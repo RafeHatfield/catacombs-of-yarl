@@ -62,3 +62,43 @@ monsters:
     damage_vulnerability: "bludgeoning"
     speed_bonus: 0.5
     etp_base: 31
+
+weapons:
+  dagger:
+    name: "Dagger"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 4
+    to_hit_bonus: 1
+    damage_type: "piercing"
+    char: "-"
+    color: [139, 69, 19]
+
+  club:
+    name: "Club"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 6
+    to_hit_bonus: 0
+    damage_type: "bludgeoning"
+    char: "/"
+    color: [139, 69, 19]
+
+  shortsword:
+    name: "Shortsword"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 6
+    to_hit_bonus: 0
+    damage_type: "slashing"
+    char: "|"
+    color: [192, 192, 192]
+
+armor:
+  leather_armor:
+    name: "Leather Armor"
+    slot: "chest"
+    armor_class_bonus: 2
+    armor_type: "light"
+    char: "["
+    color: [139, 69, 19]

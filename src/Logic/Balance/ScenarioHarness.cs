@@ -13,10 +13,12 @@ namespace CatacombsOfYarl.Logic.Balance;
 public sealed class ScenarioHarness
 {
     private readonly MonsterFactory _monsterFactory;
+    private readonly ItemFactory? _itemFactory;
 
-    public ScenarioHarness(MonsterFactory monsterFactory)
+    public ScenarioHarness(MonsterFactory monsterFactory, ItemFactory? itemFactory = null)
     {
         _monsterFactory = monsterFactory;
+        _itemFactory = itemFactory;
     }
 
     /// <summary>
@@ -45,8 +47,8 @@ public sealed class ScenarioHarness
         var rng = new SeededRandom(seed);
         var metrics = new RunMetrics();
 
-        // Create player
-        var player = CreatePlayer(scenario.Player);
+        // Create player with optional equipment
+        var player = CreatePlayer(scenario.Player, _itemFactory);
 
         // Create monsters
         var monsters = new List<Entity>();
@@ -107,7 +109,7 @@ public sealed class ScenarioHarness
         return metrics;
     }
 
-    private static Entity CreatePlayer(ScenarioPlayer def)
+    private static Entity CreatePlayer(ScenarioPlayer def, ItemFactory? itemFactory)
     {
         var player = new Entity(0, "Player", 0, 0, blocksMovement: true);
         player.Add(new Fighter(
@@ -119,6 +121,27 @@ public sealed class ScenarioHarness
             evasion: def.Evasion,
             damageMin: def.DamageMin,
             damageMax: def.DamageMax));
+
+        // Equip weapon and armor if specified
+        if (itemFactory != null && (def.Weapon != null || def.Armor != null))
+        {
+            var equipment = player.Add(new Equipment());
+
+            if (def.Weapon != null)
+            {
+                var weapon = itemFactory.Create(def.Weapon);
+                if (weapon != null)
+                    equipment.MainHand = weapon;
+            }
+
+            if (def.Armor != null)
+            {
+                var armor = itemFactory.Create(def.Armor);
+                if (armor != null)
+                    equipment.Chest = armor;
+            }
+        }
+
         return player;
     }
 }

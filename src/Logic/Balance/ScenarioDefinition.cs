@@ -55,6 +55,12 @@ public sealed class ScenarioPlayer
 
     [YamlMember(Alias = "damage_max")]
     public int DamageMax { get; set; } = 4;
+
+    [YamlMember(Alias = "weapon")]
+    public string? Weapon { get; set; }
+
+    [YamlMember(Alias = "armor")]
+    public string? Armor { get; set; }
 }
 
 public sealed class ScenarioMonster

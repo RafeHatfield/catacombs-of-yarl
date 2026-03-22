@@ -31,12 +31,17 @@ public static class CombatResolver
     {
         var atk = attacker.Require<Fighter>();
         var def = defender.Require<Fighter>();
+        var atkEquip = attacker.Get<Equipment>();
+        var defEquip = defender.Get<Equipment>();
 
         int d20 = rng.Next(1, 21); // 1-20 inclusive
 
-        int toHitBonus = atk.DexterityMod;
+        // To-hit: DEX mod + weapon to-hit bonus
+        int toHitBonus = atk.DexterityMod + (atkEquip?.TotalToHitBonus ?? 0);
         int attackRoll = d20 + toHitBonus;
-        int targetAc = def.BaseArmorClass;
+
+        // AC: base (10 + DEX mod) + armor AC bonus
+        int targetAc = def.BaseArmorClass + (defEquip?.TotalArmorClassBonus ?? 0);
 
         bool isCritical = d20 == 20;
         bool isFumble = d20 == 1;
@@ -51,8 +56,14 @@ public static class CombatResolver
 
         if (hit)
         {
-            // Roll natural damage + strength modifier
-            int baseDmg = CombatMath.RollDamage(rng, atk.DamageMin, atk.DamageMax);
+            // Weapon damage if equipped, otherwise natural damage
+            int baseDmg;
+            var weapon = atkEquip?.MainHand?.Get<Equippable>();
+            if (weapon != null && weapon.IsWeapon)
+                baseDmg = weapon.RollDamage(rng);
+            else
+                baseDmg = CombatMath.RollDamage(rng, atk.DamageMin, atk.DamageMax);
+
             damage = baseDmg + atk.StrengthMod;
 
             if (isCritical)

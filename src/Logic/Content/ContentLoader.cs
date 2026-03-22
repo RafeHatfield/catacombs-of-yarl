@@ -4,12 +4,18 @@ using YamlDotNet.Serialization.NamingConventions;
 namespace CatacombsOfYarl.Logic.Content;
 
 /// <summary>
-/// Root YAML structure: { monsters: { id: MonsterDefinition, ... } }
+/// Root YAML structure for entities file.
 /// </summary>
 internal sealed class EntitiesFile
 {
     [YamlMember(Alias = "monsters")]
     public Dictionary<string, MonsterDefinition> Monsters { get; set; } = new();
+
+    [YamlMember(Alias = "weapons")]
+    public Dictionary<string, ItemDefinition> Weapons { get; set; } = new();
+
+    [YamlMember(Alias = "armor")]
+    public Dictionary<string, ItemDefinition> Armor { get; set; } = new();
 }
 
 /// <summary>
@@ -48,6 +54,36 @@ public sealed class ContentLoader
     {
         string yaml = File.ReadAllText(path);
         return LoadMonsters(yaml);
+    }
+
+    /// <summary>
+    /// Load item definitions (weapons + armor) from a YAML string.
+    /// Returns a combined dictionary of item ID to ItemDefinition.
+    /// </summary>
+    public Dictionary<string, ItemDefinition> LoadItems(string yaml)
+    {
+        var file = _deserializer.Deserialize<EntitiesFile>(yaml);
+        var items = new Dictionary<string, ItemDefinition>();
+
+        if (file?.Weapons != null)
+        {
+            foreach (var (id, def) in file.Weapons)
+            {
+                def.Name ??= TitleCase(id);
+                items[id] = def;
+            }
+        }
+
+        if (file?.Armor != null)
+        {
+            foreach (var (id, def) in file.Armor)
+            {
+                def.Name ??= TitleCase(id);
+                items[id] = def;
+            }
+        }
+
+        return items;
     }
 
     /// <summary>
