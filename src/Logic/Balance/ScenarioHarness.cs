@@ -87,23 +87,17 @@ public sealed class ScenarioHarness
             switch (action.Type)
             {
                 case BotAction.ActionType.AttackTarget:
-                    var result = CombatResolver.ResolveAttack(player, action.Target!, rng);
-                    metrics.PlayerAttacks++;
-                    if (result.Hit)
-                    {
-                        metrics.PlayerHits++;
-                        metrics.PlayerDamageDealt += result.Damage;
-                    }
-                    if (result.TargetKilled)
-                        metrics.MonstersKilled++;
+                    ResolvePlayerAttack(player, action.Target!, rng, metrics);
                     break;
 
                 case BotAction.ActionType.HealSelf:
                     TryHeal(playerFighter, inventory, metrics);
+                    player.Get<SpeedBonusTracker>()?.ResetMomentum();
                     break;
 
                 case BotAction.ActionType.MoveToward:
                     map.MoveToward(player, action.Target!.X, action.Target.Y);
+                    player.Get<SpeedBonusTracker>()?.ResetMomentum();
                     break;
             }
 
@@ -116,13 +110,7 @@ public sealed class ScenarioHarness
 
                 if (monster.ChebyshevDistanceTo(player.X, player.Y) <= 1)
                 {
-                    var result = CombatResolver.ResolveAttack(monster, player, rng);
-                    metrics.MonsterAttacks++;
-                    if (result.Hit)
-                    {
-                        metrics.MonsterHits++;
-                        metrics.MonsterDamageDealt += result.Damage;
-                    }
+                    ResolveMonsterAttack(monster, player, rng, metrics);
                 }
                 else
                 {
@@ -133,6 +121,50 @@ public sealed class ScenarioHarness
 
         metrics.PlayerDied = !playerFighter.IsAlive;
         return metrics;
+    }
+
+    /// <summary>
+    /// Resolve a player attack, including bonus attack chain from momentum.
+    /// </summary>
+    private static void ResolvePlayerAttack(Entity player, Entity target, SeededRandom rng, RunMetrics metrics)
+    {
+        var result = CombatResolver.ResolveAttack(player, target, rng);
+        metrics.PlayerAttacks++;
+        if (result.Hit)
+        {
+            metrics.PlayerHits++;
+            metrics.PlayerDamageDealt += result.Damage;
+        }
+        if (result.TargetKilled)
+            metrics.MonstersKilled++;
+
+        // Bonus attack chain — recurse if triggered and target still alive
+        if (result.BonusAttackTriggered && !result.TargetKilled && target.Require<Fighter>().IsAlive)
+        {
+            metrics.BonusAttacks++;
+            ResolvePlayerAttack(player, target, rng, metrics);
+        }
+    }
+
+    /// <summary>
+    /// Resolve a monster attack, including bonus attack chain.
+    /// </summary>
+    private static void ResolveMonsterAttack(Entity monster, Entity player, SeededRandom rng, RunMetrics metrics)
+    {
+        var result = CombatResolver.ResolveAttack(monster, player, rng);
+        metrics.MonsterAttacks++;
+        if (result.Hit)
+        {
+            metrics.MonsterHits++;
+            metrics.MonsterDamageDealt += result.Damage;
+        }
+
+        // Monster bonus attacks
+        if (result.BonusAttackTriggered && player.Require<Fighter>().IsAlive)
+        {
+            metrics.BonusAttacks++;
+            ResolveMonsterAttack(monster, player, rng, metrics);
+        }
     }
 
     private static bool TryHeal(Fighter fighter, Inventory? inventory, RunMetrics metrics)
@@ -178,6 +210,10 @@ public sealed class ScenarioHarness
                 if (armor != null) equipment.Chest = armor;
             }
         }
+
+        // Speed bonus for momentum system
+        if (def.SpeedBonus > 0)
+            player.Add(new SpeedBonusTracker(baseRatio: def.SpeedBonus));
 
         if (consumableFactory != null && scenario.Items.Count > 0)
         {

@@ -21,6 +21,9 @@ public sealed class RunMetrics
 
     // Healing
     public int PotionsUsed { get; set; }
+
+    // Momentum
+    public int BonusAttacks { get; set; }
 }
 
 /// <summary>

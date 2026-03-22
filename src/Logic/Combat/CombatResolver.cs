@@ -14,6 +14,7 @@ public sealed class AttackResult
     public int Damage { get; init; }
     public int D20Roll { get; init; }
     public bool TargetKilled { get; init; }
+    public bool BonusAttackTriggered { get; init; }
 }
 
 /// <summary>
@@ -74,6 +75,15 @@ public static class CombatResolver
             killed = !def.IsAlive;
         }
 
+        // Check for bonus attack (momentum system)
+        bool bonusTriggered = false;
+        if (hit && !killed)
+        {
+            var tracker = attacker.Get<SpeedBonusTracker>();
+            if (tracker != null && SpeedBonusTracker.CanBuildMomentum(attacker, defender))
+                bonusTriggered = tracker.RollForBonusAttack(rng);
+        }
+
         return new AttackResult
         {
             Hit = hit,
@@ -82,6 +92,7 @@ public static class CombatResolver
             Damage = damage,
             D20Roll = d20,
             TargetKilled = killed,
+            BonusAttackTriggered = bonusTriggered,
         };
     }
 }

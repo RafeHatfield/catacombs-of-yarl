@@ -71,6 +71,10 @@ public sealed class MonsterFactory
             accuracy: accuracy,
             evasion: stats.Evasion));
 
+        // Speed bonus for momentum system
+        if (def.SpeedBonus > 0)
+            entity.Add(new SpeedBonusTracker(baseRatio: def.SpeedBonus));
+
         return entity;
     }
 

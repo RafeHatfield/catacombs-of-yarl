@@ -64,6 +64,9 @@ public sealed class ScenarioPlayer
 
     [YamlMember(Alias = "armor")]
     public string? Armor { get; set; }
+
+    [YamlMember(Alias = "speed_bonus")]
+    public double SpeedBonus { get; set; }
 }
 
 public sealed class ScenarioMonster
