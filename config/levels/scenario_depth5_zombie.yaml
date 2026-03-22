@@ -1,0 +1,25 @@
+scenario_id: depth5_zombie
+name: "Depth 5 - Zombie Horde"
+depth: 5
+turn_limit: 100
+runs: 50
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+monsters:
+  - type: "zombie"
+    count: 5
+
+items:
+  - type: "healing_potion"
+    count: 2

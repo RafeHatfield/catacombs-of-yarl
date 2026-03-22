@@ -110,6 +110,44 @@ public sealed class ContentLoader
     }
 
     /// <summary>
+    /// Load a scenario definition from a YAML string.
+    /// </summary>
+    public Balance.ScenarioDefinition LoadScenario(string yaml)
+    {
+        return _deserializer.Deserialize<Balance.ScenarioDefinition>(yaml);
+    }
+
+    /// <summary>
+    /// Load a scenario definition from a YAML file path.
+    /// </summary>
+    public Balance.ScenarioDefinition LoadScenarioFromFile(string path)
+    {
+        return LoadScenario(File.ReadAllText(path));
+    }
+
+    /// <summary>
+    /// Load all content from a single entities YAML string.
+    /// Returns monsters, items, and consumables in one call.
+    /// </summary>
+    public ContentBundle LoadAll(string yaml)
+    {
+        return new ContentBundle
+        {
+            Monsters = LoadMonsters(yaml),
+            Items = LoadItems(yaml),
+            Consumables = LoadConsumables(yaml),
+        };
+    }
+
+    /// <summary>
+    /// Load all content from a YAML file path.
+    /// </summary>
+    public ContentBundle LoadAllFromFile(string path)
+    {
+        return LoadAll(File.ReadAllText(path));
+    }
+
+    /// <summary>
     /// Resolve `extends` inheritance. Parent fields are deep-merged into children.
     /// Child values override parent values. Stats are merged field-by-field.
     /// </summary>
