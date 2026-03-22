@@ -81,7 +81,7 @@ public static class CombatResolver
         {
             var tracker = attacker.Get<SpeedBonusTracker>();
             if (tracker != null && SpeedBonusTracker.CanBuildMomentum(attacker, defender))
-                bonusTriggered = tracker.RollForBonusAttack(rng);
+                bonusTriggered = tracker.RollForBonusAttack(rng, defender);
         }
 
         return new AttackResult

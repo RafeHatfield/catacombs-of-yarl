@@ -12,13 +12,15 @@ namespace CatacombsOfYarl.Logic.Combat;
 /// the counter — momentum cascades.
 ///
 /// Only the faster entity (relative speed) builds momentum.
-/// Counter resets on guaranteed bonus or when momentum breaks (non-attack action).
+/// Counter resets on: guaranteed bonus, non-attack action, or switching targets.
+/// Preserving momentum across target switches is a potential boon (not default).
 /// </summary>
 public sealed class SpeedBonusTracker : IComponent
 {
     public Entity? Owner { get; set; }
 
     private int _attackCounter;
+    private int _lastTargetId = -1;
 
     /// <summary>Base speed ratio (from entity definition, e.g. monster speed_bonus).</summary>
     public double BaseRatio { get; set; }
@@ -39,10 +41,19 @@ public sealed class SpeedBonusTracker : IComponent
 
     /// <summary>
     /// Roll for a bonus attack after a successful hit.
+    /// Resets momentum if target changed since last attack.
     /// Call this after each attack lands. Returns true if a bonus attack triggers.
     /// </summary>
-    public bool RollForBonusAttack(SeededRandom rng)
+    public bool RollForBonusAttack(SeededRandom rng, Entity? target = null)
     {
+        // Target switch breaks momentum
+        if (target != null)
+        {
+            int targetId = target.Id;
+            if (_lastTargetId >= 0 && targetId != _lastTargetId)
+                _attackCounter = 0;
+            _lastTargetId = targetId;
+        }
         double ratio = SpeedBonusRatio;
         if (ratio <= 0) return false;
 
@@ -68,6 +79,7 @@ public sealed class SpeedBonusTracker : IComponent
     public void ResetMomentum()
     {
         _attackCounter = 0;
+        _lastTargetId = -1;
     }
 
     /// <summary>
