@@ -19,3 +19,7 @@ player:
 monsters:
   - type: "orc_grunt"
     count: 3
+
+items:
+  - type: "healing_potion"
+    count: 1

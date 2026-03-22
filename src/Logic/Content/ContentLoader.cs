@@ -16,6 +16,9 @@ internal sealed class EntitiesFile
 
     [YamlMember(Alias = "armor")]
     public Dictionary<string, ItemDefinition> Armor { get; set; } = new();
+
+    [YamlMember(Alias = "consumables")]
+    public Dictionary<string, ConsumableDefinition> Consumables { get; set; } = new();
 }
 
 /// <summary>
@@ -84,6 +87,26 @@ public sealed class ContentLoader
         }
 
         return items;
+    }
+
+    /// <summary>
+    /// Load consumable definitions from a YAML string.
+    /// </summary>
+    public Dictionary<string, ConsumableDefinition> LoadConsumables(string yaml)
+    {
+        var file = _deserializer.Deserialize<EntitiesFile>(yaml);
+        var consumables = new Dictionary<string, ConsumableDefinition>();
+
+        if (file?.Consumables != null)
+        {
+            foreach (var (id, def) in file.Consumables)
+            {
+                def.Name ??= TitleCase(id);
+                consumables[id] = def;
+            }
+        }
+
+        return consumables;
     }
 
     /// <summary>

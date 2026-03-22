@@ -61,15 +61,24 @@ armor:
     armor_type: ""light""
     char: ""[""
     color: [139, 69, 19]
+
+consumables:
+  healing_potion:
+    name: ""Healing Potion""
+    heal_amount: 40
+    char: ""!""
+    color: [127, 0, 255]
 ";
         var loader = new ContentLoader();
         var entityFactory = new EntityFactory();
         var monsters = loader.LoadMonsters(entitiesYaml);
         var items = loader.LoadItems(entitiesYaml);
+        var consumables = loader.LoadConsumables(entitiesYaml);
 
         _harness = new ScenarioHarness(
             new MonsterFactory(monsters, entityFactory),
-            new ItemFactory(items, entityFactory));
+            new ItemFactory(items, entityFactory),
+            new ConsumableFactory(consumables, entityFactory));
     }
 
     private static ScenarioDefinition Depth2OrcBaseline() => new()
@@ -174,20 +183,91 @@ armor:
         Assert.That(agg.AvgMonstersKilled, Is.GreaterThanOrEqualTo(0.85));
     }
 
-    [Test]
-    public void Depth2OrcBaseline_PrintMetrics()
+    private static ScenarioDefinition Depth2WithHealing() => new()
     {
-        var agg = _harness.Run(Depth2OrcBaseline(), baseSeed: 1337);
+        ScenarioId = "depth2_orc_healing",
+        Name = "Depth 2 - Orc Baseline with Healing",
+        Depth = 2, TurnLimit = 100, Runs = 50,
+        Player = new ScenarioPlayer
+        {
+            Hp = 54, Strength = 12, Dexterity = 14, Constitution = 12,
+            Accuracy = 2, Evasion = 1, DamageMin = 1, DamageMax = 4,
+            Weapon = "dagger", Armor = "leather_armor",
+        },
+        Monsters = new() { new() { Type = "orc_grunt", Count = 3 } },
+        Items = new() { new() { Type = "healing_potion", Count = 1 } },
+    };
 
-        TestContext.WriteLine($"=== Depth 2 Orc Baseline (seed 1337, {agg.TotalRuns} runs) ===");
-        TestContext.WriteLine($"  Death Rate:       {agg.DeathRate:P1}");
-        TestContext.WriteLine($"  Avg Turns:        {agg.AvgTurns:F1}");
-        TestContext.WriteLine($"  Player Hit Rate:  {agg.PlayerHitRate:P1}");
-        TestContext.WriteLine($"  Monster Hit Rate: {agg.MonsterHitRate:P1}");
-        TestContext.WriteLine($"  Avg Player DMG:   {agg.AvgPlayerDamageDealt:F1}");
-        TestContext.WriteLine($"  Avg Monster DMG:  {agg.AvgMonsterDamageDealt:F1}");
-        TestContext.WriteLine($"  Avg Kills:        {agg.AvgMonstersKilled:F1}");
+    private static ScenarioDefinition Depth2_TwoOrcs_WithHealing() => new()
+    {
+        ScenarioId = "depth2_2orc_healing",
+        Depth = 2, TurnLimit = 100, Runs = 50,
+        Player = new ScenarioPlayer
+        {
+            Hp = 54, Strength = 12, Dexterity = 14, Constitution = 12,
+            Accuracy = 2, Evasion = 1, DamageMin = 1, DamageMax = 4,
+            Weapon = "dagger", Armor = "leather_armor",
+        },
+        Monsters = new() { new() { Type = "orc_grunt", Count = 2 } },
+        Items = new() { new() { Type = "healing_potion", Count = 1 } },
+    };
 
-        Assert.Pass(); // informational test
+    private static ScenarioDefinition Depth2_TwoOrcs_NoHealing() => new()
+    {
+        ScenarioId = "depth2_2orc_no_heal",
+        Depth = 2, TurnLimit = 100, Runs = 50,
+        Player = new ScenarioPlayer
+        {
+            Hp = 54, Strength = 12, Dexterity = 14, Constitution = 12,
+            Accuracy = 2, Evasion = 1, DamageMin = 1, DamageMax = 4,
+            Weapon = "dagger", Armor = "leather_armor",
+        },
+        Monsters = new() { new() { Type = "orc_grunt", Count = 2 } },
+    };
+
+    [Test]
+    public void Depth2_TwoOrcs_HealingReducesDeathRate()
+    {
+        var noHeal = _harness.Run(Depth2_TwoOrcs_NoHealing(), baseSeed: 1337);
+        var heal = _harness.Run(Depth2_TwoOrcs_WithHealing(), baseSeed: 1337);
+
+        // 2 orcs is survivable — healing should meaningfully reduce death rate
+        Assert.That(heal.DeathRate, Is.LessThan(noHeal.DeathRate),
+            $"With healing: {heal.DeathRate:P1}, Without: {noHeal.DeathRate:P1}");
+    }
+
+    [Test]
+    public void Depth2_TwoOrcs_HealingIncreasesKills()
+    {
+        var noHeal = _harness.Run(Depth2_TwoOrcs_NoHealing(), baseSeed: 1337);
+        var heal = _harness.Run(Depth2_TwoOrcs_WithHealing(), baseSeed: 1337);
+
+        Assert.That(heal.AvgMonstersKilled, Is.GreaterThanOrEqualTo(noHeal.AvgMonstersKilled),
+            $"With healing kills: {heal.AvgMonstersKilled:F1}, Without: {noHeal.AvgMonstersKilled:F1}");
+    }
+
+    [Test]
+    public void Depth2_PrintMetrics_WithAndWithoutHealing()
+    {
+        var noHeal = _harness.Run(Depth2OrcBaseline(), baseSeed: 1337);
+        var heal = _harness.Run(Depth2WithHealing(), baseSeed: 1337);
+
+        TestContext.WriteLine("=== Depth 2 Orc Baseline — A/B Healing Comparison (seed 1337) ===");
+        TestContext.WriteLine("");
+        PrintRow("Metric", "No Healing", "1 Potion");
+        PrintRow("Death Rate", $"{noHeal.DeathRate:P1}", $"{heal.DeathRate:P1}");
+        PrintRow("Avg Turns", $"{noHeal.AvgTurns:F1}", $"{heal.AvgTurns:F1}");
+        PrintRow("Player Hit Rate", $"{noHeal.PlayerHitRate:P1}", $"{heal.PlayerHitRate:P1}");
+        PrintRow("Monster Hit Rate", $"{noHeal.MonsterHitRate:P1}", $"{heal.MonsterHitRate:P1}");
+        PrintRow("Avg Player DMG", $"{noHeal.AvgPlayerDamageDealt:F1}", $"{heal.AvgPlayerDamageDealt:F1}");
+        PrintRow("Avg Monster DMG", $"{noHeal.AvgMonsterDamageDealt:F1}", $"{heal.AvgMonsterDamageDealt:F1}");
+        PrintRow("Avg Kills", $"{noHeal.AvgMonstersKilled:F1}", $"{heal.AvgMonstersKilled:F1}");
+
+        Assert.Pass();
+    }
+
+    private static void PrintRow(string label, string col1, string col2)
+    {
+        TestContext.WriteLine(string.Format("  {0,-22} {1,12} {2,12}", label, col1, col2));
     }
 }

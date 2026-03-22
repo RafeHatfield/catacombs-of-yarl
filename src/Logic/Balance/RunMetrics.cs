@@ -18,6 +18,9 @@ public sealed class RunMetrics
 
     // Kill tracking
     public int MonstersKilled { get; set; }
+
+    // Healing
+    public int PotionsUsed { get; set; }
 }
 
 /// <summary>

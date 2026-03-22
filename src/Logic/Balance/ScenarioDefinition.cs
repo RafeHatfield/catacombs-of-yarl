@@ -28,6 +28,9 @@ public sealed class ScenarioDefinition
 
     [YamlMember(Alias = "monsters")]
     public List<ScenarioMonster> Monsters { get; set; } = new();
+
+    [YamlMember(Alias = "items")]
+    public List<ScenarioItem> Items { get; set; } = new();
 }
 
 public sealed class ScenarioPlayer
@@ -64,6 +67,15 @@ public sealed class ScenarioPlayer
 }
 
 public sealed class ScenarioMonster
+{
+    [YamlMember(Alias = "type")]
+    public string Type { get; set; } = "";
+
+    [YamlMember(Alias = "count")]
+    public int Count { get; set; } = 1;
+}
+
+public sealed class ScenarioItem
 {
     [YamlMember(Alias = "type")]
     public string Type { get; set; } = "";

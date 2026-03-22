@@ -102,3 +102,10 @@ armor:
     armor_type: "light"
     char: "["
     color: [139, 69, 19]
+
+consumables:
+  healing_potion:
+    name: "Healing Potion"
+    heal_amount: 40
+    char: "!"
+    color: [127, 0, 255]
