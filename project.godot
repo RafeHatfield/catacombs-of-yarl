@@ -1,0 +1,28 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; but it can also be edited just fine manually.
+
+[application]
+
+config/name="Catacombs of YARL"
+config/features=PackedStringArray("4.6", "C#", "Mobile")
+run/main_scene=""
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/size/mode=0
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep_width"
+window/handheld/orientation=1
+
+[dotnet]
+
+project/assembly_name="CatacombsOfYarl.Presentation"
+project/solution_directory="."
+
+[rendering]
+
+renderer/rendering_method="mobile"

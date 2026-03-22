@@ -1,0 +1,35 @@
+# Godot 4
+.godot/
+*.translation
+
+# Godot mono / C#
+.mono/
+data_*/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.csproj.old
+*.nupkg
+*.snupkg
+packages/
+
+# IDE
+.vs/
+.vscode/
+*.sln.DotSettings.user
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+export/
+build/
+
+# Harness output
+reports/
