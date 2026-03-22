@@ -65,7 +65,7 @@ public sealed class ScenarioHarness
         {
             for (int i = 0; i < monsterDef.Count; i++)
             {
-                var monster = _monsterFactory.Create(monsterDef.Type);
+                var monster = _monsterFactory.Create(monsterDef.Type, depth: scenario.Depth);
                 if (monster != null)
                 {
                     // Spread monsters on right side of arena

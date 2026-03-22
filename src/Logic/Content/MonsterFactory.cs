@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.ECS;
 
@@ -6,6 +7,7 @@ namespace CatacombsOfYarl.Logic.Content;
 /// <summary>
 /// Creates Entity instances from resolved MonsterDefinitions.
 /// Bridges the content layer (YAML) to the ECS layer (entities + components).
+/// Applies depth scaling at spawn time when depth is specified.
 /// </summary>
 public sealed class MonsterFactory
 {
@@ -20,37 +22,53 @@ public sealed class MonsterFactory
 
     /// <summary>
     /// Create a monster entity from a definition ID.
+    /// Depth > 0 applies depth scaling to stats.
     /// Returns null if the ID is not found.
     /// </summary>
-    public Entity? Create(string monsterId, int x = 0, int y = 0)
+    public Entity? Create(string monsterId, int x = 0, int y = 0, int depth = 0)
     {
         if (!_definitions.TryGetValue(monsterId, out var def))
             return null;
 
-        return CreateFromDefinition(def, x, y);
+        return CreateFromDefinition(def, x, y, depth);
     }
 
     /// <summary>
     /// Create a monster entity directly from a definition.
     /// </summary>
-    public Entity CreateFromDefinition(MonsterDefinition def, int x = 0, int y = 0)
+    public Entity CreateFromDefinition(MonsterDefinition def, int x = 0, int y = 0, int depth = 0)
     {
         var stats = def.Stats ?? new MonsterStats();
-        string name = def.Name ?? monsterId(def);
+        string name = def.Name ?? FallbackName(def);
 
         var entity = _entityFactory.Create(name, x, y, blocksMovement: def.Blocks);
 
+        int hp = stats.Hp;
+        int damageMin = stats.DamageMin;
+        int damageMax = stats.DamageMax;
+        int accuracy = stats.Accuracy;
+
+        // Apply depth scaling if depth specified
+        if (depth > 0)
+        {
+            var mult = DepthScaling.GetForTags(depth, def.Tags);
+            hp = DepthScaling.ScaleHp(hp, mult.Hp);
+            damageMin = DepthScaling.ScaleStat(damageMin, mult.Damage);
+            damageMax = DepthScaling.ScaleStat(damageMax, mult.Damage);
+            accuracy = DepthScaling.ScaleStat(accuracy, mult.ToHit);
+        }
+
         entity.Add(new Fighter(
-            hp: stats.Hp,
+            hp: hp,
             defense: stats.Defense,
             power: stats.Power,
             xp: stats.Xp,
-            damageMin: stats.DamageMin,
-            damageMax: stats.DamageMax,
+            damageMin: damageMin,
+            damageMax: damageMax,
             strength: stats.Strength,
             dexterity: stats.Dexterity,
             constitution: stats.Constitution,
-            accuracy: stats.Accuracy,
+            accuracy: accuracy,
             evasion: stats.Evasion));
 
         return entity;
@@ -59,6 +77,5 @@ public sealed class MonsterFactory
     /// <summary>All available monster IDs.</summary>
     public IEnumerable<string> AvailableIds => _definitions.Keys;
 
-    // Fallback name derivation — should rarely be needed since ContentLoader resolves names
-    private static string monsterId(MonsterDefinition def) => def.Char ?? "?";
+    private static string FallbackName(MonsterDefinition def) => def.Char ?? "?";
 }
