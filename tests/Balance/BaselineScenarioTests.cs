@@ -145,17 +145,17 @@ consumables:
     }
 
     [Test]
-    public void Depth2OrcBaseline_DeathRate_HighWithoutHealingOrPositioning()
+    public void Depth2OrcBaseline_DeathRate_ReasonableWithPositioning()
     {
         var agg = _harness.Run(Depth2OrcBaseline(), baseSeed: 1337);
 
-        // Without healing potions and positioning, 3 orcs simultaneously
-        // attacking is overwhelming. Death rate will be very high.
-        // This will come down as we add: healing, positioning, smarter bot AI.
-        // For now, just confirm the harness produces consistent, non-trivial results.
-        Assert.That(agg.DeathRate, Is.InRange(0.5, 1.0),
-            $"Death rate {agg.DeathRate:P1} — expected high without healing/positioning");
-        Assert.That(agg.AvgMonstersKilled, Is.GreaterThanOrEqualTo(0.0));
+        // With positioning (player at x=3, orcs at x=8+), the player engages
+        // orcs sequentially rather than all at once. Death rate should be low.
+        // Depth 2 target band: 0-8% (from pressure model). Without healing,
+        // expect slightly higher but much better than the 100% melee brawl.
+        Assert.That(agg.DeathRate, Is.InRange(0.0, 0.40),
+            $"Death rate {agg.DeathRate:P1} — positioning should keep this manageable");
+        Assert.That(agg.AvgMonstersKilled, Is.GreaterThan(0.5));
     }
 
     [Test]

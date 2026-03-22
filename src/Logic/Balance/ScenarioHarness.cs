@@ -10,16 +10,15 @@ namespace CatacombsOfYarl.Logic.Balance;
 /// </summary>
 public static class BotConfig
 {
-    /// <summary>Heal when HP drops to this fraction of max HP (30%).</summary>
     public const double HealThreshold = 0.30;
-
-    /// <summary>Panic heal at this fraction when enemies are present (15%).</summary>
     public const double PanicThreshold = 0.15;
 }
 
 /// <summary>
-/// Runs scenario simulations and collects metrics. No Godot dependencies.
-/// Bot AI: heal if below threshold, then attack nearest alive monster.
+/// Runs scenario simulations with tile-based positioning.
+/// Bot AI: move toward nearest enemy, attack if adjacent, heal if low HP.
+/// Monsters: move toward player, attack if adjacent.
+/// Melee range = Chebyshev distance 1 (adjacent, including diagonal).
 /// </summary>
 public sealed class ScenarioHarness
 {
@@ -37,43 +36,45 @@ public sealed class ScenarioHarness
         _consumableFactory = consumableFactory;
     }
 
-    /// <summary>
-    /// Run a scenario multiple times with sequential seeds starting from baseSeed.
-    /// </summary>
     public AggregatedMetrics Run(ScenarioDefinition scenario, int baseSeed = 1337)
     {
         var allRuns = new List<RunMetrics>();
-
         for (int i = 0; i < scenario.Runs; i++)
-        {
-            int seed = baseSeed + i;
-            var metrics = RunOnce(scenario, seed);
-            allRuns.Add(metrics);
-        }
-
+            allRuns.Add(RunOnce(scenario, baseSeed + i));
         return AggregatedMetrics.FromRuns(scenario.ScenarioId, baseSeed, allRuns);
     }
 
-    /// <summary>
-    /// Run a single scenario iteration. Returns metrics for that run.
-    /// </summary>
     public RunMetrics RunOnce(ScenarioDefinition scenario, int seed)
     {
         var rng = new SeededRandom(seed);
         var metrics = new RunMetrics();
 
-        // Create player with equipment and inventory
-        var player = CreatePlayer(scenario, _itemFactory, _consumableFactory);
+        // Create arena (12x12 enclosed)
+        var map = GameMap.CreateArena(12, 12);
 
-        // Create monsters
+        // Create player at left side of arena
+        var player = CreatePlayer(scenario, _itemFactory, _consumableFactory);
+        player.X = 3;
+        player.Y = 6;
+        map.RegisterEntity(player);
+
+        // Create monsters spread on right side
         var monsters = new List<Entity>();
+        int monsterIndex = 0;
         foreach (var monsterDef in scenario.Monsters)
         {
             for (int i = 0; i < monsterDef.Count; i++)
             {
                 var monster = _monsterFactory.Create(monsterDef.Type);
                 if (monster != null)
+                {
+                    // Spread monsters on right side of arena
+                    monster.X = 8 + (monsterIndex % 3);
+                    monster.Y = 4 + (monsterIndex / 3) * 2;
+                    map.RegisterEntity(monster);
                     monsters.Add(monster);
+                    monsterIndex++;
+                }
             }
         }
 
@@ -87,16 +88,23 @@ public sealed class ScenarioHarness
 
             metrics.TurnsTaken++;
 
-            // Bot decision: heal or attack
-            bool healed = TryBotHeal(player, playerFighter, inventory, metrics);
+            // === PLAYER TURN ===
+            // Priority: panic heal > attack adjacent > threshold heal > move toward enemy
+            var nearestAlive = FindNearest(player, monsters);
+            bool isAdjacent = nearestAlive != null && player.ChebyshevDistanceTo(nearestAlive.X, nearestAlive.Y) <= 1;
 
-            if (!healed)
+            // Panic heal: very low HP with enemies alive
+            double hpFraction = (double)playerFighter.Hp / playerFighter.MaxHp;
+            bool panicHealed = false;
+            if (hpFraction <= BotConfig.PanicThreshold)
+                panicHealed = TryHeal(playerFighter, inventory, metrics);
+
+            if (!panicHealed)
             {
-                // Attack nearest alive monster
-                var target = monsters.FirstOrDefault(m => m.Require<Fighter>().IsAlive);
-                if (target != null)
+                if (isAdjacent && nearestAlive != null)
                 {
-                    var result = CombatResolver.ResolveAttack(player, target, rng);
+                    // Attack adjacent enemy
+                    var result = CombatResolver.ResolveAttack(player, nearestAlive, rng);
                     metrics.PlayerAttacks++;
                     if (result.Hit)
                     {
@@ -106,21 +114,44 @@ public sealed class ScenarioHarness
                     if (result.TargetKilled)
                         metrics.MonstersKilled++;
                 }
+                else
+                {
+                    // Not adjacent — heal if below threshold, otherwise move
+                    bool thresholdHealed = false;
+                    if (hpFraction <= BotConfig.HealThreshold)
+                        thresholdHealed = TryHeal(playerFighter, inventory, metrics);
+
+                    if (!thresholdHealed && nearestAlive != null)
+                    {
+                        // Move toward nearest enemy
+                        map.MoveToward(player, nearestAlive.X, nearestAlive.Y);
+                    }
+                }
             }
 
-            // Each alive monster attacks player
+            // === MONSTER TURNS ===
             foreach (var monster in monsters)
             {
                 var mf = monster.Require<Fighter>();
                 if (!mf.IsAlive || !playerFighter.IsAlive)
                     continue;
 
-                var result = CombatResolver.ResolveAttack(monster, player, rng);
-                metrics.MonsterAttacks++;
-                if (result.Hit)
+                bool monsterAdjacent = monster.ChebyshevDistanceTo(player.X, player.Y) <= 1;
+
+                if (monsterAdjacent)
                 {
-                    metrics.MonsterHits++;
-                    metrics.MonsterDamageDealt += result.Damage;
+                    var result = CombatResolver.ResolveAttack(monster, player, rng);
+                    metrics.MonsterAttacks++;
+                    if (result.Hit)
+                    {
+                        metrics.MonsterHits++;
+                        metrics.MonsterDamageDealt += result.Damage;
+                    }
+                }
+                else
+                {
+                    // Move toward player
+                    map.MoveToward(monster, player.X, player.Y);
                 }
             }
         }
@@ -129,19 +160,27 @@ public sealed class ScenarioHarness
         return metrics;
     }
 
-    /// <summary>
-    /// Bot heal logic: use a healing potion if HP is below threshold.
-    /// Costs the player's action for this turn (no attack if healing).
-    /// Returns true if a potion was used.
-    /// </summary>
-    private static bool TryBotHeal(Entity player, Fighter fighter, Inventory? inventory, RunMetrics metrics)
+    private static Entity? FindNearest(Entity from, List<Entity> candidates)
+    {
+        Entity? nearest = null;
+        double bestDist = double.MaxValue;
+        foreach (var c in candidates)
+        {
+            if (!c.Require<Fighter>().IsAlive) continue;
+            double d = from.DistanceTo(c.X, c.Y);
+            if (d < bestDist)
+            {
+                bestDist = d;
+                nearest = c;
+            }
+        }
+        return nearest;
+    }
+
+    private static bool TryHeal(Fighter fighter, Inventory? inventory, RunMetrics metrics)
     {
         if (inventory == null) return false;
 
-        double hpFraction = (double)fighter.Hp / fighter.MaxHp;
-        if (hpFraction > BotConfig.HealThreshold) return false;
-
-        // Find a healing potion
         var potion = inventory.FindFirst(item =>
         {
             var c = item.Get<Consumable>();
@@ -150,12 +189,10 @@ public sealed class ScenarioHarness
 
         if (potion == null) return false;
 
-        // Use the potion
         var consumable = potion.Require<Consumable>();
-        int healed = fighter.Heal(consumable.HealAmount);
+        fighter.Heal(consumable.HealAmount);
         inventory.Remove(potion);
         metrics.PotionsUsed++;
-
         return true;
     }
 
@@ -173,27 +210,21 @@ public sealed class ScenarioHarness
             damageMin: def.DamageMin,
             damageMax: def.DamageMax));
 
-        // Equip weapon and armor
         if (itemFactory != null && (def.Weapon != null || def.Armor != null))
         {
             var equipment = player.Add(new Equipment());
-
             if (def.Weapon != null)
             {
                 var weapon = itemFactory.Create(def.Weapon);
-                if (weapon != null)
-                    equipment.MainHand = weapon;
+                if (weapon != null) equipment.MainHand = weapon;
             }
-
             if (def.Armor != null)
             {
                 var armor = itemFactory.Create(def.Armor);
-                if (armor != null)
-                    equipment.Chest = armor;
+                if (armor != null) equipment.Chest = armor;
             }
         }
 
-        // Add inventory with scenario items
         if (consumableFactory != null && scenario.Items.Count > 0)
         {
             var inventory = player.Add(new Inventory());
@@ -202,8 +233,7 @@ public sealed class ScenarioHarness
                 for (int i = 0; i < itemDef.Count; i++)
                 {
                     var item = consumableFactory.Create(itemDef.Type);
-                    if (item != null)
-                        inventory.Add(item);
+                    if (item != null) inventory.Add(item);
                 }
             }
         }
