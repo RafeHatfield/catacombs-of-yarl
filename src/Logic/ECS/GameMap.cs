@@ -47,15 +47,22 @@ public sealed class GameMap
 
     public void RegisterEntity(Entity entity) => _entities.Add(entity);
 
-    /// <summary>Check if a tile is blocked by a movement-blocking entity.</summary>
+    /// <summary>Check if a tile is blocked by a living, movement-blocking entity.</summary>
     public bool IsBlocked(int x, int y)
     {
         if (!IsWalkable(x, y)) return true;
-        return _entities.Any(e => e.X == x && e.Y == y && e.BlocksMovement);
+        return _entities.Any(e => e.X == x && e.Y == y && e.BlocksMovement && IsEntityAlive(e));
     }
 
     /// <summary>Check if a tile is free to move into.</summary>
-    public bool CanMoveTo(int x, int y) => IsWalkable(x, y) && !_entities.Any(e => e.X == x && e.Y == y && e.BlocksMovement);
+    public bool CanMoveTo(int x, int y) => IsWalkable(x, y) &&
+        !_entities.Any(e => e.X == x && e.Y == y && e.BlocksMovement && IsEntityAlive(e));
+
+    private static bool IsEntityAlive(Entity e)
+    {
+        var fighter = e.Get<Combat.Fighter>();
+        return fighter == null || fighter.IsAlive; // non-fighters don't block based on alive status
+    }
 
     /// <summary>
     /// Move entity one step toward target using simple greedy pathfinding.
