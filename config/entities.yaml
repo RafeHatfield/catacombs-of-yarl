@@ -1,0 +1,64 @@
+monsters:
+  orc:
+    stats:
+      hp: 28
+      power: 0
+      defense: 0
+      xp: 35
+      damage_min: 4
+      damage_max: 6
+      strength: 14
+      dexterity: 10
+      constitution: 12
+      accuracy: 4
+      evasion: 1
+    char: "o"
+    color: [63, 127, 63]
+    ai_type: "basic"
+    render_order: "actor"
+    blocks: true
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living"]
+    etp_base: 27
+
+  orc_grunt:
+    name: "Orc"
+    extends: orc
+
+  orc_brute:
+    extends: orc
+    stats:
+      hp: 42
+      damage_min: 5
+      damage_max: 8
+      strength: 16
+      xp: 55
+    char: "O"
+    color: [90, 160, 90]
+    etp_base: 45
+    tags: ["corporeal_flesh", "humanoid", "living", "brute"]
+
+  zombie:
+    stats:
+      hp: 24
+      power: 0
+      defense: 0
+      xp: 30
+      damage_min: 3
+      damage_max: 6
+      strength: 12
+      dexterity: 6
+      constitution: 14
+      accuracy: 1
+      evasion: 0
+    char: "z"
+    color: [128, 128, 96]
+    ai_type: "basic"
+    render_order: "actor"
+    blocks: true
+    faction: "undead"
+    tags: ["corporeal_flesh", "undead", "mindless", "zombie"]
+    damage_resistance: "piercing"
+    damage_vulnerability: "bludgeoning"
+    speed_bonus: 0.5
+    etp_base: 31
