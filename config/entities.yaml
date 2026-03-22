@@ -94,6 +94,26 @@ weapons:
     char: "|"
     color: [192, 192, 192]
 
+  longsword:
+    name: "Longsword"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 8
+    to_hit_bonus: 0
+    damage_type: "slashing"
+    char: "|"
+    color: [200, 200, 220]
+
+  greatsword:
+    name: "Greatsword"
+    slot: "main_hand"
+    damage_min: 2
+    damage_max: 12
+    to_hit_bonus: -1
+    damage_type: "slashing"
+    char: "|"
+    color: [220, 220, 240]
+
 armor:
   leather_armor:
     name: "Leather Armor"
