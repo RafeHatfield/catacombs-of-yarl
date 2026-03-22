@@ -7,18 +7,17 @@ namespace CatacombsOfYarl.Logic.Balance;
 /// Bot decision-making for the scenario harness. Matches the Python prototype's
 /// "balanced" persona behavior.
 ///
-/// Decision priority:
-/// 1. Panic heal (HP <= 15% and enemies alive)
-/// 2. Retreat if overwhelmed (2+ adjacent, HP < 50%) — forces sequential engagement
+/// Decision priority (balanced persona):
+/// 1. Panic heal (HP <= 15%) — absolute priority, even mid-combat
+/// 2. Threshold heal (HP <= 30%) — including during combat (allow_combat_healing)
 /// 3. Attack adjacent enemy (prefer lowest HP — focus fire)
-/// 4. Threshold heal (HP <= 30% and no adjacent enemies — safe moment)
-/// 5. Move toward nearest alive enemy
+/// 4. Move toward nearest alive enemy
+///
+/// Key insight: healing during combat costs an attack turn but prevents death.
+/// The 40 HP potion restores ~73% of max HP — a massive swing.
 /// </summary>
 public static class BotBrain
 {
-    /// <summary>Retreat when 2+ enemies adjacent and HP below this fraction.</summary>
-    private const double RetreatThreshold = 0.70;
-
     /// <summary>
     /// Decide what the bot should do this turn.
     /// </summary>
@@ -40,15 +39,11 @@ public static class BotBrain
         if (hpFraction <= BotConfig.PanicThreshold && HasHealingPotion(inventory))
             return BotAction.Heal;
 
-        // 2. Retreat if overwhelmed — 2+ adjacent enemies and HP below 50%
-        //    Move away from the centroid of adjacent enemies to force sequential engagement.
-        //    Only retreat if there's somewhere to go.
-        if (adjacent.Count >= 2 && hpFraction < RetreatThreshold)
-        {
-            var retreatTarget = FindRetreatPosition(player, adjacent, map);
-            if (retreatTarget != null)
-                return BotAction.Move(retreatTarget);
-        }
+        // 2. Threshold heal — below 30%, even during combat
+        //    The Python prototype's balanced persona allows combat healing.
+        //    Trading one attack turn for 40 HP is almost always correct.
+        if (hpFraction <= BotConfig.HealThreshold && HasHealingPotion(inventory))
+            return BotAction.Heal;
 
         // 3. Attack adjacent enemy — focus fire lowest HP
         if (adjacent.Count > 0)
@@ -57,11 +52,7 @@ public static class BotBrain
             return BotAction.Attack(target);
         }
 
-        // 4. Threshold heal — below 30% and safe (no adjacent enemies)
-        if (hpFraction <= BotConfig.HealThreshold && HasHealingPotion(inventory))
-            return BotAction.Heal;
-
-        // 5. Move toward nearest alive enemy
+        // 4. Move toward nearest alive enemy
         var nearest = FindNearest(player, aliveMonsters);
         if (nearest != null)
             return BotAction.Move(nearest);
@@ -110,43 +101,6 @@ public static class BotBrain
             }
         }
         return nearest;
-    }
-
-    /// <summary>
-    /// Find a position to retreat to — move away from the centroid of adjacent enemies.
-    /// Returns a temporary entity at the retreat position for MoveToward, or null if stuck.
-    /// </summary>
-    private static Entity? FindRetreatPosition(Entity player, List<Entity> adjacent, GameMap map)
-    {
-        // Compute centroid of adjacent enemies
-        double cx = adjacent.Average(e => (double)e.X);
-        double cy = adjacent.Average(e => (double)e.Y);
-
-        // Direction away from centroid
-        int dx = Math.Sign(player.X - (int)Math.Round(cx));
-        int dy = Math.Sign(player.Y - (int)Math.Round(cy));
-
-        // If centroid is on the player, pick a default retreat direction
-        if (dx == 0 && dy == 0) dx = -1;
-
-        // Try the retreat direction
-        int tx = player.X + dx;
-        int ty = player.Y + dy;
-
-        if (map.CanMoveTo(tx, ty))
-        {
-            // Create a temporary target entity at the retreat position
-            var retreatTarget = new Entity(-1, "_retreat", tx, ty);
-            return retreatTarget;
-        }
-
-        // Try axis-aligned alternatives
-        if (dx != 0 && map.CanMoveTo(player.X + dx, player.Y))
-            return new Entity(-1, "_retreat", player.X + dx, player.Y);
-        if (dy != 0 && map.CanMoveTo(player.X, player.Y + dy))
-            return new Entity(-1, "_retreat", player.X, player.Y + dy);
-
-        return null; // cornered, can't retreat
     }
 
     private static bool HasHealingPotion(Inventory? inventory)
