@@ -4,6 +4,7 @@ using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Presentation.Entities;
 using CatacombsOfYarl.Presentation.Map;
+using CatacombsOfYarl.Presentation.UI;
 using Godot;
 
 namespace CatacombsOfYarl.Presentation;
@@ -15,22 +16,36 @@ namespace CatacombsOfYarl.Presentation;
 public partial class Main : Node
 {
     private GameController? _gameController;
+    private GameState? _state;
     private Node2D? _gameView;
+    private HUD? _hud;
+    private CombatLog? _combatLog;
+    private GameOverScreen? _gameOverScreen;
+
+    // Stats accumulation for game-over screen
+    private int _turnCount;
+    private int _monstersKilled;
+    private int _damageDealt;
+    private int _damageTaken;
 
     public override void _Ready()
     {
         GD.Print("Catacombs of YARL — loading...");
+        LoadAndStart();
+    }
+
+    private void LoadAndStart()
+    {
+        // Reset stats
+        _turnCount = 0;
+        _monstersKilled = 0;
+        _damageDealt = 0;
+        _damageTaken = 0;
 
         var loader = new ContentLoader();
         var projectRoot = ProjectSettings.GlobalizePath("res://");
         var entitiesPath = System.IO.Path.Combine(projectRoot, "config", "entities.yaml");
         var scenarioPath = System.IO.Path.Combine(projectRoot, "config", "levels", "scenario_depth1_tuned.yaml");
-
-        if (!System.IO.File.Exists(entitiesPath))
-        {
-            GD.PrintErr($"entities.yaml not found at: {entitiesPath}");
-            return;
-        }
 
         var content = loader.LoadAllFromFile(entitiesPath);
         var scenario = loader.LoadScenarioFromFile(scenarioPath);
@@ -40,38 +55,74 @@ public partial class Main : Node
         var monsterFactory = new MonsterFactory(content.Monsters, entityFactory, itemFactory);
         var consumableFactory = new ConsumableFactory(content.Consumables, entityFactory);
 
-        var state = GameStateFactory.FromScenario(scenario, 1337, monsterFactory, itemFactory, consumableFactory);
+        _state = GameStateFactory.FromScenario(scenario, 1337, monsterFactory, itemFactory, consumableFactory);
 
+        // Get scene nodes
         _gameView = GetNode<Node2D>("GameView");
         var tileMapLayer = GetNode<Node2D>("GameView/TileMapLayer");
         var entityLayer = GetNode<Node2D>("GameView/EntityLayer");
+        var uiLayer = GetNode<CanvasLayer>("UILayer");
+        var hudNode = GetNode<Control>("UILayer/HUD");
+        var combatLogNode = GetNode<Control>("UILayer/CombatLog");
 
-        // Render dungeon tiles
-        DungeonRenderer.Render(state.Map, tileMapLayer);
+        // Clear any previous render
+        foreach (var child in tileMapLayer.GetChildren()) child.QueueFree();
+        foreach (var child in entityLayer.GetChildren()) child.QueueFree();
+        foreach (var child in hudNode.GetChildren()) child.QueueFree();
+        foreach (var child in combatLogNode.GetChildren()) child.QueueFree();
 
-        // Set up entity sprites
+        // Render dungeon
+        DungeonRenderer.Render(_state.Map, tileMapLayer);
+
+        // Entity sprites
         var entitySprites = new EntitySpriteManager(entityLayer);
-        entitySprites.Initialize(state);
+        entitySprites.Initialize(_state);
 
-        // Centre and scale the view
-        CenterView(_gameView, state.Map);
+        // HUD
+        _hud = new HUD();
+        hudNode.AddChild(_hud);
+        _hud.SetState(_state);
 
-        // Set up game controller
+        // Combat log
+        _combatLog = new CombatLog();
+        combatLogNode.AddChild(_combatLog);
+        _combatLog.SetPlayerId(_state.Player.Id);
+
+        // Game over screen (floating above everything)
+        if (_gameOverScreen == null)
+        {
+            _gameOverScreen = new GameOverScreen();
+            uiLayer.AddChild(_gameOverScreen);
+            _gameOverScreen.ReplayRequested += OnReplayRequested;
+        }
+        else
+        {
+            _gameOverScreen.Visible = false;
+        }
+
+        CenterView(_gameView, _state.Map);
+
+        // Game controller
+        if (_gameController != null)
+        {
+            _gameController.TurnCompleted -= OnTurnCompleted;
+            _gameController.GameEnded -= OnGameEnded;
+            _gameController.QueueFree();
+        }
         _gameController = new GameController();
         AddChild(_gameController);
-        _gameController.Initialize(state, entitySprites, this);
+        _gameController.Initialize(_state, entitySprites, this);
+        _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
 
-        GD.Print($"Ready. {state.Monsters.Count} monsters. Tap to play.");
+        GD.Print($"Ready — {_state.Monsters.Count} monsters. Tap to play.");
     }
 
     public override void _Input(InputEvent @event)
     {
         if (_gameController == null || _gameView == null) return;
 
-        // Handle touch or left mouse click
         Vector2? screenPos = null;
-
         if (@event is InputEventScreenTouch touch && touch.Pressed)
             screenPos = touch.Position;
         else if (@event is InputEventMouseButton mb && mb.Pressed && mb.ButtonIndex == MouseButton.Left)
@@ -79,24 +130,49 @@ public partial class Main : Node
 
         if (screenPos.HasValue)
         {
-            // Transform from viewport coords to GameView local coords for IsometricMapper
             var localPos = _gameView.ToLocal(screenPos.Value);
             _gameController.HandleTap(localPos);
         }
     }
 
+    private void OnTurnCompleted(TurnResult result)
+    {
+        if (_state == null) return;
+
+        // Accumulate stats
+        _turnCount = _state.TurnCount;
+        foreach (var evt in result.Events)
+        {
+            if (evt is AttackEvent atk)
+            {
+                if (atk.ActorId == _state.Player.Id && atk.Hit) _damageDealt += atk.Damage;
+                else if (atk.TargetId == _state.Player.Id && atk.Hit) _damageTaken += atk.Damage;
+                if (atk.TargetKilled && atk.ActorId == _state.Player.Id) _monstersKilled++;
+            }
+        }
+
+        _hud?.Refresh();
+        _combatLog?.RecordTurn(result, _state);
+    }
+
     private void OnGameEnded(bool playerWon)
     {
-        GD.Print(playerWon ? "Victory!" : "Defeated.");
-        // Phase 5 will show a proper game over screen
+        var stats = $"Turns: {_turnCount}\nMonsters killed: {_monstersKilled}\n" +
+                    $"Damage dealt: {_damageDealt}\nDamage taken: {_damageTaken}";
+        _gameOverScreen?.Show(playerWon, stats);
+    }
+
+    private void OnReplayRequested()
+    {
+        LoadAndStart();
     }
 
     private static void CenterView(Node2D gameView, GameMap map)
     {
         var viewport = gameView.GetViewport().GetVisibleRect().Size;
 
-        var topLeft   = IsometricMapper.GridToScreen(0, map.Height - 1);
-        var topRight  = IsometricMapper.GridToScreen(map.Width - 1, 0);
+        var topLeft    = IsometricMapper.GridToScreen(0, map.Height - 1);
+        var topRight   = IsometricMapper.GridToScreen(map.Width - 1, 0);
         var bottomRight = IsometricMapper.GridToScreen(map.Width - 1, map.Height - 1);
 
         float minX = topLeft.X;
