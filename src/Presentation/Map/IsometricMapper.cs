@@ -1,0 +1,65 @@
+using Godot;
+
+namespace CatacombsOfYarl.Presentation.Map;
+
+/// <summary>
+/// Converts between grid coordinates (from GameMap) and isometric screen positions.
+/// Oryx iso tiles are 32x48 pixels. The diamond footprint occupies the lower portion.
+///
+/// Iso coordinate system:
+///   screenX = (gridX - gridY) * HalfTileWidth
+///   screenY = (gridX + gridY) * HalfTileHeight
+///
+/// The tile's visual center (diamond midpoint) is offset from its top-left corner.
+/// </summary>
+public static class IsometricMapper
+{
+    public const int TileWidth = 32;
+    public const int TileHeight = 48;
+    public const int HalfTileWidth = TileWidth / 2;   // 16
+    public const int HalfTileHeight = TileHeight / 4;  // 12 — iso step height
+
+    /// <summary>
+    /// Convert grid position to screen position (top-left of tile image).
+    /// </summary>
+    public static Vector2 GridToScreen(int gridX, int gridY)
+    {
+        float screenX = (gridX - gridY) * HalfTileWidth;
+        float screenY = (gridX + gridY) * HalfTileHeight;
+        return new Vector2(screenX, screenY);
+    }
+
+    /// <summary>
+    /// Convert grid position to the center of the tile's diamond footprint.
+    /// Used for placing characters — they stand at the diamond center.
+    /// </summary>
+    public static Vector2 GridToScreenCenter(int gridX, int gridY)
+    {
+        var topLeft = GridToScreen(gridX, gridY);
+        return new Vector2(topLeft.X + HalfTileWidth, topLeft.Y + TileHeight * 0.5f);
+    }
+
+    /// <summary>
+    /// Convert screen position to the nearest grid coordinate.
+    /// Inverse of GridToScreen. Used for tap-to-target.
+    /// </summary>
+    public static (int gridX, int gridY) ScreenToGrid(Vector2 screenPos)
+    {
+        // Inverse of the iso transform:
+        // screenX = (gx - gy) * HalfW  →  gx - gy = screenX / HalfW
+        // screenY = (gx + gy) * HalfH  →  gx + gy = screenY / HalfH
+        float sum = screenPos.Y / HalfTileHeight;   // gx + gy
+        float diff = screenPos.X / HalfTileWidth;    // gx - gy
+        float gx = (sum + diff) / 2f;
+        float gy = (sum - diff) / 2f;
+        return ((int)Mathf.Round(gx), (int)Mathf.Round(gy));
+    }
+
+    /// <summary>
+    /// Get the Z-index for depth sorting. Higher gridX + gridY = drawn later (in front).
+    /// </summary>
+    public static int GetSortOrder(int gridX, int gridY)
+    {
+        return gridX + gridY;
+    }
+}
