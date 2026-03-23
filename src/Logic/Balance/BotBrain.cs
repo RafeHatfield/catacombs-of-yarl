@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 
 namespace CatacombsOfYarl.Logic.Balance;
@@ -108,6 +109,17 @@ public static class BotBrain
         if (inventory == null) return false;
         return inventory.FindFirst(item => item.Get<Consumable>()?.IsHealing == true) != null;
     }
+
+    /// <summary>
+    /// Convert a BotAction to a PlayerAction for TurnController consumption.
+    /// </summary>
+    public static PlayerAction ToPlayerAction(BotAction action) => action.Type switch
+    {
+        BotAction.ActionType.AttackTarget => PlayerAction.Attack(action.Target!),
+        BotAction.ActionType.HealSelf => PlayerAction.UseItem(),  // null = auto-find potion
+        BotAction.ActionType.MoveToward => PlayerAction.MoveToward(action.Target!),
+        _ => PlayerAction.Wait,
+    };
 }
 
 /// <summary>

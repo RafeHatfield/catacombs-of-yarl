@@ -16,6 +16,8 @@ public static class BotConfig
 
 /// <summary>
 /// Runs scenario simulations with tile-based positioning and BotBrain AI.
+/// Delegates turn processing to TurnController — the shared engine used by
+/// both the harness and the presentation layer.
 /// </summary>
 public sealed class ScenarioHarness
 {
@@ -43,193 +45,23 @@ public sealed class ScenarioHarness
 
     public RunMetrics RunOnce(ScenarioDefinition scenario, int seed)
     {
-        var rng = new SeededRandom(seed);
+        var state = GameStateFactory.FromScenario(
+            scenario, seed, _monsterFactory, _itemFactory, _consumableFactory);
+
         var metrics = new RunMetrics();
+        var player = state.Player;
+        var playerFighter = state.PlayerFighter;
+        var inventory = state.PlayerInventory;
 
-        var map = GameMap.CreateArena(12, 12);
-
-        var player = CreatePlayer(scenario, _itemFactory, _consumableFactory);
-        player.X = 3;
-        player.Y = 6;
-        map.RegisterEntity(player);
-
-        var monsters = new List<Entity>();
-        int idx = 0;
-        foreach (var monsterDef in scenario.Monsters)
+        while (!state.IsGameOver)
         {
-            for (int i = 0; i < monsterDef.Count; i++)
-            {
-                var monster = _monsterFactory.Create(monsterDef.Type, depth: scenario.Depth, rng: rng);
-                if (monster != null)
-                {
-                    monster.X = 8 + (idx % 3);
-                    monster.Y = 4 + (idx / 3) * 2;
-                    map.RegisterEntity(monster);
-                    monsters.Add(monster);
-                    idx++;
-                }
-            }
-        }
-
-        var playerFighter = player.Require<Fighter>();
-        var inventory = player.Get<Inventory>();
-
-        for (int turn = 0; turn < scenario.TurnLimit; turn++)
-        {
-            if (!playerFighter.IsAlive || monsters.All(m => !m.Require<Fighter>().IsAlive))
-                break;
-
-            metrics.TurnsTaken++;
-
-            // === PLAYER TURN (via BotBrain) ===
-            var action = BotBrain.Decide(player, playerFighter, inventory, monsters, map);
-
-            switch (action.Type)
-            {
-                case BotAction.ActionType.AttackTarget:
-                    ResolvePlayerAttack(player, action.Target!, rng, metrics);
-                    break;
-
-                case BotAction.ActionType.HealSelf:
-                    TryHeal(playerFighter, inventory, metrics);
-                    player.Get<SpeedBonusTracker>()?.ResetMomentum();
-                    break;
-
-                case BotAction.ActionType.MoveToward:
-                    map.MoveToward(player, action.Target!.X, action.Target.Y);
-                    player.Get<SpeedBonusTracker>()?.ResetMomentum();
-                    break;
-            }
-
-            // === MONSTER TURNS ===
-            foreach (var monster in monsters)
-            {
-                var mf = monster.Require<Fighter>();
-                if (!mf.IsAlive || !playerFighter.IsAlive)
-                    continue;
-
-                if (monster.ChebyshevDistanceTo(player.X, player.Y) <= 1)
-                {
-                    ResolveMonsterAttack(monster, player, rng, metrics);
-                }
-                else
-                {
-                    map.MoveToward(monster, player.X, player.Y);
-                }
-            }
+            var botAction = BotBrain.Decide(player, playerFighter, inventory, state.Monsters, state.Map);
+            var playerAction = BotBrain.ToPlayerAction(botAction);
+            var result = TurnController.ProcessTurn(state, playerAction);
+            metrics.RecordTurn(result, player.Id);
         }
 
         metrics.PlayerDied = !playerFighter.IsAlive;
         return metrics;
-    }
-
-    /// <summary>
-    /// Resolve a player attack, including bonus attack chain from momentum.
-    /// </summary>
-    private static void ResolvePlayerAttack(Entity player, Entity target, SeededRandom rng, RunMetrics metrics)
-    {
-        var result = CombatResolver.ResolveAttack(player, target, rng);
-        metrics.PlayerAttacks++;
-        if (result.Hit)
-        {
-            metrics.PlayerHits++;
-            metrics.PlayerDamageDealt += result.Damage;
-        }
-        if (result.TargetKilled)
-            metrics.MonstersKilled++;
-
-        // Bonus attack chain — recurse if triggered and target still alive
-        if (result.BonusAttackTriggered && !result.TargetKilled && target.Require<Fighter>().IsAlive)
-        {
-            metrics.BonusAttacks++;
-            ResolvePlayerAttack(player, target, rng, metrics);
-        }
-    }
-
-    /// <summary>
-    /// Resolve a monster attack, including bonus attack chain.
-    /// </summary>
-    private static void ResolveMonsterAttack(Entity monster, Entity player, SeededRandom rng, RunMetrics metrics)
-    {
-        var result = CombatResolver.ResolveAttack(monster, player, rng);
-        metrics.MonsterAttacks++;
-        if (result.Hit)
-        {
-            metrics.MonsterHits++;
-            metrics.MonsterDamageDealt += result.Damage;
-        }
-
-        // Monster bonus attacks
-        if (result.BonusAttackTriggered && player.Require<Fighter>().IsAlive)
-        {
-            metrics.BonusAttacks++;
-            ResolveMonsterAttack(monster, player, rng, metrics);
-        }
-    }
-
-    private static bool TryHeal(Fighter fighter, Inventory? inventory, RunMetrics metrics)
-    {
-        if (inventory == null) return false;
-
-        var potion = inventory.FindFirst(item =>
-            item.Get<Consumable>()?.IsHealing == true);
-
-        if (potion == null) return false;
-
-        fighter.Heal(potion.Require<Consumable>().HealAmount);
-        inventory.Remove(potion);
-        metrics.PotionsUsed++;
-        return true;
-    }
-
-    private static Entity CreatePlayer(ScenarioDefinition scenario, ItemFactory? itemFactory, ConsumableFactory? consumableFactory)
-    {
-        var def = scenario.Player;
-        var player = new Entity(0, "Player", 0, 0, blocksMovement: true);
-        player.Add(new Fighter(
-            hp: def.Hp,
-            strength: def.Strength,
-            dexterity: def.Dexterity,
-            constitution: def.Constitution,
-            accuracy: def.Accuracy,
-            evasion: def.Evasion,
-            damageMin: def.DamageMin,
-            damageMax: def.DamageMax));
-
-        Equipment? playerEquipment = null;
-        if (itemFactory != null && (def.Weapon != null || def.Armor != null))
-        {
-            playerEquipment = player.Add(new Equipment());
-            if (def.Weapon != null)
-            {
-                var weapon = itemFactory.Create(def.Weapon);
-                if (weapon != null) playerEquipment.MainHand = weapon;
-            }
-            if (def.Armor != null)
-            {
-                var armor = itemFactory.Create(def.Armor);
-                if (armor != null) playerEquipment.Chest = armor;
-            }
-        }
-
-        // Speed bonus for momentum system — from scenario config and/or weapon
-        double weaponSpeed = playerEquipment?.MainHand?.Get<SpeedBonusTracker>()?.EquipmentRatio ?? 0;
-        if (def.SpeedBonus > 0 || weaponSpeed > 0)
-            player.Add(new SpeedBonusTracker(baseRatio: def.SpeedBonus) { EquipmentRatio = weaponSpeed });
-
-        if (consumableFactory != null && scenario.Items.Count > 0)
-        {
-            var inventory = player.Add(new Inventory());
-            foreach (var itemDef in scenario.Items)
-            {
-                for (int i = 0; i < itemDef.Count; i++)
-                {
-                    var item = consumableFactory.Create(itemDef.Type);
-                    if (item != null) inventory.Add(item);
-                }
-            }
-        }
-
-        return player;
     }
 }

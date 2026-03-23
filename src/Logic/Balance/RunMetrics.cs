@@ -1,3 +1,5 @@
+using CatacombsOfYarl.Logic.Core;
+
 namespace CatacombsOfYarl.Logic.Balance;
 
 /// <summary>
@@ -24,6 +26,45 @@ public sealed class RunMetrics
 
     // Momentum
     public int BonusAttacks { get; set; }
+
+    /// <summary>
+    /// Record metrics from a single turn's events. Call once per turn.
+    /// Derives all counters from the event stream — no parallel tracking needed.
+    /// </summary>
+    public void RecordTurn(TurnResult result, int playerId)
+    {
+        TurnsTaken++;
+        foreach (var evt in result.Events)
+        {
+            switch (evt)
+            {
+                case AttackEvent atk when atk.ActorId == playerId:
+                    PlayerAttacks++;
+                    if (atk.Hit)
+                    {
+                        PlayerHits++;
+                        PlayerDamageDealt += atk.Damage;
+                    }
+                    if (atk.IsBonusAttack) BonusAttacks++;
+                    if (atk.TargetKilled) MonstersKilled++;
+                    break;
+
+                case AttackEvent atk:
+                    MonsterAttacks++;
+                    if (atk.Hit)
+                    {
+                        MonsterHits++;
+                        MonsterDamageDealt += atk.Damage;
+                    }
+                    if (atk.IsBonusAttack) BonusAttacks++;
+                    break;
+
+                case HealEvent:
+                    PotionsUsed++;
+                    break;
+            }
+        }
+    }
 }
 
 /// <summary>
