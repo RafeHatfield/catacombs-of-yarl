@@ -6,7 +6,7 @@
 
 config/name="Catacombs of YARL"
 config/features=PackedStringArray("4.6", "C#", "Mobile")
-run/main_scene=""
+run/main_scene="res://src/Presentation/Main.tscn"
 config/icon="res://icon.svg"
 
 [display]
@@ -23,6 +23,19 @@ window/handheld/orientation=1
 project/assembly_name="CatacombsOfYarl.Presentation"
 project/solution_directory="."
 
+[importer_defaults]
+
+texture={
+"compress/channel_pack": 0,
+"compress/hdr_compression": 1,
+"compress/mode": 0,
+"detect_3d/compress_to": 0,
+"mipmaps/generate": false,
+"process/fix_alpha_border": false,
+"process/premult_alpha": false
+}
+
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/canvas_textures/default_texture_filter=0
