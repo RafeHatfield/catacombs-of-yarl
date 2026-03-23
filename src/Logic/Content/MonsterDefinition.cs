@@ -49,6 +49,31 @@ public sealed class MonsterDefinition
 
     [YamlMember(Alias = "damage_vulnerability")]
     public string? DamageVulnerability { get; set; }
+
+    [YamlMember(Alias = "equipment")]
+    public MonsterEquipmentConfig? Equipment { get; set; }
+}
+
+/// <summary>
+/// Equipment spawning configuration for a monster.
+/// Defines per-slot spawn chances and weighted item pools.
+/// </summary>
+public sealed class MonsterEquipmentConfig
+{
+    [YamlMember(Alias = "spawn_chances")]
+    public Dictionary<string, double> SpawnChances { get; set; } = new();
+
+    [YamlMember(Alias = "equipment_pool")]
+    public Dictionary<string, List<WeightedItem>> EquipmentPool { get; set; } = new();
+}
+
+public sealed class WeightedItem
+{
+    [YamlMember(Alias = "item")]
+    public string Item { get; set; } = "";
+
+    [YamlMember(Alias = "weight")]
+    public int Weight { get; set; } = 1;
 }
 
 /// <summary>

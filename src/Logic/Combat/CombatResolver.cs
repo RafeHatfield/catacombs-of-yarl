@@ -44,7 +44,13 @@ public static class CombatResolver
         // AC: base (10 + DEX mod) + armor AC bonus
         int targetAc = def.BaseArmorClass + (defEquip?.TotalArmorClassBonus ?? 0);
 
-        bool isCritical = d20 == 20;
+        // Crit threshold from weapon (keen weapons crit on 19-20)
+        int critThreshold = 20;
+        var weapon = atkEquip?.MainHand?.Get<Equippable>();
+        if (weapon != null && weapon.CritThreshold >= 1 && weapon.CritThreshold <= 20)
+            critThreshold = weapon.CritThreshold;
+
+        bool isCritical = d20 >= critThreshold;
         bool isFumble = d20 == 1;
 
         bool hit;
@@ -59,7 +65,6 @@ public static class CombatResolver
         {
             // Weapon damage if equipped, otherwise natural damage
             int baseDmg;
-            var weapon = atkEquip?.MainHand?.Get<Equippable>();
             if (weapon != null && weapon.IsWeapon)
                 baseDmg = weapon.RollDamage(rng);
             else
@@ -69,6 +74,12 @@ public static class CombatResolver
 
             if (isCritical)
                 damage *= 2;
+
+            // Apply damage type resistance/vulnerability
+            string? dmgType = weapon?.DamageType;
+            var modifiers = defender.Get<DamageModifiers>();
+            if (modifiers != null && dmgType != null)
+                damage = modifiers.ApplyTo(damage, dmgType);
 
             damage = Math.Max(1, damage); // minimum 1 damage on hit
             def.TakeDamage(damage);

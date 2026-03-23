@@ -210,6 +210,7 @@ public sealed class ContentLoader
             SpeedBonus = child.SpeedBonus != 0 ? child.SpeedBonus : parent.SpeedBonus,
             DamageResistance = child.DamageResistance ?? parent.DamageResistance,
             DamageVulnerability = child.DamageVulnerability ?? parent.DamageVulnerability,
+            Equipment = child.Equipment ?? parent.Equipment,
         };
     }
 
