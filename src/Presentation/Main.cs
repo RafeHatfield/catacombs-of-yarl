@@ -9,19 +9,18 @@ using Godot;
 namespace CatacombsOfYarl.Presentation;
 
 /// <summary>
-/// Root node for the game. Loads a scenario, creates GameState, renders the
-/// dungeon and entities. Currently a static proof-of-life — no input or turns yet.
+/// Root scene node. Loads content, creates GameState, initialises all
+/// presentation systems, and routes input to the GameController.
 /// </summary>
 public partial class Main : Node
 {
-    private GameState? _state;
-    private EntitySpriteManager? _entitySprites;
+    private GameController? _gameController;
+    private Node2D? _gameView;
 
     public override void _Ready()
     {
         GD.Print("Catacombs of YARL — loading...");
 
-        // Load content from YAML
         var loader = new ContentLoader();
         var projectRoot = ProjectSettings.GlobalizePath("res://");
         var entitiesPath = System.IO.Path.Combine(projectRoot, "config", "entities.yaml");
@@ -41,66 +40,84 @@ public partial class Main : Node
         var monsterFactory = new MonsterFactory(content.Monsters, entityFactory, itemFactory);
         var consumableFactory = new ConsumableFactory(content.Consumables, entityFactory);
 
-        // Create game state
-        _state = GameStateFactory.FromScenario(scenario, 1337, monsterFactory, itemFactory, consumableFactory);
+        var state = GameStateFactory.FromScenario(scenario, 1337, monsterFactory, itemFactory, consumableFactory);
 
-        // Get scene tree nodes
-        var gameView = GetNode<Node2D>("GameView");
+        _gameView = GetNode<Node2D>("GameView");
         var tileMapLayer = GetNode<Node2D>("GameView/TileMapLayer");
         var entityLayer = GetNode<Node2D>("GameView/EntityLayer");
 
-        // Render dungeon
-        DungeonRenderer.Render(_state.Map, tileMapLayer);
+        // Render dungeon tiles
+        DungeonRenderer.Render(state.Map, tileMapLayer);
 
-        // Render entities
-        _entitySprites = new EntitySpriteManager(entityLayer);
-        _entitySprites.Initialize(_state);
+        // Set up entity sprites
+        var entitySprites = new EntitySpriteManager(entityLayer);
+        entitySprites.Initialize(state);
 
-        // Center camera on the map
-        CenterView(gameView);
+        // Centre and scale the view
+        CenterView(_gameView, state.Map);
 
-        GD.Print($"Rendered {_state.Map.Width}x{_state.Map.Height} arena with {_state.Monsters.Count} monsters.");
+        // Set up game controller
+        _gameController = new GameController();
+        AddChild(_gameController);
+        _gameController.Initialize(state, entitySprites, this);
+        _gameController.GameEnded += OnGameEnded;
+
+        GD.Print($"Ready. {state.Monsters.Count} monsters. Tap to play.");
     }
 
-    /// <summary>
-    /// Center the GameView so the iso map is centered in the viewport.
-    /// The iso grid extends both left and right of origin.
-    /// </summary>
-    private void CenterView(Node2D gameView)
+    public override void _Input(InputEvent @event)
     {
-        if (_state == null) return;
+        if (_gameController == null || _gameView == null) return;
 
-        var viewport = GetViewport().GetVisibleRect().Size;
-        int mapW = _state.Map.Width;
-        int mapH = _state.Map.Height;
+        // Handle touch or left mouse click
+        Vector2? screenPos = null;
 
-        // Calculate bounding box of the iso grid
-        var topLeft = IsometricMapper.GridToScreen(0, mapH - 1);
-        var topRight = IsometricMapper.GridToScreen(mapW - 1, 0);
-        var bottomLeft = IsometricMapper.GridToScreen(0, 0);
-        var bottomRight = IsometricMapper.GridToScreen(mapW - 1, mapH - 1);
+        if (@event is InputEventScreenTouch touch && touch.Pressed)
+            screenPos = touch.Position;
+        else if (@event is InputEventMouseButton mb && mb.Pressed && mb.ButtonIndex == MouseButton.Left)
+            screenPos = mb.Position;
 
-        float minX = Mathf.Min(topLeft.X, bottomLeft.X);
-        float maxX = Mathf.Max(topRight.X, bottomRight.X) + IsometricMapper.TileWidth;
-        float minY = Mathf.Min(topRight.Y, topLeft.Y);
-        float maxY = Mathf.Max(bottomRight.Y, bottomLeft.Y) + IsometricMapper.TileHeight;
+        if (screenPos.HasValue)
+        {
+            // Transform from viewport coords to GameView local coords for IsometricMapper
+            var localPos = _gameView.ToLocal(screenPos.Value);
+            _gameController.HandleTap(localPos);
+        }
+    }
+
+    private void OnGameEnded(bool playerWon)
+    {
+        GD.Print(playerWon ? "Victory!" : "Defeated.");
+        // Phase 5 will show a proper game over screen
+    }
+
+    private static void CenterView(Node2D gameView, GameMap map)
+    {
+        var viewport = gameView.GetViewport().GetVisibleRect().Size;
+
+        var topLeft   = IsometricMapper.GridToScreen(0, map.Height - 1);
+        var topRight  = IsometricMapper.GridToScreen(map.Width - 1, 0);
+        var bottomRight = IsometricMapper.GridToScreen(map.Width - 1, map.Height - 1);
+
+        float minX = topLeft.X;
+        float maxX = topRight.X + IsometricMapper.TileWidth;
+        float minY = topRight.Y;
+        float maxY = bottomRight.Y + IsometricMapper.TileHeight;
 
         float mapPixelW = maxX - minX;
         float mapPixelH = maxY - minY;
 
-        // Center in viewport, leaving room for UI (HUD at top, combat log at bottom)
         float uiTopMargin = 130f;
         float uiBottomMargin = 210f;
         float availableH = viewport.Y - uiTopMargin - uiBottomMargin;
 
-        // Scale to fit
         float scale = Mathf.Min(viewport.X / mapPixelW, availableH / mapPixelH);
-        scale = Mathf.Min(scale, 3.0f); // Cap at 3x for pixel art
+        scale = Mathf.Min(scale, 3.0f);
 
         gameView.Scale = new Vector2(scale, scale);
-
-        float offsetX = (viewport.X - mapPixelW * scale) / 2f - minX * scale;
-        float offsetY = uiTopMargin + (availableH - mapPixelH * scale) / 2f - minY * scale;
-        gameView.Position = new Vector2(offsetX, offsetY);
+        gameView.Position = new Vector2(
+            (viewport.X - mapPixelW * scale) / 2f - minX * scale,
+            uiTopMargin + (availableH - mapPixelH * scale) / 2f - minY * scale
+        );
     }
 }
