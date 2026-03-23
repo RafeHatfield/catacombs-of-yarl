@@ -13,30 +13,35 @@ public sealed class MonsterFactory
 {
     private readonly Dictionary<string, MonsterDefinition> _definitions;
     private readonly EntityFactory _entityFactory;
+    private readonly MonsterEquipmentSpawner? _equipmentSpawner;
 
-    public MonsterFactory(Dictionary<string, MonsterDefinition> definitions, EntityFactory entityFactory)
+    public MonsterFactory(
+        Dictionary<string, MonsterDefinition> definitions,
+        EntityFactory entityFactory,
+        ItemFactory? itemFactory = null)
     {
         _definitions = definitions;
         _entityFactory = entityFactory;
+        _equipmentSpawner = itemFactory != null ? new MonsterEquipmentSpawner(itemFactory) : null;
     }
 
     /// <summary>
     /// Create a monster entity from a definition ID.
-    /// Depth > 0 applies depth scaling to stats.
+    /// Depth > 0 applies depth scaling to stats. RNG used for equipment spawning.
     /// Returns null if the ID is not found.
     /// </summary>
-    public Entity? Create(string monsterId, int x = 0, int y = 0, int depth = 0)
+    public Entity? Create(string monsterId, int x = 0, int y = 0, int depth = 0, Core.SeededRandom? rng = null)
     {
         if (!_definitions.TryGetValue(monsterId, out var def))
             return null;
 
-        return CreateFromDefinition(def, x, y, depth);
+        return CreateFromDefinition(def, x, y, depth, rng);
     }
 
     /// <summary>
     /// Create a monster entity directly from a definition.
     /// </summary>
-    public Entity CreateFromDefinition(MonsterDefinition def, int x = 0, int y = 0, int depth = 0)
+    public Entity CreateFromDefinition(MonsterDefinition def, int x = 0, int y = 0, int depth = 0, Core.SeededRandom? rng = null)
     {
         var stats = def.Stats ?? new MonsterStats();
         string name = def.Name ?? FallbackName(def);
@@ -84,6 +89,10 @@ public sealed class MonsterFactory
         // Speed bonus for momentum system
         if (def.SpeedBonus > 0)
             entity.Add(new SpeedBonusTracker(baseRatio: def.SpeedBonus));
+
+        // Equipment spawning (weapons, armor from weighted pools)
+        if (_equipmentSpawner != null && def.Equipment != null && rng != null)
+            _equipmentSpawner.SpawnEquipment(entity, def.Equipment, rng);
 
         return entity;
     }

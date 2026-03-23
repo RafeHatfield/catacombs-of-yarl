@@ -21,9 +21,10 @@ public sealed class ScenarioRunner
         _loader = new ContentLoader();
         var entityFactory = new EntityFactory();
 
+        var itemFactory = new ItemFactory(content.Items, entityFactory);
         _harness = new ScenarioHarness(
-            new MonsterFactory(content.Monsters, entityFactory),
-            new ItemFactory(content.Items, entityFactory),
+            new MonsterFactory(content.Monsters, entityFactory, itemFactory),
+            itemFactory,
             new ConsumableFactory(content.Consumables, entityFactory));
     }
 

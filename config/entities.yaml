@@ -20,6 +20,21 @@ monsters:
     faction: "orc"
     tags: ["corporeal_flesh", "humanoid", "living"]
     etp_base: 27
+    equipment:
+      spawn_chances:
+        main_hand: 0.75
+        chest: 0.50
+      equipment_pool:
+        main_hand:
+          - item: "club"
+            weight: 40
+          - item: "dagger"
+            weight: 30
+          - item: "shortsword"
+            weight: 30
+        chest:
+          - item: "leather_armor"
+            weight: 100
 
   orc_grunt:
     name: "Orc"

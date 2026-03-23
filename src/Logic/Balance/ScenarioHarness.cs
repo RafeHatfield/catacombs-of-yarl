@@ -59,7 +59,7 @@ public sealed class ScenarioHarness
         {
             for (int i = 0; i < monsterDef.Count; i++)
             {
-                var monster = _monsterFactory.Create(monsterDef.Type, depth: scenario.Depth);
+                var monster = _monsterFactory.Create(monsterDef.Type, depth: scenario.Depth, rng: rng);
                 if (monster != null)
                 {
                     monster.X = 8 + (idx % 3);
