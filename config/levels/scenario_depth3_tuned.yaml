@@ -1,0 +1,28 @@
+scenario_id: depth3_tuned
+name: "Depth 3 - Tuned Baseline"
+depth: 3
+turn_limit: 100
+runs: 50
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "longsword"
+  armor: "leather_armor"
+  speed_bonus: 0.18
+
+monsters:
+  - type: "orc_grunt"
+    count: 3
+  - type: "orc_brute"
+    count: 1
+
+items:
+  - type: "healing_potion"
+    count: 2

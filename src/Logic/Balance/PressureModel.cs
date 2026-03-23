@@ -102,13 +102,76 @@ public static class PressureModel
         new(0.35, 0.55),  // depth 9+: brutal
     ];
 
-    /// <summary>Get H_PM target band for a depth.</summary>
+    // Provisional C# bands — based on tuned scenario measurements with current combat system.
+    // Wider than prototype bands. Converge toward prototype as mechanics are added.
+    // Measured from tuned scenarios at seed 1337, ±20% for variance.
+    private static readonly TargetBand[] Provisional_H_PM =
+    [
+        new(6.0, 16.0),   // depth 1-2: wide — dagger=12.9 at d1, shortsword+speed=7.8 at d2
+        new(6.0, 10.0),   // depth 3-4: longsword+speed (measured 7.7, 7.1)
+        new(5.5, 9.0),    // depth 5-6: fine/MW longsword+speed (measured 7.1, 6.5)
+        new(5.5, 9.0),    // depth 7-8: extrapolated
+        new(5.5, 9.0),    // depth 9+: extrapolated
+    ];
+
+    private static readonly TargetBand[] Provisional_H_MP =
+    [
+        new(22.0, 35.0),  // depth 1-2: (measured 27.5, 28.5)
+        new(13.0, 22.0),  // depth 3-4: (measured 16.5, 16.4)
+        new(15.0, 35.0),  // depth 5-6: wide — varies by composition (measured 30.7, 19.6)
+        new(15.0, 35.0),  // depth 7-8: extrapolated
+        new(15.0, 35.0),  // depth 9+: extrapolated
+    ];
+
+    private static readonly TargetBand[] Provisional_DeathRate =
+    [
+        new(0.00, 0.10),  // depth 1-2: (measured 4%, 0%)
+        new(0.15, 0.50),  // depth 3-4: (measured 36%, 36%)
+        new(0.00, 0.15),  // depth 5-6: (measured 0%, 6%) — speed+weapon dominates
+        new(0.10, 0.50),  // depth 7-8: extrapolated
+        new(0.20, 0.60),  // depth 9+: extrapolated
+    ];
+
+    /// <summary>Get prototype H_PM target band for a depth.</summary>
     public static TargetBand GetH_PM_Target(int depth) =>
         H_PM_Targets[Math.Clamp(DepthScaling.GetBand(depth), 0, H_PM_Targets.Length - 1)];
 
-    /// <summary>Get H_MP target band for a depth.</summary>
+    /// <summary>Get prototype H_MP target band for a depth.</summary>
     public static TargetBand GetH_MP_Target(int depth) =>
         H_MP_Targets[Math.Clamp(DepthScaling.GetBand(depth), 0, H_MP_Targets.Length - 1)];
+
+    /// <summary>Get provisional C# H_PM target band for a depth.</summary>
+    public static TargetBand GetProvisionalH_PM(int depth) =>
+        Provisional_H_PM[Math.Clamp(DepthScaling.GetBand(depth), 0, Provisional_H_PM.Length - 1)];
+
+    /// <summary>Get provisional C# H_MP target band for a depth.</summary>
+    public static TargetBand GetProvisionalH_MP(int depth) =>
+        Provisional_H_MP[Math.Clamp(DepthScaling.GetBand(depth), 0, Provisional_H_MP.Length - 1)];
+
+    /// <summary>Get provisional C# death rate target band for a depth.</summary>
+    public static TargetBand GetProvisionalDeathRate(int depth) =>
+        Provisional_DeathRate[Math.Clamp(DepthScaling.GetBand(depth), 0, Provisional_DeathRate.Length - 1)];
+
+    /// <summary>Evaluate against provisional C# bands (current combat system).</summary>
+    public static PressureEvaluation EvaluateProvisional(PressureMetrics pm)
+    {
+        var hpmBand = GetProvisionalH_PM(pm.Depth);
+        var hmpBand = GetProvisionalH_MP(pm.Depth);
+        var deathBand = GetProvisionalDeathRate(pm.Depth);
+
+        return new PressureEvaluation
+        {
+            ScenarioId = pm.ScenarioId,
+            Depth = pm.Depth,
+            Metrics = pm,
+            H_PM_Status = hpmBand.Status(pm.H_PM),
+            H_MP_Status = hmpBand.Status(pm.H_MP),
+            DeathRate_Status = deathBand.Status(pm.DeathRate),
+            H_PM_Target = hpmBand,
+            H_MP_Target = hmpBand,
+            DeathRate_Target = deathBand,
+        };
+    }
 
     /// <summary>Get death rate target band for a depth.</summary>
     public static TargetBand GetDeathRateTarget(int depth) =>
