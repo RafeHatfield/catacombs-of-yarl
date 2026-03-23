@@ -1,0 +1,25 @@
+scenario_id: depth5_orc_fine
+name: "Depth 5 - Orc Pressure (fine)"
+depth: 5
+turn_limit: 100
+runs: 50
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "fine_longsword"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc_grunt"
+    count: 3
+
+items:
+  - type: "healing_potion"
+    count: 2

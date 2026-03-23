@@ -1,0 +1,25 @@
+scenario_id: depth2_orc_vicious
+name: "Depth 2 - Orc Baseline (vicious)"
+depth: 2
+turn_limit: 100
+runs: 50
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "vicious_shortsword"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc_grunt"
+    count: 3
+
+items:
+  - type: "healing_potion"
+    count: 2
