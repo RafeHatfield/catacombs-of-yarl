@@ -104,6 +104,58 @@ weapons:
     char: "|"
     color: [200, 200, 220]
 
+  quickfang_dagger:
+    name: "Quickfang Dagger"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 4
+    to_hit_bonus: 1
+    damage_type: "piercing"
+    speed_bonus: 0.18
+    char: "-"
+    color: [180, 120, 60]
+
+  keen_dagger:
+    name: "Keen Dagger"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 4
+    to_hit_bonus: 1
+    damage_type: "piercing"
+    crit_threshold: 19
+    char: "-"
+    color: [160, 160, 200]
+
+  vicious_shortsword:
+    name: "Vicious Shortsword"
+    slot: "main_hand"
+    damage_min: 2
+    damage_max: 7
+    to_hit_bonus: 0
+    damage_type: "slashing"
+    char: "|"
+    color: [200, 80, 80]
+
+  fine_longsword:
+    name: "Fine Longsword"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 8
+    to_hit_bonus: 1
+    damage_type: "slashing"
+    char: "|"
+    color: [210, 210, 230]
+
+  masterwork_longsword:
+    name: "Masterwork Longsword"
+    slot: "main_hand"
+    damage_min: 2
+    damage_max: 9
+    to_hit_bonus: 1
+    damage_type: "slashing"
+    char: "|"
+    color: [230, 230, 245]
+
   greatsword:
     name: "Greatsword"
     slot: "main_hand"

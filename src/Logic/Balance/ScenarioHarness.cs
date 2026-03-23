@@ -196,24 +196,26 @@ public sealed class ScenarioHarness
             damageMin: def.DamageMin,
             damageMax: def.DamageMax));
 
+        Equipment? playerEquipment = null;
         if (itemFactory != null && (def.Weapon != null || def.Armor != null))
         {
-            var equipment = player.Add(new Equipment());
+            playerEquipment = player.Add(new Equipment());
             if (def.Weapon != null)
             {
                 var weapon = itemFactory.Create(def.Weapon);
-                if (weapon != null) equipment.MainHand = weapon;
+                if (weapon != null) playerEquipment.MainHand = weapon;
             }
             if (def.Armor != null)
             {
                 var armor = itemFactory.Create(def.Armor);
-                if (armor != null) equipment.Chest = armor;
+                if (armor != null) playerEquipment.Chest = armor;
             }
         }
 
-        // Speed bonus for momentum system
-        if (def.SpeedBonus > 0)
-            player.Add(new SpeedBonusTracker(baseRatio: def.SpeedBonus));
+        // Speed bonus for momentum system — from scenario config and/or weapon
+        double weaponSpeed = playerEquipment?.MainHand?.Get<SpeedBonusTracker>()?.EquipmentRatio ?? 0;
+        if (def.SpeedBonus > 0 || weaponSpeed > 0)
+            player.Add(new SpeedBonusTracker(baseRatio: def.SpeedBonus) { EquipmentRatio = weaponSpeed });
 
         if (consumableFactory != null && scenario.Items.Count > 0)
         {

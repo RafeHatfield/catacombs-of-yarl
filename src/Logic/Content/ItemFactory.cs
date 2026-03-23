@@ -34,7 +34,12 @@ public sealed class ItemFactory
             ArmorClassBonus = def.ArmorClassBonus,
             DamageType = def.DamageType,
             ArmorType = def.ArmorType,
+            CritThreshold = def.CritThreshold,
         });
+
+        // Weapon speed bonus for momentum system
+        if (def.SpeedBonus > 0)
+            entity.Add(new SpeedBonusTracker { EquipmentRatio = def.SpeedBonus });
 
         return entity;
     }

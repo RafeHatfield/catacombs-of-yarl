@@ -31,6 +31,12 @@ public sealed class ItemDefinition
     [YamlMember(Alias = "armor_type")]
     public string? ArmorType { get; set; }
 
+    [YamlMember(Alias = "crit_threshold")]
+    public int CritThreshold { get; set; } = 20;
+
+    [YamlMember(Alias = "speed_bonus")]
+    public double SpeedBonus { get; set; }
+
     [YamlMember(Alias = "char")]
     public string Char { get; set; } = "?";
 
