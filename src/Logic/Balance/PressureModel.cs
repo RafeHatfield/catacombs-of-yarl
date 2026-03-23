@@ -41,6 +41,27 @@ public sealed class PressureMetrics
 }
 
 /// <summary>
+/// Result of evaluating pressure metrics against target bands.
+/// </summary>
+public sealed class PressureEvaluation
+{
+    public string ScenarioId { get; init; } = "";
+    public int Depth { get; init; }
+    public PressureMetrics Metrics { get; init; } = null!;
+
+    public string H_PM_Status { get; init; } = "";
+    public string H_MP_Status { get; init; } = "";
+    public string DeathRate_Status { get; init; } = "";
+
+    public TargetBand H_PM_Target { get; init; }
+    public TargetBand H_MP_Target { get; init; }
+    public TargetBand DeathRate_Target { get; init; }
+
+    /// <summary>True if all three metrics are within target bands.</summary>
+    public bool AllInBand => H_PM_Status == "OK" && H_MP_Status == "OK" && DeathRate_Status == "OK";
+}
+
+/// <summary>
 /// Computes pressure model invariants from aggregated harness metrics.
 /// Pure math — no state, no IO.
 ///
@@ -71,6 +92,16 @@ public static class PressureModel
         new(6, 8),    // depth 9+
     ];
 
+    // Death rate targets by depth band — from Python prototype target_bands.py
+    private static readonly TargetBand[] DeathRate_Targets =
+    [
+        new(0.00, 0.05),  // depth 1-2: safe learning
+        new(0.05, 0.15),  // depth 3-4: pressure begins
+        new(0.25, 0.40),  // depth 5-6: dangerous
+        new(0.35, 0.55),  // depth 7-8: brutal
+        new(0.35, 0.55),  // depth 9+: brutal
+    ];
+
     /// <summary>Get H_PM target band for a depth.</summary>
     public static TargetBand GetH_PM_Target(int depth) =>
         H_PM_Targets[Math.Clamp(DepthScaling.GetBand(depth), 0, H_PM_Targets.Length - 1)];
@@ -78,6 +109,67 @@ public static class PressureModel
     /// <summary>Get H_MP target band for a depth.</summary>
     public static TargetBand GetH_MP_Target(int depth) =>
         H_MP_Targets[Math.Clamp(DepthScaling.GetBand(depth), 0, H_MP_Targets.Length - 1)];
+
+    /// <summary>Get death rate target band for a depth.</summary>
+    public static TargetBand GetDeathRateTarget(int depth) =>
+        DeathRate_Targets[Math.Clamp(DepthScaling.GetBand(depth), 0, DeathRate_Targets.Length - 1)];
+
+    /// <summary>
+    /// Evaluate pressure metrics against target bands. Returns a structured evaluation.
+    /// </summary>
+    public static PressureEvaluation Evaluate(PressureMetrics pm)
+    {
+        var hpmBand = GetH_PM_Target(pm.Depth);
+        var hmpBand = GetH_MP_Target(pm.Depth);
+        var deathBand = GetDeathRateTarget(pm.Depth);
+
+        return new PressureEvaluation
+        {
+            ScenarioId = pm.ScenarioId,
+            Depth = pm.Depth,
+            Metrics = pm,
+            H_PM_Status = hpmBand.Status(pm.H_PM),
+            H_MP_Status = hmpBand.Status(pm.H_MP),
+            DeathRate_Status = deathBand.Status(pm.DeathRate),
+            H_PM_Target = hpmBand,
+            H_MP_Target = hmpBand,
+            DeathRate_Target = deathBand,
+        };
+    }
+
+    /// <summary>
+    /// Generate actionable diagnosis text from an evaluation.
+    /// </summary>
+    public static List<string> Diagnose(PressureEvaluation eval)
+    {
+        var findings = new List<string>();
+        var pm = eval.Metrics;
+
+        if (eval.H_PM_Status == "HIGH")
+            findings.Add($"H_PM {pm.H_PM:F1} above target {eval.H_PM_Target.Max} — player kills too slowly. Needs higher DPR_P (currently {pm.DPR_P:F2}). Levers: better weapon, affixes, momentum.");
+        else if (eval.H_PM_Status == "LOW")
+            findings.Add($"H_PM {pm.H_PM:F1} below target {eval.H_PM_Target.Min} — monsters die too fast. Player DPR_P ({pm.DPR_P:F2}) may be too high, or monster HP too low.");
+
+        if (eval.H_MP_Status == "HIGH")
+            findings.Add($"H_MP {pm.H_MP:F1} above target {eval.H_MP_Target.Max} — monsters not threatening enough. Monster DPR_M ({pm.DPR_M:F2}) too low. Levers: monster damage/accuracy scaling, encounter composition.");
+        else if (eval.H_MP_Status == "LOW")
+            findings.Add($"H_MP {pm.H_MP:F1} below target {eval.H_MP_Target.Min} — monsters too lethal. Reduce monster damage/accuracy at this depth.");
+
+        if (eval.DeathRate_Status == "HIGH")
+            findings.Add($"Death rate {pm.DeathRate:P0} above target {eval.DeathRate_Target.Max:P0}. If H_PM/H_MP are in band, this is a composition problem (too many simultaneous enemies), not a scaling problem.");
+        else if (eval.DeathRate_Status == "LOW")
+            findings.Add($"Death rate {pm.DeathRate:P0} below target {eval.DeathRate_Target.Min:P0}. Encounter may be too easy — consider more enemies or fewer potions.");
+
+        if (pm.PressureRatio > 0.6)
+            findings.Add($"Pressure ratio {pm.PressureRatio:F2} indicates attrition — fights are long grinds. Consider increasing monster damage to make fights shorter and deadlier.");
+        else if (pm.PressureRatio < 0.3)
+            findings.Add($"Pressure ratio {pm.PressureRatio:F2} indicates spike lethality — monsters kill fast but die fast. May need more monster HP.");
+
+        if (findings.Count == 0)
+            findings.Add("All metrics within target bands.");
+
+        return findings;
+    }
 
     /// <summary>
     /// Derive pressure metrics from aggregated scenario data.
