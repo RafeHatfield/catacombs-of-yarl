@@ -11,7 +11,7 @@ namespace CatacombsOfYarl.Presentation.UI;
 /// </summary>
 public sealed partial class CombatLog : Control
 {
-    private const int MaxMessages = 6;
+    private const int MaxMessages = 3;
 
     private RichTextLabel? _label;
     private readonly List<string> _messages = new();
@@ -95,8 +95,8 @@ public sealed partial class CombatLog : Control
 
     private void BuildLayout()
     {
-        SetAnchorsPreset(LayoutPreset.BottomWide);
-        CustomMinimumSize = new Vector2(0, 200);
+        // Fill the container node defined in Main.tscn (200px BottomWide)
+        SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 
         var bg = new ColorRect { Color = new Color(0.05f, 0.05f, 0.1f, 0.80f) };
         bg.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
@@ -116,7 +116,7 @@ public sealed partial class CombatLog : Control
             ScrollFollowing = true,
             SizeFlagsVertical = SizeFlags.ExpandFill,
         };
-        _label.AddThemeFontSizeOverride("normal_font_size", 15);
+        _label.AddThemeFontSizeOverride("normal_font_size", 13);
         margin.AddChild(_label);
     }
 }

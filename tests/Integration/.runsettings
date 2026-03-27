@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+    <RunConfiguration>
+        <MaxCpuCount>1</MaxCpuCount>
+        <TestAdaptersPaths>.</TestAdaptersPaths>
+        <ResultsDirectory>./TestResults</ResultsDirectory>
+        <TestSessionTimeout>1800000</TestSessionTimeout>
+        <TreatNoTestsAsError>true</TreatNoTestsAsError>
+        <EnvironmentVariables>
+            <GODOT_BIN>/Applications/Godot_mono.app/Contents/MacOS/Godot</GODOT_BIN>
+        </EnvironmentVariables>
+    </RunConfiguration>
+
+    <LoggerRunSettings>
+        <Loggers>
+            <Logger friendlyName="console" enabled="True">
+                <Configuration>
+                    <Verbosity>normal</Verbosity>
+                </Configuration>
+            </Logger>
+        </Loggers>
+    </LoggerRunSettings>
+
+    <GdUnit4>
+        <Parameters>--verbose --headless</Parameters>
+        <DisplayName>FullyQualifiedName</DisplayName>
+        <CaptureStdOut>true</CaptureStdOut>
+        <CompileProcessTimeout>20000</CompileProcessTimeout>
+    </GdUnit4>
+</RunSettings>

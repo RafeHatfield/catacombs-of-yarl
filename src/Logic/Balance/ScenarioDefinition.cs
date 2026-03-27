@@ -14,6 +14,9 @@ public sealed class ScenarioDefinition
     [YamlMember(Alias = "name")]
     public string Name { get; set; } = "";
 
+    [YamlMember(Alias = "description")]
+    public string Description { get; set; } = "";
+
     [YamlMember(Alias = "depth")]
     public int Depth { get; set; } = 1;
 
@@ -22,6 +25,18 @@ public sealed class ScenarioDefinition
 
     [YamlMember(Alias = "runs")]
     public int Runs { get; set; } = 40;
+
+    [YamlMember(Alias = "map_width")]
+    public int MapWidth { get; set; } = 12;
+
+    [YamlMember(Alias = "map_height")]
+    public int MapHeight { get; set; } = 12;
+
+    [YamlMember(Alias = "player_start_x")]
+    public int PlayerStartX { get; set; } = 3;
+
+    [YamlMember(Alias = "player_start_y")]
+    public int PlayerStartY { get; set; } = 6;
 
     [YamlMember(Alias = "player")]
     public ScenarioPlayer Player { get; set; } = new();
@@ -76,6 +91,20 @@ public sealed class ScenarioMonster
 
     [YamlMember(Alias = "count")]
     public int Count { get; set; } = 1;
+
+    /// <summary>
+    /// Optional exact placement [x, y]. When set, overrides the default offset grid placement.
+    /// Null = use existing offset logic (backward compatible).
+    /// </summary>
+    [YamlMember(Alias = "position")]
+    public int[]? Position { get; set; }
+
+    /// <summary>
+    /// Monster awareness state. "aware" / "unaware". Stub — parsed but not yet processed.
+    /// Future AI milestone will use this to set initial detection state.
+    /// </summary>
+    [YamlMember(Alias = "state")]
+    public string? State { get; set; }
 }
 
 public sealed class ScenarioItem
@@ -85,4 +114,11 @@ public sealed class ScenarioItem
 
     [YamlMember(Alias = "count")]
     public int Count { get; set; } = 1;
+
+    /// <summary>
+    /// Optional exact placement [x, y]. When set, overrides random placement.
+    /// Null = random placement (existing behavior, backward compatible).
+    /// </summary>
+    [YamlMember(Alias = "position")]
+    public int[]? Position { get; set; }
 }

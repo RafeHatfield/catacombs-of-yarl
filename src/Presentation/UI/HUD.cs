@@ -16,13 +16,17 @@ public sealed partial class HUD : Control
 {
     private Label? _hpLabel;
     private ProgressBar? _hpBar;
-    private Label? _turnLabel;
     private Label? _depthLabel;
+    private Label? _equipLabel;
     private Control? _enemyHpPanel;
     private Label? _enemyHpLabel;
     private ProgressBar? _enemyHpBar;
 
+    private Button? _exploreButton;
     private GameState? _state;
+
+    /// <summary>Fired when the player taps the Explore button.</summary>
+    public event Action? ExploreRequested;
 
     public override void _Ready()
     {
@@ -52,9 +56,18 @@ public sealed partial class HUD : Control
         if (_hpLabel != null)
             _hpLabel.Text = $"HP  {fighter.Hp} / {fighter.MaxHp}";
 
-        // Turn counter
-        if (_turnLabel != null)
-            _turnLabel.Text = $"Turn {_state.TurnCount}";
+        // Depth
+        if (_depthLabel != null)
+            _depthLabel.Text = $"Depth: {_state.CurrentDepth}";
+
+        // Equipment summary — weapon + armor, truncated to 12 chars each
+        if (_equipLabel != null)
+        {
+            var eq = _state.Player.Get<Equipment>();
+            var wpn = Truncate(eq?.MainHand?.Name ?? "—", 12);
+            var arm = Truncate(eq?.GetSlot(EquipmentSlot.Chest)?.Name ?? "—", 12);
+            _equipLabel.Text = $"Wpn: {wpn}   Arm: {arm}";
+        }
 
         // Nearest enemy HP
         var nearest = _state.AliveMonsters
@@ -80,11 +93,21 @@ public sealed partial class HUD : Control
         }
     }
 
+    /// <summary>Visually indicate whether auto-explore is currently running.</summary>
+    public void SetAutoExploreActive(bool active)
+    {
+        if (_exploreButton == null) return;
+        _exploreButton.Text = active ? "Exploring..." : "Explore";
+        _exploreButton.Modulate = active ? Colors.Yellow : Colors.White;
+    }
+
     private void BuildLayout()
     {
-        // Full-width bar across the top
-        SetAnchorsPreset(LayoutPreset.TopWide);
-        CustomMinimumSize = new Vector2(0, 120);
+        // Fill the container node defined in Main.tscn (200px TopWide)
+        SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+
+        var sans = LoadPixelFont("res://src/Presentation/assets/fonts/PixeloidSans.ttf");
+        var bold = LoadPixelFont("res://src/Presentation/assets/fonts/PixeloidSans-Bold.ttf");
 
         var bg = new ColorRect { Color = new Color(0.05f, 0.05f, 0.1f, 0.85f) };
         bg.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
@@ -106,34 +129,66 @@ public sealed partial class HUD : Control
         inner.AddThemeConstantOverride("separation", 6);
         margin.AddChild(inner);
 
-        // Top row: HP label + turn counter
+        // Top row: HP label + depth + Explore button
         var topRow = new HBoxContainer();
         inner.AddChild(topRow);
 
         _hpLabel = new Label { Text = "HP  54 / 54", SizeFlagsHorizontal = SizeFlags.ExpandFill };
-        _hpLabel.AddThemeFontSizeOverride("font_size", 18);
+        _hpLabel.AddThemeFontOverride("font", bold);
+        _hpLabel.AddThemeFontSizeOverride("font_size", 28);
+        _hpLabel.AddThemeColorOverride("font_color", Colors.White);
         topRow.AddChild(_hpLabel);
 
-        _turnLabel = new Label { Text = "Turn 0", HorizontalAlignment = HorizontalAlignment.Right };
-        _turnLabel.AddThemeFontSizeOverride("font_size", 16);
-        topRow.AddChild(_turnLabel);
+        _depthLabel = new Label { Text = "Depth: 1", HorizontalAlignment = HorizontalAlignment.Right };
+        _depthLabel.AddThemeFontOverride("font", sans);
+        _depthLabel.AddThemeFontSizeOverride("font_size", 24);
+        _depthLabel.AddThemeColorOverride("font_color", Colors.White);
+        topRow.AddChild(_depthLabel);
+
+        _exploreButton = new Button { Text = "Explore" };
+        _exploreButton.AddThemeFontOverride("font", sans);
+        _exploreButton.AddThemeFontSizeOverride("font_size", 22);
+        _exploreButton.Pressed += () => ExploreRequested?.Invoke();
+        topRow.AddChild(_exploreButton);
 
         // Player HP bar
         _hpBar = new ProgressBar { ShowPercentage = false };
         _hpBar.CustomMinimumSize = new Vector2(0, 14);
         inner.AddChild(_hpBar);
 
+        // Equipment summary row (weapon + armor)
+        _equipLabel = new Label { Text = "Wpn: —   Arm: —" };
+        _equipLabel.AddThemeFontOverride("font", sans);
+        _equipLabel.AddThemeFontSizeOverride("font_size", 22);
+        _equipLabel.AddThemeColorOverride("font_color", new Color(0.85f, 0.85f, 0.85f, 1f));
+        inner.AddChild(_equipLabel);
+
         // Enemy HP panel
         _enemyHpPanel = new VBoxContainer { Visible = false };
         inner.AddChild(_enemyHpPanel);
 
         _enemyHpLabel = new Label { Text = "" };
-        _enemyHpLabel.AddThemeFontSizeOverride("font_size", 14);
+        _enemyHpLabel.AddThemeFontOverride("font", sans);
+        _enemyHpLabel.AddThemeFontSizeOverride("font_size", 22);
+        _enemyHpLabel.AddThemeColorOverride("font_color", Colors.White);
         _enemyHpPanel.AddChild(_enemyHpLabel);
 
         _enemyHpBar = new ProgressBar { ShowPercentage = false };
         _enemyHpBar.CustomMinimumSize = new Vector2(0, 10);
         _enemyHpPanel.AddChild(_enemyHpBar);
+    }
+
+    /// <summary>
+    /// Load a font and configure it for pixel-perfect rendering:
+    /// no antialiasing, no subpixel positioning, no hinting.
+    /// </summary>
+    private static FontFile LoadPixelFont(string path)
+    {
+        var font = GD.Load<FontFile>(path);
+        font.Antialiasing = TextServer.FontAntialiasing.None;
+        font.SubpixelPositioning = TextServer.SubpixelPositioning.Disabled;
+        font.Hinting = TextServer.Hinting.None;
+        return font;
     }
 
     private static Color HpColor(int hp, int maxHp)
@@ -143,4 +198,11 @@ public sealed partial class HUD : Control
         if (frac > 0.25f) return Colors.Yellow;
         return Colors.OrangeRed;
     }
+
+    /// <summary>
+    /// Truncate a string to maxLen characters, appending "…" if it was cut.
+    /// Keeps equipment names readable at small font sizes.
+    /// </summary>
+    private static string Truncate(string s, int maxLen) =>
+        s.Length <= maxLen ? s : s[..maxLen] + "…";
 }

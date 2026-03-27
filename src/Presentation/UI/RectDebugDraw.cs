@@ -1,0 +1,37 @@
+using Godot;
+
+namespace CatacombsOfYarl.Presentation.UI;
+
+/// <summary>
+/// Debug overlay that draws colored outlines around interactive UI element rects.
+/// Toggle via F3 in debug builds. Helps diagnose hit-test offset issues caused
+/// by Godot's integer stretch scale mode + CanvasLayer coordinate bugs.
+/// </summary>
+public sealed partial class RectDebugDraw : Control
+{
+    private InventoryPanel? _inventoryPanel;
+
+    public void SetInventoryPanel(InventoryPanel? panel) => _inventoryPanel = panel;
+
+    public override void _Draw()
+    {
+        if (_inventoryPanel == null) return;
+
+        var panelGlobalPos = _inventoryPanel.GetGlobalRect().Position;
+        var myGlobalPos = GetGlobalRect().Position;
+
+        // Draw inventory slot rects
+        foreach (var (itemId, localRect) in _inventoryPanel.SlotRects)
+        {
+            // Convert from InventoryPanel-local to our local coords
+            var globalRect = new Rect2(localRect.Position + panelGlobalPos, localRect.Size);
+            var drawRect = new Rect2(globalRect.Position - myGlobalPos, globalRect.Size);
+            DrawRect(drawRect, Colors.Lime, false, 2.0f);
+        }
+    }
+
+    public override void _Process(double delta)
+    {
+        if (Visible) QueueRedraw();
+    }
+}

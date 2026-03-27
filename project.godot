@@ -1,27 +1,32 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
-; but it can also be edited just fine manually.
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
 
 [application]
 
 config/name="Catacombs of YARL"
-config/features=PackedStringArray("4.6", "C#", "Mobile")
 run/main_scene="res://src/Presentation/Main.tscn"
+config/features=PackedStringArray("4.6", "C#", "Mobile")
 config/icon="res://icon.svg"
 
 [display]
 
 window/size/viewport_width=720
 window/size/viewport_height=1280
-window/size/mode=0
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep_width"
+window/stretch/scale_mode="integer"
 window/handheld/orientation=1
 
 [dotnet]
 
 project/assembly_name="CatacombsOfYarl.Presentation"
-project/solution_directory="."
 
 [importer_defaults]
 
@@ -37,5 +42,5 @@ texture={
 
 [rendering]
 
-renderer/rendering_method="mobile"
 textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="mobile"

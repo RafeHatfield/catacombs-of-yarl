@@ -1,0 +1,11 @@
+# Testing-only level templates. Used by integration tests to verify
+# guaranteed spawn logic and mode=replace behaviour.
+# These depths (91-99) are outside normal gameplay range.
+
+levels:
+  91:
+    guaranteed_spawns:
+      mode: replace
+      monsters:
+        - type: orc_grunt
+          count: 1

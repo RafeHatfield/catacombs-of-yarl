@@ -17,6 +17,9 @@ public sealed class ConsumableFactory
         _entityFactory = entityFactory;
     }
 
+    /// <summary>All available consumable IDs.</summary>
+    public IEnumerable<string> AvailableIds => _definitions.Keys;
+
     /// <summary>Create a consumable entity. Returns null if ID not found.</summary>
     public Entity? Create(string consumableId)
     {

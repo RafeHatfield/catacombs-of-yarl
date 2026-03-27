@@ -61,8 +61,12 @@ public sealed class Fighter : IComponent
         Evasion = evasion;
     }
 
-    /// <summary>Base max HP + constitution modifier. Equipment bonuses applied externally.</summary>
-    public int MaxHp => BaseMaxHp + CombatMath.StatModifier(Constitution);
+    /// <summary>
+    /// Max HP = base + CON modifier. Matches PoC fighter.max_hp: base_max_hp + constitution_mod.
+    /// Equipment bonuses applied externally by services.
+    /// Note: Hp starts at BaseMaxHp (flat), so player starts slightly below max HP if CON > 10.
+    /// </summary>
+    public int MaxHp => BaseMaxHp + ConstitutionMod;
 
     /// <summary>Strength modifier from ability score.</summary>
     public int StrengthMod => CombatMath.StatModifier(Strength);

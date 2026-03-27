@@ -207,6 +207,7 @@ public sealed class ContentLoader
             Faction = child.Faction != "neutral" ? child.Faction : parent.Faction,
             Tags = child.Tags ?? parent.Tags,
             EtpBase = child.EtpBase != 0 ? child.EtpBase : parent.EtpBase,
+            MinDepth = child.MinDepth != 1 ? child.MinDepth : parent.MinDepth,
             SpeedBonus = child.SpeedBonus != 0 ? child.SpeedBonus : parent.SpeedBonus,
             DamageResistance = child.DamageResistance ?? parent.DamageResistance,
             DamageVulnerability = child.DamageVulnerability ?? parent.DamageVulnerability,

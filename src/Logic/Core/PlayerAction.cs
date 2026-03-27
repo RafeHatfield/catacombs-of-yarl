@@ -9,7 +9,7 @@ namespace CatacombsOfYarl.Logic.Core;
 /// </summary>
 public sealed class PlayerAction
 {
-    public enum ActionKind { Wait, Attack, Move, UseItem }
+    public enum ActionKind { Wait, Attack, Move, UseItem, Descend, DropItem }
 
     public ActionKind Kind { get; }
 
@@ -34,8 +34,10 @@ public sealed class PlayerAction
     }
 
     public static PlayerAction Wait => new(ActionKind.Wait);
+    public static PlayerAction Descend => new(ActionKind.Descend);
     public static PlayerAction Attack(Entity target) => new(ActionKind.Attack, target: target);
     public static PlayerAction MoveTo(int x, int y) => new(ActionKind.Move, targetX: x, targetY: y);
     public static PlayerAction MoveToward(Entity target) => new(ActionKind.Move, target: target);
     public static PlayerAction UseItem(Entity? item = null) => new(ActionKind.UseItem, item: item);
+    public static PlayerAction Drop(Entity item) => new(ActionKind.DropItem, item: item);
 }

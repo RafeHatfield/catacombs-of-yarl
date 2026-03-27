@@ -97,8 +97,22 @@ public sealed class MonsterFactory
         return entity;
     }
 
+    /// <summary>
+    /// The EntityFactory shared by all content factories in this session.
+    /// Exposed so callers (e.g. DungeonFloorBuilder) can read NextId to avoid ID collisions
+    /// when allocating IDs for map-placed entities after starting gear has been created.
+    /// </summary>
+    public EntityFactory EntityFactory => _entityFactory;
+
     /// <summary>All available monster IDs.</summary>
     public IEnumerable<string> AvailableIds => _definitions.Keys;
+
+    /// <summary>
+    /// Try to get a monster definition by ID without creating an entity.
+    /// Returns false if the ID is not registered.
+    /// </summary>
+    public bool TryGetDefinition(string monsterId, out MonsterDefinition? def)
+        => _definitions.TryGetValue(monsterId, out def);
 
     private static string FallbackName(MonsterDefinition def) => def.Char ?? "?";
 }

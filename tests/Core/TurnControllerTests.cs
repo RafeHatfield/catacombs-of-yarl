@@ -268,4 +268,151 @@ public class TurnControllerTests
         var state = CreateSimpleState(seed);
         return TurnController.ProcessTurn(state, PlayerAction.Attack(state.Monsters[0]));
     }
+
+    // ─── Descend action tests ────────────────────────────────────────────────
+
+    /// <summary>
+    /// Build a dungeon-mode state where the player is on the stair and all monsters are dead.
+    /// This is the success condition for Descend.
+    /// </summary>
+    private static GameState CreateDescendReadyState(int seed = 1337)
+    {
+        var rng = new SeededRandom(seed);
+        var map = GameMap.CreateArena(12, 12);
+
+        var player = new Entity(0, "Player", 5, 5, blocksMovement: true);
+        player.Add(new Fighter(hp: 54, strength: 12, dexterity: 14, constitution: 12,
+            accuracy: 2, evasion: 1, damageMin: 1, damageMax: 4));
+        map.RegisterEntity(player);
+
+        // Dead monster — floor is clear
+        var deadMonster = new Entity(1, "Orc", 8, 8, blocksMovement: true);
+        deadMonster.Add(new Fighter(hp: 1, strength: 14, dexterity: 10, constitution: 12,
+            accuracy: 4, evasion: 1, damageMin: 4, damageMax: 6));
+        deadMonster.Require<Fighter>().TakeDamage(999);
+        map.RegisterEntity(deadMonster);
+
+        // Stair at player position (5,5)
+        var stair = new Entity(99, "Stair Down", 5, 5, blocksMovement: false);
+        stair.Add(new Stair(isDown: true, targetDepth: 2));
+        map.RegisterEntity(stair);
+
+        return new GameState(player, new List<Entity> { deadMonster }, map, rng)
+        {
+            IsDungeonMode = true,
+            CurrentDepth = 1,
+            StairDown = stair,
+        };
+    }
+
+    [Test]
+    public void Descend_OnStair_FloorClear_DungeonMode_EmitsDescendEvent()
+    {
+        var state = CreateDescendReadyState();
+        Assert.That(state.IsFloorClear, Is.True, "Precondition: floor is clear");
+        Assert.That(state.PlayerOnStairDown, Is.True, "Precondition: player on stair");
+
+        var result = TurnController.ProcessTurn(state, PlayerAction.Descend);
+
+        var descendEvents = result.Events.OfType<DescendEvent>().ToList();
+        Assert.That(descendEvents, Has.Count.EqualTo(1), "Should emit exactly one DescendEvent");
+        Assert.That(descendEvents[0].ActorId, Is.EqualTo(0), "Actor is the player");
+        Assert.That(descendEvents[0].NewDepth, Is.EqualTo(2), "New depth = current (1) + 1");
+    }
+
+    [Test]
+    public void Descend_OnStair_FloorClear_DungeonMode_MonstersDoNotAct()
+    {
+        // A live monster somewhere on the map — but we only have dead monsters in state.Monsters
+        // The point: on successful descend, monster turns are skipped entirely
+        var state = CreateDescendReadyState();
+
+        var result = TurnController.ProcessTurn(state, PlayerAction.Descend);
+
+        // No monster attack events — they don't get to act when player descends
+        var monsterAttacks = result.Events.OfType<AttackEvent>().Where(e => e.ActorId != 0).ToList();
+        Assert.That(monsterAttacks, Is.Empty, "Monsters should not act on a successful Descend turn");
+    }
+
+    [Test]
+    public void Descend_NotOnStair_EmitsWaitEvent()
+    {
+        var rng = new SeededRandom(1337);
+        var map = GameMap.CreateArena(12, 12);
+
+        var player = new Entity(0, "Player", 3, 3, blocksMovement: true);
+        player.Add(new Fighter(hp: 54, strength: 12, dexterity: 14, constitution: 12,
+            accuracy: 2, evasion: 1, damageMin: 1, damageMax: 4));
+        map.RegisterEntity(player);
+
+        // Stair is elsewhere (not where player stands)
+        var stair = new Entity(99, "Stair Down", 8, 8, blocksMovement: false);
+        stair.Add(new Stair(isDown: true, targetDepth: 2));
+        map.RegisterEntity(stair);
+
+        var state = new GameState(player, new List<Entity>(), map, rng)
+        {
+            IsDungeonMode = true,
+            CurrentDepth = 1,
+            StairDown = stair,
+        };
+
+        var result = TurnController.ProcessTurn(state, PlayerAction.Descend);
+
+        Assert.That(result.Events.OfType<DescendEvent>(), Is.Empty, "No DescendEvent — not on stair");
+        Assert.That(result.Events.OfType<WaitEvent>().Any(e => e.ActorId == 0), Is.True,
+            "Failed Descend emits WaitEvent");
+    }
+
+    [Test]
+    public void Descend_MonstersAlive_EmitsWaitEvent()
+    {
+        // Player IS on stair, but monster is still alive — floor not clear
+        var rng = new SeededRandom(1337);
+        var map = GameMap.CreateArena(12, 12);
+
+        var player = new Entity(0, "Player", 5, 5, blocksMovement: true);
+        player.Add(new Fighter(hp: 54, strength: 12, dexterity: 14, constitution: 12,
+            accuracy: 2, evasion: 1, damageMin: 1, damageMax: 4));
+        map.RegisterEntity(player);
+
+        var liveMonster = new Entity(1, "Orc", 8, 8, blocksMovement: true);
+        liveMonster.Add(new Fighter(hp: 28, strength: 14, dexterity: 10, constitution: 12,
+            accuracy: 4, evasion: 1, damageMin: 4, damageMax: 6));
+        map.RegisterEntity(liveMonster);
+
+        // Stair AT player position
+        var stair = new Entity(99, "Stair Down", 5, 5, blocksMovement: false);
+        stair.Add(new Stair(isDown: true, targetDepth: 2));
+        map.RegisterEntity(stair);
+
+        var state = new GameState(player, new List<Entity> { liveMonster }, map, rng)
+        {
+            IsDungeonMode = true,
+            CurrentDepth = 1,
+            StairDown = stair,
+        };
+
+        Assert.That(state.IsFloorClear, Is.False, "Precondition: floor is NOT clear");
+
+        var result = TurnController.ProcessTurn(state, PlayerAction.Descend);
+
+        // Design: player can descend any time they're on the stair — floor clear is not required.
+        Assert.That(result.Events.OfType<DescendEvent>().Any(), Is.True,
+            "Player can descend even with monsters alive");
+    }
+
+    [Test]
+    public void Descend_NotDungeonMode_EmitsWaitEvent()
+    {
+        // Scenario mode — Descend should be a no-op (WaitEvent)
+        var state = CreateSimpleState();
+        Assert.That(state.IsDungeonMode, Is.False, "Precondition: not dungeon mode");
+
+        var result = TurnController.ProcessTurn(state, PlayerAction.Descend);
+
+        Assert.That(result.Events.OfType<DescendEvent>(), Is.Empty,
+            "Descend in scenario mode emits WaitEvent, not DescendEvent");
+        Assert.That(result.Events.OfType<WaitEvent>().Any(e => e.ActorId == 0), Is.True);
+    }
 }

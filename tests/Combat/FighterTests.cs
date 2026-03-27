@@ -61,7 +61,7 @@ public class FighterTests
         var orc = CreateOrc();
         var fighter = orc.Require<Fighter>();
 
-        // base 28 + CON mod 1 = 29
+        // base 28 + CON mod 1 (CON=12) = 29 — matches PoC fighter.max_hp
         Assert.That(fighter.MaxHp, Is.EqualTo(29));
     }
 
@@ -71,7 +71,7 @@ public class FighterTests
         var player = CreatePlayer();
         var fighter = player.Require<Fighter>();
 
-        // base 54 + CON mod 1 = 55
+        // Player in test has CON=12 → mod +1. base 54 + 1 = 55.
         Assert.That(fighter.MaxHp, Is.EqualTo(55));
     }
 
@@ -163,7 +163,7 @@ public class FighterTests
 
         int healed = fighter.Heal(10);
 
-        // HP starts at BaseMaxHp (28), MaxHp is 29 (with CON mod)
+        // Hp starts at BaseMaxHp (28), MaxHp is 29 (with CON mod)
         // So can heal 1 point
         Assert.That(healed, Is.EqualTo(1));
     }

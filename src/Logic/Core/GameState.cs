@@ -1,5 +1,6 @@
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Map;
 
 namespace CatacombsOfYarl.Logic.Core;
 
@@ -16,6 +17,24 @@ public sealed class GameState
     public int TurnCount { get; set; }
     public int TurnLimit { get; set; }
 
+    // --- Dungeon mode properties ---
+
+    /// <summary>
+    /// True when running a full dungeon campaign floor. False in scenario/harness mode.
+    /// This flag guards all dungeon-specific behavior — the scenario harness path is
+    /// completely unaffected when this is false.
+    /// </summary>
+    public bool IsDungeonMode { get; init; }
+
+    /// <summary>Current floor depth. 1-based. Only meaningful when IsDungeonMode=true.</summary>
+    public int CurrentDepth { get; init; } = 1;
+
+    /// <summary>The stair-down entity on this floor. Set by DungeonFloorBuilder after construction.</summary>
+    public Entity? StairDown { get; set; }
+
+    /// <summary>Items currently on the dungeon floor. Populated by DungeonFloorBuilder, removed on pickup.</summary>
+    public List<Entity> FloorItems { get; } = new();
+
     public GameState(Entity player, List<Entity> monsters, GameMap map, SeededRandom rng, int turnLimit = 100)
     {
         Player = player;
@@ -25,9 +44,64 @@ public sealed class GameState
         TurnLimit = turnLimit;
     }
 
+    /// <summary>
+    /// Recompute field of view from the player's current position.
+    /// No-op in scenario mode (IsDungeonMode=false) — scenarios call RevealAll at startup
+    /// and never need per-turn FOV recomputation. This guard is what keeps the scenario
+    /// harness unaffected by Phase 2.
+    /// </summary>
+    public void RecomputeFov(int radius = 8)
+    {
+        if (!IsDungeonMode) return;
+        FovComputer.Compute(Map, Player.X, Player.Y, radius);
+    }
+
     public Fighter PlayerFighter => Player.Require<Fighter>();
     public Inventory? PlayerInventory => Player.Get<Inventory>();
-    public bool IsGameOver => !PlayerFighter.IsAlive || AliveMonsters.Count == 0 || TurnCount >= TurnLimit;
-    public bool PlayerWon => PlayerFighter.IsAlive && AliveMonsters.Count == 0;
-    public List<Entity> AliveMonsters => Monsters.Where(m => m.Require<Fighter>().IsAlive).ToList();
+
+    // Cached alive-monster list — rebuilt once per turn instead of once per access.
+    // Avoids 4-6 List<Entity> allocations per turn from callers hitting AliveMonsters.
+    private List<Entity>? _aliveMonsterCache;
+    private int _aliveMonsterCacheTurn = -1;
+
+    /// <summary>
+    /// Whether the current dungeon floor is clear of living monsters.
+    /// Only meaningful in dungeon mode — always false in scenario mode.
+    /// </summary>
+    public bool IsFloorClear => IsDungeonMode && AliveMonsters.Count == 0;
+
+    /// <summary>
+    /// Whether the player is standing on the stair-down tile.
+    /// </summary>
+    public bool PlayerOnStairDown => StairDown != null && Player.X == StairDown.X && Player.Y == StairDown.Y;
+
+    /// <summary>
+    /// CRITICAL: IsGameOver is guarded by IsDungeonMode to preserve exact scenario behaviour.
+    ///
+    /// Scenario path (IsDungeonMode=false): game over when player dies, all monsters die, or turn limit hit.
+    ///   All-monsters-dead → game over is how the harness detects scenario completion.
+    ///
+    /// Dungeon path (IsDungeonMode=true): game over only when player dies or turn limit hit.
+    ///   Floor completion is detected via IsFloorClear + PlayerOnStairDown → DescendEvent, not game over.
+    ///   Killing all monsters alone does NOT end a dungeon run.
+    /// </summary>
+    public bool IsGameOver =>
+        IsDungeonMode
+            ? !PlayerFighter.IsAlive || TurnCount >= TurnLimit
+            : !PlayerFighter.IsAlive || (Monsters.Count > 0 && AliveMonsters.Count == 0) || TurnCount >= TurnLimit;
+
+    public bool PlayerWon => PlayerFighter.IsAlive && Monsters.Count > 0 && AliveMonsters.Count == 0;
+
+    public List<Entity> AliveMonsters
+    {
+        get
+        {
+            if (_aliveMonsterCache == null || _aliveMonsterCacheTurn != TurnCount)
+            {
+                _aliveMonsterCache = Monsters.Where(m => m.Require<Fighter>().IsAlive).ToList();
+                _aliveMonsterCacheTurn = TurnCount;
+            }
+            return _aliveMonsterCache;
+        }
+    }
 }

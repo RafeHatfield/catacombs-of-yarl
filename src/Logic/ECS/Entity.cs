@@ -26,10 +26,13 @@ public sealed class Entity
     /// <summary>
     /// Add a component. Establishes ownership. Replaces any existing component of the same type.
     /// Returns the component for fluent chaining.
+    /// Uses the concrete runtime type as the dictionary key (not the generic parameter T).
+    /// This means AddRuntime(component) and Add&lt;ConcreteType&gt;(component) are equivalent.
     /// </summary>
     public T Add<T>(T component) where T : class, IComponent
     {
-        var key = typeof(T);
+        // Use runtime type so that CopyComponents can add by IComponent without losing type info
+        var key = component.GetType();
         if (_components.TryGetValue(key, out var existing))
         {
             existing.Owner = null;
@@ -37,6 +40,16 @@ public sealed class Entity
         _components[key] = component;
         component.Owner = this;
         return component;
+    }
+
+    /// <summary>
+    /// Returns existing component of type T, or creates and adds a new default instance.
+    /// </summary>
+    public T GetOrAdd<T>() where T : class, IComponent, new()
+    {
+        var existing = Get<T>();
+        if (existing != null) return existing;
+        return Add(new T());
     }
 
     /// <summary>Returns the component of type T, or null if not present.</summary>
@@ -72,6 +85,12 @@ public sealed class Entity
 
     /// <summary>Number of components attached to this entity.</summary>
     public int ComponentCount => _components.Count;
+
+    /// <summary>
+    /// Returns all components attached to this entity.
+    /// Used by EntityPlacer when re-wrapping factory-created entities under a new ID.
+    /// </summary>
+    public IEnumerable<IComponent> GetAllComponents() => _components.Values;
 
     /// <summary>Euclidean distance to a coordinate.</summary>
     public double DistanceTo(int targetX, int targetY)

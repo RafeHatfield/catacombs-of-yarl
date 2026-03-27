@@ -122,7 +122,10 @@ consumables:
 
         var inventory = state.PlayerInventory;
         Assert.That(inventory, Is.Not.Null);
-        Assert.That(inventory!.Count, Is.EqualTo(3));
+        // With stacking active, 3 healing potions of the same name occupy a single slot.
+        Assert.That(inventory!.Count, Is.EqualTo(1), "Same-named consumables stack into one slot");
+        Assert.That(inventory.Items[0].Require<Consumable>().StackSize, Is.EqualTo(3),
+            "StackSize should be 3 — all three potions merged into the slot");
     }
 
     [Test]

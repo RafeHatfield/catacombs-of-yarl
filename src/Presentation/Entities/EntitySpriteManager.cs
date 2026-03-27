@@ -4,6 +4,8 @@ using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Presentation.Map;
 using Godot;
 
+using CatacombsOfYarl.Presentation;
+
 namespace CatacombsOfYarl.Presentation.Entities;
 
 /// <summary>
@@ -17,11 +19,16 @@ public sealed class EntitySpriteManager
 {
     private readonly Node2D _parent;
     private readonly Dictionary<int, Sprite2D> _sprites = new();
+    // Cached grid positions — avoids O(n) monster scan in UpdateVisibility each turn.
+    private readonly Dictionary<int, (int X, int Y)> _positions = new();
 
     public EntitySpriteManager(Node2D entityLayerNode)
     {
         _parent = entityLayerNode;
     }
+
+    /// <summary>Number of live entity sprites (player + monsters). Useful for debug overlay.</summary>
+    public int SpriteCount => _sprites.Count;
 
     /// <summary>
     /// Create sprites for all entities in the game state.
@@ -56,13 +63,31 @@ public sealed class EntitySpriteManager
     }
 
     /// <summary>
+    /// Apply fog-of-war visibility to entity sprites.
+    /// Uses the cached position dictionary — O(sprites) not O(sprites × monsters).
+    /// </summary>
+    public void UpdateVisibility(GameState state)
+    {
+        foreach (var (entityId, sprite) in _sprites)
+        {
+            if (!_positions.TryGetValue(entityId, out var pos))
+            {
+                sprite.Visible = false;
+                continue;
+            }
+            sprite.Visible = state.Map.IsVisible(pos.X, pos.Y);
+        }
+    }
+
+    /// <summary>
     /// Remove the sprite for a dead entity (fade or instant).
     /// </summary>
     public void RemoveEntity(int entityId)
     {
         if (_sprites.Remove(entityId, out var sprite))
         {
-            sprite.QueueFree();
+            sprite.SafeFree();
+            _positions.Remove(entityId);
         }
     }
 
@@ -89,16 +114,16 @@ public sealed class EntitySpriteManager
         var sprite = new Sprite2D
         {
             Texture = texture,
-            // Center horizontally on tile diamond, feet at diamond center
             Position = screenPos,
-            Centered = true, // Sprite centered on position
-            // Offset down so feet (bottom of sprite) align with diamond center
+            Centered = true,
             Offset = new Vector2(0, -texture.GetHeight() * 0.15f),
-            ZIndex = IsometricMapper.GetSortOrder(entity.X, entity.Y) + 1, // Above tiles
+            ZIndex = IsometricMapper.GetSortOrder(entity.X, entity.Y) + 1,
+            TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
         };
 
         _parent.AddChild(sprite);
         _sprites[entity.Id] = sprite;
+        _positions[entity.Id] = (entity.X, entity.Y);
     }
 
     private void UpdateSpritePosition(Entity entity)
@@ -108,6 +133,7 @@ public sealed class EntitySpriteManager
 
         sprite.Position = IsometricMapper.GridToScreenCenter(entity.X, entity.Y);
         sprite.ZIndex = IsometricMapper.GetSortOrder(entity.X, entity.Y) + 1;
+        _positions[entity.Id] = (entity.X, entity.Y);
     }
 
     /// <summary>

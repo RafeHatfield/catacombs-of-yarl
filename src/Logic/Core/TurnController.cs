@@ -21,10 +21,18 @@ public static class TurnController
 
         // === PLAYER TURN ===
         ResolvePlayerAction(state, action, events);
+        state.RecomputeFov(); // update FOV after player moves (no-op in scenario mode)
 
         // === MONSTER TURNS ===
-        if (state.PlayerFighter.IsAlive)
+        // Skip monster turns on successful Descend — the floor transition is handled
+        // by the presentation layer. Monsters should not get a free attack as the
+        // player steps through the stair.
+        bool descended = events.Any(e => e is DescendEvent);
+        if (!descended && state.PlayerFighter.IsAlive)
+        {
             ResolveMonsterTurns(state, events);
+            state.RecomputeFov(); // update FOV after monsters move (no-op in scenario mode)
+        }
 
         var aliveMonsters = state.AliveMonsters;
         return new TurnResult
@@ -60,6 +68,14 @@ public static class TurnController
             case PlayerAction.ActionKind.Wait:
                 events.Add(new WaitEvent { ActorId = player.Id });
                 player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                break;
+
+            case PlayerAction.ActionKind.Descend:
+                ResolveDescend(state, events);
+                break;
+
+            case PlayerAction.ActionKind.DropItem:
+                ResolveDrop(state, action.Item!, events);
                 break;
         }
     }
@@ -114,7 +130,71 @@ public static class TurnController
                 FromX = fromX, FromY = fromY,
                 ToX = player.X, ToY = player.Y,
             });
+
+            // Walk-over pickup: auto-collect any floor item at the new position
+            TryPickUpItemsAt(state, player.X, player.Y, events);
         }
+    }
+
+    /// <summary>
+    /// Pick up all floor items at the given position. Each picked-up item is added to
+    /// the player's inventory (creating one if needed), removed from FloorItems, and
+    /// reported as a PickUpEvent.
+    /// </summary>
+    private static void TryPickUpItemsAt(GameState state, int x, int y, List<TurnEvent> events)
+    {
+        var toPickUp = state.FloorItems.Where(item => item.X == x && item.Y == y).ToList();
+        if (toPickUp.Count == 0) return;
+
+        var inventory = state.Player.GetOrAdd<Inventory>();
+
+        foreach (var item in toPickUp)
+        {
+            // Add returns false when inventory is full and the item could not be stacked.
+            // In that case leave the item on the floor — do NOT remove it or emit an event.
+            if (!inventory.Add(item))
+                continue;
+
+            state.FloorItems.Remove(item);
+            state.Map.UnregisterEntity(item);
+
+            events.Add(new PickUpEvent
+            {
+                ActorId = state.Player.Id,
+                ItemId = item.Id,
+                ItemName = item.Name,
+            });
+        }
+    }
+
+    /// <summary>
+    /// Resolve a Descend action.
+    ///
+    /// Guards (any failing → treat as Wait, emit WaitEvent):
+    ///   - Must be dungeon mode
+    ///   - Player must be standing on the stair
+    ///   - Floor must be clear (all monsters dead)
+    ///
+    /// On success: emit DescendEvent. Monsters do NOT act this turn (handled in ProcessTurn).
+    /// The actual floor transition (building next GameState) is handled by the presentation layer
+    /// on receipt of DescendEvent.
+    /// </summary>
+    private static void ResolveDescend(GameState state, List<TurnEvent> events)
+    {
+        var player = state.Player;
+
+        if (!state.IsDungeonMode || !state.PlayerOnStairDown)
+        {
+            // Guard failed — treat as wait, do NOT reset momentum (stair tap is like waiting)
+            events.Add(new WaitEvent { ActorId = player.Id });
+            return;
+        }
+
+        events.Add(new DescendEvent
+        {
+            ActorId = player.Id,
+            NewDepth = state.CurrentDepth + 1,
+        });
     }
 
     private static void TryHeal(GameState state, Entity? specificItem, List<TurnEvent> events)
@@ -133,7 +213,12 @@ public static class TurnController
         if (consumable == null) return;
 
         int healed = fighter.Heal(consumable.HealAmount);
-        inventory.Remove(potion);
+
+        // Stack-aware consumption: decrement stack count; only remove the entity when
+        // the last charge is used. This keeps the inventory slot alive for stacked potions.
+        consumable.StackSize--;
+        if (consumable.StackSize <= 0)
+            inventory.Remove(potion);
 
         events.Add(new HealEvent
         {
@@ -141,6 +226,33 @@ public static class TurnController
             AmountHealed = healed,
             ItemId = potion.Id,
             ItemName = potion.Name,
+        });
+    }
+
+    /// <summary>
+    /// Drop an item from the player's inventory onto the floor at the player's position.
+    /// Dropping costs a turn — monsters will still act afterward.
+    /// </summary>
+    private static void ResolveDrop(GameState state, Entity item, List<TurnEvent> events)
+    {
+        var inventory = state.PlayerInventory;
+        if (inventory == null) return;
+
+        // Item must actually be in the player's inventory
+        if (!inventory.Remove(item)) return;
+
+        // Place the item at the player's current position
+        item.X = state.Player.X;
+        item.Y = state.Player.Y;
+
+        state.FloorItems.Add(item);
+        state.Map.RegisterEntity(item);
+
+        events.Add(new DropEvent
+        {
+            ActorId = state.Player.Id,
+            ItemId = item.Id,
+            ItemName = item.Name,
         });
     }
 
@@ -155,6 +267,38 @@ public static class TurnController
             if (!mf.IsAlive || !playerFighter.IsAlive)
                 continue;
 
+            // Symmetric FOV: if player can see the monster's tile, the monster sees the player.
+            // In scenario mode (IsDungeonMode=false) fog of war is disabled — monsters always see the player.
+            bool canSeePlayer = !state.IsDungeonMode || state.Map.IsVisible(monster.X, monster.Y);
+
+            var alerted = monster.Get<AlertedState>();
+
+            if (canSeePlayer)
+            {
+                // Update or create alerted state with current player position
+                if (alerted == null)
+                {
+                    alerted = new AlertedState();
+                    monster.Add(alerted);
+                }
+                alerted.LastKnownPlayerX = player.X;
+                alerted.LastKnownPlayerY = player.Y;
+                alerted.TurnsUntilDeaggro = AlertedState.DeaggroTurns;
+            }
+            else if (alerted != null)
+            {
+                // Lost sight — count down to de-aggro
+                alerted.TurnsUntilDeaggro--;
+                if (alerted.TurnsUntilDeaggro <= 0)
+                {
+                    monster.Remove<AlertedState>();
+                    alerted = null;
+                }
+            }
+
+            // Only act if the monster can see the player OR is still chasing (alerted)
+            if (alerted == null) continue;
+
             if (monster.ChebyshevDistanceTo(player.X, player.Y) <= 1)
             {
                 ResolveMonsterAttack(state, monster, events, isBonusAttack: false);
@@ -162,7 +306,7 @@ public static class TurnController
             else
             {
                 int fromX = monster.X, fromY = monster.Y;
-                bool moved = state.Map.MoveToward(monster, player.X, player.Y);
+                bool moved = state.Map.MoveToward(monster, alerted.LastKnownPlayerX, alerted.LastKnownPlayerY);
                 if (moved)
                 {
                     events.Add(new MoveEvent

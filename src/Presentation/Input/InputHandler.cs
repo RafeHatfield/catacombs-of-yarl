@@ -2,6 +2,7 @@ using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Presentation.Map;
 using Godot;
+using CatacombsOfYarl.Presentation;
 
 namespace CatacombsOfYarl.Presentation.Input;
 
@@ -12,7 +13,8 @@ namespace CatacombsOfYarl.Presentation.Input;
 /// Priority:
 /// 1. Tap on adjacent enemy → Attack
 /// 2. Tap on walkable tile → Move
-/// 3. Nothing valid → Wait (no action emitted)
+/// 3. Tap on player's own tile when on stair + floor clear → Descend
+/// 4. Nothing valid → Wait (no action emitted)
 /// </summary>
 public sealed class InputHandler
 {
@@ -34,12 +36,18 @@ public sealed class InputHandler
     public void HandleTap(Vector2 screenPos)
     {
         if (!_acceptingInput || _state == null || _state.IsGameOver)
+        {
+            Diag.Log($"HandleTap BLOCKED: accepting={_acceptingInput}, state={_state != null}, gameOver={_state?.IsGameOver}, turnCount={_state?.TurnCount}, turnLimit={_state?.TurnLimit}");
             return;
+        }
 
         var (gridX, gridY) = IsometricMapper.ScreenToGrid(screenPos);
 
         if (!_state.Map.InBounds(gridX, gridY))
+        {
+            Diag.Log($"HandleTap OUT_OF_BOUNDS ({gridX},{gridY})");
             return;
+        }
 
         var player = _state.Player;
 
@@ -50,20 +58,36 @@ public sealed class InputHandler
             int dist = player.ChebyshevDistanceTo(gridX, gridY);
             if (dist <= 1)
             {
+                Diag.Log($"HandleTap ATTACK target={target.Name}(id={target.Id}) dist={dist}");
                 ActionChosen?.Invoke(PlayerAction.Attack(target));
                 return;
             }
             // Tapped distant enemy → move toward it
+            Diag.Log($"HandleTap MOVE_TOWARD target={target.Name} at ({gridX},{gridY})");
             ActionChosen?.Invoke(PlayerAction.MoveToward(target));
             return;
         }
 
-        // Tapped a walkable tile → move there
+        // Tapped a walkable tile → move there, or descend if on stair
         if (_state.Map.IsWalkable(gridX, gridY))
         {
+            // Special case: player taps their own tile while standing on a stair-down
+            // with the floor cleared → intent is to descend.
+            if (gridX == player.X && gridY == player.Y
+                && _state.PlayerOnStairDown
+                && _state.IsFloorClear)
+            {
+                Diag.Log($"HandleTap DESCEND at ({gridX},{gridY})");
+                ActionChosen?.Invoke(PlayerAction.Descend);
+                return;
+            }
+
+            Diag.Log($"HandleTap MOVE_TO ({gridX},{gridY})");
             ActionChosen?.Invoke(PlayerAction.MoveTo(gridX, gridY));
             return;
         }
+
+        Diag.Log($"HandleTap NO_ACTION at ({gridX},{gridY}) — not walkable, no monster");
     }
 
     private Entity? FindMonsterAt(int gridX, int gridY)

@@ -1,0 +1,25 @@
+scenario_id: tap_test
+name: "Tap Input Test"
+depth: 1
+turn_limit: 9999
+runs: 1
+map_width: 12
+map_height: 12
+
+player_start_x: 6
+player_start_y: 6
+
+player:
+  hp: 999
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+
+monsters:
+  - type: "orc_grunt"
+    count: 2
+items: []

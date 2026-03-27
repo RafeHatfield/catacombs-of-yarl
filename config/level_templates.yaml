@@ -1,0 +1,40 @@
+# Level template overrides for procedurally generated dungeon floors.
+# Keys are depth integers. Depths without an entry use engine defaults.
+# Active this milestone: parameters, guaranteed_spawns, stairs, encounter_budget.
+# Deferred (parsed but not processed): door_rules, trap_rules, secret_rooms, connectivity.
+
+levels:
+  1:
+    parameters:
+      max_rooms: 8
+      min_room_size: 5
+      max_room_size: 12
+      max_monsters_per_room: 2
+      max_items_per_room: 2
+    guaranteed_spawns:
+      mode: "additional"
+      items:
+        - type: "healing_potion"
+          count: "2-3"
+
+  2:
+    parameters:
+      max_rooms: 9
+      max_monsters_per_room: 2
+      max_items_per_room: 2
+    guaranteed_spawns:
+      mode: "additional"
+      items:
+        - type: "healing_potion"
+          count: "1-2"
+
+  3:
+    parameters:
+      max_rooms: 10
+      max_monsters_per_room: 3
+      max_items_per_room: 2
+    guaranteed_spawns:
+      mode: "additional"
+      items:
+        - type: "healing_potion"
+          count: "1-2"

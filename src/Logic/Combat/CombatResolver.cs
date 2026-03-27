@@ -70,7 +70,7 @@ public static class CombatResolver
             else
                 baseDmg = CombatMath.RollDamage(rng, atk.DamageMin, atk.DamageMax);
 
-            damage = baseDmg + atk.StrengthMod;
+            damage = baseDmg + atk.StrengthMod; // PoC attack_d20: damage = base_damage + str_modifier
 
             if (isCritical)
                 damage *= 2;

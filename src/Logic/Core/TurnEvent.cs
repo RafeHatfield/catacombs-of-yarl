@@ -38,7 +38,25 @@ public sealed class HealEvent : TurnEvent
 
 public sealed class WaitEvent : TurnEvent { }
 
+public sealed class DescendEvent : TurnEvent
+{
+    /// <summary>The new depth the player is descending to.</summary>
+    public int NewDepth { get; init; }
+}
+
 public sealed class DeathEvent : TurnEvent
 {
     public int KillerId { get; init; }
+}
+
+public sealed class PickUpEvent : TurnEvent
+{
+    public int ItemId { get; init; }
+    public string ItemName { get; init; } = "";
+}
+
+public sealed class DropEvent : TurnEvent
+{
+    public int ItemId { get; init; }
+    public string ItemName { get; init; } = "";
 }

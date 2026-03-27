@@ -51,6 +51,7 @@ monsters:
     char: "O"
     color: [90, 160, 90]
     etp_base: 45
+    min_depth: 3
     tags: ["corporeal_flesh", "humanoid", "living", "brute"]
 
   zombie:

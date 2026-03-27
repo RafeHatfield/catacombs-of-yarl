@@ -1,0 +1,151 @@
+using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Map;
+
+namespace CatacombsOfYarl.Logic.Core;
+
+/// <summary>
+/// Drives auto-explore behaviour. Stateless — all state lives in AutoExploreState on the player.
+/// Uses Dijkstra to find the nearest unexplored tile, A* to path there.
+/// Checks interrupt conditions before each step.
+/// </summary>
+public static class AutoExploreSystem
+{
+    /// <summary>
+    /// Activate auto-explore. Takes snapshot of current explored tiles and visible monsters.
+    /// Safe to call repeatedly — resets state each time.
+    /// </summary>
+    public static void Activate(GameState state)
+    {
+        var ae = state.Player.GetOrAdd<AutoExploreState>();
+        ae.IsActive = true;
+        ae.StopReason = null;
+        ae.CurrentPath.Clear();
+        ae.StuckCounter = 0;
+        ae.LastExpectedPosition = null;
+        ae.LastHp = state.PlayerFighter.Hp;
+        ae.ResetPositionHistory();
+
+        // Snapshot explored tiles — two-pass strategy uses this to prioritise NEW discoveries
+        ae.ExploredSnapshot.Clear();
+        for (int x = 0; x < state.Map.Width; x++)
+            for (int y = 0; y < state.Map.Height; y++)
+                if (state.Map.IsExplored(x, y))
+                    ae.ExploredSnapshot.Add((x, y));
+
+        // Snapshot monsters currently in FOV — don't interrupt for these
+        ae.KnownMonsterIds.Clear();
+        foreach (var m in state.AliveMonsters)
+            if (state.Map.IsVisible(m.X, m.Y))
+                ae.KnownMonsterIds.Add(m.Id);
+    }
+
+    /// <summary>
+    /// Get the next move action. Returns null and deactivates if stopped.
+    /// Call this once per turn when auto-explore is active.
+    /// </summary>
+    public static PlayerAction? GetNextAction(GameState state)
+    {
+        var ae = state.Player.Get<AutoExploreState>();
+        if (ae == null || !ae.IsActive) return null;
+
+        var stopReason = CheckInterrupts(state, ae);
+        if (stopReason != null)
+        {
+            Stop(ae, stopReason);
+            return null;
+        }
+
+        if (ae.CurrentPath.Count == 0 && !FindAndSetPath(state, ae))
+        {
+            Stop(ae, "Exploration complete");
+            return null;
+        }
+
+        ae.LastExpectedPosition = ae.CurrentPath[0];
+        ae.CurrentPath.RemoveAt(0);
+        return PlayerAction.MoveTo(ae.LastExpectedPosition.Value.X, ae.LastExpectedPosition.Value.Y);
+    }
+
+    private static string? CheckInterrupts(GameState state, AutoExploreState ae)
+    {
+        // 1. New monster in visible FOV (not known at activation)
+        foreach (var m in state.AliveMonsters)
+            if (state.Map.IsVisible(m.X, m.Y) && !ae.KnownMonsterIds.Contains(m.Id))
+                return $"Monster spotted: {m.Name}";
+
+        // 2. New floor item visible that wasn't in the explored area at activation
+        foreach (var item in state.FloorItems)
+            if (state.Map.IsVisible(item.X, item.Y)
+                && !ae.ExploredSnapshot.Contains((item.X, item.Y)))
+                return $"Item found: {item.Name}";
+
+        // 3. New stair visible and not already known
+        if (state.StairDown != null
+            && state.Map.IsVisible(state.StairDown.X, state.StairDown.Y)
+            && !ae.KnownStairs.Contains((state.StairDown.X, state.StairDown.Y)))
+            return "Stairs found";
+
+        // 4. Damage taken
+        if (state.PlayerFighter.Hp < ae.LastHp)
+            return "Took damage";
+
+        // 5. Stuck — didn't reach expected position
+        if (ae.LastExpectedPosition.HasValue)
+        {
+            var (ex, ey) = ae.LastExpectedPosition.Value;
+            if (state.Player.X != ex || state.Player.Y != ey)
+            {
+                ae.StuckCounter++;
+                if (ae.StuckCounter >= 3) return "Movement blocked";
+            }
+            else
+            {
+                ae.StuckCounter = 0;
+            }
+        }
+
+        // 6. Oscillation detection
+        ae.RecordPosition(state.Player.X, state.Player.Y);
+        if (ae.IsOscillating()) return "Movement oscillation detected";
+
+        // Update tracking state for next call
+        ae.LastHp = state.PlayerFighter.Hp;
+        if (state.StairDown != null && state.Map.IsExplored(state.StairDown.X, state.StairDown.Y))
+            ae.KnownStairs.Add((state.StairDown.X, state.StairDown.Y));
+
+        return null;
+    }
+
+    private static bool FindAndSetPath(GameState state, AutoExploreState ae)
+    {
+        var dijkstra = Pathfinder.DijkstraMap(state.Map, state.Player.X, state.Player.Y);
+
+        // Pass 1: prefer tiles not in the explored snapshot (new discoveries)
+        var target = Pathfinder.NearestWhere(dijkstra, state.Map.Width, state.Map.Height,
+            (x, y) => !state.Map.IsExplored(x, y) && !ae.ExploredSnapshot.Contains((x, y)));
+
+        // Pass 2: fall back to any unexplored tile (finish isolated pockets)
+        target ??= Pathfinder.NearestWhere(dijkstra, state.Map.Width, state.Map.Height,
+            (x, y) => !state.Map.IsExplored(x, y));
+
+        if (target == null) return false;
+
+        var path = Pathfinder.AStar(state.Map,
+            state.Player.X, state.Player.Y,
+            target.Value.X, target.Value.Y,
+            state.Player);
+
+        if (path == null || path.Count == 0) return false;
+
+        ae.CurrentPath.Clear();
+        ae.CurrentPath.AddRange(path);
+        return true;
+    }
+
+    private static void Stop(AutoExploreState ae, string reason)
+    {
+        ae.IsActive = false;
+        ae.StopReason = reason;
+        ae.CurrentPath.Clear();
+    }
+}

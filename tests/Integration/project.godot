@@ -1,0 +1,10 @@
+; Minimal Godot project for GdUnit4 integration tests.
+; This exists solely so the GdUnit4 test adapter can start a Godot runtime.
+
+config_version=5
+
+[application]
+config/name="YARL Integration Tests"
+
+[dotnet]
+project/assembly_name="CatacombsOfYarl.Integration"

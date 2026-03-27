@@ -45,11 +45,14 @@ public static class IsometricMapper
     /// </summary>
     public static (int gridX, int gridY) ScreenToGrid(Vector2 screenPos)
     {
-        // Inverse of the iso transform:
-        // screenX = (gx - gy) * HalfW  →  gx - gy = screenX / HalfW
-        // screenY = (gx + gy) * HalfH  →  gx + gy = screenY / HalfH
-        float sum = screenPos.Y / HalfTileHeight;   // gx + gy
-        float diff = screenPos.X / HalfTileWidth;    // gx - gy
+        // Adjust for the visual diamond center within the 32x48 tile.
+        // The diamond midpoint sits at (HalfTileWidth, TileHeight * 0.75f) from tile origin,
+        // so subtract that offset before inverting.
+        float adjustedX = screenPos.X - HalfTileWidth;
+        float adjustedY = screenPos.Y - TileHeight * 0.75f;
+
+        float sum = adjustedY / HalfTileHeight;   // gx + gy
+        float diff = adjustedX / HalfTileWidth;    // gx - gy
         float gx = (sum + diff) / 2f;
         float gy = (sum - diff) / 2f;
         return ((int)Mathf.Round(gx), (int)Mathf.Round(gy));

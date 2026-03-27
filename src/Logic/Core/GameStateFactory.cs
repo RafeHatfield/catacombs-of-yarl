@@ -22,11 +22,12 @@ public static class GameStateFactory
         ConsumableFactory? consumableFactory = null)
     {
         var rng = new SeededRandom(seed);
-        var map = GameMap.CreateArena(12, 12);
+        var map = GameMap.CreateArena(scenario.MapWidth, scenario.MapHeight);
+        map.RevealAll(); // Scenarios have no fog of war — all tiles visible from turn 0
 
         var player = CreatePlayer(scenario, itemFactory, consumableFactory);
-        player.X = 3;
-        player.Y = 6;
+        player.X = Math.Clamp(scenario.PlayerStartX, 1, scenario.MapWidth - 2);
+        player.Y = Math.Clamp(scenario.PlayerStartY, 1, scenario.MapHeight - 2);
         map.RegisterEntity(player);
 
         var monsters = CreateMonsters(scenario, map, rng, monsterFactory);
@@ -103,8 +104,18 @@ public static class GameStateFactory
                 var monster = monsterFactory.Create(monsterDef.Type, depth: scenario.Depth, rng: rng);
                 if (monster != null)
                 {
-                    monster.X = 8 + (idx % 3);
-                    monster.Y = 4 + (idx / 3) * 2;
+                    // Use explicit position from scenario YAML if provided.
+                    // Null position → offset grid (existing behaviour, backward compatible).
+                    if (monsterDef.Position != null && monsterDef.Position.Length == 2)
+                    {
+                        monster.X = monsterDef.Position[0];
+                        monster.Y = monsterDef.Position[1];
+                    }
+                    else
+                    {
+                        monster.X = 8 + (idx % 3);
+                        monster.Y = 4 + (idx / 3) * 2;
+                    }
                     map.RegisterEntity(monster);
                     monsters.Add(monster);
                     idx++;

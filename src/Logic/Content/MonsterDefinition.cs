@@ -41,6 +41,13 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "etp_base")]
     public int EtpBase { get; set; }
 
+    /// <summary>
+    /// Minimum dungeon depth at which this monster can spawn procedurally.
+    /// Defaults to 1 (appears from the first floor). Use min_depth: N in YAML to restrict.
+    /// </summary>
+    [YamlMember(Alias = "min_depth")]
+    public int MinDepth { get; set; } = 1;
+
     [YamlMember(Alias = "speed_bonus")]
     public double SpeedBonus { get; set; }
 
