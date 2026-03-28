@@ -122,19 +122,47 @@ public partial class Main : Node
     /// </summary>
     private void InitFactories()
     {
-        var projectRoot = ProjectSettings.GlobalizePath("res://");
-        var entitiesPath = System.IO.Path.Combine(projectRoot, "config", "entities.yaml");
-        var levelTemplatesPath = System.IO.Path.Combine(projectRoot, "config", "level_templates.yaml");
+        // Read YAML via Godot's FileAccess — on iOS, res:// files are packed inside the
+        // .pck bundle and cannot be read via System.IO.File. FileAccess handles this
+        // transparently across all platforms.
+        var entitiesYaml = ReadGodotResource("res://config/entities.yaml");
+        var levelTemplatesYaml = ReadGodotResource("res://config/level_templates.yaml");
 
         _contentLoader = new ContentLoader();
-        var content = _contentLoader.LoadAllFromFile(entitiesPath);
+        ContentBundle content;
+        try
+        {
+            content = _contentLoader.LoadAll(entitiesYaml);
+            GD.Print($"Content loaded: {content.Monsters.Count} monsters, {content.Items.Count} items, {content.Consumables.Count} consumables");
+            foreach (var (key, mon) in content.Monsters)
+                GD.Print($"  Monster: {key} → {mon.Name ?? "(null)"}, hp={mon.Stats?.Hp ?? -1}");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"YAML entities deserialization failed: {ex.GetType().Name}: {ex.Message}");
+            if (ex.InnerException != null)
+                GD.PrintErr($"  Inner: {ex.InnerException.GetType().Name}: {ex.InnerException.Message}");
+            GD.PrintErr($"  Stack: {ex.StackTrace}");
+            throw;
+        }
 
         var entityFactory = new EntityFactory();
         _itemFactory = new ItemFactory(content.Items, entityFactory);
         _monsterFactory = new MonsterFactory(content.Monsters, entityFactory, _itemFactory);
         _consumableFactory = new ConsumableFactory(content.Consumables, entityFactory);
 
-        _levelTemplates = LevelTemplateRegistry.FromFile(levelTemplatesPath);
+        try
+        {
+            _levelTemplates = LevelTemplateRegistry.FromYaml(levelTemplatesYaml);
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"YAML level_templates deserialization failed: {ex.GetType().Name}: {ex.Message}");
+            if (ex.InnerException != null)
+                GD.PrintErr($"  Inner: {ex.InnerException.GetType().Name}: {ex.InnerException.Message}");
+            GD.PrintErr($"  Stack: {ex.StackTrace}");
+            throw;
+        }
         _floorBuilder = new DungeonFloorBuilder(
             _levelTemplates, _monsterFactory, _itemFactory, _consumableFactory);
     }
@@ -145,11 +173,8 @@ public partial class Main : Node
     /// </summary>
     private void LoadAndStart()
     {
-        var projectRoot = ProjectSettings.GlobalizePath("res://");
-        var scenarioPath = System.IO.Path.Combine(
-            projectRoot, "config", "levels", "scenario_depth1_tuned.yaml");
-
-        var scenario = _contentLoader!.LoadScenarioFromFile(scenarioPath);
+        var scenarioYaml = ReadGodotResource("res://config/levels/scenario_depth1_tuned.yaml");
+        var scenario = _contentLoader!.LoadScenario(scenarioYaml);
         _state = GameStateFactory.FromScenario(
             scenario, _baseSeed, _monsterFactory!, _itemFactory!, _consumableFactory!);
 
@@ -378,8 +403,22 @@ public partial class Main : Node
 
     private void OnReplayRequested()
     {
-        // Replay resets to a fresh scenario (same as the initial load path).
-        // If we want dungeon replay, call StartDungeon(1) instead.
-        LoadAndStart();
+        _currentDepth = 1;
+        StartDungeon();
+    }
+
+    /// <summary>
+    /// Read a file from Godot's resource system. On desktop, res:// maps to the project
+    /// directory. On iOS/Android, res:// files are packed inside the .pck bundle and
+    /// cannot be accessed via System.IO.File. Godot's FileAccess handles this transparently.
+    /// </summary>
+    private static string ReadGodotResource(string resPath)
+    {
+        using var file = Godot.FileAccess.Open(resPath, Godot.FileAccess.ModeFlags.Read);
+        if (file == null)
+            throw new System.IO.FileNotFoundException($"Godot resource not found: {resPath}");
+        var text = file.GetAsText();
+        GD.Print($"[ReadGodotResource] {resPath}: {text.Length} chars, starts with: {text[..System.Math.Min(80, text.Length)]}");
+        return text;
     }
 }

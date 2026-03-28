@@ -22,7 +22,7 @@ public sealed partial class HUD : Control
     private Label? _enemyHpLabel;
     private ProgressBar? _enemyHpBar;
 
-    private Button? _exploreButton;
+    private TouchButton? _exploreButton;
     private GameState? _state;
 
     /// <summary>Fired when the player taps the Explore button.</summary>
@@ -97,7 +97,8 @@ public sealed partial class HUD : Control
     public void SetAutoExploreActive(bool active)
     {
         if (_exploreButton == null) return;
-        _exploreButton.Text = active ? "Exploring..." : "Explore";
+        _exploreButton.Text     = active ? "Exploring..." : "Explore";
+        // Tint yellow while active so the player can see the mode is on.
         _exploreButton.Modulate = active ? Colors.Yellow : Colors.White;
     }
 
@@ -145,9 +146,15 @@ public sealed partial class HUD : Control
         _depthLabel.AddThemeColorOverride("font_color", Colors.White);
         topRow.AddChild(_depthLabel);
 
-        _exploreButton = new Button { Text = "Explore" };
-        _exploreButton.AddThemeFontOverride("font", sans);
-        _exploreButton.AddThemeFontSizeOverride("font_size", 22);
+        // Use TouchButton instead of Godot Button — Godot's Button has offset hit areas
+        // under integer stretch scale mode on iOS CanvasLayer.
+        _exploreButton = new TouchButton
+        {
+            Text            = "Explore",
+            FontSize        = 22,
+            BackgroundColor = new Color(0.15f, 0.35f, 0.15f, 0.9f),
+            CustomMinimumSize = new Vector2(96, 0),
+        };
         _exploreButton.Pressed += () => ExploreRequested?.Invoke();
         topRow.AddChild(_exploreButton);
 

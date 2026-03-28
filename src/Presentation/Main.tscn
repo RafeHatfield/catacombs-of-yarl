@@ -29,8 +29,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
-offset_top = -200.0
-offset_bottom = -90.0
+offset_top = -110.0
+offset_bottom = 0.0
 
 [node name="ToastLog" type="Control" parent="UILayer"]
 layout_mode = 3

@@ -6,7 +6,7 @@ namespace CatacombsOfYarl.Logic.Content;
 /// <summary>
 /// Root YAML structure for entities file.
 /// </summary>
-internal sealed class EntitiesFile
+public sealed class EntitiesFile
 {
     [YamlMember(Alias = "monsters")]
     public Dictionary<string, MonsterDefinition> Monsters { get; set; } = new();
@@ -34,6 +34,7 @@ public sealed class ContentLoader
         _deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .IgnoreUnmatchedProperties()
+            .WithObjectFactory(new AotObjectFactory())
             .Build();
     }
 
@@ -43,11 +44,15 @@ public sealed class ContentLoader
     /// </summary>
     public Dictionary<string, MonsterDefinition> LoadMonsters(string yaml)
     {
-        var file = _deserializer.Deserialize<EntitiesFile>(yaml);
-        if (file?.Monsters == null || file.Monsters.Count == 0)
+        // Deserialize to a generic dictionary tree instead of EntitiesFile.
+        // NativeAOT trims PropertyInfo.SetValue which prevents YamlDotNet from
+        // populating typed wrapper classes. Deserializing directly to the section
+        // we need avoids the property-setter reflection entirely.
+        var root = _deserializer.Deserialize<Dictionary<string, Dictionary<string, MonsterDefinition>>>(yaml);
+        if (root == null || !root.TryGetValue("monsters", out var monsters) || monsters.Count == 0)
             return new Dictionary<string, MonsterDefinition>();
 
-        return ResolveInheritance(file.Monsters);
+        return ResolveInheritance(monsters);
     }
 
     /// <summary>
@@ -65,21 +70,21 @@ public sealed class ContentLoader
     /// </summary>
     public Dictionary<string, ItemDefinition> LoadItems(string yaml)
     {
-        var file = _deserializer.Deserialize<EntitiesFile>(yaml);
+        var root = _deserializer.Deserialize<Dictionary<string, Dictionary<string, ItemDefinition>>>(yaml);
         var items = new Dictionary<string, ItemDefinition>();
 
-        if (file?.Weapons != null)
+        if (root != null && root.TryGetValue("weapons", out var weapons))
         {
-            foreach (var (id, def) in file.Weapons)
+            foreach (var (id, def) in weapons)
             {
                 def.Name ??= TitleCase(id);
                 items[id] = def;
             }
         }
 
-        if (file?.Armor != null)
+        if (root != null && root.TryGetValue("armor", out var armor))
         {
-            foreach (var (id, def) in file.Armor)
+            foreach (var (id, def) in armor)
             {
                 def.Name ??= TitleCase(id);
                 items[id] = def;
@@ -94,12 +99,12 @@ public sealed class ContentLoader
     /// </summary>
     public Dictionary<string, ConsumableDefinition> LoadConsumables(string yaml)
     {
-        var file = _deserializer.Deserialize<EntitiesFile>(yaml);
+        var root = _deserializer.Deserialize<Dictionary<string, Dictionary<string, ConsumableDefinition>>>(yaml);
         var consumables = new Dictionary<string, ConsumableDefinition>();
 
-        if (file?.Consumables != null)
+        if (root != null && root.TryGetValue("consumables", out var section))
         {
-            foreach (var (id, def) in file.Consumables)
+            foreach (var (id, def) in section)
             {
                 def.Name ??= TitleCase(id);
                 consumables[id] = def;

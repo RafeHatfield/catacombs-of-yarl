@@ -74,8 +74,7 @@ public sealed class InputHandler
             // Special case: player taps their own tile while standing on a stair-down
             // with the floor cleared → intent is to descend.
             if (gridX == player.X && gridY == player.Y
-                && _state.PlayerOnStairDown
-                && _state.IsFloorClear)
+                && _state.PlayerOnStairDown)
             {
                 Diag.Log($"HandleTap DESCEND at ({gridX},{gridY})");
                 ActionChosen?.Invoke(PlayerAction.Descend);

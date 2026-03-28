@@ -7,10 +7,22 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>CatacombsOfYarl.Logic</RootNamespace>
     <AssemblyName>CatacombsOfYarl.Logic</AssemblyName>
+    <!-- Disable NativeAOT trimming for the Logic assembly.
+         YamlDotNet uses reflection (PropertyInfo.SetValue) to populate deserialized objects.
+         NativeAOT's trimmer strips property setter metadata, causing all YAML-mapped properties
+         to silently remain at default values. The Logic assembly is ~150KB — not worth the
+         binary size savings vs the ongoing battle with trimmer annotations. -->
+    <IsTrimmable>false</IsTrimmable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="YamlDotNet" Version="16.*" />
+  </ItemGroup>
+
+  <!-- NativeAOT trimming preservation for YAML-mapped types.
+       Required for iOS export where NativeAOT is mandatory. -->
+  <ItemGroup>
+    <TrimmerRootDescriptor Include="NativeAOT.rd.xml" />
   </ItemGroup>
 
 </Project>

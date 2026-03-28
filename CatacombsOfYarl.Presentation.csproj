@@ -10,6 +10,11 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <!-- Disable NativeAOT trimming entirely. YamlDotNet uses reflection (PropertyInfo.SetValue)
+         that the trimmer strips even with TrimmerRootAssembly and rd.xml preservation.
+         Binary size cost is ~2-3MB — acceptable for a game. -->
+    <TrimMode>partial</TrimMode>
+    <TrimmerDefaultAction>copy</TrimmerDefaultAction>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,8 +30,11 @@
   <ItemGroup>
     <PackageReference Include="YamlDotNet" Version="16.*">
       <Private>true</Private>
+      <TrimmerRootAssembly>true</TrimmerRootAssembly>
     </PackageReference>
-    <ProjectReference Include="src/Logic/CatacombsOfYarl.Logic.csproj" />
+    <ProjectReference Include="src/Logic/CatacombsOfYarl.Logic.csproj">
+      <TrimmerRootAssembly>true</TrimmerRootAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <Target Name="CopyNuGetDepsToGodotOutput" AfterTargets="Build">

@@ -27,7 +27,7 @@ public static class PlayerCamera
 
     // Match actual UI panel heights: 200px HUD top, 200px bottom (inventory 110 + combat log 90).
     public const float UiTopMargin = 200f;
-    public const float UiBottomMargin = 200f;
+    public const float UiBottomMargin = 110f;
 
     /// <summary>
     /// Active camera mode. Defaults to Deadzone — best feel for turn-based movement.

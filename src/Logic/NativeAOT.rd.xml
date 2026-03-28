@@ -1,0 +1,40 @@
+<linker>
+  <!-- Preserve all types used by YamlDotNet reflection-based deserialization.
+       NativeAOT trims unreferenced types and their metadata. These YAML-mapped
+       classes are only accessed via reflection (Deserialize<T>), so the trimmer
+       would remove their property setters and attributes without this directive.
+
+       Required for iOS export (NativeAOT is mandatory on iOS — no JIT allowed). -->
+
+  <!-- Content layer: entities.yaml -->
+  <assembly fullname="CatacombsOfYarl.Logic">
+    <type fullname="CatacombsOfYarl.Logic.Content.EntitiesFile" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Content.MonsterDefinition" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Content.MonsterStats" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Content.MonsterEquipmentConfig" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Content.WeightedItem" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Content.ItemDefinition" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Content.ConsumableDefinition" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Content.ContentBundle" preserve="all" />
+
+    <!-- Content layer: level_templates.yaml -->
+    <type fullname="CatacombsOfYarl.Logic.Content.LevelTemplatesFile" preserve="all" />
+
+    <!-- Balance layer: level overrides -->
+    <type fullname="CatacombsOfYarl.Logic.Balance.LevelOverride" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.GenerationParameters" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.GuaranteedSpawns" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.SpawnEntry" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.StairRules" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.SpawnRules" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.EncounterBudget" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.SpecialRoomDef" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.SpawnEntryConverter" preserve="all" />
+
+    <!-- Balance layer: scenario definitions -->
+    <type fullname="CatacombsOfYarl.Logic.Balance.ScenarioDefinition" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.ScenarioPlayer" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.ScenarioMonster" preserve="all" />
+    <type fullname="CatacombsOfYarl.Logic.Balance.ScenarioItem" preserve="all" />
+  </assembly>
+</linker>

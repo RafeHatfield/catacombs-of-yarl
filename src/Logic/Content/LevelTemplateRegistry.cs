@@ -9,7 +9,7 @@ namespace CatacombsOfYarl.Logic.Content;
 /// Depths are stored as integer keys in YAML but loaded as Dictionary&lt;string, LevelOverride&gt;
 /// for YAML compatibility (YamlDotNet requires string keys for non-scalar dicts).
 /// </summary>
-internal sealed class LevelTemplatesFile
+public sealed class LevelTemplatesFile
 {
     [YamlMember(Alias = "levels")]
     public Dictionary<string, LevelOverride> Levels { get; set; } = new();
@@ -38,6 +38,7 @@ public sealed class LevelTemplateRegistry
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .IgnoreUnmatchedProperties()
+            .WithObjectFactory(new AotObjectFactory())
             .WithTypeConverter(new SpawnEntryConverter())
             .Build();
 

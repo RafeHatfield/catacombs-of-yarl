@@ -28,16 +28,16 @@ public sealed class LevelOverride
 
     // Deferred — parsed but not processed this milestone
     [YamlMember(Alias = "door_rules")]
-    public Dictionary<string, object>? DoorRules { get; set; }
+    public Dictionary<string, string>? DoorRules { get; set; }
 
     [YamlMember(Alias = "trap_rules")]
-    public Dictionary<string, object>? TrapRules { get; set; }
+    public Dictionary<string, string>? TrapRules { get; set; }
 
     [YamlMember(Alias = "secret_rooms")]
-    public Dictionary<string, object>? SecretRooms { get; set; }
+    public Dictionary<string, string>? SecretRooms { get; set; }
 
     [YamlMember(Alias = "connectivity")]
-    public Dictionary<string, object>? Connectivity { get; set; }
+    public Dictionary<string, string>? Connectivity { get; set; }
 }
 
 public sealed class GenerationParameters
@@ -142,10 +142,10 @@ public sealed class SpecialRoomDef
 
     // Deferred
     [YamlMember(Alias = "metadata")]
-    public Dictionary<string, object>? Metadata { get; set; }
+    public Dictionary<string, string>? Metadata { get; set; }
 
     [YamlMember(Alias = "faction")]
-    public Dictionary<string, object>? Faction { get; set; }
+    public Dictionary<string, string>? Faction { get; set; }
 }
 
 /// <summary>

@@ -162,7 +162,7 @@ public sealed class DungeonFloorBuilder
         // Place stair down
         var stairDown = EntityPlacer.PlaceStairDown(generatedMap, targetDepth: depth + 1, ids);
 
-        var state = new GameState(player, allMonsters, generatedMap.Map, rng)
+        var state = new GameState(player, allMonsters, generatedMap.Map, rng, turnLimit: 10_000)
         {
             IsDungeonMode = true,
             CurrentDepth = depth,

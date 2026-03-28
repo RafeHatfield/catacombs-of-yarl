@@ -131,6 +131,13 @@ public static class TurnController
                 ToX = player.X, ToY = player.Y,
             });
 
+            // Auto-descend: if the player walks onto the stair, descend immediately.
+            // Matches PoC behavior — stairs are always usable, no kill requirement.
+            if (state.IsDungeonMode && state.PlayerOnStairDown)
+            {
+                ResolveDescend(state, events);
+            }
+
             // Walk-over pickup: auto-collect any floor item at the new position
             TryPickUpItemsAt(state, player.X, player.Y, events);
         }
