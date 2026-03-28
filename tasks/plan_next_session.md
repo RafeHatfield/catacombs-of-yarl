@@ -119,6 +119,29 @@ Run harness at depth 1-3 to confirm Death% stays in target bands.
 
 ---
 
+### M.1: Monster Item Usage + Failure System — COMPLETE (2026-03-26)
+- Status: complete
+- Files changed:
+  - `src/Logic/Core/TurnEvent.cs` — added `ItemUseEvent` (ActorId, ItemName, Success, FailureMode, EffectAmount)
+  - `src/Logic/ECS/AiComponent.cs` — added `CanUseItems` (bool, default false, matches PoC can_use_potions=False)
+  - `src/Logic/AI/BasicMonsterAI.cs` — added step 5: item usage decision, gated behind AiComponent.CanUseItems
+  - `src/Logic/Core/TurnController.cs` — wired UseItem case in ResolveMonsterTurns; added ResolveMonsterItemUse method
+  - `src/Presentation/UI/ToastLog.cs` — added ItemUseEvent toast cases (success/fizzle/wrong_target/equipment_damage)
+  - `tests/Core/MonsterItemUseTests.cs` — new, 7 tests covering all resolution paths
+- Key decisions:
+  - `CanUseItems = false` by default — zero RNG impact on existing runs, no balance disruption
+  - Failure modes: fizzle (nothing), wrong_target (heals player), equipment_damage (weapon DamageMax--)
+  - Failure rates: potions 20%, scrolls 75% (placeholder for future scroll system)
+  - Item consumed regardless of outcome
+  - DamageMax guard: won't decrease below DamageMin to preserve valid damage range
+  - Test uses seed-sweeping (up to 500 seeds) rather than hardcoded seeds — resilient to RNG changes
+- Notes:
+  - `FiveFloors_CompletesWithMetrics` previously failing pre-existed this change (pre-existing stash artifact)
+  - `Monster_DoesNotSeekItem_WhenCanSeekItemsFalse` had a broken assertion that was corrected by the linter
+  - 437 tests passing, 0 failures
+
+---
+
 ## Known deferred (not this milestone)
 
 - Character sheet / XP / leveling
@@ -127,3 +150,4 @@ Run harness at depth 1-3 to confirm Death% stays in target bands.
 - Wand charges
 - Partial stack drops
 - GUT-based full UI E2E tests
+- Monster item usage enabled in YAML (CanUseItems=true for specific monster types once balance validated)

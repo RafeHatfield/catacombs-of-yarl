@@ -187,6 +187,46 @@ weapons:
     char: "|"
     color: [220, 220, 240]
 
+  mace:
+    name: "Mace"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 6
+    to_hit_bonus: 0
+    damage_type: "bludgeoning"
+    char: "/"
+    color: [160, 160, 160]
+
+  rapier:
+    name: "Rapier"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 8
+    to_hit_bonus: 1
+    damage_type: "piercing"
+    char: "|"
+    color: [200, 200, 240]
+
+  spear:
+    name: "Spear"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 8
+    to_hit_bonus: 0
+    damage_type: "piercing"
+    char: "/"
+    color: [160, 140, 100]
+
+  battleaxe:
+    name: "Battle Axe"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 10
+    to_hit_bonus: -1
+    damage_type: "slashing"
+    char: "/"
+    color: [180, 160, 140]
+
 armor:
   leather_armor:
     name: "Leather Armor"
@@ -195,6 +235,115 @@ armor:
     armor_type: "light"
     char: "["
     color: [139, 69, 19]
+
+  shield:
+    name: "Shield"
+    slot: "off_hand"
+    armor_class_bonus: 2
+    armor_type: "light"
+    char: "["
+    color: [160, 140, 100]
+
+  leather_helmet:
+    name: "Leather Helmet"
+    slot: "head"
+    armor_class_bonus: 1
+    armor_type: "light"
+    char: "["
+    color: [139, 69, 19]
+
+  leather_boots:
+    name: "Leather Boots"
+    slot: "feet"
+    armor_class_bonus: 1
+    armor_type: "light"
+    char: "["
+    color: [139, 69, 19]
+
+  studded_leather:
+    name: "Studded Leather"
+    slot: "chest"
+    armor_class_bonus: 3
+    armor_type: "light"
+    char: "["
+    color: [160, 130, 80]
+
+  chain_mail:
+    name: "Chain Mail"
+    slot: "chest"
+    armor_class_bonus: 4
+    armor_type: "medium"
+    char: "["
+    color: [180, 180, 200]
+
+  scale_mail:
+    name: "Scale Mail"
+    slot: "chest"
+    armor_class_bonus: 5
+    armor_type: "medium"
+    char: "["
+    color: [170, 190, 210]
+
+# Floor item pool — items eligible to spawn as floor loot.
+# weight: relative spawn frequency (higher = more common).
+# min_depth: first floor depth where the item can appear.
+# TODO: add max_depth and band-based density scaling to match PoC B1-B5 methodology.
+# TODO: integrate consumables into this pool (unified spawn logic with depth-scaled density).
+floor_item_pool:
+  # Weapons — depth 1
+  - item: dagger
+    weight: 25
+    min_depth: 1
+  - item: club
+    weight: 25
+    min_depth: 1
+  - item: mace
+    weight: 30
+    min_depth: 1
+  - item: shortsword
+    weight: 20
+    min_depth: 1
+  # Weapons — depth 2
+  - item: rapier
+    weight: 20
+    min_depth: 2
+  - item: spear
+    weight: 20
+    min_depth: 2
+  - item: longsword
+    weight: 15
+    min_depth: 2
+  # Weapons — depth 3
+  - item: battleaxe
+    weight: 15
+    min_depth: 3
+  - item: greatsword
+    weight: 10
+    min_depth: 3
+  # Armor — depth 1
+  - item: leather_armor
+    weight: 30
+    min_depth: 1
+  - item: shield
+    weight: 25
+    min_depth: 1
+  - item: leather_helmet
+    weight: 20
+    min_depth: 1
+  - item: leather_boots
+    weight: 20
+    min_depth: 1
+  # Armor — depth 2+
+  - item: studded_leather
+    weight: 20
+    min_depth: 2
+  # Armor — depth 3+
+  - item: chain_mail
+    weight: 15
+    min_depth: 3
+  - item: scale_mail
+    weight: 10
+    min_depth: 3
 
 consumables:
   healing_potion:

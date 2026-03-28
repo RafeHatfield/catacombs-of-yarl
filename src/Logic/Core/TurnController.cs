@@ -78,6 +78,16 @@ public static class TurnController
             case PlayerAction.ActionKind.DropItem:
                 ResolveDrop(state, action.Item!, events);
                 break;
+
+            case PlayerAction.ActionKind.EquipItem:
+                ResolveEquip(state, action.Item!, events);
+                player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                break;
+
+            case PlayerAction.ActionKind.UnequipItem:
+                ResolveUnequip(state, action.Slot!.Value, events);
+                player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                break;
         }
     }
 
@@ -261,6 +271,87 @@ public static class TurnController
             ActorId = state.Player.Id,
             ItemId = item.Id,
             ItemName = item.Name,
+        });
+    }
+
+    /// <summary>
+    /// Equip an item from the player's inventory into its designated slot.
+    /// If the slot is already occupied, the displaced item is returned to inventory.
+    /// Costs a turn. Guard: item must be in inventory and have an Equippable component.
+    /// </summary>
+    private static void ResolveEquip(GameState state, Entity item, List<TurnEvent> events)
+    {
+        var inventory = state.PlayerInventory;
+        if (inventory == null) return;
+
+        var equippable = item.Get<Equippable>();
+        if (equippable == null) return;
+
+        // Item must be in the player's inventory.
+        if (!inventory.Remove(item)) return;
+
+        var equipment = state.Player.GetOrAdd<Equipment>();
+        var displaced = equipment.SetSlot(equippable.Slot, item);
+
+        // Attempt to return the displaced item to inventory. If inventory is full and
+        // the displaced item can't be stacked, drop it at the player's feet instead.
+        int? displacedId = null;
+        string? displacedName = null;
+        if (displaced != null)
+        {
+            displacedId   = displaced.Id;
+            displacedName = displaced.Name;
+            if (!inventory.Add(displaced))
+            {
+                // Inventory full — drop displaced item on floor.
+                displaced.X = state.Player.X;
+                displaced.Y = state.Player.Y;
+                state.FloorItems.Add(displaced);
+                state.Map.RegisterEntity(displaced);
+                events.Add(new DropEvent
+                {
+                    ActorId  = state.Player.Id,
+                    ItemId   = displaced.Id,
+                    ItemName = displaced.Name,
+                });
+            }
+        }
+
+        events.Add(new EquipEvent
+        {
+            ActorId          = state.Player.Id,
+            ItemId           = item.Id,
+            ItemName         = item.Name,
+            Slot             = equippable.Slot,
+            DisplacedItemId  = displacedId,
+            DisplacedItemName = displacedName,
+        });
+    }
+
+    /// <summary>
+    /// Unequip the item in the given slot and return it to the player's inventory.
+    /// Guard: slot must be occupied; inventory must not be full (unless the item can stack).
+    /// If inventory is full, the action is silently ignored (no event emitted).
+    /// </summary>
+    private static void ResolveUnequip(GameState state, EquipmentSlot slot, List<TurnEvent> events)
+    {
+        var equipment = state.Player.Get<Equipment>();
+        if (equipment == null) return;
+
+        var item = equipment.GetSlot(slot);
+        if (item == null) return;
+
+        var inventory = state.Player.GetOrAdd<Inventory>();
+        if (!inventory.Add(item)) return; // Inventory full — block the action
+
+        equipment.SetSlot(slot, null);
+
+        events.Add(new UnequipEvent
+        {
+            ActorId  = state.Player.Id,
+            ItemId   = item.Id,
+            ItemName = item.Name,
+            Slot     = slot,
         });
     }
 

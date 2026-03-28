@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Balance;
+using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
 
@@ -71,6 +72,7 @@ public static class EntityPlacer
                 // Override entity ID to use allocator
                 var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
                 CopyComponents(entity, withId);
+                ReIdMonsterEquipment(withId, ids);
 
                 map.Map.RegisterEntity(withId);
                 occupied.Add(pos.Value);
@@ -132,9 +134,14 @@ public static class EntityPlacer
     }
 
     /// <summary>
-    /// Procedurally fill rooms with monsters and consumables.
+    /// Procedurally fill rooms with monsters, consumables, and floor equipment.
     /// Skips the player room. Checks ETP budget per room.
     /// Matching Python place_entities logic.
+    ///
+    /// If itemFactory and floorItemPool are provided, each non-player room also has a chance
+    /// to receive one piece of floor equipment drawn from the depth-filtered pool.
+    /// TODO: replace the separate consumable + equipment passes with a single unified pool
+    ///       once the band-density scaling system (PoC B1-B5) is ported.
     /// </summary>
     public static List<Entity> FillRooms(
         GeneratedMap map,
@@ -144,7 +151,9 @@ public static class EntityPlacer
         SeededRandom rng,
         int depth,
         EntityIdAllocator ids,
-        int roomEtpMax = DefaultRoomEtpMax)
+        int roomEtpMax = DefaultRoomEtpMax,
+        ItemFactory? items = null,
+        IReadOnlyList<FloorItemPoolEntry>? floorItemPool = null)
     {
         var placed = new List<Entity>();
         var occupied = new HashSet<(int, int)>();
@@ -164,6 +173,11 @@ public static class EntityPlacer
             .Where(id => monsters.TryGetDefinition(id, out var d) && d!.MinDepth <= depth)
             .ToList();
         var consumablePool = consumables.AvailableIds.ToList();
+
+        // Depth-filtered equipment pool for floor drops
+        var depthFilteredEquipPool = floorItemPool?
+            .Where(e => e.MinDepth <= depth)
+            .ToList();
 
         foreach (var room in map.Rooms)
         {
@@ -194,6 +208,7 @@ public static class EntityPlacer
 
                 var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
                 CopyComponents(entity, withId);
+                ReIdMonsterEquipment(withId, ids);
 
                 map.Map.RegisterEntity(withId);
                 occupied.Add(pos.Value);
@@ -220,6 +235,31 @@ public static class EntityPlacer
                     map.Map.RegisterEntity(withId);
                     occupied.Add(pos.Value);
                     placed.Add(withId);
+                }
+            }
+
+            // Floor equipment drop — ~40% chance per room of one equipment item.
+            // Pool is depth-filtered at call time so this is just a weighted draw.
+            // TODO: replace the flat 40% with PoC band-density scaling (B1=0.35x, B2=0.45x, B3+=1.0x).
+            if (items != null && depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0
+                && rng.Next(0, 100) < 40)
+            {
+                var pos = FindFreePosition(map.Map, room, occupied, rng);
+                if (pos != null)
+                {
+                    var entry = SelectWeighted(depthFilteredEquipPool, rng);
+                    if (entry != null)
+                    {
+                        var entity = items.Create(entry.ItemId);
+                        if (entity != null)
+                        {
+                            var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
+                            CopyComponents(entity, withId);
+                            map.Map.RegisterEntity(withId);
+                            occupied.Add(pos.Value);
+                            placed.Add(withId);
+                        }
+                    }
                 }
             }
         }
@@ -280,6 +320,26 @@ public static class EntityPlacer
     }
 
     /// <summary>
+    /// Weighted random selection from a floor item pool.
+    /// Returns null only if the pool is empty.
+    /// </summary>
+    private static FloorItemPoolEntry? SelectWeighted(List<FloorItemPoolEntry> pool, SeededRandom rng)
+    {
+        int total = 0;
+        foreach (var e in pool) total += e.Weight;
+        if (total <= 0) return null;
+
+        int roll = rng.Next(total);
+        int cumulative = 0;
+        foreach (var e in pool)
+        {
+            cumulative += e.Weight;
+            if (roll < cumulative) return e;
+        }
+        return pool[^1];
+    }
+
+    /// <summary>
     /// Copy all components from source to destination entity.
     /// Used when we need to re-wrap a factory-created entity under a new ID.
     /// </summary>
@@ -289,6 +349,34 @@ public static class EntityPlacer
         {
             component.Owner = null; // detach from source before adding to destination
             destination.Add(component);
+        }
+    }
+
+    /// <summary>
+    /// Re-ID the equipment items held by a monster so their IDs come from the same
+    /// allocator as all other map entities.
+    ///
+    /// Without this, equipment items keep their EntityFactory IDs (assigned during
+    /// MonsterFactory.Create). Those IDs will collide with allocator IDs for later
+    /// monsters and consumables, causing duplicate IDs in the map registry when the
+    /// monster dies and DropMonsterLoot registers the items as floor entities.
+    ///
+    /// Call this after CopyComponents has transferred the Equipment component to the
+    /// re-wrapped monster entity.
+    /// </summary>
+    private static void ReIdMonsterEquipment(Entity monster, EntityIdAllocator ids)
+    {
+        var equipment = monster.Get<Equipment>();
+        if (equipment == null) return;
+
+        foreach (EquipmentSlot slot in Enum.GetValues<EquipmentSlot>())
+        {
+            var item = equipment.GetSlot(slot);
+            if (item == null) continue;
+
+            var reId = new Entity(ids.Next(), item.Name, item.X, item.Y, item.BlocksMovement);
+            CopyComponents(item, reId);
+            equipment.SetSlot(slot, reId);
         }
     }
 }

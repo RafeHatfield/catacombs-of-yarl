@@ -10,6 +10,9 @@ public enum EquipmentSlot
     Head,
     Chest,
     Feet,
+    LeftRing,
+    RightRing,
+    Neck,
 }
 
 /// <summary>

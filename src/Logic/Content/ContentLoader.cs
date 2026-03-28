@@ -22,6 +22,16 @@ public sealed class EntitiesFile
 }
 
 /// <summary>
+/// Partial wrapper to extract just the floor_item_pool list from the entities YAML.
+/// IgnoreUnmatchedProperties allows this to be deserialized from the full entities file.
+/// </summary>
+internal sealed class FloorItemPoolFile
+{
+    [YamlMember(Alias = "floor_item_pool")]
+    public List<FloorItemPoolEntry> FloorItemPool { get; set; } = new();
+}
+
+/// <summary>
 /// Loads YAML content files and resolves inheritance.
 /// Single source of truth for content loading — all YAML goes through here.
 /// </summary>
@@ -131,17 +141,70 @@ public sealed class ContentLoader
     }
 
     /// <summary>
+    /// Load floor item pool entries from a YAML string.
+    /// Returns an empty list if the floor_item_pool section is missing.
+    /// </summary>
+    public List<FloorItemPoolEntry> LoadFloorItemPool(string yaml)
+    {
+        var wrapper = _deserializer.Deserialize<FloorItemPoolFile>(yaml);
+        return wrapper?.FloorItemPool ?? new List<FloorItemPoolEntry>();
+    }
+
+    /// <summary>
     /// Load all content from a single entities YAML string.
-    /// Returns monsters, items, and consumables in one call.
+    /// Returns monsters, items, consumables, and floor item pool in one call.
     /// </summary>
     public ContentBundle LoadAll(string yaml)
     {
+        // Parse the floor item pool first (uses a typed wrapper that handles sequences).
+        // Then strip that key from the yaml before passing to section-specific loaders —
+        // those loaders deserialize to Dictionary<string, Dictionary<string, T>> which
+        // chokes on sequence values like floor_item_pool's list.
+        var floorPool = LoadFloorItemPool(yaml);
+        var cleanYaml = StripTopLevelKey(yaml, "floor_item_pool");
+
         return new ContentBundle
         {
-            Monsters = LoadMonsters(yaml),
-            Items = LoadItems(yaml),
-            Consumables = LoadConsumables(yaml),
+            Monsters = LoadMonsters(cleanYaml),
+            Items = LoadItems(cleanYaml),
+            Consumables = LoadConsumables(cleanYaml),
+            FloorItemPool = floorPool,
         };
+    }
+
+    /// <summary>
+    /// Remove a top-level YAML key (and all its indented content) from a YAML string.
+    /// Top-level keys are lines that start at column 0 (no leading whitespace).
+    /// </summary>
+    private static string StripTopLevelKey(string yaml, string key)
+    {
+        var lines = yaml.Split('\n');
+        var result = new System.Text.StringBuilder();
+        bool skipping = false;
+        string prefix = key + ":";
+
+        foreach (var line in lines)
+        {
+            // A top-level key: non-empty, starts at column 0, not a comment, not a list item
+            bool isTopLevel = line.Length > 0
+                && !char.IsWhiteSpace(line[0])
+                && !line.StartsWith('#')
+                && !line.StartsWith('-');
+
+            if (isTopLevel && line.StartsWith(prefix))
+            {
+                skipping = true;
+                continue;
+            }
+
+            if (skipping && isTopLevel)
+                skipping = false;
+
+            if (!skipping)
+                result.AppendLine(line);
+        }
+
+        return result.ToString();
     }
 
     /// <summary>

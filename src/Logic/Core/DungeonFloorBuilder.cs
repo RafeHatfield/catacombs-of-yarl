@@ -1,6 +1,7 @@
 using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
+using FloorItemPool = System.Collections.Generic.IReadOnlyList<CatacombsOfYarl.Logic.Content.FloorItemPoolEntry>;
 
 namespace CatacombsOfYarl.Logic.Core;
 
@@ -33,17 +34,20 @@ public sealed class DungeonFloorBuilder
     private readonly MonsterFactory _monsterFactory;
     private readonly ItemFactory _itemFactory;
     private readonly ConsumableFactory _consumableFactory;
+    private readonly FloorItemPool _floorItemPool;
 
     public DungeonFloorBuilder(
         LevelTemplateRegistry templates,
         MonsterFactory monsterFactory,
         ItemFactory itemFactory,
-        ConsumableFactory consumableFactory)
+        ConsumableFactory consumableFactory,
+        FloorItemPool? floorItemPool = null)
     {
         _templates = templates;
         _monsterFactory = monsterFactory;
         _itemFactory = itemFactory;
         _consumableFactory = consumableFactory;
+        _floorItemPool = floorItemPool ?? [];
     }
 
     /// <summary>
@@ -136,7 +140,7 @@ public sealed class DungeonFloorBuilder
             {
                 var filled = EntityPlacer.FillRooms(
                     generatedMap, genParams, _monsterFactory, _consumableFactory,
-                    rng, depth, ids);
+                    rng, depth, ids, items: _itemFactory, floorItemPool: _floorItemPool);
 
                 foreach (var entity in filled)
                     if (entity.BlocksMovement)

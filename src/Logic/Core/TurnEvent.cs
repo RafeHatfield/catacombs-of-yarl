@@ -1,3 +1,5 @@
+using CatacombsOfYarl.Logic.Combat;
+
 namespace CatacombsOfYarl.Logic.Core;
 
 /// <summary>
@@ -59,6 +61,23 @@ public sealed class DropEvent : TurnEvent
 {
     public int ItemId { get; init; }
     public string ItemName { get; init; } = "";
+}
+
+public sealed class EquipEvent : TurnEvent
+{
+    public int ItemId { get; init; }
+    public string ItemName { get; init; } = "";
+    public EquipmentSlot Slot { get; init; }
+    /// <summary>Item that was displaced from the slot and returned to inventory, if any.</summary>
+    public int? DisplacedItemId { get; init; }
+    public string? DisplacedItemName { get; init; }
+}
+
+public sealed class UnequipEvent : TurnEvent
+{
+    public int ItemId { get; init; }
+    public string ItemName { get; init; } = "";
+    public EquipmentSlot Slot { get; init; }
 }
 
 /// <summary>

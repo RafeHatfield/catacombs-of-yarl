@@ -64,21 +64,36 @@ public static class SpriteMapping
         ["poisoned_dagger"]        = "weapon_mystic_dagger",
         ["quickfang_dagger"]       = "weapon_vorpal_dagger",
         ["keen_dagger"]            = "weapon_gold_dagger",
+        ["shortsword"]             = "weapon_sword",
         ["short_sword"]            = "weapon_sword",
+        ["longsword"]              = "weapon_broadsword",
         ["long_sword"]             = "weapon_broadsword",
+        ["fine_longsword"]         = "weapon_broadsword",
+        ["masterwork_longsword"]   = "weapon_broadsword",
         ["mace"]                   = "weapon_mace",
+        ["rapier"]                 = "weapon_sword",
         ["spear"]                  = "weapon_spear",
         ["crossbow"]               = "weapon_crossbow",
+        ["battleaxe"]              = "weapon_axe",
         ["battle_axe"]             = "weapon_axe",
+        ["greatsword"]             = "weapon_broadsword",
+        ["club"]                   = "weapon_mace",
         ["staff"]                  = "weapon_staff",
         ["quarterstaff"]           = "weapon_quarterstaff",
 
-        // Armor (chests)
+        // Armor — chests
         ["leather_armor"]          = "armor_leather_chest",
+        ["studded_leather"]        = "armor_studded_chest",
         ["studded_leather_armor"]  = "armor_studded_chest",
         ["chain_mail"]             = "armor_chain_chest",
+        ["scale_mail"]             = "armor_chain_chest",
         ["plate_mail"]             = "armor_plate_chest",
         ["cloth_robe"]             = "armor_cloth_chest",
+
+        // Armor — head and feet slots
+        ["leather_helmet"]         = "armor_leather_helm",
+        ["leather_boots"]          = "armor_leather_boot",
+        // shield: no sprite in pack — falls back to tinted diamond placeholder
 
         // Wands — mapped to staff sprites by element
         ["wand_of_fireball"]       = "weapon_magic_staff_chaos",

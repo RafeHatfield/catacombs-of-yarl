@@ -37,6 +37,11 @@ public static class AutoExploreSystem
         foreach (var m in state.AliveMonsters)
             if (state.Map.IsVisible(m.X, m.Y))
                 ae.KnownMonsterIds.Add(m.Id);
+
+        // Snapshot stairs already visible — don't interrupt if stair was already uncovered
+        ae.KnownStairs.Clear();
+        if (state.StairDown != null && state.Map.IsVisible(state.StairDown.X, state.StairDown.Y))
+            ae.KnownStairs.Add((state.StairDown.X, state.StairDown.Y));
     }
 
     /// <summary>
@@ -127,6 +132,13 @@ public static class AutoExploreSystem
         // Pass 2: fall back to any unexplored tile (finish isolated pockets)
         target ??= Pathfinder.NearestWhere(dijkstra, state.Map.Width, state.Map.Height,
             (x, y) => !state.Map.IsExplored(x, y));
+
+        // Pass 3: map fully explored — path to the stair down if it exists and we're not on it
+        if (target == null && state.StairDown != null
+            && (state.Player.X != state.StairDown.X || state.Player.Y != state.StairDown.Y))
+        {
+            target = (state.StairDown.X, state.StairDown.Y);
+        }
 
         if (target == null) return false;
 

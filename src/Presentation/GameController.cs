@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Balance;
+using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
@@ -35,6 +36,7 @@ public sealed partial class GameController : Node
     private EntitySpriteManager? _entitySprites;
     private ItemSpriteManager? _itemSprites;
     private InventoryPanel? _inventoryPanel;
+    private EquipmentPanel? _equipmentPanel;
     private TurnAnimator? _animator;
 
     // Stored between OnActionChosen and OnAnimationComplete so we can fire the transition
@@ -81,7 +83,8 @@ public sealed partial class GameController : Node
     }
 
     public void Initialize(GameState state, EntitySpriteManager entitySprites, Node animationRoot,
-        ItemSpriteManager? itemSprites = null, InventoryPanel? inventoryPanel = null)
+        ItemSpriteManager? itemSprites = null, InventoryPanel? inventoryPanel = null,
+        EquipmentPanel? equipmentPanel = null)
     {
 #if DEBUG
         System.Diagnostics.Debug.Assert(_animator == null,
@@ -91,6 +94,7 @@ public sealed partial class GameController : Node
         _entitySprites = entitySprites;
         _itemSprites = itemSprites;
         _inventoryPanel = inventoryPanel;
+        _equipmentPanel = equipmentPanel;
         _animator = new TurnAnimator(animationRoot, entitySprites);
         _animator.AnimationComplete += OnAnimationComplete;
 
@@ -123,6 +127,33 @@ public sealed partial class GameController : Node
 
         Diag.Log($"  -> UseItem({item.Name})");
         OnActionChosen(PlayerAction.UseItem(item));
+    }
+
+    /// <summary>
+    /// Handle a tap on an In Pack item in the equipment panel.
+    /// Issues an EquipItem action via TurnController.
+    /// </summary>
+    public void HandleEquipRequest(int itemId)
+    {
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+
+        var inventory = _state.PlayerInventory;
+        if (inventory == null) return;
+
+        var item = inventory.FindFirst(e => e.Id == itemId);
+        if (item == null) return;
+
+        OnActionChosen(PlayerAction.Equip(item));
+    }
+
+    /// <summary>
+    /// Handle a tap on an occupied equipment slot in the equipment panel.
+    /// Issues an UnequipItem action via TurnController.
+    /// </summary>
+    public void HandleUnequipRequest(EquipmentSlot slot)
+    {
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+        OnActionChosen(PlayerAction.Unequip(slot));
     }
 
     /// <summary>
@@ -253,6 +284,7 @@ public sealed partial class GameController : Node
 
         // Single pass over events — avoids 5 separate LINQ allocations per turn.
         bool inventoryChanged = false;
+        bool equipmentChanged = false;
         _pendingDescend = null;
         foreach (var evt in result.Events)
         {
@@ -268,12 +300,16 @@ public sealed partial class GameController : Node
             }
             else if (evt is HealEvent)
                 inventoryChanged = true;
+            else if (evt is EquipEvent or UnequipEvent)
+                { inventoryChanged = true; equipmentChanged = true; }
             else if (evt is DescendEvent desc)
                 _pendingDescend = desc;
         }
 
         if (inventoryChanged)
             _inventoryPanel?.Refresh(_state!);
+        if (equipmentChanged && _equipmentPanel?.Visible == true)
+            _equipmentPanel?.Refresh(_state!);
 
         Diag.Log($"  -> PlayTurn (gameOver={result.GameOver})");
         if (result.GameOver)

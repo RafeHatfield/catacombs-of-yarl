@@ -1,7 +1,6 @@
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
-using CatacombsOfYarl.Presentation;
 using Godot;
 
 namespace CatacombsOfYarl.Presentation.UI;
@@ -26,10 +25,7 @@ public sealed partial class InventoryPanel : Control
     private const int SlotSeparation = 4;
 
     private static readonly Color FallbackConsumableColor = new(0.2f, 0.7f, 0.2f, 1f);
-    private static readonly Color FallbackWeaponColor     = new(0.9f, 0.75f, 0.1f, 1f);
-    private static readonly Color FallbackArmorColor      = new(0.2f, 0.4f, 0.9f, 1f);
     private static readonly Color FallbackDefaultColor    = new(0.5f, 0.5f, 0.5f, 1f);
-    private static readonly Color EquippedHighlightColor  = new(0.8f, 0.65f, 0.1f, 0.45f);
 
     private Label? _headerLabel;
     private HBoxContainer? _itemStrip;
@@ -89,11 +85,14 @@ public sealed partial class InventoryPanel : Control
     public void Refresh(GameState state)
     {
         var inventory = state.PlayerInventory;
-        int count    = inventory?.Count ?? 0;
-        int capacity = Logic.ECS.Inventory.Capacity;
+
+        // Quick-bar shows consumables only — equippables live in the equipment panel.
+        var consumables = inventory?.Items
+            .Where(item => item.Get<Consumable>() != null)
+            .ToList() ?? new List<Entity>();
 
         if (_headerLabel != null)
-            _headerLabel.Text = $"INVENTORY  {count}/{capacity}";
+            _headerLabel.Text = $"QUICK-BAR  {consumables.Count}";
 
         if (_itemStrip == null) return;
 
@@ -102,7 +101,7 @@ public sealed partial class InventoryPanel : Control
 
         _slotRects.Clear();
 
-        if (inventory == null || inventory.Count == 0)
+        if (consumables.Count == 0)
         {
             if (_emptyLabel != null)  _emptyLabel.Visible = true;
             if (_itemStrip != null)   _itemStrip.Visible  = false;
@@ -112,14 +111,9 @@ public sealed partial class InventoryPanel : Control
         if (_emptyLabel != null) _emptyLabel.Visible = false;
         if (_itemStrip != null)  _itemStrip.Visible  = true;
 
-        var equipment   = state.Player.Get<Equipment>();
-        var mainHandId  = equipment?.MainHand?.Id;
-        var chestId     = equipment?.GetSlot(EquipmentSlot.Chest)?.Id;
-
-        foreach (var item in inventory.Items)
+        foreach (var item in consumables)
         {
-            bool isEquipped = (item.Id == mainHandId) || (item.Id == chestId);
-            var slot = BuildSlot(item, isEquipped);
+            var slot = BuildSlot(item, isEquipped: false);
             _itemStrip.AddChild(slot);
         }
 
@@ -226,13 +220,10 @@ public sealed partial class InventoryPanel : Control
         // Store item ID as metadata so _ComputeSlotRects can read it back.
         slot.SetMeta("item_id", item.Id);
 
-        // Background
-        var bgColor = isEquipped ? EquippedHighlightColor : new Color(0.15f, 0.15f, 0.2f, 0.6f);
-        var bg = new ColorRect { Color = bgColor, MouseFilter = MouseFilterEnum.Ignore };
+        var bg = new ColorRect { Color = new Color(0.15f, 0.15f, 0.2f, 0.6f), MouseFilter = MouseFilterEnum.Ignore };
         bg.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         slot.AddChild(bg);
 
-        // Icon
         var iconContainer = BuildIconWithBadge(item, isEquipped);
         slot.AddChild(iconContainer);
 
@@ -308,8 +299,6 @@ public sealed partial class InventoryPanel : Control
     private static Color FallbackColor(Entity item)
     {
         if (item.Get<Consumable>() != null) return FallbackConsumableColor;
-        var eq = item.Get<Equippable>();
-        if (eq != null) return eq.IsWeapon ? FallbackWeaponColor : FallbackArmorColor;
         return FallbackDefaultColor;
     }
 }

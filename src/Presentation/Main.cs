@@ -31,6 +31,7 @@ public partial class Main : Node
     private ToastLog? _toastLog;
     private GameOverScreen? _gameOverScreen;
     private InventoryPanel? _inventoryPanel;
+    private EquipmentPanel? _equipmentPanel;
     // Stored as field so SetupPresentation can call SetGameState after each floor build.
     private DebugOverlay? _debugOverlay;
     private RectDebugDraw? _rectDebugDraw;
@@ -164,7 +165,7 @@ public partial class Main : Node
             throw;
         }
         _floorBuilder = new DungeonFloorBuilder(
-            _levelTemplates, _monsterFactory, _itemFactory, _consumableFactory);
+            _levelTemplates, _monsterFactory, _itemFactory, _consumableFactory, content.FloorItemPool);
     }
 
     /// <summary>
@@ -216,13 +217,15 @@ public partial class Main : Node
         var hudNode = GetNode<Control>("UILayer/HUD");
         var toastLogNode = GetNode<Control>("UILayer/ToastLog");
         var inventoryPanelNode = GetNode<Control>("UILayer/InventoryPanel");
+        var equipmentPanelNode = GetNode<Control>("UILayer/EquipmentPanel");
 
-        // ToastLog overlays the dungeon — must not block taps on the game view.
-        toastLogNode.MouseFilter = Control.MouseFilterEnum.Ignore;
+        // These nodes overlay the dungeon — must not block taps on the game view.
+        toastLogNode.MouseFilter      = Control.MouseFilterEnum.Ignore;
+        equipmentPanelNode.MouseFilter = Control.MouseFilterEnum.Ignore;
 
         // Clear any previous render — RemoveChild before QueueFree so ghost nodes
         // don't linger in layout containers until end-of-frame.
-        foreach (var node in new Node[] { tileMapLayer, entityLayer, hudNode, toastLogNode, inventoryPanelNode })
+        foreach (var node in new Node[] { tileMapLayer, entityLayer, hudNode, toastLogNode, inventoryPanelNode, equipmentPanelNode })
             foreach (var child in node.GetChildren())
                 child.SafeFree();
 
@@ -243,12 +246,18 @@ public partial class Main : Node
         hudNode.AddChild(_hud);
         _hud.SetState(state);
 
-        // Inventory panel — added to its scene-defined container node (same pattern as HUD/CombatLog)
+        // Inventory panel (quick-bar) — consumables only.
         _inventoryPanel = new InventoryPanel();
         inventoryPanelNode.AddChild(_inventoryPanel);
         _inventoryPanel.Initialize(state);
         _inventoryPanel.ItemTapped += OnInventoryItemTapped;
         _rectDebugDraw?.SetInventoryPanel(_inventoryPanel);
+
+        // Equipment panel — full-screen overlay, starts hidden.
+        _equipmentPanel = new EquipmentPanel();
+        equipmentPanelNode.AddChild(_equipmentPanel);
+        _equipmentPanel.EquipRequested   += itemId => _gameController?.HandleEquipRequest(itemId);
+        _equipmentPanel.UnequipRequested += slot   => _gameController?.HandleUnequipRequest(slot);
 
         // Combat log
         _toastLog = new ToastLog();
@@ -288,14 +297,17 @@ public partial class Main : Node
         }
         _gameController = new GameController();
         AddChild(_gameController);
-        _gameController.Initialize(state, _entitySprites, this, _itemSprites, _inventoryPanel);
+        _gameController.Initialize(state, _entitySprites, this, _itemSprites, _inventoryPanel, _equipmentPanel);
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
 
-        // Wire HUD Explore button to GameController
+        // Wire HUD buttons to GameController / EquipmentPanel.
         if (_hud != null)
+        {
             _hud.ExploreRequested += () => _gameController?.StartAutoExplore();
+            _hud.GearRequested    += OnGearRequested;
+        }
 
         // Debug overlay — update references each floor so it reflects the new state.
         // No-op in release builds (_debugOverlay is null).
@@ -368,6 +380,8 @@ public partial class Main : Node
 
         _hud?.Refresh();
         _hud?.SetAutoExploreActive(_gameController?.IsAutoExploreActive ?? false);
+        if (_equipmentPanel?.Visible == true && _state != null)
+            _equipmentPanel.Refresh(_state);
         if (_gameView != null) PlayerCamera.AnimateTo(_gameView, _state.Player, this);
         _toastLog?.RecordTurn(result, _state);
 
@@ -399,6 +413,15 @@ public partial class Main : Node
     private void OnInventoryItemTapped(int itemId)
     {
         _gameController?.HandleInventoryTap(itemId);
+    }
+
+    private void OnGearRequested()
+    {
+        if (_equipmentPanel == null || _state == null) return;
+        if (_equipmentPanel.Visible)
+            _equipmentPanel.Hide();
+        else
+            _equipmentPanel.Show(_state);
     }
 
     private void OnReplayRequested()

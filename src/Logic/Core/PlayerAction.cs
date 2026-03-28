@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.ECS;
 
 namespace CatacombsOfYarl.Logic.Core;
@@ -9,7 +10,7 @@ namespace CatacombsOfYarl.Logic.Core;
 /// </summary>
 public sealed class PlayerAction
 {
-    public enum ActionKind { Wait, Attack, Move, UseItem, Descend, DropItem }
+    public enum ActionKind { Wait, Attack, Move, UseItem, Descend, DropItem, EquipItem, UnequipItem }
 
     public ActionKind Kind { get; }
 
@@ -20,17 +21,22 @@ public sealed class PlayerAction
     public int? TargetX { get; }
     public int? TargetY { get; }
 
-    /// <summary>Specific item to use. Null = auto-find first healing potion (bot behavior).</summary>
+    /// <summary>Specific item to use or equip. Null = auto-find first healing potion (bot behavior).</summary>
     public Entity? Item { get; }
 
+    /// <summary>Equipment slot to unequip. Only set for UnequipItem actions.</summary>
+    public EquipmentSlot? Slot { get; }
+
     private PlayerAction(ActionKind kind, Entity? target = null,
-        int? targetX = null, int? targetY = null, Entity? item = null)
+        int? targetX = null, int? targetY = null, Entity? item = null,
+        EquipmentSlot? slot = null)
     {
         Kind = kind;
         Target = target;
         TargetX = targetX;
         TargetY = targetY;
         Item = item;
+        Slot = slot;
     }
 
     public static PlayerAction Wait => new(ActionKind.Wait);
@@ -40,4 +46,6 @@ public sealed class PlayerAction
     public static PlayerAction MoveToward(Entity target) => new(ActionKind.Move, target: target);
     public static PlayerAction UseItem(Entity? item = null) => new(ActionKind.UseItem, item: item);
     public static PlayerAction Drop(Entity item) => new(ActionKind.DropItem, item: item);
+    public static PlayerAction Equip(Entity item) => new(ActionKind.EquipItem, item: item);
+    public static PlayerAction Unequip(EquipmentSlot slot) => new(ActionKind.UnequipItem, slot: slot);
 }

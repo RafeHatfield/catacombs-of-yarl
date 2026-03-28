@@ -23,10 +23,14 @@ public sealed partial class HUD : Control
     private ProgressBar? _enemyHpBar;
 
     private TouchButton? _exploreButton;
+    private TouchButton? _gearButton;
     private GameState? _state;
 
     /// <summary>Fired when the player taps the Explore button.</summary>
     public event Action? ExploreRequested;
+
+    /// <summary>Fired when the player taps the Gear (equipment) button.</summary>
+    public event Action? GearRequested;
 
     public override void _Ready()
     {
@@ -148,6 +152,16 @@ public sealed partial class HUD : Control
 
         // Use TouchButton instead of Godot Button — Godot's Button has offset hit areas
         // under integer stretch scale mode on iOS CanvasLayer.
+        _gearButton = new TouchButton
+        {
+            Text              = "Gear",
+            FontSize          = 22,
+            BackgroundColor   = new Color(0.25f, 0.20f, 0.10f, 0.9f),
+            CustomMinimumSize = new Vector2(72, 0),
+        };
+        _gearButton.Pressed += () => GearRequested?.Invoke();
+        topRow.AddChild(_gearButton);
+
         _exploreButton = new TouchButton
         {
             Text            = "Explore",

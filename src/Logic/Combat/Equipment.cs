@@ -14,15 +14,21 @@ public sealed class Equipment : IComponent
     public Entity? Head { get; set; }
     public Entity? Chest { get; set; }
     public Entity? Feet { get; set; }
+    public Entity? LeftRing { get; set; }
+    public Entity? RightRing { get; set; }
+    public Entity? Neck { get; set; }
 
     /// <summary>Get the equipped item in a slot.</summary>
     public Entity? GetSlot(EquipmentSlot slot) => slot switch
     {
-        EquipmentSlot.MainHand => MainHand,
-        EquipmentSlot.OffHand => OffHand,
-        EquipmentSlot.Head => Head,
-        EquipmentSlot.Chest => Chest,
-        EquipmentSlot.Feet => Feet,
+        EquipmentSlot.MainHand  => MainHand,
+        EquipmentSlot.OffHand   => OffHand,
+        EquipmentSlot.Head      => Head,
+        EquipmentSlot.Chest     => Chest,
+        EquipmentSlot.Feet      => Feet,
+        EquipmentSlot.LeftRing  => LeftRing,
+        EquipmentSlot.RightRing => RightRing,
+        EquipmentSlot.Neck      => Neck,
         _ => null,
     };
 
@@ -32,11 +38,14 @@ public sealed class Equipment : IComponent
         Entity? previous = GetSlot(slot);
         switch (slot)
         {
-            case EquipmentSlot.MainHand: MainHand = item; break;
-            case EquipmentSlot.OffHand: OffHand = item; break;
-            case EquipmentSlot.Head: Head = item; break;
-            case EquipmentSlot.Chest: Chest = item; break;
-            case EquipmentSlot.Feet: Feet = item; break;
+            case EquipmentSlot.MainHand:  MainHand  = item; break;
+            case EquipmentSlot.OffHand:   OffHand   = item; break;
+            case EquipmentSlot.Head:      Head      = item; break;
+            case EquipmentSlot.Chest:     Chest     = item; break;
+            case EquipmentSlot.Feet:      Feet      = item; break;
+            case EquipmentSlot.LeftRing:  LeftRing  = item; break;
+            case EquipmentSlot.RightRing: RightRing = item; break;
+            case EquipmentSlot.Neck:      Neck      = item; break;
         }
         return previous;
     }
@@ -62,10 +71,13 @@ public sealed class Equipment : IComponent
 
     private IEnumerable<Entity> AllEquipped()
     {
-        if (MainHand != null) yield return MainHand;
-        if (OffHand != null) yield return OffHand;
-        if (Head != null) yield return Head;
-        if (Chest != null) yield return Chest;
-        if (Feet != null) yield return Feet;
+        if (MainHand  != null) yield return MainHand;
+        if (OffHand   != null) yield return OffHand;
+        if (Head      != null) yield return Head;
+        if (Chest     != null) yield return Chest;
+        if (Feet      != null) yield return Feet;
+        if (LeftRing  != null) yield return LeftRing;
+        if (RightRing != null) yield return RightRing;
+        if (Neck      != null) yield return Neck;
     }
 }

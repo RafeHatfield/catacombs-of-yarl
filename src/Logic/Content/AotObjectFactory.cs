@@ -32,6 +32,8 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(WeightedItem)] = () => new WeightedItem(),
         [typeof(ItemDefinition)] = () => new ItemDefinition(),
         [typeof(ConsumableDefinition)] = () => new ConsumableDefinition(),
+        [typeof(FloorItemPoolEntry)] = () => new FloorItemPoolEntry(),
+        [typeof(FloorItemPoolFile)] = () => new FloorItemPoolFile(),
         [typeof(LevelTemplatesFile)] = () => new LevelTemplatesFile(),
 
         // Balance layer
@@ -66,6 +68,7 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(List<ScenarioMonster>)] = () => new List<ScenarioMonster>(),
         [typeof(List<ScenarioItem>)] = () => new List<ScenarioItem>(),
         [typeof(List<WeightedItem>)] = () => new List<WeightedItem>(),
+        [typeof(List<FloorItemPoolEntry>)] = () => new List<FloorItemPoolEntry>(),
         [typeof(Dictionary<string, List<WeightedItem>>)] = () => new Dictionary<string, List<WeightedItem>>(),
         [typeof(Dictionary<string, double>)] = () => new Dictionary<string, double>(),
         [typeof(Dictionary<int, LevelOverride>)] = () => new Dictionary<int, LevelOverride>(),
