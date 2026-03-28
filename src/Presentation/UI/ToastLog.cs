@@ -186,6 +186,18 @@ public sealed partial class ToastLog : Control
             PickUpEvent pickup =>
                 $"Picked up {pickup.ItemName}.",
 
+            ItemUseEvent { Success: true } use =>
+                $"[color=yellow]{actorName} uses {use.ItemName}![/color]",
+
+            ItemUseEvent { FailureMode: "fizzle" } use =>
+                $"[color=gray]{actorName} tries {use.ItemName}... it fizzles.[/color]",
+
+            ItemUseEvent { FailureMode: "wrong_target" } use =>
+                $"[color=lime]{actorName} fumbles {use.ItemName} — it backfires![/color]",
+
+            ItemUseEvent { FailureMode: "equipment_damage" } use =>
+                $"[color=orange]{actorName} mishandles {use.ItemName} — weapon damaged![/color]",
+
             _ => null,
         };
     }

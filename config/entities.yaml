@@ -20,6 +20,9 @@ monsters:
     faction: "orc"
     tags: ["corporeal_flesh", "humanoid", "living"]
     etp_base: 27
+    can_seek_items: true
+    seek_distance: 5
+    inventory_size: 5
     equipment:
       spawn_chances:
         main_hand: 0.75
@@ -74,6 +77,8 @@ monsters:
     blocks: true
     faction: "undead"
     tags: ["corporeal_flesh", "undead", "mindless", "zombie"]
+    can_seek_items: false
+    inventory_size: 0
     damage_resistance: "piercing"
     damage_vulnerability: "bludgeoning"
     speed_bonus: 0.5

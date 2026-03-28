@@ -217,6 +217,11 @@ public sealed class ContentLoader
             DamageResistance = child.DamageResistance ?? parent.DamageResistance,
             DamageVulnerability = child.DamageVulnerability ?? parent.DamageVulnerability,
             Equipment = child.Equipment ?? parent.Equipment,
+            // Item-seeking behavior: child's true always wins; inherit parent's true if child didn't set it.
+            // This matches PoC convention where non-seeking monsters explicitly set can_seek_items: false.
+            CanSeekItems = child.CanSeekItems || parent.CanSeekItems,
+            SeekDistance = child.SeekDistance != 5 ? child.SeekDistance : parent.SeekDistance,
+            InventorySize = child.InventorySize != 0 ? child.InventorySize : parent.InventorySize,
         };
     }
 

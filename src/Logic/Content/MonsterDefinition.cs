@@ -59,6 +59,15 @@ public sealed class MonsterDefinition
 
     [YamlMember(Alias = "equipment")]
     public MonsterEquipmentConfig? Equipment { get; set; }
+
+    [YamlMember(Alias = "can_seek_items")]
+    public bool CanSeekItems { get; set; }
+
+    [YamlMember(Alias = "seek_distance")]
+    public int SeekDistance { get; set; } = 5;
+
+    [YamlMember(Alias = "inventory_size")]
+    public int InventorySize { get; set; }
 }
 
 /// <summary>

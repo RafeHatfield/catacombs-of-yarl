@@ -1,5 +1,6 @@
 using System.Collections;
 using CatacombsOfYarl.Logic.Balance;
+using CatacombsOfYarl.Logic.ECS;
 using YamlDotNet.Serialization;
 
 namespace CatacombsOfYarl.Logic.Content;
@@ -19,6 +20,10 @@ public sealed class AotObjectFactory : IObjectFactory
     // Lookup from Type to factory function. Populated once, used on every deserialize.
     private static readonly Dictionary<Type, Func<object>> _factories = new()
     {
+        // ECS components — not deserialized from YAML, but registered for NativeAOT safety
+        // if any future serialization path needs to reconstruct them from saved state.
+        [typeof(AiComponent)] = () => new AiComponent(),
+
         // Content layer
         [typeof(EntitiesFile)] = () => new EntitiesFile(),
         [typeof(MonsterDefinition)] = () => new MonsterDefinition(),

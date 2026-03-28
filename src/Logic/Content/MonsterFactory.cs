@@ -94,6 +94,25 @@ public sealed class MonsterFactory
         if (_equipmentSpawner != null && def.Equipment != null && rng != null)
             _equipmentSpawner.SpawnEquipment(entity, def.Equipment, rng);
 
+        // AI component — controls behavior dispatch and item-seeking
+        entity.Add(new AiComponent
+        {
+            AiType = def.AiType,
+            CanSeekItems = def.CanSeekItems,
+            SeekDistance = def.SeekDistance,
+            InventorySize = def.InventorySize,
+        });
+
+        // Inventory for monsters that can seek and carry items
+        if (def.CanSeekItems && def.InventorySize > 0)
+            entity.Add(new Inventory());
+
+        // Equipment for monsters that can seek items — ensures auto-equip works even when
+        // the monster has no YAML equipment config (MonsterEquipmentSpawner creates it
+        // conditionally, so we guarantee it here for all item-seekers).
+        if (def.CanSeekItems && entity.Get<Equipment>() == null)
+            entity.Add(new Equipment());
+
         return entity;
     }
 

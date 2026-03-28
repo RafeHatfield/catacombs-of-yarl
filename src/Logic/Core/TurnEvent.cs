@@ -60,3 +60,28 @@ public sealed class DropEvent : TurnEvent
     public int ItemId { get; init; }
     public string ItemName { get; init; } = "";
 }
+
+/// <summary>
+/// Emitted when a monster attempts to use an item from its inventory.
+/// Both success and failure paths emit this event so the presentation layer
+/// can show appropriate feedback (toast messages) and the harness can measure
+/// how often item usage fires and what outcomes result.
+/// </summary>
+public sealed class ItemUseEvent : TurnEvent
+{
+    public string ItemName { get; init; } = "";
+    public bool Success { get; init; }
+
+    /// <summary>
+    /// How the item usage failed. Empty string on success.
+    /// Values: "fizzle" (nothing happens), "wrong_target" (player benefits),
+    /// "equipment_damage" (monster's weapon loses a point of DamageMax).
+    /// </summary>
+    public string FailureMode { get; init; } = "";
+
+    /// <summary>
+    /// HP healed (success or wrong_target path) or DamageMax reduction (equipment_damage).
+    /// 0 on fizzle.
+    /// </summary>
+    public int EffectAmount { get; init; }
+}
