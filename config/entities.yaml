@@ -47,6 +47,7 @@ monsters:
     spawn_weight: 0
 
   orc_brute:
+    name: "Orc Brute"
     extends: orc
     min_depth: 3
     depth_weights:

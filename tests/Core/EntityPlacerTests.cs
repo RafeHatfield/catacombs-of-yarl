@@ -478,18 +478,7 @@ consumables:
 
         var placed = EntityPlacer.FillRooms(map, null, monsters, consumables, rng, depth: 2, ids);
 
-        // orc_brute has char "O" and name inherited from orc ("Orc") — distinguish by checking
-        // that no entity came from the orc_brute definition. MonsterFactory.Create sets the name
-        // to the definition's Name, which for orc_brute inherits "Orc" from parent. Instead,
-        // verify via the factory definition lookup: orc_brute has EtpBase 45 vs orc's 27.
-        // Fighter stats: orc_brute has hp:42. Orc has hp:28. Check Fighter.MaxHp via placed.
-        var brutes = placed
-            .Where(e =>
-            {
-                var fighter = e.Get<Fighter>();
-                return fighter != null && fighter.MaxHp == 42;
-            })
-            .ToList();
+        var brutes = placed.Where(e => e.Name == "Orc Brute").ToList();
         Assert.That(brutes, Is.Empty, $"Expected no orc_brutes at depth 2, but found {brutes.Count}");
     }
 }
