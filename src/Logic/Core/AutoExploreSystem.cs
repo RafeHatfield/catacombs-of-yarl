@@ -38,9 +38,11 @@ public static class AutoExploreSystem
             if (state.Map.IsVisible(m.X, m.Y))
                 ae.KnownMonsterIds.Add(m.Id);
 
-        // Snapshot stairs already visible — don't interrupt if stair was already uncovered
+        // Snapshot stairs already out of fog-of-war — don't interrupt for these.
+        // Uses IsExplored (ever seen) not IsVisible (currently in FOV): once the player
+        // has uncovered the stair tile from FoW, re-activating explore should not stop again.
         ae.KnownStairs.Clear();
-        if (state.StairDown != null && state.Map.IsVisible(state.StairDown.X, state.StairDown.Y))
+        if (state.StairDown != null && state.Map.IsExplored(state.StairDown.X, state.StairDown.Y))
             ae.KnownStairs.Add((state.StairDown.X, state.StairDown.Y));
     }
 
@@ -84,7 +86,7 @@ public static class AutoExploreSystem
                 && !ae.ExploredSnapshot.Contains((item.X, item.Y)))
                 return $"Item found: {item.Name}";
 
-        // 3. New stair visible and not already known
+        // 3. New stair visible and not already out of fog-of-war
         if (state.StairDown != null
             && state.Map.IsVisible(state.StairDown.X, state.StairDown.Y)
             && !ae.KnownStairs.Contains((state.StairDown.X, state.StairDown.Y)))

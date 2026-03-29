@@ -48,6 +48,11 @@ public static class PlayerCamera
     /// </summary>
     public static void Update(Node2D gameView, Entity player, float zoom = DefaultZoom)
     {
+        // Kill any in-flight camera tween from the previous floor before snapping.
+        // Without this, the stale tween overrides the position we set here and the
+        // new floor appears grey (camera is animating to the old floor's position).
+        if (_lastCameraTween != null) { _lastCameraTween.Kill(); TweenTracker.Killed(); _lastCameraTween = null; }
+
         var viewport = gameView.GetViewport().GetVisibleRect().Size;
         var playerScreen = IsometricMapper.GridToScreen(player.X, player.Y);
 

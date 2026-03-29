@@ -59,6 +59,13 @@ public partial class Main : Node
     private const double TapFadeDelay    = 0.15; // seconds at full alpha before fade starts
     private const double TapFadeDuration = 0.35; // seconds to fade to zero
 
+    // Minimap and zoom
+    private MiniMap? _miniMap;
+    private float _currentZoom = PlayerCamera.DefaultZoom;
+    private const float ZoomMin = 1.5f;
+    private const float ZoomMax = 6.0f;
+    private const float ZoomStep = 0.5f;
+
     // Dungeon run state
     private int _baseSeed = 1337;
     private int _currentDepth = 1;
@@ -251,13 +258,15 @@ public partial class Main : Node
         inventoryPanelNode.AddChild(_inventoryPanel);
         _inventoryPanel.Initialize(state);
         _inventoryPanel.ItemTapped += OnInventoryItemTapped;
+        _inventoryPanel.ItemDropRequested += itemId => _gameController?.HandleDropRequest(itemId);
         _rectDebugDraw?.SetInventoryPanel(_inventoryPanel);
 
         // Equipment panel — full-screen overlay, starts hidden.
         _equipmentPanel = new EquipmentPanel();
         equipmentPanelNode.AddChild(_equipmentPanel);
-        _equipmentPanel.EquipRequested   += itemId => _gameController?.HandleEquipRequest(itemId);
-        _equipmentPanel.UnequipRequested += slot   => _gameController?.HandleUnequipRequest(slot);
+        _equipmentPanel.EquipRequested     += itemId => _gameController?.HandleEquipRequest(itemId);
+        _equipmentPanel.UnequipRequested   += slot   => _gameController?.HandleUnequipRequest(slot);
+        _equipmentPanel.ItemDropRequested  += itemId => _gameController?.HandleDropRequest(itemId);
 
         // Combat log
         _toastLog = new ToastLog();
@@ -276,7 +285,30 @@ public partial class Main : Node
             _gameOverScreen.Visible = false;
         }
 
-        PlayerCamera.Update(_gameView!, state.Player);
+        PlayerCamera.Update(_gameView!, state.Player, _currentZoom);
+
+        // Minimap: create once, reuse across floors (just call Refresh on each floor).
+        if (_miniMap == null)
+        {
+            _miniMap = new MiniMap();
+            _miniMap.MouseFilter = Control.MouseFilterEnum.Ignore;
+            // Anchor to top-right of UILayer
+            _miniMap.AnchorLeft   = 1f;
+            _miniMap.AnchorTop    = 0f;
+            _miniMap.AnchorRight  = 1f;
+            _miniMap.AnchorBottom = 0f;
+            GetNode<CanvasLayer>("UILayer").AddChild(_miniMap);
+
+            // Zoom buttons: small +/− panel anchored to the left of the minimap area
+            var zoomPanel = BuildZoomPanel();
+            zoomPanel.MouseFilter = Control.MouseFilterEnum.Ignore;
+            GetNode<CanvasLayer>("UILayer").AddChild(zoomPanel);
+        }
+        _miniMap.OffsetLeft   = -state.Map.Width  * 2 - 8;
+        _miniMap.OffsetTop    = 210f;
+        _miniMap.OffsetRight  = -8f;
+        _miniMap.OffsetBottom = 210f + state.Map.Height * 2;
+        _miniMap.Refresh(state);
 
         // Apply initial fog-of-war so the floor renders correctly from turn 0.
         // In dungeon mode: DungeonFloorBuilder.Build called RecomputeFov — player sees start area.
@@ -297,7 +329,7 @@ public partial class Main : Node
         }
         _gameController = new GameController();
         AddChild(_gameController);
-        _gameController.Initialize(state, _entitySprites, this, _itemSprites, _inventoryPanel, _equipmentPanel);
+        _gameController.Initialize(state, _entitySprites, this, _itemSprites, _inventoryPanel, _equipmentPanel, _toastLog);
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
@@ -376,13 +408,15 @@ public partial class Main : Node
                 else if (atk.TargetId == _state.Player.Id && atk.Hit) _damageTaken += atk.Damage;
                 if (atk.TargetKilled && atk.ActorId == _state.Player.Id) _monstersKilled++;
             }
+
         }
 
         _hud?.Refresh();
         _hud?.SetAutoExploreActive(_gameController?.IsAutoExploreActive ?? false);
         if (_equipmentPanel?.Visible == true && _state != null)
             _equipmentPanel.Refresh(_state);
-        if (_gameView != null) PlayerCamera.AnimateTo(_gameView, _state.Player, this);
+        if (_gameView != null) PlayerCamera.AnimateTo(_gameView, _state.Player, this, zoom: _currentZoom);
+        _miniMap?.Refresh(_state);
         _toastLog?.RecordTurn(result, _state);
 
         // Update fog-of-war — TurnController called RecomputeFov twice this turn
@@ -428,6 +462,48 @@ public partial class Main : Node
     {
         _currentDepth = 1;
         StartDungeon();
+    }
+
+    /// <summary>
+    /// Build the zoom +/− button panel. Positioned to the left of the minimap.
+    /// Map is always 120×80, so minimap is 240×160 px at 2px/tile.
+    /// Minimap OffsetRight = -8, OffsetLeft = -248. Zoom panel sits at OffsetRight = -252, OffsetLeft = -292.
+    /// </summary>
+    private Control BuildZoomPanel()
+    {
+        var panel = new VBoxContainer();
+        panel.AnchorLeft   = 1f;
+        panel.AnchorTop    = 0f;
+        panel.AnchorRight  = 1f;
+        panel.AnchorBottom = 0f;
+        panel.OffsetTop    = 210f;
+        panel.OffsetLeft   = -292f;
+        panel.OffsetRight  = -252f;
+
+        var btnZoomIn = new Button { Text = "+" };
+        btnZoomIn.AddThemeFontSizeOverride("font_size", 18);
+        btnZoomIn.CustomMinimumSize = new Vector2(36, 36);
+        btnZoomIn.Pressed += () =>
+        {
+            _currentZoom = System.Math.Min(ZoomMax, _currentZoom + ZoomStep);
+            if (_gameView != null && _state != null)
+                PlayerCamera.Update(_gameView, _state.Player, _currentZoom);
+        };
+
+        var btnZoomOut = new Button { Text = "−" };
+        btnZoomOut.AddThemeFontSizeOverride("font_size", 18);
+        btnZoomOut.CustomMinimumSize = new Vector2(36, 36);
+        btnZoomOut.Pressed += () =>
+        {
+            _currentZoom = System.Math.Max(ZoomMin, _currentZoom - ZoomStep);
+            if (_gameView != null && _state != null)
+                PlayerCamera.Update(_gameView, _state.Player, _currentZoom);
+        };
+
+        panel.AddChild(btnZoomIn);
+        panel.AddChild(btnZoomOut);
+
+        return panel;
     }
 
     /// <summary>

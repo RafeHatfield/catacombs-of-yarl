@@ -317,6 +317,20 @@ public static class TurnController
             }
         }
 
+        // Propagate weapon speed_bonus to player's SpeedBonusTracker so momentum
+        // system activates when equipping a weapon that has a speed bonus.
+        if (equippable.Slot == EquipmentSlot.MainHand)
+        {
+            double weaponSpeed = item.Get<SpeedBonusTracker>()?.EquipmentRatio ?? 0;
+            var tracker = state.Player.Get<SpeedBonusTracker>();
+            if (tracker == null && weaponSpeed > 0)
+            {
+                tracker = new SpeedBonusTracker();
+                state.Player.Add(tracker);
+            }
+            if (tracker != null) tracker.EquipmentRatio = weaponSpeed;
+        }
+
         events.Add(new EquipEvent
         {
             ActorId          = state.Player.Id,
@@ -345,6 +359,13 @@ public static class TurnController
         if (!inventory.Add(item)) return; // Inventory full — block the action
 
         equipment.SetSlot(slot, null);
+
+        // Clear weapon speed contribution when unequipping from main hand.
+        if (slot == EquipmentSlot.MainHand)
+        {
+            var tracker = state.Player.Get<SpeedBonusTracker>();
+            if (tracker != null) tracker.EquipmentRatio = 0;
+        }
 
         events.Add(new UnequipEvent
         {

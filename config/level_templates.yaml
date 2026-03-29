@@ -2,13 +2,18 @@
 # Keys are depth integers. Depths without an entry use engine defaults.
 # Active this milestone: parameters, guaranteed_spawns, stairs, encounter_budget.
 # Deferred (parsed but not processed): door_rules, trap_rules, secret_rooms, connectivity.
+#
+# Engine defaults (match PoC game_constants.py):
+#   map: 120×80, max_rooms: 150 attempts, room_size: 12–18
+#   PoC yields ~75 actual rooms × ~200 avg tiles = ~15000 walkable tiles (~31% of map)
+#
+# Per-level overrides: only specify what differs from defaults.
+# max_monsters_per_room / max_items_per_room are encounter density controls, not generation params.
 
 levels:
   1:
     parameters:
-      max_rooms: 8
-      min_room_size: 5
-      max_room_size: 12
+      max_rooms: 150
       max_monsters_per_room: 2
       max_items_per_room: 2
     guaranteed_spawns:
@@ -19,7 +24,7 @@ levels:
 
   2:
     parameters:
-      max_rooms: 9
+      max_rooms: 150
       max_monsters_per_room: 2
       max_items_per_room: 2
     guaranteed_spawns:
@@ -30,7 +35,7 @@ levels:
 
   3:
     parameters:
-      max_rooms: 10
+      max_rooms: 150
       max_monsters_per_room: 3
       max_items_per_room: 2
     guaranteed_spawns:

@@ -23,12 +23,14 @@ namespace CatacombsOfYarl.Logic.Core;
 /// </summary>
 public sealed class DungeonFloorBuilder
 {
-    // Defaults used when no level template override is found for a depth
-    private const int DefaultMapWidth = 40;
-    private const int DefaultMapHeight = 40;
-    private const int DefaultMaxRooms = 10;
-    private const int DefaultMinRoomSize = 5;
-    private const int DefaultMaxRoomSize = 12;
+    // Defaults used when no level template override is found for a depth.
+    // Match PoC game_constants.py: 120×80, 150 attempts, 12–18 room size.
+    // PoC gets ~75 actual rooms @ ~200 avg tiles = ~15000 walkable tiles (~31% of map).
+    private const int DefaultMapWidth = 120;
+    private const int DefaultMapHeight = 80;
+    private const int DefaultMaxRooms = 150;
+    private const int DefaultMinRoomSize = 12;
+    private const int DefaultMaxRoomSize = 18;
 
     private readonly LevelTemplateRegistry _templates;
     private readonly MonsterFactory _monsterFactory;
@@ -154,7 +156,7 @@ public sealed class DungeonFloorBuilder
             // No guaranteed spawns — full procedural fill
             var filled = EntityPlacer.FillRooms(
                 generatedMap, genParams, _monsterFactory, _consumableFactory,
-                rng, depth, ids);
+                rng, depth, ids, items: _itemFactory, floorItemPool: _floorItemPool);
 
             foreach (var entity in filled)
                 if (entity.BlocksMovement)

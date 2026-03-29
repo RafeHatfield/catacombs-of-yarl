@@ -285,6 +285,7 @@ public sealed class ContentLoader
             CanSeekItems = child.CanSeekItems || parent.CanSeekItems,
             SeekDistance = child.SeekDistance != 5 ? child.SeekDistance : parent.SeekDistance,
             InventorySize = child.InventorySize != 0 ? child.InventorySize : parent.InventorySize,
+            SpawnWeight = child.SpawnWeight != 0 ? child.SpawnWeight : parent.SpawnWeight,
         };
     }
 

@@ -48,6 +48,13 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "min_depth")]
     public int MinDepth { get; set; } = 1;
 
+    /// <summary>
+    /// Relative spawn weight for procedural placement. Higher = more common.
+    /// 0 means the monster is not procedurally spawnable (only via guaranteed spawns).
+    /// </summary>
+    [YamlMember(Alias = "spawn_weight")]
+    public int SpawnWeight { get; set; } = 0;
+
     [YamlMember(Alias = "speed_bonus")]
     public double SpeedBonus { get; set; }
 

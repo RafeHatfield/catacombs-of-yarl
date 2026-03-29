@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Presentation.Map;
@@ -92,6 +93,10 @@ public sealed class InputHandler
     private Entity? FindMonsterAt(int gridX, int gridY)
     {
         if (_state == null) return null;
-        return _state.AliveMonsters.FirstOrDefault(m => m.X == gridX && m.Y == gridY);
+        // Do NOT use AliveMonsters (cached per TurnCount) — the cache is stale between turns
+        // when a monster just died. Query Monsters directly with a live IsAlive check so the
+        // player can walk onto the tile in the very next tap after killing its occupant.
+        return _state.Monsters.FirstOrDefault(
+            m => m.X == gridX && m.Y == gridY && m.Get<Fighter>()?.IsAlive == true);
     }
 }

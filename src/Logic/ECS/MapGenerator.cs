@@ -13,12 +13,13 @@ namespace CatacombsOfYarl.Logic.ECS;
 /// </summary>
 public static class MapGenerator
 {
-    // Defaults used when no level template parameters are present
-    public const int DefaultWidth = 80;
-    public const int DefaultHeight = 45;
-    public const int DefaultMaxRooms = 15;
-    public const int DefaultMinRoomSize = 5;
-    public const int DefaultMaxRoomSize = 12;
+    // Defaults used when no level template parameters are present.
+    // Match PoC game_constants.py: 120×80, 150 attempts, 12–18 room size.
+    public const int DefaultWidth = 120;
+    public const int DefaultHeight = 80;
+    public const int DefaultMaxRooms = 150;
+    public const int DefaultMinRoomSize = 12;
+    public const int DefaultMaxRoomSize = 18;
 
     /// <summary>
     /// Generate a dungeon floor.
@@ -49,10 +50,13 @@ public static class MapGenerator
             int w = rng.Next(minRoomSize, maxRoomSize + 1);
             int h = rng.Next(minRoomSize, maxRoomSize + 1);
 
-            // Random position that keeps the room entirely within the map
-            // Python: x = randint(0, map_width - w - 1), so max x = map_width - w - 1
-            int x = rng.Next(0, width - w);   // [0, width-w)  → same as randint(0, map_width-w-1)
-            int y = rng.Next(0, height - h);  // [0, height-h) → same as randint(0, map_height-h-1)
+            // Random position — keep at least 1 wall tile on every map edge so the
+            // isometric renderer always has a wall tile behind every floor tile.
+            // PoC equivalent: same constraint is implicit because rooms carve x1+1..x2-1
+            // (leaving a wall border). C# carves the full rectangle, so we enforce the
+            // border here instead.
+            int x = rng.Next(1, Math.Max(2, width - w));    // [1, width-w-1]
+            int y = rng.Next(1, Math.Max(2, height - h));   // [1, height-h-1]
 
             var newRoom = new Room(x, y, w, h);
 

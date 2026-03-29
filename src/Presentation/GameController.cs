@@ -37,6 +37,7 @@ public sealed partial class GameController : Node
     private ItemSpriteManager? _itemSprites;
     private InventoryPanel? _inventoryPanel;
     private EquipmentPanel? _equipmentPanel;
+    private ToastLog? _toastLog;
     private TurnAnimator? _animator;
 
     // Stored between OnActionChosen and OnAnimationComplete so we can fire the transition
@@ -84,7 +85,7 @@ public sealed partial class GameController : Node
 
     public void Initialize(GameState state, EntitySpriteManager entitySprites, Node animationRoot,
         ItemSpriteManager? itemSprites = null, InventoryPanel? inventoryPanel = null,
-        EquipmentPanel? equipmentPanel = null)
+        EquipmentPanel? equipmentPanel = null, ToastLog? toastLog = null)
     {
 #if DEBUG
         System.Diagnostics.Debug.Assert(_animator == null,
@@ -95,6 +96,7 @@ public sealed partial class GameController : Node
         _itemSprites = itemSprites;
         _inventoryPanel = inventoryPanel;
         _equipmentPanel = equipmentPanel;
+        _toastLog = toastLog;
         _animator = new TurnAnimator(animationRoot, entitySprites);
         _animator.AnimationComplete += OnAnimationComplete;
 
@@ -127,6 +129,20 @@ public sealed partial class GameController : Node
 
         Diag.Log($"  -> UseItem({item.Name})");
         OnActionChosen(PlayerAction.UseItem(item));
+    }
+
+    /// <summary>
+    /// Handle a tap on the drop button for an inventory item.
+    /// Issues a Drop action, placing the item on the floor at the player's feet.
+    /// </summary>
+    public void HandleDropRequest(int itemId)
+    {
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+        var inventory = _state.PlayerInventory;
+        if (inventory == null) return;
+        var item = inventory.FindFirst(e => e.Id == itemId);
+        if (item == null) return;
+        OnActionChosen(PlayerAction.Drop(item));
     }
 
     /// <summary>
@@ -190,6 +206,11 @@ public sealed partial class GameController : Node
             _animator!.SpeedMultiplier = 1.0f;
             Phase = GamePhase.WaitingForInput;
             _input.SetAcceptingInput(true);
+
+            var reason = _state.Player.Get<AutoExploreState>()?.StopReason;
+            if (reason != null)
+                _toastLog?.AddMessage($"[color=#aaaaaa]Explore: {reason}[/color]");
+
             return;
         }
         ExecuteTurn(action);

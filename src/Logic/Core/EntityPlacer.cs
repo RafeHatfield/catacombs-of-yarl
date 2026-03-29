@@ -168,10 +168,29 @@ public static class EntityPlacer
         int maxMonsters = genParams?.MaxMonstersPerRoom ?? 3;
         int maxItems = genParams?.MaxItemsPerRoom ?? 2;
 
-        // Build a pool of monster IDs available at this depth — filter by min_depth
-        var monsterPool = monsters.AvailableIds
+        // Build a weighted pool of monster IDs available at this depth.
+        // Only monsters with SpawnWeight > 0 are eligible for procedural placement.
+        // Falls back to uniform selection from all depth-eligible monsters if no weighted
+        // candidates exist (defensive — shouldn't happen in a properly configured game).
+        var allDepthEligible = monsters.AvailableIds
             .Where(id => monsters.TryGetDefinition(id, out var d) && d!.MinDepth <= depth)
             .ToList();
+
+        var weightedPool = allDepthEligible
+            .Where(id => monsters.TryGetDefinition(id, out var d) && d!.SpawnWeight > 0)
+            .Select(id => { monsters.TryGetDefinition(id, out var d); return (id, d!.SpawnWeight); })
+            .ToList();
+
+        bool useWeighted = weightedPool.Count > 0;
+        if (!useWeighted)
+        {
+            // Warn: no weighted monsters at this depth — falling back to uniform selection.
+            // This is a content configuration gap, not a runtime error.
+            System.Diagnostics.Debug.WriteLine(
+                $"[EntityPlacer] Warning: no monsters with spawn_weight > 0 at depth {depth}. " +
+                $"Falling back to uniform selection from {allDepthEligible.Count} depth-eligible monsters.");
+        }
+
         var consumablePool = consumables.AvailableIds.ToList();
 
         // Depth-filtered equipment pool for floor drops
@@ -192,9 +211,11 @@ public static class EntityPlacer
 
             for (int i = 0; i < monsterCount; i++)
             {
-                if (monsterPool.Count == 0) break;
+                if (useWeighted ? weightedPool.Count == 0 : allDepthEligible.Count == 0) break;
 
-                string monsterId = monsterPool[rng.Next(monsterPool.Count)];
+                string monsterId = useWeighted
+                    ? SelectWeightedMonster(weightedPool, rng)
+                    : allDepthEligible[rng.Next(allDepthEligible.Count)];
                 if (!monsters.TryGetDefinition(monsterId, out var def)) continue;
 
                 int etp = EtpCalculator.GetEtp(def!);
@@ -317,6 +338,25 @@ public static class EntityPlacer
         if (candidates.Count == 0) return null;
 
         return candidates[rng.Next(candidates.Count)];
+    }
+
+    /// <summary>
+    /// Weighted random selection from a monster pool of (id, weight) pairs.
+    /// Returns the last entry if rounding causes the roll to exceed cumulative total.
+    /// </summary>
+    private static string SelectWeightedMonster(List<(string Id, int Weight)> pool, SeededRandom rng)
+    {
+        int total = 0;
+        foreach (var (_, w) in pool) total += w;
+
+        int roll = rng.Next(total);
+        int cumulative = 0;
+        foreach (var (id, w) in pool)
+        {
+            cumulative += w;
+            if (roll < cumulative) return id;
+        }
+        return pool[^1].Id;
     }
 
     /// <summary>

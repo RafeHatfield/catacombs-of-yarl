@@ -47,9 +47,16 @@ public sealed partial class EquipmentPanel : Control
     /// <summary>Fires when the player taps an In Pack item to equip it.</summary>
     public event Action<int>? EquipRequested;
 
+    /// <summary>Fires when the player taps the drop button on an In Pack item.</summary>
+    public event Action<int>? ItemDropRequested;
+
     // Hit-test tracking — (slot/itemId, localRect relative to this panel).
-    private readonly List<(EquipmentSlot Slot, Rect2 Rect)> _equippedRects = new();
-    private readonly List<(int ItemId, Rect2 Rect)>         _packRects     = new();
+    private readonly List<(EquipmentSlot Slot, Rect2 Rect)> _equippedRects  = new();
+    private readonly List<(int ItemId, Rect2 Rect)>         _packRects      = new();
+    private readonly List<(int ItemId, Rect2 Rect)>         _packDropRects  = new();
+
+    // Stats label — rebuilt each Refresh.
+    private Label? _statsLabel;
 
     // Slot row containers — rebuilt each Refresh.
     private Control? _slotGrid;
@@ -71,6 +78,7 @@ public sealed partial class EquipmentPanel : Control
     public void Refresh(GameState state)
     {
         if (!IsInsideTree() || !Visible) return;
+        RefreshStats(state);
         RebuildSlotGrid(state);
         RebuildPackStrip(state);
         CallDeferred(MethodName._ComputeHitRects);
@@ -93,6 +101,17 @@ public sealed partial class EquipmentPanel : Control
                 {
                     AcceptEvent();
                     UnequipRequested?.Invoke(slot);
+                    return;
+                }
+            }
+
+            // Check In Pack drop buttons first (top-right corner of each pack slot).
+            foreach (var (itemId, rect) in _packDropRects)
+            {
+                if (rect.HasPoint(pos))
+                {
+                    AcceptEvent();
+                    ItemDropRequested?.Invoke(itemId);
                     return;
                 }
             }
@@ -197,6 +216,16 @@ public sealed partial class EquipmentPanel : Control
         };
         closeBtn.Pressed += Hide;
         headerRow.AddChild(closeBtn);
+
+        // Stats line — rebuilt each Refresh.
+        _statsLabel = new Label
+        {
+            Text        = "",
+            MouseFilter = MouseFilterEnum.Ignore,
+        };
+        _statsLabel.AddThemeFontSizeOverride("font_size", 16);
+        _statsLabel.AddThemeColorOverride("font_color", new Color(0.80f, 0.85f, 0.90f, 1f));
+        vbox.AddChild(_statsLabel);
 
         // Slot grid placeholder — rebuilt each Refresh.
         _slotGrid = new Control
@@ -492,6 +521,21 @@ public sealed partial class EquipmentPanel : Control
         nameLabel.AddThemeColorOverride("font_color", new Color(0.85f, 0.85f, 0.85f, 1f));
         container.AddChild(nameLabel);
 
+        // Drop button: "×" in top-right corner
+        var dropBtn = new Label
+        {
+            Text                = "×",
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment   = VerticalAlignment.Top,
+            AnchorLeft   = 0f, AnchorTop    = 0f,
+            AnchorRight  = 1f, AnchorBottom = 0f,
+            OffsetRight  = -1f, OffsetTop   = 1f, OffsetBottom = 22f,
+            MouseFilter  = MouseFilterEnum.Ignore,
+        };
+        dropBtn.AddThemeFontSizeOverride("font_size", 16);
+        dropBtn.SelfModulate = new Color(0.9f, 0.4f, 0.4f, 0.85f);
+        container.AddChild(dropBtn);
+
         return container;
     }
 
@@ -503,6 +547,7 @@ public sealed partial class EquipmentPanel : Control
     {
         _equippedRects.Clear();
         _packRects.Clear();
+        _packDropRects.Clear();
 
         var panelOrigin = GetGlobalRect().Position;
 
@@ -542,11 +587,48 @@ public sealed partial class EquipmentPanel : Control
             var globalRect = c.GetGlobalRect();
             var localRect = new Rect2(globalRect.Position - panelOrigin, globalRect.Size);
             _packRects.Add((itemId, localRect));
+            // Drop button: top-right 22×22 of the slot
+            var dropRect = new Rect2(localRect.Position + new Vector2(localRect.Size.X - 22, 0), new Vector2(22, 22));
+            _packDropRects.Add((itemId, dropRect));
             return; // Don't descend into pack slot children.
         }
 
         foreach (var child in node.GetChildren())
             WalkForPackItems(child, panelOrigin);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Stats line — refreshed each Refresh()
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private void RefreshStats(GameState state)
+    {
+        if (_statsLabel == null) return;
+        _statsLabel.Text = ComputeStatsLine(state);
+    }
+
+    private static string ComputeStatsLine(GameState state)
+    {
+        var fighter = state.PlayerFighter;
+        var equip = state.Player.Get<Equipment>();
+        var weapon = equip?.MainHand?.Get<Equippable>();
+
+        int strMod = fighter.StrengthMod;
+        int dexMod = fighter.DexterityMod;
+        int toHitBonus = dexMod + (equip?.TotalToHitBonus ?? 0);
+        int ac = fighter.BaseArmorClass + (equip?.TotalArmorClassBonus ?? 0);
+        int hp = fighter.Hp;
+        int maxHp = fighter.MaxHp;
+
+        string atk;
+        if (weapon != null && weapon.IsWeapon)
+            atk = $"{weapon.DamageMin + strMod}–{weapon.DamageMax + strMod}";
+        else
+            atk = $"{fighter.DamageMin + strMod}–{fighter.DamageMax + strMod}";
+
+        string hit = toHitBonus >= 0 ? $"+{toHitBonus}" : $"{toHitBonus}";
+
+        return $"HP {hp}/{maxHp}   ATK {atk}   HIT {hit}   AC {ac}";
     }
 
     // ─────────────────────────────────────────────────────────────────────────

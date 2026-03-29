@@ -67,6 +67,9 @@ public sealed partial class ToastLog : Control
     /// <summary>Number of currently-visible toasts. Useful for debug overlay.</summary>
     public int ToastCount => _activeToasts.Count;
 
+    /// <summary>Show an arbitrary message as a toast (e.g. auto-explore stop reason).</summary>
+    public void AddMessage(string text) => SpawnToast(text);
+
     /// <summary>Add messages from a completed turn's events.</summary>
     public void RecordTurn(TurnResult result, GameState state)
     {

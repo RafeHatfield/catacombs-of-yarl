@@ -326,49 +326,63 @@ public class AutoExploreTests
     // -----------------------------------------------------------------------
 
     [Test]
-    public void AutoExplore_KnownStairs_DoesNotStopRepeatedly()
+    public void AutoExplore_NewlyUncoveredStairs_InterruptOnce()
     {
-        var state = MakeDungeonState();
+        // 30×30 map, player at (2,2) — stair at (28,28) is well outside any reasonable FOV radius
+        var state = MakeDungeonState(width: 30, height: 30, playerX: 2, playerY: 2);
 
-        // Place stair-down entity adjacent to player (within initial FOV)
-        var stair = new Entity(99, "StairDown", 8, 7, blocksMovement: false);
+        // Place stair far from the player — not yet in FOV or explored
+        var stair = new Entity(99, "StairDown", 28, 28, blocksMovement: false);
         state.StairDown = stair;
         state.RecomputeFov();
 
-        Assert.That(state.Map.IsVisible(8, 7), Is.True, "Stair must be visible for this test");
+        Assert.That(state.Map.IsExplored(28, 28), Is.False, "Stair must be unexplored for this test");
 
         AutoExploreSystem.Activate(state);
 
-        // First activation: stair is visible but NOT in KnownStairs at activation time.
-        // GetNextAction should detect the stair and stop.
+        // Stair not in KnownStairs because it hasn't been explored yet.
+        // Simulate: player walks far enough that (28,28) enters FOV for the first time.
+        state.Map.SetVisible(28, 28); // marks tile visible AND explored
+
         var action1 = AutoExploreSystem.GetNextAction(state);
-        Assert.That(action1, Is.Null, "Should stop on first visible stair");
+        Assert.That(action1, Is.Null, "Should stop when stairs first uncovered from FoW");
         var ae = state.Player.Get<AutoExploreState>()!;
         Assert.That(ae.StopReason, Does.Contain("Stairs").IgnoreCase);
 
-        // Re-activate — simulate user pressing Explore again after seeing stair notification.
-        // The stair is now in KnownStairs because CheckInterrupts adds it when explored.
-        // Actually we need to add it manually since CheckInterrupts only adds when explored.
-        // Mark it explored first (player walked nearby), then add to KnownStairs.
-        ae.KnownStairs.Add((8, 7));
+        // Re-activate — stair is now explored. Should NOT interrupt again.
         AutoExploreSystem.Activate(state);
-
-        // After re-activation with stair pre-known, stair interrupt should not fire immediately
-        // (the stair is in KnownStairs at activation, so it won't be added again via the interrupt check).
-        // The first action should not stop for stairs.
-        // Note: Activate doesn't populate KnownStairs from the current state — that's by design.
-        // The test verifies that manually pre-populating KnownStairs suppresses the stair interrupt.
-        // We need to re-add it to the fresh ae after Activate (Activate calls GetOrAdd which may reuse it).
         ae = state.Player.Get<AutoExploreState>()!;
-        ae.KnownStairs.Add((8, 7));
 
         var action2 = AutoExploreSystem.GetNextAction(state);
-        // Should NOT stop for stairs this time (stair is known)
-        // It may still stop for other reasons (exploration complete, etc.) but not stairs
         if (action2 == null)
         {
             Assert.That(ae.StopReason, Does.Not.Contain("Stairs").IgnoreCase,
-                "Should not stop for already-known stairs");
+                "Already-explored stairs must not interrupt on re-activation");
+        }
+    }
+
+    [Test]
+    public void AutoExplore_AlreadyExploredStairs_DoNotInterrupt()
+    {
+        var state = MakeDungeonState();
+
+        // Place stair adjacent to player (will be in initial FOV)
+        var stair = new Entity(99, "StairDown", 8, 7, blocksMovement: false);
+        state.StairDown = stair;
+        state.RecomputeFov(); // stair tile becomes explored
+
+        Assert.That(state.Map.IsExplored(8, 7), Is.True, "Stair must be explored for this test");
+
+        AutoExploreSystem.Activate(state);
+
+        // Stair was already explored at activation → in KnownStairs → must not interrupt
+        var action1 = AutoExploreSystem.GetNextAction(state);
+        var ae = state.Player.Get<AutoExploreState>()!;
+
+        if (action1 == null)
+        {
+            Assert.That(ae.StopReason, Does.Not.Contain("Stairs").IgnoreCase,
+                "Already-explored stairs must not interrupt auto-explore");
         }
     }
 

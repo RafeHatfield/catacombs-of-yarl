@@ -46,10 +46,10 @@ public sealed class GenerationParameters
     public int? MaxRooms { get; set; }
 
     [YamlMember(Alias = "min_room_size")]
-    public int MinRoomSize { get; set; } = 5;
+    public int MinRoomSize { get; set; } = 12;
 
     [YamlMember(Alias = "max_room_size")]
-    public int MaxRoomSize { get; set; } = 12;
+    public int MaxRoomSize { get; set; } = 18;
 
     [YamlMember(Alias = "max_monsters_per_room")]
     public int MaxMonstersPerRoom { get; set; } = 3;

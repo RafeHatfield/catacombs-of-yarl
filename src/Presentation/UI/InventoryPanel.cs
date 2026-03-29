@@ -33,6 +33,7 @@ public sealed partial class InventoryPanel : Control
 
     // Tracked slot positions for manual hit-testing (bypasses Godot Button coords bug).
     private readonly List<(int ItemId, Rect2 LocalRect)> _slotRects = new();
+    private readonly List<(int ItemId, Rect2 LocalRect)> _dropRects = new();
 
     /// <summary>
     /// Exposes slot rects for the RectDebugDraw overlay. Panel-local coordinates.
@@ -43,6 +44,9 @@ public sealed partial class InventoryPanel : Control
     /// Fires when the player taps an item slot. Argument is the item's entity ID.
     /// </summary>
     public event Action<int>? ItemTapped;
+
+    /// <summary>Fires when the player taps the drop button on an item slot.</summary>
+    public event Action<int>? ItemDropRequested;
 
     public override void _Ready()
     {
@@ -61,6 +65,15 @@ public sealed partial class InventoryPanel : Control
         if (@event is InputEventMouseButton mb && mb.Pressed && mb.ButtonIndex == MouseButton.Left)
         {
             var localPos = mb.Position;
+            foreach (var (itemId, rect) in _dropRects)
+            {
+                if (rect.HasPoint(localPos))
+                {
+                    AcceptEvent();
+                    ItemDropRequested?.Invoke(itemId);
+                    return;
+                }
+            }
             foreach (var (itemId, rect) in _slotRects)
             {
                 if (rect.HasPoint(localPos))
@@ -124,6 +137,7 @@ public sealed partial class InventoryPanel : Control
     private void _ComputeSlotRects()
     {
         _slotRects.Clear();
+        _dropRects.Clear();
         if (_itemStrip == null) return;
 
         var panelOrigin = GetGlobalRect().Position;
@@ -138,6 +152,10 @@ public sealed partial class InventoryPanel : Control
                 var localRect = new Rect2(globalRect.Position - panelOrigin, globalRect.Size);
                 _slotRects.Add((itemId, localRect));
                 Diag.Log($"  slot itemId={itemId} localRect={localRect}");
+
+                // Drop button: top-right 20×20 of the slot
+                var dropRect = new Rect2(localRect.Position + new Vector2(localRect.Size.X - 20, 0), new Vector2(20, 20));
+                _dropRects.Add((itemId, dropRect));
             }
         }
     }
@@ -226,6 +244,20 @@ public sealed partial class InventoryPanel : Control
 
         var iconContainer = BuildIconWithBadge(item, isEquipped);
         slot.AddChild(iconContainer);
+
+        var dropBtn = new Label
+        {
+            Text = "×",
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Top,
+            AnchorLeft   = 0f, AnchorTop    = 0f,
+            AnchorRight  = 1f, AnchorBottom = 0f,
+            OffsetRight  = -1f, OffsetTop   = 1f, OffsetBottom = 20f,
+            MouseFilter  = MouseFilterEnum.Ignore,
+        };
+        dropBtn.AddThemeFontSizeOverride("font_size", 14);
+        dropBtn.SelfModulate = new Color(0.9f, 0.4f, 0.4f, 0.8f);
+        slot.AddChild(dropBtn);
 
         return slot;
     }
