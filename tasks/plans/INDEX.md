@@ -15,6 +15,8 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 - [x] HUD & inventory UI
 - [x] Monster AI — basic pursuit, item seeking, pickup, use scrolls, drop on death
 - [x] Floor item pools (YAML-driven loot)
+- [x] Depth-scaling spawn weights (from_dungeon_level, DepthWeights, EncounterBudget wired)
+- [x] Stat scaling curves (DEFAULT_CURVE + ZOMBIE_CURVE, applied at spawn)
 
 ## Plans To Implement (Ordered by Priority / Dependency)
 
@@ -37,8 +39,19 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | Plan | Status | Description |
 |------|--------|-------------|
 | [plan_doors_secrets_portals.md](plan_doors_secrets_portals.md) | [ ] | Locked doors, secret doors, portal network, key items |
-| [plan_monster_specials.md](plan_monster_specials.md) | [ ] | Necromancer/corpse lifecycle, slime split, skirmisher leap, orc shaman |
+| [plan_monster_specials.md](plan_monster_specials.md) | [ ] | Necromancer/corpse lifecycle, skirmisher leap, orc shaman (slime split now in slime_monsters.md) |
 | [plan_loot_policy.md](plan_loot_policy.md) | [ ] | Band-based loot distribution, pity system, item category weights |
+
+### Active Implementation Plans
+| Plan | Status | Description |
+|------|--------|-------------|
+| [slime_monsters.md](slime_monsters.md) | [ ] | slime + large_slime: split-under-pressure, corrosion, weapon materials |
+| [depth_scaling_weights.md](depth_scaling_weights.md) | [x] | from_dungeon_level depth weights, EncounterBudget wiring |
+
+### Deferred Feature Plans
+| Plan | Status | Description |
+|------|--------|-------------|
+| [deferred_slime_abilities.md](deferred_slime_abilities.md) | [ ] | greater_slime, engulf, hostile_all faction AI, natural damage type, corrosion armor |
 
 ### Tier 4 — Testing & Balance Infrastructure
 | Plan | Status | Description |
