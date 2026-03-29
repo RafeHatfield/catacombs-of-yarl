@@ -51,9 +51,11 @@ public sealed class MonsterDefinition
     /// <summary>
     /// Relative spawn weight for procedural placement. Higher = more common.
     /// 0 means the monster is not procedurally spawnable (only via guaranteed spawns).
+    /// Nullable so that spawn_weight: 0 (explicitly zeroed) is distinguishable from an
+    /// omitted field during ContentLoader.Merge — both previously deserialized as 0.
     /// </summary>
     [YamlMember(Alias = "spawn_weight")]
-    public int SpawnWeight { get; set; } = 0;
+    public int? SpawnWeight { get; set; }
 
     [YamlMember(Alias = "speed_bonus")]
     public double SpeedBonus { get; set; }
@@ -75,6 +77,19 @@ public sealed class MonsterDefinition
 
     [YamlMember(Alias = "inventory_size")]
     public int InventorySize { get; set; }
+
+    /// <summary>
+    /// Optional depth-progression table for spawn weight.
+    /// If set, overrides SpawnWeight — weight is resolved per depth via SpawnUtils.FromDungeonLevel.
+    /// Mirrors the from_dungeon_level pattern from PoC spawn_service.py.
+    ///
+    /// Note on min_depth + depth_weights: both can coexist. min_depth on the definition is a hard
+    /// pre-filter gate (monster excluded from allDepthEligible before weight resolution).
+    /// depth_weights handles the ramp. For monsters using depth_weights, set the definition's
+    /// min_depth to match the first entry's min_depth — it's redundant but serves as documentation.
+    /// </summary>
+    [YamlMember(Alias = "depth_weights")]
+    public List<DepthWeightEntry>? DepthWeights { get; set; }
 }
 
 /// <summary>
@@ -97,6 +112,20 @@ public sealed class WeightedItem
 
     [YamlMember(Alias = "weight")]
     public int Weight { get; set; } = 1;
+}
+
+/// <summary>
+/// One row of a depth-weight progression table.
+/// YAML: depth_weights: [{weight: int, min_depth: int}]
+/// Entries must be in ascending min_depth order — ContentLoader validates this.
+/// </summary>
+public sealed class DepthWeightEntry
+{
+    [YamlMember(Alias = "weight")]
+    public int Weight { get; set; }
+
+    [YamlMember(Alias = "min_depth")]
+    public int MinDepth { get; set; } = 1;
 }
 
 /// <summary>

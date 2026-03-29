@@ -16,6 +16,10 @@ levels:
       max_rooms: 150
       max_monsters_per_room: 2
       max_items_per_room: 2
+    encounter_budget:
+      etp_min: 0
+      etp_max: 50
+      allow_spike: false
     guaranteed_spawns:
       mode: "additional"
       items:
@@ -27,6 +31,10 @@ levels:
       max_rooms: 150
       max_monsters_per_room: 2
       max_items_per_room: 2
+    encounter_budget:
+      etp_min: 0
+      etp_max: 50
+      allow_spike: false
     guaranteed_spawns:
       mode: "additional"
       items:
@@ -38,6 +46,10 @@ levels:
       max_rooms: 150
       max_monsters_per_room: 3
       max_items_per_room: 2
+    encounter_budget:
+      etp_min: 0
+      etp_max: 50
+      allow_spike: false
     guaranteed_spawns:
       mode: "additional"
       items:

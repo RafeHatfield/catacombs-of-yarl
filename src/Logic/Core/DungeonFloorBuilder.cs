@@ -68,6 +68,10 @@ public sealed class DungeonFloorBuilder
         var guaranteedSpawns = levelOverride?.GuaranteedSpawns;
         var stairRules = levelOverride?.Stairs;
 
+        var encounterBudget = levelOverride?.EncounterBudget;
+        int roomEtpMax = encounterBudget?.EtpMax ?? EntityPlacer.DefaultRoomEtpMax;
+        bool allowSpike = encounterBudget?.AllowSpike ?? false;
+
         // Generation parameters — override wins, else defaults
         int mapWidth = genParams?.MapWidth ?? DefaultMapWidth;
         int mapHeight = genParams?.MapHeight ?? DefaultMapHeight;
@@ -142,7 +146,10 @@ public sealed class DungeonFloorBuilder
             {
                 var filled = EntityPlacer.FillRooms(
                     generatedMap, genParams, _monsterFactory, _consumableFactory,
-                    rng, depth, ids, items: _itemFactory, floorItemPool: _floorItemPool);
+                    rng, depth, ids,
+                    roomEtpMax: roomEtpMax,
+                    allowSpike: allowSpike,
+                    items: _itemFactory, floorItemPool: _floorItemPool);
 
                 foreach (var entity in filled)
                     if (entity.BlocksMovement)
@@ -156,7 +163,10 @@ public sealed class DungeonFloorBuilder
             // No guaranteed spawns — full procedural fill
             var filled = EntityPlacer.FillRooms(
                 generatedMap, genParams, _monsterFactory, _consumableFactory,
-                rng, depth, ids, items: _itemFactory, floorItemPool: _floorItemPool);
+                rng, depth, ids,
+                roomEtpMax: roomEtpMax,
+                allowSpike: allowSpike,
+                items: _itemFactory, floorItemPool: _floorItemPool);
 
             foreach (var entity in filled)
                 if (entity.BlocksMovement)

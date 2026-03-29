@@ -3,6 +3,7 @@ using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using NUnit.Framework;
+using CatacombsOfYarl.Logic.Combat;
 
 namespace CatacombsOfYarl.Tests.Core;
 
@@ -336,5 +337,159 @@ consumables:
         int rooms = map.Rooms.Count - 1; // exclude player room
         Assert.That(totalMonsterEtp, Is.LessThanOrEqualTo(rooms * roomEtpMax),
             "Total monster ETP exceeds per-room budget across all rooms");
+    }
+
+    // --- Depth-gate tests ---
+
+    // YAML with orc (constant weight 80), orc_brute (depth_weights starting at depth 3),
+    // and zombie (depth_weights starting at depth 10). Mirrors the actual entities.yaml
+    // monster definitions so these tests exercise the real FromDungeonLevel logic.
+    private const string DepthGateEntitiesYaml = @"
+monsters:
+  orc:
+    name: Orc
+    spawn_weight: 80
+    stats:
+      hp: 28
+      power: 0
+      defense: 0
+      xp: 35
+      damage_min: 4
+      damage_max: 6
+      strength: 14
+      dexterity: 10
+      constitution: 12
+      accuracy: 4
+      evasion: 1
+    char: o
+    color: [63, 127, 63]
+    ai_type: basic
+    blocks: true
+    faction: orc
+    tags: [corporeal_flesh, humanoid, living]
+    etp_base: 27
+
+  orc_brute:
+    extends: orc
+    min_depth: 3
+    depth_weights:
+      - weight: 6
+        min_depth: 3
+      - weight: 12
+        min_depth: 4
+      - weight: 20
+        min_depth: 6
+    stats:
+      hp: 42
+      damage_min: 5
+      damage_max: 8
+      strength: 16
+      xp: 55
+    char: O
+    color: [90, 160, 90]
+    etp_base: 45
+
+  zombie:
+    name: Zombie
+    min_depth: 10
+    depth_weights:
+      - weight: 20
+        min_depth: 10
+      - weight: 40
+        min_depth: 13
+      - weight: 60
+        min_depth: 16
+    stats:
+      hp: 24
+      power: 0
+      defense: 0
+      xp: 30
+      damage_min: 3
+      damage_max: 6
+      strength: 12
+      dexterity: 6
+      constitution: 14
+      accuracy: 1
+      evasion: 0
+    char: z
+    color: [128, 128, 96]
+    ai_type: basic
+    blocks: true
+    faction: undead
+    tags: [corporeal_flesh, undead, mindless, zombie]
+    etp_base: 31
+
+consumables:
+  healing_potion:
+    name: Healing Potion
+    heal_amount: 20
+";
+
+    private static (MonsterFactory monsters, ItemFactory items, ConsumableFactory consumables) BuildDepthGateFactories()
+    {
+        var loader = new ContentLoader();
+        var bundle = loader.LoadAll(DepthGateEntitiesYaml);
+        var entityFactory = new EntityFactory(startId: 1);
+        var monsters = new MonsterFactory(bundle.Monsters, entityFactory);
+        var items = new ItemFactory(bundle.Items, entityFactory);
+        var consumables = new ConsumableFactory(bundle.Consumables, entityFactory);
+        return (monsters, items, consumables);
+    }
+
+    // Use a large map to maximize spawn sample size — 500-room equivalent via large parameters.
+    private static GeneratedMap MakeLargeMap(int seed = 1337) =>
+        MapGenerator.Generate(120, 80, 150, 5, 10, new SeededRandom(seed));
+
+    [Test]
+    public void ZombieDoesNotSpawnBeforeDepth10()
+    {
+        var (monsters, _, consumables) = BuildDepthGateFactories();
+        var map = MakeLargeMap(seed: 1337);
+        var ids = new EntityIdAllocator(200);
+        var rng = new SeededRandom(1337);
+
+        var placed = EntityPlacer.FillRooms(map, null, monsters, consumables, rng, depth: 9, ids);
+
+        var zombies = placed.Where(e => e.Name == "Zombie").ToList();
+        Assert.That(zombies, Is.Empty, $"Expected no zombies at depth 9, but found {zombies.Count}");
+    }
+
+    [Test]
+    public void ZombieSpawnsAtDepth10()
+    {
+        var (monsters, _, consumables) = BuildDepthGateFactories();
+        var map = MakeLargeMap(seed: 1337);
+        var ids = new EntityIdAllocator(200);
+        var rng = new SeededRandom(1337);
+
+        var placed = EntityPlacer.FillRooms(map, null, monsters, consumables, rng, depth: 10, ids);
+
+        var zombies = placed.Where(e => e.Name == "Zombie").ToList();
+        Assert.That(zombies.Count, Is.GreaterThan(0), "Expected at least one zombie at depth 10");
+    }
+
+    [Test]
+    public void OrcBruteDoesNotSpawnBeforeDepth3()
+    {
+        var (monsters, _, consumables) = BuildDepthGateFactories();
+        var map = MakeLargeMap(seed: 1337);
+        var ids = new EntityIdAllocator(200);
+        var rng = new SeededRandom(1337);
+
+        var placed = EntityPlacer.FillRooms(map, null, monsters, consumables, rng, depth: 2, ids);
+
+        // orc_brute has char "O" and name inherited from orc ("Orc") — distinguish by checking
+        // that no entity came from the orc_brute definition. MonsterFactory.Create sets the name
+        // to the definition's Name, which for orc_brute inherits "Orc" from parent. Instead,
+        // verify via the factory definition lookup: orc_brute has EtpBase 45 vs orc's 27.
+        // Fighter stats: orc_brute has hp:42. Orc has hp:28. Check Fighter.MaxHp via placed.
+        var brutes = placed
+            .Where(e =>
+            {
+                var fighter = e.Get<Fighter>();
+                return fighter != null && fighter.MaxHp == 42;
+            })
+            .ToList();
+        Assert.That(brutes, Is.Empty, $"Expected no orc_brutes at depth 2, but found {brutes.Count}");
     }
 }

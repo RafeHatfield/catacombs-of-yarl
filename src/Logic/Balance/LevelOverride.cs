@@ -113,6 +113,11 @@ public sealed class SpawnRules
 
 public sealed class EncounterBudget
 {
+    /// <summary>
+    /// Minimum ETP target for a room. Parsed but not yet enforced — no mechanism
+    /// to keep adding monsters until a floor-level minimum is met. Tracked at floor
+    /// level in the PoC (balance/etp.py). Deferred to floor-ETP tracking plan.
+    /// </summary>
     [YamlMember(Alias = "etp_min")]
     public int EtpMin { get; set; }
 

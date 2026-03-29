@@ -44,11 +44,18 @@ monsters:
   orc_grunt:
     name: "Orc"
     extends: orc
-    spawn_weight: 80
+    spawn_weight: 0
 
   orc_brute:
     extends: orc
-    spawn_weight: 15
+    min_depth: 3
+    depth_weights:
+      - weight: 6
+        min_depth: 3
+      - weight: 12
+        min_depth: 4
+      - weight: 20
+        min_depth: 6
     stats:
       hp: 42
       damage_min: 5
@@ -58,13 +65,18 @@ monsters:
     char: "O"
     color: [90, 160, 90]
     etp_base: 45
-    min_depth: 3
     tags: ["corporeal_flesh", "humanoid", "living", "brute"]
 
   zombie:
     name: "Zombie"
     min_depth: 10
-    spawn_weight: 20
+    depth_weights:
+      - weight: 20
+        min_depth: 10
+      - weight: 40
+        min_depth: 13
+      - weight: 60
+        min_depth: 16
     stats:
       hp: 24
       power: 0

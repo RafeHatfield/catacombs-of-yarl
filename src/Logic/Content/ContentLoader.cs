@@ -62,7 +62,23 @@ public sealed class ContentLoader
         if (root == null || !root.TryGetValue("monsters", out var monsters) || monsters.Count == 0)
             return new Dictionary<string, MonsterDefinition>();
 
-        return ResolveInheritance(monsters);
+        var resolved = ResolveInheritance(monsters);
+
+        // Validate depth_weights tables are sorted ascending by min_depth
+        foreach (var (id, def) in resolved)
+        {
+            if (def.DepthWeights == null) continue;
+            for (int i = 1; i < def.DepthWeights.Count; i++)
+            {
+                if (def.DepthWeights[i].MinDepth <= def.DepthWeights[i - 1].MinDepth)
+                    throw new InvalidOperationException(
+                        $"Monster '{id}': depth_weights must be sorted ascending by min_depth. " +
+                        $"Entry {i} (min_depth={def.DepthWeights[i].MinDepth}) is not greater than " +
+                        $"entry {i-1} (min_depth={def.DepthWeights[i-1].MinDepth}).");
+            }
+        }
+
+        return resolved;
     }
 
     /// <summary>
@@ -285,7 +301,8 @@ public sealed class ContentLoader
             CanSeekItems = child.CanSeekItems || parent.CanSeekItems,
             SeekDistance = child.SeekDistance != 5 ? child.SeekDistance : parent.SeekDistance,
             InventorySize = child.InventorySize != 0 ? child.InventorySize : parent.InventorySize,
-            SpawnWeight = child.SpawnWeight != 0 ? child.SpawnWeight : parent.SpawnWeight,
+            SpawnWeight = child.SpawnWeight ?? parent.SpawnWeight,
+            DepthWeights = child.DepthWeights ?? parent.DepthWeights,
         };
     }
 

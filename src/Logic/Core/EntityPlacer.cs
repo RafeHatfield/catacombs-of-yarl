@@ -152,6 +152,7 @@ public static class EntityPlacer
         int depth,
         EntityIdAllocator ids,
         int roomEtpMax = DefaultRoomEtpMax,
+        bool allowSpike = false,
         ItemFactory? items = null,
         IReadOnlyList<FloorItemPoolEntry>? floorItemPool = null)
     {
@@ -177,8 +178,15 @@ public static class EntityPlacer
             .ToList();
 
         var weightedPool = allDepthEligible
-            .Where(id => monsters.TryGetDefinition(id, out var d) && d!.SpawnWeight > 0)
-            .Select(id => { monsters.TryGetDefinition(id, out var d); return (id, d!.SpawnWeight); })
+            .Select(id =>
+            {
+                monsters.TryGetDefinition(id, out var d);
+                int weight = d!.DepthWeights != null
+                    ? SpawnUtils.FromDungeonLevel(d.DepthWeights, depth)
+                    : (d.SpawnWeight ?? 0);
+                return (id, weight);
+            })
+            .Where(p => p.weight > 0)
             .ToList();
 
         bool useWeighted = weightedPool.Count > 0;
@@ -204,7 +212,6 @@ public static class EntityPlacer
             if (room == map.PlayerRoom) continue;
 
             int roomEtp = 0;
-            bool allowSpike = false;
 
             // Roll monster count for this room (0 to maxMonsters)
             int monsterCount = rng.Next(0, maxMonsters + 1);
