@@ -1,0 +1,127 @@
+id: ultimate_fantasy
+name: "Oryx Ultimate Fantasy"
+sprite_size: 48
+frame_count: 4
+frame_stride: 0
+frame_offset: 0
+frame_pattern: "{base}_{frame}.png"
+sprites_root: "res://src/Presentation/assets/sprites"
+items_root: "res://src/Presentation/assets/sprites/items"
+player_sprite: "heroes/knight"
+
+entities:
+  # Orcs (depth 1+) — heroes/ folder
+  orc: "heroes/goblin"
+  orc_grunt: "heroes/goblin"
+  orc_brute: "heroes/goblin_warrior"
+
+  # Slimes — monsters/ folder (Oryx Ultimate Fantasy 1.2)
+  # Green = minor slime, Red = large slime (visually distinct at a glance)
+  slime: "monsters/slime_green"
+  large_slime: "monsters/slime_red"
+
+  # Undead — heroes/ + monsters/ folder
+  zombie: "heroes/zombie_a"
+  skeleton: "monsters/skeleton"
+  mummy: "monsters/mummy"
+  lich: "monsters/lich"
+
+  # Humanoids — monsters/ folder
+  goblin: "heroes/goblin"
+  cultist: "monsters/cultist"
+  thief: "monsters/thief"
+
+  # Creatures — monsters/ folder
+  rat: "monsters/rat"
+  giant_rat: "monsters/rat_giant"
+  bat: "monsters/bat"
+  spider: "monsters/spider_brown"
+
+  # Bosses / deep — monsters/ folder
+  ogre: "monsters/ogre"
+  troll: "monsters/troll"
+  demon: "monsters/demon_red"
+  minotaur: "monsters/minotaur"
+  golem: "monsters/golem_stone"
+
+items:
+  # Potions
+  healing_potion: "potion_red"
+  mana_potion: "potion_blue"
+  poison_potion: "potion_green"
+  confusion_potion: "potion_black"
+  speed_potion: "potion_white"
+
+  # Weapons
+  dagger: "weapon_dagger"
+  poisoned_dagger: "weapon_mystic_dagger"
+  quickfang_dagger: "weapon_vorpal_dagger"
+  keen_dagger: "weapon_gold_dagger"
+  shortsword: "weapon_sword"
+  short_sword: "weapon_sword"
+  longsword: "weapon_broadsword"
+  long_sword: "weapon_broadsword"
+  fine_longsword: "weapon_broadsword"
+  masterwork_longsword: "weapon_broadsword"
+  mace: "weapon_mace"
+  rapier: "weapon_sword"
+  spear: "weapon_spear"
+  crossbow: "weapon_crossbow"
+  battleaxe: "weapon_axe"
+  battle_axe: "weapon_axe"
+  greatsword: "weapon_broadsword"
+  club: "weapon_mace"
+  staff: "weapon_staff"
+  quarterstaff: "weapon_quarterstaff"
+
+  # Armor — chests
+  leather_armor: "armor_leather_chest"
+  studded_leather: "armor_studded_chest"
+  studded_leather_armor: "armor_studded_chest"
+  chain_mail: "armor_chain_chest"
+  scale_mail: "armor_chain_chest"
+  plate_mail: "armor_plate_chest"
+  cloth_robe: "armor_cloth_chest"
+
+  # Armor — head and feet slots
+  leather_helmet: "armor_leather_helm"
+  leather_boots: "armor_leather_boot"
+  # shield: no sprite in pack — falls back to tinted diamond placeholder
+
+  # Wands — mapped to staff sprites by element
+  wand_of_fireball: "weapon_magic_staff_chaos"
+  wand_of_lightning: "weapon_magic_staff_winged"
+  wand_of_confusion: "weapon_magic_staff_venom"
+  wand_of_slow: "weapon_magic_staff_venom"
+  wand_of_teleportation: "weapon_staff_ankh"
+  wand_of_portals: "weapon_staff_ankh"
+  wand_of_rage: "weapon_magic_staff_chaos"
+  wand_of_glue: "weapon_staff_jeweled"
+  wand_of_dragon_farts: "weapon_staff_jeweled"
+  wand_of_yo_mama: "weapon_staff_jeweled"
+
+  # Rings
+  ring_of_protection: "ring_gold"
+  ring_of_regeneration: "ring_emerald"
+  ring_of_resistance: "ring_silver"
+  ring_of_strength: "ring_ruby"
+  ring_of_dexterity: "ring_azure"
+  ring_of_constitution: "ring_copper"
+  ring_of_might: "ring_ruby"
+  ring_of_hummingbird: "ring_diamond"
+  ring_of_teleportation: "ring_amethyst"
+  ring_of_invisibility: "ring_pearl"
+  ring_of_speed: "ring_flame"
+  ring_of_luck: "ring_ornate"
+  ring_of_wizardry: "ring_cold"
+  ring_of_clarity: "ring_diamond"
+  ring_of_free_action: "ring_silver"
+  ring_of_searching: "ring_ornate"
+
+  # Scrolls / books
+  scroll_of_identify: "book_blue"
+  scroll_of_magic_map: "book_brown"
+  scroll_of_enchant: "book_latch"
+  scroll_of_fire: "book_red"
+  scroll_of_teleport: "book_green"
+  scroll_of_curse: "book_evil"

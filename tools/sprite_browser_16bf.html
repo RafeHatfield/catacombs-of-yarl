@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>16bf Creature Sprite Browser</title>
+<style>
+  body { background:#111; color:#ddd; font-family:monospace; padding:16px; }
+  h1 { color:#fff; margin-bottom:4px; }
+  .subtitle { color:#888; margin-bottom:12px; font-size:12px; }
+  .formula {
+    background:#1e1e1e; border:1px solid #333; padding:10px 14px;
+    margin-bottom:14px; border-radius:4px; font-size:12px; line-height:1.9;
+  }
+  .formula code { color:#7ec8e3; }
+  #filter {
+    padding:6px 10px; font-size:14px; background:#1e1e1e; color:#ddd;
+    border:1px solid #444; border-radius:4px; width:260px; margin-bottom:14px;
+  }
+  .row-header {
+    grid-column: 1 / -1;
+    color:#555; font-size:11px; padding:6px 0 2px;
+    border-top:1px solid #252525; margin-top:6px;
+  }
+  .grid {
+    display:grid;
+    grid-template-columns: repeat(18, 96px);
+    gap:4px;
+  }
+  .cell {
+    background:#1a1a1a; border:1px solid #2a2a2a; border-radius:3px;
+    padding:4px; text-align:center; cursor:pointer;
+    transition:border-color 0.12s, background 0.12s;
+  }
+  .cell:hover { border-color:#7ec8e3; background:#222; }
+  .cell.hidden { display:none; }
+  .frames { display:flex; gap:2px; justify-content:center; margin-bottom:3px; }
+  .frames img {
+    image-rendering:pixelated;
+    width:44px; height:44px; background:#0a0a0a; display:block;
+  }
+  .frames img.game-frame { outline:1px solid #7ec8e3; }
+  .key { font-size:12px; font-weight:bold; color:#7ec8e3; }
+  .name { font-size:10px; color:#aaa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .fnum { font-size:9px; color:#555; }
+  .copied {
+    position:fixed; bottom:20px; right:20px; background:#222;
+    color:#7ec8e3; padding:8px 14px; border-radius:4px; font-size:13px;
+    opacity:0; transition:opacity 0.15s; pointer-events:none;
+  }
+  .copied.show { opacity:1; }
+</style>
+</head>
+<body>
+<h1>Oryx 16-bit Fantasy — Creature Sprite Browser</h1>
+<p class="subtitle">
+  Blue-outlined frame = frame A (standing, what the game loads by default).&nbsp;
+  Right frame = frame B (action pose).&nbsp;
+  Click any cell to copy the YAML key to clipboard.
+</p>
+<div class="formula">
+  <strong>Usage:</strong> find the sprite you want &rarr; put the <code>key: N</code> value in
+  <code>config/tilesets/16bit_fantasy.yaml</code> under <code>entities:</code><br>
+  <strong>Batch-of-18 layout:</strong> within each row, all 18 frame&nbsp;A sprites come first, then all 18 frame&nbsp;B sprites (18 files later).<br>
+  <code>frameA(packed) = packed + 18 &times; &lfloor;(packed&minus;1) / 18&rfloor;</code>
+  &nbsp;&mdash;&nbsp;
+  <code>frameB = frameA + 18</code><br>
+  <strong>YAML key = frameA file number</strong> (with <code>frame_stride:&thinsp;1</code>, the key IS the file number loaded).<br>
+  <em>Note: some names genuinely repeat &mdash; the Oryx sheet has 3 sets of human NPC palettes.</em>
+</div>
+<input id="filter" type="text" placeholder="Filter by name&hellip; (goblin, orc, zombie&hellip;)" oninput="filterCells(this.value)">
+<div class="grid" id="grid"></div>
+<div class="copied" id="copied">Copied!</div>
+<script>
+const NAMES = [
+  "Knight M",
+  "Thief M",
+  "Ranger M",
+  "Wizard M",
+  "Priest M",
+  "Shaman M",
+  "Berserker M",
+  "Swordsman M",
+  "Paladin M",
+  "Knight F",
+  "Thief F",
+  "Ranger F",
+  "Wizard F",
+  "Priest F",
+  "Shaman F",
+  "Berserker F",
+  "Swordsman F",
+  "Paladin F",
+  "Bandit",
+  "Hooded Human",
+  "Human M",
+  "Human F",
+  "Merchant",
+  "Butcher",
+  "Chef",
+  "Bishop",
+  "King",
+  "Queen",
+  "Prince",
+  "Princess",
+  "Guard M",
+  "Guard F",
+  "Knight",
+  "Guard Alt M",
+  "Guard Alt F",
+  "Knight Alt",
+  "Bandit",
+  "Hooded Human",
+  "Human M",
+  "Human F",
+  "Merchant",
+  "Slave",
+  "Alchemist",
+  "Prophet",
+  "King",
+  "Queen",
+  "Prince",
+  "Princess",
+  "Guard M",
+  "Guard F",
+  "Knight",
+  "Guard Alt M",
+  "Guard Alt F",
+  "Knight Alt",
+  "Assassin",
+  "Bandit",
+  "Dwarf",
+  "Dwarf Alt",
+  "Dwarf Priest",
+  "Drow Assassin",
+  "Drow Fighter",
+  "Drow Ranger",
+  "Drow Mage",
+  "Drow Sorceress",
+  "High Elf Fighter M",
+  "High Elf Shield Fighter M",
+  "High Elf Ranger M",
+  "High Elf Mage M",
+  "High Elf Fighter F",
+  "High Elf Shield Fighter F",
+  "High Elf Ranger F",
+  "High Elf Mage F",
+  "Wood Elf Fighter M",
+  "Wood Elf Shield Fighter M",
+  "Wood Elf Ranger M",
+  "Wood Elf Druid M",
+  "Wood Elf Fighter F",
+  "Wood Elf Shield Fighter F",
+  "Wood Elf Ranger F",
+  "Wood Elf Druid F",
+  "Lizardman Warrior",
+  "Lizardman Archer",
+  "Lizardman Captain",
+  "Lizardman Shaman",
+  "Lizardman High Shaman",
+  "Gnome Fighter",
+  "Gnome Fighter Alt",
+  "Gnome Fighter Alt",
+  "Gnome Wizard",
+  "Gnome Wizard Alt",
+  "Gnoll Fighter",
+  "Gnoll Fighter Alt",
+  "Gnoll Fighter Captain",
+  "Gnoll Shaman",
+  "Minotaur Axe",
+  "Minotaur Club",
+  "Minotaur Alt",
+  "Elder Demon",
+  "Fire Demon",
+  "Horned Demon",
+  "Stone Golem",
+  "Mud Golem",
+  "Flesh Golem",
+  "Lava Golem",
+  "Bone Golem",
+  "Djinn",
+  "Treant",
+  "Mimic",
+  "Purple Slime",
+  "Green Slime",
+  "Black Bat",
+  "Red Bat",
+  "Beholder",
+  "Red Spider",
+  "Black Spider",
+  "Grey Rat",
+  "Brown Rat",
+  "Cobra",
+  "Beetle",
+  "Fire Beetle",
+  "Grey Wolf",
+  "Brown Wolf",
+  "Black Wolf",
+  "Dove/Pigeon",
+  "Blue Bird",
+  "Crow/Raven",
+  "Goblin Fighter",
+  "Goblin Archer",
+  "Goblin Captain",
+  "Goblin King",
+  "Goblin Mystic",
+  "Orc Fighter",
+  "Orc Captain",
+  "Orc Mystic",
+  "Troll",
+  "Troll Captain",
+  "Cycops",
+  "Cyclops Alt",
+  "Death Knight",
+  "Death Knight Alt",
+  "Death Knight Alt",
+  "Earth Elemental",
+  "Ice/Water Elemental",
+  "Air Elemental",
+  "Zombie",
+  "Headless Zombie",
+  "Skeleton",
+  "Skeleton Archer",
+  "Skeleton Warrior",
+  "Shadow",
+  "Ghost",
+  "Mummy",
+  "Pharoah",
+  "Necromancer",
+  "Dark Wizard",
+  "Death",
+  "Vampire",
+  "Vampire Alt",
+  "Vampire Lord",
+  "Witch",
+  "Frost Witch",
+  "Green Witch",
+  "Red Dragon",
+  "Purple Dragon",
+  "Gold Dragon",
+  "Green Dragon",
+  "Yeti",
+  "Yeti Alt",
+  "Giant Leech",
+  "Giant Worm",
+  "Brown Bear",
+  "Grey Bear",
+  "Polar Bear",
+  "Giant Scorpion",
+  "Scorpion Alt",
+  "Scorpion Alt",
+  "Ettin",
+  "Ettin Alt",
+  "Pixie/Fairy/Sprite",
+  "Imp/Demon/Devil",
+  "Wisp",
+  "Wisp Alt",
+  "Turnip",
+  "Rotten Turnip",
+  "Fire Minion",
+  "Ice Minion",
+  "Smoke Minion",
+  "Mud Minion",
+  "Eye",
+  "Eyes",
+  "Red Specter",
+  "Blue Specter",
+  "Brown Specter",
+  "Blue Jelly",
+  "Green Jelly",
+  "Red Jelly",
+  "Flame",
+  "Cold Flame"
+];
+
+const ROOT = "../src/Presentation/assets/sprites_16bf/creatures_24x24";
+
+function pad(n) { return String(n).padStart(2,"0"); }
+
+// Batch-of-18 layout:
+// Within each row of 18 creatures: files 1-18 are frame A, files 19-36 are frame B.
+// frameA(packed) = packed + 18 * Math.floor((packed - 1) / 18)
+// frameB = frameA + 18
+function frameA(packed) {
+  return packed + 18 * Math.floor((packed - 1) / 18);
+}
+
+function buildGrid() {
+  const grid = document.getElementById("grid");
+  NAMES.forEach((name, i) => {
+    const packed = i + 1;
+    const fileA  = frameA(packed);
+    const fileB  = fileA + 18;
+    // yamlKey = fileA (with stride=1, the key IS the file number)
+    const yamlKey = fileA;
+
+    if (i % 18 === 0) {
+      const hdr = document.createElement("div");
+      hdr.className = "row-header";
+      const rowNum = Math.floor(i / 18) + 1;
+      const lastPacked = Math.min(packed + 17, 198);
+      hdr.textContent = "Row " + rowNum + "  (packed " + packed + "\u2013" + lastPacked + ",  keys " + fileA + "\u2013" + frameA(Math.min(packed+17,198)) + ")";
+      grid.appendChild(hdr);
+    }
+
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.dataset.name = name.toLowerCase();
+    cell.title = name + "\npacked: " + packed + "\nYAML key: " + yamlKey + "\nFrame A (game): creatures_" + pad(fileA) + ".png\nFrame B (action): creatures_" + pad(fileB) + ".png\nClick to copy YAML key";
+
+    const frames = document.createElement("div");
+    frames.className = "frames";
+
+    const imgA = document.createElement("img");
+    imgA.src = ROOT + "/oryx_16bit_fantasy_creatures_" + pad(fileA) + ".png";
+    imgA.alt = name + " A";
+    imgA.className = "game-frame";
+    imgA.loading = "lazy";
+
+    const imgB = document.createElement("img");
+    imgB.src = ROOT + "/oryx_16bit_fantasy_creatures_" + pad(fileB) + ".png";
+    imgB.alt = name + " B";
+    imgB.loading = "lazy";
+
+    frames.appendChild(imgA);
+    frames.appendChild(imgB);
+    cell.appendChild(frames);
+
+    const keyEl = document.createElement("div");
+    keyEl.className = "key";
+    keyEl.textContent = "key: " + yamlKey;
+    cell.appendChild(keyEl);
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "name";
+    nameEl.textContent = name;
+    cell.appendChild(nameEl);
+
+    const fnumEl = document.createElement("div");
+    fnumEl.className = "fnum";
+    fnumEl.textContent = "f" + pad(fileA) + " / f" + pad(fileB);
+    cell.appendChild(fnumEl);
+
+    cell.addEventListener("click", function() {
+      navigator.clipboard.writeText(String(yamlKey)).catch(function(){});
+      const el = document.getElementById("copied");
+      el.textContent = "Copied \"" + yamlKey + "\" (" + name + ")";
+      el.classList.add("show");
+      clearTimeout(window._ct);
+      window._ct = setTimeout(function(){ el.classList.remove("show"); }, 1800);
+    });
+
+    grid.appendChild(cell);
+  });
+}
+
+function filterCells(q) {
+  q = q.toLowerCase().trim();
+  document.querySelectorAll(".cell").forEach(function(c) {
+    c.classList.toggle("hidden", q.length > 0 && !c.dataset.name.includes(q));
+  });
+}
+
+buildGrid();
+</script>
+</body>
+</html>

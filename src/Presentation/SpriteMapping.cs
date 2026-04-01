@@ -1,162 +1,120 @@
 namespace CatacombsOfYarl.Presentation;
 
 /// <summary>
-/// Maps entity/item type IDs (from YAML content) to Oryx sprite names.
+/// Instance-based sprite mapping backed by a loaded TilesetConfig.
 ///
-/// Monster sprites: res://src/Presentation/assets/sprites/heroes/{base}_{frame}.png
-/// Item sprites:    res://src/Presentation/assets/sprites/items/{name}.png
+/// Replaces the former static class that had hardcoded dictionaries.
+/// Now driven entirely by YAML — swap the tileset config, get a different sprite set,
+/// no C# changes required.
 ///
-/// Monster frames are 1-4 for animation. Items are single static sprites.
-/// All sprites sourced from Oryx Ultimate Fantasy 1.2 and 8-Bit Remaster packs.
+/// Two addressing models:
+///   Path-based (FrameStride == 0, UF):
+///     {SpritesRoot}/{value}_{frame}.png
+///   Index-based (FrameStride > 0, 16bf):
+///     sprite_index = int(value) * FrameStride + frame + FrameOffset
+///     filename = FramePattern with "{index}" substituted (D2 padding)
+///
+/// Thread safety: read-only after construction. Safe to share across callers.
 /// </summary>
-public static class SpriteMapping
+public sealed class SpriteMapping
 {
-    public const string PlayerSprite = "knight";
-    public const int FrameCount = 4;
-    public const string MonsterSpritePath = "res://src/Presentation/assets/sprites/heroes";
-    public const string ItemSpritePath = "res://src/Presentation/assets/sprites/items";
+    private readonly TilesetConfig _config;
 
-    // Monster YAML type ID → Oryx sprite base name (in heroes/ folder)
-    private static readonly Dictionary<string, string> MonsterToSprite = new()
+    public SpriteMapping(TilesetConfig config)
     {
-        // Orcs (depth 1+)
-        ["orc"]       = "goblin",
-        ["orc_grunt"] = "goblin",
-        ["orc_brute"] = "goblin_warrior",
-
-        // Undead
-        ["zombie"]    = "zombie_a",
-        ["skeleton"]  = "skeleton",
-        ["mummy"]     = "mummy",
-        ["lich"]      = "lich",
-
-        // Humanoids
-        ["goblin"]    = "goblin",
-        ["cultist"]   = "cultist",
-        ["thief"]     = "thief",
-
-        // Creatures
-        ["rat"]       = "rat",
-        ["giant_rat"] = "rat_giant",
-        ["bat"]       = "bat",
-        ["spider"]    = "spider_brown",
-
-        // Bosses / deep
-        ["ogre"]      = "ogre",
-        ["troll"]     = "troll",
-        ["demon"]     = "demon_red",
-        ["minotaur"]  = "minotaur",
-        ["golem"]     = "golem_stone",
-    };
-
-    // Item YAML type ID → Oryx sprite filename (without .png, in items/ folder)
-    private static readonly Dictionary<string, string> ItemToSprite = new()
-    {
-        // Potions
-        ["healing_potion"]         = "potion_red",
-        ["mana_potion"]            = "potion_blue",
-        ["poison_potion"]          = "potion_green",
-        ["confusion_potion"]       = "potion_black",
-        ["speed_potion"]           = "potion_white",
-
-        // Weapons
-        ["dagger"]                 = "weapon_dagger",
-        ["poisoned_dagger"]        = "weapon_mystic_dagger",
-        ["quickfang_dagger"]       = "weapon_vorpal_dagger",
-        ["keen_dagger"]            = "weapon_gold_dagger",
-        ["shortsword"]             = "weapon_sword",
-        ["short_sword"]            = "weapon_sword",
-        ["longsword"]              = "weapon_broadsword",
-        ["long_sword"]             = "weapon_broadsword",
-        ["fine_longsword"]         = "weapon_broadsword",
-        ["masterwork_longsword"]   = "weapon_broadsword",
-        ["mace"]                   = "weapon_mace",
-        ["rapier"]                 = "weapon_sword",
-        ["spear"]                  = "weapon_spear",
-        ["crossbow"]               = "weapon_crossbow",
-        ["battleaxe"]              = "weapon_axe",
-        ["battle_axe"]             = "weapon_axe",
-        ["greatsword"]             = "weapon_broadsword",
-        ["club"]                   = "weapon_mace",
-        ["staff"]                  = "weapon_staff",
-        ["quarterstaff"]           = "weapon_quarterstaff",
-
-        // Armor — chests
-        ["leather_armor"]          = "armor_leather_chest",
-        ["studded_leather"]        = "armor_studded_chest",
-        ["studded_leather_armor"]  = "armor_studded_chest",
-        ["chain_mail"]             = "armor_chain_chest",
-        ["scale_mail"]             = "armor_chain_chest",
-        ["plate_mail"]             = "armor_plate_chest",
-        ["cloth_robe"]             = "armor_cloth_chest",
-
-        // Armor — head and feet slots
-        ["leather_helmet"]         = "armor_leather_helm",
-        ["leather_boots"]          = "armor_leather_boot",
-        // shield: no sprite in pack — falls back to tinted diamond placeholder
-
-        // Wands — mapped to staff sprites by element
-        ["wand_of_fireball"]       = "weapon_magic_staff_chaos",
-        ["wand_of_lightning"]      = "weapon_magic_staff_winged",
-        ["wand_of_confusion"]      = "weapon_magic_staff_venom",
-        ["wand_of_slow"]           = "weapon_magic_staff_venom",
-        ["wand_of_teleportation"]  = "weapon_staff_ankh",
-        ["wand_of_portals"]        = "weapon_staff_ankh",
-        ["wand_of_rage"]           = "weapon_magic_staff_chaos",
-        ["wand_of_glue"]           = "weapon_staff_jeweled",
-        ["wand_of_dragon_farts"]   = "weapon_staff_jeweled",
-        ["wand_of_yo_mama"]        = "weapon_staff_jeweled",
-
-        // Rings
-        ["ring_of_protection"]     = "ring_gold",
-        ["ring_of_regeneration"]   = "ring_emerald",
-        ["ring_of_resistance"]     = "ring_silver",
-        ["ring_of_strength"]       = "ring_ruby",
-        ["ring_of_dexterity"]      = "ring_azure",
-        ["ring_of_constitution"]   = "ring_copper",
-        ["ring_of_might"]          = "ring_ruby",
-        ["ring_of_hummingbird"]    = "ring_diamond",
-        ["ring_of_teleportation"]  = "ring_amethyst",
-        ["ring_of_invisibility"]   = "ring_pearl",
-        ["ring_of_speed"]          = "ring_flame",
-        ["ring_of_luck"]           = "ring_ornate",
-        ["ring_of_wizardry"]       = "ring_cold",
-        ["ring_of_clarity"]        = "ring_diamond",
-        ["ring_of_free_action"]    = "ring_silver",
-        ["ring_of_searching"]      = "ring_ornate",
-
-        // Scrolls / books
-        ["scroll_of_identify"]     = "book_blue",
-        ["scroll_of_magic_map"]    = "book_brown",
-        ["scroll_of_enchant"]      = "book_latch",
-        ["scroll_of_fire"]         = "book_red",
-        ["scroll_of_teleport"]     = "book_green",
-        ["scroll_of_curse"]        = "book_evil",
-    };
-
-    /// <summary>Get the sprite base name for a monster type ID.</summary>
-    public static string? GetSpriteBase(string monsterTypeId)
-    {
-        return MonsterToSprite.GetValueOrDefault(monsterTypeId);
+        _config = config;
     }
 
     /// <summary>
-    /// Get the full resource path for a monster sprite frame.
-    /// Frame is 1-based (1-4).
+    /// Sprite path component for the player entity.
+    /// In path-based mode: full subfolder/base, e.g. "heroes/knight".
+    /// In index-based mode: creature key string, e.g. "1".
     /// </summary>
-    public static string GetFramePath(string spriteBase, int frame)
+    public string PlayerSprite => _config.PlayerSprite;
+
+    /// <summary>Tileset identifier (e.g. "ultimate_fantasy"). Used by UI to reflect current selection.</summary>
+    public string TilesetId => _config.Id;
+
+    /// <summary>Tileset display name (e.g. "Ultimate Fantasy"). Used by UI labels.</summary>
+    public string TilesetName => _config.Name;
+
+    /// <summary>Number of animation frames per entity sprite.</summary>
+    public int FrameCount => _config.FrameCount;
+
+    /// <summary>True for index-based tilesets (e.g. 16bf). False for path-based (e.g. UF).</summary>
+    public bool IsIndexBased => _config.FrameStride > 0;
+
+    /// <summary>res:// root path for entity sprites. Used by SpriteBrowser to load raw frames.</summary>
+    public string SpritesRoot => _config.SpritesRoot;
+
+    /// <summary>
+    /// Native sprite size in pixels (48 for UF, 24 for 16bf).
+    /// Used by EntitySpriteManager for scale compensation.
+    /// </summary>
+    public int SpriteSize => _config.SpriteSize;
+
+    /// <summary>
+    /// Get the sprite base value for a monster type ID.
+    /// Returns null if no mapping exists for this type ID.
+    /// In path-based mode: a subfolder/name string (e.g. "heroes/goblin").
+    /// In index-based mode: a creature key string (e.g. "137").
+    /// </summary>
+    public string? GetSpriteBase(string typeId)
     {
-        return $"{MonsterSpritePath}/{spriteBase}_{frame}.png";
+        return _config.Entities.GetValueOrDefault(typeId);
+    }
+
+    /// <summary>
+    /// Get the full resource path for an entity sprite at a given animation frame.
+    /// spriteBase is the value returned by GetSpriteBase (or PlayerSprite).
+    /// Frame is 1-based.
+    /// </summary>
+    public string GetFramePath(string spriteBase, int animFrame)
+    {
+        if (_config.FrameStride == 0)
+        {
+            // Path-based (UF): {SpritesRoot}/{base}_{frame}.png
+            return $"{_config.SpritesRoot}/{spriteBase}_{animFrame}.png";
+        }
+        else
+        {
+            // Index-based (16bf): compute sprite index from creature key
+            // index = key * stride + frame + offset
+            // Frame is 1-based here; the offset accounts for 1-indexed sprite files.
+            if (!int.TryParse(spriteBase, out int creatureKey))
+            {
+                // Defensive: if the value isn't a valid integer, fall through to a safe path.
+                // This should never happen if the tileset YAML is correct.
+                Godot.GD.PrintErr($"[SpriteMapping] Expected integer creature key, got: '{spriteBase}'");
+                return $"{_config.SpritesRoot}/{spriteBase}_{animFrame}.png";
+            }
+
+            int spriteIndex = creatureKey * _config.FrameStride + animFrame + _config.FrameOffset;
+            // FramePattern uses {index:D2} placeholder (D2 = minimum 2-digit zero padding).
+            // Simple string replacement — avoids string.Format to keep it explicit.
+            var filename = _config.FramePattern.Replace("{index:D2}", spriteIndex.ToString("D2"));
+            return $"{_config.SpritesRoot}/{filename}";
+        }
+    }
+
+    /// <summary>
+    /// Get the Offset.Y value for entity sprites (positive = down, negative = up).
+    /// Uses entity_y_offset from the tileset config if set; otherwise falls back to
+    /// the default formula: -(textureHeight * scale * 0.15f).
+    /// </summary>
+    public float GetEntityYOffset(float textureHeight, float scale)
+    {
+        return _config.EntityYOffset ?? -(textureHeight * scale * 0.15f);
     }
 
     /// <summary>
     /// Get the full resource path for an item sprite.
     /// Returns null if no mapping exists (caller should fall back to placeholder).
     /// </summary>
-    public static string? GetItemSpritePath(string itemTypeId)
+    public string? GetItemSpritePath(string itemTypeId)
     {
-        if (ItemToSprite.TryGetValue(itemTypeId, out var spriteName))
-            return $"{ItemSpritePath}/{spriteName}.png";
+        if (_config.Items.TryGetValue(itemTypeId, out var spriteValue))
+            return $"{_config.ItemsRoot}/{spriteValue}.png";
         return null;
     }
 }
