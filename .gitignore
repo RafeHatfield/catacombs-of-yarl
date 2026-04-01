@@ -33,3 +33,6 @@ build/
 
 # Harness output
 reports/
+
+# Claude Code session data
+.claude/projects/
