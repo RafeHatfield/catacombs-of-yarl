@@ -24,15 +24,18 @@ public sealed class ScenarioHarness
     private readonly MonsterFactory _monsterFactory;
     private readonly ItemFactory? _itemFactory;
     private readonly ConsumableFactory? _consumableFactory;
+    private readonly SpellItemFactory? _spellItemFactory;
 
     public ScenarioHarness(
         MonsterFactory monsterFactory,
         ItemFactory? itemFactory = null,
-        ConsumableFactory? consumableFactory = null)
+        ConsumableFactory? consumableFactory = null,
+        SpellItemFactory? spellItemFactory = null)
     {
         _monsterFactory = monsterFactory;
         _itemFactory = itemFactory;
         _consumableFactory = consumableFactory;
+        _spellItemFactory = spellItemFactory;
     }
 
     public AggregatedMetrics Run(ScenarioDefinition scenario, int baseSeed = 1337)
@@ -46,7 +49,7 @@ public sealed class ScenarioHarness
     public RunMetrics RunOnce(ScenarioDefinition scenario, int seed)
     {
         var state = GameStateFactory.FromScenario(
-            scenario, seed, _monsterFactory, _itemFactory, _consumableFactory);
+            scenario, seed, _monsterFactory, _itemFactory, _consumableFactory, _spellItemFactory);
 
         var metrics = new RunMetrics();
         var player = state.Player;

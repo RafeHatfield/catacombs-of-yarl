@@ -1,0 +1,25 @@
+scenario_id: test_slime_corrosion
+name: "Slime Corrosion Test"
+depth: 2
+turn_limit: 200
+runs: 1
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+monsters:
+  - type: "slime"
+    count: 4
+
+items:
+  - type: "healing_potion"
+    count: 3

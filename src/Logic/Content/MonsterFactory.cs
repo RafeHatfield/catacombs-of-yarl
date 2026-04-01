@@ -35,7 +35,10 @@ public sealed class MonsterFactory
         if (!_definitions.TryGetValue(monsterId, out var def))
             return null;
 
-        return CreateFromDefinition(def, x, y, depth, rng);
+        var entity = CreateFromDefinition(def, x, y, depth, rng);
+        // Attach the YAML key so MonsterKnowledgeSystem can key on species without re-looking up the definition.
+        entity.Add(new ECS.SpeciesTag(monsterId));
+        return entity;
     }
 
     /// <summary>
@@ -97,7 +100,9 @@ public sealed class MonsterFactory
         // AI component — controls behavior dispatch and item-seeking
         entity.Add(new AiComponent
         {
-            AiType = def.AiType,
+            AiType       = def.AiType,
+            Faction      = def.Faction,
+            Tags         = def.Tags ?? [],
             CanSeekItems = def.CanSeekItems,
             SeekDistance = def.SeekDistance,
             InventorySize = def.InventorySize,
@@ -112,6 +117,21 @@ public sealed class MonsterFactory
         // conditionally, so we guarantee it here for all item-seekers).
         if (def.CanSeekItems && entity.Get<Equipment>() == null)
             entity.Add(new Equipment());
+
+        // Split-under-pressure: attach tracker when split config is present
+        if (def.SplitTriggerHpPct.HasValue && def.SplitChildType != null)
+        {
+            entity.Add(new SplitTracker(
+                triggerHpPct: def.SplitTriggerHpPct.Value,
+                childType: def.SplitChildType,
+                minChildren: def.SplitMinChildren,
+                maxChildren: def.SplitMaxChildren,
+                weights: def.SplitWeights?.ToArray()));
+        }
+
+        // Corrosion: attach component for acid-bearing monsters
+        if (def.CorrosionChance > 0)
+            entity.Add(new CorrosionComponent(def.CorrosionChance));
 
         return entity;
     }

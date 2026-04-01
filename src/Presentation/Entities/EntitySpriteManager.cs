@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Presentation.Map;
@@ -12,19 +13,29 @@ namespace CatacombsOfYarl.Presentation.Entities;
 /// Manages Sprite2D nodes for game entities. Creates sprites on game start,
 /// updates positions each turn, removes sprites when entities die.
 ///
-/// Characters use native 48x48 Oryx sprites, bottom-center aligned to the
+/// Sprite lookup priority (entity sprites):
+///   1. SpeciesTag.TypeId → SpriteMapping.GetSpriteBase() (primary path, all MonsterFactory entities)
+///   2. Name-substring heuristics (fallback for hand-constructed test entities without SpeciesTag)
+///
+/// Player entity has no SpeciesTag — uses SpriteMapping.PlayerSprite directly.
+///
+/// Characters use native sprite size scaled to 48px equivalent, bottom-center aligned to the
 /// iso tile diamond center (Option A from art direction).
 /// </summary>
 public sealed class EntitySpriteManager
 {
+    private const string FallbackSprite = "heroes/goblin";
+
     private readonly Node2D _parent;
+    private readonly SpriteMapping _spriteMapping;
     private readonly Dictionary<int, Sprite2D> _sprites = new();
     // Cached grid positions — avoids O(n) monster scan in UpdateVisibility each turn.
     private readonly Dictionary<int, (int X, int Y)> _positions = new();
 
-    public EntitySpriteManager(Node2D entityLayerNode)
+    public EntitySpriteManager(Node2D entityLayerNode, SpriteMapping spriteMapping)
     {
         _parent = entityLayerNode;
+        _spriteMapping = spriteMapping;
     }
 
     /// <summary>Number of live entity sprites (player + monsters). Useful for debug overlay.</summary>
@@ -36,15 +47,12 @@ public sealed class EntitySpriteManager
     /// </summary>
     public void Initialize(GameState state)
     {
-        // Player sprite
-        CreateSprite(state.Player, SpriteMapping.PlayerSprite);
+        // Player entity has no SpeciesTag — use PlayerSprite from tileset config directly.
+        CreateSprite(state.Player, _spriteMapping.PlayerSprite);
 
-        // Monster sprites — need to map entity name back to type ID
-        // For now, infer from entity name (the content system sets these)
         foreach (var monster in state.Monsters)
         {
-            string spriteBase = InferSpriteBase(monster);
-            CreateSprite(monster, spriteBase);
+            CreateSprite(monster, InferSpriteBase(monster));
         }
     }
 
@@ -63,6 +71,24 @@ public sealed class EntitySpriteManager
     }
 
     /// <summary>
+    /// Apply status effect tints to monster sprites for visual debuff feedback.
+    /// Call after UpdateVisibility() so visibility state is already set.
+    ///
+    /// Priority (highest wins if multiple effects active):
+    ///   poison → burning → disorientation → sleep → any other debuff → no tint
+    ///
+    /// Player sprite is intentionally excluded — the HUD StatusEffectBar covers that.
+    /// </summary>
+    public void UpdateStatusTints(GameState state)
+    {
+        foreach (var monster in state.Monsters)
+        {
+            if (!_sprites.TryGetValue(monster.Id, out var sprite)) continue;
+            sprite.Modulate = ChooseStatusTint(monster);
+        }
+    }
+
+    /// <summary>
     /// Apply fog-of-war visibility to entity sprites.
     /// Uses the cached position dictionary — O(sprites) not O(sprites × monsters).
     /// </summary>
@@ -77,6 +103,15 @@ public sealed class EntitySpriteManager
             }
             sprite.Visible = state.Map.IsVisible(pos.X, pos.Y);
         }
+    }
+
+    /// <summary>
+    /// Create a sprite for a newly spawned monster (e.g. a slime spawned by split).
+    /// Call after the child entity has been added to state.Monsters.
+    /// </summary>
+    public void SpawnMonster(Entity monster)
+    {
+        CreateSprite(monster, InferSpriteBase(monster));
     }
 
     /// <summary>
@@ -101,7 +136,7 @@ public sealed class EntitySpriteManager
 
     private void CreateSprite(Entity entity, string spriteBase)
     {
-        string framePath = SpriteMapping.GetFramePath(spriteBase, 1); // Frame 1 = idle
+        string framePath = _spriteMapping.GetFramePath(spriteBase, 1); // Frame 1 = idle
         var texture = GD.Load<Texture2D>(framePath);
         if (texture == null)
         {
@@ -111,13 +146,23 @@ public sealed class EntitySpriteManager
 
         var screenPos = IsometricMapper.GridToScreenCenter(entity.X, entity.Y);
 
+        // Scale compensation: UF sprites are 48px native; 16bf are 24px native.
+        // Integer 2x upscaling on 16bf gives clean pixel art without blurring.
+        // Scale = 48 / native_size so UF stays at 1.0, 16bf renders at 2.0.
+        float scale = 48f / _spriteMapping.SpriteSize;
+
+        // Y offset grounds entity feet on the tile surface. Positive = down, negative = up.
+        // Tileset config may override via entity_y_offset; otherwise uses default formula.
+        float offsetY = _spriteMapping.GetEntityYOffset(texture.GetHeight(), scale);
+
         var sprite = new Sprite2D
         {
             Texture = texture,
             Position = screenPos,
             Centered = true,
-            Offset = new Vector2(0, -texture.GetHeight() * 0.15f),
-            ZIndex = IsometricMapper.GetSortOrder(entity.X, entity.Y) + 1,
+            Scale = new Vector2(scale, scale),
+            Offset = new Vector2(0, offsetY),
+            ZIndex = IsometricMapper.GetEntitySortOrder(entity.X, entity.Y),
             TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
         };
 
@@ -132,39 +177,84 @@ public sealed class EntitySpriteManager
             return;
 
         sprite.Position = IsometricMapper.GridToScreenCenter(entity.X, entity.Y);
-        sprite.ZIndex = IsometricMapper.GetSortOrder(entity.X, entity.Y) + 1;
+        sprite.ZIndex = IsometricMapper.GetEntitySortOrder(entity.X, entity.Y);
         _positions[entity.Id] = (entity.X, entity.Y);
     }
 
     /// <summary>
-    /// Infer sprite base name from entity. Tries SpriteMapping first,
-    /// falls back to a default.
+    /// Resolve the sprite base for a monster entity.
+    ///
+    /// Primary path: SpeciesTag.TypeId → SpriteMapping lookup.
+    /// All entities created by MonsterFactory have a SpeciesTag — this path covers 100%
+    /// of normal gameplay cases.
+    ///
+    /// Fallback: name-substring heuristics from the old static SpriteMapping.
+    /// Retained for hand-constructed test entities (e.g. in unit tests or debug scenarios)
+    /// that may not have a SpeciesTag. A GD.PrintErr fires so gaps surface immediately.
     /// </summary>
-    private static string InferSpriteBase(Entity monster)
+    private string InferSpriteBase(Entity monster)
     {
-        // Try common monster type names
-        string nameLower = monster.Name.ToLowerInvariant();
-
-        // Check known mappings
-        foreach (var typeId in new[] { "orc_grunt", "orc_brute", "zombie" })
+        // Primary: use SpeciesTag for all factory-created monsters (the normal path)
+        var tag = monster.Get<SpeciesTag>();
+        if (tag != null)
         {
-            if (nameLower.Contains(typeId.Replace("_", " ")) ||
-                nameLower.Contains(typeId.Replace("_", "")))
-            {
-                var spriteBase = SpriteMapping.GetSpriteBase(typeId);
-                if (spriteBase != null) return spriteBase;
-            }
+            var spriteBase = _spriteMapping.GetSpriteBase(tag.TypeId);
+            if (spriteBase != null) return spriteBase;
+
+            // TypeId exists but isn't in the tileset YAML — missing mapping, not a code bug.
+            GD.PrintErr($"[EntitySpriteManager] No sprite mapping for species '{tag.TypeId}' in tileset '{_spriteMapping.SpriteSize}px' — using fallback.");
+            return FallbackSprite;
         }
 
-        // Fallback heuristics based on common names
-        if (nameLower.Contains("orc") && (nameLower.Contains("brute") || nameLower.Contains("warrior")))
-            return SpriteMapping.GetSpriteBase("orc_brute") ?? "goblin_warrior";
-        if (nameLower.Contains("orc"))
-            return SpriteMapping.GetSpriteBase("orc_grunt") ?? "goblin";
-        if (nameLower.Contains("zombie"))
-            return SpriteMapping.GetSpriteBase("zombie") ?? "zombie_a";
+        // Fallback: name-substring heuristics for entities without SpeciesTag.
+        // This path should never fire in production. If it does, something is wrong upstream.
+        GD.PrintErr($"[EntitySpriteManager] Entity '{monster.Name}' (id={monster.Id}) has no SpeciesTag — using name heuristic fallback.");
+        return InferSpriteBaseFromName(monster.Name);
+    }
 
-        // Default to goblin
-        return "goblin";
+    /// <summary>
+    /// Legacy name-substring sprite inference. Kept as a last resort for entities
+    /// without SpeciesTag (hand-constructed test entities, debug scenarios).
+    /// Never called for normal gameplay — MonsterFactory always adds SpeciesTag.
+    /// </summary>
+    private static string InferSpriteBaseFromName(string name)
+    {
+        string nameLower = name.ToLowerInvariant();
+
+        if (nameLower.Contains("large slime") || nameLower == "large_slime")
+            return "monsters/slime_red";
+        if (nameLower.Contains("slime"))
+            return "monsters/slime_green";
+
+        if (nameLower.Contains("orc") && (nameLower.Contains("brute") || nameLower.Contains("warrior")))
+            return "heroes/goblin_warrior";
+        if (nameLower.Contains("orc grunt") || nameLower == "orc_grunt")
+            return "heroes/goblin";
+        if (nameLower.Contains("orc"))
+            return "heroes/goblin";
+
+        if (nameLower.Contains("zombie"))
+            return "heroes/zombie_a";
+
+        return FallbackSprite;
+    }
+
+    /// <summary>
+    /// Select the sprite tint color based on active status effects.
+    /// Priority: poison > burning > disorientation > sleep > any IStatusEffect debuff > normal.
+    /// Returns Colors.White (no tint) when no effects are active.
+    /// </summary>
+    private static Color ChooseStatusTint(Entity entity)
+    {
+        if (entity.Has<PoisonEffect>())        return new Color(0.5f, 1f,   0.5f);  // green
+        if (entity.Has<BurningEffect>())       return new Color(1f,   0.6f, 0.2f);  // orange
+        if (entity.Has<DisorientationEffect>()) return new Color(0.8f, 0.5f, 1f);   // purple
+        if (entity.Has<SleepEffect>())         return new Color(0.6f, 0.8f, 1f);    // light blue
+
+        // Any remaining IStatusEffect debuff gets a subtle gray tint.
+        bool hasAnyEffect = entity.GetAllComponents().OfType<IStatusEffect>().Any();
+        if (hasAnyEffect) return new Color(0.8f, 0.8f, 0.8f);
+
+        return Colors.White;
     }
 }

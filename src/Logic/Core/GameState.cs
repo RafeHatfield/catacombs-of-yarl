@@ -1,5 +1,6 @@
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Knowledge;
 using CatacombsOfYarl.Logic.Map;
 
 namespace CatacombsOfYarl.Logic.Core;
@@ -34,6 +35,18 @@ public sealed class GameState
 
     /// <summary>Items currently on the dungeon floor. Populated by DungeonFloorBuilder, removed on pickup.</summary>
     public List<Entity> FloorItems { get; } = new();
+
+    /// <summary>
+    /// Monster knowledge system for this run. Tracks per-species encounter history and exposes
+    /// tier-gated info views for the inspect UI. Reset on new game via Knowledge.Reset().
+    /// </summary>
+    public MonsterKnowledgeSystem Knowledge { get; } = new();
+
+    /// <summary>
+    /// Active portal entities on the current floor. Always 0 or 2 (one entrance + one exit).
+    /// Managed by PortalSystem — do not mutate directly.
+    /// </summary>
+    public List<Entity> Portals { get; } = new();
 
     public GameState(Entity player, List<Entity> monsters, GameMap map, SeededRandom rng, int turnLimit = 100)
     {

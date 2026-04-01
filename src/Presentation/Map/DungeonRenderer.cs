@@ -78,7 +78,7 @@ public sealed class DungeonRenderer
                     Texture = texture,
                     Position = screenPos,
                     Centered = false, // Position is top-left of tile image
-                    ZIndex = IsometricMapper.GetSortOrder(gx, gy),
+                    ZIndex = IsometricMapper.GetTileSortOrder(gx, gy),
                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
                 };
 
@@ -123,8 +123,8 @@ public sealed class DungeonRenderer
                     Texture = overlayTexture,
                     Position = screenPos,
                     Centered = false,
-                    // +1 above the floor tile at this grid position to ensure it draws on top
-                    ZIndex = IsometricMapper.GetSortOrder(gx, gy) + 1,
+                    // +1 above the floor tile (even) at this grid position — same band as entities, which is fine
+                    ZIndex = IsometricMapper.GetTileSortOrder(gx, gy) + 1,
                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
                 };
 
@@ -168,7 +168,8 @@ public sealed class DungeonRenderer
                     Texture = bonesTexture,
                     Position = screenPos,
                     Centered = false,
-                    ZIndex = IsometricMapper.GetSortOrder(gx, gy) + 1,
+                    // Bones are floor decoration — stay in tile band, above plain floor tile
+                    ZIndex = IsometricMapper.GetTileSortOrder(gx, gy) + 1,
                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
                     Modulate = new Color(1f, 1f, 1f, 0.7f), // slightly transparent — subtle
                 };

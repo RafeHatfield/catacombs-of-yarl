@@ -4,6 +4,7 @@ using CatacombsOfYarl.Logic.ECS;
 using Godot;
 
 using CatacombsOfYarl.Presentation;
+using System.Globalization;
 
 namespace CatacombsOfYarl.Presentation.UI;
 
@@ -186,6 +187,13 @@ public sealed partial class ToastLog : Control
             DeathEvent =>
                 $"[color=green]{GetEntityName(evt.ActorId, state)} dies![/color]",
 
+            SplitEvent split when split.ChildIds.Count > 0 =>
+                $"[color=yellow]The {GetEntityName(split.OriginalId, state)} splits into " +
+                $"{split.ChildIds.Count} {GetEntityName(split.ChildIds[0], state).ToLower()}s![/color]",
+
+            SplitEvent split =>
+                $"[color=yellow]The {GetEntityName(split.OriginalId, state)} splits![/color]",
+
             PickUpEvent pickup =>
                 $"Picked up {pickup.ItemName}.",
 
@@ -201,9 +209,42 @@ public sealed partial class ToastLog : Control
             ItemUseEvent { FailureMode: "equipment_damage" } use =>
                 $"[color=orange]{actorName} mishandles {use.ItemName} — weapon damaged![/color]",
 
+            // ── Status effect events ─────────────────────────────────────────────────
+            // Apply: "You are poisoned!" / "The orc is confused!"
+            StatusAppliedEvent statusApplied when statusApplied.TargetId == _playerId =>
+                $"[color=orange]You are {statusApplied.EffectName}![/color]",
+
+            StatusAppliedEvent statusApplied =>
+                $"[color=orange]The {GetEntityName(statusApplied.TargetId, state).ToLower()} is {statusApplied.EffectName}![/color]",
+
+            // Expire: "The poison fades." / "You are no longer slowed."
+            StatusExpiredEvent expired when expired.EntityId == _playerId && expired.Reason == "duration" =>
+                $"[color=gray]The {expired.EffectName} fades.[/color]",
+
+            StatusExpiredEvent expired when expired.EntityId == _playerId =>
+                $"[color=gray]You are no longer {expired.EffectName}.[/color]",
+
+            StatusExpiredEvent expired when expired.Reason == "duration" =>
+                $"[color=gray]The {GetEntityName(expired.EntityId, state).ToLower()} is no longer {expired.EffectName}.[/color]",
+
+            // DOT damage: distinct orange line.
+            DotDamageEvent dot when dot.EntityId == _playerId =>
+                $"[color=orange]{Capitalize(dot.EffectName)} deals {dot.Damage} damage.[/color]",
+
+            DotDamageEvent dot =>
+                $"[color=orange]{Capitalize(dot.EffectName)} damages the {GetEntityName(dot.EntityId, state).ToLower()}.[/color]",
+
+            // HOT healing: green line.
+            HotHealEvent hot when hot.EntityId == _playerId =>
+                $"[color=lime]+{hot.Amount} HP from {hot.EffectName}.[/color]",
+
             _ => null,
         };
     }
+
+    private static string Capitalize(string s) =>
+        string.IsNullOrEmpty(s) ? s :
+        char.ToUpper(s[0], CultureInfo.InvariantCulture) + s[1..];
 
     private static string GetEntityName(int id, GameState state)
     {

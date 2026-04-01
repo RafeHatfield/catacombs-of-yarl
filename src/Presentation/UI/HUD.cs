@@ -21,10 +21,16 @@ public sealed partial class HUD : Control
     private Control? _enemyHpPanel;
     private Label? _enemyHpLabel;
     private ProgressBar? _enemyHpBar;
+    private StatusEffectBar? _statusEffectBar;
 
     private TouchButton? _exploreButton;
     private TouchButton? _gearButton;
     private GameState? _state;
+
+    // Track the last monster the player attacked. We show this monster's HP bar until
+    // it dies — then hide the bar entirely. We never auto-switch to "nearest alive" because
+    // that looks like an HP reset when the current target drops.
+    private int _combatTargetId = -1;
 
     /// <summary>Fired when the player taps the Explore button.</summary>
     public event Action? ExploreRequested;
@@ -40,6 +46,36 @@ public sealed partial class HUD : Control
     public void SetState(GameState state)
     {
         _state = state;
+        _combatTargetId = -1;
+        Refresh();
+    }
+
+    /// <summary>
+    /// Update combat target tracking from the turn result, then refresh all HUD elements.
+    /// Call this after every turn instead of the bare Refresh() overload.
+    ///
+    /// Target switch rules:
+    ///   - Player attacks a monster → that monster becomes the tracked target
+    ///   - Tracked target dies → target cleared (bar hides; no auto-switch to nearest)
+    /// </summary>
+    public void OnTurnCompleted(TurnResult result, GameState state)
+    {
+        _state = state;
+
+        // Scan events in order. Player-attack events update the target; death events clear it.
+        // Both can happen in the same turn (player one-shots a monster), so process death
+        // events after attack events so we don't briefly flash the dead monster's full bar.
+        foreach (var evt in result.Events)
+        {
+            if (evt is AttackEvent atk && atk.ActorId == state.Player.Id)
+                _combatTargetId = atk.TargetId;
+        }
+        foreach (var evt in result.Events)
+        {
+            if (evt is DeathEvent death && death.ActorId == _combatTargetId)
+                _combatTargetId = -1;
+        }
+
         Refresh();
     }
 
@@ -73,14 +109,18 @@ public sealed partial class HUD : Control
             _equipLabel.Text = $"Wpn: {wpn}   Arm: {arm}";
         }
 
-        // Nearest enemy HP
-        var nearest = _state.AliveMonsters
-            .OrderBy(m => _state.Player.ChebyshevDistanceTo(m.X, m.Y))
-            .FirstOrDefault();
+        // Status effect badges — show active effects on the player.
+        _statusEffectBar?.Refresh(_state.Player);
 
-        if (_enemyHpPanel != null && nearest != null)
+        // Enemy HP bar: show the tracked combat target if it is still alive.
+        // Never fall back to "nearest alive" — that causes apparent HP resets when targets die.
+        Entity? target = _combatTargetId >= 0
+            ? _state.AliveMonsters.FirstOrDefault(m => m.Id == _combatTargetId)
+            : null;
+
+        if (_enemyHpPanel != null && target != null)
         {
-            var ef = nearest.Require<Fighter>();
+            var ef = target.Require<Fighter>();
             _enemyHpPanel.Visible = true;
             if (_enemyHpBar != null)
             {
@@ -89,7 +129,7 @@ public sealed partial class HUD : Control
                 _enemyHpBar.SelfModulate = Colors.IndianRed;
             }
             if (_enemyHpLabel != null)
-                _enemyHpLabel.Text = $"{nearest.Name}  {ef.Hp}/{ef.MaxHp}";
+                _enemyHpLabel.Text = $"{target.Name}  {ef.Hp}/{ef.MaxHp}";
         }
         else if (_enemyHpPanel != null)
         {
@@ -176,6 +216,12 @@ public sealed partial class HUD : Control
         _hpBar = new ProgressBar { ShowPercentage = false };
         _hpBar.CustomMinimumSize = new Vector2(0, 14);
         inner.AddChild(_hpBar);
+
+        // Status effect badges — row of colored short-name + turn-count badges.
+        // Hidden when no effects are active (StatusEffectBar renders empty).
+        _statusEffectBar = new StatusEffectBar();
+        _statusEffectBar.CustomMinimumSize = new Vector2(0, 24);
+        inner.AddChild(_statusEffectBar);
 
         // Equipment summary row (weapon + armor)
         _equipLabel = new Label { Text = "Wpn: —   Arm: —" };

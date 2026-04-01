@@ -19,6 +19,12 @@ public sealed class EntitiesFile
 
     [YamlMember(Alias = "consumables")]
     public Dictionary<string, ConsumableDefinition> Consumables { get; set; } = new();
+
+    [YamlMember(Alias = "scrolls")]
+    public Dictionary<string, SpellDefinition> Scrolls { get; set; } = new();
+
+    [YamlMember(Alias = "wands")]
+    public Dictionary<string, SpellDefinition> Wands { get; set; } = new();
 }
 
 /// <summary>
@@ -167,8 +173,41 @@ public sealed class ContentLoader
     }
 
     /// <summary>
+    /// Load spell item definitions (scrolls and wands) from a YAML string.
+    /// Returns a combined dictionary of item ID → SpellDefinition.
+    /// Both scrolls (is_wand=false) and wands (is_wand=true) are returned together.
+    /// </summary>
+    public Dictionary<string, SpellDefinition> LoadSpellItems(string yaml)
+    {
+        var root = _deserializer.Deserialize<Dictionary<string, Dictionary<string, SpellDefinition>>>(yaml);
+        var spellItems = new Dictionary<string, SpellDefinition>();
+
+        if (root != null && root.TryGetValue("scrolls", out var scrolls))
+        {
+            foreach (var (id, def) in scrolls)
+            {
+                def.Name ??= TitleCase(id);
+                def.IsWand = false; // explicit: scrolls are never wands
+                spellItems[id] = def;
+            }
+        }
+
+        if (root != null && root.TryGetValue("wands", out var wands))
+        {
+            foreach (var (id, def) in wands)
+            {
+                def.Name ??= TitleCase(id);
+                def.IsWand = true; // explicit: wands section always produces wands
+                spellItems[id] = def;
+            }
+        }
+
+        return spellItems;
+    }
+
+    /// <summary>
     /// Load all content from a single entities YAML string.
-    /// Returns monsters, items, consumables, and floor item pool in one call.
+    /// Returns monsters, items, consumables, spell items, and floor item pool in one call.
     /// </summary>
     public ContentBundle LoadAll(string yaml)
     {
@@ -184,6 +223,7 @@ public sealed class ContentLoader
             Monsters = LoadMonsters(cleanYaml),
             Items = LoadItems(cleanYaml),
             Consumables = LoadConsumables(cleanYaml),
+            SpellItems = LoadSpellItems(cleanYaml),
             FloorItemPool = floorPool,
         };
     }
@@ -303,6 +343,14 @@ public sealed class ContentLoader
             InventorySize = child.InventorySize != 0 ? child.InventorySize : parent.InventorySize,
             SpawnWeight = child.SpawnWeight ?? parent.SpawnWeight,
             DepthWeights = child.DepthWeights ?? parent.DepthWeights,
+            // Corrosion: child wins if non-zero, else inherit parent
+            CorrosionChance = child.CorrosionChance != 0 ? child.CorrosionChance : parent.CorrosionChance,
+            // Split: child wins if explicitly set, else inherit parent
+            SplitTriggerHpPct = child.SplitTriggerHpPct ?? parent.SplitTriggerHpPct,
+            SplitChildType = child.SplitChildType ?? parent.SplitChildType,
+            SplitMinChildren = child.SplitMinChildren != 2 ? child.SplitMinChildren : parent.SplitMinChildren,
+            SplitMaxChildren = child.SplitMaxChildren != 3 ? child.SplitMaxChildren : parent.SplitMaxChildren,
+            SplitWeights = child.SplitWeights ?? parent.SplitWeights,
         };
     }
 

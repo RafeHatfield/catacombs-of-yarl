@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 
@@ -37,12 +38,23 @@ public static class CombatResolver
 
         int d20 = rng.Next(1, 21); // 1-20 inclusive
 
-        // To-hit: DEX mod + weapon to-hit bonus
+        // To-hit: DEX mod + weapon to-hit bonus + status effect modifiers
         int toHitBonus = atk.DexterityMod + (atkEquip?.TotalToHitBonus ?? 0);
+
+        // BlindedEffect: -4 accuracy penalty on the attacker.
+        // FocusedEffect: +3 accuracy bonus on the attacker (buff).
+        if (attacker.Get<BlindedEffect>() is { } blindedFx) toHitBonus -= blindedFx.AccuracyPenalty;
+        if (attacker.Get<FocusedEffect>() is { } focusedFx) toHitBonus += focusedFx.AccuracyBonus;
+
         int attackRoll = d20 + toHitBonus;
 
-        // AC: base (10 + DEX mod) + armor AC bonus
+        // AC: base (10 + DEX mod) + armor AC bonus + active status effect bonuses (Phase 1).
+        // Shield (+4), Protection (+3), and Barkskin (+4) are read at resolution time —
+        // the base ArmorClass stat is never mutated by status effects.
         int targetAc = def.BaseArmorClass + (defEquip?.TotalArmorClassBonus ?? 0);
+        if (defender.Get<ShieldEffect>() is { } shieldFx) targetAc += shieldFx.AcBonus;
+        if (defender.Get<ProtectionEffect>() is { } protFx) targetAc += protFx.AcBonus;
+        if (defender.Get<BarkskinEffect>() is { } barkFx) targetAc += barkFx.AcBonus;
 
         // Crit threshold from weapon (keen weapons crit on 19-20)
         int critThreshold = 20;
@@ -74,6 +86,10 @@ public static class CombatResolver
 
             if (isCritical)
                 damage *= 2;
+
+            // WeaknessEffect: -2 damage penalty on the attacker. Minimum 1 damage after.
+            if (attacker.Get<WeaknessEffect>() is { } weaknessFx)
+                damage -= weaknessFx.DamagePenalty;
 
             // Apply damage type resistance/vulnerability
             string? dmgType = weapon?.DamageType;

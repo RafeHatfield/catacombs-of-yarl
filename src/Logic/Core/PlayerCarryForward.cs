@@ -54,11 +54,14 @@ public static class PlayerCarryForward
         if (oldEquipment != null)
         {
             var newEquipment = newPlayer.Add(new Equipment());
-            newEquipment.MainHand = oldEquipment.MainHand;
-            newEquipment.OffHand = oldEquipment.OffHand;
-            newEquipment.Head = oldEquipment.Head;
-            newEquipment.Chest = oldEquipment.Chest;
-            newEquipment.Feet = oldEquipment.Feet;
+            newEquipment.MainHand  = oldEquipment.MainHand;
+            newEquipment.OffHand   = oldEquipment.OffHand;
+            newEquipment.Head      = oldEquipment.Head;
+            newEquipment.Chest     = oldEquipment.Chest;
+            newEquipment.Feet      = oldEquipment.Feet;
+            newEquipment.LeftRing  = oldEquipment.LeftRing;
+            newEquipment.RightRing = oldEquipment.RightRing;
+            newEquipment.Neck      = oldEquipment.Neck;
         }
 
         // Copy Inventory if present (items in bag persist between floors)

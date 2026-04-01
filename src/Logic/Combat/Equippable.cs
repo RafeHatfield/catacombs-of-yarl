@@ -33,6 +33,22 @@ public sealed class Equippable : IComponent
     public string? ArmorType { get; set; }
     public int CritThreshold { get; set; } = 20;
 
+    /// <summary>
+    /// Physical material of the weapon. "metal" weapons can be corroded by slimes.
+    /// "wood" and null are immune. Matches PoC entities.yaml material field.
+    /// </summary>
+    public string? Material { get; set; }
+
+    /// <summary>
+    /// Original DamageMax at creation time — never changes.
+    /// Used as the corrosion floor: weapon cannot be degraded below 50% of base.
+    /// Call SetBaseDamageMax() once after DamageMax is set at creation.
+    /// </summary>
+    public int BaseDamageMax { get; private set; }
+
+    /// <summary>Capture DamageMax as the baseline. Call once at item creation.</summary>
+    public void SetBaseDamageMax() => BaseDamageMax = DamageMax;
+
     public Equippable(EquipmentSlot slot)
     {
         Slot = slot;

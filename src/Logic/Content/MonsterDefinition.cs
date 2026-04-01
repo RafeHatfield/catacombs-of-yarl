@@ -78,6 +78,45 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "inventory_size")]
     public int InventorySize { get; set; }
 
+    // ── Corrosion ────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Probability [0.0–1.0] of corroding the player's equipped metal weapon on each hit.
+    /// 0 = no corrosion (default). Set on acidic monsters (slime, large_slime).
+    /// </summary>
+    [YamlMember(Alias = "corrosion_chance")]
+    public double CorrosionChance { get; set; }
+
+    // ── Split-under-pressure ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// HP fraction [0.0–1.0] below which the monster splits into children.
+    /// Null = no split mechanic. E.g. 0.40 triggers when HP &lt; 40%.
+    /// One-time-only — guarded by SplitTracker.HasSplit at runtime.
+    /// </summary>
+    [YamlMember(Alias = "split_trigger_hp_pct")]
+    public double? SplitTriggerHpPct { get; set; }
+
+    /// <summary>Monster type ID for spawned children (e.g. "slime").</summary>
+    [YamlMember(Alias = "split_child_type")]
+    public string? SplitChildType { get; set; }
+
+    /// <summary>Minimum children to spawn on split.</summary>
+    [YamlMember(Alias = "split_min_children")]
+    public int SplitMinChildren { get; set; } = 2;
+
+    /// <summary>Maximum children to spawn on split.</summary>
+    [YamlMember(Alias = "split_max_children")]
+    public int SplitMaxChildren { get; set; } = 3;
+
+    /// <summary>
+    /// Weighted distribution over [SplitMinChildren, SplitMaxChildren].
+    /// Length must equal SplitMaxChildren - SplitMinChildren + 1.
+    /// Null = uniform random in [min, max].
+    /// </summary>
+    [YamlMember(Alias = "split_weights")]
+    public List<int>? SplitWeights { get; set; }
+
     /// <summary>
     /// Optional depth-progression table for spawn weight.
     /// If set, overrides SpawnWeight — weight is resolved per depth via SpawnUtils.FromDungeonLevel.

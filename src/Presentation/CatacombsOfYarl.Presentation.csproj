@@ -13,4 +13,9 @@
     <ProjectReference Include="..\Logic\CatacombsOfYarl.Logic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- TilesetConfig/TilesetLoader use YamlDotNet for tileset YAML deserialization. -->
+    <PackageReference Include="YamlDotNet" Version="16.*" />
+  </ItemGroup>
+
 </Project>

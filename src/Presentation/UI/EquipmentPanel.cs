@@ -41,6 +41,12 @@ public sealed partial class EquipmentPanel : Control
     private static readonly Color FallbackRing   = new(0.7f, 0.3f, 0.8f, 1f);
     private static readonly Color FallbackDefault= new(0.5f, 0.5f, 0.5f, 1f);
 
+    /// <summary>
+    /// Injected by Main after construction. Used for item sprite lookups.
+    /// Must be set before Show/Refresh is called.
+    /// </summary>
+    public SpriteMapping? SpriteMappingInstance { get; set; }
+
     /// <summary>Fires when the player taps an occupied equipment slot to unequip it.</summary>
     public event Action<EquipmentSlot>? UnequipRequested;
 
@@ -635,10 +641,12 @@ public sealed partial class EquipmentPanel : Control
     // Helpers
     // ─────────────────────────────────────────────────────────────────────────
 
-    private static Control BuildItemIcon(Entity item, int size)
+    private Control BuildItemIcon(Entity item, int size)
     {
-        var spriteKey = item.Name.ToLowerInvariant().Replace(' ', '_');
-        var spritePath = SpriteMapping.GetItemSpritePath(spriteKey);
+        // Primary: ItemTag.TypeId (set by ItemFactory for all YAML-created items)
+        var tag = item.Get<ItemTag>();
+        var spriteKey = tag?.TypeId ?? item.Name.ToLowerInvariant().Replace(' ', '_');
+        var spritePath = SpriteMappingInstance?.GetItemSpritePath(spriteKey);
 
         if (spritePath != null)
         {

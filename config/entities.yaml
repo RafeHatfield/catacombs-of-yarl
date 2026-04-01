@@ -104,6 +104,70 @@ monsters:
     speed_bonus: 0.5
     etp_base: 31
 
+  slime:
+    name: "Slime"
+    min_depth: 2
+    depth_weights:
+      - weight: 20
+        min_depth: 2
+      - weight: 40
+        min_depth: 4
+      - weight: 60
+        min_depth: 6
+    stats:
+      hp: 15
+      power: 0
+      defense: 0
+      xp: 25
+      damage_min: 1
+      damage_max: 3
+      strength: 8
+      dexterity: 6
+      constitution: 10
+      accuracy: 3
+      evasion: 0
+    char: "s"
+    color: [0, 200, 0]
+    ai_type: "basic"
+    render_order: "actor"
+    blocks: true
+    faction: "beast"
+    tags: ["no_flesh", "amorphous", "acidic"]
+    etp_base: 10
+    can_seek_items: false
+    inventory_size: 0
+    corrosion_chance: 0.05
+    spawn_weight: 0
+
+  large_slime:
+    name: "Large Slime"
+    extends: slime
+    min_depth: 3
+    depth_weights:
+      - weight: 5
+        min_depth: 3
+      - weight: 15
+        min_depth: 5
+      - weight: 25
+        min_depth: 7
+    stats:
+      hp: 40
+      defense: 1
+      xp: 75
+      damage_min: 2
+      damage_max: 5
+      strength: 12
+      constitution: 14
+    char: "S"
+    color: [0, 160, 0]
+    etp_base: 35
+    corrosion_chance: 0.10
+    split_trigger_hp_pct: 0.40
+    split_child_type: "slime"
+    split_min_children: 2
+    split_max_children: 3
+    split_weights: [40, 60]
+
 weapons:
   dagger:
     name: "Dagger"
@@ -112,6 +176,7 @@ weapons:
     damage_max: 4
     to_hit_bonus: 1
     damage_type: "piercing"
+    material: "metal"
     char: "-"
     color: [139, 69, 19]
 
@@ -122,6 +187,7 @@ weapons:
     damage_max: 6
     to_hit_bonus: 0
     damage_type: "bludgeoning"
+    material: "wood"
     char: "/"
     color: [139, 69, 19]
 
@@ -132,6 +198,7 @@ weapons:
     damage_max: 6
     to_hit_bonus: 0
     damage_type: "slashing"
+    material: "metal"
     char: "|"
     color: [192, 192, 192]
 
@@ -142,6 +209,7 @@ weapons:
     damage_max: 8
     to_hit_bonus: 0
     damage_type: "slashing"
+    material: "metal"
     char: "|"
     color: [200, 200, 220]
 
@@ -152,6 +220,7 @@ weapons:
     damage_max: 4
     to_hit_bonus: 1
     damage_type: "piercing"
+    material: "metal"
     speed_bonus: 0.18
     char: "-"
     color: [180, 120, 60]
@@ -163,6 +232,7 @@ weapons:
     damage_max: 4
     to_hit_bonus: 1
     damage_type: "piercing"
+    material: "metal"
     crit_threshold: 19
     char: "-"
     color: [160, 160, 200]
@@ -174,6 +244,7 @@ weapons:
     damage_max: 7
     to_hit_bonus: 0
     damage_type: "slashing"
+    material: "metal"
     char: "|"
     color: [200, 80, 80]
 
@@ -184,6 +255,7 @@ weapons:
     damage_max: 8
     to_hit_bonus: 1
     damage_type: "slashing"
+    material: "metal"
     char: "|"
     color: [210, 210, 230]
 
@@ -194,6 +266,7 @@ weapons:
     damage_max: 9
     to_hit_bonus: 1
     damage_type: "slashing"
+    material: "metal"
     char: "|"
     color: [230, 230, 245]
 
@@ -204,6 +277,7 @@ weapons:
     damage_max: 12
     to_hit_bonus: -1
     damage_type: "slashing"
+    material: "metal"
     char: "|"
     color: [220, 220, 240]
 
@@ -214,6 +288,7 @@ weapons:
     damage_max: 6
     to_hit_bonus: 0
     damage_type: "bludgeoning"
+    material: "metal"
     char: "/"
     color: [160, 160, 160]
 
@@ -224,6 +299,7 @@ weapons:
     damage_max: 8
     to_hit_bonus: 1
     damage_type: "piercing"
+    material: "metal"
     char: "|"
     color: [200, 200, 240]
 
@@ -234,6 +310,7 @@ weapons:
     damage_max: 8
     to_hit_bonus: 0
     damage_type: "piercing"
+    material: "metal"
     char: "/"
     color: [160, 140, 100]
 
@@ -244,6 +321,7 @@ weapons:
     damage_max: 10
     to_hit_bonus: -1
     damage_type: "slashing"
+    material: "metal"
     char: "/"
     color: [180, 160, 140]
 
@@ -364,6 +442,122 @@ floor_item_pool:
   - item: scale_mail
     weight: 10
     min_depth: 3
+  # Scrolls — common (depth 1+)
+  # Weights doubled from 15→30 to ensure ~1-2 scrolls per floor at depth 1.
+  # At 15 each, total depth-1 scroll weight was ~60 vs ~195 gear = 23.5% → ~0.5 scrolls/floor.
+  # At 30 each, it's ~105 vs ~195 gear = 35% → ~0.8-1.0 scrolls/floor. Add earthquake below to reach ~1-2.
+  - item: scroll_of_light
+    weight: 30
+    min_depth: 1
+  - item: scroll_of_detect_monsters
+    weight: 30
+    min_depth: 1
+  - item: scroll_of_lightning
+    weight: 30
+    min_depth: 1
+  # Scrolls — uncommon (depth 2+) — earthquake moved to depth 1: low-danger, good for early floors
+  - item: scroll_of_earthquake
+    weight: 20
+    min_depth: 1
+  - item: scroll_of_magic_mapping
+    weight: 10
+    min_depth: 2
+  - item: scroll_of_enchant_weapon
+    weight: 10
+    min_depth: 2
+  # Scrolls — rare (depth 3+)
+  - item: scroll_of_enchant_armor
+    weight: 6
+    min_depth: 3
+  # Scrolls — Phase 3 single-target (depth 2+, common)
+  - item: scroll_of_confusion
+    weight: 12
+    min_depth: 2
+  - item: scroll_of_slow
+    weight: 12
+    min_depth: 2
+  - item: scroll_of_glue
+    weight: 10
+    min_depth: 2
+  - item: scroll_of_rage
+    weight: 8
+    min_depth: 3
+  - item: scroll_of_yo_mama
+    weight: 6
+    min_depth: 3
+  - item: scroll_of_disarm
+    weight: 8
+    min_depth: 2
+  - item: scroll_of_plague
+    weight: 6
+    min_depth: 4
+  - item: scroll_of_aggravation
+    weight: 5
+    min_depth: 3
+  # Phase 3 — common (depth 1+)
+  - item: scroll_of_fear
+    weight: 30
+    min_depth: 1
+  # Phase 3 — uncommon (depth 2+)
+  - item: scroll_of_teleport
+    weight: 10
+    min_depth: 2
+  - item: scroll_of_blink
+    weight: 10
+    min_depth: 2
+  - item: scroll_of_invisibility
+    weight: 10
+    min_depth: 2
+  - item: scroll_of_shield
+    weight: 10
+    min_depth: 2
+  - item: scroll_of_haste
+    weight: 10
+    min_depth: 2
+  - item: scroll_of_silence
+    weight: 10
+    min_depth: 2
+  # Phase 3 — rare (depth 3+)
+  - item: scroll_of_fireball
+    weight: 6
+    min_depth: 3
+  - item: scroll_of_dragon_fart
+    weight: 6
+    min_depth: 3
+  # Phase 4 — deep dungeon (depth 5+, stub until corpse system lands)
+  # weight: 0 — corpse system not yet implemented; handler is a no-op (see plan_monster_specials)
+  - item: scroll_of_raise_dead
+    weight: 0
+    min_depth: 5
+  # Wands (depth 2+, intentionally rarer than scrolls)
+  - item: wand_of_lightning
+    weight: 8
+    min_depth: 2
+  - item: wand_of_confusion
+    weight: 5
+    min_depth: 3
+  - item: wand_of_slow
+    weight: 5
+    min_depth: 3
+  - item: wand_of_glue
+    weight: 6
+    min_depth: 3
+  - item: wand_of_rage
+    weight: 4
+    min_depth: 4
+  - item: wand_of_yo_mama
+    weight: 3
+    min_depth: 4
+  # Phase 4 — rare deep wands
+  - item: wand_of_fireball
+    weight: 7
+    min_depth: 5
+  - item: wand_of_teleportation
+    weight: 6
+    min_depth: 6
+  - item: wand_of_dragon_farts
+    weight: 3
+    min_depth: 4
 
 consumables:
   healing_potion:
@@ -371,3 +565,395 @@ consumables:
     heal_amount: 40
     char: "!"
     color: [127, 0, 255]
+
+scrolls:
+  scroll_of_lightning:
+    name: "Scroll of Lightning"
+    description: "A crackling bolt of lightning strikes the nearest visible enemy."
+    spell_id: "lightning"
+    targeting: "auto_closest"
+    damage: 40
+    range: 5
+    char: "~"
+    color: [255, 255, 100]
+
+  scroll_of_earthquake:
+    name: "Scroll of Earthquake"
+    description: "The ground shakes, battering all visible enemies nearby."
+    spell_id: "earthquake"
+    targeting: "aoe_self"
+    damage: 20
+    radius: 3
+    char: "~"
+    color: [210, 180, 100]
+
+  scroll_of_light:
+    name: "Scroll of Light"
+    description: "Light floods your surroundings, revealing what the shadows hid."
+    spell_id: "light"
+    targeting: "self"
+    char: "~"
+    color: [255, 255, 200]
+
+  scroll_of_magic_mapping:
+    name: "Scroll of Magic Mapping"
+    description: "The layout of the entire floor burns itself into your memory."
+    spell_id: "magic_mapping"
+    targeting: "self"
+    char: "~"
+    color: [180, 255, 180]
+
+  scroll_of_detect_monsters:
+    name: "Scroll of Detect Monsters"
+    description: "You sense the presence of all creatures nearby for a short time."
+    spell_id: "detect_monsters"
+    targeting: "self"
+    duration: 20
+    char: "~"
+    color: [255, 180, 255]
+
+  scroll_of_enchant_weapon:
+    name: "Scroll of Enchant Weapon"
+    description: "Your weapon gleams with newfound power."
+    spell_id: "enhance_weapon"
+    targeting: "self"
+    char: "~"
+    color: [200, 200, 255]
+
+  scroll_of_enchant_armor:
+    name: "Scroll of Enchant Armor"
+    description: "Your armor hardens, better able to deflect blows."
+    spell_id: "enhance_armor"
+    targeting: "self"
+    char: "~"
+    color: [200, 230, 200]
+
+  # ── Phase 3: Single-target status effect scrolls ────────────────────────
+
+  scroll_of_confusion:
+    name: "Scroll of Confusion"
+    description: "The target's mind dissolves into chaos. They stumble and attack at random."
+    spell_id: "confusion"
+    targeting: "single_target"
+    range: 8
+    duration: 10
+    char: "~"
+    color: [200, 150, 255]
+
+  scroll_of_slow:
+    name: "Scroll of Slow"
+    description: "The target's movements become sluggish, acting only every other turn."
+    spell_id: "slow"
+    targeting: "single_target"
+    range: 8
+    duration: 10
+    char: "~"
+    color: [150, 200, 255]
+
+  scroll_of_glue:
+    name: "Scroll of Glue"
+    description: "Thick adhesive coats the target, rooting them in place."
+    spell_id: "glue"
+    targeting: "single_target"
+    range: 8
+    duration: 5
+    char: "~"
+    color: [200, 180, 100]
+
+  scroll_of_rage:
+    name: "Scroll of Rage"
+    description: "Blind fury seizes the target. They attack with doubled strength — but anyone nearby."
+    spell_id: "rage"
+    targeting: "single_target"
+    range: 8
+    duration: 8
+    char: "~"
+    color: [255, 80, 80]
+
+  scroll_of_yo_mama:
+    name: "Scroll of Yo Mama"
+    description: "Your devastating insult drives the target into a permanent killing frenzy — against you."
+    spell_id: "yo_mama"
+    targeting: "single_target"
+    range: 10
+    char: "~"
+    color: [255, 200, 50]
+
+  scroll_of_disarm:
+    name: "Scroll of Disarm"
+    description: "The target's weapon flies from their grip. They fight with bare hands."
+    spell_id: "disarm"
+    targeting: "single_target"
+    range: 8
+    duration: 3
+    char: "~"
+    color: [200, 200, 150]
+
+  scroll_of_plague:
+    name: "Scroll of Plague"
+    description: "Vile plague infects the target. Each turn it eats away at their flesh."
+    spell_id: "plague"
+    targeting: "single_target"
+    range: 8
+    duration: 20
+    char: "~"
+    color: [100, 200, 100]
+
+  scroll_of_aggravation:
+    name: "Scroll of Unreasonable Aggravation"
+    description: "The target turns on their own kind in a fit of murderous aggravation."
+    spell_id: "aggravation"
+    targeting: "single_target"
+    range: 10
+    char: "~"
+    color: [255, 100, 150]
+
+  # ── Phase 3: AoE / Self / Location scrolls ──────────────────────────────
+
+  scroll_of_fear:
+    name: "Scroll of Fear"
+    description: "A wave of primal terror radiates outward. All nearby enemies flee in panic."
+    spell_id: "fear"
+    targeting: "aoe_self"
+    radius: 10
+    duration: 15
+    char: "~"
+    color: [180, 180, 255]
+
+  scroll_of_teleport:
+    name: "Scroll of Teleport"
+    description: "You vanish and reappear at a chosen location — with a 10% chance of going somewhere unexpected."
+    spell_id: "teleport"
+    targeting: "location"
+    range: 20
+    misfire_chance: 0.10
+    char: "~"
+    color: [100, 255, 255]
+
+  scroll_of_blink:
+    name: "Scroll of Blink"
+    description: "You blink to an adjacent location in a flash of light. Short range, no misfire."
+    spell_id: "blink"
+    targeting: "location"
+    range: 5
+    char: "~"
+    color: [150, 255, 255]
+
+  scroll_of_invisibility:
+    name: "Scroll of Invisibility"
+    description: "You fade from sight. Monsters cannot target what they cannot see."
+    spell_id: "invisibility"
+    targeting: "self"
+    duration: 30
+    char: "~"
+    color: [220, 220, 220]
+
+  scroll_of_shield:
+    name: "Scroll of Shield"
+    description: "A magical barrier hardens around you, deflecting blows."
+    spell_id: "shield"
+    targeting: "self"
+    duration: 10
+    char: "~"
+    color: [100, 180, 255]
+
+  scroll_of_haste:
+    name: "Scroll of Haste"
+    description: "Time bends at your will. You act twice as fast for a short time."
+    spell_id: "haste"
+    targeting: "self"
+    duration: 30
+    char: "~"
+    color: [255, 230, 100]
+
+  scroll_of_fireball:
+    name: "Scroll of Fireball"
+    description: "A roiling ball of fire explodes at the target location, burning all caught in the blast."
+    spell_id: "fireball"
+    targeting: "location"
+    damage: 25
+    radius: 3
+    range: 10
+    char: "~"
+    color: [255, 120, 30]
+
+  # Stub: raise_dead requires corpse lifecycle (plan_monster_specials). Currently no-ops.
+  scroll_of_raise_dead:
+    name: "Scroll of Raise Dead"
+    description: "Dark necromantic energy courses through a nearby corpse, forcing it to serve you."
+    spell_id: "raise_dead"
+    targeting: "location"
+    range: 5
+    char: "~"
+    color: [100, 50, 150]
+
+  scroll_of_silence:
+    name: "Scroll of Silence"
+    description: "The target's voice dies in their throat. They cannot cast spells or use magical items."
+    spell_id: "silence"
+    targeting: "single_target"
+    range: 8
+    duration: 3
+    char: "~"
+    color: [200, 200, 200]
+
+  scroll_of_dragon_fart:
+    name: "Scroll of Dragon Fart"
+    description: "A noxious cloud of poison gas erupts. Any creature in range falls into a stupor."
+    spell_id: "dragon_fart"
+    targeting: "single_target"
+    range: 8
+    duration: 3
+    char: "~"
+    color: [130, 200, 80]
+
+wands:
+  wand_of_lightning:
+    name: "Wand of Lightning"
+    description: "A crackling wand that hurls bolts of lightning at the nearest foe."
+    spell_id: "lightning"
+    targeting: "auto_closest"
+    damage: 40
+    range: 5
+    is_wand: true
+    min_charges: 3
+    max_charges: 6
+    charge_cap: 10
+    recharge_scroll: "lightning"
+    char: "/"
+    color: [255, 255, 100]
+
+  wand_of_portals:
+    name: "Wand of Portals"
+    description: "An ancient wand that tears holes in space. Place an entrance and exit to teleport between them."
+    spell_id: "portal"
+    targeting: "portal"
+    is_wand: true
+    infinite: true
+    char: "/"
+    color: [0, 200, 200]
+
+  # ── Phase 3: Single-target status wands ─────────────────────────────────
+
+  wand_of_confusion:
+    name: "Wand of Confusion"
+    description: "Scrambles a target's thoughts, sending them lurching into chaos."
+    spell_id: "confusion"
+    targeting: "single_target"
+    range: 8
+    duration: 10
+    is_wand: true
+    min_charges: 2
+    max_charges: 5
+    charge_cap: 10
+    recharge_scroll: "confusion"
+    char: "/"
+    color: [200, 150, 255]
+
+  wand_of_slow:
+    name: "Wand of Slow"
+    description: "Drains vitality from a target, cutting their speed in half."
+    spell_id: "slow"
+    targeting: "single_target"
+    range: 8
+    duration: 10
+    is_wand: true
+    min_charges: 2
+    max_charges: 5
+    charge_cap: 10
+    recharge_scroll: "slow"
+    char: "/"
+    color: [150, 200, 255]
+
+  wand_of_glue:
+    name: "Wand of Glue"
+    description: "Fires a stream of adhesive that roots an enemy to the floor."
+    spell_id: "glue"
+    targeting: "single_target"
+    range: 8
+    duration: 5
+    is_wand: true
+    min_charges: 3
+    max_charges: 6
+    charge_cap: 10
+    recharge_scroll: "glue"
+    char: "/"
+    color: [200, 180, 100]
+
+  wand_of_rage:
+    name: "Wand of Rage"
+    description: "Ignites murderous fury in a target — powerful but indiscriminate."
+    spell_id: "rage"
+    targeting: "single_target"
+    range: 8
+    duration: 8
+    is_wand: true
+    min_charges: 2
+    max_charges: 4
+    charge_cap: 8
+    recharge_scroll: "rage"
+    char: "/"
+    color: [255, 80, 80]
+
+  wand_of_yo_mama:
+    name: "Wand of Yo Mama"
+    description: "Delivers devastating insults on demand. The target fixates on you forever."
+    spell_id: "yo_mama"
+    targeting: "single_target"
+    range: 10
+    is_wand: true
+    min_charges: 2
+    max_charges: 4
+    charge_cap: 8
+    recharge_scroll: "yo_mama"
+    char: "/"
+    color: [255, 200, 50]
+
+  # ── Phase 4: Location-targeting wands ───────────────────────────────────
+
+  wand_of_fireball:
+    name: "Wand of Fireball"
+    description: "A blazing wand that launches fireballs at any location. AoE radius 3."
+    spell_id: "fireball"
+    targeting: "location"
+    damage: 25
+    radius: 3
+    range: 10
+    is_wand: true
+    min_charges: 2
+    max_charges: 4
+    charge_cap: 8
+    recharge_scroll: "fireball"
+    char: "/"
+    color: [255, 100, 0]
+
+  wand_of_teleportation:
+    name: "Wand of Teleportation"
+    description: "Teleport to any visible location. 10% misfire chance sends you somewhere random."
+    spell_id: "teleport"
+    targeting: "location"
+    range: 20
+    misfire_chance: 0.10
+    is_wand: true
+    min_charges: 2
+    max_charges: 4
+    charge_cap: 8
+    recharge_scroll: "teleport"
+    char: "/"
+    color: [150, 220, 255]
+
+  # Stub: cone targeting deferred. Same behavior as dragon_fart scroll (single-target silence/sleep).
+  # When cone targeting lands (plan_monster_specials / plan_status_effects), update spell_id and targeting.
+  wand_of_dragon_farts:
+    name: "Wand of Dragon Farts"
+    description: "Releases a noxious cloud of poison gas. Cone targeting TODO."
+    spell_id: "dragon_fart"
+    targeting: "single_target"
+    duration: 3
+    is_wand: true
+    min_charges: 2
+    max_charges: 4
+    charge_cap: 6
+    recharge_scroll: "dragon_fart"
+    char: "/"
+    color: [180, 200, 80]

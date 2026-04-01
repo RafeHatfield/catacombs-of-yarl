@@ -42,4 +42,11 @@ public sealed class ItemDefinition
 
     [YamlMember(Alias = "color")]
     public int[] Color { get; set; } = [255, 255, 255];
+
+    /// <summary>
+    /// Physical material. "metal" weapons can be corroded by slimes.
+    /// "wood" and null are immune.
+    /// </summary>
+    [YamlMember(Alias = "material")]
+    public string? Material { get; set; }
 }

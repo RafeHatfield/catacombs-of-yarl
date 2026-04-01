@@ -43,6 +43,9 @@ public partial class Main : Node
     // Item sprite manager tracks floor item overlay sprites
     private ItemSpriteManager? _itemSprites;
 
+    // Tileset-backed sprite mapping — created once at boot, shared across all floors.
+    private SpriteMapping? _spriteMapping;
+
     // --- Factories (created once, reused across floor transitions) ---
     private ContentLoader? _contentLoader;
     private MonsterFactory? _monsterFactory;
@@ -80,8 +83,11 @@ public partial class Main : Node
     {
         GD.Print("Catacombs of YARL — loading...");
         Diag.Init();
+        InitSpriteMapping();
         InitFactories();
-        StartDungeon();
+
+        // Show the main menu instead of jumping straight into the dungeon.
+        ShowMainMenu();
 
         // Debug overlay: only created in editor/debug builds — zero cost in release.
         // Stored as a field so SetupPresentation can wire it to the current floor's objects.
@@ -95,6 +101,13 @@ public partial class Main : Node
             _rectDebugDraw.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
             _rectDebugDraw.MouseFilter = Control.MouseFilterEnum.Ignore;
             GetNode<CanvasLayer>("UILayer").AddChild(_rectDebugDraw);
+
+            // Sprite browser — only for index-based tilesets (16bf etc.). F8 to toggle.
+            if (_spriteMapping?.IsIndexBased == true)
+            {
+                var browser = new UI.SpriteBrowser(_spriteMapping);
+                GetNode<CanvasLayer>("UILayer").AddChild(browser);
+            }
         }
     }
 
@@ -122,6 +135,67 @@ public partial class Main : Node
                 sprite.Modulate = new Color(m.R, m.G, m.B, 1f - t);
             }
         }
+    }
+
+    /// <summary>
+    /// Load the active tileset config and create the SpriteMapping instance.
+    /// Priority: --tileset CLI arg → game_settings.yaml → default "ultimate_fantasy".
+    /// Called once from _Ready before InitFactories.
+    /// </summary>
+    private void InitSpriteMapping()
+    {
+        var tilesetId = ReadTilesetId();
+        GD.Print($"[Main] Loading tileset: {tilesetId}");
+        var config = TilesetLoader.LoadWithFallback(tilesetId);
+        _spriteMapping = new SpriteMapping(config);
+        GD.Print($"[Main] Tileset loaded: {config.Name} ({config.SpriteSize}px, {config.FrameCount} frames)");
+    }
+
+    /// <summary>
+    /// Determine which tileset ID to load.
+    /// Checks CLI args first (--tileset &lt;id&gt;), then game_settings.yaml, then defaults to ultimate_fantasy.
+    /// </summary>
+    private static string ReadTilesetId()
+    {
+        // 1. Check --tileset CLI arg (dev override — no file edit needed to switch)
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length - 1; i++)
+        {
+            if (args[i] == "--tileset")
+                return args[i + 1];
+        }
+
+        // 2. Check config/game_settings.yaml
+        const string settingsPath = "res://config/game_settings.yaml";
+        try
+        {
+            using var file = Godot.FileAccess.Open(settingsPath, Godot.FileAccess.ModeFlags.Read);
+            if (file != null)
+            {
+                var text = file.GetAsText();
+                // Simple line-by-line parse — only need the single `tileset:` field.
+                // Full YamlDotNet deserialization is overkill for one string value.
+                foreach (var line in text.Split('\n'))
+                {
+                    var trimmed = line.TrimStart();
+                    if (!trimmed.StartsWith("tileset:", System.StringComparison.Ordinal)) continue;
+
+                    var value = trimmed["tileset:".Length..].Trim();
+                    // Strip surrounding quotes if present
+                    if (value.Length >= 2 && value[0] == '"' && value[^1] == '"')
+                        value = value[1..^1];
+                    if (value.Length > 0) return value;
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+            // game_settings.yaml is optional — log and continue to default
+            GD.PrintErr($"[Main] Failed to read game_settings.yaml: {ex.Message}");
+        }
+
+        // 3. Default
+        return "ultimate_fantasy";
     }
 
     /// <summary>
@@ -241,11 +315,11 @@ public partial class Main : Node
         _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer);
 
         // Entity sprites — store reference so OnTurnCompleted can call UpdateVisibility
-        _entitySprites = new EntitySpriteManager(entityLayer);
+        _entitySprites = new EntitySpriteManager(entityLayer, _spriteMapping!);
         _entitySprites.Initialize(state);
 
         // Item sprites — floor items rendered as tinted overlay sprites on entityLayer
-        _itemSprites = new ItemSpriteManager(entityLayer);
+        _itemSprites = new ItemSpriteManager(entityLayer, _spriteMapping!);
         _itemSprites.Initialize(state);
 
         // HUD
@@ -255,6 +329,7 @@ public partial class Main : Node
 
         // Inventory panel (quick-bar) — consumables only.
         _inventoryPanel = new InventoryPanel();
+        _inventoryPanel.SpriteMappingInstance = _spriteMapping;
         inventoryPanelNode.AddChild(_inventoryPanel);
         _inventoryPanel.Initialize(state);
         _inventoryPanel.ItemTapped += OnInventoryItemTapped;
@@ -263,6 +338,7 @@ public partial class Main : Node
 
         // Equipment panel — full-screen overlay, starts hidden.
         _equipmentPanel = new EquipmentPanel();
+        _equipmentPanel.SpriteMappingInstance = _spriteMapping;
         equipmentPanelNode.AddChild(_equipmentPanel);
         _equipmentPanel.EquipRequested     += itemId => _gameController?.HandleEquipRequest(itemId);
         _equipmentPanel.UnequipRequested   += slot   => _gameController?.HandleUnequipRequest(slot);
@@ -316,6 +392,7 @@ public partial class Main : Node
         if (_tileLayer != null)
             DungeonRenderer.UpdateVisibility(_tileLayer, state.Map);
         _entitySprites?.UpdateVisibility(state);
+        _entitySprites?.UpdateStatusTints(state);
         _itemSprites?.UpdateVisibility(state);
 
         // Game controller — free old one if it exists
@@ -329,7 +406,7 @@ public partial class Main : Node
         }
         _gameController = new GameController();
         AddChild(_gameController);
-        _gameController.Initialize(state, _entitySprites, this, _itemSprites, _inventoryPanel, _equipmentPanel, _toastLog);
+        _gameController.Initialize(state, _entitySprites, this, _itemSprites, _inventoryPanel, _equipmentPanel, _toastLog, _monsterFactory);
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
@@ -411,7 +488,8 @@ public partial class Main : Node
 
         }
 
-        _hud?.Refresh();
+        if (_hud != null && _state != null)
+            _hud.OnTurnCompleted(result, _state);
         _hud?.SetAutoExploreActive(_gameController?.IsAutoExploreActive ?? false);
         if (_equipmentPanel?.Visible == true && _state != null)
             _equipmentPanel.Refresh(_state);
@@ -424,6 +502,7 @@ public partial class Main : Node
         if (_tileLayer != null)
             DungeonRenderer.UpdateVisibility(_tileLayer, _state.Map);
         _entitySprites?.UpdateVisibility(_state);
+        _entitySprites?.UpdateStatusTints(_state);
         _itemSprites?.UpdateVisibility(_state);
     }
 
@@ -460,8 +539,161 @@ public partial class Main : Node
 
     private void OnReplayRequested()
     {
+        // Return to main menu rather than immediately restarting —
+        // lets the player choose new game or test mode after a run ends.
+        _currentDepth = 1;
+        ShowMainMenu();
+    }
+
+    // -------------------------------------------------------------------------
+    // Menu system
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Show the main menu. Clears any existing panels in MenuLayer and creates fresh ones.
+    /// MenuLayer (layer=20) sits above UILayer (layer=10) so it covers everything.
+    /// </summary>
+    private void ShowMainMenu()
+    {
+        var menuLayer = GetNode<CanvasLayer>("MenuLayer");
+        ClearMenuLayer(menuLayer);
+        menuLayer.Visible = true;
+
+        var panel = new MainMenuPanel();
+        menuLayer.AddChild(panel);
+
+        panel.NewGameRequested     += OnNewGameRequested;
+        panel.TestingModeRequested += ShowTestMenu;
+        panel.OptionsRequested     += ShowOptions;
+    }
+
+    private void OnNewGameRequested()
+    {
+        GetNode<CanvasLayer>("MenuLayer").Visible = false;
         _currentDepth = 1;
         StartDungeon();
+    }
+
+    /// <summary>
+    /// Discover available test scenarios, then show the test scenario picker panel.
+    /// </summary>
+    private void ShowTestMenu()
+    {
+        var menuLayer = GetNode<CanvasLayer>("MenuLayer");
+        ClearMenuLayer(menuLayer);
+
+        var scenarios = DiscoverTestScenarios();
+        var panel = new TestMenuPanel(scenarios);
+        menuLayer.AddChild(panel);
+
+        panel.ScenarioSelected += LaunchTestScenario;
+        panel.BackRequested    += ShowMainMenu;
+    }
+
+    private void ShowOptions()
+    {
+        var menuLayer = GetNode<CanvasLayer>("MenuLayer");
+        ClearMenuLayer(menuLayer);
+
+        // Pass the loaded tileset ID so the panel can detect changes made this session.
+        var loadedId = _spriteMapping?.TilesetId ?? "ultimate_fantasy";
+        var panel = new OptionsPanel(loadedId);
+        menuLayer.AddChild(panel);
+
+        panel.BackRequested += ShowMainMenu;
+    }
+
+    /// <summary>
+    /// Load a test scenario YAML by res:// path and start the game.
+    /// Hides the menu layer so the dungeon is visible.
+    /// </summary>
+    private void LaunchTestScenario(string resPath)
+    {
+        GetNode<CanvasLayer>("MenuLayer").Visible = false;
+
+        var yaml     = ReadGodotResource(resPath);
+        var scenario = _contentLoader!.LoadScenario(yaml);
+        _state = GameStateFactory.FromScenario(
+            scenario, _baseSeed, _monsterFactory!, _itemFactory!, _consumableFactory!);
+
+        SetupPresentation(_state);
+        GD.Print($"Ready (test scenario: {resPath}) — {_state.Monsters.Count} monsters. Tap to play.");
+    }
+
+    /// <summary>
+    /// Scan res://config/testing/ for .yaml files and return a sorted list of
+    /// (display name, res:// path) pairs. Name is extracted from the `name:` field
+    /// in the YAML — falls back to the filename stem if the field is not found.
+    ///
+    /// Returns an empty list (never throws) if the directory is missing or empty,
+    /// so debug builds on platforms without the testing directory don't crash.
+    /// </summary>
+    private static List<(string name, string path)> DiscoverTestScenarios()
+    {
+        const string dir = "res://config/testing/";
+        var results = new List<(string, string)>();
+
+        using var access = DirAccess.Open(dir);
+        if (access == null) return results;
+
+        access.ListDirBegin();
+        string fileName;
+        while ((fileName = access.GetNext()) != "")
+        {
+            if (!fileName.EndsWith(".yaml", System.StringComparison.OrdinalIgnoreCase)) continue;
+
+            var resPath = dir + fileName;
+            string displayName = ExtractScenarioName(resPath, fileName);
+            results.Add((displayName, resPath));
+        }
+        access.ListDirEnd();
+
+        results.Sort((a, b) => string.Compare(a.Item1, b.Item1, System.StringComparison.Ordinal));
+        return results;
+    }
+
+    /// <summary>
+    /// Extract the value of the `name:` field from a scenario YAML file.
+    /// Simple line-by-line parse — no full YAML deserialise needed here
+    /// since we only want the display name before loading the scenario.
+    /// Returns the filename stem as a fallback if the field is absent.
+    /// </summary>
+    private static string ExtractScenarioName(string resPath, string fileName)
+    {
+        try
+        {
+            using var file = Godot.FileAccess.Open(resPath, Godot.FileAccess.ModeFlags.Read);
+            if (file == null) return System.IO.Path.GetFileNameWithoutExtension(fileName);
+
+            var text = file.GetAsText();
+            foreach (var line in text.Split('\n'))
+            {
+                var trimmed = line.TrimStart();
+                if (!trimmed.StartsWith("name:", System.StringComparison.Ordinal)) continue;
+
+                // Handle both `name: "Quoted Value"` and `name: Unquoted Value`
+                var value = trimmed["name:".Length..].Trim();
+                if (value.Length >= 2 && value[0] == '"' && value[^1] == '"')
+                    value = value[1..^1];
+                if (value.Length > 0) return value;
+            }
+        }
+        catch (System.Exception)
+        {
+            // Best-effort — fall through to filename fallback
+        }
+
+        return System.IO.Path.GetFileNameWithoutExtension(fileName);
+    }
+
+    /// <summary>
+    /// Remove all children from the menu layer so panels are created fresh each time.
+    /// Keeps the implementation simple — no panel caching.
+    /// </summary>
+    private static void ClearMenuLayer(CanvasLayer layer)
+    {
+        foreach (var child in layer.GetChildren())
+            child.SafeFree();
     }
 
     /// <summary>

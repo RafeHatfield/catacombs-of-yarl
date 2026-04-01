@@ -59,10 +59,25 @@ public static class IsometricMapper
     }
 
     /// <summary>
+    /// Get the Z-index for a tile (floor, wall) at the given grid position.
+    /// Even values — tiles always sort behind entities at the same depth.
+    /// </summary>
+    public static int GetTileSortOrder(int gridX, int gridY)
+        => (gridX + gridY) * 2;
+
+    /// <summary>
+    /// Get the Z-index for an entity (player, monster) at the given grid position.
+    /// Odd values — entities always sort in front of tiles at the same depth.
+    /// Guarantees that a wall tile at (x,y) never renders on top of an entity standing
+    /// on the tile directly in front of it (same gridX+gridY sum).
+    /// </summary>
+    public static int GetEntitySortOrder(int gridX, int gridY)
+        => (gridX + gridY) * 2 + 1;
+
+    /// <summary>
     /// Get the Z-index for depth sorting. Higher gridX + gridY = drawn later (in front).
+    /// Kept for backwards compatibility — use GetTileSortOrder / GetEntitySortOrder where possible.
     /// </summary>
     public static int GetSortOrder(int gridX, int gridY)
-    {
-        return gridX + gridY;
-    }
+        => GetTileSortOrder(gridX, gridY);
 }

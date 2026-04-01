@@ -73,16 +73,26 @@ public static class AutoExploreSystem
         return PlayerAction.MoveTo(ae.LastExpectedPosition.Value.X, ae.LastExpectedPosition.Value.Y);
     }
 
+    // How close a new monster or item must be to interrupt auto-explore.
+    // The FOV radius is 8, but the screen shows roughly 5-6 tiles. Using 5 here means
+    // only threats actually visible on screen will stop the player — matching Rogue Wizards
+    // behaviour where off-screen discoveries don't interrupt. Monsters beyond this radius
+    // are still revealed in the map fog-of-war; they just don't stop the run.
+    private const int AlertRadius = 5;
+
     private static string? CheckInterrupts(GameState state, AutoExploreState ae)
     {
-        // 1. New monster in visible FOV (not known at activation)
+        // 1. New monster in visible FOV and within alert radius (not known at activation)
         foreach (var m in state.AliveMonsters)
-            if (state.Map.IsVisible(m.X, m.Y) && !ae.KnownMonsterIds.Contains(m.Id))
+            if (state.Map.IsVisible(m.X, m.Y)
+                && state.Player.ChebyshevDistanceTo(m.X, m.Y) <= AlertRadius
+                && !ae.KnownMonsterIds.Contains(m.Id))
                 return $"Monster spotted: {m.Name}";
 
-        // 2. New floor item visible that wasn't in the explored area at activation
+        // 2. New floor item visible and within alert radius, not in the explored area at activation
         foreach (var item in state.FloorItems)
             if (state.Map.IsVisible(item.X, item.Y)
+                && state.Player.ChebyshevDistanceTo(item.X, item.Y) <= AlertRadius
                 && !ae.ExploredSnapshot.Contains((item.X, item.Y)))
                 return $"Item found: {item.Name}";
 

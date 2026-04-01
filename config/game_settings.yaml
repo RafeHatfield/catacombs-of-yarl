@@ -1,0 +1,7 @@
+# Game settings loaded at boot by Main._Ready().
+# Override any field via CLI: --tileset 16bit_fantasy
+# Missing file → silent fallback to defaults (no error).
+
+# Which tileset to use. Must match a file in config/tilesets/{id}.yaml.
+# Supported values: ultimate_fantasy, 16bit_fantasy (once TASK-006 is complete)
+tileset: "16bit_fantasy"

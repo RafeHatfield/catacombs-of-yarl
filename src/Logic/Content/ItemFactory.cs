@@ -26,7 +26,11 @@ public sealed class ItemFactory
         var slot = ParseSlot(def.Slot);
         var entity = _entityFactory.Create(def.Name ?? itemId);
 
-        entity.Add(new Equippable(slot)
+        // ItemTag carries the YAML type ID so sprite lookup doesn't have to infer it
+        // from the display name (which breaks when name diverges from key).
+        entity.Add(new ECS.ItemTag(itemId));
+
+        var equippable = new Equippable(slot)
         {
             DamageMin = def.DamageMin,
             DamageMax = def.DamageMax,
@@ -35,7 +39,10 @@ public sealed class ItemFactory
             DamageType = def.DamageType,
             ArmorType = def.ArmorType,
             CritThreshold = def.CritThreshold,
-        });
+            Material = def.Material,
+        };
+        equippable.SetBaseDamageMax(); // capture DamageMax as corrosion floor baseline
+        entity.Add(equippable);
 
         // Weapon speed bonus for momentum system
         if (def.SpeedBonus > 0)

@@ -1,6 +1,9 @@
 using CatacombsOfYarl.Logic.AI;
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Combat.StatusEffects;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Knowledge;
 
 namespace CatacombsOfYarl.Logic.Core;
 
@@ -14,14 +17,36 @@ public static class TurnController
     /// <summary>
     /// Process one complete turn: player action + all monster responses.
     /// Mutates gameState. Returns events describing what happened.
+    ///
+    /// monsterFactory: required for split spawning. When null (most test environments),
+    /// a split falls back to a kill (HP=0, DeathEvent) with no children spawned.
+    /// All existing call sites that omit this parameter retain correct behavior.
+    ///
+    /// portalEntityFactory: required for portal placement (Wand of Portals). When null,
+    /// portal cast actions silently do nothing. Tests that exercise portals must inject this.
     /// </summary>
-    public static TurnResult ProcessTurn(GameState state, PlayerAction action)
+    public static TurnResult ProcessTurn(GameState state, PlayerAction action,
+        MonsterFactory? monsterFactory = null,
+        EntityFactory? portalEntityFactory = null)
     {
         var events = new List<TurnEvent>();
         state.TurnCount++;
 
         // === PLAYER TURN ===
-        ResolvePlayerAction(state, action, events);
+        // Process start-of-turn effects: DOT/HOT ticks, skip-turn determination.
+        // If the player's turn is skipped (slowed, immobilized, asleep), skip the action.
+        // ProcessTurnStart fires BEFORE the action; ProcessTurnEnd fires AFTER.
+        // This means effects applied DURING a player action (e.g. a misfire applying
+        // DisorientationEffect to the player) are decremented on the NEXT turn — not this one —
+        // because ProcessTurnEnd has already run for this entity before the action.
+        //
+        // Effects applied to MONSTERS during the player's action (e.g. Fear scroll) ARE
+        // decremented in the same round by the monster's ProcessTurnEnd at the end of its turn.
+        // This is correct: the monster takes its full turn before the round ends.
+        bool playerSkipTurn = StatusEffectProcessor.ProcessTurnStart(state.Player, events, state.TurnCount);
+        if (!playerSkipTurn)
+            ResolvePlayerAction(state, action, events, monsterFactory, portalEntityFactory);
+        StatusEffectProcessor.ProcessTurnEnd(state.Player, events);
         state.RecomputeFov(); // update FOV after player moves (no-op in scenario mode)
 
         // === MONSTER TURNS ===
@@ -31,9 +56,19 @@ public static class TurnController
         bool descended = events.Any(e => e is DescendEvent);
         if (!descended && state.PlayerFighter.IsAlive)
         {
-            ResolveMonsterTurns(state, events);
+            ResolveMonsterTurns(state, events, portalEntityFactory);
             state.RecomputeFov(); // update FOV after monsters move (no-op in scenario mode)
         }
+
+        // Clear portal UsedThisTurn flags at end of turn so portals can fire again next turn.
+        // This is a no-op when no portals are active.
+        PortalSystem.ClearPortalUsedFlags(state);
+
+        // === KNOWLEDGE UPDATE ===
+        // Update monster knowledge after all combat events are resolved.
+        // Build a lookup of all monsters (including dead ones still in state.Monsters) so we
+        // can resolve species IDs from entity IDs in AttackEvent and DeathEvent.
+        UpdateKnowledge(state, events);
 
         var aliveMonsters = state.AliveMonsters;
         return new TurnResult
@@ -46,14 +81,83 @@ public static class TurnController
         };
     }
 
-    private static void ResolvePlayerAction(GameState state, PlayerAction action, List<TurnEvent> events)
+    /// <summary>
+    /// Update MonsterKnowledgeSystem from the turn's events and current FOV.
+    ///
+    /// Three update sources:
+    ///   1. AttackEvent where actor or target is a monster → RecordEngaged
+    ///   2. DeathEvent for a monster → RecordKilled
+    ///   3. FOV scan: all currently visible alive monsters → RecordSeen
+    ///
+    /// Uses entity ID lookup to find the SpeciesTag on each monster.
+    /// If a monster has no SpeciesTag (hand-constructed in tests), the update is skipped silently.
+    /// </summary>
+    private static void UpdateKnowledge(GameState state, List<TurnEvent> events)
+    {
+        var knowledge = state.Knowledge;
+
+        // Build id→entity map once. Include all monsters (dead ones may appear in DeathEvent).
+        // Use a manual loop rather than ToDictionary to safely handle rare duplicate IDs — these
+        // can occur in split tests where hand-constructed entities share IDs with factory children.
+        // Last-entry wins (children overwrite the dead original, which is fine for knowledge purposes).
+        var monsterById = new Dictionary<int, Entity>(state.Monsters.Count);
+        foreach (var m in state.Monsters)
+            monsterById[m.Id] = m;
+        int playerId = state.Player.Id;
+
+        foreach (var evt in events)
+        {
+            switch (evt)
+            {
+                case AttackEvent atk:
+                    // Player attacked a monster, or a monster attacked the player.
+                    // Both directions count as an engagement for that species.
+                    if (atk.ActorId != playerId && monsterById.TryGetValue(atk.ActorId, out var attacker))
+                    {
+                        var tag = attacker.Get<SpeciesTag>();
+                        if (tag != null) knowledge.RecordEngaged(tag.TypeId);
+                    }
+                    if (atk.TargetId != playerId && monsterById.TryGetValue(atk.TargetId, out var target))
+                    {
+                        var tag = target.Get<SpeciesTag>();
+                        if (tag != null) knowledge.RecordEngaged(tag.TypeId);
+                    }
+                    break;
+
+                case DeathEvent death:
+                    // Only count monster deaths (not the player's own death).
+                    if (death.ActorId != playerId && monsterById.TryGetValue(death.ActorId, out var dead))
+                    {
+                        var tag = dead.Get<SpeciesTag>();
+                        if (tag != null) knowledge.RecordKilled(tag.TypeId);
+                    }
+                    break;
+            }
+        }
+
+        // FOV: record seen for all monsters currently visible. In scenario mode (IsDungeonMode=false),
+        // IsVisible returns true for all tiles, so all alive monsters get RecordSeen every turn.
+        // This is intentional — scenario mode isn't bounded by FOV, and RecordSeen is idempotent
+        // in effect (tier only advances, never regresses). In dungeon mode, only visible monsters count.
+        foreach (var monster in state.AliveMonsters)
+        {
+            if (state.Map.IsVisible(monster.X, monster.Y))
+            {
+                var tag = monster.Get<SpeciesTag>();
+                if (tag != null) knowledge.RecordSeen(tag.TypeId);
+            }
+        }
+    }
+
+    private static void ResolvePlayerAction(GameState state, PlayerAction action, List<TurnEvent> events,
+        MonsterFactory? monsterFactory, EntityFactory? portalEntityFactory)
     {
         var player = state.Player;
 
         switch (action.Kind)
         {
             case PlayerAction.ActionKind.Attack:
-                ResolvePlayerAttack(state, action.Target!, events, isBonusAttack: false);
+                ResolvePlayerAttack(state, action.Target!, events, isBonusAttack: false, monsterFactory);
                 break;
 
             case PlayerAction.ActionKind.UseItem:
@@ -88,12 +192,193 @@ public static class TurnController
                 ResolveUnequip(state, action.Slot!.Value, events);
                 player.Get<SpeedBonusTracker>()?.ResetMomentum();
                 break;
+
+            case PlayerAction.ActionKind.CastSpell:
+                ResolveSpellAction(state, action, events, portalEntityFactory);
+                player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                break;
         }
     }
 
-    private static void ResolvePlayerAttack(GameState state, Entity target, List<TurnEvent> events, bool isBonusAttack)
+    /// <summary>
+    /// Resolve a scroll or wand use action.
+    ///
+    /// Flow:
+    ///   1. Locate the SpellEffect component on the item — bail if missing.
+    ///   2. If item has WandComponent: consume a charge. If out of charges, emit WandUseEvent(Success=false) and stop.
+    ///   3. If item has Consumable (scroll): decrement stack, remove entity from inventory when depleted.
+    ///   4. Delegate to SpellResolver.Resolve with the target info from the action.
+    ///      Exception: Portal targeting mode is handled here via PortalSystem.PlacePortals —
+    ///      SpellResolver does not have an EntityFactory, so portal placement is TurnController's job.
+    ///   5. If wand, emit WandUseEvent with remaining charges (including destroyed=true if charges hit 0).
+    ///   6. Also handle wand auto-recharge on scroll pickup (called from TryPickUpItemsAt).
+    /// </summary>
+    private static void ResolveSpellAction(GameState state, PlayerAction action, List<TurnEvent> events,
+        EntityFactory? portalEntityFactory = null)
+    {
+        var item = action.Item;
+        if (item == null) return;
+
+        var spell = item.Get<SpellEffect>();
+        if (spell == null) return;
+
+        // SilencedEffect: blocks scroll AND wand use. Does NOT block potions or melee.
+        // Gate here before charges or consumables are spent, so the player isn't charged for a blocked action.
+        if (state.Player.Has<SilencedEffect>())
+            return;
+
+        var wand = item.Get<WandComponent>();
+        var consumable = item.Get<Consumable>();
+
+        // ── Wand: check + consume charge ─────────────────────────────────────
+        if (wand != null)
+        {
+            if (!wand.HasCharges)
+            {
+                events.Add(new WandUseEvent
+                {
+                    ActorId = state.Player.Id,
+                    WandName = item.Name,
+                    RemainingCharges = 0,
+                    Success = false,
+                });
+                return;
+            }
+
+            wand.TryConsume();
+        }
+
+        // ── Scroll: consume one stack ─────────────────────────────────────────
+        if (consumable != null)
+        {
+            var inventory = state.PlayerInventory;
+            if (inventory != null)
+            {
+                consumable.StackSize--;
+                if (consumable.StackSize <= 0)
+                    inventory.Remove(item);
+            }
+        }
+
+        // ── InvisibilityEffect break on spell cast ────────────────────────────
+        // InvisibilityEffect breaks when the player casts a spell (scroll or wand).
+        // Does NOT break on item use (potions). PoC-verified.
+        if (state.Player.Has<InvisibilityEffect>())
+        {
+            state.Player.Remove<InvisibilityEffect>();
+            events.Add(new StatusExpiredEvent
+            {
+                ActorId = state.Player.Id,
+                EntityId = state.Player.Id,
+                EffectName = "invisibility",
+                Reason = "cast_spell",
+            });
+        }
+
+        // ── Resolve spell ─────────────────────────────────────────────────────
+        // Portal targeting is handled here because SpellResolver has no EntityFactory.
+        // All other targeting modes delegate to SpellResolver.
+        if (spell.SpellId == "portal" && action.TargetX2.HasValue && action.TargetY2.HasValue
+            && action.TargetX.HasValue && action.TargetY.HasValue)
+        {
+            if (portalEntityFactory != null)
+            {
+                var portalEvents = PortalSystem.PlacePortals(
+                    state,
+                    placedByEntityId: state.Player.Id,
+                    entranceX: action.TargetX.Value,
+                    entranceY: action.TargetY.Value,
+                    exitX: action.TargetX2.Value,
+                    exitY: action.TargetY2.Value,
+                    entityFactory: portalEntityFactory);
+
+                if (portalEvents != null)
+                    events.AddRange(portalEvents);
+            }
+            // If no factory: silently no-op (same pattern as split spawning with no MonsterFactory).
+        }
+        else
+        {
+            var spellEvents = SpellResolver.Resolve(
+                state.Player,
+                spell,
+                state,
+                targetEntityId: action.TargetEntityId,
+                targetX: action.TargetX,
+                targetY: action.TargetY);
+
+            events.AddRange(spellEvents);
+        }
+
+        // ── Wand post-use: emit charge event ──────────────────────────────────
+        if (wand != null)
+        {
+            bool destroyed = !wand.Infinite && wand.Charges <= 0;
+
+            events.Add(new WandUseEvent
+            {
+                ActorId = state.Player.Id,
+                WandName = item.Name,
+                RemainingCharges = wand.Infinite ? int.MaxValue : wand.Charges,
+                Success = true,
+                WandDestroyed = destroyed,
+            });
+
+            // Remove depleted wand from inventory
+            if (destroyed)
+            {
+                state.PlayerInventory?.Remove(item);
+            }
+        }
+    }
+
+    private static void ResolvePlayerAttack(GameState state, Entity target, List<TurnEvent> events,
+        bool isBonusAttack, MonsterFactory? monsterFactory)
     {
         var player = state.Player;
+
+        // ImmobilizedEffect: cannot attack (or move, or cast — all actions blocked).
+        // ProcessTurnStart already returns skipTurn=true for this, so in normal flow this
+        // branch should not fire. Kept as an explicit guard for safety.
+        if (player.Has<ImmobilizedEffect>())
+            return;
+
+        // DisarmedEffect: weapon attack is cancelled. Emit a failed attack event.
+        // Does not prevent unarmed attacks if the player has no weapon equipped.
+        var equipment = player.Get<Equipment>();
+        bool hasWeaponEquipped = equipment?.MainHand != null;
+        if (player.Has<DisarmedEffect>() && hasWeaponEquipped)
+        {
+            events.Add(new AttackEvent
+            {
+                ActorId = player.Id,
+                TargetId = target.Id,
+                Hit = false,
+                Damage = 0,
+                IsCritical = false,
+                IsFumble = false,
+                TargetKilled = false,
+                IsBonusAttack = isBonusAttack,
+                FailReason = "disarmed",
+            });
+            return;
+        }
+
+        // InvisibilityEffect breaks when the player makes any attack (PoC-verified).
+        // NOT broken by taking damage or using items. Breaks before the attack resolves
+        // so monsters can respond after the reveal.
+        if (player.Has<InvisibilityEffect>())
+        {
+            player.Remove<InvisibilityEffect>();
+            events.Add(new StatusExpiredEvent
+            {
+                ActorId = player.Id,
+                EntityId = player.Id,
+                EffectName = "invisibility",
+                Reason = "attacked",
+            });
+        }
+
         var result = CombatResolver.ResolveAttack(player, target, state.Rng);
 
         events.Add(new AttackEvent
@@ -108,6 +393,27 @@ public static class TurnController
             IsBonusAttack = isBonusAttack,
         });
 
+        if (result.Hit)
+        {
+            // Wake sleeping targets on attack damage (NOT DOT — PoC-verified).
+            StatusEffectProcessor.OnDamageTaken(target, events);
+
+            // Check split-under-pressure BEFORE death check — split wins over kill.
+            // Only check on a hit because the HP hasn't changed on a miss.
+            var splitTracker = target.Get<SplitTracker>();
+            if (splitTracker != null && !splitTracker.HasSplit)
+            {
+                var tFighter = target.Require<Fighter>();
+                double hpPct = tFighter.MaxHp > 0 ? (double)tFighter.Hp / tFighter.MaxHp : 0;
+                if (hpPct < splitTracker.TriggerHpPct)
+                {
+                    splitTracker.HasSplit = true;
+                    ResolveSplit(state, target, splitTracker, monsterFactory, events);
+                    return; // original is gone — skip death processing
+                }
+            }
+        }
+
         if (result.TargetKilled)
         {
             events.Add(new DeathEvent { ActorId = target.Id, KillerId = player.Id });
@@ -117,8 +423,116 @@ public static class TurnController
         // Bonus attack chain — recurse if triggered and target still alive
         if (result.BonusAttackTriggered && !result.TargetKilled && target.Require<Fighter>().IsAlive)
         {
-            ResolvePlayerAttack(state, target, events, isBonusAttack: true);
+            ResolvePlayerAttack(state, target, events, isBonusAttack: true, monsterFactory);
         }
+    }
+
+    /// <summary>
+    /// Resolve a split-under-pressure event. Original monster is removed and children are spawned.
+    ///
+    /// Null-factory fallback: test environments that don't inject a factory get a kill instead of
+    /// a spawn — HP=0, emit DeathEvent. No crash, just no children.
+    ///
+    /// Children act on the spawn turn because they are added to state.Monsters before
+    /// ResolveMonsterTurns completes. The AliveMonsters cache rebuilds on the next access.
+    /// This is intentional: creates a dramatic "suddenly surrounded" moment matching PoC behavior.
+    /// </summary>
+    private static void ResolveSplit(GameState state, Entity original, SplitTracker split,
+        MonsterFactory? monsterFactory, List<TurnEvent> events)
+    {
+        if (monsterFactory == null)
+        {
+            // No factory available — treat as a kill so tests that don't inject a factory
+            // still see deterministic behavior (original dies, no children).
+            original.Require<Fighter>().Hp = 0;
+            events.Add(new DeathEvent { ActorId = original.Id, KillerId = state.Player.Id });
+            return;
+        }
+
+        int numChildren = RollSplitChildren(split, state.Rng);
+        var positions = FindSplitPositions(state.Map, original.X, original.Y, numChildren, state);
+
+        // Remove original from the map (HP=0 marks it dead for AliveMonsters cache).
+        // No XP event — split is not a kill.
+        original.Require<Fighter>().Hp = 0;
+        state.Map.UnregisterEntity(original);
+
+        var childIds = new List<int>();
+        for (int i = 0; i < Math.Min(numChildren, positions.Count); i++)
+        {
+            var child = monsterFactory.Create(
+                split.ChildType,
+                positions[i].X, positions[i].Y,
+                state.CurrentDepth,
+                state.Rng);
+            if (child == null) continue;
+
+            state.Monsters.Add(child);
+            state.Map.RegisterEntity(child);
+            childIds.Add(child.Id);
+        }
+
+        events.Add(new SplitEvent
+        {
+            ActorId = original.Id,
+            OriginalId = original.Id,
+            ChildIds = childIds,
+        });
+    }
+
+    /// <summary>
+    /// Roll the number of children to spawn, using the split tracker's weight table if present.
+    /// </summary>
+    private static int RollSplitChildren(SplitTracker split, SeededRandom rng)
+    {
+        if (split.Weights == null || split.Weights.Length == 0)
+            return rng.Next(split.MinChildren, split.MaxChildren + 1);
+
+        int total = split.Weights.Sum();
+        int roll = rng.Next(total);
+        int running = 0;
+        for (int i = 0; i < split.Weights.Length; i++)
+        {
+            running += split.Weights[i];
+            if (roll < running)
+                return split.MinChildren + i;
+        }
+        return split.MaxChildren;
+    }
+
+    /// <summary>
+    /// Find valid spawn positions for split children using an expanding ring search.
+    /// Mirrors PoC's _get_valid_spawn_positions. Fallback: if no positions found,
+    /// returns origin position (children stack on top — unusual but not a crash).
+    /// </summary>
+    private static List<(int X, int Y)> FindSplitPositions(
+        GameMap map, int cx, int cy, int count, GameState state)
+    {
+        var found = new List<(int X, int Y)>();
+        var occupied = new HashSet<(int, int)>(
+            state.Monsters
+                .Where(m => m.Require<Fighter>().IsAlive)
+                .Select(m => (m.X, m.Y)));
+        occupied.Add((state.Player.X, state.Player.Y));
+
+        for (int radius = 1; radius <= 3 && found.Count < count; radius++)
+        {
+            for (int dx = -radius; dx <= radius && found.Count < count; dx++)
+            for (int dy = -radius; dy <= radius && found.Count < count; dy++)
+            {
+                // Only walk the ring perimeter, not the interior
+                if (Math.Abs(dx) != radius && Math.Abs(dy) != radius) continue;
+                int nx = cx + dx, ny = cy + dy;
+                if (map.IsWalkable(nx, ny) && !occupied.Contains((nx, ny)))
+                {
+                    found.Add((nx, ny));
+                    occupied.Add((nx, ny)); // reserve so next child doesn't pick the same spot
+                }
+            }
+        }
+
+        if (found.Count == 0) found.Add((cx, cy)); // fallback: stack on origin
+        return found;
     }
 
     private static void ResolvePlayerMove(GameState state, PlayerAction action, List<TurnEvent> events)
@@ -126,8 +540,39 @@ public static class TurnController
         var player = state.Player;
         int fromX = player.X, fromY = player.Y;
 
+        // EntangledEffect: player cannot move. CAN still attack (that's in ResolvePlayerAttack).
+        if (player.Has<EntangledEffect>())
+        {
+            // Emit wait-equivalent (no movement), consume the turn.
+            events.Add(new WaitEvent { ActorId = player.Id });
+            return;
+        }
+
+        // DisorientationEffect: player's intended direction is replaced with a random direction.
+        // The move still consumes a turn — player taps, the character stumbles elsewhere.
+        // If the random direction hits a wall, no movement occurs (same as normal wall bump).
         bool moved;
-        if (action.Target != null)
+        if (player.Has<DisorientationEffect>())
+        {
+            // Determine the intended destination so we can pick a random direction instead.
+            int destX = action.TargetX ?? (action.Target?.X ?? player.X);
+            int destY = action.TargetY ?? (action.Target?.Y ?? player.Y);
+
+            // Pick a random cardinal/diagonal direction — using game RNG for determinism.
+            var directions = new (int dx, int dy)[]
+            {
+                (-1, -1), (0, -1), (1, -1),
+                (-1,  0),          (1,  0),
+                (-1,  1), (0,  1), (1,  1),
+            };
+            int idx = state.Rng.Next(0, directions.Length);
+            var (rdx, rdy) = directions[idx];
+            int randomDestX = player.X + rdx;
+            int randomDestY = player.Y + rdy;
+
+            moved = state.Map.MoveToward(player, randomDestX, randomDestY);
+        }
+        else if (action.Target != null)
             moved = state.Map.MoveToward(player, action.Target.X, action.Target.Y);
         else if (action.TargetX.HasValue && action.TargetY.HasValue)
             moved = state.Map.MoveToward(player, action.TargetX.Value, action.TargetY.Value);
@@ -142,6 +587,12 @@ public static class TurnController
                 FromX = fromX, FromY = fromY,
                 ToX = player.X, ToY = player.Y,
             });
+
+            // Portal collision: check if player stepped onto a portal and teleport if so.
+            // Runs before stair check so portals near stairs don't cause confusion.
+            var portalTeleport = PortalSystem.CheckPortalCollision(player, state);
+            if (portalTeleport != null)
+                events.Add(portalTeleport);
 
             // Auto-descend: if the player walks onto the stair, descend immediately.
             // Matches PoC behavior — stairs are always usable, no kill requirement.
@@ -169,6 +620,18 @@ public static class TurnController
 
         foreach (var item in toPickUp)
         {
+            // Wand auto-recharge: if the item is a scroll with a SpellEffect, check whether
+            // the player holds a wand whose RechargeScrollId matches. If so, consume the scroll
+            // to add one charge instead of placing it in inventory.
+            var spellEffect = item.Get<SpellEffect>();
+            if (spellEffect != null && TryRechargeWand(state, item, spellEffect, events))
+            {
+                // Scroll was consumed for recharge — remove from floor, do NOT add to inventory.
+                state.FloorItems.Remove(item);
+                state.Map.UnregisterEntity(item);
+                continue;
+            }
+
             // Add returns false when inventory is full and the item could not be stacked.
             // In that case leave the item on the floor — do NOT remove it or emit an event.
             if (!inventory.Add(item))
@@ -184,6 +647,46 @@ public static class TurnController
                 ItemName = item.Name,
             });
         }
+    }
+
+    /// <summary>
+    /// Check if a picked-up scroll should auto-recharge a wand the player is carrying.
+    /// Returns true if the scroll was consumed for recharge (caller should skip normal pickup).
+    ///
+    /// Auto-recharge rule: if the player's inventory contains a wand whose RechargeScrollId
+    /// matches the picked-up scroll's SpellId, and that wand is below MaxCharges, consume
+    /// the scroll to add one charge instead of adding it to inventory.
+    /// </summary>
+    private static bool TryRechargeWand(GameState state, Entity scroll, SpellEffect scrollSpell,
+        List<TurnEvent> events)
+    {
+        var inventory = state.PlayerInventory;
+        if (inventory == null) return false;
+
+        // Find a wand in inventory that lists this scroll's spell_id as its recharge source
+        var wand = inventory.Items.FirstOrDefault(item =>
+        {
+            var w = item.Get<WandComponent>();
+            return w != null
+                && !w.Infinite
+                && w.RechargeScrollId == scrollSpell.SpellId
+                && w.Charges < w.MaxCharges;
+        });
+
+        if (wand == null) return false;
+
+        var wandComp = wand.Require<WandComponent>();
+        wandComp.Charges++;
+
+        events.Add(new WandRechargeEvent
+        {
+            ActorId = state.Player.Id,
+            WandName = wand.Name,
+            ScrollName = scroll.Name,
+            NewCharges = wandComp.Charges,
+        });
+
+        return true;
     }
 
     /// <summary>
@@ -376,7 +879,8 @@ public static class TurnController
         });
     }
 
-    private static void ResolveMonsterTurns(GameState state, List<TurnEvent> events)
+    private static void ResolveMonsterTurns(GameState state, List<TurnEvent> events,
+        EntityFactory? portalEntityFactory = null)
     {
         // Snapshot the list — monsters may die during resolution (e.g. player bonus attacks
         // killing a monster before its turn, or future reflect damage). Iterating a snapshot
@@ -387,6 +891,15 @@ public static class TurnController
         {
             if (!monster.Require<Fighter>().IsAlive) continue;
             if (!state.PlayerFighter.IsAlive) break; // player died mid-turn — stop processing
+
+            // Process start-of-turn effects: DOT/HOT ticks, skip-turn determination.
+            bool monsterSkipTurn = StatusEffectProcessor.ProcessTurnStart(monster, events, state.TurnCount);
+            if (monsterSkipTurn)
+            {
+                // Still decrement durations even on a skipped turn — time passes for sleeping/immobilized entities.
+                StatusEffectProcessor.ProcessTurnEnd(monster, events);
+                continue;
+            }
 
             var action = MonsterAI.Decide(monster, state);
 
@@ -410,6 +923,11 @@ public static class TurnController
                             FromX = fromX, FromY = fromY,
                             ToX = monster.X, ToY = monster.Y,
                         });
+
+                        // Portal collision: monsters can also use portals.
+                        var monsterPortalTeleport = PortalSystem.CheckPortalCollision(monster, state);
+                        if (monsterPortalTeleport != null)
+                            events.Add(monsterPortalTeleport);
                     }
                     break;
 
@@ -424,11 +942,35 @@ public static class TurnController
                 case MonsterAction.ActionKind.Wait:
                     break;
             }
+
+            // Decrement duration for all monster effects after it acts.
+            StatusEffectProcessor.ProcessTurnEnd(monster, events);
         }
     }
 
     private static void ResolveMonsterAttack(GameState state, Entity monster, Entity target, List<TurnEvent> events, bool isBonusAttack)
     {
+        // DisarmedEffect: weapon attack cancelled — emit failure event, do not resolve.
+        // Does not prevent unarmed attacks (if no weapon equipped).
+        var monEquip = monster.Get<Equipment>();
+        bool monHasWeapon = monEquip?.MainHand != null;
+        if (monster.Has<DisarmedEffect>() && monHasWeapon)
+        {
+            events.Add(new AttackEvent
+            {
+                ActorId = monster.Id,
+                TargetId = target.Id,
+                Hit = false,
+                Damage = 0,
+                IsCritical = false,
+                IsFumble = false,
+                TargetKilled = false,
+                IsBonusAttack = isBonusAttack,
+                FailReason = "disarmed",
+            });
+            return;
+        }
+
         var result = CombatResolver.ResolveAttack(monster, target, state.Rng);
 
         events.Add(new AttackEvent
@@ -443,10 +985,23 @@ public static class TurnController
             IsBonusAttack = isBonusAttack,
         });
 
+        if (result.Hit)
+        {
+            // Wake sleeping target on attack damage (NOT DOT — PoC-verified).
+            StatusEffectProcessor.OnDamageTaken(target, events);
+        }
+
         if (result.TargetKilled)
         {
             events.Add(new DeathEvent { ActorId = target.Id, KillerId = monster.Id });
             // target here is the player — players don't have equipment to drop
+        }
+        else if (result.Hit)
+        {
+            // Corrosion check — acidic monsters (slimes) degrade metal weapons on hit
+            var corrosion = monster.Get<CorrosionComponent>();
+            if (corrosion != null)
+                ResolveCorrosion(state, monster, corrosion.Chance, state.Rng, events);
         }
 
         // Monster bonus attacks — recurse if triggered and target still alive
@@ -454,6 +1009,43 @@ public static class TurnController
         {
             ResolveMonsterAttack(state, monster, target, events, isBonusAttack: true);
         }
+    }
+
+    /// <summary>
+    /// Attempt to corrode the player's equipped metal main-hand weapon.
+    /// Rolls against chance; if triggered, reduces DamageMax by 1, floored at BaseDamageMax/2.
+    /// Emits CorrosionEvent for the presentation layer to display a toast.
+    /// </summary>
+    private static void ResolveCorrosion(GameState state, Entity attacker, double chance,
+        SeededRandom rng, List<TurnEvent> events)
+    {
+        if (rng.NextDouble() >= chance) return;
+
+        var equipment = state.Player.Get<Equipment>();
+        var mainHandItem = equipment?.MainHand;
+        if (mainHandItem == null) return;
+
+        var equippable = mainHandItem.Get<Equippable>();
+        if (equippable == null) return;
+
+        // Only metal weapons corrode
+        if (!string.Equals(equippable.Material, "metal", StringComparison.OrdinalIgnoreCase)) return;
+
+        // Floor: weapon cannot be degraded below 50% of its base damage max
+        int floor = Math.Max(1, equippable.BaseDamageMax / 2);
+        if (equippable.DamageMax <= floor) return;
+
+        equippable.DamageMax--;
+
+        events.Add(new CorrosionEvent
+        {
+            ActorId = attacker.Id,
+            WeaponId = mainHandItem.Id,
+            WeaponName = mainHandItem.Name,
+            NewDamageMax = equippable.DamageMax,
+            BaseDamageMax = equippable.BaseDamageMax,
+            MonsterName = attacker.Name,
+        });
     }
 
     /// <summary>

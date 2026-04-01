@@ -149,6 +149,46 @@ public class PlayerCarryForwardTests
         Assert.That(newPlayer.Require<Inventory>().Count, Is.EqualTo(5));
     }
 
+    // ─── All 8 equipment slots survive floor transition ──────────────────────
+
+    [Test]
+    public void Apply_AllEightEquipmentSlots_SurviveFloorTransition()
+    {
+        // Regression guard for DEBT-002: LeftRing, RightRing, Neck were previously dropped.
+        var player = BuildPlayer();
+        var equipment = player.Add(new Equipment());
+
+        var mainHand  = new Entity(10, "Main Sword");  mainHand.Add(new Equippable(EquipmentSlot.MainHand));
+        var offHand   = new Entity(11, "Shield");      offHand.Add(new Equippable(EquipmentSlot.OffHand));
+        var head      = new Entity(12, "Helm");        head.Add(new Equippable(EquipmentSlot.Head));
+        var chest     = new Entity(13, "Breastplate");  chest.Add(new Equippable(EquipmentSlot.Chest));
+        var feet      = new Entity(14, "Boots");       feet.Add(new Equippable(EquipmentSlot.Feet));
+        var leftRing  = new Entity(15, "Left Ring");   leftRing.Add(new Equippable(EquipmentSlot.LeftRing));
+        var rightRing = new Entity(16, "Right Ring");  rightRing.Add(new Equippable(EquipmentSlot.RightRing));
+        var neck      = new Entity(17, "Amulet");      neck.Add(new Equippable(EquipmentSlot.Neck));
+
+        equipment.MainHand  = mainHand;
+        equipment.OffHand   = offHand;
+        equipment.Head      = head;
+        equipment.Chest     = chest;
+        equipment.Feet      = feet;
+        equipment.LeftRing  = leftRing;
+        equipment.RightRing = rightRing;
+        equipment.Neck      = neck;
+
+        var newPlayer = PlayerCarryForward.Apply(player);
+        var newEquipment = newPlayer.Require<Equipment>();
+
+        Assert.That(newEquipment.MainHand,  Is.SameAs(mainHand),  "MainHand should survive floor transition");
+        Assert.That(newEquipment.OffHand,   Is.SameAs(offHand),   "OffHand should survive floor transition");
+        Assert.That(newEquipment.Head,      Is.SameAs(head),      "Head should survive floor transition");
+        Assert.That(newEquipment.Chest,     Is.SameAs(chest),     "Chest should survive floor transition");
+        Assert.That(newEquipment.Feet,      Is.SameAs(feet),      "Feet should survive floor transition");
+        Assert.That(newEquipment.LeftRing,  Is.SameAs(leftRing),  "LeftRing should survive floor transition");
+        Assert.That(newEquipment.RightRing, Is.SameAs(rightRing), "RightRing should survive floor transition");
+        Assert.That(newEquipment.Neck,      Is.SameAs(neck),      "Neck should survive floor transition");
+    }
+
     // ─── SpeedBonusTracker NOT carried forward ───────────────────────────────
 
     [Test]

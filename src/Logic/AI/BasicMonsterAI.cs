@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.ECS;
@@ -74,12 +75,46 @@ public static class BasicMonsterAI
         if (alertedState == null)
             return MonsterAction.Wait();
 
-        // 4. Item seeking — only when not actively in melee contact with the player.
-        // "In combat" = alerted AND player is adjacent. Once the player is adjacent the
-        // monster should fight, not sidestep to grab a sword. This mirrors the PoC's
-        // `if not self.in_combat` check in BasicMonster.take_turn.
-        bool playerAdjacent = monster.ChebyshevDistanceTo(player.X, player.Y) <= 1;
-        if (!playerAdjacent)
+        // ── Phase 2/4: Status effect AI overrides ─────────────────────────────
+
+        // FearEffect: monster flees from player. Does NOT attack, even when adjacent.
+        // If no valid move away exists, stays in place. PoC-verified.
+        if (monster.Has<FearEffect>())
+            return DecideFlee(monster, player, state);
+
+        // Resolve target: TauntedEffect forces targeting the player (overrides EnragedEffect).
+        // EnragedEffect (HostileToAll) targets nearest entity regardless of allegiance.
+        // Both are handled in ChooseTarget.
+        var target = ChooseTarget(monster, player, state);
+
+        bool targetAdjacent = monster.ChebyshevDistanceTo(target.X, target.Y) <= 1;
+
+        // DisorientationEffect: monster moves in a random direction instead of pursuing.
+        // Attacks are NOT affected — if already adjacent, monster still attacks.
+        // Movement randomization applies to the pursuit path only (PoC-verified).
+        if (monster.Has<DisorientationEffect>())
+        {
+            if (targetAdjacent && !target.Has<InvisibilityEffect>())
+                return MonsterAction.Attack(target);
+            return DecideRandomMove(monster, state);
+        }
+
+        // EntangledEffect: monster cannot move but CAN attack adjacent targets.
+        if (monster.Has<EntangledEffect>())
+        {
+            if (targetAdjacent && !target.Has<InvisibilityEffect>())
+                return MonsterAction.Attack(target);
+            return MonsterAction.Wait(); // rooted, cannot pursue
+        }
+
+        // ImmobilizedEffect: ProcessTurnStart already returns skipTurn=true for the full-action block.
+        // We don't need to intercept here — TurnController skips the entire action.
+        // This branch is kept as documentation clarity but should never fire in practice.
+
+        // ── Normal AI flow ─────────────────────────────────────────────────────
+
+        // 4. Item seeking — only when not actively in melee contact with the chosen target.
+        if (!targetAdjacent)
         {
             var itemAction = TryItemSeek(monster, state);
             if (itemAction != null)
@@ -103,18 +138,26 @@ public static class BasicMonsterAI
             }
         }
 
-        // 6. Adjacent to player → attack immediately.
+        // 6. Adjacent to target → attack immediately.
         // Chebyshev distance 1 = any of the 8 surrounding tiles (diagonal melee included).
-        if (playerAdjacent)
-            return MonsterAction.Attack(player);
+        // Invisible entities cannot be targeted for direct attacks — the AI can't see them.
+        // They can still be damaged by AoE. InvisibilityEffect breaks on the player's own attack.
+        if (targetAdjacent && !target.Has<InvisibilityEffect>())
+            return MonsterAction.Attack(target);
+
+        // If adjacent but target is invisible: fall through to movement logic.
+        // Monster will wait or pursue a remembered position instead of attacking.
 
         // 7. Pursue toward last known player position using A*.
+        // For EnragedEffect (HostileToAll), pursue the chosen target (nearest entity).
         // Pass the monster as movingEntity so the pathfinder doesn't treat it as self-blocking.
-        // The goal tile is the last known position — may or may not still be occupied by the player.
+        int pursueX = monster.Has<EnragedEffect>() ? target.X : alertedState.LastKnownPlayerX;
+        int pursueY = monster.Has<EnragedEffect>() ? target.Y : alertedState.LastKnownPlayerY;
+
         var path = Pathfinder.AStar(
             state.Map,
             monster.X, monster.Y,
-            alertedState.LastKnownPlayerX, alertedState.LastKnownPlayerY,
+            pursueX, pursueY,
             movingEntity: monster);
 
         if (path != null && path.Count > 0)
@@ -124,13 +167,13 @@ public static class BasicMonsterAI
         // MoveToward mutates the entity's position directly, so we only call it if
         // a greedy step actually exists. We detect this by checking if the target differs
         // from the monster's current position (otherwise MoveToward is a no-op anyway).
-        if (monster.X != alertedState.LastKnownPlayerX || monster.Y != alertedState.LastKnownPlayerY)
+        if (monster.X != pursueX || monster.Y != pursueY)
         {
             // Greedy step: attempt to move one tile closer, return MoveTo if a direction is free.
             // We compute the intended greedy destination rather than mutating position here —
             // let TurnController apply the move to stay consistent with the action model.
-            int dx = Math.Sign(alertedState.LastKnownPlayerX - monster.X);
-            int dy = Math.Sign(alertedState.LastKnownPlayerY - monster.Y);
+            int dx = Math.Sign(pursueX - monster.X);
+            int dy = Math.Sign(pursueY - monster.Y);
 
             // Try diagonal, then axis-aligned — mirrors GameMap.MoveToward's priority order.
             if (dx != 0 && dy != 0 && state.Map.CanMoveTo(monster.X + dx, monster.Y + dy))
@@ -142,6 +185,141 @@ public static class BasicMonsterAI
         }
 
         // Fully blocked or already at the target — stand still.
+        return MonsterAction.Wait();
+    }
+
+    /// <summary>
+    /// Choose the attack target for this monster.
+    ///
+    /// Priority:
+    ///   1. TauntedEffect: always target the taunted entity's TauntTargetId (player).
+    ///   2. EnragedEffect (HostileToAll): find nearest alive entity — player or any monster.
+    ///   3. Default: target the player.
+    ///
+    /// Returns player if no special targeting applies or if the special target is not found.
+    /// </summary>
+    private static Entity ChooseTarget(Entity monster, Entity player, GameState state)
+    {
+        // Taunt overrides everything — even EnragedEffect.
+        var taunt = monster.Get<TauntedEffect>();
+        if (taunt != null)
+        {
+            // TauntTargetId -1 means unset; default to player.
+            if (taunt.TauntTargetId == player.Id || taunt.TauntTargetId < 0)
+                return player;
+            // Future: look up the entity by ID if we have non-player taunt targets.
+            return player;
+        }
+
+        // EnragedEffect: HostileToAll flag set on the effect component.
+        // Find nearest entity (player or alive monster) — we want whoever is closest.
+        if (monster.Has<EnragedEffect>())
+        {
+            Entity? nearest = null;
+            int nearestDist = int.MaxValue;
+
+            // Check player first.
+            int playerDist = monster.ChebyshevDistanceTo(player.X, player.Y);
+            if (playerDist < nearestDist)
+            {
+                nearest = player;
+                nearestDist = playerDist;
+            }
+
+            // Check all alive monsters (excluding self).
+            foreach (var other in state.AliveMonsters)
+            {
+                if (other.Id == monster.Id) continue;
+                int d = monster.ChebyshevDistanceTo(other.X, other.Y);
+                if (d < nearestDist)
+                {
+                    nearest = other;
+                    nearestDist = d;
+                }
+            }
+
+            return nearest ?? player;
+        }
+
+        // Invisible player: monster AI cannot target an invisible entity for attack.
+        // The invisible entity can still be damaged by AoE — this is a targeting gate only.
+        // Returning null signals the caller that no valid attack target exists.
+        // NOTE: We still return player here (not null) because ChooseTarget returns Entity, not Entity?.
+        // The invisibility attack gate is enforced in Decide() before the Attack action is returned.
+        // See: "if (targetAdjacent && !target.Has<InvisibilityEffect>())" in the main decision flow.
+
+        return player;
+    }
+
+    /// <summary>
+    /// Flee AI: move to maximize distance from the player.
+    /// If all adjacent passable tiles are blocked or none increases distance, stay in place.
+    /// Never attacks while feared (PoC-verified).
+    /// </summary>
+    private static MonsterAction DecideFlee(Entity monster, Entity player, GameState state)
+    {
+        int bestX = monster.X, bestY = monster.Y;
+        // Use Manhattan consistently: both the baseline and candidate evaluations use the same metric.
+        int bestDist = Math.Abs(monster.X - player.X) + Math.Abs(monster.Y - player.Y);
+
+        // Try all 8 adjacent tiles; pick the one that maximizes distance from player.
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                if (dx == 0 && dy == 0) continue;
+                int nx = monster.X + dx;
+                int ny = monster.Y + dy;
+                if (!state.Map.CanMoveTo(nx, ny)) continue;
+
+                int dist = Math.Abs(nx - player.X) + Math.Abs(ny - player.Y);
+                if (dist > bestDist)
+                {
+                    bestDist = dist;
+                    bestX = nx;
+                    bestY = ny;
+                }
+            }
+        }
+
+        // If no better tile found (cornered), stay in place.
+        if (bestX == monster.X && bestY == monster.Y)
+            return MonsterAction.Wait();
+
+        return MonsterAction.MoveTo(bestX, bestY);
+    }
+
+    /// <summary>
+    /// Random movement for DisorientationEffect: pick a random adjacent passable tile.
+    /// If the chosen direction hits a wall, no movement this turn (PoC-verified).
+    /// </summary>
+    private static MonsterAction DecideRandomMove(Entity monster, GameState state)
+    {
+        // All 8 adjacent directions
+        var dirs = new (int dx, int dy)[]
+        {
+            (-1, -1), (0, -1), (1, -1),
+            (-1,  0),          (1,  0),
+            (-1,  1), (0,  1), (1,  1),
+        };
+
+        // Shuffle using Fisher-Yates with the game's RNG to stay deterministic.
+        var shuffled = dirs.ToList();
+        for (int i = shuffled.Count - 1; i > 0; i--)
+        {
+            int j = state.Rng.Next(0, i + 1);
+            (shuffled[i], shuffled[j]) = (shuffled[j], shuffled[i]);
+        }
+
+        foreach (var (dx, dy) in shuffled)
+        {
+            int nx = monster.X + dx;
+            int ny = monster.Y + dy;
+            if (state.Map.CanMoveTo(nx, ny))
+                return MonsterAction.MoveTo(nx, ny);
+        }
+
+        // All directions blocked — no move.
         return MonsterAction.Wait();
     }
 

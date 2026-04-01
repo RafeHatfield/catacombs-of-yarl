@@ -1,6 +1,20 @@
 # Plan: Slime Monsters (slime + large_slime)
 
-**Status:** PENDING
+**Status:** COMPLETE (2026-03-29)
+
+## Implementation notes
+
+- All tasks implemented as specified. 472 tests passing (15 new slime tests).
+- `TurnEvent.cs`: `SplitEvent` and `CorrosionEvent` are sealed subclasses using `init`-style properties, matching the existing `AttackEvent`/`DeathEvent` pattern (no factory methods on base class).
+- `ProcessTurn` signature: `MonsterFactory? monsterFactory = null` — optional param, all existing call sites unaffected.
+- Split check: inside `if (result.Hit)` block, BEFORE `if (result.TargetKilled)`. Returns early on split so the kill path is skipped.
+- Null-factory fallback: sets HP=0 and emits `DeathEvent` — matches plan spec.
+- Corrosion check: `else if (result.Hit)` in `ResolveMonsterAttack`, fires only when hit but NOT killed.
+- `BaseDamageMax` floor: `Math.Max(1, BaseDamageMax / 2)` — integer division. Weapon with BaseDamageMax=4 stops at 2; BaseDamageMax=5 stops at 2 (floor(5/2)=2).
+- Tests: use retry loops (up to 20 turns) rather than pinning to RNG seeds, because D20 combat has 5% fumble auto-miss that cannot be overcome by stats alone.
+- `GameController.cs`: split handler calls `_entitySprites?.SpawnMonster(child)` via new public method added to `EntitySpriteManager`.
+- `InferSpriteBase` updated to handle "slime" name — falls back to goblin sprite (placeholder until slime sprite sheet added).
+- Deferred systems tracked in `tasks/plans/deferred_slime_abilities.md` per plan.
 **PoC reference:** `~/development/rlike/config/entities.yaml` lines 483–549, `~/development/rlike/services/slime_split_service.py`, `~/development/rlike/components/fighter.py` lines 631–676, 1594–1629, 2295–2338
 
 ---
@@ -199,52 +213,68 @@ public string? Material { get; set; }
 
 #### 5a. Split — in `ResolvePlayerAttack`, after damage is applied
 
-After the existing damage/death logic, add:
+**Guard: only check split if the attack actually hit.** Add after the hit/damage block:
 ```csharp
-// Check for split-under-pressure BEFORE death check
-var split = target.Get<SplitTracker>();
-if (split != null && !split.HasSplit)
+// Check for split-under-pressure BEFORE death check — only on a hit
+if (result.Hit)
 {
-    var tFighter = target.Require<Fighter>();
-    double hpPct = tFighter.MaxHp > 0 ? (double)tFighter.Hp / tFighter.MaxHp : 0;
-    if (hpPct < split.TriggerHpPct)
+    var split = target.Get<SplitTracker>();
+    if (split != null && !split.HasSplit)
     {
-        split.HasSplit = true;
-        ResolveSplit(state, target, split, events);
-        return; // original is gone — skip death event
+        var tFighter = target.Require<Fighter>();
+        double hpPct = tFighter.MaxHp > 0 ? (double)tFighter.Hp / tFighter.MaxHp : 0;
+        if (hpPct < split.TriggerHpPct)
+        {
+            split.HasSplit = true;
+            ResolveSplit(state, target, split, monsterFactory, events);
+            return; // original is gone — skip death event
+        }
     }
 }
 ```
 
+**Design decision: children act on the same turn they spawn.** When split fires mid-combat, the new slimes are added to `state.Monsters` before `ResolveMonsterTurns` completes its loop. The `AliveMonsters` cache key is `TurnCount` and is rebuilt at the start of `ResolveMonsterTurns` — children added during a player attack will act on that same turn. This is intentional: it creates a dramatic "suddenly surrounded" moment and matches PoC behavior. Document this in code with a comment.
+
 New private method `ResolveSplit`:
 ```csharp
-private static void ResolveSplit(GameState state, Entity original, SplitTracker split, List<TurnEvent> events)
+private static void ResolveSplit(GameState state, Entity original, SplitTracker split,
+    MonsterFactory? monsterFactory, List<TurnEvent> events)
 {
+    // Null-factory fallback: test environments that don't inject a factory.
+    // Treat split as a kill — HP = 0, emit DeathEvent, no children spawned.
+    if (monsterFactory == null)
+    {
+        original.Require<Fighter>().Hp = 0;
+        events.Add(new DeathEvent(original));
+        return;
+    }
+
     int numChildren = RollSplitChildren(split, state.Rng);
     var positions = FindSplitPositions(state.Map, original.X, original.Y, numChildren, state);
 
     // Kill original (HP = 0, no XP event — split is not a kill)
-    var origFighter = original.Require<Fighter>();
-    origFighter.Hp = 0;
+    original.Require<Fighter>().Hp = 0;
     state.Map.UnregisterEntity(original);
 
     var children = new List<Entity>();
     for (int i = 0; i < Math.Min(numChildren, positions.Count); i++)
     {
-        var child = state.MonsterFactory.Create(split.ChildType,
-            positions[i].X, positions[i].Y, state.Depth, state.Rng);
+        var child = monsterFactory.Create(split.ChildType,
+            positions[i].X, positions[i].Y, state.CurrentDepth, state.Rng);
         if (child == null) continue;
         state.Monsters.Add(child);
         state.Map.RegisterEntity(child);
         children.Add(child);
     }
 
-    events.Add(TurnEvent.Split(original, children));
+    // Children added before ResolveMonsterTurns completes — they act this turn.
+    // This is intentional: creates a "suddenly surrounded" moment.
+    events.Add(new SplitEvent(original, children));
     // No XP awarded — split is not a kill
 }
 ```
 
-`GameState` needs a `Rng` property (check if already present) and `MonsterFactory` reference. If `MonsterFactory` isn't currently on `GameState`, it needs to be added — see note below.
+`GameState` needs a `Rng` property (check if already present). `MonsterFactory` is passed via `ProcessTurn` parameter — see section 7.
 
 `RollSplitChildren` — weighted random using `SeededRandom`:
 ```csharp
@@ -340,7 +370,9 @@ private static void ResolveCorrosion(GameState state, double chance, SeededRando
     if (equippable.DamageMax <= floor) return;
 
     equippable.DamageMax--;
-    events.Add(TurnEvent.Corrosion(mainHand, equippable.DamageMax, equippable.BaseDamageMax));
+    events.Add(new CorrosionEvent(mainHand, equippable.DamageMax, equippable.BaseDamageMax));
+    // Toast format: "The Slime corrodes your Dagger! [75%]"
+    // Percentage = (DamageMax / BaseDamageMax) * 100, rounded to int
 }
 ```
 
@@ -348,19 +380,43 @@ private static void ResolveCorrosion(GameState state, double chance, SeededRando
 
 ### 6. `TurnEvent.cs` — new event types
 
-Add:
+`TurnEvent` is an abstract base class with concrete sealed subclasses — do NOT add factory methods to the base class. Add new sealed subclasses following the existing pattern:
+
 ```csharp
 /// <summary>A splitting monster has divided into children.</summary>
-public static TurnEvent Split(Entity original, IReadOnlyList<Entity> children) =>
-    new(TurnEventKind.Split) { SourceEntity = original, SpawnedEntities = children.ToList() };
+public sealed class SplitEvent : TurnEvent
+{
+    public Entity Original { get; }
+    public IReadOnlyList<Entity> Children { get; }
+
+    public SplitEvent(Entity original, IReadOnlyList<Entity> children)
+        : base(TurnEventKind.Split)
+    {
+        Original = original;
+        Children = children;
+    }
+}
 
 /// <summary>A metal weapon was corroded by acid.</summary>
-public static TurnEvent Corrosion(Entity weapon, int newDamageMax, int baseDamageMax) =>
-    new(TurnEventKind.Corrosion) { SourceEntity = weapon, Value = newDamageMax, MaxValue = baseDamageMax };
+public sealed class CorrosionEvent : TurnEvent
+{
+    public Entity Weapon { get; }
+    public int NewDamageMax { get; }
+    public int BaseDamageMax { get; }
+
+    public CorrosionEvent(Entity weapon, int newDamageMax, int baseDamageMax)
+        : base(TurnEventKind.Corrosion)
+    {
+        Weapon = weapon;
+        NewDamageMax = newDamageMax;
+        BaseDamageMax = baseDamageMax;
+    }
+}
 ```
 
 Add `TurnEventKind.Split` and `TurnEventKind.Corrosion` to the enum.
-Add `SpawnedEntities` list field to `TurnEvent` (only populated for Split events).
+
+**`AllMonstersDefeated` is correct post-split.** The `AliveMonsters` cache rebuilds during `ResolveMonsterTurns` (keyed by `TurnCount`). When the original is removed and children are added to `state.Monsters`, the cache rebuilds on the next evaluation. No changes needed here.
 
 ---
 
@@ -381,6 +437,8 @@ public static TurnResult ProcessTurn(
     PlayerAction action,
     MonsterFactory? monsterFactory = null)
 ```
+
+**Null-factory behavior:** When `monsterFactory == null`, `ResolveSplit` falls back to kill (HP=0, `DeathEvent`). All ~40 existing `ProcessTurn` call sites that don't pass a factory retain correct behavior — the split just won't spawn children. Tests that don't inject a factory get a kill instead of a split. Tests that specifically test split mechanics must pass a factory.
 
 ---
 
@@ -470,7 +528,7 @@ In `OnTurnCompleted` (or wherever events are processed):
 
 **Split:** Remove sprite for original entity, spawn sprites for children. Use existing `SpawnMonsterSprite` pathway for children.
 
-**Corrosion:** Add toast message "The slime corrodes your [weapon name]! [X%]"
+**Corrosion:** On `CorrosionEvent`, add toast: `"The [monster name] corrodes your [weapon name]! [X%]"` where X% = `(newDamageMax / baseDamageMax * 100)` rounded to int. Use orange color in the combat log.
 
 ---
 

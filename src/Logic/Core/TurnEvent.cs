@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.ECS;
 
 namespace CatacombsOfYarl.Logic.Core;
 
@@ -21,6 +22,12 @@ public sealed class AttackEvent : TurnEvent
     public bool IsFumble { get; init; }
     public bool TargetKilled { get; init; }
     public bool IsBonusAttack { get; init; }
+
+    /// <summary>
+    /// Non-null when the attack was blocked by a status effect rather than a die roll.
+    /// Values: "disarmed" (DisarmedEffect active, weapon equipped), "" / null = normal miss.
+    /// </summary>
+    public string? FailReason { get; init; }
 }
 
 public sealed class MoveEvent : TurnEvent
@@ -78,6 +85,244 @@ public sealed class UnequipEvent : TurnEvent
     public int ItemId { get; init; }
     public string ItemName { get; init; } = "";
     public EquipmentSlot Slot { get; init; }
+}
+
+/// <summary>
+/// A splitting monster has divided into children after HP dropped below its threshold.
+/// Original entity is removed from the map; children are added to state.Monsters.
+/// No XP is awarded — split is not a kill.
+/// </summary>
+public sealed class SplitEvent : TurnEvent
+{
+    /// <summary>ID of the monster that split.</summary>
+    public int OriginalId { get; init; }
+
+    /// <summary>IDs of the spawned child entities.</summary>
+    public IReadOnlyList<int> ChildIds { get; init; } = Array.Empty<int>();
+}
+
+/// <summary>
+/// A metal weapon was corroded by acid on a successful monster hit.
+/// Presentation layer should show an orange toast with the degradation percentage.
+/// Format: "The [MonsterName] corrodes your [WeaponName]! [X%]"
+/// where X% = (NewDamageMax / BaseDamageMax) * 100.
+/// </summary>
+public sealed class CorrosionEvent : TurnEvent
+{
+    /// <summary>ID of the weapon entity that was degraded.</summary>
+    public int WeaponId { get; init; }
+
+    /// <summary>Name of the weapon (for toast display).</summary>
+    public string WeaponName { get; init; } = "";
+
+    /// <summary>The weapon's new DamageMax after corrosion.</summary>
+    public int NewDamageMax { get; init; }
+
+    /// <summary>The weapon's original DamageMax at creation (never changes).</summary>
+    public int BaseDamageMax { get; init; }
+
+    /// <summary>Name of the monster that caused the corrosion (for toast display).</summary>
+    public string MonsterName { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted when the player casts a spell (via scroll or wand).
+/// AoE spells list all affected entity IDs in AffectedIds. Single-target spells
+/// set TargetId. The harness uses this event to measure spell usage frequency
+/// and effectiveness across scenario runs.
+/// </summary>
+public sealed class SpellEvent : TurnEvent
+{
+    public string SpellId { get; init; } = "";
+    public string SpellName { get; init; } = "";
+
+    /// <summary>Entity ID of primary target (single-target spells). Null for Self/AoE.</summary>
+    public int? TargetId { get; init; }
+
+    /// <summary>Damage dealt to each target (for damage spells).</summary>
+    public int Damage { get; init; }
+
+    /// <summary>IDs of all entities affected by the spell (AoE includes all, single-target is one).</summary>
+    public IReadOnlyList<int> AffectedIds { get; init; } = Array.Empty<int>();
+
+    /// <summary>True if the spell succeeded (had a valid target, not wasted).</summary>
+    public bool Success { get; init; }
+
+    /// <summary>
+    /// Name of the status effect applied by this spell (e.g., "confused", "slowed").
+    /// Empty string if no status effect was applied.
+    /// Presentation layer uses this for toast messages: "The orc is confused!"
+    /// </summary>
+    public string StatusApplied { get; init; } = "";
+
+    /// <summary>
+    /// Duration of the applied status effect in turns.
+    /// 0 if no status effect was applied, or -1 for permanent effects.
+    /// </summary>
+    public int StatusDuration { get; init; }
+}
+
+/// <summary>
+/// Emitted when the player uses a wand (before spell resolution).
+/// Lets the presentation layer show charge-count badge updates and the harness
+/// track wand usage vs. charge depletion rates.
+/// </summary>
+public sealed class WandUseEvent : TurnEvent
+{
+    public string WandName { get; init; } = "";
+    public int RemainingCharges { get; init; }
+
+    /// <summary>True when the wand fired successfully (charges consumed).</summary>
+    public bool Success { get; init; }
+
+    /// <summary>True when wand was destroyed (charges reached 0 on this use).</summary>
+    public bool WandDestroyed { get; init; }
+}
+
+/// <summary>
+/// Emitted when a scroll is picked up and auto-recharged into a matching wand
+/// instead of entering inventory. The presentation layer should show a toast:
+/// "[WandName] recharged! ([NewCharges] charges)"
+/// </summary>
+public sealed class WandRechargeEvent : TurnEvent
+{
+    public string WandName { get; init; } = "";
+    public string ScrollName { get; init; } = "";
+    public int NewCharges { get; init; }
+}
+
+/// <summary>
+/// Emitted when a map-reveal spell fires.
+/// RevealType: "fov" for Light Scroll (marks current FOV tiles explored),
+///             "full" for Magic Mapping (marks entire floor explored).
+/// </summary>
+public sealed class MapRevealEvent : TurnEvent
+{
+    public string RevealType { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted by Detect Monsters scroll. All monster positions are snapshotted here
+/// so the presentation layer can briefly flash them even through walls.
+/// Duration is in turns (20 for the detect monsters scroll).
+/// </summary>
+public sealed class DetectMonstersEvent : TurnEvent
+{
+    public IReadOnlyList<(int X, int Y, int MonsterId)> MonsterPositions { get; init; }
+        = Array.Empty<(int, int, int)>();
+    public int Duration { get; init; }
+}
+
+/// <summary>
+/// Emitted when a status effect is applied to an entity.
+/// Complements SpellEvent for cases where multiple status effects are applied
+/// in a single spell resolution (e.g., AoE fear applying FearEffect to many targets).
+/// Presentation layer uses this for per-entity toast messages.
+/// </summary>
+public sealed class StatusAppliedEvent : TurnEvent
+{
+    public int TargetId { get; init; }
+    public string EffectName { get; init; } = "";
+
+    /// <summary>Duration in turns, or -1 for permanent effects.</summary>
+    public int Duration { get; init; }
+}
+
+/// <summary>
+/// Emitted when a status effect expires (duration hits 0 or is explicitly removed).
+/// Reason is typically "duration" for natural expiry or a specific cause like "woke_on_damage".
+/// </summary>
+public sealed class StatusExpiredEvent : TurnEvent
+{
+    public int EntityId { get; init; }
+    public string EffectName { get; init; } = "";
+
+    /// <summary>"duration" for natural expiry, or a specific cause (e.g. "woke_on_damage").</summary>
+    public string Reason { get; init; } = "duration";
+}
+
+/// <summary>
+/// Emitted each turn when a DOT effect (poison, burning, plague) deals damage.
+/// </summary>
+public sealed class DotDamageEvent : TurnEvent
+{
+    public int EntityId { get; init; }
+    public string EffectName { get; init; } = "";
+    public int Damage { get; init; }
+}
+
+/// <summary>
+/// Emitted each turn when a HOT effect (regeneration) heals the entity.
+/// </summary>
+public sealed class HotHealEvent : TurnEvent
+{
+    public int EntityId { get; init; }
+    public string EffectName { get; init; } = "";
+    public int Amount { get; init; }
+}
+
+/// <summary>
+/// Emitted when an entity's turn is skipped due to a status effect (SlowedEffect, ImmobilizedEffect, SleepEffect).
+/// </summary>
+public sealed class SkipTurnEvent : TurnEvent
+{
+    public int EntityId { get; init; }
+    public string EffectName { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted when a teleport spell resolves (Teleport Scroll, Blink Scroll).
+/// Misfire=true means the caster ended up at a random tile instead of the chosen one.
+/// Presentation layer uses this to animate the teleport flash and show misfire toast.
+/// </summary>
+public sealed class TeleportEvent : TurnEvent
+{
+    public int EntityId { get; init; }
+    public int FromX { get; init; }
+    public int FromY { get; init; }
+    public int ToX { get; init; }
+    public int ToY { get; init; }
+    public bool Misfire { get; init; }
+}
+
+/// <summary>
+/// Emitted when a portal pair is placed by the Wand of Portals.
+/// Two of these are emitted per wand use — one for entrance, one for exit.
+/// Presentation layer spawns the portal sprite at Position using Type to pick the tint.
+/// </summary>
+public sealed class PortalPlacedEvent : TurnEvent
+{
+    public int PlacerId { get; init; }
+    public PortalType Type { get; init; }
+    public int PortalEntityId { get; init; }
+    public int X { get; init; }
+    public int Y { get; init; }
+}
+
+/// <summary>
+/// Emitted when an entity (player or monster) teleports through a portal.
+/// Presentation layer plays a teleport flash at From and To positions.
+/// </summary>
+public sealed class PortalTeleportEvent : TurnEvent
+{
+    public int EntityId { get; init; }
+    public int FromX { get; init; }
+    public int FromY { get; init; }
+    public int ToX { get; init; }
+    public int ToY { get; init; }
+    public int PortalEntryId { get; init; }
+    public int PortalExitId { get; init; }
+}
+
+/// <summary>
+/// Emitted when an existing portal pair is removed — either because the Wand of Portals
+/// placed a new pair (recycling the old one) or a floor transition cleared portals.
+/// Presentation layer despawns the portal sprites.
+/// </summary>
+public sealed class PortalRemovedEvent : TurnEvent
+{
+    public int EntranceEntityId { get; init; }
+    public int ExitEntityId { get; init; }
 }
 
 /// <summary>

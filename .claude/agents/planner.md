@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Use PROACTIVELY when starting any new feature, balance pass, or system change. Reads the codebase, docs, and balance data, then creates a detailed implementation plan with concrete tasks.
-tools: Read, Glob, Grep, Bash
+tools: Read, Write, Edit, Glob, Grep, Bash
 model: opus
 ---
 

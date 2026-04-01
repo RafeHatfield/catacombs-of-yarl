@@ -3,6 +3,7 @@ using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Knowledge;
 using CatacombsOfYarl.Logic.Map;
 using CatacombsOfYarl.Presentation.Animation;
 using CatacombsOfYarl.Presentation.Entities;
@@ -23,7 +24,7 @@ namespace CatacombsOfYarl.Presentation;
 /// </summary>
 public sealed partial class GameController : Node
 {
-    public enum GamePhase { WaitingForInput, Processing, Animating, GameOver }
+    public enum GamePhase { WaitingForInput, Processing, Animating, GameOver, Targeting }
 
     /// <summary>Animation speed multiplier during auto-explore. 1.0 = normal, lower = faster.</summary>
     public const float AutoExploreSpeedMultiplier = 0.25f;
@@ -32,6 +33,7 @@ public sealed partial class GameController : Node
     public const float ClickToMoveSpeedMultiplier = 0.55f;
 
     private GameState? _state;
+    private MonsterFactory? _monsterFactory;
     private InputHandler _input = new();
     private EntitySpriteManager? _entitySprites;
     private ItemSpriteManager? _itemSprites;
@@ -39,6 +41,8 @@ public sealed partial class GameController : Node
     private EquipmentPanel? _equipmentPanel;
     private ToastLog? _toastLog;
     private TurnAnimator? _animator;
+    private LongPressDetector? _longPress;
+    private InspectPanel? _inspectPanel;
 
     // Stored between OnActionChosen and OnAnimationComplete so we can fire the transition
     // after animations finish rather than immediately when the event is emitted.
@@ -85,13 +89,15 @@ public sealed partial class GameController : Node
 
     public void Initialize(GameState state, EntitySpriteManager entitySprites, Node animationRoot,
         ItemSpriteManager? itemSprites = null, InventoryPanel? inventoryPanel = null,
-        EquipmentPanel? equipmentPanel = null, ToastLog? toastLog = null)
+        EquipmentPanel? equipmentPanel = null, ToastLog? toastLog = null,
+        MonsterFactory? monsterFactory = null)
     {
 #if DEBUG
         System.Diagnostics.Debug.Assert(_animator == null,
             "GameController.Initialize called twice on the same instance — event double-subscribe risk");
 #endif
         _state = state;
+        _monsterFactory = monsterFactory;
         _entitySprites = entitySprites;
         _itemSprites = itemSprites;
         _inventoryPanel = inventoryPanel;
@@ -102,15 +108,30 @@ public sealed partial class GameController : Node
 
         _input.SetState(state);
         _input.ActionChosen += OnActionChosen;
+        _input.TargetChosen += OnTargetChosen;
+        _input.LocationChosen += OnLocationChosen;
+        _input.TargetingCancelled += OnTargetingCancelled;
         _input.SetAcceptingInput(true);
+
+        // Set up long-press detection and inspect panel.
+        // Both are created as children of this Node so they participate in the scene tree.
+        _longPress = new LongPressDetector();
+        AddChild(_longPress);
+        _longPress.LongPressDetected += OnLongPress;
+
+        _inspectPanel = new InspectPanel();
+        AddChild(_inspectPanel);
 
         _pendingPath = null;
         _autoExploreMode = false;
     }
 
     /// <summary>
-    /// Handle a tap on an inventory slot. Finds the item in the player's inventory
-    /// and issues a UseItem action, which TurnController routes to TryHeal (or similar).
+    /// Handle a tap on an inventory slot.
+    /// - Potions (Consumable with HealAmount > 0): issue UseItem immediately.
+    /// - Scrolls / Wands (SpellEffect): dispatch via HandleScrollOrWandUse.
+    ///   Self/AutoClosest/AoeSelf → immediate CastSpell action.
+    ///   SingleTarget/Location → enter targeting mode, wait for player to pick a target.
     /// </summary>
     public void HandleInventoryTap(int itemId)
     {
@@ -127,8 +148,141 @@ public sealed partial class GameController : Node
         var item = inventory.FindFirst(e => e.Id == itemId);
         if (item == null) { Diag.Log($"  BLOCKED: no item with id={itemId}"); return; }
 
+        // Check if item is a scroll or wand
+        var spellEffect = item.Get<SpellEffect>();
+        if (spellEffect != null)
+        {
+            HandleScrollOrWandUse(item, spellEffect);
+            return;
+        }
+
         Diag.Log($"  -> UseItem({item.Name})");
         OnActionChosen(PlayerAction.UseItem(item));
+    }
+
+    /// <summary>
+    /// Dispatch a scroll or wand use.
+    ///
+    /// Self / AutoClosest / AoeSelf: no targeting UI — fire CastSpell immediately.
+    ///   AutoClosest: find closest visible enemy first; if none, toast "No visible targets".
+    /// SingleTarget / Location: enter targeting mode.
+    /// Portal: wand-of-portals two-step (deferred to Phase 5).
+    /// </summary>
+    private void HandleScrollOrWandUse(Entity item, SpellEffect spell)
+    {
+        Diag.Log($"HandleScrollOrWandUse: {item.Name} targeting={spell.Targeting}");
+
+        switch (spell.Targeting)
+        {
+            case TargetingMode.Self:
+            case TargetingMode.AoeSelf:
+                // No target required — fire immediately
+                OnActionChosen(PlayerAction.CastSpell(item));
+                break;
+
+            case TargetingMode.AutoClosest:
+                // Resolve target now in the presentation layer (closest visible enemy)
+                var closest = FindClosestVisibleEnemy(spell.Range);
+                if (closest == null)
+                {
+                    _toastLog?.AddMessage("No visible targets in range.");
+                    Diag.Log("HandleScrollOrWandUse: no visible targets for AutoClosest");
+                    return; // Do NOT consume item or turn
+                }
+                OnActionChosen(PlayerAction.CastSpell(item, targetEntityId: closest.Id));
+                break;
+
+            case TargetingMode.SingleTarget:
+                EnterTargetingMode(new TargetingState
+                {
+                    Item  = item,
+                    Spell = spell,
+                    Mode  = TargetingMode.SingleTarget,
+                    Range = spell.Range,
+                });
+                break;
+
+            case TargetingMode.Location:
+                EnterTargetingMode(new TargetingState
+                {
+                    Item   = item,
+                    Spell  = spell,
+                    Mode   = TargetingMode.Location,
+                    Range  = spell.Range,
+                    Radius = spell.Radius,
+                });
+                break;
+
+            case TargetingMode.Portal:
+                // TODO Phase 5: Wand of Portals two-step targeting
+                _toastLog?.AddMessage("Portal wand: targeting not yet implemented.");
+                break;
+
+            default:
+                // Unknown targeting mode — treat as Self
+                OnActionChosen(PlayerAction.CastSpell(item));
+                break;
+        }
+    }
+
+    /// <summary>Enter targeting mode and notify the presentation.</summary>
+    private void EnterTargetingMode(TargetingState targeting)
+    {
+        Phase = GamePhase.Targeting;
+        _input.EnterTargetingMode(targeting);
+        _toastLog?.AddMessage($"Tap a target for {targeting.Item.Name}. Tap yourself to cancel.");
+        Diag.Log($"GameController: entered targeting mode for {targeting.Item.Name}");
+    }
+
+    /// <summary>Called when the player picks a single-target monster during targeting mode.</summary>
+    private void OnTargetChosen(Entity item, Entity target)
+    {
+        Diag.Log($"OnTargetChosen: item={item.Name} target={target.Name}(id={target.Id})");
+        Phase = GamePhase.WaitingForInput;
+        OnActionChosen(PlayerAction.CastSpell(item, targetEntityId: target.Id));
+    }
+
+    /// <summary>Called when the player picks a location tile during targeting mode.</summary>
+    private void OnLocationChosen(Entity item, int x, int y)
+    {
+        Diag.Log($"OnLocationChosen: item={item.Name} location=({x},{y})");
+        Phase = GamePhase.WaitingForInput;
+        OnActionChosen(PlayerAction.CastSpell(item, targetX: x, targetY: y));
+    }
+
+    /// <summary>Called when targeting is cancelled — no action, no turn consumed.</summary>
+    private void OnTargetingCancelled()
+    {
+        Diag.Log("OnTargetingCancelled: returning to WaitingForInput");
+        Phase = GamePhase.WaitingForInput;
+        _toastLog?.AddMessage("Cancelled.");
+    }
+
+    /// <summary>
+    /// Find the closest alive, visible monster within the given range.
+    /// Used for AutoClosest spell targeting.
+    /// </summary>
+    private Entity? FindClosestVisibleEnemy(int maxRange)
+    {
+        if (_state == null) return null;
+
+        Entity? closest = null;
+        double closestDist = maxRange > 0 ? maxRange + 1.0 : double.MaxValue;
+
+        foreach (var monster in _state.AliveMonsters)
+        {
+            if (_state.IsDungeonMode && !_state.Map.IsVisible(monster.X, monster.Y))
+                continue;
+
+            double dist = _state.Player.DistanceTo(monster.X, monster.Y);
+            if (dist < closestDist)
+            {
+                closest = monster;
+                closestDist = dist;
+            }
+        }
+
+        return closest;
     }
 
     /// <summary>
@@ -173,11 +327,73 @@ public sealed partial class GameController : Node
     }
 
     /// <summary>
+    /// Cancel the active targeting operation. Called by the TargetingOverlay cancel button.
+    /// Delegates to InputHandler.CancelTargeting which fires TargetingCancelled.
+    /// No turn consumed.
+    /// </summary>
+    public void CancelTargeting()
+    {
+        if (Phase != GamePhase.Targeting) return;
+        Diag.Log("GameController.CancelTargeting called");
+        _input.CancelTargeting();
+    }
+
+    /// <summary>
     /// Forward raw tap position from the scene's _Input handler.
+    /// Dismisses any open inspect panel before routing to normal input handling.
     /// </summary>
     public void HandleTap(Vector2 screenPos)
     {
+        // Dismiss inspect panel on any normal tap — the player is acting, not inspecting.
+        _inspectPanel?.Hide();
+        _longPress?.Cancel();
         _input.HandleTap(screenPos);
+    }
+
+    /// <summary>
+    /// Handle a long-press or stationary hover at the given screen position.
+    /// Checks for a monster or floor item at that tile and shows the inspect panel.
+    /// </summary>
+    private void OnLongPress(Vector2 screenPos)
+    {
+        if (_state == null) return;
+
+        var (gridX, gridY) = IsometricMapper.ScreenToGrid(screenPos);
+
+        if (!_state.Map.InBounds(gridX, gridY))
+            return;
+
+        // Check for a monster at this tile first (takes priority over floor items)
+        var monster = _state.AliveMonsters.FirstOrDefault(m => m.X == gridX && m.Y == gridY);
+        if (monster != null)
+        {
+            var speciesTag = monster.Get<Logic.ECS.SpeciesTag>();
+            if (speciesTag != null)
+            {
+                // Look up the MonsterDefinition from the monster factory for stat label computation.
+                // If no factory is available, show a minimal view using just the knowledge entry.
+                if (_monsterFactory != null && _monsterFactory.TryGetDefinition(speciesTag.TypeId, out var def) && def != null)
+                {
+                    var info = _state.Knowledge.GetInfoView(speciesTag.TypeId, def);
+                    _inspectPanel?.ShowMonster(info);
+                    _inspectPanel?.PositionNear(screenPos, GetViewport()?.GetVisibleRect().Size ?? new Vector2(480, 854));
+                    return;
+                }
+            }
+        }
+
+        // Check for a floor item at this tile
+        var floorItem = _state.FloorItems.FirstOrDefault(i => i.X == gridX && i.Y == gridY);
+        if (floorItem != null)
+        {
+            var itemInfo = ItemInspectView.From(floorItem);
+            _inspectPanel?.ShowItem(itemInfo);
+            _inspectPanel?.PositionNear(screenPos, GetViewport()?.GetVisibleRect().Size ?? new Vector2(480, 854));
+            return;
+        }
+
+        // Nothing of interest at this tile — hide any existing panel
+        _inspectPanel?.Hide();
     }
 
     /// <summary>
@@ -281,9 +497,6 @@ public sealed partial class GameController : Node
     /// Extracted from OnActionChosen so path continuation in OnAnimationComplete
     /// can reuse it without duplicating the turn-execution logic.
     /// </summary>
-    // Debug: track allocations per turn to isolate the memory spike source.
-    private long _lastAllocBytes;
-
     private void ExecuteTurn(PlayerAction action)
     {
         Phase = GamePhase.Processing;
@@ -293,7 +506,7 @@ public sealed partial class GameController : Node
         Diag.Event("ExecuteTurn", new { action = action.Kind.ToString(), turnCount = _state!.TurnCount });
         Diag.Mem("  pre-ProcessTurn");
 
-        var result = TurnController.ProcessTurn(_state!, action);
+        var result = TurnController.ProcessTurn(_state!, action, _monsterFactory);
         Diag.Log($"  ProcessTurn done: {result.Events.Count} events, gameOver={result.GameOver}");
         foreach (var evt in result.Events)
             Diag.Log($"    evt: {evt.GetType().Name}");
@@ -325,6 +538,31 @@ public sealed partial class GameController : Node
                 { inventoryChanged = true; equipmentChanged = true; }
             else if (evt is DescendEvent desc)
                 _pendingDescend = desc;
+        }
+
+        // Handle split and corrosion toast messages
+        foreach (var evt in result.Events)
+        {
+            if (evt is SplitEvent splitEvt)
+            {
+                // Remove the original sprite and spawn sprites for all children
+                _entitySprites?.RemoveEntity(splitEvt.OriginalId);
+                foreach (var childId in splitEvt.ChildIds)
+                {
+                    var child = _state!.Monsters.FirstOrDefault(m => m.Id == childId);
+                    if (child != null) _entitySprites?.SpawnMonster(child);
+                }
+            }
+            else if (evt is CorrosionEvent corrEvt)
+            {
+                // Orange corrosion toast: "The Slime corrodes your Dagger! [75%]"
+                int pct = corrEvt.BaseDamageMax > 0
+                    ? (int)Math.Round((double)corrEvt.NewDamageMax / corrEvt.BaseDamageMax * 100)
+                    : 100;
+                _toastLog?.AddMessage(
+                    $"[color=#ff8800]The {corrEvt.MonsterName} corrodes your {corrEvt.WeaponName}! [{pct}%][/color]");
+                equipmentChanged = true; // weapon stats changed — refresh equipment panel
+            }
         }
 
         if (inventoryChanged)

@@ -19,13 +19,14 @@ public static class GameStateFactory
         int seed,
         MonsterFactory monsterFactory,
         ItemFactory? itemFactory = null,
-        ConsumableFactory? consumableFactory = null)
+        ConsumableFactory? consumableFactory = null,
+        SpellItemFactory? spellItemFactory = null)
     {
         var rng = new SeededRandom(seed);
         var map = GameMap.CreateArena(scenario.MapWidth, scenario.MapHeight);
         map.RevealAll(); // Scenarios have no fog of war — all tiles visible from turn 0
 
-        var player = CreatePlayer(scenario, itemFactory, consumableFactory);
+        var player = CreatePlayer(scenario, itemFactory, consumableFactory, spellItemFactory, rng);
         player.X = Math.Clamp(scenario.PlayerStartX, 1, scenario.MapWidth - 2);
         player.Y = Math.Clamp(scenario.PlayerStartY, 1, scenario.MapHeight - 2);
         map.RegisterEntity(player);
@@ -38,7 +39,9 @@ public static class GameStateFactory
     private static Entity CreatePlayer(
         ScenarioDefinition scenario,
         ItemFactory? itemFactory,
-        ConsumableFactory? consumableFactory)
+        ConsumableFactory? consumableFactory,
+        SpellItemFactory? spellItemFactory = null,
+        SeededRandom? rng = null)
     {
         var def = scenario.Player;
         var player = new Entity(0, "Player", 0, 0, blocksMovement: true);
@@ -73,14 +76,28 @@ public static class GameStateFactory
         if (def.SpeedBonus > 0 || weaponSpeed > 0)
             player.Add(new SpeedBonusTracker(baseRatio: def.SpeedBonus) { EquipmentRatio = weaponSpeed });
 
-        if (consumableFactory != null && scenario.Items.Count > 0)
+        if (scenario.Items.Count > 0)
         {
-            var inventory = player.Add(new Inventory());
+            var inventory = player.GetOrAdd<Inventory>();
+            var itemRng = rng ?? new SeededRandom(0);
             foreach (var itemDef in scenario.Items)
             {
                 for (int i = 0; i < itemDef.Count; i++)
                 {
-                    var item = consumableFactory.Create(itemDef.Type);
+                    Entity? item = null;
+                    // Resolution order: SpellItemFactory (scrolls/wands) → ConsumableFactory → ItemFactory.
+                    // This allows scenario YAML to specify scrolls, wands, and potions in the same items list.
+                    if (spellItemFactory != null)
+                    {
+                        // Try scroll first, then wand (wands need rng + depth)
+                        item = spellItemFactory.CreateScroll(itemDef.Type)
+                            ?? spellItemFactory.CreateWand(itemDef.Type, itemRng, depth: 1);
+                    }
+                    if (item == null && consumableFactory != null)
+                        item = consumableFactory.Create(itemDef.Type);
+                    if (item == null && itemFactory != null)
+                        item = itemFactory.Create(itemDef.Type);
+
                     if (item != null) inventory.Add(item);
                 }
             }

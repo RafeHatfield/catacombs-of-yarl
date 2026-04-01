@@ -32,9 +32,11 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(WeightedItem)] = () => new WeightedItem(),
         [typeof(ItemDefinition)] = () => new ItemDefinition(),
         [typeof(ConsumableDefinition)] = () => new ConsumableDefinition(),
+        [typeof(SpellDefinition)] = () => new SpellDefinition(),
         [typeof(FloorItemPoolEntry)] = () => new FloorItemPoolEntry(),
         [typeof(FloorItemPoolFile)] = () => new FloorItemPoolFile(),
         [typeof(LevelTemplatesFile)] = () => new LevelTemplatesFile(),
+        [typeof(DepthWeightEntry)] = () => new DepthWeightEntry(),
 
         // Balance layer
         [typeof(LevelOverride)] = () => new LevelOverride(),
@@ -54,11 +56,13 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(Dictionary<string, MonsterDefinition>)] = () => new Dictionary<string, MonsterDefinition>(),
         [typeof(Dictionary<string, ItemDefinition>)] = () => new Dictionary<string, ItemDefinition>(),
         [typeof(Dictionary<string, ConsumableDefinition>)] = () => new Dictionary<string, ConsumableDefinition>(),
+        [typeof(Dictionary<string, SpellDefinition>)] = () => new Dictionary<string, SpellDefinition>(),
         [typeof(Dictionary<string, LevelOverride>)] = () => new Dictionary<string, LevelOverride>(),
         // Nested dictionary types for top-level YAML parsing (avoids EntitiesFile wrapper)
         [typeof(Dictionary<string, Dictionary<string, MonsterDefinition>>)] = () => new Dictionary<string, Dictionary<string, MonsterDefinition>>(),
         [typeof(Dictionary<string, Dictionary<string, ItemDefinition>>)] = () => new Dictionary<string, Dictionary<string, ItemDefinition>>(),
         [typeof(Dictionary<string, Dictionary<string, ConsumableDefinition>>)] = () => new Dictionary<string, Dictionary<string, ConsumableDefinition>>(),
+        [typeof(Dictionary<string, Dictionary<string, SpellDefinition>>)] = () => new Dictionary<string, Dictionary<string, SpellDefinition>>(),
         [typeof(Dictionary<string, string>)] = () => new Dictionary<string, string>(),
         [typeof(Dictionary<string, double>)] = () => new Dictionary<string, double>(),
         [typeof(List<string>)] = () => new List<string>(),
@@ -68,6 +72,7 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(List<ScenarioMonster>)] = () => new List<ScenarioMonster>(),
         [typeof(List<ScenarioItem>)] = () => new List<ScenarioItem>(),
         [typeof(List<WeightedItem>)] = () => new List<WeightedItem>(),
+        [typeof(List<DepthWeightEntry>)] = () => new List<DepthWeightEntry>(),
         [typeof(List<FloorItemPoolEntry>)] = () => new List<FloorItemPoolEntry>(),
         [typeof(Dictionary<string, List<WeightedItem>>)] = () => new Dictionary<string, List<WeightedItem>>(),
         [typeof(Dictionary<string, double>)] = () => new Dictionary<string, double>(),

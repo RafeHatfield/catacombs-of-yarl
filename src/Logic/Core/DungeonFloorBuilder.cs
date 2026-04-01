@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Balance;
+using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
 using FloorItemPool = System.Collections.Generic.IReadOnlyList<CatacombsOfYarl.Logic.Content.FloorItemPoolEntry>;
@@ -37,19 +38,22 @@ public sealed class DungeonFloorBuilder
     private readonly ItemFactory _itemFactory;
     private readonly ConsumableFactory _consumableFactory;
     private readonly FloorItemPool _floorItemPool;
+    private readonly SpellItemFactory? _spellItemFactory;
 
     public DungeonFloorBuilder(
         LevelTemplateRegistry templates,
         MonsterFactory monsterFactory,
         ItemFactory itemFactory,
         ConsumableFactory consumableFactory,
-        FloorItemPool? floorItemPool = null)
+        FloorItemPool? floorItemPool = null,
+        SpellItemFactory? spellItemFactory = null)
     {
         _templates = templates;
         _monsterFactory = monsterFactory;
         _itemFactory = itemFactory;
         _consumableFactory = consumableFactory;
         _floorItemPool = floorItemPool ?? [];
+        _spellItemFactory = spellItemFactory;
     }
 
     /// <summary>
@@ -95,6 +99,9 @@ public sealed class DungeonFloorBuilder
         Entity player;
         if (existingPlayer != null)
         {
+            // Clear all status effects on floor transition — no carry-over between floors.
+            // Policy: simplest approach that avoids confusing persistent debuffs across floors.
+            StatusEffectProcessor.ClearAllEffects(existingPlayer);
             player = PlayerCarryForward.Apply(existingPlayer);
         }
         else
@@ -149,7 +156,8 @@ public sealed class DungeonFloorBuilder
                     rng, depth, ids,
                     roomEtpMax: roomEtpMax,
                     allowSpike: allowSpike,
-                    items: _itemFactory, floorItemPool: _floorItemPool);
+                    items: _itemFactory, floorItemPool: _floorItemPool,
+                    spellItems: _spellItemFactory);
 
                 foreach (var entity in filled)
                     if (entity.BlocksMovement)
@@ -166,7 +174,8 @@ public sealed class DungeonFloorBuilder
                 rng, depth, ids,
                 roomEtpMax: roomEtpMax,
                 allowSpike: allowSpike,
-                items: _itemFactory, floorItemPool: _floorItemPool);
+                items: _itemFactory, floorItemPool: _floorItemPool,
+                spellItems: _spellItemFactory);
 
             foreach (var entity in filled)
                 if (entity.BlocksMovement)
@@ -291,12 +300,23 @@ public sealed class DungeonFloorBuilder
         if (armor != null)
             equipment.SetSlot(Combat.EquipmentSlot.Chest, armor);
 
-        // Starting inventory: 1 healing potion
+        // Starting inventory: 1 healing potion + Wand of Portals (player's core traversal tool)
         var inventory = new Inventory();
         player.Add(inventory);
         var potion = _consumableFactory.Create("healing_potion");
         if (potion != null)
             inventory.Add(potion);
+
+        // Wand of Portals: always granted at run start. Uses a deterministic dummy rng since
+        // the wand is infinite — charge count doesn't matter. The wand is the player's core
+        // traversal ability and is never absent from the starting loadout.
+        if (_spellItemFactory != null)
+        {
+            var dummyRng = new SeededRandom(0);
+            var portalWand = _spellItemFactory.CreateWand("wand_of_portals", dummyRng);
+            if (portalWand != null)
+                inventory.Add(portalWand);
+        }
 
         return player;
     }

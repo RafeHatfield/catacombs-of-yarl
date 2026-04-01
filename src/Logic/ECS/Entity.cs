@@ -75,7 +75,18 @@ public sealed class Entity
     /// <summary>Remove a component. Clears ownership. Returns true if removed.</summary>
     public bool Remove<T>() where T : class, IComponent
     {
-        if (_components.Remove(typeof(T), out var c))
+        return RemoveByType(typeof(T));
+    }
+
+    /// <summary>
+    /// Remove a component by its runtime Type, clearing ownership.
+    /// Used by StatusEffectProcessor.RemoveEffect to avoid a per-type switch statement —
+    /// the caller has an IStatusEffect interface reference, and GetType() gives the exact key.
+    /// Returns true if a component with that type was present and removed.
+    /// </summary>
+    public bool RemoveByType(Type t)
+    {
+        if (_components.Remove(t, out var c))
         {
             c.Owner = null;
             return true;

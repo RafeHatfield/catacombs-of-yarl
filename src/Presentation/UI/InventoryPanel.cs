@@ -27,6 +27,12 @@ public sealed partial class InventoryPanel : Control
     private static readonly Color FallbackConsumableColor = new(0.2f, 0.7f, 0.2f, 1f);
     private static readonly Color FallbackDefaultColor    = new(0.5f, 0.5f, 0.5f, 1f);
 
+    /// <summary>
+    /// Injected by Main after construction. Used for item sprite lookups.
+    /// Must be set before Initialize is called.
+    /// </summary>
+    public SpriteMapping? SpriteMappingInstance { get; set; }
+
     private Label? _headerLabel;
     private HBoxContainer? _itemStrip;
     private Label? _emptyLabel;
@@ -297,10 +303,12 @@ public sealed partial class InventoryPanel : Control
         return container;
     }
 
-    private static Control BuildIcon(Entity item, bool isEquipped)
+    private Control BuildIcon(Entity item, bool isEquipped)
     {
-        var spriteKey = item.Name.ToLowerInvariant().Replace(' ', '_');
-        var spritePath = SpriteMapping.GetItemSpritePath(spriteKey);
+        // Primary: ItemTag.TypeId (set by ItemFactory for all YAML-created items)
+        var tag = item.Get<ItemTag>();
+        var spriteKey = tag?.TypeId ?? item.Name.ToLowerInvariant().Replace(' ', '_');
+        var spritePath = SpriteMappingInstance?.GetItemSpritePath(spriteKey);
 
         if (spritePath != null)
         {

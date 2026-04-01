@@ -11,9 +11,10 @@ namespace CatacombsOfYarl.Presentation.Entities;
 /// <summary>
 /// Manages floor sprites for items sitting on dungeon tiles.
 ///
-/// Sprite selection:
-///   - Looks up item entity name in SpriteMapping.GetItemSpritePath() first.
-///   - Falls back to a tinted selection diamond placeholder if no sprite found.
+/// Sprite selection priority:
+///   1. ItemTag.TypeId → SpriteMapping.GetItemSpritePath() (primary path)
+///   2. item.Name.ToLower().Replace(' ', '_') → SpriteMapping (legacy fallback, GD.PrintErr fires)
+///   3. Tinted selection diamond placeholder if neither lookup finds a sprite.
 ///
 /// Items are FOV-gated — only shown when their tile is currently visible.
 /// Call RemoveItem when the player picks up an item to free its sprite node.
@@ -23,11 +24,13 @@ public sealed class ItemSpriteManager
     private const string FallbackTilePath = "res://src/Presentation/assets/tiles/iso/iso_dun_selectA.png";
 
     private readonly Node2D _parent;
+    private readonly SpriteMapping _spriteMapping;
     private readonly Dictionary<int, Sprite2D> _sprites = new();
 
-    public ItemSpriteManager(Node2D itemLayerNode)
+    public ItemSpriteManager(Node2D itemLayerNode, SpriteMapping spriteMapping)
     {
         _parent = itemLayerNode;
+        _spriteMapping = spriteMapping;
     }
 
     /// <summary>Number of live item floor sprites. Useful for debug overlay.</summary>
@@ -64,8 +67,7 @@ public sealed class ItemSpriteManager
 
     public void CreateSprite(Entity item)
     {
-        // Try item-specific sprite first, fall back to tinted placeholder
-        string? itemPath = SpriteMapping.GetItemSpritePath(item.Name.ToLowerInvariant().Replace(' ', '_'));
+        string? itemPath = ResolveItemSpritePath(item);
         Texture2D? texture = null;
         bool usingFallback = false;
 
@@ -93,7 +95,8 @@ public sealed class ItemSpriteManager
             Texture = texture,
             Position = screenPos,
             Centered = true,
-            ZIndex = IsometricMapper.GetSortOrder(item.X, item.Y) + 1,
+            // Items sit on the floor — above the tile but below standing entities
+            ZIndex = IsometricMapper.GetTileSortOrder(item.X, item.Y) + 1,
             TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
             Modulate = usingFallback ? FallbackTint(item) : Colors.White,
             Visible = false, // Hidden until FOV reveals tile
@@ -101,6 +104,27 @@ public sealed class ItemSpriteManager
 
         _parent.AddChild(sprite);
         _sprites[item.Id] = sprite;
+    }
+
+    /// <summary>
+    /// Resolve the sprite resource path for an item entity.
+    ///
+    /// Primary: ItemTag.TypeId lookup (set by ItemFactory for all YAML-created items).
+    /// Fallback: name-based key derivation for items without ItemTag — fires GD.PrintErr
+    /// so any gaps in ItemFactory coverage surface immediately.
+    /// </summary>
+    private string? ResolveItemSpritePath(Entity item)
+    {
+        // Primary: ItemTag carries the canonical YAML type ID
+        var tag = item.Get<ItemTag>();
+        if (tag != null)
+            return _spriteMapping.GetItemSpritePath(tag.TypeId);
+
+        // Fallback: name-based heuristic (legacy path, should not fire in normal gameplay)
+        var nameKey = item.Name.ToLowerInvariant().Replace(' ', '_');
+        var path = _spriteMapping.GetItemSpritePath(nameKey);
+        GD.PrintErr($"[ItemSpriteManager] Item '{item.Name}' (id={item.Id}) has no ItemTag — falling back to name-derived key '{nameKey}'. Check ItemFactory.");
+        return path;
     }
 
     /// <summary>

@@ -154,7 +154,8 @@ public static class EntityPlacer
         int roomEtpMax = DefaultRoomEtpMax,
         bool allowSpike = false,
         ItemFactory? items = null,
-        IReadOnlyList<FloorItemPoolEntry>? floorItemPool = null)
+        IReadOnlyList<FloorItemPoolEntry>? floorItemPool = null,
+        SpellItemFactory? spellItems = null)
     {
         var placed = new List<Entity>();
         var occupied = new HashSet<(int, int)>();
@@ -266,19 +267,35 @@ public static class EntityPlacer
                 }
             }
 
-            // Floor equipment drop — ~40% chance per room of one equipment item.
-            // Pool is depth-filtered at call time so this is just a weighted draw.
+            // Floor loot drop — ~40% chance per room of one item from the depth-filtered pool.
+            // Pool includes weapons, armor, scrolls, and wands. The factory is chosen based on
+            // which one can resolve the item ID: spellItems first, then items (equipment).
             // TODO: replace the flat 40% with PoC band-density scaling (B1=0.35x, B2=0.45x, B3+=1.0x).
-            if (items != null && depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0
-                && rng.Next(0, 100) < 40)
+            bool canDropItem = depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0
+                && rng.Next(0, 100) < 40;
+            if (canDropItem)
             {
                 var pos = FindFreePosition(map.Map, room, occupied, rng);
                 if (pos != null)
                 {
-                    var entry = SelectWeighted(depthFilteredEquipPool, rng);
+                    var entry = SelectWeighted(depthFilteredEquipPool!, rng);
                     if (entry != null)
                     {
-                        var entity = items.Create(entry.ItemId);
+                        Entity? entity = null;
+
+                        // Try SpellItemFactory first (scrolls and wands)
+                        if (spellItems != null)
+                        {
+                            // Scrolls are created with CreateScroll; wands with CreateWand.
+                            // SpellItemFactory.CreateScroll returns null for wand IDs and vice versa,
+                            // so we try scroll first then wand.
+                            entity = spellItems.CreateScroll(entry.ItemId)
+                                ?? spellItems.CreateWand(entry.ItemId, rng, depth);
+                        }
+
+                        // Fall back to equipment factory (weapons, armor)
+                        entity ??= items?.Create(entry.ItemId);
+
                         if (entity != null)
                         {
                             var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);

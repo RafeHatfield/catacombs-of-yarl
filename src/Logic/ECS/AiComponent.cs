@@ -14,6 +14,18 @@ public sealed class AiComponent : IComponent
     /// </summary>
     public string AiType { get; set; } = "basic";
 
+    /// <summary>
+    /// Faction this entity belongs to (e.g., "orc", "undead", "neutral").
+    /// Used by aggravation spell to make the monster aggro its own faction.
+    /// </summary>
+    public string Faction { get; set; } = "neutral";
+
+    /// <summary>
+    /// Tags describing this entity's nature (e.g., ["humanoid", "living"], ["undead", "zombie"]).
+    /// Used by plague scroll (corporeal check) and other tag-dependent effects.
+    /// </summary>
+    public List<string> Tags { get; set; } = [];
+
     /// <summary>Whether this monster can seek and pick up floor items.</summary>
     public bool CanSeekItems { get; set; }
 

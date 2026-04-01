@@ -22,10 +22,12 @@ public sealed class ScenarioRunner
         var entityFactory = new EntityFactory();
 
         var itemFactory = new ItemFactory(content.Items, entityFactory);
+        var spellItemFactory = new SpellItemFactory(content.SpellItems, entityFactory);
         _harness = new ScenarioHarness(
             new MonsterFactory(content.Monsters, entityFactory, itemFactory),
             itemFactory,
-            new ConsumableFactory(content.Consumables, entityFactory));
+            new ConsumableFactory(content.Consumables, entityFactory),
+            spellItemFactory);
     }
 
     /// <summary>
