@@ -1,7 +1,12 @@
 # Game settings loaded at boot by Main._Ready().
-# Override any field via CLI: --tileset 16bit_fantasy
+# Override any field via CLI: --tileset 16bit_fantasy --map-mode iso
 # Missing file → silent fallback to defaults (no error).
 
 # Which tileset to use. Must match a file in config/tilesets/{id}.yaml.
 # Supported values: ultimate_fantasy, 16bit_fantasy (once TASK-006 is complete)
 tileset: "16bit_fantasy"
+
+# Which map renderer to use.
+# Supported values: iso (current), topdown (Phase 2 — no tile assets yet)
+# Unknown or "topdown" values fall back to "iso" with a warning at boot.
+map_mode: "iso"

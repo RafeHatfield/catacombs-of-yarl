@@ -46,6 +46,9 @@ public partial class Main : Node
     // Tileset-backed sprite mapping — created once at boot, shared across all floors.
     private SpriteMapping? _spriteMapping;
 
+    // Map renderer — created once at boot, injected into all presentation consumers.
+    private IMapRenderer _renderer = new IsometricRenderer(); // safe default until _Ready
+
     // --- Factories (created once, reused across floor transitions) ---
     private ContentLoader? _contentLoader;
     private MonsterFactory? _monsterFactory;
@@ -62,11 +65,9 @@ public partial class Main : Node
     private const double TapFadeDelay    = 0.15; // seconds at full alpha before fade starts
     private const double TapFadeDuration = 0.35; // seconds to fade to zero
 
-    // Minimap and zoom
+    // Minimap and zoom — zoom limits come from the renderer after boot
     private MiniMap? _miniMap;
-    private float _currentZoom = PlayerCamera.DefaultZoom;
-    private const float ZoomMin = 1.5f;
-    private const float ZoomMax = 6.0f;
+    private float _currentZoom;   // initialised in _Ready after renderer is created
     private const float ZoomStep = 0.5f;
 
     // Dungeon run state
@@ -84,6 +85,9 @@ public partial class Main : Node
         GD.Print("Catacombs of YARL — loading...");
         Diag.Init();
         InitSpriteMapping();
+        _renderer = CreateRenderer(ReadMapMode());
+        _currentZoom = _renderer.DefaultZoom;
+        GD.Print($"[Main] Map renderer: {_renderer.GetType().Name} (zoom default={_renderer.DefaultZoom}, min={_renderer.MinZoom}, max={_renderer.MaxZoom})");
         InitFactories();
 
         // Show the main menu instead of jumping straight into the dungeon.
@@ -196,6 +200,70 @@ public partial class Main : Node
 
         // 3. Default
         return "ultimate_fantasy";
+    }
+
+    /// <summary>
+    /// Determine which map renderer mode to use.
+    /// Checks CLI args first (--map-mode &lt;mode&gt;), then game_settings.yaml, then defaults to "iso".
+    /// </summary>
+    private static string ReadMapMode()
+    {
+        // 1. Check --map-mode CLI arg (dev override)
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length - 1; i++)
+        {
+            if (args[i] == "--map-mode")
+                return args[i + 1];
+        }
+
+        // 2. Check config/game_settings.yaml
+        const string settingsPath = "res://config/game_settings.yaml";
+        try
+        {
+            using var file = Godot.FileAccess.Open(settingsPath, Godot.FileAccess.ModeFlags.Read);
+            if (file != null)
+            {
+                var text = file.GetAsText();
+                foreach (var line in text.Split('\n'))
+                {
+                    var trimmed = line.TrimStart();
+                    if (!trimmed.StartsWith("map_mode:", System.StringComparison.Ordinal)) continue;
+
+                    var value = trimmed["map_mode:".Length..].Trim();
+                    if (value.Length >= 2 && value[0] == '"' && value[^1] == '"')
+                        value = value[1..^1];
+                    if (value.Length > 0) return value;
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"[Main] Failed to read map_mode from game_settings.yaml: {ex.Message}");
+        }
+
+        // 3. Default
+        return "iso";
+    }
+
+    /// <summary>
+    /// Create the IMapRenderer for the given mode string.
+    /// "topdown" falls back to iso with a warning — no top-down tile assets exist yet.
+    /// Unknown values also fall back to iso with a warning.
+    /// </summary>
+    private static IMapRenderer CreateRenderer(string mode)
+    {
+        return mode.ToLowerInvariant() switch
+        {
+            "iso" => new IsometricRenderer(),
+            "topdown" => FallbackToIso("topdown", "top-down tile assets not available yet"),
+            _ => FallbackToIso(mode, "unknown map_mode value"),
+        };
+
+        static IMapRenderer FallbackToIso(string value, string reason)
+        {
+            GD.PrintErr($"[Main] map_mode '{value}' cannot be used ({reason}) — falling back to iso.");
+            return new IsometricRenderer();
+        }
     }
 
     /// <summary>
@@ -312,14 +380,14 @@ public partial class Main : Node
 
         // Render dungeon (stair overlays handled inside DungeonRenderer — second pass)
         // Returns TileLayer so we can apply fog-of-war each turn without re-creating nodes.
-        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer);
+        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer, _renderer);
 
         // Entity sprites — store reference so OnTurnCompleted can call UpdateVisibility
-        _entitySprites = new EntitySpriteManager(entityLayer, _spriteMapping!);
+        _entitySprites = new EntitySpriteManager(entityLayer, _spriteMapping!, _renderer);
         _entitySprites.Initialize(state);
 
         // Item sprites — floor items rendered as tinted overlay sprites on entityLayer
-        _itemSprites = new ItemSpriteManager(entityLayer, _spriteMapping!);
+        _itemSprites = new ItemSpriteManager(entityLayer, _spriteMapping!, _renderer);
         _itemSprites.Initialize(state);
 
         // HUD
@@ -361,7 +429,7 @@ public partial class Main : Node
             _gameOverScreen.Visible = false;
         }
 
-        PlayerCamera.Update(_gameView!, state.Player, _currentZoom);
+        PlayerCamera.Update(_gameView!, state.Player, _currentZoom, _renderer);
 
         // Minimap: create once, reuse across floors (just call Refresh on each floor).
         if (_miniMap == null)
@@ -406,7 +474,8 @@ public partial class Main : Node
         }
         _gameController = new GameController();
         AddChild(_gameController);
-        _gameController.Initialize(state, _entitySprites, this, _itemSprites, _inventoryPanel, _equipmentPanel, _toastLog, _monsterFactory);
+        _gameController.Initialize(state, _entitySprites!, this, _itemSprites, _inventoryPanel,
+            _equipmentPanel, _toastLog, _monsterFactory, _renderer, _gameView);
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
@@ -450,8 +519,8 @@ public partial class Main : Node
     private void SpawnTapIndicator(Vector2 localPos)
     {
         if (_gameView == null) return;
-        var (gridX, gridY) = IsometricMapper.ScreenToGrid(localPos);
-        var worldPos = IsometricMapper.GridToScreenCenter(gridX, gridY);
+        var (gridX, gridY) = _renderer.ScreenToGrid(localPos);
+        var worldPos = _renderer.GridToScreenCenter(gridX, gridY);
 
         _tapIndicatorTexture ??= GD.Load<Texture2D>(
             "res://src/Presentation/assets/tiles/iso/iso_dun_selectA.png");
@@ -493,7 +562,7 @@ public partial class Main : Node
         _hud?.SetAutoExploreActive(_gameController?.IsAutoExploreActive ?? false);
         if (_equipmentPanel?.Visible == true && _state != null)
             _equipmentPanel.Refresh(_state);
-        if (_gameView != null) PlayerCamera.AnimateTo(_gameView, _state.Player, this, zoom: _currentZoom);
+        if (_gameView != null) PlayerCamera.AnimateTo(_gameView, _state.Player, this, zoom: _currentZoom, renderer: _renderer);
         _miniMap?.Refresh(_state);
         _toastLog?.RecordTurn(result, _state);
 
@@ -717,9 +786,9 @@ public partial class Main : Node
         btnZoomIn.CustomMinimumSize = new Vector2(36, 36);
         btnZoomIn.Pressed += () =>
         {
-            _currentZoom = System.Math.Min(ZoomMax, _currentZoom + ZoomStep);
+            _currentZoom = System.Math.Min(_renderer.MaxZoom, _currentZoom + ZoomStep);
             if (_gameView != null && _state != null)
-                PlayerCamera.Update(_gameView, _state.Player, _currentZoom);
+                PlayerCamera.Update(_gameView, _state.Player, _currentZoom, _renderer);
         };
 
         var btnZoomOut = new Button { Text = "−" };
@@ -727,9 +796,9 @@ public partial class Main : Node
         btnZoomOut.CustomMinimumSize = new Vector2(36, 36);
         btnZoomOut.Pressed += () =>
         {
-            _currentZoom = System.Math.Max(ZoomMin, _currentZoom - ZoomStep);
+            _currentZoom = System.Math.Max(_renderer.MinZoom, _currentZoom - ZoomStep);
             if (_gameView != null && _state != null)
-                PlayerCamera.Update(_gameView, _state.Player, _currentZoom);
+                PlayerCamera.Update(_gameView, _state.Player, _currentZoom, _renderer);
         };
 
         panel.AddChild(btnZoomIn);

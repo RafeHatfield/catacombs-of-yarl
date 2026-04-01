@@ -23,6 +23,8 @@ public enum CameraMode { HardFollow, Deadzone }
 /// </summary>
 public static class PlayerCamera
 {
+    // DefaultZoom is now sourced from the renderer. This constant stays for legacy call sites
+    // that don't yet pass a renderer (e.g. tests). Will be removed when all call sites migrate.
     public const float DefaultZoom = 4.0f;
 
     // Match actual UI panel heights: 200px HUD top, 200px bottom (inventory 110 + combat log 90).
@@ -46,7 +48,8 @@ public static class PlayerCamera
     /// Always hard-follows regardless of ActiveMode; floor transitions should
     /// always snap directly to the player position.
     /// </summary>
-    public static void Update(Node2D gameView, Entity player, float zoom = DefaultZoom)
+    public static void Update(Node2D gameView, Entity player, float zoom = DefaultZoom,
+        IMapRenderer? renderer = null)
     {
         // Kill any in-flight camera tween from the previous floor before snapping.
         // Without this, the stale tween overrides the position we set here and the
@@ -54,7 +57,8 @@ public static class PlayerCamera
         if (_lastCameraTween != null) { _lastCameraTween.Kill(); TweenTracker.Killed(); _lastCameraTween = null; }
 
         var viewport = gameView.GetViewport().GetVisibleRect().Size;
-        var playerScreen = IsometricMapper.GridToScreen(player.X, player.Y);
+        var r = renderer ?? (IMapRenderer)new IsometricRenderer();
+        var playerScreen = r.GridToScreen(player.X, player.Y);
 
         float availableH = viewport.Y - UiTopMargin - UiBottomMargin;
         float centerY = UiTopMargin + availableH / 2f;
@@ -75,12 +79,13 @@ public static class PlayerCamera
     /// duration: seconds for the camera to reach target position.
     /// </summary>
     public static void AnimateTo(Node2D gameView, Entity player, Node animRoot,
-        float duration = 0.12f, float zoom = DefaultZoom)
+        float duration = 0.12f, float zoom = DefaultZoom, IMapRenderer? renderer = null)
     {
+        var r = renderer ?? (IMapRenderer)new IsometricRenderer();
         if (ActiveMode == CameraMode.Deadzone)
-            AnimateToDeadzone(gameView, player, animRoot, duration, zoom);
+            AnimateToDeadzone(gameView, player, animRoot, duration, zoom, r);
         else
-            AnimateToHardFollow(gameView, player, animRoot, duration, zoom);
+            AnimateToHardFollow(gameView, player, animRoot, duration, zoom, r);
     }
 
     // -------------------------------------------------------------------------
@@ -93,10 +98,10 @@ public static class PlayerCamera
     /// HardFollow mode and the internal reference implementation.
     /// </summary>
     private static void AnimateToHardFollow(Node2D gameView, Entity player, Node animRoot,
-        float duration, float zoom)
+        float duration, float zoom, IMapRenderer renderer)
     {
         var viewport = gameView.GetViewport().GetVisibleRect().Size;
-        var playerScreen = IsometricMapper.GridToScreen(player.X, player.Y);
+        var playerScreen = renderer.GridToScreen(player.X, player.Y);
 
         float availableH = viewport.Y - UiTopMargin - UiBottomMargin;
         float centerY = UiTopMargin + availableH / 2f;
@@ -127,10 +132,10 @@ public static class PlayerCamera
     /// Larger ratio = less scrolling; smaller ratio = closer to hard-follow.
     /// </summary>
     private static void AnimateToDeadzone(Node2D gameView, Entity player, Node animRoot,
-        float duration, float zoom, float deadzoneRatio = 0.30f)
+        float duration, float zoom, IMapRenderer renderer, float deadzoneRatio = 0.30f)
     {
         var viewport = gameView.GetViewport().GetVisibleRect().Size;
-        var playerScreen = IsometricMapper.GridToScreen(player.X, player.Y);
+        var playerScreen = renderer.GridToScreen(player.X, player.Y);
 
         // Compute where the player currently appears on screen.
         // GameView is positioned so that: screenPos = gameView.Position + worldPos * zoom

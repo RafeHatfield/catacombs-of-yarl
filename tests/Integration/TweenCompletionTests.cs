@@ -31,7 +31,7 @@ public class TweenCompletionTests
         var runner = ISceneRunner.Load(root, true);
         await runner.SimulateFrames(2);
 
-        var entitySprites = new EntitySpriteManager(entityLayer);
+        var entitySprites = new EntitySpriteManager(entityLayer, new CatacombsOfYarl.Presentation.Map.IsometricRenderer());
         var animator = new TurnAnimator(root, entitySprites);
 
         bool animComplete = false;
@@ -64,7 +64,7 @@ public class TweenCompletionTests
         var runner = ISceneRunner.Load(root, true);
         await runner.SimulateFrames(2);
 
-        var entitySprites = new EntitySpriteManager(entityLayer);
+        var entitySprites = new EntitySpriteManager(entityLayer, new CatacombsOfYarl.Presentation.Map.IsometricRenderer());
         var animator = new TurnAnimator(root, entitySprites);
 
         bool animComplete = false;
@@ -111,7 +111,7 @@ public class TweenCompletionTests
         var runner = ISceneRunner.Load(root, true);
         await runner.SimulateFrames(2);
 
-        var entitySprites = new EntitySpriteManager(entityLayer);
+        var entitySprites = new EntitySpriteManager(entityLayer, new CatacombsOfYarl.Presentation.Map.IsometricRenderer());
         var animator = new TurnAnimator(root, entitySprites);
 
         int startCount = TweenTracker.ActiveCount;

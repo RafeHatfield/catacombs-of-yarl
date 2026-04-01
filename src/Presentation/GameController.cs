@@ -43,6 +43,8 @@ public sealed partial class GameController : Node
     private TurnAnimator? _animator;
     private LongPressDetector? _longPress;
     private InspectPanel? _inspectPanel;
+    private IMapRenderer _renderer = new IsometricRenderer(); // safe default
+    private Node2D? _gameView; // needed to ToLocal() in OnLongPress
 
     // Stored between OnActionChosen and OnAnimationComplete so we can fire the transition
     // after animations finish rather than immediately when the event is emitted.
@@ -90,7 +92,8 @@ public sealed partial class GameController : Node
     public void Initialize(GameState state, EntitySpriteManager entitySprites, Node animationRoot,
         ItemSpriteManager? itemSprites = null, InventoryPanel? inventoryPanel = null,
         EquipmentPanel? equipmentPanel = null, ToastLog? toastLog = null,
-        MonsterFactory? monsterFactory = null)
+        MonsterFactory? monsterFactory = null, IMapRenderer? renderer = null,
+        Node2D? gameView = null)
     {
 #if DEBUG
         System.Diagnostics.Debug.Assert(_animator == null,
@@ -103,10 +106,13 @@ public sealed partial class GameController : Node
         _inventoryPanel = inventoryPanel;
         _equipmentPanel = equipmentPanel;
         _toastLog = toastLog;
-        _animator = new TurnAnimator(animationRoot, entitySprites);
+        _renderer = renderer ?? new IsometricRenderer();
+        _gameView = gameView;
+        _animator = new TurnAnimator(animationRoot, entitySprites, _renderer);
         _animator.AnimationComplete += OnAnimationComplete;
 
         _input.SetState(state);
+        _input.SetRenderer(_renderer);
         _input.ActionChosen += OnActionChosen;
         _input.TargetChosen += OnTargetChosen;
         _input.LocationChosen += OnLocationChosen;
@@ -358,7 +364,11 @@ public sealed partial class GameController : Node
     {
         if (_state == null) return;
 
-        var (gridX, gridY) = IsometricMapper.ScreenToGrid(screenPos);
+        // Apply the same ToLocal() transform that Main._UnhandledInput applies before HandleTap.
+        // Without this, OnLongPress was passing raw screen coordinates to ScreenToGrid, which
+        // expects GameView-local coordinates — causing long-press to resolve the wrong tile.
+        var localPos = _gameView != null ? _gameView.ToLocal(screenPos) : screenPos;
+        var (gridX, gridY) = _renderer.ScreenToGrid(localPos);
 
         if (!_state.Map.InBounds(gridX, gridY))
             return;

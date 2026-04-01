@@ -25,12 +25,14 @@ public sealed class ItemSpriteManager
 
     private readonly Node2D _parent;
     private readonly SpriteMapping _spriteMapping;
+    private readonly IMapRenderer _renderer;
     private readonly Dictionary<int, Sprite2D> _sprites = new();
 
-    public ItemSpriteManager(Node2D itemLayerNode, SpriteMapping spriteMapping)
+    public ItemSpriteManager(Node2D itemLayerNode, SpriteMapping spriteMapping, IMapRenderer renderer)
     {
         _parent = itemLayerNode;
         _spriteMapping = spriteMapping;
+        _renderer = renderer;
     }
 
     /// <summary>Number of live item floor sprites. Useful for debug overlay.</summary>
@@ -88,7 +90,7 @@ public sealed class ItemSpriteManager
         // Sprites are 48×48; tile bounding box is 32×48.
         // GridToScreenCenter = tile top-left + (16, 24) = horizontal center, vertical center.
         // Centered=true + no offset → sprite center at tile center → perfect alignment.
-        var screenPos = IsometricMapper.GridToScreenCenter(item.X, item.Y);
+        var screenPos = _renderer.GridToScreenCenter(item.X, item.Y);
 
         var sprite = new Sprite2D
         {
@@ -96,7 +98,7 @@ public sealed class ItemSpriteManager
             Position = screenPos,
             Centered = true,
             // Items sit on the floor — above the tile but below standing entities
-            ZIndex = IsometricMapper.GetTileSortOrder(item.X, item.Y) + 1,
+            ZIndex = _renderer.GetTileSortOrder(item.X, item.Y) + 1,
             TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
             Modulate = usingFallback ? FallbackTint(item) : Colors.White,
             Visible = false, // Hidden until FOV reveals tile

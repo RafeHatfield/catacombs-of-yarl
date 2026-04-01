@@ -25,6 +25,7 @@ namespace CatacombsOfYarl.Presentation.Input;
 public sealed class InputHandler
 {
     private GameState? _state;
+    private IMapRenderer _renderer = new IsometricRenderer(); // default until SetRenderer called
     private bool _acceptingInput = true;
     private TargetingState? _targeting;
 
@@ -48,6 +49,9 @@ public sealed class InputHandler
     public event Action? TargetingCancelled;
 
     public void SetState(GameState state) => _state = state;
+
+    /// <summary>Set the active map renderer. Call before HandleTap is first used.</summary>
+    public void SetRenderer(IMapRenderer renderer) => _renderer = renderer;
 
     /// <summary>Block input during animations/processing.</summary>
     public void SetAcceptingInput(bool accepting) => _acceptingInput = accepting;
@@ -91,7 +95,7 @@ public sealed class InputHandler
             return;
         }
 
-        var (gridX, gridY) = IsometricMapper.ScreenToGrid(screenPos);
+        var (gridX, gridY) = _renderer.ScreenToGrid(screenPos);
 
         if (!_state.Map.InBounds(gridX, gridY))
         {

@@ -7,6 +7,7 @@ using Godot;
 
 using CatacombsOfYarl.Presentation;
 
+
 namespace CatacombsOfYarl.Presentation.Entities;
 
 /// <summary>
@@ -27,15 +28,28 @@ public sealed class EntitySpriteManager
     private const string FallbackSprite = "heroes/goblin";
 
     private readonly Node2D _parent;
-    private readonly SpriteMapping _spriteMapping;
+    private readonly SpriteMapping? _spriteMapping;
+    private readonly IMapRenderer _renderer;
     private readonly Dictionary<int, Sprite2D> _sprites = new();
     // Cached grid positions — avoids O(n) monster scan in UpdateVisibility each turn.
     private readonly Dictionary<int, (int X, int Y)> _positions = new();
 
-    public EntitySpriteManager(Node2D entityLayerNode, SpriteMapping spriteMapping)
+    public EntitySpriteManager(Node2D entityLayerNode, SpriteMapping spriteMapping, IMapRenderer renderer)
     {
         _parent = entityLayerNode;
         _spriteMapping = spriteMapping;
+        _renderer = renderer;
+    }
+
+    /// <summary>
+    /// Test-only constructor — no SpriteMapping needed when textures are always null in the
+    /// test environment (GD.Load returns null, CreateSprite skips silently).
+    /// </summary>
+    public EntitySpriteManager(Node2D entityLayerNode, IMapRenderer renderer)
+    {
+        _parent = entityLayerNode;
+        _spriteMapping = null;
+        _renderer = renderer;
     }
 
     /// <summary>Number of live entity sprites (player + monsters). Useful for debug overlay.</summary>
@@ -48,7 +62,8 @@ public sealed class EntitySpriteManager
     public void Initialize(GameState state)
     {
         // Player entity has no SpeciesTag — use PlayerSprite from tileset config directly.
-        CreateSprite(state.Player, _spriteMapping.PlayerSprite);
+        // If no SpriteMapping (test-only constructor path), CreateSprite will skip with a log.
+        CreateSprite(state.Player, _spriteMapping?.PlayerSprite ?? FallbackSprite);
 
         foreach (var monster in state.Monsters)
         {
@@ -136,6 +151,12 @@ public sealed class EntitySpriteManager
 
     private void CreateSprite(Entity entity, string spriteBase)
     {
+        if (_spriteMapping == null)
+        {
+            GD.PrintErr($"[EntitySpriteManager] No SpriteMapping — cannot create sprite for '{entity.Name}'");
+            return;
+        }
+
         string framePath = _spriteMapping.GetFramePath(spriteBase, 1); // Frame 1 = idle
         var texture = GD.Load<Texture2D>(framePath);
         if (texture == null)
@@ -144,7 +165,7 @@ public sealed class EntitySpriteManager
             return;
         }
 
-        var screenPos = IsometricMapper.GridToScreenCenter(entity.X, entity.Y);
+        var screenPos = _renderer.GridToScreenCenter(entity.X, entity.Y);
 
         // Scale compensation: UF sprites are 48px native; 16bf are 24px native.
         // Integer 2x upscaling on 16bf gives clean pixel art without blurring.
@@ -153,6 +174,7 @@ public sealed class EntitySpriteManager
 
         // Y offset grounds entity feet on the tile surface. Positive = down, negative = up.
         // Tileset config may override via entity_y_offset; otherwise uses default formula.
+        // DO NOT change this formula — it is calibrated for the current iso tiles.
         float offsetY = _spriteMapping.GetEntityYOffset(texture.GetHeight(), scale);
 
         var sprite = new Sprite2D
@@ -162,7 +184,7 @@ public sealed class EntitySpriteManager
             Centered = true,
             Scale = new Vector2(scale, scale),
             Offset = new Vector2(0, offsetY),
-            ZIndex = IsometricMapper.GetEntitySortOrder(entity.X, entity.Y),
+            ZIndex = _renderer.GetEntitySortOrder(entity.X, entity.Y),
             TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
         };
 
@@ -176,8 +198,8 @@ public sealed class EntitySpriteManager
         if (!_sprites.TryGetValue(entity.Id, out var sprite))
             return;
 
-        sprite.Position = IsometricMapper.GridToScreenCenter(entity.X, entity.Y);
-        sprite.ZIndex = IsometricMapper.GetEntitySortOrder(entity.X, entity.Y);
+        sprite.Position = _renderer.GridToScreenCenter(entity.X, entity.Y);
+        sprite.ZIndex = _renderer.GetEntitySortOrder(entity.X, entity.Y);
         _positions[entity.Id] = (entity.X, entity.Y);
     }
 
@@ -198,11 +220,14 @@ public sealed class EntitySpriteManager
         var tag = monster.Get<SpeciesTag>();
         if (tag != null)
         {
-            var spriteBase = _spriteMapping.GetSpriteBase(tag.TypeId);
-            if (spriteBase != null) return spriteBase;
+            if (_spriteMapping != null)
+            {
+                var spriteBase = _spriteMapping.GetSpriteBase(tag.TypeId);
+                if (spriteBase != null) return spriteBase;
 
-            // TypeId exists but isn't in the tileset YAML — missing mapping, not a code bug.
-            GD.PrintErr($"[EntitySpriteManager] No sprite mapping for species '{tag.TypeId}' in tileset '{_spriteMapping.SpriteSize}px' — using fallback.");
+                // TypeId exists but isn't in the tileset YAML — missing mapping, not a code bug.
+                GD.PrintErr($"[EntitySpriteManager] No sprite mapping for species '{tag.TypeId}' in tileset '{_spriteMapping.SpriteSize}px' — using fallback.");
+            }
             return FallbackSprite;
         }
 

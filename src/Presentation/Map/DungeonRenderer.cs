@@ -43,8 +43,10 @@ public sealed class DungeonRenderer
     /// Returns a TileLayer containing references to all base tile sprites so that
     /// UpdateVisibility can apply fog-of-war modulation each turn.
     /// </summary>
-    public static TileLayer Render(GameMap map, Node2D parent)
+    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null)
     {
+        // Use provided renderer, or fall back to IsometricRenderer for backwards compatibility.
+        renderer ??= new IsometricRenderer();
         var tileLayer = new TileLayer();
 
         // Clear any existing tiles
@@ -59,7 +61,7 @@ public sealed class DungeonRenderer
             for (int gx = 0; gx < map.Width; gx++)
             {
                 bool walkable = map.IsWalkable(gx, gy);
-                var screenPos = IsometricMapper.GridToScreen(gx, gy);
+                var screenPos = renderer.GridToScreen(gx, gy);
 
                 var theme = map.GetTileTheme(gx, gy);
                 string tileName = walkable
@@ -78,7 +80,7 @@ public sealed class DungeonRenderer
                     Texture = texture,
                     Position = screenPos,
                     Centered = false, // Position is top-left of tile image
-                    ZIndex = IsometricMapper.GetTileSortOrder(gx, gy),
+                    ZIndex = renderer.GetTileSortOrder(gx, gy),
                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
                 };
 
@@ -116,7 +118,7 @@ public sealed class DungeonRenderer
                     continue;
                 }
 
-                var screenPos = IsometricMapper.GridToScreen(gx, gy);
+                var screenPos = renderer.GridToScreen(gx, gy);
 
                 var overlay = new Sprite2D
                 {
@@ -124,7 +126,7 @@ public sealed class DungeonRenderer
                     Position = screenPos,
                     Centered = false,
                     // +1 above the floor tile (even) at this grid position — same band as entities, which is fine
-                    ZIndex = IsometricMapper.GetTileSortOrder(gx, gy) + 1,
+                    ZIndex = renderer.GetTileSortOrder(gx, gy) + 1,
                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
                 };
 
@@ -162,14 +164,14 @@ public sealed class DungeonRenderer
                 var bonesTexture = ResourceLoader.Load<Texture2D>($"{TilePath}/{bonesName}.png");
                 if (bonesTexture == null) continue; // Skip silently if asset missing
 
-                var screenPos = IsometricMapper.GridToScreen(gx, gy);
+                var screenPos = renderer.GridToScreen(gx, gy);
                 var overlay = new Sprite2D
                 {
                     Texture = bonesTexture,
                     Position = screenPos,
                     Centered = false,
                     // Bones are floor decoration — stay in tile band, above plain floor tile
-                    ZIndex = IsometricMapper.GetTileSortOrder(gx, gy) + 1,
+                    ZIndex = renderer.GetTileSortOrder(gx, gy) + 1,
                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
                     Modulate = new Color(1f, 1f, 1f, 0.7f), // slightly transparent — subtle
                 };
