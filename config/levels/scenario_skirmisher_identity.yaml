@@ -1,0 +1,32 @@
+scenario_id: skirmisher_identity
+name: "Skirmisher Identity Test"
+description: "Regression anchor for Pouncing Leap and Fast Pressure mechanics. Single skirmisher at distance 6 from player."
+depth: 2
+turn_limit: 100
+runs: 30
+map_width: 16
+map_height: 12
+player_start_x: 3
+player_start_y: 6
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "longsword"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc_skirmisher"
+    count: 1
+    position: [9, 6]
+    state: "in_combat"
+
+items:
+  - type: "healing_potion"
+    count: 3
