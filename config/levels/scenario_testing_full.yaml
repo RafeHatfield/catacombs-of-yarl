@@ -1,0 +1,155 @@
+scenario_id: testing_full
+name: "Testing Full — All Systems"
+description: >
+  Prime testing scenario. One of every item type, all monster types, large map for
+  camera scrolling. Tune this file when testing specific mechanics.
+depth: 1
+turn_limit: 9999
+runs: 1
+map_width: 50
+map_height: 40
+
+player_start_x: 8
+player_start_y: 20
+
+player:
+  hp: 120
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+monsters:
+  # Slimes — test corrosion, split mechanic
+  - type: "slime"
+    count: 1
+  - type: "large_slime"
+    count: 1
+  # Orcs — test equipment variation (75% weapon, 50% armor spawn chance)
+  # Expect ~6/8 with weapons, ~4/8 with armor
+  - type: "orc"
+    count: 8
+
+items:
+  # Consumables
+  - type: "healing_potion"
+    count: 3
+
+  # Scrolls — status effect (single-target)
+  - type: "scroll_of_confusion"
+    count: 1
+  - type: "scroll_of_slow"
+    count: 1
+  - type: "scroll_of_glue"
+    count: 1
+  - type: "scroll_of_rage"
+    count: 1
+  - type: "scroll_of_yo_mama"
+    count: 3
+  - type: "scroll_of_disarm"
+    count: 1
+  - type: "scroll_of_plague"
+    count: 1
+  - type: "scroll_of_aggravation"
+    count: 1
+  - type: "scroll_of_dragon_fart"
+    count: 2
+
+  # Scrolls — self/buff
+  - type: "scroll_of_invisibility"
+    count: 2
+  - type: "scroll_of_shield"
+    count: 1
+  - type: "scroll_of_haste"
+    count: 1
+  - type: "scroll_of_silence"
+    count: 1
+  - type: "scroll_of_light"
+    count: 1
+  - type: "scroll_of_detect_monsters"
+    count: 1
+  - type: "scroll_of_magic_mapping"
+    count: 1
+  - type: "scroll_of_enchant_weapon"
+    count: 1
+  - type: "scroll_of_enchant_armor"
+    count: 1
+  - type: "scroll_of_identify"
+    count: 1
+
+  # Scrolls — damage / AoE
+  - type: "scroll_of_lightning"
+    count: 1
+  - type: "scroll_of_fireball"
+    count: 1
+  - type: "scroll_of_earthquake"
+    count: 1
+  - type: "scroll_of_fear"
+    count: 1
+
+  # Scrolls — movement
+  - type: "scroll_of_teleport"
+    count: 1
+  - type: "scroll_of_blink"
+    count: 1
+
+  # Scrolls — stubs (raise_dead no-ops until corpse system lands)
+  - type: "scroll_of_raise_dead"
+    count: 1
+
+  # Wands — single-target
+  - type: "wand_of_lightning"
+    count: 1
+  - type: "wand_of_confusion"
+    count: 1
+  - type: "wand_of_slow"
+    count: 1
+  - type: "wand_of_glue"
+    count: 1
+  - type: "wand_of_rage"
+    count: 1
+  - type: "wand_of_yo_mama"
+    count: 1
+  - type: "wand_of_dragon_farts"
+    count: 1
+
+  # Wands — location/AoE
+  - type: "wand_of_fireball"
+    count: 1
+  - type: "wand_of_teleportation"
+    count: 1
+  - type: "wand_of_portals"
+    count: 1
+
+  # Equipment — floor loot for testing pick-up, equip, unequip
+  - type: "dagger"
+    count: 1
+  - type: "shield"
+    count: 1
+  - type: "spear"
+    count: 1
+  - type: "greatsword"
+    count: 1
+  - type: "shortsword"
+    count: 1
+  - type: "longsword"
+    count: 1
+  - type: "mace"
+    count: 1
+  - type: "rapier"
+    count: 1
+  - type: "battleaxe"
+    count: 1
+  - type: "leather_helmet"
+    count: 1
+  - type: "leather_boots"
+    count: 1
+  - type: "studded_leather"
+    count: 1
+  - type: "chain_mail"
+    count: 1
