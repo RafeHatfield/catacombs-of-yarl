@@ -1,6 +1,5 @@
 using Godot;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
+using System.Globalization;
 // Alias to resolve ambiguity with System.IO.FileAccess
 using GodotFileAccess = Godot.FileAccess;
 
@@ -9,22 +8,20 @@ namespace CatacombsOfYarl.Presentation;
 /// <summary>
 /// Loads tileset configuration from config/tilesets/{id}.yaml.
 ///
-/// Uses Godot's FileAccess for res:// path resolution — on iOS/Android, res:// files are
-/// packed inside the .pck bundle and cannot be read via System.IO.File. FileAccess handles
-/// this transparently. This is the same pattern used by Main.ReadGodotResource.
+/// Uses manual line-by-line YAML parsing instead of YamlDotNet because
+/// InvariantGlobalization=true (required for iOS NativeAOT — Godot's experimental
+/// iOS C# export doesn't bundle ICU data) breaks YamlDotNet's deserialization.
 ///
-/// In debug builds, validates that the frame-1 path for each entity mapping actually
-/// exists on disk. Catches YAML typos at boot rather than at first monster spawn.
+/// The tileset YAML is simple enough (flat keys + two dictionaries) that
+/// a full YAML library isn't needed.
+///
+/// Uses Godot's FileAccess for res:// path resolution — on iOS/Android, res:// files are
+/// packed inside the .pck bundle and cannot be read via System.IO.File.
 /// </summary>
 public static class TilesetLoader
 {
     private const string TilesetsDir = "res://config/tilesets/";
     private const string FallbackId = "ultimate_fantasy";
-
-    private static readonly IDeserializer _deserializer = new DeserializerBuilder()
-        .WithNamingConvention(UnderscoredNamingConvention.Instance)
-        .IgnoreUnmatchedProperties()
-        .Build();
 
     /// <summary>
     /// Load a tileset by ID from config/tilesets/{id}.yaml.
@@ -43,10 +40,10 @@ public static class TilesetLoader
         }
 
         var yaml = file.GetAsText();
-        var config = _deserializer.Deserialize<TilesetConfig>(yaml);
+        var config = ParseTilesetYaml(yaml);
 
         if (config == null)
-            throw new System.InvalidOperationException($"Failed to deserialize tileset: {resPath}");
+            throw new System.InvalidOperationException($"Failed to parse tileset: {resPath}");
 
         // Normalize: if Id wasn't set in the YAML, use the requested id.
         if (string.IsNullOrEmpty(config.Id))
@@ -81,6 +78,113 @@ public static class TilesetLoader
         }
     }
 
+    // -------------------------------------------------------------------------
+    // Manual YAML parser — handles the flat key-value + dictionary structure
+    // of tileset YAML files without depending on YamlDotNet.
+    // -------------------------------------------------------------------------
+
+    private static TilesetConfig? ParseTilesetYaml(string yaml)
+    {
+        var config = new TilesetConfig();
+        string? currentDict = null; // "entities" or "items" when inside a mapping
+
+        foreach (var rawLine in yaml.Split('\n'))
+        {
+            var line = rawLine.TrimEnd('\r');
+
+            // Skip blank lines and comments
+            var trimmed = line.TrimStart();
+            if (trimmed.Length == 0 || trimmed[0] == '#')
+                continue;
+
+            // Strip inline comments: find # preceded by whitespace (not inside quotes)
+            var contentPart = StripInlineComment(trimmed);
+            if (contentPart.Length == 0)
+                continue;
+
+            // Detect indentation: indented lines are dictionary entries
+            bool isIndented = line.Length > 0 && (line[0] == ' ' || line[0] == '\t');
+
+            // Parse key: value
+            int colonIdx = contentPart.IndexOf(':');
+            if (colonIdx < 0) continue;
+
+            var key = contentPart[..colonIdx].Trim();
+            var value = colonIdx + 1 < contentPart.Length
+                ? contentPart[(colonIdx + 1)..].Trim()
+                : "";
+
+            // Strip surrounding quotes
+            value = Unquote(value);
+
+            if (isIndented && currentDict != null)
+            {
+                // Inside entities: or items: mapping
+                if (currentDict == "entities")
+                    config.Entities[key] = value;
+                else if (currentDict == "items")
+                    config.Items[key] = value;
+                continue;
+            }
+
+            // Top-level key — exit any current dictionary
+            currentDict = null;
+
+            switch (key)
+            {
+                case "id":              config.Id = value; break;
+                case "name":            config.Name = value; break;
+                case "sprite_size":     config.SpriteSize = ParseInt(value, 48); break;
+                case "frame_count":     config.FrameCount = ParseInt(value, 4); break;
+                case "frame_stride":    config.FrameStride = ParseInt(value, 0); break;
+                case "frame_offset":    config.FrameOffset = ParseInt(value, 0); break;
+                case "frame_pattern":   config.FramePattern = value; break;
+                case "sprites_root":    config.SpritesRoot = value; break;
+                case "items_root":      config.ItemsRoot = value; break;
+                case "items_pattern":   config.ItemsPattern = value; break;
+                case "player_sprite":   config.PlayerSprite = value; break;
+                case "entity_y_offset":
+                    if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float yOff))
+                        config.EntityYOffset = yOff;
+                    break;
+                case "entities":
+                    currentDict = "entities";
+                    break;
+                case "items":
+                    currentDict = "items";
+                    break;
+            }
+        }
+
+        return config;
+    }
+
+    private static string StripInlineComment(string s)
+    {
+        bool inQuote = false;
+        for (int i = 0; i < s.Length; i++)
+        {
+            if (s[i] == '"') inQuote = !inQuote;
+            if (!inQuote && s[i] == '#' && i > 0 && s[i - 1] == ' ')
+                return s[..i].TrimEnd();
+        }
+        return s;
+    }
+
+    private static string Unquote(string s)
+    {
+        if (s.Length >= 2 && s[0] == '"' && s[^1] == '"')
+            return s[1..^1];
+        return s;
+    }
+
+    private static int ParseInt(string s, int fallback)
+        => int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out int v) ? v : fallback;
+
+    // -------------------------------------------------------------------------
+    // Debug validation
+    // -------------------------------------------------------------------------
+
     /// <summary>
     /// Debug-only: check that the frame-1 resource path exists for each entity mapping.
     /// GD.PrintErr on any missing file so YAML typos surface at boot, not at first spawn.
@@ -94,7 +198,6 @@ public static class TilesetLoader
             if (!ResourceLoader.Exists(path))
                 GD.PrintErr($"[TilesetLoader] Missing entity sprite for '{typeId}': {path}");
         }
-        // Items use a simpler single-path model — validate the static path directly.
         foreach (var (typeId, spriteValue) in config.Items)
         {
             var path = $"{config.ItemsRoot}/{spriteValue}.png";
@@ -104,29 +207,20 @@ public static class TilesetLoader
 #endif
     }
 
-    /// <summary>
-    /// Resolve the frame-1 resource path for an entity sprite value.
-    /// Handles both path-based (FrameStride == 0) and index-based (FrameStride > 0) modes.
-    /// Frame 1 is used because it's always the idle/default frame.
-    /// </summary>
     private static string ResolveFrame1Path(TilesetConfig config, string spriteValue)
     {
         if (config.FrameStride == 0)
         {
-            // Path-based (UF): {SpritesRoot}/{value}_1.png
             return $"{config.SpritesRoot}/{spriteValue}_1.png";
         }
         else
         {
-            // Index-based (16bf): index = key * stride + 1 + offset
             if (!int.TryParse(spriteValue, out int creatureKey))
             {
                 GD.PrintErr($"[TilesetLoader] Index-based tileset has non-integer creature key: '{spriteValue}'");
                 return "";
             }
             int spriteIndex = creatureKey * config.FrameStride + 1 + config.FrameOffset;
-            // D2 padding confirmed correct for 16bf: files are creatures_01.png through creatures_396.png.
-            // D3 (creatures_001.png) would produce wrong filenames for all entries.
             var filename = config.FramePattern.Replace("{index:D2}", spriteIndex.ToString("D2"));
             return $"{config.SpritesRoot}/{filename}";
         }

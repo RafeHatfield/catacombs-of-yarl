@@ -1,6 +1,7 @@
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Presentation;
 using Godot;
 
 namespace CatacombsOfYarl.Presentation.UI;
@@ -100,12 +101,22 @@ public sealed partial class HUD : Control
         if (_depthLabel != null)
             _depthLabel.Text = $"Depth: {_state.CurrentDepth}";
 
-        // Equipment summary — weapon + armor, truncated to 12 chars each
+        // Equipment summary — weapon + armor, truncated to 12 chars each.
+        // Uses identification-aware display names so unidentified rings show correctly.
         if (_equipLabel != null)
         {
-            var eq = _state.Player.Get<Equipment>();
-            var wpn = Truncate(eq?.MainHand?.Name ?? "—", 12);
-            var arm = Truncate(eq?.GetSlot(EquipmentSlot.Chest)?.Name ?? "—", 12);
+            var eq       = _state.Player.Get<Equipment>();
+            var registry = _state.IdentificationRegistry;
+            var pool     = _state.AppearancePool;
+
+            string WpnName(Entity? item) => item == null ? "—"
+                : ItemDisplay.GetDisplayName(item, registry, pool);
+
+            var wpn = Truncate(WpnName(eq?.MainHand), 12);
+            var arm = Truncate(eq?.GetSlot(EquipmentSlot.Chest) is Entity chest
+                ? ItemDisplay.GetDisplayName(chest, registry, pool)
+                : "—", 12);
+
             _equipLabel.Text = $"Wpn: {wpn}   Arm: {arm}";
         }
 

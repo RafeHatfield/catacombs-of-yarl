@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>16bf FX Sprite Browser</title>
+<style>
+  body { background:#111; color:#ddd; font-family:monospace; padding:16px; }
+  h1 { color:#fff; margin-bottom:4px; }
+  .subtitle { color:#888; margin-bottom:12px; font-size:12px; }
+  .formula {
+    background:#1e1e1e; border:1px solid #333; padding:10px 14px;
+    margin-bottom:14px; border-radius:4px; font-size:12px; line-height:1.9;
+  }
+  .formula code { color:#7ec8e3; }
+  .sheet-header {
+    font-size:14px; font-weight:bold; color:#e8c97a;
+    padding:10px 0 6px; margin-top:16px;
+    border-top:2px solid #333;
+  }
+  .sheet-header:first-of-type { border-top:none; margin-top:0; }
+  .sheet-meta { font-size:11px; color:#666; margin-bottom:8px; }
+  .grid {
+    display:flex;
+    flex-wrap:wrap;
+    gap:3px;
+  }
+  .cell {
+    background:#1a1a1a; border:1px solid #2a2a2a; border-radius:3px;
+    padding:3px; text-align:center; cursor:pointer;
+    transition:border-color 0.12s, background 0.12s;
+    width:66px;
+  }
+  .cell:hover { border-color:#7ec8e3; background:#222; }
+  .cell img {
+    image-rendering:pixelated;
+    background:#0a0a0a; display:block;
+    margin: 0 auto 2px;
+  }
+  .cell img.s32 { width:48px; height:48px; }
+  .cell img.s24 { width:48px; height:48px; }
+  .key { font-size:11px; font-weight:bold; color:#7ec8e3; }
+  .copied {
+    position:fixed; bottom:20px; right:20px; background:#222;
+    color:#7ec8e3; padding:8px 14px; border-radius:4px; font-size:13px;
+    opacity:0; transition:opacity 0.15s; pointer-events:none;
+  }
+  .copied.show { opacity:1; }
+</style>
+</head>
+<body>
+<h1>Oryx 16-bit Fantasy — FX Sprite Browser</h1>
+<p class="subtitle">
+  Spell effects, projectiles, hit sparks, particles. Two sheets: fx (32×32) and fx2 (24×24).
+  Click any cell to copy the file number.
+</p>
+<div class="formula">
+  These sprites are primarily used for spell/combat visual effects — projectile trails, impact flashes,
+  aura particles, fire/ice/lightning bursts. Neither sheet is currently wired into the game's
+  sprite system; file numbers here are for future reference when building the VFX layer.
+</div>
+
+<div class="sheet-header">FX Sheet — 32×32px &nbsp;(<code>oryx_16bit_fantasy_fx_NN.png</code>)</div>
+<div class="sheet-meta">88 sprites, sequential 01–88 &nbsp;·&nbsp; Larger effects: explosions, big projectiles, area bursts</div>
+<div class="grid" id="grid-fx"></div>
+
+<div class="sheet-header">FX2 Sheet — 24×24px &nbsp;(<code>oryx_16bit_fantasy_fx2_NN.png</code>)</div>
+<div class="sheet-meta">179 sprites, sparse 1–200 &nbsp;·&nbsp; Smaller effects: hit sparks, particles, projectile heads, auras</div>
+<div class="grid" id="grid-fx2"></div>
+
+<div class="copied" id="copied">Copied!</div>
+<script>
+const ROOT_FX  = "../src/Presentation/assets/sprites_16bf/fx_32x32";
+const ROOT_FX2 = "../src/Presentation/assets/sprites_16bf/fx_24x24";
+
+const FX2_FILES = [
+  1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+  21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,
+  41,42,43,45,47,48,49,50,51,52,53,54,55,56,57,58,59,
+  61,62,63,64,65,66,67,68,69,
+  71,72,73,74,75,76,77,78,79,
+  81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,
+  101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,
+  121,122,123,124,125,126,127,128,
+  131,132,133,134,135,136,137,138,
+  141,142,143,144,145,146,147,148,
+  151,152,153,154,155,156,157,158,
+  161,162,163,164,165,166,167,168,
+  171,172,173,174,175,176,177,178,
+  181,182,183,184,185,186,187,188,
+  191,192,193,194,195,196,197,198,199,200,
+];
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+function addCell(gridId, root, filename, displayNum, sizeClass) {
+  const grid = document.getElementById(gridId);
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  cell.title = filename + "\nFile #: " + displayNum + "\nClick to copy";
+
+  const img = document.createElement("img");
+  img.src = root + "/" + filename;
+  img.alt = displayNum;
+  img.className = sizeClass;
+  img.loading = "lazy";
+  cell.appendChild(img);
+
+  const keyEl = document.createElement("div");
+  keyEl.className = "key";
+  keyEl.textContent = displayNum;
+  cell.appendChild(keyEl);
+
+  cell.addEventListener("click", (function(num, fname) {
+    return function() {
+      navigator.clipboard.writeText(String(num)).catch(function(){});
+      const el = document.getElementById("copied");
+      el.textContent = "Copied \"" + num + "\"  (" + fname + ")";
+      el.classList.add("show");
+      clearTimeout(window._ct);
+      window._ct = setTimeout(function(){ el.classList.remove("show"); }, 1800);
+    };
+  })(displayNum, filename));
+
+  grid.appendChild(cell);
+}
+
+// FX 32x32: sequential 01–88
+for (let n = 1; n <= 88; n++) {
+  const fname = "oryx_16bit_fantasy_fx_" + pad2(n) + ".png";
+  addCell("grid-fx", ROOT_FX, fname, n, "s32");
+}
+
+// FX2 24x24: sparse list
+for (const n of FX2_FILES) {
+  const fname = "oryx_16bit_fantasy_fx2_" + pad2(n) + ".png";
+  addCell("grid-fx2", ROOT_FX2, fname, n, "s24");
+}
+</script>
+</body>
+</html>

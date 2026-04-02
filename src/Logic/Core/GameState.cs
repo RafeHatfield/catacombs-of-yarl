@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Knowledge;
 using CatacombsOfYarl.Logic.Map;
@@ -47,6 +48,28 @@ public sealed class GameState
     /// Managed by PortalSystem — do not mutate directly.
     /// </summary>
     public List<Entity> Portals { get; } = new();
+
+    // ── Identification system ────────────────────────────────────────────────
+
+    /// <summary>
+    /// Per-run identification registry. Tracks which item types have been identified.
+    /// Survives floor transitions — identified items stay identified across the whole run.
+    /// Null in scenario mode (harness runs without identification).
+    /// </summary>
+    public IdentificationRegistry? IdentificationRegistry { get; init; }
+
+    /// <summary>
+    /// Per-run appearance pool. Assigns descriptors and mystery sprites to identifiable items.
+    /// Survives floor transitions — same assignments throughout the run.
+    /// Null in scenario mode.
+    /// </summary>
+    public AppearancePool? AppearancePool { get; init; }
+
+    /// <summary>
+    /// Difficulty level affecting pre-identification probabilities.
+    /// Defaults to Medium (balanced starting identification rates).
+    /// </summary>
+    public Difficulty Difficulty { get; init; } = Difficulty.Medium;
 
     public GameState(Entity player, List<Entity> monsters, GameMap map, SeededRandom rng, int turnLimit = 100)
     {

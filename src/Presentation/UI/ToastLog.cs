@@ -238,6 +238,15 @@ public sealed partial class ToastLog : Control
             HotHealEvent hot when hot.EntityId == _playerId =>
                 $"[color=lime]+{hot.Amount} HP from {hot.EffectName}.[/color]",
 
+            // ── Identification events ─────────────────────────────────────────────────
+            // "You realize this was a Healing Potion!" when player uses or equips an unidentified item.
+            // "Potion of Healing identified as Healing Potion!" when scroll of identify reveals it.
+            IdentificationEvent ident when ident.Trigger == "scroll_of_identify" =>
+                $"[color=aqua]{ident.IdentifiedName} identified![/color]",
+
+            IdentificationEvent ident =>
+                $"[color=aqua]You realize this was a {ident.IdentifiedName}![/color]",
+
             _ => null,
         };
     }

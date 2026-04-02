@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>16bf Class / Ability Icon Browser</title>
+<style>
+  body { background:#111; color:#ddd; font-family:monospace; padding:16px; }
+  h1 { color:#fff; margin-bottom:4px; }
+  .subtitle { color:#888; margin-bottom:12px; font-size:12px; }
+  .formula {
+    background:#1e1e1e; border:1px solid #333; padding:10px 14px;
+    margin-bottom:14px; border-radius:4px; font-size:12px; line-height:1.9;
+  }
+  .formula code { color:#7ec8e3; }
+  .grid {
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
+  }
+  .cell {
+    background:#1a1a1a; border:1px solid #2a2a2a; border-radius:3px;
+    padding:4px; text-align:center; cursor:pointer;
+    transition:border-color 0.12s, background 0.12s;
+    width:72px;
+  }
+  .cell:hover { border-color:#7ec8e3; background:#222; }
+  .cell img {
+    image-rendering:pixelated;
+    width:52px; height:56px; background:#0a0a0a; display:block;
+    margin: 0 auto 2px;
+  }
+  .key { font-size:11px; font-weight:bold; color:#7ec8e3; }
+  .copied {
+    position:fixed; bottom:20px; right:20px; background:#222;
+    color:#7ec8e3; padding:8px 14px; border-radius:4px; font-size:13px;
+    opacity:0; transition:opacity 0.15s; pointer-events:none;
+  }
+  .copied.show { opacity:1; }
+</style>
+</head>
+<body>
+<h1>Oryx 16-bit Fantasy — Class &amp; Ability Icon Browser</h1>
+<p class="subtitle">
+  48 class/ability icons (26×28px, transparent backgrounds). Useful for spell icons, skill UI, class selection.
+  Click any cell to copy the file number.
+</p>
+<div class="formula">
+  <strong>File naming:</strong> <code>oryx_16bit_fantasy_classes_trans_NN.png</code><br>
+  Numbers encode position in the source sheet grid (rows of 6), not sequential order.
+  The 8 rows represent 8 character class types; each row has 6 icon variants.
+</div>
+<div class="grid" id="grid"></div>
+<div class="copied" id="copied">Copied!</div>
+<script>
+const ROOT = "../src/Presentation/assets/sprites_16bf/classes_26x28";
+
+// 48 files: rows of 6, numbers encode source grid column positions
+const CLASS_FILES = [
+   3, 5, 7, 9,11,13,   // row 1
+  21,22,23,24,25,26,   // row 2
+  33,34,35,36,37,38,   // row 3
+  45,46,47,48,49,50,   // row 4
+  57,58,59,60,61,62,   // row 5
+  69,70,71,72,73,74,   // row 6
+  81,82,83,84,85,86,   // row 7
+  93,94,95,96,97,98,   // row 8
+];
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+function buildGrid() {
+  const grid = document.getElementById("grid");
+  for (const n of CLASS_FILES) {
+    const fname = "oryx_16bit_fantasy_classes_trans_" + pad2(n) + ".png";
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.title = fname + "\nFile #: " + n + "\nClick to copy";
+
+    const img = document.createElement("img");
+    img.src = ROOT + "/" + fname;
+    img.alt = "class " + n;
+    img.loading = "lazy";
+    cell.appendChild(img);
+
+    const keyEl = document.createElement("div");
+    keyEl.className = "key";
+    keyEl.textContent = n;
+    cell.appendChild(keyEl);
+
+    cell.addEventListener("click", (function(num, filename) {
+      return function() {
+        navigator.clipboard.writeText(String(num)).catch(function(){});
+        const el = document.getElementById("copied");
+        el.textContent = "Copied \"" + num + "\"  (" + filename + ")";
+        el.classList.add("show");
+        clearTimeout(window._ct);
+        window._ct = setTimeout(function(){ el.classList.remove("show"); }, 1800);
+      };
+    })(n, fname));
+
+    grid.appendChild(cell);
+  }
+}
+
+buildGrid();
+</script>
+</body>
+</html>

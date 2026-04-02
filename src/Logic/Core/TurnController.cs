@@ -330,6 +330,10 @@ public static class TurnController
                 state.PlayerInventory?.Remove(item);
             }
         }
+
+        // Identification on use: scrolls and wands are identified when used.
+        // Spell effects fire first, then identification check, then toast if newly identified.
+        TryIdentifyOnUse(state, item, events, trigger: "used");
     }
 
     private static void ResolvePlayerAttack(GameState state, Entity target, List<TurnEvent> events,
@@ -650,12 +654,47 @@ public static class TurnController
     }
 
     /// <summary>
+    /// Check whether the item's type needs to be identified after a use/equip action.
+    /// If the type is newly identified, emits an IdentificationEvent.
+    ///
+    /// No-op when the state has no identification registry (scenario/harness mode)
+    /// or when the item has no ItemTag (weapons/armor — always identified).
+    /// </summary>
+    private static void TryIdentifyOnUse(GameState state, Entity item, List<TurnEvent> events, string trigger)
+    {
+        var registry = state.IdentificationRegistry;
+        if (registry == null) return;
+
+        var tag = item.Get<ECS.ItemTag>();
+        if (tag == null) return;
+
+        var idComp = item.Get<ECS.IdentifiableItem>();
+        if (idComp == null) return;
+
+        // Identify returns true only the FIRST time this type is identified this run.
+        bool newlyIdentified = registry.Identify(tag.TypeId);
+        if (newlyIdentified)
+        {
+            events.Add(new IdentificationEvent
+            {
+                ActorId        = state.Player.Id,
+                TypeId         = tag.TypeId,
+                IdentifiedName = idComp.IdentifiedName,
+                Trigger        = trigger,
+            });
+        }
+    }
+
+    /// <summary>
     /// Check if a picked-up scroll should auto-recharge a wand the player is carrying.
     /// Returns true if the scroll was consumed for recharge (caller should skip normal pickup).
     ///
     /// Auto-recharge rule: if the player's inventory contains a wand whose RechargeScrollId
     /// matches the picked-up scroll's SpellId, and that wand is below MaxCharges, consume
     /// the scroll to add one charge instead of adding it to inventory.
+    ///
+    /// Gate: both scroll and wand must be identified. An unidentified scroll cannot be
+    /// absorbed by an unidentified wand — the magical concealment prevents it.
     /// </summary>
     private static bool TryRechargeWand(GameState state, Entity scroll, SpellEffect scrollSpell,
         List<TurnEvent> events)
@@ -663,14 +702,33 @@ public static class TurnController
         var inventory = state.PlayerInventory;
         if (inventory == null) return false;
 
+        // Identification gate: an unidentified scroll cannot auto-recharge an unidentified wand.
+        // The player doesn't know what either item is, so the wand doesn't "know" to accept it.
+        // When the registry is null (scenario mode), identification is off and recharge always fires.
+        var registry = state.IdentificationRegistry;
+        if (registry != null)
+        {
+            var scrollTag = scroll.Get<ECS.ItemTag>();
+            if (scrollTag != null && !registry.IsIdentified(scrollTag.TypeId))
+                return false; // Unidentified scroll goes to inventory normally
+        }
+
         // Find a wand in inventory that lists this scroll's spell_id as its recharge source
         var wand = inventory.Items.FirstOrDefault(item =>
         {
             var w = item.Get<WandComponent>();
-            return w != null
-                && !w.Infinite
-                && w.RechargeScrollId == scrollSpell.SpellId
-                && w.Charges < w.MaxCharges;
+            if (w == null || w.Infinite || w.RechargeScrollId != scrollSpell.SpellId || w.Charges >= w.MaxCharges)
+                return false;
+
+            // Identification gate: wand must also be identified for auto-recharge to fire.
+            if (registry != null)
+            {
+                var wandTag = item.Get<ECS.ItemTag>();
+                if (wandTag != null && !registry.IsIdentified(wandTag.TypeId))
+                    return false;
+            }
+
+            return true;
         });
 
         if (wand == null) return false;
@@ -748,6 +806,10 @@ public static class TurnController
             ItemId = potion.Id,
             ItemName = potion.Name,
         });
+
+        // Identification on use: potions are identified when consumed.
+        // Effect fires first (heal), then identification check, then toast if newly identified.
+        TryIdentifyOnUse(state, potion, events, trigger: "used");
     }
 
     /// <summary>
@@ -843,6 +905,10 @@ public static class TurnController
             DisplacedItemId  = displacedId,
             DisplacedItemName = displacedName,
         });
+
+        // Identification on equip: rings are identified when equipped.
+        // EquipEvent fires first, then identification check, then toast if newly identified.
+        TryIdentifyOnUse(state, item, events, trigger: "equipped");
     }
 
     /// <summary>

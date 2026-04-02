@@ -262,6 +262,25 @@ public sealed class HotHealEvent : TurnEvent
 }
 
 /// <summary>
+/// Emitted when an item type is identified for the first time this run.
+/// Presentation layer should show a toast: "You realize this was a [IdentifiedName]!"
+/// </summary>
+public sealed class IdentificationEvent : TurnEvent
+{
+    /// <summary>The YAML type ID of the item type that was identified (e.g. "healing_potion").</summary>
+    public string TypeId { get; init; } = "";
+
+    /// <summary>The true name revealed (e.g. "Healing Potion", "Scroll of Lightning").</summary>
+    public string IdentifiedName { get; init; } = "";
+
+    /// <summary>
+    /// Trigger that caused identification.
+    /// Values: "used" (potion/scroll/wand used), "equipped" (ring equipped).
+    /// </summary>
+    public string Trigger { get; init; } = "used";
+}
+
+/// <summary>
 /// Emitted when an entity's turn is skipped due to a status effect (SlowedEffect, ImmobilizedEffect, SleepEffect).
 /// </summary>
 public sealed class SkipTurnEvent : TurnEvent

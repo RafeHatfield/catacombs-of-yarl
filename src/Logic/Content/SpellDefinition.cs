@@ -93,6 +93,24 @@ public sealed class SpellDefinition
     public string? RechargeScroll { get; set; }
 
     /// <summary>
+    /// Item category. Scrolls default to ItemCategory.Scroll; wands to ItemCategory.Wand.
+    /// Set by ContentLoader after deserialization based on the is_wand flag.
+    /// </summary>
+    [YamlMember(Alias = "category")]
+    public ItemCategory Category { get; set; } = ItemCategory.Scroll;
+
+    /// <summary>
+    /// Human-readable display name. Defaults to Name if not set.
+    /// Used as the IdentifiedName in the IdentifiableItem component.
+    /// </summary>
+    public string DisplayName => Name ?? "";
+
+    /// <summary>
+    /// YAML key (e.g. "scroll_of_lightning", "wand_of_fireball"). Set by ContentLoader after deserialization.
+    /// </summary>
+    public string Id { get; set; } = "";
+
+    /// <summary>
     /// Parse the targeting string to the TargetingMode enum.
     /// Defaults to Self for unknown values.
     /// </summary>

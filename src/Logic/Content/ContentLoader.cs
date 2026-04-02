@@ -139,6 +139,10 @@ public sealed class ContentLoader
             foreach (var (id, def) in section)
             {
                 def.Name ??= TitleCase(id);
+                def.Id = id;
+                // Consumables default to Potion; override via YAML category: field if needed.
+                if (def.Category == ItemCategory.Other)
+                    def.Category = ItemCategory.Potion;
                 consumables[id] = def;
             }
         }
@@ -188,6 +192,8 @@ public sealed class ContentLoader
             {
                 def.Name ??= TitleCase(id);
                 def.IsWand = false; // explicit: scrolls are never wands
+                def.Id = id;
+                def.Category = ItemCategory.Scroll;
                 spellItems[id] = def;
             }
         }
@@ -198,6 +204,8 @@ public sealed class ContentLoader
             {
                 def.Name ??= TitleCase(id);
                 def.IsWand = true; // explicit: wands section always produces wands
+                def.Id = id;
+                def.Category = ItemCategory.Wand;
                 spellItems[id] = def;
             }
         }

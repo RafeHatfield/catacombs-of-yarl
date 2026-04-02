@@ -442,6 +442,10 @@ floor_item_pool:
   - item: scale_mail
     weight: 10
     min_depth: 3
+  # Identification scroll — common from depth 1
+  - item: scroll_of_identify
+    weight: 20
+    min_depth: 1
   # Scrolls — common (depth 1+)
   # Weights doubled from 15→30 to ensure ~1-2 scrolls per floor at depth 1.
   # At 15 each, total depth-1 scroll weight was ~60 vs ~195 gear = 23.5% → ~0.5 scrolls/floor.
@@ -806,6 +810,14 @@ scrolls:
     duration: 3
     char: "~"
     color: [130, 200, 80]
+
+  scroll_of_identify:
+    name: "Scroll of Identify"
+    description: "Magic writing burns into your memory, revealing the true nature of 1-3 items you carry."
+    spell_id: "identify"
+    targeting: "self"
+    char: "~"
+    color: [200, 255, 200]
 
 wands:
   wand_of_lightning:

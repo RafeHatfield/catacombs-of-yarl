@@ -10,3 +10,8 @@ tileset: "16bit_fantasy"
 # Supported values: iso (current), topdown (Phase 2 — no tile assets yet)
 # Unknown or "topdown" values fall back to "iso" with a warning at boot.
 map_mode: "iso"
+
+# Difficulty level for the identification system pre-identification probabilities.
+# easy: most items start identified (80-90%); medium: balanced (30-50%); hard: almost nothing (0-5%).
+# Unknown values default to "medium".
+difficulty: "medium"

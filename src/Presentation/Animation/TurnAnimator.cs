@@ -37,6 +37,7 @@ public sealed class TurnAnimator
 
     private readonly Node _root;
     private readonly EntitySpriteManager _entitySprites;
+    private readonly IMapRenderer _renderer;
     private bool _playing;
     // Stored so we can Kill() the previous tween before creating the next one.
     private Tween? _activeTween;
@@ -46,10 +47,11 @@ public sealed class TurnAnimator
 
     public event Action? AnimationComplete;
 
-    public TurnAnimator(Node root, EntitySpriteManager entitySprites)
+    public TurnAnimator(Node root, EntitySpriteManager entitySprites, IMapRenderer renderer)
     {
         _root = root;
         _entitySprites = entitySprites;
+        _renderer = renderer;
     }
 
     /// <summary>
@@ -157,7 +159,7 @@ public sealed class TurnAnimator
         if (sprite == null) return;
         _tweenHasSteps = true;
 
-        var targetPos = IsometricMapper.GridToScreenCenter(move.ToX, move.ToY);
+        var targetPos = _renderer.GridToScreenCenter(move.ToX, move.ToY);
         tween.TweenProperty(sprite, "position", targetPos, MoveDur)
              .SetEase(Tween.EaseType.Out)
              .SetTrans(Tween.TransitionType.Quad);

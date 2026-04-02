@@ -26,11 +26,24 @@ public sealed class SpellItemFactory
     /// <summary>All spell/wand definition IDs available in this factory.</summary>
     public IEnumerable<string> AvailableIds => _definitions.Keys;
 
+    /// <summary>Look up a spell definition by ID. Returns null if not found.</summary>
+    public SpellDefinition? GetDefinition(string spellId) =>
+        _definitions.TryGetValue(spellId, out var def) ? def : null;
+
     /// <summary>
     /// Create a scroll entity from a definition ID.
+    ///
+    /// registry/pool/rng/difficulty: optional identification system parameters.
+    /// When provided, pre-identification is applied per the run's per-type decision.
+    /// When null (scenario harness, tests), identification is skipped and items appear identified.
+    ///
     /// Returns null if the ID is unknown or the definition is marked is_wand=true.
     /// </summary>
-    public Entity? CreateScroll(string spellId)
+    public Entity? CreateScroll(string spellId,
+        IdentificationRegistry? registry = null,
+        AppearancePool? pool = null,
+        SeededRandom? identRng = null,
+        Difficulty difficulty = Difficulty.Medium)
     {
         if (!_definitions.TryGetValue(spellId, out var def))
             return null;
@@ -54,6 +67,20 @@ public sealed class SpellItemFactory
             MisfireChance = def.MisfireChance,
         });
 
+        // ItemTag carries the canonical YAML type ID — required for identification and stacking.
+        entity.Add(new ItemTag(spellId));
+
+        // IdentifiableItem holds the two possible display names.
+        entity.Add(new IdentifiableItem
+        {
+            IdentifiedName   = def.DisplayName,
+            UnidentifiedName = "",
+        });
+
+        // Apply pre-identification decision. No-op if registry/pool/identRng are null.
+        if (registry != null && pool != null && identRng != null)
+            PreIdentification.Apply(entity, spellId, def.Category, registry, pool, identRng, difficulty);
+
         return entity;
     }
 
@@ -62,9 +89,15 @@ public sealed class SpellItemFactory
     /// Charges are randomly selected from [def.MinCharges, def.MaxCharges] using the provided rng,
     /// then scaled by depth: charges += (depth - 1), capped at def.ChargeCap.
     /// PoC formula: rand(min_charges, max_charges) + (depth - 1), capped at charge_cap.
+    ///
+    /// registry/pool/identRng/difficulty: optional identification system parameters.
     /// Returns null if the ID is unknown or the definition is NOT marked is_wand=true.
     /// </summary>
-    public Entity? CreateWand(string spellId, SeededRandom rng, int depth = 1)
+    public Entity? CreateWand(string spellId, SeededRandom rng, int depth = 1,
+        IdentificationRegistry? registry = null,
+        AppearancePool? pool = null,
+        SeededRandom? identRng = null,
+        Difficulty difficulty = Difficulty.Medium)
     {
         if (!_definitions.TryGetValue(spellId, out var def))
             return null;
@@ -95,6 +128,20 @@ public sealed class SpellItemFactory
             Duration     = def.Duration,
             MisfireChance = def.MisfireChance,
         });
+
+        // ItemTag carries the canonical YAML type ID — required for identification and stacking.
+        entity.Add(new ItemTag(spellId));
+
+        // IdentifiableItem holds the two possible display names.
+        entity.Add(new IdentifiableItem
+        {
+            IdentifiedName   = def.DisplayName,
+            UnidentifiedName = "",
+        });
+
+        // Apply pre-identification decision. No-op if registry/pool/identRng are null.
+        if (registry != null && pool != null && identRng != null)
+            PreIdentification.Apply(entity, spellId, def.Category, registry, pool, identRng, difficulty);
 
         return entity;
     }

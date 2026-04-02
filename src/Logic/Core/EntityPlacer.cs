@@ -155,7 +155,10 @@ public static class EntityPlacer
         bool allowSpike = false,
         ItemFactory? items = null,
         IReadOnlyList<FloorItemPoolEntry>? floorItemPool = null,
-        SpellItemFactory? spellItems = null)
+        SpellItemFactory? spellItems = null,
+        Content.IdentificationRegistry? identRegistry = null,
+        Content.AppearancePool? appearancePool = null,
+        Difficulty difficulty = Difficulty.Medium)
     {
         var placed = new List<Entity>();
         var occupied = new HashSet<(int, int)>();
@@ -255,7 +258,8 @@ public static class EntityPlacer
                     var pos = FindFreePosition(map.Map, room, occupied, rng);
                     if (pos == null) break;
 
-                    var entity = consumables.Create(consumableId);
+                    var entity = consumables.Create(consumableId,
+                        registry: identRegistry, pool: appearancePool, rng: rng, difficulty: difficulty);
                     if (entity == null) continue;
 
                     var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
@@ -289,8 +293,12 @@ public static class EntityPlacer
                             // Scrolls are created with CreateScroll; wands with CreateWand.
                             // SpellItemFactory.CreateScroll returns null for wand IDs and vice versa,
                             // so we try scroll first then wand.
-                            entity = spellItems.CreateScroll(entry.ItemId)
-                                ?? spellItems.CreateWand(entry.ItemId, rng, depth);
+                            entity = spellItems.CreateScroll(entry.ItemId,
+                                        registry: identRegistry, pool: appearancePool,
+                                        identRng: rng, difficulty: difficulty)
+                                ?? spellItems.CreateWand(entry.ItemId, rng, depth,
+                                        registry: identRegistry, pool: appearancePool,
+                                        identRng: rng, difficulty: difficulty);
                         }
 
                         // Fall back to equipment factory (weapons, armor)

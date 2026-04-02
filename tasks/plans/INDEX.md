@@ -24,7 +24,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Tier 1 — Core Mechanics (needed soon)
 | Plan | Status | Description |
 |------|--------|-------------|
-| [plan_identification_system.md](plan_identification_system.md) | [ ] | Identified/unidentified items, per-run aliases, difficulty tiers |
+| [plan_identification_system.md](plan_identification_system.md) | [ ] | Identified/unidentified items, texture descriptors, mystery sprites, per-run aliases, difficulty tiers |
 | [plan_monster_knowledge.md](plan_monster_knowledge.md) | [ ] | Progressive monster knowledge (3 tiers), long-press inspect, item inspect panel |
 | [plan_status_effects.md](plan_status_effects.md) | [~] | 30+ effects: poison, blind, sleep, entangle, burning, silence, shield, etc. — plan complete |
 | [plan_player_progression.md](plan_player_progression.md) | [ ] | XP, level-up, stat gains, depth boons (one per depth, fixed) |

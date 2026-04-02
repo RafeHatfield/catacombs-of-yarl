@@ -7,15 +7,29 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>CatacombsOfYarl.Presentation</RootNamespace>
     <AssemblyName>CatacombsOfYarl.Presentation</AssemblyName>
+    <!-- iOS NativeAOT: use invariant globalization instead of ICU data.
+         Godot's experimental iOS C# export doesn't bundle icudt_godot.dat,
+         causing a strdup(null) SIGSEGV at startup when the runtime tries to
+         load the missing ICU data file. Invariant mode avoids ICU entirely.
+         No gameplay impact — the game uses no locale-specific formatting. -->
+    <!-- Disable NativeAOT trimming for the Presentation assembly.
+         TilesetConfig uses YamlDotNet reflection-based deserialization.
+         Without this, NativeAOT trims property setters and [YamlMember] attributes,
+         causing deserialization to silently fail or throw on iOS. -->
+    <IsTrimmable>false</IsTrimmable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Logic\CatacombsOfYarl.Logic.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- TilesetConfig/TilesetLoader use YamlDotNet for tileset YAML deserialization. -->
-    <PackageReference Include="YamlDotNet" Version="16.*" />
-  </ItemGroup>
+  <!-- YamlDotNet removed from Presentation: InvariantGlobalization=true (required for
+       iOS NativeAOT) breaks YamlDotNet deserialization. TilesetLoader now uses manual
+       YAML parsing. YamlDotNet remains in the Logic project where it's configured with
+       AotObjectFactory and IsTrimmable=false. -->
 
 </Project>

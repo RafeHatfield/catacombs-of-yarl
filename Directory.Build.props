@@ -1,0 +1,10 @@
+<Project>
+  <!-- iOS NativeAOT: use invariant globalization to avoid missing ICU data crash.
+       Godot's experimental iOS C# export doesn't bundle icudt_godot.dat, causing
+       a strdup(null) SIGSEGV at startup. Invariant mode skips ICU entirely.
+       YamlDotNet in TilesetLoader has been replaced with manual parsing because
+       YamlDotNet doesn't work under invariant globalization. -->
+  <PropertyGroup>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

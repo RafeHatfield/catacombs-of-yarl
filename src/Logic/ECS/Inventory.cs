@@ -36,11 +36,26 @@ public sealed class Inventory : IComponent
     {
         var incoming = item.Get<Consumable>();
 
-        // Attempt to stack onto an existing same-named consumable slot
+        // Attempt to stack onto an existing same-type consumable slot.
+        // Primary matching: ItemTag.TypeId (canonical YAML key, e.g. "healing_potion").
+        // Fallback: Entity.Name matching for items without ItemTag (backward compat for tests/scenarios).
+        //
+        // Using TypeId rather than Name means unidentified items of the same type stack correctly
+        // even when their display names differ. Identification state lives in the registry, not on
+        // the item, so identifying a type does not break existing stacks.
         if (incoming != null)
         {
+            var newTag = item.Get<ItemTag>();
+
             var existing = _items.FirstOrDefault(i =>
-                i.Name == item.Name && i.Get<Consumable>() != null);
+            {
+                if (i.Get<Consumable>() == null) return false;
+                var existingTag = i.Get<ItemTag>();
+                if (newTag != null && existingTag != null)
+                    return existingTag.TypeId == newTag.TypeId;
+                // Fallback: name-based matching for untagged items (legacy / hand-constructed in tests)
+                return i.Name == item.Name;
+            });
 
             if (existing != null)
             {

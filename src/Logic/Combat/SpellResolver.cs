@@ -88,6 +88,11 @@ public static class SpellResolver
             "dragon_fart" => ResolveStatusEffect<SleepEffect>(caster, spell, state, targetEntityId,
                                 statusName: "sleep", duration: spell.Duration > 0 ? spell.Duration : 3,
                                 applyEffect: (e, d) => e.GetOrAdd<SleepEffect>().RemainingTurns = d),
+            // Identification scroll: identifies 1-3 random unidentified item types from inventory.
+            // The scroll itself is identified by the TryIdentifyOnUse call in TurnController
+            // (which fires after ResolveSpellAction returns). The handler here only handles
+            // the secondary effect: picking additional unidentified types from inventory.
+            "identify"    => ResolveIdentify(caster, spell, state),
             _ => [new SpellEvent
             {
                 ActorId = caster.Id,
@@ -944,5 +949,110 @@ public static class SpellResolver
 
         if (candidates.Count == 0) return (state.Player.X, state.Player.Y);
         return candidates[rng.Next(candidates.Count)];
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Identify — Self: identifies 1-3 random unidentified item types from inventory.
+    //
+    // The scroll itself is identified by TurnController.TryIdentifyOnUse (which fires
+    // after ResolveSpellAction returns). This handler only covers the secondary effect:
+    // picking additional unidentified types from inventory.
+    //
+    // Flow:
+    //   1. If no identification registry: return success (no-op, scenario mode)
+    //   2. Gather all unidentified types present in player inventory (deduplicated by TypeId)
+    //   3. If none: emit success SpellEvent with StatusApplied="none" (scroll consumed, nothing happens)
+    //   4. Else: randomly select Min(count, Rng.Next(1,4)) types and identify them
+    //   5. Emit IdentificationEvent for each + aggregate success SpellEvent
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private static List<TurnEvent> ResolveIdentify(Entity caster, SpellEffect spell, GameState state)
+    {
+        var events = new List<TurnEvent>();
+        var registry = state.IdentificationRegistry;
+
+        // Scenario mode: no registry — scroll fires as a no-op but is consumed and identified.
+        if (registry == null)
+        {
+            events.Add(new Core.SpellEvent
+            {
+                ActorId   = caster.Id,
+                SpellId   = spell.SpellId,
+                SpellName = "Identify",
+                Success   = true,
+            });
+            return events;
+        }
+
+        var inventory = state.Player.Get<ECS.Inventory>();
+        if (inventory == null)
+        {
+            events.Add(new Core.SpellEvent
+            {
+                ActorId   = caster.Id,
+                SpellId   = spell.SpellId,
+                SpellName = "Identify",
+                Success   = true,
+                StatusApplied = "none",
+            });
+            return events;
+        }
+
+        // Gather all unidentified item types currently in inventory (distinct TypeIds).
+        var unidentifiedTypes = inventory.Items
+            .Select(i => (item: i, tag: i.Get<ECS.ItemTag>(), idComp: i.Get<ECS.IdentifiableItem>()))
+            .Where(t => t.tag != null && t.idComp != null && !registry.IsIdentified(t.tag.TypeId))
+            .GroupBy(t => t.tag!.TypeId)
+            .Select(g => g.First())
+            .ToList();
+
+        if (unidentifiedTypes.Count == 0)
+        {
+            // No unidentified items in inventory — scroll consumed but no effect.
+            events.Add(new Core.SpellEvent
+            {
+                ActorId   = caster.Id,
+                SpellId   = spell.SpellId,
+                SpellName = "Identify",
+                Success   = true,
+                StatusApplied = "none",
+            });
+            return events;
+        }
+
+        // Randomly identify 1-3 types.
+        int count = Math.Min(unidentifiedTypes.Count, state.Rng.Next(1, 4));
+        // Shuffle the candidates so selection is random.
+        for (int i = unidentifiedTypes.Count - 1; i > 0; i--)
+        {
+            int j = state.Rng.Next(i + 1);
+            (unidentifiedTypes[i], unidentifiedTypes[j]) = (unidentifiedTypes[j], unidentifiedTypes[i]);
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            var (_, tag, idComp) = unidentifiedTypes[i];
+            bool newlyIdentified = registry.Identify(tag!.TypeId);
+            if (newlyIdentified)
+            {
+                events.Add(new Core.IdentificationEvent
+                {
+                    ActorId        = caster.Id,
+                    TypeId         = tag.TypeId,
+                    IdentifiedName = idComp!.IdentifiedName,
+                    Trigger        = "scroll_of_identify",
+                });
+            }
+        }
+
+        events.Add(new Core.SpellEvent
+        {
+            ActorId   = caster.Id,
+            SpellId   = spell.SpellId,
+            SpellName = "Identify",
+            Success   = true,
+        });
+
+        return events;
     }
 }

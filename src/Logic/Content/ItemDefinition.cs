@@ -3,6 +3,19 @@ using YamlDotNet.Serialization;
 namespace CatacombsOfYarl.Logic.Content;
 
 /// <summary>
+/// Item category — determines identification behaviour at runtime.
+/// Weapons/armor are always identified (Other). Consumables with secrets start hidden.
+/// </summary>
+public enum ItemCategory
+{
+    Other,
+    Potion,
+    Scroll,
+    Wand,
+    Ring,
+}
+
+/// <summary>
 /// Deserialized item (weapon/armor) definition from YAML.
 /// </summary>
 public sealed class ItemDefinition
@@ -49,4 +62,17 @@ public sealed class ItemDefinition
     /// </summary>
     [YamlMember(Alias = "material")]
     public string? Material { get; set; }
+
+    /// <summary>
+    /// Item category. Weapons/armor default to Other (always identified).
+    /// Potions/scrolls/wands/rings start hidden and need identification.
+    /// </summary>
+    [YamlMember(Alias = "category")]
+    public ItemCategory Category { get; set; } = ItemCategory.Other;
+
+    /// <summary>
+    /// Human-readable display name. Defaults to Name if not set.
+    /// Used as the IdentifiedName in the IdentifiableItem component.
+    /// </summary>
+    public string DisplayName => Name ?? "";
 }

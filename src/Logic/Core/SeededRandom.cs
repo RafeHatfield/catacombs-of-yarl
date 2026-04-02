@@ -24,4 +24,7 @@ public sealed class SeededRandom
 
     /// <summary>Returns a random double in [0.0, 1.0).</summary>
     public double NextDouble() => _rng.NextDouble();
+
+    /// <summary>Returns a random float in [0.0, 1.0).</summary>
+    public float NextFloat() => (float)_rng.NextDouble();
 }

@@ -8,27 +8,28 @@ frame_offset: -1
 frame_pattern: "oryx_16bit_fantasy_creatures_{index:D2}.png"
 sprites_root: "res://src/Presentation/assets/sprites_16bf/creatures_24x24"
 items_root: "res://src/Presentation/assets/sprites_16bf/items_16x16"
+items_pattern: "oryx_16bit_fantasy_items_{index:D2}.png"
 player_sprite: "1"  # Knight M (frame A file 01)
 
-  # NOTE: YAML values are the actual sprite FILE NUMBERS (frame A = standing pose).
-  # The 16bf sheet uses a batch-of-18 layout: within each row of 18 creatures,
-  # all 18 frame A sprites come first, then all 18 frame B sprites 18 files later.
-  # Formula: frameA(packed) = packed + 18 × floor((packed−1) / 18)
-  #          frameB = frameA + 18
-  #
-  # With frame_stride=1, frame_offset=-1: spriteIndex = key × 1 + animFrame + (−1) = key
-  # So the YAML key IS the file number to load. Use frame A file numbers here.
-  # To find any sprite: open tools/sprite_browser_16bf.html, click the cell → copies the key.
+# NOTE: YAML values are the actual sprite FILE NUMBERS (frame A = standing pose).
+# The 16bf sheet uses a batch-of-18 layout: within each row of 18 creatures,
+# all 18 frame A sprites come first, then all 18 frame B sprites 18 files later.
+# Formula: frameA(packed) = packed + 18 * floor((packed-1) / 18)
+#          frameB = frameA + 18
+#
+# With frame_stride=1, frame_offset=-1: spriteIndex = key * 1 + animFrame + (-1) = key
+# So the YAML key IS the file number to load. Use frame A file numbers here.
+# To find any sprite: open tools/sprite_browser_16bf.html, click the cell -> copies the key.
 
 entities:
   # Orcs
   orc: "253"        # Goblin Fighter    packed=127 → frameA=253
   orc_grunt: "253"  # Goblin Fighter    packed=127 → frameA=253
-  orc_brute: "259"  # Orc Captain       packed=133 → frameA=259
+  orc_brute: "255"  # Orc Captain       packed=133 → frameA=259
 
   # Goblinoids / humanoids
   troll: "261"      # Troll             packed=135 → frameA=261
-  cultist: "299"    # Dark Wizard       packed=155 → frameA=299
+  cultist: "117"    # Dark Wizard       packed=155 → frameA=299
 
   # Thief — best match is Assassin (packed=55)
   thief: "109"      # Assassin          packed=55  → frameA=109
@@ -37,7 +38,7 @@ entities:
   rat: "224"        # Grey Rat          packed=116 → frameA=224
   giant_rat: "224"  # Grey Rat          packed=116 → frameA=224
   bat: "219"        # Black Bat         packed=111 → frameA=219
-  spider: "222"     # Red Spider        packed=114 → frameA=222
+  spider: "223"     # Red Spider        packed=114 → frameA=222
 
   # Slimes
   slime: "218"      # Green Slime       packed=110 → frameA=218
@@ -47,98 +48,109 @@ entities:
   zombie: "289"     # Zombie            packed=145 → frameA=289
   skeleton: "291"   # Skeleton          packed=147 → frameA=291
   mummy: "296"      # Mummy             packed=152 → frameA=296
-  lich: "298"       # Necromancer       packed=154 → frameA=298
+  lich: "297"       # Necromancer       packed=154 → frameA=298
 
   # Bosses / deep
   minotaur: "185"   # Minotaur Axe      packed=95  → frameA=185
-  demon: "188"      # Elder Demon       packed=98  → frameA=188
+  demon: "189"      # Elder Demon       packed=98  → frameA=188
   golem: "191"      # Stone Golem       packed=101 → frameA=191
 
   # Ogre — no direct Ogre sprite; Ettin (packed=177)
   ogre: "339"       # Ettin             packed=177 → frameA=339
 
 items:
-  # NOTE: No item key document exists for the 308-sprite items sheet.
-  # All entries stubbed. Items will render as tinted diamond placeholders until
-  # a manual item mapping pass is completed (see plan_tileset_switching TASK-008 notes).
+  # 308 individual item sprites. Value = file number → oryx_16bit_fantasy_items_{N:D2}.png
+  # Use tools/sprite_browser_16bf_items.html to browse and verify. Fine-tune visuals there.
 
-  # Potions
-  healing_potion: ""    # TODO: find in 16bf items sheet
-  mana_potion: ""       # TODO: find in 16bf items sheet
-  poison_potion: ""     # TODO: find in 16bf items sheet
-  confusion_potion: ""  # TODO: find in 16bf items sheet
-  speed_potion: ""      # TODO: find in 16bf items sheet
+  # Potions (01-18: various colored bottles)
+  healing_potion: "3"    # red bottle
+  mana_potion: "1"       # blue bottle
+  poison_potion: "4"     # green bottle
+  confusion_potion: "5"  # yellow bottle
+  speed_potion: "6"      # teal bottle
 
-  # Weapons
-  dagger: ""              # TODO: find in 16bf items sheet
-  poisoned_dagger: ""     # TODO: find in 16bf items sheet
-  quickfang_dagger: ""    # TODO: find in 16bf items sheet
-  keen_dagger: ""         # TODO: find in 16bf items sheet
-  shortsword: ""          # TODO: find in 16bf items sheet
-  short_sword: ""         # TODO: find in 16bf items sheet
-  longsword: ""           # TODO: find in 16bf items sheet
-  long_sword: ""          # TODO: find in 16bf items sheet
-  fine_longsword: ""      # TODO: find in 16bf items sheet
-  masterwork_longsword: "" # TODO: find in 16bf items sheet
-  mace: ""                # TODO: find in 16bf items sheet
-  rapier: ""              # TODO: find in 16bf items sheet
-  spear: ""               # TODO: find in 16bf items sheet
-  crossbow: ""            # TODO: find in 16bf items sheet
-  battleaxe: ""           # TODO: find in 16bf items sheet
-  battle_axe: ""          # TODO: find in 16bf items sheet
-  greatsword: ""          # TODO: find in 16bf items sheet
-  club: ""                # TODO: find in 16bf items sheet
-  staff: ""               # TODO: find in 16bf items sheet
-  quarterstaff: ""        # TODO: find in 16bf items sheet
+  # Weapons (155-222: diagonal weapon sprites)
+  dagger: "202"              # red dagger
+  poisoned_dagger: "201"     # red dagger variant
+  quickfang_dagger: "203"    # red dagger
+  keen_dagger: "219"         # red dagger
+  shortsword: "199"          # gray thin sword
+  short_sword: "199"         # gray thin sword
+  longsword: "200"           # dark gray longsword
+  long_sword: "200"          # dark gray longsword
+  fine_longsword: "206"      # gold longsword
+  masterwork_longsword: "204" # gold longsword
+  mace: "159"                # dark T-head mace
+  rapier: "201"              # thin gray sword
+  spear: "182"               # thin long diagonal spear
+  crossbow: "196"            # blue crossbow
+  battleaxe: "167"           # gray axe
+  battle_axe: "167"          # gray axe
+  greatsword: "209"          # dark long greatsword
+  club: "178"                # brown hammer/club
+  staff: "177"               # tan/brown long staff
+  quarterstaff: "180"        # brown staff variant
 
-  # Armor — chest
-  leather_armor: ""        # TODO: find in 16bf items sheet
-  studded_leather: ""      # TODO: find in 16bf items sheet
-  studded_leather_armor: "" # TODO: find in 16bf items sheet
-  chain_mail: ""           # TODO: find in 16bf items sheet
-  scale_mail: ""           # TODO: find in 16bf items sheet
-  plate_mail: ""           # TODO: find in 16bf items sheet
-  cloth_robe: ""           # TODO: find in 16bf items sheet
+  # Armor — chest (254-259: body silhouette shapes)
+  leather_armor: "265"        # brown leather body
+  studded_leather: "265"      # brown leather body
+  studded_leather_armor: "265" # brown leather body
+  chain_mail: "266"           # dark blue chain body
+  scale_mail: "266"           # dark blue chain body
+  plate_mail: "268"           # dark heavy armor body
+  cloth_robe: "250"           # light cloth/silver robe
 
   # Armor — head / feet
-  leather_helmet: ""  # TODO: find in 16bf items sheet
-  leather_boots: ""   # TODO: find in 16bf items sheet
-  # shield: no sprite in UF either — falls back to placeholder
+  leather_helmet: "275"  # gray helmet
+  leather_boots: "287"   # teal boots
+  # shield: no sprite mapped — falls back to placeholder
 
-  # Wands
-  wand_of_fireball: ""      # TODO: find in 16bf items sheet
-  wand_of_lightning: ""     # TODO: find in 16bf items sheet
-  wand_of_confusion: ""     # TODO: find in 16bf items sheet
-  wand_of_slow: ""          # TODO: find in 16bf items sheet
-  wand_of_teleportation: "" # TODO: find in 16bf items sheet
-  wand_of_portals: ""       # TODO: find in 16bf items sheet
-  wand_of_rage: ""          # TODO: find in 16bf items sheet
-  wand_of_glue: ""          # TODO: find in 16bf items sheet
-  wand_of_dragon_farts: ""  # TODO: find in 16bf items sheet
-  wand_of_yo_mama: ""       # TODO: find in 16bf items sheet
+  # Wands (50-54: colored gem wands)
+  wand_of_fireball: "52"      # red-gem wand
+  wand_of_lightning: "184"     # wand variant
+  wand_of_confusion: "54"     # blue-gem wand
+  wand_of_slow: "50"          # plain wooden wand
+  wand_of_teleportation: "185" # ornate gold wand
+  wand_of_portals: "189"       # blue-gem wand
+  wand_of_rage: "53"          # red-gem wand
+  wand_of_glue: "186"          # plain wooden wand
+  wand_of_dragon_farts: "51"  # ornate gold wand
+  wand_of_yo_mama: "187"       # wand variant
 
-  # Rings
-  ring_of_protection: ""    # TODO: find in 16bf items sheet
-  ring_of_regeneration: ""  # TODO: find in 16bf items sheet
-  ring_of_resistance: ""    # TODO: find in 16bf items sheet
-  ring_of_strength: ""      # TODO: find in 16bf items sheet
-  ring_of_dexterity: ""     # TODO: find in 16bf items sheet
-  ring_of_constitution: ""  # TODO: find in 16bf items sheet
-  ring_of_might: ""         # TODO: find in 16bf items sheet
-  ring_of_hummingbird: ""   # TODO: find in 16bf items sheet
-  ring_of_teleportation: "" # TODO: find in 16bf items sheet
-  ring_of_invisibility: ""  # TODO: find in 16bf items sheet
-  ring_of_speed: ""         # TODO: find in 16bf items sheet
-  ring_of_luck: ""          # TODO: find in 16bf items sheet
-  ring_of_wizardry: ""      # TODO: find in 16bf items sheet
-  ring_of_clarity: ""       # TODO: find in 16bf items sheet
-  ring_of_free_action: ""   # TODO: find in 16bf items sheet
-  ring_of_searching: ""     # TODO: find in 16bf items sheet
+  # Rings (76-80: small ring sprites)
+  ring_of_protection: "76"
+  ring_of_regeneration: "77"
+  ring_of_resistance: "78"
+  ring_of_strength: "79"
+  ring_of_dexterity: "80"
+  ring_of_constitution: "76"
+  ring_of_might: "79"
+  ring_of_hummingbird: "77"
+  ring_of_teleportation: "78"
+  ring_of_invisibility: "76"
+  ring_of_speed: "81"
+  ring_of_luck: "80"
+  ring_of_wizardry: "78"
+  ring_of_clarity: "82"
+  ring_of_free_action: "84"
+  ring_of_searching: "83"
 
-  # Scrolls
-  scroll_of_identify: ""    # TODO: find in 16bf items sheet
-  scroll_of_magic_map: ""   # TODO: find in 16bf items sheet
-  scroll_of_enchant: ""     # TODO: find in 16bf items sheet
-  scroll_of_fire: ""        # TODO: find in 16bf items sheet
-  scroll_of_teleport: ""    # TODO: find in 16bf items sheet
-  scroll_of_curse: ""       # TODO: find in 16bf items sheet
+  # Scrolls (45-49: rolled parchment sprites)
+  scroll_of_identify: "136"
+  scroll_of_magic_map: "136"
+  scroll_of_enchant: "136"
+  scroll_of_fire: "136"
+  scroll_of_teleport: "136"
+  scroll_of_curse: "136"
+
+  # Mystery sprites for unidentified items
+  # Black bottle silhouettes for unidentified potions (3 variants)
+  unknown_potion_a: "36"
+  unknown_potion_b: "37"
+  unknown_potion_c: "38"
+  # Plain wooden wand for unidentified wands
+  unknown_wand: "50"
+  # Single rune scroll sprite — all scrolls share one sprite until identified
+  rune_scroll: "45"
+  # Ring material sprites 76-80 are already present as ring_of_protection, etc.
+  # No separate mystery keys needed — AppearancePool cycles through sprite numbers directly.

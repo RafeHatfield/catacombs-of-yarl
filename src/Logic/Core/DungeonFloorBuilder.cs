@@ -3,6 +3,7 @@ using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
 using FloorItemPool = System.Collections.Generic.IReadOnlyList<CatacombsOfYarl.Logic.Content.FloorItemPoolEntry>;
+using IdentifiableItemDef = (string id, CatacombsOfYarl.Logic.Content.ItemCategory category);
 
 namespace CatacombsOfYarl.Logic.Core;
 
@@ -40,6 +41,13 @@ public sealed class DungeonFloorBuilder
     private readonly FloorItemPool _floorItemPool;
     private readonly SpellItemFactory? _spellItemFactory;
 
+    /// <summary>
+    /// All identifiable item definitions (potions, scrolls, wands, rings) for this run.
+    /// Used by AppearancePool construction at the start of each run.
+    /// Populated from ConsumableFactory and SpellItemFactory if provided to the constructor.
+    /// </summary>
+    private readonly List<IdentifiableItemDef> _identifiableItems;
+
     public DungeonFloorBuilder(
         LevelTemplateRegistry templates,
         MonsterFactory monsterFactory,
@@ -54,6 +62,35 @@ public sealed class DungeonFloorBuilder
         _consumableFactory = consumableFactory;
         _floorItemPool = floorItemPool ?? [];
         _spellItemFactory = spellItemFactory;
+
+        // Collect identifiable item types for AppearancePool construction.
+        // Potions come from ConsumableFactory; scrolls/wands come from SpellItemFactory.
+        _identifiableItems = BuildIdentifiableItemList(consumableFactory, spellItemFactory);
+    }
+
+    private static List<IdentifiableItemDef> BuildIdentifiableItemList(
+        ConsumableFactory consumableFactory, SpellItemFactory? spellItemFactory)
+    {
+        var list = new List<IdentifiableItemDef>();
+
+        foreach (var id in consumableFactory.AvailableIds)
+        {
+            var def = consumableFactory.GetDefinition(id);
+            if (def != null && def.Category != ItemCategory.Other)
+                list.Add((id, def.Category));
+        }
+
+        if (spellItemFactory != null)
+        {
+            foreach (var id in spellItemFactory.AvailableIds)
+            {
+                var def = spellItemFactory.GetDefinition(id);
+                if (def != null && def.Category != ItemCategory.Other)
+                    list.Add((id, def.Category));
+            }
+        }
+
+        return list;
     }
 
     /// <summary>
@@ -62,9 +99,17 @@ public sealed class DungeonFloorBuilder
     /// If existingPlayer is non-null, carries HP/equipment/inventory forward via PlayerCarryForward.
     /// If null, this is the start of a new run — no carry-forward needed.
     ///
+    /// identificationRegistry and appearancePool:
+    ///   - Null = new run: creates fresh instances from run seed.
+    ///   - Non-null = floor transition: passes the existing instances through unchanged.
+    ///     Registry and pool are NOT reset between floors — only reset on new game.
+    ///
     /// The returned state has IsDungeonMode=true and StairDown set (or null if no stair was placed).
     /// </summary>
-    public GameState Build(int depth, SeededRandom rng, Entity? existingPlayer = null)
+    public GameState Build(int depth, SeededRandom rng, Entity? existingPlayer = null,
+        IdentificationRegistry? identificationRegistry = null,
+        AppearancePool? appearancePool = null,
+        Difficulty difficulty = Difficulty.Medium)
     {
         // Resolve per-depth override (null = use defaults for everything)
         var levelOverride = _templates.GetLevelOverride(depth);
@@ -122,6 +167,13 @@ public sealed class DungeonFloorBuilder
         player.Y = generatedMap.PlayerSpawn.Y;
         generatedMap.Map.RegisterEntity(player);
 
+        // Create identification registry and pool BEFORE FillRooms so items placed during
+        // floor generation receive correct pre-identification decisions.
+        // Floor transitions pass existing instances through unchanged (registry persists across floors).
+        // New runs create fresh instances from the run seed.
+        var finalRegistry = identificationRegistry ?? new IdentificationRegistry();
+        var finalPool = appearancePool ?? new AppearancePool(_identifiableItems, rng.Seed);
+
         // Place entities (monsters + items)
         var allMonsters = new List<Entity>();
         var allFloorItems = new List<Entity>();
@@ -157,7 +209,9 @@ public sealed class DungeonFloorBuilder
                     roomEtpMax: roomEtpMax,
                     allowSpike: allowSpike,
                     items: _itemFactory, floorItemPool: _floorItemPool,
-                    spellItems: _spellItemFactory);
+                    spellItems: _spellItemFactory,
+                    identRegistry: finalRegistry, appearancePool: finalPool,
+                    difficulty: difficulty);
 
                 foreach (var entity in filled)
                     if (entity.BlocksMovement)
@@ -175,7 +229,9 @@ public sealed class DungeonFloorBuilder
                 roomEtpMax: roomEtpMax,
                 allowSpike: allowSpike,
                 items: _itemFactory, floorItemPool: _floorItemPool,
-                spellItems: _spellItemFactory);
+                spellItems: _spellItemFactory,
+                identRegistry: finalRegistry, appearancePool: finalPool,
+                difficulty: difficulty);
 
             foreach (var entity in filled)
                 if (entity.BlocksMovement)
@@ -192,6 +248,9 @@ public sealed class DungeonFloorBuilder
             IsDungeonMode = true,
             CurrentDepth = depth,
             StairDown = stairDown,
+            IdentificationRegistry = finalRegistry,
+            AppearancePool = finalPool,
+            Difficulty = difficulty,
         };
 
         // Register floor items into state

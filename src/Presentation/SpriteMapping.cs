@@ -109,12 +109,33 @@ public sealed class SpriteMapping
 
     /// <summary>
     /// Get the full resource path for an item sprite.
-    /// Returns null if no mapping exists (caller should fall back to placeholder).
+    /// Returns null if no mapping exists or the value is empty (caller falls back to placeholder).
+    ///
+    /// Path-based (UF, ItemsPattern == ""):  {ItemsRoot}/{value}.png
+    /// Index-based (16bf, ItemsPattern set): value is a file number; ItemsPattern replaces {index:D2}
     /// </summary>
     public string? GetItemSpritePath(string itemTypeId)
     {
-        if (_config.Items.TryGetValue(itemTypeId, out var spriteValue))
+        if (!_config.Items.TryGetValue(itemTypeId, out var spriteValue))
+            return null;
+        if (string.IsNullOrEmpty(spriteValue))
+            return null;
+
+        if (string.IsNullOrEmpty(_config.ItemsPattern))
+        {
+            // Path-based (UF): value is a filename stem
             return $"{_config.ItemsRoot}/{spriteValue}.png";
-        return null;
+        }
+        else
+        {
+            // Index-based (16bf): value is a file number
+            if (!int.TryParse(spriteValue, out int fileNum))
+            {
+                Godot.GD.PrintErr($"[SpriteMapping] Expected integer item file number, got: '{spriteValue}' for '{itemTypeId}'");
+                return null;
+            }
+            var filename = _config.ItemsPattern.Replace("{index:D2}", fileNum.ToString("D2"));
+            return $"{_config.ItemsRoot}/{filename}";
+        }
     }
 }

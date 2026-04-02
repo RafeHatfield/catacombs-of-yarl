@@ -28,6 +28,13 @@ public sealed class ItemSpriteManager
     private readonly IMapRenderer _renderer;
     private readonly Dictionary<int, Sprite2D> _sprites = new();
 
+    /// <summary>
+    /// Cached reference to the current game state. Used by ResolveItemSpritePath to look up
+    /// identification state when creating sprites. Updated on Initialize() and when sprites
+    /// are refreshed after identification events.
+    /// </summary>
+    private GameState? _lastState;
+
     public ItemSpriteManager(Node2D itemLayerNode, SpriteMapping spriteMapping, IMapRenderer renderer)
     {
         _parent = itemLayerNode;
@@ -44,6 +51,7 @@ public sealed class ItemSpriteManager
     /// </summary>
     public void Initialize(GameState state)
     {
+        _lastState = state;
         foreach (var item in state.FloorItems)
             CreateSprite(item);
     }
@@ -111,23 +119,41 @@ public sealed class ItemSpriteManager
     /// <summary>
     /// Resolve the sprite resource path for an item entity.
     ///
-    /// Primary: ItemTag.TypeId lookup (set by ItemFactory for all YAML-created items).
-    /// Fallback: name-based key derivation for items without ItemTag — fires GD.PrintErr
-    /// so any gaps in ItemFactory coverage surface immediately.
+    /// Identification-aware: unidentified potions use black bottle sprites, unidentified wands
+    /// use the plain wand sprite, unidentified scrolls use the rune scroll sprite, and
+    /// unidentified rings use material sprites (cycling 76-80).
+    ///
+    /// Primary: ItemTag.TypeId → mystery sprite (unidentified) or true sprite (identified).
+    /// Fallback: name-based key derivation for items without ItemTag.
     /// </summary>
-    private string? ResolveItemSpritePath(Entity item)
+    private string? ResolveItemSpritePath(Entity item, GameState? state = null)
     {
-        // Primary: ItemTag carries the canonical YAML type ID
-        var tag = item.Get<ItemTag>();
-        if (tag != null)
-            return _spriteMapping.GetItemSpritePath(tag.TypeId);
+        var registry = state?.IdentificationRegistry;
+        var pool     = state?.AppearancePool;
 
-        // Fallback: name-based heuristic (legacy path, should not fire in normal gameplay)
-        var nameKey = item.Name.ToLowerInvariant().Replace(' ', '_');
-        var path = _spriteMapping.GetItemSpritePath(nameKey);
-        GD.PrintErr($"[ItemSpriteManager] Item '{item.Name}' (id={item.Id}) has no ItemTag — falling back to name-derived key '{nameKey}'. Check ItemFactory.");
+        // Use ItemDisplay helper which handles identification state
+        var spriteKey = ItemDisplay.GetSpriteKey(item, registry, pool);
+        var path = _spriteMapping.GetItemSpritePath(spriteKey);
+
+        // If mystery sprite key doesn't resolve (tileset might not have it), fall back to TypeId
+        if (path == null)
+        {
+            var tag = item.Get<ItemTag>();
+            if (tag != null)
+                path = _spriteMapping.GetItemSpritePath(tag.TypeId);
+        }
+
+        if (path == null)
+        {
+            GD.PrintErr($"[ItemSpriteManager] Item '{item.Name}' (id={item.Id}) has no sprite — check tileset YAML.");
+        }
+
         return path;
     }
+
+    /// <summary>Legacy overload used by CreateSprite (called before state is always available).</summary>
+    private string? ResolveItemSpritePath(Entity item)
+        => ResolveItemSpritePath(item, _lastState);
 
     /// <summary>
     /// Fallback tint for the selection diamond placeholder.
