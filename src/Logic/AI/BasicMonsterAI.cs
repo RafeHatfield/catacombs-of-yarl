@@ -32,43 +32,7 @@ public static class BasicMonsterAI
         var player = state.Player;
 
         // 2. Awareness update.
-        // Dungeon mode has per-turn FOV: only tiles currently visible to the player count as
-        // "seen by the player". The monster itself doesn't compute sight — we use the player's FOV
-        // as the shared visibility layer, which matches the prototype's map_is_in_fov check.
-        //
-        // Scenario mode (harness, tests): no FOV system, RevealAll() is called at startup.
-        // Treat every monster as perpetually alerted so scenario combat proceeds normally.
-        if (state.IsDungeonMode)
-        {
-            if (state.Map.IsVisible(monster.X, monster.Y))
-            {
-                // Monster is in the player's FOV this turn → alert/refresh
-                var alert = monster.GetOrAdd<AlertedState>();
-                alert.LastKnownPlayerX = player.X;
-                alert.LastKnownPlayerY = player.Y;
-                alert.TurnsUntilDeaggro = AlertedState.DeaggroTurns;
-            }
-            else
-            {
-                // Out of FOV — tick down the de-aggro timer if currently alerted
-                var alert = monster.Get<AlertedState>();
-                if (alert != null)
-                {
-                    alert.TurnsUntilDeaggro--;
-                    if (alert.TurnsUntilDeaggro <= 0)
-                        monster.Remove<AlertedState>(); // monster loses interest, returns to idle
-                }
-            }
-        }
-        else
-        {
-            // Scenario mode: always treat as alerted at player's current position.
-            // TurnsUntilDeaggro is irrelevant in this path — set high to avoid confusion.
-            var alert = monster.GetOrAdd<AlertedState>();
-            alert.LastKnownPlayerX = player.X;
-            alert.LastKnownPlayerY = player.Y;
-            alert.TurnsUntilDeaggro = AlertedState.DeaggroTurns;
-        }
+        UpdateAwareness(monster, player, state);
 
         // 3. Not alerted → idle.
         var alertedState = monster.Get<AlertedState>();
@@ -189,6 +153,47 @@ public static class BasicMonsterAI
     }
 
     /// <summary>
+    /// Updates the monster's AlertedState based on current FOV (dungeon mode) or always-alerted
+    /// (scenario/harness mode). Shared by all specialized AI types.
+    /// </summary>
+    internal static void UpdateAwareness(Entity monster, Entity player, GameState state)
+    {
+        // Dungeon mode has per-turn FOV: only tiles currently visible to the player count as
+        // "seen by the player". The monster itself doesn't compute sight — we use the player's FOV
+        // as the shared visibility layer, which matches the prototype's map_is_in_fov check.
+        //
+        // Scenario mode (harness, tests): no FOV system, RevealAll() is called at startup.
+        // Treat every monster as perpetually alerted so scenario combat proceeds normally.
+        if (state.IsDungeonMode)
+        {
+            if (state.Map.IsVisible(monster.X, monster.Y))
+            {
+                var alert = monster.GetOrAdd<AlertedState>();
+                alert.LastKnownPlayerX = player.X;
+                alert.LastKnownPlayerY = player.Y;
+                alert.TurnsUntilDeaggro = AlertedState.DeaggroTurns;
+            }
+            else
+            {
+                var alert = monster.Get<AlertedState>();
+                if (alert != null)
+                {
+                    alert.TurnsUntilDeaggro--;
+                    if (alert.TurnsUntilDeaggro <= 0)
+                        monster.Remove<AlertedState>();
+                }
+            }
+        }
+        else
+        {
+            var alert = monster.GetOrAdd<AlertedState>();
+            alert.LastKnownPlayerX = player.X;
+            alert.LastKnownPlayerY = player.Y;
+            alert.TurnsUntilDeaggro = AlertedState.DeaggroTurns;
+        }
+    }
+
+    /// <summary>
     /// Choose the attack target for this monster.
     ///
     /// Priority:
@@ -198,7 +203,7 @@ public static class BasicMonsterAI
     ///
     /// Returns player if no special targeting applies or if the special target is not found.
     /// </summary>
-    private static Entity ChooseTarget(Entity monster, Entity player, GameState state)
+    internal static Entity ChooseTarget(Entity monster, Entity player, GameState state)
     {
         // Taunt overrides everything — even EnragedEffect.
         var taunt = monster.Get<TauntedEffect>();
@@ -256,7 +261,7 @@ public static class BasicMonsterAI
     /// If all adjacent passable tiles are blocked or none increases distance, stay in place.
     /// Never attacks while feared (PoC-verified).
     /// </summary>
-    private static MonsterAction DecideFlee(Entity monster, Entity player, GameState state)
+    internal static MonsterAction DecideFlee(Entity monster, Entity player, GameState state)
     {
         int bestX = monster.X, bestY = monster.Y;
         // Use Manhattan consistently: both the baseline and candidate evaluations use the same metric.
@@ -293,7 +298,7 @@ public static class BasicMonsterAI
     /// Random movement for DisorientationEffect: pick a random adjacent passable tile.
     /// If the chosen direction hits a wall, no movement this turn (PoC-verified).
     /// </summary>
-    private static MonsterAction DecideRandomMove(Entity monster, GameState state)
+    internal static MonsterAction DecideRandomMove(Entity monster, GameState state)
     {
         // All 8 adjacent directions
         var dirs = new (int dx, int dy)[]

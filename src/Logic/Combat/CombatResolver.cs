@@ -45,6 +45,12 @@ public static class CombatResolver
         // FocusedEffect: +3 accuracy bonus on the attacker (buff).
         if (attacker.Get<BlindedEffect>() is { } blindedFx) toHitBonus -= blindedFx.AccuracyPenalty;
         if (attacker.Get<FocusedEffect>() is { } focusedFx) toHitBonus += focusedFx.AccuracyBonus;
+        // CrippledEffect: -ToHitPenalty on the attacker.
+        // RallyEffect: +ToHitBonus on the attacker.
+        var attackerCrippled = attacker.Get<CrippledEffect>();
+        var attackerRallied  = attacker.Get<RallyEffect>();
+        if (attackerCrippled != null) toHitBonus -= attackerCrippled.ToHitPenalty;
+        if (attackerRallied  != null) toHitBonus += attackerRallied.ToHitBonus;
 
         int attackRoll = d20 + toHitBonus;
 
@@ -55,6 +61,9 @@ public static class CombatResolver
         if (defender.Get<ShieldEffect>() is { } shieldFx) targetAc += shieldFx.AcBonus;
         if (defender.Get<ProtectionEffect>() is { } protFx) targetAc += protFx.AcBonus;
         if (defender.Get<BarkskinEffect>() is { } barkFx) targetAc += barkFx.AcBonus;
+        // CrippledEffect on defender: -AcPenalty (defender is easier to hit).
+        var defenderCrippled = defender.Get<CrippledEffect>();
+        if (defenderCrippled != null) targetAc -= defenderCrippled.AcPenalty;
 
         // Crit threshold from weapon (keen weapons crit on 19-20)
         int critThreshold = 20;
@@ -90,6 +99,9 @@ public static class CombatResolver
             // WeaknessEffect: -2 damage penalty on the attacker. Minimum 1 damage after.
             if (attacker.Get<WeaknessEffect>() is { } weaknessFx)
                 damage -= weaknessFx.DamagePenalty;
+
+            // RallyEffect: +DamageBonus on the attacker.
+            if (attackerRallied != null) damage += attackerRallied.DamageBonus;
 
             // Apply damage type resistance/vulnerability
             string? dmgType = weapon?.DamageType;

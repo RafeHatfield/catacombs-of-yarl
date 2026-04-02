@@ -18,9 +18,10 @@ public static class MonsterAI
 
         return aiType switch
         {
-            "basic" => BasicMonsterAI.Decide(monster, state),
-            // Phase 2: "orc_chieftain" => ControllerAI.Decide(monster, state),
-            // Phase 2: "skirmisher"    => SkirmisherAI.Decide(monster, state),
+            "basic"          => BasicMonsterAI.Decide(monster, state),
+            "skirmisher"     => SkirmisherAI.Decide(monster, state),
+            "orc_shaman"     => OrcShamanAI.Decide(monster, state),
+            "orc_chieftain"  => OrcChieftainAI.Decide(monster, state),
             _ => BasicMonsterAI.Decide(monster, state), // unknown type → safe fallback
         };
     }

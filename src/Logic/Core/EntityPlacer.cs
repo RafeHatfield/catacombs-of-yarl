@@ -25,6 +25,10 @@ public static class EntityPlacer
     /// Monsters are placed in rooms other than the player room.
     /// Items are placed in any room.
     /// Returns all entities created.
+    ///
+    /// spellItems: optional SpellItemFactory for resolving scroll and wand item IDs.
+    /// Resolution order for items: SpellItemFactory.CreateScroll → SpellItemFactory.CreateWand
+    /// → ConsumableFactory. Matches FillRooms and GameStateFactory.FromScenario patterns.
     /// </summary>
     public static List<Entity> PlaceGuaranteedSpawns(
         GeneratedMap map,
@@ -34,7 +38,8 @@ public static class EntityPlacer
         ConsumableFactory consumables,
         SeededRandom rng,
         int depth,
-        EntityIdAllocator ids)
+        EntityIdAllocator ids,
+        SpellItemFactory? spellItems = null)
     {
         var placed = new List<Entity>();
         var occupied = new HashSet<(int, int)>();
@@ -80,7 +85,9 @@ public static class EntityPlacer
             }
         }
 
-        // Place guaranteed consumable items
+        // Place guaranteed consumable items (potions, scrolls, wands)
+        // Resolution order mirrors FillRooms: SpellItemFactory scroll → wand → ConsumableFactory.
+        // This allows guaranteed_spawns.items to include scroll/wand IDs alongside potion IDs.
         foreach (var entry in spawns.Items)
         {
             int count = entry.CountMin == entry.CountMax
@@ -93,7 +100,18 @@ public static class EntityPlacer
                 var pos = FindFreePosition(map.Map, room, occupied, rng);
                 if (pos == null) continue;
 
-                var entity = consumables.Create(entry.Type);
+                Entity? entity = null;
+
+                // Try SpellItemFactory first (scrolls and wands)
+                if (spellItems != null)
+                {
+                    entity = spellItems.CreateScroll(entry.Type)
+                        ?? spellItems.CreateWand(entry.Type, rng, depth);
+                }
+
+                // Fall back to ConsumableFactory (potions)
+                entity ??= consumables.Create(entry.Type);
+
                 if (entity == null) continue;
 
                 var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
@@ -235,7 +253,9 @@ public static class EntityPlacer
                 var pos = FindFreePosition(map.Map, room, occupied, rng);
                 if (pos == null) break;
 
-                var entity = monsters.Create(monsterId, pos.Value.X, pos.Value.Y, depth, rng);
+                // Resolve orc variants based on depth — "orc" routes to a depth-appropriate subtype.
+                string resolvedId = monsterId == "orc" ? Balance.OrcVariantResolver.Resolve(depth, rng) : monsterId;
+                var entity = monsters.Create(resolvedId, pos.Value.X, pos.Value.Y, depth, rng);
                 if (entity == null) continue;
 
                 var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);

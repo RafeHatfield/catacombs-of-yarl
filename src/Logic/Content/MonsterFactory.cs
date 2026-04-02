@@ -112,6 +112,20 @@ public sealed class MonsterFactory
             InventorySize = def.InventorySize,
         });
 
+        // Specialized AI state components — attached based on ai_type.
+        switch (def.AiType)
+        {
+            case "skirmisher":
+                entity.Add(new SkirmisherComponent());
+                break;
+            case "orc_shaman":
+                entity.Add(new OrcShamanComponent());
+                break;
+            case "orc_chieftain":
+                entity.Add(new OrcChieftainComponent());
+                break;
+        }
+
         // Inventory for monsters that can seek and carry items
         if (def.CanSeekItems && def.InventorySize > 0)
             entity.Add(new Inventory());

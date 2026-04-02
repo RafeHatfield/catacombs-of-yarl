@@ -68,6 +68,93 @@ monsters:
     etp_base: 45
     tags: ["corporeal_flesh", "humanoid", "living", "brute"]
 
+  orc_scout:
+    name: "Orc Scout"
+    extends: orc
+    spawn_weight: 0
+    stats:
+      hp: 15
+      xp: 25
+    seek_distance: 8
+    inventory_size: 3
+    etp_base: 21
+
+  orc_veteran:
+    name: "Orc Veteran"
+    extends: orc
+    spawn_weight: 0
+    speed_bonus: 0.15
+    stats:
+      hp: 25
+      power: 1
+      xp: 50
+    inventory_size: 6
+    etp_base: 41
+
+  orc_skirmisher:
+    name: "Orc Skirmisher"
+    spawn_weight: 0
+    stats:
+      hp: 24
+      power: 0
+      defense: 0
+      xp: 45
+      damage_min: 3
+      damage_max: 5
+      strength: 12
+      dexterity: 15
+      constitution: 10
+      accuracy: 4
+      evasion: 3
+    char: "k"
+    color: [180, 140, 100]
+    ai_type: "skirmisher"
+    render_order: "actor"
+    blocks: true
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "mobile"]
+    etp_base: 28
+    can_seek_items: false
+    speed_bonus: 0.20
+
+  orc_shaman:
+    name: "Orc Shaman"
+    extends: orc
+    spawn_weight: 0
+    stats:
+      hp: 24
+      power: 1
+      xp: 60
+      damage_min: 3
+      damage_max: 5
+      strength: 10
+      dexterity: 12
+      accuracy: 3
+      evasion: 1
+    char: "S"
+    color: [100, 80, 120]
+    ai_type: "orc_shaman"
+    inventory_size: 6
+    seek_distance: 6
+    etp_base: 34
+    can_seek_items: false
+
+  orc_chieftain:
+    name: "Orc Chieftain"
+    extends: orc
+    spawn_weight: 0
+    speed_bonus: 0.25
+    stats:
+      hp: 35
+      power: 2
+      xp: 75
+    char: "O"
+    color: [127, 63, 63]
+    ai_type: "orc_chieftain"
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 57
+
   zombie:
     name: "Zombie"
     min_depth: 10
