@@ -24,10 +24,10 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Tier 1 — Core Mechanics (needed soon)
 | Plan | Status | Description |
 |------|--------|-------------|
-| [plan_identification_system.md](plan_identification_system.md) | [ ] | Identified/unidentified items, texture descriptors, mystery sprites, per-run aliases, difficulty tiers |
+| [plan_identification_system.md](plan_identification_system.md) | [x] | Identified/unidentified items, texture descriptors, mystery sprites, per-run aliases, difficulty tiers |
 | [plan_monster_knowledge.md](plan_monster_knowledge.md) | [ ] | Progressive monster knowledge (3 tiers), long-press inspect, item inspect panel |
 | [plan_status_effects.md](plan_status_effects.md) | [~] | 30+ effects: poison, blind, sleep, entangle, burning, silence, shield, etc. — plan complete |
-| [plan_player_progression.md](plan_player_progression.md) | [ ] | XP, level-up, stat gains, depth boons (one per depth, fixed) |
+| [plan_player_progression.md](plan_player_progression.md) | [ ] | Depth boons only — no XP; fixed boon table depths 1-5; 3-choose-1 UI deferred |
 | [plan_traps_chests_features.md](plan_traps_chests_features.md) | [ ] | 8 trap types, chests (normal/trapped/locked), signs, murals |
 
 ### Tier 2 — Combat Depth
@@ -48,6 +48,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Active Implementation Plans
 | Plan | Status | Description |
 |------|--------|-------------|
+| [plan_monster_expansion.md](plan_monster_expansion.md) | [ ] | 28 monsters in 4 waves: orc variants, new factions (troll/skeleton/spiders), mid-game, deep/bosses |
 | [slime_monsters.md](slime_monsters.md) | [x] | slime + large_slime: split-under-pressure, corrosion, weapon materials |
 | [depth_scaling_weights.md](depth_scaling_weights.md) | [x] | from_dungeon_level depth weights, EncounterBudget wiring |
 
