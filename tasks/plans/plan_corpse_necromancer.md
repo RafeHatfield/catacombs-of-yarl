@@ -106,7 +106,7 @@ necromancer:
 
 ### Necromancer AI Decision Priority (per turn)
 
-1. If raise off cooldown AND FRESH corpse within 5 tiles → **raise it**
+1. If raise off cooldown AND FRESH corpse within 5 tiles AND corpse tile not occupied by a blocking entity → **raise it**
 2. Else if FRESH corpse exists but out of range → **pathfind toward it** (respecting danger radius)
 3. Else if closer than 2 tiles to player → **retreat** (maximize distance)
 4. Else → **basic melee AI** (attack if adjacent, approach if in FOV)
@@ -117,26 +117,8 @@ Extends necromancer. Same stats, same AI priority. Differences:
 
 - `ai_type: "plague_necromancer"`
 - `color: [100, 180, 80]` (sickly green)
-- Raises `plague_zombie` instead of `skeleton`/`zombie`
-- `summon_monster_id: "plague_zombie"`
-
-### Plague Zombie (PoC entities.yaml)
-
-Extends zombie:
-
-```yaml
-plague_zombie:
-  extends: zombie
-  stats:
-    hp: 30
-    damage_min: 4
-    damage_max: 7
-    xp: 45
-  char: "Z"
-  color: [100, 180, 80]
-  tags: ["corporeal_flesh", "undead", "mindless", "low_undead", "plague_carrier", "zombie"]
-  etp_base: 40
-```
+- Post-raise step adds `plague_carrier` tag + stat boost to the raised entity (NOT a separate plague_zombie created from YAML)
+- The in-place raise applies standard raise-dead modifiers first, then the plague necromancer applies plague-specific augmentation
 
 ### Raise Dead Scroll
 
@@ -149,30 +131,38 @@ Already defined in `config/entities.yaml` at `scroll_of_raise_dead` with `weight
 ### Corpse as transformed entity (not new entity)
 
 The dead monster entity keeps its ID. Components are stripped and replaced. This means:
-- `state.Monsters` still contains the entity (fighter is dead)
-- A new collection `state.Corpses` tracks corpse entities separately
-- The entity is removed from `state.Monsters` on transformation and added to `state.Corpses`
-- `AliveMonsters` filter already excludes dead fighters, so no change needed there
+- `state.Monsters` still contains the entity (dead, no Fighter)
+- A new collection `state.Corpses` tracks corpse entities as a query convenience
+- The entity stays in BOTH `state.Monsters` and `state.Corpses` (dual membership)
+- `AliveMonsters` filter already excludes dead fighters, so no change needed
+- `IsGameOver`, `PlayerWon`, `UpdateKnowledge` all work unchanged because the entity never leaves `state.Monsters`
+- `state.Corpses` is a convenience list for necromancer AI and spell targeting, not a transfer destination
 
 ### Where corpse creation hooks in
 
 Every `DeathEvent` emission in `TurnController` is followed by `DropMonsterLoot`. Corpse creation happens after loot drop — a new `TransformToCorpse` method that:
-1. Strips `Fighter`, `AiComponent`, `AlertedState`, all status effects, `SplitTracker`, `CorrosionComponent`
-2. Adds `CorpseComponent` with FRESH state
-3. Sets `BlocksMovement = false`
-4. Moves entity from `state.Monsters` to `state.Corpses`
+1. Checks `MonsterDefinition.LeavesCorpse` — if false, skip corpse creation entirely (e.g., slimes)
+2. Strips `Fighter`, `AiComponent`, `AlertedState`, all status effects (iterate `GetAllComponents()`, remove anything implementing `IStatusEffect`)
+3. Preserves `SpeciesTag` (needed by UpdateKnowledge for death event resolution, also useful as redundant identity alongside `CorpseComponent.OriginalMonsterId`)
+4. Adds `CorpseComponent` with state = `RaisedFromCorpseTag` present ? `Spent` : `Fresh`
+5. Sets `BlocksMovement = false`
+6. Adds entity to `state.Corpses` (entity remains in `state.Monsters` — dual membership)
+7. Emits `CorpseCreatedEvent`
 
-### Raised entity creation
+### Raised entity: in-place transform (not new entity)
 
-When a corpse is raised (by necromancer or player scroll):
-1. Look up `OriginalMonsterId` in `MonsterFactory`
-2. Create a new entity from that definition (fresh stats)
-3. Apply raise-dead stat modifiers
-4. Place at corpse tile position
-5. Set faction (NEUTRAL for player, raiser's faction for AI)
-6. Mark corpse as CONSUMED (or SPENT if lineage applies)
-7. Add raised entity to `state.Monsters`
-8. Add `RaisedFromCorpse` tag component for lineage tracking
+When a corpse is raised (by necromancer or player scroll), the corpse entity is transformed back into a living monster IN-PLACE. No new entity is created:
+1. Look up base stats from content registry using `CorpseComponent.OriginalMonsterId`
+2. Apply raise-dead stat modifiers to those base stats
+3. Create a new `Fighter` with modified stats and attach to the EXISTING corpse entity
+4. Attach a new `AiComponent` (basic zombie AI)
+5. Set `BlocksMovement = true`
+6. Set faction (NEUTRAL for player-raised, raiser's faction for necromancer-raised)
+7. Remove `CorpseComponent`, add `RaisedFromCorpseTag` with `CorpseId`
+8. Move entity from `state.Corpses` back to active monster tracking (entity already in `state.Monsters` via dual membership, just remove from Corpses)
+9. For plague necromancer: post-raise step adds `plague_carrier` tag + stat boost to the raised entity — NOT a separate `plague_zombie` created from YAML
+
+This eliminates the need for `GameState.MonsterFactory` entirely — no factory reference is needed since we transform in-place using content registry lookups.
 
 ### NecromancerAiComponent
 
@@ -187,11 +177,10 @@ public sealed class NecromancerAiComponent : IComponent
     public int PreferredDistanceMin { get; set; } = 4;
     public int PreferredDistanceMax { get; set; } = 7;
     public int CooldownRemaining { get; set; } = 0;
-    public string SummonMonsterId { get; set; } = "zombie";
 }
 ```
 
-Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necromancer"`. YAML fields on `MonsterDefinition` drive the values.
+Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necromancer"`. YAML fields on `MonsterDefinition` drive the values. Note: `SummonMonsterId` is removed — the raise-dead system transforms corpses in-place using `CorpseComponent.OriginalMonsterId`, not a separate monster type. The plague necromancer's post-raise augmentation is handled by AI-type-specific logic, not a YAML reference.
 
 ### Floor descent cleanup
 
@@ -211,9 +200,16 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
   - `src/Logic/ECS/CorpseComponent.cs` — component with all fields listed above
   - `src/Logic/ECS/CorpseState.cs` — enum (FRESH, SPENT, CONSUMED)
 - **Files to modify:** none
+- **Implementation notes:**
+  - Add a convenience property to CorpseComponent:
+    ```csharp
+    public bool CanBeRaised => State == CorpseState.Fresh && RaiseCount < MaxRaises;
+    ```
+    Single predicate used by both necromancer AI and spell resolver.
 - **Acceptance criteria:**
   - `CorpseComponent` implements `IComponent`
   - All fields from PoC spec present with correct types and defaults
+  - `CanBeRaised` returns true only when state is Fresh AND RaiseCount < MaxRaises
   - `CorpseState` has exactly three values: Fresh, Spent, Consumed
   - Compiles with `dotnet build src/Logic/`
 
@@ -248,28 +244,32 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 - **Status:** pending
 - **Layer:** logic
 - **Type:** system
-- **Dependencies:** TASK-001, TASK-002, TASK-003
+- **Dependencies:** TASK-001, TASK-002, TASK-003, TASK-008
 - **Files to modify:**
   - `src/Logic/Core/TurnController.cs` — add `TransformToCorpse` method, call after `DropMonsterLoot` at every `DeathEvent` site for monsters (not player death)
-  - `src/Logic/Core/TurnEvent.cs` — add `CorpseCreatedEvent` (for presentation layer toast/sprite)
 - **Implementation notes:**
   - Three death sites in TurnController emit `DeathEvent` for monsters: player-kills-monster (line ~419), split-fallback (line ~448), monster-kills-player is NOT a corpse (player doesn't become a corpse)
   - `TransformToCorpse(state, deadEntity, killerEntity, events)`:
-    1. Get `SpeciesTag` to read `OriginalMonsterId`
-    2. Strip components: `Fighter`, `AiComponent`, `AlertedState`, `SplitTracker`, `CorrosionComponent`, `SpeedBonusTracker`, `DamageModifiers`, all status effects (iterate `GetAllComponents()`, remove anything implementing `IStatusEffect`)
-    3. Add `CorpseComponent` with state = `RaisedFromCorpseTag` present ? `Spent` : `Fresh`
-    4. Set `BlocksMovement = false`
-    5. Remove from `state.Monsters`, add to `state.Corpses`
-    6. Emit `CorpseCreatedEvent`
+    1. Check `MonsterDefinition.LeavesCorpse` (via content registry lookup using SpeciesTag) — if false, skip corpse creation entirely. Acid slimes should NOT leave raisable corpses.
+    2. Get `SpeciesTag` to read `OriginalMonsterId`
+    3. Strip components: `Fighter`, `AiComponent`, `AlertedState`, `SplitTracker`, `CorrosionComponent`, `SpeedBonusTracker`, `DamageModifiers`, all status effects (iterate `GetAllComponents()`, remove anything implementing `IStatusEffect`)
+    4. Preserve `SpeciesTag` — do NOT strip it. Needed by UpdateKnowledge for death event resolution and useful as redundant identity alongside `CorpseComponent.OriginalMonsterId`.
+    5. Add `CorpseComponent` with state = `RaisedFromCorpseTag` present ? `Spent` : `Fresh`
+    6. Set `BlocksMovement = false`
+    7. Add entity to `state.Corpses` (entity remains in `state.Monsters` — dual membership)
+    8. Emit `CorpseCreatedEvent`
   - The player entity is never transformed (only monsters)
   - Guard: don't transform if entity already has `CorpseComponent` (defensive)
+  - Add `leaves_corpse` field to `MonsterDefinition` (default true). Set false for slimes in YAML.
 - **Acceptance criteria:**
   - After a monster dies, `state.Corpses` contains the entity
-  - After a monster dies, `state.Monsters` still contains the entity (for backward compat with `AliveMonsters` filter), OR `state.Monsters` no longer contains it if we move it out — **decision: move it out**. `AliveMonsters` won't miss it since it was already dead.
+  - After a monster dies, `state.Monsters` ALSO still contains the entity (dual membership)
   - Dead entity has `CorpseComponent` with state = `Fresh`
   - Dead entity has `BlocksMovement = false`
   - Dead entity does NOT have `Fighter` or `AiComponent`
+  - Dead entity DOES still have `SpeciesTag`
   - `CorpseCreatedEvent` emitted with correct fields
+  - Monsters with `leaves_corpse: false` do NOT create corpses
   - Existing combat tests still pass
 
 ### TASK-005: Floor descent clears corpses
@@ -297,16 +297,18 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
   - `MonsterDeath_CreatesCorpseWithFreshState` — kill a monster, verify `CorpseComponent` exists with `State = Fresh`
   - `MonsterDeath_CorpseIsNonBlocking` — verify `BlocksMovement = false`
   - `MonsterDeath_CorpseStripsComponents` — verify no `Fighter`, no `AiComponent`, no `AlertedState`
+  - `MonsterDeath_CorpsePreservesSpeciesTag` — verify `SpeciesTag` is still present after transformation
   - `MonsterDeath_CorpsePreservesPosition` — corpse at same (x, y) as death location
   - `MonsterDeath_CorpseTracksOriginalMonsterId` — `OriginalMonsterId` matches `SpeciesTag`
   - `MonsterDeath_CorpseTracksDeathTurn` — `DeathTurn` matches `state.TurnCount`
   - `MonsterDeath_CorpseIdFormat` — `CorpseId` matches `"corpse_{x}_{y}_{turn}"`
   - `MonsterDeath_CorpseInStateCorpsesList` — entity is in `state.Corpses`
-  - `MonsterDeath_CorpseNotInMonstersList` — entity removed from `state.Monsters`
+  - `MonsterDeath_CorpseStillInMonstersList` — entity remains in `state.Monsters` (dual membership)
   - `MonsterDeath_EmitsCorpseCreatedEvent` — event in turn result
   - `RaisedZombieDeath_CreatesSPENTCorpse` — entity with `RaisedFromCorpseTag` dies → SPENT state
   - `FloorDescent_ClearsCorpses` — descend, verify `state.Corpses.Count == 0`
   - `PlayerDeath_NoCorpseCreated` — player dies, no `CorpseComponent` added
+  - `SlimeDeath_NoCorpseCreated` — slime with `leaves_corpse: false` dies, no corpse
 - **Acceptance criteria:**
   - All tests pass with `dotnet test --filter "Category!=Slow"`
   - Tests use deterministic seed (1337)
@@ -316,7 +318,7 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 
 ## Phase 2 — Raise Dead Spell (Logic Layer)
 
-### TASK-007: SpellResolver.ResolveRaiseDead implementation
+### TASK-007: RaiseDeadResolver — in-place corpse transformation
 
 - **Status:** pending
 - **Layer:** logic
@@ -325,34 +327,34 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 - **Files to modify:**
   - `src/Logic/Combat/SpellResolver.cs` — replace stub `ResolveRaiseDead` with real implementation
 - **Files to create:**
-  - `src/Logic/Combat/RaiseDeadResolver.cs` — extracted helper for raise-dead stat calculation (shared by player scroll and necromancer AI)
+  - `src/Logic/Combat/RaiseDeadResolver.cs` — extracted helper for raise-dead in-place transformation (shared by player scroll and necromancer AI)
 - **Implementation:**
   - Validate target tile (targetX, targetY) is within `spell.Range` (Euclidean) of caster
-  - Find corpse at target tile: `state.Corpses.FirstOrDefault(c => c.X == targetX && c.Y == targetY && c.Get<CorpseComponent>()?.State == CorpseState.Fresh)`
-  - If no FRESH corpse → return SpellEvent with `Success = false`
-  - Create raised entity via `RaiseDeadResolver.Raise(corpse, casterFaction, state, monsterFactory)`
-  - `RaiseDeadResolver.Raise`:
+  - Find corpse at target tile: `state.Corpses.FirstOrDefault(c => c.X == targetX && c.Y == targetY && c.Get<CorpseComponent>()?.CanBeRaised == true)`
+  - If no raisable corpse → return SpellEvent with `Success = false`
+  - Transform corpse in-place via `RaiseDeadResolver.Raise(corpse, casterFaction, state, contentRegistry)`:
     1. Get `CorpseComponent.OriginalMonsterId`
-    2. Create entity from `MonsterFactory.Create(monsterId, corpse.X, corpse.Y)`
-    3. Apply stat modifiers (HP ×2, DmgMin ×0.5 min 1, DmgMax ×0.5 min 1, STR ×0.75 min 6, DEX ×0.5 min 6, CON ×1.5 max 18, Defense unchanged)
-    4. Set faction on `AiComponent`
-    5. Add `RaisedFromCorpseTag` with `CorpseId`
-    6. Add to `state.Monsters`
-  - Mark corpse: increment `RaiseCount`, set `State = Consumed` if `RaiseCount >= MaxRaises`
+    2. Look up base stats from content registry using `OriginalMonsterId`
+    3. Apply raise-dead stat modifiers to base stats (HP ×2, DmgMin ×0.5 min 1, DmgMax ×0.5 min 1, STR ×0.75 min 6, DEX ×0.5 min 6, CON ×1.5 max 18, Defense unchanged)
+    4. Create a new `Fighter` with modified stats and attach to the EXISTING corpse entity
+    5. Attach a new `AiComponent` (basic zombie AI)
+    6. Set `BlocksMovement = true`
+    7. Set faction on `AiComponent` (NEUTRAL for player, raiser's faction for AI)
+    8. Remove `CorpseComponent`, add `RaisedFromCorpseTag` with `CorpseId`
+    9. Remove entity from `state.Corpses` (entity already in `state.Monsters` via dual membership)
+  - For plague necromancer: post-raise step adds `plague_carrier` tag + stat boost. This is AI-type-specific logic in the caller, NOT a separate monster type from YAML.
+  - Mark corpse raise count: increment `RaiseCount` before removing `CorpseComponent` (stored in `RaisedFromCorpseTag` for lineage)
   - Emit `RaiseDeadEvent` (new TurnEvent subclass)
-- **Signature concern:** `SpellResolver.Resolve` currently doesn't receive `MonsterFactory`. Either:
-  - (a) Add `MonsterFactory?` parameter to `Resolve` — cascading signature change
-  - (b) Pass it via `GameState` — add `GameState.MonsterFactory` property
-  - **Decision: (b)** — add `MonsterFactory?` to `GameState` since it's already passed to `ProcessTurn` and needed in multiple places. Set it at the start of `ProcessTurn`.
 - **Acceptance criteria:**
-  - Casting raise_dead on a tile with a FRESH corpse creates a new monster entity
-  - The raised monster has correct stat modifiers applied
+  - Casting raise_dead on a tile with a FRESH corpse transforms the corpse entity into a living monster
+  - The raised monster has correct stat modifiers applied to the ORIGINAL monster's base stats
   - The raised monster's faction is NEUTRAL when cast by player
-  - The corpse's state transitions to CONSUMED
+  - The corpse entity no longer has `CorpseComponent` and is removed from `state.Corpses`
+  - The entity retains its original ID (same entity, transformed in-place)
   - Casting on an empty tile or SPENT/CONSUMED corpse returns `Success = false`
   - Range validation works (>5 tiles fails)
 
-### TASK-008: RaiseDeadEvent TurnEvent
+### TASK-008: Event definitions (RaiseDeadEvent, CorpseCreatedEvent)
 
 - **Status:** pending
 - **Layer:** logic
@@ -361,9 +363,9 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 - **Files to modify:**
   - `src/Logic/Core/TurnEvent.cs` — add `RaiseDeadEvent` and `CorpseCreatedEvent`
 - **Fields for RaiseDeadEvent:**
-  - `int RaisedEntityId` — ID of the newly raised monster
+  - `int RaisedEntityId` — ID of the raised monster (same entity ID as the corpse)
   - `string RaisedEntityName` — name for toast
-  - `int CorpseEntityId` — ID of the corpse that was consumed
+  - `int CorpseEntityId` — same as RaisedEntityId (in-place transform)
   - `string OriginalMonsterName` — "remains of [name]"
   - `int X, Y` — position
   - `bool RaisedByPlayer` — true if player scroll, false if necromancer
@@ -372,6 +374,8 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
   - `string OriginalMonsterName`
   - `int X, Y`
   - `CorpseState State` — Fresh or Spent
+- **Notes:**
+  - All event definitions consolidated here. TASK-004 depends on TASK-008 for `CorpseCreatedEvent`.
 - **Acceptance criteria:**
   - Both events compile and follow the existing `TurnEvent` pattern (sealed class, init properties)
 
@@ -396,10 +400,13 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 - **Files to create:**
   - `tests/Core/RaiseDeadTests.cs`
 - **Test cases:**
-  - `RaiseDead_FreshCorpse_CreatesRaisedMonster` — raised entity appears in `state.Monsters`
+  - `RaiseDead_FreshCorpse_TransformsCorpseInPlace` — corpse entity gains Fighter and AiComponent, same entity ID
   - `RaiseDead_StatsApplyCorrectly` — HP×2, Dmg×0.5 min 1, STR×0.75 min 6, DEX×0.5 min 6, CON×1.5 max 18
   - `RaiseDead_PlayerCast_FactionNeutral` — raised entity has faction = "neutral"
-  - `RaiseDead_CorpseMarkedConsumed` — corpse state = Consumed after raise
+  - `RaiseDead_CorpseComponentRemoved` — entity no longer has CorpseComponent after raise
+  - `RaiseDead_EntityRemovedFromCorpsesList` — entity no longer in state.Corpses
+  - `RaiseDead_EntityStillInMonstersList` — entity still in state.Monsters (dual membership)
+  - `RaiseDead_BlocksMovementTrue` — raised entity has BlocksMovement = true
   - `RaiseDead_NoCorpseAtTarget_Fails` — SpellEvent.Success = false
   - `RaiseDead_SpentCorpse_Fails` — SPENT corpse cannot be raised
   - `RaiseDead_ConsumedCorpse_Fails` — CONSUMED corpse cannot be raised
@@ -431,7 +438,8 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
   - `int PreferredDistanceMin = 4`
   - `int PreferredDistanceMax = 7`
   - `int CooldownRemaining = 0`
-  - `string SummonMonsterId = "zombie"` — what to raise (overridden for plague_necromancer)
+- **Notes:**
+  - No `SummonMonsterId` field — the raise-dead system transforms corpses in-place using `CorpseComponent.OriginalMonsterId`. Plague necromancer's post-raise augmentation is handled by AI-type-specific logic, not a YAML reference.
 - **Acceptance criteria:**
   - Component implements `IComponent`
   - Default values match PoC
@@ -449,7 +457,7 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
     - `danger_radius_from_player: int` (default 2)
     - `preferred_distance_min: int` (default 4)
     - `preferred_distance_max: int` (default 7)
-    - `summon_monster_id: string?` (default null)
+    - `leaves_corpse: bool` (default true) — set false for slimes
   - `src/Logic/Content/MonsterFactory.cs` — when `AiType` is `"necromancer"` or `"plague_necromancer"`, attach `NecromancerAiComponent` with values from definition
 - **Acceptance criteria:**
   - `MonsterFactory.Create("necromancer")` produces entity with `NecromancerAiComponent`
@@ -469,15 +477,18 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
   - `src/Logic/AI/MonsterAction.cs` — add `RaiseDead(Entity corpse)` action type if not already present
 - **Decision priority implementation:**
   1. Tick cooldown: if `CooldownRemaining > 0`, decrement by 1
-  2. Check raise: if cooldown == 0, find nearest FRESH corpse within `RaiseRange` (Euclidean). If found → return `MonsterAction.RaiseDead(corpse)`
-  3. Check corpse-seek: if any FRESH corpse exists on the floor but out of range, pathfind toward it. Respect danger radius: if next step brings within `DangerRadius` of player, skip that path.
+  2. Check raise: if cooldown == 0, find nearest raisable corpse (using `CorpseComponent.CanBeRaised`) within `RaiseRange` (Euclidean). **Must also check that the corpse tile is not occupied by a blocking entity.** Corpse selection uses `(distance, y, x)` tie-breaking to ensure determinism, matching the PoC. If found → return `MonsterAction.RaiseDead(corpse)`
+  3. Check corpse-seek: if any raisable corpse exists on the floor but out of range, pathfind toward it. Respect danger radius: if next step brings within `DangerRadius` of player, skip that path.
   4. Check retreat: if Euclidean distance to player < `DangerRadius`, move to maximize distance (reuse `DecideFlee` pattern from BasicMonsterAI)
+  4.5. Check preferred range: if distance to player is outside preferred range (`PreferredDistanceMin` to `PreferredDistanceMax`) and no corpses exist, move toward preferred range (but never closer than `DangerRadius`). This matches the PoC's NecromancerBase hang-back behavior.
   5. Else: fall through to `BasicMonsterAI.Decide` for standard melee
 - **Acceptance criteria:**
   - Necromancer with corpse in range raises it instead of attacking
   - Necromancer on cooldown seeks corpse or does melee
   - Necromancer never moves within danger radius of player when corpse-seeking
   - Necromancer retreats when player is too close
+  - Necromancer does not attempt to raise a corpse on a tile occupied by a blocking entity
+  - Necromancer maintains preferred distance (4-7 tiles) from player when no corpses and not in danger
   - Both `"necromancer"` and `"plague_necromancer"` ai_types dispatch to this AI
 
 ### TASK-014: TurnController resolves RaiseDead monster action
@@ -489,13 +500,15 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 - **Files to modify:**
   - `src/Logic/Core/TurnController.cs` — add case for `MonsterAction.RaiseDead` in monster turn resolution
 - **Implementation:**
-  - Call `RaiseDeadResolver.Raise(corpse, monster.Get<AiComponent>().Faction, state, monsterFactory)`
+  - Call `RaiseDeadResolver.Raise(corpse, monster.Get<AiComponent>().Faction, state, contentRegistry)`
+  - For plague necromancer (`ai_type == "plague_necromancer"`): after the standard raise, add `plague_carrier` tag + stat boost to the raised entity
   - Set `NecromancerAiComponent.CooldownRemaining = RaiseCooldown`
   - Emit `RaiseDeadEvent` with `RaisedByPlayer = false`
-  - The raised entity is added to `state.Monsters` and acts on subsequent turns (not the current turn — unlike split children)
+  - The raised entity acts on subsequent turns (not the current turn — unlike split children)
 - **Acceptance criteria:**
   - Necromancer raises a corpse, cooldown starts
-  - Raised entity appears in `state.Monsters` with correct faction
+  - Raised entity has correct faction (raiser's faction)
+  - Plague necromancer's raised entity has `plague_carrier` tag
   - `RaiseDeadEvent` emitted
   - Raised entity does NOT act on the turn it was raised (added after monster iteration)
 
@@ -507,7 +520,6 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 - **Dependencies:** TASK-012
 - **Files to modify:**
   - `config/entities.yaml` — add necromancer and plague_necromancer definitions with exact PoC stats
-  - `config/entities.yaml` — add plague_zombie definition (extends zombie)
 - **YAML entries:**
   ```yaml
   necromancer:
@@ -536,7 +548,6 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
     danger_radius_from_player: 2
     preferred_distance_min: 4
     preferred_distance_max: 7
-    summon_monster_id: "zombie"
     min_depth: 5
     spawn_weight: 10
 
@@ -546,29 +557,16 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
     char: "N"
     color: [100, 180, 80]
     ai_type: "plague_necromancer"
-    summon_monster_id: "plague_zombie"
     etp_base: 44
     min_depth: 7
-
-  plague_zombie:
-    extends: zombie
-    name: "Plague Zombie"
-    stats:
-      hp: 30
-      damage_min: 4
-      damage_max: 7
-      xp: 45
-    char: "Z"
-    color: [100, 180, 80]
-    tags: ["corporeal_flesh", "undead", "mindless", "low_undead", "plague_carrier", "zombie"]
-    etp_base: 40
-    spawn_weight: 0
   ```
+- **Notes:**
+  - `plague_zombie` YAML entry is removed — plague necromancer applies plague augmentation in-place during the raise, not via a separate monster definition
+  - `summon_monster_id` field is removed from both entries — raise-dead uses `CorpseComponent.OriginalMonsterId`
 - **Acceptance criteria:**
-  - `ContentLoader` parses all three entries without error
+  - `ContentLoader` parses both entries without error
   - `MonsterFactory.Create("necromancer")` produces entity with correct components
-  - `MonsterFactory.Create("plague_necromancer")` inherits necromancer stats, overrides ai_type and summon_monster_id
-  - `plague_zombie` spawned only by necromancer raise (weight: 0, never procedural)
+  - `MonsterFactory.Create("plague_necromancer")` inherits necromancer stats, overrides ai_type
 
 ### TASK-016: Phase 3 unit tests
 
@@ -588,20 +586,37 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
   - `Necromancer_FallsBackToMelee` — no corpses, not in danger → attacks player if adjacent
   - `Necromancer_RaisedMonsterHasRaiserFaction` — raised entity faction = "cultist"
   - `Necromancer_RaisedMonsterDoesNotActSameTurn` — raised entity skips the turn it was created
-  - `PlagueNecromancer_RaisesPlagueZombie` — summon_monster_id = "plague_zombie" used
+  - `PlagueNecromancer_AddsPlagueTags` — plague necromancer's raise adds `plague_carrier` tag + stat boost
   - `Necromancer_IgnoresSpentCorpse` — SPENT corpse not targeted
   - `Necromancer_IgnoresConsumedCorpse` — CONSUMED corpse not targeted
   - `Necromancer_PreferredDistance` — when no corpse and no danger, maintains 4-7 tiles from player
+  - `Necromancer_SkipsCorpseOnOccupiedTile` — corpse on a tile occupied by a blocking entity is not considered raisable
 - **Acceptance criteria:**
   - All tests pass with `dotnet test --filter "Category!=Slow"`
   - Tests use deterministic seed
   - Tests construct scenarios without Godot dependencies
 
+### TASK-017: Necromancer harness scenarios
+
+- **Status:** pending
+- **Layer:** logic
+- **Type:** scenario
+- **Dependencies:** TASK-014, TASK-015
+- **Files to create:**
+  - `config/testing/scenario_necromancer_basic.yaml` — necromancer + 2 orcs + player. Tests raise behavior: necromancer should raise orc corpses after player kills them.
+  - `config/testing/scenario_necromancer_solo.yaml` — necromancer alone vs player. Tests melee fallback: with no corpses to raise, necromancer should fall back to melee.
+  - `config/testing/scenario_plague_necromancer.yaml` — plague necromancer + orcs. Tests plague variant: raised corpses should have plague_carrier tag and stat boost.
+- **Acceptance criteria:**
+  - All three scenarios parse and load via ContentLoader
+  - Scenarios can be run with `dotnet run --project tools/Harness -- --scenario <id> --runs 50`
+  - Results show raise events occurring in necromancer_basic and plague_necromancer scenarios
+  - necromancer_solo scenario shows melee combat occurring
+
 ---
 
 ## Phase 4 — Presentation Layer
 
-### TASK-017: Corpse sprite and rendering
+### TASK-018: Corpse sprite and rendering
 
 - **Status:** pending
 - **Layer:** presentation
@@ -613,12 +628,14 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 - **Implementation notes:**
   - Corpse visual: dimmed/grayed version of original monster sprite, or a generic "remains" sprite
   - Inspect panel shows "Remains of [OriginalName]" on long-press
+  - Must handle the raise-dead visual transition: when an entity transitions from corpse back to living monster (CorpseComponent removed, Fighter added), the presentation layer needs to detect this and swap the sprite from corpse visual to living monster visual at the same position. Since the entity ID is preserved (in-place transform), the sprite manager should watch for component changes on tracked entities.
 - **Acceptance criteria:**
   - Corpses render on the map at correct position
   - Corpses render below living actors
   - Corpses are visually distinct from living monsters
+  - When a corpse is raised (transformed back to living), the sprite transitions from corpse to living monster visual
 
-### TASK-018: Raise dead toast messages
+### TASK-019: Raise dead toast messages
 
 - **Status:** pending
 - **Layer:** presentation
@@ -666,27 +683,11 @@ These are documented for future reference. Do NOT implement in this plan.
 
 ## Risks and Open Decisions
 
-### Risk: GameState.MonsterFactory reference
-Adding `MonsterFactory?` to `GameState` creates a new dependency. Alternative: pass it through `SpellResolver.Resolve` parameter list. The `GameState` approach is cleaner since `MonsterFactory` is already threaded through `ProcessTurn` and needed in split resolution. The risk is that tests constructing `GameState` directly would need to optionally provide it — but it's nullable, so no breaking change.
-
-### Risk: Entity removal from state.Monsters
-Moving dead entities out of `state.Monsters` into `state.Corpses` could break code that iterates `state.Monsters` expecting to find dead ones. The knowledge update system explicitly says it includes dead monsters: "Build a lookup of all monsters (including dead ones still in state.Monsters)." This code must be updated to also check `state.Corpses` when resolving entity IDs from events.
-
-**Mitigation:** In TASK-004, audit all `state.Monsters` access points:
-- `AliveMonsters` — already filters by `IsAlive`, unaffected
-- `UpdateKnowledge` — must also check `state.Corpses` for `DeathEvent` actor lookup
-- `IsGameOver` / `PlayerWon` — check `Monsters.Count > 0 && AliveMonsters.Count == 0`; if corpses are moved out, `Monsters.Count` shrinks. Need to also count corpses or adjust the condition.
-- `AllMonstersDefeated` in `TurnResult` — same concern
-
-**Decision needed:** Should corpses stay in `state.Monsters` (simpler, less risk) or move to `state.Corpses` (cleaner separation)?
-
-**Recommendation:** Keep dead entities in `state.Monsters` AND add them to `state.Corpses`. Dual membership. The `Monsters` list already handles dead entities via `AliveMonsters` filter. `Corpses` is a convenience query list. This avoids all the cascading changes to `IsGameOver`, `PlayerWon`, `UpdateKnowledge`, etc.
-
 ### Risk: Raised entity acting on spawn turn
-Split children act on spawn turn (by design — "suddenly surrounded"). Raised undead should NOT act on spawn turn (PoC-verified). The implementation must add the raised entity to `state.Monsters` but ensure it's not picked up by the current monster iteration loop. If `ResolveMonsterTurns` uses a snapshot of the list at loop start, this is automatic. If it iterates the live list, the raised entity might get a turn. Verify the iteration pattern before implementing TASK-014.
+Split children act on spawn turn (by design — "suddenly surrounded"). Raised undead should NOT act on spawn turn (PoC-verified). The implementation must ensure the raised entity is not picked up by the current monster iteration loop. If `ResolveMonsterTurns` uses a snapshot of the list at loop start, this is automatic. If it iterates the live list, the raised entity might get a turn. Verify the iteration pattern before implementing TASK-014.
 
 ### Decision: plague_carrier tag behavior
-The `plague_zombie` has a `plague_carrier` tag. In the PoC this enables plague spread on melee hit. The plague system itself is in `plan_monster_specials.md` Phase 20A and is NOT implemented yet. For now, the tag is inert metadata. No plague-specific logic ships in this plan. Document this so the builder doesn't try to implement plague spread.
+The plague necromancer's raised entities get a `plague_carrier` tag. In the PoC this enables plague spread on melee hit. The plague system itself is in `plan_monster_specials.md` Phase 20A and is NOT implemented yet. For now, the tag is inert metadata. No plague-specific logic ships in this plan. Document this so the builder doesn't try to implement plague spread.
 
 ### Decision: Necromancer spawn weight
 The PoC doesn't specify a procedural spawn weight for necromancers in the depth_weights table. Propose `spawn_weight: 10` at `min_depth: 5` as a starting point — rare but present. Needs harness validation after implementation. Plague necromancer at `min_depth: 7`.
@@ -703,4 +704,4 @@ Once implemented, the following should be measurable via scenario runs:
 - `necromancer_cooldown_turns_wasted` — turns spent on cooldown with corpses available
 - Death% for necromancer encounters vs. non-necromancer encounters at same depth
 
-These metrics require scenario YAML files with necromancer compositions. Creating those scenarios is out of scope for this plan but should follow immediately after Phase 3.
+These metrics are verified by the necromancer harness scenarios in TASK-017.
