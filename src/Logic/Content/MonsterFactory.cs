@@ -25,6 +25,10 @@ public sealed class MonsterFactory
         _equipmentSpawner = itemFactory != null ? new MonsterEquipmentSpawner(itemFactory) : null;
     }
 
+    /// <summary>Returns the resolved definition for the given type ID, or null if not found.</summary>
+    public MonsterDefinition? GetDefinition(string typeId)
+        => _definitions.TryGetValue(typeId, out var def) ? def : null;
+
     /// <summary>
     /// Create a monster entity from a definition ID.
     /// Depth > 0 applies depth scaling to stats. RNG used for equipment spawning.

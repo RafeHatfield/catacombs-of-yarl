@@ -118,6 +118,14 @@ public sealed class MonsterDefinition
     public List<int>? SplitWeights { get; set; }
 
     /// <summary>
+    /// Whether this monster leaves a raisable corpse on death.
+    /// Defaults to true. Set false for slimes and other non-flesh monsters.
+    /// When false, no CorpseComponent is added and no CorpseCreatedEvent is emitted.
+    /// </summary>
+    [YamlMember(Alias = "leaves_corpse")]
+    public bool LeavesCorpse { get; set; } = true;
+
+    /// <summary>
     /// Optional depth-progression table for spawn weight.
     /// If set, overrides SpawnWeight — weight is resolved per depth via SpawnUtils.FromDungeonLevel.
     /// Mirrors the from_dungeon_level pattern from PoC spawn_service.py.

@@ -36,7 +36,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | [plan_ranged_combat.md](plan_ranged_combat.md) | [ ] | Range bands, retaliation-first, knockback, special ammo/quiver |
 | [plan_spell_wand_scroll_system.md](plan_spell_wand_scroll_system.md) | [~] | 30+ spells, wand charges, scroll effects, spell targeting (Phase 1+2 complete; Phase 3 SingleTarget + Phase 5 Portal pending) |
 | [plan_faction_system.md](plan_faction_system.md) | [ ] | Faction hostility matrix, orc vs undead, emergent combat |
-| [plan_corpse_necromancer.md](plan_corpse_necromancer.md) | [ ] | Corpse entity lifecycle, necromancer + plague_necromancer AI, Raise Dead scroll (extracted from plan_monster_specials) |
+| [plan_corpse_necromancer.md](plan_corpse_necromancer.md) | [~] | Corpse entity lifecycle, necromancer + plague_necromancer AI, Raise Dead scroll — Phase 1 (corpse system) complete |
 
 ### Tier 3 — World Systems
 | Plan | Status | Description |

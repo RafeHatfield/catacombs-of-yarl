@@ -83,7 +83,7 @@ public static class BotBrain
     }
 
     private static List<Entity> GetAlive(List<Entity> monsters)
-        => monsters.Where(m => m.Require<Fighter>().IsAlive).ToList();
+        => monsters.Where(m => m.Get<Fighter>()?.IsAlive == true).ToList();
 
     private static List<Entity> GetAdjacent(Entity player, List<Entity> alive)
         => alive.Where(m => player.ChebyshevDistanceTo(m.X, m.Y) <= 1).ToList();

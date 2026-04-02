@@ -1,6 +1,6 @@
 # Plan: Corpse Entity & Necromancer AI
 
-**Status:** [ ] Not started
+**Status:** [~] Phase 1 complete
 **PoC reference:** `~/development/rlike/components/corpse.py`, `~/development/rlike/death_functions.py`, `~/development/rlike/components/ai/necromancer_ai.py`, `~/development/rlike/components/ai/plague_necromancer_ai.py`, `~/development/rlike/config/entities.yaml` lines 263–365, 609–655
 
 ---
@@ -192,7 +192,7 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 
 ### TASK-001: CorpseState enum and CorpseComponent
 
-- **Status:** pending
+- **Status:** complete
 - **Layer:** logic
 - **Type:** system
 - **Dependencies:** none
@@ -215,7 +215,7 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 
 ### TASK-002: GameState.Corpses collection
 
-- **Status:** pending
+- **Status:** complete
 - **Layer:** logic
 - **Type:** system
 - **Dependencies:** TASK-001
@@ -228,7 +228,7 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 
 ### TASK-003: RaisedFromCorpseTag component
 
-- **Status:** pending
+- **Status:** complete
 - **Layer:** logic
 - **Type:** system
 - **Dependencies:** TASK-001
@@ -241,7 +241,7 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 
 ### TASK-004: Death → Corpse transformation in TurnController
 
-- **Status:** pending
+- **Status:** complete
 - **Layer:** logic
 - **Type:** system
 - **Dependencies:** TASK-001, TASK-002, TASK-003, TASK-008
@@ -274,7 +274,7 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 
 ### TASK-005: Floor descent clears corpses
 
-- **Status:** pending
+- **Status:** complete
 - **Layer:** logic
 - **Type:** system
 - **Dependencies:** TASK-002, TASK-004
@@ -287,7 +287,7 @@ Attached by `MonsterFactory` when `ai_type` is `"necromancer"` or `"plague_necro
 
 ### TASK-006: Phase 1 unit tests
 
-- **Status:** pending
+- **Status:** complete
 - **Layer:** logic
 - **Type:** test
 - **Dependencies:** TASK-004, TASK-005

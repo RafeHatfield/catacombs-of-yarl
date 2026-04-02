@@ -345,6 +345,41 @@ public sealed class PortalRemovedEvent : TurnEvent
 }
 
 /// <summary>
+/// Emitted when a monster dies and its entity is transformed into a corpse in-place.
+/// Presentation layer can use this to update the entity sprite to a corpse graphic.
+/// </summary>
+public sealed class CorpseCreatedEvent : TurnEvent
+{
+    /// <summary>Entity ID of the corpse (same as the dead monster's ID — transformed in-place).</summary>
+    public int CorpseEntityId { get; init; }
+
+    /// <summary>CorpseId string for lineage tracking (format: "corpse_{x}_{y}_{turn}").</summary>
+    public string CorpseId { get; init; } = "";
+
+    /// <summary>Original monster type ID (e.g. "orc", "zombie").</summary>
+    public string OriginalMonsterId { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted when a corpse entity is raised into a living monster (by necromancer AI or Raise Dead scroll).
+/// Presentation layer should update the entity sprite back to the living monster graphic.
+/// </summary>
+public sealed class RaiseDeadEvent : TurnEvent
+{
+    /// <summary>Entity ID of the raised entity (same as the corpse entity — transformed in-place).</summary>
+    public int RaisedEntityId { get; init; }
+
+    /// <summary>CorpseId of the corpse that was raised.</summary>
+    public string CorpseId { get; init; } = "";
+
+    /// <summary>
+    /// Faction the raised entity was assigned.
+    /// "neutral" for player-raised; raiser's faction for necromancer-raised.
+    /// </summary>
+    public string AssignedFaction { get; init; } = "";
+}
+
+/// <summary>
 /// Emitted when a monster attempts to use an item from its inventory.
 /// Both success and failure paths emit this event so the presentation layer
 /// can show appropriate feedback (toast messages) and the harness can measure

@@ -54,6 +54,8 @@ public static class TurnController
         // by the presentation layer. Monsters should not get a free attack as the
         // player steps through the stair.
         bool descended = events.Any(e => e is DescendEvent);
+        if (descended)
+            state.Corpses.Clear(); // Corpses don't follow the player to the next floor
         if (!descended && state.PlayerFighter.IsAlive)
         {
             ResolveMonsterTurns(state, events, portalEntityFactory);
@@ -422,6 +424,7 @@ public static class TurnController
         {
             events.Add(new DeathEvent { ActorId = target.Id, KillerId = player.Id });
             DropMonsterLoot(state, target, events);
+            TransformToCorpse(state, target, events, monsterFactory);
         }
 
         // Bonus attack chain — recurse if triggered and target still alive
@@ -450,6 +453,7 @@ public static class TurnController
             // still see deterministic behavior (original dies, no children).
             original.Require<Fighter>().Hp = 0;
             events.Add(new DeathEvent { ActorId = original.Id, KillerId = state.Player.Id });
+            TransformToCorpse(state, original, events, monsterFactory: null);
             return;
         }
 
@@ -1306,5 +1310,78 @@ public static class TurnController
                 ItemName = item.Name,
             });
         }
+    }
+
+    /// <summary>
+    /// Transform a freshly-killed monster entity into a corpse in-place.
+    /// Called after DropMonsterLoot at every monster DeathEvent site.
+    ///
+    /// If the monster definition has LeavesCorpse=false (e.g., slimes), the call is a no-op.
+    /// When no factory is available the check is skipped and the corpse IS created — this is
+    /// the safe default for test environments (no slimes in unit tests without a factory).
+    ///
+    /// Components stripped: Fighter, AiComponent, AlertedState, SplitTracker, CorrosionComponent,
+    /// SpeedBonusTracker, DamageModifiers, and all IStatusEffect implementors.
+    /// SpeciesTag is preserved for knowledge-system and lineage tracking.
+    /// </summary>
+    private static void TransformToCorpse(GameState state, Entity entity, List<TurnEvent> events,
+        MonsterFactory? monsterFactory)
+    {
+        // Guard: already a corpse (defensive — shouldn't happen in normal flow)
+        if (entity.Has<CorpseComponent>()) return;
+
+        // Corpses require a SpeciesTag — anonymous entities (hand-crafted test fixtures
+        // without a YAML origin) are not transformed.
+        var speciesTag = entity.Get<SpeciesTag>();
+        if (speciesTag == null) return;
+
+        // Check leaves_corpse flag via factory definition lookup.
+        if (monsterFactory != null)
+        {
+            var def = monsterFactory.GetDefinition(speciesTag.TypeId);
+            if (def != null && !def.LeavesCorpse) return;
+        }
+
+        string originalMonsterId = speciesTag?.TypeId ?? "";
+        string originalName = entity.Name;
+
+        // Strip combat/AI components
+        entity.Remove<Fighter>();
+        entity.Remove<AiComponent>();
+        entity.Remove<AlertedState>();
+        entity.Remove<SplitTracker>();
+        entity.Remove<CorrosionComponent>();
+
+        // Strip all status effects (any IStatusEffect implementation)
+        foreach (var effect in entity.GetAllComponents().OfType<IStatusEffect>().ToList())
+            entity.RemoveByType(effect.GetType());
+
+        // SpeciesTag intentionally NOT stripped — preserved for knowledge system and lineage
+
+        // Add corpse component
+        string corpseId = $"corpse_{entity.X}_{entity.Y}_{state.TurnCount}";
+        bool wasRaised = entity.Has<RaisedFromCorpseTag>();
+
+        var corpse = new CorpseComponent
+        {
+            OriginalMonsterId = originalMonsterId,
+            OriginalName = originalName,
+            DeathTurn = state.TurnCount,
+            State = wasRaised ? CorpseState.Spent : CorpseState.Fresh,
+            CorpseId = corpseId,
+        };
+        entity.Add(corpse);
+        entity.BlocksMovement = false;
+
+        // Dual membership: entity stays in state.Monsters AND is added to state.Corpses
+        state.Corpses.Add(entity);
+
+        events.Add(new CorpseCreatedEvent
+        {
+            ActorId = entity.Id,
+            CorpseEntityId = entity.Id,
+            CorpseId = corpseId,
+            OriginalMonsterId = originalMonsterId,
+        });
     }
 }

@@ -49,6 +49,14 @@ public sealed class GameState
     /// </summary>
     public List<Entity> Portals { get; } = new();
 
+    /// <summary>
+    /// Corpse entities on the current floor.
+    /// When a monster dies and leaves_corpse is true, the entity is transformed in-place
+    /// and added here (it remains in Monsters — dual membership).
+    /// Cleared on floor descent. Used by necromancer AI and Raise Dead spell targeting.
+    /// </summary>
+    public List<Entity> Corpses { get; } = new();
+
     // ── Identification system ────────────────────────────────────────────────
 
     /// <summary>
@@ -134,7 +142,8 @@ public sealed class GameState
         {
             if (_aliveMonsterCache == null || _aliveMonsterCacheTurn != TurnCount)
             {
-                _aliveMonsterCache = Monsters.Where(m => m.Require<Fighter>().IsAlive).ToList();
+                // Use Get<Fighter>() (not Require) — corpse entities in state.Monsters have no Fighter.
+                _aliveMonsterCache = Monsters.Where(m => m.Get<Fighter>()?.IsAlive == true).ToList();
                 _aliveMonsterCacheTurn = TurnCount;
             }
             return _aliveMonsterCache;

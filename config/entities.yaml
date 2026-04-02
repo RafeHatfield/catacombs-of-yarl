@@ -138,6 +138,7 @@ monsters:
     inventory_size: 0
     corrosion_chance: 0.05
     spawn_weight: 0
+    leaves_corpse: false
 
   large_slime:
     name: "Large Slime"
