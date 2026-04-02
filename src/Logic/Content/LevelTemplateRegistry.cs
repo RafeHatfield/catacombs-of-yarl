@@ -66,6 +66,20 @@ public sealed class LevelTemplateRegistry
     }
 
     /// <summary>
+    /// Construct a registry containing a single depth → override entry.
+    /// Used by LaunchTestScenario to build a temporary registry from a scenario's
+    /// GuaranteedSpawns without writing a YAML string.
+    ///
+    /// GetLevelOverride(depth) returns the provided override.
+    /// GetLevelOverride(any other depth) returns null.
+    /// </summary>
+    public static LevelTemplateRegistry FromSingleDepth(int depth, LevelOverride levelOverride)
+    {
+        var levels = new Dictionary<int, LevelOverride> { [depth] = levelOverride };
+        return new LevelTemplateRegistry(levels);
+    }
+
+    /// <summary>
     /// Returns the LevelOverride for the given depth, or null if no override is configured.
     /// Callers should apply defaults when null is returned.
     /// </summary>

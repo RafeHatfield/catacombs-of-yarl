@@ -46,6 +46,23 @@ public sealed class ScenarioDefinition
 
     [YamlMember(Alias = "items")]
     public List<ScenarioItem> Items { get; set; } = new();
+
+    /// <summary>
+    /// When true, this scenario routes through DungeonFloorBuilder instead of
+    /// GameStateFactory.FromScenario. The player is constructed via CreateDefaultPlayer()
+    /// and the floor is procedurally generated with GuaranteedSpawns injected.
+    /// Defaults to false — all existing scenarios are backward compatible.
+    /// </summary>
+    [YamlMember(Alias = "dungeon_mode")]
+    public bool DungeonMode { get; set; } = false;
+
+    /// <summary>
+    /// Guaranteed spawns injected into the procedural floor when DungeonMode=true.
+    /// Reuses GuaranteedSpawns from LevelOverride so the same YAML schema applies.
+    /// Null when DungeonMode=false (normal scenario path).
+    /// </summary>
+    [YamlMember(Alias = "guaranteed_spawns")]
+    public GuaranteedSpawns? GuaranteedSpawns { get; set; }
 }
 
 public sealed class ScenarioPlayer

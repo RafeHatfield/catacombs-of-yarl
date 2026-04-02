@@ -187,7 +187,7 @@ public sealed class DungeonFloorBuilder
         {
             var guaranteed = EntityPlacer.PlaceGuaranteedSpawns(
                 generatedMap, guaranteedSpawns!, _monsterFactory, _itemFactory, _consumableFactory,
-                rng, depth, ids);
+                rng, depth, ids, spellItems: _spellItemFactory);
 
             // Separate monsters from items.
             // Monsters block movement (BlocksMovement=true from MonsterDefinition.Blocks).

@@ -54,6 +54,7 @@ public partial class Main : Node
     private MonsterFactory? _monsterFactory;
     private ItemFactory? _itemFactory;
     private ConsumableFactory? _consumableFactory;
+    private SpellItemFactory? _spellItemFactory;
     private DungeonFloorBuilder? _floorBuilder;
     private LevelTemplateRegistry? _levelTemplates;
 
@@ -300,6 +301,7 @@ public partial class Main : Node
         _itemFactory = new ItemFactory(content.Items, entityFactory);
         _monsterFactory = new MonsterFactory(content.Monsters, entityFactory, _itemFactory);
         _consumableFactory = new ConsumableFactory(content.Consumables, entityFactory);
+        _spellItemFactory = new SpellItemFactory(content.SpellItems, entityFactory);
 
         try
         {
@@ -314,7 +316,8 @@ public partial class Main : Node
             throw;
         }
         _floorBuilder = new DungeonFloorBuilder(
-            _levelTemplates, _monsterFactory, _itemFactory, _consumableFactory, content.FloorItemPool);
+            _levelTemplates, _monsterFactory, _itemFactory, _consumableFactory,
+            content.FloorItemPool, spellItemFactory: _spellItemFactory);
     }
 
     /// <summary>
@@ -640,6 +643,11 @@ public partial class Main : Node
     {
         GetNode<CanvasLayer>("MenuLayer").Visible = false;
         _currentDepth = 1;
+        // Each new game gets a unique seed so no two runs are identical.
+        // The seed is stored in _baseSeed and recoverable from GameState.Rng.Seed
+        // for future "show seed" or seed-entry UI.
+        _baseSeed = Random.Shared.Next();
+        GD.Print($"[Main] New game seed: {_baseSeed}");
         StartDungeon();
     }
 
@@ -675,6 +683,12 @@ public partial class Main : Node
     /// <summary>
     /// Load a test scenario YAML by res:// path and start the game.
     /// Hides the menu layer so the dungeon is visible.
+    ///
+    /// Routing: when scenario.DungeonMode=true, builds a procedural floor via DungeonFloorBuilder
+    /// with the scenario's GuaranteedSpawns injected. Player uses CreateDefaultPlayer() stats.
+    /// When false (default), routes through GameStateFactory.FromScenario (flat arena, unchanged).
+    ///
+    /// Test scenarios always use the current _baseSeed (default 1337) for deterministic replay.
     /// </summary>
     private void LaunchTestScenario(string resPath)
     {
@@ -682,11 +696,44 @@ public partial class Main : Node
 
         var yaml     = ReadGodotResource(resPath);
         var scenario = _contentLoader!.LoadScenario(yaml);
-        _state = GameStateFactory.FromScenario(
-            scenario, _baseSeed, _monsterFactory!, _itemFactory!, _consumableFactory!);
 
-        SetupPresentation(_state);
-        GD.Print($"Ready (test scenario: {resPath}) — {_state.Monsters.Count} monsters. Tap to play.");
+        if (scenario.DungeonMode)
+        {
+            // Build a LevelOverride from the scenario's guaranteed spawns.
+            // Use small map dimensions for fast load times in test scenarios.
+            var levelOverride = new LevelOverride
+            {
+                GuaranteedSpawns = scenario.GuaranteedSpawns,
+                Parameters = new GenerationParameters
+                {
+                    MapWidth = 60,
+                    MapHeight = 40,
+                    MaxRooms = 20,
+                },
+            };
+
+            var registry = LevelTemplateRegistry.FromSingleDepth(scenario.Depth, levelOverride);
+            var tempBuilder = new DungeonFloorBuilder(
+                registry, _monsterFactory!, _itemFactory!, _consumableFactory!,
+                spellItemFactory: _spellItemFactory);
+
+            // Deterministic seed: test scenarios use _baseSeed (default 1337), not randomized.
+            var rng = new SeededRandom(_baseSeed + scenario.Depth * 1_000_003);
+            _currentDepth = scenario.Depth;
+            _state = tempBuilder.Build(scenario.Depth, rng);
+
+            SetupPresentation(_state);
+            GD.Print($"Ready (dungeon-mode test scenario: {resPath}) — depth {scenario.Depth}, " +
+                     $"{_state.Monsters.Count} monsters, {_state.FloorItems.Count} floor items. Tap to play.");
+        }
+        else
+        {
+            _state = GameStateFactory.FromScenario(
+                scenario, _baseSeed, _monsterFactory!, _itemFactory!, _consumableFactory!);
+
+            SetupPresentation(_state);
+            GD.Print($"Ready (test scenario: {resPath}) — {_state.Monsters.Count} monsters. Tap to play.");
+        }
     }
 
     /// <summary>
