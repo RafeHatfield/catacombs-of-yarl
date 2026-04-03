@@ -80,7 +80,7 @@ public sealed class EntitySpriteManager
         UpdateSpritePosition(state.Player);
         foreach (var monster in state.Monsters)
         {
-            if (monster.Require<Fighter>().IsAlive)
+            if (monster.Get<Fighter>()?.IsAlive == true)
                 UpdateSpritePosition(monster);
         }
     }
