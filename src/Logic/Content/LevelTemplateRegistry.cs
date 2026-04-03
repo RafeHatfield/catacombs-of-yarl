@@ -33,12 +33,19 @@ public sealed class LevelTemplateRegistry
     /// Uses the same deserializer configuration as ContentLoader (IgnoreUnmatchedProperties,
     /// UnderscoredNamingConvention) plus the SpawnEntry custom converter.
     /// </summary>
-    public static LevelTemplateRegistry FromYaml(string yaml)
+    public static LevelTemplateRegistry FromYaml(string yaml) =>
+        FromYaml(yaml, new AotObjectFactory());
+
+    /// <summary>
+    /// Injectable overload — pass <c>new AotObjectFactory(strict: true)</c> in tests
+    /// to simulate NativeAOT behaviour and catch missing factory registrations early.
+    /// </summary>
+    public static LevelTemplateRegistry FromYaml(string yaml, IObjectFactory factory)
     {
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .IgnoreUnmatchedProperties()
-            .WithObjectFactory(new AotObjectFactory())
+            .WithObjectFactory(factory)
             .WithTypeConverter(new SpawnEntryConverter())
             .Build();
 

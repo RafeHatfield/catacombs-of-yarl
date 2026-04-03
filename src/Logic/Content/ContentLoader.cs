@@ -45,12 +45,18 @@ public sealed class ContentLoader
 {
     private readonly IDeserializer _deserializer;
 
-    public ContentLoader()
+    public ContentLoader() : this(new AotObjectFactory()) { }
+
+    /// <summary>
+    /// Injectable constructor — primarily for testing with a strict AotObjectFactory.
+    /// Pass <c>new AotObjectFactory(strict: true)</c> to simulate NativeAOT behaviour.
+    /// </summary>
+    public ContentLoader(IObjectFactory factory)
     {
         _deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .IgnoreUnmatchedProperties()
-            .WithObjectFactory(new AotObjectFactory())
+            .WithObjectFactory(factory)
             .Build();
     }
 

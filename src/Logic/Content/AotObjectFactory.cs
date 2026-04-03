@@ -17,6 +17,15 @@ namespace CatacombsOfYarl.Logic.Content;
 /// </summary>
 public sealed class AotObjectFactory : IObjectFactory
 {
+    /// <summary>
+    /// When true, throws immediately on any unregistered type instead of falling back to
+    /// Activator.CreateInstance. Use this in tests to simulate NativeAOT constraints —
+    /// if the test passes with strict=true, iOS will not hit a missing-factory crash.
+    /// </summary>
+    private readonly bool _strict;
+
+    public AotObjectFactory(bool strict = false) { _strict = strict; }
+
     // Lookup from Type to factory function. Populated once, used on every deserialize.
     private static readonly Dictionary<Type, Func<object>> _factories = new()
     {
@@ -89,6 +98,12 @@ public sealed class AotObjectFactory : IObjectFactory
     {
         if (_factories.TryGetValue(type, out var factory))
             return factory();
+
+        // Strict mode: no fallback — simulate NativeAOT behaviour for testing.
+        if (_strict)
+            throw new InvalidOperationException(
+                $"AotObjectFactory: no factory registered for {type.FullName}. " +
+                $"Add it to AotObjectFactory._factories for NativeAOT compatibility.");
 
         // Dynamic fallback for generic collection types we didn't pre-register.
         // NativeAOT can construct generic types if the concrete type arguments are preserved.
