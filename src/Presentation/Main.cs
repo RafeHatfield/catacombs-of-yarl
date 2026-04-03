@@ -60,6 +60,7 @@ public partial class Main : Node
 
     // Map drag-to-pan state
     private bool _isDragging;
+    private bool _dragStartRecorded; // true only when _UnhandledInput saw the matching DOWN event
     private Vector2 _dragStartScreenPos;
     private Vector2 _cameraPositionAtDragStart;
     private const float DragThreshold = 10f; // pixels before drag mode activates
@@ -513,14 +514,15 @@ public partial class Main : Node
                 _dragStartScreenPos = touch.Position;
                 _cameraPositionAtDragStart = _gameView.Position;
                 _isDragging = false;
+                _dragStartRecorded = true;
             }
             else
             {
-                // Release: fire tap only if neither drag events nor the release position
-                // indicate the finger moved — guards against drag events being consumed
-                // by a UI layer before reaching _UnhandledInput.
+                // Only fire if _UnhandledInput saw the matching DOWN. If a UI button
+                // consumed the DOWN via AcceptEvent(), _dragStartRecorded stays false
+                // and the orphaned UP is silently ignored.
                 bool fingerMoved = (touch.Position - _dragStartScreenPos).Length() > DragThreshold;
-                if (!_isDragging && !fingerMoved)
+                if (_dragStartRecorded && !_isDragging && !fingerMoved)
                 {
                     Diag.Log($"_UnhandledInput tap at {_dragStartScreenPos}, phase={_gameController.Phase}");
                     var localPos = _gameView.ToLocal(_dragStartScreenPos);
@@ -528,6 +530,7 @@ public partial class Main : Node
                     _gameController.HandleTap(localPos);
                 }
                 _isDragging = false;
+                _dragStartRecorded = false;
             }
             return;
         }
@@ -553,11 +556,12 @@ public partial class Main : Node
                 _dragStartScreenPos = mb.Position;
                 _cameraPositionAtDragStart = _gameView.Position;
                 _isDragging = false;
+                _dragStartRecorded = true;
             }
             else
             {
                 bool fingerMoved = (mb.Position - _dragStartScreenPos).Length() > DragThreshold;
-                if (!_isDragging && !fingerMoved)
+                if (_dragStartRecorded && !_isDragging && !fingerMoved)
                 {
                     Diag.Log($"_UnhandledInput tap at {_dragStartScreenPos}, phase={_gameController.Phase}");
                     var localPos = _gameView.ToLocal(_dragStartScreenPos);
@@ -565,6 +569,7 @@ public partial class Main : Node
                     _gameController.HandleTap(localPos);
                 }
                 _isDragging = false;
+                _dragStartRecorded = false;
             }
             return;
         }
