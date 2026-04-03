@@ -36,7 +36,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | [plan_ranged_combat.md](plan_ranged_combat.md) | [ ] | Range bands, retaliation-first, knockback, special ammo/quiver |
 | [plan_spell_wand_scroll_system.md](plan_spell_wand_scroll_system.md) | [~] | 30+ spells, wand charges, scroll effects, spell targeting (Phase 1+2 complete; Phase 3 SingleTarget + Phase 5 Portal pending) |
 | [plan_faction_system.md](plan_faction_system.md) | [ ] | Faction hostility matrix, orc vs undead, emergent combat |
-| [plan_corpse_necromancer.md](plan_corpse_necromancer.md) | [~] | Corpse entity lifecycle, necromancer + plague_necromancer AI, Raise Dead scroll — Phase 1 (corpse system) complete |
+| [plan_corpse_necromancer.md](plan_corpse_necromancer.md) | [x] | Corpse entity lifecycle, necromancer + plague_necromancer AI, Raise Dead scroll — Phase 1 (corpse system) + Phase 2 (raise dead resolver, NecromancerAI) complete |
 
 ### Tier 3 — World Systems
 | Plan | Status | Description |
@@ -48,7 +48,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Active Implementation Plans
 | Plan | Status | Description |
 |------|--------|-------------|
-| [plan_monster_expansion.md](plan_monster_expansion.md) | [ ] | 28 monsters in 4 waves: orc variants, new factions (troll/skeleton/spiders), mid-game, deep/bosses |
+| [plan_monster_expansion.md](plan_monster_expansion.md) | [~] | 28 monsters in 4 waves: Wave 1 orc variants [x], Wave 2 (troll/skeleton/spiders) [x], Wave 3 (necromancer/giant_spider/cultist) [x], Wave 4 deep/bosses [ ] |
 | [slime_monsters.md](slime_monsters.md) | [x] | slime + large_slime: split-under-pressure, corrosion, weapon materials |
 | [depth_scaling_weights.md](depth_scaling_weights.md) | [x] | from_dungeon_level depth weights, EncounterBudget wiring |
 

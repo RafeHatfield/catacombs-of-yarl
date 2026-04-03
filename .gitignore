@@ -22,6 +22,7 @@ packages/
 .vscode/
 *.sln.DotSettings.user
 .idea/
+*.uid
 
 # OS
 .DS_Store
