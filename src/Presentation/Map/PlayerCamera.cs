@@ -42,6 +42,18 @@ public static class PlayerCamera
     private static Tween? _lastCameraTween;
 
     /// <summary>
+    /// Cancel any in-flight camera tween without repositioning the camera.
+    /// Call this when the user starts a drag so the tween doesn't fight their input.
+    /// </summary>
+    public static void CancelTween()
+    {
+        if (_lastCameraTween == null) return;
+        _lastCameraTween.Kill();
+        TweenTracker.Killed();
+        _lastCameraTween = null;
+    }
+
+    /// <summary>
     /// Position and scale GameView so the player is centered in the available
     /// viewport area (accounting for HUD margins above and below).
     /// Instant snap — correct for floor loads and initial setup.

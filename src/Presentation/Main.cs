@@ -58,6 +58,12 @@ public partial class Main : Node
     private DungeonFloorBuilder? _floorBuilder;
     private LevelTemplateRegistry? _levelTemplates;
 
+    // Map drag-to-pan state
+    private bool _isDragging;
+    private Vector2 _dragStartScreenPos;
+    private Vector2 _cameraPositionAtDragStart;
+    private const float DragThreshold = 10f; // pixels before drag mode activates
+
     // Cached tap indicator texture — loaded once, reused on every tap.
     private Texture2D? _tapIndicatorTexture;
     // Tracked tap indicators — alpha lerped in _Process, no Tween involved.
@@ -499,18 +505,77 @@ public partial class Main : Node
     {
         if (_gameController == null || _gameView == null) return;
 
-        Vector2? screenPos = null;
-        if (@event is InputEventScreenTouch touch && touch.Pressed)
-            screenPos = touch.Position;
-        else if (@event is InputEventMouseButton mb && mb.Pressed && mb.ButtonIndex == MouseButton.Left)
-            screenPos = mb.Position;
-
-        if (screenPos.HasValue)
+        // --- Touch (mobile) ---
+        if (@event is InputEventScreenTouch touch)
         {
-            Diag.Log($"_UnhandledInput tap at {screenPos.Value}, phase={_gameController.Phase}");
-            var localPos = _gameView.ToLocal(screenPos.Value);
-            SpawnTapIndicator(localPos);
-            _gameController.HandleTap(localPos);
+            if (touch.Pressed)
+            {
+                _dragStartScreenPos = touch.Position;
+                _cameraPositionAtDragStart = _gameView.Position;
+                _isDragging = false;
+            }
+            else
+            {
+                // Release: fire tap only if the finger never drifted past the drag threshold
+                if (!_isDragging)
+                {
+                    Diag.Log($"_UnhandledInput tap at {_dragStartScreenPos}, phase={_gameController.Phase}");
+                    var localPos = _gameView.ToLocal(_dragStartScreenPos);
+                    SpawnTapIndicator(localPos);
+                    _gameController.HandleTap(localPos);
+                }
+                _isDragging = false;
+            }
+            return;
+        }
+
+        if (@event is InputEventScreenDrag screenDrag)
+        {
+            var delta = screenDrag.Position - _dragStartScreenPos;
+            if (!_isDragging && delta.Length() > DragThreshold)
+            {
+                _isDragging = true;
+                PlayerCamera.CancelTween();
+            }
+            if (_isDragging)
+                _gameView.Position = _cameraPositionAtDragStart + delta;
+            return;
+        }
+
+        // --- Mouse (desktop) ---
+        if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Left)
+        {
+            if (mb.Pressed)
+            {
+                _dragStartScreenPos = mb.Position;
+                _cameraPositionAtDragStart = _gameView.Position;
+                _isDragging = false;
+            }
+            else
+            {
+                if (!_isDragging)
+                {
+                    Diag.Log($"_UnhandledInput tap at {_dragStartScreenPos}, phase={_gameController.Phase}");
+                    var localPos = _gameView.ToLocal(_dragStartScreenPos);
+                    SpawnTapIndicator(localPos);
+                    _gameController.HandleTap(localPos);
+                }
+                _isDragging = false;
+            }
+            return;
+        }
+
+        if (@event is InputEventMouseMotion motion && (motion.ButtonMask & MouseButtonMask.Left) != 0)
+        {
+            var delta = motion.Position - _dragStartScreenPos;
+            if (!_isDragging && delta.Length() > DragThreshold)
+            {
+                _isDragging = true;
+                PlayerCamera.CancelTween();
+            }
+            if (_isDragging)
+                _gameView.Position = _cameraPositionAtDragStart + delta;
+            return;
         }
 
         if (OS.IsDebugBuild() && @event is InputEventKey key && key.Pressed && key.Keycode == Key.F3)
