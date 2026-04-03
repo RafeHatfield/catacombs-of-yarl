@@ -23,24 +23,36 @@ player_sprite: "1"  # Knight M (frame A file 01)
 
 entities:
   # Orcs
-  orc: "253"        # Goblin Fighter    packed=127 → frameA=253
-  orc_grunt: "253"  # Goblin Fighter    packed=127 → frameA=253
-  orc_brute: "255"  # Orc Captain       packed=133 → frameA=259
+  orc: "253"              # Goblin Fighter    packed=127 → frameA=253
+  orc_grunt: "253"        # Goblin Fighter    packed=127 → frameA=253
+  orc_brute: "255"        # Orc Captain       packed=133 → frameA=259
+  orc_scout: "253"        # reuse orc
+  orc_veteran: "255"      # reuse orc_brute
+  orc_skirmisher: "253"   # reuse orc
+  orc_shaman: "117"       # Dark Wizard — shaman feel
+  orc_chieftain: "255"    # reuse orc_brute — biggest orc
 
   # Goblinoids / humanoids
-  troll: "261"      # Troll             packed=135 → frameA=261
-  cultist: "117"    # Dark Wizard       packed=155 → frameA=299
+  troll: "261"               # Troll             packed=135 → frameA=261
+  cultist: "117"             # Dark Wizard       packed=155 → frameA=299
+  cultist_blademaster: "117" # reuse cultist
+
+  # Undead casters
+  necromancer: "297"         # Necromancer       packed=154 → frameA=297
+  plague_necromancer: "297"  # reuse necromancer
 
   # Thief — best match is Assassin (packed=55)
   thief: "109"      # Assassin          packed=55  → frameA=109
 
   # Creatures
-  rat: "224"        # Grey Rat          packed=116 → frameA=224
-  giant_rat: "224"  # Grey Rat          packed=116 → frameA=224
-  bat: "219"        # Black Bat         packed=111 → frameA=219
+  rat: "224"            # Grey Rat          packed=116 → frameA=224
+  giant_rat: "224"      # Grey Rat          packed=116 → frameA=224
+  bat: "219"            # Black Bat         packed=111 → frameA=219
   web_spider: "222"     # Red Spider        packed=114 → frameA=222
-  spider: "223"     # Red Spider        packed=114 → frameA=222
-  cave_spider: "223"     # Red Spider        packed=114 → frameA=222
+  spider: "223"         # Red Spider        packed=114 → frameA=222
+  cave_spider: "223"    # Red Spider        packed=114 → frameA=222
+  giant_spider: "222"   # Red Spider (larger variant)
+  fire_beetle: "220"    # Beetle-adjacent creature
 
   # Slimes
   slime: "218"      # Green Slime       packed=110 → frameA=218
@@ -137,14 +149,38 @@ items:
   ring_of_free_action: "84"
   ring_of_searching: "83"
 
-  # Scrolls (45-49: rolled parchment sprites)
+  # Scrolls — all share sprite "136" (rune scroll); identified by name not appearance.
+  # Entity name → sprite entry required so SpriteMapping.GetSpriteBase() resolves correctly.
   scroll_of_identify: "136"
-  scroll_of_magic_map: "136"
-  scroll_of_enchant: "136"
-  scroll_of_fire: "136"
-  scroll_of_teleport: "136"
-  scroll_of_curse: "136"
   scroll_of_light: "136"
+  scroll_of_teleport: "136"
+  scroll_of_blink: "136"
+  scroll_of_magic_mapping: "136"
+  scroll_of_magic_map: "136"        # legacy alias
+  scroll_of_detect_monsters: "136"
+  scroll_of_lightning: "136"
+  scroll_of_fireball: "136"
+  scroll_of_fire: "136"             # legacy alias
+  scroll_of_earthquake: "136"
+  scroll_of_confusion: "136"
+  scroll_of_slow: "136"
+  scroll_of_fear: "136"
+  scroll_of_aggravation: "136"
+  scroll_of_enchant_weapon: "136"
+  scroll_of_enchant_armor: "136"
+  scroll_of_enchant: "136"          # legacy alias
+  scroll_of_disarm: "136"
+  scroll_of_shield: "136"
+  scroll_of_haste: "136"
+  scroll_of_invisibility: "136"
+  scroll_of_rage: "136"
+  scroll_of_glue: "136"
+  scroll_of_silence: "136"
+  scroll_of_plague: "136"
+  scroll_of_raise_dead: "136"
+  scroll_of_dragon_fart: "136"
+  scroll_of_yo_mama: "136"
+  scroll_of_curse: "136"
 
   # Mystery sprites for unidentified items
   # Black bottle silhouettes for unidentified potions (3 variants)

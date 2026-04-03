@@ -210,7 +210,7 @@ monsters:
 
   cave_spider:
     name: "Cave Spider"
-    min_depth: 1
+    min_depth: 2
     spawn_weight: 12
     stats:
       hp: 16
