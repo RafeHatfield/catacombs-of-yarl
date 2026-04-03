@@ -33,6 +33,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Tier 2 — Combat Depth
 | Plan | Status | Description |
 |------|--------|-------------|
+| [plan_rings.md](plan_rings.md) | [ ] | 16 rings (10 Phase 1, 6 deferred): stat bonuses, regen, speed, free action, teleportation |
 | [plan_ranged_combat.md](plan_ranged_combat.md) | [ ] | Range bands, retaliation-first, knockback, special ammo/quiver |
 | [plan_spell_wand_scroll_system.md](plan_spell_wand_scroll_system.md) | [~] | 30+ spells, wand charges, scroll effects, spell targeting (Phase 1+2 complete; Phase 3 SingleTarget + Phase 5 Portal pending) |
 | [plan_faction_system.md](plan_faction_system.md) | [ ] | Faction hostility matrix, orc vs undead, emergent combat |

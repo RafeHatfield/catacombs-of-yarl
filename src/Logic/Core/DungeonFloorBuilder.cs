@@ -148,6 +148,13 @@ public sealed class DungeonFloorBuilder
             // Policy: simplest approach that avoids confusing persistent debuffs across floors.
             StatusEffectProcessor.ClearAllEffects(existingPlayer);
             player = PlayerCarryForward.Apply(existingPlayer);
+
+            // Restore ring effects that are NOT preserved in the carried Fighter stats.
+            // Stat rings (protection/strength/dexterity/constitution/might) survive because
+            // PlayerCarryForward copies the live Fighter (which has ring bonuses baked in).
+            // But RingMaxHpBonus, SpeedBonusTracker.RingRatio, and FreeActionTag are NOT
+            // in Fighter's constructor and are NOT copied — ReapplyRingEffects restores them.
+            TurnController.ReapplyRingEffects(player);
         }
         else
         {

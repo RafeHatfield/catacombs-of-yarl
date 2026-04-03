@@ -71,6 +71,28 @@ public sealed class ItemDefinition
     public ItemCategory Category { get; set; } = ItemCategory.Other;
 
     /// <summary>
+    /// Ring effect type string (e.g. "protection", "speed"). Null for non-ring items.
+    /// Set by ContentLoader.LoadRings when converting RingDefinition to ItemDefinition.
+    /// Read by ItemFactory to attach a RingEffectComponent.
+    /// </summary>
+    [YamlMember(Alias = "ring_effect")]
+    public string? RingEffect { get; set; }
+
+    /// <summary>
+    /// Ring effect strength (e.g. 2 for +2 AC, 20 for 20% teleport chance).
+    /// Only meaningful when RingEffect is non-null.
+    /// </summary>
+    [YamlMember(Alias = "effect_strength")]
+    public int EffectStrength { get; set; }
+
+    /// <summary>
+    /// Speed bonus ratio for speed rings (e.g. 0.10 for ring_of_speed, 0.25 for ring_of_hummingbird).
+    /// Stored as a double here because the YAML integer EffectStrength cannot carry sub-integer precision.
+    /// Set by ContentLoader.LoadRings based on ring_effect type.
+    /// </summary>
+    public double RingSpeedRatio { get; set; }
+
+    /// <summary>
     /// Human-readable display name. Defaults to Name if not set.
     /// Used as the IdentifiedName in the IdentifiableItem component.
     /// </summary>

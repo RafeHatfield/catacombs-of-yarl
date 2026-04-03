@@ -302,6 +302,12 @@ public sealed class TeleportEvent : TurnEvent
     public int ToX { get; init; }
     public int ToY { get; init; }
     public bool Misfire { get; init; }
+
+    /// <summary>
+    /// Cause of the teleport. Empty for spell-triggered teleports.
+    /// "ring_of_teleportation" for on-hit ring procs.
+    /// </summary>
+    public string Reason { get; init; } = "";
 }
 
 /// <summary>

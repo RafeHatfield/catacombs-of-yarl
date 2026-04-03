@@ -34,6 +34,14 @@ public sealed class Fighter : IComponent
     // Experience awarded on kill (monsters only)
     public int Xp { get; set; }
 
+    /// <summary>
+    /// Extra max HP from equipped constitution rings.
+    /// Stacks with a second ring. Reversed on unequip (Hp clamped to new MaxHp).
+    /// Kept separate from ConstitutionMod so it's explicitly reversible without
+    /// affecting the CON stat cascade.
+    /// </summary>
+    public int RingMaxHpBonus { get; set; }
+
     public Fighter(
         int hp,
         int defense = 0,
@@ -62,11 +70,12 @@ public sealed class Fighter : IComponent
     }
 
     /// <summary>
-    /// Max HP = base + CON modifier. Matches PoC fighter.max_hp: base_max_hp + constitution_mod.
+    /// Max HP = base + CON modifier + ring bonus. Matches PoC fighter.max_hp: base_max_hp + constitution_mod.
+    /// RingMaxHpBonus is the +20 per equipped ring_of_constitution (stacks, cleanly reversible).
     /// Equipment bonuses applied externally by services.
     /// Note: Hp starts at BaseMaxHp (flat), so player starts slightly below max HP if CON > 10.
     /// </summary>
-    public int MaxHp => BaseMaxHp + ConstitutionMod;
+    public int MaxHp => BaseMaxHp + ConstitutionMod + RingMaxHpBonus;
 
     /// <summary>Strength modifier from ability score.</summary>
     public int StrengthMod => CombatMath.StatModifier(Strength);

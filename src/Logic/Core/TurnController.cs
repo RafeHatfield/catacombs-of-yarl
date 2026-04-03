@@ -47,6 +47,32 @@ public static class TurnController
         if (!playerSkipTurn)
             ResolvePlayerAction(state, action, events, monsterFactory, portalEntityFactory);
         StatusEffectProcessor.ProcessTurnEnd(state.Player, events);
+
+        // Ring of Regeneration: passive heal every 5 turns (not turn 0).
+        // Checked after the player acts so the heal happens at the end of their action phase.
+        // Using TurnCount % 5 == 0 matches PoC ring.py passive tick logic.
+        // Two regen rings heal twice (we count both slots).
+        if (state.TurnCount > 0 && state.TurnCount % 5 == 0)
+        {
+            int regenCount = CountRingEffect(state.Player.Get<Equipment>(), RingEffectKind.Regeneration);
+            if (regenCount > 0)
+            {
+                var regenFighter = state.PlayerFighter;
+                for (int r = 0; r < regenCount; r++)
+                {
+                    int healed = regenFighter.Heal(1);
+                    if (healed > 0)
+                        events.Add(new HotHealEvent
+                        {
+                            ActorId  = state.Player.Id,
+                            EntityId = state.Player.Id,
+                            EffectName = "ring_of_regeneration",
+                            Amount   = healed,
+                        });
+                }
+            }
+        }
+
         state.RecomputeFov(); // update FOV after player moves (no-op in scenario mode)
 
         // === MONSTER TURNS ===
@@ -860,7 +886,15 @@ public static class TurnController
         if (!inventory.Remove(item)) return;
 
         var equipment = state.Player.GetOrAdd<Equipment>();
-        var displaced = equipment.SetSlot(equippable.Slot, item);
+
+        // Ring slot auto-assignment: all rings are created with slot=LeftRing.
+        // If LeftRing is occupied but RightRing is free, auto-redirect to RightRing.
+        // This prevents forcing the player to manually juggle left vs. right.
+        var targetSlot = equippable.Slot;
+        if (targetSlot == EquipmentSlot.LeftRing && equipment.LeftRing != null && equipment.RightRing == null)
+            targetSlot = EquipmentSlot.RightRing;
+
+        var displaced = equipment.SetSlot(targetSlot, item);
 
         // Attempt to return the displaced item to inventory. If inventory is full and
         // the displaced item can't be stacked, drop it at the player's feet instead.
@@ -888,7 +922,7 @@ public static class TurnController
 
         // Propagate weapon speed_bonus to player's SpeedBonusTracker so momentum
         // system activates when equipping a weapon that has a speed bonus.
-        if (equippable.Slot == EquipmentSlot.MainHand)
+        if (targetSlot == EquipmentSlot.MainHand)
         {
             double weaponSpeed = item.Get<SpeedBonusTracker>()?.EquipmentRatio ?? 0;
             var tracker = state.Player.Get<SpeedBonusTracker>();
@@ -900,12 +934,29 @@ public static class TurnController
             if (tracker != null) tracker.EquipmentRatio = weaponSpeed;
         }
 
+        // If a ring was displaced, reverse its effect before applying the new ring's effect.
+        // This ensures stat accounting stays correct when swapping rings.
+        if (displaced != null && (targetSlot == EquipmentSlot.LeftRing || targetSlot == EquipmentSlot.RightRing))
+        {
+            var displacedEffect = displaced.Get<RingEffectComponent>();
+            if (displacedEffect != null)
+                ApplyRingEffect(state.Player, displacedEffect, equip: false, events);
+        }
+
+        // Apply equip effect for rings
+        if (targetSlot == EquipmentSlot.LeftRing || targetSlot == EquipmentSlot.RightRing)
+        {
+            var ringEffect = item.Get<RingEffectComponent>();
+            if (ringEffect != null)
+                ApplyRingEffect(state.Player, ringEffect, equip: true, events);
+        }
+
         events.Add(new EquipEvent
         {
             ActorId          = state.Player.Id,
             ItemId           = item.Id,
             ItemName         = item.Name,
-            Slot             = equippable.Slot,
+            Slot             = targetSlot,
             DisplacedItemId  = displacedId,
             DisplacedItemName = displacedName,
         });
@@ -938,6 +989,14 @@ public static class TurnController
         {
             var tracker = state.Player.Get<SpeedBonusTracker>();
             if (tracker != null) tracker.EquipmentRatio = 0;
+        }
+
+        // Reverse ring effects on unequip
+        if (slot == EquipmentSlot.LeftRing || slot == EquipmentSlot.RightRing)
+        {
+            var ringEffect = item.Get<RingEffectComponent>();
+            if (ringEffect != null)
+                ApplyRingEffect(state.Player, ringEffect, equip: false, events);
         }
 
         events.Add(new UnequipEvent
@@ -1123,6 +1182,42 @@ public static class TurnController
             var onHit = monster.Get<OnHitEffectComponent>();
             if (onHit != null)
                 ResolveOnHitEffect(target, onHit, events);
+        }
+
+        // Ring of Teleportation: 20% on-hit, player teleports to a random open tile.
+        // Cancels the bonus attack chain — returning here means no recursion.
+        // Two teleportation rings each get an independent roll (36% effective chance).
+        if (result.Hit && !result.TargetKilled && target.Id == state.Player.Id)
+        {
+            int teleportCount = CountRingEffect(state.Player.Get<Equipment>(), RingEffectKind.Teleportation);
+            for (int t = 0; t < teleportCount; t++)
+            {
+                if (state.Rng.Next(0, 100) < 20)
+                {
+                    int fromX = target.X, fromY = target.Y;
+                    var dest = FindRandomOpenTile(state, target);
+                    if (dest.HasValue)
+                    {
+                        state.Map.UnregisterEntity(target);
+                        target.X = dest.Value.x;
+                        target.Y = dest.Value.y;
+                        state.Map.RegisterEntity(target);
+                        events.Add(new TeleportEvent
+                        {
+                            ActorId  = target.Id,
+                            EntityId = target.Id,
+                            FromX    = fromX,
+                            FromY    = fromY,
+                            ToX      = dest.Value.x,
+                            ToY      = dest.Value.y,
+                            Misfire  = false,
+                            Reason   = "ring_of_teleportation",
+                        });
+                        return; // teleport cancels this monster's bonus attack chain
+                    }
+                    break; // no open tile found — skip remaining rolls
+                }
+            }
         }
 
         // Monster bonus attacks — recurse if triggered and target still alive
@@ -1487,5 +1582,219 @@ public static class TurnController
             CorpseId = corpseId,
             OriginalMonsterId = originalMonsterId,
         });
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Ring system
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Apply or reverse a ring's stat effect on the player entity.
+    /// equip=true: apply the bonus. equip=false: remove the bonus.
+    ///
+    /// Phase 2 ring kinds (Resistance, Clarity, Invisibility, Searching, Wizardry, Luck)
+    /// do nothing here — their parent systems are not yet implemented. They are safely inert.
+    /// </summary>
+    private static void ApplyRingEffect(Entity player, RingEffectComponent ring, bool equip, List<TurnEvent> events)
+    {
+        int delta = equip ? ring.Strength : -ring.Strength;
+        var fighter = player.Get<Fighter>();
+
+        switch (ring.Kind)
+        {
+            case RingEffectKind.Protection:
+                if (fighter != null) fighter.BaseDefense += delta;
+                break;
+
+            case RingEffectKind.Strength:
+                if (fighter != null) fighter.Strength += delta;
+                break;
+
+            case RingEffectKind.Dexterity:
+                if (fighter != null) fighter.Dexterity += delta;
+                break;
+
+            case RingEffectKind.Constitution:
+                if (fighter != null)
+                {
+                    fighter.Constitution += delta;
+                    // +20 HP bonus tracked separately so it cleanly reverses on unequip.
+                    // The +2 CON from the delta above gives +1 MaxHp via ConstitutionMod.
+                    // The +20 RingMaxHpBonus is the additional explicit HP the ring grants.
+                    if (equip)
+                    {
+                        fighter.RingMaxHpBonus += 20;
+                        fighter.Hp += 20; // immediate current HP boost on equip
+                    }
+                    else
+                    {
+                        fighter.RingMaxHpBonus -= 20;
+                        // Clamp current HP to new (lower) MaxHp
+                        fighter.Hp = Math.Min(fighter.Hp, fighter.MaxHp);
+                    }
+                }
+                break;
+
+            case RingEffectKind.Might:
+                if (fighter != null)
+                {
+                    // Strength is effect_strength=4 → +1 DamageMin, +4 DamageMax (PoC: might ring adds both)
+                    // Convention: DamageMin gets +1, DamageMax gets +strength
+                    int minDelta = equip ? 1 : -1;
+                    fighter.DamageMin += minDelta;
+                    fighter.DamageMax += delta;
+                }
+                break;
+
+            case RingEffectKind.Regeneration:
+                // Passive tick — no stat mutation on equip/unequip.
+                // The tick fires in ProcessTurn via CountRingEffect check.
+                break;
+
+            case RingEffectKind.Speed:
+                // Adjust player's SpeedBonusTracker.RingRatio.
+                // Ring of Speed = 0.10, Ring of Hummingbird = 0.25 (stored in SpeedRatio).
+                {
+                    var tracker = player.Get<SpeedBonusTracker>();
+                    if (tracker == null && equip)
+                    {
+                        tracker = new SpeedBonusTracker();
+                        player.Add(tracker);
+                    }
+                    if (tracker != null)
+                        tracker.RingRatio += equip ? ring.SpeedRatio : -ring.SpeedRatio;
+                }
+                break;
+
+            case RingEffectKind.FreeAction:
+                if (equip)
+                    player.Add(new FreeActionTag());
+                else
+                    player.Remove<FreeActionTag>();
+                break;
+
+            case RingEffectKind.Teleportation:
+                // On-hit passive — no stat mutation. Checked in ResolveMonsterAttack.
+                break;
+
+            // Phase 2 stubs: Resistance, Clarity, Invisibility, Searching, Wizardry, Luck
+            // No-op until parent systems land.
+            default:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Count how many of a given ring effect kind are equipped across both ring slots.
+    /// Returns 0 if equipment is null or no ring slots are occupied with that effect.
+    /// </summary>
+    private static int CountRingEffect(Equipment? equipment, RingEffectKind kind)
+    {
+        if (equipment == null) return 0;
+        int count = 0;
+        if (equipment.LeftRing?.Get<RingEffectComponent>()?.Kind == kind) count++;
+        if (equipment.RightRing?.Get<RingEffectComponent>()?.Kind == kind) count++;
+        return count;
+    }
+
+    /// <summary>
+    /// Returns true if the player has at least one ring of the given kind equipped.
+    /// </summary>
+    private static bool HasRingEffect(Equipment? equipment, RingEffectKind kind)
+        => CountRingEffect(equipment, kind) > 0;
+
+    /// <summary>
+    /// Find a random walkable, unoccupied tile for teleportation.
+    /// Returns null if no open tile is found within a reasonable scan.
+    /// Excludes the entity's current position.
+    /// </summary>
+    private static (int x, int y)? FindRandomOpenTile(GameState state, Entity entity)
+    {
+        var map = state.Map;
+        // Collect all walkable, unblocked tiles excluding the entity's current position.
+        // In scenario arenas (20x20 = 400 tiles) this is cheap. In dungeons (120x80 = 9600)
+        // it's still fast. We snapshot once rather than retrying random positions.
+        var candidates = new List<(int x, int y)>();
+        for (int x = 0; x < map.Width; x++)
+        {
+            for (int y = 0; y < map.Height; y++)
+            {
+                if (x == entity.X && y == entity.Y) continue;
+                if (map.CanMoveTo(x, y))
+                    candidates.Add((x, y));
+            }
+        }
+        if (candidates.Count == 0) return null;
+        return candidates[state.Rng.Next(candidates.Count)];
+    }
+
+    /// <summary>
+    /// Re-apply all equipped ring stat effects to the player after a floor transition.
+    ///
+    /// PlayerCarryForward.Apply() creates a new Fighter with base stats only —
+    /// ring bonuses (BaseDefense, Strength, etc.) are not in the Fighter constructor.
+    /// This method must be called after Apply() to restore ring effects.
+    ///
+    /// Called from DungeonFloorBuilder (or wherever floor transitions happen) after
+    /// PlayerCarryForward.Apply() returns the new player entity.
+    ///
+    /// Note: For carry-forward we create a new Fighter from the OLD fighter's base stats,
+    /// but the OLD fighter already had ring bonuses applied. So if we just copy the stat
+    /// values, the bonus is already baked in — we would double-apply if we called this.
+    ///
+    /// IMPORTANT: PlayerCarryForward.Apply() copies Strength, Dexterity, Constitution etc.
+    /// from the live fighter (which already has ring bonuses). This means ring effects
+    /// are already embedded in the carried-forward stats. This method should only be called
+    /// when the fighter stats were reset to BASE values (not carried forward).
+    ///
+    /// For the current carry-forward strategy (copy live stats), call sites should NOT
+    /// call this — the ring bonuses survive in the copied stats. However, RingMaxHpBonus,
+    /// RingRatio, and FreeActionTag MUST be re-applied because they are not carried forward.
+    /// </summary>
+    public static void ReapplyRingEffects(Entity player)
+    {
+        var equipment = player.Get<Equipment>();
+        if (equipment == null) return;
+
+        var fighter = player.Get<Fighter>();
+
+        // Re-apply ring effects that are NOT captured in Fighter stat fields:
+        // - RingMaxHpBonus: new Fighter starts with 0, must be restored
+        // - SpeedBonusTracker.RingRatio: tracker is not carried forward
+        // - FreeActionTag: marker component, not carried forward
+
+        foreach (var ringSlot in new[] { equipment.LeftRing, equipment.RightRing })
+        {
+            var ring = ringSlot?.Get<RingEffectComponent>();
+            if (ring == null) continue;
+
+            switch (ring.Kind)
+            {
+                case RingEffectKind.Constitution:
+                    if (fighter != null)
+                    {
+                        // Only restore RingMaxHpBonus — Constitution stat was already carried forward
+                        fighter.RingMaxHpBonus += 20;
+                    }
+                    break;
+
+                case RingEffectKind.Speed:
+                    {
+                        var tracker = player.Get<SpeedBonusTracker>();
+                        if (tracker == null)
+                        {
+                            tracker = new SpeedBonusTracker();
+                            player.Add(tracker);
+                        }
+                        tracker.RingRatio += ring.SpeedRatio;
+                    }
+                    break;
+
+                case RingEffectKind.FreeAction:
+                    if (!player.Has<FreeActionTag>())
+                        player.Add(new FreeActionTag());
+                    break;
+            }
+        }
     }
 }

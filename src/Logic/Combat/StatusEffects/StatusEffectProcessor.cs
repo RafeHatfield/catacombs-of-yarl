@@ -27,10 +27,21 @@ public static class StatusEffectProcessor
     /// If the entity already has this effect, refreshes duration to the maximum of
     /// the current remaining turns and the requested duration (no downgrade).
     /// If the entity does not have this effect, creates and attaches a new instance.
-    /// Returns the (possibly existing) effect component.
+    /// Returns the (possibly existing) effect component, or null if blocked by FreeActionTag.
+    ///
+    /// FreeActionTag: entities with this tag are immune to SlowedEffect and ImmobilizedEffect.
+    /// Other effects (poison, burning, sleep, etc.) are not blocked.
     /// </summary>
-    public static T ApplyEffect<T>(Entity entity, int duration) where T : class, IStatusEffect, new()
+    public static T? ApplyEffect<T>(Entity entity, int duration) where T : class, IStatusEffect, new()
     {
+        // FreeAction blocks slow and paralysis application entirely.
+        // The tag check is on the concrete type to keep this O(1) and avoid a type string comparison.
+        if (entity.Has<FreeActionTag>())
+        {
+            if (typeof(T) == typeof(SlowedEffect) || typeof(T) == typeof(ImmobilizedEffect))
+                return null;
+        }
+
         var existing = entity.Get<T>();
         if (existing != null)
         {
@@ -116,8 +127,13 @@ public static class StatusEffectProcessor
 
         // ── Skip-turn checks ───────────────────────────────────────────────
 
-        // ImmobilizedEffect: always skip
-        if (entity.Has<ImmobilizedEffect>())
+        // FreeActionTag: entity is immune to slow and paralysis.
+        // Check once here; the individual effect checks below are still run to decrement
+        // their durations in ProcessTurnEnd — we just don't skip the turn.
+        bool hasFreeAction = entity.Has<FreeActionTag>();
+
+        // ImmobilizedEffect: always skip (unless FreeAction)
+        if (entity.Has<ImmobilizedEffect>() && !hasFreeAction)
         {
             events.Add(new SkipTurnEvent
             {
@@ -129,6 +145,7 @@ public static class StatusEffectProcessor
         }
 
         // SleepEffect: always skip (woken by attack damage via OnDamageTaken)
+        // SleepEffect is NOT blocked by FreeAction — free action only covers slow/paralysis.
         if (entity.Has<SleepEffect>())
         {
             events.Add(new SkipTurnEvent
@@ -140,10 +157,10 @@ public static class StatusEffectProcessor
             skipTurn = true;
         }
 
-        // SlowedEffect: skip odd-numbered turns (turnCount % 2 == 1)
+        // SlowedEffect: skip odd-numbered turns (turnCount % 2 == 1) (unless FreeAction)
         // Even turns the entity acts normally; odd turns it loses its action.
         // Using the caller-provided turnCount so this is deterministic and testable.
-        if (entity.Has<SlowedEffect>() && turnCount % 2 == 1)
+        if (entity.Has<SlowedEffect>() && turnCount % 2 == 1 && !hasFreeAction)
         {
             events.Add(new SkipTurnEvent
             {

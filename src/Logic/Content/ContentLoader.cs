@@ -214,6 +214,45 @@ public sealed class ContentLoader
     }
 
     /// <summary>
+    /// Load ring definitions from a YAML string.
+    /// Converts each RingDefinition into an ItemDefinition with category=Ring,
+    /// slot=left_ring, and ring-specific fields populated.
+    /// Returns a dictionary of ring ID → ItemDefinition.
+    /// </summary>
+    public Dictionary<string, ItemDefinition> LoadRings(string yaml)
+    {
+        var root = _deserializer.Deserialize<Dictionary<string, Dictionary<string, RingDefinition>>>(yaml);
+        var rings = new Dictionary<string, ItemDefinition>();
+
+        if (root == null || !root.TryGetValue("rings", out var section))
+            return rings;
+
+        foreach (var (id, def) in section)
+        {
+            var itemDef = new ItemDefinition
+            {
+                Name = TitleCase(id),
+                Slot = "left_ring",   // All rings start as left_ring; ResolveEquip auto-redirects to right
+                Category = ItemCategory.Ring,
+                Char = def.Char,
+                Color = def.Color,
+                RingEffect = def.RingEffect,
+                EffectStrength = def.EffectStrength,
+                // Speed ring ratio: convert from integer percentage to double ratio
+                RingSpeedRatio = def.RingEffect switch
+                {
+                    "speed"       => 0.10,
+                    "hummingbird" => 0.25,
+                    _             => 0.0,
+                },
+            };
+            rings[id] = itemDef;
+        }
+
+        return rings;
+    }
+
+    /// <summary>
     /// Load all content from a single entities YAML string.
     /// Returns monsters, items, consumables, spell items, and floor item pool in one call.
     /// </summary>
@@ -226,10 +265,18 @@ public sealed class ContentLoader
         var floorPool = LoadFloorItemPool(yaml);
         var cleanYaml = StripTopLevelKey(yaml, "floor_item_pool");
 
+        var items = LoadItems(cleanYaml);
+
+        // Rings are loaded separately and merged into the items dictionary.
+        // This keeps ItemFactory as the single entity creation path.
+        var rings = LoadRings(cleanYaml);
+        foreach (var (id, def) in rings)
+            items[id] = def;
+
         return new ContentBundle
         {
             Monsters = LoadMonsters(cleanYaml),
-            Items = LoadItems(cleanYaml),
+            Items = items,
             Consumables = LoadConsumables(cleanYaml),
             SpellItems = LoadSpellItems(cleanYaml),
             FloorItemPool = floorPool,

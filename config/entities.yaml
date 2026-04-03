@@ -862,6 +862,37 @@ floor_item_pool:
   - item: wand_of_dragon_farts
     weight: 3
     min_depth: 4
+  # Rings (rare — weight 3-4, min_depth 1-4)
+  - item: ring_of_protection
+    weight: 4
+    min_depth: 1
+  - item: ring_of_strength
+    weight: 3
+    min_depth: 2
+  - item: ring_of_dexterity
+    weight: 3
+    min_depth: 2
+  - item: ring_of_regeneration
+    weight: 3
+    min_depth: 2
+  - item: ring_of_constitution
+    weight: 3
+    min_depth: 3
+  - item: ring_of_might
+    weight: 3
+    min_depth: 3
+  - item: ring_of_speed
+    weight: 3
+    min_depth: 3
+  - item: ring_of_free_action
+    weight: 3
+    min_depth: 3
+  - item: ring_of_hummingbird
+    weight: 3
+    min_depth: 4
+  - item: ring_of_teleportation
+    weight: 3
+    min_depth: 4
 
 consumables:
   healing_potion:
@@ -1269,3 +1300,103 @@ wands:
     recharge_scroll: "dragon_fart"
     char: "/"
     color: [180, 200, 80]
+rings:
+  # ── Phase 1: Fully implemented rings ────────────────────────────────────────
+
+  ring_of_protection:
+    char: "="
+    color: [180, 180, 180]
+    ring_effect: "protection"
+    effect_strength: 2
+
+  ring_of_regeneration:
+    char: "="
+    color: [100, 255, 100]
+    ring_effect: "regeneration"
+    effect_strength: 5
+
+  ring_of_strength:
+    char: "="
+    color: [220, 80, 80]
+    ring_effect: "strength"
+    effect_strength: 2
+
+  ring_of_dexterity:
+    char: "="
+    color: [80, 180, 220]
+    ring_effect: "dexterity"
+    effect_strength: 2
+
+  ring_of_constitution:
+    char: "="
+    color: [180, 100, 220]
+    ring_effect: "constitution"
+    effect_strength: 2
+
+  ring_of_might:
+    char: "="
+    color: [220, 140, 40]
+    ring_effect: "might"
+    effect_strength: 4
+
+  ring_of_speed:
+    char: "="
+    color: [100, 220, 255]
+    ring_effect: "speed"
+    effect_strength: 10
+
+  ring_of_hummingbird:
+    char: "="
+    color: [200, 255, 100]
+    ring_effect: "hummingbird"
+    effect_strength: 25
+
+  ring_of_free_action:
+    char: "="
+    color: [255, 220, 100]
+    ring_effect: "free_action"
+    effect_strength: 1
+
+  ring_of_teleportation:
+    char: "="
+    color: [180, 100, 255]
+    ring_effect: "teleportation"
+    effect_strength: 20
+
+  # ── Phase 2: Stubs only — no floor pool entries, equip/unequip is a no-op ──
+
+  ring_of_resistance:
+    char: "="
+    color: [120, 200, 120]
+    ring_effect: "resistance"
+    effect_strength: 10
+
+  ring_of_clarity:
+    char: "="
+    color: [200, 200, 255]
+    ring_effect: "clarity"
+    effect_strength: 1
+
+  ring_of_invisibility:
+    char: "="
+    color: [200, 200, 200]
+    ring_effect: "invisibility"
+    effect_strength: 5
+
+  ring_of_searching:
+    char: "="
+    color: [255, 200, 100]
+    ring_effect: "searching"
+    effect_strength: 3
+
+  ring_of_wizardry:
+    char: "="
+    color: [180, 100, 255]
+    ring_effect: "wizardry"
+    effect_strength: 1
+
+  ring_of_luck:
+    char: "="
+    color: [255, 215, 0]
+    ring_effect: "luck"
+    effect_strength: 5

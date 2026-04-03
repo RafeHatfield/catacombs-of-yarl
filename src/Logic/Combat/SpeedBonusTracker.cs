@@ -28,8 +28,11 @@ public sealed class SpeedBonusTracker : IComponent
     /// <summary>Additive bonus from equipment (stacks).</summary>
     public double EquipmentRatio { get; set; }
 
-    /// <summary>Effective speed bonus ratio.</summary>
-    public double SpeedBonusRatio => BaseRatio + EquipmentRatio;
+    /// <summary>Additive bonus from equipped rings (stacks across both ring slots).</summary>
+    public double RingRatio { get; set; }
+
+    /// <summary>Effective speed bonus ratio: base + weapon equipment + rings.</summary>
+    public double SpeedBonusRatio => BaseRatio + EquipmentRatio + RingRatio;
 
     /// <summary>Current attack counter (for diagnostics).</summary>
     public int AttackCounter => _attackCounter;

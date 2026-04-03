@@ -38,7 +38,9 @@ entities:
   rat: "224"        # Grey Rat          packed=116 → frameA=224
   giant_rat: "224"  # Grey Rat          packed=116 → frameA=224
   bat: "219"        # Black Bat         packed=111 → frameA=219
+  web_spider: "222"     # Red Spider        packed=114 → frameA=222
   spider: "223"     # Red Spider        packed=114 → frameA=222
+  cave_spider: "223"     # Red Spider        packed=114 → frameA=222
 
   # Slimes
   slime: "218"      # Green Slime       packed=110 → frameA=218
@@ -142,6 +144,7 @@ items:
   scroll_of_fire: "136"
   scroll_of_teleport: "136"
   scroll_of_curse: "136"
+  scroll_of_light: "136"
 
   # Mystery sprites for unidentified items
   # Black bottle silhouettes for unidentified potions (3 variants)
