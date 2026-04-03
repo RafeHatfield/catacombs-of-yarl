@@ -124,7 +124,26 @@ public sealed class MonsterFactory
             case "orc_chieftain":
                 entity.Add(new OrcChieftainComponent());
                 break;
+            case "skeleton":
+                entity.Add(new ShieldWallComponent());
+                break;
         }
+
+        // Regeneration: attach HOT with a very long duration so it persists through any fight.
+        // PoC: regeneration_amount is healed per turn. Duration=9999 is effectively permanent
+        // within combat (StatusEffectProcessor.ProcessTurnEnd decrements it, but fights end first).
+        if (def.RegenerationAmount > 0)
+        {
+            entity.Add(new Combat.StatusEffects.RegenerationEffect
+            {
+                HealPerTurn = def.RegenerationAmount,
+                RemainingTurns = 9999,
+            });
+        }
+
+        // On-hit effect: attach for monsters that apply status effects on hit (spiders, fire_beetle).
+        if (def.OnHitEffect != null && def.OnHitEffectDuration > 0)
+            entity.Add(new OnHitEffectComponent(def.OnHitEffect, def.OnHitEffectDuration));
 
         // Inventory for monsters that can seek and carry items
         if (def.CanSeekItems && def.InventorySize > 0)

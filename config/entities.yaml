@@ -155,6 +155,126 @@ monsters:
     seek_distance: 7
     etp_base: 57
 
+  # ── Wave 2: New Factions ──────────────────────────────────────────────────────
+
+  troll:
+    name: "Troll"
+    min_depth: 4
+    spawn_weight: 5
+    stats:
+      hp: 30
+      power: 0
+      defense: 2
+      xp: 100
+      damage_min: 8
+      damage_max: 12
+      strength: 16
+      dexterity: 8
+      constitution: 16
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    regeneration_amount: 2
+    can_seek_items: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 50
+
+  skeleton:
+    name: "Skeleton"
+    min_depth: 2
+    spawn_weight: 10
+    stats:
+      hp: 20
+      power: 0
+      defense: 0
+      xp: 30
+      damage_min: 3
+      damage_max: 5
+      strength: 10
+      dexterity: 12
+      constitution: 10
+      accuracy: 2
+      evasion: 1
+    char: "s"
+    color: [200, 200, 200]
+    ai_type: "skeleton"
+    faction: "undead"
+    tags: ["undead", "no_flesh", "low_undead"]
+    damage_resistance: "piercing"
+    damage_vulnerability: "bludgeoning"
+    can_seek_items: false
+    etp_base: 27
+
+  cave_spider:
+    name: "Cave Spider"
+    min_depth: 1
+    spawn_weight: 12
+    stats:
+      hp: 16
+      power: 0
+      defense: 1
+      xp: 25
+      damage_min: 2
+      damage_max: 4
+      strength: 8
+      dexterity: 14
+      constitution: 8
+      accuracy: 3
+      evasion: 2
+    char: "s"
+    color: [80, 60, 40]
+    ai_type: "basic"
+    faction: "beast"
+    tags: ["corporeal_flesh", "beast", "living", "venomous"]
+    on_hit_effect: "poison"
+    on_hit_effect_duration: 10
+    can_seek_items: false
+    etp_base: 16
+
+  web_spider:
+    name: "Web Spider"
+    extends: cave_spider
+    min_depth: 3
+    spawn_weight: 7
+    stats:
+      hp: 20
+      xp: 40
+    char: "S"
+    color: [200, 200, 200]
+    on_hit_effect: "slowed"
+    on_hit_effect_duration: 10
+    etp_base: 22
+
+  fire_beetle:
+    name: "Fire Beetle"
+    min_depth: 2
+    spawn_weight: 8
+    stats:
+      hp: 12
+      power: 0
+      defense: 2
+      xp: 45
+      damage_min: 2
+      damage_max: 5
+      strength: 10
+      dexterity: 14
+      constitution: 10
+      accuracy: 1
+      evasion: 1
+    char: "b"
+    color: [255, 100, 0]
+    ai_type: "basic"
+    faction: "monsters"
+    tags: ["corporeal_flesh", "beast", "living"]
+    on_hit_effect: "burning"
+    on_hit_effect_duration: 5
+    damage_resistance: "fire"
+    can_seek_items: false
+    etp_base: 18
+
   zombie:
     name: "Zombie"
     min_depth: 10

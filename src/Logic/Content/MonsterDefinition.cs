@@ -125,6 +125,31 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "leaves_corpse")]
     public bool LeavesCorpse { get; set; } = true;
 
+    // ── Regeneration ─────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// HP healed per turn (HOT). 0 = no regeneration.
+    /// When non-zero, MonsterFactory attaches a RegenerationEffect with a very long duration.
+    /// PoC field: regeneration_amount. Used by troll.
+    /// </summary>
+    [YamlMember(Alias = "regeneration_amount")]
+    public int RegenerationAmount { get; set; }
+
+    // ── On-hit status effects ────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Status effect applied to the target on each successful melee hit.
+    /// Null = no on-hit effect. Supported values: "poison", "slowed", "burning".
+    /// </summary>
+    [YamlMember(Alias = "on_hit_effect")]
+    public string? OnHitEffect { get; set; }
+
+    /// <summary>
+    /// Duration in turns for the on-hit effect. Only meaningful when OnHitEffect is set.
+    /// </summary>
+    [YamlMember(Alias = "on_hit_effect_duration")]
+    public int OnHitEffectDuration { get; set; }
+
     /// <summary>
     /// Optional depth-progression table for spawn weight.
     /// If set, overrides SpawnWeight — weight is resolved per depth via SpawnUtils.FromDungeonLevel.

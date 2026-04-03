@@ -64,6 +64,9 @@ public static class CombatResolver
         // CrippledEffect on defender: -AcPenalty (defender is easier to hit).
         var defenderCrippled = defender.Get<CrippledEffect>();
         if (defenderCrippled != null) targetAc -= defenderCrippled.AcPenalty;
+        // ShieldWallComponent: skeleton formation bonus (cached by SkeletonAI each turn).
+        if (defender.Get<ShieldWallComponent>() is { } sw && sw.CurrentAcBonus > 0)
+            targetAc += sw.CurrentAcBonus;
 
         // Crit threshold from weapon (keen weapons crit on 19-20)
         int critThreshold = 20;

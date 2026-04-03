@@ -359,6 +359,13 @@ public sealed class ContentLoader
             SplitMinChildren = child.SplitMinChildren != 2 ? child.SplitMinChildren : parent.SplitMinChildren,
             SplitMaxChildren = child.SplitMaxChildren != 3 ? child.SplitMaxChildren : parent.SplitMaxChildren,
             SplitWeights = child.SplitWeights ?? parent.SplitWeights,
+            // LeavesCorpse: false wins — if either parent or child says no corpse, result is no corpse.
+            LeavesCorpse = child.LeavesCorpse && parent.LeavesCorpse,
+            // Regeneration: child wins if non-zero, else inherit parent
+            RegenerationAmount = child.RegenerationAmount != 0 ? child.RegenerationAmount : parent.RegenerationAmount,
+            // On-hit effect: child wins if set (allows child to override parent's effect)
+            OnHitEffect = child.OnHitEffect ?? parent.OnHitEffect,
+            OnHitEffectDuration = child.OnHitEffectDuration != 0 ? child.OnHitEffectDuration : parent.OnHitEffectDuration,
         };
     }
 

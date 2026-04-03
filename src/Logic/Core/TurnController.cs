@@ -1072,6 +1072,11 @@ public static class TurnController
             var corrosion = monster.Get<CorrosionComponent>();
             if (corrosion != null)
                 ResolveCorrosion(state, monster, corrosion.Chance, state.Rng, events);
+
+            // On-hit status effect (cave_spider=poison, web_spider=slowed, fire_beetle=burning)
+            var onHit = monster.Get<OnHitEffectComponent>();
+            if (onHit != null)
+                ResolveOnHitEffect(target, onHit, events);
         }
 
         // Monster bonus attacks — recurse if triggered and target still alive
@@ -1115,6 +1120,37 @@ public static class TurnController
             NewDamageMax = equippable.DamageMax,
             BaseDamageMax = equippable.BaseDamageMax,
             MonsterName = attacker.Name,
+        });
+    }
+
+    /// <summary>
+    /// Apply the monster's on-hit status effect to the target.
+    /// Uses the no-stack/refresh rule from StatusEffectProcessor.ApplyEffect.
+    /// Emits StatusAppliedEvent for the presentation layer.
+    /// </summary>
+    private static void ResolveOnHitEffect(Entity target, OnHitEffectComponent onHit, List<TurnEvent> events)
+    {
+        switch (onHit.EffectType)
+        {
+            case "poison":
+                StatusEffectProcessor.ApplyEffect<PoisonEffect>(target, onHit.Duration);
+                break;
+            case "slowed":
+                StatusEffectProcessor.ApplyEffect<SlowedEffect>(target, onHit.Duration);
+                break;
+            case "burning":
+                StatusEffectProcessor.ApplyEffect<BurningEffect>(target, onHit.Duration);
+                break;
+            default:
+                return; // unknown effect type — no-op, no event
+        }
+
+        events.Add(new StatusAppliedEvent
+        {
+            ActorId = target.Id,
+            TargetId = target.Id,
+            EffectName = onHit.EffectType,
+            Duration = onHit.Duration,
         });
     }
 
