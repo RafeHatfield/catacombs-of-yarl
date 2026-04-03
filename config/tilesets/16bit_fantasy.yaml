@@ -52,7 +52,7 @@ entities:
   spider: "223"         # Red Spider        packed=114 → frameA=222
   cave_spider: "223"    # Red Spider        packed=114 → frameA=222
   giant_spider: "222"   # Red Spider (larger variant)
-  fire_beetle: "220"    # Beetle-adjacent creature
+  fire_beetle: "228"    # Beetle-adjacent creature
 
   # Slimes
   slime: "218"      # Green Slime       packed=110 → frameA=218
@@ -120,16 +120,21 @@ items:
   # shield: no sprite mapped — falls back to placeholder
 
   # Wands (50-54: colored gem wands)
-  wand_of_fireball: "52"      # red-gem wand
-  wand_of_lightning: "184"     # wand variant
-  wand_of_confusion: "54"     # blue-gem wand
-  wand_of_slow: "50"          # plain wooden wand
-  wand_of_teleportation: "185" # ornate gold wand
-  wand_of_portals: "189"       # blue-gem wand
-  wand_of_rage: "53"          # red-gem wand
-  wand_of_glue: "186"          # plain wooden wand
-  wand_of_dragon_farts: "51"  # ornate gold wand
-  wand_of_yo_mama: "187"       # wand variant
+  wand_of_fireball: "52"          # red-gem wand
+  wand_of_lightning: "184"        # wand variant
+  wand_of_confusion: "54"         # blue-gem wand
+  wand_of_slow: "50"              # plain wooden wand
+  wand_of_teleportation: "185"    # ornate gold wand
+  wand_of_portals: "189"          # blue-gem wand
+  wand_of_rage: "53"              # red-gem wand
+  wand_of_glue: "186"             # plain wooden wand
+  wand_of_dragon_farts: "51"      # ornate gold wand
+  wand_of_yo_mama: "187"          # wand variant
+  wand_of_invisibility: "188"     # silver/pale wand
+  wand_of_haste: "183"            # gold-tipped wand
+  wand_of_fear: "190"             # dark wand
+  wand_of_silence: "191"          # pale wand
+  wand_of_raise_dead: "192"       # bone/necrotic wand
 
   # Rings (76-80: small ring sprites)
   ring_of_protection: "76"

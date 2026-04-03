@@ -1168,11 +1168,15 @@ wands:
 
   wand_of_portals:
     name: "Wand of Portals"
-    description: "An ancient wand that tears holes in space. Place an entrance and exit to teleport between them."
+    description: "An ancient wand that tears holes in space. Cast once to place an entrance, again to place an exit, a third time to collapse both portals and reset the wand."
     spell_id: "portal"
     targeting: "portal"
     is_wand: true
+    # TODO: multi-step cycling behavior (3-cast state machine: entrance → exit → reset+recharge)
+    # not yet implemented — currently uses infinite:true as placeholder.
+    # When implemented: remove infinite:true, set cycling: true, the 3rd cast recharges to 1.
     infinite: true
+    # Does not appear in floor loot — player always starts with one in their backpack (DungeonFloorBuilder.CreateDefaultPlayer).
     char: "/"
     color: [0, 200, 200]
 
@@ -1251,6 +1255,82 @@ wands:
     recharge_scroll: "yo_mama"
     char: "/"
     color: [255, 200, 50]
+
+  # ── Phase 3b: Self-targeting wands ──────────────────────────────────────
+
+  wand_of_invisibility:
+    name: "Wand of Invisibility"
+    description: "Bends light around you. Monsters cannot target what they cannot see."
+    spell_id: "invisibility"
+    targeting: "self"
+    duration: 30
+    is_wand: true
+    min_charges: 2
+    max_charges: 4
+    charge_cap: 8
+    recharge_scroll: "invisibility"
+    char: "/"
+    color: [220, 220, 220]
+
+  wand_of_haste:
+    name: "Wand of Haste"
+    description: "Time bends at your will. You act twice as fast for a short time."
+    spell_id: "haste"
+    targeting: "self"
+    duration: 30
+    is_wand: true
+    min_charges: 2
+    max_charges: 4
+    charge_cap: 8
+    recharge_scroll: "haste"
+    char: "/"
+    color: [255, 230, 100]
+
+  # ── Phase 3c: AoE and utility wands ─────────────────────────────────────
+
+  wand_of_fear:
+    name: "Wand of Fear"
+    description: "A wave of primal terror radiates outward. All nearby enemies flee in panic."
+    spell_id: "fear"
+    targeting: "aoe_self"
+    radius: 10
+    duration: 15
+    is_wand: true
+    min_charges: 2
+    max_charges: 5
+    charge_cap: 10
+    recharge_scroll: "fear"
+    char: "/"
+    color: [180, 180, 255]
+
+  wand_of_silence:
+    name: "Wand of Silence"
+    description: "The target's voice dies in their throat. They cannot cast spells or use magical items."
+    spell_id: "silence"
+    targeting: "single_target"
+    range: 8
+    duration: 3
+    is_wand: true
+    min_charges: 2
+    max_charges: 5
+    charge_cap: 10
+    recharge_scroll: "silence"
+    char: "/"
+    color: [200, 200, 200]
+
+  wand_of_raise_dead:
+    name: "Wand of Raise Dead"
+    description: "Dark necromantic energy courses through a nearby corpse, forcing it to serve you."
+    spell_id: "raise_dead"
+    targeting: "location"
+    range: 5
+    is_wand: true
+    min_charges: 1
+    max_charges: 3
+    charge_cap: 6
+    recharge_scroll: "raise_dead"
+    char: "/"
+    color: [100, 50, 150]
 
   # ── Phase 4: Location-targeting wands ───────────────────────────────────
 
