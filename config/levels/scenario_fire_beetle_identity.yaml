@@ -1,0 +1,35 @@
+scenario_id: fire_beetle_identity
+name: "Fire Beetle Identity Test"
+description: "Regression anchor for burning-on-hit mechanic. Two fire beetles; player has longsword only (no armor). BurningEffect applies 3 damage/turn for 5 turns. Beetles are fragile (12 HP) but the DOT adds significant post-hit pressure."
+depth: 2
+turn_limit: 100
+runs: 30
+map_width: 14
+map_height: 10
+player_start_x: 3
+player_start_y: 5
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "longsword"
+
+monsters:
+  - type: "fire_beetle"
+    count: 1
+    position: [8, 4]
+    state: "aware"
+  - type: "fire_beetle"
+    count: 1
+    position: [8, 6]
+    state: "aware"
+
+items:
+  - type: "healing_potion"
+    count: 2
