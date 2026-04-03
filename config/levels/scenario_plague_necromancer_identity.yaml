@@ -1,0 +1,48 @@
+scenario_id: plague_necromancer_identity
+name: "Plague Necromancer Identity Test"
+description: "Regression anchor for plague necromancer: same raise-dead loop as necromancer but with plague augmentation applied to raised zombies. Five orc_grunts provide ample corpse material. Higher threat than vanilla necromancer — expect higher death rate."
+depth: 7
+turn_limit: 250
+runs: 30
+map_width: 21
+map_height: 15
+player_start_x: 2
+player_start_y: 7
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "longsword"
+  armor: "leather_armor"
+
+monsters:
+  # Plague necromancer — deeper threat, same AI as necromancer
+  - type: "plague_necromancer"
+    count: 1
+    position: [17, 7]
+    state: "aware"
+
+  # Three orc_grunts as corpse sources (reduced from PoC's 5 — identity test, not pressure test)
+  - type: "orc_grunt"
+    count: 1
+    position: [11, 7]
+    state: "aware"
+  - type: "orc_grunt"
+    count: 1
+    position: [13, 5]
+    state: "aware"
+  - type: "orc_grunt"
+    count: 1
+    position: [13, 9]
+    state: "aware"
+
+items:
+  # Extra healing — plague augmentation makes raised zombies more dangerous
+  - type: "healing_potion"
+    count: 12

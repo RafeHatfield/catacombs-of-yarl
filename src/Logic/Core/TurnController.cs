@@ -1009,6 +1009,10 @@ public static class TurnController
                     ResolveMonsterItemUse(state, monster, action.Target!, events);
                     break;
 
+                case MonsterAction.ActionKind.RaiseDead:
+                    ResolveNecromancerRaise(state, monster, action.Target!, events);
+                    break;
+
                 case MonsterAction.ActionKind.Wait:
                     break;
             }
@@ -1016,6 +1020,48 @@ public static class TurnController
             // Decrement duration for all monster effects after it acts.
             StatusEffectProcessor.ProcessTurnEnd(monster, events);
         }
+    }
+
+    /// <summary>
+    /// Necromancer raises a fresh corpse in-place. Sets the raise cooldown and emits RaiseDeadEvent.
+    /// For plague_necromancer, adds plague_carrier tag and a small stat boost to the raised entity.
+    /// </summary>
+    private static void ResolveNecromancerRaise(
+        GameState state, Entity necromancer, Entity corpse, List<TurnEvent> events)
+    {
+        var necComp = necromancer.Get<NecromancerAiComponent>();
+        var corpseComp = corpse.Get<CorpseComponent>();
+        if (necComp == null || corpseComp == null || !corpseComp.CanBeRaised) return;
+
+        string corpseId = corpseComp.CorpseId;
+        string raisedFaction = necromancer.Get<AiComponent>()?.Faction ?? "neutral";
+
+        RaiseDeadResolver.Raise(corpse, raisedFaction, state);
+
+        // Plague necromancer: add plague_carrier tag + small stat boost to raised entity
+        if (string.Equals(necromancer.Get<AiComponent>()?.AiType, "plague_necromancer",
+                StringComparison.OrdinalIgnoreCase))
+        {
+            var raisedFighter = corpse.Get<Fighter>();
+            if (raisedFighter != null)
+            {
+                // PoC plague_necromancer_ai.py: +25% HP, add plague_carrier to tags
+                raisedFighter.Hp = (int)Math.Round(raisedFighter.Hp * 1.25);
+            }
+            var raisedAi = corpse.Get<AiComponent>();
+            if (raisedAi != null && !raisedAi.Tags.Contains("plague_carrier"))
+                raisedAi.Tags.Add("plague_carrier");
+        }
+
+        necComp.CooldownRemaining = necComp.RaiseCooldown;
+
+        events.Add(new RaiseDeadEvent
+        {
+            ActorId = necromancer.Id,
+            RaisedEntityId = corpse.Id,
+            CorpseId = corpseId,
+            AssignedFaction = raisedFaction,
+        });
     }
 
     private static void ResolveMonsterAttack(GameState state, Entity monster, Entity target, List<TurnEvent> events, bool isBonusAttack)
@@ -1381,6 +1427,18 @@ public static class TurnController
         string originalMonsterId = speciesTag?.TypeId ?? "";
         string originalName = entity.Name;
 
+        // Snapshot Fighter stats before stripping — used by RaiseDeadResolver
+        var fighter = entity.Get<Fighter>();
+        int snapHp         = fighter?.BaseMaxHp ?? 0;
+        int snapDmgMin     = fighter?.DamageMin  ?? 0;
+        int snapDmgMax     = fighter?.DamageMax  ?? 0;
+        int snapStr        = fighter?.Strength   ?? 10;
+        int snapDex        = fighter?.Dexterity  ?? 10;
+        int snapCon        = fighter?.Constitution ?? 10;
+        int snapDef        = fighter?.BaseDefense ?? 0;
+        int snapAccuracy   = fighter?.Accuracy   ?? Combat.HitModel.DefaultAccuracy;
+        int snapEvasion    = fighter?.Evasion    ?? Combat.HitModel.DefaultEvasion;
+
         // Strip combat/AI components
         entity.Remove<Fighter>();
         entity.Remove<AiComponent>();
@@ -1405,6 +1463,16 @@ public static class TurnController
             DeathTurn = state.TurnCount,
             State = wasRaised ? CorpseState.Spent : CorpseState.Fresh,
             CorpseId = corpseId,
+            // Snapshot for RaiseDeadResolver
+            BaseHp           = snapHp,
+            BaseDamageMin    = snapDmgMin,
+            BaseDamageMax    = snapDmgMax,
+            BaseStrength     = snapStr,
+            BaseDexterity    = snapDex,
+            BaseConstitution = snapCon,
+            BaseDefense      = snapDef,
+            BaseAccuracy     = snapAccuracy,
+            BaseEvasion      = snapEvasion,
         };
         entity.Add(corpse);
         entity.BlocksMovement = false;

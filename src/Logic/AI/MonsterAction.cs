@@ -9,7 +9,7 @@ namespace CatacombsOfYarl.Logic.AI;
 /// </summary>
 public sealed class MonsterAction
 {
-    public enum ActionKind { Wait, Attack, MoveTo, SeekItem, PickUp, UseItem }
+    public enum ActionKind { Wait, Attack, MoveTo, SeekItem, PickUp, UseItem, RaiseDead }
 
     public ActionKind Kind { get; }
 
@@ -37,4 +37,7 @@ public sealed class MonsterAction
 
     public static MonsterAction PickUp(Entity item) => new(ActionKind.PickUp, target: item);
     public static MonsterAction UseItem(Entity item) => new(ActionKind.UseItem, target: item);
+
+    /// <summary>Raise a corpse entity in-place. Target is the corpse entity to raise.</summary>
+    public static MonsterAction RaiseDead(Entity corpse) => new(ActionKind.RaiseDead, target: corpse);
 }

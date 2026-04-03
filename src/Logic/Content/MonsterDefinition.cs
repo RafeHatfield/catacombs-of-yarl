@@ -150,6 +150,23 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "on_hit_effect_duration")]
     public int OnHitEffectDuration { get; set; }
 
+    // ── Necromancer AI parameters ─────────────────────────────────────────────
+
+    [YamlMember(Alias = "raise_dead_range")]
+    public int RaiseDeadRange { get; set; } = 5;
+
+    [YamlMember(Alias = "raise_dead_cooldown_turns")]
+    public int RaiseDeadCooldownTurns { get; set; } = 4;
+
+    [YamlMember(Alias = "danger_radius_from_player")]
+    public int DangerRadiusFromPlayer { get; set; } = 2;
+
+    [YamlMember(Alias = "preferred_distance_min")]
+    public int PreferredDistanceMin { get; set; } = 4;
+
+    [YamlMember(Alias = "preferred_distance_max")]
+    public int PreferredDistanceMax { get; set; } = 7;
+
     /// <summary>
     /// Optional depth-progression table for spawn weight.
     /// If set, overrides SpawnWeight — weight is resolved per depth via SpawnUtils.FromDungeonLevel.

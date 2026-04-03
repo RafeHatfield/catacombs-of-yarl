@@ -127,6 +127,17 @@ public sealed class MonsterFactory
             case "skeleton":
                 entity.Add(new ShieldWallComponent());
                 break;
+            case "necromancer":
+            case "plague_necromancer":
+                entity.Add(new NecromancerAiComponent
+                {
+                    RaiseRange           = def.RaiseDeadRange,
+                    RaiseCooldown        = def.RaiseDeadCooldownTurns,
+                    DangerRadius         = def.DangerRadiusFromPlayer,
+                    PreferredDistanceMin = def.PreferredDistanceMin,
+                    PreferredDistanceMax = def.PreferredDistanceMax,
+                });
+                break;
         }
 
         // Regeneration: attach HOT with a very long duration so it persists through any fight.

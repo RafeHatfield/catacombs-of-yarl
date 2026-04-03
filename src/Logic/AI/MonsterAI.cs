@@ -22,7 +22,9 @@ public static class MonsterAI
             "skirmisher"     => SkirmisherAI.Decide(monster, state),
             "orc_shaman"     => OrcShamanAI.Decide(monster, state),
             "orc_chieftain"  => OrcChieftainAI.Decide(monster, state),
-            "skeleton"       => SkeletonAI.Decide(monster, state),
+            "skeleton"          => SkeletonAI.Decide(monster, state),
+            "necromancer"       => NecromancerAI.Decide(monster, state),
+            "plague_necromancer"=> NecromancerAI.Decide(monster, state),
             _ => BasicMonsterAI.Decide(monster, state), // unknown type → safe fallback
         };
     }

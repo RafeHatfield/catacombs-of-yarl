@@ -366,6 +366,12 @@ public sealed class ContentLoader
             // On-hit effect: child wins if set (allows child to override parent's effect)
             OnHitEffect = child.OnHitEffect ?? parent.OnHitEffect,
             OnHitEffectDuration = child.OnHitEffectDuration != 0 ? child.OnHitEffectDuration : parent.OnHitEffectDuration,
+            // Necromancer AI params: child wins if non-default, else inherit parent
+            RaiseDeadRange           = child.RaiseDeadRange != 5           ? child.RaiseDeadRange           : parent.RaiseDeadRange,
+            RaiseDeadCooldownTurns   = child.RaiseDeadCooldownTurns != 4   ? child.RaiseDeadCooldownTurns   : parent.RaiseDeadCooldownTurns,
+            DangerRadiusFromPlayer   = child.DangerRadiusFromPlayer != 2   ? child.DangerRadiusFromPlayer   : parent.DangerRadiusFromPlayer,
+            PreferredDistanceMin     = child.PreferredDistanceMin != 4     ? child.PreferredDistanceMin     : parent.PreferredDistanceMin,
+            PreferredDistanceMax     = child.PreferredDistanceMax != 7     ? child.PreferredDistanceMax     : parent.PreferredDistanceMax,
         };
     }
 

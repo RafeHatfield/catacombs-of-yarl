@@ -45,4 +45,19 @@ public sealed class CorpseComponent : IComponent
     /// Single predicate used by necromancer AI and spell resolver.
     /// </summary>
     public bool CanBeRaised => State == CorpseState.Fresh && RaiseCount < MaxRaises;
+
+    // ── Snapshotted base stats (captured from Fighter at death time) ─────────
+    // Used by RaiseDeadResolver to compute raised-monster stats without needing
+    // to re-look up the original YAML definition. These are the depth-scaled
+    // combat stats that the monster had when it died.
+
+    public int BaseHp { get; set; }
+    public int BaseDamageMin { get; set; }
+    public int BaseDamageMax { get; set; }
+    public int BaseStrength { get; set; }
+    public int BaseDexterity { get; set; }
+    public int BaseConstitution { get; set; }
+    public int BaseDefense { get; set; }
+    public int BaseAccuracy { get; set; }
+    public int BaseEvasion { get; set; }
 }

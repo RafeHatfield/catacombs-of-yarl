@@ -874,16 +874,39 @@ public static class SpellResolver
     private static List<TurnEvent> ResolveRaiseDead(
         Entity caster, SpellEffect spell, GameState state, int? targetX, int? targetY)
     {
-        // TODO: When plan_monster_specials adds corpse entities, check state.Corpses
-        // for a corpse at (targetX, targetY) within spell.Range, then create a zombie.
-        // For now: scroll is consumed (consumed by TurnController before we get here)
-        // but no effect is produced. Return a failed SpellEvent to communicate the no-op.
+        if (targetX == null || targetY == null)
+            return [new SpellEvent { ActorId = caster.Id, SpellId = spell.SpellId, SpellName = "Raise Dead", Success = false }];
+
+        // Range check (Euclidean)
+        double dist = RaiseDeadResolver.DistanceTo(caster, targetX.Value, targetY.Value);
+        if (dist > spell.Range)
+            return [new SpellEvent { ActorId = caster.Id, SpellId = spell.SpellId, SpellName = "Raise Dead", Success = false }];
+
+        // Find raisable corpse at target tile
+        var corpse = state.Corpses.FirstOrDefault(c =>
+            c.X == targetX.Value && c.Y == targetY.Value &&
+            c.Get<CorpseComponent>()?.CanBeRaised == true);
+
+        if (corpse == null)
+            return [new SpellEvent { ActorId = caster.Id, SpellId = spell.SpellId, SpellName = "Raise Dead", Success = false }];
+
+        var corpseComp = corpse.Require<CorpseComponent>();
+        string corpseId = corpseComp.CorpseId;
+
+        RaiseDeadResolver.Raise(corpse, casterFaction: "player", state);
+
         return [new SpellEvent
         {
             ActorId = caster.Id,
             SpellId = spell.SpellId,
             SpellName = "Raise Dead",
-            Success = false, // No corpse system yet — always fails gracefully
+            Success = true,
+        }, new RaiseDeadEvent
+        {
+            ActorId = caster.Id,
+            RaisedEntityId = corpse.Id,
+            CorpseId = corpseId,
+            AssignedFaction = "neutral",
         }];
     }
 

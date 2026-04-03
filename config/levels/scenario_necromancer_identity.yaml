@@ -1,0 +1,51 @@
+scenario_id: necromancer_identity
+name: "Necromancer Identity Test"
+description: "Regression anchor for necromancer AI: raise dead on 4-turn cooldown, corpse seeking, danger-radius retreat, hang-back positioning. Skeletons and orcs in the middle die first and become corpses; necromancer at far end raises them. Two skeletons start within raise range (≤5 tiles), one requires seeking."
+depth: 5
+turn_limit: 250
+runs: 30
+map_width: 21
+map_height: 15
+player_start_x: 2
+player_start_y: 7
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "longsword"
+  armor: "leather_armor"
+
+monsters:
+  # Necromancer — far end, will raise corpses as front-line skeletons fall
+  - type: "necromancer"
+    count: 1
+    position: [17, 7]
+    state: "aware"
+
+  # Skeletons — front-line corpse sources; two start within necromancer raise range (≤5 tiles from (17,7))
+  # skeleton at (13,5): dist ≈ 4.5 — in range immediately
+  # skeleton at (13,9): dist ≈ 4.5 — in range immediately
+  # skeleton at (11,7): dist = 6   — necromancer seeks this one
+  - type: "skeleton"
+    count: 1
+    position: [13, 5]
+    state: "aware"
+  - type: "skeleton"
+    count: 1
+    position: [13, 9]
+    state: "aware"
+  - type: "skeleton"
+    count: 1
+    position: [11, 7]
+    state: "aware"
+
+items:
+  # Generous healing to survive the extended fight (re-raised skeletons increase total kills)
+  - type: "healing_potion"
+    count: 10

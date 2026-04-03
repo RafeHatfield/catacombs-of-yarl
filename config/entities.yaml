@@ -275,6 +275,99 @@ monsters:
     can_seek_items: false
     etp_base: 18
 
+  # ── Wave 3: New Factions ──────────────────────────────────────────────────────
+
+  necromancer:
+    name: "Necromancer"
+    min_depth: 5
+    spawn_weight: 6
+    stats:
+      hp: 28
+      power: 1
+      defense: 0
+      xp: 80
+      damage_min: 2
+      damage_max: 4
+      strength: 8
+      dexterity: 14
+      constitution: 12
+      accuracy: 4
+      evasion: 2
+    char: "N"
+    color: [80, 40, 120]
+    ai_type: "necromancer"
+    faction: "cultist"
+    tags: ["caster", "controller"]
+    raise_dead_range: 5
+    raise_dead_cooldown_turns: 4
+    danger_radius_from_player: 2
+    preferred_distance_min: 4
+    preferred_distance_max: 7
+    etp_base: 44
+
+  plague_necromancer:
+    name: "Plague Necromancer"
+    extends: necromancer
+    min_depth: 7
+    spawn_weight: 4
+    color: [100, 180, 80]
+    ai_type: "plague_necromancer"
+    etp_base: 55
+
+  giant_spider:
+    name: "Giant Spider"
+    min_depth: 8
+    spawn_weight: 8
+    stats:
+      hp: 18
+      power: 0
+      defense: 1
+      xp: 45
+      damage_min: 4
+      damage_max: 8
+      strength: 12
+      dexterity: 16
+      constitution: 10
+      accuracy: 3
+      evasion: 3
+    char: "S"
+    color: [60, 40, 100]
+    ai_type: "basic"
+    faction: "beast"
+    tags: ["corporeal_flesh", "beast", "living", "venomous"]
+    speed_bonus: 0.35
+    on_hit_effect: "poison"
+    on_hit_effect_duration: 10
+    can_seek_items: false
+    etp_base: 42
+
+  cultist_blademaster:
+    name: "Cultist Blademaster"
+    min_depth: 12
+    spawn_weight: 6
+    stats:
+      hp: 30
+      power: 1
+      defense: 2
+      xp: 80
+      damage_min: 6
+      damage_max: 10
+      strength: 14
+      dexterity: 16
+      constitution: 12
+      accuracy: 4
+      evasion: 3
+    char: "C"
+    color: [200, 50, 200]
+    ai_type: "basic"
+    faction: "cultist"
+    tags: ["corporeal_flesh", "humanoid", "living"]
+    speed_bonus: 0.25
+    can_seek_items: true
+    inventory_size: 4
+    seek_distance: 5
+    etp_base: 70
+
   zombie:
     name: "Zombie"
     min_depth: 10
@@ -736,10 +829,9 @@ floor_item_pool:
   - item: scroll_of_dragon_fart
     weight: 6
     min_depth: 3
-  # Phase 4 — deep dungeon (depth 5+, stub until corpse system lands)
-  # weight: 0 — corpse system not yet implemented; handler is a no-op (see plan_monster_specials)
+  # Phase 4 — deep dungeon (depth 5+). Corpse system live; handler fully implemented.
   - item: scroll_of_raise_dead
-    weight: 0
+    weight: 4
     min_depth: 5
   # Wands (depth 2+, intentionally rarer than scrolls)
   - item: wand_of_lightning
