@@ -516,8 +516,11 @@ public partial class Main : Node
             }
             else
             {
-                // Release: fire tap only if the finger never drifted past the drag threshold
-                if (!_isDragging)
+                // Release: fire tap only if neither drag events nor the release position
+                // indicate the finger moved — guards against drag events being consumed
+                // by a UI layer before reaching _UnhandledInput.
+                bool fingerMoved = (touch.Position - _dragStartScreenPos).Length() > DragThreshold;
+                if (!_isDragging && !fingerMoved)
                 {
                     Diag.Log($"_UnhandledInput tap at {_dragStartScreenPos}, phase={_gameController.Phase}");
                     var localPos = _gameView.ToLocal(_dragStartScreenPos);
@@ -553,7 +556,8 @@ public partial class Main : Node
             }
             else
             {
-                if (!_isDragging)
+                bool fingerMoved = (mb.Position - _dragStartScreenPos).Length() > DragThreshold;
+                if (!_isDragging && !fingerMoved)
                 {
                     Diag.Log($"_UnhandledInput tap at {_dragStartScreenPos}, phase={_gameController.Phase}");
                     var localPos = _gameView.ToLocal(_dragStartScreenPos);
