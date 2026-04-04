@@ -629,20 +629,22 @@ public partial class Main : Node
         _tapIndicators.Add((sprite, now));
     }
 
+    private Texture2D? _portalTexture;
+
     private void SpawnPortalSprite(int entityId, int gridX, int gridY, PortalType type)
     {
         if (_gameView == null) return;
 
         // Cyan for entrance, orange for exit — visually distinct at a glance
         var color = type == PortalType.Entrance
-            ? new Color(0f, 0.85f, 1f, 0.75f)
-            : new Color(1f, 0.5f, 0f, 0.75f);
+            ? new Color(0f, 0.85f, 1f, 0.9f)
+            : new Color(1f, 0.5f, 0f, 0.9f);
 
-        _tapIndicatorTexture ??= GD.Load<Texture2D>(
-            "res://src/Presentation/assets/tiles/iso/iso_dun_selectA.png");
+        _portalTexture ??= GD.Load<Texture2D>(
+            "res://src/Presentation/assets/sprites_16bf/fx_32x32/oryx_16bit_fantasy_fx_05.png");
 
         var sprite = new Sprite2D();
-        sprite.Texture = _tapIndicatorTexture;
+        sprite.Texture = _portalTexture;
         sprite.Position = _renderer.GridToScreenCenter(gridX, gridY);
         sprite.Modulate = color;
         sprite.TextureFilter = CanvasItem.TextureFilterEnum.Nearest;
