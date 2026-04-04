@@ -351,6 +351,17 @@ public sealed class PortalRemovedEvent : TurnEvent
 }
 
 /// <summary>
+/// Emitted when the player cancels portal targeting after placing an entrance.
+/// The entrance entity has been unregistered from the map; presentation despawns its sprite.
+/// This event is NOT produced by TurnController — it is emitted directly by GameController
+/// when targeting is cancelled, so it does not appear in TurnResult.Events.
+/// </summary>
+public sealed class PortalEntranceCancelledEvent : TurnEvent
+{
+    public int EntranceEntityId { get; init; }
+}
+
+/// <summary>
 /// Emitted when a monster dies and its entity is transformed into a corpse in-place.
 /// Presentation layer can use this to update the entity sprite to a corpse graphic.
 /// </summary>

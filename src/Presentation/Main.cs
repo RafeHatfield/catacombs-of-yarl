@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Balance;
+using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
@@ -64,6 +65,10 @@ public partial class Main : Node
     private Vector2 _dragStartScreenPos;
     private Vector2 _cameraPositionAtDragStart;
     private const float DragThreshold = 10f; // pixels before drag mode activates
+
+    // Active portal sprites keyed by entity ID. Spawned on PortalPlacedEvent,
+    // despawned on PortalRemovedEvent / PortalEntranceCancelledEvent.
+    private readonly Dictionary<int, Sprite2D> _portalSprites = new();
 
     // Cached tap indicator texture — loaded once, reused on every tap.
     private Texture2D? _tapIndicatorTexture;
@@ -474,12 +479,17 @@ public partial class Main : Node
         _itemSprites?.UpdateVisibility(state);
 
         // Game controller — free old one if it exists
+        // Clear portal sprites on floor setup (new floor = no active portals)
+        foreach (var sprite in _portalSprites.Values) sprite.QueueFree();
+        _portalSprites.Clear();
+
         if (_gameController != null)
         {
             Diag.Log($"SetupPresentation: disposing old GameController, phase={_gameController.Phase}");
             _gameController.TurnCompleted -= OnTurnCompleted;
             _gameController.GameEnded -= OnGameEnded;
             _gameController.FloorTransitionRequested -= OnFloorTransitionRequested;
+            _gameController.PortalEntranceCancelled -= OnPortalEntranceCancelled;
             _gameController.SafeFree();
         }
         _gameController = new GameController();
@@ -489,6 +499,7 @@ public partial class Main : Node
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
+        _gameController.PortalEntranceCancelled += OnPortalEntranceCancelled;
 
         // Wire HUD buttons to GameController / EquipmentPanel.
         if (_hud != null)
@@ -617,6 +628,42 @@ public partial class Main : Node
         _tapIndicators.Add((sprite, now));
     }
 
+    private void SpawnPortalSprite(int entityId, int gridX, int gridY, PortalType type)
+    {
+        if (_gameView == null) return;
+
+        // Cyan for entrance, orange for exit — visually distinct at a glance
+        var color = type == PortalType.Entrance
+            ? new Color(0f, 0.85f, 1f, 0.75f)
+            : new Color(1f, 0.5f, 0f, 0.75f);
+
+        _tapIndicatorTexture ??= GD.Load<Texture2D>(
+            "res://src/Presentation/assets/tiles/iso/iso_dun_selectA.png");
+
+        var sprite = new Sprite2D();
+        sprite.Texture = _tapIndicatorTexture;
+        sprite.Position = _renderer.GridToScreenCenter(gridX, gridY);
+        sprite.Modulate = color;
+        sprite.TextureFilter = CanvasItem.TextureFilterEnum.Nearest;
+        sprite.ZIndex = 5; // above floor tiles, below entities
+        _gameView.GetNode<Node2D>("EntityLayer").AddChild(sprite);
+        _portalSprites[entityId] = sprite;
+    }
+
+    private void DespawnPortalSprite(int entityId)
+    {
+        if (_portalSprites.TryGetValue(entityId, out var sprite))
+        {
+            sprite.QueueFree();
+            _portalSprites.Remove(entityId);
+        }
+    }
+
+    private void OnPortalEntranceCancelled(int entranceEntityId)
+    {
+        DespawnPortalSprite(entranceEntityId);
+    }
+
     private void OnTurnCompleted(TurnResult result)
     {
         if (_state == null) return;
@@ -631,7 +678,13 @@ public partial class Main : Node
                 else if (atk.TargetId == _state.Player.Id && atk.Hit) _damageTaken += atk.Damage;
                 if (atk.TargetKilled && atk.ActorId == _state.Player.Id) _monstersKilled++;
             }
-
+            else if (evt is PortalPlacedEvent pp)
+                SpawnPortalSprite(pp.PortalEntityId, pp.X, pp.Y, pp.Type);
+            else if (evt is PortalRemovedEvent pr)
+            {
+                DespawnPortalSprite(pr.EntranceEntityId);
+                DespawnPortalSprite(pr.ExitEntityId);
+            }
         }
 
         if (_hud != null && _state != null)

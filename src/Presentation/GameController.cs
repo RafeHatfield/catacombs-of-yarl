@@ -50,6 +50,10 @@ public sealed partial class GameController : Node
     // after animations finish rather than immediately when the event is emitted.
     private DescendEvent? _pendingDescend;
 
+    // Set when the portal wand enters targeting mode for exit placement (step 2).
+    // Used to clean up the pending entrance if the player cancels targeting.
+    private Entity? _pendingPortalWand;
+
     // Multi-step click-to-move: A* path queued step-by-step, one step per turn.
     private Queue<(int X, int Y)>? _pendingPath;
     // HP snapshot at path start — interrupt if player takes damage mid-path.
@@ -220,9 +224,36 @@ public sealed partial class GameController : Node
                 break;
 
             case TargetingMode.Portal:
-                // TODO Phase 5: Wand of Portals two-step targeting
-                _toastLog?.AddMessage("Portal wand: targeting not yet implemented.");
+            {
+                if (_state == null) break;
+                var step = PortalSystem.GetPortalCastStep(item);
+                switch (step)
+                {
+                    case PortalCastStep.Ready:
+                        // Step 1: place entrance at player's feet — no targeting UI needed
+                        _toastLog?.AddMessage("Portal entrance placed. Tap the wand again to set the exit.");
+                        OnActionChosen(PlayerAction.CastSpell(item));
+                        break;
+                    case PortalCastStep.EntrancePlaced:
+                        // Step 2: pick exit location
+                        _pendingPortalWand = item;
+                        EnterTargetingMode(new TargetingState
+                        {
+                            Item  = item,
+                            Spell = spell,
+                            Mode  = TargetingMode.Location,
+                            Range = 0, // unlimited
+                        });
+                        _toastLog?.AddMessage("Tap a tile to place the exit portal. Tap yourself to cancel.");
+                        break;
+                    case PortalCastStep.BothPlaced:
+                        // Step 3: reset — removes both portals
+                        _toastLog?.AddMessage("Portals removed. Wand recharged.");
+                        OnActionChosen(PlayerAction.CastSpell(item));
+                        break;
+                }
                 break;
+            }
 
             default:
                 // Unknown targeting mode — treat as Self
@@ -261,8 +292,29 @@ public sealed partial class GameController : Node
     {
         Diag.Log("OnTargetingCancelled: returning to WaitingForInput");
         Phase = GamePhase.WaitingForInput;
-        _toastLog?.AddMessage("Cancelled.");
+
+        // Portal wand: cancel pending entrance placement, remove sprite
+        if (_pendingPortalWand != null && _state != null)
+        {
+            var cancelEvt = PortalSystem.CancelPendingEntrance(_pendingPortalWand, _state);
+            if (cancelEvt != null)
+            {
+                PortalEntranceCancelled?.Invoke(cancelEvt.EntranceEntityId);
+                _toastLog?.AddMessage("Portal cancelled.");
+            }
+            _pendingPortalWand = null;
+        }
+        else
+        {
+            _toastLog?.AddMessage("Cancelled.");
+        }
     }
+
+    /// <summary>
+    /// Fired when a pending portal entrance is cancelled so the presentation can despawn its sprite.
+    /// Carries the entrance entity ID.
+    /// </summary>
+    public event Action<int>? PortalEntranceCancelled;
 
     /// <summary>
     /// Find the closest alive, visible monster within the given range.

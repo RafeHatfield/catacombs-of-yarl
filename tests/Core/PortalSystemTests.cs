@@ -7,11 +7,14 @@ using NUnit.Framework;
 namespace CatacombsOfYarl.Tests.Core;
 
 /// <summary>
-/// Comprehensive tests for PortalSystem — the logic layer backing the Wand of Portals.
+/// Tests for PortalSystem — the logic layer backing the Wand of Portals.
 ///
-/// PortalSystem is a new system with no PoC reference; all correctness is defined here.
-/// Tests use manually constructed GameState (no YAML) for speed, except the YAML integration
-/// tests at the bottom which verify wand_of_portals loads correctly.
+/// The Wand of Portals uses a 3-step state machine:
+///   Step 1 (Ready → EntrancePlaced):      cast with no target → entrance at caster's feet
+///   Step 2 (EntrancePlaced → BothPlaced): cast with exit location → exit placed, both linked
+///   Step 3 (BothPlaced → Ready):          cast with no target → both portals removed
+///
+/// Tests use manually constructed GameState (no YAML) for speed, except YAML integration tests.
 /// </summary>
 [TestFixture]
 public class PortalSystemTests
@@ -34,7 +37,6 @@ public class PortalSystemTests
 
         var state = new GameState(player, new List<Entity>(), map, rng);
 
-        // Entity IDs for portals should not collide with player (0) or any monster IDs we add
         var entityFactory = new EntityFactory(startId: 500);
         return (state, entityFactory);
     }
@@ -58,6 +60,26 @@ public class PortalSystemTests
         return wand;
     }
 
+    /// <summary>
+    /// Drive the 3-step state machine to place a complete portal pair.
+    /// Player must be movable — repositioned to entranceX/Y for step 1.
+    /// After this call: state.Portals has 2 entries, step = BothPlaced.
+    /// </summary>
+    private static void SetupPortalPair(GameState state, EntityFactory factory, Entity wand,
+        int entranceX, int entranceY, int exitX, int exitY)
+    {
+        // Reset wand state in case it was used before in this test
+        PortalSystem.ResetPortalWandState(wand);
+
+        // Step 1: entrance placed at caster's feet — move player to entrance tile first
+        state.Player.X = entranceX;
+        state.Player.Y = entranceY;
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+
+        // Step 2: exit at target tile
+        PortalSystem.HandlePortalCast(state.Player, state, wand, exitX, exitY, factory);
+    }
+
     private static string FindEntitiesYaml()
     {
         var testDir = TestContext.CurrentContext.TestDirectory;
@@ -68,134 +90,266 @@ public class PortalSystemTests
         throw new FileNotFoundException($"entities.yaml not found. Tried: {path}");
     }
 
-    // ─── PlacePortals ────────────────────────────────────────────────────────
+    // ─── 3-Step State Machine ─────────────────────────────────────────────────
 
     [Test]
-    public void PlacePortals_CreatesTwoPortalEntities()
+    public void Step1_PlacesEntranceAtCasterPosition()
     {
-        var (state, factory) = CreateState();
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
 
-        var events = PortalSystem.PlacePortals(state, placedByEntityId: 0,
-            entranceX: 5, entranceY: 5, exitX: 10, exitY: 10, entityFactory: factory);
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
 
-        Assert.That(events, Is.Not.Null, "Valid placement should return events");
-        Assert.That(state.Portals, Has.Count.EqualTo(2), "Two portal entities should exist");
+        // Entrance not yet in state.Portals (0-or-2 invariant)
+        Assert.That(state.Portals, Is.Empty, "Entrance should not be in state.Portals yet");
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.EntrancePlaced));
+
+        var comp = wand.Get<PortalCastStateComponent>();
+        Assert.That(comp?.PendingEntrance, Is.Not.Null, "PendingEntrance should be set after step 1");
+        Assert.That(comp!.PendingEntrance!.X, Is.EqualTo(5));
+        Assert.That(comp.PendingEntrance.Y, Is.EqualTo(5));
     }
 
     [Test]
-    public void PlacePortals_EntranceIsLinkedToExit()
+    public void Step1_EmitsEntrancePlacedEvent()
     {
-        var (state, factory) = CreateState();
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
 
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var events = PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+
+        Assert.That(events, Is.Not.Null);
+        var placedEvent = events!.OfType<PortalPlacedEvent>().FirstOrDefault();
+        Assert.That(placedEvent, Is.Not.Null, "Step 1 should emit PortalPlacedEvent");
+        Assert.That(placedEvent!.Type, Is.EqualTo(PortalType.Entrance));
+        Assert.That(placedEvent.X, Is.EqualTo(5));
+        Assert.That(placedEvent.Y, Is.EqualTo(5));
+    }
+
+    [Test]
+    public void Step2_CreatesTwoPortalEntities()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
+
+        Assert.That(state.Portals, Has.Count.EqualTo(2));
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.BothPlaced));
+    }
+
+    [Test]
+    public void Step2_PortalsCrossLinked()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
 
         var entrance = state.Portals.First(p => p.Get<PortalComponent>()?.Type == PortalType.Entrance);
         var exit = state.Portals.First(p => p.Get<PortalComponent>()?.Type == PortalType.Exit);
 
         Assert.That(entrance.Get<PortalComponent>()!.LinkedPortalId, Is.EqualTo(exit.Id),
             "Entrance should link to exit");
-    }
-
-    [Test]
-    public void PlacePortals_ExitIsLinkedToEntrance()
-    {
-        var (state, factory) = CreateState();
-
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
-
-        var entrance = state.Portals.First(p => p.Get<PortalComponent>()?.Type == PortalType.Entrance);
-        var exit = state.Portals.First(p => p.Get<PortalComponent>()?.Type == PortalType.Exit);
-
         Assert.That(exit.Get<PortalComponent>()!.LinkedPortalId, Is.EqualTo(entrance.Id),
             "Exit should link to entrance");
     }
 
     [Test]
-    public void PlacePortals_RecyclesExistingPair_RemovesOldPortals()
+    public void Step2_EmitsExitPlacedEvent()
     {
-        var (state, factory) = CreateState();
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        // Step 1
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+        // Step 2
+        var events = PortalSystem.HandlePortalCast(state.Player, state, wand, 10, 10, factory);
+
+        Assert.That(events, Is.Not.Null);
+        var exitEvent = events!.OfType<PortalPlacedEvent>().FirstOrDefault();
+        Assert.That(exitEvent, Is.Not.Null, "Step 2 should emit PortalPlacedEvent for exit");
+        Assert.That(exitEvent!.Type, Is.EqualTo(PortalType.Exit));
+        Assert.That(exitEvent.X, Is.EqualTo(10));
+        Assert.That(exitEvent.Y, Is.EqualTo(10));
+    }
+
+    [Test]
+    public void Step2_NonWalkableExit_ReturnsNull()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+        // Wall tile (0,0) in arena
+        var result = PortalSystem.HandlePortalCast(state.Player, state, wand, 0, 0, factory);
+
+        Assert.That(result, Is.Null, "Exit on non-walkable tile should fail");
+        Assert.That(state.Portals, Is.Empty, "No portals should be created on invalid exit");
+    }
+
+    [Test]
+    public void Step2_ExitOnSameTileAsEntrance_ReturnsNull()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+        var result = PortalSystem.HandlePortalCast(state.Player, state, wand, 5, 5, factory);
+
+        Assert.That(result, Is.Null, "Exit on same tile as entrance should fail");
+        Assert.That(state.Portals, Is.Empty);
+    }
+
+    [Test]
+    public void Step2_StairTile_Blocked()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        // Place a stair down at (8,8)
+        var stair = new Entity(99, "Stair", 8, 8, blocksMovement: false);
+        state.StairDown = stair;
+
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+        var result = PortalSystem.HandlePortalCast(state.Player, state, wand, 8, 8, factory);
+
+        Assert.That(result, Is.Null, "Portal exit on stair tile should be blocked");
+        Assert.That(state.Portals, Is.Empty);
+    }
+
+    [Test]
+    public void Step1_StairTile_Blocked()
+    {
+        var (state, factory) = CreateState(playerX: 8, playerY: 8);
+        var wand = MakeInfiniteWand();
+
+        // Stair at player's current position
+        var stair = new Entity(99, "Stair", 8, 8, blocksMovement: false);
+        state.StairDown = stair;
+
+        var result = PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+
+        Assert.That(result, Is.Null, "Entrance on stair tile should be blocked");
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.Ready));
+    }
+
+    [Test]
+    public void Step3_RemovesAllPortals()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
         Assert.That(state.Portals, Has.Count.EqualTo(2));
 
-        // Place again — should remove old and create new
-        PortalSystem.PlacePortals(state, 0, 6, 6, 12, 12, factory);
+        // Step 3: clear
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
 
-        Assert.That(state.Portals, Has.Count.EqualTo(2), "Should still have exactly two portals after recycling");
-        // Verify positions changed
+        Assert.That(state.Portals, Is.Empty);
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.Ready));
+    }
+
+    [Test]
+    public void Step3_EmitsPortalRemovedEvent()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
+
+        var events = PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+
+        Assert.That(events, Is.Not.Null);
+        var removedEvent = events!.OfType<PortalRemovedEvent>().FirstOrDefault();
+        Assert.That(removedEvent, Is.Not.Null, "Step 3 should emit PortalRemovedEvent");
+    }
+
+    [Test]
+    public void Step1_AfterStep3_PlacesNewPair()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        // First pair
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
+        Assert.That(state.Portals, Has.Count.EqualTo(2));
+
+        // Step 3 clears
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+        Assert.That(state.Portals, Is.Empty);
+
+        // New pair
+        state.Player.X = 6; state.Player.Y = 6;
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+        PortalSystem.HandlePortalCast(state.Player, state, wand, 12, 12, factory);
+
+        Assert.That(state.Portals, Has.Count.EqualTo(2));
         var entrance = state.Portals.First(p => p.Get<PortalComponent>()?.Type == PortalType.Entrance);
         Assert.That(entrance.X, Is.EqualTo(6), "New entrance should be at updated position");
         Assert.That(entrance.Y, Is.EqualTo(6));
     }
 
     [Test]
-    public void PlacePortals_RecyclesExistingPair_EmitsRemovedEvent()
+    public void Step2_Displacement_MonsterOnExitTile_TeleportedAtPlacement()
     {
-        var (state, factory) = CreateState();
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+        var orc = AddMonster(state, 1, x: 10, y: 10); // sitting on future exit tile
 
-        // Second placement should emit PortalRemovedEvent for the old pair
-        var events = PortalSystem.PlacePortals(state, 0, 6, 6, 12, 12, factory)!;
+        // Step 1
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+        // Step 2 — exit placed on orc's tile
+        var events = PortalSystem.HandlePortalCast(state.Player, state, wand, 10, 10, factory);
 
-        var removedEvents = events.OfType<PortalRemovedEvent>().ToList();
-        Assert.That(removedEvents, Has.Count.EqualTo(1), "Should emit one PortalRemovedEvent when recycling");
+        Assert.That(events, Is.Not.Null);
+        var teleportEvent = events!.OfType<PortalTeleportEvent>().FirstOrDefault(e => e.EntityId == orc.Id);
+        Assert.That(teleportEvent, Is.Not.Null, "Monster on exit tile should be displaced immediately");
+        // Orc should have been teleported to entrance (5,5)
+        Assert.That(orc.X, Is.EqualTo(5));
+        Assert.That(orc.Y, Is.EqualTo(5));
+    }
+
+    // ─── Cancel entrance ──────────────────────────────────────────────────────
+
+    [Test]
+    public void CancelEntrance_WhenEntrancePlaced_ResetsToReady()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        // Step 1
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.EntrancePlaced));
+
+        var evt = PortalSystem.CancelPendingEntrance(wand, state);
+
+        Assert.That(evt, Is.Not.Null, "Should return event on cancellation");
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.Ready));
+        // PendingEntrance should be cleared from map (can still attempt a new portal cast)
     }
 
     [Test]
-    public void PlacePortals_InvalidTile_NonWalkable_Fails()
+    public void CancelEntrance_WhenReady_ReturnsNull()
     {
-        var (state, factory) = CreateState();
-        // Wall tiles are at x=0 or y=0 in the arena
-        var events = PortalSystem.PlacePortals(state, 0,
-            entranceX: 0, entranceY: 0,  // wall tile
-            exitX: 5, exitY: 5, entityFactory: factory);
+        var (state, _) = CreateState();
+        var wand = MakeInfiniteWand();
 
-        Assert.That(events, Is.Null, "Placement on non-walkable tile should fail (return null)");
-        Assert.That(state.Portals, Is.Empty, "No portals should be created on invalid placement");
+        var evt = PortalSystem.CancelPendingEntrance(wand, state);
+
+        Assert.That(evt, Is.Null, "No cancellation event when wand is in Ready state");
     }
 
-    [Test]
-    public void PlacePortals_SameTile_Fails()
-    {
-        var (state, factory) = CreateState();
-        var events = PortalSystem.PlacePortals(state, 0,
-            entranceX: 5, entranceY: 5,
-            exitX: 5, exitY: 5,  // same as entrance
-            entityFactory: factory);
-
-        Assert.That(events, Is.Null, "Entrance and exit on same tile should fail");
-        Assert.That(state.Portals, Is.Empty, "No portals should be created when same tile");
-    }
-
-    [Test]
-    public void PlacePortals_EmitsPlacedEvents()
-    {
-        var (state, factory) = CreateState();
-
-        var events = PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory)!;
-
-        var placedEvents = events.OfType<PortalPlacedEvent>().ToList();
-        Assert.That(placedEvents, Has.Count.EqualTo(2), "Should emit two PortalPlacedEvents");
-
-        var entranceEvent = placedEvents.FirstOrDefault(e => e.Type == PortalType.Entrance);
-        var exitEvent = placedEvents.FirstOrDefault(e => e.Type == PortalType.Exit);
-
-        Assert.That(entranceEvent, Is.Not.Null);
-        Assert.That(entranceEvent!.X, Is.EqualTo(5));
-        Assert.That(entranceEvent.Y, Is.EqualTo(5));
-        Assert.That(exitEvent, Is.Not.Null);
-        Assert.That(exitEvent!.X, Is.EqualTo(10));
-        Assert.That(exitEvent.Y, Is.EqualTo(10));
-    }
-
-    // ─── CheckPortalCollision ────────────────────────────────────────────────
+    // ─── CheckPortalCollision ─────────────────────────────────────────────────
 
     [Test]
     public void CheckCollision_PlayerOnEntrance_TeleportsToExit()
     {
         var (state, factory) = CreateState(playerX: 5, playerY: 5);
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var wand = MakeInfiniteWand();
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
 
-        // Player is now standing on entrance (5,5)
+        // Player still at (5,5) — on entrance
         var evt = PortalSystem.CheckPortalCollision(state.Player, state);
 
         Assert.That(evt, Is.Not.Null, "Should return a PortalTeleportEvent");
@@ -210,10 +364,14 @@ public class PortalSystemTests
     [Test]
     public void CheckCollision_PlayerOnExit_TeleportsToEntrance()
     {
-        var (state, factory) = CreateState(playerX: 10, playerY: 10);
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
 
-        // Player is standing on exit (10,10) — should teleport to entrance
+        // Move player to exit tile
+        state.Player.X = 10;
+        state.Player.Y = 10;
+
         var evt = PortalSystem.CheckPortalCollision(state.Player, state);
 
         Assert.That(evt, Is.Not.Null);
@@ -224,9 +382,11 @@ public class PortalSystemTests
     [Test]
     public void CheckCollision_MonsterOnPortal_Teleports()
     {
-        var (state, factory) = CreateState();
+        var (state, factory) = CreateState(playerX: 3, playerY: 3);
+        var wand = MakeInfiniteWand();
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
+
         var orc = AddMonster(state, 1, x: 5, y: 5);
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
 
         var evt = PortalSystem.CheckPortalCollision(orc, state);
 
@@ -239,9 +399,11 @@ public class PortalSystemTests
     public void CheckCollision_NoPortalAtPosition_ReturnsNull()
     {
         var (state, factory) = CreateState(playerX: 3, playerY: 3);
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var wand = MakeInfiniteWand();
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
+        // SetupPortalPair moves player to entrance; restore to non-portal position
+        state.Player.X = 3; state.Player.Y = 3;
 
-        // Player at (3,3), portals at (5,5) and (10,10)
         var evt = PortalSystem.CheckPortalCollision(state.Player, state);
 
         Assert.That(evt, Is.Null, "No portal at player position — should return null");
@@ -261,15 +423,15 @@ public class PortalSystemTests
     public void CheckCollision_NoChaining_JustTeleportedEntity()
     {
         var (state, factory) = CreateState(playerX: 5, playerY: 5);
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var wand = MakeInfiniteWand();
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
 
         // First teleport: entrance → exit
         var evt1 = PortalSystem.CheckPortalCollision(state.Player, state);
         Assert.That(evt1, Is.Not.Null, "First teleport should succeed");
         Assert.That(state.Player.X, Is.EqualTo(10), "Player at exit after first teleport");
 
-        // Player is now at exit (10,10). The exit portal has UsedThisTurn=true (set by first teleport).
-        // Attempting to teleport again on the exit portal this turn should be blocked.
+        // Exit portal has UsedThisTurn=true; attempting again should be blocked
         var evt2 = PortalSystem.CheckPortalCollision(state.Player, state);
         Assert.That(evt2, Is.Null, "Chain teleport should be blocked (UsedThisTurn flag)");
         Assert.That(state.Player.X, Is.EqualTo(10), "Player should not have moved again");
@@ -279,7 +441,8 @@ public class PortalSystemTests
     public void CheckCollision_AfterClearUsedFlags_CanTeleportAgainNextTurn()
     {
         var (state, factory) = CreateState(playerX: 5, playerY: 5);
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var wand = MakeInfiniteWand();
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
 
         // First teleport
         PortalSystem.CheckPortalCollision(state.Player, state);
@@ -302,8 +465,9 @@ public class PortalSystemTests
     [Test]
     public void ClearPortals_RemovesAllPortalEntities()
     {
-        var (state, factory) = CreateState();
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
         Assert.That(state.Portals, Has.Count.EqualTo(2));
 
         PortalSystem.ClearPortals(state);
@@ -312,21 +476,11 @@ public class PortalSystemTests
     }
 
     [Test]
-    public void ClearPortals_ClearsGameStatePortalList()
-    {
-        var (state, factory) = CreateState();
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
-
-        PortalSystem.ClearPortals(state);
-
-        Assert.That(state.Portals, Is.Empty, "state.Portals should be empty after ClearPortals");
-    }
-
-    [Test]
     public void ClearPortals_ReturnsRemovedEvent_WhenPortalsExisted()
     {
-        var (state, factory) = CreateState();
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
 
         var evt = PortalSystem.ClearPortals(state);
 
@@ -354,7 +508,6 @@ public class PortalSystemTests
         Assert.That(wandComp.Infinite, Is.True);
         Assert.That(wandComp.HasCharges, Is.True);
 
-        // Simulate many uses
         for (int i = 0; i < 100; i++)
             wandComp.TryConsume();
 
@@ -371,19 +524,39 @@ public class PortalSystemTests
     // ─── TurnController integration ──────────────────────────────────────────
 
     [Test]
-    public void TurnController_PortalAction_CallsPlacePortals()
+    public void TurnController_PortalStep1_PlacesEntrance()
     {
-        var (state, factory) = CreateState(playerX: 3, playerY: 3);
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
         var wand = MakeInfiniteWand();
         state.Player.Require<Inventory>().Add(wand);
 
-        // Cast with entrance at (5,5), exit at (10,10)
-        var action = PlayerAction.CastSpellPortal(wand, 5, 5, 10, 10);
-        var result = TurnController.ProcessTurn(state, action, portalEntityFactory: factory);
+        // Step 1: no target → entrance at player feet
+        var result = TurnController.ProcessTurn(state,
+            PlayerAction.CastSpell(wand), portalEntityFactory: factory);
 
-        var placedEvents = result.Events.OfType<PortalPlacedEvent>().ToList();
-        Assert.That(placedEvents, Has.Count.EqualTo(2), "Two PortalPlacedEvents expected");
-        Assert.That(state.Portals, Has.Count.EqualTo(2), "Two portals in state.Portals");
+        var entranceEvent = result.Events.OfType<PortalPlacedEvent>()
+            .FirstOrDefault(e => e.Type == PortalType.Entrance);
+        Assert.That(entranceEvent, Is.Not.Null, "Step 1 should emit entrance PortalPlacedEvent");
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.EntrancePlaced));
+    }
+
+    [Test]
+    public void TurnController_PortalStep1Then2_CreatesTwoPortals()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+        state.Player.Require<Inventory>().Add(wand);
+
+        // Step 1
+        TurnController.ProcessTurn(state, PlayerAction.CastSpell(wand), portalEntityFactory: factory);
+        // Step 2
+        var result = TurnController.ProcessTurn(state,
+            PlayerAction.CastSpell(wand, targetX: 10, targetY: 10), portalEntityFactory: factory);
+
+        var exitEvent = result.Events.OfType<PortalPlacedEvent>()
+            .FirstOrDefault(e => e.Type == PortalType.Exit);
+        Assert.That(exitEvent, Is.Not.Null, "Step 2 should emit exit PortalPlacedEvent");
+        Assert.That(state.Portals, Has.Count.EqualTo(2), "Two portals in state.Portals after step 2");
     }
 
     [Test]
@@ -394,8 +567,8 @@ public class PortalSystemTests
         state.Player.Require<Inventory>().Add(wand);
 
         // No factory injected — should not crash, just silently do nothing
-        var action = PlayerAction.CastSpellPortal(wand, 5, 5, 10, 10);
-        var result = TurnController.ProcessTurn(state, action, portalEntityFactory: null);
+        var result = TurnController.ProcessTurn(state,
+            PlayerAction.CastSpell(wand), portalEntityFactory: null);
 
         Assert.That(state.Portals, Is.Empty, "No portals should be created without a factory");
         Assert.That(result.Events.OfType<PortalPlacedEvent>(), Is.Empty);
@@ -405,7 +578,11 @@ public class PortalSystemTests
     public void TurnController_PlayerMove_ChecksPortalCollision()
     {
         var (state, factory) = CreateState(playerX: 4, playerY: 5);
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var wand = MakeInfiniteWand();
+        // Place portals: entrance at (5,5), exit at (10,10)
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
+        // Move player back to (4,5) so they can step onto the entrance
+        state.Player.X = 4; state.Player.Y = 5;
 
         // Move player onto the entrance portal at (5,5)
         var result = TurnController.ProcessTurn(state,
@@ -420,83 +597,100 @@ public class PortalSystemTests
     [Test]
     public void TurnController_MonsterMove_ChecksPortalCollision()
     {
-        // Place orc next to entrance so it will move onto it
         var (state, factory) = CreateState(playerX: 15, playerY: 15);
+        var wand = MakeInfiniteWand();
         var orc = AddMonster(state, 1, x: 4, y: 5);
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        // Place portals: entrance at (5,5), exit at (10,10)
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
+        // Move player back to far corner (SetupPortalPair repositioned player)
+        state.Player.X = 15; state.Player.Y = 15;
 
-        // Move player away so orc doesn't attack and instead moves
-        // The orc will try to move toward the player (15,15), moving from (4,5) toward (5,5)
+        // Orc will try to move toward player (15,15), potentially stepping onto (5,5)
         var result = TurnController.ProcessTurn(state, PlayerAction.Wait, portalEntityFactory: factory);
 
-        // Orc should have moved and possibly triggered the portal
-        var teleportEvent = result.Events.OfType<PortalTeleportEvent>()
-            .FirstOrDefault(e => e.EntityId == orc.Id);
-        // Note: The orc may or may not step exactly on the portal tile depending on A* pathing.
-        // This test verifies the system doesn't crash when portals + monster movement coexist.
-        // A tighter test is below using CheckPortalCollision directly.
-        Assert.That(result.Events, Is.Not.Null, "Monster movement with portals should not crash");
+        // Verify no crash when portals + monster movement coexist
+        Assert.That(result.Events, Is.Not.Null);
     }
 
     [Test]
     public void TurnController_PortalAction_InfiniteWand_NotConsumed()
     {
-        var (state, factory) = CreateState();
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
         var wand = MakeInfiniteWand();
         state.Player.Require<Inventory>().Add(wand);
 
-        TurnController.ProcessTurn(state, PlayerAction.CastSpellPortal(wand, 5, 5, 10, 10),
+        // Step 1 + Step 2
+        TurnController.ProcessTurn(state, PlayerAction.CastSpell(wand),
+            portalEntityFactory: factory);
+        TurnController.ProcessTurn(state, PlayerAction.CastSpell(wand, targetX: 10, targetY: 10),
             portalEntityFactory: factory);
 
-        // Wand should still be in inventory (infinite wands are never destroyed)
         Assert.That(state.PlayerInventory!.Items, Contains.Item(wand),
             "Infinite wand should remain in inventory after use");
         Assert.That(wand.Require<WandComponent>().HasCharges, Is.True);
     }
 
     [Test]
-    public void TurnController_PortalRecycle_OldPortalRemoved()
+    public void TurnController_Step3_RemovesPortals()
     {
-        var (state, factory) = CreateState();
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
         var wand = MakeInfiniteWand();
         state.Player.Require<Inventory>().Add(wand);
 
-        // First placement
-        TurnController.ProcessTurn(state, PlayerAction.CastSpellPortal(wand, 5, 5, 10, 10),
+        // Steps 1+2: place pair
+        TurnController.ProcessTurn(state, PlayerAction.CastSpell(wand),
+            portalEntityFactory: factory);
+        TurnController.ProcessTurn(state, PlayerAction.CastSpell(wand, targetX: 10, targetY: 10),
             portalEntityFactory: factory);
         Assert.That(state.Portals, Has.Count.EqualTo(2));
 
-        // Second placement — should remove old pair and create new
-        var result = TurnController.ProcessTurn(state,
-            PlayerAction.CastSpellPortal(wand, 6, 6, 12, 12),
+        // Step 3: clear
+        var result = TurnController.ProcessTurn(state, PlayerAction.CastSpell(wand),
             portalEntityFactory: factory);
 
-        Assert.That(state.Portals, Has.Count.EqualTo(2), "Still exactly 2 portals");
+        Assert.That(state.Portals, Is.Empty, "Step 3 should clear all portals");
         var removedEvent = result.Events.OfType<PortalRemovedEvent>().FirstOrDefault();
-        Assert.That(removedEvent, Is.Not.Null, "Should emit PortalRemovedEvent when recycling");
+        Assert.That(removedEvent, Is.Not.Null, "Step 3 should emit PortalRemovedEvent");
     }
 
     // ─── Floor transition ─────────────────────────────────────────────────────
 
     [Test]
-    public void FloorTransition_ClearsPortals()
+    public void FloorTransition_ClearsPortalsAndResetsWandState()
     {
-        // This tests that ClearPortals is the right call on floor transition.
-        // The actual floor transition is handled by the presentation layer (DescendEvent).
-        // This unit test verifies ClearPortals leaves state clean for a new floor.
-        var (state, factory) = CreateState();
-        PortalSystem.PlacePortals(state, 0, 5, 5, 10, 10, factory);
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+        SetupPortalPair(state, factory, wand, 5, 5, 10, 10);
         Assert.That(state.Portals, Has.Count.EqualTo(2));
 
+        // Simulate floor transition: clear portals + reset wand state
         PortalSystem.ClearPortals(state);
+        PortalSystem.ResetPortalWandState(wand);
 
         Assert.That(state.Portals, Is.Empty, "Portals should be cleared on floor transition");
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.Ready));
 
         // Verify portals cannot be triggered on cleared state
-        state.Player.X = 5;
-        state.Player.Y = 5;
+        state.Player.X = 5; state.Player.Y = 5;
         var evt = PortalSystem.CheckPortalCollision(state.Player, state);
         Assert.That(evt, Is.Null, "No collision after clearing portals");
+    }
+
+    [Test]
+    public void FloorTransition_WithPendingEntrance_ResetsToReady()
+    {
+        var (state, factory) = CreateState(playerX: 5, playerY: 5);
+        var wand = MakeInfiniteWand();
+
+        // Only step 1 placed — entrance pending, no full pair
+        PortalSystem.HandlePortalCast(state.Player, state, wand, null, null, factory);
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.EntrancePlaced));
+
+        // Floor transition: just reset wand state (old map abandoned)
+        PortalSystem.ResetPortalWandState(wand);
+
+        Assert.That(PortalSystem.GetPortalCastStep(wand), Is.EqualTo(PortalCastStep.Ready));
+        Assert.That(wand.Get<PortalCastStateComponent>()?.PendingEntrance, Is.Null);
     }
 
     // ─── YAML integration ─────────────────────────────────────────────────────
@@ -536,7 +730,6 @@ public class PortalSystemTests
     [Test]
     public void WandOfPortals_NotInFloorPool()
     {
-        // Verify wand_of_portals is not in any floor item pool (it's a starting item only).
         var testDir = TestContext.CurrentContext.TestDirectory;
         var poolPath = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "config", "floor_item_pools.yaml"));
 

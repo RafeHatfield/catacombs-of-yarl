@@ -149,6 +149,17 @@ public sealed class DungeonFloorBuilder
             StatusEffectProcessor.ClearAllEffects(existingPlayer);
             player = PlayerCarryForward.Apply(existingPlayer);
 
+            // Reset portal wand state — portals don't persist between floors.
+            // The portal entities belong to the old GameState (abandoned on transition),
+            // so only the wand's step tracker needs resetting here.
+            var inventory = existingPlayer.Get<Inventory>();
+            if (inventory != null)
+            {
+                foreach (var invItem in inventory.Items)
+                    if (invItem.Get<PortalCastStateComponent>() != null)
+                        PortalSystem.ResetPortalWandState(invItem);
+            }
+
             // Restore ring effects that are NOT preserved in the carried Fighter stats.
             // Stat rings (protection/strength/dexterity/constitution/might) survive because
             // PlayerCarryForward copies the live Fighter (which has ring bonuses baked in).

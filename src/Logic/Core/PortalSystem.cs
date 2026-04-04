@@ -6,94 +6,202 @@ namespace CatacombsOfYarl.Logic.Core;
 /// <summary>
 /// Handles portal pair placement, entity teleportation, and portal cleanup.
 ///
-/// Design rules (see plan_spell_wand_scroll_system.md § Phase 5):
-///   - Only one portal pair active at a time. Using the wand again recycles the old pair.
-///   - Portals are bidirectional: entrance → exit AND exit → entrance.
-///   - No teleport chaining: PortalComponent.UsedThisTurn prevents re-triggering on arrival.
-///     That flag must be cleared at end-of-turn (ClearPortalUsedFlags).
-///   - Portals do not persist between floors — ClearPortals is called in floor transition.
-///   - Both player and monsters can use portals.
-///   - Placement validates: tile must be walkable and not the same tile for both portals.
+/// 3-step casting cycle (Wand of Portals):
+///   Step 1 (Ready → EntrancePlaced):
+///     Entrance placed at caster's feet. Registered on map, NOT yet in state.Portals.
+///     state.Portals invariant (always 0 or 2) is preserved throughout.
+///   Step 2 (EntrancePlaced → BothPlaced):
+///     Exit placed at target tile. Both portals linked and added to state.Portals atomically.
+///     Any monsters on either portal tile are immediately displaced through the portal.
+///   Step 3 (BothPlaced → Ready):
+///     Both portals removed. Wand recharged (conceptually — wand is Infinite, step resets).
 ///
-/// This is a new system — there is no PoC reference implementation.
+/// Additional rules:
+///   - Only one portal pair active at a time. Step 1 recycles any existing pair first.
+///   - Portals are bidirectional: entrance ↔ exit.
+///   - No teleport chaining: PortalComponent.UsedThisTurn prevents re-triggering on arrival.
+///     Cleared at end-of-turn via ClearPortalUsedFlags.
+///   - Portals do not persist between floors. ClearPortals + ResetPortalWandState on transition.
+///   - Both player and monsters can traverse portals.
+///   - Placement validates: tile must be walkable, not a stair, not the same as the other portal.
 /// </summary>
 public static class PortalSystem
 {
+    // ─── 3-Step State Machine ─────────────────────────────────────────────────
+
     /// <summary>
-    /// Place a portal pair at the given entrance and exit positions.
+    /// Drive the 3-step portal casting cycle. Called by TurnController when the player uses
+    /// the Wand of Portals. The current step is read from the wand entity's
+    /// PortalCastStateComponent (created on first use if absent).
     ///
-    /// If portals already exist, removes them first (emits PortalRemovedEvent).
-    /// Creates two portal entities, links them to each other, registers on the map,
-    /// and adds to state.Portals.
-    ///
-    /// Returns null (no events) if placement is invalid:
-    ///   - Either tile is not walkable
-    ///   - Entrance and exit are the same tile
-    ///
-    /// On success returns events: [PortalRemovedEvent?] + [PortalPlacedEvent × 2].
+    /// Returns emitted events, or null if the cast was invalid (bad target tile, etc.).
     /// </summary>
-    public static List<TurnEvent>? PlacePortals(
-        GameState state,
-        int placedByEntityId,
-        int entranceX, int entranceY,
-        int exitX, int exitY,
+    public static List<TurnEvent>? HandlePortalCast(
+        Entity caster, GameState state, Entity wand,
+        int? targetX, int? targetY,
         EntityFactory entityFactory)
     {
-        // Validate: both tiles must be walkable
-        if (!state.Map.IsWalkable(entranceX, entranceY)) return null;
-        if (!state.Map.IsWalkable(exitX, exitY)) return null;
-
-        // Validate: entrance and exit cannot be the same tile
-        if (entranceX == exitX && entranceY == exitY) return null;
-
+        var stateComp = wand.GetOrAdd<PortalCastStateComponent>();
         var events = new List<TurnEvent>();
 
-        // Recycle existing portal pair if one is active
-        if (state.Portals.Count > 0)
+        switch (stateComp.Step)
         {
-            var removeEvent = RemoveAllPortals(state);
-            if (removeEvent != null)
-                events.Add(removeEvent);
+            case PortalCastStep.Ready:
+                return PlaceEntrance(caster, state, wand, stateComp, entityFactory);
+
+            case PortalCastStep.EntrancePlaced:
+                return PlaceExit(caster, state, wand, stateComp, entityFactory,
+                    targetX, targetY, events);
+
+            case PortalCastStep.BothPlaced:
+                return ResetPortals(state, stateComp, events);
+
+            default:
+                return null;
+        }
+    }
+
+    /// <summary>Returns the current portal cast step for the given wand entity.</summary>
+    public static PortalCastStep GetPortalCastStep(Entity wand) =>
+        wand.Get<PortalCastStateComponent>()?.Step ?? PortalCastStep.Ready;
+
+    /// <summary>
+    /// Cancel a pending entrance (Step = EntrancePlaced): remove entrance from map,
+    /// reset wand to Ready. Returns a PortalEntranceCancelledEvent if cleanup happened.
+    /// Called directly from GameController when the player cancels targeting — no turn consumed.
+    /// </summary>
+    public static PortalEntranceCancelledEvent? CancelPendingEntrance(Entity wand, GameState state)
+    {
+        var comp = wand.Get<PortalCastStateComponent>();
+        if (comp?.Step != PortalCastStep.EntrancePlaced || comp.PendingEntrance == null)
+            return null;
+
+        state.Map.UnregisterEntity(comp.PendingEntrance);
+        int entranceId = comp.PendingEntrance.Id;
+        comp.Step = PortalCastStep.Ready;
+        comp.PendingEntrance = null;
+        return new PortalEntranceCancelledEvent { ActorId = 0, EntranceEntityId = entranceId };
+    }
+
+    /// <summary>
+    /// Reset portal wand state on floor transition. The pending entrance entity (if any)
+    /// belongs to the old floor's map which is being abandoned — no unregister needed.
+    /// </summary>
+    public static void ResetPortalWandState(Entity wand)
+    {
+        var comp = wand.Get<PortalCastStateComponent>();
+        if (comp == null) return;
+        comp.Step = PortalCastStep.Ready;
+        comp.PendingEntrance = null;
+    }
+
+    // ─── Step handlers ────────────────────────────────────────────────────────
+
+    private static List<TurnEvent>? PlaceEntrance(
+        Entity caster, GameState state, Entity wand,
+        PortalCastStateComponent stateComp, EntityFactory entityFactory)
+    {
+        var events = new List<TurnEvent>();
+
+        // Recycle any existing portal pair first
+        var removeEvent = RemoveAllPortals(state);
+        if (removeEvent != null) events.Add(removeEvent);
+
+        // Validate: caster tile must be walkable (should always be true)
+        if (!state.Map.IsWalkable(caster.X, caster.Y)) return null;
+
+        // Validate: not placing on a stair tile
+        if (IsStairTile(caster.X, caster.Y, state)) return null;
+
+        var entrance = entityFactory.Create("Portal Entrance", caster.X, caster.Y);
+        entrance.Add(new PortalComponent { Type = PortalType.Entrance, LinkedPortalId = -1 });
+        state.Map.RegisterEntity(entrance);
+
+        // Track in component only — NOT in state.Portals yet (preserves 0-or-2 invariant)
+        stateComp.PendingEntrance = entrance;
+        stateComp.Step = PortalCastStep.EntrancePlaced;
+
+        events.Add(new PortalPlacedEvent
+        {
+            ActorId = caster.Id,
+            PlacerId = caster.Id,
+            Type = PortalType.Entrance,
+            PortalEntityId = entrance.Id,
+            X = caster.X,
+            Y = caster.Y,
+        });
+
+        return events;
+    }
+
+    private static List<TurnEvent>? PlaceExit(
+        Entity caster, GameState state, Entity wand,
+        PortalCastStateComponent stateComp, EntityFactory entityFactory,
+        int? targetX, int? targetY, List<TurnEvent> events)
+    {
+        if (!targetX.HasValue || !targetY.HasValue) return null;
+        int exitX = targetX.Value, exitY = targetY.Value;
+
+        // Recover pending entrance — if it's gone somehow, reset and bail
+        var entrance = stateComp.PendingEntrance;
+        if (entrance == null)
+        {
+            stateComp.Step = PortalCastStep.Ready;
+            return null;
         }
 
-        // Create entrance entity (cyan)
-        var entrance = entityFactory.Create("Portal Entrance", entranceX, entranceY);
-        var entranceComp = entrance.Add(new PortalComponent { Type = PortalType.Entrance });
+        // Validate exit tile
+        if (!state.Map.IsWalkable(exitX, exitY)) return null;
+        if (IsStairTile(exitX, exitY, state)) return null;
+        if (exitX == entrance.X && exitY == entrance.Y) return null;
 
-        // Create exit entity (yellow)
+        // Create exit and cross-link
         var exit = entityFactory.Create("Portal Exit", exitX, exitY);
+        var entranceComp = entrance.Get<PortalComponent>()!;
         var exitComp = exit.Add(new PortalComponent { Type = PortalType.Exit });
-
-        // Cross-link — each portal points to the other's entity ID
         entranceComp.LinkedPortalId = exit.Id;
         exitComp.LinkedPortalId = entrance.Id;
 
-        // Register on map and in state
-        state.Map.RegisterEntity(entrance);
+        // Add both to state.Portals atomically — invariant now satisfied
         state.Map.RegisterEntity(exit);
         state.Portals.Add(entrance);
         state.Portals.Add(exit);
 
-        events.Add(new PortalPlacedEvent
-        {
-            ActorId = placedByEntityId,
-            PlacerId = placedByEntityId,
-            Type = PortalType.Entrance,
-            PortalEntityId = entrance.Id,
-            X = entranceX,
-            Y = entranceY,
-        });
+        stateComp.PendingEntrance = null;
+        stateComp.Step = PortalCastStep.BothPlaced;
 
         events.Add(new PortalPlacedEvent
         {
-            ActorId = placedByEntityId,
-            PlacerId = placedByEntityId,
+            ActorId = caster.Id,
+            PlacerId = caster.Id,
             Type = PortalType.Exit,
             PortalEntityId = exit.Id,
             X = exitX,
             Y = exitY,
         });
 
+        // Displace any monsters standing on either portal tile at placement time.
+        // Monsters don't know about portals — they walk into them. Placing the exit
+        // on an occupied tile is intentional (displacement mechanic).
+        // Check both portals: a monster may have walked onto the entrance during step 1.
+        foreach (var monster in state.Monsters)
+        {
+            if (monster.Get<Fighter>()?.IsAlive != true) continue;
+            var teleportEvt = CheckPortalCollision(monster, state);
+            if (teleportEvt != null) events.Add(teleportEvt);
+        }
+
+        return events;
+    }
+
+    private static List<TurnEvent> ResetPortals(
+        GameState state, PortalCastStateComponent stateComp, List<TurnEvent> events)
+    {
+        var removeEvent = RemoveAllPortals(state);
+        if (removeEvent != null) events.Add(removeEvent);
+
+        stateComp.Step = PortalCastStep.Ready;
+        stateComp.PendingEntrance = null;
         return events;
     }
 
@@ -214,5 +322,17 @@ public static class PortalSystem
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Returns true if the given tile is occupied by a stair-down entity.
+    /// Portal placement on stairs is blocked: teleporting to a stair tile would
+    /// immediately trigger floor descent, which is almost certainly unintended.
+    /// </summary>
+    private static bool IsStairTile(int x, int y, GameState state)
+    {
+        return state.StairDown != null
+            && state.StairDown.X == x
+            && state.StairDown.Y == y;
     }
 }

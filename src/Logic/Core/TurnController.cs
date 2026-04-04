@@ -304,26 +304,24 @@ public static class TurnController
         }
 
         // ── Resolve spell ─────────────────────────────────────────────────────
-        // Portal targeting is handled here because SpellResolver has no EntityFactory.
+        // Portal casting is handled here (not SpellResolver) because it needs an EntityFactory.
         // All other targeting modes delegate to SpellResolver.
-        if (spell.SpellId == "portal" && action.TargetX2.HasValue && action.TargetY2.HasValue
-            && action.TargetX.HasValue && action.TargetY.HasValue)
+        if (spell.SpellId == "portal")
         {
             if (portalEntityFactory != null)
             {
-                var portalEvents = PortalSystem.PlacePortals(
+                var portalEvents = PortalSystem.HandlePortalCast(
+                    state.Player,
                     state,
-                    placedByEntityId: state.Player.Id,
-                    entranceX: action.TargetX.Value,
-                    entranceY: action.TargetY.Value,
-                    exitX: action.TargetX2.Value,
-                    exitY: action.TargetY2.Value,
+                    item,
+                    targetX: action.TargetX,
+                    targetY: action.TargetY,
                     entityFactory: portalEntityFactory);
 
                 if (portalEvents != null)
                     events.AddRange(portalEvents);
             }
-            // If no factory: silently no-op (same pattern as split spawning with no MonsterFactory).
+            // If no factory: silently no-op (tests that don't exercise portals).
         }
         else
         {

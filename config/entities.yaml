@@ -1172,9 +1172,9 @@ wands:
     spell_id: "portal"
     targeting: "portal"
     is_wand: true
-    # TODO: multi-step cycling behavior (3-cast state machine: entrance → exit → reset+recharge)
-    # not yet implemented — currently uses infinite:true as placeholder.
-    # When implemented: remove infinite:true, set cycling: true, the 3rd cast recharges to 1.
+    # 3-step casting: cast 1 = entrance at player's feet, cast 2 = exit at target tile,
+    # cast 3 = remove both portals and reset. Wand is Infinite so it's always usable;
+    # PortalCastStateComponent on the entity tracks which step is active.
     infinite: true
     # Does not appear in floor loot — player always starts with one in their backpack (DungeonFloorBuilder.CreateDefaultPlayer).
     char: "/"
