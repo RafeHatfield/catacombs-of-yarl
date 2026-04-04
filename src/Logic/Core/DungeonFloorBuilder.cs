@@ -85,7 +85,9 @@ public sealed class DungeonFloorBuilder
             foreach (var id in spellItemFactory.AvailableIds)
             {
                 var def = spellItemFactory.GetDefinition(id);
-                if (def != null && def.Category != ItemCategory.Other)
+                // Exclude infinite wands (e.g. wand_of_portals) — they are always granted at run
+                // start, always known to the player, and must never enter the mystery pool.
+                if (def != null && def.Category != ItemCategory.Other && !def.Infinite)
                     list.Add((id, def.Category));
             }
         }
@@ -191,6 +193,20 @@ public sealed class DungeonFloorBuilder
         // New runs create fresh instances from the run seed.
         var finalRegistry = identificationRegistry ?? new IdentificationRegistry();
         var finalPool = appearancePool ?? new AppearancePool(_identifiableItems, rng.Seed);
+
+        // Pre-identify infinite wands (e.g. wand_of_portals) in the registry.
+        // Infinite wands are always given to the player at run start — they are never mystery items.
+        // Without this, TryIdentifyOnUse would fire "you realize it was a wand of X" on first use,
+        // showing the wrong name (another wand's appearance-pool slot bleeds through).
+        if (_spellItemFactory != null)
+        {
+            foreach (var id in _spellItemFactory.AvailableIds)
+            {
+                var def = _spellItemFactory.GetDefinition(id);
+                if (def?.Infinite == true)
+                    finalRegistry.Identify(id);
+            }
+        }
 
         // Place entities (monsters + items)
         var allMonsters = new List<Entity>();

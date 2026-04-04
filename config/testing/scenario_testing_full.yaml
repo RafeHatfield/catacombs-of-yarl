@@ -112,8 +112,7 @@ guaranteed_spawns:
       count: 1
     - type: wand_of_teleportation
       count: 1
-    - type: wand_of_portals
-      count: 1
+    # wand_of_portals intentionally omitted — player always starts with one from CreateDefaultPlayer()
 
   equipment:
     # Weapons — test pick-up, equip, unequip
