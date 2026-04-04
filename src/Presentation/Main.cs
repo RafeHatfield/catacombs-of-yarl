@@ -131,6 +131,16 @@ public partial class Main : Node
 
     public override void _Process(double delta)
     {
+        // On the first _Process tick after SetupPresentation, re-snap the camera and re-apply
+        // fog-of-war. GetViewport().GetVisibleRect() may return stale dimensions when called
+        // during a UI callback (the button press that triggers StartDungeon). Running one frame
+        // later guarantees the viewport reports its true size and the dungeon renders correctly.
+        if (_pendingCameraSnap)
+        {
+            _pendingCameraSnap = false;
+            _DoInitialCameraSnap();
+        }
+
         // Animate and clean up tap indicators entirely in _Process — no Tween involved,
         // so no tween holds a reference to the sprite after it's freed.
         double now = Time.GetTicksMsec() / 1000.0;
@@ -512,6 +522,26 @@ public partial class Main : Node
         // Debug overlay — update references each floor so it reflects the new state.
         // No-op in release builds (_debugOverlay is null).
         _debugOverlay?.SetGameState(_gameController, state, _entitySprites, _itemSprites, _toastLog);
+
+        // Deferred second camera snap: GetViewport().GetVisibleRect() can return stale dimensions
+        // when called during a UI callback (e.g. button press), causing the camera to position
+        // incorrectly and the dungeon to appear grey. Deferring to end-of-frame ensures layout
+        // is resolved before the snap runs. The immediate Update() above already kills stale tweens.
+        _pendingCameraSnap = true;
+    }
+
+    // Set true at end of SetupPresentation; cleared after first _Process snap.
+    private bool _pendingCameraSnap;
+
+    private void _DoInitialCameraSnap()
+    {
+        if (_state == null || _gameView == null) return;
+        PlayerCamera.Update(_gameView, _state.Player, _currentZoom, _renderer);
+        if (_tileLayer != null)
+            DungeonRenderer.UpdateVisibility(_tileLayer, _state.Map);
+        _entitySprites?.UpdateVisibility(_state);
+        _entitySprites?.UpdateStatusTints(_state);
+        _itemSprites?.UpdateVisibility(_state);
     }
 
     public override void _UnhandledInput(InputEvent @event)
