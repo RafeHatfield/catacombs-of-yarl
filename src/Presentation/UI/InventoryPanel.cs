@@ -25,6 +25,7 @@ public sealed partial class InventoryPanel : Control
     private const int SlotSeparation = 4;
 
     private static readonly Color FallbackConsumableColor = new(0.2f, 0.7f, 0.2f, 1f);
+    private static readonly Color FallbackSpellItemColor  = new(0.4f, 0.4f, 0.9f, 1f);
     private static readonly Color FallbackDefaultColor    = new(0.5f, 0.5f, 0.5f, 1f);
 
     /// <summary>
@@ -105,13 +106,13 @@ public sealed partial class InventoryPanel : Control
     {
         var inventory = state.PlayerInventory;
 
-        // Quick-bar shows consumables only — equippables live in the equipment panel.
-        var consumables = inventory?.Items
-            .Where(item => item.Get<Consumable>() != null)
+        // Quick-bar shows consumables, scrolls, and wands — equippables live in the equipment panel.
+        var quickBarItems = inventory?.Items
+            .Where(item => item.Get<Consumable>() != null || item.Get<SpellEffect>() != null)
             .ToList() ?? new List<Entity>();
 
         if (_headerLabel != null)
-            _headerLabel.Text = $"QUICK-BAR  {consumables.Count}";
+            _headerLabel.Text = $"QUICK-BAR  {quickBarItems.Count}";
 
         if (_itemStrip == null) return;
 
@@ -120,7 +121,7 @@ public sealed partial class InventoryPanel : Control
 
         _slotRects.Clear();
 
-        if (consumables.Count == 0)
+        if (quickBarItems.Count == 0)
         {
             if (_emptyLabel != null)  _emptyLabel.Visible = true;
             if (_itemStrip != null)   _itemStrip.Visible  = false;
@@ -130,7 +131,7 @@ public sealed partial class InventoryPanel : Control
         if (_emptyLabel != null) _emptyLabel.Visible = false;
         if (_itemStrip != null)  _itemStrip.Visible  = true;
 
-        foreach (var item in consumables)
+        foreach (var item in quickBarItems)
         {
             var slot = BuildSlot(item, isEquipped: false);
             _itemStrip.AddChild(slot);
@@ -283,11 +284,19 @@ public sealed partial class InventoryPanel : Control
         container.AddChild(icon);
 
         var consumable = item.Get<Consumable>();
+        var wand = item.Get<WandComponent>();
+        string? badgeText = null;
         if (consumable != null)
+            badgeText = $"{consumable.StackSize}";
+        else if (wand != null)
+            badgeText = wand.Infinite ? "∞" : $"{wand.Charges}";
+        // Scrolls (SpellEffect without WandComponent) show no badge — single use, no count.
+
+        if (badgeText != null)
         {
             var badge = new Label
             {
-                Text                = $"{consumable.StackSize}",
+                Text                = badgeText,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment   = VerticalAlignment.Bottom,
                 AnchorLeft   = 0f, AnchorTop    = 0f,
@@ -339,6 +348,7 @@ public sealed partial class InventoryPanel : Control
     private static Color FallbackColor(Entity item)
     {
         if (item.Get<Consumable>() != null) return FallbackConsumableColor;
+        if (item.Get<SpellEffect>() != null) return FallbackSpellItemColor;
         return FallbackDefaultColor;
     }
 }
