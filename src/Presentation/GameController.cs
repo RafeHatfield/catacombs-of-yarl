@@ -230,9 +230,16 @@ public sealed partial class GameController : Node
                 switch (step)
                 {
                     case PortalCastStep.Ready:
-                        // Step 1: place entrance at player's feet — no targeting UI needed
-                        _toastLog?.AddMessage("Portal entrance placed. Tap the wand again to set the exit.");
-                        OnActionChosen(PlayerAction.CastSpell(item));
+                        // Step 1: pick entrance location
+                        _pendingPortalWand = item;
+                        EnterTargetingMode(new TargetingState
+                        {
+                            Item  = item,
+                            Spell = spell,
+                            Mode  = TargetingMode.Location,
+                            Range = 0,
+                        }, showGenericToast: false);
+                        _toastLog?.AddMessage("Tap a tile to place the portal entrance.");
                         break;
                     case PortalCastStep.EntrancePlaced:
                         // Step 2: pick exit location
@@ -242,8 +249,8 @@ public sealed partial class GameController : Node
                             Item  = item,
                             Spell = spell,
                             Mode  = TargetingMode.Location,
-                            Range = 0, // unlimited
-                        });
+                            Range = 0,
+                        }, showGenericToast: false);
                         _toastLog?.AddMessage("Tap a tile to place the exit portal. Tap yourself to cancel.");
                         break;
                     case PortalCastStep.BothPlaced:
@@ -263,11 +270,12 @@ public sealed partial class GameController : Node
     }
 
     /// <summary>Enter targeting mode and notify the presentation.</summary>
-    private void EnterTargetingMode(TargetingState targeting)
+    private void EnterTargetingMode(TargetingState targeting, bool showGenericToast = true)
     {
         Phase = GamePhase.Targeting;
         _input.EnterTargetingMode(targeting);
-        _toastLog?.AddMessage($"Tap a target for {targeting.Item.Name}. Tap yourself to cancel.");
+        if (showGenericToast)
+            _toastLog?.AddMessage($"Tap a target for {targeting.Item.Name}. Tap yourself to cancel.");
         Diag.Log($"GameController: entered targeting mode for {targeting.Item.Name}");
     }
 

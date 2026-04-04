@@ -47,7 +47,7 @@ public static class PortalSystem
         switch (stateComp.Step)
         {
             case PortalCastStep.Ready:
-                return PlaceEntrance(caster, state, wand, stateComp, entityFactory);
+                return PlaceEntrance(caster, state, wand, stateComp, entityFactory, targetX, targetY);
 
             case PortalCastStep.EntrancePlaced:
                 return PlaceExit(caster, state, wand, stateComp, entityFactory,
@@ -99,21 +99,24 @@ public static class PortalSystem
 
     private static List<TurnEvent>? PlaceEntrance(
         Entity caster, GameState state, Entity wand,
-        PortalCastStateComponent stateComp, EntityFactory entityFactory)
+        PortalCastStateComponent stateComp, EntityFactory entityFactory,
+        int? targetX, int? targetY)
     {
+        // Use targeted tile; fall back to caster's position (e.g. in tests that pass null)
+        int entrX = targetX ?? caster.X;
+        int entrY = targetY ?? caster.Y;
+
         var events = new List<TurnEvent>();
 
         // Recycle any existing portal pair first
         var removeEvent = RemoveAllPortals(state);
         if (removeEvent != null) events.Add(removeEvent);
 
-        // Validate: caster tile must be walkable (should always be true)
-        if (!state.Map.IsWalkable(caster.X, caster.Y)) return null;
+        // Validate target tile
+        if (!state.Map.IsWalkable(entrX, entrY)) return null;
+        if (IsStairTile(entrX, entrY, state)) return null;
 
-        // Validate: not placing on a stair tile
-        if (IsStairTile(caster.X, caster.Y, state)) return null;
-
-        var entrance = entityFactory.Create("Portal Entrance", caster.X, caster.Y);
+        var entrance = entityFactory.Create("Portal Entrance", entrX, entrY);
         entrance.Add(new PortalComponent { Type = PortalType.Entrance, LinkedPortalId = -1 });
         state.Map.RegisterEntity(entrance);
 
@@ -127,8 +130,8 @@ public static class PortalSystem
             PlacerId = caster.Id,
             Type = PortalType.Entrance,
             PortalEntityId = entrance.Id,
-            X = caster.X,
-            Y = caster.Y,
+            X = entrX,
+            Y = entrY,
         });
 
         return events;
