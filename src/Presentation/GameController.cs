@@ -34,6 +34,7 @@ public sealed partial class GameController : Node
 
     private GameState? _state;
     private MonsterFactory? _monsterFactory;
+    private EntityFactory? _portalEntityFactory;
     private InputHandler _input = new();
     private EntitySpriteManager? _entitySprites;
     private ItemSpriteManager? _itemSprites;
@@ -97,7 +98,7 @@ public sealed partial class GameController : Node
         ItemSpriteManager? itemSprites = null, InventoryPanel? inventoryPanel = null,
         EquipmentPanel? equipmentPanel = null, ToastLog? toastLog = null,
         MonsterFactory? monsterFactory = null, IMapRenderer? renderer = null,
-        Node2D? gameView = null)
+        Node2D? gameView = null, EntityFactory? portalEntityFactory = null)
     {
 #if DEBUG
         System.Diagnostics.Debug.Assert(_animator == null,
@@ -105,6 +106,7 @@ public sealed partial class GameController : Node
 #endif
         _state = state;
         _monsterFactory = monsterFactory;
+        _portalEntityFactory = portalEntityFactory;
         _entitySprites = entitySprites;
         _itemSprites = itemSprites;
         _inventoryPanel = inventoryPanel;
@@ -576,7 +578,8 @@ public sealed partial class GameController : Node
         Diag.Event("ExecuteTurn", new { action = action.Kind.ToString(), turnCount = _state!.TurnCount });
         Diag.Mem("  pre-ProcessTurn");
 
-        var result = TurnController.ProcessTurn(_state!, action, _monsterFactory);
+        var result = TurnController.ProcessTurn(_state!, action, _monsterFactory,
+            portalEntityFactory: _portalEntityFactory);
         Diag.Log($"  ProcessTurn done: {result.Events.Count} events, gameOver={result.GameOver}");
         foreach (var evt in result.Events)
             Diag.Log($"    evt: {evt.GetType().Name}");

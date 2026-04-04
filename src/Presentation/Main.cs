@@ -56,6 +56,7 @@ public partial class Main : Node
     private ItemFactory? _itemFactory;
     private ConsumableFactory? _consumableFactory;
     private SpellItemFactory? _spellItemFactory;
+    private EntityFactory? _entityFactory;
     private DungeonFloorBuilder? _floorBuilder;
     private LevelTemplateRegistry? _levelTemplates;
 
@@ -309,11 +310,11 @@ public partial class Main : Node
             throw;
         }
 
-        var entityFactory = new EntityFactory();
-        _itemFactory = new ItemFactory(content.Items, entityFactory);
-        _monsterFactory = new MonsterFactory(content.Monsters, entityFactory, _itemFactory);
-        _consumableFactory = new ConsumableFactory(content.Consumables, entityFactory);
-        _spellItemFactory = new SpellItemFactory(content.SpellItems, entityFactory);
+        _entityFactory = new EntityFactory();
+        _itemFactory = new ItemFactory(content.Items, _entityFactory);
+        _monsterFactory = new MonsterFactory(content.Monsters, _entityFactory, _itemFactory);
+        _consumableFactory = new ConsumableFactory(content.Consumables, _entityFactory);
+        _spellItemFactory = new SpellItemFactory(content.SpellItems, _entityFactory);
 
         try
         {
@@ -495,7 +496,7 @@ public partial class Main : Node
         _gameController = new GameController();
         AddChild(_gameController);
         _gameController.Initialize(state, _entitySprites!, this, _itemSprites, _inventoryPanel,
-            _equipmentPanel, _toastLog, _monsterFactory, _renderer, _gameView);
+            _equipmentPanel, _toastLog, _monsterFactory, _renderer, _gameView, _entityFactory);
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
