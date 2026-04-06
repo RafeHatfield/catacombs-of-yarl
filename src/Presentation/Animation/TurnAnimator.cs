@@ -84,7 +84,7 @@ public sealed class TurnAnimator
         bool hasAnimatable = false;
         foreach (var evt in result.Events)
         {
-            if (evt is MoveEvent or AttackEvent or HealEvent or DeathEvent)
+            if (evt is MoveEvent or AttackEvent or HealEvent or DeathEvent or ThrowEvent)
             {
                 hasAnimatable = true;
                 break;
@@ -109,7 +109,7 @@ public sealed class TurnAnimator
         _tweenHasSteps = false;
         foreach (var evt in result.Events)
         {
-            if (evt is MoveEvent or AttackEvent or HealEvent or DeathEvent)
+            if (evt is MoveEvent or AttackEvent or HealEvent or DeathEvent or ThrowEvent)
                 AppendEventAnimation(tween, evt);
         }
 
@@ -149,6 +149,10 @@ public sealed class TurnAnimator
 
             case DeathEvent death:
                 AnimateDeath(tween, death);
+                break;
+
+            case ThrowEvent throwEvt:
+                AnimateThrow(tween, throwEvt);
                 break;
         }
     }
@@ -214,5 +218,70 @@ public sealed class TurnAnimator
 
         tween.TweenProperty(sprite, "modulate:a", 0.0f, DeathFadeDur)
              .SetEase(Tween.EaseType.In);
+    }
+
+    /// <summary>
+    /// Animate a throw. Creates a temporary projectile label that travels from the thrower
+    /// to the landing tile at PoC timing (50ms per tile).
+    ///
+    /// Projectile character by type:
+    ///   Weapon → "/" (blade tumbling)
+    ///   Potion → "*" (shatter on impact)
+    ///   Junk   → "o" (generic object)
+    ///
+    /// The label is added to the animation root (scene-relative) and freed when the tween
+    /// finishes its travel step. Impact flash follows for potion hits.
+    /// </summary>
+    private void AnimateThrow(Tween tween, ThrowEvent throwEvt)
+    {
+        var actorSprite = _entitySprites.GetSprite(throwEvt.ActorId);
+        if (actorSprite == null) return;
+
+        // Determine projectile glyph
+        string glyph = throwEvt.ResultType switch
+        {
+            ThrowResultType.WeaponHit  or ThrowResultType.WeaponMiss  => "/",
+            ThrowResultType.PotionShatter => "*",
+            _ => "o",
+        };
+
+        // Timing: 50ms per tile (PoC reference), scaled by SpeedMultiplier
+        var fromScreen = _renderer.GridToScreenCenter(throwEvt.ActorX, throwEvt.ActorY);
+        var toScreen   = _renderer.GridToScreenCenter(throwEvt.LandX, throwEvt.LandY);
+
+        // Approximate tile distance for timing
+        int tileDist = Math.Max(1,
+            Math.Abs(throwEvt.LandX - throwEvt.ActorX) + Math.Abs(throwEvt.LandY - throwEvt.ActorY));
+        float travelDur = 0.05f * tileDist * _speedMultiplier;
+
+        // Create projectile label in scene tree
+        var projectile = new Label
+        {
+            Text = glyph,
+            Position = fromScreen,
+            ZIndex = 10,
+            MouseFilter = Control.MouseFilterEnum.Ignore,
+        };
+        _root.AddChild(projectile);
+
+        // Animate travel — InOut with linear transition = constant speed (PoC 50ms/tile)
+        tween.TweenProperty(projectile, "position", toScreen, travelDur)
+             .SetEase(Tween.EaseType.InOut)
+             .SetTrans(Tween.TransitionType.Linear);
+        _tweenHasSteps = true;
+
+        // Free projectile after travel
+        tween.TweenCallback(Callable.From(() => projectile.SafeFree()));
+
+        // Impact flash for potion hit
+        if (throwEvt.ResultType == ThrowResultType.PotionShatter && throwEvt.Hit)
+        {
+            var targetSprite = _entitySprites.GetSprite(throwEvt.TargetEntityId ?? -1);
+            if (targetSprite != null)
+            {
+                tween.TweenProperty(targetSprite, "modulate", new Color(0.2f, 0.6f, 2.0f), 0.08f * _speedMultiplier);
+                tween.TweenProperty(targetSprite, "modulate", Colors.White, 0.08f * _speedMultiplier);
+            }
+        }
     }
 }

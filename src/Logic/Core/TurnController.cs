@@ -225,7 +225,34 @@ public static class TurnController
                 ResolveSpellAction(state, action, events, portalEntityFactory);
                 player.Get<SpeedBonusTracker>()?.ResetMomentum();
                 break;
+
+            case PlayerAction.ActionKind.ThrowItem:
+                ResolveThrowItem(state, action, events);
+                // Note: ThrowResolver.Resolve already calls ResetMomentum internally.
+                // No second reset needed here.
+                break;
         }
+    }
+
+    /// <summary>
+    /// Resolve a throw action. Delegates to ThrowResolver which handles all three paths
+    /// (potion, weapon, junk). The monsterFactory is not needed for throws — death from
+    /// thrown weapons follows the spell-kill pattern (DeathEvent only, no loot/corpse here).
+    /// </summary>
+    private static void ResolveThrowItem(GameState state, PlayerAction action, List<TurnEvent> events)
+    {
+        var item = action.Item;
+        if (item == null) return;
+        if (!action.TargetX.HasValue || !action.TargetY.HasValue) return;
+
+        var throwEvents = ThrowResolver.Resolve(
+            state.Player,
+            item,
+            action.TargetX.Value,
+            action.TargetY.Value,
+            state);
+
+        events.AddRange(throwEvents);
     }
 
     /// <summary>

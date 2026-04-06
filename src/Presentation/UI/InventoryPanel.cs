@@ -47,6 +47,16 @@ public sealed partial class InventoryPanel : Control
     /// </summary>
     public IReadOnlyList<(int ItemId, Rect2 LocalRect)> SlotRects => _slotRects;
 
+    // ── Long-press detection constants ────────────────────────────────────────
+    private const float LongPressThreshold = 0.4f; // seconds
+    private const float DragCancelDistance = 8f;   // pixels — cancel if moved more than this
+
+    // ── Long-press state ──────────────────────────────────────────────────────
+    private int   _pressedItemId    = -1;
+    private Vector2 _pressPosition  = Vector2.Zero;
+    private float _pressHeldTime    = 0f;
+    private bool  _longPressFired   = false;
+
     /// <summary>
     /// Fires when the player taps an item slot. Argument is the item's entity ID.
     /// </summary>
@@ -54,6 +64,12 @@ public sealed partial class InventoryPanel : Control
 
     /// <summary>Fires when the player taps the drop button on an item slot.</summary>
     public event Action<int>? ItemDropRequested;
+
+    /// <summary>
+    /// Fires when the player long-presses (0.4s) an item slot.
+    /// GameController uses this to show the ActionSheet.
+    /// </summary>
+    public event Action<int>? ItemLongPressed;
 
     public override void _Ready()
     {
@@ -63,38 +79,102 @@ public sealed partial class InventoryPanel : Control
     }
 
     /// <summary>
+    /// Accumulate hold time for long-press detection. Fires ItemLongPressed when threshold reached.
+    /// </summary>
+    public override void _Process(double delta)
+    {
+        if (_pressedItemId < 0 || _longPressFired) return;
+
+        _pressHeldTime += (float)delta;
+        if (_pressHeldTime >= LongPressThreshold)
+        {
+            _longPressFired = true;
+            int itemId = _pressedItemId;
+            _pressedItemId = -1; // prevent re-firing
+            ItemLongPressed?.Invoke(itemId);
+        }
+    }
+
+    /// <summary>
     /// Handle clicks directly — manual hit-test against slot rects.
     /// Godot's Button hit-testing is broken under integer stretch scale mode
     /// (click rect offset from visual rect). This bypasses it entirely.
+    ///
+    /// Long-press: mouse-down starts a 0.4s timer. If held: fire ItemLongPressed.
+    ///             If released before threshold: fire ItemTapped.
+    ///             If dragged (>8px): cancel both.
     /// </summary>
     public override void _GuiInput(InputEvent @event)
     {
-        if (@event is InputEventMouseButton mb && mb.Pressed && mb.ButtonIndex == MouseButton.Left)
+        if (@event is InputEventMouseMotion motion)
+        {
+            // Cancel long-press if the pointer moves too far from the initial press
+            if (_pressedItemId >= 0 && !_longPressFired)
+            {
+                if (_pressPosition.DistanceTo(motion.Position) > DragCancelDistance)
+                    CancelLongPress();
+            }
+            return;
+        }
+
+        if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Left)
         {
             var localPos = mb.Position;
-            foreach (var (itemId, rect) in _dropRects)
+
+            if (mb.Pressed)
             {
-                if (rect.HasPoint(localPos))
+                // Mouse button down — check drop rects first (they don't participate in long-press)
+                foreach (var (itemId, rect) in _dropRects)
                 {
-                    AcceptEvent();
-                    ItemDropRequested?.Invoke(itemId);
-                    return;
+                    if (rect.HasPoint(localPos))
+                    {
+                        AcceptEvent();
+                        ItemDropRequested?.Invoke(itemId);
+                        return;
+                    }
                 }
-            }
-            foreach (var (itemId, rect) in _slotRects)
-            {
-                if (rect.HasPoint(localPos))
+
+                // Check slot rects — start long-press timer
+                foreach (var (itemId, rect) in _slotRects)
                 {
+                    if (rect.HasPoint(localPos))
+                    {
+                        AcceptEvent();
+                        _pressedItemId  = itemId;
+                        _pressPosition  = localPos;
+                        _pressHeldTime  = 0f;
+                        _longPressFired = false;
+                        return;
+                    }
+                }
+
+                // Click inside panel but no slot — consume
+                AcceptEvent();
+            }
+            else
+            {
+                // Mouse button released — if timer hasn't fired yet, treat as a tap
+                if (_pressedItemId >= 0 && !_longPressFired)
+                {
+                    int itemId = _pressedItemId;
+                    CancelLongPress();
                     Diag.Log($"InventoryPanel hit-test: itemId={itemId} at {localPos}");
                     AcceptEvent();
                     ItemTapped?.Invoke(itemId);
-                    return;
+                }
+                else
+                {
+                    CancelLongPress();
                 }
             }
-            // Click was inside the panel but missed all slots — consume it anyway
-            // so it doesn't fall through to the game view as a movement tap.
-            AcceptEvent();
         }
+    }
+
+    private void CancelLongPress()
+    {
+        _pressedItemId  = -1;
+        _pressHeldTime  = 0f;
+        _longPressFired = false;
     }
 
     public void Initialize(GameState state)

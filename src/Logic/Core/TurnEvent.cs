@@ -281,6 +281,70 @@ public sealed class IdentificationEvent : TurnEvent
 }
 
 /// <summary>
+/// Describes how a throw resolved.
+/// PotionShatter: potion consumed; if Hit, spell applied to target monster.
+/// WeaponHit: weapon dealt damage to a monster, then landed on ground (retrievable).
+/// WeaponMiss: weapon missed (no monster at final tile), landed on ground (retrievable).
+/// JunkLand: non-potion, non-weapon item landed on ground with no effect (retrievable).
+/// </summary>
+public enum ThrowResultType
+{
+    PotionShatter,
+    WeaponHit,
+    WeaponMiss,
+    JunkLand,
+}
+
+/// <summary>
+/// Emitted when the player throws an item.
+/// Weapons deal damage and land on ground (retrievable). Potions shatter on impact.
+/// Junk (rings, scrolls, armor) lands on ground with no effect (retrievable).
+/// Throwing always breaks invisibility and resets momentum.
+/// PoC reference: ~/development/rlike/throwing.py
+/// </summary>
+public sealed class ThrowEvent : TurnEvent
+{
+    /// <summary>Entity ID of the item being thrown.</summary>
+    public int ItemId { get; init; }
+
+    /// <summary>Name of the item (for toast display).</summary>
+    public string ItemName { get; init; } = "";
+
+    /// <summary>Position of the thrower at the time of throw (for animation path length).</summary>
+    public int ActorX { get; init; }
+    public int ActorY { get; init; }
+
+    /// <summary>Target tile chosen by the player.</summary>
+    public int TargetX { get; init; }
+    public int TargetY { get; init; }
+
+    /// <summary>Actual landing tile after Bresenham path + wall/range clipping.</summary>
+    public int LandX { get; init; }
+    public int LandY { get; init; }
+
+    /// <summary>True if a monster was at the final tile when the item arrived.</summary>
+    public bool Hit { get; init; }
+
+    /// <summary>Damage dealt to the target (weapons only). 0 for misses, potions, junk.</summary>
+    public int Damage { get; init; }
+
+    /// <summary>True if the hit killed the target monster.</summary>
+    public bool TargetKilled { get; init; }
+
+    /// <summary>Entity ID of the monster hit (null on miss).</summary>
+    public int? TargetEntityId { get; init; }
+
+    /// <summary>
+    /// True when the item is left on the ground as a floor item (weapons, junk).
+    /// False when the item is consumed (potions always consumed regardless of hit/miss).
+    /// </summary>
+    public bool ItemLandsOnGround { get; init; }
+
+    /// <summary>How the throw resolved.</summary>
+    public ThrowResultType ResultType { get; init; }
+}
+
+/// <summary>
 /// Emitted when an entity's turn is skipped due to a status effect (SlowedEffect, ImmobilizedEffect, SleepEffect).
 /// </summary>
 public sealed class SkipTurnEvent : TurnEvent

@@ -10,7 +10,7 @@ namespace CatacombsOfYarl.Logic.Core;
 /// </summary>
 public sealed class PlayerAction
 {
-    public enum ActionKind { Wait, Attack, Move, UseItem, Descend, DropItem, EquipItem, UnequipItem, CastSpell }
+    public enum ActionKind { Wait, Attack, Move, UseItem, Descend, DropItem, EquipItem, UnequipItem, CastSpell, ThrowItem }
 
     public ActionKind Kind { get; }
 
@@ -89,4 +89,12 @@ public sealed class PlayerAction
         => new(ActionKind.CastSpell, item: item,
                targetX: entranceX, targetY: entranceY,
                targetX2: exitX, targetY2: exitY);
+
+    /// <summary>
+    /// Throw an item at a target tile. ThrowResolver handles the three resolution paths:
+    /// potion → apply throw spell on hit, weapon → deal weapon dice - 2 damage then land on ground,
+    /// junk → land on ground with no effect. Equipped weapons are auto-unequipped before throw.
+    /// </summary>
+    public static PlayerAction ThrowItem(Entity item, int targetX, int targetY)
+        => new(ActionKind.ThrowItem, item: item, targetX: targetX, targetY: targetY);
 }

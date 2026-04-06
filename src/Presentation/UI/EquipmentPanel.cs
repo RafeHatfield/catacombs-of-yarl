@@ -47,6 +47,20 @@ public sealed partial class EquipmentPanel : Control
     /// </summary>
     public SpriteMapping? SpriteMappingInstance { get; set; }
 
+    // ── Long-press detection constants ────────────────────────────────────────
+    private const float LongPressThreshold = 0.4f;
+    private const float DragCancelDistance = 8f;
+
+    // Long-press state — tracks the pressed slot or pack item
+    // Slot long-press uses SlotId = (int)slot; pack item uses SlotId = -1 and ItemId = id
+    private bool  _pressIsEquippedSlot = false;
+    private EquipmentSlot _pressedSlot = EquipmentSlot.MainHand;
+    private int   _pressedPackItemId = -1;
+    private Vector2 _pressPosition  = Vector2.Zero;
+    private float _pressHeldTime    = 0f;
+    private bool  _longPressFired   = false;
+    private bool  _pressing         = false;
+
     /// <summary>Fires when the player taps an occupied equipment slot to unequip it.</summary>
     public event Action<EquipmentSlot>? UnequipRequested;
 
@@ -55,6 +69,18 @@ public sealed partial class EquipmentPanel : Control
 
     /// <summary>Fires when the player taps the drop button on an In Pack item.</summary>
     public event Action<int>? ItemDropRequested;
+
+    /// <summary>
+    /// Fires when the player long-presses an occupied equipment slot.
+    /// Parameters: (slot, itemId of the equipped item).
+    /// </summary>
+    public event Action<EquipmentSlot, int>? EquippedItemLongPressed;
+
+    /// <summary>
+    /// Fires when the player long-presses an In Pack item slot.
+    /// Parameter: itemId.
+    /// </summary>
+    public event Action<int>? PackItemLongPressed;
 
     // Hit-test tracking — (slot/itemId, localRect relative to this panel).
     private readonly List<(EquipmentSlot Slot, Rect2 Rect)> _equippedRects  = new();
@@ -68,11 +94,40 @@ public sealed partial class EquipmentPanel : Control
     private Control? _slotGrid;
     private Control? _packStrip;
 
+    // Keep the last refreshed state so long-press handlers can look up slot contents.
+    private GameState? _currentState;
+
     public override void _Ready()
     {
         BuildLayout();
         MouseFilter = MouseFilterEnum.Stop;
         Visible = false;
+    }
+
+    /// <summary>Accumulate hold time and fire long-press events when threshold reached.</summary>
+    public override void _Process(double delta)
+    {
+        if (!_pressing || _longPressFired) return;
+
+        _pressHeldTime += (float)delta;
+        if (_pressHeldTime >= LongPressThreshold)
+        {
+            _longPressFired = true;
+            _pressing = false;
+
+            if (_pressIsEquippedSlot && _currentState != null)
+            {
+                // Find the item in the pressed slot
+                var equipment = _currentState.Player.Get<Equipment>();
+                var item = equipment?.GetSlot(_pressedSlot);
+                if (item != null)
+                    EquippedItemLongPressed?.Invoke(_pressedSlot, item.Id);
+            }
+            else if (_pressedPackItemId >= 0)
+            {
+                PackItemLongPressed?.Invoke(_pressedPackItemId);
+            }
+        }
     }
 
     public void Show(GameState state)
@@ -83,6 +138,7 @@ public sealed partial class EquipmentPanel : Control
 
     public void Refresh(GameState state)
     {
+        _currentState = state;
         if (!IsInsideTree() || !Visible) return;
         RefreshStats(state);
         RebuildSlotGrid(state);
@@ -96,52 +152,106 @@ public sealed partial class EquipmentPanel : Control
 
     public override void _GuiInput(InputEvent @event)
     {
-        if (@event is InputEventMouseButton mb && mb.Pressed && mb.ButtonIndex == MouseButton.Left)
+        if (@event is InputEventMouseMotion motion)
+        {
+            // Cancel long-press on drag
+            if (_pressing && !_longPressFired)
+            {
+                if (_pressPosition.DistanceTo(motion.Position) > DragCancelDistance)
+                    CancelEquipLongPress();
+            }
+            return;
+        }
+
+        if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Left)
         {
             var pos = mb.Position;
 
-            // Check equipment slots first.
-            foreach (var (slot, rect) in _equippedRects)
+            if (mb.Pressed)
             {
-                if (rect.HasPoint(pos))
+                // Drop buttons always fire immediately — no long-press.
+                foreach (var (itemId, rect) in _packDropRects)
                 {
+                    if (rect.HasPoint(pos))
+                    {
+                        AcceptEvent();
+                        ItemDropRequested?.Invoke(itemId);
+                        return;
+                    }
+                }
+
+                // Equipped slots — start long-press timer
+                foreach (var (slot, rect) in _equippedRects)
+                {
+                    if (rect.HasPoint(pos))
+                    {
+                        AcceptEvent();
+                        _pressing = true;
+                        _pressIsEquippedSlot = true;
+                        _pressedSlot = slot;
+                        _pressedPackItemId = -1;
+                        _pressPosition = pos;
+                        _pressHeldTime = 0f;
+                        _longPressFired = false;
+                        return;
+                    }
+                }
+
+                // Pack items — start long-press timer
+                foreach (var (itemId, rect) in _packRects)
+                {
+                    if (rect.HasPoint(pos))
+                    {
+                        AcceptEvent();
+                        _pressing = true;
+                        _pressIsEquippedSlot = false;
+                        _pressedPackItemId = itemId;
+                        _pressPosition = pos;
+                        _pressHeldTime = 0f;
+                        _longPressFired = false;
+                        return;
+                    }
+                }
+
+                // Click landed outside all interactive slots.
+                // If it's also outside the visible panel container, close (tap-outside-to-dismiss).
+                bool insidePanel = _panelContainer != null &&
+                    new Rect2(_panelContainer.Position, _panelContainer.Size).HasPoint(pos);
+                if (!insidePanel)
+                    Hide();
+
+                AcceptEvent();
+            }
+            else
+            {
+                // Mouse released — if timer hasn't fired, treat as a normal tap
+                if (_pressing && !_longPressFired)
+                {
+                    bool wasEquippedSlot = _pressIsEquippedSlot;
+                    var slot = _pressedSlot;
+                    int packItemId = _pressedPackItemId;
+                    CancelEquipLongPress();
+
                     AcceptEvent();
-                    UnequipRequested?.Invoke(slot);
-                    return;
+                    if (wasEquippedSlot)
+                        UnequipRequested?.Invoke(slot);
+                    else if (packItemId >= 0)
+                        EquipRequested?.Invoke(packItemId);
+                }
+                else
+                {
+                    CancelEquipLongPress();
                 }
             }
-
-            // Check In Pack drop buttons first (top-right corner of each pack slot).
-            foreach (var (itemId, rect) in _packDropRects)
-            {
-                if (rect.HasPoint(pos))
-                {
-                    AcceptEvent();
-                    ItemDropRequested?.Invoke(itemId);
-                    return;
-                }
-            }
-
-            // Check In Pack items.
-            foreach (var (itemId, rect) in _packRects)
-            {
-                if (rect.HasPoint(pos))
-                {
-                    AcceptEvent();
-                    EquipRequested?.Invoke(itemId);
-                    return;
-                }
-            }
-
-            // Click landed outside all interactive slots.
-            // If it's also outside the visible panel container, close (tap-outside-to-dismiss).
-            bool insidePanel = _panelContainer != null &&
-                new Rect2(_panelContainer.Position, _panelContainer.Size).HasPoint(pos);
-            if (!insidePanel)
-                Hide();
-
-            AcceptEvent();
         }
+    }
+
+    private void CancelEquipLongPress()
+    {
+        _pressing = false;
+        _pressHeldTime = 0f;
+        _longPressFired = false;
+        _pressedPackItemId = -1;
     }
 
     // ─────────────────────────────────────────────────────────────────────────

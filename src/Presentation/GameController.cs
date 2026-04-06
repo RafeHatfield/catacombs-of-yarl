@@ -44,8 +44,12 @@ public sealed partial class GameController : Node
     private TurnAnimator? _animator;
     private LongPressDetector? _longPress;
     private InspectPanel? _inspectPanel;
+    private ActionSheet? _actionSheet;
     private IMapRenderer _renderer = new IsometricRenderer(); // safe default
     private Node2D? _gameView; // needed to ToLocal() in OnLongPress
+
+    // Holds the item being thrown — needed to route LocationChosen back to ThrowItem.
+    private Entity? _pendingThrowItem;
 
     // Stored between OnActionChosen and OnAnimationComplete so we can fire the transition
     // after animations finish rather than immediately when the event is emitted.
@@ -123,7 +127,6 @@ public sealed partial class GameController : Node
         _input.TargetChosen += OnTargetChosen;
         _input.LocationChosen += OnLocationChosen;
         _input.TargetingCancelled += OnTargetingCancelled;
-        _input.DrinkSelfRequested += OnDrinkSelfRequested;
         _input.SetAcceptingInput(true);
 
         // Set up long-press detection and inspect panel.
@@ -134,6 +137,24 @@ public sealed partial class GameController : Node
 
         _inspectPanel = new InspectPanel();
         AddChild(_inspectPanel);
+
+        // Action sheet — shown on long-press of inventory/equipment slots.
+        // Created here; Main adds it to the scene tree via Initialize's return value
+        // OR it can be added as a child of GameController itself (it covers the viewport).
+        _actionSheet = new ActionSheet();
+        AddChild(_actionSheet);
+        _actionSheet.ActionSelected += OnActionSheetSelected;
+
+        // Wire inventory long-press
+        if (_inventoryPanel != null)
+            _inventoryPanel.ItemLongPressed += HandleInventoryLongPress;
+
+        // Wire equipment panel long-press events
+        if (_equipmentPanel != null)
+        {
+            _equipmentPanel.EquippedItemLongPressed += HandleEquippedSlotLongPress;
+            _equipmentPanel.PackItemLongPressed     += HandlePackItemLongPress;
+        }
 
         _pendingPath = null;
         _autoExploreMode = false;
@@ -161,17 +182,12 @@ public sealed partial class GameController : Node
         var item = inventory.FindFirst(e => e.Id == itemId);
         if (item == null) { Diag.Log($"  BLOCKED: no item with id={itemId}"); return; }
 
-        // Check if item is a scroll or wand (or a throwable potion)
+        // Check if item is a scroll or wand.
+        // Throwable potions no longer enter targeting on tap — tap = drink (obvious action).
+        // Throw is accessed via long-press → action sheet → Throw.
         var spellEffect = item.Get<SpellEffect>();
         if (spellEffect != null)
         {
-            // Throwable potions: enter targeting mode for throw. Self-tap in targeting = drink.
-            // Non-throwable potions (ThrowSpellId == null) fall through to HandleScrollOrWandUse.
-            if (spellEffect.ThrowSpellId != null)
-            {
-                HandleThrowablePotion(item, spellEffect);
-                return;
-            }
             HandleScrollOrWandUse(item, spellEffect);
             return;
         }
@@ -279,43 +295,152 @@ public sealed partial class GameController : Node
         }
     }
 
-    /// <summary>
-    /// Handle a throwable potion tap (potion has ThrowSpellId set).
-    /// Enters SingleTarget targeting mode with range 10 (PoC default).
-    /// Tapping a monster throws the potion; tapping the player tile drinks it.
-    /// </summary>
-    private void HandleThrowablePotion(Entity item, SpellEffect spell)
-    {
-        Diag.Log($"HandleThrowablePotion: {item.Name} throw={spell.ThrowSpellId} drink={spell.SpellId}");
+    // HandleThrowablePotion removed (TASK-006): tap on throwable potions now drinks immediately.
+    // Throw is accessed via long-press → action sheet → "Throw" → targeting mode.
+    // OnDrinkSelfRequested removed: self-tap during targeting always cancels (no drink path).
 
+    // ─── Action Sheet ─────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Show the action sheet for a long-pressed inventory slot item.
+    /// Determines whether the item is currently equipped so the sheet shows the right actions.
+    /// </summary>
+    public void HandleInventoryLongPress(int itemId)
+    {
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+        var item = FindItemById(itemId);
+        if (item == null) return;
+
+        bool isEquipped = IsItemEquipped(item);
+        _actionSheet?.Show(item, isEquipped);
+    }
+
+    /// <summary>Show the action sheet for a long-pressed equipped slot.</summary>
+    public void HandleEquippedSlotLongPress(EquipmentSlot slot, int itemId)
+    {
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+        var item = FindItemById(itemId);
+        if (item == null) return;
+
+        _actionSheet?.Show(item, isEquipped: true);
+    }
+
+    /// <summary>Show the action sheet for a long-pressed pack item in the equipment panel.</summary>
+    public void HandlePackItemLongPress(int itemId)
+    {
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+        var item = FindItemById(itemId);
+        if (item == null) return;
+
+        _actionSheet?.Show(item, isEquipped: false);
+    }
+
+    /// <summary>
+    /// Dispatch the selected action from the action sheet.
+    /// </summary>
+    private void OnActionSheetSelected(int itemId, ActionSheetAction action)
+    {
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+        var item = FindItemById(itemId);
+        if (item == null) return;
+
+        switch (action)
+        {
+            case ActionSheetAction.Use:
+                // Tap-equivalent: drink potion, use scroll, etc.
+                HandleInventoryTap(itemId);
+                break;
+
+            case ActionSheetAction.Throw:
+                // Enter throw targeting mode — any tile is valid (not just monsters)
+                EnterThrowTargeting(item);
+                break;
+
+            case ActionSheetAction.Drop:
+                HandleDropRequest(itemId);
+                break;
+
+            case ActionSheetAction.Equip:
+                HandleEquipRequest(itemId);
+                break;
+
+            case ActionSheetAction.Unequip:
+            {
+                // Find the slot this item is in and unequip it
+                var equippable = item.Get<Equippable>();
+                if (equippable != null)
+                    HandleUnequipRequest(equippable.Slot);
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Enter throw targeting mode for the given item.
+    /// Any tile (walkable or with monster) is a valid target — you can throw at empty ground.
+    /// On location chosen, fires PlayerAction.ThrowItem.
+    /// </summary>
+    private void EnterThrowTargeting(Entity item)
+    {
+        _pendingThrowItem = item;
+        // Use Location targeting so any tile (walkable or occupied) is valid.
+        // Range 10 = PoC fixed throw range.
+        var spell = item.Get<SpellEffect>();
         EnterTargetingMode(new TargetingState
         {
             Item  = item,
-            Spell = spell,
-            Mode  = TargetingMode.SingleTarget,
-            // PoC default throw range: 10 tiles. Honor any YAML override (spell.Range).
-            Range = spell.Range > 0 ? spell.Range : 10,
-            IsThrowPotion = true,
-            ThrowSpellId  = spell.ThrowSpellId!,
-            DrinkSpellId  = spell.SpellId,
+            // Spell is required by TargetingState. Use the item's spell if present,
+            // or a synthetic Self spell for non-spell items (junk, weapons).
+            Spell = spell ?? new SpellEffect { SpellId = "_throw_placeholder", Targeting = TargetingMode.Location },
+            Mode  = TargetingMode.Location,
+            Range = 10,
         }, showGenericToast: false);
-
-        _toastLog?.AddMessage($"Tap a target to throw {item.Name}. Tap yourself to drink.");
+        _toastLog?.AddMessage($"Tap a tile to throw {item.Name}. Tap yourself to cancel.");
     }
 
     /// <summary>
-    /// Called when the player self-taps during throw targeting, choosing to drink instead.
-    /// Issues CastSpell with no target, which routes through SpellResolver using the primary
-    /// SpellId (the drink spell). TurnController's silence check bypasses drinking (IsPotion=true).
+    /// Look up an item by ID from both inventory and equipment slots.
+    /// Returns null if the item can't be found.
     /// </summary>
-    private void OnDrinkSelfRequested(Entity item)
+    private Entity? FindItemById(int itemId)
     {
-        Diag.Log($"OnDrinkSelfRequested: drinking {item.Name}");
-        Phase = GamePhase.WaitingForInput;
-        OnActionChosen(PlayerAction.CastSpell(item));
-        // CastSpell with no targetEntityId → SpellResolver uses spell.SpellId (the drink spell).
-        // TurnController already has the IsPotion silence bypass, so SilencedEffect won't block this.
+        if (_state == null) return null;
+
+        var inventory = _state.PlayerInventory;
+        if (inventory != null)
+        {
+            var found = inventory.FindFirst(e => e.Id == itemId);
+            if (found != null) return found;
+        }
+
+        // Check equipped slots
+        var equipment = _state.Player.Get<Equipment>();
+        if (equipment != null)
+        {
+            foreach (EquipmentSlot slot in Enum.GetValues<EquipmentSlot>())
+            {
+                var item = equipment.GetSlot(slot);
+                if (item?.Id == itemId) return item;
+            }
+        }
+
+        return null;
     }
+
+    /// <summary>Returns true if the item is currently in any equipment slot.</summary>
+    private bool IsItemEquipped(Entity item)
+    {
+        var equipment = _state?.Player.Get<Equipment>();
+        if (equipment == null) return false;
+
+        foreach (EquipmentSlot slot in Enum.GetValues<EquipmentSlot>())
+        {
+            if (equipment.GetSlot(slot)?.Id == item.Id) return true;
+        }
+        return false;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
 
     /// <summary>Enter targeting mode and notify the presentation.</summary>
     private void EnterTargetingMode(TargetingState targeting, bool showGenericToast = true)
@@ -340,6 +465,15 @@ public sealed partial class GameController : Node
     {
         Diag.Log($"OnLocationChosen: item={item.Name} location=({x},{y})");
         Phase = GamePhase.WaitingForInput;
+
+        // If we entered targeting from the throw action sheet, route to ThrowItem.
+        if (_pendingThrowItem != null && _pendingThrowItem.Id == item.Id)
+        {
+            _pendingThrowItem = null;
+            OnActionChosen(PlayerAction.ThrowItem(item, x, y));
+            return;
+        }
+
         OnActionChosen(PlayerAction.CastSpell(item, targetX: x, targetY: y));
     }
 
@@ -348,6 +482,7 @@ public sealed partial class GameController : Node
     {
         Diag.Log("OnTargetingCancelled: returning to WaitingForInput");
         Phase = GamePhase.WaitingForInput;
+        _pendingThrowItem = null; // clear any pending throw session
 
         // Portal wand: cancel pending entrance placement, remove sprite
         if (_pendingPortalWand != null && _state != null)
