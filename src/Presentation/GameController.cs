@@ -123,6 +123,7 @@ public sealed partial class GameController : Node
         _input.TargetChosen += OnTargetChosen;
         _input.LocationChosen += OnLocationChosen;
         _input.TargetingCancelled += OnTargetingCancelled;
+        _input.DrinkSelfRequested += OnDrinkSelfRequested;
         _input.SetAcceptingInput(true);
 
         // Set up long-press detection and inspect panel.
@@ -160,10 +161,17 @@ public sealed partial class GameController : Node
         var item = inventory.FindFirst(e => e.Id == itemId);
         if (item == null) { Diag.Log($"  BLOCKED: no item with id={itemId}"); return; }
 
-        // Check if item is a scroll or wand
+        // Check if item is a scroll or wand (or a throwable potion)
         var spellEffect = item.Get<SpellEffect>();
         if (spellEffect != null)
         {
+            // Throwable potions: enter targeting mode for throw. Self-tap in targeting = drink.
+            // Non-throwable potions (ThrowSpellId == null) fall through to HandleScrollOrWandUse.
+            if (spellEffect.ThrowSpellId != null)
+            {
+                HandleThrowablePotion(item, spellEffect);
+                return;
+            }
             HandleScrollOrWandUse(item, spellEffect);
             return;
         }
@@ -269,6 +277,44 @@ public sealed partial class GameController : Node
                 OnActionChosen(PlayerAction.CastSpell(item));
                 break;
         }
+    }
+
+    /// <summary>
+    /// Handle a throwable potion tap (potion has ThrowSpellId set).
+    /// Enters SingleTarget targeting mode with range 10 (PoC default).
+    /// Tapping a monster throws the potion; tapping the player tile drinks it.
+    /// </summary>
+    private void HandleThrowablePotion(Entity item, SpellEffect spell)
+    {
+        Diag.Log($"HandleThrowablePotion: {item.Name} throw={spell.ThrowSpellId} drink={spell.SpellId}");
+
+        EnterTargetingMode(new TargetingState
+        {
+            Item  = item,
+            Spell = spell,
+            Mode  = TargetingMode.SingleTarget,
+            // PoC default throw range: 10 tiles. Honor any YAML override (spell.Range).
+            Range = spell.Range > 0 ? spell.Range : 10,
+            IsThrowPotion = true,
+            ThrowSpellId  = spell.ThrowSpellId!,
+            DrinkSpellId  = spell.SpellId,
+        }, showGenericToast: false);
+
+        _toastLog?.AddMessage($"Tap a target to throw {item.Name}. Tap yourself to drink.");
+    }
+
+    /// <summary>
+    /// Called when the player self-taps during throw targeting, choosing to drink instead.
+    /// Issues CastSpell with no target, which routes through SpellResolver using the primary
+    /// SpellId (the drink spell). TurnController's silence check bypasses drinking (IsPotion=true).
+    /// </summary>
+    private void OnDrinkSelfRequested(Entity item)
+    {
+        Diag.Log($"OnDrinkSelfRequested: drinking {item.Name}");
+        Phase = GamePhase.WaitingForInput;
+        OnActionChosen(PlayerAction.CastSpell(item));
+        // CastSpell with no targetEntityId → SpellResolver uses spell.SpellId (the drink spell).
+        // TurnController already has the IsPotion silence bypass, so SilencedEffect won't block this.
     }
 
     /// <summary>Enter targeting mode and notify the presentation.</summary>

@@ -29,9 +29,14 @@ public static class SpellResolver
         GameState state,
         int? targetEntityId = null,
         int? targetX = null,
-        int? targetY = null)
+        int? targetY = null,
+        string? overrideSpellId = null)
     {
-        return spell.SpellId switch
+        // overrideSpellId is used when throwing a dual-mode potion: the item carries the drink
+        // spell as its primary SpellId, but the caller (TurnController) passes the throw spell ID
+        // here so we dispatch to the correct handler without mutating the SpellEffect component.
+        string spellId = overrideSpellId ?? spell.SpellId;
+        return spellId switch
         {
             "lightning"       => ResolveLightning(caster, spell, state, targetEntityId),
             "earthquake"      => ResolveEarthquake(caster, spell, state),
@@ -73,6 +78,20 @@ public static class SpellResolver
             "haste"       => ResolveSelfStatusEffect<SpeedEffect>(caster, spell, state,
                                 statusName: "speed", duration: spell.Duration > 0 ? spell.Duration : 20,
                                 applyEffect: (e, d) => e.GetOrAdd<SpeedEffect>().RemainingTurns = d),
+            // ── Potion buff spells ───────────────────────────────────────────────────
+            // "haste" and "invisibility" already handle speed/invisibility potions above.
+            // drink_protection: ProtectionEffect with AcBonus=4, 50 turns (PoC: +4 AC / 50t).
+            "drink_protection" => ResolveSelfStatusEffect<ProtectionEffect>(caster, spell, state,
+                                statusName: "protection", duration: spell.Duration > 0 ? spell.Duration : 50,
+                                applyEffect: (e, d) => { var fx = e.GetOrAdd<ProtectionEffect>(); fx.RemainingTurns = d; fx.AcBonus = 4; }),
+            // drink_regeneration: RegenerationEffect with HealPerTurn=1, 50 turns (PoC: 1 HP/t / 50t).
+            "drink_regeneration" => ResolveSelfStatusEffect<RegenerationEffect>(caster, spell, state,
+                                statusName: "regeneration", duration: spell.Duration > 0 ? spell.Duration : 50,
+                                applyEffect: (e, d) => { var fx = e.GetOrAdd<RegenerationEffect>(); fx.RemainingTurns = d; fx.HealPerTurn = 1; }),
+            // drink_heroism: HeroismEffect with AttackBonus=3, DamageBonus=3, 30 turns (PoC: +3/+3/30t).
+            "drink_heroism" => ResolveSelfStatusEffect<HeroismEffect>(caster, spell, state,
+                                statusName: "heroism", duration: spell.Duration > 0 ? spell.Duration : 30,
+                                applyEffect: (e, d) => { var fx = e.GetOrAdd<HeroismEffect>(); fx.RemainingTurns = d; fx.AttackBonus = 3; fx.DamageBonus = 3; }),
             "silence"     => ResolveStatusEffect<SilencedEffect>(caster, spell, state, targetEntityId,
                                 statusName: "silenced", duration: spell.Duration > 0 ? spell.Duration : 3,
                                 applyEffect: (e, d) => e.GetOrAdd<SilencedEffect>().RemainingTurns = d),
@@ -93,6 +112,58 @@ public static class SpellResolver
             // (which fires after ResolveSpellAction returns). The handler here only handles
             // the secondary effect: picking additional unidentified types from inventory.
             "identify"    => ResolveIdentify(caster, spell, state),
+            // ── Debuff potion spell IDs (drink = self, throw = target entity) ─────
+            // PoC values verified: each pair uses the same effect/duration, different target.
+            // drink_* applies the effect to the caster. throw_* applies to the target entity.
+            "drink_weakness"  => ResolveSelfStatusEffect<WeaknessEffect>(caster, spell, state,
+                                    statusName: "weakness", duration: spell.Duration > 0 ? spell.Duration : 30,
+                                    applyEffect: (e, d) => e.GetOrAdd<WeaknessEffect>().RemainingTurns = d),
+            "throw_weakness"  => ResolveStatusEffect<WeaknessEffect>(caster, spell, state, targetEntityId,
+                                    statusName: "weakness", duration: spell.Duration > 0 ? spell.Duration : 30,
+                                    applyEffect: (e, d) => e.GetOrAdd<WeaknessEffect>().RemainingTurns = d),
+            // drink_slowness / throw_slowness: FreeActionTag blocks via StatusEffectProcessor.ApplyEffect.
+            "drink_slowness"  => ResolveSelfStatusEffect<SlowedEffect>(caster, spell, state,
+                                    statusName: "slowed", duration: spell.Duration > 0 ? spell.Duration : 20,
+                                    applyEffect: (e, d) => StatusEffectProcessor.ApplyEffect<SlowedEffect>(e, d)),
+            "throw_slowness"  => ResolveStatusEffect<SlowedEffect>(caster, spell, state, targetEntityId,
+                                    statusName: "slowed", duration: spell.Duration > 0 ? spell.Duration : 20,
+                                    applyEffect: (e, d) => StatusEffectProcessor.ApplyEffect<SlowedEffect>(e, d)),
+            "drink_blindness" => ResolveSelfStatusEffect<BlindedEffect>(caster, spell, state,
+                                    statusName: "blinded", duration: spell.Duration > 0 ? spell.Duration : 15,
+                                    applyEffect: (e, d) => e.GetOrAdd<BlindedEffect>().RemainingTurns = d),
+            "throw_blindness" => ResolveStatusEffect<BlindedEffect>(caster, spell, state, targetEntityId,
+                                    statusName: "blinded", duration: spell.Duration > 0 ? spell.Duration : 15,
+                                    applyEffect: (e, d) => e.GetOrAdd<BlindedEffect>().RemainingTurns = d),
+            // drink_paralysis / throw_paralysis: random 3-5 turn duration (PoC value).
+            "drink_paralysis" => ResolveParalysisPotion(caster, spell, state, targetEntityId: null),
+            "throw_paralysis" => ResolveParalysisPotion(caster, spell, state, targetEntityId),
+            "drink_tar"       => ResolveSelfStatusEffect<SluggishEffect>(caster, spell, state,
+                                    statusName: "sluggish", duration: spell.Duration > 0 ? spell.Duration : 10,
+                                    applyEffect: (e, d) => e.GetOrAdd<SluggishEffect>().RemainingTurns = d),
+            "throw_tar"       => ResolveStatusEffect<SluggishEffect>(caster, spell, state, targetEntityId,
+                                    statusName: "sluggish", duration: spell.Duration > 0 ? spell.Duration : 10,
+                                    applyEffect: (e, d) => e.GetOrAdd<SluggishEffect>().RemainingTurns = d),
+            // ── Dual-mode and special potion spell IDs ────────────────────────────
+            // Root: drink = BarkskinEffect (+3 AC / 10t), throw = EntangledEffect (3t).
+            "drink_root"      => ResolveSelfStatusEffect<BarkskinEffect>(caster, spell, state,
+                                    statusName: "barkskin", duration: spell.Duration > 0 ? spell.Duration : 10,
+                                    applyEffect: (e, d) => { var fx = e.GetOrAdd<BarkskinEffect>(); fx.RemainingTurns = d; fx.AcBonus = 3; }),
+            "throw_root"      => ResolveStatusEffect<EntangledEffect>(caster, spell, state, targetEntityId,
+                                    statusName: "entangled", duration: spell.Duration > 0 ? spell.Duration : 3,
+                                    applyEffect: (e, d) => e.GetOrAdd<EntangledEffect>().RemainingTurns = d),
+            // Sunburst: drink = FocusedEffect (+2 acc / 8t), throw = BlindedEffect (3t).
+            "drink_sunburst"  => ResolveSelfStatusEffect<FocusedEffect>(caster, spell, state,
+                                    statusName: "focused", duration: spell.Duration > 0 ? spell.Duration : 8,
+                                    applyEffect: (e, d) => { var fx = e.GetOrAdd<FocusedEffect>(); fx.RemainingTurns = d; fx.AccuracyBonus = 2; }),
+            "throw_sunburst"  => ResolveStatusEffect<BlindedEffect>(caster, spell, state, targetEntityId,
+                                    statusName: "blinded", duration: spell.Duration > 0 ? spell.Duration : 3,
+                                    applyEffect: (e, d) => e.GetOrAdd<BlindedEffect>().RemainingTurns = d),
+            // Fire potion: throw-only — applies BurningEffect (1 dmg/turn / 4 turns). No drink spell.
+            "throw_fire"      => ResolveStatusEffect<BurningEffect>(caster, spell, state, targetEntityId,
+                                    statusName: "burning", duration: spell.Duration > 0 ? spell.Duration : 4,
+                                    applyEffect: (e, d) => { var fx = e.GetOrAdd<BurningEffect>(); fx.RemainingTurns = d; fx.DamagePerTurn = 1; }),
+            // Antidote: removes PlagueEffect immediately. No ongoing duration.
+            "drink_antidote"  => ResolveAntidote(caster, spell, state),
             _ => [new SpellEvent
             {
                 ActorId = caster.Id,
@@ -1073,6 +1144,91 @@ public static class SpellResolver
             ActorId   = caster.Id,
             SpellId   = spell.SpellId,
             SpellName = "Identify",
+            Success   = true,
+        });
+
+        return events;
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Paralysis Potion — random 3-5 turn duration (PoC: ImmobilizedEffect, 3-5t random)
+    // Used for both drink (self, targetEntityId=null) and throw (target, targetEntityId set).
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private static List<TurnEvent> ResolveParalysisPotion(
+        Entity caster, SpellEffect spell, GameState state, int? targetEntityId)
+    {
+        // Random 3-5 turn duration as per PoC.
+        int duration = state.Rng.Next(3, 6); // 3, 4, or 5
+
+        if (targetEntityId == null)
+        {
+            // Drink — applies to caster (self). FreeActionTag blocks ImmobilizedEffect.
+            var applied = StatusEffectProcessor.ApplyEffect<ImmobilizedEffect>(caster, duration);
+            bool blocked = applied == null;
+            return [new SpellEvent
+            {
+                ActorId = caster.Id,
+                SpellId = spell.SpellId,
+                SpellName = "paralysis",
+                Success = !blocked,
+                StatusApplied = blocked ? "" : "immobilized",
+                StatusDuration = blocked ? 0 : duration,
+            }];
+        }
+
+        // Throw — applies to target entity. FreeActionTag blocks ImmobilizedEffect.
+        var target = FindTargetById(state, targetEntityId, spell.Range > 0 ? spell.Range : 10, caster);
+        if (target == null)
+        {
+            return [new SpellEvent
+            {
+                ActorId = caster.Id, SpellId = spell.SpellId, SpellName = "paralysis", Success = false,
+            }];
+        }
+
+        var throwApplied = StatusEffectProcessor.ApplyEffect<ImmobilizedEffect>(target, duration);
+        bool throwBlocked = throwApplied == null;
+        return [new SpellEvent
+        {
+            ActorId = caster.Id,
+            SpellId = spell.SpellId,
+            SpellName = "paralysis",
+            TargetId = target.Id,
+            AffectedIds = [target.Id],
+            Success = !throwBlocked,
+            StatusApplied = throwBlocked ? "" : "immobilized",
+            StatusDuration = throwBlocked ? 0 : duration,
+        }];
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Antidote Potion — removes PlagueEffect from the caster immediately.
+    // PoC: drink_antidote — cures plague, no other effect.
+    // If no plague is present: still consumed (no error), no status event emitted.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private static List<TurnEvent> ResolveAntidote(Entity caster, SpellEffect spell, GameState state)
+    {
+        var events = new List<TurnEvent>();
+
+        if (caster.Has<PlagueEffect>())
+        {
+            caster.Remove<PlagueEffect>();
+            events.Add(new StatusExpiredEvent
+            {
+                ActorId    = caster.Id,
+                EntityId   = caster.Id,
+                EffectName = "plague",
+                Reason     = "cured",
+            });
+        }
+
+        events.Add(new SpellEvent
+        {
+            ActorId   = caster.Id,
+            SpellId   = spell.SpellId,
+            SpellName = "antidote",
             Success   = true,
         });
 

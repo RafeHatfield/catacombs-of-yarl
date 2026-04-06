@@ -45,7 +45,23 @@ public sealed class ConsumableFactory
             return null;
 
         var entity = _entityFactory.Create(def.Name ?? consumableId);
-        entity.Add(new Consumable(healAmount: def.HealAmount));
+        entity.Add(new Consumable(healAmount: def.HealAmount, isPotion: def.IsPotion));
+
+        // If the consumable has a spell_id, create a SpellEffect component so it can route
+        // through ResolveSpellAction. Potions without a spell_id (healing_potion) still use
+        // the legacy TryHeal path via PlayerAction.UseItem.
+        if (!string.IsNullOrEmpty(def.SpellId))
+        {
+            entity.Add(new SpellEffect
+            {
+                SpellId       = def.SpellId,
+                Targeting     = def.ParseTargetingMode(),
+                Damage        = def.Damage,
+                Range         = def.Range,
+                Duration      = def.Duration,
+                ThrowSpellId  = string.IsNullOrEmpty(def.ThrowSpellId) ? null : def.ThrowSpellId,
+            });
+        }
 
         // ItemTag carries the canonical YAML type ID — required for identification and stacking.
         entity.Add(new ItemTag(consumableId));

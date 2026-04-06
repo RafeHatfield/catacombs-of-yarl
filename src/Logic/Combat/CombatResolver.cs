@@ -46,11 +46,14 @@ public static class CombatResolver
         if (attacker.Get<BlindedEffect>() is { } blindedFx) toHitBonus -= blindedFx.AccuracyPenalty;
         if (attacker.Get<FocusedEffect>() is { } focusedFx) toHitBonus += focusedFx.AccuracyBonus;
         // CrippledEffect: -ToHitPenalty on the attacker.
-        // RallyEffect: +ToHitBonus on the attacker.
+        // RallyEffect: +ToHitBonus on the attacker (chieftain buff).
+        // HeroismEffect: +AttackBonus on the attacker (potion buff).
         var attackerCrippled = attacker.Get<CrippledEffect>();
         var attackerRallied  = attacker.Get<RallyEffect>();
+        var attackerHeroism  = attacker.Get<HeroismEffect>();
         if (attackerCrippled != null) toHitBonus -= attackerCrippled.ToHitPenalty;
         if (attackerRallied  != null) toHitBonus += attackerRallied.ToHitBonus;
+        if (attackerHeroism  != null) toHitBonus += attackerHeroism.AttackBonus;
 
         int attackRoll = d20 + toHitBonus;
 
@@ -103,8 +106,10 @@ public static class CombatResolver
             if (attacker.Get<WeaknessEffect>() is { } weaknessFx)
                 damage -= weaknessFx.DamagePenalty;
 
-            // RallyEffect: +DamageBonus on the attacker.
+            // RallyEffect: +DamageBonus on the attacker (chieftain buff).
+            // HeroismEffect: +DamageBonus on the attacker (potion buff).
             if (attackerRallied != null) damage += attackerRallied.DamageBonus;
+            if (attackerHeroism != null) damage += attackerHeroism.DamageBonus;
 
             // Apply damage type resistance/vulnerability
             string? dmgType = weapon?.DamageType;

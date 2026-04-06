@@ -206,3 +206,169 @@ monsters:
         Assert.That(result, Is.Empty);
     }
 }
+
+// ────────────────────────────────────────────────────────────────────────────────
+// Potion ContentLoader / ConsumableFactory tests (TASK-001 + TASK-004/006/008)
+// ────────────────────────────────────────────────────────────────────────────────
+
+[TestFixture]
+public class ConsumableFactoryPotionTests
+{
+    private const string PotionYaml = """
+        consumables:
+          healing_potion:
+            name: "Healing Potion"
+            heal_amount: 40
+            char: "!"
+            color: [127, 0, 255]
+
+          potion_of_speed:
+            name: "Potion of Speed"
+            is_potion: true
+            spell_id: "haste"
+            targeting: "self"
+            duration: 20
+            char: "!"
+            color: [255, 220, 50]
+
+          potion_of_weakness:
+            name: "Potion of Weakness"
+            is_potion: true
+            spell_id: "drink_weakness"
+            targeting: "self"
+            duration: 30
+            throw_spell_id: "throw_weakness"
+            range: 10
+            char: "!"
+            color: [180, 100, 180]
+
+          fire_potion:
+            name: "Fire Potion"
+            is_potion: true
+            spell_id: "throw_fire"
+            targeting: "single_target"
+            duration: 4
+            range: 10
+            char: "!"
+            color: [255, 80, 0]
+        """;
+
+    private Dictionary<string, CatacombsOfYarl.Logic.Content.ConsumableDefinition> _defs = null!;
+    private CatacombsOfYarl.Logic.Content.ConsumableFactory _factory = null!;
+
+    [OneTimeSetUp]
+    public void Setup()
+    {
+        var loader = new CatacombsOfYarl.Logic.Content.ContentLoader();
+        _defs = loader.LoadConsumables(PotionYaml);
+        _factory = new CatacombsOfYarl.Logic.Content.ConsumableFactory(
+            _defs, new CatacombsOfYarl.Logic.ECS.EntityFactory());
+    }
+
+    [Test]
+    public void ContentLoader_LoadConsumables_IncludesPotions()
+    {
+        Assert.That(_defs.ContainsKey("potion_of_speed"), Is.True);
+        Assert.That(_defs.ContainsKey("potion_of_weakness"), Is.True);
+        Assert.That(_defs.ContainsKey("fire_potion"), Is.True);
+    }
+
+    [Test]
+    public void ContentLoader_BuffPotion_HasIsPotion_True()
+    {
+        Assert.That(_defs["potion_of_speed"].IsPotion, Is.True, "is_potion: true should be deserialized.");
+    }
+
+    [Test]
+    public void ContentLoader_HealingPotion_IsPotion_DefaultFalse()
+    {
+        // healing_potion uses the legacy heal_amount path — is_potion defaults to false.
+        Assert.That(_defs["healing_potion"].IsPotion, Is.False,
+            "healing_potion should not have is_potion: true.");
+    }
+
+    [Test]
+    public void ConsumableFactory_CreatesSpellEffect_WhenSpellIdPresent()
+    {
+        var entity = _factory.Create("potion_of_speed")!;
+        var spell = entity.Get<CatacombsOfYarl.Logic.Combat.SpellEffect>();
+        Assert.That(spell, Is.Not.Null, "SpellEffect should be created when spell_id is present.");
+        Assert.That(spell!.SpellId, Is.EqualTo("haste"));
+    }
+
+    [Test]
+    public void ConsumableFactory_SetsIsPotion_FromDefinition()
+    {
+        var entity = _factory.Create("potion_of_speed")!;
+        var consumable = entity.Get<CatacombsOfYarl.Logic.Combat.Consumable>();
+        Assert.That(consumable, Is.Not.Null);
+        Assert.That(consumable!.IsPotion, Is.True, "Consumable.IsPotion should be true for potions.");
+    }
+
+    [Test]
+    public void ConsumableFactory_SetsThrowSpellId_WhenPresent()
+    {
+        var entity = _factory.Create("potion_of_weakness")!;
+        var spell = entity.Get<CatacombsOfYarl.Logic.Combat.SpellEffect>();
+        Assert.That(spell, Is.Not.Null);
+        Assert.That(spell!.ThrowSpellId, Is.EqualTo("throw_weakness"),
+            "SpellEffect.ThrowSpellId should be set from throw_spell_id YAML field.");
+    }
+
+    [Test]
+    public void ConsumableFactory_NoSpellEffect_WhenNoSpellId()
+    {
+        // healing_potion has no spell_id — no SpellEffect should be created.
+        var entity = _factory.Create("healing_potion")!;
+        Assert.That(entity.Get<CatacombsOfYarl.Logic.Combat.SpellEffect>(), Is.Null,
+            "healing_potion should NOT have SpellEffect — it uses the legacy heal path.");
+    }
+
+    [Test]
+    public void ConsumableFactory_FirePotion_HasSingleTargetMode()
+    {
+        var entity = _factory.Create("fire_potion")!;
+        var spell = entity.Get<CatacombsOfYarl.Logic.Combat.SpellEffect>();
+        Assert.That(spell, Is.Not.Null);
+        Assert.That(spell!.Targeting, Is.EqualTo(CatacombsOfYarl.Logic.Combat.TargetingMode.SingleTarget),
+            "Fire potion is throw-only and should have SingleTarget targeting.");
+        Assert.That(spell.ThrowSpellId, Is.Null,
+            "Fire potion is a direct single_target spell, not a throw_spell_id bifurcation.");
+    }
+
+    [Test]
+    public void ContentLoader_EntitiesYaml_LoadsAllPotions()
+    {
+        // Round-trip test against the actual entities.yaml to verify all 14 potion definitions load.
+        // Use LoadAll (not LoadConsumables directly) — LoadAll strips floor_item_pool sequences first.
+        // Path pattern: TestContext.CurrentContext.TestDirectory (same as Wave2MonsterTests).
+        var testDir = NUnit.Framework.TestContext.CurrentContext.TestDirectory;
+        var entitiesPath = System.IO.Path.GetFullPath(
+            System.IO.Path.Combine(testDir, "..", "..", "..", "..", "config", "entities.yaml"));
+        if (!System.IO.File.Exists(entitiesPath))
+            entitiesPath = System.IO.Path.GetFullPath(
+                System.IO.Path.Combine(testDir, "config", "entities.yaml"));
+
+        var loader = new CatacombsOfYarl.Logic.Content.ContentLoader();
+        var bundle = loader.LoadAllFromFile(entitiesPath);
+        var defs = bundle.Consumables;
+
+        // Buff potions
+        Assert.That(defs.ContainsKey("potion_of_speed"), Is.True, "Missing potion_of_speed");
+        Assert.That(defs.ContainsKey("potion_of_protection"), Is.True, "Missing potion_of_protection");
+        Assert.That(defs.ContainsKey("potion_of_regeneration"), Is.True, "Missing potion_of_regeneration");
+        Assert.That(defs.ContainsKey("potion_of_invisibility"), Is.True, "Missing potion_of_invisibility");
+        Assert.That(defs.ContainsKey("potion_of_heroism"), Is.True, "Missing potion_of_heroism");
+        // Debuff potions
+        Assert.That(defs.ContainsKey("potion_of_weakness"), Is.True, "Missing potion_of_weakness");
+        Assert.That(defs.ContainsKey("potion_of_slowness"), Is.True, "Missing potion_of_slowness");
+        Assert.That(defs.ContainsKey("potion_of_blindness"), Is.True, "Missing potion_of_blindness");
+        Assert.That(defs.ContainsKey("potion_of_paralysis"), Is.True, "Missing potion_of_paralysis");
+        Assert.That(defs.ContainsKey("tar_potion"), Is.True, "Missing tar_potion");
+        // Special potions
+        Assert.That(defs.ContainsKey("root_potion"), Is.True, "Missing root_potion");
+        Assert.That(defs.ContainsKey("sunburst_potion"), Is.True, "Missing sunburst_potion");
+        Assert.That(defs.ContainsKey("fire_potion"), Is.True, "Missing fire_potion");
+        Assert.That(defs.ContainsKey("antidote_potion"), Is.True, "Missing antidote_potion");
+    }
+}

@@ -50,6 +50,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | Plan | Status | Description |
 |------|--------|-------------|
 | [plan_monster_expansion.md](plan_monster_expansion.md) | [~] | 28 monsters in 4 waves: Wave 1 orc variants [x], Wave 2 (troll/skeleton/spiders) [x], Wave 3 (necromancer/giant_spider/cultist) [x], Wave 4 deep/bosses [ ] |
+| [plan_status_effects_impl.md](plan_status_effects_impl.md) | [ ] | Remaining status effects work: potion system (12+ types), presentation layer (badges/toasts/tints), harness verification |
 | [slime_monsters.md](slime_monsters.md) | [x] | slime + large_slime: split-under-pressure, corrosion, weapon materials |
 | [depth_scaling_weights.md](depth_scaling_weights.md) | [x] | from_dungeon_level depth weights, EncounterBudget wiring |
 

@@ -893,6 +893,54 @@ floor_item_pool:
   - item: ring_of_teleportation
     weight: 3
     min_depth: 4
+  # Potions — integrated into floor_item_pool (previously only via guaranteed_spawns)
+  # Weights derived from PoC EV targets. healing_potion was previously spawn-only; adding here.
+  # Buff potions depth 1+; debuff potions depth 2+; throwable/special potions depth 3+.
+  - item: healing_potion
+    weight: 30
+    min_depth: 1
+  - item: potion_of_speed
+    weight: 12
+    min_depth: 1
+  - item: potion_of_protection
+    weight: 12
+    min_depth: 1
+  - item: potion_of_regeneration
+    weight: 10
+    min_depth: 1
+  - item: potion_of_invisibility
+    weight: 8
+    min_depth: 1
+  - item: potion_of_heroism
+    weight: 6
+    min_depth: 1
+  - item: potion_of_weakness
+    weight: 8
+    min_depth: 2
+  - item: potion_of_slowness
+    weight: 8
+    min_depth: 2
+  - item: potion_of_blindness
+    weight: 6
+    min_depth: 2
+  - item: potion_of_paralysis
+    weight: 4
+    min_depth: 2
+  - item: tar_potion
+    weight: 6
+    min_depth: 2
+  - item: fire_potion
+    weight: 6
+    min_depth: 3
+  - item: root_potion
+    weight: 5
+    min_depth: 3
+  - item: sunburst_potion
+    weight: 5
+    min_depth: 3
+  - item: antidote_potion
+    weight: 8
+    min_depth: 4
 
 consumables:
   healing_potion:
@@ -900,6 +948,160 @@ consumables:
     heal_amount: 40
     char: "!"
     color: [127, 0, 255]
+
+  # ── Buff Potions (drink-only, no throw) ─────────────────────────────────────
+  # These are safe to drink unidentified. No ThrowSpellId → immediate drink on tap.
+  # PoC reference: item_functions.py drink_speed_potion / drink_protection_potion / etc.
+
+  potion_of_speed:
+    name: "Potion of Speed"
+    is_potion: true
+    spell_id: "haste"
+    targeting: "self"
+    duration: 20
+    char: "!"
+    color: [255, 220, 50]
+
+  potion_of_protection:
+    name: "Potion of Protection"
+    is_potion: true
+    spell_id: "drink_protection"
+    targeting: "self"
+    duration: 50
+    char: "!"
+    color: [100, 180, 255]
+
+  potion_of_regeneration:
+    name: "Potion of Regeneration"
+    is_potion: true
+    spell_id: "drink_regeneration"
+    targeting: "self"
+    duration: 50
+    char: "!"
+    color: [50, 220, 100]
+
+  potion_of_invisibility:
+    name: "Potion of Invisibility"
+    is_potion: true
+    spell_id: "invisibility"
+    targeting: "self"
+    duration: 30
+    char: "!"
+    color: [200, 200, 240]
+
+  potion_of_heroism:
+    name: "Potion of Heroism"
+    is_potion: true
+    spell_id: "drink_heroism"
+    targeting: "self"
+    duration: 30
+    char: "!"
+    color: [255, 160, 0]
+
+  # ── Debuff Potions (dual-mode: drink self = bad, throw at enemy = good) ─────
+  # These are dangerous if drunk unidentified. ThrowSpellId triggers throw-first targeting.
+  # PoC reference: item_functions.py drink_weakness_potion / drink_slowness_potion / etc.
+
+  potion_of_weakness:
+    name: "Potion of Weakness"
+    is_potion: true
+    spell_id: "drink_weakness"
+    targeting: "self"
+    duration: 30
+    throw_spell_id: "throw_weakness"
+    range: 10
+    char: "!"
+    color: [180, 100, 180]
+
+  potion_of_slowness:
+    name: "Potion of Slowness"
+    is_potion: true
+    spell_id: "drink_slowness"
+    targeting: "self"
+    duration: 20
+    throw_spell_id: "throw_slowness"
+    range: 10
+    char: "!"
+    color: [150, 100, 200]
+
+  potion_of_blindness:
+    name: "Potion of Blindness"
+    is_potion: true
+    spell_id: "drink_blindness"
+    targeting: "self"
+    duration: 15
+    throw_spell_id: "throw_blindness"
+    range: 10
+    char: "!"
+    color: [80, 80, 80]
+
+  potion_of_paralysis:
+    name: "Potion of Paralysis"
+    is_potion: true
+    spell_id: "drink_paralysis"
+    targeting: "self"
+    # duration: 3-5 random — resolved in SpellResolver.ResolveParalysisPotion
+    throw_spell_id: "throw_paralysis"
+    range: 10
+    char: "!"
+    color: [200, 150, 50]
+
+  tar_potion:
+    name: "Tar Potion"
+    is_potion: true
+    spell_id: "drink_tar"
+    targeting: "self"
+    duration: 10
+    throw_spell_id: "throw_tar"
+    range: 10
+    char: "!"
+    color: [60, 50, 40]
+
+  # ── Dual-mode and Special Potions ────────────────────────────────────────────
+  # root_potion: drink = BarkskinEffect (+3 AC/10t), throw = EntangledEffect (3t).
+  # sunburst_potion: drink = FocusedEffect (+2 acc/8t), throw = BlindedEffect (3t).
+  # fire_potion: throw-only (single_target). Drink does nothing useful.
+  # antidote_potion: drink-only, cures plague.
+
+  root_potion:
+    name: "Root Potion"
+    is_potion: true
+    spell_id: "drink_root"
+    targeting: "self"
+    duration: 10
+    throw_spell_id: "throw_root"
+    range: 10
+    char: "!"
+    color: [80, 160, 80]
+
+  sunburst_potion:
+    name: "Sunburst Potion"
+    is_potion: true
+    spell_id: "drink_sunburst"
+    targeting: "self"
+    duration: 8
+    throw_spell_id: "throw_sunburst"
+    range: 10
+    char: "!"
+    color: [255, 255, 100]
+
+  fire_potion:
+    name: "Fire Potion"
+    is_potion: true
+    spell_id: "throw_fire"
+    targeting: "single_target"
+    duration: 4
+    range: 10
+    char: "!"
+    color: [255, 80, 0]
+
+  antidote_potion:
+    name: "Antidote Potion"
+    is_potion: true
+    spell_id: "drink_antidote"
+    targeting: "self"
+    char: "!"
+    color: [0, 200, 80]
 
 scrolls:
   scroll_of_lightning:

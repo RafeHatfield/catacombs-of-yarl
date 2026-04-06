@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.Combat;
 using YamlDotNet.Serialization;
 
 namespace CatacombsOfYarl.Logic.Content;
@@ -35,4 +36,58 @@ public sealed class ConsumableDefinition
     /// YAML key (e.g. "healing_potion"). Set by ContentLoader after deserialization.
     /// </summary>
     public string Id { get; set; } = "";
+
+    // ── Spell-effect potion fields ────────────────────────────────────────────
+    // Potions with a spell_id are routed through SpellResolver rather than TryHeal.
+    // These fields mirror SpellDefinition but live here because potions are a
+    // separate YAML section (consumables:) and have extra fields (is_potion, throw_spell_id).
+
+    /// <summary>
+    /// Canonical spell ID for the drink effect. Matches a handler in SpellResolver.
+    /// Empty for healing_potion (which uses HealAmount directly via TryHeal).
+    /// </summary>
+    [YamlMember(Alias = "spell_id")]
+    public string SpellId { get; set; } = "";
+
+    /// <summary>Targeting mode string. "self" for all drink-only potions.</summary>
+    [YamlMember(Alias = "targeting")]
+    public string Targeting { get; set; } = "self";
+
+    /// <summary>Status effect duration in turns. 0 = instant (e.g., antidote).</summary>
+    [YamlMember(Alias = "duration")]
+    public int Duration { get; set; }
+
+    /// <summary>
+    /// True for potions — bypasses the SilencedEffect gate in ResolveSpellAction.
+    /// False for scrolls (the default). Set is_potion: true in YAML for all potions.
+    /// </summary>
+    [YamlMember(Alias = "is_potion")]
+    public bool IsPotion { get; set; }
+
+    /// <summary>
+    /// Spell ID for the throw effect. When set, tapping the potion in inventory
+    /// enters targeting mode (throw-first). Tapping self triggers the drink SpellId.
+    /// Empty for drink-only potions.
+    /// </summary>
+    [YamlMember(Alias = "throw_spell_id")]
+    public string ThrowSpellId { get; set; } = "";
+
+    /// <summary>Max range in tiles for targeting mode. 0 = no limit.</summary>
+    [YamlMember(Alias = "range")]
+    public int Range { get; set; }
+
+    /// <summary>Base damage value. 0 = not a damage potion.</summary>
+    [YamlMember(Alias = "damage")]
+    public int Damage { get; set; }
+
+    /// <summary>Parse the targeting string to the TargetingMode enum. Defaults to Self.</summary>
+    public TargetingMode ParseTargetingMode() => Targeting switch
+    {
+        "auto_closest"   => TargetingMode.AutoClosest,
+        "aoe_self"       => TargetingMode.AoeSelf,
+        "single_target"  => TargetingMode.SingleTarget,
+        "location"       => TargetingMode.Location,
+        "portal"         => TargetingMode.Portal,
+        _                => TargetingMode.Self,
+    };
 }

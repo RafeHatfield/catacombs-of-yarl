@@ -67,4 +67,11 @@ public sealed class SpellEffect : IComponent
     /// Used by Teleport Scroll (0.10 = 10% misfire). 0 = no misfire chance.
     /// </summary>
     public double MisfireChance { get; set; }
+
+    /// <summary>
+    /// Spell ID for the throw effect of a throwable potion. When set, the
+    /// presentation layer enters targeting mode instead of immediately drinking.
+    /// Null for drink-only potions and all scrolls/wands.
+    /// </summary>
+    public string? ThrowSpellId { get; set; }
 }

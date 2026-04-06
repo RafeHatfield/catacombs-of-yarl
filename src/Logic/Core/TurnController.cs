@@ -251,8 +251,10 @@ public static class TurnController
         if (spell == null) return;
 
         // SilencedEffect: blocks scroll AND wand use. Does NOT block potions or melee.
+        // Potions are physical (swallowed), not magical (spoken) — silence doesn't stop drinking.
         // Gate here before charges or consumables are spent, so the player isn't charged for a blocked action.
-        if (state.Player.Has<SilencedEffect>())
+        bool isPotion = item.Get<Consumable>()?.IsPotion == true;
+        if (state.Player.Has<SilencedEffect>() && !isPotion)
             return;
 
         var wand = item.Get<WandComponent>();
@@ -290,8 +292,12 @@ public static class TurnController
 
         // ── InvisibilityEffect break on spell cast ────────────────────────────
         // InvisibilityEffect breaks when the player casts a spell (scroll or wand).
-        // Does NOT break on item use (potions). PoC-verified.
-        if (state.Player.Has<InvisibilityEffect>())
+        // Does NOT break on drinking a potion — potions are physical, not magical.
+        // DOES break on throwing a potion — throwing at a target is an offensive action.
+        // PoC-verified: invisibility persists through potion drinks, ends on offensive actions.
+        bool throwingPotion = isPotion && action.TargetEntityId.HasValue;
+        bool breaksInvisibility = !isPotion || throwingPotion;
+        if (state.Player.Has<InvisibilityEffect>() && breaksInvisibility)
         {
             state.Player.Remove<InvisibilityEffect>();
             events.Add(new StatusExpiredEvent
@@ -299,7 +305,7 @@ public static class TurnController
                 ActorId = state.Player.Id,
                 EntityId = state.Player.Id,
                 EffectName = "invisibility",
-                Reason = "cast_spell",
+                Reason = throwingPotion ? "threw_potion" : "cast_spell",
             });
         }
 
@@ -325,13 +331,22 @@ public static class TurnController
         }
         else
         {
+            // Throwable potions: the item's primary SpellId is the drink spell (e.g., "drink_weakness").
+            // When the player throws at a target (TargetEntityId is set), use ThrowSpellId instead
+            // (e.g., "throw_weakness") so SpellResolver applies the effect to the target, not the caster.
+            // Drink path (no TargetEntityId): overrideSpellId is null, SpellResolver uses spell.SpellId.
+            string? overrideSpellId = null;
+            if (action.TargetEntityId.HasValue && !string.IsNullOrEmpty(spell.ThrowSpellId))
+                overrideSpellId = spell.ThrowSpellId;
+
             var spellEvents = SpellResolver.Resolve(
                 state.Player,
                 spell,
                 state,
                 targetEntityId: action.TargetEntityId,
                 targetX: action.TargetX,
-                targetY: action.TargetY);
+                targetY: action.TargetY,
+                overrideSpellId: overrideSpellId);
 
             events.AddRange(spellEvents);
         }

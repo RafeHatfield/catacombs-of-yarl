@@ -48,6 +48,13 @@ public sealed class InputHandler
     /// <summary>Fired when targeting is cancelled (tap self, cancel button, etc.).</summary>
     public event Action? TargetingCancelled;
 
+    /// <summary>
+    /// Fired when the player taps themselves during throw-potion targeting,
+    /// indicating they want to drink the potion instead of throwing it.
+    /// Parameter: the potion item entity.
+    /// </summary>
+    public event Action<Entity>? DrinkSelfRequested;
+
     public void SetState(GameState state) => _state = state;
 
     /// <summary>Set the active map renderer. Call before HandleTap is first used.</summary>
@@ -164,9 +171,18 @@ public sealed class InputHandler
 
         Diag.Log($"HandleTap TARGETING_MODE ({gridX},{gridY}) mode={targeting.Mode}");
 
-        // Tapping the player's own tile cancels targeting
+        // Tapping the player's own tile: cancel targeting, or drink if this is a throw-potion session.
         if (gridX == player.X && gridY == player.Y)
         {
+            if (targeting.IsThrowPotion && targeting.DrinkSpellId != null)
+            {
+                // Self-tap on a throw potion = drink it instead of throwing.
+                // Clear targeting first so GameController doesn't see stale state.
+                var item = targeting.Item;
+                _targeting = null;
+                DrinkSelfRequested?.Invoke(item);
+                return;
+            }
             CancelTargeting();
             return;
         }

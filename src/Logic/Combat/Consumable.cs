@@ -22,9 +22,17 @@ public sealed class Consumable : IComponent
     /// </summary>
     public int StackSize { get; set; } = 1;
 
-    public Consumable(int healAmount = 0)
+    /// <summary>
+    /// True for potions — bypasses the SilencedEffect gate in ResolveSpellAction.
+    /// False for scrolls (default). Drinking a potion while silenced is permitted
+    /// because potions are physical (swallowed), not magic (spoken).
+    /// </summary>
+    public bool IsPotion { get; set; }
+
+    public Consumable(int healAmount = 0, bool isPotion = false)
     {
         HealAmount = healAmount;
+        IsPotion = isPotion;
     }
 
     public bool IsHealing => HealAmount > 0;
