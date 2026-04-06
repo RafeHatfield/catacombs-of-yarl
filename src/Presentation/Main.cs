@@ -536,6 +536,14 @@ public partial class Main : Node
     private void _DoInitialCameraSnap()
     {
         if (_state == null || _gameView == null) return;
+        // Retry until the viewport has settled — GetVisibleRect() can return (0,0) on the
+        // first frame after the main menu hides, before Godot has processed the layout change.
+        var viewSize = _gameView.GetViewport().GetVisibleRect().Size;
+        if (viewSize.X < 100 || viewSize.Y < 100)
+        {
+            _pendingCameraSnap = true;
+            return;
+        }
         PlayerCamera.Update(_gameView, _state.Player, _currentZoom, _renderer);
         if (_tileLayer != null)
             DungeonRenderer.UpdateVisibility(_tileLayer, _state.Map);
@@ -678,7 +686,13 @@ public partial class Main : Node
         sprite.Position = _renderer.GridToScreenCenter(gridX, gridY);
         sprite.Modulate = color;
         sprite.TextureFilter = CanvasItem.TextureFilterEnum.Nearest;
-        sprite.ZIndex = 5; // above floor tiles, below entities
+        // Scale: fx sprites are 32px native. 1.0× matches the 32px iso tile width — large
+        // enough to be clearly visible without spilling over adjacent tiles at zoom=4.
+        sprite.Scale = new Vector2(1.0f, 1.0f);
+        // ZIndex: use the renderer's tile sort order so portals appear above the floor tile at
+        // this grid position regardless of renderer mode (iso uses gridX+gridY, top-down uses gridY).
+        // +1 places portals above tiles but below entities (entities use GetEntitySortOrder = tile+1).
+        sprite.ZIndex = _renderer.GetTileSortOrder(gridX, gridY) + 1;
         _gameView.GetNode<Node2D>("EntityLayer").AddChild(sprite);
         _portalSprites[entityId] = sprite;
     }

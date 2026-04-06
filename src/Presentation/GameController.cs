@@ -710,6 +710,28 @@ public sealed partial class GameController : Node
             _animator!.SpeedMultiplier = 1.0f;
         }
 
+        // Auto-continue portal placement: if the entrance was just placed this turn,
+        // immediately enter step-2 targeting so the player picks the exit without
+        // having to tap the wand again. _pendingPortalWand persists from step 1.
+        if (_pendingPortalWand != null &&
+            PortalSystem.GetPortalCastStep(_pendingPortalWand) == PortalCastStep.EntrancePlaced)
+        {
+            var spell = _pendingPortalWand.Get<SpellEffect>();
+            if (spell != null)
+            {
+                EnterTargetingMode(new TargetingState
+                {
+                    Item  = _pendingPortalWand,
+                    Spell = spell,
+                    Mode  = TargetingMode.Location,
+                    Range = 0,
+                }, showGenericToast: false);
+                _toastLog?.AddMessage("Portal entrance placed. Tap a tile for the exit. Tap yourself to cancel.");
+                Diag.Log("  OAC: PortalStep2Targeting");
+                return;
+            }
+        }
+
         Diag.Log("  OAC: WaitingForInput");
         Phase = GamePhase.WaitingForInput;
         _input.SetAcceptingInput(true);
