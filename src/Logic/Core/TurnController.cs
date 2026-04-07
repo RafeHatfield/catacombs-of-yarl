@@ -668,11 +668,13 @@ public static class TurnController
             if (portalTeleport != null)
                 events.Add(portalTeleport);
 
-            // Auto-descend: if the player walks onto the stair, descend immediately.
-            // Matches PoC behavior — stairs are always usable, no kill requirement.
+            // Stair reached: stop auto-explore so the player must consciously tap to descend.
+            // Auto-descend would swallow floors unintentionally during explore mode.
             if (state.IsDungeonMode && state.PlayerOnStairDown)
             {
-                ResolveDescend(state, events);
+                var ae = state.Player.Get<AutoExploreState>();
+                if (ae != null && ae.IsActive)
+                    AutoExploreSystem.Stop(ae, "Reached stairs");
             }
 
             // Walk-over pickup: auto-collect any floor item at the new position

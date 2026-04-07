@@ -1016,7 +1016,9 @@ public static class SpellResolver
         }
 
         var coneTiles = GetConeTiles(caster.X, caster.Y, targetX.Value, targetY.Value,
-            maxRange: range, coneWidthDegrees: 45);
+            maxRange: range, coneWidthDegrees: 60);
+        // Always include the target tile itself — ensures VFX shows even at point-blank range.
+        coneTiles.Add((targetX.Value, targetY.Value));
 
         var affectedIds = new List<int>();
 
@@ -1048,7 +1050,7 @@ public static class SpellResolver
             StatusDuration = duration,
             CasterPos = (caster.X, caster.Y),
             TargetPos = (targetX.Value, targetY.Value),
-            AffectedTiles = coneTiles.Count > 0 ? coneTiles.ToList() : null,
+            AffectedTiles = coneTiles.ToList(),
         });
 
         return events;

@@ -89,7 +89,18 @@ public static class AutoExploreSystem
                 && !ae.KnownMonsterIds.Contains(m.Id))
                 return $"Monster spotted: {m.Name}";
 
-        // 2. New stair visible and not already out of fog-of-war
+        // 2. New scroll or wand visible within alert radius (worth stopping to identify)
+        foreach (var item in state.FloorItems)
+        {
+            var typeId = item.Get<ItemTag>()?.TypeId ?? "";
+            if (!typeId.StartsWith("scroll_") && !typeId.StartsWith("wand_")) continue;
+            if (state.Map.IsVisible(item.X, item.Y)
+                && state.Player.ChebyshevDistanceTo(item.X, item.Y) <= AlertRadius
+                && !ae.ExploredSnapshot.Contains((item.X, item.Y)))
+                return $"Found: {item.Name}";
+        }
+
+        // 3. New stair visible and not already out of fog-of-war
         if (state.StairDown != null
             && state.Map.IsVisible(state.StairDown.X, state.StairDown.Y)
             && !ae.KnownStairs.Contains((state.StairDown.X, state.StairDown.Y)))
@@ -159,7 +170,7 @@ public static class AutoExploreSystem
         return true;
     }
 
-    private static void Stop(AutoExploreState ae, string reason)
+    public static void Stop(AutoExploreState ae, string reason)
     {
         ae.IsActive = false;
         ae.StopReason = reason;
