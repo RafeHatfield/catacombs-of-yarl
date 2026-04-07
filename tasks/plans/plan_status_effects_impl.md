@@ -885,51 +885,40 @@ Player taps cancel button / swipes away
 
 ### Phase B: Presentation Layer (UI)
 
-- [ ] TASK-012: StatusEffectBar -- player effect badges in HUD
-  - Status: pending
+- [x] TASK-012: StatusEffectBar -- player effect badges in HUD
+  - Status: complete
   - Layer: presentation
   - Type: system
   - Dependencies: Phase A tasks not required, but recommended
-  - Description: Add a row of effect badges below the player HP bar. Each badge shows the effect icon/short name + remaining turns. Color-coded by category (red/orange for debuffs, green/blue for buffs). Read from player entity's IStatusEffect components each turn.
-  - **Mobile constraint**: Max 5-6 badges visible at once on a portrait phone screen. The PoC does NOT have a visual badge bar -- it uses text messages only. This is a C# port improvement.
-  - **Recommendation**: Use a horizontal HBoxContainer with fixed-size badge nodes. If more than 5 effects are active simultaneously (rare in practice -- requires stacking multiple potions + monster debuffs), show the 5 highest-priority effects. Priority order: skip-turn effects > DOTs > debuffs > buffs. Overflow indicator ("+2 more") if truncated.
-  - Files to create:
-    - `src/Presentation/UI/StatusEffectBar.cs`
-  - Files to modify:
-    - `src/Presentation/UI/HUD.cs` -- add StatusEffectBar, update each turn
-  - Acceptance criteria:
-    - Active player effects shown as badges with turns remaining
-    - Badge disappears when effect expires
-    - Badges color-coded by category
-    - No badge overflow on mobile (truncate at 5 with overflow indicator)
+  - Files changed:
+    - `src/Presentation/UI/StatusEffectBar.cs` -- was already implemented; extended with: max-5 badge cap, overflow "+N" indicator, severity-based sort (skip-turn > DOT > debuff > buff > neutral), heroism added to BuffNames, SkipTurnNames and DotNames priority sets added
+  - Notes:
+    - StatusEffectBar and HUD wiring were already done in a prior session. This task completed the overflow capping and severity-aware sorting that were stubbed but not implemented.
+    - Max 5 badges with "+N more" label when overflow > 0. Severity sort ensures the most dangerous effects survive the cap.
 
-- [ ] TASK-013: Toast messages for status effect events
-  - Status: pending
+- [x] TASK-013: Toast messages for status effect events
+  - Status: complete
   - Layer: presentation
   - Type: system
   - Dependencies: none (events already emitted by logic layer)
-  - Description: Handle StatusAppliedEvent, StatusExpiredEvent, DotDamageEvent, and SkipTurnEvent in the ToastLog. Display messages in PoC format: "You are poisoned!", "The orc is confused!", "The poison fades.", DOT damage in orange.
-  - Files to modify:
-    - `src/Presentation/UI/ToastLog.cs` -- add handlers for new event types
-  - Acceptance criteria:
-    - Toast appears when player gains a debuff
-    - Toast appears when player debuff expires
-    - DOT damage has distinct toast line
-    - Monster effects show monster name in message
+  - Files changed:
+    - `src/Presentation/UI/ToastLog.cs` -- added SkipTurnEvent handler (player: yellow "You are {effect}!", monster: gray "The {name} is {effect}!"); added non-player HotHealEvent handler; added non-player non-duration StatusExpiredEvent catch-all
+  - Notes:
+    - StatusAppliedEvent, StatusExpiredEvent (player cases), DotDamageEvent, HotHealEvent (player case) were already handled from a prior session.
+    - SkipTurnEvent was the primary missing case. PoC uses "You are paralyzed and cannot move!" but this message fires as a movement block, not a turn-skip announcement. The C# port uses "{effectName}" as the condition name — "slowed", "sleep", "immobilized".
+    - Non-player HotHealEvent is shown as muted green to avoid spamming when troll/skeleton regenerates every turn.
 
-- [ ] TASK-014: Monster sprite tints for active effects
-  - Status: pending
+- [x] TASK-014: Monster sprite tints for active effects
+  - Status: complete
   - Layer: presentation
   - Type: system
   - Dependencies: none
-  - Description: When a monster has an active status effect and is in the player's FOV, apply a color tint to its sprite. Poison: green, Burning: orange, Disoriented: purple, Sleeping: blue, Others: subtle gray.
-  - Files to modify:
-    - `src/Presentation/Entities/EntitySpriteManager.cs` -- add tint logic based on entity status effects
-  - Acceptance criteria:
-    - Poisoned monster has green tint when visible
-    - Burning monster has orange tint when visible
-    - Sleeping monster has blue tint when visible
-    - Tint clears when effect expires
+  - Files changed:
+    - `src/Presentation/Entities/EntitySpriteManager.cs` -- extended ChooseStatusTint with FearEffect (yellow), EntangledEffect (brown), PlagueEffect (vivid green, higher priority than Poison), and updated Burning orange to a more saturated value. Priority order comment updated.
+  - Notes:
+    - Basic implementation (Poison, Burning, Disorientation, Sleep, gray fallback) was already in place.
+    - Added: Plague (separate vivid green, priority over Poison), Fear (yellow), Entangled (brown).
+    - FOV constraint is handled implicitly: UpdateVisibility sets sprite.Visible=false for out-of-FOV monsters, so tint is irrelevant when the sprite is hidden.
 
 ---
 

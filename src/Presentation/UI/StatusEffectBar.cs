@@ -66,6 +66,20 @@ public sealed partial class StatusEffectBar : Control
     private static readonly HashSet<string> BuffNames = new(StringComparer.OrdinalIgnoreCase)
     {
         "shield", "protection", "barkskin", "regeneration", "speed", "focused", "invisibility",
+        "heroism",
+    };
+
+    // Skip-turn effects are the most severe — shown first when badge count is capped.
+    // These completely deny the player their turn.
+    private static readonly HashSet<string> SkipTurnNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "immobilized", "sleep", "slowed",
+    };
+
+    // DOT effects deal damage each turn — second-highest severity.
+    private static readonly HashSet<string> DotNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "poison", "burning", "plague",
     };
 
     public override void _Ready()
@@ -100,19 +114,40 @@ public sealed partial class StatusEffectBar : Control
         var effects = player.GetAllComponents().OfType<IStatusEffect>().ToList();
         if (effects.Count == 0) return;
 
-        // Sort: debuffs first, then buffs, then neutral. Within each group: alphabetical.
+        // Sort by severity so that the most dangerous effects survive the 5-badge cap.
+        // Priority: skip-turn (0) > DOT (1) > other debuff (2) > buff (3) > neutral (4).
+        // Within each tier: alphabetical by effect name.
         effects.Sort((a, b) =>
         {
-            int catA = Category(a.EffectName);
-            int catB = Category(b.EffectName);
-            if (catA != catB) return catA.CompareTo(catB);
+            int sevA = Severity(a.EffectName);
+            int sevB = Severity(b.EffectName);
+            if (sevA != sevB) return sevA.CompareTo(sevB);
             return string.Compare(a.EffectName, b.EffectName, StringComparison.OrdinalIgnoreCase);
         });
 
-        foreach (var effect in effects)
+        // Cap at 5 badges. Priority order: skip-turn > DOT > debuff > buff > neutral.
+        // If more than 5 effects are active, show the highest-priority 5 and an overflow indicator.
+        const int MaxBadges = 5;
+        int overflow = effects.Count - MaxBadges;
+
+        var visible = overflow > 0 ? effects.Take(MaxBadges).ToList() : effects;
+        foreach (var effect in visible)
         {
             var badge = BuildBadge(effect);
             _badgeRow.AddChild(badge);
+        }
+
+        if (overflow > 0)
+        {
+            // Show how many effects are hidden so the player knows something is off-screen.
+            var overflowLabel = new Label
+            {
+                Text        = $"+{overflow}",
+                MouseFilter = MouseFilterEnum.Ignore,
+            };
+            overflowLabel.AddThemeFontSizeOverride("font_size", 18);
+            overflowLabel.AddThemeColorOverride("font_color", NeutralColor);
+            _badgeRow.AddChild(overflowLabel);
         }
     }
 
@@ -155,8 +190,21 @@ public sealed partial class StatusEffectBar : Control
         BuffNames.Contains(effectName)  ? BuffColor :
         NeutralColor;
 
-    /// <summary>0 = debuff (sort first), 1 = buff, 2 = neutral.</summary>
-    private static int Category(string effectName) =>
-        DebuffNames.Contains(effectName) ? 0 :
-        BuffNames.Contains(effectName)  ? 1 : 2;
+    /// <summary>
+    /// Severity score for badge priority when count exceeds MaxBadges.
+    /// Lower = shown first (more severe).
+    ///   0 = skip-turn (immobilized, sleep, slowed)
+    ///   1 = DOT (poison, burning, plague)
+    ///   2 = other debuff
+    ///   3 = buff
+    ///   4 = neutral
+    /// </summary>
+    private static int Severity(string effectName)
+    {
+        if (SkipTurnNames.Contains(effectName)) return 0;
+        if (DotNames.Contains(effectName))      return 1;
+        if (DebuffNames.Contains(effectName))   return 2;
+        if (BuffNames.Contains(effectName))     return 3;
+        return 4;
+    }
 }

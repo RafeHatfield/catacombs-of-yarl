@@ -266,17 +266,37 @@ public sealed class EntitySpriteManager
 
     /// <summary>
     /// Select the sprite tint color based on active status effects.
-    /// Priority: poison > burning > disorientation > sleep > any IStatusEffect debuff > normal.
-    /// Returns Colors.White (no tint) when no effects are active.
+    ///
+    /// Priority (most visually severe wins when multiple effects are active):
+    ///   burning (orange) > poison/plague (green) > sleep (blue)
+    ///   > disoriented/confused (purple) > feared (yellow) > entangled (brown)
+    ///   > any other debuff (subtle gray) > normal (white)
+    ///
+    /// Tint is only visible when the sprite is visible (FOV handled by UpdateVisibility).
+    /// Player sprite is intentionally excluded — the HUD StatusEffectBar covers that.
     /// </summary>
     private static Color ChooseStatusTint(Entity entity)
     {
-        if (entity.Has<PoisonEffect>())        return new Color(0.5f, 1f,   0.5f);  // green
-        if (entity.Has<BurningEffect>())       return new Color(1f,   0.6f, 0.2f);  // orange
-        if (entity.Has<DisorientationEffect>()) return new Color(0.8f, 0.5f, 1f);   // purple
-        if (entity.Has<SleepEffect>())         return new Color(0.6f, 0.8f, 1f);    // light blue
+        // Burning is the highest-severity visible state — bright orange, hard to miss.
+        if (entity.Has<BurningEffect>())        return new Color(1f,   0.55f, 0.1f);  // orange
 
-        // Any remaining IStatusEffect debuff gets a subtle gray tint.
+        // Poison and Plague share the green family — Plague is a stronger variant.
+        if (entity.Has<PlagueEffect>())         return new Color(0.3f, 0.9f,  0.3f);  // vivid green
+        if (entity.Has<PoisonEffect>())         return new Color(0.5f, 1f,    0.5f);  // lighter green
+
+        // Sleep: blue tint (entity is unconscious).
+        if (entity.Has<SleepEffect>())          return new Color(0.5f, 0.7f,  1f);    // blue
+
+        // Disorientation/confusion: purple.
+        if (entity.Has<DisorientationEffect>()) return new Color(0.8f, 0.5f,  1f);    // purple
+
+        // Fear: yellow (fleeing/panicked).
+        if (entity.Has<FearEffect>())           return new Color(1f,   0.9f,  0.3f);  // yellow
+
+        // Entangled: earthy brown (rooted in place).
+        if (entity.Has<EntangledEffect>())      return new Color(0.7f, 0.5f,  0.3f);  // brown
+
+        // Any remaining IStatusEffect gets a subtle gray tint (visible debuff cue, indeterminate type).
         bool hasAnyEffect = entity.GetAllComponents().OfType<IStatusEffect>().Any();
         if (hasAnyEffect) return new Color(0.8f, 0.8f, 0.8f);
 

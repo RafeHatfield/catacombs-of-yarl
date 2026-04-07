@@ -227,6 +227,10 @@ public sealed partial class ToastLog : Control
             StatusExpiredEvent expired when expired.Reason == "duration" =>
                 $"[color=gray]The {GetEntityName(expired.EntityId, state).ToLower()} is no longer {expired.EffectName}.[/color]",
 
+            // Non-player, non-duration expiry (e.g. "woke_on_damage", "cured")
+            StatusExpiredEvent expired =>
+                $"[color=gray]{GetEntityName(expired.EntityId, state)} is no longer {expired.EffectName}.[/color]",
+
             // DOT damage: distinct orange line.
             DotDamageEvent dot when dot.EntityId == _playerId =>
                 $"[color=orange]{Capitalize(dot.EffectName)} deals {dot.Damage} damage.[/color]",
@@ -234,9 +238,20 @@ public sealed partial class ToastLog : Control
             DotDamageEvent dot =>
                 $"[color=orange]{Capitalize(dot.EffectName)} damages the {GetEntityName(dot.EntityId, state).ToLower()}.[/color]",
 
-            // HOT healing: green line.
+            // HOT healing: green line for player; muted for monsters (regenerating monsters are background info).
             HotHealEvent hot when hot.EntityId == _playerId =>
                 $"[color=lime]+{hot.Amount} HP from {hot.EffectName}.[/color]",
+
+            HotHealEvent hot =>
+                $"[color=green]{GetEntityName(hot.EntityId, state)} regenerates {hot.Amount} HP.[/color]",
+
+            // Skip-turn events: "You are paralysed!" / "The orc is frozen!"
+            // PoC format: simple announcement; skip-turn is already felt by losing the turn.
+            SkipTurnEvent skip when skip.EntityId == _playerId =>
+                $"[color=yellow]You are {skip.EffectName}![/color]",
+
+            SkipTurnEvent skip =>
+                $"[color=gray]The {GetEntityName(skip.EntityId, state).ToLower()} is {skip.EffectName}![/color]",
 
             // ── Identification events ─────────────────────────────────────────────────
             // "You realize this was a Healing Potion!" when player uses or equips an unidentified item.
