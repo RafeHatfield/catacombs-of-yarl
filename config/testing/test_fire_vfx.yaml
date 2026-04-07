@@ -1,0 +1,44 @@
+scenario_id: test_fire_vfx
+name: "VFX Test — Fire & Spells"
+description: >
+  Focused manual test for spell visual effects. Small open arena with a few monsters
+  and a fire-heavy loadout. Tests: fireball travel + burst, wand of fireball,
+  lightning bolt path, dragon fart cone, thrown potions, hit/crit/miss flashes.
+dungeon_mode: true
+depth: 2
+turn_limit: 9999
+runs: 1
+
+guaranteed_spawns:
+  mode: additional
+
+  monsters:
+    - type: orc
+      count: 3
+    - type: orc_grunt
+      count: 2
+
+  items:
+    # Healing to stay alive while testing
+    - type: healing_potion
+      count: 5
+
+    # Fire — primary test targets
+    - type: scroll_of_fireball
+      count: 3
+    - type: wand_of_fireball
+      count: 1
+
+    # Other spell VFX to test while here
+    - type: scroll_of_lightning
+      count: 2
+    - type: scroll_of_dragon_fart
+      count: 2
+    - type: wand_of_lightning
+      count: 1
+
+    # Throwables — test projectile travel animation
+    - type: poison_potion
+      count: 2
+    - type: confusion_potion
+      count: 2
