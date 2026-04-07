@@ -52,6 +52,13 @@ items:
   confusion_potion: "potion_black"
   speed_potion: "potion_white"
 
+  # Mystery sprites — used for unidentified items; must match AppearancePool constants
+  unknown_potion_a: "potion_black"
+  unknown_potion_b: "potion_black"
+  unknown_potion_c: "potion_black"
+  rune_scroll: "book_brown"
+  unknown_wand: "weapon_staff_jeweled"
+
   # Weapons
   dagger: "weapon_dagger"
   poisoned_dagger: "weapon_mystic_dagger"

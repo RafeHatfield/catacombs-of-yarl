@@ -52,15 +52,16 @@ public sealed class AppearancePool
         "Opal", "Pearl", "Ruby", "Sapphire", "Ivory", "Bone", "Obsidian", "Moonstone",
     ];
 
-    // Black potion bottle sprite keys (file numbers as strings).
-    private static readonly string[] PotionMysterySprites = ["36", "37", "38"];
+    // Mystery potion bottle tileset keys — must match items section in every tileset YAML.
+    private static readonly string[] PotionMysterySprites = ["unknown_potion_a", "unknown_potion_b", "unknown_potion_c"];
 
     // Ring sprite keys (file numbers 76-80, cycling for 16 ring types).
     private static readonly string[] RingSprites = ["76", "77", "78", "79", "80"];
 
     // Shared mystery sprites for categories that use a single sprite.
-    public const string ScrollMysterySprite = "45";  // rune_scroll
-    public const string WandMysterySprite   = "50";  // unknown_wand
+    // Must match items section keys in every tileset YAML.
+    public const string ScrollMysterySprite = "rune_scroll";
+    public const string WandMysterySprite   = "unknown_wand";
 
     // ── Per-type assignments (populated at construction) ─────────────────────
 

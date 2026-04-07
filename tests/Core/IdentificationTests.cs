@@ -64,9 +64,9 @@ public class IdentificationTests
     }
 
     [Test]
-    public void AppearancePool_PotionSprites_CycleThrough36_37_38()
+    public void AppearancePool_PotionSprites_CycleThroughAllThreeKeys()
     {
-        // With many potion types, each sprite in the cycle should appear at least once.
+        // With many potion types, each mystery sprite key in the cycle should appear at least once.
         var manyPotions = Enumerable.Range(0, 9)
             .Select(i => ($"potion_{i}", ItemCategory.Potion))
             .ToList();
@@ -75,9 +75,9 @@ public class IdentificationTests
 
         var sprites = manyPotions.Select(p => pool.GetMysterySprite(p.Item1)).ToList();
 
-        Assert.That(sprites, Does.Contain("36"), "Should cycle to sprite 36");
-        Assert.That(sprites, Does.Contain("37"), "Should cycle to sprite 37");
-        Assert.That(sprites, Does.Contain("38"), "Should cycle to sprite 38");
+        Assert.That(sprites, Does.Contain("unknown_potion_a"), "Should cycle to unknown_potion_a");
+        Assert.That(sprites, Does.Contain("unknown_potion_b"), "Should cycle to unknown_potion_b");
+        Assert.That(sprites, Does.Contain("unknown_potion_c"), "Should cycle to unknown_potion_c");
     }
 
     [Test]
@@ -796,8 +796,8 @@ public class IdentificationTests
 
         Assert.That(key, Is.Not.EqualTo("healing_potion"),
             "Unidentified potion must not return its TypeId as the sprite key");
-        Assert.That(new[] { "36", "37", "38" }, Does.Contain(key),
-            "Unidentified potion sprite key must be one of the mystery bottle sprites (36/37/38)");
+        Assert.That(new[] { "unknown_potion_a", "unknown_potion_b", "unknown_potion_c" }, Does.Contain(key),
+            "Unidentified potion sprite key must be one of the mystery bottle tileset keys");
     }
 
     [Test]
