@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UF FX Sprite Browser</title>
+<style>
+  body { background:#111; color:#ddd; font-family:monospace; padding:16px; }
+  h1 { color:#fff; margin-bottom:4px; }
+  .subtitle { color:#888; margin-bottom:12px; font-size:12px; }
+  .note {
+    background:#1e1e1e; border:1px solid #333; padding:10px 14px;
+    margin-bottom:14px; border-radius:4px; font-size:12px; line-height:1.9;
+  }
+  .note code { color:#7ec8e3; }
+  .section-header {
+    font-size:14px; font-weight:bold; color:#e8c97a;
+    padding:10px 0 6px; margin-top:20px;
+    border-top:2px solid #333;
+  }
+  .section-header:first-of-type { border-top:none; margin-top:0; }
+  .grid {
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
+    margin-bottom:8px;
+  }
+  .cell {
+    background:#1a1a1a; border:1px solid #2a2a2a; border-radius:3px;
+    padding:4px; text-align:center; cursor:pointer;
+    transition:border-color 0.12s, background 0.12s;
+    width:64px;
+  }
+  .cell:hover { border-color:#7ec8e3; background:#222; }
+  .cell.copied { border-color:#7ec8e3; background:#1a2a2a; }
+  .cell img {
+    display:block; margin:0 auto 2px;
+    image-rendering:pixelated;
+    width:48px; height:48px;
+  }
+  .cell .label {
+    font-size:9px; color:#666; word-break:break-all; line-height:1.3;
+  }
+  .cell.copied .label { color:#7ec8e3; }
+  #toast {
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:#2a4a2a; color:#7ec8e3; border:1px solid #3a7a3a;
+    padding:8px 18px; border-radius:6px; font-size:13px;
+    opacity:0; transition:opacity 0.2s; pointer-events:none;
+  }
+  #toast.show { opacity:1; }
+  .filter-bar {
+    margin-bottom:12px; display:flex; gap:8px; align-items:center;
+  }
+  .filter-bar input {
+    background:#1a1a1a; border:1px solid #333; color:#ddd;
+    padding:4px 8px; border-radius:3px; font-family:monospace; font-size:12px;
+    width:200px;
+  }
+  .count { color:#666; font-size:11px; }
+</style>
+</head>
+<body>
+<h1>UF FX Sprite Browser</h1>
+<div class="subtitle">Oryx Ultimate Fantasy 1.2 — Effect sprites (uf_FX + uf_FX_impact)</div>
+
+<div class="note">
+  Click any sprite to copy its filename (without extension) to clipboard.<br>
+  Use as: <code>res://src/Presentation/assets/sprites/fx/{name}.png</code><br>
+  144 general FX (uf_FX_01–145, with gaps) + 18 impact sprites (uf_FX_impact_01–18)
+</div>
+
+<div class="filter-bar">
+  <input type="text" id="filter" placeholder="filter by number…" oninput="applyFilter()">
+  <span class="count" id="count"></span>
+</div>
+
+<div class="section-header">General FX (uf_FX_01 – uf_FX_145)</div>
+<div class="grid" id="grid-fx"></div>
+
+<div class="section-header">Impact FX (uf_FX_impact_01 – uf_FX_impact_18)</div>
+<div class="grid" id="grid-impact"></div>
+
+<div id="toast"></div>
+
+<script>
+const BASE = '../src/Presentation/assets/sprites/fx/';
+
+const fxNums = [
+  1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+  21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,
+  41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,
+  61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,
+  81,82,83,84,85,86,87,88,
+  // gap at 89
+  90,91,92,93,94,95,96,97,98,99,100,
+  101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,
+  121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,
+  141,142,143,144,145
+];
+
+const impactNums = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+
+function pad(n, prefix='uf_FX_') {
+  return prefix + String(n).padStart(2, '0');
+}
+
+function buildGrid(container, names) {
+  names.forEach(name => {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.dataset.name = name;
+
+    const img = document.createElement('img');
+    img.src = BASE + name + '.png';
+    img.alt = name;
+    img.title = name;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'label';
+    lbl.textContent = name.replace('uf_FX_impact_', 'impact_').replace('uf_FX_', '');
+
+    cell.appendChild(img);
+    cell.appendChild(lbl);
+    cell.addEventListener('click', () => copyName(name, cell));
+    container.appendChild(cell);
+  });
+}
+
+const fxNames = fxNums.map(n => 'uf_FX_' + String(n).padStart(2, '0'));
+const impactNames = impactNums.map(n => 'uf_FX_impact_' + String(n).padStart(2, '0'));
+
+buildGrid(document.getElementById('grid-fx'), fxNames);
+buildGrid(document.getElementById('grid-impact'), impactNames);
+
+updateCount();
+
+function copyName(name, cell) {
+  navigator.clipboard.writeText(name).then(() => {
+    document.querySelectorAll('.cell.copied').forEach(c => c.classList.remove('copied'));
+    cell.classList.add('copied');
+    showToast(`Copied: ${name}`);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+function applyFilter() {
+  const q = document.getElementById('filter').value.toLowerCase();
+  let visible = 0;
+  document.querySelectorAll('.cell').forEach(cell => {
+    const match = !q || cell.dataset.name.toLowerCase().includes(q);
+    cell.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  updateCount(visible);
+}
+
+function updateCount(n) {
+  const total = fxNames.length + impactNames.length;
+  document.getElementById('count').textContent = n !== undefined
+    ? `${n} / ${total} shown`
+    : `${total} sprites`;
+}
+</script>
+</body>
+</html>
