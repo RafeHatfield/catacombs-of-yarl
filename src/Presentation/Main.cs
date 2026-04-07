@@ -60,6 +60,8 @@ public partial class Main : Node
     private EntityFactory? _entityFactory;
     private DungeonFloorBuilder? _floorBuilder;
     private LevelTemplateRegistry? _levelTemplates;
+    // Set while running a test scenario so floor transitions reuse the same guaranteed spawns.
+    private DungeonFloorBuilder? _testScenarioBuilder;
 
     // Map drag-to-pan state
     private bool _isDragging;
@@ -368,6 +370,7 @@ public partial class Main : Node
     /// </summary>
     public void StartDungeon(int depth = 1, Entity? existingPlayer = null)
     {
+        _testScenarioBuilder = null; // clear any test scenario override
         _currentDepth = depth;
         var rng = new SeededRandom(_baseSeed + depth * 1_000_003);
         _state = _floorBuilder!.Build(depth, rng, existingPlayer);
@@ -777,7 +780,12 @@ public partial class Main : Node
     private void OnFloorTransitionRequested(int newDepth)
     {
         GD.Print($"Floor transition: depth {_currentDepth} → {newDepth}");
-        StartDungeon(newDepth, _state?.Player);
+        var builder = _testScenarioBuilder ?? _floorBuilder;
+        if (builder == null) return;
+        var rng = new SeededRandom(_baseSeed + newDepth * 1_000_003);
+        _currentDepth = newDepth;
+        _state = builder.Build(newDepth, rng, _state?.Player);
+        SetupPresentation(_state);
     }
 
     private void OnInventoryItemTapped(int itemId)
@@ -898,14 +906,14 @@ public partial class Main : Node
             };
 
             var registry = LevelTemplateRegistry.FromSingleDepth(scenario.Depth, levelOverride);
-            var tempBuilder = new DungeonFloorBuilder(
+            _testScenarioBuilder = new DungeonFloorBuilder(
                 registry, _monsterFactory!, _itemFactory!, _consumableFactory!,
                 spellItemFactory: _spellItemFactory);
 
             // Deterministic seed: test scenarios use _baseSeed (default 1337), not randomized.
             var rng = new SeededRandom(_baseSeed + scenario.Depth * 1_000_003);
             _currentDepth = scenario.Depth;
-            _state = tempBuilder.Build(scenario.Depth, rng);
+            _state = _testScenarioBuilder.Build(scenario.Depth, rng);
 
             SetupPresentation(_state);
             GD.Print($"Ready (dungeon-mode test scenario: {resPath}) — depth {scenario.Depth}, " +
