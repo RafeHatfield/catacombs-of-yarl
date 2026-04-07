@@ -109,7 +109,7 @@ items:
   # Armor — head and feet slots
   leather_helmet: "armor_leather_helm"
   leather_boots: "armor_leather_boot"
-  # shield: no sprite in pack — falls back to tinted diamond placeholder
+  shield: "armor_gold_chest"  # no dedicated shield sprite in pack; gold chest is the closest distinct defensive item
 
   # Wands — mapped to staff sprites by element
   wand_of_fireball: "weapon_magic_staff_chaos"
