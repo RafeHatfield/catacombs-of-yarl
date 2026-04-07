@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://947d552dab475"
-path="res://.godot/imported/weapon_vorpal_longbow.png-db57cb74c760026cee2322b25d59a01d.ctex"
+uid="uid://djjunr26iafa"
+path="res://.godot/imported/weapon_vorpal_longbow.png-334faa2c1c43f3d58c00bb2bf8843ea0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_longbow.png"
-dest_files=["res://.godot/imported/weapon_vorpal_longbow.png-db57cb74c760026cee2322b25d59a01d.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_longbow.png-334faa2c1c43f3d58c00bb2bf8843ea0.ctex"]
 
 [params]
 

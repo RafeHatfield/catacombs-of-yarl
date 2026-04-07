@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://707199e207078"
-path="res://.godot/imported/weapon_vorpal_cross.png-9535706341676a0ab36839cbbf399cc4.ctex"
+uid="uid://b3x3ks12il054"
+path="res://.godot/imported/weapon_vorpal_cross.png-e6e6344c1c64cba13b185ab97cda3434.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_cross.png"
-dest_files=["res://.godot/imported/weapon_vorpal_cross.png-9535706341676a0ab36839cbbf399cc4.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_cross.png-e6e6344c1c64cba13b185ab97cda3434.ctex"]
 
 [params]
 

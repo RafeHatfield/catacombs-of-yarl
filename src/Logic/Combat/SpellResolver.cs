@@ -102,11 +102,10 @@ public static class SpellResolver
             // Location targeting is wired; the handler returns "no corpse found" until
             // corpse entities exist on the map.
             "raise_dead"  => ResolveRaiseDead(caster, spell, state, targetX, targetY),
-            // dragon_fart: cone targeting deferred — stub as single-target sleep for now.
-            // Flavor: "falls into a stupor" → SleepEffect is the correct effect, not silence.
-            "dragon_fart" => ResolveStatusEffect<SleepEffect>(caster, spell, state, targetEntityId,
-                                statusName: "sleep", duration: spell.Duration > 0 ? spell.Duration : 3,
-                                applyEffect: (e, d) => e.GetOrAdd<SleepEffect>().RemainingTurns = d),
+            // dragon_fart: cone of noxious gas — applies SleepEffect to all alive monsters in cone.
+            // PoC: get_cone_tiles, 45° wide, range 8, caster-to-target direction.
+            // Requires targetX/targetY (location targeting) to define cone direction.
+            "dragon_fart" => ResolveDragonFart(caster, spell, state, targetX, targetY),
             // Identification scroll: identifies 1-3 random unidentified item types from inventory.
             // The scroll itself is identified by the TryIdentifyOnUse call in TurnController
             // (which fires after ResolveSpellAction returns). The handler here only handles
@@ -212,6 +211,7 @@ public static class SpellResolver
         targetFighter.TakeDamage(damage);
         bool killed = !targetFighter.IsAlive;
 
+        // Emit SpellEvent BEFORE DeathEvent so the lightning VFX plays before the target fades.
         events.Add(new SpellEvent
         {
             ActorId = caster.Id,
@@ -221,6 +221,9 @@ public static class SpellResolver
             Damage = damage,
             AffectedIds = [target.Id],
             Success = true,
+            CasterPos = (caster.X, caster.Y),
+            TargetPos = (target.X, target.Y),
+            AffectedTiles = BresenhamLine(caster.X, caster.Y, target.X, target.Y),
         });
 
         if (killed)
@@ -905,6 +908,7 @@ public static class SpellResolver
 
         int cx = targetX.Value, cy = targetY.Value;
         var affectedIds = new List<int>();
+        var deaths = new List<DeathEvent>();
 
         foreach (var monster in state.AliveMonsters)
         {
@@ -919,8 +923,12 @@ public static class SpellResolver
             affectedIds.Add(monster.Id);
 
             if (killed)
-                events.Add(new DeathEvent { ActorId = monster.Id, KillerId = caster.Id });
+                deaths.Add(new DeathEvent { ActorId = monster.Id, KillerId = caster.Id });
         }
+
+        // Compute the full blast area for VFX (Chebyshev radius, clamped to map bounds).
+        // SpellEvent comes BEFORE DeathEvents so the fireball VFX plays first.
+        var blastTiles = ChebyshevArea(cx, cy, radius, state.Map.Width, state.Map.Height);
 
         events.Add(new SpellEvent
         {
@@ -930,7 +938,12 @@ public static class SpellResolver
             Damage = baseDamage,
             AffectedIds = affectedIds,
             Success = true,
+            CasterPos = (caster.X, caster.Y),
+            TargetPos = (cx, cy),
+            AffectedTiles = blastTiles,
         });
+
+        events.AddRange(deaths);
 
         return events;
     }
@@ -979,6 +992,157 @@ public static class SpellResolver
             CorpseId = corpseId,
             AssignedFaction = "neutral",
         }];
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Dragon Fart — Location AoE: cone of noxious gas, applies SleepEffect
+    // PoC: get_cone_tiles, 45° wide, range 8, caster-to-target direction.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private static List<TurnEvent> ResolveDragonFart(
+        Entity caster, SpellEffect spell, GameState state, int? targetX, int? targetY)
+    {
+        var events = new List<TurnEvent>();
+        int duration = spell.Duration > 0 ? spell.Duration : 3;
+        int range = spell.Range > 0 ? spell.Range : 8;
+
+        if (!targetX.HasValue || !targetY.HasValue)
+        {
+            events.Add(new SpellEvent
+            {
+                ActorId = caster.Id, SpellId = spell.SpellId, SpellName = "Dragon Fart", Success = false,
+            });
+            return events;
+        }
+
+        var coneTiles = GetConeTiles(caster.X, caster.Y, targetX.Value, targetY.Value,
+            maxRange: range, coneWidthDegrees: 45);
+
+        var affectedIds = new List<int>();
+
+        // Apply SleepEffect to all alive monsters within the cone.
+        foreach (var monster in state.AliveMonsters)
+        {
+            if (!coneTiles.Contains((monster.X, monster.Y))) continue;
+            monster.GetOrAdd<SleepEffect>().RemainingTurns = duration;
+            affectedIds.Add(monster.Id);
+            events.Add(new StatusAppliedEvent
+            {
+                ActorId = caster.Id,
+                TargetId = monster.Id,
+                EffectName = "sleep",
+                Duration = duration,
+            });
+        }
+
+        // SpellEvent first so VFX plays before targets update.
+        // Insert SpellEvent at the front, before the StatusAppliedEvents.
+        events.Insert(0, new SpellEvent
+        {
+            ActorId = caster.Id,
+            SpellId = spell.SpellId,
+            SpellName = "Dragon Fart",
+            AffectedIds = affectedIds,
+            Success = true,
+            StatusApplied = "sleep",
+            StatusDuration = duration,
+            CasterPos = (caster.X, caster.Y),
+            TargetPos = (targetX.Value, targetY.Value),
+            AffectedTiles = coneTiles.Count > 0 ? coneTiles.ToList() : null,
+        });
+
+        return events;
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Geometry helpers (pure math, no Godot)
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Compute all tiles within Chebyshev distance 'radius' of center, clamped to map bounds.
+    /// Used for fireball blast area VFX.
+    /// </summary>
+    private static IReadOnlyList<(int X, int Y)> ChebyshevArea(int cx, int cy, int radius, int mapWidth, int mapHeight)
+    {
+        var tiles = new List<(int, int)>();
+        for (int dx = -radius; dx <= radius; dx++)
+        for (int dy = -radius; dy <= radius; dy++)
+        {
+            // Chebyshev distance = max(|dx|, |dy|)
+            if (Math.Max(Math.Abs(dx), Math.Abs(dy)) > radius) continue;
+            int tx = cx + dx, ty = cy + dy;
+            if (tx >= 0 && tx < mapWidth && ty >= 0 && ty < mapHeight)
+                tiles.Add((tx, ty));
+        }
+        return tiles;
+    }
+
+    /// <summary>
+    /// Standard integer Bresenham line from (x0,y0) to (x1,y1), including both endpoints.
+    /// Used for lightning bolt VFX path.
+    /// </summary>
+    private static IReadOnlyList<(int X, int Y)> BresenhamLine(int x0, int y0, int x1, int y1)
+    {
+        var tiles = new List<(int, int)>();
+
+        int dx = Math.Abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+        int dy = -Math.Abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+        int err = dx + dy;
+
+        int x = x0, y = y0;
+        while (true)
+        {
+            tiles.Add((x, y));
+            if (x == x1 && y == y1) break;
+            int e2 = 2 * err;
+            if (e2 >= dy) { err += dy; x += sx; }
+            if (e2 <= dx) { err += dx; y += sy; }
+        }
+
+        return tiles;
+    }
+
+    /// <summary>
+    /// Compute tiles within a cone from (ox,oy) toward (tx,ty), with given width (degrees) and range.
+    /// Ported from PoC get_cone_tiles (item_functions.py). Returns an empty HashSet if
+    /// origin == target (no direction defined).
+    /// </summary>
+    private static HashSet<(int X, int Y)> GetConeTiles(
+        int ox, int oy, int tx, int ty, int maxRange = 8, double coneWidthDegrees = 45.0)
+    {
+        var result = new HashSet<(int, int)>();
+
+        int ddx = tx - ox, ddy = ty - oy;
+        if (ddx == 0 && ddy == 0) return result; // no direction — empty cone
+
+        double targetAngle = Math.Atan2(ddy, ddx);
+        double halfWidth = Math.PI * (coneWidthDegrees / 2.0) / 180.0;
+
+        for (int distance = 1; distance <= maxRange; distance++)
+        {
+            int widthAtDistance = (int)(distance * Math.Tan(halfWidth));
+
+            for (int offset = -widthAtDistance; offset <= widthAtDistance; offset++)
+            {
+                double angle = targetAngle + Math.Atan2(offset, distance);
+                int cx = ox + (int)(distance * Math.Cos(angle));
+                int cy = oy + (int)(distance * Math.Sin(angle));
+
+                // Verify the candidate tile actually falls within the cone angle
+                int tileDx = cx - ox, tileDy = cy - oy;
+                double tileAngle = Math.Atan2(tileDy, tileDx);
+                double diff = tileAngle - targetAngle;
+
+                // Normalize to [-π, π]
+                while (diff > Math.PI)  diff -= 2 * Math.PI;
+                while (diff < -Math.PI) diff += 2 * Math.PI;
+
+                if (Math.Abs(diff) <= halfWidth)
+                    result.Add((cx, cy));
+            }
+        }
+
+        return result;
     }
 
     // ──────────────────────────────────────────────────────────────────────────

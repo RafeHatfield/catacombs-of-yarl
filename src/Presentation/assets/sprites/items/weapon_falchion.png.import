@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ad1b06e571728"
-path="res://.godot/imported/weapon_falchion.png-c140798851793338c803c470311f8169.ctex"
+uid="uid://d1b06e571728"
+path="res://.godot/imported/weapon_falchion.png-c68edad2ac927d39033be1f085fa49d3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_falchion.png"
-dest_files=["res://.godot/imported/weapon_falchion.png-c140798851793338c803c470311f8169.ctex"]
+dest_files=["res://.godot/imported/weapon_falchion.png-c68edad2ac927d39033be1f085fa49d3.ctex"]
 
 [params]
 

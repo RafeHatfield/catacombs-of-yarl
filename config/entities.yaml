@@ -893,54 +893,58 @@ floor_item_pool:
   - item: ring_of_teleportation
     weight: 3
     min_depth: 4
-  # Potions — integrated into floor_item_pool (previously only via guaranteed_spawns)
-  # Weights derived from PoC EV targets. healing_potion was previously spawn-only; adding here.
-  # Buff potions depth 1+; debuff potions depth 2+; throwable/special potions depth 3+.
+  # Potions — depth-gated to match PoC band system (B1=depths 1-5, B2=depths 6-10, B3=depths 11-15).
+  # PoC loot_tags.py is ground truth: only healing_potion and protection_potion are B1 items.
+  # All other potions are B2+ (min_depth 6) or later.
   - item: healing_potion
     weight: 30
-    min_depth: 1
-  - item: potion_of_speed
-    weight: 12
     min_depth: 1
   - item: potion_of_protection
     weight: 12
     min_depth: 1
+  # B2+ (depth 6+) — PoC band_min=2
+  - item: potion_of_speed
+    weight: 12
+    min_depth: 6
   - item: potion_of_regeneration
     weight: 10
-    min_depth: 1
+    min_depth: 6
   - item: potion_of_invisibility
     weight: 8
-    min_depth: 1
+    min_depth: 6
   - item: potion_of_heroism
     weight: 6
-    min_depth: 1
-  - item: potion_of_weakness
-    weight: 8
-    min_depth: 2
-  - item: potion_of_slowness
-    weight: 8
-    min_depth: 2
-  - item: potion_of_blindness
-    weight: 6
-    min_depth: 2
-  - item: potion_of_paralysis
-    weight: 4
-    min_depth: 2
+    min_depth: 6
   - item: tar_potion
     weight: 6
-    min_depth: 2
+    min_depth: 6
+  # Debuff potions (throwable) — B2+ (no direct PoC equivalent, treat as B2)
+  - item: potion_of_weakness
+    weight: 8
+    min_depth: 6
+  - item: potion_of_slowness
+    weight: 8
+    min_depth: 6
+  - item: potion_of_blindness
+    weight: 6
+    min_depth: 6
+  - item: potion_of_paralysis
+    weight: 4
+    min_depth: 6
+  # Throwable special potions — B2+ (no direct PoC equivalent, treat as B2)
   - item: fire_potion
     weight: 6
-    min_depth: 3
+    min_depth: 6
   - item: root_potion
     weight: 5
-    min_depth: 3
+    min_depth: 6
   - item: sunburst_potion
     weight: 5
-    min_depth: 3
+    min_depth: 6
+  # B3+ (depth 11+) — PoC band_min=3
   - item: antidote_potion
     weight: 8
-    min_depth: 4
+    min_depth: 11
 
 consumables:
   healing_potion:

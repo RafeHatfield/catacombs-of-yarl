@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://e7967b20aeb8d"
-path="res://.godot/imported/shield_ice_kite.png-043e3494b22f4d0b7520bf01382df149.ctex"
+uid="uid://bdvcl85qo6ghl"
+path="res://.godot/imported/shield_ice_kite.png-6484a05cebab9c967ad9a3c5ef5917d0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_ice_kite.png"
-dest_files=["res://.godot/imported/shield_ice_kite.png-043e3494b22f4d0b7520bf01382df149.ctex"]
+dest_files=["res://.godot/imported/shield_ice_kite.png-6484a05cebab9c967ad9a3c5ef5917d0.ctex"]
 
 [params]
 

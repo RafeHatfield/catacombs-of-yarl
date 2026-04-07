@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ec6b92c957284"
-path="res://.godot/imported/weapon_magic_spear_blood.png-09765afa27d845810533a1863f3e8c93.ctex"
+uid="uid://hrgo0f1l07id"
+path="res://.godot/imported/weapon_magic_spear_blood.png-8b8b581808ec66b5dce77f1314f8a609.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_magic_spear_blood.png"
-dest_files=["res://.godot/imported/weapon_magic_spear_blood.png-09765afa27d845810533a1863f3e8c93.ctex"]
+dest_files=["res://.godot/imported/weapon_magic_spear_blood.png-8b8b581808ec66b5dce77f1314f8a609.ctex"]
 
 [params]
 

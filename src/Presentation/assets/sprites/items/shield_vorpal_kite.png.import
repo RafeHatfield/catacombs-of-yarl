@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2ea0746625e1b"
-path="res://.godot/imported/shield_vorpal_kite.png-5a100262aef0c53c606789de4a1ce021.ctex"
+uid="uid://cfw3qrf4qapx"
+path="res://.godot/imported/shield_vorpal_kite.png-1f3152f553bb9b0cd9e03091742ef68a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_vorpal_kite.png"
-dest_files=["res://.godot/imported/shield_vorpal_kite.png-5a100262aef0c53c606789de4a1ce021.ctex"]
+dest_files=["res://.godot/imported/shield_vorpal_kite.png-1f3152f553bb9b0cd9e03091742ef68a.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://86b698e7134df"
-path="res://.godot/imported/crystal_crimson.png-3e8760301ecb5271166d4e310d4defbd.ctex"
+uid="uid://c818kr17jh4bb"
+path="res://.godot/imported/crystal_crimson.png-870dd75f2ed0ff2b7505d31202f4f55b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/crystal_crimson.png"
-dest_files=["res://.godot/imported/crystal_crimson.png-3e8760301ecb5271166d4e310d4defbd.ctex"]
+dest_files=["res://.godot/imported/crystal_crimson.png-870dd75f2ed0ff2b7505d31202f4f55b.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ee57318c048b1"
-path="res://.godot/imported/weapon_gold_lance.png-6e99ad87b360b1802f51222d7ac39d8e.ctex"
+uid="uid://jrdi0b3gxdka"
+path="res://.godot/imported/weapon_gold_lance.png-eb3f9155cb83dcd424cc9a8509f63c06.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_lance.png"
-dest_files=["res://.godot/imported/weapon_gold_lance.png-6e99ad87b360b1802f51222d7ac39d8e.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_lance.png-eb3f9155cb83dcd424cc9a8509f63c06.ctex"]
 
 [params]
 

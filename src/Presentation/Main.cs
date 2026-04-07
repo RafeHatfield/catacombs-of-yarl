@@ -3,6 +3,7 @@ using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Presentation.Animation;
 using CatacombsOfYarl.Presentation.Entities;
 using CatacombsOfYarl.Presentation.Map;
 using CatacombsOfYarl.Presentation.UI;
@@ -66,6 +67,9 @@ public partial class Main : Node
     private Vector2 _dragStartScreenPos;
     private Vector2 _cameraPositionAtDragStart;
     private const float DragThreshold = 10f; // pixels before drag mode activates
+
+    // VFX overlay — spell and status visual effects. Created once per floor setup.
+    private VfxOverlay? _vfxOverlay;
 
     // Active portal sprites keyed by entity ID. Spawned on PortalPlacedEvent,
     // despawned on PortalRemovedEvent / PortalEntranceCancelledEvent.
@@ -388,6 +392,7 @@ public partial class Main : Node
         _gameView = GetNode<Node2D>("GameView");
         var tileMapLayer = GetNode<Node2D>("GameView/TileMapLayer");
         var entityLayer = GetNode<Node2D>("GameView/EntityLayer");
+        var vfxLayerNode = GetNode<Node2D>("GameView/VfxLayer");
         var uiLayer = GetNode<CanvasLayer>("UILayer");
         var hudNode = GetNode<Control>("UILayer/HUD");
         var toastLogNode = GetNode<Control>("UILayer/ToastLog");
@@ -494,6 +499,11 @@ public partial class Main : Node
         foreach (var sprite in _portalSprites.Values) sprite.QueueFree();
         _portalSprites.Clear();
 
+        // VFX overlay — create once per floor. ClearAll hides any lingering pooled nodes
+        // from the previous floor before we create a fresh overlay for the new one.
+        _vfxOverlay?.ClearAll();
+        _vfxOverlay = new VfxOverlay(vfxLayerNode, _renderer);
+
         if (_gameController != null)
         {
             Diag.Log($"SetupPresentation: disposing old GameController, phase={_gameController.Phase}");
@@ -506,7 +516,8 @@ public partial class Main : Node
         _gameController = new GameController();
         AddChild(_gameController);
         _gameController.Initialize(state, _entitySprites!, this, _itemSprites, _inventoryPanel,
-            _equipmentPanel, _toastLog, _monsterFactory, _renderer, _gameView, _entityFactory);
+            _equipmentPanel, _toastLog, _monsterFactory, _renderer, _gameView, _entityFactory,
+            _vfxOverlay);
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;

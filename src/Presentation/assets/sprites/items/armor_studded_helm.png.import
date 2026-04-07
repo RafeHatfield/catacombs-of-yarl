@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://092f926def93f"
-path="res://.godot/imported/armor_studded_helm.png-91c515a9c9f750eceb3244cd9e720802.ctex"
+uid="uid://c3l7qqnty71jt"
+path="res://.godot/imported/armor_studded_helm.png-c49322c624b413e08ee0b9a9f4716741.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_studded_helm.png"
-dest_files=["res://.godot/imported/armor_studded_helm.png-91c515a9c9f750eceb3244cd9e720802.ctex"]
+dest_files=["res://.godot/imported/armor_studded_helm.png-c49322c624b413e08ee0b9a9f4716741.ctex"]
 
 [params]
 

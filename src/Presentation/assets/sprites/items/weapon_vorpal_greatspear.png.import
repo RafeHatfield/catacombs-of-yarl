@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://f479b1c47301e"
-path="res://.godot/imported/weapon_vorpal_greatspear.png-4a0de836557cb668b3b251e91acbdfc1.ctex"
+uid="uid://catepyfvnv5am"
+path="res://.godot/imported/weapon_vorpal_greatspear.png-bb516a8c79801cde46bdfbd6f483b763.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_greatspear.png"
-dest_files=["res://.godot/imported/weapon_vorpal_greatspear.png-4a0de836557cb668b3b251e91acbdfc1.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_greatspear.png-bb516a8c79801cde46bdfbd6f483b763.ctex"]
 
 [params]
 

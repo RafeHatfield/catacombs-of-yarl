@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5166fddf3e291"
-path="res://.godot/imported/weapon_gold_staff_winged.png-10c06a32902f422419e6c93a4e9e8435.ctex"
+uid="uid://d0c3axwn4yxyo"
+path="res://.godot/imported/weapon_gold_staff_winged.png-180f67b7c923bf085a75e0667146f49d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_staff_winged.png"
-dest_files=["res://.godot/imported/weapon_gold_staff_winged.png-10c06a32902f422419e6c93a4e9e8435.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_staff_winged.png-180f67b7c923bf085a75e0667146f49d.ctex"]
 
 [params]
 

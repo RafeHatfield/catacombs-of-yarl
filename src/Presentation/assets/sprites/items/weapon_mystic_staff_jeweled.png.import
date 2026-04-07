@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7495539ea2a60"
-path="res://.godot/imported/weapon_mystic_staff_jeweled.png-0a3875504a16be7fc4056530021eb753.ctex"
+uid="uid://b707gnwdrga4v"
+path="res://.godot/imported/weapon_mystic_staff_jeweled.png-9ca6dc5f8a99dee30eaa3575a84460fc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_staff_jeweled.png"
-dest_files=["res://.godot/imported/weapon_mystic_staff_jeweled.png-0a3875504a16be7fc4056530021eb753.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_staff_jeweled.png-9ca6dc5f8a99dee30eaa3575a84460fc.ctex"]
 
 [params]
 

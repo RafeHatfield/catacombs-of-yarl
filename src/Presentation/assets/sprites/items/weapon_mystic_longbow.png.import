@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://238b9ed76f892"
-path="res://.godot/imported/weapon_mystic_longbow.png-ff246608f6f8528a16191f810f228f10.ctex"
+uid="uid://2d74yxg704yp"
+path="res://.godot/imported/weapon_mystic_longbow.png-069abf61ffcff5ca406eb2fc84543fc3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_longbow.png"
-dest_files=["res://.godot/imported/weapon_mystic_longbow.png-ff246608f6f8528a16191f810f228f10.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_longbow.png-069abf61ffcff5ca406eb2fc84543fc3.ctex"]
 
 [params]
 

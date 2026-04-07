@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c79f0f724cbd3"
-path="res://.godot/imported/armor_royal_helm.png-a9f8ef751b52e8f6022e58684a42956f.ctex"
+uid="uid://c8af0f724cbd3"
+path="res://.godot/imported/armor_royal_helm.png-28fc2dbe57cd089e6aa2200b2b6ece24.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_royal_helm.png"
-dest_files=["res://.godot/imported/armor_royal_helm.png-a9f8ef751b52e8f6022e58684a42956f.ctex"]
+dest_files=["res://.godot/imported/armor_royal_helm.png-28fc2dbe57cd089e6aa2200b2b6ece24.ctex"]
 
 [params]
 

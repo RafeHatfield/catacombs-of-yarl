@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://16a66e8a06577"
-path="res://.godot/imported/armor_mystic_leg.png-1ad41be711218956d0c2058ecc44d751.ctex"
+uid="uid://dytym2prmywom"
+path="res://.godot/imported/armor_mystic_leg.png-c5fe63f7d9d8cc367795920fa3e7dedf.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_mystic_leg.png"
-dest_files=["res://.godot/imported/armor_mystic_leg.png-1ad41be711218956d0c2058ecc44d751.ctex"]
+dest_files=["res://.godot/imported/armor_mystic_leg.png-c5fe63f7d9d8cc367795920fa3e7dedf.ctex"]
 
 [params]
 

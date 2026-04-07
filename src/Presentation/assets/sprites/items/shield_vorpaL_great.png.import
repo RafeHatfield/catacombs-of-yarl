@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://faa3d6751f093"
-path="res://.godot/imported/shield_vorpaL_great.png-3f6e75e5a5ebdfb20fd9970194bb8bed.ctex"
+uid="uid://beu7r5bwg75jc"
+path="res://.godot/imported/shield_vorpaL_great.png-aa1deac40bbecf49e2aa7b0b0dd0f322.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_vorpaL_great.png"
-dest_files=["res://.godot/imported/shield_vorpaL_great.png-3f6e75e5a5ebdfb20fd9970194bb8bed.ctex"]
+dest_files=["res://.godot/imported/shield_vorpaL_great.png-aa1deac40bbecf49e2aa7b0b0dd0f322.ctex"]
 
 [params]
 

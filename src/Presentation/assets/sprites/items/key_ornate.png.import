@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4bb5ec5035fb5"
-path="res://.godot/imported/key_ornate.png-24c17f388c5efe52ba690476adc0d583.ctex"
+uid="uid://b8g18xp85qa0s"
+path="res://.godot/imported/key_ornate.png-cd2c672ff795e83ebaeb3bcf95950f3d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/key_ornate.png"
-dest_files=["res://.godot/imported/key_ornate.png-24c17f388c5efe52ba690476adc0d583.ctex"]
+dest_files=["res://.godot/imported/key_ornate.png-cd2c672ff795e83ebaeb3bcf95950f3d.ctex"]
 
 [params]
 

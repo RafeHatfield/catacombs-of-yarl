@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4c691a95f402e"
-path="res://.godot/imported/drumstick.png-9b6716d0991b4dd5002fc85332e471b5.ctex"
+uid="uid://cbc6vvuehpvq1"
+path="res://.godot/imported/drumstick.png-55001f60616ab56b2960a3f65351e775.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/drumstick.png"
-dest_files=["res://.godot/imported/drumstick.png-9b6716d0991b4dd5002fc85332e471b5.ctex"]
+dest_files=["res://.godot/imported/drumstick.png-55001f60616ab56b2960a3f65351e775.ctex"]
 
 [params]
 

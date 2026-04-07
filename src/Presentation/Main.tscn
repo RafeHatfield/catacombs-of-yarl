@@ -11,6 +11,8 @@ script = ExtResource("1_main")
 
 [node name="EntityLayer" type="Node2D" parent="GameView"]
 
+[node name="VfxLayer" type="Node2D" parent="GameView"]
+
 [node name="UILayer" type="CanvasLayer" parent="."]
 layer = 10
 

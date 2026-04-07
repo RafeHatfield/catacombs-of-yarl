@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://56d594ad8d689"
-path="res://.godot/imported/flask_blue.png-982b8213fae31fc8e071b7473f9da909.ctex"
+uid="uid://d4i25ptmax2xw"
+path="res://.godot/imported/flask_blue.png-3f87a058b0d7912b8c58721697e9d04b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/flask_blue.png"
-dest_files=["res://.godot/imported/flask_blue.png-982b8213fae31fc8e071b7473f9da909.ctex"]
+dest_files=["res://.godot/imported/flask_blue.png-3f87a058b0d7912b8c58721697e9d04b.ctex"]
 
 [params]
 

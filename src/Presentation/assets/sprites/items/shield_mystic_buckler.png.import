@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a691fb880f0f3"
-path="res://.godot/imported/shield_mystic_buckler.png-af8765b48109c66bfbfed056b333fe0a.ctex"
+uid="uid://7a1fb880f0f3"
+path="res://.godot/imported/shield_mystic_buckler.png-2fc88a4a374469200c6ae68ec44fa4f2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_mystic_buckler.png"
-dest_files=["res://.godot/imported/shield_mystic_buckler.png-af8765b48109c66bfbfed056b333fe0a.ctex"]
+dest_files=["res://.godot/imported/shield_mystic_buckler.png-2fc88a4a374469200c6ae68ec44fa4f2.ctex"]
 
 [params]
 

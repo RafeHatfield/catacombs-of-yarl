@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a64b3b411a904"
-path="res://.godot/imported/crystal_sun.png-36e9e09af8f025fc5c93de3efba10f14.ctex"
+uid="uid://64b3b411ba04"
+path="res://.godot/imported/crystal_sun.png-3e12377b7c3a58ca40707e5c5fa4a8e3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/crystal_sun.png"
-dest_files=["res://.godot/imported/crystal_sun.png-36e9e09af8f025fc5c93de3efba10f14.ctex"]
+dest_files=["res://.godot/imported/crystal_sun.png-3e12377b7c3a58ca40707e5c5fa4a8e3.ctex"]
 
 [params]
 

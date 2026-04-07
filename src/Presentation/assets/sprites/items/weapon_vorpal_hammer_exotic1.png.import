@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2bae6e166df56"
-path="res://.godot/imported/weapon_vorpal_hammer_exotic1.png-d0dd6b6d9f01b9bf570efc8ea5922605.ctex"
+uid="uid://d3s6m2jor46ml"
+path="res://.godot/imported/weapon_vorpal_hammer_exotic1.png-6483d0fce05274acac9a3dcc9af52739.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_hammer_exotic1.png"
-dest_files=["res://.godot/imported/weapon_vorpal_hammer_exotic1.png-d0dd6b6d9f01b9bf570efc8ea5922605.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_hammer_exotic1.png-6483d0fce05274acac9a3dcc9af52739.ctex"]
 
 [params]
 

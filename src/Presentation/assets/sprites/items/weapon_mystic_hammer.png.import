@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2c57cdb158d88"
-path="res://.godot/imported/weapon_mystic_hammer.png-34d4985d528afef0770ff74fda43ffab.ctex"
+uid="uid://bb36xva7s8xv"
+path="res://.godot/imported/weapon_mystic_hammer.png-09f4ca7d9dac3425861c8edb3b7f0f77.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_hammer.png"
-dest_files=["res://.godot/imported/weapon_mystic_hammer.png-34d4985d528afef0770ff74fda43ffab.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_hammer.png-09f4ca7d9dac3425861c8edb3b7f0f77.ctex"]
 
 [params]
 

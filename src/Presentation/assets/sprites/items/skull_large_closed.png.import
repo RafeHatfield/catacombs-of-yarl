@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://53c456a8a7c13"
-path="res://.godot/imported/skull_large_closed.png-51795c31f320b5e0f32c1401913a07a4.ctex"
+uid="uid://d1h11ruhcr7qq"
+path="res://.godot/imported/skull_large_closed.png-0611859c6b597f2cf9d382819b0a8eac.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/skull_large_closed.png"
-dest_files=["res://.godot/imported/skull_large_closed.png-51795c31f320b5e0f32c1401913a07a4.ctex"]
+dest_files=["res://.godot/imported/skull_large_closed.png-0611859c6b597f2cf9d382819b0a8eac.ctex"]
 
 [params]
 

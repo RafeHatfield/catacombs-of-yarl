@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://e7b04f95fe662"
-path="res://.godot/imported/shield_ice_buckler.png-cc4b2df4ab99e5ba88943c1f5f7d4c2c.ctex"
+uid="uid://bcv5jedvt7cgb"
+path="res://.godot/imported/shield_ice_buckler.png-4e004776c97624de49e8638f4e843f6f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_ice_buckler.png"
-dest_files=["res://.godot/imported/shield_ice_buckler.png-cc4b2df4ab99e5ba88943c1f5f7d4c2c.ctex"]
+dest_files=["res://.godot/imported/shield_ice_buckler.png-4e004776c97624de49e8638f4e843f6f.ctex"]
 
 [params]
 

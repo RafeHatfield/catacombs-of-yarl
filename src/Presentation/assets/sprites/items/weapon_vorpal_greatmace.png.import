@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://362d7d622f9f9"
-path="res://.godot/imported/weapon_vorpal_greatmace.png-39cd637a3a6d05fd4c6e2b6c8381ce08.ctex"
+uid="uid://b47a2yrb3044w"
+path="res://.godot/imported/weapon_vorpal_greatmace.png-55007592c00fc870e31abf2a5bf8b022.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_greatmace.png"
-dest_files=["res://.godot/imported/weapon_vorpal_greatmace.png-39cd637a3a6d05fd4c6e2b6c8381ce08.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_greatmace.png-55007592c00fc870e31abf2a5bf8b022.ctex"]
 
 [params]
 

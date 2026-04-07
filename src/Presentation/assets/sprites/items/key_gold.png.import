@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://9f88eacf0f1d4"
-path="res://.godot/imported/key_gold.png-13aa347f1ebea2389d11f7e3a0a2e468.ctex"
+uid="uid://di0ansyfhs1b0"
+path="res://.godot/imported/key_gold.png-7a2a6219d4754f63a8aff51eedeac790.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/key_gold.png"
-dest_files=["res://.godot/imported/key_gold.png-13aa347f1ebea2389d11f7e3a0a2e468.ctex"]
+dest_files=["res://.godot/imported/key_gold.png-7a2a6219d4754f63a8aff51eedeac790.ctex"]
 
 [params]
 

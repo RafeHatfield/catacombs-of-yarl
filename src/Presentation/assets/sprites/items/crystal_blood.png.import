@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8142dbfd63f12"
-path="res://.godot/imported/crystal_blood.png-9fa68e0c1f668a717810f64a3b2b1a8b.ctex"
+uid="uid://c4u3mt2dohfyx"
+path="res://.godot/imported/crystal_blood.png-fb1570070c364be73ba660e7e2448ac0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/crystal_blood.png"
-dest_files=["res://.godot/imported/crystal_blood.png-9fa68e0c1f668a717810f64a3b2b1a8b.ctex"]
+dest_files=["res://.godot/imported/crystal_blood.png-fb1570070c364be73ba660e7e2448ac0.ctex"]
 
 [params]
 

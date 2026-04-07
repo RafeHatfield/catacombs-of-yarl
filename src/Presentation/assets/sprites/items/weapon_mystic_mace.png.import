@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3550ca0b774dd"
-path="res://.godot/imported/weapon_mystic_mace.png-95238de51c3c31cb7dab518d353ed133.ctex"
+uid="uid://b4bv6vkkasy10"
+path="res://.godot/imported/weapon_mystic_mace.png-78e3e14a70487cfa457a898afe231e33.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_mace.png"
-dest_files=["res://.godot/imported/weapon_mystic_mace.png-95238de51c3c31cb7dab518d353ed133.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_mace.png-78e3e14a70487cfa457a898afe231e33.ctex"]
 
 [params]
 

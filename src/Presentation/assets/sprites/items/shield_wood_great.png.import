@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://62a7adf1b466e"
-path="res://.godot/imported/shield_wood_great.png-f99585ede3642b6f88854c993d0b19af.ctex"
+uid="uid://408jv20si64a"
+path="res://.godot/imported/shield_wood_great.png-3889c9b7bcfa0727064c86e98b362d88.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_wood_great.png"
-dest_files=["res://.godot/imported/shield_wood_great.png-f99585ede3642b6f88854c993d0b19af.ctex"]
+dest_files=["res://.godot/imported/shield_wood_great.png-3889c9b7bcfa0727064c86e98b362d88.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d6fa6d28f9966"
-path="res://.godot/imported/crystal_cloud.png-15c1989a12f8be8f3077f6c0e54bc25b.ctex"
+uid="uid://b0flb5yu3fgf"
+path="res://.godot/imported/crystal_cloud.png-c9e4eaa9fbaa323149f0b6cce5cc1421.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/crystal_cloud.png"
-dest_files=["res://.godot/imported/crystal_cloud.png-15c1989a12f8be8f3077f6c0e54bc25b.ctex"]
+dest_files=["res://.godot/imported/crystal_cloud.png-c9e4eaa9fbaa323149f0b6cce5cc1421.ctex"]
 
 [params]
 

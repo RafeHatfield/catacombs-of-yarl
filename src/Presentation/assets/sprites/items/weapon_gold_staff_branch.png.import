@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7072af04f2ab5"
-path="res://.godot/imported/weapon_gold_staff_branch.png-7964f93b0a3f646c141700c9a87f1223.ctex"
+uid="uid://b3x3jyn3wf881"
+path="res://.godot/imported/weapon_gold_staff_branch.png-ea74e4f4420b0442130ecd861e488fc2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_staff_branch.png"
-dest_files=["res://.godot/imported/weapon_gold_staff_branch.png-7964f93b0a3f646c141700c9a87f1223.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_staff_branch.png-ea74e4f4420b0442130ecd861e488fc2.ctex"]
 
 [params]
 

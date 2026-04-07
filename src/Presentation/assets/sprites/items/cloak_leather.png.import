@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a8ec6cbf0304d"
-path="res://.godot/imported/cloak_leather.png-44598165884488d4930126d5ccc060ef.ctex"
+uid="uid://8ec6cbf0304d"
+path="res://.godot/imported/cloak_leather.png-d9f4c1868c3b3a81e421756553a73c8d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/cloak_leather.png"
-dest_files=["res://.godot/imported/cloak_leather.png-44598165884488d4930126d5ccc060ef.ctex"]
+dest_files=["res://.godot/imported/cloak_leather.png-d9f4c1868c3b3a81e421756553a73c8d.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://42c3e7a082549"
-path="res://.godot/imported/armor_royal_leg.png-43f48222086b903464afa5b3565ea198.ctex"
+uid="uid://c0h0asuabn1tw"
+path="res://.godot/imported/armor_royal_leg.png-5fee7c40306aabb66d018d1c921e01a2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_royal_leg.png"
-dest_files=["res://.godot/imported/armor_royal_leg.png-43f48222086b903464afa5b3565ea198.ctex"]
+dest_files=["res://.godot/imported/armor_royal_leg.png-5fee7c40306aabb66d018d1c921e01a2.ctex"]
 
 [params]
 

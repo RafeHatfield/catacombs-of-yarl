@@ -38,6 +38,7 @@ public sealed class TurnAnimator
     private readonly Node _root;
     private readonly EntitySpriteManager _entitySprites;
     private readonly IMapRenderer _renderer;
+    private VfxOverlay? _vfxOverlay;
     private bool _playing;
     // Stored so we can Kill() the previous tween before creating the next one.
     private Tween? _activeTween;
@@ -47,12 +48,17 @@ public sealed class TurnAnimator
 
     public event Action? AnimationComplete;
 
-    public TurnAnimator(Node root, EntitySpriteManager entitySprites, IMapRenderer renderer)
+    public TurnAnimator(Node root, EntitySpriteManager entitySprites, IMapRenderer renderer,
+        VfxOverlay? vfxOverlay = null)
     {
         _root = root;
         _entitySprites = entitySprites;
         _renderer = renderer;
+        _vfxOverlay = vfxOverlay;
     }
+
+    /// <summary>Assign a VfxOverlay after construction (used during floor transitions).</summary>
+    public void SetVfxOverlay(VfxOverlay? overlay) => _vfxOverlay = overlay;
 
     /// <summary>
     /// Poll from GameController._Process every frame. When the active tween has
@@ -84,7 +90,8 @@ public sealed class TurnAnimator
         bool hasAnimatable = false;
         foreach (var evt in result.Events)
         {
-            if (evt is MoveEvent or AttackEvent or HealEvent or DeathEvent or ThrowEvent)
+            if (evt is MoveEvent or AttackEvent or HealEvent or DeathEvent or ThrowEvent
+                or SpellEvent or StatusAppliedEvent)
             {
                 hasAnimatable = true;
                 break;
@@ -109,7 +116,8 @@ public sealed class TurnAnimator
         _tweenHasSteps = false;
         foreach (var evt in result.Events)
         {
-            if (evt is MoveEvent or AttackEvent or HealEvent or DeathEvent or ThrowEvent)
+            if (evt is MoveEvent or AttackEvent or HealEvent or DeathEvent or ThrowEvent
+                or SpellEvent or StatusAppliedEvent)
                 AppendEventAnimation(tween, evt);
         }
 
@@ -154,8 +162,90 @@ public sealed class TurnAnimator
             case ThrowEvent throwEvt:
                 AnimateThrow(tween, throwEvt);
                 break;
+
+            case SpellEvent spell:
+                AnimateSpell(tween, spell);
+                break;
+
+            case StatusAppliedEvent status:
+                AnimateStatusApplied(tween, status);
+                break;
         }
     }
+
+    private void AnimateSpell(Tween tween, SpellEvent spell)
+    {
+        var config = GetSpellVfxConfig(spell.SpellId);
+        if (config == null || _vfxOverlay == null)
+        {
+            // Unknown spell or no VFX layer — small pause so the tween has a step.
+            tween.TweenInterval(0.1f * _speedMultiplier);
+            _tweenHasSteps = true;
+            return;
+        }
+
+        _tweenHasSteps = true;
+
+        // Travel phase: projectile from caster to target.
+        if (spell.CasterPos.HasValue && spell.TargetPos.HasValue)
+        {
+            _vfxOverlay.AppendTravelEffect(tween, spell.CasterPos.Value, spell.TargetPos.Value,
+                config.Color, config.Glyph, 0.05f * _speedMultiplier);
+        }
+
+        // Area / path phase.
+        if (spell.AffectedTiles?.Count > 0)
+        {
+            if (config.Shape == VfxShape.Path)
+            {
+                float perTile = config.Duration * _speedMultiplier / spell.AffectedTiles.Count;
+                _vfxOverlay.AppendPathEffect(tween, spell.AffectedTiles, config.Color, perTile);
+            }
+            else
+            {
+                _vfxOverlay.AppendAreaEffect(tween, spell.AffectedTiles, config.Color,
+                    config.Duration * _speedMultiplier);
+            }
+        }
+    }
+
+    private void AnimateStatusApplied(Tween tween, StatusAppliedEvent status)
+    {
+        if (_vfxOverlay == null) return;
+        var sprite = _entitySprites.GetSprite(status.TargetId);
+        if (sprite == null) return;
+
+        _tweenHasSteps = true;
+        var (glyph, color) = GetStatusGlyph(status.EffectName);
+        _vfxOverlay.AppendStatusIndicator(tween, sprite.Position, glyph, color, 0.2f * _speedMultiplier);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // VFX configuration — maps SpellId to visual parameters
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private enum VfxShape { Area, Path }
+
+    private sealed record SpellVfxConfig(string Glyph, Color Color, float Duration, VfxShape Shape);
+
+    private static SpellVfxConfig? GetSpellVfxConfig(string spellId) => spellId switch
+    {
+        "fireball"                    => new("*", new Color(1f, 0.5f, 0f), 0.25f, VfxShape.Area),
+        "lightning" or "lightning_bolt" => new("~", new Color(1f, 1f, 0.3f), 0.15f, VfxShape.Path),
+        "dragon_fart"                 => new("%", new Color(0.4f, 0.85f, 0.3f), 0.25f, VfxShape.Area),
+        _                             => null,
+    };
+
+    private static (string Glyph, Color Color) GetStatusGlyph(string effectName) => effectName switch
+    {
+        "slowed"                    => ("~", Colors.Cyan),
+        "poisoned" or "plague"      => ("*", Colors.Green),
+        "regeneration"              => ("+", new Color(0.3f, 1f, 0.3f)),
+        "sleep" or "sleeping"       => ("z", Colors.Gray),
+        "confused" or "disoriented" => ("?", Colors.Purple),
+        "blinded"                   => ("-", Colors.DarkGray),
+        _                           => ("!", Colors.White),
+    };
 
     private void AnimateMove(Tween tween, MoveEvent move)
     {
@@ -203,10 +293,21 @@ public sealed class TurnAnimator
 
         if (targetSprite != null)
         {
-            // Flash red runs parallel with the return step above.
-            tween.Parallel().TweenProperty(targetSprite, "modulate", new Color(2, 0.3f, 0.3f), AttackReturnDur);
-            // Step 3: reset modulate back to white (sequential, after the return).
-            tween.TweenProperty(targetSprite, "modulate", Colors.White, AttackReturnDur * 0.5f);
+            if (attack.IsCritical)
+            {
+                // Brighter flash + brief scale pop for crits.
+                tween.Parallel().TweenProperty(targetSprite, "modulate", new Color(3f, 0.1f, 0.1f), 0.2f * _speedMultiplier);
+                tween.Parallel().TweenProperty(targetSprite, "scale", new Vector2(1.15f, 1.15f), 0.1f * _speedMultiplier);
+                tween.TweenProperty(targetSprite, "modulate", Colors.White, 0.1f * _speedMultiplier);
+                tween.Parallel().TweenProperty(targetSprite, "scale", Vector2.One, 0.1f * _speedMultiplier);
+            }
+            else
+            {
+                // Standard hit flash.
+                tween.Parallel().TweenProperty(targetSprite, "modulate", new Color(2, 0.3f, 0.3f), AttackReturnDur);
+                // Step 3: reset modulate back to white (sequential, after the return).
+                tween.TweenProperty(targetSprite, "modulate", Colors.White, AttackReturnDur * 0.5f);
+            }
         }
     }
 

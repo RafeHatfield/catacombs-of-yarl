@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5ab0ba00f8853"
-path="res://.godot/imported/weapon_gold_mace.png-5efcd87057d6fa216e7f7f8f43c38ce3.ctex"
+uid="uid://c7gv5vk8ht4uq"
+path="res://.godot/imported/weapon_gold_mace.png-e8b62dd31a1d4cfb6bc2f6fdd117453e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_mace.png"
-dest_files=["res://.godot/imported/weapon_gold_mace.png-5efcd87057d6fa216e7f7f8f43c38ce3.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_mace.png-e8b62dd31a1d4cfb6bc2f6fdd117453e.ctex"]
 
 [params]
 

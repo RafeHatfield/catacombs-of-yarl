@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://757a5740c2577"
-path="res://.godot/imported/weapon_vorpal_stiletto.png-d59edb96586152bf6bc7fb6145ce6496.ctex"
+uid="uid://b8xcgrrytg553"
+path="res://.godot/imported/weapon_vorpal_stiletto.png-e71602baf3de21789d18b49a11708b17.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_stiletto.png"
-dest_files=["res://.godot/imported/weapon_vorpal_stiletto.png-d59edb96586152bf6bc7fb6145ce6496.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_stiletto.png-e71602baf3de21789d18b49a11708b17.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4d871f25a76da"
-path="res://.godot/imported/weapon_mystic_cross.png-6005f1e9900e82a1395abfb6203a8764.ctex"
+uid="uid://cce4v1necs11w"
+path="res://.godot/imported/weapon_mystic_cross.png-4641508df5a80ddf61b550e189d249df.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_cross.png"
-dest_files=["res://.godot/imported/weapon_mystic_cross.png-6005f1e9900e82a1395abfb6203a8764.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_cross.png-4641508df5a80ddf61b550e189d249df.ctex"]
 
 [params]
 

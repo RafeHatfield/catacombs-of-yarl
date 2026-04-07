@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://949b33b934783"
-path="res://.godot/imported/shield_iron_heater.png-cedeaf5e694975665d60dde779eced30.ctex"
+uid="uid://dlhsk101cdf7"
+path="res://.godot/imported/shield_iron_heater.png-df8aa2a8bb11274047141169e2386720.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_iron_heater.png"
-dest_files=["res://.godot/imported/shield_iron_heater.png-cedeaf5e694975665d60dde779eced30.ctex"]
+dest_files=["res://.godot/imported/shield_iron_heater.png-df8aa2a8bb11274047141169e2386720.ctex"]
 
 [params]
 

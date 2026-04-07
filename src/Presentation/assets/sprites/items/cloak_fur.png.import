@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1ddacc44cd44c"
-path="res://.godot/imported/cloak_fur.png-6c29ee363e6db9ca7941d9f4f7771566.ctex"
+uid="uid://c5v1r0mlw5vkq"
+path="res://.godot/imported/cloak_fur.png-3f6898dd5245a674168337852b7eebdc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/cloak_fur.png"
-dest_files=["res://.godot/imported/cloak_fur.png-6c29ee363e6db9ca7941d9f4f7771566.ctex"]
+dest_files=["res://.godot/imported/cloak_fur.png-3f6898dd5245a674168337852b7eebdc.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3423917d78474"
-path="res://.godot/imported/necklace_emerald.png-a560adc6723dd1253a85281ddb1a67f1.ctex"
+uid="uid://b2705nrmat0wr"
+path="res://.godot/imported/necklace_emerald.png-ca136d9ddfc2af44df04b75cd1860485.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/necklace_emerald.png"
-dest_files=["res://.godot/imported/necklace_emerald.png-a560adc6723dd1253a85281ddb1a67f1.ctex"]
+dest_files=["res://.godot/imported/necklace_emerald.png-ca136d9ddfc2af44df04b75cd1860485.ctex"]
 
 [params]
 

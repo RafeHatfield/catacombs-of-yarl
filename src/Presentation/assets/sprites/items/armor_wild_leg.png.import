@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://e6071c07e7c6e"
-path="res://.godot/imported/armor_wild_leg.png-0f3e63dcc5130d4fa815c9ae0421c373.ctex"
+uid="uid://bcmdga3xt0hfm"
+path="res://.godot/imported/armor_wild_leg.png-2277692a67244037d5b617f2fc1c0de9.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_wild_leg.png"
-dest_files=["res://.godot/imported/armor_wild_leg.png-0f3e63dcc5130d4fa815c9ae0421c373.ctex"]
+dest_files=["res://.godot/imported/armor_wild_leg.png-2277692a67244037d5b617f2fc1c0de9.ctex"]
 
 [params]
 

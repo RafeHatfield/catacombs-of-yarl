@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3f7b4e1954db0"
-path="res://.godot/imported/necklace_dark.png-752f899e8cb503ebb1f54fba003c85a4.ctex"
+uid="uid://bec7y0mi7o70n"
+path="res://.godot/imported/necklace_dark.png-55c77c10eb6ee659dd2f2ef811fa196e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/necklace_dark.png"
-dest_files=["res://.godot/imported/necklace_dark.png-752f899e8cb503ebb1f54fba003c85a4.ctex"]
+dest_files=["res://.godot/imported/necklace_dark.png-55c77c10eb6ee659dd2f2ef811fa196e.ctex"]
 
 [params]
 

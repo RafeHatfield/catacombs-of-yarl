@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b3489cd026693"
-path="res://.godot/imported/weapon_mystic_falchion.png-0c93284294831776faa6d0dbcc5740c3.ctex"
+uid="uid://b35aacd0267a3"
+path="res://.godot/imported/weapon_mystic_falchion.png-966c46c947d45c05d7e456b3e9b04a3f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_falchion.png"
-dest_files=["res://.godot/imported/weapon_mystic_falchion.png-0c93284294831776faa6d0dbcc5740c3.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_falchion.png-966c46c947d45c05d7e456b3e9b04a3f.ctex"]
 
 [params]
 

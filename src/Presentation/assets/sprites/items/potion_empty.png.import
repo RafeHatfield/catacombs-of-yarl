@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8e12ea311b54e"
-path="res://.godot/imported/potion_empty.png-4a86b1a81a50f43f69bb564a45b02ab9.ctex"
+uid="uid://chr3ntq1io52a"
+path="res://.godot/imported/potion_empty.png-8e0290b9f8afc94f50479e36ebd14439.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/potion_empty.png"
-dest_files=["res://.godot/imported/potion_empty.png-4a86b1a81a50f43f69bb564a45b02ab9.ctex"]
+dest_files=["res://.godot/imported/potion_empty.png-8e0290b9f8afc94f50479e36ebd14439.ctex"]
 
 [params]
 

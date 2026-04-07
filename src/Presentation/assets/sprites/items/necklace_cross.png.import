@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3d2505c6a2646"
-path="res://.godot/imported/necklace_cross.png-d270fd0f77777aab5258497d52fdea85.ctex"
+uid="uid://bb72vqwfcn2tt"
+path="res://.godot/imported/necklace_cross.png-5c2f708f9b82d33321cd865c0da48fd4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/necklace_cross.png"
-dest_files=["res://.godot/imported/necklace_cross.png-d270fd0f77777aab5258497d52fdea85.ctex"]
+dest_files=["res://.godot/imported/necklace_cross.png-5c2f708f9b82d33321cd865c0da48fd4.ctex"]
 
 [params]
 

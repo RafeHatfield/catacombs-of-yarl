@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7b56c5cc6dacf"
-path="res://.godot/imported/weapon_mystic_handaxe.png-30a6b2a1a68e0a32ed4512b0a52cdc22.ctex"
+uid="uid://bev7moycnqaab"
+path="res://.godot/imported/weapon_mystic_handaxe.png-c7745a12e8f66bbd6ba420dba913f2bf.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_handaxe.png"
-dest_files=["res://.godot/imported/weapon_mystic_handaxe.png-30a6b2a1a68e0a32ed4512b0a52cdc22.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_handaxe.png-c7745a12e8f66bbd6ba420dba913f2bf.ctex"]
 
 [params]
 

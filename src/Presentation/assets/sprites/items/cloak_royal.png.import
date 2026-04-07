@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ed7ff7f81b494"
-path="res://.godot/imported/cloak_royal.png-b5f4e210e6347202cba2d47e82ae24de.ctex"
+uid="uid://isjt5i0g4ajd"
+path="res://.godot/imported/cloak_royal.png-ccd7db8c8b656c8b7580d614f94c9286.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/cloak_royal.png"
-dest_files=["res://.godot/imported/cloak_royal.png-b5f4e210e6347202cba2d47e82ae24de.ctex"]
+dest_files=["res://.godot/imported/cloak_royal.png-ccd7db8c8b656c8b7580d614f94c9286.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://9b00e90a15915"
-path="res://.godot/imported/armor_blood_leg.png-78bf2a01058e2289f4b900478dacdabe.ctex"
+uid="uid://deq1otnajkay1"
+path="res://.godot/imported/armor_blood_leg.png-1144502d8c8d4fae0594c7ca92138e9a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_blood_leg.png"
-dest_files=["res://.godot/imported/armor_blood_leg.png-78bf2a01058e2289f4b900478dacdabe.ctex"]
+dest_files=["res://.godot/imported/armor_blood_leg.png-1144502d8c8d4fae0594c7ca92138e9a.ctex"]
 
 [params]
 

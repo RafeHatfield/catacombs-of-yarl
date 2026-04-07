@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4360b1f48db45"
-path="res://.godot/imported/weapon_magic_hammer_sun.png-7c8076ee02e562d74c13aecb4f88187d.ctex"
+uid="uid://c2cv6m0eaw6ts"
+path="res://.godot/imported/weapon_magic_hammer_sun.png-3cfd6142080efc1a119bd9250de83b62.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_magic_hammer_sun.png"
-dest_files=["res://.godot/imported/weapon_magic_hammer_sun.png-7c8076ee02e562d74c13aecb4f88187d.ctex"]
+dest_files=["res://.godot/imported/weapon_magic_hammer_sun.png-3cfd6142080efc1a119bd9250de83b62.ctex"]
 
 [params]
 

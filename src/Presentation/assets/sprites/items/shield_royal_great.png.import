@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://470d1d25169a9"
-path="res://.godot/imported/shield_royal_great.png-c192ebc17f82dd857ab437e84677f4da.ctex"
+uid="uid://c55avyne3r4yw"
+path="res://.godot/imported/shield_royal_great.png-7fc0524ba4ff2242aeff36c94c1afc6a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_royal_great.png"
-dest_files=["res://.godot/imported/shield_royal_great.png-c192ebc17f82dd857ab437e84677f4da.ctex"]
+dest_files=["res://.godot/imported/shield_royal_great.png-7fc0524ba4ff2242aeff36c94c1afc6a.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3b40bf9f73028"
-path="res://.godot/imported/cloak_tattered.png-f6a96e215d3ce2eaa9f1bdb9026a3bae.ctex"
+uid="uid://baav51toaovrv"
+path="res://.godot/imported/cloak_tattered.png-619ca6c144166d34108fea99ec621ac3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/cloak_tattered.png"
-dest_files=["res://.godot/imported/cloak_tattered.png-f6a96e215d3ce2eaa9f1bdb9026a3bae.ctex"]
+dest_files=["res://.godot/imported/cloak_tattered.png-619ca6c144166d34108fea99ec621ac3.ctex"]
 
 [params]
 

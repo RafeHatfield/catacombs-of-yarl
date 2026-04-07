@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bd654d3c260f0"
-path="res://.godot/imported/shield_vorpal_heater.png-4dbc4db7ba61c8c79616ee9c916408fa.ctex"
+path="res://.godot/imported/shield_vorpal_heater.png-040162245deb0800a8ba035c8e69823f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_vorpal_heater.png"
-dest_files=["res://.godot/imported/shield_vorpal_heater.png-4dbc4db7ba61c8c79616ee9c916408fa.ctex"]
+dest_files=["res://.godot/imported/shield_vorpal_heater.png-040162245deb0800a8ba035c8e69823f.ctex"]
 
 [params]
 

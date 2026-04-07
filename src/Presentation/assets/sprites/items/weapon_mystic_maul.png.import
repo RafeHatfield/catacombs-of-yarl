@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4d017bed96782"
-path="res://.godot/imported/weapon_mystic_maul.png-8082239a9325f460b09003896224edc0.ctex"
+uid="uid://cb5x2vxmcr3xp"
+path="res://.godot/imported/weapon_mystic_maul.png-85dff8ceff3199767ff4dff96ee8ab0d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_maul.png"
-dest_files=["res://.godot/imported/weapon_mystic_maul.png-8082239a9325f460b09003896224edc0.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_maul.png-85dff8ceff3199767ff4dff96ee8ab0d.ctex"]
 
 [params]
 

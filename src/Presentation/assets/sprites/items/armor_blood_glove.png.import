@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://eeff3f958c5be"
-path="res://.godot/imported/armor_blood_glove.png-86cb2125c7f08028f3ebf0b65e9673e6.ctex"
+uid="uid://i0kiedwn5ajm"
+path="res://.godot/imported/armor_blood_glove.png-d4735489bc6e5106bd5fd904ea1ff04f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_blood_glove.png"
-dest_files=["res://.godot/imported/armor_blood_glove.png-86cb2125c7f08028f3ebf0b65e9673e6.ctex"]
+dest_files=["res://.godot/imported/armor_blood_glove.png-d4735489bc6e5106bd5fd904ea1ff04f.ctex"]
 
 [params]
 

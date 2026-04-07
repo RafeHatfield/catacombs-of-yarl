@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6968cc85166e4"
-path="res://.godot/imported/heart_green_half.png-0ccc8c07bf3af3b3131c480a69878c9e.ctex"
+uid="uid://bdxalvv5jk6c0"
+path="res://.godot/imported/heart_green_half.png-8fb6d347a8533efe1c9a53d6e69dd793.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/heart_green_half.png"
-dest_files=["res://.godot/imported/heart_green_half.png-0ccc8c07bf3af3b3131c480a69878c9e.ctex"]
+dest_files=["res://.godot/imported/heart_green_half.png-8fb6d347a8533efe1c9a53d6e69dd793.ctex"]
 
 [params]
 

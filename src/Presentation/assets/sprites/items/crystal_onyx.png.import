@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfb57e602f330"
-path="res://.godot/imported/crystal_onyx.png-4a39a6ebefaba382362f8c3de9b8f784.ctex"
+path="res://.godot/imported/crystal_onyx.png-bd24046e25b99d6179d834360eb78627.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/crystal_onyx.png"
-dest_files=["res://.godot/imported/crystal_onyx.png-4a39a6ebefaba382362f8c3de9b8f784.ctex"]
+dest_files=["res://.godot/imported/crystal_onyx.png-bd24046e25b99d6179d834360eb78627.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bd16e97649590"
-path="res://.godot/imported/chest_silver_open.png-85c49814d9d7e7dd70e2603f4601e468.ctex"
+uid="uid://bd16fa765a6a0"
+path="res://.godot/imported/chest_silver_open.png-bdafe8fd3707790090051c0c6fd39323.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/chest_silver_open.png"
-dest_files=["res://.godot/imported/chest_silver_open.png-85c49814d9d7e7dd70e2603f4601e468.ctex"]
+dest_files=["res://.godot/imported/chest_silver_open.png-bdafe8fd3707790090051c0c6fd39323.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://e290d8dc95362"
-path="res://.godot/imported/cloak_ornate.png-771391c49b5c8c79306b53f641f83080.ctex"
+uid="uid://7u4r6f3px8gb"
+path="res://.godot/imported/cloak_ornate.png-c24c8ec6c594f0c56efbee2f32e1d7bd.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/cloak_ornate.png"
-dest_files=["res://.godot/imported/cloak_ornate.png-771391c49b5c8c79306b53f641f83080.ctex"]
+dest_files=["res://.godot/imported/cloak_ornate.png-c24c8ec6c594f0c56efbee2f32e1d7bd.ctex"]
 
 [params]
 

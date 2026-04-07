@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8ca0b0bdf9c7a"
-path="res://.godot/imported/shield_iron_buckler.png-b8ce53284be54a8f0aab9a995328af3b.ctex"
+uid="uid://ce01ljxcwnc45"
+path="res://.godot/imported/shield_iron_buckler.png-f7ba414f229a4150a53cd835f80aa6e2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_iron_buckler.png"
-dest_files=["res://.godot/imported/shield_iron_buckler.png-b8ce53284be54a8f0aab9a995328af3b.ctex"]
+dest_files=["res://.godot/imported/shield_iron_buckler.png-f7ba414f229a4150a53cd835f80aa6e2.ctex"]
 
 [params]
 

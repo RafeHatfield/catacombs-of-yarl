@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d656422a47823"
-path="res://.godot/imported/armor_studded_glove.png-4e3972a6b04a7217813af0e95fa973cb.ctex"
+uid="uid://crcj041k1ecc"
+path="res://.godot/imported/armor_studded_glove.png-184d23265d59981212c3f14cd2a5db79.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_studded_glove.png"
-dest_files=["res://.godot/imported/armor_studded_glove.png-4e3972a6b04a7217813af0e95fa973cb.ctex"]
+dest_files=["res://.godot/imported/armor_studded_glove.png-184d23265d59981212c3f14cd2a5db79.ctex"]
 
 [params]
 

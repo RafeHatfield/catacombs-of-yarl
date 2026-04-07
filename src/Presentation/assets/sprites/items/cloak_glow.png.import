@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fd2e10ef39fd1"
-path="res://.godot/imported/cloak_glow.png-cd2a18c3ea53eaf2a9e7d39be41bcde9.ctex"
+uid="uid://binjgxg6j2jma"
+path="res://.godot/imported/cloak_glow.png-cc873b7de13a57414029b1a15c16cdfc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/cloak_glow.png"
-dest_files=["res://.godot/imported/cloak_glow.png-cd2a18c3ea53eaf2a9e7d39be41bcde9.ctex"]
+dest_files=["res://.godot/imported/cloak_glow.png-cc873b7de13a57414029b1a15c16cdfc.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1295a0c03d32"
-path="res://.godot/imported/armor_mystic_glove.png-e804617f594ce2463cc0d98f353f5ed3.ctex"
+uid="uid://b13a5a0c03d32"
+path="res://.godot/imported/armor_mystic_glove.png-8727e35bfe9479344d793ab4ce1982f5.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_mystic_glove.png"
-dest_files=["res://.godot/imported/armor_mystic_glove.png-e804617f594ce2463cc0d98f353f5ed3.ctex"]
+dest_files=["res://.godot/imported/armor_mystic_glove.png-8727e35bfe9479344d793ab4ce1982f5.ctex"]
 
 [params]
 

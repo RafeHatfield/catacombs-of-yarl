@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bf6ac2ec85d9c"
-path="res://.godot/imported/shield_wood_buckler.png-045fd263ebc391c7dd184eb17c5e32bb.ctex"
+uid="uid://bf6ac2ec85eac"
+path="res://.godot/imported/shield_wood_buckler.png-1e39f15a148370b6ed4b41f4df5dbdea.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_wood_buckler.png"
-dest_files=["res://.godot/imported/shield_wood_buckler.png-045fd263ebc391c7dd184eb17c5e32bb.ctex"]
+dest_files=["res://.godot/imported/shield_wood_buckler.png-1e39f15a148370b6ed4b41f4df5dbdea.ctex"]
 
 [params]
 

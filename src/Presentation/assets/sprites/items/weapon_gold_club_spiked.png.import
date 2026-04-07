@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b9e5ce66a0e0f"
-path="res://.godot/imported/weapon_gold_club_spiked.png-c404aca5ffbc8166d6b2bae767def15e.ctex"
+uid="uid://cae5ce66a0e0f"
+path="res://.godot/imported/weapon_gold_club_spiked.png-c68f0fc4ce7c020cd5300ac73bf27814.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_club_spiked.png"
-dest_files=["res://.godot/imported/weapon_gold_club_spiked.png-c404aca5ffbc8166d6b2bae767def15e.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_club_spiked.png-c68f0fc4ce7c020cd5300ac73bf27814.ctex"]
 
 [params]
 

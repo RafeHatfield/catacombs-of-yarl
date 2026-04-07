@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d502e62992c94"
-path="res://.godot/imported/necklace_eye.png-7afc122892c1514379be8ba104add11a.ctex"
+uid="uid://bl6s451puhjd"
+path="res://.godot/imported/necklace_eye.png-31cdc3b649ff3f8df10d648251028cc9.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/necklace_eye.png"
-dest_files=["res://.godot/imported/necklace_eye.png-7afc122892c1514379be8ba104add11a.ctex"]
+dest_files=["res://.godot/imported/necklace_eye.png-31cdc3b649ff3f8df10d648251028cc9.ctex"]
 
 [params]
 

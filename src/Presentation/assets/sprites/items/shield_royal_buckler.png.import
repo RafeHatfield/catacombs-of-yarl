@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3f2524b946f1f"
-path="res://.godot/imported/shield_royal_buckler.png-acb31a091a3da1df532a1e895de8b039.ctex"
+uid="uid://bd72xpvi6rbp2"
+path="res://.godot/imported/shield_royal_buckler.png-87229466dc97a880f8c5e107b3189f50.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_royal_buckler.png"
-dest_files=["res://.godot/imported/shield_royal_buckler.png-acb31a091a3da1df532a1e895de8b039.ctex"]
+dest_files=["res://.godot/imported/shield_royal_buckler.png-87229466dc97a880f8c5e107b3189f50.ctex"]
 
 [params]
 

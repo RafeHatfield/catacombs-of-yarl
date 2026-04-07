@@ -102,7 +102,8 @@ public sealed partial class GameController : Node
         ItemSpriteManager? itemSprites = null, InventoryPanel? inventoryPanel = null,
         EquipmentPanel? equipmentPanel = null, ToastLog? toastLog = null,
         MonsterFactory? monsterFactory = null, IMapRenderer? renderer = null,
-        Node2D? gameView = null, EntityFactory? portalEntityFactory = null)
+        Node2D? gameView = null, EntityFactory? portalEntityFactory = null,
+        VfxOverlay? vfxOverlay = null)
     {
 #if DEBUG
         System.Diagnostics.Debug.Assert(_animator == null,
@@ -118,7 +119,7 @@ public sealed partial class GameController : Node
         _toastLog = toastLog;
         _renderer = renderer ?? new IsometricRenderer();
         _gameView = gameView;
-        _animator = new TurnAnimator(animationRoot, entitySprites, _renderer);
+        _animator = new TurnAnimator(animationRoot, entitySprites, _renderer, vfxOverlay);
         _animator.AnimationComplete += OnAnimationComplete;
 
         _input.SetState(state);

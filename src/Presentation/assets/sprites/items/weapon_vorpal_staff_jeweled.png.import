@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2732b73b8c4b3"
-path="res://.godot/imported/weapon_vorpal_staff_jeweled.png-160da4048b1d4ac0e5a3d48f05101018.ctex"
+uid="uid://58x6tnkawy0q"
+path="res://.godot/imported/weapon_vorpal_staff_jeweled.png-7c1b7f5a5ad9d64df2a59473d3f9ea2e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_staff_jeweled.png"
-dest_files=["res://.godot/imported/weapon_vorpal_staff_jeweled.png-160da4048b1d4ac0e5a3d48f05101018.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_staff_jeweled.png-7c1b7f5a5ad9d64df2a59473d3f9ea2e.ctex"]
 
 [params]
 

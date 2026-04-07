@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://27560c5010f4d"
-path="res://.godot/imported/weapon_vorpal_club.png-717218551da0ff395d8d03785a847156.ctex"
+uid="uid://6b3uxp83lbs0"
+path="res://.godot/imported/weapon_vorpal_club.png-e665c88bdc450538e38a4ac82ddf93d3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_club.png"
-dest_files=["res://.godot/imported/weapon_vorpal_club.png-717218551da0ff395d8d03785a847156.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_club.png-e665c88bdc450538e38a4ac82ddf93d3.ctex"]
 
 [params]
 

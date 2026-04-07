@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0e8333fc11174"
-path="res://.godot/imported/shield_mystic_heater.png-05ed977b5cf85f0f7135cbab32fa658b.ctex"
+uid="uid://b7svkqvtntsoj"
+path="res://.godot/imported/shield_mystic_heater.png-df12d231b6feae8fdef95972a10df88d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_mystic_heater.png"
-dest_files=["res://.godot/imported/shield_mystic_heater.png-05ed977b5cf85f0f7135cbab32fa658b.ctex"]
+dest_files=["res://.godot/imported/shield_mystic_heater.png-df12d231b6feae8fdef95972a10df88d.ctex"]
 
 [params]
 

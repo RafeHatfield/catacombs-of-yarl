@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c51f553e9a0db"
-path="res://.godot/imported/key_bone.png-d9d450fb4ee9578cc69899ad954d43bb.ctex"
+uid="uid://c51f553faa0db"
+path="res://.godot/imported/key_bone.png-5f76eda3ae3a4aa2da31b0ad91199c8b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/key_bone.png"
-dest_files=["res://.godot/imported/key_bone.png-d9d450fb4ee9578cc69899ad954d43bb.ctex"]
+dest_files=["res://.godot/imported/key_bone.png-5f76eda3ae3a4aa2da31b0ad91199c8b.ctex"]
 
 [params]
 

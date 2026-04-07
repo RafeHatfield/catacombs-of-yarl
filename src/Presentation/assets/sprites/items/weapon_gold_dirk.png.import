@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a7c56e983677c"
-path="res://.godot/imported/weapon_gold_dirk.png-7cf14efc96582de3d27597c0f1bc0203.ctex"
+uid="uid://7c56fa83677c"
+path="res://.godot/imported/weapon_gold_dirk.png-1c6312e08dd4649711c81e612b2f33fb.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_dirk.png"
-dest_files=["res://.godot/imported/weapon_gold_dirk.png-7cf14efc96582de3d27597c0f1bc0203.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_dirk.png-1c6312e08dd4649711c81e612b2f33fb.ctex"]
 
 [params]
 

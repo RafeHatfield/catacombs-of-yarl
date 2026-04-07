@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a94b6661c8987"
-path="res://.godot/imported/shield_ice_heater.png-90529d9e464e59538e98234972bf9aad.ctex"
+uid="uid://ba4b6661daa87"
+path="res://.godot/imported/shield_ice_heater.png-52c1cc5471b76ff025fcf53b998dc278.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_ice_heater.png"
-dest_files=["res://.godot/imported/shield_ice_heater.png-90529d9e464e59538e98234972bf9aad.ctex"]
+dest_files=["res://.godot/imported/shield_ice_heater.png-52c1cc5471b76ff025fcf53b998dc278.ctex"]
 
 [params]
 

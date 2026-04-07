@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4954ffbb0a2d"
-path="res://.godot/imported/weapon_magic_bow_horned.png-9802c727d59540e81306d2d0bc2b50d9.ctex"
+uid="uid://b5a54ffbb0a2d"
+path="res://.godot/imported/weapon_magic_bow_horned.png-bf2557f388e75918294829c957bf487e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_magic_bow_horned.png"
-dest_files=["res://.godot/imported/weapon_magic_bow_horned.png-9802c727d59540e81306d2d0bc2b50d9.ctex"]
+dest_files=["res://.godot/imported/weapon_magic_bow_horned.png-bf2557f388e75918294829c957bf487e.ctex"]
 
 [params]
 

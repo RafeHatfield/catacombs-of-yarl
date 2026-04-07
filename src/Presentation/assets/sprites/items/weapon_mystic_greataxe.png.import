@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6bf3b20fa9e18"
-path="res://.godot/imported/weapon_mystic_greataxe.png-6aef8a0be7018e6b47c03b789feb45f7.ctex"
+uid="uid://d54lmnerney4"
+path="res://.godot/imported/weapon_mystic_greataxe.png-87552e3d843988c8f4cb5af43190b336.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_greataxe.png"
-dest_files=["res://.godot/imported/weapon_mystic_greataxe.png-6aef8a0be7018e6b47c03b789feb45f7.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_greataxe.png-87552e3d843988c8f4cb5af43190b336.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://409041d723e64"
-path="res://.godot/imported/weapon_mystic_sling.png-910bf0ecb71066ed7f48c322e103c85d.ctex"
+uid="uid://cyfw0mxg4oavr"
+path="res://.godot/imported/weapon_mystic_sling.png-fc8251f8734ee6ccfba65538c5a65a88.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_sling.png"
-dest_files=["res://.godot/imported/weapon_mystic_sling.png-910bf0ecb71066ed7f48c322e103c85d.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_sling.png-fc8251f8734ee6ccfba65538c5a65a88.ctex"]
 
 [params]
 

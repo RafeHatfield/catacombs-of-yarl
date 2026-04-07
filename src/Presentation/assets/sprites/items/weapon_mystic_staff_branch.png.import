@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1ce4847f427fd"
-path="res://.godot/imported/weapon_mystic_staff_branch.png-9f5ceae86856d681e7b751aacec5bd8a.ctex"
+uid="uid://c4xwpsowquxur"
+path="res://.godot/imported/weapon_mystic_staff_branch.png-9d39f3b7e7752e082391f95d68423150.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_staff_branch.png"
-dest_files=["res://.godot/imported/weapon_mystic_staff_branch.png-9f5ceae86856d681e7b751aacec5bd8a.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_staff_branch.png-9d39f3b7e7752e082391f95d68423150.ctex"]
 
 [params]
 

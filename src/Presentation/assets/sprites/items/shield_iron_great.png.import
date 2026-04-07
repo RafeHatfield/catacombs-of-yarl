@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fa76fd8bcf045"
-path="res://.godot/imported/shield_iron_great.png-5b6c6a3c6e70a418fc4a3d182244f148.ctex"
+uid="uid://bftbtcb1q75ee"
+path="res://.godot/imported/shield_iron_great.png-a9105ab3128f45e70456abdab894bd4a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_iron_great.png"
-dest_files=["res://.godot/imported/shield_iron_great.png-5b6c6a3c6e70a418fc4a3d182244f148.ctex"]
+dest_files=["res://.godot/imported/shield_iron_great.png-a9105ab3128f45e70456abdab894bd4a.ctex"]
 
 [params]
 

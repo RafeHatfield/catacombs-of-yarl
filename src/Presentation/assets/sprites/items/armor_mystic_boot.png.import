@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://66d63fd7f7815"
-path="res://.godot/imported/armor_mystic_boot.png-911ae08691c95a989ddd967e82a5b6bf.ctex"
+uid="uid://838dx06wl8y1"
+path="res://.godot/imported/armor_mystic_boot.png-a784f6bbeca7a3de13bf75fe1fa5a0ad.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_mystic_boot.png"
-dest_files=["res://.godot/imported/armor_mystic_boot.png-911ae08691c95a989ddd967e82a5b6bf.ctex"]
+dest_files=["res://.godot/imported/armor_mystic_boot.png-a784f6bbeca7a3de13bf75fe1fa5a0ad.ctex"]
 
 [params]
 

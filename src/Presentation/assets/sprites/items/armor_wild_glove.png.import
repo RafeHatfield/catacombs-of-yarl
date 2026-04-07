@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a749535436679"
-path="res://.godot/imported/armor_wild_glove.png-12fd506f57957ce856da78dade25748e.ctex"
+uid="uid://75a53543668a"
+path="res://.godot/imported/armor_wild_glove.png-dab7facadf181dceaa8ab78de805c8a4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_wild_glove.png"
-dest_files=["res://.godot/imported/armor_wild_glove.png-12fd506f57957ce856da78dade25748e.ctex"]
+dest_files=["res://.godot/imported/armor_wild_glove.png-dab7facadf181dceaa8ab78de805c8a4.ctex"]
 
 [params]
 

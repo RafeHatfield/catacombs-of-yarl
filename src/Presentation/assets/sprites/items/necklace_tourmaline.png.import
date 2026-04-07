@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4f49fdd4b15e2"
-path="res://.godot/imported/necklace_tourmaline.png-6e1d9696b3909f5252073396c1bd67d6.ctex"
+uid="uid://cea6axxddm03p"
+path="res://.godot/imported/necklace_tourmaline.png-ba7d485eadfd3693f816de55494efe49.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/necklace_tourmaline.png"
-dest_files=["res://.godot/imported/necklace_tourmaline.png-6e1d9696b3909f5252073396c1bd67d6.ctex"]
+dest_files=["res://.godot/imported/necklace_tourmaline.png-ba7d485eadfd3693f816de55494efe49.ctex"]
 
 [params]
 

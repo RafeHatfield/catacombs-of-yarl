@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6b43541861beb"
-path="res://.godot/imported/weapon_cross.png-3a3853565e6b71f1ac4f26d5ab98663d.ctex"
+uid="uid://eu5goo8ofbb6"
+path="res://.godot/imported/weapon_cross.png-a3dd6e47949c5d8f79b6958fed3ac985.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_cross.png"
-dest_files=["res://.godot/imported/weapon_cross.png-3a3853565e6b71f1ac4f26d5ab98663d.ctex"]
+dest_files=["res://.godot/imported/weapon_cross.png-a3dd6e47949c5d8f79b6958fed3ac985.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a66029f3563c7"
-path="res://.godot/imported/weapon_magic_sword_hellfire.png-93c294eaa4b3dbe55749da6a79f9c47b.ctex"
+uid="uid://6603af3563c7"
+path="res://.godot/imported/weapon_magic_sword_hellfire.png-49675d4c9d50172e4f494eef45629c95.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_magic_sword_hellfire.png"
-dest_files=["res://.godot/imported/weapon_magic_sword_hellfire.png-93c294eaa4b3dbe55749da6a79f9c47b.ctex"]
+dest_files=["res://.godot/imported/weapon_magic_sword_hellfire.png-49675d4c9d50172e4f494eef45629c95.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://537c863cd2df7"
-path="res://.godot/imported/weapon_gold_longbow.png-66b1ced1d15c439c3afb1973d416292a.ctex"
+uid="uid://d2c84snkfm74u"
+path="res://.godot/imported/weapon_gold_longbow.png-b7e27369ecdd7d7022527a28e8e39c9e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_longbow.png"
-dest_files=["res://.godot/imported/weapon_gold_longbow.png-66b1ced1d15c439c3afb1973d416292a.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_longbow.png-b7e27369ecdd7d7022527a28e8e39c9e.ctex"]
 
 [params]
 

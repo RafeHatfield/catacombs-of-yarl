@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3df23a832b521"
-path="res://.godot/imported/weapon_mystic_axe.png-47cf5c5006e653f1d22b8fe1be0a88be.ctex"
+uid="uid://bbkyxvtc3v1ro"
+path="res://.godot/imported/weapon_mystic_axe.png-f926d8afbce09508deea3558a12e2421.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_axe.png"
-dest_files=["res://.godot/imported/weapon_mystic_axe.png-47cf5c5006e653f1d22b8fe1be0a88be.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_axe.png-f926d8afbce09508deea3558a12e2421.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://9bd6c04c6674b"
-path="res://.godot/imported/weapon_gold_sword_exotic2.png-7a603ce157f9db999f16922585b48136.ctex"
+uid="uid://dd37mkrcok716"
+path="res://.godot/imported/weapon_gold_sword_exotic2.png-0256daf74bc24bf1496f29fa4ee3729f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_sword_exotic2.png"
-dest_files=["res://.godot/imported/weapon_gold_sword_exotic2.png-7a603ce157f9db999f16922585b48136.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_sword_exotic2.png-0256daf74bc24bf1496f29fa4ee3729f.ctex"]
 
 [params]
 

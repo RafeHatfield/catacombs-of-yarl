@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5501d833b8c33"
-path="res://.godot/imported/weapon_greataxe.png-629d7662dd4d9c7aeea2c8ae1b1a099a.ctex"
+uid="uid://d35w8uocds7sq"
+path="res://.godot/imported/weapon_greataxe.png-a2728488a3b1848af410c6fe00b6c996.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_greataxe.png"
-dest_files=["res://.godot/imported/weapon_greataxe.png-629d7662dd4d9c7aeea2c8ae1b1a099a.ctex"]
+dest_files=["res://.godot/imported/weapon_greataxe.png-a2728488a3b1848af410c6fe00b6c996.ctex"]
 
 [params]
 

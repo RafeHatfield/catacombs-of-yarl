@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d602d86cda058"
-path="res://.godot/imported/key_silver.png-7db070be4f65062521e9045ef9066ee3.ctex"
+uid="uid://cl6r682r25fh"
+path="res://.godot/imported/key_silver.png-36f2f823ca2606450d397afdf50555dd.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/key_silver.png"
-dest_files=["res://.godot/imported/key_silver.png-7db070be4f65062521e9045ef9066ee3.ctex"]
+dest_files=["res://.godot/imported/key_silver.png-36f2f823ca2606450d397afdf50555dd.ctex"]
 
 [params]
 

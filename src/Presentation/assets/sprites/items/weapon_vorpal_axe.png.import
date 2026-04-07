@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5824027e17e2a"
-path="res://.godot/imported/weapon_vorpal_axe.png-8ae4a8de046c322853b1bfbe291b3d15.ctex"
+uid="uid://cs6bmuejley5"
+path="res://.godot/imported/weapon_vorpal_axe.png-a294146445ae6db571eb393ecc93b58f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_axe.png"
-dest_files=["res://.godot/imported/weapon_vorpal_axe.png-8ae4a8de046c322853b1bfbe291b3d15.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_axe.png-a294146445ae6db571eb393ecc93b58f.ctex"]
 
 [params]
 

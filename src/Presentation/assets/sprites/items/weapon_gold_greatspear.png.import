@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://94e11b5fdea6b"
-path="res://.godot/imported/weapon_gold_greatspear.png-b23cb630102cd14cd4db953941872bef.ctex"
+uid="uid://cp7psu5akfdf"
+path="res://.godot/imported/weapon_gold_greatspear.png-e812b47bcaadd5244201b43fcaa1ceed.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_greatspear.png"
-dest_files=["res://.godot/imported/weapon_gold_greatspear.png-b23cb630102cd14cd4db953941872bef.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_greatspear.png-e812b47bcaadd5244201b43fcaa1ceed.ctex"]
 
 [params]
 

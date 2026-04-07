@@ -160,6 +160,19 @@ public sealed class SpellEvent : TurnEvent
     /// 0 if no status effect was applied, or -1 for permanent effects.
     /// </summary>
     public int StatusDuration { get; init; }
+
+    /// <summary>
+    /// All map tiles affected by the spell (for area/path visual effects).
+    /// Null for single-target or self spells. Used by the Presentation layer
+    /// to drive VFX overlays — pure grid coordinates, no Godot types.
+    /// </summary>
+    public IReadOnlyList<(int X, int Y)>? AffectedTiles { get; init; }
+
+    /// <summary>Position of the spell caster (for travel projectile origin).</summary>
+    public (int X, int Y)? CasterPos { get; init; }
+
+    /// <summary>Target tile position (for travel projectile destination / cone direction).</summary>
+    public (int X, int Y)? TargetPos { get; init; }
 }
 
 /// <summary>

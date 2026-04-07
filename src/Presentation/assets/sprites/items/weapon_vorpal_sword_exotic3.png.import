@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://f9144af3b8c35"
-path="res://.godot/imported/weapon_vorpal_sword_exotic3.png-2a26f79ffeb779276c24c05f6b0bf047.ctex"
+uid="uid://cfnai7itq1hde"
+path="res://.godot/imported/weapon_vorpal_sword_exotic3.png-9904d2b964525b4f45bfdd6fe490d65f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_sword_exotic3.png"
-dest_files=["res://.godot/imported/weapon_vorpal_sword_exotic3.png-2a26f79ffeb779276c24c05f6b0bf047.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_sword_exotic3.png-9904d2b964525b4f45bfdd6fe490d65f.ctex"]
 
 [params]
 

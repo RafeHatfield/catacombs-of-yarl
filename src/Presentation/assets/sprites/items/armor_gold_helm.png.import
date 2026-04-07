@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a74b584585581"
-path="res://.godot/imported/armor_gold_helm.png-3041e373cb203aa18a16475367a3aa51.ctex"
+uid="uid://74b584585581"
+path="res://.godot/imported/armor_gold_helm.png-194b03df30e2bbc03723de5e7b88e27d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_gold_helm.png"
-dest_files=["res://.godot/imported/armor_gold_helm.png-3041e373cb203aa18a16475367a3aa51.ctex"]
+dest_files=["res://.godot/imported/armor_gold_helm.png-194b03df30e2bbc03723de5e7b88e27d.ctex"]
 
 [params]
 

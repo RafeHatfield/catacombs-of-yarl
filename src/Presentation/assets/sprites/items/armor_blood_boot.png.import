@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://e9ecd58e7e69f"
-path="res://.godot/imported/armor_blood_boot.png-728cbf9a1c6184b5639f9e446ef477b5.ctex"
+uid="uid://beygr4b5m7cin"
+path="res://.godot/imported/armor_blood_boot.png-e24995b718c235c1a6314876067a78c9.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_blood_boot.png"
-dest_files=["res://.godot/imported/armor_blood_boot.png-728cbf9a1c6184b5639f9e446ef477b5.ctex"]
+dest_files=["res://.godot/imported/armor_blood_boot.png-e24995b718c235c1a6314876067a78c9.ctex"]
 
 [params]
 

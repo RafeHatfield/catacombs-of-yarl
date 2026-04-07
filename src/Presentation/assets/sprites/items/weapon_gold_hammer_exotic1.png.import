@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5dc2507d3e367"
-path="res://.godot/imported/weapon_gold_hammer_exotic1.png-9f7fc29ea5c31cdbdd3e64e1250c3952.ctex"
+uid="uid://dbhy1mrl4yyvu"
+path="res://.godot/imported/weapon_gold_hammer_exotic1.png-6f5e1e87166a6496fffd3e5537450450.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_hammer_exotic1.png"
-dest_files=["res://.godot/imported/weapon_gold_hammer_exotic1.png-9f7fc29ea5c31cdbdd3e64e1250c3952.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_hammer_exotic1.png-6f5e1e87166a6496fffd3e5537450450.ctex"]
 
 [params]
 

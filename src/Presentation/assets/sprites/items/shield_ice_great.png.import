@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0816901732087"
-path="res://.godot/imported/shield_ice_great.png-7105fa202aaed37a019423452010812e.ctex"
+uid="uid://c2lyqojppurpm"
+path="res://.godot/imported/shield_ice_great.png-6bcface496e5a9d05df748f1f3b83620.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_ice_great.png"
-dest_files=["res://.godot/imported/shield_ice_great.png-7105fa202aaed37a019423452010812e.ctex"]
+dest_files=["res://.godot/imported/shield_ice_great.png-6bcface496e5a9d05df748f1f3b83620.ctex"]
 
 [params]
 

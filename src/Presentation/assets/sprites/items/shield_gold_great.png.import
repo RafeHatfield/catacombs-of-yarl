@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://77d383717a65f"
-path="res://.godot/imported/shield_gold_great.png-42c975607b25d175c88d3fa1e6cf3263.ctex"
+uid="uid://ca35jnu1on63b"
+path="res://.godot/imported/shield_gold_great.png-c2b9c96df9fad08e31903e469b494a42.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_gold_great.png"
-dest_files=["res://.godot/imported/shield_gold_great.png-42c975607b25d175c88d3fa1e6cf3263.ctex"]
+dest_files=["res://.godot/imported/shield_gold_great.png-c2b9c96df9fad08e31903e469b494a42.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://aab3f1af3652a"
-path="res://.godot/imported/shield_elven_kite.png-212cc6362319772c927e7e294db84736.ctex"
+uid="uid://b3f1af3652a"
+path="res://.godot/imported/shield_elven_kite.png-16f1dc10f4f8269aaec27cb2afd7d6a8.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_elven_kite.png"
-dest_files=["res://.godot/imported/shield_elven_kite.png-212cc6362319772c927e7e294db84736.ctex"]
+dest_files=["res://.godot/imported/shield_elven_kite.png-16f1dc10f4f8269aaec27cb2afd7d6a8.ctex"]
 
 [params]
 

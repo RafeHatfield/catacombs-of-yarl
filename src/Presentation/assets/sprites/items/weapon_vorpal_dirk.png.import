@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a079b329ede06"
-path="res://.godot/imported/weapon_vorpal_dirk.png-6c71c77d3604713c14dd5d758931cec3.ctex"
+uid="uid://08ab33aede06"
+path="res://.godot/imported/weapon_vorpal_dirk.png-5418b55637bd71cc3fab5aa78e06d53f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_dirk.png"
-dest_files=["res://.godot/imported/weapon_vorpal_dirk.png-6c71c77d3604713c14dd5d758931cec3.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_dirk.png-5418b55637bd71cc3fab5aa78e06d53f.ctex"]
 
 [params]
 

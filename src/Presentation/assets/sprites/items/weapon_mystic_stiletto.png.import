@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d79b62f7fcbec"
-path="res://.godot/imported/weapon_mystic_stiletto.png-2d170b265ac1994c012e104df2627ad7.ctex"
+uid="uid://dugl0ixt4fmk"
+path="res://.godot/imported/weapon_mystic_stiletto.png-5d53cbd9258fab705c41bcff97a8790c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_stiletto.png"
-dest_files=["res://.godot/imported/weapon_mystic_stiletto.png-2d170b265ac1994c012e104df2627ad7.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_stiletto.png-5d53cbd9258fab705c41bcff97a8790c.ctex"]
 
 [params]
 

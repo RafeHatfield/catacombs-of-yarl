@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://442ea2fff629f"
-path="res://.godot/imported/armor_royal_chest.png-3903eaba25d1288668231f994cb9bcb2.ctex"
+uid="uid://c27a5nynhrxx2"
+path="res://.godot/imported/armor_royal_chest.png-ba1a7081401d0aae6109c8adf9f4b71c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_royal_chest.png"
-dest_files=["res://.godot/imported/armor_royal_chest.png-3903eaba25d1288668231f994cb9bcb2.ctex"]
+dest_files=["res://.godot/imported/armor_royal_chest.png-ba1a7081401d0aae6109c8adf9f4b71c.ctex"]
 
 [params]
 

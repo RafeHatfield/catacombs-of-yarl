@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3d0d96a0da15b"
-path="res://.godot/imported/weapon_lance.png-864df2158a73ffa333d4f30bd4b1802e.ctex"
+uid="uid://bb5a5rt8euwtx"
+path="res://.godot/imported/weapon_lance.png-7ad0fe928ec32d45120e4433cbaa66ab.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_lance.png"
-dest_files=["res://.godot/imported/weapon_lance.png-864df2158a73ffa333d4f30bd4b1802e.ctex"]
+dest_files=["res://.godot/imported/weapon_lance.png-7ad0fe928ec32d45120e4433cbaa66ab.ctex"]
 
 [params]
 

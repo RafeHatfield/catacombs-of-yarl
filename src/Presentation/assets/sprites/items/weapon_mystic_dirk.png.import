@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbcfa89fb7466"
-path="res://.godot/imported/weapon_mystic_dirk.png-5bc986e54d2827473e3fca1f02bc9337.ctex"
+uid="uid://bbcfbaafb7466"
+path="res://.godot/imported/weapon_mystic_dirk.png-6b294b5e9300f6d636001156679e1d71.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_dirk.png"
-dest_files=["res://.godot/imported/weapon_mystic_dirk.png-5bc986e54d2827473e3fca1f02bc9337.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_dirk.png-6b294b5e9300f6d636001156679e1d71.ctex"]
 
 [params]
 

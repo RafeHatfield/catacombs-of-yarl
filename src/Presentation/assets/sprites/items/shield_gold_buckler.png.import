@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6df21ded69824"
-path="res://.godot/imported/shield_gold_buckler.png-67c4636c6d20f59b66433372b028f8b5.ctex"
+uid="uid://f54bv1don800"
+path="res://.godot/imported/shield_gold_buckler.png-0738c3096c8e01bf37e755655b23c7eb.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_gold_buckler.png"
-dest_files=["res://.godot/imported/shield_gold_buckler.png-67c4636c6d20f59b66433372b028f8b5.ctex"]
+dest_files=["res://.godot/imported/shield_gold_buckler.png-0738c3096c8e01bf37e755655b23c7eb.ctex"]
 
 [params]
 

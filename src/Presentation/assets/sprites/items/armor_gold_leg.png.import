@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5ded12e05a91b"
-path="res://.godot/imported/armor_gold_leg.png-c4511ba4738d2300041d7fdf1ccf8264.ctex"
+uid="uid://dbjawnx86u5px"
+path="res://.godot/imported/armor_gold_leg.png-f15fcc311877ecf2230a4eb73a006933.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_gold_leg.png"
-dest_files=["res://.godot/imported/armor_gold_leg.png-c4511ba4738d2300041d7fdf1ccf8264.ctex"]
+dest_files=["res://.godot/imported/armor_gold_leg.png-f15fcc311877ecf2230a4eb73a006933.ctex"]
 
 [params]
 

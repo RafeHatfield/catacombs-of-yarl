@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fba86f6ed91f8"
-path="res://.godot/imported/weapon_gold_crossbow.png-fa5d9bf759a185a8831f07be91141a84.ctex"
+uid="uid://bfveld84s25oh"
+path="res://.godot/imported/weapon_gold_crossbow.png-14a8db0daf0aa3140b922578d211747a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_crossbow.png"
-dest_files=["res://.godot/imported/weapon_gold_crossbow.png-fa5d9bf759a185a8831f07be91141a84.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_crossbow.png-14a8db0daf0aa3140b922578d211747a.ctex"]
 
 [params]
 

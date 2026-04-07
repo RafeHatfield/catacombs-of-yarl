@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1708d77e26152"
-path="res://.godot/imported/shield_flame_heater.png-61af6479901bc918526fd2655a733763.ctex"
+uid="uid://d1k0tvovoysmh"
+path="res://.godot/imported/shield_flame_heater.png-09b66ffc48ae0352dacee5e36fcc52c2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_flame_heater.png"
-dest_files=["res://.godot/imported/shield_flame_heater.png-61af6479901bc918526fd2655a733763.ctex"]
+dest_files=["res://.godot/imported/shield_flame_heater.png-09b66ffc48ae0352dacee5e36fcc52c2.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4f0747cefe76e"
-path="res://.godot/imported/gem_tourmaline.png-c5c0f15af85a161b3e27eba11451b4a2.ctex"
+uid="uid://cd540svmgy3u1"
+path="res://.godot/imported/gem_tourmaline.png-84d5ae9b013234390be773ee2ce1a1c6.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/gem_tourmaline.png"
-dest_files=["res://.godot/imported/gem_tourmaline.png-c5c0f15af85a161b3e27eba11451b4a2.ctex"]
+dest_files=["res://.godot/imported/gem_tourmaline.png-84d5ae9b013234390be773ee2ce1a1c6.ctex"]
 
 [params]
 

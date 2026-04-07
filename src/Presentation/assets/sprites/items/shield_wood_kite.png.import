@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ab0bb63e92002"
-path="res://.godot/imported/shield_wood_kite.png-4270599289c89d6331c6a6ccf7cb2ff3.ctex"
+uid="uid://b0bb63fa2002"
+path="res://.godot/imported/shield_wood_kite.png-d25c3c356bedb7c07046064c00e5ad16.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_wood_kite.png"
-dest_files=["res://.godot/imported/shield_wood_kite.png-4270599289c89d6331c6a6ccf7cb2ff3.ctex"]
+dest_files=["res://.godot/imported/shield_wood_kite.png-d25c3c356bedb7c07046064c00e5ad16.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ed83cc8cbf318"
-path="res://.godot/imported/shield_vorpal_buckler.png-de57c2ef174ba791baea8036b40eee89.ctex"
+uid="uid://it7qbb2p78bh"
+path="res://.godot/imported/shield_vorpal_buckler.png-216fdfa1322846350c73d39a2be3f827.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_vorpal_buckler.png"
-dest_files=["res://.godot/imported/shield_vorpal_buckler.png-de57c2ef174ba791baea8036b40eee89.ctex"]
+dest_files=["res://.godot/imported/shield_vorpal_buckler.png-216fdfa1322846350c73d39a2be3f827.ctex"]
 
 [params]
 

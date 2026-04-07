@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://e189643d629e7"
-path="res://.godot/imported/weapon_vorpal_spear.png-238db67cd687420116af471e9b52964f.ctex"
+uid="uid://6ufl254mveng"
+path="res://.godot/imported/weapon_vorpal_spear.png-f8cd55f0832138c3c9d3f701b8931310.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_spear.png"
-dest_files=["res://.godot/imported/weapon_vorpal_spear.png-238db67cd687420116af471e9b52964f.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_spear.png-f8cd55f0832138c3c9d3f701b8931310.ctex"]
 
 [params]
 

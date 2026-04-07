@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c80519863d556"
-path="res://.godot/imported/shield_flame_kite.png-d50f205d631f9d1209eca994300cf656.ctex"
+uid="uid://c8052a863d556"
+path="res://.godot/imported/shield_flame_kite.png-fce86701bbe2c1b31da5e7a392923527.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_flame_kite.png"
-dest_files=["res://.godot/imported/shield_flame_kite.png-d50f205d631f9d1209eca994300cf656.ctex"]
+dest_files=["res://.godot/imported/shield_flame_kite.png-fce86701bbe2c1b31da5e7a392923527.ctex"]
 
 [params]
 

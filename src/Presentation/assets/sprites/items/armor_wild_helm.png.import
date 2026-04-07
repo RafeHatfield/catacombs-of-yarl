@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://13ef449f5f239"
-path="res://.godot/imported/armor_wild_helm.png-dd54633b4ed6d6f4325524027d42dbad.ctex"
+uid="uid://dvw7lsqwq7tko"
+path="res://.godot/imported/armor_wild_helm.png-7a6c523ac5e3b768d7f58ff1baba2446.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_wild_helm.png"
-dest_files=["res://.godot/imported/armor_wild_helm.png-dd54633b4ed6d6f4325524027d42dbad.ctex"]
+dest_files=["res://.godot/imported/armor_wild_helm.png-7a6c523ac5e3b768d7f58ff1baba2446.ctex"]
 
 [params]
 

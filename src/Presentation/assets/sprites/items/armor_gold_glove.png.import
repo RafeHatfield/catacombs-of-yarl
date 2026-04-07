@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8a40006112c18"
-path="res://.godot/imported/armor_gold_glove.png-e5f926e9ce2ddba51d327dfc3adab3d4.ctex"
+uid="uid://cdu2bkt1jgcy4"
+path="res://.godot/imported/armor_gold_glove.png-44d03e8c5f2d8d7d529ab08e61799668.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_gold_glove.png"
-dest_files=["res://.godot/imported/armor_gold_glove.png-e5f926e9ce2ddba51d327dfc3adab3d4.ctex"]
+dest_files=["res://.godot/imported/armor_gold_glove.png-44d03e8c5f2d8d7d529ab08e61799668.ctex"]
 
 [params]
 

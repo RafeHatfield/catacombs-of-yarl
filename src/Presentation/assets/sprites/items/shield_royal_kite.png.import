@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://18f5f394d5e56"
-path="res://.godot/imported/shield_royal_kite.png-9776a8f7a8c42bb09140267b8d78ce2d.ctex"
+uid="uid://d1ywvrrlyw5ml"
+path="res://.godot/imported/shield_royal_kite.png-e44d1740f898fb58be4fa4597890994d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_royal_kite.png"
-dest_files=["res://.godot/imported/shield_royal_kite.png-9776a8f7a8c42bb09140267b8d78ce2d.ctex"]
+dest_files=["res://.godot/imported/shield_royal_kite.png-e44d1740f898fb58be4fa4597890994d.ctex"]
 
 [params]
 

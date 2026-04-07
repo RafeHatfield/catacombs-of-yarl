@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://be445af024c48"
-path="res://.godot/imported/weapon_gold_sling.png-52a8e9899a5007488ff0bfe2fc068a70.ctex"
+path="res://.godot/imported/weapon_gold_sling.png-0a7eba734dea6919840ecf848c1e77b0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_gold_sling.png"
-dest_files=["res://.godot/imported/weapon_gold_sling.png-52a8e9899a5007488ff0bfe2fc068a70.ctex"]
+dest_files=["res://.godot/imported/weapon_gold_sling.png-0a7eba734dea6919840ecf848c1e77b0.ctex"]
 
 [params]
 

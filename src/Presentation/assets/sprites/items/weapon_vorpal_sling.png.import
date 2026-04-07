@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://36d4bfb48d480"
-path="res://.godot/imported/weapon_vorpal_sling.png-3677b1050c6aabc971463bc6553cbf93.ctex"
+uid="uid://b4i050veax0xn"
+path="res://.godot/imported/weapon_vorpal_sling.png-819714e7e179b8366f9ad1593d923b9e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_vorpal_sling.png"
-dest_files=["res://.godot/imported/weapon_vorpal_sling.png-3677b1050c6aabc971463bc6553cbf93.ctex"]
+dest_files=["res://.godot/imported/weapon_vorpal_sling.png-819714e7e179b8366f9ad1593d923b9e.ctex"]
 
 [params]
 

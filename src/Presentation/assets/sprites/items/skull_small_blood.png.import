@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d9ed3b99e79d6"
-path="res://.godot/imported/skull_small_blood.png-22f4001d1a29862928641a52c707de8e.ctex"
+uid="uid://eyiiad0t1emf"
+path="res://.godot/imported/skull_small_blood.png-6f501b04d8b28bf43119ea9b90d97a7f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/skull_small_blood.png"
-dest_files=["res://.godot/imported/skull_small_blood.png-22f4001d1a29862928641a52c707de8e.ctex"]
+dest_files=["res://.godot/imported/skull_small_blood.png-6f501b04d8b28bf43119ea9b90d97a7f.ctex"]
 
 [params]
 

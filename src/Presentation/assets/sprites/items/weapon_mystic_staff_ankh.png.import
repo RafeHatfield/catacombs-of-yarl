@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3897e94f010d3"
-path="res://.godot/imported/weapon_mystic_staff_ankh.png-881127e3da4f3b077dbd26842fab0b29.ctex"
+uid="uid://b7f4avon2mu2q"
+path="res://.godot/imported/weapon_mystic_staff_ankh.png-892dff952922e78eac6e20ccc88fe635.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_mystic_staff_ankh.png"
-dest_files=["res://.godot/imported/weapon_mystic_staff_ankh.png-881127e3da4f3b077dbd26842fab0b29.ctex"]
+dest_files=["res://.godot/imported/weapon_mystic_staff_ankh.png-892dff952922e78eac6e20ccc88fe635.ctex"]
 
 [params]
 

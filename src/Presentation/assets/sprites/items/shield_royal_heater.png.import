@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://446b7124f2af6"
-path="res://.godot/imported/shield_royal_heater.png-f262b9d22eb2c4d5bbf5ad320f61b63a.ctex"
+uid="uid://c3b73nndhm44t"
+path="res://.godot/imported/shield_royal_heater.png-462d138f9488f3d898564ddbdd2c0664.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_royal_heater.png"
-dest_files=["res://.godot/imported/shield_royal_heater.png-f262b9d22eb2c4d5bbf5ad320f61b63a.ctex"]
+dest_files=["res://.godot/imported/shield_royal_heater.png-462d138f9488f3d898564ddbdd2c0664.ctex"]
 
 [params]
 

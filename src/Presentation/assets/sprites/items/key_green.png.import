@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7de2d9ba9df73"
-path="res://.godot/imported/key_green.png-d5e60ac688dc756ffb4ea488a99ce4b5.ctex"
+uid="uid://bf43nsxaqqf5y"
+path="res://.godot/imported/key_green.png-c146f7a4f23a64cb06abbb3ebfa9967b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/key_green.png"
-dest_files=["res://.godot/imported/key_green.png-d5e60ac688dc756ffb4ea488a99ce4b5.ctex"]
+dest_files=["res://.godot/imported/key_green.png-c146f7a4f23a64cb06abbb3ebfa9967b.ctex"]
 
 [params]
 

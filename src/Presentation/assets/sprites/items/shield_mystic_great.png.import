@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4c4e3a7813cfe"
-path="res://.godot/imported/shield_mystic_great.png-9ae05d3e536288699d809e21004c62e2.ctex"
+uid="uid://cbabxvsh3n631"
+path="res://.godot/imported/shield_mystic_great.png-ebe892cdb1f69a627f002ceb0acd77a9.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/shield_mystic_great.png"
-dest_files=["res://.godot/imported/shield_mystic_great.png-9ae05d3e536288699d809e21004c62e2.ctex"]
+dest_files=["res://.godot/imported/shield_mystic_great.png-ebe892cdb1f69a627f002ceb0acd77a9.ctex"]
 
 [params]
 

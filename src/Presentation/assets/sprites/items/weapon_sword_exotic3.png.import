@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3c3cb9d8cc962"
-path="res://.godot/imported/weapon_sword_exotic3.png-337e7b18fb9248fb4b93b5b2e1b32e19.ctex"
+uid="uid://ba776uxhdw5vp"
+path="res://.godot/imported/weapon_sword_exotic3.png-49ef75f2859223c9817c705a5c9cde61.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/weapon_sword_exotic3.png"
-dest_files=["res://.godot/imported/weapon_sword_exotic3.png-337e7b18fb9248fb4b93b5b2e1b32e19.ctex"]
+dest_files=["res://.godot/imported/weapon_sword_exotic3.png-49ef75f2859223c9817c705a5c9cde61.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db97003c432a1"
-path="res://.godot/imported/armor_cloth_boot.png-c3beef2dc6caa1b0e2f63f1aa9f61307.ctex"
+uid="uid://dca7003c432a1"
+path="res://.godot/imported/armor_cloth_boot.png-69676c312fdcccc51143a792b5a972cd.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/items/armor_cloth_boot.png"
-dest_files=["res://.godot/imported/armor_cloth_boot.png-c3beef2dc6caa1b0e2f63f1aa9f61307.ctex"]
+dest_files=["res://.godot/imported/armor_cloth_boot.png-69676c312fdcccc51143a792b5a972cd.ctex"]
 
 [params]
 
