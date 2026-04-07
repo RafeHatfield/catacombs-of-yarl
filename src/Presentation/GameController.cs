@@ -139,10 +139,14 @@ public sealed partial class GameController : Node
         AddChild(_inspectPanel);
 
         // Action sheet — shown on long-press of inventory/equipment slots.
-        // Created here; Main adds it to the scene tree via Initialize's return value
-        // OR it can be added as a child of GameController itself (it covers the viewport).
+        // Must live in UILayer (CanvasLayer) to render on top of all UI elements.
+        // GameController is a plain Node, so its children render behind CanvasLayer UI.
         _actionSheet = new ActionSheet();
-        AddChild(_actionSheet);
+        var uiLayer = GetTree()?.CurrentScene?.GetNode<CanvasLayer>("UILayer");
+        if (uiLayer != null)
+            uiLayer.AddChild(_actionSheet);
+        else
+            AddChild(_actionSheet); // fallback (editor/test context)
         _actionSheet.ActionSelected += OnActionSheetSelected;
 
         // Wire inventory long-press

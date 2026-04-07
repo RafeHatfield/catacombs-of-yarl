@@ -49,7 +49,7 @@ public sealed partial class EquipmentPanel : Control
 
     // ── Long-press detection constants ────────────────────────────────────────
     private const float LongPressThreshold = 0.4f;
-    private const float DragCancelDistance = 8f;
+    private const float DragCancelDistance = 24f;
 
     // Long-press state — tracks the pressed slot or pack item
     // Slot long-press uses SlotId = (int)slot; pack item uses SlotId = -1 and ItemId = id

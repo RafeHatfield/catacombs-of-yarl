@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using Godot;
@@ -47,9 +48,13 @@ public sealed partial class InventoryPanel : Control
     /// </summary>
     public IReadOnlyList<(int ItemId, Rect2 LocalRect)> SlotRects => _slotRects;
 
+    // Cached per-refresh — used by BuildIcon for identification-aware sprite lookup.
+    private IdentificationRegistry? _registry;
+    private AppearancePool? _pool;
+
     // ── Long-press detection constants ────────────────────────────────────────
     private const float LongPressThreshold = 0.4f; // seconds
-    private const float DragCancelDistance = 8f;   // pixels — cancel if moved more than this
+    private const float DragCancelDistance = 24f;  // pixels — cancel if moved more than this (24px tolerates mobile touch jitter)
 
     // ── Long-press state ──────────────────────────────────────────────────────
     private int   _pressedItemId    = -1;
@@ -184,6 +189,8 @@ public sealed partial class InventoryPanel : Control
 
     public void Refresh(GameState state)
     {
+        _registry = state.IdentificationRegistry;
+        _pool     = state.AppearancePool;
         var inventory = state.PlayerInventory;
 
         // Quick-bar shows consumables, scrolls, and wands — equippables live in the equipment panel.
@@ -394,9 +401,9 @@ public sealed partial class InventoryPanel : Control
 
     private Control BuildIcon(Entity item, bool isEquipped)
     {
-        // Primary: ItemTag.TypeId (set by ItemFactory for all YAML-created items)
-        var tag = item.Get<ItemTag>();
-        var spriteKey = tag?.TypeId ?? item.Name.ToLowerInvariant().Replace(' ', '_');
+        // Use ItemDisplay.GetSpriteKey so unidentified potions/scrolls/wands show their
+        // mystery sprite (e.g. black bottle "36") rather than the true type ID.
+        var spriteKey = ItemDisplay.GetSpriteKey(item, _registry, _pool);
         var spritePath = SpriteMappingInstance?.GetItemSpritePath(spriteKey);
 
         if (spritePath != null)
