@@ -133,7 +133,7 @@ items:
   # Armor — head / feet
   leather_helmet: "275"  # gray helmet
   leather_boots: "287"   # teal boots
-  shield: "270"  # tentative — verify in sprite_browser_16bf_items.html
+  shield: "221"  # round shield (221-234 are all shield variants)
 
   # Wands (50-54: colored gem wands)
   wand_of_fireball: "52"          # red-gem wand
