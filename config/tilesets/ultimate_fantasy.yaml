@@ -109,7 +109,7 @@ items:
   # Armor — head and feet slots
   leather_helmet: "armor_leather_helm"
   leather_boots: "armor_leather_boot"
-  shield: "armor_gold_chest"  # no dedicated shield sprite in pack; gold chest is the closest distinct defensive item
+  shield: "shield_iron_heater"  # iron heater shield; full set shield_iron/gold/royal/mystic/vorpal/elven × buckler/heater/kite/great
 
   # Wands — mapped to staff sprites by element
   wand_of_fireball: "weapon_magic_staff_chaos"
