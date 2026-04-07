@@ -792,6 +792,16 @@ public sealed partial class GameController : Node
             }
             else if (evt is HealEvent)
                 inventoryChanged = true;
+            else if (evt is ThrowEvent throwEvt)
+            {
+                inventoryChanged = true;
+                // Weapons/junk land on the ground — spawn a floor sprite at the landing tile.
+                if (throwEvt.ItemLandsOnGround)
+                {
+                    var landed = _state!.FloorItems.FirstOrDefault(i => i.Id == throwEvt.ItemId);
+                    if (landed != null) _itemSprites?.CreateSprite(landed);
+                }
+            }
             else if (evt is EquipEvent or UnequipEvent)
                 { inventoryChanged = true; equipmentChanged = true; }
             else if (evt is DescendEvent desc)
