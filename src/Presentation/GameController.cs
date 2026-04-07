@@ -777,11 +777,14 @@ public sealed partial class GameController : Node
         // Single pass over events — avoids 5 separate LINQ allocations per turn.
         bool inventoryChanged = false;
         bool equipmentChanged = false;
+        bool identificationChanged = false;
         _pendingDescend = null;
         foreach (var evt in result.Events)
         {
             if (evt is DeathEvent dead)
                 _entitySprites?.RemoveEntity(dead.ActorId);
+            else if (evt is IdentificationEvent)
+                { inventoryChanged = true; identificationChanged = true; }
             else if (evt is PickUpEvent pick)
                 { _itemSprites?.RemoveItem(pick.ItemId); inventoryChanged = true; }
             else if (evt is DropEvent drop)
@@ -833,6 +836,8 @@ public sealed partial class GameController : Node
             }
         }
 
+        if (identificationChanged)
+            _itemSprites?.RefreshIdentifiedSprites(_state!);
         if (inventoryChanged)
             _inventoryPanel?.Refresh(_state!);
         if (equipmentChanged && _equipmentPanel?.Visible == true)

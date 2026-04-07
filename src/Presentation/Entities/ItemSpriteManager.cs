@@ -74,6 +74,29 @@ public sealed class ItemSpriteManager
             sprite.SafeFree();
     }
 
+    /// <summary>
+    /// Re-resolve textures for all floor item sprites after an identification event.
+    /// When a potion/scroll/wand type is identified, its mystery sprite should flip to the
+    /// true sprite on all floor items of that type.
+    /// </summary>
+    public void RefreshIdentifiedSprites(GameState state)
+    {
+        _lastState = state;
+        foreach (var item in state.FloorItems)
+        {
+            if (!_sprites.TryGetValue(item.Id, out var sprite)) continue;
+
+            var newPath = ResolveItemSpritePath(item, state);
+            if (newPath == null) continue;
+
+            var newTexture = GD.Load<Texture2D>(newPath);
+            if (newTexture == null || newTexture == sprite.Texture) continue;
+
+            sprite.Texture  = newTexture;
+            sprite.Modulate = Colors.White; // clear any fallback tint
+        }
+    }
+
     public void CreateSprite(Entity item)
     {
         string? itemPath = ResolveItemSpritePath(item);
