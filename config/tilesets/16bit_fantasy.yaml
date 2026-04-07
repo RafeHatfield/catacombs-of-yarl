@@ -83,6 +83,22 @@ items:
   confusion_potion: "5"  # yellow bottle
   speed_potion: "6"      # teal bottle
 
+  # New potion types (added with identification system)
+  potion_of_speed: "6"        # teal bottle
+  potion_of_protection: "1"   # blue bottle
+  potion_of_regeneration: "4" # green bottle
+  potion_of_invisibility: "2" # clear/light bottle
+  potion_of_heroism: "3"      # red bottle
+  potion_of_weakness: "5"     # yellow bottle
+  potion_of_slowness: "8"     # dark bottle
+  potion_of_blindness: "8"    # dark bottle
+  potion_of_paralysis: "7"    # dark bottle
+  tar_potion: "8"             # dark bottle
+  fire_potion: "3"            # red bottle
+  root_potion: "4"            # green bottle
+  sunburst_potion: "5"        # yellow bottle
+  antidote_potion: "4"        # green bottle
+
   # Weapons (155-222: diagonal weapon sprites)
   dagger: "202"              # red dagger
   poisoned_dagger: "201"     # red dagger variant

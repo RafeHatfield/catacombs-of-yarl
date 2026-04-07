@@ -52,6 +52,22 @@ items:
   confusion_potion: "potion_black"
   speed_potion: "potion_white"
 
+  # New potion types (added with identification system)
+  potion_of_speed: "potion_white"
+  potion_of_protection: "potion_blue"
+  potion_of_regeneration: "potion_green"
+  potion_of_invisibility: "potion_white"
+  potion_of_heroism: "potion_red"
+  potion_of_weakness: "potion_black"
+  potion_of_slowness: "potion_black"
+  potion_of_blindness: "potion_black"
+  potion_of_paralysis: "potion_black"
+  tar_potion: "potion_black"
+  fire_potion: "potion_red"
+  root_potion: "potion_green"
+  sunburst_potion: "potion_white"
+  antidote_potion: "potion_green"
+
   # Mystery sprites — used for unidentified items; must match AppearancePool constants
   unknown_potion_a: "potion_black"
   unknown_potion_b: "potion_black"
