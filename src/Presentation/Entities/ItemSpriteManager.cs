@@ -1,10 +1,9 @@
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Presentation.Map;
 using Godot;
-
-using CatacombsOfYarl.Presentation;
 
 namespace CatacombsOfYarl.Presentation.Entities;
 

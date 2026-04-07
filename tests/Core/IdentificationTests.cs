@@ -4,6 +4,7 @@ using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using NUnit.Framework;
 
+
 namespace CatacombsOfYarl.Tests.Core;
 
 /// <summary>
@@ -735,5 +736,152 @@ public class IdentificationTests
         Assert.That(freshRegistry.HasDecision("healing_potion"), Is.False,
             "Fresh registry should have no decisions");
         Assert.That(freshRegistry.IdentifiedCount, Is.EqualTo(0));
+    }
+
+    // ─── ItemDisplay.GetSpriteKey ────────────────────────────────────────────────
+    // These tests cover the "green square" regression: InventoryPanel must call
+    // GetSpriteKey (not tag.TypeId directly) so unidentified potions show the
+    // mystery bottle sprite rather than the unresolved type key.
+
+    private static Entity MakePotionEntity(string typeId = "healing_potion")
+    {
+        var e = new Entity(1, "Healing Potion");
+        e.Add(new ItemTag(typeId));
+        e.Add(new Consumable(healAmount: 40) { IsPotion = true });
+        e.Add(new IdentifiableItem { IdentifiedName = "Healing Potion", UnidentifiedName = "Fizzy Potion" });
+        return e;
+    }
+
+    private static Entity MakeScrollEntity(string typeId = "scroll_of_fire")
+    {
+        var e = new Entity(2, "Scroll of Fire");
+        e.Add(new ItemTag(typeId));
+        e.Add(new Consumable(healAmount: 0));
+        e.Add(new SpellEffect { SpellId = "fire", Targeting = TargetingMode.AutoClosest });
+        e.Add(new IdentifiableItem { IdentifiedName = "Scroll of Fire" });
+        return e;
+    }
+
+    private static Entity MakeWandEntity(string typeId = "wand_of_lightning")
+    {
+        var e = new Entity(3, "Wand of Lightning");
+        e.Add(new ItemTag(typeId));
+        e.Add(new WandComponent { Charges = 3, MaxCharges = 6, RechargeScrollId = "lightning" });
+        e.Add(new SpellEffect { SpellId = "lightning", Targeting = TargetingMode.AutoClosest });
+        e.Add(new IdentifiableItem { IdentifiedName = "Wand of Lightning" });
+        return e;
+    }
+
+    private static Entity MakeWeaponEntity()
+    {
+        var e = new Entity(4, "Iron Sword");
+        e.Add(new ItemTag("iron_sword"));
+        e.Add(new Equippable(EquipmentSlot.MainHand) { DamageMin = 3, DamageMax = 8 });
+        // No IdentifiableItem — weapons are always identified
+        return e;
+    }
+
+    [Test]
+    public void GetSpriteKey_UnidentifiedPotion_ReturnsMysterySprite_NotTypeId()
+    {
+        // This is the exact bug that produced green squares: GetSpriteKey must return
+        // the mystery bottle key (e.g. "36") for an unidentified potion, not "healing_potion".
+        var items = new List<(string, ItemCategory)> { ("healing_potion", ItemCategory.Potion) };
+        var pool  = new AppearancePool(items, seed: 42);
+        var reg   = new IdentificationRegistry();
+        reg.MarkUnidentified("healing_potion");
+
+        var potion = MakePotionEntity();
+        var key    = ItemDisplay.GetSpriteKey(potion, reg, pool);
+
+        Assert.That(key, Is.Not.EqualTo("healing_potion"),
+            "Unidentified potion must not return its TypeId as the sprite key");
+        Assert.That(new[] { "36", "37", "38" }, Does.Contain(key),
+            "Unidentified potion sprite key must be one of the mystery bottle sprites (36/37/38)");
+    }
+
+    [Test]
+    public void GetSpriteKey_IdentifiedPotion_ReturnsTypeId()
+    {
+        var items = new List<(string, ItemCategory)> { ("healing_potion", ItemCategory.Potion) };
+        var pool  = new AppearancePool(items, seed: 42);
+        var reg   = new IdentificationRegistry();
+        reg.Identify("healing_potion");
+
+        var potion = MakePotionEntity();
+        var key    = ItemDisplay.GetSpriteKey(potion, reg, pool);
+
+        Assert.That(key, Is.EqualTo("healing_potion"),
+            "Identified potion must return its TypeId so the tileset can look up the true sprite");
+    }
+
+    [Test]
+    public void GetSpriteKey_NullRegistry_ReturnsTypeId()
+    {
+        // Null registry = scenario/harness mode = always show true sprite
+        var potion = MakePotionEntity();
+        var key    = ItemDisplay.GetSpriteKey(potion, registry: null, pool: null);
+
+        Assert.That(key, Is.EqualTo("healing_potion"));
+    }
+
+    [Test]
+    public void GetSpriteKey_UnidentifiedScroll_ReturnsScrollMysterySprite()
+    {
+        var items = new List<(string, ItemCategory)> { ("scroll_of_fire", ItemCategory.Scroll) };
+        var pool  = new AppearancePool(items, seed: 42);
+        var reg   = new IdentificationRegistry();
+        reg.MarkUnidentified("scroll_of_fire");
+
+        var scroll = MakeScrollEntity();
+        var key    = ItemDisplay.GetSpriteKey(scroll, reg, pool);
+
+        Assert.That(key, Is.EqualTo(AppearancePool.ScrollMysterySprite),
+            "Unidentified scroll must return the shared scroll mystery sprite key");
+    }
+
+    [Test]
+    public void GetSpriteKey_UnidentifiedWand_ReturnsWandMysterySprite()
+    {
+        var items = new List<(string, ItemCategory)> { ("wand_of_lightning", ItemCategory.Wand) };
+        var pool  = new AppearancePool(items, seed: 42);
+        var reg   = new IdentificationRegistry();
+        reg.MarkUnidentified("wand_of_lightning");
+
+        var wand = MakeWandEntity();
+        var key  = ItemDisplay.GetSpriteKey(wand, reg, pool);
+
+        Assert.That(key, Is.EqualTo(AppearancePool.WandMysterySprite),
+            "Unidentified wand must return the shared wand mystery sprite key");
+    }
+
+    [Test]
+    public void GetSpriteKey_Weapon_AlwaysReturnsTypeId()
+    {
+        // Weapons have no IdentifiableItem — always show true sprite regardless of registry.
+        var reg    = new IdentificationRegistry();
+        var weapon = MakeWeaponEntity();
+        var key    = ItemDisplay.GetSpriteKey(weapon, reg, pool: null);
+
+        Assert.That(key, Is.EqualTo("iron_sword"),
+            "Weapons have no IdentifiableItem and must always return their TypeId");
+    }
+
+    [Test]
+    public void GetSpriteKey_PotionBecomesIdentified_SpriteFlipsToTypeId()
+    {
+        // When a type goes from unidentified → identified mid-run, the sprite must update.
+        var items = new List<(string, ItemCategory)> { ("healing_potion", ItemCategory.Potion) };
+        var pool  = new AppearancePool(items, seed: 42);
+        var reg   = new IdentificationRegistry();
+        reg.MarkUnidentified("healing_potion");
+
+        var potion     = MakePotionEntity();
+        var keyBefore  = ItemDisplay.GetSpriteKey(potion, reg, pool);
+        reg.Identify("healing_potion");
+        var keyAfter   = ItemDisplay.GetSpriteKey(potion, reg, pool);
+
+        Assert.That(keyBefore, Is.Not.EqualTo("healing_potion"), "Before: mystery sprite");
+        Assert.That(keyAfter,  Is.EqualTo("healing_potion"),     "After: true sprite");
     }
 }

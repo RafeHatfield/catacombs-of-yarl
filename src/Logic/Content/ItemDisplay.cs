@@ -1,7 +1,6 @@
-using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
 
-namespace CatacombsOfYarl.Presentation;
+namespace CatacombsOfYarl.Logic.Content;
 
 /// <summary>
 /// Presentation-layer helpers for displaying item names and sprites correctly based on
@@ -11,8 +10,7 @@ namespace CatacombsOfYarl.Presentation;
 /// The logic is simple: check the registry, pick the correct string from IdentifiableItem
 /// or the AppearancePool, and return it. No game rules live here — just display decisions.
 ///
-/// These live in the Presentation namespace because sprite key resolution may eventually
-/// need Godot types. Currently no Godot dependency exists here — Logic types only.
+/// Lives in Logic.Content (not Presentation) so it can be tested without Godot.
 /// </summary>
 public static class ItemDisplay
 {
@@ -92,7 +90,6 @@ public static class ItemDisplay
             // These are returned by GetMysterySprite for those categories via the constants.
             // If the pool doesn't have a mystery sprite (scroll or wand), fall back to the
             // category-level constants based on what we know about the item.
-            // We can detect scroll vs wand from their components.
             if (item.Has<Logic.Combat.WandComponent>())
                 return AppearancePool.WandMysterySprite;
 

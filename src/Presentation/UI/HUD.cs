@@ -1,7 +1,7 @@
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
-using CatacombsOfYarl.Presentation;
 using Godot;
 
 namespace CatacombsOfYarl.Presentation.UI;
