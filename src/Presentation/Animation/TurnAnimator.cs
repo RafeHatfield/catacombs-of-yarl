@@ -186,25 +186,96 @@ public sealed class TurnAnimator
 
         _tweenHasSteps = true;
 
-        // Travel phase: projectile from caster to target.
-        if (spell.CasterPos.HasValue && spell.TargetPos.HasValue)
+        switch (config.Shape)
         {
-            _vfxOverlay.AppendTravelEffect(tween, spell.CasterPos.Value, spell.TargetPos.Value,
-                config.Color, config.Glyph, 0.05f * _speedMultiplier);
+            case VfxShape.Area:
+                AnimateAreaSpell(tween, spell, config);
+                break;
+            case VfxShape.Path:
+                AnimatePathSpell(tween, spell, config);
+                break;
+            case VfxShape.Cone:
+                AnimateDragonFart(tween, spell, config);
+                break;
+        }
+    }
+
+    private void AnimateAreaSpell(Tween tween, SpellEvent spell, SpellVfxConfig config)
+    {
+        // Travel phase: directional sprite from caster to target (e.g. fireball in flight).
+        if (config.DirectionalSprites != null
+            && spell.CasterPos.HasValue && spell.TargetPos.HasValue)
+        {
+            _vfxOverlay!.AppendTravelEffect(tween, spell.CasterPos.Value, spell.TargetPos.Value,
+                config.DirectionalSprites, 0.05f * _speedMultiplier);
+        }
+        else if (spell.CasterPos.HasValue && spell.TargetPos.HasValue)
+        {
+            // Glyph fallback for area spells without directional sprites.
+            _vfxOverlay!.AppendTravelEffect(tween, spell.CasterPos.Value, spell.TargetPos.Value,
+                config.AreaColor, config.GlyphFallback, 0.05f * _speedMultiplier);
         }
 
-        // Area / path phase.
+        // Impact / area phase.
         if (spell.AffectedTiles?.Count > 0)
         {
-            if (config.Shape == VfxShape.Path)
+            // Burst center: prefer explicit TargetPos, fall back to first affected tile.
+            var burstCenter = spell.TargetPos ?? spell.AffectedTiles[0];
+
+            if (config.DirectionalSprites != null)
             {
-                float perTile = config.Duration * _speedMultiplier / spell.AffectedTiles.Count;
-                _vfxOverlay.AppendPathEffect(tween, spell.AffectedTiles, config.Color, perTile);
+                // Directional burst (fireball) spreads outward from impact point.
+                _vfxOverlay!.AppendDirectionalBurst(tween, burstCenter,
+                    config.DirectionalSprites, 0.15f * _speedMultiplier);
+                // Color flash behind the burst sprites — parallel so both start together.
+                tween.Parallel();
+                _vfxOverlay!.AppendAreaEffect(tween, spell.AffectedTiles, config.AreaColor,
+                    0.2f * _speedMultiplier);
             }
             else
             {
-                _vfxOverlay.AppendAreaEffect(tween, spell.AffectedTiles, config.Color,
+                // No directional sprites — plain area color flash.
+                _vfxOverlay!.AppendAreaEffect(tween, spell.AffectedTiles, config.AreaColor,
                     config.Duration * _speedMultiplier);
+            }
+        }
+    }
+
+    private void AnimateDragonFart(Tween tween, SpellEvent spell, SpellVfxConfig config)
+    {
+        if (!spell.CasterPos.HasValue || spell.AffectedTiles == null || spell.AffectedTiles.Count == 0)
+        {
+            _vfxOverlay!.AppendAreaEffect(tween, spell.AffectedTiles ?? [],
+                config.AreaColor, config.Duration * _speedMultiplier);
+            return;
+        }
+
+        // Directional area: sprite per tile based on direction from caster.
+        _vfxOverlay!.AppendDirectionalAreaEffect(tween, spell.CasterPos.Value,
+            spell.AffectedTiles, config.DirectionalSprites!, config.Duration * _speedMultiplier);
+
+        // Subtle tint behind the directional sprites.
+        tween.Parallel();
+        _vfxOverlay!.AppendAreaEffect(tween, spell.AffectedTiles, config.AreaColor,
+            config.Duration * _speedMultiplier * 0.5f);
+    }
+
+    private void AnimatePathSpell(Tween tween, SpellEvent spell, SpellVfxConfig config)
+    {
+        if (spell.AffectedTiles?.Count > 0)
+        {
+            float perTile = config.Duration * _speedMultiplier / spell.AffectedTiles.Count;
+
+            if (config.CycleSprites != null)
+            {
+                _vfxOverlay!.AppendPathEffect(tween, spell.AffectedTiles,
+                    config.CycleSprites, config.ImpactSprite, perTile);
+            }
+            else
+            {
+                // Glyph fallback for path spells without cycle sprites.
+                _vfxOverlay!.AppendPathEffect(tween, spell.AffectedTiles,
+                    config.AreaColor, perTile);
             }
         }
     }
@@ -224,16 +295,74 @@ public sealed class TurnAnimator
     // VFX configuration — maps SpellId to visual parameters
     // ──────────────────────────────────────────────────────────────────────────
 
-    private enum VfxShape { Area, Path }
+    private enum VfxShape
+    {
+        /// <summary>Parallel area flash. DirectionalSprites → burst from TargetPos.</summary>
+        Area,
+        /// <summary>Sequential path chain. CycleSprites → per-tile sprites.</summary>
+        Path,
+        /// <summary>Directional cone from caster. DirectionalSprites → per-tile by direction.</summary>
+        Cone,
+    }
 
-    private sealed record SpellVfxConfig(string Glyph, Color Color, float Duration, VfxShape Shape);
+    /// <summary>
+    /// All visual parameters for a single spell effect.
+    ///
+    /// DirectionalSprites: 8-element octant array [E,SE,S,SW,W,NW,N,NE], or null.
+    /// CycleSprites: sequential sprites for path effects (each tile cycles through them), or null.
+    /// ImpactSprite: shown on the final path tile at impact scale, or null.
+    /// AreaColor: ColorRect flash color used as background tint or glyph fallback color.
+    /// GlyphFallback: ASCII character used when sprites are unavailable.
+    /// Duration: base duration before SpeedMultiplier is applied.
+    /// Shape: Area = burst, Path = sequential chain, Cone = directional area from caster.
+    /// </summary>
+    private sealed record SpellVfxConfig(
+        string[]? DirectionalSprites,
+        string[]? CycleSprites,
+        string? ImpactSprite,
+        Color AreaColor,
+        string GlyphFallback,
+        float Duration,
+        VfxShape Shape);
+
+    // Helper: build a res:// path for a single FX sprite.
+    private static string FxPath(int n) =>
+        $"res://src/Presentation/assets/sprites/fx/uf_FX_{n:D2}.png";
+
+    // Helper: build an array of res:// paths for FX sprites from a list of numbers.
+    private static string[] FxPaths(params int[] nums) =>
+        Array.ConvertAll(nums, FxPath);
 
     private static SpellVfxConfig? GetSpellVfxConfig(string spellId) => spellId switch
     {
-        "fireball"                    => new("*", new Color(1f, 0.5f, 0f), 0.25f, VfxShape.Area),
-        "lightning" or "lightning_bolt" => new("~", new Color(1f, 1f, 0.3f), 0.15f, VfxShape.Path),
-        "dragon_fart"                 => new("%", new Color(0.4f, 0.85f, 0.3f), 0.25f, VfxShape.Area),
-        _                             => null,
+        "fireball" => new SpellVfxConfig(
+            DirectionalSprites: FxPaths(81, 85, 84, 86, 83, 87, 82, 88),
+            CycleSprites: null,
+            ImpactSprite: null, // burst reuses the directional sprites
+            AreaColor: new Color(1f, 0.5f, 0f),
+            GlyphFallback: "*",
+            Duration: 0.25f,
+            Shape: VfxShape.Area),
+
+        "lightning" or "lightning_bolt" => new SpellVfxConfig(
+            DirectionalSprites: null,
+            CycleSprites: FxPaths(61, 62, 63, 64),
+            ImpactSprite: FxPath(59),
+            AreaColor: new Color(1f, 1f, 0.3f),
+            GlyphFallback: "~",
+            Duration: 0.15f,
+            Shape: VfxShape.Path),
+
+        "dragon_fart" => new SpellVfxConfig(
+            DirectionalSprites: FxPaths(122, 126, 125, 127, 124, 128, 123, 129),
+            CycleSprites: null,
+            ImpactSprite: null,
+            AreaColor: new Color(0.4f, 0.85f, 0.3f),
+            GlyphFallback: "%",
+            Duration: 0.25f,
+            Shape: VfxShape.Cone),
+
+        _ => null,
     };
 
     private static (string Glyph, Color Color) GetStatusGlyph(string effectName) => effectName switch
