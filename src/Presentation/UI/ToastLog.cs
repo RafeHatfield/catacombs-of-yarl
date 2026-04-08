@@ -23,6 +23,8 @@ public sealed partial class ToastLog : Control
     private const float FadeDuration    = 0.8f;  // seconds to fade to zero
     private const int   MaxToasts       = 5;
     private const int   FontSize        = 24;
+    private const int   HistorySize     = 20;   // messages to keep for recall
+    private const float RecallDuration  = 5.0f; // seconds recall messages stay visible
 
     private int _playerId;
     private VBoxContainer? _stack;
@@ -33,6 +35,9 @@ public sealed partial class ToastLog : Control
     // Timer-based cleanup: avoids Callable.From() leak in Godot 4 C#.
     // Each toast records its creation time; _Process culls expired toasts.
     private readonly List<(RichTextLabel Label, double ExpireTime, double FadeEndTime)> _activeToasts = new();
+
+    // Circular message history for recall. Plain strings (no nodes).
+    private readonly List<string> _history = new();
 
     public override void _Ready()
     {
@@ -71,6 +76,24 @@ public sealed partial class ToastLog : Control
     /// <summary>Show an arbitrary message as a toast (e.g. auto-explore stop reason).</summary>
     public void AddMessage(string text) => SpawnToast(text);
 
+    /// <summary>
+    /// Re-display the last N messages from history so the player can review what happened.
+    /// Called by the HUD recall button. Messages use a longer display duration.
+    /// </summary>
+    public void RecallHistory()
+    {
+        if (_history.Count == 0) return;
+        // Clear current toasts first so recalled messages have space.
+        foreach (var (label, _, _) in _activeToasts)
+            label.SafeFree();
+        _activeToasts.Clear();
+
+        // Show last min(MaxToasts, history) messages, oldest first so newest ends up on top.
+        int start = Math.Max(0, _history.Count - MaxToasts);
+        for (int i = start; i < _history.Count; i++)
+            SpawnToast(_history[i], RecallDuration);
+    }
+
     /// <summary>Add messages from a completed turn's events.</summary>
     public void RecordTurn(TurnResult result, GameState state)
     {
@@ -97,22 +120,33 @@ public sealed partial class ToastLog : Control
 
         _stack = new VBoxContainer
         {
-            // Align stacked messages toward the bottom of our area.
+            // Align stacked messages toward the bottom-left of our area.
+            // Fixed width cap so messages don't span the full screen and word-wrap works.
             Alignment           = BoxContainer.AlignmentMode.End,
             SizeFlagsHorizontal = SizeFlags.ShrinkBegin,
+            CustomMinimumSize   = new Vector2(320, 0),
             MouseFilter         = MouseFilterEnum.Ignore,
         };
         _stack.AddThemeConstantOverride("separation", 2);
-        _stack.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+        // Anchor to bottom-left so messages sit above the HUD bar.
+        _stack.SetAnchorsAndOffsetsPreset(LayoutPreset.BottomLeft);
+        _stack.SetOffset(Side.Bottom, -120); // above HUD
+        _stack.SetOffset(Side.Left,   8);
+        _stack.SetOffset(Side.Right,  328);
+        _stack.SetOffset(Side.Top,    -500); // tall enough for 5 wrapped messages
         AddChild(_stack);
     }
 
-    private void SpawnToast(string bbcode)
+    private void SpawnToast(string bbcode, float displayDuration = DisplayDuration)
     {
         if (_stack == null) return;
 
+        // Record in history (strip bbcode tags for plain text history).
+        _history.Add(bbcode);
+        if (_history.Count > HistorySize)
+            _history.RemoveAt(0);
+
         // Enforce max visible toasts — remove oldest if over limit.
-        // Also remove from tracking list so _Process doesn't try to fade a freed node.
         while (_stack.GetChildCount() >= MaxToasts)
         {
             var oldest = _stack.GetChild(0);
@@ -124,10 +158,12 @@ public sealed partial class ToastLog : Control
         {
             BbcodeEnabled       = true,
             FitContent          = true,
-            AutowrapMode        = TextServer.AutowrapMode.Off,
+            // Word-wrap within the available width so long messages don't run off-screen.
+            AutowrapMode        = TextServer.AutowrapMode.Word,
             ScrollActive        = false,
             MouseFilter         = MouseFilterEnum.Ignore,
-            SizeFlagsHorizontal = SizeFlags.ShrinkBegin,
+            // Fill width so wrapping has room to work; stack container constrains the max width.
+            SizeFlagsHorizontal = SizeFlags.ExpandFill,
         };
         if (_monoFont != null) label.AddThemeFontOverride("normal_font", _monoFont);
         label.AddThemeFontSizeOverride("normal_font_size", FontSize);
@@ -150,10 +186,8 @@ public sealed partial class ToastLog : Control
 
         _stack.AddChild(label);
 
-        // Track for timer-based fade + removal in _Process.
-        // Avoids Callable.From() which leaks delegate GCHandles in Godot 4 C#.
         double now = Time.GetTicksMsec() / 1000.0;
-        _activeToasts.Add((label, now + DisplayDuration, now + DisplayDuration + FadeDuration));
+        _activeToasts.Add((label, now + displayDuration, now + displayDuration + FadeDuration));
     }
 
     // -------------------------------------------------------------------------

@@ -26,6 +26,7 @@ public sealed partial class HUD : Control
 
     private TouchButton? _exploreButton;
     private TouchButton? _gearButton;
+    private TouchButton? _msgButton;
     private GameState? _state;
 
     // Track the last monster the player attacked. We show this monster's HP bar until
@@ -38,6 +39,9 @@ public sealed partial class HUD : Control
 
     /// <summary>Fired when the player taps the Gear (equipment) button.</summary>
     public event Action? GearRequested;
+
+    /// <summary>Fired when the player taps the message recall button.</summary>
+    public event Action? MessageRecallRequested;
 
     public override void _Ready()
     {
@@ -222,6 +226,16 @@ public sealed partial class HUD : Control
         };
         _exploreButton.Pressed += () => ExploreRequested?.Invoke();
         topRow.AddChild(_exploreButton);
+
+        _msgButton = new TouchButton
+        {
+            Text            = "Msg",
+            FontSize        = 22,
+            BackgroundColor = new Color(0.15f, 0.20f, 0.35f, 0.9f),
+            CustomMinimumSize = new Vector2(60, 0),
+        };
+        _msgButton.Pressed += () => MessageRecallRequested?.Invoke();
+        topRow.AddChild(_msgButton);
 
         // Player HP bar
         _hpBar = new ProgressBar { ShowPercentage = false };

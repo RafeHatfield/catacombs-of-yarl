@@ -529,8 +529,9 @@ public partial class Main : Node
         // Wire HUD buttons to GameController / EquipmentPanel.
         if (_hud != null)
         {
-            _hud.ExploreRequested += () => _gameController?.StartAutoExplore();
-            _hud.GearRequested    += OnGearRequested;
+            _hud.ExploreRequested        += () => _gameController?.StartAutoExplore();
+            _hud.GearRequested           += OnGearRequested;
+            _hud.MessageRecallRequested  += () => _toastLog?.RecallHistory();
         }
 
         // Debug overlay — update references each floor so it reflects the new state.

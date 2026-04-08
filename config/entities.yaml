@@ -1342,7 +1342,7 @@ scrolls:
     name: "Scroll of Dragon Fart"
     description: "A noxious cloud of poison gas erupts. Any creature in range falls into a stupor."
     spell_id: "dragon_fart"
-    targeting: "single_target"
+    targeting: "location"
     range: 8
     duration: 3
     char: "~"
@@ -1571,13 +1571,11 @@ wands:
     char: "/"
     color: [150, 220, 255]
 
-  # Stub: cone targeting deferred. Same behavior as dragon_fart scroll (single-target silence/sleep).
-  # When cone targeting lands (plan_monster_specials / plan_status_effects), update spell_id and targeting.
   wand_of_dragon_farts:
     name: "Wand of Dragon Farts"
-    description: "Releases a noxious cloud of poison gas. Cone targeting TODO."
+    description: "Releases a noxious cloud of poison gas in a cone toward the target location."
     spell_id: "dragon_fart"
-    targeting: "single_target"
+    targeting: "location"
     duration: 3
     is_wand: true
     min_charges: 2
