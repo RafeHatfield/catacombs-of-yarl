@@ -135,6 +135,7 @@ Five specialized agents in `.claude/agents/`:
 | `tester` | sonnet | Writes tests, runs harness | Tasks marked complete |
 | `reviewer` | opus | Code review, balance check | Features ready for review |
 | `analyst` | opus | Interprets harness data, diagnoses balance issues, recommends tuning | After harness runs complete |
+| `documenter` | sonnet | Updates plan status, INDEX.md, session memory, architecture docs | After builder/tester complete |
 
 Agents coordinate via task files in `tasks/`. See each agent file for detailed instructions.
 
