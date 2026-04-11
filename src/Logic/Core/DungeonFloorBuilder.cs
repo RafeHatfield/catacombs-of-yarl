@@ -2,6 +2,7 @@ using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
+using BoonTable = System.Collections.Generic.IReadOnlyDictionary<int, CatacombsOfYarl.Logic.Balance.BoonDefinition>;
 using FloorItemPool = System.Collections.Generic.IReadOnlyList<CatacombsOfYarl.Logic.Content.FloorItemPoolEntry>;
 using IdentifiableItemDef = (string id, CatacombsOfYarl.Logic.Content.ItemCategory category);
 
@@ -40,6 +41,7 @@ public sealed class DungeonFloorBuilder
     private readonly ConsumableFactory _consumableFactory;
     private readonly FloorItemPool _floorItemPool;
     private readonly SpellItemFactory? _spellItemFactory;
+    private readonly BoonTable? _boonTable;
 
     /// <summary>
     /// All identifiable item definitions (potions, scrolls, wands, rings) for this run.
@@ -54,7 +56,8 @@ public sealed class DungeonFloorBuilder
         ItemFactory itemFactory,
         ConsumableFactory consumableFactory,
         FloorItemPool? floorItemPool = null,
-        SpellItemFactory? spellItemFactory = null)
+        SpellItemFactory? spellItemFactory = null,
+        BoonTable? boonTable = null)
     {
         _templates = templates;
         _monsterFactory = monsterFactory;
@@ -62,6 +65,7 @@ public sealed class DungeonFloorBuilder
         _consumableFactory = consumableFactory;
         _floorItemPool = floorItemPool ?? [];
         _spellItemFactory = spellItemFactory;
+        _boonTable = boonTable;
 
         // Collect identifiable item types for AppearancePool construction.
         // Potions come from ConsumableFactory; scrolls/wands come from SpellItemFactory.
@@ -111,7 +115,8 @@ public sealed class DungeonFloorBuilder
     public GameState Build(int depth, SeededRandom rng, Entity? existingPlayer = null,
         IdentificationRegistry? identificationRegistry = null,
         AppearancePool? appearancePool = null,
-        Difficulty difficulty = Difficulty.Medium)
+        Difficulty difficulty = Difficulty.Medium,
+        BoonTracker? boonTracker = null)
     {
         // Resolve per-depth override (null = use defaults for everything)
         var levelOverride = _templates.GetLevelOverride(depth);
@@ -168,6 +173,11 @@ public sealed class DungeonFloorBuilder
             // But RingMaxHpBonus, SpeedBonusTracker.RingRatio, and FreeActionTag are NOT
             // in Fighter's constructor and are NOT copied — ReapplyRingEffects restores them.
             TurnController.ReapplyRingEffects(player);
+
+            // Re-apply boon max HP bonus — same pattern as RingMaxHpBonus above.
+            // The new Fighter from PlayerCarryForward copies BoonMaxHpBonus, but
+            // that's baked into the carry-forward path. Depth boon for THIS floor
+            // is applied below after state construction.
         }
         else
         {
@@ -277,6 +287,9 @@ public sealed class DungeonFloorBuilder
         // Place stair down
         var stairDown = EntityPlacer.PlaceStairDown(generatedMap, targetDepth: depth + 1, ids);
 
+        // BoonTracker: carry forward from previous floor, or create fresh for new run
+        var finalBoonTracker = boonTracker ?? new BoonTracker();
+
         var state = new GameState(player, allMonsters, generatedMap.Map, rng, turnLimit: 10_000)
         {
             IsDungeonMode = true,
@@ -285,7 +298,15 @@ public sealed class DungeonFloorBuilder
             IdentificationRegistry = finalRegistry,
             AppearancePool = finalPool,
             Difficulty = difficulty,
+            BoonTracker = finalBoonTracker,
+            BoonTable = _boonTable,
         };
+
+        // Apply depth boon for this floor (first visit only).
+        // Must happen after state construction so the boon table is available,
+        // and after PlayerCarryForward + ReapplyRingEffects so Fighter is ready.
+        if (_boonTable != null)
+            BoonSystem.ApplyDepthBoonIfEligible(player, depth, finalBoonTracker, _boonTable);
 
         // Register floor items into state
         foreach (var item in allFloorItems)

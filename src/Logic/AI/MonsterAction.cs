@@ -9,7 +9,7 @@ namespace CatacombsOfYarl.Logic.AI;
 /// </summary>
 public sealed class MonsterAction
 {
-    public enum ActionKind { Wait, Attack, MoveTo, SeekItem, PickUp, UseItem, RaiseDead }
+    public enum ActionKind { Wait, Attack, MoveTo, SeekItem, PickUp, UseItem, RaiseDead, SoulBolt, Channel }
 
     public ActionKind Kind { get; }
 
@@ -20,12 +20,16 @@ public sealed class MonsterAction
     public int TargetX { get; }
     public int TargetY { get; }
 
-    private MonsterAction(ActionKind kind, Entity? target = null, int x = 0, int y = 0)
+    /// <summary>Ability name for Channel actions (e.g. "Soul Bolt").</summary>
+    public string? AbilityName { get; }
+
+    private MonsterAction(ActionKind kind, Entity? target = null, int x = 0, int y = 0, string? abilityName = null)
     {
         Kind = kind;
         Target = target;
         TargetX = x;
         TargetY = y;
+        AbilityName = abilityName;
     }
 
     public static MonsterAction Wait() => new(ActionKind.Wait);
@@ -40,4 +44,10 @@ public sealed class MonsterAction
 
     /// <summary>Raise a corpse entity in-place. Target is the corpse entity to raise.</summary>
     public static MonsterAction RaiseDead(Entity corpse) => new(ActionKind.RaiseDead, target: corpse);
+
+    /// <summary>Fire Soul Bolt at a target (resolve phase of 2-turn telegraph).</summary>
+    public static MonsterAction SoulBolt(Entity target) => new(ActionKind.SoulBolt, target: target);
+
+    /// <summary>Channel an ability (charge phase — no damage this turn).</summary>
+    public static MonsterAction Channel(string abilityName) => new(ActionKind.Channel, abilityName: abilityName);
 }

@@ -469,6 +469,166 @@ monsters:
     split_max_children: 3
     split_weights: [40, 60]
 
+  # ── Wave 4: Deep Dungeon (depths 12+) ─────────────────────────────────────
+
+  plague_zombie:
+    extends: zombie
+    name: "Plague Zombie"
+    stats:
+      hp: 30
+      damage_min: 4
+      damage_max: 7
+      xp: 45
+    char: "Z"
+    color: [100, 180, 80]
+    tags: ["corporeal_flesh", "undead", "mindless", "low_undead", "plague_carrier", "zombie"]
+    on_hit_effect: "plague"
+    on_hit_effect_duration: 20
+    etp_base: 40
+    min_depth: 13
+    depth_weights:
+      - weight: 10
+        min_depth: 13
+      - weight: 20
+        min_depth: 16
+      - weight: 35
+        min_depth: 19
+
+  troll_ancient:
+    extends: troll
+    name: "Ancient Troll"
+    stats:
+      hp: 50
+      power: 3
+      defense: 3
+      xp: 200
+    char: "A"
+    color: [0, 200, 0]
+    inventory_size: 12
+    seek_distance: 10
+    speed_bonus: 0.15
+    regeneration_amount: 3
+    etp_base: 95
+    min_depth: 15
+    depth_weights:
+      - weight: 5
+        min_depth: 15
+      - weight: 10
+        min_depth: 18
+      - weight: 20
+        min_depth: 21
+
+  greater_slime:
+    extends: large_slime
+    name: "Greater Slime"
+    stats:
+      hp: 80
+      defense: 2
+      xp: 150
+      damage_min: 3
+      damage_max: 7
+      strength: 14
+      dexterity: 6
+      constitution: 16
+    char: "S"
+    color: [0, 150, 0]
+    corrosion_chance: 0.15
+    split_trigger_hp_pct: 0.35
+    split_child_type: "large_slime"
+    split_min_children: 2
+    split_max_children: 2
+    split_weights: [100]
+    etp_base: 75
+    min_depth: 12
+    depth_weights:
+      - weight: 5
+        min_depth: 12
+      - weight: 10
+        min_depth: 15
+      - weight: 20
+        min_depth: 18
+
+  wraith:
+    name: "Wraith"
+    stats:
+      hp: 20
+      power: 3
+      defense: 4
+      xp: 100
+      damage_min: 5
+      damage_max: 9
+      strength: 10
+      dexterity: 18
+      constitution: 10
+      accuracy: 3
+      evasion: 4
+    char: "W"
+    color: [180, 180, 220]
+    ai_type: "basic"
+    faction: "undead"
+    blocks: true
+    tags: ["incorporeal", "undead", "high_undead", "no_flesh"]
+    can_seek_items: false
+    inventory_size: 0
+    speed_bonus: 2.0
+    life_drain_pct: 0.50
+    leaves_corpse: false
+    status_immunities: ["confusion", "slow", "fear"]
+    etp_base: 65
+    min_depth: 15
+    depth_weights:
+      - weight: 5
+        min_depth: 15
+      - weight: 15
+        min_depth: 18
+      - weight: 25
+        min_depth: 21
+
+  lich:
+    name: "Lich"
+    stats:
+      hp: 60
+      power: 2
+      defense: 2
+      xp: 150
+      damage_min: 3
+      damage_max: 6
+      strength: 10
+      dexterity: 14
+      constitution: 14
+      accuracy: 5
+      evasion: 3
+    char: "L"
+    color: [140, 80, 180]
+    ai_type: "lich"
+    faction: "undead"
+    blocks: true
+    tags: ["undead", "high_undead", "caster", "no_flesh"]
+    can_seek_items: false
+    inventory_size: 0
+    leaves_corpse: false
+    status_immunities: ["confusion", "slow", "fear", "poison", "bleed"]
+    soul_bolt_range: 7
+    soul_bolt_damage_pct: 0.18
+    soul_bolt_cooldown_turns: 8
+    command_the_dead_radius: 6
+    death_siphon_radius: 6
+    raise_dead_range: 5
+    raise_dead_cooldown_turns: 4
+    danger_radius_from_player: 2
+    preferred_distance_min: 4
+    preferred_distance_max: 7
+    summon_monster_id: "zombie"
+    etp_base: 131
+    min_depth: 18
+    depth_weights:
+      - weight: 3
+        min_depth: 18
+      - weight: 8
+        min_depth: 21
+      - weight: 15
+        min_depth: 24
+
 weapons:
   dagger:
     name: "Dagger"

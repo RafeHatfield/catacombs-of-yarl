@@ -138,6 +138,26 @@ public sealed class MonsterFactory
                     PreferredDistanceMax = def.PreferredDistanceMax,
                 });
                 break;
+            case "lich":
+                // Lich gets both necromancer behavior AND lich-specific abilities
+                entity.Add(new NecromancerAiComponent
+                {
+                    RaiseRange           = def.RaiseDeadRange,
+                    RaiseCooldown        = def.RaiseDeadCooldownTurns,
+                    DangerRadius         = def.DangerRadiusFromPlayer,
+                    PreferredDistanceMin = def.PreferredDistanceMin,
+                    PreferredDistanceMax = def.PreferredDistanceMax,
+                });
+                entity.Add(new LichAiComponent
+                {
+                    SoulBoltRange        = def.SoulBoltRange,
+                    SoulBoltDamagePct    = def.SoulBoltDamagePct,
+                    SoulBoltCooldownTurns = def.SoulBoltCooldownTurns,
+                    CommandTheDeadRadius = def.CommandTheDeadRadius,
+                    DeathSiphonRadius    = def.DeathSiphonRadius,
+                    SummonMonsterId      = def.SummonMonsterId ?? "zombie",
+                });
+                break;
         }
 
         // Regeneration: attach HOT with a very long duration so it persists through any fight.
@@ -180,6 +200,14 @@ public sealed class MonsterFactory
         // Corrosion: attach component for acid-bearing monsters
         if (def.CorrosionChance > 0)
             entity.Add(new CorrosionComponent(def.CorrosionChance));
+
+        // Life drain: wraith heals on melee hit
+        if (def.LifeDrainPct > 0)
+            entity.Add(new LifeDrainComponent(def.LifeDrainPct));
+
+        // Status immunities: wraith/lich immune to confusion/slow/fear/etc.
+        if (def.StatusImmunities is { Count: > 0 })
+            entity.Add(new StatusImmunityComponent(def.StatusImmunities));
 
         return entity;
     }

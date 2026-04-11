@@ -1,19 +1,19 @@
 # Overnight Build Phase: 5 Systems
 
 ## Current State
-- Status: planning (ready for builder)
-- Last updated: 2026-04-10
-- Next step: builder executes Phase 1 (depth boons) first
+- Status: ✅ ALL PHASES COMPLETE
+- Last updated: 2026-04-11
+- 1040 tests total (1039 pass, 1 skip), 0 failures
 
 ## Status Summary
 
 | Phase | System | Status |
 |-------|--------|--------|
-| 1 | Depth Boons (Player Progression) | not started |
-| 2 | Wave 4 Monsters (wraith, lich, troll_ancient, greater_slime, plague_zombie) | not started |
-| 3 | Life Drain + Soul Bolt Systems (wraith/lich abilities) | not started |
-| 4 | Lich AI | not started |
-| 5 | Identity Scenario Tests (wave 4 monsters) | not started |
+| 1 | Depth Boons (Player Progression) | ✅ complete (16 tests) |
+| 2 | Wave 4 Monsters (wraith, lich, troll_ancient, greater_slime, plague_zombie) | ✅ complete (5 YAML defs, 8 MonsterDef fields) |
+| 3 | Life Drain + Soul Bolt + Command the Dead + Death Siphon | ✅ complete (14 tests) |
+| 4 | Lich AI | ✅ complete (built with Phase 3) |
+| 5 | Identity Scenario Tests (wave 4 monsters) | ✅ complete (22 tests) |
 
 ## IMPORTANT: Pre-build Correction
 

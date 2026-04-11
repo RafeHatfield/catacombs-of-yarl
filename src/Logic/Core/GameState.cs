@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
@@ -84,6 +85,22 @@ public sealed class GameState
     /// Created fresh per floor — hazards do not persist across descent.
     /// </summary>
     public GroundHazardManager GroundHazards { get; } = new();
+
+    // ── Depth boon system ────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Per-run boon tracker. Tracks visited depths and applied boons.
+    /// Survives floor transitions — passed from old state to new via DungeonFloorBuilder.
+    /// Null in scenario mode (harness runs without boons unless explicitly enabled).
+    /// </summary>
+    public BoonTracker? BoonTracker { get; init; }
+
+    /// <summary>
+    /// Depth → BoonDefinition mapping loaded from config/depth_boons.yaml.
+    /// Static content for the run — set once by DungeonFloorBuilder constructor.
+    /// Null when boons are not loaded (scenario mode).
+    /// </summary>
+    public IReadOnlyDictionary<int, BoonDefinition>? BoonTable { get; init; }
 
     public GameState(Entity player, List<Entity> monsters, GameMap map, SeededRandom rng, int turnLimit = 100)
     {

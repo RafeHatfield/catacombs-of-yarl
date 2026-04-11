@@ -18,6 +18,25 @@ namespace CatacombsOfYarl.Logic.Combat.StatusEffects;
 /// </summary>
 public static class StatusEffectProcessor
 {
+    // Maps C# effect types to YAML immunity key strings.
+    // StatusImmunityComponent stores YAML keys ("confusion", "slow", etc.)
+    // and this dictionary bridges the generic type to the key for lookup.
+    private static readonly Dictionary<Type, string> EffectImmunityKeys = new()
+    {
+        [typeof(DisorientationEffect)] = "confusion",
+        [typeof(SlowedEffect)] = "slow",
+        [typeof(FearEffect)] = "fear",
+        [typeof(PoisonEffect)] = "poison",
+        [typeof(PlagueEffect)] = "plague",
+        [typeof(BurningEffect)] = "burning",
+        [typeof(ImmobilizedEffect)] = "immobilized",
+        [typeof(SleepEffect)] = "sleep",
+        [typeof(BlindedEffect)] = "blinded",
+        [typeof(SilencedEffect)] = "silenced",
+        [typeof(WeaknessEffect)] = "weakness",
+        // "bleed" maps to no current effect — will be added when BleedEffect is created
+    };
+
     // ─────────────────────────────────────────────────────────────────────────
     // Apply
     // ─────────────────────────────────────────────────────────────────────────
@@ -27,13 +46,21 @@ public static class StatusEffectProcessor
     /// If the entity already has this effect, refreshes duration to the maximum of
     /// the current remaining turns and the requested duration (no downgrade).
     /// If the entity does not have this effect, creates and attaches a new instance.
-    /// Returns the (possibly existing) effect component, or null if blocked by FreeActionTag.
+    /// Returns the (possibly existing) effect component, or null if blocked by immunity or FreeActionTag.
+    ///
+    /// StatusImmunityComponent: entities with this component are immune to specific effects
+    /// (e.g. wraith immune to confusion/slow/fear). Checked before FreeActionTag.
     ///
     /// FreeActionTag: entities with this tag are immune to SlowedEffect and ImmobilizedEffect.
     /// Other effects (poison, burning, sleep, etc.) are not blocked.
     /// </summary>
     public static T? ApplyEffect<T>(Entity entity, int duration) where T : class, IStatusEffect, new()
     {
+        // Status immunity check: wraith, lich, etc. have defined immunities from YAML.
+        var immunities = entity.Get<StatusImmunityComponent>();
+        if (immunities != null && EffectImmunityKeys.TryGetValue(typeof(T), out var key) && immunities.IsImmuneTo(key))
+            return null;
+
         // FreeAction blocks slow and paralysis application entirely.
         // The tag check is on the concrete type to keep this O(1) and avoid a type string comparison.
         if (entity.Has<FreeActionTag>())

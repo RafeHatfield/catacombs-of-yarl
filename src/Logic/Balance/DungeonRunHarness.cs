@@ -102,6 +102,7 @@ public sealed class DungeonRunHarness
     {
         var perFloor = new List<FloorRunMetrics>(floors);
         Entity? player = null;
+        BoonTracker? boonTracker = null;
         int totalTurns = 0;
         int totalKills = 0;
         int floorsCompleted = 0;
@@ -112,7 +113,7 @@ public sealed class DungeonRunHarness
         {
             // Distinct-but-reproducible seed per depth — same pattern as smoke tests
             var rng = new SeededRandom(baseSeed + depth * 1_000_003);
-            var state = _floorBuilder.Build(depth, rng, player);
+            var state = _floorBuilder.Build(depth, rng, player, boonTracker: boonTracker);
 
             // Dungeon floors need far more turns than the scenario default (100).
             // Set a generous limit so IsGameOver only fires on player death, not turn-out.
@@ -226,8 +227,9 @@ public sealed class DungeonRunHarness
                 break;
             }
 
-            // Carry the same player entity forward to the next floor
+            // Carry the same player entity and boon tracker forward to the next floor
             player = state.Player;
+            boonTracker = state.BoonTracker;
         }
 
         return new DungeonRunResult

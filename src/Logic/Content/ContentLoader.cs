@@ -259,6 +259,29 @@ public sealed class ContentLoader
     }
 
     /// <summary>
+    /// Load depth boon definitions from a YAML string (config/depth_boons.yaml).
+    /// Returns a dictionary of depth → BoonDefinition.
+    /// </summary>
+    public Dictionary<int, Balance.BoonDefinition> LoadBoons(string yaml)
+    {
+        var config = _deserializer.Deserialize<Balance.DepthBoonConfig>(yaml);
+        if (config?.DepthBoons == null || config.DepthBoons.Count == 0)
+            return new Dictionary<int, Balance.BoonDefinition>();
+
+        return config.DepthBoons.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.ToBoonDefinition());
+    }
+
+    /// <summary>
+    /// Load depth boon definitions from a YAML file path.
+    /// </summary>
+    public Dictionary<int, Balance.BoonDefinition> LoadBoonsFromFile(string path)
+    {
+        return LoadBoons(File.ReadAllText(path));
+    }
+
+    /// <summary>
     /// Load all content from a single entities YAML string.
     /// Returns monsters, items, consumables, spell items, and floor item pool in one call.
     /// </summary>
@@ -425,6 +448,19 @@ public sealed class ContentLoader
             DangerRadiusFromPlayer   = child.DangerRadiusFromPlayer != 2   ? child.DangerRadiusFromPlayer   : parent.DangerRadiusFromPlayer,
             PreferredDistanceMin     = child.PreferredDistanceMin != 4     ? child.PreferredDistanceMin     : parent.PreferredDistanceMin,
             PreferredDistanceMax     = child.PreferredDistanceMax != 7     ? child.PreferredDistanceMax     : parent.PreferredDistanceMax,
+            // Life drain: child wins if non-zero
+            LifeDrainPct = child.LifeDrainPct != 0 ? child.LifeDrainPct : parent.LifeDrainPct,
+            // Soul Bolt params: child wins if non-zero/default
+            SoulBoltRange = child.SoulBoltRange != 0 ? child.SoulBoltRange : parent.SoulBoltRange,
+            SoulBoltDamagePct = child.SoulBoltDamagePct != 0 ? child.SoulBoltDamagePct : parent.SoulBoltDamagePct,
+            SoulBoltCooldownTurns = child.SoulBoltCooldownTurns != 0 ? child.SoulBoltCooldownTurns : parent.SoulBoltCooldownTurns,
+            // Command the Dead / Death Siphon: child wins if non-zero
+            CommandTheDeadRadius = child.CommandTheDeadRadius != 0 ? child.CommandTheDeadRadius : parent.CommandTheDeadRadius,
+            DeathSiphonRadius = child.DeathSiphonRadius != 0 ? child.DeathSiphonRadius : parent.DeathSiphonRadius,
+            // Summon override: child wins if set
+            SummonMonsterId = child.SummonMonsterId ?? parent.SummonMonsterId,
+            // Status immunities: child wins if set (full override, not merge)
+            StatusImmunities = child.StatusImmunities ?? parent.StatusImmunities,
         };
     }
 

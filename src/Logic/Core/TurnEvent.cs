@@ -428,6 +428,41 @@ public sealed class PortalRemovedEvent : TurnEvent
 }
 
 /// <summary>
+/// Emitted when a wraith (or other life drain monster) heals from melee damage.
+/// </summary>
+public sealed class LifeDrainEvent : TurnEvent
+{
+    public int TargetId { get; init; }
+    public int Amount { get; init; }
+}
+
+/// <summary>
+/// Emitted when a lich's Soul Bolt resolves and deals %MaxHp damage.
+/// </summary>
+public sealed class SoulBoltEvent : TurnEvent
+{
+    public int TargetId { get; init; }
+    public int Damage { get; init; }
+}
+
+/// <summary>
+/// Emitted when a lich begins channeling an ability (Soul Bolt charge turn).
+/// </summary>
+public sealed class ChannelEvent : TurnEvent
+{
+    public string AbilityName { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted when a lich heals from an allied undead dying within Death Siphon radius.
+/// </summary>
+public sealed class DeathSiphonEvent : TurnEvent
+{
+    public int DeadMonsterId { get; init; }
+    public int Amount { get; init; }
+}
+
+/// <summary>
 /// Emitted when the player cancels portal targeting after placing an entrance.
 /// The entrance entity has been unregistered from the map; presentation despawns its sprite.
 /// This event is NOT produced by TurnController — it is emitted directly by GameController

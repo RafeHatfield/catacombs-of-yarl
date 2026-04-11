@@ -47,6 +47,10 @@ public static class PlayerCarryForward
         // Preserve current HP — the player carries wounds between floors
         newFighter.Hp = oldFighter.Hp;
 
+        // Preserve boon max HP bonus — not a constructor param, must be copied explicitly.
+        // Same pattern as RingMaxHpBonus (which is restored by ReapplyRingEffects instead).
+        newFighter.BoonMaxHpBonus = oldFighter.BoonMaxHpBonus;
+
         newPlayer.Add(newFighter);
 
         // Copy Equipment if present (equipped items persist between floors)

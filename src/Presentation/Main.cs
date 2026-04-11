@@ -346,9 +346,23 @@ public partial class Main : Node
             GD.PrintErr($"  Stack: {ex.StackTrace}");
             throw;
         }
+        // Load depth boons (optional — missing file means no boons, not a crash)
+        Dictionary<int, CatacombsOfYarl.Logic.Balance.BoonDefinition>? boonTable = null;
+        try
+        {
+            var boonYaml = ReadGodotResource("res://config/depth_boons.yaml");
+            boonTable = _contentLoader.LoadBoons(boonYaml);
+            GD.Print($"Depth boons loaded: {boonTable.Count} entries");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"Depth boons load failed (non-fatal): {ex.Message}");
+        }
+
         _floorBuilder = new DungeonFloorBuilder(
             _levelTemplates, _monsterFactory, _itemFactory, _consumableFactory,
-            content.FloorItemPool, spellItemFactory: _spellItemFactory);
+            content.FloorItemPool, spellItemFactory: _spellItemFactory,
+            boonTable: boonTable);
     }
 
     /// <summary>
@@ -793,7 +807,7 @@ public partial class Main : Node
         if (builder == null) return;
         var rng = new SeededRandom(_baseSeed + newDepth * 1_000_003);
         _currentDepth = newDepth;
-        _state = builder.Build(newDepth, rng, _state?.Player);
+        _state = builder.Build(newDepth, rng, _state?.Player, boonTracker: _state?.BoonTracker);
         SetupPresentation(_state);
     }
 

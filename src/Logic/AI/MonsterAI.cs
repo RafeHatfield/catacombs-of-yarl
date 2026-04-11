@@ -25,6 +25,7 @@ public static class MonsterAI
             "skeleton"          => SkeletonAI.Decide(monster, state),
             "necromancer"       => NecromancerAI.Decide(monster, state),
             "plague_necromancer"=> NecromancerAI.Decide(monster, state),
+            "lich"             => LichAI.Decide(monster, state),
             _ => BasicMonsterAI.Decide(monster, state), // unknown type → safe fallback
         };
     }

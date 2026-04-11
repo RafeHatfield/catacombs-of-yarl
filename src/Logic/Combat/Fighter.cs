@@ -42,6 +42,13 @@ public sealed class Fighter : IComponent
     /// </summary>
     public int RingMaxHpBonus { get; set; }
 
+    /// <summary>
+    /// Extra max HP from depth boons (fortitude_10, resilience_5).
+    /// BaseMaxHp is read-only, so boon HP bonuses are tracked separately —
+    /// same pattern as RingMaxHpBonus. Carried forward by PlayerCarryForward.
+    /// </summary>
+    public int BoonMaxHpBonus { get; set; }
+
     public Fighter(
         int hp,
         int defense = 0,
@@ -75,7 +82,7 @@ public sealed class Fighter : IComponent
     /// Equipment bonuses applied externally by services.
     /// Note: Hp starts at BaseMaxHp (flat), so player starts slightly below max HP if CON > 10.
     /// </summary>
-    public int MaxHp => BaseMaxHp + ConstitutionMod + RingMaxHpBonus;
+    public int MaxHp => BaseMaxHp + ConstitutionMod + RingMaxHpBonus + BoonMaxHpBonus;
 
     /// <summary>Strength modifier from ability score.</summary>
     public int StrengthMod => CombatMath.StatModifier(Strength);

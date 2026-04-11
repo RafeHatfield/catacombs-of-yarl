@@ -112,11 +112,13 @@ public static class BasicMonsterAI
         // If adjacent but target is invisible: fall through to movement logic.
         // Monster will wait or pursue a remembered position instead of attacking.
 
-        // 7. Pursue toward last known player position using A*.
-        // For EnragedEffect (HostileToAll), pursue the chosen target (nearest entity).
+        // 7. Pursue toward target using A*.
+        // When target is the player, use last-known position (handles invisibility/fog).
+        // When target is a monster (faction hostility), pursue directly toward it.
         // Pass the monster as movingEntity so the pathfinder doesn't treat it as self-blocking.
-        int pursueX = monster.Has<EnragedEffect>() ? target.X : alertedState.LastKnownPlayerX;
-        int pursueY = monster.Has<EnragedEffect>() ? target.Y : alertedState.LastKnownPlayerY;
+        bool targetIsPlayer = target.Id == state.Player.Id;
+        int pursueX = targetIsPlayer ? alertedState.LastKnownPlayerX : target.X;
+        int pursueY = targetIsPlayer ? alertedState.LastKnownPlayerY : target.Y;
 
         var path = Pathfinder.AStar(
             state.Map,
@@ -199,13 +201,14 @@ public static class BasicMonsterAI
     /// Priority:
     ///   1. TauntedEffect: always target the taunted entity's TauntTargetId (player).
     ///   2. EnragedEffect (HostileToAll): find nearest alive entity — player or any monster.
-    ///   3. Default: target the player.
+    ///   3. Faction hostility: find nearest hostile entity (player or monster). Player preferred on tie.
+    ///   4. Fallback: target the player.
     ///
-    /// Returns player if no special targeting applies or if the special target is not found.
+    /// Returns player if no special targeting applies or if no hostile entity is found.
     /// </summary>
-    internal static Entity ChooseTarget(Entity monster, Entity player, GameState state)
+    public static Entity ChooseTarget(Entity monster, Entity player, GameState state)
     {
-        // Taunt overrides everything — even EnragedEffect.
+        // Taunt overrides everything — even EnragedEffect and faction targeting.
         var taunt = monster.Get<TauntedEffect>();
         if (taunt != null)
         {
@@ -216,14 +219,12 @@ public static class BasicMonsterAI
             return player;
         }
 
-        // EnragedEffect: HostileToAll flag set on the effect component.
-        // Find nearest entity (player or alive monster) — we want whoever is closest.
+        // EnragedEffect: HostileToAll flag — find nearest entity regardless of faction.
         if (monster.Has<EnragedEffect>())
         {
             Entity? nearest = null;
             int nearestDist = int.MaxValue;
 
-            // Check player first.
             int playerDist = monster.ChebyshevDistanceTo(player.X, player.Y);
             if (playerDist < nearestDist)
             {
@@ -231,7 +232,6 @@ public static class BasicMonsterAI
                 nearestDist = playerDist;
             }
 
-            // Check all alive monsters (excluding self).
             foreach (var other in state.AliveMonsters)
             {
                 if (other.Id == monster.Id) continue;
@@ -246,14 +246,45 @@ public static class BasicMonsterAI
             return nearest ?? player;
         }
 
-        // Invisible player: monster AI cannot target an invisible entity for attack.
-        // The invisible entity can still be damaged by AoE — this is a targeting gate only.
-        // Returning null signals the caller that no valid attack target exists.
-        // NOTE: We still return player here (not null) because ChooseTarget returns Entity, not Entity?.
-        // The invisibility attack gate is enforced in Decide() before the Attack action is returned.
-        // See: "if (targetAdjacent && !target.Has<InvisibilityEffect>())" in the main decision flow.
+        // Faction-aware targeting: find nearest hostile entity.
+        // Player is always hostile and gets highest priority (10).
+        // Monsters of hostile factions are secondary targets.
+        string myFaction = monster.Get<AiComponent>()?.Faction ?? "neutral";
+        bool playerInvisible = player.Has<InvisibilityEffect>();
 
-        return player;
+        Entity? bestTarget = null;
+        int bestDist = int.MaxValue;
+        int bestPriority = -1;
+
+        // Consider player (unless invisible — can't target what you can't see)
+        if (!playerInvisible)
+        {
+            int d = monster.ChebyshevDistanceTo(player.X, player.Y);
+            bestTarget = player;
+            bestDist = d;
+            bestPriority = FactionRegistry.GetTargetPriority(myFaction, "player"); // 10
+        }
+
+        // Consider hostile monsters
+        foreach (var other in state.AliveMonsters)
+        {
+            if (other.Id == monster.Id) continue;
+            string otherFaction = other.Get<AiComponent>()?.Faction ?? "neutral";
+            if (!FactionRegistry.AreHostile(myFaction, otherFaction)) continue;
+
+            int d = monster.ChebyshevDistanceTo(other.X, other.Y);
+            int priority = FactionRegistry.GetTargetPriority(myFaction, otherFaction);
+
+            // Prefer higher priority, then closer distance
+            if (priority > bestPriority || (priority == bestPriority && d < bestDist))
+            {
+                bestTarget = other;
+                bestDist = d;
+                bestPriority = priority;
+            }
+        }
+
+        return bestTarget ?? player;
     }
 
     /// <summary>

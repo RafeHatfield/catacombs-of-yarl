@@ -84,7 +84,7 @@ public static class TurnController
             state.Corpses.Clear(); // Corpses don't follow the player to the next floor
         if (!descended && state.PlayerFighter.IsAlive)
         {
-            ResolveMonsterTurns(state, events, portalEntityFactory);
+            ResolveMonsterTurns(state, events, monsterFactory, portalEntityFactory);
             TickEnvironment(state, events, monsterFactory);
             state.RecomputeFov(); // update FOV after monsters move (no-op in scenario mode)
         }
@@ -492,6 +492,7 @@ public static class TurnController
             events.Add(new DeathEvent { ActorId = target.Id, KillerId = player.Id });
             DropMonsterLoot(state, target, events);
             TransformToCorpse(state, target, events, monsterFactory);
+            ResolveDeathSiphon(state, target, events);
         }
 
         // Bonus attack chain — recurse if triggered and target still alive
@@ -1131,7 +1132,7 @@ public static class TurnController
     }
 
     private static void ResolveMonsterTurns(GameState state, List<TurnEvent> events,
-        EntityFactory? portalEntityFactory = null)
+        MonsterFactory? monsterFactory = null, EntityFactory? portalEntityFactory = null)
     {
         // Snapshot the list — monsters may die during resolution (e.g. player bonus attacks
         // killing a monster before its turn, or future reflect damage). Iterating a snapshot
@@ -1157,7 +1158,8 @@ public static class TurnController
             switch (action.Kind)
             {
                 case MonsterAction.ActionKind.Attack:
-                    ResolveMonsterAttack(state, monster, action.Target!, events, isBonusAttack: false);
+                    ResolveMonsterAttack(state, monster, action.Target!, events, isBonusAttack: false,
+                        monsterFactory: monsterFactory);
                     break;
 
                 case MonsterAction.ActionKind.MoveTo:
@@ -1192,6 +1194,16 @@ public static class TurnController
 
                 case MonsterAction.ActionKind.RaiseDead:
                     ResolveNecromancerRaise(state, monster, action.Target!, events);
+                    break;
+
+                case MonsterAction.ActionKind.SoulBolt:
+                    var lichComp = monster.Get<LichAiComponent>();
+                    if (lichComp != null)
+                        SoulBoltResolver.Resolve(monster, action.Target!, lichComp.SoulBoltDamagePct, events);
+                    break;
+
+                case MonsterAction.ActionKind.Channel:
+                    events.Add(new ChannelEvent { ActorId = monster.Id, AbilityName = action.AbilityName ?? "" });
                     break;
 
                 case MonsterAction.ActionKind.Wait:
@@ -1245,7 +1257,8 @@ public static class TurnController
         });
     }
 
-    private static void ResolveMonsterAttack(GameState state, Entity monster, Entity target, List<TurnEvent> events, bool isBonusAttack)
+    private static void ResolveMonsterAttack(GameState state, Entity monster, Entity target, List<TurnEvent> events, bool isBonusAttack,
+        MonsterFactory? monsterFactory = null)
     {
         // DisarmedEffect: weapon attack cancelled — emit failure event, do not resolve.
         // Does not prevent unarmed attacks (if no weapon equipped).
@@ -1268,7 +1281,9 @@ public static class TurnController
             return;
         }
 
-        var result = CombatResolver.ResolveAttack(monster, target, state.Rng);
+        // Command the Dead: undead allies near a lich get +1 to-hit
+        int commandBonus = GetCommandTheDeadBonus(monster, state);
+        var result = CombatResolver.ResolveAttack(monster, target, state.Rng, extraToHitBonus: commandBonus);
 
         events.Add(new AttackEvent
         {
@@ -1291,7 +1306,15 @@ public static class TurnController
         if (result.TargetKilled)
         {
             events.Add(new DeathEvent { ActorId = target.Id, KillerId = monster.Id });
-            // target here is the player — players don't have equipment to drop
+
+            // Monster-vs-monster kill: drop loot, create corpse, check death siphon.
+            // Player kills are not handled here (players don't drop items or leave corpses).
+            if (target.Id != state.Player.Id)
+            {
+                DropMonsterLoot(state, target, events);
+                TransformToCorpse(state, target, events, monsterFactory);
+                ResolveDeathSiphon(state, target, events);
+            }
         }
         else if (result.Hit)
         {
@@ -1304,6 +1327,16 @@ public static class TurnController
             var onHit = monster.Get<OnHitEffectComponent>();
             if (onHit != null)
                 ResolveOnHitEffect(target, onHit, events);
+
+            // Life drain: wraith heals for ceil(DrainPct * damage) on each successful hit
+            var drain = monster.Get<LifeDrainComponent>();
+            if (drain != null && result.Damage > 0)
+            {
+                int drainAmount = (int)Math.Ceiling(drain.DrainPct * result.Damage);
+                int healed = monster.Require<Fighter>().Heal(drainAmount);
+                if (healed > 0)
+                    events.Add(new LifeDrainEvent { ActorId = monster.Id, TargetId = target.Id, Amount = healed });
+            }
         }
 
         // Ring of Teleportation: 20% on-hit, player teleports to a random open tile.
@@ -1345,7 +1378,8 @@ public static class TurnController
         // Monster bonus attacks — recurse if triggered and target still alive
         if (result.BonusAttackTriggered && target.Require<Fighter>().IsAlive)
         {
-            ResolveMonsterAttack(state, monster, target, events, isBonusAttack: true);
+            ResolveMonsterAttack(state, monster, target, events, isBonusAttack: true,
+                monsterFactory: monsterFactory);
         }
     }
 
@@ -1404,6 +1438,9 @@ public static class TurnController
             case "burning":
                 StatusEffectProcessor.ApplyEffect<BurningEffect>(target, onHit.Duration);
                 break;
+            case "plague":
+                StatusEffectProcessor.ApplyEffect<PlagueEffect>(target, onHit.Duration);
+                break;
             default:
                 return; // unknown effect type — no-op, no event
         }
@@ -1415,6 +1452,59 @@ public static class TurnController
             EffectName = onHit.EffectType,
             Duration = onHit.Duration,
         });
+    }
+
+    /// <summary>
+    /// Command the Dead: undead allies within a lich's command_the_dead_radius get +1 to-hit.
+    /// Lich does not buff itself. Returns 0 if no lich in range or attacker is not undead.
+    /// </summary>
+    private static int GetCommandTheDeadBonus(Entity attacker, GameState state)
+    {
+        // Skip if attacker is a lich (does not buff self)
+        if (attacker.Get<LichAiComponent>() != null) return 0;
+
+        var ai = attacker.Get<AiComponent>();
+        if (ai == null || !ai.Tags.Contains("undead")) return 0;
+
+        foreach (var monster in state.AliveMonsters)
+        {
+            var lichComp = monster.Get<LichAiComponent>();
+            if (lichComp == null) continue;
+
+            double dx = attacker.X - monster.X;
+            double dy = attacker.Y - monster.Y;
+            if (Math.Sqrt(dx * dx + dy * dy) <= lichComp.CommandTheDeadRadius)
+                return 1; // +1 to-hit
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// Death Siphon: when an undead monster dies within a lich's death_siphon_radius,
+    /// the lich heals 2 HP. PoC lich_ai.py: death_siphon.
+    /// </summary>
+    private static void ResolveDeathSiphon(GameState state, Entity deadMonster, List<TurnEvent> events)
+    {
+        // Check if dead monster has "undead" tag
+        var ai = deadMonster.Get<AiComponent>();
+        if (ai == null || !ai.Tags.Contains("undead")) return;
+
+        foreach (var monster in state.AliveMonsters)
+        {
+            var lichComp = monster.Get<LichAiComponent>();
+            if (lichComp == null || monster.Id == deadMonster.Id) continue;
+
+            double dx = monster.X - deadMonster.X;
+            double dy = monster.Y - deadMonster.Y;
+            double dist = Math.Sqrt(dx * dx + dy * dy);
+
+            if (dist <= lichComp.DeathSiphonRadius)
+            {
+                int healed = monster.Require<Fighter>().Heal(2);
+                if (healed > 0)
+                    events.Add(new DeathSiphonEvent { ActorId = monster.Id, DeadMonsterId = deadMonster.Id, Amount = healed });
+            }
+        }
     }
 
     /// <summary>

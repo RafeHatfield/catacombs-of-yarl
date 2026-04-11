@@ -167,6 +167,46 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "preferred_distance_max")]
     public int PreferredDistanceMax { get; set; } = 7;
 
+    // ── Life Drain (wraith) ────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Fraction [0.0–1.0] of melee damage healed back as life drain.
+    /// 0 = no drain (default). MonsterFactory attaches LifeDrainComponent when > 0.
+    /// </summary>
+    [YamlMember(Alias = "life_drain_pct")]
+    public double LifeDrainPct { get; set; }
+
+    // ── Soul Bolt (lich) ─────────────────────────────────────────────────────
+
+    [YamlMember(Alias = "soul_bolt_range")]
+    public int SoulBoltRange { get; set; }
+
+    [YamlMember(Alias = "soul_bolt_damage_pct")]
+    public double SoulBoltDamagePct { get; set; }
+
+    [YamlMember(Alias = "soul_bolt_cooldown_turns")]
+    public int SoulBoltCooldownTurns { get; set; }
+
+    // ── Command the Dead (lich) ──────────────────────────────────────────────
+
+    [YamlMember(Alias = "command_the_dead_radius")]
+    public int CommandTheDeadRadius { get; set; }
+
+    // ── Death Siphon (lich) ──────────────────────────────────────────────────
+
+    [YamlMember(Alias = "death_siphon_radius")]
+    public int DeathSiphonRadius { get; set; }
+
+    // ── Summon override (lich raises zombies, not original corpse type) ──────
+
+    [YamlMember(Alias = "summon_monster_id")]
+    public string? SummonMonsterId { get; set; }
+
+    // ── Status immunities (wraith, lich) ─────────────────────────────────────
+
+    [YamlMember(Alias = "status_immunities")]
+    public List<string>? StatusImmunities { get; set; }
+
     /// <summary>
     /// Optional depth-progression table for spawn weight.
     /// If set, overrides SpawnWeight — weight is resolved per depth via SpawnUtils.FromDungeonLevel.

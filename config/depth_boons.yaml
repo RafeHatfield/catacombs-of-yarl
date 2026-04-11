@@ -1,0 +1,6 @@
+depth_boons:
+  1: {id: fortitude_10, display_name: "Fortitude", description: "+10 max HP (heals 10 HP immediately)", hp_bonus: 10, immediate_heal: 10}
+  2: {id: accuracy_1, display_name: "Keen Eye", description: "+2 accuracy (improves to-hit chance)", accuracy_bonus: 2}
+  3: {id: defense_1, display_name: "Iron Skin", description: "+1 defense (reduces damage taken)", defense_bonus: 1}
+  4: {id: damage_1, display_name: "Cruel Blow", description: "+1 minimum damage", min_damage_bonus: 1}
+  5: {id: resilience_5, display_name: "Resilience", description: "+10 max HP (heals 10 HP immediately)", hp_bonus: 10, immediate_heal: 10}

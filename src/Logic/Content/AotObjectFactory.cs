@@ -47,6 +47,11 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(LevelTemplatesFile)] = () => new LevelTemplatesFile(),
         [typeof(DepthWeightEntry)] = () => new DepthWeightEntry(),
 
+        // Depth boons
+        [typeof(DepthBoonConfig)] = () => new DepthBoonConfig(),
+        [typeof(DepthBoonYamlEntry)] = () => new DepthBoonYamlEntry(),
+        [typeof(Dictionary<int, DepthBoonYamlEntry>)] = () => new Dictionary<int, DepthBoonYamlEntry>(),
+
         // Balance layer
         [typeof(LevelOverride)] = () => new LevelOverride(),
         [typeof(GenerationParameters)] = () => new GenerationParameters(),

@@ -29,7 +29,7 @@ public static class CombatResolver
     /// Uses d20 roll vs AC for hit determination, then rolls damage on hit.
     /// Natural 20 = critical (2x damage). Natural 1 = fumble (auto-miss).
     /// </summary>
-    public static AttackResult ResolveAttack(Entity attacker, Entity defender, SeededRandom rng)
+    public static AttackResult ResolveAttack(Entity attacker, Entity defender, SeededRandom rng, int extraToHitBonus = 0)
     {
         var atk = attacker.Require<Fighter>();
         var def = defender.Require<Fighter>();
@@ -54,6 +54,9 @@ public static class CombatResolver
         if (attackerCrippled != null) toHitBonus -= attackerCrippled.ToHitPenalty;
         if (attackerRallied  != null) toHitBonus += attackerRallied.ToHitBonus;
         if (attackerHeroism  != null) toHitBonus += attackerHeroism.AttackBonus;
+
+        // External bonus: Command the Dead (+1 for undead allies near a lich)
+        toHitBonus += extraToHitBonus;
 
         int attackRoll = d20 + toHitBonus;
 
