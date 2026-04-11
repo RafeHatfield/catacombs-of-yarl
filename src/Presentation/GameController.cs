@@ -609,6 +609,18 @@ public sealed partial class GameController : Node
         // Dismiss inspect panel on any normal tap — the player is acting, not inspecting.
         _inspectPanel?.Hide();
         _longPress?.Cancel();
+
+        // Any tap cancels auto-explore or path-following. The current animation step
+        // finishes naturally; OnAnimationComplete then finds nothing pending and returns
+        // to WaitingForInput. Don't process the tap further — it was consumed by the cancel.
+        if (_autoExploreMode || (_pendingPath != null && _pendingPath.Count > 0))
+        {
+            _autoExploreMode = false;
+            _pendingPath = null;
+            _animator!.SpeedMultiplier = 1.0f;
+            return;
+        }
+
         _input.HandleTap(screenPos);
     }
 
