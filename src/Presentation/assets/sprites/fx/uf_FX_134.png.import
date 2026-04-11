@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://50b4009ec6bbc"
-path="res://.godot/imported/uf_FX_134.png-af744ae31fb3131516386a792b8756a6.ctex"
+uid="uid://dxg1vmtmeq5yy"
+path="res://.godot/imported/uf_FX_134.png-14f66ebefcdfb883bb510bd148cb620d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites/fx/uf_FX_134.png"
-dest_files=["res://.godot/imported/uf_FX_134.png-af744ae31fb3131516386a792b8756a6.ctex"]
+dest_files=["res://.godot/imported/uf_FX_134.png-14f66ebefcdfb883bb510bd148cb620d.ctex"]
 
 [params]
 

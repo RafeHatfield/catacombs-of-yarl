@@ -945,6 +945,10 @@ public static class SpellResolver
 
         events.AddRange(deaths);
 
+        // Leave burning ground on all blast tiles: base 3 damage, lasts 3 turns (3→2→1).
+        foreach (var (tx, ty) in blastTiles)
+            state.GroundHazards.AddHazard(HazardType.Fire, tx, ty, baseDamage: 3, maxDuration: 3);
+
         return events;
     }
 
@@ -1052,6 +1056,10 @@ public static class SpellResolver
             TargetPos = (targetX.Value, targetY.Value),
             AffectedTiles = coneTiles.ToList(),
         });
+
+        // Leave poison gas on all cone tiles: base 6 damage, lasts 5 turns.
+        foreach (var (tx, ty) in coneTiles)
+            state.GroundHazards.AddHazard(HazardType.PoisonGas, tx, ty, baseDamage: 6, maxDuration: 5);
 
         return events;
     }

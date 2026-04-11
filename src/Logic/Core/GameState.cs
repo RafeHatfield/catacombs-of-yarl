@@ -79,6 +79,12 @@ public sealed class GameState
     /// </summary>
     public Difficulty Difficulty { get; init; } = Difficulty.Medium;
 
+    /// <summary>
+    /// Active ground hazards on the current floor (burning tiles, poison gas, etc.).
+    /// Created fresh per floor — hazards do not persist across descent.
+    /// </summary>
+    public GroundHazardManager GroundHazards { get; } = new();
+
     public GameState(Entity player, List<Entity> monsters, GameMap map, SeededRandom rng, int turnLimit = 100)
     {
         Player = player;

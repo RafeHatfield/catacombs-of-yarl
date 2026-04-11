@@ -227,10 +227,6 @@ public sealed class TurnAnimator
                 // Directional burst (fireball) spreads outward from impact point.
                 _vfxOverlay!.AppendDirectionalBurst(tween, burstCenter,
                     config.DirectionalSprites, 0.15f * _speedMultiplier);
-                // Color flash behind the burst sprites — parallel so both start together.
-                tween.Parallel();
-                _vfxOverlay!.AppendAreaEffect(tween, spell.AffectedTiles, config.AreaColor,
-                    0.2f * _speedMultiplier);
             }
             else
             {
@@ -253,11 +249,6 @@ public sealed class TurnAnimator
         // Directional area: sprite per tile based on direction from caster.
         _vfxOverlay!.AppendDirectionalAreaEffect(tween, spell.CasterPos.Value,
             spell.AffectedTiles, config.DirectionalSprites!, config.Duration * _speedMultiplier);
-
-        // Subtle tint behind the directional sprites.
-        tween.Parallel();
-        _vfxOverlay!.AppendAreaEffect(tween, spell.AffectedTiles, config.AreaColor,
-            config.Duration * _speedMultiplier * 0.5f);
     }
 
     private void AnimatePathSpell(Tween tween, SpellEvent spell, SpellVfxConfig config)
@@ -381,6 +372,10 @@ public sealed class TurnAnimator
         var sprite = _entitySprites.GetSprite(move.ActorId);
         if (sprite == null) return;
         _tweenHasSteps = true;
+
+        // Update ZIndex immediately to the destination tile so the entity renders above
+        // tiles/entities at the target depth for the full duration of the move animation.
+        sprite.ZIndex = _renderer.GetEntitySortOrder(move.ToX, move.ToY);
 
         var targetPos = _renderer.GridToScreenCenter(move.ToX, move.ToY);
         tween.TweenProperty(sprite, "position", targetPos, MoveDur)

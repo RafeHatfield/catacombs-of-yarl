@@ -86,20 +86,22 @@ public sealed class VfxOverlay
     {
         if (tiles.Count == 0) return;
 
+        // First tile is a sequential step (advances tween timeline to "area starts").
+        // All subsequent tiles are parallel so they all flash simultaneously.
         bool first = true;
         foreach (var (x, y) in tiles)
         {
             var rect = BorrowRect(x, y, color);
 
-            var step = first
-                ? tween.TweenProperty(rect, "modulate:a", 0.0f, durationSecs)
-                : tween.Parallel().TweenProperty(rect, "modulate:a", 0.0f, durationSecs);
-            step.SetEase(Tween.EaseType.In).SetTrans(Tween.TransitionType.Quad);
-
+            // Reveal when the area step is reached.
             if (first)
-                tween.TweenProperty(rect, "visible", false, 0.0f);
+                tween.TweenProperty(rect, "visible", true, 0.0f);
             else
-                tween.Parallel().TweenProperty(rect, "visible", false, 0.0f);
+                tween.Parallel().TweenProperty(rect, "visible", true, 0.0f);
+
+            // Fade alpha to 0 in parallel with the reveal (reveal is 0-duration so effectively simultaneous).
+            tween.Parallel().TweenProperty(rect, "modulate:a", 0.0f, durationSecs)
+                 .SetEase(Tween.EaseType.In).SetTrans(Tween.TransitionType.Quad);
 
             first = false;
         }
@@ -122,10 +124,11 @@ public sealed class VfxOverlay
             float holdTime = perTileSecs * 0.3f;
             float fadeTime = perTileSecs * 0.7f;
 
+            // Reveal tile when path reaches it (sequential — each tile waits for previous).
+            tween.TweenProperty(rect, "visible", true, 0.0f);
             tween.TweenInterval(holdTime);
             tween.TweenProperty(rect, "modulate:a", 0.0f, fadeTime)
                  .SetEase(Tween.EaseType.Out);
-            tween.TweenProperty(rect, "visible", false, 0.0f);
         }
     }
 
@@ -151,11 +154,11 @@ public sealed class VfxOverlay
 
             if (isLast && impactSprite != null)
             {
-                // Impact tile: scale pop then fade.
+                // Impact tile: reveal at scale pop, fade + scale normalize in parallel.
                 sprite.Scale = Vector2.One * 1.3f;
+                tween.TweenProperty(sprite, "visible", true, 0.0f);
                 tween.TweenProperty(sprite, "modulate:a", 0.0f, 0.2f)
                      .SetEase(Tween.EaseType.Out);
-                tween.TweenProperty(sprite, "visible", false, 0.0f);
                 tween.Parallel().TweenProperty(sprite, "scale", Vector2.One, 0.2f)
                      .SetEase(Tween.EaseType.Out);
             }
@@ -164,10 +167,11 @@ public sealed class VfxOverlay
                 float holdTime = perTileSecs * 0.3f;
                 float fadeTime = perTileSecs * 0.7f;
 
+                // Reveal when path reaches this tile, hold briefly, then fade.
+                tween.TweenProperty(sprite, "visible", true, 0.0f);
                 tween.TweenInterval(holdTime);
                 tween.TweenProperty(sprite, "modulate:a", 0.0f, fadeTime)
                      .SetEase(Tween.EaseType.Out);
-                tween.TweenProperty(sprite, "visible", false, 0.0f);
             }
         }
     }
@@ -197,11 +201,11 @@ public sealed class VfxOverlay
         LoadTextureOrFallback(sprite, spritePath);
         sprite.Position = fromScreen;
 
+        // Reveal when the travel step is reached (not before), then move, then hide.
+        tween.TweenProperty(sprite, "visible", true, 0.0f);
         tween.TweenProperty(sprite, "position", toScreen, travelDur)
              .SetEase(Tween.EaseType.InOut)
              .SetTrans(Tween.TransitionType.Linear);
-
-        // Hide after travel completes — no lambda.
         tween.TweenProperty(sprite, "visible", false, 0.0f);
     }
 
@@ -272,24 +276,25 @@ public sealed class VfxOverlay
             var sprite = BorrowSprite(center.X, center.Y);
             LoadTextureOrFallback(sprite, spritePath);
             sprite.Position = centerScreen;
-            // Start fully opaque.
             sprite.Modulate = Colors.White;
 
             float angle = angles[i];
             var endPos = centerScreen + new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * spreadPx;
 
-            // Position travel
-            var moveProp = first
-                ? tween.TweenProperty(sprite, "position", endPos, durationSecs)
-                : tween.Parallel().TweenProperty(sprite, "position", endPos, durationSecs);
-            moveProp.SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quad);
+            // Reveal all 8 sprites simultaneously when burst step is reached.
+            // First sprite is sequential (advances timeline to "burst starts"), rest are parallel.
+            if (first)
+                tween.TweenProperty(sprite, "visible", true, 0.0f);
+            else
+                tween.Parallel().TweenProperty(sprite, "visible", true, 0.0f);
 
-            // Alpha fade in parallel with movement
+            // Movement: parallel with reveal (and with each other).
+            tween.Parallel().TweenProperty(sprite, "position", endPos, durationSecs)
+                 .SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Quad);
+
+            // Fade in parallel with movement.
             tween.Parallel().TweenProperty(sprite, "modulate:a", 0.0f, durationSecs)
                  .SetEase(Tween.EaseType.In);
-
-            // Hide once fade completes — parallel so it lands at the same time.
-            tween.Parallel().TweenProperty(sprite, "visible", false, 0.0f);
 
             first = false;
         }
@@ -323,15 +328,16 @@ public sealed class VfxOverlay
             LoadTextureOrFallback(sprite, spritePath);
             sprite.Modulate = Colors.White;
 
-            var fade = first
-                ? tween.TweenProperty(sprite, "modulate:a", 0.0f, durationSecs)
-                : tween.Parallel().TweenProperty(sprite, "modulate:a", 0.0f, durationSecs);
-            fade.SetEase(Tween.EaseType.In).SetTrans(Tween.TransitionType.Quad);
-
+            // Reveal all cone tiles simultaneously when cone step is reached.
+            // First is sequential (advances timeline), rest are parallel.
             if (first)
-                tween.TweenProperty(sprite, "visible", false, 0.0f);
+                tween.TweenProperty(sprite, "visible", true, 0.0f);
             else
-                tween.Parallel().TweenProperty(sprite, "visible", false, 0.0f);
+                tween.Parallel().TweenProperty(sprite, "visible", true, 0.0f);
+
+            // Fade in parallel with reveal (and with each other).
+            tween.Parallel().TweenProperty(sprite, "modulate:a", 0.0f, durationSecs)
+                 .SetEase(Tween.EaseType.In).SetTrans(Tween.TransitionType.Quad);
 
             first = false;
         }
@@ -397,7 +403,9 @@ public sealed class VfxOverlay
         sprite.Modulate = Colors.White;
         sprite.Scale = Vector2.One;
         sprite.ZIndex = _renderer.GetTileSortOrder(gridX, gridY) + 5;
-        sprite.Visible = true;
+        // Do NOT set Visible=true here — each caller controls when visibility starts
+        // so nodes don't appear before their tween step is reached.
+        sprite.Visible = false;
 
         return sprite;
     }
@@ -412,7 +420,8 @@ public sealed class VfxOverlay
         rect.Position = screenCenter - new Vector2(TileHalfSize, TileHalfSize);
         rect.Modulate = new Color(color, 0.8f);
         rect.ZIndex = _renderer.GetTileSortOrder(gridX, gridY) + 5;
-        rect.Visible = true;
+        // Do NOT set Visible=true here — callers reveal via TweenProperty when the step is reached.
+        rect.Visible = false;
 
         return rect;
     }

@@ -400,7 +400,10 @@ public sealed partial class GameController : Node
             Mode  = TargetingMode.Location,
             Range = 10,
         }, showGenericToast: false);
-        _toastLog?.AddMessage($"Tap a tile to throw {item.Name}. Tap yourself to cancel.");
+        string throwName = _state != null
+            ? ItemDisplay.GetDisplayName(item, _state.IdentificationRegistry, _state.AppearancePool)
+            : item.Name;
+        _toastLog?.AddMessage($"Tap a tile to throw {throwName}. Tap yourself to cancel.");
     }
 
     /// <summary>
@@ -453,7 +456,12 @@ public sealed partial class GameController : Node
         Phase = GamePhase.Targeting;
         _input.EnterTargetingMode(targeting);
         if (showGenericToast)
-            _toastLog?.AddMessage($"Tap a target for {targeting.Item.Name}. Tap yourself to cancel.");
+        {
+            string displayName = _state != null
+                ? ItemDisplay.GetDisplayName(targeting.Item, _state.IdentificationRegistry, _state.AppearancePool)
+                : targeting.Item.Name;
+            _toastLog?.AddMessage($"Tap a target for {displayName}. Tap yourself to cancel.");
+        }
         Diag.Log($"GameController: entered targeting mode for {targeting.Item.Name}");
     }
 
@@ -811,6 +819,11 @@ public sealed partial class GameController : Node
             else if (evt is DescendEvent desc)
                 _pendingDescend = desc;
         }
+
+        // Re-sync floor item visibility: CreateSprite sets Visible=false by default, but
+        // TurnCompleted (in Main.cs) ran UpdateVisibility before the event loop above. Any
+        // sprites created by DropEvent/ThrowEvent during that loop would never be shown.
+        _itemSprites?.UpdateVisibility(_state!);
 
         // Handle split and corrosion toast messages
         foreach (var evt in result.Events)

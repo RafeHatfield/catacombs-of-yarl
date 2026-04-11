@@ -89,11 +89,14 @@ public static class AutoExploreSystem
                 && !ae.KnownMonsterIds.Contains(m.Id))
                 return $"Monster spotted: {m.Name}";
 
-        // 2. New scroll or wand visible within alert radius (worth stopping to identify)
+        // 2. New scroll, wand, or unidentified potion visible within alert radius
         foreach (var item in state.FloorItems)
         {
             var typeId = item.Get<ItemTag>()?.TypeId ?? "";
-            if (!typeId.StartsWith("scroll_") && !typeId.StartsWith("wand_")) continue;
+            bool isInteresting = typeId.StartsWith("scroll_") || typeId.StartsWith("wand_")
+                || (typeId.StartsWith("potion_")
+                    && state.IdentificationRegistry?.IsIdentified(typeId) == false);
+            if (!isInteresting) continue;
             if (state.Map.IsVisible(item.X, item.Y)
                 && state.Player.ChebyshevDistanceTo(item.X, item.Y) <= AlertRadius
                 && !ae.ExploredSnapshot.Contains((item.X, item.Y)))

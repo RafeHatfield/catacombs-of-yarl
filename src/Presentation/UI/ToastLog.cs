@@ -228,8 +228,11 @@ public sealed partial class ToastLog : Control
             SplitEvent split =>
                 $"[color=yellow]The {GetEntityName(split.OriginalId, state)} splits![/color]",
 
+            PickUpEvent pickup when isPlayer =>
+                $"You pick up {pickup.ItemName}.",
+
             PickUpEvent pickup =>
-                $"Picked up {pickup.ItemName}.",
+                $"{actorName} picks up {pickup.ItemName}.",
 
             ItemUseEvent { Success: true } use =>
                 $"[color=yellow]{actorName} uses {use.ItemName}![/color]",

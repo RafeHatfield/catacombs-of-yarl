@@ -44,6 +44,8 @@ public partial class Main : Node
     private EntitySpriteManager? _entitySprites;
     // Item sprite manager tracks floor item overlay sprites
     private ItemSpriteManager? _itemSprites;
+    // Ground hazard overlay — persistent tile tints for burning/poison ground.
+    private GroundHazardOverlay? _groundHazardOverlay;
 
     // Tileset-backed sprite mapping — created once at boot, shared across all floors.
     private SpriteMapping? _spriteMapping;
@@ -507,6 +509,11 @@ public partial class Main : Node
         _vfxOverlay?.ClearAll();
         _vfxOverlay = new VfxOverlay(vfxLayerNode, _renderer);
 
+        // Ground hazard overlay — persistent tile tints for burning/poison ground.
+        // Clear previous floor's nodes, then create fresh for this floor.
+        _groundHazardOverlay?.Clear();
+        _groundHazardOverlay = new GroundHazardOverlay(vfxLayerNode, _renderer);
+
         if (_gameController != null)
         {
             Diag.Log($"SetupPresentation: disposing old GameController, phase={_gameController.Phase}");
@@ -757,6 +764,7 @@ public partial class Main : Node
         if (_gameView != null) PlayerCamera.AnimateTo(_gameView, _state.Player, this, zoom: _currentZoom, renderer: _renderer);
         _miniMap?.Refresh(_state);
         _toastLog?.RecordTurn(result, _state);
+        _groundHazardOverlay?.Refresh(_state);
 
         // Update fog-of-war — TurnController called RecomputeFov twice this turn
         // (after player action, after monster turns). Apply the result to the renderer.

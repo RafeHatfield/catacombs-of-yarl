@@ -85,6 +85,7 @@ public static class TurnController
         if (!descended && state.PlayerFighter.IsAlive)
         {
             ResolveMonsterTurns(state, events, portalEntityFactory);
+            TickEnvironment(state, events, monsterFactory);
             state.RecomputeFov(); // update FOV after monsters move (no-op in scenario mode)
         }
 
@@ -720,7 +721,7 @@ public static class TurnController
             {
                 ActorId = state.Player.Id,
                 ItemId = item.Id,
-                ItemName = item.Name,
+                ItemName = ItemDisplay.GetDisplayName(item, state.IdentificationRegistry, state.AppearancePool),
             });
         }
     }
@@ -876,7 +877,7 @@ public static class TurnController
             ActorId = state.Player.Id,
             AmountHealed = healed,
             ItemId = potion.Id,
-            ItemName = potion.Name,
+            ItemName = ItemDisplay.GetDisplayName(potion, state.IdentificationRegistry, state.AppearancePool),
         });
 
         // Identification on use: potions are identified when consumed.
@@ -1048,6 +1049,85 @@ public static class TurnController
             ItemName = item.Name,
             Slot     = slot,
         });
+    }
+
+    /// <summary>
+    /// Environment phase: tick all active ground hazards, apply damage to any entity
+    /// standing on a hazard tile, then age and expire the hazards.
+    ///
+    /// Runs after monster turns, before FOV recompute. Applies to player AND monsters.
+    /// Damage decays linearly each tick: floor(base × remaining / max).
+    /// Monster deaths from hazards are fully resolved (loot drop, corpse transform).
+    /// </summary>
+    private static void TickEnvironment(GameState state, List<TurnEvent> events,
+        MonsterFactory? monsterFactory)
+    {
+        var manager = state.GroundHazards;
+        if (manager.Hazards.Count == 0) return;
+
+        // Snapshot so we don't mutate while iterating.
+        var activeHazards = manager.Hazards.Values.ToList();
+
+        // Clear JustPlaced flag on newly-placed hazards before damage/aging so they are
+        // ready to tick from next turn. Don't damage or age them this turn.
+        var toTickNow = new List<GroundHazard>(activeHazards.Count);
+        foreach (var hazard in activeHazards)
+        {
+            if (hazard.JustPlaced) { hazard.JustPlaced = false; continue; }
+            toTickNow.Add(hazard);
+        }
+
+        foreach (var hazard in toTickNow)
+        {
+            int dmg = hazard.CurrentDamage;
+            if (dmg <= 0) continue;
+
+            string effectName = hazard.Type == HazardType.Fire ? "fire" : "poison gas";
+
+            // Player on this tile?
+            var pf = state.PlayerFighter;
+            if (pf.IsAlive && state.Player.X == hazard.X && state.Player.Y == hazard.Y)
+            {
+                pf.TakeDamage(dmg);
+                events.Add(new DotDamageEvent
+                {
+                    ActorId    = state.Player.Id,
+                    EntityId   = state.Player.Id,
+                    EffectName = effectName,
+                    Damage     = dmg,
+                });
+                if (!pf.IsAlive)
+                    events.Add(new DeathEvent { ActorId = state.Player.Id, KillerId = -1 });
+            }
+
+            // Monsters on this tile?
+            foreach (var monster in state.AliveMonsters.ToList())
+            {
+                if (monster.X != hazard.X || monster.Y != hazard.Y) continue;
+                var mf = monster.Require<Fighter>();
+                if (!mf.IsAlive) continue;
+
+                mf.TakeDamage(dmg);
+                events.Add(new DotDamageEvent
+                {
+                    ActorId    = monster.Id,
+                    EntityId   = monster.Id,
+                    EffectName = effectName,
+                    Damage     = dmg,
+                });
+                if (!mf.IsAlive)
+                {
+                    events.Add(new DeathEvent { ActorId = monster.Id, KillerId = -1 });
+                    DropMonsterLoot(state, monster, events);
+                    TransformToCorpse(state, monster, events, monsterFactory);
+                }
+            }
+        }
+
+        // Age only hazards that ticked this turn; newly-placed ones are untouched.
+        foreach (var hazard in toTickNow)
+            hazard.RemainingTurns--;
+        manager.RemoveExpired();
     }
 
     private static void ResolveMonsterTurns(GameState state, List<TurnEvent> events,
