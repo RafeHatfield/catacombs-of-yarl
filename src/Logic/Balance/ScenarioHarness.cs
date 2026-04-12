@@ -38,12 +38,14 @@ public sealed class ScenarioHarness
         _spellItemFactory = spellItemFactory;
     }
 
-    public AggregatedMetrics Run(ScenarioDefinition scenario, int baseSeed = 1337)
+    public AggregatedMetrics Run(ScenarioDefinition scenario, int baseSeed = 1337, int? runsOverride = null)
     {
+        int runCount = runsOverride ?? scenario.Runs;
         var allRuns = new List<RunMetrics>();
-        for (int i = 0; i < scenario.Runs; i++)
+        for (int i = 0; i < runCount; i++)
             allRuns.Add(RunOnce(scenario, baseSeed + i));
-        return AggregatedMetrics.FromRuns(scenario.ScenarioId, baseSeed, allRuns);
+        return AggregatedMetrics.FromRuns(scenario.ScenarioId, baseSeed, allRuns,
+            name: scenario.Name, depth: scenario.Depth);
     }
 
     public RunMetrics RunOnce(ScenarioDefinition scenario, int seed)
@@ -55,6 +57,18 @@ public sealed class ScenarioHarness
         var player = state.Player;
         var playerFighter = state.PlayerFighter;
         var inventory = state.PlayerInventory;
+
+        // Capture initial HP values for H_PM / H_MP calculations
+        metrics.PlayerMaxHp = playerFighter.MaxHp;
+        if (state.Monsters.Count > 0)
+        {
+            var monsterHps = state.Monsters
+                .Select(m => m.Get<Fighter>()?.MaxHp ?? 0)
+                .Where(hp => hp > 0)
+                .ToList();
+            if (monsterHps.Count > 0)
+                metrics.MonsterAvgMaxHp = monsterHps.Average();
+        }
 
         while (!state.IsGameOver)
         {

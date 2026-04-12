@@ -43,18 +43,18 @@ public sealed class ScenarioRunner
     /// <summary>
     /// Run a scenario from a YAML file path. Returns aggregated metrics.
     /// </summary>
-    public AggregatedMetrics RunFromFile(string scenarioPath, int baseSeed = 1337)
+    public AggregatedMetrics RunFromFile(string scenarioPath, int baseSeed = 1337, int? runsOverride = null)
     {
         var scenario = _loader.LoadScenarioFromFile(scenarioPath);
-        return _harness.Run(scenario, baseSeed);
+        return _harness.Run(scenario, baseSeed, runsOverride);
     }
 
     /// <summary>
     /// Run a scenario definition directly.
     /// </summary>
-    public AggregatedMetrics Run(ScenarioDefinition scenario, int baseSeed = 1337)
+    public AggregatedMetrics Run(ScenarioDefinition scenario, int baseSeed = 1337, int? runsOverride = null)
     {
-        return _harness.Run(scenario, baseSeed);
+        return _harness.Run(scenario, baseSeed, runsOverride);
     }
 
     /// <summary>

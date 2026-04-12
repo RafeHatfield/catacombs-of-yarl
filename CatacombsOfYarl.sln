@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatacombsOfYarl.Presentatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatacombsOfYarl.Tests", "tests\CatacombsOfYarl.Tests.csproj", "{03A948EA-8B92-47E7-B905-AD3D612E132E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{AD793D0B-AB52-4794-A613-299894E0EFEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harness", "tools\Harness\Harness.csproj", "{D7997AAA-F01C-4B0A-9945-F4E36EBFA69C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,9 +36,14 @@ Global
 		{03A948EA-8B92-47E7-B905-AD3D612E132E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03A948EA-8B92-47E7-B905-AD3D612E132E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03A948EA-8B92-47E7-B905-AD3D612E132E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7997AAA-F01C-4B0A-9945-F4E36EBFA69C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7997AAA-F01C-4B0A-9945-F4E36EBFA69C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7997AAA-F01C-4B0A-9945-F4E36EBFA69C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7997AAA-F01C-4B0A-9945-F4E36EBFA69C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{14AE02A1-5B50-421C-82B2-D5B3D9329D8A} = {EF9BA561-AC97-44C9-863F-90B50A447FA1}
 		{7ED6BB2C-2925-453B-A138-B77FE3C8318A} = {EF9BA561-AC97-44C9-863F-90B50A447FA1}
+		{D7997AAA-F01C-4B0A-9945-F4E36EBFA69C} = {AD793D0B-AB52-4794-A613-299894E0EFEC}
 	EndGlobalSection
 EndGlobal

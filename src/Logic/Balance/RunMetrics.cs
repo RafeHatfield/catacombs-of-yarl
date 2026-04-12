@@ -27,6 +27,10 @@ public sealed class RunMetrics
     // Momentum
     public int BonusAttacks { get; set; }
 
+    // Captured at run start for H_PM / H_MP calculations
+    public int PlayerMaxHp { get; set; }
+    public double MonsterAvgMaxHp { get; set; }
+
     /// <summary>
     /// Record metrics from a single turn's events. Call once per turn.
     /// Derives all counters from the event stream — no parallel tracking needed.
@@ -73,6 +77,8 @@ public sealed class RunMetrics
 public sealed class AggregatedMetrics
 {
     public string ScenarioId { get; init; } = "";
+    public string Name { get; init; } = "";
+    public int Depth { get; init; }
     public int TotalRuns { get; init; }
     public int Seed { get; init; }
 
@@ -87,31 +93,62 @@ public sealed class AggregatedMetrics
     public double AvgMonsterDamageDealt { get; init; }
     public double AvgMonstersKilled { get; init; }
 
+    /// <summary>Average player max HP across all runs (used for DPR-based H_MP).</summary>
+    public double AvgPlayerMaxHp { get; init; }
+
+    /// <summary>Average monster max HP per scenario run (used for DPR-based H_PM).</summary>
+    public double AvgMonsterMaxHp { get; init; }
+
+    /// <summary>H_PM (hits-based): avg monster HP / avg player damage per hit.</summary>
+    public double H_PM { get; init; }
+
+    /// <summary>H_MP (hits-based): avg player HP / avg monster damage per hit.</summary>
+    public double H_MP { get; init; }
+
     /// <summary>
     /// Aggregate a list of run metrics into summary statistics.
     /// </summary>
-    public static AggregatedMetrics FromRuns(string scenarioId, int seed, List<RunMetrics> runs)
+    public static AggregatedMetrics FromRuns(string scenarioId, int seed, List<RunMetrics> runs,
+        string name = "", int depth = 0)
     {
         if (runs.Count == 0)
-            return new AggregatedMetrics { ScenarioId = scenarioId, Seed = seed };
+            return new AggregatedMetrics { ScenarioId = scenarioId, Name = name, Depth = depth, Seed = seed };
 
         int totalPlayerAttacks = runs.Sum(r => r.PlayerAttacks);
-        int totalPlayerHits = runs.Sum(r => r.PlayerHits);
+        int totalPlayerHits    = runs.Sum(r => r.PlayerHits);
         int totalMonsterAttacks = runs.Sum(r => r.MonsterAttacks);
-        int totalMonsterHits = runs.Sum(r => r.MonsterHits);
+        int totalMonsterHits   = runs.Sum(r => r.MonsterHits);
+        int totalPlayerDamage  = runs.Sum(r => r.PlayerDamageDealt);
+        int totalMonsterDamage = runs.Sum(r => r.MonsterDamageDealt);
+        double avgMonsterMaxHp = runs.Average(r => r.MonsterAvgMaxHp);
+        double avgPlayerMaxHp  = runs.Average(r => (double)r.PlayerMaxHp);
+
+        // Hits-based H_PM/H_MP — useful for "how hard is each swing" analysis
+        double h_pm = totalPlayerHits > 0 && totalPlayerDamage > 0
+            ? avgMonsterMaxHp / ((double)totalPlayerDamage / totalPlayerHits)
+            : 0;
+        double h_mp = totalMonsterHits > 0 && totalMonsterDamage > 0
+            ? avgPlayerMaxHp / ((double)totalMonsterDamage / totalMonsterHits)
+            : 0;
 
         return new AggregatedMetrics
         {
-            ScenarioId = scenarioId,
-            Seed = seed,
-            TotalRuns = runs.Count,
-            AvgTurns = runs.Average(r => r.TurnsTaken),
-            DeathRate = (double)runs.Count(r => r.PlayerDied) / runs.Count,
-            PlayerHitRate = totalPlayerAttacks > 0 ? (double)totalPlayerHits / totalPlayerAttacks : 0,
-            MonsterHitRate = totalMonsterAttacks > 0 ? (double)totalMonsterHits / totalMonsterAttacks : 0,
-            AvgPlayerDamageDealt = runs.Average(r => r.PlayerDamageDealt),
+            ScenarioId            = scenarioId,
+            Name                  = name,
+            Depth                 = depth,
+            Seed                  = seed,
+            TotalRuns             = runs.Count,
+            AvgTurns              = runs.Average(r => r.TurnsTaken),
+            DeathRate             = (double)runs.Count(r => r.PlayerDied) / runs.Count,
+            PlayerHitRate         = totalPlayerAttacks > 0 ? (double)totalPlayerHits / totalPlayerAttacks : 0,
+            MonsterHitRate        = totalMonsterAttacks > 0 ? (double)totalMonsterHits / totalMonsterAttacks : 0,
+            AvgPlayerDamageDealt  = runs.Average(r => r.PlayerDamageDealt),
             AvgMonsterDamageDealt = runs.Average(r => r.MonsterDamageDealt),
-            AvgMonstersKilled = runs.Average(r => r.MonstersKilled),
+            AvgMonstersKilled     = runs.Average(r => r.MonstersKilled),
+            AvgPlayerMaxHp        = avgPlayerMaxHp,
+            AvgMonsterMaxHp       = avgMonsterMaxHp,
+            H_PM                  = h_pm,
+            H_MP                  = h_mp,
         };
     }
 }
