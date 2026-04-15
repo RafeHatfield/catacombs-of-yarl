@@ -309,7 +309,7 @@ public sealed class DungeonRenderer
     // Programmatic shadow modulate for wall-adjacent Dark floor tiles when visible.
     // Very subtle dimming (86%) with a whisper of cool shift — just enough to read as
     // shadow at the wall edge without looking like a deliberate floor pattern.
-    private static readonly Color DarkFloorModulate = new(0.86f, 0.86f, 0.90f);
+    private static readonly Color DarkFloorModulate = new(0.92f, 0.92f, 0.95f);
 
     /// <summary>
     /// Map the TileTheme enum value to the YAML config theme key.
