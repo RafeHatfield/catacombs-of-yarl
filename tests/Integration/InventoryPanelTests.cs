@@ -9,6 +9,13 @@ using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Presentation.UI;
 
+// InventoryPanel is superseded by QuickSlotBar (Phase 3 mobile layout overhaul).
+// These tests remain for regression coverage until QuickSlotBar integration tests
+// are written to replace them. CS0618 suppressed here because the warning is expected
+// and the coverage is still valid.
+// TODO: migrate these tests to QuickSlotBar integration tests.
+#pragma warning disable CS0618
+
 /// <summary>
 /// Integration tests for InventoryPanel.
 /// Verifies slot rect computation and manual hit-test click handling
@@ -151,3 +158,4 @@ public class InventoryPanelTests
         await ISceneRunner.SyncProcessFrame;
     }
 }
+#pragma warning restore CS0618

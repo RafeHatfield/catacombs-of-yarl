@@ -21,7 +21,7 @@ namespace CatacombsOfYarl.Presentation.UI;
 ///
 /// Tapping an occupied equipment slot → UnequipRequested event.
 /// Tapping an In Pack item → EquipRequested event.
-/// Tap outside panel or the [✕] button → Close().
+/// The [✕] button is the only close mechanism (full-screen: no "outside" exists).
 ///
 /// Manual hit-testing (same approach as InventoryPanel) bypasses Godot Button
 /// click-rect offset bug under integer stretch scale mode.
@@ -213,13 +213,9 @@ public sealed partial class EquipmentPanel : Control
                     }
                 }
 
-                // Click landed outside all interactive slots.
-                // If it's also outside the visible panel container, close (tap-outside-to-dismiss).
-                bool insidePanel = _panelContainer != null &&
-                    new Rect2(_panelContainer.Position, _panelContainer.Size).HasPoint(pos);
-                if (!insidePanel)
-                    Hide();
-
+                // Click landed outside all interactive slots but still inside the full-screen
+                // panel. With a full-screen layout there is no "outside the panel", so we no
+                // longer auto-dismiss on background taps. The X button is the only close path.
                 AcceptEvent();
             }
             else
@@ -273,17 +269,16 @@ public sealed partial class EquipmentPanel : Control
         backdrop.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         AddChild(backdrop);
 
-        // Centered panel container — anchored to center, sized to fit content.
+        // Full-screen panel container — fills the entire screen with 16px insets on all
+        // sides so content never touches the screen edges.
         // MouseFilter=Ignore so all clicks bubble up to EquipmentPanel._GuiInput,
         // where the unified hit-test runs against tracked slot rects.
-        _panelContainer = new Control
-        {
-            AnchorLeft   = 0.5f, AnchorRight  = 0.5f,
-            AnchorTop    = 0.5f, AnchorBottom  = 0.5f,
-            OffsetLeft   = -340f, OffsetRight  = 340f,
-            OffsetTop    = -320f, OffsetBottom = 320f,
-            MouseFilter  = MouseFilterEnum.Ignore,
-        };
+        _panelContainer = new Control { MouseFilter = MouseFilterEnum.Ignore };
+        _panelContainer.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+        _panelContainer.OffsetLeft   =  16f;
+        _panelContainer.OffsetRight  = -16f;
+        _panelContainer.OffsetTop    =  16f;
+        _panelContainer.OffsetBottom = -16f;
         AddChild(_panelContainer);
 
         // Panel background.
@@ -371,14 +366,22 @@ public sealed partial class EquipmentPanel : Control
         packLabel.AddThemeColorOverride("font_color", new Color(0.75f, 0.75f, 0.75f, 1f));
         vbox.AddChild(packLabel);
 
-        // Pack strip placeholder — rebuilt each Refresh.
-        _packStrip = new Control
+        // Pack strip: ScrollContainer with horizontal scroll so many items don't overflow.
+        // The inner HBoxContainer is rebuilt each Refresh and must NOT use ExpandFill —
+        // it should grow to its natural content width so the ScrollContainer can scroll it.
+        var packScroll = new ScrollContainer
         {
-            CustomMinimumSize   = new Vector2(0, PackSlotSize),
-            SizeFlagsHorizontal = SizeFlags.ExpandFill,
-            MouseFilter         = MouseFilterEnum.Ignore,
+            CustomMinimumSize          = new Vector2(0, PackSlotSize + 12), // +12 for scrollbar
+            SizeFlagsHorizontal        = SizeFlags.ExpandFill,
+            HorizontalScrollMode       = ScrollContainer.ScrollMode.ShowAlways,
+            VerticalScrollMode         = ScrollContainer.ScrollMode.Disabled,
         };
-        vbox.AddChild(_packStrip);
+        // The scroll container itself shouldn't block all input — let _GuiInput handle taps.
+        packScroll.MouseFilter = MouseFilterEnum.Pass;
+        vbox.AddChild(packScroll);
+
+        // _packStrip is the ScrollContainer; RebuildPackStrip adds/clears the inner HBoxContainer.
+        _packStrip = packScroll;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -576,10 +579,15 @@ public sealed partial class EquipmentPanel : Control
             .Where(item => item.Get<Equippable>() != null && !equippedIds.Contains(item.Id))
             .ToList() ?? new List<Entity>();
 
-        var hbox = new HBoxContainer();
+        var hbox = new HBoxContainer
+        {
+            // ShrinkBegin so the HBox grows to natural content width rather than being
+            // forced to match the ScrollContainer. This allows horizontal scrolling when
+            // there are more pack items than fit in the visible strip.
+            SizeFlagsHorizontal = SizeFlags.ShrinkBegin,
+            MouseFilter         = MouseFilterEnum.Ignore,
+        };
         hbox.AddThemeConstantOverride("separation", 6);
-        hbox.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
-        hbox.MouseFilter = MouseFilterEnum.Ignore;
         _packStrip.AddChild(hbox);
 
         if (equippables.Count == 0)

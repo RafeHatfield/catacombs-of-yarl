@@ -1,0 +1,45 @@
+scenario_id: test_scrolls_targeted
+name: "Scroll Single-Target Spells"
+description: >
+  Tests single-target status effect spells: confusion, slow, glue, fear, fireball.
+  Three orcs at range 5 from the player — within all scroll ranges.
+  Goal: verify targeted spell application (status components present on targets)
+  and fireball AoE lands on clustered enemies.
+depth: 2
+turn_limit: 150
+runs: 1
+map_width: 20
+map_height: 20
+player_start_x: 3
+player_start_y: 6
+
+player:
+  hp: 80
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 2
+  damage_max: 8
+  weapon: "longsword"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc"
+    count: 3
+    position: [8, 6]
+
+items:
+  - type: "scroll_of_confusion"
+    count: 1
+  - type: "scroll_of_slow"
+    count: 1
+  - type: "scroll_of_glue"
+    count: 1
+  - type: "scroll_of_fear"
+    count: 1
+  - type: "scroll_of_fireball"
+    count: 2
+  - type: "healing_potion"
+    count: 2

@@ -9,21 +9,21 @@ namespace CatacombsOfYarl.Presentation.UI;
 /// </summary>
 public sealed partial class RectDebugDraw : Control
 {
-    private InventoryPanel? _inventoryPanel;
+    private QuickSlotBar? _quickSlotBar;
 
-    public void SetInventoryPanel(InventoryPanel? panel) => _inventoryPanel = panel;
+    public void SetQuickSlotBar(QuickSlotBar? bar) => _quickSlotBar = bar;
 
     public override void _Draw()
     {
-        if (_inventoryPanel == null) return;
+        if (_quickSlotBar == null) return;
 
-        var panelGlobalPos = _inventoryPanel.GetGlobalRect().Position;
+        var panelGlobalPos = _quickSlotBar.GetGlobalRect().Position;
         var myGlobalPos = GetGlobalRect().Position;
 
-        // Draw inventory slot rects
-        foreach (var (itemId, localRect) in _inventoryPanel.SlotRects)
+        // Draw item slot rects
+        foreach (var (itemId, localRect) in _quickSlotBar.SlotRects)
         {
-            // Convert from InventoryPanel-local to our local coords
+            // Convert from QuickSlotBar-local to our local coords
             var globalRect = new Rect2(localRect.Position + panelGlobalPos, localRect.Size);
             var drawRect = new Rect2(globalRect.Position - myGlobalPos, globalRect.Size);
             DrawRect(drawRect, Colors.Lime, false, 2.0f);

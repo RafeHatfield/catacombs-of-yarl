@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Map;
@@ -21,11 +23,26 @@ public sealed class FloorRunMetrics
     /// <summary>Player HP at end of floor (0 if player died).</summary>
     public int PlayerHpAtEnd { get; set; }
 
+    /// <summary>Player max HP at end of floor. Used for HP-fraction calculations per floor.</summary>
+    public int PlayerMaxHp { get; set; }
+
     /// <summary>True if the player died on this floor.</summary>
     public bool PlayerDied { get; set; }
 
     /// <summary>True if the player successfully descended (reached stair after clearing floor).</summary>
     public bool Descended { get; set; }
+
+    /// <summary>
+    /// Healing potions used on this floor (player HealEvent count, filtered to player ActorId only).
+    /// Does NOT count accidental monster item-use that heals the player.
+    /// </summary>
+    public int PotionsUsed { get; set; }
+
+    /// <summary>
+    /// True when this floor ended because the per-floor turn cap was hit, rather than
+    /// descent or death. Indicates a potential stuck-bot or pathfinding regression.
+    /// </summary>
+    public bool HitMaxTurns { get; set; }
 }
 
 /// <summary>
@@ -68,12 +85,15 @@ public sealed class DungeonRunResult
 /// Usage:
 ///   var harness = new DungeonRunHarness(floorBuilder);
 ///   var result = harness.Run(floors: 5, baseSeed: 1337);
+///   var summary = harness.RunSoak(floors: 3, runs: 100, baseSeed: 1337);
 /// </summary>
 public sealed class DungeonRunHarness
 {
     // After floor is cleared, bot walks toward stair. Cap turns per floor to prevent
     // infinite loops if the bot gets stuck (e.g. pathfinding edge case).
-    private const int MaxTurnsPerFloor = 500;
+    // 1000 gives a full dungeon floor (120×80, ~40 rooms, 10+ monsters) comfortable clearance.
+    // 500 was too tight — large floors with scattered monsters could time out legitimately.
+    private const int MaxTurnsPerFloor = 1000;
 
     // Override the GameState TurnLimit for dungeon floors. The default is 100 (scenario mode),
     // which is far too low for a procedural dungeon floor with pathfinding to a distant stair.
@@ -97,17 +117,99 @@ public sealed class DungeonRunHarness
     /// The bot uses BotBrain for combat and healing decisions. When a floor is clear
     /// (all monsters dead), the bot paths to the stair and descends. If the player dies
     /// or the per-floor turn cap is hit, the run stops early.
+    ///
+    /// Backward-compatible: callers that used Run() previously get identical results.
     /// </summary>
     public DungeonRunResult Run(int floors, int baseSeed = 1337)
     {
-        var perFloor = new List<FloorRunMetrics>(floors);
-        Entity? player = null;
+        var soakResult = RunSingle(floors, baseSeed, enableTelemetry: false);
+
+        // Reconstruct the legacy DungeonRunResult from the enriched soak result.
+        // FloorsAttempted is PerFloor.Count — same logic as before.
+        return new DungeonRunResult
+        {
+            Seed             = soakResult.Seed,
+            FloorsAttempted  = soakResult.PerFloor.Count,
+            FloorsCompleted  = soakResult.FloorsCompleted,
+            TotalTurns       = soakResult.TotalTurns,
+            TotalKills       = soakResult.TotalKills,
+            FinalHp          = soakResult.FinalHp,
+            PlayerDied       = soakResult.Outcome == OutcomeClassifier.Died,
+            PerFloor         = soakResult.PerFloor,
+        };
+    }
+
+    /// <summary>
+    /// Run N dungeon campaigns and return aggregate soak statistics.
+    ///
+    /// Seed per run: baseSeed + i (i = 0..runs-1), matching the PoC convention.
+    /// Each run is wrapped in try/catch — exceptions produce an "exception" result
+    /// and are logged to stderr, but do NOT abort the whole session.
+    ///
+    /// This is the primary entry point for automated regression testing.
+    /// </summary>
+    public DungeonSoakSummary RunSoak(int floors, int runs, int baseSeed = 1337)
+    {
+        var results = new List<DungeonSoakRunResult>(runs);
+
+        for (int i = 0; i < runs; i++)
+        {
+            int seed = baseSeed + i;
+            try
+            {
+                // Telemetry always enabled in soak mode — no reason to run N iterations without it.
+                var result = RunSingle(floors, seed, enableTelemetry: true);
+                results.Add(result);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"  [soak] run {i} (seed {seed}) threw: {ex.Message}");
+                results.Add(new DungeonSoakRunResult
+                {
+                    Seed          = seed,
+                    Outcome       = OutcomeClassifier.Exception,
+                    FailureType   = OutcomeClassifier.FailureException,
+                    FailureDetail = ex.Message,
+                    FloorsCompleted = 0,
+                    PerFloor      = Array.Empty<FloorRunMetrics>(),
+                });
+            }
+        }
+
+        return DungeonSoakSummary.ComputeFrom(results, configuredFloors: floors);
+    }
+
+    /// <summary>
+    /// Core single-run implementation. Returns a fully populated DungeonSoakRunResult
+    /// including killerName, potions tracking, boon count, and timing.
+    ///
+    /// Both Run() and RunSoak() call this method. It replaces the original run loop
+    /// while preserving identical behavior for all existing callers.
+    ///
+    /// When <paramref name="enableTelemetry"/> is true (default for soak mode), creates a
+    /// BotTelemetryRecorder and passes a BotDecisionContext to every BotBrain.Decide() call,
+    /// storing the resulting BotRunSummary in the returned DungeonSoakRunResult.BotSummary.
+    /// When false (legacy Run() path), no recorder is created and BotSummary is null.
+    /// </summary>
+    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false)
+    {
+        var sw = Stopwatch.StartNew();
+
+        var perFloor      = new List<FloorRunMetrics>(floors);
+        Entity? player    = null;
+        Entity? lastFloorPlayer = null; // always the last floor's player entity (even on death)
         BoonTracker? boonTracker = null;
-        int totalTurns = 0;
-        int totalKills = 0;
+        int totalTurns    = 0;
+        int totalKills    = 0;
         int floorsCompleted = 0;
-        bool playerDied = false;
-        int finalHp = 0;
+        int totalPotionsUsed = 0;
+        int finalHp       = 0;
+        int finalMaxHp    = 0;
+        string? killerName = null;
+
+        // Create a single recorder for the whole run when telemetry is enabled.
+        // All BotBrain.Decide() calls share this recorder; context carries per-call metadata.
+        BotTelemetryRecorder? recorder = enableTelemetry ? new BotTelemetryRecorder() : null;
 
         for (int depth = 1; depth <= floors; depth++)
         {
@@ -120,18 +222,28 @@ public sealed class DungeonRunHarness
             state.TurnLimit = DungeonFloorTurnLimit;
 
             var floorMetrics = new FloorRunMetrics { Depth = depth };
-            int floorTurns = 0;
-            int floorKills = 0;
+            int floorTurns   = 0;
+            int floorKills   = 0;
+            int floorPotions = 0;
+            int playerId     = state.Player.Id;
+            bool descended   = false;
 
             while (!state.IsGameOver && floorTurns < MaxTurnsPerFloor)
             {
                 PlayerAction action;
+                // TurnNumber for telemetry: accumulated total turns so far + current floor turns.
+                // This gives a monotonically increasing turn number across the whole run.
+                int currentTurnNumber = totalTurns + floorTurns + 1;
 
                 if (state.IsFloorClear && state.StairDown != null)
                 {
-                    // All monsters dead — navigate to the stair and descend
+                    // All monsters dead — navigate to the stair and descend.
+                    // Emit NavigateToStair telemetry for the harness-driven path,
+                    // which is not inside BotBrain.Decide() (see plan risk #3).
                     if (state.PlayerOnStairDown)
                     {
+                        // Emit a Descend decision for the actual descend step
+                        recorder?.Record(BuildNavigateRecord(state, currentTurnNumber, depth, "Descend", "navigate_stair"));
                         action = PlayerAction.Descend;
                     }
                     else
@@ -145,25 +257,34 @@ public sealed class DungeonRunHarness
 
                         if (path != null && path.Count > 0)
                         {
+                            recorder?.Record(BuildNavigateRecord(state, currentTurnNumber, depth, "NavigateToStair", "navigate_stair"));
                             var (nx, ny) = path[0];
                             action = PlayerAction.MoveTo(nx, ny);
                         }
                         else
                         {
                             // Pathfinding failed (stair unreachable) — wait rather than infinite-loop
+                            recorder?.Record(BuildNavigateRecord(state, currentTurnNumber, depth, "Wait", "navigate_stair"));
                             action = PlayerAction.Wait;
                         }
                     }
                 }
                 else
                 {
-                    // Normal combat/heal decision via BotBrain
+                    // Normal combat/heal decision via BotBrain.
+                    // Pass context when telemetry is enabled so BotBrain emits a decision record.
+                    BotDecisionContext? decisionContext = recorder != null
+                        ? new BotDecisionContext(recorder, currentTurnNumber, depth)
+                        : null;
+
                     var botAction = BotBrain.Decide(
                         state.Player,
                         state.PlayerFighter,
                         state.PlayerInventory,
                         state.Monsters,
-                        state.Map);
+                        state.Map,
+                        decisionContext,
+                        floorItems: state.FloorItems);
 
                     // BotBrain.ToPlayerAction uses GameMap.MoveToward — a greedy directional
                     // step that gets stuck at walls. In a dungeon with rooms and corridors, we
@@ -194,54 +315,211 @@ public sealed class DungeonRunHarness
                     }
                 }
 
-                var result = TurnController.ProcessTurn(state, action);
+                var turnResult = TurnController.ProcessTurn(state, action);
                 floorTurns++;
 
-                // Count kills from this turn's events
-                floorKills += result.Events.OfType<DeathEvent>()
-                    .Count(e => e.ActorId != state.Player.Id);
-
-                // Descend signals floor completion — move to the next depth
-                if (result.Events.Any(e => e is DescendEvent))
+                // Process events from this turn
+                foreach (var evt in turnResult.Events)
                 {
-                    floorMetrics.Descended = true;
-                    floorsCompleted++;
-                    break;
+                    switch (evt)
+                    {
+                        case DeathEvent death when death.ActorId != playerId:
+                            // Monster died — count kill
+                            floorKills++;
+                            break;
+
+                        case DeathEvent death when death.ActorId == playerId:
+                            // Player died — capture killer name immediately.
+                            // Dead monsters remain in state.Monsters (not removed until next floor),
+                            // so this lookup works even if the killer died in the same turn.
+                            // KillerId = -1 means a ground hazard kill (fire/gas); no entity to look up.
+                            killerName = death.KillerId == -1
+                                ? "Ground Hazard"
+                                : state.Monsters.FirstOrDefault(m => m.Id == death.KillerId)?.Name;
+                            break;
+
+                        case HealEvent heal when heal.ActorId == playerId:
+                            // Player used a healing item. Filter to player only — monster item-use
+                            // that accidentally heals the player via HealEvent also has a different
+                            // ActorId (the monster), so this check is correct.
+                            floorPotions++;
+                            break;
+
+                        case DescendEvent:
+                            descended = true;
+                            floorsCompleted++;
+                            break;
+                    }
                 }
+
+                if (descended) break;
             }
 
-            floorMetrics.TurnsTaken = floorTurns;
+            floorMetrics.TurnsTaken    = floorTurns;
             floorMetrics.MonstersKilled = floorKills;
-            floorMetrics.PlayerHpAtEnd = state.PlayerFighter.Hp;
-            floorMetrics.PlayerDied = !state.PlayerFighter.IsAlive;
+            floorMetrics.PlayerHpAtEnd  = state.PlayerFighter.Hp;
+            floorMetrics.PlayerMaxHp    = state.PlayerFighter.MaxHp;
+            floorMetrics.PlayerDied     = !state.PlayerFighter.IsAlive;
+            floorMetrics.Descended      = descended;
+            floorMetrics.PotionsUsed    = floorPotions;
+            // HitMaxTurns: floor ended at the cap without descent or death
+            floorMetrics.HitMaxTurns    = floorTurns >= MaxTurnsPerFloor
+                && !floorMetrics.Descended
+                && !floorMetrics.PlayerDied;
 
             perFloor.Add(floorMetrics);
 
-            totalTurns += floorTurns;
-            totalKills += floorKills;
-            finalHp = state.PlayerFighter.Hp;
+            totalTurns   += floorTurns;
+            totalKills   += floorKills;
+            totalPotionsUsed += floorPotions;
+            finalHp      = state.PlayerFighter.Hp;
+            finalMaxHp   = state.PlayerFighter.MaxHp;
+            // Track the last-seen player entity for post-run inventory scan.
+            // On death, this is the dead player entity from the final floor.
+            lastFloorPlayer = state.Player;
 
             if (!state.PlayerFighter.IsAlive)
-            {
-                playerDied = true;
                 break;
-            }
 
             // Carry the same player entity and boon tracker forward to the next floor
-            player = state.Player;
+            player      = state.Player;
             boonTracker = state.BoonTracker;
         }
 
-        return new DungeonRunResult
+        sw.Stop();
+
+        // Build the intermediate DungeonRunResult for OutcomeClassifier.
+        bool playerDiedThisRun = killerName != null
+            || (perFloor.Count > 0 && perFloor[^1].PlayerDied);
+
+        var runResult = new DungeonRunResult
         {
-            Seed = baseSeed,
+            Seed            = baseSeed,
             FloorsAttempted = perFloor.Count,
             FloorsCompleted = floorsCompleted,
-            TotalTurns = totalTurns,
-            TotalKills = totalKills,
-            FinalHp = finalHp,
-            PlayerDied = playerDied,
-            PerFloor = perFloor,
+            TotalTurns      = totalTurns,
+            TotalKills      = totalKills,
+            FinalHp         = finalHp,
+            PlayerDied      = playerDiedThisRun,
+            PerFloor        = perFloor,
         };
+
+        var (outcome, failureType, failureDetail) = OutcomeClassifier.Classify(runResult, killerName);
+
+        // Clamp finalHp to 0 on death — the plan specifies "0 if player died".
+        // In-game HP can go below 0 on a fatal hit; clamp here for clean data.
+        int reportedFinalHp = playerDiedThisRun ? 0 : finalHp;
+        double hpFraction   = (finalMaxHp > 0 && !playerDiedThisRun)
+            ? (double)finalHp / finalMaxHp
+            : 0.0;
+
+        // Count remaining potions from the last-seen player entity.
+        // lastFloorPlayer is set every floor (including the death floor), so it is
+        // never null after at least one floor was attempted.
+        int potionsRemaining = CountHealingPotions(lastFloorPlayer);
+
+        // Finalize telemetry: summarize and adjust DeathsWithUnusedPotions.
+        // ComputeFrom() sets DeathsWithUnusedPotions = 1 if last decision had potions.
+        // We correct it here: only count if the run actually ended in death.
+        BotRunSummary? botSummary = null;
+        if (recorder != null && recorder.Decisions.Count > 0)
+        {
+            var rawSummary = recorder.Summarize();
+            int deathsWithUnused = playerDiedThisRun && rawSummary.DeathsWithUnusedPotions > 0 ? 1 : 0;
+
+            botSummary = new BotRunSummary
+            {
+                TotalDecisions          = rawSummary.TotalDecisions,
+                FloorsVisited           = rawSummary.FloorsVisited,
+                ActionCounts            = rawSummary.ActionCounts,
+                ReasonCounts            = rawSummary.ReasonCounts,
+                ContextCounts           = rawSummary.ContextCounts,
+                AvgHpWhenHealing        = rawSummary.AvgHpWhenHealing,
+                HealDecisions           = rawSummary.HealDecisions,
+                DeathsWithUnusedPotions = deathsWithUnused,
+            };
+        }
+
+        return new DungeonSoakRunResult
+        {
+            Seed                = baseSeed,
+            Outcome             = outcome,
+            FailureType         = failureType,
+            FailureDetail       = failureDetail,
+            DeepestFloorReached = perFloor.Count > 0 ? perFloor[^1].Depth : 0,
+            FloorsCompleted     = floorsCompleted,
+            TotalTurns          = totalTurns,
+            TotalKills          = totalKills,
+            FinalHp             = reportedFinalHp,
+            FinalMaxHp          = finalMaxHp,
+            FinalHpFraction     = hpFraction,
+            PotionsUsed         = totalPotionsUsed,
+            PotionsRemaining    = potionsRemaining,
+            BoonsAcquired       = boonTracker?.BoonsApplied.Count ?? 0,
+            DurationSeconds     = sw.Elapsed.TotalSeconds,
+            PerFloor            = perFloor,
+            BotSummary          = botSummary,
+        };
+    }
+
+    /// <summary>
+    /// Build a BotDecisionRecord for the harness-driven navigate-to-stair path.
+    /// This path is NOT inside BotBrain.Decide() (it's harness logic), so we emit
+    /// telemetry manually here with the player's current state.
+    /// </summary>
+    private static BotDecisionRecord BuildNavigateRecord(
+        GameState state,
+        int turnNumber,
+        int floorDepth,
+        string actionType,
+        string reason)
+    {
+        var fighter = state.PlayerFighter;
+        double hpFraction = fighter.MaxHp > 0 ? (double)fighter.Hp / fighter.MaxHp : 0.0;
+        var inventory = state.PlayerInventory;
+
+        int potions = 0;
+        if (inventory != null)
+        {
+            foreach (var item in inventory.Items)
+            {
+                var consumable = item.Get<Consumable>();
+                if (consumable?.IsHealing == true)
+                    potions += consumable.StackSize;
+            }
+        }
+
+        return new BotDecisionRecord
+        {
+            TurnNumber              = turnNumber,
+            FloorDepth              = floorDepth,
+            ActionType              = actionType,
+            Reason                  = reason,
+            HpFraction              = hpFraction,
+            VisibleEnemies          = 0, // floor is clear when navigating to stair
+            AdjacentEnemies         = 0,
+            HealingPotionsAvailable = potions,
+            InCombat                = false,
+            LowHp                   = hpFraction <= BotConfig.HealThreshold,
+        };
+    }
+
+    /// <summary>
+    /// Count healing potions in the entity's inventory.
+    /// Returns 0 if entity is null or has no inventory.
+    /// </summary>
+    private static int CountHealingPotions(Entity? entity)
+    {
+        var inventory = entity?.Get<Inventory>();
+        if (inventory == null) return 0;
+
+        int count = 0;
+        foreach (var item in inventory.Items)
+        {
+            var consumable = item.Get<Consumable>();
+            if (consumable?.IsHealing == true)
+                count += consumable.StackSize;
+        }
+        return count;
     }
 }

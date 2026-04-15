@@ -9,6 +9,19 @@ using System.Globalization;
 namespace CatacombsOfYarl.Presentation.UI;
 
 /// <summary>
+/// Semantic category for a toast message. Controls the left-border accent color.
+/// </summary>
+public enum ToastCategory
+{
+    /// <summary>Kills, heals, buffs, identification, item pickups.</summary>
+    Positive,
+    /// <summary>Damage taken by player, debuffs applied to player, player death.</summary>
+    Danger,
+    /// <summary>Misses, status expiry, generic messages, monster-only events.</summary>
+    Neutral,
+}
+
+/// <summary>
 /// Floating toast messages overlaid on the dungeon. Each combat event
 /// appears as a line of text that fades out after a few seconds.
 ///
@@ -23,13 +36,12 @@ public sealed partial class ToastLog : Control
     private const float FadeDuration    = 0.8f;  // seconds to fade to zero
     private const int   MaxToasts       = 5;
     private const int   FontSize        = 24;
-    private const int   HistorySize     = 20;   // messages to keep for recall
-    private const float RecallDuration  = 5.0f; // seconds recall messages stay visible
+    private const int   HistorySize     = 20;   // messages to keep for MessageLogPanel recall
 
     private int _playerId;
     private VBoxContainer? _stack;
-    // Shared style — created once, reused across all toasts to avoid RefCounted GC churn.
-    private StyleBoxFlat? _toastStyle;
+    // No shared style — each toast creates its own StyleBoxFlat so the left-border color
+    // can vary per message. At MaxToasts=5 visible at once, the GC cost is negligible.
     private FontFile? _monoFont;
 
     // Timer-based cleanup: avoids Callable.From() leak in Godot 4 C#.
@@ -73,35 +85,23 @@ public sealed partial class ToastLog : Control
     /// <summary>Number of currently-visible toasts. Useful for debug overlay.</summary>
     public int ToastCount => _activeToasts.Count;
 
-    /// <summary>Show an arbitrary message as a toast (e.g. auto-explore stop reason).</summary>
-    public void AddMessage(string text) => SpawnToast(text);
-
     /// <summary>
-    /// Re-display the last N messages from history so the player can review what happened.
-    /// Called by the HUD recall button. Messages use a longer display duration.
+    /// Read-only view of the message history, oldest-first. Each entry is the raw BBCode
+    /// string that was displayed as a toast. Used by MessageLogPanel to populate the log.
     /// </summary>
-    public void RecallHistory()
-    {
-        if (_history.Count == 0) return;
-        // Clear current toasts first so recalled messages have space.
-        foreach (var (label, _, _) in _activeToasts)
-            label.SafeFree();
-        _activeToasts.Clear();
+    public IReadOnlyList<string> History => _history;
 
-        // Show last min(MaxToasts, history) messages, oldest first so newest ends up on top.
-        int start = Math.Max(0, _history.Count - MaxToasts);
-        for (int i = start; i < _history.Count; i++)
-            SpawnToast(_history[i], RecallDuration);
-    }
+    /// <summary>Show an arbitrary message as a toast (e.g. auto-explore stop reason).</summary>
+    public void AddMessage(string text) => SpawnToast(text, ToastCategory.Neutral);
 
     /// <summary>Add messages from a completed turn's events.</summary>
     public void RecordTurn(TurnResult result, GameState state)
     {
         foreach (var evt in result.Events)
         {
-            var msg = FormatEvent(evt, state);
+            var (msg, category) = FormatEvent(evt, state);
             if (msg != null)
-                SpawnToast(msg);
+                SpawnToast(msg, category);
         }
     }
 
@@ -128,16 +128,19 @@ public sealed partial class ToastLog : Control
             MouseFilter         = MouseFilterEnum.Ignore,
         };
         _stack.AddThemeConstantOverride("separation", 2);
-        // Anchor to bottom-left so messages sit above the HUD bar.
+        // Anchor to bottom-left of parent (UILayer/ToastLog node, which is already bounded
+        // to the viewport zone via tscn offsets: offset_top=90, offset_bottom=-333).
+        // OffsetBottom=-10 means 10px above the ToastLog node's bottom edge, which IS the
+        // QuickSlotBar boundary — no hardcoded chrome height needed.
         _stack.SetAnchorsAndOffsetsPreset(LayoutPreset.BottomLeft);
-        _stack.SetOffset(Side.Bottom, -120); // above HUD
+        _stack.SetOffset(Side.Bottom, -10);
         _stack.SetOffset(Side.Left,   8);
         _stack.SetOffset(Side.Right,  328);
         _stack.SetOffset(Side.Top,    -500); // tall enough for 5 wrapped messages
         AddChild(_stack);
     }
 
-    private void SpawnToast(string bbcode, float displayDuration = DisplayDuration)
+    private void SpawnToast(string bbcode, ToastCategory category, float displayDuration = DisplayDuration)
     {
         if (_stack == null) return;
 
@@ -170,19 +173,30 @@ public sealed partial class ToastLog : Control
         label.AddThemeColorOverride("default_color", Colors.White);
         label.AppendText(bbcode);
 
-        _toastStyle ??= new StyleBoxFlat
+        // Each toast gets its own StyleBoxFlat so the left-border color can differ per category.
+        // The left border provides a quick visual read: green = good, red = bad, gray = neutral.
+        Color borderColor = category switch
+        {
+            ToastCategory.Positive => new Color(0.3f, 0.9f, 0.3f),
+            ToastCategory.Danger   => new Color(0.9f, 0.3f, 0.3f),
+            _                      => new Color(0.5f, 0.5f, 0.5f),
+        };
+        var style = new StyleBoxFlat
         {
             BgColor                 = new Color(0f, 0f, 0f, 0.55f),
             CornerRadiusTopLeft     = 4,
             CornerRadiusTopRight    = 4,
             CornerRadiusBottomLeft  = 4,
             CornerRadiusBottomRight = 4,
-            ContentMarginLeft       = 8f,
+            // Left margin is wider to accommodate the 3px border stripe without crowding text.
+            ContentMarginLeft       = 11f,
             ContentMarginRight      = 8f,
             ContentMarginTop        = 2f,
             ContentMarginBottom     = 2f,
+            BorderWidthLeft         = 3,
+            BorderColor             = borderColor,
         };
-        label.AddThemeStyleboxOverride("normal", _toastStyle);
+        label.AddThemeStyleboxOverride("normal", style);
 
         _stack.AddChild(label);
 
@@ -192,7 +206,11 @@ public sealed partial class ToastLog : Control
 
     // -------------------------------------------------------------------------
 
-    private string? FormatEvent(TurnEvent evt, GameState state)
+    /// <summary>
+    /// Formats an event into a BBCode string and classifies it as Positive, Danger, or Neutral.
+    /// Returns (null, Neutral) for events that should produce no toast.
+    /// </summary>
+    private (string? text, ToastCategory category) FormatEvent(TurnEvent evt, GameState state)
     {
         bool isPlayer = evt.ActorId == _playerId;
         string actorName = isPlayer ? "You" : GetEntityName(evt.ActorId, state);
@@ -200,106 +218,144 @@ public sealed partial class ToastLog : Control
 
         return evt switch
         {
+            // Misses are neutral regardless of who is attacking.
             AttackEvent { Hit: false } atk =>
-                $"[color=gray]{actorName} miss{(isPlayer ? "" : "es")} {targetName(atk.TargetId)}.[/color]",
+                ($"[color=gray]{actorName} miss{(isPlayer ? "" : "es")} {targetName(atk.TargetId)}.[/color]",
+                 ToastCategory.Neutral),
+
+            // Critical hit by player = very positive; by monster on player = danger.
+            AttackEvent { IsCritical: true } atk when isPlayer =>
+                ($"[color=yellow]CRIT! {actorName} hit{(isPlayer ? "" : "s")} {targetName(atk.TargetId)} for {atk.Damage}![/color]",
+                 ToastCategory.Positive),
 
             AttackEvent { IsCritical: true } atk =>
-                $"[color=yellow]CRIT! {actorName} hit{(isPlayer ? "" : "s")} {targetName(atk.TargetId)} for {atk.Damage}![/color]",
+                ($"[color=yellow]CRIT! {actorName} hit{(isPlayer ? "" : "s")} {targetName(atk.TargetId)} for {atk.Damage}![/color]",
+                 atk.TargetId == _playerId ? ToastCategory.Danger : ToastCategory.Neutral),
 
+            // Bonus attacks: positive when player lands them, danger when monster lands them on player.
             AttackEvent { IsBonusAttack: true } atk =>
-                $"[color=cyan]+{atk.Damage} bonus hit on {targetName(atk.TargetId)}[/color]",
+                ($"[color=cyan]+{atk.Damage} bonus hit on {targetName(atk.TargetId)}[/color]",
+                 isPlayer ? ToastCategory.Positive : (atk.TargetId == _playerId ? ToastCategory.Danger : ToastCategory.Neutral)),
 
+            // Normal hit: danger if monster hits player, positive if player hits monster.
             AttackEvent atk =>
-                $"{actorName} hit{(isPlayer ? "" : "s")} {targetName(atk.TargetId)} for [color=white]{atk.Damage}[/color].",
+                ($"{actorName} hit{(isPlayer ? "" : "s")} {targetName(atk.TargetId)} for [color=white]{atk.Damage}[/color].",
+                 isPlayer ? ToastCategory.Positive : (atk.TargetId == _playerId ? ToastCategory.Danger : ToastCategory.Neutral)),
 
             HealEvent heal =>
-                $"[color=lime]+{heal.AmountHealed} HP[/color] from {heal.ItemName}.",
+                ($"[color=lime]+{heal.AmountHealed} HP[/color] from {heal.ItemName}.",
+                 ToastCategory.Positive),
 
+            // Player death is the clearest danger signal.
             DeathEvent death when death.ActorId == _playerId =>
-                "[color=red]You die...[/color]",
+                ("[color=red]You die...[/color]",
+                 ToastCategory.Danger),
 
+            // Monster death is a positive outcome.
             DeathEvent =>
-                $"[color=green]{GetEntityName(evt.ActorId, state)} dies![/color]",
+                ($"[color=green]{GetEntityName(evt.ActorId, state)} dies![/color]",
+                 ToastCategory.Positive),
 
             SplitEvent split when split.ChildIds.Count > 0 =>
-                $"[color=yellow]The {GetEntityName(split.OriginalId, state)} splits into " +
-                $"{split.ChildIds.Count} {GetEntityName(split.ChildIds[0], state).ToLower()}s![/color]",
+                ($"[color=yellow]The {GetEntityName(split.OriginalId, state)} splits into " +
+                 $"{split.ChildIds.Count} {GetEntityName(split.ChildIds[0], state).ToLower()}s![/color]",
+                 ToastCategory.Neutral),
 
             SplitEvent split =>
-                $"[color=yellow]The {GetEntityName(split.OriginalId, state)} splits![/color]",
+                ($"[color=yellow]The {GetEntityName(split.OriginalId, state)} splits![/color]",
+                 ToastCategory.Neutral),
 
+            // Pickup by player = positive; by monster = neutral.
             PickUpEvent pickup when isPlayer =>
-                $"You pick up {pickup.ItemName}.",
+                ($"You pick up {pickup.ItemName}.",
+                 ToastCategory.Positive),
 
             PickUpEvent pickup =>
-                $"{actorName} picks up {pickup.ItemName}.",
+                ($"{actorName} picks up {pickup.ItemName}.",
+                 ToastCategory.Neutral),
 
             ItemUseEvent { Success: true } use =>
-                $"[color=yellow]{actorName} uses {use.ItemName}![/color]",
+                ($"[color=yellow]{actorName} uses {use.ItemName}![/color]",
+                 isPlayer ? ToastCategory.Positive : ToastCategory.Neutral),
 
             ItemUseEvent { FailureMode: "fizzle" } use =>
-                $"[color=gray]{actorName} tries {use.ItemName}... it fizzles.[/color]",
+                ($"[color=gray]{actorName} tries {use.ItemName}... it fizzles.[/color]",
+                 ToastCategory.Neutral),
 
             ItemUseEvent { FailureMode: "wrong_target" } use =>
-                $"[color=lime]{actorName} fumbles {use.ItemName} — it backfires![/color]",
+                ($"[color=lime]{actorName} fumbles {use.ItemName} — it backfires![/color]",
+                 isPlayer ? ToastCategory.Danger : ToastCategory.Neutral),
 
             ItemUseEvent { FailureMode: "equipment_damage" } use =>
-                $"[color=orange]{actorName} mishandles {use.ItemName} — weapon damaged![/color]",
+                ($"[color=orange]{actorName} mishandles {use.ItemName} — weapon damaged![/color]",
+                 isPlayer ? ToastCategory.Danger : ToastCategory.Neutral),
 
             // ── Status effect events ─────────────────────────────────────────────────
-            // Apply: "You are poisoned!" / "The orc is confused!"
+            // StatusAppliedEvent has no IsNegative flag; in the current design all statuses
+            // applied to the player are debuffs (poison, slow, confusion, etc.) so we treat
+            // them as Danger. Revisit if positive player buffs are added.
             StatusAppliedEvent statusApplied when statusApplied.TargetId == _playerId =>
-                $"[color=orange]You are {statusApplied.EffectName}![/color]",
+                ($"[color=orange]You are {statusApplied.EffectName}![/color]",
+                 ToastCategory.Danger),
 
             StatusAppliedEvent statusApplied =>
-                $"[color=orange]The {GetEntityName(statusApplied.TargetId, state).ToLower()} is {statusApplied.EffectName}![/color]",
+                ($"[color=orange]The {GetEntityName(statusApplied.TargetId, state).ToLower()} is {statusApplied.EffectName}![/color]",
+                 ToastCategory.Neutral),
 
-            // Expire: "The poison fades." / "You are no longer slowed."
+            // Expire: player regaining normal status is neutral (it was already bad, now it's over).
             StatusExpiredEvent expired when expired.EntityId == _playerId && expired.Reason == "duration" =>
-                $"[color=gray]The {expired.EffectName} fades.[/color]",
+                ($"[color=gray]The {expired.EffectName} fades.[/color]",
+                 ToastCategory.Neutral),
 
             StatusExpiredEvent expired when expired.EntityId == _playerId =>
-                $"[color=gray]You are no longer {expired.EffectName}.[/color]",
+                ($"[color=gray]You are no longer {expired.EffectName}.[/color]",
+                 ToastCategory.Neutral),
 
             StatusExpiredEvent expired when expired.Reason == "duration" =>
-                $"[color=gray]The {GetEntityName(expired.EntityId, state).ToLower()} is no longer {expired.EffectName}.[/color]",
+                ($"[color=gray]The {GetEntityName(expired.EntityId, state).ToLower()} is no longer {expired.EffectName}.[/color]",
+                 ToastCategory.Neutral),
 
-            // Non-player, non-duration expiry (e.g. "woke_on_damage", "cured")
             StatusExpiredEvent expired =>
-                $"[color=gray]{GetEntityName(expired.EntityId, state)} is no longer {expired.EffectName}.[/color]",
+                ($"[color=gray]{GetEntityName(expired.EntityId, state)} is no longer {expired.EffectName}.[/color]",
+                 ToastCategory.Neutral),
 
-            // DOT damage: distinct orange line.
+            // DOT damage on player = danger; on monster = neutral background info.
             DotDamageEvent dot when dot.EntityId == _playerId =>
-                $"[color=orange]{Capitalize(dot.EffectName)} deals {dot.Damage} damage.[/color]",
+                ($"[color=orange]{Capitalize(dot.EffectName)} deals {dot.Damage} damage.[/color]",
+                 ToastCategory.Danger),
 
             DotDamageEvent dot =>
-                $"[color=orange]{Capitalize(dot.EffectName)} damages the {GetEntityName(dot.EntityId, state).ToLower()}.[/color]",
+                ($"[color=orange]{Capitalize(dot.EffectName)} damages the {GetEntityName(dot.EntityId, state).ToLower()}.[/color]",
+                 ToastCategory.Neutral),
 
-            // HOT healing: green line for player; muted for monsters (regenerating monsters are background info).
+            // HOT healing on player = positive; on monster = neutral.
             HotHealEvent hot when hot.EntityId == _playerId =>
-                $"[color=lime]+{hot.Amount} HP from {hot.EffectName}.[/color]",
+                ($"[color=lime]+{hot.Amount} HP from {hot.EffectName}.[/color]",
+                 ToastCategory.Positive),
 
             HotHealEvent hot =>
-                $"[color=green]{GetEntityName(hot.EntityId, state)} regenerates {hot.Amount} HP.[/color]",
+                ($"[color=green]{GetEntityName(hot.EntityId, state)} regenerates {hot.Amount} HP.[/color]",
+                 ToastCategory.Neutral),
 
-            // Skip-turn events: "You are paralysed!" / "The orc is frozen!"
-            // PoC format: simple announcement; skip-turn is already felt by losing the turn.
+            // Skip-turn on player = danger; on monster = neutral.
             SkipTurnEvent skip when skip.EntityId == _playerId =>
-                $"[color=yellow]You are {skip.EffectName}![/color]",
+                ($"[color=yellow]You are {skip.EffectName}![/color]",
+                 ToastCategory.Danger),
 
             SkipTurnEvent skip =>
-                $"[color=gray]The {GetEntityName(skip.EntityId, state).ToLower()} is {skip.EffectName}![/color]",
+                ($"[color=gray]The {GetEntityName(skip.EntityId, state).ToLower()} is {skip.EffectName}![/color]",
+                 ToastCategory.Neutral),
 
             // ── Identification events ─────────────────────────────────────────────────
-            // "You realize this was a Healing Potion!" when player uses or equips an unidentified item.
-            // "Potion of Healing identified as Healing Potion!" when scroll of identify reveals it.
             IdentificationEvent ident when ident.Trigger == "scroll_of_identify" =>
-                $"[color=aqua]{ident.IdentifiedName} identified![/color]",
+                ($"[color=aqua]{ident.IdentifiedName} identified![/color]",
+                 ToastCategory.Positive),
 
             IdentificationEvent ident =>
-                $"[color=aqua]You realize this was a {ident.IdentifiedName}![/color]",
+                ($"[color=aqua]You realize this was a {ident.IdentifiedName}![/color]",
+                 ToastCategory.Positive),
 
-            _ => null,
+            _ => (null, ToastCategory.Neutral),
         };
     }
 

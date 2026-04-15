@@ -1,28 +1,36 @@
 scenario_id: depth3_tuned
 name: "Depth 3 - Tuned Baseline"
 depth: 3
-turn_limit: 100
+turn_limit: 110
 runs: 50
+map_width: 14
+map_height: 14
+player_start_y: 7
 
 player:
   hp: 54
-  strength: 12
+  strength: 14
   dexterity: 14
-  constitution: 12
+  constitution: 14
   accuracy: 2
   evasion: 1
   damage_min: 1
   damage_max: 4
   weapon: "longsword"
   armor: "leather_armor"
-  speed_bonus: 0.18
 
+# Player at (3,7) in 14x14 arena. Same layout as depth3_orc_brutal, longsword variant.
+# C# IsHarnessMode (sequential engagement): 3 orcs with no healing gives ~10-20% death rate
+# in target band (5-30%). 4 orcs + 1 potion = 2% (too easy); 4 orcs + 0 potions = 30% (edge).
 monsters:
   - type: "orc_grunt"
-    count: 3
-  - type: "orc_brute"
     count: 1
+    position: [8, 7]
+  - type: "orc_grunt"
+    count: 1
+    position: [9, 5]
+  - type: "orc_grunt"
+    count: 1
+    position: [10, 7]
 
-items:
-  - type: "healing_potion"
-    count: 2
+items: []

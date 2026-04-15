@@ -1,14 +1,17 @@
 scenario_id: depth3_orc_brutal
 name: "Depth 3 - Orc Brutal (Pressure Begins)"
 depth: 3
-turn_limit: 100
+turn_limit: 110
 runs: 50
+map_width: 11
+map_height: 11
+player_start_y: 5
 
 player:
   hp: 54
-  strength: 12
+  strength: 14
   dexterity: 14
-  constitution: 12
+  constitution: 14
   accuracy: 2
   evasion: 1
   damage_min: 1
@@ -16,12 +19,28 @@ player:
   weapon: "dagger"
   armor: "leather_armor"
 
+# Player at (3,5) in 11x11 arena — matches PoC's 11x11 layout (was 14x14, too spacious).
+# PoC uses 4 orcs; C# uses 5 because the PoC's ground potion could be contested by
+# item-seeking orcs (reducing effective healing), while C# bot heals with perfect timing.
+# One extra orc compensates for the healing advantage C# bot has over PoC.
+# 5 orcs at distances 4.0, 5.1, 5.1, 6.0, 6.3 tiles → 16% death rate ✅
 monsters:
   - type: "orc_grunt"
-    count: 3
-  - type: "orc_brute"
     count: 1
+    position: [7, 5]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 4]
+  - type: "orc_grunt"
+    count: 1
+    position: [9, 5]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 6]
+  - type: "orc_grunt"
+    count: 1
+    position: [9, 3]
 
 items:
   - type: "healing_potion"
-    count: 2
+    count: 1

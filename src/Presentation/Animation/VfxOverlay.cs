@@ -25,7 +25,11 @@ public sealed class VfxOverlay
 {
     private const int SpritePoolSize = 64;
     private const int RectPoolSize = 16;
-    private const int TileHalfSize = 16; // ColorRect is 32×32, offset by -16 to center
+
+    // Derived from the renderer's TileWidth so ColorRects auto-scale with tile size.
+    // For 24px tiles (TopDownRenderer): TileHalfSize = 12 → 24×24 rect.
+    // For 32px tiles (IsometricRenderer): TileHalfSize = 16 → 32×32 rect.
+    private int TileHalfSize => _renderer.TileWidth / 2;
 
     private readonly Node2D _layer;
     private readonly IMapRenderer _renderer;
@@ -60,11 +64,11 @@ public sealed class VfxOverlay
         }
 
         // Pre-allocate ColorRect pool — for tile flash effects.
+        // Size is set in BorrowRect (after renderer is stored) so it reflects TileWidth.
         for (int i = 0; i < RectPoolSize; i++)
         {
             var rect = new ColorRect
             {
-                Size = new Vector2(32, 32),
                 Visible = false,
                 ZAsRelative = false,
                 MouseFilter = Control.MouseFilterEnum.Ignore,
@@ -416,8 +420,10 @@ public sealed class VfxOverlay
         var rect = _rectPool[_rectNext];
         _rectNext = (_rectNext + 1) % RectPoolSize;
 
+        int half = TileHalfSize;
         var screenCenter = _renderer.GridToScreenCenter(gridX, gridY);
-        rect.Position = screenCenter - new Vector2(TileHalfSize, TileHalfSize);
+        rect.Size = new Vector2(half * 2, half * 2);
+        rect.Position = screenCenter - new Vector2(half, half);
         rect.Modulate = new Color(color, 0.8f);
         rect.ZIndex = _renderer.GetTileSortOrder(gridX, gridY) + 5;
         // Do NOT set Visible=true here — callers reveal via TweenProperty when the step is reached.

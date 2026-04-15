@@ -19,6 +19,11 @@ namespace CatacombsOfYarl.Presentation.UI;
 ///
 /// No .tscn file — built entirely in C# following the same pattern as HUD.cs.
 /// </summary>
+/// <remarks>
+/// Superseded by <see cref="QuickSlotBar"/> (Phase 3 mobile layout overhaul).
+/// Kept for reference during transition. Do not use in new code.
+/// </remarks>
+[Obsolete("Use QuickSlotBar instead. InventoryPanel is superseded by the Phase 3 mobile layout.")]
 public sealed partial class InventoryPanel : Control
 {
     private const int SlotWidth  = 52;

@@ -1,14 +1,18 @@
 scenario_id: depth5_orc_vicious
-name: "Depth 5 - Orc Pressure (vicious)"
+name: "Depth 5 - Orc Pressure (vicious shortsword)"
+is_probe: true
 depth: 5
-turn_limit: 100
+turn_limit: 120
 runs: 50
+map_width: 16
+map_height: 16
+player_start_y: 8
 
 player:
   hp: 54
-  strength: 12
+  strength: 14
   dexterity: 14
-  constitution: 12
+  constitution: 14
   accuracy: 2
   evasion: 1
   damage_min: 1
@@ -16,10 +20,14 @@ player:
   weapon: "vicious_shortsword"
   armor: "leather_armor"
 
+# Affix probe: vicious_shortsword (high damage variance) vs dagger baseline. Same composition as pressure.
+# Expected: lower H_PM than dagger; death rate dependent on damage distribution.
 monsters:
   - type: "orc_grunt"
     count: 3
+  - type: "orc_brute"
+    count: 1
 
 items:
   - type: "healing_potion"
-    count: 2
+    count: 1

@@ -414,12 +414,19 @@ public sealed class DungeonFloorBuilder
         if (armor != null)
             equipment.SetSlot(Combat.EquipmentSlot.Chest, armor);
 
-        // Starting inventory: 1 healing potion + Wand of Portals (player's core traversal tool)
+        // Starting inventory: 3 healing potions + Wand of Portals (player's core traversal tool).
+        // 3 potions (each heals 40 HP) = ~186 effective HP at panic/threshold thresholds.
+        // Floor 1 spawns 5-10 orcs that deal ~7 avg damage per hit at 35% hit rate — 1 potion
+        // is not enough. PoC guarantees additional floor drops via a pity system (not yet ported);
+        // 3 starting potions bridges that gap so floor 1 is survivable with some left over.
         var inventory = new Inventory();
         player.Add(inventory);
-        var potion = _consumableFactory.Create("healing_potion");
-        if (potion != null)
-            inventory.Add(potion);
+        for (int i = 0; i < 3; i++)
+        {
+            var potion = _consumableFactory.Create("healing_potion");
+            if (potion != null)
+                inventory.Add(potion);
+        }
 
         // Wand of Portals: always granted at run start. Uses a deterministic dummy rng since
         // the wand is infinite — charge count doesn't matter. The wand is the player's core

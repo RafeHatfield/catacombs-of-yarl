@@ -16,7 +16,7 @@ public sealed class TileLayer
 }
 
 /// <summary>
-/// Renders a GameMap as isometric tiles. Creates Sprite2D nodes for each
+/// Renders a GameMap as tile sprites. Creates Sprite2D nodes for each
 /// floor and wall tile under the TileMapLayer node.
 ///
 /// Renders back-to-front (by grid row/column sum) for correct depth sorting.
@@ -25,28 +25,33 @@ public sealed class TileLayer
 /// Second pass: overlays stair sprites on top of floor tiles where TileKind.StairDown
 /// is set. This only applies to dungeon-generated maps — scenario maps use CreateArena
 /// and never set StairDown tile kinds.
+///
+/// Tile textures are sourced entirely from TileThemeConfig (loaded from tile_themes.yaml).
+/// No tile paths are hardcoded here — the renderer is content-agnostic.
 /// </summary>
 public sealed class DungeonRenderer
 {
-    private const string TilePath = "res://src/Presentation/assets/tiles/iso";
-
-    // FloorVariants and WallVariants removed — replaced by theme-aware PickFloorTile / PickWallTile.
-
-    private const string StairDownTexture = "iso_dun_stairdown_grey";
-    private const string StairUpTexture = "iso_dun_stairup_grey";
-
     /// <summary>
-    /// Render the entire GameMap as iso tile sprites under the given parent node.
+    /// Render the entire GameMap as tile sprites under the given parent node.
     /// Pass 1: floor/wall tiles for every cell.
     /// Pass 2: stair overlays on top of StairDown/StairUp cells.
+    /// Pass 3: bones decorations on ~2.5% of room floor tiles.
     ///
     /// Returns a TileLayer containing references to all base tile sprites so that
     /// UpdateVisibility can apply fog-of-war modulation each turn.
+    ///
+    /// If themeConfig is null, logs an error and returns an empty TileLayer without crashing.
     /// </summary>
-    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null)
+    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null, TileThemeConfig? themeConfig = null)
     {
-        // Use provided renderer, or fall back to IsometricRenderer for backwards compatibility.
-        renderer ??= new IsometricRenderer();
+        if (themeConfig == null)
+        {
+            GD.PrintErr("[DungeonRenderer] No TileThemeConfig provided — dungeon floor will not render.");
+            return new TileLayer();
+        }
+
+        // Use provided renderer, or fall back to TopDownRenderer as the active default.
+        renderer ??= new TopDownRenderer();
         var tileLayer = new TileLayer();
 
         // Clear any existing tiles
@@ -63,15 +68,46 @@ public sealed class DungeonRenderer
                 bool walkable = map.IsWalkable(gx, gy);
                 var screenPos = renderer.GridToScreen(gx, gy);
 
-                var theme = map.GetTileTheme(gx, gy);
-                string tileName = walkable
-                    ? PickFloorTile(theme, gx, gy)
-                    : PickWallTile(theme, gx, gy);
+                var tileTheme = map.GetTileTheme(gx, gy);
+                string themeName = ThemeToConfigName(tileTheme);
 
-                var texture = GD.Load<Texture2D>($"{TilePath}/{tileName}.png");
+                string? tilePath;
+                if (walkable)
+                {
+                    tilePath = themeConfig.GetFloorTile(themeName, gx, gy);
+                }
+                else
+                {
+                    var (cardinal, diagonal) = ComputeWallMasks(map, gx, gy);
+
+                    // Collapse three-wall masks to two-wall edges. Thick walls (2+ tiles
+                    // deep) cause room edge tiles to have wall mass behind them, producing
+                    // masks 7/11 (horizontal edge + wall behind) and 13/14 (vertical edge
+                    // + wall behind). These should render as simple edges (masks 3 and 12),
+                    // not T-junctions. The T-junction tiles stay in the YAML for future use
+                    // when thin walls or actual corridor junctions need them.
+                    cardinal = cardinal switch
+                    {
+                        7  => 3,  // S+E+W walls, floor N → horizontal edge (E+W walls)
+                        11 => 3,  // N+E+W walls, floor S → horizontal edge (E+W walls)
+                        13 => 12, // N+S+W walls, floor E → vertical edge (N+S walls)
+                        14 => 12, // N+S+E walls, floor W → vertical edge (N+S walls)
+                        _  => cardinal,
+                    };
+
+                    tilePath = themeConfig.GetWallTile(themeName, cardinal, diagonal);
+                }
+
+                if (tilePath == null)
+                {
+                    GD.PrintErr($"[DungeonRenderer] No tile path for {(walkable ? "floor" : "wall")} at ({gx},{gy}) theme='{themeName}'");
+                    continue;
+                }
+
+                var texture = GD.Load<Texture2D>(tilePath);
                 if (texture == null)
                 {
-                    GD.PrintErr($"Missing tile texture: {tileName}");
+                    GD.PrintErr($"[DungeonRenderer] Missing tile texture: {tilePath}");
                     continue;
                 }
 
@@ -100,21 +136,24 @@ public sealed class DungeonRenderer
             for (int gx = 0; gx < map.Width; gx++)
             {
                 var kind = map.GetTileKind(gx, gy);
-                string? overlayName = kind switch
+                var tileTheme = map.GetTileTheme(gx, gy);
+                string themeName = ThemeToConfigName(tileTheme);
+
+                string? overlayPath = kind switch
                 {
-                    TileKind.StairDown => StairDownTexture,
-                    TileKind.StairUp => StairUpTexture,
-                    _ => null,
+                    TileKind.StairDown => themeConfig.GetStairDown(themeName),
+                    TileKind.StairUp   => themeConfig.GetStairUp(themeName),
+                    _                  => null,
                 };
 
-                if (overlayName == null) continue;
+                if (overlayPath == null) continue;
 
-                var overlayTexture = ResourceLoader.Load<Texture2D>($"{TilePath}/{overlayName}.png");
+                var overlayTexture = ResourceLoader.Load<Texture2D>(overlayPath);
                 if (overlayTexture == null)
                 {
                     // Asset missing — skip silently rather than crashing.
                     // The floor tile still renders; the stair is just invisible.
-                    GD.PrintErr($"Missing stair overlay texture: {overlayName}.png — skipping.");
+                    GD.PrintErr($"[DungeonRenderer] Missing stair overlay texture: {overlayPath} — skipping.");
                     continue;
                 }
 
@@ -135,8 +174,7 @@ public sealed class DungeonRenderer
                 // We store them under a unique key by offsetting into a parallel entry.
                 // This lets UpdateVisibility find and modulate them alongside the base tile.
                 // Key: (gx | StairOverlayFlag, gy) won't collide with base tiles.
-                // Simpler approach: use a separate offset flag stored in a high bit.
-                // Actually: just use the same key suffixed into a separate stair overlay dict.
+                // Simpler approach: use the same key suffixed into a separate stair overlay dict.
                 // For Phase 2, stair cells are always visible (they're on the path to the exit).
                 // We don't track overlays in tileLayer — they are always shown when the base tile
                 // at (gx, gy) is shown. Visibility is controlled via the base tile only.
@@ -146,9 +184,9 @@ public sealed class DungeonRenderer
         }
 
         // Pass 3: decorative details — bones on room floors (not corridors, not walls).
-        // ~2.5% of room tiles get a bones overlay. Purely atmospheric, never gameplay-affecting.
+        // ~2.5% of room tiles get a bones overlay (controlled inside TileThemeConfig.GetBones).
+        // Purely atmospheric, never gameplay-affecting.
         // Overlays are tracked in tileLayer with an offset key so UpdateVisibility auto-modulates them.
-        string[] bonesVariants = { "iso_dun_bonesA", "iso_dun_bonesB", "iso_dun_bonesC" };
         for (int gy = 0; gy < map.Height; gy++)
         {
             for (int gx = 0; gx < map.Width; gx++)
@@ -157,11 +195,11 @@ public sealed class DungeonRenderer
                 var boneTheme = map.GetTileTheme(gx, gy);
                 if (boneTheme == TileTheme.Dirt) continue; // Corridors don't get bones
 
-                int hash = PositionHash(gx, gy);
-                if (hash % 40 != 0) continue; // ~2.5% of room tiles
+                string themeName = ThemeToConfigName(boneTheme);
+                string? bonesPath = themeConfig.GetBones(themeName, gx, gy);
+                if (bonesPath == null) continue; // ~97.5% of tiles — no bones
 
-                string bonesName = bonesVariants[hash % 3];
-                var bonesTexture = ResourceLoader.Load<Texture2D>($"{TilePath}/{bonesName}.png");
+                var bonesTexture = ResourceLoader.Load<Texture2D>(bonesPath);
                 if (bonesTexture == null) continue; // Skip silently if asset missing
 
                 var screenPos = renderer.GridToScreen(gx, gy);
@@ -227,59 +265,61 @@ public sealed class DungeonRenderer
     }
 
     /// <summary>
-    /// Select a floor tile name based on the tile's theme and position.
-    /// 85% primary variant, 15% accent — deterministic by position.
-    /// Keeps rooms visually coherent while adding subtle texture.
+    /// Map the TileTheme enum value to the YAML config theme key.
+    ///
+    /// All themes currently map to "sandstone" — the TMX-verified tile set from Phase 0.
+    /// Additional themes (crypt, moss, dirt) will diverge once their tile IDs are verified
+    /// and added to tile_themes.yaml in a later phase.
     /// </summary>
-    private static string PickFloorTile(TileTheme theme, int x, int y)
+    private static string ThemeToConfigName(TileTheme theme) => theme switch
     {
-        // 15% accent: (hash % 20) < 3
-        bool useAccent = (PositionHash(x, y) % 20) < 3;
-
-        return theme switch
-        {
-            TileTheme.Grey  => useAccent ? "iso_dun_floor_tileB" : "iso_dun_floor_tileA",
-            TileTheme.Crypt => useAccent ? "iso_dun_floor_tileE" : "iso_dun_floor_tileD",
-            TileTheme.Moss  => useAccent ? "iso_dun_floor_tileG" : "iso_dun_floor_tileF",
-            TileTheme.Dirt  => useAccent ? "iso_dun_floor_dirtB" : "iso_dun_floor_dirtA",
-            _               => "iso_dun_floor_tileA",
-        };
-    }
+        TileTheme.Grey  => "sandstone",
+        TileTheme.Crypt => "sandstone", // Fallback until crypt tile IDs are verified
+        TileTheme.Moss  => "sandstone", // Fallback until moss tile IDs are verified
+        TileTheme.Dirt  => "sandstone", // Fallback until dirt theme tile IDs are verified
+        _               => "sandstone",
+    };
 
     /// <summary>
-    /// Select a wall tile name based on the tile's theme and position.
-    /// 2% cracked variants add wear; otherwise 80% A / 20% B — deterministic by position.
+    /// Compute the cardinal and diagonal wall masks for autotile selection at (x, y).
+    ///
+    /// Cardinal mask (0–15): each bit encodes whether the corresponding cardinal
+    /// neighbor is a wall (non-walkable or out-of-bounds — border = solid wall):
+    ///   bit3 (8) = North (y-1)
+    ///   bit2 (4) = South (y+1)
+    ///   bit1 (2) = East  (x+1)
+    ///   bit0 (1) = West  (x-1)
+    ///
+    /// Diagonal mask (0–15): only computed when cardinalMask == 15 (all four cardinal
+    /// neighbors are walls). Each bit encodes whether a diagonal neighbor IS FLOOR
+    /// (walkable). A diagonal floor means this wall tile is an outer corner facing
+    /// that diagonal direction:
+    ///   bit3 (8) = NE diagonal is floor
+    ///   bit2 (4) = NW diagonal is floor
+    ///   bit1 (2) = SE diagonal is floor
+    ///   bit0 (1) = SW diagonal is floor
+    ///
+    /// IsWalkable returns false for out-of-bounds, so map borders resolve as wall.
     /// </summary>
-    private static string PickWallTile(TileTheme theme, int x, int y)
+    private static (int Cardinal, int Diagonal) ComputeWallMasks(GameMap map, int x, int y)
     {
-        int hash = PositionHash(x, y);
-        bool useCracked = (hash % 50) == 0;           // 2% cracked
-        bool useB       = !useCracked && (hash % 5) == 0; // 20% B (of the remaining 98%)
+        int cardinal = 0;
+        if (!map.IsWalkable(x,     y - 1)) cardinal |= 8; // North
+        if (!map.IsWalkable(x,     y + 1)) cardinal |= 4; // South
+        if (!map.IsWalkable(x + 1, y    )) cardinal |= 2; // East
+        if (!map.IsWalkable(x - 1, y    )) cardinal |= 1; // West
 
-        return theme switch
+        // Only check diagonals when all cardinal neighbors are walls.
+        // If any cardinal is floor, this can't be an outer corner — skip diagonal work.
+        int diagonal = 0;
+        if (cardinal == 15)
         {
-            TileTheme.Grey  => useCracked ? "iso_dun_wall_grey_cracked"
-                             : useB       ? "iso_dun_wall_greyB"
-                                          : "iso_dun_wall_greyA",
-            TileTheme.Crypt => useCracked ? "iso_dun_wall_crypt_cracked"
-                             : useB       ? "iso_dun_wall_cryptB"
-                                          : "iso_dun_wall_cryptA",
-            TileTheme.Moss  => useCracked ? "iso_dun_wall_moss_cracked"
-                             : useB       ? "iso_dun_wall_mossB"
-                                          : "iso_dun_wall_mossA",
-            TileTheme.Dirt  => useCracked ? "iso_dun_wall_grey_cracked"
-                             : useB       ? "iso_dun_wall_greyB"
-                                          : "iso_dun_wall_greyA", // Dirt corridors use grey walls
-            _               => "iso_dun_wall_greyA",
-        };
-    }
+            if (map.IsWalkable(x + 1, y - 1)) diagonal |= 8; // NE is floor
+            if (map.IsWalkable(x - 1, y - 1)) diagonal |= 4; // NW is floor
+            if (map.IsWalkable(x + 1, y + 1)) diagonal |= 2; // SE is floor
+            if (map.IsWalkable(x - 1, y + 1)) diagonal |= 1; // SW is floor
+        }
 
-    /// <summary>
-    /// Simple deterministic hash for tile variation. Same position always gets same variant.
-    /// </summary>
-    private static int PositionHash(int x, int y)
-    {
-        // Simple hash that spreads well for small grids
-        return Math.Abs((x * 7919 + y * 6271) ^ (x * 31 + y * 37));
+        return (cardinal, diagonal);
     }
 }

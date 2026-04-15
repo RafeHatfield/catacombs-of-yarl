@@ -1,14 +1,17 @@
 scenario_id: depth5_orc_pressure
-name: "Depth 5 - Orc Pressure Test"
+name: "Depth 5 - Orc Pressure (dagger baseline)"
 depth: 5
-turn_limit: 100
+turn_limit: 120
 runs: 50
+map_width: 16
+map_height: 16
+player_start_y: 8
 
 player:
   hp: 54
-  strength: 12
+  strength: 14
   dexterity: 14
-  constitution: 12
+  constitution: 14
   accuracy: 2
   evasion: 1
   damage_min: 1
@@ -16,10 +19,16 @@ player:
   weapon: "dagger"
   armor: "leather_armor"
 
+# Baseline for depth 5 affix probes. 3 grunts + 1 brute + 1 potion = 42% death with dagger.
+# The brute is the tier-defining threat. Dagger (weak DPR) vs brute = spike danger.
+# Affix variants (fine/keen/masterwork/vicious) should show progressively lower death rate.
+# PoC has no depth5_orc_* scenarios — this is a C# calibration anchor for gear scaling.
 monsters:
   - type: "orc_grunt"
     count: 3
+  - type: "orc_brute"
+    count: 1
 
 items:
   - type: "healing_potion"
-    count: 2
+    count: 1

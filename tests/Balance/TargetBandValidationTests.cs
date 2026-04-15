@@ -38,7 +38,7 @@ public class TargetBandValidationTests
         ("scenario_depth4_mixed.yaml", 4, 28, 55, "Serious"),
         ("scenario_depth5_orc_pressure.yaml", 5, 36, 55, "Dangerous"),
         ("scenario_depth5_zombie.yaml", 5, 25, 55, "Dangerous (zombie)"),
-        ("scenario_depth6_orc_siege.yaml", 6, 36, 55, "Brutal"),
+        ("scenario_depth6_orc_siege.yaml", 6, 40, 55, "Brutal (fine LS)"),  // 4g(36)+1brute(54) avg≈40
     ];
 
     [Test]
@@ -99,11 +99,14 @@ public class TargetBandValidationTests
     [Test]
     public void EvaluateAndDiagnose_ProduceActionableOutput()
     {
-        // Synthetic test: verify diagnosis produces correct output
+        // Synthetic test: verify diagnosis produces correct output for out-of-band metrics.
+        // H_PM=12 >> band [6-10] → HIGH (player kills too slowly)
+        // H_MP=40  > band [20-24] → HIGH (monsters not threatening enough)
+        // DeathRate=44% >> band [0-8%] → HIGH
         var pm = new PressureMetrics
         {
             ScenarioId = "test", Depth = 2,
-            H_PM = 12.0, H_MP = 23.0, DPR_P = 2.4, DPR_M = 2.4,
+            H_PM = 12.0, H_MP = 40.0, DPR_P = 2.4, DPR_M = 2.4,
             DeathRate = 0.44,
         };
 

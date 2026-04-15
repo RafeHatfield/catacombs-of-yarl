@@ -1,27 +1,29 @@
 scenario_id: depth6_orc_siege
-name: "Depth 6 - Orc Siege (Brutal)"
+name: "Depth 6 - Orc Siege (fine longsword)"
 depth: 6
 turn_limit: 120
 runs: 50
 
 player:
   hp: 54
-  strength: 12
+  strength: 14
   dexterity: 14
-  constitution: 12
+  constitution: 14
   accuracy: 2
   evasion: 1
   damage_min: 1
   damage_max: 4
-  weapon: "longsword"
+  weapon: "fine_longsword"
   armor: "leather_armor"
 
+# 4 orc_grunts + 1 orc_brute with no healing = ~50-56% death rate.
+# Fine longsword (between longsword and masterwork) probes mid-tier gear at depth 6.
+# Complement to depth6_tuned (masterwork, 42%). No potions — sequential engagement
+# with 3 potions originally made this trivially easy (0% death).
 monsters:
   - type: "orc_grunt"
     count: 4
   - type: "orc_brute"
     count: 1
 
-items:
-  - type: "healing_potion"
-    count: 3
+items: []

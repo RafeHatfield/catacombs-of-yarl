@@ -1,26 +1,33 @@
 scenario_id: depth5_tuned
-name: "Depth 5 - Tuned Baseline"
+name: "Depth 5 - Tuned Baseline (2 grunts + 1 brute, longsword)"
 depth: 5
-turn_limit: 100
+turn_limit: 120
 runs: 50
+map_width: 16
+map_height: 16
+player_start_y: 8
 
 player:
   hp: 54
-  strength: 12
+  strength: 14
   dexterity: 14
-  constitution: 12
+  constitution: 14
   accuracy: 2
   evasion: 1
   damage_min: 1
   damage_max: 4
-  weapon: "fine_longsword"
+  weapon: "longsword"
   armor: "leather_armor"
-  speed_bonus: 0.18
 
+# Player at (3,8) in 16x16 arena.
+# 2 orc_grunts + 1 orc_brute with no healing = 32% death rate.
+# The brute (42 HP scaled 1.25x = 53 HP, 5-8 dmg) is the primary threat.
+# Zombie composition (8 zombies) gave only 16% due to travel-time-diluted pressure.
+# Brute creates spike lethality that sequential engagement preserves.
 monsters:
   - type: "orc_grunt"
-    count: 3
-
-items:
-  - type: "healing_potion"
     count: 2
+  - type: "orc_brute"
+    count: 1
+
+items: []

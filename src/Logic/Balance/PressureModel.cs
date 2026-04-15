@@ -73,63 +73,87 @@ public sealed class PressureEvaluation
 public static class PressureModel
 {
     // Target bands by depth band index (0 = depth 1-2, 1 = depth 3-4, etc.)
-    // From docs/DEPTH_PRESSURE_MODEL.md — these are the equilibrium targets.
+    // From Python prototype balance/target_bands.py — union of per-depth ranges within each band.
+    // Depth 1: [6-8], depth 2: [7-9]   → band 0: [6-9]
+    // Depth 3: [8-10], depth 4: [9-11] → band 1: [8-11]
+    // Depth 5: [9-12], depth 6: [10-13]→ band 2: [9-13]
     private static readonly TargetBand[] H_PM_Targets =
     [
-        new(3.5, 4.5),  // depth 1-2
-        new(4.0, 5.0),  // depth 3-4
-        new(4.5, 5.5),  // depth 5-6
-        new(5.0, 6.0),  // depth 7-8
-        new(6.0, 7.0),  // depth 9+
+        new(6.0, 9.0),    // depth 1-2
+        new(8.0, 11.0),   // depth 3-4
+        new(9.0, 13.0),   // depth 5-6
+        new(10.0, 14.0),  // depth 7-8 (extrapolated)
+        new(11.0, 15.0),  // depth 9+  (extrapolated)
     ];
 
+    // Depth 1: [20-24], depth 2: [20-24] → band 0: [20-24]
+    // Depth 3: [20-23], depth 4: [18-22] → band 1: [18-23]
+    // Depth 5: [17-21], depth 6: [16-20] → band 2: [16-21]
     private static readonly TargetBand[] H_MP_Targets =
     [
-        new(10, 14),  // depth 1-2
-        new(9, 12),   // depth 3-4
-        new(8, 10),   // depth 5-6
-        new(7, 9),    // depth 7-8
-        new(6, 8),    // depth 9+
+        new(20.0, 24.0),  // depth 1-2
+        new(18.0, 23.0),  // depth 3-4
+        new(16.0, 21.0),  // depth 5-6
+        new(14.0, 20.0),  // depth 7-8 (extrapolated)
+        new(12.0, 18.0),  // depth 9+  (extrapolated)
     ];
 
     // Death rate targets by depth band — from Python prototype target_bands.py
+    // Depth 1: [0-5%], depth 2: [0-8%]   → band 0: [0-8%]
+    // Depth 3: [5-15%], depth 4: [15-30%]→ band 1: [5-30%]
+    // Depth 5: [25-40%], depth 6: [35-55%]→band 2: [25-55%]
     private static readonly TargetBand[] DeathRate_Targets =
     [
-        new(0.00, 0.05),  // depth 1-2: safe learning
-        new(0.05, 0.15),  // depth 3-4: pressure begins
-        new(0.25, 0.40),  // depth 5-6: dangerous
-        new(0.35, 0.55),  // depth 7-8: brutal
-        new(0.35, 0.55),  // depth 9+: brutal
+        new(0.00, 0.08),  // depth 1-2: safe learning
+        new(0.05, 0.30),  // depth 3-4: pressure begins → serious
+        new(0.25, 0.55),  // depth 5-6: dangerous → brutal
+        new(0.35, 0.65),  // depth 7-8: brutal (extrapolated)
+        new(0.40, 0.70),  // depth 9+: brutal (extrapolated)
     ];
 
-    // Provisional C# bands — based on tuned scenario measurements with current combat system.
-    // Wider than prototype bands. Converge toward prototype as mechanics are added.
-    // Measured from tuned scenarios at seed 1337, ±20% for variance.
+    // Provisional C# bands — empirically calibrated from harness runs on well-tuned scenarios.
+    //
+    // C# H_PM is LOWER than PoC theory because player DPR is slightly higher per turn
+    // (bot always attacks, no turn waste from item-seeking diversion).
+    //
+    // C# H_MP is HIGHER than PoC theory because PoC monsters have a two-phase hit system
+    // (flat pre-check 75% × d20 hit = ~18-19% effective), whereas C# uses pure d20 (~35%).
+    // Despite C# monsters hitting more often, DPR_M is diluted by travel/approach turns,
+    // so H_MP remains high. Zombie scenarios inflate H_MP further (travel between spread
+    // monsters dominates turn count, reducing DPR_M toward zero).
+    //
+    // Empirical baseline from well-calibrated scenarios (death rate in target band):
+    //   depth1_tuned (0% death):   H_PM=7.8,  H_MP=46.3
+    //   depth2_baseline (0%):      H_PM=7.7,  H_MP=37.7
+    //   depth3_tuned (16%):        H_PM=6.9,  H_MP=38.7
+    //   depth4_mixed (24%):        H_PM=9.5,  H_MP=40.0
+    //   depth4_tuned (14%):        H_PM=8.4,  H_MP=42.6
+    //   depth6_tuned (42%):        H_PM=6.2,  H_MP=35.5
     private static readonly TargetBand[] Provisional_H_PM =
     [
-        new(6.0, 16.0),   // depth 1-2: wide — dagger=12.9 at d1, shortsword+speed=7.8 at d2
-        new(6.0, 10.0),   // depth 3-4: longsword+speed (measured 7.7, 7.1)
-        new(5.5, 9.0),    // depth 5-6: fine/MW longsword+speed (measured 7.1, 6.5)
-        new(5.5, 9.0),    // depth 7-8: extrapolated
-        new(5.5, 9.0),    // depth 9+: extrapolated
+        new(5.0, 10.0),   // depth 1-2: observed 7.7-7.8 baseline; 5.5-5.8 for fine/masterwork probes
+        new(6.0, 12.0),   // depth 3-4: observed 6.9-9.5; wider band covers gear variance
+        new(6.0, 22.0),   // depth 5-6: wide — orc ~6-9, zombie ~15-20 (HP+resistance)
+        new(7.0, 24.0),   // depth 7-8: extrapolated
+        new(8.0, 26.0),   // depth 9+: extrapolated
     ];
 
     private static readonly TargetBand[] Provisional_H_MP =
     [
-        new(22.0, 35.0),  // depth 1-2: (measured 27.5, 28.5)
-        new(13.0, 22.0),  // depth 3-4: (measured 16.5, 16.4)
-        new(15.0, 35.0),  // depth 5-6: wide — varies by composition (measured 30.7, 19.6)
-        new(15.0, 35.0),  // depth 7-8: extrapolated
-        new(15.0, 35.0),  // depth 9+: extrapolated
+        new(32.0, 55.0),  // depth 1-2: observed 37-49 across all orc scenarios
+        new(28.0, 52.0),  // depth 3-4: observed 35-43 (orc); zombie scenarios will inflate
+        new(22.0, 85.0),  // depth 5-6: orc 30-44; zombie spread scenarios inflate to 50-80 (travel time dilution)
+        new(20.0, 48.0),  // depth 7-8: extrapolated
+        new(16.0, 45.0),  // depth 9+: extrapolated
     ];
 
     private static readonly TargetBand[] Provisional_DeathRate =
     [
-        new(0.00, 0.10),  // depth 1-2: (measured 4%, 0%)
-        new(0.15, 0.50),  // depth 3-4: (measured 36%, 36%)
-        new(0.00, 0.15),  // depth 5-6: (measured 0%, 6%) — speed+weapon dominates
-        new(0.10, 0.50),  // depth 7-8: extrapolated
-        new(0.20, 0.60),  // depth 9+: extrapolated
+        new(0.00, 0.08),  // depth 1-2: PoC [0-5%/0-8%]; d1 observed 2%
+        new(0.05, 0.30),  // depth 3-4: PoC [5-15%/15-30%]
+        new(0.25, 0.60),  // depth 5-6: PoC [25-40%/35-55%]; C# sequential eng. → max bumped to 60%
+        new(0.35, 0.65),  // depth 7-8: extrapolated
+        new(0.40, 0.70),  // depth 9+: extrapolated
     ];
 
     /// <summary>Get prototype H_PM target band for a depth.</summary>

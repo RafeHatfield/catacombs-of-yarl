@@ -25,7 +25,7 @@ namespace CatacombsOfYarl.Presentation.Input;
 public sealed class InputHandler
 {
     private GameState? _state;
-    private IMapRenderer _renderer = new IsometricRenderer(); // default until SetRenderer called
+    private IMapRenderer _renderer = new TopDownRenderer(); // default until SetRenderer called
     private bool _acceptingInput = true;
     private TargetingState? _targeting;
 

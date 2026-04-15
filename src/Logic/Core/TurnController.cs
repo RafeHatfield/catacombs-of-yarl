@@ -452,7 +452,14 @@ public static class TurnController
             });
         }
 
-        var result = CombatResolver.ResolveAttack(player, target, state.Rng);
+        // Surprise attack — guaranteed hit on first player attack against any monster.
+        // PoC: is_monster_aware starts False even in "aware" scenario state; first attack auto-hits.
+        var targetFighter = target.Get<Fighter>();
+        bool isSurprise = targetFighter?.SurpriseAttackAvailable == true;
+        if (isSurprise)
+            targetFighter!.ConsumeSurpriseAttack();
+
+        var result = CombatResolver.ResolveAttack(player, target, state.Rng, forceHit: isSurprise);
 
         events.Add(new AttackEvent
         {

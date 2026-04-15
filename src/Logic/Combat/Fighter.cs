@@ -101,6 +101,17 @@ public sealed class Fighter : IComponent
     public bool IsAlive => Hp > 0;
 
     /// <summary>
+    /// When true, the next player attack on this entity is a guaranteed hit (surprise attack).
+    /// PoC: is_monster_aware() starts False for all monsters, even in "aware" scenario state.
+    /// First player attack on any monster triggers one guaranteed hit, then awareness is set.
+    /// Defaults to true for all entities; TurnController consumes it on first player attack.
+    /// </summary>
+    public bool SurpriseAttackAvailable { get; private set; } = true;
+
+    /// <summary>Consume the surprise attack advantage. Called before first player attack lands.</summary>
+    public void ConsumeSurpriseAttack() => SurpriseAttackAvailable = false;
+
+    /// <summary>
     /// Apply damage. Returns actual damage dealt (after floor of 0).
     /// Does not handle resistances — that's the combat resolver's job.
     /// </summary>

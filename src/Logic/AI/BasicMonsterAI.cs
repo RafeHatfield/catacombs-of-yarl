@@ -155,19 +155,22 @@ public static class BasicMonsterAI
     }
 
     /// <summary>
-    /// Updates the monster's AlertedState based on current FOV (dungeon mode) or always-alerted
-    /// (scenario/harness mode). Shared by all specialized AI types.
+    /// Updates the monster's AlertedState based on the current game mode.
+    ///
+    /// Three modes:
+    ///   Dungeon mode (IsDungeonMode=true): FOV-based — alert when visible, deaggro when unseen.
+    ///   Harness mode (IsHarnessMode=true):  PoC-matching — passive until attacked. Replicates
+    ///     the PoC's scenario_harness.py behavior where fov_map=None makes monster_sees_player
+    ///     always False, so monsters only act when in_combat=True (set on first hit).
+    ///     We proxy "was attacked" as Hp &lt; MaxHp. Once alerted, the monster stays active.
+    ///   Scenario mode (neither):            Always-alerted — all monsters active from turn 1.
+    ///     Used by unit tests that need monsters acting immediately.
     /// </summary>
     internal static void UpdateAwareness(Entity monster, Entity player, GameState state)
     {
-        // Dungeon mode has per-turn FOV: only tiles currently visible to the player count as
-        // "seen by the player". The monster itself doesn't compute sight — we use the player's FOV
-        // as the shared visibility layer, which matches the prototype's map_is_in_fov check.
-        //
-        // Scenario mode (harness, tests): no FOV system, RevealAll() is called at startup.
-        // Treat every monster as perpetually alerted so scenario combat proceeds normally.
         if (state.IsDungeonMode)
         {
+            // Dungeon: per-turn FOV. Alert when visible, deaggro after DeaggroTurns unseen.
             if (state.Map.IsVisible(monster.X, monster.Y))
             {
                 var alert = monster.GetOrAdd<AlertedState>();
@@ -186,8 +189,30 @@ public static class BasicMonsterAI
                 }
             }
         }
+        else if (state.IsHarnessMode)
+        {
+            // Harness: PoC-matching passive-until-attacked. A monster activates only after
+            // it takes damage. Once alerted it stays alerted for the run.
+            //
+            // We compare Hp against BaseMaxHp (not MaxHp) because Hp is initialized to
+            // BaseMaxHp while MaxHp includes ConstitutionMod — monsters with CON > 10 would
+            // always read Hp < MaxHp on turn 1, firing the proxy incorrectly.
+            var fighter = monster.Get<Fighter>();
+            bool hasBeenAttacked = fighter != null && fighter.IsAlive && fighter.Hp < fighter.BaseMaxHp;
+            bool alreadyAlerted  = monster.Has<AlertedState>();
+
+            if (hasBeenAttacked || alreadyAlerted)
+            {
+                var alert = monster.GetOrAdd<AlertedState>();
+                alert.LastKnownPlayerX = player.X;
+                alert.LastKnownPlayerY = player.Y;
+                alert.TurnsUntilDeaggro = AlertedState.DeaggroTurns;
+            }
+            // Otherwise monster stays passive — no AlertedState → returns Wait in Decide().
+        }
         else
         {
+            // Regular scenario mode (unit tests): all monsters permanently alerted from turn 1.
             var alert = monster.GetOrAdd<AlertedState>();
             alert.LastKnownPlayerX = player.X;
             alert.LastKnownPlayerY = player.Y;

@@ -7,9 +7,9 @@
 tileset: "16bit_fantasy"
 
 # Which map renderer to use.
-# Supported values: iso (current), topdown (Phase 2 — no tile assets yet)
-# Unknown or "topdown" values fall back to "iso" with a warning at boot.
-map_mode: "iso"
+# Supported values: topdown (default, 16bf world tiles 24x24), iso (legacy isometric)
+# Unknown values fall back to "topdown" with a warning at boot.
+map_mode: "topdown"
 
 # Difficulty level for the identification system pre-identification probabilities.
 # easy: most items start identified (80-90%); medium: balanced (30-50%); hard: almost nothing (0-5%).

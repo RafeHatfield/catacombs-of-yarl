@@ -25,11 +25,15 @@ public static class PlayerCamera
 {
     // DefaultZoom is now sourced from the renderer. This constant stays for legacy call sites
     // that don't yet pass a renderer (e.g. tests). Will be removed when all call sites migrate.
-    public const float DefaultZoom = 4.0f;
+    // Value matches TopDownRenderer.DefaultZoom (3.0f for 24px tiles at ~10 tiles wide on 720px).
+    public const float DefaultZoom = 3.0f;
 
-    // Match actual UI panel heights: 200px HUD top, 200px bottom (inventory 110 + combat log 90).
-    public const float UiTopMargin = 200f;
-    public const float UiBottomMargin = 110f;
+    // Phase 1 layout margins:
+    //   Top: 90px StatusBar
+    //   Bottom: 154px QuickSlotBar + 128px MenuButtons + 51px BottomSafeArea = 333px
+    // The camera centers the player in the clear viewport strip between these two zones.
+    public const float UiTopMargin    = 90f;
+    public const float UiBottomMargin = 333f;
 
     /// <summary>
     /// Active camera mode. Defaults to Deadzone — best feel for turn-based movement.
@@ -69,7 +73,7 @@ public static class PlayerCamera
         if (_lastCameraTween != null) { _lastCameraTween.Kill(); TweenTracker.Killed(); _lastCameraTween = null; }
 
         var viewport = gameView.GetViewport().GetVisibleRect().Size;
-        var r = renderer ?? (IMapRenderer)new IsometricRenderer();
+        var r = renderer ?? (IMapRenderer)new TopDownRenderer();
         var playerScreen = r.GridToScreen(player.X, player.Y);
 
         float availableH = viewport.Y - UiTopMargin - UiBottomMargin;
@@ -93,7 +97,7 @@ public static class PlayerCamera
     public static void AnimateTo(Node2D gameView, Entity player, Node animRoot,
         float duration = 0.12f, float zoom = DefaultZoom, IMapRenderer? renderer = null)
     {
-        var r = renderer ?? (IMapRenderer)new IsometricRenderer();
+        var r = renderer ?? (IMapRenderer)new TopDownRenderer();
         if (ActiveMode == CameraMode.Deadzone)
             AnimateToDeadzone(gameView, player, animRoot, duration, zoom, r);
         else

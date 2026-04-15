@@ -1,0 +1,62 @@
+# Tile theme configuration for top-down dungeon rendering.
+# Maps theme names to Oryx 16bf world tile IDs (24x24px).
+# Tiles loaded from: res://src/Presentation/assets/sprites_16bf/world_24x24/
+#
+# Tile IDs verified from Oryx TMX example files (Phase 0 wall autotile fix).
+# sandstone theme replaces the old grey_stone guesses with TMX-proven IDs.
+
+tile_root: "res://src/Presentation/assets/sprites_16bf/world_24x24"
+tile_pattern: "oryx_16bit_fantasy_world_{id}.png"
+
+themes:
+  sandstone:
+    floor_primary: [774]
+    floor_accent: [774]
+    floor_dark: [774]
+    floor_interior: [774]
+    wall_autotile:
+      # Bitmask: N(8)+S(4)+E(2)+W(1) — which cardinal neighbors are walls
+      # Mask 0  (isolated wall, no wall neighbors)
+      0: 182
+      # Mask 1  (wall only to W, floor N+S+E)
+      1: 185
+      # Mask 2  (wall only to E, floor N+S+W)
+      2: 183
+      # Mask 3  (walls E+W, floor N+S) — horizontal edge between two floors
+      3: 184
+      # Mask 4  (wall only to S, floor N+E+W)
+      4: 186
+      # Mask 5  (walls S+W, floor N+E) — 2-wall corner approximation
+      5: 190
+      # Mask 6  (walls S+E, floor N+W) — 2-wall corner approximation
+      6: 189
+      # Mask 7  (walls S+E+W, floor N) — horizontal edge (symmetric tile works top/bottom)
+      7: 194
+      # Mask 8  (wall only to N, floor S+E+W)
+      8: 188
+      # Mask 9  (walls N+W, floor S+E) — 2-wall corner approximation
+      9: 192
+      # Mask 10 (walls N+E, floor S+W) — 2-wall corner approximation
+      10: 191
+      # Mask 11 (walls N+E+W, floor S) — horizontal edge
+      11: 197
+      # Mask 12 (walls N+S, floor E+W) — vertical edge
+      12: 187
+      # Mask 13 (walls N+S+W, floor E) — vertical edge type A
+      13: 195
+      # Mask 14 (walls N+S+E, floor W) — vertical edge type B (variant)
+      14: 196
+      # Mask 15 (all cardinals are walls) — default to interior fill;
+      #          overridden by diagonal check in GetWallTile when diagonalFloorMask > 0
+      15: 193
+    wall_diagonal:
+      corner_outer_nw: 189
+      corner_outer_ne: 190
+      corner_outer_sw: 191
+      corner_outer_se: 192
+      interior_fill: 176
+    stair_down: [181]
+    stair_up: [180]
+    bones: [96, 90, 95]
+
+default_theme: sandstone

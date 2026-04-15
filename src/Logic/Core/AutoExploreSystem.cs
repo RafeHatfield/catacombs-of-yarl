@@ -103,11 +103,8 @@ public static class AutoExploreSystem
                 return $"Found: {item.Name}";
         }
 
-        // 3. New stair visible and not already out of fog-of-war
-        if (state.StairDown != null
-            && state.Map.IsVisible(state.StairDown.X, state.StairDown.Y)
-            && !ae.KnownStairs.Contains((state.StairDown.X, state.StairDown.Y)))
-            return "Stairs found";
+        // 3. (Stairs found interrupt removed — auto-explore runs until every tile is uncovered.
+        //    Pass 3 of FindAndSetPath guides the player to stairs after the floor is fully explored.)
 
         // 4. Damage taken
         if (state.PlayerFighter.Hp < ae.LastHp)

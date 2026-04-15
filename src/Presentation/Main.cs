@@ -32,8 +32,9 @@ public partial class Main : Node
     private HUD? _hud;
     private ToastLog? _toastLog;
     private GameOverScreen? _gameOverScreen;
-    private InventoryPanel? _inventoryPanel;
+    private QuickSlotBar? _inventoryPanel;
     private EquipmentPanel? _equipmentPanel;
+    private MenuButtonBar? _menuButtonBar;
     // Stored as field so SetupPresentation can call SetGameState after each floor build.
     private DebugOverlay? _debugOverlay;
     private RectDebugDraw? _rectDebugDraw;
@@ -46,12 +47,18 @@ public partial class Main : Node
     private ItemSpriteManager? _itemSprites;
     // Ground hazard overlay — persistent tile tints for burning/poison ground.
     private GroundHazardOverlay? _groundHazardOverlay;
+    // Floating HP bars — small red bars above damaged enemy sprites (Phase 4).
+    private FloatingHpBarManager? _floatingHpBars;
 
     // Tileset-backed sprite mapping — created once at boot, shared across all floors.
     private SpriteMapping? _spriteMapping;
 
+    // Tile theme config — loaded once at boot, passed to DungeonRenderer.Render on every floor.
+    // Covers dungeon tile assets (floors, walls, stairs, decorations). Does not change per floor.
+    private TileThemeConfig? _tileThemeConfig;
+
     // Map renderer — created once at boot, injected into all presentation consumers.
-    private IMapRenderer _renderer = new IsometricRenderer(); // safe default until _Ready
+    private IMapRenderer _renderer = new TopDownRenderer(); // safe default until _Ready
 
     // --- Factories (created once, reused across floor transitions) ---
     private ContentLoader? _contentLoader;
@@ -79,16 +86,22 @@ public partial class Main : Node
     // despawned on PortalRemovedEvent / PortalEntranceCancelledEvent.
     private readonly Dictionary<int, Sprite2D> _portalSprites = new();
 
-    // Cached tap indicator texture — loaded once, reused on every tap.
-    private Texture2D? _tapIndicatorTexture;
     // Tracked tap indicators — alpha lerped in _Process, no Tween involved.
     // SpawnTime is when the indicator appeared; fade starts after FadeDelay seconds.
-    private readonly List<(Sprite2D Sprite, double SpawnTime)> _tapIndicators = new();
+    // CanvasItem covers both ColorRect (top-down) and any future Sprite2D variant.
+    private readonly List<(CanvasItem Node, double SpawnTime)> _tapIndicators = new();
     private const double TapFadeDelay    = 0.15; // seconds at full alpha before fade starts
     private const double TapFadeDuration = 0.35; // seconds to fade to zero
 
     // Minimap and zoom — zoom limits come from the renderer after boot
     private MiniMap? _miniMap;
+    // Msg button — created once, anchored to bottom-left of ViewportOverlay (Phase 5).
+    private MsgButton? _msgButton;
+    // Message log panel — full-screen overlay opened by Msg button (Phase 6.2).
+    private MessageLogPanel? _messageLogPanel;
+    // Status effect badge row — created once, anchored to top-left of ViewportOverlay (Phase 5).
+    // Hides itself when the player has no active effects, so no viewport clutter during normal play.
+    private StatusEffectBar? _statusEffectBar;
     private float _currentZoom;   // initialised in _Ready after renderer is created
     private const float ZoomStep = 0.5f;
 
@@ -107,6 +120,9 @@ public partial class Main : Node
         GD.Print("Catacombs of YARL — loading...");
         Diag.Init();
         InitSpriteMapping();
+        _tileThemeConfig = TileThemeLoader.LoadWithFallback();
+        if (_tileThemeConfig.Themes.Count == 0)
+            GD.PrintErr("[Main] TileThemeConfig loaded with no themes — dungeon tiles will not render. Check config/tile_themes.yaml.");
         _renderer = CreateRenderer(ReadMapMode());
         _currentZoom = _renderer.DefaultZoom;
         GD.Print($"[Main] Map renderer: {_renderer.GetType().Name} (zoom default={_renderer.DefaultZoom}, min={_renderer.MinZoom}, max={_renderer.MaxZoom})");
@@ -154,21 +170,21 @@ public partial class Main : Node
         double now = Time.GetTicksMsec() / 1000.0;
         for (int i = _tapIndicators.Count - 1; i >= 0; i--)
         {
-            var (sprite, spawnTime) = _tapIndicators[i];
+            var (node, spawnTime) = _tapIndicators[i];
             double age = now - spawnTime;
             double fadeStart = TapFadeDelay;
             double fadeEnd   = TapFadeDelay + TapFadeDuration;
 
             if (age >= fadeEnd)
             {
-                sprite.SafeFree();
+                node.SafeFree();
                 _tapIndicators.RemoveAt(i);
             }
             else if (age >= fadeStart)
             {
                 float t = (float)((age - fadeStart) / TapFadeDuration);
-                var m = sprite.Modulate;
-                sprite.Modulate = new Color(m.R, m.G, m.B, 1f - t);
+                var m = node.Modulate;
+                node.Modulate = new Color(m.R, m.G, m.B, 1f - t);
             }
         }
     }
@@ -279,22 +295,23 @@ public partial class Main : Node
 
     /// <summary>
     /// Create the IMapRenderer for the given mode string.
-    /// "topdown" falls back to iso with a warning — no top-down tile assets exist yet.
-    /// Unknown values also fall back to iso with a warning.
+    /// "topdown" is the default active renderer using 16bf world tiles (24x24).
+    /// "iso" preserves the legacy isometric path — can be reactivated via game_settings.yaml.
+    /// Unknown values fall back to TopDownRenderer with a warning.
     /// </summary>
     private static IMapRenderer CreateRenderer(string mode)
     {
         return mode.ToLowerInvariant() switch
         {
             "iso" => new IsometricRenderer(),
-            "topdown" => FallbackToIso("topdown", "top-down tile assets not available yet"),
-            _ => FallbackToIso(mode, "unknown map_mode value"),
+            "topdown" => new TopDownRenderer(),
+            _ => FallbackRenderer(mode),
         };
 
-        static IMapRenderer FallbackToIso(string value, string reason)
+        static IMapRenderer FallbackRenderer(string value)
         {
-            GD.PrintErr($"[Main] map_mode '{value}' cannot be used ({reason}) — falling back to iso.");
-            return new IsometricRenderer();
+            GD.PrintErr($"[Main] map_mode '{value}' is unknown — falling back to topdown.");
+            return new TopDownRenderer();
         }
     }
 
@@ -413,10 +430,15 @@ public partial class Main : Node
         var entityLayer = GetNode<Node2D>("GameView/EntityLayer");
         var vfxLayerNode = GetNode<Node2D>("GameView/VfxLayer");
         var uiLayer = GetNode<CanvasLayer>("UILayer");
-        var hudNode = GetNode<Control>("UILayer/HUD");
+        var hudNode = GetNode<Control>("UILayer/StatusBar");
         var toastLogNode = GetNode<Control>("UILayer/ToastLog");
-        var inventoryPanelNode = GetNode<Control>("UILayer/InventoryPanel");
+        var inventoryPanelNode = GetNode<Control>("UILayer/QuickSlotBar");
         var equipmentPanelNode = GetNode<Control>("UILayer/EquipmentPanel");
+
+        // Phase 1 zone containers — content added in later phases.
+        var quickSlotZone   = inventoryPanelNode;  // UILayer/QuickSlotBar
+        var menuButtonsZone = GetNode<Control>("UILayer/MenuButtons");
+        var bottomSafeArea  = GetNode<Control>("UILayer/BottomSafeArea");
 
         // These nodes overlay the dungeon — must not block taps on the game view.
         toastLogNode.MouseFilter      = Control.MouseFilterEnum.Ignore;
@@ -424,13 +446,20 @@ public partial class Main : Node
 
         // Clear any previous render — RemoveChild before QueueFree so ghost nodes
         // don't linger in layout containers until end-of-frame.
-        foreach (var node in new Node[] { tileMapLayer, entityLayer, hudNode, toastLogNode, inventoryPanelNode, equipmentPanelNode })
+        foreach (var node in new Node[] { tileMapLayer, entityLayer, hudNode, toastLogNode, inventoryPanelNode, equipmentPanelNode, quickSlotZone, menuButtonsZone, bottomSafeArea })
             foreach (var child in node.GetChildren())
                 child.SafeFree();
 
+        // Phase 1 placeholder backgrounds — make zones visible during development.
+        // QuickSlotBar placeholder replaced by real QuickSlotBar in Phase 3.
+        AddZonePlaceholder(quickSlotZone,  new Color(0.08f, 0.08f, 0.12f, 0.92f)); // dark blue-grey
+        AddZonePlaceholder(bottomSafeArea, new Color(0.00f, 0.00f, 0.00f, 1.00f)); // solid black
+        // MenuButtons zone: populated below by MenuButtonBar (Phase 2 — no placeholder needed).
+
         // Render dungeon (stair overlays handled inside DungeonRenderer — second pass)
         // Returns TileLayer so we can apply fog-of-war each turn without re-creating nodes.
-        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer, _renderer);
+        // TileThemeConfig is loaded once at boot and reused across all floor transitions.
+        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer, _renderer, _tileThemeConfig);
 
         // Entity sprites — store reference so OnTurnCompleted can call UpdateVisibility
         _entitySprites = new EntitySpriteManager(entityLayer, _spriteMapping!, _renderer);
@@ -445,14 +474,28 @@ public partial class Main : Node
         hudNode.AddChild(_hud);
         _hud.SetState(state);
 
-        // Inventory panel (quick-bar) — consumables only.
-        _inventoryPanel = new InventoryPanel();
+        // Menu button bar (Phase 2) — Gear and Explore buttons in the MenuButtons zone.
+        // Replaces the temporary Phase 1 placeholder for that zone.
+        _menuButtonBar = new MenuButtonBar();
+        menuButtonsZone.AddChild(_menuButtonBar);
+        _menuButtonBar.GearRequested    += OnGearRequested;
+        _menuButtonBar.ExploreRequested += () => _gameController?.StartAutoExplore();
+
+        // Quick-slot bar (Phase 3) — scrollable consumable/wand strip + weapon indicator.
+        // Replaces InventoryPanel. Drop goes through long-press → action sheet.
+        _inventoryPanel = new QuickSlotBar();
         _inventoryPanel.SpriteMappingInstance = _spriteMapping;
         inventoryPanelNode.AddChild(_inventoryPanel);
         _inventoryPanel.Initialize(state);
-        _inventoryPanel.ItemTapped += OnInventoryItemTapped;
-        _inventoryPanel.ItemDropRequested += itemId => _gameController?.HandleDropRequest(itemId);
-        _rectDebugDraw?.SetInventoryPanel(_inventoryPanel);
+        _inventoryPanel.ItemTapped     += OnInventoryItemTapped;
+        _inventoryPanel.WeaponTapped        += () => _toastLog?.AddMessage("Ranged toggle coming soon");
+        _inventoryPanel.WeaponLongPressed   += () =>
+        {
+            var weapon = _state?.Player.Get<Equipment>()?.MainHand;
+            if (weapon != null)
+                _gameController?.HandleInventoryLongPress(weapon.Id);
+        };
+        _rectDebugDraw?.SetQuickSlotBar(_inventoryPanel);
 
         // Equipment panel — full-screen overlay, starts hidden.
         _equipmentPanel = new EquipmentPanel();
@@ -486,22 +529,25 @@ public partial class Main : Node
         {
             _miniMap = new MiniMap();
             _miniMap.MouseFilter = Control.MouseFilterEnum.Ignore;
-            // Anchor to top-right of UILayer
+            // Anchor to top-right of ViewportOverlay — consistent with MsgButton/StatusEffectBar
+            // pattern. ViewportOverlay's top edge IS the StatusBar's bottom edge, so an 8px
+            // OffsetTop here naturally tracks any future StatusBar height change.
             _miniMap.AnchorLeft   = 1f;
             _miniMap.AnchorTop    = 0f;
             _miniMap.AnchorRight  = 1f;
             _miniMap.AnchorBottom = 0f;
-            GetNode<CanvasLayer>("UILayer").AddChild(_miniMap);
+            GetNode<Control>("UILayer/ViewportOverlay").AddChild(_miniMap);
 
-            // Zoom buttons: small +/− panel anchored to the left of the minimap area
+            // Zoom buttons: small +/− panel anchored to the left of the minimap area.
+            // Also parented to ViewportOverlay for consistency.
             var zoomPanel = BuildZoomPanel();
             zoomPanel.MouseFilter = Control.MouseFilterEnum.Ignore;
-            GetNode<CanvasLayer>("UILayer").AddChild(zoomPanel);
+            GetNode<Control>("UILayer/ViewportOverlay").AddChild(zoomPanel);
         }
         _miniMap.OffsetLeft   = -state.Map.Width  * 2 - 8;
-        _miniMap.OffsetTop    = 210f;
+        _miniMap.OffsetTop    = 8f;  // 8px gap below ViewportOverlay top (= StatusBar bottom)
         _miniMap.OffsetRight  = -8f;
-        _miniMap.OffsetBottom = 210f + state.Map.Height * 2;
+        _miniMap.OffsetBottom = 8f + state.Map.Height * 2;
         _miniMap.Refresh(state);
 
         // Apply initial fog-of-war so the floor renders correctly from turn 0.
@@ -512,6 +558,9 @@ public partial class Main : Node
         _entitySprites?.UpdateVisibility(state);
         _entitySprites?.UpdateStatusTints(state);
         _itemSprites?.UpdateVisibility(state);
+        // Initial HP bar pass — shows bars for any pre-damaged monsters at floor start.
+        if (_entitySprites != null)
+            _floatingHpBars?.Refresh(state, _entitySprites);
 
         // Game controller — free old one if it exists
         // Clear portal sprites on floor setup (new floor = no active portals)
@@ -527,6 +576,12 @@ public partial class Main : Node
         // Clear previous floor's nodes, then create fresh for this floor.
         _groundHazardOverlay?.Clear();
         _groundHazardOverlay = new GroundHazardOverlay(vfxLayerNode, _renderer);
+
+        // Floating HP bars — small red bars above damaged enemy sprites.
+        // Clear old bars before entityLayer children are freed (child-free loop already ran above),
+        // then create a fresh manager pointing at the new entityLayer.
+        _floatingHpBars?.Clear();
+        _floatingHpBars = new FloatingHpBarManager(entityLayer);
 
         if (_gameController != null)
         {
@@ -547,13 +602,51 @@ public partial class Main : Node
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
         _gameController.PortalEntranceCancelled += OnPortalEntranceCancelled;
 
-        // Wire HUD buttons to GameController / EquipmentPanel.
-        if (_hud != null)
+        // Message log panel — Phase 6.2. Created once, lives at UILayer root (same level as
+        // EquipmentPanel) so it sits above everything else when visible. Starts hidden.
+        if (_messageLogPanel == null)
         {
-            _hud.ExploreRequested        += () => _gameController?.StartAutoExplore();
-            _hud.GearRequested           += OnGearRequested;
-            _hud.MessageRecallRequested  += () => _toastLog?.RecallHistory();
+            _messageLogPanel = new MessageLogPanel();
+            GetNode<CanvasLayer>("UILayer").AddChild(_messageLogPanel);
         }
+
+        // Msg button — Phase 5. Created once and parented to the ViewportOverlay zone.
+        // The Pressed lambda captures `this` (Main), resolving _toastLog/_messageLogPanel at
+        // call time so they always refer to the current floor's objects after floor transitions.
+        if (_msgButton == null)
+        {
+            _msgButton = new MsgButton();
+            GetNode<Control>("UILayer/ViewportOverlay").AddChild(_msgButton);
+            _msgButton.Pressed += () => _messageLogPanel?.Open(_toastLog?.History ?? System.Array.Empty<string>());
+        }
+
+        // Status effect bar — Phase 5. Created once, lives in ViewportOverlay just below
+        // the StatusBar zone. The ViewportOverlay's top edge IS the StatusBar's bottom edge,
+        // so a small offset (8px left, 4px top) positions the badge row flush with the bar.
+        // The control hides itself when no effects are active — no viewport clutter.
+        if (_statusEffectBar == null)
+        {
+            _statusEffectBar = new StatusEffectBar();
+            _statusEffectBar.CustomMinimumSize = new Vector2(0, 24);
+            _statusEffectBar.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+            _statusEffectBar.MouseFilter = Control.MouseFilterEnum.Ignore;
+            // Anchor to top-left of ViewportOverlay with a small margin from the zone edges.
+            _statusEffectBar.AnchorLeft   = 0f;
+            _statusEffectBar.AnchorTop    = 0f;
+            _statusEffectBar.AnchorRight  = 1f;
+            _statusEffectBar.AnchorBottom = 0f;
+            _statusEffectBar.OffsetLeft   = 8f;
+            _statusEffectBar.OffsetTop    = 4f;
+            _statusEffectBar.OffsetRight  = 0f;
+            _statusEffectBar.OffsetBottom = 28f; // top offset + height (4 + 24)
+            GetNode<Control>("UILayer/ViewportOverlay").AddChild(_statusEffectBar);
+        }
+        // Refresh immediately so any pre-existing effects show on floor entry.
+        _statusEffectBar.Refresh(state.Player);
+
+        // Wire HUD buttons to GameController / EquipmentPanel.
+        // Phase 2: Gear/Explore wired via MenuButtonBar (created above).
+        // Phase 5: Msg button wired above (MsgButton in ViewportOverlay).
 
         // Debug overlay — update references each floor so it reflects the new state.
         // No-op in release builds (_debugOverlay is null).
@@ -683,24 +776,26 @@ public partial class Main : Node
     {
         if (_gameView == null) return;
         var (gridX, gridY) = _renderer.ScreenToGrid(localPos);
-        var worldPos = _renderer.GridToScreenCenter(gridX, gridY);
 
-        _tapIndicatorTexture ??= GD.Load<Texture2D>(
-            "res://src/Presentation/assets/tiles/iso/iso_dun_selectA.png");
+        // Top-left of the tile — ColorRect is not centered, so position at grid origin.
+        var tileOrigin = _renderer.GridToScreen(gridX, gridY);
 
-        var sprite = new Sprite2D();
-        sprite.Texture = _tapIndicatorTexture;
-        sprite.Position = worldPos;
-        sprite.Modulate = new Color(1f, 1f, 0.5f, 0.6f);
-        sprite.TextureFilter = CanvasItem.TextureFilterEnum.Nearest;
-        sprite.ZIndex = 100;
-        _gameView.GetNode<Node2D>("EntityLayer").AddChild(sprite);
+        // Programmatic colored square — no sprite asset needed. Warm yellow-white at low
+        // opacity so the highlight is visible without obscuring the tile underneath.
+        var rect = new ColorRect
+        {
+            Size     = new Vector2(_renderer.TileWidth, _renderer.TileHeight),
+            Color    = new Color(1f, 1f, 0.7f, 0.3f),
+            Position = tileOrigin,
+            ZIndex   = _renderer.GetTileSortOrder(gridX, gridY) + 1,
+        };
+        _gameView.GetNode<Node2D>("EntityLayer").AddChild(rect);
 
         // No Tween — alpha is lerped in _Process. Avoids a Tween holding a reference
-        // to the sprite after _Process QueueFree's it (use-after-free on the tween's
+        // to the ColorRect after _Process SafeFree's it (use-after-free on the tween's
         // PropertyTweener when Godot later processes or frees the stopped tween).
         double now = Time.GetTicksMsec() / 1000.0;
-        _tapIndicators.Add((sprite, now));
+        _tapIndicators.Add((rect, now));
     }
 
     private Texture2D? _portalTexture;
@@ -772,7 +867,8 @@ public partial class Main : Node
 
         if (_hud != null && _state != null)
             _hud.OnTurnCompleted(result, _state);
-        _hud?.SetAutoExploreActive(_gameController?.IsAutoExploreActive ?? false);
+        _statusEffectBar?.Refresh(_state.Player);
+        _menuButtonBar?.SetAutoExploreActive(_gameController?.IsAutoExploreActive ?? false);
         if (_equipmentPanel?.Visible == true && _state != null)
             _equipmentPanel.Refresh(_state);
         if (_gameView != null) PlayerCamera.AnimateTo(_gameView, _state.Player, this, zoom: _currentZoom, renderer: _renderer);
@@ -787,6 +883,9 @@ public partial class Main : Node
         _entitySprites?.UpdateVisibility(_state);
         _entitySprites?.UpdateStatusTints(_state);
         _itemSprites?.UpdateVisibility(_state);
+        // Update floating HP bars after visibility is resolved for this turn.
+        if (_entitySprites != null)
+            _floatingHpBars?.Refresh(_state, _entitySprites);
     }
 
     private void OnGameEnded(bool playerWon)
@@ -831,6 +930,23 @@ public partial class Main : Node
         // lets the player choose new game or test mode after a run ends.
         _currentDepth = 1;
         ShowMainMenu();
+    }
+
+    // -------------------------------------------------------------------------
+    // Zone layout helpers
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Add a full-rect ColorRect placeholder to a zone container so the zone is
+    /// visible during development. Replaced with real content in later phases.
+    /// The placeholder MouseFilter=Ignore so it doesn't consume taps.
+    /// </summary>
+    private static void AddZonePlaceholder(Control zone, Color color)
+    {
+        var bg = new ColorRect { Color = color };
+        bg.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+        bg.MouseFilter = Control.MouseFilterEnum.Ignore;
+        zone.AddChild(bg);
     }
 
     // -------------------------------------------------------------------------
@@ -1040,7 +1156,7 @@ public partial class Main : Node
         panel.AnchorTop    = 0f;
         panel.AnchorRight  = 1f;
         panel.AnchorBottom = 0f;
-        panel.OffsetTop    = 210f;
+        panel.OffsetTop    = 120f; // 210 - 90 (ViewportOverlay starts at StatusBar bottom)
         panel.OffsetLeft   = -292f;
         panel.OffsetRight  = -252f;
 

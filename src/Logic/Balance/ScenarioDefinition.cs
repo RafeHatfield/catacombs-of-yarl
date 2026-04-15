@@ -63,6 +63,14 @@ public sealed class ScenarioDefinition
     /// </summary>
     [YamlMember(Alias = "guaranteed_spawns")]
     public GuaranteedSpawns? GuaranteedSpawns { get; set; }
+
+    /// <summary>
+    /// When true, this scenario is an affix/gear probe — designed to isolate weapon advantage,
+    /// not to hit a death rate target. Probes are reported as PROBE (not PASS/FAIL) in the
+    /// harness table and excluded from the pass/fail count. H_PM/H_MP are still checked.
+    /// </summary>
+    [YamlMember(Alias = "is_probe")]
+    public bool IsProbe { get; set; } = false;
 }
 
 public sealed class ScenarioPlayer
@@ -97,8 +105,12 @@ public sealed class ScenarioPlayer
     [YamlMember(Alias = "armor")]
     public string? Armor { get; set; }
 
+    /// <summary>
+    /// Base speed bonus ratio for the player. PoC default is 0.25 — always active,
+    /// independent of equipment. Equipment speed adds on top via EquipmentRatio.
+    /// </summary>
     [YamlMember(Alias = "speed_bonus")]
-    public double SpeedBonus { get; set; }
+    public double SpeedBonus { get; set; } = 0.25;
 }
 
 public sealed class ScenarioMonster

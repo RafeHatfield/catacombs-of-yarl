@@ -322,16 +322,15 @@ public class AutoExploreTests
     }
 
     // -----------------------------------------------------------------------
-    // Known stairs — no repeat stop
+    // Stairs do not interrupt — explore runs until every tile is uncovered
     // -----------------------------------------------------------------------
 
     [Test]
-    public void AutoExplore_NewlyUncoveredStairs_InterruptOnce()
+    public void AutoExplore_NewlyUncoveredStairs_DoNotInterrupt()
     {
-        // 30×30 map, player at (2,2) — stair at (28,28) is well outside any reasonable FOV radius
+        // 30×30 map, player at (2,2) — stair at (28,28) is well outside FOV
         var state = MakeDungeonState(width: 30, height: 30, playerX: 2, playerY: 2);
 
-        // Place stair far from the player — not yet in FOV or explored
         var stair = new Entity(99, "StairDown", 28, 28, blocksMovement: false);
         state.StairDown = stair;
         state.RecomputeFov();
@@ -340,25 +339,19 @@ public class AutoExploreTests
 
         AutoExploreSystem.Activate(state);
 
-        // Stair not in KnownStairs because it hasn't been explored yet.
-        // Simulate: player walks far enough that (28,28) enters FOV for the first time.
-        state.Map.SetVisible(28, 28); // marks tile visible AND explored
+        // Simulate stairs entering FOV for the first time mid-run
+        state.Map.SetVisible(28, 28);
 
+        // Stair visibility must NOT stop auto-explore — the player wants to finish the floor
         var action1 = AutoExploreSystem.GetNextAction(state);
-        Assert.That(action1, Is.Null, "Should stop when stairs first uncovered from FoW");
         var ae = state.Player.Get<AutoExploreState>()!;
-        Assert.That(ae.StopReason, Does.Contain("Stairs").IgnoreCase);
 
-        // Re-activate — stair is now explored. Should NOT interrupt again.
-        AutoExploreSystem.Activate(state);
-        ae = state.Player.Get<AutoExploreState>()!;
-
-        var action2 = AutoExploreSystem.GetNextAction(state);
-        if (action2 == null)
+        if (action1 == null)
         {
             Assert.That(ae.StopReason, Does.Not.Contain("Stairs").IgnoreCase,
-                "Already-explored stairs must not interrupt on re-activation");
+                "Stairs becoming visible must not interrupt auto-explore");
         }
+        // If action1 is non-null, auto-explore correctly continued — test passes
     }
 
     [Test]

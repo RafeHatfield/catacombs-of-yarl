@@ -32,8 +32,8 @@ public class TunedBaselineTests
         ("scenario_depth2_tuned.yaml", 2, 29, "Shortsword+Speed"),
         ("scenario_depth3_tuned.yaml", 3, 31, "Longsword+Speed"),
         ("scenario_depth4_tuned.yaml", 4, 28, "Longsword+Speed"),
-        ("scenario_depth5_tuned.yaml", 5, 36, "Fine LS+Speed"),
-        ("scenario_depth6_tuned.yaml", 6, 36, "MW LS+Speed"),
+        ("scenario_depth5_tuned.yaml", 5, 42, "Longsword+Brute"),  // 2g(36)+1brute(54) avg=42
+        ("scenario_depth6_tuned.yaml", 6, 40, "MW LS+Brute"),       // 4g(36)+1brute(54) avg=39.6→40
     ];
 
     [Test]

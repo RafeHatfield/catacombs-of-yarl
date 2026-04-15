@@ -71,10 +71,10 @@ public static class GameStateFactory
             }
         }
 
-        // Speed bonus for momentum system — from scenario config and/or weapon
+        // Speed bonus for momentum system — PoC gives every scenario player a 0.25 base tracker
+        // unconditionally (scenario_level_loader.py line 230). Equipment speed adds via EquipmentRatio.
         double weaponSpeed = playerEquipment?.MainHand?.Get<SpeedBonusTracker>()?.EquipmentRatio ?? 0;
-        if (def.SpeedBonus > 0 || weaponSpeed > 0)
-            player.Add(new SpeedBonusTracker(baseRatio: def.SpeedBonus) { EquipmentRatio = weaponSpeed });
+        player.Add(new SpeedBonusTracker(baseRatio: def.SpeedBonus) { EquipmentRatio = weaponSpeed });
 
         if (scenario.Items.Count > 0)
         {

@@ -23,7 +23,30 @@ public sealed partial class MiniMap : Control
     private static readonly Color ColStair       = new(0.30f, 0.55f, 1.00f, 1.00f);
     private static readonly Color ColPlayer      = new(1.00f, 1.00f, 0.20f, 1.00f);
     private static readonly Color ColMonster     = new(1.00f, 0.25f, 0.25f, 1.00f);
-    private static readonly Color ColBg          = new(0.05f, 0.05f, 0.08f, 0.70f);
+    // StyleBoxFlat for rounded-corner background + subtle border.
+    // Created once and reused across redraws to avoid per-frame allocations.
+    private readonly StyleBoxFlat _bgStyle = BuildBgStyle();
+
+    private static StyleBoxFlat BuildBgStyle()
+    {
+        var style = new StyleBoxFlat();
+        style.BgColor = new Color(0.05f, 0.05f, 0.08f, 0.82f);
+
+        // 4px rounded corners
+        style.CornerRadiusTopLeft     = 4;
+        style.CornerRadiusTopRight    = 4;
+        style.CornerRadiusBottomLeft  = 4;
+        style.CornerRadiusBottomRight = 4;
+
+        // Subtle 1px border (0.5px isn't representable; 1px at minimap scale reads as subtle)
+        style.BorderColor       = new Color(0.60f, 0.60f, 0.70f, 0.45f);
+        style.BorderWidthTop    = 1;
+        style.BorderWidthRight  = 1;
+        style.BorderWidthBottom = 1;
+        style.BorderWidthLeft   = 1;
+
+        return style;
+    }
 
     private GameState? _state;
 
@@ -50,8 +73,9 @@ public sealed partial class MiniMap : Control
         int pw = mw * TilePixels;
         int ph = mh * TilePixels;
 
-        // Background
-        DrawRect(new Rect2(0, 0, pw, ph), ColBg);
+        // Background — rounded corners + border via StyleBoxFlat.
+        // TODO: tap-to-expand — intercept _GuiInput, scale up to full-screen map view, add close gesture.
+        DrawStyleBox(_bgStyle, new Rect2(0, 0, pw, ph));
 
         // Tiles
         for (int x = 0; x < mw; x++)

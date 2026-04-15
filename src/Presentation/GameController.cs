@@ -38,14 +38,14 @@ public sealed partial class GameController : Node
     private InputHandler _input = new();
     private EntitySpriteManager? _entitySprites;
     private ItemSpriteManager? _itemSprites;
-    private InventoryPanel? _inventoryPanel;
+    private QuickSlotBar? _inventoryPanel;
     private EquipmentPanel? _equipmentPanel;
     private ToastLog? _toastLog;
     private TurnAnimator? _animator;
     private LongPressDetector? _longPress;
     private InspectPanel? _inspectPanel;
     private ActionSheet? _actionSheet;
-    private IMapRenderer _renderer = new IsometricRenderer(); // safe default
+    private IMapRenderer _renderer = new TopDownRenderer(); // safe default
     private Node2D? _gameView; // needed to ToLocal() in OnLongPress
 
     // Holds the item being thrown — needed to route LocationChosen back to ThrowItem.
@@ -99,7 +99,7 @@ public sealed partial class GameController : Node
     }
 
     public void Initialize(GameState state, EntitySpriteManager entitySprites, Node animationRoot,
-        ItemSpriteManager? itemSprites = null, InventoryPanel? inventoryPanel = null,
+        ItemSpriteManager? itemSprites = null, QuickSlotBar? inventoryPanel = null,
         EquipmentPanel? equipmentPanel = null, ToastLog? toastLog = null,
         MonsterFactory? monsterFactory = null, IMapRenderer? renderer = null,
         Node2D? gameView = null, EntityFactory? portalEntityFactory = null,
@@ -117,7 +117,7 @@ public sealed partial class GameController : Node
         _inventoryPanel = inventoryPanel;
         _equipmentPanel = equipmentPanel;
         _toastLog = toastLog;
-        _renderer = renderer ?? new IsometricRenderer();
+        _renderer = renderer ?? new TopDownRenderer();
         _gameView = gameView;
         _animator = new TurnAnimator(animationRoot, entitySprites, _renderer, vfxOverlay);
         _animator.AnimationComplete += OnAnimationComplete;

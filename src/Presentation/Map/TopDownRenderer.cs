@@ -3,27 +3,29 @@ using Godot;
 namespace CatacombsOfYarl.Presentation.Map;
 
 /// <summary>
-/// Top-down 2D coordinate renderer. Working coordinate math, no tile assets yet.
+/// Top-down 2D coordinate renderer using Oryx 16bf world tiles (24x24px).
 ///
-/// Tile size is 48×48 (UF terrain native size). Grid coordinates map directly to
-/// screen pixels: GridToScreen(x, y) = (x*48, y*48). Z-order is row-major.
+/// Tile size is 24x24 (16bf world tile native size). Grid coordinates map directly
+/// to screen pixels: GridToScreen(x, y) = (x*24, y*24). Z-order is row-major.
 ///
-/// Phase 1: math stub only. Booting with this renderer will fail at DungeonRenderer
-/// because top-down tile assets (td_* prefix) don't exist yet. That is expected.
-/// Phase 2 adds the tile assets and wires DungeonRenderer to use them.
+/// At DefaultZoom 3.0 on a 720px-wide viewport, approximately 10 tiles are visible
+/// horizontally — matching Shattered Pixel Dungeon's density target.
 ///
-/// Zoom defaults are initial guesses — calibrated visually in Phase 2 TASK-007.
+/// Zoom range (1.5–6.0) prevents the 24px tiles from becoming unreadably small
+/// at min zoom while allowing close pixel-art inspection at max zoom.
 /// </summary>
 public sealed class TopDownRenderer : IMapRenderer
 {
-    public int TileWidth  => 48;
-    public int TileHeight => 48;
+    public int TileWidth  => 24;
+    public int TileHeight => 24;
 
-    // Initial zoom guesses for 48×48 tiles on a mobile screen.
-    // These will be calibrated in Phase 2 once top-down tile assets exist.
-    public float DefaultZoom => 2.5f;
-    public float MinZoom     => 1.0f;
-    public float MaxZoom     => 5.0f;
+    // Calibrated for 24x24 (16bf world) tiles on a 720x1280 mobile viewport.
+    // DefaultZoom 3.0 gives ~10 tiles wide x ~14 tall — same density as Shattered PD.
+    // MinZoom 1.5 keeps individual tiles recognizable when zoomed out.
+    // MaxZoom 6.0 lets players inspect pixel art detail.
+    public float DefaultZoom => 3.0f;
+    public float MinZoom     => 1.5f;
+    public float MaxZoom     => 6.0f;
 
     /// <summary>Screen position of tile top-left corner. Simple grid multiplication.</summary>
     public Vector2 GridToScreen(int gridX, int gridY)

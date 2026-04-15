@@ -29,14 +29,15 @@ public static class CombatResolver
     /// Uses d20 roll vs AC for hit determination, then rolls damage on hit.
     /// Natural 20 = critical (2x damage). Natural 1 = fumble (auto-miss).
     /// </summary>
-    public static AttackResult ResolveAttack(Entity attacker, Entity defender, SeededRandom rng, int extraToHitBonus = 0)
+    public static AttackResult ResolveAttack(Entity attacker, Entity defender, SeededRandom rng,
+        int extraToHitBonus = 0, bool forceHit = false)
     {
         var atk = attacker.Require<Fighter>();
         var def = defender.Require<Fighter>();
         var atkEquip = attacker.Get<Equipment>();
         var defEquip = defender.Get<Equipment>();
 
-        int d20 = rng.Next(1, 21); // 1-20 inclusive
+        int d20 = rng.Next(1, 21); // 1-20 inclusive (consumed for RNG determinism even on forceHit)
 
         // To-hit: DEX mod + weapon to-hit bonus + status effect modifiers
         int toHitBonus = atk.DexterityMod + (atkEquip?.TotalToHitBonus ?? 0);
@@ -80,11 +81,12 @@ public static class CombatResolver
         if (weapon != null && weapon.CritThreshold >= 1 && weapon.CritThreshold <= 20)
             critThreshold = weapon.CritThreshold;
 
-        bool isCritical = d20 >= critThreshold;
-        bool isFumble = d20 == 1;
+        bool isCritical = !forceHit && d20 >= critThreshold;
+        bool isFumble = !forceHit && d20 == 1;
 
         bool hit;
-        if (isCritical) hit = true;
+        if (forceHit) hit = true;           // Surprise attack: always hits, not a crit
+        else if (isCritical) hit = true;
         else if (isFumble) hit = false;
         else hit = attackRoll >= targetAc;
 

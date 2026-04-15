@@ -82,6 +82,11 @@ public sealed class AggregatedMetrics
     public int TotalRuns { get; init; }
     public int Seed { get; init; }
 
+    /// <summary>
+    /// Mirrors ScenarioDefinition.IsProbe — scenario is a gear/affix probe, not a calibration target.
+    /// </summary>
+    public bool IsProbe { get; init; }
+
     // Averages
     public double AvgTurns { get; init; }
     public double DeathRate { get; init; }
@@ -105,14 +110,17 @@ public sealed class AggregatedMetrics
     /// <summary>H_MP (hits-based): avg player HP / avg monster damage per hit.</summary>
     public double H_MP { get; init; }
 
+    /// <summary>Average bonus attacks per run (player + monster combined).</summary>
+    public double AvgBonusAttacks { get; init; }
+
     /// <summary>
     /// Aggregate a list of run metrics into summary statistics.
     /// </summary>
     public static AggregatedMetrics FromRuns(string scenarioId, int seed, List<RunMetrics> runs,
-        string name = "", int depth = 0)
+        string name = "", int depth = 0, bool isProbe = false)
     {
         if (runs.Count == 0)
-            return new AggregatedMetrics { ScenarioId = scenarioId, Name = name, Depth = depth, Seed = seed };
+            return new AggregatedMetrics { ScenarioId = scenarioId, Name = name, Depth = depth, Seed = seed, IsProbe = isProbe };
 
         int totalPlayerAttacks = runs.Sum(r => r.PlayerAttacks);
         int totalPlayerHits    = runs.Sum(r => r.PlayerHits);
@@ -137,6 +145,7 @@ public sealed class AggregatedMetrics
             Name                  = name,
             Depth                 = depth,
             Seed                  = seed,
+            IsProbe               = isProbe,
             TotalRuns             = runs.Count,
             AvgTurns              = runs.Average(r => r.TurnsTaken),
             DeathRate             = (double)runs.Count(r => r.PlayerDied) / runs.Count,
@@ -149,6 +158,7 @@ public sealed class AggregatedMetrics
             AvgMonsterMaxHp       = avgMonsterMaxHp,
             H_PM                  = h_pm,
             H_MP                  = h_mp,
+            AvgBonusAttacks       = runs.Average(r => r.BonusAttacks),
         };
     }
 }

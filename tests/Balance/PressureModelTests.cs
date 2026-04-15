@@ -11,13 +11,23 @@ public class PressureModelTests
     [Test]
     public void TargetBands_CorrectForDepths()
     {
+        // Prototype bands from PoC target_bands.py (union of per-depth ranges within each band)
         var hpm1 = PressureModel.GetH_PM_Target(1);
-        Assert.That(hpm1.Min, Is.EqualTo(3.5));
-        Assert.That(hpm1.Max, Is.EqualTo(4.5));
+        Assert.That(hpm1.Min, Is.EqualTo(6.0));
+        Assert.That(hpm1.Max, Is.EqualTo(9.0));
+
+        var hpm3 = PressureModel.GetH_PM_Target(3);
+        Assert.That(hpm3.Min, Is.EqualTo(8.0));
+        Assert.That(hpm3.Max, Is.EqualTo(11.0));
+
+        // H_MP: depth1 [20-24], depth5 (band 5-6) [16-21]
+        var hmp1 = PressureModel.GetH_MP_Target(1);
+        Assert.That(hmp1.Min, Is.EqualTo(20.0));
+        Assert.That(hmp1.Max, Is.EqualTo(24.0));
 
         var hmp5 = PressureModel.GetH_MP_Target(5);
-        Assert.That(hmp5.Min, Is.EqualTo(8));
-        Assert.That(hmp5.Max, Is.EqualTo(10));
+        Assert.That(hmp5.Min, Is.EqualTo(16.0));
+        Assert.That(hmp5.Max, Is.EqualTo(21.0));
     }
 
     [Test]

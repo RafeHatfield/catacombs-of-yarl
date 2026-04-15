@@ -17,6 +17,7 @@ namespace CatacombsOfYarl.Presentation.UI;
 ///       Text = "Explore",
 ///       FontSize = 22,
 ///       BackgroundColor = new Color(0.2f, 0.4f, 0.8f, 1f),
+///       CornerRadius = 6,
 ///       CustomMinimumSize = new Vector2(120, 48),
 ///   };
 ///   btn.Pressed += () => DoSomething();
@@ -27,12 +28,17 @@ public sealed partial class TouchButton : Control
     private static readonly Color DisabledColor = new(0.35f, 0.35f, 0.35f, 0.6f);
     private static readonly Color DisabledTextColor = new(0.55f, 0.55f, 0.55f, 1f);
 
+    // StyleBoxFlat is used when CornerRadius > 0 so we get rounded corners.
+    // Falls back to a plain ColorRect when radius is 0 (legacy callers unchanged).
+    private Panel?     _panel;
+    private StyleBoxFlat? _panelStyle;
     private ColorRect? _bg;
     private Label?     _label;
 
     private string _text = "";
     private int    _fontSize = 22;
     private Color  _backgroundColor = new(0.2f, 0.4f, 0.8f, 1f);
+    private int    _cornerRadius = 0;
     private bool   _disabled;
 
     // C# event — not a Godot signal, so no Callable allocation or leak.
@@ -68,6 +74,21 @@ public sealed partial class TouchButton : Control
         set
         {
             _backgroundColor = value;
+            ApplyColors();
+        }
+    }
+
+    /// <summary>
+    /// Corner radius in pixels. Set before adding to the scene tree (or before _Ready fires).
+    /// When > 0, the background uses a StyleBoxFlat instead of a plain ColorRect so that
+    /// rounded corners are rendered correctly. Default 0 preserves the legacy flat-rect look.
+    /// </summary>
+    public int CornerRadius
+    {
+        get => _cornerRadius;
+        set
+        {
+            _cornerRadius = value;
             ApplyColors();
         }
     }
@@ -128,9 +149,29 @@ public sealed partial class TouchButton : Control
 
     private void BuildLayout()
     {
-        _bg = new ColorRect { MouseFilter = MouseFilterEnum.Ignore };
-        _bg.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
-        AddChild(_bg);
+        // When CornerRadius > 0 we use Panel + StyleBoxFlat for rounded corners.
+        // When CornerRadius == 0 we keep the legacy plain ColorRect.
+        if (_cornerRadius > 0)
+        {
+            _panelStyle = new StyleBoxFlat
+            {
+                BgColor                 = _backgroundColor,
+                CornerRadiusTopLeft     = _cornerRadius,
+                CornerRadiusTopRight    = _cornerRadius,
+                CornerRadiusBottomLeft  = _cornerRadius,
+                CornerRadiusBottomRight = _cornerRadius,
+            };
+            _panel = new Panel { MouseFilter = MouseFilterEnum.Ignore };
+            _panel.AddThemeStyleboxOverride("panel", _panelStyle);
+            _panel.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+            AddChild(_panel);
+        }
+        else
+        {
+            _bg = new ColorRect { MouseFilter = MouseFilterEnum.Ignore };
+            _bg.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+            AddChild(_bg);
+        }
 
         _label = new Label
         {
@@ -148,18 +189,23 @@ public sealed partial class TouchButton : Control
 
     private void ApplyColors()
     {
-        if (_bg    == null) return;
         if (_label == null) return;
 
+        Color bgColor = _disabled ? DisabledColor : _backgroundColor;
+
+        if (_panelStyle != null)
+        {
+            _panelStyle.BgColor = bgColor;
+            // StyleBoxFlat is already applied as an override — Godot re-reads it automatically.
+        }
+        else if (_bg != null)
+        {
+            _bg.Color = bgColor;
+        }
+
         if (_disabled)
-        {
-            _bg.Color = DisabledColor;
             _label.AddThemeColorOverride("font_color", DisabledTextColor);
-        }
         else
-        {
-            _bg.Color = _backgroundColor;
             _label.RemoveThemeColorOverride("font_color");
-        }
     }
 }

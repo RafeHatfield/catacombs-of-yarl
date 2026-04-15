@@ -120,6 +120,14 @@ public static class Pathfinder
                     int nx = cx + dx, ny = cy + dy;
                     if (!map.InBounds(nx, ny)) continue;
                     if (!map.IsWalkable(nx, ny)) continue;
+
+                    // Match A*'s no-corner-cutting rule so DijkstraMap and AStar agree on
+                    // reachability. Without this, Dijkstra selects diagonal-corner targets that
+                    // AStar cannot path to, causing auto-explore to stop prematurely.
+                    bool isDiagonal = dx != 0 && dy != 0;
+                    if (isDiagonal && (!map.IsWalkable(cx + dx, cy) || !map.IsWalkable(cx, cy + dy)))
+                        continue;
+
                     if (dist[nx, ny] != int.MaxValue) continue;
 
                     dist[nx, ny] = nextDist;

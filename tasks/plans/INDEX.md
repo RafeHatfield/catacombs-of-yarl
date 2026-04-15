@@ -60,7 +60,11 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | Plan | Status | Description |
 |------|--------|-------------|
 | [plan_tileset_switching.md](plan_tileset_switching.md) | [ ] | Data-driven tileset YAML, UF + 16bf support, boot-time switching, CLI mapping tool |
-| [plan_map_renderer.md](plan_map_renderer.md) | [ ] | IMapRenderer interface, iso + top-down 2D modes, config-driven switching |
+| [plan_map_renderer.md](plan_map_renderer.md) | [~] | IMapRenderer interface, iso + top-down 2D modes, config-driven switching (Phase 1 complete) |
+| [PLAN_mobile_layout.md](PLAN_mobile_layout.md) | [x] | Mobile portrait layout: 5-zone UILayer, QuickSlotBar, MenuButtonBar, FloatingHpBars, MessageLogPanel (all 7 phases complete) |
+| [PLAN_topdown_switch.md](PLAN_topdown_switch.md) | [~] | Switch to top-down orthogonal rendering: 16bf 24x24 world tiles, data-driven tile themes, grey dungeon first |
+| [PLAN_wall_autotile.md](PLAN_wall_autotile.md) | [x] | Superseded: absorbed into PLAN_dungeon_visual_overhaul Phase 0 (complete) |
+| [PLAN_dungeon_visual_overhaul.md](PLAN_dungeon_visual_overhaul.md) | [~] | 3-phase visual overhaul: Phase 0 (wall autotile hybrid algorithm) complete; Phase 1 (room shapes) and Phase 2 (floor composition) not started |
 
 ### Deferred Feature Plans
 | Plan | Status | Description |
@@ -70,6 +74,9 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Tier 4 — Testing & Balance Infrastructure
 | Plan | Status | Description |
 |------|--------|-------------|
+| [plan_testing_infra_phase1.md](plan_testing_infra_phase1.md) | [ ] | Dungeon soak CLI: --dungeon mode, DungeonSoakRunResult, outcome classification, JSONL output, multi-run aggregation |
+| [plan_testing_infra_phase2.md](plan_testing_infra_phase2.md) | [ ] | Bot decision telemetry: BotDecisionRecord, IBotTelemetryRecorder, BotRunSummary, wired into BotBrain.Decide() |
+| [plan_testing_infra_phase3.md](plan_testing_infra_phase3.md) | [ ] | Analysis reports: DungeonSoakReport generator, JSONL reader for offline analysis, --report flag, CI integration |
 | [plan_bot_personas.md](plan_bot_personas.md) | [ ] | 5 personas: balanced/cautious/aggressive/greedy/speedrunner |
 | [plan_testing_mode.md](plan_testing_mode.md) | [ ] | In-game test menu, testing YAML loader, preconfigured test states |
 | [plan_balance_pipeline.md](plan_balance_pipeline.md) | [ ] | ETP system, target bands, depth scaling, auto-diagnosis |

@@ -29,6 +29,15 @@ public sealed class GameState
     /// </summary>
     public bool IsDungeonMode { get; init; }
 
+    /// <summary>
+    /// True when running the balance scenario harness (ScenarioHarness.RunOnce).
+    /// Enables PoC-matching monster awareness: monsters start passive and only activate
+    /// after being attacked (replicating PoC's fov_map=None behavior where
+    /// monster_sees_player is always False and monsters only act when in_combat=True).
+    /// False in all other scenario/test modes — those use the always-alerted model.
+    /// </summary>
+    public bool IsHarnessMode { get; set; }
+
     /// <summary>Current floor depth. 1-based. Only meaningful when IsDungeonMode=true.</summary>
     public int CurrentDepth { get; init; } = 1;
 

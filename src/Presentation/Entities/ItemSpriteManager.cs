@@ -20,7 +20,9 @@ namespace CatacombsOfYarl.Presentation.Entities;
 /// </summary>
 public sealed class ItemSpriteManager
 {
-    private const string FallbackTilePath = "res://src/Presentation/assets/tiles/iso/iso_dun_selectA.png";
+    // Grey stone floor tile from the 16bf world sheet — visible but clearly a placeholder.
+    // Used when no sprite is registered for an item. Tile 1091 is a plain grey floor square.
+    private const string FallbackTilePath = "res://src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_1091.png";
 
     private readonly Node2D _parent;
     private readonly SpriteMapping _spriteMapping;

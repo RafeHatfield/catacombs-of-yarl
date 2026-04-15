@@ -1,5 +1,3 @@
-using CatacombsOfYarl.Logic.Combat;
-using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using Godot;
@@ -7,41 +5,26 @@ using Godot;
 namespace CatacombsOfYarl.Presentation.UI;
 
 /// <summary>
-/// Heads-up display. Shows player HP bar, turn counter, depth,
-/// and the nearest enemy's HP bar when in range.
+/// Slim status bar — Phase 1 layout. Shows HP fill bar + depth label only.
 ///
-/// Driven by GameState directly — reads values on each Update() call.
-/// No Godot scene file — built entirely in code for portability.
+/// Intentionally stripped of gear/explore/msg buttons, equipment summary, and
+/// enemy HP panel — those move to MenuButtonBar (Phase 2), QuickSlotBar (Phase 3),
+/// and FloatingHpBarManager (Phase 4) respectively.
+///
+/// HP bar uses a ColorRect fill inside a container rather than Godot's ProgressBar
+/// so we have full visual control without fighting ProgressBar theme overrides.
+/// Fill width: (hp / maxHp) * availableWidth. Color thresholds: green >50%, yellow >25%, red otherwise.
+///
+/// No Godot scene file — built entirely in code.
 /// </summary>
 public sealed partial class HUD : Control
 {
     private Label? _hpLabel;
-    private ProgressBar? _hpBar;
+    private ColorRect? _hpBarBg;
+    private ColorRect? _hpBarFill;
     private Label? _depthLabel;
-    private Label? _equipLabel;
-    private Control? _enemyHpPanel;
-    private Label? _enemyHpLabel;
-    private ProgressBar? _enemyHpBar;
-    private StatusEffectBar? _statusEffectBar;
 
-    private TouchButton? _exploreButton;
-    private TouchButton? _gearButton;
-    private TouchButton? _msgButton;
     private GameState? _state;
-
-    // Track the last monster the player attacked. We show this monster's HP bar until
-    // it dies — then hide the bar entirely. We never auto-switch to "nearest alive" because
-    // that looks like an HP reset when the current target drops.
-    private int _combatTargetId = -1;
-
-    /// <summary>Fired when the player taps the Explore button.</summary>
-    public event Action? ExploreRequested;
-
-    /// <summary>Fired when the player taps the Gear (equipment) button.</summary>
-    public event Action? GearRequested;
-
-    /// <summary>Fired when the player taps the message recall button.</summary>
-    public event Action? MessageRecallRequested;
 
     public override void _Ready()
     {
@@ -51,36 +34,16 @@ public sealed partial class HUD : Control
     public void SetState(GameState state)
     {
         _state = state;
-        _combatTargetId = -1;
         Refresh();
     }
 
     /// <summary>
-    /// Update combat target tracking from the turn result, then refresh all HUD elements.
-    /// Call this after every turn instead of the bare Refresh() overload.
-    ///
-    /// Target switch rules:
-    ///   - Player attacks a monster → that monster becomes the tracked target
-    ///   - Tracked target dies → target cleared (bar hides; no auto-switch to nearest)
+    /// Update HUD state from a completed turn result, then refresh all elements.
+    /// Enemy HP tracking removed — that's handled by FloatingHpBarManager in Phase 4.
     /// </summary>
     public void OnTurnCompleted(TurnResult result, GameState state)
     {
         _state = state;
-
-        // Scan events in order. Player-attack events update the target; death events clear it.
-        // Both can happen in the same turn (player one-shots a monster), so process death
-        // events after attack events so we don't briefly flash the dead monster's full bar.
-        foreach (var evt in result.Events)
-        {
-            if (evt is AttackEvent atk && atk.ActorId == state.Player.Id)
-                _combatTargetId = atk.TargetId;
-        }
-        foreach (var evt in result.Events)
-        {
-            if (evt is DeathEvent death && death.ActorId == _combatTargetId)
-                _combatTargetId = -1;
-        }
-
         Refresh();
     }
 
@@ -91,183 +54,113 @@ public sealed partial class HUD : Control
 
         var fighter = _state.PlayerFighter;
 
-        // HP bar
-        if (_hpBar != null)
+        // HP fill bar — compute fill width from HP fraction.
+        // Must read Size after layout; falls back to CustomMinimumSize if layout hasn't resolved yet.
+        if (_hpBarFill != null && _hpBarBg != null)
         {
-            _hpBar.MaxValue = fighter.MaxHp;
-            _hpBar.Value = fighter.Hp;
-            _hpBar.SelfModulate = HpColor(fighter.Hp, fighter.MaxHp);
+            float availableWidth = _hpBarBg.Size.X > 0 ? _hpBarBg.Size.X : _hpBarBg.CustomMinimumSize.X;
+            float frac = fighter.MaxHp > 0 ? (float)fighter.Hp / fighter.MaxHp : 0f;
+            frac = Math.Clamp(frac, 0f, 1f);
+            _hpBarFill.Size = new Vector2(availableWidth * frac, _hpBarFill.Size.Y);
+            _hpBarFill.Color = HpColor(fighter.Hp, fighter.MaxHp);
         }
+
         if (_hpLabel != null)
-            _hpLabel.Text = $"HP  {fighter.Hp} / {fighter.MaxHp}";
+            _hpLabel.Text = $"{fighter.Hp}/{fighter.MaxHp}";
 
-        // Depth
         if (_depthLabel != null)
-            _depthLabel.Text = $"Depth: {_state.CurrentDepth}";
-
-        // Equipment summary — weapon + armor, truncated to 12 chars each.
-        // Uses identification-aware display names so unidentified rings show correctly.
-        if (_equipLabel != null)
-        {
-            var eq       = _state.Player.Get<Equipment>();
-            var registry = _state.IdentificationRegistry;
-            var pool     = _state.AppearancePool;
-
-            string WpnName(Entity? item) => item == null ? "—"
-                : ItemDisplay.GetDisplayName(item, registry, pool);
-
-            var wpn = Truncate(WpnName(eq?.MainHand), 12);
-            var arm = Truncate(eq?.GetSlot(EquipmentSlot.Chest) is Entity chest
-                ? ItemDisplay.GetDisplayName(chest, registry, pool)
-                : "—", 12);
-
-            _equipLabel.Text = $"Wpn: {wpn}   Arm: {arm}";
-        }
-
-        // Status effect badges — show active effects on the player.
-        _statusEffectBar?.Refresh(_state.Player);
-
-        // Enemy HP bar: show the tracked combat target if it is still alive.
-        // Never fall back to "nearest alive" — that causes apparent HP resets when targets die.
-        Entity? target = _combatTargetId >= 0
-            ? _state.AliveMonsters.FirstOrDefault(m => m.Id == _combatTargetId)
-            : null;
-
-        if (_enemyHpPanel != null && target != null)
-        {
-            var ef = target.Require<Fighter>();
-            _enemyHpPanel.Visible = true;
-            if (_enemyHpBar != null)
-            {
-                _enemyHpBar.MaxValue = ef.MaxHp;
-                _enemyHpBar.Value = ef.Hp;
-                _enemyHpBar.SelfModulate = Colors.IndianRed;
-            }
-            if (_enemyHpLabel != null)
-                _enemyHpLabel.Text = $"{target.Name}  {ef.Hp}/{ef.MaxHp}";
-        }
-        else if (_enemyHpPanel != null)
-        {
-            _enemyHpPanel.Visible = false;
-        }
+            _depthLabel.Text = $"D:{_state.CurrentDepth}";
     }
 
-    /// <summary>Visually indicate whether auto-explore is currently running.</summary>
-    public void SetAutoExploreActive(bool active)
-    {
-        if (_exploreButton == null) return;
-        _exploreButton.Text     = active ? "Exploring..." : "Explore";
-        // Tint yellow while active so the player can see the mode is on.
-        _exploreButton.Modulate = active ? Colors.Yellow : Colors.White;
-    }
+    // -------------------------------------------------------------------------
 
     private void BuildLayout()
     {
-        // Fill the container node defined in Main.tscn (200px TopWide)
+        // Fill the StatusBar zone container from Main.tscn (90px TopWide).
         SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 
         var sans = LoadPixelFont("res://src/Presentation/assets/fonts/PixeloidSans.ttf");
         var bold = LoadPixelFont("res://src/Presentation/assets/fonts/PixeloidSans-Bold.ttf");
 
+        // Dark navy background — same color as the original HUD.
         var bg = new ColorRect { Color = new Color(0.05f, 0.05f, 0.1f, 0.85f) };
         bg.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         AddChild(bg);
 
-        var vbox = new VBoxContainer();
-        vbox.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
-        vbox.AddThemeConstantOverride("separation", 4);
-        AddChild(vbox);
-
+        // Single-column layout with a margin container for edge padding.
         var margin = new MarginContainer();
-        margin.AddThemeConstantOverride("margin_left", 16);
-        margin.AddThemeConstantOverride("margin_right", 16);
-        margin.AddThemeConstantOverride("margin_top", 12);
-        margin.AddThemeConstantOverride("margin_bottom", 8);
-        vbox.AddChild(margin);
+        margin.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+        margin.AddThemeConstantOverride("margin_left",   16);
+        margin.AddThemeConstantOverride("margin_right",  16);
+        margin.AddThemeConstantOverride("margin_top",    10);
+        margin.AddThemeConstantOverride("margin_bottom", 6);
+        AddChild(margin);
 
-        var inner = new VBoxContainer();
-        inner.AddThemeConstantOverride("separation", 6);
-        margin.AddChild(inner);
+        var vbox = new VBoxContainer();
+        vbox.AddThemeConstantOverride("separation", 4);
+        margin.AddChild(vbox);
 
-        // Top row: HP label + depth + Explore button
+        // ── Row 1: HP fill bar + "HP X/Y" label + depth label ────────────────
         var topRow = new HBoxContainer();
-        inner.AddChild(topRow);
+        topRow.AddThemeConstantOverride("separation", 8);
+        vbox.AddChild(topRow);
 
-        _hpLabel = new Label { Text = "HP  54 / 54", SizeFlagsHorizontal = SizeFlags.ExpandFill };
+        // HP bar container: a dark background rect that acts as the track.
+        // Relative width via SizeFlags.ExpandFill so it fills available space.
+        var hpBarContainer = new Control();
+        hpBarContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        hpBarContainer.CustomMinimumSize = new Vector2(0, 22);
+        topRow.AddChild(hpBarContainer);
+
+        _hpBarBg = new ColorRect
+        {
+            Color = new Color(0.1f, 0.1f, 0.1f, 0.9f),
+            // Match container height; width resolved by Godot layout.
+            AnchorRight = 1f,
+            AnchorBottom = 1f,
+        };
+        hpBarContainer.AddChild(_hpBarBg);
+
+        // The fill starts at 0 width; Refresh() sets it based on HP fraction.
+        _hpBarFill = new ColorRect
+        {
+            Color = Colors.LimeGreen,
+            // Anchored to left/top/bottom; width is set procedurally in Refresh().
+            AnchorLeft   = 0f,
+            AnchorTop    = 0f,
+            AnchorRight  = 0f,
+            AnchorBottom = 1f,
+            // Start at max width (immediately corrected by first Refresh).
+            Size = new Vector2(200f, 0f),
+        };
+        hpBarContainer.AddChild(_hpBarFill);
+
+        // HP text overlaid on top of the fill bar.
+        _hpLabel = new Label
+        {
+            Text = "HP",
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment   = VerticalAlignment.Center,
+            // Covers the full bar area for centered overlay text.
+            AnchorRight  = 1f,
+            AnchorBottom = 1f,
+        };
         _hpLabel.AddThemeFontOverride("font", bold);
-        _hpLabel.AddThemeFontSizeOverride("font_size", 28);
+        _hpLabel.AddThemeFontSizeOverride("font_size", 16);
         _hpLabel.AddThemeColorOverride("font_color", Colors.White);
-        topRow.AddChild(_hpLabel);
+        _hpLabel.MouseFilter = MouseFilterEnum.Ignore;
+        hpBarContainer.AddChild(_hpLabel);
 
-        _depthLabel = new Label { Text = "Depth: 1", HorizontalAlignment = HorizontalAlignment.Right };
+        // Depth label — right-aligned, compact.
+        _depthLabel = new Label
+        {
+            Text = "D:1",
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
         _depthLabel.AddThemeFontOverride("font", sans);
-        _depthLabel.AddThemeFontSizeOverride("font_size", 24);
+        _depthLabel.AddThemeFontSizeOverride("font_size", 22);
         _depthLabel.AddThemeColorOverride("font_color", Colors.White);
         topRow.AddChild(_depthLabel);
-
-        // Use TouchButton instead of Godot Button — Godot's Button has offset hit areas
-        // under integer stretch scale mode on iOS CanvasLayer.
-        _gearButton = new TouchButton
-        {
-            Text              = "Gear",
-            FontSize          = 22,
-            BackgroundColor   = new Color(0.25f, 0.20f, 0.10f, 0.9f),
-            CustomMinimumSize = new Vector2(72, 0),
-        };
-        _gearButton.Pressed += () => GearRequested?.Invoke();
-        topRow.AddChild(_gearButton);
-
-        _exploreButton = new TouchButton
-        {
-            Text            = "Explore",
-            FontSize        = 22,
-            BackgroundColor = new Color(0.15f, 0.35f, 0.15f, 0.9f),
-            CustomMinimumSize = new Vector2(96, 0),
-        };
-        _exploreButton.Pressed += () => ExploreRequested?.Invoke();
-        topRow.AddChild(_exploreButton);
-
-        _msgButton = new TouchButton
-        {
-            Text            = "Msg",
-            FontSize        = 22,
-            BackgroundColor = new Color(0.15f, 0.20f, 0.35f, 0.9f),
-            CustomMinimumSize = new Vector2(60, 0),
-        };
-        _msgButton.Pressed += () => MessageRecallRequested?.Invoke();
-        topRow.AddChild(_msgButton);
-
-        // Player HP bar
-        _hpBar = new ProgressBar { ShowPercentage = false };
-        _hpBar.CustomMinimumSize = new Vector2(0, 14);
-        inner.AddChild(_hpBar);
-
-        // Status effect badges — row of colored short-name + turn-count badges.
-        // Hidden when no effects are active (StatusEffectBar renders empty).
-        _statusEffectBar = new StatusEffectBar();
-        _statusEffectBar.CustomMinimumSize = new Vector2(0, 24);
-        inner.AddChild(_statusEffectBar);
-
-        // Equipment summary row (weapon + armor)
-        _equipLabel = new Label { Text = "Wpn: —   Arm: —" };
-        _equipLabel.AddThemeFontOverride("font", sans);
-        _equipLabel.AddThemeFontSizeOverride("font_size", 22);
-        _equipLabel.AddThemeColorOverride("font_color", new Color(0.85f, 0.85f, 0.85f, 1f));
-        inner.AddChild(_equipLabel);
-
-        // Enemy HP panel
-        _enemyHpPanel = new VBoxContainer { Visible = false };
-        inner.AddChild(_enemyHpPanel);
-
-        _enemyHpLabel = new Label { Text = "" };
-        _enemyHpLabel.AddThemeFontOverride("font", sans);
-        _enemyHpLabel.AddThemeFontSizeOverride("font_size", 22);
-        _enemyHpLabel.AddThemeColorOverride("font_color", Colors.White);
-        _enemyHpPanel.AddChild(_enemyHpLabel);
-
-        _enemyHpBar = new ProgressBar { ShowPercentage = false };
-        _enemyHpBar.CustomMinimumSize = new Vector2(0, 10);
-        _enemyHpPanel.AddChild(_enemyHpBar);
     }
 
     /// <summary>
@@ -290,11 +183,4 @@ public sealed partial class HUD : Control
         if (frac > 0.25f) return Colors.Yellow;
         return Colors.OrangeRed;
     }
-
-    /// <summary>
-    /// Truncate a string to maxLen characters, appending "…" if it was cut.
-    /// Keeps equipment names readable at small font sizes.
-    /// </summary>
-    private static string Truncate(string s, int maxLen) =>
-        s.Length <= maxLen ? s : s[..maxLen] + "…";
 }
