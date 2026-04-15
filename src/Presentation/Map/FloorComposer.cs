@@ -15,8 +15,8 @@ public enum FloorTileType
     Standard,
 
     /// Wall-adjacent shadow tile. Applied in the edge-darkening pass.
-    /// Tiles immediately adjacent to a wall (or one step away, probabilistically)
-    /// receive this type to give rooms a natural recessed shadow at their edges.
+    /// Tiles with any wall in their 8-cell neighborhood receive this type.
+    /// Rendered with a subtle colour modulate (not a separate asset) for edge depth.
     Dark,
 
     /// Noise-driven accent cluster. Applied to Standard tiles only (never Dark).
@@ -96,31 +96,6 @@ public static class FloorComposer
             }
 
             if (adjacentToWall)
-            {
-                result[pos] = FloorTileType.Dark;
-                continue;
-            }
-
-            // Distance 1: any floor neighbor itself has a wall neighbor → 50% Dark.
-            // This provides a soft falloff gradient from wall edges into room interiors.
-            // The 50% is deterministic by position (not random) to keep the map stable.
-            bool nearWall = false;
-            for (int d = 0; d < 8 && !nearWall; d++)
-            {
-                int nx = x + dx[d], ny = y + dy[d];
-                if (!map.IsWalkable(nx, ny)) continue; // wall neighbor — already handled above
-
-                for (int d2 = 0; d2 < 8; d2++)
-                {
-                    if (!map.IsWalkable(nx + dx[d2], ny + dy[d2]))
-                    {
-                        nearWall = true;
-                        break;
-                    }
-                }
-            }
-
-            if (nearWall && PositionHash(x, y) % 2 == 0)
                 result[pos] = FloorTileType.Dark;
         }
     }
