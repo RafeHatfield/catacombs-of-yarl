@@ -13,6 +13,15 @@ namespace CatacombsOfYarl.Presentation.Map;
 public sealed class TileLayer
 {
     public Dictionary<(int X, int Y), Node2D> TileSprites { get; } = new();
+
+    /// <summary>
+    /// Base tile keys where the floor type is Dark (wall-adjacent shadow tiles).
+    /// UpdateVisibility applies a slightly dimmed, cool-tinted modulate to these
+    /// sprites when visible, giving rooms natural shadow depth near walls without
+    /// requiring a separate tile asset.
+    /// Only contains base tile keys (x, y) — never offset bones overlay keys.
+    /// </summary>
+    public HashSet<(int X, int Y)> DarkTileKeys { get; } = new();
 }
 
 /// <summary>
@@ -77,11 +86,15 @@ public sealed class DungeonRenderer
                 string themeName = ThemeToConfigName(tileTheme);
 
                 string? tilePath;
+                bool isDarkFloor = false;
                 if (walkable)
                 {
                     // Use FloorComposer variant to select the appropriate tile type.
-                    // All variants fall back to GetFloorTile when their variant list is empty.
+                    // Dark and Accent variants fall back to GetFloorTile when their lists are empty
+                    // (both currently point to the same tile 774). DarkTileKeys is populated here
+                    // so UpdateVisibility can apply programmatic shadow modulation instead.
                     var tileType = floorMap.TryGetValue((gx, gy), out var ft) ? ft : FloorTileType.Standard;
+                    isDarkFloor = tileType == FloorTileType.Dark;
                     tilePath = tileType switch
                     {
                         FloorTileType.Dark   => themeConfig.GetFloorDark(themeName, gx, gy),
@@ -139,6 +152,7 @@ public sealed class DungeonRenderer
                 parent.AddChild(sprite);
                 // Track in TileLayer so UpdateVisibility can modulate this sprite
                 tileLayer.TileSprites[(gx, gy)] = sprite;
+                if (isDarkFloor) tileLayer.DarkTileKeys.Add((gx, gy));
             }
         }
 
@@ -247,15 +261,15 @@ public sealed class DungeonRenderer
     /// Call after each turn completes (both player and monster turns resolve).
     ///
     /// Three states:
-    ///   Visible     — full brightness (white modulate)
+    ///   Visible     — full brightness; Dark floor tiles get a shadowed modulate
     ///   Explored    — dimmed blue-grey (previously seen, currently not in FOV)
     ///   Unexplored  — hidden entirely
     ///
-    /// Note: stair overlay sprites are children of the same parent node as base tiles
-    /// but are not tracked in tileLayer. They will remain at their natural modulation.
-    /// Their base tile IS in tileLayer, so they'll inherit the parent's draw calls.
-    /// Fine-grained stair overlay modulation is deferred — in practice stairs are always
-    /// in the player's visible area when they matter.
+    /// Dark floor tiles (wall-adjacent) stay slightly dimmed even when visible —
+    /// the shadow modulate is applied via programmatic color rather than a separate asset.
+    ///
+    /// Bones overlays (offset key y >= map.Height) preserve their 0.7 alpha at all
+    /// visible/explored states so they remain subtle rather than fully opaque.
     /// </summary>
     public static void UpdateVisibility(TileLayer layer, GameMap map)
     {
@@ -263,18 +277,27 @@ public sealed class DungeonRenderer
         {
             // Bones overlays are stored under offset key (gx, gy + map.Height) to avoid
             // colliding with base tile keys. Resolve the actual grid position before lookup.
+            bool isBoneOverlay = y >= map.Height;
             int realX = x;
-            int realY = y >= map.Height ? y - map.Height : y;
+            int realY = isBoneOverlay ? y - map.Height : y;
 
             if (map.IsVisible(realX, realY))
             {
                 sprite.Visible = true;
-                sprite.Modulate = Colors.White;
+                if (isBoneOverlay)
+                    sprite.Modulate = new Color(1f, 1f, 1f, 0.7f);        // bones: restore subtle alpha
+                else if (layer.DarkTileKeys.Contains((x, y)))
+                    sprite.Modulate = DarkFloorModulate;                   // wall-shadow darkening
+                else
+                    sprite.Modulate = Colors.White;
             }
             else if (map.IsExplored(realX, realY))
             {
                 sprite.Visible = true;
-                sprite.Modulate = new Color(0.4f, 0.4f, 0.5f); // dim blue-grey for explored-but-dark
+                // Bones overlays keep their 0.7 alpha in explored state too
+                sprite.Modulate = isBoneOverlay
+                    ? new Color(0.4f, 0.4f, 0.5f, 0.7f)
+                    : new Color(0.4f, 0.4f, 0.5f);
             }
             else
             {
@@ -282,6 +305,11 @@ public sealed class DungeonRenderer
             }
         }
     }
+
+    // Programmatic shadow modulate for wall-adjacent Dark floor tiles when visible.
+    // 70% brightness with a slight blue shift — gives rooms natural depth near walls
+    // without requiring a separate tile asset.
+    private static readonly Color DarkFloorModulate = new(0.70f, 0.70f, 0.78f);
 
     /// <summary>
     /// Map the TileTheme enum value to the YAML config theme key.
