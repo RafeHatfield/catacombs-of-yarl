@@ -42,7 +42,7 @@ public sealed class DungeonRenderer
     ///
     /// If themeConfig is null, logs an error and returns an empty TileLayer without crashing.
     /// </summary>
-    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null, TileThemeConfig? themeConfig = null)
+    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null, TileThemeConfig? themeConfig = null, int seed = 0)
     {
         if (themeConfig == null)
         {
@@ -53,6 +53,11 @@ public sealed class DungeonRenderer
         // Use provided renderer, or fall back to TopDownRenderer as the active default.
         renderer ??= new TopDownRenderer();
         var tileLayer = new TileLayer();
+
+        // Pre-compute floor tile types for the entire map.
+        // FloorComposer runs the multi-pass pipeline: edge darkening + noise variation.
+        // This is computed once here and referenced in Pass 1 and Pass 3.
+        var floorMap = FloorComposer.Compose(map, seed);
 
         // Clear any existing tiles
         foreach (var child in parent.GetChildren())
@@ -74,7 +79,18 @@ public sealed class DungeonRenderer
                 string? tilePath;
                 if (walkable)
                 {
-                    tilePath = themeConfig.GetFloorTile(themeName, gx, gy);
+                    // Use FloorComposer variant to select the appropriate tile type.
+                    // All variants fall back to GetFloorTile when their variant list is empty.
+                    var tileType = floorMap.TryGetValue((gx, gy), out var ft) ? ft : FloorTileType.Standard;
+                    tilePath = tileType switch
+                    {
+                        FloorTileType.Dark   => themeConfig.GetFloorDark(themeName, gx, gy),
+                        FloorTileType.Accent => themeConfig.GetFloorAccent(themeName, gx, gy),
+                        FloorTileType.Worn   => themeConfig.GetFloorWorn(themeName, gx, gy),
+                        _                    => themeConfig.GetFloorTile(themeName, gx, gy),
+                    };
+                    // Belt-and-suspenders fallback in case a variant returns null
+                    tilePath ??= themeConfig.GetFloorTile(themeName, gx, gy);
                 }
                 else
                 {
@@ -194,6 +210,9 @@ public sealed class DungeonRenderer
                 if (!map.IsWalkable(gx, gy)) continue;
                 var boneTheme = map.GetTileTheme(gx, gy);
                 if (boneTheme == TileTheme.Dirt) continue; // Corridors don't get bones
+                // Skip bones on Dark (wall-adjacent) tiles — shadows belong to the walls,
+                // not decoration. Bones look odd crammed against wall edges anyway.
+                if (floorMap.TryGetValue((gx, gy), out var boneFloorType) && boneFloorType == FloorTileType.Dark) continue;
 
                 string themeName = ThemeToConfigName(boneTheme);
                 string? bonesPath = themeConfig.GetBones(themeName, gx, gy);

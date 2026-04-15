@@ -84,6 +84,48 @@ public sealed class TileThemeConfig
     }
 
     /// <summary>
+    /// Return a dark floor tile path for wall-adjacent edge shadowing.
+    /// Falls back to GetFloorTile if FloorDark is empty.
+    /// </summary>
+    public string? GetFloorDark(string theme, int x, int y)
+    {
+        var data = ResolveTheme(theme);
+        if (data == null) return null;
+        if (data.FloorDark.Count == 0) return GetFloorTile(theme, x, y);
+        int hash = PositionHash(x, y);
+        int tileId = data.FloorDark[hash % data.FloorDark.Count];
+        return GetTexturePath(tileId);
+    }
+
+    /// <summary>
+    /// Return an accent floor tile path for noise-driven variation clusters.
+    /// Falls back to GetFloorTile if FloorAccent is empty.
+    /// </summary>
+    public string? GetFloorAccent(string theme, int x, int y)
+    {
+        var data = ResolveTheme(theme);
+        if (data == null) return null;
+        if (data.FloorAccent.Count == 0) return GetFloorTile(theme, x, y);
+        int hash = PositionHash(x, y);
+        int tileId = data.FloorAccent[hash % data.FloorAccent.Count];
+        return GetTexturePath(tileId);
+    }
+
+    /// <summary>
+    /// Return a worn floor tile path for high-traffic path appearance.
+    /// Falls back to GetFloorTile if FloorWorn is empty.
+    /// </summary>
+    public string? GetFloorWorn(string theme, int x, int y)
+    {
+        var data = ResolveTheme(theme);
+        if (data == null) return null;
+        if (data.FloorWorn.Count == 0) return GetFloorTile(theme, x, y);
+        int hash = PositionHash(x, y);
+        int tileId = data.FloorWorn[hash % data.FloorWorn.Count];
+        return GetTexturePath(tileId);
+    }
+
+    /// <summary>
     /// Return a wall texture path for the given theme using the hybrid cardinal+diagonal
     /// autotile algorithm.
     ///
@@ -283,6 +325,13 @@ public sealed class TileThemeData
     /// Optional — floor decoration pipeline uses these when present.
     /// </summary>
     public List<int> FloorInterior { get; set; } = new();
+
+    /// <summary>
+    /// Worn floor tiles for high-traffic paths (noise-driven variation cluster).
+    /// Provides a subtle "walked over" look to central corridors and room paths.
+    /// Optional — floor decoration pipeline uses these when present.
+    /// </summary>
+    public List<int> FloorWorn     { get; set; } = new();
 
     /// <summary>
     /// 4-bit cardinal bitmask → tile ID for connected wall autotiling.

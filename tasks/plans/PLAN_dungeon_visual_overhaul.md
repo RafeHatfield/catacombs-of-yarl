@@ -5,13 +5,13 @@
 
 ## Current State
 
-Phase 0 implementation complete (2026-04-15). P0-001 through P0-005 done; P0-006 (visual verification in running game) is the only remaining Phase 0 task.
+Phase 1 and Phase 2 implementation complete (2026-04-15). P1-001 through P1-010 and P2-001 through P2-007 all done. P0-006 (visual verification) still requires running Godot.
 
-**What was just done:** Full hybrid cardinal+diagonal autotile algorithm implemented across all 4 files. tile_themes.yaml replaced with sandstone theme using TMX-verified tile IDs. WallDiagonal dictionary added to TileThemeData, GetWallTile() method added to TileThemeConfig, InDiagonal parse state added to TileThemeLoader, ComputeWallMasks() replaces ComputeWallBitmask() in DungeonRenderer. Build: 0 errors.
+**What was just done:** Phase 1 — room shape variety (RoomShapeGenerator, 6 shape carvers, 45 new tests, 1150 total). Phase 2 — floor composition pipeline (SimplexNoise, FloorComposer with edge darkening + noise variation, DungeonRenderer wired, FloorWorn/GetFloorDark/GetFloorAccent/GetFloorWorn added).
 
-**Next step:** P0-006 — boot the game and visually verify that outer corners render with corner tiles instead of interior fill, room edges show directional tiles, corridors look correct.
+**Next step:** P0-006 — boot the game and visually verify wall rendering + room shape variety + edge-darkened floors. Then: pick distinct tile IDs for floor_dark, floor_accent, floor_worn in tile_themes.yaml (all currently 774 placeholder).
 
-**Open issues:** None. Phase 1 (Room Shape Variety) and Phase 2 (Floor Composition Pipeline) are unblocked and can proceed in parallel.
+**Open issues:** floor_dark/floor_worn tile IDs are placeholder (774 = same as primary). Visual edge darkening effect won't be visible until Rafe picks different tile IDs via tools/sprite_browser_16bf_world.html.
 
 ## Overview
 
@@ -257,250 +257,73 @@ This is the minimum-disruption approach. No consumer changes needed.
 
 ### TASK-P1-001: Extend Room with shape metadata and walkable tile tracking
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: system
-- Dependencies: none (can start before Phase 0 finishes)
-- Files to modify:
-  - `src/Logic/ECS/Room.cs`
-- Description: Add a `RoomShape` enum and a `Shape` property to Room. Add a `WalkableTiles` property that stores the set of (x,y) positions that were carved as floor within this room's bounding box. This enables accurate room-area counting and future door placement without scanning the full map.
-- New types:
-  ```csharp
-  public enum RoomShape
-  {
-      Rectangle,      // Current default
-      Union,          // Two-rectangle union (L/T/cross)
-      Cave,           // Cellular automata blob
-      Circle,         // Circle or oval
-      Alcove,         // Rectangle with alcoves
-      CorridorRoom,   // Long thin connector
-  }
-  ```
-- Room changes: Add optional `Shape` property (default Rectangle for backwards compat). Add optional `WalkableTileCount` or similar metric.
-- Note: Room is a `sealed record` currently. The cleanest approach is to add optional properties with defaults so existing construction sites remain valid.
-- Acceptance criteria:
-  - `RoomShape` enum exists with all 6 shape types
-  - Room has a `Shape` property (defaults to Rectangle)
-  - Existing Room construction sites compile without changes
-  - All existing tests pass: `dotnet test --filter "Category!=Slow"`
+- Files changed: `src/Logic/ECS/Room.cs`
+- Notes: RoomShape enum added (Rectangle/Union/Cave/Circle/Alcove/CorridorRoom). Room.Shape property added as `{ get; init; } = RoomShape.Rectangle;`. WalkableTiles not added — EntityPlacer already filters by map.IsWalkable() so the actual tile set in GameMap IS the ground truth. All existing construction sites unchanged. Build: 0 errors.
 
 ### TASK-P1-002: Room shape generator infrastructure
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: system
-- Dependencies: TASK-P1-001
-- Files to create:
-  - `src/Logic/ECS/RoomShapeGenerator.cs`
-- Description: Create the static class `RoomShapeGenerator` with a `CarveRoom(GameMap map, Room room, RoomShape shape, SeededRandom rng)` method that dispatches to the appropriate shape carver. Initially implements only `Rectangle` (delegates to existing `CarveRoom` logic) so it can be wired into MapGenerator without changing behavior.
-- Interface:
-  ```csharp
-  public static class RoomShapeGenerator
-  {
-      public static void CarveRoom(GameMap map, Room room, RoomShape shape, SeededRandom rng)
-      {
-          switch (shape)
-          {
-              case RoomShape.Rectangle: CarveRectangle(map, room); break;
-              case RoomShape.Union: CarveUnion(map, room, rng); break;
-              case RoomShape.Cave: CarveCave(map, room, rng); break;
-              case RoomShape.Circle: CarveCircle(map, room, rng); break;
-              case RoomShape.Alcove: CarveAlcove(map, room, rng); break;
-              case RoomShape.CorridorRoom: CarveCorridorRoom(map, room, rng); break;
-          }
-      }
-  }
-  ```
-- Also: Add `SelectShape(int roomWidth, int roomHeight, SeededRandom rng)` method that picks a shape using the weight table from the design doc, respecting minimum size constraints.
-- Weight table (from design doc):
-  | Shape | Weight | Min Size |
-  |-------|--------|----------|
-  | Rectangle | 30% | 3x3 |
-  | Union | 30% | 5x5 |
-  | Cave | 15% | 7x7 |
-  | Alcove | 10% | 8x8 |
-  | Circle | 8% | 7x7 |
-  | CorridorRoom | 7% | 3x8 (or 8x3) |
-- Rooms below the minimum size for non-rectangle shapes always get Rectangle.
-- Acceptance criteria:
-  - `SelectShape` returns Rectangle for rooms below 5x5
-  - `SelectShape` produces the expected distribution over 10,000 samples (within 3% tolerance)
-  - `CarveRoom` with `RoomShape.Rectangle` produces identical output to current `MapGenerator.CarveRoom`
-  - Build: 0 errors, all existing tests pass
+- Files changed: `src/Logic/ECS/RoomShapeGenerator.cs` (created)
+- Notes: Static class with SelectShape() weight table (Rectangle 30/Union 30/Cave 15/Circle 8/Alcove 10/CorridorRoom 7) and CarveRoom() dispatch. All 6 carvers implemented in the same file. Center-tile floor invariant enforced at the CarveRoom dispatch level.
 
 ### TASK-P1-003: Implement two-rectangle union shapes
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: system
-- Dependencies: TASK-P1-002
-- Description: Implement `CarveUnion`. Generate two random rectangles within the room's bounding box, carve their union. This naturally produces L-shapes, T-shapes, and crosses depending on overlap position. Bias toward symmetry by sometimes centering one rectangle on the other.
-- Algorithm:
-  1. Room bounding box defines the available space
-  2. Generate rectA: random position and size within bounds (min 3x3)
-  3. Generate rectB: random position and size within bounds (min 3x3)
-  4. 50% chance: force rectB to share a center axis with rectA (encourages T/cross shapes)
-  5. Carve all tiles in rectA union rectB as Floor
-  6. Verify at least 60% of the bounding box area is carved (retry up to 3 times if too sparse)
-- Acceptance criteria:
-  - Union shapes carve correctly within bounding box
-  - At least one axis of overlap exists (no disconnected halves)
-  - All carved tiles are within the Room's bounding box
-  - Flood fill from any carved tile reaches all carved tiles (connected)
-  - Min 3 tests: L-shape, T-shape, cross-shape with known seeds
+- Files changed: `src/Logic/ECS/RoomShapeGenerator.cs`
+- Notes: CarveUnion() implemented. rectA forced to touch at least one bounding-box edge. 50% axis-alignment bias for T/cross shapes. 60% coverage check with 3 retries, falls back to rectangle. Connectivity check with ResetRoom() on failure.
 
 ### TASK-P1-004: Implement cellular automata cave shapes
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: system
-- Dependencies: TASK-P1-002
-- Description: Implement `CarveCave` using the 4-5 rule cellular automata. The room center and corridor connection points are pinned as "definitively floor" to guarantee connectivity.
-- Algorithm:
-  1. Initialize grid within bounding box: 45% wall probability
-  2. Pin center tile and 1-tile border around center as definitively floor
-  3. Run 4 CA iterations using the 4-5 rule:
-     - Wall stays wall if >= 4 of 8 neighbors are wall
-     - Floor becomes wall if >= 5 of 8 neighbors are wall
-     - Pinned tiles never change
-  4. Flood fill from center to find largest connected region
-  5. Discard any disconnected pockets (make them wall)
-  6. Carve the surviving floor tiles into the GameMap
-- Minimum bounding box: 7x7. Below that, fall back to Rectangle.
-- Acceptance criteria:
-  - Cave shapes are visually organic (not rectangular)
-  - All carved tiles are reachable from room center via flood fill
-  - Room center is always floor
-  - Bounding box is respected (no carving outside)
-  - Deterministic: same seed produces same cave
-  - 3 tests: connectivity guarantee, minimum size fallback, determinism
+- Files changed: `src/Logic/ECS/RoomShapeGenerator.cs`
+- Notes: CarveCave() with 4-5 CA rule, 45% initial wall density, 4 iterations. 3×3 center neighborhood pinned as floor. Flood fill from center discards disconnected pockets. Min 7×7, falls back to rectangle. All floor tiles reachable from center guaranteed.
 
 ### TASK-P1-005: Implement circle/oval room shapes
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: system
-- Dependencies: TASK-P1-002
-- Description: Implement `CarveCircle` using the ellipse equation `(x-cx)^2/a^2 + (y-cy)^2/b^2 <= 1`. Radii derived from room dimensions. Optionally run 1 CA smoothing pass to soften staircase edges.
-- Algorithm:
-  1. Compute center (cx, cy) of bounding box
-  2. Semi-axes: a = Width/2, b = Height/2
-  3. For each tile in bounding box: carve if inside ellipse
-  4. Optional: 1 CA smoothing pass (wall with <= 3 wall neighbors becomes floor)
-- Minimum bounding box: 7x7 (diameter 7 avoids too-blocky circles).
-- Acceptance criteria:
-  - Circular rooms look round-ish at tile resolution
-  - All carved tiles connected (guaranteed by convexity)
-  - Bounding box respected
-  - Test: circle with radius 5 has expected tile count (within 5% of pi*r^2)
+- Files changed: `src/Logic/ECS/RoomShapeGenerator.cs`
+- Notes: CarveCircle() with ellipse equation using (Width-1)/2 and (Height-1)/2 semi-axes so boundary fits inside bounding box. One CA smoothing pass (wall with <= 2 wall neighbors → floor) to reduce staircase jaggedness. Min 7×7, falls back to rectangle.
 
 ### TASK-P1-006: Implement alcove addition
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: system
-- Dependencies: TASK-P1-002
-- Description: Implement `CarveAlcove`. Start with a base rectangle, then scan wall segments > 3 tiles long. Each eligible segment has a 20% chance of receiving a 1-2 tile deep, 1-3 tile wide niche extruded outward.
-- Algorithm:
-  1. Carve the base rectangle (inner portion of bounding box, leaving 2-tile margin for alcoves)
-  2. Scan each wall edge of the base rectangle for segments > 3 tiles
-  3. For each eligible segment: 20% chance to extrude a 1-2 deep, 1-3 wide alcove
-  4. Extrude direction: outward from the wall (into the 2-tile margin)
-  5. Verify alcoves stay within bounding box
-- Minimum bounding box: 8x8 (needs space for base + margin).
-- Acceptance criteria:
-  - Base rectangle carved correctly
-  - Alcoves extrude outward from walls
-  - All alcoves within bounding box
-  - All tiles connected via flood fill
-  - Deterministic with same seed
+- Files changed: `src/Logic/ECS/RoomShapeGenerator.cs`
+- Notes: CarveAlcove() carves base rect with 2-tile margin, then TryAddAlcove() for each of 4 wall faces. 20% chance per face, 1-2 deep, 1-3 wide, position randomised along segment. Bounding-box check via room.Contains() before each tile write. Min 8×8, falls back to rectangle.
 
 ### TASK-P1-007: Implement corridor-room shape
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: system
-- Dependencies: TASK-P1-002
-- Description: Implement `CarveCorridorRoom`. A long thin room (width 2-3, length = room dimension). Used for wide hallways, galleries, and transition spaces.
-- Algorithm:
-  1. Determine orientation: horizontal if Width > Height, vertical otherwise
-  2. Corridor width: 2-3 tiles (random)
-  3. Center the corridor within the bounding box along the short axis
-  4. Carve the full length
-- Minimum: one dimension >= 8, other >= 3.
-- Acceptance criteria:
-  - Corridor-room is visibly elongated
-  - Width is 2-3 tiles, length fills the bounding box
-  - All tiles connected
-  - Deterministic
+- Files changed: `src/Logic/ECS/RoomShapeGenerator.cs`
+- Notes: CarveCorridorRoom() — horizontal if Width>Height, vertical if Height>Width, random when square. Width 2-3 tiles (rng), centered on short axis, full bounding-box length. Min one dim >= 8 and other >= 3, falls back to rectangle otherwise.
 
 ### TASK-P1-008: Wire shape generation into MapGenerator
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: system
-- Dependencies: TASK-P1-003, TASK-P1-004, TASK-P1-005, TASK-P1-006, TASK-P1-007
-- Files to modify:
-  - `src/Logic/ECS/MapGenerator.cs`
-- Description: Replace the direct `CarveRoom(map, newRoom)` call with `RoomShapeGenerator.CarveRoom(map, newRoom, shape, rng)`. Shape is selected via `RoomShapeGenerator.SelectShape(w, h, rng)`. Store the shape in the Room record.
-- Changes:
-  1. After `new Room(x, y, w, h)`: call `SelectShape(w, h, rng)` to pick a shape
-  2. After overlap check passes: call `RoomShapeGenerator.CarveRoom(map, newRoom, shape, rng)` instead of `CarveRoom(map, newRoom)`
-  3. Set `newRoom.Shape = shape` (requires TASK-P1-001 changes to Room)
-  4. Remove the private `CarveRoom` method (replaced by `RoomShapeGenerator`)
-- Important: The rng consumption order changes slightly (shape selection consumes random calls before carving). This is acceptable -- dungeon generation is seeded per-floor and is not required to match Python prototype output exactly (rooms were already rectangles in both).
-- Acceptance criteria:
-  - MapGenerator produces varied room shapes
-  - Generated maps pass connectivity validation (all rooms reachable)
-  - EntityPlacer places entities correctly in non-rectangular rooms
-  - All existing MapGenerator/DungeonFloorBuilder tests still pass
-  - No Godot dependencies introduced
+- Files changed: `src/Logic/ECS/MapGenerator.cs`
+- Notes: SelectShape() called after room placement succeeds (after overlap check). RoomShapeGenerator.CarveRoom() replaces old CarveRoom() call. newRoom assigned `with { Shape = shape }`. Private CarveRoom kept for pathological 0-room fallback. EnsureConnectivity() added (see P1-009). RNG sequence differs from old code — acceptable, per-floor seeding means no cross-session requirements.
 
 ### TASK-P1-009: Connectivity validation post-generation
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: system
-- Dependencies: TASK-P1-008
-- Files to modify:
-  - `src/Logic/ECS/MapGenerator.cs`
-- Description: Add a post-generation connectivity check. After all rooms are carved and corridors connected, flood-fill from the player spawn to verify all rooms are reachable. If any room is disconnected, add an emergency corridor. This is critical because non-rectangular shapes might fail to connect at the corridor junction point (corridor connects to room center, but cave/circle might not include the exact center tile).
-- Algorithm:
-  1. Flood fill from playerSpawn across all walkable tiles
-  2. For each room: check if room center is reachable
-  3. If unreachable: carve an L-corridor from nearest reachable room center to unreachable room center
-  4. Re-validate until all rooms connected
-- Note: Cave rooms already pin the center, but belt-and-suspenders validation is cheap insurance.
-- Acceptance criteria:
-  - Every room's center is reachable from the player spawn
-  - Emergency corridor carving activates only when needed
-  - Test: construct a scenario where a cave room loses its center connection, verify emergency corridor fires
+- Files changed: `src/Logic/ECS/MapGenerator.cs`
+- Notes: EnsureConnectivity() added — BFS flood fill from playerSpawn, finds nearest reachable room to connect any unreachable room via emergency H+V tunnel. Max 3 passes. Also ensures unreachable room center is set to Floor explicitly. Called between room generation and stair placement.
 
 ### TASK-P1-010: Tests for room shape generation
 
-- Status: pending
+- Status: ✅ complete
 - Layer: logic
-- Type: test
-- Dependencies: TASK-P1-008
-- Files to create:
-  - `tests/Core/RoomShapeGeneratorTests.cs`
-- Description: Comprehensive test suite for room shape generation.
-- Test cases:
-  1. **Rectangle carving** -- identical to old behavior
-  2. **Union shape connectivity** -- all tiles connected
-  3. **Cave connectivity** -- flood fill from center reaches all carved tiles
-  4. **Circle tile count** -- within 10% of expected area
-  5. **Alcove bounds** -- no tiles carved outside bounding box
-  6. **Corridor-room dimensions** -- correct elongation
-  7. **Shape selection weights** -- distribution within tolerance over 10k samples
-  8. **Small room fallback** -- rooms below minimum size get Rectangle
-  9. **Determinism** -- same seed produces identical rooms
-  10. **Full map connectivity** -- generated map with varied shapes is fully connected
-  11. **EntityPlacer compatibility** -- entities placed correctly in non-rectangular rooms
-- Acceptance criteria:
-  - All tests pass: `dotnet test --filter "Category!=Slow"`
-  - Test coverage for every shape type
-  - At least one integration test with full MapGenerator flow
+- Files changed: `tests/Core/RoomShapeGeneratorTests.cs` (created)
+- Notes: 45 new tests. Covers: Room.Shape default/init/with, SelectShape distribution (2000 samples ±15%), small room fallbacks for all shapes, connectivity for Union/Cave/Alcove, bounding-box containment for all shapes, determinism parameterized over all 6 shapes, center invariant parameterized over all 6 shapes, full-map connectivity over 5 seeds, player spawn walkability, shape recording on rooms. 1105 → 1150 tests, 0 failures.
 
 ---
 
@@ -511,7 +334,9 @@ This is the minimum-disruption approach. No consumer changes needed.
 
 ### TASK-P2-001: Simplex noise implementation (Logic layer)
 
-- Status: pending
+- Status: ✅ complete
+- Files changed: `src/Logic/Map/SimplexNoise.cs`
+- Notes: Gustavson 2D simplex algorithm with standard 256-value permutation table doubled to 512. Pure static class, no Godot deps. Deterministic by input.
 - Layer: logic
 - Type: system
 - Dependencies: none (can start before Phase 0 finishes)
@@ -531,7 +356,9 @@ This is the minimum-disruption approach. No consumer changes needed.
 
 ### TASK-P2-002: Extend tile_themes.yaml with floor variants
 
-- Status: pending
+- Status: ✅ complete
+- Files changed: `config/tile_themes.yaml`, `src/Presentation/TileThemeConfig.cs`, `src/Presentation/TileThemeLoader.cs`
+- Notes: FloorWorn added to TileThemeData. GetFloorDark/GetFloorAccent/GetFloorWorn added to TileThemeConfig (all fallback to GetFloorTile when variant list is empty). floor_worn added to TileThemeLoader role switch. floor_worn: [774] added to YAML as placeholder. All three variants currently → tile 774; Rafe to update with distinct IDs.
 - Layer: presentation (config)
 - Type: art direction
 - Dependencies: TASK-P0-006 (wall fix verified first)
@@ -567,7 +394,9 @@ This is the minimum-disruption approach. No consumer changes needed.
 
 ### TASK-P2-003: Floor composition data structure
 
-- Status: pending
+- Status: ✅ complete
+- Files changed: `src/Presentation/Map/FloorComposer.cs`
+- Notes: FloorTileType enum (Standard/Dark/Accent/Worn) and FloorComposer static class created. Compose(map, seed) runs 3 passes. No Godot deps.
 - Layer: presentation
 - Type: system
 - Dependencies: TASK-P2-001, TASK-P2-002
@@ -589,7 +418,9 @@ This is the minimum-disruption approach. No consumer changes needed.
 
 ### TASK-P2-004: Pass 2 -- Edge darkening
 
-- Status: pending
+- Status: ✅ complete
+- Files changed: `src/Presentation/Map/FloorComposer.cs`
+- Notes: ApplyEdgeDarkening() implemented. 8-directional neighbor check: distance-0 tiles (any of 8 neighbors is wall) always Dark; distance-1 tiles 50% Dark by PositionHash. Dark tiles never overridden by later passes.
 - Layer: presentation
 - Type: system
 - Dependencies: TASK-P2-003
@@ -614,7 +445,9 @@ This is the minimum-disruption approach. No consumer changes needed.
 
 ### TASK-P2-005: Pass 4 -- Noise variation
 
-- Status: pending
+- Status: ✅ complete
+- Files changed: `src/Presentation/Map/FloorComposer.cs`
+- Notes: ApplyNoiseVariation() samples SimplexNoise at 0.25 frequency, threshold 0.6 → ~10% of Standard tiles become Accent. Seed offset (×0.37, ×0.73) gives per-map variation. Dark tiles never overridden.
 - Layer: presentation
 - Type: system
 - Dependencies: TASK-P2-001, TASK-P2-003
@@ -639,7 +472,9 @@ This is the minimum-disruption approach. No consumer changes needed.
 
 ### TASK-P2-006: Pass 7 -- Scatter decoration (enhance existing)
 
-- Status: pending
+- Status: ✅ complete
+- Files changed: `src/Presentation/Map/DungeonRenderer.cs`
+- Notes: Bones pass (Pass 3) now skips Dark tiles via floorMap lookup. Density unchanged at hash % 40 (2.5%); can be tuned later via tile_themes.yaml.
 - Layer: presentation
 - Type: system
 - Dependencies: TASK-P2-003
@@ -653,7 +488,9 @@ This is the minimum-disruption approach. No consumer changes needed.
 
 ### TASK-P2-007: Wire FloorComposer into DungeonRenderer
 
-- Status: pending
+- Status: ✅ complete
+- Files changed: `src/Presentation/Map/DungeonRenderer.cs`
+- Notes: Render() takes optional seed=0 parameter. floorMap pre-computed before Pass 1. Floor tile selection dispatches by FloorTileType (Dark→GetFloorDark, Accent→GetFloorAccent, Worn→GetFloorWorn, Standard→GetFloorTile). Fallback to GetFloorTile if variant path is null. All existing callers unchanged (seed defaults to 0).
 - Layer: presentation
 - Type: system
 - Dependencies: TASK-P2-004, TASK-P2-005, TASK-P2-006

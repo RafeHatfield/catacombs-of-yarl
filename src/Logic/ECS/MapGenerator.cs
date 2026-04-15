@@ -72,12 +72,18 @@ public static class MapGenerator
             }
             if (overlaps) continue;
 
-            // Carve room interior as Floor tiles
-            CarveRoom(map, newRoom);
+            // Select shape and carve — shape consumes RNG calls before the overlap check passes,
+            // so the dungeon seed sequence differs from the old rectangle-only behavior.
+            // That is acceptable: generation is seeded per-floor and doesn't need to match
+            // the Python prototype output exactly (rooms were rectangular there too).
+            var shape = RoomShapeGenerator.SelectShape(w, h, rng);
+            RoomShapeGenerator.CarveRoom(map, newRoom, shape, rng);
+            newRoom = newRoom with { Shape = shape };
 
             if (rooms.Count > 0)
             {
-                // Connect this room's center to the previous room's center with an L-shaped tunnel
+                // Connect this room's center to the previous room's center with an L-shaped tunnel.
+                // All shape carvers guarantee the center tile is floor (pinned or reset by CarveRoom).
                 var prevRoom = rooms[^1];
                 ConnectRooms(map, corridors, prevRoom, newRoom, rng);
             }
@@ -95,6 +101,11 @@ public static class MapGenerator
 
         var playerRoom = rooms[0];
         var playerSpawn = (playerRoom.CenterX, playerRoom.CenterY);
+
+        // Belt-and-suspenders: ensure every room center is reachable from player spawn.
+        // Non-rectangular shapes are designed to include their center, but cave/circle shapes
+        // can occasionally produce a corner case where the corridor L-tunnel joins at a wall.
+        EnsureConnectivity(map, rooms, playerSpawn);
 
         // Stair down goes in the last room placed
         (int X, int Y)? stairDownPos = null;
@@ -126,12 +137,102 @@ public static class MapGenerator
             stairUpPos: stairUpPos);
     }
 
-    /// <summary>Carve all interior tiles of a room as Floor.</summary>
+    /// <summary>Carve all interior tiles of a room as Floor (fallback for pathological case).</summary>
     private static void CarveRoom(GameMap map, Room room)
     {
         for (int x = room.X; x < room.X + room.Width; x++)
             for (int y = room.Y; y < room.Y + room.Height; y++)
                 map.SetTile(x, y, TileKind.Floor);
+    }
+
+    /// <summary>
+    /// Post-generation connectivity check. Flood fills from playerSpawn and verifies
+    /// every room center is reachable. If a room is unreachable, carves an emergency
+    /// L-corridor from the nearest reachable room center to reconnect it.
+    /// Runs up to 3 passes to handle cascading disconnections.
+    ///
+    /// This is belt-and-suspenders: shape carvers are designed to include the room center
+    /// as floor, but edge cases in cave/circle shapes with small bounding boxes can
+    /// occasionally produce a center that the corridor tunnel lands on a wall tile.
+    /// </summary>
+    private static void EnsureConnectivity(
+        GameMap map,
+        List<Room> rooms,
+        (int X, int Y) playerSpawn)
+    {
+        const int MaxPasses = 3;
+
+        for (int pass = 0; pass < MaxPasses; pass++)
+        {
+            // Flood fill from player spawn across all walkable tiles
+            var reachable = FloodFillMap(map, playerSpawn.X, playerSpawn.Y);
+
+            // Find the first unreachable room
+            Room? unreachable = null;
+            foreach (var room in rooms)
+            {
+                if (!reachable.Contains((room.CenterX, room.CenterY)))
+                {
+                    unreachable = room;
+                    break;
+                }
+            }
+
+            if (unreachable == null) return; // all rooms connected
+
+            // Find nearest reachable room to connect from
+            Room? nearest = null;
+            int bestDist = int.MaxValue;
+            foreach (var room in rooms)
+            {
+                if (!reachable.Contains((room.CenterX, room.CenterY))) continue;
+                int dist = Math.Abs(room.CenterX - unreachable.CenterX)
+                         + Math.Abs(room.CenterY - unreachable.CenterY);
+                if (dist < bestDist) { bestDist = dist; nearest = room; }
+            }
+
+            if (nearest == null)
+            {
+                // No reachable room at all — just ensure the first room's center is floor
+                map.SetTile(rooms[0].CenterX, rooms[0].CenterY, TileKind.Floor);
+                continue;
+            }
+
+            // Carve emergency L-corridor (H then V, no random — just fix the gap)
+            int x1 = nearest.CenterX, y1 = nearest.CenterY;
+            int x2 = unreachable.CenterX, y2 = unreachable.CenterY;
+            CarveHTunnel(map, x1, x2, y1);
+            CarveVTunnel(map, y1, y2, x2);
+            // Ensure the unreachable room center is floor (CarveVTunnel only sets Corridor on Wall)
+            map.SetTile(x2, y2, TileKind.Floor);
+        }
+    }
+
+    /// <summary>
+    /// BFS flood fill from (startX, startY) across all walkable tiles on the full map.
+    /// Returns the set of (x,y) positions reachable.
+    /// </summary>
+    private static HashSet<(int X, int Y)> FloodFillMap(GameMap map, int startX, int startY)
+    {
+        var visited = new HashSet<(int, int)>();
+        if (!map.IsWalkable(startX, startY)) return visited;
+
+        var queue = new Queue<(int, int)>();
+        queue.Enqueue((startX, startY));
+        visited.Add((startX, startY));
+
+        while (queue.Count > 0)
+        {
+            var (x, y) = queue.Dequeue();
+            foreach (var (nx, ny) in new[] { (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1) })
+            {
+                if (visited.Contains((nx, ny))) continue;
+                if (!map.IsWalkable(nx, ny)) continue;
+                visited.Add((nx, ny));
+                queue.Enqueue((nx, ny));
+            }
+        }
+        return visited;
     }
 
     /// <summary>

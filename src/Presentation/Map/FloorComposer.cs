@@ -1,0 +1,164 @@
+using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Map;
+
+namespace CatacombsOfYarl.Presentation.Map;
+
+/// <summary>
+/// The tile type assigned to each walkable floor cell by FloorComposer.
+///
+/// Passes run in priority order: later passes override earlier ones.
+/// Dark always wins — a wall-adjacent tile never becomes Accent.
+/// </summary>
+public enum FloorTileType
+{
+    /// Standard floor tile (85%+ of walkable cells in open rooms).
+    Standard,
+
+    /// Wall-adjacent shadow tile. Applied in the edge-darkening pass.
+    /// Tiles immediately adjacent to a wall (or one step away, probabilistically)
+    /// receive this type to give rooms a natural recessed shadow at their edges.
+    Dark,
+
+    /// Noise-driven accent cluster. Applied to Standard tiles only (never Dark).
+    /// Simplex noise produces organic blobs (~10% of standard tiles) rather than
+    /// salt-and-pepper scatter.
+    Accent,
+
+    /// Worn path tile. Reserved for future use (e.g., worn pathways through rooms).
+    /// Currently unused by the pipeline but available to callers.
+    Worn,
+}
+
+/// <summary>
+/// Multi-pass floor tile compositor. Runs purely on GameMap data — no Godot APIs.
+///
+/// The pipeline has three passes:
+///   1. Base fill — all walkable tiles start as Standard.
+///   2. Edge darkening — tiles adjacent to walls become Dark for shadow effect.
+///   3. Noise variation — remaining Standard tiles may become Accent via simplex noise.
+///
+/// Results are deterministic: same map + seed → same output every time.
+/// </summary>
+public static class FloorComposer
+{
+    /// <summary>
+    /// Pre-compute the floor tile variant for every walkable tile in the map.
+    /// Returns a dictionary keyed by (x, y) for all walkable tiles.
+    /// Non-walkable (wall) tiles are not included.
+    ///
+    /// The seed offsets the simplex noise pattern so each map floor looks different
+    /// even with the same geometry. Pass 0 for a consistent baseline appearance.
+    /// </summary>
+    public static Dictionary<(int X, int Y), FloorTileType> Compose(GameMap map, int seed)
+    {
+        var result = new Dictionary<(int X, int Y), FloorTileType>();
+
+        // Pass 1: base fill — all walkable tiles start as Standard
+        for (int x = 0; x < map.Width; x++)
+            for (int y = 0; y < map.Height; y++)
+                if (map.IsWalkable(x, y))
+                    result[(x, y)] = FloorTileType.Standard;
+
+        // Pass 2: edge darkening — tiles next to walls become Dark
+        ApplyEdgeDarkening(map, result);
+
+        // Pass 3: noise-driven accent variation — only affects Standard tiles
+        // (Dark tiles are intentionally never overridden to keep wall shadows intact)
+        ApplyNoiseVariation(result, seed);
+
+        return result;
+    }
+
+    // -------------------------------------------------------------------------
+    // Pass 2: Edge darkening
+    // -------------------------------------------------------------------------
+
+    private static void ApplyEdgeDarkening(GameMap map, Dictionary<(int X, int Y), FloorTileType> result)
+    {
+        // All 8 neighbor directions (cardinal + diagonal)
+        int[] dx = { -1, 0, 1, -1, 1, -1, 0, 1 };
+        int[] dy = { -1, -1, -1, 0, 0, 1, 1, 1 };
+
+        foreach (var (pos, _) in result.ToList()) // ToList: avoid modifying dict while iterating
+        {
+            int x = pos.X, y = pos.Y;
+
+            // Distance 0: any of the 8 immediate neighbors is a wall → always Dark.
+            // This catches all room edges including diagonal corners.
+            bool adjacentToWall = false;
+            for (int d = 0; d < 8; d++)
+            {
+                if (!map.IsWalkable(x + dx[d], y + dy[d]))
+                {
+                    adjacentToWall = true;
+                    break;
+                }
+            }
+
+            if (adjacentToWall)
+            {
+                result[pos] = FloorTileType.Dark;
+                continue;
+            }
+
+            // Distance 1: any floor neighbor itself has a wall neighbor → 50% Dark.
+            // This provides a soft falloff gradient from wall edges into room interiors.
+            // The 50% is deterministic by position (not random) to keep the map stable.
+            bool nearWall = false;
+            for (int d = 0; d < 8 && !nearWall; d++)
+            {
+                int nx = x + dx[d], ny = y + dy[d];
+                if (!map.IsWalkable(nx, ny)) continue; // wall neighbor — already handled above
+
+                for (int d2 = 0; d2 < 8; d2++)
+                {
+                    if (!map.IsWalkable(nx + dx[d2], ny + dy[d2]))
+                    {
+                        nearWall = true;
+                        break;
+                    }
+                }
+            }
+
+            if (nearWall && PositionHash(x, y) % 2 == 0)
+                result[pos] = FloorTileType.Dark;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Pass 3: Noise variation
+    // -------------------------------------------------------------------------
+
+    private static void ApplyNoiseVariation(Dictionary<(int X, int Y), FloorTileType> result, int seed)
+    {
+        // Per-map offset derived from seed so each floor looks distinct.
+        // The modulo keeps offsets in a sane range to avoid float precision issues.
+        float offsetX = (seed * 0.37f) % 1000f;
+        float offsetY = (seed * 0.73f) % 1000f;
+
+        foreach (var (pos, type) in result.ToList())
+        {
+            if (type != FloorTileType.Standard) continue; // Dark tiles are never overridden
+
+            // Scale of 0.25 → low-frequency blobs, not fine grain.
+            // Threshold 0.6 → ~10% of standard tiles become Accent.
+            float noise = SimplexNoise.Evaluate(
+                pos.X * 0.25f + offsetX,
+                pos.Y * 0.25f + offsetY);
+
+            if (noise > 0.6f)
+                result[pos] = FloorTileType.Accent;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Deterministic position hash for tile-level decisions.
+    /// Same (x, y) always produces the same value — the floor looks stable across re-renders.
+    /// </summary>
+    private static int PositionHash(int x, int y)
+        => Math.Abs((x * 7919 + y * 104729) & 0x7FFFFFFF);
+}

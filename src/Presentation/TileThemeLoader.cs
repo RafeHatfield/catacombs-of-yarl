@@ -254,6 +254,7 @@ public static class TileThemeLoader
                     case "floor_accent":    currentThemeData.FloorAccent    = ids; break;
                     case "floor_dark":      currentThemeData.FloorDark      = ids; break;
                     case "floor_interior":  currentThemeData.FloorInterior  = ids; break;
+                    case "floor_worn":      currentThemeData.FloorWorn      = ids; break;
                     case "stair_down":      currentThemeData.StairDown      = ids; break;
                     case "stair_up":        currentThemeData.StairUp        = ids; break;
                     case "bones":           currentThemeData.Bones          = ids; break;
