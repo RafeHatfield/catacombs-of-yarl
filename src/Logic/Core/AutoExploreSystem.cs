@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Map;
 
@@ -100,7 +101,7 @@ public static class AutoExploreSystem
             if (state.Map.IsVisible(item.X, item.Y)
                 && state.Player.ChebyshevDistanceTo(item.X, item.Y) <= AlertRadius
                 && !ae.ExploredSnapshot.Contains((item.X, item.Y)))
-                return $"Found: {item.Name}";
+                return $"Found: {ItemDisplay.GetDisplayName(item, state.IdentificationRegistry, state.AppearancePool)}";
         }
 
         // 3. (Stairs found interrupt removed — auto-explore runs until every tile is uncovered.

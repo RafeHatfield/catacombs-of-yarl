@@ -1,0 +1,35 @@
+prop_id,tile_id,source_filename,dest_filename,uid,status,notes
+anvil,4001,anvil.png,oryx_16bit_fantasy_world_4001.png,uid://yarl_ph_4001,placeholder,AI-generated placeholder — remake before launch
+armor_stand,4002,armor_stand.png,oryx_16bit_fantasy_world_4002.png,uid://yarl_ph_4002,placeholder,AI-generated placeholder — remake before launch
+bed,4003,bed.png,oryx_16bit_fantasy_world_4003.png,uid://yarl_ph_4003,placeholder,AI-generated placeholder — remake before launch
+bench,4004,bench.png,oryx_16bit_fantasy_world_4004.png,uid://yarl_ph_4004,placeholder,AI-generated placeholder — remake before launch
+bucket,4005,bucket.png,oryx_16bit_fantasy_world_4005.png,uid://yarl_ph_4005,placeholder,AI-generated placeholder — remake before launch
+cage,4006,cage.png,oryx_16bit_fantasy_world_4006.png,uid://yarl_ph_4006,placeholder,AI-generated placeholder — remake before launch
+chain,4007,chain.png,oryx_16bit_fantasy_world_4007.png,uid://yarl_ph_4007,placeholder,AI-generated placeholder — remake before launch
+coal_pile,4008,coal_pile.png,oryx_16bit_fantasy_world_4008.png,uid://yarl_ph_4008,placeholder,AI-generated placeholder — remake before launch
+desk,4009,desk.png,oryx_16bit_fantasy_world_4009.png,uid://yarl_ph_4009,placeholder,AI-generated placeholder — remake before launch
+drain,4010,drain.png,oryx_16bit_fantasy_world_4010.png,uid://yarl_ph_4010,placeholder,AI-generated placeholder — remake before launch
+forge,4011,forge.png,oryx_16bit_fantasy_world_4011.png,uid://yarl_ph_4011,placeholder,AI-generated placeholder — remake before launch
+globe,4012,globe.png,oryx_16bit_fantasy_world_4012.png,uid://yarl_ph_4012,placeholder,AI-generated placeholder — remake before launch
+glowing_mushroom,4013,glowing_mushroom.png,oryx_16bit_fantasy_world_4013.png,uid://yarl_ph_4013,placeholder,AI-generated placeholder — remake before launch
+grate,4014,grate.png,oryx_16bit_fantasy_world_4014.png,uid://yarl_ph_4014,placeholder,AI-generated placeholder — remake before launch
+iron_bars,4015,iron_bars.png,oryx_16bit_fantasy_world_4015.png,uid://yarl_ph_4015,placeholder,AI-generated placeholder — remake before launch
+moss_patch,4016,moss_patch.png,oryx_16bit_fantasy_world_4016.png,uid://yarl_ph_4016,placeholder,AI-generated placeholder — remake before launch
+mushroom_cluster,4017,mushroom_cluster.png,oryx_16bit_fantasy_world_4017.png,uid://yarl_ph_4017,placeholder,AI-generated placeholder — remake before launch
+nightstand,4018,nightstand.png,oryx_16bit_fantasy_world_4018.png,uid://yarl_ph_4018,placeholder,AI-generated placeholder — remake before launch
+pipe_horizontal,4019,pipe_horizontal.png,oryx_16bit_fantasy_world_4019.png,uid://yarl_ph_4019,placeholder,AI-generated placeholder — remake before launch
+pipe_vertical,4020,pipe_vertical.png,oryx_16bit_fantasy_world_4020.png,uid://yarl_ph_4020,placeholder,AI-generated placeholder — remake before launch
+puddle,4021,puddle.png,oryx_16bit_fantasy_world_4021.png,uid://yarl_ph_4021,placeholder,AI-generated placeholder — remake before launch
+rock,4022,rock.png,oryx_16bit_fantasy_world_4022.png,uid://yarl_ph_4022,placeholder,AI-generated placeholder — remake before launch
+sack,4023,sack.png,oryx_16bit_fantasy_world_4023.png,uid://yarl_ph_4023,placeholder,AI-generated placeholder — remake before launch
+shelf_bottles,4024,shelf_bottles.png,oryx_16bit_fantasy_world_4024.png,uid://yarl_ph_4024,placeholder,AI-generated placeholder — remake before launch
+shelf,4025,shelf.png,oryx_16bit_fantasy_world_4025.png,uid://yarl_ph_4025,placeholder,AI-generated placeholder — remake before launch
+stalagmite,218,—,oryx_16bit_fantasy_world_218.png,—,oryx_real,Oryx tile 218/219 — these ARE stalagmites (was misassigned to pillar). No placeholder needed.
+pillar,4026,pillar.png,oryx_16bit_fantasy_world_4026.png,uid://yarl_ph_4026,placeholder,AI-generated placeholder — remake before launch
+candelabra,4033,candelabra.png,oryx_16bit_fantasy_world_4033.png,uid://yarl_ph_4033,placeholder,AI-generated placeholder — Oryx 156 was a flame dot not a candelabra. Remake before launch.
+straw_pile,4027,straw_pile.png,oryx_16bit_fantasy_world_4027.png,uid://yarl_ph_4027,placeholder,AI-generated placeholder — remake before launch
+tool_rack,4028,tool_rack.png,oryx_16bit_fantasy_world_4028.png,uid://yarl_ph_4028,placeholder,AI-generated placeholder — remake before launch
+training_dummy,4029,training_dummy.png,oryx_16bit_fantasy_world_4029.png,uid://yarl_ph_4029,placeholder,AI-generated placeholder — remake before launch
+vine,4030,vine.png,oryx_16bit_fantasy_world_4030.png,uid://yarl_ph_4030,placeholder,AI-generated placeholder — remake before launch
+water_barrel,4031,water_barrel.png,oryx_16bit_fantasy_world_4031.png,uid://yarl_ph_4031,placeholder,AI-generated placeholder — remake before launch
+workbench,4032,workbench.png,oryx_16bit_fantasy_world_4032.png,uid://yarl_ph_4032,placeholder,AI-generated placeholder — remake before launch

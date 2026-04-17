@@ -247,6 +247,19 @@ public sealed class TileThemeConfig
     }
 
     /// <summary>
+    /// Return the door texture path for the given theme.
+    /// Returns null if no door tile is configured — door is invisible but still walkable/functional.
+    /// Unlike stairs, a missing door tile is not an error and produces no log output.
+    /// </summary>
+    public string? GetDoor(string theme)
+    {
+        var data = ResolveTheme(theme);
+        if (data == null) return null;
+        if (data.Door.Count == 0) return null; // graceful fallback — no error log
+        return GetTexturePath(data.Door[0]);
+    }
+
+    /// <summary>
     /// Return a bones decoration texture path for the given theme and position,
     /// or null if the position doesn't receive a bones overlay (~2.5% chance).
     ///
@@ -349,5 +362,6 @@ public sealed class TileThemeData
 
     public List<int> StairDown     { get; set; } = new();
     public List<int> StairUp       { get; set; } = new();
+    public List<int> Door          { get; set; } = new();
     public List<int> Bones         { get; set; } = new();
 }

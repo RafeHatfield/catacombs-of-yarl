@@ -1,0 +1,502 @@
+# Room Props Definition
+#
+# Each prop has:
+#   tile_ids:        Array of tile IDs from the Oryx 16bf world_24x24 sheet.
+#                    Leave [] if no tile has been chosen yet.
+#                    If multiple IDs are listed, one is chosen randomly at placement time.
+#   footprint:       [width, height] in tiles. Use [1,1] for most props.
+#   blocks_movement: true = furniture/obstacle. false = floor overlay (puddles, grates, moss).
+#   placement:       wall_adjacent | center | corner | free_standing | floor_overlay
+#   tags:            Grouping hints used by archetype recipes.
+#
+# Browse tools/sprite_browser_16bf_world.html to find tile IDs.
+# List multiple IDs for variants: tile_ids: [123, 124, 125]
+
+props:
+
+  # ---------------------------------------------------------------------------
+  # Dungeon Basics
+  # ---------------------------------------------------------------------------
+
+  barrel:
+    tile_ids: [268]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: corner
+    tags: [storage, dungeon_basic]
+
+  barrel_open:
+    tile_ids: [269]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: corner
+    tags: [storage, dungeon_basic]
+
+  crate:
+    tile_ids: [327]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: corner
+    tags: [storage, dungeon_basic]
+
+  chest_closed:
+    tile_ids: [328]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: corner
+    tags: [storage, dungeon_basic]
+
+  sack:
+    tile_ids: [4023]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [storage, dungeon_basic]
+
+  rubble:
+    tile_ids: [550]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [scatter, dungeon_basic]
+
+  cobweb:
+    tile_ids: [144,145,146,147,148,149]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: corner
+    tags: [scatter, dungeon_basic]
+
+  pillar:
+    tile_ids: [4026]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [structure, dungeon_basic, grand]
+
+  bones_pile:
+    tile_ids: [90,91,92,93,94,95,96]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [scatter, dungeon_basic, crypt]
+
+  skeleton_prop:
+    tile_ids: [612,613]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [scatter, dungeon_basic, prison]
+
+  # ---------------------------------------------------------------------------
+  # Furniture / Living Quarters
+  # ---------------------------------------------------------------------------
+
+  table:
+    tile_ids: [319,320]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: center
+    tags: [furniture, living]
+
+  chair:
+    tile_ids: [321]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [furniture, living, flippable]
+
+  bed:
+    tile_ids: [4003]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [furniture, bedroom]
+
+  nightstand:
+    tile_ids: [4018]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [furniture, bedroom]
+
+  wardrobe:
+    tile_ids: [315,316]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [furniture, bedroom]
+
+  desk:
+    tile_ids: [4009]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [furniture, library]
+
+  bookshelf:
+    tile_ids: [317,318]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [furniture, library]
+
+  shelf:
+    tile_ids: [4025]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [furniture, storage]
+
+  candelabra:
+    tile_ids: [4033]         # Oryx 156 was a small flame dot, not a candelabra
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [light, living, grand]
+
+  candle:
+    tile_ids: [99]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [light, living]
+
+  fireplace:
+    tile_ids: [97]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [furniture, kitchen]
+
+  rug:
+    tile_ids: []             # Not used — multi-tile prop uses tile_layouts below
+    footprint: [3, 3]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [scatter, living]
+    # Multi-tile: tile IDs in row-major order (left→right, top→bottom).
+    # Two colour variants; one is chosen randomly at placement time.
+    # Renderer reads footprint [3,3] and maps index → offset (i%w, i/w).
+    tile_layouts:
+      - [1374, 1375, 1376, 1431, 1432, 1433, 1488, 1489, 1490]  # tan/brown
+      - [1377, 1378, 1379, 1434, 1435, 1436, 1491, 1492, 1493]  # blue
+
+  # ---------------------------------------------------------------------------
+  # Grand Spaces
+  # ---------------------------------------------------------------------------
+
+  throne:
+    tile_ids: [322]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [furniture, grand, throne_room]
+
+  banner:
+    tile_ids: [1545, 1546, 1547, 1548, 1549, 1550]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: wall_adjacent
+    tags: [decor, grand]
+
+  statue:
+    tile_ids: [376]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [decor, grand, shrine]
+
+  brazier:
+    tile_ids: [434]          # Base tile (bowl on stand)
+    overlay_tile_id: 97      # Flame tile rendered on top at same position
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [light, grand, shrine]
+
+  fountain:
+    tile_ids: [486,487]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: center
+    tags: [structure, grand, fountain_room]
+
+  bench:
+    tile_ids: [4004]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [furniture, grand]
+
+  planter:
+    tile_ids: [274]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [decor, grand]
+
+  # ---------------------------------------------------------------------------
+  # Religious / Ritual
+  # ---------------------------------------------------------------------------
+
+  altar:
+    tile_ids: [488,489,490,491,492,493]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: center
+    tags: [ritual, shrine]
+
+  sarcophagus:
+    tile_ids: [265,266,267]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: center
+    tags: [ritual, crypt]
+
+  tombstone:
+    tile_ids: [87,88,89]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [ritual, crypt]
+
+  urn:
+    tile_ids: [380,381,382,383,384,385]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [ritual, crypt]
+
+  prayer_mat:
+    tile_ids: [347]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [ritual, shrine]
+
+  # ---------------------------------------------------------------------------
+  # Workshop / Forge
+  # ---------------------------------------------------------------------------
+
+  forge:
+    tile_ids: [4011]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [forge, workshop]
+
+  anvil:
+    tile_ids: [4001]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [forge, workshop]
+
+  weapon_rack:
+    tile_ids: [323,324]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [armory, workshop]
+
+  armor_stand:
+    tile_ids: [4002]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [armory, workshop]
+
+  tool_rack:
+    tile_ids: [4028]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [forge, workshop]
+
+  workbench:
+    tile_ids: [4032]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [forge, workshop, laboratory]
+
+  coal_pile:
+    tile_ids: [4008]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [forge, workshop]
+
+  water_barrel:
+    tile_ids: [4031]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [forge, kitchen]
+
+  training_dummy:
+    tile_ids: [4029]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [armory, workshop]
+
+  # ---------------------------------------------------------------------------
+  # Alchemy / Laboratory
+  # ---------------------------------------------------------------------------
+
+  cauldron:
+    tile_ids: [374,375]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: center
+    tags: [laboratory, kitchen]
+
+  alchemy_table:
+    tile_ids: []             # Not used — multi-tile prop uses tile_layouts below
+    footprint: [3, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [laboratory]
+    # Multi-tile: three tiles side by side (left, centre, right).
+    tile_layouts:
+      - [605, 606, 607]
+
+  shelf_bottles:
+    tile_ids: [4024]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [laboratory, library]
+
+  globe:
+    tile_ids: [4012]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [decor, library, laboratory]
+
+  # ---------------------------------------------------------------------------
+  # Prison
+  # ---------------------------------------------------------------------------
+
+  chain:
+    tile_ids: [4007]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: wall_adjacent
+    tags: [prison]
+
+  cage:
+    tile_ids: [4006]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [prison]
+
+  iron_bars:
+    tile_ids: [4015]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: wall_adjacent
+    tags: [prison]
+
+  bucket:
+    tile_ids: [4005]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: free_standing
+    tags: [prison, kitchen]
+
+  straw_pile:
+    tile_ids: [4027]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [prison, scatter]
+
+  # ---------------------------------------------------------------------------
+  # Sewer / Industrial
+  # ---------------------------------------------------------------------------
+
+  grate:
+    tile_ids: [4014]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [sewer]
+
+  pipe_horizontal:
+    tile_ids: [4019]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: wall_adjacent
+    tags: [sewer]
+
+  pipe_vertical:
+    tile_ids: [4020]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: wall_adjacent
+    tags: [sewer]
+
+  puddle:
+    tile_ids: [4021]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [sewer, natural]
+
+  moss_patch:
+    tile_ids: [4016]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [sewer, natural]
+
+  drain:
+    tile_ids: [4010]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: floor_overlay
+    tags: [sewer]
+
+  # ---------------------------------------------------------------------------
+  # Natural / Organic
+  # ---------------------------------------------------------------------------
+
+  mushroom_cluster:
+    tile_ids: [4017]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [natural, mushroom_garden]
+
+  glowing_mushroom:
+    tile_ids: [4013]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [natural, mushroom_garden, light]
+
+  vine:
+    tile_ids: [4030]
+    footprint: [1, 1]
+    blocks_movement: false
+    placement: wall_adjacent
+    tags: [natural, mushroom_garden]
+
+  rock:
+    tile_ids: [4022]
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [natural, dungeon_basic]
+
+  stalagmite:
+    tile_ids: [218, 219]     # Oryx stone mound/cone — these ARE stalagmites (formerly misassigned to pillar)
+    footprint: [1, 1]
+    blocks_movement: true
+    placement: free_standing
+    tags: [natural, dungeon_basic]

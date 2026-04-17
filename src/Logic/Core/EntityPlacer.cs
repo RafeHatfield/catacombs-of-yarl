@@ -185,6 +185,12 @@ public static class EntityPlacer
         if (map.StairDownPos.HasValue) occupied.Add(map.StairDownPos.Value);
         if (map.StairUpPos.HasValue) occupied.Add(map.StairUpPos.Value);
 
+        // Precompute globally reachable tiles via flood fill from player spawn.
+        // Props can create enclosed walkable pockets inside rooms that IsWalkable() accepts
+        // but pathfinding cannot reach. Filtering candidates against this set ensures nothing
+        // is placed in an unreachable corner.
+        var reachable = FloodFillReachable(map.Map, map.PlayerSpawn.X, map.PlayerSpawn.Y);
+
         // Track existing registered entities to avoid overlap
         // (guaranteed spawns may have already been placed)
 
@@ -250,7 +256,7 @@ public static class EntityPlacer
                 int etp = EtpCalculator.GetEtp(def!);
                 if (!EtpCalculator.FitsInBudget(roomEtp, etp, roomEtpMax, allowSpike)) continue;
 
-                var pos = FindFreePosition(map.Map, room, occupied, rng);
+                var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
                 if (pos == null) break;
 
                 // Resolve orc variants based on depth — "orc" routes to a depth-appropriate subtype.
@@ -268,14 +274,18 @@ public static class EntityPlacer
                 roomEtp += etp;
             }
 
-            // Roll item count for this room (0 to maxItems)
+            // Roll item count for this room (0 to maxItems).
+            // Dead-end rooms guarantee at least 1 item as a loot bias — rewarding exploration
+            // of branching passages that lead nowhere else (SROOM-001).
             if (consumablePool.Count > 0)
             {
-                int itemCount = rng.Next(0, maxItems + 1);
+                int itemCount = room.IsDeadEnd
+                    ? rng.Next(1, maxItems + 2)   // 1..(maxItems+1) — always at least 1
+                    : rng.Next(0, maxItems + 1);   // 0..maxItems — normal
                 for (int i = 0; i < itemCount; i++)
                 {
                     string consumableId = consumablePool[rng.Next(consumablePool.Count)];
-                    var pos = FindFreePosition(map.Map, room, occupied, rng);
+                    var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
                     if (pos == null) break;
 
                     var entity = consumables.Create(consumableId,
@@ -299,7 +309,7 @@ public static class EntityPlacer
                 && rng.Next(0, 100) < 40;
             if (canDropItem)
             {
-                var pos = FindFreePosition(map.Map, room, occupied, rng);
+                var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
                 if (pos != null)
                 {
                     var entry = SelectWeighted(depthFilteredEquipPool!, rng);
@@ -335,6 +345,117 @@ public static class EntityPlacer
                     }
                 }
             }
+
+            // Vault room guaranteed items — 1-2 items from the floor pool beyond normal loot.
+            // Vault rooms are rare, depth 3+ rooms meant to reward players who find them.
+            // No rarity filter here: vault loot comes from the standard floor pool (deferred to loot policy plan).
+            if (room.IsVault && depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0)
+            {
+                int vaultItemCount = rng.Next(1, 3); // 1-2 guaranteed items
+                for (int vi = 0; vi < vaultItemCount; vi++)
+                {
+                    var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
+                    if (pos == null) break;
+
+                    var entry = SelectWeighted(depthFilteredEquipPool, rng);
+                    if (entry == null) break;
+
+                    Entity? entity = null;
+                    if (spellItems != null)
+                    {
+                        entity = spellItems.CreateScroll(entry.ItemId,
+                                     registry: identRegistry, pool: appearancePool,
+                                     identRng: rng, difficulty: difficulty)
+                              ?? spellItems.CreateWand(entry.ItemId, rng, depth,
+                                     registry: identRegistry, pool: appearancePool,
+                                     identRng: rng, difficulty: difficulty);
+                    }
+                    entity ??= items?.Create(entry.ItemId);
+
+                    if (entity == null) continue;
+
+                    var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
+                    CopyComponents(entity, withId);
+                    map.Map.RegisterEntity(withId);
+                    occupied.Add(pos.Value);
+                    placed.Add(withId);
+                }
+            }
+
+            // Vault rooms guarantee 1 guardian monster regardless of normal ETP budget.
+            // Vault rooms are meant to be dangerous — the guardian is why the room has good loot.
+            if (room.IsVault && (useWeighted ? weightedPool.Count > 0 : allDepthEligible.Count > 0))
+            {
+                string guardianId = useWeighted
+                    ? SelectWeightedMonster(weightedPool, rng)
+                    : allDepthEligible[rng.Next(allDepthEligible.Count)];
+
+                string resolvedId = guardianId == "orc"
+                    ? Balance.OrcVariantResolver.Resolve(depth, rng)
+                    : guardianId;
+
+                var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
+                if (pos != null)
+                {
+                    var entity = monsters.Create(resolvedId, pos.Value.X, pos.Value.Y, depth, rng);
+                    if (entity != null)
+                    {
+                        var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
+                        CopyComponents(entity, withId);
+                        ReIdMonsterEquipment(withId, ids);
+                        map.Map.RegisterEntity(withId);
+                        occupied.Add(pos.Value);
+                        placed.Add(withId);
+                    }
+                }
+            }
+        }
+
+        // Grand Shrine altar rewards — place a guaranteed item at each altar position.
+        // Altar rewards are more interesting than typical floor loot: equipment pool is preferred
+        // over consumables, making Grand Shrines a reliable source of gear.
+        // Item placement at the altar is a real pickup entity, not a prop.
+        foreach (var altarPos in map.GrandShrineAltarPositions)
+        {
+            if (occupied.Contains(altarPos)) continue;
+            if (!map.Map.IsWalkable(altarPos.X, altarPos.Y)) continue;
+
+            Entity? altarItem = null;
+
+            // Try floor equipment pool first (more interesting than a potion)
+            if (depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0)
+            {
+                var entry = SelectWeighted(depthFilteredEquipPool, rng);
+                if (entry != null)
+                {
+                    if (spellItems != null)
+                    {
+                        altarItem = spellItems.CreateScroll(entry.ItemId,
+                                        registry: identRegistry, pool: appearancePool,
+                                        identRng: rng, difficulty: difficulty)
+                                 ?? spellItems.CreateWand(entry.ItemId, rng, depth,
+                                        registry: identRegistry, pool: appearancePool,
+                                        identRng: rng, difficulty: difficulty);
+                    }
+                    altarItem ??= items?.Create(entry.ItemId);
+                }
+            }
+
+            // Fall back to consumable if no equipment pool or equipment creation failed
+            if (altarItem == null && consumablePool.Count > 0)
+            {
+                string consumableId = consumablePool[rng.Next(consumablePool.Count)];
+                altarItem = consumables.Create(consumableId,
+                    registry: identRegistry, pool: appearancePool, rng: rng, difficulty: difficulty);
+            }
+
+            if (altarItem == null) continue;
+
+            var withId = new Entity(ids.Next(), altarItem.Name, altarPos.X, altarPos.Y, altarItem.BlocksMovement);
+            CopyComponents(altarItem, withId);
+            map.Map.RegisterEntity(withId);
+            occupied.Add(altarPos);
+            placed.Add(withId);
         }
 
         return placed;
@@ -378,18 +499,53 @@ public static class EntityPlacer
         GameMap map,
         Room room,
         HashSet<(int, int)> occupied,
-        SeededRandom rng)
+        SeededRandom rng,
+        HashSet<(int, int)>? reachable = null)
     {
-        // Collect all candidate tiles in this room
+        // Collect all candidate tiles in this room that are walkable, unoccupied,
+        // and reachable from the player spawn (when a reachable set is provided).
+        // The reachable filter prevents items/monsters from being placed in walkable
+        // pockets that are physically enclosed by blocking props.
         var candidates = new List<(int X, int Y)>();
         for (int x = room.X; x < room.X + room.Width; x++)
             for (int y = room.Y; y < room.Y + room.Height; y++)
-                if (map.IsWalkable(x, y) && !occupied.Contains((x, y)))
+                if (map.IsWalkable(x, y) && !occupied.Contains((x, y))
+                    && (reachable == null || reachable.Contains((x, y))))
                     candidates.Add((x, y));
 
         if (candidates.Count == 0) return null;
 
         return candidates[rng.Next(candidates.Count)];
+    }
+
+    /// <summary>
+    /// BFS flood fill from (startX, startY) across walkable tiles.
+    /// Returns all reachable (X, Y) positions. Used to exclude prop-enclosed
+    /// unreachable pockets from entity placement candidates.
+    /// </summary>
+    private static HashSet<(int, int)> FloodFillReachable(GameMap map, int startX, int startY)
+    {
+        var visited = new HashSet<(int, int)>();
+        if (!map.IsWalkable(startX, startY)) return visited;
+
+        var queue = new Queue<(int, int)>();
+        queue.Enqueue((startX, startY));
+        visited.Add((startX, startY));
+
+        while (queue.Count > 0)
+        {
+            var (x, y) = queue.Dequeue();
+            foreach (var (nx, ny) in new[] { (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1) })
+            {
+                if (!visited.Contains((nx, ny)) && map.IsWalkable(nx, ny))
+                {
+                    visited.Add((nx, ny));
+                    queue.Enqueue((nx, ny));
+                }
+            }
+        }
+
+        return visited;
     }
 
     /// <summary>

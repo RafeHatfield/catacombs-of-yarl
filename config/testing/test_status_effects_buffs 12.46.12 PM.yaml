@@ -1,0 +1,44 @@
+scenario_id: test_status_effects_buffs
+name: "Status Effects — Buffs (Haste, Shield, Rage)"
+description: >
+  Verify player-side buff effects.
+  scroll_of_haste → SpeedEffect: player moves and attacks faster (tick/expire lifecycle verified).
+  scroll_of_shield → ShieldEffect: +4 AC for 10 turns, then expires cleanly.
+  scroll_of_rage → EnragedEffect on self: player gains HostileToAll (combat pressure test).
+  Healing potions ensure survival when outnumbered with buffs active.
+  Goal: buff effects apply, tick down correctly each turn, and expire with StatusExpiredEvent.
+  SpeedEffect and ShieldEffect should be clearly visible in StatusEffectBar badge display.
+depth: 2
+turn_limit: 150
+runs: 1
+map_width: 16
+map_height: 16
+player_start_x: 4
+player_start_y: 4
+
+player:
+  hp: 80
+  strength: 14
+  dexterity: 14
+  constitution: 12
+  accuracy: 4
+  evasion: 1
+  damage_min: 2
+  damage_max: 8
+  weapon: "longsword"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc"
+    count: 4
+    position: [8, 4]
+
+items:
+  - type: "scroll_of_haste"
+    count: 2
+  - type: "scroll_of_shield"
+    count: 2
+  - type: "scroll_of_rage"
+    count: 1
+  - type: "healing_potion"
+    count: 3

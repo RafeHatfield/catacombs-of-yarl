@@ -171,6 +171,14 @@ public partial class Main : Node
         for (int i = _tapIndicators.Count - 1; i >= 0; i--)
         {
             var (node, spawnTime) = _tapIndicators[i];
+
+            // Guard: node may have been freed if the floor transitioned while it was alive.
+            if (!GodotObject.IsInstanceValid(node))
+            {
+                _tapIndicators.RemoveAt(i);
+                continue;
+            }
+
             double age = now - spawnTime;
             double fadeStart = TapFadeDelay;
             double fadeEnd   = TapFadeDelay + TapFadeDuration;
@@ -376,10 +384,22 @@ public partial class Main : Node
             GD.PrintErr($"Depth boons load failed (non-fatal): {ex.Message}");
         }
 
+        PropRegistry? propRegistry = null;
+        try
+        {
+            var propsYaml = ReadGodotResource("res://config/props.yaml");
+            propRegistry = _contentLoader.LoadProps(propsYaml);
+            GD.Print($"Props loaded: {propRegistry.All.Count} prop definitions");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"Props load failed (non-fatal — no props will appear): {ex.Message}");
+        }
+
         _floorBuilder = new DungeonFloorBuilder(
             _levelTemplates, _monsterFactory, _itemFactory, _consumableFactory,
             content.FloorItemPool, spellItemFactory: _spellItemFactory,
-            boonTable: boonTable);
+            boonTable: boonTable, propRegistry: propRegistry);
     }
 
     /// <summary>
@@ -400,13 +420,14 @@ public partial class Main : Node
     /// <summary>
     /// Procedural dungeon entry point. Builds a fresh floor at the given depth.
     /// Pass existingPlayer=null for a new run; pass _state.Player to carry the player forward.
+    /// explorationMode=true spawns no monsters — useful for visually inspecting generated floors.
     /// </summary>
-    public void StartDungeon(int depth = 1, Entity? existingPlayer = null)
+    public void StartDungeon(int depth = 1, Entity? existingPlayer = null, bool explorationMode = false)
     {
         _testScenarioBuilder = null; // clear any test scenario override
         _currentDepth = depth;
         var rng = new SeededRandom(_baseSeed + depth * 1_000_003);
-        _state = _floorBuilder!.Build(depth, rng, existingPlayer);
+        _state = _floorBuilder!.Build(depth, rng, existingPlayer, explorationMode: explorationMode);
 
         SetupPresentation(_state);
         GD.Print($"Ready (dungeon depth {depth}) — {_state.Monsters.Count} monsters, {_state.FloorItems.Count} floor items. Tap to play.");
@@ -450,6 +471,10 @@ public partial class Main : Node
             foreach (var child in node.GetChildren())
                 child.SafeFree();
 
+        // Tap indicators are children of EntityLayer — they were just freed above.
+        // Clear the list so _Process doesn't try to fade/free already-disposed nodes.
+        _tapIndicators.Clear();
+
         // Phase 1 placeholder backgrounds — make zones visible during development.
         // QuickSlotBar placeholder replaced by real QuickSlotBar in Phase 3.
         AddZonePlaceholder(quickSlotZone,  new Color(0.08f, 0.08f, 0.12f, 0.92f)); // dark blue-grey
@@ -459,7 +484,9 @@ public partial class Main : Node
         // Render dungeon (stair overlays handled inside DungeonRenderer — second pass)
         // Returns TileLayer so we can apply fog-of-war each turn without re-creating nodes.
         // TileThemeConfig is loaded once at boot and reused across all floor transitions.
-        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer, _renderer, _tileThemeConfig);
+        // Pass props from GameState so Pass 4 renders placed furniture/overlays.
+        // Props is empty in scenario mode (IsDungeonMode=false) — no regression there.
+        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer, _renderer, _tileThemeConfig, props: state.Props);
 
         // Entity sprites — store reference so OnTurnCompleted can call UpdateVisibility
         _entitySprites = new EntitySpriteManager(entityLayer, _spriteMapping!, _renderer);
@@ -581,7 +608,7 @@ public partial class Main : Node
         // Clear old bars before entityLayer children are freed (child-free loop already ran above),
         // then create a fresh manager pointing at the new entityLayer.
         _floatingHpBars?.Clear();
-        _floatingHpBars = new FloatingHpBarManager(entityLayer);
+        _floatingHpBars = new FloatingHpBarManager(entityLayer, _renderer);
 
         if (_gameController != null)
         {
@@ -966,9 +993,19 @@ public partial class Main : Node
         var panel = new MainMenuPanel();
         menuLayer.AddChild(panel);
 
-        panel.NewGameRequested     += OnNewGameRequested;
-        panel.TestingModeRequested += ShowTestMenu;
-        panel.OptionsRequested     += ShowOptions;
+        panel.NewGameRequested      += OnNewGameRequested;
+        panel.ExploreModeRequested  += OnExploreModeRequested;
+        panel.TestingModeRequested  += ShowTestMenu;
+        panel.OptionsRequested      += ShowOptions;
+    }
+
+    private void OnExploreModeRequested()
+    {
+        GetNode<CanvasLayer>("MenuLayer").Visible = false;
+        _currentDepth = 1;
+        _baseSeed = Random.Shared.Next();
+        GD.Print($"[Main] Explore mode seed: {_baseSeed}");
+        StartDungeon(explorationMode: true);
     }
 
     private void OnNewGameRequested()

@@ -11,6 +11,7 @@ namespace CatacombsOfYarl.Presentation.UI;
 public sealed partial class MainMenuPanel : Control
 {
     [Signal] public delegate void NewGameRequestedEventHandler();
+    [Signal] public delegate void ExploreModeRequestedEventHandler();
     [Signal] public delegate void TestingModeRequestedEventHandler();
     [Signal] public delegate void OptionsRequestedEventHandler();
 
@@ -79,9 +80,19 @@ public sealed partial class MainMenuPanel : Control
         newGameBtn.Pressed += () => EmitSignal(SignalName.NewGameRequested);
         vbox.AddChild(newGameBtn);
 
-        // Testing Mode button — only visible in debug builds
+        // Debug-only buttons
         if (OS.IsDebugBuild())
         {
+            var exploreBtn = new TouchButton
+            {
+                Text              = "Explore Mode",
+                FontSize          = 24,
+                BackgroundColor   = new Color(0.15f, 0.35f, 0.45f, 0.95f),
+                CustomMinimumSize = new Vector2(280, 64),
+            };
+            exploreBtn.Pressed += () => EmitSignal(SignalName.ExploreModeRequested);
+            vbox.AddChild(exploreBtn);
+
             var testingBtn = new TouchButton
             {
                 Text              = "Testing Mode",

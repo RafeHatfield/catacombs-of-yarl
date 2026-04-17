@@ -62,8 +62,13 @@ public static class FloorComposer
         // Pass 2: edge darkening — tiles next to walls become Dark
         ApplyEdgeDarkening(map, result);
 
-        // Pass 3: noise-driven accent variation — only affects Standard tiles
-        // (Dark tiles are intentionally never overridden to keep wall shadows intact)
+        // Pass 3a: worn patch variation — large low-frequency blobs (~6% of Standard tiles).
+        // Represents well-travelled floor: stone worn smooth by foot traffic.
+        // Runs before Accent so worn and accent pools are mutually exclusive.
+        ApplyWornVariation(result, seed);
+
+        // Pass 3b: noise-driven accent variation — only affects remaining Standard tiles.
+        // Dark tiles are never overridden to keep wall shadows intact.
         ApplyNoiseVariation(result, seed);
 
         return result;
@@ -101,7 +106,34 @@ public static class FloorComposer
     }
 
     // -------------------------------------------------------------------------
-    // Pass 3: Noise variation
+    // Pass 3a: Worn variation
+    // -------------------------------------------------------------------------
+
+    private static void ApplyWornVariation(Dictionary<(int X, int Y), FloorTileType> result, int seed)
+    {
+        // Medium-frequency noise (scale 0.22) → patches 4-5 tiles across — smaller than a typical room,
+        // so worn areas read as a path through the room rather than covering it entirely.
+        // Scale 0.10 was too low: a single noise peak could span an entire small room.
+        // Seed offset is intentionally different from the Accent pass so the two patterns don't align.
+        float offsetX = (seed * 0.53f + 317f) % 1000f;
+        float offsetY = (seed * 0.89f + 431f) % 1000f;
+
+        foreach (var (pos, type) in result.ToList())
+        {
+            if (type != FloorTileType.Standard) continue; // Dark tiles never overridden
+
+            // Scale 0.22 → medium frequency. Threshold 0.72 ≈ 3-4% of standard tiles.
+            float noise = SimplexNoise.Evaluate(
+                pos.X * 0.22f + offsetX,
+                pos.Y * 0.22f + offsetY);
+
+            if (noise > 0.72f)
+                result[pos] = FloorTileType.Worn;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Pass 3b: Noise variation
     // -------------------------------------------------------------------------
 
     private static void ApplyNoiseVariation(Dictionary<(int X, int Y), FloorTileType> result, int seed)

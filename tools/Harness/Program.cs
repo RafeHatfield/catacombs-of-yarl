@@ -7,39 +7,116 @@
 ///   dotnet run --project tools/Harness -- --all
 ///   dotnet run --project tools/Harness -- --all --runs 50
 ///   dotnet run --project tools/Harness -- --scenario depth1_tuned --json
+///   dotnet run --project tools/Harness -- --dungeon --floors 6 --runs 100 --seed 1337
+///   dotnet run --project tools/Harness -- --dungeon --floors 3 --runs 50 --jsonl reports/soak.jsonl
+///   dotnet run --project tools/Harness -- --dungeon --floors 3 --runs 10 --report
+///   dotnet run --project tools/Harness -- --report --jsonl-in reports/soak.jsonl
 /// </summary>
 
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using CatacombsOfYarl.Logic.Balance;
+using CatacombsOfYarl.Logic.Content;
+using CatacombsOfYarl.Logic.Core;
+using CatacombsOfYarl.Logic.ECS;
 
-const string EntitiesFile = "config/entities.yaml";
-const string LevelsDir    = "config/levels";
+const string EntitiesFile        = "config/entities.yaml";
+const string LevelsDir           = "config/levels";
+const string LevelTemplatesFile  = "config/level_templates.yaml";
+const string DepthBoonsFile      = "config/depth_boons.yaml";
 
 // ─── Parse args ────────────────────────────────────────────────────────────
 
-string? scenarioId = null;
-bool runAll        = false;
-bool jsonOutput    = false;
-int? runsOverride  = null;
-int seed           = 1337;
+string? scenarioId   = null;
+bool    runAll       = false;
+bool    jsonOutput   = false;
+bool    dungeonMode  = false;
+bool    verbose      = false;
+bool    printReport  = false;
+int?    runsOverride = null;
+int     seed         = 1337;
+int     floors       = 6;
+string? jsonlPath    = null;
+string? jsonlInPath  = null;
 
 for (int i = 0; i < args.Length; i++)
 {
     switch (args[i])
     {
-        case "--scenario": scenarioId   = args[++i]; break;
-        case "--all":      runAll       = true;      break;
-        case "--runs":     runsOverride = int.Parse(args[++i]); break;
-        case "--seed":     seed         = int.Parse(args[++i]); break;
-        case "--json":     jsonOutput   = true;      break;
+        case "--scenario":  scenarioId   = args[++i]; break;
+        case "--all":       runAll       = true;      break;
+        case "--runs":      runsOverride = int.Parse(args[++i]); break;
+        case "--seed":      seed         = int.Parse(args[++i]); break;
+        case "--json":      jsonOutput   = true;      break;
+        case "--dungeon":   dungeonMode  = true;      break;
+        case "--floors":    floors       = int.Parse(args[++i]); break;
+        case "--verbose":   verbose      = true;      break;
+        case "--report":    printReport  = true;      break;
+        case "--jsonl":
+            if (i + 1 >= args.Length || args[i + 1].StartsWith("--"))
+            {
+                Console.Error.WriteLine("ERROR: --jsonl requires a file path argument.");
+                return 1;
+            }
+            jsonlPath = args[++i];
+            break;
+        case "--jsonl-in":
+            if (i + 1 >= args.Length || args[i + 1].StartsWith("--"))
+            {
+                Console.Error.WriteLine("ERROR: --jsonl-in requires a file path argument.");
+                return 1;
+            }
+            jsonlInPath = args[++i];
+            break;
         case "--help": case "-h":
             PrintHelp(); return 0;
     }
 }
 
-if (scenarioId == null && !runAll)
+// ─── Validate mode ─────────────────────────────────────────────────────────
+
+if (dungeonMode && (scenarioId != null || runAll))
 {
-    Console.Error.WriteLine("Usage: harness --scenario <id> | --all [--runs N] [--seed N] [--json]");
+    Console.Error.WriteLine("ERROR: --dungeon is mutually exclusive with --scenario and --all.");
+    return 1;
+}
+
+// --jsonl-in without --report makes no sense: the data would be read and discarded.
+if (jsonlInPath != null && !printReport)
+{
+    Console.Error.WriteLine("ERROR: --jsonl-in requires --report (otherwise the data is unused).");
+    return 1;
+}
+
+// --report --jsonl-in --dungeon: ambiguous data source. Pick one.
+if (printReport && jsonlInPath != null && dungeonMode)
+{
+    Console.Error.WriteLine("ERROR: --report with both --dungeon and --jsonl-in is ambiguous. Pick one data source.");
+    return 1;
+}
+
+// ─── OFFLINE REPORT MODE (--report --jsonl-in) ─────────────────────────────
+
+if (printReport && jsonlInPath != null && !dungeonMode)
+{
+    if (!File.Exists(jsonlInPath))
+    {
+        Console.Error.WriteLine($"ERROR: JSONL input file not found: '{jsonlInPath}'");
+        return 1;
+    }
+
+    Console.Error.WriteLine($"Reading soak data from {jsonlInPath}...");
+    var offlineSummary = SoakJsonlReader.ReadFromFile(jsonlInPath);
+    Console.Error.WriteLine($"Loaded {offlineSummary.RunsAttempted} runs.");
+
+    var offlineReport = DungeonSoakReport.Generate(offlineSummary);
+    Console.WriteLine(offlineReport);
+    return 0;
+}
+
+if (!dungeonMode && scenarioId == null && !runAll)
+{
+    Console.Error.WriteLine("Usage: harness --scenario <id> | --all | --dungeon [--runs N] [--seed N] [--json]");
     Console.Error.WriteLine("Run with --help for details.");
     return 1;
 }
@@ -51,7 +128,82 @@ if (!File.Exists(EntitiesFile))
     return 1;
 }
 
-// ─── Build runner ──────────────────────────────────────────────────────────
+// ─── DUNGEON MODE ──────────────────────────────────────────────────────────
+
+if (dungeonMode)
+{
+    if (!File.Exists(LevelTemplatesFile))
+    {
+        Console.Error.WriteLine($"ERROR: '{LevelTemplatesFile}' not found.");
+        return 1;
+    }
+
+    int runs = runsOverride ?? 100;
+
+    Console.Error.WriteLine($"Building dungeon floor factory...");
+
+    DungeonFloorBuilder floorBuilder;
+    try
+    {
+        floorBuilder = BuildDungeonFloorBuilder(EntitiesFile, LevelTemplatesFile, DepthBoonsFile);
+    }
+    catch (Exception ex)
+    {
+        Console.Error.WriteLine($"ERROR loading content: {ex.Message}");
+        return 1;
+    }
+
+    var harness = new DungeonRunHarness(floorBuilder);
+
+    Console.Error.WriteLine($"Running {runs} soak runs ({floors} floors, seed {seed})...");
+
+    // Optional JSONL streaming writer — opened before the soak so each run flushes immediately.
+    // If a run crashes or the process is killed mid-session, partial output is still readable.
+    StreamWriter? jsonlWriter = null;
+    if (jsonlPath != null)
+    {
+        try
+        {
+            var dir = Path.GetDirectoryName(jsonlPath);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
+            // Use UTF-8 without BOM — JSONL files are read as ASCII-compatible bytestreams;
+            // a BOM at the start of the first line will confuse standard JSON parsers.
+            jsonlWriter = new StreamWriter(jsonlPath, append: false, new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"ERROR: Cannot open JSONL output file '{jsonlPath}': {ex.Message}");
+            return 1;
+        }
+    }
+
+    DungeonSoakSummary summary;
+    try
+    {
+        summary = RunSoakWithStreaming(harness, floors, runs, seed, jsonlWriter);
+    }
+    finally
+    {
+        jsonlWriter?.Flush();
+        jsonlWriter?.Dispose();
+    }
+
+    PrintDungeonTable(summary, runs, seed, floors);
+    if (verbose)
+        PrintBotVerbose(summary);
+
+    // --report: generate full text report and print to stdout after the summary table.
+    if (printReport)
+    {
+        var report = DungeonSoakReport.Generate(summary);
+        Console.WriteLine(report);
+    }
+
+    return 0;
+}
+
+// ─── SCENARIO MODE: Build runner ──────────────────────────────────────────
 
 ScenarioRunner runner;
 try   { runner = ScenarioRunner.FromEntitiesFile(EntitiesFile); }
@@ -89,11 +241,45 @@ foreach (var path in paths)
 
 if (results.Count == 0) { Console.Error.WriteLine("No results."); return 1; }
 
-// ─── Output ────────────────────────────────────────────────────────────────
+// ─── Scenario JSON output (--all --jsonl writes one line per scenario) ─────
+
+if (jsonlPath != null && !dungeonMode)
+{
+    try
+    {
+        var dir = Path.GetDirectoryName(jsonlPath);
+        if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+        using var w = new StreamWriter(jsonlPath, append: false, new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        foreach (var m in results)
+        {
+            var pm = ToPresssureMetrics(m);
+            var eval = PressureModel.EvaluateProvisional(pm);
+            var line = new
+            {
+                scenario_id      = m.ScenarioId,
+                name             = m.Name,
+                depth            = m.Depth,
+                runs             = m.TotalRuns,
+                seed             = m.Seed,
+                death_rate       = m.DeathRate,
+                h_pm             = pm.H_PM,
+                h_mp             = pm.H_MP,
+                dpr_p            = pm.DPR_P,
+                dpr_m            = pm.DPR_M,
+                avg_turns        = m.AvgTurns,
+                evaluation       = eval,
+            };
+            w.WriteLine(JsonSerializer.Serialize(line));
+            w.Flush();
+        }
+    }
+    catch (Exception ex) { Console.Error.WriteLine($"ERROR writing JSONL: {ex.Message}"); }
+}
+
+// ─── Scenario output ───────────────────────────────────────────────────────
 
 if (jsonOutput)
 {
-    // Build full pressure evaluations for JSON
     var evals = results.Select(m =>
     {
         var pm   = ToPresssureMetrics(m);
@@ -124,9 +310,230 @@ if (results.Count == 1) PrintSingle(results[0]);
 else                     PrintTable(results);
 return 0;
 
-// ─── Helpers ───────────────────────────────────────────────────────────────
+// ─── Bot verbose output ────────────────────────────────────────────────────
 
-// Use PressureModel.Compute so H_PM/H_MP match the DPR-based bands in PressureModel.
+/// <summary>
+/// Print aggregate bot action distribution and heal behavior across all soak runs.
+/// Only printed when --verbose is passed with --dungeon.
+/// Skipped silently if no run has BotSummary data (e.g., legacy runs without telemetry).
+/// </summary>
+void PrintBotVerbose(DungeonSoakSummary soakSummary)
+{
+    // Collect all non-null BotSummary objects
+    var summaries = soakSummary.Runs
+        .Where(r => r.BotSummary != null)
+        .Select(r => r.BotSummary!)
+        .ToList();
+
+    if (summaries.Count == 0)
+        return;
+
+    // Aggregate action counts across all runs
+    var totalActionCounts = new Dictionary<string, long>();
+    var totalReasonCounts = new Dictionary<string, long>();
+    long totalDecisions   = 0;
+    double healHpSum      = 0.0;
+    int healRunCount      = 0;
+    int deathsWithUnused  = 0;
+    int deathCount        = 0;
+
+    foreach (var s in summaries)
+    {
+        totalDecisions += s.TotalDecisions;
+        foreach (var (key, count) in s.ActionCounts)
+        {
+            totalActionCounts.TryGetValue(key, out long existing);
+            totalActionCounts[key] = existing + count;
+        }
+        foreach (var (key, count) in s.ReasonCounts)
+        {
+            totalReasonCounts.TryGetValue(key, out long existing);
+            totalReasonCounts[key] = existing + count;
+        }
+        if (s.HealDecisions > 0)
+        {
+            healHpSum   += s.AvgHpWhenHealing * s.HealDecisions;
+            healRunCount += s.HealDecisions;
+        }
+        deathsWithUnused += s.DeathsWithUnusedPotions;
+    }
+
+    // Count runs that ended in death (for context on DeathsWithUnusedPotions)
+    deathCount = soakSummary.Runs.Count(r => r.Outcome == CatacombsOfYarl.Logic.Balance.OutcomeClassifier.Died);
+
+    Console.WriteLine("Bot Action Distribution (across all runs):");
+    foreach (var (action, count) in totalActionCounts.OrderByDescending(kv => kv.Value))
+    {
+        double pct = totalDecisions > 0 ? (double)count / totalDecisions * 100.0 : 0.0;
+        Console.WriteLine($"  {action,-20} {pct,5:F1}%  ({count:N0} decisions)");
+    }
+    Console.WriteLine();
+
+    double avgHpHealing = healRunCount > 0 ? healHpSum / healRunCount * 100.0 : 0.0;
+    string deathsNote = deathCount > 0
+        ? $"{deathsWithUnused} / {deathCount} deaths ({(double)deathsWithUnused / deathCount * 100.0:F1}%)"
+        : "0 deaths";
+
+    Console.WriteLine("Heal Behavior:");
+    Console.WriteLine($"  Avg HP% when healing:       {avgHpHealing:F1}%");
+    Console.WriteLine($"  Deaths with unused potions: {deathsNote}");
+    Console.WriteLine();
+}
+
+// ─── Dungeon soak helpers ─────────────────────────────────────────────────
+
+/// <summary>
+/// Builds a fully configured DungeonFloorBuilder with all factories including
+/// SpellItemFactory and boon table. The test setup in DungeonRunTests is intentionally
+/// lightweight (no SpellItemFactory). The harness needs the full factory chain so
+/// wands/scrolls spawn and depth boons apply, reflecting actual gameplay.
+/// </summary>
+DungeonFloorBuilder BuildDungeonFloorBuilder(string entitiesPath, string templatesPath, string boonsPath)
+{
+    var loader  = new ContentLoader();
+    var content = loader.LoadAllFromFile(entitiesPath);
+
+    var entityFactory    = new EntityFactory();
+    var itemFactory      = new ItemFactory(content.Items, entityFactory);
+    var spellItemFactory = new SpellItemFactory(content.SpellItems, entityFactory);
+    var monsterFactory   = new MonsterFactory(content.Monsters, entityFactory, itemFactory);
+    var consumableFactory = new ConsumableFactory(content.Consumables, entityFactory);
+
+    var templates = LevelTemplateRegistry.FromFile(templatesPath);
+
+    System.Collections.Generic.IReadOnlyDictionary<int, BoonDefinition>? boonTable = null;
+    if (File.Exists(boonsPath))
+        boonTable = loader.LoadBoonsFromFile(boonsPath);
+
+    var floorItemPool = content.FloorItemPool;
+
+    return new DungeonFloorBuilder(
+        templates,
+        monsterFactory,
+        itemFactory,
+        consumableFactory,
+        floorItemPool: floorItemPool,
+        spellItemFactory: spellItemFactory,
+        boonTable: boonTable);
+}
+
+/// <summary>
+/// Run the soak, streaming JSONL output per-run if a writer is provided.
+/// Stream-writes so partial output survives Ctrl-C or crashes.
+/// </summary>
+DungeonSoakSummary RunSoakWithStreaming(
+    DungeonRunHarness harness, int floorCount, int runCount, int baseSeed, StreamWriter? writer)
+{
+    var soakOptions = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy        = JsonNamingPolicy.SnakeCaseLower,
+        // Do NOT apply snake_case to dictionary keys — they are data values (e.g. "orc_brute",
+        // "Attack") that downstream analysis keys on. SnakeCaseLower on keys would mangle them.
+        DictionaryKeyPolicy         = null,
+        DefaultIgnoreCondition      = JsonIgnoreCondition.WhenWritingNull,
+    };
+
+    var allResults = new List<DungeonSoakRunResult>(runCount);
+
+    for (int i = 0; i < runCount; i++)
+    {
+        int runSeed = baseSeed + i;
+        DungeonSoakRunResult result;
+
+        try
+        {
+            // RunSingle is called via RunSoak — but we need per-run access for streaming.
+            // Use a 1-run mini-soak to get the structured result.
+            var miniSummary = harness.RunSoak(floors: floorCount, runs: 1, baseSeed: runSeed);
+            result = miniSummary.Runs[0];
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"  [soak] run {i} (seed {runSeed}) threw: {ex.Message}");
+            result = new DungeonSoakRunResult
+            {
+                Seed          = runSeed,
+                Outcome       = OutcomeClassifier.Exception,
+                FailureType   = OutcomeClassifier.FailureException,
+                FailureDetail = ex.Message,
+                FloorsCompleted = 0,
+                PerFloor      = Array.Empty<FloorRunMetrics>(),
+            };
+        }
+
+        allResults.Add(result);
+
+        if (writer != null)
+        {
+            writer.WriteLine(JsonSerializer.Serialize(result, soakOptions));
+            writer.Flush(); // stream-write: don't lose data on crash/Ctrl-C
+        }
+
+        // Progress indicator every 10 runs
+        if ((i + 1) % 10 == 0 || i + 1 == runCount)
+            Console.Error.WriteLine($"  {i + 1}/{runCount} runs complete...");
+    }
+
+    return DungeonSoakSummary.ComputeFrom(allResults, configuredFloors: floorCount);
+}
+
+void PrintDungeonTable(DungeonSoakSummary summary, int runs, int baseSeed, int floorCount)
+{
+    Console.WriteLine();
+    Console.WriteLine($"=== YARL Dungeon Soak ({runs} runs, seed {baseSeed}, {floorCount} floors) ===");
+    Console.WriteLine();
+    Console.WriteLine($"  Survival rate:       {summary.SurvivalRate:P1}");
+    Console.WriteLine($"  Avg floors completed: {summary.AvgFloorsCompleted:F2}");
+    Console.WriteLine($"  Avg total turns:      {summary.AvgTotalTurns:F1}");
+    Console.WriteLine();
+
+    // Per-depth table
+    Console.WriteLine($"  {"Depth",5}  {"Death%",7}  {"Avg Turns",9}  {"Avg Kills",9}  {"Survival%",9}");
+    Console.WriteLine($"  {"-----",5}  {"------",7}  {"---------",9}  {"---------",9}  {"---------",9}");
+
+    int maxDepth = floorCount;
+    for (int d = 1; d <= maxDepth; d++)
+    {
+        // Runs that attempted this depth
+        var floorRuns = summary.Runs
+            .Select(r => r.PerFloor.FirstOrDefault(f => f.Depth == d))
+            .Where(f => f != null)
+            .Select(f => f!)
+            .ToList();
+
+        if (floorRuns.Count == 0) continue;
+
+        double deathPct    = summary.DeathRateByFloor.TryGetValue(d, out double dr) ? dr * 100.0 : 0.0;
+        double avgTurns    = floorRuns.Average(f => f.TurnsTaken);
+        double avgKills    = floorRuns.Average(f => f.MonstersKilled);
+        double survivalPct = summary.SurvivalCurve.Count >= d ? summary.SurvivalCurve[d - 1] * 100.0 : 0.0;
+
+        Console.WriteLine($"  {d,5}  {deathPct,6:F1}%  {avgTurns,9:F1}  {avgKills,9:F1}  {survivalPct,8:F1}%");
+    }
+
+    Console.WriteLine();
+
+    // Failure types
+    if (summary.FailureTypeCounts.Count > 0)
+    {
+        Console.WriteLine("  Failure Types:");
+        foreach (var (type, count) in summary.FailureTypeCounts.OrderByDescending(kv => kv.Value))
+            Console.WriteLine($"    {type}: {count}");
+        Console.WriteLine();
+    }
+
+    // Top killers
+    if (summary.KillerCounts.Count > 0)
+    {
+        Console.WriteLine("  Top Killers:");
+        foreach (var (killer, count) in summary.KillerCounts.OrderByDescending(kv => kv.Value).Take(10))
+            Console.WriteLine($"    {killer}: {count}");
+        Console.WriteLine();
+    }
+}
+
+// ─── Scenario helpers ─────────────────────────────────────────────────────
+
 PressureMetrics ToPresssureMetrics(AggregatedMetrics m) =>
     PressureModel.Compute(m, m.Depth, m.AvgMonsterMaxHp, (int)Math.Round(m.AvgPlayerMaxHp));
 
@@ -184,7 +591,7 @@ void PrintTable(List<AggregatedMetrics> ms)
     Console.WriteLine($"  {"Scenario",-28}  {"D",2}  {"Death%",7}  {"[Band]",9}  {"H_PM",5}  {"[Band]",7}  {"H_MP",5}  {"[Band]",7}  Status");
     Console.WriteLine($"  {new string('-', 28)}  {"--"}  {"-------"}  {"---------"}  {"-----"}  {"-------"}  {"-----"}  {"-------"}  ------");
 
-    int passes = 0, fails = 0;
+    int passes = 0, fails = 0, probes = 0;
     var failedScenarios = new List<AggregatedMetrics>();
 
     foreach (var m in ms)
@@ -199,15 +606,27 @@ void PrintTable(List<AggregatedMetrics> ms)
         string hmp  = $"{pm.H_MP:F1}";
         string hmpB = $"[{eval.H_MP_Target.Min:F1}-{eval.H_MP_Target.Max:F1}]";
 
-        bool pass = eval.AllInBand;
-        if (pass) passes++; else { fails++; failedScenarios.Add(m); }
-        string status = pass ? "PASS" : $"FAIL({(eval.H_PM_Status != "OK" ? "H_PM " : "")}{(eval.H_MP_Status != "OK" ? "H_MP " : "")}{(eval.DeathRate_Status != "OK" ? "Death%" : "")})";
+        string status;
+        if (m.IsProbe)
+        {
+            probes++;
+            bool hpmOk = eval.H_PM_Status == "OK";
+            bool hmpOk = eval.H_MP_Status == "OK";
+            status = $"PROBE{(!hpmOk ? "(H_PM)" : !hmpOk ? "(H_MP)" : "")}";
+        }
+        else
+        {
+            bool pass = eval.AllInBand;
+            if (pass) passes++; else { fails++; failedScenarios.Add(m); }
+            status = pass ? "PASS" : $"FAIL({(eval.H_PM_Status != "OK" ? "H_PM " : "")}{(eval.H_MP_Status != "OK" ? "H_MP " : "")}{(eval.DeathRate_Status != "OK" ? "Death%" : "")})";
+        }
 
         Console.WriteLine($"  {m.ScenarioId,-28}  {m.Depth,2}  {dr,7}  {drB,9}  {hpm,5}  {hpmB,7}  {hmp,5}  {hmpB,7}  {status}");
     }
 
     Console.WriteLine();
-    Console.WriteLine($"  Results: {passes} PASS / {fails} FAIL  ({ms.Count} total)");
+    string probeNote = probes > 0 ? $" / {probes} PROBE" : "";
+    Console.WriteLine($"  Results: {passes} PASS / {fails} FAIL{probeNote}  ({ms.Count} total)");
     Console.WriteLine();
 
     if (failedScenarios.Count > 0)
@@ -238,19 +657,41 @@ void PrintHelp()
     Console.WriteLine("Usage:");
     Console.WriteLine("  dotnet run --project tools/Harness -- --scenario <id> [options]");
     Console.WriteLine("  dotnet run --project tools/Harness -- --all [options]");
+    Console.WriteLine("  dotnet run --project tools/Harness -- --dungeon [options]");
     Console.WriteLine();
-    Console.WriteLine("Options:");
+    Console.WriteLine("Scenario mode options:");
     Console.WriteLine("  --scenario <id>   Run a specific scenario by scenario_id");
     Console.WriteLine("  --all             Run all scenario_depth*.yaml files");
     Console.WriteLine("  --runs <n>        Override run count (default: from YAML, usually 50)");
     Console.WriteLine("  --seed <n>        Base seed (default: 1337)");
     Console.WriteLine("  --json            Output results as JSON");
+    Console.WriteLine("  --jsonl <path>    Write per-scenario JSON lines to file");
+    Console.WriteLine();
+    Console.WriteLine("Dungeon mode options:");
+    Console.WriteLine("  --dungeon         Run dungeon soak (multi-floor bot campaign)");
+    Console.WriteLine("  --floors <n>      Number of dungeon floors per run (default: 6)");
+    Console.WriteLine("  --runs <n>        Number of soak runs (default: 100)");
+    Console.WriteLine("  --seed <n>        Base seed — run i uses seed+i (default: 1337)");
+    Console.WriteLine("  --jsonl <path>    Stream per-run results as JSONL to file");
+    Console.WriteLine("  --verbose         Print bot action distribution and heal behavior after table");
+    Console.WriteLine("  --report          Generate and print full analysis report after the soak");
+    Console.WriteLine();
+    Console.WriteLine("Offline report options:");
+    Console.WriteLine("  --report --jsonl-in <path>  Read saved JSONL and print analysis report");
+    Console.WriteLine("                              (no soak run needed)");
+    Console.WriteLine();
     Console.WriteLine("  --help, -h        Show this help");
     Console.WriteLine();
-    Console.WriteLine("Must be run from the project root (directory containing config/).");
+    Console.WriteLine("Must be run from the project root (the directory containing config/).");
     Console.WriteLine();
     Console.WriteLine("Examples:");
     Console.WriteLine("  dotnet run --project tools/Harness -- --scenario depth1_tuned");
     Console.WriteLine("  dotnet run --project tools/Harness -- --all --runs 100");
     Console.WriteLine("  dotnet run --project tools/Harness -- --all --json > reports/latest.json");
+    Console.WriteLine("  dotnet run --project tools/Harness -- --dungeon --floors 3 --runs 20 --seed 1337");
+    Console.WriteLine("  dotnet run --project tools/Harness -- --dungeon --floors 6 --runs 100 --jsonl reports/soak.jsonl");
+    Console.WriteLine("  dotnet run --project tools/Harness -- --dungeon --floors 3 --runs 10 --report");
+    Console.WriteLine("  dotnet run --project tools/Harness -- --dungeon --floors 3 --runs 10 --jsonl reports/soak.jsonl --report");
+    Console.WriteLine("  dotnet run --project tools/Harness -- --report --jsonl-in reports/soak.jsonl");
+    Console.WriteLine("  dotnet run --project tools/Harness -- --report --jsonl-in reports/soak.jsonl > reports/report.txt");
 }

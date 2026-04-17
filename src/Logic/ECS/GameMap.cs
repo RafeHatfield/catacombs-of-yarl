@@ -16,6 +16,7 @@ public sealed class GameMap
     private readonly bool[,] _explored;
     private readonly TileTheme[,] _theme;
     private readonly List<Entity> _entities = new();
+    private readonly HashSet<(int, int)> _propCells = new();
 
     /// <summary>Default constructor: all tiles walkable (existing behavior for scenarios).</summary>
     public GameMap(int width, int height)
@@ -143,7 +144,32 @@ public sealed class GameMap
             }
     }
 
-    public bool IsWalkable(int x, int y) => InBounds(x, y) && _walkable[x, y];
+    public bool IsWalkable(int x, int y) => InBounds(x, y) && _walkable[x, y] && !_propCells.Contains((x, y));
+
+    /// <summary>
+    /// Mark a grid cell as occupied by a blocking prop.
+    /// Called during dungeon generation after prop placement.
+    /// </summary>
+    public void MarkPropCell(int x, int y)
+    {
+        if (InBounds(x, y)) _propCells.Add((x, y));
+    }
+
+    /// <summary>Returns true if a blocking prop occupies this cell.</summary>
+    public bool IsPropCell(int x, int y) => _propCells.Contains((x, y));
+
+    /// <summary>
+    /// Remove a prop cell marking. Used during connectivity repair when a
+    /// previously placed prop is removed to restore passage.
+    /// </summary>
+    public void UnmarkPropCell(int x, int y) => _propCells.Remove((x, y));
+
+    /// <summary>
+    /// Returns true only for actual wall tiles (tile array = Wall).
+    /// Used by the wall autotile renderer — does NOT include prop cells.
+    /// This separation prevents prop sprites from generating wall graphics around them.
+    /// </summary>
+    public bool IsWallTile(int x, int y) => InBounds(x, y) && !_walkable[x, y];
 
     /// <summary>Returns the tile kind at (x, y). Returns Wall if out of bounds.</summary>
     public TileKind GetTileKind(int x, int y)

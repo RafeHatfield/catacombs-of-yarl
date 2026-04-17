@@ -98,6 +98,40 @@ public static class RoomShapeGenerator
 
         // Invariant: center tile is always floor so corridor tunnels connect correctly.
         map.SetTile(room.CenterX, room.CenterY, TileKind.Floor);
+
+        // Post-carve: remove dangling inner-corner wall tiles that appear as random
+        // wall pieces inside non-rectangular rooms. Any wall tile within the bounding
+        // box with ≥ 2 walkable cardinal neighbors is a concave corner artifact
+        // (e.g. the inner corner of an L/T/plus shape, or a cave boundary pocket).
+        // Safe: only operates within this room's bounding box; the 1-tile gap between
+        // room bounding boxes ensures no adjacent room's tiles are modified.
+        RemoveInnerCorners(map, room);
+    }
+
+    /// <summary>
+    /// Convert inner-corner and isolated wall tiles within the room bounding box
+    /// to floor. A wall tile with ≥ 2 walkable cardinal neighbors is a concave
+    /// corner artifact from non-rectangular room shapes — it renders as a corner
+    /// tile floating inside the room area, looking like a random wall piece.
+    /// </summary>
+    private static void RemoveInnerCorners(GameMap map, Room room)
+    {
+        for (int x = room.X; x < room.X + room.Width; x++)
+        {
+            for (int y = room.Y; y < room.Y + room.Height; y++)
+            {
+                if (map.IsWalkable(x, y)) continue; // already floor
+
+                int walkableNeighbors = 0;
+                if (map.IsWalkable(x,     y - 1)) walkableNeighbors++;
+                if (map.IsWalkable(x,     y + 1)) walkableNeighbors++;
+                if (map.IsWalkable(x - 1, y    )) walkableNeighbors++;
+                if (map.IsWalkable(x + 1, y    )) walkableNeighbors++;
+
+                if (walkableNeighbors >= 2)
+                    map.SetTile(x, y, TileKind.Floor);
+            }
+        }
     }
 
     // ---------------------------------------------------------------------------
@@ -117,96 +151,117 @@ public static class RoomShapeGenerator
     // ---------------------------------------------------------------------------
 
     /// <summary>
-    /// Carve two random sub-rectangles within the bounding box and write their
-    /// union as Floor. Biases toward T/cross when random axis alignment fires.
-    /// Retries up to 3 times if coverage is below 60% of bounding box area, then
-    /// falls back to a simple rectangle.
+    /// Carve a clean geometric compound shape — one of three variants chosen randomly:
+    ///
+    ///   0. Plus/cross: full-width horizontal bar + full-height vertical bar, both centered.
+    ///      Bilaterally symmetric. Center tile (CenterX,CenterY) is always carved.
+    ///
+    ///   1. T-shape (4 orientations ⊤⊥⊣⊢): one full-span bar centered on an axis;
+    ///      one half-span stem extending from the bar to one edge.
+    ///      Center tile is always in the full-span bar.
+    ///
+    ///   2. L-shape (4 corners): one half of the room carved fully, one adjacent quarter
+    ///      carved as the "foot" of the L. The boundary row/column includes the center.
+    ///      Guarantees center tile is always in the carved region.
+    ///
+    /// All three variants guarantee the center tile is carved and all floor tiles are
+    /// connected (no isolated pockets). No random protrusions — every shape uses only
+    /// clean rectilinear regions.
     /// </summary>
     public static void CarveUnion(GameMap map, Room room, SeededRandom rng)
     {
-        const int MaxRetries = 3;
-        const double MinCoverage = 0.60;
+        int barH = rng.Next(2, 4); // horizontal bar thickness: 2 or 3 tiles tall
+        int barV = rng.Next(2, 4); // vertical bar thickness: 2 or 3 tiles wide
 
-        int bboxArea = room.Width * room.Height;
-        int minCoveredTiles = (int)(bboxArea * MinCoverage);
+        // Pre-compute centered bar bounds — used by Plus and T-shape.
+        int hY1 = Math.Max(room.Y, room.CenterY - barH / 2);
+        int hY2 = Math.Min(room.Y + room.Height, hY1 + barH);
+        int vX1 = Math.Max(room.X, room.CenterX - barV / 2);
+        int vX2 = Math.Min(room.X + room.Width, vX1 + barV);
 
-        for (int attempt = 0; attempt <= MaxRetries; attempt++)
+        int variant = rng.Next(3);
+
+        if (variant == 0)
         {
-            if (attempt == MaxRetries)
+            // ─── Plus/cross ───
+            // Horizontal bar: full width, centered on Y
+            for (int x = room.X; x < room.X + room.Width; x++)
+                for (int y = hY1; y < hY2; y++)
+                    map.SetTile(x, y, TileKind.Floor);
+            // Vertical bar: full height, centered on X
+            for (int x = vX1; x < vX2; x++)
+                for (int y = room.Y; y < room.Y + room.Height; y++)
+                    map.SetTile(x, y, TileKind.Floor);
+        }
+        else if (variant == 1)
+        {
+            // ─── T-shape ───
+            // 4 orientations: stem below (⊥), above (⊤), left (⊣), right (⊢) the crossbar.
+            // The full-span bar always passes through (CenterX, CenterY) — center guaranteed.
+            int orient = rng.Next(4);
+
+            if (orient <= 1) // horizontal crossbar, vertical stem
             {
-                // Exhausted retries — fall back to full rectangle
-                CarveRectangle(map, room);
-                return;
+                // Crossbar: full width, centered on Y — center tile IS in this bar
+                for (int x = room.X; x < room.X + room.Width; x++)
+                    for (int y = hY1; y < hY2; y++)
+                        map.SetTile(x, y, TileKind.Floor);
+                // Stem: centered on X, extends to the edge opposite the stem side
+                // orient 0 (⊥): stem BELOW crossbar; orient 1 (⊤): stem ABOVE crossbar
+                int stemY1 = orient == 0 ? hY2 : room.Y;
+                int stemY2 = orient == 0 ? room.Y + room.Height : hY1;
+                for (int x = vX1; x < vX2; x++)
+                    for (int y = stemY1; y < stemY2; y++)
+                        map.SetTile(x, y, TileKind.Floor);
             }
-
-            // --- Generate rectA: random within bounding box, touches at least one edge ---
-            int aw = rng.Next(3, room.Width + 1);
-            int ah = rng.Next(3, room.Height + 1);
-
-            // Touch one of the four edges randomly
-            int edgeSide = rng.Next(4);
-            int ax = edgeSide switch
+            else // vertical crossbar, horizontal stem
             {
-                0 => room.X,                       // left edge
-                2 => room.X + room.Width - aw,     // right edge
-                _ => rng.Next(room.X, room.X + room.Width - aw + 1), // top/bottom: random x
-            };
-            int ay = edgeSide switch
-            {
-                1 => room.Y,                       // top edge
-                3 => room.Y + room.Height - ah,    // bottom edge
-                _ => rng.Next(room.Y, room.Y + room.Height - ah + 1), // left/right: random y
-            };
-            // Clamp to bounding box
-            ax = Math.Clamp(ax, room.X, room.X + room.Width - aw);
-            ay = Math.Clamp(ay, room.Y, room.Y + room.Height - ah);
-
-            // --- Generate rectB: random within bounding box ---
-            int bw = rng.Next(3, room.Width + 1);
-            int bh = rng.Next(3, room.Height + 1);
-            int bx = rng.Next(room.X, room.X + room.Width - bw + 1);
-            int by = rng.Next(room.Y, room.Y + room.Height - bh + 1);
-
-            // 50% chance: share a center axis (T/cross bias)
-            if (rng.Next(2) == 0)
-            {
-                if (rng.Next(2) == 0)
-                    bx = ax + aw / 2 - bw / 2; // align on X center
-                else
-                    by = ay + ah / 2 - bh / 2; // align on Y center
-                bx = Math.Clamp(bx, room.X, room.X + room.Width - bw);
-                by = Math.Clamp(by, room.Y, room.Y + room.Height - bh);
+                // Crossbar: full height, centered on X — center tile IS in this bar
+                for (int x = vX1; x < vX2; x++)
+                    for (int y = room.Y; y < room.Y + room.Height; y++)
+                        map.SetTile(x, y, TileKind.Floor);
+                // Stem: centered on Y, extends to the edge opposite the stem side
+                // orient 2 (⊢): stem RIGHT of bar; orient 3 (⊣): stem LEFT of bar
+                int stemX1 = orient == 2 ? vX2 : room.X;
+                int stemX2 = orient == 2 ? room.X + room.Width : vX1;
+                for (int x = stemX1; x < stemX2; x++)
+                    for (int y = hY1; y < hY2; y++)
+                        map.SetTile(x, y, TileKind.Floor);
             }
+        }
+        else
+        {
+            // ─── L-shape ───
+            // Divide the room at (CenterX, CenterY). Three of the four quadrant-halves are carved:
+            // the full "main half" (row or column) + one adjacent "foot" quadrant.
+            // The boundary row/column at the center is INCLUSIVE in both halves, so the center
+            // tile is always carved and all floor tiles are connected via the shared boundary.
+            //
+            // 4 corners (which half is "main", which quadrant is the "foot"):
+            //   0 = TL: top half (full width) + bottom-left quadrant
+            //   1 = TR: top half (full width) + bottom-right quadrant
+            //   2 = BL: bottom half (full width) + top-left quadrant
+            //   3 = BR: bottom half (full width) + top-right quadrant
+            int corner = rng.Next(4);
 
-            // --- Count how many unique tiles will be carved ---
-            // Quick area estimate: |A| + |B| - |A∩B|
-            int axEnd = ax + aw, ayEnd = ay + ah;
-            int bxEnd = bx + bw, byEnd = by + bh;
-            int overlapW = Math.Max(0, Math.Min(axEnd, bxEnd) - Math.Max(ax, bx));
-            int overlapH = Math.Max(0, Math.Min(ayEnd, byEnd) - Math.Max(ay, by));
-            int estimatedTiles = aw * ah + bw * bh - overlapW * overlapH;
+            bool topMain = corner <= 1; // main half is top (corners 0,1) or bottom (2,3)
+            bool leftFoot = (corner == 0 || corner == 2); // foot quadrant on left or right
 
-            if (estimatedTiles < minCoveredTiles)
-                continue; // try again
-
-            // --- Carve both rectangles ---
-            for (int x = ax; x < axEnd; x++)
-                for (int y = ay; y < ayEnd; y++)
+            // Main half: full room width, top or bottom — includes the center row (CenterY)
+            int mainY1 = topMain ? room.Y      : room.CenterY; // top: from top; bottom: from center
+            int mainY2 = topMain ? room.CenterY + 1 : room.Y + room.Height; // +1 to include center row
+            for (int x = room.X; x < room.X + room.Width; x++)
+                for (int y = mainY1; y < mainY2; y++)
                     map.SetTile(x, y, TileKind.Floor);
 
-            for (int x = bx; x < bxEnd; x++)
-                for (int y = by; y < byEnd; y++)
+            // Foot quadrant: one side, the other half of the room height — includes center col (CenterX)
+            int footX1 = leftFoot ? room.X : room.CenterX;
+            int footX2 = leftFoot ? room.CenterX + 1 : room.X + room.Width; // +1 to include center col
+            int footY1 = topMain ? room.CenterY : room.Y;
+            int footY2 = topMain ? room.Y + room.Height : room.CenterY + 1;
+            for (int x = footX1; x < footX2; x++)
+                for (int y = footY1; y < footY2; y++)
                     map.SetTile(x, y, TileKind.Floor);
-
-            // --- Verify connectivity via flood fill from any carved tile ---
-            if (!AllCarvedTilesConnected(map, room))
-            {
-                // Reset the tiles we carved (set back to wall so next attempt is clean)
-                ResetRoom(map, room);
-                continue;
-            }
-
-            return; // success
         }
     }
 
@@ -353,8 +408,9 @@ public static class RoomShapeGenerator
     // ---------------------------------------------------------------------------
 
     /// <summary>
-    /// Carve a base rectangle with 2-tile margin, then add small alcoves
-    /// extruded outward from wall segments longer than 3 tiles.
+    /// Carve a base rectangle with 2-tile margin, then add symmetric alcove pairs
+    /// on the N/S and E/W wall pairs. Each axis pair shares the same offset so the
+    /// resulting room is bilaterally symmetric on both axes.
     /// Minimum 8×8. Falls back to Rectangle for smaller rooms.
     /// </summary>
     public static void CarveAlcove(GameMap map, Room room, SeededRandom rng)
@@ -376,72 +432,50 @@ public static class RoomShapeGenerator
             for (int y = by1; y < by2; y++)
                 map.SetTile(x, y, TileKind.Floor);
 
-        // --- North wall: tiles at y = by1, x in [bx1, bx2) ---
-        // Extrude toward room.Y (decreasing Y)
+        // --- N/S alcove pair (horizontal walls) ---
+        // Roll once; if success, place the SAME alcove on both N and S walls.
         int northLen = bx2 - bx1;
-        if (northLen > 3)
-            TryAddAlcove(map, room, rng,
-                startX: bx1, startY: by1,
-                length: northLen, isHorizontal: true, extrudeDir: -1);
-
-        // --- South wall: tiles at y = by2-1, x in [bx1, bx2) ---
-        // Extrude toward room.Y+Height (increasing Y)
-        if (northLen > 3)
-            TryAddAlcove(map, room, rng,
-                startX: bx1, startY: by2 - 1,
-                length: northLen, isHorizontal: true, extrudeDir: +1);
-
-        // --- West wall: tiles at x = bx1, y in [by1, by2) ---
-        int westLen = by2 - by1;
-        if (westLen > 3)
-            TryAddAlcove(map, room, rng,
-                startX: bx1, startY: by1,
-                length: westLen, isHorizontal: false, extrudeDir: -1);
-
-        // --- East wall: tiles at x = bx2-1, y in [by1, by2) ---
-        if (westLen > 3)
-            TryAddAlcove(map, room, rng,
-                startX: bx2 - 1, startY: by1,
-                length: westLen, isHorizontal: false, extrudeDir: +1);
-    }
-
-    /// <summary>
-    /// Attempt to carve a single alcove niche from a wall segment.
-    /// 20% chance per wall segment. Size 1-2 deep, 1-3 wide.
-    /// </summary>
-    private static void TryAddAlcove(
-        GameMap map, Room room, SeededRandom rng,
-        int startX, int startY,
-        int length, bool isHorizontal, int extrudeDir)
-    {
-        if (rng.Next(100) >= 20) return; // 20% chance
-
-        int alcoveDepth = rng.Next(1, 3);  // 1-2 deep
-        int alcoveWidth = rng.Next(1, 4);  // 1-3 wide
-        alcoveWidth = Math.Min(alcoveWidth, length - 1); // can't be wider than wall
-
-        // Pick a random position along the wall for the alcove
-        int posOffset = rng.Next(0, length - alcoveWidth + 1);
-
-        for (int w = 0; w < alcoveWidth; w++)
+        if (northLen > 3 && rng.Next(100) < 40) // 40% chance for the pair
         {
-            for (int d = 1; d <= alcoveDepth; d++)
-            {
-                int x, y;
-                if (isHorizontal)
-                {
-                    x = startX + posOffset + w;
-                    y = startY + d * extrudeDir;
-                }
-                else
-                {
-                    x = startX + d * extrudeDir;
-                    y = startY + posOffset + w;
-                }
+            int depth = rng.Next(1, 3);           // 1-2 deep
+            int width = rng.Next(1, Math.Min(4, northLen)); // 1-3 wide, ≤ wall length
+            int posOffset = rng.Next(0, northLen - width + 1); // same position for both
 
-                // Only carve tiles strictly within the room's bounding box
-                if (room.Contains(x, y))
-                    map.SetTile(x, y, TileKind.Floor);
+            for (int w = 0; w < width; w++)
+            {
+                for (int d = 1; d <= depth; d++)
+                {
+                    int alcX = bx1 + posOffset + w;
+                    // North: extrude toward room.Y (decreasing Y)
+                    if (room.Contains(alcX, by1 - d))
+                        map.SetTile(alcX, by1 - d, TileKind.Floor);
+                    // South: extrude toward room.Y+Height (increasing Y) — mirrors North
+                    if (room.Contains(alcX, by2 - 1 + d))
+                        map.SetTile(alcX, by2 - 1 + d, TileKind.Floor);
+                }
+            }
+        }
+
+        // --- E/W alcove pair (vertical walls) ---
+        int westLen = by2 - by1;
+        if (westLen > 3 && rng.Next(100) < 40) // 40% chance for the pair
+        {
+            int depth = rng.Next(1, 3);
+            int width = rng.Next(1, Math.Min(4, westLen));
+            int posOffset = rng.Next(0, westLen - width + 1);
+
+            for (int w = 0; w < width; w++)
+            {
+                for (int d = 1; d <= depth; d++)
+                {
+                    int alcY = by1 + posOffset + w;
+                    // West: extrude toward room.X (decreasing X)
+                    if (room.Contains(bx1 - d, alcY))
+                        map.SetTile(bx1 - d, alcY, TileKind.Floor);
+                    // East: extrude toward room.X+Width (increasing X) — mirrors West
+                    if (room.Contains(bx2 - 1 + d, alcY))
+                        map.SetTile(bx2 - 1 + d, alcY, TileKind.Floor);
+                }
             }
         }
     }
@@ -549,58 +583,4 @@ public static class RoomShapeGenerator
         return reachable;
     }
 
-    /// <summary>
-    /// Check whether all Floor tiles within a room's bounding box on the GameMap
-    /// are connected (reachable from the first found floor tile).
-    /// </summary>
-    private static bool AllCarvedTilesConnected(GameMap map, Room room)
-    {
-        // Find first floor tile
-        int? startX = null, startY = null;
-        int totalFloor = 0;
-        for (int x = room.X; x < room.X + room.Width && startX == null; x++)
-            for (int y = room.Y; y < room.Y + room.Height && startX == null; y++)
-                if (map.GetTileKind(x, y) == TileKind.Floor)
-                { startX = x; startY = y; }
-
-        if (startX == null) return true; // no floor tiles — vacuously connected
-
-        // Count all floor tiles
-        for (int x = room.X; x < room.X + room.Width; x++)
-            for (int y = room.Y; y < room.Y + room.Height; y++)
-                if (map.GetTileKind(x, y) == TileKind.Floor)
-                    totalFloor++;
-
-        // BFS from first floor tile
-        var visited = new HashSet<(int, int)>();
-        var queue = new Queue<(int, int)>();
-        queue.Enqueue((startX.Value, startY.Value));
-        visited.Add((startX.Value, startY.Value));
-
-        while (queue.Count > 0)
-        {
-            var (x, y) = queue.Dequeue();
-            foreach (var (nx, ny) in new[] { (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1) })
-            {
-                if (!room.Contains(nx, ny)) continue;
-                if (visited.Contains((nx, ny))) continue;
-                if (map.GetTileKind(nx, ny) != TileKind.Floor) continue;
-                visited.Add((nx, ny));
-                queue.Enqueue((nx, ny));
-            }
-        }
-
-        return visited.Count == totalFloor;
-    }
-
-    /// <summary>
-    /// Reset all tiles in a room's bounding box back to Wall.
-    /// Used by CarveUnion when a retry is needed.
-    /// </summary>
-    private static void ResetRoom(GameMap map, Room room)
-    {
-        for (int x = room.X; x < room.X + room.Width; x++)
-            for (int y = room.Y; y < room.Y + room.Height; y++)
-                map.SetTile(x, y, TileKind.Wall);
-    }
 }

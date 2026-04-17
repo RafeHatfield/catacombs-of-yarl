@@ -64,7 +64,9 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | [PLAN_mobile_layout.md](PLAN_mobile_layout.md) | [x] | Mobile portrait layout: 5-zone UILayer, QuickSlotBar, MenuButtonBar, FloatingHpBars, MessageLogPanel (all 7 phases complete) |
 | [PLAN_topdown_switch.md](PLAN_topdown_switch.md) | [~] | Switch to top-down orthogonal rendering: 16bf 24x24 world tiles, data-driven tile themes, grey dungeon first |
 | [PLAN_wall_autotile.md](PLAN_wall_autotile.md) | [x] | Superseded: absorbed into PLAN_dungeon_visual_overhaul Phase 0 (complete) |
-| [PLAN_dungeon_visual_overhaul.md](PLAN_dungeon_visual_overhaul.md) | [~] | 3-phase visual overhaul: Phase 0 (wall autotile hybrid algorithm) complete; Phase 1 (room shapes) and Phase 2 (floor composition) not started |
+| [PLAN_dungeon_visual_overhaul.md](PLAN_dungeon_visual_overhaul.md) | [x] | All 3 phases complete: wall autotile hybrid, room shape variety (6 types), floor composition pipeline. floor_dark/accent/worn tile IDs pending Rafe's sprite survey. |
+| [PLAN_room_props_archetypes.md](PLAN_room_props_archetypes.md) | [x] | 15 room archetypes, ~65 prop types, constraint-based placement, YAML-driven config. Renderer integration complete. PROP-009 YAML migration deferred. |
+| [PLAN_level_quality_phase2.md](PLAN_level_quality_phase2.md) | [x] | Complete: symmetry, best-of-N, maintenance state, door system (logic+render+FOV), dead-end/grand shrine/vault special rooms. PROP-009 + CORR-001/002/003 deferred. |
 
 ### Deferred Feature Plans
 | Plan | Status | Description |

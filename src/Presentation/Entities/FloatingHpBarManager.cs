@@ -1,5 +1,6 @@
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Core;
+using CatacombsOfYarl.Presentation.Map;
 using Godot;
 
 namespace CatacombsOfYarl.Presentation.Entities;
@@ -33,13 +34,15 @@ public sealed class FloatingHpBarManager
     private static readonly Color FillColor = new(0.85f, 0.15f, 0.15f, 1f);
 
     private readonly Node2D _entityLayer;
+    private readonly IMapRenderer _renderer;
 
     // Keyed by entity ID. Each value is a Node2D root containing bg + fill ColorRects.
     private readonly Dictionary<int, (Node2D Root, ColorRect Fill)> _bars = new();
 
-    public FloatingHpBarManager(Node2D entityLayer)
+    public FloatingHpBarManager(Node2D entityLayer, IMapRenderer renderer)
     {
         _entityLayer = entityLayer;
+        _renderer = renderer;
     }
 
     /// <summary>
@@ -50,6 +53,10 @@ public sealed class FloatingHpBarManager
     /// - Updates an existing bar's fill width to reflect current HP.
     /// - Hides/removes bars for full-HP or non-visible monsters.
     /// - Cleans up bars for monsters no longer in AliveMonsters.
+    ///
+    /// Bar position is derived from the monster's logical grid coordinate (not the sprite's
+    /// current animated position) so the bar snaps to the correct tile immediately when
+    /// the turn resolves rather than lagging one turn behind animated movement.
     /// </summary>
     public void Refresh(GameState state, EntitySpriteManager spriteManager)
     {
@@ -73,23 +80,25 @@ public sealed class FloatingHpBarManager
                 continue;
             }
 
-            // Monster is visible and damaged — create or update its bar.
-            var sprite = spriteManager.GetSprite(monster.Id);
-            if (sprite == null)
+            // Monster is visible and damaged — check sprite exists (guard, not expected to fail).
+            if (spriteManager.GetSprite(monster.Id) == null)
             {
-                // Sprite not yet created (should not happen in normal play, but guard anyway).
                 RemoveBar(monster.Id);
                 continue;
             }
 
-            // Compute bar root position: sprite world position + upward offset,
-            // shifted left by half the bar width so the bar centers over the sprite.
-            var barPos = sprite.GlobalPosition + new Vector2(-BarWidth / 2f, VerticalOffset);
+            // Position from logical grid coordinate — not the sprite's animated position.
+            // Sprites are tweened between positions; reading sprite.GlobalPosition during
+            // OnTurnCompleted (before PlayTurn starts) gives the PRE-move position, causing
+            // the bar to lag one turn behind whenever the monster moves. Using the logical
+            // position keeps the bar anchored to where the monster will be after animation.
+            var spriteLocalPos = _renderer.GridToScreenCenter(monster.X, monster.Y);
+            var barPos = spriteLocalPos + new Vector2(-BarWidth / 2f, VerticalOffset);
 
             if (_bars.TryGetValue(monster.Id, out var existing))
             {
                 // Update existing bar position and fill width.
-                existing.Root.GlobalPosition = barPos;
+                existing.Root.Position = barPos;
                 UpdateFill(existing.Fill, fighter.Hp, fighter.MaxHp);
             }
             else
@@ -128,7 +137,8 @@ public sealed class FloatingHpBarManager
     {
         var root = new Node2D
         {
-            GlobalPosition = position,
+            // position is in entityLayer local space (from GridToScreenCenter).
+            Position = position,
             // Bars render on top of entity sprites — use a high ZIndex.
             ZIndex = 100,
         };

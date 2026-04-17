@@ -92,6 +92,11 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(List<DepthWeightEntry>)] = () => new List<DepthWeightEntry>(),
         [typeof(List<FloorItemPoolEntry>)] = () => new List<FloorItemPoolEntry>(),
         [typeof(Dictionary<string, List<WeightedItem>>)] = () => new Dictionary<string, List<WeightedItem>>(),
+        // Props
+        [typeof(PropsFile)] = () => new PropsFile(),
+        [typeof(PropDefinition)] = () => new PropDefinition(),
+        [typeof(Dictionary<string, PropDefinition>)] = () => new Dictionary<string, PropDefinition>(),
+        [typeof(List<List<int>>)] = () => new List<List<int>>(),
         [typeof(Dictionary<string, double>)] = () => new Dictionary<string, double>(),
         [typeof(Dictionary<int, LevelOverride>)] = () => new Dictionary<int, LevelOverride>(),
         [typeof(List<double>)] = () => new List<double>(),

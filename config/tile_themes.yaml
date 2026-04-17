@@ -14,7 +14,7 @@ themes:
     floor_accent: [774]
     floor_dark: [774]
     floor_interior: [774]
-    floor_worn: [774]
+    floor_worn: [3001]
     wall_autotile:
       # Bitmask: N(8)+S(4)+E(2)+W(1) — which cardinal neighbors are walls
       # Mask 0  (isolated wall, no wall neighbors)
@@ -58,6 +58,7 @@ themes:
       interior_fill: 176
     stair_down: [181]
     stair_up: [180]
+    door: [201]
     bones: [96, 90, 95]
 
 default_theme: sandstone

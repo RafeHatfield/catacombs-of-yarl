@@ -25,6 +25,18 @@ public sealed class GeneratedMap
     /// <summary>Position of the up stair, if placed. Typically null on depth > 1.</summary>
     public (int X, int Y)? StairUpPos { get; }
 
+    /// <summary>Props placed in rooms at generation time. Empty until the prop placement pass runs.</summary>
+    public IReadOnlyList<PlacedProp> Props { get; }
+
+    /// <summary>Door positions placed at corridor-room chokepoints. Empty if DoorPlacer was not run.</summary>
+    public IReadOnlyList<(int X, int Y)> DoorPositions { get; }
+
+    /// <summary>
+    /// Altar positions in Grand Shrine rooms. EntityPlacer places a guaranteed item reward
+    /// at each position. Empty on floors with no Grand Shrine.
+    /// </summary>
+    public IReadOnlyList<(int X, int Y)> GrandShrineAltarPositions { get; }
+
     public GeneratedMap(
         GameMap map,
         IReadOnlyList<Room> rooms,
@@ -32,7 +44,10 @@ public sealed class GeneratedMap
         Room playerRoom,
         (int X, int Y) playerSpawn,
         (int X, int Y)? stairDownPos,
-        (int X, int Y)? stairUpPos)
+        (int X, int Y)? stairUpPos,
+        IReadOnlyList<PlacedProp>? props = null,
+        IReadOnlyList<(int X, int Y)>? doorPositions = null,
+        IReadOnlyList<(int X, int Y)>? grandShrineAltarPositions = null)
     {
         Map = map;
         Rooms = rooms;
@@ -41,5 +56,8 @@ public sealed class GeneratedMap
         PlayerSpawn = playerSpawn;
         StairDownPos = stairDownPos;
         StairUpPos = stairUpPos;
+        Props = props ?? Array.Empty<PlacedProp>();
+        DoorPositions = doorPositions ?? Array.Empty<(int X, int Y)>();
+        GrandShrineAltarPositions = grandShrineAltarPositions ?? Array.Empty<(int X, int Y)>();
     }
 }

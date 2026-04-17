@@ -95,6 +95,13 @@ public sealed class GameState
     /// </summary>
     public GroundHazardManager GroundHazards { get; } = new();
 
+    /// <summary>
+    /// Props placed in rooms on this floor. Set by DungeonFloorBuilder after generation.
+    /// Empty in scenario mode — scenarios use flat arenas with no prop placement.
+    /// The presentation layer reads this to render prop sprites in Pass 4.
+    /// </summary>
+    public IReadOnlyList<PlacedProp> Props { get; init; } = Array.Empty<PlacedProp>();
+
     // ── Depth boon system ────────────────────────────────────────────────────
 
     /// <summary>

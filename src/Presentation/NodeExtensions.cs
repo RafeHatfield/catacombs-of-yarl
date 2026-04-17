@@ -12,10 +12,11 @@ public static class NodeExtensions
 {
     /// <summary>
     /// Remove from parent immediately, then queue for deletion.
-    /// Safe to call even if the node has no parent.
+    /// Safe to call even if the node has no parent or has already been freed.
     /// </summary>
     public static void SafeFree(this Node node)
     {
+        if (!GodotObject.IsInstanceValid(node)) return;
         node.GetParent()?.RemoveChild(node);
         node.QueueFree();
     }

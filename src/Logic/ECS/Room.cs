@@ -16,6 +16,30 @@ public enum RoomShape
 }
 
 /// <summary>
+/// The semantic purpose or identity of a room, assigned during generation.
+/// Archetype drives prop placement, monster thematic affinity, and loot table hints —
+/// it is distinct from RoomShape which describes only the carved geometry.
+/// </summary>
+public enum RoomArchetype
+{
+    Generic,         // No specific identity; default for all rooms
+    Library,         // Shelves, scrolls, books
+    Armory,          // Weapon racks, armor stands
+    Kitchen,         // Cooking equipment, food stores
+    ThroneRoom,      // Seat of power; boss-adjacent
+    Prison,          // Cells, chains, cages
+    Laboratory,      // Alchemy equipment, experiments
+    Shrine,          // Altar, candles, religious iconography
+    Storage,         // Barrels, crates, supply caches
+    Bedroom,         // Beds, wardrobes, personal items
+    Crypt,           // Sarcophagi, burial niches, undead affinity
+    FountainRoom,    // Central water feature
+    Forge,           // Anvil, bellows, metalworking
+    Sewer,           // Drainage channels, slime, rats
+    MushroomGarden,  // Bioluminescent fungi, underground flora
+}
+
+/// <summary>
 /// An axis-aligned rectangular room in a generated dungeon.
 /// X, Y are the top-left corner (inclusive). Width and Height are in tiles.
 /// Interior tiles are [X, X+Width) x [Y, Y+Height).
@@ -35,6 +59,40 @@ public sealed record Room(int X, int Y, int Width, int Height)
     /// Set with: newRoom = newRoom with { Shape = shape };
     /// </summary>
     public RoomShape Shape { get; init; } = RoomShape.Rectangle;
+
+    /// <summary>
+    /// The semantic archetype assigned to this room during generation.
+    /// Defaults to Generic so all existing new Room(x,y,w,h) call sites compile unchanged.
+    /// Set with: newRoom = newRoom with { Archetype = archetype };
+    /// </summary>
+    public RoomArchetype Archetype { get; init; } = RoomArchetype.Generic;
+
+    /// <summary>
+    /// True if this room has exactly one corridor connection and a small walkable area (≤16 tiles).
+    /// Dead-end rooms receive a loot bias in EntityPlacer — they reward players who explore
+    /// branching passages rather than rushing to the staircase.
+    /// First and last rooms are never tagged dead-end.
+    /// </summary>
+    public bool IsDeadEnd { get; init; } = false;
+
+    /// <summary>
+    /// True if this is a Shrine room with large walkable area (≥ 36 tiles).
+    /// Grand Shrine rooms use a dramatic override recipe and guarantee an item reward at the altar.
+    /// </summary>
+    public bool IsGrandShrine { get; init; } = false;
+
+    /// <summary>
+    /// True if this room has been designated as a vault. Depth 3+ only.
+    /// Vault rooms guarantee items from the floor pool and a guardian monster.
+    /// Archetype is overridden to Generic so no themed props clutter the room.
+    /// </summary>
+    public bool IsVault { get; init; } = false;
+
+    /// <summary>
+    /// How well this room has been maintained. Assigned during generation based on depth.
+    /// Affects prop density, scatter overlays, and jitter in RoomPropPlacer.
+    /// </summary>
+    public RoomMaintenanceState MaintenanceState { get; init; } = RoomMaintenanceState.Normal;
 
     /// <summary>
     /// True if this room overlaps the other room, including a 1-tile padding gap.

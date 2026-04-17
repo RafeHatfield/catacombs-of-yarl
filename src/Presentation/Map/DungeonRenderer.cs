@@ -22,6 +22,23 @@ public sealed class TileLayer
     /// Only contains base tile keys (x, y) — never offset bones overlay keys.
     /// </summary>
     public HashSet<(int X, int Y)> DarkTileKeys { get; } = new();
+
+    /// <summary>
+    /// Door overlay sprites keyed by grid position (X, Y).
+    /// Tracked separately from TileSprites so UpdateVisibility can apply FOV without
+    /// colliding with the base tile key or the bones overlay offset key.
+    /// Doors respect FOV: visible when seen, dimmed when explored, hidden when unknown.
+    /// </summary>
+    public Dictionary<(int X, int Y), Node2D> DoorOverlaySprites { get; } = new();
+
+    /// <summary>
+    /// Prop sprite nodes keyed by (PropIndex, CellOffset).
+    /// PropIndex is the index of the prop in the props list passed to Render.
+    /// CellOffset is 0 for single-tile props; 0..(FootprintW*FootprintH-1) for multi-tile.
+    /// CellOffset -1 is reserved for the overlay tile of a 1x1 prop (e.g. brazier flame on base).
+    /// UpdateVisibility modulates these via their stored grid position (GridX, GridY).
+    /// </summary>
+    public Dictionary<(int PropIndex, int CellOffset), (Node2D Sprite, int GridX, int GridY)> PropSprites { get; } = new();
 }
 
 /// <summary>
@@ -51,7 +68,7 @@ public sealed class DungeonRenderer
     ///
     /// If themeConfig is null, logs an error and returns an empty TileLayer without crashing.
     /// </summary>
-    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null, TileThemeConfig? themeConfig = null, int seed = 0)
+    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null, TileThemeConfig? themeConfig = null, int seed = 0, IReadOnlyList<PlacedProp>? props = null)
     {
         if (themeConfig == null)
         {
@@ -68,6 +85,18 @@ public sealed class DungeonRenderer
         // This is computed once here and referenced in Pass 1 and Pass 3.
         var floorMap = FloorComposer.Compose(map, seed);
 
+        // Pre-compute prop footprint positions so Pass 1 can fall back to Standard floor
+        // under blocking props. Worn and accent tiles create an unintended "pedestal" look when
+        // visible behind a fountain, bookcase, or other furniture — the prop should sit on plain floor.
+        // Dark (shadow) tiles are kept even under props: a bookshelf against a wall still casts shadow.
+        var propFootprint = new HashSet<(int, int)>();
+        if (props != null)
+            foreach (var p in props)
+                if (p.BlocksMovement)
+                    for (int fx = p.X; fx < p.X + p.FootprintW; fx++)
+                        for (int fy = p.Y; fy < p.Y + p.FootprintH; fy++)
+                            propFootprint.Add((fx, fy));
+
         // Clear any existing tiles
         foreach (var child in parent.GetChildren())
         {
@@ -79,7 +108,12 @@ public sealed class DungeonRenderer
         {
             for (int gx = 0; gx < map.Width; gx++)
             {
-                bool walkable = map.IsWalkable(gx, gy);
+                // IsWalkable returns false for prop-occupied tiles (blocking props register
+                // cells as impassable for pathfinding). For rendering the FLOOR beneath a prop,
+                // those cells must still render as floor so transparent prop pixels show floor
+                // instead of the scene background. propFootprint already contains all blocking
+                // prop positions computed before the tile loop.
+                bool walkable = map.IsWalkable(gx, gy) || propFootprint.Contains((gx, gy));
                 var screenPos = renderer.GridToScreen(gx, gy);
 
                 var tileTheme = map.GetTileTheme(gx, gy);
@@ -87,14 +121,20 @@ public sealed class DungeonRenderer
 
                 string? tilePath;
                 bool isDarkFloor = false;
+                bool isAccentFloor = false;
                 if (walkable)
                 {
                     // Use FloorComposer variant to select the appropriate tile type.
-                    // Dark and Accent variants fall back to GetFloorTile when their lists are empty
-                    // (both currently point to the same tile 774). DarkTileKeys is populated here
-                    // so UpdateVisibility can apply programmatic shadow modulation instead.
+                    // Dark tiles get programmatic shadow modulation in UpdateVisibility.
+                    // Accent tiles use FlipH/FlipV mirroring for sprite variety (4 orientations
+                    // from one asset) — better than a separate tile for dynamic light compatibility.
                     var tileType = floorMap.TryGetValue((gx, gy), out var ft) ? ft : FloorTileType.Standard;
-                    isDarkFloor = tileType == FloorTileType.Dark;
+                    // Suppress Worn and Accent under blocking props — keeps floor visually neutral
+                    // so the prop doesn't appear to sit on a pedestal. Dark shadow is kept.
+                    if (propFootprint.Contains((gx, gy)) && tileType is FloorTileType.Worn or FloorTileType.Accent)
+                        tileType = FloorTileType.Standard;
+                    isDarkFloor   = tileType == FloorTileType.Dark;
+                    isAccentFloor = tileType == FloorTileType.Accent;
                     tilePath = tileType switch
                     {
                         FloorTileType.Dark   => themeConfig.GetFloorDark(themeName, gx, gy),
@@ -109,20 +149,25 @@ public sealed class DungeonRenderer
                 {
                     var (cardinal, diagonal) = ComputeWallMasks(map, gx, gy);
 
-                    // Collapse three-wall masks to two-wall edges. Thick walls (2+ tiles
-                    // deep) cause room edge tiles to have wall mass behind them, producing
-                    // masks 7/11 (horizontal edge + wall behind) and 13/14 (vertical edge
-                    // + wall behind). These should render as simple edges (masks 3 and 12),
-                    // not T-junctions. The T-junction tiles stay in the YAML for future use
-                    // when thin walls or actual corridor junctions need them.
-                    cardinal = cardinal switch
-                    {
-                        7  => 3,  // S+E+W walls, floor N → horizontal edge (E+W walls)
-                        11 => 3,  // N+E+W walls, floor S → horizontal edge (E+W walls)
-                        13 => 12, // N+S+W walls, floor E → vertical edge (N+S walls)
-                        14 => 12, // N+S+E walls, floor W → vertical edge (N+S walls)
-                        _  => cardinal,
-                    };
+                    // Masks 7/11/13/14 are directional face tiles — NOT T-junctions.
+                    // Each has a purpose-built tile in the YAML with the face oriented toward
+                    // the single open floor direction:
+                    //   mask  7 (SEW walls, floor N) → tile 194: south face, dark band at bottom
+                    //   mask 11 (NEW walls, floor S) → tile 197: north face, dark band at top
+                    //   mask 13 (NSW walls, floor E) → tile 195: east face, band on right
+                    //   mask 14 (NSE walls, floor W) → tile 196: west face, band on left
+                    //
+                    // Collapsing these to masks 3/12 was wrong: tile 184 (mask 3) always shows
+                    // the face at the bottom, so using it for mask 11 (floor to south) pointed
+                    // the wall face away from the room — visible as a "miss" at the bottom wall.
+                    //
+                    // No collapse needed. The YAML has correct tile IDs for all 16 masks.
+                    //
+                    // NOTE: inner-corner tiles (masks 5/6/9/10) assume floor on TWO cardinal
+                    // sides, but face-endpoint tiles here have floor on only ONE side. Forcing
+                    // inner-corner tiles at face endpoints creates visual "notch" artifacts.
+                    // Room corners are instead handled by the outer-corner tiles selected by
+                    // the diagonal check below (mask 15 + diagonal → 189-192).
 
                     tilePath = themeConfig.GetWallTile(themeName, cardinal, diagonal);
                 }
@@ -134,12 +179,24 @@ public sealed class DungeonRenderer
                 }
 
                 var texture = GD.Load<Texture2D>(tilePath);
+                if (texture == null && walkable)
+                {
+                    // Variant tile missing (e.g. worn tile not yet imported by Godot editor).
+                    // Fall back to standard floor so the tile is visible instead of a hole.
+                    var fallbackPath = themeConfig.GetFloorTile(themeName, gx, gy);
+                    if (fallbackPath != null) texture = GD.Load<Texture2D>(fallbackPath);
+                    if (texture != null)
+                        GD.PrintErr($"[DungeonRenderer] Variant tile missing, using fallback: {tilePath}");
+                }
                 if (texture == null)
                 {
                     GD.PrintErr($"[DungeonRenderer] Missing tile texture: {tilePath}");
                     continue;
                 }
 
+                // Accent tiles get per-position flip flags — 4 orientations from one asset,
+                // compatible with future dynamic lighting (modulate-based, not asset-based).
+                int posHash = Math.Abs((gx * 7919 + gy * 104729) & 0x7FFFFFFF);
                 var sprite = new Sprite2D
                 {
                     Texture = texture,
@@ -147,6 +204,8 @@ public sealed class DungeonRenderer
                     Centered = false, // Position is top-left of tile image
                     ZIndex = renderer.GetTileSortOrder(gx, gy),
                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
+                    FlipH = isAccentFloor && (posHash & 1) != 0,
+                    FlipV = isAccentFloor && (posHash & 2) != 0,
                 };
 
                 parent.AddChild(sprite);
@@ -173,6 +232,7 @@ public sealed class DungeonRenderer
                 {
                     TileKind.StairDown => themeConfig.GetStairDown(themeName),
                     TileKind.StairUp   => themeConfig.GetStairUp(themeName),
+                    TileKind.Door      => themeConfig.GetDoor(themeName),
                     _                  => null,
                 };
 
@@ -200,16 +260,11 @@ public sealed class DungeonRenderer
                 };
 
                 parent.AddChild(overlay);
-                // Stair overlays share a grid cell with the floor tile below them.
-                // We store them under a unique key by offsetting into a parallel entry.
-                // This lets UpdateVisibility find and modulate them alongside the base tile.
-                // Key: (gx | StairOverlayFlag, gy) won't collide with base tiles.
-                // Simpler approach: use the same key suffixed into a separate stair overlay dict.
-                // For Phase 2, stair cells are always visible (they're on the path to the exit).
-                // We don't track overlays in tileLayer — they are always shown when the base tile
-                // at (gx, gy) is shown. Visibility is controlled via the base tile only.
-                // The overlay is a child of parent and will be hidden by the scene tree if needed.
-                // TODO Phase 3: if fine-grained overlay visibility is needed, add a stair overlay dict.
+
+                // Stair overlays are always visible (player always knows where the exit is).
+                // Door overlays respect FOV — track them so UpdateVisibility can show/hide them.
+                if (kind == TileKind.Door)
+                    tileLayer.DoorOverlaySprites[(gx, gy)] = overlay;
             }
         }
 
@@ -253,7 +308,108 @@ public sealed class DungeonRenderer
             }
         }
 
+        // Pass 4: room props — furniture, overlays, and decorative scenery placed by RoomPropPlacer.
+        // Props are tracked in TileLayer.PropSprites for per-turn FOV modulation.
+        //
+        // Non-blocking props (floor overlays: puddles, grates, moss) render at 0.7 alpha like
+        // bones — present but subordinate to entity movement above them.
+        //
+        // Multi-tile props: TileLayout is a flat row-major list (FootprintW * FootprintH entries).
+        //   Index i → grid offset dx=(i % FootprintW), dy=(i / FootprintW).
+        //
+        // Overlay tile: composite prop with two sprites at the same cell (e.g. brazier base + flame).
+        //   Stored under CellOffset=-1 so it never collides with layout cell indices.
+        if (props != null)
+        {
+            for (int propIdx = 0; propIdx < props.Count; propIdx++)
+            {
+                var prop = props[propIdx];
+                if (prop.TileId == 0 && prop.TileLayout == null) continue; // no tile assigned — skip
+
+                bool isOverlay = !prop.BlocksMovement;
+
+                if (prop.TileLayout != null && (prop.FootprintW > 1 || prop.FootprintH > 1))
+                {
+                    // Multi-tile prop: render each cell in the layout grid
+                    for (int cellIdx = 0; cellIdx < prop.TileLayout.Count; cellIdx++)
+                    {
+                        int tileId = prop.TileLayout[cellIdx];
+                        if (tileId == 0) continue; // sparse layout gap — no sprite for this cell
+
+                        int dx = cellIdx % prop.FootprintW;
+                        int dy = cellIdx / prop.FootprintW;
+                        int gx = prop.X + dx;
+                        int gy = prop.Y + dy;
+
+                        var sprite = CreatePropSprite(themeConfig, renderer, gx, gy, tileId, isOverlay);
+                        if (sprite == null) continue;
+
+                        parent.AddChild(sprite);
+                        tileLayer.PropSprites[(propIdx, cellIdx)] = (sprite, gx, gy);
+                    }
+                }
+                else
+                {
+                    // 1x1 prop: single sprite at prop anchor. Pass FlipH for flippable props (e.g. chairs).
+                    var sprite = CreatePropSprite(themeConfig, renderer, prop.X, prop.Y, prop.TileId, isOverlay, prop.FlipH);
+                    if (sprite != null)
+                    {
+                        parent.AddChild(sprite);
+                        tileLayer.PropSprites[(propIdx, 0)] = (sprite, prop.X, prop.Y);
+                    }
+
+                    // Optional overlay tile (e.g. brazier flame on top of base sprite)
+                    if (prop.OverlayTileId.HasValue && prop.OverlayTileId.Value != 0)
+                    {
+                        var overlaySprite = CreatePropSprite(themeConfig, renderer, prop.X, prop.Y, prop.OverlayTileId.Value, isOverlay);
+                        if (overlaySprite != null)
+                        {
+                            // Bump ZIndex +1 so the overlay renders above the base at the same cell
+                            overlaySprite.ZIndex = renderer.GetTileSortOrder(prop.X, prop.Y) + 3;
+                            parent.AddChild(overlaySprite);
+                            tileLayer.PropSprites[(propIdx, -1)] = (overlaySprite, prop.X, prop.Y); // -1 = overlay slot
+                        }
+                    }
+                }
+            }
+        }
+
         return tileLayer;
+    }
+
+    /// <summary>
+    /// Create a single Sprite2D for one prop tile (or multi-tile cell).
+    /// Returns null and logs an error if the texture is missing — never crashes.
+    /// isOverlay=true renders at 0.7 alpha (floor overlay: puddles, grates, moss) to stay
+    /// visually subordinate to entities moving over them.
+    /// </summary>
+    private static Sprite2D? CreatePropSprite(
+        TileThemeConfig themeConfig, IMapRenderer renderer,
+        int gx, int gy, int tileId, bool isOverlay, bool flipH = false)
+    {
+        var texturePath = themeConfig.GetTexturePath(tileId);
+        var texture = GD.Load<Texture2D>(texturePath);
+        if (texture == null)
+        {
+            GD.PrintErr($"[DungeonRenderer] Missing prop texture: {texturePath} (tileId={tileId})");
+            return null;
+        }
+
+        var screenPos = renderer.GridToScreen(gx, gy);
+
+        return new Sprite2D
+        {
+            Texture = texture,
+            Position = screenPos,
+            Centered = false,
+            // Props sit above floor (+0) and bones (+1) but below entity layer.
+            // +2 keeps them visually above floor decoration without competing with entities.
+            ZIndex = renderer.GetTileSortOrder(gx, gy) + 2,
+            TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
+            // Non-blocking overlays (puddles, grates) are 0.7 alpha like bones — subtle atmosphere
+            Modulate = isOverlay ? new Color(1f, 1f, 1f, 0.7f) : Colors.White,
+            FlipH = flipH,
+        };
     }
 
     /// <summary>
@@ -304,6 +460,54 @@ public sealed class DungeonRenderer
                 sprite.Visible = false; // never seen — hidden
             }
         }
+
+        // Door overlay sprites — respect FOV like base tiles.
+        // Doors are full opacity when visible, dim when explored, hidden when unknown.
+        foreach (var ((x, y), sprite) in layer.DoorOverlaySprites)
+        {
+            if (map.IsVisible(x, y))
+            {
+                sprite.Visible = true;
+                sprite.Modulate = Colors.White;
+            }
+            else if (map.IsExplored(x, y))
+            {
+                sprite.Visible = true;
+                sprite.Modulate = new Color(0.4f, 0.4f, 0.5f);
+            }
+            else
+            {
+                sprite.Visible = false;
+            }
+        }
+
+        // Prop sprites — FOV modulation by stored grid position.
+        // isOverlay is re-derived from Modulate.A because non-blocking props have 0.7 alpha
+        // set at creation time; blocking props (furniture) use full white.
+        foreach (var ((propIdx, cellOffset), (sprite, gx, gy)) in layer.PropSprites)
+        {
+            bool isPropOverlay = sprite.Modulate.A < 1f; // non-blocking overlays always have A=0.7
+
+            if (map.IsVisible(gx, gy))
+            {
+                sprite.Visible = true;
+                sprite.Modulate = isPropOverlay
+                    ? new Color(1f, 1f, 1f, 0.7f)
+                    : Colors.White;
+            }
+            else if (map.IsExplored(gx, gy))
+            {
+                sprite.Visible = true;
+                // Preserve alpha for overlays; solid props get the same explored tint as tiles
+                sprite.Modulate = isPropOverlay
+                    ? new Color(0.4f, 0.4f, 0.5f, 0.7f)
+                    : new Color(0.4f, 0.4f, 0.5f);
+            }
+            else
+            {
+                sprite.Visible = false;
+            }
+        }
     }
 
     // Programmatic shadow modulate for wall-adjacent Dark floor tiles when visible.
@@ -331,40 +535,42 @@ public sealed class DungeonRenderer
     /// Compute the cardinal and diagonal wall masks for autotile selection at (x, y).
     ///
     /// Cardinal mask (0–15): each bit encodes whether the corresponding cardinal
-    /// neighbor is a wall (non-walkable or out-of-bounds — border = solid wall):
+    /// neighbor is a wall tile. Uses IsWallTile (not IsWalkable) so that prop cells
+    /// — which are non-walkable but are not wall geometry — are treated as open space
+    /// and don't corrupt the autotile bitmask for adjacent real walls.
+    /// Out-of-bounds returns false from IsWallTile, so map borders do NOT count as
+    /// walls for autotile purposes (edge tiles will use the non-wall fallback).
     ///   bit3 (8) = North (y-1)
     ///   bit2 (4) = South (y+1)
     ///   bit1 (2) = East  (x+1)
     ///   bit0 (1) = West  (x-1)
     ///
     /// Diagonal mask (0–15): only computed when cardinalMask == 15 (all four cardinal
-    /// neighbors are walls). Each bit encodes whether a diagonal neighbor IS FLOOR
-    /// (walkable). A diagonal floor means this wall tile is an outer corner facing
-    /// that diagonal direction:
-    ///   bit3 (8) = NE diagonal is floor
-    ///   bit2 (4) = NW diagonal is floor
-    ///   bit1 (2) = SE diagonal is floor
-    ///   bit0 (1) = SW diagonal is floor
-    ///
-    /// IsWalkable returns false for out-of-bounds, so map borders resolve as wall.
+    /// neighbors are walls). Each bit encodes whether a diagonal neighbor is NOT a wall
+    /// (i.e. open space — floor or prop). A diagonal non-wall means this wall tile is
+    /// an outer corner facing that diagonal direction:
+    ///   bit3 (8) = NE diagonal is open
+    ///   bit2 (4) = NW diagonal is open
+    ///   bit1 (2) = SE diagonal is open
+    ///   bit0 (1) = SW diagonal is open
     /// </summary>
     private static (int Cardinal, int Diagonal) ComputeWallMasks(GameMap map, int x, int y)
     {
         int cardinal = 0;
-        if (!map.IsWalkable(x,     y - 1)) cardinal |= 8; // North
-        if (!map.IsWalkable(x,     y + 1)) cardinal |= 4; // South
-        if (!map.IsWalkable(x + 1, y    )) cardinal |= 2; // East
-        if (!map.IsWalkable(x - 1, y    )) cardinal |= 1; // West
+        if (map.IsWallTile(x,     y - 1)) cardinal |= 8; // North
+        if (map.IsWallTile(x,     y + 1)) cardinal |= 4; // South
+        if (map.IsWallTile(x + 1, y    )) cardinal |= 2; // East
+        if (map.IsWallTile(x - 1, y    )) cardinal |= 1; // West
 
         // Only check diagonals when all cardinal neighbors are walls.
         // If any cardinal is floor, this can't be an outer corner — skip diagonal work.
         int diagonal = 0;
         if (cardinal == 15)
         {
-            if (map.IsWalkable(x + 1, y - 1)) diagonal |= 8; // NE is floor
-            if (map.IsWalkable(x - 1, y - 1)) diagonal |= 4; // NW is floor
-            if (map.IsWalkable(x + 1, y + 1)) diagonal |= 2; // SE is floor
-            if (map.IsWalkable(x - 1, y + 1)) diagonal |= 1; // SW is floor
+            if (!map.IsWallTile(x + 1, y - 1)) diagonal |= 8; // NE is open
+            if (!map.IsWallTile(x - 1, y - 1)) diagonal |= 4; // NW is open
+            if (!map.IsWallTile(x + 1, y + 1)) diagonal |= 2; // SE is open
+            if (!map.IsWallTile(x - 1, y + 1)) diagonal |= 1; // SW is open
         }
 
         return (cardinal, diagonal);

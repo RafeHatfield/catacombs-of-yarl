@@ -27,13 +27,13 @@ namespace CatacombsOfYarl.Logic.Core;
 public sealed class DungeonFloorBuilder
 {
     // Defaults used when no level template override is found for a depth.
-    // Match PoC game_constants.py: 120×80, 150 attempts, 12–18 room size.
-    // PoC gets ~75 actual rooms @ ~200 avg tiles = ~15000 walkable tiles (~31% of map).
+    // Room sizes tuned for mobile: SPD-style small rooms that fit on screen.
+    // 5–10 tile sides → most rooms fully visible without scrolling on a phone.
     private const int DefaultMapWidth = 120;
     private const int DefaultMapHeight = 80;
     private const int DefaultMaxRooms = 150;
-    private const int DefaultMinRoomSize = 12;
-    private const int DefaultMaxRoomSize = 18;
+    private const int DefaultMinRoomSize = 5;
+    private const int DefaultMaxRoomSize = 10;
 
     private readonly LevelTemplateRegistry _templates;
     private readonly MonsterFactory _monsterFactory;
@@ -42,6 +42,7 @@ public sealed class DungeonFloorBuilder
     private readonly FloorItemPool _floorItemPool;
     private readonly SpellItemFactory? _spellItemFactory;
     private readonly BoonTable? _boonTable;
+    private readonly Content.PropRegistry? _propRegistry;
 
     /// <summary>
     /// All identifiable item definitions (potions, scrolls, wands, rings) for this run.
@@ -57,7 +58,8 @@ public sealed class DungeonFloorBuilder
         ConsumableFactory consumableFactory,
         FloorItemPool? floorItemPool = null,
         SpellItemFactory? spellItemFactory = null,
-        BoonTable? boonTable = null)
+        BoonTable? boonTable = null,
+        Content.PropRegistry? propRegistry = null)
     {
         _templates = templates;
         _monsterFactory = monsterFactory;
@@ -66,6 +68,7 @@ public sealed class DungeonFloorBuilder
         _floorItemPool = floorItemPool ?? [];
         _spellItemFactory = spellItemFactory;
         _boonTable = boonTable;
+        _propRegistry = propRegistry;
 
         // Collect identifiable item types for AppearancePool construction.
         // Potions come from ConsumableFactory; scrolls/wands come from SpellItemFactory.
@@ -116,7 +119,8 @@ public sealed class DungeonFloorBuilder
         IdentificationRegistry? identificationRegistry = null,
         AppearancePool? appearancePool = null,
         Difficulty difficulty = Difficulty.Medium,
-        BoonTracker? boonTracker = null)
+        BoonTracker? boonTracker = null,
+        bool explorationMode = false)
     {
         // Resolve per-depth override (null = use defaults for everything)
         var levelOverride = _templates.GetLevelOverride(depth);
@@ -135,9 +139,10 @@ public sealed class DungeonFloorBuilder
         int minRoomSize = genParams?.MinRoomSize ?? DefaultMinRoomSize;
         int maxRoomSize = genParams?.MaxRoomSize ?? DefaultMaxRoomSize;
 
-        // Generate the floor geometry
+        // Generate the floor geometry (and place props if a registry was provided)
         var generatedMap = MapGenerator.Generate(
-            mapWidth, mapHeight, maxRooms, minRoomSize, maxRoomSize, rng, stairRules);
+            mapWidth, mapHeight, maxRooms, minRoomSize, maxRoomSize, rng, stairRules,
+            depth: depth, propRegistry: _propRegistry);
 
         // Assign visual themes to rooms and corridors.
         // Themes are purely cosmetic — they drive sprite selection in DungeonRenderer.
@@ -239,7 +244,7 @@ public sealed class DungeonFloorBuilder
             // CopyComponents stores components under the IComponent key, not the concrete type key.
             foreach (var entity in guaranteed)
                 if (entity.BlocksMovement)
-                    allMonsters.Add(entity);
+                { if (!explorationMode) allMonsters.Add(entity); }
                 else
                     allFloorItems.Add(entity);
 
@@ -259,7 +264,7 @@ public sealed class DungeonFloorBuilder
 
                 foreach (var entity in filled)
                     if (entity.BlocksMovement)
-                        allMonsters.Add(entity);
+                    { if (!explorationMode) allMonsters.Add(entity); }
                     else
                         allFloorItems.Add(entity);
             }
@@ -279,7 +284,7 @@ public sealed class DungeonFloorBuilder
 
             foreach (var entity in filled)
                 if (entity.BlocksMovement)
-                    allMonsters.Add(entity);
+                { if (!explorationMode) allMonsters.Add(entity); }
                 else
                     allFloorItems.Add(entity);
         }
@@ -300,6 +305,7 @@ public sealed class DungeonFloorBuilder
             Difficulty = difficulty,
             BoonTracker = finalBoonTracker,
             BoonTable = _boonTable,
+            Props = generatedMap.Props,
         };
 
         // Apply depth boon for this floor (first visit only).

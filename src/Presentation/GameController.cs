@@ -136,14 +136,18 @@ public sealed partial class GameController : Node
         AddChild(_longPress);
         _longPress.LongPressDetected += OnLongPress;
 
-        _inspectPanel = new InspectPanel();
-        AddChild(_inspectPanel);
-
-        // Action sheet — shown on long-press of inventory/equipment slots.
-        // Must live in UILayer (CanvasLayer) to render on top of all UI elements.
-        // GameController is a plain Node, so its children render behind CanvasLayer UI.
-        _actionSheet = new ActionSheet();
+        // Both InspectPanel and ActionSheet must live in UILayer (CanvasLayer) to render
+        // on top of all game tiles and entity sprites. GameController is a plain Node —
+        // its children render in world space behind CanvasLayer UI.
         var uiLayer = GetTree()?.CurrentScene?.GetNode<CanvasLayer>("UILayer");
+
+        _inspectPanel = new InspectPanel();
+        if (uiLayer != null)
+            uiLayer.AddChild(_inspectPanel);
+        else
+            AddChild(_inspectPanel); // fallback (editor/test context)
+
+        _actionSheet = new ActionSheet();
         if (uiLayer != null)
             uiLayer.AddChild(_actionSheet);
         else

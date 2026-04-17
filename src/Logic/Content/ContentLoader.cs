@@ -282,6 +282,24 @@ public sealed class ContentLoader
     }
 
     /// <summary>
+    /// Load prop definitions from a YAML string (config/props.yaml).
+    /// Returns a PropRegistry keyed by prop ID.
+    /// </summary>
+    public PropRegistry LoadProps(string yaml)
+    {
+        var file = _deserializer.Deserialize<PropsFile>(yaml);
+        return new PropRegistry(file?.Props ?? new Dictionary<string, PropDefinition>());
+    }
+
+    /// <summary>
+    /// Load prop definitions from a YAML file path.
+    /// </summary>
+    public PropRegistry LoadPropsFromFile(string path)
+    {
+        return LoadProps(File.ReadAllText(path));
+    }
+
+    /// <summary>
     /// Load all content from a single entities YAML string.
     /// Returns monsters, items, consumables, spell items, and floor item pool in one call.
     /// </summary>
