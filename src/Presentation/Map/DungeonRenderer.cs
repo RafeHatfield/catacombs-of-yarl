@@ -161,15 +161,28 @@ public sealed class DungeonRenderer
                     // the face at the bottom, so using it for mask 11 (floor to south) pointed
                     // the wall face away from the room — visible as a "miss" at the bottom wall.
                     //
-                    // No collapse needed. The YAML has correct tile IDs for all 16 masks.
-                    //
-                    // NOTE: inner-corner tiles (masks 5/6/9/10) assume floor on TWO cardinal
-                    // sides, but face-endpoint tiles here have floor on only ONE side. Forcing
-                    // inner-corner tiles at face endpoints creates visual "notch" artifacts.
-                    // Room corners are instead handled by the outer-corner tiles selected by
-                    // the diagonal check below (mask 15 + diagonal → 189-192).
+                    // CORRIDOR EXCEPTION: directional face tiles look correct bordering rooms but
+                    // produce a prominent tooth pattern on both sides of a 1-tile corridor
+                    // (top wall → mask 11, bottom wall → mask 7, both show strong faces).
+                    // When the single open neighbor is a Corridor (not Floor), collapse back to
+                    // the plain horizontal/vertical edge tile (masks 3/12) — quieter appearance.
+                    int effectiveCardinal = cardinal;
+                    if (cardinal is 7 or 11)
+                    {
+                        // Open neighbor is N (mask 7) or S (mask 11)
+                        int openY = cardinal == 7 ? gy - 1 : gy + 1;
+                        if (map.InBounds(gx, openY) && map.GetTileKind(gx, openY) == TileKind.Corridor)
+                            effectiveCardinal = 3; // plain horizontal edge
+                    }
+                    else if (cardinal is 13 or 14)
+                    {
+                        // Open neighbor is E (mask 13) or W (mask 14)
+                        int openX = cardinal == 13 ? gx + 1 : gx - 1;
+                        if (map.InBounds(openX, gy) && map.GetTileKind(openX, gy) == TileKind.Corridor)
+                            effectiveCardinal = 12; // plain vertical edge
+                    }
 
-                    tilePath = themeConfig.GetWallTile(themeName, cardinal, diagonal);
+                    tilePath = themeConfig.GetWallTile(themeName, effectiveCardinal, diagonal);
                 }
 
                 if (tilePath == null)
@@ -249,11 +262,24 @@ public sealed class DungeonRenderer
 
                 var screenPos = renderer.GridToScreen(gx, gy);
 
+                // Doors in horizontal corridors (walls N+S, passage runs E-W) need 90° rotation.
+                // The base sprite is oriented for a vertical corridor (walls E+W, passage N-S).
+                // Rotation pivots around the tile center (Centered=true + center position) so the
+                // sprite stays within its tile regardless of orientation.
+                bool isDoorHorizontal = false;
+                if (kind == TileKind.Door)
+                {
+                    bool wallN = !map.InBounds(gx, gy - 1) || map.GetTileKind(gx, gy - 1) == TileKind.Wall;
+                    bool wallS = !map.InBounds(gx, gy + 1) || map.GetTileKind(gx, gy + 1) == TileKind.Wall;
+                    isDoorHorizontal = wallN && wallS;
+                }
+
                 var overlay = new Sprite2D
                 {
                     Texture = overlayTexture,
-                    Position = screenPos,
-                    Centered = false,
+                    Position = isDoorHorizontal ? renderer.GridToScreenCenter(gx, gy) : screenPos,
+                    Centered = isDoorHorizontal,
+                    RotationDegrees = isDoorHorizontal ? 90f : 0f,
                     // +1 above the floor tile (even) at this grid position — same band as entities, which is fine
                     ZIndex = renderer.GetTileSortOrder(gx, gy) + 1,
                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://yarl_ph_4033"
-path="res://.godot/imported/oryx_16bit_fantasy_world_4033.png-a94ebca5edc4574f40658763f792ad42.ctex"
+uid="uid://cm33nmo074pr6"
+path="res://.godot/imported/oryx_16bit_fantasy_world_4033.png-8491460b62dfbfaf13cf5a87948acf50.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_4033.png"
-dest_files=["res://.godot/imported/oryx_16bit_fantasy_world_4033.png-a94ebca5edc4574f40658763f792ad42.ctex"]
+dest_files=["res://.godot/imported/oryx_16bit_fantasy_world_4033.png-8491460b62dfbfaf13cf5a87948acf50.ctex"]
 
 [params]
 

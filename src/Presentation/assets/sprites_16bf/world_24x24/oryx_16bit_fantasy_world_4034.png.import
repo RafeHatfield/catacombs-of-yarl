@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ba5lmlsisrpaf"
-path="res://.godot/imported/anvil.png-8c791127f17640efaf2cd68d547e5c51.ctex"
+uid="uid://jqmefn8e2uhn"
+path="res://.godot/imported/oryx_16bit_fantasy_world_4034.png-5f88ae6603ce38ba492c51ccc4c386d5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tools/new-sprites/anvil.png"
-dest_files=["res://.godot/imported/anvil.png-8c791127f17640efaf2cd68d547e5c51.ctex"]
+source_file="res://src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_4034.png"
+dest_files=["res://.godot/imported/oryx_16bit_fantasy_world_4034.png-5f88ae6603ce38ba492c51ccc4c386d5.ctex"]
 
 [params]
 

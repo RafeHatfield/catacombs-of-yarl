@@ -54,7 +54,7 @@ props:
     tags: [storage, dungeon_basic]
 
   rubble:
-    tile_ids: [550]
+    tile_ids: [4034]         # Oryx 550 was a plain grey mound; replaced with AI placeholder
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
