@@ -39,6 +39,22 @@ public static class AutoExploreSystem
             if (state.Map.IsVisible(m.X, m.Y))
                 ae.KnownMonsterIds.Add(m.Id);
 
+        // Snapshot interesting items currently visible and in range — don't re-interrupt for these.
+        // Uses entity IDs so re-activating near a known-but-unpicked-up potion stays silent.
+        ae.KnownItemIds.Clear();
+        foreach (var item in state.FloorItems)
+            if (IsInterestingItem(item)
+                && state.Map.IsVisible(item.X, item.Y)
+                && state.Player.ChebyshevDistanceTo(item.X, item.Y) <= AlertRadius)
+                ae.KnownItemIds.Add(item.Id);
+
+        // Snapshot features currently visible and in range
+        ae.KnownFeatureIds.Clear();
+        foreach (var feature in state.Features)
+            if (state.Map.IsVisible(feature.X, feature.Y)
+                && state.Player.ChebyshevDistanceTo(feature.X, feature.Y) <= AlertRadius)
+                ae.KnownFeatureIds.Add(feature.Id);
+
         // Snapshot stairs already out of fog-of-war — don't interrupt for these.
         // Uses IsExplored (ever seen) not IsVisible (currently in FOV): once the player
         // has uncovered the stair tile from FoW, re-activating explore should not stop again.
@@ -74,6 +90,14 @@ public static class AutoExploreSystem
         return PlayerAction.MoveTo(ae.LastExpectedPosition.Value.X, ae.LastExpectedPosition.Value.Y);
     }
 
+    /// <summary>
+    /// True if the floor item is worth stopping auto-explore for.
+    /// Potions/scrolls/wands/rings have IdentifiableItem; weapons/armor/rings have Equippable.
+    /// Using component presence avoids fragile typeId prefix matching.
+    /// </summary>
+    private static bool IsInterestingItem(Entity item) =>
+        item.Get<IdentifiableItem>() != null || item.Get<Combat.Equippable>() != null;
+
     // How close a new monster or item must be to interrupt auto-explore.
     // The FOV radius is 8, but the screen shows roughly 5-6 tiles. Using 5 here means
     // only threats actually visible on screen will stop the player — matching Rogue Wizards
@@ -90,30 +114,22 @@ public static class AutoExploreSystem
                 && !ae.KnownMonsterIds.Contains(m.Id))
                 return $"Monster spotted: {m.Name}";
 
-        // 2. Interesting floor items visible within alert radius:
-        //    - Scrolls and wands (always interesting)
-        //    - Unidentified potions and rings
-        //    - Any equippable (weapon, armor) — always worth stopping for
+        // 2. Interesting floor items visible and in range — skip ones known at activation
         foreach (var item in state.FloorItems)
         {
-            var typeId = item.Get<ItemTag>()?.TypeId ?? "";
-            bool isInteresting = typeId.StartsWith("scroll_") || typeId.StartsWith("wand_")
-                || (typeId.StartsWith("potion_")
-                    && state.IdentificationRegistry?.IsIdentified(typeId) == false)
-                || item.Get<Combat.Equippable>() != null;
-            if (!isInteresting) continue;
+            if (!IsInterestingItem(item)) continue;
+            if (ae.KnownItemIds.Contains(item.Id)) continue;
             if (state.Map.IsVisible(item.X, item.Y)
-                && state.Player.ChebyshevDistanceTo(item.X, item.Y) <= AlertRadius
-                && !ae.ExploredSnapshot.Contains((item.X, item.Y)))
+                && state.Player.ChebyshevDistanceTo(item.X, item.Y) <= AlertRadius)
                 return $"Found: {ItemDisplay.GetDisplayName(item, state.IdentificationRegistry, state.AppearancePool)}";
         }
 
-        // 3. Interactive features (chests, signs, murals) visible within alert radius
+        // 3. Interactive features (chests, signs, murals) visible and in range
         foreach (var feature in state.Features)
         {
+            if (ae.KnownFeatureIds.Contains(feature.Id)) continue;
             if (!state.Map.IsVisible(feature.X, feature.Y)) continue;
             if (state.Player.ChebyshevDistanceTo(feature.X, feature.Y) > AlertRadius) continue;
-            if (ae.ExploredSnapshot.Contains((feature.X, feature.Y))) continue;
 
             var chest = feature.Get<ChestComponent>();
             if (chest != null && !chest.IsOpen) return "Found: chest";

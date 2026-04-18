@@ -91,7 +91,7 @@ public class FeatureInteractionTests
     }
 
     [Test]
-    public void BumpClosedChest_DropLootToFloorItems()
+    public void BumpClosedChest_LootGoesToPlayerInventory()
     {
         var ids = new EntityIdAllocator(startFrom: 10);
         var chest = new Entity(ids.Next(), "Chest", 0, 0, blocksMovement: true);
@@ -103,13 +103,15 @@ public class FeatureInteractionTests
         chest.Add(new ChestLootStash(new List<Entity> { item1, item2 }));
 
         var (state, _) = CreateStateWithFeature(chest);
+        // Ensure player has an inventory so auto-pickup can run
+        state.Player.Add(new Inventory());
 
         TurnController.ProcessTurn(state, MoveRight());
 
-        // Both items should now be in FloorItems at chest position
-        Assert.That(state.FloorItems.Count, Is.EqualTo(2), "Both loot items should appear as floor items");
-        Assert.That(state.FloorItems.All(i => i.X == 4 && i.Y == 5), Is.True,
-            "Loot should be at chest position");
+        // Items should be in player inventory (auto-picked up), not on the floor
+        var inventory = state.Player.Get<Inventory>();
+        Assert.That(inventory!.Items.Count, Is.EqualTo(2), "Both loot items should auto-pick up into inventory");
+        Assert.That(state.FloorItems.Count, Is.EqualTo(0), "No items should remain on floor after auto-pickup");
     }
 
     [Test]

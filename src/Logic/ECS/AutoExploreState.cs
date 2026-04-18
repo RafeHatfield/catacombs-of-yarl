@@ -21,6 +21,15 @@ public sealed class AutoExploreState : IComponent
     /// <summary>Monster IDs visible in FOV at activation — don't interrupt for these.</summary>
     public HashSet<int> KnownMonsterIds { get; set; } = new();
 
+    /// <summary>
+    /// Item entity IDs that were visible and in range at activation — don't re-interrupt for these.
+    /// Using entity IDs (not tile positions) so re-activating near a known potion stays silent.
+    /// </summary>
+    public HashSet<int> KnownItemIds { get; set; } = new();
+
+    /// <summary>Feature entity IDs (chests, signs, murals) visible at activation — don't re-interrupt.</summary>
+    public HashSet<int> KnownFeatureIds { get; set; } = new();
+
     /// <summary>Stair positions already seen — prevents re-triggering on the same stair.</summary>
     public HashSet<(int X, int Y)> KnownStairs { get; set; } = new();
 

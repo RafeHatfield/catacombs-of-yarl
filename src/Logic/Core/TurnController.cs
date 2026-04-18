@@ -778,23 +778,25 @@ public static class TurnController
                 return true;
             }
 
-            // Open the chest: drop all loot from ChestLootStash onto the floor at the chest's position.
+            // Open the chest: place loot at the player's tile (not the chest tile, which is
+            // non-walkable), then immediately run auto-pickup so items go to inventory.
+            // Overflow items that don't fit stay on the player's tile for manual pickup.
             chest.IsOpen = true;
 
             var lootStash = feature.Get<ChestLootStash>();
             var droppedIds = new List<int>();
+            var player = state.Player;
 
             if (lootStash != null)
             {
                 foreach (var item in lootStash.Items)
                 {
-                    item.X = feature.X;
-                    item.Y = feature.Y;
+                    item.X = player.X;
+                    item.Y = player.Y;
                     state.FloorItems.Add(item);
                     state.Map.RegisterEntity(item);
                     droppedIds.Add(item.Id);
                 }
-                // Clear the stash — items are now live floor entities.
                 lootStash.Items.Clear();
             }
 
@@ -805,7 +807,10 @@ public static class TurnController
                 DroppedItemIds = droppedIds,
             });
 
-            consumesTurn = true; // opening a chest costs a turn
+            // Auto-pick up the loot immediately — player opened the chest, items go to inventory.
+            TryPickUpItemsAt(state, player.X, player.Y, events);
+
+            consumesTurn = true;
             return true;
         }
 
