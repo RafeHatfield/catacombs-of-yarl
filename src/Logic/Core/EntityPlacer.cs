@@ -462,6 +462,183 @@ public static class EntityPlacer
     }
 
     /// <summary>
+    /// Place interactive features (chests, signposts, murals) on a dungeon floor.
+    ///
+    /// Floor-level quotas:
+    ///   - 1 chest per floor (100% chance), placed in a random non-player room.
+    ///   - 0–2 signs per floor (50/35/15 distribution), placed in non-player rooms.
+    ///   - 0–1 mural per floor (40% chance), placed wall-adjacent in a non-player room.
+    ///
+    /// All features are placed at reachable, walkable, unoccupied positions.
+    /// Features are registered on the map so pathfinding treats them as blocking.
+    ///
+    /// Returns a flat list of all created feature entities.
+    /// When signRegistry or muralRegistry is null, that feature type is skipped (scenario mode).
+    /// </summary>
+    public static List<Entity> PlaceFloorFeatures(
+        GeneratedMap map,
+        EntityIdAllocator ids,
+        SeededRandom rng,
+        int depth,
+        HashSet<(int, int)> occupied,
+        SignpostMessageRegistry? signRegistry,
+        MuralRegistry? muralRegistry,
+        MuralTracker? muralTracker,
+        IReadOnlyList<FloorItemPoolEntry>? floorItemPool = null,
+        SpellItemFactory? spellItems = null,
+        ItemFactory? items = null,
+        ConsumableFactory? consumables = null,
+        IdentificationRegistry? identRegistry = null,
+        AppearancePool? appearancePool = null,
+        Difficulty difficulty = Difficulty.Medium)
+    {
+        var placed = new List<Entity>();
+
+        // Non-player rooms for feature placement
+        var featureRooms = map.Rooms
+            .Where(r => r != map.PlayerRoom)
+            .ToList();
+
+        if (featureRooms.Count == 0)
+            return placed;
+
+        // Precompute reachable tiles for features too (avoids prop-enclosed pockets)
+        var reachable = FloodFillReachable(map.Map, map.PlayerSpawn.X, map.PlayerSpawn.Y);
+
+        // ── Chest placement (1 per floor, always) ────────────────────────────
+        {
+            var room = featureRooms[rng.Next(featureRooms.Count)];
+            var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
+            if (pos != null)
+            {
+                // Generate loot now for determinism — same seed produces same chest contents.
+                var lootEntities = floorItemPool != null && consumables != null
+                    ? ChestLootGenerator.Generate(depth, rng, ids, floorItemPool, spellItems, items, consumables,
+                        identRegistry, appearancePool, difficulty)
+                    : new List<Entity>();
+
+                var chest = FeatureFactory.CreateChest(pos.Value.X, pos.Value.Y, ids);
+                map.Map.RegisterEntity(chest);
+                occupied.Add(pos.Value);
+                placed.Add(chest);
+
+                // Register loot entities as floor items at the chest position —
+                // they are not yet accessible; they'll be dropped to FloorItems on open.
+                // Store loot item IDs on the component for TurnController to resolve.
+                var chestComp = chest.Get<ChestComponent>();
+                if (chestComp != null)
+                    foreach (var lootItem in lootEntities)
+                        chestComp.LootItemIds.Add(lootItem.Id.ToString());
+
+                // Keep loot entities in the placed list so DungeonFloorBuilder can route them.
+                // They start with no position on the map — they appear only when the chest opens.
+                // The caller (DungeonFloorBuilder) must NOT register them or add them to FloorItems
+                // until the chest is opened. Tag them with ChestLoot so the caller can identify them.
+                // For simplicity in this pass: store loot entities as pre-built items at (chestX, chestY)
+                // and add them to FloorItems — TurnController will already have them ready.
+                // Actually: PoC resolves loot at open-time. C# pass: generate at place-time and
+                // pre-position at chest coords, but only add to FloorItems on ChestOpenedEvent.
+                // Store loot in ChestLootStash on the entity. See TASK-004 for consumption.
+
+                // Attach a ChestLootStash component so TurnController can drop them on open.
+                chest.Add(new ChestLootStash(lootEntities));
+            }
+        }
+
+        // ── Sign placement (0–2 per floor) ───────────────────────────────────
+        if (signRegistry != null)
+        {
+            // 50/35/15 distribution for 0/1/2 signs
+            int signRoll = rng.Next(100);
+            int signCount = signRoll < 50 ? 0 : signRoll < 85 ? 1 : 2;
+
+            var signTypes = signRegistry.SignTypes;
+
+            for (int i = 0; i < signCount; i++)
+            {
+                var room = featureRooms[rng.Next(featureRooms.Count)];
+                var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
+                if (pos == null) continue;
+
+                string signType = signTypes[rng.Next(signTypes.Count)];
+                var (message, resolvedType) = signRegistry.GetRandomMessage(signType, depth, rng);
+
+                var sign = FeatureFactory.CreateSignpost(pos.Value.X, pos.Value.Y, ids, message, resolvedType);
+                map.Map.RegisterEntity(sign);
+                occupied.Add(pos.Value);
+                placed.Add(sign);
+            }
+        }
+
+        // ── Mural placement (0–1 per floor, wall-adjacent) ───────────────────
+        if (muralRegistry != null && muralTracker != null && rng.Next(100) < 40)
+        {
+            muralTracker.ResetForFloor();
+
+            // Find a wall-adjacent walkable tile in a non-player room
+            (int X, int Y)? muralPos = null;
+            foreach (var room in featureRooms.OrderBy(_ => rng.Next(int.MaxValue)))
+            {
+                muralPos = FindWallAdjacentPosition(map.Map, room, occupied, rng, reachable);
+                if (muralPos != null) break;
+            }
+
+            if (muralPos != null)
+            {
+                var muralData = muralTracker.GetUniqueMuralForFloor(depth, muralRegistry, rng);
+                if (muralData != null)
+                {
+                    // Pick a random tile variant (4036, 4037, 4038)
+                    int tileId = 4036 + rng.Next(3);
+
+                    var mural = FeatureFactory.CreateMural(
+                        muralPos.Value.X, muralPos.Value.Y, ids,
+                        muralData.Value.Text, muralData.Value.Id, tileId);
+                    map.Map.RegisterEntity(mural);
+                    occupied.Add(muralPos.Value);
+                    placed.Add(mural);
+                }
+            }
+        }
+
+        return placed;
+    }
+
+    /// <summary>
+    /// Find a walkable, unoccupied tile adjacent to at least one wall (cardinal neighbor).
+    /// Used for mural placement — murals should feel embedded in the stonework.
+    /// Returns null if no wall-adjacent free tile exists in the room.
+    /// </summary>
+    private static (int X, int Y)? FindWallAdjacentPosition(
+        GameMap map, Room room, HashSet<(int, int)> occupied,
+        SeededRandom rng, HashSet<(int, int)>? reachable = null)
+    {
+        var candidates = new List<(int X, int Y)>();
+        for (int x = room.X; x < room.X + room.Width; x++)
+        {
+            for (int y = room.Y; y < room.Y + room.Height; y++)
+            {
+                if (!map.IsWalkable(x, y)) continue;
+                if (occupied.Contains((x, y))) continue;
+                if (reachable != null && !reachable.Contains((x, y))) continue;
+
+                // Must have at least one cardinal wall neighbor
+                bool hasWallNeighbor =
+                    (!map.InBounds(x, y - 1) || map.GetTileKind(x, y - 1) == TileKind.Wall) ||
+                    (!map.InBounds(x, y + 1) || map.GetTileKind(x, y + 1) == TileKind.Wall) ||
+                    (!map.InBounds(x - 1, y) || map.GetTileKind(x - 1, y) == TileKind.Wall) ||
+                    (!map.InBounds(x + 1, y) || map.GetTileKind(x + 1, y) == TileKind.Wall);
+
+                if (hasWallNeighbor)
+                    candidates.Add((x, y));
+            }
+        }
+
+        if (candidates.Count == 0) return null;
+        return candidates[rng.Next(candidates.Count)];
+    }
+
+    /// <summary>
     /// Place a stair-down entity at the map's StairDownPos.
     /// Returns null if the map has no stair down position.
     /// </summary>

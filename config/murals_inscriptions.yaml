@@ -1,0 +1,164 @@
+# Murals & Inscriptions Configuration
+#
+# Examinable wall murals and ancient inscriptions throughout the dungeon.
+# Provides environmental storytelling — each ID can only appear once per floor.
+#
+# Schema:
+#   murals:
+#     - id: unique_id
+#       text: |
+#         Multi-line mural text...
+#       min_depth: 1   # optional, default 1
+#       max_depth: 99  # optional, default 99
+
+version: "1.0"
+
+murals:
+  # ==========================================================================
+  # TIER 1: Early Mystery (Levels 1-10)
+  # ==========================================================================
+
+  - id: mural_ancient_site
+    min_depth: 1
+    max_depth: 10
+    text: |
+      A vast mural depicts an ancient citadel being carved from living stone.
+      Hooded figures work methodically, their faces obscured. Runes glow
+      faintly around the construction. The scene conveys obsessive preparation
+      for something momentous.
+
+  - id: inscription_founding_order
+    min_depth: 2
+    max_depth: 8
+    text: |
+      Carved in archaic script, worn by centuries:
+      "Here stands the Citadel of the Crimson Order.
+      We seek what immortals possess.
+      We will have it."
+
+  - id: mural_ritual_ground
+    min_depth: 3
+    max_depth: 9
+    text: |
+      A faded mural shows hooded ritualists arranging objects in geometric
+      patterns. Torches burn at cardinal points. In the center lies a massive
+      circle inscribed with symbols. The craftsmanship is obsessively precise —
+      every detail meant to endure through centuries.
+
+  - id: inscription_warning_previous
+    min_depth: 4
+    max_depth: 7
+    text: |
+      Scratched hastily into stone, in different hands than the formal carvings:
+      "Don't go deeper. The ritual is still active.
+      Bodies don't stay buried here. They get taken."
+
+  - id: mural_falling_heroes
+    min_depth: 1
+    max_depth: 6
+    text: |
+      A mural of proud warriors descending into shadow. Each figure is depicted
+      progressively smaller, swallowed by the dark below. The last is barely
+      a smudge of pigment. Someone added a single word beneath in charcoal:
+      "STOP."
+
+  # ==========================================================================
+  # TIER 2: The Two Dragons (Levels 11-20)
+  # ==========================================================================
+
+  - id: mural_golden_pair
+    min_depth: 11
+    max_depth: 18
+    text: |
+      A breathtaking mural portrays two massive dragons in flight. They are
+      rendered in gold and silver leaf, their wings spread wide. They fly
+      together across an expansive sky, bonded. Their eyes glow with
+      intelligence. Whoever carved this understood dragon nature intimately.
+
+  - id: mural_ritual_preparation
+    min_depth: 12
+    max_depth: 19
+    text: |
+      Ritualists work methodically across sequential panels spanning years.
+      Early scenes show study. Middle panels show construction. The final
+      panel shows them at the ritual ground, arms raised, ready.
+      Each figure's face shows absolute determination. This was their life's work.
+
+  - id: inscription_ritual_theory
+    min_depth: 13
+    max_depth: 18
+    text: |
+      Written in scholarly hand, precise and academic:
+      "The dragon's immortal power resides in the Ruby Heart.
+      Binding ritual: attraction — capture — completion.
+      One dragon, perfectly prepared. Nothing can stop this."
+
+  - id: mural_dragon_bound
+    min_depth: 14
+    max_depth: 20
+    text: |
+      A golden dragon descends on a ritual ground, wings spread, magnificent.
+      Then: the circle ignites. Binding runes explode with light. The dragon
+      writhes, trapped. The final panel: only a crystalline Ruby Heart
+      remains, glowing on the stone.
+
+  - id: inscription_triumph
+    min_depth: 15
+    max_depth: 19
+    text: |
+      Triumphant script, exuberant and bold:
+      "THE FIRST BINDING IS COMPLETE.
+      THE RUBY HEART IS OURS.
+      TODAY, IMMORTALITY. TOMORROW, THE WORLD."
+
+  # ==========================================================================
+  # TIER 3: The Prison (Levels 18-25)
+  # ==========================================================================
+
+  - id: mural_second_dragon
+    min_depth: 18
+    max_depth: 22
+    text: |
+      A second dragon, darker and more terrible than the first, descends in
+      blind rage. Claws rake across stone. Fire erupts. Ritualists scatter.
+      The dragon's face is contorted with grief and fury — a heartbreak
+      rendered in such detail that the stone itself seems to scream.
+
+  - id: mural_incomplete_binding
+    min_depth: 19
+    max_depth: 22
+    text: |
+      A human figure lies bound in glowing chains that don't quite fit.
+      The runes are corrupted, flickering, barely holding. Around the figure,
+      ritualists collapse from exhaustion. The binding worked — partially.
+      The muralist left this scene deliberately rough, imperfect, unstable.
+
+  - id: inscription_frantic_warning
+    min_depth: 20
+    max_depth: 22
+    text: |
+      Carved frantically, almost illegibly, by hands that shook:
+      "The dragon is BOUND but not BROKEN.
+      He will not die. He will not leave.
+      We cannot kill what we have already half-destroyed.
+      What do we do? WHAT DO WE DO?"
+
+  - id: mural_souls_cycle
+    min_depth: 21
+    max_depth: 25
+    text: |
+      A haunting mural shows a bound figure reaching out with one hand.
+      Around him, translucent shapes appear — souls trapped in spectral form.
+      Bodies appear and disappear in a cycle, spiraling down. Centuries
+      of repetition. The figure stands at the center, watching, waiting.
+      His expression contains infinite despair.
+
+  - id: mural_crossroads
+    min_depth: 24
+    max_depth: 25
+    text: |
+      The final mural is unfinished, deliberately incomplete.
+      It shows a figure standing before a glowing heart, six paths branching:
+      one climbs, one descends, one transforms, one destroys, one speaks,
+      one frees. The figure's face is blank — waiting to be filled in.
+      The muralists were asking: what will YOU choose?

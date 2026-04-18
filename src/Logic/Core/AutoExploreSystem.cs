@@ -90,18 +90,36 @@ public static class AutoExploreSystem
                 && !ae.KnownMonsterIds.Contains(m.Id))
                 return $"Monster spotted: {m.Name}";
 
-        // 2. New scroll, wand, or unidentified potion visible within alert radius
+        // 2. Interesting floor items visible within alert radius:
+        //    - Scrolls and wands (always interesting)
+        //    - Unidentified potions and rings
+        //    - Any equippable (weapon, armor) — always worth stopping for
         foreach (var item in state.FloorItems)
         {
             var typeId = item.Get<ItemTag>()?.TypeId ?? "";
             bool isInteresting = typeId.StartsWith("scroll_") || typeId.StartsWith("wand_")
                 || (typeId.StartsWith("potion_")
-                    && state.IdentificationRegistry?.IsIdentified(typeId) == false);
+                    && state.IdentificationRegistry?.IsIdentified(typeId) == false)
+                || item.Get<Combat.Equippable>() != null;
             if (!isInteresting) continue;
             if (state.Map.IsVisible(item.X, item.Y)
                 && state.Player.ChebyshevDistanceTo(item.X, item.Y) <= AlertRadius
                 && !ae.ExploredSnapshot.Contains((item.X, item.Y)))
                 return $"Found: {ItemDisplay.GetDisplayName(item, state.IdentificationRegistry, state.AppearancePool)}";
+        }
+
+        // 3. Interactive features (chests, signs, murals) visible within alert radius
+        foreach (var feature in state.Features)
+        {
+            if (!state.Map.IsVisible(feature.X, feature.Y)) continue;
+            if (state.Player.ChebyshevDistanceTo(feature.X, feature.Y) > AlertRadius) continue;
+            if (ae.ExploredSnapshot.Contains((feature.X, feature.Y))) continue;
+
+            var chest = feature.Get<ChestComponent>();
+            if (chest != null && !chest.IsOpen) return "Found: chest";
+
+            if (feature.Get<SignpostComponent>() != null) return "Found: sign";
+            if (feature.Get<MuralComponent>() != null) return "Found: mural";
         }
 
         // 3. (Stairs found interrupt removed — auto-explore runs until every tile is uncovered.
@@ -142,13 +160,21 @@ public static class AutoExploreSystem
     {
         var dijkstra = Pathfinder.DijkstraMap(state.Map, state.Player.X, state.Player.Y, canPassDoors: true);
 
+        // Exclude cells occupied by blocking entities (chests, signs, murals, monsters).
+        // DijkstraMap ignores entities and assigns distances through them, but A* cannot
+        // path TO such a cell as a move destination — the player would bump-interact instead.
+        // Filtering here prevents auto-explore from ever targeting a feature or monster cell,
+        // which would cause it to auto-open chests or walk into monsters.
+        static bool NotBlocked(GameMap map, int x, int y) => !map.IsBlocked(x, y);
+
         // Pass 1: prefer tiles not in the explored snapshot (new discoveries)
         var target = Pathfinder.NearestWhere(dijkstra, state.Map.Width, state.Map.Height,
-            (x, y) => !state.Map.IsExplored(x, y) && !ae.ExploredSnapshot.Contains((x, y)));
+            (x, y) => !state.Map.IsExplored(x, y) && !ae.ExploredSnapshot.Contains((x, y))
+                      && NotBlocked(state.Map, x, y));
 
         // Pass 2: fall back to any unexplored tile (finish isolated pockets)
         target ??= Pathfinder.NearestWhere(dijkstra, state.Map.Width, state.Map.Height,
-            (x, y) => !state.Map.IsExplored(x, y));
+            (x, y) => !state.Map.IsExplored(x, y) && NotBlocked(state.Map, x, y));
 
         // Pass 3: map fully explored — path to the stair down if it exists and we're not on it
         if (target == null && state.StairDown != null

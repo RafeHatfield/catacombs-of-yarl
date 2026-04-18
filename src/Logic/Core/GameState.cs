@@ -102,6 +102,23 @@ public sealed class GameState
     /// </summary>
     public IReadOnlyList<PlacedProp> Props { get; init; } = Array.Empty<PlacedProp>();
 
+    /// <summary>
+    /// Interactive feature entities on the current floor: chests, signposts, murals.
+    /// These block movement (BlocksMovement=true) and respond to bump-interaction via TurnController.
+    /// Populated by EntityPlacer.PlaceFloorFeatures after FillRooms; empty in scenario mode.
+    /// Unlike Monsters, features have no AI or Fighter — they are purely interactive objects.
+    /// Cleared on floor transition by building a new GameState (same contract as Monsters/FloorItems).
+    /// </summary>
+    public List<Entity> Features { get; } = new();
+
+    /// <summary>
+    /// Per-run tracker ensuring mural IDs are unique within each floor.
+    /// Carries forward across floors — murals placed on floor 1 are excluded from floor 2+
+    /// until the pool is exhausted, then the tracker resets.
+    /// Null in scenario mode (harness runs without features unless explicitly enabled).
+    /// </summary>
+    public MuralTracker? MuralTracker { get; init; }
+
     // ── Depth boon system ────────────────────────────────────────────────────
 
     /// <summary>

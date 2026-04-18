@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Map;
@@ -437,5 +438,79 @@ public class AutoExploreTests
 
         var action = AutoExploreSystem.GetNextAction(state);
         Assert.That(action, Is.Null);
+    }
+
+    // -----------------------------------------------------------------------
+    // Feature blocking: chests, signs, murals
+    // -----------------------------------------------------------------------
+
+    /// <summary>
+    /// A chest placed between the player and unexplored area should never be
+    /// targeted as a move destination by auto-explore. The player stops adjacent
+    /// to it (or finds another route) — never bumps it open automatically.
+    ///
+    /// Map layout (11x9 corridor): player at (1,4), chest at (5,4).
+    /// Tiles to the right of the chest (6-9, 4) are unexplored.
+    /// Auto-explore must NOT return a path step that puts the player on (5,4).
+    /// </summary>
+    [Test]
+    public void AutoExplore_DoesNotAutoOpen_ChestInPath()
+    {
+        int width = 11, height = 9;
+        var map = new GameMap(width, height, allWalls: true);
+        // Carve a horizontal corridor
+        for (int x = 1; x < width - 1; x++)
+            map.SetTile(x, 4, TileKind.Floor);
+
+        var player = new Entity(0, "Player", 1, 4, blocksMovement: true);
+        player.Add(new Fighter(hp: 20, strength: 10, dexterity: 10, constitution: 10,
+            accuracy: 2, evasion: 1, damageMin: 1, damageMax: 4));
+        map.RegisterEntity(player);
+
+        // Place a chest at (5,4) — blocking the corridor
+        var ids = new EntityIdAllocator();
+        ids.Next(); // skip 0 (player)
+        var chest = FeatureFactory.CreateChest(5, 4, ids, new List<string>());
+        map.RegisterEntity(chest);
+
+        var monsters = new List<Entity>();
+        var state = new GameState(player, monsters, map, new SeededRandom(42))
+        {
+            IsDungeonMode = true,
+            CurrentDepth = 1
+        };
+        state.Features.Add(chest);
+
+        // Reveal only the left portion — tiles right of chest are unexplored
+        state.Map.SetVisible(1, 4);
+        state.Map.SetVisible(2, 4);
+        state.Map.SetVisible(3, 4);
+        state.Map.SetVisible(4, 4);
+        // Chest cell at (5,4) is explored (FOV reached it), right side is unknown
+        state.Map.SetVisible(5, 4);
+
+        AutoExploreSystem.Activate(state);
+
+        // Run several turns of auto-explore. Track every step target.
+        var stepTargets = new List<(int X, int Y)>();
+        const int maxSteps = 30;
+        for (int i = 0; i < maxSteps; i++)
+        {
+            var action = AutoExploreSystem.GetNextAction(state);
+            if (action == null) break;
+
+            int tx = action.TargetX!.Value;
+            int ty = action.TargetY!.Value;
+            stepTargets.Add((tx, ty));
+
+            // Move player to requested position
+            state.Player.X = tx;
+            state.Player.Y = ty;
+            state.RecomputeFov();
+        }
+
+        // The chest cell (5,4) must NEVER be a targeted step
+        Assert.That(stepTargets, Does.Not.Contain((5, 4)),
+            "Auto-explore must not target the chest cell — that would auto-open it");
     }
 }

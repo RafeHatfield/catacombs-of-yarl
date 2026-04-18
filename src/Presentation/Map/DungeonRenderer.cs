@@ -39,6 +39,15 @@ public sealed class TileLayer
     /// UpdateVisibility modulates these via their stored grid position (GridX, GridY).
     /// </summary>
     public Dictionary<(int PropIndex, int CellOffset), (Node2D Sprite, int GridX, int GridY)> PropSprites { get; } = new();
+
+    /// <summary>
+    /// Feature overlay sprites keyed by grid position (X, Y).
+    /// Covers chests (closed/open), signposts, and murals placed by EntityPlacer.PlaceFloorFeatures.
+    /// Tracked separately so UpdateVisibility can apply FOV and SwapFeatureSprite can swap
+    /// chest textures on open without reconstructing the scene tree.
+    /// Features respect FOV: visible when seen, dimmed when explored, hidden when unknown.
+    /// </summary>
+    public Dictionary<(int X, int Y), Sprite2D> FeatureOverlaySprites { get; } = new();
 }
 
 /// <summary>
@@ -68,7 +77,7 @@ public sealed class DungeonRenderer
     ///
     /// If themeConfig is null, logs an error and returns an empty TileLayer without crashing.
     /// </summary>
-    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null, TileThemeConfig? themeConfig = null, int seed = 0, IReadOnlyList<PlacedProp>? props = null)
+    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null, TileThemeConfig? themeConfig = null, int seed = 0, IReadOnlyList<PlacedProp>? props = null, IReadOnlyList<Entity>? features = null)
     {
         if (themeConfig == null)
         {
@@ -384,7 +393,65 @@ public sealed class DungeonRenderer
             }
         }
 
+        // Pass 5: interactive features — chests (closed/open), signposts, murals.
+        // Rendered as Sprite2D overlays on top of the floor tile at the same cell.
+        // Tracked in FeatureOverlaySprites so UpdateVisibility applies FOV and
+        // SwapFeatureSprite can swap chest textures when the chest is opened.
+        //
+        // Tile ID conventions (Oryx 16bf world_24x24):
+        //   261 = chest closed, 262 = chest open
+        //   4035 = signpost (used for both signs and murals in this pass)
+        //   MuralComponent.TileId stores the chosen variant (4036–4038) for future use.
+        if (features != null)
+        {
+            foreach (var feature in features)
+            {
+                int tileId = ResolveFeaturedTileId(feature);
+                if (tileId == 0) continue; // no tile assigned — unknown feature type
+
+                var texPath = themeConfig.GetTexturePath(tileId);
+                var tex = GD.Load<Texture2D>(texPath);
+                if (tex == null)
+                {
+                    GD.PrintErr($"[DungeonRenderer] Missing feature texture: {texPath} (tileId={tileId})");
+                    continue;
+                }
+
+                var screenPos = renderer.GridToScreen(feature.X, feature.Y);
+                var sprite = new Sprite2D
+                {
+                    Texture = tex,
+                    Position = screenPos,
+                    Centered = false,
+                    // Features sit at the same Z-level as props (+2) so they appear above
+                    // floor and bones overlays, but below entities.
+                    ZIndex = renderer.GetTileSortOrder(feature.X, feature.Y) + 2,
+                    TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
+                };
+                parent.AddChild(sprite);
+                tileLayer.FeatureOverlaySprites[(feature.X, feature.Y)] = sprite;
+            }
+        }
+
         return tileLayer;
+    }
+
+    /// <summary>
+    /// Resolve the tile ID for a feature entity based on its component type.
+    /// Returns 0 for unknown feature types — caller should skip those.
+    /// </summary>
+    private static int ResolveFeaturedTileId(Entity feature)
+    {
+        var chest = feature.Get<ChestComponent>();
+        if (chest != null) return chest.IsOpen ? 262 : 261;
+
+        var sign = feature.Get<SignpostComponent>();
+        if (sign != null) return 4035;
+
+        var mural = feature.Get<MuralComponent>();
+        if (mural != null) return 4035; // placeholder; TileId field reserved for future mural sprite variants
+
+        return 0;
     }
 
     /// <summary>
@@ -512,6 +579,26 @@ public sealed class DungeonRenderer
                 sprite.Modulate = isPropOverlay
                     ? new Color(0.4f, 0.4f, 0.5f, 0.7f)
                     : new Color(0.4f, 0.4f, 0.5f);
+            }
+            else
+            {
+                sprite.Visible = false;
+            }
+        }
+
+        // Feature overlay sprites — full opacity visible, dimmed explored, hidden unknown.
+        // Same FOV rules as door overlays: solid props that the player can interact with.
+        foreach (var ((x, y), sprite) in layer.FeatureOverlaySprites)
+        {
+            if (map.IsVisible(x, y))
+            {
+                sprite.Visible = true;
+                sprite.Modulate = Colors.White;
+            }
+            else if (map.IsExplored(x, y))
+            {
+                sprite.Visible = true;
+                sprite.Modulate = new Color(0.4f, 0.4f, 0.5f);
             }
             else
             {

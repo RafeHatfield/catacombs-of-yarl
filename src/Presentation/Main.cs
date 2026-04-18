@@ -396,10 +396,35 @@ public partial class Main : Node
             GD.PrintErr($"Props load failed (non-fatal — no props will appear): {ex.Message}");
         }
 
+        CatacombsOfYarl.Logic.Content.SignpostMessageRegistry? signpostRegistry = null;
+        try
+        {
+            var signYaml = ReadGodotResource("res://config/signpost_messages.yaml");
+            signpostRegistry = CatacombsOfYarl.Logic.Content.SignpostMessageRegistry.FromYaml(signYaml);
+            GD.Print($"Signpost registry loaded");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"Signpost registry load failed (non-fatal — no signs will appear): {ex.Message}");
+        }
+
+        CatacombsOfYarl.Logic.Content.MuralRegistry? muralRegistry = null;
+        try
+        {
+            var muralYaml = ReadGodotResource("res://config/murals_inscriptions.yaml");
+            muralRegistry = CatacombsOfYarl.Logic.Content.MuralRegistry.FromYaml(muralYaml);
+            GD.Print($"Mural registry loaded: {muralRegistry.Count} entries");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"Mural registry load failed (non-fatal — no murals will appear): {ex.Message}");
+        }
+
         _floorBuilder = new DungeonFloorBuilder(
             _levelTemplates, _monsterFactory, _itemFactory, _consumableFactory,
             content.FloorItemPool, spellItemFactory: _spellItemFactory,
-            boonTable: boonTable, propRegistry: propRegistry);
+            boonTable: boonTable, propRegistry: propRegistry,
+            signpostRegistry: signpostRegistry, muralRegistry: muralRegistry);
     }
 
     /// <summary>
@@ -486,7 +511,7 @@ public partial class Main : Node
         // TileThemeConfig is loaded once at boot and reused across all floor transitions.
         // Pass props from GameState so Pass 4 renders placed furniture/overlays.
         // Props is empty in scenario mode (IsDungeonMode=false) — no regression there.
-        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer, _renderer, _tileThemeConfig, props: state.Props);
+        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer, _renderer, _tileThemeConfig, props: state.Props, features: state.Features);
 
         // Entity sprites — store reference so OnTurnCompleted can call UpdateVisibility
         _entitySprites = new EntitySpriteManager(entityLayer, _spriteMapping!, _renderer);
@@ -884,6 +909,23 @@ public partial class Main : Node
             s2d.Texture = tex;
     }
 
+    /// <summary>
+    /// Swap the chest sprite from closed (tile 261) to open (tile 262) at the given cell.
+    /// Called from OnTurnCompleted when a ChestOpenedEvent fires.
+    /// Mirrors the SwapDoorSprite pattern — update existing sprite rather than recreating it.
+    /// </summary>
+    private void SwapChestSprite(int x, int y)
+    {
+        if (_tileLayer == null || _tileThemeConfig == null) return;
+        if (!_tileLayer.FeatureOverlaySprites.TryGetValue((x, y), out var sprite)) return;
+
+        // Tile 262 = chest open in Oryx 16bf world_24x24
+        var openPath = _tileThemeConfig.GetTexturePath(262);
+        var tex = ResourceLoader.Load<Texture2D>(openPath);
+        if (tex != null)
+            sprite.Texture = tex;
+    }
+
     private void OnTurnCompleted(TurnResult result)
     {
         if (_state == null) return;
@@ -907,6 +949,21 @@ public partial class Main : Node
             }
             else if (evt is DoorOpenedEvent doorEvt)
                 SwapDoorSprite(doorEvt.X, doorEvt.Y);
+            else if (evt is ChestOpenedEvent chestEvt)
+            {
+                SwapChestSprite(chestEvt.X, chestEvt.Y);
+                _toastLog?.AddMessage("You open the chest!");
+            }
+            else if (evt is SignpostReadEvent signEvt)
+            {
+                // Signs are free actions — show the message text as a toast.
+                // Sign type could drive color coding in a future pass; neutral for now.
+                _toastLog?.AddMessage($"Sign: {signEvt.Message}");
+            }
+            else if (evt is MuralExaminedEvent muralEvt)
+            {
+                _toastLog?.AddMessage($"Mural: {muralEvt.Text}");
+            }
         }
 
         if (_hud != null && _state != null)
@@ -950,7 +1007,11 @@ public partial class Main : Node
         if (builder == null) return;
         var rng = new SeededRandom(_baseSeed + newDepth * 1_000_003);
         _currentDepth = newDepth;
-        _state = builder.Build(newDepth, rng, _state?.Player, boonTracker: _state?.BoonTracker);
+        _state = builder.Build(newDepth, rng, _state?.Player,
+            identificationRegistry: _state?.IdentificationRegistry,
+            appearancePool: _state?.AppearancePool,
+            boonTracker: _state?.BoonTracker,
+            muralTracker: _state?.MuralTracker);
         SetupPresentation(_state);
     }
 

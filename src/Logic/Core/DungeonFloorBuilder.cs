@@ -43,6 +43,8 @@ public sealed class DungeonFloorBuilder
     private readonly SpellItemFactory? _spellItemFactory;
     private readonly BoonTable? _boonTable;
     private readonly Content.PropRegistry? _propRegistry;
+    private readonly Content.SignpostMessageRegistry? _signpostRegistry;
+    private readonly Content.MuralRegistry? _muralRegistry;
 
     /// <summary>
     /// All identifiable item definitions (potions, scrolls, wands, rings) for this run.
@@ -59,7 +61,9 @@ public sealed class DungeonFloorBuilder
         FloorItemPool? floorItemPool = null,
         SpellItemFactory? spellItemFactory = null,
         BoonTable? boonTable = null,
-        Content.PropRegistry? propRegistry = null)
+        Content.PropRegistry? propRegistry = null,
+        Content.SignpostMessageRegistry? signpostRegistry = null,
+        Content.MuralRegistry? muralRegistry = null)
     {
         _templates = templates;
         _monsterFactory = monsterFactory;
@@ -69,6 +73,8 @@ public sealed class DungeonFloorBuilder
         _spellItemFactory = spellItemFactory;
         _boonTable = boonTable;
         _propRegistry = propRegistry;
+        _signpostRegistry = signpostRegistry;
+        _muralRegistry = muralRegistry;
 
         // Collect identifiable item types for AppearancePool construction.
         // Potions come from ConsumableFactory; scrolls/wands come from SpellItemFactory.
@@ -120,7 +126,8 @@ public sealed class DungeonFloorBuilder
         AppearancePool? appearancePool = null,
         Difficulty difficulty = Difficulty.Medium,
         BoonTracker? boonTracker = null,
-        bool explorationMode = false)
+        bool explorationMode = false,
+        MuralTracker? muralTracker = null)
     {
         // Resolve per-depth override (null = use defaults for everything)
         var levelOverride = _templates.GetLevelOverride(depth);
@@ -292,6 +299,35 @@ public sealed class DungeonFloorBuilder
         // Place stair down
         var stairDown = EntityPlacer.PlaceStairDown(generatedMap, targetDepth: depth + 1, ids);
 
+        // Place floor features (chests, signs, murals) — after monsters and items so they don't
+        // collide. Build an occupied set from all entities already placed plus spawn and stairs.
+        var allFeatures = new List<Entity>();
+        if (_signpostRegistry != null || _muralRegistry != null || _floorItemPool.Count > 0)
+        {
+            // MuralTracker: carry forward per-run to prevent same mural appearing twice in a run.
+            // On new run (no existing tracker), create fresh. On floor transition, carry forward.
+            var finalMuralTracker = muralTracker ?? (_muralRegistry != null ? new MuralTracker() : null);
+
+            // Build occupied set from all entities placed so far (player, monsters, items, stair).
+            var occupied = new HashSet<(int, int)>();
+            occupied.Add((generatedMap.PlayerSpawn.X, generatedMap.PlayerSpawn.Y));
+            if (generatedMap.StairDownPos.HasValue) occupied.Add(generatedMap.StairDownPos.Value);
+            if (generatedMap.StairUpPos.HasValue) occupied.Add(generatedMap.StairUpPos.Value);
+            foreach (var m in allMonsters) occupied.Add((m.X, m.Y));
+            foreach (var fi in allFloorItems) occupied.Add((fi.X, fi.Y));
+
+            allFeatures = EntityPlacer.PlaceFloorFeatures(
+                generatedMap, ids, rng, depth, occupied,
+                _signpostRegistry, _muralRegistry, finalMuralTracker,
+                _floorItemPool, _spellItemFactory, _itemFactory, _consumableFactory,
+                finalRegistry, finalPool, difficulty);
+
+            // Don't pass mural tracker for new-run case — Build() doesn't have the old state.
+            // Caller (GameController) must thread muralTracker through floor transitions.
+            // Store finalMuralTracker back so the caller can read it off the returned GameState.
+            muralTracker = finalMuralTracker;
+        }
+
         // BoonTracker: carry forward from previous floor, or create fresh for new run
         var finalBoonTracker = boonTracker ?? new BoonTracker();
 
@@ -306,6 +342,7 @@ public sealed class DungeonFloorBuilder
             BoonTracker = finalBoonTracker,
             BoonTable = _boonTable,
             Props = generatedMap.Props,
+            MuralTracker = muralTracker,
         };
 
         // Apply depth boon for this floor (first visit only).
@@ -317,6 +354,10 @@ public sealed class DungeonFloorBuilder
         // Register floor items into state
         foreach (var item in allFloorItems)
             state.FloorItems.Add(item);
+
+        // Register features into state (chests, signs, murals)
+        foreach (var feature in allFeatures)
+            state.Features.Add(feature);
 
         // Compute initial FOV so the player sees their starting area immediately.
         // This must happen after IsDungeonMode=true is set — RecomputeFov is a no-op

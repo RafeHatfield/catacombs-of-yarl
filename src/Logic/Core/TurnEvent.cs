@@ -439,6 +439,42 @@ public sealed class PortalRemovedEvent : TurnEvent
 }
 
 /// <summary>
+/// Emitted when the player opens a chest by bumping into it.
+/// DroppedItemIds contains all entity IDs of items placed on the floor.
+/// Presentation layer swaps chest sprite from closed (261) to open (262).
+/// </summary>
+public sealed class ChestOpenedEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+    public IReadOnlyList<int> DroppedItemIds { get; init; } = Array.Empty<int>();
+}
+
+/// <summary>
+/// Emitted when the player reads a signpost by bumping into it. Free action — no turn consumed.
+/// Presentation layer shows a popup with Message.
+/// </summary>
+public sealed class SignpostReadEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+    public string Message { get; init; } = "";
+    public string SignType { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted when the player examines a mural by bumping into it. Costs a turn.
+/// Presentation layer shows a popup with Text.
+/// </summary>
+public sealed class MuralExaminedEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+    public string Text { get; init; } = "";
+    public string MuralId { get; init; } = "";
+}
+
+/// <summary>
 /// Emitted when a wraith (or other life drain monster) heals from melee damage.
 /// </summary>
 public sealed class LifeDrainEvent : TurnEvent

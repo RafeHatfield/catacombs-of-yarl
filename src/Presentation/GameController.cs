@@ -739,7 +739,8 @@ public sealed partial class GameController : Node
                     _state.Map,
                     _state.Player.X, _state.Player.Y,
                     tx, ty,
-                    _state.Player);
+                    _state.Player,
+                    canPassDoors: true);
 
                 if (path == null || path.Count == 0) return; // Unreachable — silently ignore
 

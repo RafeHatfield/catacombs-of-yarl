@@ -147,6 +147,14 @@ public sealed class InputHandler
             return;
         }
 
+        // Tapped a closed door → treat as MoveTo so TurnController can open it.
+        if (_state.Map.GetTileKind(gridX, gridY) == TileKind.Door)
+        {
+            Diag.Log($"HandleTap OPEN_DOOR ({gridX},{gridY})");
+            ActionChosen?.Invoke(PlayerAction.MoveTo(gridX, gridY));
+            return;
+        }
+
         Diag.Log($"HandleTap NO_ACTION at ({gridX},{gridY}) — not walkable, no monster");
     }
 

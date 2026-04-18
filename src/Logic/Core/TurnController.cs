@@ -43,10 +43,26 @@ public static class TurnController
         // Effects applied to MONSTERS during the player's action (e.g. Fear scroll) ARE
         // decremented in the same round by the monster's ProcessTurnEnd at the end of its turn.
         // This is correct: the monster takes its full turn before the round ends.
+
+        // freeAction: true when the player reads a signpost. Sign reads don't cost a turn —
+        // TurnCount is decremented back, monster turns are skipped, status ticks are skipped.
+        // Mirrors PoC behavior where reading a sign is "looking," not a game action.
+        bool freeAction = false;
+
         bool playerSkipTurn = StatusEffectProcessor.ProcessTurnStart(state.Player, events, state.TurnCount);
         if (!playerSkipTurn)
-            ResolvePlayerAction(state, action, events, monsterFactory, portalEntityFactory);
-        StatusEffectProcessor.ProcessTurnEnd(state.Player, events);
+            ResolvePlayerAction(state, action, events, monsterFactory, portalEntityFactory, out freeAction);
+
+        // Sign reads are free actions: reverse the TurnCount increment so the game clock
+        // does not advance. Status ticks are also skipped (no ProcessTurnEnd this cycle).
+        if (freeAction)
+        {
+            state.TurnCount--;
+        }
+        else
+        {
+            StatusEffectProcessor.ProcessTurnEnd(state.Player, events);
+        }
 
         // Ring of Regeneration: passive heal every 5 turns (not turn 0).
         // Checked after the player acts so the heal happens at the end of their action phase.
@@ -82,7 +98,8 @@ public static class TurnController
         bool descended = events.Any(e => e is DescendEvent);
         if (descended)
             state.Corpses.Clear(); // Corpses don't follow the player to the next floor
-        if (!descended && state.PlayerFighter.IsAlive)
+        // Skip monster turns for free actions (sign reads) — they don't advance game time.
+        if (!descended && !freeAction && state.PlayerFighter.IsAlive)
         {
             ResolveMonsterTurns(state, events, monsterFactory, portalEntityFactory);
             TickEnvironment(state, events, monsterFactory);
@@ -179,8 +196,9 @@ public static class TurnController
     }
 
     private static void ResolvePlayerAction(GameState state, PlayerAction action, List<TurnEvent> events,
-        MonsterFactory? monsterFactory, EntityFactory? portalEntityFactory)
+        MonsterFactory? monsterFactory, EntityFactory? portalEntityFactory, out bool freeAction)
     {
+        freeAction = false;
         var player = state.Player;
 
         switch (action.Kind)
@@ -195,8 +213,10 @@ public static class TurnController
                 break;
 
             case PlayerAction.ActionKind.Move:
-                ResolvePlayerMove(state, action, events);
-                player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                ResolvePlayerMove(state, action, events, out freeAction);
+                // Don't reset momentum for free actions (sign reads) — momentum is unchanged.
+                if (!freeAction)
+                    player.Get<SpeedBonusTracker>()?.ResetMomentum();
                 break;
 
             case PlayerAction.ActionKind.Wait:
@@ -618,8 +638,10 @@ public static class TurnController
         return found;
     }
 
-    private static void ResolvePlayerMove(GameState state, PlayerAction action, List<TurnEvent> events)
+    private static void ResolvePlayerMove(GameState state, PlayerAction action, List<TurnEvent> events,
+        out bool freeAction)
     {
+        freeAction = false;
         var player = state.Player;
         int fromX = player.X, fromY = player.Y;
 
@@ -653,6 +675,7 @@ public static class TurnController
             int randomDestX = player.X + rdx;
             int randomDestY = player.Y + rdy;
 
+            // Disoriented moves: no feature interaction (player doesn't know where they're going)
             // Door check for disoriented move (player always can open doors)
             if (TryOpenDoor(state.Map, player, randomDestX, randomDestY, events))
                 return;
@@ -660,12 +683,26 @@ public static class TurnController
         }
         else if (action.Target != null)
         {
+            // Feature interaction: check before door/move. Returns true if handled (caller skips move).
+            // consumesTurn=false → sign read → freeAction=true (no turn cost).
+            if (TryInteractFeature(state, action.Target.X, action.Target.Y, events, out bool consumesTurnA))
+            {
+                freeAction = !consumesTurnA;
+                return;
+            }
             if (TryOpenDoorOnPath(state.Map, player, action.Target.X, action.Target.Y, events))
                 return;
             moved = state.Map.MoveToward(player, action.Target.X, action.Target.Y);
         }
         else if (action.TargetX.HasValue && action.TargetY.HasValue)
         {
+            // Feature interaction: check before door/move. Returns true if handled (caller skips move).
+            // consumesTurn=false → sign read → freeAction=true (no turn cost).
+            if (TryInteractFeature(state, action.TargetX.Value, action.TargetY.Value, events, out bool consumesTurnB))
+            {
+                freeAction = !consumesTurnB;
+                return;
+            }
             if (TryOpenDoor(state.Map, player, action.TargetX.Value, action.TargetY.Value, events))
                 return;
             moved = state.Map.MoveToward(player, action.TargetX.Value, action.TargetY.Value);
@@ -700,6 +737,117 @@ public static class TurnController
             // Walk-over pickup: auto-collect any floor item at the new position
             TryPickUpItemsAt(state, player.X, player.Y, events);
         }
+    }
+
+    /// <summary>
+    /// Check if a feature entity (chest, signpost, mural) is at the given tile and interact with it.
+    ///
+    /// Called before door/move logic in ResolvePlayerMove. Returns true when the bump is fully
+    /// consumed by the feature (movement should not also apply this turn).
+    ///
+    /// consumesTurn (out): true when the interaction costs a game turn; false for free actions.
+    ///   - Chest (closed): costs a turn (loot drop, game time advances)
+    ///   - Chest (open): costs no turn (blocked bump, but nothing to do)
+    ///   - Signpost: free action (no turn consumed — clock does not advance)
+    ///   - Mural: costs a turn (reading a mural is a deliberate action)
+    ///
+    /// The caller uses consumesTurn via the freeAction flag to decide whether TurnCount
+    /// is decremented and monster turns are skipped.
+    /// </summary>
+    private static bool TryInteractFeature(GameState state, int x, int y, List<TurnEvent> events,
+        out bool consumesTurn)
+    {
+        consumesTurn = true; // default: costs a turn (safe for unhandled cases)
+
+        // Find the first feature entity at this tile.
+        var feature = state.Features.FirstOrDefault(f => f.X == x && f.Y == y);
+        if (feature == null)
+        {
+            consumesTurn = true;
+            return false; // no feature here — let normal door/move logic proceed
+        }
+
+        var chest = feature.Get<ChestComponent>();
+        if (chest != null)
+        {
+            if (chest.IsOpen)
+            {
+                // Already open chest: bump is consumed (player can't walk through it — it blocks
+                // movement) but no turn is spent and no event is emitted. The player just bumps.
+                consumesTurn = false;
+                return true;
+            }
+
+            // Open the chest: drop all loot from ChestLootStash onto the floor at the chest's position.
+            chest.IsOpen = true;
+
+            var lootStash = feature.Get<ChestLootStash>();
+            var droppedIds = new List<int>();
+
+            if (lootStash != null)
+            {
+                foreach (var item in lootStash.Items)
+                {
+                    item.X = feature.X;
+                    item.Y = feature.Y;
+                    state.FloorItems.Add(item);
+                    state.Map.RegisterEntity(item);
+                    droppedIds.Add(item.Id);
+                }
+                // Clear the stash — items are now live floor entities.
+                lootStash.Items.Clear();
+            }
+
+            events.Add(new ChestOpenedEvent
+            {
+                X = feature.X,
+                Y = feature.Y,
+                DroppedItemIds = droppedIds,
+            });
+
+            consumesTurn = true; // opening a chest costs a turn
+            return true;
+        }
+
+        var sign = feature.Get<SignpostComponent>();
+        if (sign != null)
+        {
+            // Reading a sign is a free action — emits event even if already read before.
+            // PoC: re-reading a sign is allowed (same message each time).
+            sign.HasBeenRead = true;
+
+            events.Add(new SignpostReadEvent
+            {
+                X = feature.X,
+                Y = feature.Y,
+                Message = sign.Message,
+                SignType = sign.SignType,
+            });
+
+            consumesTurn = false; // sign read is a free action — TurnCount will be reversed
+            return true;
+        }
+
+        var mural = feature.Get<MuralComponent>();
+        if (mural != null)
+        {
+            mural.HasBeenExamined = true;
+
+            events.Add(new MuralExaminedEvent
+            {
+                X = feature.X,
+                Y = feature.Y,
+                Text = mural.Text,
+                MuralId = mural.MuralId,
+            });
+
+            consumesTurn = true; // reading a mural costs a turn
+            return true;
+        }
+
+        // Feature exists but has no recognized component — treat as a blocking bump.
+        consumesTurn = false;
+        return true;
     }
 
     /// <summary>
