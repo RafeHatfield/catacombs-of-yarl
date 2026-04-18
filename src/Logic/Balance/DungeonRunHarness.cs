@@ -253,7 +253,8 @@ public sealed class DungeonRunHarness
                             state.Map,
                             state.Player.X, state.Player.Y,
                             state.StairDown.X, state.StairDown.Y,
-                            state.Player);
+                            state.Player,
+                            canPassDoors: true);
 
                         if (path != null && path.Count > 0)
                         {
@@ -297,7 +298,8 @@ public sealed class DungeonRunHarness
                             state.Map,
                             state.Player.X, state.Player.Y,
                             target.X, target.Y,
-                            state.Player);
+                            state.Player,
+                            canPassDoors: true);
 
                         if (path != null && path.Count > 0)
                         {

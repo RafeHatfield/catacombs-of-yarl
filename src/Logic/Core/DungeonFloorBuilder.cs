@@ -406,7 +406,10 @@ public sealed class DungeonFloorBuilder
             accuracy: 3,
             evasion: 0,
             damageMin: 1,
-            damageMax: 2)); // unarmed; dagger equipped below overrides this in CombatResolver
+            damageMax: 2) // unarmed; dagger equipped below overrides this in CombatResolver
+        {
+            CanOpenDoors = true, // player can always open doors
+        });
 
         // Starting equipment — from PoC initialize_new_game.py
         var equipment = new Combat.Equipment();

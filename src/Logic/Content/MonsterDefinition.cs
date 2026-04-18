@@ -72,6 +72,14 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "can_seek_items")]
     public bool CanSeekItems { get; set; }
 
+    /// <summary>
+    /// Whether this monster can open closed doors during movement.
+    /// Intelligent monsters (orcs, humans, cultists) set true.
+    /// Mindless monsters (undead, slimes) leave false (default).
+    /// </summary>
+    [YamlMember(Alias = "can_open_doors")]
+    public bool CanOpenDoors { get; set; }
+
     [YamlMember(Alias = "seek_distance")]
     public int SeekDistance { get; set; } = 5;
 

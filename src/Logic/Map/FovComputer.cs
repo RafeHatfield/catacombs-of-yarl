@@ -127,6 +127,7 @@ public static class FovComputer
     private static bool BlocksSight(GameMap map, int x, int y)
     {
         if (!map.InBounds(x, y)) return true;
-        return map.GetTileKind(x, y) == TileKind.Wall;
+        var kind = map.GetTileKind(x, y);
+        return kind == TileKind.Wall || kind == TileKind.Door;
     }
 }

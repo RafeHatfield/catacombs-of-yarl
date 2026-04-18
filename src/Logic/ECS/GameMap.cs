@@ -165,11 +165,26 @@ public sealed class GameMap
     public void UnmarkPropCell(int x, int y) => _propCells.Remove((x, y));
 
     /// <summary>
-    /// Returns true only for actual wall tiles (tile array = Wall).
-    /// Used by the wall autotile renderer — does NOT include prop cells.
-    /// This separation prevents prop sprites from generating wall graphics around them.
+    /// Returns true only for actual Wall tiles.
+    /// Used by the wall autotile renderer — does NOT include prop cells or closed doors.
+    /// Closed doors are non-walkable but must not be treated as walls for autotile purposes.
     /// </summary>
-    public bool IsWallTile(int x, int y) => InBounds(x, y) && !_walkable[x, y];
+    public bool IsWallTile(int x, int y) => InBounds(x, y) && _tiles[x, y] == TileKind.Wall;
+
+    /// <summary>Returns true for Door (closed) or DoorOpen (open).</summary>
+    public bool IsDoorTile(int x, int y) =>
+        InBounds(x, y) && (_tiles[x, y] == TileKind.Door || _tiles[x, y] == TileKind.DoorOpen);
+
+    /// <summary>
+    /// Open a closed door at (x, y). Changes Door → DoorOpen (walkable, LOS-transparent).
+    /// No-op if the tile is not a closed Door. Returns true if a door was opened.
+    /// </summary>
+    public bool OpenDoor(int x, int y)
+    {
+        if (!InBounds(x, y) || _tiles[x, y] != TileKind.Door) return false;
+        SetTile(x, y, TileKind.DoorOpen);
+        return true;
+    }
 
     /// <summary>Returns the tile kind at (x, y). Returns Wall if out of bounds.</summary>
     public TileKind GetTileKind(int x, int y)
@@ -194,7 +209,8 @@ public sealed class GameMap
             TileKind.Corridor => true,
             TileKind.StairDown => true,
             TileKind.StairUp => true,
-            TileKind.Door => true,
+            TileKind.Door => false,      // closed door blocks movement until opened
+            TileKind.DoorOpen => true,  // open door is walkable
             TileKind.Wall => false,
             TileKind.Trap => false,
             _ => false,
@@ -242,10 +258,13 @@ public sealed class GameMap
     /// Check if a tile can be moved into, with optional exclusions.
     /// excludeEntity: this entity is not counted as a blocker (an entity can't block itself).
     /// ignoreEntityAtDest: when true, entity blocking at (x,y) is ignored — allows pathing TO an occupied tile.
+    /// canPassDoors: when true, closed Door tiles count as passable for pathfinding purposes.
+    ///   The door is NOT opened by this check — callers must call OpenDoor before actually moving through.
     /// </summary>
-    public bool CanMoveToWith(int x, int y, Entity? excludeEntity, bool ignoreEntityAtDest = false)
+    public bool CanMoveToWith(int x, int y, Entity? excludeEntity, bool ignoreEntityAtDest = false, bool canPassDoors = false)
     {
-        if (!IsWalkable(x, y)) return false;
+        bool passable = IsWalkable(x, y) || (canPassDoors && InBounds(x, y) && _tiles[x, y] == TileKind.Door);
+        if (!passable) return false;
         return !_entities.Any(e =>
             e.X == x && e.Y == y
             && e.BlocksMovement

@@ -29,8 +29,10 @@ namespace CatacombsOfYarl.Presentation.UI;
 public sealed partial class EquipmentPanel : Control
 {
     private const int SlotSize       = 90;  // px — each equipment slot is a square
-    private const int PackSlotSize   = 76;  // px — smaller slots in the In Pack strip
     private const int SlotLabelH     = 20;  // px — slot label below each slot
+    private const int PackColumns    = 6;   // columns in the In Pack grid
+    private const int PackSlotGap    = 6;   // px — gap between pack slots
+    private int _packSlotSize;              // computed from viewport width in BuildLayout
 
     private static readonly Color SlotBgEmpty    = new(0.12f, 0.12f, 0.18f, 0.9f);
     private static readonly Color SlotBgOccupied = new(0.18f, 0.16f, 0.10f, 0.95f);
@@ -366,22 +368,24 @@ public sealed partial class EquipmentPanel : Control
         packLabel.AddThemeColorOverride("font_color", new Color(0.75f, 0.75f, 0.75f, 1f));
         vbox.AddChild(packLabel);
 
-        // Pack strip: ScrollContainer with horizontal scroll so many items don't overflow.
-        // The inner HBoxContainer is rebuilt each Refresh and must NOT use ExpandFill —
-        // it should grow to its natural content width so the ScrollContainer can scroll it.
-        var packScroll = new ScrollContainer
-        {
-            CustomMinimumSize          = new Vector2(0, PackSlotSize + 12), // +12 for scrollbar
-            SizeFlagsHorizontal        = SizeFlags.ExpandFill,
-            HorizontalScrollMode       = ScrollContainer.ScrollMode.ShowAlways,
-            VerticalScrollMode         = ScrollContainer.ScrollMode.Disabled,
-        };
-        // The scroll container itself shouldn't block all input — let _GuiInput handle taps.
-        packScroll.MouseFilter = MouseFilterEnum.Pass;
-        vbox.AddChild(packScroll);
+        // Pack grid: fixed columns, no scroll. Slot size computed from available viewport width.
+        var viewportWidth = GetViewport().GetVisibleRect().Size.X;
+        const float panelPadding = 64f; // 16+16 panelContainer insets + 16+16 inner margin
+        _packSlotSize = Mathf.FloorToInt((viewportWidth - panelPadding - (PackColumns - 1) * PackSlotGap) / PackColumns);
 
-        // _packStrip is the ScrollContainer; RebuildPackStrip adds/clears the inner HBoxContainer.
-        _packStrip = packScroll;
+        var packGrid = new GridContainer
+        {
+            SizeFlagsHorizontal = SizeFlags.ExpandFill,
+            SizeFlagsVertical   = SizeFlags.ShrinkBegin,
+            MouseFilter         = MouseFilterEnum.Ignore,
+        };
+        packGrid.Columns = PackColumns;
+        packGrid.AddThemeConstantOverride("h_separation", PackSlotGap);
+        packGrid.AddThemeConstantOverride("v_separation", PackSlotGap);
+        vbox.AddChild(packGrid);
+
+        // _packStrip is the GridContainer; RebuildPackStrip adds/clears slot children directly.
+        _packStrip = packGrid;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -579,17 +583,6 @@ public sealed partial class EquipmentPanel : Control
             .Where(item => item.Get<Equippable>() != null && !equippedIds.Contains(item.Id))
             .ToList() ?? new List<Entity>();
 
-        var hbox = new HBoxContainer
-        {
-            // ShrinkBegin so the HBox grows to natural content width rather than being
-            // forced to match the ScrollContainer. This allows horizontal scrolling when
-            // there are more pack items than fit in the visible strip.
-            SizeFlagsHorizontal = SizeFlags.ShrinkBegin,
-            MouseFilter         = MouseFilterEnum.Ignore,
-        };
-        hbox.AddThemeConstantOverride("separation", 6);
-        _packStrip.AddChild(hbox);
-
         if (equippables.Count == 0)
         {
             var emptyLabel = new Label
@@ -599,14 +592,14 @@ public sealed partial class EquipmentPanel : Control
             };
             emptyLabel.AddThemeFontSizeOverride("font_size", 16);
             emptyLabel.AddThemeColorOverride("font_color", new Color(0.45f, 0.45f, 0.5f, 1f));
-            hbox.AddChild(emptyLabel);
+            _packStrip.AddChild(emptyLabel);
             return;
         }
 
         foreach (var item in equippables)
         {
             var slot = BuildPackSlot(item);
-            hbox.AddChild(slot);
+            _packStrip.AddChild(slot);
         }
     }
 
@@ -614,7 +607,7 @@ public sealed partial class EquipmentPanel : Control
     {
         var container = new Control
         {
-            CustomMinimumSize = new Vector2(PackSlotSize, PackSlotSize),
+            CustomMinimumSize = new Vector2(_packSlotSize, _packSlotSize),
             MouseFilter       = MouseFilterEnum.Ignore,
         };
         container.SetMeta("pack_item_id", item.Id);
@@ -623,7 +616,7 @@ public sealed partial class EquipmentPanel : Control
         bg.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         container.AddChild(bg);
 
-        var icon = BuildItemIcon(item, PackSlotSize - 8);
+        var icon = BuildItemIcon(item, _packSlotSize - 8);
         icon.OffsetLeft = 4; icon.OffsetTop = 4;
         icon.OffsetRight = -4; icon.OffsetBottom = -4;
         icon.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
@@ -752,7 +745,33 @@ public sealed partial class EquipmentPanel : Control
 
         string hit = toHitBonus >= 0 ? $"+{toHitBonus}" : $"{toHitBonus}";
 
-        return $"HP {hp}/{maxHp}   ATK {atk}   HIT {hit}   AC {ac}";
+        var line1 = $"HP {hp}/{maxHp}   ATK {atk}   HIT {hit}   AC {ac}";
+
+        var speed = state.Player.Get<SpeedBonusTracker>();
+        if (speed == null || speed.SpeedBonusRatio <= 0)
+            return line1;
+
+        int pct       = (int)Math.Round(speed.SpeedBonusRatio * 100);
+        int threshold = Mathf.CeilToInt((float)(1.0 / speed.SpeedBonusRatio));
+        int counter   = speed.AttackCounter;
+
+        string sources = "";
+        if (speed.BaseRatio > 0 && (speed.EquipmentRatio > 0 || speed.RingRatio > 0))
+        {
+            var parts = new List<string>();
+            if (speed.EquipmentRatio > 0) parts.Add($"equip +{(int)Math.Round(speed.EquipmentRatio * 100)}%");
+            if (speed.RingRatio > 0)      parts.Add($"ring +{(int)Math.Round(speed.RingRatio * 100)}%");
+            sources = $" ({string.Join(", ", parts)})";
+        }
+        else if (speed.BaseRatio <= 0)
+        {
+            var parts = new List<string>();
+            if (speed.EquipmentRatio > 0) parts.Add($"equip");
+            if (speed.RingRatio > 0)      parts.Add($"ring");
+            sources = parts.Count > 0 ? $" ({string.Join(" + ", parts)})" : "";
+        }
+
+        return $"{line1}\nSPD +{pct}%{sources}   [{counter}/{threshold}]";
     }
 
     // ─────────────────────────────────────────────────────────────────────────

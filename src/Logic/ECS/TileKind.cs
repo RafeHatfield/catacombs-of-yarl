@@ -11,6 +11,7 @@ public enum TileKind
     Corridor,
     StairDown,
     StairUp,
-    Door,
+    Door,       // Closed door — blocks movement and LOS until opened
+    DoorOpen,   // Open door — walkable and LOS-transparent
     Trap,
 }

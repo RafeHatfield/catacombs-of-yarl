@@ -653,12 +653,23 @@ public static class TurnController
             int randomDestX = player.X + rdx;
             int randomDestY = player.Y + rdy;
 
+            // Door check for disoriented move (player always can open doors)
+            if (TryOpenDoor(state.Map, player, randomDestX, randomDestY, events))
+                return;
             moved = state.Map.MoveToward(player, randomDestX, randomDestY);
         }
         else if (action.Target != null)
+        {
+            if (TryOpenDoorOnPath(state.Map, player, action.Target.X, action.Target.Y, events))
+                return;
             moved = state.Map.MoveToward(player, action.Target.X, action.Target.Y);
+        }
         else if (action.TargetX.HasValue && action.TargetY.HasValue)
+        {
+            if (TryOpenDoor(state.Map, player, action.TargetX.Value, action.TargetY.Value, events))
+                return;
             moved = state.Map.MoveToward(player, action.TargetX.Value, action.TargetY.Value);
+        }
         else
             moved = false;
 
@@ -1174,6 +1185,9 @@ public static class TurnController
                     // A* already computed the exact next step (adjacent tile), so MoveToward
                     // resolves directly without extra greedy computation.
                     int fromX = monster.X, fromY = monster.Y;
+                    // Door check — intelligent monsters open doors before stepping through.
+                    if (TryOpenDoor(state.Map, monster, action.TargetX, action.TargetY, events))
+                        break;
                     bool moved = state.Map.MoveToward(monster, action.TargetX, action.TargetY);
                     if (moved)
                     {
@@ -2015,5 +2029,44 @@ public static class TurnController
                     break;
             }
         }
+    }
+
+    /// <summary>
+    /// If the target tile is a closed door and the entity can open doors, open it and emit
+    /// DoorOpenedEvent, consuming the turn. Returns true if a door was opened (caller should
+    /// not also apply movement this turn).
+    /// </summary>
+    private static bool TryOpenDoor(GameMap map, Entity entity, int x, int y, List<TurnEvent> events)
+    {
+        if (!map.InBounds(x, y)) return false;
+        if (map.GetTileKind(x, y) != TileKind.Door) return false;
+
+        // Player always can open doors; monsters check CanOpenDoors flag.
+        bool canOpen = entity.Get<Fighter>()?.CanOpenDoors ?? false;
+        if (!canOpen) return false;
+
+        map.OpenDoor(x, y);
+        events.Add(new DoorOpenedEvent { X = x, Y = y, OpenedById = entity.Id });
+        return true;
+    }
+
+    /// <summary>
+    /// Like TryOpenDoor but for MoveToward (entity target): checks the first greedy step
+    /// toward (targetX, targetY) rather than the target tile itself. Handles the case where
+    /// the path to the enemy passes through a door before reaching the enemy's position.
+    /// </summary>
+    private static bool TryOpenDoorOnPath(GameMap map, Entity entity, int targetX, int targetY, List<TurnEvent> events)
+    {
+        int dx = Math.Sign(targetX - entity.X);
+        int dy = Math.Sign(targetY - entity.Y);
+
+        // Mirror MoveToward's priority: diagonal first, then horizontal, then vertical.
+        if (dx != 0 && dy != 0 && TryOpenDoor(map, entity, entity.X + dx, entity.Y + dy, events))
+            return true;
+        if (dx != 0 && TryOpenDoor(map, entity, entity.X + dx, entity.Y, events))
+            return true;
+        if (dy != 0 && TryOpenDoor(map, entity, entity.X, entity.Y + dy, events))
+            return true;
+        return false;
     }
 }

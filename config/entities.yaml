@@ -23,6 +23,7 @@ monsters:
     tags: ["corporeal_flesh", "humanoid", "living"]
     etp_base: 27
     can_seek_items: true
+    can_open_doors: true
     seek_distance: 5
     inventory_size: 5
     equipment:
@@ -115,6 +116,7 @@ monsters:
     tags: ["corporeal_flesh", "humanoid", "living", "mobile"]
     etp_base: 28
     can_seek_items: false
+    can_open_doors: true
     speed_bonus: 0.20
 
   orc_shaman:
@@ -178,6 +180,7 @@ monsters:
     tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
     regeneration_amount: 2
     can_seek_items: true
+    can_open_doors: true
     inventory_size: 8
     seek_distance: 7
     etp_base: 50
@@ -298,6 +301,7 @@ monsters:
     ai_type: "necromancer"
     faction: "cultist"
     tags: ["caster", "controller"]
+    can_open_doors: true
     raise_dead_range: 5
     raise_dead_cooldown_turns: 4
     danger_radius_from_player: 2
@@ -364,6 +368,7 @@ monsters:
     tags: ["corporeal_flesh", "humanoid", "living"]
     speed_bonus: 0.25
     can_seek_items: true
+    can_open_doors: true
     inventory_size: 4
     seek_distance: 5
     etp_base: 70

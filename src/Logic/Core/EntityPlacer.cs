@@ -537,7 +537,10 @@ public static class EntityPlacer
             var (x, y) = queue.Dequeue();
             foreach (var (nx, ny) in new[] { (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1) })
             {
-                if (!visited.Contains((nx, ny)) && map.IsWalkable(nx, ny))
+                if (visited.Contains((nx, ny))) continue;
+                // Treat Door as passable — opening it grants access to the room beyond.
+                var nk = map.GetTileKind(nx, ny);
+                if (map.IsWalkable(nx, ny) || nk == TileKind.Door)
                 {
                     visited.Add((nx, ny));
                     queue.Enqueue((nx, ny));

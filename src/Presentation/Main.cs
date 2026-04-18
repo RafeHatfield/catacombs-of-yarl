@@ -869,6 +869,21 @@ public partial class Main : Node
         DespawnPortalSprite(entranceEntityId);
     }
 
+    private void SwapDoorSprite(int x, int y)
+    {
+        if (_tileLayer == null || _tileThemeConfig == null || _state == null) return;
+        if (!_tileLayer.DoorOverlaySprites.TryGetValue((x, y), out var sprite)) return;
+
+        var theme = _state.Map.GetTileTheme(x, y);
+        string themeName = DungeonRenderer.ThemeToConfigName(theme);
+        var openPath = _tileThemeConfig.GetDoorOpen(themeName);
+        if (openPath == null) return;
+
+        var tex = ResourceLoader.Load<Texture2D>(openPath);
+        if (tex != null && sprite is Sprite2D s2d)
+            s2d.Texture = tex;
+    }
+
     private void OnTurnCompleted(TurnResult result)
     {
         if (_state == null) return;
@@ -890,6 +905,8 @@ public partial class Main : Node
                 DespawnPortalSprite(pr.EntranceEntityId);
                 DespawnPortalSprite(pr.ExitEntityId);
             }
+            else if (evt is DoorOpenedEvent doorEvt)
+                SwapDoorSprite(doorEvt.X, doorEvt.Y);
         }
 
         if (_hud != null && _state != null)

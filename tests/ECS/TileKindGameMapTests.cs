@@ -60,11 +60,22 @@ public class TileKindGameMapTests
     }
 
     [Test]
-    public void SetTile_Door_MakesTileWalkable()
+    public void SetTile_Door_MakesTileNonWalkable()
     {
         var map = new GameMap(10, 10, allWalls: true);
         map.SetTile(5, 5, TileKind.Door);
+        Assert.That(map.IsWalkable(5, 5), Is.False, "Closed door blocks movement");
+    }
+
+    [Test]
+    public void OpenDoor_MakesTileWalkable()
+    {
+        var map = new GameMap(10, 10, allWalls: true);
+        map.SetTile(5, 5, TileKind.Door);
+        bool opened = map.OpenDoor(5, 5);
+        Assert.That(opened, Is.True);
         Assert.That(map.IsWalkable(5, 5), Is.True);
+        Assert.That(map.GetTileKind(5, 5), Is.EqualTo(TileKind.DoorOpen));
     }
 
     [Test]

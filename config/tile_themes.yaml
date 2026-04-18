@@ -58,7 +58,21 @@ themes:
       interior_fill: 176
     stair_down: [181]
     stair_up: [180]
-    door: [201]
+    # Door tile variants (Oryx 16bf world_24x24)
+    door: 201              # closed door (default)
+    door_open: 202         # open door
+    door_locked: 203       # locked door (keyed)
+    door_shut: 204         # shut door, no handle
+    door_barred: 205       # barred door
+    door_broken: 206       # broken open door
+    door_ajar: 207         # door slightly ajar
+    door_iron: 208         # iron door, closed
+    door_iron_open: 209    # iron door, open
+    door_magic: 210        # magic door, closed
+    door_magic_open: 211   # magic door, open
+    door_barricaded: 212   # barricaded door
+    door_barricaded_open: 213  # barricaded door, broken open
+    door_portal: 214       # door with magic portal
     bones: [96, 90, 95]
 
 default_theme: sandstone

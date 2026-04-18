@@ -149,38 +149,20 @@ public sealed class DungeonRenderer
                 {
                     var (cardinal, diagonal) = ComputeWallMasks(map, gx, gy);
 
-                    // Masks 7/11/13/14 are directional face tiles — NOT T-junctions.
-                    // Each has a purpose-built tile in the YAML with the face oriented toward
-                    // the single open floor direction:
-                    //   mask  7 (SEW walls, floor N) → tile 194: south face, dark band at bottom
-                    //   mask 11 (NEW walls, floor S) → tile 197: north face, dark band at top
-                    //   mask 13 (NSW walls, floor E) → tile 195: east face, band on right
-                    //   mask 14 (NSE walls, floor W) → tile 196: west face, band on left
-                    //
-                    // Collapsing these to masks 3/12 was wrong: tile 184 (mask 3) always shows
-                    // the face at the bottom, so using it for mask 11 (floor to south) pointed
-                    // the wall face away from the room — visible as a "miss" at the bottom wall.
-                    //
-                    // CORRIDOR EXCEPTION: directional face tiles look correct bordering rooms but
-                    // produce a prominent tooth pattern on both sides of a 1-tile corridor
-                    // (top wall → mask 11, bottom wall → mask 7, both show strong faces).
-                    // When the single open neighbor is a Corridor (not Floor), collapse back to
-                    // the plain horizontal/vertical edge tile (masks 3/12) — quieter appearance.
-                    int effectiveCardinal = cardinal;
-                    if (cardinal is 7 or 11)
+                    // Collapse 3-wall masks to plain horizontal/vertical edges.
+                    // Masks 7/11 (one open cardinal N or S) → mask 3 (tile 184, horizontal edge).
+                    // Masks 13/14 (one open cardinal E or W) → mask 12 (tile 187, vertical edge).
+                    // Tiles 194/195/196/197 in this set render as directional faces/T-junctions
+                    // with the far side showing rock/stone texture — correct for a wall that
+                    // has an external wall structure meeting it, but WRONG for plain room
+                    // edges and corridor edges, where the far side is just more interior fill.
+                    // Room and corridor walls look consistent when all edges use 184/187.
+                    int effectiveCardinal = cardinal switch
                     {
-                        // Open neighbor is N (mask 7) or S (mask 11)
-                        int openY = cardinal == 7 ? gy - 1 : gy + 1;
-                        if (map.InBounds(gx, openY) && map.GetTileKind(gx, openY) == TileKind.Corridor)
-                            effectiveCardinal = 3; // plain horizontal edge
-                    }
-                    else if (cardinal is 13 or 14)
-                    {
-                        // Open neighbor is E (mask 13) or W (mask 14)
-                        int openX = cardinal == 13 ? gx + 1 : gx - 1;
-                        if (map.InBounds(openX, gy) && map.GetTileKind(openX, gy) == TileKind.Corridor)
-                            effectiveCardinal = 12; // plain vertical edge
-                    }
+                        7 or 11 => 3,
+                        13 or 14 => 12,
+                        _ => cardinal,
+                    };
 
                     tilePath = themeConfig.GetWallTile(themeName, effectiveCardinal, diagonal);
                 }
@@ -246,6 +228,7 @@ public sealed class DungeonRenderer
                     TileKind.StairDown => themeConfig.GetStairDown(themeName),
                     TileKind.StairUp   => themeConfig.GetStairUp(themeName),
                     TileKind.Door      => themeConfig.GetDoor(themeName),
+                    TileKind.DoorOpen  => themeConfig.GetDoorOpen(themeName),
                     _                  => null,
                 };
 
@@ -266,8 +249,9 @@ public sealed class DungeonRenderer
                 // The base sprite is oriented for a vertical corridor (walls E+W, passage N-S).
                 // Rotation pivots around the tile center (Centered=true + center position) so the
                 // sprite stays within its tile regardless of orientation.
+                // DoorOpen uses the same orientation logic as closed Door.
                 bool isDoorHorizontal = false;
-                if (kind == TileKind.Door)
+                if (kind == TileKind.Door || kind == TileKind.DoorOpen)
                 {
                     bool wallN = !map.InBounds(gx, gy - 1) || map.GetTileKind(gx, gy - 1) == TileKind.Wall;
                     bool wallS = !map.InBounds(gx, gy + 1) || map.GetTileKind(gx, gy + 1) == TileKind.Wall;
@@ -288,8 +272,8 @@ public sealed class DungeonRenderer
                 parent.AddChild(overlay);
 
                 // Stair overlays are always visible (player always knows where the exit is).
-                // Door overlays respect FOV — track them so UpdateVisibility can show/hide them.
-                if (kind == TileKind.Door)
+                // Door overlays (both closed and open) respect FOV — track for UpdateVisibility.
+                if (kind == TileKind.Door || kind == TileKind.DoorOpen)
                     tileLayer.DoorOverlaySprites[(gx, gy)] = overlay;
             }
         }
@@ -548,7 +532,7 @@ public sealed class DungeonRenderer
     /// Additional themes (crypt, moss, dirt) will diverge once their tile IDs are verified
     /// and added to tile_themes.yaml in a later phase.
     /// </summary>
-    private static string ThemeToConfigName(TileTheme theme) => theme switch
+    internal static string ThemeToConfigName(TileTheme theme) => theme switch
     {
         TileTheme.Grey  => "sandstone",
         TileTheme.Crypt => "sandstone", // Fallback until crypt tile IDs are verified

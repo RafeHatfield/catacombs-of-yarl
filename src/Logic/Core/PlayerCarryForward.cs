@@ -50,6 +50,7 @@ public static class PlayerCarryForward
         // Preserve boon max HP bonus — not a constructor param, must be copied explicitly.
         // Same pattern as RingMaxHpBonus (which is restored by ReapplyRingEffects instead).
         newFighter.BoonMaxHpBonus = oldFighter.BoonMaxHpBonus;
+        newFighter.CanOpenDoors = true; // player always opens doors
 
         newPlayer.Add(newFighter);
 

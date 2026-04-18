@@ -226,7 +226,9 @@ public class MapGeneratorTests
             {
                 int nx = x + dxs[i];
                 int ny = y + dys[i];
-                if (map.IsWalkable(nx, ny) && visited.Add((nx, ny)))
+                // Treat Door as passable — opening it grants access.
+                bool passable = map.IsWalkable(nx, ny) || map.GetTileKind(nx, ny) == TileKind.Door;
+                if (passable && visited.Add((nx, ny)))
                     queue.Enqueue((nx, ny));
             }
         }

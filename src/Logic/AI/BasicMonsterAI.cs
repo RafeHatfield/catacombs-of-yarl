@@ -120,11 +120,13 @@ public static class BasicMonsterAI
         int pursueX = targetIsPlayer ? alertedState.LastKnownPlayerX : target.X;
         int pursueY = targetIsPlayer ? alertedState.LastKnownPlayerY : target.Y;
 
+        bool canOpenDoors = monster.Get<Fighter>()?.CanOpenDoors ?? false;
         var path = Pathfinder.AStar(
             state.Map,
             monster.X, monster.Y,
             pursueX, pursueY,
-            movingEntity: monster);
+            movingEntity: monster,
+            canPassDoors: canOpenDoors);
 
         if (path != null && path.Count > 0)
             return MonsterAction.MoveTo(path[0].X, path[0].Y);
@@ -434,11 +436,13 @@ public static class BasicMonsterAI
             return MonsterAction.PickUp(bestItem);
 
         // Navigate toward the item using A* for the first step, just like player pursuit.
+        bool canOpenDoorsForItem = monster.Get<Fighter>()?.CanOpenDoors ?? false;
         var path = Pathfinder.AStar(
             state.Map,
             monster.X, monster.Y,
             bestItem.X, bestItem.Y,
-            movingEntity: monster);
+            movingEntity: monster,
+            canPassDoors: canOpenDoorsForItem);
 
         if (path != null && path.Count > 0)
             return MonsterAction.SeekItem(path[0].X, path[0].Y);

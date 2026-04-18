@@ -709,7 +709,7 @@ public static class RoomPropPlacer
                 // DoorPlacer converts corridor-room boundary tiles to Door — we must
                 // treat Door the same as Corridor here so entrance detection still works
                 // after doors are placed (DOOR-001).
-                static bool IsCorridorOrDoor(TileKind k) => k == TileKind.Corridor || k == TileKind.Door;
+                static bool IsCorridorOrDoor(TileKind k) => k == TileKind.Corridor || k == TileKind.Door || k == TileKind.DoorOpen;
 
                 if (IsCorridorOrDoor(map.GetTileKind(x - 1, y)) ||
                     IsCorridorOrDoor(map.GetTileKind(x + 1, y)) ||

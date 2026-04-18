@@ -245,6 +245,33 @@ public static class TileThemeLoader
                     continue;
                 }
 
+                // Door variants are scalar ints; all other roles use bracketed int lists.
+                if (key.StartsWith("door"))
+                {
+                    int doorId = ParseScalarInt(rawValue);
+                    switch (key)
+                    {
+                        case "door":                currentThemeData.Door               = doorId; break;
+                        case "door_open":           currentThemeData.DoorOpen           = doorId; break;
+                        case "door_locked":         currentThemeData.DoorLocked         = doorId; break;
+                        case "door_shut":           currentThemeData.DoorShut           = doorId; break;
+                        case "door_barred":         currentThemeData.DoorBarred         = doorId; break;
+                        case "door_broken":         currentThemeData.DoorBroken         = doorId; break;
+                        case "door_ajar":           currentThemeData.DoorAjar           = doorId; break;
+                        case "door_iron":           currentThemeData.DoorIron           = doorId; break;
+                        case "door_iron_open":      currentThemeData.DoorIronOpen       = doorId; break;
+                        case "door_magic":          currentThemeData.DoorMagic          = doorId; break;
+                        case "door_magic_open":     currentThemeData.DoorMagicOpen      = doorId; break;
+                        case "door_barricaded":     currentThemeData.DoorBarricaded     = doorId; break;
+                        case "door_barricaded_open":currentThemeData.DoorBarricadedOpen = doorId; break;
+                        case "door_portal":         currentThemeData.DoorPortal         = doorId; break;
+                        default:
+                            GD.PrintErr($"[TileThemeLoader] Unknown door variant '{key}' in theme '{currentThemeName}'.");
+                            break;
+                    }
+                    continue;
+                }
+
                 // Value must be a bracketed int list: [1, 2, 3]
                 var ids = ParseIntList(rawValue);
 
@@ -257,7 +284,6 @@ public static class TileThemeLoader
                     case "floor_worn":      currentThemeData.FloorWorn      = ids; break;
                     case "stair_down":      currentThemeData.StairDown      = ids; break;
                     case "stair_up":        currentThemeData.StairUp        = ids; break;
-                    case "door":            currentThemeData.Door           = ids; break;
                     case "bones":           currentThemeData.Bones          = ids; break;
                     default:
                         GD.PrintErr($"[TileThemeLoader] Unknown role key '{key}' in theme '{currentThemeName}'.");
@@ -286,6 +312,12 @@ public static class TileThemeLoader
     /// Parse a bracketed integer list from YAML: "[1091]" or "[1034, 1090, 1089, 1088]"
     /// Returns an empty list on any parse error rather than throwing.
     /// </summary>
+    private static int ParseScalarInt(string raw)
+    {
+        raw = raw.Trim();
+        return int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out int id) ? id : 0;
+    }
+
     private static List<int> ParseIntList(string raw)
     {
         var result = new List<int>();

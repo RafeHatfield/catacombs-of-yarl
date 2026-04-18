@@ -247,16 +247,31 @@ public sealed class TileThemeConfig
     }
 
     /// <summary>
-    /// Return the door texture path for the given theme.
-    /// Returns null if no door tile is configured — door is invisible but still walkable/functional.
-    /// Unlike stairs, a missing door tile is not an error and produces no log output.
+    /// Return a door texture path for the given theme and variant.
+    /// Returns null if the tile ID is 0 (not configured) — door renders invisibly but still functions.
+    /// No error log on missing variant — themes only configure the variants they use.
     /// </summary>
-    public string? GetDoor(string theme)
+    public string? GetDoor(string theme)               => GetDoorVariant(theme, d => d.Door);
+    public string? GetDoorOpen(string theme)           => GetDoorVariant(theme, d => d.DoorOpen);
+    public string? GetDoorLocked(string theme)         => GetDoorVariant(theme, d => d.DoorLocked);
+    public string? GetDoorShut(string theme)           => GetDoorVariant(theme, d => d.DoorShut);
+    public string? GetDoorBarred(string theme)         => GetDoorVariant(theme, d => d.DoorBarred);
+    public string? GetDoorBroken(string theme)         => GetDoorVariant(theme, d => d.DoorBroken);
+    public string? GetDoorAjar(string theme)           => GetDoorVariant(theme, d => d.DoorAjar);
+    public string? GetDoorIron(string theme)           => GetDoorVariant(theme, d => d.DoorIron);
+    public string? GetDoorIronOpen(string theme)       => GetDoorVariant(theme, d => d.DoorIronOpen);
+    public string? GetDoorMagic(string theme)          => GetDoorVariant(theme, d => d.DoorMagic);
+    public string? GetDoorMagicOpen(string theme)      => GetDoorVariant(theme, d => d.DoorMagicOpen);
+    public string? GetDoorBarricaded(string theme)     => GetDoorVariant(theme, d => d.DoorBarricaded);
+    public string? GetDoorBarricadedOpen(string theme) => GetDoorVariant(theme, d => d.DoorBarricadedOpen);
+    public string? GetDoorPortal(string theme)         => GetDoorVariant(theme, d => d.DoorPortal);
+
+    private string? GetDoorVariant(string theme, Func<TileThemeData, int> selector)
     {
         var data = ResolveTheme(theme);
         if (data == null) return null;
-        if (data.Door.Count == 0) return null; // graceful fallback — no error log
-        return GetTexturePath(data.Door[0]);
+        int id = selector(data);
+        return id == 0 ? null : GetTexturePath(id);
     }
 
     /// <summary>
@@ -360,8 +375,24 @@ public sealed class TileThemeData
     /// </summary>
     public Dictionary<string, int> WallDiagonal { get; set; } = new();
 
-    public List<int> StairDown     { get; set; } = new();
-    public List<int> StairUp       { get; set; } = new();
-    public List<int> Door          { get; set; } = new();
-    public List<int> Bones         { get; set; } = new();
+    public List<int> StairDown         { get; set; } = new();
+    public List<int> StairUp           { get; set; } = new();
+
+    // Door tile variants. 0 = not configured for this theme.
+    public int Door               { get; set; }  // 201 closed
+    public int DoorOpen           { get; set; }  // 202 open
+    public int DoorLocked         { get; set; }  // 203 locked (keyed)
+    public int DoorShut           { get; set; }  // 204 shut, no handle
+    public int DoorBarred         { get; set; }  // 205 barred
+    public int DoorBroken         { get; set; }  // 206 broken open
+    public int DoorAjar           { get; set; }  // 207 slightly ajar
+    public int DoorIron           { get; set; }  // 208 iron, closed
+    public int DoorIronOpen       { get; set; }  // 209 iron, open
+    public int DoorMagic          { get; set; }  // 210 magic, closed
+    public int DoorMagicOpen      { get; set; }  // 211 magic, open
+    public int DoorBarricaded     { get; set; }  // 212 barricaded
+    public int DoorBarricadedOpen { get; set; }  // 213 barricaded, broken open
+    public int DoorPortal         { get; set; }  // 214 door with magic portal
+
+    public List<int> Bones             { get; set; } = new();
 }

@@ -96,7 +96,8 @@ public class CorridorPolishTests
     private static HashSet<(int X, int Y)> FloodFill(GameMap map, int startX, int startY)
     {
         var visited = new HashSet<(int, int)>();
-        if (!map.IsWalkable(startX, startY)) return visited;
+        var startKind = map.GetTileKind(startX, startY);
+        if (!map.IsWalkable(startX, startY) && startKind != TileKind.Door) return visited;
 
         var queue = new Queue<(int, int)>();
         queue.Enqueue((startX, startY));
@@ -107,7 +108,10 @@ public class CorridorPolishTests
             var (x, y) = queue.Dequeue();
             foreach (var (nx, ny) in new[] { (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1) })
             {
-                if (!visited.Contains((nx, ny)) && map.IsWalkable(nx, ny))
+                if (visited.Contains((nx, ny))) continue;
+                var nk = map.GetTileKind(nx, ny);
+                // Treat Door as passable — opening it grants access.
+                if (map.IsWalkable(nx, ny) || nk == TileKind.Door)
                 {
                     visited.Add((nx, ny));
                     queue.Enqueue((nx, ny));

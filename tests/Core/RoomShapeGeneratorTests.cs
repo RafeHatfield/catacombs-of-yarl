@@ -583,7 +583,9 @@ public class RoomShapeGeneratorTests
                 foreach (var (nx, ny) in new[] { (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1) })
                 {
                     if (visited.Contains((nx, ny))) continue;
-                    if (!map.IsWalkable(nx, ny)) continue;
+                    // Treat Door as passable for connectivity — opening it grants access.
+                    var nk = map.GetTileKind(nx, ny);
+                    if (!map.IsWalkable(nx, ny) && nk != TileKind.Door) continue;
                     visited.Add((nx, ny));
                     queue.Enqueue((nx, ny));
                 }

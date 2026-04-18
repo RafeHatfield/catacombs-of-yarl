@@ -71,7 +71,8 @@ public class MultiFloorSmokeTests
                             state.Map,
                             state.Player.X, state.Player.Y,
                             state.StairDown.X, state.StairDown.Y,
-                            state.Player);
+                            state.Player,
+                            canPassDoors: true);
                         if (path != null && path.Count > 0)
                         {
                             var (nx, ny) = path[0];
@@ -102,7 +103,8 @@ public class MultiFloorSmokeTests
                             state.Map,
                             state.Player.X, state.Player.Y,
                             target.X, target.Y,
-                            state.Player);
+                            state.Player,
+                            canPassDoors: true);
                         if (path != null && path.Count > 0)
                         {
                             var (nx, ny) = path[0];

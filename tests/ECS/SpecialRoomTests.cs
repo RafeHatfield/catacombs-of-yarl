@@ -170,7 +170,10 @@ public class SpecialRoomTests
             var (x, y) = queue.Dequeue();
             foreach (var (nx, ny) in new[] { (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1) })
             {
-                if (!visited.Contains((nx, ny)) && map.IsWalkable(nx, ny))
+                if (visited.Contains((nx, ny))) continue;
+                var nk = map.GetTileKind(nx, ny);
+                // Treat Door as passable — opening it grants access.
+                if (map.IsWalkable(nx, ny) || nk == TileKind.Door)
                 {
                     visited.Add((nx, ny));
                     queue.Enqueue((nx, ny));

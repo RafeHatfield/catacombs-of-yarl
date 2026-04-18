@@ -101,6 +101,13 @@ public sealed class Fighter : IComponent
     public bool IsAlive => Hp > 0;
 
     /// <summary>
+    /// When true, this entity can open closed doors during movement.
+    /// Set from MonsterDefinition.CanOpenDoors at spawn time (via MonsterFactory).
+    /// Always true for the player.
+    /// </summary>
+    public bool CanOpenDoors { get; set; }
+
+    /// <summary>
     /// When true, the next player attack on this entity is a guaranteed hit (surprise attack).
     /// PoC: is_monster_aware() starts False for all monsters, even in "aware" scenario state.
     /// First player attack on any monster triggers one guaranteed hit, then awareness is set.

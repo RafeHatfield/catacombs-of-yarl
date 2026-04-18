@@ -47,6 +47,17 @@ public sealed class HealEvent : TurnEvent
 
 public sealed class WaitEvent : TurnEvent { }
 
+/// <summary>
+/// Emitted when a door is opened (by player or monster).
+/// Presentation layer uses this to swap the door sprite from closed to open.
+/// </summary>
+public sealed class DoorOpenedEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+    public int OpenedById { get; init; }
+}
+
 public sealed class DescendEvent : TurnEvent
 {
     /// <summary>The new depth the player is descending to.</summary>

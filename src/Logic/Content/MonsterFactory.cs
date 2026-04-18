@@ -70,7 +70,7 @@ public sealed class MonsterFactory
             accuracy = DepthScaling.ScaleStat(accuracy, mult.ToHit);
         }
 
-        entity.Add(new Fighter(
+        var fighter = new Fighter(
             hp: hp,
             defense: stats.Defense,
             power: stats.Power,
@@ -81,7 +81,11 @@ public sealed class MonsterFactory
             dexterity: stats.Dexterity,
             constitution: stats.Constitution,
             accuracy: accuracy,
-            evasion: stats.Evasion));
+            evasion: stats.Evasion)
+        {
+            CanOpenDoors = def.CanOpenDoors,
+        };
+        entity.Add(fighter);
 
         // Damage resistance/vulnerability
         if (def.DamageResistance != null || def.DamageVulnerability != null)

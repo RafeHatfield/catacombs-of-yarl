@@ -50,11 +50,13 @@ public class DoorPlacerTests
 
     /// <summary>
     /// Flood fill walkable tiles from a starting position.
+    /// Treats closed Door tiles as passable for connectivity checks (opening a door = reachable).
     /// </summary>
     private static HashSet<(int X, int Y)> FloodFill(GameMap map, int startX, int startY)
     {
         var visited = new HashSet<(int, int)>();
-        if (!map.IsWalkable(startX, startY)) return visited;
+        var kind = map.GetTileKind(startX, startY);
+        if (!map.IsWalkable(startX, startY) && kind != TileKind.Door) return visited;
 
         var queue = new Queue<(int, int)>();
         queue.Enqueue((startX, startY));
@@ -65,7 +67,9 @@ public class DoorPlacerTests
             var (x, y) = queue.Dequeue();
             foreach (var (nx, ny) in new[] { (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1) })
             {
-                if (!visited.Contains((nx, ny)) && map.IsWalkable(nx, ny))
+                if (visited.Contains((nx, ny))) continue;
+                var nKind = map.GetTileKind(nx, ny);
+                if (map.IsWalkable(nx, ny) || nKind == TileKind.Door)
                 {
                     visited.Add((nx, ny));
                     queue.Enqueue((nx, ny));
@@ -101,17 +105,17 @@ public class DoorPlacerTests
     }
 
     [Test]
-    public void PlaceDoors_DoorTiles_AreWalkable()
+    public void PlaceDoors_DoorTiles_AreClosedDoors()
     {
         var (map, _, _, _) = MakeRoomWithEastCorridor();
         var doors = DoorPlacer.PlaceDoors(map);
 
         foreach (var (dx, dy) in doors)
         {
-            Assert.That(map.IsWalkable(dx, dy), Is.True,
-                $"Door at ({dx},{dy}) should be walkable");
             Assert.That(map.GetTileKind(dx, dy), Is.EqualTo(TileKind.Door),
                 $"Tile at ({dx},{dy}) should be TileKind.Door after PlaceDoors");
+            Assert.That(map.IsWalkable(dx, dy), Is.False,
+                $"Closed door at ({dx},{dy}) should block movement until opened");
         }
     }
 

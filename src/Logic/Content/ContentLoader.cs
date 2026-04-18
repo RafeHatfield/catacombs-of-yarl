@@ -441,6 +441,8 @@ public sealed class ContentLoader
             // Item-seeking behavior: child's true always wins; inherit parent's true if child didn't set it.
             // This matches PoC convention where non-seeking monsters explicitly set can_seek_items: false.
             CanSeekItems = child.CanSeekItems || parent.CanSeekItems,
+            // Door-opening: same pattern — true propagates from parent to children.
+            CanOpenDoors = child.CanOpenDoors || parent.CanOpenDoors,
             SeekDistance = child.SeekDistance != 5 ? child.SeekDistance : parent.SeekDistance,
             InventorySize = child.InventorySize != 0 ? child.InventorySize : parent.InventorySize,
             SpawnWeight = child.SpawnWeight ?? parent.SpawnWeight,

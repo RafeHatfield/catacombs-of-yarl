@@ -140,7 +140,7 @@ public static class AutoExploreSystem
 
     private static bool FindAndSetPath(GameState state, AutoExploreState ae)
     {
-        var dijkstra = Pathfinder.DijkstraMap(state.Map, state.Player.X, state.Player.Y);
+        var dijkstra = Pathfinder.DijkstraMap(state.Map, state.Player.X, state.Player.Y, canPassDoors: true);
 
         // Pass 1: prefer tiles not in the explored snapshot (new discoveries)
         var target = Pathfinder.NearestWhere(dijkstra, state.Map.Width, state.Map.Height,
@@ -162,7 +162,8 @@ public static class AutoExploreSystem
         var path = Pathfinder.AStar(state.Map,
             state.Player.X, state.Player.Y,
             target.Value.X, target.Value.Y,
-            state.Player);
+            state.Player,
+            canPassDoors: true);
 
         if (path == null || path.Count == 0) return false;
 

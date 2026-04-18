@@ -19,7 +19,7 @@ public static class Pathfinder
     /// </summary>
     public static List<(int X, int Y)>? AStar(
         GameMap map, int fromX, int fromY, int toX, int toY,
-        Entity? movingEntity = null)
+        Entity? movingEntity = null, bool canPassDoors = false)
     {
         if (fromX == toX && fromY == toY) return new List<(int, int)>();
 
@@ -68,7 +68,7 @@ public static class Pathfinder
 
                     // Check passability — destination is always allowed even if occupied
                     bool isDestination = nx == toX && ny == toY;
-                    if (!map.CanMoveToWith(nx, ny, movingEntity, ignoreEntityAtDest: isDestination))
+                    if (!map.CanMoveToWith(nx, ny, movingEntity, ignoreEntityAtDest: isDestination, canPassDoors: canPassDoors))
                         continue;
 
                     int moveCost = isDiagonal ? DiagonalCost : CardinalCost;
@@ -94,7 +94,7 @@ public static class Pathfinder
     /// Traverses walkable tiles only (ignores entity blocking — targets tiles, not paths through entities).
     /// 8-directional.
     /// </summary>
-    public static int[,] DijkstraMap(GameMap map, int fromX, int fromY)
+    public static int[,] DijkstraMap(GameMap map, int fromX, int fromY, bool canPassDoors = false)
     {
         var dist = new int[map.Width, map.Height];
         for (int x = 0; x < map.Width; x++)
@@ -119,7 +119,8 @@ public static class Pathfinder
                     if (dx == 0 && dy == 0) continue;
                     int nx = cx + dx, ny = cy + dy;
                     if (!map.InBounds(nx, ny)) continue;
-                    if (!map.IsWalkable(nx, ny)) continue;
+                    bool passable = map.IsWalkable(nx, ny) || (canPassDoors && map.GetTileKind(nx, ny) == TileKind.Door);
+                    if (!passable) continue;
 
                     // Match A*'s no-corner-cutting rule so DijkstraMap and AStar agree on
                     // reachability. Without this, Dijkstra selects diagonal-corner targets that
