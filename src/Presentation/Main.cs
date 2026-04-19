@@ -910,7 +910,7 @@ public partial class Main : Node
     }
 
     /// <summary>
-    /// Swap the chest sprite from closed (tile 261) to open (tile 262) at the given cell.
+    /// Swap the chest sprite from closed (tile 261) to empty/looted (tile 264) at the given cell.
     /// Called from OnTurnCompleted when a ChestOpenedEvent fires.
     /// Mirrors the SwapDoorSprite pattern — update existing sprite rather than recreating it.
     /// </summary>
@@ -919,8 +919,8 @@ public partial class Main : Node
         if (_tileLayer == null || _tileThemeConfig == null) return;
         if (!_tileLayer.FeatureOverlaySprites.TryGetValue((x, y), out var sprite)) return;
 
-        // Tile 262 = chest open in Oryx 16bf world_24x24
-        var openPath = _tileThemeConfig.GetTexturePath(262);
+        // Tile 264 = empty/looted chest (loot auto-picks up on open, so always empty after)
+        var openPath = _tileThemeConfig.GetTexturePath(264);
         var tex = ResourceLoader.Load<Texture2D>(openPath);
         if (tex != null)
             sprite.Texture = tex;

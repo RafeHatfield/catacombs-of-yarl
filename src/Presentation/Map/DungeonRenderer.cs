@@ -399,7 +399,7 @@ public sealed class DungeonRenderer
         // SwapFeatureSprite can swap chest textures when the chest is opened.
         //
         // Tile ID conventions (Oryx 16bf world_24x24):
-        //   261 = chest closed, 262 = chest open
+        //   261 = chest closed, 264 = chest empty/looted (loot auto-picks up, so open = empty)
         //   4035 = signpost (used for both signs and murals in this pass)
         //   MuralComponent.TileId stores the chosen variant (4036–4038) for future use.
         if (features != null)
@@ -443,7 +443,7 @@ public sealed class DungeonRenderer
     private static int ResolveFeaturedTileId(Entity feature)
     {
         var chest = feature.Get<ChestComponent>();
-        if (chest != null) return chest.IsOpen ? 262 : 261;
+        if (chest != null) return chest.IsOpen ? 264 : 261;
 
         var sign = feature.Get<SignpostComponent>();
         if (sign != null) return 4035;
