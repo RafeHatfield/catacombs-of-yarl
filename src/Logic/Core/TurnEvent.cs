@@ -62,6 +62,13 @@ public sealed class DescendEvent : TurnEvent
 {
     /// <summary>The new depth the player is descending to.</summary>
     public int NewDepth { get; init; }
+
+    /// <summary>
+    /// Why the descent happened. Default "player" for voluntary stair use.
+    /// "hole_trap" when a hole_trap floor trap fires — presentation layer
+    /// uses this to suppress the confirmation prompt.
+    /// </summary>
+    public string Cause { get; init; } = "player";
 }
 
 public sealed class DeathEvent : TurnEvent
@@ -578,4 +585,121 @@ public sealed class ItemUseEvent : TurnEvent
     /// 0 on fizzle.
     /// </summary>
     public int EffectAmount { get; init; }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Interactive props + trap system events (Phase 1)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// <summary>
+/// Emitted when a destructible prop (barrel, bookshelf, bone pile) is broken/searched by the player.
+/// Presentation layer swaps the sprite to the open/broken tile ID.
+/// </summary>
+public sealed class PropDestroyedEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+
+    /// <summary>"barrel" | "bookshelf" | "bone_pile"</summary>
+    public string PropKind { get; init; } = "";
+
+    /// <summary>Entity IDs of items dropped to the player's tile.</summary>
+    public IReadOnlyList<int> DroppedItemIds { get; init; } = Array.Empty<int>();
+
+    /// <summary>True when a trap payload fired during resolution.</summary>
+    public bool TrapFired { get; init; }
+
+    /// <summary>True when a monster was roused from this prop.</summary>
+    public bool MonsterRoused { get; init; }
+}
+
+/// <summary>
+/// Emitted when a floor trap fires against a target (player or monster).
+/// </summary>
+public sealed class TrapTriggeredEvent : TurnEvent
+{
+    /// <summary>Entity ID of the creature that triggered and is affected by the trap.</summary>
+    public int TargetId { get; init; }
+
+    public int X { get; init; }
+    public int Y { get; init; }
+
+    /// <summary>Source label: trap type ID or prop kind (e.g. "spike_trap", "barrel_trap").</summary>
+    public string Source { get; init; } = "";
+
+    /// <summary>The action kinds that were resolved (e.g. ["damage", "bleed"]).</summary>
+    public IReadOnlyList<string> ActionKinds { get; init; } = Array.Empty<string>();
+}
+
+/// <summary>
+/// Emitted when a floor trap is passively detected before triggering.
+/// The trap is now marked IsDetected and will be avoided on future entry.
+/// </summary>
+public sealed class TrapDetectedEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+    public string TrapType { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted when the player steps onto a previously-detected trap, triggering auto-avoid.
+/// </summary>
+public sealed class TrapAvoidedEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+    public string TrapType { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted when a bone pile rouse fires and a monster is spawned nearby.
+/// </summary>
+public sealed class MonsterRousedEvent : TurnEvent
+{
+    /// <summary>Entity ID of the newly spawned monster.</summary>
+    public int SpawnedEntityId { get; init; }
+
+    public string MonsterType { get; init; } = "";
+    public int OriginX { get; init; }
+    public int OriginY { get; init; }
+}
+
+/// <summary>
+/// Emitted each tick when a BleedEffect deals damage to an entity.
+/// ActorId (inherited) is the entity taking bleed damage.
+/// </summary>
+public sealed class BleedTickEvent : TurnEvent
+{
+    public int Damage { get; init; }
+}
+
+/// <summary>
+/// Emitted when a status effect (poison or bleed) transfers from one entity to another
+/// via a drain attack (wraith, future vampire).
+/// </summary>
+public sealed class StatusTransferredEvent : TurnEvent
+{
+    public int SourceId { get; init; }
+    public int TargetId { get; init; }
+
+    /// <summary>"poison" | "bleed"</summary>
+    public string EffectKind { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted each turn that InnateRegenComponent is suppressed by an active AcidEffect.
+/// ActorId (inherited) is the entity whose innate regen was suppressed.
+/// </summary>
+public sealed class RegenSuppressedEvent : TurnEvent
+{
+}
+
+/// <summary>
+/// Emitted when the player's equipped weapon is coated with acid after triggering an acid_trap.
+/// </summary>
+public sealed class WeaponAcidCoatedEvent : TurnEvent
+{
+    public int WeaponId { get; init; }
+    public int HitsRemaining { get; init; }
 }
