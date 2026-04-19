@@ -240,12 +240,13 @@ public class Wave4IdentityTests
     [Test]
     public void TrollAncient_Regen3PerTurn()
     {
+        // After Phase 6: troll_ancient uses InnateRegenComponent (permanent, not a timed status).
         var factory = CreateFactory();
         var troll = factory.Create("troll_ancient")!;
-        var regen = troll.Get<RegenerationEffect>();
+        var innateRegen = troll.Get<InnateRegenComponent>();
 
-        Assert.That(regen, Is.Not.Null, "Ancient troll must have RegenerationEffect");
-        Assert.That(regen!.HealPerTurn, Is.EqualTo(3));
+        Assert.That(innateRegen, Is.Not.Null, "Ancient troll must have InnateRegenComponent");
+        Assert.That(innateRegen!.HealPerTurn, Is.EqualTo(3));
     }
 
     [Test]

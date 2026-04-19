@@ -1,5 +1,6 @@
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.AI;
 
 namespace CatacombsOfYarl.Logic.Combat.StatusEffects;
 
@@ -34,7 +35,8 @@ public static class StatusEffectProcessor
         [typeof(BlindedEffect)] = "blinded",
         [typeof(SilencedEffect)] = "silenced",
         [typeof(WeaknessEffect)] = "weakness",
-        // "bleed" maps to no current effect — will be added when BleedEffect is created
+        [typeof(BleedEffect)] = "bleed",
+        [typeof(AcidEffect)] = "acid",
     };
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -91,8 +93,12 @@ public static class StatusEffectProcessor
     ///
     /// SlowedEffect skip rule: odd-numbered turns are skipped (turnCount % 2 == 1).
     /// This matches PoC behavior where the slow effect gates every other turn.
+    ///
+    /// state: optional GameState for bleed attraction (undead alert when player bleeds).
+    /// Null in unit tests that don't need the full state.
     /// </summary>
-    public static bool ProcessTurnStart(Entity entity, List<TurnEvent> events, int turnCount = 0)
+    public static bool ProcessTurnStart(Entity entity, List<TurnEvent> events, int turnCount = 0,
+        GameState? state = null)
     {
         var fighter = entity.Get<Fighter>();
         bool skipTurn = false;
@@ -135,6 +141,23 @@ public static class StatusEffectProcessor
             });
         }
 
+        // BleedEffect: DOT damage + undead attraction.
+        if (entity.Get<BleedEffect>() is { } bleed && fighter != null)
+        {
+            int bleedDmg = bleed.DamagePerTick;
+            fighter.TakeDamage(bleedDmg);
+            events.Add(new BleedTickEvent
+            {
+                ActorId = entity.Id,
+                Damage  = bleedDmg,
+            });
+
+            // Undead attraction: alert nearby undead toward the bleeding entity.
+            // Cap: BleedAttractionCapPerTick per tick to prevent surging.
+            if (state != null)
+                ApplyBleedAttraction(entity, state, events);
+        }
+
         // ── HOT ticks ──────────────────────────────────────────────────────
 
         if (entity.Get<RegenerationEffect>() is { } regen && fighter != null)
@@ -149,6 +172,31 @@ public static class StatusEffectProcessor
                     EffectName = "regeneration",
                     Amount = actualHeal,
                 });
+            }
+        }
+
+        // InnateRegenComponent: permanent monster regeneration (troll, troll_ancient).
+        // Suppressed while AcidEffect is active on the entity.
+        if (entity.Get<InnateRegenComponent>() is { } innateRegen && fighter != null)
+        {
+            if (entity.Has<AcidEffect>())
+            {
+                // Regen suppressed by acid — emit event for presentation layer feedback.
+                events.Add(new RegenSuppressedEvent { ActorId = entity.Id });
+            }
+            else
+            {
+                int actualHeal = fighter.Heal(innateRegen.HealPerTurn);
+                if (actualHeal > 0)
+                {
+                    events.Add(new HotHealEvent
+                    {
+                        ActorId = entity.Id,
+                        EntityId = entity.Id,
+                        EffectName = "innate_regen",
+                        Amount = actualHeal,
+                    });
+                }
             }
         }
 
@@ -295,5 +343,48 @@ public static class StatusEffectProcessor
     private static void RemoveEffect(Entity entity, IStatusEffect effect)
     {
         entity.RemoveByType(effect.GetType());
+    }
+
+    /// <summary>
+    /// Apply bleed attraction: alert nearby undead monsters without a current target toward
+    /// the bleeding entity. Cap: BleedAttractionCapPerTick per tick to prevent surging.
+    ///
+    /// Undead tag check: monster has tag "undead" in MonsterDefinition.Tags.
+    /// Target filter: monsters without AlertedState (passive) and alive.
+    ///
+    /// Called from ProcessTurnStart when BleedEffect is active and state is provided.
+    /// Sorted by distance (row-major as tiebreaker) for determinism.
+    /// </summary>
+    private static void ApplyBleedAttraction(Entity bleeder, GameState state, List<TurnEvent> events)
+    {
+        int cx = bleeder.X, cy = bleeder.Y;
+        int radius = BleedEffect.BleedAttractionRadius;
+        int cap = BleedEffect.BleedAttractionCapPerTick;
+
+        // Find undead monsters within radius, without AlertedState, alive — sorted for determinism.
+        var candidates = state.AliveMonsters
+            .Where(m => m.Id != bleeder.Id
+                && m.Get<AiComponent>()?.Tags?.Contains("undead") == true
+                && !m.Has<AlertedState>()
+                && Math.Abs(m.X - cx) <= radius
+                && Math.Abs(m.Y - cy) <= radius)
+            .OrderBy(m => Math.Abs(m.X - cx) + Math.Abs(m.Y - cy)) // nearest first
+            .ThenBy(m => m.Y).ThenBy(m => m.X)                      // row-major tiebreaker
+            .ToList();
+
+        int alerted = 0;
+        foreach (var candidate in candidates)
+        {
+            if (alerted >= cap) break;
+
+            // Alert toward the bleeding entity.
+            candidate.Add(new AlertedState
+            {
+                LastKnownPlayerX = cx,
+                LastKnownPlayerY = cy,
+                TurnsUntilDeaggro = 5,
+            });
+            alerted++;
+        }
     }
 }

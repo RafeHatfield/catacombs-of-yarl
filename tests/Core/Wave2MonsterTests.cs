@@ -72,16 +72,20 @@ public class Wave2MonsterTests
     // ─── Troll regeneration ───────────────────────────────────────────────────
 
     [Test]
-    public void TrollFactory_HasRegenerationEffect()
+    public void TrollFactory_HasInnateRegenComponent()
     {
+        // After Phase 6: trolls use InnateRegenComponent (permanent innate regen) instead of
+        // RegenerationEffect (timed status). This allows AcidEffect to suppress troll regen
+        // without affecting player ring/potion regeneration (RegenerationEffect).
         var factory = CreateFactory();
         var troll = factory.Create("troll");
 
         Assert.That(troll, Is.Not.Null, "troll must be registered in entities.yaml");
-        var regen = troll!.Get<RegenerationEffect>();
-        Assert.That(regen, Is.Not.Null, "Troll must have RegenerationEffect attached");
-        Assert.That(regen!.HealPerTurn, Is.EqualTo(2), "Troll regen should heal 2 HP/turn (PoC value)");
-        Assert.That(regen.RemainingTurns, Is.GreaterThan(100), "Troll regen should have a very long duration");
+        var innateRegen = troll!.Get<InnateRegenComponent>();
+        Assert.That(innateRegen, Is.Not.Null, "Troll must have InnateRegenComponent attached");
+        Assert.That(innateRegen!.HealPerTurn, Is.EqualTo(2), "Troll innate regen should heal 2 HP/turn (PoC value)");
+        // InnateRegenComponent is permanent (no RemainingTurns) — check no RegenerationEffect exists.
+        Assert.That(troll.Get<RegenerationEffect>(), Is.Null, "Troll should not have timed RegenerationEffect");
     }
 
     [Test]

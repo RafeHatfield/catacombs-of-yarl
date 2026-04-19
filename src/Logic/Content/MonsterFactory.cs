@@ -164,16 +164,13 @@ public sealed class MonsterFactory
                 break;
         }
 
-        // Regeneration: attach HOT with a very long duration so it persists through any fight.
-        // PoC: regeneration_amount is healed per turn. Duration=9999 is effectively permanent
-        // within combat (StatusEffectProcessor.ProcessTurnEnd decrements it, but fights end first).
+        // Regeneration: monsters with regeneration_amount get InnateRegenComponent — a permanent,
+        // non-duration component. This differs from RegenerationEffect (used for ring/potion regen),
+        // which is a timed status effect. The separation allows AcidEffect to suppress only innate
+        // regeneration without affecting player ring/potion regeneration.
         if (def.RegenerationAmount > 0)
         {
-            entity.Add(new Combat.StatusEffects.RegenerationEffect
-            {
-                HealPerTurn = def.RegenerationAmount,
-                RemainingTurns = 9999,
-            });
+            entity.Add(new InnateRegenComponent { HealPerTurn = def.RegenerationAmount });
         }
 
         // On-hit effect: attach for monsters that apply status effects on hit (spiders, fire_beetle).

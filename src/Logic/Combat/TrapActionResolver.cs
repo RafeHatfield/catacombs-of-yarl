@@ -172,43 +172,50 @@ public static class TrapActionResolver
     }
 
     /// <summary>
-    /// Apply bleed effect. Phase 1: stub that marks application but does nothing mechanical yet.
-    /// Full implementation in Phase 6 (BleedEffect class + StatusEffectProcessor wiring).
+    /// Apply bleed effect (Phase 6 full implementation).
+    /// Severity comes from action.Amount (1 = standard, 2 = deep wound).
+    /// Duration from action.Duration (default 3 if unset).
+    /// BleedEffect ticks damage each turn and attracts nearby undead.
     /// </summary>
     private static bool ApplyBleed(Entity target, TrapAction action, List<TurnEvent> events)
     {
-        // Phase 1 stub: BleedEffect implementation deferred to Phase 6 (TASK-016).
-        // When BleedEffect is created, replace this with:
-        //   var effect = StatusEffectProcessor.ApplyEffect<BleedEffect>(target, action.Duration);
-        //   effect.Severity = action.Amount;
-        // For now: emit a StatusAppliedEvent so the event stream is observable.
+        int duration = action.Duration > 0 ? action.Duration : 3;
+        int severity = action.Amount > 0 ? action.Amount : 1;
+
+        var effect = StatusEffectProcessor.ApplyEffect<BleedEffect>(target, duration);
+        if (effect == null) return false;
+
+        // Set severity — take the higher value if already bleeding (no downgrade).
+        effect.Severity = Math.Max(effect.Severity, severity);
+
         events.Add(new StatusAppliedEvent
         {
-            ActorId   = target.Id,
-            TargetId  = target.Id,
+            ActorId    = target.Id,
+            TargetId   = target.Id,
             EffectName = "bleed",
-            Duration  = action.Duration > 0 ? action.Duration : 3,
+            Duration   = effect.RemainingTurns,
         });
         return true;
     }
 
     /// <summary>
-    /// Apply acid effect. Phase 1: stub that marks application but does nothing mechanical yet.
-    /// Full implementation in Phase 6 (AcidEffect class + InnateRegenComponent suppression).
-    /// When triggered on acid_trap, also checks for weapon coating (Phase 7, TASK-020).
+    /// Apply acid effect (Phase 6 full implementation).
+    /// Duration from action.Duration (default 8 if unset, matching acid_trap YAML).
+    /// While active: suppresses InnateRegenComponent on the same entity.
     /// </summary>
     private static bool ApplyAcid(Entity target, TrapAction action, List<TurnEvent> events)
     {
-        // Phase 1 stub: AcidEffect implementation deferred to Phase 6 (TASK-017).
-        // When AcidEffect is created, replace this with:
-        //   StatusEffectProcessor.ApplyEffect<AcidEffect>(target, action.Duration);
-        // For now: emit a StatusAppliedEvent so the event stream is observable.
+        int duration = action.Duration > 0 ? action.Duration : 8;
+
+        var effect = StatusEffectProcessor.ApplyEffect<AcidEffect>(target, duration);
+        if (effect == null) return false;
+
         events.Add(new StatusAppliedEvent
         {
-            ActorId   = target.Id,
-            TargetId  = target.Id,
+            ActorId    = target.Id,
+            TargetId   = target.Id,
             EffectName = "acid",
-            Duration  = action.Duration > 0 ? action.Duration : 8,
+            Duration   = effect.RemainingTurns,
         });
         return true;
     }

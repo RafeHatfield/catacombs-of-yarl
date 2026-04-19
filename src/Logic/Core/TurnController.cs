@@ -49,7 +49,7 @@ public static class TurnController
         // Mirrors PoC behavior where reading a sign is "looking," not a game action.
         bool freeAction = false;
 
-        bool playerSkipTurn = StatusEffectProcessor.ProcessTurnStart(state.Player, events, state.TurnCount);
+        bool playerSkipTurn = StatusEffectProcessor.ProcessTurnStart(state.Player, events, state.TurnCount, state);
         if (!playerSkipTurn)
             ResolvePlayerAction(state, action, events, monsterFactory, portalEntityFactory, out freeAction);
 
@@ -1242,6 +1242,21 @@ public static class TurnController
         if (consumable.StackSize <= 0)
             inventory.Remove(potion);
 
+        // Healing potion clears severity-1 bleed (minor wound stanched by bandaging / magical healing).
+        // Severity-2 bleed (deep wound) requires a dedicated remedy — not cleared here.
+        var bleed = state.Player.Get<BleedEffect>();
+        if (bleed != null && bleed.Severity == 1)
+        {
+            state.Player.Remove<BleedEffect>();
+            events.Add(new StatusExpiredEvent
+            {
+                ActorId    = state.Player.Id,
+                EntityId   = state.Player.Id,
+                EffectName = "bleed",
+                Reason     = "healed",
+            });
+        }
+
         events.Add(new HealEvent
         {
             ActorId = state.Player.Id,
@@ -1514,7 +1529,7 @@ public static class TurnController
             if (!state.PlayerFighter.IsAlive) break; // player died mid-turn — stop processing
 
             // Process start-of-turn effects: DOT/HOT ticks, skip-turn determination.
-            bool monsterSkipTurn = StatusEffectProcessor.ProcessTurnStart(monster, events, state.TurnCount);
+            bool monsterSkipTurn = StatusEffectProcessor.ProcessTurnStart(monster, events, state.TurnCount, state);
             if (monsterSkipTurn)
             {
                 // Still decrement durations even on a skipped turn — time passes for sleeping/immobilized entities.
