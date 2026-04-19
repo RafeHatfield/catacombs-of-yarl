@@ -622,6 +622,7 @@ public sealed partial class GameController : Node
             _autoExploreMode = false;
             _pendingPath = null;
             _animator!.SpeedMultiplier = 1.0f;
+            PlayerCamera.ActiveMode = CameraMode.Deadzone;
             return;
         }
 
@@ -690,6 +691,7 @@ public sealed partial class GameController : Node
         _pendingPath = null;
         _autoExploreMode = true;
         _animator!.SpeedMultiplier = AutoExploreSpeedMultiplier;
+        PlayerCamera.ActiveMode = CameraMode.HardFollow;
         AutoExploreSystem.Activate(_state);
         AdvanceAutoExplore();
     }
@@ -702,6 +704,7 @@ public sealed partial class GameController : Node
         {
             _autoExploreMode = false;
             _animator!.SpeedMultiplier = 1.0f;
+            PlayerCamera.ActiveMode = CameraMode.Deadzone;
             Phase = GamePhase.WaitingForInput;
             _input.SetAcceptingInput(true);
 
@@ -723,6 +726,7 @@ public sealed partial class GameController : Node
             Diag.Log($"OnActionChosen: action={action.Kind}, cancelled auto-explore");
         _autoExploreMode = false;
         if (_animator != null) _animator.SpeedMultiplier = 1.0f;
+        PlayerCamera.ActiveMode = CameraMode.Deadzone;
         if (_state != null)
             if (_state.Player.Get<AutoExploreState>() is { } ae) ae.IsActive = false;
 
