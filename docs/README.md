@@ -1,10 +1,26 @@
 # Catacombs of YARL — Documentation Index
 
+## Systems Reference (What's Implemented)
+
+- [systems/INDEX.md](systems/INDEX.md) — **Start here**: index of all system docs with implementation status
+- [systems/WEAPONS.md](systems/WEAPONS.md) — All weapons, damage types, enchantment
+- [systems/ARMOUR.md](systems/ARMOUR.md) — All armour pieces, slots, AC values
+- [systems/POTIONS.md](systems/POTIONS.md) — All potions, drink/throw mechanics
+- [systems/SCROLLS_AND_WANDS.md](systems/SCROLLS_AND_WANDS.md) — All scrolls and wands, spell system
+- [systems/RINGS.md](systems/RINGS.md) — All rings, Phase 1 vs Phase 2
+- [systems/MONSTERS.md](systems/MONSTERS.md) — All monsters, AI types, special abilities
+- [systems/STATUS_EFFECTS.md](systems/STATUS_EFFECTS.md) — All status effects, durations, values
+- [systems/COMBAT.md](systems/COMBAT.md) — Combat resolution, crits, speed/momentum
+- [systems/MAP_GENERATION_AND_PROPS.md](systems/MAP_GENERATION_AND_PROPS.md) — Floor gen, props, signposts, chests
+- [systems/LOOT_AND_IDENTIFICATION.md](systems/LOOT_AND_IDENTIFICATION.md) — Loot bands, categories, identification
+- [systems/GROUND_HAZARDS.md](systems/GROUND_HAZARDS.md) — Fire and poison gas hazards (no traps yet)
+- [systems/DEPTH_BANDS_AND_BOONS.md](systems/DEPTH_BANDS_AND_BOONS.md) — Bands B1–B5, boon awards, ETP budgets
+
 ## Design
 
 - [DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md) — Architecture, gameplay, and code quality principles
 - [PLAYER_PAIN_POINTS.md](PLAYER_PAIN_POINTS.md) — Research on what players hate about roguelikes and our decisions
-- [TRADITIONAL_ROGUELIKE_FEATURES.md](TRADITIONAL_ROGUELIKE_FEATURES.md) — 35+ classic features with priority rankings
+- [TRADITIONAL_ROGUELIKE_FEATURES.md](TRADITIONAL_ROGUELIKE_FEATURES.md) — Feature wishlist from Oct 2025 (partially stale — many systems now built)
 - [PLAYER_PROGRESSION_DOCTRINE.md](PLAYER_PROGRESSION_DOCTRINE.md) — Depth Boons system design (why not XP, mathematical constraints)
 - [DEPTH_PRESSURE_MODEL.md](DEPTH_PRESSURE_MODEL.md) — H_PM/H_MP invariants, target curves, scaling math
 
