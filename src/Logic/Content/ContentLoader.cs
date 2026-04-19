@@ -300,6 +300,44 @@ public sealed class ContentLoader
     }
 
     /// <summary>
+    /// Load interactive prop definitions from a YAML string (config/interactive_props.yaml).
+    /// Returns an InteractivePropsRegistry containing prop definitions + named trap payloads.
+    /// </summary>
+    public InteractivePropsRegistry LoadInteractiveProps(string yaml)
+    {
+        var file = _deserializer.Deserialize<InteractivePropsFile>(yaml);
+        return new InteractivePropsRegistry(
+            file?.Props ?? new Dictionary<string, InteractivePropDefinition>(),
+            file?.TrapPayloads ?? new Dictionary<string, TrapPayloadDefinition>());
+    }
+
+    /// <summary>
+    /// Load interactive prop definitions from a YAML file path.
+    /// </summary>
+    public InteractivePropsRegistry LoadInteractivePropsFromFile(string path)
+    {
+        return LoadInteractiveProps(File.ReadAllText(path));
+    }
+
+    /// <summary>
+    /// Load floor trap definitions from a YAML string (config/floor_traps.yaml).
+    /// Returns a FloorTrapRegistry keyed by trap type ID.
+    /// </summary>
+    public FloorTrapRegistry LoadFloorTraps(string yaml)
+    {
+        var file = _deserializer.Deserialize<FloorTrapsFile>(yaml);
+        return new FloorTrapRegistry(file?.Traps ?? new Dictionary<string, FloorTrapDefinition>());
+    }
+
+    /// <summary>
+    /// Load floor trap definitions from a YAML file path.
+    /// </summary>
+    public FloorTrapRegistry LoadFloorTrapsFromFile(string path)
+    {
+        return LoadFloorTraps(File.ReadAllText(path));
+    }
+
+    /// <summary>
     /// Load all content from a single entities YAML string.
     /// Returns monsters, items, consumables, spell items, and floor item pool in one call.
     /// </summary>

@@ -1,0 +1,51 @@
+# Interactive prop definitions for Catacombs of YARL
+# Barrels, bookshelves, bone piles — bump to search/break.
+# Loot is pre-resolved at floor-gen time for determinism.
+
+interactive_props:
+  barrel:
+    closed_tile_id: 268
+    open_tile_id: 269
+    loot:
+      weights: { potion: 60, scroll: 10, nothing: 30 }
+      min_depth: 1
+    trap_chance: 0.15
+    trap_table:
+      - { weight: 60, payload: fire_burst_small }
+      - { weight: 40, payload: spike_burst_small }
+
+  bookshelf:
+    closed_tile_id: 317
+    open_tile_id: 317          # no visual change when searched
+    loot:
+      weights: { scroll: 20, nothing: 80 }
+      min_depth: 1
+    trap_chance: 0.0           # never trapped
+
+  bone_pile:
+    closed_tile_id: 90
+    open_tile_id: 91
+    loot:
+      weights: { weapon: 30, armor: 30, nothing: 40 }
+      min_depth: 1
+    rouse_chance: 0.35
+    rouse_monster: zombie
+    rouse_radius: 4
+    rouse_min_depth: 2         # no rouse at depth 1
+
+# Named trap payloads shared by props and trapped chests.
+# Referenced from trap_table entries above by payload key.
+trap_payloads:
+  fire_burst_small:
+    actions:
+      - { kind: damage, amount: 4 }
+      - { kind: burning, duration: 4 }
+
+  spike_burst_small:
+    actions:
+      - { kind: damage, amount: 6 }
+      - { kind: bleed, amount: 1, duration: 3 }
+
+  spike_burst_chest:           # trapped chest payload — spike burst, no bleed
+    actions:
+      - { kind: damage, amount: 5 }

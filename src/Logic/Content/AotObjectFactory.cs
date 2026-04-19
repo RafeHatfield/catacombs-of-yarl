@@ -103,6 +103,26 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(List<float>)] = () => new List<float>(),
         [typeof(int[])] = () => new int[0],
 
+        // Interactive props + floor traps (interactive_props.yaml + floor_traps.yaml)
+        [typeof(InteractivePropsFile)] = () => new InteractivePropsFile(),
+        [typeof(InteractivePropDefinition)] = () => new InteractivePropDefinition(),
+        [typeof(PropLootConfig)] = () => new PropLootConfig(),
+        [typeof(WeightedPayloadEntry)] = () => new WeightedPayloadEntry(),
+        [typeof(TrapPayloadDefinition)] = () => new TrapPayloadDefinition(),
+        [typeof(TrapActionDefinition)] = () => new TrapActionDefinition(),
+        [typeof(FloorTrapsFile)] = () => new FloorTrapsFile(),
+        [typeof(FloorTrapDefinition)] = () => new FloorTrapDefinition(),
+        [typeof(Dictionary<string, InteractivePropDefinition>)] = () => new Dictionary<string, InteractivePropDefinition>(),
+        [typeof(Dictionary<string, TrapPayloadDefinition>)] = () => new Dictionary<string, TrapPayloadDefinition>(),
+        [typeof(Dictionary<string, FloorTrapDefinition>)] = () => new Dictionary<string, FloorTrapDefinition>(),
+        [typeof(Dictionary<string, int>)] = () => new Dictionary<string, int>(),
+        [typeof(List<TrapActionDefinition>)] = () => new List<TrapActionDefinition>(),
+        [typeof(List<WeightedPayloadEntry>)] = () => new List<WeightedPayloadEntry>(),
+        // ECS components registered for forward-safety (forward-compatibility with any future save state path)
+        [typeof(DestructiblePropComponent)] = () => new DestructiblePropComponent(),
+        [typeof(FloorTrapComponent)] = () => new FloorTrapComponent(),
+        [typeof(TrapPayloadComponent)] = () => new TrapPayloadComponent(),
+
         // Loot system (loot_tags.yaml + loot_policy.yaml)
         [typeof(LootTagsFile)] = () => new LootTagsFile(),
         [typeof(LootTag)] = () => new LootTag(),

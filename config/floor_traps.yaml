@@ -1,0 +1,73 @@
+# Floor trap definitions for Catacombs of YARL
+# 9 trap types: 8 PoC-canonical + acid trap (new, counter to troll regen).
+# Placement is managed by EntityPlacer.PlaceFloorFeatures.
+# tile_modulate: [r, g, b, a] presentation-only color tint for traps sharing a tile ID.
+
+floor_traps:
+  spike_trap:
+    visible_tile_id: 429
+    is_detectable: true
+    passive_detect_chance: 0.10
+    actions:
+      - { kind: damage, amount: 7 }
+      - { kind: bleed, amount: 1, duration: 3 }
+
+  web_trap:
+    visible_tile_id: 430
+    is_detectable: true
+    passive_detect_chance: 0.15
+    actions:
+      - { kind: slow, duration: 5, amount: 1 }
+
+  gas_trap:
+    visible_tile_id: 431
+    is_detectable: true
+    passive_detect_chance: 0.12
+    actions:
+      - { kind: poison, duration: 6 }
+
+  fire_trap:
+    visible_tile_id: 432
+    is_detectable: true
+    passive_detect_chance: 0.12
+    actions:
+      - { kind: burning, duration: 4 }
+
+  alarm_plate:
+    visible_tile_id: 433
+    is_detectable: true
+    passive_detect_chance: 0.20
+    actions:
+      - { kind: alert_faction, target: orc, radius: 8 }
+
+  teleport_trap:
+    visible_tile_id: 434
+    is_detectable: true
+    passive_detect_chance: 0.15
+    actions:
+      - { kind: teleport }
+
+  root_trap:
+    visible_tile_id: 430
+    tile_modulate: [0.6, 1.0, 0.5, 1.0]   # green tint to distinguish from web_trap
+    is_detectable: true
+    passive_detect_chance: 0.10
+    actions:
+      - { kind: entangle, duration: 3 }
+
+  hole_trap:
+    visible_tile_id: 429
+    tile_modulate: [0.3, 0.3, 0.4, 1.0]   # dark blue-grey tint
+    is_detectable: true
+    passive_detect_chance: 0.08
+    actions:
+      - { kind: descend }
+
+  acid_trap:
+    visible_tile_id: 431
+    tile_modulate: [0.8, 1.0, 0.3, 1.0]   # yellow-green tint
+    is_detectable: true
+    passive_detect_chance: 0.12
+    actions:
+      - { kind: damage, amount: 4 }
+      - { kind: acid, duration: 8 }
