@@ -245,28 +245,36 @@ public static class TileThemeLoader
                     continue;
                 }
 
-                // Door variants are scalar ints; all other roles use bracketed int lists.
-                if (key.StartsWith("door"))
+                // Scalar int roles: doors, chests, signs, murals.
+                if (IsScalarIntRole(key))
                 {
-                    int doorId = ParseScalarInt(rawValue);
+                    int id = ParseScalarInt(rawValue);
                     switch (key)
                     {
-                        case "door":                currentThemeData.Door               = doorId; break;
-                        case "door_open":           currentThemeData.DoorOpen           = doorId; break;
-                        case "door_locked":         currentThemeData.DoorLocked         = doorId; break;
-                        case "door_shut":           currentThemeData.DoorShut           = doorId; break;
-                        case "door_barred":         currentThemeData.DoorBarred         = doorId; break;
-                        case "door_broken":         currentThemeData.DoorBroken         = doorId; break;
-                        case "door_ajar":           currentThemeData.DoorAjar           = doorId; break;
-                        case "door_iron":           currentThemeData.DoorIron           = doorId; break;
-                        case "door_iron_open":      currentThemeData.DoorIronOpen       = doorId; break;
-                        case "door_magic":          currentThemeData.DoorMagic          = doorId; break;
-                        case "door_magic_open":     currentThemeData.DoorMagicOpen      = doorId; break;
-                        case "door_barricaded":     currentThemeData.DoorBarricaded     = doorId; break;
-                        case "door_barricaded_open":currentThemeData.DoorBarricadedOpen = doorId; break;
-                        case "door_portal":         currentThemeData.DoorPortal         = doorId; break;
+                        case "door":                currentThemeData.Door               = id; break;
+                        case "door_open":           currentThemeData.DoorOpen           = id; break;
+                        case "door_locked":         currentThemeData.DoorLocked         = id; break;
+                        case "door_shut":           currentThemeData.DoorShut           = id; break;
+                        case "door_barred":         currentThemeData.DoorBarred         = id; break;
+                        case "door_broken":         currentThemeData.DoorBroken         = id; break;
+                        case "door_ajar":           currentThemeData.DoorAjar           = id; break;
+                        case "door_iron":           currentThemeData.DoorIron           = id; break;
+                        case "door_iron_open":      currentThemeData.DoorIronOpen       = id; break;
+                        case "door_magic":          currentThemeData.DoorMagic          = id; break;
+                        case "door_magic_open":     currentThemeData.DoorMagicOpen      = id; break;
+                        case "door_barricaded":     currentThemeData.DoorBarricaded     = id; break;
+                        case "door_barricaded_open":currentThemeData.DoorBarricadedOpen = id; break;
+                        case "door_portal":         currentThemeData.DoorPortal         = id; break;
+                        case "chest_closed":        currentThemeData.ChestClosed        = id; break;
+                        case "chest_open":          currentThemeData.ChestOpen          = id; break;
+                        case "chest_trapped":       currentThemeData.ChestTrapped       = id; break;
+                        case "chest_empty":         currentThemeData.ChestEmpty         = id; break;
+                        case "sign":                currentThemeData.Sign               = id; break;
+                        case "mural_gold_landscape":currentThemeData.MuralGoldLandscape = id; break;
+                        case "mural_gold_warm":     currentThemeData.MuralGoldWarm      = id; break;
+                        case "mural_wood_cool":     currentThemeData.MuralWoodCool      = id; break;
                         default:
-                            GD.PrintErr($"[TileThemeLoader] Unknown door variant '{key}' in theme '{currentThemeName}'.");
+                            GD.PrintErr($"[TileThemeLoader] Unknown scalar role '{key}' in theme '{currentThemeName}'.");
                             break;
                     }
                     continue;
@@ -307,6 +315,9 @@ public static class TileThemeLoader
     // -------------------------------------------------------------------------
     // Parsing helpers
     // -------------------------------------------------------------------------
+
+    private static bool IsScalarIntRole(string key)
+        => key.StartsWith("door") || key.StartsWith("chest") || key.StartsWith("mural") || key == "sign";
 
     /// <summary>
     /// Parse a bracketed integer list from YAML: "[1091]" or "[1034, 1090, 1089, 1088]"

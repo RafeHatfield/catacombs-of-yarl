@@ -200,7 +200,21 @@ public static class TilesetLoader
         }
         foreach (var (typeId, spriteValue) in config.Items)
         {
-            var path = $"{config.ItemsRoot}/{spriteValue}.png";
+            string path;
+            if (string.IsNullOrEmpty(config.ItemsPattern))
+            {
+                path = $"{config.ItemsRoot}/{spriteValue}.png";
+            }
+            else
+            {
+                if (!int.TryParse(spriteValue, out int fileNum))
+                {
+                    GD.PrintErr($"[TilesetLoader] Item sprite value not an integer: '{spriteValue}' for '{typeId}'");
+                    continue;
+                }
+                var filename = config.ItemsPattern.Replace("{index:D2}", fileNum.ToString("D2"));
+                path = $"{config.ItemsRoot}/{filename}";
+            }
             if (!ResourceLoader.Exists(path))
                 GD.PrintErr($"[TilesetLoader] Missing item sprite for '{typeId}': {path}");
         }

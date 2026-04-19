@@ -395,4 +395,16 @@ public sealed class TileThemeData
     public int DoorPortal         { get; set; }  // 214 door with magic portal
 
     public List<int> Bones             { get; set; } = new();
+
+    // Chest variants (0 = not configured for this theme)
+    public int ChestClosed  { get; set; }
+    public int ChestOpen    { get; set; }
+    public int ChestTrapped { get; set; }
+    public int ChestEmpty   { get; set; }
+
+    // Decorative prop tiles (0 = not configured for this theme)
+    public int Sign               { get; set; }
+    public int MuralGoldLandscape { get; set; }
+    public int MuralGoldWarm      { get; set; }
+    public int MuralWoodCool      { get; set; }
 }
