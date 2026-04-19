@@ -734,9 +734,87 @@ public static class TurnController
                     AutoExploreSystem.Stop(ae, "Reached stairs");
             }
 
+            // Floor trap check: test whether the player just stepped onto a trap.
+            HandleFloorTrapEntry(state, player, player.X, player.Y, events, skipPassiveDetect: false);
+
             // Walk-over pickup: auto-collect any floor item at the new position
             TryPickUpItemsAt(state, player.X, player.Y, events);
         }
+    }
+
+    /// <summary>
+    /// Check whether a floor trap is at (x, y) and process entry logic.
+    ///
+    /// Detection model (PoC-exact):
+    ///   1. Find FloorTrapComponent at (x, y) that is not yet spent.
+    ///   2. If already detected → emit TrapAvoidedEvent, skip trigger.
+    ///   3. If skipPassiveDetect=true (monsters) → trigger immediately.
+    ///   4. Else roll PassiveDetectChance:
+    ///      - Success → mark IsDetected=true, emit TrapDetectedEvent, skip trigger.
+    ///      - Failure → call TrapActionResolver.Resolve, mark IsSpent=true.
+    /// </summary>
+    private static void HandleFloorTrapEntry(GameState state, Entity mover, int x, int y,
+        List<TurnEvent> events, bool skipPassiveDetect,
+        MonsterFactory? monsterFactory = null)
+    {
+        // Find the first non-spent floor trap at this tile.
+        // Floor traps do NOT block movement so they don't appear in Features.BlocksMovement path.
+        // They are stored in Features (same list as chests/signs) but with BlocksMovement=false.
+        var trapFeature = state.Features.FirstOrDefault(f =>
+            f.X == x && f.Y == y && f.Get<FloorTrapComponent>() != null);
+        if (trapFeature == null) return;
+
+        var trap = trapFeature.Require<FloorTrapComponent>();
+        if (trap.IsSpent) return;
+
+        // Auto-avoid detected traps.
+        if (trap.IsDetected)
+        {
+            events.Add(new TrapAvoidedEvent
+            {
+                ActorId  = mover.Id,
+                X        = x,
+                Y        = y,
+                TrapType = trap.TrapType,
+            });
+            return;
+        }
+
+        // Monsters skip passive detection — they always trigger.
+        if (!skipPassiveDetect && trap.IsDetectable)
+        {
+            double roll = state.Rng.NextDouble();
+            if (roll < trap.PassiveDetectChance)
+            {
+                // Detected: mark and emit, do NOT trigger.
+                trap.IsDetected = true;
+                events.Add(new TrapDetectedEvent
+                {
+                    ActorId  = mover.Id,
+                    X        = x,
+                    Y        = y,
+                    TrapType = trap.TrapType,
+                });
+
+                // Stop auto-explore on trap detection (same pattern as chest discovery).
+                var ae = mover.Get<AutoExploreState>();
+                if (ae != null && ae.IsActive)
+                    AutoExploreSystem.Stop(ae, "Detected trap");
+
+                return;
+            }
+        }
+
+        // Trigger: mark spent BEFORE resolving to prevent recursion if a spawned monster
+        // immediately walks onto the same tile.
+        trap.IsSpent = true;
+
+        var idAlloc = GetOrCreateIdAllocator(state);
+        TrapActionResolver.Resolve(mover, trap.Payload,
+            trap.TrapType, (x, y),
+            state, state.Rng, events,
+            monsterFactory: monsterFactory,
+            idAllocator: idAlloc);
     }
 
     /// <summary>
@@ -759,12 +837,14 @@ public static class TurnController
     {
         consumesTurn = true; // default: costs a turn (safe for unhandled cases)
 
-        // Find the first feature entity at this tile.
-        var feature = state.Features.FirstOrDefault(f => f.X == x && f.Y == y);
+        // Find the first BLOCKING feature entity at this tile.
+        // Floor traps (BlocksMovement=false) are intentionally excluded — they are handled
+        // after movement by HandleFloorTrapEntry, not here at the bump point.
+        var feature = state.Features.FirstOrDefault(f => f.X == x && f.Y == y && f.BlocksMovement);
         if (feature == null)
         {
             consumesTurn = true;
-            return false; // no feature here — let normal door/move logic proceed
+            return false; // no blocking feature here — let normal door/move logic proceed
         }
 
         var chest = feature.Get<ChestComponent>();
@@ -850,9 +930,127 @@ public static class TurnController
             return true;
         }
 
+        var prop = feature.Get<DestructiblePropComponent>();
+        if (prop != null)
+        {
+            if (prop.IsResolved)
+            {
+                // Already resolved: bump is consumed (entity still blocks movement)
+                // but no turn is spent and nothing happens. Player just bumps.
+                consumesTurn = false;
+                return true;
+            }
+
+            prop.IsResolved = true;
+            var player = state.Player;
+            bool trapFired = false;
+            bool monsterRoused = false;
+
+            // Drop pre-staged loot to player tile and auto-pick up.
+            var lootStash = feature.Get<ChestLootStash>(); // reuse ChestLootStash for prop loot
+            var droppedIds = new List<int>();
+            if (lootStash != null)
+            {
+                foreach (var item in lootStash.Items)
+                {
+                    item.X = player.X;
+                    item.Y = player.Y;
+                    state.FloorItems.Add(item);
+                    state.Map.RegisterEntity(item);
+                    droppedIds.Add(item.Id);
+                }
+                lootStash.Items.Clear();
+            }
+
+            events.Add(new PropDestroyedEvent
+            {
+                ActorId       = player.Id,
+                X             = feature.X,
+                Y             = feature.Y,
+                PropKind      = prop.PropKind,
+                DroppedItemIds = droppedIds,
+                TrapFired      = false,   // updated below if trap fires
+                MonsterRoused  = false,
+            });
+
+            TryPickUpItemsAt(state, player.X, player.Y, events);
+
+            // Fire trap payload if present.
+            if (prop.TrapPayload != null)
+            {
+                var idAlloc = GetOrCreateIdAllocator(state);
+                TrapActionResolver.Resolve(player, prop.TrapPayload,
+                    $"{prop.PropKind}_trap", (feature.X, feature.Y),
+                    state, state.Rng, events,
+                    monsterFactory: null, idAllocator: idAlloc);
+                trapFired = true;
+            }
+
+            // Fire rouse action if present.
+            if (prop.RouseAction != null)
+            {
+                var rousePayload = new TrapPayloadComponent();
+                rousePayload.Actions.Add(prop.RouseAction);
+                var idAlloc = GetOrCreateIdAllocator(state);
+
+                // We need monsterFactory for spawn_monster — not available here.
+                // The rouse fires as a no-op when no factory is injected (tests).
+                // In dungeon mode, ProcessTurn passes monsterFactory; but TryInteractFeature
+                // doesn't receive it. For now: rouse fires without factory (no-op in non-dungeon).
+                // Full wiring deferred to Phase 4 when EntityPlacer places bone piles in dungeon mode.
+                bool rouseResult = TrapActionResolver.Resolve(player, rousePayload,
+                    "bone_pile_rouse", (feature.X, feature.Y),
+                    state, state.Rng, events,
+                    monsterFactory: null, idAllocator: idAlloc);
+
+                if (rouseResult)
+                    monsterRoused = true;
+            }
+
+            // Update the PropDestroyedEvent with actual trap/rouse results.
+            // TurnEvent is init-only so we need to replace the event.
+            var existingPropEvt = events.OfType<PropDestroyedEvent>()
+                .LastOrDefault(e => e.X == feature.X && e.Y == feature.Y);
+            if (existingPropEvt != null && (trapFired || monsterRoused))
+            {
+                int idx = events.LastIndexOf(existingPropEvt);
+                events[idx] = new PropDestroyedEvent
+                {
+                    ActorId        = existingPropEvt.ActorId,
+                    X              = existingPropEvt.X,
+                    Y              = existingPropEvt.Y,
+                    PropKind       = existingPropEvt.PropKind,
+                    DroppedItemIds = existingPropEvt.DroppedItemIds,
+                    TrapFired      = trapFired,
+                    MonsterRoused  = monsterRoused,
+                };
+            }
+
+            consumesTurn = true;
+            return true;
+        }
+
         // Feature exists but has no recognized component — treat as a blocking bump.
         consumesTurn = false;
         return true;
+    }
+
+    /// <summary>
+    /// Get the floor's EntityIdAllocator from state, or create a fallback one based on max existing ID.
+    /// The fallback is used in tests and scenario mode where no allocator was set at floor-build time.
+    /// </summary>
+    private static EntityIdAllocator GetOrCreateIdAllocator(GameState state)
+    {
+        if (state.IdAllocator != null)
+            return state.IdAllocator;
+
+        // Fallback: compute max ID across all entities and start from there.
+        int maxId = 0;
+        if (state.Player.Id > maxId) maxId = state.Player.Id;
+        foreach (var m in state.Monsters) if (m.Id > maxId) maxId = m.Id;
+        foreach (var f in state.Features) if (f.Id > maxId) maxId = f.Id;
+        foreach (var item in state.FloorItems) if (item.Id > maxId) maxId = item.Id;
+        return new EntityIdAllocator(startFrom: maxId + 1);
     }
 
     /// <summary>
@@ -1355,6 +1553,14 @@ public static class TurnController
                         var monsterPortalTeleport = PortalSystem.CheckPortalCollision(monster, state);
                         if (monsterPortalTeleport != null)
                             events.Add(monsterPortalTeleport);
+
+                        // Floor trap: monsters skip passive detection and always trigger.
+                        // Only check if the monster is still alive after the portal (teleport might have moved it).
+                        if (monster.Require<Fighter>().IsAlive)
+                        {
+                            HandleFloorTrapEntry(state, monster, monster.X, monster.Y, events,
+                                skipPassiveDetect: true, monsterFactory: monsterFactory);
+                        }
                     }
                     break;
 

@@ -204,6 +204,49 @@ public static class FeatureFactory
         return entity;
     }
 
+    /// <summary>
+    /// Create a floor trap entity with a custom passive detect chance override.
+    /// Used for contextual placement (traps near high-value rooms have lower detect chance).
+    /// </summary>
+    public static Entity CreateFloorTrapWithDetectOverride(
+        int x, int y,
+        string trapType,
+        FloorTrapDefinition def,
+        EntityIdAllocator ids,
+        double passiveDetectChanceOverride)
+    {
+        var entity = new Entity(ids.Next(), FormatTrapName(trapType), x, y, blocksMovement: false);
+
+        var payload = new TrapPayloadComponent();
+        foreach (var actionDef in def.Actions)
+        {
+            payload.Actions.Add(new TrapAction
+            {
+                Kind     = actionDef.Kind,
+                Amount   = actionDef.Amount,
+                Duration = actionDef.Duration,
+                Radius   = actionDef.Radius,
+                Target   = actionDef.Target,
+            });
+        }
+
+        float[]? modulate = def.TileModulate != null ? def.TileModulate.ToArray() : null;
+
+        entity.Add(new FloorTrapComponent
+        {
+            TrapType            = trapType,
+            IsSpent             = false,
+            IsDetected          = false,
+            IsDetectable        = def.IsDetectable,
+            PassiveDetectChance = passiveDetectChanceOverride,  // contextual override
+            Payload             = payload,
+            VisibleTileId       = def.VisibleTileId,
+            TileModulate        = modulate,
+        });
+
+        return entity;
+    }
+
     // ── Private helpers ────────────────────────────────────────────────────────
 
     /// <summary>Build a runtime TrapPayloadComponent from a YAML TrapPayloadDefinition.</summary>

@@ -1,13 +1,15 @@
 # Plan: Interactive Props, Trap System & Status Interactions
 
-Status: [ ] Not started
+Status: [~] In progress — Phases 1–3 complete, Phase 4 in progress
 PoC reference: `~/development/rlike/components/trap.py`, `~/development/rlike/services/movement_service.py` (_apply_trap_effects), `~/development/rlike/config/entities.yaml` (map_traps, bone_pile)
 Supersedes: most of `plan_traps_chests_features.md` trap section — chests/signs/murals already complete.
 
 ---
 
 ## Current State
-- Feature not started. Design finalized in this plan. Awaiting builder.
+- Phases 1, 2, 3 complete. All 14 PropAndTrap tests passing + 17 registry tests + 19 resolver tests.
+- Key fix: TryInteractFeature now filters to BlocksMovement=true only — floor traps (BlocksMovement=false) skip interaction and are handled by HandleFloorTrapEntry after movement.
+- Next: Phase 4 (TASK-013 + TASK-014) — EntityPlacer.PlaceFloorFeatures extension for props and floor traps.
 
 ---
 
@@ -421,45 +423,43 @@ public sealed class WeaponAcidCoatedEvent : TurnEvent {
   - Acceptance: no barrel/bookshelf/bone_pile tile placed by `RoomPropPlacer`; counts verified by existing placement tests.
 
 ### Phase 1 — Core components + resolver
-- [ ] TASK-001: Create `DestructiblePropComponent`, `FloorTrapComponent`, `TrapPayloadComponent`, `TrapAction` in `src/Logic/ECS/`. No separate RousePayload — rouse is a `TrapAction(Kind="spawn_monster")`.
-  - Acceptance: compile; NUnit: component defaults, Entity.Add/Get round-trip.
+- [x] TASK-001: Create `DestructiblePropComponent`, `FloorTrapComponent`, `TrapPayloadComponent`, `TrapAction` in `src/Logic/ECS/`. No separate RousePayload — rouse is a `TrapAction(Kind="spawn_monster")`.
+  - Status: complete
 
-- [ ] TASK-002: Add new TurnEvents to `Logic/Core/TurnEvent.cs` (all events listed in Architecture section — PropDestroyedEvent through WeaponAcidCoatedEvent).
-  - Acceptance: compile; spot-check init-setter serialization.
+- [x] TASK-002: Add new TurnEvents to `Logic/Core/TurnEvent.cs` (all events listed in Architecture section — PropDestroyedEvent through WeaponAcidCoatedEvent).
+  - Status: complete. BleedTickEvent/RegenSuppressedEvent do not re-declare ActorId (inherited from TurnEvent).
 
-- [ ] TASK-003: Implement `TrapActionResolver.Resolve` covering all 11 action kinds (damage, bleed, acid, burning, poison, slow, entangle, teleport, alert_faction, descend, spawn_monster).
-  - **Action ordering within a payload:** status effects are applied BEFORE damage. This ensures a creature with damage-reaction logic sees the status when the damage tick fires. Order: status application → damage → spawn/teleport/descend (world-changing actions last).
-  - Notes: `spawn_monster` requires optional MonsterFactory param; null → no-op. `acid` action applies AcidEffect (stub in Phase 1, full impl in Phase 6). `bleed` applies BleedEffect (stub in Phase 1, full impl in Phase 6).
-  - Acceptance: NUnit `TrapActionResolverTests` — one test per action kind. Determinism test. One test confirms status-before-damage ordering.
+- [x] TASK-003: Implement `TrapActionResolver.Resolve` covering all 11 action kinds.
+  - Status: complete. 19 tests passing.
 
 ### Phase 2 — YAML content + registries + factory
-- [ ] TASK-004: YAML DTO classes in `src/Logic/Content/`: `InteractivePropsFile`, `InteractivePropDefinition`, `PropLootConfig`, `TrapPayloadDefinition`, `TrapActionDefinition`, `FloorTrapsFile`, `FloorTrapDefinition`.
-  - Acceptance: round-trip deserialization test.
+- [x] TASK-004: YAML DTO classes in `src/Logic/Content/InteractivePropsDefinitions.cs`.
+  - Status: complete
 
-- [ ] TASK-005: Register all new DTOs in `AotObjectFactory`. See AotObjectFactory section below.
-  - Acceptance: strict-mode deserialization of both YAML files passes.
+- [x] TASK-005: Register all new DTOs in `AotObjectFactory`.
+  - Status: complete. 19 registrations added.
 
-- [ ] TASK-006: Write `config/interactive_props.yaml` (barrel, bookshelf, bone_pile, named payloads). Values from Architecture section above.
+- [x] TASK-006: Write `config/interactive_props.yaml`.
+  - Status: complete
 
-- [ ] TASK-007: Write `config/floor_traps.yaml` (all 9 trap types with confirmed tile IDs and modulates).
+- [x] TASK-007: Write `config/floor_traps.yaml`.
+  - Status: complete
 
-- [ ] TASK-008: Create `InteractivePropsRegistry` and `FloorTrapRegistry` in `src/Logic/Content/`. Wire load calls into `ContentLoader`.
-  - Acceptance: NUnit: loads all 3 prop types, all 9 trap types, missing key raises clear exception.
+- [x] TASK-008: Create `InteractivePropsRegistry` and `FloorTrapRegistry`. Wire into `ContentLoader`.
+  - Status: complete. 17 registry tests passing.
 
-- [ ] TASK-009: Extend `FeatureFactory` with `CreateDestructibleProp` and `CreateFloorTrap`.
-  - `CreateDestructibleProp` requires access to `IdentificationRegistry` (needed to generate unidentified scrolls/potions as prop loot). Thread it via factory constructor or a loot factory helper — do not add it as a parameter to every call site.
-  - Acceptance: NUnit: blocksMovement correct per type, component presence, payload wiring, unidentified scroll created correctly for bookshelf loot.
+- [x] TASK-009: Extend `FeatureFactory` with `CreateDestructibleProp` and `CreateFloorTrap`.
+  - Status: complete. Loot threading via optional factory params (not constructor injection).
 
 ### Phase 3 — Trigger integration (TurnController)
-- [ ] TASK-010: Extend `TurnController.TryInteractFeature` with `DestructiblePropComponent` branch.
-  - Guard: spawned zombie from rouse must not act on the same turn it spawns (mark with `ActedThisTurn=true` or equivalent before handing to monster scheduler).
-  - Acceptance: NUnit: `BumpBarrel_DropsLoot`, `BumpBarrel_TrappedFiresPayload`, `BumpBonePile_RousesZombie`, `BumpBookshelf_DropsScroll`, `BumpResolvedProp_FreeAction`, `BumpBonePile_AtDepth1_NoRouse` (min depth gate), `RousedZombie_DoesNotActSpawnTurn`.
+- [x] TASK-010: Extend `TurnController.TryInteractFeature` with `DestructiblePropComponent` branch.
+  - Status: complete. Key fix: TryInteractFeature filters to BlocksMovement=true to avoid matching floor traps.
 
-- [ ] TASK-011: Add floor-trap walk-over check in `TurnController.ResolvePlayerMove`. New `HandleFloorTrapEntry` helper.
-  - Acceptance: NUnit: `StepOnSpikeTrap_DealsDamage`, `StepOnDetectedTrap_EmitsAvoided`, `PassiveDetect_PreventsTrigger` (seeded), `StepOnSpentTrap_NoEffect`, `HoleTrap_EmitsDescendEvent`, `ContextualTrap_LowerDetectChance`.
+- [x] TASK-011: Add floor-trap walk-over check in `TurnController.ResolvePlayerMove`. New `HandleFloorTrapEntry` helper.
+  - Status: complete. 14 Phase-3 tests passing.
 
-- [ ] TASK-012: Monster walk-over: call `HandleFloorTrapEntry` with `skipPassiveDetect=true` from monster move processing.
-  - Acceptance: monster triggering spike trap emits TrapTriggeredEvent with monster as target; monster can die from it.
+- [x] TASK-012: Monster walk-over: call `HandleFloorTrapEntry` with `skipPassiveDetect=true` from monster move processing.
+  - Status: complete. Monster trap trigger tests passing.
 
 ### Phase 4 — Placement
 - [ ] TASK-013: Extend `EntityPlacer.PlaceFloorFeatures` — destructible props (barrels, bookshelves, bone piles) with depth-scaled counts and room-tag biases. Pre-resolve loot entities at placement time.

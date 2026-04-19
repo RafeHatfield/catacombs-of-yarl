@@ -144,6 +144,15 @@ public sealed class GameState
     /// </summary>
     public IReadOnlyDictionary<int, BoonDefinition>? BoonTable { get; init; }
 
+    /// <summary>
+    /// Per-floor entity ID allocator. Used by runtime spawn actions (trap rouse, bone pile)
+    /// to generate new entity IDs that won't collide with existing entities.
+    /// Null in scenario mode — spawns from traps use a fallback allocator starting from
+    /// max-existing-id + 1 when this is not set.
+    /// Set by DungeonFloorBuilder after construction.
+    /// </summary>
+    public EntityIdAllocator? IdAllocator { get; init; }
+
     public GameState(Entity player, List<Entity> monsters, GameMap map, SeededRandom rng, int turnLimit = 100)
     {
         Player = player;

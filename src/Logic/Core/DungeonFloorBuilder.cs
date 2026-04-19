@@ -48,6 +48,8 @@ public sealed class DungeonFloorBuilder
     private readonly Content.MuralRegistry? _muralRegistry;
     private readonly Content.LootTagRegistry? _lootTagRegistry;
     private readonly Content.LootPolicyConfig? _lootPolicy;
+    private readonly Content.InteractivePropsRegistry? _interactivePropsRegistry;
+    private readonly Content.FloorTrapRegistry? _floorTrapRegistry;
 
     /// <summary>
     /// All identifiable item definitions (potions, scrolls, wands, rings) for this run.
@@ -68,7 +70,9 @@ public sealed class DungeonFloorBuilder
         Content.SignpostMessageRegistry? signpostRegistry = null,
         Content.MuralRegistry? muralRegistry = null,
         Content.LootTagRegistry? lootTagRegistry = null,
-        Content.LootPolicyConfig? lootPolicy = null)
+        Content.LootPolicyConfig? lootPolicy = null,
+        Content.InteractivePropsRegistry? interactivePropsRegistry = null,
+        Content.FloorTrapRegistry? floorTrapRegistry = null)
     {
         _templates = templates;
         _monsterFactory = monsterFactory;
@@ -82,6 +86,8 @@ public sealed class DungeonFloorBuilder
         _muralRegistry = muralRegistry;
         _lootTagRegistry = lootTagRegistry;
         _lootPolicy = lootPolicy;
+        _interactivePropsRegistry = interactivePropsRegistry;
+        _floorTrapRegistry = floorTrapRegistry;
 
         // Collect identifiable item types for AppearancePool construction.
         // Potions come from ConsumableFactory; scrolls/wands come from SpellItemFactory.
@@ -319,10 +325,11 @@ public sealed class DungeonFloorBuilder
         // Place stair down
         var stairDown = EntityPlacer.PlaceStairDown(generatedMap, targetDepth: depth + 1, ids);
 
-        // Place floor features (chests, signs, murals) — after monsters and items so they don't
-        // collide. Build an occupied set from all entities already placed plus spawn and stairs.
+        // Place floor features (chests, signs, murals, props, traps) — after monsters and items
+        // so they don't collide. Build an occupied set from all entities already placed.
         var allFeatures = new List<Entity>();
-        if (_signpostRegistry != null || _muralRegistry != null || _floorItemPool.Count > 0)
+        if (_signpostRegistry != null || _muralRegistry != null || _floorItemPool.Count > 0
+            || _interactivePropsRegistry != null || _floorTrapRegistry != null)
         {
             // MuralTracker: carry forward per-run to prevent same mural appearing twice in a run.
             // On new run (no existing tracker), create fresh. On floor transition, carry forward.
@@ -341,7 +348,8 @@ public sealed class DungeonFloorBuilder
                 _signpostRegistry, _muralRegistry, finalMuralTracker,
                 _floorItemPool, _spellItemFactory, _itemFactory, _consumableFactory,
                 finalRegistry, finalPool, difficulty,
-                lootTagRegistry: _lootTagRegistry, lootPolicy: _lootPolicy);
+                lootTagRegistry: _lootTagRegistry, lootPolicy: _lootPolicy,
+                propsRegistry: _interactivePropsRegistry, trapRegistry: _floorTrapRegistry);
 
             // Don't pass mural tracker for new-run case — Build() doesn't have the old state.
             // Caller (GameController) must thread muralTracker through floor transitions.

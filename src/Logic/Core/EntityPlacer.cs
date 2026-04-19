@@ -585,18 +585,22 @@ public static class EntityPlacer
     }
 
     /// <summary>
-    /// Place interactive features (chests, signposts, murals) on a dungeon floor.
+    /// Place interactive features (chests, signposts, murals, props, floor traps) on a dungeon floor.
     ///
     /// Floor-level quotas:
     ///   - 1 chest per floor (100% chance), placed in a random non-player room.
     ///   - 0–2 signs per floor (50/35/15 distribution), placed in non-player rooms.
     ///   - 0–1 mural per floor (40% chance), placed wall-adjacent in a non-player room.
+    ///   - Barrels: 1–4 per floor; bookshelves: 0–2; bone piles: 0–3 (depth ≥2 for rouse).
+    ///   - Floor traps: depth-gated pool, two-pass contextual + random placement.
     ///
     /// All features are placed at reachable, walkable, unoccupied positions.
-    /// Features are registered on the map so pathfinding treats them as blocking.
+    /// Blocking features (chests, props) are registered on the map so pathfinding treats them as blocking.
+    /// Non-blocking features (floor traps) are NOT registered on the map but are in the returned list.
     ///
     /// Returns a flat list of all created feature entities.
     /// When signRegistry or muralRegistry is null, that feature type is skipped (scenario mode).
+    /// When propsRegistry or trapRegistry is null, props/traps are skipped (scenario mode).
     /// </summary>
     public static List<Entity> PlaceFloorFeatures(
         GeneratedMap map,
@@ -615,7 +619,9 @@ public static class EntityPlacer
         AppearancePool? appearancePool = null,
         Difficulty difficulty = Difficulty.Medium,
         Content.LootTagRegistry? lootTagRegistry = null,
-        Content.LootPolicyConfig? lootPolicy = null)
+        Content.LootPolicyConfig? lootPolicy = null,
+        InteractivePropsRegistry? propsRegistry = null,
+        FloorTrapRegistry? trapRegistry = null)
     {
         var placed = new List<Entity>();
 
@@ -747,6 +753,29 @@ public static class EntityPlacer
             }
         }
 
+        // ── Destructible prop placement (TASK-013) ───────────────────────────
+        // Barrels 1–4, bookshelves 0–2, bone piles 0–3 per floor.
+        // Bone piles have depth-gated rouse (rouse_min_depth=2 in YAML, enforced by FeatureFactory).
+        // Prop loot is pre-resolved and stored in a ChestLootStash attached to the entity.
+        // The loot entities are NOT registered on the map or added to FloorItems until the prop
+        // is resolved (bumped) — they are dormant inside the ChestLootStash.
+        if (propsRegistry != null)
+        {
+            PlaceDestructibleProps(map, ids, rng, depth, occupied, reachable, featureRooms, placed,
+                propsRegistry, spellItems, items, consumables, identRegistry, appearancePool, difficulty);
+        }
+
+        // ── Floor trap placement (TASK-014) ─────────────────────────────────
+        // Two-pass: ~70% contextual (near altars/chests/dead-ends) + ~30% random.
+        // Depth-gated pool. Hole trap ≤1 per floor at depth 6+.
+        // Floor traps do NOT block movement and are NOT registered on the map.
+        // They are added to the placed list so DungeonFloorBuilder adds them to state.Features.
+        if (trapRegistry != null)
+        {
+            PlaceFloorTraps(map, ids, rng, depth, occupied, reachable, featureRooms, placed,
+                trapRegistry);
+        }
+
         return placed;
     }
 
@@ -777,6 +806,272 @@ public static class EntityPlacer
 
                 if (hasWallNeighbor)
                     candidates.Add((x, y));
+            }
+        }
+
+        if (candidates.Count == 0) return null;
+        return candidates[rng.Next(candidates.Count)];
+    }
+
+    // ── Prop and Trap placement helpers (TASK-013 / TASK-014) ──────────────────
+
+    /// <summary>
+    /// Place destructible props (barrels, bookshelves, bone piles) in feature rooms.
+    ///
+    /// Counts per floor:
+    ///   - Barrels: 1–4 (uniform across all rooms; prefer Storage archetype)
+    ///   - Bookshelves: 0–2 (prefer Library; require ≥ 1 room of that archetype if possible)
+    ///   - Bone piles: 0–3 (prefer Crypt; depth ≥ 2 for rouse — enforced by YAML rouse_min_depth)
+    ///
+    /// Each prop is pre-resolved: loot category rolled, trap/rouse chance rolled at placement time.
+    /// Loot entities are stored dormant in a ChestLootStash on the entity — not yet on the floor.
+    /// </summary>
+    private static void PlaceDestructibleProps(
+        GeneratedMap map, EntityIdAllocator ids, SeededRandom rng, int depth,
+        HashSet<(int, int)> occupied, HashSet<(int, int)> reachable,
+        List<Room> featureRooms, List<Entity> placed,
+        InteractivePropsRegistry propsRegistry,
+        SpellItemFactory? spellItems, ItemFactory? itemFactory,
+        ConsumableFactory? consumables, IdentificationRegistry? identRegistry,
+        AppearancePool? appearancePool, Difficulty difficulty)
+    {
+        // Counts — all seeded for determinism.
+        int barrelCount = rng.Next(1, 5);          // 1–4
+        int bookshelfCount = rng.Next(0, 3);        // 0–2
+        int bonePileCount = rng.Next(0, 4);         // 0–3
+
+        // Archetype-preferred room lists (for themed placement).
+        // Fall back to all featureRooms if no themed rooms exist.
+        var storageRooms  = featureRooms.Where(r => r.Archetype == RoomArchetype.Storage).ToList();
+        var libraryRooms  = featureRooms.Where(r => r.Archetype == RoomArchetype.Library).ToList();
+        var cryptRooms    = featureRooms.Where(r => r.Archetype == RoomArchetype.Crypt).ToList();
+
+        // Helper: pick a room from preferred list, fall back to featureRooms, ensure sorted order
+        // for determinism (OrderBy Id since rooms don't have stable Ids — use position hash).
+        // We just use the pre-ordered featureRooms + preferred list as-is (they come from the
+        // same generator, so ordering is already deterministic for a given seed).
+        List<Room> PickRoomList(List<Room> preferred)
+            => preferred.Count > 0 ? preferred : featureRooms;
+
+        PlacePropType("barrel", barrelCount, PickRoomList(storageRooms),
+            map, ids, rng, depth, occupied, reachable, placed, propsRegistry,
+            spellItems, itemFactory, consumables, identRegistry, appearancePool, difficulty);
+
+        PlacePropType("bookshelf", bookshelfCount, PickRoomList(libraryRooms),
+            map, ids, rng, depth, occupied, reachable, placed, propsRegistry,
+            spellItems, itemFactory, consumables, identRegistry, appearancePool, difficulty);
+
+        PlacePropType("bone_pile", bonePileCount, PickRoomList(cryptRooms),
+            map, ids, rng, depth, occupied, reachable, placed, propsRegistry,
+            spellItems, itemFactory, consumables, identRegistry, appearancePool, difficulty);
+    }
+
+    /// <summary>
+    /// Place count instances of a named prop type across rooms from the candidate list.
+    /// Each prop gets a random position; loot/trap/rouse pre-resolved by FeatureFactory.
+    /// Blocking props are registered on the map; loot entities are stashed on the entity.
+    /// </summary>
+    private static void PlacePropType(
+        string propKind, int count, List<Room> rooms,
+        GeneratedMap map, EntityIdAllocator ids, SeededRandom rng, int depth,
+        HashSet<(int, int)> occupied, HashSet<(int, int)> reachable,
+        List<Entity> placed,
+        InteractivePropsRegistry propsRegistry,
+        SpellItemFactory? spellItems, ItemFactory? itemFactory,
+        ConsumableFactory? consumables, IdentificationRegistry? identRegistry,
+        AppearancePool? appearancePool, Difficulty difficulty)
+    {
+        if (count <= 0 || rooms.Count == 0) return;
+        if (!propsRegistry.TryGet(propKind, out var def) || def == null) return;
+
+        for (int i = 0; i < count; i++)
+        {
+            // Pick a random room from the candidate list (sorted iteration for determinism).
+            var room = rooms[rng.Next(rooms.Count)];
+            var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
+            if (pos == null) continue;
+
+            var (propEntity, lootEntities) = FeatureFactory.CreateDestructibleProp(
+                pos.Value.X, pos.Value.Y,
+                propKind, def, propsRegistry, ids, rng, depth,
+                consumables: consumables,
+                items: itemFactory,
+                spellItems: spellItems,
+                identRegistry: identRegistry,
+                appearancePool: appearancePool,
+                difficulty: difficulty);
+
+            // Pre-staged loot: attach to the prop entity as a ChestLootStash.
+            // TurnController reads this when the prop is resolved (bumped).
+            if (lootEntities.Count > 0)
+                propEntity.Add(new ChestLootStash(lootEntities));
+
+            // Register blocking props on the map so they prevent walk-through.
+            map.Map.RegisterEntity(propEntity);
+            occupied.Add(pos.Value);
+            placed.Add(propEntity);
+        }
+    }
+
+    /// <summary>
+    /// Place floor traps using a two-pass contextual + random algorithm.
+    ///
+    /// Depth-gated trap pool:
+    ///   Depth 1–2: spike, web
+    ///   Depth 3–5: + alarm, root, gas, acid
+    ///   Depth 6+:  + fire, teleport, hole (hole ≤1 per floor)
+    ///
+    /// Pass 1 (~70% of budget): contextual — placed adjacent to high-value rooms:
+    ///   altar rooms, dead-end rooms, rooms already containing a chest.
+    ///   These traps have lower passive_detect_chance (overridden to 0.05–0.08).
+    ///
+    /// Pass 2 (~30% of budget): random — scattered across non-player rooms.
+    ///   Use the trap's natural passive_detect_chance.
+    ///
+    /// Floor traps do NOT block movement and are NOT registered on the map.
+    /// They are added to placed so DungeonFloorBuilder routes them into state.Features.
+    /// </summary>
+    private static void PlaceFloorTraps(
+        GeneratedMap map, EntityIdAllocator ids, SeededRandom rng, int depth,
+        HashSet<(int, int)> occupied, HashSet<(int, int)> reachable,
+        List<Room> featureRooms, List<Entity> placed,
+        FloorTrapRegistry trapRegistry)
+    {
+        // Build depth-gated trap pool.
+        var depthTrapIds = BuildDepthTrapPool(depth);
+        if (depthTrapIds.Count == 0) return;
+
+        // Total trap budget: 2 at depth 1, growing with depth, capped at 10.
+        int totalBudget = Math.Min(2 + (depth - 1) * 2, 10);
+        int contextualBudget = (int)(totalBudget * 0.70);  // ~70% contextual
+        int randomBudget = totalBudget - contextualBudget;  // ~30% random
+
+        // Track hole traps — limit to 1 per floor starting depth 6.
+        int holeTrapCount = 0;
+
+        // Identify contextual rooms: altar (IsGrandShrine), dead-end, rooms with chest (BlocksMovement props).
+        // We detect "rooms with chests" by checking if any already-placed entity with ChestComponent
+        // lives in the room. Sorted for determinism.
+        var chestRooms = featureRooms
+            .Where(r => placed.Any(e => r.Contains(e.X, e.Y) && e.Get<ChestComponent>() != null))
+            .ToList();
+
+        var contextualRooms = featureRooms
+            .Where(r => r.IsGrandShrine || r.IsDeadEnd || chestRooms.Contains(r))
+            .Distinct()
+            .ToList();
+
+        // ── Pass 1: contextual traps ──────────────────────────────────────────
+        // Use approach tiles: the 1–2 tiles just before or inside the high-value room.
+        // Simplified: place at a random walkable tile within the contextual room itself.
+        // Lower detection chance to 0.05–0.08 (player focused on the reward, not the floor).
+        for (int i = 0; i < contextualBudget; i++)
+        {
+            if (contextualRooms.Count == 0) break;
+            var room = contextualRooms[rng.Next(contextualRooms.Count)];
+
+            // Find a free, non-occupied, reachable tile in the room.
+            // Floor traps don't go in occupied (they don't block), but we avoid stacking.
+            var pos = FindFreeTrapPosition(map.Map, room, occupied, rng, reachable, placed);
+            if (pos == null) continue;
+
+            string? trapId = PickTrapId(depthTrapIds, depth, holeTrapCount, rng, out bool pickedHole1);
+            if (trapId == null) continue;
+            if (pickedHole1) holeTrapCount++;
+            if (!trapRegistry.TryGet(trapId, out var def) || def == null) continue;
+
+            // Override passive detect chance to contextual low range (0.05–0.08).
+            // Player's attention is on the reward ahead, not the floor — lower detection chance.
+            double contextualDetectChance = 0.05 + rng.NextDouble() * 0.03;
+            var trap = FeatureFactory.CreateFloorTrapWithDetectOverride(
+                pos.Value.X, pos.Value.Y, trapId, def, ids, contextualDetectChance);
+
+            // Floor traps are NOT registered on the map (they don't block movement).
+            // They are not added to occupied (multiple non-blocking traps can't stack but we
+            // track separately to prevent same-tile stacking).
+            occupied.Add(pos.Value);  // prevent stacking traps on same tile
+            placed.Add(trap);
+        }
+
+        // ── Pass 2: random traps ──────────────────────────────────────────────
+        // Scattered in non-player rooms. Natural passive_detect_chance from YAML.
+        for (int i = 0; i < randomBudget; i++)
+        {
+            if (featureRooms.Count == 0) break;
+            var room = featureRooms[rng.Next(featureRooms.Count)];
+
+            var pos = FindFreeTrapPosition(map.Map, room, occupied, rng, reachable, placed);
+            if (pos == null) continue;
+
+            string? trapId = PickTrapId(depthTrapIds, depth, holeTrapCount, rng, out bool pickedHole2);
+            if (trapId == null) continue;
+            if (pickedHole2) holeTrapCount++;
+            if (!trapRegistry.TryGet(trapId, out var def) || def == null) continue;
+
+            var trap = FeatureFactory.CreateFloorTrap(pos.Value.X, pos.Value.Y, trapId, def, ids);
+            occupied.Add(pos.Value);
+            placed.Add(trap);
+        }
+    }
+
+    /// <summary>Build the set of trap IDs available at a given depth.</summary>
+    private static List<string> BuildDepthTrapPool(int depth)
+    {
+        var pool = new List<string> { "spike_trap", "web_trap" };
+        if (depth >= 3)
+            pool.AddRange(["alarm_plate", "root_trap", "gas_trap", "acid_trap"]);
+        if (depth >= 6)
+            pool.AddRange(["fire_trap", "teleport_trap", "hole_trap"]);
+        return pool;
+    }
+
+    /// <summary>
+    /// Pick a random trap ID from the pool.
+    /// Enforces hole_trap ≤1 per floor at depth 6+.
+    /// Returns null if no valid trap can be selected.
+    /// </summary>
+    private static string? PickTrapId(List<string> pool, int depth, int holeTrapCount, SeededRandom rng,
+        out bool didPickHole)
+    {
+        // Build eligible list without a lambda so we avoid ref-parameter capture restrictions.
+        // hole_trap is excluded once its cap is reached (depth 6+, max 1 per floor).
+        var eligible = new List<string>(pool.Count);
+        foreach (var id in pool)
+        {
+            if (id == "hole_trap" && depth >= 6 && holeTrapCount >= 1)
+                continue;
+            eligible.Add(id);
+        }
+
+        didPickHole = false;
+        if (eligible.Count == 0) return null;
+
+        string selected = eligible[rng.Next(eligible.Count)];
+        if (selected == "hole_trap")
+            didPickHole = true;
+        return selected;
+    }
+
+    /// <summary>
+    /// Find a free walkable tile for trap placement within a room.
+    /// Avoids occupied tiles AND tiles already hosting a trap (checked in placed list).
+    /// Returns null if no candidate exists.
+    /// </summary>
+    private static (int X, int Y)? FindFreeTrapPosition(
+        GameMap map, Room room, HashSet<(int, int)> occupied,
+        SeededRandom rng, HashSet<(int, int)>? reachable,
+        List<Entity> placed)
+    {
+        var candidates = new List<(int X, int Y)>();
+        for (int x = room.X; x < room.X + room.Width; x++)
+        {
+            for (int y = room.Y; y < room.Y + room.Height; y++)
+            {
+                if (!map.IsWalkable(x, y)) continue;
+                if (occupied.Contains((x, y))) continue;
+                if (reachable != null && !reachable.Contains((x, y))) continue;
+
+                candidates.Add((x, y));
             }
         }
 
