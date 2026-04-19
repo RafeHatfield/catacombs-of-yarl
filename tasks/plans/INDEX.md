@@ -44,7 +44,8 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 |------|--------|-------------|
 | [plan_doors_secrets_portals.md](plan_doors_secrets_portals.md) | [ ] | Locked doors, secret doors, portal network, key items |
 | [plan_monster_specials.md](plan_monster_specials.md) | [~] | Skirmisher leap, orc shaman, orc chieftain, troll regen (corpse/necro extracted to plan_corpse_necromancer) |
-| [plan_loot_policy.md](plan_loot_policy.md) | [ ] | Band-based loot distribution, pity system, item category weights |
+| [plan_loot_policy.md](plan_loot_policy.md) | [x] | Band-based loot distribution, pity system, item category weights — complete |
+| [plan_interactive_props_traps.md](plan_interactive_props_traps.md) | [~] | Destructible props (barrel/bookshelf/bone_pile), 9 floor trap types, unified TrapActionResolver, BleedEffect, AcidEffect, status interactions |
 
 ### Active Implementation Plans
 | Plan | Status | Description |
