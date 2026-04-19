@@ -102,6 +102,17 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(List<double>)] = () => new List<double>(),
         [typeof(List<float>)] = () => new List<float>(),
         [typeof(int[])] = () => new int[0],
+
+        // Loot system (loot_tags.yaml + loot_policy.yaml)
+        [typeof(LootTagsFile)] = () => new LootTagsFile(),
+        [typeof(LootTag)] = () => new LootTag(),
+        [typeof(List<LootTag>)] = () => new List<LootTag>(),
+        [typeof(LootPolicyFile)] = () => new LootPolicyFile(),
+        [typeof(LootPolicyBandConfig)] = () => new LootPolicyBandConfig(),
+        [typeof(LootPityConfig)] = () => new LootPityConfig(),
+        [typeof(PityBandThreshold)] = () => new PityBandThreshold(),
+        [typeof(Dictionary<string, LootPolicyBandConfig>)] = () => new Dictionary<string, LootPolicyBandConfig>(),
+        [typeof(Dictionary<string, PityBandThreshold>)] = () => new Dictionary<string, PityBandThreshold>(),
     };
 
     public object Create(Type type)

@@ -5,6 +5,7 @@ using CatacombsOfYarl.Logic.ECS;
 using BoonTable = System.Collections.Generic.IReadOnlyDictionary<int, CatacombsOfYarl.Logic.Balance.BoonDefinition>;
 using FloorItemPool = System.Collections.Generic.IReadOnlyList<CatacombsOfYarl.Logic.Content.FloorItemPoolEntry>;
 using IdentifiableItemDef = (string id, CatacombsOfYarl.Logic.Content.ItemCategory category);
+using PityTrackerType = CatacombsOfYarl.Logic.Balance.PityTracker;
 
 namespace CatacombsOfYarl.Logic.Core;
 
@@ -45,6 +46,8 @@ public sealed class DungeonFloorBuilder
     private readonly Content.PropRegistry? _propRegistry;
     private readonly Content.SignpostMessageRegistry? _signpostRegistry;
     private readonly Content.MuralRegistry? _muralRegistry;
+    private readonly Content.LootTagRegistry? _lootTagRegistry;
+    private readonly Content.LootPolicyConfig? _lootPolicy;
 
     /// <summary>
     /// All identifiable item definitions (potions, scrolls, wands, rings) for this run.
@@ -63,7 +66,9 @@ public sealed class DungeonFloorBuilder
         BoonTable? boonTable = null,
         Content.PropRegistry? propRegistry = null,
         Content.SignpostMessageRegistry? signpostRegistry = null,
-        Content.MuralRegistry? muralRegistry = null)
+        Content.MuralRegistry? muralRegistry = null,
+        Content.LootTagRegistry? lootTagRegistry = null,
+        Content.LootPolicyConfig? lootPolicy = null)
     {
         _templates = templates;
         _monsterFactory = monsterFactory;
@@ -75,6 +80,8 @@ public sealed class DungeonFloorBuilder
         _propRegistry = propRegistry;
         _signpostRegistry = signpostRegistry;
         _muralRegistry = muralRegistry;
+        _lootTagRegistry = lootTagRegistry;
+        _lootPolicy = lootPolicy;
 
         // Collect identifiable item types for AppearancePool construction.
         // Potions come from ConsumableFactory; scrolls/wands come from SpellItemFactory.
@@ -127,7 +134,8 @@ public sealed class DungeonFloorBuilder
         Difficulty difficulty = Difficulty.Medium,
         BoonTracker? boonTracker = null,
         bool explorationMode = false,
-        MuralTracker? muralTracker = null)
+        MuralTracker? muralTracker = null,
+        PityTrackerType? pityTracker = null)
     {
         // Resolve per-depth override (null = use defaults for everything)
         var levelOverride = _templates.GetLevelOverride(depth);
@@ -230,6 +238,12 @@ public sealed class DungeonFloorBuilder
             }
         }
 
+        // PityTracker: carry forward from previous floor, or create fresh for new run.
+        // Initialize category tracking from the loot policy (idempotent — safe to call on carry-forward).
+        var finalPityTracker = pityTracker ?? (_lootPolicy != null ? new PityTrackerType() : null);
+        if (finalPityTracker != null && _lootPolicy != null)
+            finalPityTracker.InitializeTrackedCategories(_lootPolicy.TrackedCategories);
+
         // Place entities (monsters + items)
         var allMonsters = new List<Entity>();
         var allFloorItems = new List<Entity>();
@@ -267,7 +281,10 @@ public sealed class DungeonFloorBuilder
                     items: _itemFactory, floorItemPool: _floorItemPool,
                     spellItems: _spellItemFactory,
                     identRegistry: finalRegistry, appearancePool: finalPool,
-                    difficulty: difficulty);
+                    difficulty: difficulty,
+                    lootTagRegistry: _lootTagRegistry,
+                    lootPolicy: _lootPolicy,
+                    pityTracker: finalPityTracker);
 
                 foreach (var entity in filled)
                     if (entity.BlocksMovement)
@@ -287,7 +304,10 @@ public sealed class DungeonFloorBuilder
                 items: _itemFactory, floorItemPool: _floorItemPool,
                 spellItems: _spellItemFactory,
                 identRegistry: finalRegistry, appearancePool: finalPool,
-                difficulty: difficulty);
+                difficulty: difficulty,
+                lootTagRegistry: _lootTagRegistry,
+                lootPolicy: _lootPolicy,
+                pityTracker: finalPityTracker);
 
             foreach (var entity in filled)
                 if (entity.BlocksMovement)
@@ -320,7 +340,8 @@ public sealed class DungeonFloorBuilder
                 generatedMap, ids, rng, depth, occupied,
                 _signpostRegistry, _muralRegistry, finalMuralTracker,
                 _floorItemPool, _spellItemFactory, _itemFactory, _consumableFactory,
-                finalRegistry, finalPool, difficulty);
+                finalRegistry, finalPool, difficulty,
+                lootTagRegistry: _lootTagRegistry, lootPolicy: _lootPolicy);
 
             // Don't pass mural tracker for new-run case — Build() doesn't have the old state.
             // Caller (GameController) must thread muralTracker through floor transitions.
@@ -343,6 +364,7 @@ public sealed class DungeonFloorBuilder
             BoonTable = _boonTable,
             Props = generatedMap.Props,
             MuralTracker = muralTracker,
+            PityTracker = finalPityTracker,
         };
 
         // Apply depth boon for this floor (first visit only).

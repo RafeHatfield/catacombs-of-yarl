@@ -1,0 +1,93 @@
+# Loot policy configuration for the 5-band dungeon system.
+# Controls how often each item category appears and guarantees variety via pity.
+#
+# EV (Expected Value) per band: target number of items of that category
+# per room at full density (B3+). Lower bands use DensityMultiplier to scale down.
+#
+# Categories: healing, defensive, panic, offensive, utility,
+#             upgrade_weapon, upgrade_armor, rare, key
+#
+# Pity tracked categories: healing, panic, upgrade_weapon, upgrade_armor
+# Soft pity: weight multiplied by soft_bias_factor when window is empty (rooms since last > soft threshold)
+# Hard pity: inject guaranteed item when rooms since last reaches hard threshold
+
+version: "1.0"
+
+bands:
+  B1:
+    healing_ev: 2.5
+    defensive_ev: 1.0
+    panic_ev: 1.5
+    offensive_ev: 1.0
+    utility_ev: 1.0
+    upgrade_weapon_ev: 0.5
+    upgrade_armor_ev: 0.5
+    rare_ev: 0.05
+
+  B2:
+    healing_ev: 2.0
+    defensive_ev: 1.0
+    panic_ev: 2.0
+    offensive_ev: 1.5
+    utility_ev: 1.5
+    upgrade_weapon_ev: 1.0
+    upgrade_armor_ev: 1.0
+    rare_ev: 0.15
+
+  B3:
+    healing_ev: 1.5
+    defensive_ev: 1.0
+    panic_ev: 2.5
+    offensive_ev: 2.0
+    utility_ev: 2.0
+    upgrade_weapon_ev: 1.5
+    upgrade_armor_ev: 1.5
+    rare_ev: 0.5
+
+  B4:
+    healing_ev: 1.0
+    defensive_ev: 1.0
+    panic_ev: 2.0
+    offensive_ev: 2.5
+    utility_ev: 2.5
+    upgrade_weapon_ev: 2.0
+    upgrade_armor_ev: 2.0
+    rare_ev: 0.8
+
+  B5:
+    healing_ev: 0.5
+    defensive_ev: 0.5
+    panic_ev: 1.5
+    offensive_ev: 2.0
+    utility_ev: 2.0
+    upgrade_weapon_ev: 3.0
+    upgrade_armor_ev: 3.0
+    rare_ev: 1.0
+
+pity:
+  # soft_bias_factor: weight multiplier when soft pity is active
+  # PoC: 2.0x (doubles the category's selection weight)
+  soft_bias_factor: 2.0
+
+  # tracked_categories: only these 4 categories have pity counters (PoC-exact)
+  # offensive and utility can go dry — they're tactical options, not survival requirements
+  tracked_categories: [healing, panic, upgrade_weapon, upgrade_armor]
+
+  # thresholds: soft = rooms-since-last for soft bias to activate
+  #             hard = rooms-since-last for guaranteed inject (soft + 2 per PoC design)
+  thresholds:
+    B1:
+      soft: 6
+      hard: 8
+    B2:
+      soft: 5
+      hard: 7
+    B3:
+      soft: 4
+      hard: 6
+    B4:
+      soft: 4
+      hard: 6
+    B5:
+      soft: 4
+      hard: 6

@@ -41,9 +41,10 @@ public static class ChestLootGenerator
     {
         var result = new List<Entity>();
 
-        // Depth-filter the pool (same as EntityPlacer.FillRooms)
+        // Depth-filter the pool (same as EntityPlacer.FillRooms).
+        // MaxDepth: items age out above this depth (defaults to 99 — no cap).
         var depthPool = floorItemPool
-            .Where(e => e.MinDepth <= depth)
+            .Where(e => e.MinDepth <= depth && e.MaxDepth >= depth)
             .ToList();
 
         if (depthPool.Count == 0)

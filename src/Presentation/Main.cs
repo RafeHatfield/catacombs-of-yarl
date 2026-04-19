@@ -420,11 +420,36 @@ public partial class Main : Node
             GD.PrintErr($"Mural registry load failed (non-fatal — no murals will appear): {ex.Message}");
         }
 
+        CatacombsOfYarl.Logic.Content.LootTagRegistry? lootTagRegistry = null;
+        try
+        {
+            var lootTagsYaml = ReadGodotResource("res://config/loot_tags.yaml");
+            lootTagRegistry = CatacombsOfYarl.Logic.Content.LootTagRegistry.FromYaml(lootTagsYaml);
+            GD.Print($"Loot tag registry loaded: {lootTagRegistry.Count} entries");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"Loot tag registry load failed (non-fatal — falling back to flat pool): {ex.Message}");
+        }
+
+        CatacombsOfYarl.Logic.Content.LootPolicyConfig? lootPolicy = null;
+        try
+        {
+            var lootPolicyYaml = ReadGodotResource("res://config/loot_policy.yaml");
+            lootPolicy = CatacombsOfYarl.Logic.Content.LootPolicyConfig.FromYaml(lootPolicyYaml);
+            GD.Print($"Loot policy loaded");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"Loot policy load failed (non-fatal — falling back to flat pool): {ex.Message}");
+        }
+
         _floorBuilder = new DungeonFloorBuilder(
             _levelTemplates, _monsterFactory, _itemFactory, _consumableFactory,
             content.FloorItemPool, spellItemFactory: _spellItemFactory,
             boonTable: boonTable, propRegistry: propRegistry,
-            signpostRegistry: signpostRegistry, muralRegistry: muralRegistry);
+            signpostRegistry: signpostRegistry, muralRegistry: muralRegistry,
+            lootTagRegistry: lootTagRegistry, lootPolicy: lootPolicy);
     }
 
     /// <summary>
@@ -1011,7 +1036,8 @@ public partial class Main : Node
             identificationRegistry: _state?.IdentificationRegistry,
             appearancePool: _state?.AppearancePool,
             boonTracker: _state?.BoonTracker,
-            muralTracker: _state?.MuralTracker);
+            muralTracker: _state?.MuralTracker,
+            pityTracker: _state?.PityTracker);
         SetupPresentation(_state);
     }
 

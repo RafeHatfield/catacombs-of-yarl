@@ -1,0 +1,598 @@
+# Item loot tags — category assignments, weights, and band availability.
+# Each item appears exactly once. Items may have only one category (the primary category
+# for loot selection). Multi-category items in the PoC were simplified to their dominant
+# category for the C# implementation.
+#
+# Categories:
+#   healing        — HP restoration
+#   defensive      — protection/mitigation (not healing; tracked separately by pity)
+#   panic          — emergency escape (teleport, haste, blink, invisibility)
+#   offensive      — direct damage (fireball, lightning, plague, fear)
+#   utility        — tactical/situational (confusion, slow, glue, identify)
+#   upgrade_weapon — weapon improvements (weapons + enchant_weapon scroll)
+#   upgrade_armor  — armor improvements (armor pieces + enchant_armor scroll)
+#   rare           — rings (all ring types, depth-gated via band_min)
+#   key            — progression keys (empty for now — no keys exist yet)
+#
+# Bands: B1=1, B2=2, B3=3, B4=4, B5=5 (each band = 5 dungeon floors)
+# band_min/band_max refer to band numbers, not depth numbers.
+# B1 = depths 1-5, B2 = depths 6-10, B3 = depths 11-15, B4 = depths 16-20, B5 = depths 21-25.
+#
+# Weights are relative within a category. Higher weight = more likely to be selected
+# when that category is chosen. PoC weights from balance/loot_tags.py.
+
+loot_tags:
+
+  # ─── HEALING ──────────────────────────────────────────────────────────────
+  - item_id: healing_potion
+    categories: [healing]
+    weight: 10.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: potion_of_regeneration
+    categories: [healing]
+    weight: 3.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: antidote_potion
+    categories: [healing]
+    weight: 2.0
+    band_min: 3
+    band_max: 5
+
+  # ─── DEFENSIVE ────────────────────────────────────────────────────────────
+  # DEVIATION-003: potion_of_protection moved from healing to defensive.
+  # A potion that prevents damage is categorically distinct from one that heals.
+  - item_id: potion_of_protection
+    categories: [defensive]
+    weight: 4.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_shield
+    categories: [defensive]
+    weight: 4.0
+    band_min: 1
+    band_max: 5
+
+  # ─── PANIC ────────────────────────────────────────────────────────────────
+  - item_id: scroll_of_teleport
+    categories: [panic]
+    weight: 5.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_blink
+    categories: [panic]
+    weight: 4.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_haste
+    categories: [panic]
+    weight: 4.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_invisibility
+    categories: [panic]
+    weight: 3.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: potion_of_speed
+    categories: [panic]
+    weight: 2.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: potion_of_invisibility
+    categories: [panic]
+    weight: 2.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: potion_of_heroism
+    categories: [panic]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_invisibility
+    categories: [panic]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_haste
+    categories: [panic]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_teleportation
+    categories: [panic]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  # ─── OFFENSIVE ────────────────────────────────────────────────────────────
+  - item_id: scroll_of_lightning
+    categories: [offensive]
+    weight: 5.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_fear
+    categories: [offensive]
+    weight: 5.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_fireball
+    categories: [offensive]
+    weight: 5.0
+    band_min: 3
+    band_max: 5
+
+  - item_id: scroll_of_earthquake
+    categories: [offensive]
+    weight: 3.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_rage
+    categories: [offensive]
+    weight: 3.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: scroll_of_yo_mama
+    categories: [offensive]
+    weight: 2.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: scroll_of_dragon_fart
+    categories: [offensive]
+    weight: 2.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: scroll_of_plague
+    categories: [offensive]
+    weight: 1.5
+    band_min: 4
+    band_max: 5
+
+  - item_id: scroll_of_raise_dead
+    categories: [offensive]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_lightning
+    categories: [offensive]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_fireball
+    categories: [offensive]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_fear
+    categories: [offensive]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_rage
+    categories: [offensive]
+    weight: 1.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_yo_mama
+    categories: [offensive]
+    weight: 1.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_dragon_farts
+    categories: [offensive]
+    weight: 1.0
+    band_min: 3
+    band_max: 5
+
+  - item_id: wand_of_raise_dead
+    categories: [offensive]
+    weight: 1.5
+    band_min: 3
+    band_max: 5
+
+  - item_id: fire_potion
+    categories: [offensive]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: sunburst_potion
+    categories: [offensive]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  # ─── UTILITY ──────────────────────────────────────────────────────────────
+  # DEVIATION-002: scroll_of_identify is utility (no separate identification_ev category).
+  - item_id: scroll_of_identify
+    categories: [utility]
+    weight: 4.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_light
+    categories: [utility]
+    weight: 3.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_detect_monsters
+    categories: [utility]
+    weight: 3.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_magic_mapping
+    categories: [utility]
+    weight: 2.5
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_confusion
+    categories: [utility]
+    weight: 5.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_slow
+    categories: [utility]
+    weight: 4.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_glue
+    categories: [utility]
+    weight: 4.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_disarm
+    categories: [utility]
+    weight: 3.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: scroll_of_aggravation
+    categories: [utility]
+    weight: 1.5
+    band_min: 3
+    band_max: 5
+
+  - item_id: scroll_of_silence
+    categories: [utility]
+    weight: 2.5
+    band_min: 1
+    band_max: 5
+
+  - item_id: wand_of_confusion
+    categories: [utility]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_slow
+    categories: [utility]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_glue
+    categories: [utility]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: wand_of_silence
+    categories: [utility]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: potion_of_weakness
+    categories: [utility]
+    weight: 2.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: potion_of_slowness
+    categories: [utility]
+    weight: 2.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: potion_of_blindness
+    categories: [utility]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: potion_of_paralysis
+    categories: [utility]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: tar_potion
+    categories: [utility]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: root_potion
+    categories: [utility]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  # ─── UPGRADE WEAPON ───────────────────────────────────────────────────────
+  - item_id: scroll_of_enchant_weapon
+    categories: [upgrade_weapon]
+    weight: 3.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: dagger
+    categories: [upgrade_weapon]
+    weight: 5.0
+    band_min: 1
+    band_max: 3
+
+  - item_id: club
+    categories: [upgrade_weapon]
+    weight: 5.0
+    band_min: 1
+    band_max: 3
+
+  - item_id: mace
+    categories: [upgrade_weapon]
+    weight: 4.0
+    band_min: 1
+    band_max: 3
+
+  - item_id: shortsword
+    categories: [upgrade_weapon]
+    weight: 4.0
+    band_min: 1
+    band_max: 3
+
+  - item_id: rapier
+    categories: [upgrade_weapon]
+    weight: 2.5
+    band_min: 1
+    band_max: 4
+
+  - item_id: spear
+    categories: [upgrade_weapon]
+    weight: 3.0
+    band_min: 1
+    band_max: 4
+
+  - item_id: longsword
+    categories: [upgrade_weapon]
+    weight: 3.0
+    band_min: 1
+    band_max: 4
+
+  - item_id: battleaxe
+    categories: [upgrade_weapon]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: greatsword
+    categories: [upgrade_weapon]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  # Named weapons — late-game gear, PoC-style named items get reduced weight (rarer)
+  - item_id: quickfang_dagger
+    categories: [upgrade_weapon]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: keen_dagger
+    categories: [upgrade_weapon]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: vicious_shortsword
+    categories: [upgrade_weapon]
+    weight: 2.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: fine_longsword
+    categories: [upgrade_weapon]
+    weight: 1.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: masterwork_longsword
+    categories: [upgrade_weapon]
+    weight: 1.0
+    band_min: 3
+    band_max: 5
+
+  # ─── UPGRADE ARMOR ────────────────────────────────────────────────────────
+  - item_id: scroll_of_enchant_armor
+    categories: [upgrade_armor]
+    weight: 3.0
+    band_min: 1
+    band_max: 5
+
+  - item_id: leather_armor
+    categories: [upgrade_armor]
+    weight: 5.0
+    band_min: 1
+    band_max: 3
+
+  - item_id: shield
+    categories: [upgrade_armor]
+    weight: 4.0
+    band_min: 1
+    band_max: 3
+
+  - item_id: leather_helmet
+    categories: [upgrade_armor]
+    weight: 4.0
+    band_min: 1
+    band_max: 3
+
+  - item_id: leather_boots
+    categories: [upgrade_armor]
+    weight: 4.0
+    band_min: 1
+    band_max: 3
+
+  - item_id: studded_leather
+    categories: [upgrade_armor]
+    weight: 3.0
+    band_min: 2
+    band_max: 5
+
+  - item_id: chain_mail
+    categories: [upgrade_armor]
+    weight: 2.5
+    band_min: 2
+    band_max: 5
+
+  - item_id: scale_mail
+    categories: [upgrade_armor]
+    weight: 2.0
+    band_min: 3
+    band_max: 5
+
+  # ─── RARE (RINGS) ─────────────────────────────────────────────────────────
+  # Band gating per task spec: common rings B2-B5, mid rings B3-B5, exotic rings B4-B5.
+  # Weights from PoC (reduced vs baseline to ensure rings are uncommon finds).
+  # The RareMultiplier further reduces these in early bands.
+
+  # Common rings — start at B2 (depth 6+)
+  - item_id: ring_of_protection
+    categories: [rare]
+    weight: 0.6
+    band_min: 2
+    band_max: 5
+
+  - item_id: ring_of_regeneration
+    categories: [rare]
+    weight: 0.6
+    band_min: 2
+    band_max: 5
+
+  - item_id: ring_of_strength
+    categories: [rare]
+    weight: 0.6
+    band_min: 2
+    band_max: 5
+
+  - item_id: ring_of_dexterity
+    categories: [rare]
+    weight: 0.6
+    band_min: 2
+    band_max: 5
+
+  - item_id: ring_of_searching
+    categories: [rare]
+    weight: 0.6
+    band_min: 2
+    band_max: 5
+
+  - item_id: ring_of_clarity
+    categories: [rare]
+    weight: 0.5
+    band_min: 2
+    band_max: 5
+
+  # Mid rings — start at B3 (depth 11+)
+  - item_id: ring_of_constitution
+    categories: [rare]
+    weight: 0.5
+    band_min: 3
+    band_max: 5
+
+  - item_id: ring_of_might
+    categories: [rare]
+    weight: 0.5
+    band_min: 3
+    band_max: 5
+
+  - item_id: ring_of_speed
+    categories: [rare]
+    weight: 0.4
+    band_min: 3
+    band_max: 5
+
+  - item_id: ring_of_free_action
+    categories: [rare]
+    weight: 0.5
+    band_min: 3
+    band_max: 5
+
+  - item_id: ring_of_luck
+    categories: [rare]
+    weight: 0.5
+    band_min: 3
+    band_max: 5
+
+  # Exotic rings — start at B4 (depth 16+)
+  - item_id: ring_of_hummingbird
+    categories: [rare]
+    weight: 0.4
+    band_min: 4
+    band_max: 5
+
+  - item_id: ring_of_teleportation
+    categories: [rare]
+    weight: 0.4
+    band_min: 4
+    band_max: 5
+
+  - item_id: ring_of_resistance
+    categories: [rare]
+    weight: 0.4
+    band_min: 4
+    band_max: 5
+
+  - item_id: ring_of_invisibility
+    categories: [rare]
+    weight: 0.3
+    band_min: 4
+    band_max: 5
+
+  - item_id: ring_of_wizardry
+    categories: [rare]
+    weight: 0.3
+    band_min: 4
+    band_max: 5
+
+  # key category is intentionally empty (DEVIATION-004)
+  # When locked doors land, add bronze_key/silver_key/gold_key here.

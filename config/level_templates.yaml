@@ -55,3 +55,65 @@ levels:
       items:
         - type: "healing_potion"
           count: "1-2"
+
+  # ── Band 2 start: depth 6 (B2: depths 6-10) ──────────────────────────────
+  # ETP ramps to 120 — more varied encounter compositions begin here.
+  # Pity thresholds tighten: healing every 5 rooms, weapon/armor every 7.
+  6:
+    parameters:
+      max_rooms: 25
+      max_monsters_per_room: 3
+      max_items_per_room: 2
+    encounter_budget:
+      etp_min: 0
+      etp_max: 120
+      allow_spike: false
+
+  # ── Band 3 start: depth 11 (B3: depths 11-15) ────────────────────────────
+  # ETP at 180 — full loot density baseline. Rings start appearing more often.
+  # Pity tightens to 4 rooms for healing.
+  11:
+    parameters:
+      max_rooms: 25
+      max_monsters_per_room: 4
+      max_items_per_room: 2
+    encounter_budget:
+      etp_min: 0
+      etp_max: 180
+      allow_spike: false
+
+  # ── Band 4 start: depth 16 (B4: depths 16-20) ────────────────────────────
+  # ETP at 240 — mid-late game, tactical depth, ring rate 80% of baseline.
+  16:
+    parameters:
+      max_rooms: 25
+      max_monsters_per_room: 4
+      max_items_per_room: 2
+    encounter_budget:
+      etp_min: 0
+      etp_max: 240
+      allow_spike: false
+
+  # ── Band 5 start: depth 21 (B5: depths 21-25) ────────────────────────────
+  # ETP at 300 — endgame, gear optimization phase, full ring rate.
+  21:
+    parameters:
+      max_rooms: 25
+      max_monsters_per_room: 5
+      max_items_per_room: 2
+    encounter_budget:
+      etp_min: 0
+      etp_max: 300
+      allow_spike: false
+
+  # ── Final floor: depth 25 ────────────────────────────────────────────────
+  # Canonical dungeon endpoint. Highest ETP, max challenge.
+  25:
+    parameters:
+      max_rooms: 25
+      max_monsters_per_room: 5
+      max_items_per_room: 2
+    encounter_budget:
+      etp_min: 0
+      etp_max: 350
+      allow_spike: true

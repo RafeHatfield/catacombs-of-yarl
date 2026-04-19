@@ -2,6 +2,7 @@ using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
+using PityTrackerType = CatacombsOfYarl.Logic.Balance.PityTracker;
 
 namespace CatacombsOfYarl.Logic.Core;
 
@@ -176,7 +177,10 @@ public static class EntityPlacer
         SpellItemFactory? spellItems = null,
         Content.IdentificationRegistry? identRegistry = null,
         Content.AppearancePool? appearancePool = null,
-        Difficulty difficulty = Difficulty.Medium)
+        Difficulty difficulty = Difficulty.Medium,
+        Content.LootTagRegistry? lootTagRegistry = null,
+        Content.LootPolicyConfig? lootPolicy = null,
+        PityTrackerType? pityTracker = null)
     {
         var placed = new List<Entity>();
         var occupied = new HashSet<(int, int)>();
@@ -229,9 +233,11 @@ public static class EntityPlacer
 
         var consumablePool = consumables.AvailableIds.ToList();
 
-        // Depth-filtered equipment pool for floor drops
+        // Depth-filtered equipment pool for floor drops.
+        // MinDepth: item must be unlocked at this depth.
+        // MaxDepth: item ages out above this depth (defaults to 99 — no cap unless specified).
         var depthFilteredEquipPool = floorItemPool?
-            .Where(e => e.MinDepth <= depth)
+            .Where(e => e.MinDepth <= depth && e.MaxDepth >= depth)
             .ToList();
 
         foreach (var room in map.Rooms)
@@ -274,6 +280,12 @@ public static class EntityPlacer
                 roomEtp += etp;
             }
 
+            // ── Per-room pity advance ────────────────────────────────────────
+            // Advance pity counters before generating an item. This means the counter
+            // reflects "rooms processed without X" at the moment of generation — matches
+            // PoC semantics where the counter increments when a room is entered.
+            pityTracker?.AdvanceRoom();
+
             // Roll item count for this room (0 to maxItems).
             // Dead-end rooms guarantee at least 1 item as a loot bias — rewarding exploration
             // of branching passages that lead nowhere else (SROOM-001).
@@ -301,84 +313,151 @@ public static class EntityPlacer
                 }
             }
 
-            // Floor loot drop — ~40% chance per room of one item from the depth-filtered pool.
-            // Pool includes weapons, armor, scrolls, and wands. The factory is chosen based on
-            // which one can resolve the item ID: spellItems first, then items (equipment).
-            // TODO: replace the flat 40% with PoC band-density scaling (B1=0.35x, B2=0.45x, B3+=1.0x).
-            bool canDropItem = depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0
-                && rng.Next(0, 100) < 40;
-            if (canDropItem)
+            // ── Floor loot drop ─────────────────────────────────────────────
+            // LootController path (when loot registries are available):
+            //   - Band-density scaling (B1=35%, B2=45%, B3-B5=100%)
+            //   - Category-weighted selection from band EV table
+            //   - Pity-tracked categories biased when dry
+            //   - Dead-end rooms skip the density roll (always get an item)
+            //   - Vault rooms generate 1-2 guaranteed items (density roll also skipped)
+            //
+            // Fallback path (when registries are null):
+            //   - Flat ~40% roll + SelectWeighted from depth-filtered flat pool
+            //   - Backward compat for tests that don't load loot_tags.yaml
+            if (lootTagRegistry != null && lootPolicy != null)
             {
-                var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
-                if (pos != null)
+                // LootController-driven path (new band-aware system)
+                bool isDeadEnd = room.IsDeadEnd;
+                bool isVault = room.IsVault;
+
+                // Dead-end: always generate at least one item
+                if (isDeadEnd || isVault)
                 {
-                    var entry = SelectWeighted(depthFilteredEquipPool!, rng);
-                    if (entry != null)
+                    int lootCount = isVault ? rng.Next(1, 3) : 1; // vault: 1-2, dead-end: always 1
+                    for (int li = 0; li < lootCount; li++)
                     {
-                        Entity? entity = null;
+                        string? itemId = LootController.GenerateRoomItem(
+                            depth, rng, lootTagRegistry, lootPolicy, pityTracker,
+                            skipDensityRoll: true);  // guaranteed — skip density
 
-                        // Try SpellItemFactory first (scrolls and wands)
-                        if (spellItems != null)
+                        if (itemId == null) continue;
+
+                        var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
+                        if (pos == null) break;
+
+                        var lootEntity = ResolveAndCreateItem(itemId, depth, rng, spellItems, items,
+                            consumables, identRegistry, appearancePool, difficulty);
+                        if (lootEntity == null) continue;
+
+                        var withId = new Entity(ids.Next(), lootEntity.Name, pos.Value.X, pos.Value.Y, lootEntity.BlocksMovement);
+                        CopyComponents(lootEntity, withId);
+                        map.Map.RegisterEntity(withId);
+                        occupied.Add(pos.Value);
+                        placed.Add(withId);
+                    }
+                }
+                else
+                {
+                    // Normal room: density roll decides whether an item appears
+                    string? itemId = LootController.GenerateRoomItem(
+                        depth, rng, lootTagRegistry, lootPolicy, pityTracker,
+                        skipDensityRoll: false);
+
+                    if (itemId != null)
+                    {
+                        var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
+                        if (pos != null)
                         {
-                            // Scrolls are created with CreateScroll; wands with CreateWand.
-                            // SpellItemFactory.CreateScroll returns null for wand IDs and vice versa,
-                            // so we try scroll first then wand.
-                            entity = spellItems.CreateScroll(entry.ItemId,
-                                        registry: identRegistry, pool: appearancePool,
-                                        identRng: rng, difficulty: difficulty)
-                                ?? spellItems.CreateWand(entry.ItemId, rng, depth,
-                                        registry: identRegistry, pool: appearancePool,
-                                        identRng: rng, difficulty: difficulty);
-                        }
-
-                        // Fall back to equipment factory (weapons, armor)
-                        entity ??= items?.Create(entry.ItemId);
-
-                        if (entity != null)
-                        {
-                            var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
-                            CopyComponents(entity, withId);
-                            map.Map.RegisterEntity(withId);
-                            occupied.Add(pos.Value);
-                            placed.Add(withId);
+                            var lootEntity = ResolveAndCreateItem(itemId, depth, rng, spellItems, items,
+                                consumables, identRegistry, appearancePool, difficulty);
+                            if (lootEntity != null)
+                            {
+                                var withId = new Entity(ids.Next(), lootEntity.Name, pos.Value.X, pos.Value.Y, lootEntity.BlocksMovement);
+                                CopyComponents(lootEntity, withId);
+                                map.Map.RegisterEntity(withId);
+                                occupied.Add(pos.Value);
+                                placed.Add(withId);
+                            }
                         }
                     }
                 }
             }
-
-            // Vault room guaranteed items — 1-2 items from the floor pool beyond normal loot.
-            // Vault rooms are rare, depth 3+ rooms meant to reward players who find them.
-            // No rarity filter here: vault loot comes from the standard floor pool (deferred to loot policy plan).
-            if (room.IsVault && depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0)
+            else
             {
-                int vaultItemCount = rng.Next(1, 3); // 1-2 guaranteed items
-                for (int vi = 0; vi < vaultItemCount; vi++)
+                // ── Fallback: flat pool selection ────────────────────────────
+                // Used when loot_tags.yaml/loot_policy.yaml not loaded (e.g., unit tests).
+                // Preserves existing ~40% roll + SelectWeighted behaviour.
+
+                bool canDropItem = depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0
+                    && rng.Next(0, 100) < 40;
+                if (canDropItem)
                 {
                     var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
-                    if (pos == null) break;
-
-                    var entry = SelectWeighted(depthFilteredEquipPool, rng);
-                    if (entry == null) break;
-
-                    Entity? entity = null;
-                    if (spellItems != null)
+                    if (pos != null)
                     {
-                        entity = spellItems.CreateScroll(entry.ItemId,
-                                     registry: identRegistry, pool: appearancePool,
-                                     identRng: rng, difficulty: difficulty)
-                              ?? spellItems.CreateWand(entry.ItemId, rng, depth,
-                                     registry: identRegistry, pool: appearancePool,
-                                     identRng: rng, difficulty: difficulty);
+                        var entry = SelectWeighted(depthFilteredEquipPool!, rng);
+                        if (entry != null)
+                        {
+                            Entity? entity = null;
+
+                            if (spellItems != null)
+                            {
+                                entity = spellItems.CreateScroll(entry.ItemId,
+                                            registry: identRegistry, pool: appearancePool,
+                                            identRng: rng, difficulty: difficulty)
+                                    ?? spellItems.CreateWand(entry.ItemId, rng, depth,
+                                            registry: identRegistry, pool: appearancePool,
+                                            identRng: rng, difficulty: difficulty);
+                            }
+
+                            entity ??= items?.Create(entry.ItemId);
+                            entity ??= consumables.Create(entry.ItemId, registry: identRegistry,
+                                pool: appearancePool, rng: rng, difficulty: difficulty);
+
+                            if (entity != null)
+                            {
+                                var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
+                                CopyComponents(entity, withId);
+                                map.Map.RegisterEntity(withId);
+                                occupied.Add(pos.Value);
+                                placed.Add(withId);
+                            }
+                        }
                     }
-                    entity ??= items?.Create(entry.ItemId);
+                }
 
-                    if (entity == null) continue;
+                // Vault room flat-pool fallback
+                if (room.IsVault && depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0)
+                {
+                    int vaultItemCount = rng.Next(1, 3); // 1-2 guaranteed items
+                    for (int vi = 0; vi < vaultItemCount; vi++)
+                    {
+                        var pos = FindFreePosition(map.Map, room, occupied, rng, reachable);
+                        if (pos == null) break;
 
-                    var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
-                    CopyComponents(entity, withId);
-                    map.Map.RegisterEntity(withId);
-                    occupied.Add(pos.Value);
-                    placed.Add(withId);
+                        var entry = SelectWeighted(depthFilteredEquipPool, rng);
+                        if (entry == null) break;
+
+                        Entity? entity = null;
+                        if (spellItems != null)
+                        {
+                            entity = spellItems.CreateScroll(entry.ItemId,
+                                         registry: identRegistry, pool: appearancePool,
+                                         identRng: rng, difficulty: difficulty)
+                                  ?? spellItems.CreateWand(entry.ItemId, rng, depth,
+                                         registry: identRegistry, pool: appearancePool,
+                                         identRng: rng, difficulty: difficulty);
+                        }
+                        entity ??= items?.Create(entry.ItemId);
+
+                        if (entity == null) continue;
+
+                        var withId = new Entity(ids.Next(), entity.Name, pos.Value.X, pos.Value.Y, entity.BlocksMovement);
+                        CopyComponents(entity, withId);
+                        map.Map.RegisterEntity(withId);
+                        occupied.Add(pos.Value);
+                        placed.Add(withId);
+                    }
                 }
             }
 
@@ -412,8 +491,8 @@ public static class EntityPlacer
         }
 
         // Grand Shrine altar rewards — place a guaranteed item at each altar position.
-        // Altar rewards are more interesting than typical floor loot: equipment pool is preferred
-        // over consumables, making Grand Shrines a reliable source of gear.
+        // Altar rewards are more interesting than typical floor loot: prefer upgrade_weapon or
+        // upgrade_armor categories (PoC: altar = gear shrine). Pity is not applied to altar loot.
         // Item placement at the altar is a real pickup entity, not a prop.
         foreach (var altarPos in map.GrandShrineAltarPositions)
         {
@@ -422,9 +501,22 @@ public static class EntityPlacer
 
             Entity? altarItem = null;
 
-            // Try floor equipment pool first (more interesting than a potion)
-            if (depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0)
+            if (lootTagRegistry != null && lootPolicy != null)
             {
+                // LootController: bias toward upgrade_weapon or upgrade_armor
+                string altarCategory = rng.Next(2) == 0 ? "upgrade_weapon" : "upgrade_armor";
+                string? altarItemId = LootController.GenerateRoomItem(
+                    depth, rng, lootTagRegistry, lootPolicy, pity: null,
+                    skipDensityRoll: true, forcedCategory: altarCategory);
+                if (altarItemId != null)
+                {
+                    altarItem = ResolveAndCreateItem(altarItemId, depth, rng, spellItems, items,
+                        consumables, identRegistry, appearancePool, difficulty);
+                }
+            }
+            else if (depthFilteredEquipPool != null && depthFilteredEquipPool.Count > 0)
+            {
+                // Fallback: flat pool
                 var entry = SelectWeighted(depthFilteredEquipPool, rng);
                 if (entry != null)
                 {
@@ -441,7 +533,7 @@ public static class EntityPlacer
                 }
             }
 
-            // Fall back to consumable if no equipment pool or equipment creation failed
+            // Fall back to consumable if all other paths fail
             if (altarItem == null && consumablePool.Count > 0)
             {
                 string consumableId = consumablePool[rng.Next(consumablePool.Count)];
@@ -459,6 +551,37 @@ public static class EntityPlacer
         }
 
         return placed;
+    }
+
+    /// <summary>
+    /// Resolve an item ID from LootController to a concrete Entity using the factory chain.
+    /// Resolution order: SpellItemFactory (scrolls → wands) → ItemFactory (equipment) → ConsumableFactory.
+    /// Returns null if no factory can resolve the ID.
+    /// </summary>
+    private static Entity? ResolveAndCreateItem(
+        string itemId, int depth, SeededRandom rng,
+        SpellItemFactory? spellItems, ItemFactory? items, ConsumableFactory consumables,
+        Content.IdentificationRegistry? identRegistry, Content.AppearancePool? appearancePool,
+        Difficulty difficulty)
+    {
+        Entity? entity = null;
+
+        if (spellItems != null)
+        {
+            entity = spellItems.CreateScroll(itemId,
+                         registry: identRegistry, pool: appearancePool,
+                         identRng: rng, difficulty: difficulty)
+                  ?? spellItems.CreateWand(itemId, rng, depth,
+                         registry: identRegistry, pool: appearancePool,
+                         identRng: rng, difficulty: difficulty);
+        }
+
+        entity ??= items?.Create(itemId);
+
+        entity ??= consumables.Create(itemId,
+            registry: identRegistry, pool: appearancePool, rng: rng, difficulty: difficulty);
+
+        return entity;
     }
 
     /// <summary>
@@ -490,7 +613,9 @@ public static class EntityPlacer
         ConsumableFactory? consumables = null,
         IdentificationRegistry? identRegistry = null,
         AppearancePool? appearancePool = null,
-        Difficulty difficulty = Difficulty.Medium)
+        Difficulty difficulty = Difficulty.Medium,
+        Content.LootTagRegistry? lootTagRegistry = null,
+        Content.LootPolicyConfig? lootPolicy = null)
     {
         var placed = new List<Entity>();
 
@@ -512,10 +637,31 @@ public static class EntityPlacer
             if (pos != null)
             {
                 // Generate loot now for determinism — same seed produces same chest contents.
-                var lootEntities = floorItemPool != null && consumables != null
-                    ? ChestLootGenerator.Generate(depth, rng, ids, floorItemPool, spellItems, items, consumables,
-                        identRegistry, appearancePool, difficulty)
-                    : new List<Entity>();
+                // LootController path: use band-aware chest loot generation.
+                // Fallback: legacy ChestLootGenerator from flat floor item pool.
+                List<Entity> lootEntities;
+                if (lootTagRegistry != null && lootPolicy != null && consumables != null)
+                {
+                    // LootController generates item IDs; resolve them to entities via factory chain.
+                    var chestItemIds = LootController.GenerateChestLoot(depth, rng, lootTagRegistry, lootPolicy, pity: null);
+                    lootEntities = new List<Entity>(chestItemIds.Count);
+                    foreach (var itemId in chestItemIds)
+                    {
+                        var lootEntity = ResolveAndCreateItem(itemId, depth, rng, spellItems, items,
+                            consumables, identRegistry, appearancePool, difficulty);
+                        if (lootEntity == null) continue;
+                        var lootWithId = new Entity(ids.Next(), lootEntity.Name, 0, 0, lootEntity.BlocksMovement);
+                        CopyComponents(lootEntity, lootWithId);
+                        lootEntities.Add(lootWithId);
+                    }
+                }
+                else
+                {
+                    lootEntities = floorItemPool != null && consumables != null
+                        ? ChestLootGenerator.Generate(depth, rng, ids, floorItemPool, spellItems, items, consumables,
+                            identRegistry, appearancePool, difficulty)
+                        : new List<Entity>();
+                }
 
                 var chest = FeatureFactory.CreateChest(pos.Value.X, pos.Value.Y, ids);
                 map.Map.RegisterEntity(chest);

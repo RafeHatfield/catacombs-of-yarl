@@ -854,50 +854,61 @@ armor:
 # TODO: add max_depth and band-based density scaling to match PoC B1-B5 methodology.
 # TODO: integrate consumables into this pool (unified spawn logic with depth-scaled density).
 floor_item_pool:
-  # Weapons — depth 1
+  # Weapons — depth 1 (age out at depth 15; PoC band_max=3 → depths 1-15)
   - item: dagger
     weight: 25
     min_depth: 1
+    max_depth: 15
   - item: club
     weight: 25
     min_depth: 1
+    max_depth: 15
   - item: mace
     weight: 30
     min_depth: 1
+    max_depth: 15
   - item: shortsword
     weight: 20
     min_depth: 1
-  # Weapons — depth 2
+    max_depth: 15
+  # Weapons — depth 2 (mid weapons age out at depth 20; PoC band_max=4 → depths 1-20)
   - item: rapier
     weight: 20
     min_depth: 2
+    max_depth: 20
   - item: spear
     weight: 20
     min_depth: 2
+    max_depth: 20
   - item: longsword
     weight: 15
     min_depth: 2
-  # Weapons — depth 3
+    max_depth: 20
+  # Weapons — depth 3 (late weapons go to depth 25)
   - item: battleaxe
     weight: 15
     min_depth: 3
   - item: greatsword
     weight: 10
     min_depth: 3
-  # Armor — depth 1
+  # Armor — depth 1 (early armor ages out at depth 15; PoC band_max=2-3)
   - item: leather_armor
     weight: 30
     min_depth: 1
+    max_depth: 15
   - item: shield
     weight: 25
     min_depth: 1
+    max_depth: 15
   - item: leather_helmet
     weight: 20
     min_depth: 1
+    max_depth: 15
   - item: leather_boots
     weight: 20
     min_depth: 1
-  # Armor — depth 2+
+    max_depth: 15
+  # Armor — depth 2+ (mid armor goes to depth 25)
   - item: studded_leather
     weight: 20
     min_depth: 2

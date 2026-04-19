@@ -24,6 +24,8 @@ const string EntitiesFile        = "config/entities.yaml";
 const string LevelsDir           = "config/levels";
 const string LevelTemplatesFile  = "config/level_templates.yaml";
 const string DepthBoonsFile      = "config/depth_boons.yaml";
+const string LootTagsFile        = "config/loot_tags.yaml";
+const string LootPolicyFile      = "config/loot_policy.yaml";
 
 // ─── Parse args ────────────────────────────────────────────────────────────
 
@@ -35,7 +37,9 @@ bool    verbose      = false;
 bool    printReport  = false;
 int?    runsOverride = null;
 int     seed         = 1337;
-int     floors       = 6;
+// Default to 10 floors (B1+B2) for soak runs. The canonical dungeon is 25 floors (B1-B5),
+// but 10 is enough to verify band-density and pity behaviour without long run times.
+int     floors       = 10;
 string? jsonlPath    = null;
 string? jsonlInPath  = null;
 
@@ -407,6 +411,14 @@ DungeonFloorBuilder BuildDungeonFloorBuilder(string entitiesPath, string templat
 
     var floorItemPool = content.FloorItemPool;
 
+    CatacombsOfYarl.Logic.Content.LootTagRegistry? lootTagRegistry = null;
+    if (File.Exists(LootTagsFile))
+        lootTagRegistry = CatacombsOfYarl.Logic.Content.LootTagRegistry.FromFile(LootTagsFile);
+
+    CatacombsOfYarl.Logic.Content.LootPolicyConfig? lootPolicy = null;
+    if (File.Exists(LootPolicyFile))
+        lootPolicy = CatacombsOfYarl.Logic.Content.LootPolicyConfig.FromFile(LootPolicyFile);
+
     return new DungeonFloorBuilder(
         templates,
         monsterFactory,
@@ -414,7 +426,9 @@ DungeonFloorBuilder BuildDungeonFloorBuilder(string entitiesPath, string templat
         consumableFactory,
         floorItemPool: floorItemPool,
         spellItemFactory: spellItemFactory,
-        boonTable: boonTable);
+        boonTable: boonTable,
+        lootTagRegistry: lootTagRegistry,
+        lootPolicy: lootPolicy);
 }
 
 /// <summary>
@@ -509,6 +523,44 @@ void PrintDungeonTable(DungeonSoakSummary summary, int runs, int baseSeed, int f
         double survivalPct = summary.SurvivalCurve.Count >= d ? summary.SurvivalCurve[d - 1] * 100.0 : 0.0;
 
         Console.WriteLine($"  {d,5}  {deathPct,6:F1}%  {avgTurns,9:F1}  {avgKills,9:F1}  {survivalPct,8:F1}%");
+    }
+
+    // Per-depth loot telemetry — only printed if any floor has LootCategoryCounts data
+    bool hasLootData = summary.Runs
+        .Any(r => r.PerFloor.Any(f => f.LootCategoryCounts != null));
+
+    if (hasLootData)
+    {
+        Console.WriteLine();
+        Console.WriteLine("  Loot Category Rates (avg items/floor across all runs that reached depth):");
+        Console.WriteLine($"  {"Depth",5}  {"Total",6}  {"healing",8}  {"panic",6}  {"offense",8}  {"utility",8}  {"wpn_up",7}  {"arm_up",7}  {"rare",5}  {"pity",5}");
+        Console.WriteLine($"  {"-----",5}  {"-----",6}  {"-------",8}  {"-----",6}  {"-------",8}  {"-------",8}  {"------",7}  {"------",7}  {"----",5}  {"----",5}");
+
+        for (int d = 1; d <= maxDepth; d++)
+        {
+            var floorRuns = summary.Runs
+                .Select(r => r.PerFloor.FirstOrDefault(f => f.Depth == d))
+                .Where(f => f?.LootCategoryCounts != null)
+                .Select(f => f!)
+                .ToList();
+
+            if (floorRuns.Count == 0) continue;
+
+            double Avg(string cat) => floorRuns.Average(f =>
+                f.LootCategoryCounts!.TryGetValue(cat, out int v) ? v : 0);
+
+            double total   = floorRuns.Average(f => f.LootCategoryCounts!.Values.Sum());
+            double healing = Avg("healing");
+            double panic   = Avg("panic");
+            double offense = Avg("offensive");
+            double utility = Avg("utility");
+            double wpnUp   = Avg("upgrade_weapon");
+            double armUp   = Avg("upgrade_armor");
+            double rare    = Avg("rare");
+            double pityFires = floorRuns.Average(f => f.LootHardPityFires);
+
+            Console.WriteLine($"  {d,5}  {total,5:F1}  {healing,8:F2}  {panic,6:F2}  {offense,8:F2}  {utility,8:F2}  {wpnUp,7:F2}  {armUp,7:F2}  {rare,5:F2}  {pityFires,5:F2}");
+        }
     }
 
     Console.WriteLine();

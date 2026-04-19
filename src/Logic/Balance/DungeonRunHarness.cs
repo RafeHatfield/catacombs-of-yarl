@@ -43,6 +43,19 @@ public sealed class FloorRunMetrics
     /// descent or death. Indicates a potential stuck-bot or pathfinding regression.
     /// </summary>
     public bool HitMaxTurns { get; set; }
+
+    /// <summary>
+    /// Loot category counts for this floor — how many items of each category spawned.
+    /// Null if loot telemetry was not collected (e.g., no PityTracker was wired).
+    /// Keys match loot_tags.yaml categories: healing, panic, offensive, utility,
+    /// upgrade_weapon, upgrade_armor, rare, defensive, key.
+    /// </summary>
+    public IReadOnlyDictionary<string, int>? LootCategoryCounts { get; set; }
+
+    /// <summary>
+    /// Number of times hard pity forced a guaranteed item on this floor.
+    /// </summary>
+    public int LootHardPityFires { get; set; }
 }
 
 /// <summary>
@@ -199,6 +212,7 @@ public sealed class DungeonRunHarness
         Entity? player    = null;
         Entity? lastFloorPlayer = null; // always the last floor's player entity (even on death)
         BoonTracker? boonTracker = null;
+        PityTracker? pityTracker = null;
         int totalTurns    = 0;
         int totalKills    = 0;
         int floorsCompleted = 0;
@@ -215,7 +229,7 @@ public sealed class DungeonRunHarness
         {
             // Distinct-but-reproducible seed per depth — same pattern as smoke tests
             var rng = new SeededRandom(baseSeed + depth * 1_000_003);
-            var state = _floorBuilder.Build(depth, rng, player, boonTracker: boonTracker);
+            var state = _floorBuilder.Build(depth, rng, player, boonTracker: boonTracker, pityTracker: pityTracker);
 
             // Dungeon floors need far more turns than the scenario default (100).
             // Set a generous limit so IsGameOver only fires on player death, not turn-out.
@@ -369,6 +383,14 @@ public sealed class DungeonRunHarness
                 && !floorMetrics.Descended
                 && !floorMetrics.PlayerDied;
 
+            // Snapshot per-floor loot telemetry from PityTracker before carrying it forward.
+            if (state.PityTracker != null)
+            {
+                var (counts, fires) = state.PityTracker.SnapshotAndResetFloorTelemetry();
+                floorMetrics.LootCategoryCounts = counts;
+                floorMetrics.LootHardPityFires  = fires;
+            }
+
             perFloor.Add(floorMetrics);
 
             totalTurns   += floorTurns;
@@ -383,9 +405,11 @@ public sealed class DungeonRunHarness
             if (!state.PlayerFighter.IsAlive)
                 break;
 
-            // Carry the same player entity and boon tracker forward to the next floor
-            player      = state.Player;
-            boonTracker = state.BoonTracker;
+            // Carry the same player entity, boon tracker, and pity tracker forward to the next floor.
+            // PityTracker persists across floors — drought counters don't reset on descent (PoC-exact).
+            player       = state.Player;
+            boonTracker  = state.BoonTracker;
+            pityTracker  = state.PityTracker;
         }
 
         sw.Stop();

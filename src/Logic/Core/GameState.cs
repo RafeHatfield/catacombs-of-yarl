@@ -119,6 +119,15 @@ public sealed class GameState
     /// </summary>
     public MuralTracker? MuralTracker { get; init; }
 
+    // ── Loot pity system ────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Per-run pity tracker. Tracks rooms-since-last-appearance for critical loot categories.
+    /// Survives floor transitions — passed from old state to new via DungeonFloorBuilder.
+    /// Null in scenario mode (harness runs without pity tracking unless explicitly enabled).
+    /// </summary>
+    public Balance.PityTracker? PityTracker { get; init; }
+
     // ── Depth boon system ────────────────────────────────────────────────────
 
     /// <summary>
