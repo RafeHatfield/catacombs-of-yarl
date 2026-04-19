@@ -5,9 +5,8 @@ namespace CatacombsOfYarl.Presentation.UI;
 /// <summary>
 /// Options panel shown from the main menu.
 ///
-/// Currently contains a tileset selector. The selection is boot-time only —
-/// changing it writes to config/game_settings.yaml and shows a "Restart to apply"
-/// notice. No hot-swap; the engine picks up the new value on next launch.
+/// Contains a tileset selector (requires restart) and, in debug builds,
+/// a hot-toggle for the debug overlay.
 /// </summary>
 public sealed partial class OptionsPanel : Control
 {
@@ -15,6 +14,9 @@ public sealed partial class OptionsPanel : Control
 
     // The ID that was actually loaded at boot (passed in from Main so we can detect changes).
     private readonly string _loadedTilesetId;
+
+    // Debug overlay reference — null in release builds or when not passed.
+    private readonly DebugOverlay? _debugOverlay;
 
     // Ordered list of (id, display name) pairs. Small and fixed — no need to scan disk.
     private static readonly (string Id, string DisplayName)[] KnownTilesets =
@@ -29,10 +31,12 @@ public sealed partial class OptionsPanel : Control
     // Live UI references so we can update text after _Ready
     private TouchButton? _cycleBtn;
     private Label?       _restartLabel;
+    private TouchButton? _debugOverlayBtn;
 
-    public OptionsPanel(string loadedTilesetId)
+    public OptionsPanel(string loadedTilesetId, DebugOverlay? debugOverlay = null)
     {
         _loadedTilesetId = loadedTilesetId;
+        _debugOverlay    = debugOverlay;
         // Find the starting selection — default to index 0 if ID not recognised.
         _selectedIndex = FindIndex(loadedTilesetId);
     }
@@ -109,6 +113,30 @@ public sealed partial class OptionsPanel : Control
         _restartLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.75f, 0.3f, 1f));
         vbox.AddChild(_restartLabel);
 
+        // Debug overlay toggle — only in debug builds where the overlay exists.
+        if (_debugOverlay != null)
+        {
+            var debugSection = new Label
+            {
+                Text                = "Debug",
+                HorizontalAlignment = HorizontalAlignment.Center,
+                MouseFilter         = MouseFilterEnum.Ignore,
+            };
+            debugSection.AddThemeFontSizeOverride("font_size", 18);
+            debugSection.AddThemeColorOverride("font_color", new Color(0.65f, 0.65f, 0.65f, 1f));
+            vbox.AddChild(debugSection);
+
+            _debugOverlayBtn = new TouchButton
+            {
+                Text              = DebugOverlayBtnText(),
+                FontSize          = 22,
+                BackgroundColor   = new Color(0.25f, 0.25f, 0.35f, 0.95f),
+                CustomMinimumSize = new Vector2(280, 56),
+            };
+            _debugOverlayBtn.Pressed += OnDebugOverlayToggle;
+            vbox.AddChild(_debugOverlayBtn);
+        }
+
         // Back button
         var backBtn = new TouchButton
         {
@@ -149,6 +177,25 @@ public sealed partial class OptionsPanel : Control
     {
         var (_, displayName) = KnownTilesets[_selectedIndex];
         return $"Tileset: {displayName}  →";
+    }
+
+    // -------------------------------------------------------------------------
+    // Debug overlay toggle
+    // -------------------------------------------------------------------------
+
+    private void OnDebugOverlayToggle()
+    {
+        if (_debugOverlay == null) return;
+        _debugOverlay.Visible = !_debugOverlay.Visible;
+        if (_debugOverlayBtn != null)
+            _debugOverlayBtn.Text = DebugOverlayBtnText();
+        WriteDebugOverlaySetting(_debugOverlay.Visible);
+    }
+
+    private string DebugOverlayBtnText()
+    {
+        var on = _debugOverlay?.Visible ?? false;
+        return $"Debug Overlay: {(on ? "ON" : "OFF")}";
     }
 
     // -------------------------------------------------------------------------
@@ -230,6 +277,48 @@ public sealed partial class OptionsPanel : Control
         catch (System.Exception ex)
         {
             GD.PrintErr($"[OptionsPanel] Failed to write game_settings.yaml: {ex.Message}");
+        }
+    }
+
+    private static void WriteDebugOverlaySetting(bool visible)
+    {
+        const string resPath = "res://config/game_settings.yaml";
+        try
+        {
+            string currentText;
+            using (var readFile = Godot.FileAccess.Open(resPath, Godot.FileAccess.ModeFlags.Read))
+            {
+                if (readFile == null) return;
+                currentText = readFile.GetAsText();
+            }
+
+            var lines = currentText.Split('\n');
+            bool replaced = false;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].TrimStart().StartsWith("show_debug_overlay:", System.StringComparison.Ordinal))
+                {
+                    lines[i] = $"show_debug_overlay: {(visible ? "true" : "false")}";
+                    replaced = true;
+                    break;
+                }
+            }
+
+            if (!replaced)
+            {
+                var list = new System.Collections.Generic.List<string>(lines)
+                    { $"show_debug_overlay: {(visible ? "true" : "false")}" };
+                lines = list.ToArray();
+            }
+
+            using var writeFile = Godot.FileAccess.Open(resPath, Godot.FileAccess.ModeFlags.Write);
+            if (writeFile == null) return;
+            writeFile.StoreString(string.Join('\n', lines));
+            GD.Print($"[OptionsPanel] Debug overlay setting saved: {visible}");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"[OptionsPanel] Failed to write debug overlay setting: {ex.Message}");
         }
     }
 }

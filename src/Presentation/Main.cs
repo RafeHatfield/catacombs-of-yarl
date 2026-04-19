@@ -136,6 +136,7 @@ public partial class Main : Node
         if (OS.IsDebugBuild())
         {
             _debugOverlay = new DebugOverlay();
+            _debugOverlay.Visible = ReadDebugOverlayVisible();
             GetNode<CanvasLayer>("UILayer").AddChild(_debugOverlay);
 
             _rectDebugDraw = new RectDebugDraw();
@@ -299,6 +300,27 @@ public partial class Main : Node
 
         // 3. Default
         return "iso";
+    }
+
+    private static bool ReadDebugOverlayVisible()
+    {
+        const string settingsPath = "res://config/game_settings.yaml";
+        try
+        {
+            using var file = Godot.FileAccess.Open(settingsPath, Godot.FileAccess.ModeFlags.Read);
+            if (file != null)
+            {
+                foreach (var line in file.GetAsText().Split('\n'))
+                {
+                    var trimmed = line.TrimStart();
+                    if (!trimmed.StartsWith("show_debug_overlay:", System.StringComparison.Ordinal)) continue;
+                    var value = trimmed["show_debug_overlay:".Length..].Trim().Trim('"');
+                    return value.Equals("true", System.StringComparison.OrdinalIgnoreCase);
+                }
+            }
+        }
+        catch { /* silent — default to hidden */ }
+        return false;
     }
 
     /// <summary>
@@ -1147,7 +1169,7 @@ public partial class Main : Node
 
         // Pass the loaded tileset ID so the panel can detect changes made this session.
         var loadedId = _spriteMapping?.TilesetId ?? "ultimate_fantasy";
-        var panel = new OptionsPanel(loadedId);
+        var panel = new OptionsPanel(loadedId, _debugOverlay);
         menuLayer.AddChild(panel);
 
         panel.BackRequested += ShowMainMenu;

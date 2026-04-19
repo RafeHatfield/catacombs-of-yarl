@@ -15,3 +15,6 @@ map_mode: "topdown"
 # easy: most items start identified (80-90%); medium: balanced (30-50%); hard: almost nothing (0-5%).
 # Unknown values default to "medium".
 difficulty: "medium"
+
+# Debug overlay visibility (debug builds only). Default hidden.
+show_debug_overlay: false
