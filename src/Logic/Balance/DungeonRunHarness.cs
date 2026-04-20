@@ -308,7 +308,21 @@ public sealed class DungeonRunHarness
                     if (botAction.Type == BotAction.ActionType.MoveToward && botAction.Target != null)
                     {
                         var target = botAction.Target;
+
+                        // Build detected trap set so the bot routes around known hazards.
+                        // If trap-avoidance produces no path (bot is completely surrounded),
+                        // fall back to unconstrained A* to keep the bot moving.
+                        var trapTiles = Pathfinder.DetectedTrapTiles(state.Features);
                         var path = Pathfinder.AStar(
+                            state.Map,
+                            state.Player.X, state.Player.Y,
+                            target.X, target.Y,
+                            state.Player,
+                            canPassDoors: true,
+                            avoidTiles: trapTiles.Count > 0 ? trapTiles : null);
+
+                        // Fallback: if trap-avoiding path fails, try without avoidance
+                        path ??= Pathfinder.AStar(
                             state.Map,
                             state.Player.X, state.Player.Y,
                             target.X, target.Y,

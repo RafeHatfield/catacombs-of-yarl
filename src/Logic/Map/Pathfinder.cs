@@ -19,7 +19,8 @@ public static class Pathfinder
     /// </summary>
     public static List<(int X, int Y)>? AStar(
         GameMap map, int fromX, int fromY, int toX, int toY,
-        Entity? movingEntity = null, bool canPassDoors = false)
+        Entity? movingEntity = null, bool canPassDoors = false,
+        HashSet<(int, int)>? avoidTiles = null)
     {
         if (fromX == toX && fromY == toY) return new List<(int, int)>();
 
@@ -71,6 +72,11 @@ public static class Pathfinder
                     if (!map.CanMoveToWith(nx, ny, movingEntity, ignoreEntityAtDest: isDestination, canPassDoors: canPassDoors))
                         continue;
 
+                    // Skip avoid-tiles unless we're already standing on one (start tile)
+                    // or the destination itself is the goal (can't route elsewhere).
+                    if (avoidTiles != null && avoidTiles.Contains(neighbor) && !isDestination)
+                        continue;
+
                     int moveCost = isDiagonal ? DiagonalCost : CardinalCost;
                     int tentativeG = gCost[current] + moveCost;
 
@@ -86,6 +92,22 @@ public static class Pathfinder
         }
 
         return null; // No path found
+    }
+
+    /// <summary>
+    /// Build a set of detected, non-spent floor trap positions from the features list.
+    /// Used by the harness bot to route around known traps via trap-aware A*.
+    /// </summary>
+    public static HashSet<(int, int)> DetectedTrapTiles(IReadOnlyList<Entity> features)
+    {
+        var tiles = new HashSet<(int, int)>();
+        foreach (var f in features)
+        {
+            var trap = f.Get<FloorTrapComponent>();
+            if (trap != null && trap.IsDetected && !trap.IsSpent)
+                tiles.Add((f.X, f.Y));
+        }
+        return tiles;
     }
 
     /// <summary>

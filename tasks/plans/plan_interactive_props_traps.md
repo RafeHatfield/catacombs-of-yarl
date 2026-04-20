@@ -1,6 +1,6 @@
 # Plan: Interactive Props, Trap System & Status Interactions
 
-Status: [~] In progress — Phases 1–7 complete, Phase 7b + Phase 8 pending
+Status: [~] In progress — Phases 1–7b complete, Phase 8 pending
 PoC reference: `~/development/rlike/components/trap.py`, `~/development/rlike/services/movement_service.py` (_apply_trap_effects), `~/development/rlike/config/entities.yaml` (map_traps, bone_pile)
 Supersedes: most of `plan_traps_chests_features.md` trap section — chests/signs/murals already complete.
 
@@ -9,9 +9,10 @@ Supersedes: most of `plan_traps_chests_features.md` trap section — chests/sign
 ## Current State
 - Phases 1–7 complete. 1387 tests passing (fast suite).
 - TASK-001–021 all done: components, YAML registries, TrapActionResolver, TurnController integration (props + traps), EntityPlacer placement (props + traps), BleedEffect, AcidEffect, InnateRegenComponent, poison transfer on drain (wraith), WeaponAcidCoating from acid_trap.
-- Remaining: Phase 7b (TASK-026 bot trap avoidance, TASK-027 AutoExplore interrupt) + Phase 8 (harness identity scenarios, TASK-023/024 harness runs) + TASK-000c (RoomPropPlacer cleanup) + TASK-025 (INDEX update).
-- Phase 5 (presentation wiring) is intentionally deferred — needs manual Godot session.
-- Next: TASK-026 (BotBrain trap avoidance in A*) or skip straight to Phase 8 harness verification.
+- Remaining: Phase 8 (harness identity scenarios, TASK-023/024 harness runs) + TASK-000c (RoomPropPlacer cleanup) + TASK-025 (INDEX update).
+- Phase 7b complete: Pathfinder.AStar now accepts avoidTiles parameter; DungeonRunHarness threads DetectedTrapTiles into A* call with unconstrained fallback. AutoExplore already stopped on TrapDetectedEvent (confirmed). 5 new tests.
+- Phase 5 (presentation wiring) intentionally deferred — needs manual Godot session.
+- Next: Phase 8 harness verification runs or TASK-000c RoomPropPlacer cleanup.
 
 ---
 
