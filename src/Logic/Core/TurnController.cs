@@ -498,6 +498,29 @@ public static class TurnController
             // Wake sleeping targets on attack damage (NOT DOT — PoC-verified).
             StatusEffectProcessor.OnDamageTaken(target, events);
 
+            // Acid weapon coating: coated main-hand weapon applies AcidEffect to the target on hit
+            // and decrements the coating's hit counter. Removed when exhausted.
+            var playerEquip = player.Get<Equipment>();
+            var coatedWeapon = playerEquip?.MainHand?.Get<WeaponAcidCoatingComponent>();
+            if (coatedWeapon != null)
+            {
+                var acidEffect = StatusEffectProcessor.ApplyEffect<AcidEffect>(target, coatedWeapon.EffectDuration);
+                if (acidEffect != null)
+                {
+                    events.Add(new StatusAppliedEvent
+                    {
+                        ActorId    = player.Id,
+                        TargetId   = target.Id,
+                        EffectName = "acid",
+                        Duration   = acidEffect.RemainingTurns,
+                    });
+                }
+
+                coatedWeapon.HitsRemaining--;
+                if (coatedWeapon.HitsRemaining <= 0)
+                    playerEquip!.MainHand!.Remove<WeaponAcidCoatingComponent>();
+            }
+
             // Check split-under-pressure BEFORE death check — split wins over kill.
             // Only check on a hit because the HP hasn't changed on a miss.
             var splitTracker = target.Get<SplitTracker>();
@@ -815,6 +838,37 @@ public static class TurnController
             state, state.Rng, events,
             monsterFactory: monsterFactory,
             idAllocator: idAlloc);
+
+        // Acid trap weapon coating: if the player survives an acid_trap trigger, their
+        // equipped main-hand weapon gains WeaponAcidCoatingComponent (4 hits, 6-turn AcidEffect).
+        // Only applies to the player (not monsters), only when alive, only for acid_trap.
+        if (trap.TrapType == "acid_trap"
+            && mover.Id == state.Player.Id
+            && mover.Get<Fighter>() is { } movedFighter && movedFighter.IsAlive)
+        {
+            var equip = mover.Get<Equipment>();
+            var weapon = equip?.MainHand;
+            if (weapon != null)
+            {
+                var existing = weapon.Get<WeaponAcidCoatingComponent>();
+                if (existing != null)
+                {
+                    // Already coated — take the higher HitsRemaining to avoid downgrade.
+                    if (4 > existing.HitsRemaining)
+                        existing.HitsRemaining = 4;
+                }
+                else
+                {
+                    weapon.Add(new WeaponAcidCoatingComponent { HitsRemaining = 4, EffectDuration = 6 });
+                }
+
+                events.Add(new WeaponAcidCoatedEvent
+                {
+                    WeaponId       = weapon.Id,
+                    HitsRemaining  = weapon.Require<WeaponAcidCoatingComponent>().HitsRemaining,
+                });
+            }
+        }
     }
 
     /// <summary>
@@ -1732,6 +1786,11 @@ public static class TurnController
                 if (healed > 0)
                     events.Add(new LifeDrainEvent { ActorId = monster.Id, TargetId = target.Id, Amount = healed });
             }
+
+            // Effect transfer: wraith absorbs poison/bleed from the target onto itself on each hit.
+            // Clone semantics — original stays on target, both share the effect afterward.
+            if (monster.Has<TransfersEffectsOnHitComponent>())
+                ResolveEffectTransfer(monster, target, events);
         }
 
         // Ring of Teleportation: 20% on-hit, player teleports to a random open tile.
@@ -1847,6 +1906,54 @@ public static class TurnController
             EffectName = onHit.EffectType,
             Duration = onHit.Duration,
         });
+    }
+
+    /// <summary>
+    /// Effect transfer: clones active PoisonEffect and/or BleedEffect from target onto attacker.
+    /// Clone semantics — both entities end up with the effect; original is NOT removed from target.
+    /// Guard: skips if attacker already has the effect (prevents re-applying / extending via loop).
+    /// Immunity check is handled inside ApplyEffect — so an immune attacker silently skips transfer.
+    ///
+    /// Bleed cloning preserves the source severity (wraith that drains a deep-wound player gets
+    /// the same severity, not a flat sev-1).
+    /// </summary>
+    private static void ResolveEffectTransfer(Entity attacker, Entity target, List<TurnEvent> events)
+    {
+        // Poison transfer
+        var targetPoison = target.Get<PoisonEffect>();
+        if (targetPoison != null && !attacker.Has<PoisonEffect>())
+        {
+            var cloned = StatusEffectProcessor.ApplyEffect<PoisonEffect>(attacker, targetPoison.RemainingTurns);
+            if (cloned != null)
+            {
+                cloned.DamagePerTurn = targetPoison.DamagePerTurn;
+                events.Add(new StatusTransferredEvent
+                {
+                    ActorId  = attacker.Id,
+                    SourceId = target.Id,
+                    TargetId = attacker.Id,
+                    EffectKind = "poison",
+                });
+            }
+        }
+
+        // Bleed transfer
+        var targetBleed = target.Get<BleedEffect>();
+        if (targetBleed != null && !attacker.Has<BleedEffect>())
+        {
+            var cloned = StatusEffectProcessor.ApplyEffect<BleedEffect>(attacker, targetBleed.RemainingTurns);
+            if (cloned != null)
+            {
+                cloned.Severity = targetBleed.Severity;
+                events.Add(new StatusTransferredEvent
+                {
+                    ActorId  = attacker.Id,
+                    SourceId = target.Id,
+                    TargetId = attacker.Id,
+                    EffectKind = "bleed",
+                });
+            }
+        }
     }
 
     /// <summary>
