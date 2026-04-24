@@ -123,6 +123,26 @@ public sealed partial class InspectPanel : Control
         Visible = true;
     }
 
+    /// <summary>
+    /// Render a world feature (prop, door, chest, trap, portal, etc.) and show the panel.
+    /// Simpler than ShowMonster/ShowItem — just name and one-sentence description.
+    /// </summary>
+    public void ShowFeature(string displayName, string description, Vector2 nearPos)
+    {
+        if (_content == null) return;
+        ClearContent();
+
+        AddLabel(displayName, HeaderColor, 18, bold: true);
+
+        if (!string.IsNullOrEmpty(description))
+        {
+            AddSeparator();
+            AddLabel(description, StatColor, 13);
+        }
+
+        Visible = true;
+    }
+
     /// <summary>Hide the panel.</summary>
     public new void Hide()
     {

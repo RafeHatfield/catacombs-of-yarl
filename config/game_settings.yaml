@@ -18,3 +18,7 @@ difficulty: "medium"
 
 # Debug overlay visibility (debug builds only). Default hidden.
 show_debug_overlay: false
+
+# Show atmospheric description panel when long-pressing props, doors, traps, and other features.
+# Set to false to disable feature inspection (monster and item inspection are unaffected).
+show_prop_inspect: true

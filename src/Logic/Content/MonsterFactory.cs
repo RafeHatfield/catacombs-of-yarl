@@ -206,6 +206,10 @@ public sealed class MonsterFactory
         if (def.LifeDrainPct > 0)
             entity.Add(new LifeDrainComponent(def.LifeDrainPct));
 
+        // Effect transfer on drain: wraith absorbs poison/bleed from target on melee hit
+        if (def.TransfersEffectsOnHit)
+            entity.Add(new TransfersEffectsOnHitComponent());
+
         // Status immunities: wraith/lich immune to confusion/slow/fear/etc.
         if (def.StatusImmunities is { Count: > 0 })
             entity.Add(new StatusImmunityComponent(def.StatusImmunities));

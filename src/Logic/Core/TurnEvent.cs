@@ -458,6 +458,17 @@ public sealed class ChestOpenedEvent : TurnEvent
 }
 
 /// <summary>
+/// Emitted when the player bumps an already-open chest to collect the visible loot (second interaction).
+/// Items are moved from the chest tile to the player's inventory via auto-pickup.
+/// Presentation layer swaps the chest sprite from open-with-items (262) to empty (264).
+/// </summary>
+public sealed class ChestLootedEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+}
+
+/// <summary>
 /// Emitted when the player reads a signpost by bumping into it. Free action — no turn consumed.
 /// Presentation layer shows a popup with Message.
 /// </summary>
@@ -702,4 +713,80 @@ public sealed class WeaponAcidCoatedEvent : TurnEvent
 {
     public int WeaponId { get; init; }
     public int HitsRemaining { get; init; }
+}
+
+/// <summary>
+/// Emitted when a locked chest is successfully unlocked by a matching colored key.
+/// The key is consumed immediately; the chest proceeds to open normally (ChestOpenedEvent follows).
+/// Presentation layer should show a toast: "The [color] key unlocks the chest!"
+/// </summary>
+public sealed class ChestUnlockedEvent : TurnEvent
+{
+    public int ChestId { get; init; }
+    public int KeyId { get; init; }
+    public int LockColorId { get; init; }
+    public int X { get; init; }
+    public int Y { get; init; }
+}
+
+/// <summary>
+/// Emitted when a key item is consumed (used to unlock a chest).
+/// Presentation layer can use this to remove the key sprite from any inventory display.
+/// </summary>
+public sealed class KeyConsumedEvent : TurnEvent
+{
+    public int KeyId { get; init; }
+    public int LockColorId { get; init; }
+}
+
+/// <summary>
+/// Emitted when the player bumps a locked chest but has no matching key in inventory.
+/// Presentation layer should show a toast: "This chest is locked. You need a [color] key."
+/// </summary>
+public sealed class ChestLockedEvent : TurnEvent
+{
+    public int ChestId { get; init; }
+    public int LockColorId { get; init; }
+    public int X { get; init; }
+    public int Y { get; init; }
+}
+
+/// <summary>
+/// Emitted when the player bumps a locked door but has no matching key in inventory.
+/// This is a free action — no turn is consumed (same as bumping a wall).
+/// Presentation layer should show a toast: "This door is locked. You need a [color] key."
+/// </summary>
+public sealed class LockedDoorBumpedEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+    public int LockColorId { get; init; }
+}
+
+/// <summary>
+/// Emitted when passive detection reveals a SecretDoor tile, converting it to a normal Door.
+/// The tile has already been changed to TileKind.Door when this event fires.
+/// Presentation layer should: replace the wall sprite with a door overlay at (X, Y),
+/// and show Hint as a toast/log message.
+/// </summary>
+public sealed class SecretDoorFoundEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+
+    /// <summary>Flavor text hint shown to the player upon discovery.</summary>
+    public string Hint { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted when the player uses a matching key to unlock and open a locked door.
+/// The key is consumed; the door tile changes from LockedDoor to DoorOpen.
+/// Presentation layer should: swap tile sprite, show toast, remove key icon overlay.
+/// </summary>
+public sealed class DoorUnlockedEvent : TurnEvent
+{
+    public int X { get; init; }
+    public int Y { get; init; }
+    public int KeyId { get; init; }
+    public int LockColorId { get; init; }
 }

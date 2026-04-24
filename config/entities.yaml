@@ -577,6 +577,7 @@ monsters:
     inventory_size: 0
     speed_bonus: 2.0
     life_drain_pct: 0.50
+    transfers_effects_on_hit: true
     leaves_corpse: false
     status_immunities: ["confusion", "slow", "fear"]
     etp_base: 65

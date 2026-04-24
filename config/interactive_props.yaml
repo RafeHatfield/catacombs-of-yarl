@@ -4,6 +4,8 @@
 
 interactive_props:
   barrel:
+    display_name: "Barrel"
+    description: "A battered wooden barrel — tap to search it."
     closed_tile_id: 268
     open_tile_id: 269
     loot:
@@ -15,6 +17,8 @@ interactive_props:
       - { weight: 40, payload: spike_burst_small }
 
   bookshelf:
+    display_name: "Bookshelf"
+    description: "Shelves of mouldering volumes — tap to search for useful texts."
     closed_tile_id: 317
     open_tile_id: 317          # no visual change when searched
     loot:
@@ -23,6 +27,8 @@ interactive_props:
     trap_chance: 0.0           # never trapped
 
   bone_pile:
+    display_name: "Bone Pile"
+    description: "A heap of old bones — tap to search, but be ready for what stirs."
     closed_tile_id: 90
     open_tile_id: 91
     loot:
@@ -32,6 +38,16 @@ interactive_props:
     rouse_monster: zombie
     rouse_radius: 4
     rouse_min_depth: 2         # no rouse at depth 1
+
+  # Locked chest — requires matching colored key to open.
+  # No trap or rouse; tint and key overlay are applied by DungeonRenderer via LockableComponent.
+  # open_tile_id is chest_open (262) but is handled by TurnController after unlock.
+  locked_chest:
+    display_name: "Locked Chest"
+    description: "A chest sealed with a colored lock — you'll need the matching key."
+    closed_tile_id: 261      # same as chest_closed — tint distinguishes locked state
+    open_tile_id: 262        # opens to chest_open on unlock + open
+    min_depth: 1
 
 # Named trap payloads shared by props and trapped chests.
 # Referenced from trap_table entries above by payload key.

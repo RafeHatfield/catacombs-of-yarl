@@ -1,5 +1,6 @@
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Combat.StatusEffects;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using NUnit.Framework;
@@ -207,6 +208,52 @@ public class PropAndTrapTests
             "No rouse when RouseAction is null");
     }
 
+    [Test]
+    public void BumpBonePile_AtDepth2_WithRouseAction_SpawnsZombie()
+    {
+        // Identity scenario: bone_pile_rouse_identity.
+        // TurnController passes monsterFactory:null to TryInteractFeature (deferred wiring).
+        // Test TrapActionResolver directly with a real factory to verify the spawn path works.
+        var factory = CreateMonsterFactory();
+        var rng = new SeededRandom(1337);
+        var map = GameMap.CreateArena(12, 12);
+
+        var player = new Entity(0, "Player", 3, 5, blocksMovement: true);
+        player.Add(new Fighter(hp: 54, strength: 12, dexterity: 14, constitution: 12,
+            accuracy: 2, evasion: 1, damageMin: 1, damageMax: 4));
+        map.RegisterEntity(player);
+
+        var state = new GameState(player, new List<Entity>(), map, rng);
+
+        var payload = new TrapPayloadComponent();
+        payload.Actions.Add(new TrapAction { Kind = "spawn_monster", Target = "zombie", Radius = 4 });
+
+        var events = new List<TurnEvent>();
+        var idAlloc = new EntityIdAllocator(startFrom: 100);
+
+        TrapActionResolver.Resolve(player, payload, "bone_pile_rouse", (4, 5),
+            state, rng, events, monsterFactory: factory, idAllocator: idAlloc);
+
+        var rouseEvt = events.OfType<MonsterRousedEvent>().FirstOrDefault();
+        Assert.That(rouseEvt, Is.Not.Null, "MonsterRousedEvent should fire when factory is provided");
+        Assert.That(state.Monsters.Count, Is.EqualTo(1), "A zombie should be added to the monster list");
+        Assert.That(state.Monsters[0].Name, Does.Contain("Zombie").Or.Contain("zombie").IgnoreCase,
+            "The spawned monster should be a zombie");
+    }
+
+    private static MonsterFactory CreateMonsterFactory()
+    {
+        var loader = new ContentLoader();
+        var testDir = TestContext.CurrentContext.TestDirectory;
+        var configPath = Path.GetFullPath(Path.Combine(testDir, "..", "..", "..", "..", "config", "entities.yaml"));
+        if (!File.Exists(configPath))
+            configPath = Path.GetFullPath(Path.Combine(testDir, "config", "entities.yaml"));
+        var bundle = loader.LoadAllFromFile(configPath);
+        var entityFactory = new EntityFactory();
+        var itemFactory = new ItemFactory(bundle.Items, entityFactory);
+        return new MonsterFactory(bundle.Monsters, entityFactory, itemFactory);
+    }
+
     // ── TASK-011: Floor trap walk-over tests ──────────────────────────────────
 
     [Test]
@@ -238,6 +285,40 @@ public class PropAndTrapTests
         var triggered = result.Events.OfType<TrapTriggeredEvent>().FirstOrDefault();
         Assert.That(triggered, Is.Not.Null);
         Assert.That(triggered!.Source, Is.EqualTo("spike_trap"));
+    }
+
+    [Test]
+    public void StepOnSpikeTrap_AppliesBleedEffect()
+    {
+        // Identity scenario: spike_trap_identity.
+        // Spike trap payload: damage=7 + bleed(severity=1, duration=3). Both must apply.
+        var rng = new SeededRandom(1337);
+        var map = GameMap.CreateArena(12, 12);
+
+        var player = new Entity(0, "Player", 3, 5, blocksMovement: true);
+        player.Add(new Fighter(hp: 50, strength: 12, dexterity: 14, constitution: 12,
+            accuracy: 2, evasion: 1, damageMin: 1, damageMax: 4));
+        map.RegisterEntity(player);
+
+        var trap = CreateFloorTrap(10, "spike_trap", actions: new List<TrapAction>
+        {
+            new TrapAction { Kind = "damage", Amount = 7 },
+            new TrapAction { Kind = "bleed", Amount = 1, Duration = 3 },
+        });
+        trap.X = 2;
+        trap.Y = 5;
+        map.RegisterEntity(trap);
+
+        var state = new GameState(player, new List<Entity>(), map, rng);
+        state.Features.Add(trap);
+
+        TurnController.ProcessTurn(state, PlayerAction.MoveTo(2, 5));
+
+        Assert.That(state.PlayerFighter.Hp, Is.LessThan(50), "Spike trap should deal damage");
+        Assert.That(player.Has<BleedEffect>(), Is.True, "Spike trap should apply BleedEffect");
+        var bleed = player.Get<BleedEffect>()!;
+        Assert.That(bleed.Severity, Is.EqualTo(1));
+        Assert.That(bleed.RemainingTurns, Is.GreaterThanOrEqualTo(2), "Bleed should have remaining turns");
     }
 
     [Test]

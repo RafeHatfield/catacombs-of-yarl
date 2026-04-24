@@ -215,6 +215,19 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "status_immunities")]
     public List<string>? StatusImmunities { get; set; }
 
+    // ── Status transfer on drain attack (wraith) ──────────────────────────────
+
+    /// <summary>
+    /// When true, this monster transfers active poison/bleed effects FROM its attack target
+    /// TO itself on a successful melee hit. Wraith drain attack is the canonical use case:
+    /// a wraith draining a poisoned player becomes poisoned itself.
+    ///
+    /// Clone semantics: the effect is cloned (original stays on target), not moved.
+    /// Both entities have the effect after the hit. Prevents triggering on already-poisoned attackers.
+    /// </summary>
+    [YamlMember(Alias = "transfers_effects_on_hit")]
+    public bool TransfersEffectsOnHit { get; set; }
+
     /// <summary>
     /// Optional depth-progression table for spawn weight.
     /// If set, overrides SpawnWeight — weight is resolved per depth via SpawnUtils.FromDungeonLevel.

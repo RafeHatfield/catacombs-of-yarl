@@ -103,6 +103,14 @@ public sealed class GameState
     public IReadOnlyList<PlacedProp> Props { get; init; } = Array.Empty<PlacedProp>();
 
     /// <summary>
+    /// Maps locked door positions to their LockColorId. Populated by DungeonFloorBuilder
+    /// after EntityPlacer.PlaceFloorFeatures runs. Empty in scenario mode.
+    /// TurnController reads this when the player bumps a LockedDoor tile to identify the lock color.
+    /// Entries are removed when a door is unlocked (DoorUnlockedEvent fired).
+    /// </summary>
+    public Dictionary<(int X, int Y), int> LockedDoors { get; } = new();
+
+    /// <summary>
     /// Interactive feature entities on the current floor: chests, signposts, murals.
     /// These block movement (BlocksMovement=true) and respond to bump-interaction via TurnController.
     /// Populated by EntityPlacer.PlaceFloorFeatures after FillRooms; empty in scenario mode.

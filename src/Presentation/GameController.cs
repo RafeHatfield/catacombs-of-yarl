@@ -48,6 +48,10 @@ public sealed partial class GameController : Node
     private IMapRenderer _renderer = new TopDownRenderer(); // safe default
     private Node2D? _gameView; // needed to ToLocal() in OnLongPress
 
+    // When true, long-pressing props/doors/traps/portals shows the feature inspect panel.
+    // Controlled by game_settings.yaml: show_prop_inspect. Default true.
+    private bool _showPropInspect = true;
+
     // Holds the item being thrown — needed to route LocationChosen back to ThrowItem.
     private Entity? _pendingThrowItem;
 
@@ -103,7 +107,7 @@ public sealed partial class GameController : Node
         EquipmentPanel? equipmentPanel = null, ToastLog? toastLog = null,
         MonsterFactory? monsterFactory = null, IMapRenderer? renderer = null,
         Node2D? gameView = null, EntityFactory? portalEntityFactory = null,
-        VfxOverlay? vfxOverlay = null)
+        VfxOverlay? vfxOverlay = null, bool showPropInspect = true)
     {
 #if DEBUG
         System.Diagnostics.Debug.Assert(_animator == null,
@@ -119,6 +123,7 @@ public sealed partial class GameController : Node
         _toastLog = toastLog;
         _renderer = renderer ?? new TopDownRenderer();
         _gameView = gameView;
+        _showPropInspect = showPropInspect;
         _animator = new TurnAnimator(animationRoot, entitySprites, _renderer, vfxOverlay);
         _animator.AnimationComplete += OnAnimationComplete;
 
@@ -675,9 +680,133 @@ public sealed partial class GameController : Node
             return;
         }
 
+        // Feature inspection (props, doors, traps, portals, etc.) — respects show_prop_inspect setting
+        if (_showPropInspect)
+        {
+            // Check for feature entities (chests, signposts, murals, barrels, bone piles, etc.)
+            var feature = _state.Features.FirstOrDefault(f => f.X == gridX && f.Y == gridY);
+            if (feature != null)
+            {
+                var propId = ResolvePropInspectKey(feature);
+                if (propId != null)
+                {
+                    var entry = CatacombsOfYarl.Logic.Content.PropDescriptionRegistry.Get(propId);
+                    if (entry.HasValue)
+                    {
+                        _inspectPanel?.ShowFeature(entry.Value.Name, entry.Value.Description, screenPos);
+                        _inspectPanel?.PositionNear(screenPos, GetViewport()?.GetVisibleRect().Size ?? new Vector2(480, 854));
+                        return;
+                    }
+                }
+            }
+
+            // Check tile-based features (doors, portals, stairs, traps)
+            var tileKind = _state.Map.GetTileKind(gridX, gridY);
+            var tileKey = TileKindToInspectKey(tileKind);
+            if (tileKey != null)
+            {
+                var entry = CatacombsOfYarl.Logic.Content.PropDescriptionRegistry.Get(tileKey);
+                if (entry.HasValue)
+                {
+                    _inspectPanel?.ShowFeature(entry.Value.Name, entry.Value.Description, screenPos);
+                    _inspectPanel?.PositionNear(screenPos, GetViewport()?.GetVisibleRect().Size ?? new Vector2(480, 854));
+                    return;
+                }
+            }
+        }
+
         // Nothing of interest at this tile — hide any existing panel
         _inspectPanel?.Hide();
     }
+
+    /// <summary>
+    /// Show a mural's full inscription text in the inspect panel.
+    /// Called from Main.cs when a MuralExaminedEvent fires.
+    /// Using the inspect panel (which supports autowrap) instead of the toast log prevents
+    /// multi-line mural text from being dumped as a run-on message.
+    /// </summary>
+    public void ShowMuralInspect(string muralText)
+    {
+        if (_inspectPanel == null) return;
+        var viewport = GetViewport()?.GetVisibleRect().Size ?? new Vector2(480, 854);
+        _inspectPanel.ShowFeature("Ancient Inscription", muralText, viewport / 2);
+        _inspectPanel.PositionNear(viewport / 2, viewport);
+    }
+
+    /// <summary>
+    /// Determine the PropDescriptionRegistry key for a feature entity.
+    /// Checks components in priority order: chest → signpost/mural → trap → destructible prop → portal.
+    /// Returns null if no matching key can be resolved.
+    /// </summary>
+    private static string? ResolvePropInspectKey(Entity feature)
+    {
+        // Chest (may also have LockableComponent for locked chests)
+        var chest = feature.Get<ChestComponent>();
+        if (chest != null)
+        {
+            var lockable = feature.Get<LockableComponent>();
+            if (lockable != null && lockable.IsLocked)
+                return "__chest_locked";
+            return chest.IsOpen ? "__chest_open" : "__chest_closed";
+        }
+
+        // Signpost
+        var signpost = feature.Get<SignpostComponent>();
+        if (signpost != null) return "__sign";
+
+        // Mural
+        var mural = feature.Get<MuralComponent>();
+        if (mural != null) return "__mural";
+
+        // Floor trap
+        var trap = feature.Get<FloorTrapComponent>();
+        if (trap != null) return TrapTypeToInspectKey(trap.TrapType);
+
+        // Destructible prop (barrel, bookshelf, bone_pile) — use PropKind directly as registry key
+        var destructible = feature.Get<DestructiblePropComponent>();
+        if (destructible != null && !string.IsNullOrEmpty(destructible.PropKind))
+            return destructible.PropKind;
+
+        // Portal
+        var portal = feature.Get<PortalComponent>();
+        if (portal != null) return "__portal";
+
+        return null;
+    }
+
+    /// <summary>
+    /// Map a FloorTrapComponent.TrapType string to its PropDescriptionRegistry key.
+    /// PoC-canonical trap type IDs are defined in FloorTrapComponent documentation.
+    /// </summary>
+    private static string? TrapTypeToInspectKey(string trapType) => trapType switch
+    {
+        "spike_trap"    => "__trap_spike",
+        "web_trap"      => "__trap_web",
+        "alarm_plate"   => "__trap_alarm",
+        "root_trap"     => "__trap_root",
+        "teleport_trap" => "__trap_teleport",
+        "gas_trap"      => "__trap_gas",
+        "fire_trap"     => "__trap_fire",
+        "hole_trap"     => "__trap_hole",
+        "acid_trap"     => "__trap_acid",
+        _               => null,
+    };
+
+    /// <summary>
+    /// Map a TileKind to its PropDescriptionRegistry key.
+    /// Only tile kinds that have inspect-worthy content are covered — wall/floor/corridor return null.
+    /// </summary>
+    private static string? TileKindToInspectKey(TileKind kind) => kind switch
+    {
+        TileKind.Door       => "__door",
+        TileKind.DoorOpen   => "__door",
+        TileKind.LockedDoor => "__door_locked",
+        TileKind.SecretDoor => "__secret_door",
+        TileKind.StairDown  => "__stair_down",
+        TileKind.StairUp    => "__stair_up",
+        TileKind.Trap       => "__trap_spike",  // generic fallback for untyped Trap tiles
+        _                   => null,
+    };
 
     /// <summary>
     /// Begin auto-explore. Cancels any queued click-to-move path, activates

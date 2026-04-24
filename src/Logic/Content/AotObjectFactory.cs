@@ -123,6 +123,8 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(FloorTrapComponent)] = () => new FloorTrapComponent(),
         [typeof(TrapPayloadComponent)] = () => new TrapPayloadComponent(),
         [typeof(WeaponAcidCoatingComponent)] = () => new WeaponAcidCoatingComponent(),
+        [typeof(KeyItemComponent)] = () => new KeyItemComponent(),
+        [typeof(LockableComponent)] = () => new LockableComponent(),
 
         // Loot system (loot_tags.yaml + loot_policy.yaml)
         [typeof(LootTagsFile)] = () => new LootTagsFile(),

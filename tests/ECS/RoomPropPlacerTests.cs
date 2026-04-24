@@ -123,25 +123,22 @@ public class RoomPropPlacerTests
     }
 
     // -------------------------------------------------------------------------
-    // Test 2: Library always places at least 1 bookshelf
+    // Test 2: Library always places a table (required) — bookshelves now via EntityPlacer
     // -------------------------------------------------------------------------
 
     [Test]
-    public void Library_AlwaysPlacesBookshelf()
+    public void Library_AlwaysPlacesTable()
     {
         var registry = LoadRegistry();
         // Large enough for a library (MinWalkable = 25; 8x8 = 64 > 25)
-        var (room, map) = MakeRoomWithArchetype(8, 8, RoomArchetype.Library);
 
         // Run multiple seeds — required prop must always appear
         for (int seed = 0; seed < 20; seed++)
         {
-            var props = RoomPropPlacer.PlaceProps(room, map, depth: 1, registry, new SeededRandom(seed));
-            // Rebuild map for each seed (MarkPropCell is cumulative, need fresh map)
             var (room2, map2) = MakeRoomWithArchetype(8, 8, RoomArchetype.Library);
             var props2 = RoomPropPlacer.PlaceProps(room2, map2, depth: 1, registry, new SeededRandom(seed));
-            Assert.That(props2.Any(p => p.PropId == "bookshelf"), Is.True,
-                $"Seed {seed}: Library must always have at least one bookshelf (required rule)");
+            Assert.That(props2.Any(p => p.PropId == "table"), Is.True,
+                $"Seed {seed}: Library must always have a table (required rule)");
         }
     }
 
@@ -511,16 +508,15 @@ public class RoomPropPlacerTests
     }
 
     // -------------------------------------------------------------------------
-    // Test 12: Storage archetype places barrels and crates
+    // Test 12: Storage archetype places crates (required) — barrels now via EntityPlacer
     // -------------------------------------------------------------------------
 
     [Test]
-    public void Storage_PlacesBarrelsAndCrates()
+    public void Storage_PlacesCrates()
     {
         var registry = LoadRegistry();
 
-        // Run enough seeds that both required props (barrel, crate) appear
-        bool seenBarrel = false;
+        // Run enough seeds that required prop (crate) appears
         bool seenCrate = false;
 
         for (int seed = 0; seed < 50; seed++)
@@ -528,13 +524,11 @@ public class RoomPropPlacerTests
             var (room, map) = MakeRoomWithArchetype(10, 10, RoomArchetype.Storage);
             var props = RoomPropPlacer.PlaceProps(room, map, depth: 1, registry, new SeededRandom(seed));
 
-            if (props.Any(p => p.PropId == "barrel")) seenBarrel = true;
             if (props.Any(p => p.PropId == "crate")) seenCrate = true;
 
-            if (seenBarrel && seenCrate) break;
+            if (seenCrate) break;
         }
 
-        Assert.That(seenBarrel, Is.True, "Storage should place barrels (required rule)");
         Assert.That(seenCrate, Is.True, "Storage should place crates (required rule)");
     }
 

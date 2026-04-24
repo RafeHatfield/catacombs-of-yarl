@@ -91,27 +91,103 @@ public class FeatureInteractionTests
     }
 
     [Test]
-    public void BumpClosedChest_LootGoesToPlayerInventory()
+    public void BumpClosedChest_FirstTap_LootStaysOnChestTile()
     {
+        // Two-step UX: first bump opens the chest, items appear on the chest tile (not auto-collected).
         var ids = new EntityIdAllocator(startFrom: 10);
         var chest = new Entity(ids.Next(), "Chest", 0, 0, blocksMovement: true);
         chest.Add(new ChestComponent());
 
-        // Pre-populate loot stash with two items
         var item1 = new Entity(ids.Next(), "Potion", 0, 0, false);
         var item2 = new Entity(ids.Next(), "Scroll", 0, 0, false);
         chest.Add(new ChestLootStash(new List<Entity> { item1, item2 }));
 
         var (state, _) = CreateStateWithFeature(chest);
-        // Ensure player has an inventory so auto-pickup can run
         state.Player.Add(new Inventory());
 
-        TurnController.ProcessTurn(state, MoveRight());
+        TurnController.ProcessTurn(state, MoveRight()); // first tap — opens chest
 
-        // Items should be in player inventory (auto-picked up), not on the floor
+        // Items should be on the chest tile (4,5), not yet in inventory
+        Assert.That(state.FloorItems.Count, Is.EqualTo(2), "Items should be on the chest tile after open");
+        Assert.That(state.FloorItems.All(i => i.X == 4 && i.Y == 5), Is.True,
+            "Items should be at the chest tile position");
         var inventory = state.Player.Get<Inventory>();
-        Assert.That(inventory!.Items.Count, Is.EqualTo(2), "Both loot items should auto-pick up into inventory");
-        Assert.That(state.FloorItems.Count, Is.EqualTo(0), "No items should remain on floor after auto-pickup");
+        Assert.That(inventory!.Items.Count, Is.EqualTo(0), "No items auto-collected on first tap");
+    }
+
+    [Test]
+    public void BumpOpenChest_SecondTap_LootGoesToPlayerInventory()
+    {
+        // Two-step UX: second bump on an open chest collects loot into inventory.
+        var ids = new EntityIdAllocator(startFrom: 10);
+        var chest = new Entity(ids.Next(), "Chest", 0, 0, blocksMovement: true);
+        var chestComp = new ChestComponent { IsOpen = true }; // chest already open
+        chest.Add(chestComp);
+
+        var (state, _) = CreateStateWithFeature(chest);
+        state.Player.Add(new Inventory());
+
+        // Place items on the chest tile (simulating what happens after first tap)
+        var item1 = new Entity(ids.Next(), "Potion", 4, 5, false);
+        var item2 = new Entity(ids.Next(), "Scroll", 4, 5, false);
+        state.FloorItems.Add(item1);
+        state.FloorItems.Add(item2);
+        state.Map.RegisterEntity(item1);
+        state.Map.RegisterEntity(item2);
+
+        TurnController.ProcessTurn(state, MoveRight()); // second tap — collect loot
+
+        var inventory = state.Player.Get<Inventory>();
+        Assert.That(inventory!.Items.Count, Is.EqualTo(2), "Both loot items should be in inventory after second tap");
+        Assert.That(state.FloorItems.Count, Is.EqualTo(0), "No items should remain on floor after collection");
+        Assert.That(chestComp.IsLooted, Is.True, "Chest should be marked looted");
+    }
+
+    [Test]
+    public void BumpOpenChest_SecondTap_EmitsChestLootedEvent()
+    {
+        // Two-step UX: second tap emits ChestLootedEvent (presentation swaps sprite to empty).
+        var ids = new EntityIdAllocator(startFrom: 10);
+        var chest = new Entity(ids.Next(), "Chest", 0, 0, blocksMovement: true);
+        chest.Add(new ChestComponent { IsOpen = true });
+
+        var (state, _) = CreateStateWithFeature(chest);
+
+        var result = TurnController.ProcessTurn(state, MoveRight());
+
+        var lootEvt = result.Events.OfType<ChestLootedEvent>().FirstOrDefault();
+        Assert.That(lootEvt, Is.Not.Null, "Should emit ChestLootedEvent on second tap");
+        Assert.That(lootEvt!.X, Is.EqualTo(4));
+        Assert.That(lootEvt.Y, Is.EqualTo(5));
+    }
+
+    [Test]
+    public void TwoStepChest_FullFlow_OpenThenCollect()
+    {
+        // Full two-step flow: bump 1 opens, bump 2 collects.
+        var ids = new EntityIdAllocator(startFrom: 10);
+        var chest = new Entity(ids.Next(), "Chest", 0, 0, blocksMovement: true);
+        chest.Add(new ChestComponent());
+
+        var item1 = new Entity(ids.Next(), "Potion", 0, 0, false);
+        var item2 = new Entity(ids.Next(), "Scroll", 0, 0, false);
+        chest.Add(new ChestLootStash(new List<Entity> { item1, item2 }));
+
+        var (state, _) = CreateStateWithFeature(chest);
+        state.Player.Add(new Inventory());
+
+        // Bump 1: open
+        var result1 = TurnController.ProcessTurn(state, MoveRight());
+        Assert.That(result1.Events.OfType<ChestOpenedEvent>().Any(), Is.True, "Bump 1 should emit ChestOpenedEvent");
+        Assert.That(result1.Events.OfType<ChestLootedEvent>().Any(), Is.False, "Bump 1 should not emit ChestLootedEvent");
+        Assert.That(state.FloorItems.Count, Is.EqualTo(2), "Items on chest tile after bump 1");
+
+        // Bump 2: collect
+        var result2 = TurnController.ProcessTurn(state, MoveRight());
+        Assert.That(result2.Events.OfType<ChestLootedEvent>().Any(), Is.True, "Bump 2 should emit ChestLootedEvent");
+        var inventory = state.Player.Get<Inventory>();
+        Assert.That(inventory!.Items.Count, Is.EqualTo(2), "Both items in inventory after bump 2");
+        Assert.That(state.FloorItems.Count, Is.EqualTo(0), "No floor items after bump 2");
     }
 
     [Test]
@@ -171,23 +247,28 @@ public class FeatureInteractionTests
     }
 
     [Test]
-    public void BumpOpenChest_NothingHappens_NoChestEvent()
+    public void BumpLootedChest_NothingHappens_NoChestEvent()
     {
+        // A fully looted chest (IsOpen=true, IsLooted=true) — bumping it does nothing and is a free action.
         var ids = new EntityIdAllocator(startFrom: 10);
         var chest = new Entity(ids.Next(), "Chest", 0, 0, blocksMovement: true);
-        chest.Add(new ChestComponent { IsOpen = true }); // Already open
+        chest.Add(new ChestComponent { IsOpen = true, IsLooted = true }); // Fully looted
 
         var (state, _) = CreateStateWithFeature(chest);
+        int turnBefore = state.TurnCount;
 
         var result = TurnController.ProcessTurn(state, MoveRight());
 
-        // No ChestOpenedEvent for an already-open chest
-        var openEvent = result.Events.OfType<ChestOpenedEvent>().FirstOrDefault();
-        Assert.That(openEvent, Is.Null, "No event for bumping an already-open chest");
+        // No chest events for bumping a looted chest
+        Assert.That(result.Events.OfType<ChestOpenedEvent>().Any(), Is.False, "No ChestOpenedEvent for looted chest");
+        Assert.That(result.Events.OfType<ChestLootedEvent>().Any(), Is.False, "No ChestLootedEvent for looted chest");
 
-        // No movement (player stays put — open chest blocks)
-        Assert.That(state.Player.X, Is.EqualTo(3), "Player should not move into open chest");
+        // No movement (looted chest still blocks)
+        Assert.That(state.Player.X, Is.EqualTo(3), "Player should not move into looted chest");
         Assert.That(state.Player.Y, Is.EqualTo(5));
+
+        // Free action — no turn consumed
+        Assert.That(state.TurnCount, Is.EqualTo(turnBefore), "Bumping a looted chest is a free action");
     }
 
     // ─────────────────────────────────────────────────────────────────────────

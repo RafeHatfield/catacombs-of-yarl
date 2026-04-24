@@ -79,10 +79,12 @@ themes:
     chest_open: 262            # open chest with items visible
     chest_trapped: 263         # trapped chest (spike variant)
     chest_empty: 264           # empty/looted chest
-    sign: 4035                 # signpost_plain (custom sprite, tools/new-sprites)
+    chest_locked: 261          # locked chest — uses chest_closed sprite, tint applied by renderer
+    key_item: 5039             # key item floor sprite (custom placeholder, tools/new-sprites)
+    sign: 5035                 # signpost_plain (custom sprite, tools/new-sprites)
     # Mural tile variants — 3 visual styles, chosen by rng at placement time
-    mural_gold_landscape: 4036 # mural_gold_landscape.png
-    mural_gold_warm: 4037      # mural_gold_warm.png
-    mural_wood_cool: 4038      # mural_wood_cool.png
+    mural_gold_landscape: 5036 # mural_gold_landscape.png
+    mural_gold_warm: 5037      # mural_gold_warm.png
+    mural_wood_cool: 5038      # mural_wood_cool.png
 
 default_theme: sandstone

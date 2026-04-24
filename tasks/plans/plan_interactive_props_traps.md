@@ -1,18 +1,20 @@
 # Plan: Interactive Props, Trap System & Status Interactions
 
-Status: [~] In progress — Phases 1–7b complete, Phase 8 pending
+Status: [x] Complete — all logic phases done; Phase 5 (presentation wiring) intentionally deferred to Godot session
 PoC reference: `~/development/rlike/components/trap.py`, `~/development/rlike/services/movement_service.py` (_apply_trap_effects), `~/development/rlike/config/entities.yaml` (map_traps, bone_pile)
 Supersedes: most of `plan_traps_chests_features.md` trap section — chests/signs/murals already complete.
 
 ---
 
 ## Current State
-- Phases 1–7 complete. 1387 tests passing (fast suite).
-- TASK-001–021 all done: components, YAML registries, TrapActionResolver, TurnController integration (props + traps), EntityPlacer placement (props + traps), BleedEffect, AcidEffect, InnateRegenComponent, poison transfer on drain (wraith), WeaponAcidCoating from acid_trap.
-- Remaining: Phase 8 (harness identity scenarios, TASK-023/024 harness runs) + TASK-000c (RoomPropPlacer cleanup) + TASK-025 (INDEX update).
-- Phase 7b complete: Pathfinder.AStar now accepts avoidTiles parameter; DungeonRunHarness threads DetectedTrapTiles into A* call with unconstrained fallback. AutoExplore already stopped on TrapDetectedEvent (confirmed). 5 new tests.
+- Phases 1–7b + TASK-000c complete. 1392 tests passing (fast suite).
+- TASK-000c done: barrel/bookshelf/bones_pile removed from RoomPropPlacer recipes and AddScatterOverlays. EntityPlacer is now the single source of truth. 3 tests updated to match.
+- TASK-023 done: harness depth1–6 tuned scenarios all PASS (0/0/13/15/35/41% Death%, all within target bands). No regressions from trap/prop work.
+- TASK-022 done: identity tests in PropAndTrapTests.cs — BumpBonePile_AtDepth2_WithRouseAction_SpawnsZombie (rouse via TrapActionResolver + real factory), StepOnSpikeTrap_AppliesBleedEffect (damage+bleed). Barrel loot, bleed/undead, acid/troll already covered by existing tests.
+- TASK-024 dropped: traps are environmental texture, not balance variables. TASK-023 confirms no regression — that's sufficient.
+- Remaining: TASK-025 (INDEX update).
 - Phase 5 (presentation wiring) intentionally deferred — needs manual Godot session.
-- Next: Phase 8 harness verification runs or TASK-000c RoomPropPlacer cleanup.
+- Next: TASK-022 identity scenarios or TASK-025 INDEX update.
 
 ---
 

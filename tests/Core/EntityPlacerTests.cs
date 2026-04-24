@@ -481,4 +481,136 @@ consumables:
         var brutes = placed.Where(e => e.Name == "Orc Brute").ToList();
         Assert.That(brutes, Is.Empty, $"Expected no orc_brutes at depth 2, but found {brutes.Count}");
     }
+
+    // --- PlacePortalPairs ---
+
+    [Test]
+    public void PlacePortalPairs_Depth3_ReturnsTwoPortals()
+    {
+        var map = MakeMap(seed: 1337);
+        var ids = new EntityIdAllocator(500);
+        var rng = new SeededRandom(1337);
+        var occupied = new HashSet<(int, int)> { map.PlayerSpawn };
+
+        var portals = EntityPlacer.PlacePortalPairs(map, ids, rng, depth: 3, occupied);
+
+        Assert.That(portals, Has.Count.EqualTo(2), "Depth 3 should place exactly 2 portal entities");
+    }
+
+    [Test]
+    public void PlacePortalPairs_DepthBelow3_ReturnsEmpty()
+    {
+        var map = MakeMap(seed: 1337);
+        var ids = new EntityIdAllocator(500);
+        var rng = new SeededRandom(1337);
+        var occupied = new HashSet<(int, int)> { map.PlayerSpawn };
+
+        var portals2 = EntityPlacer.PlacePortalPairs(map, ids, rng, depth: 2, occupied);
+        var portals1 = EntityPlacer.PlacePortalPairs(map, ids, rng, depth: 1, occupied);
+
+        Assert.That(portals2, Is.Empty, "Depth 2 should produce no portals");
+        Assert.That(portals1, Is.Empty, "Depth 1 should produce no portals");
+    }
+
+    [Test]
+    public void PlacePortalPairs_PortalsAreCrossLinked()
+    {
+        var map = MakeMap(seed: 1337);
+        var ids = new EntityIdAllocator(500);
+        var rng = new SeededRandom(1337);
+        var occupied = new HashSet<(int, int)> { map.PlayerSpawn };
+
+        var portals = EntityPlacer.PlacePortalPairs(map, ids, rng, depth: 3, occupied);
+
+        Assert.That(portals, Has.Count.EqualTo(2));
+        var entrance = portals.First(p => p.Get<CatacombsOfYarl.Logic.Combat.PortalComponent>()?.Type == CatacombsOfYarl.Logic.Combat.PortalType.Entrance);
+        var exit     = portals.First(p => p.Get<CatacombsOfYarl.Logic.Combat.PortalComponent>()?.Type == CatacombsOfYarl.Logic.Combat.PortalType.Exit);
+
+        Assert.That(entrance.Get<CatacombsOfYarl.Logic.Combat.PortalComponent>()!.LinkedPortalId, Is.EqualTo(exit.Id),
+            "Entrance.LinkedPortalId should point to Exit");
+        Assert.That(exit.Get<CatacombsOfYarl.Logic.Combat.PortalComponent>()!.LinkedPortalId, Is.EqualTo(entrance.Id),
+            "Exit.LinkedPortalId should point to Entrance");
+    }
+
+    [Test]
+    public void PlacePortalPairs_PortalsOnWalkableTiles()
+    {
+        var map = MakeMap(seed: 1337);
+        var ids = new EntityIdAllocator(500);
+        var rng = new SeededRandom(1337);
+        var occupied = new HashSet<(int, int)> { map.PlayerSpawn };
+
+        var portals = EntityPlacer.PlacePortalPairs(map, ids, rng, depth: 3, occupied);
+
+        foreach (var portal in portals)
+            Assert.That(map.Map.IsWalkable(portal.X, portal.Y), Is.True,
+                $"Portal at ({portal.X},{portal.Y}) must be on a walkable tile");
+    }
+
+    [Test]
+    public void PlacePortalPairs_PortalsNotBlocking()
+    {
+        var map = MakeMap(seed: 1337);
+        var ids = new EntityIdAllocator(500);
+        var rng = new SeededRandom(1337);
+        var occupied = new HashSet<(int, int)> { map.PlayerSpawn };
+
+        var portals = EntityPlacer.PlacePortalPairs(map, ids, rng, depth: 3, occupied);
+
+        foreach (var portal in portals)
+            Assert.That(portal.BlocksMovement, Is.False,
+                "Portals must be non-blocking — player walks onto them");
+    }
+
+    [Test]
+    public void PlacePortalPairs_PortalsInDifferentRooms()
+    {
+        var map = MakeMap(seed: 1337);
+        var ids = new EntityIdAllocator(500);
+        var rng = new SeededRandom(1337);
+        var occupied = new HashSet<(int, int)> { map.PlayerSpawn };
+
+        var portals = EntityPlacer.PlacePortalPairs(map, ids, rng, depth: 3, occupied);
+
+        Assert.That(portals, Has.Count.EqualTo(2));
+        // The two portals must not be in the same position (not stacked).
+        Assert.That((portals[0].X, portals[0].Y), Is.Not.EqualTo((portals[1].X, portals[1].Y)),
+            "Portal A and Portal B must be at different positions");
+    }
+
+    [Test]
+    public void PlacePortalPairs_TeleportWorks_ViaCheckPortalCollision()
+    {
+        // End-to-end: place portals, add to GameState.Portals, verify teleportation fires.
+        var mapGen = MakeMap(seed: 1337);
+        var ids = new EntityIdAllocator(500);
+        var rng = new SeededRandom(1337);
+        var occupied = new HashSet<(int, int)> { mapGen.PlayerSpawn };
+
+        var portals = EntityPlacer.PlacePortalPairs(mapGen, ids, rng, depth: 3, occupied);
+        Assert.That(portals, Has.Count.EqualTo(2));
+
+        // Build a minimal GameState and register portals.
+        var playerRng = new SeededRandom(1337);
+        var player = new Entity(0, "Player", mapGen.PlayerSpawn.X, mapGen.PlayerSpawn.Y, blocksMovement: true);
+        player.Add(new Fighter(hp: 80, strength: 14, dexterity: 14, constitution: 14,
+            accuracy: 3, evasion: 0, damageMin: 2, damageMax: 8));
+        mapGen.Map.RegisterEntity(player);
+
+        var state = new GameState(player, new List<Entity>(), mapGen.Map, playerRng);
+        foreach (var portal in portals)
+            state.Portals.Add(portal);
+
+        // Put player on the entrance portal.
+        var entrance = portals.First(p => p.Get<CatacombsOfYarl.Logic.Combat.PortalComponent>()?.Type == CatacombsOfYarl.Logic.Combat.PortalType.Entrance);
+        var exit     = portals.First(p => p.Get<CatacombsOfYarl.Logic.Combat.PortalComponent>()?.Type == CatacombsOfYarl.Logic.Combat.PortalType.Exit);
+        player.X = entrance.X;
+        player.Y = entrance.Y;
+
+        var evt = CatacombsOfYarl.Logic.Core.PortalSystem.CheckPortalCollision(player, state);
+
+        Assert.That(evt, Is.Not.Null, "Walking onto static portal should trigger teleportation");
+        Assert.That(player.X, Is.EqualTo(exit.X), "Player should teleport to exit X");
+        Assert.That(player.Y, Is.EqualTo(exit.Y), "Player should teleport to exit Y");
+    }
 }

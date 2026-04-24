@@ -29,6 +29,44 @@ public static class FeatureFactory
     }
 
     /// <summary>
+    /// Create a locked chest entity at the given position.
+    /// Adds both ChestComponent and LockableComponent; chest starts closed and locked.
+    /// Must be opened with a KeyItemComponent matching LockColorId.
+    /// </summary>
+    public static Entity CreateLockedChest(int x, int y, EntityIdAllocator ids, int lockColorId)
+    {
+        var entity = new Entity(ids.Next(), "Locked Chest", x, y, blocksMovement: true);
+        entity.Add(new ChestComponent
+        {
+            IsOpen = false,
+            LootItemIds = new List<string>(),
+        });
+        entity.Add(new LockableComponent
+        {
+            LockColorId = lockColorId,
+            IsLocked = true,
+        });
+        return entity;
+    }
+
+    /// <summary>
+    /// Create a key item entity at the given position.
+    /// Keys are non-blocking floor items (BlocksMovement=false) that the player can pick up.
+    /// The key entity has KeyItemComponent and ItemTag so it participates in inventory and
+    /// floor-item rendering pipelines.
+    /// </summary>
+    public static Entity CreateKeyItem(int x, int y, EntityIdAllocator ids, int lockColorId)
+    {
+        var entity = new Entity(ids.Next(), "Key", x, y, blocksMovement: false);
+        entity.Add(new KeyItemComponent
+        {
+            LockColorId = lockColorId,
+        });
+        entity.Add(new ItemTag("key"));
+        return entity;
+    }
+
+    /// <summary>
     /// Create a signpost entity at the given position.
     /// Message and signType are assigned at placement time from SignpostMessageRegistry.
     /// </summary>
@@ -46,10 +84,10 @@ public static class FeatureFactory
 
     /// <summary>
     /// Create a mural entity at the given position.
-    /// Text and muralId come from MuralRegistry; tileId is the visual variant (4036-4038).
+    /// Text and muralId come from MuralRegistry; tileId is the visual variant (5036-5038).
     /// Wall-adjacent placement is the caller's responsibility (EntityPlacer.PlaceFloorFeatures).
     /// </summary>
-    public static Entity CreateMural(int x, int y, EntityIdAllocator ids, string text, string muralId, int tileId = 4036)
+    public static Entity CreateMural(int x, int y, EntityIdAllocator ids, string text, string muralId, int tileId = 5036)
     {
         var entity = new Entity(ids.Next(), "Mural", x, y, blocksMovement: true);
         entity.Add(new MuralComponent

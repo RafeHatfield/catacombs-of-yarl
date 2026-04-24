@@ -593,12 +593,15 @@ public static class EntityPlacer
     ///   - 0–1 mural per floor (40% chance), placed wall-adjacent in a non-player room.
     ///   - Barrels: 1–4 per floor; bookshelves: 0–2; bone piles: 0–3 (depth ≥2 for rouse).
     ///   - Floor traps: depth-gated pool, two-pass contextual + random placement.
+    ///   - Locked doors: 1 per floor at depth ≥ 2, placed on a dead-end room's connecting door.
     ///
     /// All features are placed at reachable, walkable, unoccupied positions.
     /// Blocking features (chests, props) are registered on the map so pathfinding treats them as blocking.
     /// Non-blocking features (floor traps) are NOT registered on the map but are in the returned list.
     ///
     /// Returns a flat list of all created feature entities.
+    /// lockedDoorPlacements (out): positions and color IDs of locked doors placed this floor.
+    ///   Caller (DungeonFloorBuilder) registers these in GameState.LockedDoors for TurnController.
     /// When signRegistry or muralRegistry is null, that feature type is skipped (scenario mode).
     /// When propsRegistry or trapRegistry is null, props/traps are skipped (scenario mode).
     /// </summary>
@@ -611,6 +614,7 @@ public static class EntityPlacer
         SignpostMessageRegistry? signRegistry,
         MuralRegistry? muralRegistry,
         MuralTracker? muralTracker,
+        out List<(int X, int Y, int LockColorId)> lockedDoorPlacements,
         IReadOnlyList<FloorItemPoolEntry>? floorItemPool = null,
         SpellItemFactory? spellItems = null,
         ItemFactory? items = null,
@@ -624,6 +628,7 @@ public static class EntityPlacer
         FloorTrapRegistry? trapRegistry = null)
     {
         var placed = new List<Entity>();
+        lockedDoorPlacements = new List<(int X, int Y, int LockColorId)>();
 
         // Non-player rooms for feature placement
         var featureRooms = map.Rooms
@@ -740,8 +745,8 @@ public static class EntityPlacer
                 var muralData = muralTracker.GetUniqueMuralForFloor(depth, muralRegistry, rng);
                 if (muralData != null)
                 {
-                    // Pick a random tile variant (4036, 4037, 4038)
-                    int tileId = 4036 + rng.Next(3);
+                    // Pick a random tile variant (5036, 5037, 5038)
+                    int tileId = 5036 + rng.Next(3);
 
                     var mural = FeatureFactory.CreateMural(
                         muralPos.Value.X, muralPos.Value.Y, ids,
@@ -775,6 +780,34 @@ public static class EntityPlacer
             PlaceFloorTraps(map, ids, rng, depth, occupied, reachable, featureRooms, placed,
                 trapRegistry);
         }
+
+        // ── Locked chest + key pairs ──────────────────────────────────────────
+        // 1 pair per floor from depth 1; 2 pairs from depth 4+.
+        // Each pair: 1 locked chest (feature, blocks movement) + 1 key item (floor item).
+        // The chest gets a ChestLootStash with 2–3 good items generated at placement time.
+        // Keys are placed in a different room from their chest when possible.
+        int chestPairCount = depth >= 4 ? 2 : 1;
+        PlaceLockedChestPairs(map, ids, rng, depth, occupied, reachable, featureRooms, placed,
+            chestPairCount, spellItems, items, consumables, identRegistry, appearancePool, difficulty,
+            lootTagRegistry, lootPolicy);
+
+        // ── Locked door + key pair ────────────────────────────────────────────
+        // 1 locked door per floor at depth ≥ 2; none at depth 1 (too early).
+        // Door is placed on a dead-end room's single connecting corridor door.
+        // Color ID is offset past the chest pair colors to avoid visual ambiguity.
+        if (depth >= 2)
+        {
+            PlaceLockedDoorPair(map, ids, rng, depth, occupied, reachable, featureRooms, placed,
+                lockedDoorPlacements, lockColorOffset: chestPairCount,
+                spellItems, items, consumables, identRegistry, appearancePool, difficulty,
+                lootTagRegistry, lootPolicy);
+        }
+
+        // ── Secret doors (0–1 per floor) ─────────────────────────────────────
+        // 20% chance to place one secret door between two unconnected rooms.
+        // Placed directly as a TileKind.SecretDoor on the map — no entity created.
+        // Discovery happens via passive detection in TurnController.CheckSecretDoorDetection.
+        PlaceSecretDoors(map, rng);
 
         return placed;
     }
@@ -811,6 +844,290 @@ public static class EntityPlacer
 
         if (candidates.Count == 0) return null;
         return candidates[rng.Next(candidates.Count)];
+    }
+
+    // ── Locked chest + key pair placement ──────────────────────────────────────
+
+    /// <summary>
+    /// Place locked chest + matching key pairs on the floor.
+    ///
+    /// Each pair gets a unique LockColorId (sequential from 0).
+    /// The chest is placed as a blocking feature entity with ChestComponent + LockableComponent.
+    /// The key is a non-blocking floor item with KeyItemComponent + ItemTag.
+    ///
+    /// Placement strategy:
+    ///   - Chest: a random non-player room (blocking entity registered on the map).
+    ///   - Key: a different room from its chest when possible (at least 2 feature rooms required).
+    ///     Falls back to any free position in featureRooms if only one room is available.
+    ///
+    /// The locked chest loot stash is generated the same way as normal chests — using
+    /// LootController when registries are available, falling back to empty loot otherwise.
+    /// </summary>
+    private static void PlaceLockedChestPairs(
+        GeneratedMap map, EntityIdAllocator ids, SeededRandom rng, int depth,
+        HashSet<(int, int)> occupied, HashSet<(int, int)> reachable,
+        List<Room> featureRooms, List<Entity> placed,
+        int pairCount,
+        SpellItemFactory? spellItems, ItemFactory? items,
+        ConsumableFactory? consumables, IdentificationRegistry? identRegistry,
+        AppearancePool? appearancePool, Difficulty difficulty,
+        Content.LootTagRegistry? lootTagRegistry,
+        Content.LootPolicyConfig? lootPolicy)
+    {
+        if (featureRooms.Count == 0) return;
+
+        for (int pair = 0; pair < pairCount; pair++)
+        {
+            int lockColorId = pair; // sequential: 0=red, 1=blue, etc.
+
+            // ── Place locked chest ──────────────────────────────────────────
+            var chestRoom = featureRooms[rng.Next(featureRooms.Count)];
+            var chestPos = FindFreePosition(map.Map, chestRoom, occupied, rng, reachable);
+            if (chestPos == null) continue; // no room on this floor — skip this pair
+
+            // Generate loot for the chest (mirrors normal chest loot path).
+            List<Entity> lootEntities;
+            if (lootTagRegistry != null && lootPolicy != null && consumables != null)
+            {
+                var chestItemIds = LootController.GenerateChestLoot(depth, rng, lootTagRegistry, lootPolicy, pity: null);
+                lootEntities = new List<Entity>(chestItemIds.Count);
+                foreach (var itemId in chestItemIds)
+                {
+                    var lootEntity = ResolveAndCreateItem(itemId, depth, rng, spellItems, items,
+                        consumables, identRegistry, appearancePool, difficulty);
+                    if (lootEntity == null) continue;
+                    var lootWithId = new Entity(ids.Next(), lootEntity.Name, 0, 0, lootEntity.BlocksMovement);
+                    CopyComponents(lootEntity, lootWithId);
+                    lootEntities.Add(lootWithId);
+                }
+            }
+            else
+            {
+                lootEntities = new List<Entity>();
+            }
+
+            var chest = FeatureFactory.CreateLockedChest(chestPos.Value.X, chestPos.Value.Y, ids, lockColorId);
+            if (lootEntities.Count > 0)
+                chest.Add(new ChestLootStash(lootEntities));
+            map.Map.RegisterEntity(chest);
+            occupied.Add(chestPos.Value);
+            placed.Add(chest);
+
+            // ── Place matching key in a different room ──────────────────────
+            // Prefer a room that isn't the chest's room. If only one room exists, allow same room.
+            var keyRoomCandidates = featureRooms.Count > 1
+                ? featureRooms.Where(r => r != chestRoom).ToList()
+                : featureRooms;
+
+            var keyRoom = keyRoomCandidates[rng.Next(keyRoomCandidates.Count)];
+            var keyPos = FindFreePosition(map.Map, keyRoom, occupied, rng, reachable);
+            if (keyPos == null) continue; // no space for key — chest exists but no key (rare edge case)
+
+            var key = FeatureFactory.CreateKeyItem(keyPos.Value.X, keyPos.Value.Y, ids, lockColorId);
+            // Keys are floor items (non-blocking) — register on map so pathfinding / FOV knows about them
+            map.Map.RegisterEntity(key);
+            occupied.Add(keyPos.Value);
+            placed.Add(key);
+        }
+    }
+
+    // ── Locked door + key pair placement ──────────────────────────────────────
+
+    /// <summary>
+    /// Place one locked door on a dead-end room's connecting corridor door tile, plus a
+    /// matching key item in a different room.
+    ///
+    /// Algorithm:
+    ///   1. Find dead-end rooms (IsDeadEnd=true) that are not the player room.
+    ///   2. For each candidate (shuffled for determinism), find the one Door tile adjacent
+    ///      to or within the room's bounding box (expanded by 1) — this is the corridor chokepoint.
+    ///   3. Replace that Door tile with LockedDoor on the map.
+    ///   4. Record the locked door position in lockedDoorPlacements for GameState registration.
+    ///   5. Place a matching key item in a different room (prefer non-dead-end rooms).
+    ///
+    /// lockColorOffset: start at this color ID to avoid colliding with locked chest colors.
+    /// If no dead-end room has a suitable door tile, this is a no-op (not every floor qualifies).
+    /// </summary>
+    private static void PlaceLockedDoorPair(
+        GeneratedMap map, EntityIdAllocator ids, SeededRandom rng, int depth,
+        HashSet<(int, int)> occupied, HashSet<(int, int)> reachable,
+        List<Room> featureRooms, List<Entity> placed,
+        List<(int X, int Y, int LockColorId)> lockedDoorPlacements,
+        int lockColorOffset,
+        SpellItemFactory? spellItems, ItemFactory? items,
+        ConsumableFactory? consumables, IdentificationRegistry? identRegistry,
+        AppearancePool? appearancePool, Difficulty difficulty,
+        Content.LootTagRegistry? lootTagRegistry,
+        Content.LootPolicyConfig? lootPolicy)
+    {
+        // Collect dead-end rooms excluding the player room.
+        var deadEndRooms = map.Rooms
+            .Where(r => r.IsDeadEnd && r != map.PlayerRoom)
+            .ToList();
+
+        if (deadEndRooms.Count == 0) return;
+
+        // Shuffle dead-end room order for determinism with the provided RNG.
+        // Pick the first candidate that has a connectable door tile.
+        for (int i = deadEndRooms.Count - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (deadEndRooms[i], deadEndRooms[j]) = (deadEndRooms[j], deadEndRooms[i]);
+        }
+
+        Room? chosenRoom = null;
+        (int X, int Y) doorPos = default;
+
+        foreach (var deadEnd in deadEndRooms)
+        {
+            // Find a Door tile within the dead-end room's bounding box expanded by 1 tile.
+            // The connecting corridor door is always just outside (or touching) the room edge.
+            int searchX1 = deadEnd.X - 1;
+            int searchY1 = deadEnd.Y - 1;
+            int searchX2 = deadEnd.X + deadEnd.Width;
+            int searchY2 = deadEnd.Y + deadEnd.Height;
+
+            (int X, int Y)? found = null;
+            for (int sx = searchX1; sx <= searchX2 && !found.HasValue; sx++)
+                for (int sy = searchY1; sy <= searchY2 && !found.HasValue; sy++)
+                    if (map.Map.InBounds(sx, sy) && map.Map.GetTileKind(sx, sy) == TileKind.Door)
+                        found = (sx, sy);
+
+            if (!found.HasValue) continue;
+
+            chosenRoom = deadEnd;
+            doorPos = found.Value;
+            break;
+        }
+
+        if (chosenRoom == null) return; // no eligible dead-end room found
+
+        // Color ID: offset past chest pair colors.
+        int lockColorId = lockColorOffset % 5; // clamp to palette [0..4]
+
+        // Convert the Door tile to LockedDoor on the map.
+        map.Map.SetTile(doorPos.X, doorPos.Y, TileKind.LockedDoor);
+
+        // Record placement for GameState.LockedDoors registration.
+        lockedDoorPlacements.Add((doorPos.X, doorPos.Y, lockColorId));
+
+        // ── Place matching key in a different room ──────────────────────────
+        // Prefer non-dead-end rooms to make exploration rewarding (key is in the "main" path,
+        // door guards optional bonus content in the dead-end). Fallback: any feature room.
+        var keyRoomCandidates = featureRooms
+            .Where(r => r != chosenRoom && !r.IsDeadEnd)
+            .ToList();
+        if (keyRoomCandidates.Count == 0)
+            keyRoomCandidates = featureRooms.Where(r => r != chosenRoom).ToList();
+        if (keyRoomCandidates.Count == 0)
+            keyRoomCandidates = featureRooms; // absolute fallback: same room
+
+        var keyRoom = keyRoomCandidates[rng.Next(keyRoomCandidates.Count)];
+        var keyPos = FindFreePosition(map.Map, keyRoom, occupied, rng, reachable);
+        if (keyPos == null) return; // no space — door exists but no key (rare edge case)
+
+        var key = FeatureFactory.CreateKeyItem(keyPos.Value.X, keyPos.Value.Y, ids, lockColorId);
+        map.Map.RegisterEntity(key);
+        occupied.Add(keyPos.Value);
+        placed.Add(key);
+    }
+
+    // ── Secret door placement ──────────────────────────────────────────────────
+
+    /// <summary>
+    /// Attempt to place one secret door between two unconnected rooms.
+    ///
+    /// Algorithm:
+    ///   1. Roll 20% — if fails, no secret door this floor.
+    ///   2. Shuffle all room-pair combinations. Try up to 10 distinct pairs.
+    ///   3. For each candidate pair (roomA, roomB):
+    ///      - Walk each interior floor tile in room A.
+    ///      - Check its 4 cardinal neighbors: if a neighbor is a Wall tile, check that
+    ///        wall tile's 4 cardinal neighbors in turn.
+    ///      - If any of those second-level neighbors is a Floor/Corridor tile inside
+    ///        room B, the wall tile between them is a valid secret door position.
+    ///   4. If a valid wall tile is found, change it to TileKind.SecretDoor and return.
+    ///
+    /// No entity is created — the SecretDoor is a tile kind only.
+    /// The rooms must not share a direct corridor connection; we approximate this by
+    /// requiring the connecting wall tile to be sandwiched between the two rooms'
+    /// interior floor tiles with no existing Door in the wall.
+    /// </summary>
+    private static void PlaceSecretDoors(GeneratedMap map, SeededRandom rng)
+    {
+        // 20% chance to place any secret door this floor.
+        if (rng.NextDouble() >= 0.20) return;
+
+        var rooms = map.Rooms;
+        if (rooms.Count < 2) return;
+
+        // Build a shuffled list of room indices and try pairs in shuffled order.
+        var indices = Enumerable.Range(0, rooms.Count).ToList();
+        for (int i = indices.Count - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (indices[i], indices[j]) = (indices[j], indices[i]);
+        }
+
+        int attemptsRemaining = 10;
+        for (int ai = 0; ai < indices.Count && attemptsRemaining > 0; ai++)
+        {
+            for (int bi = ai + 1; bi < indices.Count && attemptsRemaining > 0; bi++, attemptsRemaining--)
+            {
+                var roomA = rooms[indices[ai]];
+                var roomB = rooms[indices[bi]];
+
+                // Try to find a wall tile between the two rooms.
+                (int X, int Y)? candidate = FindWallBetweenRooms(map.Map, roomA, roomB);
+                if (candidate == null) continue;
+
+                map.Map.SetTile(candidate.Value.X, candidate.Value.Y, TileKind.SecretDoor);
+                return; // one secret door per floor
+            }
+        }
+    }
+
+    /// <summary>
+    /// Find a Wall tile that is simultaneously adjacent (cardinal) to a floor tile in roomA
+    /// AND adjacent (cardinal) to a floor tile in roomB.
+    ///
+    /// Returns null if no such tile exists.
+    /// </summary>
+    private static (int X, int Y)? FindWallBetweenRooms(GameMap map, Room roomA, Room roomB)
+    {
+        // Cardinal offsets: N, S, E, W
+        (int dx, int dy)[] cardinals = [(0, -1), (0, 1), (1, 0), (-1, 0)];
+
+        for (int ax = roomA.X; ax < roomA.X + roomA.Width; ax++)
+        for (int ay = roomA.Y; ay < roomA.Y + roomA.Height; ay++)
+        {
+            // Only interior floor tiles of room A
+            var kindA = map.GetTileKind(ax, ay);
+            if (kindA != TileKind.Floor && kindA != TileKind.Corridor) continue;
+
+            foreach (var (wdx, wdy) in cardinals)
+            {
+                int wx = ax + wdx, wy = ay + wdy;
+                if (!map.InBounds(wx, wy)) continue;
+                if (map.GetTileKind(wx, wy) != TileKind.Wall) continue;
+
+                // The wall tile (wx, wy) is adjacent to a room A floor. Now check if any
+                // cardinal neighbor of (wx, wy) is a floor tile belonging to room B.
+                foreach (var (ndx, ndy) in cardinals)
+                {
+                    int nx = wx + ndx, ny = wy + ndy;
+                    if (!map.InBounds(nx, ny)) continue;
+                    if (nx == ax && ny == ay) continue; // don't count the room A tile itself
+
+                    var kindN = map.GetTileKind(nx, ny);
+                    if (kindN != TileKind.Floor && kindN != TileKind.Corridor) continue;
+                    if (roomB.Contains(nx, ny))
+                        return (wx, wy);
+                }
+            }
+        }
+
+        return null;
     }
 
     // ── Prop and Trap placement helpers (TASK-013 / TASK-014) ──────────────────
@@ -1077,6 +1394,113 @@ public static class EntityPlacer
 
         if (candidates.Count == 0) return null;
         return candidates[rng.Next(candidates.Count)];
+    }
+
+    /// <summary>
+    /// Place one static portal pair on the floor (depth ≥ 3 only).
+    ///
+    /// Two portal feature entities are created and cross-linked. Both are registered on the map
+    /// and added to state.Portals by the caller (DungeonFloorBuilder). TurnController already
+    /// handles walk-onto-portal teleportation via PortalSystem.CheckPortalCollision, which checks
+    /// state.Portals — static portals fire that logic identically to wand-placed portals.
+    ///
+    /// Placement algorithm:
+    ///   - Requires ≥ 2 distinct non-player rooms. If fewer exist, returns empty list.
+    ///   - Picks the pair of rooms with maximum centre-to-centre distance (Manhattan distance
+    ///     is sufficient for dungeon rooms — picks "far corners" reliably).
+    ///   - Picks a random reachable, walkable, unoccupied tile in each room.
+    ///   - If either room has no valid tile, returns empty list (no partial pairs).
+    ///
+    /// Portal entities are non-blocking (player walks onto them) and are registered on the
+    /// map so the spatial query system knows about them.
+    ///
+    /// Returns a list of exactly 0 or 2 entities.
+    /// </summary>
+    public static List<Entity> PlacePortalPairs(
+        GeneratedMap map,
+        EntityIdAllocator ids,
+        SeededRandom rng,
+        int depth,
+        HashSet<(int, int)> occupied)
+    {
+        // Static portals only appear from depth 3 onward — before that the dungeon
+        // is short enough that wand portals are sufficient for traversal.
+        if (depth < 3)
+            return new List<Entity>();
+
+        // Need at least 2 non-player rooms to separate the portal pair.
+        var candidateRooms = map.Rooms
+            .Where(r => r != map.PlayerRoom)
+            .ToList();
+
+        if (candidateRooms.Count < 2)
+            return new List<Entity>();
+
+        // Precompute reachable tiles so portals aren't placed in prop-enclosed pockets.
+        var reachable = FloodFillReachable(map.Map, map.PlayerSpawn.X, map.PlayerSpawn.Y);
+
+        // Pick the room pair with maximum centre-to-centre Manhattan distance.
+        // This ensures portals are placed in "far corners" of the dungeon, making
+        // them genuinely useful for traversal rather than a minor shortcut.
+        int bestDist = -1;
+        Room? roomA = null;
+        Room? roomB = null;
+
+        for (int i = 0; i < candidateRooms.Count; i++)
+        {
+            for (int j = i + 1; j < candidateRooms.Count; j++)
+            {
+                var ra = candidateRooms[i];
+                var rb = candidateRooms[j];
+                int cx1 = ra.X + ra.Width / 2;
+                int cy1 = ra.Y + ra.Height / 2;
+                int cx2 = rb.X + rb.Width / 2;
+                int cy2 = rb.Y + rb.Height / 2;
+                int dist = Math.Abs(cx2 - cx1) + Math.Abs(cy2 - cy1);
+                if (dist > bestDist)
+                {
+                    bestDist = dist;
+                    roomA = ra;
+                    roomB = rb;
+                }
+            }
+        }
+
+        if (roomA == null || roomB == null)
+            return new List<Entity>();
+
+        // Find free positions in each room. Fail entirely if either room is full
+        // (no partial pairs — a lone portal with no link is broken by design).
+        var posA = FindFreePosition(map.Map, roomA, occupied, rng, reachable);
+        if (posA == null)
+            return new List<Entity>();
+
+        // Mark posA occupied before searching roomB, in case rooms overlap somehow.
+        occupied.Add(posA.Value);
+
+        var posB = FindFreePosition(map.Map, roomB, occupied, rng, reachable);
+        if (posB == null)
+        {
+            // Roll back — posA is already in occupied but no entity was placed there.
+            occupied.Remove(posA.Value);
+            return new List<Entity>();
+        }
+
+        occupied.Add(posB.Value);
+
+        // Create portal A (Entrance) and B (Exit), cross-linked.
+        // Non-blocking: player walks onto them to trigger teleportation.
+        var portalA = new Entity(ids.Next(), "Portal Entrance", posA.Value.X, posA.Value.Y, blocksMovement: false);
+        var portalB = new Entity(ids.Next(), "Portal Exit",     posB.Value.X, posB.Value.Y, blocksMovement: false);
+
+        portalA.Add(new PortalComponent { Type = PortalType.Entrance, LinkedPortalId = portalB.Id, UsedThisTurn = false });
+        portalB.Add(new PortalComponent { Type = PortalType.Exit,     LinkedPortalId = portalA.Id, UsedThisTurn = false });
+
+        // Register on the map so spatial queries (FOV, pathfinding) are aware of them.
+        map.Map.RegisterEntity(portalA);
+        map.Map.RegisterEntity(portalB);
+
+        return new List<Entity> { portalA, portalB };
     }
 
     /// <summary>

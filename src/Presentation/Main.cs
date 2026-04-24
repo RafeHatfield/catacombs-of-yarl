@@ -41,6 +41,8 @@ public partial class Main : Node
 
     // Fog-of-war: tile layer tracks sprites for per-turn visibility updates
     private TileLayer? _tileLayer;
+    // Tile map parent node — needed to add door overlay sprites on SecretDoorFoundEvent.
+    private Node2D? _tileMapLayer;
     // Entity sprite manager is stored here so OnTurnCompleted can call UpdateVisibility
     private EntitySpriteManager? _entitySprites;
     // Item sprite manager tracks floor item overlay sprites
@@ -324,6 +326,31 @@ public partial class Main : Node
     }
 
     /// <summary>
+    /// Read the show_prop_inspect setting from game_settings.yaml.
+    /// Defaults to true — feature inspection is on unless explicitly disabled.
+    /// </summary>
+    private static bool ReadShowPropInspect()
+    {
+        const string settingsPath = "res://config/game_settings.yaml";
+        try
+        {
+            using var file = Godot.FileAccess.Open(settingsPath, Godot.FileAccess.ModeFlags.Read);
+            if (file != null)
+            {
+                foreach (var line in file.GetAsText().Split('\n'))
+                {
+                    var trimmed = line.TrimStart();
+                    if (!trimmed.StartsWith("show_prop_inspect:", System.StringComparison.Ordinal)) continue;
+                    var value = trimmed["show_prop_inspect:".Length..].Trim().Trim('"');
+                    return value.Equals("true", System.StringComparison.OrdinalIgnoreCase);
+                }
+            }
+        }
+        catch { /* silent — default to true */ }
+        return true;
+    }
+
+    /// <summary>
     /// Create the IMapRenderer for the given mode string.
     /// "topdown" is the default active renderer using 16bf world tiles (24x24).
     /// "iso" preserves the legacy isometric path — can be reactivated via game_settings.yaml.
@@ -407,15 +434,33 @@ public partial class Main : Node
         }
 
         PropRegistry? propRegistry = null;
+        string? propsYamlForDescriptions = null;
         try
         {
             var propsYaml = ReadGodotResource("res://config/props.yaml");
+            propsYamlForDescriptions = propsYaml;
             propRegistry = _contentLoader.LoadProps(propsYaml);
             GD.Print($"Props loaded: {propRegistry.All.Count} prop definitions");
         }
         catch (System.Exception ex)
         {
             GD.PrintErr($"Props load failed (non-fatal — no props will appear): {ex.Message}");
+        }
+
+        // Load prop description registry for long-press inspect panel.
+        // Both YAMLs are read here; the registry's static ctor already seeded tile-feature entries.
+        // Non-fatal: if either file is missing, tile-based feature descriptions still work.
+        try
+        {
+            var interactivePropsYaml = ReadGodotResource("res://config/interactive_props.yaml");
+            CatacombsOfYarl.Logic.Content.PropDescriptionRegistry.Load(
+                propsYamlForDescriptions ?? "",
+                interactivePropsYaml);
+            GD.Print("[Main] PropDescriptionRegistry loaded");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"PropDescriptionRegistry load failed (non-fatal): {ex.Message}");
         }
 
         CatacombsOfYarl.Logic.Content.SignpostMessageRegistry? signpostRegistry = null;
@@ -520,6 +565,7 @@ public partial class Main : Node
         // Get scene nodes
         _gameView = GetNode<Node2D>("GameView");
         var tileMapLayer = GetNode<Node2D>("GameView/TileMapLayer");
+        _tileMapLayer = tileMapLayer;
         var entityLayer = GetNode<Node2D>("GameView/EntityLayer");
         var vfxLayerNode = GetNode<Node2D>("GameView/VfxLayer");
         var uiLayer = GetNode<CanvasLayer>("UILayer");
@@ -558,14 +604,17 @@ public partial class Main : Node
         // TileThemeConfig is loaded once at boot and reused across all floor transitions.
         // Pass props from GameState so Pass 4 renders placed furniture/overlays.
         // Props is empty in scenario mode (IsDungeonMode=false) — no regression there.
-        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer, _renderer, _tileThemeConfig, props: state.Props, features: state.Features);
+        _tileLayer = DungeonRenderer.Render(state.Map, tileMapLayer, _renderer, _tileThemeConfig,
+            props: state.Props, features: state.Features, lockedDoors: state.LockedDoors);
 
         // Entity sprites — store reference so OnTurnCompleted can call UpdateVisibility
         _entitySprites = new EntitySpriteManager(entityLayer, _spriteMapping!, _renderer);
         _entitySprites.Initialize(state);
 
-        // Item sprites — floor items rendered as tinted overlay sprites on entityLayer
-        _itemSprites = new ItemSpriteManager(entityLayer, _spriteMapping!, _renderer);
+        // Item sprites — floor items rendered as tinted overlay sprites on entityLayer.
+        // TileThemeConfig is passed so key items can resolve the world_24x24 key sprite
+        // (tile 5039) directly, bypassing the items_16x16 tileset lookup.
+        _itemSprites = new ItemSpriteManager(entityLayer, _spriteMapping!, _renderer, _tileThemeConfig);
         _itemSprites.Initialize(state);
 
         // HUD
@@ -666,6 +715,16 @@ public partial class Main : Node
         foreach (var sprite in _portalSprites.Values) sprite.QueueFree();
         _portalSprites.Clear();
 
+        // Spawn sprites for any pre-placed static portals (from DungeonFloorBuilder.PlacePortalPairs).
+        // Wand-placed portals arrive via PortalPlacedEvent during the turn loop; static portals are
+        // placed at floor build time before the first turn, so we seed sprites here instead.
+        foreach (var portal in state.Portals)
+        {
+            var comp = portal.Get<CatacombsOfYarl.Logic.Combat.PortalComponent>();
+            if (comp != null)
+                SpawnPortalSprite(portal.Id, portal.X, portal.Y, comp.Type);
+        }
+
         // VFX overlay — create once per floor. ClearAll hides any lingering pooled nodes
         // from the previous floor before we create a fresh overlay for the new one.
         _vfxOverlay?.ClearAll();
@@ -695,7 +754,7 @@ public partial class Main : Node
         AddChild(_gameController);
         _gameController.Initialize(state, _entitySprites!, this, _itemSprites, _inventoryPanel,
             _equipmentPanel, _toastLog, _monsterFactory, _renderer, _gameView, _entityFactory,
-            _vfxOverlay);
+            _vfxOverlay, showPropInspect: ReadShowPropInspect());
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
@@ -957,20 +1016,191 @@ public partial class Main : Node
     }
 
     /// <summary>
-    /// Swap the chest sprite from closed (tile 261) to empty/looted (tile 264) at the given cell.
-    /// Called from OnTurnCompleted when a ChestOpenedEvent fires.
+    /// Swap the chest sprite at the given cell to the texture for tileId.
+    /// Called from OnTurnCompleted for ChestOpenedEvent (tileId=262) and ChestLootedEvent (tileId=264).
     /// Mirrors the SwapDoorSprite pattern — update existing sprite rather than recreating it.
     /// </summary>
-    private void SwapChestSprite(int x, int y)
+    private void SwapChestSprite(int x, int y, int tileId = 264)
     {
         if (_tileLayer == null || _tileThemeConfig == null) return;
         if (!_tileLayer.FeatureOverlaySprites.TryGetValue((x, y), out var sprite)) return;
 
-        // Tile 264 = empty/looted chest (loot auto-picks up on open, so always empty after)
-        var openPath = _tileThemeConfig.GetTexturePath(264);
-        var tex = ResourceLoader.Load<Texture2D>(openPath);
+        var path = _tileThemeConfig.GetTexturePath(tileId);
+        var tex = ResourceLoader.Load<Texture2D>(path);
         if (tex != null)
+        {
             sprite.Texture = tex;
+            sprite.Modulate = Colors.White; // clear any lock tint
+        }
+    }
+
+    /// <summary>
+    /// Handle a locked door being unlocked. The tile has already changed to DoorOpen in the
+    /// logic layer (TurnController.TryHandleLockedDoorBump). Here we:
+    ///   - Swap the door sprite from locked (tile 203) to open (tile 202).
+    ///   - Remove the key icon overlay that was showing the lock color.
+    ///
+    /// The DoorOverlaySprites entry is reused (same position, new texture).
+    /// </summary>
+    private void HandleDoorUnlocked(int x, int y)
+    {
+        if (_tileLayer == null || _tileThemeConfig == null || _state == null) return;
+
+        // Remove key icon overlay for the door.
+        if (_tileLayer.LockKeyOverlaySprites.Remove((x, y), out var keyIcon))
+            keyIcon.SafeFree();
+
+        // Swap door sprite from locked → open.
+        // The tile kind in the map is already DoorOpen — use the same theme-driven path as SwapDoorSprite.
+        if (_tileLayer.DoorOverlaySprites.TryGetValue((x, y), out var doorSprite))
+        {
+            var theme = _state.Map.GetTileTheme(x, y);
+            string themeName = DungeonRenderer.ThemeToConfigName(theme);
+            var openPath = _tileThemeConfig.GetDoorOpen(themeName);
+            if (openPath != null)
+            {
+                var tex = ResourceLoader.Load<Texture2D>(openPath);
+                if (tex != null && doorSprite is Sprite2D s2d)
+                {
+                    s2d.Texture = tex;
+                    s2d.Modulate = Colors.White; // clear lock color tint
+                    s2d.Centered = false;
+                    s2d.RotationDegrees = 0f; // reset rotation — open door doesn't need it
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handle a secret door being revealed. The tile kind has already changed to TileKind.Door
+    /// in the logic layer. Here we:
+    ///   1. Swap the wall base sprite at (x, y) to the floor tile (the revealed area is now
+    ///      passable; the full re-render on the next UpdateVisibility will handle floor color).
+    ///      We keep the existing base sprite and let UpdateVisibility re-modulate it naturally —
+    ///      the wall sprite sits at (x, y) in TileSprites and will be visible/explored already.
+    ///   2. Add a new door overlay sprite at (x, y) tracked in DoorOverlaySprites, exactly
+    ///      mirroring how the initial render pass creates door overlays.
+    ///
+    /// The wall base sprite visually becomes "wrong" (wall texture, but now a door). We fix
+    /// this by swapping it to the floor tile texture so the door overlay renders on floor.
+    /// </summary>
+    private void HandleSecretDoorFound(int x, int y)
+    {
+        if (_tileLayer == null || _tileThemeConfig == null || _state == null || _tileMapLayer == null)
+            return;
+
+        var map = _state.Map;
+        var theme = map.GetTileTheme(x, y);
+        string themeName = DungeonRenderer.ThemeToConfigName(theme);
+
+        // Step 1: replace the wall base sprite with a floor sprite so the door overlay
+        // renders on a floor background rather than a mismatched wall background.
+        if (_tileLayer.TileSprites.TryGetValue((x, y), out var baseSprite))
+        {
+            var floorPath = _tileThemeConfig.GetFloorTile(themeName, x, y);
+            if (floorPath != null)
+            {
+                var floorTex = ResourceLoader.Load<Texture2D>(floorPath);
+                if (floorTex != null && baseSprite is Sprite2D s2d)
+                    s2d.Texture = floorTex;
+            }
+        }
+
+        // Step 2: add a door overlay at (x, y) — exactly mirrors DungeonRenderer Pass 2.
+        // The door sprite is a closed door (the player still has to open it).
+        var doorPath = _tileThemeConfig.GetDoor(themeName);
+        if (doorPath == null) return;
+
+        var doorTex = ResourceLoader.Load<Texture2D>(doorPath);
+        if (doorTex == null) return;
+
+        // Determine orientation: horizontal if walls above AND below (passage runs E-W).
+        // After reveal the tile is now TileKind.Door, so neighbors are still wall/secret-door.
+        bool wallN = !map.InBounds(x, y - 1) || map.IsWallTile(x, y - 1);
+        bool wallS = !map.InBounds(x, y + 1) || map.IsWallTile(x, y + 1);
+        bool isDoorHorizontal = wallN && wallS;
+
+        var screenPos = _renderer.GridToScreen(x, y);
+        var doorOverlay = new Sprite2D
+        {
+            Texture = doorTex,
+            Position = isDoorHorizontal ? _renderer.GridToScreenCenter(x, y) : screenPos,
+            Centered = isDoorHorizontal,
+            RotationDegrees = isDoorHorizontal ? 90f : 0f,
+            ZIndex = _renderer.GetTileSortOrder(x, y) + 1,
+            TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
+        };
+
+        _tileMapLayer.AddChild(doorOverlay);
+        _tileLayer.DoorOverlaySprites[(x, y)] = doorOverlay;
+    }
+
+    /// <summary>
+    /// Remove the key icon overlay from a locked chest when it is unlocked.
+    /// Resets the chest sprite tint to White so it looks like a normal closed chest
+    /// (it will be swapped to open in the immediately-following ChestOpenedEvent handler).
+    /// </summary>
+    private void HandleChestUnlocked(int x, int y)
+    {
+        if (_tileLayer == null) return;
+
+        // Remove the key icon overlay sprite.
+        if (_tileLayer.LockKeyOverlaySprites.Remove((x, y), out var keyIcon))
+            keyIcon.SafeFree();
+
+        // Reset chest sprite tint to White — the chest is now unlocked and about to open.
+        if (_tileLayer.FeatureOverlaySprites.TryGetValue((x, y), out var chestSprite))
+            chestSprite.Modulate = Colors.White;
+    }
+
+    /// <summary>
+    /// Human-readable color name for a lock color ID, used in toast messages.
+    /// Must stay in sync with DungeonRenderer.GetLockColor palette.
+    /// </summary>
+    private static string LockColorName(int colorId) => colorId switch
+    {
+        0 => "red",
+        1 => "blue",
+        2 => "green",
+        3 => "gold",
+        4 => "purple",
+        _ => "unknown",
+    };
+
+    /// <summary>
+    /// After UpdateVisibility sets all visible sprites to White, re-apply lock color tints to:
+    ///   - Locked chests still in the player's FOV (FeatureOverlaySprites).
+    ///   - Locked doors still in the player's FOV (DoorOverlaySprites via LockedDoors registry).
+    ///
+    /// Called from OnTurnCompleted after DungeonRenderer.UpdateVisibility. This two-pass approach
+    /// (UpdateVisibility sets White baseline → RefreshLockedChestTints overrides where needed)
+    /// avoids storing per-sprite original tints in TileLayer.
+    /// </summary>
+    private void RefreshLockedChestTints()
+    {
+        if (_tileLayer == null || _state == null) return;
+
+        // Re-tint locked chests (feature overlay sprites).
+        foreach (var feature in _state.Features)
+        {
+            var lockable = feature.Get<LockableComponent>();
+            if (lockable == null || !lockable.IsLocked) continue;
+
+            // Only re-tint if this cell is currently visible (explored state keeps the dim tint).
+            if (!_state.Map.IsVisible(feature.X, feature.Y)) continue;
+
+            if (_tileLayer.FeatureOverlaySprites.TryGetValue((feature.X, feature.Y), out var sprite))
+                sprite.Modulate = DungeonRenderer.GetLockColor(lockable.LockColorId);
+        }
+
+        // Re-tint locked doors (door overlay sprites).
+        foreach (var ((x, y), colorId) in _state.LockedDoors)
+        {
+            if (!_state.Map.IsVisible(x, y)) continue;
+
+            if (_tileLayer.DoorOverlaySprites.TryGetValue((x, y), out var doorSprite))
+                doorSprite.Modulate = DungeonRenderer.GetLockColor(colorId);
+        }
     }
 
     private void OnTurnCompleted(TurnResult result)
@@ -996,10 +1226,37 @@ public partial class Main : Node
             }
             else if (evt is DoorOpenedEvent doorEvt)
                 SwapDoorSprite(doorEvt.X, doorEvt.Y);
+            else if (evt is ChestUnlockedEvent unlockEvt)
+            {
+                HandleChestUnlocked(unlockEvt.X, unlockEvt.Y);
+                string colorName = LockColorName(unlockEvt.LockColorId);
+                _toastLog?.AddMessage($"The {colorName} key unlocks the chest!");
+            }
+            else if (evt is ChestLockedEvent lockedEvt)
+            {
+                string colorName = LockColorName(lockedEvt.LockColorId);
+                _toastLog?.AddMessage($"This chest is locked. You need a {colorName} key.");
+            }
+            else if (evt is DoorUnlockedEvent doorUnlockEvt)
+            {
+                HandleDoorUnlocked(doorUnlockEvt.X, doorUnlockEvt.Y);
+                string doorColorName = LockColorName(doorUnlockEvt.LockColorId);
+                _toastLog?.AddMessage($"The {doorColorName} key unlocks the door!");
+            }
+            else if (evt is LockedDoorBumpedEvent lockedDoorEvt)
+            {
+                string doorColorName = LockColorName(lockedDoorEvt.LockColorId);
+                _toastLog?.AddMessage($"This door is locked. You need a {doorColorName} key.");
+            }
             else if (evt is ChestOpenedEvent chestEvt)
             {
-                SwapChestSprite(chestEvt.X, chestEvt.Y);
-                _toastLog?.AddMessage("You open the chest!");
+                SwapChestSprite(chestEvt.X, chestEvt.Y, 262); // open with items visible
+                _toastLog?.AddMessage("You open the chest.");
+            }
+            else if (evt is ChestLootedEvent lootEvt)
+            {
+                SwapChestSprite(lootEvt.X, lootEvt.Y, 264); // empty/looted
+                _toastLog?.AddMessage("You loot the chest!");
             }
             else if (evt is SignpostReadEvent signEvt)
             {
@@ -1009,7 +1266,12 @@ public partial class Main : Node
             }
             else if (evt is MuralExaminedEvent muralEvt)
             {
-                _toastLog?.AddMessage($"Mural: {muralEvt.Text}");
+                _gameController?.ShowMuralInspect(muralEvt.Text);
+            }
+            else if (evt is SecretDoorFoundEvent secretEvt)
+            {
+                HandleSecretDoorFound(secretEvt.X, secretEvt.Y);
+                _toastLog?.AddMessage(secretEvt.Hint);
             }
         }
 
@@ -1027,7 +1289,13 @@ public partial class Main : Node
         // Update fog-of-war — TurnController called RecomputeFov twice this turn
         // (after player action, after monster turns). Apply the result to the renderer.
         if (_tileLayer != null)
+        {
             DungeonRenderer.UpdateVisibility(_tileLayer, _state.Map);
+            // Re-apply lock color tints to visible locked chests.
+            // UpdateVisibility sets all visible feature sprites to White as a baseline;
+            // this pass overrides with the lock tint where the chest is still locked.
+            RefreshLockedChestTints();
+        }
         _entitySprites?.UpdateVisibility(_state);
         _entitySprites?.UpdateStatusTints(_state);
         _itemSprites?.UpdateVisibility(_state);

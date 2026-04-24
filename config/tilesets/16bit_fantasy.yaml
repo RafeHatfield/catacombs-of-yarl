@@ -117,7 +117,7 @@ items:
   battleaxe: "167"           # gray axe
   battle_axe: "167"          # gray axe
   greatsword: "209"          # dark long greatsword
-  club: "178"                # brown hammer/club
+  club: "4001"               # AI-generated club (retrodiffusion)
   staff: "177"               # tan/brown long staff
   quarterstaff: "180"        # brown staff variant
 

@@ -9,7 +9,7 @@ public sealed class MuralComponent : IComponent
     /// <summary>Unique mural ID used by MuralTracker to prevent duplicates per floor.</summary>
     public string MuralId { get; init; } = "";
 
-    /// <summary>Tile ID (4036-4038) for the visual variant chosen at placement.</summary>
+    /// <summary>Tile ID (5036-5038) for the visual variant chosen at placement.</summary>
     public int TileId { get; init; }
 
     public bool HasBeenExamined { get; set; }

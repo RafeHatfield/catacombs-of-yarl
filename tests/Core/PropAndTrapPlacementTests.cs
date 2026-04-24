@@ -52,6 +52,7 @@ public class PropAndTrapPlacementTests
             signRegistry: null,
             muralRegistry: null,
             muralTracker: null,
+            out _,
             propsRegistry: propsRegistry,
             trapRegistry: trapRegistry);
     }
@@ -138,6 +139,7 @@ public class PropAndTrapPlacementTests
         var features = EntityPlacer.PlaceFloorFeatures(
             map, ids, rng, depth: 2, occupied,
             signRegistry: null, muralRegistry: null, muralTracker: null,
+            out _,
             propsRegistry: propsRegistry);
 
         var props = features.Where(f => f.Get<DestructiblePropComponent>() != null).ToList();
@@ -324,6 +326,7 @@ public class PropAndTrapPlacementTests
         var features = EntityPlacer.PlaceFloorFeatures(
             map, ids, rng, depth: 3, occupied,
             signRegistry: null, muralRegistry: null, muralTracker: null,
+            out _,
             trapRegistry: trapRegistry);
 
         var traps = features.Where(f => f.Get<FloorTrapComponent>() != null).ToList();
@@ -357,6 +360,7 @@ public class PropAndTrapPlacementTests
         var features = EntityPlacer.PlaceFloorFeatures(
             map, ids, rng, depth: 3, occupied,
             signRegistry: null, muralRegistry: null, muralTracker: null,
+            out _,
             propsRegistry: propsRegistry, trapRegistry: trapRegistry);
 
         // No two blocking features on the same tile.

@@ -165,15 +165,21 @@ public sealed class GameMap
     public void UnmarkPropCell(int x, int y) => _propCells.Remove((x, y));
 
     /// <summary>
-    /// Returns true only for actual Wall tiles.
+    /// Returns true for Wall or SecretDoor tiles.
     /// Used by the wall autotile renderer — does NOT include prop cells or closed doors.
     /// Closed doors are non-walkable but must not be treated as walls for autotile purposes.
+    /// SecretDoors render identically to walls until discovered, so they must contribute to
+    /// the autotile bitmask the same way walls do — otherwise adjacent wall tiles would have
+    /// incorrect corner fills where the secret door sits.
     /// </summary>
-    public bool IsWallTile(int x, int y) => InBounds(x, y) && _tiles[x, y] == TileKind.Wall;
+    public bool IsWallTile(int x, int y) => InBounds(x, y)
+        && (_tiles[x, y] == TileKind.Wall || _tiles[x, y] == TileKind.SecretDoor);
 
-    /// <summary>Returns true for Door (closed) or DoorOpen (open).</summary>
+    /// <summary>Returns true for Door (closed), DoorOpen, or LockedDoor.</summary>
     public bool IsDoorTile(int x, int y) =>
-        InBounds(x, y) && (_tiles[x, y] == TileKind.Door || _tiles[x, y] == TileKind.DoorOpen);
+        InBounds(x, y) && (_tiles[x, y] == TileKind.Door
+            || _tiles[x, y] == TileKind.DoorOpen
+            || _tiles[x, y] == TileKind.LockedDoor);
 
     /// <summary>
     /// Open a closed door at (x, y). Changes Door → DoorOpen (walkable, LOS-transparent).
@@ -209,10 +215,12 @@ public sealed class GameMap
             TileKind.Corridor => true,
             TileKind.StairDown => true,
             TileKind.StairUp => true,
-            TileKind.Door => false,      // closed door blocks movement until opened
-            TileKind.DoorOpen => true,  // open door is walkable
+            TileKind.Door => false,        // closed door blocks movement until opened
+            TileKind.DoorOpen => true,     // open door is walkable
             TileKind.Wall => false,
             TileKind.Trap => false,
+            TileKind.LockedDoor => false,  // locked door: impassable until matching key used; never in canPassDoors
+            TileKind.SecretDoor => false,  // secret door: looks and behaves like a wall until discovered
             _ => false,
         };
     }

@@ -328,6 +328,9 @@ public sealed class DungeonFloorBuilder
         // Place floor features (chests, signs, murals, props, traps) — after monsters and items
         // so they don't collide. Build an occupied set from all entities already placed.
         var allFeatures = new List<Entity>();
+        // Locked door positions to register in GameState after features are placed.
+        // Declared outside the if-block so it is accessible for state registration below.
+        var allLockedDoorPlacements = new List<(int X, int Y, int LockColorId)>();
         if (_signpostRegistry != null || _muralRegistry != null || _floorItemPool.Count > 0
             || _interactivePropsRegistry != null || _floorTrapRegistry != null)
         {
@@ -346,15 +349,36 @@ public sealed class DungeonFloorBuilder
             allFeatures = EntityPlacer.PlaceFloorFeatures(
                 generatedMap, ids, rng, depth, occupied,
                 _signpostRegistry, _muralRegistry, finalMuralTracker,
+                out var lockedDoorPlacements,
                 _floorItemPool, _spellItemFactory, _itemFactory, _consumableFactory,
                 finalRegistry, finalPool, difficulty,
                 lootTagRegistry: _lootTagRegistry, lootPolicy: _lootPolicy,
                 propsRegistry: _interactivePropsRegistry, trapRegistry: _floorTrapRegistry);
 
+            allLockedDoorPlacements = lockedDoorPlacements;
+
             // Don't pass mural tracker for new-run case — Build() doesn't have the old state.
             // Caller (GameController) must thread muralTracker through floor transitions.
             // Store finalMuralTracker back so the caller can read it off the returned GameState.
             muralTracker = finalMuralTracker;
+        }
+
+        // Place static portal pair (depth ≥ 3 only, 1 pair per floor).
+        // Portals go into state.Portals (same list used by wand-placed portals) so
+        // PortalSystem.CheckPortalCollision fires when the player walks onto either tile.
+        // Build the occupied set from all entities placed on this floor so far.
+        var allPortals = new List<Entity>();
+        if (depth >= 3)
+        {
+            var portalOccupied = new HashSet<(int, int)>();
+            portalOccupied.Add((generatedMap.PlayerSpawn.X, generatedMap.PlayerSpawn.Y));
+            if (generatedMap.StairDownPos.HasValue) portalOccupied.Add(generatedMap.StairDownPos.Value);
+            if (generatedMap.StairUpPos.HasValue)   portalOccupied.Add(generatedMap.StairUpPos.Value);
+            foreach (var m  in allMonsters)  portalOccupied.Add((m.X,  m.Y));
+            foreach (var fi in allFloorItems) portalOccupied.Add((fi.X, fi.Y));
+            foreach (var f  in allFeatures)  portalOccupied.Add((f.X,  f.Y));
+
+            allPortals = EntityPlacer.PlacePortalPairs(generatedMap, ids, rng, depth, portalOccupied);
         }
 
         // BoonTracker: carry forward from previous floor, or create fresh for new run
@@ -385,9 +409,28 @@ public sealed class DungeonFloorBuilder
         foreach (var item in allFloorItems)
             state.FloorItems.Add(item);
 
-        // Register features into state (chests, signs, murals)
+        // Register features into state (chests, signs, murals, props, traps).
+        // Key items from locked chest pairs are in allFeatures but must go into FloorItems
+        // because they are non-blocking pickups, not interactive features.
         foreach (var feature in allFeatures)
-            state.Features.Add(feature);
+        {
+            if (feature.Get<CatacombsOfYarl.Logic.ECS.KeyItemComponent>() != null)
+                state.FloorItems.Add(feature);
+            else
+                state.Features.Add(feature);
+        }
+
+        // Register static portal pair into state.Portals.
+        // state.Portals is the list PortalSystem.CheckPortalCollision reads — adding static portals
+        // here makes walk-over teleportation fire automatically with no additional wiring.
+        foreach (var portal in allPortals)
+            state.Portals.Add(portal);
+
+        // Register locked door positions so TurnController can look up lock colors on bump.
+        // allLockedDoorPlacements is populated by EntityPlacer.PlaceFloorFeatures when
+        // PlaceLockedDoorPair runs (depth ≥ 2). Empty in scenario mode or at depth 1.
+        foreach (var (dx, dy, colorId) in allLockedDoorPlacements)
+            state.LockedDoors[(dx, dy)] = colorId;
 
         // Compute initial FOV so the player sees their starting area immediately.
         // This must happen after IsDungeonMode=true is set — RecomputeFov is a no-op

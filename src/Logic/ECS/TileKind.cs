@@ -11,7 +11,9 @@ public enum TileKind
     Corridor,
     StairDown,
     StairUp,
-    Door,       // Closed door — blocks movement and LOS until opened
-    DoorOpen,   // Open door — walkable and LOS-transparent
+    Door,         // Closed door — blocks movement and LOS until opened
+    DoorOpen,     // Open door — walkable and LOS-transparent
     Trap,
+    LockedDoor,   // Locked door — blocks movement until matching key is used; never passable by pathfinder
+    SecretDoor,   // Hidden door — renders as wall until discovered; passive detection reveals it as Door
 }

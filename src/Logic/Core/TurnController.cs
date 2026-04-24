@@ -91,6 +91,11 @@ public static class TurnController
 
         state.RecomputeFov(); // update FOV after player moves (no-op in scenario mode)
 
+        // Passive secret door detection: checked once per player turn after the action resolves.
+        // Free actions (sign reads) and skipped turns do not count — same as other passive effects.
+        if (!freeAction && !playerSkipTurn && state.PlayerFighter.IsAlive)
+            CheckSecretDoorDetection(state, events);
+
         // === MONSTER TURNS ===
         // Skip monster turns on successful Descend — the floor transition is handled
         // by the presentation layer. Monsters should not get a free attack as the
@@ -713,6 +718,13 @@ public static class TurnController
                 freeAction = !consumesTurnA;
                 return;
             }
+            // Locked door bump: check target tile and each step on the path.
+            // Returns true (as free action) when locked door blocked movement.
+            if (TryHandleLockedDoorBump(state, player, action.Target.X, action.Target.Y, events, out bool lockedDoorFreeA))
+            {
+                freeAction = lockedDoorFreeA;
+                return;
+            }
             if (TryOpenDoorOnPath(state.Map, player, action.Target.X, action.Target.Y, events))
                 return;
             moved = state.Map.MoveToward(player, action.Target.X, action.Target.Y);
@@ -724,6 +736,12 @@ public static class TurnController
             if (TryInteractFeature(state, action.TargetX.Value, action.TargetY.Value, events, out bool consumesTurnB))
             {
                 freeAction = !consumesTurnB;
+                return;
+            }
+            // Locked door bump: free action when blocked by a locked door.
+            if (TryHandleLockedDoorBump(state, player, action.TargetX.Value, action.TargetY.Value, events, out bool lockedDoorFreeB))
+            {
+                freeAction = lockedDoorFreeB;
                 return;
             }
             if (TryOpenDoor(state.Map, player, action.TargetX.Value, action.TargetY.Value, events))
@@ -904,17 +922,81 @@ public static class TurnController
         var chest = feature.Get<ChestComponent>();
         if (chest != null)
         {
-            if (chest.IsOpen)
+            if (chest.IsOpen && !chest.IsLooted)
             {
-                // Already open chest: bump is consumed (player can't walk through it — it blocks
-                // movement) but no turn is spent and no event is emitted. The player just bumps.
+                // Second tap on an open chest: collect items sitting on the chest tile into inventory.
+                var atChest = state.FloorItems.Where(i => i.X == feature.X && i.Y == feature.Y).ToList();
+                foreach (var lootItem in atChest)
+                {
+                    lootItem.X = state.Player.X;
+                    lootItem.Y = state.Player.Y;
+                }
+                TryPickUpItemsAt(state, state.Player.X, state.Player.Y, events);
+                chest.IsLooted = true;
+                events.Add(new ChestLootedEvent { ActorId = state.Player.Id, X = feature.X, Y = feature.Y });
+                consumesTurn = true;
+                return true;
+            }
+
+            if (chest.IsOpen && chest.IsLooted)
+            {
+                // Already looted: bump is consumed (chest still blocks movement) but no turn spent.
                 consumesTurn = false;
                 return true;
             }
 
-            // Open the chest: place loot at the player's tile (not the chest tile, which is
-            // non-walkable), then immediately run auto-pickup so items go to inventory.
-            // Overflow items that don't fit stay on the player's tile for manual pickup.
+            // Locked chest check: if the chest has a LockableComponent and is still locked,
+            // require a matching colored key in the player's inventory.
+            var lockable = feature.Get<LockableComponent>();
+            if (lockable != null && lockable.IsLocked)
+            {
+                var inventory = state.Player.GetOrAdd<Inventory>();
+                var matchingKey = inventory.FindFirst(item =>
+                {
+                    var key = item.Get<KeyItemComponent>();
+                    return key != null && key.LockColorId == lockable.LockColorId;
+                });
+
+                if (matchingKey == null)
+                {
+                    // No matching key — emit feedback event, consume a turn, do not open.
+                    events.Add(new ChestLockedEvent
+                    {
+                        ActorId      = state.Player.Id,
+                        ChestId      = feature.Id,
+                        LockColorId  = lockable.LockColorId,
+                        X            = feature.X,
+                        Y            = feature.Y,
+                    });
+                    consumesTurn = true;
+                    return true;
+                }
+
+                // Found matching key — consume it and unlock the chest.
+                int keyId = matchingKey.Id;
+                inventory.Remove(matchingKey);
+                lockable.IsLocked = false;
+
+                events.Add(new KeyConsumedEvent
+                {
+                    ActorId     = state.Player.Id,
+                    KeyId       = keyId,
+                    LockColorId = lockable.LockColorId,
+                });
+                events.Add(new ChestUnlockedEvent
+                {
+                    ActorId     = state.Player.Id,
+                    ChestId     = feature.Id,
+                    KeyId       = keyId,
+                    LockColorId = lockable.LockColorId,
+                    X           = feature.X,
+                    Y           = feature.Y,
+                });
+                // Fall through to normal chest-open logic below.
+            }
+
+            // Open the chest (first tap): place loot at the CHEST tile so they are visible.
+            // Items stay there until the player bumps again (second tap) to collect them.
             chest.IsOpen = true;
 
             var lootStash = feature.Get<ChestLootStash>();
@@ -925,8 +1007,8 @@ public static class TurnController
             {
                 foreach (var item in lootStash.Items)
                 {
-                    item.X = player.X;
-                    item.Y = player.Y;
+                    item.X = feature.X;
+                    item.Y = feature.Y;
                     state.FloorItems.Add(item);
                     state.Map.RegisterEntity(item);
                     droppedIds.Add(item.Id);
@@ -936,14 +1018,13 @@ public static class TurnController
 
             events.Add(new ChestOpenedEvent
             {
+                ActorId = player.Id,
                 X = feature.X,
                 Y = feature.Y,
                 DroppedItemIds = droppedIds,
             });
 
-            // Auto-pick up the loot immediately — player opened the chest, items go to inventory.
-            TryPickUpItemsAt(state, player.X, player.Y, events);
-
+            // No auto-pickup here — items remain on the chest tile until the player bumps again.
             consumesTurn = true;
             return true;
         }
@@ -2513,6 +2594,96 @@ public static class TurnController
     }
 
     /// <summary>
+    /// Check whether moving toward (targetX, targetY) would bump into a locked door.
+    /// Checks the direct target tile and, for multi-step paths, the first greedy step.
+    ///
+    /// Two outcomes when a locked door is found:
+    ///   - Player has matching key: consume the key, open the door (LockedDoor → DoorOpen),
+    ///     emit DoorUnlockedEvent + KeyConsumedEvent. Returns true, isFreeAction=false (costs a turn).
+    ///   - No matching key: emit LockedDoorBumpedEvent. Returns true, isFreeAction=true (no turn cost).
+    ///
+    /// Returns false when no locked door is on the path — caller proceeds normally.
+    /// LockedDoor tiles are NEVER passable to the pathfinder (no canPassDoors bypass).
+    /// </summary>
+    private static bool TryHandleLockedDoorBump(GameState state, Entity player,
+        int targetX, int targetY, List<TurnEvent> events, out bool isFreeAction)
+    {
+        isFreeAction = false;
+
+        // Determine the actual tile being bumped — the direct target, or the first step
+        // toward the target (mirrors TryOpenDoorOnPath's greedy logic).
+        int bumpX = targetX, bumpY = targetY;
+
+        var directKind = state.Map.GetTileKind(targetX, targetY);
+        if (directKind != TileKind.LockedDoor)
+        {
+            // Check first greedy step toward target (same priority as MoveToward: diagonal first).
+            int dx = Math.Sign(targetX - player.X);
+            int dy = Math.Sign(targetY - player.Y);
+
+            if (dx != 0 && dy != 0 && state.Map.GetTileKind(player.X + dx, player.Y + dy) == TileKind.LockedDoor)
+            { bumpX = player.X + dx; bumpY = player.Y + dy; }
+            else if (dx != 0 && state.Map.GetTileKind(player.X + dx, player.Y) == TileKind.LockedDoor)
+            { bumpX = player.X + dx; bumpY = player.Y; }
+            else if (dy != 0 && state.Map.GetTileKind(player.X, player.Y + dy) == TileKind.LockedDoor)
+            { bumpX = player.X; bumpY = player.Y + dy; }
+            else
+                return false; // no locked door on path
+        }
+
+        // Locked door found at (bumpX, bumpY).
+        if (!state.LockedDoors.TryGetValue((bumpX, bumpY), out int lockColorId))
+        {
+            // Door exists in map but not in registry — structural error. Treat as no-key (free action).
+            events.Add(new LockedDoorBumpedEvent { ActorId = player.Id, X = bumpX, Y = bumpY, LockColorId = 0 });
+            isFreeAction = true;
+            return true;
+        }
+
+        // Find matching key in player inventory.
+        var inventory = player.GetOrAdd<Inventory>();
+        var matchingKey = inventory.FindFirst(item =>
+        {
+            var key = item.Get<KeyItemComponent>();
+            return key != null && key.LockColorId == lockColorId;
+        });
+
+        if (matchingKey == null)
+        {
+            // No key — feedback event, no turn consumed (free action, same as bumping a wall).
+            events.Add(new LockedDoorBumpedEvent { ActorId = player.Id, X = bumpX, Y = bumpY, LockColorId = lockColorId });
+            isFreeAction = true;
+            return true;
+        }
+
+        // Key found — consume it, open the door, emit events.
+        int keyId = matchingKey.Id;
+        inventory.Remove(matchingKey);
+        state.LockedDoors.Remove((bumpX, bumpY));
+
+        // Change tile from LockedDoor to DoorOpen (walkable, transparent).
+        state.Map.SetTile(bumpX, bumpY, TileKind.DoorOpen);
+
+        events.Add(new KeyConsumedEvent
+        {
+            ActorId     = player.Id,
+            KeyId       = keyId,
+            LockColorId = lockColorId,
+        });
+        events.Add(new DoorUnlockedEvent
+        {
+            ActorId     = player.Id,
+            X           = bumpX,
+            Y           = bumpY,
+            KeyId       = keyId,
+            LockColorId = lockColorId,
+        });
+
+        isFreeAction = false; // unlocking a door costs a turn
+        return true;
+    }
+
+    /// <summary>
     /// If the target tile is a closed door and the entity can open doors, open it and emit
     /// DoorOpenedEvent, consuming the turn. Returns true if a door was opened (caller should
     /// not also apply movement this turn).
@@ -2536,6 +2707,72 @@ public static class TurnController
     /// toward (targetX, targetY) rather than the target tile itself. Handles the case where
     /// the path to the enemy passes through a door before reaching the enemy's position.
     /// </summary>
+    // ─────────────────────────────────────────────────────────────────────────
+    // Secret door detection
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Flavor hints shown to the player when a secret door is passively discovered.
+    /// One is chosen at random using the game's seeded RNG so discovery text is deterministic.
+    /// </summary>
+    private static readonly string[] SecretDoorHints =
+    [
+        "You notice a faint draft from the wall.",
+        "The wall sounds hollow when you tap it.",
+        "There are scratch marks on the floor here.",
+        "The stones here are slightly worn.",
+        "A subtle misalignment in the stonework catches your eye.",
+    ];
+
+    /// <summary>
+    /// Passive secret door detection. Called once per player turn, after the player acts.
+    /// Checks all 8 Chebyshev-adjacent tiles for SecretDoor. Each adjacent SecretDoor has
+    /// a 25% chance to be revealed as a normal Door this turn.
+    ///
+    /// When revealed: tile changes to TileKind.Door and SecretDoorFoundEvent is emitted.
+    /// The event carries a random flavor hint from SecretDoorHints.
+    /// Multiple adjacent secret doors can all reveal in the same turn (independent rolls).
+    ///
+    /// Skip-turn and free-action cases are handled by the caller — this method always checks.
+    /// </summary>
+    private static void CheckSecretDoorDetection(GameState state, List<TurnEvent> events)
+    {
+        int px = state.Player.X, py = state.Player.Y;
+
+        // Chebyshev radius 1 — all 8 adjacent tiles (diagonals included)
+        for (int dx = -1; dx <= 1; dx++)
+        for (int dy = -1; dy <= 1; dy++)
+        {
+            if (dx == 0 && dy == 0) continue;
+            int nx = px + dx, ny = py + dy;
+            if (!state.Map.InBounds(nx, ny)) continue;
+            if (state.Map.GetTileKind(nx, ny) != TileKind.SecretDoor) continue;
+
+            // 25% base chance per adjacent secret door per turn
+            if (state.Rng.NextDouble() < 0.25)
+            {
+                // Reveal: change tile to normal closed door before emitting the event
+                // so the presentation layer sees the updated tile kind when it processes events.
+                state.Map.SetTile(nx, ny, TileKind.Door);
+
+                string hint = SecretDoorHints[state.Rng.Next(SecretDoorHints.Length)];
+                events.Add(new SecretDoorFoundEvent
+                {
+                    ActorId = state.Player.Id,
+                    X = nx,
+                    Y = ny,
+                    Hint = hint,
+                });
+
+                // Stop auto-explore on secret door discovery so the player can assess the
+                // new passage. Same pattern as trap detection and chest discovery.
+                var ae = state.Player.Get<AutoExploreState>();
+                if (ae != null && ae.IsActive)
+                    AutoExploreSystem.Stop(ae, "Found secret door");
+            }
+        }
+    }
+
     private static bool TryOpenDoorOnPath(GameMap map, Entity entity, int targetX, int targetY, List<TurnEvent> events)
     {
         int dx = Math.Sign(targetX - entity.X);

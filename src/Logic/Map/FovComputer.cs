@@ -128,6 +128,6 @@ public static class FovComputer
     {
         if (!map.InBounds(x, y)) return true;
         var kind = map.GetTileKind(x, y);
-        return kind == TileKind.Wall || kind == TileKind.Door;
+        return kind == TileKind.Wall || kind == TileKind.Door || kind == TileKind.SecretDoor;
     }
 }

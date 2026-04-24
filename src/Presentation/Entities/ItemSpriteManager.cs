@@ -11,9 +11,10 @@ namespace CatacombsOfYarl.Presentation.Entities;
 /// Manages floor sprites for items sitting on dungeon tiles.
 ///
 /// Sprite selection priority:
-///   1. ItemTag.TypeId → SpriteMapping.GetItemSpritePath() (primary path)
-///   2. item.Name.ToLower().Replace(' ', '_') → SpriteMapping (legacy fallback, GD.PrintErr fires)
-///   3. Tinted selection diamond placeholder if neither lookup finds a sprite.
+///   1. KeyItemComponent → direct world_24x24 key sprite (tile 5039) with lock color tint
+///   2. ItemTag.TypeId → SpriteMapping.GetItemSpritePath() (primary path)
+///   3. item.Name.ToLower().Replace(' ', '_') → SpriteMapping (legacy fallback, GD.PrintErr fires)
+///   4. Tinted selection diamond placeholder if neither lookup finds a sprite.
 ///
 /// Items are FOV-gated — only shown when their tile is currently visible.
 /// Call RemoveItem when the player picks up an item to free its sprite node.
@@ -27,6 +28,7 @@ public sealed class ItemSpriteManager
     private readonly Node2D _parent;
     private readonly SpriteMapping _spriteMapping;
     private readonly IMapRenderer _renderer;
+    private readonly TileThemeConfig? _tileThemeConfig;
     private readonly Dictionary<int, Sprite2D> _sprites = new();
 
     /// <summary>
@@ -36,11 +38,17 @@ public sealed class ItemSpriteManager
     /// </summary>
     private GameState? _lastState;
 
-    public ItemSpriteManager(Node2D itemLayerNode, SpriteMapping spriteMapping, IMapRenderer renderer)
+    /// <param name="tileThemeConfig">
+    /// Optional TileThemeConfig used to resolve world-sprite item paths (e.g. key items
+    /// that use tile IDs from world_24x24 rather than the items_16x16 tileset).
+    /// </param>
+    public ItemSpriteManager(Node2D itemLayerNode, SpriteMapping spriteMapping, IMapRenderer renderer,
+        TileThemeConfig? tileThemeConfig = null)
     {
         _parent = itemLayerNode;
         _spriteMapping = spriteMapping;
         _renderer = renderer;
+        _tileThemeConfig = tileThemeConfig;
     }
 
     /// <summary>Number of live item floor sprites. Useful for debug overlay.</summary>
@@ -119,6 +127,12 @@ public sealed class ItemSpriteManager
             }
         }
 
+        // Key items use the lock color tint so the floor sprite matches the locked chest color.
+        Color modulate = usingFallback ? FallbackTint(item) : Colors.White;
+        var keyComp = item.Get<KeyItemComponent>();
+        if (keyComp != null)
+            modulate = DungeonRenderer.GetLockColor(keyComp.LockColorId);
+
         // Sprites are 48×48; tile bounding box is 32×48.
         // GridToScreenCenter = tile top-left + (16, 24) = horizontal center, vertical center.
         // Centered=true + no offset → sprite center at tile center → perfect alignment.
@@ -132,7 +146,7 @@ public sealed class ItemSpriteManager
             // Items sit on the floor — above the tile but below standing entities
             ZIndex = _renderer.GetTileSortOrder(item.X, item.Y) + 1,
             TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
-            Modulate = usingFallback ? FallbackTint(item) : Colors.White,
+            Modulate = modulate,
             Visible = false, // Hidden until FOV reveals tile
         };
 
@@ -143,6 +157,9 @@ public sealed class ItemSpriteManager
     /// <summary>
     /// Resolve the sprite resource path for an item entity.
     ///
+    /// Key items (KeyItemComponent): use the world_24x24 key sprite directly via TileThemeConfig.
+    ///   This bypasses the items tileset since the key sprite lives in world_24x24, not items_16x16.
+    ///
     /// Identification-aware: unidentified potions use black bottle sprites, unidentified wands
     /// use the plain wand sprite, unidentified scrolls use the rune scroll sprite, and
     /// unidentified rings use material sprites (cycling 76-80).
@@ -152,6 +169,11 @@ public sealed class ItemSpriteManager
     /// </summary>
     private string? ResolveItemSpritePath(Entity item, GameState? state = null)
     {
+        // Key items use the world_24x24 key sprite (tile 5039) via TileThemeConfig.
+        // This is the only item type that uses a world-sprite rather than an item-sheet sprite.
+        if (item.Get<KeyItemComponent>() != null && _tileThemeConfig != null)
+            return _tileThemeConfig.GetTexturePath(5039);
+
         var registry = state?.IdentificationRegistry;
         var pool     = state?.AppearancePool;
 

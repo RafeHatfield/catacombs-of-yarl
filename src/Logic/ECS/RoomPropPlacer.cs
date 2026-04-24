@@ -69,7 +69,6 @@ public static class RoomPropPlacer
     {
         [RoomArchetype.Library] =
         [
-            new("bookshelf",   PropPlacement.WallAdjacent,  2, 3),
             new("table",       PropPlacement.Center,         1, 1),
             new("chair",       PropPlacement.PropAdjacent,   1, 2, 0.70f),
             new("desk",        PropPlacement.WallAdjacent,   1, 1, 0.50f),
@@ -89,7 +88,6 @@ public static class RoomPropPlacer
             new("fireplace",  PropPlacement.WallAdjacent,  1, 1),
             new("table",      PropPlacement.Center,         1, 1),
             new("chair",      PropPlacement.PropAdjacent,   1, 3, 0.60f),
-            new("barrel",     PropPlacement.Corner,          1, 2, 0.50f),
             new("cauldron",   PropPlacement.Center,          1, 1, 0.40f),
         ],
 
@@ -109,7 +107,6 @@ public static class RoomPropPlacer
             new("cage",        PropPlacement.FreeStanding,   1, 1, 0.30f),
             new("bucket",      PropPlacement.FreeStanding,   1, 2, 0.40f),
             new("straw_pile",  PropPlacement.FloorOverlay,   1, 2, 0.40f),
-            new("bones_pile",  PropPlacement.FloorOverlay,   1, 2, 0.30f),
         ],
 
         [RoomArchetype.Laboratory] =
@@ -117,7 +114,6 @@ public static class RoomPropPlacer
             new("alchemy_table",  PropPlacement.WallAdjacent,  1, 1),
             new("cauldron",       PropPlacement.Center,          1, 1),
             new("shelf_bottles",  PropPlacement.WallAdjacent,   1, 2),
-            new("bookshelf",      PropPlacement.WallAdjacent,   1, 2, 0.40f),
             new("globe",          PropPlacement.FreeStanding,   1, 1, 0.35f),
             new("candelabra",     PropPlacement.FreeStanding,   1, 1, 0.30f),
         ],
@@ -133,7 +129,6 @@ public static class RoomPropPlacer
 
         [RoomArchetype.Storage] =
         [
-            new("barrel",       PropPlacement.Corner,        2, 4),
             new("crate",        PropPlacement.Corner,        2, 3),
             new("shelf",        PropPlacement.WallAdjacent,  1, 2, 0.50f),
             new("chest_closed", PropPlacement.Corner,        1, 1, 0.30f),
@@ -156,7 +151,6 @@ public static class RoomPropPlacer
             new("candelabra",   PropPlacement.FreeStanding,   1, 2, 0.40f),
             new("cobweb",       PropPlacement.Corner,          1, 3, 0.50f),
             new("stalagmite",   PropPlacement.FreeStanding,   1, 2, 0.35f),
-            new("bones_pile",   PropPlacement.FloorOverlay,   1, 3, 0.40f),
         ],
 
         [RoomArchetype.FountainRoom] =
@@ -175,7 +169,6 @@ public static class RoomPropPlacer
             new("workbench",    PropPlacement.WallAdjacent,   1, 1, 0.45f),
             new("weapon_rack",  PropPlacement.WallAdjacent,   1, 2, 0.40f),
             new("water_barrel", PropPlacement.Corner,          1, 1, 0.35f),
-            new("barrel",       PropPlacement.Corner,          1, 2, 0.40f),
             new("coal_pile",    PropPlacement.FloorOverlay,   1, 2, 0.50f),
         ],
 
@@ -209,7 +202,6 @@ public static class RoomPropPlacer
         [
             new("cobweb",     PropPlacement.Corner,       1, 2, 0.55f),  // 55%: cobwebs in dark corners
             new("rubble",     PropPlacement.FloorOverlay, 1, 2, 0.40f),  // 40%: rubble on floor
-            new("bones_pile", PropPlacement.FloorOverlay, 1, 1, 0.35f),  // 35%: bones scattered
         ],
     };
 
@@ -486,7 +478,7 @@ public static class RoomPropPlacer
     {
         // Scatter prop candidates in priority order (use whichever exists in the registry)
         string[] scatterIds = maintenance == RoomMaintenanceState.Ruined
-            ? ["rubble", "bones_pile", "cobweb"]
+            ? ["rubble", "cobweb"]
             : ["cobweb", "rubble"];
 
         int scatterMin = maintenance == RoomMaintenanceState.Ruined ? 2 : 1;

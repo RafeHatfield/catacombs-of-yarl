@@ -48,6 +48,15 @@ public sealed class TileLayer
     /// Features respect FOV: visible when seen, dimmed when explored, hidden when unknown.
     /// </summary>
     public Dictionary<(int X, int Y), Sprite2D> FeatureOverlaySprites { get; } = new();
+
+    /// <summary>
+    /// Small key icon overlay sprites for locked chests, keyed by grid position (X, Y).
+    /// Each locked chest gets a second Sprite2D at ~40% scale in the top-right corner
+    /// to visually indicate a lock exists. The icon is removed when the chest is unlocked
+    /// (ChestUnlockedEvent or when IsLocked becomes false).
+    /// Visibility follows FeatureOverlaySprites exactly.
+    /// </summary>
+    public Dictionary<(int X, int Y), Sprite2D> LockKeyOverlaySprites { get; } = new();
 }
 
 /// <summary>
@@ -77,7 +86,7 @@ public sealed class DungeonRenderer
     ///
     /// If themeConfig is null, logs an error and returns an empty TileLayer without crashing.
     /// </summary>
-    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null, TileThemeConfig? themeConfig = null, int seed = 0, IReadOnlyList<PlacedProp>? props = null, IReadOnlyList<Entity>? features = null)
+    public static TileLayer Render(GameMap map, Node2D parent, IMapRenderer? renderer = null, TileThemeConfig? themeConfig = null, int seed = 0, IReadOnlyList<PlacedProp>? props = null, IReadOnlyList<Entity>? features = null, IReadOnlyDictionary<(int X, int Y), int>? lockedDoors = null)
     {
         if (themeConfig == null)
         {
@@ -234,11 +243,12 @@ public sealed class DungeonRenderer
 
                 string? overlayPath = kind switch
                 {
-                    TileKind.StairDown => themeConfig.GetStairDown(themeName),
-                    TileKind.StairUp   => themeConfig.GetStairUp(themeName),
-                    TileKind.Door      => themeConfig.GetDoor(themeName),
-                    TileKind.DoorOpen  => themeConfig.GetDoorOpen(themeName),
-                    _                  => null,
+                    TileKind.StairDown   => themeConfig.GetStairDown(themeName),
+                    TileKind.StairUp     => themeConfig.GetStairUp(themeName),
+                    TileKind.Door        => themeConfig.GetDoor(themeName),
+                    TileKind.DoorOpen    => themeConfig.GetDoorOpen(themeName),
+                    TileKind.LockedDoor  => themeConfig.GetDoorLocked(themeName),
+                    _                    => null,
                 };
 
                 if (overlayPath == null) continue;
@@ -260,10 +270,13 @@ public sealed class DungeonRenderer
                 // sprite stays within its tile regardless of orientation.
                 // DoorOpen uses the same orientation logic as closed Door.
                 bool isDoorHorizontal = false;
-                if (kind == TileKind.Door || kind == TileKind.DoorOpen)
+                if (kind == TileKind.Door || kind == TileKind.DoorOpen || kind == TileKind.LockedDoor)
                 {
-                    bool wallN = !map.InBounds(gx, gy - 1) || map.GetTileKind(gx, gy - 1) == TileKind.Wall;
-                    bool wallS = !map.InBounds(gx, gy + 1) || map.GetTileKind(gx, gy + 1) == TileKind.Wall;
+                    // SecretDoors count as wall-like for orientation purposes — an unrevealed
+                    // secret door adjacent to a revealed door must still orient the door sprite
+                    // correctly (otherwise a door flanked by secret doors would render unrotated).
+                    bool wallN = !map.InBounds(gx, gy - 1) || map.IsWallTile(gx, gy - 1);
+                    bool wallS = !map.InBounds(gx, gy + 1) || map.IsWallTile(gx, gy + 1);
                     isDoorHorizontal = wallN && wallS;
                 }
 
@@ -281,9 +294,40 @@ public sealed class DungeonRenderer
                 parent.AddChild(overlay);
 
                 // Stair overlays are always visible (player always knows where the exit is).
-                // Door overlays (both closed and open) respect FOV — track for UpdateVisibility.
-                if (kind == TileKind.Door || kind == TileKind.DoorOpen)
+                // Door overlays (both closed, open, and locked) respect FOV — track for UpdateVisibility.
+                if (kind == TileKind.Door || kind == TileKind.DoorOpen || kind == TileKind.LockedDoor)
                     tileLayer.DoorOverlaySprites[(gx, gy)] = overlay;
+
+                // Locked doors: apply the lock color tint and add a key icon overlay.
+                // The lock color comes from the lockedDoors lookup (populated by DungeonFloorBuilder).
+                // Color tint distinguishes locked doors from locked chests in the same color family.
+                if (kind == TileKind.LockedDoor && lockedDoors != null
+                    && lockedDoors.TryGetValue((gx, gy), out int doorColorId))
+                {
+                    overlay.Modulate = GetLockColor(doorColorId);
+
+                    // Small key icon overlay in the top-right corner — same pattern as locked chests.
+                    var keyIconPath = themeConfig.GetTexturePath(5039);
+                    var keyIconTex = GD.Load<Texture2D>(keyIconPath);
+                    if (keyIconTex != null)
+                    {
+                        var keyIconPos = isDoorHorizontal
+                            ? renderer.GridToScreenCenter(gx, gy) + new Vector2(4f, -10f)
+                            : renderer.GridToScreen(gx, gy) + new Vector2(13f, 1f);
+                        var keyIcon = new Sprite2D
+                        {
+                            Texture = keyIconTex,
+                            Position = keyIconPos,
+                            Centered = false,
+                            Scale = new Vector2(0.4f, 0.4f),
+                            ZIndex = renderer.GetTileSortOrder(gx, gy) + 2,
+                            TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
+                            Modulate = Colors.White,
+                        };
+                        parent.AddChild(keyIcon);
+                        tileLayer.LockKeyOverlaySprites[(gx, gy)] = keyIcon;
+                    }
+                }
             }
         }
 
@@ -400,8 +444,11 @@ public sealed class DungeonRenderer
         //
         // Tile ID conventions (Oryx 16bf world_24x24):
         //   261 = chest closed, 264 = chest empty/looted (loot auto-picks up, so open = empty)
-        //   4035 = signpost (used for both signs and murals in this pass)
-        //   MuralComponent.TileId stores the chosen variant (4036–4038) for future use.
+        //   5035 = signpost (used for both signs and murals in this pass)
+        //   MuralComponent.TileId stores the chosen variant (5036–5038) for future use.
+        //
+        // Locked chests: same chest_closed sprite (261) with a color tint applied, plus a
+        // small key icon overlay (tile 5039) in the top-right corner at ~40% scale.
         if (features != null)
         {
             foreach (var feature in features)
@@ -418,6 +465,13 @@ public sealed class DungeonRenderer
                 }
 
                 var screenPos = renderer.GridToScreen(feature.X, feature.Y);
+                int featureZIndex = renderer.GetTileSortOrder(feature.X, feature.Y) + 2;
+
+                // Apply lock color tint for locked chests (LockableComponent present and IsLocked).
+                var lockable = feature.Get<LockableComponent>();
+                bool isLocked = lockable != null && lockable.IsLocked;
+                var chestTint = isLocked ? GetLockColor(lockable!.LockColorId) : Colors.White;
+
                 var sprite = new Sprite2D
                 {
                     Texture = tex,
@@ -425,11 +479,42 @@ public sealed class DungeonRenderer
                     Centered = false,
                     // Features sit at the same Z-level as props (+2) so they appear above
                     // floor and bones overlays, but below entities.
-                    ZIndex = renderer.GetTileSortOrder(feature.X, feature.Y) + 2,
+                    ZIndex = featureZIndex,
                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
+                    Modulate = chestTint,
                 };
                 parent.AddChild(sprite);
                 tileLayer.FeatureOverlaySprites[(feature.X, feature.Y)] = sprite;
+
+                // Locked chest: add a small key icon in the top-right corner as a visual indicator.
+                // Scale 0.4 makes the 24px key icon appear as ~9px — recognisable but not dominant.
+                if (isLocked)
+                {
+                    var keyIconPath = themeConfig.GetTexturePath(5039);
+                    var keyIconTex = GD.Load<Texture2D>(keyIconPath);
+                    if (keyIconTex != null)
+                    {
+                        // Position: top-right quadrant of the 24px tile.
+                        // Offset (13, 1) puts the scaled icon in the top-right without clipping.
+                        var keyIconPos = screenPos + new Vector2(13f, 1f);
+                        var keyIcon = new Sprite2D
+                        {
+                            Texture = keyIconTex,
+                            Position = keyIconPos,
+                            Centered = false,
+                            Scale = new Vector2(0.4f, 0.4f),
+                            ZIndex = featureZIndex + 1,
+                            TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
+                            Modulate = Colors.White,
+                        };
+                        parent.AddChild(keyIcon);
+                        tileLayer.LockKeyOverlaySprites[(feature.X, feature.Y)] = keyIcon;
+                    }
+                    else
+                    {
+                        GD.PrintErr($"[DungeonRenderer] Missing key icon texture: {keyIconPath} — locked chest will have no key overlay.");
+                    }
+                }
             }
         }
 
@@ -439,20 +524,37 @@ public sealed class DungeonRenderer
     /// <summary>
     /// Resolve the tile ID for a feature entity based on its component type.
     /// Returns 0 for unknown feature types — caller should skip those.
+    ///
+    /// Locked chests use the same tile as closed chests (261); the tint is applied separately.
     /// </summary>
     private static int ResolveFeaturedTileId(Entity feature)
     {
         var chest = feature.Get<ChestComponent>();
-        if (chest != null) return chest.IsOpen ? 264 : 261;
+        if (chest != null) return chest.IsLooted ? 264 : chest.IsOpen ? 262 : 261;
 
         var sign = feature.Get<SignpostComponent>();
-        if (sign != null) return 4035;
+        if (sign != null) return 5035;
 
         var mural = feature.Get<MuralComponent>();
-        if (mural != null) return 4035; // placeholder; TileId field reserved for future mural sprite variants
+        if (mural != null) return mural.TileId;
 
         return 0;
     }
+
+    /// <summary>
+    /// Map a LockColorId (0–4) to a Color for chest tinting and key item modulation.
+    /// Colors are saturated enough to read clearly on the 24px chest sprite.
+    /// Fallback to White for unknown IDs — safe, looks like an unlocked chest.
+    /// </summary>
+    internal static Color GetLockColor(int colorId) => colorId switch
+    {
+        0 => new Color(0.88f, 0.31f, 0.31f),  // red
+        1 => new Color(0.31f, 0.50f, 0.88f),  // blue
+        2 => new Color(0.25f, 0.75f, 0.38f),  // green
+        3 => new Color(0.83f, 0.63f, 0.13f),  // gold
+        4 => new Color(0.56f, 0.31f, 0.75f),  // purple
+        _ => Colors.White,
+    };
 
     /// <summary>
     /// Create a single Sprite2D for one prop tile (or multi-tile cell).
@@ -588,7 +690,31 @@ public sealed class DungeonRenderer
 
         // Feature overlay sprites — full opacity visible, dimmed explored, hidden unknown.
         // Same FOV rules as door overlays: solid props that the player can interact with.
+        // NOTE: For locked chests, the lock tint is set at creation time and re-applied after
+        // this call by RefreshLockedChestTints (in Main.cs), which has access to game state.
+        // UpdateVisibility sets White for visible tiles as a safe baseline; RefreshLockedChestTints
+        // then overrides White with the lock tint for any chest that is still locked and visible.
         foreach (var ((x, y), sprite) in layer.FeatureOverlaySprites)
+        {
+            if (map.IsVisible(x, y))
+            {
+                sprite.Visible = true;
+                sprite.Modulate = Colors.White; // baseline; lock tint re-applied by caller if needed
+            }
+            else if (map.IsExplored(x, y))
+            {
+                sprite.Visible = true;
+                sprite.Modulate = new Color(0.4f, 0.4f, 0.5f);
+            }
+            else
+            {
+                sprite.Visible = false;
+            }
+        }
+
+        // Lock key icon overlay sprites — same FOV rules as feature overlays.
+        // Hidden when the tile is explored (icon also dims) or unseen.
+        foreach (var ((x, y), sprite) in layer.LockKeyOverlaySprites)
         {
             if (map.IsVisible(x, y))
             {

@@ -319,6 +319,7 @@ public class PropSymmetryTests
     /// normal (non-mirrored) results: the set of prop IDs must be consistent with the recipe
     /// and should not contain artificially doubled positions at symmetric coordinates.
     /// We simply verify: no crash, required props present, placement count within sensible range.
+    /// Note: bookshelf is now placed by EntityPlacer (interactive prop), not RoomPropPlacer.
     /// </summary>
     [Test]
     public void NonSymmetric_Library_UnaffectedBySymmetryPass()
@@ -330,15 +331,13 @@ public class PropSymmetryTests
             var (room, map) = MakeRoomWithArchetype(10, 10, RoomArchetype.Library);
             var props = Place(room, map, registry, seed);
 
-            // Required props must be present regardless of symmetry
-            Assert.That(props.Any(p => p.PropId == "bookshelf"), Is.True,
-                $"Library seed={seed}: bookshelf (required) must be present");
+            // table is the remaining required prop (bookshelf moved to EntityPlacer)
             Assert.That(props.Any(p => p.PropId == "table"), Is.True,
                 $"Library seed={seed}: table (required) must be present");
 
-            // Sanity: prop count should be >= 2 (the two required) and <= maxProps for a 10x10 room
-            Assert.That(props.Count, Is.GreaterThanOrEqualTo(2),
-                $"Library seed={seed}: expected at least 2 props (required)");
+            // Sanity: prop count should be >= 1 (table required) and <= maxProps for a 10x10 room
+            Assert.That(props.Count, Is.GreaterThanOrEqualTo(1),
+                $"Library seed={seed}: expected at least 1 prop (required)");
         }
     }
 }
