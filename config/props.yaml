@@ -8,6 +8,8 @@
 #   blocks_movement: true = furniture/obstacle. false = floor overlay (puddles, grates, moss).
 #   placement:       wall_adjacent | center | corner | free_standing | floor_overlay
 #   tags:            Grouping hints used by archetype recipes.
+#   display_name:    Short human-readable name shown in the inspect panel.
+#   description:     One-sentence atmospheric description shown on long-press inspect.
 #
 # Browse tools/sprite_browser_16bf_world.html to find tile IDs.
 # List multiple IDs for variants: tile_ids: [123, 124, 125]
@@ -19,6 +21,8 @@ props:
   # ---------------------------------------------------------------------------
 
   barrel:
+    display_name: "Barrel"
+    description: "A battered wooden barrel, stained with something best left unidentified."
     tile_ids: [268]
     footprint: [1, 1]
     blocks_movement: true
@@ -26,6 +30,8 @@ props:
     tags: [storage, dungeon_basic]
 
   barrel_open:
+    display_name: "Open Barrel"
+    description: "The barrel has already been rifled through — nothing left but splinters."
     tile_ids: [269]
     footprint: [1, 1]
     blocks_movement: true
@@ -33,6 +39,8 @@ props:
     tags: [storage, dungeon_basic]
 
   crate:
+    display_name: "Crate"
+    description: "A heavy wooden crate, nailed shut with iron spikes."
     tile_ids: [327]
     footprint: [1, 1]
     blocks_movement: true
@@ -40,6 +48,8 @@ props:
     tags: [storage, dungeon_basic]
 
   chest_closed:
+    display_name: "Chest"
+    description: "A wooden chest bound with iron straps — could hold anything."
     tile_ids: [328]
     footprint: [1, 1]
     blocks_movement: true
@@ -47,20 +57,26 @@ props:
     tags: [storage, dungeon_basic]
 
   sack:
-    tile_ids: [4023]
+    display_name: "Sack"
+    description: "A rough burlap sack, tied at the neck with fraying rope."
+    tile_ids: [5023]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [storage, dungeon_basic]
 
   rubble:
-    tile_ids: [4034]         # Oryx 550 was a plain grey mound; replaced with AI placeholder
+    display_name: "Rubble"
+    description: "Chunks of broken stone — a reminder that these tunnels are older than anyone alive."
+    tile_ids: [5034]         # Oryx 550 was a plain grey mound; replaced with AI placeholder
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
     tags: [scatter, dungeon_basic]
 
   cobweb:
+    display_name: "Cobweb"
+    description: "Thick webs cling to the corner — something large made its home here."
     tile_ids: [144,145,146,147,148,149]
     footprint: [1, 1]
     blocks_movement: false
@@ -68,13 +84,17 @@ props:
     tags: [scatter, dungeon_basic]
 
   pillar:
-    tile_ids: [4026]
+    display_name: "Pillar"
+    description: "A stone column supporting the ceiling — or at least trying to."
+    tile_ids: [5026]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [structure, dungeon_basic, grand]
 
   bones_pile:
+    display_name: "Bones"
+    description: "A heap of old bones, picked clean long ago."
     tile_ids: [90,91,92,93,94,95,96]
     footprint: [1, 1]
     blocks_movement: false
@@ -82,6 +102,8 @@ props:
     tags: [scatter, dungeon_basic, crypt]
 
   skeleton_prop:
+    display_name: "Skeleton"
+    description: "The remains of someone who ventured this way before you."
     tile_ids: [612,613]
     footprint: [1, 1]
     blocks_movement: false
@@ -93,34 +115,44 @@ props:
   # ---------------------------------------------------------------------------
 
   table:
-    tile_ids: [319,320]
+    display_name: "Table"
+    description: "A crude wooden table, scarred by years of use."
+    tile_ids: [5052, 5053, 5054, 5055]
     footprint: [1, 1]
     blocks_movement: true
     placement: center
     tags: [furniture, living]
 
   chair:
-    tile_ids: [321]
+    display_name: "Chair"
+    description: "A simple wooden chair — someone sat here, once."
+    tile_ids: [5051, 5056, 5057]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [furniture, living, flippable]
 
   bed:
-    tile_ids: [4003]
+    display_name: "Bed"
+    description: "A straw pallet on a rough frame — creature comforts are relative down here."
+    tile_ids: [5058, 5059]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [furniture, bedroom]
 
   nightstand:
-    tile_ids: [4018]
+    display_name: "Nightstand"
+    description: "A small bedside table, its single drawer left hanging open."
+    tile_ids: [5018]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [furniture, bedroom]
 
   wardrobe:
+    display_name: "Wardrobe"
+    description: "A tall wooden wardrobe, its doors warped by damp."
     tile_ids: [315,316]
     footprint: [1, 1]
     blocks_movement: true
@@ -128,13 +160,17 @@ props:
     tags: [furniture, bedroom]
 
   desk:
-    tile_ids: [4009]
+    display_name: "Desk"
+    description: "A writing desk cluttered with old papers, none of which tell you anything useful."
+    tile_ids: [5062, 5063, 5064]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [furniture, library]
 
   bookshelf:
+    display_name: "Bookshelf"
+    description: "Shelves crammed with mouldering volumes — knowledge has a price, and someone paid it."
     tile_ids: [317,318]
     footprint: [1, 1]
     blocks_movement: true
@@ -142,20 +178,26 @@ props:
     tags: [furniture, library]
 
   shelf:
-    tile_ids: [4025]
+    display_name: "Shelf"
+    description: "A wooden shelf fixed to the wall, mostly empty now."
+    tile_ids: [5025]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [furniture, storage]
 
   candelabra:
-    tile_ids: [4033]         # Oryx 156 was a small flame dot, not a candelabra
+    display_name: "Candelabra"
+    description: "An ornate iron candelabra, its candles long burned to stubs."
+    tile_ids: [5033]         # Oryx 156 was a small flame dot, not a candelabra
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [light, living, grand]
 
   candle:
+    display_name: "Candle"
+    description: "A stub of tallow candle, still faintly warm."
     tile_ids: [99]
     footprint: [1, 1]
     blocks_movement: false
@@ -163,6 +205,8 @@ props:
     tags: [light, living]
 
   fireplace:
+    display_name: "Fireplace"
+    description: "A stone hearth, long cold — the ashes are older than your boots."
     tile_ids: [97]
     footprint: [1, 1]
     blocks_movement: true
@@ -170,6 +214,8 @@ props:
     tags: [furniture, kitchen]
 
   rug:
+    display_name: "Rug"
+    description: "A faded woven rug, its pattern too worn to make out."
     tile_ids: []             # Not used — multi-tile prop uses tile_layouts below
     footprint: [3, 3]
     blocks_movement: false
@@ -187,6 +233,8 @@ props:
   # ---------------------------------------------------------------------------
 
   throne:
+    display_name: "Throne"
+    description: "A high-backed stone throne — whoever sat here commanded absolute authority."
     tile_ids: [322]
     footprint: [1, 1]
     blocks_movement: true
@@ -194,6 +242,8 @@ props:
     tags: [furniture, grand, throne_room]
 
   banner:
+    display_name: "Banner"
+    description: "A tattered banner hanging from the wall, its sigil faded beyond recognition."
     tile_ids: [1545, 1546, 1547, 1548, 1549, 1550]
     footprint: [1, 1]
     blocks_movement: false
@@ -201,6 +251,8 @@ props:
     tags: [decor, grand]
 
   statue:
+    display_name: "Statue"
+    description: "A carved stone figure, its features worn smooth by time and neglect."
     tile_ids: [376]
     footprint: [1, 1]
     blocks_movement: true
@@ -208,6 +260,8 @@ props:
     tags: [decor, grand, shrine]
 
   brazier:
+    display_name: "Brazier"
+    description: "A bronze bowl on a wrought-iron stand, the coals still faintly glowing."
     tile_ids: [434]          # Base tile (bowl on stand)
     overlay_tile_id: 97      # Flame tile rendered on top at same position
     footprint: [1, 1]
@@ -216,6 +270,8 @@ props:
     tags: [light, grand, shrine]
 
   fountain:
+    display_name: "Fountain"
+    description: "A stone fountain, the water inside dark and perfectly still."
     tile_ids: [486,487]
     footprint: [1, 1]
     blocks_movement: true
@@ -223,13 +279,17 @@ props:
     tags: [structure, grand, fountain_room]
 
   bench:
-    tile_ids: [4004]
+    display_name: "Bench"
+    description: "A long stone bench, cold to the touch."
+    tile_ids: [5060, 5061]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [furniture, grand]
 
   planter:
+    display_name: "Planter"
+    description: "A stone planter holding the desiccated remains of something that once grew."
     tile_ids: [274]
     footprint: [1, 1]
     blocks_movement: true
@@ -241,6 +301,8 @@ props:
   # ---------------------------------------------------------------------------
 
   altar:
+    display_name: "Altar"
+    description: "A ritual altar stained dark — whatever was offered here, it wasn't willing."
     tile_ids: [488,489,490,491,492,493]
     footprint: [1, 1]
     blocks_movement: true
@@ -248,6 +310,8 @@ props:
     tags: [ritual, shrine]
 
   sarcophagus:
+    display_name: "Sarcophagus"
+    description: "A stone coffin, sealed with care by hands long dead."
     tile_ids: [265,266,267]
     footprint: [1, 1]
     blocks_movement: true
@@ -255,6 +319,8 @@ props:
     tags: [ritual, crypt]
 
   tombstone:
+    display_name: "Tombstone"
+    description: "A worn grave marker — the name has long since weathered away."
     tile_ids: [87,88,89]
     footprint: [1, 1]
     blocks_movement: true
@@ -262,6 +328,8 @@ props:
     tags: [ritual, crypt]
 
   urn:
+    display_name: "Urn"
+    description: "A funerary urn, sealed with wax that has cracked and darkened with age."
     tile_ids: [380,381,382,383,384,385]
     footprint: [1, 1]
     blocks_movement: true
@@ -269,6 +337,8 @@ props:
     tags: [ritual, crypt]
 
   prayer_mat:
+    display_name: "Prayer Mat"
+    description: "A woven prayer mat, worn thin at the knees."
     tile_ids: [347]
     footprint: [1, 1]
     blocks_movement: false
@@ -280,20 +350,26 @@ props:
   # ---------------------------------------------------------------------------
 
   forge:
-    tile_ids: [4011]
+    display_name: "Forge"
+    description: "A stone forge, the firebox cold but still reeking of char and iron."
+    tile_ids: [5011]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [forge, workshop]
 
   anvil:
-    tile_ids: [4001]
+    display_name: "Anvil"
+    description: "A heavy iron anvil, its face pocked with the marks of countless strikes."
+    tile_ids: [5001]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [forge, workshop]
 
   weapon_rack:
+    display_name: "Weapon Rack"
+    description: "A wooden rack that once held weapons — stripped bare by whoever came before."
     tile_ids: [323,324]
     footprint: [1, 1]
     blocks_movement: true
@@ -301,42 +377,54 @@ props:
     tags: [armory, workshop]
 
   armor_stand:
-    tile_ids: [4002]
+    display_name: "Armor Stand"
+    description: "An iron stand shaped like a torso — the armor it held is long gone."
+    tile_ids: [5002]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [armory, workshop]
 
   tool_rack:
-    tile_ids: [4028]
+    display_name: "Tool Rack"
+    description: "A wall-mounted rack of rusted tools, none of them useful in a fight."
+    tile_ids: [5028]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [forge, workshop]
 
   workbench:
-    tile_ids: [4032]
+    display_name: "Workbench"
+    description: "A scarred wooden workbench, its surface stained with oil and metal filings."
+    tile_ids: [5032]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [forge, workshop, laboratory]
 
   coal_pile:
-    tile_ids: [4008]
+    display_name: "Coal Pile"
+    description: "A mound of coal, grey with age — whoever used the forge is long gone."
+    tile_ids: [5008]
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
     tags: [forge, workshop]
 
   water_barrel:
-    tile_ids: [4031]
+    display_name: "Water Barrel"
+    description: "A barrel of water, kept for the quench tank — you wouldn't want to drink it."
+    tile_ids: [5031]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [forge, kitchen]
 
   training_dummy:
-    tile_ids: [4029]
+    display_name: "Training Dummy"
+    description: "A stuffed sackcloth figure on a post — whoever trained here meant business."
+    tile_ids: [5029]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
@@ -347,6 +435,8 @@ props:
   # ---------------------------------------------------------------------------
 
   cauldron:
+    display_name: "Cauldron"
+    description: "A large iron cauldron, its interior encrusted with the residue of old brews."
     tile_ids: [374,375]
     footprint: [1, 1]
     blocks_movement: true
@@ -354,6 +444,8 @@ props:
     tags: [laboratory, kitchen]
 
   alchemy_table:
+    display_name: "Alchemy Table"
+    description: "A long table covered in alembics and retorts, most of them shattered."
     tile_ids: []             # Not used — multi-tile prop uses tile_layouts below
     footprint: [3, 1]
     blocks_movement: true
@@ -364,14 +456,18 @@ props:
       - [605, 606, 607]
 
   shelf_bottles:
-    tile_ids: [4024]
+    display_name: "Bottle Shelf"
+    description: "A shelf lined with old bottles — most are empty, a few hold dark residue."
+    tile_ids: [5024]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [laboratory, library]
 
   globe:
-    tile_ids: [4012]
+    display_name: "Globe"
+    description: "A brass celestial globe, its surface etched with stars that no longer match the sky."
+    tile_ids: [5012]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
@@ -382,35 +478,45 @@ props:
   # ---------------------------------------------------------------------------
 
   chain:
-    tile_ids: [4007]
+    display_name: "Chain"
+    description: "Iron chains bolted to the wall — the manacles at the end are still fastened."
+    tile_ids: [5007]
     footprint: [1, 1]
     blocks_movement: false
     placement: wall_adjacent
     tags: [prison]
 
   cage:
-    tile_ids: [4006]
+    display_name: "Cage"
+    description: "An iron cage, its door hanging open — whatever was inside got out."
+    tile_ids: [5065, 5066]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [prison]
 
   iron_bars:
-    tile_ids: [4015]
+    display_name: "Iron Bars"
+    description: "A section of iron bars set into the wall — solid, and going nowhere."
+    tile_ids: [5015]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
     tags: [prison]
 
   bucket:
-    tile_ids: [4005]
+    display_name: "Bucket"
+    description: "A dented iron bucket — you don't want to know what it was used for."
+    tile_ids: [5005]
     footprint: [1, 1]
     blocks_movement: false
     placement: free_standing
     tags: [prison, kitchen]
 
   straw_pile:
-    tile_ids: [4027]
+    display_name: "Straw"
+    description: "A thin layer of straw on the stone floor — a prisoner's bed."
+    tile_ids: [5027]
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
@@ -421,42 +527,54 @@ props:
   # ---------------------------------------------------------------------------
 
   grate:
-    tile_ids: [4014]
+    display_name: "Grate"
+    description: "An iron drainage grate, set flush with the floor — something moves below."
+    tile_ids: [5014]
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
     tags: [sewer]
 
   pipe_horizontal:
-    tile_ids: [4019]
+    display_name: "Pipe"
+    description: "A corroded iron pipe running along the wall, faintly dripping."
+    tile_ids: [5019]
     footprint: [1, 1]
     blocks_movement: false
     placement: wall_adjacent
     tags: [sewer]
 
   pipe_vertical:
-    tile_ids: [4020]
+    display_name: "Pipe"
+    description: "A corroded iron pipe running up the wall, its top lost in the dark above."
+    tile_ids: [5020]
     footprint: [1, 1]
     blocks_movement: false
     placement: wall_adjacent
     tags: [sewer]
 
   puddle:
-    tile_ids: [4021]
+    display_name: "Puddle"
+    description: "A shallow puddle of brackish water, seeping from somewhere overhead."
+    tile_ids: [5021]
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
     tags: [sewer, natural]
 
   moss_patch:
-    tile_ids: [4016]
+    display_name: "Moss"
+    description: "A patch of damp moss, clinging to the stone where water collects."
+    tile_ids: [5016]
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
     tags: [sewer, natural]
 
   drain:
-    tile_ids: [4010]
+    display_name: "Drain"
+    description: "A stone drain, slow and clogged — the floor is perpetually damp around it."
+    tile_ids: [5010]
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
@@ -467,34 +585,44 @@ props:
   # ---------------------------------------------------------------------------
 
   mushroom_cluster:
-    tile_ids: [4017]
+    display_name: "Mushroom Cluster"
+    description: "A cluster of pale fungi growing from a crack in the floor."
+    tile_ids: [5017]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [natural, mushroom_garden]
 
   glowing_mushroom:
-    tile_ids: [4013]
+    display_name: "Glowing Mushroom"
+    description: "A large mushroom pulsing with faint bioluminescent light."
+    tile_ids: [5013]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [natural, mushroom_garden, light]
 
   vine:
-    tile_ids: [4030]
+    display_name: "Vine"
+    description: "Thick, pale vines trailing down the wall from some unseen source above."
+    tile_ids: [5030]
     footprint: [1, 1]
     blocks_movement: false
     placement: wall_adjacent
     tags: [natural, mushroom_garden]
 
   rock:
-    tile_ids: [4022]
+    display_name: "Rock"
+    description: "A large loose stone, too heavy to move, too small to hide behind."
+    tile_ids: [5022]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
     tags: [natural, dungeon_basic]
 
   stalagmite:
+    display_name: "Stalagmite"
+    description: "A pointed stone column rising from the floor, built up over centuries of drip."
     tile_ids: [218, 219]     # Oryx stone mound/cone — these ARE stalagmites (formerly misassigned to pillar)
     footprint: [1, 1]
     blocks_movement: true

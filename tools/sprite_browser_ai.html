@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI-Generated Sprite Browser</title>
+<style>
+  body { background:#111; color:#ddd; font-family:monospace; padding:16px; }
+  h1 { color:#fff; margin-bottom:4px; }
+  .subtitle { color:#888; margin-bottom:12px; font-size:12px; }
+  .formula {
+    background:#1e1e1e; border:1px solid #333; padding:10px 14px;
+    margin-bottom:14px; border-radius:4px; font-size:12px; line-height:1.9;
+  }
+  .formula code { color:#c9a96e; }
+  .controls { display:flex; gap:10px; align-items:center; margin-bottom:14px; flex-wrap:wrap; }
+  #filter {
+    padding:6px 10px; font-size:14px; background:#1e1e1e; color:#ddd;
+    border:1px solid #444; border-radius:4px; width:220px;
+  }
+  .filter-btn {
+    padding:5px 12px; font-size:12px; background:#1e1e1e; color:#aaa;
+    border:1px solid #444; border-radius:4px; cursor:pointer;
+  }
+  .filter-btn.active { border-color:#c9a96e; color:#c9a96e; background:#252015; }
+  .section-header {
+    grid-column: 1 / -1;
+    color:#aaa; font-size:13px; font-weight:bold;
+    padding:10px 0 4px; margin-top:10px;
+    border-top:1px solid #333;
+  }
+  .section-sub {
+    grid-column: 1 / -1;
+    color:#555; font-size:10px; padding-bottom:6px;
+  }
+  .grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, 68px);
+    gap:4px;
+  }
+  .cell {
+    background:#1a1a1a; border:1px solid #2a2a2a; border-radius:3px;
+    padding:4px; text-align:center; cursor:pointer; width:68px;
+    transition:border-color 0.12s, background 0.12s;
+    position:relative; box-sizing:border-box;
+  }
+  .cell:hover { border-color:#c9a96e; background:#222; }
+  .cell.hidden { display:none; }
+  .cell.reserved { opacity:0.55; }
+  .cell img {
+    image-rendering:pixelated;
+    width:48px; height:48px; background:#0a0a0a; display:block;
+    margin:0 auto 3px;
+  }
+  .id   { font-size:11px; font-weight:bold; color:#c9a96e; }
+  .name { font-size:9px; color:#ccc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .badge {
+    position:absolute; top:3px; right:3px;
+    font-size:7px; padding:1px 3px; border-radius:2px; text-transform:uppercase;
+  }
+  .badge.in-game   { background:#1a3a1a; color:#7ec86e; border:1px solid #2a5a2a; }
+  .badge.reserved  { background:#2a2a1a; color:#777;    border:1px solid #3a3a2a; }
+  .badge.replace   { background:#3a1a1a; color:#e07070; border:1px solid #5a2a2a; }
+  .badge.replaced  { background:#1a1a1a; color:#444;    border:1px solid #2a2a2a; }
+  .cell.replaced   { opacity:0.35; }
+  .copied {
+    position:fixed; bottom:20px; right:20px; background:#222;
+    color:#c9a96e; padding:8px 14px; border-radius:4px; font-size:13px;
+    opacity:0; transition:opacity 0.15s; pointer-events:none;
+  }
+  .copied.show { opacity:1; }
+</style>
+</head>
+<body>
+<h1>AI-Generated Sprite Library</h1>
+<p class="subtitle">
+  Items (16×16): IDs 4001+. Props (24×24): IDs 5001+. Creatures: 6001+. Oryx originals: 1–999.
+  <span style="color:#7ec86e">■</span> live &nbsp;
+  <span style="color:#e07070">■</span> needs replacement &nbsp;
+  <span style="color:#777">■</span> reserved.
+  Click any cell to copy the ID to clipboard.
+</p>
+<div class="formula">
+  <strong>Adding a new RetroDiffusion sprite:</strong><br>
+  1. Copy PNG to <code>items_16x16/oryx_16bit_fantasy_items_4NNN.png</code> (items) or <code>world_24x24/oryx_16bit_fantasy_world_5NNN.png</code> (props)<br>
+  2. Add entry to <code>SPRITES</code> array in this file (RD section)<br>
+  3. If using in game: update <code>config/tilesets/16bit_fantasy.yaml</code> or <code>config/props.yaml</code>
+</div>
+<div class="controls">
+  <input id="filter" type="text" placeholder="Filter by name…" oninput="applyFilter()">
+  <button class="filter-btn active" onclick="setStatus('all', this)">All</button>
+  <button class="filter-btn" onclick="setStatus('in-game', this)">Live only</button>
+  <button class="filter-btn" onclick="setStatus('replace', this)">Needs replacement</button>
+  <button class="filter-btn" onclick="setStatus('hide-replaced', this)">Hide replaced</button>
+</div>
+<div class="grid" id="grid"></div>
+<div class="copied" id="copied">Copied!</div>
+
+<script>
+const BASE = "../src/Presentation/assets/sprites_16bf";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 1 — RetroDiffusion-generated sprites
+// Add new entries here as sprites come in from retrodiffusion.ai
+// status: "in-game" | "reserved"
+// dir: "items_16x16" | "world_24x24" | "creatures_24x24"
+// gameKey: key in 16bit_fantasy.yaml or props.yaml display_name, or null
+// ─────────────────────────────────────────────────────────────────────────────
+const RD_SPRITES = [
+  // items_16x16
+  { id:4001, name:"Club",    dir:"items_16x16", status:"in-game",  gameKey:"club", notes:"rd_plus__low_res variant 3" },
+  { id:4002, name:"Halberd", dir:"items_16x16", status:"reserved", gameKey:null,   notes:"rd_plus__low_res variant 2 — banked, no game entry yet" },
+  { id:4003, name:"Pick",    dir:"items_16x16", status:"reserved", gameKey:null,   notes:"rd_plus__low_res variant 0 — banked, no game entry yet" },
+  { id:4004, name:"Hammer",  dir:"items_16x16", status:"reserved", gameKey:null,   notes:"rd_plus__low_res variant 1 — banked, no game entry yet" },
+  // world_24x24
+  { id:5001, name:"Anvil",        dir:"world_24x24", status:"in-game",  gameKey:"Anvil",       notes:"rd_plus__low_res variant 2" },
+  { id:5002, name:"Armor Stand",  dir:"world_24x24", status:"in-game",  gameKey:"Armor Stand", notes:"rd_plus__low_res variant 1" },
+  { id:5005, name:"Bucket",       dir:"world_24x24", status:"in-game",  gameKey:"Bucket",      notes:"rd_plus__low_res variant 1" },
+  { id:5007, name:"Chain",            dir:"world_24x24", status:"in-game",  gameKey:"Chain",             notes:"rd_plus__low_res variant 1" },
+  { id:5008, name:"Coal Pile",        dir:"world_24x24", status:"in-game",  gameKey:"Coal Pile",         notes:"rd_plus__low_res variant 1" },
+  { id:5010, name:"Drain",            dir:"world_24x24", status:"in-game",  gameKey:"Drain",             notes:"rd_plus__low_res drain_v2 variant 0" },
+  { id:5011, name:"Forge",            dir:"world_24x24", status:"in-game",  gameKey:"Forge",             notes:"rd_plus__low_res variant 1" },
+  { id:5012, name:"Globe",            dir:"world_24x24", status:"in-game",  gameKey:"Globe",             notes:"rd_plus__low_res variant 0" },
+  { id:5013, name:"Glowing Mushroom", dir:"world_24x24", status:"in-game",  gameKey:"Glowing Mushroom",  notes:"rd_plus__low_res variant 0" },
+  { id:5014, name:"Grate",            dir:"world_24x24", status:"in-game",  gameKey:"Grate",             notes:"rd_plus__low_res grate_v3 variant 1" },
+  { id:5015, name:"Iron Bars",        dir:"world_24x24", status:"in-game",  gameKey:"Iron Bars",         notes:"rd_plus__low_res iron_bars_v2 variant 0" },
+  { id:5016, name:"Moss",             dir:"world_24x24", status:"in-game",  gameKey:"Moss",              notes:"rd_plus__low_res variant 0" },
+  { id:5042, name:"Mushroom (alt 1)", dir:"world_24x24", status:"reserved", gameKey:null,                notes:"rd_plus__low_res glowing_mushroom variant 1 — banked" },
+  { id:5043, name:"Mushroom (alt 2)", dir:"world_24x24", status:"reserved", gameKey:null,                notes:"rd_plus__low_res glowing_mushroom variant 2 — banked" },
+  { id:5044, name:"Mushroom (alt 3)", dir:"world_24x24", status:"reserved", gameKey:null,                notes:"rd_plus__low_res glowing_mushroom variant 3 — banked" },
+  { id:5051, name:"Chair",         dir:"world_24x24", status:"in-game",  gameKey:"Chair", notes:"PixelLab BitForge seed=42, 32→24px" },
+  { id:5052, name:"Table (round)", dir:"world_24x24", status:"in-game",  gameKey:"Table", notes:"PixelLab BitForge seed=0, 32→24px" },
+  { id:5053, name:"Table (deco)",  dir:"world_24x24", status:"in-game",  gameKey:"Table", notes:"PixelLab BitForge seed=1, 32→24px" },
+  { id:5054, name:"Table",         dir:"world_24x24", status:"in-game",  gameKey:"Table", notes:"PixelLab BitForge seed=42, 32→24px — primary" },
+  { id:5055, name:"Table (alt)",   dir:"world_24x24", status:"in-game",  gameKey:"Table", notes:"PixelLab BitForge seed=1337, 32→24px" },
+  { id:5056, name:"Chair (cross)", dir:"world_24x24", status:"in-game",  gameKey:"Chair", notes:"PixelLab BitForge seed=999, 32→24px" },
+  { id:5057, name:"Chair (tall)",  dir:"world_24x24", status:"in-game",  gameKey:"Chair", notes:"PixelLab BitForge seed=0, 32→24px" },
+  { id:5058, name:"Bed",           dir:"world_24x24", status:"in-game",  gameKey:"Bed",   notes:"PixelLab BitForge seed=2, 32→24px" },
+  { id:5059, name:"Bed (alt)",     dir:"world_24x24", status:"in-game",  gameKey:"Bed",   notes:"PixelLab BitForge seed=999, 32→24px" },
+  { id:5060, name:"Bench",         dir:"world_24x24", status:"in-game",  gameKey:"Bench", notes:"PixelLab BitForge seed=3, 32→24px" },
+  { id:5061, name:"Bench (alt)",   dir:"world_24x24", status:"in-game",  gameKey:"Bench", notes:"PixelLab BitForge seed=999, 32→24px" },
+  { id:5062, name:"Desk",          dir:"world_24x24", status:"in-game",  gameKey:"Desk",  notes:"PixelLab BitForge seed=42, 32→24px — primary" },
+  { id:5063, name:"Desk (alt)",    dir:"world_24x24", status:"in-game",  gameKey:"Desk",  notes:"PixelLab BitForge seed=999, 32→24px" },
+  { id:5064, name:"Desk (secretary)", dir:"world_24x24", status:"in-game", gameKey:"Desk", notes:"PixelLab BitForge seed=137, 32→24px" },
+  { id:5065, name:"Cage",          dir:"world_24x24", status:"in-game",  gameKey:"Cage",  notes:"PixelLab BitForge seed=0, 32→24px — primary" },
+  { id:5066, name:"Cage (alt)",    dir:"world_24x24", status:"in-game",  gameKey:"Cage",  notes:"PixelLab BitForge seed=1, 32→24px" },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 2 — Existing new-sprites (tools/new-sprites), all world_24x24
+// These are placeholder/AI sprites already in the game, pending replacement
+// status: "in-game" | "replace" (needs a proper RetroDiffusion replacement)
+// ─────────────────────────────────────────────────────────────────────────────
+const NEW_SPRITES = [
+  { id:5017,  name:"Mushroom Cluster",dir:"world_24x24", status:"replace", gameKey:"Mushroom Cluster" },
+  { id:5018,  name:"Nightstand",      dir:"world_24x24", status:"replace", gameKey:"Nightstand" },
+  { id:5019,  name:"Pipe (horiz)",    dir:"world_24x24", status:"replace", gameKey:"Pipe" },
+  { id:5020,  name:"Pipe (vert)",     dir:"world_24x24", status:"replace", gameKey:"Pipe" },
+  { id:5021,  name:"Puddle",          dir:"world_24x24", status:"replace", gameKey:"Puddle" },
+  { id:5022,  name:"Rock",            dir:"world_24x24", status:"replace", gameKey:"Rock" },
+  { id:5023,  name:"Sack",            dir:"world_24x24", status:"replace", gameKey:"Sack" },
+  { id:5024,  name:"Bottle Shelf",    dir:"world_24x24", status:"replace", gameKey:"Bottle Shelf" },
+  { id:5025,  name:"Shelf",           dir:"world_24x24", status:"replace", gameKey:"Shelf" },
+  { id:5026,  name:"Pillar",          dir:"world_24x24", status:"replace", gameKey:"Pillar" },
+  { id:5027,  name:"Straw",           dir:"world_24x24", status:"replace", gameKey:"Straw" },
+  { id:5028,  name:"Tool Rack",       dir:"world_24x24", status:"replace", gameKey:"Tool Rack" },
+  { id:5029,  name:"Training Dummy",  dir:"world_24x24", status:"replace", gameKey:"Training Dummy" },
+  { id:5030,  name:"Vine",            dir:"world_24x24", status:"replace", gameKey:"Vine" },
+  { id:5031,  name:"Water Barrel",    dir:"world_24x24", status:"replace", gameKey:"Water Barrel" },
+  { id:5032,  name:"Workbench",       dir:"world_24x24", status:"replace", gameKey:"Workbench" },
+  { id:5033,  name:"Candelabra",      dir:"world_24x24", status:"replace", gameKey:"Candelabra" },
+  { id:5034,  name:"Rubble",          dir:"world_24x24", status:"replace", gameKey:"Rubble" },
+  { id:5035,  name:"Signpost",        dir:"world_24x24", status:"replace", gameKey:"sign" },
+  { id:5036,  name:"Mural (gold land)",dir:"world_24x24",status:"replace", gameKey:"mural_gold_landscape" },
+  { id:5037,  name:"Mural (gold warm)",dir:"world_24x24",status:"replace", gameKey:"mural_gold_warm" },
+  { id:5038,  name:"Mural (wood cool)",dir:"world_24x24",status:"replace", gameKey:"mural_wood_cool" },
+  { id:5039,  name:"Key Item",        dir:"world_24x24", status:"in-game", gameKey:"key_item" },
+];
+
+function imgSrc(s) {
+  const prefix = s.dir === "items_16x16"    ? "oryx_16bit_fantasy_items_"     :
+                 s.dir === "world_24x24"     ? "oryx_16bit_fantasy_world_"     :
+                                               "oryx_16bit_fantasy_creatures_";
+  return `${BASE}/${s.dir}/${prefix}${s.id}.png`;
+}
+
+function makeCell(s) {
+  const cell = document.createElement("div");
+  cell.className = `cell ${s.status}`;
+  cell.dataset.name = s.name.toLowerCase();
+  cell.title = [
+    s.name,
+    `ID: ${s.id}  (${s.dir})`,
+    s.gameKey ? `game key: ${s.gameKey}` : "not in game yet",
+    s.notes || "",
+    "Click to copy ID"
+  ].filter(Boolean).join("\n");
+
+  const badge = document.createElement("span");
+  badge.className = `badge ${s.status}`;
+  badge.textContent = s.status === "in-game" ? "live" : s.status === "reserved" ? "rsvd" : s.status === "replaced" ? "old" : "repl";
+  cell.appendChild(badge);
+
+  const img = document.createElement("img");
+  img.src = imgSrc(s);
+  img.alt = s.name;
+  img.loading = "lazy";
+  img.onerror = function() { this.style.opacity = "0.1"; this.style.filter = "grayscale(1)"; };
+  cell.appendChild(img);
+
+  const idEl = document.createElement("div");
+  idEl.className = "id";
+  idEl.textContent = s.id;
+  cell.appendChild(idEl);
+
+  const nameEl = document.createElement("div");
+  nameEl.className = "name";
+  nameEl.textContent = s.name;
+  cell.appendChild(nameEl);
+
+  cell.addEventListener("click", function() {
+    navigator.clipboard.writeText(String(s.id)).catch(function(){});
+    const el = document.getElementById("copied");
+    el.textContent = `Copied "${s.id}" (${s.name})`;
+    el.classList.add("show");
+    clearTimeout(window._ct);
+    window._ct = setTimeout(function(){ el.classList.remove("show"); }, 1800);
+  });
+
+  return cell;
+}
+
+function addHeader(grid, title, sub) {
+  const hdr = document.createElement("div");
+  hdr.className = "section-header";
+  hdr.textContent = title;
+  grid.appendChild(hdr);
+  if (sub) {
+    const s = document.createElement("div");
+    s.className = "section-sub";
+    s.textContent = sub;
+    grid.appendChild(s);
+  }
+}
+
+function buildGrid() {
+  const grid = document.getElementById("grid");
+
+  addHeader(grid,
+    "RetroDiffusion — New Sprites",
+    "Generated via retrodiffusion.ai · rd_plus__low_res style · items (16×16) and props (24×24). Sprites graduate here when replaced from the pending section below."
+  );
+  RD_SPRITES.forEach(s => grid.appendChild(makeCell(s)));
+
+  addHeader(grid,
+    "New-Sprites Placeholders (tools/new-sprites) — Pending Replacement",
+    "All 24×24, all in world_24x24. Red badge = replace with a RetroDiffusion version and update this entry to 'in-game'."
+  );
+  NEW_SPRITES.forEach(s => grid.appendChild(makeCell(s)));
+}
+
+let activeStatus = "all";
+
+function setStatus(status, btn) {
+  activeStatus = status;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  applyFilter();
+}
+
+function applyFilter() {
+  const q = document.getElementById("filter").value.toLowerCase().trim();
+  document.querySelectorAll(".cell").forEach(c => {
+    const nameMatch = q.length === 0 || c.dataset.name.includes(q);
+    const statusMatch =
+      activeStatus === "all"          ? true :
+      activeStatus === "hide-replaced"? !c.classList.contains("replaced") :
+      c.classList.contains(activeStatus);
+    c.classList.toggle("hidden", !nameMatch || !statusMatch);
+  });
+}
+
+buildGrid();
+</script>
+</body>
+</html>
