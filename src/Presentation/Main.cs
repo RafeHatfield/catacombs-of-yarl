@@ -3,9 +3,11 @@ using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Persistence;
 using CatacombsOfYarl.Presentation.Animation;
 using CatacombsOfYarl.Presentation.Entities;
 using CatacombsOfYarl.Presentation.Map;
+using CatacombsOfYarl.Presentation.Persistence;
 using CatacombsOfYarl.Presentation.UI;
 using Godot;
 
@@ -111,6 +113,10 @@ public partial class Main : Node
     private int _baseSeed = 1337;
     private int _currentDepth = 1;
 
+    // Cross-run persistence — loaded once at app start, flushed at narrative-event boundaries.
+    private GodotPersistencePathProvider? _persistenceProvider;
+    private PersistentRunState? _persistentState;
+
     // Stats accumulation for game-over screen
     private int _turnCount;
     private int _monstersKilled;
@@ -121,6 +127,12 @@ public partial class Main : Node
     {
         GD.Print("Catacombs of YARL — loading...");
         Diag.Init();
+
+        // Load cross-run persistence. Missing file → fresh defaults (no write until first dirty flush).
+        _persistenceProvider = new GodotPersistencePathProvider();
+        _persistentState = PersistentRunState.LoadFromDisk(_persistenceProvider, GD.PrintErr);
+        GD.Print($"[Main] Persistence loaded — {_persistentState.RunCounter.TotalRuns} runs ever.");
+
         InitSpriteMapping();
         _tileThemeConfig = TileThemeLoader.LoadWithFallback();
         if (_tileThemeConfig.Themes.Count == 0)
@@ -545,6 +557,15 @@ public partial class Main : Node
         _currentDepth = depth;
         var rng = new SeededRandom(_baseSeed + depth * 1_000_003);
         _state = _floorBuilder!.Build(depth, rng, existingPlayer, explorationMode: explorationMode);
+
+        // Increment run counter at the start of a real run (depth 1, not explore mode).
+        // Explore mode is a visual tool, not a campaign run — don't count it.
+        if (depth == 1 && !explorationMode && _persistentState != null && _persistenceProvider != null)
+        {
+            _persistentState.RunCounter.IncrementRunCount();
+            _persistentState.MarkDirty();
+            _persistentState.Flush(_persistenceProvider, GD.PrintErr);
+        }
 
         SetupPresentation(_state);
         GD.Print($"Ready (dungeon depth {depth}) — {_state.Monsters.Count} monsters, {_state.FloorItems.Count} floor items. Tap to play.");
@@ -1309,6 +1330,17 @@ public partial class Main : Node
         var stats = $"Turns: {_turnCount}\nMonsters killed: {_monstersKilled}\n" +
                     $"Damage dealt: {_damageDealt}\nDamage taken: {_damageTaken}";
         _gameOverScreen?.Show(playerWon, stats);
+
+        // Run end is a forced flush — write regardless of dirty state (spec §5).
+        if (_persistentState != null && _persistenceProvider != null)
+            _persistentState.Flush(_persistenceProvider, GD.PrintErr);
+    }
+
+    public override void _Notification(int what)
+    {
+        // App backgrounding: forced flush so in-progress state is not lost on iOS/Android.
+        if (what == NotificationWMGoingToBackground && _persistentState != null && _persistenceProvider != null)
+            _persistentState.Flush(_persistenceProvider, GD.PrintErr);
     }
 
     /// <summary>
@@ -1329,6 +1361,10 @@ public partial class Main : Node
             muralTracker: _state?.MuralTracker,
             pityTracker: _state?.PityTracker);
         SetupPresentation(_state);
+
+        // Floor descent is a narrative-event-boundary flush (spec §5).
+        if (_persistentState != null && _persistenceProvider != null && _persistentState.IsDirty)
+            _persistentState.Flush(_persistenceProvider, GD.PrintErr);
     }
 
     private void OnInventoryItemTapped(int itemId)

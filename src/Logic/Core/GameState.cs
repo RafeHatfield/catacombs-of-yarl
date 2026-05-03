@@ -4,6 +4,7 @@ using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Knowledge;
 using CatacombsOfYarl.Logic.Map;
+using CatacombsOfYarl.Logic.Persistence;
 
 namespace CatacombsOfYarl.Logic.Core;
 
@@ -160,6 +161,31 @@ public sealed class GameState
     /// Set by DungeonFloorBuilder after construction.
     /// </summary>
     public EntityIdAllocator? IdAllocator { get; init; }
+
+    // ── Cross-run persistence ────────────────────────────────────────────────
+
+    /// <summary>
+    /// Cross-run persistent state. Loaded once at app start; survives floor transitions.
+    /// Null in scenario/harness mode — cross-run state has no meaning in isolated runs.
+    /// Consumers call MarkDirty() after mutations; Flush() at narrative-event boundaries.
+    /// See plan_cross_run_persistence.md for the full lifecycle spec.
+    /// </summary>
+    public PersistentRunState? PersistentState { get; init; }
+
+    // ── Run-scoped tier-1 state kept here per spec §2 tier discipline ────────
+
+    /// <summary>
+    /// Past-Sasha record IDs consumed in the current run. Resets at run start.
+    /// The records themselves are cross-run (PersistentState.PastSashas); this set
+    /// is run-scoped to prevent re-encountering the same corpse twice in one run.
+    /// </summary>
+    public HashSet<int> PastSashasEncounteredThisRun { get; } = new();
+
+    /// <summary>
+    /// Counter driving the "3 unprovoked kills → Hostile" faction transition.
+    /// Resets at run start. The resulting reputation enum is cross-run (PersistentState.Factions).
+    /// </summary>
+    public int UnprovokedOrcKillsThisRun { get; set; }
 
     public GameState(Entity player, List<Entity> monsters, GameMap map, SeededRandom rng, int turnLimit = 100)
     {

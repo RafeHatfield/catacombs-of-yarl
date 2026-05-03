@@ -34,9 +34,6 @@ for obj_name, prompt in OBJECTS:
         resp = client.generate_image_bitforge(description=prompt, seed=seed, **BASE)
         img = resp.image.pil_image()
         img.save(obj_dir / f"{obj_name}_s{seed}_32px.png")
-        img.resize((24, 24), Image.NEAREST).resize((144, 144), Image.NEAREST).save(
-            obj_dir / f"{obj_name}_s{seed}_preview.png"
-        )
         print(f"  seed {seed} ✓")
         time.sleep(0.2)
     print()

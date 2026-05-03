@@ -59,7 +59,7 @@ props:
   sack:
     display_name: "Sack"
     description: "A rough burlap sack, tied at the neck with fraying rope."
-    tile_ids: [5023]
+    tile_ids: [5102]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
@@ -68,7 +68,7 @@ props:
   rubble:
     display_name: "Rubble"
     description: "Chunks of broken stone — a reminder that these tunnels are older than anyone alive."
-    tile_ids: [5034]         # Oryx 550 was a plain grey mound; replaced with AI placeholder
+    tile_ids: [5078, 5079]
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
@@ -86,7 +86,7 @@ props:
   pillar:
     display_name: "Pillar"
     description: "A stone column supporting the ceiling — or at least trying to."
-    tile_ids: [5026]
+    tile_ids: [5093, 5094, 5095]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
@@ -144,7 +144,7 @@ props:
   nightstand:
     display_name: "Nightstand"
     description: "A small bedside table, its single drawer left hanging open."
-    tile_ids: [5018]
+    tile_ids: [5106, 5107]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
@@ -180,7 +180,7 @@ props:
   shelf:
     display_name: "Shelf"
     description: "A wooden shelf fixed to the wall, mostly empty now."
-    tile_ids: [5025]
+    tile_ids: [5096, 5097, 5098]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
@@ -189,7 +189,7 @@ props:
   candelabra:
     display_name: "Candelabra"
     description: "An ornate iron candelabra, its candles long burned to stubs."
-    tile_ids: [5033]         # Oryx 156 was a small flame dot, not a candelabra
+    tile_ids: [5080, 5081]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
@@ -388,7 +388,7 @@ props:
   tool_rack:
     display_name: "Tool Rack"
     description: "A wall-mounted rack of rusted tools, none of them useful in a fight."
-    tile_ids: [5028]
+    tile_ids: [5089, 5090]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
@@ -397,7 +397,7 @@ props:
   workbench:
     display_name: "Workbench"
     description: "A scarred wooden workbench, its surface stained with oil and metal filings."
-    tile_ids: [5032]
+    tile_ids: [5082, 5083]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
@@ -415,7 +415,7 @@ props:
   water_barrel:
     display_name: "Water Barrel"
     description: "A barrel of water, kept for the quench tank — you wouldn't want to drink it."
-    tile_ids: [5031]
+    tile_ids: [5084, 5085]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
@@ -424,7 +424,7 @@ props:
   training_dummy:
     display_name: "Training Dummy"
     description: "A stuffed sackcloth figure on a post — whoever trained here meant business."
-    tile_ids: [5029]
+    tile_ids: [5087, 5088]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
@@ -458,7 +458,7 @@ props:
   shelf_bottles:
     display_name: "Bottle Shelf"
     description: "A shelf lined with old bottles — most are empty, a few hold dark residue."
-    tile_ids: [5024]
+    tile_ids: [5099, 5100, 5101]
     footprint: [1, 1]
     blocks_movement: true
     placement: wall_adjacent
@@ -516,7 +516,7 @@ props:
   straw_pile:
     display_name: "Straw"
     description: "A thin layer of straw on the stone floor — a prisoner's bed."
-    tile_ids: [5027]
+    tile_ids: [5091, 5092]
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
@@ -538,7 +538,7 @@ props:
   pipe_horizontal:
     display_name: "Pipe"
     description: "A corroded iron pipe running along the wall, faintly dripping."
-    tile_ids: [5019]
+    tile_ids: []  # deferred — PixelLab pipes pending
     footprint: [1, 1]
     blocks_movement: false
     placement: wall_adjacent
@@ -547,7 +547,7 @@ props:
   pipe_vertical:
     display_name: "Pipe"
     description: "A corroded iron pipe running up the wall, its top lost in the dark above."
-    tile_ids: [5020]
+    tile_ids: []  # deferred — PixelLab pipes pending
     footprint: [1, 1]
     blocks_movement: false
     placement: wall_adjacent
@@ -556,7 +556,7 @@ props:
   puddle:
     display_name: "Puddle"
     description: "A shallow puddle of brackish water, seeping from somewhere overhead."
-    tile_ids: [5021]
+    tile_ids: [5110]
     footprint: [1, 1]
     blocks_movement: false
     placement: floor_overlay
@@ -587,7 +587,7 @@ props:
   mushroom_cluster:
     display_name: "Mushroom Cluster"
     description: "A cluster of pale fungi growing from a crack in the floor."
-    tile_ids: [5017]
+    tile_ids: [5108, 5109]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
@@ -596,7 +596,7 @@ props:
   glowing_mushroom:
     display_name: "Glowing Mushroom"
     description: "A large mushroom pulsing with faint bioluminescent light."
-    tile_ids: [5013]
+    tile_ids: [5067, 5068, 5069]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing
@@ -605,7 +605,7 @@ props:
   vine:
     display_name: "Vine"
     description: "Thick, pale vines trailing down the wall from some unseen source above."
-    tile_ids: [5030]
+    tile_ids: [5086]
     footprint: [1, 1]
     blocks_movement: false
     placement: wall_adjacent
@@ -614,7 +614,7 @@ props:
   rock:
     display_name: "Rock"
     description: "A large loose stone, too heavy to move, too small to hide behind."
-    tile_ids: [5022]
+    tile_ids: [5104, 5105]
     footprint: [1, 1]
     blocks_movement: true
     placement: free_standing

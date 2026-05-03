@@ -35,6 +35,10 @@
 
 - [reference_rogue_wizards.md](reference_rogue_wizards.md) — Primary visual/UX reference game analysis
 
+## Story
+
+- [story/](story/) — Under-Warden design docs and narrative specs (the_under_warden_v3.md, possession system design notes, style bible)
+
 ## History
 
 - [PHASES.md](PHASES.md) — Development phases from Python prototype (Phases 1-20 complete, 21+ planned)

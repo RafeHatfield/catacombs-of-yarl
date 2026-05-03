@@ -88,3 +88,9 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | Plan | Status | Description |
 |------|--------|-------------|
 | [plan_end_game.md](plan_end_game.md) | [ ] | Final boss (Zhyraxion forms), 5 ending paths, victory conditions |
+
+### Tier 6 — Under-Warden Story Systems
+| Plan | Status | Description |
+|------|--------|-------------|
+| [plan_cross_run_persistence.md](plan_cross_run_persistence.md) | [~] | Cross-run persistence: 15 namespaces, source-gen JSON, atomic I/O, migration framework, RunCounter wired. Phases 1-3 done. Phase 4 next. |
+| [plan_possession_system.md](plan_possession_system.md) | [ ] | Player possession: PossessionEffect, host-body state machine, drain clock, HUD, OnPossessionInducedHostDeath pipeline. Unblocked after persistence Phase 1. |

@@ -75,16 +75,16 @@ themes:
     door_portal: 214       # door with magic portal
     bones: [96, 90, 95]
     # Interactive features — chests and signs
-    chest_closed: 261          # closed chest (full)
-    chest_open: 262            # open chest with items visible
-    chest_trapped: 263         # trapped chest (spike variant)
-    chest_empty: 264           # empty/looted chest
-    chest_locked: 261          # locked chest — uses chest_closed sprite, tint applied by renderer
+    chest_closed: 5111         # closed chest (PixelLab s42)
+    chest_open: 5112           # open chest with gold (PixelLab inpaint s1337)
+    chest_trapped: 5114        # trapped chest with skull (PixelLab inpaint s42)
+    chest_empty: 5113          # empty/looted chest (PixelLab inpaint s42)
+    chest_locked: 5111         # locked chest — uses chest_closed sprite, tint applied by renderer
     key_item: 5039             # key item floor sprite (custom placeholder, tools/new-sprites)
-    sign: 5035                 # signpost_plain (custom sprite, tools/new-sprites)
+    sign: 5077                 # PixelLab signpost s0
     # Mural tile variants — 3 visual styles, chosen by rng at placement time
-    mural_gold_landscape: 5036 # mural_gold_landscape.png
-    mural_gold_warm: 5037      # mural_gold_warm.png
-    mural_wood_cool: 5038      # mural_wood_cool.png
+    mural_gold_landscape: 5075 # PixelLab s137 (primary); variant: 5076 (s0)
+    mural_gold_warm: 5071      # PixelLab s999 (primary); variants: 5072 s42, 5073 s3, 5074 s0
+    mural_wood_cool: 5070      # PixelLab s1337
 
 default_theme: sandstone
