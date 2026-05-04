@@ -1381,7 +1381,7 @@ public partial class Main : Node
     public override void _Notification(int what)
     {
         // App backgrounding: forced flush so in-progress state is not lost on iOS/Android.
-        if (what == NotificationWMGoingToBackground && _persistentState != null && _persistenceProvider != null)
+        if (what == NotificationApplicationPaused && _persistentState != null && _persistenceProvider != null)
             _persistentState.Flush(_persistenceProvider, GD.PrintErr);
     }
 
