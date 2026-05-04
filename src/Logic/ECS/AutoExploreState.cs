@@ -22,8 +22,8 @@ public sealed class AutoExploreState : IComponent
     public HashSet<int> KnownMonsterIds { get; set; } = new();
 
     /// <summary>
-    /// Item entity IDs that were visible and in range at activation — don't re-interrupt for these.
-    /// Using entity IDs (not tile positions) so re-activating near a known potion stays silent.
+    /// Item entity IDs on explored tiles at activation — don't re-interrupt for these.
+    /// Using entity IDs so re-activating near a known-but-unpicked-up item stays silent.
     /// </summary>
     public HashSet<int> KnownItemIds { get; set; } = new();
 

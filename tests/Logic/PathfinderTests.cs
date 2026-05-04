@@ -75,15 +75,13 @@ public class PathfinderTests
     [Test]
     public void AStar_BlockedCompletely_ReturnsNull()
     {
-        // Surround destination with walls so it's completely unreachable
+        // Surround destination on all 8 sides so it's completely unreachable
+        // (since corner-cutting is allowed, diagonal neighbours must also be walled)
         var map = GameMap.CreateArena(10, 10);
-        // Box in (5,5) with walls on all four cardinal sides (diagonal access also blocked
-        // because corner-cutting prevention requires cardinal tiles to be walkable)
         map.SetTile(4, 5, TileKind.Wall);
         map.SetTile(6, 5, TileKind.Wall);
         map.SetTile(5, 4, TileKind.Wall);
         map.SetTile(5, 6, TileKind.Wall);
-        // Block diagonals too — surround fully
         map.SetTile(4, 4, TileKind.Wall);
         map.SetTile(6, 4, TileKind.Wall);
         map.SetTile(4, 6, TileKind.Wall);
@@ -95,26 +93,21 @@ public class PathfinderTests
     }
 
     [Test]
-    public void AStar_DiagonalBlocked_WhenCornerWallPresent()
+    public void AStar_DiagonalAllowed_ThroughCornerWall()
     {
-        // Force path to go (3,3) -> (4,4) diagonally.
-        // Place walls at (4,3) and (3,4) — both cardinal neighbors of the diagonal step.
-        // The diagonal step to (4,4) must be blocked; path should go around.
+        // Place walls at (4,3) and (3,4) — adjacent to the diagonal step (3,3)->(4,4).
+        // Corner-cutting is NOT blocked: the game's MoveToward only checks destination
+        // walkability, not cardinal neighbours. AStar must match that behaviour so
+        // auto-explore can plan paths the player can actually execute.
         var map = GameMap.CreateArena(10, 10);
         map.SetTile(4, 3, TileKind.Wall);
         map.SetTile(3, 4, TileKind.Wall);
 
         var path = Pathfinder.AStar(map, 3, 3, 4, 4);
 
-        Assert.That(path, Is.Not.Null, "Path should exist — just not via blocked diagonal");
-        // The direct diagonal (3,3)->(4,4) is blocked; path must take at least 2 steps
-        Assert.That(path!.Count, Is.GreaterThanOrEqualTo(2),
-            "Blocked diagonal forces a longer route");
-        Assert.That(path[^1], Is.EqualTo((4, 4)));
-        // Verify no step goes through a wall
-        foreach (var step in path)
-            Assert.That(map.IsWalkable(step.X, step.Y), Is.True,
-                $"Path step ({step.X},{step.Y}) should be walkable");
+        Assert.That(path, Is.Not.Null, "Diagonal through a corner wall must be reachable");
+        Assert.That(path!.Count, Is.EqualTo(1), "Destination is one diagonal step away");
+        Assert.That(path[0], Is.EqualTo((4, 4)));
     }
 
     // -----------------------------------------------------------------------

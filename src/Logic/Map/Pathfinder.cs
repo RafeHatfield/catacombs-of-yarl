@@ -59,14 +59,6 @@ public static class Pathfinder
 
                     bool isDiagonal = dx != 0 && dy != 0;
 
-                    // No corner-cutting: diagonal move blocked if either cardinal neighbor is a wall
-                    if (isDiagonal)
-                    {
-                        if (!map.IsWalkable(current.X + dx, current.Y) ||
-                            !map.IsWalkable(current.X, current.Y + dy))
-                            continue;
-                    }
-
                     // Check passability — destination is always allowed even if occupied
                     bool isDestination = nx == toX && ny == toY;
                     if (!map.CanMoveToWith(nx, ny, movingEntity, ignoreEntityAtDest: isDestination, canPassDoors: canPassDoors))
@@ -143,13 +135,6 @@ public static class Pathfinder
                     if (!map.InBounds(nx, ny)) continue;
                     bool passable = map.IsWalkable(nx, ny) || (canPassDoors && map.GetTileKind(nx, ny) == TileKind.Door);
                     if (!passable) continue;
-
-                    // Match A*'s no-corner-cutting rule so DijkstraMap and AStar agree on
-                    // reachability. Without this, Dijkstra selects diagonal-corner targets that
-                    // AStar cannot path to, causing auto-explore to stop prematurely.
-                    bool isDiagonal = dx != 0 && dy != 0;
-                    if (isDiagonal && (!map.IsWalkable(cx + dx, cy) || !map.IsWalkable(cx, cy + dy)))
-                        continue;
 
                     if (dist[nx, ny] != int.MaxValue) continue;
 

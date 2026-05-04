@@ -39,20 +39,18 @@ public static class AutoExploreSystem
             if (state.Map.IsVisible(m.X, m.Y))
                 ae.KnownMonsterIds.Add(m.Id);
 
-        // Snapshot interesting items currently visible and in range — don't re-interrupt for these.
-        // Uses entity IDs so re-activating near a known-but-unpicked-up potion stays silent.
+        // Snapshot interesting items on already-explored tiles — don't re-interrupt for these.
+        // Uses explored (ever seen) rather than currently visible: prevents re-alerting when
+        // the player walks back near something they already found in a previous explore run.
         ae.KnownItemIds.Clear();
         foreach (var item in state.FloorItems)
-            if (IsInterestingItem(item)
-                && state.Map.IsVisible(item.X, item.Y)
-                && state.Player.ChebyshevDistanceTo(item.X, item.Y) <= AlertRadius)
+            if (IsInterestingItem(item) && state.Map.IsExplored(item.X, item.Y))
                 ae.KnownItemIds.Add(item.Id);
 
-        // Snapshot features currently visible and in range
+        // Snapshot features on already-explored tiles — same rationale as items above.
         ae.KnownFeatureIds.Clear();
         foreach (var feature in state.Features)
-            if (state.Map.IsVisible(feature.X, feature.Y)
-                && state.Player.ChebyshevDistanceTo(feature.X, feature.Y) <= AlertRadius)
+            if (state.Map.IsExplored(feature.X, feature.Y))
                 ae.KnownFeatureIds.Add(feature.Id);
 
         // Snapshot stairs already out of fog-of-war — don't interrupt for these.
