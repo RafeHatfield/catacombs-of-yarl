@@ -1039,15 +1039,17 @@ public partial class Main : Node
     }
 
     /// <summary>
-    /// Swap the chest sprite at the given cell to the texture for tileId.
-    /// Called from OnTurnCompleted for ChestOpenedEvent (tileId=262) and ChestLootedEvent (tileId=264).
+    /// Swap the chest sprite at the given cell to the open or empty state texture.
     /// Mirrors the SwapDoorSprite pattern — update existing sprite rather than recreating it.
     /// </summary>
-    private void SwapChestSprite(int x, int y, int tileId = 264)
+    private void SwapChestSprite(int x, int y, bool looted)
     {
-        if (_tileLayer == null || _tileThemeConfig == null) return;
+        if (_tileLayer == null || _tileThemeConfig == null || _state == null) return;
         if (!_tileLayer.FeatureOverlaySprites.TryGetValue((x, y), out var sprite)) return;
 
+        var themeName = DungeonRenderer.ThemeToConfigName(_state.Map.GetTileTheme(x, y));
+        int tileId = looted ? _tileThemeConfig.GetChestEmpty(themeName) : _tileThemeConfig.GetChestOpen(themeName);
+        if (tileId == 0) return;
         var path = _tileThemeConfig.GetTexturePath(tileId);
         var tex = ResourceLoader.Load<Texture2D>(path);
         if (tex != null)
@@ -1273,12 +1275,12 @@ public partial class Main : Node
             }
             else if (evt is ChestOpenedEvent chestEvt)
             {
-                SwapChestSprite(chestEvt.X, chestEvt.Y, 262); // open with items visible
+                SwapChestSprite(chestEvt.X, chestEvt.Y, looted: false);
                 _toastLog?.AddMessage("You open the chest.");
             }
             else if (evt is ChestLootedEvent lootEvt)
             {
-                SwapChestSprite(lootEvt.X, lootEvt.Y, 264); // empty/looted
+                SwapChestSprite(lootEvt.X, lootEvt.Y, looted: true);
                 _toastLog?.AddMessage("You loot the chest!");
             }
             else if (evt is SignpostReadEvent signEvt)
@@ -1333,17 +1335,23 @@ public partial class Main : Node
                     $"Damage dealt: {_damageDealt}\nDamage taken: {_damageTaken}";
         _gameOverScreen?.Show(playerWon, stats);
 
-        // Record a past-Sasha on player death (spec §6.2).
-        if (!playerWon && _state != null && _persistentState != null)
+        if (_state != null && _persistentState != null)
         {
-            var gear = SnapshotEquippedGear(_state.Player);
-            _persistentState.PastSashas.AddRecord(
-                diedRun: _persistentState.RunCounter.TotalRuns,
-                diedFloor: _currentDepth,
-                causeOfDeath: _state.PlayerDeathCause,
-                killerSpecies: _state.PlayerDeathKillerSpecies,
-                gearCarried: gear);
-            _persistentState.MarkDirty();
+            // Record a past-Sasha on player death (spec §6.2).
+            if (!playerWon)
+            {
+                var gear = SnapshotEquippedGear(_state.Player);
+                _persistentState.PastSashas.AddRecord(
+                    diedRun: _persistentState.RunCounter.TotalRuns,
+                    diedFloor: _currentDepth,
+                    causeOfDeath: _state.PlayerDeathCause,
+                    killerSpecies: _state.PlayerDeathKillerSpecies,
+                    gearCarried: gear);
+                _persistentState.MarkDirty();
+            }
+
+            // Faction reputation: apply transitions at run end (spec §6.3).
+            ApplyFactionRunEnd(_state, _persistentState);
         }
 
         // Run end is a forced flush — write regardless of dirty state (spec §5).
@@ -1376,6 +1384,20 @@ public partial class Main : Node
             });
         }
         return result;
+    }
+
+    /// <summary>
+    /// Apply faction reputation transitions at run end (spec §6.3).
+    /// Orc: threshold unprovoked kills → Hostile; otherwise increment/check decay.
+    /// </summary>
+    private static void ApplyFactionRunEnd(GameState state, PersistentRunState persistent)
+    {
+        bool hadNegativeAction = state.UnprovokedOrcKillsThisRun >= FactionsData.HostileThreshold;
+        if (hadNegativeAction)
+            persistent.Factions.ApplyNegativeAction(FactionsData.OrcFactionId);
+        else
+            persistent.Factions.OnRunEndNoNegativeAction(FactionsData.OrcFactionId);
+        persistent.MarkDirty();
     }
 
     public override void _Notification(int what)

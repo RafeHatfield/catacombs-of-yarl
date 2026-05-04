@@ -402,6 +402,14 @@ public sealed class DungeonFloorBuilder
             PersistentState = persistentState,
         };
 
+        // Unshriven Geas: when the push-the-marker job is complete (spec §6.10), floors 4-8
+        // get slightly more orc and less undead in encounter composition. The dynamic weight
+        // adjustment is deferred until the encounter pool supports per-floor weight overrides;
+        // this stub is the read point that will drive it.
+        // TODO: apply geas encounter composition tweak (more orc, less undead, floors 4-8)
+        // when encounter pool weight override system is implemented.
+        _ = persistentState?.UnshrivenGeas.MarkerPushed;
+
         // Apply depth boon for this floor (first visit only).
         // Must happen after state construction so the boon table is available,
         // and after PlayerCarryForward + ReapplyRingEffects so Fighter is ready.

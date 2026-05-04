@@ -1,15 +1,15 @@
 # Plan: Cross-Run Persistence System
 
-**Status:** [~] Phases 1-4 complete — skeleton, source-gen JSON context, migration framework, RunCounter + PastSashas wired end-to-end. Phase 5 next.
+**Status:** [~] Phases 1-5 complete — skeleton, migrations, RunCounter/PastSashas/Factions/Geas wired. Phase 6 next.
 **Spec version:** 1.1 (2026-05-02).
 
-## Current State (2026-05-03)
+## Current State (2026-05-04)
 
-**Just completed:** Phase 4 — PastSashas + FreedPastSelves. Gear snapshot on player death (OQ-2: equipped slots only). PlayerDeathKillerSpecies/PlayerDeathCause on GameState, set in TurnController at kill site. DungeonFloorBuilder.Build() accepts PersistentRunState and threads it into GameState. PastSashasData.GetEligibleRecords() for possession floor-builder. 14 new tests (1465 total).
+**Just completed:** Phase 5 — Faction reputation + Unshriven geas. FactionsData: ApplyNegativeAction/ApplyAllied/OnRunEndNoNegativeAction (soft decay, OQ-3 C). ApplyFactionRunEnd helper in Main.cs called at run end. UnshrivenGeasData.PushMarker idempotent. Geas read stub in DungeonFloorBuilder (encounter composition tweak deferred until encounter pool supports weight overrides). 19 new tests (1484 total).
 
-**Next step:** Phase 5 — Faction reputation + Unshriven geas (three-state enum, action counter, floor builder reads geas flag).
+**Next step:** Phase 6 — Borrek/Vesh/Hael arcs + Marya fragments catalog + Hollowmark meta-unlock.
 
-**Open issues:** iOS NativeAOT smoke test is a manual step requiring iOS export build on a real device. All logic-layer round-trips passing on macOS/arm64. FreedPastSelves write point (OnPossessionDispelled Warden path) will be wired in possession system build.
+**Open issues:** iOS NativeAOT smoke test is a manual step requiring iOS export build on a real device. Geas encounter composition tweak is a TODO stub — deferred until encounter pool supports per-floor weight overrides. FreedPastSelves write point (OnPossessionDispelled Warden path) will be wired in possession system build.
 
 ### Phase checklist
 
@@ -18,7 +18,7 @@
 - [x] Phase 2: Migration framework (pre-deserialization JSON pass, forward chain, future-namespace fallback, 7 tests)
 - [x] Phase 3: Run counter wired end-to-end in Main.cs (StartDungeon depth-1 increment, floor-descent flush, game-over flush, app-background flush via _Notification)
 - [x] Phase 4: Past-Sashas + Freed-Past-Selves (gear snapshot on death, killer tracking, DungeonFloorBuilder passthrough, GetEligibleRecords, 14 tests)
-- [ ] Phase 5: Faction reputation + Unshriven geas
+- [x] Phase 5: Faction reputation + Unshriven geas (ApplyNegativeAction/ApplyAllied/decay, run-end wiring, geas stub, 19 tests)
 - [ ] Phase 6: Borrek/Vesh/Hael arcs + catalogs + Hollowmark meta
 - [ ] Phase 7: Daily-seed sibling file
 
