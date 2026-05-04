@@ -10,6 +10,15 @@ public sealed class PastSashasData
     [JsonPropertyName("next_id")]
     public int NextId { get; set; } = 1;
 
+    /// <summary>
+    /// Returns records eligible for Variant 3 possession spawn — those not already encountered
+    /// this run. The floor builder calls this to find past-Sasha candidates; it should prefer
+    /// the most-recent eligible record (highest Id), falling back to older ones.
+    /// </summary>
+    public IEnumerable<PastSashaRecord> GetEligibleRecords(IReadOnlySet<int> encounteredThisRun) =>
+        Records.Where(r => !encounteredThisRun.Contains(r.Id))
+               .OrderByDescending(r => r.Id);
+
     public PastSashaRecord AddRecord(
         int diedRun, int diedFloor, string causeOfDeath,
         string? killerSpecies, List<GearItemRecord> gearCarried)

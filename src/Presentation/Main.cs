@@ -4,6 +4,7 @@ using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Persistence;
+using CatacombsOfYarl.Logic.Persistence.Namespaces;
 using CatacombsOfYarl.Presentation.Animation;
 using CatacombsOfYarl.Presentation.Entities;
 using CatacombsOfYarl.Presentation.Map;
@@ -556,7 +557,8 @@ public partial class Main : Node
         _testScenarioBuilder = null; // clear any test scenario override
         _currentDepth = depth;
         var rng = new SeededRandom(_baseSeed + depth * 1_000_003);
-        _state = _floorBuilder!.Build(depth, rng, existingPlayer, explorationMode: explorationMode);
+        _state = _floorBuilder!.Build(depth, rng, existingPlayer, explorationMode: explorationMode,
+            persistentState: _persistentState);
 
         // Increment run counter at the start of a real run (depth 1, not explore mode).
         // Explore mode is a visual tool, not a campaign run — don't count it.
@@ -1331,9 +1333,49 @@ public partial class Main : Node
                     $"Damage dealt: {_damageDealt}\nDamage taken: {_damageTaken}";
         _gameOverScreen?.Show(playerWon, stats);
 
+        // Record a past-Sasha on player death (spec §6.2).
+        if (!playerWon && _state != null && _persistentState != null)
+        {
+            var gear = SnapshotEquippedGear(_state.Player);
+            _persistentState.PastSashas.AddRecord(
+                diedRun: _persistentState.RunCounter.TotalRuns,
+                diedFloor: _currentDepth,
+                causeOfDeath: _state.PlayerDeathCause,
+                killerSpecies: _state.PlayerDeathKillerSpecies,
+                gearCarried: gear);
+            _persistentState.MarkDirty();
+        }
+
         // Run end is a forced flush — write regardless of dirty state (spec §5).
         if (_persistentState != null && _persistenceProvider != null)
             _persistentState.Flush(_persistenceProvider, GD.PrintErr);
+    }
+
+    /// <summary>
+    /// Snapshot equipped weapon, armor, and rings at death time (OQ-2 resolution A: equipped only).
+    /// </summary>
+    private static List<GearItemRecord> SnapshotEquippedGear(Entity player)
+    {
+        var result = new List<GearItemRecord>();
+        var equipment = player.Get<Equipment>();
+        if (equipment == null) return result;
+
+        foreach (var slot in new[] { EquipmentSlot.MainHand, EquipmentSlot.Chest, EquipmentSlot.LeftRing, EquipmentSlot.RightRing })
+        {
+            var item = equipment.GetSlot(slot);
+            if (item == null) continue;
+            var tag = item.Get<ItemTag>();
+            if (tag == null) continue;
+            var eq = item.Get<Equippable>();
+            result.Add(new GearItemRecord
+            {
+                TypeId = tag.TypeId,
+                Enchantment = eq?.ToHitBonus ?? 0,
+                Condition = (eq is { BaseDamageMax: > 0 } && eq.DamageMax < eq.BaseDamageMax)
+                    ? "corroded" : "normal",
+            });
+        }
+        return result;
     }
 
     public override void _Notification(int what)
@@ -1359,7 +1401,8 @@ public partial class Main : Node
             appearancePool: _state?.AppearancePool,
             boonTracker: _state?.BoonTracker,
             muralTracker: _state?.MuralTracker,
-            pityTracker: _state?.PityTracker);
+            pityTracker: _state?.PityTracker,
+            persistentState: _persistentState);
         SetupPresentation(_state);
 
         // Floor descent is a narrative-event-boundary flush (spec §5).

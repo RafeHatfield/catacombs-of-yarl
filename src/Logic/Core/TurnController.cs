@@ -1617,7 +1617,10 @@ public static class TurnController
                     Damage     = dmg,
                 });
                 if (!pf.IsAlive)
+                {
                     events.Add(new DeathEvent { ActorId = state.Player.Id, KillerId = -1 });
+                    state.PlayerDeathCause = "hazard";
+                }
             }
 
             // Monsters on this tile?
@@ -1837,10 +1840,15 @@ public static class TurnController
         {
             events.Add(new DeathEvent { ActorId = target.Id, KillerId = monster.Id });
 
-            // Monster-vs-monster kill: drop loot, create corpse, check death siphon.
-            // Player kills are not handled here (players don't drop items or leave corpses).
-            if (target.Id != state.Player.Id)
+            if (target.Id == state.Player.Id)
             {
+                // Record killer for past-Sasha snapshot at game-over.
+                state.PlayerDeathKillerSpecies = monster.Get<SpeciesTag>()?.TypeId;
+                state.PlayerDeathCause = "monster";
+            }
+            else
+            {
+                // Monster-vs-monster kill: drop loot, create corpse, check death siphon.
                 DropMonsterLoot(state, target, events);
                 TransformToCorpse(state, target, events, monsterFactory);
                 ResolveDeathSiphon(state, target, events);

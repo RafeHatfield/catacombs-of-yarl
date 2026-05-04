@@ -187,6 +187,19 @@ public sealed class GameState
     /// </summary>
     public int UnprovokedOrcKillsThisRun { get; set; }
 
+    /// <summary>
+    /// Species TypeId of the entity that dealt the killing blow to the player this run.
+    /// Set in TurnController when a monster's attack kills the player. Null if death was
+    /// by hazard/DoT or the player survived. Used to populate PastSashaRecord on game-over.
+    /// </summary>
+    public string? PlayerDeathKillerSpecies { get; set; }
+
+    /// <summary>
+    /// High-level cause of death for the current run. "monster" | "hazard" | "under_warden".
+    /// Defaults to "monster". Set in TurnController when cause is known at the kill site.
+    /// </summary>
+    public string PlayerDeathCause { get; set; } = "monster";
+
     public GameState(Entity player, List<Entity> monsters, GameMap map, SeededRandom rng, int turnLimit = 100)
     {
         Player = player;

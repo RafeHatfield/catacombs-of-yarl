@@ -2,6 +2,7 @@ using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Persistence;
 using BoonTable = System.Collections.Generic.IReadOnlyDictionary<int, CatacombsOfYarl.Logic.Balance.BoonDefinition>;
 using FloorItemPool = System.Collections.Generic.IReadOnlyList<CatacombsOfYarl.Logic.Content.FloorItemPoolEntry>;
 using IdentifiableItemDef = (string id, CatacombsOfYarl.Logic.Content.ItemCategory category);
@@ -141,7 +142,8 @@ public sealed class DungeonFloorBuilder
         BoonTracker? boonTracker = null,
         bool explorationMode = false,
         MuralTracker? muralTracker = null,
-        PityTrackerType? pityTracker = null)
+        PityTrackerType? pityTracker = null,
+        PersistentRunState? persistentState = null)
     {
         // Resolve per-depth override (null = use defaults for everything)
         var levelOverride = _templates.GetLevelOverride(depth);
@@ -397,6 +399,7 @@ public sealed class DungeonFloorBuilder
             Props = generatedMap.Props,
             MuralTracker = muralTracker,
             PityTracker = finalPityTracker,
+            PersistentState = persistentState,
         };
 
         // Apply depth boon for this floor (first visit only).

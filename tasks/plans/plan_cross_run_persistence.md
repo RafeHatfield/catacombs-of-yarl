@@ -1,15 +1,15 @@
 # Plan: Cross-Run Persistence System
 
-**Status:** [~] Phases 1-3 complete — skeleton, source-gen JSON context, migration framework, RunCounter wired end-to-end. Phase 4 next.
+**Status:** [~] Phases 1-4 complete — skeleton, source-gen JSON context, migration framework, RunCounter + PastSashas wired end-to-end. Phase 5 next.
 **Spec version:** 1.1 (2026-05-02).
 
-## Current State (2026-04-22)
+## Current State (2026-05-03)
 
-**Just completed:** Phase 3 — RunCounter wired end-to-end in Main.cs (1451 tests).
+**Just completed:** Phase 4 — PastSashas + FreedPastSelves. Gear snapshot on player death (OQ-2: equipped slots only). PlayerDeathKillerSpecies/PlayerDeathCause on GameState, set in TurnController at kill site. DungeonFloorBuilder.Build() accepts PersistentRunState and threads it into GameState. PastSashasData.GetEligibleRecords() for possession floor-builder. 14 new tests (1465 total).
 
-**Next step:** Phase 4 — Past-Sashas + Freed-Past-Selves (gear serialization, OnDeath wiring, floor builder eligibility check).
+**Next step:** Phase 5 — Faction reputation + Unshriven geas (three-state enum, action counter, floor builder reads geas flag).
 
-**Open issues:** iOS NativeAOT smoke test is a manual step requiring iOS export build on a real device. All logic-layer round-trips passing on macOS/arm64.
+**Open issues:** iOS NativeAOT smoke test is a manual step requiring iOS export build on a real device. All logic-layer round-trips passing on macOS/arm64. FreedPastSelves write point (OnPossessionDispelled Warden path) will be wired in possession system build.
 
 ### Phase checklist
 
@@ -17,7 +17,7 @@
 - [x] Phase 1: Skeleton + JSON context (all 15 namespaces, PersistentRunState, atomic load/save, 12 tests)
 - [x] Phase 2: Migration framework (pre-deserialization JSON pass, forward chain, future-namespace fallback, 7 tests)
 - [x] Phase 3: Run counter wired end-to-end in Main.cs (StartDungeon depth-1 increment, floor-descent flush, game-over flush, app-background flush via _Notification)
-- [ ] Phase 4: Past-Sashas + Freed-Past-Selves (possession handshake)
+- [x] Phase 4: Past-Sashas + Freed-Past-Selves (gear snapshot on death, killer tracking, DungeonFloorBuilder passthrough, GetEligibleRecords, 14 tests)
 - [ ] Phase 5: Faction reputation + Unshriven geas
 - [ ] Phase 6: Borrek/Vesh/Hael arcs + catalogs + Hollowmark meta
 - [ ] Phase 7: Daily-seed sibling file
