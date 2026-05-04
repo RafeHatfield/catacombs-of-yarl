@@ -117,6 +117,8 @@ public partial class Main : Node
     // Cross-run persistence — loaded once at app start, flushed at narrative-event boundaries.
     private GodotPersistencePathProvider? _persistenceProvider;
     private PersistentRunState? _persistentState;
+    // Daily-seed sibling file — loaded once at app start, separate from character state.
+    private DailySeedsFile? _dailySeeds;
 
     // Stats accumulation for game-over screen
     private int _turnCount;
@@ -132,6 +134,7 @@ public partial class Main : Node
         // Load cross-run persistence. Missing file → fresh defaults (no write until first dirty flush).
         _persistenceProvider = new GodotPersistencePathProvider();
         _persistentState = PersistentRunState.LoadFromDisk(_persistenceProvider, GD.PrintErr);
+        _dailySeeds = PersistentRunState.LoadDailySeedsFromDisk(_persistenceProvider, GD.PrintErr);
         GD.Print($"[Main] Persistence loaded — {_persistentState.RunCounter.TotalRuns} runs ever.");
 
         InitSpriteMapping();

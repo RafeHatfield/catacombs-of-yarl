@@ -92,5 +92,5 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Tier 6 — Under-Warden Story Systems
 | Plan | Status | Description |
 |------|--------|-------------|
-| [plan_cross_run_persistence.md](plan_cross_run_persistence.md) | [~] | Cross-run persistence: 15 namespaces, source-gen JSON, atomic I/O, migration framework, RunCounter wired. Phases 1-3 done. Phase 4 next. |
+| [plan_cross_run_persistence.md](plan_cross_run_persistence.md) | [x] | Cross-run persistence: all 7 phases complete. 15 namespaces, source-gen JSON, migrations, all arc/catalog mutation APIs, daily seeds. 1528 tests. |
 | [plan_possession_system.md](plan_possession_system.md) | [ ] | Player possession: PossessionEffect, host-body state machine, drain clock, HUD, OnPossessionInducedHostDeath pipeline. Unblocked after persistence Phase 1. |

@@ -28,6 +28,20 @@ public sealed class DailySeedsFile
         }
         return record;
     }
+
+    /// <summary>
+    /// Record a completed daily-seed run. Updates best score/floor, increments run count,
+    /// and captures the first-completion timestamp.
+    /// </summary>
+    public void RecordRun(string dateKey, string seed, int score, int floor)
+    {
+        var rec = GetOrCreate(dateKey);
+        rec.Seed = seed;
+        rec.RunsCompleted++;
+        if (score > rec.BestScore) rec.BestScore = score;
+        if (floor > rec.BestFloor) rec.BestFloor = floor;
+        rec.FirstRunCompletedAt ??= DateTimeOffset.UtcNow;
+    }
 }
 
 public sealed class DailySeedRecord
