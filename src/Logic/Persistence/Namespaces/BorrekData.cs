@@ -16,4 +16,25 @@ public sealed class BorrekData
 
     [JsonPropertyName("daughter_bloodline_news_delivered")]
     public bool DaughterBloodlineNewsDelivered { get; set; }
+
+    // Thresholds from spec §6.4 / v3 §M-prime.
+    private const int CuriousThreshold = 1;
+    private const int AlliedThreshold  = 3;
+
+    /// <summary>
+    /// Record one orc-positive action and advance the arc state if thresholds are crossed.
+    /// Returns true if the arc state changed (caller should MarkDirty and flush).
+    /// </summary>
+    public bool RecordPositiveAction()
+    {
+        OrcPositiveActions++;
+        var previous = ArcState;
+        ArcState = OrcPositiveActions >= AlliedThreshold ? "allied"
+                 : OrcPositiveActions >= CuriousThreshold ? "curious"
+                 : "wary";
+        return ArcState != previous;
+    }
+
+    public void RecordKnifeReceived()         => KnifeReceived = true;
+    public void RecordDaughterNewsDelivered() => DaughterBloodlineNewsDelivered = true;
 }

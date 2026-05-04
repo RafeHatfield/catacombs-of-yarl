@@ -1,6 +1,6 @@
 # Plan: Cross-Run Persistence System
 
-**Status:** [~] Phases 1-5 complete — skeleton, migrations, RunCounter/PastSashas/Factions/Geas wired. Phase 6 next.
+**Status:** [~] Phases 1-6 complete — all arc/catalog data classes have mutation methods and tests. Phase 7 (daily-seed file) next.
 **Spec version:** 1.1 (2026-05-02).
 
 ## Current State (2026-05-04)
@@ -19,7 +19,7 @@
 - [x] Phase 3: Run counter wired end-to-end in Main.cs (StartDungeon depth-1 increment, floor-descent flush, game-over flush, app-background flush via _Notification)
 - [x] Phase 4: Past-Sashas + Freed-Past-Selves (gear snapshot on death, killer tracking, DungeonFloorBuilder passthrough, GetEligibleRecords, 14 tests)
 - [x] Phase 5: Faction reputation + Unshriven geas (ApplyNegativeAction/ApplyAllied/decay, run-end wiring, geas stub, 19 tests)
-- [ ] Phase 6: Borrek/Vesh/Hael arcs + catalogs + Hollowmark meta
+- [x] Phase 6: Borrek/Vesh/Hael arcs + catalogs + Hollowmark meta (mutation methods on all arc data classes, 34 tests)
 - [ ] Phase 7: Daily-seed sibling file
 
 - v1.1 (2026-05-02): Tier discipline tightened — run-scoped fields lifted out of cross-run namespaces (§6.2, §6.3). Flush model changed from end-of-turn to narrative-event-boundary (§5). OQ-2 locked as A; OQ-5 closed as B-modified. Hael branch-unlock derived, not stored (§6.6). Hollowmark meta-unlock pool tracked by stable IDs, not index (§6.11). Faction schema explicit about v1 single-faction scope with extension story (§6.3). New consumer: Under-Warden memo escalation state (§6.15). New OQ: heirlooms across runs.

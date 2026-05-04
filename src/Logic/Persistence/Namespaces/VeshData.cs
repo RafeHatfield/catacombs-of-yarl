@@ -15,4 +15,9 @@ public sealed class VeshData
 
     [JsonPropertyName("spirit_story_heard")]
     public bool SpiritStoryHeard { get; set; }
+
+    public void RecordMet()               => Met = true;
+    public void RecordJobCompleted()      => JobsCompleted++;
+    public void RecordSpiritReceived()    => SpiritReceived = true;
+    public void RecordSpiritStoryHeard()  => SpiritStoryHeard = true;
 }

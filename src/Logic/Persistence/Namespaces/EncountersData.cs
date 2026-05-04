@@ -19,4 +19,9 @@ public sealed class EncountersData
     // Reserved — the Lady of the Long Hour does not appear in v1.
     [JsonPropertyName("met_lady_of_long_hour")]
     public bool MetLadyOfLongHour { get; set; }
+
+    public void RecordMetBorrek()      => MetBorrek = true;
+    public void RecordMetVesh()        => MetVesh = true;
+    public void RecordMetHael()        => MetHael = true;
+    public void RecordMetUnderWarden() => MetUnderWarden = true;
 }
