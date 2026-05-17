@@ -63,6 +63,10 @@ public sealed partial class GameController : Node
     // Used to clean up the pending entrance if the player cancels targeting.
     private Entity? _pendingPortalWand;
 
+    // True while the player is in possession-targeting mode (§3 of plan_possession_system.md).
+    // Taps route to HandlePossessionTargetingTap instead of the normal InputHandler flow.
+    private bool _possessionTargetingActive;
+
     // Multi-step click-to-move: A* path queued step-by-step, one step per turn.
     private Queue<(int X, int Y)>? _pendingPath;
     // HP snapshot at path start — interrupt if player takes damage mid-path.
@@ -76,6 +80,9 @@ public sealed partial class GameController : Node
 
     /// <summary>True while auto-explore is actively running.</summary>
     public bool IsAutoExploreActive => _autoExploreMode;
+
+    /// <summary>True while possession targeting is active (player taps resolve to Possess).</summary>
+    public bool IsPossessionTargetingActive => _possessionTargetingActive;
 
     /// <summary>Fired each time a turn completes. UI can update from this.</summary>
     public event Action<TurnResult>? TurnCompleted;
@@ -619,9 +626,7 @@ public sealed partial class GameController : Node
         _inspectPanel?.Hide();
         _longPress?.Cancel();
 
-        // Any tap cancels auto-explore or path-following. The current animation step
-        // finishes naturally; OnAnimationComplete then finds nothing pending and returns
-        // to WaitingForInput. Don't process the tap further — it was consumed by the cancel.
+        // Any tap cancels auto-explore or path-following.
         if (_autoExploreMode || (_pendingPath != null && _pendingPath.Count > 0))
         {
             _autoExploreMode = false;
@@ -631,7 +636,41 @@ public sealed partial class GameController : Node
             return;
         }
 
+        // Possession targeting intercept — tap on a valid target possesses; anything else cancels.
+        if (_possessionTargetingActive)
+        {
+            HandlePossessionTargetingTap(screenPos);
+            return;
+        }
+
         _input.HandleTap(screenPos);
+    }
+
+    private void HandlePossessionTargetingTap(Vector2 screenPos)
+    {
+        if (_state == null || _gameView == null) { CancelPossessionTargeting(); return; }
+
+        var localPos = _gameView.ToLocal(screenPos);
+        var (gridX, gridY) = _renderer.ScreenToGrid(localPos);
+
+        // Tap on player's own tile → cancel
+        if (gridX == _state.Player.X && gridY == _state.Player.Y)
+        {
+            CancelPossessionTargeting();
+            return;
+        }
+
+        var target = _state.AliveMonsters.FirstOrDefault(m => m.X == gridX && m.Y == gridY);
+        if (target != null && PossessionSystem.IsValidTarget(target, _state.Player, _state))
+        {
+            _possessionTargetingActive = false;
+            OnActionChosen(PlayerAction.Possess(target));
+        }
+        else
+        {
+            // Invalid tap — cancel targeting
+            CancelPossessionTargeting();
+        }
     }
 
     /// <summary>
@@ -807,6 +846,40 @@ public sealed partial class GameController : Node
         TileKind.Trap       => "__trap_spike",  // generic fallback for untyped Trap tiles
         _                   => null,
     };
+
+    /// <summary>
+    /// Enter possession targeting mode. Free action — no turn consumed.
+    /// Taps during targeting resolve to Possess(host) or cancel.
+    /// No-op if already possessing, in targeting, or if state is not ready.
+    /// </summary>
+    public void StartPossessionTargeting()
+    {
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+        if (!ReferenceEquals(_state.ControlledEntity, _state.Player)) return; // already possessing
+
+        _possessionTargetingActive = true;
+        // Fire the free action so TurnController sees it (updates state if needed).
+        ExecuteTurn(PlayerAction.EnterPossessionTargeting());
+        _toastLog?.AddMessage("Tap a monster to possess. Tap Cancel to abort.");
+        Diag.Log("GameController: entered possession targeting mode");
+    }
+
+    /// <summary>Cancel possession targeting without consuming a turn.</summary>
+    public void CancelPossessionTargeting()
+    {
+        if (!_possessionTargetingActive) return;
+        _possessionTargetingActive = false;
+        _toastLog?.AddMessage("Possession cancelled.");
+        Diag.Log("GameController: cancelled possession targeting");
+    }
+
+    /// <summary>Voluntarily exit active possession. Free action — no turn consumed.</summary>
+    public void ExitPossessionAction()
+    {
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+        if (ReferenceEquals(_state.ControlledEntity, _state.Player)) return; // not possessing
+        OnActionChosen(PlayerAction.ExitPossession());
+    }
 
     /// <summary>
     /// Begin auto-explore. Cancels any queued click-to-move path, activates

@@ -104,6 +104,42 @@ public sealed class GameMap
 
     public bool InBounds(int x, int y) => x >= 0 && x < Width && y >= 0 && y < Height;
 
+    // --- Line of sight ---
+
+    /// <summary>
+    /// Bresenham LOS trace from (x1,y1) to (x2,y2).
+    /// Returns true if no opaque tile (Wall/Door/SecretDoor) lies strictly between the two points.
+    /// Start and destination tiles are excluded from the opacity check —
+    /// both are assumed to be entity positions (walkable or otherwise relevant).
+    /// Used by PossessionSystem.CheckVisibilityConstraint.
+    /// </summary>
+    public bool HasLineOfSight(int x1, int y1, int x2, int y2)
+    {
+        if (x1 == x2 && y1 == y2) return true;
+
+        int dx = Math.Abs(x2 - x1), dy = Math.Abs(y2 - y1);
+        int sx = x1 < x2 ? 1 : -1, sy = y1 < y2 ? 1 : -1;
+        int err = dx - dy, cx = x1, cy = y1;
+
+        while (true)
+        {
+            if (cx == x2 && cy == y2) return true;
+
+            int e2 = 2 * err;
+            if (e2 > -dy) { err -= dy; cx += sx; }
+            if (e2 < dx) { err += dx; cy += sy; }
+
+            // Check intermediate tile (skip source; destination is already the loop exit)
+            if (cx != x2 || cy != y2)
+            {
+                if (!InBounds(cx, cy)) return false;
+                var kind = GetTileKind(cx, cy);
+                if (kind == TileKind.Wall || kind == TileKind.Door || kind == TileKind.SecretDoor)
+                    return false;
+            }
+        }
+    }
+
     // --- Visibility / FOV ---
 
     public bool IsVisible(int x, int y) => InBounds(x, y) && _visible[x, y];

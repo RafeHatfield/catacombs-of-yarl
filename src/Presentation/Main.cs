@@ -120,6 +120,12 @@ public partial class Main : Node
     // Daily-seed sibling file — loaded once at app start, separate from character state.
     private DailySeedsFile? _dailySeeds;
 
+    // Voice line registry — loaded once, shared across all turns.
+    // Null until InitFactories succeeds; VoiceLineEvent handling is a no-op when null.
+    private VoiceLineRegistry? _voiceLineRegistry;
+    // Tracks which trigger IDs have already fired their canonical (first) line this run.
+    private readonly HashSet<string> _voiceLineFiredSet = new();
+
     // Stats accumulation for game-over screen
     private int _turnCount;
     private int _monstersKilled;
@@ -533,6 +539,22 @@ public partial class Main : Node
             boonTable: boonTable, propRegistry: propRegistry,
             signpostRegistry: signpostRegistry, muralRegistry: muralRegistry,
             lootTagRegistry: lootTagRegistry, lootPolicy: lootPolicy);
+
+        // Voice line registries — merged into a single registry at boot.
+        try
+        {
+            var hollowmarkYaml = ReadGodotResource("res://config/voice_lines/hollowmark.yaml");
+            var quippingShadeYaml = ReadGodotResource("res://config/voice_lines/quipping_shade.yaml");
+            var catalogYaml = ReadGodotResource("res://config/voice_lines/catalog_past_selves.yaml");
+            _voiceLineRegistry = VoiceLineRegistry.LoadFromYaml(hollowmarkYaml);
+            _voiceLineRegistry.Merge(VoiceLineRegistry.LoadFromYaml(quippingShadeYaml));
+            _voiceLineRegistry.Merge(VoiceLineRegistry.LoadFromYaml(catalogYaml));
+            GD.Print("[Main] Voice line registry loaded.");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"[Main] Voice line registry load failed (non-fatal): {ex.Message}");
+        }
     }
 
     /// <summary>
@@ -571,6 +593,10 @@ public partial class Main : Node
             _persistentState.MarkDirty();
             _persistentState.Flush(_persistenceProvider, GD.PrintErr);
         }
+
+        // Reset per-run voice line first-fire set on every new run (depth 1).
+        if (depth == 1)
+            _voiceLineFiredSet.Clear();
 
         SetupPresentation(_state);
         GD.Print($"Ready (dungeon depth {depth}) — {_state.Monsters.Count} monsters, {_state.FloorItems.Count} floor items. Tap to play.");
@@ -654,6 +680,9 @@ public partial class Main : Node
         menuButtonsZone.AddChild(_menuButtonBar);
         _menuButtonBar.GearRequested    += OnGearRequested;
         _menuButtonBar.ExploreRequested += () => _gameController?.StartAutoExplore();
+        _menuButtonBar.PossessRequested += () => _gameController?.StartPossessionTargeting();
+        _menuButtonBar.ExitPossessionRequested += () => _gameController?.ExitPossessionAction();
+        _menuButtonBar.CancelPossessionTargetingRequested += () => _gameController?.CancelPossessionTargeting();
 
         // Quick-slot bar (Phase 3) — scrollable consumable/wand strip + weapon indicator.
         // Replaces InventoryPanel. Drop goes through long-press → action sheet.
@@ -696,7 +725,7 @@ public partial class Main : Node
             _gameOverScreen.Visible = false;
         }
 
-        PlayerCamera.Update(_gameView!, state.Player, _currentZoom, _renderer);
+        PlayerCamera.Update(_gameView!, state.ControlledEntity, _currentZoom, _renderer);
 
         // Minimap: create once, reuse across floors (just call Refresh on each floor).
         if (_miniMap == null)
@@ -857,7 +886,7 @@ public partial class Main : Node
             _pendingCameraSnap = true;
             return;
         }
-        PlayerCamera.Update(_gameView, _state.Player, _currentZoom, _renderer);
+        PlayerCamera.Update(_gameView, _state.ControlledEntity, _currentZoom, _renderer);
         if (_tileLayer != null)
             DungeonRenderer.UpdateVisibility(_tileLayer, _state.Map);
         _entitySprites?.UpdateVisibility(_state);
@@ -1301,15 +1330,65 @@ public partial class Main : Node
                 HandleSecretDoorFound(secretEvt.X, secretEvt.Y);
                 _toastLog?.AddMessage(secretEvt.Hint);
             }
+            else if (evt is PossessionEnteredEvent possEnterEvt)
+            {
+                _toastLog?.AddMessage($"You possess the {result.Events.OfType<PossessionEnteredEvent>().FirstOrDefault()?.HostSpecies ?? "creature"}.");
+                _ = possEnterEvt; // used above via linq
+            }
+            else if (evt is PossessionExitedEvent possExitEvt)
+            {
+                string reason = possExitEvt.Reason switch
+                {
+                    "voluntary"         => "You withdraw your spirit.",
+                    "host_died"         => "The host body collapses — your spirit returns.",
+                    "visibility_broken" => "The host strays too far. Your spirit snaps back.",
+                    "dispelled"         => "The spell is broken. You return to yourself.",
+                    "home_body_died"    => "Your home body has fallen.",
+                    _                   => "Possession ends.",
+                };
+                _toastLog?.AddMessage(reason);
+            }
+            else if (evt is PossessionNearDeathWarningEvent)
+            {
+                _toastLog?.AddMessage("[color=#ff4444]Your body is failing — drain is critical![/color]");
+            }
+            else if (evt is VoiceLineEvent voiceEvt && _state != null)
+            {
+                var line = _voiceLineRegistry?.GetLine(voiceEvt.TriggerId, _state.Rng, _voiceLineFiredSet);
+                if (line != null)
+                    _toastLog?.AddMessage($"[color=#b090d0]{line}[/color]");
+            }
         }
+
+        // Determine possession state for UI updates.
+        bool isPossessing = _state != null && !ReferenceEquals(_state.ControlledEntity, _state.Player);
+        bool isPossessionTargeting = _gameController?.IsPossessionTargetingActive ?? false;
 
         if (_hud != null && _state != null)
             _hud.OnTurnCompleted(result, _state);
         _statusEffectBar?.Refresh(_state.Player);
         _menuButtonBar?.SetAutoExploreActive(_gameController?.IsAutoExploreActive ?? false);
+        if (isPossessionTargeting)
+            _menuButtonBar?.SetPossessionMode(MenuButtonBar.PossessionMode.Targeting);
+        else if (isPossessing)
+        {
+            // Pass species abilities so the button bar can render them when Hall Wardens ship.
+            var abilities = _state?.ControlledEntity.Get<HostAbilityComponent>()?.Abilities;
+            _menuButtonBar?.SetPossessionMode(MenuButtonBar.PossessionMode.Active, abilities);
+        }
+        else
+            _menuButtonBar?.SetPossessionMode(MenuButtonBar.PossessionMode.Idle);
+
         if (_equipmentPanel?.Visible == true && _state != null)
             _equipmentPanel.Refresh(_state);
-        if (_gameView != null) PlayerCamera.AnimateTo(_gameView, _state.Player, this, zoom: _currentZoom, renderer: _renderer);
+
+        // Camera follows the controlled entity. Forced possession exits snap; voluntary tweens.
+        var forcedExit = result.Events.OfType<PossessionExitedEvent>()
+            .FirstOrDefault(e => e.Reason is not "voluntary" and not null);
+        if (forcedExit != null && _gameView != null && _state != null)
+            PlayerCamera.Update(_gameView, _state.ControlledEntity, _currentZoom, _renderer); // snap
+        else if (_gameView != null && _state != null)
+            PlayerCamera.AnimateTo(_gameView, _state.ControlledEntity, this, zoom: _currentZoom, renderer: _renderer);
         _miniMap?.Refresh(_state);
         _toastLog?.RecordTurn(result, _state);
         _groundHazardOverlay?.Refresh(_state);
@@ -1344,12 +1423,26 @@ public partial class Main : Node
             if (!playerWon)
             {
                 var gear = SnapshotEquippedGear(_state.Player);
+                var bestFloor = Math.Max(_persistentState.RunCounter.BestFloorReached, _currentDepth);
+                _persistentState.RunCounter.UpdateBestFloor(_currentDepth);
+
+                var killerSpecies = _state.PlayerDeathKillerSpecies;
+                bool killerWasFirst = killerSpecies != null
+                    && _state.Knowledge.GetEntry(killerSpecies).EngagedCount <= 1;
+
+                // "Clean run" heuristic: died to non-self-inflicted cause at floor 10+.
+                bool prevClean = _state.PlayerDeathCause is not ("oil_slick_fire" or "own_poison"
+                    or "own_trap" or "possessed_wrong_host") && _currentDepth >= 10;
+
                 _persistentState.PastSashas.AddRecord(
                     diedRun: _persistentState.RunCounter.TotalRuns,
                     diedFloor: _currentDepth,
                     causeOfDeath: _state.PlayerDeathCause,
-                    killerSpecies: _state.PlayerDeathKillerSpecies,
-                    gearCarried: gear);
+                    killerSpecies: killerSpecies,
+                    gearCarried: gear,
+                    bestFloorReachedAtDeath: bestFloor,
+                    previousRunWasClean: prevClean,
+                    killerWasFirstEncounter: killerWasFirst);
                 _persistentState.MarkDirty();
             }
 
@@ -1378,16 +1471,28 @@ public partial class Main : Node
             var tag = item.Get<ItemTag>();
             if (tag == null) continue;
             var eq = item.Get<Equippable>();
+            var enchantment = eq?.ToHitBonus ?? 0;
             result.Add(new GearItemRecord
             {
                 TypeId = tag.TypeId,
-                Enchantment = eq?.ToHitBonus ?? 0,
+                Enchantment = enchantment,
                 Condition = (eq is { BaseDamageMax: > 0 } && eq.DamageMax < eq.BaseDamageMax)
                     ? "corroded" : "normal",
+                // Notable: enchanted (+1 or better) or a specific NPC-gifted item.
+                IsNotable = enchantment > 0 || IsNamedItem(tag.TypeId),
             });
         }
         return result;
     }
+
+    // Named / NPC-gifted items that are always "notable" regardless of enchantment.
+    // Expand when items like the Borrek knife are added.
+    private static readonly HashSet<string> _namedItemIds = new(StringComparer.Ordinal)
+    {
+        // placeholder — no named items yet; populated as content is added
+    };
+
+    private static bool IsNamedItem(string typeId) => _namedItemIds.Contains(typeId);
 
     /// <summary>
     /// Apply faction reputation transitions at run end (spec §6.3).
@@ -1417,6 +1522,12 @@ public partial class Main : Node
     private void OnFloorTransitionRequested(int newDepth)
     {
         GD.Print($"Floor transition: depth {_currentDepth} → {newDepth}");
+        // Track best floor reached — recorded at stairs-down, so the player gets credit for clearing it.
+        if (_persistentState != null)
+        {
+            _persistentState.RunCounter.UpdateBestFloor(_currentDepth);
+            _persistentState.MarkDirty();
+        }
         var builder = _testScenarioBuilder ?? _floorBuilder;
         if (builder == null) return;
         var rng = new SeededRandom(_baseSeed + newDepth * 1_000_003);
@@ -1702,7 +1813,7 @@ public partial class Main : Node
         {
             _currentZoom = System.Math.Min(_renderer.MaxZoom, _currentZoom + ZoomStep);
             if (_gameView != null && _state != null)
-                PlayerCamera.Update(_gameView, _state.Player, _currentZoom, _renderer);
+                PlayerCamera.Update(_gameView, _state.ControlledEntity, _currentZoom, _renderer);
         };
 
         var btnZoomOut = new Button { Text = "−" };
@@ -1712,7 +1823,7 @@ public partial class Main : Node
         {
             _currentZoom = System.Math.Max(_renderer.MinZoom, _currentZoom - ZoomStep);
             if (_gameView != null && _state != null)
-                PlayerCamera.Update(_gameView, _state.Player, _currentZoom, _renderer);
+                PlayerCamera.Update(_gameView, _state.ControlledEntity, _currentZoom, _renderer);
         };
 
         panel.AddChild(btnZoomIn);

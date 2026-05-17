@@ -274,6 +274,16 @@ public sealed class TileThemeConfig
         return id == 0 ? null : GetTexturePath(id);
     }
 
+    // -------------------------------------------------------------------------
+    // Chest and sign tile IDs
+    // -------------------------------------------------------------------------
+
+    public int GetChestClosed(string theme)  => ResolveTheme(theme)?.ChestClosed  ?? 0;
+    public int GetChestOpen(string theme)    => ResolveTheme(theme)?.ChestOpen    ?? 0;
+    public int GetChestEmpty(string theme)   => ResolveTheme(theme)?.ChestEmpty   ?? 0;
+    public int GetChestTrapped(string theme) => ResolveTheme(theme)?.ChestTrapped ?? 0;
+    public int GetSign(string theme)         => ResolveTheme(theme)?.Sign         ?? 0;
+
     /// <summary>
     /// Return a bones decoration texture path for the given theme and position,
     /// or null if the position doesn't receive a bones overlay (~2.5% chance).

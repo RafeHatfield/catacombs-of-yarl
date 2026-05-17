@@ -442,18 +442,17 @@ public sealed class DungeonRenderer
         // Tracked in FeatureOverlaySprites so UpdateVisibility applies FOV and
         // SwapFeatureSprite can swap chest textures when the chest is opened.
         //
-        // Tile ID conventions (Oryx 16bf world_24x24):
-        //   261 = chest closed, 264 = chest empty/looted (loot auto-picks up, so open = empty)
-        //   5035 = signpost (used for both signs and murals in this pass)
-        //   MuralComponent.TileId stores the chosen variant (5036–5038) for future use.
+        // Chest and sign tile IDs come from tile_themes.yaml via themeConfig — never hardcoded.
+        // MuralComponent.TileId stores the chosen variant at placement time.
         //
-        // Locked chests: same chest_closed sprite (261) with a color tint applied, plus a
+        // Locked chests: same chest_closed sprite with a color tint applied, plus a
         // small key icon overlay (tile 5039) in the top-right corner at ~40% scale.
         if (features != null)
         {
             foreach (var feature in features)
             {
-                int tileId = ResolveFeaturedTileId(feature);
+                var featureTheme = ThemeToConfigName(map.GetTileTheme(feature.X, feature.Y));
+                int tileId = ResolveFeaturedTileId(feature, themeConfig, featureTheme);
                 if (tileId == 0) continue; // no tile assigned — unknown feature type
 
                 var texPath = themeConfig.GetTexturePath(tileId);
@@ -525,15 +524,22 @@ public sealed class DungeonRenderer
     /// Resolve the tile ID for a feature entity based on its component type.
     /// Returns 0 for unknown feature types — caller should skip those.
     ///
-    /// Locked chests use the same tile as closed chests (261); the tint is applied separately.
+    /// Locked chests use the same tile as closed chests; the tint is applied separately.
     /// </summary>
-    private static int ResolveFeaturedTileId(Entity feature)
+    private static int ResolveFeaturedTileId(Entity feature, TileThemeConfig themeConfig, string theme)
     {
         var chest = feature.Get<ChestComponent>();
-        if (chest != null) return chest.IsLooted ? 264 : chest.IsOpen ? 262 : 261;
+        if (chest != null)
+        {
+            if (chest.IsLooted) return themeConfig.GetChestEmpty(theme);
+            if (chest.IsOpen)   return themeConfig.GetChestOpen(theme);
+            var trapped = feature.Get<TrapPayloadComponent>();
+            if (trapped != null) return themeConfig.GetChestTrapped(theme);
+            return themeConfig.GetChestClosed(theme);
+        }
 
         var sign = feature.Get<SignpostComponent>();
-        if (sign != null) return 5035;
+        if (sign != null) return themeConfig.GetSign(theme);
 
         var mural = feature.Get<MuralComponent>();
         if (mural != null) return mural.TileId;

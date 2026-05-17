@@ -37,6 +37,7 @@ public static class StatusEffectProcessor
         [typeof(WeaknessEffect)] = "weakness",
         [typeof(BleedEffect)] = "bleed",
         [typeof(AcidEffect)] = "acid",
+        [typeof(PossessionEffect)] = "possessed",
     };
 
     // ─────────────────────────────────────────────────────────────────────────

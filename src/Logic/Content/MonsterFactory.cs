@@ -214,6 +214,11 @@ public sealed class MonsterFactory
         if (def.StatusImmunities is { Count: > 0 })
             entity.Add(new StatusImmunityComponent(def.StatusImmunities));
 
+        // Species abilities usable during possession (e.g. Hall Warden grapple).
+        // Infrastructure-only until ability-bearing species ship.
+        if (def.Abilities?.Count > 0)
+            entity.Add(new HostAbilityComponent { Abilities = def.Abilities });
+
         return entity;
     }
 

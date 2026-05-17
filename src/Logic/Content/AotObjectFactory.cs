@@ -36,6 +36,8 @@ public sealed class AotObjectFactory : IObjectFactory
         // Content layer
         [typeof(EntitiesFile)] = () => new EntitiesFile(),
         [typeof(MonsterDefinition)] = () => new MonsterDefinition(),
+        [typeof(MonsterAbilityDefinition)] = () => new MonsterAbilityDefinition(),
+        [typeof(List<MonsterAbilityDefinition>)] = () => new List<MonsterAbilityDefinition>(),
         [typeof(MonsterStats)] = () => new MonsterStats(),
         [typeof(MonsterEquipmentConfig)] = () => new MonsterEquipmentConfig(),
         [typeof(WeightedItem)] = () => new WeightedItem(),
@@ -136,6 +138,9 @@ public sealed class AotObjectFactory : IObjectFactory
         [typeof(PityBandThreshold)] = () => new PityBandThreshold(),
         [typeof(Dictionary<string, LootPolicyBandConfig>)] = () => new Dictionary<string, LootPolicyBandConfig>(),
         [typeof(Dictionary<string, PityBandThreshold>)] = () => new Dictionary<string, PityBandThreshold>(),
+
+        // Voice line YAML pools: trigger_id → string[]
+        [typeof(Dictionary<string, List<string>>)] = () => new Dictionary<string, List<string>>(),
     };
 
     public object Create(Type type)

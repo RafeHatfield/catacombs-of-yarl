@@ -74,6 +74,12 @@ public sealed class DescendEvent : TurnEvent
 public sealed class DeathEvent : TurnEvent
 {
     public int KillerId { get; init; }
+
+    /// <summary>
+    /// True when the death was triggered by the possession system (§8.2 host-died, §8.5 warden-dispelled).
+    /// UpdateKnowledge skips RecordKilled for these deaths — the player held the body, not killed the species.
+    /// </summary>
+    public bool IsPossessionInduced { get; init; }
 }
 
 public sealed class PickUpEvent : TurnEvent
@@ -789,4 +795,67 @@ public sealed class DoorUnlockedEvent : TurnEvent
     public int Y { get; init; }
     public int KeyId { get; init; }
     public int LockColorId { get; init; }
+}
+
+// ─── Possession Events ────────────────────────────────────────────────────────
+
+public sealed class PossessionEnteredEvent : TurnEvent
+{
+    public int HostEntityId { get; init; }
+    public string HostSpecies { get; init; } = "";
+    public int OriginatorBodyId { get; init; }
+}
+
+/// <summary>
+/// Emitted on any possession exit (voluntary, host_died, visibility_broken, dispelled, home_body_died).
+/// Presentation layer uses Reason to pick camera behaviour and SFX.
+/// </summary>
+public sealed class PossessionExitedEvent : TurnEvent
+{
+    public string Reason { get; init; } = "";
+    public int HostEntityId { get; init; }
+    public string HostSpecies { get; init; } = "";
+}
+
+/// <summary>Drain tick: HP removed from the home body each possessed player-turn.</summary>
+public sealed class PossessionDrainEvent : TurnEvent
+{
+    public int TargetEntityId { get; init; }
+    public int Damage { get; init; }
+}
+
+/// <summary>
+/// Fired once per possession session when the home body falls to ≤25% MaxHp.
+/// Presentation layer shows a visual/audio warning. Logic layer sets NearDeathWarningFired
+/// on the effect to suppress duplicates.
+/// </summary>
+public sealed class PossessionNearDeathWarningEvent : TurnEvent
+{
+    public int HomeBodyEntityId { get; init; }
+    public int CurrentHp { get; init; }
+    public int MaxHp { get; init; }
+}
+
+// ─── Voice Events ─────────────────────────────────────────────────────────────
+
+/// <summary>
+/// Emitted when a logic-layer event should trigger a Hollowmark or Quipping Shade voice line.
+/// TriggerId maps to a pool key in the voice line YAML files.
+/// The presentation layer resolves the actual line text via VoiceLineRegistry.
+/// </summary>
+public sealed class VoiceLineEvent : TurnEvent
+{
+    public string TriggerId { get; init; } = "";
+}
+
+/// <summary>
+/// Emitted when a monster kicks Hollowmark's phantom wand to a new tile.
+/// The wand position is stored on PossessionEffect (Option A from §5/OQ-2 resolution) —
+/// no transient entity. NewWandPositionX/Y reflect the updated phantom coordinates.
+/// </summary>
+public sealed class WandKickedEvent : TurnEvent
+{
+    public int NewWandPositionX { get; init; }
+    public int NewWandPositionY { get; init; }
+    public int KickerEntityId { get; init; }
 }

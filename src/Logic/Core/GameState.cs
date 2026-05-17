@@ -224,6 +224,28 @@ public sealed class GameState
     public Fighter PlayerFighter => Player.Require<Fighter>();
     public Inventory? PlayerInventory => Player.Get<Inventory>();
 
+    /// <summary>
+    /// The entity the player is currently controlling.
+    /// During Active possession: the monster carrying PossessionEffect{ Source=PlayerInitiated }.
+    /// All other times: Player (the home body).
+    ///
+    /// TurnController uses this for Move/Attack/UseItem dispatch so the possessed host
+    /// acts as the player during possession without branching everywhere.
+    /// </summary>
+    public Entity ControlledEntity =>
+        Monsters.FirstOrDefault(m =>
+            m.Get<Combat.StatusEffects.PossessionEffect>() is { } e
+            && e.Source == Combat.StatusEffects.PossessionSource.PlayerInitiated
+            && e.PossessorEntityId == Player.Id)
+        ?? Player;
+
+    /// <summary>
+    /// Fighter of the currently controlled entity.
+    /// Answers combat and movement rolls during possession.
+    /// PlayerFighter always refers to the home body (for game-over checks and drain).
+    /// </summary>
+    public Fighter ControlledFighter => ControlledEntity.Require<Fighter>();
+
     // Cached alive-monster list — rebuilt once per turn instead of once per access.
     // Avoids 4-6 List<Entity> allocations per turn from callers hitting AliveMonsters.
     private List<Entity>? _aliveMonsterCache;

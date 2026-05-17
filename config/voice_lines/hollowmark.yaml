@@ -1,0 +1,34 @@
+past_sasha_encounter.looted_body:
+  - "Sasha a la Tuesday. A bold vintage. Notes of acid, regret, and one bad decision regarding a troll."
+  - "This one's the candle Sasha. He had a theory. The troll was unconvinced."
+  - "Boss. Don't look at the face. The dungeon was not gentle with him on the way down."
+  - "The corridor Sasha. He thought it was clear. It was, briefly, in the technical sense."
+
+past_sasha_encounter.looted_body.on_loot:
+  - "Take what's left. He won't mind. He didn't mind anything, by the end."
+  - "The dungeon kept the better half. Of course it did. It always does."
+  - "Boss. The dagger. He carried it for nine floors. It deserves to come back up."
+
+past_sasha_encounter.quipping_shade.before:
+  - "Boss. Look. He stayed."
+  - "He's been waiting. Don't ask me how I know that."
+  - "Boss. Careful. He has something to say."
+
+past_sasha_encounter.quipping_shade.after:
+  - "He always was the funny one. We both were."
+  - "He remembered. So did I."
+  - "Don't dwell, Boss. He didn't."
+
+past_sasha_encounter.possessed_corpse.identify:
+  - "Boss. Stop. That one's not yours anymore."
+  - "That's the file the Under-Warden opened on you. He reads it now and then."
+  - "Boss. The body is wrong. Don't engage yet."
+
+past_sasha_encounter.possessed_corpse.pre_spell_break:
+  - "I can break it. I can. Get me line of sight and a half-second."
+  - "The Under-Warden's grip is procedural. Procedural things break."
+
+past_sasha_encounter.possessed_corpse.post_spell_break:
+  - "That wasn't you anymore, Boss. You can have the gear back now."
+  - "Done. He's at rest. Take what's his. Yours. His."
+  - "Boss. Take a breath. The dispel held. The body's quiet."

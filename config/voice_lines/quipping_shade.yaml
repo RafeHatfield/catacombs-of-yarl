@@ -1,0 +1,26 @@
+oil_slick_fire:
+  - "I lit the oil. The oil was where you're standing. You'll notice the oil. I didn't."
+  - "The fire spread the way fire spreads. I was inside the spreading. Don't be inside the spreading."
+
+possession_neglect:
+  - "I left my body in a corridor with three orcs. The orcs were patient. I should have been less."
+
+own_poison:
+  - "The poison was for the Hall Warden. I forgot which way the wind was going. The wind never forgets."
+  - "I bottled it myself. The bottle had a flaw. I could have spotted the flaw. I didn't, but you could."
+
+own_trap:
+  - "I set the trap on Tuesday. I stepped on the trap on Wednesday. The trap does not keep a calendar."
+
+fall_damage:
+  - "The chasm was shorter than I thought. I was wrong about the chasm in a permanent way."
+  - "I jumped. The jumping was correct. The landing was, on review, optional."
+
+acid:
+  - "The acid was green. I assumed all acid was green. Some acid is not green. The other acid is also acid."
+
+possessed_wrong_host:
+  - "I wore the orc. The orc was a mistake. The orc had eaten something. I learned what."
+
+hollowmark_out_of_range:
+  - "I walked too far. She called. I didn't hear. I never not-hear her. Don't."

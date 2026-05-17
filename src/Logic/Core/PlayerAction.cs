@@ -10,7 +10,7 @@ namespace CatacombsOfYarl.Logic.Core;
 /// </summary>
 public sealed class PlayerAction
 {
-    public enum ActionKind { Wait, Attack, Move, UseItem, Descend, DropItem, EquipItem, UnequipItem, CastSpell, ThrowItem }
+    public enum ActionKind { Wait, Attack, Move, UseItem, Descend, DropItem, EquipItem, UnequipItem, CastSpell, ThrowItem, EnterPossessionTargeting, Possess, ExitPossession, UseMonsterAbility }
 
     public ActionKind Kind { get; }
 
@@ -41,10 +41,18 @@ public sealed class PlayerAction
     public int? TargetX2 { get; }
     public int? TargetY2 { get; }
 
+    /// <summary>
+    /// Ability ID for UseMonsterAbility actions.
+    /// Maps to MonsterAbilityDefinition.AbilityId on the controlled entity's HostAbilityComponent.
+    /// </summary>
+    public string? AbilityId { get; }
+
+    private readonly string? _abilityId;
+
     private PlayerAction(ActionKind kind, Entity? target = null,
         int? targetX = null, int? targetY = null, Entity? item = null,
         EquipmentSlot? slot = null, int? targetEntityId = null,
-        int? targetX2 = null, int? targetY2 = null)
+        int? targetX2 = null, int? targetY2 = null, string? abilityId = null)
     {
         Kind = kind;
         Target = target;
@@ -55,6 +63,8 @@ public sealed class PlayerAction
         TargetEntityId = targetEntityId;
         TargetX2 = targetX2;
         TargetY2 = targetY2;
+        _abilityId = abilityId;
+        AbilityId = abilityId;
     }
 
     public static PlayerAction Wait => new(ActionKind.Wait);
@@ -97,4 +107,20 @@ public sealed class PlayerAction
     /// </summary>
     public static PlayerAction ThrowItem(Entity item, int targetX, int targetY)
         => new(ActionKind.ThrowItem, item: item, targetX: targetX, targetY: targetY);
+
+    /// <summary>Free action: open the possession targeting overlay.</summary>
+    public static PlayerAction EnterPossessionTargeting() => new(ActionKind.EnterPossessionTargeting);
+
+    /// <summary>Costs one turn: possess the given host entity.</summary>
+    public static PlayerAction Possess(Entity host) => new(ActionKind.Possess, target: host);
+
+    /// <summary>Free action: voluntarily exit the current possession.</summary>
+    public static PlayerAction ExitPossession() => new(ActionKind.ExitPossession);
+
+    /// <summary>
+    /// Use a species-specific ability while possessing the host.
+    /// TurnController routes abilityId to the appropriate resolver.
+    /// Unknown ability IDs resolve as Wait (graceful degradation).
+    /// </summary>
+    public static PlayerAction UseAbility(string abilityId) => new(ActionKind.UseMonsterAbility, abilityId: abilityId);
 }

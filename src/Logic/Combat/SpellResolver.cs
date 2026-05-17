@@ -163,6 +163,10 @@ public static class SpellResolver
                                     applyEffect: (e, d) => { var fx = e.GetOrAdd<BurningEffect>(); fx.RemainingTurns = d; fx.DamagePerTurn = 1; }),
             // Antidote: removes PlagueEffect immediately. No ongoing duration.
             "drink_antidote"  => ResolveAntidote(caster, spell, state),
+            // Dispel (Hollowmark's Spell-Break): removes one IStatusEffect from target within range.
+            // Priority: PossessionEffect (routes to PossessionSystem.OnPossessionDispelled) first,
+            // then any other effect. Used by Sasha to free past-Sasha corpses (Variant 3).
+            "dispel"          => ResolveDispel(caster, spell, state, targetEntityId),
             _ => [new SpellEvent
             {
                 ActorId = caster.Id,
@@ -1375,6 +1379,72 @@ public static class SpellResolver
             StatusDuration = throwBlocked ? 0 : duration,
         }];
     }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Dispel (Hollowmark's Spell-Break) — removes one IStatusEffect from target within range.
+    // Priority: PossessionEffect first (dispatches to PossessionSystem.OnPossessionDispelled),
+    // then the first other effect found. Range default: 5 tiles (Chebyshev), LOS required.
+    // Variant 3 path: WardenInitiated PossessionEffect on a past-Sasha corpse collapses the host.
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private static List<TurnEvent> ResolveDispel(
+        Entity caster, SpellEffect spell, GameState state, int? targetEntityId)
+    {
+        var events = new List<TurnEvent>();
+
+        if (targetEntityId == null)
+        {
+            events.Add(FailEvent(caster, spell, "Spell-Break"));
+            return events;
+        }
+
+        var target = state.Monsters.FirstOrDefault(m => m.Id == targetEntityId.Value);
+        if (target == null)
+        {
+            events.Add(FailEvent(caster, spell, "Spell-Break"));
+            return events;
+        }
+
+        int range = spell.Range > 0 ? spell.Range : 5;
+        if (Core.PossessionSystem.ChebyshevDistance(caster.X, caster.Y, target.X, target.Y) > range
+            || !state.Map.HasLineOfSight(caster.X, caster.Y, target.X, target.Y))
+        {
+            events.Add(FailEvent(caster, spell, "Spell-Break"));
+            return events;
+        }
+
+        // PossessionEffect has highest priority — routes to dedicated dispel pipeline.
+        var possEffect = target.Get<PossessionEffect>();
+        if (possEffect != null)
+        {
+            PossessionSystem.OnPossessionDispelled(target, possEffect, state, events);
+            events.Add(new SpellEvent { ActorId = caster.Id, SpellId = spell.SpellId, SpellName = "Spell-Break", Success = true });
+            return events;
+        }
+
+        // Remove the first other status effect found on the target.
+        var anyEffect = target.GetAllComponents().OfType<IStatusEffect>().FirstOrDefault();
+        if (anyEffect == null)
+        {
+            events.Add(FailEvent(caster, spell, "Spell-Break"));
+            return events;
+        }
+
+        string effectName = anyEffect.EffectName;
+        target.RemoveByType(anyEffect.GetType());
+        events.Add(new StatusExpiredEvent
+        {
+            ActorId    = caster.Id,
+            EntityId   = target.Id,
+            EffectName = effectName,
+            Reason     = "dispelled",
+        });
+        events.Add(new SpellEvent { ActorId = caster.Id, SpellId = spell.SpellId, SpellName = "Spell-Break", Success = true });
+        return events;
+    }
+
+    private static SpellEvent FailEvent(Entity caster, SpellEffect spell, string spellName) =>
+        new() { ActorId = caster.Id, SpellId = spell.SpellId, SpellName = spellName, Success = false };
 
     // ──────────────────────────────────────────────────────────────────────────
     // Antidote Potion — removes PlagueEffect from the caster immediately.

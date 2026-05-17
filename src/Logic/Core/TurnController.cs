@@ -115,6 +115,12 @@ public static class TurnController
         // This is a no-op when no portals are active.
         PortalSystem.ClearPortalUsedFlags(state);
 
+        // Possession visibility constraint (§4): check after all entities have moved.
+        // If the host moved outside MAX_POSSESSION_DISTANCE or LOS was broken, forces exit.
+        // No-op when no active possession.
+        if (state.PlayerFighter.IsAlive)
+            PossessionSystem.CheckVisibilityConstraint(state, events);
+
         // === KNOWLEDGE UPDATE ===
         // Update monster knowledge after all combat events are resolved.
         // Build a lookup of all monsters (including dead ones still in state.Monsters) so we
@@ -175,8 +181,9 @@ public static class TurnController
                     }
                     break;
 
-                case DeathEvent death:
+                case DeathEvent death when !death.IsPossessionInduced:
                     // Only count monster deaths (not the player's own death).
+                    // Possession-induced deaths (§8.2/§8.5) are excluded: holding a body ≠ killing it.
                     if (death.ActorId != playerId && monsterById.TryGetValue(death.ActorId, out var dead))
                     {
                         var tag = dead.Get<SpeciesTag>();
@@ -205,57 +212,98 @@ public static class TurnController
     {
         freeAction = false;
         var player = state.Player;
+        bool isPossessing = !ReferenceEquals(state.ControlledEntity, player);
 
         switch (action.Kind)
         {
-            case PlayerAction.ActionKind.Attack:
-                ResolvePlayerAttack(state, action.Target!, events, isBonusAttack: false, monsterFactory);
+            // ── Possession actions ────────────────────────────────────────────────
+            case PlayerAction.ActionKind.EnterPossessionTargeting:
+                // Free action: UI opens targeting overlay; no game-state change here.
+                freeAction = true;
                 break;
 
-            case PlayerAction.ActionKind.UseItem:
-                TryHeal(state, action.Item, events);
-                player.Get<SpeedBonusTracker>()?.ResetMomentum();
+            case PlayerAction.ActionKind.Possess:
+                // Costs one turn: possess the target host.
+                if (action.Target != null)
+                    PossessionSystem.Enter(action.Target, state, events);
+                // Drain ticks on the possessed turn (including this first one — §7).
+                PossessionSystem.ApplyDrainTick(state, events);
                 break;
 
-            case PlayerAction.ActionKind.Move:
-                ResolvePlayerMove(state, action, events, out freeAction);
-                // Don't reset momentum for free actions (sign reads) — momentum is unchanged.
-                if (!freeAction)
-                    player.Get<SpeedBonusTracker>()?.ResetMomentum();
+            case PlayerAction.ActionKind.ExitPossession:
+                // Free action: voluntarily leave the host body.
+                PossessionSystem.ExitVoluntary(state, events);
+                freeAction = true;
                 break;
 
-            case PlayerAction.ActionKind.Wait:
-                events.Add(new WaitEvent { ActorId = player.Id });
-                player.Get<SpeedBonusTracker>()?.ResetMomentum();
-                break;
-
-            case PlayerAction.ActionKind.Descend:
-                ResolveDescend(state, events);
-                break;
-
-            case PlayerAction.ActionKind.DropItem:
-                ResolveDrop(state, action.Item!, events);
-                break;
-
+            // ── Blocked during possession ─────────────────────────────────────────
             case PlayerAction.ActionKind.EquipItem:
+                if (isPossessing) { events.Add(new WaitEvent { ActorId = player.Id }); break; }
                 ResolveEquip(state, action.Item!, events);
                 player.Get<SpeedBonusTracker>()?.ResetMomentum();
                 break;
 
             case PlayerAction.ActionKind.UnequipItem:
+                if (isPossessing) { events.Add(new WaitEvent { ActorId = player.Id }); break; }
                 ResolveUnequip(state, action.Slot!.Value, events);
                 player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                break;
+
+            case PlayerAction.ActionKind.Descend:
+                if (isPossessing) { events.Add(new WaitEvent { ActorId = player.Id }); break; }
+                ResolveDescend(state, events);
+                break;
+
+            // ── Normal actions (routed to ControlledEntity for Move/Attack in future phases) ──
+            case PlayerAction.ActionKind.Attack:
+                ResolvePlayerAttack(state, action.Target!, events, isBonusAttack: false, monsterFactory);
+                if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
+                break;
+
+            case PlayerAction.ActionKind.UseItem:
+                TryHeal(state, action.Item, events);
+                player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
+                break;
+
+            case PlayerAction.ActionKind.Move:
+                ResolvePlayerMove(state, action, events, out freeAction);
+                if (!freeAction)
+                {
+                    player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                    if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
+                }
+                break;
+
+            case PlayerAction.ActionKind.Wait:
+                events.Add(new WaitEvent { ActorId = player.Id });
+                player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
+                break;
+
+            case PlayerAction.ActionKind.DropItem:
+                ResolveDrop(state, action.Item!, events);
+                if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
                 break;
 
             case PlayerAction.ActionKind.CastSpell:
                 ResolveSpellAction(state, action, events, portalEntityFactory);
                 player.Get<SpeedBonusTracker>()?.ResetMomentum();
+                if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
                 break;
 
             case PlayerAction.ActionKind.ThrowItem:
                 ResolveThrowItem(state, action, events);
-                // Note: ThrowResolver.Resolve already calls ResetMomentum internally.
-                // No second reset needed here.
+                if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
+                break;
+
+            case PlayerAction.ActionKind.UseMonsterAbility:
+                // Infrastructure stub — no species abilities are implemented yet.
+                // Future phases will route action.AbilityId to per-ability resolvers
+                // (e.g. "grapple" → Hall Warden grapple handler in Phase 8+).
+                // Graceful degradation: unknown ability IDs resolve as Wait.
+                events.Add(new WaitEvent { ActorId = player.Id });
+                if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
                 break;
         }
     }
@@ -1675,6 +1723,10 @@ public static class TurnController
                 continue;
             }
 
+            // Wand-kick: monster adjacent to the unattended home body during player-initiated possession
+            // gets a 1-in-N chance to kick the phantom wand. Does not consume the monster's action.
+            TryKickWand(monster, state, events);
+
             var action = MonsterAI.Decide(monster, state);
 
             switch (action.Kind)
@@ -1838,6 +1890,16 @@ public static class TurnController
 
         if (result.TargetKilled)
         {
+            // Possession death router (§8.2): host killed during active player possession.
+            // Bypasses RecordKilled / XP / faction-rep triggers — holding a body ≠ killing it.
+            if (target.Get<Combat.StatusEffects.PossessionEffect>() is { Source: Combat.StatusEffects.PossessionSource.PlayerInitiated } possEff
+                && possEff.PossessorEntityId == state.Player.Id)
+            {
+                DropMonsterLoot(state, target, events); // gear hits the floor for recovery
+                PossessionSystem.OnPossessionInducedHostDeath(target, state, events, "host_died");
+                return;
+            }
+
             events.Add(new DeathEvent { ActorId = target.Id, KillerId = monster.Id });
 
             if (target.Id == state.Player.Id)
@@ -2794,5 +2856,31 @@ public static class TurnController
         if (dy != 0 && TryOpenDoor(map, entity, entity.X, entity.Y + dy, events))
             return true;
         return false;
+    }
+
+    /// <summary>
+    /// If the monster is adjacent to the unattended home body during player-initiated possession,
+    /// applies a 1-in-N chance to kick the phantom wand as a side effect.
+    /// Does not consume the monster's action — checked before MonsterAI.Decide.
+    /// The possessed host itself is excluded — only free-roaming monsters can kick the wand.
+    /// </summary>
+    private static void TryKickWand(Entity monster, GameState state, List<TurnEvent> events)
+    {
+        // Only fires during active player-initiated possession with an unattended home body.
+        if (!state.Player.Has<UnattendedBodyTag>()) return;
+
+        // Monster must be adjacent (Chebyshev distance 1) to the home body to kick the wand.
+        if (PossessionSystem.ChebyshevDistance(monster.X, monster.Y, state.Player.X, state.Player.Y) > 1) return;
+
+        var (host, effect) = PossessionSystem.FindActivePossession(state);
+        if (effect == null || effect.Source != PossessionSource.PlayerInitiated) return;
+
+        // The possessed host is controlled by the player — it does not kick its own wand.
+        if (host != null && monster.Id == host.Id) return;
+
+        // 1-in-N chance per monster per turn.
+        if (state.Rng.Next(PossessionConfig.WandKickChanceDenominator) != 0) return;
+
+        PossessionSystem.KickWand(state, effect, monster, events);
     }
 }

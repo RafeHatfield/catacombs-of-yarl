@@ -21,7 +21,9 @@ public sealed class PastSashasData
 
     public PastSashaRecord AddRecord(
         int diedRun, int diedFloor, string causeOfDeath,
-        string? killerSpecies, List<GearItemRecord> gearCarried)
+        string? killerSpecies, List<GearItemRecord> gearCarried,
+        int bestFloorReachedAtDeath = 0, bool previousRunWasClean = false,
+        bool killerWasFirstEncounter = false)
     {
         var record = new PastSashaRecord
         {
@@ -32,6 +34,9 @@ public sealed class PastSashasData
             CauseOfDeath = causeOfDeath,
             KillerSpecies = killerSpecies,
             GearCarried = gearCarried,
+            BestFloorReachedAtDeath = bestFloorReachedAtDeath,
+            PreviousRunWasClean = previousRunWasClean,
+            KillerWasFirstEncounter = killerWasFirstEncounter,
         };
         Records.Add(record);
         return record;
@@ -61,6 +66,28 @@ public sealed class PastSashaRecord
 
     [JsonPropertyName("gear_carried")]
     public List<GearItemRecord> GearCarried { get; set; } = new();
+
+    /// <summary>
+    /// The player's all-time best floor reached up to and including this run, at death time.
+    /// Used by CatalogEntryRenderer to evaluate the_one_we_kept category.
+    /// Snapshotted at death so the check doesn't drift as the player later surpasses this depth.
+    /// </summary>
+    [JsonPropertyName("best_floor_reached_at_death")]
+    public int BestFloorReachedAtDeath { get; set; }
+
+    /// <summary>
+    /// True if this run was "clean" — no self-inflicted death, floor ≥ 10.
+    /// Drives the_patient_one catalog category.
+    /// </summary>
+    [JsonPropertyName("previous_run_was_clean")]
+    public bool PreviousRunWasClean { get; set; }
+
+    /// <summary>
+    /// True if the killing monster species had not been previously engaged in this run.
+    /// Drives the no_warning catalog category.
+    /// </summary>
+    [JsonPropertyName("killer_was_first_encounter")]
+    public bool KillerWasFirstEncounter { get; set; }
 }
 
 public sealed class GearItemRecord
@@ -74,4 +101,11 @@ public sealed class GearItemRecord
     // "normal" | "corroded" | etc.
     [JsonPropertyName("condition")]
     public string Condition { get; set; } = "normal";
+
+    /// <summary>
+    /// True for named, identified-rare, or NPC-gifted items (e.g., Borrek knife).
+    /// Used by the good_gear catalog category. Computed at death time.
+    /// </summary>
+    [JsonPropertyName("is_notable")]
+    public bool IsNotable { get; set; }
 }

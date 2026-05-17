@@ -215,6 +215,16 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "status_immunities")]
     public List<string>? StatusImmunities { get; set; }
 
+    // ── Possession abilities ──────────────────────────────────────────────────
+
+    /// <summary>
+    /// Species-specific abilities available when a player possesses this monster.
+    /// Empty for most monsters. Populated for Hall Wardens and similar ability-bearing species.
+    /// Attached to the entity as HostAbilityComponent by MonsterFactory.
+    /// </summary>
+    [YamlMember(Alias = "abilities")]
+    public List<MonsterAbilityDefinition>? Abilities { get; set; }
+
     // ── Status transfer on drain attack (wraith) ──────────────────────────────
 
     /// <summary>

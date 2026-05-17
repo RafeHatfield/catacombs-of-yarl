@@ -1,0 +1,29 @@
+header:
+  - "The ones we got back. Not all of them. The ones we got back."
+
+empty_state:
+  - "No entries yet. Boss, this page fills when you free one of yours from the Warden's grip. There will be entries. There will be more than you'd like."
+
+entry_templates.early_disaster:
+  - "#{run_number}. Floor {floor}. He had ambitions on this one. Floor {floor} did not respect his ambitions. The {gear_item} is yours now. He'd want you to disappoint a different floor."
+
+entry_templates.the_almost:
+  - "#{run_number}. Floor {floor}. Two more floors and he'd have been standing in front of him. The Warden caught him before that, of course. The Warden always catches the close ones first. Freed. He carried the {gear_item} all the way down. It came home with us."
+
+entry_templates.the_patient_one:
+  - "#{run_number}. Floor {floor}. He was being careful that run. He'd stopped to identify three things he didn't need to identify, which is the kind of careful you can't teach and shouldn't have to. The Warden caught him during a dialogue I keep replaying. Freed. He'd appreciate the irony. He liked irony. They all do."
+
+entry_templates.good_gear:
+  - "#{run_number}. Floor {floor}. The {gear_item} was on him when he fell. Wend work. Not mine. The maker had better hands than I did, and I will not say that twice, so enjoy it. It's yours, Boss. He'd want it walked further down than he got it."
+
+entry_templates.the_stupid_one:
+  - "#{run_number}. Floor {floor}. The {hazard} was visible from across the room. I mentioned it. He acknowledged. He then walked into it the way men walk into things they have decided to walk into. The Warden was, professionally, embarrassed for him. Freed."
+
+entry_templates.the_one_we_kept:
+  - "#{run_number}. Floor {floor}. That was a good run, Boss. He was careful and we were funny and we'd worked out the {floor_milestone} business properly for once. The Warden caught him in the {region_name}. Freed. I miss that one."
+
+entry_templates.no_warning:
+  - "#{run_number}. Floor {floor}. He didn't see it. I didn't see it. We were having a conversation about something that did not matter, and the thing that mattered was already in the room. Freed. The {gear_item} is yours. The conversation, in retrospect, did mean something. We were laughing."
+
+entry_templates.the_recent_one:
+  - "#{run_number}. Last run. You remember. He had the {gear_item} and a plan and an opinion about the plan, in that order. The Warden has been quicker since then. We should be quicker too. Or wittier. Witty might work. We have not tried witty."

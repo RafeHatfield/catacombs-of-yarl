@@ -579,7 +579,7 @@ monsters:
     life_drain_pct: 0.50
     transfers_effects_on_hit: true
     leaves_corpse: false
-    status_immunities: ["confusion", "slow", "fear"]
+    status_immunities: ["confusion", "slow", "fear", "possessed"]
     etp_base: 65
     min_depth: 15
     depth_weights:
@@ -613,7 +613,7 @@ monsters:
     can_seek_items: false
     inventory_size: 0
     leaves_corpse: false
-    status_immunities: ["confusion", "slow", "fear", "poison", "bleed"]
+    status_immunities: ["confusion", "slow", "fear", "poison", "bleed", "possessed"]
     soul_bolt_range: 7
     soul_bolt_damage_pct: 0.18
     soul_bolt_cooldown_turns: 8
@@ -1562,6 +1562,18 @@ wands:
     # Does not appear in floor loot — player always starts with one in their backpack (DungeonFloorBuilder.CreateDefaultPlayer).
     char: "/"
     color: [0, 200, 200]
+
+  wand_of_spell_break:
+    name: "Hollowmark's Spell-Break"
+    description: "Sasha's wand, imbued with Hollowmark's power. Strips any status effect from a target within 5 tiles. On a past-Sasha corpse held by the Under-Warden: frees them."
+    spell_id: "dispel"
+    targeting: "single_target"
+    range: 5
+    is_wand: true
+    infinite: true
+    # Does not appear in floor loot — granted at run start alongside the portal wand.
+    char: "/"
+    color: [200, 160, 255]
 
   # ── Phase 3: Single-target status wands ─────────────────────────────────
 

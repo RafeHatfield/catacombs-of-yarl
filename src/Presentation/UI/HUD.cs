@@ -24,6 +24,11 @@ public sealed partial class HUD : Control
     private ColorRect? _hpBarFill;
     private Label? _depthLabel;
 
+    // Dual HP bar overlay — shown during Active possession, hidden otherwise.
+    private PossessionOverlay? _possessionOverlay;
+    // Single-bar HP row — hidden during possession.
+    private HBoxContainer? _singleBarRow;
+
     private GameState? _state;
 
     public override void _Ready()
@@ -52,21 +57,33 @@ public sealed partial class HUD : Control
     {
         if (_state == null) return;
 
-        var fighter = _state.PlayerFighter;
+        bool isPossessing = !ReferenceEquals(_state.ControlledEntity, _state.Player);
 
-        // HP fill bar — compute fill width from HP fraction.
-        // Must read Size after layout; falls back to CustomMinimumSize if layout hasn't resolved yet.
-        if (_hpBarFill != null && _hpBarBg != null)
+        // Switch between single bar (idle) and dual bar (possession active).
+        if (_singleBarRow != null) _singleBarRow.Visible = !isPossessing;
+        if (_possessionOverlay != null) _possessionOverlay.Visible = isPossessing;
+
+        if (isPossessing)
         {
-            float availableWidth = _hpBarBg.Size.X > 0 ? _hpBarBg.Size.X : _hpBarBg.CustomMinimumSize.X;
-            float frac = fighter.MaxHp > 0 ? (float)fighter.Hp / fighter.MaxHp : 0f;
-            frac = Math.Clamp(frac, 0f, 1f);
-            _hpBarFill.Size = new Vector2(availableWidth * frac, _hpBarFill.Size.Y);
-            _hpBarFill.Color = HpColor(fighter.Hp, fighter.MaxHp);
+            _possessionOverlay?.Refresh(_state);
         }
+        else
+        {
+            var fighter = _state.PlayerFighter;
 
-        if (_hpLabel != null)
-            _hpLabel.Text = $"{fighter.Hp}/{fighter.MaxHp}";
+            // HP fill bar — compute fill width from HP fraction.
+            if (_hpBarFill != null && _hpBarBg != null)
+            {
+                float availableWidth = _hpBarBg.Size.X > 0 ? _hpBarBg.Size.X : _hpBarBg.CustomMinimumSize.X;
+                float frac = fighter.MaxHp > 0 ? (float)fighter.Hp / fighter.MaxHp : 0f;
+                frac = Math.Clamp(frac, 0f, 1f);
+                _hpBarFill.Size = new Vector2(availableWidth * frac, _hpBarFill.Size.Y);
+                _hpBarFill.Color = HpColor(fighter.Hp, fighter.MaxHp);
+            }
+
+            if (_hpLabel != null)
+                _hpLabel.Text = $"{fighter.Hp}/{fighter.MaxHp}";
+        }
 
         if (_depthLabel != null)
             _depthLabel.Text = $"D:{_state.CurrentDepth}";
@@ -100,58 +117,16 @@ public sealed partial class HUD : Control
         vbox.AddThemeConstantOverride("separation", 4);
         margin.AddChild(vbox);
 
-        // ── Row 1: HP fill bar + "HP X/Y" label + depth label ────────────────
-        var topRow = new HBoxContainer();
-        topRow.AddThemeConstantOverride("separation", 8);
-        vbox.AddChild(topRow);
+        // ── Header row: depth label (always visible) ─────────────────────────
+        var headerRow = new HBoxContainer();
+        headerRow.AddThemeConstantOverride("separation", 8);
+        vbox.AddChild(headerRow);
 
-        // HP bar container: a dark background rect that acts as the track.
-        // Relative width via SizeFlags.ExpandFill so it fills available space.
-        var hpBarContainer = new Control();
-        hpBarContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        hpBarContainer.CustomMinimumSize = new Vector2(0, 22);
-        topRow.AddChild(hpBarContainer);
+        // Spacer so depth label is right-aligned.
+        var spacer = new Control();
+        spacer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        headerRow.AddChild(spacer);
 
-        _hpBarBg = new ColorRect
-        {
-            Color = new Color(0.1f, 0.1f, 0.1f, 0.9f),
-            // Match container height; width resolved by Godot layout.
-            AnchorRight = 1f,
-            AnchorBottom = 1f,
-        };
-        hpBarContainer.AddChild(_hpBarBg);
-
-        // The fill starts at 0 width; Refresh() sets it based on HP fraction.
-        _hpBarFill = new ColorRect
-        {
-            Color = Colors.LimeGreen,
-            // Anchored to left/top/bottom; width is set procedurally in Refresh().
-            AnchorLeft   = 0f,
-            AnchorTop    = 0f,
-            AnchorRight  = 0f,
-            AnchorBottom = 1f,
-            // Start at max width (immediately corrected by first Refresh).
-            Size = new Vector2(200f, 0f),
-        };
-        hpBarContainer.AddChild(_hpBarFill);
-
-        // HP text overlaid on top of the fill bar.
-        _hpLabel = new Label
-        {
-            Text = "HP",
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment   = VerticalAlignment.Center,
-            // Covers the full bar area for centered overlay text.
-            AnchorRight  = 1f,
-            AnchorBottom = 1f,
-        };
-        _hpLabel.AddThemeFontOverride("font", bold);
-        _hpLabel.AddThemeFontSizeOverride("font_size", 16);
-        _hpLabel.AddThemeColorOverride("font_color", Colors.White);
-        _hpLabel.MouseFilter = MouseFilterEnum.Ignore;
-        hpBarContainer.AddChild(_hpLabel);
-
-        // Depth label — right-aligned, compact.
         _depthLabel = new Label
         {
             Text = "D:1",
@@ -160,7 +135,61 @@ public sealed partial class HUD : Control
         _depthLabel.AddThemeFontOverride("font", sans);
         _depthLabel.AddThemeFontSizeOverride("font_size", 22);
         _depthLabel.AddThemeColorOverride("font_color", Colors.White);
-        topRow.AddChild(_depthLabel);
+        headerRow.AddChild(_depthLabel);
+
+        // ── Possession overlay (dual HP bars) — hidden until Active possession ─
+        _possessionOverlay = new PossessionOverlay();
+        _possessionOverlay.Visible = false;
+        _possessionOverlay.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        vbox.AddChild(_possessionOverlay);
+
+        // ── Single-bar row (normal / idle play) ───────────────────────────────
+        _singleBarRow = new HBoxContainer();
+        _singleBarRow.AddThemeConstantOverride("separation", 8);
+        _singleBarRow.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        _singleBarRow.CustomMinimumSize = new Vector2(0, 22);
+        vbox.AddChild(_singleBarRow);
+
+        // HP bar container: a dark background rect that acts as the track.
+        var hpBarContainer = new Control();
+        hpBarContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        hpBarContainer.CustomMinimumSize = new Vector2(0, 22);
+        _singleBarRow.AddChild(hpBarContainer);
+
+        _hpBarBg = new ColorRect
+        {
+            Color = new Color(0.1f, 0.1f, 0.1f, 0.9f),
+            AnchorRight = 1f,
+            AnchorBottom = 1f,
+        };
+        hpBarContainer.AddChild(_hpBarBg);
+
+        // The fill starts at max width; Refresh() corrects it on first call.
+        _hpBarFill = new ColorRect
+        {
+            Color = Colors.LimeGreen,
+            AnchorLeft   = 0f,
+            AnchorTop    = 0f,
+            AnchorRight  = 0f,
+            AnchorBottom = 1f,
+            Size = new Vector2(200f, 0f),
+        };
+        hpBarContainer.AddChild(_hpBarFill);
+
+        // HP text overlaid on the fill bar.
+        _hpLabel = new Label
+        {
+            Text = "HP",
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment   = VerticalAlignment.Center,
+            AnchorRight  = 1f,
+            AnchorBottom = 1f,
+        };
+        _hpLabel.AddThemeFontOverride("font", bold);
+        _hpLabel.AddThemeFontSizeOverride("font_size", 16);
+        _hpLabel.AddThemeColorOverride("font_color", Colors.White);
+        _hpLabel.MouseFilter = MouseFilterEnum.Ignore;
+        hpBarContainer.AddChild(_hpLabel);
     }
 
     /// <summary>

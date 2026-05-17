@@ -571,6 +571,12 @@ public sealed class DungeonFloorBuilder
             var portalWand = _spellItemFactory.CreateWand("wand_of_portals", dummyRng);
             if (portalWand != null)
                 inventory.Add(portalWand);
+
+            // Hollowmark's Spell-Break: always granted at run start. Sasha's narrative wand —
+            // dispels status effects, and frees past-Sasha corpses held by the Under-Warden.
+            var spellBreakWand = _spellItemFactory.CreateWand("wand_of_spell_break", dummyRng);
+            if (spellBreakWand != null)
+                inventory.Add(spellBreakWand);
         }
 
         return player;
