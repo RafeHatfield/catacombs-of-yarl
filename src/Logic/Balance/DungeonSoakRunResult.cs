@@ -87,4 +87,10 @@ public sealed class DungeonSoakRunResult
     /// Serializes as "bot_summary" in JSONL output and is omitted (not null-literal) when absent.
     /// </summary>
     public BotRunSummary? BotSummary { get; set; }
+
+    /// <summary>
+    /// Voice line trigger IDs emitted during this run, with emission counts.
+    /// Null when no voice lines fired. Serializes as snake_case via harness options.
+    /// </summary>
+    public Dictionary<string, int>? VoiceLineHits { get; set; }
 }

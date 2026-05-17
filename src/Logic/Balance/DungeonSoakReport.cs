@@ -31,6 +31,7 @@ public static class DungeonSoakReport
         AppendDeathClassification(sb, summary);
         AppendFloorEfficiency(sb, summary);
         AppendBotEfficiency(sb, summary);
+        AppendVoiceLineHistogram(sb, summary);
         AppendAnomalies(sb, summary);
 
         return sb.ToString();
@@ -297,7 +298,34 @@ public static class DungeonSoakReport
         sb.AppendLine();
     }
 
-    // ── Section 6: Anomalies ────────────────────────────────────────────────
+    // ── Section 6: Voice Line Histogram ────────────────────────────────────
+
+    private static void AppendVoiceLineHistogram(StringBuilder sb, DungeonSoakSummary summary)
+    {
+        sb.AppendLine("Voice Line Emissions:");
+
+        if (summary.VoiceLineHits.Count == 0)
+        {
+            sb.AppendLine("  (no voice lines fired in this soak run)");
+            sb.AppendLine();
+            return;
+        }
+
+        int totalFires = summary.VoiceLineHits.Values.Sum();
+        sb.AppendLine($"  Total fires: {totalFires} across {summary.RunsAttempted} runs");
+        sb.AppendLine($"  {"Trigger ID",-55}  {"Count",5}    {"Rate/Run",8}");
+        sb.AppendLine($"  {new string('-', 55)}  {"-----",5}    {"--------",8}");
+
+        foreach (var (triggerId, count) in summary.VoiceLineHits.OrderByDescending(kv => kv.Value))
+        {
+            double perRun = summary.RunsAttempted > 0 ? (double)count / summary.RunsAttempted : 0.0;
+            sb.AppendLine($"  {triggerId,-55}  {count,5}    {perRun,8:F2}");
+        }
+
+        sb.AppendLine();
+    }
+
+    // ── Section 7: Anomalies ────────────────────────────────────────────────
 
     private static void AppendAnomalies(StringBuilder sb, DungeonSoakSummary summary)
     {

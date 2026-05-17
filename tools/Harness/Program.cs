@@ -35,6 +35,7 @@ bool    jsonOutput   = false;
 bool    dungeonMode  = false;
 bool    verbose      = false;
 bool    printReport  = false;
+bool    transcriptMode = false;
 int?    runsOverride = null;
 int     seed         = 1337;
 // Default to 10 floors (B1+B2) for soak runs. The canonical dungeon is 25 floors (B1-B5),
@@ -53,6 +54,7 @@ for (int i = 0; i < args.Length; i++)
         case "--seed":      seed         = int.Parse(args[++i]); break;
         case "--json":      jsonOutput   = true;      break;
         case "--dungeon":   dungeonMode  = true;      break;
+        case "--transcript": transcriptMode = true;  break;
         case "--floors":    floors       = int.Parse(args[++i]); break;
         case "--verbose":   verbose      = true;      break;
         case "--report":    printReport  = true;      break;
@@ -158,6 +160,14 @@ if (dungeonMode)
     }
 
     var harness = new DungeonRunHarness(floorBuilder);
+
+    if (transcriptMode)
+    {
+        Console.Error.WriteLine($"Generating run transcript (seed {seed}, {floors} floors)...");
+        var text = harness.RunTranscript(floors, seed);
+        Console.WriteLine(text);
+        return 0;
+    }
 
     Console.Error.WriteLine($"Running {runs} soak runs ({floors} floors, seed {seed})...");
 
@@ -727,6 +737,7 @@ void PrintHelp()
     Console.WriteLine("  --jsonl <path>    Stream per-run results as JSONL to file");
     Console.WriteLine("  --verbose         Print bot action distribution and heal behavior after table");
     Console.WriteLine("  --report          Generate and print full analysis report after the soak");
+    Console.WriteLine("  --transcript       Print a single-run narrative transcript (use with --dungeon)");
     Console.WriteLine();
     Console.WriteLine("Offline report options:");
     Console.WriteLine("  --report --jsonl-in <path>  Read saved JSONL and print analysis report");

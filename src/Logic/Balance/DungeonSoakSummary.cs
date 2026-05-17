@@ -73,6 +73,13 @@ public sealed class DungeonSoakSummary
     public int ConfiguredFloors { get; init; }
 
     /// <summary>
+    /// Aggregated voice line trigger IDs across all runs, with total emission counts.
+    /// Only populated by ComputeFrom() when any run has VoiceLineHits data.
+    /// </summary>
+    public IReadOnlyDictionary<string, int> VoiceLineHits { get; init; }
+        = new Dictionary<string, int>();
+
+    /// <summary>
     /// Compute aggregate statistics from a list of completed run results.
     ///
     /// <paramref name="configuredFloors"/> is the number of floors requested for the soak.
@@ -158,6 +165,17 @@ public sealed class DungeonSoakSummary
             }
         }
 
+        // ── Voice-line hits (aggregate across all runs) ──────────────────────────
+        var voiceLineHits = new Dictionary<string, int>();
+        foreach (var r in runs.Where(r => r.VoiceLineHits != null))
+        {
+            foreach (var (triggerId, count) in r.VoiceLineHits!)
+            {
+                voiceLineHits.TryGetValue(triggerId, out int existing);
+                voiceLineHits[triggerId] = existing + count;
+            }
+        }
+
         return new DungeonSoakSummary
         {
             RunsAttempted      = runs.Count,
@@ -172,6 +190,7 @@ public sealed class DungeonSoakSummary
             SurvivalCurve      = curve,
             Runs               = runs,
             ConfiguredFloors   = configuredFloors,
+            VoiceLineHits      = voiceLineHits,
         };
     }
 }

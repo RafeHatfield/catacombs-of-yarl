@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
@@ -153,6 +154,62 @@ public sealed class DungeonRunHarness
     }
 
     /// <summary>
+    /// Run a single dungeon campaign and return a formatted narrative transcript.
+    /// Captures floor entries, voice lines, monster kills, deaths, descents, and traps.
+    /// Intended for D1 narrative testing — prints a human-readable play-by-play.
+    /// </summary>
+    public string RunTranscript(int floors, int seed)
+    {
+        var entries = new List<TranscriptEntry>();
+        var result = RunSingle(floors, seed, enableTelemetry: false, transcript: entries);
+        return FormatTranscript(result, entries, floors, seed);
+    }
+
+    private static string FormatTranscript(DungeonSoakRunResult result, List<TranscriptEntry> entries, int floors, int seed)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"=== Run Transcript (seed {seed}, {floors} floors) ===");
+        sb.AppendLine($"Outcome: {result.Outcome}  |  Floors completed: {result.FloorsCompleted}/{floors}  |  Kills: {result.TotalKills}  |  Turns: {result.TotalTurns}");
+        if (!string.IsNullOrEmpty(result.FailureDetail))
+            sb.AppendLine($"Death: {result.FailureDetail}");
+        sb.AppendLine();
+
+        int currentDepth = 0;
+        foreach (var entry in entries)
+        {
+            if (entry.Depth != currentDepth)
+            {
+                currentDepth = entry.Depth;
+                // floor_enter entries are the depth header — skip duplicate header
+            }
+
+            string line = entry.EventType switch
+            {
+                "floor_enter"    => $"\n[Floor {entry.Depth}]",
+                "voice"          => $"  T{entry.FloorTurn,4} | Voice:   {entry.Detail}",
+                "monster_killed" => $"  T{entry.FloorTurn,4} | Kill:    {entry.Detail}",
+                "player_died"    => $"  T{entry.FloorTurn,4} | DIED:    killed by {entry.Detail}",
+                "descended"      => $"  T{entry.FloorTurn,4} | Descended to floor {entry.Depth + 1}",
+                "trap_triggered" => $"  T{entry.FloorTurn,4} | Trap:    {entry.Detail}",
+                _                => $"  T{entry.FloorTurn,4} | {entry.EventType}: {entry.Detail}",
+            };
+            sb.AppendLine(line);
+        }
+
+        // Voice-line summary at end of transcript
+        if (result.VoiceLineHits?.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine("Voice Line Summary:");
+            foreach (var (triggerId, count) in result.VoiceLineHits.OrderByDescending(kv => kv.Value))
+                sb.AppendLine($"  {triggerId,-55}  x{count}");
+        }
+
+        sb.AppendLine();
+        return sb.ToString();
+    }
+
+    /// <summary>
     /// Run N dungeon campaigns and return aggregate soak statistics.
     ///
     /// Seed per run: baseSeed + i (i = 0..runs-1), matching the PoC convention.
@@ -204,7 +261,7 @@ public sealed class DungeonRunHarness
     /// storing the resulting BotRunSummary in the returned DungeonSoakRunResult.BotSummary.
     /// When false (legacy Run() path), no recorder is created and BotSummary is null.
     /// </summary>
-    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false)
+    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false, IList<TranscriptEntry>? transcript = null)
     {
         var sw = Stopwatch.StartNew();
 
@@ -220,6 +277,7 @@ public sealed class DungeonRunHarness
         int finalHp       = 0;
         int finalMaxHp    = 0;
         string? killerName = null;
+        var voiceLineHits = new Dictionary<string, int>();
 
         // Create a single recorder for the whole run when telemetry is enabled.
         // All BotBrain.Decide() calls share this recorder; context carries per-call metadata.
@@ -227,6 +285,8 @@ public sealed class DungeonRunHarness
 
         for (int depth = 1; depth <= floors; depth++)
         {
+            transcript?.Add(new TranscriptEntry { Depth = depth, FloorTurn = 0, EventType = "floor_enter", Detail = $"Depth {depth}" });
+
             // Distinct-but-reproducible seed per depth — same pattern as smoke tests
             var rng = new SeededRandom(baseSeed + depth * 1_000_003);
             var state = _floorBuilder.Build(depth, rng, player, boonTracker: boonTracker, pityTracker: pityTracker);
@@ -356,6 +416,11 @@ public sealed class DungeonRunHarness
                         case DeathEvent death when death.ActorId != playerId:
                             // Monster died — count kill
                             floorKills++;
+                            if (transcript != null)
+                            {
+                                string mName = state.Monsters.FirstOrDefault(m => m.Id == death.ActorId)?.Name ?? "unknown";
+                                transcript.Add(new TranscriptEntry { Depth = depth, FloorTurn = floorTurns, EventType = "monster_killed", Detail = mName });
+                            }
                             break;
 
                         case DeathEvent death when death.ActorId == playerId:
@@ -366,6 +431,7 @@ public sealed class DungeonRunHarness
                             killerName = death.KillerId == -1
                                 ? "Ground Hazard"
                                 : state.Monsters.FirstOrDefault(m => m.Id == death.KillerId)?.Name;
+                            transcript?.Add(new TranscriptEntry { Depth = depth, FloorTurn = floorTurns, EventType = "player_died", Detail = killerName ?? "unknown" });
                             break;
 
                         case HealEvent heal when heal.ActorId == playerId:
@@ -378,6 +444,17 @@ public sealed class DungeonRunHarness
                         case DescendEvent:
                             descended = true;
                             floorsCompleted++;
+                            transcript?.Add(new TranscriptEntry { Depth = depth, FloorTurn = floorTurns, EventType = "descended", Detail = "" });
+                            break;
+
+                        case VoiceLineEvent v:
+                            voiceLineHits.TryGetValue(v.TriggerId, out int vlc);
+                            voiceLineHits[v.TriggerId] = vlc + 1;
+                            transcript?.Add(new TranscriptEntry { Depth = depth, FloorTurn = floorTurns, EventType = "voice", Detail = v.TriggerId });
+                            break;
+
+                        case TrapTriggeredEvent trap when trap.TargetId == playerId:
+                            transcript?.Add(new TranscriptEntry { Depth = depth, FloorTurn = floorTurns, EventType = "trap_triggered", Detail = trap.Source });
                             break;
                     }
                 }
@@ -499,6 +576,7 @@ public sealed class DungeonRunHarness
             DurationSeconds     = sw.Elapsed.TotalSeconds,
             PerFloor            = perFloor,
             BotSummary          = botSummary,
+            VoiceLineHits       = voiceLineHits.Count > 0 ? voiceLineHits : null,
         };
     }
 
