@@ -13,6 +13,11 @@ namespace CatacombsOfYarl.Tests.Core;
 ///   - TurnController: bumping without key emits LockedDoorBumpedEvent (free action)
 ///   - TurnController: bumping with key consumes key and opens door (DoorUnlockedEvent + KeyConsumedEvent)
 ///   - PlaceFloorFeatures skips locked doors at depth 1; places one at depth 2+
+///
+/// Also covers SecretDoor and CanOpenDoors behaviors:
+///   - TileKind.SecretDoor is non-walkable and counts as a wall tile (renders as wall)
+///   - CheckSecretDoorDetection eventually reveals an adjacent SecretDoor → TileKind.Door
+///   - Monsters with CanOpenDoors=false cannot open doors
 /// </summary>
 [TestFixture]
 public class LockedDoorTests
@@ -352,5 +357,186 @@ public class LockedDoorTests
                 return;
             }
         }
+    }
+
+    // ── SecretDoor tile behavior ─────────────────────────────────────────────
+
+    [Test]
+    public void SecretDoor_IsNotWalkable()
+    {
+        var map = MakeArena(10, 10);
+        map.SetTile(5, 5, TileKind.SecretDoor);
+        Assert.That(map.IsWalkable(5, 5), Is.False,
+            "SecretDoor must not be walkable — it looks like a wall");
+    }
+
+    [Test]
+    public void SecretDoor_IsWallTile_ReturnsTrue()
+    {
+        // Critical for the renderer: IsWallTile must return true for SecretDoor so the
+        // wall autotile bitmask is computed correctly for adjacent tiles.
+        var map = MakeArena(10, 10);
+        map.SetTile(5, 5, TileKind.SecretDoor);
+        Assert.That(map.IsWallTile(5, 5), Is.True,
+            "SecretDoor must count as a wall tile for autotile/renderer purposes");
+    }
+
+    [Test]
+    public void SecretDoor_GetTileKind_ReturnsSecretDoor()
+    {
+        var map = MakeArena(10, 10);
+        map.SetTile(5, 5, TileKind.SecretDoor);
+        Assert.That(map.GetTileKind(5, 5), Is.EqualTo(TileKind.SecretDoor));
+    }
+
+    [Test]
+    public void SecretDoor_CannotPassEvenWithCanPassDoors()
+    {
+        // SecretDoor is unrevealed — canPassDoors flag is for normal Door only.
+        var map = MakeArena(10, 10);
+        map.SetTile(5, 5, TileKind.SecretDoor);
+        Assert.That(map.CanMoveToWith(5, 5, null, canPassDoors: true), Is.False,
+            "SecretDoor must not be passable even with canPassDoors=true");
+    }
+
+    [Test]
+    public void SecretDoor_Detection_EventuallyRevealsToDoor()
+    {
+        // CheckSecretDoorDetection has a 25% chance per turn. Over many turns with a
+        // fixed seed the door must eventually reveal. We cap at 100 turns (~99.997%
+        // cumulative probability of at least one reveal) to keep the test deterministic.
+        var map = MakeArena(10, 10);
+        // Player at (4,5), SecretDoor adjacent at (5,5)
+        map.SetTile(5, 5, TileKind.SecretDoor);
+        var player = MakePlayer(4, 5);
+        var state = MakeState(map, player);
+
+        bool revealed = false;
+        for (int t = 0; t < 100 && !revealed; t++)
+        {
+            // Wait action triggers passive detection on each turn.
+            var result = TurnController.ProcessTurn(state, PlayerAction.Wait);
+            if (result.Events.OfType<SecretDoorFoundEvent>().Any())
+                revealed = true;
+        }
+
+        Assert.That(revealed, Is.True,
+            "SecretDoor adjacent to player must eventually be revealed by passive detection");
+        Assert.That(map.GetTileKind(5, 5), Is.EqualTo(TileKind.Door),
+            "Revealed SecretDoor tile must become TileKind.Door (a closed door — still must be opened)");
+        // A revealed secret door is a *closed* Door, which is not yet walkable.
+        // The player must bump into it to open it, just like any other closed door.
+        Assert.That(map.IsWalkable(5, 5), Is.False,
+            "Revealed secret door is a closed Door — not walkable until opened");
+    }
+
+    [Test]
+    public void SecretDoor_Detection_EmitsHintText()
+    {
+        // SecretDoorFoundEvent must carry a non-empty hint string (flavor text for the UI).
+        var map = MakeArena(10, 10);
+        map.SetTile(5, 5, TileKind.SecretDoor);
+        var player = MakePlayer(4, 5);
+        var state = MakeState(map, player);
+
+        SecretDoorFoundEvent? foundEvt = null;
+        for (int t = 0; t < 100 && foundEvt == null; t++)
+        {
+            var result = TurnController.ProcessTurn(state, PlayerAction.Wait);
+            foundEvt = result.Events.OfType<SecretDoorFoundEvent>().FirstOrDefault();
+        }
+
+        Assert.That(foundEvt, Is.Not.Null, "SecretDoor must eventually be revealed");
+        Assert.That(foundEvt!.Hint, Is.Not.Empty,
+            "SecretDoorFoundEvent must carry a non-empty hint string");
+    }
+
+    [Test]
+    public void SecretDoor_NotDetectedFromDistance()
+    {
+        // Passive detection only covers Chebyshev radius 1. A SecretDoor more than 1 tile
+        // away must never be revealed regardless of turn count.
+        var map = MakeArena(10, 10);
+        // Player at (4,5), SecretDoor at (8,5) — 4 tiles away
+        map.SetTile(8, 5, TileKind.SecretDoor);
+        var player = MakePlayer(4, 5);
+        var state = MakeState(map, player);
+
+        for (int t = 0; t < 40; t++)
+            TurnController.ProcessTurn(state, PlayerAction.Wait);
+
+        Assert.That(map.GetTileKind(8, 5), Is.EqualTo(TileKind.SecretDoor),
+            "SecretDoor more than 1 tile away must not be revealed by passive detection");
+    }
+
+    // ── CanOpenDoors monster behavior ────────────────────────────────────────
+
+    [Test]
+    public void Monster_CanOpenDoors_False_CannotOpenDoor()
+    {
+        // A monster with CanOpenDoors=false that moves into a door tile must NOT open it.
+        // The door remains closed and the monster cannot pass through.
+        var map = MakeArena(10, 10);
+        // Door at (5,5), monster at (4,5) — adjacent, will try to move right into the door.
+        map.SetTile(5, 5, TileKind.Door);
+        var player = MakePlayer(9, 9); // player far away — won't attract monster
+
+        // Monster with CanOpenDoors=false
+        var monster = new Entity(1, "Zombie", 4, 5, blocksMovement: true);
+        monster.Add(new Fighter(hp: 10, strength: 5, dexterity: 5, constitution: 5,
+            accuracy: 1, evasion: 0, damageMin: 1, damageMax: 2)
+        {
+            CanOpenDoors = false,
+        });
+
+        var state = new GameState(player, new List<Entity> { monster }, map, new SeededRandom(1337));
+        state.Map.RegisterEntity(player);
+        state.Map.RegisterEntity(monster);
+
+        // Run several turns — monster AI will try to move toward the player and hit the door
+        for (int t = 0; t < 5; t++)
+            TurnController.ProcessTurn(state, PlayerAction.Wait);
+
+        Assert.That(map.GetTileKind(5, 5), Is.EqualTo(TileKind.Door),
+            "Monster with CanOpenDoors=false must not open a closed door");
+    }
+
+    [Test]
+    public void Monster_CanOpenDoors_True_CanOpenDoor()
+    {
+        // A monster with CanOpenDoors=true that tries to move into a door tile DOES open it.
+        // The door becomes DoorOpen and a DoorOpenedEvent is emitted.
+        var map = MakeArena(12, 12);
+        // Door at (5,5), monster at (4,5) — adjacent, will move right through
+        map.SetTile(5, 5, TileKind.Door);
+        var player = MakePlayer(9, 5); // player east of door — monster will approach through it
+
+        var monster = new Entity(1, "Orc", 4, 5, blocksMovement: true);
+        monster.Add(new Fighter(hp: 15, strength: 8, dexterity: 8, constitution: 8,
+            accuracy: 2, evasion: 0, damageMin: 2, damageMax: 4)
+        {
+            CanOpenDoors = true,
+        });
+
+        var state = new GameState(player, new List<Entity> { monster }, map, new SeededRandom(1337));
+        state.Map.RegisterEntity(player);
+        state.Map.RegisterEntity(monster);
+
+        // One turn: monster AI sees the player, moves toward it, and must open the door
+        TurnResult? resultWithDoor = null;
+        for (int t = 0; t < 5; t++)
+        {
+            var r = TurnController.ProcessTurn(state, PlayerAction.Wait);
+            if (r.Events.OfType<DoorOpenedEvent>().Any())
+            {
+                resultWithDoor = r;
+                break;
+            }
+        }
+
+        Assert.That(resultWithDoor, Is.Not.Null,
+            "Monster with CanOpenDoors=true must open a door when moving through it");
+        Assert.That(map.GetTileKind(5, 5), Is.EqualTo(TileKind.DoorOpen),
+            "Door must be DoorOpen after being opened by a CanOpenDoors monster");
     }
 }
