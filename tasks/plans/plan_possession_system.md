@@ -1,6 +1,6 @@
 # Plan: Possession System
 
-**Status:** [ ] Not started — spec only, no implementation in this pass.
+**Status:** [x] Phases 1–7 complete (2026-05-13). Primitive, state machine, visibility, drain, near-death warning, knowledge, TurnController dispatch, death router, end-of-turn hooks, HUD dual-bar, camera ControlledEntity, Possess/Exit/Cancel buttons, Dispel spell (both source branches), wraith/lich immunity, Hollowmark's Spell-Break wand, voice line registry (3 YAML files), VoiceLineEvent, CatalogEntryRenderer (8 categories), BestFloorReachedAtDeath + IsNotable + KillerWasFirstEncounter persistence fields, possession soak scenario, phantom wand-kick mechanic (WandKickedEvent, IsWandAbilitySuppressed, KickWand, TryKickWand), MonsterAbilityDefinition + HostAbilityComponent infrastructure, UseMonsterAbility action stub. 1631 tests.
 **Spec version:** 1.2 (2026-04-26). All open questions resolved; Phase 0 closed; Phases 1–4 unblocked. Phase 5 depends on cross-run persistence schema landing in parallel.
 
 - v1.2 (2026-04-26): §8.2 internal contradiction fixed. Possession-induced host deaths now route through a dedicated `PossessionSystem.OnPossessionInducedHostDeath` pipeline that bypasses the standard `OnDeath` flow entirely — making the `RecordKilled` / XP / faction-rep-trigger suppression explicit at the call site. Same pipeline absorbs the §8.5 WardenInitiated corpse-collapse path. §14 method list and TurnController integration notes updated.

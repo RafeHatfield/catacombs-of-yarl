@@ -77,9 +77,10 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Tier 4 — Testing & Balance Infrastructure
 | Plan | Status | Description |
 |------|--------|-------------|
-| [plan_testing_infra_phase1.md](plan_testing_infra_phase1.md) | [ ] | Dungeon soak CLI: --dungeon mode, DungeonSoakRunResult, outcome classification, JSONL output, multi-run aggregation |
-| [plan_testing_infra_phase2.md](plan_testing_infra_phase2.md) | [ ] | Bot decision telemetry: BotDecisionRecord, IBotTelemetryRecorder, BotRunSummary, wired into BotBrain.Decide() |
-| [plan_testing_infra_phase3.md](plan_testing_infra_phase3.md) | [ ] | Analysis reports: DungeonSoakReport generator, JSONL reader for offline analysis, --report flag, CI integration |
+| [plan_testing_infra_phase1.md](plan_testing_infra_phase1.md) | [x] | Dungeon soak CLI: --dungeon mode, DungeonSoakRunResult, outcome classification, JSONL output, multi-run aggregation |
+| [plan_testing_infra_phase2.md](plan_testing_infra_phase2.md) | [x] | Bot decision telemetry: BotDecisionRecord, IBotTelemetryRecorder, BotRunSummary, wired into BotBrain.Decide() |
+| [plan_testing_infra_phase3.md](plan_testing_infra_phase3.md) | [x] | Analysis reports: DungeonSoakReport generator, JSONL reader for offline analysis, --report flag, CI integration |
+| plan_narrative_testing_d1d2.md (no file) | [x] | D1 run transcript (--transcript flag, FormatTranscript), D2 voice-line histogram (VoiceLineHits in soak pipeline + DungeonSoakReport section). 1638 tests. |
 | [plan_bot_personas.md](plan_bot_personas.md) | [ ] | 5 personas: balanced/cautious/aggressive/greedy/speedrunner |
 | [plan_testing_mode.md](plan_testing_mode.md) | [ ] | In-game test menu, testing YAML loader, preconfigured test states |
 | [plan_balance_pipeline.md](plan_balance_pipeline.md) | [ ] | ETP system, target bands, depth scaling, auto-diagnosis |
@@ -93,4 +94,5 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | Plan | Status | Description |
 |------|--------|-------------|
 | [plan_cross_run_persistence.md](plan_cross_run_persistence.md) | [x] | Cross-run persistence: all 7 phases complete. 15 namespaces, source-gen JSON, migrations, all arc/catalog mutation APIs, daily seeds. 1528 tests. |
-| [plan_possession_system.md](plan_possession_system.md) | [ ] | Player possession: PossessionEffect, host-body state machine, drain clock, HUD, OnPossessionInducedHostDeath pipeline. Unblocked after persistence Phase 1. |
+| [plan_possession_system.md](plan_possession_system.md) | [x] | Player possession: Phases 1–7 complete (+ Dispel spell, wraith/lich immunity, Spell-Break wand, VoiceLineRegistry, CatalogEntryRenderer, 3 voice YAML files, wand-kick mechanic, HostAbilityComponent infrastructure — 1631 tests). |
+| [plan_under_warden_memos.md](plan_under_warden_memos.md) | [ ] | Memo delivery system: MemoRegistry, cause_display_names.yaml, memo inbox UI, cross-run persistence wiring. Content: ~30 memos across 4 tones. polite.death_first drafted. |
