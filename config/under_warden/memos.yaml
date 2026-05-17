@@ -1,0 +1,183 @@
+# Under-Warden memo content pools.
+#
+# Key format: {tone}.{incident_type}
+# Tones (locked): polite | procedural_notice | formal_complaint | final_audit
+#
+# Incident types:
+#   death_first, death_repeat, cause_trap, cause_acid, cause_possession_neglect,
+#   cause_own_poison, floor_low, floor_milestone, audit_warning, audit_final,
+#   catalog_referenced, item_theft, run_clean, hall_warden_possession
+#
+# Each memo:
+#   register:  direct (written TO Sasha) | internal_cc (written ABOUT Sasha, cc'd)
+#   to:        department name (internal_cc only; authored content, not rendered)
+#   subject:   string (slots allowed)
+#   body:      list — body[0] is canonical first-fire (cross-run persisted);
+#              body[1+] are repeat variants for multi-fire triggers
+#
+# Slot vocabulary:
+#   {run_number}      current run index
+#   {floor}           floor death/event occurred on
+#   {cause_of_death}  readable phrase from cause_display_names.yaml
+#   {killer_species}  species name if monster kill
+#   {run_count}       total runs to date
+#   {memo_count}      total memos delivered to date
+#   {floor_best}      best floor reached across all runs
+#   {offense_summary} one-line primary grievance summary
+#   {catalog_entry}   most recent past-self catalog line (from CatalogEntryRenderer)
+#
+# Emphasis convention: **text** renders as bold (parsed by MemoRenderer; do not use BBCode directly).
+
+# ── Polite ───────────────────────────────────────────────────────────────────
+
+polite.death_first:
+  register: internal_cc
+  to: "Occupancy Management, Sublevel Correspondence"
+  subject: "Attrition Record: Unit #{run_number}, Floor {floor}"
+  body:
+    - |
+      From: The Under-Warden
+      To: Occupancy Management, Sublevel Correspondence
+      Cc: Unit #{run_number}, as procedural courtesy
+
+      **Summary:** Termination filed. Replacement unit anticipated within the standard interval.
+
+      Per Regulation 44-C (Custodial Attrition, Routine), this office logs the termination of Unit #{run_number} on Floor {floor}. Cause of loss: {cause_of_death}. Catalog entry has been generated and filed under the appropriate sub-archive; no review required at this stage.
+
+      Unit #{run_number} is cc'd as a procedural courtesy. We have found, over the operational tenure of this institution, that visiting parties appreciate the gesture, even where the gesture is, strictly speaking, addressed past them.
+
+      No replacement unit has yet presented. This office assumes, on the basis of consistent prior pattern, that one will.
+
+      Signed,
+      The Under-Warden
+
+polite.floor_low:
+  register: direct
+  subject: "Floor {floor}, recent descent"
+  body:
+    - |
+      Mr. of Reven,
+
+      **Summary:** Termination filed on Floor {floor}. Descent was, in operational terms, brief.
+
+      I trust the prior orientation materials reached you in good order. They were, I am told, the standard issue.
+
+      The incident log notes that termination occurred on Floor {floor}, which is, for the descent as it had been progressing, an early and somewhat structurally significant juncture. Cause of loss: {cause_of_death}. The catalog has been updated accordingly.
+
+      This office offers no judgment in such matters. The early floors of any institution are, by their nature, calibrating instruments; many visiting parties find them more demanding than the published rotation might suggest. We make a point of noting that distinction in the introductory materials, though we appreciate that introductory materials are often consulted only in retrospect.
+
+      Please be assured that the catalog entry has been filed under the standard sub-archive, and that no remedial action is contemplated at this stage.
+
+      With regards,
+      The Under-Warden
+
+polite.cause_trap:
+  register: direct
+  subject: "Termination, Floor {floor}, mechanical disposition"
+  body:
+    - |
+      Mr. of Reven,
+
+      **Summary:** Cause of termination logged as {cause_of_death}. The relevant signage is, per institutional standard, in place.
+
+      This office records, with some small administrative bemusement, that termination on Floor {floor} resulted from a sprung mechanical disposition of a kind clearly enumerated in the descent advisories.
+
+      The mechanical disposition in question is, I am informed, one of the older models. It has been in continuous operation for the better part of three centuries, having been inspected on its semicentennial schedule and certified each time as functioning within tolerance. Its location is marked on the relevant floor map, which is updated annually and distributed via the appropriate channels.
+
+      I mention these particulars not by way of reproach but in the spirit of orientation. Visiting parties who familiarize themselves with the floor maps before descent generally report fewer encounters of this nature.
+
+      The catalog has been updated. The mechanical disposition has been re-armed, in accordance with regulation.
+
+      With courtesies,
+      The Under-Warden
+
+polite.cause_acid:
+  register: direct
+  subject: "Termination, Floor {floor}, environmental"
+  body:
+    - |
+      Mr. of Reven,
+
+      **Summary:** Cause of termination logged as {cause_of_death}. Environmental hazards of this class are, by institutional convention, marked through coloration.
+
+      The incident log records that termination on Floor {floor} resulted from contact with a deposit of the corrosive substance commonly catalogued as "{cause_of_death}." This substance, in its natural occurrence within the institution, presents in shades of green or, depending on mineral content, yellow-green to brown-green. It is, by convention and by long practice, visible.
+
+      This office notes, for the record, that the lower floors of certain regions contain similar deposits of differing pigmentation. Visiting parties who have made the descent before this one have, in some cases, found this variation noteworthy. The matter has been discussed in successive editions of the descent advisories.
+
+      The deposit in question has been logged and will be left in its natural state. Replenishment is, you may be reassured, ongoing.
+
+      The catalog has been updated.
+
+      With regards,
+      The Under-Warden
+
+polite.hall_warden_possession:
+  register: direct
+  subject: "Floor 13, recent visit"
+  body:
+    - |
+      Mr. of Reven,
+
+      **Summary:** The matter of Hall Warden 04-Kessen's brief unavailability has been noted and is under routine review. No response is required.
+
+      I trust this finds you well. The descent has, by all accounts, been productive on your end, and we are pleased that the Boundary continues to be navigable for visiting parties.
+
+      Number 04-Kessen reports no memory of the interval, which is, as you may appreciate, irregular for a member of his order, who are constitutionally attentive. Kessen took the omission personally. He has asked to be informed if any further intervals occur.
+
+      The matter is under review, as such matters routinely are. I mention it so that you are aware the matter has been noticed, and so that you have the opportunity, should you wish, to clarify any aspects of your own visit to that floor that may be relevant.
+
+      Please continue to enjoy your descent.
+
+      Cordially,
+      The Under-Warden
+
+# ── Procedural Notice ────────────────────────────────────────────────────────
+
+procedural_notice.hall_warden_possession:
+  register: direct
+  subject: "Floor 13 and Floor 14, recurring matter"
+  body:
+    - |
+      **Summary:** The matter is now in standing review status. Standing review is a status from which the matter does not retreat.
+
+      The previous correspondence on this matter does not appear to have resulted in a clarifying response from your end. This office assumes good faith and proceeds accordingly.
+
+      Per Hall Standing Order 7.2.iii, members of the Warden order are not, in the administrative sense, available for involuntary intervals imposed by visiting parties. The relevant regulations are cited here for your reference; they have been in force for the entirety of this institution's operation.
+
+      The incident log notes the following recurrences:
+
+      - Hall Warden 04-Kessen, Floor 13. Second documented interval. Subject's professional record remains otherwise without blemish, which is an observation this office offers in Kessen's defense, not yours.
+      - Hall Warden 06-Voren, Floor 14. First documented interval. Voren is, at present, attempting to reconstruct the missing time from peripheral testimony; this is, as you may understand, the kind of work the Wardens should not be required to perform.
+
+      Should you wish to clarify any aspect of the recurrences, the appropriate channel is correspondence to this office, addressed as above.
+
+      Cordially,
+      The Under-Warden
+
+# ── Formal Complaint ─────────────────────────────────────────────────────────
+
+formal_complaint.hall_warden_possession:
+  register: direct
+  subject: "Continued irregularities on the Floors of the Boundary, with specific reference to repeated possessions of Hall Wardens"
+  body:
+    - |
+      **Summary:** A formal complaint regarding repeated involuntary intervals imposed on Hall Wardens is now on file. The complaint is filed.
+
+      The matter previously raised in correspondence dated the visit prior, and the visit before, and on three occasions before that, has now reached a point at which this office can no longer treat it as a series of unrelated incidents. A pattern is on file.
+
+      Itemized:
+
+      1. Hall Warden 04-Kessen, Floor 13, three separate intervals across as many descents. Subject reports no memory of intervals. Subject's professional record is otherwise without blemish.
+      2. Hall Warden 06-Voren, Floor 14, two intervals. Same pattern.
+      3. Hall Warden 09-Maleth, Floor 17, one interval, during which Maleth's post was breached and an item of inventory left the floor without proper transfer documentation.
+
+      The Hall Wardens of this institution are not gloves. They are not coats one removes at the door of a building one was not invited to enter. They are not vehicles. They have names, and posts, and a duty agreed to under proper rite, and they do not, and this is the point, they do not consent to intervals.
+
+      I would draw your attention to the fact that this office has, on each previous occasion, declined to escalate. That was a courtesy. Courtesies are not entitlements.
+
+      The complaint does not, at present, require action from your end. It is filed.
+
+      I trust this clarifies the matter.
+
+      Regards,
+      The Under-Warden

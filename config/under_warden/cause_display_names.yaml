@@ -1,0 +1,41 @@
+# Bureaucratic display phrases for engine cause-of-death strings.
+# Substituted into {cause_of_death} slots at memo render time.
+# Fallback for unmapped causes: underscore-to-space + title-case (e.g. "orc_brute" -> "Orc Brute").
+
+# ── Environmental hazards ────────────────────────────────────────────────────
+
+spike_trap: "encounter with a sprung floor trap"
+dart_trap: "exposure to a dart mechanism"
+flame_trap: "contact with a thermal disposition"
+acid_pool: "acid exposure"
+acid_spray: "contact with a corrosive aerosol"
+poison_cloud: "exposure to an airborne toxin"
+falling_rocks: "structural displacement event"
+chasm_fall: "gravitational descent past the operational floor"
+
+# ── Self-inflicted ───────────────────────────────────────────────────────────
+
+own_poison: "contact with a self-deployed reagent"
+own_fire: "immersion in a self-initiated thermal event"
+own_trap: "contact with a personally-deployed mechanical disposition"
+possession_neglect: "vacation of the home vessel during an active inhabitation"
+
+# ── Monster causes ───────────────────────────────────────────────────────────
+
+orc_brute: "engagement with a hostile Unshriven combatant"
+orc_skirmisher: "engagement with an Unshriven irregular"
+orc_shaman: "contact with Unshriven ritual practice"
+iron_orc_captain: "engagement with a ranking Unshriven"
+bone_orc: "engagement with a senior Unshriven"
+hall_warden: "contact with an institutional officer in the performance of duties"
+oathbreaker: "contact with a non-compliant residual"
+wraith: "exposure to a low-substantive entity"
+lich: "contact with a non-cooperative former officer"
+troll: "engagement with a regional native"
+bat_swarm: "contact with an aerial cohort"
+king_bat: "contact with the largest specimen of an aerial cohort"
+
+# ── Special ──────────────────────────────────────────────────────────────────
+
+under_warden_directly: "administrative action by this office"
+unknown: "cause unclassified"
