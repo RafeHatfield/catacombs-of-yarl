@@ -1,123 +1,134 @@
 # Plan: Under-Warden Memo Delivery System
 
-**Status:** [ ] Not started (2026-05-13). YAML schema defined, content drafting in progress. Engineering not yet built.
+**Status:** [ ] Not started (engineering). YAML files created, content drafting in progress.
+
+**Content status:** 7 memos across 4 incident types drafted (sessions 1–2). ~23 remaining.
 
 ---
 
 ## What It Is
 
-A memo delivery system that surfaces Under-Warden correspondence between dungeon runs. Memos appear in an inbox UI after each run (or on the main menu), presenting bureaucratic notes from the Under-Warden keyed to specific in-run incidents.
+A memo delivery system that surfaces Under-Warden correspondence between runs. Memos
+appear in an inbox UI after each run, presenting bureaucratic notes keyed to specific
+in-run and cross-run incidents. Two registers:
 
-Memos are keyed by `{tone}.{incident_type}` and stored in `config/under_warden/memos.yaml`. Two registers exist:
-
-- **direct** — The Under-Warden writing TO Sasha (formal, escalating tone over repeat incidents)
-- **internal_cc** — The Under-Warden writing ABOUT Sasha to departments, with Sasha cc'd (bureaucratic aside, dry humor, escalating dossier)
+- **direct** — Written TO Sasha. Personal address, tone progression per incident type.
+- **internal_cc** — Written ABOUT Sasha to departments; Sasha cc'd as procedural
+  courtesy. Third-person, chilling institutional distance. The contrast with direct
+  correspondence is the point.
 
 ---
 
-## Tone Taxonomy
-
-Tone names are locked (used as keys in cross-run persistence schema; changing them breaks saved data):
+## Tone Taxonomy (locked — matches `under_warden` persistence namespace keys)
 
 | Tone | Character |
 |------|-----------|
-| `polite` | Courteous, almost warm — opening correspondence |
-| `procedural_notice` | Formal record-keeping tone — incident noted, no judgment yet |
-| `formal_complaint` | Elevated concern — pattern flagged, wording careful |
-| `final_audit` | Terminal tone — exhausted patience, consequences implied |
+| `polite` | Courteous, institutional. Opening correspondence. Almost warm. |
+| `procedural_notice` | Pattern noted, regulations cited. No judgment — yet. |
+| `formal_complaint` | Complaint filed. The patience is still present; the mask is not. |
+| `final_audit` | Terminal. Brief. Administrative. Like a termination notice. |
 
 ---
 
 ## Incident Types
 
-| Incident Key | Trigger |
+Key format: `{tone}.{incident_type}`. Each incident_type has a fixed register.
+
+| Incident Key | Register | Trigger condition |
+|---|---|---|
+| `death_first` | internal_cc | First run death ever |
+| `death_repeat` | direct | 3rd+ cumulative death |
+| `cause_trap` | direct | Death caused by a trap |
+| `cause_acid` | direct | Death caused by acid damage |
+| `cause_possession_neglect` | direct | Home body killed during possession |
+| `cause_own_poison` | direct | Death by own poison (throw, splash) |
+| `floor_low` | direct | Death on floor 1–3 |
+| `floor_milestone` | internal_cc | First time reaching floor 10 / 15 / 20 |
+| `audit_warning` | direct | Cumulative death count crosses audit threshold |
+| `audit_final` | direct | Terminal audit threshold (final warning) |
+| `catalog_referenced` | direct | A catalog entry surfaced in-run (standalone session — uses {catalog_entry} slot) |
+| `item_theft` | direct | Item flagged as Under-Warden property taken |
+| `run_clean` | direct | Run completed without traps triggered and without possession |
+| `hall_warden_possession` | direct | Player has possessed a Hall Warden N times across runs |
+
+### `hall_warden_possession` thresholds
+
+| Fires at | Tone |
 |---|---|
-| `death_first` | First run death ever |
-| `death_repeat` | Subsequent deaths |
-| `cause_trap` | Death caused by a trap |
-| `cause_acid` | Death caused by acid damage |
-| `cause_possession_neglect` | Home body killed during possession |
-| `cause_own_poison` | Death by own poison (e.g. splash, misuse) |
-| `floor_low` | Run ended on floor 1 or 2 |
-| `floor_milestone` | Reached a new deepest floor |
-| `audit_warning` | Cross-run threshold crossed (e.g. 10 deaths) |
-| `audit_final` | Terminal audit threshold crossed |
-| `catalog_referenced` | A catalog entry was accessed in-run |
-| `item_theft` | Item taken that was flagged as Under-Warden property |
-| `run_clean` | Completed a run with no traps triggered, no possession |
+| 1st Hall Warden possession ever | `polite` |
+| 3rd cumulative possession | `procedural_notice` |
+| 6th+ cumulative possession | `formal_complaint` |
+
+Tracked via `hall_warden_possessions_total` counter in `under_warden` namespace.
+Incremented on `PossessionExitedEvent` where `HostSpecies == "hall_warden"`.
 
 ---
 
 ## Slot Vocabulary
 
-Memos support interpolated slots in subject and body text. All slots come from cross-run persistence or run result data — no hardcoded C# strings:
-
 | Slot | Source |
 |---|---|
-| `{run_number}` | Cross-run persistence: total run count |
-| `{floor}` | Run result: deepest floor reached |
-| `{cause_of_death}` | Run result: cause key, resolved via `cause_display_names.yaml` |
-| `{killer_species}` | Run result: species that landed the killing blow |
-| `{run_count}` | Cross-run persistence: total runs |
-| `{memo_count}` | Cross-run persistence: total memos sent |
-| `{floor_best}` | Cross-run persistence: best floor ever reached |
-| `{offense_summary}` | Cross-run persistence: computed summary of flagged incidents |
-| `{catalog_entry}` | Catalog entry referenced (for `catalog_referenced` incident) |
+| `{run_number}` | `RunCounterData.RunCount` |
+| `{floor}` | Run result: floor death/event occurred on |
+| `{cause_of_death}` | Run result cause key → resolved via `cause_display_names.yaml` |
+| `{killer_species}` | Run result: killer entity species |
+| `{run_count}` | `RunCounterData.RunCount` |
+| `{memo_count}` | `under_warden.memo_count` |
+| `{floor_best}` | `RunCounterData.BestFloorReached` |
+| `{offense_summary}` | Computed from `under_warden` grievance log |
+| `{catalog_entry}` | `CatalogEntryRenderer.RenderEntry()` for most recent past-self |
 
 ---
 
 ## Cause Display Names
 
-Readable display phrases for `{cause_of_death}` slot live in `config/under_warden/cause_display_names.yaml` — not hardcoded in C#.
+`config/under_warden/cause_display_names.yaml` — bureaucratic phrases for engine
+cause-of-death strings. Loaded at render time. Fallback: underscore→space + title-case.
 
-Fallback behavior (when a key is missing from the YAML): convert underscore to space, apply title-case. Example: `orc_brute` → "Orc Brute".
+**File exists.** 20 entries covering environmental hazards, self-inflicted, monster
+causes, and special cases (including `under_warden_directly`).
 
 ---
 
 ## First-Fire Semantics
 
-Different from `VoiceLineRegistry` (session-level deduplication):
+Different from `VoiceLineRegistry` (session-level):
 
-- Canonical body[0] of each memo fires **once ever** — cross-run persisted in the `under_warden` namespace.
-- Subsequent fires of the same `{tone}.{incident_type}` key use body[1..n] variants in round-robin or random order.
-- Each body entry is an object with `subject` and `body` fields (supporting multi-line body text).
-
-This means repeat incidents accumulate a growing correspondence thread, not the same letter again.
+- `body[0]` fires **once ever** — cross-run persisted in `under_warden.delivered_memos`
+  (a `HashSet<string>` of fired `{tone}.{incident_type}` keys).
+- Subsequent fires of the same key use `body[1..n]` variants (random selection from pool).
+- Single-shot incident types (`death_first`, `floor_milestone`, `audit_final`,
+  `catalog_referenced`) author `body[0]` only — no variants needed.
+- Multi-fire types (`cause_trap`, `cause_acid`, `death_repeat`, `audit_warning`, etc.)
+  author `body[0]` as first-encounter pitch (more explanatory), `body[1..n]` as repeat
+  variants (shorter, assume familiarity, different angle on the fifth fire than the first).
 
 ---
 
-## YAML Schema
+## YAML Format
 
 ```yaml
 # config/under_warden/memos.yaml
-memos:
-  polite.death_first:
-    register: direct
-    bodies:
-      - subject: "Re: Your Recent Departure from Active Service"
-        body: |
-          Mr. Valdris,
+# Key: {tone}.{incident_type}
+# register: direct | internal_cc
+# to: department string (internal_cc only; authored content, not rendered)
+# subject: string (slots allowed)
+# body: list — body[0] canonical first-fire; body[1+] repeat variants
+# Emphasis: **text** → bold (parsed by MemoRenderer; do not use BBCode directly)
 
-          It has come to our attention that you have died. We understand this is
-          sometimes an adjustment. The Reven Administration wishes you a prompt
-          recovery and looks forward to your continued engagement with the
-          cataloging initiative.
-
-          Should you have questions about the reintegration process, please
-          consult your assigned liaison.
-
-          With regard,
-          The Under-Warden
-          Office of Depth Compliance
-      - subject: "Re: Subsequent Departure from Active Service"
-        body: |
-          Mr. Valdris,
-
-          Again.
-
-          With diminishing regard,
-          The Under-Warden
+polite.death_first:
+  register: internal_cc
+  to: "Occupancy Management, Sublevel Correspondence"
+  subject: "Attrition Record: Unit #{run_number}, Floor {floor}"
+  body:
+    - |
+      From: The Under-Warden
+      To: Occupancy Management, Sublevel Correspondence
+      Cc: Unit #{run_number}, as procedural courtesy
+      ...
 ```
+
+**File exists.** 7 memos across 4 incident types. See `config/under_warden/memos.yaml`.
 
 ---
 
@@ -125,8 +136,20 @@ memos:
 
 | Memo Key | Status |
 |---|---|
-| `polite.death_first` | Drafted (canonical body[0] complete) |
-| All others (~29 memos) | In progress |
+| `polite.death_first` | ✅ Drafted (body[0] canonical) |
+| `polite.floor_low` | ✅ Drafted (body[0]) |
+| `polite.cause_trap` | ✅ Drafted (body[0]) |
+| `polite.cause_acid` | ✅ Drafted (body[0]) |
+| `polite.hall_warden_possession` | ✅ Drafted (body[0]) |
+| `procedural_notice.hall_warden_possession` | ✅ Drafted (body[0]) |
+| `formal_complaint.hall_warden_possession` | ✅ Drafted (body[0]) |
+| `procedural_notice.death_repeat` | ⬜ Next session |
+| `procedural_notice.cause_possession_neglect` | ⬜ Next session |
+| `procedural_notice.audit_warning` | ⬜ Next session |
+| `procedural_notice.run_clean` | ⬜ Next session |
+| `catalog_referenced` (any tone) | ⬜ Standalone session (needs {catalog_entry} slot wired) |
+| Remaining ~16 memos | ⬜ Future sessions |
+| `body[1+]` variants for multi-fire triggers | ⬜ Future session |
 
 ---
 
@@ -134,25 +157,53 @@ memos:
 
 | Component | Status |
 |---|---|
-| YAML schema | Defined (see above) |
-| `config/under_warden/memos.yaml` | Not yet created |
-| `config/under_warden/cause_display_names.yaml` | Not yet created |
-| `MemoRegistry` | Not yet built — structured lookup returning `MemoDefinition` with subject, body, register |
-| `MemoDefinition` type | Not yet built |
-| Delivery UI (memo inbox) | Not yet designed or built |
-| Cross-run persistence wiring (`under_warden` namespace) | Schema reserved, wiring not yet built |
+| `config/under_warden/memos.yaml` | ✅ Created (7 memos) |
+| `config/under_warden/cause_display_names.yaml` | ✅ Created (20 entries) |
+| `MemoDefinition` type | ⬜ Not built |
+| `MemoRegistry` (YAML loader + lookup) | ⬜ Not built |
+| `MemoFormatter` (slot interpolation) | ⬜ Not built |
+| Cross-run persistence wiring | ⬜ Not built (`delivered_memos`, `memo_count`, `hall_warden_possessions_total`) |
+| Delivery trigger (post-run incident evaluation) | ⬜ Not built |
+| Inbox UI (`MemoInboxPanel`) | ⬜ Not built |
 
 ---
 
 ## Implementation Phases
 
-| Phase | Description |
-|---|---|
-| 1 | YAML files: `memos.yaml` + `cause_display_names.yaml`. `MemoDefinition` type. `MemoRegistry` loader and lookup. Unit tests for registry. |
-| 2 | Cross-run persistence wiring: track which memo body indices have fired, which incident keys have been triggered. Integration with `under_warden` namespace. |
-| 3 | Slot interpolation: `MemoFormatter` takes `MemoDefinition` + slot values dict, returns formatted subject + body. Tests for all slot types including missing-key fallback. |
-| 4 | Delivery trigger: after each run, evaluate which incident keys fire, select correct memo + body index, write to pending-memos queue in persistence. |
-| 5 | Inbox UI: presentation layer, displayed between runs or on main menu. Read from pending-memos queue, mark as read. |
+**Phase 1 — Registry + formatter (Logic layer)**
+- `MemoDefinition` DTO: `Register` (enum), `To` (nullable string), `Subject`, `Body` (list)
+- `MemoRegistry`: YAML loader, `{tone}.{incident_type}` lookup, compound-key fallback,
+  `MemoDefinition? GetMemo(string key, int fireIndex)` where `fireIndex` 0 = first-fire
+- `MemoFormatter`: slot interpolation — takes `MemoDefinition` + `Dictionary<string, string>` slots,
+  returns `(subject: string, body: string)`; cause display name lookup from `cause_display_names.yaml`
+- AOT factory registration
+- Tests: registry lookup, missing key graceful null, slot substitution, cause display name fallback
+
+**Phase 2 — Cross-run persistence fields**
+- `under_warden` namespace additions:
+  - `delivered_memos: HashSet<string>` — tracks fired `{tone}.{incident_type}` keys (for first-fire semantics)
+  - `memo_count: int` — total memos ever delivered (feeds `{memo_count}` slot)
+  - `hall_warden_possessions_total: int` — incremented on `PossessionExitedEvent` where host is hall_warden
+  - `pending_memos: List<PendingMemo>` — queue of memos waiting to surface in inbox
+- `PendingMemo` record: `Key`, `Subject`, `Body`, `DeliveredRun`
+- Tests: counter increment, delivered_memos deduplication, pending queue add/consume
+
+**Phase 3 — Delivery trigger (post-run evaluation)**
+- `MemoDeliveryEvaluator.Evaluate(RunResult result, CrossRunPersistence persistence)`:
+  evaluates which incident keys fire for the completed run, selects memo + body index,
+  calls `MemoFormatter`, writes to `pending_memos` queue
+- Incident detection logic per type (cause_trap checks `DungeonSoakRunResult.FailureDetail`,
+  floor_low checks `DeepestFloorReached`, hall_warden_possession checks counter threshold, etc.)
+- Wired into post-run flow in `Main.cs` after persistence flush
+- Tests: each incident type fires on correct condition, does not double-fire (first-fire respected),
+  threshold-based incidents (`hall_warden_possession`) fire at correct counts
+
+**Phase 4 — Inbox UI**
+- `MemoInboxPanel.cs` in Presentation layer
+- Reads `pending_memos` from persistence; displays subject list + selected body
+- Marks memos as read (removes from pending queue, increments `memo_count`)
+- Surfaces after run-end screen, before floor transition on new run
+- **BBCode rendering**: MemoRenderer parses `**text**` → `[b]text[/b]` before display
 
 ---
 
@@ -160,19 +211,35 @@ memos:
 
 | Path | Contents |
 |---|---|
-| `config/under_warden/memos.yaml` | ~30 memos across 4 tones and 13 incident types |
-| `config/under_warden/cause_display_names.yaml` | Display names for cause-of-death keys |
-| `src/Logic/Content/MemoRegistry.cs` | YAML loader + structured lookup |
-| `src/Logic/Content/MemoDefinition.cs` | DTO: subject, body list, register enum |
-| `src/Logic/Content/MemoFormatter.cs` | Slot interpolation logic |
-| `src/Presentation/UI/MemoInboxPanel.cs` | Delivery UI |
-| `tests/Content/MemoRegistryTests.cs` | Unit tests |
+| `src/Logic/Content/MemoDefinition.cs` | DTO with Register enum, To, Subject, Body list |
+| `src/Logic/Content/MemoRegistry.cs` | YAML loader, lookup, AotObjectFactory registration |
+| `src/Logic/Content/MemoFormatter.cs` | Slot interpolation + cause display name resolution |
+| `src/Logic/Content/MemoDeliveryEvaluator.cs` | Post-run incident evaluation → pending queue |
+| `src/Logic/Persistence/Namespaces/UnderWardenData.cs` | Namespace data class (or extend existing) |
+| `src/Presentation/UI/MemoInboxPanel.cs` | Inbox UI |
+| `tests/Content/MemoRegistryTests.cs` | Registry tests |
 | `tests/Content/MemoFormatterTests.cs` | Slot interpolation tests |
+| `tests/Content/MemoDeliveryEvaluatorTests.cs` | Incident detection tests |
+
+---
+
+## Open Questions
+
+- **`catalog_referenced` slot source**: `CatalogEntryRenderer.RenderEntry()` requires a
+  live `PastSashasData` record and `VoiceLineRegistry`. The memo delivery evaluator will
+  need both wired in. Handle in standalone session once catalog content is drafted.
+- **`run_clean` definition**: exact trigger condition TBD (no traps triggered AND no
+  possession? or just no deaths from self-inflicted causes?). Calibrate when drafting
+  the `procedural_notice.run_clean` memo.
+- **`MemoInboxPanel` placement**: surfaces after run-end screen vs. as a main-menu item
+  vs. both. Decide during Phase 4.
 
 ---
 
 ## Cross-References
 
-- `tasks/plans/plan_cross_run_persistence.md` — `under_warden` namespace lives here; memo fire state persists here
-- `tasks/plans/plan_possession_system.md` — `cause_possession_neglect` incident type depends on possession exit data
-- `docs/story/the_under_warden_v3.md` — narrative source for Under-Warden voice and tone taxonomy
+- `plan_cross_run_persistence.md` — `under_warden` namespace; `UnderWardenData` class
+- `plan_possession_system.md` — `cause_possession_neglect` incident + `hall_warden_possessions_total` counter
+- `config/under_warden/memos.yaml` — authored memo content
+- `config/under_warden/cause_display_names.yaml` — cause display name mapping
+- `docs/story/the_under_warden_v3.md` — tone taxonomy source, voice calibration
