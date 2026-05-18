@@ -126,6 +126,15 @@ public partial class Main : Node
     // Tracks which trigger IDs have already fired their canonical (first) line this run.
     private readonly HashSet<string> _voiceLineFiredSet = new();
 
+    // Under-Warden memo delivery — registry loaded once at boot alongside voice lines.
+    // Evaluator is stateless; _memoRegistry is null until InitFactories succeeds.
+    private MemoRegistry? _memoRegistry;
+    private readonly MemoDeliveryEvaluator _memoEvaluator = new();
+
+    // Inbox panel — created once alongside _gameOverScreen; shown after run ends when
+    // PendingMemos is non-empty.
+    private MemoInboxPanel? _memoInboxPanel;
+
     // Stats accumulation for game-over screen
     private int _turnCount;
     private int _monstersKilled;
@@ -555,6 +564,20 @@ public partial class Main : Node
         {
             GD.PrintErr($"[Main] Voice line registry load failed (non-fatal): {ex.Message}");
         }
+
+        // Under-Warden memo registry — loaded once at boot alongside voice lines.
+        // Non-fatal: inbox UI silently stays disabled if files are missing.
+        try
+        {
+            var memosYaml = ReadGodotResource("res://config/under_warden/memos.yaml");
+            var causeNamesYaml = ReadGodotResource("res://config/under_warden/cause_display_names.yaml");
+            _memoRegistry = MemoRegistry.LoadFromYaml(memosYaml, causeNamesYaml);
+            GD.Print("[Main] Memo registry loaded.");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"[Main] Memo registry load failed (non-fatal): {ex.Message}");
+        }
     }
 
     /// <summary>
@@ -723,6 +746,15 @@ public partial class Main : Node
         else
         {
             _gameOverScreen.Visible = false;
+        }
+
+        // Memo inbox panel (created once, shown after run ends when memos are pending)
+        if (_memoInboxPanel == null)
+        {
+            _memoInboxPanel = new MemoInboxPanel();
+            uiLayer.AddChild(_memoInboxPanel);
+            _memoInboxPanel.InboxClosed += OnInboxClosed;
+            _memoInboxPanel.Visible = false;
         }
 
         PlayerCamera.Update(_gameView!, state.ControlledEntity, _currentZoom, _renderer);
@@ -1347,6 +1379,19 @@ public partial class Main : Node
                     _                   => "Possession ends.",
                 };
                 _toastLog?.AddMessage(reason);
+
+                // Track hall warden possessions for Under-Warden memo triggers.
+                // Threshold memos (1st, 3rd, 6th+) are queued here so the evaluator
+                // can fire mid-run rather than waiting for run end.
+                if (possExitEvt.HostSpecies == "hall_warden"
+                    && _memoRegistry != null && _persistentState != null)
+                {
+                    _memoEvaluator.EvaluateHallWardenPossession(
+                        _persistentState, _memoRegistry,
+                        _persistentState.RunCounter.TotalRuns);
+                    // Dirty flag set inside EvaluateHallWardenPossession — flush deferred
+                    // to the next natural persistence boundary (floor descent or run end).
+                }
             }
             else if (evt is PossessionNearDeathWarningEvent)
             {
@@ -1448,6 +1493,22 @@ public partial class Main : Node
 
             // Faction reputation: apply transitions at run end (spec §6.3).
             ApplyFactionRunEnd(_state, _persistentState);
+
+            // Under-Warden memo delivery: evaluate post-run incidents and queue any
+            // memos that should surface in the inbox. Must run BEFORE the persistence
+            // flush so queued memos are written in the same atomic write.
+            if (_memoRegistry != null)
+            {
+                var ctx = new PostRunContext(
+                    Died: !playerWon,
+                    CauseOfDeath: _state.PlayerDeathCause,
+                    KillerSpecies: _state.PlayerDeathKillerSpecies,
+                    FloorReached: _currentDepth,
+                    RunNumber: _persistentState.RunCounter.TotalRuns
+                );
+                _memoEvaluator.EvaluateRunEnd(ctx, _persistentState, _memoRegistry);
+                // MarkDirty is called inside EvaluateRunEnd if any memos were queued.
+            }
         }
 
         // Run end is a forced flush — write regardless of dirty state (spec §5).
@@ -1562,8 +1623,31 @@ public partial class Main : Node
 
     private void OnReplayRequested()
     {
-        // Return to main menu rather than immediately restarting —
-        // lets the player choose new game or test mode after a run ends.
+        // Hide the game-over screen first in all paths.
+        _gameOverScreen?.Hide();
+
+        // If there are pending Under-Warden memos, show the inbox before returning
+        // to the main menu. OnInboxClosed handles the menu navigation.
+        if (_persistentState != null && _persistentState.UnderWarden.PendingMemos.Count > 0
+            && _memoInboxPanel != null && _memoRegistry != null && _persistenceProvider != null)
+        {
+            _memoInboxPanel.Show(_persistentState, _persistenceProvider, _memoRegistry);
+        }
+        else
+        {
+            _currentDepth = 1;
+            ShowMainMenu();
+        }
+    }
+
+    /// <summary>
+    /// Called when the player has dismissed all pending memos and the inbox closes.
+    /// Navigates back to the main menu to begin a new run.
+    /// </summary>
+    private void OnInboxClosed()
+    {
+        if (_memoInboxPanel != null)
+            _memoInboxPanel.Visible = false;
         _currentDepth = 1;
         ShowMainMenu();
     }

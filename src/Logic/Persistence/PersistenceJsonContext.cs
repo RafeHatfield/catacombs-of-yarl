@@ -49,6 +49,7 @@ namespace CatacombsOfYarl.Logic.Persistence;
 [JsonSerializable(typeof(HollowmarkSpanData))]
 [JsonSerializable(typeof(UnderWardenData))]
 // Nested record types
+[JsonSerializable(typeof(PendingMemo))]
 [JsonSerializable(typeof(PastSashaRecord))]
 [JsonSerializable(typeof(GearItemRecord))]
 [JsonSerializable(typeof(FactionStateEntry))]
@@ -58,6 +59,7 @@ namespace CatacombsOfYarl.Logic.Persistence;
 [JsonSerializable(typeof(AchievementRecord))]
 [JsonSerializable(typeof(DailySeedRecord))]
 // Collection types
+[JsonSerializable(typeof(List<PendingMemo>))]
 [JsonSerializable(typeof(List<PastSashaRecord>))]
 [JsonSerializable(typeof(List<GearItemRecord>))]
 [JsonSerializable(typeof(List<MaryaFragmentRecord>))]

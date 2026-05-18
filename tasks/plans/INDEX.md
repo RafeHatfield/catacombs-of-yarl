@@ -95,4 +95,4 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 |------|--------|-------------|
 | [plan_cross_run_persistence.md](plan_cross_run_persistence.md) | [x] | Cross-run persistence: all 7 phases complete. 15 namespaces, source-gen JSON, migrations, all arc/catalog mutation APIs, daily seeds. 1528 tests. |
 | [plan_possession_system.md](plan_possession_system.md) | [x] | Player possession: Phases 1–7 complete (+ Dispel spell, wraith/lich immunity, Spell-Break wand, VoiceLineRegistry, CatalogEntryRenderer, 3 voice YAML files, wand-kick mechanic, HostAbilityComponent infrastructure — 1631 tests). |
-| [plan_under_warden_memos.md](plan_under_warden_memos.md) | [ ] | Memo delivery system: MemoRegistry, cause_display_names.yaml, memo inbox UI, cross-run persistence wiring. Content: ~30 memos across 4 tones. polite.death_first drafted. |
+| [plan_under_warden_memos.md](plan_under_warden_memos.md) | [x] | Memo delivery system: MemoRegistry, MemoDeliveryEvaluator, MemoInboxPanel (Phase 4 done). 7 memos drafted; ~23 remaining. |

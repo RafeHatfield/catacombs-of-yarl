@@ -141,6 +141,10 @@ public sealed class AotObjectFactory : IObjectFactory
 
         // Voice line YAML pools: trigger_id → string[]
         [typeof(Dictionary<string, List<string>>)] = () => new Dictionary<string, List<string>>(),
+
+        // Under-Warden memos (memos.yaml): key → MemoDtoEntry
+        [typeof(MemoRegistry.MemoDtoEntry)] = () => new MemoRegistry.MemoDtoEntry(),
+        [typeof(Dictionary<string, MemoRegistry.MemoDtoEntry>)] = () => new Dictionary<string, MemoRegistry.MemoDtoEntry>(),
     };
 
     public object Create(Type type)

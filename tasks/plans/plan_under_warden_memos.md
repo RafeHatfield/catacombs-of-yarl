@@ -1,6 +1,6 @@
 # Plan: Under-Warden Memo Delivery System
 
-**Status:** [ ] Not started (engineering). YAML files created, content drafting in progress.
+**Status:** [x] Phase 4 complete. All engineering phases done; content drafting ongoing (see Content Status table).
 
 **Content status:** 7 memos across 4 incident types drafted (sessions 1–2). ~23 remaining.
 
@@ -159,12 +159,14 @@ polite.death_first:
 |---|---|
 | `config/under_warden/memos.yaml` | ✅ Created (7 memos) |
 | `config/under_warden/cause_display_names.yaml` | ✅ Created (20 entries) |
-| `MemoDefinition` type | ⬜ Not built |
-| `MemoRegistry` (YAML loader + lookup) | ⬜ Not built |
-| `MemoFormatter` (slot interpolation) | ⬜ Not built |
-| Cross-run persistence wiring | ⬜ Not built (`delivered_memos`, `memo_count`, `hall_warden_possessions_total`) |
-| Delivery trigger (post-run incident evaluation) | ⬜ Not built |
-| Inbox UI (`MemoInboxPanel`) | ⬜ Not built |
+| `MemoDefinition` type | ✅ Built |
+| `MemoRegistry` (YAML loader + lookup) | ✅ Built |
+| `MemoFormatter` (slot interpolation) | ✅ Built |
+| Cross-run persistence wiring | ✅ Built (`ProceduralGrievancesLogged`, `TotalMemosSentEver`, `HallWardenPossessionsTotal`, `PendingMemos`) |
+| `PostRunContext` DTO | ✅ Built — `src/Logic/Content/PostRunContext.cs` |
+| `MemoDeliveryEvaluator` | ✅ Built — `src/Logic/Content/MemoDeliveryEvaluator.cs` (19 tests) |
+| Inbox UI (`MemoInboxPanel`) | ✅ Built — `src/Presentation/UI/MemoInboxPanel.cs` (Phase 4) |
+| `Main.cs` wiring | ✅ Complete — registry load, `EvaluateRunEnd`, `EvaluateHallWardenPossession`, `OnReplayRequested`, `OnInboxClosed` |
 
 ---
 
@@ -188,15 +190,13 @@ polite.death_first:
 - `PendingMemo` record: `Key`, `Subject`, `Body`, `DeliveredRun`
 - Tests: counter increment, delivered_memos deduplication, pending queue add/consume
 
-**Phase 3 — Delivery trigger (post-run evaluation)**
-- `MemoDeliveryEvaluator.Evaluate(RunResult result, CrossRunPersistence persistence)`:
-  evaluates which incident keys fire for the completed run, selects memo + body index,
-  calls `MemoFormatter`, writes to `pending_memos` queue
-- Incident detection logic per type (cause_trap checks `DungeonSoakRunResult.FailureDetail`,
-  floor_low checks `DeepestFloorReached`, hall_warden_possession checks counter threshold, etc.)
-- Wired into post-run flow in `Main.cs` after persistence flush
-- Tests: each incident type fires on correct condition, does not double-fire (first-fire respected),
-  threshold-based incidents (`hall_warden_possession`) fire at correct counts
+**Phase 3 — Delivery trigger (post-run evaluation)** ✅ COMPLETE
+- `PostRunContext` DTO: `src/Logic/Content/PostRunContext.cs`
+- `MemoDeliveryEvaluator`: `src/Logic/Content/MemoDeliveryEvaluator.cs`
+  - `EvaluateRunEnd(PostRunContext, PersistentRunState, MemoRegistry)` — 4 incident checks
+  - `EvaluateHallWardenPossession(PersistentRunState, MemoRegistry, int)` — threshold checks at 1/3/6+
+- 19 tests in `tests/Content/MemoDeliveryEvaluatorTests.cs`, all passing
+- Wiring into post-run flow (`Main.cs`) deferred to Phase 4 (presentation layer work)
 
 **Phase 4 — Inbox UI**
 - `MemoInboxPanel.cs` in Presentation layer
