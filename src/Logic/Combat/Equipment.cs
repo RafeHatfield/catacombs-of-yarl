@@ -17,6 +17,8 @@ public sealed class Equipment : IComponent
     public Entity? LeftRing { get; set; }
     public Entity? RightRing { get; set; }
     public Entity? Neck { get; set; }
+    /// <summary>Holds special ammo stacks (fire_arrow, net_arrow). See Equippable.IsSpecialAmmo.</summary>
+    public Entity? Quiver { get; set; }
 
     /// <summary>Get the equipped item in a slot.</summary>
     public Entity? GetSlot(EquipmentSlot slot) => slot switch
@@ -29,6 +31,7 @@ public sealed class Equipment : IComponent
         EquipmentSlot.LeftRing  => LeftRing,
         EquipmentSlot.RightRing => RightRing,
         EquipmentSlot.Neck      => Neck,
+        EquipmentSlot.Quiver    => Quiver,
         _ => null,
     };
 
@@ -46,6 +49,7 @@ public sealed class Equipment : IComponent
             case EquipmentSlot.LeftRing:  LeftRing  = item; break;
             case EquipmentSlot.RightRing: RightRing = item; break;
             case EquipmentSlot.Neck:      Neck      = item; break;
+            case EquipmentSlot.Quiver:    Quiver    = item; break;
         }
         return previous;
     }
@@ -79,5 +83,6 @@ public sealed class Equipment : IComponent
         if (LeftRing  != null) yield return LeftRing;
         if (RightRing != null) yield return RightRing;
         if (Neck      != null) yield return Neck;
+        if (Quiver    != null) yield return Quiver;
     }
 }

@@ -62,11 +62,31 @@ public sealed class ScenarioHarness
     {
         var state = GameStateFactory.FromScenario(
             scenario, seed, _monsterFactory, _itemFactory, _consumableFactory, _spellItemFactory);
-        // PoC scenario_level_loader ignores state:"aware" on monsters (see line 441: "not processed
-        // to preserve existing baseline behavior"). Monsters activate via item-seeking diversion:
-        // unattacked orcs move toward the ground potion between player and orcs, creating sequential
-        // engagement. C# replicates this via harness mode: monsters passive until attacked.
+        // PoC scenario_level_loader ignores state:"aware" on monsters — they activate via
+        // item-seeking diversion (ground potion draws sequential aggro). C# harness mode
+        // replicates this: monsters passive until attacked (Hp < MaxHp proxy).
+        // Exception: state:"aware" in the scenario YAML pre-sets AlertedState so the monster
+        // acts from turn 1 — needed for ranged scenarios where denial shots deal no damage.
         state.IsHarnessMode = true;
+
+        // Wire state:"aware" → AlertedState pre-set. Monsters are created in YAML order;
+        // we expand count>1 groups so index correspondence holds.
+        int monsterIdx = 0;
+        var player0 = state.Player;
+        foreach (var monsterDef in scenario.Monsters)
+        {
+            for (int i = 0; i < monsterDef.Count; i++, monsterIdx++)
+            {
+                if (monsterIdx >= state.Monsters.Count) break;
+                if (monsterDef.State == "aware")
+                {
+                    var alert = state.Monsters[monsterIdx].GetOrAdd<AlertedState>();
+                    alert.LastKnownPlayerX = player0.X;
+                    alert.LastKnownPlayerY = player0.Y;
+                    alert.TurnsUntilDeaggro = AlertedState.DeaggroTurns;
+                }
+            }
+        }
 
         var metrics = new RunMetrics();
         var player = state.Player;
@@ -87,8 +107,18 @@ public sealed class ScenarioHarness
 
         while (!state.IsGameOver)
         {
-            var botAction = BotBrain.Decide(player, playerFighter, inventory, state.Monsters, state.Map, context);
-            var playerAction = BotBrain.ToPlayerAction(botAction);
+            // Bot dispatch: ranged_net_arrow uses the kiting bot; everything else uses BotBrain.
+            // player_bot field in scenario YAML selects the policy.
+            PlayerAction playerAction;
+            if (scenario.Player.PlayerBot == "ranged_net_arrow")
+            {
+                playerAction = RangedNetArrowBot.Decide(player, playerFighter, inventory, state.Monsters, state.Map, state);
+            }
+            else
+            {
+                var botAction = BotBrain.Decide(player, playerFighter, inventory, state.Monsters, state.Map, context);
+                playerAction = BotBrain.ToPlayerAction(botAction);
+            }
             var result = TurnController.ProcessTurn(state, playerAction);
             metrics.RecordTurn(result, player.Id);
         }

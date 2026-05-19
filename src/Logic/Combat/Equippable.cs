@@ -13,6 +13,12 @@ public enum EquipmentSlot
     LeftRing,
     RightRing,
     Neck,
+    /// <summary>
+    /// Holds special ammo (fire_arrow, net_arrow stacks). Only items with IsSpecialAmmo=true
+    /// may be equipped here. Validated at equip-time in TurnController.ResolveEquip.
+    /// Normal arrows are infinite and not tracked — no quiver item needed for basic ranged.
+    /// </summary>
+    Quiver,
 }
 
 /// <summary>
@@ -53,6 +59,26 @@ public sealed class Equippable : IComponent
     {
         Slot = slot;
     }
+
+    /// <summary>
+    /// True for bows and crossbows. Detection by explicit flag only — spears and thrown weapons
+    /// are melee and do NOT set this. RangedCombatService gates the ranged resolution path on this.
+    /// </summary>
+    public bool IsRangedWeapon { get; set; }
+
+    /// <summary>
+    /// Two-handed weapons (bows) clear the OffHand slot when equipped.
+    /// This prevents bow + shield stacking. Equipping a two-handed weapon returns the
+    /// previous off-hand item to inventory before placing the weapon in MainHand.
+    /// </summary>
+    public bool TwoHanded { get; set; }
+
+    /// <summary>
+    /// True for quiver ammo types (fire_arrow, net_arrow). Validated at equip-time:
+    /// only items with IsSpecialAmmo=true can occupy EquipmentSlot.Quiver.
+    /// Consumed on hit OR miss; NOT on out-of-range denial or if player dies to retaliation.
+    /// </summary>
+    public bool IsSpecialAmmo { get; set; }
 
     /// <summary>Roll weapon damage. Returns 0 if no damage range (armor, etc).</summary>
     public int RollDamage(SeededRandom rng)

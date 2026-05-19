@@ -31,6 +31,37 @@ public sealed class RunMetrics
     public int PlayerMaxHp { get; set; }
     public double MonsterAvgMaxHp { get; set; }
 
+    // ── Ranged Combat Metrics (Phase 22.2) ───────────────────────────────────
+
+    /// <summary>Ranged attacks that resolved (hit or miss, but NOT denied). Excludes denial.</summary>
+    public int RangedAttacksMadeByPlayer { get; set; }
+
+    /// <summary>Ranged attacks blocked because target was out of range (d>8) or no LoS.</summary>
+    public int RangedAttacksDeniedOutOfRange { get; set; }
+
+    /// <summary>Total damage dealt via ranged attacks (hit-only, after band modifier).</summary>
+    public int RangedDamageDealtByPlayer { get; set; }
+
+    /// <summary>Sum of damage lost to range band penalties across all ranged hits.</summary>
+    public int RangedDamagePenaltyTotal { get; set; }
+
+    /// <summary>Times the defender retaliated on a d≤1 ranged shot.</summary>
+    public int RangedAdjacentRetaliationsTriggered { get; set; }
+
+    /// <summary>Successful ranged knockback procs (tiles_moved > 0).</summary>
+    public int RangedKnockbackProcs { get; set; }
+
+    /// <summary>Special ammo shots consumed (hit OR miss, not denied).</summary>
+    public int SpecialAmmoShotsFired { get; set; }
+
+    /// <summary>Times a special ammo on-hit effect (burning, entangled) was actually applied.</summary>
+    public int SpecialAmmoEffectsApplied { get; set; }
+
+    /// <summary>Times movement or leap was blocked due to EntangledEffect (player + monster + leap).</summary>
+    public int EntangleMovesBlocked { get; set; }
+
+    // ── End Ranged Combat Metrics ─────────────────────────────────────────────
+
     /// <summary>
     /// Record metrics from a single turn's events. Call once per turn.
     /// Derives all counters from the event stream — no parallel tracking needed.
@@ -65,6 +96,46 @@ public sealed class RunMetrics
 
                 case HealEvent:
                     PotionsUsed++;
+                    break;
+
+                // ── Ranged combat metrics derived from events ──────────────────
+                case RangedAttackEvent ranged when ranged.ActorId == playerId:
+                    if (ranged.Denied)
+                    {
+                        RangedAttacksDeniedOutOfRange++;
+                    }
+                    else
+                    {
+                        RangedAttacksMadeByPlayer++;
+                        PlayerAttacks++;
+                        if (ranged.Hit)
+                        {
+                            RangedDamageDealtByPlayer += ranged.Damage;
+                            PlayerHits++;
+                            PlayerDamageDealt += ranged.Damage;
+                            // Penalty = pre-modifier damage minus actual damage dealt
+                            int penalty = ranged.DamageBeforePenalty - ranged.Damage;
+                            if (penalty > 0)
+                                RangedDamagePenaltyTotal += penalty;
+                        }
+                        if (ranged.TargetKilled) MonstersKilled++;
+                        if (ranged.RetaliationTriggered)
+                            RangedAdjacentRetaliationsTriggered++;
+                        if (ranged.SpecialEffectApplied)
+                            SpecialAmmoEffectsApplied++;
+                    }
+                    break;
+
+                case RangedKnockbackEvent:
+                    RangedKnockbackProcs++;
+                    break;
+
+                case SpecialAmmoConsumedEvent:
+                    SpecialAmmoShotsFired++;
+                    break;
+
+                case EntangleMoveBlockedEvent:
+                    EntangleMovesBlocked++;
                     break;
             }
         }
@@ -113,6 +184,20 @@ public sealed class AggregatedMetrics
     /// <summary>Average bonus attacks per run (player + monster combined).</summary>
     public double AvgBonusAttacks { get; init; }
 
+    // ── Ranged Combat Aggregates (Phase 22.2) ─────────────────────────────────
+
+    public double AvgRangedAttacksMadeByPlayer { get; init; }
+    public double AvgRangedAttacksDeniedOutOfRange { get; init; }
+    public double AvgRangedDamageDealtByPlayer { get; init; }
+    public double AvgRangedDamagePenaltyTotal { get; init; }
+    public double AvgRangedAdjacentRetaliationsTriggered { get; init; }
+    public double AvgRangedKnockbackProcs { get; init; }
+    public double AvgSpecialAmmoShotsFired { get; init; }
+    public double AvgSpecialAmmoEffectsApplied { get; init; }
+    public double AvgEntangleMovesBlocked { get; init; }
+
+    // ── End Ranged Combat Aggregates ──────────────────────────────────────────
+
     /// <summary>
     /// Aggregate a list of run metrics into summary statistics.
     /// </summary>
@@ -159,6 +244,16 @@ public sealed class AggregatedMetrics
             H_PM                  = h_pm,
             H_MP                  = h_mp,
             AvgBonusAttacks       = runs.Average(r => r.BonusAttacks),
+            // Ranged aggregates
+            AvgRangedAttacksMadeByPlayer          = runs.Average(r => r.RangedAttacksMadeByPlayer),
+            AvgRangedAttacksDeniedOutOfRange       = runs.Average(r => r.RangedAttacksDeniedOutOfRange),
+            AvgRangedDamageDealtByPlayer           = runs.Average(r => r.RangedDamageDealtByPlayer),
+            AvgRangedDamagePenaltyTotal            = runs.Average(r => r.RangedDamagePenaltyTotal),
+            AvgRangedAdjacentRetaliationsTriggered = runs.Average(r => r.RangedAdjacentRetaliationsTriggered),
+            AvgRangedKnockbackProcs                = runs.Average(r => r.RangedKnockbackProcs),
+            AvgSpecialAmmoShotsFired               = runs.Average(r => r.SpecialAmmoShotsFired),
+            AvgSpecialAmmoEffectsApplied           = runs.Average(r => r.SpecialAmmoEffectsApplied),
+            AvgEntangleMovesBlocked                = runs.Average(r => r.EntangleMovesBlocked),
         };
     }
 }

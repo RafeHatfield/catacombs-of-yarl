@@ -56,7 +56,7 @@ public static class GameStateFactory
             damageMax: def.DamageMax));
 
         Equipment? playerEquipment = null;
-        if (itemFactory != null && (def.Weapon != null || def.Armor != null))
+        if (itemFactory != null && (def.Weapon != null || def.Armor != null || def.Quiver != null))
         {
             playerEquipment = player.Add(new Equipment());
             if (def.Weapon != null)
@@ -68,6 +68,14 @@ public static class GameStateFactory
             {
                 var armor = itemFactory.Create(def.Armor);
                 if (armor != null) playerEquipment.Chest = armor;
+            }
+            // Quiver: special ammo pre-equipped at scenario start.
+            // Direct slot assignment (same pattern as weapon/armor) — no inventory detour.
+            if (def.Quiver != null)
+            {
+                var quiver = itemFactory.Create(def.Quiver);
+                if (quiver?.Get<Equippable>()?.IsSpecialAmmo == true)
+                    playerEquipment.Quiver = quiver;
             }
         }
 

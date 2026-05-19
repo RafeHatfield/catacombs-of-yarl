@@ -97,4 +97,34 @@ public sealed class ItemDefinition
     /// Used as the IdentifiedName in the IdentifiableItem component.
     /// </summary>
     public string DisplayName => Name ?? "";
+
+    // ── Ranged Weapon / Ammo Fields (Phase 22.2) ─────────────────────────────
+
+    /// <summary>
+    /// True for bows and crossbows. Activates RangedCombatService resolution path.
+    /// Spears and thrown weapons are melee — do NOT set this.
+    /// </summary>
+    [YamlMember(Alias = "is_ranged_weapon")]
+    public bool IsRangedWeapon { get; set; }
+
+    /// <summary>
+    /// Two-handed weapons clear the OffHand slot when equipped.
+    /// Both shortbow and longbow are two-handed — bow + shield is not allowed.
+    /// </summary>
+    [YamlMember(Alias = "two_handed")]
+    public bool TwoHanded { get; set; }
+
+    /// <summary>
+    /// True for quiver ammo types (fire_arrow, net_arrow).
+    /// Only items with IsSpecialAmmo=true can be equipped in EquipmentSlot.Quiver.
+    /// </summary>
+    [YamlMember(Alias = "is_special_ammo")]
+    public bool IsSpecialAmmo { get; set; }
+
+    /// <summary>
+    /// Starting stack size for ammo items. fire_arrow=10, net_arrow=8.
+    /// Ignored for non-ammo items.
+    /// </summary>
+    [YamlMember(Alias = "stack_size")]
+    public int StackSize { get; set; }
 }

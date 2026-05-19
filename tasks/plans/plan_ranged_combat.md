@@ -1,6 +1,6 @@
 # Plan: Ranged Combat System
 
-Status: [ ] Not started
+Status: [x] Complete
 PoC reference: services/ranged_combat_service.py (Phase 22.2)
 
 ---
@@ -213,24 +213,24 @@ A ranged-focused run (shortbow + net arrows) should complete depth 1-5 at roughl
 
 ## C# Port Checklist
 
-- [ ] `KnockbackService` (direction calc, wall/entity/edge stops, returns `tiles_moved`)
-- [ ] `TwoHanded` flag on `Equippable`, clear off-hand on equip
-- [ ] `EquipmentSlot.Quiver`, `is_special_ammo` validation at equip-time
-- [ ] `is_ranged_weapon` flag on `Equippable`
-- [ ] Bow/arrow YAML definitions (`shortbow`, `longbow`, `fire_arrow`, `net_arrow`)
-- [ ] `RangedCombatService.AttemptRangedAttack()` — full resolution order per spec above
-- [ ] LoS gate via `GameMap.HasLineOfSight()`
-- [ ] Retaliation-first + `can_retaliate` gate (entangled does NOT block)
-- [ ] Armor halving during retaliation
-- [ ] Minimum 1 damage floor on range-modified shots
-- [ ] Knockback proc (10%, on hit only, successful-only metric)
-- [ ] `fire_arrow` burning: flat 1/turn, 3 turns, 100% on hit, stack 10
-- [ ] `net_arrow` entangle: 50% on hit, 1 turn, stack 8
-- [ ] Ammo consumed on hit OR miss (not on denial; not if player dies to retaliation)
-- [ ] `RangedAttackEvent`, `SpecialAmmoConsumedEvent`, `RangedKnockbackEvent`, `EntangleMoveBlockedEvent`
-- [ ] `EntangleMoveBlockedEvent` emitted from player move, monster AI move, SkirmisherAI leap
-- [ ] `RunMetrics` + `AggregatedMetrics`: all 9 metrics
-- [ ] `ranged_net_arrow` bot policy (kiting decision logic)
-- [ ] Bot dispatch table wired from `ScenarioDefinition.PlayerBot` through harness to `BotBrain`
-- [ ] Scenario YAML files (4 scenarios, chains deferred)
-- [ ] Scenario harness tests
+- [x] `KnockbackService` (direction calc, wall/entity/edge stops, returns `tiles_moved`)
+- [x] `TwoHanded` flag on `Equippable`, clear off-hand on equip
+- [x] `EquipmentSlot.Quiver`, `is_special_ammo` validation at equip-time
+- [x] `is_ranged_weapon` flag on `Equippable`
+- [x] Bow/arrow YAML definitions (`shortbow`, `longbow`, `fire_arrow`, `net_arrow`)
+- [x] `RangedCombatService.AttemptRangedAttack()` — full resolution order per spec above
+- [x] LoS gate via `GameMap.HasLineOfSight()`
+- [x] Retaliation-first + `can_retaliate` gate (entangled does NOT block)
+- [x] Armor halving during retaliation
+- [x] Minimum 1 damage floor on range-modified shots
+- [x] Knockback proc (10%, on hit only, successful-only metric)
+- [x] `fire_arrow` burning: flat 1/turn, 3 turns, 100% on hit, stack 10
+- [x] `net_arrow` entangle: 50% on hit, 1 turn, stack 8
+- [x] Ammo consumed on hit OR miss (not on denial; not if player dies to retaliation)
+- [x] `RangedAttackEvent`, `SpecialAmmoConsumedEvent`, `RangedKnockbackEvent`, `EntangleMoveBlockedEvent`
+- [x] `EntangleMoveBlockedEvent` emitted from player move, monster AI move, SkirmisherAI leap
+- [x] `RunMetrics` + `AggregatedMetrics`: all 9 metrics
+- [x] `ranged_net_arrow` bot policy (kiting decision logic)
+- [x] Bot dispatch table wired from `ScenarioDefinition.PlayerBot` through harness to `BotBrain`
+- [x] Scenario YAML files (4 scenarios, chains deferred)
+- [x] Scenario harness tests

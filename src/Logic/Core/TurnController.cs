@@ -305,6 +305,11 @@ public static class TurnController
                 events.Add(new WaitEvent { ActorId = player.Id });
                 if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
                 break;
+
+            case PlayerAction.ActionKind.RangedAttack:
+                ResolveRangedAttack(state, action.Target!, events);
+                if (isPossessing) PossessionSystem.ApplyDrainTick(state, events);
+                break;
         }
     }
 
@@ -606,6 +611,55 @@ public static class TurnController
     }
 
     /// <summary>
+    /// Resolve a ranged attack action. Delegates entirely to RangedCombatService.
+    /// Validates that the player has a ranged weapon equipped — falls back to Wait if not.
+    /// Also handles loot drop and corpse creation when the target is killed.
+    /// </summary>
+    private static void ResolveRangedAttack(GameState state, Entity target, List<TurnEvent> events)
+    {
+        var player = state.Player;
+
+        // Guard: must have ranged weapon equipped (bow/crossbow with IsRangedWeapon=true).
+        var equip = player.Get<Equipment>();
+        var weapon = equip?.MainHand?.Get<Equippable>();
+        if (weapon == null || !weapon.IsRangedWeapon)
+        {
+            // No ranged weapon — silently do nothing (treat as Wait).
+            events.Add(new WaitEvent { ActorId = player.Id });
+            return;
+        }
+
+        // InvisibilityEffect breaks on any attack.
+        if (player.Has<InvisibilityEffect>())
+        {
+            player.Remove<InvisibilityEffect>();
+            events.Add(new StatusExpiredEvent
+            {
+                ActorId    = player.Id,
+                EntityId   = player.Id,
+                EffectName = "invisibility",
+                Reason     = "attacked",
+            });
+        }
+
+        bool targetWasAlive = target.Get<Fighter>()?.IsAlive == true;
+
+        RangedCombatService.AttemptRangedAttack(player, target, state, events);
+
+        // If target was alive and is now dead, handle loot drop and corpse transformation.
+        // RangedCombatService emits DeathEvent; TurnController owns the loot/corpse side effect.
+        if (targetWasAlive && target.Get<Fighter>()?.IsAlive == false)
+        {
+            DropMonsterLoot(state, target, events);
+            TransformToCorpse(state, target, events, monsterFactory: null);
+            ResolveDeathSiphon(state, target, events);
+        }
+
+        // Ranged attacks reset momentum (no chaining from ranged).
+        player.Get<SpeedBonusTracker>()?.ResetMomentum();
+    }
+
+    /// <summary>
     /// Resolve a split-under-pressure event. Original monster is removed and children are spawned.
     ///
     /// Null-factory fallback: test environments that don't inject a factory get a kill instead of
@@ -726,6 +780,13 @@ public static class TurnController
         {
             // Emit wait-equivalent (no movement), consume the turn.
             events.Add(new WaitEvent { ActorId = player.Id });
+            // Record that movement was blocked by entangle — used by ranged combat metrics.
+            events.Add(new EntangleMoveBlockedEvent
+            {
+                ActorId           = player.Id,
+                EntityId          = player.Id,
+                BlockedActionType = "move",
+            });
             return;
         }
 
@@ -1496,6 +1557,14 @@ public static class TurnController
         // Item must be in the player's inventory.
         if (!inventory.Remove(item)) return;
 
+        // Quiver slot guard: only IsSpecialAmmo items can be equipped in the Quiver.
+        // Non-ammo items with slot=Quiver would be a YAML authoring mistake — silently abort.
+        if (equippable.Slot == EquipmentSlot.Quiver && !equippable.IsSpecialAmmo)
+        {
+            inventory.Add(item); // return to inventory
+            return;
+        }
+
         var equipment = state.Player.GetOrAdd<Equipment>();
 
         // Ring slot auto-assignment: all rings are created with slot=LeftRing.
@@ -1504,6 +1573,31 @@ public static class TurnController
         var targetSlot = equippable.Slot;
         if (targetSlot == EquipmentSlot.LeftRing && equipment.LeftRing != null && equipment.RightRing == null)
             targetSlot = EquipmentSlot.RightRing;
+
+        // Two-handed weapon: clear OffHand slot BEFORE placing the weapon in MainHand.
+        // This prevents bow + shield stacking. The displaced off-hand item is returned to
+        // inventory (or dropped if inventory is full) before the weapon equip event fires.
+        if (equippable.TwoHanded && targetSlot == EquipmentSlot.MainHand && equipment.OffHand != null)
+        {
+            var offHandItem = equipment.SetSlot(EquipmentSlot.OffHand, null);
+            if (offHandItem != null)
+            {
+                if (!inventory.Add(offHandItem))
+                {
+                    // Inventory full — drop the off-hand item at the player's feet.
+                    offHandItem.X = state.Player.X;
+                    offHandItem.Y = state.Player.Y;
+                    state.FloorItems.Add(offHandItem);
+                    state.Map.RegisterEntity(offHandItem);
+                    events.Add(new DropEvent
+                    {
+                        ActorId  = state.Player.Id,
+                        ItemId   = offHandItem.Id,
+                        ItemName = offHandItem.Name,
+                    });
+                }
+            }
+        }
 
         var displaced = equipment.SetSlot(targetSlot, item);
 
@@ -1728,6 +1822,28 @@ public static class TurnController
             TryKickWand(monster, state, events);
 
             var action = MonsterAI.Decide(monster, state);
+
+            // EntangleMoveBlockedEvent for skirmisher leap: if the skirmisher is entangled,
+            // in leap range, and the action resolved to Wait (because EntangledEffect prevented the leap),
+            // emit the event. TurnController owns this cross-cutting detection because MonsterAction
+            // has no event list — SkirmisherAI communicates via the returned action kind only.
+            if (action.Kind == MonsterAction.ActionKind.Wait && monster.Has<EntangledEffect>())
+            {
+                var skirmComp = monster.Get<SkirmisherComponent>();
+                if (skirmComp != null)
+                {
+                    int dist = monster.ChebyshevDistanceTo(state.Player.X, state.Player.Y);
+                    if (dist >= skirmComp.LeapRangeMin && dist <= skirmComp.LeapRangeMax)
+                    {
+                        events.Add(new EntangleMoveBlockedEvent
+                        {
+                            ActorId           = monster.Id,
+                            EntityId          = monster.Id,
+                            BlockedActionType = "leap",
+                        });
+                    }
+                }
+            }
 
             switch (action.Kind)
             {

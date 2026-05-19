@@ -1,0 +1,28 @@
+scenario_id: melee_viability_probe
+name: "Melee Viability Probe"
+description: "Melee-equivalent comparison for ranged_viability_arena. Same player stats, same orc position (d=6), same map — shortsword instead of longbow, tactical_fighter bot. Compare H_PM/H_MP/DeathRate to ranged_viability_arena to confirm the ranged build is not systematically weaker at its optimal range."
+depth: 1
+turn_limit: 100
+runs: 50
+map_width: 12
+map_height: 12
+player_start_x: 3
+player_start_y: 6
+is_probe: true
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "shortsword"
+
+monsters:
+  - type: "orc"
+    count: 1
+    position: [9, 6]
+    state: "aware"

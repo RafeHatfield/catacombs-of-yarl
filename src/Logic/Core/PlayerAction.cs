@@ -10,7 +10,7 @@ namespace CatacombsOfYarl.Logic.Core;
 /// </summary>
 public sealed class PlayerAction
 {
-    public enum ActionKind { Wait, Attack, Move, UseItem, Descend, DropItem, EquipItem, UnequipItem, CastSpell, ThrowItem, EnterPossessionTargeting, Possess, ExitPossession, UseMonsterAbility }
+    public enum ActionKind { Wait, Attack, Move, UseItem, Descend, DropItem, EquipItem, UnequipItem, CastSpell, ThrowItem, EnterPossessionTargeting, Possess, ExitPossession, UseMonsterAbility, RangedAttack }
 
     public ActionKind Kind { get; }
 
@@ -123,4 +123,11 @@ public sealed class PlayerAction
     /// Unknown ability IDs resolve as Wait (graceful degradation).
     /// </summary>
     public static PlayerAction UseAbility(string abilityId) => new(ActionKind.UseMonsterAbility, abilityId: abilityId);
+
+    /// <summary>
+    /// Shoot the equipped ranged weapon at the given target.
+    /// RangedCombatService validates LoS and range band before resolving.
+    /// The target must be a living monster — TurnController validates.
+    /// </summary>
+    public static PlayerAction ShootAt(Entity target) => new(ActionKind.RangedAttack, target: target);
 }

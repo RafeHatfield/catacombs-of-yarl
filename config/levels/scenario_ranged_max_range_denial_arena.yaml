@@ -1,0 +1,29 @@
+scenario_id: ranged_max_range_denial_arena
+name: "Ranged Max Range Denial Arena"
+description: "Out-of-range denial test. Player starts at (1,6), orc at (10,6) — Chebyshev distance 9, which exceeds max range 8. Bot uses ranged_net_arrow: it will first try to shoot (denied, d=9>8), then approach. Validates ranged_attacks_denied_out_of_range counter."
+depth: 1
+turn_limit: 100
+runs: 10
+map_width: 12
+map_height: 12
+player_start_x: 1
+player_start_y: 6
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "longbow"
+  quiver: "net_arrow"
+  player_bot: "ranged_net_arrow"
+
+monsters:
+  - type: "orc"
+    count: 1
+    position: [10, 6]
+    state: "aware"

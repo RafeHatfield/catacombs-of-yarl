@@ -792,6 +792,61 @@ weapons:
     char: "/"
     color: [180, 160, 140]
 
+  # ── Ranged Weapons (Phase 22.2) ─────────────────────────────────────────────
+
+  shortbow:
+    name: "Shortbow"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 6
+    to_hit_bonus: 2
+    damage_type: "piercing"
+    material: "wood"
+    is_ranged_weapon: true
+    two_handed: true
+    char: ")"
+    color: [160, 120, 80]
+
+  longbow:
+    name: "Longbow"
+    slot: "main_hand"
+    damage_min: 1
+    damage_max: 8
+    to_hit_bonus: 3
+    damage_type: "piercing"
+    material: "wood"
+    is_ranged_weapon: true
+    two_handed: true
+    char: ")"
+    color: [140, 100, 60]
+
+  # ── Special Ammo (Phase 22.2) ───────────────────────────────────────────────
+  # Equipped in EquipmentSlot.Quiver. is_special_ammo: true required for Quiver slot.
+  # damage_type is used by RangedCombatService to identify the on-hit effect.
+  # Consumed on hit OR miss; NOT on out-of-range denial.
+
+  fire_arrow:
+    name: "Fire Arrows"
+    slot: "quiver"
+    is_special_ammo: true
+    damage_min: 0
+    damage_max: 0
+    damage_type: "fire"
+    stack_size: 10
+    char: "/"
+    color: [255, 120, 30]
+
+  net_arrow:
+    name: "Net Arrows"
+    slot: "quiver"
+    is_special_ammo: true
+    damage_min: 0
+    damage_max: 0
+    damage_type: "entangle"
+    stack_size: 8
+    char: "/"
+    color: [180, 200, 150]
+
 armor:
   leather_armor:
     name: "Leather Armor"

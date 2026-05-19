@@ -47,9 +47,23 @@ public sealed class ItemFactory
             ArmorType = def.ArmorType,
             CritThreshold = def.CritThreshold,
             Material = def.Material,
+            IsRangedWeapon = def.IsRangedWeapon,
+            TwoHanded = def.TwoHanded,
+            IsSpecialAmmo = def.IsSpecialAmmo,
         };
         equippable.SetBaseDamageMax(); // capture DamageMax as corrosion floor baseline
         entity.Add(equippable);
+
+        // Special ammo: attach a Consumable component to track remaining shots.
+        // The Consumable.StackSize field is used as the remaining-shots counter.
+        // HealAmount=0 so IsHealing=false — BotBrain won't treat arrows as potions.
+        if (def.IsSpecialAmmo && def.StackSize > 0)
+        {
+            entity.Add(new Consumable(healAmount: 0)
+            {
+                StackSize = def.StackSize,
+            });
+        }
 
         // Weapon speed bonus for momentum system
         if (def.SpeedBonus > 0)
@@ -112,6 +126,7 @@ public sealed class ItemFactory
         "feet"       => EquipmentSlot.Feet,
         "left_ring"  => EquipmentSlot.LeftRing,
         "right_ring" => EquipmentSlot.RightRing,
+        "quiver"     => EquipmentSlot.Quiver,
         _            => EquipmentSlot.MainHand,
     };
 }

@@ -106,6 +106,22 @@ public sealed class ScenarioPlayer
     public string? Armor { get; set; }
 
     /// <summary>
+    /// Quiver item type to pre-equip (e.g. "net_arrow", "fire_arrow").
+    /// When set, GameStateFactory equips this item in EquipmentSlot.Quiver at scenario start.
+    /// Null = no special ammo (normal arrows, infinite).
+    /// </summary>
+    [YamlMember(Alias = "quiver")]
+    public string? Quiver { get; set; }
+
+    /// <summary>
+    /// Bot policy for this scenario. "tactical_fighter" (default) uses BotBrain.
+    /// "ranged_net_arrow" uses RangedNetArrowBot for kiting behavior.
+    /// Dispatched in ScenarioHarness.RunOnce.
+    /// </summary>
+    [YamlMember(Alias = "player_bot")]
+    public string? PlayerBot { get; set; }
+
+    /// <summary>
     /// Base speed bonus ratio for the player. PoC default is 0.25 — always active,
     /// independent of equipment. Equipment speed adds on top via EquipmentRatio.
     /// </summary>

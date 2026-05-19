@@ -859,3 +859,69 @@ public sealed class WandKickedEvent : TurnEvent
     public int NewWandPositionY { get; init; }
     public int KickerEntityId { get; init; }
 }
+
+// ─── Ranged Combat Events (Phase 22.2) ───────────────────────────────────────
+
+/// <summary>
+/// Emitted on every ranged attack attempt (hit, miss, or denial).
+/// Metrics are derived from this event in RunMetrics.RecordTurn.
+///
+/// BandName values: "adjacent_threatened" | "close_range" | "optimal_range" |
+///                  "far_range" | "extreme_range" | "denied_out_of_range"
+///
+/// Denied=true means the attack was rejected before resolving (d>8 or no LoS).
+/// On denial: no ammo consumed, ranged_attacks_made counter NOT incremented.
+/// </summary>
+public sealed class RangedAttackEvent : TurnEvent
+{
+    public int TargetId { get; init; }
+    public int Distance { get; init; }
+    public string BandName { get; init; } = "";
+    public bool Denied { get; init; }
+    public bool Hit { get; init; }
+    public int Damage { get; init; }
+    /// <summary>True when the defender retaliates (d≤1 and defender can_retaliate).</summary>
+    public bool RetaliationTriggered { get; init; }
+    /// <summary>True when knockback proc fired AND tiles_moved > 0.</summary>
+    public bool KnockbackApplied { get; init; }
+    /// <summary>True when a special ammo on-hit effect was successfully applied to the target.</summary>
+    public bool SpecialEffectApplied { get; init; }
+    /// <summary>Damage before range penalty (for penalty calculation). 0 on miss or denial.</summary>
+    public int DamageBeforePenalty { get; init; }
+    /// <summary>True when this hit killed the target.</summary>
+    public bool TargetKilled { get; init; }
+}
+
+/// <summary>
+/// Emitted when a special ammo shot is consumed (hit OR miss, but NOT on denial and NOT
+/// if the player died to retaliation before the shot resolved).
+/// Remaining=0 means the quiver was exhausted and auto-unequipped this turn.
+/// </summary>
+public sealed class SpecialAmmoConsumedEvent : TurnEvent
+{
+    public string AmmoType { get; init; } = "";
+    public int Remaining { get; init; }
+}
+
+/// <summary>
+/// Emitted when a ranged knockback proc fires AND actually moves the target (tiles_moved > 0).
+/// Silent failures (wall, entity, edge) do not emit this event.
+/// Direction is the unit vector: each component is -1, 0, or 1.
+/// </summary>
+public sealed class RangedKnockbackEvent : TurnEvent
+{
+    public (int X, int Y) Direction { get; init; }
+    public int TilesMoved { get; init; }
+    public int TargetId { get; init; }
+}
+
+/// <summary>
+/// Emitted when movement or a special action (leap) is denied because the entity is entangled.
+/// BlockedActionType: "move" for normal movement, "leap" for SkirmisherAI leap attempt.
+/// EntityId is the entangled entity (player or monster).
+/// </summary>
+public sealed class EntangleMoveBlockedEvent : TurnEvent
+{
+    public int EntityId { get; init; }
+    public string BlockedActionType { get; init; } = "move";
+}
