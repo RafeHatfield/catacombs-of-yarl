@@ -34,7 +34,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | Plan | Status | Description |
 |------|--------|-------------|
 | [plan_rings.md](plan_rings.md) | [x] | 16 rings (10 Phase 1, 6 deferred): stat bonuses, regen, speed, free action, teleportation |
-| [plan_ranged_combat.md](plan_ranged_combat.md) | [ ] | Range bands, retaliation-first, knockback, special ammo/quiver |
+| [plan_ranged_combat.md](plan_ranged_combat.md) | [x] | Range bands, retaliation-first, knockback, special ammo/quiver. KnockbackService, RangedCombatService, RangedNetArrowBot, 5 scenarios, 33 tests. Harness-validated 2026-05-19. |
 | [plan_spell_wand_scroll_system.md](plan_spell_wand_scroll_system.md) | [x] | 30+ spells, wand charges, scroll effects, spell targeting (Phase 1+2+3 complete; Portal wand complete; single-target targeting UI complete) |
 | [plan_faction_system.md](plan_faction_system.md) | [x] | Faction hostility matrix, orc vs undead, emergent combat (impl: plan_faction_system_impl.md) |
 | [plan_corpse_necromancer.md](plan_corpse_necromancer.md) | [x] | Corpse entity lifecycle, necromancer + plague_necromancer AI, Raise Dead scroll — Phase 1 (corpse system) + Phase 2 (raise dead resolver, NecromancerAI) complete |

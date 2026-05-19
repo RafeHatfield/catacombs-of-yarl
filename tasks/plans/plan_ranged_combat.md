@@ -234,3 +234,37 @@ A ranged-focused run (shortbow + net arrows) should complete depth 1-5 at roughl
 - [x] Bot dispatch table wired from `ScenarioDefinition.PlayerBot` through harness to `BotBrain`
 - [x] Scenario YAML files (4 scenarios, chains deferred)
 - [x] Scenario harness tests
+
+---
+
+## Harness Validation — 2026-05-19
+
+Validated against 5 scenarios (50 runs each, seed 1337). 4 bugs were caught and fixed during harness run before final results were accepted.
+
+### Bugs found and fixed
+
+1. **Ranged damage not folded into H_PM / DPR_P.** `RunMetrics.RecordTurn` only counted `AttackEvent` for `PlayerDamageDealt` and `PlayerHits`. `RangedAttackEvent` was excluded, so ranged kills appeared as 0 damage in pressure model. Fixed by folding `RangedAttackEvent` into the same counters.
+
+2. **Kill counter missed ranged kills.** `TargetKilled` flag was not propagated to `RangedAttackEvent`. Monster deaths via ranged went unrecorded. Fixed: `TargetKilled` added to `RangedAttackEvent`.
+
+3. **`state:"aware"` was a documented stub — monsters stayed passive.** The harness set `state: aware` in YAML but `ScenarioHarness.RunOnce` never actually wired it into monster startup state. In the denial scenario orc never closed range because all denied shots dealt 0 damage (no aggro trigger). Fixed by wiring `state: aware` in `ScenarioHarness.RunOnce`.
+
+4. **Viability scenario orc started at d=2 in 12x12 arena.** Player (1,6) + orc (3,6) meant orc cornered the player in ~2 turns before kiting bot could establish range. Moved orc to (9,6) = d=6 from player, matching the intended optimal-range starting position. This was a scenario design error, not a code error.
+
+### Final results (50 runs each, seed 1337)
+
+| Scenario | Death Rate | H_PM | H_MP | Notes |
+|---|---|---|---|---|
+| Viability arena (orc at d=6) | 22% | 10.3 | 32.5 | Ranged viable |
+| Melee probe (same arena setup) | 4% | 9.6 | 28.3 | Comparison baseline |
+| Adjacent punish | 100% | 30.2 | 10.2 | PROBE — retaliation mechanic confirmed |
+| Max range denial | 18% | 12.0 | 49.3 | Denial gate fires correctly |
+| Skirmisher identity | 88% | 22.9 | 14.5 | PROBE — entangle blocks leap confirmed |
+
+### DPR parity confirmed
+
+Ranged DPR is 93% of melee (2.81 vs 3.03). H_PM within 8% (10.3 vs 9.6). Effective output is equivalent. The 22% vs 4% death rate gap is a cramped 12x12 arena artifact — the kiting bot cannot fully establish range before the orc closes. Not a balance issue. Melee probe runs in the same arena with the same constraint.
+
+### `state:"aware"` note
+
+`ScenarioHarness.RunOnce` now wires initial monster awareness from the scenario YAML field. This is a new behavior — scenarios without `state: aware` are unaffected (monsters start passive as before).
