@@ -210,6 +210,10 @@ public sealed class MonsterFactory
         if (def.TransfersEffectsOnHit)
             entity.Add(new TransfersEffectsOnHitComponent());
 
+        // Engulf on hit: slimes apply EngulfedEffect to the player on any successful melee hit.
+        if (def.EngulfsOnHit)
+            entity.Add(new EngulfsOnHitTag());
+
         // Status immunities: wraith/lich immune to confusion/slow/fear/etc.
         if (def.StatusImmunities is { Count: > 0 })
             entity.Add(new StatusImmunityComponent(def.StatusImmunities));

@@ -268,20 +268,22 @@ public class OrcVariantTests
     [Test]
     public void Shaman_AppliesCrippledEffectWhenReady()
     {
-        // Shaman at (10,5), player at (5,5) → dist=5, within HexRange=6
-        var shaman = MakeShaman(x: 10, y: 5);
+        // Shaman at (11,5), player at (5,5) → dist=6. Outside ChantRange=5 so chant cannot fire.
+        // Within HexRange=6 so hex fires. Tests that hex works when chant is not available.
+        var shaman = MakeShaman(x: 11, y: 5);
         var (state, player, _) = CreateArena(shaman);
 
         OrcShamanAI.Decide(shaman, state);
 
         Assert.That(player.Has<CrippledEffect>(), Is.True,
-            "Shaman should apply CrippledEffect to player when in range and cooldown=0.");
+            "Shaman should apply CrippledEffect to player when in hex range but outside chant range.");
     }
 
     [Test]
     public void Shaman_HexSetsFullCooldown()
     {
-        var shaman = MakeShaman(x: 10, y: 5);
+        // Shaman at (11,5): outside ChantRange=5, inside HexRange=6 — hex fires and sets cooldown.
+        var shaman = MakeShaman(x: 11, y: 5);
         var (state, _, _) = CreateArena(shaman);
         var comp = shaman.Get<OrcShamanComponent>()!;
 

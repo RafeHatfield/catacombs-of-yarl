@@ -19,4 +19,11 @@ public sealed class RallyEffect : IStatusEffect
 
     /// <summary>Added to the rallied entity's damage on hit. PoC value: 1.</summary>
     public int DamageBonus { get; set; } = 1;
+
+    /// <summary>
+    /// Entity ID of the chieftain that applied this rally.
+    /// Used to remove all rally effects from all carriers when the chieftain takes damage.
+    /// Set to 0 (unset) for rally effects created before this field was added.
+    /// </summary>
+    public int ChieftainId { get; set; }
 }

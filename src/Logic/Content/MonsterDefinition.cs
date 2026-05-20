@@ -225,6 +225,17 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "abilities")]
     public List<MonsterAbilityDefinition>? Abilities { get; set; }
 
+    // ── Engulf on hit (slimes) ────────────────────────────────────────────────
+
+    /// <summary>
+    /// When true, this monster applies EngulfedEffect to the player on any successful melee hit.
+    /// Inherits via extends: child true wins, else parent (default false).
+    /// Set on slime, large_slime, greater_slime in entities.yaml.
+    /// MonsterFactory attaches EngulfsOnHitTag when true.
+    /// </summary>
+    [YamlMember(Alias = "engulfs_on_hit")]
+    public bool EngulfsOnHit { get; set; } = false;
+
     // ── Status transfer on drain attack (wraith) ──────────────────────────────
 
     /// <summary>

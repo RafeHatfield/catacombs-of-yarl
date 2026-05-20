@@ -1,6 +1,6 @@
 # Monster Specials — Implementation Plan
 
-## Status: planning
+## Status: complete (2026-05-20)
 
 ## Scope
 

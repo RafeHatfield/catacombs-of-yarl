@@ -519,6 +519,8 @@ public sealed class ContentLoader
             SummonMonsterId = child.SummonMonsterId ?? parent.SummonMonsterId,
             // Status immunities: child wins if set (full override, not merge)
             StatusImmunities = child.StatusImmunities ?? parent.StatusImmunities,
+            // Engulf: true propagates from parent to children (slime hierarchy inherits it)
+            EngulfsOnHit = child.EngulfsOnHit || parent.EngulfsOnHit,
         };
     }
 

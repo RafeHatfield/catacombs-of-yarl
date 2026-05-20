@@ -1,6 +1,6 @@
 # Plan: Special Monster Mechanics
 
-Status: [~] In progress
+Status: [x] Complete (2026-05-20)
 PoC reference: components/ai/, services/slime_split_service.py, components/corpse.py
 Implementation plan: tasks/plans/plan_monster_specials_impl.md
 

@@ -1,0 +1,37 @@
+scenario_id: slime_engulf_identity
+name: "Slime Engulf Identity Test"
+description: "Mechanic-probe for EngulfedEffect. Two slimes adjacent to player start; player has shortsword and 2 healing potions. Validates engulf applies, refreshes, and movement skips fire without crashes."
+depth: 3
+turn_limit: 200
+runs: 30
+is_probe: true
+map_width: 13
+map_height: 11
+player_start_x: 5
+player_start_y: 5
+
+player:
+  hp: 54
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "shortsword"
+  armor: "leather_armor"
+
+monsters:
+  - type: "slime"
+    count: 1
+    position: [4, 5]
+    state: "aware"
+  - type: "slime"
+    count: 1
+    position: [5, 4]
+    state: "aware"
+
+items:
+  - type: "healing_potion"
+    count: 2

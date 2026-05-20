@@ -83,9 +83,23 @@ public static class OrcChieftainAI
             {
                 chieftain.RallyCried = true;
                 // Apply RallyEffect to the chieftain itself and all orc allies in range.
-                StatusEffectProcessor.ApplyEffect<RallyEffect>(monster, 1000);
+                // Set ChieftainId so the effect can be removed when the chieftain takes damage.
+                var chieftainRally = StatusEffectProcessor.ApplyEffect<RallyEffect>(monster, 1000);
+                if (chieftainRally != null) chieftainRally.ChieftainId = monster.Id;
+
                 foreach (var ally in nearbyOrcAllies)
-                    StatusEffectProcessor.ApplyEffect<RallyEffect>(ally, 1000);
+                {
+                    // Cleanse FearEffect from allies at rally time (PoC: rally_cleanse).
+                    if (ally.Has<FearEffect>())
+                    {
+                        ally.Remove<FearEffect>();
+                        // We'd emit StatusExpiredEvent here but we don't have the events list.
+                        // TurnController's OnAttackDamageTaken handles the rally-broken events.
+                        // For fear cleanse at rally time: it silently removes (PoC doesn't emit an event here).
+                    }
+                    var allyRally = StatusEffectProcessor.ApplyEffect<RallyEffect>(ally, 1000);
+                    if (allyRally != null) allyRally.ChieftainId = monster.Id;
+                }
                 // Fall through to positioning — rally cry is instant and doesn't consume the turn.
             }
         }

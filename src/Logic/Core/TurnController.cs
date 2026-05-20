@@ -579,6 +579,12 @@ public static class TurnController
                     playerEquip!.MainHand!.Remove<WeaponAcidCoatingComponent>();
             }
 
+            // Attack damage interrupt hooks — rally end, chant interrupt.
+            // Called after acid coating so all on-hit effects fire before the interrupt check.
+            // DOT damage does NOT call this path (PoC-verified).
+            if (result.Damage > 0)
+                OnAttackDamageTaken(state, player, target, events);
+
             // Check split-under-pressure BEFORE death check — split wins over kill.
             // Only check on a hit because the HP hasn't changed on a miss.
             var splitTracker = target.Get<SplitTracker>();
@@ -601,6 +607,10 @@ public static class TurnController
             DropMonsterLoot(state, target, events);
             TransformToCorpse(state, target, events, monsterFactory);
             ResolveDeathSiphon(state, target, events);
+
+            // Shaman death cleanup: if the killed monster was channeling, remove
+            // DissonantChantEffect from the player so they aren't permanently slowed.
+            ResolveChannelCleanupOnDeath(state, target, events);
         }
 
         // Bonus attack chain — recurse if triggered and target still alive
@@ -2002,6 +2012,28 @@ public static class TurnController
         {
             // Wake sleeping target on attack damage (NOT DOT — PoC-verified).
             StatusEffectProcessor.OnDamageTaken(target, events);
+
+            // Engulf: slimes apply EngulfedEffect to the player on any successful hit.
+            // Only applies to the player (not monster-vs-monster); deterministic (no RNG).
+            if (result.Damage > 0 && monster.Has<EngulfsOnHitTag>() && target.Id == state.Player.Id)
+            {
+                var engulfed = StatusEffectProcessor.ApplyEffect<EngulfedEffect>(target, 3);
+                if (engulfed != null)
+                {
+                    events.Add(new StatusAppliedEvent
+                    {
+                        ActorId    = monster.Id,
+                        TargetId   = target.Id,
+                        EffectName = "engulfed",
+                        Duration   = engulfed.RemainingTurns,
+                    });
+                }
+            }
+
+            // Attack damage interrupt hooks — rally end, chant interrupt.
+            // DOT damage does NOT call this path (PoC-verified).
+            if (result.Damage > 0)
+                OnAttackDamageTaken(state, monster, target, events);
         }
 
         if (result.TargetKilled)
@@ -2030,6 +2062,8 @@ public static class TurnController
                 DropMonsterLoot(state, target, events);
                 TransformToCorpse(state, target, events, monsterFactory);
                 ResolveDeathSiphon(state, target, events);
+                // Shaman death cleanup for monster-vs-monster kills.
+                ResolveChannelCleanupOnDeath(state, target, events);
             }
         }
         else if (result.Hit)
@@ -2272,6 +2306,81 @@ public static class TurnController
                 int healed = monster.Require<Fighter>().Heal(2);
                 if (healed > 0)
                     events.Add(new DeathSiphonEvent { ActorId = monster.Id, DeadMonsterId = deadMonster.Id, Amount = healed });
+            }
+        }
+    }
+
+    /// <summary>
+    /// Called after any successful ATTACK hit that deals damage > 0.
+    /// Handles cross-cutting interrupt rules that depend on the attacker/defender pair:
+    ///   - Rally ends when the chieftain (defender) takes attack damage.
+    ///   - Chant of Dissonance is interrupted when the shaman (defender) takes attack damage.
+    ///
+    /// DOT damage does NOT call this (PoC-verified: only attack damage interrupts these).
+    /// Called from both ResolvePlayerAttack and ResolveMonsterAttack.
+    /// </summary>
+    private static void OnAttackDamageTaken(GameState state, Entity attacker, Entity defender,
+        List<TurnEvent> events)
+    {
+        // Rally ends when the chieftain takes any attack damage > 0.
+        // Remove RallyEffect from the chieftain itself and every monster whose
+        // RallyEffect.ChieftainId matches this chieftain.
+        //
+        // Use state.Monsters directly (not state.AliveMonsters) to avoid caching
+        // a stale AliveMonsters list during the player turn phase. The filter
+        // Get<Fighter>()?.IsAlive == true ensures we only process living monsters.
+        if (defender.Has<OrcChieftainComponent>())
+        {
+            foreach (var entity in state.Monsters.Where(m => m.Get<Fighter>()?.IsAlive == true))
+            {
+                var rally = entity.Get<RallyEffect>();
+                if (rally != null && rally.ChieftainId == defender.Id)
+                {
+                    entity.Remove<RallyEffect>();
+                    events.Add(new StatusExpiredEvent
+                    {
+                        ActorId    = entity.Id,
+                        EntityId   = entity.Id,
+                        EffectName = "rallied",
+                        Reason     = "rally_broken",
+                    });
+                }
+            }
+            // Also remove from the chieftain itself.
+            var chieftainRally = defender.Get<RallyEffect>();
+            if (chieftainRally != null)
+            {
+                defender.Remove<RallyEffect>();
+                events.Add(new StatusExpiredEvent
+                {
+                    ActorId    = defender.Id,
+                    EntityId   = defender.Id,
+                    EffectName = "rallied",
+                    Reason     = "rally_broken",
+                });
+            }
+        }
+
+        // Chant interrupted when the shaman (defender) takes any attack damage > 0.
+        var shamanComp = defender.Get<OrcShamanComponent>();
+        if (shamanComp != null && shamanComp.IsChanneling)
+        {
+            shamanComp.IsChanneling = false;
+            shamanComp.ChantTurnsRemaining = 0;
+            shamanComp.ChantCooldownRemaining = shamanComp.ChantCooldownTurns;
+
+            // Remove DissonantChantEffect from the player if it was started by this shaman.
+            var chantEffect = state.Player.Get<DissonantChantEffect>();
+            if (chantEffect != null && chantEffect.ChantingShamanId == defender.Id)
+            {
+                StatusEffectProcessor.RemoveEffect<DissonantChantEffect>(state.Player);
+                events.Add(new StatusExpiredEvent
+                {
+                    ActorId    = state.Player.Id,
+                    EntityId   = state.Player.Id,
+                    EffectName = "dissonant_chant",
+                    Reason     = "chant_interrupted",
+                });
             }
         }
     }
@@ -2956,6 +3065,36 @@ public static class TurnController
                 if (ae != null && ae.IsActive)
                     AutoExploreSystem.Stop(ae, "Found secret door");
             }
+        }
+    }
+
+    /// <summary>
+    /// When a monster dies, if it was channeling a Chant of Dissonance, remove the
+    /// DissonantChantEffect from the player so they are not permanently slowed.
+    /// Called from both ResolvePlayerAttack and ResolveMonsterAttack death paths.
+    /// Risk R4 mitigation — easy to miss in edge cases, so it lives here in one place.
+    /// </summary>
+    private static void ResolveChannelCleanupOnDeath(GameState state, Entity deadMonster,
+        List<TurnEvent> events)
+    {
+        var shaman = deadMonster.Get<OrcShamanComponent>();
+        if (shaman == null || !shaman.IsChanneling) return;
+
+        // The shaman was channeling when it died — clean up the effect on the player.
+        shaman.IsChanneling = false;
+        shaman.ChantTurnsRemaining = 0;
+
+        var chantEffect = state.Player.Get<DissonantChantEffect>();
+        if (chantEffect != null && chantEffect.ChantingShamanId == deadMonster.Id)
+        {
+            StatusEffectProcessor.RemoveEffect<DissonantChantEffect>(state.Player);
+            events.Add(new StatusExpiredEvent
+            {
+                ActorId    = state.Player.Id,
+                EntityId   = state.Player.Id,
+                EffectName = "dissonant_chant",
+                Reason     = "shaman_died",
+            });
         }
     }
 

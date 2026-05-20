@@ -444,6 +444,10 @@ monsters:
     corrosion_chance: 0.05
     spawn_weight: 0
     leaves_corpse: false
+    # Engulf on hit: applies EngulfedEffect(3) to the player on any successful melee hit.
+    # large_slime and greater_slime inherit this via extends: slime.
+    # PoC: entities.yaml slime entries; tests/test_engulf_mechanics.py.
+    engulfs_on_hit: true
 
   large_slime:
     name: "Large Slime"

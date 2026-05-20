@@ -38,6 +38,8 @@ public static class StatusEffectProcessor
         [typeof(BleedEffect)] = "bleed",
         [typeof(AcidEffect)] = "acid",
         [typeof(PossessionEffect)] = "possessed",
+        [typeof(EngulfedEffect)] = "engulfed",
+        [typeof(DissonantChantEffect)] = "dissonant_chant",
     };
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -177,12 +179,13 @@ public static class StatusEffectProcessor
         }
 
         // InnateRegenComponent: permanent monster regeneration (troll, troll_ancient).
-        // Suppressed while AcidEffect is active on the entity.
+        // Suppressed while AcidEffect OR BurningEffect is active on the entity.
+        // PoC: regen suppressed when damage_type in ['acid', 'fire'] (fighter.py lines 553–570).
         if (entity.Get<InnateRegenComponent>() is { } innateRegen && fighter != null)
         {
-            if (entity.Has<AcidEffect>())
+            if (entity.Has<AcidEffect>() || entity.Has<BurningEffect>())
             {
-                // Regen suppressed by acid — emit event for presentation layer feedback.
+                // Regen suppressed by acid or fire — emit event for presentation layer feedback.
                 events.Add(new RegenSuppressedEvent { ActorId = entity.Id });
             }
             else
@@ -198,6 +201,31 @@ public static class StatusEffectProcessor
                         Amount = actualHeal,
                     });
                 }
+            }
+        }
+
+        // ── EngulfedEffect adjacency refresh ──────────────────────────────
+        // While engulfed, if any alive monster with EngulfsOnHitTag is adjacent, refresh
+        // duration to 3. If no such monster is adjacent, duration ticks down normally.
+        // Only meaningful when state is provided (not in unit tests with no monster list).
+        //
+        // IMPORTANT: Use state.Monsters directly (not state.AliveMonsters) to avoid
+        // poisoning AliveMonsters cache. If state.AliveMonsters is called here (in the player's
+        // ProcessTurnStart), the cache is built with all monsters alive. If a monster then dies
+        // during the player's action and its Fighter component is removed by TransformToCorpse,
+        // the stale cache in ResolveMonsterTurns would include the Fighter-less entity and crash.
+        // Directly filtering state.Monsters with Get<Fighter>()?.IsAlive avoids caching.
+        if (entity.Has<EngulfedEffect>() && state != null)
+        {
+            bool adjacentSlimeFound = state.Monsters.Any(m =>
+                m.Get<Fighter>()?.IsAlive == true &&
+                m.Has<EngulfsOnHitTag>() &&
+                entity.ChebyshevDistanceTo(m.X, m.Y) <= 1);
+
+            if (adjacentSlimeFound)
+            {
+                // Refresh — no event emitted (duration didn't expire; no presentation hook needed)
+                entity.Require<EngulfedEffect>().RemainingTurns = 3;
             }
         }
 
@@ -233,18 +261,31 @@ public static class StatusEffectProcessor
             skipTurn = true;
         }
 
-        // SlowedEffect: skip odd-numbered turns (turnCount % 2 == 1) (unless FreeAction)
-        // Even turns the entity acts normally; odd turns it loses its action.
-        // Using the caller-provided turnCount so this is deterministic and testable.
-        if (entity.Has<SlowedEffect>() && turnCount % 2 == 1 && !hasFreeAction)
+        // Unified alternating-skip gate (R2): SlowedEffect, EngulfedEffect, and
+        // DissonantChantEffect all share one skip slot. If any of them is active AND
+        // the turn is odd (turnCount % 2 == 1), exactly one skip fires. Stacking these
+        // effects never causes multiple skips — the gate checks all three at once.
+        // FreeAction still overrides all of them (covers slow/paralysis category only;
+        // DissonantChant and Engulf are separate mechanics but use the same slot).
+        //
+        // Priority: first matching effect name is used in SkipTurnEvent (for presentation).
+        if (!hasFreeAction && turnCount % 2 == 1 && !skipTurn)
         {
-            events.Add(new SkipTurnEvent
+            string? alternatingSkipEffect = null;
+            if (entity.Has<SlowedEffect>()) alternatingSkipEffect = "slowed";
+            else if (entity.Has<EngulfedEffect>()) alternatingSkipEffect = "engulfed";
+            else if (entity.Has<DissonantChantEffect>()) alternatingSkipEffect = "dissonant_chant";
+
+            if (alternatingSkipEffect != null)
             {
-                ActorId = entity.Id,
-                EntityId = entity.Id,
-                EffectName = "slowed",
-            });
-            skipTurn = true;
+                events.Add(new SkipTurnEvent
+                {
+                    ActorId = entity.Id,
+                    EntityId = entity.Id,
+                    EffectName = alternatingSkipEffect,
+                });
+                skipTurn = true;
+            }
         }
 
         return skipTurn;
@@ -334,6 +375,16 @@ public static class StatusEffectProcessor
     // ─────────────────────────────────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Remove a specific status effect type from an entity.
+    /// Used by OrcShamanAI to explicitly end DissonantChantEffect on the player when
+    /// the channel ends naturally, is interrupted, or the shaman dies.
+    /// </summary>
+    public static void RemoveEffect<T>(Entity entity) where T : class, IStatusEffect
+    {
+        entity.Remove<T>();
+    }
 
     /// <summary>
     /// Remove a status effect from an entity using its concrete runtime type.

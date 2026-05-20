@@ -9,6 +9,7 @@ namespace CatacombsOfYarl.Logic.Combat.StatusEffects;
 /// Suppression: while active on an entity, any InnateRegenComponent on the same entity
 /// will not trigger during ProcessTurnStart. Player RegenerationEffect (from rings/potions)
 /// is NOT suppressed — AcidEffect only targets InnateRegenComponent.
+/// BurningEffect applies the same suppression rule — both fire and acid suppress innate regen.
 ///
 /// Sources: acid_trap walk-over.
 /// Weapon coating: when the player triggers an acid_trap, their equipped weapon gains
