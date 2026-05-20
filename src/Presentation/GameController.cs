@@ -650,8 +650,9 @@ public sealed partial class GameController : Node
     {
         if (_state == null || _gameView == null) { CancelPossessionTargeting(); return; }
 
-        var localPos = _gameView.ToLocal(screenPos);
-        var (gridX, gridY) = _renderer.ScreenToGrid(localPos);
+        // screenPos is already in local space — Main._UnhandledInput calls _gameView.ToLocal()
+        // before passing to HandleTap. Do NOT call ToLocal() again here.
+        var (gridX, gridY) = _renderer.ScreenToGrid(screenPos);
 
         // Tap on player's own tile → cancel
         if (gridX == _state.Player.X && gridY == _state.Player.Y)
