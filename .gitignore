@@ -37,3 +37,4 @@ reports/
 
 # Claude Code session data
 .claude/projects/
+.claude/worktrees/
