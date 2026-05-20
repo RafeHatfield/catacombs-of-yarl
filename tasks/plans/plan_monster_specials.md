@@ -1,7 +1,8 @@
 # Plan: Special Monster Mechanics
 
-Status: [ ] Not started
+Status: [~] In progress
 PoC reference: components/ai/, services/slime_split_service.py, components/corpse.py
+Implementation plan: tasks/plans/plan_monster_specials_impl.md
 
 ---
 
