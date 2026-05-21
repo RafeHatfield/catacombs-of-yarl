@@ -1,6 +1,6 @@
 # Plan: Balance Pipeline Implementation (Production Build)
 
-## Status: [~] In progress — planning complete, phases pending
+## Status: [x] Complete — all 5 phases implemented, 1838 tests pass
 
 This plan ports the Python PoC's balance pipeline (`balance_suite.py`, `etp_config.yaml`, `analysis/depth_pressure_model.py`, `etp_sanity.py`) to C#. It is the highest-priority infrastructure work — without it, every other balance change is a guess.
 
@@ -924,8 +924,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
 
 ### Phase 0 — Seeding
 
-- [ ] TASK-001: Implement `SeedDerivation.Stable(scenarioId, runIdx, seedBase)` + tests.
-  - Status: pending
+- [x] TASK-001: Implement `SeedDerivation.Stable(scenarioId, runIdx, seedBase)` + tests.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: none
@@ -934,8 +934,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - 50 different runIdx values → 50 unique seeds
     - `depth2_orc_baseline` and `depth2_orc_baseline_fine` produce disjoint seed sets
 
-- [ ] TASK-002: Wire `SeedDerivation.Stable` into `ScenarioHarness.Run()`.
-  - Status: pending
+- [x] TASK-002: Wire `SeedDerivation.Stable` into `ScenarioHarness.Run()`.
+  - Status: complete
   - Layer: logic
   - Type: refactor
   - Dependencies: TASK-001
@@ -944,8 +944,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - All existing `tests/Balance/*` tests still pass (numbers will shift but pass/fail status remains)
     - Run `harness --scenario depth1_tuned --runs 10` twice; outputs byte-identical
 
-- [ ] TASK-003: Recalibrate provisional bands in `PressureModel.cs` post-reseed.
-  - Status: pending
+- [x] TASK-003: Recalibrate provisional bands in `PressureModel.cs` post-reseed.
+  - Status: complete
   - Layer: logic
   - Type: balance
   - Dependencies: TASK-002
@@ -956,8 +956,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
 
 ### Phase 1 — Acceptance Matrix
 
-- [ ] TASK-101: Author 4 missing depth-2 weapon-variant scenarios.
-  - Status: pending
+- [x] TASK-101: Author 4 missing depth-2 weapon-variant scenarios.
+  - Status: complete
   - Layer: scenario
   - Type: scenario
   - Dependencies: none
@@ -966,8 +966,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Each differs from `scenario_depth2_orc_baseline.yaml` only in `player.weapon`
     - `harness --scenario depth2_orc_baseline_keen` runs successfully
 
-- [ ] TASK-102: Author 4 missing depth-3 weapon-variant scenarios.
-  - Status: pending
+- [x] TASK-102: Author 4 missing depth-3 weapon-variant scenarios.
+  - Status: complete
   - Layer: scenario
   - Type: scenario
   - Dependencies: none
@@ -975,16 +975,16 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - `scenario_depth3_orc_brutal_keen.yaml`, `_vicious`, `_fine`, `_masterwork` created
     - `harness --scenario depth3_orc_brutal_fine` runs and reports H_PM/H_MP
 
-- [ ] TASK-103: Author 4 missing depth-5 weapon-variant scenarios.
-  - Status: pending
+- [x] TASK-103: Author 4 missing depth-5 weapon-variant scenarios.
+  - Status: complete
   - Layer: scenario
   - Type: scenario
   - Dependencies: none
   - Acceptance criteria:
     - `scenario_depth5_zombie_keen.yaml`, `_vicious`, `_fine`, `_masterwork` created
 
-- [ ] TASK-104: Implement `NormalizedMetrics` record and `SuiteRunner.Normalize()`.
-  - Status: pending
+- [x] TASK-104: Implement `NormalizedMetrics` record and `SuiteRunner.Normalize()`.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-001
@@ -992,8 +992,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - `NormalizedMetrics(scenario_id, runs, deaths, death_rate, player_hit_rate, monster_hit_rate, pressure_index, bonus_attacks_per_run)` matches PoC schema exactly
     - `SuiteRunner.Normalize(AggregatedMetrics)` returns the same shape PoC's `normalize_metrics()` produces
 
-- [ ] TASK-105: Implement `SuiteRunner.Run()` matrix execution (no baseline compare).
-  - Status: pending
+- [x] TASK-105: Implement `SuiteRunner.Run()` matrix execution (no baseline compare).
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-101, TASK-102, TASK-103, TASK-104
@@ -1003,8 +1003,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Writes `metrics/raw/<scenario>.json`, `summary.json`, `balance_report.md`, `verdict.json`
     - Two runs at same `--seed` produce byte-identical `summary.json`
 
-- [ ] TASK-106: Implement verdict markdown report formatter.
-  - Status: pending
+- [x] TASK-106: Implement verdict markdown report formatter.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-105
@@ -1013,8 +1013,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Per-scenario section with Runs, Deaths, Death Rate, Hit Rates, Pressure Index, Bonus Attacks
     - Verdict Summary section with PASS/WARN/FAIL counts
 
-- [ ] TASK-107: Wire `--suite` CLI flag into `Program.cs`.
-  - Status: pending
+- [x] TASK-107: Wire `--suite` CLI flag into `Program.cs`.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-106
@@ -1024,8 +1024,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - `harness --suite --out-dir <path>` writes to custom dir
     - `--help` documents new flags
 
-- [ ] TASK-108: End-to-end harness verification.
-  - Status: pending
+- [x] TASK-108: End-to-end harness verification.
+  - Status: complete
   - Layer: logic
   - Type: test
   - Dependencies: TASK-107
@@ -1037,8 +1037,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
 
 ### Phase 2 — Baseline & Regression
 
-- [ ] TASK-201: Implement `SuiteRunner.ComputeDeltas` and `ClassifyVerdict`.
-  - Status: pending
+- [x] TASK-201: Implement `SuiteRunner.ComputeDeltas` and `ClassifyVerdict`.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-104
@@ -1047,8 +1047,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Synthetic test: death_rate Δ=0.21 → FAIL; 0.11 → WARN; 0.04 → PASS
     - Cross-metric: if death_rate WARN and bonus_attacks FAIL → overall FAIL
 
-- [ ] TASK-202: Implement baseline read/write + `--update-baseline` flag.
-  - Status: pending
+- [x] TASK-202: Implement baseline read/write + `--update-baseline` flag.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-105, TASK-201
@@ -1057,8 +1057,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - `--baseline <path>` reads from custom path
     - JSON shape matches PoC verbatim (`{ scenario_id: NormalizedMetrics, ... }`)
 
-- [ ] TASK-203: Wire baseline comparison into `SuiteRunner.Run()`.
-  - Status: pending
+- [x] TASK-203: Wire baseline comparison into `SuiteRunner.Run()`.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-202
@@ -1067,8 +1067,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - When baseline absent: verdict.json has `status: NO_BASELINE`, `acceptance_status: PASS`
     - Exit code 1 if any FAIL verdict; 0 otherwise
 
-- [ ] TASK-204: Bootstrap initial baseline.
-  - Status: pending
+- [x] TASK-204: Bootstrap initial baseline.
+  - Status: complete
   - Layer: balance
   - Type: balance
   - Dependencies: TASK-203, TASK-003
@@ -1077,8 +1077,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Commit `reports/baselines/balance_suite_baseline.json`
     - Verify subsequent `harness --suite` reports all PASS or PROBE (no FAIL)
 
-- [ ] TASK-205: CI workflow integration.
-  - Status: pending
+- [x] TASK-205: CI workflow integration.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-204
@@ -1089,8 +1089,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
 
 ### Phase 3 — Full ETP
 
-- [ ] TASK-301: Port `etp_config.yaml` to C# config.
-  - Status: pending
+- [x] TASK-301: Port `etp_config.yaml` to C# config.
+  - Status: complete
   - Layer: logic
   - Type: balance
   - Dependencies: none
@@ -1098,8 +1098,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - `config/etp_config.yaml` exists; matches PoC byte-for-byte structurally
     - Comment block at top points to PoC source
 
-- [ ] TASK-302: Implement `EtpConfigLoader` + `EtpConfig`/`BandConfig` records.
-  - Status: pending
+- [x] TASK-302: Implement `EtpConfigLoader` + `EtpConfig`/`BandConfig` records.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-301
@@ -1108,8 +1108,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - All 5 bands deserialize with correct multipliers
     - All 9 behavior modifiers deserialize
 
-- [ ] TASK-303: Implement `EtpCalculator` (replacing stub).
-  - Status: pending
+- [x] TASK-303: Implement `EtpCalculator` (replacing stub).
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-302
@@ -1119,8 +1119,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Orc at depth 1 returns 20 < etp < 40
     - Speed tier lookup matches PoC table
 
-- [ ] TASK-304: Implement `EtpBudgetChecker.CheckRoom`.
-  - Status: pending
+- [x] TASK-304: Implement `EtpBudgetChecker.CheckRoom`.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-303
@@ -1130,8 +1130,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Returns OVER when above max × (1 + tolerance)
     - Spike allowance: max × 1.5 when `allowSpike=true`
 
-- [ ] TASK-305: Port ETP test suite from PoC.
-  - Status: pending
+- [x] TASK-305: Port ETP test suite from PoC.
+  - Status: complete
   - Layer: logic
   - Type: test
   - Dependencies: TASK-304
@@ -1142,8 +1142,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
 
 ### Phase 4 — Depth Pressure Report
 
-- [ ] TASK-401: Implement `DepthCurvePoint` + `DepthReportLoader`.
-  - Status: pending
+- [x] TASK-401: Implement `DepthCurvePoint` + `DepthReportLoader`.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-105
@@ -1151,8 +1151,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Loads `metrics/raw/*.json` directory or single `summary.json`
     - Returns `IReadOnlyList<DepthCurvePoint>` sorted by depth
 
-- [ ] TASK-402: Implement `FormatPressureTable` and `FormatTargetComparison`.
-  - Status: pending
+- [x] TASK-402: Implement `FormatPressureTable` and `FormatTargetComparison`.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-401
@@ -1161,8 +1161,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Target comparison table includes Death%, H_PM, H_MP with target ranges and status
     - Diagnosis section includes per-depth findings from `PressureModel.Diagnose()`
 
-- [ ] TASK-403: Implement `DeriveRequiredDamageMultiplier` + formatter.
-  - Status: pending
+- [x] TASK-403: Implement `DeriveRequiredDamageMultiplier` + formatter.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-402
@@ -1171,8 +1171,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Observed H_MP=30, target midpoint=20 → multiplier ≈ 1.5
     - When in range → multiplier=1.0, adjustment_needed=false
 
-- [ ] TASK-404: Implement `FormatScalingDiagnosis` (trend analysis).
-  - Status: pending
+- [x] TASK-404: Implement `FormatScalingDiagnosis` (trend analysis).
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-401
@@ -1181,8 +1181,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Attrition indicator per depth (ATTRITION/LETHAL/BALANCED) computed correctly
     - Synthetic test: each category triggered by hand-crafted curve
 
-- [ ] TASK-405: Wire `--depth-report` CLI flag.
-  - Status: pending
+- [x] TASK-405: Wire `--depth-report` CLI flag.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-404
@@ -1192,8 +1192,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
 
 ### Phase 5 — ETP Sanity Tool
 
-- [ ] TASK-501: Audit `LevelTemplate` for `role` and `allow_spike` fields.
-  - Status: pending
+- [x] TASK-501: Audit `LevelTemplate` for `role` and `allow_spike` fields.
+  - Status: complete
   - Layer: logic
   - Type: analysis
   - Dependencies: none
@@ -1201,8 +1201,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Document which level templates carry role/spike metadata
     - If missing, add to `LevelTemplate` schema + at least one example template
 
-- [ ] TASK-502: Implement `AnalyzeLevel` against `DungeonFloorBuilder`.
-  - Status: pending
+- [x] TASK-502: Implement `AnalyzeLevel` against `DungeonFloorBuilder`.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-303, TASK-501
@@ -1212,8 +1212,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - Boss rooms → BOSS status (always valid)
     - Two calls at same seed → identical result
 
-- [ ] TASK-503: Implement `RunSanity` orchestrator + CSV writer.
-  - Status: pending
+- [x] TASK-503: Implement `RunSanity` orchestrator + CSV writer.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-502
@@ -1223,8 +1223,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - `--strict` exits 1 only on OVER violations in normal rooms
     - Per-band summary printed after CSV
 
-- [ ] TASK-504: Wire `--etp-sanity` CLI flag.
-  - Status: pending
+- [x] TASK-504: Wire `--etp-sanity` CLI flag.
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-503
@@ -1233,8 +1233,8 @@ Tasks are grouped by phase. Each is sized for a single builder session.
     - `--strict`, `--depth`, `--runs`, `--verbose` flags work
     - Exit codes correct (0 = pass strict, 1 = OVER detected in strict)
 
-- [ ] TASK-505: ETP sanity verification run.
-  - Status: pending
+- [x] TASK-505: ETP sanity verification run.
+  - Status: complete
   - Layer: logic
   - Type: test
   - Dependencies: TASK-504

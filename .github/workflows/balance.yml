@@ -1,0 +1,41 @@
+name: Balance Suite
+
+on:
+  pull_request:
+  # Also run on main pushes so the baseline drift is visible
+  push:
+    branches: [main]
+
+jobs:
+  balance:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Fast tests
+        run: dotnet test tests/ --filter "Category!=Slow" --logger "console;verbosity=minimal"
+
+      - name: Balance acceptance suite
+        # Compares against committed baseline. Exit 1 if any FAIL verdict.
+        # NO_BASELINE (first run on a fresh checkout) → exit 0 (PASS).
+        run: >
+          dotnet run --project tools/Harness --
+          --suite
+          --baseline reports/baselines/balance_suite_baseline.json
+          --out-dir reports/balance_suite/ci_${{ github.sha }}
+
+      - name: Upload balance report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: balance-report-${{ github.sha }}
+          path: reports/balance_suite/ci_${{ github.sha }}/
+          if-no-files-found: warn

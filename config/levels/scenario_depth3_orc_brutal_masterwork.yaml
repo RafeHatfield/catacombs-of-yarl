@@ -1,0 +1,42 @@
+scenario_id: depth3_orc_brutal_masterwork
+name: "Depth 3 - Orc Brutal (masterwork longsword)"
+depth: 3
+turn_limit: 110
+runs: 50
+map_width: 11
+map_height: 11
+player_start_y: 5
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "masterwork_longsword"
+  armor: "leather_armor"
+
+# Same layout as scenario_depth3_orc_brutal — only player.weapon differs.
+monsters:
+  - type: "orc_grunt"
+    count: 1
+    position: [7, 5]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 4]
+  - type: "orc_grunt"
+    count: 1
+    position: [9, 5]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 6]
+  - type: "orc_grunt"
+    count: 1
+    position: [9, 3]
+
+items:
+  - type: "healing_potion"
+    count: 1

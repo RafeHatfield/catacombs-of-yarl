@@ -33,6 +33,18 @@ string? scenarioId   = null;
 bool    runAll       = false;
 bool    jsonOutput   = false;
 bool    dungeonMode  = false;
+bool    suiteMode    = false;
+bool    suitefast    = false;
+string? suiteOutDir  = null;
+string? baselinePath = null;
+bool    updateBaseline = false;
+bool    depthReportMode = false;
+string? depthReportIn   = null;
+string? depthReportOut  = null;
+bool    etpSanityMode   = false;
+bool    etpSanityStrict = false;
+int?    etpSanityDepth  = null;
+int     etpSanityRuns   = 1;
 bool    verbose      = false;
 bool    printReport  = false;
 bool    transcriptMode = false;
@@ -54,6 +66,17 @@ for (int i = 0; i < args.Length; i++)
         case "--seed":      seed         = int.Parse(args[++i]); break;
         case "--json":      jsonOutput   = true;      break;
         case "--dungeon":   dungeonMode  = true;      break;
+        case "--suite":     suiteMode    = true;      break;
+        case "--fast":      suitefast    = true;      break;
+        case "--out-dir":   suiteOutDir  = args[++i]; break;
+        case "--baseline":  baselinePath = args[++i]; break;
+        case "--update-baseline": updateBaseline = true; break;
+        case "--depth-report": depthReportMode = true; break;
+        case "--in":  depthReportIn  = args[++i]; break;
+        case "--out": depthReportOut = args[++i]; break;
+        case "--etp-sanity":   etpSanityMode   = true; break;
+        case "--strict":       etpSanityStrict = true; break;
+        case "--depth":        etpSanityDepth  = int.Parse(args[++i]); break;
         case "--transcript": transcriptMode = true;  break;
         case "--floors":    floors       = int.Parse(args[++i]); break;
         case "--verbose":   verbose      = true;      break;
@@ -80,6 +103,12 @@ for (int i = 0; i < args.Length; i++)
 }
 
 // ─── Validate mode ─────────────────────────────────────────────────────────
+
+if (suiteMode && (dungeonMode || scenarioId != null || runAll))
+{
+    Console.Error.WriteLine("ERROR: --suite is mutually exclusive with --dungeon, --scenario, and --all.");
+    return 1;
+}
 
 if (dungeonMode && (scenarioId != null || runAll))
 {
@@ -120,9 +149,147 @@ if (printReport && jsonlInPath != null && !dungeonMode)
     return 0;
 }
 
+// ─── SUITE MODE ────────────────────────────────────────────────────────────
+
+if (suiteMode)
+{
+    if (!File.Exists(EntitiesFile))
+    {
+        Console.Error.WriteLine($"ERROR: '{EntitiesFile}' not found. Run from project root.");
+        return 1;
+    }
+
+    ScenarioRunner suiteRunner;
+    try   { suiteRunner = ScenarioRunner.FromEntitiesFile(EntitiesFile); }
+    catch (Exception ex) { Console.Error.WriteLine($"ERROR loading entities: {ex.Message}"); return 1; }
+
+    string outDirPath = suiteOutDir
+        ?? Path.Combine("reports", "balance_suite", DateTime.UtcNow.ToString("yyyyMMdd_HHmmss"));
+    var outDir = new DirectoryInfo(outDirPath);
+
+    int exitCode = SuiteRunner.Run(
+        suiteRunner,
+        LevelsDir,
+        outDir,
+        seed,
+        suitefast,
+        baselinePath,
+        updateBaseline,
+        out var suiteResults);
+
+    // Print brief summary table to stdout
+    Console.WriteLine();
+    Console.WriteLine($"=== Balance Suite ({(suitefast ? "fast" : "full")}, seed {seed}) ===");
+    Console.WriteLine();
+    foreach (var r in suiteResults)
+        Console.WriteLine($"  {r.ScenarioId,-35}  {r.Verdict}");
+    Console.WriteLine();
+
+    int passCount  = suiteResults.Count(r => r.Verdict == "PASS");
+    int warnCount  = suiteResults.Count(r => r.Verdict == "WARN");
+    int failCount  = suiteResults.Count(r => r.Verdict == "FAIL");
+    int probeCount = suiteResults.Count(r => r.Verdict == "PROBE");
+    int noBaselineCount = suiteResults.Count(r => r.Verdict == "NO_BASELINE");
+
+    if (noBaselineCount > 0)
+        Console.WriteLine($"  Status: NO_BASELINE ({noBaselineCount} scenarios — run --update-baseline to create baseline)");
+    else
+        Console.WriteLine($"  Results: {passCount} PASS  {warnCount} WARN  {failCount} FAIL  {probeCount} PROBE");
+    Console.WriteLine();
+    Console.WriteLine($"  Report: {outDir.FullName}/balance_report.md");
+
+    return exitCode;
+}
+
+// ─── DEPTH REPORT MODE ─────────────────────────────────────────────────────
+
+if (depthReportMode)
+{
+    if (string.IsNullOrEmpty(depthReportIn))
+    {
+        Console.Error.WriteLine("ERROR: --depth-report requires --in <dir-or-file>");
+        return 1;
+    }
+
+    IReadOnlyList<CatacombsOfYarl.Logic.Balance.DepthPressureReport.DepthCurvePoint> points;
+    try
+    {
+        points = DepthReportLoader.Load(depthReportIn);
+    }
+    catch (Exception ex)
+    {
+        Console.Error.WriteLine($"ERROR loading depth report data: {ex.Message}");
+        return 1;
+    }
+
+    if (points.Count == 0)
+    {
+        Console.Error.WriteLine("No depth data found in input.");
+        return 1;
+    }
+
+    var report = CatacombsOfYarl.Logic.Balance.DepthPressureReport.FormatFullReport(points);
+
+    if (!string.IsNullOrEmpty(depthReportOut))
+    {
+        File.WriteAllText(depthReportOut, report,
+            new System.Text.UTF8Encoding(false));
+        Console.Error.WriteLine($"Report written to {depthReportOut}");
+    }
+    else
+    {
+        Console.WriteLine(report);
+    }
+
+    return 0;
+}
+
+// ─── ETP SANITY MODE ───────────────────────────────────────────────────────
+
+if (etpSanityMode)
+{
+    if (!File.Exists(EntitiesFile) || !File.Exists(LevelTemplatesFile))
+    {
+        Console.Error.WriteLine("ERROR: entities.yaml and level_templates.yaml required for --etp-sanity. Run from project root.");
+        return 1;
+    }
+
+    const string EtpConfigFile = "config/etp_config.yaml";
+    if (!File.Exists(EtpConfigFile))
+    {
+        Console.Error.WriteLine($"ERROR: '{EtpConfigFile}' not found.");
+        return 1;
+    }
+
+    var etpCfg = CatacombsOfYarl.Logic.Balance.Etp.EtpConfigLoader.FromFile(EtpConfigFile);
+    DungeonFloorBuilder etpBuilder;
+    try
+    {
+        etpBuilder = BuildDungeonFloorBuilder(EntitiesFile, LevelTemplatesFile, DepthBoonsFile);
+    }
+    catch (Exception ex) { Console.Error.WriteLine($"ERROR loading content: {ex.Message}"); return 1; }
+
+    int[] depths = etpSanityDepth.HasValue
+        ? [etpSanityDepth.Value]
+        : CatacombsOfYarl.Logic.Balance.Etp.EtpSanityHarness.DefaultDepths;
+
+    // RunSanity writes the CSV header itself; pass Console.Out as the CSV output stream
+    int exitCode = CatacombsOfYarl.Logic.Balance.Etp.EtpSanityHarness.RunSanity(
+        etpBuilder, etpCfg,
+        depths:        depths,
+        strict:        etpSanityStrict,
+        verbose:       verbose,
+        runsPerDepth:  etpSanityRuns,
+        csvOut:        Console.Out);
+
+    if (etpSanityStrict && exitCode != 0)
+        Console.Error.WriteLine("ETP sanity FAILED: OVER violations detected in normal rooms.");
+    return exitCode;
+}
+
 if (!dungeonMode && scenarioId == null && !runAll)
 {
-    Console.Error.WriteLine("Usage: harness --scenario <id> | --all | --dungeon [--runs N] [--seed N] [--json]");
+    Console.Error.WriteLine("Usage: harness --scenario <id> | --all | --dungeon | --suite | --depth-report | --etp-sanity [options]");
     Console.Error.WriteLine("Run with --help for details.");
     return 1;
 }

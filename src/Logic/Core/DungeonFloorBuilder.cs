@@ -400,6 +400,8 @@ public sealed class DungeonFloorBuilder
             MuralTracker = muralTracker,
             PityTracker = finalPityTracker,
             PersistentState = persistentState,
+            // Expose rooms for ETP sanity analysis (EtpSanityHarness.AnalyzeLevel)
+            Rooms = generatedMap.Rooms,
         };
 
         // Unshriven Geas: when the push-the-marker job is complete (spec §6.10), floors 4-8

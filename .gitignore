@@ -32,8 +32,13 @@ Thumbs.db
 export/
 build/
 
-# Harness output
-reports/
+# Harness output — ignore run artifacts but commit the baseline
+reports/balance_suite/
+reports/post_reseed_baseline.json
+# Note: reports/baselines/ is intentionally committed (baseline lives there)
+# Keep individual soak reports out of source control
+reports/*.jsonl
+reports/*.json
 
 # Claude Code session data
 .claude/projects/

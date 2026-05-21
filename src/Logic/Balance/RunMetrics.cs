@@ -184,6 +184,22 @@ public sealed class AggregatedMetrics
     /// <summary>Average bonus attacks per run (player + monster combined).</summary>
     public double AvgBonusAttacks { get; init; }
 
+    /// <summary>
+    /// Average player attacks per run (hits + misses combined).
+    /// Used by NormalizedMetrics.PressureIndex = AvgMonsterAttacksPerRun - AvgPlayerAttacksPerRun.
+    /// PoC: total_player_attacks / runs.
+    /// Note: PoC does not distinguish bonus attacks in this count; C# follows the same convention
+    /// (BonusAttacks are included in RunMetrics.PlayerAttacks).
+    /// </summary>
+    public double AvgPlayerAttacksPerRun { get; init; }
+
+    /// <summary>
+    /// Average monster attacks per run (hits + misses combined).
+    /// Used by NormalizedMetrics.PressureIndex = AvgMonsterAttacksPerRun - AvgPlayerAttacksPerRun.
+    /// PoC: total_monster_attacks / runs.
+    /// </summary>
+    public double AvgMonsterAttacksPerRun { get; init; }
+
     // ── Ranged Combat Aggregates (Phase 22.2) ─────────────────────────────────
 
     public double AvgRangedAttacksMadeByPlayer { get; init; }
@@ -243,7 +259,9 @@ public sealed class AggregatedMetrics
             AvgMonsterMaxHp       = avgMonsterMaxHp,
             H_PM                  = h_pm,
             H_MP                  = h_mp,
-            AvgBonusAttacks       = runs.Average(r => r.BonusAttacks),
+            AvgBonusAttacks          = runs.Average(r => r.BonusAttacks),
+            AvgPlayerAttacksPerRun   = runs.Average(r => r.PlayerAttacks),
+            AvgMonsterAttacksPerRun  = runs.Average(r => r.MonsterAttacks),
             // Ranged aggregates
             AvgRangedAttacksMadeByPlayer          = runs.Average(r => r.RangedAttacksMadeByPlayer),
             AvgRangedAttacksDeniedOutOfRange       = runs.Average(r => r.RangedAttacksDeniedOutOfRange),

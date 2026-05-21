@@ -162,6 +162,13 @@ public sealed class GameState
     /// </summary>
     public EntityIdAllocator? IdAllocator { get; init; }
 
+    /// <summary>
+    /// Rooms from the generated floor map. Populated by DungeonFloorBuilder.Build().
+    /// Null in scenario/harness mode. Used by ETP sanity analysis to correlate
+    /// monster positions to rooms.
+    /// </summary>
+    public IReadOnlyList<CatacombsOfYarl.Logic.ECS.Room>? Rooms { get; init; }
+
     // ── Cross-run persistence ────────────────────────────────────────────────
 
     /// <summary>

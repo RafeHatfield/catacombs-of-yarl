@@ -43,7 +43,10 @@ public sealed class ScenarioHarness
         int runCount = runsOverride ?? scenario.Runs;
         var allRuns = new List<RunMetrics>();
         for (int i = 0; i < runCount; i++)
-            allRuns.Add(RunOnce(scenario, baseSeed + i));
+            // Per-scenario isolated seed: each (scenario, runIdx) pair gets an independent
+            // seed derived via SHA-256. Prevents cross-scenario correlation when running a
+            // matrix (depth3_orc_brutal and depth3_orc_brutal_fine at run 5 now diverge).
+            allRuns.Add(RunOnce(scenario, SeedDerivation.Stable(scenario.ScenarioId, i, baseSeed)));
         return AggregatedMetrics.FromRuns(scenario.ScenarioId, baseSeed, allRuns,
             name: scenario.Name, depth: scenario.Depth, isProbe: scenario.IsProbe);
     }

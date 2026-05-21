@@ -1,0 +1,52 @@
+scenario_id: depth5_zombie_masterwork
+name: "Depth 5 - Zombie Horde (masterwork longsword)"
+depth: 5
+turn_limit: 150
+runs: 50
+map_width: 16
+map_height: 16
+player_start_y: 8
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "masterwork_longsword"
+  armor: "leather_armor"
+
+# Same layout as scenario_depth5_zombie — only player.weapon differs.
+# Note: suite matrix uses 50 runs (not 100 like the base scenario).
+monsters:
+  - type: "zombie"
+    count: 1
+    position: [9, 8]
+  - type: "zombie"
+    count: 1
+    position: [10, 8]
+  - type: "zombie"
+    count: 1
+    position: [9, 6]
+  - type: "zombie"
+    count: 1
+    position: [10, 6]
+  - type: "zombie"
+    count: 1
+    position: [11, 7]
+  - type: "zombie"
+    count: 1
+    position: [11, 9]
+  - type: "zombie"
+    count: 1
+    position: [12, 8]
+  - type: "zombie"
+    count: 1
+    position: [12, 6]
+
+items:
+  - type: "healing_potion"
+    count: 1

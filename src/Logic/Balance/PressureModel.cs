@@ -122,13 +122,12 @@ public static class PressureModel
     // so H_MP remains high. Zombie scenarios inflate H_MP further (travel between spread
     // monsters dominates turn count, reducing DPR_M toward zero).
     //
-    // Empirical baseline from well-calibrated scenarios (death rate in target band):
-    //   depth1_tuned (0% death):   H_PM=7.8,  H_MP=46.3
-    //   depth2_baseline (0%):      H_PM=7.7,  H_MP=37.7
-    //   depth3_tuned (16%):        H_PM=6.9,  H_MP=38.7
-    //   depth4_mixed (24%):        H_PM=9.5,  H_MP=40.0
-    //   depth4_tuned (14%):        H_PM=8.4,  H_MP=42.6
-    //   depth6_tuned (42%):        H_PM=6.2,  H_MP=35.5
+    // Empirical baseline from well-calibrated scenarios (post Phase-0 SHA-256 reseed at seed=1337):
+    //   depth1_tuned (0% death):    H_PM=9.1,  H_MP=34.1
+    //   depth2_baseline (0%):       H_PM=8.2,  H_MP=37.2
+    //   depth3_orc_brutal (18%):    H_PM=8.1,  H_MP=32.7
+    //   depth4_tuned (8%):          H_PM=7.3,  H_MP=43.9
+    //   depth6_tuned (38%):         H_PM=6.3,  H_MP=38.4
     private static readonly TargetBand[] Provisional_H_PM =
     [
         new(5.0, 10.0),   // depth 1-2: observed 7.7-7.8 baseline; 5.5-5.8 for fine/masterwork probes

@@ -50,6 +50,22 @@ public sealed class ScenarioRunner
     }
 
     /// <summary>
+    /// Run a scenario with explicit run count and turn limit overrides.
+    /// Used by SuiteRunner where the matrix defines runs/turn_limit, not the YAML.
+    /// </summary>
+    public AggregatedMetrics RunFromFileWithOverrides(
+        string scenarioPath, int baseSeed, int runsOverride, int turnLimitOverride)
+    {
+        var scenario = _loader.LoadScenarioFromFile(scenarioPath);
+        // Apply the matrix's turn limit and run count, not the YAML's defaults.
+        // ScenarioDefinition is a class, so mutate the loaded instance directly
+        // (it is a local, not shared with any other caller).
+        scenario.TurnLimit = turnLimitOverride;
+        scenario.Runs = runsOverride;
+        return _harness.Run(scenario, baseSeed, runsOverride);
+    }
+
+    /// <summary>
     /// Run a scenario definition directly.
     /// </summary>
     public AggregatedMetrics Run(ScenarioDefinition scenario, int baseSeed = 1337, int? runsOverride = null)
