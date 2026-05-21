@@ -83,7 +83,8 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | plan_narrative_testing_d1d2.md (no file) | [x] | D1 run transcript (--transcript flag, FormatTranscript), D2 voice-line histogram (VoiceLineHits in soak pipeline + DungeonSoakReport section). 1638 tests. |
 | [plan_bot_personas.md](plan_bot_personas.md) | [ ] | 5 personas: balanced/cautious/aggressive/greedy/speedrunner |
 | [plan_testing_mode.md](plan_testing_mode.md) | [ ] | In-game test menu, testing YAML loader, preconfigured test states |
-| [plan_balance_pipeline.md](plan_balance_pipeline.md) | [ ] | ETP system, target bands, depth scaling, auto-diagnosis |
+| [plan_balance_pipeline.md](plan_balance_pipeline.md) | [~] | ETP system, target bands, depth scaling, auto-diagnosis. Impl plan: `plan_balance_pipeline_impl.md` |
+| [plan_balance_pipeline_impl.md](plan_balance_pipeline_impl.md) | [~] | Full 5-phase build plan: acceptance matrix, baseline regression, ETP, depth-report, etp-sanity |
 
 ### Tier 5 — End Game
 | Plan | Status | Description |

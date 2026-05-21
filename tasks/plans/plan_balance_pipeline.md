@@ -1,6 +1,6 @@
 # Plan: Balance Pipeline (ETP, Target Bands, Depth Scaling)
 
-Status: [ ] Partially ported (basic harness exists; ETP and target bands not implemented)
+Status: [~] In progress — implementation plan at `tasks/plans/plan_balance_pipeline_impl.md` (phases 1-5)
 PoC reference: balance/etp.py (~27,473 lines), balance/target_bands.py, balance/depth_scaling.py
 
 ---
