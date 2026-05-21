@@ -28,7 +28,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | [plan_monster_knowledge.md](plan_monster_knowledge.md) | [x] | Progressive monster knowledge (3 tiers), long-press inspect, item inspect panel |
 | [plan_status_effects.md](plan_status_effects.md) | [x] | 30+ effects complete. Potions (14 types), throw system, status badges/toasts/tints all done. |
 | [plan_player_progression.md](plan_player_progression.md) | [x] | Depth boons complete (16 tests). 3-choose-1 UI deferred. |
-| [plan_traps_chests_features.md](plan_traps_chests_features.md) | [ ] | 8 trap types, chests (normal/trapped/locked), signs, murals |
+| [plan_traps_chests_features.md](plan_traps_chests_features.md) | [x] | Superseded by plan_interactive_props_traps + chests/signs/murals feature. Disarm + active Search deferred. |
 
 ### Tier 2 — Combat Depth
 | Plan | Status | Description |

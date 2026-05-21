@@ -448,6 +448,7 @@ monsters:
     # large_slime and greater_slime inherit this via extends: slime.
     # PoC: entities.yaml slime entries; tests/test_engulf_mechanics.py.
     engulfs_on_hit: true
+    natural_damage_type: "acid"
 
   large_slime:
     name: "Large Slime"

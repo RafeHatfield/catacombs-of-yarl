@@ -236,6 +236,14 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "engulfs_on_hit")]
     public bool EngulfsOnHit { get; set; } = false;
 
+    /// <summary>
+    /// Damage type for unarmed natural attacks (e.g. "acid" for slimes, "fire" for fire beetles).
+    /// CombatResolver falls back to this when no weapon is equipped, enabling type-based
+    /// interactions (regen suppression, resistances). PoC: natural_damage_type field.
+    /// </summary>
+    [YamlMember(Alias = "natural_damage_type")]
+    public string? NaturalDamageType { get; set; }
+
     // ── Status transfer on drain attack (wraith) ──────────────────────────────
 
     /// <summary>

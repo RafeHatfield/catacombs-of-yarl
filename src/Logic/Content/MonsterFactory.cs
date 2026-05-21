@@ -84,6 +84,7 @@ public sealed class MonsterFactory
             evasion: stats.Evasion)
         {
             CanOpenDoors = def.CanOpenDoors,
+            NaturalDamageType = def.NaturalDamageType,
         };
         entity.Add(fighter);
 

@@ -116,8 +116,10 @@ public static class CombatResolver
             if (attackerRallied != null) damage += attackerRallied.DamageBonus;
             if (attackerHeroism != null) damage += attackerHeroism.DamageBonus;
 
-            // Apply damage type resistance/vulnerability
-            string? dmgType = weapon?.DamageType;
+            // Apply damage type resistance/vulnerability.
+            // Weapon damage type takes priority; fall back to attacker's natural damage type
+            // (e.g. "acid" for slimes) when no weapon is equipped.
+            string? dmgType = weapon?.DamageType ?? attacker.Get<Fighter>()?.NaturalDamageType;
             var modifiers = defender.Get<DamageModifiers>();
             if (modifiers != null && dmgType != null)
                 damage = modifiers.ApplyTo(damage, dmgType);

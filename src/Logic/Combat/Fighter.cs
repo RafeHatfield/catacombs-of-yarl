@@ -27,6 +27,12 @@ public sealed class Fighter : IComponent
     public int DamageMin { get; set; }
     public int DamageMax { get; set; }
 
+    /// <summary>
+    /// Damage type for unarmed attacks (e.g. "acid" for slimes). Null for most creatures.
+    /// CombatResolver uses this when the attacker has no weapon equipped.
+    /// </summary>
+    public string? NaturalDamageType { get; set; }
+
     // Legacy power/defense (kept for compatibility with YAML definitions)
     public int BasePower { get; set; }
     public int BaseDefense { get; set; }

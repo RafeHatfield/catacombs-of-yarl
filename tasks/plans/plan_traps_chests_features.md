@@ -1,6 +1,6 @@
 # Plan: Traps, Chests, and Dungeon Features
 
-Status: [ ] Not started
+Status: [x] Complete — superseded by plan_interactive_props_traps.md (9 trap types, floor hazards) and the chests/signs/murals feature (session 2026-04-18b). Disarm action and active Search deferred and noted in plan_interactive_props_traps.
 PoC reference: components/trap.py, level_templates.yaml
 
 ---

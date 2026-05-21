@@ -1,6 +1,11 @@
 # Deferred Plan: Slime Advanced Abilities
 
-**Status:** DEFERRED
+**Status:** PARTIALLY COMPLETE
+- ✅ greater_slime — done (overnight build)
+- ✅ Engulf (EngulfedEffect) — implemented 2026-05-20
+- ✅ natural_damage_type: "acid" — implemented 2026-05-20; slime attacks now participate in acid damage type system
+- 🔄 hostile_all faction AI (inter-faction targeting) — deferred, acknowledged large scope
+- ⬜ Natural damage type for armor corrosion — deferred
 **Blocked by:** `slime_monsters.md` must be complete first
 **PoC reference:** `~/development/rlike/config/entities.yaml` lines 483–580, `~/development/rlike/components/fighter.py` lines 1636–1755, `~/development/rlike/services/faction_engine.py`
 
