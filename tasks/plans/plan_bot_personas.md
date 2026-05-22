@@ -1,6 +1,6 @@
 # Plan: Bot Personas for Automated Playtesting
 
-Status: [~] In progress — implementation tracked in [plan_bot_personas_impl.md](plan_bot_personas_impl.md)
+Status: [x] Complete 2026-05-22 — see [plan_bot_personas_impl.md](plan_bot_personas_impl.md) for full detail.
 PoC reference: io_layer/bot_brain.py (Phase 17B)
 
 ---
