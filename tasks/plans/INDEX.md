@@ -81,7 +81,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | [plan_testing_infra_phase2.md](plan_testing_infra_phase2.md) | [x] | Bot decision telemetry: BotDecisionRecord, IBotTelemetryRecorder, BotRunSummary, wired into BotBrain.Decide() |
 | [plan_testing_infra_phase3.md](plan_testing_infra_phase3.md) | [x] | Analysis reports: DungeonSoakReport generator, JSONL reader for offline analysis, --report flag, CI integration |
 | plan_narrative_testing_d1d2.md (no file) | [x] | D1 run transcript (--transcript flag, FormatTranscript), D2 voice-line histogram (VoiceLineHits in soak pipeline + DungeonSoakReport section). 1638 tests. |
-| [plan_bot_personas.md](plan_bot_personas.md) | [ ] | 5 personas: balanced/cautious/aggressive/greedy/speedrunner |
+| [plan_bot_personas.md](plan_bot_personas.md) | [~] | 5 personas + graphical bot mode — impl: [plan_bot_personas_impl.md](plan_bot_personas_impl.md) |
 | [plan_testing_mode.md](plan_testing_mode.md) | [ ] | In-game test menu, testing YAML loader, preconfigured test states |
 | [plan_balance_pipeline.md](plan_balance_pipeline.md) | [x] | SHA-256 seeding, 15-scenario acceptance suite (--suite), baseline regression (--baseline), full ETP system, depth pressure reports (--depth-report), ETP sanity tool (--etp-sanity). Complete 2026-05-21. |
 | [plan_balance_pipeline_impl.md](plan_balance_pipeline_impl.md) | [x] | Full 5-phase impl: all 25 tasks complete, 1838 tests, CI wired in .github/workflows/balance.yml |
