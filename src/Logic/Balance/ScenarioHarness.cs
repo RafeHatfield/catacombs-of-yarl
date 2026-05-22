@@ -6,12 +6,20 @@ using CatacombsOfYarl.Logic.ECS;
 namespace CatacombsOfYarl.Logic.Balance;
 
 /// <summary>
-/// Bot heal thresholds — matches the Python prototype's "balanced" persona.
+/// Bot heal thresholds — delegates to the "balanced" persona in BotPersonaRegistry.
+///
+/// Legacy API kept for backward compatibility: these fields were previously `const double`.
+/// They are now `static readonly double` computed from the registry so all call-sites
+/// continue to compile without change.
+///
+/// Note: These are `const`-like but not compile-time constants — they cannot be used as
+/// default parameter values or attribute arguments. For those use-cases, use
+/// BotPersonaRegistry.Defaults["balanced"].BaseHealThreshold directly.
 /// </summary>
 public static class BotConfig
 {
-    public const double HealThreshold = 0.30;
-    public const double PanicThreshold = 0.15;
+    public static readonly double HealThreshold  = BotPersonaRegistry.Defaults["balanced"].BaseHealThreshold;
+    public static readonly double PanicThreshold = BotPersonaRegistry.Defaults["balanced"].PanicHpThreshold;
 }
 
 /// <summary>
@@ -38,7 +46,7 @@ public sealed class ScenarioHarness
         _spellItemFactory = spellItemFactory;
     }
 
-    public AggregatedMetrics Run(ScenarioDefinition scenario, int baseSeed = 1337, int? runsOverride = null)
+    public AggregatedMetrics Run(ScenarioDefinition scenario, int baseSeed = 1337, int? runsOverride = null, BotPersonaConfig? persona = null)
     {
         int runCount = runsOverride ?? scenario.Runs;
         var allRuns = new List<RunMetrics>();
@@ -46,7 +54,7 @@ public sealed class ScenarioHarness
             // Per-scenario isolated seed: each (scenario, runIdx) pair gets an independent
             // seed derived via SHA-256. Prevents cross-scenario correlation when running a
             // matrix (depth3_orc_brutal and depth3_orc_brutal_fine at run 5 now diverge).
-            allRuns.Add(RunOnce(scenario, SeedDerivation.Stable(scenario.ScenarioId, i, baseSeed)));
+            allRuns.Add(RunOnce(scenario, SeedDerivation.Stable(scenario.ScenarioId, i, baseSeed), persona: persona));
         return AggregatedMetrics.FromRuns(scenario.ScenarioId, baseSeed, allRuns,
             name: scenario.Name, depth: scenario.Depth, isProbe: scenario.IsProbe);
     }
@@ -59,9 +67,15 @@ public sealed class ScenarioHarness
     /// create a BotDecisionContext with their own recorder and pass it here. The public Run()
     /// method does not use telemetry; callers that need it call RunOnce() directly.
     ///
-    /// All existing test callers that omit context continue to work unchanged.
+    /// The optional <paramref name="persona"/> selects the bot persona. When null, defaults to
+    /// "balanced". YAML player_bot field wins over this parameter for ranged_net_arrow scenarios.
+    ///
+    /// One BotBrain instance per RunOnce call — so stuck detection (TASK-004) fires correctly
+    /// for the duration of this run. The static BotBrain.Decide() wrapper is NOT used here.
+    ///
+    /// All existing test callers that omit context and persona continue to work unchanged.
     /// </summary>
-    public RunMetrics RunOnce(ScenarioDefinition scenario, int seed, BotDecisionContext? context = null)
+    public RunMetrics RunOnce(ScenarioDefinition scenario, int seed, BotDecisionContext? context = null, BotPersonaConfig? persona = null)
     {
         var state = GameStateFactory.FromScenario(
             scenario, seed, _monsterFactory, _itemFactory, _consumableFactory, _spellItemFactory);
@@ -108,10 +122,17 @@ public sealed class ScenarioHarness
                 metrics.MonsterAvgMaxHp = monsterHps.Average();
         }
 
+        // Construct one BotBrain instance per run so stuck detection fires correctly.
+        // YAML player_bot wins over CLI persona for ranged_net_arrow scenarios (3-way dispatch).
+        var resolvedPersona = persona ?? BotPersonaRegistry.Get("balanced");
+        var botBrain = new BotBrain(resolvedPersona);
+
         while (!state.IsGameOver)
         {
-            // Bot dispatch: ranged_net_arrow uses the kiting bot; everything else uses BotBrain.
-            // player_bot field in scenario YAML selects the policy.
+            // 3-way bot dispatch:
+            //   1. player_bot == "ranged_net_arrow" → RangedNetArrowBot (YAML wins)
+            //   2. player_bot == named persona → BotBrain with that persona
+            //   3. null/unknown player_bot → BotBrain with CLI/default persona
             PlayerAction playerAction;
             if (scenario.Player.PlayerBot == "ranged_net_arrow")
             {
@@ -119,14 +140,25 @@ public sealed class ScenarioHarness
             }
             else
             {
-                var botAction = BotBrain.Decide(player, playerFighter, inventory, state.Monsters, state.Map, context);
+                // Use instance botBrain so stuck detection state persists across turns
+                var botAction = botBrain.Decide(player, playerFighter, inventory, state.Monsters, state.Map, context);
+
+                // AbortRun: intercept before ToPlayerAction — count as death-equivalent
+                if (botAction.Type == BotAction.ActionType.AbortRun)
+                {
+                    metrics.PlayerDied = true;
+                    metrics.WasAborted = true;
+                    break;
+                }
+
                 playerAction = BotBrain.ToPlayerAction(botAction);
             }
             var result = TurnController.ProcessTurn(state, playerAction);
             metrics.RecordTurn(result, player.Id);
         }
 
-        metrics.PlayerDied = !playerFighter.IsAlive;
+        if (!metrics.WasAborted)
+            metrics.PlayerDied = !playerFighter.IsAlive;
         return metrics;
     }
 }

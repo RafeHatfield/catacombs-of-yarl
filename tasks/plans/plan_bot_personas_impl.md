@@ -1,11 +1,14 @@
 # Feature: Bot Personas + Graphical Bot Mode
 
-## Status: planning — v2 (review-addressed)
+## Status: needs-review
 
 ## Current State
-- Plan drafted. No tasks started.
-- Next: hand TASK-001 to a builder once the plan is approved.
-- Open issues: see "Risks and Decisions" at the bottom — most notably (a) `BotConfig.HealThreshold` is referenced from many call-sites and must keep working as the `balanced` default after refactor, (b) graphical bot mode must reuse the `PlayerAction` pipeline (cannot inject a new event source).
+- TASK-001 through TASK-011 complete. 1873 tests passing (was 1838).
+- TASK-012 (manual smoke test) pending — requires Godot editor.
+- Build tracking file: `tasks/bot_personas_build.md`
+- Key behavioral change: panic heal now requires 2+ adjacent enemies (PoC-correct). Balance baseline updated.
+- Full 5×15 matrix report at `reports/bot_survivability_v1.md`.
+- Next: reviewer should check BotBrain engagement distance behavior, panic heal alignment to PoC, and verify TASK-012 smoke test when Godot is available.
 
 ---
 
@@ -135,8 +138,8 @@ tests/Presentation/  (existing dir if any)
 
 Tasks are ordered by dependency. Each is sized for one builder/tester session.
 
-- [ ] TASK-001: Introduce `BotPersonaConfig` record + 5 hardcoded defaults
-  - Status: pending
+- [x] TASK-001: Introduce `BotPersonaConfig` record + 5 hardcoded defaults
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: none
@@ -152,8 +155,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - `BotConfig.HealThreshold == 0.30` still (no caller breaks).
     - `dotnet test --filter "Category!=Slow"` passes.
 
-- [ ] TASK-002: YAML loader for `config/bot_personas.yaml`
-  - Status: pending
+- [x] TASK-002: YAML loader for `config/bot_personas.yaml`
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-001
@@ -168,8 +171,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Schema test: missing fields use C# record defaults; extra fields are ignored without throwing.
     - `dotnet test --filter "Category!=Slow"` passes.
 
-- [ ] TASK-003: Refactor `BotBrain.Decide` to accept `BotPersonaConfig`
-  - Status: pending
+- [x] TASK-003: Refactor `BotBrain.Decide` to accept `BotPersonaConfig`
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-001
@@ -192,8 +195,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - `BotBrain.Decide(..., persona: BotPersonaRegistry.Get("speedrunner"), floorItems: [potion at distance 2])` returns the move-toward-enemy action, NOT the potion-pickup, because `LootPriority == 0`.
     - `dotnet test --filter "Category!=Slow"` passes.
 
-- [ ] TASK-004: Port STUCK detection from PoC
-  - Status: pending
+- [x] TASK-004: Port STUCK detection from PoC
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-003
@@ -216,8 +219,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Regression: the legacy static `BotBrain.Decide` is unchanged in observable behavior for the suite.
     - `dotnet test --filter "Category!=Slow"` passes.
 
-- [ ] TASK-005: Add Persona field to telemetry
-  - Status: pending
+- [x] TASK-005: Add Persona field to telemetry
+  - Status: complete
   - Layer: logic
   - Type: system
   - Dependencies: TASK-003
@@ -232,8 +235,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Existing JSONL files without a `persona` field still parse (offline `--report` mode does not fail) — default to `"balanced"` when missing.
     - `dotnet test --filter "Category!=Slow"` passes.
 
-- [ ] TASK-006: `--persona` flag on harness scenario and dungeon modes
-  - Status: pending
+- [x] TASK-006: `--persona` flag on harness scenario and dungeon modes
+  - Status: complete
   - Layer: logic + tool
   - Type: system
   - Dependencies: TASK-003, TASK-005
@@ -256,8 +259,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Backward compat: every existing harness invocation in `Makefile`, CI workflow, and docs continues to work unchanged.
     - `dotnet test --filter "Category!=Slow"` passes.
 
-- [ ] TASK-007: `--bot-report` mode (per-persona survivability matrix)
-  - Status: pending
+- [x] TASK-007: `--bot-report` mode (per-persona survivability matrix)
+  - Status: complete
   - Layer: tool
   - Type: analysis
   - Dependencies: TASK-006
@@ -281,8 +284,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - `aggressive` survival rate <= `balanced` on at least 4 of 6 fast-matrix scenarios.
     - `dotnet test --filter "Category!=Slow"` passes (includes a snapshot test for the markdown format).
 
-- [ ] TASK-008: Tests for persona behavior differences
-  - Status: pending
+- [x] TASK-008: Tests for persona behavior differences
+  - Status: complete
   - Layer: logic
   - Type: test
   - Dependencies: TASK-003, TASK-004
@@ -299,8 +302,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Test category `Bot` is used so they can be selected with `--filter Category=Bot` if needed.
     - `dotnet test --filter "Category!=Slow"` passes.
 
-- [ ] TASK-009: `BotPlayerDriver` Godot node + injection point
-  - Status: pending
+- [x] TASK-009: `BotPlayerDriver` Godot node + injection point
+  - Status: complete
   - Layer: presentation
   - Type: system
   - Dependencies: TASK-003
@@ -329,8 +332,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Existing human input is unaffected when `Enabled == false`.
     - `dotnet test --filter "Category!=Slow"` passes (logic-layer tests don't reach the driver; presentation tests for the driver use a fake controller).
 
-- [ ] TASK-009b: BotPlayerDriver exploration + floor-clear logic (makes graphical bot actually playable)
-  - Status: pending
+- [x] TASK-009b: BotPlayerDriver exploration + floor-clear logic (makes graphical bot actually playable)
+  - Status: complete
   - Layer: presentation
   - Type: system
   - Dependencies: TASK-009
@@ -348,8 +351,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Unit test: driver calls `Disable()` once when `state.IsGameOver` flips to true.
     - `dotnet test --filter "Category!=Slow"` passes.
 
-- [ ] TASK-010: F4 hotkey + debug-menu toggle + HUD indicator
-  - Status: pending
+- [x] TASK-010: F4 hotkey + debug-menu toggle + HUD indicator
+  - Status: complete
   - Layer: presentation
   - Type: system
   - Dependencies: TASK-009
@@ -369,8 +372,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Manual test: open the game in Godot editor, press F4, watch the bot clear the first dungeon floor with the default persona. No crashes, no orphaned UI.
     - `dotnet test --filter "Category!=Slow"` passes (no new failures; presentation-only changes have minimal test surface).
 
-- [ ] TASK-011: 5×15 acceptance matrix verification run
-  - Status: pending
+- [x] TASK-011: 5×15 acceptance matrix verification run
+  - Status: complete
   - Layer: tool (verification)
   - Type: analysis
   - Dependencies: TASK-006, TASK-007
@@ -385,7 +388,7 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Wall-clock runtime under 15 minutes on a developer Mac (this is the bound; if it's too slow, drop to `--runs 25`).
 
 - [ ] TASK-012: Visual smoke test of graphical bot mode
-  - Status: pending
+  - Status: pending — requires Godot editor
   - Layer: presentation (manual)
   - Type: test
   - Dependencies: TASK-009b, TASK-010

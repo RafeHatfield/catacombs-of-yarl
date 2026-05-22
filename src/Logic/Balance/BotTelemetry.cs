@@ -45,8 +45,14 @@ public readonly record struct BotDecisionRecord
     /// <summary>True if at least one enemy is adjacent (Chebyshev distance <= 1).</summary>
     public bool InCombat { get; init; }
 
-    /// <summary>True if HpFraction is at or below BotConfig.HealThreshold (0.30).</summary>
+    /// <summary>True if HpFraction is at or below the persona's BaseHealThreshold.</summary>
     public bool LowHp { get; init; }
+
+    /// <summary>
+    /// Persona name active when this decision was made (e.g. "balanced", "aggressive").
+    /// Defaults to "balanced" when missing from JSONL files (forward-compatible deserialization).
+    /// </summary>
+    public string Persona { get; init; }
 }
 
 /// <summary>
@@ -54,13 +60,14 @@ public readonly record struct BotDecisionRecord
 /// bloating the Decide() parameter list. A value type (readonly record struct)
 /// so it passes by copy — no allocation, no sharing concerns.
 ///
-/// Future extension point: add persona, difficulty modifier, etc. here without
-/// changing the Decide() signature again.
+/// Persona defaults to "balanced" when not provided — backward-compatible with
+/// existing callers that construct BotDecisionContext without the persona field.
 /// </summary>
 public readonly record struct BotDecisionContext(
     IBotTelemetryRecorder Recorder,
     int TurnNumber,
-    int FloorDepth
+    int FloorDepth,
+    string Persona = "balanced"
 );
 
 /// <summary>
@@ -112,6 +119,13 @@ public sealed class BotTelemetryRecorder : IBotTelemetryRecorder
 /// </summary>
 public sealed class BotRunSummary
 {
+    /// <summary>
+    /// Persona name used for this run (e.g. "balanced", "aggressive").
+    /// Computed from the first decision's Persona field. Defaults to "balanced" for
+    /// empty decision lists and for JSONL files missing the persona field.
+    /// </summary>
+    public string Persona { get; init; } = "balanced";
+
     /// <summary>Total decisions recorded this run.</summary>
     public int TotalDecisions { get; init; }
 
@@ -159,6 +173,7 @@ public sealed class BotRunSummary
         {
             return new BotRunSummary
             {
+                Persona        = "balanced",
                 TotalDecisions = 0,
                 FloorsVisited  = 0,
                 ActionCounts   = new Dictionary<string, int>(),
@@ -233,8 +248,12 @@ public sealed class BotRunSummary
         var lastDecision = decisions[^1];
         int deathsWithUnusedPotions = lastDecision.HealingPotionsAvailable > 0 ? 1 : 0;
 
+        // Persona: derived from first decision's Persona field (all decisions in a run share persona)
+        string persona = decisions.Count > 0 ? decisions[0].Persona : "balanced";
+
         return new BotRunSummary
         {
+            Persona                 = persona,
             TotalDecisions          = decisions.Count,
             FloorsVisited           = floorsVisited.Count,
             ActionCounts            = actionCounts,

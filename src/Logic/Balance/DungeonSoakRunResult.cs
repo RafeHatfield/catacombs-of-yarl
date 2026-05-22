@@ -93,4 +93,17 @@ public sealed class DungeonSoakRunResult
     /// Null when no voice lines fired. Serializes as snake_case via harness options.
     /// </summary>
     public Dictionary<string, int>? VoiceLineHits { get; set; }
+
+    /// <summary>
+    /// True when BotBrain's stuck detection aborted this run (stuck counter >= 15 turns).
+    /// Aborted runs are classified as Outcome="aborted", FailureType="aborted", and count
+    /// as death-equivalent in Death% and PressureModel calculations.
+    /// </summary>
+    public bool WasAborted { get; set; }
+
+    /// <summary>
+    /// Persona name used for this run (e.g. "balanced", "aggressive").
+    /// Defaults to "balanced" for JSONL files missing this field (forward-compatible reads).
+    /// </summary>
+    public string Persona { get; set; } = "balanced";
 }

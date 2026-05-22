@@ -134,9 +134,9 @@ public sealed class DungeonRunHarness
     ///
     /// Backward-compatible: callers that used Run() previously get identical results.
     /// </summary>
-    public DungeonRunResult Run(int floors, int baseSeed = 1337)
+    public DungeonRunResult Run(int floors, int baseSeed = 1337, BotPersonaConfig? persona = null)
     {
-        var soakResult = RunSingle(floors, baseSeed, enableTelemetry: false);
+        var soakResult = RunSingle(floors, baseSeed, enableTelemetry: false, persona: persona);
 
         // Reconstruct the legacy DungeonRunResult from the enriched soak result.
         // FloorsAttempted is PerFloor.Count — same logic as before.
@@ -158,10 +158,10 @@ public sealed class DungeonRunHarness
     /// Captures floor entries, voice lines, monster kills, deaths, descents, and traps.
     /// Intended for D1 narrative testing — prints a human-readable play-by-play.
     /// </summary>
-    public string RunTranscript(int floors, int seed)
+    public string RunTranscript(int floors, int seed, BotPersonaConfig? persona = null)
     {
         var entries = new List<TranscriptEntry>();
-        var result = RunSingle(floors, seed, enableTelemetry: false, transcript: entries);
+        var result = RunSingle(floors, seed, enableTelemetry: false, transcript: entries, persona: persona);
         return FormatTranscript(result, entries, floors, seed);
     }
 
@@ -218,7 +218,7 @@ public sealed class DungeonRunHarness
     ///
     /// This is the primary entry point for automated regression testing.
     /// </summary>
-    public DungeonSoakSummary RunSoak(int floors, int runs, int baseSeed = 1337)
+    public DungeonSoakSummary RunSoak(int floors, int runs, int baseSeed = 1337, BotPersonaConfig? persona = null)
     {
         var results = new List<DungeonSoakRunResult>(runs);
 
@@ -228,7 +228,7 @@ public sealed class DungeonRunHarness
             try
             {
                 // Telemetry always enabled in soak mode — no reason to run N iterations without it.
-                var result = RunSingle(floors, seed, enableTelemetry: true);
+                var result = RunSingle(floors, seed, enableTelemetry: true, persona: persona);
                 results.Add(result);
             }
             catch (Exception ex)
@@ -261,7 +261,7 @@ public sealed class DungeonRunHarness
     /// storing the resulting BotRunSummary in the returned DungeonSoakRunResult.BotSummary.
     /// When false (legacy Run() path), no recorder is created and BotSummary is null.
     /// </summary>
-    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false, IList<TranscriptEntry>? transcript = null)
+    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false, IList<TranscriptEntry>? transcript = null, BotPersonaConfig? persona = null)
     {
         var sw = Stopwatch.StartNew();
 
@@ -282,6 +282,13 @@ public sealed class DungeonRunHarness
         // Create a single recorder for the whole run when telemetry is enabled.
         // All BotBrain.Decide() calls share this recorder; context carries per-call metadata.
         BotTelemetryRecorder? recorder = enableTelemetry ? new BotTelemetryRecorder() : null;
+
+        // One BotBrain instance per run — stuck detection state persists across floors.
+        // Per plan TASK-006: harnesses must use the instance path so TASK-004 stuck detection fires.
+        var resolvedPersona = persona ?? BotPersonaRegistry.Get("balanced");
+        var botBrain = new BotBrain(resolvedPersona);
+        string personaName = resolvedPersona.Name;
+        bool runWasAborted = false;
 
         for (int depth = 1; depth <= floors; depth++)
         {
@@ -346,13 +353,14 @@ public sealed class DungeonRunHarness
                 }
                 else
                 {
-                    // Normal combat/heal decision via BotBrain.
+                    // Normal combat/heal decision via BotBrain instance (not static path).
+                    // Using the instance ensures stuck detection (TASK-004) fires across turns.
                     // Pass context when telemetry is enabled so BotBrain emits a decision record.
                     BotDecisionContext? decisionContext = recorder != null
-                        ? new BotDecisionContext(recorder, currentTurnNumber, depth)
+                        ? new BotDecisionContext(recorder, currentTurnNumber, depth, personaName)
                         : null;
 
-                    var botAction = BotBrain.Decide(
+                    var botAction = botBrain.Decide(
                         state.Player,
                         state.PlayerFighter,
                         state.PlayerInventory,
@@ -361,48 +369,19 @@ public sealed class DungeonRunHarness
                         decisionContext,
                         floorItems: state.FloorItems);
 
-                    // BotBrain.ToPlayerAction uses GameMap.MoveToward — a greedy directional
-                    // step that gets stuck at walls. In a dungeon with rooms and corridors, we
-                    // need proper A* to navigate across the floor. Override MoveToward actions
-                    // with A*-pathed moves so the bot can reach monsters in other rooms.
-                    if (botAction.Type == BotAction.ActionType.MoveToward && botAction.Target != null)
+                    // AbortRun: intercept before ToPlayerAction — count as death-equivalent.
+                    // Set flag and break the floor loop immediately. The outer loop will detect
+                    // runWasAborted and break the floor iteration as well.
+                    if (botAction.Type == BotAction.ActionType.AbortRun)
                     {
-                        var target = botAction.Target;
-
-                        // Build detected trap set so the bot routes around known hazards.
-                        // If trap-avoidance produces no path (bot is completely surrounded),
-                        // fall back to unconstrained A* to keep the bot moving.
-                        var trapTiles = Pathfinder.DetectedTrapTiles(state.Features);
-                        var path = Pathfinder.AStar(
-                            state.Map,
-                            state.Player.X, state.Player.Y,
-                            target.X, target.Y,
-                            state.Player,
-                            canPassDoors: true,
-                            avoidTiles: trapTiles.Count > 0 ? trapTiles : null);
-
-                        // Fallback: if trap-avoiding path fails, try without avoidance
-                        path ??= Pathfinder.AStar(
-                            state.Map,
-                            state.Player.X, state.Player.Y,
-                            target.X, target.Y,
-                            state.Player,
-                            canPassDoors: true);
-
-                        if (path != null && path.Count > 0)
-                        {
-                            var (nx, ny) = path[0];
-                            action = PlayerAction.MoveTo(nx, ny);
-                        }
-                        else
-                        {
-                            action = PlayerAction.Wait; // unreachable target
-                        }
+                        runWasAborted = true;
+                        killerName = "stuck_abort";
+                        break;
                     }
-                    else
-                    {
-                        action = BotBrain.ToPlayerAction(botAction);
-                    }
+
+                    // Use BotActionConverter for A*-pathed movement so the bot can navigate
+                    // across dungeon floors with rooms and corridors (not just greedy moves).
+                    action = BotActionConverter.ToPlayerActionWithPathing(botAction, state);
                 }
 
                 var turnResult = TurnController.ProcessTurn(state, action);
@@ -466,7 +445,7 @@ public sealed class DungeonRunHarness
             floorMetrics.MonstersKilled = floorKills;
             floorMetrics.PlayerHpAtEnd  = state.PlayerFighter.Hp;
             floorMetrics.PlayerMaxHp    = state.PlayerFighter.MaxHp;
-            floorMetrics.PlayerDied     = !state.PlayerFighter.IsAlive;
+            floorMetrics.PlayerDied     = !state.PlayerFighter.IsAlive || runWasAborted;
             floorMetrics.Descended      = descended;
             floorMetrics.PotionsUsed    = floorPotions;
             // HitMaxTurns: floor ended at the cap without descent or death
@@ -493,7 +472,7 @@ public sealed class DungeonRunHarness
             // On death, this is the dead player entity from the final floor.
             lastFloorPlayer = state.Player;
 
-            if (!state.PlayerFighter.IsAlive)
+            if (!state.PlayerFighter.IsAlive || runWasAborted)
                 break;
 
             // Carry the same player entity, boon tracker, and pity tracker forward to the next floor.
@@ -507,21 +486,33 @@ public sealed class DungeonRunHarness
 
         // Build the intermediate DungeonRunResult for OutcomeClassifier.
         bool playerDiedThisRun = killerName != null
-            || (perFloor.Count > 0 && perFloor[^1].PlayerDied);
+            || (perFloor.Count > 0 && perFloor[^1].PlayerDied)
+            || runWasAborted;
 
-        var runResult = new DungeonRunResult
+        // Aborted runs bypass OutcomeClassifier and go directly to "aborted" outcome.
+        // They count as death-equivalent for Death% and PressureModel calculations.
+        string outcome, failureType, failureDetail;
+        if (runWasAborted)
         {
-            Seed            = baseSeed,
-            FloorsAttempted = perFloor.Count,
-            FloorsCompleted = floorsCompleted,
-            TotalTurns      = totalTurns,
-            TotalKills      = totalKills,
-            FinalHp         = finalHp,
-            PlayerDied      = playerDiedThisRun,
-            PerFloor        = perFloor,
-        };
-
-        var (outcome, failureType, failureDetail) = OutcomeClassifier.Classify(runResult, killerName);
+            outcome       = OutcomeClassifier.Aborted;
+            failureType   = OutcomeClassifier.FailureAborted;
+            failureDetail = "stuck_abort: bot stuck counter exceeded threshold";
+        }
+        else
+        {
+            var runResult = new DungeonRunResult
+            {
+                Seed            = baseSeed,
+                FloorsAttempted = perFloor.Count,
+                FloorsCompleted = floorsCompleted,
+                TotalTurns      = totalTurns,
+                TotalKills      = totalKills,
+                FinalHp         = finalHp,
+                PlayerDied      = playerDiedThisRun,
+                PerFloor        = perFloor,
+            };
+            (outcome, failureType, failureDetail) = OutcomeClassifier.Classify(runResult, killerName);
+        }
 
         // Clamp finalHp to 0 on death — the plan specifies "0 if player died".
         // In-game HP can go below 0 on a fatal hit; clamp here for clean data.
@@ -546,6 +537,7 @@ public sealed class DungeonRunHarness
 
             botSummary = new BotRunSummary
             {
+                Persona                 = personaName,
                 TotalDecisions          = rawSummary.TotalDecisions,
                 FloorsVisited           = rawSummary.FloorsVisited,
                 ActionCounts            = rawSummary.ActionCounts,
@@ -577,6 +569,8 @@ public sealed class DungeonRunHarness
             PerFloor            = perFloor,
             BotSummary          = botSummary,
             VoiceLineHits       = voiceLineHits.Count > 0 ? voiceLineHits : null,
+            WasAborted          = runWasAborted,
+            Persona             = personaName,
         };
     }
 
@@ -618,7 +612,7 @@ public sealed class DungeonRunHarness
             AdjacentEnemies         = 0,
             HealingPotionsAvailable = potions,
             InCombat                = false,
-            LowHp                   = hpFraction <= BotConfig.HealThreshold,
+            LowHp                   = hpFraction <= BotConfig.HealThreshold, // balanced threshold for navigate records
         };
     }
 

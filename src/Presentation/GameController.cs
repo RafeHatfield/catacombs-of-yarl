@@ -84,6 +84,32 @@ public sealed partial class GameController : Node
     /// <summary>True while possession targeting is active (player taps resolve to Possess).</summary>
     public bool IsPossessionTargetingActive => _possessionTargetingActive;
 
+    /// <summary>
+    /// Injection point for the graphical bot driver (BotPlayerDriver).
+    /// Submits a pre-computed PlayerAction directly to ExecuteTurn, bypassing human input
+    /// path-following, auto-explore cancellation, and click-to-move logic.
+    ///
+    /// Guards:
+    /// - Phase must be WaitingForInput (bot cannot act during animations or game over)
+    /// - The player must be controlling themselves, not a possessed monster
+    ///   (bot does not drive possession hosts; the driver should call Disable() on possession)
+    ///
+    /// Only callable from BotPlayerDriver — not from human input code paths.
+    /// Debug builds only: BotPlayerDriver is never instantiated in release builds.
+    /// </summary>
+    public void SubmitBotAction(PlayerAction action)
+    {
+        if (_state == null) return;
+        if (Phase != GamePhase.WaitingForInput) return;
+
+        // Bot does not drive possessed hosts — possession is a human-controlled feature.
+        // The driver should already have called Disable() on possession entry, but guard
+        // here as a safety net.
+        if (!ReferenceEquals(_state.ControlledEntity, _state.Player)) return;
+
+        ExecuteTurn(action);
+    }
+
     /// <summary>Fired each time a turn completes. UI can update from this.</summary>
     public event Action<TurnResult>? TurnCompleted;
 

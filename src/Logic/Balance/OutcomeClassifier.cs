@@ -20,12 +20,22 @@ public static class OutcomeClassifier
     public const string Stuck      = "stuck";
     public const string Exception  = "exception";
 
+    /// <summary>
+    /// Outcome when BotBrain's stuck detection fired (stuck counter >= 15 turns).
+    /// Treated as death-equivalent for Death% and PressureModel calculations.
+    /// Downstream consumers: treat "aborted" the same as "died" for aggregate metrics.
+    /// </summary>
+    public const string Aborted = "aborted";
+
     // FailureType string constants
     public const string FailureNone      = "none";
     public const string FailureDeath     = "death";
     public const string FailureMaxTurns  = "max_turns";
     public const string FailureStuck     = "stuck";
     public const string FailureException = "exception";
+
+    /// <summary>FailureType when BotBrain aborted the run via stuck detection.</summary>
+    public const string FailureAborted = "aborted";
 
     /// <summary>
     /// Classify the outcome of a dungeon run.

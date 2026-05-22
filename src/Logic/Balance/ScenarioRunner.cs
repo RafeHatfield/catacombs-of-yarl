@@ -42,11 +42,12 @@ public sealed class ScenarioRunner
 
     /// <summary>
     /// Run a scenario from a YAML file path. Returns aggregated metrics.
+    /// When persona is null, defaults to "balanced" (balanced harness behavior).
     /// </summary>
-    public AggregatedMetrics RunFromFile(string scenarioPath, int baseSeed = 1337, int? runsOverride = null)
+    public AggregatedMetrics RunFromFile(string scenarioPath, int baseSeed = 1337, int? runsOverride = null, BotPersonaConfig? persona = null)
     {
         var scenario = _loader.LoadScenarioFromFile(scenarioPath);
-        return _harness.Run(scenario, baseSeed, runsOverride);
+        return _harness.Run(scenario, baseSeed, runsOverride, persona);
     }
 
     /// <summary>

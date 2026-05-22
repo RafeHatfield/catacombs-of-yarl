@@ -35,6 +35,9 @@ bool    jsonOutput   = false;
 bool    dungeonMode  = false;
 bool    suiteMode    = false;
 bool    suitefast    = false;
+bool    botReportMode = false;
+string? botReportMatrix = null;  // "fast" | "full"
+string? botReportOut    = null;
 string? suiteOutDir  = null;
 string? baselinePath = null;
 bool    updateBaseline = false;
@@ -55,6 +58,7 @@ int     seed         = 1337;
 int     floors       = 10;
 string? jsonlPath    = null;
 string? jsonlInPath  = null;
+string? personaName  = null;  // --persona <name>, default: null → balanced
 
 for (int i = 0; i < args.Length; i++)
 {
@@ -96,6 +100,21 @@ for (int i = 0; i < args.Length; i++)
                 return 1;
             }
             jsonlInPath = args[++i];
+            break;
+        case "--persona":
+            if (i + 1 >= args.Length || args[i + 1].StartsWith("--"))
+            {
+                Console.Error.WriteLine("ERROR: --persona requires a name argument (balanced, cautious, aggressive, greedy, speedrunner).");
+                return 1;
+            }
+            personaName = args[++i];
+            break;
+        case "--bot-report":
+            botReportMode = true;
+            break;
+        case "--matrix":
+            if (i + 1 < args.Length && !args[i + 1].StartsWith("--"))
+                botReportMatrix = args[++i];
             break;
         case "--help": case "-h":
             PrintHelp(); return 0;
@@ -287,18 +306,68 @@ if (etpSanityMode)
     return exitCode;
 }
 
-if (!dungeonMode && scenarioId == null && !runAll)
+if (!dungeonMode && scenarioId == null && !runAll && !botReportMode)
 {
-    Console.Error.WriteLine("Usage: harness --scenario <id> | --all | --dungeon | --suite | --depth-report | --etp-sanity [options]");
+    Console.Error.WriteLine("Usage: harness --scenario <id> | --all | --dungeon | --suite | --bot-report | --depth-report | --etp-sanity [options]");
     Console.Error.WriteLine("Run with --help for details.");
     return 1;
 }
+
+// ─── Resolve persona ──────────────────────────────────────────────────────────
+
+// Validate persona name early — unknown name emits a warning (not error) and falls back.
+BotPersonaConfig? resolvedPersona = null;
+if (personaName != null)
+{
+    resolvedPersona = BotPersonaRegistry.Get(personaName);
+    // BotPersonaRegistry.Get() already emits a stderr warning on unknown names.
+    if (resolvedPersona.Name != personaName)
+    {
+        // Unknown persona — warning was already emitted by registry; use balanced fallback.
+    }
+}
+// When personaName is null, resolvedPersona is null → harnesses default to balanced.
 
 if (!File.Exists(EntitiesFile))
 {
     Console.Error.WriteLine($"ERROR: '{EntitiesFile}' not found.");
     Console.Error.WriteLine("Run from the project root (the directory containing config/).");
     return 1;
+}
+
+// ─── BOT REPORT MODE ──────────────────────────────────────────────────────────
+
+if (botReportMode)
+{
+    if (!File.Exists(EntitiesFile))
+    {
+        Console.Error.WriteLine($"ERROR: '{EntitiesFile}' not found. Run from project root.");
+        return 1;
+    }
+
+    int reportRuns = runsOverride ?? (botReportMatrix == "full" ? 50 : 20);
+    bool useFastMatrix = botReportMatrix != "full";
+    var reportOutPath = botReportOut ?? (args.Contains("--out") ? args[Array.IndexOf(args, "--out") + 1] : null);
+
+    Console.Error.WriteLine($"Running bot survivability report (matrix={botReportMatrix ?? "fast"}, runs={reportRuns})...");
+
+    ScenarioRunner reportRunner;
+    try { reportRunner = ScenarioRunner.FromEntitiesFile(EntitiesFile); }
+    catch (Exception ex) { Console.Error.WriteLine($"ERROR loading entities: {ex.Message}"); return 1; }
+
+    var report = BotSurvivabilityReport.Generate(reportRunner, LevelsDir, useFastMatrix, reportRuns, seed);
+    if (reportOutPath != null)
+    {
+        var dir = Path.GetDirectoryName(reportOutPath);
+        if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+        File.WriteAllText(reportOutPath, report, new System.Text.UTF8Encoding(false));
+        Console.Error.WriteLine($"Report written to {reportOutPath}");
+    }
+    else
+    {
+        Console.WriteLine(report);
+    }
+    return 0;
 }
 
 // ─── DUNGEON MODE ──────────────────────────────────────────────────────────
@@ -336,7 +405,8 @@ if (dungeonMode)
         return 0;
     }
 
-    Console.Error.WriteLine($"Running {runs} soak runs ({floors} floors, seed {seed})...");
+    string personaLabel = resolvedPersona?.Name ?? "balanced";
+    Console.Error.WriteLine($"Running {runs} soak runs ({floors} floors, seed {seed}, persona {personaLabel})...");
 
     // Optional JSONL streaming writer — opened before the soak so each run flushes immediately.
     // If a run crashes or the process is killed mid-session, partial output is still readable.
@@ -362,7 +432,7 @@ if (dungeonMode)
     DungeonSoakSummary summary;
     try
     {
-        summary = RunSoakWithStreaming(harness, floors, runs, seed, jsonlWriter);
+        summary = RunSoakWithStreaming(harness, floors, runs, seed, jsonlWriter, resolvedPersona);
     }
     finally
     {
@@ -413,7 +483,7 @@ foreach (var path in paths)
     Console.Error.Write($"  Running {Path.GetFileNameWithoutExtension(path)}...");
     try
     {
-        var m = runner.RunFromFile(path, seed, runsOverride);
+        var m = runner.RunFromFile(path, seed, runsOverride, resolvedPersona);
         results.Add(m);
         Console.Error.WriteLine($" {m.TotalRuns} runs.");
     }
@@ -613,7 +683,7 @@ DungeonFloorBuilder BuildDungeonFloorBuilder(string entitiesPath, string templat
 /// Stream-writes so partial output survives Ctrl-C or crashes.
 /// </summary>
 DungeonSoakSummary RunSoakWithStreaming(
-    DungeonRunHarness harness, int floorCount, int runCount, int baseSeed, StreamWriter? writer)
+    DungeonRunHarness harness, int floorCount, int runCount, int baseSeed, StreamWriter? writer, BotPersonaConfig? persona = null)
 {
     var soakOptions = new JsonSerializerOptions
     {
@@ -635,7 +705,7 @@ DungeonSoakSummary RunSoakWithStreaming(
         {
             // RunSingle is called via RunSoak — but we need per-run access for streaming.
             // Use a 1-run mini-soak to get the structured result.
-            var miniSummary = harness.RunSoak(floors: floorCount, runs: 1, baseSeed: runSeed);
+            var miniSummary = harness.RunSoak(floors: floorCount, runs: 1, baseSeed: runSeed, persona: persona);
             result = miniSummary.Runs[0];
         }
         catch (Exception ex)
@@ -901,10 +971,17 @@ void PrintHelp()
     Console.WriteLine("  --floors <n>      Number of dungeon floors per run (default: 6)");
     Console.WriteLine("  --runs <n>        Number of soak runs (default: 100)");
     Console.WriteLine("  --seed <n>        Base seed — run i uses seed+i (default: 1337)");
+    Console.WriteLine("  --persona <name>  Bot persona (balanced|cautious|aggressive|greedy|speedrunner, default: balanced)");
     Console.WriteLine("  --jsonl <path>    Stream per-run results as JSONL to file");
     Console.WriteLine("  --verbose         Print bot action distribution and heal behavior after table");
     Console.WriteLine("  --report          Generate and print full analysis report after the soak");
     Console.WriteLine("  --transcript       Print a single-run narrative transcript (use with --dungeon)");
+    Console.WriteLine();
+    Console.WriteLine("Bot report mode:");
+    Console.WriteLine("  --bot-report      Run 5×N persona survivability matrix");
+    Console.WriteLine("  --matrix <fast|full>  Scenario matrix (default: fast = 6 scenarios, full = 15)");
+    Console.WriteLine("  --runs <n>        Runs per scenario per persona (default: 20 fast, 50 full)");
+    Console.WriteLine("  --out <path>      Write markdown report to file (default: stdout)");
     Console.WriteLine();
     Console.WriteLine("Offline report options:");
     Console.WriteLine("  --report --jsonl-in <path>  Read saved JSONL and print analysis report");

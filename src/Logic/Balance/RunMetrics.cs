@@ -10,6 +10,13 @@ public sealed class RunMetrics
     public int TurnsTaken { get; set; }
     public bool PlayerDied { get; set; }
 
+    /// <summary>
+    /// True if this run was aborted by BotBrain's stuck detection (stuck counter >= 15).
+    /// Aborted runs count as death-equivalent for Death% calculations.
+    /// See OutcomeClassifier.Aborted and BotAction.ActionType.AbortRun.
+    /// </summary>
+    public bool WasAborted { get; set; }
+
     // Attack tracking
     public int PlayerAttacks { get; set; }
     public int PlayerHits { get; set; }

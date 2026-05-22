@@ -1,0 +1,63 @@
+# Bot persona configurations.
+# PoC-exact values from ~/development/rlike/io_layer/bot_brain.py:
+#   - PERSONAS dict (lines 80-127): combat engagement, loot, explore preferences
+#   - PERSONA_HEAL_CONFIG dict (lines 186-217): heal thresholds, panic conditions
+#
+# Distance note: combat_engagement_distance uses Manhattan distance (abs(dx)+abs(dy)),
+# NOT Chebyshev. The values (4, 5, 6, 8, 12) were tuned against Manhattan in the PoC.
+
+personas:
+  balanced:
+    retreat_hp_threshold: 0.25
+    base_heal_threshold: 0.30
+    panic_hp_threshold: 0.15
+    panic_multi_enemy_count: 2
+    combat_engagement_distance: 8
+    loot_priority: 1
+    prefer_stairs: false
+    avoid_combat: false
+    allow_combat_healing: true
+
+  cautious:
+    retreat_hp_threshold: 0.40
+    base_heal_threshold: 0.50
+    panic_hp_threshold: 0.30
+    panic_multi_enemy_count: 2
+    combat_engagement_distance: 5
+    loot_priority: 1
+    prefer_stairs: false
+    avoid_combat: true
+    allow_combat_healing: true
+
+  aggressive:
+    retreat_hp_threshold: 0.10
+    base_heal_threshold: 0.20
+    panic_hp_threshold: 0.10
+    panic_multi_enemy_count: 3
+    combat_engagement_distance: 12
+    loot_priority: 0
+    prefer_stairs: false
+    avoid_combat: false
+    allow_combat_healing: true
+
+  greedy:
+    retreat_hp_threshold: 0.25
+    base_heal_threshold: 0.30
+    panic_hp_threshold: 0.15
+    panic_multi_enemy_count: 2
+    combat_engagement_distance: 6
+    loot_priority: 2
+    prefer_stairs: false
+    avoid_combat: false
+    allow_combat_healing: true
+
+  speedrunner:
+    retreat_hp_threshold: 0.30
+    base_heal_threshold: 0.40
+    panic_hp_threshold: 0.20
+    panic_multi_enemy_count: 2
+    combat_engagement_distance: 4
+    loot_priority: 0
+    prefer_stairs: true
+    avoid_combat: true
+    allow_combat_healing: true

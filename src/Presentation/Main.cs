@@ -82,6 +82,14 @@ public partial class Main : Node
     private bool _dragStartRecorded; // true only when _UnhandledInput saw the matching DOWN event
     private Vector2 _dragStartScreenPos;
     private Vector2 _cameraPositionAtDragStart;
+
+    // Bot mode (debug builds only) — never instantiated in release builds.
+    private CatacombsOfYarl.Presentation.Bot.BotPlayerDriver? _botDriver;
+    private CatacombsOfYarl.Presentation.Bot.BotModeHud? _botHud;
+    private static readonly string[] BotPersonaCycle = ["balanced", "cautious", "aggressive", "greedy", "speedrunner"];
+    private static readonly float[] BotSpeedCycle = [1.0f, 0.5f, 0.25f, 0.1f, 0.0f];
+    private int _botPersonaIdx;
+    private int _botSpeedIdx;
     private const float DragThreshold = 10f; // pixels before drag mode activates
 
     // VFX overlay — spell and status visual effects. Created once per floor setup.
@@ -847,6 +855,22 @@ public partial class Main : Node
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
         _gameController.PortalEntranceCancelled += OnPortalEntranceCancelled;
 
+        // Bot driver — debug builds only. Re-initialize across floor transitions.
+        // Release builds: _botDriver is never assigned (BotPlayerDriver is never instantiated).
+        if (OS.IsDebugBuild())
+        {
+            if (_botDriver == null)
+            {
+                _botDriver = new CatacombsOfYarl.Presentation.Bot.BotPlayerDriver();
+                AddChild(_botDriver);
+
+                _botHud = new CatacombsOfYarl.Presentation.Bot.BotModeHud();
+                GetNode<CanvasLayer>("UILayer").AddChild(_botHud);
+                _botHud.Initialize(_botDriver);
+            }
+            _botDriver.Initialize(_gameController, state);
+        }
+
         // Message log panel — Phase 6.2. Created once, lives at UILayer root (same level as
         // EquipmentPanel) so it sits above everything else when visible. Starts hidden.
         if (_messageLogPanel == null)
@@ -1014,6 +1038,36 @@ public partial class Main : Node
         if (OS.IsDebugBuild() && @event is InputEventKey key && key.Pressed && key.Keycode == Key.F3)
         {
             if (_rectDebugDraw != null) _rectDebugDraw.Visible = !_rectDebugDraw.Visible;
+        }
+
+        // ── Bot mode hotkeys (debug builds only) ──────────────────────────────
+        if (OS.IsDebugBuild() && _botDriver != null && @event is InputEventKey botKey && botKey.Pressed)
+        {
+            switch (botKey.Keycode)
+            {
+                case Key.F4:
+                    // Toggle bot mode
+                    if (_botDriver.Enabled) _botDriver.Disable();
+                    else                    _botDriver.Enable();
+                    _botHud?.RefreshDisplay();
+                    break;
+
+                case Key.F5 when _botDriver.Enabled:
+                    // Cycle persona: balanced → cautious → aggressive → greedy → speedrunner → balanced
+                    _botPersonaIdx = (_botPersonaIdx + 1) % BotPersonaCycle.Length;
+                    _botDriver.SetPersona(BotPersonaCycle[_botPersonaIdx]);
+                    _botHud?.RefreshDisplay();
+                    Diag.Log($"[Bot] Persona → {BotPersonaCycle[_botPersonaIdx]}");
+                    break;
+
+                case Key.F6 when _botDriver.Enabled:
+                    // Cycle speed: 1.0 → 0.5 → 0.25 → 0.1 → 0.0 (max) → 1.0
+                    _botSpeedIdx = (_botSpeedIdx + 1) % BotSpeedCycle.Length;
+                    _botDriver.TurnDelaySeconds = BotSpeedCycle[_botSpeedIdx];
+                    _botHud?.RefreshDisplay();
+                    Diag.Log($"[Bot] Speed → {BotSpeedCycle[_botSpeedIdx]}s/turn");
+                    break;
+            }
         }
     }
 
