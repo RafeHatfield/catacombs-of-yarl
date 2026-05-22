@@ -1,6 +1,6 @@
 # Feature: Bot Personas + Graphical Bot Mode
 
-## Status: planning
+## Status: planning — v2 (review-addressed)
 
 ## Current State
 - Plan drafted. No tasks started.
@@ -179,9 +179,11 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
       1. **Panic heal** — `hpFraction <= persona.PanicHpThreshold && hpFraction < 1.0 && adjacent.Count >= persona.PanicMultiEnemyCount && HasHealingPotion(inventory)`. (Note: the current C# bot panics on HP alone; PoC requires multi-enemy. This task aligns to PoC.)
       2. **Threshold heal** — `hpFraction <= persona.BaseHealThreshold && HasHealingPotion(inventory) && (persona.AllowCombatHealing || adjacent.Count == 0)`.
       3. **Opportunistic loot** — only when `persona.LootPriority > 0`. `searchRadius = 3` for priority 1, `searchRadius = 6` for priority 2 (greedy deviates further). Skip entirely when `LootPriority == 0` (aggressive, speedrunner).
+         - Note: the PoC's greedy bot also auto-equips better weapons/armor found on the floor (`bot_brain.py:580-589`). This plan defers gear pickup — `LootPriority` controls only potion-pickup search radius in this pass. `greedy` and `balanced` will behave similarly in gear-heavy floors. Porting `auto_equip_better_items` is a follow-up task. See the Deferred section at the bottom of this plan.
       4. **Retreat to choke** — when `adjacent.Count >= 2 && hpFraction < persona.RetreatHpThreshold` AND `!persona.AvoidCombat` (avoid_combat personas use a different rule, see #5).
-      5. **Avoid-combat detour** — when `persona.AvoidCombat == true` and the nearest enemy is NOT adjacent and distance <= `persona.CombatEngagementDistance`: take one step away from the nearest enemy (Chebyshev-direction `(player.x - enemy.x, player.y - enemy.y)` normalized). If no walkable retreat tile, fall through to rule 6.
-      6. **Engage / move** — unchanged from current code, but only chase enemies up to `persona.CombatEngagementDistance` Chebyshev tiles. Beyond that, Wait.
+      5. **Avoid-combat detour** — when `persona.AvoidCombat == true` and the nearest enemy is NOT adjacent and Manhattan distance `abs(dx) + abs(dy) <= persona.CombatEngagementDistance`: take one step away from the nearest enemy (direction `(player.x - enemy.x, player.y - enemy.y)` normalized). If no walkable retreat tile, fall through to rule 6.
+      6. **Engage / move** — unchanged from current code, but only chase enemies whose Manhattan distance `abs(dx) + abs(dy)` is `<= persona.CombatEngagementDistance`. Beyond that, Wait.
+    - **Distance-metric note:** `CombatEngagementDistance` is compared against Manhattan distance (`abs(dx) + abs(dy)`) to mirror the PoC's `bot_brain.py` semantics. This is asymmetric with the rest of `BotBrain`, which uses Chebyshev distance for adjacency checks and weapon-range gates — that asymmetry is intentional and matches the PoC. Builder should not "normalize" the two metrics; the engagement-distance values in the persona table (4, 5, 6, 8, 12) were tuned against Manhattan in the PoC.
     - `BotBrain.ToPlayerAction` unchanged.
     - The static surface of `BotBrain` is preserved (`Decide(...)`, `ToPlayerAction(...)`) so existing tests compile.
   - Acceptance criteria:
@@ -201,6 +203,11 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - After computing the decision but before returning: if action is "attack nearest" and player position unchanged AND target position unchanged AND last action was also a move-toward (not attack), increment `_stuckCounter`. Reset to 0 on any positional change OR on an attack action.
     - At `_stuckCounter >= 8`: set `_stuckDroppedTarget = current target`, clear `_stuckCounter`, return `BotAction.None` (Wait) for this turn. On the next turn, refuse to re-target `_stuckDroppedTarget` until a different enemy is closer or `_stuckDroppedTarget` dies.
     - At `_stuckCounter >= 15` (PoC + user spec): return a `BotAction.AbortRun` sentinel. New action type. Both harnesses interpret this as "end the run with outcome=stuck" and record the abort reason in metrics. (`OutcomeClassifier.Stuck` — add a new outcome string.)
+    - **AbortRun plumbing (explicit):**
+      - Add `AbortRun` to the `ActionType` enum (or whichever enum backs `BotAction.Kind` — builder picks the right type after grepping).
+      - `BotBrain.ToPlayerAction` handles `AbortRun` by returning `PlayerAction.Wait` (a sentinel value — harnesses intercept the underlying `BotAction.AbortRun` before this conversion path runs and never call `ToPlayerAction` for an abort, but the case must still be safe).
+      - Both harnesses (`ScenarioHarness.RunOnce` and `DungeonRunHarness.Run`): if the `BotBrain` instance returns `AbortRun`, break the run loop immediately; set `metrics.PlayerDied = true` (abort counts as death-equivalent for now); add a new bool `WasAborted` field to `RunMetrics` and set it `true`.
+      - `OutcomeClassifier` gains an `"aborted"` outcome string returned when `WasAborted == true`. Downstream consumers (`PressureModel`, soak report aggregation) treat `aborted` the same as `died` for metric purposes — abort contributes to `Death%`. Document this in the classifier's XML comment.
     - Static `BotBrain.Decide(...)` (the existing call surface used by tests that don't care about state) keeps working by constructing a transient instance — stuck detection is then per-call, which means it never triggers in the static path. Document this clearly in XML comments. Tests assert this behavior.
   - Acceptance criteria:
     - Unit test: a `BotBrain` instance, fed 9 turns of "move toward enemy where neither moves," returns Wait on turn 9 and does NOT target the same enemy on turn 10.
@@ -233,6 +240,10 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
   - Deliverables:
     - `tools/Harness/Program.cs` parses `--persona <name>`. Default: `balanced`. Unknown name: stderr warning + fall back to `balanced` (matches `BotPersonaRegistry.Get`).
     - `ScenarioHarness.RunOnce` and `DungeonRunHarness.Run/RunSoak` accept an optional `BotPersonaConfig` parameter (default = balanced). Pass it through to `BotBrain.Decide` via `BotDecisionContext`.
+    - **Instance-based wiring (so stuck detection from TASK-004 actually fires):**
+      - `ScenarioHarness.RunOnce` constructs **one** `BotBrain` instance per call (instead of calling the static `BotBrain.Decide(...)` path) and passes the persona config to it. All per-turn decisions in that run go through the same instance so `_stuckCounter` / `_lastPlayerPos` / `_stuckDroppedTarget` persist across turns.
+      - `DungeonRunHarness.Run` likewise constructs **one** `BotBrain` instance per `Run()` call (per-run, not per-floor — stuck state spans floor transitions, which matches the PoC).
+      - The static `BotBrain.Decide(...)` wrapper remains in place for backward compatibility with tests that don't need stuck state — without this wiring change, TASK-004's stuck detection would be silently dead in scenario mode.
     - `ScenarioHarness.cs:114-124` dispatch becomes a 3-way switch:
       - `player_bot: "ranged_net_arrow"` → `RangedNetArrowBot.Decide` (unchanged behavior)
       - `player_bot: "balanced"` / `"cautious"` / `"aggressive"` / `"greedy"` / `"speedrunner"` → `BotBrain.Decide` with that persona
@@ -262,11 +273,11 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
       ...
       ```
       Plus secondary tables: average HP-at-heal per persona, avg turns to clear per persona, deaths-with-unused-potions per persona × scenario.
-    - Deterministic seeding: each (persona, scenario, run_idx) gets a unique seed via the existing `SeedDerivation.Stable(scenario_id, run_idx, base_seed)`. Personas use the same seed sequence so the comparison is fair (same monster spawn = different bot policy).
+    - Deterministic seeding: each (persona, scenario, run_idx) gets a unique seed via the existing `SeedDerivation.Stable(scenario_id, run_idx, base_seed)`. Personas share the same seed sequence so the encounter layout matches across personas (same seed → same monster spawn positions, same initial inventory, same map). Combat roll sequences diverge from turn 1 onward as personas take different actions and consume different RNG draws. N=50 run counts wash out the resulting stochastic variance at the aggregate level — survival-rate deltas across personas reflect policy, not RNG drift.
   - Acceptance criteria:
     - `dotnet run --project tools/Harness -- --bot-report --matrix fast --runs 5` completes in under 90 seconds on a developer Mac.
     - Output table has 5 columns (personas) and N rows (scenarios in matrix), all cells filled.
-    - `cautious` survival rate >= `balanced` survival rate on at least 4 of 6 fast-matrix scenarios (sanity check that personas actually differ).
+    - `cautious` survival rate >= `balanced` survival rate on at least 3 of 6 fast-matrix scenarios (sanity check that personas actually differ — softer than 4/6 because arena scenarios penalize `avoid_combat` with a wasted turn; see Risk #4).
     - `aggressive` survival rate <= `balanced` on at least 4 of 6 fast-matrix scenarios.
     - `dotnet test --filter "Category!=Slow"` passes (includes a snapshot test for the markdown format).
 
@@ -318,6 +329,25 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
     - Existing human input is unaffected when `Enabled == false`.
     - `dotnet test --filter "Category!=Slow"` passes (logic-layer tests don't reach the driver; presentation tests for the driver use a fake controller).
 
+- [ ] TASK-009b: BotPlayerDriver exploration + floor-clear logic (makes graphical bot actually playable)
+  - Status: pending
+  - Layer: presentation
+  - Type: system
+  - Dependencies: TASK-009
+  - Rationale: TASK-009 as specified ships a non-functional graphical bot in dungeon mode — it clears visible enemies then freezes (`BotBrain` returns Wait forever; no floor-clear → stair logic; no auto-explore integration; pathing into walls via fog-hidden monsters). This task closes those gaps so the bot survives a floor transition (required by TASK-012's acceptance).
+  - Deliverables:
+    - **Monster visibility filtering.** `BotPlayerDriver` passes `state.Monsters.Where(m => state.Map.IsVisible(m.X, m.Y) && m.Get<Fighter>()?.IsAlive == true).ToList()` as the monster list to `BotBrain.Decide` (not all floor monsters). This prevents the bot from path-planning to enemies on the other side of unexplored walls. The headless harnesses keep their existing all-monsters call — they run in fully-visible scenario arenas.
+    - **Floor-clear → stair.** After `BotBrain.Decide` returns `Wait` (or after the converter produces a `PlayerAction.Wait`), and `visibleAlive.Count == 0`, check `state.AliveMonsters.Count == 0` (whole-floor clear). If true AND a known downstair position is in `state` (visible or remembered via FOW), submit `PlayerAction.Descend`. If true AND no stair is known yet, fall through to auto-explore.
+    - **Auto-explore integration.** When no visible enemies AND the floor is not fully clear (or stair is unknown), submit `PlayerAction.AutoExplore`. This action already exists and is handled by `TurnController` — the driver simply submits it on the next timer tick. `TurnController` runs the existing auto-explore system, which navigates through unrevealed tiles. The driver does NOT re-implement pathing; it submits the action and waits for `TurnCompleted`.
+    - **Re-engage on enemy reveal.** When auto-explore reveals a new enemy mid-traversal, `TurnController.AutoExplore` will already abort and return to `WaitingForInput`. The driver's next tick re-runs `BotBrain.Decide`, which now sees the visible enemy via the filtering deliverable above, and engages normally. No special handling needed.
+    - **Loop termination.** If `state.IsGameOver`, call `Disable()` (which stops the timer and fires `EnabledChanged(false)`). Guard at the top of the timer-tick handler so a dead bot never submits another action.
+  - Acceptance criteria:
+    - Manual smoke: bot enables on a fresh floor, clears all visible enemies, auto-explores into unseen rooms, engages monsters as they appear, and submits `Descend` when standing on the stair after clearing the floor.
+    - Unit test (using a fake controller + fake GameState): driver submits `AutoExplore` when monster list is empty and the floor has unrevealed tiles.
+    - Unit test: driver submits `Descend` when monster list is empty AND `AliveMonsters.Count == 0` AND a downstair position is known AND the player is standing on it.
+    - Unit test: driver calls `Disable()` once when `state.IsGameOver` flips to true.
+    - `dotnet test --filter "Category!=Slow"` passes.
+
 - [ ] TASK-010: F4 hotkey + debug-menu toggle + HUD indicator
   - Status: pending
   - Layer: presentation
@@ -358,7 +388,8 @@ Tasks are ordered by dependency. Each is sized for one builder/tester session.
   - Status: pending
   - Layer: presentation (manual)
   - Type: test
-  - Dependencies: TASK-010
+  - Dependencies: TASK-009b, TASK-010
+  - Note: "Bot survives at least one floor transition" (below) is achievable only with TASK-009b's exploration + floor-clear logic in place. Without TASK-009b the bot freezes after clearing visible enemies and this checklist cannot pass.
   - Deliverables:
     - Manual checklist captured in the task file when complete:
       - Bot mode toggles on with F4. HUD appears.
@@ -423,3 +454,25 @@ Per-task test focus:
 - TASK-012: manual visual smoke test.
 
 Final verification: `harness --bot-report --matrix full --runs 50` produces a 5×15 table where cautious >= balanced and aggressive <= balanced on majority of scenarios. If not, the persona thresholds did not port correctly — return to TASK-003.
+
+---
+
+## Deferred
+
+- **Auto-equip better gear (PoC `bot_brain.py:580-589`).** The PoC's greedy bot scans floor items, compares weapons/armor against equipped, and auto-equips upgrades. This plan defers that behavior. Consequence: in floors with significant gear loot, `greedy` and `balanced` personas will perform similarly because `LootPriority` in this pass only governs potion-pickup radius. Follow-up task: port `auto_equip_better_items` and extend `LootPriority` semantics to cover weapon/armor pickup-and-equip decisions.
+- **Persona-aware target bands.** `PressureModel` Death% / H_PM / H_MP target bands assume the balanced bot. Aggressive runs will exceed Death% targets by design — currently classified ad-hoc. Future work: per-persona band sets, fed back into the suite verdict logic.
+
+---
+
+## Review Notes (2026-05-21)
+
+Six issues raised in critical review, all addressed via targeted edits (no task renumbering, no architecture change):
+
+- **C1 — Distance metric inconsistency.** TASK-003 rules 5 and 6 now specify Manhattan distance for `CombatEngagementDistance` to match the PoC's `bot_brain.py`. Added an asymmetry note: the rest of `BotBrain` uses Chebyshev for adjacency/range checks; engagement distance mirrors the PoC's Manhattan metric. The persona table values (4, 5, 6, 8, 12) were tuned against Manhattan and must not be "normalized."
+- **C2 — Misleading "fair comparison" claim.** TASK-007's seeding note replaced. Personas share encounter layout (same seed → same spawn positions / inventory / map), but combat RNG streams diverge from turn 1 onward as different actions consume different draws. N=50 run counts wash out the resulting variance at the aggregate level. Wording fix only; no design change.
+- **C3 — Static-vs-instance harness wiring gap.** TASK-006 now explicitly requires `ScenarioHarness.RunOnce` and `DungeonRunHarness.Run` to construct one `BotBrain` instance per call (not the static path), so TASK-004's stuck detection actually fires in scenario mode. Static `BotBrain.Decide` wrapper kept for backward compat in tests that don't need stuck state.
+- **C4 — `AbortRun` plumbing not specified.** TASK-004 now explicitly lists the enum addition, `ToPlayerAction` fallback (`PlayerAction.Wait` sentinel), harness interception (break loop, mark `PlayerDied = true`, new `RunMetrics.WasAborted`), and `OutcomeClassifier` `"aborted"` outcome (treated as died by `PressureModel` and soak aggregation).
+- **C5 — Graphical bot exploration unspecified.** New TASK-009b inserted between TASK-009 and TASK-010. Covers visible-monster filtering (no path-planning through walls), floor-clear → `Descend`, `AutoExplore` integration via `TurnController`, re-engage on reveal, and `Disable()` on game-over. TASK-012's "survives at least one floor transition" criterion now depends on TASK-009b.
+- **I2 — Auto-equip not ported, loot_priority misbehaves.** TASK-003's `LootPriority` deliverable annotated: in this pass it governs only potion-pickup search radius; PoC's `auto_equip_better_items` is deferred to a follow-up (added to the new Deferred section). TASK-007's `cautious >= balanced` sanity check softened from 4-of-6 to 3-of-6 fast-matrix scenarios to account for arena scenarios where `avoid_combat` wastes a turn (see Risk #4).
+
+Task numbering is unchanged. TASK-009b is the only insertion. No subsequent tasks reference task numbers > 010 by literal index; the dependency graph is updated where needed (TASK-012 now also depends on TASK-009b).
