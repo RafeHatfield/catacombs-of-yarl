@@ -1,5 +1,7 @@
 # YARL Balance Tuning Cheat Sheet
 
+> **For the full operational workflow — commands, drift thresholds, how to diagnose a WARN/FAIL — see [`BALANCE_PIPELINE_PLAYBOOK.md`](BALANCE_PIPELINE_PLAYBOOK.md).**
+
 ## A. Rooms feel too spiky in early game
 
 1. Lower ETP for the main offenders.
@@ -84,29 +86,33 @@ Healthy target: **5-15%** pity triggers per category.
 
 ## I. CI Integration
 
-Run in CI:
-- ETP sanity harness (strict mode)
-- Loot sanity harness (normal mode)
+CI runs automatically on every PR (`.github/workflows/balance.yml`):
+
+```bash
+dotnet run --project tools/Harness -- --suite   # blocks PR if FAIL
+dotnet run --project tools/Harness -- --etp-sanity --strict
+```
 
 Treat failures as:
-- **Hard errors** for ETP OVER in normal rooms.
-- **Warnings** for loot drift.
+- **Hard block** for `--suite` FAIL (balance regression).
+- **Hard block** for ETP `--etp-sanity --strict` OVER in normal rooms.
 
-This prevents silent balance regression.
+See `BALANCE_PIPELINE_PLAYBOOK.md` for drift thresholds and how to investigate.
 
 ---
 
 ## J. When in doubt
 
-Re-run both harnesses:
+```bash
+# Quick check (2 min)
+dotnet run --project tools/Harness -- --suite --fast
 
-### ETP Sanity
-- Verifies encounter difficulty curve.
-- Flags spikes, invalid rooms, band errors.
+# Diagnose a specific depth
+dotnet run --project tools/Harness -- --suite --out-dir /tmp/run
+dotnet run --project tools/Harness -- --depth-report --in /tmp/run
 
-### Loot Sanity
-- Verifies item pacing.
-- Checks pity frequency.
-- Finds category droughts or floods.
+# Check encounter budgets
+dotnet run --project tools/Harness -- --etp-sanity --verbose
+```
 
-Together, these harnesses catch 90% of issues before playtesting.
+See `BALANCE_PIPELINE_PLAYBOOK.md` for full command reference and interpretation guide.
