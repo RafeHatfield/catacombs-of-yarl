@@ -1,5 +1,6 @@
 scenario_id: test_slime_arena
 name: "Slime Arena"
+category: Combat
 depth: 2
 turn_limit: 200
 runs: 1

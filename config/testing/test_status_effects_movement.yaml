@@ -1,5 +1,7 @@
 scenario_id: test_status_effects_movement
 name: "Status Effects — Movement (Entangled, Fear, Disorientation)"
+category: Status Effects
+all_items_identified: true
 description: >
   Verify movement-gating status effects.
   scroll_of_glue → EntangledEffect: target cannot move but can still attack if adjacent.

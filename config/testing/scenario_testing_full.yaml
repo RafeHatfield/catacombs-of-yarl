@@ -5,7 +5,9 @@ description: >
   type injected as guaranteed spawns. Tests camera scrolling, FOV, spell items, wands,
   status effects, equipment, pick-up/equip/unequip, and all monster types.
   Player uses default loadout (dagger, leather armor, healing potion, wand of portals).
+category: General
 dungeon_mode: true
+all_items_identified: true
 depth: 1
 turn_limit: 9999
 runs: 1

@@ -4,7 +4,9 @@ description: >
   Focused manual test for spell visual effects. Small open arena with a few orc
   targets. Only fire/lightning/dragon fart spells and healing pots — no random drops.
   Tests: fireball travel + burst, lightning path, dragon fart cone, thrown potions.
+category: Presentation
 dungeon_mode: true
+all_items_identified: true
 depth: 2
 turn_limit: 9999
 runs: 1

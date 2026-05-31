@@ -32,6 +32,12 @@ public static class PossessionConfig
     public const int MaxWandDistance = 4;
 
     /// <summary>
+    /// 1-in-N chance per possession for Hollowmark to voice enter commentary.
+    /// Denominator of 4 gives a 25% chance — mostly silent, occasionally speaks.
+    /// </summary>
+    public const int PossessionEnterVoiceChanceDenominator = 4;
+
+    /// <summary>
     /// 1-in-N chance per adjacent monster per turn to kick the phantom wand.
     /// Denominator of 4 gives a 25% chance, generating average kick rate of ~1.4 kicks
     /// per 5-turn encounter against a typical adjacent pack.

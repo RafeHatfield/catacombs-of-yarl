@@ -82,7 +82,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | [plan_testing_infra_phase3.md](plan_testing_infra_phase3.md) | [x] | Analysis reports: DungeonSoakReport generator, JSONL reader for offline analysis, --report flag, CI integration |
 | plan_narrative_testing_d1d2.md (no file) | [x] | D1 run transcript (--transcript flag, FormatTranscript), D2 voice-line histogram (VoiceLineHits in soak pipeline + DungeonSoakReport section). 1638 tests. |
 | [plan_bot_personas.md](plan_bot_personas.md) | [x] | 5 personas (balanced/cautious/aggressive/greedy/speedrunner), YAML config, --persona flag, --bot-report 5×15 matrix, graphical bot mode F4/F5/F6. Complete 2026-05-22. |
-| [plan_testing_mode.md](plan_testing_mode.md) | [ ] | In-game test menu, testing YAML loader, preconfigured test states |
+| [plan_testing_mode.md](plan_testing_mode.md) | [x] | In-game test menu, categories, all_items_identified, default_bot_persona, user:// scanning, 18 scenarios. Complete 2026-05-28. |
 | [plan_balance_pipeline.md](plan_balance_pipeline.md) | [x] | SHA-256 seeding, 15-scenario acceptance suite (--suite), baseline regression (--baseline), full ETP system, depth pressure reports (--depth-report), ETP sanity tool (--etp-sanity). Complete 2026-05-21. |
 | [plan_balance_pipeline_impl.md](plan_balance_pipeline_impl.md) | [x] | Full 5-phase impl: all 25 tasks complete, 1838 tests, CI wired in .github/workflows/balance.yml |
 
@@ -95,5 +95,5 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 | Plan | Status | Description |
 |------|--------|-------------|
 | [plan_cross_run_persistence.md](plan_cross_run_persistence.md) | [x] | Cross-run persistence: all 7 phases complete. 15 namespaces, source-gen JSON, migrations, all arc/catalog mutation APIs, daily seeds. 1528 tests. |
-| [plan_possession_system.md](plan_possession_system.md) | [x] | Player possession: Phases 1–7 complete (+ Dispel spell, wraith/lich immunity, Spell-Break wand, VoiceLineRegistry, CatalogEntryRenderer, 3 voice YAML files, wand-kick mechanic, HostAbilityComponent infrastructure — 1631 tests). |
-| [plan_under_warden_memos.md](plan_under_warden_memos.md) | [x] | Memo delivery system: MemoRegistry, MemoDeliveryEvaluator, MemoInboxPanel (Phase 4 done). 7 memos drafted; ~23 remaining. |
+| [plan_possession_system.md](plan_possession_system.md) | [x] | Player possession: Phases 1–7 complete (+ Dispel spell, wraith/lich immunity, Spell-Break wand, VoiceLineRegistry, CatalogEntryRenderer, 3 voice YAML files, wand-kick mechanic, HostAbilityComponent infrastructure — possession.yaml voice surface added 2026-05-31). |
+| [plan_under_warden_memos.md](plan_under_warden_memos.md) | [x] | Memo delivery system: MemoRegistry, MemoDeliveryEvaluator, MemoInboxPanel (Phase 4 done). formal_complaint.catalog_referenced memo added with {catalog_entry} live-lookup slot 2026-05-31. |

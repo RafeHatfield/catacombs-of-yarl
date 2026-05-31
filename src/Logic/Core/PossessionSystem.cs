@@ -59,13 +59,24 @@ public static class PossessionSystem
 
         state.Player.Add(new UnattendedBodyTag());
 
+        var speciesId = host.Get<SpeciesTag>()?.TypeId ?? "";
         events.Add(new PossessionEnteredEvent
         {
             ActorId = state.Player.Id,
             HostEntityId = host.Id,
-            HostSpecies = host.Get<SpeciesTag>()?.TypeId ?? "",
+            HostSpecies = speciesId,
             OriginatorBodyId = state.Player.Id,
         });
+
+        // Occasional enter commentary (~25% chance). Event pools fire reliably; only enter is gated.
+        if (state.Rng.Next(PossessionConfig.PossessionEnterVoiceChanceDenominator) == 0)
+        {
+            events.Add(new VoiceLineEvent
+            {
+                ActorId = state.Player.Id,
+                TriggerId = PossessionEnterTriggerId(speciesId),
+            });
+        }
 
         return true;
     }
@@ -102,6 +113,7 @@ public static class PossessionSystem
             HostEntityId = host.Id,
             HostSpecies = speciesId ?? "",
         });
+        events.Add(new VoiceLineEvent { ActorId = state.Player.Id, TriggerId = "possession_exit_voluntary" });
     }
 
     // ── Exit: Visibility break (§8.3) ─────────────────────────────────────────
@@ -139,6 +151,7 @@ public static class PossessionSystem
             HostEntityId = hostId,
             HostSpecies = speciesId ?? "",
         });
+        events.Add(new VoiceLineEvent { ActorId = state.Player.Id, TriggerId = "possession_exit_out_of_range" });
     }
 
     // ── ApplyDrainTick (§7) ───────────────────────────────────────────────────
@@ -171,7 +184,22 @@ public static class PossessionSystem
         homeFighter.Hp -= effect.DrainPerTurn;
         events.Add(new PossessionDrainEvent { ActorId = state.Player.Id, TargetEntityId = state.Player.Id, Damage = effect.DrainPerTurn });
 
-        // Near-death warning: fire once per session when home body falls to ≤25% MaxHp.
+        // Drain progress voice warnings — three tiers, each fires once per session.
+        // 25% drained: home body at ≤75% MaxHp.
+        if (!effect.DrainWarning25Fired && homeFighter.MaxHp > 0
+            && homeFighter.Hp <= homeFighter.MaxHp * 3 / 4)
+        {
+            effect.DrainWarning25Fired = true;
+            events.Add(new VoiceLineEvent { ActorId = state.Player.Id, TriggerId = "possession_drain_warning_25" });
+        }
+        // 50% drained: home body at ≤50% MaxHp.
+        if (!effect.DrainWarning50Fired && homeFighter.MaxHp > 0
+            && homeFighter.Hp <= homeFighter.MaxHp / 2)
+        {
+            effect.DrainWarning50Fired = true;
+            events.Add(new VoiceLineEvent { ActorId = state.Player.Id, TriggerId = "possession_drain_warning_50" });
+        }
+        // 75% drained: home body at ≤25% MaxHp — also fires the UI near-death alert.
         if (!effect.NearDeathWarningFired && homeFighter.MaxHp > 0
             && homeFighter.Hp <= homeFighter.MaxHp / 4)
         {
@@ -183,6 +211,7 @@ public static class PossessionSystem
                 CurrentHp = homeFighter.Hp,
                 MaxHp = homeFighter.MaxHp,
             });
+            events.Add(new VoiceLineEvent { ActorId = state.Player.Id, TriggerId = "possession_drain_warning_75" });
         }
     }
 
@@ -222,6 +251,9 @@ public static class PossessionSystem
             HostEntityId = hostId,
             HostSpecies = speciesId ?? "",
         });
+
+        if (reason == "host_died")
+            events.Add(new VoiceLineEvent { ActorId = state.Player.Id, TriggerId = "possession_exit_host_death" });
     }
 
     // ── OnPossessionDispelled (§8.5) ──────────────────────────────────────────
@@ -370,8 +402,49 @@ public static class PossessionSystem
             events.Add(new VoiceLineEvent
             {
                 ActorId   = state.Player.Id,
-                TriggerId = "wand_kicked_away",
+                TriggerId = "possession_wand_kicked",
             });
         }
+    }
+
+    // ── OnHomeBodyHit ─────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Called when a monster lands a hit on the player's home body while the player
+    /// is inhabiting a host. Fires the home-body-threatened voice line once per possession.
+    /// No-op when not possessing or when already fired this possession.
+    /// </summary>
+    public static void OnHomeBodyHit(GameState state, List<TurnEvent> events)
+    {
+        if (!state.Player.Has<UnattendedBodyTag>()) return;
+
+        var (_, effect) = FindActivePossession(state);
+        if (effect == null || effect.HomeBodyThreatenedFired) return;
+
+        effect.HomeBodyThreatenedFired = true;
+        events.Add(new VoiceLineEvent { ActorId = state.Player.Id, TriggerId = "possession_home_body_threatened" });
+    }
+
+    // ── Species-to-trigger mapping ────────────────────────────────────────────
+
+    /// <summary>
+    /// Maps a species ID to the correct possession_enter trigger for compound-key lookup.
+    /// Six bespoke hosts get their own pools; others resolve via orc/undead category or generic.
+    /// </summary>
+    private static string PossessionEnterTriggerId(string speciesId)
+    {
+        // Six bespoke hosts with dedicated voice pools.
+        if (speciesId is "hall_warden" or "orc_shaman" or "king_bat" or "troll" or "bone_orc" or "hollow_orc")
+            return $"possession_enter.{speciesId}";
+
+        // Orc-family: any entity whose ID contains "orc" (covers grunt, brute, scout, veteran, etc.)
+        if (speciesId.Contains("orc", StringComparison.OrdinalIgnoreCase))
+            return "possession_enter.orc";
+
+        // Undead-family: canonical undead species.
+        if (speciesId is "zombie" or "plague_zombie" or "skeleton" or "wraith" or "lich")
+            return "possession_enter.undead";
+
+        return "possession_enter";
     }
 }

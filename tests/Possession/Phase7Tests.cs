@@ -280,7 +280,7 @@ public class WandKickTests
             PossessionSystem.KickWand(state, effect, kicker, events);
 
             if (events.OfType<VoiceLineEvent>()
-                .Any(v => v.TriggerId == "wand_kicked_away"))
+                .Any(v => v.TriggerId == "possession_wand_kicked"))
             {
                 voiceLineFired = true;
                 break;
@@ -288,7 +288,7 @@ public class WandKickTests
         }
 
         Assert.That(voiceLineFired, Is.True,
-            "VoiceLineEvent with 'wand_kicked_away' should fire when wand drifts beyond MaxWandDistance from host.");
+            "VoiceLineEvent with 'possession_wand_kicked' should fire when wand drifts beyond MaxWandDistance from host.");
     }
 }
 

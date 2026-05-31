@@ -1,6 +1,6 @@
 # Plan: In-Game Testing Mode
 
-Status: [ ] Not started
+Status: [x] Complete — 2026-05-28
 PoC reference: io_layer/bot_brain.py, config/levels/level_templates.yaml (levels 91-99)
 
 ---
@@ -143,13 +143,13 @@ For the C# port, these should be scenario YAML files instead of hardcoded level 
 
 ## C# Port Checklist
 
-- [ ] Testing menu scene (dev-only visible)
-- [ ] `TestScenarioLoader` — YAML → game state
-- [ ] Testing scenario YAML format (player state, floor, features, monsters)
-- [ ] Testing overrides (all_items_identified, etc.)
-- [ ] Bundled test scenarios for each major system (combat, traps, items, map features)
-- [ ] `user://testing/` directory scanning for custom scenarios
-- [ ] Mobile: file picker integration for custom scenario loading
-- [ ] Debug build gate (hide from release builds)
-- [ ] Scenario categories in menu (Combat / Items / Traps / Map / Custom)
-- [ ] Testing scenarios for each system as they are implemented
+- [x] Testing menu scene (dev-only visible) — MainMenuPanel debug gate
+- [x] `TestScenarioLoader` — embedded in Main.cs LaunchTestScenario (arena + dungeon modes)
+- [x] Testing scenario YAML format — ScenarioDefinition with category/all_items_identified/default_bot_persona
+- [x] Testing overrides — `all_items_identified` (IdentificationRegistry.AlwaysIdentified), `default_bot_persona` auto-starts BotPlayerDriver
+- [x] Bundled test scenarios — Combat, Status Effects, Spells & Wands, Ranged Combat, Traps, Possession, Factions, Bot, Presentation, General
+- [x] `user://testing/` directory scanning — ScanTestDirectory scans both res:// and user://
+- [ ] Mobile: file picker integration — deferred (user:// scanning covers the main need)
+- [x] Debug build gate — OS.IsDebugBuild() gate in MainMenuPanel
+- [x] Scenario categories in menu — TestMenuPanel groups by category with headers
+- [x] Testing scenarios for each system — 18 scenarios across 10 categories

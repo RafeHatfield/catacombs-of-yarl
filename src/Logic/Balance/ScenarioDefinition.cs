@@ -71,6 +71,30 @@ public sealed class ScenarioDefinition
     /// </summary>
     [YamlMember(Alias = "is_probe")]
     public bool IsProbe { get; set; } = false;
+
+    // ── Testing-mode fields (graphical game only; ignored by headless harness) ──
+
+    /// <summary>
+    /// Display category shown in the Testing Mode menu (e.g. "Combat", "Traps", "Possession").
+    /// Falls back to "Uncategorised" if absent.
+    /// </summary>
+    [YamlMember(Alias = "category")]
+    public string Category { get; set; } = "Uncategorised";
+
+    /// <summary>
+    /// When true, the IdentificationRegistry for this scenario is set to AlwaysIdentified,
+    /// so all potions, scrolls, wands, and rings show their true names immediately.
+    /// </summary>
+    [YamlMember(Alias = "all_items_identified")]
+    public bool AllItemsIdentified { get; set; } = false;
+
+    /// <summary>
+    /// Bot persona to auto-start when this scenario is loaded in the graphical game.
+    /// Valid values: balanced, cautious, aggressive, greedy, speedrunner.
+    /// Null/empty = bot not auto-started (manual F4 as usual).
+    /// </summary>
+    [YamlMember(Alias = "default_bot_persona")]
+    public string? DefaultBotPersona { get; set; }
 }
 
 public sealed class ScenarioPlayer

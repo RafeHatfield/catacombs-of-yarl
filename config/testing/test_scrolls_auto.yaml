@@ -1,5 +1,7 @@
 scenario_id: test_scrolls_auto
 name: "Scroll Auto-Target Spells"
+category: Spells & Wands
+all_items_identified: true
 description: >
   Tests auto-targeting and AoE spells: lightning, earthquake, magic_mapping, light,
   detect_monsters. Arena has a mix of orcs, zombies, and an orc_brute to ensure

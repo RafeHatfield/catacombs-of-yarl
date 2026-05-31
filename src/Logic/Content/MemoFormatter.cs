@@ -35,21 +35,19 @@ public sealed class MemoFormatter
         MemoRegistry registry)
     {
         // Select body variant. Body list is always non-null per MemoDefinition contract.
+        // fireIndex=0 → canonical first-fire body[0]
+        // fireIndex>0 → body[fireIndex] if it exists; clamp to body[last] rather than
+        //   falling back to body[0], so the Under-Warden's weariness progression (shortest,
+        //   most exhausted variant) is the steady state for repeat offenders, not the full
+        //   explanation given on a first encounter.
         var bodyList = memo.Body;
         string rawBody;
         if (bodyList.Count == 0)
-        {
             rawBody = "";
-        }
-        else if (fireIndex <= 0 || fireIndex >= bodyList.Count)
-        {
-            // fireIndex=0 or out-of-range → canonical first-fire
+        else if (fireIndex <= 0)
             rawBody = bodyList[0];
-        }
         else
-        {
-            rawBody = bodyList[fireIndex];
-        }
+            rawBody = bodyList[Math.Min(fireIndex, bodyList.Count - 1)];
 
         var subject = ApplySlots(memo.Subject, slots, registry);
         var body    = ApplySlots(rawBody, slots, registry);

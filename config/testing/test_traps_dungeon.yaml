@@ -1,0 +1,29 @@
+scenario_id: test_traps_dungeon
+name: "Traps — Dungeon Floor (Depth 3)"
+category: Traps
+description: >
+  Procedural dungeon at depth 3 where traps naturally appear (spike_trap, web_trap,
+  alarm_plate, root_trap). Player starts with a scroll of disarm to test the disarm flow.
+  Walk carefully — if the bot runs it you'll see trap triggers; manually play it to
+  test detection and disarm interactions. Tests: trap sprite rendering, trigger animation,
+  disarm scroll use, status effects from traps (bleed from spike, entangled from web).
+dungeon_mode: true
+all_items_identified: true
+depth: 3
+turn_limit: 9999
+runs: 1
+
+guaranteed_spawns:
+  mode: additional
+
+  monsters:
+    - type: orc
+      count: 3
+    - type: orc_grunt
+      count: 2
+
+  items:
+    - type: scroll_of_disarm
+      count: 3
+    - type: healing_potion
+      count: 4

@@ -359,4 +359,310 @@ public class MemoDeliveryEvaluatorTests
         Assert.That(state.IsDirty, Is.True,
             "EvaluateHallWardenPossession always increments counter, so always marks dirty");
     }
+
+    // ── death_repeat ──────────────────────────────────────────────────────────
+
+    [Test]
+    public void Death_QueuesDeath_Repeat_On_ThirdDeath()
+    {
+        var state = FreshState();
+        // Seed 2 prior deaths by incrementing CumulativeDeaths directly
+        // (simulate prior runs without queuing their memos)
+        state.UnderWarden.CumulativeDeaths = 2;
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "polite.death_first");
+
+        var ctx = Died(floor: 5, cause: "orc_brute", run: 3);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(state.UnderWarden.PendingMemos.Any(m => m.Key == "procedural_notice.death_repeat"), Is.True,
+            "death_repeat must fire on the third death");
+    }
+
+    [Test]
+    public void Death_DoesNotQueue_Death_Repeat_Before_ThirdDeath()
+    {
+        var state = FreshState();
+        // Seed 1 prior death — this will be the 2nd death total
+        state.UnderWarden.CumulativeDeaths = 1;
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "polite.death_first");
+
+        var ctx = Died(floor: 5, cause: "orc_brute", run: 2);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(state.UnderWarden.PendingMemos.Any(m => m.Key == "procedural_notice.death_repeat"), Is.False,
+            "death_repeat must not fire before the third death");
+    }
+
+    [Test]
+    public void Death_DoesNotQueue_Death_Repeat_When_CauseSpecificAlsoFires()
+    {
+        var state = FreshState();
+        // Third death via trap — cause_trap fires, death_repeat should be suppressed
+        state.UnderWarden.CumulativeDeaths = 2;
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "polite.death_first");
+
+        var ctx = Died(floor: 5, cause: "spike_trap", run: 3);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(state.UnderWarden.PendingMemos.Any(m => m.Key == "polite.cause_trap"), Is.True,
+            "cause_trap should fire");
+        Assert.That(state.UnderWarden.PendingMemos.Any(m => m.Key == "procedural_notice.death_repeat"), Is.False,
+            "death_repeat must be suppressed when a cause-specific memo fires on the same run");
+    }
+
+    [Test]
+    public void Death_QueuesDeathRepeat_Without_CauseSpecific_On_ThirdDeath()
+    {
+        var state = FreshState();
+        // Third death via generic orc — no cause-specific suppression
+        state.UnderWarden.CumulativeDeaths = 2;
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "polite.death_first");
+
+        var ctx = Died(floor: 5, cause: "orc_brute", run: 3);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(state.UnderWarden.PendingMemos.Any(m => m.Key == "procedural_notice.death_repeat"), Is.True,
+            "death_repeat must fire on third death with no cause-specific memo");
+    }
+
+    // ── cause_possession_neglect ──────────────────────────────────────────────
+
+    [Test]
+    public void Death_QueuesCausePossessionNeglect()
+    {
+        var state = FreshState();
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "polite.death_first");
+
+        var ctx = Died(floor: 6, cause: "possession_neglect", run: 2);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(
+            state.UnderWarden.PendingMemos.Any(m => m.Key == "procedural_notice.cause_possession_neglect"),
+            Is.True,
+            "cause_possession_neglect memo must fire for possession_neglect cause");
+    }
+
+    // ── audit_warning ─────────────────────────────────────────────────────────
+
+    [Test]
+    public void Death_QueuesAuditWarning_AtThreshold()
+    {
+        var state = FreshState();
+        // Seed 9 prior deaths — this death will be the 10th
+        state.UnderWarden.CumulativeDeaths = 9;
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "polite.death_first");
+
+        var ctx = Died(floor: 5, cause: "orc_brute", run: 10);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(
+            state.UnderWarden.PendingMemos.Any(m => m.Key == "procedural_notice.audit_warning"),
+            Is.True,
+            "audit_warning must fire when CumulativeDeaths reaches 10");
+    }
+
+    [Test]
+    public void Death_DoesNotRequeue_AuditWarning_After_First_Fire()
+    {
+        var state = FreshState();
+        state.UnderWarden.CumulativeDeaths = 10;
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "polite.death_first");
+        // Pre-seed audit_warning as already fired
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "procedural_notice.audit_warning");
+
+        var ctx = Died(floor: 5, cause: "orc_brute", run: 12);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        var count = state.UnderWarden.PendingMemos.Count(m => m.Key == "procedural_notice.audit_warning");
+        Assert.That(count, Is.EqualTo(0),
+            "audit_warning is single-shot and must not re-fire after first fire");
+    }
+
+    // ── run_clean ─────────────────────────────────────────────────────────────
+
+    [Test]
+    public void Survived_QueuesRunClean_WhenPreviousRunAlsoClean()
+    {
+        var state = FreshState();
+        state.UnderWarden.LastRunWasClean = true; // previous run was also clean
+
+        var ctx = Survived(floor: 10, run: 3);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(
+            state.UnderWarden.PendingMemos.Any(m => m.Key == "procedural_notice.run_clean"),
+            Is.True,
+            "run_clean must fire when both the current and previous runs were clean");
+    }
+
+    [Test]
+    public void Survived_DoesNotQueue_RunClean_OnFirstCleanRun()
+    {
+        var state = FreshState(); // LastRunWasClean defaults to false
+
+        var ctx = Survived(floor: 10, run: 1);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(
+            state.UnderWarden.PendingMemos.Any(m => m.Key == "procedural_notice.run_clean"),
+            Is.False,
+            "run_clean must not fire on the first clean run — requires two consecutive");
+    }
+
+    [Test]
+    public void EvaluateRunEnd_UpdatesLastRunWasClean_True_On_Survival()
+    {
+        var state = FreshState();
+        Assert.That(state.UnderWarden.LastRunWasClean, Is.False, "Defaults to false");
+
+        var ctx = Survived(floor: 10, run: 1);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(state.UnderWarden.LastRunWasClean, Is.True,
+            "LastRunWasClean must be set to true after a survival run");
+    }
+
+    [Test]
+    public void EvaluateRunEnd_UpdatesLastRunWasClean_False_On_Death()
+    {
+        var state = FreshState();
+        state.UnderWarden.LastRunWasClean = true; // previously clean
+
+        var ctx = Died(floor: 5, cause: "orc_brute", run: 2);
+        _evaluator.EvaluateRunEnd(ctx, state, _registry);
+
+        Assert.That(state.UnderWarden.LastRunWasClean, Is.False,
+            "LastRunWasClean must be set to false after a death run");
+    }
+
+    // ── Multi-fire body variant selection ────────────────────────────────────
+
+    [Test]
+    public void CauseTrap_FiresBody1_OnSecondTrapDeath()
+    {
+        var state = FreshState();
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "polite.death_first");
+
+        // First trap death (fires body[0] — contains "three centuries")
+        _evaluator.EvaluateRunEnd(Died(floor: 5, cause: "spike_trap", run: 2), state, _registry);
+        state.UnderWarden.PendingMemos.Clear();
+
+        // Second trap death (fires body[1] — contains "recurrence")
+        _evaluator.EvaluateRunEnd(Died(floor: 5, cause: "spike_trap", run: 3), state, _registry);
+
+        var memo = state.UnderWarden.PendingMemos.FirstOrDefault(m => m.Key == "polite.cause_trap");
+        Assert.That(memo, Is.Not.Null, "cause_trap should fire on second trap death");
+        Assert.That(memo!.Body, Does.Contain("recurrence"),
+            "Second fire should use body[1] which contains 'recurrence'");
+        Assert.That(memo.Body, Does.Not.Contain("three centuries"),
+            "Second fire must not use body[0] which contains 'three centuries'");
+    }
+
+    [Test]
+    public void CauseTrap_FiresBody2_OnThirdTrapDeath()
+    {
+        var state = FreshState();
+        state.UnderWarden.RecordMemoSent(newGrievanceId: "polite.death_first");
+
+        // First and second trap deaths
+        _evaluator.EvaluateRunEnd(Died(floor: 5, cause: "spike_trap", run: 2), state, _registry);
+        _evaluator.EvaluateRunEnd(Died(floor: 5, cause: "spike_trap", run: 3), state, _registry);
+        state.UnderWarden.PendingMemos.Clear();
+
+        // Third trap death (fires body[2] — contains "No comment.")
+        _evaluator.EvaluateRunEnd(Died(floor: 5, cause: "spike_trap", run: 4), state, _registry);
+
+        var memo = state.UnderWarden.PendingMemos.FirstOrDefault(m => m.Key == "polite.cause_trap");
+        Assert.That(memo, Is.Not.Null, "cause_trap should fire on third trap death");
+        Assert.That(memo!.Body, Does.Contain("No comment."),
+            "Third fire should use body[2] which contains 'No comment.'");
+    }
+
+    // ── MemoFormatter clamping ────────────────────────────────────────────────
+
+    [Test]
+    public void MemoFormatter_ClampsToLastBody_OnHighFireIndex()
+    {
+        // Use polite.cause_trap which has 3 body variants (body[0], body[1], body[2]).
+        // A fireIndex of 5 should clamp to body[2] (the last), not wrap back to body[0].
+        var formatter = new MemoFormatter();
+        var memo = _registry.GetMemo("polite.cause_trap");
+        Assert.That(memo, Is.Not.Null, "polite.cause_trap must be in the registry");
+
+        var slots = new Dictionary<string, string>
+        {
+            ["floor"] = "7",
+            ["cause_of_death"] = "spike_trap",
+        };
+
+        var (_, body) = formatter.Format(memo!, fireIndex: 5, slots, _registry);
+
+        Assert.That(body, Does.Contain("No comment."),
+            "fireIndex=5 should clamp to body[2] (the last variant) which contains 'No comment.'");
+        Assert.That(body, Does.Not.Contain("three centuries"),
+            "fireIndex=5 must not use body[0]");
+    }
+
+    // ── catalog_referenced ────────────────────────────────────────────────────
+
+    [Test]
+    public void EvaluateCatalogReferenced_QueuesMemo_FirstTime()
+    {
+        var state = FreshState();
+
+        _evaluator.EvaluateCatalogReferenced(state, _registry, runNumber: 3, catalogEntry: "test entry");
+
+        var memo = state.UnderWarden.PendingMemos.FirstOrDefault(m => m.Key == "formal_complaint.catalog_referenced");
+        Assert.That(memo, Is.Not.Null, "formal_complaint.catalog_referenced should be queued");
+        Assert.That(memo!.Subject, Does.Contain("irregularity"));
+    }
+
+    [Test]
+    public void EvaluateCatalogReferenced_FillsCatalogEntrySlot()
+    {
+        var state = FreshState();
+        const string entry = "He carried it for nine floors. Take what's left.";
+
+        _evaluator.EvaluateCatalogReferenced(state, _registry, runNumber: 2, catalogEntry: entry);
+
+        var memo = state.UnderWarden.PendingMemos.First(m => m.Key == "formal_complaint.catalog_referenced");
+        Assert.That(memo.Body, Does.Contain(entry),
+            "The rendered catalog entry should appear quoted in the memo body.");
+    }
+
+    [Test]
+    public void EvaluateCatalogReferenced_IsSingleShot_DoesNotFireTwice()
+    {
+        var state = FreshState();
+
+        _evaluator.EvaluateCatalogReferenced(state, _registry, runNumber: 1, catalogEntry: "first entry");
+        _evaluator.EvaluateCatalogReferenced(state, _registry, runNumber: 2, catalogEntry: "second entry");
+
+        var memos = state.UnderWarden.PendingMemos
+            .Where(m => m.Key == "formal_complaint.catalog_referenced").ToList();
+        Assert.That(memos.Count, Is.EqualTo(1), "catalog_referenced is single-shot; must not fire twice.");
+    }
+
+    [Test]
+    public void EvaluateCatalogReferenced_WithNullEntry_LeavesSlotUnfilled()
+    {
+        var state = FreshState();
+
+        _evaluator.EvaluateCatalogReferenced(state, _registry, runNumber: 1, catalogEntry: null);
+
+        var memo = state.UnderWarden.PendingMemos.First(m => m.Key == "formal_complaint.catalog_referenced");
+        Assert.That(memo.Body, Does.Contain("{catalog_entry}"),
+            "With a null entry the slot placeholder should remain unfilled.");
+    }
+
+    [Test]
+    public void EvaluateCatalogReferenced_MarksDirty()
+    {
+        var state = FreshState();
+        Assert.That(state.IsDirty, Is.False, "pre-condition: state is clean");
+
+        _evaluator.EvaluateCatalogReferenced(state, _registry, runNumber: 1, catalogEntry: "entry");
+
+        Assert.That(state.IsDirty, Is.True, "EvaluateCatalogReferenced must mark state dirty.");
+    }
 }

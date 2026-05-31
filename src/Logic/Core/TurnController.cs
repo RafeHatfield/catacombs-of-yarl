@@ -2013,6 +2013,10 @@ public static class TurnController
             // Wake sleeping target on attack damage (NOT DOT — PoC-verified).
             StatusEffectProcessor.OnDamageTaken(target, events);
 
+            // Home body threatened: alert Hollowmark once if the catatonic home body is hit.
+            if (target.Id == state.Player.Id)
+                PossessionSystem.OnHomeBodyHit(state, events);
+
             // Engulf: slimes apply EngulfedEffect to the player on any successful hit.
             // Only applies to the player (not monster-vs-monster); deterministic (no RNG).
             if (result.Damage > 0 && monster.Has<EngulfsOnHitTag>() && target.Id == state.Player.Id)

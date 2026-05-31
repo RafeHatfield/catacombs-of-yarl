@@ -50,8 +50,26 @@ public sealed class PossessionEffect : IStatusEffect
     public int WandTileY { get; set; } = -1;
 
     /// <summary>
-    /// True after the near-death warning event fires (≤25% home body MaxHp).
+    /// True after the 25%-drain voice warning fires (home body ≤75% MaxHp).
+    /// Prevents duplicate warnings within the same possession session.
+    /// </summary>
+    public bool DrainWarning25Fired { get; set; }
+
+    /// <summary>
+    /// True after the 50%-drain voice warning fires (home body ≤50% MaxHp).
+    /// Prevents duplicate warnings within the same possession session.
+    /// </summary>
+    public bool DrainWarning50Fired { get; set; }
+
+    /// <summary>
+    /// True after the near-death warning event fires (home body ≤25% MaxHp = 75% drained).
     /// Prevents duplicate warnings within the same possession session.
     /// </summary>
     public bool NearDeathWarningFired { get; set; }
+
+    /// <summary>
+    /// True after the home-body-threatened voice fires for this possession.
+    /// Caps at one fire per possession so the alarm doesn't repeat every hit turn.
+    /// </summary>
+    public bool HomeBodyThreatenedFired { get; set; }
 }

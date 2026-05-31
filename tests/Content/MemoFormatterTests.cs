@@ -75,14 +75,18 @@ public class MemoFormatterTests
     }
 
     [Test]
-    public void Format_FireIndex5_ExceedsBodyCount_FallsBackToBodyZero()
+    public void Format_FireIndex5_ExceedsBodyCount_ClampsToLastBody()
     {
+        // Out-of-range fireIndex should clamp to the last body variant, not fall back to
+        // body[0]. This ensures the "increasingly weary Under-Warden" arc stays at the
+        // shortest/most-exhausted steady state for repeat offenders rather than reverting
+        // to the full first-encounter explanation.
         var registry = MakeRegistry();
         var memo = MakeMemo("S", "body zero", "body one");
         var slots = new Dictionary<string, string>();
 
         var (_, body) = Formatter.Format(memo, fireIndex: 5, slots, registry);
-        Assert.That(body, Is.EqualTo("body zero"));
+        Assert.That(body, Is.EqualTo("body one"));
     }
 
     [Test]

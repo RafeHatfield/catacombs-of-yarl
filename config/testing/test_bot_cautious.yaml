@@ -1,0 +1,36 @@
+scenario_id: test_bot_cautious
+name: "Bot — Cautious Persona (Tight HP)"
+category: Bot
+description: >
+  Cautious persona auto-starts with low HP to trigger its aggressive heal-first behaviour.
+  Player starts at 30% HP facing 2 orcs with 3 healing potions. Cautious bot should
+  heal before engaging. Compare with aggressive persona (F5) which would dive straight in.
+all_items_identified: true
+default_bot_persona: cautious
+depth: 2
+turn_limit: 300
+runs: 1
+map_width: 16
+map_height: 16
+player_start_x: 3
+player_start_y: 8
+
+player:
+  hp: 16
+  strength: 12
+  dexterity: 14
+  constitution: 12
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 8
+  weapon: "longsword"
+  armor: "leather_armor"
+
+monsters:
+  - type: orc
+    count: 2
+
+items:
+  - type: healing_potion
+    count: 3

@@ -2,7 +2,7 @@
 
 **Status:** [x] Phase 4 complete. All engineering phases done; content drafting ongoing (see Content Status table).
 
-**Content status:** 7 memos across 4 incident types drafted (sessions 1–2). ~23 remaining.
+**Content status:** 13 memos across 8 incident types (sessions 1–3). cause_trap + cause_acid have body[1+] variants. ~12 remaining.
 
 ---
 
@@ -138,18 +138,18 @@ polite.death_first:
 |---|---|
 | `polite.death_first` | ✅ Drafted (body[0] canonical) |
 | `polite.floor_low` | ✅ Drafted (body[0]) |
-| `polite.cause_trap` | ✅ Drafted (body[0]) |
-| `polite.cause_acid` | ✅ Drafted (body[0]) |
+| `polite.cause_trap` | ✅ Drafted (body[0] + body[1] + body[2]) |
+| `polite.cause_acid` | ✅ Drafted (body[0] + body[1] + body[2]) |
 | `polite.hall_warden_possession` | ✅ Drafted (body[0]) |
 | `procedural_notice.hall_warden_possession` | ✅ Drafted (body[0]) |
 | `formal_complaint.hall_warden_possession` | ✅ Drafted (body[0]) |
-| `procedural_notice.death_repeat` | ⬜ Next session |
-| `procedural_notice.cause_possession_neglect` | ⬜ Next session |
-| `procedural_notice.audit_warning` | ⬜ Next session |
-| `procedural_notice.run_clean` | ⬜ Next session |
+| `procedural_notice.death_repeat` | ✅ Drafted (body[0]) — 2026-05-30 |
+| `procedural_notice.cause_possession_neglect` | ✅ Drafted (body[0]) — 2026-05-30 |
+| `procedural_notice.audit_warning` | ✅ Drafted (body[0]) — 2026-05-30 |
+| `procedural_notice.run_clean` | ✅ Drafted (body[0]) — 2026-05-30 |
 | `catalog_referenced` (any tone) | ⬜ Standalone session (needs {catalog_entry} slot wired) |
-| Remaining ~16 memos | ⬜ Future sessions |
-| `body[1+]` variants for multi-fire triggers | ⬜ Future session |
+| Remaining ~12 memos | ⬜ Future sessions |
+| `body[1+]` variants for remaining multi-fire triggers | ⬜ Future session |
 
 ---
 

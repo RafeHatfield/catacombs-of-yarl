@@ -587,4 +587,163 @@ public class PossessionSystemTests
             "Safety rail exit path does not emit the near-death warning.");
         Assert.That(host.Has<PossessionEffect>(), Is.False, "Safety rail should have exited possession.");
     }
+
+    // ─── Voice line events ────────────────────────────────────────────────────
+
+    [Test]
+    public void ExitVoluntary_EmitsExitVoluntaryVoiceEvent()
+    {
+        var player = MakePlayer();
+        var host = MakeMonster();
+        var state = MakeState(player, host);
+        var events = new List<TurnEvent>();
+        PossessionSystem.Enter(host, state, events);
+
+        events.Clear();
+        PossessionSystem.ExitVoluntary(state, events);
+
+        Assert.That(events.OfType<VoiceLineEvent>()
+            .Any(v => v.TriggerId == "possession_exit_voluntary"), Is.True,
+            "ExitVoluntary must emit a VoiceLineEvent with trigger 'possession_exit_voluntary'.");
+    }
+
+    [Test]
+    public void CheckVisibilityConstraint_EmitsOutOfRangeVoiceEvent_WhenDistanceBroken()
+    {
+        var player = MakePlayer(x: 0, y: 0);
+        var host = MakeMonster(x: 0, y: 0);
+        var state = MakeState(player, host);
+        PossessionSystem.Enter(host, state, new List<TurnEvent>());
+
+        // Move host far enough to break MaxPossessionDistance.
+        host.X = PossessionConfig.MaxPossessionDistance + 2;
+        host.Y = 0;
+
+        var events = new List<TurnEvent>();
+        PossessionSystem.CheckVisibilityConstraint(state, events);
+
+        Assert.That(events.OfType<VoiceLineEvent>()
+            .Any(v => v.TriggerId == "possession_exit_out_of_range"), Is.True,
+            "CheckVisibilityConstraint must emit 'possession_exit_out_of_range' on visibility break.");
+    }
+
+    [Test]
+    public void OnPossessionInducedHostDeath_EmitsHostDeathVoiceEvent_ForHostDiedReason()
+    {
+        var player = MakePlayer();
+        var host = MakeMonster();
+        var state = MakeState(player, host);
+        PossessionSystem.Enter(host, state, new List<TurnEvent>());
+
+        var events = new List<TurnEvent>();
+        PossessionSystem.OnPossessionInducedHostDeath(host, state, events, reason: "host_died");
+
+        Assert.That(events.OfType<VoiceLineEvent>()
+            .Any(v => v.TriggerId == "possession_exit_host_death"), Is.True,
+            "host_died reason must emit 'possession_exit_host_death' voice event.");
+    }
+
+    [Test]
+    public void OnPossessionInducedHostDeath_NoHostDeathVoice_ForWardenDispelledReason()
+    {
+        var player = MakePlayer();
+        var host = MakeMonster();
+        var state = MakeState(player, host);
+        // Simulate warden-initiated possession.
+        var effect = StatusEffectProcessor.ApplyEffect<PossessionEffect>(host, int.MaxValue)!;
+        effect.PossessorEntityId = PossessionConfig.WardenPossessorSentinelId;
+        effect.Source = PossessionSource.WardenInitiated;
+
+        var events = new List<TurnEvent>();
+        PossessionSystem.OnPossessionInducedHostDeath(host, state, events, reason: "warden_dispelled");
+
+        Assert.That(events.OfType<VoiceLineEvent>()
+            .Any(v => v.TriggerId == "possession_exit_host_death"), Is.False,
+            "warden_dispelled reason must not emit 'possession_exit_host_death'.");
+    }
+
+    [Test]
+    public void ApplyDrainTick_EmitsDrainWarning25_WhenHpFallsToSeventyFivePercent()
+    {
+        // MaxHp = 21 (base 20 + con mod 1). HP ≤ 75% = ≤15.
+        var player = MakePlayer(hp: 20);
+        player.Get<Fighter>()!.Hp = 16;  // drain 1 → 15 ≤ 15 → fires
+        var host = MakeMonster();
+        var state = MakeState(player, host);
+        PossessionSystem.Enter(host, state, new List<TurnEvent>());
+
+        var events = new List<TurnEvent>();
+        PossessionSystem.ApplyDrainTick(state, events);
+
+        Assert.That(events.OfType<VoiceLineEvent>()
+            .Any(v => v.TriggerId == "possession_drain_warning_25"), Is.True,
+            "DrainWarning25 should fire when HP falls to ≤75% MaxHp.");
+    }
+
+    [Test]
+    public void ApplyDrainTick_EmitsDrainWarning50_WhenHpFallsToFiftyPercent()
+    {
+        // MaxHp = 21. HP ≤ 50% = ≤10.
+        var player = MakePlayer(hp: 20);
+        player.Get<Fighter>()!.Hp = 11;  // drain 1 → 10 ≤ 10 → fires
+        var host = MakeMonster();
+        var state = MakeState(player, host);
+        PossessionSystem.Enter(host, state, new List<TurnEvent>());
+
+        var events = new List<TurnEvent>();
+        PossessionSystem.ApplyDrainTick(state, events);
+
+        Assert.That(events.OfType<VoiceLineEvent>()
+            .Any(v => v.TriggerId == "possession_drain_warning_50"), Is.True,
+            "DrainWarning50 should fire when HP falls to ≤50% MaxHp.");
+    }
+
+    [Test]
+    public void ApplyDrainTick_DrainWarnings_EachFireOnlyOnce()
+    {
+        var player = MakePlayer(hp: 20);
+        player.Get<Fighter>()!.Hp = 11;  // will cross 50% after one tick
+        var host = MakeMonster();
+        var state = MakeState(player, host);
+        PossessionSystem.Enter(host, state, new List<TurnEvent>());
+
+        var events = new List<TurnEvent>();
+        PossessionSystem.ApplyDrainTick(state, events); // crosses 50% threshold
+        PossessionSystem.ApplyDrainTick(state, events); // second tick — must not re-fire
+
+        var w50Events = events.OfType<VoiceLineEvent>()
+            .Where(v => v.TriggerId == "possession_drain_warning_50").ToList();
+        Assert.That(w50Events.Count, Is.EqualTo(1), "DrainWarning50 must fire exactly once per possession.");
+    }
+
+    [Test]
+    public void OnHomeBodyHit_EmitsThreatenedVoice_FirstHitOnly()
+    {
+        var player = MakePlayer();
+        var host = MakeMonster(id: 2);
+        var state = MakeState(player, host);
+        PossessionSystem.Enter(host, state, new List<TurnEvent>());
+
+        var events = new List<TurnEvent>();
+        PossessionSystem.OnHomeBodyHit(state, events);
+        PossessionSystem.OnHomeBodyHit(state, events); // second call — must not re-fire
+
+        var voiceEvents = events.OfType<VoiceLineEvent>()
+            .Where(v => v.TriggerId == "possession_home_body_threatened").ToList();
+        Assert.That(voiceEvents.Count, Is.EqualTo(1),
+            "possession_home_body_threatened fires once per possession, not on every hit.");
+    }
+
+    [Test]
+    public void OnHomeBodyHit_NoVoice_WhenNotPossessing()
+    {
+        var player = MakePlayer();
+        var state = MakeState(player);
+
+        var events = new List<TurnEvent>();
+        PossessionSystem.OnHomeBodyHit(state, events);
+
+        Assert.That(events.OfType<VoiceLineEvent>(), Is.Empty,
+            "OnHomeBodyHit should be a no-op when the player is not possessing.");
+    }
 }

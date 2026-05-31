@@ -1,5 +1,7 @@
 scenario_id: test_scrolls_targeted
 name: "Scroll Single-Target Spells"
+category: Spells & Wands
+all_items_identified: true
 description: >
   Tests single-target status effect spells: confusion, slow, glue, fear, fireball.
   Three orcs at range 5 from the player — within all scroll ranges.

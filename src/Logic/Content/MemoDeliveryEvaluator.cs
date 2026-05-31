@@ -15,9 +15,14 @@ namespace CatacombsOfYarl.Logic.Content;
 /// and call state.MarkDirty() if any memos were added.
 ///
 /// Fire semantics:
-///   - body[0] fires the first time an incident key fires (cross-run, via ProceduralGrievancesLogged)
-///   - body[1] fires on subsequent fires (fireIndex=1), if the memo has a variant
-///   - Single-shot memos (only body[0]) never re-fire — checked via HasLoggedGrievance
+///   - body[0] fires on the first fire of a key (fireIndex=0)
+///   - body[1], body[2], ... fire on subsequent fires (fireIndex=1, 2, ...)
+///   - If fireIndex exceeds the body list, MemoFormatter clamps to the last variant
+///   - Single-shot memos (only body[0]) never re-fire — caller guards via HasLoggedGrievance
+///
+/// Fire order within EvaluateRunEnd is deterministic:
+///   death_first → floor_low → cause_trap → cause_acid → cause_possession_neglect
+///   → death_repeat → audit_warning → run_clean
 /// </summary>
 public sealed class MemoDeliveryEvaluator
 {
@@ -33,6 +38,13 @@ public sealed class MemoDeliveryEvaluator
         "acid_pool", "acid_spray",
     };
 
+    // Engine cause strings that map to the possession-neglect incident type.
+    // Fires when the home vessel is killed while the player inhabits a host body.
+    private static readonly HashSet<string> PossessionNeglectCauses = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "possession_neglect",
+    };
+
     private readonly MemoFormatter _formatter = new();
 
     // ── Public API ─────────────────────────────────────────────────────────────
@@ -41,51 +53,130 @@ public sealed class MemoDeliveryEvaluator
     /// Evaluate which memos should fire after a game run ends. Adds formatted memos
     /// to the pending queue and marks state dirty if any were added.
     ///
-    /// Fire order is deterministic: death_first → floor_low → cause_trap → cause_acid.
-    /// A single run can produce multiple memos (e.g. first death on floor 2 via spike_trap
-    /// fires death_first, floor_low, and cause_trap).
+    /// Handles both death runs and survival runs:
+    ///   - Death: increments CumulativeDeaths, evaluates cause-specific and pattern memos
+    ///   - Survival: evaluates run_clean (requires two consecutive clean runs)
+    ///
+    /// Always updates LastRunWasClean to reflect this run's outcome.
     /// </summary>
     public void EvaluateRunEnd(PostRunContext ctx, PersistentRunState state, MemoRegistry registry)
     {
-        if (!ctx.Died)
-            return;
-
         var addedAny = false;
 
-        // ── polite.death_first ─────────────────────────────────────────────────
-        // Single-shot. Only fires if this key has never been logged before.
-        if (!state.UnderWarden.HasLoggedGrievance("polite.death_first"))
+        if (ctx.Died)
         {
-            AddMemo("polite.death_first", ctx, state, registry, ctx.RunNumber);
-            addedAny = true;
+            // Increment the cumulative death counter before evaluating thresholds so
+            // that death_repeat and audit_warning see the updated count.
+            state.UnderWarden.CumulativeDeaths++;
+
+            // Track whether a cause-specific memo fired this run. death_repeat is suppressed
+            // when a cause-specific memo fires on the same run — the specific cause is more
+            // characterful than the general pattern notice.
+            var causeSpecificFired = false;
+
+            // ── polite.death_first ─────────────────────────────────────────────
+            // Single-shot. Only fires on the first death ever.
+            if (!state.UnderWarden.HasLoggedGrievance("polite.death_first"))
+            {
+                AddMemo("polite.death_first", ctx, state, registry, ctx.RunNumber);
+                addedAny = true;
+            }
+
+            // ── polite.floor_low ───────────────────────────────────────────────
+            // Multi-fire. Fires whenever a death happens on floor 3 or below.
+            if (ctx.FloorReached <= 3)
+            {
+                AddMemo("polite.floor_low", ctx, state, registry, ctx.RunNumber);
+                addedAny = true;
+            }
+
+            // ── polite.cause_trap ──────────────────────────────────────────────
+            // Multi-fire. Fires whenever death cause is a trap type.
+            if (ctx.CauseOfDeath != null && TrapCauses.Contains(ctx.CauseOfDeath))
+            {
+                AddMemo("polite.cause_trap", ctx, state, registry, ctx.RunNumber);
+                addedAny = true;
+                causeSpecificFired = true;
+            }
+
+            // ── polite.cause_acid ──────────────────────────────────────────────
+            // Multi-fire. Fires whenever death cause is an acid type.
+            if (ctx.CauseOfDeath != null && AcidCauses.Contains(ctx.CauseOfDeath))
+            {
+                AddMemo("polite.cause_acid", ctx, state, registry, ctx.RunNumber);
+                addedAny = true;
+                causeSpecificFired = true;
+            }
+
+            // ── procedural_notice.cause_possession_neglect ─────────────────────
+            // Multi-fire. Fires when the home vessel is killed during active possession.
+            if (ctx.CauseOfDeath != null && PossessionNeglectCauses.Contains(ctx.CauseOfDeath))
+            {
+                AddMemo("procedural_notice.cause_possession_neglect", ctx, state, registry, ctx.RunNumber);
+                addedAny = true;
+                causeSpecificFired = true;
+            }
+
+            // ── procedural_notice.death_repeat ─────────────────────────────────
+            // Multi-fire, but suppressed when a cause-specific memo fires on the same run.
+            // Fires on the 3rd death and every subsequent death without a specific cause.
+            // CumulativeDeaths was already incremented above, so >= 3 means "third or later".
+            if (state.UnderWarden.CumulativeDeaths >= 3 && !causeSpecificFired)
+            {
+                AddMemo("procedural_notice.death_repeat", ctx, state, registry, ctx.RunNumber);
+                addedAny = true;
+            }
+
+            // ── procedural_notice.audit_warning ────────────────────────────────
+            // Single-shot. Fires once when cumulative deaths cross the audit threshold.
+            // Threshold is tunable here; memo text is threshold-agnostic.
+            if (state.UnderWarden.CumulativeDeaths >= 10
+                && !state.UnderWarden.HasLoggedGrievance("procedural_notice.audit_warning"))
+            {
+                AddMemo("procedural_notice.audit_warning", ctx, state, registry, ctx.RunNumber);
+                addedAny = true;
+            }
+        }
+        else
+        {
+            // ── procedural_notice.run_clean ────────────────────────────────────
+            // Fires only when BOTH the current run and the previous run were clean.
+            // Single clean runs do not trigger it; the memo text's "two consecutive
+            // descents" framing depends on the two-in-a-row condition.
+            if (state.UnderWarden.LastRunWasClean)
+            {
+                AddMemo("procedural_notice.run_clean", ctx, state, registry, ctx.RunNumber);
+                addedAny = true;
+            }
         }
 
-        // ── polite.floor_low ──────────────────────────────────────────────────
-        // Multi-fire. Fires whenever a death happens on floor 3 or below.
-        if (ctx.FloorReached <= 3)
-        {
-            AddMemo("polite.floor_low", ctx, state, registry, ctx.RunNumber);
-            addedAny = true;
-        }
-
-        // ── polite.cause_trap ─────────────────────────────────────────────────
-        // Multi-fire. Fires whenever death cause is a trap type.
-        if (ctx.CauseOfDeath != null && TrapCauses.Contains(ctx.CauseOfDeath))
-        {
-            AddMemo("polite.cause_trap", ctx, state, registry, ctx.RunNumber);
-            addedAny = true;
-        }
-
-        // ── polite.cause_acid ─────────────────────────────────────────────────
-        // Multi-fire. Fires whenever death cause is an acid type.
-        if (ctx.CauseOfDeath != null && AcidCauses.Contains(ctx.CauseOfDeath))
-        {
-            AddMemo("polite.cause_acid", ctx, state, registry, ctx.RunNumber);
-            addedAny = true;
-        }
+        // Update the clean-run flag for the next run to consult.
+        // Must happen after the run_clean check above.
+        state.UnderWarden.LastRunWasClean = !ctx.Died;
 
         if (addedAny)
             state.MarkDirty();
+    }
+
+    /// <summary>
+    /// Called the first time a past-self is freed via the Possessed-Corpse spell-break encounter.
+    /// Queues the formal_complaint.catalog_referenced memo with the rendered catalog entry quoted
+    /// verbatim inside the memo body. Single-shot — never re-fires.
+    ///
+    /// <paramref name="catalogEntry"/> is the pre-rendered Hollowmark catalog line for the freed
+    /// past-self (from CatalogEntryRenderer). If null, the {catalog_entry} slot is left unfilled.
+    /// </summary>
+    public void EvaluateCatalogReferenced(
+        PersistentRunState state, MemoRegistry registry, int runNumber, string? catalogEntry)
+    {
+        if (state.UnderWarden.HasLoggedGrievance("formal_complaint.catalog_referenced")) return;
+
+        var ctx = new PostRunContext(Died: false, CauseOfDeath: null, KillerSpecies: null, FloorReached: 0, RunNumber: runNumber);
+        var extraSlots = catalogEntry != null
+            ? new Dictionary<string, string> { ["catalog_entry"] = catalogEntry }
+            : null;
+        AddMemo("formal_complaint.catalog_referenced", ctx, state, registry, runNumber, extraSlots);
+        state.MarkDirty();
     }
 
     /// <summary>
@@ -129,9 +220,9 @@ public sealed class MemoDeliveryEvaluator
     // ── Private helpers ────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Look up the memo definition, determine the correct fire index, format the memo,
-    /// and append it to the pending queue. Also calls RecordMemoSent to track the
-    /// grievance key and increment TotalMemosSentEver.
+    /// Look up the memo definition, determine the correct fire index (from GrievanceFireCounts),
+    /// format the memo, and append it to the pending queue. Also calls RecordMemoSent to
+    /// track the grievance key, increment TotalMemosSentEver, and update GrievanceFireCounts.
     ///
     /// If the key is unknown in the registry, the call is a no-op.
     /// </summary>
@@ -140,19 +231,22 @@ public sealed class MemoDeliveryEvaluator
         PostRunContext ctx,
         PersistentRunState state,
         MemoRegistry registry,
-        int runNumber)
+        int runNumber,
+        Dictionary<string, string>? extraSlots = null)
     {
         var memo = registry.GetMemo(memoKey);
         if (memo is null)
             return;
 
-        // fireIndex=0 for first-ever fire; 1 for repeat fires.
-        // Single-shot memos only have body[0], so repeat fires would fall back to body[0]
-        // anyway — but single-shot memos shouldn't re-fire at all (caller guards via
-        // HasLoggedGrievance for single-shot keys). Here we just compute the index.
-        var fireIndex = state.UnderWarden.HasLoggedGrievance(memoKey) ? 1 : 0;
+        // Use GrievanceFireCounts for the fire index so MemoFormatter selects the correct
+        // body variant. GetFireCount returns 0 before first fire, 1 on second, etc.
+        var fireIndex = state.UnderWarden.GetFireCount(memoKey);
 
         var slots = BuildSlots(ctx, state);
+        if (extraSlots != null)
+            foreach (var (k, v) in extraSlots)
+                slots[k] = v;
+
         var (subject, body) = _formatter.Format(memo, fireIndex, slots, registry);
 
         state.UnderWarden.PendingMemos.Add(new PendingMemo(
@@ -162,7 +256,8 @@ public sealed class MemoDeliveryEvaluator
             DeliveredRun: runNumber
         ));
 
-        // RecordMemoSent increments TotalMemosSentEver and dedup-adds to ProceduralGrievancesLogged.
+        // RecordMemoSent increments TotalMemosSentEver, dedup-adds to ProceduralGrievancesLogged,
+        // and increments GrievanceFireCounts[memoKey] for the variant index on the next fire.
         state.UnderWarden.RecordMemoSent(newGrievanceId: memoKey);
     }
 

@@ -44,20 +44,77 @@ public sealed class UnderWardenData
     [JsonPropertyName("hall_warden_possessions_total")]
     public int HallWardenPossessionsTotal { get; set; }
 
+    // Total deaths across all runs. Used for death_repeat and audit_warning thresholds.
+    // Incremented by MemoDeliveryEvaluator on every death run.
+    [JsonPropertyName("cumulative_deaths")]
+    public int CumulativeDeaths { get; set; }
+
+    // True if the most recently completed run had no death (survived to exit/win).
+    // Used to detect two consecutive clean runs for the run_clean memo.
+    [JsonPropertyName("last_run_was_clean")]
+    public bool LastRunWasClean { get; set; }
+
+    // Tracks how many times each memo key has fired (first fire and repeats).
+    // Used by MemoFormatter to select the correct body variant index.
+    [JsonPropertyName("grievance_fire_counts")]
+    public Dictionary<string, int> GrievanceFireCounts { get; set; } = new();
+
     // Queue of formatted memos waiting to surface in the inbox UI.
     // PendingMemos are added after each run by MemoDeliveryEvaluator (Phase 3).
     // Consumed by MemoInboxPanel (Phase 4).
     [JsonPropertyName("pending_memos")]
     public List<PendingMemo> PendingMemos { get; set; } = new();
 
+    // The "excess" metric for the Weighing (plan_end_game decision 2): cumulative unprovoked
+    // cross-faction kills, keyed by victim faction. Feeds Guardian 4 (Auditor's Own, all factions)
+    // and Guardian 2 (Oathkeeper, the "orc" subset). Default-add per persistence §3 — no migration.
+    // Write side (run-scoped counter → flush at run end) is plan_end_game_impl TASK-003.
+    [JsonPropertyName("cumulative_unprovoked_kills")]
+    public Dictionary<string, int> CumulativeUnprovokedKills { get; set; } = new();
+
+    /// <summary>Total unprovoked cross-faction kills across all runs (sum over factions).</summary>
+    public int TotalUnprovokedKills()
+    {
+        int sum = 0;
+        foreach (var v in CumulativeUnprovokedKills.Values) sum += v;
+        return sum;
+    }
+
+    /// <summary>Unprovoked kills against a specific victim faction (0 if none).</summary>
+    public int UnprovokedKillsFor(string factionId) =>
+        CumulativeUnprovokedKills.TryGetValue(factionId, out var c) ? c : 0;
+
+    /// <summary>Record an unprovoked cross-faction kill against the given victim faction.</summary>
+    public void AddUnprovokedKill(string factionId, int count = 1)
+    {
+        CumulativeUnprovokedKills[factionId] =
+            (CumulativeUnprovokedKills.TryGetValue(factionId, out var prev) ? prev : 0) + count;
+    }
+
     public bool HasLoggedGrievance(string grievanceId) =>
         ProceduralGrievancesLogged.Contains(grievanceId);
+
+    /// <summary>
+    /// Returns how many times the given memo key has fired (0 if never).
+    /// Used by MemoDeliveryEvaluator to pass the correct fireIndex to MemoFormatter.
+    /// </summary>
+    public int GetFireCount(string key) =>
+        GrievanceFireCounts.TryGetValue(key, out var c) ? c : 0;
 
     public void RecordMemoSent(string? newTone = null, string? newGrievanceId = null)
     {
         TotalMemosSentEver++;
         if (newTone != null) LastMemoTone = newTone;
-        if (newGrievanceId != null && !HasLoggedGrievance(newGrievanceId))
-            ProceduralGrievancesLogged.Add(newGrievanceId);
+        if (newGrievanceId != null)
+        {
+            // Track in single-fire dedup list (first fire only)
+            if (!HasLoggedGrievance(newGrievanceId))
+                ProceduralGrievancesLogged.Add(newGrievanceId);
+
+            // Track fire count for every fire (first and repeat), so MemoFormatter
+            // can select the correct body variant on each call.
+            GrievanceFireCounts[newGrievanceId] =
+                (GrievanceFireCounts.TryGetValue(newGrievanceId, out var prev) ? prev : 0) + 1;
+        }
     }
 }

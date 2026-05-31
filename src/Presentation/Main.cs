@@ -197,13 +197,12 @@ public partial class Main : Node
 
     public override void _Process(double delta)
     {
-        // On the first _Process tick after SetupPresentation, re-snap the camera and re-apply
-        // fog-of-war. GetViewport().GetVisibleRect() may return stale dimensions when called
-        // during a UI callback (the button press that triggers StartDungeon). Running one frame
-        // later guarantees the viewport reports its true size and the dungeon renders correctly.
-        if (_pendingCameraSnap)
+        // Re-snap camera for the first N frames after SetupPresentation. Running each frame
+        // handles layout settling after the MenuLayer hides — GetVisibleRect() can report a
+        // plausible but stale size on the first frame before Godot has processed the change.
+        if (_pendingCameraSnapFrames > 0)
         {
-            _pendingCameraSnap = false;
+            _pendingCameraSnapFrames--;
             _DoInitialCameraSnap();
         }
 
@@ -563,9 +562,11 @@ public partial class Main : Node
             var hollowmarkYaml = ReadGodotResource("res://config/voice_lines/hollowmark.yaml");
             var quippingShadeYaml = ReadGodotResource("res://config/voice_lines/quipping_shade.yaml");
             var catalogYaml = ReadGodotResource("res://config/voice_lines/catalog_past_selves.yaml");
+            var possessionYaml = ReadGodotResource("res://config/voice_lines/possession.yaml");
             _voiceLineRegistry = VoiceLineRegistry.LoadFromYaml(hollowmarkYaml);
             _voiceLineRegistry.Merge(VoiceLineRegistry.LoadFromYaml(quippingShadeYaml));
             _voiceLineRegistry.Merge(VoiceLineRegistry.LoadFromYaml(catalogYaml));
+            _voiceLineRegistry.Merge(VoiceLineRegistry.LoadFromYaml(possessionYaml));
             GD.Print("[Main] Voice line registry loaded.");
         }
         catch (System.Exception ex)
@@ -714,6 +715,7 @@ public partial class Main : Node
         _menuButtonBar.PossessRequested += () => _gameController?.StartPossessionTargeting();
         _menuButtonBar.ExitPossessionRequested += () => _gameController?.ExitPossessionAction();
         _menuButtonBar.CancelPossessionTargetingRequested += () => _gameController?.CancelPossessionTargeting();
+        _menuButtonBar.MenuRequested    += ShowMainMenu;
 
         // Quick-slot bar (Phase 3) — scrollable consumable/wand strip + weapon indicator.
         // Replaces InventoryPanel. Drop goes through long-press → action sheet.
@@ -921,25 +923,26 @@ public partial class Main : Node
         // No-op in release builds (_debugOverlay is null).
         _debugOverlay?.SetGameState(_gameController, state, _entitySprites, _itemSprites, _toastLog);
 
-        // Deferred second camera snap: GetViewport().GetVisibleRect() can return stale dimensions
-        // when called during a UI callback (e.g. button press), causing the camera to position
-        // incorrectly and the dungeon to appear grey. Deferring to end-of-frame ensures layout
-        // is resolved before the snap runs. The immediate Update() above already kills stale tweens.
-        _pendingCameraSnap = true;
+        // Queue 4 frames of camera snaps. The first frame handles the immediate stale-viewport
+        // case; frames 2–4 handle slower layout settling after MenuLayer hides. Each snap is
+        // cheap (one Position/Scale assignment), so running 4 times is safe.
+        _pendingCameraSnapFrames = 4;
     }
 
-    // Set true at end of SetupPresentation; cleared after first _Process snap.
-    private bool _pendingCameraSnap;
+    // Set > 0 at end of SetupPresentation; decremented each frame until 0.
+    // Retrying multiple frames handles the case where GetVisibleRect() reports a plausible
+    // but stale size on the first frame after the MenuLayer hides (layout hasn't settled yet).
+    private int _pendingCameraSnapFrames;
+    private bool _pendingCameraSnap => _pendingCameraSnapFrames > 0;
 
     private void _DoInitialCameraSnap()
     {
         if (_state == null || _gameView == null) return;
-        // Retry until the viewport has settled — GetVisibleRect() can return (0,0) on the
-        // first frame after the main menu hides, before Godot has processed the layout change.
         var viewSize = _gameView.GetViewport().GetVisibleRect().Size;
         if (viewSize.X < 100 || viewSize.Y < 100)
         {
-            _pendingCameraSnap = true;
+            // Viewport not ready yet — keep retrying.
+            _pendingCameraSnapFrames = System.Math.Max(_pendingCameraSnapFrames, 1);
             return;
         }
         PlayerCamera.Update(_gameView, _state.ControlledEntity, _currentZoom, _renderer);
@@ -1446,6 +1449,36 @@ public partial class Main : Node
                     // Dirty flag set inside EvaluateHallWardenPossession — flush deferred
                     // to the next natural persistence boundary (floor descent or run end).
                 }
+
+                // Variant 3 spell-break: past-self freed. Record in persistence and fire
+                // the catalog_referenced memo on first occurrence.
+                // NOTE: FreedPastSashaId uses the most recent PastSashaRecord as an
+                // approximation until the spawn system stores record IDs on entities.
+                if (possExitEvt.Reason == "warden_dispelled"
+                    && _persistentState != null && _memoRegistry != null)
+                {
+                    var mostRecent = _persistentState.PastSashas.Records.Count > 0
+                        ? _persistentState.PastSashas.Records[^1]
+                        : null;
+                    if (mostRecent != null)
+                    {
+                        _persistentState.FreedPastSelves.AddRecord(
+                            freedPastSashaId: mostRecent.Id,
+                            freedRun: _persistentState.RunCounter.TotalRuns,
+                            freedFloor: _currentDepth);
+                        _persistentState.MarkDirty();
+                    }
+
+                    string? catalogEntry = null;
+                    if (mostRecent != null && _state != null && _voiceLineRegistry != null)
+                        catalogEntry = CatalogEntryRenderer.RenderEntry(
+                            mostRecent, _persistentState.PastSashas, _voiceLineRegistry, _state.Rng);
+
+                    _memoEvaluator.EvaluateCatalogReferenced(
+                        _persistentState, _memoRegistry,
+                        _persistentState.RunCounter.TotalRuns,
+                        catalogEntry);
+                }
             }
             else if (evt is PossessionNearDeathWarningEvent)
             {
@@ -1838,6 +1871,9 @@ public partial class Main : Node
             _currentDepth = scenario.Depth;
             _state = _testScenarioBuilder.Build(scenario.Depth, rng);
 
+            if (scenario.AllItemsIdentified && _state.IdentificationRegistry != null)
+                _state.IdentificationRegistry.AlwaysIdentified = true;
+
             SetupPresentation(_state);
             GD.Print($"Ready (dungeon-mode test scenario: {resPath}) — depth {scenario.Depth}, " +
                      $"{_state.Monsters.Count} monsters, {_state.FloorItems.Count} floor items. Tap to play.");
@@ -1847,75 +1883,95 @@ public partial class Main : Node
             _state = GameStateFactory.FromScenario(
                 scenario, _baseSeed, _monsterFactory!, _itemFactory!, _consumableFactory!);
 
+            if (scenario.AllItemsIdentified && _state.IdentificationRegistry != null)
+                _state.IdentificationRegistry.AlwaysIdentified = true;
+
             SetupPresentation(_state);
             GD.Print($"Ready (test scenario: {resPath}) — {_state.Monsters.Count} monsters. Tap to play.");
+        }
+
+        // Auto-start bot mode if the scenario specifies a default persona.
+        if (!string.IsNullOrEmpty(scenario.DefaultBotPersona) && _botDriver != null)
+        {
+            _botDriver.SetPersona(scenario.DefaultBotPersona);
+            _botDriver.Enable();
+            GD.Print($"[TestMode] Bot auto-started with persona: {scenario.DefaultBotPersona}");
         }
     }
 
     /// <summary>
-    /// Scan res://config/testing/ for .yaml files and return a sorted list of
-    /// (display name, res:// path) pairs. Name is extracted from the `name:` field
-    /// in the YAML — falls back to the filename stem if the field is not found.
-    ///
-    /// Returns an empty list (never throws) if the directory is missing or empty,
-    /// so debug builds on platforms without the testing directory don't crash.
+    /// Scan res://config/testing/ and user://testing/ for .yaml files.
+    /// Returns a sorted list of (name, path, category) tuples.
+    /// Never throws — returns empty list on missing directory.
     /// </summary>
-    private static List<(string name, string path)> DiscoverTestScenarios()
+    private static List<(string name, string path, string category)> DiscoverTestScenarios()
     {
-        const string dir = "res://config/testing/";
-        var results = new List<(string, string)>();
+        var results = new List<(string, string, string)>();
+        ScanTestDirectory("res://config/testing/", results);
+        ScanTestDirectory("user://testing/", results);
+        results.Sort((a, b) =>
+        {
+            var cat = string.Compare(a.Item3, b.Item3, System.StringComparison.Ordinal);
+            return cat != 0 ? cat : string.Compare(a.Item1, b.Item1, System.StringComparison.Ordinal);
+        });
+        return results;
+    }
 
+    private static void ScanTestDirectory(string dir, List<(string, string, string)> results)
+    {
         using var access = DirAccess.Open(dir);
-        if (access == null) return results;
+        if (access == null) return;
 
         access.ListDirBegin();
         string fileName;
         while ((fileName = access.GetNext()) != "")
         {
             if (!fileName.EndsWith(".yaml", System.StringComparison.OrdinalIgnoreCase)) continue;
-
             var resPath = dir + fileName;
-            string displayName = ExtractScenarioName(resPath, fileName);
-            results.Add((displayName, resPath));
+            var (name, category) = ExtractScenarioMeta(resPath, fileName);
+            results.Add((name, resPath, category));
         }
         access.ListDirEnd();
-
-        results.Sort((a, b) => string.Compare(a.Item1, b.Item1, System.StringComparison.Ordinal));
-        return results;
     }
 
     /// <summary>
-    /// Extract the value of the `name:` field from a scenario YAML file.
-    /// Simple line-by-line parse — no full YAML deserialise needed here
-    /// since we only want the display name before loading the scenario.
-    /// Returns the filename stem as a fallback if the field is absent.
+    /// Extract `name:` and `category:` fields from a scenario YAML file without full deserialisation.
+    /// Falls back to filename stem / "Uncategorised" if fields are absent.
     /// </summary>
-    private static string ExtractScenarioName(string resPath, string fileName)
+    private static (string name, string category) ExtractScenarioMeta(string resPath, string fileName)
     {
+        string name     = System.IO.Path.GetFileNameWithoutExtension(fileName);
+        string category = "Uncategorised";
         try
         {
             using var file = Godot.FileAccess.Open(resPath, Godot.FileAccess.ModeFlags.Read);
-            if (file == null) return System.IO.Path.GetFileNameWithoutExtension(fileName);
+            if (file == null) return (name, category);
 
             var text = file.GetAsText();
             foreach (var line in text.Split('\n'))
             {
                 var trimmed = line.TrimStart();
-                if (!trimmed.StartsWith("name:", System.StringComparison.Ordinal)) continue;
-
-                // Handle both `name: "Quoted Value"` and `name: Unquoted Value`
-                var value = trimmed["name:".Length..].Trim();
-                if (value.Length >= 2 && value[0] == '"' && value[^1] == '"')
-                    value = value[1..^1];
-                if (value.Length > 0) return value;
+                if (trimmed.StartsWith("name:", System.StringComparison.Ordinal))
+                {
+                    var v = StripYamlInline(trimmed["name:".Length..]);
+                    if (v.Length > 0) name = v;
+                }
+                else if (trimmed.StartsWith("category:", System.StringComparison.Ordinal))
+                {
+                    var v = StripYamlInline(trimmed["category:".Length..]);
+                    if (v.Length > 0) category = v;
+                }
             }
         }
-        catch (System.Exception)
-        {
-            // Best-effort — fall through to filename fallback
-        }
+        catch (System.Exception) { /* Best-effort */ }
+        return (name, category);
+    }
 
-        return System.IO.Path.GetFileNameWithoutExtension(fileName);
+    private static string StripYamlInline(string raw)
+    {
+        var v = raw.Trim();
+        if (v.Length >= 2 && v[0] == '"' && v[^1] == '"') v = v[1..^1];
+        return v;
     }
 
     /// <summary>

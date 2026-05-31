@@ -90,6 +90,25 @@ polite.cause_trap:
 
       With courtesies,
       The Under-Warden
+    - |
+      Mr. of Reven,
+
+      **Summary:** Cause of termination, Floor {floor}: {cause_of_death}. Mechanical disposition re-armed.
+
+      This office observes a recurrence of the previously documented pattern. The relevant floor maps remain available through the established channels.
+
+      The mechanical disposition has been re-armed.
+
+      With regards,
+      The Under-Warden
+    - |
+      Mr. of Reven,
+
+      **Summary:** {cause_of_death}, Floor {floor}. Re-armed.
+
+      No comment.
+
+      The Under-Warden
 
 polite.cause_acid:
   register: direct
@@ -109,6 +128,25 @@ polite.cause_acid:
       The catalog has been updated.
 
       With regards,
+      The Under-Warden
+    - |
+      Mr. of Reven,
+
+      **Summary:** Cause of termination, Floor {floor}: {cause_of_death}. Substance variation continues to be noted.
+
+      This office records a second incident of contact with a corrosive substance during descent. The variation in pigmentation across the lower regions has been discussed in correspondence dated the previous descent.
+
+      Replenishment continues.
+
+      With regards,
+      The Under-Warden
+    - |
+      Mr. of Reven,
+
+      **Summary:** {cause_of_death}, Floor {floor}.
+
+      The substance is, in this institution, frequently variable in color. This office has noted that point in prior correspondence.
+
       The Under-Warden
 
 polite.hall_warden_possession:
@@ -178,6 +216,102 @@ formal_complaint.hall_warden_possession:
       The complaint does not, at present, require action from your end. It is filed.
 
       I trust this clarifies the matter.
+
+      Regards,
+      The Under-Warden
+
+# ── Procedural Notice (additional) ───────────────────────────────────────────
+
+procedural_notice.death_repeat:
+  register: direct
+  subject: "Recurring attrition: Unit #{run_number}, Floor {floor}"
+  body:
+    - |
+      **Summary:** Third recorded termination of the same visiting party. Pattern logged. Standard review applies.
+
+      The previous two terminations in this descent series produced internal records under Regulation 44-C (Custodial Attrition, Routine). The third instance, as currently filed, exceeds the threshold at which routine records remain routine. This office is therefore filing the present termination under Regulation 44-D (Custodial Attrition, Patterned), which requires this notice be issued to the affected visiting party.
+
+      Cause of present loss: {cause_of_death}, Floor {floor}.
+
+      No remedial action is contemplated. The pattern is noted. The catalog has been updated to reflect three filed entries for this visiting party. Visiting parties whose entries accumulate at this rate may expect a corresponding increase in correspondence from this office.
+
+      Regards,
+      The Under-Warden
+
+procedural_notice.cause_possession_neglect:
+  register: direct
+  subject: "Termination by unattended vessel, Floor {floor}"
+  body:
+    - |
+      **Summary:** Termination filed. Cause: vacation of the home vessel during an active inhabitation. The practice is, per Regulation 17-B, neither sanctioned nor recommended.
+
+      The incident log records that on Floor {floor}, the visiting party's home vessel sustained terminal damage while the party itself was occupying an unrelated host. This office wishes to note, for the record, that the relevant regulation (17-B, Unauthorized Translocation, Bilateral Vulnerability) has been in standing since the institution's founding. The regulation's text observes, with what was at the time considered admirable foresight, that practitioners of bilateral occupancy bear administrative responsibility for both vessels concurrently.
+
+      The home vessel has been logged as terminated. The host vessel, this office is informed, has resumed its prior duties without incident.
+
+      This office offers no commentary on the practice itself. The catalog has been updated.
+
+      Regards,
+      The Under-Warden
+
+procedural_notice.audit_warning:
+  register: direct
+  subject: "Audit threshold notification: Standing review status pending"
+  body:
+    - |
+      **Summary:** The audit counter for this visiting party has crossed the threshold for procedural review. The matter is now in standing review.
+
+      Per Regulation 22-A (Cumulative Incident Threshold), this office is required to notify visiting parties when their accumulated administrative footprint exceeds the standard review boundary. The boundary is calculated according to the published schedule, which is, this office notes, available upon request, though it is more commonly observed in retrospect.
+
+      The visiting party identified in the To: line has now produced an administrative footprint of sufficient cumulative size to warrant standing review. The relevant categories include, but are not limited to: filed terminations, unauthorized translocations, items of inventory removed from documented locations, and incidents of practice not enumerated in the visiting parties' descent advisories.
+
+      No remedial action is required at this time. Standing review is a status. It is not, in itself, an action.
+
+      The matter will be reviewed at the next scheduled audit session.
+
+      Regards,
+      The Under-Warden
+
+procedural_notice.run_clean:
+  register: direct
+  subject: "Routine correspondence: Floor {floor_best}, consecutive completions"
+  body:
+    - |
+      **Summary:** No incidents of administrative note this descent. This office is, in the absence of other irregularities, obliged to note that the visiting party's presence itself remains the irregularity.
+
+      The descent log for this visit records no terminations, no unauthorized translocations, no items of inventory removed from documented locations, and no incidents of practice not enumerated in the descent advisories. This office is required, per Regulation 4-B (Routine Correspondence Schedule), to acknowledge the visiting party's continued descent at intervals consistent with established procedure.
+
+      Acknowledgment is hereby tendered.
+
+      This office observes, without prejudice, that the visiting party has now completed two consecutive descents without incident. The frequency of these acknowledgments will, per regulation, increase with the duration of the visiting party's continued attendance. Visiting parties whose attendance becomes extended may, on occasion, find the volume of routine correspondence notable.
+
+      The institution's records reflect that no visiting party of the Revenese practice has previously sustained this many consecutive incident-free descents under similar review status. The observation is offered for the record only.
+
+      Regards,
+      The Under-Warden
+
+# ── Formal Complaint (additional) ────────────────────────────────────────────
+
+formal_complaint.catalog_referenced:
+  register: direct
+  subject: "Archival irregularity: familiar-authored commentary, past-self sub-archive"
+  body:
+    - |
+      **Summary:** A review of the past-self sub-archive has identified commentary entries exceeding the scope of factual documentation. The familiar bound to the visiting party is reminded of archival standards. Corrective guidance follows.
+
+      In the course of routine maintenance of the attrition records, this office has reviewed the catalog entries associated with the visiting party's prior terminations. The entries are, in the main, factually adequate: floor, cause, disposition of recovered inventory. This office records its appreciation for the inclusion of these particulars.
+
+      A number of entries, however, contain commentary that this office must, with respect, flag as irregular. The most recent such entry reads, in the familiar's own hand:
+
+      > {catalog_entry}
+
+      This office notes the following. The attrition sub-archive exists to record the fact of termination and the disposition of associated assets. It does not exist to record the familiar's assessment of the terminated party's character, disposition, manner, or the familiar's own sentiment regarding the loss. Entries of this nature complicate retrieval, exceed the allotted field length, and introduce subjective material into what is, by design, an objective record.
+
+      The familiar is a registered instrument of conscience and is, this office understands, operating within its binding. This office casts no aspersion on the instrument's function. It observes only that the instrument's commentary, however sincerely entered, is not admissible as archival fact, and requests that future entries be confined to the documented particulars.
+
+      The entry quoted above has been retained in the record, annotated as familiar-authored, and flagged for the familiar's reference. No correction to the underlying termination record is required.
+
+      This office trusts the familiar will adjust its practice accordingly.
 
       Regards,
       The Under-Warden

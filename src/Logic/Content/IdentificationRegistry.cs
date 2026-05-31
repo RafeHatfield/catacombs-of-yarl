@@ -18,8 +18,14 @@ public sealed class IdentificationRegistry
     private readonly HashSet<string> _identified = new();
     private readonly HashSet<string> _decidedUnidentified = new();
 
+    /// <summary>
+    /// When true, all items are treated as identified regardless of what's in the set.
+    /// Used by testing-mode scenarios with all_items_identified: true.
+    /// </summary>
+    public bool AlwaysIdentified { get; set; } = false;
+
     /// <summary>Returns true if the given item type is identified this run.</summary>
-    public bool IsIdentified(string typeId) => _identified.Contains(typeId);
+    public bool IsIdentified(string typeId) => AlwaysIdentified || _identified.Contains(typeId);
 
     /// <summary>
     /// Returns true if a pre-identification decision has already been made for this type —

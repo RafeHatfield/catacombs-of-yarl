@@ -1,5 +1,7 @@
 scenario_id: test_portal_wand
 name: "Portal Wand — Traversal Mechanics"
+category: Spells & Wands
+all_items_identified: true
 description: >
   Tests the Wand of Portals traversal system.
   Player starts with the wand_of_portals (infinite charges) in a 20x20 arena.

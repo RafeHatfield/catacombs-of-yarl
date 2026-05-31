@@ -1,5 +1,7 @@
 scenario_id: test_wands
 name: "Wand Mechanics"
+category: Spells & Wands
+all_items_identified: true
 description: >
   Tests wand charge consumption and recharge on scroll pickup.
   Player starts with a wand_of_lightning (3 charges) and a wand_of_fireball (2 charges),

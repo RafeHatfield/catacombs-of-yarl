@@ -27,6 +27,7 @@ public sealed partial class MenuButtonBar : Control
     private static readonly Color PossessBgColor      = new(0.30f, 0.10f, 0.40f, 0.9f); // purple
     private static readonly Color ExitPossessBgColor  = new(0.50f, 0.10f, 0.10f, 0.9f); // dark red
     private static readonly Color CancelBgColor       = new(0.30f, 0.30f, 0.30f, 0.9f); // grey
+    private static readonly Color MenuBgColor         = new(0.18f, 0.18f, 0.22f, 0.9f); // dark neutral
 
     private const int HorizontalMargin = 8;
     private const int ButtonGap        = 8;
@@ -50,6 +51,7 @@ public sealed partial class MenuButtonBar : Control
     public event Action? PossessRequested;
     public event Action? ExitPossessionRequested;
     public event Action? CancelPossessionTargetingRequested;
+    public event Action? MenuRequested;
 
     public override void _Ready()
     {
@@ -121,8 +123,22 @@ public sealed partial class MenuButtonBar : Control
         stack.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         margin.AddChild(stack);
 
-        // ── Idle mode: [Gear] [Explore] [Possess] ─────────────────────────────
+        // ── Idle mode: [Menu] [Gear] [Explore] [Possess] ──────────────────────
         _idleButtons = MakeHBox(stack);
+
+        // Menu button: fixed narrow width so it doesn't crowd the gameplay buttons.
+        var menuButton = new TouchButton
+        {
+            Text            = "Menu",
+            FontSize        = FontSize,
+            BackgroundColor = MenuBgColor,
+            CornerRadius    = 6,
+        };
+        menuButton.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        menuButton.SizeFlagsVertical   = SizeFlags.ExpandFill;
+        menuButton.CustomMinimumSize   = new Vector2(72, MinButtonHeight);
+        menuButton.Pressed            += () => MenuRequested?.Invoke();
+        _idleButtons.AddChild(menuButton);
 
         _gearButton = MakeButton("Gear", GearBgColor, () => GearRequested?.Invoke());
         _idleButtons.AddChild(_gearButton);
