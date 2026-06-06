@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Persistence;
 using CatacombsOfYarl.Logic.Persistence.Namespaces;
 
@@ -8,9 +9,11 @@ namespace CatacombsOfYarl.Logic.Endgame;
 /// and a final ending. This is the convergence point of plan_end_game: possession, memo tone,
 /// faction reputation, deaths/past-Sashas, and the excess metric all resolve here.
 ///
-/// Inputs are existing persistence fields plus the excess metric (decision 2). Thresholds are
-/// STRAWMAN per decisions 5/6 — the structure is final; the numbers move in the harness balance
-/// pass (TASK-011). All scoring is pure and deterministic (no RNG, no time).
+/// Inputs: cross-run persistence fields (possession count, memo tone, orc rep, deaths) for the
+/// axes the institution remembers across the whole save, plus THIS DESCENT's unprovoked-kill tally
+/// for the excess axes (decision 2 / per-run, 2026-06-06). Thresholds are STRAWMAN per decisions
+/// 5/6 — the structure is final; the numbers move in the harness balance pass (TASK-011). All
+/// scoring is pure and deterministic (no RNG, no time).
 /// </summary>
 public static class AuditScorer
 {
@@ -66,6 +69,8 @@ public static class AuditScorer
     /// <summary>
     /// Guardian 2 — Oathkeeper. Orc reputation is the coarse lever; unprovoked orc kills sharpen
     /// the middle. Allied rep → ally; Hostile rep → savage; Neutral splits on whether blood was spilled.
+    /// <paramref name="unprovokedOrcKills"/> is THIS DESCENT's count (per-run), not lifetime — the
+    /// audit weighs who Sasha was on the run that reached the bottom (see <see cref="Score"/>).
     /// </summary>
     public static GuardianTier ScoreOathkeeper(string orcRepState, int unprovokedOrcKills)
     {
@@ -93,6 +98,8 @@ public static class AuditScorer
     /// <summary>
     /// Guardian 4 — Auditor's Own. The excess metric: unprovoked cross-faction kills normalized by
     /// floors reached (rate, not raw count — descending deeper does not by itself count as cruelty).
+    /// Both inputs are THIS DESCENT's: per-run kills over this run's floors. A careful descent reads
+    /// clean no matter how many prior runs were played — the metric measures cruelty, not playtime.
     /// </summary>
     public static GuardianTier ScoreAuditor(int totalUnprovokedKills, int floorsReached)
     {
@@ -104,19 +111,34 @@ public static class AuditScorer
     }
 
     /// <summary>
-    /// Score the full audit from persistence + run context. <paramref name="floorsReached"/> is
-    /// normally <see cref="WeighingConstants.FinalFloorDepth"/> at the Weighing.
+    /// Score the full audit from persistence + this run's aggression tally.
+    ///
+    /// The excess axes (Auditor's Own, all factions; and the Oathkeeper's orc-subset fine scaling)
+    /// read THIS DESCENT's unprovoked kills from <paramref name="runTally"/> — the run-scoped tally
+    /// live on the player at the Weighing, before its run-end flush into the lifetime cumulative.
+    /// This is deliberate: the audit weighs who Sasha was on the descent that reached the bottom, not
+    /// his career. A clean descent reads clean regardless of how many prior runs accrued kills.
+    ///
+    /// The possession (Warden) and death (Assembly) axes remain cross-run by design — the institution
+    /// remembers every possession and every death across the whole save.
+    ///
+    /// <paramref name="floorsReached"/> is this run's floors descended (≈ <see
+    /// cref="WeighingConstants.FinalFloorDepth"/> at the Weighing). <paramref name="runTally"/> may be
+    /// null (treated as zero kills).
     /// </summary>
-    public static AuditResult Score(PersistentRunState persistent, int floorsReached)
+    public static AuditResult Score(PersistentRunState persistent, RunAggressionTally? runTally, int floorsReached)
     {
         UnderWardenData uw = persistent.UnderWarden;
         string orcRep = persistent.Factions.GetState(FactionsData.OrcFactionId);
 
+        int orcUnprovokedThisRun = runTally?.UnprovokedKillsFor(FactionsData.OrcFactionId) ?? 0;
+        int totalUnprovokedThisRun = runTally?.Total() ?? 0;
+
         return new AuditResult(
             WardenOfWardens: ScoreWarden(uw.HallWardenPossessionsTotal, uw.LastMemoTone),
-            Oathkeeper: ScoreOathkeeper(orcRep, uw.UnprovokedKillsFor(FactionsData.OrcFactionId)),
+            Oathkeeper: ScoreOathkeeper(orcRep, orcUnprovokedThisRun),
             AssemblyOfTheLost: ScoreAssembly(uw.CumulativeDeaths),
-            AuditorsOwn: ScoreAuditor(uw.TotalUnprovokedKills(), floorsReached));
+            AuditorsOwn: ScoreAuditor(totalUnprovokedThisRun, floorsReached));
     }
 
     /// <summary>

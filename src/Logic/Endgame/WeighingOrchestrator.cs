@@ -48,6 +48,14 @@ public sealed class WeighingState
     public List<GuardianId> AlliedGuardianTypes { get; } = new();
     public int? DebtId { get; set; }
     public bool AlliesFellBack { get; set; }
+
+    /// <summary>
+    /// Set when the Warden-of-Wardens rises Savage; consumed when the next allied Guardian rises,
+    /// turning it against Sasha (decision C, 2026-06-06). The Warden rises first and is defeated
+    /// before any other Guardian, so its "now wear this" curse must linger past its own death to
+    /// land on a later ally. Fizzles (stays true, no effect) if no later Guardian allies.
+    /// </summary>
+    public bool WardenCursePending { get; set; }
 }
 
 // ── Events (content/presentation hooks; lines are authored separately) ──────────
@@ -124,17 +132,47 @@ public static class WeighingOrchestrator
         RiseUntilBlockedOrDone(state, ws, events);
     }
 
-    /// <summary>Begin the Weighing, scoring the audit from the run's persistence (production path).</summary>
+    /// <summary>The audit used headlessly when there is no persistence and no override — a neutral
+    /// (full-strength, no-ally) baseline wall. The harness sets <see cref="GameState.WeighingAuditOverride"/>
+    /// to test other tiers.</summary>
+    public static readonly AuditScorer.AuditResult DefaultHeadlessAudit = new(
+        GuardianTier.Neutral, GuardianTier.Neutral, GuardianTier.Neutral, GuardianTier.Neutral);
+
+    /// <summary>
+    /// Begin the Weighing, scoring the audit from the run's persistence (production path).
+    ///
+    /// Headless-safe: when there is no persistence (the harness / balance pass), it falls back to
+    /// <see cref="GameState.WeighingAuditOverride"/> or <see cref="DefaultHeadlessAudit"/> instead of
+    /// bailing — bailing would soft-lock the arena (no Guardians, no stair, no resolution). The audit
+    /// override on <see cref="GameState"/> takes precedence even when persistence exists, so a save's
+    /// real tiers can be overridden for balance runs.
+    /// </summary>
     public static void BeginFromPersistence(GameState state, List<TurnEvent> events)
     {
         var persistent = state.PersistentState;
-        if (persistent == null) return;
-        var audit = AuditScorer.Score(persistent, WeighingConstants.FinalFloorDepth);
-        Begin(state, audit,
-            swapAvailable: persistent.Hael.BranchOfPassageUnlocked,
-            orcRepState: persistent.Factions.GetState(Persistence.Namespaces.FactionsData.OrcFactionId),
-            cumulativeDeaths: persistent.UnderWarden.CumulativeDeaths,
-            events);
+        AuditScorer.AuditResult audit;
+        bool swapAvailable;
+        string orcRepState;
+        int cumulativeDeaths;
+
+        if (persistent != null)
+        {
+            audit = state.WeighingAuditOverride
+                ?? AuditScorer.Score(persistent, state.Player.Get<RunAggressionTally>(), state.CurrentDepth);
+            swapAvailable = persistent.Hael.BranchOfPassageUnlocked;
+            orcRepState = persistent.Factions.GetState(Persistence.Namespaces.FactionsData.OrcFactionId);
+            cumulativeDeaths = persistent.UnderWarden.CumulativeDeaths;
+        }
+        else
+        {
+            // No persistence (harness / balance pass): use the injected override or the neutral baseline.
+            audit = state.WeighingAuditOverride ?? DefaultHeadlessAudit;
+            swapAvailable = false;
+            orcRepState = "neutral";
+            cumulativeDeaths = 0;
+        }
+
+        Begin(state, audit, swapAvailable, orcRepState, cumulativeDeaths, events);
     }
 
     /// <summary>
@@ -218,6 +256,12 @@ public static class WeighingOrchestrator
             var tier = ws.Audit.TierFor(id);
             var pos = state.WeighingArena?.FirstAnchor(anchor) ?? (state.Player.X, state.Player.Y);
 
+            // The Savage Warden's "now wear this" — arm the curse. It lands on the next ally to rise
+            // (decision C): the Warden is first and dies before any other Guardian, so the curse must
+            // outlive it. Possession-themed malice corrupting Sasha's one ally — on-theme.
+            if (id == GuardianId.WardenOfWardens && tier == GuardianTier.Savage)
+                ws.WardenCursePending = true;
+
             // Emit the beat dialogue before spawning so narration precedes the rise.
             EmitDialogue(state, events,
                 $"{GuardianTypeId(id)}.{tier.ToString().ToLowerInvariant()}",
@@ -228,8 +272,22 @@ public static class WeighingOrchestrator
             if (tier == GuardianTier.Allied)
             {
                 // An ally joins Sasha's side and does not block the gauntlet — rise the next at once.
-                ws.AlliedGuardianIds.Add(guardian.Id);
-                ws.AlliedGuardianTypes.Add(id);
+                ws.AlliedGuardianIds.Add(guardian.Id); // tracked for cleanup at the allies-fall-back beat
+
+                if (ws.WardenCursePending)
+                {
+                    // The Warden's lingering curse turns this ally hostile (HostileToAll) — it now
+                    // fights Sasha and the field. Still player_ally faction, so Hollowmark's Dispel
+                    // reverts it. NOT added to AlliedGuardianTypes: a turned Guardian earns no loyal
+                    // fall-back line. Consumed once — only the first ally after the Savage Warden turns.
+                    ws.WardenCursePending = false;
+                    GuardianAbilities.TurnAllyHostile(guardian, events);
+                }
+                else
+                {
+                    ws.AlliedGuardianTypes.Add(id);
+                }
+
                 ws.CurrentGuardianIndex++;
                 continue;
             }
@@ -297,6 +355,17 @@ public static class WeighingOrchestrator
 
         bool heavy = AuditScorer.IsHeavyRecord(ws.Audit, ws.OrcRepState, ws.CumulativeDeaths);
 
+        // Headless gate policy (harness / balance pass): drive the choice without UI. The gate event
+        // still fires for any listener, then the policy applies the decision immediately. This also
+        // bypasses the clean+no-swap auto-resolve, so the harness can force the Debt fight on any record.
+        if (state.WeighingHeadlessGatePolicy is WeighingGateDecision decision)
+        {
+            ws.Phase = WeighingPhase.DebtChoiceGate;
+            events.Add(new DebtChoiceGateEvent { SwapAvailable = ws.SwapAvailable, IsHeavyRecord = heavy });
+            ApplyGateDecision(state, ws, decision, events);
+            return;
+        }
+
         // Swap always shows the gate — it's a choice, not an outcome.
         // Clean + no swap = the claim is satisfied; auto-resolve with no decision to make.
         if (!ws.SwapAvailable && !heavy)
@@ -307,6 +376,29 @@ public static class WeighingOrchestrator
 
         ws.Phase = WeighingPhase.DebtChoiceGate;
         events.Add(new DebtChoiceGateEvent { SwapAvailable = ws.SwapAvailable, IsHeavyRecord = heavy });
+    }
+
+    /// <summary>
+    /// Apply a headless gate decision (harness path). Reuses the same Choose* entry points the UI
+    /// calls, so production and headless share one code path. A Swap requested without availability
+    /// falls back to Force — a headless run must resolve, not hang; a well-formed policy never hits it.
+    /// </summary>
+    private static void ApplyGateDecision(GameState state, WeighingState ws,
+        WeighingGateDecision decision, List<TurnEvent> events)
+    {
+        switch (decision)
+        {
+            case WeighingGateDecision.Swap when ws.SwapAvailable:
+                ChooseSwap(state, events);
+                break;
+            case WeighingGateDecision.Refuse:
+                Refuse(state, events);
+                break;
+            case WeighingGateDecision.Force:
+            case WeighingGateDecision.Swap: // unavailable — safe non-hang fallback
+                ChooseForce(state, events);
+                break;
+        }
     }
 
     /// <summary>Spawns the Debt as a live combatant (called by ChooseForce).</summary>

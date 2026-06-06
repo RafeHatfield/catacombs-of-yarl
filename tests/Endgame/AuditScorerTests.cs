@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Endgame;
 using CatacombsOfYarl.Logic.Persistence;
 using CatacombsOfYarl.Logic.Persistence.Namespaces;
@@ -195,15 +196,18 @@ public class AuditScorerTests
         var state = PersistentRunState.LoadFromDisk(new FakePersistencePathProvider(
             Path.Combine(Path.GetTempPath(), "yarl_audit_" + System.Guid.NewGuid())));
 
-        // A heavy record across the board.
+        // A heavy record across the board. Possession + deaths are cross-run (persistence); the
+        // excess axes are THIS DESCENT's, carried on the run tally.
         state.UnderWarden.HallWardenPossessionsTotal = 7;          // Warden → Savage
         state.UnderWarden.LastMemoTone = "polite";
-        state.Factions.Factions["orc"].State = "hostile";          // Oathkeeper → Savage
+        state.Factions.Factions["orc"].State = "hostile";          // Oathkeeper → Savage (rep)
         state.UnderWarden.CumulativeDeaths = 12;                   // Assembly → Savage
-        state.UnderWarden.AddUnprovokedKill("orc", 8);             // contributes to excess + orc subset
-        state.UnderWarden.AddUnprovokedKill("undead", 8);          // 16 total / 25 floors = 0.64 → Savage
 
-        var audit = AuditScorer.Score(state, WeighingConstants.FinalFloorDepth);
+        var tally = new RunAggressionTally();
+        tally.UnprovokedKillsByFaction["orc"] = 8;                 // contributes to excess + orc subset
+        tally.UnprovokedKillsByFaction["undead"] = 8;             // 16 total / 25 floors = 0.64 → Savage
+
+        var audit = AuditScorer.Score(state, tally, WeighingConstants.FinalFloorDepth);
 
         Assert.That(audit.WardenOfWardens, Is.EqualTo(GuardianTier.Savage));
         Assert.That(audit.Oathkeeper, Is.EqualTo(GuardianTier.Savage));
@@ -218,15 +222,39 @@ public class AuditScorerTests
         var state = PersistentRunState.LoadFromDisk(new FakePersistencePathProvider(
             Path.Combine(Path.GetTempPath(), "yarl_audit_" + System.Guid.NewGuid())));
 
-        // A fresh save: no possessions, neutral orc rep, no deaths, no excess.
+        // A fresh save with no kills this run (null tally): no possessions, neutral orc rep, no deaths.
         // Neutral orc rep with zero unprovoked kills → Oathkeeper Diminished (not Allied).
-        var audit = AuditScorer.Score(state, WeighingConstants.FinalFloorDepth);
+        var audit = AuditScorer.Score(state, runTally: null, WeighingConstants.FinalFloorDepth);
 
         Assert.That(audit.WardenOfWardens, Is.EqualTo(GuardianTier.Allied));
         Assert.That(audit.Oathkeeper, Is.EqualTo(GuardianTier.Diminished));
         Assert.That(audit.AssemblyOfTheLost, Is.EqualTo(GuardianTier.Allied));
         Assert.That(audit.AuditorsOwn, Is.EqualTo(GuardianTier.Allied));
         Assert.That(audit.AnySavage, Is.False);
+    }
+
+    [Test]
+    public void Score_Excess_ReadsThisDescent_NotLifetimeCumulative()
+    {
+        // The decision: the Auditor's Own and the Oathkeeper's orc-subset fine scaling judge THIS
+        // descent, not a career. A player with a heavy lifetime cumulative who descended CLEANLY this
+        // run must read clean — otherwise the metric measures playtime, the flaw we rejected.
+        var state = PersistentRunState.LoadFromDisk(new FakePersistencePathProvider(
+            Path.Combine(Path.GetTempPath(), "yarl_audit_" + System.Guid.NewGuid())));
+
+        // A butcher's career in the lifetime cumulative...
+        state.UnderWarden.AddUnprovokedKill("orc", 100);
+        state.UnderWarden.AddUnprovokedKill("undead", 100);
+
+        // ...but this descent was clean (empty run tally).
+        var cleanRun = new RunAggressionTally();
+
+        var audit = AuditScorer.Score(state, cleanRun, WeighingConstants.FinalFloorDepth);
+
+        Assert.That(audit.AuditorsOwn, Is.EqualTo(GuardianTier.Allied),
+            "a clean descent reads clean on the excess axis regardless of lifetime kills");
+        Assert.That(audit.Oathkeeper, Is.EqualTo(GuardianTier.Diminished),
+            "neutral rep + no orc blood THIS run → Diminished, not sharpened by the lifetime cumulative");
     }
 
     [Test]

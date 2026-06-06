@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using CatacombsOfYarl.Logic.AI;
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Endgame;
@@ -225,11 +226,148 @@ public class WeighingOrchestratorTests
         TurnController.ProcessTurn(s, PlayerAction.Wait);
 
         Assert.That(s.Weighing, Is.Not.Null, "the turn loop begins the Weighing on the first arena turn");
-        Assert.That(s.Weighing!.Phase, Is.AnyOf(
-            WeighingPhase.Guardians, WeighingPhase.DebtChoiceGate,
-            WeighingPhase.DebtCombat, WeighingPhase.Resolved));
-        // A Guardian should be on the field (fresh save = clean record → could also have auto-resolved).
-        Assert.That(s.Monsters.Count(m => m.Get<Fighter>()?.IsAlive == true), Is.GreaterThanOrEqualTo(0));
+        // A fresh save scores Warden Allied (0 possessions) + Oathkeeper Diminished (neutral rep, no
+        // orc blood this run) → the Warden joins as an ally and the Oathkeeper rises as the blocker.
+        Assert.That(s.Weighing!.Phase, Is.EqualTo(WeighingPhase.Guardians));
+        Assert.That(s.Weighing.ActiveGuardianId, Is.Not.Null, "a hostile Guardian blocks");
+        var blocker = s.Monsters.First(m => m.Id == s.Weighing.ActiveGuardianId);
+        Assert.That(blocker.Get<Fighter>()!.IsAlive, Is.True, "the blocking Guardian is live on the field");
+        Assert.That(blocker.Get<SpeciesTag>()!.TypeId, Is.EqualTo("guardian_oathkeeper"));
+    }
+
+    // ── Headless enablement: null persistence + gate policy + audit override (TASK-009) ─
+
+    [Test]
+    public void ProcessTurn_NullPersistence_BeginsTheWeighing_NoSoftLock()
+    {
+        // Regression for the soft-lock: before the fix, BeginFromPersistence bailed on null
+        // persistence → the gauntlet never began, and floor 25 has no stair to leave by. The harness
+        // (which passes no persistence) would hang forever. Now it falls back to the default audit.
+        var s = ArenaState(persistent: null);
+        Assert.That(s.Weighing, Is.Null, "not yet begun");
+
+        TurnController.ProcessTurn(s, PlayerAction.Wait);
+
+        Assert.That(s.Weighing, Is.Not.Null, "the Weighing begins even without persistence");
+        // Default headless audit is all-Neutral (hostile) → the Warden blocks first.
+        Assert.That(s.Weighing!.Phase, Is.EqualTo(WeighingPhase.Guardians));
+        Assert.That(s.Weighing.ActiveGuardianId, Is.Not.Null, "a Guardian is up — no soft-lock");
+    }
+
+    [Test]
+    public void HeadlessGatePolicy_Force_FightsTheDebt_OnANeutralRecord()
+    {
+        // The default neutral audit is not heavy and offers no swap, so the Debt would auto-resolve
+        // to CleanAudit. A Force policy makes the harness drive the Debt fight instead.
+        var s = ArenaState(persistent: null);
+        s.WeighingHeadlessGatePolicy = WeighingGateDecision.Force;
+        WeighingOrchestrator.BeginFromPersistence(s, new List<TurnEvent>());
+
+        while (s.Weighing!.Phase == WeighingPhase.Guardians) KillActiveGuardianAndAdvance(s);
+
+        Assert.That(s.Weighing.Phase, Is.EqualTo(WeighingPhase.DebtCombat),
+            "Force policy bypassed the clean auto-resolve and spawned the Debt");
+        Assert.That(s.Weighing.DebtId, Is.Not.Null);
+
+        s.Monsters.First(m => m.Id == s.Weighing.DebtId).Require<Fighter>().TakeDamage(99999);
+        WeighingOrchestrator.Advance(s, new List<TurnEvent>());
+
+        Assert.That(s.Weighing.Phase, Is.EqualTo(WeighingPhase.Resolved));
+        Assert.That(s.Ending, Is.EqualTo(EndingType.CleanAudit), "neutral record + survived → CleanAudit");
+        Assert.That(s.IsDungeonVictory, Is.True);
+    }
+
+    [Test]
+    public void HeadlessGatePolicy_Refuse_ResolvesToLossRefused()
+    {
+        var s = ArenaState(persistent: null);
+        s.WeighingHeadlessGatePolicy = WeighingGateDecision.Refuse;
+        WeighingOrchestrator.BeginFromPersistence(s, new List<TurnEvent>());
+
+        while (s.Weighing!.Phase == WeighingPhase.Guardians) KillActiveGuardianAndAdvance(s);
+
+        Assert.That(s.Weighing.Phase, Is.EqualTo(WeighingPhase.Resolved));
+        Assert.That(s.Ending, Is.EqualTo(EndingType.LossRefused));
+        Assert.That(s.PlayerFighter.IsAlive, Is.True, "refusal is a chosen loss, not a death");
+    }
+
+    // ── Savage Warden lingering curse (decision C) ────────────────────────────
+
+    [Test]
+    public void SavageWarden_CursesTheNextAllyToRise()
+    {
+        // Warden Savage lays the curse; it dies first, but the curse lands on the next ally to rise.
+        var s = ArenaState();
+        var audit = new AuditScorer.AuditResult(
+            GuardianTier.Savage,   // Warden — lays the curse, blocks first
+            GuardianTier.Allied,   // Oathkeeper — the next ally to rise → gets turned
+            GuardianTier.Savage,
+            GuardianTier.Savage);
+        WeighingOrchestrator.Begin(s, audit, swapAvailable: false, "neutral", 0, new List<TurnEvent>());
+
+        var warden = s.Monsters.First(m => m.Id == s.Weighing!.ActiveGuardianId);
+        Assert.That(warden.Get<SpeciesTag>()!.TypeId, Is.EqualTo("guardian_warden_of_wardens"));
+        Assert.That(s.Weighing!.WardenCursePending, Is.True, "the savage Warden armed the curse");
+
+        // Kill the Warden → the Oathkeeper rises Allied, and the lingering curse turns it.
+        KillActiveGuardianAndAdvance(s);
+
+        var oathkeeper = s.Monsters.First(m => m.Get<SpeciesTag>()!.TypeId == "guardian_oathkeeper");
+        Assert.That(oathkeeper.Get<AiComponent>()!.Faction, Is.EqualTo(FactionRegistry.PlayerAllyFaction),
+            "still player_ally faction so Hollowmark's Dispel can revert it");
+        Assert.That(oathkeeper.Has<EnragedEffect>(), Is.True, "the curse enraged the risen ally");
+        Assert.That(s.Weighing.WardenCursePending, Is.False, "curse consumed once");
+        // A turned Guardian earns no loyal fall-back line.
+        Assert.That(s.Weighing.AlliedGuardianTypes, Does.Not.Contain(GuardianId.Oathkeeper));
+    }
+
+    [Test]
+    public void SavageWarden_OnlyFirstAllyIsTurned()
+    {
+        // Warden Savage; Oathkeeper + Auditor both Allied. Only the FIRST ally to rise is cursed.
+        var s = ArenaState();
+        var audit = new AuditScorer.AuditResult(
+            GuardianTier.Savage, GuardianTier.Allied, GuardianTier.Allied, GuardianTier.Allied);
+        WeighingOrchestrator.Begin(s, audit, swapAvailable: false, "neutral", 0, new List<TurnEvent>());
+
+        KillActiveGuardianAndAdvance(s); // kill the Warden → remaining allies rise, gauntlet completes
+
+        // The remaining allies are all loyal and fall back once the gauntlet completes, so the
+        // invariant under test is the consumed-once flag and the fall-back roster: exactly one turned.
+        Assert.That(s.Weighing!.WardenCursePending, Is.False, "curse consumed by the first ally");
+        Assert.That(s.Weighing.AlliedGuardianTypes, Does.Not.Contain(GuardianId.Oathkeeper),
+            "first ally (Oathkeeper) was turned — no loyal fall-back line");
+        Assert.That(s.Weighing.AlliedGuardianTypes, Does.Contain(GuardianId.AuditorsOwn),
+            "second ally (Auditor) stood loyally — keeps its fall-back line");
+    }
+
+    [Test]
+    public void SavageWarden_NoAllyToTurn_CurseFizzles_NoCrash()
+    {
+        // All-Savage: the curse arms but never finds an ally. It must fizzle harmlessly, not hang.
+        var s = ArenaState();
+        WeighingOrchestrator.Begin(s, AllSavage(), swapAvailable: false, "hostile", 12, new List<TurnEvent>());
+        Assert.That(s.Weighing!.WardenCursePending, Is.True);
+
+        while (s.Weighing!.Phase == WeighingPhase.Guardians) KillActiveGuardianAndAdvance(s);
+
+        Assert.That(s.Weighing.WardenCursePending, Is.True, "fizzled — no ally ever rose to turn");
+        Assert.That(s.Weighing.Phase, Is.EqualTo(WeighingPhase.DebtChoiceGate), "gauntlet still completed");
+    }
+
+    [Test]
+    public void WeighingAuditOverride_DrivesTiers_WithoutPersistence()
+    {
+        // Override to all-Allied: every Guardian joins, allies fall back, clean record auto-resolves
+        // to CleanAudit with no blocker. (Proves the override is honored — the default neutral audit
+        // would instead block on the Warden.)
+        var s = ArenaState(persistent: null);
+        s.WeighingAuditOverride = AllAllied();
+        WeighingOrchestrator.BeginFromPersistence(s, new List<TurnEvent>());
+
+        Assert.That(s.Weighing!.Phase, Is.EqualTo(WeighingPhase.Resolved));
+        Assert.That(s.Ending, Is.EqualTo(EndingType.CleanAudit));
+        Assert.That(s.Weighing.ActiveGuardianId, Is.Null, "no Guardian blocks on an all-Allied override");
     }
 
     [Test]

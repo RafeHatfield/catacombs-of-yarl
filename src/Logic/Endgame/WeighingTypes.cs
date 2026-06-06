@@ -82,6 +82,21 @@ public enum WeighingOutcome
 }
 
 /// <summary>
+/// A headless decision for the Debt choice gate. Set on <see cref="Core.GameState"/> by the harness
+/// (or a test) so the Weighing can resolve the Force / Self / Refuse choice without UI input — the
+/// enabler for the balance pass. Null in production: the presentation layer drives the gate instead.
+/// </summary>
+public enum WeighingGateDecision
+{
+    /// <summary>Take Anik by force — spawn the Debt as a combatant and fight it.</summary>
+    Force,
+    /// <summary>Offer himself (the Swap) — valid only when the catalog gate is open.</summary>
+    Swap,
+    /// <summary>Decline the weighing — the chosen non-death loss.</summary>
+    Refuse,
+}
+
+/// <summary>
 /// Constants for the Weighing. Tunable knobs live here so they have one canonical home.
 /// </summary>
 public static class WeighingConstants

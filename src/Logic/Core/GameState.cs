@@ -311,6 +311,21 @@ public sealed class GameState
     /// <summary>Loaded audit dialogue content. Null until weighing_audit.yaml is loaded at boot.</summary>
     public Content.WeighingAuditRegistry? WeighingAudit { get; set; }
 
+    /// <summary>
+    /// Headless override for the per-Guardian audit tiers. When set, the orchestrator uses this
+    /// instead of scoring from persistence — lets the balance pass (TASK-011) drive a specific
+    /// audit configuration (e.g. an all-Savage wall) without constructing a matching save. Null in
+    /// production: the audit is scored from the run's persistence.
+    /// </summary>
+    public Endgame.AuditScorer.AuditResult? WeighingAuditOverride { get; set; }
+
+    /// <summary>
+    /// Headless decision for the Debt choice gate. When set, the orchestrator applies it instead of
+    /// emitting the gate and waiting for UI — the enabler for running the Weighing headlessly in the
+    /// harness. Null in production: the presentation layer drives Force / Self / Refuse.
+    /// </summary>
+    public Endgame.WeighingGateDecision? WeighingHeadlessGatePolicy { get; set; }
+
     public List<Entity> AliveMonsters
     {
         get
