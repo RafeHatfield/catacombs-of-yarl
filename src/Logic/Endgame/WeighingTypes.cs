@@ -89,6 +89,9 @@ public static class WeighingConstants
     /// <summary>The descent ends here. Reaching this depth triggers the Weighing instead of a normal floor.</summary>
     public const int FinalFloorDepth = 25;
 
+    /// <summary>True if the given depth is the Weighing floor — build the arena, not a procedural floor.</summary>
+    public static bool IsWeighingFloor(int depth) => depth == FinalFloorDepth;
+
     // Loss cause-codes — the closed set per decision 8. PlayerDeathCause is a free string consumed
     // by the memo evaluator and recorded into past_sashas; these extend it for Weighing losses.
     public const string LossGuardiansCause = "weighing_loss_guardians";

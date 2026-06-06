@@ -39,6 +39,12 @@ public sealed class UnderWardenData
     [JsonPropertyName("audit_completed")]
     public bool AuditCompleted { get; set; }
 
+    // Times the player declined the Weighing (weighing_loss_refused). A refusal is NOT a death —
+    // it records no past-Sasha corpse. Instead the Under-Warden files it: future audit/memo content
+    // can reference prior refusals ("the visiting party has declined before; the case remains open").
+    [JsonPropertyName("weighing_refusals")]
+    public int WeighingRefusals { get; set; }
+
     // Monotonic counter. Incremented on PossessionExitedEvent where host is hall_warden.
     // Thresholds: 1 → polite.hall_warden_possession, 3 → procedural_notice, 6+ → formal_complaint.
     [JsonPropertyName("hall_warden_possessions_total")]

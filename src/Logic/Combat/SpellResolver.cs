@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.AI;
 using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
@@ -252,8 +253,20 @@ public static class SpellResolver
         var affected = new List<Entity>();
         var affectedIds = new List<int>();
 
+        // Friendly-fire guard (TASK-006): a player-side caster's AoE never hits Sasha's side
+        // (player-allies). Monster-cast AoE is unaffected — preserves existing behavior.
+        string casterFaction = caster.Get<AiComponent>()?.Faction ?? FactionRegistry.PlayerFaction;
+        bool casterIsPlayerSide = FactionRegistry.IsPlayerSide(casterFaction);
+
         foreach (var monster in state.AliveMonsters)
         {
+            // Skip Sasha's side — unless a (Warden-)enraged ally, which is hostile to all and
+            // is therefore a legitimate target the player can fight back against (TASK-006/007).
+            if (casterIsPlayerSide
+                && FactionRegistry.IsPlayerSide(monster.Get<AiComponent>()?.Faction ?? "neutral")
+                && !monster.Has<EnragedEffect>())
+                continue;
+
             // Check within radius (Chebyshev distance for consistent roguelike feel)
             int dist = caster.ChebyshevDistanceTo(monster.X, monster.Y);
             if (dist > radius) continue;
@@ -479,8 +492,18 @@ public static class SpellResolver
         Entity? closest = null;
         double closestDist = maxRange + 1.0; // exclusive upper bound
 
+        // Friendly-fire guard (TASK-006): a player-side caster never auto-targets Sasha's side.
+        string casterFaction = caster.Get<AiComponent>()?.Faction ?? FactionRegistry.PlayerFaction;
+        bool casterIsPlayerSide = FactionRegistry.IsPlayerSide(casterFaction);
+
         foreach (var monster in state.AliveMonsters)
         {
+            // Skip Sasha's side — unless a (Warden-)enraged ally that has turned hostile.
+            if (casterIsPlayerSide
+                && FactionRegistry.IsPlayerSide(monster.Get<AiComponent>()?.Faction ?? "neutral")
+                && !monster.Has<EnragedEffect>())
+                continue;
+
             // In dungeon mode, check FOV visibility. In scenario mode (no FOV), all tiles visible.
             if (state.IsDungeonMode && !state.Map.IsVisible(monster.X, monster.Y))
                 continue;

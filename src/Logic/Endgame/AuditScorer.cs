@@ -145,12 +145,21 @@ public static class AuditScorer
             case WeighingOutcome.Survived:
                 // Swap is the hidden terminus — only when the catalog gate is open and the player chose it.
                 if (swapChosen && swapAvailable) return EndingType.Swap;
-                bool heavy = audit.AnySavage
-                    || orcRepState == "hostile"
-                    || cumulativeDeaths > AssemblyNeutralMaxDeaths;
-                return heavy ? EndingType.Theft : EndingType.CleanAudit;
+                return IsHeavyRecord(audit, orcRepState, cumulativeDeaths)
+                    ? EndingType.Theft : EndingType.CleanAudit;
             default:
                 return EndingType.None;
         }
     }
+
+    /// <summary>
+    /// True when the record is heavy enough that the claim cannot be auto-satisfied.
+    /// "Heavy" = any faction Guardian came up Savage, orc rep Hostile, or death count very high.
+    /// Used by the orchestrator to decide whether the Debt threshold auto-resolves (clean + no Swap)
+    /// or presents a choice gate.
+    /// </summary>
+    public static bool IsHeavyRecord(AuditResult audit, string orcRepState, int cumulativeDeaths)
+        => audit.AnySavage
+           || orcRepState == "hostile"
+           || cumulativeDeaths > AssemblyNeutralMaxDeaths;
 }

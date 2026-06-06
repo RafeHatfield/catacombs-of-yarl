@@ -131,6 +131,7 @@ public partial class Main : Node
     // Voice line registry — loaded once, shared across all turns.
     // Null until InitFactories succeeds; VoiceLineEvent handling is a no-op when null.
     private VoiceLineRegistry? _voiceLineRegistry;
+    private Logic.Content.WeighingAuditRegistry? _weighingAuditRegistry;
     // Tracks which trigger IDs have already fired their canonical (first) line this run.
     private readonly HashSet<string> _voiceLineFiredSet = new();
 
@@ -568,6 +569,10 @@ public partial class Main : Node
             _voiceLineRegistry.Merge(VoiceLineRegistry.LoadFromYaml(catalogYaml));
             _voiceLineRegistry.Merge(VoiceLineRegistry.LoadFromYaml(possessionYaml));
             GD.Print("[Main] Voice line registry loaded.");
+
+            var weighingAuditYaml = ReadGodotResource("res://config/voice_lines/weighing_audit.yaml");
+            _weighingAuditRegistry = Logic.Content.WeighingAuditRegistry.LoadFromYaml(weighingAuditYaml);
+            GD.Print("[Main] Weighing audit registry loaded.");
         }
         catch (System.Exception ex)
         {
@@ -1414,6 +1419,34 @@ public partial class Main : Node
             {
                 _gameController?.ShowMuralInspect(muralEvt.Text);
             }
+            else if (evt is Logic.Endgame.DebtChoiceGateEvent gateEvt)
+            {
+                // TODO (presentation tail): show Force / (Self if SwapAvailable) / Refuse buttons.
+                // Three gate shapes: Force+Self+Refuse (swap available),
+                //                    Force+Refuse (heavy, no swap),
+                //                    [never emitted] (clean, no swap → auto-resolved).
+                // For now, surface in the toast log so the gate is visible during development.
+                string opts = gateEvt.SwapAvailable
+                    ? "[Force] [Self] [Refuse]"
+                    : "[Force] [Refuse]";
+                _toastLog?.AddMessage($"[color=#c0c0c0]The Weighing: {opts}[/color]");
+            }
+            else if (evt is WeighingDialogueEvent dialogueEvt)
+            {
+                // TODO (presentation tail): replace with WeighingDialoguePanel (blocking, paged,
+                // tap-to-advance). Until that panel exists the dialogue is printed to the toast log
+                // in sequence so the content is visible during development.
+                foreach (var page in dialogueEvt.Pages)
+                {
+                    string color = page.Speaker switch
+                    {
+                        "under_warden" => "#c8b880",
+                        "guardian"     => "#d0806060",
+                        _              => "#aaaaaa",
+                    };
+                    _toastLog?.AddMessage($"[color={color}]{page.Text}[/color]");
+                }
+            }
             else if (evt is SecretDoorFoundEvent secretEvt)
             {
                 HandleSecretDoorFound(secretEvt.X, secretEvt.Y);
@@ -1551,8 +1584,19 @@ public partial class Main : Node
 
         if (_state != null && _persistentState != null)
         {
+            // A refusal at the Weighing is NOT a death — Sasha assessed the cost and walked out
+            // alive, debt open. No corpse to loot/quip/possess; recording a past-Sasha would be a
+            // category error (a living man's body in the catalog of the dead). File the refusal
+            // instead — the Under-Warden remembers you turned back. [decision 2026-06-01]
+            bool refused = _state.PlayerDeathCause == Logic.Endgame.WeighingConstants.LossRefusedCause;
+            if (refused)
+            {
+                _persistentState.RunCounter.UpdateBestFloor(_currentDepth);
+                _persistentState.UnderWarden.WeighingRefusals++;
+                _persistentState.MarkDirty();
+            }
             // Record a past-Sasha on player death (spec §6.2).
-            if (!playerWon)
+            else if (!playerWon)
             {
                 var gear = SnapshotEquippedGear(_state.Player);
                 var bestFloor = Math.Max(_persistentState.RunCounter.BestFloorReached, _currentDepth);
@@ -1578,8 +1622,30 @@ public partial class Main : Node
                 _persistentState.MarkDirty();
             }
 
+            // Weighing outcome (TASK-008): record the ending. Clean Audit sets the sticky
+            // audit_completed flag (drives different memo content forever after); reaching floor 25
+            // with a Weighing that resolved counts as an audit attempt.
+            if (_state.WeighingArena != null && _state.Ending != Logic.Endgame.EndingType.None)
+            {
+                _persistentState.UnderWarden.AuditAttemptedRuns++;
+                if (_state.Ending == Logic.Endgame.EndingType.CleanAudit)
+                    _persistentState.UnderWarden.AuditCompleted = true;
+                _persistentState.MarkDirty();
+            }
+
             // Faction reputation: apply transitions at run end (spec §6.3).
+            // (Reads UnprovokedOrcKillsThisRun, now fed by the run aggression tally — TASK-003.)
             ApplyFactionRunEnd(_state, _persistentState);
+
+            // Excess metric (TASK-003): flush this run's unprovoked cross-faction kills into the
+            // cross-run cumulative total that feeds the Weighing's Auditor's Own / Oathkeeper audit.
+            var tally = _state.Player.Get<RunAggressionTally>();
+            if (tally != null && tally.Total() > 0)
+            {
+                foreach (var (faction, count) in tally.UnprovokedKillsByFaction)
+                    _persistentState.UnderWarden.AddUnprovokedKill(faction, count);
+                _persistentState.MarkDirty();
+            }
 
             // Under-Warden memo delivery: evaluate post-run incidents and queue any
             // memos that should surface in the inbox. Must run BEFORE the persistence
@@ -1687,6 +1753,12 @@ public partial class Main : Node
             muralTracker: _state?.MuralTracker,
             pityTracker: _state?.PityTracker,
             persistentState: _persistentState);
+
+        // Inject the audit dialogue registry on the Weighing floor so the orchestrator
+        // can emit voiced beats when Guardians rise.
+        if (_state?.WeighingArena != null && _weighingAuditRegistry != null)
+            _state.WeighingAudit = _weighingAuditRegistry;
+
         SetupPresentation(_state);
 
         // Floor descent is a narrative-event-boundary flush (spec §5).

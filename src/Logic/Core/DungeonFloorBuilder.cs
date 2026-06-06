@@ -2,6 +2,7 @@ using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Endgame;
 using CatacombsOfYarl.Logic.Persistence;
 using BoonTable = System.Collections.Generic.IReadOnlyDictionary<int, CatacombsOfYarl.Logic.Balance.BoonDefinition>;
 using FloorItemPool = System.Collections.Generic.IReadOnlyList<CatacombsOfYarl.Logic.Content.FloorItemPoolEntry>;
@@ -145,6 +146,12 @@ public sealed class DungeonFloorBuilder
         PityTrackerType? pityTracker = null,
         PersistentRunState? persistentState = null)
     {
+        // The Weighing floor (25) is a hand-authored arena, not procedural — see decision memo.
+        // It bypasses the generation pipeline entirely; the orchestrator populates it on the first turn.
+        if (WeighingConstants.IsWeighingFloor(depth))
+            return BuildWeighingArena(depth, rng, existingPlayer, identificationRegistry,
+                appearancePool, difficulty, boonTracker, muralTracker, pityTracker, persistentState);
+
         // Resolve per-depth override (null = use defaults for everything)
         var levelOverride = _templates.GetLevelOverride(depth);
         var genParams = levelOverride?.Parameters;
@@ -454,6 +461,61 @@ public sealed class DungeonFloorBuilder
     }
 
     /// <summary>
+    /// Build the Weighing arena (floor 25) — the hand-authored Tribunal Hall. Bypasses procedural
+    /// generation: fixed map, player placed at the well, no monsters (the orchestrator raises the
+    /// Guardians on the first turn), no down-stair (the descent ends here; the run resolves via the
+    /// orchestration into GameState.Ending). Carries the player forward exactly like a normal floor.
+    /// </summary>
+    private GameState BuildWeighingArena(int depth, SeededRandom rng, Entity? existingPlayer,
+        IdentificationRegistry? identificationRegistry, AppearancePool? appearancePool,
+        Difficulty difficulty, BoonTracker? boonTracker, MuralTracker? muralTracker,
+        PityTrackerType? pityTracker, PersistentRunState? persistentState)
+    {
+        var arena = WeighingArenaDefinition.Build();
+
+        Entity player;
+        if (existingPlayer != null)
+        {
+            StatusEffectProcessor.ClearAllEffects(existingPlayer);
+            player = PlayerCarryForward.Apply(existingPlayer);
+            TurnController.ReapplyRingEffects(player);
+        }
+        else
+        {
+            player = CreateDefaultPlayer();
+        }
+
+        var start = arena.FirstAnchor("player_start") ?? (1, 1);
+        player.X = start.Item1;
+        player.Y = start.Item2;
+        arena.Map.RegisterEntity(player);
+
+        var finalRegistry = identificationRegistry ?? new IdentificationRegistry();
+        var finalPool = appearancePool ?? new AppearancePool(_identifiableItems, rng.Seed);
+        var finalBoonTracker = boonTracker ?? new BoonTracker();
+        var finalPityTracker = pityTracker ?? (_lootPolicy != null ? new PityTrackerType() : null);
+
+        var state = new GameState(player, new List<Entity>(), arena.Map, rng, turnLimit: 10_000)
+        {
+            IsDungeonMode = true,
+            CurrentDepth = depth,
+            StairDown = null, // final floor — no descent
+            IdentificationRegistry = finalRegistry,
+            AppearancePool = finalPool,
+            Difficulty = difficulty,
+            BoonTracker = finalBoonTracker,
+            BoonTable = _boonTable,
+            MuralTracker = muralTracker,
+            PityTracker = finalPityTracker,
+            PersistentState = persistentState,
+            WeighingArena = arena,
+        };
+
+        state.RecomputeFov();
+        return state;
+    }
+
+    /// <summary>
     /// Assign TileTheme to every room tile and corridor tile in the generated map.
     /// Each room gets one theme (cohesive look within a room). Corridors always get Dirt.
     /// This method consumes rng — call it after MapGenerator.Generate() finishes.
@@ -537,6 +599,10 @@ public sealed class DungeonFloorBuilder
         {
             CanOpenDoors = true, // player can always open doors
         });
+
+        // Run-scoped aggression tally (TASK-003) — accumulates unprovoked kills across the run.
+        // Fresh here per run; carried across floors by PlayerCarryForward.
+        player.Add(new RunAggressionTally());
 
         // Starting equipment — from PoC initialize_new_game.py
         var equipment = new Combat.Equipment();

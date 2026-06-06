@@ -2,6 +2,7 @@ using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Endgame;
 using CatacombsOfYarl.Logic.Knowledge;
 using CatacombsOfYarl.Logic.Map;
 using CatacombsOfYarl.Logic.Persistence;
@@ -190,9 +191,12 @@ public sealed class GameState
 
     /// <summary>
     /// Counter driving the "3 unprovoked kills → Hostile" faction transition.
-    /// Resets at run start. The resulting reputation enum is cross-run (PersistentState.Factions).
+    /// Single-sourced from the run-scoped tally on the player entity (RunAggressionTally, TASK-003),
+    /// which accumulates across floors and resets per run. "orc" mirrors FactionsData.OrcFactionId.
+    /// The resulting reputation enum is cross-run (PersistentState.Factions).
     /// </summary>
-    public int UnprovokedOrcKillsThisRun { get; set; }
+    public int UnprovokedOrcKillsThisRun =>
+        Player.Get<RunAggressionTally>()?.UnprovokedKillsFor("orc") ?? 0;
 
     /// <summary>
     /// Species TypeId of the entity that dealt the killing blow to the player this run.
@@ -281,10 +285,31 @@ public sealed class GameState
     /// </summary>
     public bool IsGameOver =>
         IsDungeonMode
-            ? !PlayerFighter.IsAlive || TurnCount >= TurnLimit
+            ? !PlayerFighter.IsAlive || TurnCount >= TurnLimit || Ending != EndingType.None
             : !PlayerFighter.IsAlive || (Monsters.Count > 0 && AliveMonsters.Count == 0) || TurnCount >= TurnLimit;
 
     public bool PlayerWon => PlayerFighter.IsAlive && Monsters.Count > 0 && AliveMonsters.Count == 0;
+
+    /// <summary>
+    /// The Weighing's resolved ending (TASK-008). Default None = the run is ongoing. Set by the
+    /// Weighing orchestration when the gauntlet resolves; a terminal value also ends the run via
+    /// IsGameOver above (covers the chosen non-death loss `LossRefused` and the survival wins, which
+    /// are not death- or turn-limit-driven). Dungeon-mode victory state, which did not exist before.
+    /// </summary>
+    public EndingType Ending { get; set; } = EndingType.None;
+
+    /// <summary>True once the Weighing resolved into one of the three winning endings.</summary>
+    public bool IsDungeonVictory =>
+        Ending is EndingType.CleanAudit or EndingType.Theft or EndingType.Swap;
+
+    /// <summary>The loaded Weighing arena (map + named anchors), set when floor 25 is built. Null otherwise.</summary>
+    public WeighingArena? WeighingArena { get; set; }
+
+    /// <summary>Live Weighing orchestration state (phase, current Guardian, audit tiers). Null off the Weighing floor.</summary>
+    public WeighingState? Weighing { get; set; }
+
+    /// <summary>Loaded audit dialogue content. Null until weighing_audit.yaml is loaded at boot.</summary>
+    public Content.WeighingAuditRegistry? WeighingAudit { get; set; }
 
     public List<Entity> AliveMonsters
     {

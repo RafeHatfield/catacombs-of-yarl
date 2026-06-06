@@ -89,7 +89,8 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Tier 5 — End Game
 | Plan | Status | Description |
 |------|--------|-------------|
-| [plan_end_game.md](plan_end_game.md) | [ ] | Final boss (Zhyraxion forms), 5 ending paths, victory conditions |
+| [plan_end_game.md](plan_end_game.md) | [~] | The Weighing endgame (replaces Zhyraxion). Framework complete: audit spine + scoring, ally combat (player_ally faction), Tribunal Hall arena, sequential orchestration → 6 endings, choice-gate Debt (Force/Self/Refuse). Audit content complete: opening + 4 Guardian beats + Debt terms + 4 resolutions all wired. Remaining: 2 combat-death ending texts, ally-fallback lines, Refuse/Swap UI copy, balance pass. impl: plan_end_game_impl.md. 2023 tests. |
+| [plan_end_game_impl.md](plan_end_game_impl.md) | [~] | Weighing impl tracker. Chunks A–C complete (audit spine, ally combat, orchestration). Content: all 5 audit beats + Debt complete. TASK-011 balance pass pending. |
 
 ### Tier 6 — Under-Warden Story Systems
 | Plan | Status | Description |

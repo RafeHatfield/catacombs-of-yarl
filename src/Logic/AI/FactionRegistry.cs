@@ -27,6 +27,24 @@ public static class FactionRegistry
     /// Returns true if entities of factionA would attack entities of factionB.
     /// Uses the directional PoC matrix — checks both directions for full coverage.
     /// </summary>
+    /// <summary>The player faction.</summary>
+    public const string PlayerFaction = "player";
+
+    /// <summary>
+    /// Entities that fight on Sasha's side (Weighing allies). Friendly to the player and to each
+    /// other; hostile to every monster faction, exactly as the player is. See plan_end_game TASK-004.
+    /// </summary>
+    public const string PlayerAllyFaction = "player_ally";
+
+    /// <summary>True for the player and player-allies — Sasha's side. Used by friendly-fire guards.</summary>
+    public static bool IsPlayerSide(string faction)
+    {
+        string f = Normalize(faction);
+        return f == PlayerFaction || f == PlayerAllyFaction;
+    }
+
+    private static bool IsSashasSide(string faction) => IsPlayerSide(faction);
+
     public static bool AreHostile(string factionA, string factionB)
     {
         // Normalize: "monsters" → "neutral" (fire_beetle YAML quirk)
@@ -35,8 +53,12 @@ public static class FactionRegistry
 
         if (a == b) return false;
 
-        // Player is hostile to everything, everything is hostile to player
-        if (a == "player" || b == "player") return true;
+        // Sasha's side (player + player-allies) is friendly within itself and hostile to all
+        // monster factions. This generalizes the old "player is hostile to everything" rule.
+        bool aSide = IsSashasSide(a);
+        bool bSide = IsSashasSide(b);
+        if (aSide && bSide) return false;   // player ↔ ally: never hostile
+        if (aSide || bSide) return true;    // Sasha's side ↔ any monster faction: hostile
 
         return IsHostile(a, b) || IsHostile(b, a);
     }
@@ -88,6 +110,10 @@ public static class FactionRegistry
         string target = Normalize(targetFaction);
 
         if (target == "player") return 10;
+        // Monsters treat a player-ally as high-value, just below Sasha himself.
+        if (target == PlayerAllyFaction) return 8;
+        // A player-ally engages any hostile monster; distance breaks ties (uniform priority).
+        if (attacker == PlayerAllyFaction) return 6;
 
         return (attacker, target) switch
         {

@@ -51,6 +51,10 @@ public static class BasicMonsterAI
         // Both are handled in ChooseTarget.
         var target = ChooseTarget(monster, player, state);
 
+        // No-target sentinel (player-ally with no hostile in range): nothing to fight, idle.
+        if (target.Id == monster.Id)
+            return MonsterAction.Wait();
+
         bool targetAdjacent = monster.ChebyshevDistanceTo(target.X, target.Y) <= 1;
 
         // DisorientationEffect: monster moves in a random direction instead of pursuing.
@@ -283,8 +287,10 @@ public static class BasicMonsterAI
         int bestDist = int.MaxValue;
         int bestPriority = -1;
 
-        // Consider player (unless invisible — can't target what you can't see)
-        if (!playerInvisible)
+        // Consider player — unless invisible, or unless the chooser is on Sasha's side
+        // (a player-ally is not hostile to the player). TASK-005: gate the previously-hardcoded
+        // "always target the player" branch behind faction hostility so allies don't attack Sasha.
+        if (!playerInvisible && FactionRegistry.AreHostile(myFaction, FactionRegistry.PlayerFaction))
         {
             int d = monster.ChebyshevDistanceTo(player.X, player.Y);
             bestTarget = player;
@@ -311,7 +317,11 @@ public static class BasicMonsterAI
             }
         }
 
-        return bestTarget ?? player;
+        // No hostile found. Monsters fall back to the player (their universal enemy). A player-ally
+        // has no enemy to fall back to, so it returns itself as a no-target sentinel — Decide reads
+        // that as "idle this turn".
+        if (bestTarget != null) return bestTarget;
+        return FactionRegistry.AreHostile(myFaction, FactionRegistry.PlayerFaction) ? player : monster;
     }
 
     /// <summary>

@@ -78,6 +78,16 @@ public static class PlayerCarryForward
                 newInventory.Add(item);
         }
 
+        // Carry the run-scoped aggression tally (TASK-003) — unprovoked kills accumulate across
+        // floors within a run. A new run gets a fresh default player (and thus a fresh tally).
+        var oldTally = existingPlayer.Get<RunAggressionTally>();
+        if (oldTally != null)
+        {
+            var newTally = newPlayer.Add(new RunAggressionTally());
+            foreach (var (faction, count) in oldTally.UnprovokedKillsByFaction)
+                newTally.UnprovokedKillsByFaction[faction] = count;
+        }
+
         return newPlayer;
     }
 }

@@ -127,6 +127,15 @@ public static class TurnController
         // can resolve species IDs from entity IDs in AttackEvent and DeathEvent.
         UpdateKnowledge(state, events);
 
+        // Weighing orchestration (TASK-009). On the first turn in the arena, begin the gauntlet
+        // (score the audit, rise the first Guardian). Thereafter advance the phase after all combat
+        // resolves. No-op off the Weighing floor (no arena). Runs even on player death to set the
+        // distinct loss ending/cause.
+        if (state.WeighingArena != null && state.Weighing == null)
+            Endgame.WeighingOrchestrator.BeginFromPersistence(state, events);
+        else if (state.Weighing != null)
+            Endgame.WeighingOrchestrator.Advance(state, events);
+
         var aliveMonsters = state.AliveMonsters;
         return new TurnResult
         {
@@ -173,6 +182,18 @@ public static class TurnController
                     {
                         var tag = attacker.Get<SpeciesTag>();
                         if (tag != null) knowledge.RecordEngaged(tag.TypeId);
+
+                        // Aggression flag (TASK-003/007): a monster that attacks Sasha's side —
+                        // the player OR a player-ally — hit OR miss, chose violence. Sticky, so a
+                        // later kill of it reads as provoked even if it deaggros or flees first.
+                        if (!attacker.Has<HasAttackedPlayerTag>())
+                        {
+                            bool attackedSashasSide = atk.TargetId == playerId
+                                || (monsterById.TryGetValue(atk.TargetId, out var atkTarget)
+                                    && FactionRegistry.IsPlayerSide(atkTarget.Get<AiComponent>()?.Faction ?? "neutral"));
+                            if (attackedSashasSide)
+                                attacker.Add(new HasAttackedPlayerTag());
+                        }
                     }
                     if (atk.TargetId != playerId && monsterById.TryGetValue(atk.TargetId, out var target))
                     {
@@ -188,6 +209,19 @@ public static class TurnController
                     {
                         var tag = dead.Get<SpeciesTag>();
                         if (tag != null) knowledge.RecordKilled(tag.TypeId);
+
+                        // Unprovoked-kill tally (TASK-003): Sasha killed a monster that never
+                        // attacked him. Counts toward the excess metric (Auditor's Own) and, for
+                        // orcs, the faction-rep Hostile transition. "Dealt by Sasha" includes kills
+                        // through a host he is possessing — the metric must not be launderable via a
+                        // proxy — but not kills by hosts possessed by anything else (see ExcessKillEvaluator).
+                        Entity? killer = monsterById.TryGetValue(death.KillerId, out var k) ? k : null;
+                        if (Endgame.ExcessKillEvaluator.DealtByPlayer(killer, death.KillerId, playerId)
+                            && !dead.Has<HasAttackedPlayerTag>())
+                        {
+                            string victimFaction = dead.Get<AiComponent>()?.Faction ?? "neutral";
+                            state.Player.GetOrAdd<RunAggressionTally>().AddUnprovokedKill(victimFaction);
+                        }
                     }
                     break;
             }

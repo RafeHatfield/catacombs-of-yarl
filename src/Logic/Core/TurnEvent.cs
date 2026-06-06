@@ -916,6 +916,24 @@ public sealed class RangedKnockbackEvent : TurnEvent
 }
 
 /// <summary>
+/// A single page of the Weighing audit dialogue. Speaker determines color/label in the panel.
+/// </summary>
+public sealed record WeighingDialoguePage(
+    string Speaker,  // "under_warden" | "guardian" | "narrator"
+    string Text);
+
+/// <summary>
+/// Emitted by the Weighing orchestrator when a blocking paged dialogue sequence must play
+/// before the encounter can continue. The presentation layer shows a WeighingDialoguePanel
+/// that the player taps through; the game blocks input until all pages are dismissed.
+/// </summary>
+public sealed class WeighingDialogueEvent : TurnEvent
+{
+    public string DialogueKey { get; init; } = "";
+    public IReadOnlyList<WeighingDialoguePage> Pages { get; init; } = Array.Empty<WeighingDialoguePage>();
+}
+
+/// <summary>
 /// Emitted when movement or a special action (leap) is denied because the entity is entangled.
 /// BlockedActionType: "move" for normal movement, "leap" for SkirmisherAI leap attempt.
 /// EntityId is the entangled entity (player or monster).

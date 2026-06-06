@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.AI;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.ECS;
@@ -28,6 +29,8 @@ public static class PossessionSystem
         if (target.Get<Fighter>() == null) return false;
         if (target.Get<AiComponent>() == null) return false;
         if (target.Get<Fighter>()!.IsAlive == false) return false;
+        // Can't possess Sasha's own side — the player or a player-ally (TASK-006).
+        if (FactionRegistry.IsPlayerSide(target.Get<AiComponent>()!.Faction)) return false;
         if (target.Get<StatusImmunityComponent>()?.IsImmuneTo("possessed") == true) return false;
         if (target.Has<CorpseComponent>()) return false;
         if (target.Has<PossessionEffect>()) return false;

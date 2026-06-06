@@ -1133,7 +1133,12 @@ public sealed partial class GameController : Node
         if (Phase == GamePhase.GameOver)
         {
             Diag.Log("  OAC: GameOver -> GameEnded");
-            GameEnded?.Invoke(_state.PlayerWon);
+            // A Weighing victory resolves via GameState.Ending (the player is alive), not the
+            // scenario all-monsters-dead formula. A loss Ending forces a defeat regardless. Off the
+            // Weighing (Ending == None), fall back to the scenario PlayerWon.
+            bool won = _state.IsDungeonVictory
+                || (_state.Ending == CatacombsOfYarl.Logic.Endgame.EndingType.None && _state.PlayerWon);
+            GameEnded?.Invoke(won);
             return;
         }
 
