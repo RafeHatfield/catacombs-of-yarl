@@ -42,8 +42,10 @@ public sealed class WeighingState
 
     /// <summary>The hostile Guardian currently blocking progress (null while none is up).</summary>
     public int? ActiveGuardianId { get; set; }
-    /// <summary>Allied Guardians fighting beside Sasha — they withdraw before the Debt.</summary>
+    /// <summary>Entity IDs of allied Guardians on the field.</summary>
     public List<int> AlliedGuardianIds { get; } = new();
+    /// <summary>GuardianId values that allied — needed to emit fallback lines in FallBackAllies.</summary>
+    public List<GuardianId> AlliedGuardianTypes { get; } = new();
     public int? DebtId { get; set; }
     public bool AlliesFellBack { get; set; }
 }
@@ -227,6 +229,7 @@ public static class WeighingOrchestrator
             {
                 // An ally joins Sasha's side and does not block the gauntlet — rise the next at once.
                 ws.AlliedGuardianIds.Add(guardian.Id);
+                ws.AlliedGuardianTypes.Add(id);
                 ws.CurrentGuardianIndex++;
                 continue;
             }
@@ -245,8 +248,20 @@ public static class WeighingOrchestrator
     {
         if (ws.AlliesFellBack) return;
         ws.AlliesFellBack = true;
-        // Allies withdraw — the Debt is faced alone. They leave by will (the layout lets them follow;
-        // they choose not to). Removing them from the field is the v1 mechanic for that withdrawal.
+
+        // Emit fallback dialogue before removing entities so narration precedes the withdrawal.
+        // Framing narration only fires when at least one ally stood with Sasha (the line
+        // "those who stood with you step back" reads nonsensically with no one present).
+        if (ws.AlliedGuardianTypes.Count > 0 && state.WeighingAudit != null)
+        {
+            EmitDialogue(state, events, "ally_fallback.framing",
+                state.WeighingAudit.GetAllyFallbackFraming());
+            foreach (var guardianId in ws.AlliedGuardianTypes)
+                EmitDialogue(state, events, $"ally_fallback.{GuardianFallbackKey(guardianId)}",
+                    state.WeighingAudit.GetAllyFallback(guardianId));
+        }
+
+        // Remove allied entities — they leave by will (the layout lets them follow; they choose not to).
         foreach (var allyId in ws.AlliedGuardianIds)
         {
             var ally = state.Monsters.FirstOrDefault(m => m.Id == allyId);
@@ -258,6 +273,15 @@ public static class WeighingOrchestrator
         }
         events.Add(new AlliesFellBackEvent());
     }
+
+    private static string GuardianFallbackKey(GuardianId id) => id switch
+    {
+        GuardianId.WardenOfWardens => "warden",
+        GuardianId.Oathkeeper => "oathkeeper",
+        GuardianId.AssemblyOfTheLost => "assembly",
+        GuardianId.AuditorsOwn => "auditor",
+        _ => "unknown",
+    };
 
     /// <summary>
     /// Called after all faction Guardians resolve. Emits the Debt's terms (dialogue), then either:

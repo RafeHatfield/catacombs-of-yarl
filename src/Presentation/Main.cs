@@ -1425,10 +1425,13 @@ public partial class Main : Node
                 // Three gate shapes: Force+Self+Refuse (swap available),
                 //                    Force+Refuse (heavy, no swap),
                 //                    [never emitted] (clean, no swap → auto-resolved).
-                // For now, surface in the toast log so the gate is visible during development.
+                // Button labels and confirmation copy come from the audit registry.
+                string forceLabel   = _weighingAuditRegistry?.GetUiText("ui.force_button")  ?? "Take her by force.";
+                string selfLabel    = _weighingAuditRegistry?.GetUiText("ui.self_button")   ?? "Give yourself in her place.";
+                string refuseLabel  = _weighingAuditRegistry?.GetUiText("ui.refuse_button") ?? "Turn back. Carry the debt.";
                 string opts = gateEvt.SwapAvailable
-                    ? "[Force] [Self] [Refuse]"
-                    : "[Force] [Refuse]";
+                    ? $"[{forceLabel}] [{selfLabel}] [{refuseLabel}]"
+                    : $"[{forceLabel}] [{refuseLabel}]";
                 _toastLog?.AddMessage($"[color=#c0c0c0]The Weighing: {opts}[/color]");
             }
             else if (evt is WeighingDialogueEvent dialogueEvt)

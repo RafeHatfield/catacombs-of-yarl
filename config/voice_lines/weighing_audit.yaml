@@ -96,7 +96,71 @@ auditor.savage:
   - speaker: guardian
     text: "THERE. (the word swells, far too large, and the hall feels it) There you are, there you ARE, oh I have WAITED, I have waited so long in the warm dark for one of you to come down to me with hands like THESE - (it is laughing, and the laugh keeps almost becoming something else) - hundreds. HUNDREDS. Who would have let you pass. Who BEGGED. And you, you beautiful thing, you didn't even slow down. You and I, we're the same. We ARE. Say it. (softer, sibilant, unbearably intimate) No - no, you don't have to say it. I can SEE it. It's written all through you, the way it's written all through me. (and here the performance starts to come apart - the friendliness was the cage, and the cage is failing) And I have been so good. So patient. So POLITE, up here where they make me be polite - (the word distorts) - and you, you came down with all that lovely red still on you, and you smell like the warm dark smells, you smell like HOME, and I am so - I am so - (it is no longer making sentences; the beast is at the surface and the friend is gone) - I am so HUNGRY, friend, I have always been so hungry, and you are so CLOSE now, and there is no office down here, there is no office down HERE -"
 
-# The Debt — the Lady's terms, unscaled, fires before the gate / auto-resolve.
+# ── Combat-death resolutions ──────────────────────────────────────────────────────────────────
+# Short and final. LossGuardians is curt (fell before reaching the Debt). LossDebt aches (closest
+# failure; the Lady is present because you died in her hall reaching for Anik). Do not pad.
+resolution.loss_guardians:
+  - speaker: under_warden
+    text: "The visiting party did not complete the proceeding. The account remains open. The reading will resume when the party returns, as the party will."
+  - speaker: narrator
+    text: "You fell among your own accounts, with the Debt still unread and Anik still unreached. The Under-Warden files the hour and turns the page. There is always another descent. There is always another reading. The stairs are patient, and so is he."
+
+resolution.loss_debt:
+  - speaker: debt
+    text: "Oh, so close. So close, and so tired. Come here. You reached so far. Rest now; you have earned the resting, even if you did not earn the having. (softer) She is still here. She is always here. You will reach her next time, or the time after. I am in no hurry, and now, neither are you."
+  - speaker: narrator
+    text: "You died with your hand almost upon her, in the warm hall at the bottom of the world. The Lady receives you gently, as she receives everything, and holds you a while beside the one you came for, the two of you so near and not yet free. Above, the stairs wait. You will come down them again. You always do."
+
+# ── Ally-fallback lines ───────────────────────────────────────────────────────────────────────
+# Fire on AlliesFellBackEvent. Framing narration fires only if at least one Guardian allied.
+# Per-Guardian lines fire only for Guardians that actually allied this run.
+# The Auditor's Own fallback is DISMISSAL (inverted character), not solidarity.
+ally_fallback.framing:
+  - speaker: narrator
+    text: "The Debt rises at the head of the hall, and one by one, those who stood with you step back. Not driven. Not barred. They step back because this part was never theirs."
+
+ally_fallback.warden:
+  - speaker: guardian
+    text: "This is past the edge of my post, and past the edge of my charter. I kept the law for you because you kept it for me. But the law does not reach the thing at the head of this hall. You go to it as you came: yourself. Go well."
+
+ally_fallback.oathkeeper:
+  - speaker: guardian
+    text: "This one we cannot carry for you, Sasha of Reven. We would if we could. We have carried much. Not this. (a beat, hammered) Stand. We will be here when you turn back around. If you turn back around."
+
+ally_fallback.assembly:
+  - speaker: guardian
+    text: "We'd come with you. We always came with you. (dry, and it costs something) But we already tried this part, every one of us, and we are the proof of how it went. This time you go without us. Maybe that's what changes it. (a beat) Go on. We'll be watching, same as ever."
+
+# Not solidarity — dismissal. The beast loses interest because the Lady doesn't deal in what it eats.
+# Only fires for clean-record players where the Auditor's Own allied out of boredom.
+ally_fallback.auditor:
+  - speaker: guardian
+    text: "Mm. No. I don't follow careful little men into rooms like that one. There's nothing in there for me -- she doesn't deal in the kind of thing I eat. (a yawn, almost) Go and be tedious with the tall pale woman. We're done, you and I. You were never going to be any fun."
+
+# ── Debt choice gate UI copy ──────────────────────────────────────────────────────────────────
+# Button labels (terse -- the Lady named the three options in her terms).
+# Confirmation text for Force and Swap (irreversible, run-ending). Refuse has no confirmation.
+ui.force_button:
+  - speaker: ui
+    text: "Take her by force."
+
+ui.self_button:
+  - speaker: ui
+    text: "Give yourself in her place."
+
+ui.refuse_button:
+  - speaker: ui
+    text: "Turn back. Carry the debt."
+
+ui.force_confirm:
+  - speaker: ui
+    text: "You will tear her free against the Lady's hold. If you fall, you fall here, in the warm hall, with her almost in reach. Reach anyway?"
+
+ui.self_confirm:
+  - speaker: ui
+    text: "You will give yourself into the Long Hour, and she will go up without you, and never know the cost. There is no taking this back. Stay, so that she goes free?"
+
+# ── The Debt — the Lady's terms, unscaled, fires before the gate / auto-resolve.
 # Six pages: narrator scene-set, Lady (3 pages at natural breaks), Anik (ambiguous), Hollowmark threshold.
 # Trim priority: the Lady's opening two pages are prime trim candidates once it pages in-game.
 # The ambiguity of Anik's voice (her or the claim wearing her) is intentional and unresolvable.

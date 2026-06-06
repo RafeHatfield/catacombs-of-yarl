@@ -81,10 +81,34 @@ public sealed class WeighingAuditRegistry
             Logic.Endgame.EndingType.Swap => "resolution.swap",
             Logic.Endgame.EndingType.Theft => "resolution.theft",
             Logic.Endgame.EndingType.LossRefused => "resolution.refused",
+            Logic.Endgame.EndingType.LossGuardians => "resolution.loss_guardians",
+            Logic.Endgame.EndingType.LossDebt => "resolution.loss_debt",
             _ => "",
         };
         return GetSequence(key);
     }
+
+    /// <summary>Framing narration for the ally fall-back beat (fires once if at least one ally present).</summary>
+    public IReadOnlyList<WeighingDialoguePage> GetAllyFallbackFraming() =>
+        GetSequence("ally_fallback.framing");
+
+    /// <summary>Per-Guardian fallback line as the ally steps back before the Debt.</summary>
+    public IReadOnlyList<WeighingDialoguePage> GetAllyFallback(Logic.Endgame.GuardianId guardian)
+    {
+        string key = guardian switch
+        {
+            Logic.Endgame.GuardianId.WardenOfWardens => "ally_fallback.warden",
+            Logic.Endgame.GuardianId.Oathkeeper => "ally_fallback.oathkeeper",
+            Logic.Endgame.GuardianId.AssemblyOfTheLost => "ally_fallback.assembly",
+            Logic.Endgame.GuardianId.AuditorsOwn => "ally_fallback.auditor",
+            _ => "",
+        };
+        return GetSequence(key);
+    }
+
+    /// <summary>Single text string for UI copy (button labels, confirmation text).</summary>
+    public string? GetUiText(string key) =>
+        _sequences.TryGetValue(key, out var seq) && seq.Count > 0 ? seq[0].Text : null;
 
     public bool HasSequence(string key) => _sequences.ContainsKey(key);
 

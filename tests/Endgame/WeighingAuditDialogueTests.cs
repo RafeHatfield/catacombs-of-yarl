@@ -370,13 +370,121 @@ public class WeighingAuditDialogueTests
         }
     }
 
+    // ── Combat-death resolutions ─────────────────────────────────────────────
+
     [Test]
-    public void UnwrittenEnding_ReturnsEmpty_NoException()
+    public void LossGuardians_TwoPages_UnderWardenAndNarrator()
     {
-        // LossGuardians / LossDebt have no Debt-specific dialogue (covered by broader ending-texts batch).
         var reg = LoadLiveRegistry();
-        Assert.That(reg.GetResolution(EndingType.LossGuardians), Is.Empty);
-        Assert.That(reg.GetResolution(EndingType.LossDebt), Is.Empty);
+        var pages = reg.GetResolution(EndingType.LossGuardians);
+        Assert.That(pages, Has.Count.EqualTo(2), "short and final — curt, not padded");
+        Assert.That(pages[0].Speaker, Is.EqualTo("under_warden"),
+            "LossGuardians opens with the Under-Warden filing the hour");
+        Assert.That(pages[1].Speaker, Is.EqualTo("narrator"));
+    }
+
+    [Test]
+    public void LossGuardians_IsShort_FiledAndMoved()
+    {
+        var reg = LoadLiveRegistry();
+        var pages = reg.GetResolution(EndingType.LossGuardians);
+        Assert.That(pages[0].Text, Does.Contain("remains open"),
+            "Under-Warden: the account remains open (will resume)");
+    }
+
+    [Test]
+    public void LossDebt_TwoPages_LadyAndNarrator()
+    {
+        var reg = LoadLiveRegistry();
+        var pages = reg.GetResolution(EndingType.LossDebt);
+        Assert.That(pages, Has.Count.EqualTo(2));
+        Assert.That(pages[0].Speaker, Is.EqualTo("debt"),
+            "LossDebt: the Lady is present — you died in her hall");
+        Assert.That(pages[1].Speaker, Is.EqualTo("narrator"));
+    }
+
+    [Test]
+    public void LossDebt_LadyIsGentle_AchesMoreThanLossGuardians()
+    {
+        var reg = LoadLiveRegistry();
+        var lossDebt = reg.GetResolution(EndingType.LossDebt);
+        // Lady is gentle even in your defeat — especially now.
+        Assert.That(lossDebt[0].Text, Does.Contain("so close"),
+            "Lady: 'So close, and so tired' — the closest failure, she receives you");
+        // Narrator holds Anik nearby — that nearness is the ache.
+        Assert.That(lossDebt[1].Text, Does.Contain("beside the one you came for"),
+            "narrator: you are held near Anik but not yet free");
+    }
+
+    // ── Ally-fallback lines ───────────────────────────────────────────────────
+
+    [Test]
+    public void AllyFallback_FramingNarration_Present()
+    {
+        var reg = LoadLiveRegistry();
+        var pages = reg.GetAllyFallbackFraming();
+        Assert.That(pages, Has.Count.EqualTo(1));
+        Assert.That(pages[0].Speaker, Is.EqualTo("narrator"));
+        Assert.That(pages[0].Text, Does.Contain("step back"),
+            "framing: they step back by will, not because a barrier stops them");
+    }
+
+    [Test]
+    public void AllyFallback_ThreeGuardians_AreSolidarity_OneDismissal()
+    {
+        var reg = LoadLiveRegistry();
+        // Warden, Oathkeeper, Assembly: solidarity / regret / letting go.
+        var warden = reg.GetAllyFallback(GuardianId.WardenOfWardens);
+        var oath = reg.GetAllyFallback(GuardianId.Oathkeeper);
+        var assembly = reg.GetAllyFallback(GuardianId.AssemblyOfTheLost);
+        Assert.That(warden[0].Text, Does.Contain("Go well"),
+            "Warden fallback: institutional, closes with 'Go well'");
+        Assert.That(oath[0].Text, Does.Contain("We would if we could"),
+            "Oathkeeper fallback: the explicit 'we would if we could' beat");
+        Assert.That(assembly[0].Text, Does.Contain("We'll be watching"),
+            "Assembly fallback: dry dead-self voice, 'same as ever'");
+    }
+
+    [Test]
+    public void AllyFallback_AuditorsOwn_IsDismissal_NotSolidarity()
+    {
+        // The Auditor's Own inverted character: allied out of boredom, dismisses rather than mourns.
+        var reg = LoadLiveRegistry();
+        var auditor = reg.GetAllyFallback(GuardianId.AuditorsOwn);
+        Assert.That(auditor[0].Text, Does.Contain("any fun"),
+            "Auditor's Own fallback is dismissal — 'You were never going to be any fun'");
+        Assert.That(auditor[0].Text, Does.Not.Contain("would if we could"),
+            "Auditor's Own does not get the solidarity beat");
+    }
+
+    // ── UI copy ───────────────────────────────────────────────────────────────
+
+    [Test]
+    public void UiCopy_AllThreeButtonLabels_Present()
+    {
+        var reg = LoadLiveRegistry();
+        Assert.That(reg.GetUiText("ui.force_button"),  Is.EqualTo("Take her by force."));
+        Assert.That(reg.GetUiText("ui.self_button"),   Is.EqualTo("Give yourself in her place."));
+        Assert.That(reg.GetUiText("ui.refuse_button"), Is.EqualTo("Turn back. Carry the debt."));
+    }
+
+    [Test]
+    public void UiCopy_ForceAndSwapHaveConfirmations_RefuseDoesNot()
+    {
+        var reg = LoadLiveRegistry();
+        Assert.That(reg.GetUiText("ui.force_confirm"), Is.Not.Null,
+            "Force is irreversible — requires confirmation");
+        Assert.That(reg.GetUiText("ui.self_confirm"),  Is.Not.Null,
+            "Swap is irreversible — requires confirmation");
+        Assert.That(reg.GetUiText("ui.refuse_confirm"), Is.Null,
+            "Refuse has no confirmation — it is recoverable (you climb back up)");
+    }
+
+    [Test]
+    public void UiCopy_MissingKey_ReturnsNull()
+    {
+        var reg = LoadLiveRegistry();
+        Assert.That(reg.GetUiText("ui.nonexistent"), Is.Null);
     }
 
     // ── Orchestrator: dialogue events emitted during Begin ───────────────────
