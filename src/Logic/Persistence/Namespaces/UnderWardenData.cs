@@ -71,10 +71,17 @@ public sealed class UnderWardenData
     [JsonPropertyName("pending_memos")]
     public List<PendingMemo> PendingMemos { get; set; } = new();
 
-    // The "excess" metric for the Weighing (plan_end_game decision 2): cumulative unprovoked
-    // cross-faction kills, keyed by victim faction. Feeds Guardian 4 (Auditor's Own, all factions)
-    // and Guardian 2 (Oathkeeper, the "orc" subset). Default-add per persistence §3 — no migration.
-    // Write side (run-scoped counter → flush at run end) is plan_end_game_impl TASK-003.
+    // Lifetime unprovoked cross-faction kills across all runs, keyed by victim faction. Still
+    // written (flushed at run end — plan_end_game_impl TASK-003), but INTENTIONALLY no longer read.
+    //
+    // The Weighing audit now reads THIS DESCENT's kills from RunAggressionTally, not this lifetime
+    // cumulative (per-run decision, 2026-06-06): the audit weighs who Sasha was on the descent that
+    // reached the bottom, not his career. See AuditScorer.Score and tech_debt_2026_06_06 DEBT-014.
+    //
+    // KEPT (not dead) as a deliberate seam: a future Under-Warden career-cruelty memo/audit line —
+    // the bureaucrat noting the whole record even on a clean run ("across all descents, ended a
+    // great many lives that posed no threat"). Same lifetime-record pattern as WeighingRefusals.
+    // Remove only in a future persistence-cleanup pass IF we commit to never writing that content.
     [JsonPropertyName("cumulative_unprovoked_kills")]
     public Dictionary<string, int> CumulativeUnprovokedKills { get; set; } = new();
 
