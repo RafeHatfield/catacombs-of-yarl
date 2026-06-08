@@ -49,7 +49,33 @@ for an intended-difficulty encounter). Going forward:
 15/15 PASS; CI (`balance.yml`) gates on the full matrix. The ≤7% deltas from the May-21 baseline are
 attributed to the bot-persona instrument change, within tolerance.
 
-**FIND-003: actual time-to-kill is ~2× the canonical ttk target, game-wide.** Now that ETP ttk/ttd
+**FIND-004 (CORRECTS/COMPLETES FIND-003): the durability gap dominates, and the reconciliation is a
+fundamental combat-lethality question — not a monster-HP nudge.** Verifying the metric definitions
+(`RunMetrics.FromRuns`): H_PM = monsterHP / player-dmg-per-hit = **hits to kill a monster**; H_MP =
+playerHP / monster-dmg-per-hit = **hits for monsters to kill the player**. At depth 7:
+- ttk (H_PM) **7.2** vs target 4 — ~1.8× (the gap FIND-003 fixated on; real but the *smaller* half).
+- ttd (H_MP) **40.3** vs target 4 — ~**10×**. The player is nearly unkillable 1-on-1; death comes
+  only from being swarmed over many turns (why 3 grunts = 10% but the 5-orc siege = 50%).
+- Monster damage lands at ~1.3/hit despite orc raw damage 4–6 + STR (~7 expected) and NO flat soak in
+  the melee path (`CombatResolver` = base+STR, min 1). A reduction mechanism exists that I have NOT yet
+  located (likely in the defender's `TakeDamage`/defense path). **Until that's understood, lethality
+  must not be tuned.**
+- The harness's existing H_MP band [20–48] (and H_PM [7–24]) *ratify* these numbers — so low per-hit
+  lethality + high durability is the game's **long-standing** combat reality, not a regression. The ETP
+  ttk/ttd intent (3–4) describes a fast, lethal game; the shipped game is, and always was, slow/durable.
+
+**Process note (accountability):** FIND-003's "tune monster HP toward ttk 5" framing was incomplete —
+it addressed the smaller axis and was offered before the metric definitions were verified. The
+"measured step → ttk ~5" decision is **paused** pending a proper combat-lethality diagnosis (locate the
+damage-reduction model; characterize per-hit lethality vs the ETP intent on BOTH axes). The real
+decision is whether to keep the durable game (revise ETP ttd toward reality) or shift toward the
+lethal ETP intent (a large feel change touching damage/soak, not just HP) — to be re-posed with data.
+
+**FIND-003 (SUPERSEDED — see FIND-004): "actual time-to-kill is ~2× the canonical ttk target."** The
+ttk observation holds, but it is the minor axis; do not act on it in isolation.
+
+Original FIND-003 text:
+**Actual time-to-kill is ~2× the canonical ttk target, game-wide.** Now that ETP ttk/ttd
 is canonical (decision above), measured H_PM (hits-to-kill a common grunt) is roughly double the
 intent at every band tested:
 - Depth 2 (B1, target ttk **3**): H_PM **8.0**
