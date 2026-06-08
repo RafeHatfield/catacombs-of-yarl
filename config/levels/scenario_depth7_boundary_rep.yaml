@@ -1,0 +1,29 @@
+scenario_id: depth7_boundary_rep
+name: "Depth 7 - Boundary (representative B2 encounter)"
+depth: 7
+turn_limit: 120
+runs: 50
+
+# REPRESENTATIVE encounter (not a stress test). Measures whether INTENDED floor difficulty
+# hits the band-B2 target (etp_config.yaml: floors 6-10, target_ttk_hits 4 / target_ttd_hits 4).
+# Composition is ETP-budgeted to the B2 room max (~100 ETP ≈ 3 orcs; orc etp_base 27 → ~81 base,
+# ~90 with B2 hp_multiplier 1.10). Player at the intended mid-game baseline (hp 54, fine longsword,
+# leather) — the same loadout the depth6 siege uses, so this is comparable but budget-sized, not
+# over-budget. Read H_PM (≈ttk) and H_MP (≈ttd) against the 4/4 target; death rate is secondary.
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 2
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "fine_longsword"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc_grunt"
+    count: 3
+
+items: []
