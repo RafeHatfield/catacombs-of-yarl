@@ -44,3 +44,6 @@ reports/*.json
 .claude/projects/
 .claude/worktrees/
 reports/llm-transcripts/
+reports/analyst/
+reports/llm-batch/
+reports/analyst-batch/

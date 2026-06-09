@@ -56,9 +56,10 @@ public sealed class TranscriptRecorder
     /// <summary>
     /// Append a TurnRecord. <paramref name="events"/> is the turn's event list;
     /// VoiceLineEvents are resolved in place and system triggers are updated.
+    /// <paramref name="vitals"/> carries the post-action scalar fields the rubric predicates read.
     /// </summary>
     public void RecordTurn(
-        int turn, int floor, double hpPct, int availableActionCount,
+        int turn, int floor, TurnVitals vitals,
         PlayerAction action, IReadOnlyList<TurnEvent> events)
     {
         ResolveVoiceLines(events);
@@ -68,8 +69,13 @@ public sealed class TranscriptRecorder
         {
             Turn                 = turn,
             Floor                = floor,
-            PlayerHpPct          = Round(hpPct),
-            AvailableActionCount = availableActionCount,
+            PlayerHpPct          = Round(vitals.PlayerHpPct),
+            AvailableActionCount = vitals.AvailableActionCount,
+            IsGameOver           = vitals.IsGameOver,
+            RunAggressionTally   = vitals.RunAggressionTally,
+            PossessionActive     = vitals.PossessionActive,
+            ControlledEntityId   = vitals.ControlledEntityId,
+            PlayerEntityId       = vitals.PlayerEntityId,
             ActionTaken          = ActionTakenBuilder.From(action),
             Events               = events,
         });
@@ -85,7 +91,7 @@ public sealed class TranscriptRecorder
     /// </summary>
     public void Finish(
         string runId, int depthReached, int floorCount, int turnCount,
-        string? ending, IReadOnlyList<MemoRecord> memos)
+        string? ending, IReadOnlyList<MemoRecord> memos, int runAggressionTally = 0)
     {
         _header = new TranscriptHeader
         {
@@ -105,9 +111,10 @@ public sealed class TranscriptRecorder
 
         _summary = new RunSummary
         {
-            HpProfile      = _hpProfile,
-            SystemTriggers = _triggers,
-            MemosDelivered = memos,
+            HpProfile          = _hpProfile,
+            SystemTriggers     = _triggers,
+            RunAggressionTally = runAggressionTally,
+            MemosDelivered     = memos,
         };
     }
 

@@ -116,6 +116,29 @@ public sealed class TurnRecord
     /// </summary>
     public int AvailableActionCount { get; init; }
 
+    // ── Rubric v1 RUNNABLE-NOW predicate fields (config/rubric/v1.yaml) ──
+    // These are top-level TurnRecord fields so the single-record predicate evaluator
+    // reads them directly. Captured POST-action (the state the turn resolved into).
+
+    /// <summary>Game-over flag after this turn resolved. Pairs with available_action_count
+    /// for the `soft_lock` predicate (avail==0 and not is_game_over).</summary>
+    public bool IsGameOver { get; init; }
+
+    /// <summary>Total unprovoked cross-faction kills this run so far (increment-only).
+    /// Feeds `aggression_tally_negative` (sanity) and the run-level value_reconciliation.</summary>
+    public int RunAggressionTally { get; init; }
+
+    /// <summary>True iff a player-initiated PossessionEffect exists in the game this turn —
+    /// derived independently of ControlledEntity so `possession_body_inconsistent` is not
+    /// circular (effect present but control not transferred -> bug).</summary>
+    public bool PossessionActive { get; init; }
+
+    /// <summary>Entity currently driven by player input (the possessed host, or the player).</summary>
+    public int ControlledEntityId { get; init; }
+
+    /// <summary>The home-body player entity id (always 0; captured explicitly for the predicate).</summary>
+    public int PlayerEntityId { get; init; }
+
     /// <summary>The full resolved action. Always present for replay-capable runs.</summary>
     public ActionTaken? ActionTaken { get; init; }
 
@@ -131,6 +154,20 @@ public sealed class TurnRecord
     public string? DecisionContext { get; init; }
     public StructuralAssessment? StructuralAssessment { get; init; }
 }
+
+/// <summary>
+/// Per-turn vitals the harness captures POST-action and hands to the recorder. Groups the
+/// scalar TurnRecord fields so the capture call stays readable and new rubric predicate
+/// fields can be added here without churning the RecordTurn signature.
+/// </summary>
+public readonly record struct TurnVitals(
+    double PlayerHpPct,
+    int AvailableActionCount,
+    bool IsGameOver,
+    int RunAggressionTally,
+    bool PossessionActive,
+    int ControlledEntityId,
+    int PlayerEntityId);
 
 /// <summary>LLM Player structural self-report for a turn. Vocabulary from the rubric.</summary>
 public sealed class StructuralAssessment
@@ -173,6 +210,14 @@ public sealed class RunSummary
     public IReadOnlyList<double[]> HpProfile { get; init; } = Array.Empty<double[]>();
 
     public SystemTriggerLog SystemTriggers { get; init; } = new();
+
+    /// <summary>
+    /// Final RunAggressionTally for the run. The `aggression_tally_increment`
+    /// value_reconciliation detector reconstructs an expected count from the qualifying-act
+    /// events in the turn stream and compares it to this final value — so no per-increment
+    /// event clutters the stream (silent-failure-inventory.md, value_reconciliation).
+    /// </summary>
+    public int RunAggressionTally { get; init; }
 
     public IReadOnlyList<MemoRecord> MemosDelivered { get; init; } = Array.Empty<MemoRecord>();
 

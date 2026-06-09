@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Logic\CatacombsOfYarl.Logic.csproj" />
+    <ProjectReference Include="..\tools\Analyst\Analyst.csproj" />
   </ItemGroup>
 
 </Project>

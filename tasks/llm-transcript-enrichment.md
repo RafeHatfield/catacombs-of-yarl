@@ -8,9 +8,63 @@ silent_failure inventory lands.
 Plan source: `docs/llm-testing/00-overview.md`, `shared-transcript-schema.md`,
 `plan-analyst.md` (Phases 0–1).
 
-## Current State
+## Current State (Analyst Phase 4 — DONE)
 
-**Status: COMPLETE.** All sub-tasks done; 7 new tests + full fast suite (2059) green.
+**Status: Analyst Phase 4 COMPLETE.** Batch pipeline in `tools/Analyst/`: BatchAnalyzer (parallel,
+deterministic, resilient to bad files) + AggregateReport (JSON) + findings.md. 30 Analyst tests +
+full fast suite (2140) green.
+- **Audit-trail invariant holds at aggregate:** per-category total turns evaluated + runs ran +
+  runs skipped roll up; "0 candidates" always travels with its ran-count. Missing field → SKIP rollup.
+- **Heatmap = neutral fire rates + coverage_semantics interpretation.** 0× MECHANISM triggers
+  ROUTE as UNVERIFIED blind spots ("does NOT mean broken"); CONTENT 0× never flagged; unmatched →
+  unclassified (neutral). Classification bridges rubric example-names ↔ transcript keys by stem.
+- **Real 50-run bot batch:** 0 candidates, each predicate evaluated 82,442 turns × 50 runs, 0
+  skipped; blind spots = `possession_used`, `orc_rep_changed` (the canonical bulk-instrument gaps).
+- Bug-candidate confidence = "N of M runs" frequency (resolves plan open issue). Coherence +
+  structural-judgment = present-but-N/A slots (not faked).
+- CLI: `--batch <dir> --rubric config/rubric/v1.yaml [--aggregate findings.md] [--aggregate-json <json>] [--concurrency N]`.
+- No project-ref/shared-config changes; NUnit 4.5.1 pin untouched (reason inline at pin site).
+- Next: Phase 3 coherence (needs coherence_dimensions) OR trigger_consequence evaluator+events
+  (needs the four open contracts). The 0× blind-spot list feeds the scripted-scenario backlog.
+
+---
+## (Earlier) Analyst Phase 2
+
+**Status: Analyst Phase 2 COMPLETE.** BugDetector (predicate mechanism) + single-run
+EvaluationReport in `tools/Analyst/`. 21 Analyst tests + full fast suite (2132) green.
+- Components: TranscriptLoader, RubricLoader (strict — all malformed/unknown cases fatal),
+  PredicateExpression (self-contained evaluator), BugDetector (mechanism dispatch, predicate
+  implemented; text_pattern/llm_judged/trigger_consequence log-and-skip), EvaluationReport.
+- **Acceptance gate met:** all four runnable predicates demonstrated FIRING on engineered
+  violation fixtures (permanent regression tests in tests/Balance/AnalystBugDetectorTests.cs) +
+  end-to-end CLI. Clean runs auditable (predicate_coverage shows each ran); missing field → SKIP,
+  not silent clean.
+- Pinned NUnit to 4.5.1 (4.6.1 broke the suite's lambda assertions). Documented.
+- Stopped before coherence pass (Phase 3) and trigger_consequence (needs evaluator + contracts).
+- Next: Phase 3 coherence (needs full rubric coherence_dimensions) OR Phase 4 batch, OR the
+  trigger_consequence events (faction-change, orc-rep, possession-grant, MemoDeliveredEvent).
+
+---
+## (Earlier) Transcript enrichment + cross-check
+
+**Status: Phase-0/1 engineering + Phase-1 rubric cross-check COMPLETE.** 8 transcript tests +
+full fast suite (2113) green.
+
+**Rubric landed (config/rubric/v1.yaml + silent-failure-inventory.md). Cross-check done:**
+- All four RUNNABLE-NOW predicates now executable — added 5 per-turn TurnRecord fields
+  (`is_game_over`, `run_aggression_tally`, `possession_active`, `controlled_entity_id`,
+  `player_entity_id`) + `run_aggression_tally` (final) in RunSummary. `possession_active`
+  derived from PossessionEffect existence (non-circular). See 00-overview.md "Phase-1 Cross-Check".
+- `trigger_consequence` spine NOT built (later mechanism). Needs new events: faction-change,
+  orc-rep stance-change, possession ability-grant, and a per-turn memo-delivery decision +
+  MemoDeliveredEvent. Reported, not wired.
+- 4 open contracts flagged for Rafe (geas, past-Sasha payload, Assembly metric, Debt scaling).
+
+**Next step:** Build Phase 2 (BugDetector predicate dispatch + single-run report) — needs no
+new game code, only the rubric (now present). Then decide on the trigger_consequence events.
+
+---
+## (Historical) Phase-0/1 engineering — COMPLETE; 7 new tests + fast suite (2059) green.
 **Just done:** Phase 0–1 engineering shipped. Both invariants verified (results in
 00-overview.md). Two narrative gaps fixed (voice ResolvedText, memos in RunSummary).
 Stranded mechanical signals reported (orc-rep has no event; aggravation SpellEvent lacks

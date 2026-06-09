@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>CatacombsOfYarl.Analyst</RootNamespace>
+    <AssemblyName>yarl-analyst</AssemblyName>
+    <!-- YamlDotNet (transitive via Logic) uses reflection for rubric deserialization. -->
+    <PublishTrimmed>false</PublishTrimmed>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Referenced for YamlDotNet (transitive) only. The Analyst reads transcripts as
+         generic JSON, NOT via Logic's transcript classes — so it stays robust to schema
+         drift and never depends on game logic. -->
+    <ProjectReference Include="..\..\src\Logic\CatacombsOfYarl.Logic.csproj" />
+  </ItemGroup>
+
+</Project>
