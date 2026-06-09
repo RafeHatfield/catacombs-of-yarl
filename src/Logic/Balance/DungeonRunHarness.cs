@@ -82,6 +82,9 @@ public sealed class FloorRunMetrics
     /// <summary>True if any escalator/fused monster was present on this floor (initially or via spawn/raise).</summary>
     public bool EscalatorPresent { get; set; }
 
+    /// <summary>True if any spike/fused monster was present on this floor (the role-aware spike-pushover check).</summary>
+    public bool SpikePresent { get; set; }
+
     /// <summary>True if an escalator/fused monster was killed on this floor.</summary>
     public bool EscalatorNeutralized { get; set; }
 
@@ -515,7 +518,21 @@ public sealed class DungeonRunHarness
                 var turnResult = TurnController.ProcessTurn(state, action);
                 floorTurns++;
 
-                transcriptRecorder?.RecordTurn(currentTurnNumber, depth, hpPctBeforeTurn, availableActions, action, turnResult.Events);
+                if (transcriptRecorder != null)
+                {
+                    // Post-action scalar fields the rubric v1 predicates read (see config/rubric/v1.yaml).
+                    transcriptRecorder.RecordTurn(
+                        currentTurnNumber, depth,
+                        new TurnVitals(
+                            PlayerHpPct:        hpPctBeforeTurn,
+                            AvailableActionCount: availableActions,
+                            IsGameOver:         state.IsGameOver,
+                            RunAggressionTally: state.Player.Get<RunAggressionTally>()?.Total() ?? 0,
+                            PossessionActive:   IsPlayerPossessionActive(state),
+                            ControlledEntityId: state.ControlledEntity.Id,
+                            PlayerEntityId:     state.Player.Id),
+                        action, turnResult.Events);
+                }
 
                 // 0c: ingest this turn's combat into the per-floor lever-signal accumulators.
                 combat.IngestTurn(turnResult.Events, floorTurns, state);
@@ -593,6 +610,7 @@ public sealed class DungeonRunHarness
             floorMetrics.CombatTurns             = combat.CombatTurns;
             floorMetrics.AvgHitsToKill           = combat.AvgHitsToKill;
             floorMetrics.EscalatorPresent        = combat.EscalatorPresent;
+            floorMetrics.SpikePresent            = combat.SpikePresent;
             floorMetrics.EscalatorNeutralizedAtTurn = combat.EscalatorNeutralizedAtTurn;
             floorMetrics.EscalatorNeutralized    = combat.EscalatorNeutralizedAtTurn.HasValue;
             // Build the death record only on a real player DeathEvent (not stuck-aborts, which set
@@ -701,13 +719,16 @@ public sealed class DungeonRunHarness
         {
             int depthReached = perFloor.Count > 0 ? perFloor[^1].Depth : 0;
             var memos = BuildDeliveredMemos(memoRegistry, playerDiedThisRun, killerName, depthReached);
+            // Final aggression tally for the run-level value_reconciliation detector.
+            int finalTally = lastFloorPlayer?.Get<RunAggressionTally>()?.Total() ?? 0;
             transcriptRecorder.Finish(
                 runId: $"{baseSeed}-{Guid.NewGuid():N}",
                 depthReached: depthReached,
                 floorCount: perFloor.Count,
                 turnCount: totalTurns,
                 ending: outcome,
-                memos: memos);
+                memos: memos,
+                runAggressionTally: finalTally);
         }
 
         return new DungeonSoakRunResult
@@ -779,6 +800,21 @@ public sealed class DungeonRunHarness
 
     private static double HpFraction(Fighter fighter)
         => fighter.MaxHp > 0 ? (double)fighter.Hp / fighter.MaxHp : 0.0;
+
+    /// <summary>
+    /// True iff a player-initiated PossessionEffect exists on any monster this turn. Derived
+    /// from the effect's presence — NOT from ControlledEntity — so the rubric's
+    /// `possession_body_inconsistent` predicate (possession_active AND controlled==player) can
+    /// catch the bug where the effect exists but control was never transferred. ControlledEntity
+    /// additionally requires PossessorEntityId == Player.Id, so a mismatch there trips the check.
+    /// </summary>
+    private static bool IsPlayerPossessionActive(GameState state)
+    {
+        foreach (var m in state.Monsters)
+            if (m.Get<Combat.StatusEffects.PossessionEffect>() is { Source: Combat.StatusEffects.PossessionSource.PlayerInitiated })
+                return true;
+        return false;
+    }
 
     /// <summary>
     /// Count of meaningful actions available to the player this turn — the signal the
@@ -883,13 +919,18 @@ public sealed class DungeonRunHarness
         public int DamageTaken { get; private set; }
         public int CombatTurns { get; private set; }
         public bool EscalatorPresent { get; private set; }
+        public bool SpikePresent { get; private set; }
         public int? EscalatorNeutralizedAtTurn { get; private set; }
 
         public FloorCombatTracker(int playerId, GameState state)
         {
             _playerId = playerId;
             foreach (var m in state.Monsters)
-                if (IsEscalator(m)) { EscalatorPresent = true; break; }
+            {
+                var a = m.Get<ThreatArchetypeTag>()?.Archetype;
+                if (a is ThreatArchetype.Escalator or ThreatArchetype.Fused) EscalatorPresent = true;
+                if (a is ThreatArchetype.Spike or ThreatArchetype.Fused) SpikePresent = true;
+            }
         }
 
         public double AvgHitsToKill => _killHitCounts.Count > 0 ? _killHitCounts.Average() : 0.0;

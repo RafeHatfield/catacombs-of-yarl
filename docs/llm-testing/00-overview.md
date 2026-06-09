@@ -1,7 +1,16 @@
 # LLM Testing System — Overview
 
-**Status:** Both plans locked. **Analyst Phase 0–1 engineering (rubric-independent) is COMPLETE** (2026-06-09).
-Rubric-dependent work (BugDetector logic, coherence pass) still on hold pending the Thread 1 handoff.
+**Status:** Both plans locked. **Analyst Phases 0–2 + 4 COMPLETE** (2026-06-09): transcript
+enrichment, Phase-1 cross-check, BugDetector (predicate mechanism) + single-run report, and the
+**batch pipeline (BatchAnalyzer + AggregateReport + findings.md)**. All four RUNNABLE-NOW
+predicates demonstrated firing on engineered violation fixtures; the audit trail (turns evaluated
+per category) survives aggregation; 0× mechanism triggers route as UNVERIFIED blind spots, never
+"broken". `text_pattern` / `llm_judged` / `trigger_consequence` recognized by dispatch and
+log-and-skip. **Phase 3 (coherence) intentionally skipped** — needs `coherence_dimensions`; the
+aggregate carries an N/A slot for it (not faked). `trigger_consequence` evaluator unbuilt (needs
+evaluator + the four open contracts).
+**Rubric landed:** `config/rubric/v1.yaml` + `config/rubric/silent-failure-inventory.md`.
+**Tool:** `tools/Analyst/` — single: `--transcript <jsonl> --rubric config/rubric/v1.yaml [--report <json>]`; batch: `--batch <dir> --rubric config/rubric/v1.yaml [--aggregate findings.md] [--aggregate-json <json>] [--concurrency N]`.
 **Last updated:** 2026-06-09
 
 This directory contains the engineering plans for the LLM-based testing system.
@@ -220,6 +229,201 @@ fixes await the full trigger inventory):
 The `RunSummary.system_triggers` set is **provisional-pending-rubric**: the minimal set is
 wired; the rubric may extend it (and should add the orc-rep + aggravation-faction events
 above to make their silent_failure detectors implementable).
+
+---
+
+## Phase-1 Cross-Check vs Rubric v1 (2026-06-09)
+
+Reconciles `config/rubric/v1.yaml` (RUNNABLE-NOW predicates) and
+`config/rubric/silent-failure-inventory.md` (the `trigger_consequence` punch list) against
+what the transcript actually captures. This is the CC half of the cross-check the inventory
+asks for.
+
+### RUNNABLE-NOW predicates — ALL FOUR now executable ✅
+
+The four `predicate`-mechanism categories reference five per-turn fields that did not exist
+in the Phase-0/1 transcript. All are now captured as top-level `TurnRecord` fields (post-action),
+verified by `TurnRecord_CarriesRubricV1PredicateFields`:
+
+| predicate | fields it reads | status |
+|---|---|---|
+| `soft_lock` | `available_action_count`, `is_game_over` | ✅ both present |
+| `hp_out_of_range` | `player_hp_pct` | ✅ (already present) |
+| `aggression_tally_negative` | `run_aggression_tally` | ✅ added (`RunAggressionTally.Total()`) |
+| `possession_body_inconsistent` | `possession_active`, `controlled_entity_id`, `player_entity_id` | ✅ added; `possession_active` derived from the PossessionEffect's existence, NOT from `ControlledEntity`, so the predicate is non-circular |
+
+`value_reconciliation` (`aggression_tally_increment`): `RunSummary.run_aggression_tally`
+(final) is added. Confirmed per the inventory note — **no per-increment event is needed**;
+the analyst reconstructs the expected count from qualifying-act events and compares.
+**Remaining gap:** the qualifying acts (unprovoked cross-faction kills) are not yet
+classifiable from the stream — `DeathEvent` carries killer/victim ids but not the
+victim faction or the "unprovoked" flag the tally keys on. Reconstruction needs those
+attributes on the kill event (or a marker), AND the exact qualifying-act list is itself an
+open contract. Report only; not wired.
+
+### `trigger_consequence` detectors — punch list reconciled
+
+The `trigger_consequence` evaluator does NOT exist in v1 (it is a later mechanism), so none
+of these run yet. The cross-check is about whether the TRIGGER and CONSEQUENCE events are in
+the stream when it is built:
+
+| detector | trigger event | consequence event | gap |
+|---|---|---|---|
+| `faction_turning` | `SpellEvent`(aggravated) — present but **missing `TargetFaction` value** | **faction-change event — does not exist anywhere** | trigger needs the faction param; consequence event must be defined (coupled to the faction-turning fix) |
+| `possession_ability_grant` | `PossessionEnteredEvent` ✅ | ability-set-granted event — **none found** (grant is silent on possession) | needs a grant event |
+| `orc_rep_threshold` | **no event** (orc-rep change is fully stranded) | **no event** | needs both trigger + consequence events |
+| `memo_escalation` | escalation condition — n/a | `MemoDeliveredEvent` — **not added** | memos deliver as an END-OF-RUN BATCH, captured in `RunSummary.memos_delivered`; a windowed per-turn check needs the memo system to deliver per-turn AND a `MemoDeliveredEvent`. That is a design decision (when do memos deliver?), not just an event class. Left for the design thread + the evaluator |
+| `guardian_rose_with_no_tier` / `guardian_tier_correctness` | Weighing rise | assigned-tier as a **structured field** + **tier table as readable config** | endgame; bot never reaches; deferred |
+| `savage_warden_curse`, `corrosion_easter_egg` | scoped `[scripted]` | — | need scripted scenarios, not organic bot runs; out of scope |
+
+**Net:** the predicate spine is fully unblocked for Phase 2. The `trigger_consequence` spine
+needs new mechanical EVENTS before its evaluator can be built — chiefly a **faction-change
+event**, an **orc-rep stance-change event**, a **possession ability-grant event**, and a
+decision on **per-turn memo delivery + `MemoDeliveredEvent`**. None are wired this session
+(they need the evaluator and, in several cases, the open contracts below).
+
+### Open contracts — still need Rafe's input (from the inventory)
+
+These block writing the corresponding detectors; do not infer them:
+1. **Orc geas** — what state is set on commitment, what enforces it, what is the break consequence?
+2. **Past-Sasha** — mechanical payload of an encounter, or purely narrative? (If narrative, it leaves silent_failure for coherence/voice.)
+3. **Assembly tier** — what metric does the Assembly key on at the Weighing?
+4. **The Debt** — metric-scaled, or an unscaled claim (`direction: n/a`)?
+
+---
+
+## Analyst Phase 2 — BugDetector + single-run report (COMPLETE, 2026-06-09)
+
+Pure tooling in `tools/Analyst/` — no game-logic changes. Components:
+- `TranscriptLoader` — reads enriched JSONL as generic JSON, lifts top-level scalar fields into
+  a name→value map (forward-compatible; new scalar fields auto-available). Schema-version
+  mismatch on a mandatory field is fatal.
+- `RubricLoader` — loads `v1.yaml`, validates strictly. Missing mechanism, unknown mechanism,
+  missing predicate, malformed predicate, schema mismatch are ALL fatal at load — never a silent
+  never-fire. Unknown top-level keys (coherence_dimensions, coverage_semantics) ignored gracefully.
+- `PredicateExpression` — self-contained parser/evaluator for the rubric's expression language
+  (`and`/`or`/`not`, `== != < <= > >=`, identifiers, literals, parens). Parsed once at load.
+- `BugDetector` — dispatches on `mechanism`, NOT category name (Constraint A). `predicate`
+  implemented; `text_pattern` / `llm_judged` / `trigger_consequence` recognized and log-and-skip.
+- `EvaluationReport` — per-run JSON: bug_candidates, **predicate_coverage** (turns evaluated +
+  hits per category), **skipped_mechanisms** (what didn't run and why), system_coverage echo,
+  deterministic analyst_note. Coherence empty (Phase 3), structural_summary null (bot runs).
+
+### Acceptance gate — each predicate demonstrated FIRING (not just "clean")
+
+Per the gate (a never-fired check is indistinguishable from a cannot-fire check), each of the
+four RUNNABLE-NOW predicates has a permanent violation-fixture regression test
+(`tests/Balance/AnalystBugDetectorTests.cs`) proving it fires, plus end-to-end CLI confirmation:
+
+| predicate | violation that fires it | evidence snippet |
+|---|---|---|
+| `soft_lock` | `available_action_count=0, is_game_over=false` | `available_action_count=0, is_game_over=false at turn 42` |
+| `hp_out_of_range` | `player_hp_pct=1.4` (and `-0.2`) | `player_hp_pct=1.4 at turn 42` |
+| `aggression_tally_negative` | `run_aggression_tally=-2` | `run_aggression_tally=-2 at turn 42` |
+| `possession_body_inconsistent` | `possession_active=true, controlled_entity_id==player_entity_id==0` | `possession_active=true, controlled_entity_id=0, player_entity_id=0 at turn 42` |
+
+Each fixture also includes CLEAN turns that must NOT fire (specificity). Two further gate tests:
+a complete clean transcript yields 0 candidates with all four categories shown evaluated; a
+transcript MISSING a predicate's field surfaces that category as a SKIP (with reason), never as a
+clean pass. Real bot run (seed 1337, 2403 turns): 0 candidates, all four categories evaluated
+2403× — auditably clean. 21 Analyst tests green; full fast suite 2132 green.
+
+### EvaluationReport shape (real transcript)
+
+```jsonc
+{
+  "run_id": "...", "persona": "balanced", "player_type": "bot", "replay_available": true,
+  "bug_candidates": [ /* { turn, category, mechanism, description, evidence_snippet } */ ],
+  "predicate_coverage": [ { "category": "soft_lock", "turns_evaluated": 2403, "candidates_found": 0 }, ... ],
+  "skipped_mechanisms": [ /* { category, mechanism, reason } — empty when all categories ran */ ],
+  "coherence": {},                         // Phase 3
+  "system_coverage": { /* RunSummary.system_triggers echoed */ },
+  "structural_summary": null,              // LLM Player runs only
+  "analyst_note": "Predicate scan: 4 predicate categories evaluated across 2403 turns; 0 bug candidates. No categories skipped."
+}
+```
+
+### NUnit pin (incidental)
+
+Referencing the Analyst project from the test project triggered a restore that floated NUnit
+`4.*` from 4.5.1 → 4.6.1; 4.6.1's new Func/Action assertion overloads make the suite's existing
+lambda-based `Assert.That`/`DoesNotThrow`/`Throws` calls ambiguous. Pinned NUnit to `4.5.1` (the
+version the suite was written against) rather than churn 30+ pre-existing files. Migrating those
+call sites to disambiguate is a separate cleanup if we later want to unpin.
+
+### Stop line
+
+Stopped before the coherence pass (Phase 3 — needs full rubric `coherence_dimensions`) and
+before any `trigger_consequence` work (needs the evaluator + the open contracts above).
+
+---
+
+## Analyst Phase 4 — batch pipeline (COMPLETE, 2026-06-09)
+
+`BatchAnalyzer` evaluates a directory of transcripts in parallel (shared reentrant `BugDetector`;
+one bad file is recorded as a load failure and never aborts the batch) → `AggregateReport`
+(JSON) + `findings.md`. Deterministic regardless of concurrency (results sorted by run_id).
+CLI: `--batch <dir> --rubric config/rubric/v1.yaml [--aggregate findings.md] [--aggregate-json <json>] [--concurrency N]`.
+
+### Standing invariant: silence travels with its ran-count
+
+The per-run audit trail (predicate_coverage + skipped_mechanisms) is rolled up, NOT discarded.
+The aggregate reports, per predicate category: **total turns evaluated across the batch**, **runs
+ran**, **runs skipped**. "0 candidates across 50 runs" is always accompanied by "each category
+evaluated N total times, K skipped" — so silent-clean cannot re-emerge at the aggregate level.
+A run missing a predicate's field rolls up as a SKIP with its reason, never as a clean pass.
+
+### Heatmap = neutral data + semantic interpretation
+
+The system-trigger heatmap is emitted as raw per-trigger fire rates (% of runs that fired each) —
+no judgment baked in. `coverage_semantics` (v1.yaml, zero-threshold model) is then applied:
+- **CONTENT** triggers (mural_read…): any rate incl. zero is fine — never flagged.
+- **MECHANISM** triggers: low-but-nonzero is coherent playstyle; **0× across the batch =
+  UNVERIFIED**, surfaced as a blind spot that **ROUTES, not concludes**: "exercise with a
+  targeted/scripted run (or LLM persona); if the consequence fires it's healthy-but-unexercised,
+  if not it's dead. 0× from a bot batch does NOT mean broken."
+- Classification bridges the rubric's detector-named examples (possession_ability_grant) to the
+  transcript's system_triggers keys (possession_used) by stem; unmatched → `unclassified`,
+  reported neutrally. (This naming bridge is a seam to tighten as the rubric classification completes.)
+
+### The blind-spot list IS the value (real 50-run bot batch)
+
+On a real 50-run bot batch: 0 bug candidates, every predicate category evaluated **82,442 turns
+across 50 runs, 0 skipped** (auditably clean). Mechanism blind spots at 0×: **`possession_used`**
+and **`orc_rep_changed`** — the canonical cases. This list = the things the bulk (bot) instrument
+never exercises (sub-shape B made visible in aggregate). possession is the canonical example —
+voice lines are possession-gated and bots never possess, so that whole surface is a known blind
+spot. This feeds the scripted-scenario backlog and the case for the LLM personas. Content
+(`mural_read`, 0×) and unclassified (`past_sasha_encountered`, `weighing_reached`) are NOT flagged.
+
+### Smaller decisions
+
+- **Bug-candidate confidence:** reported as "appeared in N of M runs" (frequency, human-judgeable),
+  not a synthesized score. Resolves the plan's open issue.
+- **LLM-Player-only fields** (structural_judgment frequency) + **coherence**: present-but-N/A slots
+  in the aggregate, built for slot-in, NOT faked.
+
+### AggregateReport shape (real bot batch)
+
+```jsonc
+{
+  "batch_dir": "...", "runs_evaluated": 50, "runs_failed_to_load": 0, "failed_files": [],
+  "bug_candidates": [ /* { category, mechanism, description, runs_with_candidate, total_runs, total_instances, example_evidence } */ ],
+  "predicate_coverage": [ { "category": "soft_lock", "total_turns_evaluated": 82442, "runs_evaluated": 50, "runs_skipped": 0, "total_candidates": 0 }, ... ],
+  "skipped_mechanisms": [ /* { category, mechanism, runs_skipped, reasons[] } */ ],
+  "system_trigger_heatmap": [ { "trigger": "possession_used", "fired_in_runs": 0, "total_runs": 50, "fire_rate": 0.0, "trigger_class": "mechanism" }, ... ],
+  "mechanism_blind_spots": [ { "trigger": "possession_used", "route": "unverified — exercise … 0× from a bot batch does NOT mean broken." }, ... ],
+  "coherence_status": "N/A — coherence pass not run (rubric coherence_dimensions empty; Analyst Phase 3).",
+  "structural_judgment_status": "N/A — bot-only batch (structural judgments are emitted by LLM Player runs).",
+  "note": "50 runs evaluated; 0 bug candidate instances …; 4 predicate categories in the audit trail, none skipped; 2 mechanism blind-spots (0× — unverified)."
+}
+```
+
+### Stop line (Phase 4)
+
+No coherence pass (needs `coherence_dimensions`); no `trigger_consequence` work (needs the
+evaluator + the four open contracts). The NUnit 4.5.1 pin (added in Phase 2, reason inline at the
+pin site) was not touched — Phase 4 added no project references or shared-config changes.
 
 ---
 

@@ -1,0 +1,186 @@
+# ============================================================================
+# Evaluation Rubric — v1 (minimal)
+# Thread 1 (design-owned) handoff to the Analyst (Thread 2) and Player (Thread 3).
+#
+# THIS FILE IS LOADED BY THE ANALYST. Everything uncommented here must be
+# runnable by the v1 BugDetector, which implements ONLY the `predicate`
+# mechanism: a single expression evaluated against ONE TurnRecord's fields.
+# An unknown `mechanism` value is a FATAL load error by design — so anything
+# that needs a mechanism v1 has not built is COMMENTED OUT, not live.
+#
+# Companion: silent-failure-inventory.md holds the `trigger_consequence`
+# detector spec. That is NOT loaded here — it is the spec for a later mechanism
+# and the input to the CC Phase-1 cross-check. Do not paste those entries into
+# this file until the trigger_consequence evaluator exists.
+#
+# Status 2026-06-09:
+#   - structural_judgment_schema: LOCKED.
+#   - bug_categories: split into RUNNABLE-NOW and PENDING (see inline).
+#   - coherence_dimensions: experiential-only, empty in v1, arrives from design.
+# ============================================================================
+
+schema_version: 1
+
+# ----------------------------------------------------------------------------
+# structural_judgment_schema — LOCKED.
+# Vocabulary the Player uses for self-assessment and the Analyst reads back.
+# These four terms describe DECISION ARCHITECTURE only. Voice / narrative
+# problems do NOT route here — they route to bug_categories (text/register) or
+# to coherence_dimensions. Keeping the channel clean is deliberate.
+# Unblocks: Player Phase 0, Analyst Phase 2.
+# ----------------------------------------------------------------------------
+structural_judgment_schema:
+  - dead_action_space    # every available option was equivalent / arbitrary
+  - forced_move          # only one action existed
+  - novel_encounter      # first interaction with this entity or mechanic
+  - system_unreachable   # mechanic present but no accessible entry point this turn
+
+# ----------------------------------------------------------------------------
+# bug_categories
+# Each entry carries a `mechanism` selecting the BugDetector implementation.
+# v1 ships `predicate` only. `text_pattern` and `llm_judged` are stubbed in the
+# dispatcher (log-and-skip). `trigger_consequence` does NOT exist in v1.
+# ----------------------------------------------------------------------------
+bug_categories:
+
+  # ========================================================================
+  # RUNNABLE NOW — single-record predicate. Fits the v1 evaluator as-is.
+  # This block is the real Phase-2 unblock.
+  # ========================================================================
+
+  soft_lock:
+    mechanism: predicate
+    description: "Player cannot act and the game is not flagged over."
+    predicate: "available_action_count == 0 and not is_game_over"
+    scope: runtime
+
+  hp_out_of_range:
+    mechanism: predicate
+    description: "HP fraction outside the valid [0,1] band."
+    predicate: "player_hp_pct < 0 or player_hp_pct > 1"
+    scope: runtime
+
+  aggression_tally_negative:
+    mechanism: predicate
+    description: "RunAggressionTally went negative; it is an increment-only counter."
+    predicate: "run_aggression_tally < 0"
+    scope: runtime
+
+  possession_body_inconsistent:
+    mechanism: predicate
+    description: >
+      Possession is active but the controlled entity is still the original
+      player rather than the possessed body.
+    predicate: "possession_active and controlled_entity_id == player_entity_id"
+    scope: runtime
+
+  # ========================================================================
+  # PENDING — needs evaluator support v1 does NOT yet have.
+  # Left COMMENTED so they do not trip the loader. Uncomment per the note.
+  # ========================================================================
+
+  # --- Needs SEQUENTIAL comparison (turn N vs N-1) -------------------------
+  # The v1 predicate evaluator reads a single TurnRecord. CONFIRM WITH CC
+  # whether it can hold prior-turn state. If not, this is a small evaluator
+  # extension (iterate + retain prev), NOT a new mechanism. Both checks are
+  # inherently about the sequence, so they cannot be reduced to single-record.
+  #
+  # aggression_tally_monotonic:
+  #   mechanism: predicate            # + sequential support
+  #   description: "RunAggressionTally decreased between consecutive turns."
+  #   predicate: "run_aggression_tally < prev.run_aggression_tally"
+  #   scope: runtime
+  #
+  # floor_monotonic:
+  #   mechanism: predicate            # + sequential support
+  #   description: "Floor number decreased; descent is one-directional."
+  #   predicate: "floor < prev.floor"
+  #   scope: runtime
+
+  # --- Needs reconciliation + two CC-exposed fields -----------------------
+  # This is a STATE-RECONCILIATION check, not a one-line predicate. It needs:
+  #   (a) the tier table as READABLE CONFIG — the detector READS it and never
+  #       duplicates thresholds in code; and
+  #   (b) the assigned tier per Guardian as a STRUCTURED FIELD in the
+  #       transcript, not the dialogue prose that is already greppable.
+  # Both (a) and (b) are on the CC Phase-1 punch list.
+  #
+  # This guards PLUMBING regression (tally -> tier logic — the exact failure
+  # that was just fixed), NOT table INTENT (whether the butcher SHOULD face a
+  # Savage Auditor is a "does the Weighing feel earned" question and lives in
+  # coherence_dimensions). Keeping intent out of here is Constraint B holding.
+  #
+  # Live entries cover the THREE Guardians the per-run-excess fix touched.
+  # Assembly + the Debt are PARKED on contract (see companion doc, Open Contracts).
+  #
+  # guardian_tier_correctness:
+  #   mechanism: state_reconciliation   # NOT IN v1 — pending evaluator
+  #   source_of_truth: "game tier-table config"
+  #   per_guardian:
+  #     warden_of_wardens: { keys_on: run_aggression_tally, direction: standard }
+  #     oathkeeper:        { keys_on: run_aggression_tally, direction: standard }
+  #     auditors_own:      { keys_on: run_aggression_tally, direction: inverted }
+  #   rule: "assigned_tier == table.lookup(keys_on, direction)"
+  #   on_mismatch: bug_candidate
+  #   scope: runtime
+
+  # --- Future mechanisms, stubbed in dispatch, populated by design thread --
+  # register_violation:   { mechanism: llm_judged }    # voice taxonomy — later
+  # disallowed_character: { mechanism: text_pattern }  # e.g. em-dash lint — later
+
+# ----------------------------------------------------------------------------
+# coherence_dimensions — EXPERIENTIAL ONLY (Constraint B).
+# Value-correctness ("computed right?") belongs in bug_categories, NEVER here.
+# Graded on COHERENCE (did choices add up to a story), not COVERAGE (did the run
+# touch everything). A run that commits to ignoring a faction and pays it forward
+# at the Weighing is a GOOD run, not a gap. Arrives in full from the design
+# thread; EMPTY in v1 so the Analyst loads without a coherence pass.
+# ----------------------------------------------------------------------------
+coherence_dimensions: {}
+  # record_reflects_choices (experiential half only): "Do the Guardian tiers
+  #   feel earned by the arc that led to them?" The value-correctness half lives
+  #   in guardian_tier_correctness (bug_categories), NOT here. Do not mix.
+
+# ----------------------------------------------------------------------------
+# coverage_semantics — read by the AGGREGATE REPORTER (Analyst Phase 4), NOT a
+# per-run bug check. The heatmap itself is NEUTRAL DATA (per-trigger fire rate
+# across the batch); this layer says how to READ it.
+#
+# The key threshold is ZERO, not "low". Refined from an earlier
+# low_rate_is_defect binary, which was too crude — the possession case exposed
+# it: a run that never possesses is coherent direct-combat playstyle, so
+# low-but-nonzero is NOT a defect; yet ZERO possession across an entire batch
+# still means the mechanism is unverified.
+#
+#   - CONTENT (murals, signs, flavor): any rate including zero is fine. An
+#     unread mural is doing its job; there is no mechanism to verify. Do NOT flag.
+#   - MECHANISM (faction-turning, possession grant, orc-rep): low-but-nonzero is
+#     coherent playstyle variation, NOT a defect. But ZERO across a batch =
+#     UNVERIFIED, and zero has two INDISTINGUISHABLE causes:
+#       (a) the mechanism is dead, or
+#       (b) this instrument never creates the trigger condition (e.g. bots never
+#           possess, so possession-grant never fires regardless of its health).
+#     Both produce identical evidence (0x). The report must therefore ROUTE, not
+#     CONCLUDE: "unverified — exercise [trigger] with a targeted/scripted run; if
+#     the consequence fires there it's healthy-but-unexercised, if not it's dead."
+#     Never report a 0x mechanism as "broken".
+#
+# This makes the batch report a BLIND-SPOT DETECTOR for the bulk instrument: the
+# list of mechanism triggers at 0x IS the list of things bot runs never exercise
+# — sub-shape B (the faction-turning failure shape) made visible in aggregate.
+# That list feeds the scripted-scenario backlog and the case for the LLM personas.
+#
+# Per-trigger classification below is INCOMPLETE — completed as triggers are
+# instrumented and the open contracts land.
+# ----------------------------------------------------------------------------
+coverage_semantics:
+  content_triggers:
+    zero_rate_is_evidence_gap: false
+    examples: [mural_read]
+  mechanism_triggers:
+    zero_rate_is_evidence_gap: true     # 0x across a batch => unverified; route to targeted run
+    low_nonzero_is_coherent: true       # low-but-present is playstyle variation, not a defect
+    examples: [faction_turning, possession_ability_grant, orc_rep_threshold]
+  # parked / incomplete:
+  #   past_sasha_encountered  — class depends on the open contract (mechanism vs narrative)
+  #   weighing_reached        — depth-gated; low rate may be bot skill, not system health

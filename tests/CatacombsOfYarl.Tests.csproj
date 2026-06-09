@@ -17,7 +17,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
-    <PackageReference Include="NUnit" Version="4.*" />
+    <!-- Pinned: NUnit 4.6 added Func/Action assertion overloads that make lambda-based
+         Assert.That/DoesNotThrow/Throws calls (used throughout this suite) ambiguous. Pin to
+         the version the suite was written against until those call sites are migrated. -->
+    <PackageReference Include="NUnit" Version="4.5.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.*" />
     <PackageReference Include="NUnit.Analyzers" Version="4.*">
       <PrivateAssets>all</PrivateAssets>
@@ -27,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Logic\CatacombsOfYarl.Logic.csproj" />
+    <ProjectReference Include="..\tools\Analyst\Analyst.csproj" />
   </ItemGroup>
 
 </Project>

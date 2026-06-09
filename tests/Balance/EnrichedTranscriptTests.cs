@@ -123,7 +123,11 @@ public class EnrichedTranscriptTests
         var recorder = new TranscriptRecorder(seed: 42, persona: "balanced", voiceRegistry: _voice);
         recorder.BeginFloor(1, 1.0);
         var evt = new VoiceLineEvent { ActorId = 0, TriggerId = trigger };
-        recorder.RecordTurn(1, 1, 1.0, 5, PlayerAction.Wait, new TurnEvent[] { evt });
+        recorder.RecordTurn(
+            1, 1,
+            new TurnVitals(PlayerHpPct: 1.0, AvailableActionCount: 5, IsGameOver: false,
+                RunAggressionTally: 0, PossessionActive: false, ControlledEntityId: 0, PlayerEntityId: 0),
+            PlayerAction.Wait, new TurnEvent[] { evt });
         recorder.Finish("run", 1, 1, 1, "survived", System.Array.Empty<MemoRecord>());
 
         var jsonl = recorder.ToJsonl();
@@ -212,6 +216,47 @@ public class EnrichedTranscriptTests
             "Attack must record the resolved target entity ID (replay prerequisite).");
         Assert.That(a.GetProperty("target_entity_type").GetString(), Is.Not.Empty,
             "Attack must record the target's stable type string for readability.");
+    }
+
+    [Test]
+    [Description("Rubric v1 RUNNABLE-NOW predicates can read every field they reference on a real TurnRecord + RunSummary")]
+    public void TurnRecord_CarriesRubricV1PredicateFields()
+    {
+        var (_, jsonl) = BuildHarness().RunWithTranscript(3, BaseSeed, voiceRegistry: _voice, memoRegistry: _memos);
+        var lines = jsonl.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
+        // A representative turn record carries all four predicates' fields, correctly typed.
+        var turn = JsonDocument.Parse(lines[1]).RootElement;
+        Assert.Multiple(() =>
+        {
+            // soft_lock: available_action_count, is_game_over
+            Assert.That(turn.GetProperty("available_action_count").ValueKind, Is.EqualTo(JsonValueKind.Number));
+            Assert.That(turn.GetProperty("is_game_over").ValueKind, Is.AnyOf(JsonValueKind.True, JsonValueKind.False));
+            // hp_out_of_range: player_hp_pct
+            Assert.That(turn.GetProperty("player_hp_pct").ValueKind, Is.EqualTo(JsonValueKind.Number));
+            // aggression_tally_negative: run_aggression_tally
+            Assert.That(turn.GetProperty("run_aggression_tally").ValueKind, Is.EqualTo(JsonValueKind.Number));
+            // possession_body_inconsistent: possession_active, controlled_entity_id, player_entity_id
+            Assert.That(turn.GetProperty("possession_active").ValueKind, Is.AnyOf(JsonValueKind.True, JsonValueKind.False));
+            Assert.That(turn.GetProperty("controlled_entity_id").ValueKind, Is.EqualTo(JsonValueKind.Number));
+            Assert.That(turn.GetProperty("player_entity_id").ValueKind, Is.EqualTo(JsonValueKind.Number));
+        });
+
+        // Sanity: the increment-only invariants actually hold across the real run, and the
+        // run-level reconciliation tally is present in RunSummary.
+        foreach (var line in lines)
+        {
+            var el = JsonDocument.Parse(line).RootElement;
+            if (el.GetProperty("record_type").GetString() != "turn") continue;
+            Assert.That(el.GetProperty("run_aggression_tally").GetInt32(), Is.GreaterThanOrEqualTo(0),
+                "aggression_tally_negative predicate must never fire on a clean run.");
+            var hp = el.GetProperty("player_hp_pct").GetDouble();
+            Assert.That(hp, Is.InRange(0.0, 1.0), "hp_out_of_range predicate must never fire on a clean run.");
+        }
+
+        var summary = JsonDocument.Parse(lines[^1]).RootElement;
+        Assert.That(summary.TryGetProperty("run_aggression_tally", out var tally), Is.True);
+        Assert.That(tally.GetInt32(), Is.GreaterThanOrEqualTo(0));
     }
 
     // ── helpers ─────────────────────────────────────────────────────────────────
