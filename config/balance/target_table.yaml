@@ -24,27 +24,40 @@ regions:
       spike: 3        # lethal-if-ignored — downs you in few blows
       escalator: 4    # not ttd-tuned in intent; a nominal anchor until B-tuning sets it
       fused: 3        # lich (spike half drives the fast-death check)
+    # lever_expectations — the EXPECTED per-death signal values at baseline gear, one per actionable
+    # lever. When a floor's death% is flagged, observed signals are read as distances from these to
+    # attribute WHICH dial (LeverAttributionClassifier). Placeholders; authored for real during B1 tuning.
+    lever_expectations:
+      damage_per_hit: 5.0          # monster-damage lever
+      killer_hit_rate: 0.5         # armor/AC lever (landed ÷ attempted swings)
+      counterattacks_landed: 4.0   # weapon-speed / control lever (player blows back)
+      distinct_attackers: 2.0      # density lever
+      attack_frequency: 1.0        # attack-frequency lever (hits per engagement turn)
 
   B2:
     depth_min: 6
     depth_max: 9
     death_pct: { min: 0.05, max: 0.15 }
     hits_to_down: { baseline: 9, spike: 3, escalator: 4, fused: 3 }   # placeholder = B1
+    lever_expectations: { damage_per_hit: 5.0, killer_hit_rate: 0.5, counterattacks_landed: 4.0, distinct_attackers: 2.0, attack_frequency: 1.0 }
 
   B3:
     depth_min: 10
     depth_max: 14
     death_pct: { min: 0.05, max: 0.15 }
     hits_to_down: { baseline: 9, spike: 3, escalator: 4, fused: 3 }   # placeholder = B1
+    lever_expectations: { damage_per_hit: 5.0, killer_hit_rate: 0.5, counterattacks_landed: 4.0, distinct_attackers: 2.0, attack_frequency: 1.0 }
 
   B4:
     depth_min: 15
     depth_max: 19
     death_pct: { min: 0.05, max: 0.15 }
     hits_to_down: { baseline: 9, spike: 3, escalator: 4, fused: 3 }   # placeholder = B1
+    lever_expectations: { damage_per_hit: 5.0, killer_hit_rate: 0.5, counterattacks_landed: 4.0, distinct_attackers: 2.0, attack_frequency: 1.0 }
 
   B5:
     depth_min: 20
     depth_max: 25
     death_pct: { min: 0.05, max: 0.15 }
     hits_to_down: { baseline: 9, spike: 3, escalator: 4, fused: 3 }   # placeholder = B1
+    lever_expectations: { damage_per_hit: 5.0, killer_hit_rate: 0.5, counterattacks_landed: 4.0, distinct_attackers: 2.0, attack_frequency: 1.0 }
