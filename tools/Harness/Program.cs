@@ -26,6 +26,7 @@ const string LevelTemplatesFile  = "config/level_templates.yaml";
 const string DepthBoonsFile      = "config/depth_boons.yaml";
 const string LootTagsFile        = "config/loot_tags.yaml";
 const string LootPolicyFile      = "config/loot_policy.yaml";
+const string TargetTableFile     = "config/balance/target_table.yaml";
 
 // ─── Parse args ────────────────────────────────────────────────────────────
 
@@ -501,7 +502,10 @@ if (dungeonMode)
     // --report: generate full text report and print to stdout after the summary table.
     if (printReport)
     {
-        var report = DungeonSoakReport.Generate(summary);
+        // Load the role-aware target table so the report includes the Floor Health section.
+        // Missing table → plain report (no health section) rather than a hard failure.
+        TargetTable? targets = File.Exists(TargetTableFile) ? TargetTableLoader.FromFile(TargetTableFile) : null;
+        var report = DungeonSoakReport.Generate(summary, targets);
         Console.WriteLine(report);
     }
 

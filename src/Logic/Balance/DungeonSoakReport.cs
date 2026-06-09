@@ -22,7 +22,19 @@ public static class DungeonSoakReport
     /// Sections are skipped or noted when data is unavailable (e.g. no telemetry),
     /// but the method never throws on valid (even empty) summaries.
     /// </summary>
-    public static string Generate(DungeonSoakSummary summary)
+    public static string Generate(DungeonSoakSummary summary) => Generate(summary, targets: null);
+
+    /// <summary>
+    /// Generate a full soak report, optionally including the role-aware Floor Health section.
+    ///
+    /// When <paramref name="targets"/> is provided, a "Floor Health" section renders each floor's
+    /// OBSERVED death% against the TARGET band, the classifier's VERDICT (the role-aware health reading),
+    /// the Δ from the band, and — beneath any too-hard floor — the lever attribution (which dial the
+    /// deaths implicate). Survival rate stays the balance verdict; the lever line is attribution only.
+    /// When null, the report omits Floor Health (back-compat with callers that have no target table).
+    /// </summary>
+    public static string Generate(DungeonSoakSummary summary, TargetTable? targets,
+        ClassifierConfig? classifierConfig = null, LeverConfig? leverConfig = null)
     {
         var sb = new StringBuilder();
 
@@ -30,6 +42,8 @@ public static class DungeonSoakReport
         AppendSurvivalCurve(sb, summary);
         AppendDeathClassification(sb, summary);
         AppendFloorEfficiency(sb, summary);
+        if (targets != null)
+            AppendFloorHealth(sb, summary, targets, classifierConfig ?? new ClassifierConfig(), leverConfig ?? new LeverConfig());
         AppendBotEfficiency(sb, summary);
         AppendVoiceLineHistogram(sb, summary);
         AppendAnomalies(sb, summary);
@@ -153,23 +167,8 @@ public static class DungeonSoakReport
             return;
         }
 
-        // Aggregate per-floor stats from the run list.
-        // Each run's PerFloor is keyed by Depth (1-based).
-        // We collect all depths that were actually attempted.
-        var byDepth = new SortedDictionary<int, List<FloorRunMetrics>>();
-
-        foreach (var run in summary.Runs)
-        {
-            foreach (var floor in run.PerFloor)
-            {
-                if (!byDepth.TryGetValue(floor.Depth, out var list))
-                {
-                    list = new List<FloorRunMetrics>();
-                    byDepth[floor.Depth] = list;
-                }
-                list.Add(floor);
-            }
-        }
+        // Aggregate per-floor stats from the run list (keyed by Depth, 1-based).
+        var byDepth = GroupByDepth(summary);
 
         if (byDepth.Count == 0)
         {
@@ -185,9 +184,7 @@ public static class DungeonSoakReport
         {
             double avgTurns  = floors.Average(f => f.TurnsTaken);
             double avgKills  = floors.Average(f => f.MonstersKilled);
-            double deathPct  = floors.Count > 0
-                ? (double)floors.Count(f => f.PlayerDied) / floors.Count * 100.0
-                : 0.0;
+            double deathPct  = DeathPctFraction(floors) * 100.0;
 
             // Avg HP displayed as "current/max" using the average of both fields.
             // Players with MaxHp=0 (exception runs) are excluded from the average.
@@ -210,6 +207,111 @@ public static class DungeonSoakReport
 
         sb.AppendLine();
     }
+
+    // ── Section 4b: Floor Health (role-aware) ───────────────────────────────
+    //
+    // The balance verdict is the SURVIVAL RATE vs the target band (multivariate by construction).
+    // FloorHealthClassifier renders the role-aware verdict per floor; LeverAttributionClassifier
+    // attributes too-hard floors to a tuning dial. This section is the working screen the engine feeds.
+
+    private static void AppendFloorHealth(StringBuilder sb, DungeonSoakSummary summary, TargetTable targets,
+        ClassifierConfig classifierCfg, LeverConfig leverCfg)
+    {
+        sb.AppendLine("Floor Health (role-aware):");
+        sb.AppendLine($"  Verdict = survival rate vs band (balance); levers below = attribution. Overall survival: {summary.SurvivalRate * 100:F1}%");
+
+        var byDepth = GroupByDepth(summary);
+        if (byDepth.Count == 0)
+        {
+            sb.AppendLine("  (no floor data)");
+            sb.AppendLine();
+            return;
+        }
+
+        sb.AppendLine($"  {"Depth",5}   {"Observed",8}   {"Target Band",12}   {"Δ",8}   {"Verdict",-16}");
+        sb.AppendLine($"  {"-----",5}   {"--------",8}   {"------------",12}   {"--------",8}   {"----------------",-16}");
+
+        foreach (var (depth, floors) in byDepth)
+        {
+            double observed = DeathPctFraction(floors);
+            var target = targets.ForDepth(depth);
+            var band = target.DeathPct;
+
+            // Only deaths with a classified killer feed archetype attribution; ALL deaths count in observed%.
+            var deaths = floors
+                .Where(f => f.Death?.KillerArchetype != null)
+                .Select(f => new DeathRecord(f.Death!.KillerArchetype!.Value, f.Death!.HitsToDown))
+                .ToList();
+
+            var observedFloor = new FloorObserved(
+                DeathPct: observed,
+                Deaths: deaths,
+                HasSpike: floors.Any(f => f.SpikePresent),
+                HasEscalator: floors.Any(f => f.EscalatorPresent),
+                EscalatorReachable: false, // produced by staged-start (step 8); escalator branch is moot until then
+                Escalator: null);
+
+            var verdict = FloorHealthClassifier.Classify(observedFloor, target, classifierCfg);
+
+            string delta = band.Contains(observed) ? "—"
+                : band.Above(observed) ? $"+{(observed - band.Max) * 100:F1}%"
+                : $"-{(band.Min - observed) * 100:F1}%";
+            string bandStr = $"{band.Min * 100:F0}-{band.Max * 100:F0}%";
+
+            sb.AppendLine($"  {depth,5}   {observed * 100,7:F1}%   {bandStr,12}   {delta,8}   {verdict,-16}");
+
+            // Lever attribution beneath too-hard floors (incl. secretly-lethal baseline, which can be in-band).
+            bool tooHard = band.Above(observed) || verdict == FloorHealth.BaselineBroken;
+            if (tooHard)
+                AppendLeverAttribution(sb, floors, targets.LeverExpectationForDepth(depth), leverCfg);
+        }
+
+        sb.AppendLine();
+    }
+
+    private static void AppendLeverAttribution(
+        StringBuilder sb, List<FloorRunMetrics> floors, LeverExpectation? expectation, LeverConfig leverCfg)
+    {
+        var deathRecords = floors.Where(f => f.Death != null).Select(f => f.Death!).ToList();
+        if (expectation == null || deathRecords.Count == 0)
+            return;
+
+        var tally = new Dictionary<BalanceLever, int>();
+        foreach (var d in deathRecords)
+        {
+            var dominant = LeverAttributionClassifier.Dominant(d, expectation, leverCfg);
+            if (dominant != null)
+            {
+                tally.TryGetValue(dominant.Value, out int c);
+                tally[dominant.Value] = c + 1;
+            }
+        }
+
+        string body = tally.Count == 0
+            ? "none implicated (signals within tolerance — composition/variance, not a single dial)"
+            : "levers: " + string.Join(" · ", tally.OrderByDescending(kv => kv.Value).Select(kv => $"{kv.Key} ×{kv.Value}"));
+        sb.AppendLine($"          └─ {body}");
+    }
+
+    // ── Shared floor aggregation helpers ─────────────────────────────────────
+
+    /// <summary>Group every attempted floor across all runs by depth (1-based), preserving depth order.</summary>
+    private static SortedDictionary<int, List<FloorRunMetrics>> GroupByDepth(DungeonSoakSummary summary)
+    {
+        var byDepth = new SortedDictionary<int, List<FloorRunMetrics>>();
+        foreach (var run in summary.Runs)
+        foreach (var floor in run.PerFloor)
+        {
+            if (!byDepth.TryGetValue(floor.Depth, out var list))
+                byDepth[floor.Depth] = list = new List<FloorRunMetrics>();
+            list.Add(floor);
+        }
+        return byDepth;
+    }
+
+    /// <summary>Observed death rate (fraction) for a depth = died / reached. The single source for death%.</summary>
+    private static double DeathPctFraction(IReadOnlyList<FloorRunMetrics> floors)
+        => floors.Count > 0 ? (double)floors.Count(f => f.PlayerDied) / floors.Count : 0.0;
 
     // ── Section 5: Bot Efficiency ───────────────────────────────────────────
 

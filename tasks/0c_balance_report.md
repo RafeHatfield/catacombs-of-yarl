@@ -18,10 +18,22 @@
   hits-to-down stays the upstream role-fastness trigger (FloorHealth), not re-evaluated here. Outcome tests
   green (9): high-dmg⇒MonsterDamage, normal-dmg+high-hit-rate⇒Armor, normal-dmg+high-freq⇒AttackFrequency
   (proves freq/damage don't bleed). `tests/Balance/LeverAttributionClassifierTests.cs`.
-- **Next step:** step 6 report — wire FloorHealthClassifier + LeverAttributionClassifier into
-  `DungeonSoakReport` (OBSERVED/TARGET/FLAG/Δ; survival-rate=balance verdict, levers=attribution), retire
-  inline deathPct math, and hydrate `LeverExpectation` per region (extend target_table.yaml with a
-  `lever_expectations` block, placeholders). Then step 7 baseline, step 8 staged-start.
+- **Step 6 DONE + GREEN + COMMITTED:** Role-aware `Floor Health` section in
+  `DungeonSoakReport` — OBSERVED death% / TARGET band / Δ / Verdict per floor, survival-rate framing, lever
+  attribution line beneath too-hard floors. Inline death% math retired via shared `DeathPctFraction`/
+  `GroupByDepth` helpers. `SpikePresent` added to capture (FloorHealth needs HasSpike). `lever_expectations`
+  block added to target_table.yaml (placeholders) + `TargetRegion.LeverExpectation` + loader + `ForDepth`.
+  CLI `--report` wired to load the table. New `Generate(summary, targets, ...)` overload; old `Generate(summary)`
+  back-compat (omits the section). Read-level tests (FloorHealthReportTests, 5) + TargetTableLoaderTests (9)
+  GREEN — incl. the two proof-tests at the REPORT level: TooHard+normal-dmg+high-hit-rate→"Armor"
+  (not MonsterDamage); TooHard+normal-dmg+high-freq→"AttackFrequency" (not MonsterDamage).
+- **Landed (2026-06-09) in two green commits** once the transcript/Analyst thread finished (it never
+  committed, so this session landed both): A = transcript-enrichment + Analyst rubric (Thread 2/3) carrying
+  the shared `DungeonRunHarness.cs` incl. `SpikePresent`; B = the 0c step-6 Floor Health report on top.
+  Both compile in isolation (A verified via stash). The target-table slice landed earlier as `142af2e`.
+- **Next step:** step 7 baseline-delta (mirror `BalanceSuiteEvaluator.ComputeDeltas`; `reports/baselines/
+  soak_baseline.json` + `--update-baseline`), then step 8 staged-start (produces the escalator alive-vs-killed
+  comparison the capture already records the neutralized-when half of).
 - **Open issues / FLAGS for Rafe:**
   - `target_table.yaml` numbers are B1 placeholders (HITS), authored for real *during* B1 tuning.
   - Escalator alive-vs-killed comparison still only PRODUCED once staged-start (step 8) exists; the
@@ -66,8 +78,9 @@ The report is the instrument of truth — it cannot drift green while broken (th
 5. ✅ **Outcome tests** — `tests/Balance/FloorHealthClassifierTests.cs`: 12 synthetic (observed, target,
    deaths) → assert verdict enum. Incl. the refinement proofs (fast-to-spike=Healthy; escalator-killed-
    early-but-still-lost=BaselineBroken). **All green.**
-6. ⬜ **Report columns** — `DungeonSoakReport.cs:145` Floor Efficiency: OBSERVED/TARGET/FLAG/Δ; source
-   verdicts from the classifier; retire inline deathPct math (`:188`).
+6. ✅ **Report columns** — role-aware `Floor Health` section in `DungeonSoakReport` (OBSERVED/TARGET/Δ/
+   Verdict + lever line); verdicts from FloorHealthClassifier + LeverAttributionClassifier; inline deathPct
+   math retired into shared helpers. `tests/Balance/FloorHealthReportTests.cs` (read-level, green).
 7. ⬜ **Delta baseline** — `reports/baselines/soak_baseline.json` + diff (mirror `SuiteRunner`/
    `BalanceSuiteEvaluator.ComputeDeltas`); CLI `--update-baseline` for soak.
 8. ⬜ **Staged-start** — `RunSoakStaged(startDepth, gearProfile)` on `DungeonRunHarness` (loop init :293) +
