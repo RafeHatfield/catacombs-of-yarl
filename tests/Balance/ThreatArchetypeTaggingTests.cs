@@ -40,16 +40,19 @@ public class ThreatArchetypeTaggingTests
         return entity.Get<ThreatArchetypeTag>()?.Archetype;
     }
 
-    // ── Direct assignments (§2) ───────────────────────────────────────────────────────────
+    // ── Direct assignments (§2, with the tightened spike definition) ────────────────────────
+    // SPIKE is reserved for can't-tank-must-change-approach (troll regen, wraith drain+speed, lich).
+    // Status-on-a-weak-beast (spiders' poison/slow, fire_beetle's burn) is TEXTURE → textured baseline.
     [TestCase("orc",                 ThreatArchetype.Baseline)]
     [TestCase("skeleton",            ThreatArchetype.Baseline)]
     [TestCase("zombie",              ThreatArchetype.Baseline)]
     [TestCase("cultist_blademaster", ThreatArchetype.Baseline)]
     [TestCase("slime",               ThreatArchetype.Baseline)]
+    [TestCase("fire_beetle",         ThreatArchetype.Baseline)]   // fragile + burn wrinkle, not a spike
+    [TestCase("cave_spider",         ThreatArchetype.Baseline)]   // weak beast + poison wrinkle
+    [TestCase("giant_spider",        ThreatArchetype.Baseline)]   // hard-hitting but low-HP/tankable (cf. orc_brute)
     [TestCase("troll",               ThreatArchetype.Spike)]
     [TestCase("wraith",              ThreatArchetype.Spike)]
-    [TestCase("giant_spider",        ThreatArchetype.Spike)]
-    [TestCase("cave_spider",         ThreatArchetype.Spike)]
     [TestCase("orc_shaman",          ThreatArchetype.Escalator)]
     [TestCase("orc_chieftain",       ThreatArchetype.Escalator)]
     [TestCase("necromancer",         ThreatArchetype.Escalator)]
@@ -65,7 +68,7 @@ public class ThreatArchetypeTaggingTests
     [TestCase("orc_veteran",        ThreatArchetype.Baseline)]   // ← orc
     [TestCase("plague_zombie",      ThreatArchetype.Baseline)]   // ← zombie
     [TestCase("troll_ancient",      ThreatArchetype.Spike)]      // ← troll
-    [TestCase("web_spider",         ThreatArchetype.Spike)]      // ← cave_spider
+    [TestCase("web_spider",         ThreatArchetype.Baseline)]   // ← cave_spider (textured baseline)
     [TestCase("plague_necromancer", ThreatArchetype.Escalator)] // ← necromancer
     [TestCase("greater_slime",      ThreatArchetype.Escalator)] // ← large_slime ← slime (override holds)
     public void InheritedArchetype_PropagatesThroughExtends(string typeId, ThreatArchetype expected)
@@ -75,15 +78,19 @@ public class ThreatArchetypeTaggingTests
     public void OrcSkirmisher_IsBaseline_DespiteNotExtendingOrc()
         => Assert.That(ArchetypeOf(CreateFactory(), "orc_skirmisher"), Is.EqualTo(ThreatArchetype.Baseline));
 
-    // ── Unclassified: no tag, kills carry no archetype (must not crash, must not default) ───
+    // ── Unclassified path: a monster with no threat_archetype gets no tag (no silent default) ──
     [Test]
-    public void FireBeetle_IsUnclassified_NoTag()
+    public void UnclassifiedMonster_GetsNoTag()
     {
-        // fire_beetle is not in §2 — deliberately left untagged pending Rafe's assignment.
-        var entity = CreateFactory().Create("fire_beetle");
+        // Every combat monster is now classified; this pins the fallback so a future untagged monster
+        // carries no archetype (its kills attribute to nothing) rather than silently defaulting.
+        var entityFactory = new EntityFactory();
+        var def = new MonsterDefinition { Name = "Test Dummy", ThreatArchetype = null };
+        var entity = new MonsterFactory(new Dictionary<string, MonsterDefinition> { ["dummy"] = def }, entityFactory)
+            .Create("dummy");
         Assert.That(entity, Is.Not.Null);
         Assert.That(entity!.Get<ThreatArchetypeTag>(), Is.Null,
-            "fire_beetle has no threat_archetype yet — it must stay untagged, not silently default.");
+            "a monster with no threat_archetype must stay untagged, not default to an archetype.");
     }
 
     // ── Parser unit cases ───────────────────────────────────────────────────────────────────

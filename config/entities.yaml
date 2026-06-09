@@ -219,7 +219,7 @@ monsters:
 
   cave_spider:
     name: "Cave Spider"
-    threat_archetype: "spike"   # §2 prose: giant_spider ≡ cave_spider (spike-lite); web_spider inherits. FLAG: confirm
+    threat_archetype: "baseline"   # textured baseline — weak depth-2 beast (2-4 dmg) + poison wrinkle; tank it + account for status (like skeleton). web_spider inherits. (status proc ≠ spike)
     min_depth: 2
     spawn_weight: 12
     stats:
@@ -260,6 +260,7 @@ monsters:
 
   fire_beetle:
     name: "Fire Beetle"
+    threat_archetype: "baseline"   # textured baseline — fragile (12 HP), low dmg (2-5); burning DOT is a wrinkle, not can't-tank. Swarm = density lever.
     min_depth: 2
     spawn_weight: 8
     stats:
@@ -328,7 +329,7 @@ monsters:
 
   giant_spider:
     name: "Giant Spider"
-    threat_archetype: "spike"   # §2 — spike-lite (raw dmg + guaranteed poison)
+    threat_archetype: "baseline"   # hard-hitting textured baseline — high dmg (4-8) but low HP (18, dies fast), tankable; poison=texture, speed=frequency lever. NOT can't-tank (cf. orc_brute precedent).
     min_depth: 8
     spawn_weight: 8
     stats:
