@@ -31,9 +31,13 @@
   committed, so this session landed both): A = transcript-enrichment + Analyst rubric (Thread 2/3) carrying
   the shared `DungeonRunHarness.cs` incl. `SpikePresent`; B = the 0c step-6 Floor Health report on top.
   Both compile in isolation (A verified via stash). The target-table slice landed earlier as `142af2e`.
-- **Next step:** step 7 baseline-delta (mirror `BalanceSuiteEvaluator.ComputeDeltas`; `reports/baselines/
-  soak_baseline.json` + `--update-baseline`), then step 8 staged-start (produces the escalator alive-vs-killed
-  comparison the capture already records the neutralized-when half of).
+- **Step 7 DONE + GREEN + COMMITTED:** `SoakBaseline` + `SoakBaselineEvaluator` + `SoakBaselineDeltaReport`
+  + CLI `--update-baseline`/diff. Same-seed re-run shows all-`+0.0pp`/PASS (deterministic), verified e2e.
+- **Next step:** step 8 staged-start — `RunSoakStaged(startDepth, gearProfile)` on `DungeonRunHarness` +
+  parameterized gear-player via `DungeonFloorBuilder.Build(existingPlayer)` seam + `config/balance/
+  gear_profiles.yaml` + CLI `--start-floor/--gear`. Produces the escalator alive-vs-killed comparison the
+  capture already records the neutralized-when half of → lights up the classifier's escalator branch. Last
+  step before B1 tuning (first tuned number, ascending by region).
 - **Open issues / FLAGS for Rafe:**
   - `target_table.yaml` numbers are B1 placeholders (HITS), authored for real *during* B1 tuning.
   - Escalator alive-vs-killed comparison still only PRODUCED once staged-start (step 8) exists; the
@@ -81,8 +85,10 @@ The report is the instrument of truth — it cannot drift green while broken (th
 6. ✅ **Report columns** — role-aware `Floor Health` section in `DungeonSoakReport` (OBSERVED/TARGET/Δ/
    Verdict + lever line); verdicts from FloorHealthClassifier + LeverAttributionClassifier; inline deathPct
    math retired into shared helpers. `tests/Balance/FloorHealthReportTests.cs` (read-level, green).
-7. ⬜ **Delta baseline** — `reports/baselines/soak_baseline.json` + diff (mirror `SuiteRunner`/
-   `BalanceSuiteEvaluator.ComputeDeltas`); CLI `--update-baseline` for soak.
+7. ✅ **Delta baseline** — `SoakBaseline` (snapshot + JSON I/O), `SoakBaselineEvaluator` (per-depth deltas +
+   PASS/WARN/FAIL on death-rate drift, mirrors `BalanceSuiteEvaluator`), `SoakBaselineDeltaReport` (read-level
+   section). CLI: `--update-baseline` writes `reports/baselines/soak_baseline.json`, else diffs against it.
+   `tests/Balance/SoakBaselineTests.cs` (8, green). Real baseline authored from a B1 soak during tuning.
 8. ⬜ **Staged-start** — `RunSoakStaged(startDepth, gearProfile)` on `DungeonRunHarness` (loop init :293) +
    parameterized gear-player in `DungeonFloorBuilder.Build(existingPlayer)` seam + `config/balance/
    gear_profiles.yaml` + CLI `--start-floor/--gear`.

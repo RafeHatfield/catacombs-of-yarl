@@ -27,6 +27,7 @@ const string DepthBoonsFile      = "config/depth_boons.yaml";
 const string LootTagsFile        = "config/loot_tags.yaml";
 const string LootPolicyFile      = "config/loot_policy.yaml";
 const string TargetTableFile     = "config/balance/target_table.yaml";
+const string SoakBaselineFile    = "reports/baselines/soak_baseline.json";
 
 // ─── Parse args ────────────────────────────────────────────────────────────
 
@@ -507,6 +508,27 @@ if (dungeonMode)
         TargetTable? targets = File.Exists(TargetTableFile) ? TargetTableLoader.FromFile(TargetTableFile) : null;
         var report = DungeonSoakReport.Generate(summary, targets);
         Console.WriteLine(report);
+    }
+
+    // Baseline delta: --update-baseline writes the snapshot; otherwise diff against it (step 7).
+    // So a tuning change reads as a signed Δ vs the prior run instead of in a vacuum.
+    {
+        string soakBaselinePath = baselinePath ?? SoakBaselineFile;
+        var current = SoakBaseline.FromSummary(summary);
+        if (updateBaseline)
+        {
+            current.Save(soakBaselinePath);
+            Console.WriteLine($"Soak baseline updated: {soakBaselinePath} ({current.Runs} runs, {current.Floors.Count} floors)");
+        }
+        else if (File.Exists(soakBaselinePath))
+        {
+            var baseline = SoakBaseline.Load(soakBaselinePath);
+            Console.WriteLine(SoakBaselineDeltaReport.Format(current, baseline));
+        }
+        else
+        {
+            Console.WriteLine($"(No soak baseline at {soakBaselinePath} — run with --update-baseline to create one.)");
+        }
     }
 
     return 0;
