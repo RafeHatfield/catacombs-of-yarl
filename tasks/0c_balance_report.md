@@ -12,10 +12,16 @@
     MonsterFactory attaches it; 15 monsters authored per §2, rest inherit. Tagging tests green (34).
   - Also: classifier honesty rename `TurnsToDown`→`HitsToDown`, `TargetTtd`→`TargetHitsToDown` (12 tests
     still green, values unchanged).
-- **Next step:** the **lever-attribution classifier** — additive sibling that turns the 6 captured signals
-  → a lever verdict (monster-damage / armor / weapon-speed / density / frequency), sitting BESIDE
-  FloorHealth. Then step 6 report (OBSERVED/TARGET/FLAG/Δ; survival-rate=balance, levers=attribution),
-  step 7 baseline, step 8 staged-start.
+- **Also done:** the **lever-attribution classifier** — `LeverAttributionClassifier` (pure) + `BalanceLever`
+  enum + `LeverExpectation`/`LeverFinding`/`LeverConfig`. Attributes a flagged death among the 5 actionable
+  levers (monster-damage / armor / weapon-speed / density / frequency) from the signals; ranked, worst-first.
+  hits-to-down stays the upstream role-fastness trigger (FloorHealth), not re-evaluated here. Outcome tests
+  green (9): high-dmg⇒MonsterDamage, normal-dmg+high-hit-rate⇒Armor, normal-dmg+high-freq⇒AttackFrequency
+  (proves freq/damage don't bleed). `tests/Balance/LeverAttributionClassifierTests.cs`.
+- **Next step:** step 6 report — wire FloorHealthClassifier + LeverAttributionClassifier into
+  `DungeonSoakReport` (OBSERVED/TARGET/FLAG/Δ; survival-rate=balance verdict, levers=attribution), retire
+  inline deathPct math, and hydrate `LeverExpectation` per region (extend target_table.yaml with a
+  `lever_expectations` block, placeholders). Then step 7 baseline, step 8 staged-start.
 - **Open issues / FLAGS for Rafe:**
   - `target_table.yaml` numbers are B1 placeholders (HITS), authored for real *during* B1 tuning.
   - Escalator alive-vs-killed comparison still only PRODUCED once staged-start (step 8) exists; the
