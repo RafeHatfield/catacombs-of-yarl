@@ -7,6 +7,8 @@ namespace CatacombsOfYarl.Logic.Balance;
 public readonly record struct TargetBand(double Min, double Max)
 {
     public bool Contains(double value) => value >= Min && value <= Max;
+    public bool Below(double value) => value < Min;   // observed under the band
+    public bool Above(double value) => value > Max;   // observed over the band
     public string Status(double value) => Contains(value) ? "OK" : value < Min ? "LOW" : "HIGH";
 }
 

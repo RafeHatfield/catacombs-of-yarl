@@ -1,7 +1,7 @@
 # Monsters
 
 **Source:** `config/entities.yaml` → `monsters:` section  
-**Last updated:** 2026-05-20 — reflects all 4 waves + special abilities through monster_specials plan.
+**Last updated:** 2026-06-08 — added giant_spider on-hit poison + giant_spider/cultist_blademaster ability notes (both `basic` AI, no scripted special). Reflects all 4 waves + special abilities through monster_specials plan.
 
 ---
 
@@ -171,11 +171,20 @@ Cannot be possessed.
 
 ---
 
+### Giant Spider / Cultist Blademaster
+
+**AI:** `basic` (both)
+
+Neither has a scripted special. The **Giant Spider** is a high-damage poison beast (poison on hit — see On-Hit Status Effects). The **Cultist Blademaster** is a pure melee beatstick — high damage (6–10), no status, no ability hook. Its threat is raw DPR, not mechanics.
+
+---
+
 ## On-Hit Status Effects
 
 | Monster | Effect | Chance | Duration |
 |---|---|---|---|
 | `cave_spider` | Poison (2 dmg/turn) | 100% | 10 turns |
+| `giant_spider` | Poison (2 dmg/turn) | 100% | 10 turns |
 | `web_spider` | Slowed (skip every other move) | 100% | 10 turns |
 | `fire_beetle` | Burning (3 dmg/turn) | 100% | 5 turns |
 | `plague_zombie` | Plague (1 dmg/turn, spreads) | 100% | 20 turns |

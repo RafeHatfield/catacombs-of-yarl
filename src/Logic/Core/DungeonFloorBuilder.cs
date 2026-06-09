@@ -619,8 +619,8 @@ public sealed class DungeonFloorBuilder
         // Starting inventory: 3 healing potions + Wand of Portals (player's core traversal tool).
         // 3 potions (each heals 40 HP) = ~186 effective HP at panic/threshold thresholds.
         // Floor 1 spawns 5-10 orcs that deal ~7 avg damage per hit at 35% hit rate — 1 potion
-        // is not enough. PoC guarantees additional floor drops via a pity system (not yet ported);
-        // 3 starting potions bridges that gap so floor 1 is survivable with some left over.
+        // is not enough. The pity system (now ported — PityTracker/LootController) guarantees
+        // additional floor drops; 3 starting potions bridge floor 1 before pity ramps in.
         var inventory = new Inventory();
         player.Add(inventory);
         for (int i = 0; i < 3; i++)
