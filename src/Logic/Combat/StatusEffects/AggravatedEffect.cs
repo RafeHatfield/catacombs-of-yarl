@@ -8,8 +8,10 @@ namespace CatacombsOfYarl.Logic.Combat.StatusEffects;
 /// Applied by: Aggravation Scroll.
 ///
 /// IsPermanent=true — this effect never expires via duration; only cleared on entity death
-/// or explicit dispel. The faction system is not yet implemented (plan_faction_system).
-/// TODO: When faction system lands, wire AggravatedEffect into faction targeting rules.
+/// or explicit dispel. NOTE: the faction system IS implemented (FactionRegistry +
+/// BasicMonsterAI.ChooseTarget) — what is missing is the read hook: ChooseTarget does not yet
+/// consult TargetFaction. Restoring the PoC's _check_enraged_against_faction override branch
+/// (~25–40 lines) wires this up. See docs/balance/migration_loss_audit.md.
 /// </summary>
 public sealed class AggravatedEffect : IStatusEffect
 {

@@ -99,9 +99,9 @@ public static class SpellResolver
             "teleport"    => ResolveTeleport(caster, spell, state, targetX, targetY),
             "blink"       => ResolveBlink(caster, spell, state, targetX, targetY),
             "fireball"    => ResolveFireball(caster, spell, state, targetX, targetY),
-            // Stub: raise_dead requires corpse lifecycle (plan_monster_specials).
-            // Location targeting is wired; the handler returns "no corpse found" until
-            // corpse entities exist on the map.
+            // raise_dead: location-targeted; raises a corpse on the map as an ally. Corpse
+            // lifecycle is live (CorpseComponent + RaiseDeadResolver); returns "no corpse found"
+            // only when no corpse is in range.
             "raise_dead"  => ResolveRaiseDead(caster, spell, state, targetX, targetY),
             // dragon_fart: cone of noxious gas — applies SleepEffect to all alive monsters in cone.
             // PoC: get_cone_tiles, 45° wide, range 8, caster-to-target direction.
