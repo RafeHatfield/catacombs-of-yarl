@@ -20,10 +20,10 @@
   - `target_table.yaml` numbers are B1 placeholders (HITS), authored for real *during* B1 tuning.
   - Escalator alive-vs-killed comparison still only PRODUCED once staged-start (step 8) exists; the
     capture records neutralized-when, which step 8 will pair with the staged comparison.
-  - **Archetype assignments needing confirmation:** `fire_beetle` — NOT in §2, left UNTAGGED (unclassified;
-    its kills carry no archetype). `orc_skirmisher` — standalone (doesn't extend orc), tagged Baseline.
-    `cave_spider`/`web_spider` — §2 names only giant_spider but prose says ≡, tagged Spike. `plague_zombie`
-    — inherits Baseline from zombie.
+  - **Archetype assignments RESOLVED (2026-06-09):** all Baseline — fire_beetle, cave_spider/web_spider,
+    giant_spider (reclassified from Spike), orc_skirmisher, plague_zombie. Per the TIGHTENED SPIKE PRINCIPLE
+    (spike = can't-tank-must-change-approach; status-on-weak-beast = texture; high-dmg-alone = hard baseline).
+    Spike roster now troll/troll_ancient/wraith + lich(Fused). Reflected in entities.yaml + §2 + memory.
 
 ## Diagnostic design (LOCKED 2026-06-09) — see memory project_0c_diagnostic_design
 - **Balance verdict = SURVIVAL RATE vs band** (multivariate by construction). ttd is NOT the balance
