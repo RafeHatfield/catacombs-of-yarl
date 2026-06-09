@@ -43,3 +43,4 @@ reports/*.json
 # Claude Code session data
 .claude/projects/
 .claude/worktrees/
+reports/llm-transcripts/

@@ -470,6 +470,8 @@ public sealed class ContentLoader
             Blocks = child.Blocks,
             Faction = child.Faction != "neutral" ? child.Faction : parent.Faction,
             Tags = child.Tags ?? parent.Tags,
+            // Threat archetype: child wins if set, else inherit parent (orc variants inherit orc's).
+            ThreatArchetype = child.ThreatArchetype ?? parent.ThreatArchetype,
             EtpBase = child.EtpBase != 0 ? child.EtpBase : parent.EtpBase,
             MinDepth = child.MinDepth != 1 ? child.MinDepth : parent.MinDepth,
             SpeedBonus = child.SpeedBonus != 0 ? child.SpeedBonus : parent.SpeedBonus,

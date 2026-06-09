@@ -1,6 +1,7 @@
 # LLM Testing System — Overview
 
-**Status:** Both plans locked. No code written. No-code hold in effect.
+**Status:** Both plans locked. **Analyst Phase 0–1 engineering (rubric-independent) is COMPLETE** (2026-06-09).
+Rubric-dependent work (BugDetector logic, coherence pass) still on hold pending the Thread 1 handoff.
 **Last updated:** 2026-06-09
 
 This directory contains the engineering plans for the LLM-based testing system.
@@ -103,48 +104,122 @@ structure unblocks Analyst Phase 2. Coherence dimensions can arrive later
 
 ---
 
+## What Was Built (Analyst Phase 0–1 engineering)
+
+Rubric-independent. Code:
+- `src/Logic/Balance/Transcript/EnrichedTranscript.cs` — schema models (header / turn /
+  summary / action_taken / system-triggers / memo).
+- `src/Logic/Balance/Transcript/TurnEventJsonConverter.cs` — extensible polymorphic event
+  serializer (the open seam).
+- `src/Logic/Balance/Transcript/ActionTakenBuilder.cs` — resolved PlayerAction → ids+types.
+- `src/Logic/Balance/Transcript/TranscriptRecorder.cs` — accumulate, resolve voice, build
+  summary, write JSONL.
+- `DungeonRunHarness.RunWithTranscript(...)` + recorder hooks (non-invasive).
+- `VoiceLineEvent.ResolvedText`; `PersistentRunState.CreateEmpty()`.
+- CLI: `dotnet run --project tools/Harness -- --dungeon --llm-transcript <dir> --floors N --runs M --seed S`
+  (fresh harness per run; loads voice + memo registries).
+- Tests: `tests/Balance/EnrichedTranscriptTests.cs` (7, all green).
+
+Validated on 10 real bot runs (seed 1337, 10 floors); schema round-trips; verbatim memo
+text and (via targeted test) voice ResolvedText are greppable; seed reproduces
+byte-identical output.
+
+**Provisional-pending-rubric:** the mechanical-event capture set is OPEN (see the trigger
+inventory above). Do not treat the schema as fully locked — settled parts are action
+serialization, the two narrative fixes, RunSummary/HP profile; the trigger-event set may grow.
+
 ## Next Action When Work Resumes
 
 1. **Confirm the minimal v1 rubric has landed from the design thread.** It
    should exist as `config/rubric/v1.yaml` (proposed location). Do not proceed
-   without it.
+   with Phase 2 without it.
 
-2. **Begin Analyst Phase 0:** finalize the enriched transcript schema (defined
-   in `shared-transcript-schema.md`) and validate the stub rubric structure
-   against a real bot-run JSONL. No code yet — this phase is verification only.
+2. **Reconcile the trigger inventory** (above) against the rubric's silent_failure list —
+   wire any newly-required mechanical events (notably orc-rep and aggravation-faction).
 
-3. **Begin Player Phase 0–2 in parallel** once Analyst Phase 1 (transcript
-   enrichment, the format-defining phase) is complete and the Player has a
-   validated transcript format to target.
+3. **Begin Analyst Phase 2** (BugDetector + single-run report) once the rubric lands.
+
+4. **Begin Player Phase 0–2 in parallel** — the transcript format is now validated and
+   ready to target.
 
 ---
 
-## Two Invariants to Verify, Not Trust
+## Two Invariants — VERIFIED (2026-06-09)
 
-Both must be verified during Analyst Phase 1, not assumed:
+Both verified with controlled tests in `tests/Balance/EnrichedTranscriptTests.cs`
+and a real-run check, not assumed.
 
-**1. Deterministic entity-ID assignment under a fixed seed**
-The replay guarantee (game state reproducible from seed + action sequence) depends
-on entity IDs being assigned deterministically. The existing bot regression
-harness already assumes this; verify explicitly with a controlled test in Phase 1.
+**1. Deterministic entity-ID assignment under a fixed seed — PASS, with one caveat.**
+- Player is always ID 0; gear + map entities are allocated sequentially from a
+  seeded-RNG-driven `EntityFactory`/`EntityIdAllocator` (`DungeonFloorBuilder`).
+  Given a FRESH factory, the same seed yields the same IDs — `SameSeed_ProducesIdenticalTranscript`
+  and `SameSeed_IdenticalActionTargetEntityIds` pass; a fresh re-run of seed 1337
+  reproduces a byte-identical transcript (modulo the per-run `run_id` GUID).
+- **Caveat (important for replay):** the factory counter is process-shared mutable
+  state and is NOT reset per run. A *reused* harness drifts absolute IDs across runs
+  (~+1 per entity created). Gameplay outcomes are unaffected — IDs feed no game logic
+  or RNG, confirmed by `TranscriptCapture_DoesNotAlterGameOutcome` and the existing
+  soak determinism test — but transcript IDs would no longer match a fresh replay.
+  **Resolution:** the `--llm-transcript` CLI builds a FRESH harness per run, so every
+  transcript corresponds to what replaying (seed + actions) in a fresh harness produces.
+  A future optimization could reset the factory at run start instead of rebuilding.
 
-**2. Verbatim text reaching the transcript**
-The schema addendum requires player-facing text to be embedded verbatim in the
-event stream. Two known gaps exist as of the plan lock date (2026-06-09):
-
-- `VoiceLineEvent` carries a `TriggerId` key only; the resolved line text is
-  not in the event. The resolution happens in `Main.cs` presentation layer.
-  **Fix required:** embed the resolved string in the event.
-- Memos are queued into `PersistentState.UnderWarden.PendingMemos` with no
-  `TurnEvent` emitted at delivery time. **Fix required:** add a
-  `MemoDeliveredEvent` to the event stream, or include `PendingMemos` verbatim
-  in `RunSummary`.
-
-Both gaps are wiring work in Analyst Phase 1. Already known; verify and fix
-then, not before.
+**2. Verbatim text reaching the transcript — PASS (both gaps fixed).**
+- `VoiceLineEvent` now carries a `ResolvedText` field. The harness recorder resolves
+  `TriggerId` against `VoiceLineRegistry` (logic layer) using a DEDICATED rng — never
+  the game rng — so capture cannot perturb the replay stream. Verified by
+  `VoiceLineEvent_ResolvedTextReachesTranscript`. **Note:** all `VoiceLineEvent`s are
+  possession-gated (every emit site is in `PossessionSystem`), so standard *bot* runs
+  never fire one — the bulk instrument will not surface voice/register defects
+  organically. The Reader/System-Explorer LLM personas (or a possession-capable bot)
+  are required to exercise voice resolution at volume.
+- Memos: captured verbatim in `RunSummary.memos_delivered` (RunSummary approach, per
+  §5). The transcript harness runs `MemoDeliveryEvaluator` at run end against a fresh
+  `PersistentRunState`. Verified greppable end-to-end on a real death run
+  (`DeathRun_CapturesVerbatimMemos`; the full memo body appears in `run-*.jsonl`).
+- **Serialization fix:** the transcript uses `UnsafeRelaxedJsonEscaping` so verbatim
+  text (apostrophes, em dashes, `<`, `&`) stays greppable rather than `\uXXXX`-escaped
+  — otherwise text-pattern checks (e.g. a house-style em-dash rule) would silently miss.
 
 Already greppable (no changes needed): `MuralExaminedEvent.Text`,
 `SignpostReadEvent.Message`, `WeighingDialogueEvent.Pages[].Text`.
+
+---
+
+## Mechanical Trigger Capture — Inventory & Stranded Signals
+
+The capture layer (`TurnEventJsonConverter`) serializes EVERY `TurnEvent` subtype
+generically by reflection into each turn's `events` array, with an `event_type`
+discriminator. **New event types are captured automatically — no capture-layer change
+when the rubric's silent_failure inventory adds trigger events.** This is the open seam.
+
+Findings on mechanical triggers the rubric thread asked about (verified, NOT fixed —
+fixes await the full trigger inventory):
+
+- **AggravatedEffect / TargetFaction — captured, but parameter-incomplete.** Application
+  is NOT stranded in presentation: it fires a `SpellEvent` in the logic event stream with
+  `StatusApplied="aggravated"` (`SpellResolver.ResolveAggravation`). However, the
+  `TargetFaction` VALUE (e.g. "orc") is NOT on the event. A window-check detector
+  ("aggravated → expect faction-change within 2 turns") needs that faction to know what to
+  watch — so the trigger is greppable but the parameter is missing. **Deeper gap:** the
+  *consequence* side is itself unimplemented — `BasicMonsterAI.ChooseTarget` does not yet
+  consult `TargetFaction` (see `AggravatedEffect.cs` doc + `migration_loss_audit.md`), so
+  no faction-change event can ever fire. That detector would always flag until both are wired.
+- **Orc reputation changes — fully stranded (no event at all).** There is no `TurnEvent`
+  representing an orc-rep change anywhere in the logic layer. `RunSummary.system_triggers`
+  leaves `orc_rep_changed`/`orc_rep_change_turn` at defaults because nothing emits the
+  signal. This needs a new mechanical event when the rubric thread defines the rep system's
+  observability.
+- **Weighing guardian allied count — not reachable by bot harness.** Lives in endgame
+  (floor-25 Weighing) state the bot never reaches; `weighing_guardian_allied_count` stays 0.
+  Wiring deferred until the Weighing-outcome capture is specified.
+- **Possession / mural / past-Sasha / Weighing-reached — wired and working.** Derived from
+  `PossessionEnteredEvent`, `MuralExaminedEvent`, `VoiceLineEvent` (`past_sasha*` prefix),
+  and `WeighingDialogueEvent` respectively. (Bot runs rarely trip these — see voice note above.)
+
+The `RunSummary.system_triggers` set is **provisional-pending-rubric**: the minimal set is
+wired; the rubric may extend it (and should add the orc-rep + aggravation-faction events
+above to make their silent_failure detectors implementable).
 
 ---
 

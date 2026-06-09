@@ -1,0 +1,50 @@
+# ── Role-aware balance targets (0c) ────────────────────────────────────────────────────────────
+# Consumed by FloorHealthClassifier via TargetTable.ForDepth(depth).
+#
+# THE BALANCE VERDICT comes from death_pct (survival rate vs band) — multivariate by construction,
+# because the bot played the whole fight. hits_to_down is a SUBORDINATE DIAGNOSTIC: the per-archetype
+# role-fastness target, consulted only after death_pct flags a floor, to attribute which lever.
+#
+# UNIT IS HITS, NOT TURNS. hits_to_down = the killer's landed blows the player should absorb before
+# going down. A landed hit is the monster's actual offensive contribution; this strips swarm-window
+# contamination and carries no free measurement parameter. Attack FREQUENCY (how fast the hits arrive)
+# is a SEPARATE lever (hits ÷ engagement-turns), not encoded here.
+#
+# ⚠️ NUMBERS ARE B1 PLACEHOLDERS. Real per-region values are authored DURING tuning (decide-on-merits
+# first, then measure), walking the regions ascending from B1. B2–B5 mirror B1 until authored.
+version: "1.0"
+
+regions:
+  B1:
+    depth_min: 1
+    depth_max: 5
+    death_pct: { min: 0.05, max: 0.15 }
+    hits_to_down:
+      baseline: 9     # durable — survive many blows
+      spike: 3        # lethal-if-ignored — downs you in few blows
+      escalator: 4    # not ttd-tuned in intent; a nominal anchor until B-tuning sets it
+      fused: 3        # lich (spike half drives the fast-death check)
+
+  B2:
+    depth_min: 6
+    depth_max: 9
+    death_pct: { min: 0.05, max: 0.15 }
+    hits_to_down: { baseline: 9, spike: 3, escalator: 4, fused: 3 }   # placeholder = B1
+
+  B3:
+    depth_min: 10
+    depth_max: 14
+    death_pct: { min: 0.05, max: 0.15 }
+    hits_to_down: { baseline: 9, spike: 3, escalator: 4, fused: 3 }   # placeholder = B1
+
+  B4:
+    depth_min: 15
+    depth_max: 19
+    death_pct: { min: 0.05, max: 0.15 }
+    hits_to_down: { baseline: 9, spike: 3, escalator: 4, fused: 3 }   # placeholder = B1
+
+  B5:
+    depth_min: 20
+    depth_max: 25
+    death_pct: { min: 0.05, max: 0.15 }
+    hits_to_down: { baseline: 9, spike: 3, escalator: 4, fused: 3 }   # placeholder = B1

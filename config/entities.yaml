@@ -1,6 +1,7 @@
 monsters:
   orc:
     name: "Orc"
+    threat_archetype: "baseline"   # §2 durable baseline; orc variants inherit unless overridden
     spawn_weight: 80
     stats:
       hp: 28
@@ -94,6 +95,7 @@ monsters:
 
   orc_skirmisher:
     name: "Orc Skirmisher"
+    threat_archetype: "baseline"   # standalone (does not extend orc); baseline orc variant, leap countered by entangle
     spawn_weight: 0
     stats:
       hp: 24
@@ -121,6 +123,7 @@ monsters:
 
   orc_shaman:
     name: "Orc Shaman"
+    threat_archetype: "escalator"   # §2 — chant buffs allies; overrides inherited baseline
     extends: orc
     spawn_weight: 0
     stats:
@@ -143,6 +146,7 @@ monsters:
 
   orc_chieftain:
     name: "Orc Chieftain"
+    threat_archetype: "escalator"   # §2 — rally multiplier; overrides inherited baseline
     extends: orc
     spawn_weight: 0
     speed_bonus: 0.25
@@ -161,6 +165,7 @@ monsters:
 
   troll:
     name: "Troll"
+    threat_archetype: "spike"   # §2 — lethal-by-attrition, countered by acid/fire; troll_ancient inherits
     min_depth: 4
     spawn_weight: 5
     stats:
@@ -187,6 +192,7 @@ monsters:
 
   skeleton:
     name: "Skeleton"
+    threat_archetype: "baseline"   # §2 — textured baseline (ShieldWall + bludgeoning-vuln counter)
     min_depth: 2
     spawn_weight: 10
     stats:
@@ -213,6 +219,7 @@ monsters:
 
   cave_spider:
     name: "Cave Spider"
+    threat_archetype: "spike"   # §2 prose: giant_spider ≡ cave_spider (spike-lite); web_spider inherits. FLAG: confirm
     min_depth: 2
     spawn_weight: 12
     stats:
@@ -282,6 +289,7 @@ monsters:
 
   necromancer:
     name: "Necromancer"
+    threat_archetype: "escalator"   # §2 — raises real allies; plague_necromancer inherits
     min_depth: 5
     spawn_weight: 6
     stats:
@@ -320,6 +328,7 @@ monsters:
 
   giant_spider:
     name: "Giant Spider"
+    threat_archetype: "spike"   # §2 — spike-lite (raw dmg + guaranteed poison)
     min_depth: 8
     spawn_weight: 8
     stats:
@@ -347,6 +356,7 @@ monsters:
 
   cultist_blademaster:
     name: "Cultist Blademaster"
+    threat_archetype: "baseline"   # §2 — de facto "hot baseline" (§6 Q1; real role still TBD)
     min_depth: 12
     spawn_weight: 6
     stats:
@@ -375,6 +385,7 @@ monsters:
 
   zombie:
     name: "Zombie"
+    threat_archetype: "baseline"   # §2 — durable baseline (speed 0.5 → frequency lever, not lethality); plague_zombie inherits
     min_depth: 10
     depth_weights:
       - weight: 20
@@ -411,6 +422,7 @@ monsters:
 
   slime:
     name: "Slime"
+    threat_archetype: "baseline"   # §2 — base slime is the non-resplitting child (a body); large/greater_slime are the escalators
     min_depth: 2
     depth_weights:
       - weight: 20
@@ -452,6 +464,7 @@ monsters:
 
   large_slime:
     name: "Large Slime"
+    threat_archetype: "escalator"   # §2 — split spawns real children; overrides inherited baseline; greater_slime inherits
     extends: slime
     min_depth: 3
     depth_weights:
@@ -560,6 +573,7 @@ monsters:
 
   wraith:
     name: "Wraith"
+    threat_archetype: "spike"   # §2 — intrinsic spike (life drain). NB speed 2.0 = attack-frequency outlier
     stats:
       hp: 20
       power: 3
@@ -597,6 +611,7 @@ monsters:
 
   lich:
     name: "Lich"
+    threat_archetype: "fused"   # §2 — Soul Bolt (spike) + Command/Siphon/Raise (escalator)
     stats:
       hp: 60
       power: 2

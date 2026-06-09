@@ -31,8 +31,15 @@ public enum FloorHealth
     EscalatorUnfair,   // an escalator kills with no response window — the lever exists but can't be reached
 }
 
-/// <summary>Per-archetype intended turns-to-down-player. A baseline's is HIGH, a spike's LOW.</summary>
-public sealed record ArchetypeTarget(double TargetTtd);
+/// <summary>
+/// Per-archetype intended HITS-to-down-player (the killer's landed blows the player should absorb).
+/// A baseline's is HIGH (durable; survive many hits), a spike's LOW (downs you in few hits if ignored).
+/// Unit is hits, not turns: a landed hit is the monster's actual offensive contribution, which strips
+/// the swarm-window contamination (idle turns, positioning, other monsters) that corrupts a turns-based
+/// measure, and has no free measurement parameter. Attack FREQUENCY (how fast those hits arrive) is a
+/// SEPARATE lever (hits÷engagement-turns), deliberately not folded in here.
+/// </summary>
+public sealed record ArchetypeTarget(double TargetHitsToDown);
 
 /// <summary>
 /// The canonical per-floor targets the classifier checks observed reality against.
@@ -42,8 +49,13 @@ public sealed record FloorTarget(
     TargetBand DeathPct,
     IReadOnlyDictionary<ThreatArchetype, ArchetypeTarget> ByArchetype);
 
-/// <summary>One player death: who landed the kill, and how many turns the lethal engagement lasted.</summary>
-public sealed record DeathRecord(ThreatArchetype KillerArchetype, double TurnsToDown);
+/// <summary>
+/// One player death, reduced to the inputs the verdict logic needs: who landed the kill, and how many
+/// of that killer's blows the player absorbed before going down (HitsToDown — the role-fastness signal).
+/// The full diagnostic capture (damage-per-hit, hit-rate, counterattacks, attacker-count, engagement-turns)
+/// lives on PlayerDeathRecord in the harness; this is the projection the classifier consumes.
+/// </summary>
+public sealed record DeathRecord(ThreatArchetype KillerArchetype, double HitsToDown);
 
 /// <summary>
 /// Refinement 2's third signal. Death% for the same composition under two sub-conditions:
@@ -67,7 +79,7 @@ public sealed record FloorObserved(
 /// </summary>
 public sealed record ClassifierConfig
 {
-    /// <summary>A death is "fast for its killer" when TurnsToDown &lt; this × the killer archetype's target ttd.</summary>
+    /// <summary>A death is "fast for its killer" when HitsToDown &lt; this × the killer archetype's target hits-to-down.</summary>
     public double FastDeathTtdFraction { get; init; } = 1.0 / 3.0;
 
     /// <summary>Share of all deaths that must be fast-to-baseline to call the baseline broken.</summary>
@@ -143,11 +155,11 @@ public static class FloorHealthClassifier
         return FloorHealth.Healthy;
     }
 
-    /// <summary>True when this death was fast relative to the KILLER archetype's intended turns-to-down.</summary>
+    /// <summary>True when this death was fast relative to the KILLER archetype's intended hits-to-down.</summary>
     private static bool IsFastForArchetype(DeathRecord d, FloorTarget t, ClassifierConfig cfg)
     {
         if (!t.ByArchetype.TryGetValue(d.KillerArchetype, out var at))
             return false;
-        return d.TurnsToDown < cfg.FastDeathTtdFraction * at.TargetTtd;
+        return d.HitsToDown < cfg.FastDeathTtdFraction * at.TargetHitsToDown;
     }
 }

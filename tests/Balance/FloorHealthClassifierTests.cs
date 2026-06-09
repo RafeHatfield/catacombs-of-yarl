@@ -19,26 +19,28 @@ public class FloorHealthClassifierTests
 {
     private static readonly ClassifierConfig Cfg = new();
 
-    // Default floor: death% target band 5–15%; baseline ttd HIGH (9), spike ttd LOW (3).
+    // Default floor: death% target band 5–15%; baseline hits-to-down HIGH (9), spike LOW (3).
+    // Units are HITS (the killer's landed blows the player absorbs), not turns — see ArchetypeTarget.
     private static FloorTarget Target(double min = 0.05, double max = 0.15,
-        double baselineTtd = 9, double spikeTtd = 3, double escalatorTtd = 4, double fusedTtd = 3)
+        double baselineHits = 9, double spikeHits = 3, double escalatorHits = 4, double fusedHits = 3)
         => new(new TargetBand(min, max), new Dictionary<ThreatArchetype, ArchetypeTarget>
         {
-            [ThreatArchetype.Baseline]  = new(baselineTtd),
-            [ThreatArchetype.Spike]     = new(spikeTtd),
-            [ThreatArchetype.Escalator] = new(escalatorTtd),
-            [ThreatArchetype.Fused]     = new(fusedTtd),
+            [ThreatArchetype.Baseline]  = new(baselineHits),
+            [ThreatArchetype.Spike]     = new(spikeHits),
+            [ThreatArchetype.Escalator] = new(escalatorHits),
+            [ThreatArchetype.Fused]     = new(fusedHits),
         });
 
     private static List<DeathRecord> Deaths(params DeathRecord[] d) => d.ToList();
-    private static DeathRecord Death(ThreatArchetype a, double turns) => new(a, turns);
+    // hits = the killer's landed blows the player absorbed before going down (HitsToDown).
+    private static DeathRecord Death(ThreatArchetype a, double hits) => new(a, hits);
 
-    // ── Refinement 1: "fast" is relative to the KILLER's archetype ttd ──────────────────
+    // ── Refinement 1: "fast" is relative to the KILLER's archetype hits-to-down ──────────
 
     [Test]
     public void FastDeathToBaseline_IsBaselineBroken()
     {
-        // Baseline target ttd 9 → fast = <3 turns. Dying in 2 turns to a baseline = secretly lethal.
+        // Baseline target 9 hits → fast = <3 hits. Going down in 2 hits to a baseline = secretly lethal.
         var o = new FloorObserved(
             DeathPct: 0.20,
             Deaths: Deaths(Death(ThreatArchetype.Baseline, 2), Death(ThreatArchetype.Baseline, 2)),
@@ -64,7 +66,7 @@ public class FloorHealthClassifierTests
     [Test]
     public void SlowDeathToBaseline_IsHealthy()
     {
-        // Died grinding (10 turns vs target 9) — attrition, the baseline working. (baseline-OK)
+        // Died grinding (10 hits vs target 9) — attrition, the baseline working. (baseline-OK)
         var o = new FloorObserved(
             DeathPct: 0.10,
             Deaths: Deaths(Death(ThreatArchetype.Baseline, 10), Death(ThreatArchetype.Baseline, 11)),

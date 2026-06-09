@@ -1,9 +1,12 @@
 using System.Diagnostics;
 using System.Text;
+using CatacombsOfYarl.Logic.Balance.Transcript;
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Map;
+using CatacombsOfYarl.Logic.Persistence;
 
 namespace CatacombsOfYarl.Logic.Balance;
 
@@ -57,6 +60,91 @@ public sealed class FloorRunMetrics
     /// Number of times hard pity forced a guaranteed item on this floor.
     /// </summary>
     public int LootHardPityFires { get; set; }
+
+    // ── 0c role-aware health capture (see docs/balance/threat_archetypes.md, memory:0c_diagnostic) ──
+
+    /// <summary>
+    /// Total HP the player lost to combat on this floor (monster melee landed hits + DOT/bleed + Soul
+    /// Bolt). Excludes environmental hazard/trap damage (traps are texture, not a balance lever). A floor
+    /// vitals number; per-killer attribution lives on <see cref="Death"/>.
+    /// </summary>
+    public int DamageTakenThisFloor { get; set; }
+
+    /// <summary>Turns on this floor in which the player attacked or was attacked (combat engagement length).</summary>
+    public int CombatTurns { get; set; }
+
+    /// <summary>
+    /// ttk proxy: average number of the player's LANDED hits per monster killed on this floor.
+    /// 0 when no monster was killed. Diagnostic only — not a balance verdict input.
+    /// </summary>
+    public double AvgHitsToKill { get; set; }
+
+    /// <summary>True if any escalator/fused monster was present on this floor (initially or via spawn/raise).</summary>
+    public bool EscalatorPresent { get; set; }
+
+    /// <summary>True if an escalator/fused monster was killed on this floor.</summary>
+    public bool EscalatorNeutralized { get; set; }
+
+    /// <summary>Floor-turn at which the FIRST escalator/fused monster died, or null if none was neutralized.</summary>
+    public int? EscalatorNeutralizedAtTurn { get; set; }
+
+    /// <summary>
+    /// The role-aware death diagnostic — populated ONLY on the floor where the player died, else null.
+    /// Carries the six bounded lever signals (see PlayerDeathRecord).
+    /// </summary>
+    public PlayerDeathRecord? Death { get; set; }
+}
+
+/// <summary>
+/// The full per-death diagnostic capture for role-aware floor health (0c). One per player death.
+///
+/// Survival rate is the BALANCE verdict; this record is the SUBORDINATE diagnostic, consulted only after
+/// the survival rate flags a floor, to attribute WHICH lever is off. Each field maps to one bounded lever
+/// (memory:project_0c_diagnostic_design):
+///   HitsToDown            → role-fastness (was each blow earning its kill too fast for the killer's role)
+///   DamagePerHit          → monster-damage lever
+///   KillerHitRate         → armor/AC lever (this game's armor is avoidance, not soak — hit-rate is the observable)
+///   CounterattacksLanded  → weapon-speed / control lever
+///   DistinctAttackers     → density lever
+///   HitsToDown ÷ EngagementTurns → attack-frequency lever (the wraith lever; parameter-free)
+///
+/// The classifier consumes only (KillerArchetype, HitsToDown) via DeathRecord; the rest feeds the
+/// additive lever-attribution layer (0c step 6).
+/// </summary>
+public sealed class PlayerDeathRecord
+{
+    /// <summary>Depth of the floor the player died on.</summary>
+    public int Depth { get; init; }
+
+    /// <summary>Entity id of the killer. -1 = ground hazard (no monster entity).</summary>
+    public int KillerId { get; init; }
+
+    /// <summary>YAML type id of the killer (SpeciesTag), or null for hazard/unknown.</summary>
+    public string? KillerTypeId { get; init; }
+
+    /// <summary>Threat archetype of the killer, or null when unclassified / a hazard.</summary>
+    public ThreatArchetype? KillerArchetype { get; init; }
+
+    /// <summary>The killer's landed blows the player absorbed before going down (role-fastness).</summary>
+    public int HitsToDown { get; init; }
+
+    /// <summary>Average final damage per the killer's landed hit on the player (monster-damage lever).</summary>
+    public double DamagePerHit { get; init; }
+
+    /// <summary>Killer's landed ÷ attempted swings against the player (armor/AC lever). 0 if it never swung.</summary>
+    public double KillerHitRate { get; init; }
+
+    /// <summary>Player's landed hits on the killer during the engagement (weapon-speed / control lever).</summary>
+    public int CounterattacksLanded { get; init; }
+
+    /// <summary>Distinct monsters that dealt the player damage on this floor (density lever).</summary>
+    public int DistinctAttackers { get; init; }
+
+    /// <summary>Floor-turns from the killer's first landed hit to the player's death (with HitsToDown → frequency).</summary>
+    public int EngagementTurns { get; init; }
+
+    /// <summary>Realized attack frequency of the killer: landed hits per engagement turn (the wraith lever).</summary>
+    public double AttackFrequency => EngagementTurns > 0 ? (double)HitsToDown / EngagementTurns : 0.0;
 }
 
 /// <summary>
@@ -115,6 +203,9 @@ public sealed class DungeonRunHarness
     // a reasonable bound without making IsGameOver trigger prematurely.
     private const int DungeonFloorTurnLimit = 2000;
 
+    // Sentinel for "the player did not die via a DeathEvent this floor" (distinct from -1 = hazard kill).
+    private const int NoDeath = -2;
+
     private readonly DungeonFloorBuilder _floorBuilder;
 
     public DungeonRunHarness(DungeonFloorBuilder floorBuilder)
@@ -163,6 +254,30 @@ public sealed class DungeonRunHarness
         var entries = new List<TranscriptEntry>();
         var result = RunSingle(floors, seed, enableTelemetry: false, transcript: entries, persona: persona);
         return FormatTranscript(result, entries, floors, seed);
+    }
+
+    /// <summary>
+    /// Run a single dungeon campaign and emit the ENRICHED LLM-testing transcript
+    /// (JSONL) defined in docs/llm-testing/shared-transcript-schema.md, alongside the
+    /// usual soak result. This is the Analyst/Player shared format: header + one
+    /// TurnRecord per turn (full action_taken for replay + verbatim event stream) +
+    /// RunSummary (HP profile, system triggers, memos delivered verbatim).
+    ///
+    /// <paramref name="voiceRegistry"/> (optional) resolves VoiceLineEvent text into the
+    /// transcript; <paramref name="memoRegistry"/> (optional) drives end-of-run memo capture.
+    /// Both are nullable — absent registries leave the corresponding fields empty/null,
+    /// which is itself greppable as a capture gap.
+    /// </summary>
+    public (DungeonSoakRunResult Result, string Jsonl) RunWithTranscript(
+        int floors, int seed, BotPersonaConfig? persona = null,
+        VoiceLineRegistry? voiceRegistry = null, MemoRegistry? memoRegistry = null)
+    {
+        var resolvedPersona = persona ?? BotPersonaRegistry.Get("balanced");
+        var recorder = new TranscriptRecorder(seed, resolvedPersona.Name, voiceRegistry);
+        var result = RunSingle(
+            floors, seed, enableTelemetry: true, persona: resolvedPersona,
+            transcriptRecorder: recorder, memoRegistry: memoRegistry);
+        return (result, recorder.ToJsonl());
     }
 
     private static string FormatTranscript(DungeonSoakRunResult result, List<TranscriptEntry> entries, int floors, int seed)
@@ -261,7 +376,7 @@ public sealed class DungeonRunHarness
     /// storing the resulting BotRunSummary in the returned DungeonSoakRunResult.BotSummary.
     /// When false (legacy Run() path), no recorder is created and BotSummary is null.
     /// </summary>
-    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false, IList<TranscriptEntry>? transcript = null, BotPersonaConfig? persona = null)
+    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false, IList<TranscriptEntry>? transcript = null, BotPersonaConfig? persona = null, TranscriptRecorder? transcriptRecorder = null, MemoRegistry? memoRegistry = null)
     {
         var sw = Stopwatch.StartNew();
 
@@ -308,6 +423,14 @@ public sealed class DungeonRunHarness
             int floorPotions = 0;
             int playerId     = state.Player.Id;
             bool descended   = false;
+
+            // 0c role-aware health capture: accumulate the per-death lever signals + floor vitals.
+            var combat = new FloorCombatTracker(playerId, state);
+            int killerId = NoDeath;          // set from the player's DeathEvent (-1 = hazard)
+            int playerDeathFloorTurn = 0;    // floor-turn at which the player went down
+
+            // Enriched transcript: HP-profile point at floor entry.
+            transcriptRecorder?.BeginFloor(depth, HpFraction(state.PlayerFighter));
 
             while (!state.IsGameOver && floorTurns < MaxTurnsPerFloor)
             {
@@ -384,8 +507,18 @@ public sealed class DungeonRunHarness
                     action = BotActionConverter.ToPlayerActionWithPathing(botAction, state);
                 }
 
+                // Capture pre-action state for the enriched transcript (HP fraction and
+                // available-action count reflect the situation the action responded to).
+                double hpPctBeforeTurn = transcriptRecorder != null ? HpFraction(state.PlayerFighter) : 0.0;
+                int availableActions   = transcriptRecorder != null ? ComputeAvailableActionCount(state) : 0;
+
                 var turnResult = TurnController.ProcessTurn(state, action);
                 floorTurns++;
+
+                transcriptRecorder?.RecordTurn(currentTurnNumber, depth, hpPctBeforeTurn, availableActions, action, turnResult.Events);
+
+                // 0c: ingest this turn's combat into the per-floor lever-signal accumulators.
+                combat.IngestTurn(turnResult.Events, floorTurns, state);
 
                 // Process events from this turn
                 foreach (var evt in turnResult.Events)
@@ -410,6 +543,8 @@ public sealed class DungeonRunHarness
                             killerName = death.KillerId == -1
                                 ? "Ground Hazard"
                                 : state.Monsters.FirstOrDefault(m => m.Id == death.KillerId)?.Name;
+                            killerId = death.KillerId;
+                            playerDeathFloorTurn = floorTurns;
                             transcript?.Add(new TranscriptEntry { Depth = depth, FloorTurn = floorTurns, EventType = "player_died", Detail = killerName ?? "unknown" });
                             break;
 
@@ -452,6 +587,18 @@ public sealed class DungeonRunHarness
             floorMetrics.HitMaxTurns    = floorTurns >= MaxTurnsPerFloor
                 && !floorMetrics.Descended
                 && !floorMetrics.PlayerDied;
+
+            // 0c role-aware health: floor vitals + the per-death lever record (death floors only).
+            floorMetrics.DamageTakenThisFloor    = combat.DamageTaken;
+            floorMetrics.CombatTurns             = combat.CombatTurns;
+            floorMetrics.AvgHitsToKill           = combat.AvgHitsToKill;
+            floorMetrics.EscalatorPresent        = combat.EscalatorPresent;
+            floorMetrics.EscalatorNeutralizedAtTurn = combat.EscalatorNeutralizedAtTurn;
+            floorMetrics.EscalatorNeutralized    = combat.EscalatorNeutralizedAtTurn.HasValue;
+            // Build the death record only on a real player DeathEvent (not stuck-aborts, which set
+            // PlayerDied but have no killer/engagement to attribute).
+            if (floorMetrics.PlayerDied && killerId != NoDeath)
+                floorMetrics.Death = combat.BuildDeathRecord(depth, killerId, playerDeathFloorTurn, state);
 
             // Snapshot per-floor loot telemetry from PityTracker before carrying it forward.
             if (state.PityTracker != null)
@@ -549,6 +696,20 @@ public sealed class DungeonRunHarness
             };
         }
 
+        // Enriched transcript: finalize with run-level rollup + verbatim memos.
+        if (transcriptRecorder != null)
+        {
+            int depthReached = perFloor.Count > 0 ? perFloor[^1].Depth : 0;
+            var memos = BuildDeliveredMemos(memoRegistry, playerDiedThisRun, killerName, depthReached);
+            transcriptRecorder.Finish(
+                runId: $"{baseSeed}-{Guid.NewGuid():N}",
+                depthReached: depthReached,
+                floorCount: perFloor.Count,
+                turnCount: totalTurns,
+                ending: outcome,
+                memos: memos);
+        }
+
         return new DungeonSoakRunResult
         {
             Seed                = baseSeed,
@@ -616,6 +777,69 @@ public sealed class DungeonRunHarness
         };
     }
 
+    private static double HpFraction(Fighter fighter)
+        => fighter.MaxHp > 0 ? (double)fighter.Hp / fighter.MaxHp : 0.0;
+
+    /// <summary>
+    /// Count of meaningful actions available to the player this turn — the signal the
+    /// soft_lock / dead_action_space predicates key on. Formula (documented in the schema):
+    /// walkable adjacent tiles (8-dir) + adjacent living monsters + (1 if a healing item is
+    /// held) + (1 if standing on the down stair). Reaches 0 only in a genuine soft-lock.
+    /// </summary>
+    private static int ComputeAvailableActionCount(GameState state)
+    {
+        var player = state.Player;
+        int count = 0;
+
+        for (int dy = -1; dy <= 1; dy++)
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            if (dx == 0 && dy == 0) continue;
+            int nx = player.X + dx, ny = player.Y + dy;
+
+            // An adjacent living monster is an attack option.
+            bool monsterHere = false;
+            foreach (var m in state.AliveMonsters)
+                if (m.X == nx && m.Y == ny) { monsterHere = true; break; }
+            if (monsterHere) { count++; continue; }
+
+            if (state.Map.CanMoveToWith(nx, ny, player, canPassDoors: true))
+                count++;
+        }
+
+        if (CountHealingPotions(player) > 0) count++;
+        if (state.PlayerOnStairDown) count++;
+
+        return count;
+    }
+
+    /// <summary>
+    /// Run MemoDeliveryEvaluator against a FRESH in-memory persistent state and return the
+    /// memos delivered this run, verbatim. A clean slate means first-fire variants dominate
+    /// (death_first, floor_low) — sufficient for capturing memo text in the transcript;
+    /// cross-run memo evolution is a separate concern. Returns empty if no registry is wired.
+    /// </summary>
+    private static IReadOnlyList<MemoRecord> BuildDeliveredMemos(
+        MemoRegistry? memoRegistry, bool died, string? killerName, int depthReached)
+    {
+        if (memoRegistry == null) return Array.Empty<MemoRecord>();
+
+        var pstate = PersistentRunState.CreateEmpty();
+        var ctx = new PostRunContext(
+            Died: died,
+            CauseOfDeath: null,        // raw engine cause string is not tracked by this harness
+            KillerSpecies: killerName,
+            FloorReached: depthReached,
+            RunNumber: 1);
+
+        new MemoDeliveryEvaluator().EvaluateRunEnd(ctx, pstate, memoRegistry);
+
+        var memos = new List<MemoRecord>();
+        foreach (var pm in pstate.UnderWarden.PendingMemos)
+            memos.Add(new MemoRecord { Key = pm.Key, Subject = pm.Subject, Body = pm.Body });
+        return memos;
+    }
+
     /// <summary>
     /// Count healing potions in the entity's inventory.
     /// Returns 0 if entity is null or has no inventory.
@@ -633,5 +857,145 @@ public sealed class DungeonRunHarness
                 count += consumable.StackSize;
         }
         return count;
+    }
+
+    /// <summary>
+    /// Accumulates one floor's combat into the six bounded per-death lever signals (0c) plus floor
+    /// vitals (damage taken, combat turns, ttk, escalator-neutralized-when). Pure bookkeeping over the
+    /// turn event stream — no balance opinion. The classifier and the lever-attribution layer read the
+    /// derived outputs; survival rate (the balance verdict) is computed elsewhere from outcomes.
+    ///
+    /// All "turn" values are FLOOR-turns (the harness's per-floor counter), so engagement windows and
+    /// the escalator-neutralized timestamp share one clock.
+    /// </summary>
+    private sealed class FloorCombatTracker
+    {
+        private readonly int _playerId;
+
+        private readonly Dictionary<int, int> _monsterHits = new();        // killer's LANDED hits on player
+        private readonly Dictionary<int, int> _monsterSwings = new();      // killer's ATTEMPTED swings on player
+        private readonly Dictionary<int, int> _monsterDamage = new();      // sum of landed damage to player
+        private readonly Dictionary<int, int> _monsterFirstHitTurn = new();// floor-turn of killer's first landed hit
+        private readonly Dictionary<int, int> _playerHitsOnMonster = new();// player's LANDED hits per monster
+        private readonly HashSet<int> _distinctAttackers = new();          // monsters that dealt the player damage
+        private readonly List<int> _killHitCounts = new();                 // player hits per monster killed (ttk)
+
+        public int DamageTaken { get; private set; }
+        public int CombatTurns { get; private set; }
+        public bool EscalatorPresent { get; private set; }
+        public int? EscalatorNeutralizedAtTurn { get; private set; }
+
+        public FloorCombatTracker(int playerId, GameState state)
+        {
+            _playerId = playerId;
+            foreach (var m in state.Monsters)
+                if (IsEscalator(m)) { EscalatorPresent = true; break; }
+        }
+
+        public double AvgHitsToKill => _killHitCounts.Count > 0 ? _killHitCounts.Average() : 0.0;
+
+        public void IngestTurn(IEnumerable<TurnEvent> events, int floorTurn, GameState state)
+        {
+            bool playerInCombat = false;
+
+            foreach (var evt in events)
+            {
+                switch (evt)
+                {
+                    // A blow swung AT the player (monster melee). Misses still emit, so this is the
+                    // hit-rate denominator (armor/AC lever).
+                    case AttackEvent atk when atk.TargetId == _playerId:
+                        playerInCombat = true;
+                        Bump(_monsterSwings, atk.ActorId);
+                        if (atk.Hit)
+                            RecordLandedHitOnPlayer(atk.ActorId, atk.Damage, floorTurn);
+                        break;
+
+                    // The player's own blow — landed hits feed ttk + the counterattack signal.
+                    case AttackEvent atk when atk.ActorId == _playerId:
+                        playerInCombat = true;
+                        if (atk.Hit) Bump(_playerHitsOnMonster, atk.TargetId);
+                        break;
+
+                    // Soul Bolt is the lich's spike blow (not an AttackEvent). Count it as a landed hit
+                    // by its caster so a soul-bolt kill still attributes hits-to-down to the lich.
+                    case SoulBoltEvent sb when sb.TargetId == _playerId:
+                        playerInCombat = true;
+                        Bump(_monsterSwings, sb.ActorId);
+                        RecordLandedHitOnPlayer(sb.ActorId, sb.Damage, floorTurn);
+                        break;
+
+                    // DOT / bleed are status ticks, not blows: they count toward HP lost (floor vitals)
+                    // but NOT toward hits-to-down (which measures the killer's blows).
+                    case DotDamageEvent dot when dot.EntityId == _playerId:
+                        DamageTaken += dot.Damage;
+                        break;
+                    case BleedTickEvent bleed when bleed.ActorId == _playerId:
+                        DamageTaken += bleed.Damage;
+                        break;
+
+                    // A monster died: record player-hits-to-kill (ttk) and the escalator-neutralized clock.
+                    case DeathEvent d when d.ActorId != _playerId:
+                        _killHitCounts.Add(_playerHitsOnMonster.GetValueOrDefault(d.ActorId));
+                        if (IsEscalatorId(d.ActorId, state))
+                        {
+                            EscalatorPresent = true;
+                            EscalatorNeutralizedAtTurn ??= floorTurn;
+                        }
+                        break;
+                }
+            }
+
+            if (playerInCombat) CombatTurns++;
+        }
+
+        public PlayerDeathRecord BuildDeathRecord(int depth, int killerId, int floorTurnAtDeath, GameState state)
+        {
+            int hits   = _monsterHits.GetValueOrDefault(killerId);
+            int swings  = _monsterSwings.GetValueOrDefault(killerId);
+            int damage  = _monsterDamage.GetValueOrDefault(killerId);
+            int firstHit = _monsterFirstHitTurn.TryGetValue(killerId, out var f) ? f : floorTurnAtDeath;
+
+            var killer = killerId == -1 ? null : state.Monsters.FirstOrDefault(m => m.Id == killerId);
+
+            return new PlayerDeathRecord
+            {
+                Depth                = depth,
+                KillerId             = killerId,
+                KillerTypeId         = killer?.Get<SpeciesTag>()?.TypeId,
+                KillerArchetype      = killer?.Get<ThreatArchetypeTag>()?.Archetype,
+                HitsToDown           = hits,
+                DamagePerHit         = hits > 0 ? (double)damage / hits : 0.0,
+                KillerHitRate        = swings > 0 ? (double)hits / swings : 0.0,
+                CounterattacksLanded = _playerHitsOnMonster.GetValueOrDefault(killerId),
+                DistinctAttackers    = _distinctAttackers.Count,
+                // Inclusive span so frequency = hits / turns reads as hits-per-turn (1 hit over 1 turn = 1.0).
+                EngagementTurns      = Math.Max(1, floorTurnAtDeath - firstHit + 1),
+            };
+        }
+
+        private void RecordLandedHitOnPlayer(int attackerId, int damage, int floorTurn)
+        {
+            Bump(_monsterHits, attackerId);
+            _monsterDamage[attackerId] = _monsterDamage.GetValueOrDefault(attackerId) + damage;
+            if (!_monsterFirstHitTurn.ContainsKey(attackerId))
+                _monsterFirstHitTurn[attackerId] = floorTurn;
+            if (damage > 0)
+            {
+                DamageTaken += damage;
+                _distinctAttackers.Add(attackerId);
+            }
+        }
+
+        private static void Bump(Dictionary<int, int> d, int key) => d[key] = d.GetValueOrDefault(key) + 1;
+
+        private static bool IsEscalator(Entity m)
+            => m.Get<ThreatArchetypeTag>()?.Archetype is ThreatArchetype.Escalator or ThreatArchetype.Fused;
+
+        private static bool IsEscalatorId(int id, GameState state)
+        {
+            var m = state.Monsters.FirstOrDefault(e => e.Id == id);
+            return m != null && IsEscalator(m);
+        }
     }
 }

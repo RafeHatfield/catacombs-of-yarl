@@ -51,6 +51,7 @@ int     etpSanityRuns   = 1;
 bool    verbose      = false;
 bool    printReport  = false;
 bool    transcriptMode = false;
+string? llmTranscriptDir = null;  // --llm-transcript <dir>: emit enriched JSONL, one file per run
 int?    runsOverride = null;
 int     seed         = 1337;
 // Default to 10 floors (B1+B2) for soak runs. The canonical dungeon is 25 floors (B1-B5),
@@ -82,6 +83,14 @@ for (int i = 0; i < args.Length; i++)
         case "--strict":       etpSanityStrict = true; break;
         case "--depth":        etpSanityDepth  = int.Parse(args[++i]); break;
         case "--transcript": transcriptMode = true;  break;
+        case "--llm-transcript":
+            if (i + 1 >= args.Length || args[i + 1].StartsWith("--"))
+            {
+                Console.Error.WriteLine("ERROR: --llm-transcript requires an output directory argument.");
+                return 1;
+            }
+            llmTranscriptDir = args[++i];
+            break;
         case "--floors":    floors       = int.Parse(args[++i]); break;
         case "--verbose":   verbose      = true;      break;
         case "--report":    printReport  = true;      break;
@@ -405,6 +414,51 @@ if (dungeonMode)
         return 0;
     }
 
+    if (llmTranscriptDir != null)
+    {
+        int transcriptRuns = runsOverride ?? 10;
+        Console.Error.WriteLine($"Generating {transcriptRuns} enriched LLM-testing transcript(s) " +
+                                $"({floors} floors, seed {seed}) -> {llmTranscriptDir}");
+
+        // Load voice + memo registries so verbatim text and memos reach the transcript.
+        // Missing files are non-fatal — the corresponding fields stay empty/null (a greppable gap).
+        var voiceRegistry = LoadVoiceRegistry();
+        var memoRegistry  = LoadMemoRegistry();
+        if (voiceRegistry == null)
+            Console.Error.WriteLine("  WARN: voice line YAML not loaded — VoiceLineEvent.resolved_text will be null.");
+        if (memoRegistry == null)
+            Console.Error.WriteLine("  WARN: memo YAML not loaded — memos_delivered will be empty.");
+
+        try
+        {
+            Directory.CreateDirectory(llmTranscriptDir);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"ERROR: cannot create directory '{llmTranscriptDir}': {ex.Message}");
+            return 1;
+        }
+
+        for (int i = 0; i < transcriptRuns; i++)
+        {
+            int runSeed = seed + i;
+            // Build a FRESH harness per run. Entity IDs are deterministic only from a fresh
+            // EntityFactory; the factory counter is process-shared mutable state that is not
+            // reset per run, so reusing a harness drifts absolute IDs across runs (gameplay
+            // is unaffected, but transcript IDs would no longer match a fresh replay).
+            // A fresh factory per run guarantees replay fidelity: replaying (seed + actions)
+            // in a fresh harness reproduces the exact IDs in this transcript.
+            var runHarness = new DungeonRunHarness(
+                BuildDungeonFloorBuilder(EntitiesFile, LevelTemplatesFile, DepthBoonsFile));
+            var (_, jsonl) = runHarness.RunWithTranscript(floors, runSeed, resolvedPersona, voiceRegistry, memoRegistry);
+            var outPath = Path.Combine(llmTranscriptDir, $"run-{runSeed}.jsonl");
+            // UTF-8 without BOM — JSONL is read as an ASCII-compatible bytestream.
+            File.WriteAllText(outPath, jsonl, new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+            Console.Error.WriteLine($"  wrote {outPath}");
+        }
+        return 0;
+    }
+
     string personaLabel = resolvedPersona?.Name ?? "balanced";
     Console.Error.WriteLine($"Running {runs} soak runs ({floors} floors, seed {seed}, persona {personaLabel})...");
 
@@ -676,6 +730,38 @@ DungeonFloorBuilder BuildDungeonFloorBuilder(string entitiesPath, string templat
         boonTable: boonTable,
         lootTagRegistry: lootTagRegistry,
         lootPolicy: lootPolicy);
+}
+
+/// <summary>
+/// Load and merge the voice line pools (Hollowmark + Quipping Shade + catalog + possession),
+/// matching Main.cs load order so transcript-resolved lines match the live game's pools.
+/// Returns null if the primary file is absent.
+/// </summary>
+VoiceLineRegistry? LoadVoiceRegistry()
+{
+    const string dir = "config/voice_lines";
+    var hollowmark = Path.Combine(dir, "hollowmark.yaml");
+    if (!File.Exists(hollowmark)) return null;
+
+    var registry = VoiceLineRegistry.LoadFromYaml(File.ReadAllText(hollowmark));
+    // Matches Main.cs: weighing_audit.yaml is a DIFFERENT schema (WeighingAuditRegistry), not merged here.
+    foreach (var name in new[] { "quipping_shade.yaml", "possession.yaml", "catalog_past_selves.yaml" })
+    {
+        var p = Path.Combine(dir, name);
+        if (File.Exists(p))
+            registry.Merge(VoiceLineRegistry.LoadFromYaml(File.ReadAllText(p)));
+    }
+    return registry;
+}
+
+/// <summary>Load the Under-Warden memo registry. Returns null if the memo file is absent.</summary>
+MemoRegistry? LoadMemoRegistry()
+{
+    const string memos = "config/under_warden/memos.yaml";
+    const string causes = "config/under_warden/cause_display_names.yaml";
+    if (!File.Exists(memos)) return null;
+    var causesYaml = File.Exists(causes) ? File.ReadAllText(causes) : "";
+    return MemoRegistry.LoadFromYaml(File.ReadAllText(memos), causesYaml);
 }
 
 /// <summary>
