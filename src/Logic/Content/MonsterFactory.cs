@@ -42,6 +42,10 @@ public sealed class MonsterFactory
         var entity = CreateFromDefinition(def, x, y, depth, rng);
         // Attach the YAML key so MonsterKnowledgeSystem can key on species without re-looking up the definition.
         entity.Add(new ECS.SpeciesTag(monsterId));
+        // Attach the threat archetype (if classified) so the soak harness can attribute kills + scan for
+        // live escalators directly off the entity. Unclassified monsters get no tag.
+        if (Balance.ThreatArchetypeTag.Parse(def.ThreatArchetype) is { } archetype)
+            entity.Add(new Balance.ThreatArchetypeTag(archetype));
         return entity;
     }
 

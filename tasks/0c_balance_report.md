@@ -1,18 +1,47 @@
 # Task: 0c — Whole-Game Balance Report (role-aware health)
 
 ## Current State
-- **Just done:** Steps 4+5 COMPLETE — `FloorHealthClassifier` (pure, both refinements folded in) +
-  `FloorHealthClassifierTests` (12 outcome tests, **all green**). This is the reviewable spec; the verdict
-  logic is pinned by the tests. Reused canonical `TargetBand` (added Below/Above). Refinements: fast-death
-  anchors to the killer's archetype ttd; escalator has 3 signals (not-escalating=EscalatorBroken,
-  no-window=EscalatorUnfair, killing-it-doesn't-help=BaselineBroken).
-- **Awaiting:** Rafe reviews the classifier by reading the test verdicts (the gate before steps 6–8).
-- **Next step:** steps 1–3 — the WIRING that feeds the classifier from live runs (metrics capture →
-  target_table.yaml + loader → archetype tagging on monster defs + death-archetype attribution).
-- **Open issues:** `target_table.yaml` needs real per-region NUMBERS — authored *during* B1 tuning
-  (decided on merits, then measured). Refinement-2's third signal (escalator-alive vs killed-early
-  comparison) can only be PRODUCED live once staged-start (step 8) exists; the classifier already consumes
-  + is tested on it. Step 3 must capture WHETHER/WHEN the escalator was neutralized, not just the killer.
+- **Just done (2026-06-09):** Steps 1–3 COMPLETE under the corrected multi-signal frame, all tests green
+  (fast suite 2102 pass / 0 fail; capture tests Slow, real-engine, green).
+  - Step 1 — `FloorRunMetrics` gains DamageTakenThisFloor / CombatTurns / AvgHitsToKill / EscalatorPresent
+    / EscalatorNeutralized(+AtTurn) / `Death` (PlayerDeathRecord: the 6 lever signals + AttackFrequency).
+    Captured live in RunSingle via a private `FloorCombatTracker` over the turn-event stream.
+  - Step 2 — `config/balance/target_table.yaml` (B1–B5, HITS, B1-placeholder) + `TargetTable.cs` (ForDepth
+    resolver, edge-clamped) + `TargetTableLoader.cs` (Etp pattern). Loader tests green incl. shipped config.
+  - Step 3 — `threat_archetype` on MonsterDefinition (+Merge inherit) + `ThreatArchetypeTag` (Balance) +
+    MonsterFactory attaches it; 15 monsters authored per §2, rest inherit. Tagging tests green (34).
+  - Also: classifier honesty rename `TurnsToDown`→`HitsToDown`, `TargetTtd`→`TargetHitsToDown` (12 tests
+    still green, values unchanged).
+- **Next step:** the **lever-attribution classifier** — additive sibling that turns the 6 captured signals
+  → a lever verdict (monster-damage / armor / weapon-speed / density / frequency), sitting BESIDE
+  FloorHealth. Then step 6 report (OBSERVED/TARGET/FLAG/Δ; survival-rate=balance, levers=attribution),
+  step 7 baseline, step 8 staged-start.
+- **Open issues / FLAGS for Rafe:**
+  - `target_table.yaml` numbers are B1 placeholders (HITS), authored for real *during* B1 tuning.
+  - Escalator alive-vs-killed comparison still only PRODUCED once staged-start (step 8) exists; the
+    capture records neutralized-when, which step 8 will pair with the staged comparison.
+  - **Archetype assignments needing confirmation:** `fire_beetle` — NOT in §2, left UNTAGGED (unclassified;
+    its kills carry no archetype). `orc_skirmisher` — standalone (doesn't extend orc), tagged Baseline.
+    `cave_spider`/`web_spider` — §2 names only giant_spider but prose says ≡, tagged Spike. `plague_zombie`
+    — inherits Baseline from zombie.
+
+## Diagnostic design (LOCKED 2026-06-09) — see memory project_0c_diagnostic_design
+- **Balance verdict = SURVIVAL RATE vs band** (multivariate by construction). ttd is NOT the balance
+  metric — it's a subordinate diagnostic, consulted only AFTER survival rate flags a floor, to attribute
+  WHICH lever. Make this split explicit in code + report.
+- **Diagnostic = 6 bounded signals, one per lever** (per death): hits-to-down→role-fastness ·
+  damage-per-hit→monster-damage · **killer hit-rate (landed/attempted)→armor/AC lever** (NOT
+  damage-absorbed — combat is AC/avoidance, no soak exists) · counterattacks-landed→weapon-speed/control ·
+  distinct-attacker count→density · **hits÷engagement-turns→attack-frequency (the wraith lever)**.
+- **ttd unit = hits-to-down** (not turns). Rename `TurnsToDown`→`HitsToDown`, `TargetTtd`→`TargetHitsToDown`
+  (honesty, not logic — 12 tests survive as-is in value). Lever signals are an ADDITIVE layer beside
+  FloorHealth; zero existing tests change.
+- **Attack-speed finding:** SpeedBonusTracker bonus-attacks is the sole frequency mechanism; spread is
+  non-uniform (wraith 2.0 outlier, zombie 0.5 baseline, mid-cluster conditional, core baselines/lich/
+  troll-base/necro flat 0) → frequency is its own parameter-free lever (hits÷turns), not folded into ttd.
+- **Archetype assignment flags (need Rafe):** fire_beetle (NOT in §2 — left untagged) · orc_skirmisher
+  (standalone, not orc-extending; tagged Baseline) · cave_spider/web_spider (§2 names only giant_spider but
+  prose says ≡; tagged Spike) · plague_zombie (inherits Baseline from zombie).
 
 ## Hard requirement (non-negotiable, from Rafe)
 0c's health classifications must be tested at the **OUTCOME** level, not attachment. A known-broken
@@ -20,12 +49,12 @@ composition must make the report SAY broken; a healthy one read healthy; an unfa
 The report is the instrument of truth — it cannot drift green while broken (the exact bug the audit exposed).
 
 ## Build order (each step compiles + tests green before the next)
-1. ⬜ **Metrics data-model** — add `DamageTakenThisFloor`, combat-turn count, and per-floor ttk/ttd capture
-   to `FloorRunMetrics` (`DungeonRunHarness.cs:13`); populate in the `RunSingle` event loop (~:391).
-2. ⬜ **Target table** — `config/balance/target_table.yaml` (schema + B1 placeholder), `TargetTable.cs` +
-   `TargetTableLoader.cs` (follow `Etp/EtpConfigLoader.cs` pattern).
-3. ⬜ **Archetype tagging** — `threat_archetype` field on monster defs (`config/entities.yaml` +
-   `MonsterDefinition.cs`); archetype-tag deaths from killer id.
+1. ✅ **Metrics data-model** — `FloorRunMetrics` + `PlayerDeathRecord` (6 lever signals) captured in
+   `RunSingle` via `FloorCombatTracker`. `tests/Balance/FloorMetricsCaptureTests.cs` (Slow, green).
+2. ✅ **Target table** — `config/balance/target_table.yaml` + `TargetTable.cs` + `TargetTableLoader.cs`.
+   `tests/Balance/TargetTableLoaderTests.cs` (green).
+3. ✅ **Archetype tagging** — `threat_archetype` on MonsterDefinition + `ThreatArchetypeTag` + MonsterFactory.
+   `tests/Balance/ThreatArchetypeTaggingTests.cs` (green, 34). FLAGS in Current State.
 4. ✅ **FloorHealthClassifier (pure)** — `src/Logic/Balance/FloorHealthClassifier.cs`, sibling to
    `OutcomeClassifier`/`BalanceSuiteEvaluator`. Returns the seven verdicts; both refinements folded in.
 5. ✅ **Outcome tests** — `tests/Balance/FloorHealthClassifierTests.cs`: 12 synthetic (observed, target,

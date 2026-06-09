@@ -18,6 +18,13 @@ public sealed class PersistentRunState
 
     private PersistentRunState(PersistenceFile file) => _file = file;
 
+    /// <summary>
+    /// Create a fresh in-memory state with all namespaces at their defaults — no disk I/O.
+    /// Used by headless tooling (e.g. the LLM-testing transcript harness) that needs to run
+    /// post-run systems like MemoDeliveryEvaluator against a clean slate.
+    /// </summary>
+    public static PersistentRunState CreateEmpty() => new(new PersistenceFile());
+
     // ── Dirty tracking ───────────────────────────────────────────────────────
 
     public bool IsDirty => _isDirty;

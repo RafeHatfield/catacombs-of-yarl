@@ -38,6 +38,15 @@ public sealed class MonsterDefinition
     [YamlMember(Alias = "tags")]
     public List<string>? Tags { get; set; }
 
+    /// <summary>
+    /// Threat archetype for role-aware balance health (docs/balance/threat_archetypes.md §2):
+    /// "baseline" | "spike" | "escalator" | "fused". Parsed to ThreatArchetype and attached as a
+    /// ThreatArchetypeTag at spawn. Null = unclassified (no archetype attribution for its kills).
+    /// Inherited via extends (child wins) so orc variants pick up the base orc's archetype automatically.
+    /// </summary>
+    [YamlMember(Alias = "threat_archetype")]
+    public string? ThreatArchetype { get; set; }
+
     [YamlMember(Alias = "etp_base")]
     public int EtpBase { get; set; }
 

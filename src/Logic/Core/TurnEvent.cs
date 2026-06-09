@@ -846,6 +846,16 @@ public sealed class PossessionNearDeathWarningEvent : TurnEvent
 public sealed class VoiceLineEvent : TurnEvent
 {
     public string TriggerId { get; init; } = "";
+
+    /// <summary>
+    /// The resolved player-facing line text. Null at emission time (emit sites have no
+    /// VoiceLineRegistry). Populated for transcript capture by the harness recorder, which
+    /// resolves TriggerId against the registry using a DEDICATED rng (never the game rng,
+    /// so replay determinism is preserved). The live game resolves separately in Main.cs.
+    /// Required for the LLM-testing transcript so voice/register checks can run on the
+    /// as-fired string in any run (bot or LLM) — see docs/llm-testing/shared-transcript-schema.md.
+    /// </summary>
+    public string? ResolvedText { get; set; }
 }
 
 /// <summary>
