@@ -46,12 +46,22 @@ public static class TargetTableLoader
                 }
             }
 
+            LeverExpectation? leverExpectation = r.LeverExpectations == null
+                ? null
+                : new LeverExpectation(
+                    DamagePerHit: r.LeverExpectations.DamagePerHit,
+                    KillerHitRate: r.LeverExpectations.KillerHitRate,
+                    CounterattacksLanded: r.LeverExpectations.CounterattacksLanded,
+                    DistinctAttackers: r.LeverExpectations.DistinctAttackers,
+                    AttackFrequency: r.LeverExpectations.AttackFrequency);
+
             regions.Add(new TargetRegion(
                 Name: name,
                 DepthMin: r.DepthMin,
                 DepthMax: r.DepthMax,
                 DeathPct: new TargetBand(r.DeathPct.Min, r.DeathPct.Max),
-                ByArchetype: byArchetype));
+                ByArchetype: byArchetype,
+                LeverExpectation: leverExpectation));
         }
 
         return new TargetTable(regions);
@@ -70,11 +80,21 @@ public static class TargetTableLoader
         public int DepthMax { get; set; }
         public BandDto? DeathPct { get; set; }
         public Dictionary<string, double>? HitsToDown { get; set; }
+        public LeverExpectationsDto? LeverExpectations { get; set; }
     }
 
     private sealed class BandDto
     {
         public double Min { get; set; }
         public double Max { get; set; }
+    }
+
+    private sealed class LeverExpectationsDto
+    {
+        public double DamagePerHit { get; set; }
+        public double KillerHitRate { get; set; }
+        public double CounterattacksLanded { get; set; }
+        public double DistinctAttackers { get; set; }
+        public double AttackFrequency { get; set; }
     }
 }

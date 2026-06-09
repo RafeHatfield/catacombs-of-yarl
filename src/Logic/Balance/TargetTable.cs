@@ -9,7 +9,8 @@ public sealed record TargetRegion(
     int DepthMin,
     int DepthMax,
     TargetBand DeathPct,
-    IReadOnlyDictionary<ThreatArchetype, ArchetypeTarget> ByArchetype)
+    IReadOnlyDictionary<ThreatArchetype, ArchetypeTarget> ByArchetype,
+    LeverExpectation? LeverExpectation = null)
 {
     public bool ContainsDepth(int depth) => depth >= DepthMin && depth <= DepthMax;
 
@@ -58,4 +59,7 @@ public sealed class TargetTable
 
     /// <summary>The FloorTarget the classifier consumes for a floor at the given depth.</summary>
     public FloorTarget ForDepth(int depth) => RegionForDepth(depth).ToFloorTarget();
+
+    /// <summary>The per-lever expectations for a floor at the given depth, or null if the region has none.</summary>
+    public LeverExpectation? LeverExpectationForDepth(int depth) => RegionForDepth(depth).LeverExpectation;
 }
