@@ -12,6 +12,10 @@ turn_limit: 100
 runs: 100
 category: "B1_engagement_calibration"
 
+# Per-composition engagement band: "the flip." The good-play band — dangerous-but-winnable.
+# Bot reads the floor of the skill range; skilled human survives more, naive human less.
+target_death_pct: { min: 0.35, max: 0.50 }
+
 player:
   hp: 54
   strength: 14

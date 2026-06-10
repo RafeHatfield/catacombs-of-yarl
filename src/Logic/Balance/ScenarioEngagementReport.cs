@@ -24,7 +24,10 @@ public static class ScenarioEngagementReport
         var lCfg  = leverCfg ?? new LeverConfig();
 
         var target      = targets.ForDepth(metrics.Depth);
-        var band        = target.DeathPct;
+        // Per-composition band (from scenario's target_death_pct) takes priority over the depth-region
+        // band — it encodes the INTENT for this specific composition (Layer-1), not the general depth
+        // pressure (Layer-2). Fall back to the region band only when no per-composition band is present.
+        var band        = metrics.EngagementBand ?? target.DeathPct;
         var expectation = targets.LeverExpectationForDepth(metrics.Depth);
 
         var deaths = metrics.Deaths
@@ -37,10 +40,13 @@ public static class ScenarioEngagementReport
             Deaths: deaths,
             HasSpike: metrics.HasSpike,
             HasEscalator: metrics.HasEscalator,
-            EscalatorReachable: false, // staged-start (step 8 prereq) met; signal still null pending design call
+            EscalatorReachable: false,
             Escalator: null);
 
-        var verdict = FloorHealthClassifier.Classify(observed, target, cfg);
+        // The FloorTarget the classifier checks against: per-composition death-pct band (Layer-1)
+        // for the verdict, combined with the region's archetype targets (unchanged).
+        var classifierTarget = new FloorTarget(band, target.ByArchetype);
+        var verdict = FloorHealthClassifier.Classify(observed, classifierTarget, cfg);
 
         var sb = new StringBuilder();
         sb.AppendLine($"Engagement Health (role-aware): {metrics.ScenarioId}");
