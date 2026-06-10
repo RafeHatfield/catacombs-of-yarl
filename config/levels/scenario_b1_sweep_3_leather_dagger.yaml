@@ -1,0 +1,37 @@
+scenario_id: b1_sweep_3_leather_dagger
+name: "B1 sweep — 3 orc_grunt | Leather armor, dagger, 0 potions — armor upgrade only"
+description: >
+  Loadout characterization sweep. Finds where the winnable->too-much flip sits for this
+  specific loadout by checking 3 orc_grunts against it. Intended band: tough.
+  Output: the flip-point table — what each loadout requires, so level design becomes a
+  calculation rather than a guess.
+depth: 1
+turn_limit: 100
+runs: 100
+category: "B1_loadout_sweep"
+
+target_death_pct: { min: 0.10, max: 0.25 }
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 3]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 6]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 9]
+

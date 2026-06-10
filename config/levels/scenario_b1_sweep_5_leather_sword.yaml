@@ -1,0 +1,43 @@
+scenario_id: b1_sweep_5_leather_sword
+name: "B1 sweep — 5 orc_grunt | Leather armor, shortsword, 0 potions — both weapon+armor, no recovery"
+description: >
+  Loadout characterization sweep. Finds where the winnable->too-much flip sits for this
+  specific loadout by checking 5 orc_grunts against it. Intended band: too-much.
+  Output: the flip-point table — what each loadout requires, so level design becomes a
+  calculation rather than a guess.
+depth: 1
+turn_limit: 100
+runs: 100
+category: "B1_loadout_sweep"
+
+target_death_pct: { min: 0.50, max: 1.00 }
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "shortsword"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 2]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 4]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 6]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 8]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 10]
+
