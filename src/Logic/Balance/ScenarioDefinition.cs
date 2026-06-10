@@ -95,6 +95,33 @@ public sealed class ScenarioDefinition
     /// </summary>
     [YamlMember(Alias = "default_bot_persona")]
     public string? DefaultBotPersona { get; set; }
+
+    /// <summary>
+    /// Per-composition engagement death-rate band (Layer-1 target). If present, ScenarioEngagementReport
+    /// uses this band instead of the depth-region band from target_table.yaml — because the intended
+    /// death rate for a SPECIFIC composition ("this fight is the flip; ~35-50%") is a fact about that
+    /// composition, not about a depth region. Co-located with the composition it describes. Layer-1 is
+    /// architecturally separate from Layer-2 (target table); do NOT add per-scenario entries there.
+    /// </summary>
+    [YamlMember(Alias = "target_death_pct")]
+    public ScenarioBand? TargetDeathPct { get; set; }
+
+    /// <summary>Returns a TargetBand from the per-composition band, or null if not specified.</summary>
+    public TargetBand? EngagementBand => TargetDeathPct == null ? null
+        : new TargetBand(TargetDeathPct.Min, TargetDeathPct.Max);
+}
+
+/// <summary>
+/// The intended death-rate band for a specific scenario composition (Layer-1 engagement target).
+/// YAML: target_death_pct: { min: 0.35, max: 0.50 }
+/// </summary>
+public sealed class ScenarioBand
+{
+    [YamlMember(Alias = "min")]
+    public double Min { get; set; }
+
+    [YamlMember(Alias = "max")]
+    public double Max { get; set; }
 }
 
 public sealed class ScenarioPlayer

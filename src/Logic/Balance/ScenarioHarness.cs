@@ -56,7 +56,8 @@ public sealed class ScenarioHarness
             // matrix (depth3_orc_brutal and depth3_orc_brutal_fine at run 5 now diverge).
             allRuns.Add(RunOnce(scenario, SeedDerivation.Stable(scenario.ScenarioId, i, baseSeed), persona: persona));
         return AggregatedMetrics.FromRuns(scenario.ScenarioId, baseSeed, allRuns,
-            name: scenario.Name, depth: scenario.Depth, isProbe: scenario.IsProbe);
+            name: scenario.Name, depth: scenario.Depth, isProbe: scenario.IsProbe,
+            engagementBand: scenario.EngagementBand);
     }
 
     /// <summary>

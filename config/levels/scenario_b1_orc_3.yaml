@@ -9,6 +9,10 @@ turn_limit: 100
 runs: 100
 category: "B1_engagement_calibration"
 
+# Per-composition engagement band: "tough but winnable." 10-25% gives actual bite — enough daylight
+# above the control (~0%) that a 5%-death result reads TooEasy, not Healthy. Distinct from the flip (35-50%).
+target_death_pct: { min: 0.10, max: 0.25 }
+
 player:
   hp: 54
   strength: 14

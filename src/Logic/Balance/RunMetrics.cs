@@ -246,6 +246,15 @@ public sealed class AggregatedMetrics
 
     // ── End Ranged Combat Aggregates ──────────────────────────────────────────
 
+    // ── Per-composition engagement band ──────────────────────────────────────
+
+    /// <summary>
+    /// Per-composition intended death-rate band from the scenario's target_death_pct field.
+    /// Null when the scenario has no band (uses the depth-region band from the target table).
+    /// Architecturally separate from the target table's depth bands (Layer-2).
+    /// </summary>
+    public TargetBand? EngagementBand { get; init; }
+
     // ── 0c per-death lever data (bridged from EngagementTracker) ─────────────
 
     /// <summary>
@@ -267,7 +276,7 @@ public sealed class AggregatedMetrics
     /// Aggregate a list of run metrics into summary statistics.
     /// </summary>
     public static AggregatedMetrics FromRuns(string scenarioId, int seed, List<RunMetrics> runs,
-        string name = "", int depth = 0, bool isProbe = false)
+        string name = "", int depth = 0, bool isProbe = false, TargetBand? engagementBand = null)
     {
         if (runs.Count == 0)
             return new AggregatedMetrics { ScenarioId = scenarioId, Name = name, Depth = depth, Seed = seed, IsProbe = isProbe };
@@ -322,9 +331,10 @@ public sealed class AggregatedMetrics
             AvgSpecialAmmoEffectsApplied           = runs.Average(r => r.SpecialAmmoEffectsApplied),
             AvgEntangleMovesBlocked                = runs.Average(r => r.EntangleMovesBlocked),
             // 0c per-death lever data
-            Deaths      = runs.Where(r => r.EngagementDeath != null).Select(r => r.EngagementDeath!).ToList(),
-            HasSpike     = runs.Any(r => r.HadSpike),
-            HasEscalator = runs.Any(r => r.HadEscalator),
+            Deaths        = runs.Where(r => r.EngagementDeath != null).Select(r => r.EngagementDeath!).ToList(),
+            HasSpike      = runs.Any(r => r.HadSpike),
+            HasEscalator  = runs.Any(r => r.HadEscalator),
+            EngagementBand = engagementBand,
         };
     }
 }

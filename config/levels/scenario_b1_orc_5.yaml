@@ -10,6 +10,10 @@ turn_limit: 100
 runs: 100
 category: "B1_engagement_calibration"
 
+# Per-composition engagement band: "decisively too-much." Once calibrated, death% should
+# sit above the flip (>50%). Upper bound 1.00 = no ceiling (a valid result is 100% deaths).
+target_death_pct: { min: 0.50, max: 1.00 }
+
 player:
   hp: 54
   strength: 14
