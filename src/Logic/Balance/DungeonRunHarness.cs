@@ -336,7 +336,8 @@ public sealed class DungeonRunHarness
     ///
     /// This is the primary entry point for automated regression testing.
     /// </summary>
-    public DungeonSoakSummary RunSoak(int floors, int runs, int baseSeed = 1337, BotPersonaConfig? persona = null)
+    public DungeonSoakSummary RunSoak(int floors, int runs, int baseSeed = 1337, BotPersonaConfig? persona = null,
+        int startDepth = 1, GearProfile? gearProfile = null)
     {
         var results = new List<DungeonSoakRunResult>(runs);
 
@@ -346,7 +347,8 @@ public sealed class DungeonRunHarness
             try
             {
                 // Telemetry always enabled in soak mode — no reason to run N iterations without it.
-                var result = RunSingle(floors, seed, enableTelemetry: true, persona: persona);
+                var result = RunSingle(floors, seed, enableTelemetry: true, persona: persona,
+                    startDepth: startDepth, gearProfile: gearProfile);
                 results.Add(result);
             }
             catch (Exception ex)
@@ -368,6 +370,16 @@ public sealed class DungeonRunHarness
     }
 
     /// <summary>
+    /// Staged-start soak (0c step 8): run depths <paramref name="startDepth"/>..<paramref name="floors"/>
+    /// with a region-appropriate player built from <paramref name="gearProfile"/>, instead of grinding up
+    /// from floor 1. Seed-per-depth is absolute, so a staged floor N reproduces a full run's floor-N
+    /// geometry — letting a region be soaked at its own gear level. Thin wrapper over RunSoak.
+    /// </summary>
+    public DungeonSoakSummary RunSoakStaged(int floors, int runs, int startDepth, GearProfile gearProfile,
+        int baseSeed = 1337, BotPersonaConfig? persona = null)
+        => RunSoak(floors, runs, baseSeed, persona, startDepth: startDepth, gearProfile: gearProfile);
+
+    /// <summary>
     /// Core single-run implementation. Returns a fully populated DungeonSoakRunResult
     /// including killerName, potions tracking, boon count, and timing.
     ///
@@ -379,12 +391,16 @@ public sealed class DungeonRunHarness
     /// storing the resulting BotRunSummary in the returned DungeonSoakRunResult.BotSummary.
     /// When false (legacy Run() path), no recorder is created and BotSummary is null.
     /// </summary>
-    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false, IList<TranscriptEntry>? transcript = null, BotPersonaConfig? persona = null, TranscriptRecorder? transcriptRecorder = null, MemoRegistry? memoRegistry = null)
+    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false, IList<TranscriptEntry>? transcript = null, BotPersonaConfig? persona = null, TranscriptRecorder? transcriptRecorder = null, MemoRegistry? memoRegistry = null, int startDepth = 1, GearProfile? gearProfile = null)
     {
         var sw = Stopwatch.StartNew();
 
-        var perFloor      = new List<FloorRunMetrics>(floors);
-        Entity? player    = null;
+        var perFloor      = new List<FloorRunMetrics>(Math.Max(1, floors - startDepth + 1));
+        // Staged start (step 8): begin at startDepth with a region-appropriate geared player instead of
+        // grinding up from floor 1. gearProfile != null builds that player once per run; otherwise the
+        // first Build() creates the floor-1 default. Seed-per-depth is absolute, so a staged floor N has
+        // the same geometry as a full run that reached floor N.
+        Entity? player    = gearProfile != null ? _floorBuilder.CreateGearedPlayer(gearProfile) : null;
         Entity? lastFloorPlayer = null; // always the last floor's player entity (even on death)
         BoonTracker? boonTracker = null;
         PityTracker? pityTracker = null;
@@ -408,7 +424,7 @@ public sealed class DungeonRunHarness
         string personaName = resolvedPersona.Name;
         bool runWasAborted = false;
 
-        for (int depth = 1; depth <= floors; depth++)
+        for (int depth = startDepth; depth <= floors; depth++)
         {
             transcript?.Add(new TranscriptEntry { Depth = depth, FloorTurn = 0, EventType = "floor_enter", Detail = $"Depth {depth}" });
 

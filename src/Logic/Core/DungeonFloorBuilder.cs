@@ -649,4 +649,69 @@ public sealed class DungeonFloorBuilder
 
         return player;
     }
+
+    /// <summary>
+    /// Build a starting player from a staged-start gear profile (0c step 8) — region-appropriate
+    /// equipment + stats instead of the floor-1 default. Mirrors CreateDefaultPlayer's structure (same
+    /// shared factories, so gear IDs advance the same EntityFactory counter) but reads slots/stats/potion
+    /// count from the profile. The Wand of Portals + Spell-Break are always granted, same as a normal run.
+    /// </summary>
+    public Entity CreateGearedPlayer(Balance.GearProfile profile)
+    {
+        var player = new Entity(0, "Player", 0, 0, blocksMovement: true);
+        player.Add(new Combat.Fighter(
+            hp: 54 + profile.BonusHp,
+            strength: profile.Strength ?? 14,
+            dexterity: profile.Dexterity ?? 14,
+            constitution: profile.Constitution ?? 14,
+            accuracy: 3,
+            evasion: 0,
+            damageMin: 1,
+            damageMax: 2)
+        {
+            CanOpenDoors = true,
+        });
+
+        player.Add(new RunAggressionTally());
+
+        var equipment = new Combat.Equipment();
+        player.Add(equipment);
+        EquipFromProfile(equipment, Combat.EquipmentSlot.MainHand, profile.MainHand);
+        EquipFromProfile(equipment, Combat.EquipmentSlot.Chest,    profile.Chest);
+        EquipFromProfile(equipment, Combat.EquipmentSlot.OffHand,  profile.OffHand);
+        EquipFromProfile(equipment, Combat.EquipmentSlot.Head,     profile.Head);
+        EquipFromProfile(equipment, Combat.EquipmentSlot.Feet,     profile.Feet);
+
+        var inventory = new Inventory();
+        player.Add(inventory);
+        for (int i = 0; i < profile.HealingPotions; i++)
+        {
+            var potion = _consumableFactory.Create("healing_potion");
+            if (potion != null)
+                inventory.Add(potion);
+        }
+
+        if (_spellItemFactory != null)
+        {
+            var dummyRng = new SeededRandom(0);
+            var portalWand = _spellItemFactory.CreateWand("wand_of_portals", dummyRng);
+            if (portalWand != null)
+                inventory.Add(portalWand);
+            var spellBreakWand = _spellItemFactory.CreateWand("wand_of_spell_break", dummyRng);
+            if (spellBreakWand != null)
+                inventory.Add(spellBreakWand);
+        }
+
+        return player;
+    }
+
+    /// <summary>Create + equip an item id into a slot, if the id is non-empty and the item exists.</summary>
+    private void EquipFromProfile(Combat.Equipment equipment, Combat.EquipmentSlot slot, string? itemId)
+    {
+        if (string.IsNullOrWhiteSpace(itemId))
+            return;
+        var item = _itemFactory.Create(itemId);
+        if (item != null)
+            equipment.SetSlot(slot, item);
+    }
 }

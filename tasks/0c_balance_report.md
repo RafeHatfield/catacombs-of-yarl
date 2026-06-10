@@ -33,11 +33,14 @@
   Both compile in isolation (A verified via stash). The target-table slice landed earlier as `142af2e`.
 - **Step 7 DONE + GREEN + COMMITTED:** `SoakBaseline` + `SoakBaselineEvaluator` + `SoakBaselineDeltaReport`
   + CLI `--update-baseline`/diff. Same-seed re-run shows all-`+0.0pp`/PASS (deterministic), verified e2e.
-- **Next step:** step 8 staged-start — `RunSoakStaged(startDepth, gearProfile)` on `DungeonRunHarness` +
-  parameterized gear-player via `DungeonFloorBuilder.Build(existingPlayer)` seam + `config/balance/
-  gear_profiles.yaml` + CLI `--start-floor/--gear`. Produces the escalator alive-vs-killed comparison the
-  capture already records the neutralized-when half of → lights up the classifier's escalator branch. Last
-  step before B1 tuning (first tuned number, ascending by region).
+- **Step 8 DONE + GREEN:** staged-start (see build order #8). 0c FOUNDATION COMPLETE — all 8 steps done.
+- **Open follow-up (now UNBLOCKED, needs a design call):** the escalator alive-vs-killed comparison
+  (EscalatorComparison, the classifier's 3rd escalator signal) is still null in the report → the escalator
+  branch stays moot. Staged-start was its prerequisite and is now met. Two ways to PRODUCE it: (a) partition
+  a soak's runs by EscalatorNeutralizedAtTurn (early vs not) — cheap, uses existing capture, but carries
+  selection bias; (b) a controlled experiment (bot target-priority knob to force kill-early vs leave-alive)
+  — unbiased, needs a bot-policy feature. DECIDE before wiring; don't bake in the biased one silently.
+- **Next:** B1 tuning — the first tuned number, ascending by region, with the report + delta reading it back.
 - **Open issues / FLAGS for Rafe:**
   - `target_table.yaml` numbers are B1 placeholders (HITS), authored for real *during* B1 tuning.
   - Escalator alive-vs-killed comparison still only PRODUCED once staged-start (step 8) exists; the
@@ -89,9 +92,11 @@ The report is the instrument of truth — it cannot drift green while broken (th
    PASS/WARN/FAIL on death-rate drift, mirrors `BalanceSuiteEvaluator`), `SoakBaselineDeltaReport` (read-level
    section). CLI: `--update-baseline` writes `reports/baselines/soak_baseline.json`, else diffs against it.
    `tests/Balance/SoakBaselineTests.cs` (8, green). Real baseline authored from a B1 soak during tuning.
-8. ⬜ **Staged-start** — `RunSoakStaged(startDepth, gearProfile)` on `DungeonRunHarness` (loop init :293) +
-   parameterized gear-player in `DungeonFloorBuilder.Build(existingPlayer)` seam + `config/balance/
-   gear_profiles.yaml` + CLI `--start-floor/--gear`.
+8. ✅ **Staged-start** — `DungeonFloorBuilder.CreateGearedPlayer(profile)` + `GearProfile`/`GearProfileLoader`
+   + `config/balance/gear_profiles.yaml` (b1–b5 placeholders) + `RunSoakStaged(startDepth, gearProfile)` on
+   `DungeonRunHarness` (RunSingle parameterized with startDepth + geared initial player; absolute seed-per-
+   depth = same geometry as a full run at depth N) + CLI `--start-floor/--gear`. Tests: `GearProfileTests`
+   (fast), `StagedStartTests` (Slow). Verified e2e (b3 gear, MaxHp 82 vs default 56, depths 3–5).
 
 ## Key facts (from harness map)
 - Soak engine is in `src/Logic/Balance/` (NOT tools/Harness — that's just CLI). `DungeonRunHarness.cs`,

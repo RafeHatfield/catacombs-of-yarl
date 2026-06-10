@@ -28,6 +28,7 @@ const string LootTagsFile        = "config/loot_tags.yaml";
 const string LootPolicyFile      = "config/loot_policy.yaml";
 const string TargetTableFile     = "config/balance/target_table.yaml";
 const string SoakBaselineFile    = "reports/baselines/soak_baseline.json";
+const string GearProfilesFile    = "config/balance/gear_profiles.yaml";
 
 // ─── Parse args ────────────────────────────────────────────────────────────
 
@@ -59,6 +60,8 @@ int     seed         = 1337;
 // Default to 10 floors (B1+B2) for soak runs. The canonical dungeon is 25 floors (B1-B5),
 // but 10 is enough to verify band-density and pity behaviour without long run times.
 int     floors       = 10;
+int     startFloor   = 1;       // --start-floor N: staged-start soak begins at depth N (step 8)
+string? gearName     = null;    // --gear <profile>: staged-start gear profile key (b1..b5)
 string? jsonlPath    = null;
 string? jsonlInPath  = null;
 string? personaName  = null;  // --persona <name>, default: null → balanced
@@ -94,6 +97,15 @@ for (int i = 0; i < args.Length; i++)
             llmTranscriptDir = args[++i];
             break;
         case "--floors":    floors       = int.Parse(args[++i]); break;
+        case "--start-floor": startFloor = int.Parse(args[++i]); break;
+        case "--gear":
+            if (i + 1 >= args.Length || args[i + 1].StartsWith("--"))
+            {
+                Console.Error.WriteLine("ERROR: --gear requires a profile name (b1, b2, b3, b4, b5).");
+                return 1;
+            }
+            gearName = args[++i];
+            break;
         case "--verbose":   verbose      = true;      break;
         case "--report":    printReport  = true;      break;
         case "--jsonl":
@@ -462,6 +474,31 @@ if (dungeonMode)
     }
 
     string personaLabel = resolvedPersona?.Name ?? "balanced";
+
+    // Staged-start (step 8): resolve --gear profile + validate --start-floor before the soak.
+    GearProfile? gearProfile = null;
+    if (gearName != null)
+    {
+        if (!File.Exists(GearProfilesFile))
+        {
+            Console.Error.WriteLine($"ERROR: --gear requires {GearProfilesFile} (not found).");
+            return 1;
+        }
+        var profiles = GearProfileLoader.FromFile(GearProfilesFile);
+        if (!profiles.TryGetValue(gearName, out gearProfile))
+        {
+            Console.Error.WriteLine($"ERROR: unknown gear profile '{gearName}'. Available: {string.Join(", ", profiles.Keys)}.");
+            return 1;
+        }
+    }
+    if (startFloor < 1 || startFloor > floors)
+    {
+        Console.Error.WriteLine($"ERROR: --start-floor {startFloor} must be between 1 and --floors ({floors}).");
+        return 1;
+    }
+    if (startFloor > 1)
+        Console.Error.WriteLine($"Staged start: depths {startFloor}..{floors}, gear '{gearName ?? "(default — none specified, using floor-1 loadout)"}'");
+
     Console.Error.WriteLine($"Running {runs} soak runs ({floors} floors, seed {seed}, persona {personaLabel})...");
 
     // Optional JSONL streaming writer — opened before the soak so each run flushes immediately.
@@ -488,7 +525,8 @@ if (dungeonMode)
     DungeonSoakSummary summary;
     try
     {
-        summary = RunSoakWithStreaming(harness, floors, runs, seed, jsonlWriter, resolvedPersona);
+        summary = RunSoakWithStreaming(harness, floors, runs, seed, jsonlWriter, resolvedPersona,
+            startDepth: startFloor, gearProfile: gearProfile);
     }
     finally
     {
@@ -795,7 +833,8 @@ MemoRegistry? LoadMemoRegistry()
 /// Stream-writes so partial output survives Ctrl-C or crashes.
 /// </summary>
 DungeonSoakSummary RunSoakWithStreaming(
-    DungeonRunHarness harness, int floorCount, int runCount, int baseSeed, StreamWriter? writer, BotPersonaConfig? persona = null)
+    DungeonRunHarness harness, int floorCount, int runCount, int baseSeed, StreamWriter? writer, BotPersonaConfig? persona = null,
+    int startDepth = 1, GearProfile? gearProfile = null)
 {
     var soakOptions = new JsonSerializerOptions
     {
@@ -817,7 +856,8 @@ DungeonSoakSummary RunSoakWithStreaming(
         {
             // RunSingle is called via RunSoak — but we need per-run access for streaming.
             // Use a 1-run mini-soak to get the structured result.
-            var miniSummary = harness.RunSoak(floors: floorCount, runs: 1, baseSeed: runSeed, persona: persona);
+            var miniSummary = harness.RunSoak(floors: floorCount, runs: 1, baseSeed: runSeed, persona: persona,
+                startDepth: startDepth, gearProfile: gearProfile);
             result = miniSummary.Runs[0];
         }
         catch (Exception ex)

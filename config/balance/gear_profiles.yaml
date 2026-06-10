@@ -1,0 +1,54 @@
+# ── Staged-start gear profiles (0c step 8) ──────────────────────────────────────────────────────
+# A named starting loadout per region, so a soak can begin at that region's depth with region-
+# appropriate gear (RunSoakStaged / --start-floor --gear) instead of always grinding up from floor 1.
+#
+# ⚠️ PLACEHOLDER VALUES. The real gear curve (what a player actually carries on reaching each region)
+# is authored during tuning, the same way the target_table numbers are. These are coarse stand-ins:
+# weapon/armor tiers + a flat bonus_hp and stat bumps approximating character growth.
+#
+# b1 == the floor-1 default loadout (dagger + leather + 3 potions), so --gear b1 --start-floor 1
+# reproduces a normal soak.
+profiles:
+  b1:
+    description: "B1 — floor-1 baseline (matches the default new-run loadout)"
+    main_hand: dagger
+    chest: leather_armor
+    healing_potions: 3
+
+  b2:
+    description: "B2 — early progression"
+    main_hand: shortsword
+    chest: studded_leather
+    healing_potions: 3
+    bonus_hp: 12
+    strength: 15
+
+  b3:
+    description: "B3 — mid dungeon"
+    main_hand: shortsword
+    chest: chain_mail
+    healing_potions: 4
+    bonus_hp: 26
+    strength: 16
+    constitution: 15
+
+  b4:
+    description: "B4 — deep dungeon"
+    main_hand: rapier
+    chest: scale_mail
+    off_hand: shield
+    healing_potions: 4
+    bonus_hp: 44
+    strength: 16
+    dexterity: 16
+    constitution: 16
+
+  b5:
+    description: "B5 — endgame approach"
+    main_hand: battleaxe
+    chest: scale_mail
+    off_hand: shield
+    healing_potions: 5
+    bonus_hp: 70
+    strength: 18
+    constitution: 18
