@@ -55,6 +55,14 @@ public sealed class Fighter : IComponent
     /// </summary>
     public int BoonMaxHpBonus { get; set; }
 
+    /// <summary>
+    /// Turns remaining until the player can use another cooldown-gated potion (0 = ready).
+    /// Decremented once per player turn (in TurnController.ProcessTurnEnd). Set to
+    /// Consumable.UseCooldownTurns on a successful use. Irrelevant between fights (10+ travel
+    /// turns reset it), so the between-fight reset is preserved. Carried by PlayerCarryForward.
+    /// </summary>
+    public int PotionCooldownRemaining { get; set; }
+
     public Fighter(
         int hp,
         int defense = 0,

@@ -14,6 +14,15 @@ public sealed class ConsumableDefinition
     [YamlMember(Alias = "heal_amount")]
     public int HealAmount { get; set; }
 
+    /// <summary>
+    /// Turns the player must wait before using another potion of this type (0 = no cooldown).
+    /// The cooldown is tracked on the player's Fighter (PotionCooldownRemaining) and decremented
+    /// once per player turn. A non-zero value decouples quantity from balance — the player can
+    /// hold 20 potions and the RATE (heal × cooldown) is the only balance-relevant variable.
+    /// </summary>
+    [YamlMember(Alias = "use_cooldown_turns")]
+    public int UseCooldownTurns { get; set; }
+
     [YamlMember(Alias = "char")]
     public string Char { get; set; } = "!";
 

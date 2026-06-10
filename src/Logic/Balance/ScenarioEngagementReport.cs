@@ -80,11 +80,14 @@ public static class ScenarioEngagementReport
         }
 
         // PoC pressure metrics alongside — so both the new and old reading are visible.
+        string potionStr = metrics.AvgPotionsUsed > 0
+            ? $"  |  Avg potions/fight: {metrics.AvgPotionsUsed:F2}"
+            : "";
         sb.AppendLine(
             $"  H_PM: {metrics.H_PM:F1}  |  H_MP: {metrics.H_MP:F1}  |  " +
             $"Monster hit rate: {metrics.MonsterHitRate * 100:F0}%  |  " +
             $"Player hit rate: {metrics.PlayerHitRate * 100:F0}%  |  " +
-            $"Avg turns: {metrics.AvgTurns:F0}");
+            $"Avg turns: {metrics.AvgTurns:F0}{potionStr}");
 
         return sb.ToString();
     }

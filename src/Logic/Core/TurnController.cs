@@ -62,6 +62,10 @@ public static class TurnController
         else
         {
             StatusEffectProcessor.ProcessTurnEnd(state.Player, events);
+            // Potion cooldown: tick down each real player turn (not free actions, not skipped turns).
+            var pf = state.PlayerFighter;
+            if (pf.PotionCooldownRemaining > 0)
+                pf.PotionCooldownRemaining--;
         }
 
         // Ring of Regeneration: passive heal every 5 turns (not turn 0).
@@ -1514,13 +1518,24 @@ public static class TurnController
         if (inventory == null) return;
 
         // Use specific item if provided (UI), otherwise find first healing potion (bot)
-        var potion = specificItem ?? inventory.FindFirst(item =>
-            item.Get<Consumable>()?.IsHealing == true);
+        // For cooldown-gated potions: only pick one whose cooldown allows use right now.
+        // CanUsePotion = cooldown is 0 OR the item has no cooldown (UseCooldownTurns == 0).
+        bool CanUsePotion(Entity item) {
+            var c = item.Get<Consumable>();
+            if (c == null || !c.IsHealing) return false;
+            return c.UseCooldownTurns == 0 || fighter.PotionCooldownRemaining == 0;
+        }
+
+        var potion = specificItem ?? inventory.FindFirst(CanUsePotion);
 
         if (potion == null) return;
 
         var consumable = potion.Get<Consumable>();
         if (consumable == null) return;
+
+        // Apply cooldown before healing so the set happens even if heal returns 0 (already at max HP).
+        if (consumable.UseCooldownTurns > 0)
+            fighter.PotionCooldownRemaining = consumable.UseCooldownTurns;
 
         int healed = fighter.Heal(consumable.HealAmount);
 
