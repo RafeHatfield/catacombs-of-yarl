@@ -45,7 +45,7 @@ public sealed class ConsumableFactory
             return null;
 
         var entity = _entityFactory.Create(def.Name ?? consumableId);
-        entity.Add(new Consumable(healAmount: def.HealAmount, isPotion: def.IsPotion));
+        entity.Add(new Consumable(healAmount: def.HealAmount, isPotion: def.IsPotion, useCooldownTurns: def.UseCooldownTurns));
 
         // If the consumable has a spell_id, create a SpellEffect component so it can route
         // through ResolveSpellAction. Potions without a spell_id (healing_potion) still use

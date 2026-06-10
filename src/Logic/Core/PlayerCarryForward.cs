@@ -50,6 +50,8 @@ public static class PlayerCarryForward
         // Preserve boon max HP bonus — not a constructor param, must be copied explicitly.
         // Same pattern as RingMaxHpBonus (which is restored by ReapplyRingEffects instead).
         newFighter.BoonMaxHpBonus = oldFighter.BoonMaxHpBonus;
+        // Potion cooldown persists across floors — can't spam potions at the stair transition.
+        newFighter.PotionCooldownRemaining = oldFighter.PotionCooldownRemaining;
         newFighter.CanOpenDoors = true; // player always opens doors
 
         newPlayer.Add(newFighter);

@@ -29,10 +29,18 @@ public sealed class Consumable : IComponent
     /// </summary>
     public bool IsPotion { get; set; }
 
-    public Consumable(int healAmount = 0, bool isPotion = false)
+    /// <summary>
+    /// Turns the player must wait before using another potion (0 = no cooldown). When > 0,
+    /// a successful use sets Fighter.PotionCooldownRemaining to this value. Decouples potion
+    /// quantity from balance — count doesn't matter, the rate (heal × cooldown) does.
+    /// </summary>
+    public int UseCooldownTurns { get; set; }
+
+    public Consumable(int healAmount = 0, bool isPotion = false, int useCooldownTurns = 0)
     {
         HealAmount = healAmount;
         IsPotion = isPotion;
+        UseCooldownTurns = useCooldownTurns;
     }
 
     public bool IsHealing => HealAmount > 0;

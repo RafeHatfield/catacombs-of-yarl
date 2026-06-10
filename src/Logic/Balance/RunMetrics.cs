@@ -31,6 +31,7 @@ public sealed class RunMetrics
     // Healing
     public int PotionsUsed { get; set; }
 
+
     // ── 0c per-death lever capture (bridged onto ScenarioHarness from DungeonRunHarness) ──
 
     /// <summary>
@@ -246,6 +247,9 @@ public sealed class AggregatedMetrics
 
     // ── End Ranged Combat Aggregates ──────────────────────────────────────────
 
+    /// <summary>Average healing potions used per run. Key output for the cooldown sweep row.</summary>
+    public double AvgPotionsUsed { get; init; }
+
     // ── Per-composition engagement band ──────────────────────────────────────
 
     /// <summary>
@@ -330,6 +334,7 @@ public sealed class AggregatedMetrics
             AvgSpecialAmmoShotsFired               = runs.Average(r => r.SpecialAmmoShotsFired),
             AvgSpecialAmmoEffectsApplied           = runs.Average(r => r.SpecialAmmoEffectsApplied),
             AvgEntangleMovesBlocked                = runs.Average(r => r.EntangleMovesBlocked),
+            AvgPotionsUsed                         = runs.Average(r => r.PotionsUsed),
             // 0c per-death lever data
             Deaths        = runs.Where(r => r.EngagementDeath != null).Select(r => r.EngagementDeath!).ToList(),
             HasSpike      = runs.Any(r => r.HadSpike),

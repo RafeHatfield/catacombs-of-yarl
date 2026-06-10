@@ -1206,6 +1206,16 @@ consumables:
     char: "!"
     color: [127, 0, 255]
 
+  # Cooldown-gated healing potion for the B1 loadout sweep: flat 20 HP + 10-turn cooldown.
+  # Decouples quantity from balance (rate = 20 HP / 10 turns is what matters, not count).
+  # Starting cooldown value; tuned against the sweep once the row is measured.
+  healing_potion_cd:
+    name: "Healing Potion"
+    heal_amount: 20
+    use_cooldown_turns: 10
+    char: "!"
+    color: [127, 0, 255]
+
   # ── Buff Potions (drink-only, no throw) ─────────────────────────────────────
   # These are safe to drink unidentified. No ThrowSpellId → immediate drink on tap.
   # PoC reference: item_functions.py drink_speed_potion / drink_protection_potion / etc.

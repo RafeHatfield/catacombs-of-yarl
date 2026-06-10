@@ -129,7 +129,7 @@ public sealed class BotBrain
         if (hpFraction <= persona.PanicHpThreshold
             && hpFraction < 1.0
             && adjacent.Count >= persona.PanicMultiEnemyCount
-            && HasHealingPotion(inventory))
+            && HasUsableHealingPotion(inventory, playerFighter))
         {
             EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Heal", "panic_heal", persona);
             stateHolder?.ResetStuck(player);
@@ -140,7 +140,7 @@ public sealed class BotBrain
         //    PoC: allow_combat_healing is true for all current personas. If false, only heals
         //    when no adjacent enemies.
         if (hpFraction <= persona.BaseHealThreshold
-            && HasHealingPotion(inventory)
+            && HasUsableHealingPotion(inventory, playerFighter)
             && (persona.AllowCombatHealing || adjacent.Count == 0))
         {
             EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Heal", "threshold_heal", persona);
@@ -531,6 +531,21 @@ public sealed class BotBrain
     {
         if (inventory == null) return false;
         return inventory.FindFirst(item => item.Get<Consumable>()?.IsHealing == true) != null;
+    }
+
+    /// <summary>
+    /// True when the player has a healing potion AND can currently use it (cooldown = 0 or item has no cooldown).
+    /// Gate BotBrain's heal decisions on this, not bare HasHealingPotion, so a bot issuing Heal while on
+    /// cooldown doesn't waste a turn producing a no-op.
+    /// </summary>
+    private static bool HasUsableHealingPotion(Inventory? inventory, Combat.Fighter fighter)
+    {
+        if (inventory == null) return false;
+        return inventory.FindFirst(item => {
+            var c = item.Get<Combat.Consumable>();
+            if (c == null || !c.IsHealing) return false;
+            return c.UseCooldownTurns == 0 || fighter.PotionCooldownRemaining == 0;
+        }) != null;
     }
 
     /// <summary>
