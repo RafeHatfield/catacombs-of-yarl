@@ -1,0 +1,44 @@
+scenario_id: b1_orc_4
+name: "B1 Orc — 4 orc_grunt (The Flip)"
+description: >
+  B1 Layer-1 engagement calibration — the FLIP scenario. Four orc_grunts is the
+  "dangerous-but-winnable" composition: death rate target ~35-50% (the good-play band).
+  This is the Shattered-Pixel-Dungeon feel: you probably die unless you play well. The bot
+  reads the FLOOR of the skill range; a skilled human survives more, a naive human less.
+  Intended verdict: TooHard (until tuned toward the band) then Healthy once calibrated.
+  The lever reading here is the first real engagement-balance diagnostic.
+depth: 1
+turn_limit: 100
+runs: 100
+category: "B1_engagement_calibration"
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+# Player at (3,6). Four orcs two-by-two, high-and-low.
+monsters:
+  - type: "orc_grunt"
+    count: 1
+    position: [9, 3]
+  - type: "orc_grunt"
+    count: 1
+    position: [9, 5]
+  - type: "orc_grunt"
+    count: 1
+    position: [9, 7]
+  - type: "orc_grunt"
+    count: 1
+    position: [9, 9]
+
+items:
+  - type: "healing_potion"
+    count: 1

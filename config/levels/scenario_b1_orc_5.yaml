@@ -1,0 +1,45 @@
+scenario_id: b1_orc_5
+name: "B1 Orc — 5 orc_grunt (Decisively Too-Much)"
+description: >
+  B1 Layer-1 engagement calibration. Five orc_grunts should be decisively too-much at
+  baseline B1 gear — the bot should read well above the band. Intended verdict: TooHard.
+  Used as the upper-bound anchor: once the 4-orc flip is calibrated to ~35-50%, this stays
+  firmly in TooHard, confirming the density ceiling sits where it should.
+depth: 1
+turn_limit: 100
+runs: 100
+category: "B1_engagement_calibration"
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+# Player at (3,6). Five orcs spread wide.
+monsters:
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 2]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 4]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 6]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 8]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 10]
+
+items:
+  - type: "healing_potion"
+    count: 1

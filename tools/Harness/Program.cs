@@ -677,6 +677,16 @@ if (jsonOutput)
 
 if (results.Count == 1) PrintSingle(results[0]);
 else                     PrintTable(results);
+
+// --report: append role-aware engagement-health section for each scenario.
+if (printReport)
+{
+    TargetTable? targets = File.Exists(TargetTableFile) ? TargetTableLoader.FromFile(TargetTableFile) : null;
+    if (targets != null)
+        foreach (var m in results)
+            Console.WriteLine(ScenarioEngagementReport.Format(m, targets));
+}
+
 return 0;
 
 // ─── Bot verbose output ────────────────────────────────────────────────────
