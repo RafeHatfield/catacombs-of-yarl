@@ -31,6 +31,27 @@ public sealed class RunMetrics
     // Healing
     public int PotionsUsed { get; set; }
 
+    // ── 0c per-death lever capture (bridged onto ScenarioHarness from DungeonRunHarness) ──
+
+    /// <summary>
+    /// Entity ID of the killer from the player's DeathEvent (-1 = hazard, NoDeath = no death this run).
+    /// Populated by RecordTurn; consumed by ScenarioHarness to call EngagementTracker.BuildDeathRecord.
+    /// </summary>
+    public int KillerId { get; set; } = NoDeath;
+    private const int NoDeath = -2;
+
+    /// <summary>True when at least one Spike/Fused monster was present at the start of the run.</summary>
+    public bool HadSpike { get; set; }
+
+    /// <summary>True when at least one Escalator/Fused monster was present at the start of the run.</summary>
+    public bool HadEscalator { get; set; }
+
+    /// <summary>
+    /// Per-death lever record for this run. Null when the player survived or when the run was aborted
+    /// (no engagement to attribute). Set by ScenarioHarness after the run completes.
+    /// </summary>
+    public PlayerDeathRecord? EngagementDeath { get; set; }
+
     // Momentum
     public int BonusAttacks { get; set; }
 
@@ -99,6 +120,10 @@ public sealed class RunMetrics
                         MonsterDamageDealt += atk.Damage;
                     }
                     if (atk.IsBonusAttack) BonusAttacks++;
+                    break;
+
+                case DeathEvent death when death.ActorId == playerId:
+                    KillerId = death.KillerId; // -1 = ground hazard, ≥0 = monster entity id
                     break;
 
                 case HealEvent:
@@ -221,6 +246,23 @@ public sealed class AggregatedMetrics
 
     // ── End Ranged Combat Aggregates ──────────────────────────────────────────
 
+    // ── 0c per-death lever data (bridged from EngagementTracker) ─────────────
+
+    /// <summary>
+    /// Per-death lever records for runs that ended in a real player death (not abort, not survival).
+    /// In a controlled scenario DistinctAttackers reflects the actual composition — uncontaminated.
+    /// Empty when no deaths occurred or the harness ran without the tracker.
+    /// </summary>
+    public IReadOnlyList<PlayerDeathRecord> Deaths { get; init; } = Array.Empty<PlayerDeathRecord>();
+
+    /// <summary>True when at least one Spike/Fused monster was present in any run's starting state.</summary>
+    public bool HasSpike { get; init; }
+
+    /// <summary>True when at least one Escalator/Fused monster was present in any run's starting state.</summary>
+    public bool HasEscalator { get; init; }
+
+    // ── End 0c lever data ─────────────────────────────────────────────────────
+
     /// <summary>
     /// Aggregate a list of run metrics into summary statistics.
     /// </summary>
@@ -279,6 +321,10 @@ public sealed class AggregatedMetrics
             AvgSpecialAmmoShotsFired               = runs.Average(r => r.SpecialAmmoShotsFired),
             AvgSpecialAmmoEffectsApplied           = runs.Average(r => r.SpecialAmmoEffectsApplied),
             AvgEntangleMovesBlocked                = runs.Average(r => r.EntangleMovesBlocked),
+            // 0c per-death lever data
+            Deaths      = runs.Where(r => r.EngagementDeath != null).Select(r => r.EngagementDeath!).ToList(),
+            HasSpike     = runs.Any(r => r.HadSpike),
+            HasEscalator = runs.Any(r => r.HadEscalator),
         };
     }
 }

@@ -110,6 +110,12 @@ public sealed class ScenarioHarness
         var playerFighter = state.PlayerFighter;
         var inventory = state.PlayerInventory;
 
+        // 0c per-death lever capture: same EngagementTracker that the dungeon soak uses.
+        // In a controlled scenario DistinctAttackers = the actual composition, not bot-pulled chaos.
+        var tracker = new EngagementTracker(player.Id, state);
+        metrics.HadSpike = tracker.SpikePresent;
+        metrics.HadEscalator = tracker.EscalatorPresent;
+
         // Capture initial HP values for H_PM / H_MP calculations
         metrics.PlayerMaxHp = playerFighter.MaxHp;
         if (state.Monsters.Count > 0)
@@ -155,10 +161,16 @@ public sealed class ScenarioHarness
             }
             var result = TurnController.ProcessTurn(state, playerAction);
             metrics.RecordTurn(result, player.Id);
+            tracker.IngestTurn(result.Events, metrics.TurnsTaken, state);
         }
 
         if (!metrics.WasAborted)
             metrics.PlayerDied = !playerFighter.IsAlive;
+
+        // Build per-death lever record on any real death (not stuck-abort, not survival).
+        if (metrics.PlayerDied && !metrics.WasAborted)
+            metrics.EngagementDeath = tracker.BuildDeathRecord(scenario.Depth, metrics.KillerId, metrics.TurnsTaken, state);
+
         return metrics;
     }
 }

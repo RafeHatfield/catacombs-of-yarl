@@ -40,7 +40,42 @@
   a soak's runs by EscalatorNeutralizedAtTurn (early vs not) — cheap, uses existing capture, but carries
   selection bias; (b) a controlled experiment (bot target-priority knob to force kill-early vs leave-alive)
   — unbiased, needs a bot-policy feature. DECIDE before wiring; don't bake in the biased one silently.
-- **Next:** B1 tuning — the first tuned number, ascending by region, with the report + delta reading it back.
+- **PIVOT (2026-06-09) — two balance layers, see memory project_balance_two_layers:** the first B1 full-soak
+  reading conflated Layer 1 (engagement: does a composition resolve fairly in isolation — controlled
+  scenarios) with Layer 2 (economy: does the run string fair engagements together — full soak). The "Density"
+  flag smeared engagement-density + bot-pulled-rooms + economy-attrition. ENGAGEMENT BALANCE FIRST, in
+  controlled `ScenarioHarness` scenarios (PoC method), THEN soak = Layer-2 economy test.
+- **DONE — bridge + orc ladder + first controlled reading (2026-06-10):** see below.
+  It exists (`ScenarioHarness`/`ScenarioDefinition` + 59 YAMLs in config/levels/) but produces PoC
+  PressureMetrics (`RunMetrics`), NOT FloorHealthClassifier/LeverAttribution. Bridge = derive a per-death
+  PlayerDeathRecord from each PlayerDied run's RunMetrics aggregates + the KNOWN composition (DistinctAttackers
+  = composition size; archetype from tags), then run the (unchanged, pure) classifiers → a scenario role-aware
+  report. Read-level tested.
+- **Bridge:** `EngagementTracker` (extracted standalone from `DungeonRunHarness.FloorCombatTracker`; both
+  harnesses share the single source of truth). `RunMetrics` gains `KillerId`/`HadSpike`/`HadEscalator`/
+  `EngagementDeath`; `RecordTurn` captures killerId from player DeathEvent. `AggregatedMetrics` gains
+  `Deaths`/`HasSpike`/`HasEscalator`. `ScenarioHarness.RunOnce` wires `EngagementTracker` per run. True
+  per-death capture (not derive-from-aggregates) so mixed compositions (spike/escalator/half-the-threat-model)
+  work faithfully from day one. `ScenarioEngagementReport.Format` renders the role-aware section + levers.
+  Scenario `--report` flag wired in the CLI.
+- **Orc ladder:** 4 scenarios (`scenario_b1_orc_2/3/4/5.yaml`, `config/levels/`), 100 runs each, B1 player
+  (dagger+leather, accuracy 3), 1 healing potion. Intended verdicts: 2=Comfortable, 3=Tough/Winnable,
+  4=The Flip (~35-50% death target), 5=Too-Much. Tests: `ScenarioEngagementReportTests` (7, green incl. Slow
+  real-engine archetype-attribution proof).
+- **FIRST CONTROLLED B1 READING (2026-06-10):**
+    b1_orc_2: Death% 0.0% | Δ -5.0pp | Verdict: TooEasy  (H_PM 6.0, H_MP 8.9, monster hit 35%)
+    b1_orc_3: Death% 0.0% | Δ -5.0pp | Verdict: TooEasy  (H_PM 6.0, H_MP 9.0, monster hit 37%)
+    b1_orc_4: Death% 5.0% | Δ —      | Verdict: BaselineBroken  └─ levers: Density ×3 · Armor ×1 · MonsterDamage ×1
+    b1_orc_5: Death% 12.0%| Δ —      | Verdict: BaselineBroken  └─ levers: Density ×9 · Armor ×2 · MonsterDamage ×1
+  Signal: the bot crushes 2-3 orcs (0% death), the 4-orc flip barely nicks it (5%), 5 orcs starts to hurt
+  (12%, both readings BaselineBroken). The target band (5-15%) is dramatically too permissive for B1 at the
+  low end — 0% death for 3 orcs means the control and "tough" scenarios both read TooEasy. Target band needs
+  rethinking for controlled scenarios (see next step note).
+- **NEXT: recalibrate the B1 engagement target bands** before tuning. The current band (5-15%) is the global
+  soak rate; for a one-room controlled scenario with 1 healing potion, the bot zero-deaths 2 and 3 orcs
+  clean. The engagement band should be per-composition, decided on merits (0% comfortable, 0-15% tough,
+  35-50% the flip). Then tune the orc count / player stats / potion supply until each scenario reads its
+  intended verdict. One lever at a time.
 - **Open issues / FLAGS for Rafe:**
   - `target_table.yaml` numbers are B1 placeholders (HITS), authored for real *during* B1 tuning.
   - Escalator alive-vs-killed comparison still only PRODUCED once staged-start (step 8) exists; the

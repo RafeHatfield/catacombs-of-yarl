@@ -1,0 +1,38 @@
+scenario_id: b1_orc_3
+name: "B1 Orc — 3 orc_grunt (Tough but Winnable)"
+description: >
+  B1 Layer-1 engagement calibration. Three orc_grunts is a real fight — the player
+  takes damage and has to use the potion — but should be winnable. Intended verdict: Healthy
+  (mid-band). The gap between "comfortable" (2) and "the flip" (4) where skill starts to matter.
+depth: 1
+turn_limit: 100
+runs: 100
+category: "B1_engagement_calibration"
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+# Player at (3,6). Three orcs spread vertically.
+monsters:
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 3]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 6]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 9]
+
+items:
+  - type: "healing_potion"
+    count: 1

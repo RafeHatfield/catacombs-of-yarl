@@ -1,0 +1,36 @@
+scenario_id: b1_orc_2
+name: "B1 Orc — 2 orc_grunt (Control: Comfortable)"
+description: >
+  B1 Layer-1 engagement calibration — the CONTROL scenario. Two orc_grunts at standard
+  B1 gear should win cleanly. If this reads TooHard the instrument or the player baseline is
+  wrong. Intended verdict: Healthy (low-end of band), confirming the bottom of the
+  "punishing-by-default, winnable-by-skill" arc.
+depth: 1
+turn_limit: 100
+runs: 100
+category: "B1_engagement_calibration"
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+# Player at (3,6). Two orcs symmetric above and below.
+monsters:
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 4]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 8]
+
+items:
+  - type: "healing_potion"
+    count: 1
