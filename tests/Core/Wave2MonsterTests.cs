@@ -83,7 +83,7 @@ public class Wave2MonsterTests
         Assert.That(troll, Is.Not.Null, "troll must be registered in entities.yaml");
         var innateRegen = troll!.Get<InnateRegenComponent>();
         Assert.That(innateRegen, Is.Not.Null, "Troll must have InnateRegenComponent attached");
-        Assert.That(innateRegen!.HealPerTurn, Is.EqualTo(2), "Troll innate regen should heal 2 HP/turn (PoC value)");
+        Assert.That(innateRegen!.HealPerTurn, Is.EqualTo(4), "Troll innate regen: 4 HP/turn (calibrated B1 spike floor, locked 2026-06-11)");
         // InnateRegenComponent is permanent (no RemainingTurns) — check no RegenerationEffect exists.
         Assert.That(troll.Get<RegenerationEffect>(), Is.Null, "Troll should not have timed RegenerationEffect");
     }
