@@ -211,10 +211,10 @@ public sealed class BotBrain
             }
         }
 
-        // 5. Attack adjacent enemy — focus fire lowest HP
+        // 5. Attack adjacent enemy — focus fire (or forced escalator priority for experiments).
         if (adjacent.Count > 0)
         {
-            var target = PickTarget(adjacent);
+            var target = PickTargetWithPriority(adjacent, persona);
 
             // Update stuck detection if we're in instance mode
             stateHolder?.UpdateStuck(player, target, isAttack: false);
@@ -252,7 +252,7 @@ public sealed class BotBrain
         //    Manhattan vs Chebyshev asymmetry note: FindNearest uses Euclidean distance (DistanceTo),
         //    which is consistent with "nearest" semantics. The engagement-distance gate uses Manhattan
         //    to match the PoC's bot_brain.py semantics.
-        var nearestEnemy = FindNearest(player, aliveMonsters);
+        var nearestEnemy = FindNearestWithPriority(player, aliveMonsters, persona);
         if (nearestEnemy != null)
         {
             // Skip stuckDroppedTarget if alive (don't immediately re-chase just-dropped target)
@@ -485,6 +485,45 @@ public sealed class BotBrain
 
     private static List<Entity> GetAdjacent(Entity player, List<Entity> alive)
         => alive.Where(m => player.ChebyshevDistanceTo(m.X, m.Y) <= 1).ToList();
+
+    /// <summary>
+    /// Pick an adjacent attack target, with hard-forced escalator priority for experiments.
+    /// "escalator_first": always targets an Escalator/Fused monster if one is adjacent.
+    /// "escalator_last": never targets Escalator/Fused while any non-escalator is adjacent.
+    /// null/other: normal lowest-HP focus fire. Hard-forced keeps cohort membership clean.
+    /// </summary>
+    private static Entity PickTargetWithPriority(List<Entity> adjacent, BotPersonaConfig persona)
+    {
+        if (persona.EscalatorTargetingPriority == "escalator_first")
+        {
+            var escalator = adjacent.FirstOrDefault(IsEscalator);
+            if (escalator != null) return escalator;
+        }
+        else if (persona.EscalatorTargetingPriority == "escalator_last")
+        {
+            var nonEscalators = adjacent.Where(m => !IsEscalator(m)).ToList();
+            if (nonEscalators.Count > 0) return PickTarget(nonEscalators);
+        }
+        return PickTarget(adjacent);
+    }
+
+    private static Entity? FindNearestWithPriority(Entity from, List<Entity> candidates, BotPersonaConfig persona)
+    {
+        if (persona.EscalatorTargetingPriority == "escalator_first")
+        {
+            var nearestEscalator = FindNearest(from, candidates.Where(IsEscalator).ToList());
+            if (nearestEscalator != null) return nearestEscalator;
+        }
+        else if (persona.EscalatorTargetingPriority == "escalator_last")
+        {
+            var nonEscalators = candidates.Where(m => !IsEscalator(m)).ToList();
+            if (nonEscalators.Count > 0) return FindNearest(from, nonEscalators);
+        }
+        return FindNearest(from, candidates);
+    }
+
+    private static bool IsEscalator(Entity m)
+        => m.Get<ThreatArchetypeTag>()?.Archetype is ThreatArchetype.Escalator or ThreatArchetype.Fused;
 
     private static Entity? FindNearbyFloorPotion(Entity player, IReadOnlyList<Entity> floorItems, int searchRadius)
     {

@@ -1,0 +1,35 @@
+scenario_id: b1_brute_solo
+name: "B1 Brute — solo vs primary loadout"
+description: >
+  Tier-gap check: does orc_brute still read as the tier-definer at HP 40 for grunt?
+  Brute HP 42 vs grunt HP 40 — the gap narrowed from 1.5x to barely more than 1.0x.
+  NOT tuning yet; just reading whether the brute still feels categorically harder.
+  Compare to b1_sweep results: grunt-4 = 35% with primary; brute should read much harder.
+depth: 3
+turn_limit: 120
+runs: 100
+category: "B1_brute_check"
+
+# No per-composition band — this is a characterization read, not a calibration target.
+# We expect "much harder than 4 grunts" but don't have a target yet.
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc_brute"
+    count: 1
+    position: [8, 6]
+
+items:
+  - type: "healing_potion_cd"
+    count: 1
