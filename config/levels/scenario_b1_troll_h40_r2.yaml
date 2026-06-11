@@ -1,0 +1,32 @@
+scenario_id: b1_troll_h40_r2
+name: "Troll probe HP=40 regen=2"
+description: >
+  Grid sweep cell HP=40 regen=2. UN-COUNTERED — must read genuinely dangerous (60-80% death = spike floor).
+  Scored against two-sided criterion: un-countered 60-80% death AND countered fast-kill.
+depth: 4
+turn_limit: 300
+runs: 100
+category: "B1_troll_grid"
+
+target_death_pct: { min: 0.60, max: 0.80 }  # un-countered spike floor target
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+monsters:
+  - type: "troll_probe_h40_r2"
+    count: 1
+    position: [8, 6]
+
+items:
+  - type: "healing_potion_cd"
+    count: 1

@@ -1,0 +1,32 @@
+scenario_id: b1_troll_h36_r0
+name: "Troll probe HP=36 regen=0"
+description: >
+  Grid sweep cell HP=36 regen=0. COUNTERED PROXY — regen 0 = acid/fire-suppressed troll. Must stay fast-kill (Row E preview).
+  Scored against two-sided criterion: un-countered 60-80% death AND countered fast-kill.
+depth: 4
+turn_limit: 300
+runs: 100
+category: "B1_troll_grid"
+
+target_death_pct: { min: 0.00, max: 0.25 }  # countered proxy: should be fast-kill
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+monsters:
+  - type: "troll_probe_h36_r0"
+    count: 1
+    position: [8, 6]
+
+items:
+  - type: "healing_potion_cd"
+    count: 1

@@ -246,6 +246,307 @@ monsters:
     seek_distance: 7
     etp_base: 0
 
+
+  # hp=36, regen=0
+  troll_probe_h36_r0:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 36, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+
+
+  # hp=36, regen=2
+  troll_probe_h36_r2:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 36, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 2
+
+
+  # hp=36, regen=3
+  troll_probe_h36_r3:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 36, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 3
+
+
+  # hp=36, regen=4
+  troll_probe_h36_r4:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 36, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 4
+
+
+  # hp=40, regen=0
+  troll_probe_h40_r0:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 40, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+
+
+  # hp=40, regen=2
+  troll_probe_h40_r2:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 40, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 2
+
+
+  # hp=40, regen=3
+  troll_probe_h40_r3:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 40, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 3
+
+
+  # hp=40, regen=4
+  troll_probe_h40_r4:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 40, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 4
+
+
+  # hp=44, regen=0
+  troll_probe_h44_r0:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 44, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+
+
+  # hp=44, regen=2
+  troll_probe_h44_r2:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 44, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 2
+
+
+  # hp=44, regen=3
+  troll_probe_h44_r3:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 44, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 3
+
+
+  # hp=44, regen=4
+  troll_probe_h44_r4:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 44, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 4
+
+
+  # hp=48, regen=0
+  troll_probe_h48_r0:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 48, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+
+
+  # hp=48, regen=2
+  troll_probe_h48_r2:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 48, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 2
+
+
+  # hp=48, regen=3
+  troll_probe_h48_r3:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 48, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 3
+
+
+  # hp=48, regen=4
+  troll_probe_h48_r4:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 48, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+    regeneration_amount: 4
+
+
   skeleton:
     name: "Skeleton"
     threat_archetype: "baseline"   # §2 — textured baseline (ShieldWall + bludgeoning-vuln counter)
