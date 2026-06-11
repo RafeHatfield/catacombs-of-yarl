@@ -1,0 +1,34 @@
+scenario_id: b1_troll_countered
+name: "Troll calibration — regen 0 — countered proxy (Row E preview)"
+description: >
+  Troll durability probe. Regen is the identity lever: higher regen = longer un-countered
+  fight = more troll hits land = genuinely dangerous. HP stays low so the COUNTERED troll
+  (regen suppressed by acid/fire) dies fast — that gap IS the counter's value.
+  The countered proxy (regen 0) previews Row E without building the §5.2 loot-pool fix first.
+depth: 4
+turn_limit: 200
+runs: 100
+category: "B1_troll_calibration"
+
+target_death_pct: { min: 0.00, max: 0.20 }
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+monsters:
+  - type: "troll_probe_countered"
+    count: 1
+    position: [8, 6]
+
+items:
+  - type: "healing_potion_cd"
+    count: 1

@@ -190,6 +190,62 @@ monsters:
     seek_distance: 7
     etp_base: 50
 
+  # ── Troll calibration probe variants (balance testing only, spawn_weight: 0) ──────────────
+  # Standalone (no extends) so regeneration_amount: 0 works correctly for the countered proxy.
+  # Identical stats to troll except regeneration_amount; threat_archetype inherited as spike.
+
+  troll_probe_regen3:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 30, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    regeneration_amount: 3
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+
+  troll_probe_regen4:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 30, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
+    regeneration_amount: 4
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+
+  # Countered proxy — regen omitted (0), simulates acid/fire-suppressed troll.
+  # Verifies that "with counter, the troll dies fast" (Row E preview).
+  troll_probe_countered:
+    name: "Troll"
+    threat_archetype: "spike"
+    spawn_weight: 0
+    stats: { hp: 30, power: 0, defense: 2, xp: 100, damage_min: 8, damage_max: 12, strength: 16, dexterity: 8, constitution: 16 }
+    char: "T"
+    color: [0, 127, 0]
+    ai_type: "basic"
+    faction: "orc"
+    tags: ["corporeal_flesh", "humanoid", "living"]
+    can_seek_items: true
+    can_open_doors: true
+    inventory_size: 8
+    seek_distance: 7
+    etp_base: 0
+
   skeleton:
     name: "Skeleton"
     threat_archetype: "baseline"   # §2 — textured baseline (ShieldWall + bludgeoning-vuln counter)
