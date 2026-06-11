@@ -1,0 +1,47 @@
+scenario_id: b1_chieftain_diagnostic
+name: "B1 Chieftain + 3 grunts — escalator diagnostic"
+description: >
+  Row B escalator diagnostic. Run BOTH cohorts (escalator_first / escalator_last) and
+  read the death% DELTA — that delta IS the third escalator signal. A large delta means
+  killing the chieftain first matters (it IS the priority target; escalator working). A
+  small/zero delta means the swarm is the real threat (chieftain not escalating, or
+  baseline is the problem). Don't tune yet — bring the diagnostic first.
+  
+  Composition: 1 orc_chieftain + 3 orc_grunt (HP 40, always-armed, primary loadout).
+  Run via: --scenario b1_chieftain_diagnostic --persona escalator_first
+           --scenario b1_chieftain_diagnostic --persona escalator_last
+depth: 1
+turn_limit: 100
+runs: 100
+category: "B1_escalator_diagnostic"
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+# Chieftain at (9,6) — the escalator. Grunts flanking.
+monsters:
+  - type: "orc_chieftain"
+    count: 1
+    position: [9, 6]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 4]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 8]
+  - type: "orc_grunt"
+    count: 1
+    position: [7, 6]
+
+items:
+  - type: "healing_potion_cd"
+    count: 1

@@ -169,7 +169,7 @@ monsters:
     min_depth: 4
     spawn_weight: 5
     stats:
-      hp: 30
+      hp: 48
       power: 0
       defense: 2
       xp: 100
@@ -183,7 +183,7 @@ monsters:
     ai_type: "basic"
     faction: "orc"
     tags: ["corporeal_flesh", "humanoid", "living", "regenerating"]
-    regeneration_amount: 2
+    regeneration_amount: 4
     can_seek_items: true
     can_open_doors: true
     inventory_size: 8
