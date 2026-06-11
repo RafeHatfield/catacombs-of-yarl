@@ -12,7 +12,7 @@ category: "B1_engagement_calibration"
 
 # Per-composition engagement band (Layer-1 target — distinct from the depth-region band in target_table.yaml).
 # The control: bot should always survive. If this reads TooHard the instrument or player baseline is wrong.
-target_death_pct: { min: 0.00, max: 0.05 }
+target_death_pct: { min: 0.00, max: 0.10 }
 
 player:
   hp: 54

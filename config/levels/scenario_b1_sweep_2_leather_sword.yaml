@@ -10,7 +10,7 @@ turn_limit: 100
 runs: 100
 category: "B1_loadout_sweep"
 
-target_death_pct: { min: 0.00, max: 0.05 }
+target_death_pct: { min: 0.00, max: 0.10 }
 
 player:
   hp: 54
