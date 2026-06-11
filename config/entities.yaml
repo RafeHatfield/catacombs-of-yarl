@@ -29,7 +29,7 @@ monsters:
     inventory_size: 5
     equipment:
       spawn_chances:
-        main_hand: 0.75
+        main_hand: 1.00   # always armed — lethality lever; weapon selection stays randomized (club/dagger/sword)
         chest: 0.50
       equipment_pool:
         main_hand:
