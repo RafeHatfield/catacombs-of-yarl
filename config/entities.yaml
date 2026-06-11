@@ -4,7 +4,7 @@ monsters:
     threat_archetype: "baseline"   # §2 durable baseline; orc variants inherit unless overridden
     spawn_weight: 80
     stats:
-      hp: 28
+      hp: 36
       power: 0
       defense: 0
       xp: 35
