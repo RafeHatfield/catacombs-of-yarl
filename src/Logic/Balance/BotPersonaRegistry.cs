@@ -138,6 +138,35 @@ public static class BotPersonaRegistry
                 PreferStairs:             true,
                 AvoidCombat:              true,
                 AllowCombatHealing:       true),
+
+            // ── Escalator-fork experiment cohorts (hard-forced targeting, not game personas) ──
+            // Uses balanced stats; only EscalatorTargetingPriority changes.
+            // Run via --persona escalator_first / escalator_last on escalator scenarios.
+            new BotPersonaConfig(
+                Name:                        "escalator_first",
+                RetreatHpThreshold:          0.25,
+                BaseHealThreshold:           0.25,
+                PanicHpThreshold:            0.15,
+                PanicMultiEnemyCount:        2,
+                CombatEngagementDistance:    6,
+                LootPriority:                1,
+                PreferStairs:                false,
+                AvoidCombat:                 false,
+                AllowCombatHealing:          true,
+                EscalatorTargetingPriority:  "escalator_first"),
+
+            new BotPersonaConfig(
+                Name:                        "escalator_last",
+                RetreatHpThreshold:          0.25,
+                BaseHealThreshold:           0.25,
+                PanicHpThreshold:            0.15,
+                PanicMultiEnemyCount:        2,
+                CombatEngagementDistance:    6,
+                LootPriority:                1,
+                PreferStairs:                false,
+                AvoidCombat:                 false,
+                AllowCombatHealing:          true,
+                EscalatorTargetingPriority:  "escalator_last"),
         };
 
         return personas.ToDictionary(p => p.Name);

@@ -1,0 +1,38 @@
+scenario_id: b1_brute_2grunts
+name: "B1 Brute + 2 grunts — tier-gap mix check"
+description: >
+  Mixed encounter: 1 brute + 2 grunts. This is the B1/B2 boundary encounter shape where
+  the brute is the tier-defining threat surrounded by grunt chaff. With HP 40 grunts, does
+  the brute still read as the primary threat in the mix (the thing that kills you), or do
+  the grunts now compete? Per-death archetype attribution will tell us.
+depth: 3
+turn_limit: 120
+runs: 100
+category: "B1_brute_check"
+
+player:
+  hp: 54
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  accuracy: 3
+  evasion: 1
+  damage_min: 1
+  damage_max: 4
+  weapon: "dagger"
+  armor: "leather_armor"
+
+monsters:
+  - type: "orc_brute"
+    count: 1
+    position: [9, 6]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 4]
+  - type: "orc_grunt"
+    count: 1
+    position: [8, 8]
+
+items:
+  - type: "healing_potion_cd"
+    count: 1

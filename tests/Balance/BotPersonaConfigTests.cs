@@ -25,11 +25,14 @@ public class BotPersonaConfigTests
     // ── Registry defaults ─────────────────────────────────────────────────────
 
     [Test]
-    [Description("BotPersonaRegistry.Defaults has exactly 5 entries")]
-    public void Defaults_HasFivePersonas()
+    [Description("BotPersonaRegistry.Defaults has the 5 game personas + 2 escalator-fork experiment cohorts")]
+    public void Defaults_HasExpectedPersonaCount()
     {
-        Assert.That(BotPersonaRegistry.Defaults.Count, Is.EqualTo(5),
-            "Should have exactly 5 personas: balanced, cautious, aggressive, greedy, speedrunner");
+        Assert.That(BotPersonaRegistry.Defaults.Count, Is.EqualTo(7),
+            "5 game personas + 2 experiment cohorts (escalator_first, escalator_last)");
+        Assert.That(BotPersonaRegistry.Defaults.Keys, Is.SupersetOf(
+            new[] { "balanced", "cautious", "aggressive", "greedy", "speedrunner",
+                    "escalator_first", "escalator_last" }));
     }
 
     [Test]

@@ -79,5 +79,16 @@ public sealed record BotPersonaConfig(
     /// All current personas have this enabled. Reserved for a future berserker persona.
     /// PoC: PERSONA_HEAL_CONFIG.allow_combat_healing.
     /// </summary>
-    bool AllowCombatHealing
+    bool AllowCombatHealing,
+
+    /// <summary>
+    /// Hard-forced escalator targeting priority for controlled experiments. This is NOT a game
+    /// behavior; it is a testing/experiment lever for the escalator-fork measurement. Two cohorts:
+    ///   "escalator_first" — always attack an Escalator/Fused monster if one is alive (hard override).
+    ///   "escalator_last"  — never attack an Escalator/Fused monster while any non-escalator lives.
+    ///   null              — normal behavior (lowest-HP focus fire, unchanged).
+    /// The knob must be HARD-FORCED (not a soft preference) so cohort membership is clean:
+    /// partial targeting blurs the cohorts and slides the measurement back toward selection bias.
+    /// </summary>
+    string? EscalatorTargetingPriority = null
 );
