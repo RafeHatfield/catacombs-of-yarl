@@ -25,6 +25,8 @@ string? aggregatePath = null;     // findings.md (batch)
 string? aggregateJsonPath = null; // structured aggregate JSON (batch)
 int concurrency = Environment.ProcessorCount;
 string? model = null;   // accepted, unused until the coherence pass (Phase 3)
+bool traceMode = false;
+bool traceVerbose = false;
 
 for (int i = 0; i < args.Length; i++)
 {
@@ -38,6 +40,8 @@ for (int i = 0; i < args.Length; i++)
         case "--aggregate-json": aggregateJsonPath = Next(); break;
         case "--concurrency":    concurrency = int.Parse(Next()); break;
         case "--model":          model = Next(); break;
+        case "--trace":          traceMode = true; break;
+        case "--verbose":        traceVerbose = true; break;
         default:
             Console.Error.WriteLine($"ERROR: unknown argument '{args[i]}'.");
             return 2;
@@ -54,9 +58,25 @@ for (int i = 0; i < args.Length; i++)
     }
 }
 
+// ── TRACE MODE (no rubric needed) ───────────────────────────────────────────
+if (traceMode)
+{
+    if (transcriptPath == null)
+    {
+        Console.Error.WriteLine("Usage: --trace --transcript <run.jsonl> [--verbose]");
+        return 2;
+    }
+    string jsonl;
+    try { jsonl = File.ReadAllText(transcriptPath); }
+    catch (Exception ex) { Console.Error.WriteLine($"ERROR: {ex.Message}"); return 1; }
+    Console.WriteLine(TraceRenderer.Render(jsonl, new TraceOptions { Verbose = traceVerbose }));
+    return 0;
+}
+
 if (rubricPath == null || (transcriptPath == null) == (batchDir == null))
 {
     Console.Error.WriteLine("Usage:");
+    Console.Error.WriteLine("  trace:  --trace --transcript <run.jsonl> [--verbose]");
     Console.Error.WriteLine("  single: --transcript <run.jsonl> --rubric <rubric.yaml> [--report <out.json>]");
     Console.Error.WriteLine("  batch:  --batch <dir> --rubric <rubric.yaml> [--aggregate <findings.md>] [--aggregate-json <out.json>] [--concurrency N]");
     return 2;
@@ -115,14 +135,30 @@ if (batchDir != null)
     Console.Error.WriteLine($"  {aggregate.Note}");
     foreach (var b in aggregate.MechanismBlindSpots)
         Console.Error.WriteLine($"  BLIND SPOT (0x, unverified): {b.Trigger}");
-    return 0;
+    // Exit 2 when bug candidates are found, so CI / shell scripts can gate on findings.
+    // Exit 0 = clean batch; exit 1 = tool error; exit 2 = candidates found.
+    return aggregate.BugCandidates.Count > 0 ? 2 : 0;
 }
 
 // ── SINGLE-RUN MODE ─────────────────────────────────────────────────────────
+string jsonlText;
+try
+{
+    jsonlText = File.ReadAllText(transcriptPath!);
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"ERROR reading transcript: {ex.Message}");
+    return 1;
+}
+
+// Human-readable run report first — gives the reader context before the predicate JSON.
+Console.WriteLine(RunReporter.Render(jsonlText));
+
 LoadedTranscript transcript;
 try
 {
-    transcript = TranscriptLoader.LoadFromFile(transcriptPath!);
+    transcript = TranscriptLoader.LoadFromText(jsonlText, transcriptPath!);
 }
 catch (TranscriptLoadException ex)
 {

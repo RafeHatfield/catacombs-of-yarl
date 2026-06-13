@@ -4,6 +4,7 @@ using CatacombsOfYarl.Logic.Combat.StatusEffects;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Knowledge;
+using CatacombsOfYarl.Logic.Persistence.Namespaces;
 
 namespace CatacombsOfYarl.Logic.Core;
 
@@ -175,8 +176,13 @@ public static class TurnController
             monsterById[m.Id] = m;
         int playerId = state.Player.Id;
 
-        foreach (var evt in events)
+        // Snapshot count before the loop so that instrumentation events appended inside the loop
+        // (e.g. OrcRepChangedEvent) land in `events` for the caller without being re-processed and
+        // without tripping List<T>'s modification-during-enumeration guard.
+        int eventCount = events.Count;
+        for (int evtIdx = 0; evtIdx < eventCount; evtIdx++)
         {
+            var evt = events[evtIdx];
             switch (evt)
             {
                 case AttackEvent atk:
@@ -225,6 +231,9 @@ public static class TurnController
                         {
                             string victimFaction = dead.Get<AiComponent>()?.Faction ?? "neutral";
                             state.Player.GetOrAdd<RunAggressionTally>().AddUnprovokedKill(victimFaction);
+                            // Note: OrcRepChangedEvent is emitted from ResolvePlayerAttack (at the kill
+                            // site, before TransformToCorpse strips the AiComponent). The emit here would
+                            // read a null faction because TransformToCorpse already ran.
                         }
                     }
                     break;
@@ -549,6 +558,8 @@ public static class TurnController
                 TargetKilled = false,
                 IsBonusAttack = isBonusAttack,
                 FailReason = "disarmed",
+                ActorName = player.Name,
+                TargetName = target.Name,
             });
             return;
         }
@@ -587,6 +598,8 @@ public static class TurnController
             IsFumble = result.IsFumble,
             TargetKilled = result.TargetKilled,
             IsBonusAttack = isBonusAttack,
+            ActorName = player.Name,
+            TargetName = target.Name,
         });
 
         if (result.Hit)
@@ -641,8 +654,17 @@ public static class TurnController
 
         if (result.TargetKilled)
         {
-            events.Add(new DeathEvent { ActorId = target.Id, KillerId = player.Id });
+            events.Add(new DeathEvent { ActorId = target.Id, KillerId = player.Id, ActorName = target.Name, KillerName = player.Name });
             DropMonsterLoot(state, target, events);
+
+            // Instrumentation: emit OrcRepChangedEvent at the exact turn where the orc tally
+            // crosses the Hostile threshold. Must happen BEFORE TransformToCorpse (which strips
+            // AiComponent from the target) and BEFORE UpdateKnowledge (which calls AddUnprovokedKill
+            // but reads a null faction from the already-stripped entity). Reading faction here, at
+            // the kill site, is the only point where the faction is still present on the entity.
+            // The event predicts the run-end mutation that fires in the presentation layer (Main.cs).
+            EmitOrcRepChangedIfThresholdCrossed(state, target, events);
+
             TransformToCorpse(state, target, events, monsterFactory);
             ResolveDeathSiphon(state, target, events);
 
@@ -725,7 +747,7 @@ public static class TurnController
             // No factory available — treat as a kill so tests that don't inject a factory
             // still see deterministic behavior (original dies, no children).
             original.Require<Fighter>().Hp = 0;
-            events.Add(new DeathEvent { ActorId = original.Id, KillerId = state.Player.Id });
+            events.Add(new DeathEvent { ActorId = original.Id, KillerId = state.Player.Id, ActorName = original.Name, KillerName = state.Player.Name });
             TransformToCorpse(state, original, events, monsterFactory: null);
             return;
         }
@@ -1819,7 +1841,7 @@ public static class TurnController
                 });
                 if (!pf.IsAlive)
                 {
-                    events.Add(new DeathEvent { ActorId = state.Player.Id, KillerId = -1 });
+                    events.Add(new DeathEvent { ActorId = state.Player.Id, KillerId = -1, ActorName = state.Player.Name });
                     state.PlayerDeathCause = "hazard";
                 }
             }
@@ -1841,7 +1863,7 @@ public static class TurnController
                 });
                 if (!mf.IsAlive)
                 {
-                    events.Add(new DeathEvent { ActorId = monster.Id, KillerId = -1 });
+                    events.Add(new DeathEvent { ActorId = monster.Id, KillerId = -1, ActorName = monster.Name });
                     DropMonsterLoot(state, monster, events);
                     TransformToCorpse(state, monster, events, monsterFactory);
                 }
@@ -2037,6 +2059,8 @@ public static class TurnController
                 TargetKilled = false,
                 IsBonusAttack = isBonusAttack,
                 FailReason = "disarmed",
+                ActorName = monster.Name,
+                TargetName = target.Name,
             });
             return;
         }
@@ -2055,6 +2079,8 @@ public static class TurnController
             IsFumble = result.IsFumble,
             TargetKilled = result.TargetKilled,
             IsBonusAttack = isBonusAttack,
+            ActorName = monster.Name,
+            TargetName = target.Name,
         });
 
         if (result.Hit)
@@ -2101,7 +2127,7 @@ public static class TurnController
                 return;
             }
 
-            events.Add(new DeathEvent { ActorId = target.Id, KillerId = monster.Id });
+            events.Add(new DeathEvent { ActorId = target.Id, KillerId = monster.Id, ActorName = target.Name, KillerName = monster.Name });
 
             if (target.Id == state.Player.Id)
             {
@@ -3119,6 +3145,44 @@ public static class TurnController
                     AutoExploreSystem.Stop(ae, "Found secret door");
             }
         }
+    }
+
+    /// <summary>
+    /// When a monster dies, if it was channeling a Chant of Dissonance, remove the
+    /// DissonantChantEffect from the player so they are not permanently slowed.
+    /// Called from both ResolvePlayerAttack and ResolveMonsterAttack death paths.
+    /// Risk R4 mitigation — easy to miss in edge cases, so it lives here in one place.
+    /// </summary>
+    /// <summary>
+    /// Emit <see cref="OrcRepChangedEvent"/> if this kill crosses the orc-hostile threshold.
+    /// Called at the kill site (before TransformToCorpse strips AiComponent) for unprovoked
+    /// orc kills dealt directly by the player. Mirrors the unprovoked-kill conditions in
+    /// UpdateKnowledge but reads faction BEFORE the component is stripped. Fires at most once
+    /// per run (threshold can only be crossed once; existing-hostile rep is also guarded).
+    /// </summary>
+    private static void EmitOrcRepChangedIfThresholdCrossed(GameState state, Entity killed,
+        List<TurnEvent> events)
+    {
+        // Only for unprovoked orc kills dealt directly by the player (same predicate as UpdateKnowledge).
+        if (killed.Has<HasAttackedPlayerTag>()) return;
+        string faction = killed.Get<AiComponent>()?.Faction ?? "";
+        if (faction != FactionsData.OrcFactionId) return;
+
+        // Count the kill (AddUnprovokedKill will be called by UpdateKnowledge; add it now to get
+        // the post-kill count for the threshold check, but do NOT double-add — we use a peek approach).
+        // Peek: what would the count be after UpdateKnowledge adds this kill?
+        int currentCount = state.Player.Get<RunAggressionTally>()?.UnprovokedKillsFor(FactionsData.OrcFactionId) ?? 0;
+        int postKillCount = currentCount + 1; // UpdateKnowledge will add exactly one
+        string currentRep = state.PersistentState?.Factions.GetState(FactionsData.OrcFactionId) ?? "neutral";
+
+        if (postKillCount == FactionsData.HostileThreshold && currentRep != "hostile")
+            events.Add(new OrcRepChangedEvent
+            {
+                ActorId      = state.Player.Id,
+                FactionId    = FactionsData.OrcFactionId,
+                ToState      = "hostile",
+                KillsThisRun = postKillCount,
+            });
     }
 
     /// <summary>
