@@ -289,6 +289,18 @@ public sealed class LlmBotBrain : IPlayerBrain, IDisposable
 
         var sb = new System.Text.StringBuilder();
 
+        // Brief factual context — the LLM has no conversation history, so we must
+        // supply what happened or it will confabulate "I haven't played yet".
+        sb.AppendLine($"RUN COMPLETE — ending: {endingLabel.ToUpperInvariant()}");
+        sb.AppendLine($"Floors reached: {_currentDepth}  |  Your decisions this run: {_llmTurnsUsed}  |  Auto-explored turns: {_turnsSinceLastDecision + (_llmTurnsUsed > 0 ? 0 : 0)}");
+        if (_recentEvents.Count > 0)
+        {
+            sb.AppendLine("Last events in the run:");
+            foreach (var ev in _recentEvents)
+                sb.AppendLine($"  - {ev}");
+        }
+        sb.AppendLine();
+
         // Death reflection — folded into the run-end call (no Decide call exists after death)
         if (isDeath)
         {
@@ -310,7 +322,7 @@ public sealed class LlmBotBrain : IPlayerBrain, IDisposable
         // End-of-run summary
         sb.AppendLine(
             $"""
-            You just completed a run (ending: {endingLabel}). In 3–5 sentences:
+            Based on the decisions you made this run, in 3–5 sentences:
             1. What was the structural character of this run? (Were decisions alive or
                mostly forced?)
             2. What systems were present but had no accessible entry point?
@@ -323,6 +335,37 @@ public sealed class LlmBotBrain : IPlayerBrain, IDisposable
             """);
 
         var (text, _) = _client.CallSync(sb.ToString(), maxTokens: 800);
+        if (text == null) return null;
+
+        // The system prompt instructs JSON-only output; strip any JSON wrapper if present
+        // so run_narrative is plain prose rather than a JSON-encoded string.
+        var trimmed = text.Trim();
+        if (trimmed.StartsWith("```"))
+        {
+            // Strip fences and try to extract a "reflection" or "reasoning" string from the JSON
+            var inner = trimmed.TrimStart('`');
+            var firstBrace = inner.IndexOf('{');
+            var lastBrace  = inner.LastIndexOf('}');
+            if (firstBrace >= 0 && lastBrace > firstBrace)
+            {
+                try
+                {
+                    var doc = System.Text.Json.JsonDocument.Parse(inner[firstBrace..(lastBrace + 1)]);
+                    // Look for a prose value in priority order
+                    foreach (var key in new[] { "reflection", "reasoning", "action_label" })
+                    {
+                        if (doc.RootElement.TryGetProperty(key, out var val) &&
+                            val.ValueKind == System.Text.Json.JsonValueKind.String)
+                        {
+                            var s = val.GetString();
+                            if (!string.IsNullOrWhiteSpace(s)) return s;
+                        }
+                    }
+                }
+                catch { /* fall through to return raw text */ }
+            }
+        }
+
         return text;
     }
 

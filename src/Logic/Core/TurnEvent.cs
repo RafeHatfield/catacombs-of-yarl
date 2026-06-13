@@ -28,6 +28,11 @@ public sealed class AttackEvent : TurnEvent
     /// Values: "disarmed" (DisarmedEffect active, weapon equipped), "" / null = normal miss.
     /// </summary>
     public string? FailReason { get; init; }
+
+    /// <summary>Human-readable name of the actor and target. Populated at event creation so
+    /// the transcript doesn't need a separate entity-ID lookup pass.</summary>
+    public string ActorName { get; init; } = "";
+    public string TargetName { get; init; } = "";
 }
 
 public sealed class MoveEvent : TurnEvent
@@ -80,6 +85,10 @@ public sealed class DeathEvent : TurnEvent
     /// UpdateKnowledge skips RecordKilled for these deaths — the player held the body, not killed the species.
     /// </summary>
     public bool IsPossessionInduced { get; init; }
+
+    /// <summary>Name of who died and who killed them (empty string for hazard kills where KillerId == -1).</summary>
+    public string ActorName { get; init; } = "";
+    public string KillerName { get; init; } = "";
 }
 
 public sealed class PickUpEvent : TurnEvent
