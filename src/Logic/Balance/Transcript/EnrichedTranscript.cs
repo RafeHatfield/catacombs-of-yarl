@@ -174,6 +174,9 @@ public sealed class StructuralAssessment
 {
     public string Judgment { get; init; } = "";
     public string Note { get; init; } = "";
+    /// <summary>Monotonic turn number (1-based) at which this assessment was produced.
+    /// Null for assessments not associated with a specific turn (e.g., run-end summaries).</summary>
+    public int? Turn { get; init; }
 }
 
 /// <summary>
