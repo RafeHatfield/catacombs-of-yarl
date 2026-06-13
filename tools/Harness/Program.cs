@@ -15,7 +15,9 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CatacombsOfYarl.Harness.LlmPlayer;
 using CatacombsOfYarl.Logic.Balance;
+using CatacombsOfYarl.Logic.Balance.LlmPlayer;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
@@ -65,6 +67,7 @@ string? gearName     = null;    // --gear <profile>: staged-start gear profile k
 string? jsonlPath    = null;
 string? jsonlInPath  = null;
 string? personaName  = null;  // --persona <name>, default: null → balanced
+string  playerMode   = "bot"; // --player bot|llm, default: bot
 
 for (int i = 0; i < args.Length; i++)
 {
@@ -131,6 +134,19 @@ for (int i = 0; i < args.Length; i++)
                 return 1;
             }
             personaName = args[++i];
+            break;
+        case "--player":
+            if (i + 1 >= args.Length || args[i + 1].StartsWith("--"))
+            {
+                Console.Error.WriteLine("ERROR: --player requires a mode argument (bot|llm).");
+                return 1;
+            }
+            playerMode = args[++i].ToLowerInvariant();
+            if (playerMode != "bot" && playerMode != "llm")
+            {
+                Console.Error.WriteLine($"ERROR: --player must be 'bot' or 'llm' (got '{playerMode}').");
+                return 1;
+            }
             break;
         case "--bot-report":
             botReportMode = true;
@@ -339,8 +355,9 @@ if (!dungeonMode && scenarioId == null && !runAll && !botReportMode)
 // ─── Resolve persona ──────────────────────────────────────────────────────────
 
 // Validate persona name early — unknown name emits a warning (not error) and falls back.
+// When --player llm, persona is validated later in the LLM branch (accepts reader|system_explorer).
 BotPersonaConfig? resolvedPersona = null;
-if (personaName != null)
+if (personaName != null && playerMode != "llm")
 {
     resolvedPersona = BotPersonaRegistry.Get(personaName);
     // BotPersonaRegistry.Get() already emits a stderr warning on unknown names.
@@ -430,9 +447,7 @@ if (dungeonMode)
 
     if (llmTranscriptDir != null)
     {
-        int transcriptRuns = runsOverride ?? 10;
-        Console.Error.WriteLine($"Generating {transcriptRuns} enriched LLM-testing transcript(s) " +
-                                $"({floors} floors, seed {seed}) -> {llmTranscriptDir}");
+        int transcriptRuns = runsOverride ?? (playerMode == "llm" ? 1 : 10);
 
         // Load voice + memo registries so verbatim text and memos reach the transcript.
         // Missing files are non-fatal — the corresponding fields stay empty/null (a greppable gap).
@@ -453,23 +468,83 @@ if (dungeonMode)
             return 1;
         }
 
-        for (int i = 0; i < transcriptRuns; i++)
+        if (playerMode == "llm")
         {
-            int runSeed = seed + i;
-            // Build a FRESH harness per run. Entity IDs are deterministic only from a fresh
-            // EntityFactory; the factory counter is process-shared mutable state that is not
-            // reset per run, so reusing a harness drifts absolute IDs across runs (gameplay
-            // is unaffected, but transcript IDs would no longer match a fresh replay).
-            // A fresh factory per run guarantees replay fidelity: replaying (seed + actions)
-            // in a fresh harness reproduces the exact IDs in this transcript.
-            var runHarness = new DungeonRunHarness(
-                BuildDungeonFloorBuilder(EntitiesFile, LevelTemplatesFile, DepthBoonsFile));
-            var (_, jsonl) = runHarness.RunWithTranscript(floors, runSeed, resolvedPersona, voiceRegistry, memoRegistry);
-            var outPath = Path.Combine(llmTranscriptDir, $"run-{runSeed}.jsonl");
-            // UTF-8 without BOM — JSONL is read as an ASCII-compatible bytestream.
-            File.WriteAllText(outPath, jsonl, new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-            Console.Error.WriteLine($"  wrote {outPath}");
+            // ── LLM Player transcript mode ──────────────────────────────────────────
+            // Requires ANTHROPIC_API_KEY and --persona reader|system_explorer.
+            // Runs one at a time (LLM API calls are expensive); fresh harness per run.
+
+            var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                Console.Error.WriteLine("Error: ANTHROPIC_API_KEY environment variable is not set.");
+                return 1;
+            }
+
+            string llmPersonaName = personaName ?? "reader";
+            if (llmPersonaName != "reader" && llmPersonaName != "system_explorer")
+            {
+                Console.Error.WriteLine($"Error: --persona must be 'reader' or 'system_explorer' for --player llm (got '{llmPersonaName}').");
+                return 1;
+            }
+            var llmPersonaEnum = llmPersonaName == "reader" ? LlmPersona.Reader : LlmPersona.SystemExplorer;
+
+            // Load config — use defaults if the file is missing.
+            var configPath = Path.Combine("config", "llm_player", $"{llmPersonaName}.yaml");
+            var config = LlmPlayerConfig.FromYaml(configPath);
+
+            Console.Error.WriteLine($"Generating {transcriptRuns} LLM Player transcript(s) " +
+                                    $"({floors} floors, seed {seed}, persona {llmPersonaName}, model {config.Model}) -> {llmTranscriptDir}");
+
+            for (int i = 0; i < transcriptRuns; i++)
+            {
+                int runSeed = seed + i;
+
+                // Build system prompt before constructing the brain — static method.
+                string systemPrompt = LlmBotBrain.BuildSystemPrompt(llmPersonaEnum);
+
+                // Fresh harness and client per run: entity IDs are deterministic only from a fresh
+                // EntityFactory; replay fidelity depends on it (see existing bot-path comment).
+                var runHarness = new DungeonRunHarness(
+                    BuildDungeonFloorBuilder(EntitiesFile, LevelTemplatesFile, DepthBoonsFile));
+
+                using var client = new AnthropicTurnClient(apiKey, config.Model, systemPrompt);
+                using var brain  = new LlmBotBrain(client, llmPersonaEnum, config.FallbackPersona, config.MaxTurns);
+
+                var (result, jsonl) = runHarness.RunWithLlmPlayer(
+                    floors, runSeed, brain, llmPersonaName, config.Model,
+                    voiceRegistry: voiceRegistry, memoRegistry: memoRegistry);
+
+                var outPath = Path.Combine(llmTranscriptDir, $"run-{runSeed}.jsonl");
+                File.WriteAllText(outPath, jsonl, new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+                Console.WriteLine($"  run {i + 1}/{transcriptRuns} seed={runSeed} outcome={result.Outcome} floors={result.FloorsCompleted} -> {outPath}");
+            }
         }
+        else
+        {
+            // ── Bot transcript mode (existing behavior) ──────────────────────────
+            Console.Error.WriteLine($"Generating {transcriptRuns} enriched LLM-testing transcript(s) " +
+                                    $"({floors} floors, seed {seed}) -> {llmTranscriptDir}");
+
+            for (int i = 0; i < transcriptRuns; i++)
+            {
+                int runSeed = seed + i;
+                // Build a FRESH harness per run. Entity IDs are deterministic only from a fresh
+                // EntityFactory; the factory counter is process-shared mutable state that is not
+                // reset per run, so reusing a harness drifts absolute IDs across runs (gameplay
+                // is unaffected, but transcript IDs would no longer match a fresh replay).
+                // A fresh factory per run guarantees replay fidelity: replaying (seed + actions)
+                // in a fresh harness reproduces the exact IDs in this transcript.
+                var runHarness = new DungeonRunHarness(
+                    BuildDungeonFloorBuilder(EntitiesFile, LevelTemplatesFile, DepthBoonsFile));
+                var (_, jsonl) = runHarness.RunWithTranscript(floors, runSeed, resolvedPersona, voiceRegistry, memoRegistry);
+                var outPath = Path.Combine(llmTranscriptDir, $"run-{runSeed}.jsonl");
+                // UTF-8 without BOM — JSONL is read as an ASCII-compatible bytestream.
+                File.WriteAllText(outPath, jsonl, new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+                Console.Error.WriteLine($"  wrote {outPath}");
+            }
+        }
+
         return 0;
     }
 
@@ -1133,11 +1208,19 @@ void PrintHelp()
     Console.WriteLine("  --floors <n>      Number of dungeon floors per run (default: 6)");
     Console.WriteLine("  --runs <n>        Number of soak runs (default: 100)");
     Console.WriteLine("  --seed <n>        Base seed — run i uses seed+i (default: 1337)");
-    Console.WriteLine("  --persona <name>  Bot persona (balanced|cautious|aggressive|greedy|speedrunner, default: balanced)");
+    Console.WriteLine("  --player <mode>   Player type: bot (default) or llm");
+    Console.WriteLine("  --persona <name>  Bot persona (balanced|cautious|aggressive|greedy|speedrunner)");
+    Console.WriteLine("                    For --player llm: reader (default) or system_explorer");
     Console.WriteLine("  --jsonl <path>    Stream per-run results as JSONL to file");
     Console.WriteLine("  --verbose         Print bot action distribution and heal behavior after table");
     Console.WriteLine("  --report          Generate and print full analysis report after the soak");
     Console.WriteLine("  --transcript       Print a single-run narrative transcript (use with --dungeon)");
+    Console.WriteLine();
+    Console.WriteLine("LLM Player mode (--player llm):");
+    Console.WriteLine("  Requires: --dungeon --llm-transcript <dir> --player llm");
+    Console.WriteLine("  Requires: ANTHROPIC_API_KEY environment variable");
+    Console.WriteLine("  Example: dotnet run --project tools/Harness -- --dungeon --llm-transcript reports/llm \\");
+    Console.WriteLine("               --player llm --persona reader --floors 10 --runs 1 --seed 1337");
     Console.WriteLine();
     Console.WriteLine("Bot report mode:");
     Console.WriteLine("  --bot-report      Run 5×N persona survivability matrix");

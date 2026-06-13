@@ -23,6 +23,8 @@ public sealed class TranscriptRecorder
 {
     private readonly int _seed;
     private readonly string _persona;
+    private readonly string _playerType;
+    private readonly string? _llmModel;
     private readonly VoiceLineRegistry? _voiceRegistry;
 
     // Dedicated rng + fired-set for voice resolution. Seeded deterministically from
@@ -35,12 +37,18 @@ public sealed class TranscriptRecorder
     private readonly List<double[]> _hpProfile = new();
     private readonly SystemTriggerLog _triggers = new();
 
+    // Accumulated structural judgments from LLM Player turns. Empty for bot runs.
+    private readonly List<StructuralAssessment> _judgments = new();
+
     private static readonly JsonSerializerOptions JsonOptions = BuildOptions();
 
-    public TranscriptRecorder(int seed, string persona, VoiceLineRegistry? voiceRegistry)
+    public TranscriptRecorder(int seed, string persona, VoiceLineRegistry? voiceRegistry,
+        string playerType = "bot", string? llmModel = null)
     {
         _seed = seed;
         _persona = persona;
+        _playerType = playerType;
+        _llmModel = llmModel;
         _voiceRegistry = voiceRegistry;
         // Distinct from any game-floor seed derivation; voice resolution is cosmetic
         // to the transcript and must never collide with gameplay rng streams.
@@ -57,13 +65,35 @@ public sealed class TranscriptRecorder
     /// Append a TurnRecord. <paramref name="events"/> is the turn's event list;
     /// VoiceLineEvents are resolved in place and system triggers are updated.
     /// <paramref name="vitals"/> carries the post-action scalar fields the rubric predicates read.
+    /// <paramref name="decisionContext"/> and <paramref name="structuralAssessment"/> are LLM
+    /// Player metadata — null for bot runs (zero behavior change for existing callers).
+    /// Non-null assessments with a real Judgment are also accumulated into the run-level
+    /// StructuralJudgments list.
     /// </summary>
     public void RecordTurn(
         int turn, int floor, TurnVitals vitals,
-        PlayerAction action, IReadOnlyList<TurnEvent> events)
+        PlayerAction action, IReadOnlyList<TurnEvent> events,
+        string? decisionContext = null,
+        StructuralAssessment? structuralAssessment = null)
     {
         ResolveVoiceLines(events);
         UpdateTriggers(turn, events);
+
+        // Stamp the turn number onto the assessment so RunSummary.StructuralJudgments
+        // carries turn refs as plan-player §6 requires. StructuralAssessment is a class
+        // (not a record), so we create a new instance with Turn set rather than using `with`.
+        StructuralAssessment? stampedAssessment = structuralAssessment != null
+            ? new StructuralAssessment
+              {
+                  Judgment = structuralAssessment.Judgment,
+                  Note     = structuralAssessment.Note,
+                  Turn     = turn,
+              }
+            : null;
+
+        // Accumulate per-turn assessments with real judgments into the run-level list.
+        if (stampedAssessment != null && !string.IsNullOrEmpty(stampedAssessment.Judgment))
+            _judgments.Add(stampedAssessment);
 
         _turns.Add(new TurnRecord
         {
@@ -78,7 +108,20 @@ public sealed class TranscriptRecorder
             PlayerEntityId       = vitals.PlayerEntityId,
             ActionTaken          = ActionTakenBuilder.From(action),
             Events               = events,
+            DecisionContext      = decisionContext,
+            StructuralAssessment = stampedAssessment,
         });
+    }
+
+    /// <summary>
+    /// Accumulate a structural judgment that is NOT tied to a per-turn assessment — e.g.
+    /// floor_summary and reflection entries that arrive in the same turn's ExtraJudgments list.
+    /// The caller is responsible for stamping the Turn field before calling this method.
+    /// </summary>
+    public void AddStructuralJudgment(StructuralAssessment assessment)
+    {
+        if (!string.IsNullOrEmpty(assessment.Judgment))
+            _judgments.Add(assessment);
     }
 
     private RunSummary? _summary;
@@ -87,18 +130,20 @@ public sealed class TranscriptRecorder
     /// <summary>
     /// Finalize the transcript. <paramref name="memos"/> are memos delivered this
     /// run (verbatim); pass an empty list when none. <paramref name="ending"/> is
-    /// the outcome string (null if interrupted).
+    /// the outcome string (null if interrupted). <paramref name="runNarrative"/> is
+    /// the LLM end-of-run narrative string — null for bot runs (zero behavior change).
     /// </summary>
     public void Finish(
         string runId, int depthReached, int floorCount, int turnCount,
-        string? ending, IReadOnlyList<MemoRecord> memos, int runAggressionTally = 0)
+        string? ending, IReadOnlyList<MemoRecord> memos, int runAggressionTally = 0,
+        string? runNarrative = null)
     {
         _header = new TranscriptHeader
         {
             RunId           = runId,
             Persona         = _persona,
-            PlayerType      = "bot",
-            LlmModel        = null,
+            PlayerType      = _playerType,
+            LlmModel        = _llmModel,
             Seed            = _seed,
             DepthReached    = depthReached,
             Ending          = ending,
@@ -111,10 +156,14 @@ public sealed class TranscriptRecorder
 
         _summary = new RunSummary
         {
-            HpProfile          = _hpProfile,
-            SystemTriggers     = _triggers,
-            RunAggressionTally = runAggressionTally,
-            MemosDelivered     = memos,
+            HpProfile           = _hpProfile,
+            SystemTriggers      = _triggers,
+            RunAggressionTally  = runAggressionTally,
+            MemosDelivered      = memos,
+            StructuralJudgments = _judgments.Count > 0
+                ? _judgments.ToArray()
+                : Array.Empty<StructuralAssessment>(),
+            RunNarrative        = runNarrative,
         };
     }
 
@@ -157,6 +206,14 @@ public sealed class TranscriptRecorder
         {
             switch (evt)
             {
+                case OrcRepChangedEvent:
+                    if (!_triggers.OrcRepChanged)
+                    {
+                        _triggers.OrcRepChanged = true;
+                        _triggers.OrcRepChangeTurn = turn;
+                    }
+                    break;
+
                 case PossessionEnteredEvent:
                     if (!_triggers.PossessionUsed)
                     {

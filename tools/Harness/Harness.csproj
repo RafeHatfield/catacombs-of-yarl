@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\src\Logic\CatacombsOfYarl.Logic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Anthropic.SDK" Version="5.*" />
+  </ItemGroup>
+
 </Project>

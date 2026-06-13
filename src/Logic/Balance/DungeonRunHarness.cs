@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text;
+using CatacombsOfYarl.Logic.Balance.LlmPlayer;
 using CatacombsOfYarl.Logic.Balance.Transcript;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
@@ -200,6 +201,12 @@ public sealed class DungeonRunHarness
     // 500 was too tight — large floors with scattered monsters could time out legitimately.
     private const int MaxTurnsPerFloor = 1000;
 
+    // LLM path uses a much lower per-floor cap. The bot has goal-directed navigation;
+    // the LLM can circle a floor for hundreds of turns without finding the stair.
+    // 200 turns is enough to fight, explore, and descend on a typical floor, while
+    // keeping API costs bounded at ~$0.09/floor at Haiku rates.
+    private const int LlmMaxTurnsPerFloor = 200;
+
     // Override the GameState TurnLimit for dungeon floors. The default is 100 (scenario mode),
     // which is far too low for a procedural dungeon floor with pathfinding to a distant stair.
     // DungeonFloorBuilder does not set this — it's the harness's responsibility to impose
@@ -380,6 +387,25 @@ public sealed class DungeonRunHarness
         => RunSoak(floors, runs, baseSeed, persona, startDepth: startDepth, gearProfile: gearProfile);
 
     /// <summary>
+    /// Run a single dungeon campaign with the LLM Player brain and emit the enriched
+    /// JSONL transcript. Mirrors RunWithTranscript but uses IPlayerBrain instead of BotBrain.
+    /// Creates a fresh TranscriptRecorder with playerType="llm" and the given model id.
+    /// BotTelemetry is disabled (the LLM path does not use BotBrain at the harness level).
+    /// </summary>
+    public (DungeonSoakRunResult Result, string Jsonl) RunWithLlmPlayer(
+        int floors, int seed, IPlayerBrain brain, string personaName, string llmModel,
+        VoiceLineRegistry? voiceRegistry = null, MemoRegistry? memoRegistry = null)
+    {
+        var recorder = new TranscriptRecorder(seed, personaName, voiceRegistry,
+            playerType: "llm", llmModel: llmModel);
+        var result = RunSingle(
+            floors, seed, enableTelemetry: false, persona: null,
+            transcriptRecorder: recorder, memoRegistry: memoRegistry,
+            llmBrain: brain);
+        return (result, recorder.ToJsonl());
+    }
+
+    /// <summary>
     /// Core single-run implementation. Returns a fully populated DungeonSoakRunResult
     /// including killerName, potions tracking, boon count, and timing.
     ///
@@ -390,8 +416,12 @@ public sealed class DungeonRunHarness
     /// BotTelemetryRecorder and passes a BotDecisionContext to every BotBrain.Decide() call,
     /// storing the resulting BotRunSummary in the returned DungeonSoakRunResult.BotSummary.
     /// When false (legacy Run() path), no recorder is created and BotSummary is null.
+    ///
+    /// When <paramref name="llmBrain"/> is non-null, the brain decides every turn (skipping
+    /// the harness-level auto-stair-navigation branch), BotTelemetry is unused, and the
+    /// transcript captures LLM metadata (reasoning, structural assessments, fallback events).
     /// </summary>
-    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false, IList<TranscriptEntry>? transcript = null, BotPersonaConfig? persona = null, TranscriptRecorder? transcriptRecorder = null, MemoRegistry? memoRegistry = null, int startDepth = 1, GearProfile? gearProfile = null)
+    private DungeonSoakRunResult RunSingle(int floors, int baseSeed, bool enableTelemetry = false, IList<TranscriptEntry>? transcript = null, BotPersonaConfig? persona = null, TranscriptRecorder? transcriptRecorder = null, MemoRegistry? memoRegistry = null, int startDepth = 1, GearProfile? gearProfile = null, IPlayerBrain? llmBrain = null)
     {
         var sw = Stopwatch.StartNew();
 
@@ -415,12 +445,15 @@ public sealed class DungeonRunHarness
 
         // Create a single recorder for the whole run when telemetry is enabled.
         // All BotBrain.Decide() calls share this recorder; context carries per-call metadata.
-        BotTelemetryRecorder? recorder = enableTelemetry ? new BotTelemetryRecorder() : null;
+        // Telemetry is not applicable on the LLM path (BotBrain decisions don't happen there).
+        BotTelemetryRecorder? recorder = (enableTelemetry && llmBrain == null) ? new BotTelemetryRecorder() : null;
 
         // One BotBrain instance per run — stuck detection state persists across floors.
         // Per plan TASK-006: harnesses must use the instance path so TASK-004 stuck detection fires.
+        // When llmBrain is non-null, BotBrain lives inside LlmBotBrain as a fallback; the harness
+        // does not need its own BotBrain instance.
         var resolvedPersona = persona ?? BotPersonaRegistry.Get("balanced");
-        var botBrain = new BotBrain(resolvedPersona);
+        BotBrain? botBrain = llmBrain == null ? new BotBrain(resolvedPersona) : null;
         string personaName = resolvedPersona.Name;
         bool runWasAborted = false;
 
@@ -442,6 +475,7 @@ public sealed class DungeonRunHarness
             int floorPotions = 0;
             int playerId     = state.Player.Id;
             bool descended   = false;
+            bool forceDescend = false; // set when BotBrain signals ForceDescend; stays true for the floor
 
             // 0c role-aware health capture: accumulate the per-death lever signals + floor vitals.
             var combat = new EngagementTracker(playerId, state);
@@ -450,15 +484,73 @@ public sealed class DungeonRunHarness
 
             // Enriched transcript: HP-profile point at floor entry.
             transcriptRecorder?.BeginFloor(depth, HpFraction(state.PlayerFighter));
+            // LLM Player hook: called after floor is built and before the first Decide.
+            // For depth > first floor, the brain queues a FLOOR COMPLETE prompt block.
+            llmBrain?.OnFloorEnter(depth);
 
-            while (!state.IsGameOver && floorTurns < MaxTurnsPerFloor)
+            // LLM stuck detection: mirrors BotBrain's per-run counters but scoped per-floor.
+            // Bot path has stuck detection inside BotBrain; the LLM path needs it here because
+            // the LLM can issue the same blocked-move for hundreds of turns with no progress.
+            int  llmStuckTurns   = 0;
+            bool llmForceDescend = false;
+            var  llmLastPos      = (X: state.Player.X, Y: state.Player.Y);
+            const int LlmStuckWarnThreshold        = 4;   // inject warning into next prompt
+            const int LlmStuckForceDescendThreshold = 12;  // take over navigation
+
+            int turnCap = llmBrain != null ? LlmMaxTurnsPerFloor : MaxTurnsPerFloor;
+            while (!state.IsGameOver && floorTurns < turnCap)
             {
                 PlayerAction action;
                 // TurnNumber for telemetry: accumulated total turns so far + current floor turns.
                 // This gives a monotonically increasing turn number across the whole run.
                 int currentTurnNumber = totalTurns + floorTurns + 1;
 
-                if (state.IsFloorClear && state.StairDown != null)
+                // LLM metadata for transcript capture (null on the bot path).
+                string? llmDecisionContext = null;
+                StructuralAssessment? llmAssessment = null;
+                IReadOnlyList<StructuralAssessment>? llmExtraJudgments = null;
+                bool llmUsedFallback = false;
+                string? llmFallbackReason = null;
+
+                if (llmBrain != null)
+                {
+                    if (llmForceDescend && state.StairDown != null)
+                    {
+                        // Stuck force-descend: bypass the LLM and navigate to the stair directly.
+                        // Same logic as the bot's auto-stair-nav branch.
+                        if (state.PlayerOnStairDown)
+                        {
+                            action = PlayerAction.Descend;
+                        }
+                        else
+                        {
+                            var path = Pathfinder.AStar(
+                                state.Map,
+                                state.Player.X, state.Player.Y,
+                                state.StairDown.X, state.StairDown.Y,
+                                state.Player, canPassDoors: true);
+                            action = path is { Count: > 0 }
+                                ? PlayerAction.MoveTo(path[0].X, path[0].Y)
+                                : PlayerAction.Wait;
+                        }
+                        llmUsedFallback  = true;
+                        llmFallbackReason = "stuck_force_descend";
+                    }
+                    else
+                    {
+                        // LLM path: the brain decides EVERY turn — including post-floor-clear navigation.
+                        // The describer's menu already includes a pathed "Move toward the staircase"
+                        // entry, so Reader/Explorer can choose when to descend (hardening note 5).
+                        var decision = llmBrain.Decide(state);
+                        action            = decision.Action;
+                        llmDecisionContext = decision.Reasoning;
+                        llmAssessment      = decision.Assessment;
+                        llmExtraJudgments  = decision.ExtraJudgments;
+                        llmUsedFallback    = decision.UsedFallback;
+                        llmFallbackReason  = decision.FallbackReason;
+                    }
+                }
+                else if ((state.IsFloorClear || forceDescend) && state.StairDown != null)
                 {
                     // All monsters dead — navigate to the stair and descend.
                     // Emit NavigateToStair telemetry for the harness-driven path,
@@ -502,7 +594,7 @@ public sealed class DungeonRunHarness
                         ? new BotDecisionContext(recorder, currentTurnNumber, depth, personaName)
                         : null;
 
-                    var botAction = botBrain.Decide(
+                    var botAction = botBrain!.Decide(
                         state.Player,
                         state.PlayerFighter,
                         state.PlayerInventory,
@@ -511,19 +603,28 @@ public sealed class DungeonRunHarness
                         decisionContext,
                         floorItems: state.FloorItems);
 
+                    // ForceDescend: bot stuck with unreachable enemy — navigate to stair even with
+                    // monsters alive. Preserves the run; the next floor gets a fresh attempt.
+                    if (botAction.Type == BotAction.ActionType.ForceDescend)
+                    {
+                        forceDescend = true;
+                        action = PlayerAction.Wait; // safe no-op this turn; next iterations use stair nav
+                    }
                     // AbortRun: intercept before ToPlayerAction — count as death-equivalent.
                     // Set flag and break the floor loop immediately. The outer loop will detect
                     // runWasAborted and break the floor iteration as well.
-                    if (botAction.Type == BotAction.ActionType.AbortRun)
+                    else if (botAction.Type == BotAction.ActionType.AbortRun)
                     {
                         runWasAborted = true;
                         killerName = "stuck_abort";
                         break;
                     }
-
-                    // Use BotActionConverter for A*-pathed movement so the bot can navigate
-                    // across dungeon floors with rooms and corridors (not just greedy moves).
-                    action = BotActionConverter.ToPlayerActionWithPathing(botAction, state);
+                    else
+                    {
+                        // Use BotActionConverter for A*-pathed movement so the bot can navigate
+                        // across dungeon floors with rooms and corridors (not just greedy moves).
+                        action = BotActionConverter.ToPlayerActionWithPathing(botAction, state);
+                    }
                 }
 
                 // Capture pre-action state for the enriched transcript (HP fraction and
@@ -533,6 +634,12 @@ public sealed class DungeonRunHarness
 
                 var turnResult = TurnController.ProcessTurn(state, action);
                 floorTurns++;
+
+                // LLM path: inject a fallback event into the resolved event stream so the
+                // transcript captures the reason. Events is a List<TurnEvent> (TurnResult.cs:10) —
+                // safe to append post-ProcessTurn without copying.
+                if (llmUsedFallback && !string.IsNullOrEmpty(llmFallbackReason))
+                    turnResult.Events.Add(new LlmFallbackEvent { Reason = llmFallbackReason });
 
                 if (transcriptRecorder != null)
                 {
@@ -547,7 +654,49 @@ public sealed class DungeonRunHarness
                             PossessionActive:   IsPlayerPossessionActive(state),
                             ControlledEntityId: state.ControlledEntity.Id,
                             PlayerEntityId:     state.Player.Id),
-                        action, turnResult.Events);
+                        action, turnResult.Events,
+                        decisionContext: llmDecisionContext,
+                        structuralAssessment: llmAssessment);
+
+                    // LLM path: floor_summary and reflection judgments arrive as ExtraJudgments —
+                    // stamp the current turn number and accumulate into the run-level list.
+                    // StructuralAssessment is a class (not a record), so we create new instances.
+                    if (llmExtraJudgments != null)
+                    {
+                        foreach (var j in llmExtraJudgments)
+                            transcriptRecorder.AddStructuralJudgment(new StructuralAssessment
+                            {
+                                Judgment = j.Judgment,
+                                Note     = j.Note,
+                                Turn     = currentTurnNumber,
+                            });
+                    }
+                }
+
+                // LLM path: feed the resolved events back to the brain so it can update its
+                // ring buffer and run hook detection (near-death, first-orc, mural, possession).
+                llmBrain?.OnTurnResolved(currentTurnNumber, turnResult.Events, state);
+
+                // LLM stuck detection: update counter after turn resolution.
+                if (llmBrain != null && !llmForceDescend)
+                {
+                    var newPos = (X: state.Player.X, Y: state.Player.Y);
+                    if (newPos == llmLastPos)
+                    {
+                        llmStuckTurns++;
+                        if (llmStuckTurns == LlmStuckWarnThreshold)
+                            llmBrain.InjectPromptBlock(
+                                "WARNING: You have not moved for several turns. Your chosen actions " +
+                                "are not working. Try a completely different approach — move in a " +
+                                "different direction, attack an enemy, wait, or descend the staircase.");
+                        if (llmStuckTurns >= LlmStuckForceDescendThreshold)
+                            llmForceDescend = true;
+                    }
+                    else
+                    {
+                        llmStuckTurns = 0;
+                    }
+                    llmLastPos = newPos;
                 }
 
                 // 0c: ingest this turn's combat into the per-floor lever-signal accumulators.
@@ -617,7 +766,7 @@ public sealed class DungeonRunHarness
             floorMetrics.Descended      = descended;
             floorMetrics.PotionsUsed    = floorPotions;
             // HitMaxTurns: floor ended at the cap without descent or death
-            floorMetrics.HitMaxTurns    = floorTurns >= MaxTurnsPerFloor
+            floorMetrics.HitMaxTurns    = floorTurns >= turnCap
                 && !floorMetrics.Descended
                 && !floorMetrics.PlayerDied;
 
@@ -737,6 +886,11 @@ public sealed class DungeonRunHarness
             var memos = BuildDeliveredMemos(memoRegistry, playerDiedThisRun, killerName, depthReached);
             // Final aggression tally for the run-level value_reconciliation detector.
             int finalTally = lastFloorPlayer?.Get<RunAggressionTally>()?.Total() ?? 0;
+
+            // LLM path: call OnRunEnd BEFORE Finish so the narrative reaches the transcript.
+            // OnRunEnd is synchronous with its own timeout; null on failure (safe sentinel).
+            string? runNarrative = llmBrain?.OnRunEnd(outcome);
+
             transcriptRecorder.Finish(
                 runId: $"{baseSeed}-{Guid.NewGuid():N}",
                 depthReached: depthReached,
@@ -744,7 +898,8 @@ public sealed class DungeonRunHarness
                 turnCount: totalTurns,
                 ending: outcome,
                 memos: memos,
-                runAggressionTally: finalTally);
+                runAggressionTally: finalTally,
+                runNarrative: runNarrative);
         }
 
         return new DungeonSoakRunResult

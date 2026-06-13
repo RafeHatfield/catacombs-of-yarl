@@ -953,3 +953,29 @@ public sealed class EntangleMoveBlockedEvent : TurnEvent
     public int EntityId { get; init; }
     public string BlockedActionType { get; init; } = "move";
 }
+
+// ─── Faction instrumentation ──────────────────────────────────────────────────
+
+/// <summary>
+/// Emitted at the turn where the orc unprovoked-kill tally crosses the Hostile threshold,
+/// predicting the run-end faction-state transition that fires in the presentation layer.
+/// The actual mutation (FactionsData.ApplyNegativeAction) remains in Main.cs; this event makes the
+/// threshold-crossing observable in the logic-layer event stream for the transcript and detectors.
+///
+/// Not emitted if the rep is already Hostile this run (threshold can only be crossed once).
+/// FactionId: the faction crossing the threshold (currently always "orc").
+/// ToState: the state it will transition to at run end ("hostile").
+/// KillsThisRun: the tally count at the moment of threshold crossing.
+/// </summary>
+public sealed class OrcRepChangedEvent : TurnEvent
+{
+    public string FactionId { get; init; } = "";
+    public string ToState { get; init; } = "";
+    public int KillsThisRun { get; init; }
+}
+
+/// <summary>Emitted when the LLM player fell back to the bot brain for a turn.</summary>
+public sealed class LlmFallbackEvent : TurnEvent
+{
+    public string Reason { get; init; } = "";
+}

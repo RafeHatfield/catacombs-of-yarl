@@ -1,0 +1,10 @@
+persona: system_explorer
+model: claude-haiku-4-5-20251001
+max_turns: 1500
+fallback_persona: aggressive
+structural_assessment_threshold: 1
+significant_event_hooks:
+  - near_death
+  - first_possession
+  - death
+  - first_orc_interaction
