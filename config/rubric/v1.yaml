@@ -48,6 +48,22 @@ bug_categories:
   # This block is the real Phase-2 unblock.
   # ========================================================================
 
+  no_progress:
+    mechanism: predicate
+    description: >
+      The bot has issued a Move action that produced no relocation and no productive
+      interaction for 5 or more consecutive turns. Threshold >= 5 excludes the healthy
+      4-turn stuck-detect-and-reroute cycle (after the bot-fix the max healthy streak
+      is exactly 4; anything longer means stuck detection itself failed).
+      Excluded from the streak: hard blocking reasons (EntangleMoveBlocked, TrapTriggered,
+      SkipTurn status effect) and productive tile interactions (DoorOpened, ChestOpened,
+      ChestUnlocked, PropDestroyed, MuralExamined, SignpostRead) — a door-open turn is the
+      mandatory first half of traversing a door, not a stall. Distinct from soft_lock
+      (which fires when available_action_count == 0); no_progress fires when the bot has
+      options but is stuck issuing the same blocked move past the recovery window.
+    predicate: "consecutive_blocked_moves >= 5"
+    scope: runtime
+
   soft_lock:
     mechanism: predicate
     description: "Player cannot act and the game is not flagged over."

@@ -202,8 +202,7 @@ generically by reflection into each turn's `events` array, with an `event_type`
 discriminator. **New event types are captured automatically — no capture-layer change
 when the rubric's silent_failure inventory adds trigger events.** This is the open seam.
 
-Findings on mechanical triggers the rubric thread asked about (verified, NOT fixed —
-fixes await the full trigger inventory):
+Findings on mechanical triggers — status as of 2026-06-11 (after Weighing instrumentation):
 
 - **AggravatedEffect / TargetFaction — captured, but parameter-incomplete.** Application
   is NOT stranded in presentation: it fires a `SpellEvent` in the logic event stream with
@@ -214,21 +213,64 @@ fixes await the full trigger inventory):
   *consequence* side is itself unimplemented — `BasicMonsterAI.ChooseTarget` does not yet
   consult `TargetFaction` (see `AggravatedEffect.cs` doc + `migration_loss_audit.md`), so
   no faction-change event can ever fire. That detector would always flag until both are wired.
-- **Orc reputation changes — fully stranded (no event at all).** There is no `TurnEvent`
-  representing an orc-rep change anywhere in the logic layer. `RunSummary.system_triggers`
-  leaves `orc_rep_changed`/`orc_rep_change_turn` at defaults because nothing emits the
-  signal. This needs a new mechanical event when the rubric thread defines the rep system's
-  observability.
+- **Orc reputation changes — WIRED (2026-06-11).** `OrcRepChangedEvent` now fires at the
+  kill turn where the orc tally crosses `HostileThreshold`, predicting the run-end mutation.
+  `RunSummary.OrcRepChanged`/`OrcRepChangeTurn` are now set by the transcript recorder.
+  Implementation note: the event fires from `ResolvePlayerAttack` (before `TransformToCorpse`
+  strips `AiComponent`) using a peek count. Verified by `OrcRepChangedEvent_FiresAtThresholdTurn`.
+  Pre-existing gap discovered and noted: `UpdateKnowledge` was recording orc kills under
+  faction `"neutral"` (because `AiComponent` is stripped before `UpdateKnowledge` runs) — this
+  is a bug in the tally accuracy, separate from the instrumentation, and not fixed here.
+- **Weighing guardian tier resolution — WIRED (2026-06-11).** `GuardianTierResolvedEvent` now
+  fires for all four faction Guardians on `BeginFromPersistence`, carrying BOTH the resolved
+  tier AND the raw input metrics the scorer read (independence invariant). The `WeighingResolvedEvent`
+  now carries the full audit record + aggregate inputs. `RunSummary.weighing_guardian_allied_count`
+  is still not wired (would require counting allies through the Weighing gauntlet, which the bot
+  harness never reaches; deferred).
 - **Weighing guardian allied count — not reachable by bot harness.** Lives in endgame
   (floor-25 Weighing) state the bot never reaches; `weighing_guardian_allied_count` stays 0.
-  Wiring deferred until the Weighing-outcome capture is specified.
+  Wiring deferred until scripted Weighing scenarios exist.
 - **Possession / mural / past-Sasha / Weighing-reached — wired and working.** Derived from
   `PossessionEnteredEvent`, `MuralExaminedEvent`, `VoiceLineEvent` (`past_sasha*` prefix),
   and `WeighingDialogueEvent` respectively. (Bot runs rarely trip these — see voice note above.)
 
 The `RunSummary.system_triggers` set is **provisional-pending-rubric**: the minimal set is
-wired; the rubric may extend it (and should add the orc-rep + aggravation-faction events
-above to make their silent_failure detectors implementable).
+wired; the rubric may extend it.
+
+---
+
+## Weighing Instrumentation — event set (2026-06-11)
+
+These events are now in the logic-layer event stream, captured by `TurnEventJsonConverter`
+automatically (the open seam). They only fire in runs that REACH the Weighing (floor 25).
+
+**What currently reaches the Weighing:**
+- The test suite: `tests/Endgame/Weighing*Tests.cs` drives `WeighingOrchestrator.Begin()` and
+  `BeginFromPersistence()` directly, with a real `WeighingArenaDefinition`. 11 instrumentation
+  tests confirm all three events fire with correct data.
+- **The bot harness NEVER reaches the Weighing.** `DungeonRunHarness` caps at configurable
+  floors (default 10, never 25). These events are therefore `scope: scripted/endgame` — the
+  `guardian_tier_correctness` detector and `ending_resolved` detector only fire on scripted runs
+  that drive to floor 25, not organic bot batches. This is the **necessary-but-not-sufficient**
+  flag from the task: instrumented ≠ exercised at scale.
+
+**New events:**
+
+| event | fires when | key fields | verified |
+|---|---|---|---|
+| `GuardianTierResolvedEvent` | `BeginFromPersistence()` — 4×, once per Guardian | `Guardian`, `Tier`, `WasScored`, plus raw scorer inputs per-guardian (`OrcRepState`, `UnprovokedOrcKillsThisRun`, etc.) | ✅ inputs match scorer independently |
+| `WeighingResolvedEvent` (enhanced) | `Resolve()` — on any Weighing end | `Ending`, all 4 tiers, `AnySavage`, `IsHeavyRecord`, `OrcRepState`, `CumulativeDeaths`, `SwapChosen`/`SwapAvailable` | ✅ all 6 endings verified |
+| `OrcRepChangedEvent` | kill turn where orc tally crosses `HostileThreshold` | `FactionId="orc"`, `ToState="hostile"`, `KillsThisRun` | ✅ fires at correct turn, not before |
+
+**Independence invariant verified:** capturing the inputs before `AuditScorer.Score()` runs and
+recording them alongside the tier means a detector can re-run the scorer from the captured inputs
+and compare — an event that merely echoes the scorer's output would not enable this.
+
+**Endgame scope note for detectors:** `guardian_tier_correctness` and `ending_resolved`
+predicates should be tagged `scope: scripted` in the rubric, not `scope: runtime`. A standard
+bot run will never contain these events; looking for them in a bot-batch report will always be
+zero, which is healthy-unexercised not clean. The `trigger_consequence` detector for
+`possession_ability_grant` and `faction_turning` have the same profile.
 
 ---
 

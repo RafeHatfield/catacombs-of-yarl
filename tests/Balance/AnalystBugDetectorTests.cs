@@ -83,6 +83,112 @@ public class AnalystBugDetectorTests
         AssertFiresExactlyOn("possession_body_inconsistent", jsonl, firingTurns: new[] { 1 });
     }
 
+    // ── TWO-SIDED CANARY for no_progress (threshold >= 5) ──────────────────────
+    //
+    // The gate has two halves: a genuine long stuck-streak MUST fire; a door-open
+    // turn and a healthy 4-turn recovery episode must NOT. A one-sided fixture is
+    // not evidence — it only shows the predicate CAN fire, not that it won't cry wolf.
+    //
+    // COMMITTED FREEZE FIXTURE: a 30-turn run of the same blocked move at the same
+    // tile — the pre-fix pathology in miniature. No transient batch files involved;
+    // the fixture is constructed entirely from in-memory JSON by Transcript().
+    // If the predicate were miscalibrated back to "== true", this fixture would
+    // produce 30 candidates. Calibrated to >= 5 it produces exactly 26 (turns 5-30).
+
+    [Test]
+    [Description("GATE side 1 (COMMITTED FREEZE FIXTURE): no_progress fires on a pre-fix-style freeze — 30 consecutive blocked moves at the same tile")]
+    public void NoProgress_FiresOnFreezeFixture_30TurnStreak()
+    {
+        // Build a 30-turn "stuck at (86,9)" transcript matching the pre-fix failure mode:
+        // every turn issues Move→(86,9), no Move event fires, no productive interaction.
+        // Under the old calibration (== true) this would fire on all 30 turns.
+        // Under the recalibrated (>= 5) this fires only on turns 5-30 (streak exceeds window).
+        var turns = Enumerable.Range(1, 30)
+            .Select(t => CleanTurn(t) with { ActionKind = "Move" })
+            .ToArray();
+        var jsonl = Transcript(turns);
+
+        var result = new BugDetector(Rubric()).Detect(TranscriptLoader.LoadFromText(jsonl));
+
+        var fired = result.Candidates.Where(c => c.Category == "no_progress")
+            .Select(c => c.Turn!.Value).OrderBy(t => t).ToArray();
+
+        // Turns 1-4: streak 1-4, below threshold — silent.
+        // Turns 5-30: streak 5-30, at or above threshold — fire.
+        var expected = Enumerable.Range(5, 26).ToArray(); // turns 5..30
+        Assert.That(fired, Is.EqualTo(expected),
+            $"Freeze fixture: must fire on turns 5-30 (streak >= 5). " +
+            $"Actual firing turns: [{string.Join(",", fired)}]");
+
+        // Evidence snippet confirms the streak count is present.
+        var sample = result.Candidates.First(c => c.Category == "no_progress");
+        Assert.That(sample.EvidenceSnippet, Does.Contain("consecutive_blocked_moves=5"),
+            "Evidence must show the streak value that triggered the candidate.");
+    }
+
+    [Test]
+    [Description("GATE side 1 (minimal): no_progress fires when streak of genuine blocked moves reaches 5+")]
+    public void NoProgress_FiresOn5ConsecutiveGenuineBlocks()
+    {
+        // 6 consecutive genuine blocked moves (no door, no entangle, no skip) → streak 1..6
+        // Turns 1-4 are streak < 5 (no fire). Turns 5-6 have streak 5 and 6 (fire).
+        var jsonl = Transcript(
+            CleanTurn(1) with { ActionKind = "Move" }, // streak=1 — no fire
+            CleanTurn(2) with { ActionKind = "Move" }, // streak=2
+            CleanTurn(3) with { ActionKind = "Move" }, // streak=3
+            CleanTurn(4) with { ActionKind = "Move" }, // streak=4 — exactly the recovery window; no fire
+            CleanTurn(5) with { ActionKind = "Move" }, // streak=5 — FIRES (exceeded window)
+            CleanTurn(6) with { ActionKind = "Move" }  // streak=6 — FIRES
+        );
+        AssertFiresExactlyOn("no_progress", jsonl, firingTurns: new[] { 5, 6 });
+    }
+
+    [Test]
+    [Description("GATE side 2a: no_progress does NOT fire on a door-open turn (productive interaction)")]
+    public void NoProgress_DoesNotFire_ForDoorOpenTurn()
+    {
+        // A door-open turn: Move action, DoorOpened event, no MoveEvent.
+        // This is the first half of door traversal — productive progress, not a stall.
+        var doorOpen = CleanTurn(1) with { ActionKind = "Move", HasDoorOpenedEvent = true };
+        var jsonl = Transcript(doorOpen, CleanTurn(2), CleanTurn(3));
+        var result = new BugDetector(Rubric()).Detect(TranscriptLoader.LoadFromText(jsonl));
+        Assert.That(result.Candidates.Any(c => c.Category == "no_progress"), Is.False,
+            "DoorOpened is a productive interaction — no_progress must never fire on it.");
+    }
+
+    [Test]
+    [Description("GATE side 2b: no_progress does NOT fire on a healthy 4-turn recovery episode")]
+    public void NoProgress_DoesNotFire_For4TurnRecoveryEpisode()
+    {
+        // The healthy stuck-detect-and-reroute cycle: 4 consecutive genuine blocked moves
+        // (streak 1..4), then the bot issues Wait and reroutes (streak resets to 0).
+        // Threshold >= 5 means NONE of the 4-turn recovery turns fire.
+        var jsonl = Transcript(
+            CleanTurn(1) with { ActionKind = "Move" }, // streak=1
+            CleanTurn(2) with { ActionKind = "Move" }, // streak=2
+            CleanTurn(3) with { ActionKind = "Move" }, // streak=3
+            CleanTurn(4) with { ActionKind = "Move" }, // streak=4 — recovery window, NOT fire
+            CleanTurn(5),                              // Wait issued — streak resets to 0
+            CleanTurn(6) with { ActionKind = "Move" }, // streak=1 again — no fire
+            CleanTurn(7)                               // normal turn
+        );
+        var result = new BugDetector(Rubric()).Detect(TranscriptLoader.LoadFromText(jsonl));
+        Assert.That(result.Candidates.Any(c => c.Category == "no_progress"), Is.False,
+            "A healthy 4-turn recovery episode must not fire no_progress (threshold is 5).");
+    }
+
+    [Test]
+    [Description("no_progress does NOT fire when blocked by a hard reason (entangle or status skip)")]
+    public void NoProgress_NotFiredForHardBlockingReasons()
+    {
+        var entangled = CleanTurn(1) with { ActionKind = "Move", HasEntangleBlock = true };
+        var skipped   = CleanTurn(2) with { ActionKind = "Move", HasSkipTurnEvent = true };
+        var jsonl = Transcript(entangled, skipped, CleanTurn(3));
+        var result = new BugDetector(Rubric()).Detect(TranscriptLoader.LoadFromText(jsonl));
+        Assert.That(result.Candidates.Any(c => c.Category == "no_progress"), Is.False,
+            "Hard blocking reasons (entangle, skip) must never fire no_progress.");
+    }
+
     // ── Coverage / auditability ─────────────────────────────────────────────────
 
     [Test]
@@ -94,7 +200,7 @@ public class AnalystBugDetectorTests
 
         Assert.That(result.Candidates, Is.Empty);
         Assert.That(result.Skipped, Is.Empty, "No category should be skipped on a complete transcript.");
-        Assert.That(result.Coverage.Count, Is.EqualTo(4), "All four predicate categories must have run.");
+        Assert.That(result.Coverage.Count, Is.EqualTo(5), "All five predicate categories must have run.");
         foreach (var c in result.Coverage)
             Assert.That(c.TurnsEvaluated, Is.EqualTo(3), $"{c.Category} must have evaluated every turn.");
     }
@@ -137,7 +243,7 @@ public class AnalystBugDetectorTests
             Assert.That(node["bug_candidates"]!.AsArray().Count, Is.EqualTo(1));
             Assert.That(node["bug_candidates"]![0]!["category"]!.GetValue<string>(), Is.EqualTo("hp_out_of_range"));
             Assert.That(node["bug_candidates"]![0]!["evidence_snippet"]!.GetValue<string>(), Does.Contain("player_hp_pct=2"));
-            Assert.That(node["predicate_coverage"]!.AsArray().Count, Is.EqualTo(4));
+            Assert.That(node["predicate_coverage"]!.AsArray().Count, Is.EqualTo(5));
             Assert.That(node["coherence"]!.AsObject().Count, Is.EqualTo(0), "No coherence pass in v1.");
             Assert.That(node["system_coverage"], Is.Not.Null);
             Assert.That(node["analyst_note"]!.GetValue<string>(), Does.Contain("1 bug candidate"));
@@ -157,21 +263,50 @@ public class AnalystBugDetectorTests
         public int ControlledEntityId { get; init; } = 0;
         public int PlayerEntityId { get; init; } = 0;
 
-        public JsonObject ToNode() => new()
+        // For no_progress fixture control: action kind and event presence flags.
+        public string ActionKind { get; init; } = "Wait";
+        public bool HasMoveEvent { get; init; } = false;
+        public bool HasEntangleBlock { get; init; } = false;
+        public bool HasSkipTurnEvent { get; init; } = false;
+        public bool HasDoorOpenedEvent { get; init; } = false;
+
+        public JsonObject ToNode()
         {
-            ["record_type"] = "turn",
-            ["turn"] = Turn,
-            ["floor"] = 1,
-            ["player_hp_pct"] = PlayerHpPct,
-            ["available_action_count"] = AvailableActionCount,
-            ["is_game_over"] = IsGameOver,
-            ["run_aggression_tally"] = RunAggressionTally,
-            ["possession_active"] = PossessionActive,
-            ["controlled_entity_id"] = ControlledEntityId,
-            ["player_entity_id"] = PlayerEntityId,
-            ["action_taken"] = new JsonObject { ["kind"] = "Wait" },
-            ["events"] = new JsonArray(),
-        };
+            var events = new JsonArray();
+            if (HasMoveEvent)
+                events.Add(new JsonObject { ["event_type"] = "Move", ["actor_id"] = 0,
+                    ["from_x"] = 5, ["from_y"] = 5, ["to_x"] = 6, ["to_y"] = 5 });
+            if (HasEntangleBlock)
+                events.Add(new JsonObject { ["event_type"] = "EntangleMoveBlocked",
+                    ["actor_id"] = 0, ["entity_id"] = 0, ["blocked_action_type"] = "move" });
+            if (HasSkipTurnEvent)
+                events.Add(new JsonObject { ["event_type"] = "SkipTurn",
+                    ["actor_id"] = 0, ["entity_id"] = 0, ["effect_name"] = "slowed" });
+            if (HasDoorOpenedEvent)
+                events.Add(new JsonObject { ["event_type"] = "DoorOpened",
+                    ["actor_id"] = 0, ["x"] = 6, ["y"] = 5, ["opened_by_id"] = 0 });
+
+            return new JsonObject
+            {
+                ["record_type"] = "turn",
+                ["turn"] = Turn,
+                ["floor"] = 1,
+                ["player_hp_pct"] = PlayerHpPct,
+                ["available_action_count"] = AvailableActionCount,
+                ["is_game_over"] = IsGameOver,
+                ["run_aggression_tally"] = RunAggressionTally,
+                ["possession_active"] = PossessionActive,
+                ["controlled_entity_id"] = ControlledEntityId,
+                ["player_entity_id"] = PlayerEntityId,
+                ["action_taken"] = new JsonObject
+                {
+                    ["kind"] = ActionKind,
+                    ["target_x"] = ActionKind == "Move" ? 6 : (JsonNode?)null,
+                    ["target_y"] = ActionKind == "Move" ? 5 : (JsonNode?)null,
+                },
+                ["events"] = events,
+            };
+        }
     }
 
     private static TurnFixture CleanTurn(int turn) => new(turn);

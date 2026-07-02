@@ -87,6 +87,23 @@ dotnet run --project tools/Analyst -- \
 
 **Cost:** ~$0.01–0.05 per 3-floor run at Haiku rates (~15–20% of turns reach the API).
 
+### Visual bot mode (Godot, debug builds only)
+
+Open the game in the Godot editor and use these hotkeys to watch the bot play live. The bot
+runs the same `BotBrain` logic as the headless harness — same decisions, just rendered.
+Useful for debugging: watch where it freezes, which items it ignores, how it navigates.
+
+| Key | Action |
+|-----|--------|
+| **F4** | Toggle bot on / off (you get control back instantly) |
+| **F5** | Cycle persona: balanced → cautious → aggressive → greedy → speedrunner |
+| **F6** | Cycle speed: 1.0 s/turn → 0.5 → 0.25 → 0.1 → 0.0 (max, still rendered) |
+
+Not available on iOS — debug builds only. The HUD shows the current persona and speed while
+the bot is running.
+
+For **batch runs with analysis** (headless, fast), use the bot-analysis pipeline above.
+
 ### Godot (visual game)
 
 Open `CatacombsOfYarl.Presentation.sln` in the Godot editor, or export via the Godot CLI.

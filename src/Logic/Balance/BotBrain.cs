@@ -34,23 +34,26 @@ public sealed class BotBrain
 {
     // ── Stuck detection state (instance-only — static path never uses these) ──
 
-    // _stuckCounter: consecutive turns without progress toward ANY target.
-    // Increments when (player pos, target pos) are both unchanged AND action is not attack.
-    // Resets on positional change or attack.
-    // Drop threshold (8): drop current target, wait one turn. Counter does NOT reset to 0 —
-    // it continues climbing so the abort threshold can be reached after multiple drops.
-    // Abort threshold (15): return AbortRun — bot cannot make progress.
+    // _stuckCounter: consecutive turns the bot has not moved (player position unchanged).
+    // Increments when player position is unchanged regardless of what the target does.
+    //
+    // PRIOR BUG (fixed): the counter previously required BOTH player pos AND target pos
+    // to be unchanged. A wandering target continually reset the counter, allowing the bot
+    // to issue the same blocked move for 990+ turns while the stuck thresholds never fired.
+    // The correct invariant: "the bot made no progress" = player didn't move.
+    //
+    // Drop threshold (4): drop current target, wait one turn. Counter continues climbing.
+    // Force-descend threshold (12): bot is truly stuck; harness should navigate to stair
+    //   and force-descend even if the floor isn't clear (signals as ForceDescend, not AbortRun,
+    //   so the run continues and the next floor gets a fresh attempt).
+    // Abort threshold (20): fallback if even stair navigation fails.
     private int _stuckCounter;
     private (int X, int Y)? _lastPlayerPos;
-    private (int X, int Y)? _lastTargetPos;
     private Entity? _stuckDroppedTarget;
 
-    // Stuck thresholds from PoC bot_brain.py:33 (STUCK_THRESHOLD = 8).
-    // Drop: at 8 consecutive stuck turns, drop the current target (wait 1 turn).
-    //       Counter does NOT reset — it keeps climbing toward the abort threshold.
-    // Abort: at 15 consecutive stuck turns (after the drop), return AbortRun.
-    private const int StuckDropTargetThreshold = 8;
-    private const int StuckAbortRunThreshold = 15;
+    private const int StuckDropTargetThreshold   = 4;
+    private const int StuckForceDescendThreshold = 12;
+    private const int StuckAbortRunThreshold     = 20;
 
     private readonly BotPersonaConfig _persona;
 
@@ -123,6 +126,31 @@ public sealed class BotBrain
         double hpFraction = (double)playerFighter.Hp / playerFighter.MaxHp;
         var adjacent = GetAdjacent(player, aliveMonsters);
 
+        // ── Position-based stuck detection ─────────────────────────────────────
+        // Runs BEFORE any rule fires so it covers all code paths: loot-chase, retreat,
+        // enemy-chase, and avoid-combat all pass through here. The counter increments any
+        // turn the player didn't move, regardless of WHAT the bot was trying to do. Only
+        // attacks reset it (via the explicit ResetStuck call on the attack return path).
+        stateHolder?.UpdateStuck(player);
+        if (stateHolder != null)
+        {
+            if (stateHolder._stuckCounter >= StuckAbortRunThreshold)
+            {
+                EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Wait", "stuck_abort", persona);
+                return BotAction.AbortRun;
+            }
+            if (stateHolder._stuckCounter >= StuckForceDescendThreshold)
+            {
+                EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Wait", "stuck_force_descend", persona);
+                return BotAction.ForceDescend;
+            }
+            if (stateHolder._stuckCounter >= StuckDropTargetThreshold)
+            {
+                EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Wait", "stuck_drop_target", persona);
+                return BotAction.None;
+            }
+        }
+
         // 1. Panic heal — HP at panic threshold AND 2+ adjacent enemies AND has potion.
         //    PoC: requires multi-enemy pressure (panic_multi_enemy_count). This differs from
         //    the old C# impl that panicked on HP alone. The new rule is PoC-correct.
@@ -148,18 +176,19 @@ public sealed class BotBrain
             return BotAction.Heal;
         }
 
-        // 3. Opportunistic loot — floor potion nearby when not actively brawling.
-        //    search radius: 3 for loot_priority==1, 6 for loot_priority==2 (greedy).
+        // 3. Opportunistic loot — useful item nearby when not actively brawling.
+        //    search radius: 3 for loot_priority==1, 6 for loot_priority==2.
         //    Skipped entirely when loot_priority==0 (aggressive, speedrunner).
+        //    "Useful" = any consumable (potions, scrolls), wand, equippable (weapon/armour), or key.
+        //    Previously only healing potions were targeted; the bot now picks up anything worth having.
         if (persona.LootPriority > 0 && adjacent.Count == 0 && floorItems != null)
         {
             int searchRadius = persona.LootPriority >= 2 ? 6 : 3;
-            var nearbyPotion = FindNearbyFloorPotion(player, floorItems, searchRadius);
-            if (nearbyPotion != null)
+            var nearbyItem = FindNearbyFloorItem(player, floorItems, searchRadius);
+            if (nearbyItem != null)
             {
                 EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "MoveTo", "loot_potion", persona);
-                stateHolder?.ResetStuck(player);
-                return BotAction.MoveTo(nearbyPotion.X, nearbyPotion.Y);
+                return BotAction.MoveTo(nearbyItem.X, nearbyItem.Y);
             }
         }
 
@@ -173,7 +202,6 @@ public sealed class BotBrain
                 if (choke.HasValue)
                 {
                     EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "MoveTo", "retreat_to_choke", persona);
-                    stateHolder?.ResetStuck(player);
                     return BotAction.MoveTo(choke.Value.x, choke.Value.y);
                 }
             }
@@ -216,27 +244,8 @@ public sealed class BotBrain
         {
             var target = PickTargetWithPriority(adjacent, persona);
 
-            // Update stuck detection if we're in instance mode
-            stateHolder?.UpdateStuck(player, target, isAttack: false);
-            if (stateHolder != null)
-            {
-                if (stateHolder._stuckCounter >= StuckAbortRunThreshold)
-                {
-                    EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Wait", "stuck_abort", persona);
-                    return BotAction.AbortRun;
-                }
-                if (stateHolder._stuckCounter >= StuckDropTargetThreshold)
-                {
-                    // Drop this target for one turn. Counter does NOT reset — it keeps climbing
-                    // so abort threshold (15) can be reached after multiple drops.
-                    stateHolder._stuckDroppedTarget = target;
-                    EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Wait", "stuck_drop_target", persona);
-                    return BotAction.None;
-                }
-            }
-
             EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Attack", "attack_lowest_hp", persona);
-            stateHolder?.ResetStuck(player);
+            stateHolder?.ResetStuck(player);  // attack = progress; reset counter
             return BotAction.Attack(target);
         }
 
@@ -300,23 +309,6 @@ public sealed class BotBrain
                     }
                 }
 
-                stateHolder?.UpdateStuck(player, nearestEnemy, isAttack: false);
-                if (stateHolder != null)
-                {
-                    if (stateHolder._stuckCounter >= StuckAbortRunThreshold)
-                    {
-                        EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Wait", "stuck_abort", persona);
-                        return BotAction.AbortRun;
-                    }
-                    if (stateHolder._stuckCounter >= StuckDropTargetThreshold)
-                    {
-                        // Drop target — wait one turn. Counter does NOT reset — keeps climbing toward abort.
-                        stateHolder._stuckDroppedTarget = nearestEnemy;
-                        EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "Wait", "stuck_drop_target", persona);
-                        return BotAction.None;
-                    }
-                }
-
                 EmitDecision(context, player, playerFighter, inventory, aliveMonsters, "MoveToward", "move_to_nearest", persona);
                 return BotAction.Move(nearestEnemy);
             }
@@ -329,41 +321,45 @@ public sealed class BotBrain
     // ── Stuck detection helpers ────────────────────────────────────────────────
 
     /// <summary>
-    /// Track position/target for stuck detection.
-    /// Called when the bot is about to move-toward or attack (but hasn't confirmed movement yet).
-    /// Increments the counter when player position AND target position are both unchanged
-    /// and the action is not an attack.
+    /// Track player position for stuck detection. Increments the counter whenever the
+    /// player has not moved, regardless of where the target is.
+    ///
+    /// Prior design checked both player AND target position, which meant a wandering monster
+    /// reset the counter every turn it moved — allowing 990+ turn freezes while the bot
+    /// issued the same blocked move. The correct signal is "did the bot move?" only.
     /// </summary>
-    private void UpdateStuck(Entity player, Entity target, bool isAttack)
+    /// <summary>
+    /// Track player position + target entity ID for stuck detection.
+    ///
+    /// Increment when BOTH player position AND target entity are unchanged. This catches
+    /// the failure mode: player issues the same move toward the same enemy and doesn't progress.
+    ///
+    /// Using target entity ID (not position) means:
+    /// - Wandering monster (same entity, moves around): counter STILL increments — the bot
+    ///   is stuck on the same entity regardless of where it wanders. This is the original bug fix.
+    /// - New target entity (a different enemy becomes the priority): counter resets — the bot
+    ///   deserves a fresh attempt at the new target without carrying over stuck state.
+    /// </summary>
+    /// <summary>
+    /// Increment the stuck counter when the bot hasn't moved. Called once per decision
+    /// cycle, BEFORE any rule fires, so it covers all paths (loot, retreat, enemy-chase)
+    /// equally. Attacks reset the counter (progress) separately via ResetStuck.
+    /// </summary>
+    private void UpdateStuck(Entity player)
     {
-        var currentPlayerPos = (player.X, player.Y);
-        var currentTargetPos = (target.X, target.Y);
-
-        if (isAttack)
-        {
-            // Attacks reset the counter — we're making progress (dealing damage)
-            ResetStuck(player);
-            return;
-        }
-
-        if (_lastPlayerPos == currentPlayerPos && _lastTargetPos == currentTargetPos)
-        {
+        var pos = (player.X, player.Y);
+        if (_lastPlayerPos == pos)
             _stuckCounter++;
-        }
         else
-        {
             _stuckCounter = 0;
-        }
-
-        _lastPlayerPos = currentPlayerPos;
-        _lastTargetPos = currentTargetPos;
+        _lastPlayerPos = pos;
     }
+
 
     private void ResetStuck(Entity player)
     {
-        _stuckCounter = 0;
+        _stuckCounter  = 0;
         _lastPlayerPos = (player.X, player.Y);
-        _lastTargetPos = null;
     }
 
     // ── EmitDecision ──────────────────────────────────────────────────────────
@@ -525,29 +521,53 @@ public sealed class BotBrain
     private static bool IsEscalator(Entity m)
         => m.Get<ThreatArchetypeTag>()?.Archetype is ThreatArchetype.Escalator or ThreatArchetype.Fused;
 
-    private static Entity? FindNearbyFloorPotion(Entity player, IReadOnlyList<Entity> floorItems, int searchRadius)
+    /// <summary>
+    /// Find the nearest floor item worth picking up within Chebyshev radius.
+    /// "Worth picking up" = any consumable (potions, scrolls), wand (SpellEffect),
+    /// equippable (weapon/armour), or key. Prioritises healing potions — they're returned
+    /// first if one is within radius; otherwise falls back to any useful item.
+    /// Returns null if nothing worth collecting is nearby.
+    /// </summary>
+    private static Entity? FindNearbyFloorItem(Entity player, IReadOnlyList<Entity> floorItems, int searchRadius)
     {
-        Entity? best = null;
-        double bestDist = double.MaxValue;
+        Entity? bestHeal = null;
+        Entity? bestOther = null;
+        double bestHealDist = double.MaxValue;
+        double bestOtherDist = double.MaxValue;
 
         foreach (var item in floorItems)
         {
-            var consumable = item.Get<Consumable>();
-            if (consumable?.IsHealing != true) continue;
-
             int dx = Math.Abs(item.X - player.X);
             int dy = Math.Abs(item.Y - player.Y);
             if (Math.Max(dx, dy) > searchRadius) continue;
 
-            double dist = player.DistanceTo(item.X, item.Y);
-            if (dist < bestDist)
+            bool isUseful =
+                item.Has<Consumable>()   // potions, scrolls
+                || item.Has<SpellEffect>() // wands
+                || item.Has<Equippable>(); // weapons, armour
+            // Also grab keys (ItemTag with "key" in the type id)
+            if (!isUseful)
             {
-                bestDist = dist;
-                best = item;
+                var tag = item.Get<ItemTag>();
+                if (tag != null && tag.TypeId.Contains("key", System.StringComparison.OrdinalIgnoreCase))
+                    isUseful = true;
+            }
+            if (!isUseful) continue;
+
+            double dist = player.DistanceTo(item.X, item.Y);
+            var consumable = item.Get<Consumable>();
+            if (consumable?.IsHealing == true)
+            {
+                if (dist < bestHealDist) { bestHealDist = dist; bestHeal = item; }
+            }
+            else
+            {
+                if (dist < bestOtherDist) { bestOtherDist = dist; bestOther = item; }
             }
         }
 
-        return best;
+        // Prefer healing potions; fall back to any useful item
+        return bestHeal ?? bestOther;
     }
 
     private static Entity? FindNearest(Entity from, List<Entity> candidates)
@@ -616,9 +636,15 @@ public sealed class BotAction
         MoveToward,
         MoveTo,
         /// <summary>
-        /// Abort the run — stuck counter exceeded the abort threshold (15 turns).
-        /// Both harnesses intercept this BEFORE calling ToPlayerAction:
-        /// set metrics.PlayerDied = true, set metrics.WasAborted = true, break run loop.
+        /// Force descend — stuck counter hit the force-descend threshold (12 turns without moving).
+        /// The harness navigates to the stair and descends even if the floor isn't clear.
+        /// The run continues; the next floor gets a fresh attempt.
+        /// Preferred over AbortRun because it preserves the run.
+        /// </summary>
+        ForceDescend,
+        /// <summary>
+        /// Abort the run — stuck counter exceeded the full abort threshold (20 turns).
+        /// Only fires when even stair navigation has failed (e.g. stair unreachable).
         /// ToPlayerAction maps this to PlayerAction.Wait as a safe fallback (should never reach it).
         /// </summary>
         AbortRun,
@@ -637,9 +663,10 @@ public sealed class BotAction
         TargetY = targetY;
     }
 
-    public static BotAction None      => new(ActionType.DoNothing);
-    public static BotAction Heal      => new(ActionType.HealSelf);
-    public static BotAction AbortRun  => new(ActionType.AbortRun);
+    public static BotAction None         => new(ActionType.DoNothing);
+    public static BotAction Heal         => new(ActionType.HealSelf);
+    public static BotAction ForceDescend => new(ActionType.ForceDescend);
+    public static BotAction AbortRun     => new(ActionType.AbortRun);
     public static BotAction Attack(Entity target)   => new(ActionType.AttackTarget, target);
     public static BotAction Move(Entity toward)     => new(ActionType.MoveToward, toward);
     public static BotAction MoveTo(int x, int y)    => new(ActionType.MoveTo, targetX: x, targetY: y);

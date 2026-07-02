@@ -60,7 +60,7 @@ public class AnalystBatchTests
         Assert.That(softLock.TotalTurnsEvaluated, Is.EqualTo(10), "3+5+2 turns must sum.");
         Assert.That(softLock.RunsEvaluated, Is.EqualTo(3), "Ran in every run.");
         Assert.That(softLock.RunsSkipped, Is.EqualTo(0));
-        Assert.That(agg.PredicateCoverage.Count, Is.EqualTo(4), "All four predicate categories in the audit trail.");
+        Assert.That(agg.PredicateCoverage.Count, Is.EqualTo(5), "All five predicate categories in the audit trail.");
         Assert.That(agg.BugCandidates, Is.Empty, "Clean batch — but provably ran (see coverage).");
     }
 
