@@ -1,0 +1,41 @@
+{
+  "survival_rate": 0,
+  "runs": 100,
+  "floors": [
+    {
+      "depth": 1,
+      "death_rate": 0.05,
+      "avg_turns": 831.21,
+      "avg_kills": 4.83,
+      "avg_hp_end_fraction": 0.6019696969696969
+    },
+    {
+      "depth": 2,
+      "death_rate": 0.4421052631578947,
+      "avg_turns": 666.0631578947368,
+      "avg_kills": 6.242105263157895,
+      "avg_hp_end_fraction": 0.3306220095693779
+    },
+    {
+      "depth": 3,
+      "death_rate": 0.6415094339622641,
+      "avg_turns": 499.79245283018867,
+      "avg_kills": 5.264150943396227,
+      "avg_hp_end_fraction": 0.19868496283590623
+    },
+    {
+      "depth": 4,
+      "death_rate": 0.7894736842105263,
+      "avg_turns": 306.89473684210526,
+      "avg_kills": 3.8421052631578947,
+      "avg_hp_end_fraction": 0.13556618819776714
+    },
+    {
+      "depth": 5,
+      "death_rate": 0.75,
+      "avg_turns": 328.5,
+      "avg_kills": 2.5,
+      "avg_hp_end_fraction": 0.16447368421052633
+    }
+  ]
+}

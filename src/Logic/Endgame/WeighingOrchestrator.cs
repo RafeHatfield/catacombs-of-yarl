@@ -81,7 +81,71 @@ public sealed class DebtChoiceGateEvent : TurnEvent
     public bool IsHeavyRecord { get; init; }
 }
 
-public sealed class WeighingResolvedEvent : TurnEvent { public EndingType Ending { get; init; } }
+/// <summary>
+/// Emitted once per faction Guardian when its tier is resolved at Weighing begin.
+/// Carries BOTH the resolved tier AND the raw input metrics the scorer read, independently of each
+/// other — the guardian_tier_correctness detector reconciles "given these inputs, was this the right
+/// tier?" Capturing inputs separately from the output is the independence invariant.
+///
+/// WasScored=true: tier was computed from a real PersistentRunState (inputs are meaningful).
+/// WasScored=false: tier came from a headless override (inputs are null — the scorer did not run).
+/// Extensibility: uses the same TurnEventJsonConverter seam as all other TurnEvents; new Weighing
+/// inputs are added as nullable properties here without touching the capture layer.
+///
+/// Input fields per guardian (others are null):
+///   WardenOfWardens  → HallWardenPossessions, MemoTone
+///   Oathkeeper       → OrcRepState, UnprovokedOrcKillsThisRun
+///   AssemblyOfTheLost → CumulativeDeaths
+///   AuditorsOwn      → TotalUnprovokedKillsThisRun, FloorsReached
+/// </summary>
+public sealed class GuardianTierResolvedEvent : TurnEvent
+{
+    public GuardianId Guardian { get; init; }
+    public GuardianTier Tier { get; init; }
+
+    /// <summary>True when the tier was computed by AuditScorer.Score(); false for a headless override.</summary>
+    public bool WasScored { get; init; }
+
+    // ── Warden-of-Wardens inputs ──
+    public int? HallWardenPossessions { get; init; }
+    public string? MemoTone { get; init; }
+
+    // ── Oathkeeper inputs ──
+    public string? OrcRepState { get; init; }
+    public int? UnprovokedOrcKillsThisRun { get; init; }
+
+    // ── Assembly-of-the-Lost inputs ──
+    public int? CumulativeDeaths { get; init; }
+
+    // ── Auditor's Own inputs ──
+    public int? TotalUnprovokedKillsThisRun { get; init; }
+    public int? FloorsReached { get; init; }
+}
+
+/// <summary>
+/// Emitted when the Weighing fully resolves into an ending.
+/// Carries the resolved ending type plus the full audit record and the key aggregate inputs
+/// DetermineEnding keyed on — so the ending_resolved detector can reconcile without re-running
+/// the scorer.
+/// </summary>
+public sealed class WeighingResolvedEvent : TurnEvent
+{
+    public EndingType Ending { get; init; }
+
+    // ── Full audit result ──
+    public GuardianTier WardenTier { get; init; }
+    public GuardianTier OathkeeperTier { get; init; }
+    public GuardianTier AssemblyTier { get; init; }
+    public GuardianTier AuditorTier { get; init; }
+
+    // ── Aggregate inputs DetermineEnding read ──
+    public bool AnySavage { get; init; }
+    public bool IsHeavyRecord { get; init; }
+    public string OrcRepState { get; init; } = "";
+    public int CumulativeDeaths { get; init; }
+    public bool SwapChosen { get; init; }
+    public bool SwapAvailable { get; init; }
+}
 
 /// <summary>
 /// Drives the Weighing gauntlet (TASK-009). Sequential: the four faction Guardians rise in the
@@ -157,19 +221,85 @@ public static class WeighingOrchestrator
 
         if (persistent != null)
         {
+            var runTally = state.Player.Get<RunAggressionTally>();
+            var uw = persistent.UnderWarden;
+            var factions = persistent.Factions;
+            orcRepState = factions.GetState(Persistence.Namespaces.FactionsData.OrcFactionId);
+            cumulativeDeaths = uw.CumulativeDeaths;
+
+            // Capture inputs BEFORE Score() so they are independent of the scorer's output.
+            // This is the independence invariant: the detector reconciles "given these inputs, was
+            // this the right tier?" and cannot do so if the event merely echoes the scorer's decision.
+            bool willScore = state.WeighingAuditOverride == null;
+            int orcKillsThisRun = runTally?.UnprovokedKillsFor(Persistence.Namespaces.FactionsData.OrcFactionId) ?? 0;
+            int totalKillsThisRun = runTally?.Total() ?? 0;
+            int floors = state.CurrentDepth;
+
             audit = state.WeighingAuditOverride
-                ?? AuditScorer.Score(persistent, state.Player.Get<RunAggressionTally>(), state.CurrentDepth);
+                ?? AuditScorer.Score(persistent, runTally, floors);
             swapAvailable = persistent.Hael.BranchOfPassageUnlocked;
-            orcRepState = persistent.Factions.GetState(Persistence.Namespaces.FactionsData.OrcFactionId);
-            cumulativeDeaths = persistent.UnderWarden.CumulativeDeaths;
+
+            // Emit one GuardianTierResolvedEvent per Guardian. Inputs are present when WasScored=true
+            // (the scorer ran from real persistence) and null when WasScored=false (headless override,
+            // scorer bypassed — inputs are not meaningful and the detector must skip reconciliation).
+            int actor = state.Player.Id;
+            events.Add(new GuardianTierResolvedEvent
+            {
+                ActorId = actor,
+                Guardian = GuardianId.WardenOfWardens,
+                Tier     = audit.WardenOfWardens,
+                WasScored = willScore,
+                HallWardenPossessions = willScore ? uw.HallWardenPossessionsTotal : null,
+                MemoTone              = willScore ? uw.LastMemoTone : null,
+            });
+            events.Add(new GuardianTierResolvedEvent
+            {
+                ActorId = actor,
+                Guardian = GuardianId.Oathkeeper,
+                Tier     = audit.Oathkeeper,
+                WasScored = willScore,
+                OrcRepState              = willScore ? orcRepState : null,
+                UnprovokedOrcKillsThisRun = willScore ? orcKillsThisRun : null,
+            });
+            events.Add(new GuardianTierResolvedEvent
+            {
+                ActorId = actor,
+                Guardian = GuardianId.AssemblyOfTheLost,
+                Tier     = audit.AssemblyOfTheLost,
+                WasScored = willScore,
+                CumulativeDeaths = willScore ? cumulativeDeaths : null,
+            });
+            events.Add(new GuardianTierResolvedEvent
+            {
+                ActorId = actor,
+                Guardian = GuardianId.AuditorsOwn,
+                Tier     = audit.AuditorsOwn,
+                WasScored = willScore,
+                TotalUnprovokedKillsThisRun = willScore ? totalKillsThisRun : null,
+                FloorsReached               = willScore ? floors : null,
+            });
         }
         else
         {
             // No persistence (harness / balance pass): use the injected override or the neutral baseline.
+            // GuardianTierResolvedEvent still fires (with WasScored=false) so the event is always in
+            // the stream — a test watching for the event can verify it fires without needing real inputs.
             audit = state.WeighingAuditOverride ?? DefaultHeadlessAudit;
             swapAvailable = false;
             orcRepState = "neutral";
             cumulativeDeaths = 0;
+
+            int actor = state.Player.Id;
+            foreach (var (id, _) in RiseOrder)
+            {
+                events.Add(new GuardianTierResolvedEvent
+                {
+                    ActorId   = actor,
+                    Guardian  = id,
+                    Tier      = audit.TierFor(id),
+                    WasScored = false,
+                });
+            }
         }
 
         Begin(state, audit, swapAvailable, orcRepState, cumulativeDeaths, events);
@@ -470,7 +600,21 @@ public static class WeighingOrchestrator
         if (resolutionPages != null && resolutionPages.Count > 0)
             EmitDialogue(state, events, $"resolution.{ending.ToString().ToLowerInvariant()}", resolutionPages);
 
-        events.Add(new WeighingResolvedEvent { Ending = ending });
+        bool isHeavy = AuditScorer.IsHeavyRecord(ws.Audit, ws.OrcRepState, ws.CumulativeDeaths);
+        events.Add(new WeighingResolvedEvent
+        {
+            Ending = ending,
+            WardenTier    = ws.Audit.WardenOfWardens,
+            OathkeeperTier = ws.Audit.Oathkeeper,
+            AssemblyTier  = ws.Audit.AssemblyOfTheLost,
+            AuditorTier   = ws.Audit.AuditorsOwn,
+            AnySavage     = ws.Audit.AnySavage,
+            IsHeavyRecord = isHeavy,
+            OrcRepState   = ws.OrcRepState,
+            CumulativeDeaths = ws.CumulativeDeaths,
+            SwapChosen    = ws.SwapChosen,
+            SwapAvailable = ws.SwapAvailable,
+        });
     }
 
     private static void EmitDialogue(GameState state, List<TurnEvent> events, string key,

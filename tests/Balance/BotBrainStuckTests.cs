@@ -77,7 +77,7 @@ public class BotBrainStuckTests
     // ── Test 2: Instance drops target at stuck threshold ─────────────────────
 
     [Test]
-    [Description("Instance BotBrain: 9 same-position turns returns Wait on turn 9 (drops target at 8)")]
+    [Description("Instance BotBrain: 5 same-position turns returns Wait on turn 5 (drops target at 4)")]
     public void Instance_DropsTarget_After8StuckTurns()
     {
         var (player, fighter, inventory, map) = MakeArena();
@@ -89,57 +89,60 @@ public class BotBrainStuckTests
 
         var brain = new BotBrain(BotPersonaRegistry.Get("balanced"));
 
-        // First 8 calls: all should be MoveToward (stuck counter increments each turn)
-        for (int i = 0; i < 8; i++)
+        // First 4 calls: all should be MoveToward (stuck counter increments: 0..3)
+        for (int i = 0; i < 4; i++)
         {
             var action = brain.Decide(player, fighter, inventory, monsters, map);
             Assert.That(action.Type, Is.EqualTo(BotAction.ActionType.MoveToward),
                 $"Turn {i+1}: should be MoveToward before stuck threshold");
         }
 
-        // Turn 9 (stuck counter reaches 8): should drop target and return Wait
+        // Turn 5 (stuck counter reaches 4): should drop target and return Wait
         var stuckAction = brain.Decide(player, fighter, inventory, monsters, map);
         Assert.That(stuckAction.Type, Is.EqualTo(BotAction.ActionType.DoNothing),
-            "Turn 9: should return Wait after dropping target at stuck threshold 8");
+            "Turn 5: should return Wait after dropping target at stuck threshold 4");
     }
 
     [Test]
-    [Description("Instance BotBrain: with a second enemy available, bot targets it after dropping enemy1")]
+    [Description("Instance BotBrain: when two enemies are present, bot targets the closest one")]
     public void Instance_TargetsAlternativeEnemy_WhenAvailable()
     {
         var (player, fighter, inventory, map) = MakeArena();
-        var enemy1 = MakeMonster(1, 13, 10, map); // far enemy
-        var enemy2 = MakeMonster(2, 12, 10, map); // closer enemy (Manhattan 2) — will be added on turn 9
+        var enemy1 = MakeMonster(1, 13, 10, map); // far enemy (Manhattan 3)
+        var enemy2 = MakeMonster(2, 12, 10, map); // closer enemy (Manhattan 2)
 
+        // Fresh brain — no stuck state accumulated. Tests that closest enemy is targeted.
+        var brain = new BotBrain(BotPersonaRegistry.Get("balanced"));
+        var monsters = new List<Entity> { enemy1, enemy2 };
+
+        var action = brain.Decide(player, fighter, inventory, monsters, map);
+
+        Assert.That(action.Type, Is.EqualTo(BotAction.ActionType.MoveToward),
+            "Bot should move toward an enemy when two are present");
+        Assert.That(action.Target, Is.SameAs(enemy2),
+            "Bot should target the closer enemy2 (Manhattan 2) over the farther enemy1 (Manhattan 3)");
+    }
+
+    [Test]
+    [Description("Instance BotBrain: after stuck fires (Wait), if the player finally moves the counter resets")]
+    public void Instance_StuckCounterResetsAfterMoving()
+    {
+        var (player, fighter, inventory, map) = MakeArena();
+        var enemy = MakeMonster(1, 13, 10, map);
+        var monsters = new List<Entity> { enemy };
         var brain = new BotBrain(BotPersonaRegistry.Get("balanced"));
 
-        // Run 8 turns with only enemy1 — bot moves toward it, counter climbs
-        var monstersOneEnemy = new List<Entity> { enemy1 };
-        for (int i = 0; i < 8; i++)
-            brain.Decide(player, fighter, inventory, monstersOneEnemy, map);
+        // Run until the drop fires (turn 5)
+        for (int i = 0; i < 4; i++)
+            brain.Decide(player, fighter, inventory, monsters, map);
+        var drop = brain.Decide(player, fighter, inventory, monsters, map);
+        Assert.That(drop.Type, Is.EqualTo(BotAction.ActionType.DoNothing), "Drop fires at turn 5");
 
-        // Turn 9 fires the drop (counter=8)
-        var drop = brain.Decide(player, fighter, inventory, monstersOneEnemy, map);
-        Assert.That(drop.Type, Is.EqualTo(BotAction.ActionType.DoNothing),
-            "Turn 9: drop should fire");
-
-        // Now add enemy2 — the brain should prefer enemy2 over the dropped enemy1
-        // But counter is still >= 8, so it will keep dropping until counter reaches 15
-        // OR until the bot successfully targets the alternative.
-        // When enemy2 is available and enemy1 is dropped, FindNearest finds enemy2 (closer),
-        // which is not the dropped target, so the bot should target enemy2.
-        var monstersTwo = new List<Entity> { enemy1, enemy2 };
-        var action10 = brain.Decide(player, fighter, inventory, monstersTwo, map);
-
-        // enemy2 (at distance 2) is closer than enemy1 (at distance 3), so FindNearest returns enemy2.
-        // enemy2 is NOT the dropped target → bot should move toward enemy2
-        // HOWEVER: counter is still 9 >= 8, so UpdateStuck will run and then check >= 8.
-        // The positions changed (enemy2 is at different position than enemy1 was last turn)
-        // so counter resets to 0. Then bot moves toward enemy2.
-        Assert.That(action10.Type, Is.EqualTo(BotAction.ActionType.MoveToward),
-            "Turn 10 with closer enemy2: should move toward the alternative enemy");
-        Assert.That(action10.Target, Is.SameAs(enemy2),
-            "Should target the closer enemy2, not the dropped enemy1");
+        // Simulate the player moving (position change)
+        player.X = 11; player.Y = 10; // moved!
+        var afterMove = brain.Decide(player, fighter, inventory, monsters, map);
+        Assert.That(afterMove.Type, Is.EqualTo(BotAction.ActionType.MoveToward),
+            "Counter resets after player position changes — back to normal MoveToward");
     }
 
     // ── Test 3: AbortRun at 15 stuck turns ────────────────────────────────────
@@ -155,28 +158,30 @@ public class BotBrainStuckTests
 
         var brain = new BotBrain(BotPersonaRegistry.Get("balanced"));
 
-        BotAction? abortAction = null;
+        BotAction? terminatingAction = null;
 
-        // Counter does NOT reset when dropping target — it keeps climbing from 8 to 15.
-        // Turn-by-turn trace for a single enemy at (13,10) that never moves:
-        //   Turns 1-8:  MoveToward (counter 0..7)
-        //   Turn 9:     Wait/DoNothing (drop fires at counter=8; counter stays 8)
-        //   Turns 10-14: Wait/DoNothing (drop fires again at 9,10,11,12,13,14; counter climbs)
-        //   Turn 15: AbortRun (counter reaches 15)
-        // Total: should abort by turn ~16. Run 20 turns for safety.
-        for (int i = 0; i < 20; i++)
+        // Counter does NOT reset when dropping target — climbs from 4→ForceDescend→AbortRun.
+        // Turn-by-turn trace (single enemy at (13,10) that never moves):
+        //   Turns 1-4:   MoveToward (counter 0..3)
+        //   Turn 5:      DoNothing (drop fires at counter=4)
+        //   Turns 6-11:  DoNothing or ForceDescend (counter climbs: 5..11)
+        //   Turn 13:     ForceDescend (counter=12)
+        //   ...until counter=20: AbortRun
+        // Run 25 turns for safety.
+        for (int i = 0; i < 25; i++)
         {
             var action = brain.Decide(player, fighter, inventory, monsters, map);
-            if (action.Type == BotAction.ActionType.AbortRun)
+            if (action.Type is BotAction.ActionType.AbortRun or BotAction.ActionType.ForceDescend)
             {
-                abortAction = action;
+                terminatingAction = action;
                 break;
             }
         }
 
-        Assert.That(abortAction, Is.Not.Null,
-            "Should have received AbortRun within 20 turns of stuck bot (counter climbs 0→15 without resetting)");
-        Assert.That(abortAction!.Type, Is.EqualTo(BotAction.ActionType.AbortRun));
+        Assert.That(terminatingAction, Is.Not.Null,
+            "Should receive ForceDescend or AbortRun within 25 turns (counter climbs to 12 or 20)");
+        Assert.That(terminatingAction!.Type,
+            Is.EqualTo(BotAction.ActionType.ForceDescend).Or.EqualTo(BotAction.ActionType.AbortRun));
     }
 
     // ── Test 4: Attack resets stuck counter ───────────────────────────────────

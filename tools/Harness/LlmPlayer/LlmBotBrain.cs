@@ -36,6 +36,10 @@ public sealed class LlmBotBrain : IPlayerBrain, IDisposable
     private int _turnsSinceLastDecision;
     private const int PeriodicCheckInterval = 25;
 
+    // True when the player took damage (melee hit, ranged hit, or DoT) on the previous turn.
+    // Forces a decision point so the LLM can react to remote threats and chip damage.
+    private bool _tookDamageLastTurn;
+
     // Significant-event detector (Phase 4): extracted to the Logic layer for testability.
     private readonly SignificantEventDetector _detector;
 

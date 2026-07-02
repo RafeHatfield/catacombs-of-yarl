@@ -97,6 +97,11 @@ public static class TranscriptLoader
         LoadedSummary? summary = null;
         var turns = new List<LoadedTurn>();
 
+        // Running streak counter for consecutive_blocked_moves.
+        // Maintained across turns so each turn knows how many prior blocked-move turns
+        // preceded it without a break — no sequential-eval plumbing required.
+        int blockedStreak = 0;
+
         for (int i = 0; i < lines.Length; i++)
         {
             JsonObject obj;
@@ -119,13 +124,54 @@ public static class TranscriptLoader
                     header = obj;
                     break;
                 case "turn":
+                {
+                    var fields = ScalarFields(obj);
+                    // Derived fields: move_was_blocked + consecutive_blocked_moves.
+                    //
+                    // move_was_blocked: true when a Move action was issued, no Move event fired,
+                    // AND no known productive reason accounts for the non-movement.
+                    //
+                    // Exclusion categories:
+                    //   Hard blocking (no-choice):  EntangleMoveBlocked, TrapTriggered, SkipTurn
+                    //   Productive interactions:    DoorOpened, ChestOpened, ChestUnlocked,
+                    //                               PropDestroyed, MuralExamined, SignpostRead
+                    //
+                    // consecutive_blocked_moves: running streak of move_was_blocked turns, reset
+                    // to 0 on any non-blocked turn. Predicate threshold >=5 excludes the healthy
+                    // 4-turn stuck-detect-and-reroute cycle (max streak after the fix = 4).
+                    var actionTaken = obj["action_taken"]?.AsObject();
+                    string actionKind = actionTaken?["kind"]?.GetValue<string>() ?? "";
+                    var evtArray = obj["events"]?.AsArray();
+                    bool thisBlocked = false;
+                    if (actionKind == "Move" && evtArray != null)
+                    {
+                        bool hasMoveEvent = false, hasBlockingReason = false, hasProductiveInteraction = false;
+                        foreach (var ev in evtArray)
+                        {
+                            string et = ev?.AsObject()?["event_type"]?.GetValue<string>() ?? "";
+                            if (et == "Move") hasMoveEvent = true;
+                            if (et is "EntangleMoveBlocked" or "TrapTriggered" or "SkipTurn")
+                                hasBlockingReason = true;
+                            if (et is "DoorOpened" or "ChestOpened" or "ChestUnlocked"
+                                    or "PropDestroyed" or "MuralExamined" or "SignpostRead")
+                                hasProductiveInteraction = true;
+                        }
+                        thisBlocked = !hasMoveEvent && !hasBlockingReason && !hasProductiveInteraction;
+                    }
+                    fields["move_was_blocked"] = FieldValue.Boolean(thisBlocked);
+
+                    // Running streak: reset to 0 on any non-blocked turn.
+                    blockedStreak = thisBlocked ? blockedStreak + 1 : 0;
+                    fields["consecutive_blocked_moves"] = FieldValue.Number(blockedStreak);
+
                     turns.Add(new LoadedTurn
                     {
                         Turn   = (int)(ReadScalar(obj, "turn")?.Num ?? 0),
                         Floor  = (int)(ReadScalar(obj, "floor")?.Num ?? 0),
-                        Fields = ScalarFields(obj),
+                        Fields = fields,
                     });
                     break;
+                }
                 case "summary":
                     summary = new LoadedSummary
                     {

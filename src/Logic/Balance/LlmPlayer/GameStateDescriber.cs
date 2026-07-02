@@ -1,5 +1,6 @@
 using System.Text;
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Map;
@@ -34,6 +35,12 @@ public static class GameStateDescriber
 
         // Header
         sb.AppendLine($"=== TURN {state.TurnCount} | FLOOR {state.CurrentDepth} | {fighter.Hp}/{fighter.MaxHp} HP ({hpPct}%) ===");
+
+        // Combat loadout — helps the LLM notice when it's fighting unarmed
+        var equipment = player.Get<Equipment>();
+        string weaponStr = equipment?.MainHand?.Name ?? "bare hands";
+        string armourStr = equipment?.Chest?.Name ?? "none";
+        sb.AppendLine($"Weapon: {weaponStr} | Armour: {armourStr}");
         sb.AppendLine();
 
         // Decision point trigger (why the LLM was woken from auto-explore)
@@ -316,6 +323,75 @@ public static class GameStateDescriber
             {
                 int hpPct = fighter.MaxHp > 0 ? (int)Math.Round(100.0 * fighter.Hp / fighter.MaxHp) : 0;
                 actions.Add(new AvailableAction($"Drink a healing potion ({potionCount} left, you are at {hpPct}% HP)", PlayerAction.UseItem()));
+            }
+        }
+
+        // 3b. Equip items from inventory — only offer if not already equipped.
+        // Helps the LLM notice weapons/armour it picked up but hasn't equipped.
+        if (inv != null)
+        {
+            var equip = player.Get<Equipment>();
+            foreach (var item in inv.Items)
+            {
+                var eq = item.Get<Equippable>();
+                if (eq == null) continue;
+
+                // Determine whether this item is already in the matching slot
+                bool alreadyEquipped = eq.Slot switch
+                {
+                    EquipmentSlot.MainHand => equip?.MainHand?.Id == item.Id,
+                    EquipmentSlot.OffHand  => equip?.OffHand?.Id  == item.Id,
+                    EquipmentSlot.Head     => equip?.Head?.Id      == item.Id,
+                    EquipmentSlot.Chest    => equip?.Chest?.Id     == item.Id,
+                    EquipmentSlot.Feet     => equip?.Feet?.Id      == item.Id,
+                    EquipmentSlot.LeftRing => equip?.LeftRing?.Id  == item.Id,
+                    EquipmentSlot.RightRing => equip?.RightRing?.Id == item.Id,
+                    EquipmentSlot.Neck     => equip?.Neck?.Id      == item.Id,
+                    EquipmentSlot.Quiver   => equip?.Quiver?.Id    == item.Id,
+                    _ => false,
+                };
+                if (alreadyEquipped) continue;
+
+                string slotLabel = eq.Slot switch
+                {
+                    EquipmentSlot.MainHand => "weapon",
+                    EquipmentSlot.OffHand  => "off-hand",
+                    EquipmentSlot.Head     => "helmet",
+                    EquipmentSlot.Chest    => "armour",
+                    EquipmentSlot.Feet     => "boots",
+                    EquipmentSlot.LeftRing or EquipmentSlot.RightRing => "ring",
+                    EquipmentSlot.Neck     => "amulet",
+                    EquipmentSlot.Quiver   => "quiver",
+                    _ => "gear",
+                };
+                actions.Add(new AvailableAction($"Equip {item.Name} ({slotLabel})", PlayerAction.Equip(item)));
+            }
+        }
+
+        // 3c. Drink unidentified consumables (non-healing potions the LLM hasn't tried yet).
+        // Limited to 3 entries to keep the menu concise.
+        if (inv != null)
+        {
+            int unknownCount = 0;
+            foreach (var item in inv.Items)
+            {
+                if (unknownCount >= 3) break;
+
+                var c = item.Get<Consumable>();
+                if (c == null) continue;
+                if (c.IsHealing) continue;  // already handled by healing potion entry
+
+                // Skip if definitively identified (we know what it is — don't label it "unknown")
+                var tag = item.Get<ItemTag>();
+                bool identified = tag != null
+                    ? (state.IdentificationRegistry?.IsIdentified(tag.TypeId) ?? false)
+                    : false;
+                if (identified) continue;
+
+                actions.Add(new AvailableAction(
+                    $"Drink {item.Name} (unidentified — unknown effect)",
+                    PlayerAction.UseItem(item)));
+                unknownCount++;
             }
         }
 
