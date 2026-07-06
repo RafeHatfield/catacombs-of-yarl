@@ -5,6 +5,43 @@ bug to silently fix. Newest first.
 
 ---
 
+## 2026-07-06 — FIND-005 (RESOLVES FIND-004): there is no hidden damage reduction — the "10× ttd gap" was a metric-identity error
+
+FIND-004 blocked lethality tuning until a suspected damage-reduction mechanism was located. It was
+located: **it doesn't exist.** The codebase carries TWO different metrics under the same names, and
+FIND-004 verified one definition but read the other's numbers:
+
+- `AggregatedMetrics.H_PM / H_MP` (RunMetrics.FromRuns) — **hits-based**: HP ÷ damage-per-LANDED-hit.
+  This is the definition FIND-004 verified.
+- `PressureModel.H_PM / H_MP` — **rounds-based**: HP ÷ DPR (damage per turn, misses and
+  no-contact turns included). This is what the harness prints and what the bands gate on. Its
+  *property* doc-comments say "hits", which is wrong — the class-level comment says rounds.
+
+Verified empirically on `depth7_boundary_rep` (event-stream dump, 20 runs, canonical seeds):
+- Orc per-landed-hit damage: **6.35** (raw 4–6 + STR +2, club-equipped — exactly as speced).
+  The "~1.3/hit" in FIND-004 was DPR_M 1.39 (per-round), not per-hit. 56 HP ÷ 1.39 = the printed 40.3.
+- Monster hit rate: **36%** (player AC 14 vs orc to-hit +0). Player hit rate 71%.
+- True hits-based numbers vs the canonical ETP B2 targets (4/4):
+  - **ttk ≈ 5.6 hits** (orc 39 effective HP ÷ 6.98 player dmg/hit) vs target 4 → **1.4×** over.
+  - **ttd ≈ 8.8 hits** (56 player HP ÷ 6.35) vs target 4 → **2.2×** over.
+
+**Implications:**
+- The reconciliation FIND-004 posed ("keep the durable game vs large feel change touching
+  damage/soak") shrinks to a **1.4×/2.2× HP-and-accuracy question**, not a 10× redesign. Lethality
+  tuning is unblocked.
+- The ttd lever is as much **monster accuracy** as player HP: at 36% hit rate, ttd 8.8 hits ≈ 24
+  rounds of 1-on-1 exposure. If the ETP intent is "4 hits ≈ ~11 threatened rounds", accuracy tuning
+  changes felt danger without touching the damage model.
+- **Method fix required before further tuning:** rename the two metric families so this cannot
+  recur — e.g. `TtkHits/TtdHits` (hits-based, evaluated against ETP ttk/ttd for representative
+  scenarios) and `RoundsToKill/RoundsToDie` (rounds-based, kept for the stress-test regression
+  bands). Fix the `PressureModel` property doc-comments. Have the harness print both families
+  labeled by unit.
+
+**FIND-004 status: RESOLVED (diagnosis complete; tuning decision still open, now correctly sized).**
+
+---
+
 ## 2026-06-07 — DECISION: ETP ttk/ttd is the canonical combat-pace target
 
 Two design-intent specs contradicted each other (~2×): the harness `PressureModel` bands (death
