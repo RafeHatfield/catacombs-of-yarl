@@ -1,7 +1,9 @@
 # Rings
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Source:** `config/entities.yaml` → `rings:` section; `src/Logic/ECS/RingEffectComponent.cs`  
-**Implementation status:** Phase 1 rings (10) fully implemented. Phase 2 rings (5) defined in YAML and equip/unequip is handled, but the passive effect is a no-op until their parent systems land.
+**Implementation status:** 16 rings defined. 10 are fully functional; 6 are no-op stubs (equip/unequip is handled, but the passive effect does nothing — their `RingEffectKind` is not handled in the `TurnController` ring-effect switch).
 
 ---
 
@@ -34,10 +36,10 @@ These rings can be picked up, equipped, and identified, but their passive effect
 
 | Item ID | Name | Intended Effect | Blocking System |
 |---|---|---|---|
-| `ring_of_resistance` | Ring of Resistance | Elemental resistance (fire/poison/cold) | Resistance system not yet built |
+| `ring_of_resistance` | Ring of Resistance | Elemental resistance (fire/poison/cold) | Ring effect not wired — the `Resistance` `RingEffectKind` is not handled in `TurnController`. (The damage-type resistance *combat* mechanic itself is built — `DamageModifiers.cs` — the ring just doesn't grant it yet.) |
 | `ring_of_clarity` | Ring of Clarity | Slow magic charge drain or anti-confusion | Unclear scope, deferred |
 | `ring_of_invisibility` | Ring of Invisibility | Passive invisible while still | Requires monster targeting integration |
-| `ring_of_searching` | Ring of Searching | Auto-detect secret doors / traps nearby | Trap system not yet built |
+| `ring_of_searching` | Ring of Searching | Auto-detect secret doors / traps nearby | Ring effect not wired — the `Searching` `RingEffectKind` is not handled in `TurnController`. (Traps and secret doors themselves are built; the ring just doesn't reveal them yet.) |
 | `ring_of_wizardry` | Ring of Wizardry | Extra wand charges or reduced scroll fail chance | No magic system to plug into |
 | `ring_of_luck` | Ring of Luck | Improved crit chance or loot luck | System undefined |
 

@@ -1,5 +1,7 @@
 # Armour
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Source:** `config/entities.yaml` → `armor:` section  
 **Implementation status:** Fully implemented. Enchantment (+1 AC via Scroll of Enchant Armor) is live.
 

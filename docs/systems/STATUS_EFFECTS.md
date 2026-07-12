@@ -1,5 +1,7 @@
 # Status Effects
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Source:** `src/Logic/Combat/StatusEffects/`  
 **Implementation status:** All effects listed below are fully implemented. Duration refresh on re-application: takes the max of existing and new duration (not stacked/additive).
 

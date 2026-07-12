@@ -1,5 +1,7 @@
 # Combat System
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Source:** `src/Logic/Combat/CombatResolver.cs`, `src/Logic/ECS/`, `src/Logic/Combat/StatusEffects/`  
 **Implementation status:** Fully implemented. Speed/momentum system live. Crits implemented.
 

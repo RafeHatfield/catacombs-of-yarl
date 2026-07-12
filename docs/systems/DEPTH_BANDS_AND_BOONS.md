@@ -1,5 +1,7 @@
 # Depth Bands and Boons
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Sources:** `config/depth_boons.yaml`, `config/level_templates.yaml`, `src/Logic/Balance/PressureModel.cs`  
 **Implementation status:** Depth bands fully implemented. Boon system implemented for bands 1–5. Boons awarded at the start of each new band.
 

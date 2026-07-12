@@ -1,5 +1,7 @@
 # Ground Hazards
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Source:** `src/Logic/Core/GroundHazard.cs`, `src/Logic/Combat/SpellResolver.cs`  
 **Implementation status:** Fully implemented. Two hazard types: Fire and Poison Gas.
 
@@ -79,5 +81,5 @@ Ground hazards tick in the environment phase at the end of each turn (after all 
 ## Notes
 
 - Hazards affect both monsters and the player. Dropped a fireball at your feet? You take the lingering damage too.
-- Fire resistance (fire_beetle tag) will reduce hazard damage when the resistance system is built, but currently raw damage applies to all.
-- There are no traditional placed traps in the current implementation. Traps are planned for a future milestone (see `tasks/plans/plan_interactive_props_traps.md`). Ground hazards are the current equivalent of environmental danger.
+- Hazard tick damage is raw (`GroundHazard.CurrentDamage` — linear decay, no resistance lookup) and applies to all entities. The damage-type resistance/vulnerability system (`src/Logic/Combat/DamageModifiers.cs`) is now live for direct combat damage but is not referenced by ground-hazard ticks.
+- Ground hazards are distinct from **placed traps**, which are also implemented (9 types in `config/floor_traps.yaml`, placed by the floor generator via `FloorTrapRegistry`, resolved through `src/Logic/Combat/TrapActionResolver.cs`). Ground hazards are lingering area effects (from spells/abilities); traps are floor features triggered on step. See the systems INDEX and `tasks/plans/plan_interactive_props_traps.md` (completed).

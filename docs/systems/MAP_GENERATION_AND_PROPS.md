@@ -1,7 +1,9 @@
 # Map Generation and Props
 
-**Sources:** `src/Logic/Core/DungeonFloorBuilder.cs`, `config/level_templates.yaml`, `config/props.yaml`  
-**Implementation status:** Procedural generation fully implemented. Props rendered in-engine. Room archetypes implemented via prop placement system. Traps — not yet implemented (see note).
+_Last verified: 2026-07-12 against commit 86b6f10_
+
+**Sources:** `src/Logic/Core/DungeonFloorBuilder.cs`, `config/level_templates.yaml`, `config/props.yaml`, `config/floor_traps.yaml`  
+**Implementation status:** Procedural generation fully implemented. Props rendered in-engine. Room archetypes implemented via prop placement system. Traps implemented and placed by the generator (see Traps note).
 
 ---
 
@@ -145,9 +147,11 @@ This is the most complex archetype currently implemented.
 
 ## Traps
 
-**Not yet implemented.** The `level_templates.yaml` references `trap_rules` as a deferred field (parsed but not processed). The PoC has a trap system — this is in the future plans (`plan_interactive_props_traps.md`).
+**Implemented.** 9 trap types are defined in `config/floor_traps.yaml` (spike, web, gas, fire, alarm_plate, teleport, root, hole, acid) and loaded via `FloorTrapRegistry`. The floor generator places them alongside other floor features (chests, signs, murals, props) in `DungeonFloorBuilder` (see the "Place floor features … traps" step), and stepping onto one is resolved through `src/Logic/Combat/TrapActionResolver.cs` (dispatched from `TurnController`, payload carried by `TrapPayloadComponent`). Plan `plan_interactive_props_traps.md` is complete.
 
-Ground hazards (fire, poison gas from spells) are implemented — see `GROUND_HAZARDS.md`. These are the closest thing to environmental hazards currently in the game.
+Caveat: the scenario-level `trap_rules` override field on `LevelOverride` (`config/level_templates.yaml`) is still parsed-but-not-consumed — it has no reader in `src/Logic`. Trap placement does not depend on it; it uses `FloorTrapRegistry`.
+
+Ground hazards (fire, poison gas from spells) are a separate, also-implemented system — see `GROUND_HAZARDS.md`. Traps are step-triggered floor features; hazards are lingering area effects.
 
 ---
 

@@ -1,5 +1,7 @@
 # Monsters
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Source:** `config/entities.yaml` → `monsters:` section  
 **Last updated:** 2026-06-08 — added giant_spider on-hit poison + giant_spider/cultist_blademaster ability notes (both `basic` AI, no scripted special). Reflects all 4 waves + special abilities through monster_specials plan.
 

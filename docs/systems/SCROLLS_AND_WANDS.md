@@ -1,5 +1,7 @@
 # Scrolls and Wands
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Source:** `config/entities.yaml` → `scrolls:` and `wands:` sections  
 **Implementation status:** All listed scrolls and wands fully implemented.  
 `scroll_of_raise_dead` / `wand_of_raise_dead` require a corpse within range; effect works when a corpse is present.

@@ -1,5 +1,7 @@
 # Loot and Identification
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Sources:** `config/loot_tags.yaml`, `config/loot_policy.yaml`, `config/entities.yaml` → `floor_item_pool:`, `src/Logic/Content/LootTagRegistry.cs`, `src/Logic/Content/IdentificationRegistry.cs`  
 **Implementation status:** Both systems fully implemented.
 
@@ -140,6 +142,6 @@ Target bands: B1 5–8 items/room (not yet met — early game is intentionally l
 
 ## Deferred Systems
 
-- **Rarity tiers** (common/uncommon/rare/legendary) — stubs in code, not yet active
-- **Pity system for weapons/armour** — PoC had separate pity tracking for gear categories; C# version has healing pity only
-- **Item stacking** — unimplemented; each item is a separate entity even if of the same type
+- **Rarity tiers** (common/uncommon/rare/legendary) — not built. No rarity enum, field, or stub exists in code or config (verified against `src/Logic` and `config/`).
+- **Pity system for weapons/armour** — PoC had separate pity tracking for gear categories; C# version has healing pity only.
+- **Item stacking** — *implemented* for consumables (`Consumable.StackSize`, decrements on use) and ammo (`ItemDefinition.stack_size`). Equipment remains one-entity-per-item by nature. (This "Deferred Systems" entry is retained only to note that general/arbitrary stacking beyond consumables+ammo is not a goal.)

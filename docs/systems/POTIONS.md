@@ -1,5 +1,7 @@
 # Potions
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Source:** `config/entities.yaml` → `consumables:` section  
 **Implementation status:** All potions fully implemented. Throw mechanics live for dual-mode potions.
 

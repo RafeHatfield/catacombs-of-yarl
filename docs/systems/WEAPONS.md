@@ -1,5 +1,7 @@
 # Weapons
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Source:** `config/entities.yaml` → `weapons:` section  
 **Implementation status:** Fully implemented. Enchantment (+1/+1 via Scroll of Enchant Weapon) is live.
 
@@ -7,7 +9,7 @@
 
 ## Weapon Stats
 
-All weapons occupy the `main_hand` slot. Two-hand weapons are not implemented (no slot restriction).
+Most weapons occupy the `main_hand` slot. Two-handed weapons **are** implemented: items flagged `two_handed: true` in `config/entities.yaml` (e.g. shortbow, longbow) clear the off-hand slot when equipped, so bow + shield is not allowed (`src/Logic/Combat/Equippable.cs` → `TwoHanded`).
 
 | Item ID | Name | Damage | To-Hit | Damage Type | Material | Band |
 |---|---|---|---|---|---|---|
