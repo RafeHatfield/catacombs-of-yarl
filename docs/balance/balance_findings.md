@@ -5,6 +5,35 @@ bug to silently fix. Newest first.
 
 ---
 
+## 2026-07-12 — FIND-006 (OPEN): branch `balance/0c-foundation` balance change is on main but UNVERIFIED
+
+The `balance/0c-foundation` work (merged to main at `86b6f10`, then carried forward) changed
+`config/entities.yaml` combat balance: **orc HP 28→40, orc `main_hand` spawn 0.75→1.00 (always armed),
+troll HP 30→48**, plus `threat_archetype` tags (baseline/escalator/spike) across orc variants and troll.
+It was merged on an explicit decision to "leave it on main," **not** because it passed validation.
+
+**Why it's unverified:** the balance acceptance suite (`--suite`, baseline-gated) is the harness
+re-validation for this change, and it could not run:
+- GitHub Actions cannot dispatch on this private repo — every run since 2026-05-22 dies in ~1s with no
+  runner assigned (account Actions minutes / spending-limit exhausted, or Actions disabled). This is an
+  account-billing fix, not a code fix (raise the spending limit, wait for the monthly reset, or make the
+  repo public). Branch A's CI/build fixes are real but don't turn the check green because the job never
+  starts.
+- No local .NET toolchain was available in the session to run the harness offline.
+
+**Risk:** these HP/arming changes very likely move `H_PM` / `Death%` against the committed
+`reports/baselines/balance_suite_baseline.json`. If so, the suite would FAIL — and that unmeasured
+delta is currently sitting on main.
+
+**Decision / next step (do this when CI can dispatch again, or locally):**
+1. Run `dotnet run --project tools/Harness -- --suite --baseline reports/baselines/balance_suite_baseline.json`.
+2. If it FAILs, decide per the usual process whether the new numbers are intended (then re-baseline) or a
+   regression (then revert/adjust). Note this change is entangled with the still-open FIND-005 lethality
+   question below — the orc/troll HP bump pushes *toward* the durable end, opposite the ttk-intent
+   direction FIND-005 flags. Resolve them together, not in isolation.
+
+---
+
 ## 2026-07-06 — FIND-005 (RESOLVES FIND-004): there is no hidden damage reduction — the "10× ttd gap" was a metric-identity error
 
 FIND-004 blocked lethality tuning until a suspected damage-reduction mechanism was located. It was
