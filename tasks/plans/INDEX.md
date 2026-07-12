@@ -1,5 +1,7 @@
 # YARL Implementation Plans — Master Index
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 Generated from deep audit of Python PoC at ~/development/rlike.
 Each plan file captures design intent, key decisions, and PoC reference points.
 Status: [ ] Not started | [~] In progress | [x] Complete
@@ -60,7 +62,7 @@ Status: [ ] Not started | [~] In progress | [x] Complete
 ### Presentation / Art Direction
 | Plan | Status | Description |
 |------|--------|-------------|
-| [plan_tileset_switching.md](plan_tileset_switching.md) | [ ] | Data-driven tileset YAML, UF + 16bf support, boot-time switching, CLI mapping tool |
+| [plan_tileset_switching.md](plan_tileset_switching.md) | [~] | Core switching is **live** (was wrongly marked "not started"): data-driven tileset YAML for UF + 16bf (`config/tilesets/`), boot-time + `--tileset` CLI selection (`config/game_settings.yaml`), depth-based tile themes (`TileTheme.cs`, `DungeonFloorBuilder.AssignTileThemes`). Sprite-mapping tooling under `tools/` (sprite browsers). Full per-deliverable completion not exhaustively verified. |
 | [plan_map_renderer.md](plan_map_renderer.md) | [~] | IMapRenderer interface, iso + top-down 2D modes, config-driven switching (Phase 1 complete) |
 | [PLAN_mobile_layout.md](PLAN_mobile_layout.md) | [x] | Mobile portrait layout: 5-zone UILayer, QuickSlotBar, MenuButtonBar, FloatingHpBars, MessageLogPanel (all 7 phases complete) |
 | [PLAN_topdown_switch.md](PLAN_topdown_switch.md) | [~] | Switch to top-down orthogonal rendering: 16bf 24x24 world tiles, data-driven tile themes, grey dungeon first |
