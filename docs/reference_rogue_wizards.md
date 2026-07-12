@@ -1,5 +1,7 @@
 # Reference: Rogue Wizards
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Status:** Primary visual and UX reference for Catacombs of YARL. The closest existing game to the vision.
 
 Screenshots: `docs/IMG_1444.PNG`, `docs/IMG_1445.PNG`

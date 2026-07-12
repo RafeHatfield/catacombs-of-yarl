@@ -1,5 +1,7 @@
 # Combat Metrics Guide
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 ## Overview
 
 Combat metrics enable data-driven analysis of hit rates, attack pacing, and combat balance via the scenario harness.

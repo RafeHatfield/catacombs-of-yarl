@@ -1,5 +1,7 @@
 # Yarl: Design Principles
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 These principles guide all architectural and gameplay decisions in Yarl.
 
 ---

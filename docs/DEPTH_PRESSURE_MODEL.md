@@ -1,5 +1,7 @@
 # Depth Pressure Model
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 ## Purpose
 
 This document describes the **Formal Pressure Model Derivation Layer** for

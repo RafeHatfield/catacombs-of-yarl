@@ -1,5 +1,7 @@
 # YARL Balance Tuning Cheat Sheet
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 > **For the full operational workflow — commands, drift thresholds, how to diagnose a WARN/FAIL — see [`BALANCE_PIPELINE_PLAYBOOK.md`](BALANCE_PIPELINE_PLAYBOOK.md).**
 
 ## A. Rooms feel too spiky in early game

@@ -1,5 +1,7 @@
 # The Under-Warden — Style Bible
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 *Voice reference for five characters across all authored content. Read this before writing dialogue, diary entries, memos, mural text, catalog entries, or any in-game prose.*
 
 ---

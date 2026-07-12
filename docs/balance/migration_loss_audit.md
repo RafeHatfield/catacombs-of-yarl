@@ -1,5 +1,7 @@
 # PoC → C# Migration-Loss Audit (Triage)
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Date:** 2026-06-08. **Method:** four parallel ground-truth passes (status-effects, AI/movement,
 items/loot/spells, combat/monsters/bosses) comparing the Python PoC (`~/development/rlike`) against the
 current C# codebase. **Purpose:** make the losses KNOWN rather than discovered ad hoc, so a balance pass

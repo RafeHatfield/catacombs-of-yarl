@@ -1,5 +1,7 @@
 # Balance Pipeline Playbook
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 Operational guide for the YARL balance pipeline. Theory lives in `balance_system_overview.md`
 and `combat_metrics_guide.md`. This document is the day-to-day workflow reference.
 

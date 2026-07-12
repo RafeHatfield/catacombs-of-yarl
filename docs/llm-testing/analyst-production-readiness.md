@@ -1,5 +1,7 @@
 # Bot Analysis (the Analyst) - Definition of Production
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Naming note:** in the project docs and CC's numbering this is the ANALYST
 (originally "Thread 2"). To avoid a numbering collision with the rubric (the
 original Thread 1), this doc uses the instrument's NAME, not a number.

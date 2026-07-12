@@ -1,7 +1,11 @@
 # Player Pain Points Analysis - What Players HATE About Roguelikes
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 *Created: October 2025*
 *Purpose: Research-based analysis to avoid common roguelike frustrations*
+
+> **Verification note (2026-07-12):** This is a design/research doc. Of the QoL "Solutions Implemented" below, the following are confirmed in the logic layer at commit 86b6f10: **item stacking** (consumables via `Consumable.StackSize`, ammo via `ItemDefinition.stack_size`), **autopickup** (`TurnController`/`FeatureFactory`), and **no weight limit** (no encumbrance system exists). **Auto-sort inventory** and **quick keys** are not present in the logic layer — they are presentation/input-layer concerns and were not verifiable here (see the reconciliation report's "could-not-verify" list).
 
 ## Research Methodology
 

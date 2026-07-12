@@ -1,5 +1,7 @@
 # B1 Orc-Density Engagement Calibration
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Status: LOCKED 2026-06-11**
 **Companion to:** `threat_archetypes.md §4` (composition-assertion table, rows A)
 

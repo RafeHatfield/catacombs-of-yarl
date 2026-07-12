@@ -1,5 +1,7 @@
 # Shared Transcript Schema
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 The enriched JSONL transcript format consumed by the Analyst and emitted by the
 Player. Bot runs and LLM Player runs both produce this format; the LLM-specific
 fields are null in bot runs and the Analyst handles their absence gracefully.

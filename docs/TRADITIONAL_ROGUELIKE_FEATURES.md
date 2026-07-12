@@ -1,6 +1,10 @@
 # Traditional Roguelike Features - Design Document
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 *Last Updated: October 2025 - Post Boss Fights v3.9.0*
+
+> **Status reconciliation (2026-07-12):** This is an **aspirational design wishlist** with effort estimates and a priority matrix — it describes features to consider, not current implementation status. Since October 2025 several items on this list have shipped and the roadmap framing below is now partly stale. As of commit 86b6f10: **item stacking** (consumables + ammo), **damage-type resistance/vulnerability**, and the **trap system** (9 placed trap types) are **implemented** — do not treat their "future / N weeks" entries here as current. For authoritative current status, always defer to [systems/INDEX.md](systems/INDEX.md). Still not built: amulets, blessed/cursed items, gods, hunger/food, shops, rarity tiers.
 
 ## Executive Summary
 

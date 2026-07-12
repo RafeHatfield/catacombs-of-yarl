@@ -1,5 +1,7 @@
 # Balance Coverage Map — 2026-06-06
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Purpose:** an honest grid of what the harness *measures* vs what the game *ships*, so the balance
 push is disciplined ("measured, not guessed" starts with knowing what isn't measured). Drives the
 build-out plan at the bottom.

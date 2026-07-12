@@ -1,5 +1,7 @@
 # Switch to Top-Down: The Evidence Is Overwhelming
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **For a mobile-first roguelike, standard top-down orthogonal perspective is the clearly superior choice over isometric.** Every measurable dimension — commercial success patterns, player sentiment, mobile usability, development cost, and visual clarity for roguelike gameplay — favors top-down. The isometric perspective that Rogue Wizards uses was not a differentiator for that game, and no top-tier mobile roguelike has ever used isometric successfully. Catacombs of Yarl should switch to top-down orthogonal tiles before investing further in isometric art production.
 
 This recommendation draws from analysis of **30+ roguelike titles**, developer postmortems, player forum discussions across Reddit and Steam, commercial sales data, and mobile UX research. The evidence is remarkably consistent across all dimensions.

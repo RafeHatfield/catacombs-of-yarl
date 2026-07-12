@@ -1,5 +1,7 @@
 # Procedural room generation spec for Catacombs of Yarl
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Every room in a dungeon tells a micro-story.** The difference between a dungeon that feels designed and one that feels random comes down to a single principle: rooms need *purpose*, not just geometry. Research across dozens of shipped roguelikes — Brogue, DCSS, Shattered Pixel Dungeon, Cogmind, Dead Cells, Hades — reveals that the most praised procedural dungeons all use constrained, multi-pass generation where each layer of detail builds on decisions made by the layer above. The spec below encodes these principles into concrete, implementable rules for a mobile-first roguelike using 24×24px tiles on maps of roughly **36×36 to 48×48 tiles**, targeting **6–12 rooms per floor** with generation under 200ms.
 
 Kate Compton (Spore, UC Santa Cruz) framed the core challenge as the "10,000 Bowls of Oatmeal" problem: mathematically unique outputs that players perceive as identical. Perceptual uniqueness — not mathematical uniqueness — is the metric that matters. A library with bookshelves on the walls, a reading table in the center, and a candle on the desk reads as "designed" even when every element was placed algorithmically. A room with the same objects scattered uniformly reads as noise.

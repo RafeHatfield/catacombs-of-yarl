@@ -1,5 +1,7 @@
 # Threat Archetypes & Composition Targets (Step 0b)
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Status:** **LOCKED 2026-06-08** (reviewed and blessed by Rafe). This is the definition of "balanced"
 for the game. Verdicts and the assertion list refine as balance walks the regions; the *shape* is fixed.
 All §7 decisions resolved. Migration-loss triage referenced in §8 lives in `migration_loss_audit.md`.

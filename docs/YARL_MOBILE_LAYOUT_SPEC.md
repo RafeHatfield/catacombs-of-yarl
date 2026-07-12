@@ -1,5 +1,7 @@
 # YARL mobile portrait layout spec
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 This document describes the target UI layout for YARL (Catacombs of Yarl) running in portrait mode on mobile (primarily iPhone). The game is a tap-to-move isometric roguelike. The layout is designed for one-handed play with the thumb naturally resting in the lower third of the screen.
 
 ## Design principles

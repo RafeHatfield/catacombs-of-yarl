@@ -1,5 +1,7 @@
 # Balance Strategy — Catacombs of YARL
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Status:** DRAFT for Rafe's review. No tuning happens until this is reviewed and aligned.
 **Date:** 2026-06-08
 **Purpose:** restore the strategic seat. After reading this you should know what *balanced* means for

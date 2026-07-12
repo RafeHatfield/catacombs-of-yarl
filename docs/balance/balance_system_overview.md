@@ -1,5 +1,7 @@
 # Balance System Overview
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 This document describes the combat and loot balancing systems in Catacombs of YARL. It covers the Effective Threat Points (ETP) encounter budgeting, banded loot distribution, and the pity system that prevents bad-luck streaks.
 
 ## Overview

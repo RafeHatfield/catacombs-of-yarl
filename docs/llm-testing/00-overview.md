@@ -1,5 +1,7 @@
 # LLM Testing System — Overview
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Status:** Both plans locked. **Analyst Phases 0–2 + 4 COMPLETE** (2026-06-09): transcript
 enrichment, Phase-1 cross-check, BugDetector (predicate mechanism) + single-run report, and the
 **batch pipeline (BatchAnalyzer + AggregateReport + findings.md)**. All four RUNNABLE-NOW

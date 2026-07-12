@@ -1,5 +1,7 @@
 # Player Progression Doctrine — Depth Boons
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 ## Status: Design Specification (No Implementation)
 
 This document defines the player progression model for Catacombs of YARL.

@@ -1,5 +1,7 @@
 # Isometric Tileset Research
 
+_Last verified: 2026-07-12 against commit 86b6f10_
+
 **Date:** 2026-03-30  
 **Aesthetic target:** Rogue Wizards — alive, vibrant, readable on mobile  
 **Baseline:** Oryx Iso Dungeon (already licensed). Everything below is rated relative to beating it.
