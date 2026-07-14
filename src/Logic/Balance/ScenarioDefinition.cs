@@ -67,7 +67,7 @@ public sealed class ScenarioDefinition
     /// <summary>
     /// When true, this scenario is an affix/gear probe — designed to isolate weapon advantage,
     /// not to hit a death rate target. Probes are reported as PROBE (not PASS/FAIL) in the
-    /// harness table and excluded from the pass/fail count. H_PM/H_MP are still checked.
+    /// harness table and excluded from the pass/fail count. RoundsToKill/RoundsToDie are still checked.
     /// </summary>
     [YamlMember(Alias = "is_probe")]
     public bool IsProbe { get; set; } = false;

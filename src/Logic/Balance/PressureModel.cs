@@ -27,17 +27,17 @@ public sealed class PressureMetrics
     /// <summary>Monster damage per round.</summary>
     public double DPR_M { get; init; }
 
-    /// <summary>Player hits to kill one monster. Higher = monsters are tankier.</summary>
-    public double H_PM { get; init; }
+    /// <summary>Player rounds (turns) to kill one monster. Higher = monsters are tankier.</summary>
+    public double RoundsToKill { get; init; }
 
-    /// <summary>Monster hits to kill the player. Lower = more dangerous.</summary>
-    public double H_MP { get; init; }
+    /// <summary>Monster rounds (turns) to kill the player. Lower = more dangerous.</summary>
+    public double RoundsToDie { get; init; }
 
     /// <summary>Average damage taken per monster killed.</summary>
     public double DmgPerEncounter { get; init; }
 
-    /// <summary>Ratio H_PM / H_MP. Attrition > 0.6, balanced 0.3-0.6, spike < 0.3.</summary>
-    public double PressureRatio => H_MP > 0 ? H_PM / H_MP : 0;
+    /// <summary>Ratio RoundsToKill / RoundsToDie. Attrition > 0.6, balanced 0.3-0.6, spike < 0.3.</summary>
+    public double PressureRatio => RoundsToDie > 0 ? RoundsToKill / RoundsToDie : 0;
 
     public double DeathRate { get; init; }
 }
@@ -51,24 +51,24 @@ public sealed class PressureEvaluation
     public int Depth { get; init; }
     public PressureMetrics Metrics { get; init; } = null!;
 
-    public string H_PM_Status { get; init; } = "";
-    public string H_MP_Status { get; init; } = "";
+    public string RoundsToKill_Status { get; init; } = "";
+    public string RoundsToDie_Status { get; init; } = "";
     public string DeathRate_Status { get; init; } = "";
 
-    public TargetBand H_PM_Target { get; init; }
-    public TargetBand H_MP_Target { get; init; }
+    public TargetBand RoundsToKill_Target { get; init; }
+    public TargetBand RoundsToDie_Target { get; init; }
     public TargetBand DeathRate_Target { get; init; }
 
     /// <summary>True if all three metrics are within target bands.</summary>
-    public bool AllInBand => H_PM_Status == "OK" && H_MP_Status == "OK" && DeathRate_Status == "OK";
+    public bool AllInBand => RoundsToKill_Status == "OK" && RoundsToDie_Status == "OK" && DeathRate_Status == "OK";
 }
 
 /// <summary>
 /// Computes pressure model invariants from aggregated harness metrics.
 /// Pure math — no state, no IO.
 ///
-/// H_PM = avg monster HP / DPR_P  (how many rounds to kill one monster)
-/// H_MP = player max HP / DPR_M   (how many rounds for monsters to kill player)
+/// RoundsToKill = avg monster HP / DPR_P  (how many rounds to kill one monster)
+/// RoundsToDie  = player max HP / DPR_M   (how many rounds for monsters to kill player)
 /// DPR_P = avg player damage per turn spent attacking
 /// DPR_M = avg monster damage per turn
 /// </summary>
@@ -79,7 +79,7 @@ public static class PressureModel
     // Depth 1: [6-8], depth 2: [7-9]   → band 0: [6-9]
     // Depth 3: [8-10], depth 4: [9-11] → band 1: [8-11]
     // Depth 5: [9-12], depth 6: [10-13]→ band 2: [9-13]
-    private static readonly TargetBand[] H_PM_Targets =
+    private static readonly TargetBand[] RoundsToKill_Targets =
     [
         new(6.0, 9.0),    // depth 1-2
         new(8.0, 11.0),   // depth 3-4
@@ -91,7 +91,7 @@ public static class PressureModel
     // Depth 1: [20-24], depth 2: [20-24] → band 0: [20-24]
     // Depth 3: [20-23], depth 4: [18-22] → band 1: [18-23]
     // Depth 5: [17-21], depth 6: [16-20] → band 2: [16-21]
-    private static readonly TargetBand[] H_MP_Targets =
+    private static readonly TargetBand[] RoundsToDie_Targets =
     [
         new(20.0, 24.0),  // depth 1-2
         new(18.0, 23.0),  // depth 3-4
@@ -115,22 +115,22 @@ public static class PressureModel
 
     // Provisional C# bands — empirically calibrated from harness runs on well-tuned scenarios.
     //
-    // C# H_PM is LOWER than PoC theory because player DPR is slightly higher per turn
+    // C# RoundsToKill is LOWER than PoC theory because player DPR is slightly higher per turn
     // (bot always attacks, no turn waste from item-seeking diversion).
     //
-    // C# H_MP is HIGHER than PoC theory because PoC monsters have a two-phase hit system
+    // C# RoundsToDie is HIGHER than PoC theory because PoC monsters have a two-phase hit system
     // (flat pre-check 75% × d20 hit = ~18-19% effective), whereas C# uses pure d20 (~35%).
     // Despite C# monsters hitting more often, DPR_M is diluted by travel/approach turns,
-    // so H_MP remains high. Zombie scenarios inflate H_MP further (travel between spread
+    // so RoundsToDie remains high. Zombie scenarios inflate RoundsToDie further (travel between spread
     // monsters dominates turn count, reducing DPR_M toward zero).
     //
     // Empirical baseline from well-calibrated scenarios (post Phase-0 SHA-256 reseed at seed=1337):
-    //   depth1_tuned (0% death):    H_PM=9.1,  H_MP=34.1
-    //   depth2_baseline (0%):       H_PM=8.2,  H_MP=37.2
-    //   depth3_orc_brutal (18%):    H_PM=8.1,  H_MP=32.7
-    //   depth4_tuned (8%):          H_PM=7.3,  H_MP=43.9
-    //   depth6_tuned (38%):         H_PM=6.3,  H_MP=38.4
-    private static readonly TargetBand[] Provisional_H_PM =
+    //   depth1_tuned (0% death):    RoundsToKill=9.1,  RoundsToDie=34.1
+    //   depth2_baseline (0%):       RoundsToKill=8.2,  RoundsToDie=37.2
+    //   depth3_orc_brutal (18%):    RoundsToKill=8.1,  RoundsToDie=32.7
+    //   depth4_tuned (8%):          RoundsToKill=7.3,  RoundsToDie=43.9
+    //   depth6_tuned (38%):         RoundsToKill=6.3,  RoundsToDie=38.4
+    private static readonly TargetBand[] Provisional_RoundsToKill =
     [
         new(5.0, 10.0),   // depth 1-2: observed 7.7-7.8 baseline; 5.5-5.8 for fine/masterwork probes
         new(6.0, 12.0),   // depth 3-4: observed 6.9-9.5; wider band covers gear variance
@@ -139,7 +139,7 @@ public static class PressureModel
         new(8.0, 26.0),   // depth 9+: extrapolated
     ];
 
-    private static readonly TargetBand[] Provisional_H_MP =
+    private static readonly TargetBand[] Provisional_RoundsToDie =
     [
         new(32.0, 55.0),  // depth 1-2: observed 37-49 across all orc scenarios
         new(28.0, 52.0),  // depth 3-4: observed 35-43 (orc); zombie scenarios will inflate
@@ -157,21 +157,21 @@ public static class PressureModel
         new(0.40, 0.70),  // depth 9+: extrapolated
     ];
 
-    /// <summary>Get prototype H_PM target band for a depth.</summary>
-    public static TargetBand GetH_PM_Target(int depth) =>
-        H_PM_Targets[Math.Clamp(DepthScaling.GetBand(depth), 0, H_PM_Targets.Length - 1)];
+    /// <summary>Get prototype RoundsToKill target band for a depth.</summary>
+    public static TargetBand GetRoundsToKillTarget(int depth) =>
+        RoundsToKill_Targets[Math.Clamp(DepthScaling.GetBand(depth), 0, RoundsToKill_Targets.Length - 1)];
 
-    /// <summary>Get prototype H_MP target band for a depth.</summary>
-    public static TargetBand GetH_MP_Target(int depth) =>
-        H_MP_Targets[Math.Clamp(DepthScaling.GetBand(depth), 0, H_MP_Targets.Length - 1)];
+    /// <summary>Get prototype RoundsToDie target band for a depth.</summary>
+    public static TargetBand GetRoundsToDieTarget(int depth) =>
+        RoundsToDie_Targets[Math.Clamp(DepthScaling.GetBand(depth), 0, RoundsToDie_Targets.Length - 1)];
 
-    /// <summary>Get provisional C# H_PM target band for a depth.</summary>
-    public static TargetBand GetProvisionalH_PM(int depth) =>
-        Provisional_H_PM[Math.Clamp(DepthScaling.GetBand(depth), 0, Provisional_H_PM.Length - 1)];
+    /// <summary>Get provisional C# RoundsToKill target band for a depth.</summary>
+    public static TargetBand GetProvisionalRoundsToKill(int depth) =>
+        Provisional_RoundsToKill[Math.Clamp(DepthScaling.GetBand(depth), 0, Provisional_RoundsToKill.Length - 1)];
 
-    /// <summary>Get provisional C# H_MP target band for a depth.</summary>
-    public static TargetBand GetProvisionalH_MP(int depth) =>
-        Provisional_H_MP[Math.Clamp(DepthScaling.GetBand(depth), 0, Provisional_H_MP.Length - 1)];
+    /// <summary>Get provisional C# RoundsToDie target band for a depth.</summary>
+    public static TargetBand GetProvisionalRoundsToDie(int depth) =>
+        Provisional_RoundsToDie[Math.Clamp(DepthScaling.GetBand(depth), 0, Provisional_RoundsToDie.Length - 1)];
 
     /// <summary>Get provisional C# death rate target band for a depth.</summary>
     public static TargetBand GetProvisionalDeathRate(int depth) =>
@@ -180,8 +180,8 @@ public static class PressureModel
     /// <summary>Evaluate against provisional C# bands (current combat system).</summary>
     public static PressureEvaluation EvaluateProvisional(PressureMetrics pm)
     {
-        var hpmBand = GetProvisionalH_PM(pm.Depth);
-        var hmpBand = GetProvisionalH_MP(pm.Depth);
+        var rtkBand = GetProvisionalRoundsToKill(pm.Depth);
+        var rtdBand = GetProvisionalRoundsToDie(pm.Depth);
         var deathBand = GetProvisionalDeathRate(pm.Depth);
 
         return new PressureEvaluation
@@ -189,11 +189,11 @@ public static class PressureModel
             ScenarioId = pm.ScenarioId,
             Depth = pm.Depth,
             Metrics = pm,
-            H_PM_Status = hpmBand.Status(pm.H_PM),
-            H_MP_Status = hmpBand.Status(pm.H_MP),
+            RoundsToKill_Status = rtkBand.Status(pm.RoundsToKill),
+            RoundsToDie_Status = rtdBand.Status(pm.RoundsToDie),
             DeathRate_Status = deathBand.Status(pm.DeathRate),
-            H_PM_Target = hpmBand,
-            H_MP_Target = hmpBand,
+            RoundsToKill_Target = rtkBand,
+            RoundsToDie_Target = rtdBand,
             DeathRate_Target = deathBand,
         };
     }
@@ -207,8 +207,8 @@ public static class PressureModel
     /// </summary>
     public static PressureEvaluation Evaluate(PressureMetrics pm)
     {
-        var hpmBand = GetH_PM_Target(pm.Depth);
-        var hmpBand = GetH_MP_Target(pm.Depth);
+        var rtkBand = GetRoundsToKillTarget(pm.Depth);
+        var rtdBand = GetRoundsToDieTarget(pm.Depth);
         var deathBand = GetDeathRateTarget(pm.Depth);
 
         return new PressureEvaluation
@@ -216,11 +216,11 @@ public static class PressureModel
             ScenarioId = pm.ScenarioId,
             Depth = pm.Depth,
             Metrics = pm,
-            H_PM_Status = hpmBand.Status(pm.H_PM),
-            H_MP_Status = hmpBand.Status(pm.H_MP),
+            RoundsToKill_Status = rtkBand.Status(pm.RoundsToKill),
+            RoundsToDie_Status = rtdBand.Status(pm.RoundsToDie),
             DeathRate_Status = deathBand.Status(pm.DeathRate),
-            H_PM_Target = hpmBand,
-            H_MP_Target = hmpBand,
+            RoundsToKill_Target = rtkBand,
+            RoundsToDie_Target = rtdBand,
             DeathRate_Target = deathBand,
         };
     }
@@ -233,18 +233,18 @@ public static class PressureModel
         var findings = new List<string>();
         var pm = eval.Metrics;
 
-        if (eval.H_PM_Status == "HIGH")
-            findings.Add($"H_PM {pm.H_PM:F1} above target {eval.H_PM_Target.Max} — player kills too slowly. Needs higher DPR_P (currently {pm.DPR_P:F2}). Levers: better weapon, affixes, momentum.");
-        else if (eval.H_PM_Status == "LOW")
-            findings.Add($"H_PM {pm.H_PM:F1} below target {eval.H_PM_Target.Min} — monsters die too fast. Player DPR_P ({pm.DPR_P:F2}) may be too high, or monster HP too low.");
+        if (eval.RoundsToKill_Status == "HIGH")
+            findings.Add($"RoundsToKill {pm.RoundsToKill:F1} above target {eval.RoundsToKill_Target.Max} — player kills too slowly. Needs higher DPR_P (currently {pm.DPR_P:F2}). Levers: better weapon, affixes, momentum.");
+        else if (eval.RoundsToKill_Status == "LOW")
+            findings.Add($"RoundsToKill {pm.RoundsToKill:F1} below target {eval.RoundsToKill_Target.Min} — monsters die too fast. Player DPR_P ({pm.DPR_P:F2}) may be too high, or monster HP too low.");
 
-        if (eval.H_MP_Status == "HIGH")
-            findings.Add($"H_MP {pm.H_MP:F1} above target {eval.H_MP_Target.Max} — monsters not threatening enough. Monster DPR_M ({pm.DPR_M:F2}) too low. Levers: monster damage/accuracy scaling, encounter composition.");
-        else if (eval.H_MP_Status == "LOW")
-            findings.Add($"H_MP {pm.H_MP:F1} below target {eval.H_MP_Target.Min} — monsters too lethal. Reduce monster damage/accuracy at this depth.");
+        if (eval.RoundsToDie_Status == "HIGH")
+            findings.Add($"RoundsToDie {pm.RoundsToDie:F1} above target {eval.RoundsToDie_Target.Max} — monsters not threatening enough. Monster DPR_M ({pm.DPR_M:F2}) too low. Levers: monster damage/accuracy scaling, encounter composition.");
+        else if (eval.RoundsToDie_Status == "LOW")
+            findings.Add($"RoundsToDie {pm.RoundsToDie:F1} below target {eval.RoundsToDie_Target.Min} — monsters too lethal. Reduce monster damage/accuracy at this depth.");
 
         if (eval.DeathRate_Status == "HIGH")
-            findings.Add($"Death rate {pm.DeathRate:P0} above target {eval.DeathRate_Target.Max:P0}. If H_PM/H_MP are in band, this is a composition problem (too many simultaneous enemies), not a scaling problem.");
+            findings.Add($"Death rate {pm.DeathRate:P0} above target {eval.DeathRate_Target.Max:P0}. If RoundsToKill/RoundsToDie are in band, this is a composition problem (too many simultaneous enemies), not a scaling problem.");
         else if (eval.DeathRate_Status == "LOW")
             findings.Add($"Death rate {pm.DeathRate:P0} below target {eval.DeathRate_Target.Min:P0}. Encounter may be too easy — consider more enemies or fewer potions.");
 
@@ -275,11 +275,11 @@ public static class PressureModel
         double dprP = agg.AvgTurns > 0 ? agg.AvgPlayerDamageDealt / agg.AvgTurns : 0;
         double dprM = agg.AvgTurns > 0 ? agg.AvgMonsterDamageDealt / agg.AvgTurns : 0;
 
-        // H_PM = monster HP / player DPR (rounds to kill one monster)
-        double hPM = dprP > 0 ? avgMonsterHp / dprP : 0;
+        // RoundsToKill = monster HP / player DPR (rounds to kill one monster)
+        double roundsToKill = dprP > 0 ? avgMonsterHp / dprP : 0;
 
-        // H_MP = player HP / monster DPR (rounds for monsters to kill player)
-        double hMP = dprM > 0 ? playerMaxHp / dprM : 0;
+        // RoundsToDie = player HP / monster DPR (rounds for monsters to kill player)
+        double roundsToDie = dprM > 0 ? playerMaxHp / dprM : 0;
 
         // Damage per encounter = avg monster damage / avg kills
         double dmgPerEnc = agg.AvgMonstersKilled > 0
@@ -292,8 +292,8 @@ public static class PressureModel
             Depth = depth,
             DPR_P = dprP,
             DPR_M = dprM,
-            H_PM = hPM,
-            H_MP = hMP,
+            RoundsToKill = roundsToKill,
+            RoundsToDie = roundsToDie,
             DmgPerEncounter = dmgPerEnc,
             DeathRate = agg.DeathRate,
         };

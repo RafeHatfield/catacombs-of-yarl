@@ -16,8 +16,8 @@ public static class DepthPressureReport
     public sealed record DepthCurvePoint(
         int Depth,
         string ScenarioId,
-        double H_PM,
-        double H_MP,
+        double RoundsToKill,
+        double RoundsToDie,
         double DPR_P,
         double DPR_M,
         double PlayerHitRate,
@@ -49,8 +49,8 @@ public static class DepthPressureReport
         return new DepthCurvePoint(
             Depth:           m.Depth,
             ScenarioId:      m.ScenarioId,
-            H_PM:            pm.H_PM,
-            H_MP:            pm.H_MP,
+            RoundsToKill:            pm.RoundsToKill,
+            RoundsToDie:            pm.RoundsToDie,
             DPR_P:           pm.DPR_P,
             DPR_M:           pm.DPR_M,
             PlayerHitRate:   m.PlayerHitRate,
@@ -63,7 +63,7 @@ public static class DepthPressureReport
     // ── Format: Pressure Table ─────────────────────────────────────────────
 
     /// <summary>
-    /// ASCII table of observed H_PM/H_MP/DPR/death_rate per depth.
+    /// ASCII table of observed RoundsToKill/RoundsToDie/DPR/death_rate per depth.
     /// Ports format_pressure_table() from depth_pressure_model.py:571-600.
     /// </summary>
     public static string FormatPressureTable(IEnumerable<DepthCurvePoint> curve)
@@ -74,7 +74,7 @@ public static class DepthPressureReport
         sb.AppendLine("OBSERVED DEPTH PRESSURE CURVE");
         sb.AppendLine(new string('=', 110));
         sb.AppendLine(
-            $"{"Depth",5}  {"Scenario",-35}  {"H_PM",6}  {"H_MP",6}  " +
+            $"{"Depth",5}  {"Scenario",-35}  {"RoundsToKill",6}  {"RoundsToDie",6}  " +
             $"{"DPR_P",6}  {"DPR_M",6}  {"P(hit_P)",8}  {"P(hit_M)",8}  " +
             $"{"DMG/Enc",8}  {"T/Kill",6}  {"Death%",6}");
         sb.AppendLine(new string('-', 110));
@@ -83,7 +83,7 @@ public static class DepthPressureReport
         {
             sb.AppendLine(
                 $"{p.Depth,5}  {p.ScenarioId,-35}  " +
-                $"{p.H_PM,6:F2}  {p.H_MP,6:F2}  " +
+                $"{p.RoundsToKill,6:F2}  {p.RoundsToDie,6:F2}  " +
                 $"{p.DPR_P,6:F2}  {p.DPR_M,6:F2}  " +
                 $"{p.PlayerHitRate,7:P1}  {p.MonsterHitRate,7:P1}  " +
                 $"{p.DmgPerEncounter,8:F1}  {p.TurnsPerKill,6:F1}  " +
@@ -112,8 +112,8 @@ public static class DepthPressureReport
         sb.AppendLine(
             $"{"Depth",5}  {"Feel",-22}  " +
             $"{"Death%",6}  {"Target",11}  {"St",4}  " +
-            $"{"H_PM",6}  {"Target",9}  {"St",4}  " +
-            $"{"H_MP",6}  {"Target",9}  {"St",4}");
+            $"{"RoundsToKill",6}  {"Target",9}  {"St",4}  " +
+            $"{"RoundsToDie",6}  {"Target",9}  {"St",4}");
         sb.AppendLine(new string('-', 120));
 
         var allDiagnoses = new List<string>();
@@ -124,8 +124,8 @@ public static class DepthPressureReport
             {
                 ScenarioId    = p.ScenarioId,
                 Depth         = p.Depth,
-                H_PM          = p.H_PM,
-                H_MP          = p.H_MP,
+                RoundsToKill          = p.RoundsToKill,
+                RoundsToDie          = p.RoundsToDie,
                 DPR_P         = p.DPR_P,
                 DPR_M         = p.DPR_M,
                 DmgPerEncounter = p.DmgPerEncounter,
@@ -139,12 +139,12 @@ public static class DepthPressureReport
                 $"{p.DeathRate,5:P0}  " +
                 $"{eval.DeathRate_Target.Min,4:P0}–{eval.DeathRate_Target.Max,-4:P0}  " +
                 $"{eval.DeathRate_Status,4}  " +
-                $"{p.H_PM,6:F2}  " +
-                $"{eval.H_PM_Target.Min,3:F0}–{eval.H_PM_Target.Max,-3:F0}  " +
-                $"{eval.H_PM_Status,4}  " +
-                $"{p.H_MP,6:F2}  " +
-                $"{eval.H_MP_Target.Min,3:F0}–{eval.H_MP_Target.Max,-3:F0}  " +
-                $"{eval.H_MP_Status,4}");
+                $"{p.RoundsToKill,6:F2}  " +
+                $"{eval.RoundsToKill_Target.Min,3:F0}–{eval.RoundsToKill_Target.Max,-3:F0}  " +
+                $"{eval.RoundsToKill_Status,4}  " +
+                $"{p.RoundsToDie,6:F2}  " +
+                $"{eval.RoundsToDie_Target.Min,3:F0}–{eval.RoundsToDie_Target.Max,-3:F0}  " +
+                $"{eval.RoundsToDie_Status,4}");
 
             var diags = PressureModel.Diagnose(eval);
             if (diags.Count > 0 && !(diags.Count == 1 && diags[0] == "All metrics within target bands."))
@@ -183,7 +183,7 @@ public static class DepthPressureReport
         sb.AppendLine("DERIVED DAMAGE MULTIPLIER RECOMMENDATIONS (NOT APPLIED)");
         sb.AppendLine(new string('=', 95));
         sb.AppendLine(
-            $"{"Depth",5}  {"Obs H_MP",8}  {"Tgt H_MP",8}  " +
+            $"{"Depth",5}  {"Obs RoundsToDie",8}  {"Tgt RoundsToDie",8}  " +
             $"{"Obs DPR_M",9}  {"Req DPR_M",9}  " +
             $"{"Obs DMG",7}  {"Req DMG",7}  {"Mult",6}  {"Adj?",4}");
         sb.AppendLine(new string('-', 95));
@@ -204,32 +204,32 @@ public static class DepthPressureReport
     }
 
     /// <summary>
-    /// Derive the damage multiplier needed to bring H_MP into target range.
+    /// Derive the damage multiplier needed to bring RoundsToDie into target range.
     /// Ports derive_required_damage_multiplier() from depth_pressure_model.py:458-564.
     ///
     /// Math:
-    ///   H_MP = player_hp / DPR_M
-    ///   To hit target_H_MP: required_DPR_M = player_hp / target_midpoint
+    ///   RoundsToDie = player_hp / DPR_M
+    ///   To hit target_RoundsToDie: required_DPR_M = player_hp / target_midpoint
     ///   required_avg_dmg = required_DPR_M / monster_hit_rate
     ///   multiplier = required_avg_dmg / observed_avg_dmg
     /// </summary>
     public static MultiplierRecommendation DeriveMultiplierRecommendation(DepthCurvePoint p)
     {
-        var hmpBand = PressureModel.GetProvisionalH_MP(p.Depth);
+        var hmpBand = PressureModel.GetProvisionalRoundsToDie(p.Depth);
         double targetMidpoint = (hmpBand.Min + hmpBand.Max) / 2.0;
 
-        // Reconstruct player HP from H_MP × DPR_M (PoC: player_hp = h_mp * dpr_m)
-        double playerHp = p.H_MP * p.DPR_M;
+        // Reconstruct player HP from RoundsToDie × DPR_M (PoC: player_hp = h_mp * dpr_m)
+        double playerHp = p.RoundsToDie * p.DPR_M;
         if (playerHp <= 0) playerHp = 54.0; // PoC fallback
 
         double observedAvgDmg = p.MonsterHitRate > 0 ? p.DPR_M / p.MonsterHitRate : 0;
 
         // In range → multiplier = 1.0
-        if (hmpBand.Contains(p.H_MP))
+        if (hmpBand.Contains(p.RoundsToDie))
         {
             return new MultiplierRecommendation(
                 Depth:                         p.Depth,
-                ObservedHmp:                   p.H_MP,
+                ObservedHmp:                   p.RoundsToDie,
                 TargetMidpoint:                targetMidpoint,
                 ObservedMonsterDpr:            p.DPR_M,
                 RequiredMonsterDpr:            p.DPR_M,
@@ -246,7 +246,7 @@ public static class DepthPressureReport
 
         return new MultiplierRecommendation(
             Depth:                         p.Depth,
-            ObservedHmp:                   p.H_MP,
+            ObservedHmp:                   p.RoundsToDie,
             TargetMidpoint:                targetMidpoint,
             ObservedMonsterDpr:            p.DPR_M,
             RequiredMonsterDpr:            requiredDprM,
@@ -263,10 +263,10 @@ public static class DepthPressureReport
     /// Ports format_scaling_diagnosis() from depth_pressure_model.py:717-807.
     ///
     /// Categories (first→last depth deltas):
-    ///   H_PM Δ > +0.5 AND H_MP Δ in (-1.0, +1.0) → HP-HEAVY SCALING
-    ///   H_PM Δ > +0.5 AND H_MP Δ < -1.0           → BALANCED SCALING
-    ///   H_PM Δ < +0.3 AND H_MP Δ < -1.5           → SPIKE LETHALITY
-    ///   H_PM Δ ≈0     AND H_MP Δ ≈0               → FLAT SCALING
+    ///   RoundsToKill Δ > +0.5 AND RoundsToDie Δ in (-1.0, +1.0) → HP-HEAVY SCALING
+    ///   RoundsToKill Δ > +0.5 AND RoundsToDie Δ < -1.0           → BALANCED SCALING
+    ///   RoundsToKill Δ < +0.3 AND RoundsToDie Δ < -1.5           → SPIKE LETHALITY
+    ///   RoundsToKill Δ ≈0     AND RoundsToDie Δ ≈0               → FLAT SCALING
     ///   Otherwise                                   → MIXED SIGNALS
     /// </summary>
     public static string FormatScalingDiagnosis(IEnumerable<DepthCurvePoint> curve)
@@ -287,16 +287,16 @@ public static class DepthPressureReport
         var first = sorted.First();
         var last  = sorted.Last();
 
-        double hPmDelta  = last.H_PM   - first.H_PM;
-        double hMpDelta  = last.H_MP   - first.H_MP;
+        double hPmDelta  = last.RoundsToKill   - first.RoundsToKill;
+        double hMpDelta  = last.RoundsToDie   - first.RoundsToDie;
         double dprPDelta = last.DPR_P  - first.DPR_P;
         double dprMDelta = last.DPR_M  - first.DPR_M;
 
         sb.AppendLine($"Depth range analyzed: {first.Depth} → {last.Depth}");
         sb.AppendLine();
         sb.AppendLine($"Trend Analysis (depth {first.Depth} → {last.Depth}):");
-        sb.AppendLine($"  H_PM (player hits-to-kill):   {first.H_PM:F2} → {last.H_PM:F2}  (Δ = {hPmDelta:+.2f})");
-        sb.AppendLine($"  H_MP (monster hits-to-kill):  {first.H_MP:F2} → {last.H_MP:F2}  (Δ = {hMpDelta:+.2f})");
+        sb.AppendLine($"  RoundsToKill (player rounds-to-kill):   {first.RoundsToKill:F2} → {last.RoundsToKill:F2}  (Δ = {hPmDelta:+.2f})");
+        sb.AppendLine($"  RoundsToDie (monster rounds-to-die):  {first.RoundsToDie:F2} → {last.RoundsToDie:F2}  (Δ = {hMpDelta:+.2f})");
         sb.AppendLine($"  DPR_P (player DPR):           {first.DPR_P:F2} → {last.DPR_P:F2}  (Δ = {dprPDelta:+.2f})");
         sb.AppendLine($"  DPR_M (monster DPR):          {first.DPR_M:F2} → {last.DPR_M:F2}  (Δ = {dprMDelta:+.2f})");
         sb.AppendLine();
@@ -306,15 +306,15 @@ public static class DepthPressureReport
         if (hPmDelta > 0.5 && Math.Abs(hMpDelta) < 1.0)
         {
             diagnosis   = "HP-HEAVY SCALING";
-            explanation = "Monsters take more hits to kill at deeper depths (H_PM rising),\n" +
-                          "  but monster lethality is flat (H_MP stable). This creates ATTRITION:\n" +
+            explanation = "Monsters take more hits to kill at deeper depths (RoundsToKill rising),\n" +
+                          "  but monster lethality is flat (RoundsToDie stable). This creates ATTRITION:\n" +
                           "  fights are longer, not deadlier. Player dies from resource exhaustion\n" +
                           "  rather than tactical failure. Damage scaling needs to increase.";
         }
         else if (hPmDelta > 0.5 && hMpDelta < -1.0)
         {
             diagnosis   = "BALANCED SCALING";
-            explanation = "Both H_PM (fight duration) and H_MP (survival budget) are moving\n" +
+            explanation = "Both RoundsToKill (fight duration) and RoundsToDie (survival budget) are moving\n" +
                           "  in the expected directions. Monsters are getting tougher AND deadlier.";
         }
         else if (hPmDelta < 0.3 && hMpDelta < -1.5)
@@ -344,9 +344,9 @@ public static class DepthPressureReport
         sb.AppendLine("Attrition vs Lethality Indicator:");
         foreach (var p in sorted)
         {
-            double ratio     = p.H_MP > 0 ? p.H_PM / p.H_MP : 0;
+            double ratio     = p.RoundsToDie > 0 ? p.RoundsToKill / p.RoundsToDie : 0;
             string indicator = ratio > 0.6 ? "ATTRITION" : (ratio < 0.3 ? "LETHAL" : "BALANCED");
-            sb.AppendLine($"  Depth {p.Depth}: H_PM/H_MP = {ratio:F3}  → {indicator}");
+            sb.AppendLine($"  Depth {p.Depth}: RoundsToKill/RoundsToDie = {ratio:F3}  → {indicator}");
         }
 
         sb.Append(new string('=', 70));

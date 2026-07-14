@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CatacombsOfYarl.Logic.Core;
 
 namespace CatacombsOfYarl.Logic.Balance;
@@ -56,7 +57,7 @@ public sealed class RunMetrics
     // Momentum
     public int BonusAttacks { get; set; }
 
-    // Captured at run start for H_PM / H_MP calculations
+    // Captured at run start for hits-based (TtkHits/TtdHits) and rounds-based metric calculations
     public int PlayerMaxHp { get; set; }
     public double MonsterAvgMaxHp { get; set; }
 
@@ -202,17 +203,21 @@ public sealed class AggregatedMetrics
     public double AvgMonsterDamageDealt { get; init; }
     public double AvgMonstersKilled { get; init; }
 
-    /// <summary>Average player max HP across all runs (used for DPR-based H_MP).</summary>
+    /// <summary>Average player max HP across all runs (used for DPR-based RoundsToDie).</summary>
     public double AvgPlayerMaxHp { get; init; }
 
-    /// <summary>Average monster max HP per scenario run (used for DPR-based H_PM).</summary>
+    /// <summary>Average monster max HP per scenario run (used for DPR-based RoundsToKill).</summary>
     public double AvgMonsterMaxHp { get; init; }
 
-    /// <summary>H_PM (hits-based): avg monster HP / avg player damage per hit.</summary>
-    public double H_PM { get; init; }
+    /// <summary>TtkHits (hits-based): avg monster HP / avg player damage per hit.</summary>
+    /// <remarks>On-disk JSON key kept as "h_pm" for baseline/report round-trip stability (FIND-005 rename).</remarks>
+    [JsonPropertyName("h_pm")]
+    public double TtkHits { get; init; }
 
-    /// <summary>H_MP (hits-based): avg player HP / avg monster damage per hit.</summary>
-    public double H_MP { get; init; }
+    /// <summary>TtdHits (hits-based): avg player HP / avg monster damage per hit.</summary>
+    /// <remarks>On-disk JSON key kept as "h_mp" for baseline/report round-trip stability (FIND-005 rename).</remarks>
+    [JsonPropertyName("h_mp")]
+    public double TtdHits { get; init; }
 
     /// <summary>Average bonus attacks per run (player + monster combined).</summary>
     public double AvgBonusAttacks { get; init; }
@@ -294,11 +299,11 @@ public sealed class AggregatedMetrics
         double avgMonsterMaxHp = runs.Average(r => r.MonsterAvgMaxHp);
         double avgPlayerMaxHp  = runs.Average(r => (double)r.PlayerMaxHp);
 
-        // Hits-based H_PM/H_MP — useful for "how hard is each swing" analysis
-        double h_pm = totalPlayerHits > 0 && totalPlayerDamage > 0
+        // Hits-based TtkHits/TtdHits — useful for "how hard is each swing" analysis
+        double ttkHits = totalPlayerHits > 0 && totalPlayerDamage > 0
             ? avgMonsterMaxHp / ((double)totalPlayerDamage / totalPlayerHits)
             : 0;
-        double h_mp = totalMonsterHits > 0 && totalMonsterDamage > 0
+        double ttdHits = totalMonsterHits > 0 && totalMonsterDamage > 0
             ? avgPlayerMaxHp / ((double)totalMonsterDamage / totalMonsterHits)
             : 0;
 
@@ -319,8 +324,8 @@ public sealed class AggregatedMetrics
             AvgMonstersKilled     = runs.Average(r => r.MonstersKilled),
             AvgPlayerMaxHp        = avgPlayerMaxHp,
             AvgMonsterMaxHp       = avgMonsterMaxHp,
-            H_PM                  = h_pm,
-            H_MP                  = h_mp,
+            TtkHits               = ttkHits,
+            TtdHits               = ttdHits,
             AvgBonusAttacks          = runs.Average(r => r.BonusAttacks),
             AvgPlayerAttacksPerRun   = runs.Average(r => r.PlayerAttacks),
             AvgMonsterAttacksPerRun  = runs.Average(r => r.MonsterAttacks),

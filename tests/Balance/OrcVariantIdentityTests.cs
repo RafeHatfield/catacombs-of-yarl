@@ -48,7 +48,7 @@ public class OrcVariantIdentityTests
 
         TestContext.WriteLine("=== ORC VARIANT IDENTITY SCENARIOS (seed 1337) ===");
         TestContext.WriteLine(string.Format("  {0,-28} {1,5} {2,8} {3,7} {4,7} {5,7} {6,7}",
-            "Scenario", "Depth", "Death%", "H_PM", "H_MP", "DPR_P", "DPR_M"));
+            "Scenario", "Depth", "Death%", "RoundsToKill", "RoundsToDie", "DPR_P", "DPR_M"));
         TestContext.WriteLine(string.Format("  {0,-28} {1,5} {2,8} {3,7} {4,7} {5,7} {6,7}",
             "--------", "-----", "------", "----", "----", "-----", "-----"));
 
@@ -65,7 +65,7 @@ public class OrcVariantIdentityTests
             var pm = PressureModel.Compute(agg, depth, monsterHp, playerHp);
 
             TestContext.WriteLine(string.Format("  {0,-28} {1,5} {2,7:P0} {3,7:F1} {4,7:F1} {5,7:F2} {6,7:F2}",
-                label, depth, pm.DeathRate, pm.H_PM, pm.H_MP, pm.DPR_P, pm.DPR_M));
+                label, depth, pm.DeathRate, pm.RoundsToKill, pm.RoundsToDie, pm.DPR_P, pm.DPR_M));
         }
 
         TestContext.WriteLine("");
@@ -84,14 +84,14 @@ public class OrcVariantIdentityTests
         var agg = _runner.RunFromFile(ScenarioPath("scenario_skirmisher_identity.yaml"));
         var pm = PressureModel.Compute(agg, depth: 2, avgMonsterHp: 24.0, playerMaxHp: 55);
 
-        TestContext.WriteLine($"Skirmisher Identity: Death%={pm.DeathRate:P0}, H_PM={pm.H_PM:F1}, H_MP={pm.H_MP:F1}");
+        TestContext.WriteLine($"Skirmisher Identity: Death%={pm.DeathRate:P0}, RoundsToKill={pm.RoundsToKill:F1}, RoundsToDie={pm.RoundsToDie:F1}");
 
         // 0% death rate is expected and correct: one skirmisher vs longsword + leather is not a death threat.
         // The scenario validates Pouncing Leap fires and combat resolves; not that the player dies.
         Assert.That(pm.DeathRate, Is.LessThan(0.85),
             $"Skirmisher 1v1 death rate {pm.DeathRate:P0} is too high — AI may be broken or monster is over-tuned.");
-        Assert.That(pm.H_PM, Is.GreaterThan(0),
-            "H_PM of 0 means no combat resolved at all.");
+        Assert.That(pm.RoundsToKill, Is.GreaterThan(0),
+            "RoundsToKill of 0 means no combat resolved at all.");
     }
 
     /// <summary>
@@ -104,14 +104,14 @@ public class OrcVariantIdentityTests
         var agg = _runner.RunFromFile(ScenarioPath("scenario_orc_shaman_identity.yaml"));
         var pm = PressureModel.Compute(agg, depth: 3, avgMonsterHp: 26.5, playerMaxHp: 55);
 
-        TestContext.WriteLine($"Shaman Identity: Death%={pm.DeathRate:P0}, H_PM={pm.H_PM:F1}, H_MP={pm.H_MP:F1}");
+        TestContext.WriteLine($"Shaman Identity: Death%={pm.DeathRate:P0}, RoundsToKill={pm.RoundsToKill:F1}, RoundsToDie={pm.RoundsToDie:F1}");
 
         Assert.That(pm.DeathRate, Is.LessThan(0.90),
             $"Shaman identity death rate {pm.DeathRate:P0} is too high — check hex duration/cooldown values.");
-        // Shaman has H_MP~74 so 0% deaths across 30 runs is statistically expected.
-        // Use H_PM as the "combat is resolving" proxy instead of death rate.
-        Assert.That(pm.H_PM, Is.LessThan(50.0),
-            $"H_PM={pm.H_PM:F1} is implausibly high — player may not be attacking.");
+        // Shaman has RoundsToDie~74 so 0% deaths across 30 runs is statistically expected.
+        // Use RoundsToKill as the "combat is resolving" proxy instead of death rate.
+        Assert.That(pm.RoundsToKill, Is.LessThan(50.0),
+            $"RoundsToKill={pm.RoundsToKill:F1} is implausibly high — player may not be attacking.");
     }
 
     /// <summary>
@@ -124,14 +124,14 @@ public class OrcVariantIdentityTests
         var agg = _runner.RunFromFile(ScenarioPath("scenario_orc_chieftain_identity.yaml"));
         var pm = PressureModel.Compute(agg, depth: 3, avgMonsterHp: 28.5, playerMaxHp: 55);
 
-        TestContext.WriteLine($"Chieftain Identity: Death%={pm.DeathRate:P0}, H_PM={pm.H_PM:F1}, H_MP={pm.H_MP:F1}");
+        TestContext.WriteLine($"Chieftain Identity: Death%={pm.DeathRate:P0}, RoundsToKill={pm.RoundsToKill:F1}, RoundsToDie={pm.RoundsToDie:F1}");
 
         Assert.That(pm.DeathRate, Is.LessThan(0.90),
             $"Chieftain identity death rate {pm.DeathRate:P0} is too high — check rally/bellow parameters.");
         // With a hang-back caster behind frontliners, death rate can legitimately be 0% at seed 1337/30 runs.
-        // Use H_PM as the "combat is resolving" proxy instead of death rate.
-        Assert.That(pm.H_PM, Is.LessThan(50.0),
-            $"H_PM={pm.H_PM:F1} is implausibly high — player may not be attacking.");
+        // Use RoundsToKill as the "combat is resolving" proxy instead of death rate.
+        Assert.That(pm.RoundsToKill, Is.LessThan(50.0),
+            $"RoundsToKill={pm.RoundsToKill:F1} is implausibly high — player may not be attacking.");
     }
 
     /// <summary>

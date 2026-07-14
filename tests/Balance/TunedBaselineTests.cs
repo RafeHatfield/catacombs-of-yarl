@@ -43,7 +43,7 @@ public class TunedBaselineTests
         TestContext.WriteLine("    These measurements define the provisional C# target bands.");
         TestContext.WriteLine("");
         TestContext.WriteLine(string.Format("  {0,-22} {1,5} {2,8} {3,7} {4,7} {5,7} {6,7} {7,6}",
-            "Scenario", "Depth", "Death%", "H_PM", "H_MP", "DPR_P", "DPR_M", "Kills"));
+            "Scenario", "Depth", "Death%", "RoundsToKill", "RoundsToDie", "DPR_P", "DPR_M", "Kills"));
 
         foreach (var (file, depth, monsterHp, weapon) in TunedScenarios)
         {
@@ -54,7 +54,7 @@ public class TunedBaselineTests
             var pm = PressureModel.Compute(agg, depth, monsterHp, 55);
 
             TestContext.WriteLine(string.Format("  {0,-22} {1,5} {2,7:P0} {3,7:F1} {4,7:F1} {5,7:F2} {6,7:F2} {7,6:F1}",
-                agg.ScenarioId, depth, pm.DeathRate, pm.H_PM, pm.H_MP,
+                agg.ScenarioId, depth, pm.DeathRate, pm.RoundsToKill, pm.RoundsToDie,
                 pm.DPR_P, pm.DPR_M, agg.AvgMonstersKilled));
         }
 
@@ -62,12 +62,12 @@ public class TunedBaselineTests
         TestContext.WriteLine("");
         TestContext.WriteLine("  --- Prototype Target Bands (for convergence reference) ---");
         TestContext.WriteLine(string.Format("  {0,-12} {1,10} {2,10} {3,12}",
-            "Depth Band", "H_PM", "H_MP", "Death%"));
+            "Depth Band", "RoundsToKill", "RoundsToDie", "Death%"));
         for (int band = 0; band < 5; band++)
         {
             int d = band * 2 + 1;
-            var hpm = PressureModel.GetH_PM_Target(d);
-            var hmp = PressureModel.GetH_MP_Target(d);
+            var hpm = PressureModel.GetRoundsToKillTarget(d);
+            var hmp = PressureModel.GetRoundsToDieTarget(d);
             var dr = PressureModel.GetDeathRateTarget(d);
             string label = band switch
             {
@@ -91,7 +91,7 @@ public class TunedBaselineTests
         TestContext.WriteLine("=== TUNED VALIDATION (Provisional C# Bands) ===");
         TestContext.WriteLine("");
         TestContext.WriteLine(string.Format("  {0,-22} {1,5} {2,8} {3,7} {4,7} {5,6} {6,6} {7,6}",
-            "Scenario", "Depth", "Death%", "H_PM", "H_MP", "D%?", "HPM?", "HMP?"));
+            "Scenario", "Depth", "Death%", "RoundsToKill", "RoundsToDie", "D%?", "HPM?", "HMP?"));
 
         int inBand = 0;
         int total = 0;
@@ -106,8 +106,8 @@ public class TunedBaselineTests
             var eval = PressureModel.EvaluateProvisional(pm);
 
             TestContext.WriteLine(string.Format("  {0,-22} {1,5} {2,7:P0} {3,7:F1} {4,7:F1} {5,6} {6,6} {7,6}",
-                agg.ScenarioId, depth, pm.DeathRate, pm.H_PM, pm.H_MP,
-                eval.DeathRate_Status, eval.H_PM_Status, eval.H_MP_Status));
+                agg.ScenarioId, depth, pm.DeathRate, pm.RoundsToKill, pm.RoundsToDie,
+                eval.DeathRate_Status, eval.RoundsToKill_Status, eval.RoundsToDie_Status));
 
             if (eval.AllInBand) inBand++;
             total++;
@@ -125,15 +125,15 @@ public class TunedBaselineTests
         TestContext.WriteLine("=== CONVERGENCE GAP: Provisional vs Prototype Bands ===");
         TestContext.WriteLine("");
         TestContext.WriteLine(string.Format("  {0,-12} {1,14} {2,14} {3,14} {4,14}",
-            "Depth Band", "Prov H_PM", "Proto H_PM", "Prov H_MP", "Proto H_MP"));
+            "Depth Band", "Prov RoundsToKill", "Proto RoundsToKill", "Prov RoundsToDie", "Proto RoundsToDie"));
 
         for (int band = 0; band < 5; band++)
         {
             int d = band * 2 + 1;
-            var pHpm = PressureModel.GetProvisionalH_PM(d);
-            var tHpm = PressureModel.GetH_PM_Target(d);
-            var pHmp = PressureModel.GetProvisionalH_MP(d);
-            var tHmp = PressureModel.GetH_MP_Target(d);
+            var pHpm = PressureModel.GetProvisionalRoundsToKill(d);
+            var tHpm = PressureModel.GetRoundsToKillTarget(d);
+            var pHmp = PressureModel.GetProvisionalRoundsToDie(d);
+            var tHmp = PressureModel.GetRoundsToDieTarget(d);
             string label = band switch
             {
                 0 => "1-2", 1 => "3-4", 2 => "5-6", 3 => "7-8", 4 => "9+", _ => "?"
@@ -144,8 +144,8 @@ public class TunedBaselineTests
         }
 
         TestContext.WriteLine("");
-        TestContext.WriteLine("  H_PM gap: provisional ~2x wider and ~2x higher than prototype");
-        TestContext.WriteLine("  H_MP gap: provisional ~3x wider and ~2x higher than prototype");
+        TestContext.WriteLine("  RoundsToKill gap: provisional ~2x wider and ~2x higher than prototype");
+        TestContext.WriteLine("  RoundsToDie gap: provisional ~3x wider and ~2x higher than prototype");
         TestContext.WriteLine("  Levers to close: bonus attacks, monster abilities, tighter arenas");
 
         Assert.Pass();

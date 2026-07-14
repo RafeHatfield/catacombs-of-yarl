@@ -44,7 +44,7 @@ public class ScenarioEngagementReportTests
             DeathRate  = deathRate,
             MonsterHitRate = 0.5,
             PlayerHitRate  = 0.6,
-            H_PM = 5.0, H_MP = 4.0,
+            TtkHits = 5.0, TtdHits = 4.0,
             AvgTurns = 45.0,
             Deaths   = deaths,
             HasSpike = hasSpike,
@@ -127,8 +127,8 @@ public class ScenarioEngagementReportTests
     {
         var report = ScenarioEngagementReport.Format(
             Metrics("b1_orc_4", 1, 0.42, new[] { Death(ThreatArchetype.Baseline) }), B1Targets());
-        Assert.That(report, Does.Contain("H_PM"));
-        Assert.That(report, Does.Contain("H_MP"));
+        Assert.That(report, Does.Contain("TtkHits"));
+        Assert.That(report, Does.Contain("TtdHits"));
     }
 
     /// <summary>

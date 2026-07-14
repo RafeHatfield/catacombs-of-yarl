@@ -85,10 +85,10 @@ public class MomentumTests
         var pmBase = PressureModel.Compute(baseline, 2, 29, 55);
         var pmSpeed = PressureModel.Compute(speed, 2, 29, 55);
 
-        var hpmTarget = PressureModel.GetH_PM_Target(2);
+        var hpmTarget = PressureModel.GetRoundsToKillTarget(2);
 
         TestContext.WriteLine("=== Momentum Impact: Depth 2, 3x Orc ===");
-        TestContext.WriteLine($"    H_PM target: {hpmTarget.Min}-{hpmTarget.Max}");
+        TestContext.WriteLine($"    RoundsToKill target: {hpmTarget.Min}-{hpmTarget.Max}");
         TestContext.WriteLine("");
         TestContext.WriteLine(string.Format("  {0,-18} {1,10} {2,10}",
             "Metric", "No Speed", "Speed 0.25"));
@@ -103,9 +103,9 @@ public class MomentumTests
         TestContext.WriteLine(string.Format("  {0,-18} {1,10:F2} {2,10:F2}",
             "DPR_P", pmBase.DPR_P, pmSpeed.DPR_P));
         TestContext.WriteLine(string.Format("  {0,-18} {1,10:F1} {2,10:F1}",
-            "H_PM", pmBase.H_PM, pmSpeed.H_PM));
+            "RoundsToKill", pmBase.RoundsToKill, pmSpeed.RoundsToKill));
         TestContext.WriteLine(string.Format("  {0,-18} {1,10} {2,10}",
-            "H_PM Status", hpmTarget.Status(pmBase.H_PM), hpmTarget.Status(pmSpeed.H_PM)));
+            "RoundsToKill Status", hpmTarget.Status(pmBase.RoundsToKill), hpmTarget.Status(pmSpeed.RoundsToKill)));
 
         Assert.Pass();
     }

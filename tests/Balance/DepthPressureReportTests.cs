@@ -16,37 +16,37 @@ public class DepthPressureReportTests
     [Test]
     public void DeriveMultiplier_WhenObservedInRange_ReturnsMult1AndNoAdjust()
     {
-        // Depth 3 provisional H_MP band: [28, 52] — put obs at 38 (center)
+        // Depth 3 provisional RoundsToDie band: [28, 52] — put obs at 38 (center)
         var p = MakePoint(depth: 3, h_pm: 8.0, h_mp: 38.0, dpr_m: 2.0, monsterHitRate: 0.37);
         var r = DPR.DeriveMultiplierRecommendation(p);
 
         Assert.That(r.AdjustmentNeeded, Is.False);
         Assert.That(r.RecommendedDamageMultiplier, Is.EqualTo(1.0).Within(0.001),
-            "In-range H_MP → multiplier 1.0");
+            "In-range RoundsToDie → multiplier 1.0");
     }
 
     [Test]
     public void DeriveMultiplier_WhenObservedHmpTooHigh_MultGreaterThan1()
     {
-        // H_MP = 60 but target band max is ~52 — monsters need to hit harder
+        // RoundsToDie = 60 but target band max is ~52 — monsters need to hit harder
         var p = MakePoint(depth: 3, h_pm: 8.0, h_mp: 60.0, dpr_m: 1.0, monsterHitRate: 0.37);
         var r = DPR.DeriveMultiplierRecommendation(p);
 
         Assert.That(r.AdjustmentNeeded, Is.True);
         Assert.That(r.RecommendedDamageMultiplier, Is.GreaterThan(1.0),
-            "H_MP too high → mult > 1 (monsters need more damage)");
+            "RoundsToDie too high → mult > 1 (monsters need more damage)");
     }
 
     [Test]
     public void DeriveMultiplier_WhenObservedHmpTooLow_MultLessThan1()
     {
-        // H_MP = 10 is below min ~28 — monsters currently too lethal, reduce damage
+        // RoundsToDie = 10 is below min ~28 — monsters currently too lethal, reduce damage
         var p = MakePoint(depth: 3, h_pm: 8.0, h_mp: 10.0, dpr_m: 5.0, monsterHitRate: 0.37);
         var r = DPR.DeriveMultiplierRecommendation(p);
 
         Assert.That(r.AdjustmentNeeded, Is.True);
         Assert.That(r.RecommendedDamageMultiplier, Is.LessThan(1.0),
-            "H_MP too low → mult < 1 (monsters too lethal)");
+            "RoundsToDie too low → mult < 1 (monsters too lethal)");
     }
 
     // ── FormatScalingDiagnosis categories ────────────────────────────────
@@ -54,7 +54,7 @@ public class DepthPressureReportTests
     [Test]
     public void FormatScalingDiagnosis_BalancedScaling_WhenHpmRisingAndHmpFalling()
     {
-        // H_PM Δ = +0.7 (>0.5), H_MP Δ = -2.0 (<-1.0) → BALANCED SCALING
+        // RoundsToKill Δ = +0.7 (>0.5), RoundsToDie Δ = -2.0 (<-1.0) → BALANCED SCALING
         var curve = new[]
         {
             MakePoint(depth: 1, h_pm: 7.0, h_mp: 42.0, dpr_m: 1.3, monsterHitRate: 0.37),
@@ -62,13 +62,13 @@ public class DepthPressureReportTests
         };
         var report = DPR.FormatScalingDiagnosis(curve);
         Assert.That(report, Does.Contain("BALANCED SCALING"),
-            "H_PM Δ > +0.5 and H_MP Δ < -1.0 should diagnose BALANCED SCALING");
+            "RoundsToKill Δ > +0.5 and RoundsToDie Δ < -1.0 should diagnose BALANCED SCALING");
     }
 
     [Test]
     public void FormatScalingDiagnosis_HpHeavy_WhenHpmRisingButHmpStable()
     {
-        // H_PM Δ = +0.8 (>0.5), H_MP Δ = +0.3 (between -1 and +1) → HP-HEAVY SCALING
+        // RoundsToKill Δ = +0.8 (>0.5), RoundsToDie Δ = +0.3 (between -1 and +1) → HP-HEAVY SCALING
         var curve = new[]
         {
             MakePoint(depth: 1, h_pm: 7.0, h_mp: 40.0, dpr_m: 1.3, monsterHitRate: 0.37),
@@ -76,13 +76,13 @@ public class DepthPressureReportTests
         };
         var report = DPR.FormatScalingDiagnosis(curve);
         Assert.That(report, Does.Contain("HP-HEAVY SCALING"),
-            "H_PM rising, H_MP stable → HP-HEAVY SCALING");
+            "RoundsToKill rising, RoundsToDie stable → HP-HEAVY SCALING");
     }
 
     [Test]
     public void FormatScalingDiagnosis_SpikeLethality_WhenHpmFlatHmpDropping()
     {
-        // H_PM Δ = 0.1 (<0.3), H_MP Δ = -2.0 (<-1.5) → SPIKE LETHALITY
+        // RoundsToKill Δ = 0.1 (<0.3), RoundsToDie Δ = -2.0 (<-1.5) → SPIKE LETHALITY
         var curve = new[]
         {
             MakePoint(depth: 1, h_pm: 8.0, h_mp: 42.0, dpr_m: 1.3, monsterHitRate: 0.37),
@@ -90,13 +90,13 @@ public class DepthPressureReportTests
         };
         var report = DPR.FormatScalingDiagnosis(curve);
         Assert.That(report, Does.Contain("SPIKE LETHALITY"),
-            "H_PM flat, H_MP dropping fast → SPIKE LETHALITY");
+            "RoundsToKill flat, RoundsToDie dropping fast → SPIKE LETHALITY");
     }
 
     [Test]
     public void FormatScalingDiagnosis_FlatScaling_WhenNeitherMetricChanges()
     {
-        // H_PM Δ ≈0, H_MP Δ ≈0 → FLAT SCALING
+        // RoundsToKill Δ ≈0, RoundsToDie Δ ≈0 → FLAT SCALING
         var curve = new[]
         {
             MakePoint(depth: 1, h_pm: 8.0, h_mp: 40.0, dpr_m: 1.3, monsterHitRate: 0.37),
@@ -120,7 +120,7 @@ public class DepthPressureReportTests
     [Test]
     public void AttritionIndicator_HighRatio_IsAttrition()
     {
-        // H_PM=8, H_MP=12 → ratio 0.667 > 0.6 → ATTRITION
+        // RoundsToKill=8, RoundsToDie=12 → ratio 0.667 > 0.6 → ATTRITION
         var curve = new[]
         {
             MakePoint(depth: 1, h_pm: 8.0, h_mp: 12.0, dpr_m: 4.5, monsterHitRate: 0.37),
@@ -128,13 +128,13 @@ public class DepthPressureReportTests
         };
         var report = DPR.FormatScalingDiagnosis(curve);
         Assert.That(report, Does.Contain("ATTRITION"),
-            "H_PM/H_MP > 0.6 should label as ATTRITION");
+            "RoundsToKill/RoundsToDie > 0.6 should label as ATTRITION");
     }
 
     [Test]
     public void AttritionIndicator_LowRatio_IsLethal()
     {
-        // H_PM=3, H_MP=40 → ratio 0.075 < 0.3 → LETHAL
+        // RoundsToKill=3, RoundsToDie=40 → ratio 0.075 < 0.3 → LETHAL
         var curve = new[]
         {
             MakePoint(depth: 1, h_pm: 3.0, h_mp: 40.0, dpr_m: 1.3, monsterHitRate: 0.37),
@@ -142,7 +142,7 @@ public class DepthPressureReportTests
         };
         var report = DPR.FormatScalingDiagnosis(curve);
         Assert.That(report, Does.Contain("LETHAL"),
-            "H_PM/H_MP < 0.3 should label as LETHAL");
+            "RoundsToKill/RoundsToDie < 0.3 should label as LETHAL");
     }
 
     // ── Format methods produce non-empty output ───────────────────────────
@@ -153,8 +153,8 @@ public class DepthPressureReportTests
         var curve = TwoCurveSample();
         var table = DPR.FormatPressureTable(curve);
         Assert.That(table, Does.Contain("OBSERVED DEPTH PRESSURE CURVE"));
-        Assert.That(table, Does.Contain("H_PM"));
-        Assert.That(table, Does.Contain("H_MP"));
+        Assert.That(table, Does.Contain("RoundsToKill"));
+        Assert.That(table, Does.Contain("RoundsToDie"));
     }
 
     [Test]
@@ -193,8 +193,8 @@ public class DepthPressureReportTests
         return new DPR.DepthCurvePoint(
             Depth:           depth,
             ScenarioId:      $"test_depth{depth}",
-            H_PM:            h_pm,
-            H_MP:            h_mp,
+            RoundsToKill:            h_pm,
+            RoundsToDie:            h_mp,
             DPR_P:           dpr_p,
             DPR_M:           dpr_m,
             PlayerHitRate:   0.70,

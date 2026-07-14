@@ -6,7 +6,7 @@ namespace CatacombsOfYarl.Logic.Balance;
 /// Renders the role-aware engagement-health section for a single controlled scenario. Soak analogue:
 /// Layer-1 engagement verdict where DistinctAttackers = the actual composition (no bot-pulled chaos),
 /// so "Density" means composition density — trustworthy for tuning decisions. Sits beside the existing
-/// PoC pressure metrics (H_PM / H_MP / hit-rates) rather than replacing them.
+/// PoC pressure metrics (TtkHits / TtdHits / hit-rates) rather than replacing them.
 ///
 /// Balance verdict = death rate vs target band (the multivariate outcome). The FloorHealth verdict and
 /// lever attribution are the DIAGNOSTIC layer, consulted after the band flags a composition.
@@ -84,7 +84,7 @@ public static class ScenarioEngagementReport
             ? $"  |  Avg potions/fight: {metrics.AvgPotionsUsed:F2}"
             : "";
         sb.AppendLine(
-            $"  H_PM: {metrics.H_PM:F1}  |  H_MP: {metrics.H_MP:F1}  |  " +
+            $"  TtkHits: {metrics.TtkHits:F1}  |  TtdHits: {metrics.TtdHits:F1}  |  " +
             $"Monster hit rate: {metrics.MonsterHitRate * 100:F0}%  |  " +
             $"Player hit rate: {metrics.PlayerHitRate * 100:F0}%  |  " +
             $"Avg turns: {metrics.AvgTurns:F0}{potionStr}");

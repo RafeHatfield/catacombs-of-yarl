@@ -21,7 +21,7 @@ namespace CatacombsOfYarl.Tests.Balance;
 ///   - giant_spider depth 8:     18 (no depth_weights; min_depth only)
 ///
 /// NOTE: Raise-event tracking is not yet in the harness. Necromancer identity gates are
-/// conservative (H_PM > 0, AvgMonstersKilled, death rate band). A future harness pass
+/// conservative (RoundsToKill > 0, AvgMonstersKilled, death rate band). A future harness pass
 /// should add RaiseDeadEvent counting for a tighter raise-loop gate.
 ///
 /// Tagged [Category("Slow")]: use 'dotnet test --filter "Category!=Slow"' for fast CI.
@@ -58,7 +58,7 @@ public class Wave3IdentityTests
 
         TestContext.WriteLine("=== WAVE 3 IDENTITY SCENARIOS (seed 1337) ===");
         TestContext.WriteLine(string.Format("  {0,-42} {1,5} {2,8} {3,7} {4,7} {5,7} {6,7}",
-            "Scenario", "Depth", "Death%", "H_PM", "H_MP", "DPR_P", "DPR_M"));
+            "Scenario", "Depth", "Death%", "RoundsToKill", "RoundsToDie", "DPR_P", "DPR_M"));
         TestContext.WriteLine(string.Format("  {0,-42} {1,5} {2,8} {3,7} {4,7} {5,7} {6,7}",
             "--------", "-----", "------", "----", "----", "-----", "-----"));
 
@@ -75,7 +75,7 @@ public class Wave3IdentityTests
             var pm = PressureModel.Compute(agg, depth, monsterHp, playerHp);
 
             TestContext.WriteLine(string.Format("  {0,-42} {1,5} {2,7:P0} {3,7:F1} {4,7:F1} {5,7:F2} {6,7:F2}",
-                label, depth, pm.DeathRate, pm.H_PM, pm.H_MP, pm.DPR_P, pm.DPR_M));
+                label, depth, pm.DeathRate, pm.RoundsToKill, pm.RoundsToDie, pm.DPR_P, pm.DPR_M));
         }
 
         TestContext.WriteLine("");
@@ -88,7 +88,7 @@ public class Wave3IdentityTests
     /// <summary>
     /// Necromancer identity: 1 necromancer + 3 skeletons in a 21×15 crypt.
     ///
-    /// Observed first run: Death%=0%, H_PM=16.4, H_MP=92.5, AvgKills=6.9
+    /// Observed first run: Death%=0%, RoundsToKill=16.4, RoundsToDie=92.5, AvgKills=6.9
     ///
     /// PRIMARY IDENTITY GATE — AvgMonstersKilled > 5.0:
     ///   Only 4 monsters spawned (1 necro + 3 skeletons). AvgKills = 6.9 means the player
@@ -96,7 +96,7 @@ public class Wave3IdentityTests
     ///   loop is firing and skeletons are being re-raised and killed again.
     ///   If AvgKills drops to ≤ 4, raises have stopped working.
     ///
-    /// H_PM = 16.4: necromancer hangs back (low direct damage), skeletons are the primary threat.
+    /// RoundsToKill = 16.4: necromancer hangs back (low direct damage), skeletons are the primary threat.
     ///   Two skeletons start within raise range of necromancer at (17,7): dist ≈ 4.5 tiles.
     /// </summary>
     [Test]
@@ -105,10 +105,10 @@ public class Wave3IdentityTests
         var agg = _runner.RunFromFile(ScenarioPath("scenario_necromancer_identity.yaml"));
         var pm = PressureModel.Compute(agg, depth: 5, avgMonsterHp: 24.0, playerMaxHp: 55);
 
-        TestContext.WriteLine($"Necromancer Identity: Death%={pm.DeathRate:P0}, H_PM={pm.H_PM:F1}, H_MP={pm.H_MP:F1}, AvgKills={agg.AvgMonstersKilled:F1}");
+        TestContext.WriteLine($"Necromancer Identity: Death%={pm.DeathRate:P0}, RoundsToKill={pm.RoundsToKill:F1}, RoundsToDie={pm.RoundsToDie:F1}, AvgKills={agg.AvgMonstersKilled:F1}");
 
-        Assert.That(pm.H_PM, Is.GreaterThan(0),
-            "H_PM = 0 means no combat resolved — necromancer spawning or AI dispatch is broken.");
+        Assert.That(pm.RoundsToKill, Is.GreaterThan(0),
+            "RoundsToKill = 0 means no combat resolved — necromancer spawning or AI dispatch is broken.");
         Assert.That(agg.AvgMonstersKilled, Is.GreaterThan(5.0),
             $"AvgMonstersKilled={agg.AvgMonstersKilled:F1} — only 4 monsters spawn; >5 kills confirms raise-dead loop fires and skeletons are re-killed after being raised.");
         Assert.That(pm.DeathRate, Is.LessThan(0.30),
@@ -118,7 +118,7 @@ public class Wave3IdentityTests
     /// <summary>
     /// Plague necromancer identity: 1 plague_necromancer + 3 orcs in a 21×15 crypt.
     ///
-    /// Observed first run: Death%=3%, H_PM=13.3, H_MP=41.6, AvgKills=6.4
+    /// Observed first run: Death%=3%, RoundsToKill=13.3, RoundsToDie=41.6, AvgKills=6.4
     ///
     /// Same raise-loop gate as vanilla necromancer: 4 monsters spawned, AvgKills=6.4 confirms
     /// raises are firing. Plague augmentation distinguishes this from vanilla necromancer —
@@ -132,10 +132,10 @@ public class Wave3IdentityTests
         var agg = _runner.RunFromFile(ScenarioPath("scenario_plague_necromancer_identity.yaml"));
         var pm = PressureModel.Compute(agg, depth: 7, avgMonsterHp: 26.0, playerMaxHp: 55);
 
-        TestContext.WriteLine($"Plague Necromancer Identity: Death%={pm.DeathRate:P0}, H_PM={pm.H_PM:F1}, H_MP={pm.H_MP:F1}, AvgKills={agg.AvgMonstersKilled:F1}");
+        TestContext.WriteLine($"Plague Necromancer Identity: Death%={pm.DeathRate:P0}, RoundsToKill={pm.RoundsToKill:F1}, RoundsToDie={pm.RoundsToDie:F1}, AvgKills={agg.AvgMonstersKilled:F1}");
 
-        Assert.That(pm.H_PM, Is.GreaterThan(0),
-            "H_PM = 0 means no combat resolved — plague_necromancer spawning or AI dispatch is broken.");
+        Assert.That(pm.RoundsToKill, Is.GreaterThan(0),
+            "RoundsToKill = 0 means no combat resolved — plague_necromancer spawning or AI dispatch is broken.");
         Assert.That(agg.AvgMonstersKilled, Is.GreaterThan(5.0),
             $"AvgMonstersKilled={agg.AvgMonstersKilled:F1} — only 4 monsters spawn; >5 kills confirms raise-dead loop fires.");
         Assert.That(pm.DeathRate, Is.LessThan(0.30),
@@ -146,10 +146,10 @@ public class Wave3IdentityTests
     /// Giant spider identity: 1 giant spider at depth 8.
     /// Stats: HP 18, dmg 4-8, dex 16 (+3 accuracy/evasion), speed_bonus 0.35, on-hit poison 10 turns.
     ///
-    /// Observed first run: Death%=17%, H_PM=9.5, H_MP=11.7
+    /// Observed first run: Death%=17%, RoundsToKill=9.5, RoundsToDie=11.7
     ///
-    /// H_MP gate: spider must land hits for poison to apply. H_MP=11.7 confirms it is.
-    /// If H_MP drops to ≤ 5: spider accuracy or AI is broken.
+    /// RoundsToDie gate: spider must land hits for poison to apply. RoundsToDie=11.7 confirms it is.
+    /// If RoundsToDie drops to ≤ 5: spider accuracy or AI is broken.
     /// Death rate of 17% with longsword + leather + 5 potions reflects the speed bonus + poison pressure.
     ///
     /// No PoC reference for this monster (PoC had web ability; ours has poison).
@@ -160,12 +160,12 @@ public class Wave3IdentityTests
         var agg = _runner.RunFromFile(ScenarioPath("scenario_giant_spider_identity.yaml"));
         var pm = PressureModel.Compute(agg, depth: 8, avgMonsterHp: 18.0, playerMaxHp: 55);
 
-        TestContext.WriteLine($"Giant Spider Identity: Death%={pm.DeathRate:P0}, H_PM={pm.H_PM:F1}, H_MP={pm.H_MP:F1}");
+        TestContext.WriteLine($"Giant Spider Identity: Death%={pm.DeathRate:P0}, RoundsToKill={pm.RoundsToKill:F1}, RoundsToDie={pm.RoundsToDie:F1}");
 
-        Assert.That(pm.H_PM, Is.GreaterThan(0),
-            "H_PM = 0 means no combat resolved — giant spider spawning or AI is broken.");
-        Assert.That(pm.H_MP, Is.GreaterThan(5.0),
-            $"Giant spider H_MP={pm.H_MP:F1} too low — spider must land hits for on-hit poison to apply.");
+        Assert.That(pm.RoundsToKill, Is.GreaterThan(0),
+            "RoundsToKill = 0 means no combat resolved — giant spider spawning or AI is broken.");
+        Assert.That(pm.RoundsToDie, Is.GreaterThan(5.0),
+            $"Giant spider RoundsToDie={pm.RoundsToDie:F1} too low — spider must land hits for on-hit poison to apply.");
         Assert.That(pm.DeathRate, Is.LessThan(0.50),
             $"Giant spider 1v1 death rate {pm.DeathRate:P0} too high — longsword + leather + 5 potions should handle a single depth-8 spider most of the time.");
     }

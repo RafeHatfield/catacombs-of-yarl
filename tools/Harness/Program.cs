@@ -706,8 +706,12 @@ if (jsonlPath != null && !dungeonMode)
                 runs             = m.TotalRuns,
                 seed             = m.Seed,
                 death_rate       = m.DeathRate,
-                h_pm             = pm.H_PM,
-                h_mp             = pm.H_MP,
+                // Rounds-based (band-gated). On-disk keys kept as h_pm/h_mp for round-trip stability.
+                h_pm             = pm.RoundsToKill,
+                h_mp             = pm.RoundsToDie,
+                // Hits-based (per landed swing) — surfaced alongside for FIND-005 disambiguation.
+                ttk_hits         = m.TtkHits,
+                ttd_hits         = m.TtdHits,
                 dpr_p            = pm.DPR_P,
                 dpr_m            = pm.DPR_M,
                 avg_turns        = m.AvgTurns,
@@ -736,8 +740,12 @@ if (jsonOutput)
             runs              = m.TotalRuns,
             seed              = m.Seed,
             death_rate        = m.DeathRate,
-            h_pm              = pm.H_PM,
-            h_mp              = pm.H_MP,
+            // Rounds-based (band-gated). On-disk keys kept as h_pm/h_mp for round-trip stability.
+            h_pm              = pm.RoundsToKill,
+            h_mp              = pm.RoundsToDie,
+            // Hits-based (per landed swing) — surfaced alongside for FIND-005 disambiguation.
+            ttk_hits          = m.TtkHits,
+            ttd_hits          = m.TtdHits,
             dpr_p             = pm.DPR_P,
             dpr_m             = pm.DPR_M,
             avg_turns         = m.AvgTurns,
@@ -1106,10 +1114,14 @@ void PrintSingle(AggregatedMetrics m)
 
     Console.WriteLine(MetricLine("Death Rate",
         $"{m.DeathRate:P1}", eval.DeathRate_Target, eval.DeathRate_Status));
-    Console.WriteLine(MetricLine("H_PM",
-        $"{pm.H_PM:F1}",     eval.H_PM_Target, eval.H_PM_Status));
-    Console.WriteLine(MetricLine("H_MP",
-        $"{pm.H_MP:F1}",     eval.H_MP_Target, eval.H_MP_Status));
+    // Rounds-based family (HP ÷ damage-per-turn) — the bands gate on these.
+    Console.WriteLine(MetricLine("RoundsToKill",
+        $"{pm.RoundsToKill:F1}", eval.RoundsToKill_Target, eval.RoundsToKill_Status));
+    Console.WriteLine(MetricLine("RoundsToDie",
+        $"{pm.RoundsToDie:F1}",  eval.RoundsToDie_Target, eval.RoundsToDie_Status));
+    Console.WriteLine($"  {"(above: rounds — turns, incl. misses/approach)"}");
+    // Hits-based family (HP ÷ damage-per-landed-hit) — surfaced for per-swing analysis (FIND-005).
+    Console.WriteLine($"  {"TtkHits",-12} {m.TtkHits,8:F1}    {"TtdHits",-12} {m.TtdHits:F1}    (hits — per landed swing)");
     Console.WriteLine($"  {"DPR_P",-12} {pm.DPR_P,8:F2}    {"DPR_M",-12} {pm.DPR_M:F2}");
     Console.WriteLine($"  {"Avg Turns",-12} {m.AvgTurns,8:F1}    Player Hit%: {m.PlayerHitRate:P0}    Monster Hit%: {m.MonsterHitRate:P0}");
     Console.WriteLine($"  {sep}");
@@ -1123,9 +1135,10 @@ void PrintTable(List<AggregatedMetrics> ms)
 {
     Console.WriteLine();
     Console.WriteLine($"=== YARL Balance Report ({seed} seed) ===");
+    Console.WriteLine($"  RtK/RtD = rounds (turns, band-gated);  Ttk/Ttd = hits (per landed swing, ungated)  [FIND-005]");
     Console.WriteLine();
-    Console.WriteLine($"  {"Scenario",-28}  {"D",2}  {"Death%",7}  {"[Band]",9}  {"H_PM",5}  {"[Band]",7}  {"H_MP",5}  {"[Band]",7}  Status");
-    Console.WriteLine($"  {new string('-', 28)}  {"--"}  {"-------"}  {"---------"}  {"-----"}  {"-------"}  {"-----"}  {"-------"}  ------");
+    Console.WriteLine($"  {"Scenario",-28}  {"D",2}  {"Death%",7}  {"[Band]",9}  {"RtK",5}  {"[Band]",7}  {"RtD",5}  {"[Band]",7}  {"Ttk",5}  {"Ttd",5}  Status");
+    Console.WriteLine($"  {new string('-', 28)}  {"--"}  {"-------"}  {"---------"}  {"-----"}  {"-------"}  {"-----"}  {"-------"}  {"-----"}  {"-----"}  ------");
 
     int passes = 0, fails = 0, probes = 0;
     var failedScenarios = new List<AggregatedMetrics>();
@@ -1137,27 +1150,29 @@ void PrintTable(List<AggregatedMetrics> ms)
 
         string dr   = $"{m.DeathRate:P1}";
         string drB  = $"[{eval.DeathRate_Target.Min:P0}-{eval.DeathRate_Target.Max:P0}]";
-        string hpm  = $"{pm.H_PM:F1}";
-        string hpmB = $"[{eval.H_PM_Target.Min:F1}-{eval.H_PM_Target.Max:F1}]";
-        string hmp  = $"{pm.H_MP:F1}";
-        string hmpB = $"[{eval.H_MP_Target.Min:F1}-{eval.H_MP_Target.Max:F1}]";
+        string rtk  = $"{pm.RoundsToKill:F1}";
+        string rtkB = $"[{eval.RoundsToKill_Target.Min:F1}-{eval.RoundsToKill_Target.Max:F1}]";
+        string rtd  = $"{pm.RoundsToDie:F1}";
+        string rtdB = $"[{eval.RoundsToDie_Target.Min:F1}-{eval.RoundsToDie_Target.Max:F1}]";
+        string ttk  = $"{m.TtkHits:F1}";
+        string ttd  = $"{m.TtdHits:F1}";
 
         string status;
         if (m.IsProbe)
         {
             probes++;
-            bool hpmOk = eval.H_PM_Status == "OK";
-            bool hmpOk = eval.H_MP_Status == "OK";
-            status = $"PROBE{(!hpmOk ? "(H_PM)" : !hmpOk ? "(H_MP)" : "")}";
+            bool rtkOk = eval.RoundsToKill_Status == "OK";
+            bool rtdOk = eval.RoundsToDie_Status == "OK";
+            status = $"PROBE{(!rtkOk ? "(RtK)" : !rtdOk ? "(RtD)" : "")}";
         }
         else
         {
             bool pass = eval.AllInBand;
             if (pass) passes++; else { fails++; failedScenarios.Add(m); }
-            status = pass ? "PASS" : $"FAIL({(eval.H_PM_Status != "OK" ? "H_PM " : "")}{(eval.H_MP_Status != "OK" ? "H_MP " : "")}{(eval.DeathRate_Status != "OK" ? "Death%" : "")})";
+            status = pass ? "PASS" : $"FAIL({(eval.RoundsToKill_Status != "OK" ? "RtK " : "")}{(eval.RoundsToDie_Status != "OK" ? "RtD " : "")}{(eval.DeathRate_Status != "OK" ? "Death%" : "")})";
         }
 
-        Console.WriteLine($"  {m.ScenarioId,-28}  {m.Depth,2}  {dr,7}  {drB,9}  {hpm,5}  {hpmB,7}  {hmp,5}  {hmpB,7}  {status}");
+        Console.WriteLine($"  {m.ScenarioId,-28}  {m.Depth,2}  {dr,7}  {drB,9}  {rtk,5}  {rtkB,7}  {rtd,5}  {rtdB,7}  {ttk,5}  {ttd,5}  {status}");
     }
 
     Console.WriteLine();

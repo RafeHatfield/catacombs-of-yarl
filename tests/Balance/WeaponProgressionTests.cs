@@ -94,14 +94,14 @@ consumables:
     [Test]
     public void PrintWeaponProgression()
     {
-        var hpmTarget = PressureModel.GetH_PM_Target(2);
-        var hmpTarget = PressureModel.GetH_MP_Target(2);
+        var hpmTarget = PressureModel.GetRoundsToKillTarget(2);
+        var hmpTarget = PressureModel.GetRoundsToDieTarget(2);
 
         TestContext.WriteLine("=== Weapon Progression Probe: Depth 2, 3x Orc, 2 Potions ===");
-        TestContext.WriteLine($"    H_PM target: {hpmTarget.Min}-{hpmTarget.Max}    H_MP target: {hmpTarget.Min}-{hmpTarget.Max}");
+        TestContext.WriteLine($"    RoundsToKill target: {hpmTarget.Min}-{hpmTarget.Max}    RoundsToDie target: {hmpTarget.Min}-{hmpTarget.Max}");
         TestContext.WriteLine("");
         TestContext.WriteLine(string.Format("  {0,-14} {1,7} {2,7} {3,6} {4,6} {5,8} {6,8}",
-            "Weapon", "H_PM", "H_MP", "DPR_P", "Death%", "H_PM?", "H_MP?"));
+            "Weapon", "RoundsToKill", "RoundsToDie", "DPR_P", "Death%", "RoundsToKill?", "RoundsToDie?"));
 
         foreach (var weapon in new[] { "dagger", "shortsword", "longsword", "greatsword" })
         {
@@ -109,15 +109,15 @@ consumables:
             var pm = PressureModel.Compute(agg, depth: 2, avgMonsterHp: 29, playerMaxHp: 55);
 
             TestContext.WriteLine(string.Format("  {0,-14} {1,7:F1} {2,7:F1} {3,6:F2} {4,5:P0} {5,8} {6,8}",
-                weapon, pm.H_PM, pm.H_MP, pm.DPR_P, pm.DeathRate,
-                hpmTarget.Status(pm.H_PM), hmpTarget.Status(pm.H_MP)));
+                weapon, pm.RoundsToKill, pm.RoundsToDie, pm.DPR_P, pm.DeathRate,
+                hpmTarget.Status(pm.RoundsToKill), hmpTarget.Status(pm.RoundsToDie)));
         }
 
         Assert.Pass();
     }
 
     [Test]
-    public void BetterWeapon_LowerH_PM()
+    public void BetterWeapon_LowerRoundsToKill()
     {
         var dagger = _harness.Run(MakeScenario("dagger"), baseSeed: 1337);
         var longsword = _harness.Run(MakeScenario("longsword"), baseSeed: 1337);
@@ -125,8 +125,8 @@ consumables:
         var pmDagger = PressureModel.Compute(dagger, 2, 29, 55);
         var pmLongsword = PressureModel.Compute(longsword, 2, 29, 55);
 
-        Assert.That(pmLongsword.H_PM, Is.LessThan(pmDagger.H_PM),
-            $"Longsword H_PM {pmLongsword.H_PM:F1} should be lower than dagger {pmDagger.H_PM:F1}");
+        Assert.That(pmLongsword.RoundsToKill, Is.LessThan(pmDagger.RoundsToKill),
+            $"Longsword RoundsToKill {pmLongsword.RoundsToKill:F1} should be lower than dagger {pmDagger.RoundsToKill:F1}");
     }
 
     [Test]
