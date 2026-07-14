@@ -73,6 +73,23 @@ public sealed partial class QuickSlotBar : Control
     // ── Slot rect surface ─────────────────────────────────────────────────────
     public IReadOnlyList<(int ItemId, Rect2 LocalRect)> SlotRects => _slotRects;
 
+    /// <summary>
+    /// Hit-tests a global (viewport-space) position against the item slots.
+    /// Used by GameController's hover-to-inspect path (mouse hover, no button held) —
+    /// separate from the press-and-hold ActionSheet flow in _GuiInput/_Process below.
+    /// Returns the item's entity ID, or null if the position isn't over any slot.
+    /// </summary>
+    public int? GetItemIdAtGlobalPosition(Vector2 globalPos)
+    {
+        var localPos = globalPos - GetGlobalRect().Position;
+        foreach (var (itemId, rect) in _slotRects)
+        {
+            if (rect.HasPoint(localPos))
+                return itemId;
+        }
+        return null;
+    }
+
     // ── Internal nodes ────────────────────────────────────────────────────────
     private Control?       _weaponSlot;
     private TextureRect?   _weaponIcon;

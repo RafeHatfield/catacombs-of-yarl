@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.Combat;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.ECS;
 
 namespace CatacombsOfYarl.Logic.Knowledge;
@@ -16,11 +17,24 @@ public sealed record ItemInspectView(
     /// <summary>
     /// Build an ItemInspectView from an item entity by reading its components.
     /// Returns a view with generic "Unknown Item" if no recognized components are found.
+    ///
+    /// Potions/scrolls/wands/rings (anything with IdentifiableItem) show only the mystery
+    /// appearance name and a placeholder line until identified — mirrors ItemDisplay.GetDisplayName's
+    /// gating so the inspect popup can't spoil identification. Weapons and plain armor have no
+    /// IdentifiableItem component and are always shown in full, per docs/systems/LOOT_AND_IDENTIFICATION.md.
+    /// Pass registry/pool null (e.g. scenario/harness mode) to always show true stats.
     /// </summary>
-    public static ItemInspectView From(Entity item)
+    public static ItemInspectView From(Entity item, IdentificationRegistry? registry = null, AppearancePool? pool = null)
     {
+        var idComp = item.Get<IdentifiableItem>();
+        if (idComp != null && !IsIdentified(item, registry))
+        {
+            string mysteryName = ItemDisplay.GetDisplayName(item, registry, pool);
+            return new ItemInspectView(mysteryName, CategoryOf(item), new[] { "Unidentified — use it to reveal its effect" });
+        }
+
         var lines = new List<string>();
-        string category = "Item";
+        string category = CategoryOf(item);
 
         var equippable = item.Get<Equippable>();
         var consumable = item.Get<Consumable>();
@@ -33,7 +47,6 @@ public sealed record ItemInspectView(
 
             if (isWeapon)
             {
-                category = "Weapon";
                 if (equippable.DamageMin > 0 || equippable.DamageMax > 0)
                     lines.Add($"Damage: {equippable.DamageMin}-{equippable.DamageMax}");
                 if (equippable.ToHitBonus != 0)
@@ -41,41 +54,26 @@ public sealed record ItemInspectView(
                 if (!string.IsNullOrEmpty(equippable.DamageType))
                     lines.Add($"Type: {equippable.DamageType}");
             }
-            else
+            else if (equippable.ArmorClassBonus != 0)
             {
-                // Armor slot
-                category = equippable.Slot switch
-                {
-                    EquipmentSlot.Head  => "Helmet",
-                    EquipmentSlot.Chest => "Armor",
-                    EquipmentSlot.Feet  => "Boots",
-                    EquipmentSlot.LeftRing or EquipmentSlot.RightRing => "Ring",
-                    EquipmentSlot.Neck  => "Amulet",
-                    _                   => "Armor",
-                };
-
-                if (equippable.ArmorClassBonus != 0)
-                    lines.Add($"AC Bonus: +{equippable.ArmorClassBonus}");
+                lines.Add($"AC Bonus: +{equippable.ArmorClassBonus}");
             }
         }
         else if (wand != null && spellEffect != null)
         {
-            category = "Wand";
             if (!string.IsNullOrEmpty(spellEffect.SpellId))
                 lines.Add($"Spell: {FormatSpellId(spellEffect.SpellId)}");
 
-            string chargesText = wand.Infinite ? "\u221e" : $"{wand.Charges}/{wand.MaxCharges}";
+            string chargesText = wand.Infinite ? "∞" : $"{wand.Charges}/{wand.MaxCharges}";
             lines.Add($"Charges: {chargesText}");
         }
         else if (spellEffect != null && consumable != null)
         {
-            category = "Scroll";
             if (!string.IsNullOrEmpty(spellEffect.SpellId))
                 lines.Add($"Spell: {FormatSpellId(spellEffect.SpellId)}");
         }
         else if (consumable != null)
         {
-            category = "Potion";
             if (consumable.HealAmount > 0)
                 lines.Add($"Heals: {consumable.HealAmount} HP");
             else
@@ -83,6 +81,45 @@ public sealed record ItemInspectView(
         }
 
         return new ItemInspectView(item.Name, category, lines);
+    }
+
+    /// <summary>Whether the item is identified — true for anything without IdentifiableItem (weapons/plain armor), or when registry is null (scenario/harness mode).</summary>
+    private static bool IsIdentified(Entity item, IdentificationRegistry? registry)
+    {
+        if (registry == null) return true;
+        var tag = item.Get<ItemTag>();
+        return tag == null || registry.IsIdentified(tag.TypeId);
+    }
+
+    /// <summary>Broad item category — safe to reveal even when unidentified (matches what the sprite/shape already implies).</summary>
+    private static string CategoryOf(Entity item)
+    {
+        var equippable = item.Get<Equippable>();
+        if (equippable != null)
+        {
+            bool isWeapon = equippable.Slot == EquipmentSlot.MainHand || equippable.Slot == EquipmentSlot.OffHand;
+            if (isWeapon) return "Weapon";
+
+            return equippable.Slot switch
+            {
+                EquipmentSlot.Head  => "Helmet",
+                EquipmentSlot.Chest => "Armor",
+                EquipmentSlot.Feet  => "Boots",
+                EquipmentSlot.LeftRing or EquipmentSlot.RightRing => "Ring",
+                EquipmentSlot.Neck  => "Amulet",
+                _                   => "Armor",
+            };
+        }
+
+        var wand = item.Get<WandComponent>();
+        var spellEffect = item.Get<SpellEffect>();
+        var consumable = item.Get<Consumable>();
+
+        if (wand != null && spellEffect != null) return "Wand";
+        if (spellEffect != null && consumable != null) return "Scroll";
+        if (consumable != null) return "Potion";
+
+        return "Item";
     }
 
     /// <summary>

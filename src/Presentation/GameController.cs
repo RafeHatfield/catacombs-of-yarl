@@ -708,6 +708,20 @@ public sealed partial class GameController : Node
     {
         if (_state == null) return;
 
+        // Check the quick-slot bar first — it lives in a CanvasLayer (screen space), same as
+        // InspectPanel, so no ToLocal() transform is needed here (unlike the map check below).
+        var hoveredItemId = _inventoryPanel?.GetItemIdAtGlobalPosition(screenPos);
+        if (hoveredItemId.HasValue)
+        {
+            var invItem = _state.PlayerInventory?.Items.FirstOrDefault(i => i.Id == hoveredItemId.Value);
+            if (invItem != null)
+            {
+                _inspectPanel?.ShowItem(ItemInspectView.From(invItem, _state.IdentificationRegistry, _state.AppearancePool));
+                _inspectPanel?.PositionNear(screenPos, GetViewport()?.GetVisibleRect().Size ?? new Vector2(480, 854));
+                return;
+            }
+        }
+
         // Apply the same ToLocal() transform that Main._UnhandledInput applies before HandleTap.
         // Without this, OnLongPress was passing raw screen coordinates to ScreenToGrid, which
         // expects GameView-local coordinates — causing long-press to resolve the wrong tile.
@@ -740,7 +754,7 @@ public sealed partial class GameController : Node
         var floorItem = _state.FloorItems.FirstOrDefault(i => i.X == gridX && i.Y == gridY);
         if (floorItem != null)
         {
-            var itemInfo = ItemInspectView.From(floorItem);
+            var itemInfo = ItemInspectView.From(floorItem, _state.IdentificationRegistry, _state.AppearancePool);
             _inspectPanel?.ShowItem(itemInfo);
             _inspectPanel?.PositionNear(screenPos, GetViewport()?.GetVisibleRect().Size ?? new Vector2(480, 854));
             return;
