@@ -5,7 +5,7 @@ using CatacombsOfYarl.Logic.Balance;
 /// Generates a 5×N bot persona survivability matrix.
 ///
 /// For each (persona × scenario) pair: runs the scenario with that persona,
-/// collects death rate, avg turns, H_PM, H_MP.
+/// collects death rate, avg turns, TtkHits, TtdHits.
 ///
 /// Output: markdown table with personas as columns and scenarios as rows.
 /// Label: "Death Rate" per plan minor note M1 (not "Survival Rate").
@@ -112,17 +112,17 @@ public static class BotSurvivabilityReport
         sb.AppendLine();
         AppendTable(sb, matrix, results, (m) => m != null ? $"{m.AvgTurns:F1}" : "N/A");
 
-        // ── H_PM table ──
+        // ── TtkHits table ──
         sb.AppendLine();
-        sb.AppendLine("## H_PM (Hits to Kill Monster)");
+        sb.AppendLine("## TtkHits (Hits to Kill Monster)");
         sb.AppendLine();
-        AppendTable(sb, matrix, results, (m) => m != null ? $"{m.H_PM:F1}" : "N/A");
+        AppendTable(sb, matrix, results, (m) => m != null ? $"{m.TtkHits:F1}" : "N/A");
 
-        // ── H_MP table ──
+        // ── TtdHits table ──
         sb.AppendLine();
-        sb.AppendLine("## H_MP (Monster Hits to Kill Player)");
+        sb.AppendLine("## TtdHits (Monster Hits to Kill Player)");
         sb.AppendLine();
-        AppendTable(sb, matrix, results, (m) => m != null ? $"{m.H_MP:F1}" : "N/A");
+        AppendTable(sb, matrix, results, (m) => m != null ? $"{m.TtdHits:F1}" : "N/A");
 
         // ── Observations ──
         sb.AppendLine();

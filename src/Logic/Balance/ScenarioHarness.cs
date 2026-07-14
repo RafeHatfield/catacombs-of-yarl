@@ -117,7 +117,7 @@ public sealed class ScenarioHarness
         metrics.HadSpike = tracker.SpikePresent;
         metrics.HadEscalator = tracker.EscalatorPresent;
 
-        // Capture initial HP values for H_PM / H_MP calculations
+        // Capture initial HP values for hits-based (TtkHits/TtdHits) and rounds-based (RoundsToKill/RoundsToDie) calculations
         metrics.PlayerMaxHp = playerFighter.MaxHp;
         if (state.Monsters.Count > 0)
         {

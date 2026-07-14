@@ -122,6 +122,20 @@ dotnet run --project tools/Harness -- --scenario <id> --runs 50
 - **Commit messages:** semantic format (`feat:`, `fix:`, `refactor:`, etc.)
 - **Report model(s) used** at the end of every response per global directive.
 
+### Pull requests
+All changes land through PRs, not direct pushes. This exists so CI status is *visible* before
+merge — the "red badge for six weeks" failure (FIND-006) was a process gap, not a code gap.
+
+- **Branch → PR → CI green → merge.** No direct commits or pushes to `main`.
+- **Balance Suite CI must be green before merge.** The `balance.yml` check runs the fast test
+  suite (`Category!=Slow`) *and* the baseline-gated acceptance suite (`--suite --baseline`). A red
+  suite step means the committed baseline and current harness output disagree — resolve it (re-baseline
+  intentionally, or fix the regression) before merging, don't merge over it.
+- **One logical change per PR.** Rename PRs carry no behavior change; balance PRs re-baseline in the
+  same commit that moves the numbers.
+- **Branch protection** (require the status check before merge) is the GitHub-admin enforcement of
+  this convention — configure it in repo settings so the rule can't be bypassed by accident.
+
 ---
 
 ## Agents

@@ -72,7 +72,7 @@ public static class DepthReportLoader
     private static IReadOnlyList<DepthPressureReport.DepthCurvePoint> LoadFromSummaryJson(string path)
     {
         // summary.json is keyed by scenario_id → NormalizedMetrics
-        // NormalizedMetrics doesn't have H_PM/H_MP/DPR directly — but we can still
+        // NormalizedMetrics doesn't have RoundsToKill/RoundsToDie/DPR directly — but we can still
         // provide the subset we have.
         var json = File.ReadAllText(path);
         var raw  = JsonSerializer.Deserialize<Dictionary<string, SummaryEntry>>(json, JsonOptions);
@@ -85,8 +85,8 @@ public static class DepthReportLoader
             .Select(e => new DepthPressureReport.DepthCurvePoint(
                 Depth:           0,   // depth not available in summary.json
                 ScenarioId:      e.ScenarioId ?? "unknown",
-                H_PM:            0,
-                H_MP:            0,
+                RoundsToKill:            0,
+                RoundsToDie:            0,
                 DPR_P:           0,
                 DPR_M:           0,
                 PlayerHitRate:   e.PlayerHitRate,

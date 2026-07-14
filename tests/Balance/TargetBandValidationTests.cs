@@ -50,7 +50,7 @@ public class TargetBandValidationTests
 
         // Header
         TestContext.WriteLine(string.Format("  {0,-28} {1,5} {2,8} {3,7} {4,7} {5,8} {6,8} {7,8}",
-            "Scenario", "Depth", "Death%", "H_PM", "H_MP", "D%?", "HPM?", "HMP?"));
+            "Scenario", "Depth", "Death%", "RoundsToKill", "RoundsToDie", "D%?", "HPM?", "HMP?"));
         TestContext.WriteLine(string.Format("  {0,-28} {1,5} {2,8} {3,7} {4,7} {5,8} {6,8} {7,8}",
             "--------", "-----", "------", "----", "----", "---", "----", "----"));
 
@@ -68,8 +68,8 @@ public class TargetBandValidationTests
             var eval = PressureModel.Evaluate(pm);
 
             TestContext.WriteLine(string.Format("  {0,-28} {1,5} {2,7:P0} {3,7:F1} {4,7:F1} {5,8} {6,8} {7,8}",
-                agg.ScenarioId, depth, pm.DeathRate, pm.H_PM, pm.H_MP,
-                eval.DeathRate_Status, eval.H_PM_Status, eval.H_MP_Status));
+                agg.ScenarioId, depth, pm.DeathRate, pm.RoundsToKill, pm.RoundsToDie,
+                eval.DeathRate_Status, eval.RoundsToKill_Status, eval.RoundsToDie_Status));
 
             if (eval.AllInBand) inBand++;
             total++;
@@ -100,20 +100,20 @@ public class TargetBandValidationTests
     public void EvaluateAndDiagnose_ProduceActionableOutput()
     {
         // Synthetic test: verify diagnosis produces correct output for out-of-band metrics.
-        // H_PM=12 >> band [6-10] → HIGH (player kills too slowly)
-        // H_MP=40  > band [20-24] → HIGH (monsters not threatening enough)
+        // RoundsToKill=12 >> band [6-10] → HIGH (player kills too slowly)
+        // RoundsToDie=40  > band [20-24] → HIGH (monsters not threatening enough)
         // DeathRate=44% >> band [0-8%] → HIGH
         var pm = new PressureMetrics
         {
             ScenarioId = "test", Depth = 2,
-            H_PM = 12.0, H_MP = 40.0, DPR_P = 2.4, DPR_M = 2.4,
+            RoundsToKill = 12.0, RoundsToDie = 40.0, DPR_P = 2.4, DPR_M = 2.4,
             DeathRate = 0.44,
         };
 
         var eval = PressureModel.Evaluate(pm);
 
-        Assert.That(eval.H_PM_Status, Is.EqualTo("HIGH"));
-        Assert.That(eval.H_MP_Status, Is.EqualTo("HIGH"));
+        Assert.That(eval.RoundsToKill_Status, Is.EqualTo("HIGH"));
+        Assert.That(eval.RoundsToDie_Status, Is.EqualTo("HIGH"));
         Assert.That(eval.DeathRate_Status, Is.EqualTo("HIGH"));
         Assert.That(eval.AllInBand, Is.False);
 

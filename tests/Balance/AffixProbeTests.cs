@@ -34,11 +34,11 @@ public class AffixProbeTests
         foreach (int depth in new[] { 2, 5 })
         {
             double monsterHp = depth == 2 ? 29 : 36;
-            var hpmTarget = PressureModel.GetH_PM_Target(depth);
+            var hpmTarget = PressureModel.GetRoundsToKillTarget(depth);
 
-            TestContext.WriteLine($"  --- Depth {depth} (H_PM target: {hpmTarget.Min}-{hpmTarget.Max}) ---");
+            TestContext.WriteLine($"  --- Depth {depth} (RoundsToKill target: {hpmTarget.Min}-{hpmTarget.Max}) ---");
             TestContext.WriteLine(string.Format("  {0,-24} {1,7} {2,7} {3,7} {4,8} {5,8}",
-                "Weapon", "H_PM", "DPR_P", "Death%", "HPM?", "Kills"));
+                "Weapon", "RoundsToKill", "DPR_P", "Death%", "HPM?", "Kills"));
 
             // Baseline
             var baseFile = depth == 2
@@ -77,12 +77,12 @@ public class AffixProbeTests
     private static void PrintRow(string label, PressureMetrics pm, AggregatedMetrics agg, TargetBand hpmTarget)
     {
         TestContext.WriteLine(string.Format("  {0,-24} {1,7:F1} {2,7:F2} {3,6:P0} {4,8} {5,8:F1}",
-            label, pm.H_PM, pm.DPR_P, pm.DeathRate,
-            hpmTarget.Status(pm.H_PM), agg.AvgMonstersKilled));
+            label, pm.RoundsToKill, pm.DPR_P, pm.DeathRate,
+            hpmTarget.Status(pm.RoundsToKill), agg.AvgMonstersKilled));
     }
 
     [Test]
-    public void AllAffixes_LowerH_PM_ThanBaseline()
+    public void AllAffixes_LowerRoundsToKill_ThanBaseline()
     {
         var baseAgg = _runner.RunFromFile(ScenarioPath("scenario_depth2_orc_baseline.yaml"));
         var basePm = PressureModel.Compute(baseAgg, 2, 29, 55);
@@ -95,10 +95,10 @@ public class AffixProbeTests
             var agg = _runner.RunFromFile(path);
             var pm = PressureModel.Compute(agg, 2, 29, 55);
 
-            // Each affix should produce lower H_PM than baseline dagger
+            // Each affix should produce lower RoundsToKill than baseline dagger
             // (more damage output = fewer rounds to kill)
-            Assert.That(pm.H_PM, Is.LessThanOrEqualTo(basePm.H_PM),
-                $"{affix} H_PM {pm.H_PM:F1} should be <= baseline {basePm.H_PM:F1}");
+            Assert.That(pm.RoundsToKill, Is.LessThanOrEqualTo(basePm.RoundsToKill),
+                $"{affix} RoundsToKill {pm.RoundsToKill:F1} should be <= baseline {basePm.RoundsToKill:F1}");
         }
     }
 }
