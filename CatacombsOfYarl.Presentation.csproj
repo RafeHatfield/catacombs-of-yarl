@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.6.1">
+<Project Sdk="Godot.NET.Sdk/4.7.0">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -22,9 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="analyzers/QueueFreeAnalyzer/QueueFreeAnalyzer.csproj"
-                      OutputItemType="Analyzer"
-                      ReferenceOutputAssembly="false" />
+    <ProjectReference Include="analyzers/QueueFreeAnalyzer/QueueFreeAnalyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,9 +36,7 @@
   </ItemGroup>
 
   <Target Name="CopyNuGetDepsToGodotOutput" AfterTargets="Build">
-    <Copy SourceFiles="$(NuGetPackageRoot)yamldotnet/16.3.0/lib/net8.0/YamlDotNet.dll"
-          DestinationFolder="$(OutputPath)"
-          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(NuGetPackageRoot)yamldotnet/16.3.0/lib/net8.0/YamlDotNet.dll" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
   </Target>
 
 </Project>
