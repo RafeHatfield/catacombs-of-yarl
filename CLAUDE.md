@@ -126,15 +126,24 @@ dotnet run --project tools/Harness -- --scenario <id> --runs 50
 All changes land through PRs, not direct pushes. This exists so CI status is *visible* before
 merge — the "red badge for six weeks" failure (FIND-006) was a process gap, not a code gap.
 
-- **Branch → PR → CI green → merge.** No direct commits or pushes to `main`.
-- **Balance Suite CI must be green before merge.** The `balance.yml` check runs the fast test
-  suite (`Category!=Slow`) *and* the baseline-gated acceptance suite (`--suite --baseline`). A red
-  suite step means the committed baseline and current harness output disagree — resolve it (re-baseline
-  intentionally, or fix the regression) before merging, don't merge over it.
-- **One logical change per PR.** Rename PRs carry no behavior change; balance PRs re-baseline in the
-  same commit that moves the numbers.
-- **Branch protection** (require the status check before merge) is the GitHub-admin enforcement of
-  this convention — configure it in repo settings so the rule can't be bypassed by accident.
+- **Branch → PR → merge.** No direct commits or pushes to `main`.
+- **Merge gate until M2 re-baseline: fast tests green (by review).** `balance.yml` runs the fast
+  suite (`Category!=Slow`) *and* the baseline-gated acceptance suite (`--suite --baseline`) in one
+  job. `main`'s acceptance suite is currently **red for a known, documented reason** — the FIND-006
+  orc/troll balance change disagrees with the committed baseline, and the ruling + re-baseline are
+  deferred to M2. Every PR inherits that red until then. So for now the merge gate is: **fast tests
+  pass**, and the suite shows **no *new* failures** beyond the FIND-006 set. Confirm by reading the
+  CI log, not the top-level badge (the job is red whenever the suite is red, even when fast tests pass).
+- **Never re-baseline to force green, and never merge over an unexplained red.** Re-baselining now
+  would bless the unverified FIND-006 change — that's M2's ruling to make. A red suite step outside
+  the known FIND-006 set means new disagreement: fix the regression or re-baseline intentionally
+  before merging. A proven delta-zero refactor may merge against the documented pre-existing red; a
+  behavioral change may not.
+- **One logical change per PR.** Rename/refactor PRs carry no behavior change; balance PRs re-baseline
+  in the same commit that moves the numbers.
+- **Branch protection turns on at M2.** Once M2 re-baselines the suite to verified green, require the
+  Balance Suite check via repo settings so the rule can't be bypassed. Until then enforcement is by
+  review — branch protection now would block every PR on the inherited red.
 
 ---
 
