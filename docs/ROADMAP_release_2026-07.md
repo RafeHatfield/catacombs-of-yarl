@@ -9,7 +9,7 @@
 
 ## 1. Where the game stands (compressed from the review)
 
-**Done and verified:** core roguelike loop; 28 monsters, 4 factions; traps (9 types), resistance, item stacking, two-handed weapons; possession through Phase 7; cross-run persistence (15 namespaces, migrations, daily seeds); Under-Warden memo pipeline; Weighing endgame framework (6 endings wired); depth-based tile theming mechanism; balance harness + Analyst + LLM Player stack; CI green on clean machines (2,040 fast tests, 15/15 suite); docs reconciled and stamped.
+**Done and verified:** core roguelike loop; 28 monsters, 4 factions; traps (9 types), resistance, item stacking, two-handed weapons; possession through Phase 7; cross-run persistence (15 namespaces, migrations, daily seeds); Under-Warden memo pipeline; Weighing endgame framework (6 endings wired); depth-based tile theming mechanism; balance harness + Analyst + LLM Player stack; CI dispatches on clean machines with fast tests green (2,223 passed / 1 skipped as of 2026-07-16) — but the baseline-gated acceptance suite is RED (5 PASS / 3 WARN / 7 FAIL), pending the FIND-006 ruling and re-baseline in M2; docs reconciled and stamped.
 
 **Confirmed absent (never built; not recoverable from any ref):** mid-run save/resume; Hollowmark ribbon UI (logic-side `VoiceLineRegistry` only); dialogue system; Borrek/Vesh/Hael as entities; Warden of Reven, Tide-Hunger, Hollow King, Weigher of Hearts; region content identity (mechanism live, themes not authored); audio; ~15–20K words of the 24–30K voice bill (≈9.9K written, distribution inverted — endgame deepest, Hollowmark thinnest at 254 words); 6 no-op rings; stair-up ascent.
 
@@ -37,9 +37,9 @@ The measurement and process fixes that everything downstream trusts.
 
 1. **Metric-family rename** per FIND-005: `TtkHits`/`TtdHits` vs `RoundsToKill`/`RoundsToDie`; fix `PressureModel` doc-comments; harness prints both families labeled. No lethality tuning before this lands.
 2. **PR-based flow with visible CI** — the red-badge-for-six-weeks failure gets a process answer while stakes are low: all work via PRs, CI status surfaced (the world-class review's Part 4 recommendation).
-3. Housekeeping rulings: delete or keep `docs/archive/` (manifest awaits); wire or remove the stair-up tile.
+3. Housekeeping rulings (**resolved 2026-07-16**): `docs/archive/` **KEPT** — retained as provenance cited by this roadmap and `tasks/plans/`, fenced as non-current-state in its MANIFEST. Stair-up **NOT wired** — the game is a one-way descent; the tile is retained as an entry marker with honest flavor text ("there is no going back"), no ascent logic added.
 
-**Exit gate:** harness output shows both metric families; a deliberately-red test PR is visibly red to you within one session.
+**Exit gate:** harness output shows both metric families; a deliberately-red test PR is visibly red to you within one session. **All three items resolved — M0 closed 2026-07-16.**
 
 ## M1 — Mobile viability + voice delivery surface (build next, before any content)
 

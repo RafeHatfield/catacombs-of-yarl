@@ -4,8 +4,9 @@ _Last verified: 2026-07-12 against commit 86b6f10_
 
 Historic and superseded documentation moved here during the 2026-07 documentation
 reconciliation. **Nothing here is current-state reference.** Content is preserved (moved,
-not deleted) so history is not lost. Deletion decisions are deferred to the maintainer —
-see `reports/doc_reconciliation_2026-07.md`.
+not deleted) so history is not lost. Kept by maintainer ruling 2026-07-16: retained as
+provenance cited by the release roadmap and `tasks/plans/`; not current-state reference.
+See `reports/doc_reconciliation_2026-07.md`.
 
 | Archived path | Original path | Reason |
 |---|---|---|
