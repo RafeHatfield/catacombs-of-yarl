@@ -180,7 +180,7 @@ public static class PropDescriptionRegistry
 
         // Navigation
         Entries["__stair_down"]    = ("Stairs Down",  "Stone steps descending into deeper darkness.");
-        Entries["__stair_up"]      = ("Stairs Up",    "Stone steps leading back to the level above.");
+        Entries["__stair_up"]      = ("Stairs Up",    "The stairs you came down. There is no going back.");
 
         // Signs and murals
         Entries["__sign"]          = ("Sign",         "There is writing here — tap to read it.");

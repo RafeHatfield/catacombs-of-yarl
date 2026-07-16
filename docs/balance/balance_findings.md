@@ -32,6 +32,13 @@ delta is currently sitting on main.
    question below — the orc/troll HP bump pushes *toward* the durable end, opposite the ttk-intent
    direction FIND-005 flags. Resolve them together, not in isolation.
 
+**2026-07-16 update:** confirmed RED on CI now that the repo is public and Actions dispatch —
+`--suite --baseline` returns 5 PASS / 3 WARN / 7 FAIL, red on every `main` push (the FIND-005
+rename PR and its docs follow-up both inherited this exact set, delta-zero). Ruling and
+re-baseline remain deferred to M2. Merge gate until then: fast-tests-green by review; a PR is
+clear if it adds no *new* suite failures beyond this known set. Finding stays **OPEN**; do not
+re-baseline.
+
 ---
 
 ## 2026-07-06 — FIND-005 (RESOLVES FIND-004): there is no hidden damage reduction — the "10× ttd gap" was a metric-identity error
