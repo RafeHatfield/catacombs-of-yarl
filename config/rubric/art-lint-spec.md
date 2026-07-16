@@ -1,6 +1,6 @@
 # Art Lint Spec
 
-Status: draft for ruling. Companion: `docs/art_bible.md` (rationale and canon rules live there).
+Status: adopted 2026-07-16 (PR #4). Thresholds accepted as drafted: color ceilings at observed canon maxima, outline FAIL at 0.90, live generated tiles not grandfathered.
 Sibling discipline: `voice-anti-tell-lint.md` — same model, machine checks plus judgment rubric, both required.
 
 Baselines below were measured 2026-07-16 against the canonical Oryx library (150-tile world sample, 80 creatures, 312 items). Thresholds are observed Oryx values, not aspirations. Re-measurement requires a ruling.

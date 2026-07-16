@@ -1,6 +1,6 @@
 # Catacombs of Yarl — Art Bible
 
-Status: draft for ruling. Companion document: `config/rubric/art-lint-spec.md`.
+Status: adopted 2026-07-16 (PR #4). Companion document: config/rubric/art-lint-spec.md.
 
 ## 1. Canon
 
