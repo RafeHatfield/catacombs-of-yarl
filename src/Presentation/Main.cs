@@ -1,3 +1,4 @@
+using System.Linq;
 using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
@@ -122,6 +123,13 @@ public partial class Main : Node
     private int _baseSeed = 1337;
     private int _currentDepth = 1;
 
+    // --art-scene-capture state (tools/art_lint/capture_scene.py driver).
+    // Set true in _Ready when the flag is present; consumed in _Process once the
+    // post-SetupPresentation camera snap (_pendingCameraSnapFrames) has settled to 0.
+    private bool _pendingCapture;
+    private string? _captureOutputPath;
+    private int _captureSettleBuffer = 2; // extra idle frames after camera-snap settles
+
     // Cross-run persistence — loaded once at app start, flushed at narrative-event boundaries.
     private GodotPersistencePathProvider? _persistenceProvider;
     private PersistentRunState? _persistentState;
@@ -152,6 +160,16 @@ public partial class Main : Node
 
     public override void _Ready()
     {
+        // --art-scene-capture at a specific logical resolution: project.godot's stretch mode
+        // (canvas_items / keep_width / integer) keeps the render canvas pinned to the
+        // project's base viewport size (720x1280) regardless of --resolution, which only
+        // resizes the OS window around that fixed canvas. ContentScaleSize overrides the
+        // base canvas size itself for this run only — no change to project.godot, no effect
+        // outside a capture run. Must happen before any viewport-size-dependent setup below
+        // (renderer creation, camera math) so everything sees the final size from frame 0.
+        if (ReadArtSceneCaptureResolution(out var captureWidth, out var captureHeight))
+            GetTree().Root.ContentScaleSize = new Vector2I(captureWidth, captureHeight);
+
         GD.Print("Catacombs of YARL — loading...");
         Diag.Init();
 
@@ -173,10 +191,24 @@ public partial class Main : Node
         // --art-scene: dev/debug launch flag (same convention as --tileset/--map-mode) that
         // boots directly into the fixed art-acceptance test scene instead of the main menu.
         // See ArtAcceptanceSceneBuilder (Logic layer) for the authored floor data.
-        if (ReadArtSceneFlag())
+        //
+        // --art-scene-capture --capture-out <path>: same boot path (reuses
+        // LaunchArtAcceptanceScene — no parallel boot logic), but additionally captures the
+        // settled viewport to a PNG and quits. Driven by tools/art_lint/capture_scene.py.
+        if (ReadArtSceneCaptureFlag(out var captureOutputPath))
+        {
+            _pendingCapture = true;
+            _captureOutputPath = captureOutputPath;
             LaunchArtAcceptanceScene();
+        }
+        else if (ReadArtSceneFlag())
+        {
+            LaunchArtAcceptanceScene();
+        }
         else
+        {
             ShowMainMenu();
+        }
 
         // Debug overlay: only created in editor/debug builds — zero cost in release.
         // Stored as a field so SetupPresentation can wire it to the current floor's objects.
@@ -210,6 +242,17 @@ public partial class Main : Node
         {
             _pendingCameraSnapFrames--;
             _DoInitialCameraSnap();
+        }
+
+        // --art-scene-capture: wait for the camera-snap sequence above to fully settle
+        // (_pendingCameraSnapFrames reaches 0), then a couple more idle frames as a buffer
+        // against any one-frame-late layout settling, then capture and quit.
+        if (_pendingCapture && _pendingCameraSnapFrames == 0)
+        {
+            if (_captureSettleBuffer > 0)
+                _captureSettleBuffer--;
+            else
+                CaptureAndQuit();
         }
 
         // Animate and clean up tap indicators entirely in _Process — no Tween involved,
@@ -360,6 +403,40 @@ public partial class Main : Node
         foreach (var arg in args)
             if (arg == "--art-scene") return true;
         return false;
+    }
+
+    /// <summary>
+    /// --art-scene-capture --capture-out &lt;path&gt;: both required together.
+    /// </summary>
+    private static bool ReadArtSceneCaptureFlag(out string? outputPath)
+    {
+        outputPath = null;
+        var args = OS.GetCmdlineArgs();
+        bool present = false;
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (args[i] == "--art-scene-capture") present = true;
+            if (args[i] == "--capture-out" && i + 1 < args.Length) outputPath = args[i + 1];
+        }
+        return present;
+    }
+
+    /// <summary>
+    /// --capture-width/--capture-height: the resolution.width/height values from
+    /// scene_capture_config.yaml, passed through by tools/art_lint/capture_scene.py (the
+    /// YAML remains the single source of truth; these flags carry its values into the
+    /// engine process, they are not an independent second place to set resolution).
+    /// </summary>
+    private static bool ReadArtSceneCaptureResolution(out int width, out int height)
+    {
+        width = height = 0;
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length - 1; i++)
+        {
+            if (args[i] == "--capture-width") width = int.Parse(args[i + 1]);
+            if (args[i] == "--capture-height") height = int.Parse(args[i + 1]);
+        }
+        return width > 0 && height > 0;
     }
 
     private static bool ReadDebugOverlayVisible()
@@ -1945,6 +2022,93 @@ public partial class Main : Node
         GD.Print("Ready (art acceptance scene) — " +
                  $"{_state.Monsters.Count} monsters, {_state.Props.Count} props, {_state.Features.Count} features, " +
                  $"{_state.FloorItems.Count} floor items.");
+    }
+
+    /// <summary>
+    /// --art-scene-capture: log the worn-tile (3001) in-frame report, save the settled
+    /// viewport to --capture-out, and quit. Called once _pendingCameraSnapFrames has
+    /// reached 0 and the extra settle buffer has elapsed (see _Process).
+    /// </summary>
+    private void CaptureAndQuit()
+    {
+        _pendingCapture = false;
+
+        if (string.IsNullOrEmpty(_captureOutputPath))
+        {
+            GD.PrintErr("[Main] --art-scene-capture requires --capture-out <path>. Not capturing.");
+            GetTree().Quit(1);
+            return;
+        }
+
+        LogWornTilePositions();
+
+        var image = GetViewport().GetTexture().GetImage();
+        var dir = System.IO.Path.GetDirectoryName(_captureOutputPath);
+        if (!string.IsNullOrEmpty(dir))
+            System.IO.Directory.CreateDirectory(dir);
+        var err = image.SavePng(_captureOutputPath);
+        if (err != Error.Ok)
+            GD.PrintErr($"[Main] Capture save failed ({err}): {_captureOutputPath}");
+        else
+            GD.Print($"[Main] Capture written: {_captureOutputPath}");
+
+        GetTree().Quit(err == Error.Ok ? 0 : 1);
+    }
+
+    /// <summary>
+    /// The tile-coordinate rect actually visible in the playable strip between the HUD
+    /// margins — same math PlayerCamera.Update used to position/scale _gameView, inverted.
+    /// Read-only consumption of existing camera state; does not modify rendering.
+    /// </summary>
+    private (int x0, int y0, int x1, int y1) ComputeVisibleTileRect()
+    {
+        var viewport = _gameView!.GetViewport().GetVisibleRect().Size;
+        var topLeftScreen = new Vector2(0, PlayerCamera.UiTopMargin);
+        var bottomRightScreen = new Vector2(viewport.X, viewport.Y - PlayerCamera.UiBottomMargin);
+
+        Vector2 ToLocal(Vector2 screen) => (screen - _gameView.Position) / _gameView.Scale;
+
+        var (x0, y0) = _renderer!.ScreenToGrid(ToLocal(topLeftScreen));
+        var (x1, y1) = _renderer.ScreenToGrid(ToLocal(bottomRightScreen));
+        return (x0, y0, x1, y1);
+    }
+
+    /// <summary>
+    /// Honest floor_worn (3001) in-frame check (spec §5 merge evidence). Calls
+    /// FloorComposer.Compose a second time with the exact inputs DungeonRenderer.Render
+    /// already used internally (state.Map, seed: 0 — Render's own default, not reproduced
+    /// from a guess) to recover which cells it marked Worn; that dictionary is otherwise
+    /// discarded by Render and never returned to the caller. Read-only — does not touch
+    /// render code. Reproduces Render's own prop-footprint suppression (worn/accent tiles
+    /// under blocking props render as Standard) so a suppressed cell isn't misreported as
+    /// "worn and in frame" when it visually isn't.
+    /// </summary>
+    private void LogWornTilePositions()
+    {
+        if (_state == null) return;
+
+        var floorMap = FloorComposer.Compose(_state.Map, seed: 0);
+
+        var propFootprint = new HashSet<(int, int)>();
+        foreach (var p in _state.Props)
+            if (p.BlocksMovement)
+                for (int fx = p.X; fx < p.X + p.FootprintW; fx++)
+                    for (int fy = p.Y; fy < p.Y + p.FootprintH; fy++)
+                        propFootprint.Add((fx, fy));
+
+        var wornPositions = floorMap
+            .Where(kv => kv.Value == FloorTileType.Worn && !propFootprint.Contains(kv.Key))
+            .Select(kv => kv.Key)
+            .OrderBy(p => p.Y).ThenBy(p => p.X)
+            .ToList();
+
+        var (x0, y0, x1, y1) = ComputeVisibleTileRect();
+        var inFrame = wornPositions.Where(p => p.X >= x0 && p.X <= x1 && p.Y >= y0 && p.Y <= y1).ToList();
+
+        GD.Print($"[Main] Visible tile rect: ({x0},{y0})-({x1},{y1})");
+        GD.Print($"[Main] floor_worn (3001) tiles: {wornPositions.Count} rendered in the authored room, " +
+                  $"{inFrame.Count} in frame: " +
+                  string.Join(", ", inFrame.Select(p => $"({p.X},{p.Y})")));
     }
 
     /// <summary>

@@ -1,0 +1,31 @@
+Worn-tile (floor_worn, 3001) in-frame check — docs/art_test_scene_spec_v2.md §5 merge evidence.
+
+Method: Main.LogWornTilePositions() calls FloorComposer.Compose(state.Map, seed: 0) — the
+exact same inputs DungeonRenderer.Render used internally (seed: 0 is Render's own default
+parameter, not reproduced from a guess) — to recover which cells it marked Worn, a result
+Render computes but never returns to the caller. Cells suppressed back to Standard under a
+blocking prop footprint (DungeonRenderer's own suppression rule — worn/accent tiles would
+look like a "pedestal" under furniture) are excluded, so a suppressed cell is not
+misreported as "worn and in frame" when it visually isn't. The in-frame check intersects
+against the actual visible tile rect, computed by inverting PlayerCamera's own
+position/scale math (ComputeVisibleTileRect) — not assumed from the room's authored bounds.
+
+Capture: tools/art_lint/scene_captures/2026-07-16_pr8_before_full.png (750x1334, ruled
+resolution per spec §7).
+
+Result:
+  Visible tile rect: (1,10)-(12,23)
+  floor_worn (3001) tiles rendered in the authored room: 5 total
+  floor_worn (3001) tiles in frame: 2
+    (6,15)  — visible in tools/art_lint/scene_captures/2026-07-16_pr8_before_crop3.png
+    (11,15) — underneath the canon healing_potion floor item; visible in
+              tools/art_lint/scene_captures/2026-07-16_pr8_before_crop1.png (the faded
+              square patch behind the potion bottle)
+
+Count is nonzero — check PASSES. No scene-data or seed adjustment needed.
+
+Raw Godot log lines (verbatim, --art-scene-capture run):
+  [Main] Map renderer: TopDownRenderer (zoom default=3, min=1.5, max=6)
+  [Main] Visible tile rect: (1,10)-(12,23)
+  [Main] floor_worn (3001) tiles: 5 rendered in the authored room, 2 in frame: (6,15), (11,15)
+  [Main] Capture written: tools/art_lint/scene_captures/2026-07-16_pr8_before_full.png
