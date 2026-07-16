@@ -1,0 +1,916 @@
+{
+  "generated_at": "2026-07-16T18:17:40.543470+00:00",
+  "method": "Git provenance sweep: earliest add-commit per currently-live file, classified against a hand-verified canon/generated commit ruling. See tools/art_lint/build_generated_manifest.py for the ruling and per-entry metadata sources.",
+  "swept_dirs": [
+    "src/Presentation/assets/sprites_16bf",
+    "src/Presentation/assets/sprites",
+    "src/Presentation/assets/tiles/iso"
+  ],
+  "total_files_swept": 3630,
+  "canon_file_count": 3550,
+  "generated_file_count": 80,
+  "unclassified_count": 0,
+  "classification_table": [
+    {
+      "commit": "d124b5ff6131dd5762a9155800a1ab95ed7c08bb",
+      "date": "2026-03-23",
+      "ruling": "CANON",
+      "live_file_count": 87,
+      "subject": "feat: Phase 2 \u2014 Godot project setup, Oryx asset import, scene tree skeleton"
+    },
+    {
+      "commit": "ff630613bf50be07bdfd9c27ae592f0a059bb66c",
+      "date": "2026-03-26",
+      "ruling": "CANON",
+      "live_file_count": 238,
+      "subject": "feat: dungeon generation, visibility, HUD/inventory, and observability infrastructure"
+    },
+    {
+      "commit": "c9c27f18d7e0fdcf3276dc8b5de56599b77b238d",
+      "date": "2026-03-31",
+      "ruling": "CANON",
+      "live_file_count": 12,
+      "subject": "feat: spell/wand/portal system, status effects, monster knowledge, tech debt fixes \u2014 734 tests"
+    },
+    {
+      "commit": "ae5969f024eaa34111915ac906bc586f699c7e62",
+      "date": "2026-04-01",
+      "ruling": "CANON",
+      "live_file_count": 2803,
+      "subject": "chore: add 16-bit fantasy sprite assets (Oryx 24x24 creatures + 16x16 items)"
+    },
+    {
+      "commit": "a67ac2ac0e0934cc27592123ad6db235e092b7c2",
+      "date": "2026-04-06",
+      "ruling": "CANON",
+      "live_file_count": 248,
+      "subject": "feat: import full UF items sprite set (328 sprites) and fix shield mapping"
+    },
+    {
+      "commit": "84ce76d17cb6e5594718808ded3e2750e8767343",
+      "date": "2026-04-07",
+      "ruling": "CANON",
+      "live_file_count": 162,
+      "subject": "feat: import UF FX sprite set (162 sprites) and add FX sprite browser"
+    },
+    {
+      "commit": "447f5237b440791c5bb2981078caa29ab0cc935e",
+      "date": "2026-04-16",
+      "ruling": "GENERATED",
+      "live_file_count": 1,
+      "subject": "feat: room prop system, placeholder sprites, dungeon visual improvements"
+    },
+    {
+      "commit": "fccf258d7e23171dd329442217b3f882feee6008",
+      "date": "2026-04-17",
+      "ruling": "GENERATED",
+      "live_file_count": 0,
+      "subject": "fix: corridor wall tiles, door rotation, rubble sprite; clean up new-sprites imports"
+    },
+    {
+      "commit": "c5af9dd9d0798e996ed1d9d66cf0424df8661cd5",
+      "date": "2026-04-18",
+      "ruling": "GENERATED",
+      "live_file_count": 0,
+      "subject": "feat: chests, signs, murals \u2014 bump interaction, PoC content, rendering"
+    },
+    {
+      "commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "date": "2026-04-24",
+      "ruling": "GENERATED",
+      "live_file_count": 32,
+      "subject": "feat: adopt PixelLab as primary sprite tool; replace RD furniture sprites"
+    },
+    {
+      "commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "date": "2026-05-03",
+      "ruling": "GENERATED",
+      "live_file_count": 47,
+      "subject": "feat: cross-run persistence Phases 1-3 + Under-Warden design docs + style bible"
+    }
+  ],
+  "entries": [
+    {
+      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4001.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "item",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "club",
+      "notes": "RD rd_plus__low_res v3"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4002.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "item",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": null,
+      "notes": "RD rd_plus__low_res v2 \u2014 banked (status: reserved \u2014 not currently used by any game_key)"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4003.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "item",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": null,
+      "notes": "RD rd_plus__low_res v0 \u2014 banked (status: reserved \u2014 not currently used by any game_key)"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4004.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "item",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": null,
+      "notes": "RD rd_plus__low_res v1 \u2014 banked (status: reserved \u2014 not currently used by any game_key)"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_3001.png",
+      "origin": "placeholder",
+      "added_commit": "447f5237b440791c5bb2981078caa29ab0cc935e",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "floor_worn",
+      "notes": "Full-cell worn-floor tile (config/tile_themes.yaml). Predates the PixelLab/RD tracking sheet."
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5001.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "Anvil",
+      "notes": "RD rd_plus__low_res v2"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5002.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "Armor Stand",
+      "notes": "RD rd_plus__low_res v1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5005.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "Bucket",
+      "notes": "RD rd_plus__low_res v1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5007.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "Chain",
+      "notes": "RD rd_plus__low_res v1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5008.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "Coal Pile",
+      "notes": "RD rd_plus__low_res v1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5010.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "Drain",
+      "notes": "RD rd_plus__low_res drain_v2"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5011.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "Forge",
+      "notes": "RD rd_plus__low_res v1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5012.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "Globe",
+      "notes": "RD rd_plus__low_res v0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5014.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "Grate",
+      "notes": "RD rd_plus__low_res grate_v3"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5015.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "Iron Bars",
+      "notes": "RD rd_plus__low_res iron_bars_v2"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5016.png",
+      "origin": "retrodiffusion",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "Moss",
+      "notes": "RD rd_plus__low_res v0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5039.png",
+      "origin": "placeholder",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "world_tile",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "key_item",
+      "notes": "Key icon overlay rendered directly from world_24x24 by ItemSpriteManager/DungeonRenderer, bypassing the items_16x16 pipeline \u2014 see src/Presentation/Entities/ItemSpriteManager.cs. 24x24 is correct/intentional for this asset, not a resolution bug. Classified world_tile (not item) so A3 checks the resolution it actually ships at. Flagging for Part B rubric: confirm this classification with Rafe rather than assuming it."
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5051.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "chair",
+      "notes": "PixelLab s42"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5052.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "table",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5053.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "table",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5054.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "table",
+      "notes": "PixelLab s42 \u2014 primary"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5055.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "table",
+      "notes": "PixelLab s1337"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5056.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "chair",
+      "notes": "PixelLab s999"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5057.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "chair",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5058.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "bed",
+      "notes": "PixelLab s2"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5059.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "bed",
+      "notes": "PixelLab s999"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5060.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "bench",
+      "notes": "PixelLab s3"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5061.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "bench",
+      "notes": "PixelLab s999"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5062.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "desk",
+      "notes": "PixelLab s42 \u2014 primary"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5063.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "desk",
+      "notes": "PixelLab s999"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5064.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "desk",
+      "notes": "PixelLab s137"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5065.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "cage",
+      "notes": "PixelLab s0 \u2014 primary"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5066.png",
+      "origin": "pixellab",
+      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "cage",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5067.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "glowing_mushroom",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5068.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "glowing_mushroom",
+      "notes": "PixelLab s2"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5069.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "glowing_mushroom",
+      "notes": "PixelLab s1337"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5070.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "mural_wood_cool",
+      "notes": "PixelLab s1337"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5071.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "mural_gold_warm",
+      "notes": "PixelLab s999 \u2014 primary"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5072.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "mural_gold_warm",
+      "notes": "PixelLab s42"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5073.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "mural_gold_warm",
+      "notes": "PixelLab s3"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5074.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "mural_gold_warm",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5075.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "mural_gold_landscape",
+      "notes": "PixelLab s137 \u2014 primary"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5076.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "mural_gold_landscape",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5077.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "sign",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5078.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "rubble",
+      "notes": "PixelLab s137"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5079.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "rubble",
+      "notes": "PixelLab s2"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5080.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "candelabra",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5081.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "candelabra",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5082.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "workbench",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5083.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "workbench",
+      "notes": "PixelLab s1337"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5084.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "water_barrel",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5085.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "water_barrel",
+      "notes": "PixelLab s999"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5086.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "vine",
+      "notes": "PixelLab s42"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5087.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "training_dummy",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5088.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "training_dummy",
+      "notes": "PixelLab s42"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5089.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "tool_rack",
+      "notes": "PixelLab s137"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5090.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "tool_rack",
+      "notes": "PixelLab s1337"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5091.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "straw_pile",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5092.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "straw_pile",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5093.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "pillar",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5094.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "pillar",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5095.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "pillar",
+      "notes": "PixelLab s137"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5096.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "shelf",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5097.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "shelf",
+      "notes": "PixelLab s42"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5098.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "shelf",
+      "notes": "PixelLab s999"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5099.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "shelf_bottles",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5100.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "shelf_bottles",
+      "notes": "PixelLab s42"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5101.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "shelf_bottles",
+      "notes": "PixelLab s137"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5102.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "sack",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5104.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "rock",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5105.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "rock",
+      "notes": "PixelLab s2"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5106.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "nightstand",
+      "notes": "PixelLab s42"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5107.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "nightstand",
+      "notes": "PixelLab s999"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5108.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "mushroom_cluster",
+      "notes": "PixelLab s0"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5109.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "mushroom_cluster",
+      "notes": "PixelLab s1"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5110.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "decal",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [
+        "A6_outline"
+      ],
+      "game_key": "puddle",
+      "notes": "PixelLab p3 s3"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5111.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "chest_closed",
+      "notes": "PixelLab s42"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5112.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "chest_open",
+      "notes": "PixelLab inpaint m40 g7 s1337"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5113.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "chest_empty",
+      "notes": "PixelLab inpaint m40 g9 s42"
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5114.png",
+      "origin": "pixellab",
+      "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
+      "asset_class": "prop",
+      "conformance_status": "nonconformant",
+      "lint_exemptions": [],
+      "game_key": "chest_trapped",
+      "notes": "PixelLab inpaint m40 g9 s42"
+    }
+  ]
+}
