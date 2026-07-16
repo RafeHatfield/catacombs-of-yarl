@@ -170,8 +170,13 @@ public partial class Main : Node
         GD.Print($"[Main] Map renderer: {_renderer.GetType().Name} (zoom default={_renderer.DefaultZoom}, min={_renderer.MinZoom}, max={_renderer.MaxZoom})");
         InitFactories();
 
-        // Show the main menu instead of jumping straight into the dungeon.
-        ShowMainMenu();
+        // --art-scene: dev/debug launch flag (same convention as --tileset/--map-mode) that
+        // boots directly into the fixed art-acceptance test scene instead of the main menu.
+        // See ArtAcceptanceSceneBuilder (Logic layer) for the authored floor data.
+        if (ReadArtSceneFlag())
+            LaunchArtAcceptanceScene();
+        else
+            ShowMainMenu();
 
         // Debug overlay: only created in editor/debug builds — zero cost in release.
         // Stored as a field so SetupPresentation can wire it to the current floor's objects.
@@ -341,6 +346,20 @@ public partial class Main : Node
 
         // 3. Default
         return "iso";
+    }
+
+    /// <summary>
+    /// --art-scene: dev launch flag that boots directly into the fixed art-acceptance test
+    /// scene (docs/art_test_scene_spec_v2.md), bypassing the main menu. Same CLI-arg convention
+    /// as --tileset/--map-mode. No game_settings.yaml fallback — this is a one-shot debug
+    /// launch mode, not a persistent setting.
+    /// </summary>
+    private static bool ReadArtSceneFlag()
+    {
+        var args = OS.GetCmdlineArgs();
+        foreach (var arg in args)
+            if (arg == "--art-scene") return true;
+        return false;
     }
 
     private static bool ReadDebugOverlayVisible()
@@ -1902,6 +1921,30 @@ public partial class Main : Node
         menuLayer.AddChild(panel);
 
         panel.BackRequested += ShowMainMenu;
+    }
+
+    /// <summary>
+    /// Boot directly into the fixed art-acceptance test scene (--art-scene launch flag).
+    ///
+    /// The authored floor data comes entirely from ArtAcceptanceSceneBuilder (Logic layer,
+    /// no Godot dependency, unit-tested in tests/Core/ArtAcceptanceSceneBuilderTests.cs).
+    /// This method's only job is the seam: hand that GameState to SetupPresentation, the
+    /// exact same shared entry point StartDungeon/LaunchTestScenario use, which in turn
+    /// calls DungeonRenderer.Render(state.Map, ..., props: state.Props, features: state.Features)
+    /// — the same render call a procedurally generated floor goes through. No parallel
+    /// rendering path exists for this scene.
+    /// </summary>
+    private void LaunchArtAcceptanceScene()
+    {
+        GetNode<CanvasLayer>("MenuLayer").Visible = false;
+
+        _currentDepth = 1;
+        _state = ArtAcceptanceSceneBuilder.Build(_monsterFactory!, _itemFactory!, _consumableFactory!);
+
+        SetupPresentation(_state);
+        GD.Print("Ready (art acceptance scene) — " +
+                 $"{_state.Monsters.Count} monsters, {_state.Props.Count} props, {_state.Features.Count} features, " +
+                 $"{_state.FloorItems.Count} floor items.");
     }
 
     /// <summary>

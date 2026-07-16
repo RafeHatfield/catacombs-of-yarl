@@ -49,6 +49,7 @@ bool    updateBaseline = false;
 bool    depthReportMode = false;
 string? depthReportIn   = null;
 string? depthReportOut  = null;
+bool    artSceneDumpMode = false;
 bool    etpSanityMode   = false;
 bool    etpSanityStrict = false;
 int?    etpSanityDepth  = null;
@@ -87,6 +88,7 @@ for (int i = 0; i < args.Length; i++)
         case "--depth-report": depthReportMode = true; break;
         case "--in":  depthReportIn  = args[++i]; break;
         case "--out": depthReportOut = args[++i]; break;
+        case "--art-scene-dump": artSceneDumpMode = true; break;
         case "--etp-sanity":   etpSanityMode   = true; break;
         case "--strict":       etpSanityStrict = true; break;
         case "--depth":        etpSanityDepth  = int.Parse(args[++i]); break;
@@ -300,6 +302,52 @@ if (depthReportMode)
     }
 
     return 0;
+}
+
+// ─── ART SCENE DUMP MODE ───────────────────────────────────────────────────
+// Produces the docs/art_test_scene_spec_v2.md §4 determinism evidence: two independent
+// cold-start builds of ArtAcceptanceSceneBuilder's fixed scene, dumped to text, diffed.
+// Fresh ContentLoader/EntityFactory/*Factory instances each time — a true cold start,
+// not reuse of warm state that could mask a hidden ordering dependency.
+
+if (artSceneDumpMode)
+{
+    if (!File.Exists(EntitiesFile))
+    {
+        Console.Error.WriteLine("ERROR: config/entities.yaml required for --art-scene-dump. Run from project root.");
+        return 1;
+    }
+
+    string BuildDump()
+    {
+        var loader = new ContentLoader();
+        var content = loader.LoadAllFromFile(EntitiesFile);
+        var entityFactory = new EntityFactory();
+        var itemFactory = new ItemFactory(content.Items, entityFactory);
+        var consumableFactory = new ConsumableFactory(content.Consumables, entityFactory);
+        var monsterFactory = new MonsterFactory(content.Monsters, entityFactory, itemFactory);
+        var state = ArtAcceptanceSceneBuilder.Build(monsterFactory, itemFactory, consumableFactory);
+        return ArtAcceptanceSceneDump.Dump(state);
+    }
+
+    var dump1 = BuildDump();
+    var dump2 = BuildDump();
+
+    const string evidenceDir = "tools/art_lint/scene_evidence";
+    Directory.CreateDirectory(evidenceDir);
+    File.WriteAllText(Path.Combine(evidenceDir, "run1_floor_dump.txt"), dump1);
+    File.WriteAllText(Path.Combine(evidenceDir, "run2_floor_dump.txt"), dump2);
+
+    bool identical = dump1 == dump2;
+    var diffResult = identical
+        ? "IDENTICAL — 0 differences.\n"
+        : "DIFFERENCES FOUND — see run1_floor_dump.txt / run2_floor_dump.txt.\n";
+    File.WriteAllText(Path.Combine(evidenceDir, "diff_result.txt"), diffResult);
+
+    Console.WriteLine(identical
+        ? "Determinism check PASSED: two cold builds are byte-identical."
+        : "Determinism check FAILED: cold builds differ — see scene_evidence/.");
+    return identical ? 0 : 1;
 }
 
 // ─── ETP SANITY MODE ───────────────────────────────────────────────────────
