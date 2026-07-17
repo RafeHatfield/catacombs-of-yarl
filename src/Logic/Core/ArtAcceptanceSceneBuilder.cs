@@ -12,32 +12,45 @@ namespace CatacombsOfYarl.Logic.Core;
 /// props, and RoomPropPlacer's archetype-recipe placement has no mechanism to pin exact
 /// tile IDs or guarantee specific asset co-presence — the two things this scene needs.
 ///
-/// Fidelity constraint: this builder produces ONLY data — a GameState with a populated
-/// GameMap, Props, Features, FloorItems, Monsters, and Player. It contains no rendering
-/// code. The caller (see Main.LaunchArtAcceptanceScene) feeds the result through the exact
-/// same DungeonRenderer.Render(...) call used for procedurally generated floors — same
-/// method, same overload, same wall-autotile and FloorComposer logic. See that call site
-/// for the seam evidence. This builder deliberately lives in the Logic layer (no Godot
-/// dependency) so its content can be asserted and diffed in the fast headless test suite —
-/// see tests/Core/ArtAcceptanceSceneBuilderTests.cs.
+/// v3 repack (docs/art_test_scene_spec_v2.md ruling): the first capture (PR #8) measured
+/// the actual visible tile rect at the ruled reference resolution/zoom as (1,10)-(12,23)
+/// against the original 14x18 room — most of the room fell outside the frame. This is the
+/// same content, repacked into an 8x9 interior sized to fit entirely inside that visible
+/// window with a full tile of margin on every side. See
+/// ArtAcceptanceSceneBuilderTests.Build_AllContentIsFullyInFrameWithMargin for the
+/// machine-derived proof (it reproduces the camera math independently, not by trusting
+/// this class's own numbers).
 ///
-/// Determinism: per docs/art_test_scene_spec_v2.md §4 ("No seeds, no rolls, no variant
-/// selection... identical composition every launch, by construction"), this builder uses
-/// no RNG anywhere — every position and tile ID is a fixed literal, and monster creation
-/// is called with rng=null, which deterministically skips equipment-roll randomness
-/// (MonsterFactory.CreateFromDefinition only spawns equipment when rng is non-null).
-/// Two calls produce byte-identical GameMap/Props/Features/FloorItems/Monster data
-/// (verified by ArtAcceptanceSceneBuilderTests.Build_IsDeterministic_AcrossTwoColdRuns).
+/// Room absolute position (not just shape) matters here: FloorComposer's worn-tile noise
+/// (docs/art_test_scene_spec_v2.md item 4) is a function of a cell's absolute (x,y), and
+/// MarkPropCell (called below for every blocking prop, matching production behavior —
+/// RoomPropPlacer does the same) makes prop-occupied cells act as pseudo-walls for
+/// FloorComposer's edge-darkening pass. In this densely-packed 8x9 room that leaves only
+/// ~10 truly Standard-eligible cells, and at the room's first-tried absolute position none
+/// exceeded the worn threshold (noise > 0.72) — a real, verified-by-live-capture zero, not
+/// a hypothetical. The room was shifted by exactly (0,+1) — same shape, same relative
+/// content layout, one tile down — which is enough to move one eligible cell's noise
+/// sample to 0.84. This is a legitimate repack lever (translating the room), not a seed or
+/// renderer change: FloorComposer's seed stays Render's own default (0), untouched.
 /// </summary>
 public static class ArtAcceptanceSceneBuilder
 {
-    // Interior room is 14 wide x 18 tall (x: 1..14, y: 1..18), with a 1-tile wall border
-    // and a 1-tile door + corridor stub on the south wall. Total map: 16 x 21.
-    private const int MapWidth = 16;
-    private const int MapHeight = 21;
-    private const int RoomX0 = 1, RoomY0 = 1, RoomX1 = 14, RoomY1 = 18;
-    private const int DoorX = 8, DoorY = 19;
-    private const int CorridorStubX = 8, CorridorStubY = 20;
+    // Interior room is 8 wide x 9 tall (x: 1..8, y: 2..10), with a 1-tile wall border and a
+    // 1-tile door + corridor stub on the south wall. Total map: 10 x 13.
+    private const int MapWidth = 10;
+    private const int MapHeight = 13;
+    private const int RoomX0 = 1, RoomY0 = 2, RoomX1 = 8, RoomY1 = 10;
+    private const int DoorX = 5, DoorY = 11;
+    private const int CorridorStubX = 5, CorridorStubY = 12;
+
+    // Player anchor. Chosen (alongside the room dimensions above) so the full room —
+    // walls, door, and corridor stub included — sits inside the visible tile rect with
+    // exactly the required 1-tile margin on every side, per
+    // ArtAcceptanceSceneBuilderTests.Build_AllContentIsFullyInFrameWithMargin. The
+    // visible-rect computation is translation-invariant in (player, room) together, so this
+    // is the same margin proof as the pre-shift layout, verified again after the shift by a
+    // live --art-scene-capture run (see the capture-harness PR description).
+    private const int PlayerX = 5, PlayerY = 7;
 
     public static GameState Build(
         MonsterFactory monsterFactory,
@@ -47,13 +60,13 @@ public static class ArtAcceptanceSceneBuilder
         var map = BuildMap();
 
         var player = CreatePlayer();
-        player.X = 7;
-        player.Y = 17;
+        player.X = PlayerX;
+        player.Y = PlayerY;
         map.RegisterEntity(player);
 
         var monsters = new List<Entity>();
         AddMonster(monsters, map, monsterFactory, "orc_grunt", x: 3, y: 3);  // adjacent to anvil (2,3)
-        AddMonster(monsters, map, monsterFactory, "troll", x: 7, y: 9);       // adjacent to table (7,8)
+        AddMonster(monsters, map, monsterFactory, "troll", x: 4, y: 7);       // adjacent to table (4,6)
 
         var props = BuildProps();
         foreach (var prop in props)
@@ -149,28 +162,29 @@ public static class ArtAcceptanceSceneBuilder
     {
         return new List<PlacedProp>
         {
-            // Smithy cluster (wall_adjacent forge + tool_rack, free_standing anvil) — §3 "wall_adjacent".
-            new("forge",      X: 2, Y: 1, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5011),
-            new("tool_rack",  X: 4, Y: 1, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5089),
+            // Smithy cluster (wall_adjacent forge + tool_rack, row y=2 against the top wall)
+            // plus free_standing anvil — §3 "wall_adjacent" / "free_standing".
+            new("forge",      X: 2, Y: 2, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5011),
+            new("tool_rack",  X: 4, Y: 2, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5089),
             new("anvil",      X: 2, Y: 3, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5001),
 
             // Free-standing candelabra — §3 "free_standing".
-            new("candelabra", X: 8, Y: 1, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5080),
+            new("candelabra", X: 6, Y: 3, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5080),
 
             // Center table + chairs — §3 "center".
-            new("table",      X: 7, Y: 8, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5052),
-            new("chair",      X: 6, Y: 8, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5051),
-            new("chair",      X: 8, Y: 8, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5056),
-            new("chair",      X: 7, Y: 7, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5057),
+            new("table",      X: 4, Y: 6, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5052),
+            new("chair",      X: 3, Y: 6, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5051),
+            new("chair",      X: 5, Y: 6, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5056),
+            new("chair",      X: 4, Y: 5, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5057),
 
             // Floor overlays — §3 "floor_overlay". Non-blocking.
-            new("rubble",     X: 3, Y: 10, FootprintW: 1, FootprintH: 1, BlocksMovement: false, TileId: 5078),
-            new("rubble",     X: 4, Y: 11, FootprintW: 1, FootprintH: 1, BlocksMovement: false, TileId: 5079),
-            new("puddle",     X: 10, Y: 11, FootprintW: 1, FootprintH: 1, BlocksMovement: false, TileId: 5110),
+            new("rubble",     X: 2, Y: 5, FootprintW: 1, FootprintH: 1, BlocksMovement: false, TileId: 5078),
+            new("rubble",     X: 7, Y: 5, FootprintW: 1, FootprintH: 1, BlocksMovement: false, TileId: 5079),
+            new("puddle",     X: 6, Y: 5, FootprintW: 1, FootprintH: 1, BlocksMovement: false, TileId: 5110),
 
             // Canon barrel (268) beside generated sack (5102) — §3 nearest-equivalent pairing.
-            new("barrel",     X: 2, Y: 16, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 268),
-            new("sack",       X: 3, Y: 16, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5102),
+            new("barrel",     X: 7, Y: 8, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 268),
+            new("sack",       X: 8, Y: 8, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5102),
         };
     }
 
@@ -181,19 +195,19 @@ public static class ArtAcceptanceSceneBuilder
     /// </summary>
     private static List<Entity> BuildFeatures(EntityIdAllocator ids)
     {
-        var chestClosed = FeatureFactory.CreateChest(11, 13, ids);
+        var chestClosed = FeatureFactory.CreateChest(2, 8, ids);
 
-        var chestOpen = FeatureFactory.CreateChest(13, 13, ids);
+        var chestOpen = FeatureFactory.CreateChest(6, 8, ids);
         chestOpen.Get<ChestComponent>()!.IsOpen = true;
 
         var sign = FeatureFactory.CreateSignpost(
-            14, 4, ids,
+            8, 2, ids,
             message: "The forge has gone cold, but the anvil remembers every strike.",
             signType: "lore");
 
         // tileId 5075 pinned explicitly — spec §3: "the worst A4 offender" (mural_gold_landscape).
         var mural = FeatureFactory.CreateMural(
-            12, 1, ids,
+            6, 2, ids,
             text: "A gilded landscape, its gold leaf flaking at the edges.",
             muralId: "art_scene_mural_gold_landscape",
             tileId: 5075);
@@ -209,7 +223,7 @@ public static class ArtAcceptanceSceneBuilder
     private static List<Entity> BuildFloorItems(
         EntityIdAllocator ids, ItemFactory itemFactory, ConsumableFactory consumableFactory)
     {
-        var key = FeatureFactory.CreateKeyItem(12, 15, ids, lockColorId: 0);
+        var key = FeatureFactory.CreateKeyItem(4, 9, ids, lockColorId: 0);
 
         var items = new List<Entity> { key };
 
@@ -217,21 +231,21 @@ public static class ArtAcceptanceSceneBuilder
         if (potion == null)
             throw new InvalidOperationException(
                 "ArtAcceptanceSceneBuilder: consumable 'healing_potion' not found — check config/entities.yaml.");
-        potion.X = 11; potion.Y = 15;
+        potion.X = 3; potion.Y = 9;
         items.Add(potion);
 
         var dagger = itemFactory.Create("dagger");
         if (dagger == null)
             throw new InvalidOperationException(
                 "ArtAcceptanceSceneBuilder: item 'dagger' not found — check config/entities.yaml.");
-        dagger.X = 13; dagger.Y = 15;
+        dagger.X = 5; dagger.Y = 9;
         items.Add(dagger);
 
         var club = itemFactory.Create("club");
         if (club == null)
             throw new InvalidOperationException(
                 "ArtAcceptanceSceneBuilder: item 'club' not found — check config/entities.yaml.");
-        club.X = 12; club.Y = 16;
+        club.X = 4; club.Y = 10;
         items.Add(club);
 
         return items;
