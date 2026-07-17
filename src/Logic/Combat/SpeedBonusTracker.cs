@@ -37,9 +37,21 @@ public sealed class SpeedBonusTracker : IComponent
     /// <summary>Current attack counter (for diagnostics).</summary>
     public int AttackCounter => _attackCounter;
 
+    /// <summary>Id of the last target this attacker hit (-1 = none). Read-only accessor for the
+    /// mid-run serializer; drives momentum reset, so it must survive save/load for determinism.</summary>
+    public int LastTargetId => _lastTargetId;
+
     public SpeedBonusTracker(double baseRatio = 0.0)
     {
         BaseRatio = baseRatio;
+    }
+
+    /// <summary>Restore the private momentum counters after a mid-run load. Serializer-only —
+    /// gameplay mutates these solely through RollForBonusAttack.</summary>
+    public void RestoreMomentum(int attackCounter, int lastTargetId)
+    {
+        _attackCounter = attackCounter;
+        _lastTargetId = lastTargetId;
     }
 
     /// <summary>

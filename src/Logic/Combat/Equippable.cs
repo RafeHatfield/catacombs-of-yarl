@@ -55,6 +55,10 @@ public sealed class Equippable : IComponent
     /// <summary>Capture DamageMax as the baseline. Call once at item creation.</summary>
     public void SetBaseDamageMax() => BaseDamageMax = DamageMax;
 
+    /// <summary>Restore the exact baseline after a mid-run load (it can diverge from DamageMax via
+    /// corrosion, so it must persist independently). Serializer-only.</summary>
+    public void RestoreBaseDamageMax(int baseDamageMax) => BaseDamageMax = baseDamageMax;
+
     public Equippable(EquipmentSlot slot)
     {
         Slot = slot;

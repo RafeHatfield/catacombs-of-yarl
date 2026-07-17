@@ -18,4 +18,8 @@ public sealed class StatusImmunityComponent : IComponent
     }
 
     public bool IsImmuneTo(string immunityKey) => _immunities.Contains(immunityKey);
+
+    /// <summary>The immunity keys, exposed read-only so the mid-run serializer can persist them
+    /// (the set is otherwise private). Not used by gameplay — mutation stays via the constructor.</summary>
+    public IReadOnlyCollection<string> Immunities => _immunities;
 }
