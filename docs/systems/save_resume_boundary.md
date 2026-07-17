@@ -16,6 +16,9 @@ Fragility acknowledged: assumes every wrapper call consumes exactly one internal
 sample. True for legacy seeded System.Random at game-scale ranges; the two-sample
 path triggers only near int.MaxValue ranges. Guard: Next(min,max) asserts
 (long)max - min < int.MaxValue / 2. A dedicated continuity test locks the behavior.
+Note (M1): the guard is a Debug.Assert — it fires in Debug builds only, not Release.
+Acceptable for M1 (game-scale ranges never approach the threshold); revisit at the M2
+PRNG swap, where the explicit-state generator removes the single-sample assumption entirely.
 M2 (scheduled with the suite re-baseline, when sequence changes are free): replace
 System.Random with an explicit-state PRNG (xoshiro256**), serialize state directly,
 delete the counter. Do NOT do this now.

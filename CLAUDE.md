@@ -126,7 +126,10 @@ dotnet run --project tools/Harness -- --scenario <id> --runs 50
 All changes land through PRs, not direct pushes. This exists so CI status is *visible* before
 merge — the "red badge for six weeks" failure (FIND-006) was a process gap, not a code gap.
 
-- **Branch → PR → merge.** No direct commits or pushes to `main`.
+- **Branch → PR → merge.** No direct commits or pushes to `main` — this applies to every thread.
+- **One working copy per session.** Each agent session runs in its own git worktree or clone; never
+  share a working copy between concurrent sessions. Sharing one lets a parallel session move HEAD or
+  stage another's files mid-task — how M1.4's item 1 got carried into `main` on an unrelated art PR.
 - **Merge gate until M2 re-baseline: fast tests green (by review).** `balance.yml` runs the fast
   suite (`Category!=Slow`) *and* the baseline-gated acceptance suite (`--suite --baseline`) in one
   job. `main`'s acceptance suite is currently **red for a known, documented reason** — the FIND-006
