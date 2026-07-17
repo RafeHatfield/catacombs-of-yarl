@@ -77,7 +77,8 @@ public sealed record AiComponentDto(string? AiType, string? Faction, List<string
 public sealed record AlertedStateDto(int LastKnownPlayerX, int LastKnownPlayerY, int TurnsUntilDeaggro);
 public sealed record AutoExploreStateDto(bool IsActive, List<PointDto> CurrentPath, PointDto[] ExploredSnapshot,
     int[] KnownMonsterIds, int[] KnownItemIds, int[] KnownFeatureIds, PointDto[] KnownStairs,
-    int LastHp, string? StopReason, int StuckCounter, PointDto? LastExpectedPosition);
+    int LastHp, string? StopReason, int StuckCounter, PointDto? LastExpectedPosition,
+    PointDto[] PositionHistory);
 public sealed record ChestComponentDto(bool IsOpen, bool IsLooted, List<string> LootItemIds);
 public sealed record ChestLootStashDto(int[] ItemIds);
 public sealed record CorpseComponentDto(string? OriginalMonsterId, string? OriginalName, int DeathTurn,
