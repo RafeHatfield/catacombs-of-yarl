@@ -1,32 +1,16 @@
 [
   {
-    "sheet": "/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-burndown-1/tools/art_lint/reports/burndown1_review/contact_sheet_01_of_03.png",
+    "sheet": "/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-burndown-1/tools/art_lint/reports/burndown1_review/contact_sheet_01_of_02.png",
     "files": [
-      "oryx_16bit_fantasy_world_5001.png",
-      "oryx_16bit_fantasy_world_5002.png",
-      "oryx_16bit_fantasy_world_5005.png",
       "oryx_16bit_fantasy_world_5007.png",
       "oryx_16bit_fantasy_world_5008.png",
-      "oryx_16bit_fantasy_world_5010.png",
-      "oryx_16bit_fantasy_world_5011.png",
-      "oryx_16bit_fantasy_world_5012.png",
       "oryx_16bit_fantasy_world_5014.png",
       "oryx_16bit_fantasy_world_5015.png",
       "oryx_16bit_fantasy_world_5016.png",
-      "oryx_16bit_fantasy_world_5070.png",
-      "oryx_16bit_fantasy_world_5077.png",
-      "oryx_16bit_fantasy_world_5086.png",
-      "oryx_16bit_fantasy_world_5102.png",
-      "oryx_16bit_fantasy_world_5110.png",
       "oryx_16bit_fantasy_world_5039.png",
       "oryx_16bit_fantasy_world_5051.png",
       "oryx_16bit_fantasy_world_5052.png",
-      "oryx_16bit_fantasy_world_5054.png"
-    ]
-  },
-  {
-    "sheet": "/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-burndown-1/tools/art_lint/reports/burndown1_review/contact_sheet_02_of_03.png",
-    "files": [
+      "oryx_16bit_fantasy_world_5054.png",
       "oryx_16bit_fantasy_world_5055.png",
       "oryx_16bit_fantasy_world_5056.png",
       "oryx_16bit_fantasy_world_5057.png",
@@ -37,27 +21,31 @@
       "oryx_16bit_fantasy_world_5064.png",
       "oryx_16bit_fantasy_world_5065.png",
       "oryx_16bit_fantasy_world_5066.png",
-      "oryx_16bit_fantasy_world_5067.png",
+      "oryx_16bit_fantasy_world_5067.png"
+    ]
+  },
+  {
+    "sheet": "/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-burndown-1/tools/art_lint/reports/burndown1_review/contact_sheet_02_of_02.png",
+    "files": [
       "oryx_16bit_fantasy_world_5068.png",
       "oryx_16bit_fantasy_world_5069.png",
       "oryx_16bit_fantasy_world_5072.png",
       "oryx_16bit_fantasy_world_5073.png",
+      "oryx_16bit_fantasy_world_5077.png",
       "oryx_16bit_fantasy_world_5078.png",
       "oryx_16bit_fantasy_world_5079.png",
+      "oryx_16bit_fantasy_world_5086.png",
       "oryx_16bit_fantasy_world_5087.png",
       "oryx_16bit_fantasy_world_5091.png",
-      "oryx_16bit_fantasy_world_5092.png"
-    ]
-  },
-  {
-    "sheet": "/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-burndown-1/tools/art_lint/reports/burndown1_review/contact_sheet_03_of_03.png",
-    "files": [
+      "oryx_16bit_fantasy_world_5092.png",
       "oryx_16bit_fantasy_world_5093.png",
       "oryx_16bit_fantasy_world_5096.png",
       "oryx_16bit_fantasy_world_5097.png",
       "oryx_16bit_fantasy_world_5098.png",
+      "oryx_16bit_fantasy_world_5102.png",
       "oryx_16bit_fantasy_world_5106.png",
-      "oryx_16bit_fantasy_world_5107.png"
+      "oryx_16bit_fantasy_world_5107.png",
+      "oryx_16bit_fantasy_world_5110.png"
     ]
   }
 ]
