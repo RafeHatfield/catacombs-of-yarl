@@ -28,10 +28,26 @@ Load rebuilds the table first, then resolves references. Identity is preserved:
 an entity referenced twice deserializes to ONE object. Cycles (portal A <-> B)
 are legal by construction.
 
+Structural rule (measured 2026-07-16, for 4a.2): the entity table is the transitive
+closure of all reachable entities, NOT just the top-level GameState lists. Once an item
+is picked up or equipped it leaves FloorItems and lives inside a container, so the walk
+must descend into containers. Specifically: Inventory's `List<Entity>` serializes as an
+Id array, and Equipment's nine `Entity?` slots (MainHand, OffHand, Head, Chest, Feet,
+LeftRing, RightRing, Neck, Quiver) serialize as nullable Ids — all resolved against the
+entity table on load, same rule as every other reference. Any component field typed
+`Entity`/`Entity?`/`List<Entity>` follows this rule (store Id / Id array, never the object).
+
 ## Component registry + completeness gate
-Components (incl. status effects — one IComponent family, ~75 concrete types) are
-serialized via an explicit per-type registry (System.Text.Json source-gen context,
-extending the PersistenceJsonContext pattern; discriminator = stable type name).
+Components (incl. status effects — one IComponent family) are serialized via an explicit
+per-type registry (System.Text.Json source-gen context, extending the PersistenceJsonContext
+pattern; discriminator = stable type name).
+Family size (measured 2026-07-16): 52 concrete `IComponent` + ~32 `IStatusEffect` (the latter
+extends `IComponent`), ~84 total. This hand count is indicative only — the reflection gate's
+runtime enumeration is AUTHORITATIVE over any hand count, including this one.
+Component `Owner` back-references are RECONSTRUCT-class — NEVER serialized. `Owner` is rebuilt
+automatically when a component is attached to its entity on load (Entity.Add sets it), so
+serializing it would duplicate graph information already carried by the entity table and invite
+inconsistency between the two.
 CI COMPLETENESS GATE: a reflection test enumerates every concrete IComponent in the
 Logic assembly and asserts (a) registered in the serializer, (b) round-trips a
 default-constructed + a property-populated instance losslessly. An unregistered

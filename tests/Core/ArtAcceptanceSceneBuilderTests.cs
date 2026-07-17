@@ -179,6 +179,92 @@ public class ArtAcceptanceSceneBuilderTests
         Assert.That(state.Map.GetTileTheme(7, 8), Is.EqualTo(TileTheme.Grey));
     }
 
+    // ── Margin/in-frame check (v3 repack ruling) ────────────────────────────
+
+    /// <summary>
+    /// Reproduces the camera transform independently — from the same source constants
+    /// PlayerCamera.Update/TopDownRenderer/scene_capture_config.yaml use, not by calling
+    /// into Presentation (this project has no Godot dependency and must stay that way).
+    /// Mirrors, does not modify, Main.ComputeVisibleTileRect: this test would have caught
+    /// the PR #8 finding (content outside the visible window) before a capture run did.
+    /// Verified against the real PR #8/v3 --art-scene-capture log line
+    /// ("[Main] Visible tile rect: ...") before being trusted here.
+    /// </summary>
+    private static (int x0, int y0, int x1, int y1) ComputeVisibleTileRect(int playerX, int playerY)
+    {
+        const double viewportW = 750, viewportH = 1334; // scene_capture_config.yaml resolution (ruled)
+        const double tileSize = 24;                     // TopDownRenderer.TileWidth/TileHeight
+        const double zoom = 3.0;                         // TopDownRenderer.DefaultZoom
+        const double uiTop = 90, uiBottom = 333;          // PlayerCamera.UiTopMargin/UiBottomMargin
+
+        double playerScreenX = playerX * tileSize, playerScreenY = playerY * tileSize;
+        double centerY = uiTop + (viewportH - uiTop - uiBottom) / 2;
+        double gameViewX = viewportW / 2 - playerScreenX * zoom;
+        double gameViewY = centerY - playerScreenY * zoom;
+
+        (int, int) ScreenToGrid(double screenX, double screenY)
+        {
+            double localX = (screenX - gameViewX) / zoom;
+            double localY = (screenY - gameViewY) / zoom;
+            int gx = (int)Math.Round((localX - tileSize / 2) / tileSize, MidpointRounding.AwayFromZero);
+            int gy = (int)Math.Round((localY - tileSize / 2) / tileSize, MidpointRounding.AwayFromZero);
+            return (gx, gy);
+        }
+
+        var (x0, y0) = ScreenToGrid(0, uiTop);
+        var (x1, y1) = ScreenToGrid(viewportW, viewportH - uiBottom);
+        return (x0, y0, x1, y1);
+    }
+
+    [Test]
+    public void Build_AllContentIsFullyInFrameWithMargin()
+    {
+        var (monsters, items, consumables) = CreateFactories();
+        var state = ArtAcceptanceSceneBuilder.Build(monsters, items, consumables);
+
+        var (vx0, vy0, vx1, vy1) = ComputeVisibleTileRect(state.Player.X, state.Player.Y);
+        // At least one full tile of margin from every frame edge, per the v3 repack ruling —
+        // not index membership in the raw visible rect (PR #8's finding: a tile at the raw
+        // edge can be ~20% visible, a sliver, not a clean crop).
+        int ux0 = vx0 + 1, uy0 = vy0 + 1, ux1 = vx1 - 1, uy1 = vy1 - 1;
+
+        void AssertInFrame(int x, int y, string label)
+        {
+            Assert.That(x, Is.InRange(ux0, ux1), $"{label} at ({x},{y}) has less than 1 tile of x-margin (usable range {ux0}-{ux1})");
+            Assert.That(y, Is.InRange(uy0, uy1), $"{label} at ({x},{y}) has less than 1 tile of y-margin (usable range {uy0}-{uy1})");
+        }
+
+        // Room structure: every non-Wall tile (floor, door) and, for corners, the wall cells
+        // immediately outside the floor — the room's full built extent, not just its interior.
+        int minFloorX = int.MaxValue, minFloorY = int.MaxValue;
+        for (int x = 0; x < state.Map.Width; x++)
+            for (int y = 0; y < state.Map.Height; y++)
+                if (state.Map.GetTileKind(x, y) != TileKind.Wall)
+                {
+                    AssertInFrame(x, y, $"map tile ({x},{y}) kind={state.Map.GetTileKind(x, y)}");
+                    if (x < minFloorX) minFloorX = x;
+                    if (y < minFloorY) minFloorY = y;
+                }
+
+        // Wall corner: derived from the room's actual built extent (top-left-most non-Wall
+        // tile minus one), not a hardcoded (0,0) — that would silently stop meaning "the
+        // room's corner" the moment the room's absolute position changes (as it did here,
+        // shifted by the worn-tile fix below) while still passing.
+        Assert.That(state.Map.GetTileKind(minFloorX - 1, minFloorY - 1), Is.EqualTo(TileKind.Wall),
+            "Expected a wall cell diagonally outside the room's top-left floor tile");
+        AssertInFrame(minFloorX - 1, minFloorY - 1, "wall corner");
+
+        foreach (var prop in state.Props)
+            AssertInFrame(prop.X, prop.Y, $"prop {prop.PropId} (tile {prop.TileId})");
+        foreach (var feature in state.Features)
+            AssertInFrame(feature.X, feature.Y, $"feature {feature.Name}");
+        foreach (var item in state.FloorItems)
+            AssertInFrame(item.X, item.Y, $"floor item {item.Name}");
+        foreach (var monster in state.Monsters)
+            AssertInFrame(monster.X, monster.Y, $"monster {monster.Get<SpeciesTag>()?.TypeId}");
+        AssertInFrame(state.Player.X, state.Player.Y, "player");
+    }
+
     // ── Determinism check (spec §4) ─────────────────────────────────────────
 
     [Test]
