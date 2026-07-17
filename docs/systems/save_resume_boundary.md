@@ -7,6 +7,13 @@ no ascent, no floor stack) — GameState is strictly single-floor and stays that
 Cross-run persistence (PersistentRunState) is a SEPARATE file with its own lifecycle:
 the mid-run save stores nothing from it and never writes it.
 
+Mid-run saves are self-contained snapshots: component state is serialized as captured, not
+reconstructed from config (ruled 2026-07-16 — HostAbilityComponent precedent). Rationale:
+mid-run saves live hours-to-days and die with the run; an in-flight run must keep playing
+exactly as dealt, even across a content patch. The RECONSTRUCT-from-config rule applies to
+static content tables (BoonTable, ContentLoader) and to the CROSS-RUN layer, whose saves live
+for months.
+
 ## RNG continuity (two-step ruling)
 M1: SeededRandom gains an internal call counter. Every Next/NextDouble/NextFloat
 increments it. Save (Seed, CallCount); load reconstructs Random(seed) and burns
@@ -30,6 +37,10 @@ entity record per Id in a flat table; all lists and references are Id arrays.
 Load rebuilds the table first, then resolves references. Identity is preserved:
 an entity referenced twice deserializes to ONE object. Cycles (portal A <-> B)
 are legal by construction.
+
+REACHABILITY CLOSURE: the table must contain every entity reachable BY ID from any serialized
+root — list membership is not the criterion. Known case: DestructiblePropComponent.LootEntityIds
+references pre-generated loot entities that sit in no floor list until the chest opens.
 
 Structural rule (measured 2026-07-16, for 4a.2): the entity table is the transitive
 closure of all reachable entities, NOT just the top-level GameState lists. Once an item
