@@ -32,3 +32,158 @@ past_sasha_encounter.possessed_corpse.post_spell_break:
   - "That wasn't you anymore, Boss. You can have the gear back now."
   - "Done. He's at rest. Take what's his. Yours. His."
   - "Boss. Take a breath. The dispel held. The body's quiet."
+
+# ── Batch 1a/1b: taxonomy triggers (scheduler pending; pools sized for
+#    once-per-run-per-line semantics the future ribbon scheduler will enforce) ──
+
+# ── HP thresholds (index 0 = canon first-fire) ──
+
+hp_threshold.25:
+  - "Boss. You're leaking."
+  - "A quarter left, Boss. I'm counting even if you're not."
+  - "Boss. Bind that. It's not getting shallower."
+  - "That one landed, Boss. Stop pretending it didn't."
+
+hp_threshold.10:
+  - "Boss. BOSS. Drink something."
+  - "Ten percent, Boss. That's a number I don't say twice."
+  - "Boss. Now. Whatever you're saving, this is what for."
+  - "Don't make me do the pull, Boss. Drink."
+
+hp_threshold.1:
+  - "Goodbye."
+  - "Boss."
+  - "Stay."
+
+# ── Region first-entry (keys land as authored; region scheme ruling pending — see PR-description note) ──
+
+region_first_entry.boundary:
+  - "This is the Boundary. The Unshriven hold it because they have to. We pass through because we have to. Try not to make friends."
+  - "The Boundary, Boss. The orcs keep the line so the deeper things stay deep. Walk like a guest."
+
+region_first_entry.dimhalls:
+  - "The Dimhalls. The lamps down here gave up before I was bound. Watch your feet."
+  - "Dimhalls, Boss. Everything here is between places. Don't be one of them."
+
+region_first_entry.crossing:
+  - "The Crossing. There was traffic through here once. Good freight-work on those arches. I knew the style."
+  - "Halfway, Boss. The Crossing. From here down, the Paths stop pretending to be a place."
+
+region_first_entry.inner_court:
+  - "Inner Court, Boss. Mind your manners. Everything down here has a title."
+  - "The Inner Court. The stonework gets proud from here on. So does everything else."
+
+region_first_entry.weighing:
+  - "The Weighing, Boss. They audit souls down here. Try not to look like inventory."
+  - "Last region, Boss. Whatever you owe, it gets counted here. Walk straight."
+
+# ── Trap first-of-type (keys = the 9 PoC-canonical TrapType values in FloorTrapComponent.cs) ──
+
+trap_first.spike_trap:
+  - "Spikes, Boss. The floor's honest down here. It hates you openly."
+  - "Spike plate. Old work, still sharp. Someone maintains these. Step wide."
+
+trap_first.fire_trap:
+  - "Flame trap, Boss. Thermal trigger. I've built cleaner, but it works."
+  - "Fire, Boss. Mind the reagents on your belt. They mind you back."
+
+trap_first.acid_trap:
+  - "Acid. On purpose, I hope."
+  - "Acid pool, Boss. It doesn't want you. It just doesn't move for anyone."
+
+trap_first.web_trap:
+  - "Webbing. The spider's optional, Boss. The stuck part isn't."
+  - "Web, Boss. It holds you the polite way. Nothing down here follows up politely."
+
+trap_first.alarm_plate:
+  - "Alarm plate. Nothing's hurt but your anonymity, Boss. Expect company."
+  - "Alarm. The floor just took attendance, Boss. You're marked present."
+
+trap_first.root_trap:
+  - "Roots, Boss. Nothing grows down here on its own. Somebody planted these."
+  - "Root trap. The floor's holding your ankle, Boss. It doesn't want anything. It was told to."
+
+trap_first.teleport_trap:
+  - "Teleport plate. Look around before you ask questions, Boss."
+  - "Teleporter, Boss. Wherever we are, the map's wrong now. Start over."
+
+trap_first.gas_trap:
+  - "Gas, Boss. Hold your breath and move. Argue with me later."
+  - "Gas trap. If the air tastes like coins, Boss, stop tasting it."
+
+trap_first.hole_trap:
+  - "Hole trap. The fast way down, Boss. Nobody chooses it twice."
+  - "A hole. Gravity's honest work, Boss. Everything else down here should take notes."
+
+# ── Kill streak ≥5 no-damage (≤3 fires/run) ──
+
+kill_streak_clean:
+  - "Showing off, are we."
+  - "Five clean, Boss. Don't get poetic about it."
+  - "Clean work. I saw. Don't ask me to say it twice."
+  - "That's a streak, Boss. Streaks end. Plan for the ending."
+  - "Efficient. I'd say I taught you that, but you'd argue."
+  - "Not one scratch. Somewhere the Under-Warden is amending a file."
+
+# ── Long idle (20+ silent turns; ≤3 fires/run) ──
+
+long_idle:
+  - "Any decade now, Boss."
+  - "Boss. The floor isn't going to descend itself."
+  - "Still here. Both of us. One of us on purpose."
+  - "I've counted the bricks, Boss. Twice. Move."
+  - "Take your time. The dead do."
+  - "Boss. If we're camping, say so. I'll start identifying things."
+
+# ── Species first-sight (keys = entities.yaml monster ids; excludes troll_probe_* fixtures) ──
+
+species_first_sight.orc:
+  - "Unshriven. He'd rather be fighting what's below, Boss. You'll do."
+species_first_sight.orc_grunt:
+  - "Orc, Boss. A soldier on the wrong shift. It's not personal. Duck anyway."
+species_first_sight.orc_brute:
+  - "Brute. Built like the argument's over, Boss. Don't reopen it."
+species_first_sight.orc_scout:
+  - "Scout, Boss. He's not hiding. He's letting you know they know."
+species_first_sight.orc_veteran:
+  - "Veteran, Boss. The armor's patched in eight places. He earned all eight."
+species_first_sight.orc_skirmisher:
+  - "Skirmisher, Boss. He moves more than you do. I know. Insulting."
+species_first_sight.orc_shaman:
+  - "Shaman. Orcs sing at their work, Boss. The quiet ones are doing the other kind."
+species_first_sight.orc_chieftain:
+  - "Chieftain, Boss. Somebody has to give the orders. The orders stop when he does."
+species_first_sight.troll:
+  - "Troll. Everything you spend on it comes back with interest, Boss. Bad loan."
+species_first_sight.troll_ancient:
+  - "Ancient troll. The young ones grow back, Boss. This one's had practice being killed."
+species_first_sight.skeleton:
+  - "Skeleton. Whoever it was is long gone. What's left still bites."
+species_first_sight.zombie:
+  - "Zombie. Nobody's home, Boss. You're arguing with a door."
+species_first_sight.plague_zombie:
+  - "Plague-carrier, Boss. Kill it from where you're standing. Not closer."
+species_first_sight.wraith:
+  - "Wraith. Nothing to hold, Boss. It doesn't extend the same courtesy."
+species_first_sight.lich:
+  - "Lich. He did this to himself on purpose, Boss. Never trust anything that volunteered."
+species_first_sight.necromancer:
+  - "Necromancer. Every corpse in the room is on his side, Boss. Mind the floor."
+species_first_sight.plague_necromancer:
+  - "Plague-necromancer. Killing you isn't the plan, Boss. It's the cleanup."
+species_first_sight.cultist_blademaster:
+  - "Blademaster, Boss. That stance is trained. Whoever taught him knew steel."
+species_first_sight.cave_spider:
+  - "Cave spider. Venom, Boss. Small bites add up. So do small spiders."
+species_first_sight.web_spider:
+  - "Web spider. The web's not where you're looking, Boss. It never is."
+species_first_sight.giant_spider:
+  - "Giant spider. Everything the small one does, Boss, with conviction."
+species_first_sight.fire_beetle:
+  - "Fire beetle. It's a lamp that hates you, Boss. Don't stand in the glow."
+species_first_sight.slime:
+  - "Slime. Acid, Boss. It ruins gear before it ruins you. Priorities."
+species_first_sight.large_slime:
+  - "Large slime, Boss. Same argument as the small one, louder."
+species_first_sight.greater_slime:
+  - "Greater slime. That one's eaten things with names, Boss. Stay out of reach."
