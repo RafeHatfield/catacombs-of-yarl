@@ -4,6 +4,9 @@ using CatacombsOfYarl.Logic.Persistence.Namespaces;
 using NUnit.Framework;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace CatacombsOfYarl.Tests.Possession;
 
@@ -468,5 +471,126 @@ public class VoiceLineYamlIntegrationTests
             new SeededRandom(1337), fired);
         Assert.That(line, Is.EqualTo("That wasn't you anymore, Boss. You can have the gear back now."),
             "Canonical (first) line should fire on first encounter.");
+    }
+}
+
+/// <summary>
+/// Hollowmark voice batch 1a: hp_threshold, region_first_entry, trap_first,
+/// kill_streak_clean, long_idle triggers. Content-only — no scheduler wiring;
+/// pools are sized for the future once-per-run shuffle-bag scheduler, not
+/// enforced by the registry today (GetLine is first-line-first, then random
+/// with replacement).
+/// </summary>
+[TestFixture]
+public class HollowmarkBatch1aTests
+{
+    private static string VoiceLinePath(string fileName) =>
+        Path.Combine(TestContext.CurrentContext.TestDirectory,
+            "..", "..", "..", "..", "config", "voice_lines", fileName);
+
+    private static readonly string[] NewKeys =
+    {
+        "hp_threshold.25", "hp_threshold.10", "hp_threshold.1",
+        "region_first_entry.boundary", "region_first_entry.dimhalls",
+        "region_first_entry.crossing", "region_first_entry.inner_court",
+        "region_first_entry.weighing",
+        "trap_first.spike_trap", "trap_first.dart_trap",
+        "trap_first.flame_trap", "trap_first.acid_pool",
+        "kill_streak_clean", "long_idle",
+    };
+
+    private static Dictionary<string, List<string>> LoadPools()
+    {
+        var yaml = File.ReadAllText(VoiceLinePath("hollowmark.yaml"));
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .IgnoreUnmatchedProperties()
+            .WithObjectFactory(new AotObjectFactory())
+            .Build();
+        return deserializer.Deserialize<Dictionary<string, List<string>>>(yaml)
+               ?? new Dictionary<string, List<string>>();
+    }
+
+    [Test]
+    public void HollowmarkYaml_LoadsWithoutError()
+    {
+        var yaml = File.ReadAllText(VoiceLinePath("hollowmark.yaml"));
+        Assert.DoesNotThrow(() => VoiceLineRegistry.LoadFromYaml(yaml, new AotObjectFactory()));
+    }
+
+    [Test]
+    public void HasTrigger_ReturnsTrueForAllNewKeys()
+    {
+        var yaml = File.ReadAllText(VoiceLinePath("hollowmark.yaml"));
+        var registry = VoiceLineRegistry.LoadFromYaml(yaml, new AotObjectFactory());
+
+        foreach (var key in NewKeys)
+            Assert.That(registry.HasTrigger(key), Is.True, $"Missing trigger: {key}");
+    }
+
+    [Test]
+    public void PoolCounts_MatchSpec()
+    {
+        var pools = LoadPools();
+        var expected = new Dictionary<string, int>
+        {
+            ["hp_threshold.25"] = 4,
+            ["hp_threshold.10"] = 4,
+            ["hp_threshold.1"] = 3,
+            ["region_first_entry.boundary"] = 2,
+            ["region_first_entry.dimhalls"] = 2,
+            ["region_first_entry.crossing"] = 2,
+            ["region_first_entry.inner_court"] = 2,
+            ["region_first_entry.weighing"] = 2,
+            ["trap_first.spike_trap"] = 2,
+            ["trap_first.dart_trap"] = 2,
+            ["trap_first.flame_trap"] = 2,
+            ["trap_first.acid_pool"] = 2,
+            ["kill_streak_clean"] = 6,
+            ["long_idle"] = 6,
+        };
+
+        foreach (var (key, count) in expected)
+        {
+            Assert.That(pools.ContainsKey(key), Is.True, $"Missing pool: {key}");
+            Assert.That(pools[key].Count, Is.EqualTo(count), $"Pool count mismatch for {key}");
+        }
+    }
+
+    // ─── Anti-tell character tier (config/rubric/voice-anti-tell-lint.md) ──────
+    // Hard-block: em-dash, en-dash, ellipsis glyph, markdown emphasis chars.
+    // Three-period ellipses and hyphens are authored voice and must NOT be flagged.
+
+    private static readonly Regex CharacterTierViolation =
+        new("—|–|…|[*`_#]", RegexOptions.Compiled);
+
+    [Test]
+    public void NewLines_ContainNoAntiTellCharacterTierViolations()
+    {
+        var pools = LoadPools();
+        var violations = new List<string>();
+
+        foreach (var key in NewKeys)
+        {
+            foreach (var line in pools[key])
+            {
+                if (CharacterTierViolation.IsMatch(line))
+                    violations.Add($"{key}: \"{line}\"");
+            }
+        }
+
+        Assert.That(violations, Is.Empty,
+            "Anti-tell character-tier hard-block violated:\n" + string.Join("\n", violations));
+    }
+
+    [Test]
+    public void AntiTellCheck_CanaryFixture_EmDashFailsTheCheck()
+    {
+        // Canary: a check that has never fired is indistinguishable from one
+        // that cannot fire. This fixture proves the regex actually catches an
+        // em-dash rather than silently passing everything.
+        const string fixtureLine = "Boss—don't.";
+        Assert.That(CharacterTierViolation.IsMatch(fixtureLine), Is.True,
+            "Canary fixture with an em-dash must fail the anti-tell check.");
     }
 }

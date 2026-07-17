@@ -32,3 +32,82 @@ past_sasha_encounter.possessed_corpse.post_spell_break:
   - "That wasn't you anymore, Boss. You can have the gear back now."
   - "Done. He's at rest. Take what's his. Yours. His."
   - "Boss. Take a breath. The dispel held. The body's quiet."
+
+# ── HP thresholds (fire once per run each; index 0 = canon v2 line, first-fire) ──
+
+hp_threshold.25:
+  - "Boss. You're leaking."
+  - "A quarter left, Boss. I'm counting even if you're not."
+  - "Boss. Bind that. It's not getting shallower."
+  - "That one landed, Boss. Stop pretending it didn't."
+
+hp_threshold.10:
+  - "Boss. BOSS. Drink something."
+  - "Ten percent, Boss. That's a number I don't say twice."
+  - "Boss. Now. Whatever you're saving, this is what for."
+  - "Don't make me do the pull, Boss. Drink."
+
+hp_threshold.1:
+  - "Goodbye."
+  - "Boss."
+  - "Stay."
+
+# ── Region first-entry (once per region per run) ──
+
+region_first_entry.boundary:
+  - "This is the Boundary. The Unshriven hold it because they have to. We pass through because we have to. Try not to make friends."
+  - "The Boundary, Boss. The orcs keep the line so the deeper things stay deep. Walk like a guest."
+
+region_first_entry.dimhalls:
+  - "The Dimhalls. The lamps down here gave up before I was bound. Watch your feet."
+  - "Dimhalls, Boss. Everything here is between places. Don't be one of them."
+
+region_first_entry.crossing:
+  - "The Crossing. There was traffic through here once. Good freight-work on those arches. I knew the style."
+  - "Halfway, Boss. The Crossing. From here down, the Paths stop pretending to be a place."
+
+region_first_entry.inner_court:
+  - "Inner Court, Boss. Mind your manners. Everything down here has a title."
+  - "The Inner Court. The stonework gets proud from here on. So does everything else."
+
+region_first_entry.weighing:
+  - "The Weighing, Boss. They audit souls down here. Try not to look like inventory."
+  - "Last region, Boss. Whatever you owe, it gets counted here. Walk straight."
+
+# ── Trap first-of-type (once per type per run; keys mirror cause codes) ──
+
+trap_first.spike_trap:
+  - "Spikes, Boss. The floor's honest down here. It hates you openly."
+  - "Spike plate. Old work, still sharp. Someone maintains these. Step wide."
+
+trap_first.dart_trap:
+  - "Darts, Boss. Wall-mounted. Whoever set the sight lines knew the trade."
+  - "Dart trap. There'll be more. The Paths don't install anything once."
+
+trap_first.flame_trap:
+  - "Flame trap, Boss. Thermal trigger. I've built cleaner, but it works."
+  - "Fire, Boss. Mind the reagents on your belt. They mind you back."
+
+trap_first.acid_pool:
+  - "Acid. On purpose, I hope."
+  - "Acid pool, Boss. It doesn't want you. It just doesn't move for anyone."
+
+# ── Kill streak ≥5 no-damage (≤3 fires/run) ──
+
+kill_streak_clean:
+  - "Showing off, are we."
+  - "Five clean, Boss. Don't get poetic about it."
+  - "Clean work. I saw. Don't ask me to say it twice."
+  - "That's a streak, Boss. Streaks end. Plan for the ending."
+  - "Efficient. I'd say I taught you that, but you'd argue."
+  - "Not one scratch. Somewhere the Under-Warden is amending a file."
+
+# ── Long idle (20+ silent turns; ≤3 fires/run) ──
+
+long_idle:
+  - "Any decade now, Boss."
+  - "Boss. The floor isn't going to descend itself."
+  - "Still here. Both of us. One of us on purpose."
+  - "I've counted the bricks, Boss. Twice. Move."
+  - "Take your time. The dead do."
+  - "Boss. If we're camping, say so. I'll start identifying things."
