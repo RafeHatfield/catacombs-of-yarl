@@ -1,0 +1,9 @@
+run1: tools/art_lint/scene_evidence/pixel_identity_run1.png
+  sha256: 5382c9c85d27c676cf1be3fb1c52cce89a3a8c8124d8d6c642df2ef9c2670a17
+  resolution: (750, 1334)
+run2: tools/art_lint/scene_evidence/pixel_identity_run2.png
+  sha256: 5382c9c85d27c676cf1be3fb1c52cce89a3a8c8124d8d6c642df2ef9c2670a17
+  resolution: (750, 1334)
+byte_identical: True
+pixel_identical: True
+basis: SHA-256 of raw PNG bytes (see module docstring for why this is also the pixel-level comparison here)

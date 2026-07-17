@@ -1,0 +1,63 @@
+# Art scene capture configuration — docs/art_test_scene_spec_v2.md §5/§7.
+# Single machine-readable source for capture resolution, camera parameters, and crop
+# rectangles. Changing any value here is a ruling (spec §9 changelog), not a casual edit.
+#
+# Consumed by:
+#   tools/art_lint/capture_scene.py   — launches Godot with --resolution from here.
+#   tools/art_lint/crop_captures.py   — reads crops[].tile_rect to produce the 6x crops.
+
+resolution:
+  width: 750
+  height: 1334
+  # Reference device RULED (docs/art_test_scene_spec_v2.md §7, not provisional):
+  # iPhone SE (2nd/3rd gen), 750x1334 logical points. This is a desktop windowed capture
+  # at that logical resolution, not an on-device @2x pixel capture — the on-device sticker
+  # test itself is performed by Rafe (spec §6); this harness produces the reproducible
+  # PR evidence at the same logical size.
+
+camera:
+  # Fixed by the scene/renderer, recorded here for the crop tool's tile<->pixel math.
+  # Source: src/Presentation/Map/TopDownRenderer.cs (tile size, DefaultZoom),
+  # src/Presentation/Map/PlayerCamera.cs (UI margins), src/Logic/Core/ArtAcceptanceSceneBuilder.cs
+  # (player position, fixed at (7,17)). "gameplay zoom (no debug zoom)" per spec §5 — this
+  # is TopDownRenderer.DefaultZoom, not a value chosen for this capture.
+  tile_size: 24
+  zoom: 3.0
+  ui_top_margin: 90
+  ui_bottom_margin: 333
+  player_tile: [7, 17]
+
+# FINDING (recorded 2026-07-16, first capture run at the ruled 750x1334 resolution): the
+# visible tile rect is (1,10)-(12,23) — roughly 11x13 tiles. The authored room is 14x18,
+# sized to fit every spec §3 element in one room, not to fit the whole room in one portrait
+# viewport at gameplay zoom simultaneously. Consequence: the smithy cluster
+# (forge/anvil/tool_rack, y=1-3), the table+chairs (y=7-8), the mural+sign (y=1,4),
+# orc_grunt+troll (y=3,9), and one of the two required chest states (chest_open, x=13) all
+# fall OUTSIDE the captured frame. Additionally, tile column x=12 (where the key and canon
+# club sit) is only ~20% visible at its left edge — a sliver, not reliably "in frame" even
+# though it's within the nominal tile-index range.
+#
+# This is a scene-content/camera-zoom mismatch against spec §3's "simultaneously inside the
+# portrait viewport" requirement — out of the capture-harness task's scope to fix (scene
+# changes are a ruling, not a drive-by fix here). Reported in the capture-harness PR; needs
+# a ruling (room resize, zoom-out affordance for captures, or reduced §3 scope) before a
+# crop1 "smithy cluster" is achievable. The three crops below are chosen from what IS
+# reliably, fully in frame today, not from spec §5's literal example list.
+crops:
+  - name: crop1_chest_canon_item
+    description: >
+      Chest (closed, 5111) + canon healing_potion + puddle (5110). Deliberately excludes
+      tile column x=12 (key 5039, canon club) — only ~20% visible at the frame's right
+      edge, not a clean crop. chest_open (5112) and the dagger canon item are entirely
+      outside the frame (x=13) — see FINDING above.
+    tile_rect: [9, 11, 11, 17]  # x0, y0, x1, y1 — inclusive tile range
+  - name: crop2_canon_barrel_sack
+    description: >
+      Canon barrel (268) beside generated sack (5102) — spec §3's explicit
+      nearest-equivalent comparison pairing. Fully in frame.
+    tile_rect: [2, 14, 5, 18]
+  - name: crop3_worn_floor
+    description: >
+      Open floor span containing a floor_worn (3001) tile at (6,15) — confirmed in-frame
+      by the --art-scene-capture worn-tile report, not assumed.
+    tile_rect: [4, 13, 9, 17]
