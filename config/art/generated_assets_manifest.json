@@ -98,7 +98,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "club",
-      "notes": "RD rd_plus__low_res v3"
+      "notes": "RD rd_plus__low_res v3",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"WARN\", \"A5\": \"WARN\", \"A6\": \"FAIL\", \"A4_color_count\": 15, \"A5_near_color_pairs\": 3, \"A6_outline_fraction\": 0.5714}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4002.png",
@@ -108,7 +110,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": null,
-      "notes": "RD rd_plus__low_res v2 \u2014 banked (status: reserved \u2014 not currently used by any game_key)"
+      "notes": "RD rd_plus__low_res v2 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"PASS\", \"A5\": \"PASS\", \"A6\": \"FAIL\", \"A4_color_count\": 8, \"A5_near_color_pairs\": 2, \"A6_outline_fraction\": 0.3571}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4003.png",
@@ -118,7 +122,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": null,
-      "notes": "RD rd_plus__low_res v0 \u2014 banked (status: reserved \u2014 not currently used by any game_key)"
+      "notes": "RD rd_plus__low_res v0 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"WARN\", \"A5\": \"WARN\", \"A6\": \"FAIL\", \"A4_color_count\": 21, \"A5_near_color_pairs\": 5, \"A6_outline_fraction\": 0.1765}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4004.png",
@@ -128,7 +134,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": null,
-      "notes": "RD rd_plus__low_res v1 \u2014 banked (status: reserved \u2014 not currently used by any game_key)"
+      "notes": "RD rd_plus__low_res v1 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"PASS\", \"A5\": \"WARN\", \"A6\": \"FAIL\", \"A4_color_count\": 10, \"A5_near_color_pairs\": 5, \"A6_outline_fraction\": 0.7742}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_3001.png",
@@ -140,155 +148,197 @@
         "A6_outline"
       ],
       "game_key": "floor_worn",
-      "notes": "Full-cell worn-floor tile (config/tile_themes.yaml). Predates the PixelLab/RD tracking sheet."
+      "notes": "Full-cell worn-floor tile (config/tile_themes.yaml). Predates the PixelLab/RD tracking sheet.",
+      "triage": "redesign",
+      "triage_note": "Full-cell worn-floor tile stamped across floors; most nonconformant asset in repo per spec. Expected Tier-3 at spec adoption. Not attempted this PR (no manual pixel art)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5001.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "Anvil",
-      "notes": "RD rd_plus__low_res v2"
+      "notes": "RD rd_plus__low_res v2",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 67.9 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5002.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "Armor Stand",
-      "notes": "RD rd_plus__low_res v1"
+      "notes": "RD rd_plus__low_res v1",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 109.5 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5005.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "Bucket",
-      "notes": "RD rd_plus__low_res v1"
+      "notes": "RD rd_plus__low_res v1",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 91.0 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5007.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "Chain",
-      "notes": "RD rd_plus__low_res v1"
+      "notes": "RD rd_plus__low_res v1",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 71.3 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5008.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "Coal Pile",
-      "notes": "RD rd_plus__low_res v1"
+      "notes": "RD rd_plus__low_res v1",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 66.9 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5010.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "Drain",
-      "notes": "RD rd_plus__low_res drain_v2"
+      "notes": "RD rd_plus__low_res drain_v2",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 75.1 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5011.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "Forge",
-      "notes": "RD rd_plus__low_res v1"
+      "notes": "RD rd_plus__low_res v1",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 104.1 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5012.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "Globe",
-      "notes": "RD rd_plus__low_res v0"
+      "notes": "RD rd_plus__low_res v0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 142.3 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5014.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "Grate",
-      "notes": "RD rd_plus__low_res grate_v3"
+      "notes": "RD rd_plus__low_res grate_v3",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 53.4 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5015.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "Iron Bars",
-      "notes": "RD rd_plus__low_res iron_bars_v2"
+      "notes": "RD rd_plus__low_res iron_bars_v2",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 71.8 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5016.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "Moss",
-      "notes": "RD rd_plus__low_res v0"
+      "notes": "RD rd_plus__low_res v0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 166.7 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5039.png",
       "origin": "placeholder",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "world_tile",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "key_item",
-      "notes": "Key icon overlay rendered directly from world_24x24 by ItemSpriteManager/DungeonRenderer, bypassing the items_16x16 pipeline \u2014 see src/Presentation/Entities/ItemSpriteManager.cs. 24x24 is correct/intentional for this asset, not a resolution bug. Classified world_tile (not item) so A3 checks the resolution it actually ships at. Flagging for Part B rubric: confirm this classification with Rafe rather than assuming it."
+      "notes": "Key icon overlay rendered directly from world_24x24 by ItemSpriteManager/DungeonRenderer, bypassing the items_16x16 pipeline \u2014 see src/Presentation/Entities/ItemSpriteManager.cs. 24x24 is correct/intentional for this asset, not a resolution bug. Classified world_tile (not item) so A3 checks the resolution it actually ships at. Flagging for Part B rubric: confirm this classification with Rafe rather than assuming it.",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5051.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chair",
-      "notes": "PixelLab s42"
+      "notes": "PixelLab s42",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(4 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5052.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "table",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5053.png",
@@ -298,87 +348,109 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "table",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 23, \"A5_near_color_pairs\": 10, \"A6_outline_fraction\": 0.1067}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5054.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "table",
-      "notes": "PixelLab s42 \u2014 primary"
+      "notes": "PixelLab s42 \u2014 primary",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(2 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5055.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "table",
-      "notes": "PixelLab s1337"
+      "notes": "PixelLab s1337",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(1 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5056.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chair",
-      "notes": "PixelLab s999"
+      "notes": "PixelLab s999",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5057.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chair",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5058.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "bed",
-      "notes": "PixelLab s2"
+      "notes": "PixelLab s2",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5059.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "bed",
-      "notes": "PixelLab s999"
+      "notes": "PixelLab s999",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(4 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5060.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "bench",
-      "notes": "PixelLab s3"
+      "notes": "PixelLab s3",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5061.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "bench",
-      "notes": "PixelLab s999"
+      "notes": "PixelLab s999",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(3 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5062.png",
@@ -388,7 +460,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "desk",
-      "notes": "PixelLab s42 \u2014 primary"
+      "notes": "PixelLab s42 \u2014 primary",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"PASS\", \"A6\": \"WARN\", \"A4_color_count\": 15, \"A5_near_color_pairs\": 2, \"A6_outline_fraction\": 0.3929}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5063.png",
@@ -398,77 +472,99 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "desk",
-      "notes": "PixelLab s999"
+      "notes": "PixelLab s999",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"PASS\", \"A6\": \"WARN\", \"A4_color_count\": 19, \"A5_near_color_pairs\": 2, \"A6_outline_fraction\": 0.1194}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5064.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "desk",
-      "notes": "PixelLab s137"
+      "notes": "PixelLab s137",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(2 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5065.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "cage",
-      "notes": "PixelLab s0 \u2014 primary"
+      "notes": "PixelLab s0 \u2014 primary",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5066.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "cage",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5067.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "glowing_mushroom",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(2 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5068.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "glowing_mushroom",
-      "notes": "PixelLab s2"
+      "notes": "PixelLab s2",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(2 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5069.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "glowing_mushroom",
-      "notes": "PixelLab s1337"
+      "notes": "PixelLab s1337",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(1 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5070.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "mural_wood_cool",
-      "notes": "PixelLab s1337"
+      "notes": "PixelLab s1337",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here;auto_collapse(1 merges)",
+      "auto_collapsed": true,
+      "rubric_priority_flag": "expected_tier3_but_passed_via_autocollapse \u2014 extra scrutiny requested (ramp-collapse review, spec Part B #6); high_redesign_distance (mean 161.3 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5071.png",
@@ -478,27 +574,35 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "mural_gold_warm",
-      "notes": "PixelLab s999 \u2014 primary"
+      "notes": "PixelLab s999 \u2014 primary",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 22, \"A5_near_color_pairs\": 5, \"A6_outline_fraction\": 0.0}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5072.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "mural_gold_warm",
-      "notes": "PixelLab s42"
+      "notes": "PixelLab s42",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(3 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5073.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "mural_gold_warm",
-      "notes": "PixelLab s3"
+      "notes": "PixelLab s3",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(4 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5074.png",
@@ -508,7 +612,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "mural_gold_warm",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 15, \"A5_near_color_pairs\": 3, \"A6_outline_fraction\": 0.0}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5075.png",
@@ -518,7 +624,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "mural_gold_landscape",
-      "notes": "PixelLab s137 \u2014 primary"
+      "notes": "PixelLab s137 \u2014 primary",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"PASS\", \"A4_color_count\": 25, \"A5_near_color_pairs\": 12, \"A6_outline_fraction\": 1.0}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5076.png",
@@ -528,41 +636,51 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "mural_gold_landscape",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 26, \"A5_near_color_pairs\": 13, \"A6_outline_fraction\": 0.0694}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5077.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "sign",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 133.4 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5078.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "rubble",
-      "notes": "PixelLab s137"
+      "notes": "PixelLab s137",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5079.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "rubble",
-      "notes": "PixelLab s2"
+      "notes": "PixelLab s2",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(2 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5080.png",
@@ -572,7 +690,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "candelabra",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 14, \"A5_near_color_pairs\": 8, \"A6_outline_fraction\": 0.4355}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5081.png",
@@ -582,7 +702,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "candelabra",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 16, \"A5_near_color_pairs\": 12, \"A6_outline_fraction\": 0.1967}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5082.png",
@@ -592,7 +714,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "workbench",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 32, \"A5_near_color_pairs\": 8, \"A6_outline_fraction\": 0.29}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5083.png",
@@ -602,7 +726,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "workbench",
-      "notes": "PixelLab s1337"
+      "notes": "PixelLab s1337",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 21, \"A5_near_color_pairs\": 5, \"A6_outline_fraction\": 0.4186}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5084.png",
@@ -612,7 +738,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "water_barrel",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 30, \"A5_near_color_pairs\": 13, \"A6_outline_fraction\": 0.0}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5085.png",
@@ -622,29 +750,37 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "water_barrel",
-      "notes": "PixelLab s999"
+      "notes": "PixelLab s999",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 25, \"A5_near_color_pairs\": 10, \"A6_outline_fraction\": 0.0455}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5086.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "vine",
-      "notes": "PixelLab s42"
+      "notes": "PixelLab s42",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 121.3 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5087.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "training_dummy",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(4 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5088.png",
@@ -654,7 +790,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "training_dummy",
-      "notes": "PixelLab s42"
+      "notes": "PixelLab s42",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 17, \"A5_near_color_pairs\": 3, \"A6_outline_fraction\": 0.04}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5089.png",
@@ -664,7 +802,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "tool_rack",
-      "notes": "PixelLab s137"
+      "notes": "PixelLab s137",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"PASS\", \"A6\": \"WARN\", \"A4_color_count\": 16, \"A5_near_color_pairs\": 1, \"A6_outline_fraction\": 0.0143}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5090.png",
@@ -674,41 +814,49 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "tool_rack",
-      "notes": "PixelLab s1337"
+      "notes": "PixelLab s1337",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 15, \"A5_near_color_pairs\": 4, \"A6_outline_fraction\": 0.1008}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5091.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "straw_pile",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5092.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "straw_pile",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5093.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "pillar",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5094.png",
@@ -718,7 +866,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "pillar",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 25, \"A5_near_color_pairs\": 27, \"A6_outline_fraction\": 0.1835}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5095.png",
@@ -728,37 +878,46 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "pillar",
-      "notes": "PixelLab s137"
+      "notes": "PixelLab s137",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 17, \"A5_near_color_pairs\": 4, \"A6_outline_fraction\": 0.0}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5096.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "shelf",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(3 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5097.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "shelf",
-      "notes": "PixelLab s42"
+      "notes": "PixelLab s42",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5098.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "shelf",
-      "notes": "PixelLab s999"
+      "notes": "PixelLab s999",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5099.png",
@@ -768,7 +927,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "shelf_bottles",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 24, \"A5_near_color_pairs\": 6, \"A6_outline_fraction\": 0.0149}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5100.png",
@@ -778,7 +939,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "shelf_bottles",
-      "notes": "PixelLab s42"
+      "notes": "PixelLab s42",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 15, \"A5_near_color_pairs\": 3, \"A6_outline_fraction\": 0.3901}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5101.png",
@@ -788,17 +951,22 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "shelf_bottles",
-      "notes": "PixelLab s137"
+      "notes": "PixelLab s137",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 23, \"A5_near_color_pairs\": 6, \"A6_outline_fraction\": 0.1481}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5102.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "sack",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 160.9 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5104.png",
@@ -808,7 +976,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "rock",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 19, \"A5_near_color_pairs\": 22, \"A6_outline_fraction\": 0.6667}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5105.png",
@@ -818,27 +988,35 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "rock",
-      "notes": "PixelLab s2"
+      "notes": "PixelLab s2",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 15, \"A5_near_color_pairs\": 14, \"A6_outline_fraction\": 0.6719}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5106.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "nightstand",
-      "notes": "PixelLab s42"
+      "notes": "PixelLab s42",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(1 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5107.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "nightstand",
-      "notes": "PixelLab s999"
+      "notes": "PixelLab s999",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh;auto_collapse(3 merges)",
+      "auto_collapsed": true
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5108.png",
@@ -848,7 +1026,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "mushroom_cluster",
-      "notes": "PixelLab s0"
+      "notes": "PixelLab s0",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"PASS\", \"A6\": \"WARN\", \"A4_color_count\": 16, \"A5_near_color_pairs\": 2, \"A6_outline_fraction\": 0.1333}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5109.png",
@@ -858,19 +1038,24 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "mushroom_cluster",
-      "notes": "PixelLab s1"
+      "notes": "PixelLab s1",
+      "triage": "retouch",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"WARN\", \"A6\": \"WARN\", \"A4_color_count\": 19, \"A5_near_color_pairs\": 5, \"A6_outline_fraction\": 0.0}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5110.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "puddle",
-      "notes": "PixelLab p3 s3"
+      "notes": "PixelLab p3 s3",
+      "pipeline_pr": "burndown1",
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); re-verified here",
+      "rubric_priority_flag": "high_redesign_distance (mean 144.2 RGB units vs previous live sprite, threshold 50.0) \u2014 this is a wholesale replacement design from the Phase-2 new-sprites-snapped staging batch, not an incremental clean of the current art. Several in this bucket read as flatter/less detailed than the sprite they replace. Priority review candidate \u2014 same-hand + ramp-collapse rubric checks (Part B #3/#6)."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5111.png",
@@ -880,7 +1065,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "chest_closed",
-      "notes": "PixelLab s42"
+      "notes": "PixelLab s42",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 27, \"A5_near_color_pairs\": 18, \"A6_outline_fraction\": 0.4909}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5112.png",
@@ -890,7 +1077,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "chest_open",
-      "notes": "PixelLab inpaint m40 g7 s1337"
+      "notes": "PixelLab inpaint m40 g7 s1337",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 39, \"A5_near_color_pairs\": 28, \"A6_outline_fraction\": 0.4655}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5113.png",
@@ -900,7 +1089,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "chest_empty",
-      "notes": "PixelLab inpaint m40 g9 s42"
+      "notes": "PixelLab inpaint m40 g9 s42",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 31, \"A5_near_color_pairs\": 22, \"A6_outline_fraction\": 0.3667}"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5114.png",
@@ -910,7 +1101,9 @@
       "conformance_status": "nonconformant",
       "lint_exemptions": [],
       "game_key": "chest_trapped",
-      "notes": "PixelLab inpaint m40 g9 s42"
+      "notes": "PixelLab inpaint m40 g9 s42",
+      "triage": "redesign",
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline, verified);snap:applied fresh). {\"A1\": \"PASS\", \"A2\": \"PASS\", \"A3\": \"PASS\", \"A4\": \"FAIL\", \"A5\": \"FAIL\", \"A6\": \"WARN\", \"A4_color_count\": 35, \"A5_near_color_pairs\": 36, \"A6_outline_fraction\": 0.4386}"
     }
   ]
 }
