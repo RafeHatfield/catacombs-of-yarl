@@ -123,7 +123,7 @@ A conscious brass wand, formerly the artificer Marya. Bound to Sasha for one fur
 **Voice gradient across modes.** Holl has at least four distinct registers within the same character:
 
 - **Banter** — clipped, dry, with Sasha. Fast disagreements over small things.
-- **Tactical** — declarative, fact-fact-fact. Identification work, spell-break warnings, monster commentary. *Less verbose than Sasha thinks aloud.*
+- **Tactical** — declarative, fact-fact-fact. Identification work, spell-break warnings, monster commentary. *Less verbose than Sasha thinks aloud.* Tactical lines are opinions with a tactical tail, never neutral readouts; if a line would survive as a tooltip with the Boss tag removed, it is not her.
 - **Marya substrate** — ordinary professional knowledge that happens to be Marya's. Present-tense ownership of Wend, the artificer guild, work she once did. Should leak frequently as small artifacts of a person who taught artificery and once knew a cat.
 - **Forced silence** — after a Marya memory surfaces, Holl goes quiet for the rest of the floor. No banter, no commentary. The medium can enforce silence through a mechanic in a way prose cannot.
 
