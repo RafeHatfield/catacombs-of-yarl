@@ -17,6 +17,23 @@ public sealed class MonsterKnowledgeSystem
 {
     private readonly Dictionary<string, MonsterKnowledgeEntry> _entries = new();
 
+    /// <summary>Per-species knowledge entries, exposed read-only for the mid-run serializer.</summary>
+    public IReadOnlyDictionary<string, MonsterKnowledgeEntry> Entries => _entries;
+
+    /// <summary>Restore one species entry after a mid-run load. Serializer-only — gameplay records
+    /// knowledge through the Record* methods.</summary>
+    public void RestoreEntry(string speciesId, int seenCount, int engagedCount, int killedCount, IEnumerable<string> traitsDiscovered)
+    {
+        var entry = new MonsterKnowledgeEntry
+        {
+            SeenCount = seenCount,
+            EngagedCount = engagedCount,
+            KilledCount = killedCount,
+        };
+        foreach (var t in traitsDiscovered) entry.TraitsDiscovered.Add(t);
+        _entries[speciesId] = entry;
+    }
+
     // ── Write API (called by TurnController) ───────────────────────────────────
 
     /// <summary>

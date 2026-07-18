@@ -287,6 +287,64 @@ public sealed class GameMap
     public void RegisterEntity(Entity entity) => _entities.Add(entity);
     public void UnregisterEntity(Entity entity) => _entities.Remove(entity);
 
+    // ── Mid-run serialization (M1.4) ──────────────────────────────────────────
+    // The five per-cell grids are private; the serializer exports/restores them row-major
+    // (x outer, y inner) for byte-stable output. _entities and _propCells are DERIVED — the
+    // loader rebuilds them by re-registering entities / re-marking prop cells.
+
+    /// <summary>Flattened row-major snapshot of the five per-cell grids for the mid-run save.</summary>
+    public readonly record struct GridSnapshot(
+        TileKind[] Tiles, bool[] Walkable, bool[] Visible, bool[] Explored, TileTheme[] Theme);
+
+    public GridSnapshot ExportGrids()
+    {
+        int n = Width * Height;
+        var tiles = new TileKind[n];
+        var walk = new bool[n];
+        var vis = new bool[n];
+        var expl = new bool[n];
+        var theme = new TileTheme[n];
+        int i = 0;
+        for (int x = 0; x < Width; x++)
+            for (int y = 0; y < Height; y++, i++)
+            {
+                tiles[i] = _tiles[x, y];
+                walk[i] = _walkable[x, y];
+                vis[i] = _visible[x, y];
+                expl[i] = _explored[x, y];
+                theme[i] = _theme[x, y];
+            }
+        return new GridSnapshot(tiles, walk, vis, expl, theme);
+    }
+
+    /// <summary>Ids of entities registered on the map for occupancy (blocking) checks. This set is
+    /// dynamic — dropped items, split children, portals etc. register/unregister during play, so it
+    /// is NOT derivable from GameState list membership and must be serialized. Sorted for byte-stability;
+    /// occupancy tests are order-independent.</summary>
+    public IReadOnlyList<int> RegisteredEntityIds => _entities.Select(e => e.Id).OrderBy(i => i).ToList();
+
+    /// <summary>Prop-blocked cells (barrels/bookshelves), sorted. Empty in scenario mode.</summary>
+    public IReadOnlyList<(int X, int Y)> PropCells => _propCells.OrderBy(c => c.Item1).ThenBy(c => c.Item2).ToList();
+
+    public void RestoreGrids(GridSnapshot g)
+    {
+        int n = Width * Height;
+        if (g.Tiles.Length != n || g.Walkable.Length != n || g.Visible.Length != n
+            || g.Explored.Length != n || g.Theme.Length != n)
+            throw new InvalidOperationException(
+                $"Mid-run map restore: grid length mismatch for a {Width}x{Height} map.");
+        int i = 0;
+        for (int x = 0; x < Width; x++)
+            for (int y = 0; y < Height; y++, i++)
+            {
+                _tiles[x, y] = g.Tiles[i];
+                _walkable[x, y] = g.Walkable[i];
+                _visible[x, y] = g.Visible[i];
+                _explored[x, y] = g.Explored[i];
+                _theme[x, y] = g.Theme[i];
+            }
+    }
+
     /// <summary>Check if a tile is blocked by a living, movement-blocking entity.</summary>
     public bool IsBlocked(int x, int y)
     {
