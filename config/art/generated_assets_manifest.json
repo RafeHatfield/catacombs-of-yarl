@@ -100,7 +100,8 @@
       "game_key": "club",
       "notes": "RD rd_plus__low_res v3",
       "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=WARN, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=15, final_overall=FAIL.]",
+      "batch_c_canon_reference": "canon IDs 159 \u2014 mace \u2014 nearest canon blunt-weapon icon, style/proportion reference only (metal-headed flail, not a wooden club)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4002.png",
@@ -112,7 +113,7 @@
       "game_key": null,
       "notes": "RD rd_plus__low_res v2 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
       "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=PASS, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=8, final_overall=FAIL.]"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4003.png",
@@ -136,21 +137,21 @@
       "game_key": null,
       "notes": "RD rd_plus__low_res v1 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
       "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=WARN, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=10, final_overall=FAIL.]"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_3001.png",
       "origin": "placeholder",
       "added_commit": "447f5237b440791c5bb2981078caa29ab0cc935e",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "floor_worn",
       "notes": "Full-cell worn-floor tile (config/tile_themes.yaml). Predates the PixelLab/RD tracking sheet.",
-      "triage": "redesign",
-      "triage_note": "Full-cell worn-floor tile stamped across floors; most nonconformant asset in repo per spec. Expected Tier-3 at spec adoption. Not attempted (no manual pixel art)."
+      "route": "worn_floor_derivation",
+      "derivation_note": "Scripted derivation from canon floor_primary (774, tile_themes.yaml sandstone theme). Uses only 774's own 2 colors (60,48,11 / 77,65,16) plus one darker ramp step (33,24,9, nearest same-hue neighbor of 60,48,11 in the master palette): a short scripted crack (random-walk line, seed 1337) plus 4 scattered discoloration pixels. 3 colors total (within +/-2 of base's 2), zero A5 near-color pairs introduced, full-tile opacity unchanged. Two additional candidate variants (seeds 42, 999) at tools/art_lint/candidates/worn_variants/ \u2014 not landed, wiring extra floor_worn variants into tile_themes.yaml is a config change deferred to a later ruling."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5001.png",
@@ -181,12 +182,12 @@
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "Bucket",
       "notes": "RD rd_plus__low_res v1",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/bucket.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied."
+      "route": "canon_substitution",
+      "canon_source_id": 270
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5007.png",
@@ -219,14 +220,15 @@
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "decal",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [
         "A6_outline"
       ],
       "game_key": "Drain",
       "notes": "RD rd_plus__low_res drain_v2",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/drain.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied."
+      "route": "deep_collapse",
+      "auto_collapsed": true,
+      "deep_collapse_merges": 5
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5011.png",
@@ -250,7 +252,8 @@
       "game_key": "Globe",
       "notes": "RD rd_plus__low_res v0",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/globe.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/globe.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied.",
+      "batch_c_canon_reference": "canon IDs 380;381;382;383;384;385 \u2014 canon urns \u2014 weak decor-clutter/metal-tone reference only, not a globe shape"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5014.png",
@@ -441,12 +444,14 @@
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "desk",
       "notes": "PixelLab s42 \u2014 primary",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "batch_c_canon_reference": "canon IDs 600;601;602;603;604 \u2014 counter/bar-top cluster \u2014 wood-plank color/material reference only, wrong shape for a desk",
+      "route": "deep_collapse",
+      "auto_collapsed": true,
+      "deep_collapse_merges": 5
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5063.png",
@@ -458,7 +463,8 @@
       "game_key": "desk",
       "notes": "PixelLab s999",
       "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: exceeded 8 merges \u2014 redesign wearing a retouch tag, final_colors=11, final_overall=FAIL.]",
+      "batch_c_canon_reference": "canon IDs 600;601;602;603;604 \u2014 counter/bar-top cluster \u2014 wood-plank color/material reference only, wrong shape for a desk"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5064.png",
@@ -666,7 +672,8 @@
       "game_key": "candelabra",
       "notes": "PixelLab s0",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 380;381;382;383;384;385 \u2014 canon urns \u2014 weak decor-clutter/metal-tone reference only, not a candelabra shape"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5081.png",
@@ -678,7 +685,8 @@
       "game_key": "candelabra",
       "notes": "PixelLab s1",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 380;381;382;383;384;385 \u2014 canon urns \u2014 weak decor-clutter/metal-tone reference only, not a candelabra shape"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5082.png",
@@ -690,7 +698,8 @@
       "game_key": "workbench",
       "notes": "PixelLab s0",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 600;601;602;603;604 \u2014 counter/bar-top cluster \u2014 wood-plank color/material reference only, no tool/vice detail"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5083.png",
@@ -702,7 +711,8 @@
       "game_key": "workbench",
       "notes": "PixelLab s1337",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 600;601;602;603;604 \u2014 counter/bar-top cluster \u2014 wood-plank color/material reference only, no tool/vice detail"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5084.png",
@@ -714,7 +724,8 @@
       "game_key": "water_barrel",
       "notes": "PixelLab s1",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5085.png",
@@ -726,7 +737,8 @@
       "game_key": "water_barrel",
       "notes": "PixelLab s999",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5086.png",
@@ -759,36 +771,41 @@
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "training_dummy",
       "notes": "PixelLab s42",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "route": "deep_collapse",
+      "auto_collapsed": true,
+      "deep_collapse_merges": 7
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5089.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "tool_rack",
       "notes": "PixelLab s137",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "batch_c_canon_reference": "canon IDs 323;324 \u2014 weapon_rack (already wired) \u2014 wall-rack style reference only, holds weapons not tools",
+      "route": "deep_collapse",
+      "auto_collapsed": true,
+      "deep_collapse_merges": 6
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5090.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "tool_rack",
       "notes": "PixelLab s1337",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "batch_c_canon_reference": "canon IDs 323;324 \u2014 weapon_rack (already wired) \u2014 wall-rack style reference only, holds weapons not tools",
+      "route": "deep_collapse",
+      "auto_collapsed": true,
+      "deep_collapse_merges": 5
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5091.png",
@@ -840,19 +857,22 @@
       "game_key": "pillar",
       "notes": "PixelLab s1",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 218;219 \u2014 stalagmite (already wired, different concept name) \u2014 stone-material reference only, wrong silhouette (natural cone vs built column)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5095.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "pillar",
       "notes": "PixelLab s137",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "batch_c_canon_reference": "canon IDs 218;219 \u2014 stalagmite (already wired, different concept name) \u2014 stone-material reference only, wrong silhouette (natural cone vs built column)",
+      "route": "deep_collapse",
+      "auto_collapsed": true,
+      "deep_collapse_merges": 7
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5096.png",
@@ -900,19 +920,22 @@
       "game_key": "shelf_bottles",
       "notes": "PixelLab s1",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 317;318 \u2014 bookshelf (already wired) \u2014 wood-tone/shelf-furniture reference only, holds books not bottles"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5100.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "shelf_bottles",
       "notes": "PixelLab s42",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "batch_c_canon_reference": "canon IDs 317;318 \u2014 bookshelf (already wired) \u2014 wood-tone/shelf-furniture reference only, holds books not bottles",
+      "route": "deep_collapse",
+      "auto_collapsed": true,
+      "deep_collapse_merges": 5
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5101.png",
@@ -924,7 +947,8 @@
       "game_key": "shelf_bottles",
       "notes": "PixelLab s137",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 317;318 \u2014 bookshelf (already wired) \u2014 wood-tone/shelf-furniture reference only, holds books not bottles"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5102.png",
@@ -948,7 +972,8 @@
       "game_key": "rock",
       "notes": "PixelLab s1",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 218;219;220 \u2014 stalagmite + pebble cluster \u2014 stone-material/palette reference only, wrong scale/silhouette for a loose boulder"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5105.png",
@@ -960,7 +985,8 @@
       "game_key": "rock",
       "notes": "PixelLab s2",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "batch_c_canon_reference": "canon IDs 218;219;220 \u2014 stalagmite + pebble cluster \u2014 stone-material/palette reference only, wrong scale/silhouette for a loose boulder"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5106.png",
@@ -991,12 +1017,13 @@
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "mushroom_cluster",
       "notes": "PixelLab s0",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "route": "deep_collapse",
+      "auto_collapsed": true,
+      "deep_collapse_merges": 6
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5109.png",
@@ -1008,7 +1035,7 @@
       "game_key": "mushroom_cluster",
       "notes": "PixelLab s1",
       "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: exceeded 8 merges \u2014 redesign wearing a retouch tag, final_colors=11, final_overall=FAIL.]"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5110.png",
@@ -1029,48 +1056,48 @@
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chest_closed",
       "notes": "PixelLab s42",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "route": "canon_substitution",
+      "canon_source_id": 261
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5112.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chest_open",
       "notes": "PixelLab inpaint m40 g7 s1337",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "route": "canon_substitution",
+      "canon_source_id": 262
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5113.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chest_empty",
       "notes": "PixelLab inpaint m40 g9 s42",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "route": "canon_substitution",
+      "canon_source_id": 264
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5114.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chest_trapped",
       "notes": "PixelLab inpaint m40 g9 s42",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "route": "canon_substitution",
+      "canon_source_id": 263
     }
   ]
 }
