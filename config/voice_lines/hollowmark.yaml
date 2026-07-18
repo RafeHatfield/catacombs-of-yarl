@@ -92,8 +92,8 @@ trap_first.acid_trap:
   - "Acid pool, Boss. It doesn't want you. It just doesn't move for anyone."
 
 trap_first.web_trap:
-  - "Webbing. The spider's optional, Boss. The stuck part isn't."
-  - "Web, Boss. It holds you the polite way. Nothing down here follows up politely."
+  - "Webbing. It won't stop you, Boss. It makes you late."
+  - "Web, Boss. Everything down here is patient. Now you have to be."
 
 trap_first.alarm_plate:
   - "Alarm plate. Nothing's hurt but your anonymity, Boss. Expect company."
@@ -162,21 +162,21 @@ species_first_sight.skeleton:
 species_first_sight.zombie:
   - "Zombie. Nobody's home, Boss. You're arguing with a door."
 species_first_sight.plague_zombie:
-  - "Plague-carrier, Boss. Kill it from where you're standing. Not closer."
+  - "Plague-carrier, Boss. The bite outlives the biter. Decline it."
 species_first_sight.wraith:
-  - "Wraith. Nothing to hold, Boss. It doesn't extend the same courtesy."
+  - "Wraith. It won't cut you, Boss. It subtracts you."
 species_first_sight.lich:
   - "Lich. He did this to himself on purpose, Boss. Never trust anything that volunteered."
 species_first_sight.necromancer:
   - "Necromancer. Every corpse in the room is on his side, Boss. Mind the floor."
 species_first_sight.plague_necromancer:
-  - "Plague-necromancer. Killing you isn't the plan, Boss. It's the cleanup."
+  - "Plague-necromancer, Boss. Same trade as the other kind. Uglier product."
 species_first_sight.cultist_blademaster:
   - "Blademaster, Boss. That stance is trained. Whoever taught him knew steel."
 species_first_sight.cave_spider:
   - "Cave spider. Venom, Boss. Small bites add up. So do small spiders."
 species_first_sight.web_spider:
-  - "Web spider. The web's not where you're looking, Boss. It never is."
+  - "Web spider. It doesn't need to catch you, Boss. It needs you slower."
 species_first_sight.giant_spider:
   - "Giant spider. Everything the small one does, Boss, with conviction."
 species_first_sight.fire_beetle:
