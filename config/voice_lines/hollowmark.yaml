@@ -187,3 +187,73 @@ species_first_sight.large_slime:
   - "Large slime, Boss. Same argument as the small one, louder."
 species_first_sight.greater_slime:
   - "Greater slime. That one's eaten things with names, Boss. Stay out of reach."
+
+# ── Item identified (per-category; agnostic to identification method) ──
+
+item_identified.potion:
+  - "Potion, named. One less gamble on the belt, Boss."
+  - "Sorted, Boss. Drink with confidence. Well. With more confidence."
+  - "Brewed properly, whatever else, Boss. Someone down here keeps their standards."
+  - "Named, Boss. Knowledge is cheap when it isn't urgent. Stock up."
+  - "That's settled. Label it in your head, Boss. I've labeled it in mine."
+  - "Identified. The good ones announce themselves eventually, Boss. So do the others."
+  - "Another potion off the mystery shelf, Boss. The shelf stays full down here."
+  - "Known, Boss. Now it's equipment. Before, it was a bet."
+  - "That one's honest now, Boss. It wasn't lying before. You just weren't listening right."
+  - "Filed, Boss. Somebody taught me to keep a ledger of these. I keep it."
+
+item_identified.scroll:
+  - "Scroll, named, Boss. The words were always there. Now they're yours."
+  - "Sorted. Whoever scribed that had a steady hand, Boss. Respect the penmanship."
+  - "Named, Boss. Paper keeps its secrets badly. Everything else down here keeps them better."
+  - "That's one more thing you can read, Boss. Literacy pays. Eventually."
+  - "Identified. Careful with the ones that read back, Boss."
+  - "Known, Boss. Ink fades. What it did to the last reader doesn't."
+  - "Scroll's sorted. File the wording away, Boss. Wording matters down here."
+  - "Named. The Paths run on paperwork, Boss. Now you hold some."
+  - "That one's yours now, Boss. Knowledge signed for is knowledge owed."
+  - "Identified, Boss. Read it like you mean it. The scroll can tell."
+
+item_identified.wand:
+  - "Wand, named. Good core, lazy finish, Boss. I'd have sanded it."
+  - "Identified. It's not conscious, Boss. I checked."
+  - "Named, Boss. Point the working end away from us. That's the whole trade."
+  - "Sorted. A wand's a promise with a handle, Boss. Now you know what it promised."
+  - "Sorted, Boss. Hold it like you mean it. Tools can tell."
+  - "Named. Whoever wound the core knew the old method, Boss. It'll hold."
+  - "Identified, Boss. Charges are a budget. Spend like it."
+  - "Known. It does one thing well, Boss. That's a career down here."
+  - "Wand, sorted. Mind the grip wear, Boss. Its last owner used it plenty. Consider why."
+  - "Named, Boss. Don't tap it when it's slow. They hate that."
+
+item_identified.ring:
+  - "Ring, named. Fine work, Boss. Small things take the most skill."
+  - "Identified. Wear it or trade it, Boss. Don't collect. Collectors die heavy."
+  - "Named, Boss. Jewelry with a job. The best kind."
+  - "Sorted. Whoever sized that had thin fingers and patience, Boss."
+  - "Known. A ring works while you sleep, Boss. Respect the work ethic."
+  - "Ring's named, Boss. Small weight, long lever."
+  - "Identified. Metal remembers being shaped, Boss. This one was shaped kindly."
+  - "Sorted, Boss. One finger's worth of advantage. Take every finger you can get."
+  - "Named. Somebody loved this once, Boss. It ended up down here anyway."
+  - "Known, Boss. Put it on or pocket it. Either way it's done being a question."
+
+# ── Overnight identification (mechanic unimplemented; forward-authored, content-only) ──
+
+overnight_identified:
+  - "Morning, Boss. Worked that one out while you snored. You're welcome."
+  - "Solved it overnight, Boss. The dark's good for thinking. It's most of what I do."
+  - "One mystery fewer, Boss. Call it rent."
+  - "Sorted it while you slept. Slow work, Boss, done right. The best kind."
+  - "Morning. I named your mystery, Boss. It behaved once it was named. Most things do."
+  - "Night shift's done, Boss. One item, fully understood. Some nights that's everything."
+  - "Worked it out by feel, Boss. The old way. It still works."
+  - "That one fought me till the third bell, Boss. I won. I usually win."
+  - "Done overnight, Boss. You slept through good craftsmanship. Typical."
+  - "Named it in the dark, Boss. Things confess quicker when it's quiet."
+  - "Item's sorted, Boss. The Paths talked in their sleep again. I tried not to listen."
+  - "One more named, Boss. Somebody had to know these things. Now it's me. Then you."
+  - "Overnight work, Boss. No rush jobs. The dead don't buy, but they judge."
+  - "Solved, Boss. It's honest work if you can get it. I got it."
+  - "Morning. Your mystery's a tool now, Boss. Best trade there is."
+  - "Sorted by dawn, Boss. I'd have finished sooner, but you snore in E flat."

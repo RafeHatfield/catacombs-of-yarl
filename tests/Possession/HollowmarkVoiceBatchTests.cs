@@ -9,11 +9,14 @@ using YamlDotNet.Serialization.NamingConventions;
 namespace CatacombsOfYarl.Tests.Possession;
 
 /// <summary>
-/// Hollowmark voice batches 1a (revised) + 1b: hp_threshold, region_first_entry,
-/// trap_first, kill_streak_clean, long_idle, species_first_sight triggers.
+/// Hollowmark voice batches 1a (revised) + 1b + 1c: hp_threshold, region_first_entry,
+/// trap_first, kill_streak_clean, long_idle, species_first_sight, item_identified,
+/// overnight_identified triggers.
 /// Content-only — no scheduler wiring; pools are sized for the future once-per-run
 /// shuffle-bag scheduler, not enforced by the registry today (GetLine is
-/// first-line-first, then random with replacement).
+/// first-line-first, then random with replacement). overnight_identified is
+/// forward-authored: the overnight identification mechanic exists only in design
+/// docs, not in code.
 /// </summary>
 [TestFixture]
 public class HollowmarkVoiceBatchTests
@@ -52,6 +55,17 @@ public class HollowmarkVoiceBatchTests
         "fire_beetle", "slime", "large_slime", "greater_slime",
     };
 
+    // entities.yaml top-level sections that item_identified.* categories map to.
+    private static readonly string[] ItemCategories = { "potion", "scroll", "wand", "ring" };
+
+    private static readonly Dictionary<string, string> ItemCategoryToEntitiesSection = new()
+    {
+        ["potion"] = "consumables",
+        ["scroll"] = "scrolls",
+        ["wand"] = "wands",
+        ["ring"] = "rings",
+    };
+
     private static readonly string[] NewKeys = BuildNewKeys();
 
     private static string[] BuildNewKeys()
@@ -63,11 +77,14 @@ public class HollowmarkVoiceBatchTests
             "region_first_entry.crossing", "region_first_entry.inner_court",
             "region_first_entry.weighing",
             "kill_streak_clean", "long_idle",
+            "overnight_identified",
         };
         foreach (var trap in FloorTrapComponentRoster)
             keys.Add($"trap_first.{trap}");
         foreach (var species in SpeciesFirstSightKeys)
             keys.Add($"species_first_sight.{species}");
+        foreach (var category in ItemCategories)
+            keys.Add($"item_identified.{category}");
         return keys.ToArray();
     }
 
@@ -96,7 +113,7 @@ public class HollowmarkVoiceBatchTests
         var yaml = File.ReadAllText(VoiceLinePath());
         var registry = VoiceLineRegistry.LoadFromYaml(yaml, new AotObjectFactory());
 
-        Assert.That(NewKeys.Length, Is.EqualTo(44), "Sanity check on the expected new-key count.");
+        Assert.That(NewKeys.Length, Is.EqualTo(49), "Sanity check on the expected new-key count.");
         foreach (var key in NewKeys)
             Assert.That(registry.HasTrigger(key), Is.True, $"Missing trigger: {key}");
     }
@@ -127,11 +144,14 @@ public class HollowmarkVoiceBatchTests
             ["region_first_entry.weighing"] = 2,
             ["kill_streak_clean"] = 6,
             ["long_idle"] = 6,
+            ["overnight_identified"] = 16,
         };
         foreach (var trap in FloorTrapComponentRoster)
             expected[$"trap_first.{trap}"] = 2;
         foreach (var species in SpeciesFirstSightKeys)
             expected[$"species_first_sight.{species}"] = 1;
+        foreach (var category in ItemCategories)
+            expected[$"item_identified.{category}"] = 10;
 
         var totalLines = 0;
         foreach (var (key, count) in expected)
@@ -141,7 +161,46 @@ public class HollowmarkVoiceBatchTests
             totalLines += pools[key].Count;
         }
 
-        Assert.That(totalLines, Is.EqualTo(76), "Total new-line count across all new pools should be 76.");
+        Assert.That(totalLines, Is.EqualTo(132), "Total new-line count across all new pools should be 132.");
+    }
+
+    [Test]
+    public void ItemIdentifiedCategories_MapToNonEmptyEntitiesYamlSections()
+    {
+        // Guards the batch's key design intent: item_identified.<category> maps to
+        // an entities.yaml top-level section. If a section is ever renamed, this
+        // test breaks loudly instead of the mapping silently going stale.
+        var entitiesPath = Path.Combine(TestContext.CurrentContext.TestDirectory,
+            "..", "..", "..", "..", "config", "entities.yaml");
+        var lines = File.ReadAllLines(entitiesPath);
+
+        foreach (var (category, section) in ItemCategoryToEntitiesSection)
+        {
+            var sectionStart = Array.FindIndex(lines, l => l == $"{section}:");
+            Assert.That(sectionStart, Is.GreaterThanOrEqualTo(0),
+                $"entities.yaml has no top-level '{section}:' section for item_identified.{category}.");
+
+            var sectionEnd = lines.Length;
+            for (var i = sectionStart + 1; i < lines.Length; i++)
+            {
+                if (Regex.IsMatch(lines[i], @"^[a-z_][a-z0-9_]*:"))
+                {
+                    sectionEnd = i;
+                    break;
+                }
+            }
+
+            var hasEntry = false;
+            for (var i = sectionStart + 1; i < sectionEnd; i++)
+            {
+                if (Regex.IsMatch(lines[i], @"^  [a-z_][a-z0-9_]*:\s*$"))
+                {
+                    hasEntry = true;
+                    break;
+                }
+            }
+            Assert.That(hasEntry, Is.True, $"entities.yaml section '{section}:' has no entries.");
+        }
     }
 
     [Test]
