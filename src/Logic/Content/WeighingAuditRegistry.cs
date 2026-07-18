@@ -20,6 +20,11 @@ public sealed class WeighingAuditRegistry
         _sequences = sequences;
     }
 
+    /// <summary>The loaded dialogue sequences, exposed read-only for the mid-run serializer. The
+    /// registry is config-shaped; it is serialized as captured so an in-flight run keeps the dialogue
+    /// it was dealt across a content patch (self-contained-snapshot ruling).</summary>
+    public IReadOnlyDictionary<string, List<WeighingDialoguePage>> Sequences => _sequences;
+
     /// <summary>Load from a YAML string.</summary>
     public static WeighingAuditRegistry LoadFromYaml(string yaml, IObjectFactory? factory = null)
     {

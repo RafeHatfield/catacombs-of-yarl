@@ -48,6 +48,11 @@ public sealed class MidRunSaveDto
     public PlacedPropDto[]? Props { get; set; }
     public LockedDoorDto[] LockedDoors { get; set; } = Array.Empty<LockedDoorDto>();
 
+    // Floor-25 Weighing subsystems (null off the weighing floor).
+    public WeighingStateDto? Weighing { get; set; }
+    public WeighingArenaDto? WeighingArena { get; set; }
+    public WeighingAuditDto? WeighingAudit { get; set; }
+
     // Rng continuity (SeededRandom Seed + CallCount → Restore).
     public int RngSeed { get; set; }
     public long RngCallCount { get; set; }

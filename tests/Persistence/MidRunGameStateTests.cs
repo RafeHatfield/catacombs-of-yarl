@@ -182,21 +182,6 @@ consumables:
         finally { File.Delete(path); }
     }
 
-    [Test]
-    public void SaveMidRun_OnWeighingState_FailsLoud()
-    {
-        // LockedDoors is now SERIALIZED (4a.3b-2) — it must NOT throw anymore.
-        var okState = BuildAndAdvance(depth: 1, seed: 7, turns: 5);
-        okState.LockedDoors[(1, 1)] = 0;
-        Assert.That(() => MidRunSerializer.SaveMidRun(okState), Throws.Nothing);
-
-        // Weighing* (floor-25) is still deferred (4a.3b-3) — the guard fences it, not silently drop.
-        var weighingAudit = BuildAndAdvance(depth: 1, seed: 7, turns: 5);
-        weighingAudit.WeighingAudit = new CatacombsOfYarl.Logic.Content.WeighingAuditRegistry(new());
-        Assert.That(() => MidRunSerializer.SaveMidRun(weighingAudit), Throws.TypeOf<NotSupportedException>()
-            .With.Message.Contains("WeighingAudit"));
-    }
-
     // ── S1 soak: serialize → deserialize → serialize is byte-identical ─────────
     [Test]
     public void S1_RoundTripStability_ByteIdentical([Values(1337, 7, 99, 2024, 55555)] int seed,

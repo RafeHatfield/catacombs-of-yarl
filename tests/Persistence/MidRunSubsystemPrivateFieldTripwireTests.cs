@@ -23,6 +23,9 @@ public class MidRunSubsystemPrivateFieldTripwireTests
         typeof(GameMap), typeof(MonsterKnowledgeSystem), typeof(GroundHazardManager),
         typeof(IdentificationRegistry), typeof(AppearancePool), typeof(MuralTracker),
         typeof(PityTracker), typeof(BoonTracker),
+        typeof(CatacombsOfYarl.Logic.Endgame.WeighingState),
+        typeof(CatacombsOfYarl.Logic.Endgame.WeighingArena),
+        typeof(WeighingAuditRegistry),
     };
 
     // Every private instance field of the above, "Type.field" — all COVERED by the serializer.
@@ -39,6 +42,9 @@ public class MidRunSubsystemPrivateFieldTripwireTests
         "MuralTracker._usedThisFloor", "MuralTracker._usedThisRun",
         "PityTracker._counters", "PityTracker._pendingHardInjects",
         "PityTracker._lootItemCounts", "PityTracker._hardPityFireCount",
+        // WeighingState is all public props (no private fields).
+        "WeighingArena._anchors",
+        "WeighingAuditRegistry._sequences",
     };
 
     [Test]

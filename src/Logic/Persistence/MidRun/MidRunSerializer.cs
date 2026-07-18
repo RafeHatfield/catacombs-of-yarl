@@ -2,6 +2,7 @@ using CatacombsOfYarl.Logic.Balance;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Endgame;
 
 namespace CatacombsOfYarl.Logic.Persistence.MidRun;
 
@@ -18,8 +19,7 @@ public static class MidRunSerializer
 {
     public static MidRunSaveDto SaveMidRun(GameState state)
     {
-        GuardWeighingUnsupported(state);
-
+        // Every SERIALIZE-class subsystem is now covered — no guard remains.
         // Roots: every entity list + player. 4a.2 container traversal closes over inventory/equipment
         // and stash contents; the audit confirmed no other unlisted-entity reference exists.
         var roots = new List<Entity> { state.Player };
@@ -111,6 +111,21 @@ public static class MidRunSerializer
                 p.TileLayout?.ToArray(), p.FlipH)).ToArray(),
             LockedDoors = state.LockedDoors.OrderBy(kv => kv.Key.X).ThenBy(kv => kv.Key.Y)
                 .Select(kv => new LockedDoorDto(kv.Key.X, kv.Key.Y, kv.Value)).ToArray(),
+
+            // Floor-25 Weighing subsystems. WeighingArena.Map == state.Map (shared) → only anchors.
+            Weighing = state.Weighing is not { } ws ? null : new WeighingStateDto(
+                ws.Phase, ws.CurrentGuardianIndex,
+                ws.Audit.WardenOfWardens, ws.Audit.Oathkeeper, ws.Audit.AssemblyOfTheLost, ws.Audit.AuditorsOwn,
+                ws.SwapAvailable, ws.SwapChosen, ws.OrcRepState, ws.CumulativeDeaths,
+                ws.ActiveGuardianId, ws.AlliedGuardianIds.ToArray(), ws.AlliedGuardianTypes.ToArray(),
+                ws.DebtId, ws.AlliesFellBack, ws.WardenCursePending),
+            WeighingArena = state.WeighingArena is not { } wa ? null : new WeighingArenaDto(
+                wa.Anchors.OrderBy(kv => kv.Key, StringComparer.Ordinal)
+                    .Select(kv => new AnchorDto(kv.Key, kv.Value.Select(c => new PointDto(c.X, c.Y)).ToArray())).ToArray()),
+            WeighingAudit = state.WeighingAudit is not { } au ? null : new WeighingAuditDto(
+                au.Sequences.OrderBy(kv => kv.Key, StringComparer.Ordinal)
+                    .Select(kv => new AuditSequenceDto(kv.Key,
+                        kv.Value.Select(p => new DialoguePageDto(p.Speaker, p.Text)).ToArray())).ToArray()),
         };
     }
 
@@ -160,6 +175,11 @@ public static class MidRunSerializer
         };
 
         foreach (var d in dto.LockedDoors) state.LockedDoors[(d.X, d.Y)] = d.LockColorId;
+
+        // Floor-25 Weighing subsystems (settable — restored after construction). Arena reuses state.Map.
+        state.Weighing = BuildWeighing(dto.Weighing);
+        state.WeighingArena = BuildArena(dto.WeighingArena, state.Map);
+        state.WeighingAudit = BuildAudit(dto.WeighingAudit);
 
         state.TurnCount = dto.TurnCount;
         foreach (var id in dto.FloorItemIds) state.FloorItems.Add(Get(id));
@@ -238,17 +258,41 @@ public static class MidRunSerializer
     private static PlacedProp BuildProp(PlacedPropDto d) => new(d.PropId, d.X, d.Y, d.FootprintW, d.FootprintH,
         d.BlocksMovement, d.TileId, d.OverlayTileId, d.TileLayout, d.FlipH);
 
-    // Weighing* (floor-25 endgame) is the ONLY remaining unserialized SERIALIZE-class surface; its
-    // serializers land in 4a.3b-3. Fail loud so a floor-25 save never silently drops the gauntlet
-    // state. Every other subsystem is now serialized below.
-    private static void GuardWeighingUnsupported(GameState s)
+    private static WeighingState? BuildWeighing(WeighingStateDto? d)
     {
-        var populated = new List<string>();
-        if (s.Weighing != null || s.WeighingArena != null) populated.Add("Weighing");
-        if (s.WeighingAudit != null) populated.Add("WeighingAudit");
-        if (populated.Count > 0)
-            throw new NotSupportedException(
-                "Weighing-floor mid-run save is 4a.3b-3; these SERIALIZE-class subsystems are populated and " +
-                $"would be dropped: {string.Join(", ", populated)}.");
+        if (d is null) return null;
+        var w = new WeighingState
+        {
+            Phase = d.Phase,
+            CurrentGuardianIndex = d.CurrentGuardianIndex,
+            Audit = new AuditScorer.AuditResult(d.AuditWarden, d.AuditOathkeeper, d.AuditAssembly, d.AuditAuditor),
+            SwapAvailable = d.SwapAvailable,
+            SwapChosen = d.SwapChosen,
+            OrcRepState = d.OrcRepState,
+            CumulativeDeaths = d.CumulativeDeaths,
+            ActiveGuardianId = d.ActiveGuardianId,
+            DebtId = d.DebtId,
+            AlliesFellBack = d.AlliesFellBack,
+            WardenCursePending = d.WardenCursePending,
+        };
+        foreach (var id in d.AlliedGuardianIds) w.AlliedGuardianIds.Add(id);
+        foreach (var g in d.AlliedGuardianTypes) w.AlliedGuardianTypes.Add(g);
+        return w;
+    }
+
+    // WeighingArena.Map is GameState.Map (shared) — rebuild the arena around the already-restored map.
+    private static WeighingArena? BuildArena(WeighingArenaDto? d, GameMap map)
+    {
+        if (d is null) return null;
+        var anchors = d.Anchors.ToDictionary(a => a.Name, a => a.Cells.Select(c => (c.X, c.Y)).ToList());
+        return new WeighingArena(map, anchors);
+    }
+
+    private static WeighingAuditRegistry? BuildAudit(WeighingAuditDto? d)
+    {
+        if (d is null) return null;
+        var sequences = d.Sequences.ToDictionary(s => s.Key,
+            s => s.Pages.Select(p => new WeighingDialoguePage(p.Speaker, p.Text)).ToList());
+        return new WeighingAuditRegistry(sequences);
     }
 }
