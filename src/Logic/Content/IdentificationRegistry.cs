@@ -24,6 +24,20 @@ public sealed class IdentificationRegistry
     /// </summary>
     public bool AlwaysIdentified { get; set; } = false;
 
+    // ── Mid-run serialization (M1.4) ──────────────────────────────────────────
+    public IReadOnlyCollection<string> IdentifiedTypeIds => _identified;
+    public IReadOnlyCollection<string> DecidedUnidentifiedTypeIds => _decidedUnidentified;
+
+    /// <summary>Restore identification state after a mid-run load. Serializer-only.</summary>
+    public void RestoreState(IEnumerable<string> identified, IEnumerable<string> decidedUnidentified, bool alwaysIdentified)
+    {
+        AlwaysIdentified = alwaysIdentified;
+        _identified.Clear();
+        foreach (var t in identified) _identified.Add(t);
+        _decidedUnidentified.Clear();
+        foreach (var t in decidedUnidentified) _decidedUnidentified.Add(t);
+    }
+
     /// <summary>Returns true if the given item type is identified this run.</summary>
     public bool IsIdentified(string typeId) => AlwaysIdentified || _identified.Contains(typeId);
 

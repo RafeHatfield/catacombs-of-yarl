@@ -183,16 +183,17 @@ consumables:
     }
 
     [Test]
-    public void SaveMidRun_OnDungeonOnlyState_FailsLoud()
+    public void SaveMidRun_OnWeighingState_FailsLoud()
     {
-        var state = BuildAndAdvance(depth: 1, seed: 7, turns: 5);
-        state.LockedDoors[(1, 1)] = 0; // a dungeon-only field the scenario saver must not silently drop
-        Assert.That(() => MidRunSerializer.SaveMidRun(state), Throws.TypeOf<NotSupportedException>());
+        // LockedDoors is now SERIALIZED (4a.3b-2) — it must NOT throw anymore.
+        var okState = BuildAndAdvance(depth: 1, seed: 7, turns: 5);
+        okState.LockedDoors[(1, 1)] = 0;
+        Assert.That(() => MidRunSerializer.SaveMidRun(okState), Throws.Nothing);
 
-        // WeighingAudit is SERIALIZE-class (spec) — it must also trip the guard, not be shadowed.
-        var state2 = BuildAndAdvance(depth: 1, seed: 7, turns: 5);
-        state2.WeighingAudit = new CatacombsOfYarl.Logic.Content.WeighingAuditRegistry(new());
-        Assert.That(() => MidRunSerializer.SaveMidRun(state2), Throws.TypeOf<NotSupportedException>()
+        // Weighing* (floor-25) is still deferred (4a.3b-3) — the guard fences it, not silently drop.
+        var weighingAudit = BuildAndAdvance(depth: 1, seed: 7, turns: 5);
+        weighingAudit.WeighingAudit = new CatacombsOfYarl.Logic.Content.WeighingAuditRegistry(new());
+        Assert.That(() => MidRunSerializer.SaveMidRun(weighingAudit), Throws.TypeOf<NotSupportedException>()
             .With.Message.Contains("WeighingAudit"));
     }
 

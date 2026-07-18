@@ -19,6 +19,19 @@ public sealed class MuralTracker
     // IDs used across all floors this run — resets when the pool is exhausted.
     private readonly HashSet<string> _usedThisRun = new();
 
+    // ── Mid-run serialization (M1.4) ──────────────────────────────────────────
+    public IReadOnlyCollection<string> UsedThisFloor => _usedThisFloor;
+    public IReadOnlyCollection<string> UsedThisRun => _usedThisRun;
+
+    /// <summary>Restore both used-sets after a mid-run load. Serializer-only.</summary>
+    public void RestoreState(IEnumerable<string> usedThisFloor, IEnumerable<string> usedThisRun)
+    {
+        _usedThisFloor.Clear();
+        foreach (var m in usedThisFloor) _usedThisFloor.Add(m);
+        _usedThisRun.Clear();
+        foreach (var m in usedThisRun) _usedThisRun.Add(m);
+    }
+
     /// <summary>True if the given mural ID has been placed on the current floor.</summary>
     public bool IsUsedThisFloor(string muralId) => _usedThisFloor.Contains(muralId);
 

@@ -1,3 +1,5 @@
+using CatacombsOfYarl.Logic.Balance;
+using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 
@@ -16,7 +18,7 @@ public static class MidRunSerializer
 {
     public static MidRunSaveDto SaveMidRun(GameState state)
     {
-        GuardScenarioOnly(state);
+        GuardWeighingUnsupported(state);
 
         // Roots: every entity list + player. 4a.2 container traversal closes over inventory/equipment
         // and stash contents; the audit confirmed no other unlisted-entity reference exists.
@@ -79,16 +81,50 @@ public static class MidRunSerializer
             PlayerDeathKillerSpecies = state.PlayerDeathKillerSpecies,
             PlayerDeathCause = state.PlayerDeathCause,
             Ending = state.Ending,
+
+            // Dungeon-only subsystems (null in scenario mode). Every collection canonically ordered.
+            Identification = state.IdentificationRegistry is not { } ir ? null : new IdentificationDto(
+                ir.IdentifiedTypeIds.OrderBy(s => s, StringComparer.Ordinal).ToArray(),
+                ir.DecidedUnidentifiedTypeIds.OrderBy(s => s, StringComparer.Ordinal).ToArray(),
+                ir.AlwaysIdentified),
+            Appearance = state.AppearancePool is not { } ap ? null : new AppearancePoolDto(
+                ap.Descriptors.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => new StringPairDto(kv.Key, kv.Value)).ToArray(),
+                ap.MysterySprites.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => new StringPairDto(kv.Key, kv.Value)).ToArray(),
+                ap.PotionTypes.OrderBy(s => s, StringComparer.Ordinal).ToArray(),
+                ap.ScrollTypes.OrderBy(s => s, StringComparer.Ordinal).ToArray(),
+                ap.WandTypes.OrderBy(s => s, StringComparer.Ordinal).ToArray(),
+                ap.RingTypes.OrderBy(s => s, StringComparer.Ordinal).ToArray()),
+            Murals = state.MuralTracker is not { } mt ? null : new MuralTrackerDto(
+                mt.UsedThisFloor.OrderBy(s => s, StringComparer.Ordinal).ToArray(),
+                mt.UsedThisRun.OrderBy(s => s, StringComparer.Ordinal).ToArray()),
+            Pity = state.PityTracker is not { } pt ? null : new PityTrackerDto(
+                pt.Counters.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => new IntEntryDto(kv.Key, kv.Value)).ToArray(),
+                pt.PendingHardInjects.OrderBy(s => s, StringComparer.Ordinal).ToArray(),
+                pt.LootItemCounts.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => new IntEntryDto(kv.Key, kv.Value)).ToArray(),
+                pt.HardPityFireCount),
+            Boons = state.BoonTracker is not { } bt ? null : new BoonTrackerDto(
+                bt.VisitedDepths.OrderBy(i => i).ToArray(), bt.BoonsApplied.ToArray(), bt.DisableDepthBoons),
+            Rooms = state.Rooms is null ? null : state.Rooms.Select(r => new RoomDto(
+                r.X, r.Y, r.Width, r.Height, r.Shape, r.Archetype, r.IsDeadEnd, r.IsGrandShrine, r.IsVault, r.MaintenanceState)).ToArray(),
+            Props = state.Props.Count == 0 ? null : state.Props.Select(p => new PlacedPropDto(
+                p.PropId, p.X, p.Y, p.FootprintW, p.FootprintH, p.BlocksMovement, p.TileId, p.OverlayTileId,
+                p.TileLayout?.ToArray(), p.FlipH)).ToArray(),
+            LockedDoors = state.LockedDoors.OrderBy(kv => kv.Key.X).ThenBy(kv => kv.Key.Y)
+                .Select(kv => new LockedDoorDto(kv.Key.X, kv.Key.Y, kv.Value)).ToArray(),
         };
     }
 
-    public static GameState LoadMidRun(MidRunSaveDto dto)
+    /// <summary>
+    /// Rebuild a GameState from a mid-run save. <paramref name="boonTable"/> is RECONSTRUCT-class:
+    /// the caller loads it from config (via DungeonFloorBuilder/ContentLoader) and passes it in — it
+    /// is never stored in the save. Null is fine for scenario mode and for a floor with no descent left.
+    /// </summary>
+    public static GameState LoadMidRun(MidRunSaveDto dto,
+        IReadOnlyDictionary<int, BoonDefinition>? boonTable = null)
     {
         if (dto.SchemaVersion != MidRunSchema.Version)
             throw new InvalidOperationException(
                 $"Mid-run save schema version {dto.SchemaVersion} != supported {MidRunSchema.Version}.");
-        if (dto.IsDungeonMode)
-            throw new NotSupportedException("Dungeon-mode mid-run load is 4a.3b-2 (needs subsystem + BoonTable reconstruction).");
 
         var byId = EntitySerializer.Deserialize(dto.Entities);
         Entity Get(int id) => byId.TryGetValue(id, out var e)
@@ -105,13 +141,25 @@ public static class MidRunSerializer
 
         var rng = SeededRandom.Restore(dto.RngSeed, dto.RngCallCount);
 
+        // Reconstruct init-only subsystems BEFORE the GameState (they are set at construction).
         var state = new GameState(player, monsters, map, rng, dto.TurnLimit)
         {
             IsDungeonMode = dto.IsDungeonMode,
             CurrentDepth = dto.CurrentDepth,
             Difficulty = dto.Difficulty,
             IdAllocator = dto.IdAllocatorWatermark is { } w ? new EntityIdAllocator(w) : null,
+            IdentificationRegistry = BuildIdentification(dto.Identification),
+            AppearancePool = BuildAppearance(dto.Appearance),
+            MuralTracker = BuildMurals(dto.Murals),
+            PityTracker = BuildPity(dto.Pity),
+            BoonTracker = BuildBoons(dto.Boons),
+            BoonTable = boonTable,                                   // RECONSTRUCT from config, never the save
+            Rooms = dto.Rooms?.Select(BuildRoom).ToList(),
+            Props = dto.Props is null ? Array.Empty<PlacedProp>() : dto.Props.Select(BuildProp).ToList(),
+            PersistentState = null,                                  // cross-run layer is injected by 4b, not the save
         };
+
+        foreach (var d in dto.LockedDoors) state.LockedDoors[(d.X, d.Y)] = d.LockColorId;
 
         state.TurnCount = dto.TurnCount;
         foreach (var id in dto.FloorItemIds) state.FloorItems.Add(Get(id));
@@ -137,24 +185,70 @@ public static class MidRunSerializer
         return state;
     }
 
-    // Fail loud on any dungeon-only subsystem so a scenario-scoped save never silently drops state.
-    private static void GuardScenarioOnly(GameState s)
+    // ── subsystem reconstruction (construct-then-restore; static content is caller-provided) ──
+    private static IdentificationRegistry? BuildIdentification(IdentificationDto? d)
+    {
+        if (d is null) return null;
+        var r = new IdentificationRegistry();
+        r.RestoreState(d.Identified, d.DecidedUnidentified, d.AlwaysIdentified);
+        return r;
+    }
+
+    private static AppearancePool? BuildAppearance(AppearancePoolDto? d) =>
+        d is null ? null : AppearancePool.Restore(
+            d.Descriptors.Select(p => new KeyValuePair<string, string>(p.Key, p.Value)),
+            d.MysterySprites.Select(p => new KeyValuePair<string, string>(p.Key, p.Value)),
+            d.PotionTypes, d.ScrollTypes, d.WandTypes, d.RingTypes);
+
+    private static MuralTracker? BuildMurals(MuralTrackerDto? d)
+    {
+        if (d is null) return null;
+        var m = new MuralTracker();
+        m.RestoreState(d.UsedThisFloor, d.UsedThisRun);
+        return m;
+    }
+
+    private static PityTracker? BuildPity(PityTrackerDto? d)
+    {
+        if (d is null) return null;
+        var p = new PityTracker();
+        p.RestoreState(
+            d.Counters.Select(e => new KeyValuePair<string, int>(e.Key, e.Count)),
+            d.PendingHardInjects,
+            d.LootItemCounts.Select(e => new KeyValuePair<string, int>(e.Key, e.Count)),
+            d.HardPityFireCount);
+        return p;
+    }
+
+    private static BoonTracker? BuildBoons(BoonTrackerDto? d)
+    {
+        if (d is null) return null;
+        var b = new BoonTracker { DisableDepthBoons = d.DisableDepthBoons };
+        foreach (var depth in d.VisitedDepths) b.VisitedDepths.Add(depth);
+        foreach (var boon in d.BoonsApplied) b.BoonsApplied.Add(boon);
+        return b;
+    }
+
+    private static Room BuildRoom(RoomDto d) => new(d.X, d.Y, d.Width, d.Height)
+    {
+        Shape = d.Shape, Archetype = d.Archetype, IsDeadEnd = d.IsDeadEnd,
+        IsGrandShrine = d.IsGrandShrine, IsVault = d.IsVault, MaintenanceState = d.MaintenanceState,
+    };
+
+    private static PlacedProp BuildProp(PlacedPropDto d) => new(d.PropId, d.X, d.Y, d.FootprintW, d.FootprintH,
+        d.BlocksMovement, d.TileId, d.OverlayTileId, d.TileLayout, d.FlipH);
+
+    // Weighing* (floor-25 endgame) is the ONLY remaining unserialized SERIALIZE-class surface; its
+    // serializers land in 4a.3b-3. Fail loud so a floor-25 save never silently drops the gauntlet
+    // state. Every other subsystem is now serialized below.
+    private static void GuardWeighingUnsupported(GameState s)
     {
         var populated = new List<string>();
-        if (s.IsDungeonMode) populated.Add("IsDungeonMode");
-        if (s.IdentificationRegistry != null) populated.Add("IdentificationRegistry");
-        if (s.AppearancePool != null) populated.Add("AppearancePool");
-        if (s.MuralTracker != null) populated.Add("MuralTracker");
-        if (s.PityTracker != null) populated.Add("PityTracker");
-        if (s.BoonTracker != null) populated.Add("BoonTracker");
-        if (s.Rooms is { Count: > 0 }) populated.Add("Rooms");
-        if (s.Props.Count > 0) populated.Add("Props");
-        if (s.LockedDoors.Count > 0) populated.Add("LockedDoors");
         if (s.Weighing != null || s.WeighingArena != null) populated.Add("Weighing");
         if (s.WeighingAudit != null) populated.Add("WeighingAudit");
         if (populated.Count > 0)
             throw new NotSupportedException(
-                "Dungeon-mode mid-run save is 4a.3b-2; these SERIALIZE-class subsystems are populated and " +
-                $"would be dropped by the scenario-scoped saver: {string.Join(", ", populated)}.");
+                "Weighing-floor mid-run save is 4a.3b-3; these SERIALIZE-class subsystems are populated and " +
+                $"would be dropped: {string.Join(", ", populated)}.");
     }
 }

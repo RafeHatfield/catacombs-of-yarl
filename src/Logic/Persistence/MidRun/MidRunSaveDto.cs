@@ -34,9 +34,19 @@ public sealed class MidRunSaveDto
     // Map (tiles + walkable + FOV mask (visible) + explored + theme), flattened row-major.
     public GameMapDto Map { get; set; } = new();
 
-    // Subsystems.
+    // Subsystems (mode-agnostic).
     public KnowledgeEntryDto[] Knowledge { get; set; } = Array.Empty<KnowledgeEntryDto>();
     public GroundHazardDto[] GroundHazards { get; set; } = Array.Empty<GroundHazardDto>();
+
+    // Dungeon-only subsystems (null/empty in scenario mode).
+    public IdentificationDto? Identification { get; set; }
+    public AppearancePoolDto? Appearance { get; set; }
+    public MuralTrackerDto? Murals { get; set; }
+    public PityTrackerDto? Pity { get; set; }
+    public BoonTrackerDto? Boons { get; set; }
+    public RoomDto[]? Rooms { get; set; }
+    public PlacedPropDto[]? Props { get; set; }
+    public LockedDoorDto[] LockedDoors { get; set; } = Array.Empty<LockedDoorDto>();
 
     // Rng continuity (SeededRandom Seed + CallCount → Restore).
     public int RngSeed { get; set; }
