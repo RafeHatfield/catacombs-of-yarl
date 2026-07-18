@@ -74,6 +74,34 @@ public sealed class AppearancePool
     /// items: all identifiable item definitions from the content bundle, keyed by YAML ID.
     /// seed: run seed — same seed always produces same assignments.
     /// </summary>
+    // ── Mid-run serialization (M1.4) ──────────────────────────────────────────
+    private AppearancePool() { }   // for Restore only — bypasses the RNG-consuming build
+
+    public IReadOnlyDictionary<string, string> Descriptors => _descriptors;
+    public IReadOnlyDictionary<string, string> MysterySprites => _mysterySprites;
+    public IReadOnlyCollection<string> PotionTypes => _potionTypes;
+    public IReadOnlyCollection<string> ScrollTypes => _scrollTypes;
+    public IReadOnlyCollection<string> WandTypes => _wandTypes;
+    public IReadOnlyCollection<string> RingTypes => _ringTypes;
+
+    /// <summary>Rebuild an appearance pool from a mid-run save — sets the per-run assignments directly,
+    /// without re-running the RNG-consuming build. Serializer-only.</summary>
+    public static AppearancePool Restore(
+        IEnumerable<KeyValuePair<string, string>> descriptors,
+        IEnumerable<KeyValuePair<string, string>> mysterySprites,
+        IEnumerable<string> potionTypes, IEnumerable<string> scrollTypes,
+        IEnumerable<string> wandTypes, IEnumerable<string> ringTypes)
+    {
+        var p = new AppearancePool();
+        foreach (var kv in descriptors) p._descriptors[kv.Key] = kv.Value;
+        foreach (var kv in mysterySprites) p._mysterySprites[kv.Key] = kv.Value;
+        foreach (var t in potionTypes) p._potionTypes.Add(t);
+        foreach (var t in scrollTypes) p._scrollTypes.Add(t);
+        foreach (var t in wandTypes) p._wandTypes.Add(t);
+        foreach (var t in ringTypes) p._ringTypes.Add(t);
+        return p;
+    }
+
     public AppearancePool(IEnumerable<(string id, ItemCategory category)> items, int seed)
     {
         // Separate items by category so we can shuffle each pool independently.

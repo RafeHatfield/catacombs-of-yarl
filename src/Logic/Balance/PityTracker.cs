@@ -34,6 +34,25 @@ public sealed class PityTracker
     private readonly Dictionary<string, int> _lootItemCounts = new(StringComparer.OrdinalIgnoreCase);
     private int _hardPityFireCount;
 
+    // ── Mid-run serialization (M1.4) ──────────────────────────────────────────
+    public IReadOnlyDictionary<string, int> Counters => _counters;
+    public IReadOnlyCollection<string> PendingHardInjects => _pendingHardInjects;
+    public IReadOnlyDictionary<string, int> LootItemCounts => _lootItemCounts;
+    public int HardPityFireCount => _hardPityFireCount;
+
+    /// <summary>Restore pity state after a mid-run load. Serializer-only.</summary>
+    public void RestoreState(IEnumerable<KeyValuePair<string, int>> counters, IEnumerable<string> pendingHardInjects,
+        IEnumerable<KeyValuePair<string, int>> lootItemCounts, int hardPityFireCount)
+    {
+        _counters.Clear();
+        foreach (var kv in counters) _counters[kv.Key] = kv.Value;
+        _pendingHardInjects.Clear();
+        foreach (var c in pendingHardInjects) _pendingHardInjects.Add(c);
+        _lootItemCounts.Clear();
+        foreach (var kv in lootItemCounts) _lootItemCounts[kv.Key] = kv.Value;
+        _hardPityFireCount = hardPityFireCount;
+    }
+
     /// <summary>
     /// Called for every room processed (including empty rooms and rooms with no item).
     /// Increments all tracked counters to advance the pity window.
