@@ -14,6 +14,11 @@ exactly as dealt, even across a content patch. The RECONSTRUCT-from-config rule 
 static content tables (BoonTable, ContentLoader) and to the CROSS-RUN layer, whose saves live
 for months.
 
+The reconstruct-vs-serialize line for config-shaped data is FUTURE DRAWS vs IN-FLIGHT CONTENT:
+lookup tables for draws not yet made (BoonTable) are RECONSTRUCT so patches apply; content already
+dealt into the active encounter (WeighingAuditRegistry sequences, host ability snapshots) is
+SERIALIZE so the run keeps what it was dealt (ruled 2026-07-18).
+
 ## RNG continuity (two-step ruling)
 M1: SeededRandom gains an internal call counter. Every Next/NextDouble/NextFloat
 increments it. Save (Seed, CallCount); load reconstructs Random(seed) and burns
