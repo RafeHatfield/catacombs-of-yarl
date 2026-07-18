@@ -220,9 +220,12 @@ internal static class MidRunComponentRegistrations
                 c.KnownFeatureIds.OrderBy(i => i).ToArray(),
                 c.KnownStairs.OrderBy(p => p.X).ThenBy(p => p.Y).Select(p => new PointDto(p.X, p.Y)).ToArray(),
                 c.LastHp, c.StopReason, c.StuckCounter,
-                c.LastExpectedPosition is { } lp ? new PointDto(lp.X, lp.Y) : null),
-            (d, _) => new AutoExploreState
+                c.LastExpectedPosition is { } lp ? new PointDto(lp.X, lp.Y) : null,
+                c.PositionHistorySnapshot.Select(p => new PointDto(p.X, p.Y)).ToArray()),
+            (d, _) =>
             {
+                var state = new AutoExploreState
+                {
                 IsActive = d.IsActive,
                 CurrentPath = d.CurrentPath.Select(p => (p.X, p.Y)).ToList(),
                 ExploredSnapshot = new HashSet<(int, int)>(d.ExploredSnapshot.Select(p => (p.X, p.Y))),
@@ -232,7 +235,10 @@ internal static class MidRunComponentRegistrations
                 KnownStairs = new HashSet<(int, int)>(d.KnownStairs.Select(p => (p.X, p.Y))),
                 LastHp = d.LastHp, StopReason = d.StopReason, StuckCounter = d.StuckCounter,
                 LastExpectedPosition = d.LastExpectedPosition is { } lp ? (lp.X, lp.Y) : null,
-            });
+            };
+            state.RestorePositionHistory(d.PositionHistory.Select(p => (p.X, p.Y)).ToArray());
+            return state;
+        });
 
         Register<ChestComponent, ChestComponentDto>("ChestComponent", C.ChestComponentDto,
             c => new(c.IsOpen, c.IsLooted, new List<string>(c.LootItemIds)),

@@ -72,4 +72,28 @@ public sealed class AutoExploreState : IComponent
     {
         _positionCount = 0;
     }
+
+    /// <summary>The recorded oscillation-detection positions (oldest→newest), read-only, for the
+    /// mid-run serializer. The buffer is private and read after construction (IsOscillating), so it
+    /// must persist for faithful auto-explore resume.</summary>
+    public IReadOnlyList<(int X, int Y)> PositionHistorySnapshot
+    {
+        get
+        {
+            var list = new List<(int X, int Y)>(_positionCount);
+            for (int i = 0; i < _positionCount; i++) list.Add(_positionHistory[i]);
+            return list;
+        }
+    }
+
+    /// <summary>Restore the oscillation-detection buffer after a mid-run load. Serializer-only.</summary>
+    public void RestorePositionHistory(IReadOnlyList<(int X, int Y)> positions)
+    {
+        _positionCount = 0;
+        foreach (var p in positions)
+        {
+            if (_positionCount >= 6) break;
+            _positionHistory[_positionCount++] = p;
+        }
+    }
 }
