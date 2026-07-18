@@ -23,6 +23,10 @@ jobs:
         run: dotnet restore CatacombsOfYarl.sln
 
       - name: Fast tests
+        # Includes the M1.4 mid-run determinism soak as a PERMANENT gate: S1 (round-trip byte-identity —
+        # scenario + dungeon + weighing matrices) and S2 (save/load divergence — per-turn state-hash
+        # sequences across 9 feature-covered seeds). These carry no Category, so Category!=Slow runs them
+        # here; the full soak adds < 1s, so it stays in the fast filter rather than a separate step.
         run: dotnet test tests/ --filter "Category!=Slow" --logger "console;verbosity=minimal"
 
       - name: Balance acceptance suite
