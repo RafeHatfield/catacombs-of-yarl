@@ -31,4 +31,7 @@ public sealed class GodotPersistencePathProvider : IPersistencePathProvider
 
     public string GetBackupDirectory() =>
         Path.Combine(_userDir, "backups");
+
+    public string GetMidRunSaveFilePath() =>
+        Path.Combine(_userDir, "yarl_midrun.json");
 }

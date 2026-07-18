@@ -407,6 +407,10 @@ public sealed class DungeonFloorBuilder
             MuralTracker = muralTracker,
             PityTracker = finalPityTracker,
             PersistentState = persistentState,
+            // Expose the live id allocator (already used for this floor's placement) so its next-id
+            // watermark is captured by the mid-run save — post-resume spawns then never reuse an id the
+            // original allocator had already advanced past (M1.4 4b; closes the 4a.3b-2 carry-forward).
+            IdAllocator = ids,
             // Expose rooms for ETP sanity analysis (EtpSanityHarness.AnalyzeLevel)
             Rooms = generatedMap.Rooms,
         };
