@@ -188,6 +188,12 @@ consumables:
         var state = BuildAndAdvance(depth: 1, seed: 7, turns: 5);
         state.LockedDoors[(1, 1)] = 0; // a dungeon-only field the scenario saver must not silently drop
         Assert.That(() => MidRunSerializer.SaveMidRun(state), Throws.TypeOf<NotSupportedException>());
+
+        // WeighingAudit is SERIALIZE-class (spec) — it must also trip the guard, not be shadowed.
+        var state2 = BuildAndAdvance(depth: 1, seed: 7, turns: 5);
+        state2.WeighingAudit = new CatacombsOfYarl.Logic.Content.WeighingAuditRegistry(new());
+        Assert.That(() => MidRunSerializer.SaveMidRun(state2), Throws.TypeOf<NotSupportedException>()
+            .With.Message.Contains("WeighingAudit"));
     }
 
     // ── S1 soak: serialize → deserialize → serialize is byte-identical ─────────

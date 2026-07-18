@@ -151,6 +151,7 @@ public static class MidRunSerializer
         if (s.Props.Count > 0) populated.Add("Props");
         if (s.LockedDoors.Count > 0) populated.Add("LockedDoors");
         if (s.Weighing != null || s.WeighingArena != null) populated.Add("Weighing");
+        if (s.WeighingAudit != null) populated.Add("WeighingAudit");
         if (populated.Count > 0)
             throw new NotSupportedException(
                 "Dungeon-mode mid-run save is 4a.3b-2; these SERIALIZE-class subsystems are populated and " +
