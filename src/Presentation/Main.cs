@@ -180,7 +180,8 @@ public partial class Main : Node
 
         // Load cross-run persistence. Missing file → fresh defaults (no write until first dirty flush).
         _persistenceProvider = new GodotPersistencePathProvider();
-        _midRunWriter = new Logic.Persistence.MidRun.MidRunAutosaveWriter(_persistenceProvider.GetMidRunSaveFilePath());
+        _midRunWriter = new Logic.Persistence.MidRun.MidRunAutosaveWriter(
+            _persistenceProvider.GetMidRunSaveFilePath(), GD.PrintErr);
         _persistentState = PersistentRunState.LoadFromDisk(_persistenceProvider, GD.PrintErr);
         _dailySeeds = PersistentRunState.LoadDailySeedsFromDisk(_persistenceProvider, GD.PrintErr);
         GD.Print($"[Main] Persistence loaded — {_persistentState.RunCounter.TotalRuns} runs ever.");

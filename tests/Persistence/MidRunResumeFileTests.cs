@@ -1,3 +1,4 @@
+using System.Threading;
 using CatacombsOfYarl.Logic.Combat;
 using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
@@ -142,6 +143,35 @@ consumables:
                 var afterFlush = MidRunFile.LoadMidRunFromFile(p);
                 Assert.That(afterFlush.Save!.RngSeed, Is.EqualTo(11), "FlushSync must be durable on return.");
             }
+        }
+        finally { File.Delete(p); }
+    }
+
+    // (6) BLOCKING-fix regression: a stalled background write holding an OLDER snapshot must NOT
+    // overwrite a newer FlushSync. Forces the interleaving deterministically via the test seam.
+    [Test]
+    public void FlushSync_IsNotOvertakenByStaleBackgroundWrite()
+    {
+        var older = DungeonFloor(11);   // RngSeed 11 — queued first (lower seq)
+        var newer = DungeonFloor(22);   // RngSeed 22 — FlushSync'd second (higher seq)
+        string p = TempPath();
+        try
+        {
+            using var dequeued = new ManualResetEventSlim(false);
+            using var release = new ManualResetEventSlim(false);
+            using var w = new MidRunAutosaveWriter(p);
+            w.OnAfterDequeueForTest = _ => { dequeued.Set(); release.Wait(); };  // stall the background write pre-gate
+
+            w.RequestWrite(MidRunSerializer.SaveMidRun(older));   // worker dequeues (older, seq=1), stalls
+            Assert.That(dequeued.Wait(TimeSpan.FromSeconds(5)), Is.True, "background worker never dequeued.");
+
+            w.FlushSync(MidRunSerializer.SaveMidRun(newer));      // seq=2 → written, lastWrittenSeq=2
+            release.Set();                                        // worker resumes → tries to write older (seq=1) → SKIP
+            w.WaitForIdle();
+
+            var final = MidRunFile.LoadMidRunFromFile(p);
+            Assert.That(final.Save!.RngSeed, Is.EqualTo(22),
+                "the newer FlushSync snapshot must survive — a stale background write must not land after it.");
         }
         finally { File.Delete(p); }
     }
