@@ -91,6 +91,7 @@ public class HollowmarkVoiceBatchTests
             keys.Add($"on_death.{species}");
         keys.Add("on_death.hazard");
         keys.Add("on_death");
+        keys.Add("spell_break_used");
         return keys.ToArray();
     }
 
@@ -124,7 +125,9 @@ public class HollowmarkVoiceBatchTests
         // keys — the 32-new-lines figure (25 + 4 + 3) does check out, only the key-count
         // figures don't. Asserting the true count derived from the payload; flagged in
         // the PR description rather than silently matching the stated-but-wrong number.
-        Assert.That(NewKeys.Length, Is.EqualTo(76), "Sanity check on the expected new-key count.");
+        // Batch 1e adds 1 more key (spell_break_used): 77 taxonomy keys total, matching
+        // the batch 1e task's own stated end-state exactly.
+        Assert.That(NewKeys.Length, Is.EqualTo(77), "Sanity check on the expected new-key count.");
         foreach (var key in NewKeys)
             Assert.That(registry.HasTrigger(key), Is.True, $"Missing trigger: {key}");
     }
@@ -167,6 +170,7 @@ public class HollowmarkVoiceBatchTests
             expected[$"on_death.{species}"] = 1;
         expected["on_death.hazard"] = 4;
         expected["on_death"] = 3;
+        expected["spell_break_used"] = 25;
 
         var totalLines = 0;
         foreach (var (key, count) in expected)
@@ -176,7 +180,7 @@ public class HollowmarkVoiceBatchTests
             totalLines += pools[key].Count;
         }
 
-        Assert.That(totalLines, Is.EqualTo(164), "Total new-line count across all new pools should be 164.");
+        Assert.That(totalLines, Is.EqualTo(189), "Total new-line count across all new pools should be 189.");
     }
 
     [Test]
