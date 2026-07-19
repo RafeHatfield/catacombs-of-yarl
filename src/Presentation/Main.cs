@@ -133,6 +133,11 @@ public partial class Main : Node
     // Cross-run persistence — loaded once at app start, flushed at narrative-event boundaries.
     private GodotPersistencePathProvider? _persistenceProvider;
     private PersistentRunState? _persistentState;
+
+    // Mid-run save/resume (M1.4 4b): off-critical-path autosave every turn + on descent/pause,
+    // deleted on run-end (record-then-delete), silently resumed at startup. Dungeon mode only.
+    private Logic.Persistence.MidRun.MidRunAutosaveWriter? _midRunWriter;
+    private Dictionary<int, Logic.Balance.BoonDefinition>? _boonTable;   // for LoadMidRun (RECONSTRUCT-class)
     // Daily-seed sibling file — loaded once at app start, separate from character state.
     private DailySeedsFile? _dailySeeds;
 
@@ -175,6 +180,8 @@ public partial class Main : Node
 
         // Load cross-run persistence. Missing file → fresh defaults (no write until first dirty flush).
         _persistenceProvider = new GodotPersistencePathProvider();
+        _midRunWriter = new Logic.Persistence.MidRun.MidRunAutosaveWriter(
+            _persistenceProvider.GetMidRunSaveFilePath(), GD.PrintErr);
         _persistentState = PersistentRunState.LoadFromDisk(_persistenceProvider, GD.PrintErr);
         _dailySeeds = PersistentRunState.LoadDailySeedsFromDisk(_persistenceProvider, GD.PrintErr);
         GD.Print($"[Main] Persistence loaded — {_persistentState.RunCounter.TotalRuns} runs ever.");
@@ -207,7 +214,8 @@ public partial class Main : Node
         }
         else
         {
-            ShowMainMenu();
+            // Silent resume of a valid mid-run save, else the normal menu/new-game flow.
+            ResumeOrShowMenu();
         }
 
         // Debug overlay: only created in editor/debug builds — zero cost in release.
@@ -561,6 +569,7 @@ public partial class Main : Node
         {
             var boonYaml = ReadGodotResource("res://config/depth_boons.yaml");
             boonTable = _contentLoader.LoadBoons(boonYaml);
+            _boonTable = boonTable;   // kept for LoadMidRun on resume (RECONSTRUCT-class, from config)
             GD.Print($"Depth boons loaded: {boonTable.Count} entries");
         }
         catch (System.Exception ex)
@@ -816,7 +825,7 @@ public partial class Main : Node
         _menuButtonBar.PossessRequested += () => _gameController?.StartPossessionTargeting();
         _menuButtonBar.ExitPossessionRequested += () => _gameController?.ExitPossessionAction();
         _menuButtonBar.CancelPossessionTargetingRequested += () => _gameController?.CancelPossessionTargeting();
-        _menuButtonBar.MenuRequested    += ShowMainMenu;
+        _menuButtonBar.MenuRequested    += () => ShowMainMenu();
 
         // Quick-slot bar (Phase 3) — scrollable consumable/wand strip + weapon indicator.
         // Replaces InventoryPanel. Drop goes through long-press → action sheet.
@@ -1454,6 +1463,15 @@ public partial class Main : Node
     {
         if (_state == null) return;
 
+        // Mid-run autosave (M1.4 4b). This is the turn-commit seam: GameController fires TurnCompleted
+        // immediately after TurnController.ProcessTurn, so _state is fully advanced here. Snapshot on
+        // the game thread, write off the critical path. Dungeon mode only (scenario/harness never write
+        // device saves). Skip terminal turns — record-then-delete owns those — and descend turns, whose
+        // NEW floor is saved synchronously in OnFloorTransitionRequested.
+        if (_state.IsDungeonMode && !result.GameOver && _midRunWriter != null
+            && !result.Events.Any(e => e is DescendEvent))
+            _midRunWriter.RequestWrite(Logic.Persistence.MidRun.MidRunSerializer.SaveMidRun(_state));
+
         // Accumulate stats
         _turnCount = _state.TurnCount;
         foreach (var evt in result.Events)
@@ -1766,6 +1784,13 @@ public partial class Main : Node
         // Run end is a forced flush — write regardless of dirty state (spec §5).
         if (_persistentState != null && _persistenceProvider != null)
             _persistentState.Flush(_persistenceProvider, GD.PrintErr);
+
+        // RECORD-then-DELETE (M1.4 4b): the run's outcome is now committed to the cross-run save above,
+        // so it survives any crash from here. ONLY now delete the mid-run save. Never the reverse — a
+        // crash between must lose the mid-run save, never the record. The load-time terminal check is
+        // the net for any mid-run save that slipped through (its state IsGameOver → routed back here).
+        if (_persistenceProvider != null)
+            Logic.Persistence.MidRun.MidRunFile.Delete(_persistenceProvider.GetMidRunSaveFilePath());
     }
 
     /// <summary>
@@ -1824,8 +1849,16 @@ public partial class Main : Node
     public override void _Notification(int what)
     {
         // App backgrounding: forced flush so in-progress state is not lost on iOS/Android.
-        if (what == NotificationApplicationPaused && _persistentState != null && _persistenceProvider != null)
-            _persistentState.Flush(_persistenceProvider, GD.PrintErr);
+        if (what == NotificationApplicationPaused)
+        {
+            if (_persistentState != null && _persistenceProvider != null)
+                _persistentState.Flush(_persistenceProvider, GD.PrintErr);
+            // Belt-and-suspenders mid-run flush: write the current floor synchronously and wait for any
+            // in-flight background write, so a force-kill after backgrounding still resumes losslessly.
+            if (_state != null && _state.IsDungeonMode && !_state.IsGameOver && _midRunWriter != null)
+                _midRunWriter.FlushSync(Logic.Persistence.MidRun.MidRunSerializer.SaveMidRun(_state));
+            _midRunWriter?.WaitForIdle();
+        }
     }
 
     /// <summary>
@@ -1859,6 +1892,11 @@ public partial class Main : Node
             _state.WeighingAudit = _weighingAuditRegistry;
 
         SetupPresentation(_state);
+
+        // Mid-run save: write the NEW floor synchronously so a kill in the Build-to-first-turn window
+        // resumes into this floor, never the previous one (M1.4 4b ruling).
+        if (_state != null && _state.IsDungeonMode && _midRunWriter != null)
+            _midRunWriter.FlushSync(Logic.Persistence.MidRun.MidRunSerializer.SaveMidRun(_state));
 
         // Floor descent is a narrative-event-boundary flush (spec §5).
         if (_persistentState != null && _persistenceProvider != null && _persistentState.IsDirty)
@@ -1935,7 +1973,7 @@ public partial class Main : Node
     /// Show the main menu. Clears any existing panels in MenuLayer and creates fresh ones.
     /// MenuLayer (layer=20) sits above UILayer (layer=10) so it covers everything.
     /// </summary>
-    private void ShowMainMenu()
+    private void ShowMainMenu(string? notice = null)
     {
         var menuLayer = GetNode<CanvasLayer>("MenuLayer");
         ClearMenuLayer(menuLayer);
@@ -1948,6 +1986,76 @@ public partial class Main : Node
         panel.ExploreModeRequested  += OnExploreModeRequested;
         panel.TestingModeRequested  += ShowTestMenu;
         panel.OptionsRequested      += ShowOptions;
+
+        // Quiet one-line notice (e.g. a corrupt save was set aside). Bottom-anchored, unobtrusive.
+        if (!string.IsNullOrEmpty(notice))
+        {
+            GD.Print($"[Main] menu notice: {notice}");
+            var label = new Label
+            {
+                Text = notice,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                AnchorTop = 0.92f, AnchorBottom = 1f, AnchorLeft = 0f, AnchorRight = 1f,
+            };
+            label.AddThemeColorOverride("font_color", new Color(0.8f, 0.8f, 0.8f));
+            menuLayer.AddChild(label);
+        }
+    }
+
+    /// <summary>
+    /// Startup entry: silently RESUME a valid non-terminal mid-run save (no menu, no prompt), reusing
+    /// the existing floor-entry presentation path; otherwise fall through to the menu. Corrupt/mismatched
+    /// saves are ARCHIVED (never deleted) and the menu shows a quiet notice. A terminal save routes to the
+    /// death/victory flow (record + delete), never into play. (M1.4 4b — Rafe's rulings.)
+    /// </summary>
+    private void ResumeOrShowMenu()
+    {
+        if (_persistenceProvider == null) { ShowMainMenu(); return; }
+        var path = _persistenceProvider.GetMidRunSaveFilePath();
+        var result = Logic.Persistence.MidRun.MidRunFile.LoadMidRunFromFile(path);
+
+        switch (result.Status)
+        {
+            case Logic.Persistence.MidRun.MidRunLoadStatus.Ok:
+                GameState loaded;
+                try { loaded = Logic.Persistence.MidRun.MidRunSerializer.LoadMidRun(result.Save!, _boonTable); }
+                catch (System.Exception ex)
+                {
+                    GD.PrintErr($"[Main] mid-run load failed post-parse: {ex.Message}");
+                    Logic.Persistence.MidRun.MidRunFile.ArchiveCorrupt(path);
+                    ShowMainMenu("A saved run couldn't be loaded and was set aside.");
+                    return;
+                }
+                _state = loaded;
+                _currentDepth = loaded.CurrentDepth;
+                if (loaded.IsGameOver)
+                {
+                    // Load-time terminal net: never resume into play. Route to the death/victory flow,
+                    // which records the outcome + deletes the save idempotently.
+                    bool won = loaded.IsDungeonVictory
+                        || (loaded.Ending == Logic.Endgame.EndingType.None && loaded.PlayerWon);
+                    OnGameEnded(won);
+                    if (_gameOverScreen == null) ShowMainMenu();   // no game-over UI exists yet at startup
+                }
+                else
+                {
+                    GD.Print($"[Main] Resuming mid-run save — depth {loaded.CurrentDepth}, turn {loaded.TurnCount}.");
+                    _currentDepth = loaded.CurrentDepth;
+                    SetupPresentation(loaded);   // reuse the floor-entry path (sprites/camera/FOV) — silent
+                }
+                return;
+
+            case Logic.Persistence.MidRun.MidRunLoadStatus.Corrupt:
+            case Logic.Persistence.MidRun.MidRunLoadStatus.SchemaMismatch:
+                var archived = Logic.Persistence.MidRun.MidRunFile.ArchiveCorrupt(path);
+                GD.PrintErr($"[Main] mid-run save unreadable ({result.Status}: {result.Error}); archived to {archived}.");
+                ShowMainMenu("A saved run was unreadable and was set aside.");
+                return;
+
+            default:  // FileNotFound — the normal fresh-launch path
+                ShowMainMenu();
+                return;
+        }
     }
 
     private void OnExploreModeRequested()
@@ -1984,7 +2092,7 @@ public partial class Main : Node
         menuLayer.AddChild(panel);
 
         panel.ScenarioSelected += LaunchTestScenario;
-        panel.BackRequested    += ShowMainMenu;
+        panel.BackRequested    += () => ShowMainMenu();
     }
 
     private void ShowOptions()
@@ -1997,7 +2105,7 @@ public partial class Main : Node
         var panel = new OptionsPanel(loadedId, _debugOverlay);
         menuLayer.AddChild(panel);
 
-        panel.BackRequested += ShowMainMenu;
+        panel.BackRequested += () => ShowMainMenu();
     }
 
     /// <summary>
