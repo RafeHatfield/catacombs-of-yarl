@@ -9,14 +9,16 @@ using YamlDotNet.Serialization.NamingConventions;
 namespace CatacombsOfYarl.Tests.Possession;
 
 /// <summary>
-/// Hollowmark voice batches 1a (revised) + 1b + 1c: hp_threshold, region_first_entry,
+/// Hollowmark voice batches 1a (revised) + 1b + 1c + 1d: hp_threshold, region_first_entry,
 /// trap_first, kill_streak_clean, long_idle, species_first_sight, item_identified,
-/// overnight_identified triggers.
+/// overnight_identified, on_death triggers.
 /// Content-only — no scheduler wiring; pools are sized for the future once-per-run
 /// shuffle-bag scheduler, not enforced by the registry today (GetLine is
 /// first-line-first, then random with replacement). overnight_identified is
 /// forward-authored: the overnight identification mechanic exists only in design
-/// docs, not in code.
+/// docs, not in code. on_death.* keys are flat by design (not on_death.monster.*)
+/// so the registry's one-segment compound-key fallback degrades any unmatched
+/// cause to the on_death generic pool in a single hop.
 /// </summary>
 [TestFixture]
 public class HollowmarkVoiceBatchTests
@@ -85,6 +87,10 @@ public class HollowmarkVoiceBatchTests
             keys.Add($"species_first_sight.{species}");
         foreach (var category in ItemCategories)
             keys.Add($"item_identified.{category}");
+        foreach (var species in SpeciesFirstSightKeys)
+            keys.Add($"on_death.{species}");
+        keys.Add("on_death.hazard");
+        keys.Add("on_death");
         return keys.ToArray();
     }
 
@@ -113,7 +119,12 @@ public class HollowmarkVoiceBatchTests
         var yaml = File.ReadAllText(VoiceLinePath());
         var registry = VoiceLineRegistry.LoadFromYaml(yaml, new AotObjectFactory());
 
-        Assert.That(NewKeys.Length, Is.EqualTo(49), "Sanity check on the expected new-key count.");
+        // The batch 1d task text claimed 28 new keys / 84 total / 77 taxonomy, but the
+        // actual payload (25 on_death.<species> + on_death.hazard + on_death) is 27 new
+        // keys — the 32-new-lines figure (25 + 4 + 3) does check out, only the key-count
+        // figures don't. Asserting the true count derived from the payload; flagged in
+        // the PR description rather than silently matching the stated-but-wrong number.
+        Assert.That(NewKeys.Length, Is.EqualTo(76), "Sanity check on the expected new-key count.");
         foreach (var key in NewKeys)
             Assert.That(registry.HasTrigger(key), Is.True, $"Missing trigger: {key}");
     }
@@ -152,6 +163,10 @@ public class HollowmarkVoiceBatchTests
             expected[$"species_first_sight.{species}"] = 1;
         foreach (var category in ItemCategories)
             expected[$"item_identified.{category}"] = 10;
+        foreach (var species in SpeciesFirstSightKeys)
+            expected[$"on_death.{species}"] = 1;
+        expected["on_death.hazard"] = 4;
+        expected["on_death"] = 3;
 
         var totalLines = 0;
         foreach (var (key, count) in expected)
@@ -161,7 +176,55 @@ public class HollowmarkVoiceBatchTests
             totalLines += pools[key].Count;
         }
 
-        Assert.That(totalLines, Is.EqualTo(132), "Total new-line count across all new pools should be 132.");
+        Assert.That(totalLines, Is.EqualTo(164), "Total new-line count across all new pools should be 164.");
+    }
+
+    [Test]
+    public void OnDeathSpeciesKeys_MatchSpeciesFirstSightKeys_AndEntitiesYamlMonsterIds()
+    {
+        // Guards the batch's key design intent: on_death.<species> and
+        // species_first_sight.<species> must never drift apart, and both must stay
+        // pinned to entities.yaml's actual monster roster (excluding troll_probe_*).
+        var pools = LoadPools();
+
+        var onDeathSpecies = pools.Keys
+            .Where(k => k.StartsWith("on_death.", StringComparison.Ordinal)
+                        && k != "on_death.hazard")
+            .Select(k => k["on_death.".Length..])
+            .ToHashSet();
+
+        var speciesFirstSight = pools.Keys
+            .Where(k => k.StartsWith("species_first_sight.", StringComparison.Ordinal))
+            .Select(k => k["species_first_sight.".Length..])
+            .ToHashSet();
+
+        Assert.That(onDeathSpecies, Is.EquivalentTo(speciesFirstSight),
+            "on_death.<species> keys must exactly match species_first_sight.<species> keys.");
+
+        var entitiesPath = Path.Combine(TestContext.CurrentContext.TestDirectory,
+            "..", "..", "..", "..", "config", "entities.yaml");
+        var lines = File.ReadAllLines(entitiesPath);
+        var monstersStart = Array.FindIndex(lines, l => l == "monsters:");
+        var monstersEnd = lines.Length;
+        for (var i = monstersStart + 1; i < lines.Length; i++)
+        {
+            if (Regex.IsMatch(lines[i], @"^[a-z_][a-z0-9_]*:"))
+            {
+                monstersEnd = i;
+                break;
+            }
+        }
+        var monsterIds = new HashSet<string>();
+        for (var i = monstersStart + 1; i < monstersEnd; i++)
+        {
+            var m = Regex.Match(lines[i], @"^  (?<id>[a-z_][a-z0-9_]*):\s*$");
+            if (m.Success)
+                monsterIds.Add(m.Groups["id"].Value);
+        }
+        monsterIds.RemoveWhere(id => id.StartsWith("troll_probe_", StringComparison.Ordinal));
+
+        Assert.That(onDeathSpecies, Is.EquivalentTo(monsterIds),
+            "on_death.<species> keys must exactly match entities.yaml monster ids (excl. troll_probe_*).");
     }
 
     [Test]
