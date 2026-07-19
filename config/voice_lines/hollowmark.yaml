@@ -257,3 +257,71 @@ overnight_identified:
   - "Solved, Boss. It's honest work if you can get it. I got it."
   - "Morning. Your mystery's a tool now, Boss. Best trade there is."
   - "Sorted by dawn, Boss. I'd have finished sooner, but you snore in E flat."
+
+# ── On death: killer species (cause "monster" + PlayerDeathKillerSpecies) ──
+
+on_death.orc:
+  - "An Unshriven, Boss. He didn't enjoy it. Small comfort. It's what I have."
+on_death.orc_grunt:
+  - "The line held, Boss. That's all he was doing. The line held."
+on_death.orc_brute:
+  - "The brute, Boss. I said don't trade hits. You traded."
+on_death.orc_scout:
+  - "He counted you first, Boss. The count came due."
+on_death.orc_veteran:
+  - "The veteran, Boss. Ninth patch. I hate that I noticed."
+on_death.orc_skirmisher:
+  - "The flank, Boss. He asked for it all fight. You finally answered."
+on_death.orc_shaman:
+  - "The quiet work finished, Boss. I heard it starting. I wasn't loud enough."
+on_death.orc_chieftain:
+  - "The chieftain, Boss. The orders held. Ours didn't."
+on_death.troll:
+  - "The loan came due, Boss. I do the accounts. I should have called it."
+on_death.troll_ancient:
+  - "The old one, Boss. Practice won. It usually does. I hoped anyway."
+on_death.skeleton:
+  - "Bones, Boss. It forgot everything it was and still remembered how. Unfair."
+on_death.zombie:
+  - "The door won, Boss. Doors shouldn't win."
+on_death.plague_zombie:
+  - "The bite outlived you both, Boss. I said decline it."
+on_death.wraith:
+  - "Subtracted, Boss. All the way down. I counted what it took. Everything."
+on_death.lich:
+  - "The volunteer got you, Boss. He had centuries. You had me. Not enough."
+on_death.necromancer:
+  - "The floor took his side, Boss. I watched it happen. I'm still watching."
+on_death.plague_necromancer:
+  - "His product held, Boss. I called it ugly. Ugly works."
+on_death.cultist_blademaster:
+  - "Trained steel, Boss. His teacher would be proud. Mine would understand."
+on_death.cave_spider:
+  - "Small bites, Boss. They added up. I did the adding too late."
+on_death.web_spider:
+  - "Slower was enough, Boss. It only ever needed slower."
+on_death.giant_spider:
+  - "It had conviction, Boss. I wanted it to be wrong."
+on_death.fire_beetle:
+  - "You stood in the glow, Boss. I won't say I told you. I told you."
+on_death.slime:
+  - "The gear went first, Boss. Then the priorities stopped mattering."
+on_death.large_slime:
+  - "The loud argument won, Boss. I ran out of rebuttals."
+on_death.greater_slime:
+  - "It has your name now, Boss. That's how it gets the names."
+
+# ── On death: hazard (cause "hazard"; no sub-type recorded) ──
+
+on_death.hazard:
+  - "No enemy, Boss. Just the Paths being the Paths. I hate that it counts."
+  - "The Paths did this one themselves, Boss. No middleman. They don't even gloat."
+  - "The architecture won, Boss. It was always going to get one of us."
+  - "The ground did it, Boss. I scout ahead. I missed it. That's mine."
+
+# ── On death: fallback (any unmatched cause, incl. Weighing losses) ──
+
+on_death:
+  - "It's done, Boss. I'll keep the account. I keep all of them."
+  - "Rest, Boss. The next part is mine."
+  - "Not this. Not again."
