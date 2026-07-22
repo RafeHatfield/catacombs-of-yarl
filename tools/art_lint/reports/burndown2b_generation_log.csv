@@ -1,0 +1,212 @@
+concept,tag,seed,prompt,status,overall,colors,A5,A6,collapse_merges,final_path
+club,club_s0,0,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,14,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s0_snapped.png
+club,club_s1,1,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,9,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s1_snapped.png
+club,club_s2,2,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s2_snapped.png
+club,club_s3,3,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s3_snapped.png
+club,club_s4,4,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s4_snapped.png
+club,club_s5,5,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,6,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s5_snapped.png
+club,club_s6,6,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s6_snapped.png
+club,club_s7,7,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,14,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s7_snapped.png
+club,club_s8,8,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,18,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s8_snapped.png
+club,club_s9,9,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,9,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s9_snapped.png
+club,club_s10,10,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,12,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s10_snapped.png
+club,club_s11,11,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,12,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s11_snapped.png
+club,club_s12,12,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,15,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s12_snapped.png
+club,club_s13,13,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,18,WARN,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s13_snapped.png
+club,club_s14,14,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,12,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s14_snapped.png
+club,club_s15,15,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,5,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s15_snapped.png
+club,club_s16,16,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,12,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s16_snapped.png
+club,club_s17,17,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s17_snapped.png
+club,club_s18,18,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s18_snapped.png
+club,club_s19,19,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s19_snapped.png
+club,club_s20,20,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s20_snapped.png
+club,club_s21,21,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,9,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s21_snapped.png
+club,club_s22,22,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,12,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s22_snapped.png
+club,club_s23,23,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,12,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s23_snapped.png
+club,club_s24,24,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,7,PASS,FAIL,0,tools/art_lint/candidates/burndown2b/club/club_s24_snapped.png
+anvil,anvil_s0,0,"blacksmith anvil with horn, heavy iron block",ok,WARN,10,PASS,PASS,3,tools/art_lint/candidates/burndown2b/anvil/anvil_s0_snapped.png
+anvil,anvil_s1,1,"blacksmith anvil with horn, heavy iron block",ok,FAIL,26,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s1_snapped.png
+anvil,anvil_s2,2,"blacksmith anvil with horn, heavy iron block",ok,FAIL,18,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s2_snapped.png
+anvil,anvil_s3,3,"blacksmith anvil with horn, heavy iron block",ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/anvil/anvil_s3_snapped.png
+anvil,anvil_s4,4,"blacksmith anvil with horn, heavy iron block",ok,WARN,10,PASS,PASS,1,tools/art_lint/candidates/burndown2b/anvil/anvil_s4_snapped.png
+anvil,anvil_s5,5,"blacksmith anvil with horn, heavy iron block",ok,FAIL,25,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s5_snapped.png
+anvil,anvil_s6,6,"blacksmith anvil with horn, heavy iron block",ok,FAIL,16,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s6_snapped.png
+anvil,anvil_s7,7,"blacksmith anvil with horn, heavy iron block",ok,FAIL,21,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s7_snapped.png
+anvil,anvil_s8,8,"blacksmith anvil with horn, heavy iron block",ok,FAIL,18,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s8_snapped.png
+anvil,anvil_s9,9,"blacksmith anvil with horn, heavy iron block",ok,FAIL,20,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s9_snapped.png
+anvil,anvil_s10,10,"blacksmith anvil with horn, heavy iron block",ok,FAIL,19,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s10_snapped.png
+anvil,anvil_s11,11,"blacksmith anvil with horn, heavy iron block",ok,PASS,5,PASS,PASS,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s11_snapped.png
+anvil,anvil_s12,12,"blacksmith anvil with horn, heavy iron block",ok,FAIL,25,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s12_snapped.png
+anvil,anvil_s13,13,"blacksmith anvil with horn, heavy iron block",ok,FAIL,24,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s13_snapped.png
+anvil,anvil_s14,14,"blacksmith anvil with horn, heavy iron block",ok,WARN,10,PASS,PASS,7,tools/art_lint/candidates/burndown2b/anvil/anvil_s14_snapped.png
+anvil,anvil_s15,15,"blacksmith anvil with horn, heavy iron block",ok,FAIL,21,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s15_snapped.png
+anvil,anvil_s16,16,"blacksmith anvil with horn, heavy iron block",ok,FAIL,21,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/anvil/anvil_s16_snapped.png
+anvil,anvil_s17,17,"blacksmith anvil with horn, heavy iron block",ok,WARN,10,WARN,WARN,1,tools/art_lint/candidates/burndown2b/anvil/anvil_s17_snapped.png
+armor_stand,armor_stand_s0,0,iron armor stand shaped like a headless torso mannequin,ok,FAIL,17,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s0_snapped.png
+armor_stand,armor_stand_s1,1,iron armor stand shaped like a headless torso mannequin,ok,FAIL,22,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s1_snapped.png
+armor_stand,armor_stand_s2,2,iron armor stand shaped like a headless torso mannequin,ok,FAIL,16,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s2_snapped.png
+armor_stand,armor_stand_s3,3,iron armor stand shaped like a headless torso mannequin,ok,FAIL,15,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s3_snapped.png
+armor_stand,armor_stand_s4,4,iron armor stand shaped like a headless torso mannequin,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s4_snapped.png
+armor_stand,armor_stand_s5,5,iron armor stand shaped like a headless torso mannequin,ok,FAIL,15,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s5_snapped.png
+armor_stand,armor_stand_s6,6,iron armor stand shaped like a headless torso mannequin,ok,FAIL,13,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s6_snapped.png
+armor_stand,armor_stand_s7,7,iron armor stand shaped like a headless torso mannequin,ok,FAIL,13,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s7_snapped.png
+armor_stand,armor_stand_s8,8,iron armor stand shaped like a headless torso mannequin,ok,WARN,10,PASS,WARN,1,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s8_snapped.png
+armor_stand,armor_stand_s9,9,iron armor stand shaped like a headless torso mannequin,ok,WARN,9,PASS,WARN,0,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s9_snapped.png
+armor_stand,armor_stand_s10,10,iron armor stand shaped like a headless torso mannequin,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s10_snapped.png
+armor_stand,armor_stand_s11,11,iron armor stand shaped like a headless torso mannequin,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s11_snapped.png
+armor_stand,armor_stand_s12,12,iron armor stand shaped like a headless torso mannequin,ok,WARN,10,PASS,WARN,2,tools/art_lint/candidates/burndown2b/armor_stand/armor_stand_s12_snapped.png
+forge,forge_s0,0,stone blacksmith forge furnace with firebox and coals,ok,WARN,10,PASS,WARN,1,tools/art_lint/candidates/burndown2b/forge/forge_s0_snapped.png
+forge,forge_s1,1,stone blacksmith forge furnace with firebox and coals,ok,FAIL,22,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/forge/forge_s1_snapped.png
+forge,forge_s2,2,stone blacksmith forge furnace with firebox and coals,ok,FAIL,17,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/forge/forge_s2_snapped.png
+forge,forge_s3,3,stone blacksmith forge furnace with firebox and coals,ok,FAIL,20,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/forge/forge_s3_snapped.png
+forge,forge_s4,4,stone blacksmith forge furnace with firebox and coals,ok,WARN,10,PASS,WARN,6,tools/art_lint/candidates/burndown2b/forge/forge_s4_snapped.png
+forge,forge_s5,5,stone blacksmith forge furnace with firebox and coals,ok,FAIL,18,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/forge/forge_s5_snapped.png
+forge,forge_s6,6,stone blacksmith forge furnace with firebox and coals,ok,FAIL,16,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/forge/forge_s6_snapped.png
+forge,forge_s7,7,stone blacksmith forge furnace with firebox and coals,ok,FAIL,19,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/forge/forge_s7_snapped.png
+forge,forge_s8,8,stone blacksmith forge furnace with firebox and coals,ok,FAIL,23,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/forge/forge_s8_snapped.png
+forge,forge_s9,9,stone blacksmith forge furnace with firebox and coals,ok,WARN,10,PASS,WARN,2,tools/art_lint/candidates/burndown2b/forge/forge_s9_snapped.png
+forge,forge_s10,10,stone blacksmith forge furnace with firebox and coals,ok,FAIL,16,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/forge/forge_s10_snapped.png
+forge,forge_s11,11,stone blacksmith forge furnace with firebox and coals,ok,WARN,10,PASS,WARN,5,tools/art_lint/candidates/burndown2b/forge/forge_s11_snapped.png
+forge,forge_s12,12,stone blacksmith forge furnace with firebox and coals,ok,FAIL,11,PASS,WARN,8,tools/art_lint/candidates/burndown2b/forge/forge_s12_snapped.png
+forge,forge_s13,13,stone blacksmith forge furnace with firebox and coals,ok,WARN,10,PASS,WARN,6,tools/art_lint/candidates/burndown2b/forge/forge_s13_snapped.png
+forge,forge_s14,14,stone blacksmith forge furnace with firebox and coals,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/forge/forge_s14_snapped.png
+globe,globe_s0,0,brass celestial globe on a wooden stand,ok,FAIL,21,PASS,WARN,8,tools/art_lint/candidates/burndown2b/globe/globe_s0_snapped.png
+globe,globe_s1,1,brass celestial globe on a wooden stand,ok,WARN,10,PASS,WARN,8,tools/art_lint/candidates/burndown2b/globe/globe_s1_snapped.png
+globe,globe_s2,2,brass celestial globe on a wooden stand,ok,WARN,10,PASS,WARN,5,tools/art_lint/candidates/burndown2b/globe/globe_s2_snapped.png
+globe,globe_s3,3,brass celestial globe on a wooden stand,ok,WARN,10,PASS,WARN,7,tools/art_lint/candidates/burndown2b/globe/globe_s3_snapped.png
+globe,globe_s4,4,brass celestial globe on a wooden stand,ok,FAIL,12,PASS,WARN,8,tools/art_lint/candidates/burndown2b/globe/globe_s4_snapped.png
+globe,globe_s5,5,brass celestial globe on a wooden stand,ok,WARN,10,PASS,WARN,8,tools/art_lint/candidates/burndown2b/globe/globe_s5_snapped.png
+globe,globe_s6,6,brass celestial globe on a wooden stand,ok,WARN,10,PASS,WARN,5,tools/art_lint/candidates/burndown2b/globe/globe_s6_snapped.png
+globe,globe_s7,7,brass celestial globe on a wooden stand,ok,WARN,10,PASS,WARN,8,tools/art_lint/candidates/burndown2b/globe/globe_s7_snapped.png
+table,table_s0,0,simple crude wooden table,ok,WARN,10,PASS,WARN,2,tools/art_lint/candidates/burndown2b/table/table_s0_snapped.png
+table,table_s1,1,simple crude wooden table,ok,FAIL,16,PASS,WARN,8,tools/art_lint/candidates/burndown2b/table/table_s1_snapped.png
+table,table_s2,2,simple crude wooden table,ok,WARN,10,WARN,WARN,0,tools/art_lint/candidates/burndown2b/table/table_s2_snapped.png
+table,table_s3,3,simple crude wooden table,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/table/table_s3_snapped.png
+table,table_s4,4,simple crude wooden table,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/table/table_s4_snapped.png
+table,table_s5,5,simple crude wooden table,ok,WARN,10,PASS,WARN,3,tools/art_lint/candidates/burndown2b/table/table_s5_snapped.png
+table,table_s6,6,simple crude wooden table,ok,FAIL,12,PASS,WARN,8,tools/art_lint/candidates/burndown2b/table/table_s6_snapped.png
+table,table_s7,7,simple crude wooden table,ok,WARN,10,PASS,WARN,1,tools/art_lint/candidates/burndown2b/table/table_s7_snapped.png
+desk,desk_s0,0,wooden writing desk with papers on top,ok,WARN,10,PASS,WARN,1,tools/art_lint/candidates/burndown2b/desk/desk_s0_snapped.png
+desk,desk_s1,1,wooden writing desk with papers on top,ok,WARN,10,PASS,WARN,6,tools/art_lint/candidates/burndown2b/desk/desk_s1_snapped.png
+desk,desk_s2,2,wooden writing desk with papers on top,ok,WARN,10,PASS,WARN,6,tools/art_lint/candidates/burndown2b/desk/desk_s2_snapped.png
+desk,desk_s3,3,wooden writing desk with papers on top,ok,FAIL,16,PASS,WARN,8,tools/art_lint/candidates/burndown2b/desk/desk_s3_snapped.png
+desk,desk_s4,4,wooden writing desk with papers on top,ok,FAIL,11,PASS,WARN,8,tools/art_lint/candidates/burndown2b/desk/desk_s4_snapped.png
+desk,desk_s5,5,wooden writing desk with papers on top,ok,WARN,10,PASS,WARN,6,tools/art_lint/candidates/burndown2b/desk/desk_s5_snapped.png
+desk,desk_s6,6,wooden writing desk with papers on top,ok,WARN,10,PASS,WARN,5,tools/art_lint/candidates/burndown2b/desk/desk_s6_snapped.png
+desk,desk_s7,7,wooden writing desk with papers on top,ok,WARN,10,PASS,WARN,6,tools/art_lint/candidates/burndown2b/desk/desk_s7_snapped.png
+pillar,pillar_s0,0,stone pillar column,ok,WARN,8,PASS,WARN,0,tools/art_lint/candidates/burndown2b/pillar/pillar_s0_snapped.png
+pillar,pillar_s1,1,stone pillar column,ok,FAIL,25,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/pillar/pillar_s1_snapped.png
+pillar,pillar_s2,2,stone pillar column,ok,WARN,9,PASS,PASS,0,tools/art_lint/candidates/burndown2b/pillar/pillar_s2_snapped.png
+pillar,pillar_s3,3,stone pillar column,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/pillar/pillar_s3_snapped.png
+pillar,pillar_s4,4,stone pillar column,ok,WARN,10,PASS,WARN,2,tools/art_lint/candidates/burndown2b/pillar/pillar_s4_snapped.png
+pillar,pillar_s5,5,stone pillar column,ok,FAIL,18,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/pillar/pillar_s5_snapped.png
+pillar,pillar_s6,6,stone pillar column,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/pillar/pillar_s6_snapped.png
+pillar,pillar_s7,7,stone pillar column,ok,WARN,10,PASS,WARN,3,tools/art_lint/candidates/burndown2b/pillar/pillar_s7_snapped.png
+mushroom_cluster,mushroom_cluster_s0,0,cluster of pale mushrooms growing from a floor crack,ok,WARN,10,PASS,WARN,2,tools/art_lint/candidates/burndown2b/mushroom_cluster/mushroom_cluster_s0_snapped.png
+mushroom_cluster,mushroom_cluster_s1,1,cluster of pale mushrooms growing from a floor crack,ok,WARN,10,PASS,WARN,3,tools/art_lint/candidates/burndown2b/mushroom_cluster/mushroom_cluster_s1_snapped.png
+mushroom_cluster,mushroom_cluster_s2,2,cluster of pale mushrooms growing from a floor crack,ok,WARN,9,WARN,WARN,0,tools/art_lint/candidates/burndown2b/mushroom_cluster/mushroom_cluster_s2_snapped.png
+mushroom_cluster,mushroom_cluster_s3,3,cluster of pale mushrooms growing from a floor crack,ok,WARN,9,WARN,WARN,0,tools/art_lint/candidates/burndown2b/mushroom_cluster/mushroom_cluster_s3_snapped.png
+mushroom_cluster,mushroom_cluster_s4,4,cluster of pale mushrooms growing from a floor crack,ok,WARN,8,PASS,WARN,0,tools/art_lint/candidates/burndown2b/mushroom_cluster/mushroom_cluster_s4_snapped.png
+mushroom_cluster,mushroom_cluster_s5,5,cluster of pale mushrooms growing from a floor crack,ok,WARN,10,PASS,WARN,3,tools/art_lint/candidates/burndown2b/mushroom_cluster/mushroom_cluster_s5_snapped.png
+candelabra,candelabra_s0,0,ornate iron candelabra with lit candles,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s0_snapped.png
+candelabra,candelabra_s1,1,ornate iron candelabra with lit candles,ok,FAIL,12,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s1_snapped.png
+candelabra,candelabra_s2,2,ornate iron candelabra with lit candles,ok,FAIL,19,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s2_snapped.png
+candelabra,candelabra_s3,3,ornate iron candelabra with lit candles,ok,WARN,10,PASS,WARN,1,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s3_snapped.png
+candelabra,candelabra_s4,4,ornate iron candelabra with lit candles,ok,FAIL,19,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s4_snapped.png
+candelabra,candelabra_s5,5,ornate iron candelabra with lit candles,ok,FAIL,19,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s5_snapped.png
+candelabra,candelabra_s6,6,ornate iron candelabra with lit candles,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s6_snapped.png
+candelabra,candelabra_s7,7,ornate iron candelabra with lit candles,ok,WARN,10,PASS,WARN,1,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s7_snapped.png
+candelabra,candelabra_s8,8,ornate iron candelabra with lit candles,ok,FAIL,22,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s8_snapped.png
+candelabra,candelabra_s9,9,ornate iron candelabra with lit candles,ok,WARN,7,PASS,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s9_snapped.png
+candelabra,candelabra_s10,10,ornate iron candelabra with lit candles,ok,FAIL,16,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s10_snapped.png
+candelabra,candelabra_s11,11,ornate iron candelabra with lit candles,ok,FAIL,17,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s11_snapped.png
+candelabra,candelabra_s12,12,ornate iron candelabra with lit candles,ok,FAIL,17,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s12_snapped.png
+candelabra,candelabra_s13,13,ornate iron candelabra with lit candles,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s13_snapped.png
+candelabra,candelabra_s14,14,ornate iron candelabra with lit candles,ok,FAIL,21,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s14_snapped.png
+candelabra,candelabra_s15,15,ornate iron candelabra with lit candles,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s15_snapped.png
+candelabra,candelabra_s16,16,ornate iron candelabra with lit candles,ok,WARN,10,PASS,WARN,8,tools/art_lint/candidates/burndown2b/candelabra/candelabra_s16_snapped.png
+workbench,workbench_s0,0,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s0_snapped.png
+workbench,workbench_s10,10,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s10_snapped.png
+workbench,workbench_s11,11,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s11_snapped.png
+workbench,workbench_s1,1,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s1_snapped.png
+workbench,workbench_s2,2,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,PASS,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s2_snapped.png
+workbench,workbench_s3,3,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s3_snapped.png
+workbench,workbench_s4,4,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s4_snapped.png
+workbench,workbench_s5,5,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s5_snapped.png
+workbench,workbench_s6,6,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s6_snapped.png
+workbench,workbench_s7,7,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s7_snapped.png
+workbench,workbench_s8,8,scarred wooden workbench with tools and stains,ok,WARN,10,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s8_snapped.png
+workbench,workbench_s9,9,scarred wooden workbench with tools and stains,ok,FAIL,12,PASS,WARN,0,tools/art_lint/candidates/burndown2b/workbench/workbench_s9_snapped.png
+water_barrel,water_barrel_s0,0,wooden barrel filled with visible water,ok,WARN,10,PASS,WARN,5,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s0_snapped.png
+water_barrel,water_barrel_s1,1,wooden barrel filled with visible water,ok,FAIL,27,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s1_snapped.png
+water_barrel,water_barrel_s2,2,wooden barrel filled with visible water,ok,FAIL,34,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s2_snapped.png
+water_barrel,water_barrel_s3,3,wooden barrel filled with visible water,ok,FAIL,28,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s3_snapped.png
+water_barrel,water_barrel_s4,4,wooden barrel filled with visible water,ok,FAIL,27,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s4_snapped.png
+water_barrel,water_barrel_s5,5,wooden barrel filled with visible water,ok,FAIL,32,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s5_snapped.png
+water_barrel,water_barrel_s6,6,wooden barrel filled with visible water,ok,FAIL,25,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s6_snapped.png
+water_barrel,water_barrel_s7,7,wooden barrel filled with visible water,ok,WARN,10,PASS,WARN,8,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s7_snapped.png
+water_barrel,water_barrel_s8,8,wooden barrel filled with visible water,ok,FAIL,23,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s8_snapped.png
+water_barrel,water_barrel_s9,9,wooden barrel filled with visible water,ok,FAIL,24,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s9_snapped.png
+water_barrel,water_barrel_s10,10,wooden barrel filled with visible water,ok,FAIL,37,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s10_snapped.png
+water_barrel,water_barrel_s11,11,wooden barrel filled with visible water,ok,FAIL,25,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s11_snapped.png
+water_barrel,water_barrel_s12,12,wooden barrel filled with visible water,ok,WARN,10,PASS,PASS,6,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s12_snapped.png
+water_barrel,water_barrel_s13,13,wooden barrel filled with visible water,ok,WARN,10,PASS,WARN,8,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s13_snapped.png
+water_barrel,water_barrel_s14,14,wooden barrel filled with visible water,ok,FAIL,26,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s14_snapped.png
+water_barrel,water_barrel_s15,15,wooden barrel filled with visible water,ok,FAIL,26,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s15_snapped.png
+water_barrel,water_barrel_s16,16,wooden barrel filled with visible water,ok,FAIL,25,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s16_snapped.png
+water_barrel,water_barrel_s17,17,wooden barrel filled with visible water,ok,FAIL,28,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s17_snapped.png
+water_barrel,water_barrel_s18,18,wooden barrel filled with visible water,ok,FAIL,17,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s18_snapped.png
+water_barrel,water_barrel_s19,19,wooden barrel filled with visible water,ok,FAIL,26,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s19_snapped.png
+water_barrel,water_barrel_s20,20,wooden barrel filled with visible water,ok,FAIL,21,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s20_snapped.png
+water_barrel,water_barrel_s21,21,wooden barrel filled with visible water,ok,FAIL,25,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s21_snapped.png
+water_barrel,water_barrel_s22,22,wooden barrel filled with visible water,ok,FAIL,38,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s22_snapped.png
+water_barrel,water_barrel_s23,23,wooden barrel filled with visible water,ok,FAIL,22,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s23_snapped.png
+water_barrel,water_barrel_s24,24,wooden barrel filled with visible water,ok,WARN,10,PASS,WARN,7,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s24_snapped.png
+water_barrel,water_barrel_s25,25,wooden barrel filled with visible water,ok,WARN,10,PASS,WARN,6,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s25_snapped.png
+water_barrel,water_barrel_s26,26,wooden barrel filled with visible water,ok,WARN,10,PASS,WARN,8,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s26_snapped.png
+water_barrel,water_barrel_s27,27,wooden barrel filled with visible water,ok,FAIL,35,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/water_barrel/water_barrel_s27_snapped.png
+shelf_bottles,shelf_bottles_s0,0,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,2,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s0_snapped.png
+shelf_bottles,shelf_bottles_s1,1,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,7,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s1_snapped.png
+shelf_bottles,shelf_bottles_s2,2,wooden shelf lined with glass bottles,ok,FAIL,13,PASS,WARN,8,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s2_snapped.png
+shelf_bottles,shelf_bottles_s3,,,error,,,,,,
+shelf_bottles,shelf_bottles_s4,4,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s4_snapped.png
+shelf_bottles,shelf_bottles_s5,5,wooden shelf lined with glass bottles,ok,WARN,9,PASS,WARN,0,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s5_snapped.png
+shelf_bottles,shelf_bottles_s6,6,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,2,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s6_snapped.png
+shelf_bottles,shelf_bottles_s7,7,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,4,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s7_snapped.png
+shelf_bottles,shelf_bottles_s8,8,wooden shelf lined with glass bottles,ok,FAIL,15,PASS,WARN,8,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s8_snapped.png
+shelf_bottles,shelf_bottles_s9,9,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,3,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s9_snapped.png
+shelf_bottles,shelf_bottles_s10,10,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,2,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s10_snapped.png
+shelf_bottles,shelf_bottles_s11,11,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,3,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s11_snapped.png
+shelf_bottles,shelf_bottles_s12,12,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,6,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s12_snapped.png
+shelf_bottles,shelf_bottles_s13,13,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,1,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s13_snapped.png
+shelf_bottles,shelf_bottles_s14,14,wooden shelf lined with glass bottles,ok,WARN,10,PASS,WARN,2,tools/art_lint/candidates/burndown2b/shelf_bottles/shelf_bottles_s14_snapped.png
+rock,rock_s0,0,large loose boulder rock,ok,FAIL,19,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s0_snapped.png
+rock,rock_s1,1,large loose boulder rock,ok,FAIL,23,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s1_snapped.png
+rock,rock_s2,2,large loose boulder rock,ok,FAIL,13,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s2_snapped.png
+rock,rock_s3,3,large loose boulder rock,ok,FAIL,14,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s3_snapped.png
+rock,rock_s4,4,large loose boulder rock,ok,WARN,10,PASS,PASS,0,tools/art_lint/candidates/burndown2b/rock/rock_s4_snapped.png
+rock,rock_s5,5,large loose boulder rock,ok,FAIL,13,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s5_snapped.png
+rock,rock_s6,6,large loose boulder rock,ok,FAIL,22,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/rock/rock_s6_snapped.png
+rock,rock_s7,7,large loose boulder rock,ok,FAIL,17,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/rock/rock_s7_snapped.png
+rock,rock_s8,8,large loose boulder rock,ok,FAIL,18,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s8_snapped.png
+rock,rock_s9,9,large loose boulder rock,ok,FAIL,17,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s9_snapped.png
+rock,rock_s10,10,large loose boulder rock,ok,WARN,10,WARN,WARN,2,tools/art_lint/candidates/burndown2b/rock/rock_s10_snapped.png
+rock,rock_s11,11,large loose boulder rock,ok,FAIL,17,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s11_snapped.png
+rock,rock_s12,12,large loose boulder rock,ok,FAIL,20,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/rock/rock_s12_snapped.png
+rock,rock_s13,13,large loose boulder rock,ok,FAIL,21,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s13_snapped.png
+rock,rock_s14,14,large loose boulder rock,ok,WARN,7,PASS,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s14_snapped.png
+rock,rock_s15,15,large loose boulder rock,ok,FAIL,20,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/rock/rock_s15_snapped.png
+rock,rock_s16,16,large loose boulder rock,ok,FAIL,21,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s16_snapped.png
+rock,rock_s17,17,large loose boulder rock,ok,FAIL,20,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s17_snapped.png
+rock,rock_s18,18,large loose boulder rock,ok,FAIL,19,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s18_snapped.png
+rock,rock_s19,19,large loose boulder rock,ok,FAIL,16,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s19_snapped.png
+rock,rock_s20,20,large loose boulder rock,ok,FAIL,18,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/rock/rock_s20_snapped.png
+rock,rock_s21,21,large loose boulder rock,ok,FAIL,15,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s21_snapped.png
+rock,rock_s22,22,large loose boulder rock,ok,WARN,10,PASS,WARN,3,tools/art_lint/candidates/burndown2b/rock/rock_s22_snapped.png
+rock,rock_s23,23,large loose boulder rock,ok,FAIL,26,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s23_snapped.png
+rock,rock_s24,24,large loose boulder rock,ok,FAIL,20,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s24_snapped.png
+rock,rock_s25,25,large loose boulder rock,ok,WARN,10,PASS,PASS,7,tools/art_lint/candidates/burndown2b/rock/rock_s25_snapped.png
+rock,rock_s26,26,large loose boulder rock,ok,FAIL,20,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s26_snapped.png
+rock,rock_s27,27,large loose boulder rock,ok,FAIL,17,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/rock/rock_s27_snapped.png
+rock,rock_s28,28,large loose boulder rock,ok,FAIL,19,FAIL,WARN,0,tools/art_lint/candidates/burndown2b/rock/rock_s28_snapped.png
+rock,rock_s29,29,large loose boulder rock,ok,FAIL,19,FAIL,PASS,0,tools/art_lint/candidates/burndown2b/rock/rock_s29_snapped.png
