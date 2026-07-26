@@ -59,4 +59,23 @@ public static class MidRunFile
 
         return new MidRunLoadResult(MidRunLoadStatus.Ok, dto, null);
     }
+
+    /// <summary>Delete the mid-run save (and any stray .tmp). Used by the RECORD-then-DELETE run-end
+    /// flow — call ONLY after the run's outcome is committed to the cross-run save.</summary>
+    public static void Delete(string path)
+    {
+        if (File.Exists(path)) File.Delete(path);
+        var tmp = path + ".tmp";
+        if (File.Exists(tmp)) File.Delete(tmp);
+    }
+
+    /// <summary>Move a corrupt save aside (never delete) so it can be inspected. Returns the archived
+    /// path, or null if there was nothing to archive.</summary>
+    public static string? ArchiveCorrupt(string path)
+    {
+        if (!File.Exists(path)) return null;
+        var archived = $"{path}.corrupt-{DateTime.UtcNow:yyyyMMddHHmmss}";
+        File.Move(path, archived);
+        return archived;
+    }
 }
