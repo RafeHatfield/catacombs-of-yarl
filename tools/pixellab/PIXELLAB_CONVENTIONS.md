@@ -35,10 +35,30 @@ That's it. Nothing else.
 
 | Parameter | Why not |
 |---|---|
-| `color_image` | Spatial color transfer, not palette lock — passing the Oryx palette strip corrupts output with green noise |
 | `style_image` | The Oryx sprite composite doesn't work as a style reference — produces green noise at any `style_strength > 0` |
 | `oblique_projection`, `isometric`, `view` | Marked "weakly guiding" in the API — mostly ignored or produces subtle unwanted changes |
 | `shading`, `detail`, `outline` | Unpredictably changes the character of what's generated, not just the rendering style |
+
+## `color_image` — verified 2026-07 as a real palette lock
+
+Earlier testing (`sweep.py`, ~2026-04) fed `color_image` the full detailed multi-sprite Oryx style
+composite and got green-noise corruption, which was read as "no palette lock, spatial transfer
+only." That composite is the wrong input shape for what this parameter does. Re-checked 2026-07-24
+against the live OpenAPI spec (`api.pixellab.ai/v1/openapi.json` and `/v2/openapi.json`), which
+documents `color_image` as: **"Forced color palette, image containing colors used for palette."**
+Confirmed empirically: a small flat swatch of solid color blocks (~8-10 colors, no detail, no
+spatial structure to a real object) produces output using *only* those exact colors — see
+`tools/pixellab/palette_lock_evidence/` for the swatch, the generated output, and the color
+measurement.
+
+**Use it:** pass a flat swatch image (solid blocks, not a detailed composite) as `color_image` to
+lock generation to a specific color set — e.g. a themed subset of `config/art/oryx_master_palette.json`
+sized to the target asset class's color budget (bible §5: props/decals ≤10, items ≤21, creatures ≤18).
+
+**License guard still applies as documented in `docs/art_bible.md` §8**: a swatch built from
+`oryx_master_palette.json` *values* (solid RGB blocks, no Oryx pixel imagery) is approved derived-data
+conditioning. Feeding an actual Oryx sprite image as `color_image` (or any conditioning input) remains
+prohibited pending the license check called out there — never do that, only synthetic swatches.
 
 ## Sprite sizes
 

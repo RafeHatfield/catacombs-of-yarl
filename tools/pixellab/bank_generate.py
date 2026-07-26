@@ -8,10 +8,13 @@ tools/art_lint/candidates/bank/<category>/<subcategory>/*.png, plus one
 index.csv per category.
 
 Hard constraints (verbatim from Burn-Down 2b / PIXELLAB_CONVENTIONS.md):
-  - License guard: BitForge calls take description/image_size/no_background/seed
-    ONLY. No color_image, no style_image, ever — no Oryx image is used as
-    conditioning of any kind. This is enforced structurally: generate_one()
-    below has no parameter through which a reference image could be passed.
+  - License guard: BitForge calls take description/image_size/no_background/seed/
+    color_image ONLY. No style_image, ever, and no Oryx sprite pixels are ever used
+    as conditioning of any kind. color_image (when --palette-locked) is a synthetic
+    flat swatch built from config/art/oryx_master_palette.json *values* — approved
+    derived-data conditioning per docs/art_bible.md #8, not Oryx imagery. See
+    PIXELLAB_CONVENTIONS.md's "color_image — verified 2026-07 as a real palette lock"
+    section for why this is safe and how it behaves.
   - Prompt template: "{object}, small sprite, pixel art" (PIXELLAB_CONVENTIONS.md).
   - Pipeline: generate -> structural clean (binarize alpha) -> palette snap
     (tools/art_lint/snap_to_palette.py) -> lint (tools/art_lint/art_lint.py),
@@ -22,7 +25,11 @@ Resumable: skips any candidate whose final PNG already exists. Safe to
 interrupt (Ctrl-C or backgrounded process kill) and re-run.
 
 Run from repo root:
-  source ~/.bashrc && python3 tools/pixellab/bank_generate.py [--max-total N] [--category NAME]
+  source ~/.bashrc && python3 tools/pixellab/bank_generate.py [--max-total N] [--category NAME] [--palette-locked]
+
+--palette-locked writes to a separate tools/art_lint/candidates/bank_palette_locked/ tree
+(quarantined from the original unlocked bank/ tree, same category/subcategory/concept/seed
+grid) so the two are directly comparable rather than silently overwritten into one set.
 """
 import argparse
 import csv
@@ -47,8 +54,49 @@ import client_compat  # noqa: E402
 
 MAX_CONSECUTIVE_FAILURES = 5
 
-BANK_ROOT = os.path.join(REPO_ROOT, "tools", "art_lint", "candidates", "bank")
+BANK_ROOT_UNLOCKED = os.path.join(REPO_ROOT, "tools", "art_lint", "candidates", "bank")
+BANK_ROOT_LOCKED = os.path.join(REPO_ROOT, "tools", "art_lint", "candidates", "bank_palette_locked")
 PALETTE_PATH = os.path.join(REPO_ROOT, "config", "art", "oryx_master_palette.json")
+
+# Themed 8-color swatches for --palette-locked, hand-picked from oryx_master_palette.json by hue
+# bucket (see palette_lock_evidence/ for the mechanism this relies on). Each includes a near-black
+# for outlines and stays within the bible's prop/decal color ceiling (8 warn / 10 fail).
+SWATCHES = {
+    ("mural_design", "heraldic"): [(0, 0, 0), (34, 34, 34), (204, 41, 41), (145, 120, 12),
+                                    (207, 193, 116), (31, 158, 222), (251, 251, 251), (142, 142, 142)],
+    ("mural_design", "banner_tapestry"): [(0, 0, 0), (84, 68, 36), (143, 85, 31), (145, 120, 12),
+                                           (207, 193, 116), (163, 39, 39), (222, 222, 222), (108, 108, 108)],
+    ("mural_design", "simplified_pictorial"): [(0, 0, 0), (82, 141, 186), (50, 103, 63), (136, 152, 96),
+                                                (112, 88, 38), (179, 135, 95), (222, 222, 222), (64, 64, 64)],
+    # prop_variety: one shared wood/stone/metal swatch across all 9 subcategories (theme-agnostic staples)
+    "prop_variety": [(0, 0, 0), (34, 34, 34), (84, 68, 36), (143, 85, 31), (108, 108, 108),
+                      (142, 142, 142), (199, 199, 199), (140, 53, 31)],
+    # floor_wall_texture: one shared stone/moss/stain swatch across all 4 subcategories
+    "floor_wall_texture": [(0, 0, 0), (39, 39, 39), (82, 82, 82), (142, 142, 142), (199, 199, 199),
+                            (50, 103, 63), (106, 128, 20), (140, 53, 31)],
+}
+
+_swatch_image_cache = {}
+
+
+def build_swatch_image(colors, block=8):
+    key = tuple(colors)
+    if key in _swatch_image_cache:
+        return _swatch_image_cache[key]
+    im = Image.new("RGBA", (block * len(colors), block), (0, 0, 0, 255))
+    for i, c in enumerate(colors):
+        for x in range(block):
+            for y in range(block):
+                im.putpixel((i * block + x, y), (*c, 255))
+    _swatch_image_cache[key] = im
+    return im
+
+
+def swatch_for(cat_name, subcat):
+    colors = SWATCHES.get((cat_name, subcat)) or SWATCHES.get(cat_name)
+    if colors is None:
+        return None
+    return build_swatch_image(colors)
 
 SEEDS_8 = [0, 1, 2, 3, 42, 137, 999, 1337]
 SEEDS_10 = SEEDS_8 + [7, 21]
@@ -280,15 +328,17 @@ def check_api_key():
         sys.exit(1)
 
 
-def generate_one(description, seed):
-    """BitForge call — description/image_size/no_background/seed ONLY.
-    No color_image, no style_image: structurally impossible to pass one here.
+def generate_one(description, seed, color_image=None):
+    """BitForge call — description/image_size/no_background/seed/color_image ONLY.
+    No style_image: structurally impossible to pass one here. color_image, when given,
+    is always a synthetic swatch built by build_swatch_image() — never Oryx sprite pixels.
     """
     return client_compat.generate_image_bitforge(
         description=description,
         image_size=GEN_SIZE,
         no_background=True,
         seed=seed,
+        color_image=color_image,
     )
 
 
@@ -307,8 +357,8 @@ def downscale(im, size):
     return im.resize((size, size), Image.NEAREST)
 
 
-def run_pipeline(description, seed, out_path):
-    raw = generate_one(description, seed)
+def run_pipeline(description, seed, out_path, color_image=None):
+    raw = generate_one(description, seed, color_image=color_image)
     cleaned = structural_clean(raw)
     final = downscale(cleaned, FINAL_SIZE)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
@@ -333,9 +383,9 @@ def iter_candidates(category):
                 yield subcat, concept, motif, seed
 
 
-def run_category(category, palette_set, max_remaining, consecutive_failures):
+def run_category(category, palette_set, max_remaining, consecutive_failures, bank_root, palette_locked):
     cat_name = category["name"]
-    cat_dir = os.path.join(BANK_ROOT, cat_name)
+    cat_dir = os.path.join(bank_root, cat_name)
     index_path = os.path.join(cat_dir, "index.csv")
     os.makedirs(cat_dir, exist_ok=True)
 
@@ -357,8 +407,9 @@ def run_category(category, palette_set, max_remaining, consecutive_failures):
             continue  # resumable: already generated
 
         description = f"{motif}, small sprite, pixel art"
+        color_image = swatch_for(cat_name, subcat) if palette_locked else None
         try:
-            final = run_pipeline(description, seed, out_path)
+            final = run_pipeline(description, seed, out_path, color_image=color_image)
         except Exception as e:
             print(f"  ERROR generating {cat_name}/{subcat}/{fname}: {e}", file=sys.stderr)
             consecutive_failures[0] += 1
@@ -395,11 +446,11 @@ def run_category(category, palette_set, max_remaining, consecutive_failures):
     return generated_this_run
 
 
-def count_existing():
+def count_existing(bank_root):
     total = 0
-    if not os.path.isdir(BANK_ROOT):
+    if not os.path.isdir(bank_root):
         return 0
-    for root, _, files in os.walk(BANK_ROOT):
+    for root, _, files in os.walk(bank_root):
         total += sum(1 for fn in files if fn.endswith(".png"))
     return total
 
@@ -407,31 +458,39 @@ def count_existing():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--max-total", type=int, default=1500,
-                        help="hard cap on total PNGs across the whole bank (existing + new)")
+                        help="hard cap on total PNGs in the target bank tree (existing + new)")
     parser.add_argument("--category", default=None,
                         help="restrict to one category name (mural_design, prop_variety, "
                              "floor_wall_texture, m3_design_reference)")
+    parser.add_argument("--palette-locked", action="store_true",
+                         help="use color_image swatches (SWATCHES) and write to the separate "
+                              "bank_palette_locked/ tree instead of bank/. m3_design_reference "
+                              "is skipped in this mode (no swatch defined, not lint-triaged anyway).")
     args = parser.parse_args()
 
     palette_set = al.load_palette(PALETTE_PATH)
     check_api_key()
 
-    existing = count_existing()
+    bank_root = BANK_ROOT_LOCKED if args.palette_locked else BANK_ROOT_UNLOCKED
+    cats = [c for c in CATEGORIES if args.category is None or c["name"] == args.category]
+    if args.palette_locked:
+        cats = [c for c in cats if c["name"] != "m3_design_reference"]
+
+    existing = count_existing(bank_root)
     remaining_budget = max(0, args.max_total - existing)
-    print(f"Existing bank PNGs: {existing}. Budget remaining this run: {remaining_budget} (cap {args.max_total})")
+    print(f"Bank root: {bank_root}")
+    print(f"Existing PNGs there: {existing}. Budget remaining this run: {remaining_budget} (cap {args.max_total})")
     max_remaining = [remaining_budget]
     consecutive_failures = [0]
-
-    cats = [c for c in CATEGORIES if args.category is None or c["name"] == args.category]
 
     for category in cats:
         if max_remaining[0] <= 0:
             print(f"Budget exhausted before category {category['name']}; stopping.")
             break
-        print(f"=== Category: {category['name']} ===")
-        run_category(category, palette_set, max_remaining, consecutive_failures)
+        print(f"=== Category: {category['name']} ({'palette-locked' if args.palette_locked else 'unlocked'}) ===")
+        run_category(category, palette_set, max_remaining, consecutive_failures, bank_root, args.palette_locked)
 
-    print(f"Run complete. Total bank PNGs now: {count_existing()}")
+    print(f"Run complete. Total PNGs in {bank_root} now: {count_existing(bank_root)}")
 
 
 if __name__ == "__main__":
