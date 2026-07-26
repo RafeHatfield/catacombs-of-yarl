@@ -1,0 +1,39 @@
+concept,tag,seed,prompt,status,overall,colors,A5,A6,collapse_merges,final_path
+anvil,anvil_locked_s0,0,"blacksmith anvil with horn, heavy iron block",ok,WARN,7,PASS,WARN,0,tools/art_lint/candidates/burndown3/anvil/anvil_locked_s0_snapped.png
+anvil,anvil_locked_s1,1,"blacksmith anvil with horn, heavy iron block",ok,WARN,7,PASS,WARN,0,tools/art_lint/candidates/burndown3/anvil/anvil_locked_s1_snapped.png
+anvil,anvil_locked_s2,2,"blacksmith anvil with horn, heavy iron block",ok,WARN,3,PASS,WARN,0,tools/art_lint/candidates/burndown3/anvil/anvil_locked_s2_snapped.png
+anvil,anvil_locked_s3,3,"blacksmith anvil with horn, heavy iron block",ok,WARN,5,PASS,WARN,0,tools/art_lint/candidates/burndown3/anvil/anvil_locked_s3_snapped.png
+anvil,anvil_locked_s4,4,"blacksmith anvil with horn, heavy iron block",ok,PASS,4,PASS,PASS,0,tools/art_lint/candidates/burndown3/anvil/anvil_locked_s4_snapped.png
+anvil,anvil_locked_s5,5,"blacksmith anvil with horn, heavy iron block",ok,WARN,6,PASS,WARN,0,tools/art_lint/candidates/burndown3/anvil/anvil_locked_s5_snapped.png
+armor_stand,armor_stand_locked_s0,0,iron armor stand shaped like a headless torso mannequin,ok,WARN,6,PASS,WARN,0,tools/art_lint/candidates/burndown3/armor_stand/armor_stand_locked_s0_snapped.png
+armor_stand,armor_stand_locked_s1,1,iron armor stand shaped like a headless torso mannequin,ok,WARN,8,PASS,WARN,0,tools/art_lint/candidates/burndown3/armor_stand/armor_stand_locked_s1_snapped.png
+armor_stand,armor_stand_locked_s2,2,iron armor stand shaped like a headless torso mannequin,ok,WARN,6,PASS,WARN,0,tools/art_lint/candidates/burndown3/armor_stand/armor_stand_locked_s2_snapped.png
+armor_stand,armor_stand_locked_s3,3,iron armor stand shaped like a headless torso mannequin,ok,WARN,6,PASS,WARN,0,tools/art_lint/candidates/burndown3/armor_stand/armor_stand_locked_s3_snapped.png
+armor_stand,armor_stand_locked_s4,4,iron armor stand shaped like a headless torso mannequin,ok,WARN,6,PASS,WARN,0,tools/art_lint/candidates/burndown3/armor_stand/armor_stand_locked_s4_snapped.png
+armor_stand,armor_stand_locked_s5,5,iron armor stand shaped like a headless torso mannequin,ok,WARN,7,PASS,WARN,0,tools/art_lint/candidates/burndown3/armor_stand/armor_stand_locked_s5_snapped.png
+club,club_locked_s0,0,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,5,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s0_snapped.png
+club,club_locked_s1,1,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,7,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s1_snapped.png
+club,club_locked_s2,2,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,5,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s2_snapped.png
+club,club_locked_s3,3,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,8,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s3_snapped.png
+club,club_locked_s4,4,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,8,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s4_snapped.png
+club,club_locked_s5,5,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,6,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s5_snapped.png
+club,club_locked_s6,6,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,8,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s6_snapped.png
+club,club_locked_s7,7,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,9,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s7_snapped.png
+club,club_locked_s8,8,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,9,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s8_snapped.png
+club,club_locked_s9,9,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,7,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s9_snapped.png
+club,club_locked_s10,10,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s10_snapped.png
+club,club_locked_s11,11,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,9,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s11_snapped.png
+club,club_locked_s12,12,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,8,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s12_snapped.png
+club,club_locked_s13,13,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s13_snapped.png
+club,club_locked_s14,14,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,8,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s14_snapped.png
+club,club_locked_s15,15,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,6,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s15_snapped.png
+club,club_locked_s16,16,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,10,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s16_snapped.png
+club,club_locked_s17,17,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,9,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s17_snapped.png
+club,club_locked_s18,18,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,7,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s18_snapped.png
+club,club_locked_s19,19,"wooden club weapon, thick knobbed end tapering to a handle",ok,FAIL,9,PASS,FAIL,0,tools/art_lint/candidates/burndown3/club/club_locked_s19_snapped.png
+mushroom_cluster,mushroom_cluster_locked_s0,0,cluster of pale mushrooms growing from a floor crack,ok,WARN,5,PASS,WARN,0,tools/art_lint/candidates/burndown3/mushroom_cluster/mushroom_cluster_locked_s0_snapped.png
+mushroom_cluster,mushroom_cluster_locked_s1,1,cluster of pale mushrooms growing from a floor crack,ok,WARN,4,PASS,WARN,0,tools/art_lint/candidates/burndown3/mushroom_cluster/mushroom_cluster_locked_s1_snapped.png
+mushroom_cluster,mushroom_cluster_locked_s2,2,cluster of pale mushrooms growing from a floor crack,ok,WARN,4,PASS,WARN,0,tools/art_lint/candidates/burndown3/mushroom_cluster/mushroom_cluster_locked_s2_snapped.png
+mushroom_cluster,mushroom_cluster_locked_s3,3,cluster of pale mushrooms growing from a floor crack,ok,WARN,3,PASS,WARN,0,tools/art_lint/candidates/burndown3/mushroom_cluster/mushroom_cluster_locked_s3_snapped.png
+mushroom_cluster,mushroom_cluster_locked_s4,4,cluster of pale mushrooms growing from a floor crack,ok,WARN,4,PASS,WARN,0,tools/art_lint/candidates/burndown3/mushroom_cluster/mushroom_cluster_locked_s4_snapped.png
+mushroom_cluster,mushroom_cluster_locked_s5,5,cluster of pale mushrooms growing from a floor crack,ok,WARN,4,PASS,WARN,0,tools/art_lint/candidates/burndown3/mushroom_cluster/mushroom_cluster_locked_s5_snapped.png

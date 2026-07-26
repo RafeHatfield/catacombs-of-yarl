@@ -14,7 +14,7 @@ import os
 
 from PIL import Image, ImageDraw, ImageFont
 
-REPO = "/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-burndown-2b"
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CAND_DIR = os.path.join(REPO, "tools/art_lint/candidates/burndown2b")
 OUT_DIR = os.path.join(CAND_DIR, "review")
 os.chdir(REPO)
