@@ -23,7 +23,13 @@ def _decode(resp_json):
     return Image.open(BytesIO(base64.b64decode(img_b64))).convert("RGBA")
 
 
-def generate_image_bitforge(description, image_size, seed=0, no_background=True, **kwargs):
+def generate_image_bitforge(description, image_size, seed=0, no_background=True, color_image=None, **kwargs):
+    """color_image: optional PIL Image. Per the live OpenAPI spec (api.pixellab.ai/v1/openapi.json,
+    checked 2026-07-24), this is a genuine forced-color-palette parameter — "image containing colors
+    used for palette" — not spatial color transfer. Verified empirically: a small (~8-10 color) flat
+    swatch of solid blocks produces output using only those exact colors. Feed it a flat swatch, not
+    a large detailed/multi-object composite (see tools/pixellab/palette_lock_evidence/).
+    """
     client = _client()
     request_data = {
         "description": description,
@@ -36,6 +42,8 @@ def generate_image_bitforge(description, image_size, seed=0, no_background=True,
         "seed": seed,
         **kwargs,
     }
+    if color_image is not None:
+        request_data["color_image"] = pixellab.models.Base64Image.from_pil_image(color_image).model_dump()
     r = requests.post(f"{client.base_url}/generate-image-bitforge",
                        headers=client.headers(), json=request_data)
     r.raise_for_status()

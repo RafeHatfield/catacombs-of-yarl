@@ -1,0 +1,8 @@
+Prompt: "wooden chair, small sprite, pixel art", seed=42, no other structured params.
+color_image: 10-color flat swatch (block image, no spatial structure), colors drawn from config/art/oryx_master_palette.json[:10].
+
+Swatch colors: [(0, 0, 0), (0, 47, 118), (0, 68, 175), (0, 97, 65), (0, 99, 33), (0, 133, 44), (0, 140, 140), (0, 148, 10), (0, 168, 112), (0, 173, 204)]
+
+Unique opaque colors in output: 5
+Exact matches to swatch: 5/5
+Output colors: [(0, 0, 0), (0, 97, 65), (0, 133, 44), (0, 168, 112), (0, 173, 204)]
