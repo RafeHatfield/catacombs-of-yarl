@@ -23,10 +23,11 @@ Seven milestones, ordered by dependency, not calendar. Each has an exit gate —
 
 - **Track V (voice/content authoring)** — design-thread work, you + Claude, gated per milestone below. This is the long pole (~15–20K words) and starts now.
 - **Track L (launch runway)** — Steam page, assets, demo packaging. Starts now at low intensity; §M7 is its convergence point.
+- **Track A (art conformance)** — Oryx conformance burn-down + asset pipeline, added 2026-07-24. Runs parallel to the milestone chain; gates M7's Steam capsule/screenshot work specifically (§Track A).
 
 ```
 M0 → M1 → M2 → M3 → M6 → M7
-         (V runs M0–M6 continuously; L runs M0–M7; M4/M5 slot after M2, parallel with M3)
+         (V runs M0–M6 continuously; L runs M0–M7; A runs parallel, gates M7 assets; M4/M5 slot after M2, parallel with M3)
 ```
 
 ---
@@ -117,6 +118,38 @@ Authoring order is by player exposure, inverting the current corpus:
 4. **Price ruling:** $6.99–$9.99, your call (my starting suggestion remains $7.99; first sale event is the experiment).
 5. **Platform sequencing:** mobile + Steam near-simultaneous if bandwidth allows; Steam trailing ~2 months if it doesn't. Keyboard support is the one real Steam port cost — budget it.
 6. **Post-launch plan, published as a roadmap at launch:** with the full game shipping at once, the depth-expansion update no longer exists as the marketing beat — plan the first post-launch beat from other material (new possession targets, challenge badges/daily-seed events, a sixth ending are all candidates already in the design space). Quarterly cadence, SPD playbook.
+
+---
+
+## Track A — Art conformance (added 2026-07-24; runs parallel, gates M7 assets)
+
+**Done:** Oryx master palette + snap pipeline; art lint (Part A machine checks +
+Part B rubric) as a standing PR gate for asset changes; provenance-derived
+generated-assets manifest (80 files); acceptance test scene (authored data →
+production renderer) + capture harness (iPhone SE 750×1334 baseline);
+burn-downs 1–2a–2b: 64/80 conformant, incl. canon chest family and derived
+worn floor; PixelLab palette-lock correction (PIXELLAB_CONVENTIONS.md,
+2026-07-24) + locked candidate bank (~1,170 quarantined candidates:
+murals ×3 directions, prop variety, textures, M3 design references).
+
+**Remaining, in order:**
+1. Parked-six palette-locked round (anvil, armor_stand, club, mushroom_cluster,
+   rock, water_barrel) — candidates → picks → land. Club may need the
+   outline-repair script (also unlocks banked items if kept).
+2. Mural ruling — design conversation over the 150 banked candidates
+   (heraldic / banner / pictorial). NOTE: M3 item 4 already plans
+   per-region signpost/mural pools, so this ruling should decide the mural
+   *language*, with per-region motifs deferred to M3.
+3. Banked items 4002–4004 ruling: exempt-as-banked or delete.
+4. Variant expansion (later, optional): wire banked picks + extra worn
+   variants into props.yaml/tile_themes.yaml variant lists as new IDs.
+
+**Exit gate:** acceptance scene passes full Part B rubric on the reference
+device. **M7 dependency:** Steam capsule + screenshots do not start until
+this gate passes. (Manifest + lint remain permanent infrastructure past exit.)
+
+Live state (issue numbers, picks, ruling status) tracked in GitHub Issues
+under `thread:art`; this section is the definition, not the state.
 
 ---
 
