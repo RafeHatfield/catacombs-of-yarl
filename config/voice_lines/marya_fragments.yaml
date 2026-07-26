@@ -1,0 +1,56 @@
+# Marya memory fragments — cross-run one-shots, mural-anchored.
+# Consumed via MaryaFragmentRecord.FragmentTextRef; re-readable in the catalog.
+# NOT ribbon lines; NOT loaded by VoiceLineRegistry.
+# v3 mechanic (unbuilt): after a fragment surfaces, Hollowmark is silent for
+# the remainder of the floor. Every fragment's closing is written to that.
+# meta.tier / meta.min_depth are unlock-gating intent for future wiring.
+version: "1.0"
+
+fragments:
+  mf_stonework:
+    text: "That's southern work. The undercut on the relief, there. Wend used it on the customs house, the one with the bells. Marya walked past it every morning and never once looked up. You always think there's time to look later. Go on, Boss. I'm done talking for a while."
+    meta: { tier: common, min_depth: 1 }
+
+  mf_wend_bells:
+    text: "A market square. Not Wend's, but close enough to sting. Wend's had a fountain the founders bought secondhand and swore was new. The bells rang flat on cold mornings and nobody fixed them, because that's how you knew you were home. Marya could hear them from the workshop. Enough, Boss. Give me the floor in quiet."
+    meta: { tier: common, min_depth: 3 }
+
+  mf_folds:
+    text: "Whoever painted this understood doors. Look, the arch opens onto somewhere the wall can't hold. That was Marya's trade. Portals, folds, the polite bending of distance. The best in the south, and the south said so out loud. I still do the work, Boss. Smaller now. Every portal I open is her hand. Quiet now, please. Walk."
+    meta: { tier: common, min_depth: 6 }
+
+  mf_erasure:
+    text: "Soldiers, see, and a town under them. The highland kingdoms called it consolidation. Wend called it Tuesday, then fire, then nothing. Erased means the maps got reprinted. It means the bells stopped mid-ring. Marya was delivering a ward two valleys over. She came home to smoke and paperwork. Nobody was punished. There was nobody left to insist. Go ahead, Boss. I'll be quiet a while."
+    meta: { tier: mid, min_depth: 8 }
+
+  mf_ana_north:
+    text: "Two sisters on the road, see. The painter got the pack straps right. Ana carried the tools north when it ended. Marya stayed. Somebody had to finish the orders, she said. There were no orders. There was a wand, half-made, and quiet. Ana would be old now. Her grandchildren wouldn't know the name Hollowmark. It's fine, Boss. Walk on. I'll be quiet a while."
+    meta: { tier: mid, min_depth: 8 }
+
+  mf_stayed:
+    text: "Marya stayed thirty years in a town that wasn't there. Rebuilt the workshop twice. Filled orders for the dead, because the dead had paid deposits and she kept honest books. People said she was waiting for Wend to come back. She wasn't. She was finishing. There's a difference, Boss, and I'd know. Go on. Quiet suits this floor."
+    meta: { tier: mid, min_depth: 10 }
+
+  mf_wand_making:
+    text: "A maker at a bench. Close enough. The last work was a wand of conscience, commissioned by nobody, started the winter the orders finally ran out. You build one to hold a person, Boss. That's the whole craft of it. Marya built well. Take that as a warning or a comfort. She never decided which. Walk on. I'm done for this floor."
+    meta: { tier: late, min_depth: 12 }
+
+  mf_death:
+    text: "Marya died at the bench on a morning with frost on the window. Mid-work. The binding doesn't wait for you to finish your tea. The terms came due, and the wand was right there, open, the way a door is open. That's all it takes. Craft and timing. Give me the rest of the floor, Boss. I'm going to not talk about this."
+    meta: { tier: late, min_depth: 14 }
+
+  mf_waking:
+    text: "The first thing you learn is that you still expect hands. Marya reached for tools for a year. No hands, no year, but you count anyway. Then you learn the other senses. Brass hears better than ears. Enchantment has a smell. And a held wand knows the holder's pulse, which is more honesty than most friendships manage. Enough, Boss. Quiet now."
+    meta: { tier: late, min_depth: 14 }
+
+  mf_suspects:
+    text: "Ana's line went north, past the maps Marya kept. There would be grandchildren now. A workshop somewhere, maybe, if the trade held. Marya doesn't know. Didn't. Marya didn't know. She died not knowing, and the not-knowing died with her, and what's left is me, suspecting. If you ever walk the highland kingdoms, Boss, listen for flat bells. Go on now. Quiet."
+    meta: { tier: rare, min_depth: 16 }
+
+  mf_name:
+    text: "Hollowmark was the family name. The mark of the hollow, some joke about the valley Wend sat in. Marya signed it on every ward she ever sold. Now it's what the Boss calls a wand. He shortens it when he's bleeding. Holl. Like a name you'd give a person. I let him. It's the closest either of us comes to saying it out loud. Walk, Boss. I'll be quiet."
+    meta: { tier: rare, min_depth: 16 }
+
+  mf_span:
+    text: "A further span of service. That's the rite, fourth panel. Marya said those words and thought span meant her time. It means more. When you die down here and wake in your own bed, Boss, that's the binding hauling you back to the work. Hauling isn't free. Every trip home is paid out of somebody's remaining span. Never mind whose. The stairs are ahead. Go on. No more from me this floor. I'll follow. I always follow."
+    meta: { tier: rare, min_depth: 20 }
