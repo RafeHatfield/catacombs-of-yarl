@@ -44,7 +44,7 @@ monsters:
             weight: 100
 
   orc_grunt:
-    name: "Orc"
+    name: "Grunt"
     extends: orc
     spawn_weight: 0
 
