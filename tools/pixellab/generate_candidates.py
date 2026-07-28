@@ -25,7 +25,7 @@ import time
 from itertools import combinations
 from collections import Counter
 
-REPO = "/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-burndown-2b"
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(REPO, "tools/pixellab"))
 sys.path.insert(0, os.path.join(REPO, "tools/art_lint"))
 os.chdir(REPO)
