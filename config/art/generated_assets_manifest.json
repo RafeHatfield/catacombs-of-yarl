@@ -716,26 +716,26 @@
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "water_barrel",
       "notes": "PixelLab s1",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
-      "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant"
+      "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant",
+      "route": "pixellab_regen_locked",
+      "pick_source": "burndown3 fresh palette-locked generation, seed 3 (WARN, 8c)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5085.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "water_barrel",
       "notes": "PixelLab s999",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
-      "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant"
+      "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant",
+      "route": "pixellab_regen_locked",
+      "pick_source": "burndown3 fresh palette-locked generation, seed 4 (WARN, 7c)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5086.png",
