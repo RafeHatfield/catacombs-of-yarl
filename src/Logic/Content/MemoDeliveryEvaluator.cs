@@ -171,7 +171,10 @@ public sealed class MemoDeliveryEvaluator
     {
         if (state.UnderWarden.HasLoggedGrievance("formal_complaint.catalog_referenced")) return;
 
-        var ctx = new PostRunContext(Died: false, CauseOfDeath: null, KillerSpecies: null, FloorReached: 0, RunNumber: runNumber);
+        // No authoritative EndingType source in scope: this is a synthetic mid-run context for a
+        // catalog-referenced possession event, not an end-of-run flush. Only PersistentRunState is
+        // available here, not the live GameState that carries Ending. None is honest, not a guess.
+        var ctx = new PostRunContext(Died: false, CauseOfDeath: null, KillerSpecies: null, FloorReached: 0, RunNumber: runNumber, Ending: Endgame.EndingType.None);
         var extraSlots = catalogEntry != null
             ? new Dictionary<string, string> { ["catalog_entry"] = catalogEntry }
             : null;
@@ -193,12 +196,16 @@ public sealed class MemoDeliveryEvaluator
 
         // Use a null context — possession memos don't have per-run death data.
         // Pass a minimal ctx with only the run number relevant field.
+        // No authoritative EndingType source in scope here either (same reasoning as
+        // EvaluateCatalogReferenced above): only PersistentRunState is available, not the live
+        // GameState that carries Ending. None is honest, not a guess.
         var ctx = new PostRunContext(
             Died: false,
             CauseOfDeath: null,
             KillerSpecies: null,
             FloorReached: 0,
-            RunNumber: runNumber
+            RunNumber: runNumber,
+            Ending: Endgame.EndingType.None
         );
 
         if (total == 1)

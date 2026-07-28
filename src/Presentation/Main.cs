@@ -1774,7 +1774,8 @@ public partial class Main : Node
                     CauseOfDeath: _state.PlayerDeathCause,
                     KillerSpecies: _state.PlayerDeathKillerSpecies,
                     FloorReached: _currentDepth,
-                    RunNumber: _persistentState.RunCounter.TotalRuns
+                    RunNumber: _persistentState.RunCounter.TotalRuns,
+                    Ending: _state.Ending
                 );
                 _memoEvaluator.EvaluateRunEnd(ctx, _persistentState, _memoRegistry);
                 // MarkDirty is called inside EvaluateRunEnd if any memos were queued.

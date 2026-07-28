@@ -1037,7 +1037,12 @@ public sealed class DungeonRunHarness
             CauseOfDeath: null,        // raw engine cause string is not tracked by this harness
             KillerSpecies: killerName,
             FloorReached: depthReached,
-            RunNumber: 1);
+            RunNumber: 1,
+            // No authoritative EndingType source in scope: the per-floor GameState built inside
+            // the floor loop above (_floorBuilder.Build(...)) is block-scoped to that loop and is
+            // already out of scope here. This harness also never calls WeighingOrchestrator, so
+            // even a captured GameState would carry the default. None is honest, not a guess.
+            Ending: Logic.Endgame.EndingType.None);
 
         new MemoDeliveryEvaluator().EvaluateRunEnd(ctx, pstate, memoRegistry);
 
