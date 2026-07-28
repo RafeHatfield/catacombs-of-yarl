@@ -33,6 +33,10 @@ CONCEPTS = {
         file_ids=[5109], asset_class="prop", final_size=24, exempt=False,
         prompt="cluster of pale mushrooms growing from a floor crack",
         live_path="src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5109.png"),
+    "water_barrel": dict(
+        file_ids=[5084, 5085], asset_class="prop", final_size=24, exempt=False,
+        prompt="wooden barrel filled with visible water, water surface clearly visible inside the rim",
+        live_path="src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5084.png"),
 }
 
 LOG_PATH = "tools/art_lint/reports/burndown3_generation_log.csv"

@@ -90,6 +90,23 @@ def build_bank_sheet(concept, live_file_ids, bank_subcategory, final_size=24):
           f"organized into {len(by_bank_concept)} sub-concepts")
 
 
+def build_single_multi_live(concept, live_file_ids, final_size=24):
+    """Like build_single, but for a concept with more than one live variant ID
+    (water_barrel: 5084 has visible water, 5085 doesn't) -- reference row shows
+    both, candidate row shows the fresh palette-locked generation."""
+    live_paths = [find_live_path(fid) for fid in live_file_ids]
+    row_cells = [cell(f"LIVE {os.path.basename(p)}", load_scaled(p, final_size), border=(180, 60, 60))
+                 for p in live_paths]
+
+    passers = passers_for(concept)
+    for r in passers:
+        label = f"seed{r['seed']} {r['overall']} {r['colors']}c"
+        row_cells.append(cell(label, load_scaled(r["final_path"], final_size), border=(60, 160, 60)))
+
+    stack_rows([row_image(row_cells)], f"{OUT_DIR}/{concept}_freshlocked_sheet.png")
+    print(f"{concept}: {len(passers)} fresh-locked candidates in sheet")
+
+
 if __name__ == "__main__":
     build_single("anvil", 5001)
     build_single("armor_stand", 5002)
@@ -97,3 +114,4 @@ if __name__ == "__main__":
     build_single("mushroom_cluster", 5109)
     build_bank_sheet("rock", [5104, 5105], "rocks_rubble")
     build_bank_sheet("water_barrel", [5084, 5085], "barrels")
+    build_single_multi_live("water_barrel", [5084, 5085])
