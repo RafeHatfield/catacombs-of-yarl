@@ -26,6 +26,7 @@ public class MidRunSubsystemPrivateFieldTripwireTests
         typeof(CatacombsOfYarl.Logic.Endgame.WeighingState),
         typeof(CatacombsOfYarl.Logic.Endgame.WeighingArena),
         typeof(WeighingAuditRegistry),
+        typeof(CatacombsOfYarl.Logic.Voice.VoiceScheduler),
     };
 
     // Every private instance field of the above, "Type.field" — all COVERED by the serializer.
@@ -45,6 +46,15 @@ public class MidRunSubsystemPrivateFieldTripwireTests
         // WeighingState is all public props (no private fields).
         "WeighingArena._anchors",
         "WeighingAuditRegistry._sequences",
+        // VoiceScheduler run state — all SERIALIZE-class except the two RECONSTRUCT deps.
+        "VoiceScheduler._registry",             // RECONSTRUCT — caller-provided VoiceLineRegistry, never serialized
+        "VoiceScheduler._meta",                 // RECONSTRUCT — caller-provided VoiceTierMetadata, never serialized
+        "VoiceScheduler._rng",                  // COVERED via (RngSeed, RngCallCount)
+        "VoiceScheduler._bags",                 // COVERED via VoiceBagDto[] (remaining draw order per family)
+        "VoiceScheduler._fired",                // COVERED via Fired[]
+        "VoiceScheduler._history",              // COVERED via VoiceHistoryDto[]
+        "VoiceScheduler._currentFloorSilenced", // COVERED via CurrentFloorSilenced
+        "VoiceScheduler._lastDeliveredTurn",    // COVERED via LastDeliveredTurn
     };
 
     [Test]

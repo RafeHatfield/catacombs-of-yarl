@@ -45,3 +45,20 @@ container children (4a.2). The remaining int-id fields were classified:
 container-child traversal, the table is complete. No new id-traversal code is required for the
 known surface; the reachability rule is enforced and tested at the serializer level here, and will
 get the full build→save→load→open-chest integration test with GameState SaveMidRun/LoadMidRun.
+
+## Voice scheduler subsystem (M1.5a)
+
+`VoiceScheduler` (docs/systems/voice_delivery.md) is a serialized subsystem — registered in
+`MidRunSubsystemPrivateFieldTripwireTests`. Its private instance fields are classified:
+
+| Field | Class | Coverage |
+|---|---|---|
+| `_registry`, `_meta` | RECONSTRUCT | Caller-provided (`VoiceLineRegistry`, `VoiceTierMetadata`), passed to `LoadMidRun` — never serialized. Same contract as `GameState.BoonTable`. |
+| `_rng` | COVERED | `(RngSeed, RngCallCount)` → `SeededRandom.Restore`, exactly like the gameplay Rng. |
+| `_bags` | COVERED | `VoiceBagDto[]` — remaining draw order per family (empty bags omitted; they refill identically). |
+| `_fired` | COVERED | `Fired[]` — one-shot families already spent this run. |
+| `_history` | COVERED | `VoiceHistoryDto[]` — last 20 delivered lines (order-significant). |
+| `_currentFloorSilenced`, `_lastDeliveredTurn` | COVERED | Scalars in `VoiceSchedulerStateDto`. |
+
+The voice Rng is a distinct stream (run-seed XOR salt); voice code never touches gameplay `state.Rng`,
+so gameplay hash sequences are identical with voice enabled or disabled (proven by the isolation soak).
