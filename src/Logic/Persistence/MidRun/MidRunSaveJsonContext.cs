@@ -12,4 +12,7 @@ namespace CatacombsOfYarl.Logic.Persistence.MidRun;
 [JsonSerializable(typeof(KnowledgeEntryDto))]
 [JsonSerializable(typeof(GroundHazardDto))]
 [JsonSerializable(typeof(EntityTableDto))]
+[JsonSerializable(typeof(VoiceSchedulerStateDto))]
+[JsonSerializable(typeof(VoiceBagDto))]
+[JsonSerializable(typeof(VoiceHistoryDto))]
 public partial class MidRunSaveJsonContext : JsonSerializerContext { }

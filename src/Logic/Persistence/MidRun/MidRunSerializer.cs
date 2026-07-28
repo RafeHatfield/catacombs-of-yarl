@@ -3,6 +3,7 @@ using CatacombsOfYarl.Logic.Content;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Endgame;
+using CatacombsOfYarl.Logic.Voice;
 
 namespace CatacombsOfYarl.Logic.Persistence.MidRun;
 
@@ -126,6 +127,15 @@ public static class MidRunSerializer
                 au.Sequences.OrderBy(kv => kv.Key, StringComparer.Ordinal)
                     .Select(kv => new AuditSequenceDto(kv.Key,
                         kv.Value.Select(p => new DialoguePageDto(p.Speaker, p.Text)).ToArray())).ToArray()),
+
+            // Hollowmark voice scheduler run state (canonical: bags + fired ordinal-ordered; history chronological).
+            Voice = state.VoiceScheduler is not { } vs ? null : new VoiceSchedulerStateDto(
+                vs.RngSeed, vs.RngCallCount,
+                vs.BagsSnapshot().Select(b => new VoiceBagDto(b.Family, b.Remaining)).ToArray(),
+                vs.FiredSnapshot().ToArray(),
+                vs.CurrentFloorSilenced,
+                vs.LastDeliveredTurn,
+                vs.HistorySnapshot().Select(h => new VoiceHistoryDto(h.Family, h.Line, h.Turn)).ToArray()),
         };
     }
 
@@ -135,7 +145,9 @@ public static class MidRunSerializer
     /// is never stored in the save. Null is fine for scenario mode and for a floor with no descent left.
     /// </summary>
     public static GameState LoadMidRun(MidRunSaveDto dto,
-        IReadOnlyDictionary<int, BoonDefinition>? boonTable = null)
+        IReadOnlyDictionary<int, BoonDefinition>? boonTable = null,
+        VoiceLineRegistry? voiceRegistry = null,
+        VoiceTierMetadata? voiceMeta = null)
     {
         if (dto.SchemaVersion != MidRunSchema.Version)
             throw new InvalidOperationException(
@@ -201,8 +213,26 @@ public static class MidRunSerializer
         state.PlayerDeathKillerSpecies = dto.PlayerDeathKillerSpecies;
         state.PlayerDeathCause = dto.PlayerDeathCause;
         state.Ending = dto.Ending;
+        state.VoiceScheduler = BuildVoice(dto.Voice, voiceRegistry, voiceMeta);
 
         return state;
+    }
+
+    // Voice scheduler: RECONSTRUCT registry + metadata (caller-provided, from config), then restore the
+    // SERIALIZE-class run state. Loud-fail if the save carries voice state but the caller gave us no
+    // registry/metadata to rebuild against — mirrors the boon-table RECONSTRUCT contract.
+    private static VoiceScheduler? BuildVoice(VoiceSchedulerStateDto? d,
+        VoiceLineRegistry? registry, VoiceTierMetadata? meta)
+    {
+        if (d is null) return null;
+        if (registry is null || meta is null)
+            throw new InvalidOperationException(
+                "Mid-run load: voice scheduler state present but no VoiceLineRegistry/VoiceTierMetadata " +
+                "was provided to reconstruct it (RECONSTRUCT-class — pass both to LoadMidRun).");
+        return VoiceScheduler.Restore(registry, meta, d.RngSeed, d.RngCallCount,
+            d.Bags.Select(b => (b.Family, b.Remaining)),
+            d.Fired, d.CurrentFloorSilenced, d.LastDeliveredTurn,
+            d.History.Select(h => new VoiceHistoryEntry(h.Family, h.Line, h.Turn)));
     }
 
     // ── subsystem reconstruction (construct-then-restore; static content is caller-provided) ──

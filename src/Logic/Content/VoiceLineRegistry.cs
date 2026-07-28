@@ -73,6 +73,12 @@ public sealed class VoiceLineRegistry
     /// <summary>True if any pool is registered for this trigger (or a compound-key prefix).</summary>
     public bool HasTrigger(string triggerId) => Resolve(triggerId) != null;
 
+    /// <summary>
+    /// The full line pool for a trigger (compound-key resolved), or null if none. Read-only view —
+    /// the scheduler (VoiceScheduler) needs the whole pool to build a shuffle bag, not a single pick.
+    /// </summary>
+    public IReadOnlyList<string>? GetPool(string triggerId) => Resolve(triggerId);
+
     // ── Private ────────────────────────────────────────────────────────────────
 
     private List<string>? Resolve(string triggerId)

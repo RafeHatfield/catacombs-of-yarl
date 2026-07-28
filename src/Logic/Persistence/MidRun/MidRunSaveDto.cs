@@ -53,6 +53,10 @@ public sealed class MidRunSaveDto
     public WeighingArenaDto? WeighingArena { get; set; }
     public WeighingAuditDto? WeighingAudit { get; set; }
 
+    // Hollowmark voice scheduler run state (M1.5). Null in scenario/harness mode and until 5b builds
+    // the scheduler — so every existing save stays byte-identical (S1/S2 unaffected).
+    public VoiceSchedulerStateDto? Voice { get; set; }
+
     // Rng continuity (SeededRandom Seed + CallCount → Restore).
     public int RngSeed { get; set; }
     public long RngCallCount { get; set; }

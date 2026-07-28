@@ -312,6 +312,14 @@ public sealed class GameState
     public Content.WeighingAuditRegistry? WeighingAudit { get; set; }
 
     /// <summary>
+    /// Hollowmark voice delivery scheduler (M1.5, docs/systems/voice_delivery.md). Null in scenario/
+    /// harness mode and until 5b constructs it from the voice registry + tier metadata. Its mutable run
+    /// state is SERIALIZE-class (mid-run save); the registry + metadata are RECONSTRUCT (caller-provided).
+    /// Never draws from <see cref="Rng"/> — the gameplay stream is isolated from voice.
+    /// </summary>
+    public Voice.VoiceScheduler? VoiceScheduler { get; set; }
+
+    /// <summary>
     /// Headless override for the per-Guardian audit tiers. When set, the orchestrator uses this
     /// instead of scoring from persistence — lets the balance pass (TASK-011) drive a specific
     /// audit configuration (e.g. an all-Savage wall) without constructing a matching save. Null in
