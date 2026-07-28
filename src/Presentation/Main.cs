@@ -148,6 +148,49 @@ public partial class Main : Node
     // Tracks which trigger IDs have already fired their canonical (first) line this run.
     private readonly HashSet<string> _voiceLineFiredSet = new();
 
+    // Hollowmark ribbon (M1.5b). The scheduler is a Main-level field that persists across floor
+    // GameState rebuilds; it is attached to _state before each save and reconstructed on resume.
+    // Dungeon mode only — scenario/harness paths never construct it.
+    private Logic.Voice.VoiceScheduler? _voiceScheduler;
+    private Logic.Voice.VoiceTierMetadata? _voiceTierMeta;   // RECONSTRUCT (fixture until Voice authors real tiers)
+    private VoiceLineRegistry? _voiceRibbonRegistry;         // scheduler's pools — real registry, or the dev fixture
+    private readonly Logic.Voice.VoiceTriggerReader _voiceTriggerReader = new();
+    private Logic.Voice.VoiceSettings _voiceSettings = new();   // DEVICE setting, loaded from user:// — never in the run save
+    private UI.VoiceRibbon? _voiceRibbon;
+
+    // ─── DEV FIXTURE (M1.5b) — NOT shipped content. Embedded in code (not a config/ file) so the
+    // ribbon renders before the Voice thread authors config/voice_lines/voice_tiers.yaml + family line
+    // pools. All lines are [DEV]-marked on screen. Delete this once authored content lands. ───
+    private const string DevVoiceTierFixtureYaml = @"
+ambient_cutoff_tier: 20
+families:
+  - key: hp_critical
+    tier: 70
+    cooldown_exempt: true
+  - key: possession
+    tier: 60
+  - key: species_first_sight
+    tier: 40
+  - key: trap
+    tier: 30
+  - key: idle
+    tier: 10
+";
+    private const string DevVoiceLinesFixtureYaml = @"
+hp_critical:
+  - '[DEV] The body won''t hold much longer.'
+  - '[DEV] Careful — you are nearly spent.'
+possession:
+  - '[DEV] A borrowed shape. Wear it well.'
+species_first_sight:
+  - '[DEV] Something new watches from the dark.'
+trap:
+  - '[DEV] The floor bites back.'
+idle:
+  - '[DEV] Still here. Still listening.'
+  - '[DEV] The quiet stretches on.'
+";
+
     // Under-Warden memo delivery — registry loaded once at boot alongside voice lines.
     // Evaluator is stateless; _memoRegistry is null until InitFactories succeeds.
     private MemoRegistry? _memoRegistry;
@@ -675,6 +718,27 @@ public partial class Main : Node
             _voiceLineRegistry.Merge(VoiceLineRegistry.LoadFromYaml(possessionYaml));
             GD.Print("[Main] Voice line registry loaded.");
 
+            // Voice tier metadata + ribbon line pools (M1.5b). Prefer the Voice-thread-authored file;
+            // fall back to the clearly-marked DEV fixture (embedded in code, NOT shipped as a config
+            // file). In authored mode the ribbon draws from the real voice registry; in dev mode it
+            // draws from an embedded fixture pool so the legacy possession→toast registry is untouched.
+            const string tierPath = "res://config/voice_lines/voice_tiers.yaml";
+            if (Godot.FileAccess.FileExists(tierPath))
+            {
+                _voiceTierMeta = Logic.Voice.VoiceTierMetadata.LoadFromYaml(ReadGodotResource(tierPath));
+                _voiceRibbonRegistry = _voiceLineRegistry;
+                GD.Print("[Main] Voice tier metadata loaded from authored file; ribbon uses the real registry.");
+            }
+            else
+            {
+                _voiceTierMeta = Logic.Voice.VoiceTierMetadata.LoadFromYaml(DevVoiceTierFixtureYaml);
+                _voiceRibbonRegistry = VoiceLineRegistry.LoadFromYaml(DevVoiceLinesFixtureYaml);
+                GD.Print("[Main] Voice: using DEV FIXTURE tiers + lines (Voice thread has not authored voice_tiers.yaml).");
+            }
+
+            // Device voice settings (mode + duration) — survive across runs, never in the run save.
+            _voiceSettings = Presentation.Persistence.VoiceSettingsStore.Load();
+
             var weighingAuditYaml = ReadGodotResource("res://config/voice_lines/weighing_audit.yaml");
             _weighingAuditRegistry = Logic.Content.WeighingAuditRegistry.LoadFromYaml(weighingAuditYaml);
             GD.Print("[Main] Weighing audit registry loaded.");
@@ -739,6 +803,17 @@ public partial class Main : Node
         // Reset per-run voice line first-fire set on every new run (depth 1).
         if (depth == 1)
             _voiceLineFiredSet.Clear();
+
+        // Voice scheduler (M1.5b): fresh on a new run (depth 1), carried across floors otherwise.
+        // Dungeon-mode only — this path is never taken by scenario/harness. New run also re-arms the
+        // edge-triggered trigger reader.
+        if (depth == 1 && _voiceRibbonRegistry != null && _voiceTierMeta != null)
+        {
+            _voiceScheduler = new Logic.Voice.VoiceScheduler(_voiceRibbonRegistry, _voiceTierMeta, _baseSeed);
+            _voiceTriggerReader.Reset();
+        }
+        _voiceScheduler?.OnFloorEntered();      // clear the floor-silence flag on entering any floor
+        _state.VoiceScheduler = _voiceScheduler; // attach so mid-run saves serialize it
 
         SetupPresentation(_state);
         GD.Print($"Ready (dungeon depth {depth}) — {_state.Monsters.Count} monsters, {_state.FloorItems.Count} floor items. Tap to play.");
@@ -989,6 +1064,18 @@ public partial class Main : Node
         {
             _messageLogPanel = new MessageLogPanel();
             GetNode<CanvasLayer>("UILayer").AddChild(_messageLogPanel);
+        }
+
+        // Hollowmark ribbon (M1.5b) — its own Control, created once, top band clear of touch controls.
+        // History anchor renders the scheduler's serialized last-20; quiet button mutes the current floor.
+        if (_voiceRibbon == null)
+        {
+            _voiceRibbon = new UI.VoiceRibbon();
+            GetNode<CanvasLayer>("UILayer").AddChild(_voiceRibbon);
+            _voiceRibbon.HistoryRequested += () =>
+                _voiceRibbon.ToggleHistory(_voiceScheduler?.HistorySnapshot()
+                    ?? System.Array.Empty<Logic.Voice.VoiceHistoryEntry>());
+            _voiceRibbon.QuietRequested += () => _voiceScheduler?.SilenceCurrentFloor();
         }
 
         // Msg button — Phase 5. Created once and parented to the ViewportOverlay zone.
@@ -1459,9 +1546,44 @@ public partial class Main : Node
         }
     }
 
+    /// <summary>
+    /// The real <c>surfaceAvailable</c> probe for the ribbon (M1.5b): true only when the dungeon HUD is
+    /// active and no modal is covering it. Never hardcoded true — a false result must keep the scheduler
+    /// from consuming.
+    /// </summary>
+    private bool IsRibbonSurfaceAvailable()
+    {
+        if (_state == null || !_state.IsDungeonMode || _state.IsGameOver) return false;
+        if (GetNodeOrNull<CanvasLayer>("MenuLayer") is { Visible: true }) return false;   // main menu / options
+        if (_equipmentPanel?.Visible == true) return false;
+        if (_memoInboxPanel?.Visible == true) return false;
+        if (_messageLogPanel?.Visible == true) return false;
+        if (_gameOverScreen?.Visible == true) return false;
+        return true;
+    }
+
     private void OnTurnCompleted(TurnResult result)
     {
         if (_state == null) return;
+
+        // Hollowmark ribbon (M1.5b): derive trigger families from this committed turn and offer them to
+        // the scheduler with REAL probes — the ribbon's current tier (strict supersede) and whether the
+        // surface is available (dungeon HUD active, no modal). The scheduler consumes nothing on any
+        // non-render path, so hardcoding these true would silently burn bag draws / one-shots. Runs
+        // BEFORE the autosave below so a delivered line is captured in this turn's save (resume shows it).
+        if (_state.IsDungeonMode && _voiceScheduler != null && _voiceRibbon != null)
+        {
+            var families = _voiceTriggerReader.Read(result, _state);
+            if (families.Count > 0)
+            {
+                var delivery = _voiceScheduler.TryDeliver(
+                    families, _voiceSettings.Mode, _state.TurnCount,
+                    currentRibbonTier: _voiceRibbon.CurrentTier,
+                    surfaceAvailable: IsRibbonSurfaceAvailable());
+                if (delivery != null)
+                    _voiceRibbon.ShowLine(delivery.Line, delivery.Tier, _voiceSettings.DurationSeconds);
+            }
+        }
 
         // Mid-run autosave (M1.4 4b). This is the turn-commit seam: GameController fires TurnCompleted
         // immediately after TurnController.ProcessTurn, so _state is fully advanced here. Snapshot on
@@ -1892,6 +2014,14 @@ public partial class Main : Node
         if (_state?.WeighingArena != null && _weighingAuditRegistry != null)
             _state.WeighingAudit = _weighingAuditRegistry;
 
+        // Voice scheduler carries across floors: clear the floor-silence flag and re-attach so the
+        // new floor's synchronous save serializes it.
+        if (_state != null)
+        {
+            _voiceScheduler?.OnFloorEntered();
+            _state.VoiceScheduler = _voiceScheduler;
+        }
+
         SetupPresentation(_state);
 
         // Mid-run save: write the NEW floor synchronously so a kill in the Build-to-first-turn window
@@ -2019,7 +2149,10 @@ public partial class Main : Node
         {
             case Logic.Persistence.MidRun.MidRunLoadStatus.Ok:
                 GameState loaded;
-                try { loaded = Logic.Persistence.MidRun.MidRunSerializer.LoadMidRun(result.Save!, _boonTable); }
+                // Pass the ribbon registry + tier metadata (RECONSTRUCT) so a voice-bearing save resumes
+                // its scheduler; LoadMidRun throws if the save carries voice state and these are absent.
+                try { loaded = Logic.Persistence.MidRun.MidRunSerializer.LoadMidRun(
+                        result.Save!, _boonTable, _voiceRibbonRegistry, _voiceTierMeta); }
                 catch (System.Exception ex)
                 {
                     GD.PrintErr($"[Main] mid-run load failed post-parse: {ex.Message}");
@@ -2029,6 +2162,15 @@ public partial class Main : Node
                 }
                 _state = loaded;
                 _currentDepth = loaded.CurrentDepth;
+
+                // Adopt the reconstructed scheduler; a pre-voice save has none, so build a fresh one so
+                // voice works post-resume. Edge state re-arms for the resumed session.
+                _voiceScheduler = loaded.VoiceScheduler
+                    ?? (_voiceRibbonRegistry != null && _voiceTierMeta != null
+                        ? new Logic.Voice.VoiceScheduler(_voiceRibbonRegistry, _voiceTierMeta, loaded.Rng.Seed)
+                        : null);
+                loaded.VoiceScheduler = _voiceScheduler;
+                _voiceTriggerReader.Reset();
                 if (loaded.IsGameOver)
                 {
                     // Load-time terminal net: never resume into play. Route to the death/victory flow,
@@ -2103,7 +2245,11 @@ public partial class Main : Node
 
         // Pass the loaded tileset ID so the panel can detect changes made this session.
         var loadedId = _spriteMapping?.TilesetId ?? "ultimate_fantasy";
-        var panel = new OptionsPanel(loadedId, _debugOverlay);
+        var panel = new OptionsPanel(loadedId, _debugOverlay, _voiceSettings, newSettings =>
+        {
+            _voiceSettings = newSettings;                                   // live for the next TryDeliver
+            Presentation.Persistence.VoiceSettingsStore.Save(newSettings);  // survives across runs (device store)
+        });
         menuLayer.AddChild(panel);
 
         panel.BackRequested += () => ShowMainMenu();
