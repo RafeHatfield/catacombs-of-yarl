@@ -68,6 +68,16 @@ public class HollowmarkVoiceBatchTests
         ["ring"] = "rings",
     };
 
+    // Batch 1g: between-runs (results screen). Per docs/systems/between_runs_conditioning.md.
+    private static readonly int[] MilestoneRunNumbers = { 1, 2, 3, 10, 25, 50 };
+    private static readonly string[] DiedFactionKeys = { "unshriven", "undead", "beast", "cultist", "hazard" };
+    private static readonly string[] DiedBandKeys = { "band_1", "band_2", "band_3", "band_4", "band_5" };
+    private static readonly string[] SurvivedKeys = { "clean_audit", "theft", "swap" };
+
+    // Faction values entities.yaml's monster roster is expected to map onto totally, per the
+    // spec's died.* family design. entities.yaml's own faction field values, not display names.
+    private static readonly HashSet<string> ExpectedFactionValues = new() { "orc", "undead", "beast", "cultist" };
+
     private static readonly string[] NewKeys = BuildNewKeys();
 
     private static string[] BuildNewKeys()
@@ -92,6 +102,16 @@ public class HollowmarkVoiceBatchTests
         keys.Add("on_death.hazard");
         keys.Add("on_death");
         keys.Add("spell_break_used");
+        foreach (var run in MilestoneRunNumbers)
+            keys.Add($"between_runs.milestone.run_{run}");
+        foreach (var faction in DiedFactionKeys)
+            keys.Add($"between_runs.died.{faction}");
+        foreach (var band in DiedBandKeys)
+            keys.Add($"between_runs.died.{band}");
+        keys.Add("between_runs.weighing_loss");
+        foreach (var survived in SurvivedKeys)
+            keys.Add($"between_runs.survived.{survived}");
+        keys.Add("between_runs");
         return keys.ToArray();
     }
 
@@ -127,7 +147,10 @@ public class HollowmarkVoiceBatchTests
         // the PR description rather than silently matching the stated-but-wrong number.
         // Batch 1e adds 1 more key (spell_break_used): 77 taxonomy keys total, matching
         // the batch 1e task's own stated end-state exactly.
-        Assert.That(NewKeys.Length, Is.EqualTo(77), "Sanity check on the expected new-key count.");
+        // Batch 1g adds 21 more keys (6 milestone + 5 died-faction + 5 died-band +
+        // 1 weighing_loss + 3 survived + 1 fallback): 98 taxonomy keys total, matching
+        // the batch 1g task's own stated end-state exactly (105 = 7 legacy + 98).
+        Assert.That(NewKeys.Length, Is.EqualTo(98), "Sanity check on the expected new-key count.");
         foreach (var key in NewKeys)
             Assert.That(registry.HasTrigger(key), Is.True, $"Missing trigger: {key}");
     }
@@ -171,6 +194,20 @@ public class HollowmarkVoiceBatchTests
         expected["on_death.hazard"] = 4;
         expected["on_death"] = 3;
         expected["spell_break_used"] = 25;
+        foreach (var run in MilestoneRunNumbers)
+            expected[$"between_runs.milestone.run_{run}"] = 1;
+        expected["between_runs.died.unshriven"] = 4;
+        expected["between_runs.died.undead"] = 4;
+        expected["between_runs.died.beast"] = 4;
+        expected["between_runs.died.cultist"] = 3;
+        expected["between_runs.died.hazard"] = 3;
+        foreach (var band in DiedBandKeys)
+            expected[$"between_runs.died.{band}"] = 3;
+        expected["between_runs.weighing_loss"] = 3;
+        expected["between_runs.survived.clean_audit"] = 3;
+        expected["between_runs.survived.theft"] = 3;
+        expected["between_runs.survived.swap"] = 1;
+        expected["between_runs"] = 6;
 
         var totalLines = 0;
         foreach (var (key, count) in expected)
@@ -180,7 +217,101 @@ public class HollowmarkVoiceBatchTests
             totalLines += pools[key].Count;
         }
 
-        Assert.That(totalLines, Is.EqualTo(189), "Total new-line count across all new pools should be 189.");
+        Assert.That(totalLines, Is.EqualTo(244), "Total new-line count across all new pools should be 244.");
+    }
+
+    [Test]
+    public void MilestoneKeys_EachHaveExactlyOneLine()
+    {
+        // Depth-1 by design: the key itself is the stable fired-set line id
+        // (HollowmarkMetaData.BetweenRunsLinesFired, once-ever semantics). A milestone
+        // pool with more than 1 line would silently break that contract.
+        var pools = LoadPools();
+        foreach (var run in MilestoneRunNumbers)
+        {
+            var key = $"between_runs.milestone.run_{run}";
+            Assert.That(pools.ContainsKey(key), Is.True, $"Missing milestone pool: {key}");
+            Assert.That(pools[key].Count, Is.EqualTo(1), $"{key} must have exactly 1 line (fired-set id contract).");
+        }
+    }
+
+    [Test]
+    public void FactionValues_AreTotalOverNonProbeMonsters_ExceptKnownOutlier()
+    {
+        // Parse entities.yaml's monsters: block directly (not via YAML deserialization —
+        // the file mixes heterogeneous sections a single strongly-typed model can't
+        // handle uniformly). Resolves `extends` inheritance so a monster with no own
+        // `faction:` field still reports its inherited value, same as the game does.
+        var entitiesPath = Path.Combine(TestContext.CurrentContext.TestDirectory,
+            "..", "..", "..", "..", "config", "entities.yaml");
+        var lines = File.ReadAllLines(entitiesPath);
+
+        var monstersStart = Array.FindIndex(lines, l => l == "monsters:");
+        Assert.That(monstersStart, Is.GreaterThanOrEqualTo(0), "entities.yaml has no top-level 'monsters:' key.");
+        var monstersEnd = lines.Length;
+        for (var i = monstersStart + 1; i < lines.Length; i++)
+        {
+            if (Regex.IsMatch(lines[i], @"^[a-z_][a-z0-9_]*:"))
+            {
+                monstersEnd = i;
+                break;
+            }
+        }
+
+        var faction = new Dictionary<string, string?>();
+        var extends = new Dictionary<string, string?>();
+        string? currentId = null;
+        for (var i = monstersStart + 1; i < monstersEnd; i++)
+        {
+            var idMatch = Regex.Match(lines[i], @"^  (?<id>[a-z_][a-z0-9_]*):\s*$");
+            if (idMatch.Success)
+            {
+                currentId = idMatch.Groups["id"].Value;
+                faction[currentId] = null;
+                extends[currentId] = null;
+                continue;
+            }
+            if (currentId == null) continue;
+
+            var factionMatch = Regex.Match(lines[i], "^ {4}faction: \"(?<f>[^\"]+)\"");
+            if (factionMatch.Success) faction[currentId] = factionMatch.Groups["f"].Value;
+
+            var extendsMatch = Regex.Match(lines[i], @"^ {4}extends: (?<e>\S+)");
+            if (extendsMatch.Success) extends[currentId] = extendsMatch.Groups["e"].Value;
+        }
+
+        string? Resolve(string id, HashSet<string> seen)
+        {
+            if (!seen.Add(id) || !faction.ContainsKey(id)) return null;
+            if (faction[id] != null) return faction[id];
+            return extends[id] != null ? Resolve(extends[id]!, seen) : null;
+        }
+
+        var monsterIds = faction.Keys.Where(id => !id.StartsWith("troll_probe_", StringComparison.Ordinal)).ToList();
+        Assert.That(monsterIds, Is.Not.Empty);
+
+        var distinctFactions = new SortedSet<string>();
+        var outsideSet = new List<(string Id, string? Faction)>();
+        foreach (var id in monsterIds)
+        {
+            var resolved = Resolve(id, new HashSet<string>());
+            if (resolved != null) distinctFactions.Add(resolved);
+            if (resolved == null || !ExpectedFactionValues.Contains(resolved))
+                outsideSet.Add((id, resolved));
+        }
+
+        TestContext.Out.WriteLine($"Distinct faction values found: {string.Join(", ", distinctFactions)}");
+        TestContext.Out.WriteLine(outsideSet.Count == 0
+            ? "All non-troll_probe monsters resolve to {orc, undead, beast, cultist}."
+            : "Outside expected set: " + string.Join(", ", outsideSet.Select(o => $"{o.Id}->{o.Faction ?? "(none)"}")));
+
+        // Known, reported outlier: fire_beetle's faction field is literally "monsters", not
+        // "beast" (its tags list does say "beast", but the faction field itself doesn't match).
+        // Per instructions this is flagged, not silently pooled or "fixed" here — the spec's own
+        // fallback pool (between_runs, unconditioned) absorbs any run that dies to fire_beetle.
+        Assert.That(outsideSet.Select(o => o.Id), Is.EquivalentTo(new[] { "fire_beetle" }),
+            "Expected exactly one known outlier (fire_beetle); a different result means the " +
+            "faction data changed and this assertion (and the PR report) need re-verification.");
     }
 
     [Test]

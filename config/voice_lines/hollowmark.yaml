@@ -354,3 +354,89 @@ spell_break_used:
   - "Broken. Give me a moment. Joke. Go."
   - "Unmade. Nothing holds if I say so."
   - "Broken, Boss. That's the whole trade. Breaking and knowing where."
+
+# ── Between-runs (results screen). Selection contract:
+#    docs/systems/between_runs_conditioning.md. Selector unbuilt.
+#    Milestone keys are depth-1 by design; key = fired-set line id. ──
+
+between_runs.milestone.run_1:
+  - "So that's the shape of it, Boss. Again tomorrow. I'll be here. I'm always here."
+between_runs.milestone.run_2:
+  - "Twice now. It gets easier to start and never easier to stop. Rest first."
+between_runs.milestone.run_3:
+  - "Third time, Boss. This is officially work now. Work suits us."
+between_runs.milestone.run_10:
+  - "Ten runs, Boss. I've stopped counting the doors. I still count you down and back. Every time."
+between_runs.milestone.run_25:
+  - "Twenty-five, Boss. You know the Paths better than most of their staff. They've noticed. So have I."
+between_runs.milestone.run_50:
+  - "Fifty, Boss. Some bindings are terms. This stopped being terms a while ago. Go to bed. I'll keep the light."
+
+between_runs.died.unshriven:
+  - "Soldiers, Boss. It wasn't malice. Somehow that's worse to file."
+  - "The line held again. They'll sing about holding it. Not about you. Rest."
+  - "An honest death, as they go. The Unshriven don't do the other kind."
+  - "They fight like people with something behind them, Boss. We fight like people with something below. Bad trade some days."
+between_runs.died.undead:
+  - "The dead won today, Boss. They have the numbers. They always have the numbers."
+  - "What's below doesn't tire, Boss. You do. That's not a flaw. Rest anyway."
+  - "Lost to the quiet kind. The Paths keep them fed. Don't think about with what."
+  - "The dead don't win, Boss. They just wait better. Learn the waiting."
+between_runs.died.beast:
+  - "Eaten, technically. The Paths don't stand on ceremony. Neither do the things in them."
+  - "Small things, Boss. It's always the small things. Big ones announce."
+  - "The wildlife won this one. No grudge in it. Doesn't help, I know."
+  - "Something hungry got lucky, Boss. Hunger's patient down there. Be patienter."
+between_runs.died.cultist:
+  - "Trained hands, Boss. Somebody's still teaching down there. That's the worrying part."
+  - "The robes got you. They believe in something. You just owe something. Believers swing harder."
+  - "Steel with a doctrine behind it, Boss. Doctrine's just practice with an excuse."
+between_runs.died.hazard:
+  - "The Paths themselves today, Boss. No author, no apology. File it under architecture."
+  - "Nothing killed you, technically. The floor just stopped agreeing to hold you. I hate this place professionally."
+  - "No enemy to blame, Boss. That's the Paths' idea of a joke. Nobody laughs."
+
+between_runs.died.band_1:
+  - "Shallow end, Boss. Everyone drowns somewhere before they swim. Again tomorrow."
+  - "Five floors is still down, Boss. Down doesn't grade on effort. We'll fix the start."
+  - "Early exit, Boss. The Paths see everyone twice. They've seen worse twice too."
+between_runs.died.band_2:
+  - "Middle-shallow, Boss. Far enough to cost, close enough to sting. Both fade."
+  - "Ten floors is real work, Boss. The Paths took it personally. Take that as flattery."
+  - "You're past the tourist depths now. The Paths noticed. That's the price of being noticed."
+between_runs.died.band_3:
+  - "Halfway down, Boss. The Paths stop being a place around there. You saw it. It saw back."
+  - "Fifteen deep. Most ledgers close shallower. Yours stays open. Rest first."
+  - "Deep enough that the maps get honest, Boss. So does the danger. Fair trade. Mostly."
+between_runs.died.band_4:
+  - "Deep run, Boss. Titles and pride down there, and you walked through most of it."
+  - "Twenty floors is knocking on the audit, Boss. They heard. Next time we answer properly."
+  - "Past the proud stonework. Few get there. Fewer file back out. We'll be both."
+between_runs.died.band_5:
+  - "The doorstep, Boss. You died within paperwork's reach of the desk. That's not nothing. It's nearly everything."
+  - "Almost the desk itself. The Paths spend their best on the last five floors. So did you."
+  - "That deep, the dying's almost administrative, Boss. Next time we bring the right forms."
+
+between_runs.weighing_loss:
+  - "The Weighing went against us, Boss. Audits do. The record's still ours to amend."
+  - "Lost at the desk itself. The scales don't hate you. They don't anything. That's what makes them beatable."
+  - "The Weighing keeps what it weighs, Boss. It didn't keep you. Read that again. Then rest."
+
+between_runs.survived.clean_audit:
+  - "A clean audit, Boss. Stamped and closed. Buy me something shiny."
+  - "Debts paid, doors held, desk satisfied. I'd frame the paperwork, but I lack the arms."
+  - "Out clean. The stairs pretended to end, and this once we let them. Well worked, Boss."
+between_runs.survived.theft:
+  - "You stole from an auditor, Boss. I'm appalled. I'm also keeping the receipt."
+  - "The defiant exit. The ledger will remember. Good. Let it."
+  - "Taken, not granted, Boss. Some things you don't wait to be owed. Rest. We're wanted now."
+between_runs.survived.swap:
+  - "You offered instead, Boss. Nobody offers. Almost nobody. Now there are two of you."
+
+between_runs:
+  - "Run's filed, Boss. Rest. The Paths keep."
+  - "Done for today. The account stays open. So do I."
+  - "That's the run, Boss. No summary from me. The memo people have that covered."
+  - "Rest, Boss. Down there keeps. It always keeps."
+  - "Another one for the ledger. Sleep first. Arithmetic after."
+  - "Closed for the day, Boss. Same door tomorrow. It'll pretend it never saw us."
