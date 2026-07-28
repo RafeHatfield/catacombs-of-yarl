@@ -101,7 +101,8 @@
       "notes": "RD rd_plus__low_res v3",
       "triage": "retouch",
       "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=WARN, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=15, final_overall=FAIL.]",
-      "batch_c_canon_reference": "canon IDs 159 \u2014 mace \u2014 nearest canon blunt-weapon icon, style/proportion reference only (metal-headed flail, not a wooden club)"
+      "batch_c_canon_reference": "canon IDs 159 \u2014 mace \u2014 nearest canon blunt-weapon icon, style/proportion reference only (metal-headed flail, not a wooden club)",
+      "rubric_override_note": "parked by rubric preference, pending gate review 2026-07"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4002.png",
@@ -163,7 +164,8 @@
       "game_key": "Anvil",
       "notes": "RD rd_plus__low_res v2",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/anvil.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/anvil.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied.",
+      "rubric_override_note": "parked by rubric preference, pending gate review 2026-07"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5002.png",
@@ -175,7 +177,8 @@
       "game_key": "Armor Stand",
       "notes": "RD rd_plus__low_res v1",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/armor_stand.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/armor_stand.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied.",
+      "rubric_override_note": "parked by rubric preference, pending gate review 2026-07"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5005.png",
@@ -958,26 +961,24 @@
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "rock",
       "notes": "PixelLab s1",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
-      "batch_c_canon_reference": "canon IDs 218;219;220 \u2014 stalagmite + pebble cluster \u2014 stone-material/palette reference only, wrong scale/silhouette for a loose boulder"
+      "route": "bank_palette_locked",
+      "pick_source": "bank_palette_locked/prop_variety/rocks_rubble boulder_fragment seed 2 (WARN, 4c)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5105.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "rock",
       "notes": "PixelLab s2",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
-      "batch_c_canon_reference": "canon IDs 218;219;220 \u2014 stalagmite + pebble cluster \u2014 stone-material/palette reference only, wrong scale/silhouette for a loose boulder"
+      "route": "bank_palette_locked",
+      "pick_source": "bank_palette_locked/prop_variety/rocks_rubble cracked_stone_chunk seed 42 (PASS, 5c) -- interpreted 's4pass 5c' as seed 42 (the only PASS/5c entry for this concept; literal seed 4 does not exist in the bank, seeds used are 0,1,2,3,42,137,999,1337)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5106.png",
@@ -1021,12 +1022,12 @@
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "mushroom_cluster",
       "notes": "PixelLab s1",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: exceeded 8 merges \u2014 redesign wearing a retouch tag, final_colors=11, final_overall=FAIL.]"
+      "route": "pixellab_regen_locked",
+      "pick_source": "burndown3 fresh palette-locked generation, seed 1 (WARN, 4c)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5110.png",
