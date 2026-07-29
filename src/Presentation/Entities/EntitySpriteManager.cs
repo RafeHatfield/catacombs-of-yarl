@@ -67,6 +67,12 @@ public sealed class EntitySpriteManager
 
         foreach (var monster in state.Monsters)
         {
+            // Corpses have DUAL MEMBERSHIP: a dead monster stays in state.Monsters AND is added to
+            // state.Corpses (TurnController.MakeCorpse), keeping its SpeciesTag. During live play the
+            // death path removes its sprite (GameController on DeathEvent), so it has no live sprite.
+            // On RESUME, Initialize rebuilds from state.Monsters — without this skip it would re-sprite
+            // corpses as LIVE monsters (device symptom B). Fresh floors have no corpses, so no change there.
+            if (monster.Has<CorpseComponent>()) continue;
             CreateSprite(monster, InferSpriteBase(monster));
         }
     }
