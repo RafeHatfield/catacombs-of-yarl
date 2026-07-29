@@ -214,6 +214,41 @@ consumables:
     }
 
     [Test]
+    public void S2_LadenPlayer()
+    {
+        var s = Base(1337);
+        int id = FreshId(s);
+        var inv = s.Player.Get<Inventory>() ?? s.Player.Add(new Inventory());
+
+        // Unique type ids so they don't merge with the scenario's existing healing_potion loadout.
+        var stacked = new Entity(id++, "triage_stack"); stacked.Add(new ItemTag("triage_stack"));
+        stacked.Add(new Consumable(healAmount: 20, isPotion: true) { StackSize = 8 });
+        inv.Add(stacked);
+        var partial = new Entity(id++, "triage_partial"); partial.Add(new ItemTag("triage_partial"));
+        partial.Add(new Consumable(healAmount: 0, isPotion: true) { StackSize = 3 });
+        inv.Add(partial);
+
+        var eq = s.Player.Get<Equipment>() ?? s.Player.Add(new Equipment());
+        if (eq.Head == null)
+        {
+            var helm = new Entity(id++, "helm"); helm.Add(new ItemTag("helm"));
+            helm.Add(new Equippable(EquipmentSlot.Head) { ArmorClassBonus = 1 });
+            eq.Head = helm;
+        }
+        if (eq.LeftRing == null)
+        {
+            var ring = new Entity(id++, "ring"); ring.Add(new ItemTag("ring"));
+            ring.Add(new Equippable(EquipmentSlot.LeftRing));
+            eq.LeftRing = ring;
+        }
+
+        Assert.That(inv.Items.Any(i => i.Get<Consumable>()?.StackSize == 8), Is.True, "the 8-stack must be present before capture.");
+        Assert.That(inv.Items.Any(i => i.Get<Consumable>()?.StackSize == 3), Is.True, "the partial stack must be present before capture.");
+        Assert.That(eq.Head, Is.Not.Null);
+        RunS2(s, "laden-player");
+    }
+
+    [Test]
     public void S2_DungeonMode()
     {
         var (m, i, c) = Factories();

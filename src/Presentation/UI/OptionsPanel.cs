@@ -42,13 +42,18 @@ public sealed partial class OptionsPanel : Control
     private TouchButton? _voiceModeBtn;
     private TouchButton? _voiceDurationBtn;
 
+    // Dev instrumentation: export the on-disk + in-memory mid-run save. Null (and hidden) in release.
+    private readonly Action? _onExportSave;
+
     public OptionsPanel(string loadedTilesetId, DebugOverlay? debugOverlay = null,
-        VoiceSettings? voiceSettings = null, Action<VoiceSettings>? onVoiceChanged = null)
+        VoiceSettings? voiceSettings = null, Action<VoiceSettings>? onVoiceChanged = null,
+        Action? onExportSave = null)
     {
         _loadedTilesetId = loadedTilesetId;
         _debugOverlay    = debugOverlay;
         _voiceSettings   = voiceSettings ?? new VoiceSettings();
         _onVoiceChanged  = onVoiceChanged;
+        _onExportSave    = onExportSave;
         // Find the starting selection — default to index 0 if ID not recognised.
         _selectedIndex = FindIndex(loadedTilesetId);
     }
@@ -179,6 +184,21 @@ public sealed partial class OptionsPanel : Control
             };
             _debugOverlayBtn.Pressed += OnDebugOverlayToggle;
             vbox.AddChild(_debugOverlayBtn);
+        }
+
+        // Export Save (dev instrumentation) — DEBUG BUILDS ONLY. Exports the on-disk save byte-verbatim
+        // plus a fresh serialization of the current in-memory state, for save-side vs load-side diffing.
+        if (_onExportSave != null && OS.IsDebugBuild())
+        {
+            var exportBtn = new TouchButton
+            {
+                Text              = "Export Save (dev)",
+                FontSize          = 22,
+                BackgroundColor   = new Color(0.2f, 0.3f, 0.25f, 0.95f),
+                CustomMinimumSize = new Vector2(280, 56),
+            };
+            exportBtn.Pressed += () => _onExportSave();
+            vbox.AddChild(exportBtn);
         }
 
         // Back button
