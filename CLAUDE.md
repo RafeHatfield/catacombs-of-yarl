@@ -54,23 +54,6 @@ See `docs/README.md` for documentation index. See `docs/DESIGN_PRINCIPLES.md` fo
 └─────────────────────────────────────────┘
 ```
 
-### Key Directories
-```
-src/Logic/           — Pure C# game logic (no Godot dependencies)
-src/Logic/ECS/       — Entity-component system
-src/Logic/Combat/    — Combat resolution, damage, accuracy
-src/Logic/AI/        — Monster AI, bot AI, decision-making
-src/Logic/Balance/   — Scaling curves, boons, target bands, loot
-src/Logic/Content/   — YAML loading, content registry, validation
-src/Presentation/    — Godot scenes, nodes, rendering, input
-config/              — YAML content (monsters, items, scenarios, rooms)
-config/levels/       — Scenario YAML files
-tests/               — NUnit/xUnit tests against logic layer
-tools/               — Harness runner, data collection, analysis
-docs/                — Design principles, balance docs, architecture
-tasks/               — Agent task coordination files
-```
-
 ### Balance Pipeline
 ```
 Scenario YAML → C# harness → JSON metrics → analysis tools → reports/
@@ -120,7 +103,7 @@ dotnet run --project tools/Harness -- --scenario <id> --runs 50
 ### Workflow
 - **Plan before coding** for non-trivial tasks. List files to change, identify risks, wait for approval.
 - **Commit messages:** semantic format (`feat:`, `fix:`, `refactor:`, etc.)
-- **Report model(s) used** at the end of every response per global directive.
+- **Report model(s) used** at the end of every response.
 
 ### Pull requests
 All changes land through PRs, not direct pushes. This exists so CI status is *visible* before
@@ -152,18 +135,15 @@ merge — the "red badge for six weeks" failure (FIND-006) was a process gap, no
 
 ## Agents
 
-Five specialized agents in `.claude/agents/`:
+Agents coordinate via task files in `tasks/`.
 
-| Agent | Model | Role | Trigger |
-|-------|-------|------|---------|
-| `planner` | opus | Breaks features into tasks | Starting new work |
-| `builder` | sonnet | Implements tasks | Tasks ready to build |
-| `tester` | sonnet | Writes tests, runs harness | Tasks marked complete |
-| `reviewer` | opus | Code review, balance check | Features ready for review |
-| `analyst` | opus | Interprets harness data, diagnoses balance issues, recommends tuning | After harness runs complete |
-| `documenter` | sonnet | Updates plan status, INDEX.md, session memory, architecture docs | After builder/tester complete |
+---
+## Issue / ticket creation
 
-Agents coordinate via task files in `tasks/`. See each agent file for detailed instructions.
+All issues follow the `create-issue` skill — native issue Type (not `type:*`
+labels), exactly one `thread:*` label, one milestone where the work maps to
+`M1–M7`. **Never create or apply `type:feature`, `type:bug`, or `type:task`
+labels.**
 
 ---
 
