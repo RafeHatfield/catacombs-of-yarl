@@ -1,3 +1,5 @@
+using System;
+using CatacombsOfYarl.Logic.Voice;
 using Godot;
 
 namespace CatacombsOfYarl.Presentation.UI;
@@ -33,10 +35,20 @@ public sealed partial class OptionsPanel : Control
     private Label?       _restartLabel;
     private TouchButton? _debugOverlayBtn;
 
-    public OptionsPanel(string loadedTilesetId, DebugOverlay? debugOverlay = null)
+    // Voice device settings (M1.5b) — persisted immediately via the callback so they survive across
+    // runs, separate from the run save. Null callback → the Voice section is not shown.
+    private VoiceSettings _voiceSettings;
+    private readonly Action<VoiceSettings>? _onVoiceChanged;
+    private TouchButton? _voiceModeBtn;
+    private TouchButton? _voiceDurationBtn;
+
+    public OptionsPanel(string loadedTilesetId, DebugOverlay? debugOverlay = null,
+        VoiceSettings? voiceSettings = null, Action<VoiceSettings>? onVoiceChanged = null)
     {
         _loadedTilesetId = loadedTilesetId;
         _debugOverlay    = debugOverlay;
+        _voiceSettings   = voiceSettings ?? new VoiceSettings();
+        _onVoiceChanged  = onVoiceChanged;
         // Find the starting selection — default to index 0 if ID not recognised.
         _selectedIndex = FindIndex(loadedTilesetId);
     }
@@ -113,6 +125,38 @@ public sealed partial class OptionsPanel : Control
         _restartLabel.AddThemeColorOverride("font_color", new Color(0.9f, 0.75f, 0.3f, 1f));
         vbox.AddChild(_restartLabel);
 
+        // Voice section (M1.5b) — mode + ribbon duration. Device settings, persisted immediately.
+        if (_onVoiceChanged != null)
+        {
+            var voiceSection = new Label
+            {
+                Text = "Hollowmark voice",
+                HorizontalAlignment = HorizontalAlignment.Center,
+                MouseFilter = MouseFilterEnum.Ignore,
+            };
+            voiceSection.AddThemeFontSizeOverride("font_size", 18);
+            voiceSection.AddThemeColorOverride("font_color", new Color(0.65f, 0.65f, 0.65f, 1f));
+            vbox.AddChild(voiceSection);
+
+            _voiceModeBtn = new TouchButton
+            {
+                Text = VoiceModeBtnText(), FontSize = 22,
+                BackgroundColor = new Color(0.25f, 0.25f, 0.35f, 0.95f),
+                CustomMinimumSize = new Vector2(280, 56),
+            };
+            _voiceModeBtn.Pressed += OnVoiceModeCycle;
+            vbox.AddChild(_voiceModeBtn);
+
+            _voiceDurationBtn = new TouchButton
+            {
+                Text = VoiceDurationBtnText(), FontSize = 22,
+                BackgroundColor = new Color(0.25f, 0.25f, 0.35f, 0.95f),
+                CustomMinimumSize = new Vector2(280, 56),
+            };
+            _voiceDurationBtn.Pressed += OnVoiceDurationCycle;
+            vbox.AddChild(_voiceDurationBtn);
+        }
+
         // Debug overlay toggle — only in debug builds where the overlay exists.
         if (_debugOverlay != null)
         {
@@ -148,6 +192,27 @@ public sealed partial class OptionsPanel : Control
         backBtn.Pressed += () => EmitSignal(SignalName.BackRequested);
         vbox.AddChild(backBtn);
     }
+
+    // -------------------------------------------------------------------------
+    // Voice settings (M1.5b) — cycle + persist immediately via the callback.
+    // -------------------------------------------------------------------------
+
+    private void OnVoiceModeCycle()
+    {
+        _voiceSettings = _voiceSettings with { Mode = _voiceSettings.CycleMode() };
+        if (_voiceModeBtn != null) _voiceModeBtn.Text = VoiceModeBtnText();
+        _onVoiceChanged?.Invoke(_voiceSettings);
+    }
+
+    private void OnVoiceDurationCycle()
+    {
+        _voiceSettings = _voiceSettings with { Duration = _voiceSettings.CycleDuration() };
+        if (_voiceDurationBtn != null) _voiceDurationBtn.Text = VoiceDurationBtnText();
+        _onVoiceChanged?.Invoke(_voiceSettings);
+    }
+
+    private string VoiceModeBtnText() => $"Voice: {_voiceSettings.Mode}";
+    private string VoiceDurationBtnText() => $"Duration: {_voiceSettings.Duration}";
 
     // -------------------------------------------------------------------------
     // Tileset cycling
