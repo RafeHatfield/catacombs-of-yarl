@@ -42,51 +42,71 @@ printf '%s' "$scan" | grep -Eq '(^|[;&|]|[[:space:]])git[[:space:]]' || exit 0
 
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 
-# --- Rule 1: no direct commits or pushes to main -----------------------------
+# Split into independently-evaluated segments. One Bash call routinely chains
+# unrelated commands, and a rule must only see the arguments of the invocation it
+# is judging: `git push my-branch && gh pr create --base main` is legitimate, but
+# scanning it whole makes the PR target look like the push target.
+segments=$(printf '%s' "$scan" | tr '\n' ';' | sed 's/&&/;/g; s/||/;/g; s/|/;/g' | tr ';' '\n')
 
-is_git_subcmd() {
-  printf '%s' "$scan" | grep -Eq "(^|[;&|][[:space:]]*)git([[:space:]]+-[^[:space:]]+)*[[:space:]]+$1([[:space:]]|$)"
+is_git_subcmd() { # $1 = segment, $2 = subcommand
+  printf '%s' "$1" | grep -Eq "(^|[[:space:]])git([[:space:]]+-[^[:space:]]+)*[[:space:]]+$2([[:space:]]|$)"
 }
 
-if is_git_subcmd push; then
-  # Explicit main ref: `origin main`, `HEAD:main`, `:main`, `--set-upstream origin main`
-  if printf '%s' "$scan" | grep -Eq "(^|[[:space:]:])${MAIN_BRANCH}([[:space:]]|$)"; then
-    deny "Blocked: pushes to ${MAIN_BRANCH} are not allowed (CLAUDE.md: Branch -> PR -> merge). Push the feature branch and open a PR instead — CI status has to be visible before merge (FIND-006)."
-  fi
-  # Bare `git push` while sitting on main pushes main.
-  if [ "$branch" = "$MAIN_BRANCH" ]; then
-    deny "Blocked: HEAD is on ${MAIN_BRANCH}, so this push would land directly on ${MAIN_BRANCH} (CLAUDE.md: Branch -> PR -> merge). Create a branch first."
-  fi
-fi
-
-if [ "$branch" = "$MAIN_BRANCH" ]; then
-  for sub in commit merge rebase "cherry-pick" revert; do
-    if is_git_subcmd "$sub"; then
-      deny "Blocked: 'git ${sub}' on ${MAIN_BRANCH} would create commits directly on ${MAIN_BRANCH} (CLAUDE.md: no direct commits to ${MAIN_BRANCH}). Branch first, then open a PR."
-    fi
-  done
-fi
-
-# --- Rule 2: one working copy per session ------------------------------------
+# --- Rule 2 prerequisites (evaluated once) -----------------------------------
 
 git_dir=$(git rev-parse --absolute-git-dir 2>/dev/null) || exit 0
 lock="${git_dir}/claude-session.lock"
 now=$(date +%s)
+holder=""
+age=0
 
 if [ -f "$lock" ]; then
   holder=$(head -n1 "$lock" 2>/dev/null | cut -d' ' -f1)
   held_at=$(head -n1 "$lock" 2>/dev/null | cut -d' ' -f2)
   case "$held_at" in ''|*[!0-9]*) held_at=0 ;; esac
   age=$((now - held_at))
+  if [ "$holder" = "$sid" ] || [ "$age" -ge "$LOCK_STALE_SECONDS" ]; then
+    holder=""
+  fi
+fi
 
-  if [ -n "$holder" ] && [ "$holder" != "$sid" ] && [ "$age" -lt "$LOCK_STALE_SECONDS" ]; then
+while IFS= read -r seg; do
+  [ -n "$seg" ] || continue
+  printf '%s' "$seg" | grep -Eq '(^|[[:space:]])git[[:space:]]' || continue
+
+  # --- Rule 1: no direct commits or pushes to main ---------------------------
+
+  if is_git_subcmd "$seg" push; then
+    # Explicit main ref: `origin main`, `HEAD:main`, `:main`, `--set-upstream origin main`
+    if printf '%s' "$seg" | grep -Eq "(^|[[:space:]:])${MAIN_BRANCH}([[:space:]]|$)"; then
+      deny "Blocked: pushes to ${MAIN_BRANCH} are not allowed (CLAUDE.md: Branch -> PR -> merge). Push the feature branch and open a PR instead — CI status has to be visible before merge (FIND-006)."
+    fi
+    # Bare `git push` while sitting on main pushes main.
+    if [ "$branch" = "$MAIN_BRANCH" ]; then
+      deny "Blocked: HEAD is on ${MAIN_BRANCH}, so this push would land directly on ${MAIN_BRANCH} (CLAUDE.md: Branch -> PR -> merge). Create a branch first."
+    fi
+  fi
+
+  if [ "$branch" = "$MAIN_BRANCH" ]; then
+    for sub in commit merge rebase "cherry-pick" revert; do
+      if is_git_subcmd "$seg" "$sub"; then
+        deny "Blocked: 'git ${sub}' on ${MAIN_BRANCH} would create commits directly on ${MAIN_BRANCH} (CLAUDE.md: no direct commits to ${MAIN_BRANCH}). Branch first, then open a PR."
+      fi
+    done
+  fi
+
+  # --- Rule 2: one working copy per session ----------------------------------
+
+  if [ -n "$holder" ]; then
     for sub in commit checkout switch reset stash add rm restore merge rebase "cherry-pick" push; do
-      if is_git_subcmd "$sub"; then
+      if is_git_subcmd "$seg" "$sub"; then
         deny "Blocked: another Claude Code session (${holder}, active ${age}s ago) is already holding this working copy. Two sessions sharing one checkout is how M1.4's item 1 got carried into ${MAIN_BRANCH} on an unrelated art PR. Use EnterWorktree for an isolated copy, or wait for that session to finish. To override a session you know is dead: rm '${lock}'"
       fi
     done
   fi
-fi
+done <<SEGMENTS
+$segments
+SEGMENTS
 
 # Claim / refresh the lock for this session.
 printf '%s %s\n' "$sid" "$now" >"$lock" 2>/dev/null || true
