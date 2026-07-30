@@ -1,0 +1,93 @@
+# .github/workflows/set-thread-field.yml
+#
+# Populates the Project v2 "Thread" single-select field from an issue's
+# thread:* label, at creation time. This is the DURABLE fix for the
+# blank-Thread-field problem: gh issue create cannot write a Project
+# field, so the repo sets it the moment an issue is born (or relabeled).
+#
+# ── ONE-TIME PREREQUISITE (workflow fails on every run without it) ──
+# The default GITHUB_TOKEN cannot write Projects v2. You must supply a
+# PAT with project + repo scope as a repo secret named PROJECTS_TOKEN:
+#   1. github.com/settings/tokens → Fine-grained or classic token
+#      classic: check `repo` and `project`
+#   2. Repo → Settings → Secrets and variables → Actions → New secret
+#      Name: PROJECTS_TOKEN   Value: <the token>
+# After the private flip this still works; Actions is just metered then.
+#
+# Auditable by design: pure gh CLI, no third-party actions to vet.
+
+name: Set Project Thread field
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  set-thread:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+      OWNER: RafeHatfield
+      REPO: catacombs-of-yarl
+      PROJECT_TITLE: "Catacombs of Yarl — Release"
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+    steps:
+      - name: Populate Thread from thread:* label
+        run: |
+          set -euo pipefail
+
+          # 1. Read the issue's single thread:* label (skip cleanly if none)
+          LBL="$(gh issue view "$ISSUE_NUMBER" --repo "$OWNER/$REPO" \
+                  --json labels \
+                  --jq '.labels[].name | select(startswith("thread:"))' \
+                | head -1)"
+          if [ -z "$LBL" ]; then
+            echo "No thread:* label on #$ISSUE_NUMBER — nothing to set."
+            exit 0
+          fi
+          NAME="$(echo "${LBL#thread:}" \
+                  | python3 -c 'import sys;print(sys.stdin.read().strip().replace("_"," ").title())')"
+          echo "Issue #$ISSUE_NUMBER → Thread:$NAME"
+
+          # 2. Resolve project number + id
+          PROJECT_NUMBER="$(gh project list --owner "$OWNER" --format json \
+            --jq ".projects[] | select(.title == \"$PROJECT_TITLE\") | .number")"
+          PROJECT_ID="$(gh project list --owner "$OWNER" --format json \
+            --jq ".projects[] | select(.title == \"$PROJECT_TITLE\") | .id")"
+
+          # 3. Ensure the issue is a project item (auto-add may not have
+          #    fired yet — this races it, so add idempotently).
+          ISSUE_URL="https://github.com/$OWNER/$REPO/issues/$ISSUE_NUMBER"
+          ITEM_ID="$(gh project item-list "$PROJECT_NUMBER" --owner "$OWNER" \
+            --format json --limit 300 \
+            --jq ".items[] | select(.content.number == $ISSUE_NUMBER and .content.type == \"Issue\") | .id" \
+            | head -1)"
+          if [ -z "$ITEM_ID" ]; then
+            ITEM_ID="$(gh project item-add "$PROJECT_NUMBER" --owner "$OWNER" \
+              --url "$ISSUE_URL" --format json --jq '.id')"
+            echo "Added #$ISSUE_NUMBER to board as item $ITEM_ID"
+          fi
+
+          # 4. Resolve the Thread field id + matching option id
+          FIELD_JSON="$(gh project field-list "$PROJECT_NUMBER" --owner "$OWNER" \
+            --format json --jq '.fields[] | select(.name == "Thread")')"
+          FIELD_ID="$(echo "$FIELD_JSON" \
+            | python3 -c 'import sys,json;print(json.load(sys.stdin)["id"])')"
+          OPT_ID="$(echo "$FIELD_JSON" | python3 -c "
+          import sys,json
+          f=json.load(sys.stdin)
+          m=[o['id'] for o in f['options'] if o['name']=='$NAME']
+          print(m[0] if m else '')")"
+          if [ -z "$OPT_ID" ]; then
+            echo "::warning::No Thread option named '$NAME' — is the label a typo?"
+            exit 0
+          fi
+
+          # 5. Set it
+          gh project item-edit --id "$ITEM_ID" --project-id "$PROJECT_ID" \
+            --field-id "$FIELD_ID" --single-select-option-id "$OPT_ID"
+          echo "Set #$ISSUE_NUMBER Thread = $NAME"
