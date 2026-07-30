@@ -109,10 +109,12 @@ dotnet run --project tools/Harness -- --scenario <id> --runs 50
 All changes land through PRs, not direct pushes. This exists so CI status is *visible* before
 merge — the "red badge for six weeks" failure (FIND-006) was a process gap, not a code gap.
 
-- **Branch → PR → merge.** No direct commits or pushes to `main` — this applies to every thread.
-- **One working copy per session.** Each agent session runs in its own git worktree or clone; never
-  share a working copy between concurrent sessions. Sharing one lets a parallel session move HEAD or
-  stage another's files mid-task — how M1.4's item 1 got carried into `main` on an unrelated art PR.
+- **Branch → PR → merge, one working copy per session.** Both are enforced by
+  `scripts/claude-hooks/` (wired in `.claude/settings.json`), not by good intentions: commits and
+  pushes to `main` are blocked, as are state-changing git commands in a checkout another live
+  session holds. Read-only git passes through. Use a worktree per session. The incidents behind
+  the rules: FIND-006, and M1.4's item 1 reaching `main` on an unrelated art PR because two
+  sessions shared a checkout.
 - **Merge gate until M2 re-baseline: fast tests green (by review).** `balance.yml` runs the fast
   suite (`Category!=Slow`) *and* the baseline-gated acceptance suite (`--suite --baseline`) in one
   job. `main`'s acceptance suite is currently **red for a known, documented reason** — the FIND-006
@@ -128,8 +130,9 @@ merge — the "red badge for six weeks" failure (FIND-006) was a process gap, no
 - **One logical change per PR.** Rename/refactor PRs carry no behavior change; balance PRs re-baseline
   in the same commit that moves the numbers.
 - **Branch protection turns on at M2.** Once M2 re-baselines the suite to verified green, require the
-  Balance Suite check via repo settings so the rule can't be bypassed. Until then enforcement is by
-  review — branch protection now would block every PR on the inherited red.
+  Balance Suite check via repo settings so the rule can't be bypassed. Until then the hooks cover
+  the branch rule locally and the suite gate stays enforcement-by-review — branch protection now
+  would block every PR on the inherited red.
 
 ---
 
