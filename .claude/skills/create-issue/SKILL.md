@@ -1,6 +1,6 @@
 ---
 name: create-issue
-description: Use when creating, filing, or opening a GitHub issue or ticket for Catacombs of YARL — covers the required native issue Type, thread label, milestone, sub-issue structure, and body discipline. Also use when correcting an existing issue's labels, Type, or milestone.
+description: Use when creating, filing, or opening a GitHub issue or ticket for Catacombs of YARL — covers the required thread label and milestone, the optional type:bug label, sub-issue structure, and body discipline. Also use when correcting an existing issue's labels or milestone.
 ---
 
 # Issue / ticket creation contract
@@ -9,25 +9,31 @@ All work tracking lives in GitHub Issues + the "Catacombs of Yarl — Release"
 Project board. When creating any issue, follow this exactly. Do not
 reintroduce the taxonomy this replaces.
 
-**Type — use the native issue Type, not a label.**
-Set Type to one of `Bug`, `Feature`, `Task`. After creating the issue:
+**Type — one optional label, `type:bug`.**
 
 ```bash
 gh issue create --repo RafeHatfield/catacombs-of-yarl \
   --title "…" --body "…" --milestone "…" --label "thread:<name>"
-# then set native Type (works on any gh version):
-gh api -X PATCH repos/RafeHatfield/catacombs-of-yarl/issues/<N> -f type="Feature"
+# add --label "type:bug" when the issue is a defect
 ```
 
-If this gh version supports `gh issue create --type "Feature"`, that shortcut
-is equivalent and preferred. **Never create or apply `type:feature`,
-`type:bug`, or `type:task` labels** — those label definitions have been
-deleted; native Type is the single source of truth for those three.
+Apply `type:bug` when current behaviour is **wrong relative to intent** — a
+regression, a contract the code does not honour, or output that is incorrect
+rather than merely coarse or unfinished. Everything else carries no type label;
+"work to be done" is the default and does not need marking. Do not classify
+feature-vs-task — that distinction has never changed what happens next.
 
-**Story / idea — these stay as labels** (native Type covers only bug/feature/
-task): apply `type:story` or `type:idea` where they apply. Epic→story→task
-structure uses native sub-issues (`--parent`), or a `parent: #N` body note
-plus post-hoc linking if this gh version lacks `--parent`.
+**Do not use native issue Type.** GitHub issue Types are an organisation-level
+feature and `RafeHatfield` is a User account, so `gh issue create --type` fails
+with `type "Bug" not found` and the field cannot be set by any route. An earlier
+version of this contract mandated native Type and deleted the `type:*` labels in
+its favour; the Type was never actually available, which left 33 issues with no
+kind-signal at all. If the repo ever moves under an organisation, revisit.
+
+**`type:idea`** marks a backlog item that is not committed. `type:story` was
+retired — zero uses across 33 issues, and epic→story→task structure is carried by
+native sub-issues (`--parent`), or a `parent: #N` body note plus post-hoc linking
+if this gh version lacks `--parent`.
 
 **Thread — apply exactly one `thread:*` label** (`thread:foundation|voice|
 launch|combat|spine|art`). Do **not** attempt to set the Project "Thread"
