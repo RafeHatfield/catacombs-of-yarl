@@ -135,10 +135,10 @@ Agents coordinate via task files in `tasks/`.
 ---
 ## Issue / ticket creation
 
-All issues follow the `create-issue` skill — native issue Type (not `type:*`
-labels), exactly one `thread:*` label, one milestone where the work maps to
-`M1–M7`. **Never create or apply `type:feature`, `type:bug`, or `type:task`
-labels.**
+All issues follow the `create-issue` skill — exactly one `thread:*` label, one
+milestone where the work maps to `M1–M7`, and `type:bug` only when behaviour is
+wrong relative to intent. Native issue Type is unavailable (org-level feature; this
+repo is user-owned) — don't reach for it.
 
 ---
 
