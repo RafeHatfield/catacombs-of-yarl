@@ -115,6 +115,11 @@ public sealed record ItemInspectView(
         var spellEffect = item.Get<SpellEffect>();
         var consumable = item.Get<Consumable>();
 
+        // Sasha's Sunder (ruling 2026-07-21): a reflavored keepsake — never label it a "wand", even
+        // though it keeps wand-shaped mechanics. Scoped to this one narrative item; every other wand
+        // still reads "Wand". This is the only player-facing "wand" string this item would otherwise hit.
+        if (item.Get<ItemTag>()?.TypeId == "wand_of_spell_break") return "Keepsake";
+
         if (wand != null && spellEffect != null) return "Wand";
         if (spellEffect != null && consumable != null) return "Scroll";
         if (consumable != null) return "Potion";
