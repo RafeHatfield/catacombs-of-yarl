@@ -236,7 +236,7 @@ public class HollowmarkVoiceBatchTests
     }
 
     [Test]
-    public void FactionValues_AreTotalOverNonProbeMonsters_ExceptKnownOutlier()
+    public void FactionValues_AreTotalOverNonProbeMonsters()
     {
         // Parse entities.yaml's monsters: block directly (not via YAML deserialization —
         // the file mixes heterogeneous sections a single strongly-typed model can't
@@ -305,13 +305,12 @@ public class HollowmarkVoiceBatchTests
             ? "All non-troll_probe monsters resolve to {orc, undead, beast, cultist}."
             : "Outside expected set: " + string.Join(", ", outsideSet.Select(o => $"{o.Id}->{o.Faction ?? "(none)"}")));
 
-        // Known, reported outlier: fire_beetle's faction field is literally "monsters", not
-        // "beast" (its tags list does say "beast", but the faction field itself doesn't match).
-        // Per instructions this is flagged, not silently pooled or "fixed" here — the spec's own
-        // fallback pool (between_runs, unconditioned) absorbs any run that dies to fire_beetle.
-        Assert.That(outsideSet.Select(o => o.Id), Is.EquivalentTo(new[] { "fire_beetle" }),
-            "Expected exactly one known outlier (fire_beetle); a different result means the " +
-            "faction data changed and this assertion (and the PR report) need re-verification.");
+        // fire_beetle's faction field was literally "monsters" (a data bug; its tags list
+        // correctly said "beast") and was the sole outlier here — fixed directly in
+        // entities.yaml (voice/corpus-cleanup-1). Full totality now: no exceptions.
+        Assert.That(outsideSet, Is.Empty,
+            "All non-troll_probe monsters must resolve to {orc, undead, beast, cultist}; " +
+            "a non-empty result means new faction data drifted outside the set again.");
     }
 
     [Test]

@@ -20,7 +20,7 @@ fragments:
     meta: { tier: common, min_depth: 6 }
 
   mf_erasure:
-    text: "Soldiers, see, and a town under them. The highland kingdoms called it consolidation. Wend called it Tuesday, then fire, then nothing. Erased means the maps got reprinted. It means the bells stopped mid-ring. Marya was delivering a ward two valleys over. She came home to smoke and paperwork. Nobody was punished. There was nobody left to insist. Go ahead, Boss. I'll be quiet a while."
+    text: "Soldiers, see, and a town under them. The highland kingdoms called it consolidation. Wend called it Tuesday, then fire, then nothing. Erased means the maps got reprinted. It means the bells stopped mid-ring. Marya was delivering a ward two valleys over. She came home to smoke and paperwork. Nobody was punished. There was nobody left to insist. Go ahead, Boss. The rest of this floor belongs to the quiet."
     meta: { tier: mid, min_depth: 8 }
 
   mf_ana_north:
