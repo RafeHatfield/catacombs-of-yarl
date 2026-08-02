@@ -170,6 +170,11 @@ items:
   ring_of_free_action: "84"
   ring_of_searching: "83"
 
+  # Sasha's Sunder (key wand_of_spell_break) — a bent tin clasp. No dedicated clasp/amulet tile
+  # exists in this set; "76" (plain ring) is the closest charm/jewelry stand-in, NOT the gem-wand
+  # stopgap the D-issue ruling supersedes. ART-THREAD HANDOFF: wants a bespoke clasp sprite.
+  wand_of_spell_break: "76"
+
   # Scrolls — all share sprite "136" (rune scroll); identified by name not appearance.
   # Entity name → sprite entry required so SpriteMapping.GetSpriteBase() resolves correctly.
   scroll_of_identify: "136"
