@@ -1547,6 +1547,50 @@ idle:
     }
 
     /// <summary>
+    /// DEV instrumentation (symptom A): capture two mid-run saves for save-side vs load-side diffing —
+    /// (1) the on-disk file BYTE-VERBATIM (the exact bytes LoadMidRun reads — copied, never re-serialized)
+    /// and (2) a fresh SaveMidRun of the current in-memory state. Written as &lt;timestamp&gt;-disk.json and
+    /// &lt;timestamp&gt;-memory.json under user://. Debug-build only (gated at the call site via OS.IsDebugBuild).
+    ///
+    /// NOTE: Godot core has no iOS share-sheet API and the project has no share GDExtension, so this does
+    /// not pop the share sheet — the files land in the app's user data dir (path logged). Getting them off
+    /// device (share sheet or Finder file-sharing) is a flagged infra follow-up.
+    /// </summary>
+    private void ExportSaveForDebug()
+    {
+        try
+        {
+            string ts = System.DateTime.Now.ToString("yyyyMMdd-HHmmss");
+            string userDir = ProjectSettings.GlobalizePath("user://");
+            string diskDest = System.IO.Path.Combine(userDir, $"{ts}-disk.json");
+            string memDest  = System.IO.Path.Combine(userDir, $"{ts}-memory.json");
+
+            string savePath = _persistenceProvider?.GetMidRunSaveFilePath() ?? "";
+            if (!string.IsNullOrEmpty(savePath) && System.IO.File.Exists(savePath))
+                System.IO.File.Copy(savePath, diskDest, overwrite: true);   // byte-verbatim — no re-serialize
+            else
+                GD.PrintErr("[ExportSave] no on-disk mid-run save to export.");
+
+            if (_state != null)
+            {
+                var json = System.Text.Json.JsonSerializer.Serialize(
+                    Logic.Persistence.MidRun.MidRunSerializer.SaveMidRun(_state),
+                    Logic.Persistence.MidRun.MidRunSaveJsonContext.Default.MidRunSaveDto);
+                System.IO.File.WriteAllText(memDest, json);
+            }
+            else
+                GD.PrintErr("[ExportSave] no in-memory state to serialize.");
+
+            GD.Print($"[ExportSave] wrote:\n  {diskDest}\n  {memDest}");
+            _toastLog?.AddMessage($"[color=#88cc99]Save exported: {ts}-disk/-memory.json[/color]");
+        }
+        catch (System.Exception ex)
+        {
+            GD.PrintErr($"[ExportSave] failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// The real <c>surfaceAvailable</c> probe for the ribbon (M1.5b): true only when the dungeon HUD is
     /// active and no modal is covering it. Never hardcoded true — a false result must keep the scheduler
     /// from consuming.
@@ -2249,7 +2293,8 @@ idle:
         {
             _voiceSettings = newSettings;                                   // live for the next TryDeliver
             Presentation.Persistence.VoiceSettingsStore.Save(newSettings);  // survives across runs (device store)
-        });
+        },
+        onExportSave: OS.IsDebugBuild() ? ExportSaveForDebug : null);
         menuLayer.AddChild(panel);
 
         panel.BackRequested += () => ShowMainMenu();
