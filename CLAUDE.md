@@ -101,12 +101,14 @@ dotnet run --project tools/Harness -- --scenario <id> --runs 50
 All changes land through PRs, not direct pushes. This exists so CI status is *visible* before
 merge — the "red badge for six weeks" failure (FIND-006) was a process gap, not a code gap.
 
-- **Branch → PR → merge, one working copy per session.** Both are enforced by
-  `scripts/claude-hooks/` (wired in `.claude/settings.json`), not by good intentions: commits and
-  pushes to `main` are blocked, as are state-changing git commands in a checkout another live
-  session holds. Read-only git passes through. Use a worktree per session. The incidents behind
-  the rules: FIND-006, and M1.4's item 1 reaching `main` on an unrelated art PR because two
-  sessions shared a checkout.
+- **Branch → PR → merge, one working copy per session.** Both are enforced by hooks at
+  *user* scope (`~/.claude/hooks/`, wired in `~/.claude/settings.json`), not by good
+  intentions: commits and pushes to `main` are blocked, as are state-changing git commands
+  in a checkout another live session holds. Read-only git passes through. Use a worktree
+  per session. User scope rather than in-repo so the guard also covers worktrees pinned to
+  commits that predate it — an in-repo hook is invisible to every checkout older than
+  itself. The incidents behind the rules: FIND-006, and M1.4's item 1 reaching `main` on an
+  unrelated art PR because two sessions shared a checkout.
 - **Merge gate until M2 re-baseline: fast tests green (by review).** `balance.yml` runs the fast
   suite (`Category!=Slow`) *and* the baseline-gated acceptance suite (`--suite --baseline`) in one
   job. `main`'s acceptance suite is currently **red for a known, documented reason** — the FIND-006
