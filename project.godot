@@ -10,38 +10,24 @@ config_version=5
 
 [application]
 
-config/name="Catacombs of YARL"
-run/main_scene="res://src/Presentation/Main.tscn"
-config/features=PackedStringArray("4.7", "C#", "Mobile")
+config/name="Catacombs of YARL Release"
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]
 
-window/size/viewport_width=720
-window/size/viewport_height=1280
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep_width"
-window/stretch/scale_mode="integer"
-window/handheld/orientation=1
+window/stretch/aspect="expand"
 
 [dotnet]
 
-project/assembly_name="CatacombsOfYarl.Presentation"
+project/assembly_name="Catacombs of YARL Release"
 
-[importer_defaults]
+[physics]
 
-texture={
-"compress/channel_pack": 0,
-"compress/hdr_compression": 1,
-"compress/mode": 0,
-"detect_3d/compress_to": 0,
-"mipmaps/generate": false,
-"process/fix_alpha_border": false,
-"process/premult_alpha": false
-}
+3d/physics_engine="Jolt Physics"
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=0
-renderer/rendering_method="mobile"
+rendering_device/driver.windows="d3d12"
 textures/vram_compression/import_etc2_astc=true
