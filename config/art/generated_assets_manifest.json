@@ -114,7 +114,8 @@
       "game_key": null,
       "notes": "RD rd_plus__low_res v2 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
       "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=PASS, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=8, final_overall=FAIL.]"
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=PASS, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=8, final_overall=FAIL.]",
+      "gate_note": "unwired \u2014 pending exempt-or-delete ruling"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4003.png",
@@ -126,7 +127,8 @@
       "game_key": null,
       "notes": "RD rd_plus__low_res v0 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
       "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh)."
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
+      "gate_note": "unwired \u2014 pending exempt-or-delete ruling"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4004.png",
@@ -138,7 +140,8 @@
       "game_key": null,
       "notes": "RD rd_plus__low_res v1 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
       "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=WARN, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=10, final_overall=FAIL.]"
+      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=WARN, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=10, final_overall=FAIL.]",
+      "gate_note": "unwired \u2014 pending exempt-or-delete ruling"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_3001.png",
