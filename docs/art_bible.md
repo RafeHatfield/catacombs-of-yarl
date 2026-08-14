@@ -80,3 +80,20 @@ Every art PR includes before/after captures of this scene. The scene definition 
 Generate → structural clean (background strip, color reduction, outline) → palette snap (`tools/art_lint/snap_to_palette.py`) → lint (`config/rubric/art-lint-spec.md` thresholds) → rubric pass → PR with lint report and test-scene captures → merge on green.
 
 No asset lands in `src/Presentation/assets/` without completing the full pipeline.
+
+## 11. Mural design language
+
+Adopted 2026-07, recorded 2026-08-02 (issue #26): heraldic — emblem-on-flat-field devices (shield, crest,
+or icon centered on a plain heraldic ground) — is the mural design language for the
+game. Per-region motif authoring (varying the emblem per biome/faction) is M3 item 4's
+job, done within this language, not a departure from it. Banner/tapestry motifs may be
+used later as a rarer secondary pool, not the default. Simplified pictorial murals
+(scene-like compositions) are retired; do not generate or land them.
+
+## Changelog
+
+- 2026-07 (recorded 2026-08-02): mural design language ruling (issue #26) —
+  "Heraldic is the mural language (adopted 2026-07); emblem-on-flat-field; per-region
+  motifs are M3 item 4 work within this language; banner motifs permitted later as rarer
+  secondary pool; pictorial retired." Five heraldic murals (lion, eagle, dragon, shield,
+  sword-and-star) landed at world tile IDs 5070/5071/5074/5075/5076.
