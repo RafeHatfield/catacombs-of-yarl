@@ -51,6 +51,10 @@ _Last verified: 2026-07-12 against commit 86b6f10_
 - [llm-testing/shared-transcript-schema.md](llm-testing/shared-transcript-schema.md) — Enriched transcript schema
 - [llm-testing/analyst-production-readiness.md](llm-testing/analyst-production-readiness.md) — Analyst production-readiness notes
 
+## Build & Device
+
+- [ios-export-pipeline.md](ios-export-pipeline.md) — **Headless iOS build + install** (`tools/ios_build.sh`): one command from tree to phone, and the failure modes it guards against
+
 ## Reference
 
 - [reference_rogue_wizards.md](reference_rogue_wizards.md) — Primary visual/UX reference game analysis
