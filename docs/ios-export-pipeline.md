@@ -145,6 +145,25 @@ A fresh worktree or an rsync'd `--tree` copy has no `.godot/`, so no assets are 
 export produces an app with no content. The script detects a missing `.godot/` and runs
 `dotnet build` + `--headless --import` first. Force it with `--import`.
 
+**The cold import can segfault, and a plain retry does not recover it.** On this project (~3,600
+importable assets) Godot 4.7's headless `--import` intermittently **segfaults during "Preparing files
+to reimport"**, before any textures are imported. The crash leaves a corrupt partial `.godot/`: a
+second `--import` sees the stale metadata, re-imports only the fonts (~6 entries), and exits 0 — so
+the export then ships a nearly-textureless app that *looks* built. A complete import is ~7,272
+entries; `ls .godot/imported | wc -l` is the quick check.
+
+Recovery is to import from *truly empty*, not to retry in place:
+
+```
+rm -rf .godot
+/Applications/Godot_mono.app/Contents/MacOS/Godot --headless --path . --import
+ls .godot/imported | wc -l          # expect ~7272, not ~6
+```
+
+Warm checkouts skip import entirely (the script only imports when `.godot/` is absent), so this only
+bites a first import or CI. Verified 2026-08-21: after the clean reimport the full
+export → xcodebuild → install chain completed and installed to the device.
+
 ### Patch throwaway copies, never the working tree
 
 When a build needs temporary source edits, `rsync` the tree to scratch, patch the copy, and build
