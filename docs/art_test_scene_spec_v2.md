@@ -67,7 +67,7 @@ Baseline expectation at adoption: the scene FAILS today. The first capture is th
 
 | parameter | value |
 |---|---|
-| reference device | TBD |
+| reference device | iPhone SE (2nd/3rd gen), iOS, 750×1334 @2x |
 | gameplay zoom / visible tile span | record at first capture |
 | Hollowmark ribbon fixed line | deferred to M1 item 5 landing |
 | crop positions (3) | record at first capture (tile coordinates) |
