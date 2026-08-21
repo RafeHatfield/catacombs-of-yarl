@@ -1,3 +1,6 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Headless iOS build output (tools/ios_build.sh)
+/.ios-build/
