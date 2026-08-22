@@ -157,9 +157,10 @@ public partial class Main : Node
     private readonly Logic.Voice.VoiceTriggerReader _voiceTriggerReader = new();
     private Logic.Voice.VoiceSettings _voiceSettings = new();   // DEVICE setting, loaded from user:// — never in the run save
     private UI.VoiceRibbon? _voiceRibbon;
-    // Phase 1 device diagnostic (E): when on (debug builds only, toggled in Options), each turn's
-    // ribbon decision + reason code is written to diag_structured.jsonl. Never true in release.
-    private bool _voiceDiag;
+    // Phase 1 device diagnostic (E): each turn's ribbon decision + reason code is written to
+    // diag_structured.jsonl. DEFAULT-ON IN DEBUG BUILDS so the evidence needs no toggle; the Options
+    // toggle can turn it off. OS.IsDebugBuild() is false in release, so this never logs there.
+    private bool _voiceDiag = Godot.OS.IsDebugBuild();
 
     // ─── DEV FIXTURE (M1.5b) — NOT shipped content. Embedded in code (not a config/ file) so the
     // ribbon renders before the Voice thread authors config/voice_lines/voice_tiers.yaml + family line
