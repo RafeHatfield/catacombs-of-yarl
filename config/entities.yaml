@@ -1993,8 +1993,13 @@ wands:
     color: [255, 255, 100]
 
   wand_of_portals:
-    name: "Wand of Portals"
-    description: "An ancient wand that tears holes in space. Cast once to place an entrance, again to place an exit, a third time to collapse both portals and reset the wand."
+    # Reflavored per Rafe's ruling (2026-08-22), Sunder precedent: presentation-only. CANON —
+    # Hollowmark IS the wand of portals (the bound artificer; the item is her body, the ribbon her
+    # voice). Mechanics untouched: spell_id/targeting/is_wand/infinite and the 3-step casting cycle
+    # below are the load-bearing traversal tool. Entity KEY kept: renaming would edit the run-start
+    # grant (DungeonFloorBuilder) for no player-facing benefit (the key is internal; player sees the name).
+    name: "Hollowmark"
+    description: "Pale wood, light grip, warm. It opens passages; it decides where they close. It points better than it is pointed. Sasha has stopped arguing with it."
     spell_id: "portal"
     targeting: "portal"
     is_wand: true
