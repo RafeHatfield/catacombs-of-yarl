@@ -70,6 +70,12 @@ public sealed class VoiceLineRegistry
         return pool[rng.Next(pool.Count)];
     }
 
+    /// <summary>
+    /// The authored top-level pool keys, verbatim (no compound-key resolution). Used by the
+    /// tiers↔pools cross-validation to assert every authored key resolves to exactly one voice family.
+    /// </summary>
+    public IReadOnlyCollection<string> PoolKeys => _pools.Keys;
+
     /// <summary>True if any pool is registered for this trigger (or a compound-key prefix).</summary>
     public bool HasTrigger(string triggerId) => Resolve(triggerId) != null;
 
