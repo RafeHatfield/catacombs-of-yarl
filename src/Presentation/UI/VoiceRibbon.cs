@@ -72,6 +72,10 @@ public sealed partial class VoiceRibbon : Control
         bg.SetCornerRadiusAll(6);
         _bar.AddThemeStyleboxOverride("panel", bg);
         AddChild(_bar);
+        // Span the ribbon Control's full width. Without this the PanelContainer collapses to its
+        // content minimum, so the autowrapping label wraps to a tall thin vertical strip (device
+        // geometry showed 117x863) instead of a horizontal line — the second half of symptom E.
+        _bar.SetAnchorsPreset(LayoutPreset.TopWide);
 
         var row = new HBoxContainer();
         _bar.AddChild(row);
