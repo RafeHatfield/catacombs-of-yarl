@@ -687,26 +687,26 @@
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "candelabra",
       "notes": "PixelLab s0",
-      "route": "pixellab_regen",
+      "route": "pixellab_regen_locked",
       "pixellab_prompt_seed": "candelabra seed 15",
-      "gate_note": "gate rejection: readability \u2014 design does not name itself at gameplay scale"
+      "pick_source": "gate remediation fresh palette-locked round, seed 2 (WARN, prop band); swatch from live 5080"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5081.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "candelabra",
       "notes": "PixelLab s1",
-      "route": "pixellab_regen",
+      "route": "pixellab_regen_locked",
       "pixellab_prompt_seed": "candelabra seed 16",
-      "gate_note": "gate rejection: readability \u2014 design does not name itself at gameplay scale"
+      "pick_source": "gate remediation fresh palette-locked round, seed 1 (WARN, prop band); swatch from live 5080"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5082.png",
