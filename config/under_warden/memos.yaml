@@ -70,6 +70,25 @@ polite.floor_low:
 
       With regards,
       The Under-Warden
+    - |
+      Mr. of Reven,
+
+      **Summary:** A second termination at an early juncture, Floor {floor}. The brevity of the descent is noted.
+
+      This office notes a second early termination, the descent having concluded before the calibrating floors were cleared. The observations regarding those floors were made in prior correspondence and are not restated here.
+
+      Cause of loss: {cause_of_death}. The catalog has been updated.
+
+      With regards,
+      The Under-Warden
+    - |
+      Mr. of Reven,
+
+      **Summary:** {cause_of_death}, Floor {floor}. Another brief descent.
+
+      The early floors are as previously described.
+
+      The Under-Warden
 
 polite.cause_trap:
   register: direct
@@ -237,6 +256,21 @@ procedural_notice.death_repeat:
 
       Regards,
       The Under-Warden
+    - |
+      **Summary:** A further termination of the same visiting party. The pattern remains on file under Regulation 44-D. Standard review applies.
+
+      The tally under Regulation 44-D advances by one. This office adds the present termination to those already recorded and files it accordingly.
+
+      Cause of present loss: {cause_of_death}, Floor {floor}. The catalog now holds one entry more than it did.
+
+      Regards,
+      The Under-Warden
+    - |
+      **Summary:** A further termination. {cause_of_death}, Floor {floor}. Filed with the others.
+
+      The count is maintained. This office no longer itemizes it.
+
+      The Under-Warden
 
 procedural_notice.cause_possession_neglect:
   register: direct
@@ -252,6 +286,21 @@ procedural_notice.cause_possession_neglect:
       This office offers no commentary on the practice itself. The catalog has been updated.
 
       Regards,
+      The Under-Warden
+    - |
+      **Summary:** Termination filed. The home vessel was left untenanted during an active inhabitation, Floor {floor}. This is not the first such filing. Regulation 17-B applies.
+
+      The vessel has been left so before. On this occasion, as on the prior one, it sustained terminal damage while the visiting party occupied another host. The regulation governing bilateral responsibility was set out in prior correspondence, and this office declines to set it out twice.
+
+      The host vessel has resumed its prior duties. The home vessel has been logged as terminated.
+
+      Regards,
+      The Under-Warden
+    - |
+      **Summary:** Floor {floor}. The home vessel left where it fell, as documented.
+
+      Both vessels remain the visiting party's responsibility. This office has made the point.
+
       The Under-Warden
 
 procedural_notice.audit_warning:
@@ -288,6 +337,21 @@ procedural_notice.run_clean:
       The institution's records reflect that no visiting party of the Revenese practice has previously sustained this many consecutive incident-free descents under similar review status. The observation is offered for the record only.
 
       Regards,
+      The Under-Warden
+    - |
+      **Summary:** Again no incidents of administrative note. Acknowledgment is again tendered, as required.
+
+      The descent log again records nothing this office is obliged to act upon. Per Regulation 4-B, acknowledgment of a continued clean descent is required at intervals; it is issued here.
+
+      The recurrence is noted without commendation. Commendation is not a function of this office.
+
+      Regards,
+      The Under-Warden
+    - |
+      **Summary:** Again nothing to record. Acknowledgment tendered.
+
+      This office has acknowledged. The regulation is satisfied.
+
       The Under-Warden
 
 # ── Formal Complaint (additional) ────────────────────────────────────────────
