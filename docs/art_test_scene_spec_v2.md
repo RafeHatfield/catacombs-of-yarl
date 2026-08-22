@@ -78,5 +78,6 @@ This scene gates art conformance only: pixels in composition. It does not exerci
 
 ## 9. Changelog
 
+- v2.1 (2026-08-22): prop-pedestal render bug fixed at source — `FloorComposer`'s edge-darkening pass wrongly treated blocking-prop cells as walls (a `!IsWalkable` predicate borrowing), casting a wall-shadow halo around every prop; it now tests `IsWallTile`, so props no longer affect floor shading (per §8, a render bug, not an art failure). The scene's `(0,+1)` worn-coverage shift is retained and re-verified against the corrected compositor (worn=1 in frame at (4,9), unchanged by the fix) — it is a worn lever, independent of the pedestal bug, contrary to an earlier read that it dodged the bug.
 - v2 (2026-07-16): mechanism changed from scenario-YAML to authored-data-into-production-renderer after schema verification showed `ScenarioDefinition` is a headless balance harness with no rendering or prop vocabulary. Seed machinery removed (authored scene is static by construction). Ribbon requirement deferred to M1 item 5. Scope boundary (§8) added.
 - v1 (2026-07-16): initial draft (scenario-YAML mechanism; superseded).
