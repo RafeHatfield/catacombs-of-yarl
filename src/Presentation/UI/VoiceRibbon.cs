@@ -72,22 +72,30 @@ public sealed partial class VoiceRibbon : Control
         bg.SetCornerRadiusAll(6);
         _bar.AddThemeStyleboxOverride("panel", bg);
         AddChild(_bar);
-        // Span the ribbon Control's full width. Without this the PanelContainer collapses to its
-        // content minimum, so the autowrapping label wraps to a tall thin vertical strip (device
-        // geometry showed 117x863) instead of a horizontal line — the second half of symptom E.
-        _bar.SetAnchorsPreset(LayoutPreset.TopWide);
+        // Fill the ribbon Control's rect. MUST be SetAnchorsAndOffsetsPreset, not SetAnchorsPreset:
+        // the latter defaults to keepOffsets=false, which PRESERVES the control's current (content-
+        // minimum) size and only repositions it — so the bar stayed a 117x863 vertical strip on device.
+        // Setting anchors AND offsets to FullRect resizes it to the parent's 696x54, so the label lays
+        // out on one horizontal line. (Device geometry dump caught the strip; there is no headless
+        // Godot seam to unit-test this.)
+        _bar.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 
         var row = new HBoxContainer();
         _bar.AddChild(row);
 
         _line = new RichTextLabel
         {
+            // FitContent must stay OFF: it reports a min-height computed by wrapping at the label's
+            // MINIMUM width, which balloons the PanelContainer to ~863px tall (device geometry) even
+            // though the line renders on one row at the real width. With it off, the bar's height comes
+            // from its FullRect anchors (~54) and the label fills its row.
             BbcodeEnabled = true,
-            FitContent = true,
+            FitContent = false,
             ScrollActive = false,
             AutowrapMode = TextServer.AutowrapMode.WordSmart,
             MouseFilter = MouseFilterEnum.Stop,   // tap the line to dismiss
             SizeFlagsHorizontal = SizeFlags.ExpandFill,
+            SizeFlagsVertical = SizeFlags.ExpandFill,
         };
         _line.AddThemeFontSizeOverride("normal_font_size", FontSize);
         _line.GuiInput += OnLineInput;
