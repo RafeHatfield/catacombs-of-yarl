@@ -106,6 +106,7 @@ if __name__ == "__main__":
         "bed":       dict(prompt="a simple bed with headboard and blanket", live=f"{W}/oryx_16bit_fantasy_world_5058.png", front=True),
         "bench":     dict(prompt="a plain wooden bench", live=f"{W}/oryx_16bit_fantasy_world_5060.png", front=True),
         "shelf_bottles": dict(prompt="a wooden shelf holding a few bottles", live=f"{W}/oryx_16bit_fantasy_world_5099.png", front=True),
+        "training_dummy": dict(prompt="a training dummy, straw and cloth on a wooden post", live=f"{W}/oryx_16bit_fantasy_world_5088.png", front=True),
     }
     name = sys.argv[1]
     n = int(sys.argv[2]) if len(sys.argv) > 2 else 12

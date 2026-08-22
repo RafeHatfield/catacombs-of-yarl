@@ -1,0 +1,7 @@
+seed,win,gap,speckle,small_clusters,color_regions,edge_density,largest_gap,lint,path,error
+0,False,0.12,32,52,57,0.9914,edge_density,WARN,tools/art_lint/candidates/gauntlet/training_dummy/training_dummy_s0_snapped.png,
+1,False,0.024,15,32,38,0.9062,edge_density,WARN,tools/art_lint/candidates/gauntlet/training_dummy/training_dummy_s1_snapped.png,
+2,False,0.105,25,43,51,0.9778,edge_density,WARN,tools/art_lint/candidates/gauntlet/training_dummy/training_dummy_s2_snapped.png,
+3,True,0.0,12,21,26,0.798,edge_density,WARN,tools/art_lint/candidates/gauntlet/training_dummy/training_dummy_s3_snapped.png,
+4,False,0.235,43,68,75,0.9865,edge_density,WARN,tools/art_lint/candidates/gauntlet/training_dummy/training_dummy_s4_snapped.png,
+5,True,0.0,13,29,34,0.8521,edge_density,WARN,tools/art_lint/candidates/gauntlet/training_dummy/training_dummy_s5_snapped.png,
