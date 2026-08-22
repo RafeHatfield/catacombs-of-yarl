@@ -1,26 +1,39 @@
 oil_slick_fire:
   - "I lit the oil. The oil was where you're standing. You'll notice the oil. I didn't."
   - "The fire spread the way fire spreads. I was inside the spreading. Don't be inside the spreading."
+  - "I poured the slick between me and the door. It was clever until I remembered which side I was on. Fire does not wait for you to finish being clever."
 
 possession_neglect:
   - "I left my body in a corridor with three orcs. The orcs were patient. I should have been less."
+  - "I went for a walk in someone else's skin. I came back to find mine had not waited up. You cannot leave yourself lying around down here."
+  - "I left mine breathing in a doorway. Doorways are where the dungeon looks first. I know that now. I knew it then, too."
 
 own_poison:
   - "The poison was for the Hall Warden. I forgot which way the wind was going. The wind never forgets."
   - "I bottled it myself. The bottle had a flaw. I could have spotted the flaw. I didn't, but you could."
+  - "I coated the blade myself. Even edge, good work. Then I held it the way you hold a thing you forgot was wet. The poison did not care whose hand it was."
 
 own_trap:
   - "I set the trap on Tuesday. I stepped on the trap on Wednesday. The trap does not keep a calendar."
+  - "I armed it in the dark so nobody would see me arm it. Nobody did. Least of all me, later, in the same dark."
+  - "I built it to catch something clever. It waited. I am, on my worse days, something clever. It did not check."
 
 fall_damage:
   - "The chasm was shorter than I thought. I was wrong about the chasm in a permanent way."
   - "I jumped. The jumping was correct. The landing was, on review, optional."
+  - "I tested the ledge with one foot. The ledge tested back with all of me. It had the better instrument."
 
 acid:
   - "The acid was green. I assumed all acid was green. Some acid is not green. The other acid is also acid."
+  - "I trusted the boots. The boots trusted the leather. The leather had opinions about acid, and none of them lasted long."
+  - "It looked like water. I have been thirsty enough to argue with my eyes. My eyes were right. I drank anyway."
 
 possessed_wrong_host:
   - "I wore the orc. The orc was a mistake. The orc had eaten something. I learned what."
+  - "I wore a body that was already halfway to something else. Possession is a lease, not a purchase. I signed for the damage."
+  - "I wore the plague-carrier because it was the nearest thing still standing. Nearest is not safest. I had the difference explained from the inside."
 
 hollowmark_out_of_range:
   - "I walked too far. She called. I didn't hear. I never not-hear her. Don't."
+  - "There is a distance past which she cannot reach me. I found it. I found it from the far side."
+  - "She keeps a hold on me, the way you keep a hand on a child in a crowd. I let go of the hand. Down here that is a decision you only get to make once."
