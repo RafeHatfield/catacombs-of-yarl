@@ -68,12 +68,17 @@ public sealed partial class VoiceRibbon : Control
 
         _line = new RichTextLabel
         {
+            // FitContent must stay OFF: it reports a min-height computed by wrapping at the label's
+            // MINIMUM width, which balloons the PanelContainer to ~863px tall (device geometry) even
+            // though the line renders on one row at the real width. With it off, the bar's height comes
+            // from its FullRect anchors (~54) and the label fills its row.
             BbcodeEnabled = true,
-            FitContent = true,
+            FitContent = false,
             ScrollActive = false,
             AutowrapMode = TextServer.AutowrapMode.WordSmart,
             MouseFilter = MouseFilterEnum.Stop,   // tap the line to dismiss
             SizeFlagsHorizontal = SizeFlags.ExpandFill,
+            SizeFlagsVertical = SizeFlags.ExpandFill,
         };
         _line.AddThemeFontSizeOverride("normal_font_size", FontSize);
         _line.GuiInput += OnLineInput;
