@@ -106,11 +106,20 @@ public sealed class VoiceScheduler
     /// <param name="surfaceAvailable">False when 5b cannot render right now (probe).</param>
     public VoiceDelivery? TryDeliver(IReadOnlyList<string> triggerFamilies, VoiceMode mode,
         int currentTurn, int? currentRibbonTier = null, bool surfaceAvailable = true)
+        => TryDeliver(triggerFamilies, mode, currentTurn, currentRibbonTier, surfaceAvailable, out _);
+
+    /// <summary>
+    /// Diagnostic overload — identical behaviour and RNG to the parameterless-reason overload, but also
+    /// reports WHY nothing was delivered (Phase 1 device diagnostic for symptom E). The reason is
+    /// observed at each existing gate; no extra draws, so gameplay/voice-stream isolation is unchanged.
+    /// </summary>
+    public VoiceDelivery? TryDeliver(IReadOnlyList<string> triggerFamilies, VoiceMode mode,
+        int currentTurn, int? currentRibbonTier, bool surfaceAvailable, out VoiceDeliverReason reason)
     {
         // Global silence gates — nothing renders, nothing consumes.
-        if (mode == VoiceMode.Silent) return null;
-        if (_currentFloorSilenced) return null;
-        if (!surfaceAvailable) return null;
+        if (mode == VoiceMode.Silent) { reason = VoiceDeliverReason.SilentMode; return null; }
+        if (_currentFloorSilenced) { reason = VoiceDeliverReason.FloorSilenced; return null; }
+        if (!surfaceAvailable) { reason = VoiceDeliverReason.SurfaceUnavailable; return null; }
 
         // Eligible candidates: known family, non-empty pool, mode-visible, not an already-fired one-shot.
         VoiceFamilyMeta? best = null;
@@ -127,13 +136,13 @@ public sealed class VoiceScheduler
             if (best == null || meta.Tier > best.Tier || (meta.Tier == best.Tier && meta.Order < best.Order))
                 best = meta;
         }
-        if (best == null) return null;                                         // priority loss / nothing eligible
+        if (best == null) { reason = VoiceDeliverReason.NoEligibleFamily; return null; }  // empty pool / unknown / filtered
 
         // Cooldown — the winner must clear it unless its family is exempt. (long math avoids sentinel overflow.)
-        if (!best.CooldownExempt && (long)currentTurn - _lastDeliveredTurn < CooldownTurns) return null;
+        if (!best.CooldownExempt && (long)currentTurn - _lastDeliveredTurn < CooldownTurns) { reason = VoiceDeliverReason.Cooldown; return null; }
 
         // Ribbon supersede — a new line only lands if strictly higher than what is already showing.
-        if (currentRibbonTier is int shown && best.Tier <= shown) return null;
+        if (currentRibbonTier is int shown && best.Tier <= shown) { reason = VoiceDeliverReason.SupersededByCurrent; return null; }
 
         // ── every gate passed: CONSUME exactly once ──
         string line = DrawFromBag(best.Key);
@@ -142,6 +151,7 @@ public sealed class VoiceScheduler
         _history.Add(new VoiceHistoryEntry(best.Key, line, currentTurn));
         if (_history.Count > HistoryCap) _history.RemoveRange(0, _history.Count - HistoryCap);
 
+        reason = VoiceDeliverReason.Delivered;
         return new VoiceDelivery(best.Key, line, best.Tier);
     }
 
@@ -201,6 +211,21 @@ public sealed class VoiceScheduler
 
 /// <summary>A line the scheduler chose to deliver this turn: its family, resolved text, and tier.</summary>
 public sealed record VoiceDelivery(string Family, string Line, int Tier);
+
+/// <summary>
+/// Why <see cref="VoiceScheduler.TryDeliver"/> did or didn't deliver — the reason codes the Phase 1
+/// device diagnostic logs per turn to localize symptom E without guessing.
+/// </summary>
+public enum VoiceDeliverReason
+{
+    Delivered,            // a line rendered
+    SilentMode,           // mode == Silent
+    FloorSilenced,        // shut-up / post-Marya floor mute
+    SurfaceUnavailable,   // 5b probe said the ribbon can't render (HUD inactive / modal up)
+    NoEligibleFamily,     // no trigger family survived (empty pool, unknown key, mode-filtered, one-shot spent)
+    Cooldown,             // winner within the 3-turn cooldown and not exempt
+    SupersededByCurrent,  // a same-or-higher-tier line already on the ribbon
+}
 
 /// <summary>One entry of the run-scoped ribbon history (delivered line text + the turn it fired).</summary>
 public sealed record VoiceHistoryEntry(string Family, string Line, int Turn);
