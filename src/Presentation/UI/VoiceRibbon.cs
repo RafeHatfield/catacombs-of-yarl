@@ -55,6 +55,13 @@ public sealed partial class VoiceRibbon : Control
         bg.SetCornerRadiusAll(6);
         _bar.AddThemeStyleboxOverride("panel", bg);
         AddChild(_bar);
+        // Fill the ribbon Control's rect. MUST be SetAnchorsAndOffsetsPreset, not SetAnchorsPreset:
+        // the latter defaults to keepOffsets=false, which PRESERVES the control's current (content-
+        // minimum) size and only repositions it — so the bar stayed a 117x863 vertical strip on device.
+        // Setting anchors AND offsets to FullRect resizes it to the parent's 696x54, so the label lays
+        // out on one horizontal line. (Device geometry dump caught the strip; there is no headless
+        // Godot seam to unit-test this.)
+        _bar.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 
         var row = new HBoxContainer();
         _bar.AddChild(row);
