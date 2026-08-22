@@ -330,13 +330,14 @@
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chair",
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "gate_note": "gate rejection: color/weight/orientation mismatch in scene"
+      "route": "pixellab_regen_locked",
+      "pick_source": "gate re-roll Route B (front-facing, palette-locked to table 5053), seed 0; sheet position 5th from top (builder row 5); PRIMARY"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5052.png",
@@ -391,26 +392,28 @@
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chair",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "gate_note": "gate rejection: color/weight/orientation mismatch in scene"
+      "route": "pixellab_regen_locked",
+      "pick_source": "gate re-roll Route B (front-facing, palette-locked to table 5053), seed 4; sheet position 4th from bottom (builder row 8)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5057.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "nonconformant",
+      "conformance_status": "conformant",
       "lint_exemptions": [],
       "game_key": "chair",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "gate_note": "gate rejection: color/weight/orientation mismatch in scene"
+      "route": "pixellab_regen_locked",
+      "pick_source": "gate re-roll Route B (front-facing, palette-locked to table 5053), seed 5; sheet position 3rd from bottom (builder row 9)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5058.png",
