@@ -33,6 +33,23 @@ public sealed partial class VoiceRibbon : Control
     /// <summary>Tier of the line currently displayed, or null if the ribbon is empty/expired.</summary>
     public int? CurrentTier => _currentTier;
 
+    /// <summary>
+    /// Diagnostic snapshot of the widget's on-screen geometry (Phase 1 device diagnostic for E): the
+    /// Control's global rect + visibility, the inner bar's rect + visibility, this widget's CanvasLayer,
+    /// and the viewport size. If a line was "delivered" but off-screen or behind another layer, this says so.
+    /// </summary>
+    public string DiagState()
+    {
+        var r = GetGlobalRect();
+        var barVis = _bar?.Visible ?? false;
+        var br = _bar?.GetGlobalRect() ?? new Rect2();
+        int layer = GetParent() is CanvasLayer cl ? cl.Layer : -999;
+        var vp = GetViewportRect().Size;
+        return $"ribbonVisible={Visible} rect=({r.Position.X:0},{r.Position.Y:0} {r.Size.X:0}x{r.Size.Y:0}) " +
+               $"barVisible={barVis} barRect=({br.Position.X:0},{br.Position.Y:0} {br.Size.X:0}x{br.Size.Y:0}) " +
+               $"canvasLayer={layer} viewport={vp.X:0}x{vp.Y:0}";
+    }
+
     public override void _Ready()
     {
         // Portrait-safe: a top band, inset from the edges, clear of the bottom touch controls.
