@@ -28,7 +28,7 @@ One to two connected rooms sized so all of the following are simultaneously insi
 - `center`: table (505x) with chairs
 - `floor_overlay`: rubble (5078/5079), puddle (5110)
 - Chests: closed (5111) and open (5112) both visible
-- One mural (5075, the worst A4 offender), the sign (5077), the key (5039) on floor
+- One wall mural (5075, the landed heraldic_shield), the sign (5077), the key (5039) on floor. The mural sits on the wall row with at least one clear tile between it and the free-standing candelabra below, so their silhouettes do not merge.
 
 **Canon adjacency (comparison anchors):**
 - Orc grunt and troll (canon, balance-locked, stable silhouettes) adjacent to generated props
@@ -78,6 +78,7 @@ This scene gates art conformance only: pixels in composition. It does not exerci
 
 ## 9. Changelog
 
+- v2.2 (2026-08-22): gate-review composition fix. Candelabra moved from (6,3) to (6,4) so a clear tile separates it from the wall mural at (6,2) — at (6,3) their stacked silhouettes merged in the capture. Mural flavor text rewritten from the retired gold-landscape pictorial ("A gilded landscape, its gold leaf flaking at the edges.") to match the landed heraldic_shield ("A heraldic shield, its blazon still bright on a plain field."); muralId updated to `art_scene_mural_heraldic_shield`. Both scene-data changes in `ArtAcceptanceSceneBuilder`. (Later the same day, chairs 5051/5056/5057 and candelabra 5080/5081 landed as gate-remediation replacements.)
 - v2.1 (2026-08-22): prop-pedestal render bug fixed at source — `FloorComposer`'s edge-darkening pass wrongly treated blocking-prop cells as walls (a `!IsWalkable` predicate borrowing), casting a wall-shadow halo around every prop; it now tests `IsWallTile`, so props no longer affect floor shading (per §8, a render bug, not an art failure). The scene's `(0,+1)` worn-coverage shift is retained and re-verified against the corrected compositor (worn=1 in frame at (4,9), unchanged by the fix) — it is a worn lever, independent of the pedestal bug, contrary to an earlier read that it dodged the bug.
 - v2 (2026-07-16): mechanism changed from scenario-YAML to authored-data-into-production-renderer after schema verification showed `ScenarioDefinition` is a headless balance harness with no rendering or prop vocabulary. Seed machinery removed (authored scene is static by construction). Ribbon requirement deferred to M1 item 5. Scope boundary (§8) added.
 - v1 (2026-07-16): initial draft (scenario-YAML mechanism; superseded).

@@ -1,10 +1,10 @@
 file,asset_class,A1_off_palette_colors,A1,A2_partial_alpha_pixels,A2,A3_actual_resolution,A3_expected_resolution,A3,A4_color_count,A4,A5_near_color_pairs,A5,A6_outline_fraction,A6,A7_speckle_count,overall
-src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4001.png,item,48,FAIL,0,PASS,16x16,16x16,PASS,15,WARN,4,WARN,0.2857,FAIL,36,FAIL
+src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4001.png,item,48,FAIL,0,PASS,16x16,16x16,PASS,15,WARN,4,WARN,,EXEMPT,36,FAIL
 src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4002.png,item,31,FAIL,0,PASS,16x16,16x16,PASS,8,PASS,2,PASS,0.25,FAIL,23,FAIL
 src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4003.png,item,34,FAIL,0,PASS,16x16,16x16,PASS,21,WARN,7,WARN,0.1471,FAIL,32,FAIL
 src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4004.png,item,38,FAIL,0,PASS,16x16,16x16,PASS,10,PASS,6,WARN,0.6129,FAIL,31,FAIL
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_3001.png,decal,0,PASS,0,PASS,24x24,24x24,PASS,3,PASS,0,PASS,,EXEMPT,2,PASS
-src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5001.png,prop,253,FAIL,0,PASS,24x24,24x24,PASS,23,FAIL,8,FAIL,0.4531,WARN,104,FAIL
+src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5001.png,prop,253,FAIL,0,PASS,24x24,24x24,PASS,23,FAIL,8,FAIL,,EXEMPT,104,FAIL
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5002.png,prop,172,FAIL,0,PASS,24x24,24x24,PASS,26,FAIL,7,WARN,0.25,WARN,99,FAIL
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5005.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,5,PASS,0,PASS,1.0,PASS,12,PASS
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5007.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,0,PASS,0.7216,WARN,74,WARN

@@ -49,6 +49,7 @@ Scored by Rafe or delegated reviewer at PR time. Any FAIL blocks merge regardles
 4. **Light direction.** Consistent with adjacent canon sprites of the same class. Pass/fail (convention to be documented at first session, bible §7).
 5. **Proportion and perspective.** Matches class conventions (top-down oblique, front-facing props). Pass/fail.
 6. **Ramp-collapse review.** For palette-snapped assets: compare before/after; did snapping destroy a detail the design needs? If yes, redesign the sprite within the palette rather than reverting the snap.
+7. **Names itself at 1× in scene** — a sprite whose object is not identifiable without being told fails, regardless of style conformance.
 
 ## Part C — Process
 
@@ -60,3 +61,7 @@ Scored by Rafe or delegated reviewer at PR time. Any FAIL blocks merge regardles
 ## Known exempt/legacy state (at spec adoption)
 
 - 75 live generated world tiles (IDs 5001–5114) predate this spec and fail A1/A4/A5/A6. They are the Phase 4 burn-down backlog, tracked in the manifest, and are not grandfathered — they are scheduled debt.
+
+## Changelog
+
+- 2026-08: added Part B item 7 ("Names itself at 1× in scene"), ruled at the Track A gate review after candelabra 5080/5081 were rejected for reading as an unidentifiable shape at gameplay scale despite passing every Part A check.
