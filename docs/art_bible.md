@@ -92,6 +92,13 @@ used later as a rarer secondary pool, not the default. Simplified pictorial mura
 
 ## Changelog
 
+- 2026-08 (play review): **style register named explicitly** — the game's look is the
+  Shattered-Pixel-Dungeon / Oryx school: **chunky, low-detail, bold-read** sprites. The systemic
+  failure mode in generated art is **refinement** (too fine, too detailed, too many small
+  structures) even when palette and colour budget pass — A1–A6 caught palette drift; structural
+  fineness slipped through. Corrected the known furniture cases by canon substitution (chairs ←
+  canon 321, table ← canon 319, armor stand derived from weapon-stand 323) and added the
+  Structural-fineness lint family (`config/rubric/art-lint-spec.md` §AF) to find the rest.
 - 2026-07 (recorded 2026-08-02): mural design language ruling (issue #26) —
   "Heraldic is the mural language (adopted 2026-07); emblem-on-flat-field; per-region
   motifs are M3 item 4 work within this language; banner motifs permitted later as rarer
