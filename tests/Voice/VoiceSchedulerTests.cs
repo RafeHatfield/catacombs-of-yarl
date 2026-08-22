@@ -225,6 +225,53 @@ public class VoiceSchedulerTests
         Assert.That(c, Is.Not.EqualTo(a), "a different voice seed must change the shuffle order.");
     }
 
+    // ── Option A: specific pool key → family-resolved tier ───────────────────────
+
+    // Registry keyed by SPECIFIC pool keys; meta keyed by FAMILIES the reader never emits bare.
+    private static VoiceScheduler OptionA(int seed = 1337)
+    {
+        var reg = VoiceLineRegistry.LoadFromYaml(
+            "species_first_sight.orc_grunt: [orc_line]\n" +
+            "hp_threshold.25: [q1, q2]\n");
+        var meta = new VoiceTierMetadata(ambientCutoffTier: 20, new[]
+        {
+            new VoiceFamilyMeta("hp_threshold", 90, 0, OncePerRun: false, CooldownExempt: true),
+            new VoiceFamilyMeta("species_first_sight", 50, 1, OncePerRun: true, CooldownExempt: false),
+        });
+        return new VoiceScheduler(reg, meta, seed);
+    }
+
+    [Test]
+    public void SpecificKey_DrawsFromItsPool_TierFromResolvedFamily()
+    {
+        var s = OptionA();
+        var d = s.TryDeliver(Trig("species_first_sight.orc_grunt"), VoiceMode.Verbose, 0);
+        Assert.That(d, Is.Not.Null);
+        Assert.That(d!.Line, Is.EqualTo("orc_line"), "the pool is the SPECIFIC key's, not the family's.");
+        Assert.That(d.Tier, Is.EqualTo(50), "the tier comes from the resolved family.");
+    }
+
+    [Test]
+    public void SpecificKey_HigherFamilyTierWins_AcrossDifferentKeys()
+    {
+        var s = OptionA();
+        // hp_threshold.25 (family tier 90) must beat species_first_sight.orc_grunt (family tier 50).
+        var d = s.TryDeliver(Trig("species_first_sight.orc_grunt", "hp_threshold.25"), VoiceMode.Verbose, 0);
+        Assert.That(d!.Tier, Is.EqualTo(90));
+        Assert.That(d.Line, Is.AnyOf("q1", "q2"));
+    }
+
+    [Test]
+    public void UnknownKey_SkippedWithoutConsuming()
+    {
+        var s = OptionA();
+        var before = Snap(s);
+        Assert.That(s.TryDeliver(Trig("hp_threshold_x", "not_a_family.thing"), VoiceMode.Verbose, 5,
+            currentRibbonTier: null, surfaceAvailable: true, out var reason), Is.Null);
+        Assert.That(reason, Is.EqualTo(VoiceDeliverReason.NoEligibleFamily));
+        Assert.That(Snap(s), Is.EqualTo(before), "an unresolvable key must not draw, fire, or advance history.");
+    }
+
     [Test]
     public void MetadataYaml_ParsesSchema_PreservingOrderAndFlags()
     {

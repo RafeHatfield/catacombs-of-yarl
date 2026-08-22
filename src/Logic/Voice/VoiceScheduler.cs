@@ -121,20 +121,26 @@ public sealed class VoiceScheduler
         if (_currentFloorSilenced) { reason = VoiceDeliverReason.FloorSilenced; return null; }
         if (!surfaceAvailable) { reason = VoiceDeliverReason.SurfaceUnavailable; return null; }
 
-        // Eligible candidates: known family, non-empty pool, mode-visible, not an already-fired one-shot.
+        // Candidates: each trigger key is a SPECIFIC pool key (e.g. "species_first_sight.orc_grunt").
+        // Tier/flags come from the family the key resolves to (separator-exact prefix); the pool + bag are
+        // keyed by the specific key. An unknown key resolves to no family → skipped, never consumed.
         VoiceFamilyMeta? best = null;
-        foreach (var family in triggerFamilies)
+        string? bestKey = null;                                                // the winner's specific pool key
+        foreach (var triggerKey in triggerFamilies)
         {
-            var meta = _meta.Get(family);
-            if (meta == null) continue;                                        // unknown family — not schedulable
+            var meta = _meta.ResolveFamily(triggerKey);
+            if (meta == null) continue;                                        // unknown key — skip, no consume
             if (mode == VoiceMode.Tactical && meta.Tier <= _meta.AmbientCutoffTier) continue;  // ambient, hidden
-            if (meta.OncePerRun && _fired.Contains(meta.Key)) continue;        // one-shot already spent
-            var pool = _registry.GetPool(family);
-            if (pool == null || pool.Count == 0) continue;                     // no lines to draw
+            if (meta.OncePerRun && _fired.Contains(meta.Key)) continue;        // one-shot family already spent
+            var pool = _registry.GetPool(triggerKey);
+            if (pool == null || pool.Count == 0) continue;                     // no lines to draw for this key
 
             // Highest tier wins; ties broken by family declaration order (lower Order wins).
             if (best == null || meta.Tier > best.Tier || (meta.Tier == best.Tier && meta.Order < best.Order))
+            {
                 best = meta;
+                bestKey = triggerKey;
+            }
         }
         if (best == null) { reason = VoiceDeliverReason.NoEligibleFamily; return null; }  // empty pool / unknown / filtered
 
@@ -145,8 +151,8 @@ public sealed class VoiceScheduler
         if (currentRibbonTier is int shown && best.Tier <= shown) { reason = VoiceDeliverReason.SupersededByCurrent; return null; }
 
         // ── every gate passed: CONSUME exactly once ──
-        string line = DrawFromBag(best.Key);
-        if (best.OncePerRun) _fired.Add(best.Key);
+        string line = DrawFromBag(bestKey!);                 // bag + pool keyed by the SPECIFIC key
+        if (best.OncePerRun) _fired.Add(best.Key);           // one-shot tracked per FAMILY
         _lastDeliveredTurn = currentTurn;
         _history.Add(new VoiceHistoryEntry(best.Key, line, currentTurn));
         if (_history.Count > HistoryCap) _history.RemoveRange(0, _history.Count - HistoryCap);
@@ -163,13 +169,13 @@ public sealed class VoiceScheduler
 
     // ── shuffle bag ──────────────────────────────────────────────────────────────
 
-    private string DrawFromBag(string family)
+    private string DrawFromBag(string poolKey)
     {
-        var pool = _registry.GetPool(family)!;     // guaranteed non-empty by the eligibility filter
-        if (!_bags.TryGetValue(family, out var bag) || bag.Count == 0)
+        var pool = _registry.GetPool(poolKey)!;    // guaranteed non-empty by the eligibility filter
+        if (!_bags.TryGetValue(poolKey, out var bag) || bag.Count == 0)
         {
             bag = ShuffledIndices(pool.Count);     // reshuffle only on exhaustion
-            _bags[family] = bag;
+            _bags[poolKey] = bag;
         }
         int idx = bag[0];
         bag.RemoveAt(0);

@@ -48,6 +48,25 @@ public sealed class VoiceTierMetadata
     public VoiceFamilyMeta? Get(string familyKey) =>
         _byKey.TryGetValue(familyKey, out var f) ? f : null;
 
+    /// <summary>
+    /// Resolve a SPECIFIC pool/trigger key (e.g. "species_first_sight.orc_grunt", "hp_threshold.25",
+    /// "long_idle") to the family that owns it, for the tier/flags. Matching is SEPARATOR-EXACT: a family
+    /// "hp_threshold" owns "hp_threshold" (exact) and "hp_threshold.25" (dot-prefixed), but never a future
+    /// "hp_threshold_x". On nested families the LONGEST prefix wins, so resolution is unambiguous. Returns
+    /// null for an unknown key — the caller then skips it WITHOUT consuming (the ONE RULE for malformed
+    /// keys); the tiers↔pools cross-validation test turns such a key into a loud CI failure.
+    /// </summary>
+    public VoiceFamilyMeta? ResolveFamily(string triggerKey)
+    {
+        if (_byKey.TryGetValue(triggerKey, out var exact)) return exact;   // flat key == family
+        VoiceFamilyMeta? best = null;
+        foreach (var f in _families)
+            if (triggerKey.StartsWith(f.Key + ".", StringComparison.Ordinal)
+                && (best == null || f.Key.Length > best.Key.Length))
+                best = f;
+        return best;
+    }
+
     /// <summary>Load from the tier-metadata YAML string. Uses AotObjectFactory for NativeAOT safety.</summary>
     public static VoiceTierMetadata LoadFromYaml(string yaml, IObjectFactory? factory = null)
     {

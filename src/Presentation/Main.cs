@@ -162,39 +162,6 @@ public partial class Main : Node
     // toggle can turn it off. OS.IsDebugBuild() is false in release, so this never logs there.
     private bool _voiceDiag = Godot.OS.IsDebugBuild();
 
-    // ─── DEV FIXTURE (M1.5b) — NOT shipped content. Embedded in code (not a config/ file) so the
-    // ribbon renders before the Voice thread authors config/voice_lines/voice_tiers.yaml + family line
-    // pools. All lines are [DEV]-marked on screen. Delete this once authored content lands. ───
-    private const string DevVoiceTierFixtureYaml = @"
-ambient_cutoff_tier: 20
-families:
-  - key: hp_critical
-    tier: 70
-    cooldown_exempt: true
-  - key: possession
-    tier: 60
-  - key: species_first_sight
-    tier: 40
-  - key: trap
-    tier: 30
-  - key: idle
-    tier: 10
-";
-    private const string DevVoiceLinesFixtureYaml = @"
-hp_critical:
-  - '[DEV] The body won''t hold much longer.'
-  - '[DEV] Careful — you are nearly spent.'
-possession:
-  - '[DEV] A borrowed shape. Wear it well.'
-species_first_sight:
-  - '[DEV] Something new watches from the dark.'
-trap:
-  - '[DEV] The floor bites back.'
-idle:
-  - '[DEV] Still here. Still listening.'
-  - '[DEV] The quiet stretches on.'
-";
-
     // Under-Warden memo delivery — registry loaded once at boot alongside voice lines.
     // Evaluator is stateless; _memoRegistry is null until InitFactories succeeds.
     private MemoRegistry? _memoRegistry;
@@ -722,23 +689,14 @@ idle:
             _voiceLineRegistry.Merge(VoiceLineRegistry.LoadFromYaml(possessionYaml));
             GD.Print("[Main] Voice line registry loaded.");
 
-            // Voice tier metadata + ribbon line pools (M1.5b). Prefer the Voice-thread-authored file;
-            // fall back to the clearly-marked DEV fixture (embedded in code, NOT shipped as a config
-            // file). In authored mode the ribbon draws from the real voice registry; in dev mode it
-            // draws from an embedded fixture pool so the legacy possession→toast registry is untouched.
-            const string tierPath = "res://config/voice_lines/voice_tiers.yaml";
-            if (Godot.FileAccess.FileExists(tierPath))
-            {
-                _voiceTierMeta = Logic.Voice.VoiceTierMetadata.LoadFromYaml(ReadGodotResource(tierPath));
-                _voiceRibbonRegistry = _voiceLineRegistry;
-                GD.Print("[Main] Voice tier metadata loaded from authored file; ribbon uses the real registry.");
-            }
-            else
-            {
-                _voiceTierMeta = Logic.Voice.VoiceTierMetadata.LoadFromYaml(DevVoiceTierFixtureYaml);
-                _voiceRibbonRegistry = VoiceLineRegistry.LoadFromYaml(DevVoiceLinesFixtureYaml);
-                GD.Print("[Main] Voice: using DEV FIXTURE tiers + lines (Voice thread has not authored voice_tiers.yaml).");
-            }
+            // Voice tier metadata (M1.5, real pools). The ribbon delivers Hollowmark's OWN voice, so its
+            // registry is hollowmark.yaml only — a fresh parse, not the merged _voiceLineRegistry, which
+            // also holds the possession/catalog/shade pools other systems own. The tiers resolve each
+            // hollowmark pool key by family prefix (cross-validated headlessly).
+            _voiceRibbonRegistry = VoiceLineRegistry.LoadFromYaml(hollowmarkYaml);
+            _voiceTierMeta = Logic.Voice.VoiceTierMetadata.LoadFromYaml(
+                ReadGodotResource("res://config/voice_lines/voice_tiers.yaml"));
+            GD.Print($"[Main] Voice tiers loaded — {_voiceTierMeta.Families.Count} families; ribbon uses hollowmark.yaml pools.");
 
             // Device voice settings (mode + duration) — survive across runs, never in the run save.
             _voiceSettings = Presentation.Persistence.VoiceSettingsStore.Load();

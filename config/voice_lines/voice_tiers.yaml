@@ -1,0 +1,45 @@
+# Hollowmark ribbon — voice delivery tiers (M1.5, scheme Option A ruled 2026-08-22).
+#
+# TIER ASSIGNMENTS PENDING VOICE-THREAD REGISTER REVIEW. Ordering follows the ruled priority
+# (hp-critical > named/artifact > first-sight > traps/hazards > kills > region > items > idle);
+# exact integers + the ambient cutoff are a Voice-thread call.
+#
+# Each `key` is a FAMILY that owns the matching pool keys in config/voice_lines/hollowmark.yaml by
+# separator-exact prefix (family "species_first_sight" owns "species_first_sight.orc_grunt", etc.).
+# The reader emits the SPECIFIC pool key; the scheduler resolves the tier by this family. Every
+# hollowmark.yaml pool key must resolve to exactly one family here, and every family must own >=1
+# pool — cross-validated headlessly (VoiceTiersPoolCrossCheckTests); a typo is a CI failure.
+#
+# Not every family is emitted by the trigger reader yet (on_death, kill_streak_clean,
+# region_first_entry, item_identified, overnight_identified, spell_break_used, between_runs,
+# past_sasha_encounter are future derivations) — they carry tiers so the cross-validation passes and
+# so they light up the moment their reader derivation lands.
+
+ambient_cutoff_tier: 20   # Tactical mode renders only families with tier strictly above this
+
+families:
+  - key: hp_threshold          # the body is failing — highest, and exempt from the 3-turn cooldown
+    tier: 90
+    cooldown_exempt: true
+  - key: past_sasha_encounter  # meeting a past self — a major narrative beat
+    tier: 70
+  - key: spell_break_used      # the artifact acts
+    tier: 65
+  - key: species_first_sight   # first sight of a new species
+    tier: 50
+  - key: trap_first            # first time a trap type bites
+    tier: 45
+  - key: on_death              # something died
+    tier: 40
+  - key: kill_streak_clean
+    tier: 38
+  - key: region_first_entry    # entering a new region
+    tier: 35
+  - key: item_identified
+    tier: 25
+  - key: overnight_identified
+    tier: 22
+  - key: between_runs          # fires outside a run (own path)
+    tier: 15
+  - key: long_idle             # the quiet stretches on — ambient, hidden in Tactical
+    tier: 10
