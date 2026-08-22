@@ -45,15 +45,22 @@ public sealed partial class OptionsPanel : Control
     // Dev instrumentation: export the on-disk + in-memory mid-run save. Null (and hidden) in release.
     private readonly Action? _onExportSave;
 
+    // Dev instrumentation: toggle the per-turn voice diagnostic (Phase 1, symptom E). Null in release.
+    private readonly Action<bool>? _onVoiceDiagToggle;
+    private bool _voiceDiagOn;
+    private TouchButton? _voiceDiagBtn;
+
     public OptionsPanel(string loadedTilesetId, DebugOverlay? debugOverlay = null,
         VoiceSettings? voiceSettings = null, Action<VoiceSettings>? onVoiceChanged = null,
-        Action? onExportSave = null)
+        Action? onExportSave = null, bool voiceDiagOn = false, Action<bool>? onVoiceDiagToggle = null)
     {
         _loadedTilesetId = loadedTilesetId;
         _debugOverlay    = debugOverlay;
         _voiceSettings   = voiceSettings ?? new VoiceSettings();
         _onVoiceChanged  = onVoiceChanged;
         _onExportSave    = onExportSave;
+        _voiceDiagOn     = voiceDiagOn;
+        _onVoiceDiagToggle = onVoiceDiagToggle;
         // Find the starting selection — default to index 0 if ID not recognised.
         _selectedIndex = FindIndex(loadedTilesetId);
     }
@@ -201,6 +208,26 @@ public sealed partial class OptionsPanel : Control
             vbox.AddChild(exportBtn);
         }
 
+        // Voice diagnostic toggle (Phase 1, symptom E) — DEBUG BUILDS ONLY. Writes per-turn ribbon
+        // reason codes to diag_structured.jsonl so a device play localizes why the ribbon stays blank.
+        if (_onVoiceDiagToggle != null && OS.IsDebugBuild())
+        {
+            _voiceDiagBtn = new TouchButton
+            {
+                Text              = VoiceDiagBtnText(),
+                FontSize          = 22,
+                BackgroundColor   = new Color(0.2f, 0.3f, 0.25f, 0.95f),
+                CustomMinimumSize = new Vector2(280, 56),
+            };
+            _voiceDiagBtn.Pressed += () =>
+            {
+                _voiceDiagOn = !_voiceDiagOn;
+                if (_voiceDiagBtn != null) _voiceDiagBtn.Text = VoiceDiagBtnText();
+                _onVoiceDiagToggle(_voiceDiagOn);
+            };
+            vbox.AddChild(_voiceDiagBtn);
+        }
+
         // Back button
         var backBtn = new TouchButton
         {
@@ -233,6 +260,7 @@ public sealed partial class OptionsPanel : Control
 
     private string VoiceModeBtnText() => $"Voice: {_voiceSettings.Mode}";
     private string VoiceDurationBtnText() => $"Duration: {_voiceSettings.Duration}";
+    private string VoiceDiagBtnText() => $"Voice Diag (dev): {(_voiceDiagOn ? "ON" : "OFF")}";
 
     // -------------------------------------------------------------------------
     // Tileset cycling

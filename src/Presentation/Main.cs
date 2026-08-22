@@ -157,6 +157,9 @@ public partial class Main : Node
     private readonly Logic.Voice.VoiceTriggerReader _voiceTriggerReader = new();
     private Logic.Voice.VoiceSettings _voiceSettings = new();   // DEVICE setting, loaded from user:// — never in the run save
     private UI.VoiceRibbon? _voiceRibbon;
+    // Phase 1 device diagnostic (E): when on (debug builds only, toggled in Options), each turn's
+    // ribbon decision + reason code is written to diag_structured.jsonl. Never true in release.
+    private bool _voiceDiag;
 
     // ─── DEV FIXTURE (M1.5b) — NOT shipped content. Embedded in code (not a config/ file) so the
     // ribbon renders before the Voice thread authors config/voice_lines/voice_tiers.yaml + family line
@@ -1618,15 +1621,38 @@ idle:
         if (_state.IsDungeonMode && _voiceScheduler != null && _voiceRibbon != null)
         {
             var families = _voiceTriggerReader.Read(result, _state);
-            if (families.Count > 0)
+            bool surf = IsRibbonSurfaceAvailable();
+            Logic.Voice.VoiceDeliverReason reason = Logic.Voice.VoiceDeliverReason.NoEligibleFamily;
+            Logic.Voice.VoiceDelivery? delivery = families.Count > 0
+                ? _voiceScheduler.TryDeliver(families, _voiceSettings.Mode, _state.TurnCount,
+                      _voiceRibbon.CurrentTier, surf, out reason)
+                : null;
+            if (delivery != null)
+                _voiceRibbon.ShowLine(delivery.Line, delivery.Tier, _voiceSettings.DurationSeconds);
+
+            if (_voiceDiag)   // debug-only device diagnostic (E)
+                Diag.Event("voice_turn", new
+                {
+                    turn = _state.TurnCount,
+                    fams = string.Join(",", families),
+                    mode = _voiceSettings.Mode.ToString(),
+                    surface = surf,
+                    curTier = _voiceRibbon.CurrentTier?.ToString() ?? "null",
+                    reason = families.Count == 0 ? "no-triggers-derived" : reason.ToString(),
+                    delivered = delivery?.Line ?? "(none)",
+                    // If a line WAS delivered, dump geometry so a silent widget is caught (suspect a).
+                    ribbon = delivery != null ? _voiceRibbon.DiagState() : "",
+                });
+        }
+        else if (_voiceDiag)
+        {
+            Diag.Event("voice_skip", new
             {
-                var delivery = _voiceScheduler.TryDeliver(
-                    families, _voiceSettings.Mode, _state.TurnCount,
-                    currentRibbonTier: _voiceRibbon.CurrentTier,
-                    surfaceAvailable: IsRibbonSurfaceAvailable());
-                if (delivery != null)
-                    _voiceRibbon.ShowLine(delivery.Line, delivery.Tier, _voiceSettings.DurationSeconds);
-            }
+                turn = _state.TurnCount,
+                dungeon = _state.IsDungeonMode,
+                schedulerNull = _voiceScheduler == null,
+                ribbonNull = _voiceRibbon == null,
+            });
         }
 
         // Mid-run autosave (M1.4 4b). This is the turn-commit seam: GameController fires TurnCompleted
@@ -2294,7 +2320,13 @@ idle:
             _voiceSettings = newSettings;                                   // live for the next TryDeliver
             Presentation.Persistence.VoiceSettingsStore.Save(newSettings);  // survives across runs (device store)
         },
-        onExportSave: OS.IsDebugBuild() ? ExportSaveForDebug : null);
+        onExportSave: OS.IsDebugBuild() ? ExportSaveForDebug : null,
+        voiceDiagOn: _voiceDiag,
+        onVoiceDiagToggle: OS.IsDebugBuild() ? (on =>
+        {
+            _voiceDiag = on;
+            Diag.Log($"[voice-diag] {(on ? "ENABLED" : "disabled")} — per-turn reason codes to diag_structured.jsonl");
+        }) : null);
         menuLayer.AddChild(panel);
 
         panel.BackRequested += () => ShowMainMenu();
