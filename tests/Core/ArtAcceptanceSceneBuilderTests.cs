@@ -76,7 +76,7 @@ public class ArtAcceptanceSceneBuilderTests
         Assert.That(state.Features.Any(f => f.Get<SignpostComponent>() != null), Is.True, "Missing sign");
         var mural = state.Features.Select(f => f.Get<MuralComponent>()).FirstOrDefault(m => m != null);
         Assert.That(mural, Is.Not.Null, "Missing mural");
-        Assert.That(mural!.TileId, Is.EqualTo(5075), "Mural must be the pinned worst-A4-offender variant");
+        Assert.That(mural!.TileId, Is.EqualTo(5075), "Mural must be the pinned heraldic_shield variant");
     }
 
     [Test]

@@ -171,8 +171,10 @@ public static class ArtAcceptanceSceneBuilder
             new("tool_rack",  X: 4, Y: 2, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5089),
             new("anvil",      X: 2, Y: 3, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5001),
 
-            // Free-standing candelabra — §3 "free_standing".
-            new("candelabra", X: 6, Y: 3, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5080),
+            // Free-standing candelabra — §3 "free_standing". Placed at (6,4), one clear tile
+            // below the wall mural at (6,2): at (6,3) their stacked silhouettes merged in the
+            // capture (gate finding 2026-08), so the candelabra is separated by an empty cell.
+            new("candelabra", X: 6, Y: 4, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5080),
 
             // Center table + chairs — §3 "center".
             new("table",      X: 4, Y: 6, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5052),
@@ -208,11 +210,12 @@ public static class ArtAcceptanceSceneBuilder
             message: "The forge has gone cold, but the anvil remembers every strike.",
             signType: "lore");
 
-        // tileId 5075 pinned explicitly — spec §3: "the worst A4 offender" (mural_gold_landscape).
+        // tileId 5075 pinned explicitly — the heraldic_shield mural landed in the burn-down
+        // (the earlier gold_landscape pictorial was retired per the 2026-07 mural ruling).
         var mural = FeatureFactory.CreateMural(
             6, 2, ids,
-            text: "A gilded landscape, its gold leaf flaking at the edges.",
-            muralId: "art_scene_mural_gold_landscape",
+            text: "A heraldic shield, its blazon still bright on a plain field.",
+            muralId: "art_scene_mural_heraldic_shield",
             tileId: 5075);
 
         return new List<Entity> { chestClosed, chestOpen, sign, mural };
