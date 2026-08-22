@@ -184,17 +184,14 @@
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "accepted",
-      "lint_exemptions": [
-        "A1_palette",
-        "A4_color_budget",
-        "A5_near_colors"
-      ],
+      "conformance_status": "conformant",
+      "lint_exemptions": [],
       "game_key": "Armor Stand",
       "notes": "RD rd_plus__low_res v1",
       "triage": "redesign",
       "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/armor_stand.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied.",
-      "accepted_note": "accepted-as-is at gate review 2026-08; original reads correctly, no candidate improved it"
+      "route": "canon_derived",
+      "pick_source": "canon-derived from weapon-stand 323 frame + chunky helm+cuirass; APPROVED at fineness rubric (rank 5, 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5005.png",
@@ -297,7 +294,10 @@
       "game_key": "Iron Bars",
       "notes": "RD rd_plus__low_res iron_bars_v2",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "canon_substitution",
+      "canon_source_id": 258,
+      "pick_source": "fineness rework rank 17: canon substitution world tile 258 \u2014 iron_bars \u2014 canon barred gate (single state, outright match)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5016.png",
@@ -336,8 +336,9 @@
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "route": "pixellab_regen_locked",
-      "pick_source": "gate re-roll Route B (front-facing, palette-locked to table 5053), seed 0; sheet position 5th from top (builder row 5); PRIMARY"
+      "route": "canon_substitution",
+      "pick_source": "canon substitution: world tile 321 (chair) pixels copied in place \u2014 resolved: canon substitution (play-review register ruling 2026-08)",
+      "canon_source_id": 321
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5052.png",
@@ -349,7 +350,10 @@
       "game_key": "table",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 319,
+      "pick_source": "fineness rework rank 21: canon substitution world tile 319 \u2014 table \u2014 canon plain table (outright match)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5053.png",
@@ -360,8 +364,9 @@
       "lint_exemptions": [],
       "game_key": "table",
       "notes": "PixelLab s1",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "table seed 7"
+      "route": "canon_substitution",
+      "canon_source_id": 319,
+      "pick_source": "canon substitution: world tile 319 (table) pixels copied in place \u2014 resolves the deferred table gate verdict (play-review register ruling 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5054.png",
@@ -373,7 +378,10 @@
       "game_key": "table",
       "notes": "PixelLab s42 \u2014 primary",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 319,
+      "pick_source": "sibling reconciliation: table family already ruled (canon 319/320); 5054 -> canon 319"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5055.png",
@@ -385,7 +393,10 @@
       "game_key": "table",
       "notes": "PixelLab s1337",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 320,
+      "pick_source": "fineness rework rank 20: canon substitution world tile 320 \u2014 table \u2014 canon writing desk (table family; single-cell writing-desk substitute per multi-tile flag)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5056.png",
@@ -398,8 +409,9 @@
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "route": "pixellab_regen_locked",
-      "pick_source": "gate re-roll Route B (front-facing, palette-locked to table 5053), seed 4; sheet position 4th from bottom (builder row 8)"
+      "route": "canon_substitution",
+      "pick_source": "canon substitution: world tile 321 (chair) pixels copied in place \u2014 resolved: canon substitution (play-review register ruling 2026-08)",
+      "canon_source_id": 321
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5057.png",
@@ -412,8 +424,9 @@
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "route": "pixellab_regen_locked",
-      "pick_source": "gate re-roll Route B (front-facing, palette-locked to table 5053), seed 5; sheet position 3rd from bottom (builder row 9)"
+      "route": "canon_substitution",
+      "pick_source": "canon substitution: world tile 321 (chair) pixels copied in place \u2014 resolved: canon substitution (play-review register ruling 2026-08)",
+      "canon_source_id": 321
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5058.png",
@@ -523,7 +536,10 @@
       "game_key": "cage",
       "notes": "PixelLab s1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 544,
+      "pick_source": "fineness rework rank 28: canon substitution world tile 544 \u2014 cage \u2014 canon barred cage variant (543-546 confirmed single-cell variants; grey to match)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5067.png",

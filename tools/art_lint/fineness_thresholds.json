@@ -1,0 +1,65 @@
+{
+  "world_24x24": {
+    "speckle": {
+      "warn_p90": 42,
+      "fail_max": 207
+    },
+    "small_clusters": {
+      "warn_p90": 62,
+      "fail_max": 216
+    },
+    "color_regions": {
+      "warn_p90": 75,
+      "fail_max": 239
+    },
+    "edge_density": {
+      "warn_p90": 0.8849,
+      "fail_max": 1.0
+    },
+    "_n": 1784
+  },
+  "creatures_24x24": {
+    "speckle": {
+      "warn_p90": 65,
+      "fail_max": 100
+    },
+    "small_clusters": {
+      "warn_p90": 105,
+      "fail_max": 140
+    },
+    "color_regions": {
+      "warn_p90": 121,
+      "fail_max": 153
+    },
+    "edge_density": {
+      "warn_p90": 0.9581,
+      "fail_max": 0.9896
+    },
+    "_n": 396
+  },
+  "items_16x16": {
+    "speckle": {
+      "warn_p90": 49,
+      "fail_max": 112
+    },
+    "small_clusters": {
+      "warn_p90": 62,
+      "fail_max": 117
+    },
+    "color_regions": {
+      "warn_p90": 65,
+      "fail_max": 128
+    },
+    "edge_density": {
+      "warn_p90": 0.9872,
+      "fail_max": 1.0
+    },
+    "_n": 308
+  },
+  "_meta": {
+    "small_cluster_max_area": 4,
+    "warn": "canon p90",
+    "fail": "canon max",
+    "ruling": "play review 2026-08"
+  }
+}

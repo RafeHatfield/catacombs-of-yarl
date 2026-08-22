@@ -36,8 +36,26 @@ Fraction of silhouette-boundary pixels (opaque, 4-adjacent to transparent) that 
 - props / furniture: WARN below 0.75
 - ground decals, full-cell tiles: exempt (tagged in `generated_assets_manifest.json`)
 
-### A7. Speckle — WARN (advisory, unbaselined)
-Count of opaque pixels whose color differs from all 4-neighbors. Not yet baselined against canon; collect distributions during the first audit pass, then promote to thresholded check by ruling. Do not gate on this yet.
+### A7. Speckle — WARN (advisory, unbaselined) → PROMOTED, see AF (Structural fineness)
+Count of opaque pixels whose color differs from all 4-neighbors. **Promoted 2026-08** (play-review register ruling): now thresholded against canon as metric F1 of the Structural-fineness family below.
+
+### AF. Structural fineness — WARN at canon p90, FAIL at canon max (ruled: play review 2026-08)
+The register is Shattered-Pixel / Oryx school — chunky, low-detail, bold-read. The dominant generated-art failure is **refinement** (too fine, too many small structures) which passes A1–A6 while still reading as non-canon. This family measures fineness directly and thresholds it against the canonical Oryx population per sheet-class, WARN at canon **p90**, FAIL at canon **max** (same upper-bound philosophy as A4). Metrics (all: higher = finer = worse), computed by `tools/art_lint/fineness_metrics.py`:
+
+- **F1 speckle** — opaque pixels with no same-colour 4-neighbour (isolated singles). (= A7, now thresholded.)
+- **F2 small_clusters** — count of same-colour 4-connected components with area ≤ 4 px ("below meaningful structure size" in the chunky register).
+- **F3 color_regions** — total count of same-colour 4-connected components (region fragmentation).
+- **F4 edge_density** — interior colour-boundary pixels / opaque pixels (an opaque pixel with an opaque, different-coloured 4-neighbour; silhouette edges to transparency excluded).
+
+Canon-derived thresholds (`tools/art_lint/fineness_thresholds.json`, from the full canonical population — world_24x24 n=1784, creatures_24x24 n=396, items_16x16 n=308):
+
+| class | F1 speckle p90/max | F2 small_clusters p90/max | F3 color_regions p90/max | F4 edge_density p90/max |
+|---|---|---|---|---|
+| world_24x24 | 42 / 207 | 62 / 216 | 75 / 239 | 0.885 / 1.0 |
+| creatures_24x24 | 65 / 100 | 105 / 140 | 121 / 153 | 0.958 / 0.990 |
+| items_16x16 | 49 / 112 | 62 / 117 | 65 / 128 | 0.987 / 1.0 |
+
+Re-derive with `python3 tools/art_lint/fineness_metrics.py`. Sweep generated assets with `tools/art_lint/fineness_sweep.py`. This family **feeds** the Part B rubric and the acceptance scene — it ranks, the human eye rules; nothing is gated on a fineness score alone.
 
 ## Part B — Rubric (judgment, per-asset, human)
 
@@ -64,4 +82,5 @@ Scored by Rafe or delegated reviewer at PR time. Any FAIL blocks merge regardles
 
 ## Changelog
 
+- 2026-08 (play review): promoted A7 speckle to a thresholded check and added the **Structural-fineness family (AF: F1–F4)** — speckle, small_clusters, color_regions, edge_density — baselined on the full canonical population per sheet-class, WARN at canon p90, FAIL at canon max (same philosophy as A4). Named the register explicitly (Shattered-Pixel / Oryx: chunky, low-detail, bold-read) and the failure mode (refinement). Thresholds in `tools/art_lint/fineness_thresholds.json`; derivation `tools/art_lint/fineness_metrics.py`.
 - 2026-08: added Part B item 7 ("Names itself at 1× in scene"), ruled at the Track A gate review after candelabra 5080/5081 were rejected for reading as an unidentifiable shape at gameplay scale despite passing every Part A check.
