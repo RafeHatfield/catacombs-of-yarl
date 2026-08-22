@@ -524,7 +524,10 @@
       "game_key": "cage",
       "notes": "PixelLab s0 \u2014 primary",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 546,
+      "pick_source": "rank42 cage sibling -> canon 546 (barred cage family 543-546, same as rank28)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5066.png",
@@ -841,10 +844,10 @@
       "game_key": "tool_rack",
       "notes": "PixelLab s1337",
       "batch_c_canon_reference": "canon IDs 323;324 \u2014 weapon_rack (already wired) \u2014 wall-rack style reference only, holds weapons not tools",
-      "route": "deep_collapse",
+      "route": "canon_derived",
       "auto_collapsed": true,
       "deep_collapse_merges": 5,
-      "gate_note": "readability flagged at gate \u2014 possible future revisit"
+      "pick_source": "rank 11: derived from canon 323 frame + tools; ACCEPTED at rubric 2026-08"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5091.png",
@@ -922,7 +925,10 @@
       "game_key": "shelf",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 318,
+      "pick_source": "rank30 shelf -> canon 318 (ACCEPTED)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5097.png",
@@ -966,13 +972,17 @@
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
       "conformance_status": "conformant",
-      "lint_exemptions": [],
+      "lint_exemptions": [
+        "A4_color_budget"
+      ],
       "game_key": "shelf_bottles",
       "notes": "PixelLab s42",
       "batch_c_canon_reference": "canon IDs 317;318 \u2014 bookshelf (already wired) \u2014 wood-tone/shelf-furniture reference only, holds books not bottles",
-      "route": "deep_collapse",
+      "route": "canon_substitution",
       "auto_collapsed": true,
-      "deep_collapse_merges": 5
+      "deep_collapse_merges": 5,
+      "canon_source_id": 317,
+      "pick_source": "rank19 shelf_bottles -> canon 317 bookshelf-with-books (ACCEPTED, books in). A4 FAIL is canon 317s multicolour book palette (17 colours) exceeding the prop budget \u2014 accepted as canon/register-correct; lint reports it honestly."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5101.png",

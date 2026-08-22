@@ -160,3 +160,14 @@ mechanical concepts (a "chunky anvil" regenerates as a hammer) — so the blind 
 mandatory, and compact detailed props (benches, shelves) often can't get `edge_density` under canon
 p90 at all. Prefer **canon substitution / derivation** over regeneration whenever a canon concept
 exists; keep-fallback items revert to KEEP rather than force a metric-clean but wrong-reading sprite.
+
+## Blind pre-filter gap (rubric feedback 2026-08)
+
+The gauntlet's blind visual pre-filter (seat a candidate between two canon neighbours, discard the
+obvious outsider) is necessary but **not sufficient**: the sack and bed regen candidates passed both
+the metric critic AND the blind pre-filter, yet Rafe rejected them at rubric as "formless / colour
+off" — i.e. metric-clean and not-obviously-alien, but lacking human form-coherence. This is a known
+gap. **Do not invent a new metric for it** — form-coherence is a human-eye judgement the acceptance
+rubric owns; the pre-filter only trims the obvious. Practical consequence: for soft/organic concepts
+(sacks, bedding, piles) prefer canon substitution/derivation, and treat regen candidates as
+low-confidence until the human rubric confirms.

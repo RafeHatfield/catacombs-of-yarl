@@ -1,0 +1,81 @@
+rank,id,game_key,fineness,disposition
+1,5010,Drain,WARN,KEEP
+2,5001,Anvil,WARN,REWORK keep-fallback -> PARKED->KEEP (anvil reads as hammer)
+3,5108,mushroom_cluster,WARN,DEFER/HELD (mushroom in-situ)
+4,5008,Coal Pile,WARN,KEEP
+5,5002,Armor Stand,WARN,LANDED (approved derived armor stand)
+6,5074,mural_gold_warm,WARN,KEEP
+7,5014,Grate,WARN,KEEP
+8,5092,straw_pile,WARN,KEEP
+9,5099,shelf_bottles,WARN,REWORK -> shelf_bottles derivation (present)
+10,5007,Chain,WARN,KEEP
+11,5090,tool_rack,WARN,LANDED derived (tool_rack)
+12,5070,mural_wood_cool,WARN,KEEP
+13,5078,rubble,WARN,KEEP
+14,5091,straw_pile,WARN,KEEP
+15,5086,vine,WARN,KEEP
+16,5016,Moss,WARN,KEEP
+17,5015,Iron Bars,WARN,LANDED canon 258
+18,5012,Globe,WARN,KEEP
+19,5100,shelf_bottles,WARN,LANDED canon 317 (books; A4 exempt)
+20,5055,table,WARN,LANDED canon 320
+21,5052,table,WARN,LANDED canon 319
+22,5102,sack,WARN,REWORK gauntlet -> PARK keep-fallback (sack/bed rejected)
+23,5079,rubble,WARN,KEEP
+24,5058,bed,WARN,REWORK gauntlet -> PARK keep-fallback (sack/bed rejected)
+25,5060,bench,WARN,"REWORK gauntlet -> PARK (bench, edge_density)"
+26,5061,bench,WARN,REWORK gauntlet -> PARK (bench)
+27,5071,mural_gold_warm,WARN,KEEP
+28,5066,cage,WARN,LANDED canon 544 (cage)
+29,5059,bed,WARN,REWORK gauntlet -> PARK keep-fallback (bed rejected)
+30,5096,shelf,WARN,LANDED canon 318 (shelf)
+31,5075,mural_gold_landscape,WARN,KEEP
+32,5062,desk,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+33,5011,Forge,WARN,KEEP
+34,5064,desk,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+35,5105,rock,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+36,5101,shelf_bottles,WARN,REWORK toward canon shelf register
+37,5077,sign,WARN,"REWORK recolor-first (sign, colour)"
+38,5106,nightstand,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+39,5082,workbench,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+40,5085,water_barrel,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+41,5094,pillar,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+42,5065,cage,WARN,LANDED canon 546 (cage sibling 5065)
+43,5005,Bucket,WARN,KEEP
+44,5080,candelabra,WARN,KEEP
+45,5098,shelf,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+46,5107,nightstand,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+47,5110,puddle,WARN,KEEP
+48,5073,mural_gold_warm,WARN,KEEP
+49,4001,club,WARN,KEEP
+50,5084,water_barrel,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+51,5069,glowing_mushroom,WARN,KEEP pending in-situ (this batch)
+52,5093,pillar,WARN,"REWORK recolor-first (pillar, colour)"
+53,5109,mushroom_cluster,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+54,5097,shelf,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+55,5072,mural_gold_warm,WARN,KEEP
+56,5112,chest_open,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+57,5076,mural_gold_landscape,WARN,KEEP
+58,5039,key_item,WARN,KEEP
+59,5063,desk,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+60,5089,tool_rack,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+61,4004,,WARN,REWORK identifiability (Part B item7)
+62,5068,glowing_mushroom,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+63,4003,,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+64,5081,candelabra,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+65,5054,table,WARN,"REWORK gauntlet (edge_density-only -> F4-dependent, see flag)"
+66,5095,pillar,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+67,5088,training_dummy,WARN,REWORK bounded/keep-fallback (training_dummy)
+68,5087,training_dummy,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+69,5067,glowing_mushroom,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+70,5104,rock,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+71,5114,chest_trapped,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+72,5083,workbench,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+73,5111,chest_closed,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+74,4002,,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+75,5113,chest_empty,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+76,5051,chair,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+77,5056,chair,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+78,5057,chair,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+79,5053,table,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
+80,3001,floor_worn,PASS,"PASS (below WARN) -> no strip, implicit KEEP"
