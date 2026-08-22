@@ -70,13 +70,16 @@ public sealed class VoiceTierMetadata
     }
 
     // ── YAML shape (deserializer targets) ────────────────────────────────────────
-    private sealed class MetaFileDto
+    // internal (not private) so AotObjectFactory can register them — under NativeAOT (iOS) YamlDotNet
+    // cannot reflect a parameterless ctor, so every deserialized type MUST have an explicit factory
+    // entry or the parse throws. Missing these is exactly why the voice scheduler was null on device.
+    internal sealed class MetaFileDto
     {
         public int AmbientCutoffTier { get; set; }
         public List<FamilyDto> Families { get; set; } = new();
     }
 
-    private sealed class FamilyDto
+    internal sealed class FamilyDto
     {
         public string Key { get; set; } = "";
         public int Tier { get; set; }
