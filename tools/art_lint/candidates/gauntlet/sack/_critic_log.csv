@@ -1,0 +1,9 @@
+seed,win,gap,speckle,small_clusters,color_regions,edge_density,largest_gap,lint,path,error
+0,False,0.063,23,34,40,0.9407,edge_density,WARN,tools/art_lint/candidates/gauntlet/sack/sack_s0_snapped.png,
+1,True,0.0,33,53,62,0.8818,edge_density,WARN,tools/art_lint/candidates/gauntlet/sack/sack_s1_snapped.png,
+2,True,0.0,29,44,53,0.8401,edge_density,PASS,tools/art_lint/candidates/gauntlet/sack/sack_s2_snapped.png,
+3,True,0.0,18,29,34,0.7806,edge_density,WARN,tools/art_lint/candidates/gauntlet/sack/sack_s3_snapped.png,
+4,False,0.032,41,64,69,0.7175,small_clusters,PASS,tools/art_lint/candidates/gauntlet/sack/sack_s4_snapped.png,
+5,True,0.0,17,41,48,0.7198,edge_density,PASS,tools/art_lint/candidates/gauntlet/sack/sack_s5_snapped.png,
+6,True,0.0,22,30,38,0.8242,edge_density,PASS,tools/art_lint/candidates/gauntlet/sack/sack_s6_snapped.png,
+7,True,0.0,30,43,53,0.6862,edge_density,PASS,tools/art_lint/candidates/gauntlet/sack/sack_s7_snapped.png,

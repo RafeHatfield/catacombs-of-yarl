@@ -1,0 +1,7 @@
+seed,win,gap,speckle,small_clusters,color_regions,edge_density,largest_gap,lint,path,error
+0,True,0.0,31,43,48,0.7333,edge_density,WARN,tools/art_lint/candidates/gauntlet/anvil/anvil_s0_snapped.png,
+1,True,0.0,20,32,34,0.8425,edge_density,PASS,tools/art_lint/candidates/gauntlet/anvil/anvil_s1_snapped.png,
+2,True,0.0,23,28,30,0.8795,edge_density,WARN,tools/art_lint/candidates/gauntlet/anvil/anvil_s2_snapped.png,
+3,True,0.0,25,34,36,0.7174,edge_density,WARN,tools/art_lint/candidates/gauntlet/anvil/anvil_s3_snapped.png,
+4,True,0.0,40,56,61,0.8516,edge_density,WARN,tools/art_lint/candidates/gauntlet/anvil/anvil_s4_snapped.png,
+5,True,0.0,24,35,39,0.7724,edge_density,WARN,tools/art_lint/candidates/gauntlet/anvil/anvil_s5_snapped.png,
