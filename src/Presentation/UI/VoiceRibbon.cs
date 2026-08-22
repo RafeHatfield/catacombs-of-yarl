@@ -6,13 +6,13 @@ namespace CatacombsOfYarl.Presentation.UI;
 
 /// <summary>
 /// The Hollowmark ribbon (docs/systems/voice_delivery.md §Ribbon contract). Its OWN Control — NOT
-/// ToastLog / MessageLogPanel. One line at a time, italic purple, portrait-safe near the top and clear
-/// of the bottom touch controls. Tap the line to dismiss; a small history anchor expands the last-20
-/// (run-scoped, from the scheduler's serialized history); a quiet button mutes the current floor.
+/// ToastLog / MessageLogPanel. Lines STACK: up to <see cref="MaxCards"/> attributed cards, newest on
+/// top, each tagged "✦ HOLLOWMARK" so the player knows who is speaking. Dismiss is a device setting:
+/// Manual (default) keeps each card until tapped — nothing missed mid-fight — while Timed fades each
+/// after its own duration. Portrait-safe near the top, clear of the bottom touch controls.
 ///
-/// No queue: <see cref="ShowLine"/> simply replaces the current line. The scheduler decides whether a
-/// new line supersedes (strictly higher tier) via the <see cref="CurrentTier"/> probe, so the ribbon
-/// only ever receives lines that are allowed to land.
+/// The scheduler no longer supersedes by tier (that was for a single-slot ribbon); it still filters by
+/// cooldown / mode / once-per-run and delivers at most one line per turn, which this stacks.
 /// </summary>
 public sealed partial class VoiceRibbon : Control
 {
@@ -20,81 +20,50 @@ public sealed partial class VoiceRibbon : Control
     [Signal] public delegate void QuietRequestedEventHandler();
 
     private const int FontSize = 22;
+    private const int MaxCards = 3;                         // stack cap; oldest drops off the bottom
+    private const double FadeSeconds = 0.35;               // dismiss/expire fade-out
     private static readonly Color Purple = new("b090d0");
 
-    private RichTextLabel? _line;
-    private PanelContainer? _bar;
+    // One live line on the stack: its card node + when it auto-expires (MaxValue in Manual mode).
+    private sealed class Card
+    {
+        public required PanelContainer Node;
+        public double ExpireAt;
+        public bool Fading;
+    }
+
+    private readonly List<Card> _cards = new();            // index 0 = newest (top)
+    private VBoxContainer? _stack;
+    private HBoxContainer? _controls;
     private PanelContainer? _historyPanel;
     private RichTextLabel? _historyText;
 
-    private double _expireAt;          // Time.GetTicksMsec()/1000 when the current line auto-dismisses
-    private int? _currentTier;         // tier of the line on screen, null when empty — the supersede probe
-
-    /// <summary>Tier of the line currently displayed, or null if the ribbon is empty/expired.</summary>
-    public int? CurrentTier => _currentTier;
-
-    /// <summary>
-    /// Diagnostic snapshot of the widget's on-screen geometry (Phase 1 device diagnostic for E): the
-    /// Control's global rect + visibility, the inner bar's rect + visibility, this widget's CanvasLayer,
-    /// and the viewport size. If a line was "delivered" but off-screen or behind another layer, this says so.
-    /// </summary>
-    public string DiagState()
-    {
-        var r = GetGlobalRect();
-        var barVis = _bar?.Visible ?? false;
-        var br = _bar?.GetGlobalRect() ?? new Rect2();
-        int layer = GetParent() is CanvasLayer cl ? cl.Layer : -999;
-        var vp = GetViewportRect().Size;
-        return $"ribbonVisible={Visible} rect=({r.Position.X:0},{r.Position.Y:0} {r.Size.X:0}x{r.Size.Y:0}) " +
-               $"barVisible={barVis} barRect=({br.Position.X:0},{br.Position.Y:0} {br.Size.X:0}x{br.Size.Y:0}) " +
-               $"canvasLayer={layer} viewport={vp.X:0}x{vp.Y:0}";
-    }
-
     public override void _Ready()
     {
-        // Portrait-safe: a top band, inset from the edges, clear of the bottom touch controls.
+        // Portrait-safe: a top band, inset from the edges, tall enough for the 3-card stack + controls,
+        // clear of the bottom touch controls.
         SetAnchorsPreset(LayoutPreset.TopWide);
         OffsetTop = 96;                // below the status bar
         OffsetLeft = 12;
         OffsetRight = -12;
-        OffsetBottom = 150;
-        MouseFilter = MouseFilterEnum.Ignore;   // container passes through; children opt back in
+        OffsetBottom = 360;            // room for MaxCards cards + the controls row
+        MouseFilter = MouseFilterEnum.Ignore;   // container passes through; cards opt back in
 
-        _bar = new PanelContainer { Visible = false, MouseFilter = MouseFilterEnum.Stop };
-        var bg = new StyleBoxFlat
-        {
-            BgColor = new Color(0.06f, 0.05f, 0.09f, 0.82f),
-            BorderColor = Purple,
-            ContentMarginLeft = 12, ContentMarginRight = 8, ContentMarginTop = 6, ContentMarginBottom = 6,
-        };
-        bg.SetBorderWidthAll(0);
-        bg.BorderWidthLeft = 3;
-        bg.SetCornerRadiusAll(6);
-        _bar.AddThemeStyleboxOverride("panel", bg);
-        AddChild(_bar);
-        // Span the ribbon Control's full width. Without this the PanelContainer collapses to its
-        // content minimum, so the autowrapping label wraps to a tall thin vertical strip (device
-        // geometry showed 117x863) instead of a horizontal line — the second half of symptom E.
-        _bar.SetAnchorsPreset(LayoutPreset.TopWide);
+        // Root column: a right-aligned controls row, then the card stack below it.
+        var root = new VBoxContainer { MouseFilter = MouseFilterEnum.Ignore };
+        root.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+        root.AddThemeConstantOverride("separation", 6);
+        AddChild(root);
 
-        var row = new HBoxContainer();
-        _bar.AddChild(row);
+        _controls = new HBoxContainer { Alignment = BoxContainer.AlignmentMode.End, MouseFilter = MouseFilterEnum.Ignore };
+        _controls.AddChild(MakeGlyphButton("⋯", () => EmitSignal(SignalName.HistoryRequested)));        // history
+        _controls.AddChild(MakeGlyphButton("\U0001F910", () => EmitSignal(SignalName.QuietRequested))); // 🤫 quiet floor
+        _controls.Visible = false;    // hidden until there's something to control
+        root.AddChild(_controls);
 
-        _line = new RichTextLabel
-        {
-            BbcodeEnabled = true,
-            FitContent = true,
-            ScrollActive = false,
-            AutowrapMode = TextServer.AutowrapMode.WordSmart,
-            MouseFilter = MouseFilterEnum.Stop,   // tap the line to dismiss
-            SizeFlagsHorizontal = SizeFlags.ExpandFill,
-        };
-        _line.AddThemeFontSizeOverride("normal_font_size", FontSize);
-        _line.GuiInput += OnLineInput;
-        row.AddChild(_line);
-
-        row.AddChild(MakeGlyphButton("⋯", () => EmitSignal(SignalName.HistoryRequested)));  // ⋯ history
-        row.AddChild(MakeGlyphButton("\U0001F910", () => EmitSignal(SignalName.QuietRequested))); // 🤫 quiet floor
+        _stack = new VBoxContainer { MouseFilter = MouseFilterEnum.Ignore };
+        _stack.AddThemeConstantOverride("separation", 6);
+        root.AddChild(_stack);
 
         SetProcess(true);
     }
@@ -112,30 +81,139 @@ public sealed partial class VoiceRibbon : Control
         return b;
     }
 
+    /// <summary>
+    /// Push a delivered line onto the top of the stack. In Manual mode the card stays until tapped (or
+    /// until pushed off by the cap); in Timed mode it fades after <paramref name="seconds"/>.
+    /// </summary>
+    public void ShowLine(string text, float seconds, bool manualDismiss)
+    {
+        if (_stack == null) return;
+
+        var card = new Card
+        {
+            Node = BuildCardNode(text),
+            ExpireAt = manualDismiss ? double.MaxValue : Now() + seconds,
+        };
+        WireDismiss(card);
+
+        _stack.AddChild(card.Node);
+        _stack.MoveChild(card.Node, 0);   // newest on top
+        _cards.Insert(0, card);
+
+        // Cap: drop the oldest (bottom) immediately when a 4th arrives — snappy, no fade.
+        while (_cards.Count > MaxCards)
+        {
+            var oldest = _cards[^1];
+            _cards.RemoveAt(_cards.Count - 1);
+            oldest.Node.QueueFree();
+        }
+
+        if (_controls != null) _controls.Visible = true;
+    }
+
+    private PanelContainer BuildCardNode(string text)
+    {
+        var card = new PanelContainer { MouseFilter = MouseFilterEnum.Stop };
+        var bg = new StyleBoxFlat
+        {
+            BgColor = new Color(0.06f, 0.05f, 0.09f, 0.86f),
+            BorderColor = Purple,
+            ContentMarginLeft = 12, ContentMarginRight = 10, ContentMarginTop = 6, ContentMarginBottom = 8,
+        };
+        bg.SetBorderWidthAll(0);
+        bg.BorderWidthLeft = 3;
+        bg.SetCornerRadiusAll(6);
+        card.AddThemeStyleboxOverride("panel", bg);
+
+        var col = new VBoxContainer { MouseFilter = MouseFilterEnum.Ignore };
+        col.AddThemeConstantOverride("separation", 1);
+        card.AddChild(col);
+
+        // Attribution header — glyph + name, so the player knows Hollowmark is speaking.
+        var header = new Label
+        {
+            Text = "✦ HOLLOWMARK",
+            MouseFilter = MouseFilterEnum.Ignore,
+        };
+        header.AddThemeFontSizeOverride("font_size", 13);
+        header.AddThemeColorOverride("font_color", new Color(0.69f, 0.56f, 0.82f, 0.95f));
+        col.AddChild(header);
+
+        var line = new RichTextLabel
+        {
+            BbcodeEnabled = true,
+            FitContent = true,                    // card sizes to the wrapped line; width is the full ribbon
+            ScrollActive = false,
+            AutowrapMode = TextServer.AutowrapMode.WordSmart,
+            MouseFilter = MouseFilterEnum.Ignore, // the card (parent) captures the tap-to-dismiss
+            SizeFlagsHorizontal = SizeFlags.ExpandFill,
+        };
+        line.AddThemeFontSizeOverride("normal_font_size", FontSize);
+        line.Text = $"[i][color=#b090d0]{text}[/color][/i]";
+        col.AddChild(line);
+
+        return card;
+    }
+
+    private void WireDismiss(Card card)
+    {
+        card.Node.GuiInput += @event =>
+        {
+            if (@event is InputEventScreenTouch { Pressed: true }
+                or InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
+                StartFadeOut(card);
+        };
+    }
+
     public override void _Process(double delta)
     {
-        if (_currentTier == null) return;
-        if (Time.GetTicksMsec() / 1000.0 >= _expireAt) Dismiss();
+        if (_cards.Count == 0) return;
+        double now = Now();
+        foreach (var c in _cards.ToArray())
+            if (!c.Fading && now >= c.ExpireAt)
+                StartFadeOut(c);
     }
+
+    /// <summary>Fade a card out then free it (tap-dismiss or timed expiry).</summary>
+    private void StartFadeOut(Card card)
+    {
+        if (card.Fading) return;
+        card.Fading = true;
+        var tween = CreateTween();
+        tween.TweenProperty(card.Node, "modulate:a", 0.0, FadeSeconds);
+        tween.TweenCallback(Callable.From(() => RemoveCard(card)));
+    }
+
+    private void RemoveCard(Card card)
+    {
+        _cards.Remove(card);
+        if (Godot.GodotObject.IsInstanceValid(card.Node)) card.Node.QueueFree();
+        if (_cards.Count == 0 && _controls != null) _controls.Visible = false;
+    }
+
+    /// <summary>Clear the whole stack (e.g., on a new run/floor). No fade.</summary>
+    public void ClearAll()
+    {
+        foreach (var c in _cards) if (Godot.GodotObject.IsInstanceValid(c.Node)) c.Node.QueueFree();
+        _cards.Clear();
+        if (_controls != null) _controls.Visible = false;
+    }
+
+    private static double Now() => Time.GetTicksMsec() / 1000.0;
 
     /// <summary>
-    /// Display a delivered line. Replaces whatever is showing (no queue). <paramref name="tier"/> becomes
-    /// the new supersede probe; <paramref name="seconds"/> is the auto-dismiss duration from settings.
+    /// Diagnostic snapshot for the device diagnostic (E): stack depth and the top card's on-screen rect,
+    /// so a "delivered" line that renders off-screen or degenerate is caught.
     /// </summary>
-    public void ShowLine(string text, int tier, float seconds)
+    public string DiagState()
     {
-        if (_line == null || _bar == null) return;
-        _line.Text = $"[i][color=#b090d0]{text}[/color][/i]";
-        _currentTier = tier;
-        _expireAt = Time.GetTicksMsec() / 1000.0 + seconds;
-        _bar.Visible = true;
-    }
-
-    /// <summary>Clear the ribbon (tap-to-dismiss or auto-expire). The tier probe goes null.</summary>
-    public void Dismiss()
-    {
-        _currentTier = null;
-        if (_bar != null) _bar.Visible = false;
+        var top = _cards.Count > 0 ? _cards[0].Node : null;
+        var r = top?.GetGlobalRect() ?? new Rect2();
+        int layer = GetParent() is CanvasLayer cl ? cl.Layer : -999;
+        var vp = GetViewportRect().Size;
+        return $"ribbonVisible={Visible} cards={_cards.Count} " +
+               $"topRect=({r.Position.X:0},{r.Position.Y:0} {r.Size.X:0}x{r.Size.Y:0}) " +
+               $"canvasLayer={layer} viewport={vp.X:0}x{vp.Y:0}";
     }
 
     /// <summary>Toggle the history popup, rendering the scheduler's run-scoped last-20 (newest first).</summary>
@@ -178,11 +256,5 @@ public sealed partial class VoiceRibbon : Control
         scroll.AddChild(_historyText);
         AddChild(_historyPanel);
         _historyPanel.Visible = false;
-    }
-
-    private void OnLineInput(InputEvent @event)
-    {
-        if (@event is InputEventScreenTouch { Pressed: true } or InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left })
-            Dismiss();
     }
 }

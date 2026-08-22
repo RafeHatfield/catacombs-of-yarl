@@ -42,8 +42,13 @@ reflavor is a *separate* item and does not touch this canon.)
 - NOT in the run save (device settings, 5b): Verbose/Tactical/Silent toggle, ribbon
   duration. Settings must survive across runs; run state must not leak into settings.
 
-## Ribbon contract (implemented 5b; scheduler API must support it)
-- One line at a time; new delivery SUPERSEDES current only when strictly higher tier,
-  else dropped (unconsumed). No queue, ever.
-- Duration: Short 2.5s / Normal 4s (default) / Long 6s; tap-to-dismiss.
-- History: tap-to-expand anchor, last 20, run-scoped (from the serialized history).
+## Ribbon contract (5b; revised 2026-08 — stacked, attributed, dismiss-mode)
+- STACK, newest on top, up to 3 cards; the 4th pushes the oldest off the bottom. The scheduler
+  no longer supersedes by tier (that was for a single slot) — the ribbon hook passes
+  `currentRibbonTier: null`. The scheduler still delivers at most one line per turn and filters by
+  cooldown / mode / once-per-run, so the stack fills gradually, not every turn.
+- ATTRIBUTION: each card is tagged "✦ HOLLOWMARK" so the player knows who is speaking.
+- DISMISS MODE (device setting, default Manual): Manual = each card stays until tapped (nothing
+  missed mid-fight); Timed = each card fades after its own Duration (Short 2.5s / Normal 4s / Long 6s).
+- History: tap-to-expand anchor, last 20, run-scoped (from the serialized history). Quiet button
+  mutes the current floor. Both live in a persistent controls row above the stack.
