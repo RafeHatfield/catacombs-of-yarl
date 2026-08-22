@@ -142,6 +142,13 @@ public sealed class AotObjectFactory : IObjectFactory
         // Voice line YAML pools: trigger_id → string[]
         [typeof(Dictionary<string, List<string>>)] = () => new Dictionary<string, List<string>>(),
 
+        // Voice tier metadata (voice_tiers.yaml + the dev fixture): ambient_cutoff_tier + ordered
+        // families. Missing these made VoiceTierMetadata.LoadFromYaml throw under NativeAOT (iOS), so
+        // the voice scheduler was never built and the ribbon stayed silent — desktop JIT hid it.
+        [typeof(Voice.VoiceTierMetadata.MetaFileDto)] = () => new Voice.VoiceTierMetadata.MetaFileDto(),
+        [typeof(Voice.VoiceTierMetadata.FamilyDto)] = () => new Voice.VoiceTierMetadata.FamilyDto(),
+        [typeof(List<Voice.VoiceTierMetadata.FamilyDto>)] = () => new List<Voice.VoiceTierMetadata.FamilyDto>(),
+
         // Under-Warden memos (memos.yaml): key → MemoDtoEntry
         [typeof(MemoRegistry.MemoDtoEntry)] = () => new MemoRegistry.MemoDtoEntry(),
         [typeof(Dictionary<string, MemoRegistry.MemoDtoEntry>)] = () => new Dictionary<string, MemoRegistry.MemoDtoEntry>(),
