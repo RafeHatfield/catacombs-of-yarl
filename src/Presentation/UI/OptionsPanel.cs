@@ -41,6 +41,7 @@ public sealed partial class OptionsPanel : Control
     private readonly Action<VoiceSettings>? _onVoiceChanged;
     private TouchButton? _voiceModeBtn;
     private TouchButton? _voiceDurationBtn;
+    private TouchButton? _voiceDismissBtn;
 
     // Dev instrumentation: export the on-disk + in-memory mid-run save. Null (and hidden) in release.
     private readonly Action? _onExportSave;
@@ -167,6 +168,15 @@ public sealed partial class OptionsPanel : Control
             };
             _voiceDurationBtn.Pressed += OnVoiceDurationCycle;
             vbox.AddChild(_voiceDurationBtn);
+
+            _voiceDismissBtn = new TouchButton
+            {
+                Text = VoiceDismissBtnText(), FontSize = 22,
+                BackgroundColor = new Color(0.25f, 0.25f, 0.35f, 0.95f),
+                CustomMinimumSize = new Vector2(280, 56),
+            };
+            _voiceDismissBtn.Pressed += OnVoiceDismissCycle;
+            vbox.AddChild(_voiceDismissBtn);
         }
 
         // Debug overlay toggle — only in debug builds where the overlay exists.
@@ -258,8 +268,18 @@ public sealed partial class OptionsPanel : Control
         _onVoiceChanged?.Invoke(_voiceSettings);
     }
 
+    private void OnVoiceDismissCycle()
+    {
+        _voiceSettings = _voiceSettings with { Dismiss = _voiceSettings.CycleDismiss() };
+        if (_voiceDismissBtn != null) _voiceDismissBtn.Text = VoiceDismissBtnText();
+        _onVoiceChanged?.Invoke(_voiceSettings);
+    }
+
     private string VoiceModeBtnText() => $"Voice: {_voiceSettings.Mode}";
     private string VoiceDurationBtnText() => $"Duration: {_voiceSettings.Duration}";
+    // "Tap to clear" (Manual) keeps lines until tapped; "Auto-fade" (Timed) uses the Duration above.
+    private string VoiceDismissBtnText() =>
+        $"Dismiss: {(_voiceSettings.Dismiss == VoiceDismiss.Manual ? "Tap to clear" : "Auto-fade")}";
     private string VoiceDiagBtnText() => $"Voice Diag (dev): {(_voiceDiagOn ? "ON" : "OFF")}";
 
     // -------------------------------------------------------------------------
