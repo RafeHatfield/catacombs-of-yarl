@@ -50,7 +50,7 @@ public class ArtAcceptanceSceneBuilderTests
         var state = ArtAcceptanceSceneBuilder.Build(monsters, items, consumables);
 
         var tileIds = state.Props.Select(p => p.TileId).ToHashSet();
-        int[] required = { 5011, 5089, 5001, 5080, 5052, 5051, 5056, 5057, 5078, 5079, 5110, 268, 5102 };
+        int[] required = { 5011, 5089, 5001, 5080, 5053, 5051, 5056, 5057, 5078, 5079, 5110, 268, 5102 };
         foreach (var id in required)
             Assert.That(tileIds, Does.Contain(id), $"Missing required prop tile id {id}");
     }
