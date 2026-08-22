@@ -22,16 +22,19 @@ namespace CatacombsOfYarl.Logic.Core;
 /// this class's own numbers).
 ///
 /// Room absolute position (not just shape) matters here: FloorComposer's worn-tile noise
-/// (docs/art_test_scene_spec_v2.md item 4) is a function of a cell's absolute (x,y), and
-/// MarkPropCell (called below for every blocking prop, matching production behavior —
-/// RoomPropPlacer does the same) makes prop-occupied cells act as pseudo-walls for
-/// FloorComposer's edge-darkening pass. In this densely-packed 8x9 room that leaves only
-/// ~10 truly Standard-eligible cells, and at the room's first-tried absolute position none
-/// exceeded the worn threshold (noise > 0.72) — a real, verified-by-live-capture zero, not
-/// a hypothetical. The room was shifted by exactly (0,+1) — same shape, same relative
-/// content layout, one tile down — which is enough to move one eligible cell's noise
-/// sample to 0.84. This is a legitimate repack lever (translating the room), not a seed or
-/// renderer change: FloorComposer's seed stays Render's own default (0), untouched.
+/// (docs/art_test_scene_spec_v2.md item 4) is a function of a cell's absolute (x,y). Every
+/// blocking prop calls MarkPropCell (matching production — RoomPropPlacer does the same), which
+/// makes its cell non-walkable; FloorComposer's Pass 1 only assigns a floor variant to walkable
+/// cells, so prop cells are never worn-eligible. In this densely-packed 8x9 room that leaves a
+/// small worn-eligible pool, and at the room's first-tried absolute position none exceeded the
+/// worn threshold (noise > 0.72) — a real, verified-by-live-capture zero. The room is therefore
+/// shifted by exactly (0,+1) — same shape, same relative content layout, one tile down — enough
+/// to bring one eligible cell's noise sample above threshold (0.84) so the scene satisfies spec
+/// §5's "≥1 floor_worn in frame". This is a worn-coverage lever (translating the room), NOT a
+/// renderer change: FloorComposer's seed stays Render's own default (0), untouched. (The shift
+/// is independent of the prop-pedestal render bug — that was FloorComposer's edge-darkening pass
+/// wrongly treating prop cells as walls, fixed at source there; props no longer affect shading,
+/// and the shift's worn value is unchanged by that fix — verified worn=1 at (4,9) before & after.)
 /// </summary>
 public static class ArtAcceptanceSceneBuilder
 {

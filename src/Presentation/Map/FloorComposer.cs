@@ -90,10 +90,18 @@ public static class FloorComposer
 
             // Distance 0: any of the 8 immediate neighbors is a wall → always Dark.
             // This catches all room edges including diagonal corners.
+            //
+            // Wall-ness is IsWallTile, NOT !IsWalkable. Walkability also excludes blocking
+            // props (and closed doors), so borrowing it here made prop-occupied cells cast
+            // wall-shadow — a "pedestal" halo around every blocking prop, mid-room, with no
+            // wall to justify it. Never designed; an accident of predicate reuse (ruled a
+            // render bug, Rafe 2026-08). Edge darkening is a WALL-shadow pass, so it must
+            // test rendered walls (Wall/SecretDoor) — the same predicate the wall autotiler
+            // uses — and props must not participate.
             bool adjacentToWall = false;
             for (int d = 0; d < 8; d++)
             {
-                if (!map.IsWalkable(x + dx[d], y + dy[d]))
+                if (map.IsWallTile(x + dx[d], y + dy[d]))
                 {
                     adjacentToWall = true;
                     break;
