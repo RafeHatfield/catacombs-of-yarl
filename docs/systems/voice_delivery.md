@@ -3,6 +3,14 @@ Ruled 2026-07-20, Foundation thread. Supersedes the archived skeleton
 (docs/archive/story/the_under_warden_design_notes.md — ribbon row); ToastLog and
 MessageLogPanel remain ruled out; the ribbon is its own widget (5b).
 
+## Canon — who Hollowmark is (ruled Foundation, 2026-08-21)
+**Hollowmark IS the wand of portals** — the bound artificer. The item is her body; the
+ribbon is her voice. They are one character, not a voice feature plus an unrelated wand.
+That the `wand_of_portals` entity does not yet carry her name/description is a **design gap
+being closed in Phase 3**, not the design. Never write "Hollowmark is only the voice" — the
+voice and the artifact are the same being. (The `wand_of_spell_break` → "Sasha's Sunder"
+reflavor is a *separate* item and does not touch this canon.)
+
 ## Scheduler (Logic; presentation-agnostic)
 - Per-trigger-family SHUFFLE BAGS: draw without replacement; reshuffle only on
   exhaustion; a line never repeats until its family's bag empties.
