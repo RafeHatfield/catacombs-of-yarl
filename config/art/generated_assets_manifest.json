@@ -106,46 +106,8 @@
       "triage": "retouch",
       "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=WARN, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=15, final_overall=FAIL.]",
       "batch_c_canon_reference": "canon IDs 159 \u2014 mace \u2014 nearest canon blunt-weapon icon, style/proportion reference only (metal-headed flail, not a wooden club)",
-      "accepted_note": "accepted-as-is at gate review 2026-08; original reads correctly, no candidate improved it"
-    },
-    {
-      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4002.png",
-      "origin": "retrodiffusion",
-      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
-      "asset_class": "item",
-      "conformance_status": "nonconformant",
-      "lint_exemptions": [],
-      "game_key": null,
-      "notes": "RD rd_plus__low_res v2 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=PASS, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=8, final_overall=FAIL.]",
-      "gate_note": "unwired \u2014 pending exempt-or-delete ruling"
-    },
-    {
-      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4003.png",
-      "origin": "retrodiffusion",
-      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
-      "asset_class": "item",
-      "conformance_status": "nonconformant",
-      "lint_exemptions": [],
-      "game_key": null,
-      "notes": "RD rd_plus__low_res v0 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
-      "gate_note": "unwired \u2014 pending exempt-or-delete ruling"
-    },
-    {
-      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4004.png",
-      "origin": "retrodiffusion",
-      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
-      "asset_class": "item",
-      "conformance_status": "nonconformant",
-      "lint_exemptions": [],
-      "game_key": null,
-      "notes": "RD rd_plus__low_res v1 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=WARN, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=10, final_overall=FAIL.]",
-      "gate_note": "unwired \u2014 pending exempt-or-delete ruling"
+      "accepted_note": "accepted-by-eye (sweep closure 2026-08); no candidate beat the live sprite",
+      "route": "original_accepted"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_3001.png",
@@ -177,24 +139,22 @@
       "notes": "RD rd_plus__low_res v2",
       "triage": "redesign",
       "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/anvil.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied.",
-      "accepted_note": "accepted-as-is at gate review 2026-08; original reads correctly, no candidate improved it"
+      "accepted_note": "accepted-by-eye (sweep closure 2026-08); no candidate beat the live sprite",
+      "route": "original_accepted"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5002.png",
       "origin": "retrodiffusion",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "accepted",
-      "lint_exemptions": [
-        "A1_palette",
-        "A4_color_budget",
-        "A5_near_colors"
-      ],
+      "conformance_status": "conformant",
+      "lint_exemptions": [],
       "game_key": "Armor Stand",
       "notes": "RD rd_plus__low_res v1",
       "triage": "redesign",
       "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/armor_stand.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied.",
-      "accepted_note": "accepted-as-is at gate review 2026-08; original reads correctly, no candidate improved it"
+      "route": "canon_derived",
+      "pick_source": "canon-derived from weapon-stand 323 frame + chunky helm+cuirass; APPROVED at fineness rubric (rank 5, 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5005.png",
@@ -218,7 +178,8 @@
       "game_key": "Chain",
       "notes": "RD rd_plus__low_res v1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "retrodiffusion_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5008.png",
@@ -232,7 +193,8 @@
       "game_key": "Coal Pile",
       "notes": "RD rd_plus__low_res v1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "retrodiffusion_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5010.png",
@@ -285,7 +247,8 @@
       "game_key": "Grate",
       "notes": "RD rd_plus__low_res grate_v3",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "retrodiffusion_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5015.png",
@@ -297,7 +260,10 @@
       "game_key": "Iron Bars",
       "notes": "RD rd_plus__low_res iron_bars_v2",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "canon_substitution",
+      "canon_source_id": 258,
+      "pick_source": "fineness rework rank 17: canon substitution world tile 258 \u2014 iron_bars \u2014 canon barred gate (single state, outright match)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5016.png",
@@ -311,7 +277,8 @@
       "game_key": "Moss",
       "notes": "RD rd_plus__low_res v0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "retrodiffusion_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5039.png",
@@ -323,7 +290,8 @@
       "game_key": "key_item",
       "notes": "Key icon overlay rendered directly from world_24x24 by ItemSpriteManager/DungeonRenderer, bypassing the items_16x16 pipeline \u2014 see src/Presentation/Entities/ItemSpriteManager.cs. 24x24 is correct/intentional for this asset, not a resolution bug. Classified world_tile (not item) so A3 checks the resolution it actually ships at. Flagging for Part B rubric: confirm this classification with Rafe rather than assuming it.",
       "pipeline_pr": "12",
-      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); unaffected by 2026-07-16 rubric-review correction (low redesign distance, not rejected)"
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); unaffected by 2026-07-16 rubric-review correction (low redesign distance, not rejected)",
+      "route": "canon_overlay"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5051.png",
@@ -336,8 +304,9 @@
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "route": "pixellab_regen_locked",
-      "pick_source": "gate re-roll Route B (front-facing, palette-locked to table 5053), seed 0; sheet position 5th from top (builder row 5); PRIMARY"
+      "route": "canon_substitution",
+      "pick_source": "canon substitution: world tile 321 (chair) pixels copied in place \u2014 resolved: canon substitution (play-review register ruling 2026-08)",
+      "canon_source_id": 321
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5052.png",
@@ -349,7 +318,10 @@
       "game_key": "table",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 319,
+      "pick_source": "fineness rework rank 21: canon substitution world tile 319 \u2014 table \u2014 canon plain table (outright match)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5053.png",
@@ -360,8 +332,9 @@
       "lint_exemptions": [],
       "game_key": "table",
       "notes": "PixelLab s1",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "table seed 7"
+      "route": "canon_substitution",
+      "canon_source_id": 319,
+      "pick_source": "canon substitution: world tile 319 (table) pixels copied in place \u2014 resolves the deferred table gate verdict (play-review register ruling 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5054.png",
@@ -373,7 +346,10 @@
       "game_key": "table",
       "notes": "PixelLab s42 \u2014 primary",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 319,
+      "pick_source": "sibling reconciliation: table family already ruled (canon 319/320); 5054 -> canon 319"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5055.png",
@@ -385,7 +361,10 @@
       "game_key": "table",
       "notes": "PixelLab s1337",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 320,
+      "pick_source": "fineness rework rank 20: canon substitution world tile 320 \u2014 table \u2014 canon writing desk (table family; single-cell writing-desk substitute per multi-tile flag)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5056.png",
@@ -398,8 +377,9 @@
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "route": "pixellab_regen_locked",
-      "pick_source": "gate re-roll Route B (front-facing, palette-locked to table 5053), seed 4; sheet position 4th from bottom (builder row 8)"
+      "route": "canon_substitution",
+      "pick_source": "canon substitution: world tile 321 (chair) pixels copied in place \u2014 resolved: canon substitution (play-review register ruling 2026-08)",
+      "canon_source_id": 321
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5057.png",
@@ -412,56 +392,65 @@
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "route": "pixellab_regen_locked",
-      "pick_source": "gate re-roll Route B (front-facing, palette-locked to table 5053), seed 5; sheet position 3rd from bottom (builder row 9)"
+      "route": "canon_substitution",
+      "pick_source": "canon substitution: world tile 321 (chair) pixels copied in place \u2014 resolved: canon substitution (play-review register ruling 2026-08)",
+      "canon_source_id": 321
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5058.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "bed",
       "notes": "PixelLab s2",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5059.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "bed",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5060.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "bench",
       "notes": "PixelLab s3",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5061.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "bench",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5062.png",
@@ -473,9 +462,11 @@
       "game_key": "desk",
       "notes": "PixelLab s42 \u2014 primary",
       "batch_c_canon_reference": "canon IDs 600;601;602;603;604 \u2014 counter/bar-top cluster \u2014 wood-plank color/material reference only, wrong shape for a desk",
-      "route": "deep_collapse",
+      "route": "canon_substitution",
       "auto_collapsed": true,
-      "deep_collapse_merges": 5
+      "deep_collapse_merges": 5,
+      "canon_source_id": 320,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 320"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5063.png",
@@ -486,8 +477,10 @@
       "lint_exemptions": [],
       "game_key": "desk",
       "notes": "PixelLab s999",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "desk seed 6"
+      "route": "canon_substitution",
+      "pixellab_prompt_seed": "desk seed 6",
+      "canon_source_id": 320,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 320"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5064.png",
@@ -499,7 +492,10 @@
       "game_key": "desk",
       "notes": "PixelLab s137",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 320,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 320"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5065.png",
@@ -511,7 +507,10 @@
       "game_key": "cage",
       "notes": "PixelLab s0 \u2014 primary",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 546,
+      "pick_source": "rank42 cage sibling -> canon 546 (barred cage family 543-546, same as rank28)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5066.png",
@@ -523,7 +522,10 @@
       "game_key": "cage",
       "notes": "PixelLab s1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 544,
+      "pick_source": "fineness rework rank 28: canon substitution world tile 544 \u2014 cage \u2014 canon barred cage variant (543-546 confirmed single-cell variants; grey to match)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5067.png",
@@ -535,7 +537,8 @@
       "game_key": "glowing_mushroom",
       "notes": "PixelLab s1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5068.png",
@@ -547,7 +550,8 @@
       "game_key": "glowing_mushroom",
       "notes": "PixelLab s2",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5069.png",
@@ -559,7 +563,8 @@
       "game_key": "glowing_mushroom",
       "notes": "PixelLab s1337",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5070.png",
@@ -595,7 +600,8 @@
       "game_key": "mural_gold_warm",
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5073.png",
@@ -607,7 +613,8 @@
       "game_key": "mural_gold_warm",
       "notes": "PixelLab s3",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5074.png",
@@ -655,7 +662,9 @@
       "game_key": "sign",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "recolor",
+      "pick_source": "rank37 sign recolored (canon wood 319) APPROVED in-scene 2026-08"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5078.png",
@@ -669,7 +678,8 @@
       "game_key": "rubble",
       "notes": "PixelLab s137",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5079.png",
@@ -683,7 +693,8 @@
       "game_key": "rubble",
       "notes": "PixelLab s2",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5080.png",
@@ -720,8 +731,9 @@
       "lint_exemptions": [],
       "game_key": "workbench",
       "notes": "PixelLab s0",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "workbench seed 2"
+      "route": "canon_derived",
+      "pixellab_prompt_seed": "workbench seed 2",
+      "pick_source": "Round D APPROVED: workbench derived from canon 319 table + tool clutter"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5083.png",
@@ -745,8 +757,8 @@
       "game_key": "water_barrel",
       "notes": "PixelLab s1",
       "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant",
-      "route": "pixellab_regen_locked",
-      "pick_source": "burndown3 fresh palette-locked generation, seed 3 (WARN, 8c)"
+      "route": "canon_derived",
+      "pick_source": "Round D APPROVED: water_barrel derived from canon 268 + water (bright)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5085.png",
@@ -758,8 +770,8 @@
       "game_key": "water_barrel",
       "notes": "PixelLab s999",
       "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant",
-      "route": "pixellab_regen_locked",
-      "pick_source": "burndown3 fresh palette-locked generation, seed 4 (WARN, 7c)"
+      "route": "canon_derived",
+      "pick_source": "Round D APPROVED: water_barrel derived from canon 268 + water (calm); variant pair with 5084"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5086.png",
@@ -773,7 +785,8 @@
       "game_key": "vine",
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5087.png",
@@ -785,7 +798,8 @@
       "game_key": "training_dummy",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5088.png",
@@ -796,9 +810,10 @@
       "lint_exemptions": [],
       "game_key": "training_dummy",
       "notes": "PixelLab s42",
-      "route": "deep_collapse",
+      "route": "gauntlet_regen",
       "auto_collapsed": true,
-      "deep_collapse_merges": 7
+      "deep_collapse_merges": 7,
+      "pick_source": "rank67 training_dummy s5 APPROVED in-scene (landed over 5088)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5089.png",
@@ -825,10 +840,10 @@
       "game_key": "tool_rack",
       "notes": "PixelLab s1337",
       "batch_c_canon_reference": "canon IDs 323;324 \u2014 weapon_rack (already wired) \u2014 wall-rack style reference only, holds weapons not tools",
-      "route": "deep_collapse",
+      "route": "canon_derived",
       "auto_collapsed": true,
       "deep_collapse_merges": 5,
-      "gate_note": "readability flagged at gate \u2014 possible future revisit"
+      "pick_source": "rank 11: derived from canon 323 frame + tools; ACCEPTED at rubric 2026-08"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5091.png",
@@ -842,7 +857,8 @@
       "game_key": "straw_pile",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5092.png",
@@ -856,7 +872,8 @@
       "game_key": "straw_pile",
       "notes": "PixelLab s1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5093.png",
@@ -868,7 +885,9 @@
       "game_key": "pillar",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "recolor",
+      "pick_source": "rank52 pillar recolored (canon grey stone 258) APPROVED in-scene"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5094.png",
@@ -906,7 +925,10 @@
       "game_key": "shelf",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 318,
+      "pick_source": "rank30 shelf -> canon 318 (ACCEPTED)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5097.png",
@@ -918,7 +940,10 @@
       "game_key": "shelf",
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 318,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 318"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5098.png",
@@ -930,7 +955,10 @@
       "game_key": "shelf",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 318,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 318"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5099.png",
@@ -941,8 +969,9 @@
       "lint_exemptions": [],
       "game_key": "shelf_bottles",
       "notes": "PixelLab s1",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "shelf_bottles seed 0"
+      "route": "canon_derived",
+      "pixellab_prompt_seed": "shelf_bottles seed 0",
+      "pick_source": "shelf_bottles derivation APPROVED (rank 9/36): bottles on canon 318 shelf frame, master palette. Family note: shelf_bottles are shelves-with-books for now (5100=canon 317 books); family label/re-key folded into #51."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5100.png",
@@ -950,13 +979,17 @@
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
       "conformance_status": "conformant",
-      "lint_exemptions": [],
+      "lint_exemptions": [
+        "A4_color_budget"
+      ],
       "game_key": "shelf_bottles",
       "notes": "PixelLab s42",
       "batch_c_canon_reference": "canon IDs 317;318 \u2014 bookshelf (already wired) \u2014 wood-tone/shelf-furniture reference only, holds books not bottles",
-      "route": "deep_collapse",
+      "route": "canon_substitution",
       "auto_collapsed": true,
-      "deep_collapse_merges": 5
+      "deep_collapse_merges": 5,
+      "canon_source_id": 317,
+      "pick_source": "rank19 shelf_bottles -> canon 317 bookshelf-with-books (ACCEPTED, books in). A4 FAIL is canon 317s multicolour book palette (17 colours) exceeding the prop budget \u2014 accepted as canon/register-correct; lint reports it honestly."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5101.png",
@@ -967,20 +1000,23 @@
       "lint_exemptions": [],
       "game_key": "shelf_bottles",
       "notes": "PixelLab s137",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "shelf_bottles seed 1"
+      "route": "canon_derived",
+      "pixellab_prompt_seed": "shelf_bottles seed 1",
+      "pick_source": "shelf_bottles derivation APPROVED (rank 9/36): bottles on canon 318 shelf frame, master palette. Family note: shelf_bottles are shelves-with-books for now (5100=canon 317 books); family label/re-key folded into #51."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5102.png",
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "sack",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5104.png",
@@ -1016,7 +1052,9 @@
       "game_key": "nightstand",
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "gauntlet_regen",
+      "pick_source": "Round D APPROVED: nightstand regen2 s107 (front-facing). colour flagged for play review \u2014 provisional pending Rafe's next play session"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5107.png",
@@ -1028,7 +1066,9 @@
       "game_key": "nightstand",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "gauntlet_regen",
+      "pick_source": "Round D APPROVED: nightstand regen2 s107 (canon repetition). colour flagged for play review \u2014 provisional pending Rafe's next play session"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5108.png",
@@ -1067,7 +1107,8 @@
       "game_key": "puddle",
       "notes": "PixelLab p3 s3",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5111.png",
@@ -1117,5 +1158,9 @@
       "route": "canon_substitution",
       "canon_source_id": 263
     }
+  ],
+  "changelog": [
+    "2026-08 (Rafe ruling): deleted banked items 4002-4004 \u2014 unwired stock, no assigned identity; regenerable via the locked pipeline if ever wanted. Reconciled manifest to 77.",
+    "2026-08 (sweep closure): parked-with-dignity set (sack 5102, beds 5058/5059, benches 5060/5061) formalized as accepted-by-eye; anvil 5001 + club 4001 remain accepted. End state: 0 nonconformant."
   ]
 }

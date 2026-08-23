@@ -1,0 +1,7 @@
+seed,win,gap,speckle,small_clusters,color_regions,edge_density,largest_gap,lint,path,error
+0,True,0.0,10,20,26,0.808,edge_density,WARN,tools/art_lint/candidates/gauntlet/workbench/workbench_s0_snapped.png,
+1,True,0.059,29,55,64,0.9375,edge_density,WARN,tools/art_lint/candidates/gauntlet/workbench/workbench_s1_snapped.png,
+2,True,0.022,27,48,59,0.9045,edge_density,WARN,tools/art_lint/candidates/gauntlet/workbench/workbench_s2_snapped.png,
+3,True,0.051,17,33,40,0.93,edge_density,WARN,tools/art_lint/candidates/gauntlet/workbench/workbench_s3_snapped.png,
+4,True,0.087,26,53,57,0.9621,edge_density,WARN,tools/art_lint/candidates/gauntlet/workbench/workbench_s4_snapped.png,
+5,False,0.761,53,79,85,0.9657,small_clusters,WARN,tools/art_lint/candidates/gauntlet/workbench/workbench_s5_snapped.png,

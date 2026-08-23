@@ -177,7 +177,11 @@ public static class ArtAcceptanceSceneBuilder
             new("candelabra", X: 6, Y: 4, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5080),
 
             // Center table + chairs — §3 "center".
-            new("table",      X: 4, Y: 6, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5052),
+            // Table tile pinned to 5053 — the canon-substituted variant (canon world tile 319),
+            // so the scene shows the register-corrected table next to the canon chairs (5051/5056/
+            // 5057 ← canon 321). The other table variants (5052/5054/5055) are still generated and
+            // go through the Part B fineness sweep.
+            new("table",      X: 4, Y: 6, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5053),
             new("chair",      X: 3, Y: 6, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5051),
             new("chair",      X: 5, Y: 6, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5056),
             new("chair",      X: 4, Y: 5, FootprintW: 1, FootprintH: 1, BlocksMovement: true,  TileId: 5057),

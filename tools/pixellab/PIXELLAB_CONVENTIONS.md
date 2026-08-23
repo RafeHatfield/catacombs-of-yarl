@@ -136,3 +136,46 @@ Evaluate at the TARGET size (24×24 or 16×16), not at generation size.
 - **Style gap with Oryx** — PixelLab sprites are slightly more refined than Oryx's chunky
   hand-crafted style. Long-term solution: replace Oryx props progressively so the game
   settles into a consistent PixelLab style rather than a mix.
+
+## Register language + canon-validated-swatch rule (play review 2026-08, PR #108)
+
+**Register ruling.** The target look is the Shattered-Pixel/Oryx school: **chunky, low-detail,
+bold-read**. The dominant PixelLab failure mode is **refinement** (too fine, too many small
+structures) even when palette/colour budget pass. Every generation prompt for a register-critical
+prop MUST carry: `"chunky, minimal detail, bold shapes, thick outline"` + the **two-plane rule**:
+`"only the front face and the top surface are visible; no side faces, orthographic"`. The register's
+projection is exactly two planes — front face + top surface. **Side planes are NEVER visible: a
+single pixel column of side face is a violation**, even on an otherwise front-facing sprite. Then
+pass the structural-fineness post-filters (`config/rubric/art-lint-spec.md` §AF;
+`tools/art_lint/fineness_metrics.py`) — WARN at canon p90.
+
+**Discard filter (blind pre-filter):** the question is now **"is any side face visible?"** — if yes,
+discard, regardless of how clean the sprite is otherwise. *Recorded example:* the Round-D nightstand
+candidate `nightstand2 s101` was metric-clean and read as a nightstand, but showed a sliver of side
+face and was rejected on perspective; `s107` (pure two-plane) was approved.
+
+**Canon-validated-swatch rule.** Build the `color_image` palette-lock swatch from *the concept's own
+canon-or-live sprite's dominant colours* (snapped to the master palette), never a generic swatch and
+never hand-picked hues. **Recorded example — the chair drift:** an early fresh chair round used a
+generic/eyeballed swatch and produced pinkish-pale chairs that read as a different hand next to the
+warm-wood canon table; they were gate-rejected on colour, and the fix was to derive the swatch from
+the table's own colours (`build_swatch_from_live`). Lock to the object's real palette, then let the
+register prompt + fineness filter do the rest.
+
+**What the gauntlet found (2026-08).** Constrained regeneration wins the fineness critic for
+*soft/large* concepts (sacks, beds) but tends to metric-win with the *wrong object* for hard
+mechanical concepts (a "chunky anvil" regenerates as a hammer) — so the blind visual pre-filter is
+mandatory, and compact detailed props (benches, shelves) often can't get `edge_density` under canon
+p90 at all. Prefer **canon substitution / derivation** over regeneration whenever a canon concept
+exists; keep-fallback items revert to KEEP rather than force a metric-clean but wrong-reading sprite.
+
+## Blind pre-filter gap (rubric feedback 2026-08)
+
+The gauntlet's blind visual pre-filter (seat a candidate between two canon neighbours, discard the
+obvious outsider) is necessary but **not sufficient**: the sack and bed regen candidates passed both
+the metric critic AND the blind pre-filter, yet Rafe rejected them at rubric as "formless / colour
+off" — i.e. metric-clean and not-obviously-alien, but lacking human form-coherence. This is a known
+gap. **Do not invent a new metric for it** — form-coherence is a human-eye judgement the acceptance
+rubric owns; the pre-filter only trims the obvious. Practical consequence: for soft/organic concepts
+(sacks, bedding, piles) prefer canon substitution/derivation, and treat regen candidates as
+low-confidence until the human rubric confirms.

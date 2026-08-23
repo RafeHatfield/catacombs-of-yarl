@@ -123,6 +123,20 @@ Authoring order is by player exposure, inverting the current corpus:
 
 ## Track A — Art conformance (added 2026-07-24; runs parallel, gates M7 assets)
 
+**Sweep complete (2026-08).** The style-register sweep is closed: the register is named
+(Shattered-Pixel/Oryx — chunky, low-detail, bold-read), and all 67 fineness-ranked assets were
+verdicted via the **in-scene review protocol**, now the standing Part B mechanism (candidates are
+judged only as rendered through the production renderer beside canon neighbours; `ReviewSceneBuilder`
++ `review_capture.py`; contact sheets are a pre-filter only). The fineness lint family **F1–F3 is
+permanent**; **F4 (edge_density) was demoted-with-evidence to advisory** (it could not separate
+Rafe's labeled rejects from his keeps or from canon). The manifest reconciles to **77 files with 0
+nonconformant** — every entry is canon, canon-derived, eye-approved regen, pipeline-conformant, or
+accepted-by-eye (parked-with-dignity set: sack/beds/benches/anvil/club). Also ruled: the two-plane
+perspective rule (front face + top surface only; no side faces). **Remaining open art surface:** the
+#51 config PR (bookshelves spawn + shelf-family re-key — held on Rafe's go); multi-tile prop support
+(#109, future engine capability for canon banquet tables 600-607); and play-review follow-ups
+(nightstand colour, flagged provisional).
+
 **Done:** Oryx master palette + snap pipeline; art lint (Part A machine checks +
 Part B rubric) as a standing PR gate for asset changes; provenance-derived
 generated-assets manifest (80 files); acceptance test scene (authored data →

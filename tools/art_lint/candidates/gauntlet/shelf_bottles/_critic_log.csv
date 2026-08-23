@@ -1,0 +1,7 @@
+seed,win,gap,speckle,small_clusters,color_regions,edge_density,largest_gap,lint,path,error
+0,True,0.0,8,22,30,0.8182,edge_density,WARN,tools/art_lint/candidates/gauntlet/shelf_bottles/shelf_bottles_s0_snapped.png,
+1,False,0.586,38,77,94,0.9655,color_regions,WARN,tools/art_lint/candidates/gauntlet/shelf_bottles/shelf_bottles_s1_snapped.png,
+2,False,0.123,34,51,67,0.9934,edge_density,WARN,tools/art_lint/candidates/gauntlet/shelf_bottles/shelf_bottles_s2_snapped.png,
+3,True,0.0,16,31,41,0.7269,edge_density,WARN,tools/art_lint/candidates/gauntlet/shelf_bottles/shelf_bottles_s3_snapped.png,
+4,True,0.0,7,14,22,0.8367,edge_density,WARN,tools/art_lint/candidates/gauntlet/shelf_bottles/shelf_bottles_s4_snapped.png,
+5,False,0.338,48,65,77,0.9913,speckle,WARN,tools/art_lint/candidates/gauntlet/shelf_bottles/shelf_bottles_s5_snapped.png,
