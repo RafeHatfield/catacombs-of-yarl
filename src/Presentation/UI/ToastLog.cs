@@ -274,6 +274,14 @@ public sealed partial class ToastLog : Control
                 ($"{actorName} picks up {pickup.ItemName}.",
                  ToastCategory.Neutral),
 
+            // The player's own item use, announced from the use seam. Plain white and
+            // Neutral - it is a statement of what you did, not an outcome, so it reads in
+            // the same voice as an ordinary hit line rather than competing with the effect
+            // message that follows it.
+            PlayerItemUseEvent use =>
+                ($"You {use.Verb} the {use.ItemName}.",
+                 ToastCategory.Neutral),
+
             ItemUseEvent { Success: true } use =>
                 ($"[color=yellow]{actorName} uses {use.ItemName}![/color]",
                  isPlayer ? ToastCategory.Positive : ToastCategory.Neutral),
