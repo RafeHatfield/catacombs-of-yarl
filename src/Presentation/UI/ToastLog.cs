@@ -38,6 +38,13 @@ public sealed partial class ToastLog : Control
     private const int   FontSize        = 24;
     private const int   HistorySize     = 20;   // messages to keep for MessageLogPanel recall
 
+    // Layout insets, all relative to the ToastLog node's own rect — never to a window size.
+    // The node is anchored full-width in Main.tscn and vertically bounded to the clear strip
+    // between the StatusBar and the QuickSlotBar, so these are the only numbers needed.
+    private const int   SideMargin      = 8;    // left/right inset from the node edges
+    private const int   BottomMargin    = 10;   // gap above the QuickSlotBar boundary
+    private const int   StackHeight     = 500;  // tall enough for MaxToasts wrapped messages
+
     private int _playerId;
     private VBoxContainer? _stack;
     // No shared style — each toast creates its own StyleBoxFlat so the left-border color
@@ -120,23 +127,28 @@ public sealed partial class ToastLog : Control
 
         _stack = new VBoxContainer
         {
-            // Align stacked messages toward the bottom-left of our area.
-            // Fixed width cap so messages don't span the full screen and word-wrap works.
+            // Stack messages from the bottom up, spanning the usable width.
             Alignment           = BoxContainer.AlignmentMode.End,
-            SizeFlagsHorizontal = SizeFlags.ShrinkBegin,
-            CustomMinimumSize   = new Vector2(320, 0),
+            SizeFlagsHorizontal = SizeFlags.Fill,
             MouseFilter         = MouseFilterEnum.Ignore,
         };
         _stack.AddThemeConstantOverride("separation", 2);
-        // Anchor to bottom-left of parent (UILayer/ToastLog node, which is already bounded
-        // to the viewport zone via tscn offsets: offset_top=90, offset_bottom=-333).
-        // OffsetBottom=-10 means 10px above the ToastLog node's bottom edge, which IS the
-        // QuickSlotBar boundary — no hardcoded chrome height needed.
-        _stack.SetAnchorsAndOffsetsPreset(LayoutPreset.BottomLeft);
-        _stack.SetOffset(Side.Bottom, -10);
-        _stack.SetOffset(Side.Left,   8);
-        _stack.SetOffset(Side.Right,  328);
-        _stack.SetOffset(Side.Top,    -500); // tall enough for 5 wrapped messages
+
+        // Bottom-WIDE, not bottom-left. The stack used to be pinned to a hardcoded 320px
+        // (CustomMinimumSize plus OffsetRight=328), which on the project's 720px viewport
+        // is 44% of the screen — long messages wrapped after a handful of words with two
+        // thirds of the width empty beside them. Anchoring to both edges and insetting by
+        // SideMargin means the wrap measure now follows the viewport instead of a number
+        // typed against one.
+        //
+        // Vertical bounds come from the tscn node (offset_top=90, offset_bottom=-333), so
+        // OffsetBottom=-10 sits 10px above the QuickSlotBar boundary with no chrome height
+        // repeated here.
+        _stack.SetAnchorsAndOffsetsPreset(LayoutPreset.BottomWide);
+        _stack.SetOffset(Side.Bottom, -BottomMargin);
+        _stack.SetOffset(Side.Left,    SideMargin);
+        _stack.SetOffset(Side.Right,  -SideMargin);
+        _stack.SetOffset(Side.Top,    -StackHeight);
         AddChild(_stack);
     }
 
