@@ -1,0 +1,9 @@
+seed,win,gap,speckle,small_clusters,color_regions,edge_density,largest_gap,lint,path,error
+100,False,0.071,45,60,68,0.681,speckle,PASS,tools/art_lint/candidates/gauntlet/nightstand2/nightstand2_s100_snapped.png,
+101,True,0.014,5,13,28,0.8977,edge_density,WARN,tools/art_lint/candidates/gauntlet/nightstand2/nightstand2_s101_snapped.png,
+102,True,0.0,24,29,39,0.7979,edge_density,WARN,tools/art_lint/candidates/gauntlet/nightstand2/nightstand2_s102_snapped.png,
+103,True,0.02,20,34,48,0.9024,edge_density,WARN,tools/art_lint/candidates/gauntlet/nightstand2/nightstand2_s103_snapped.png,
+104,True,0.0,11,16,31,0.8445,edge_density,PASS,tools/art_lint/candidates/gauntlet/nightstand2/nightstand2_s104_snapped.png,
+105,True,0.0,32,49,59,0.7627,edge_density,WARN,tools/art_lint/candidates/gauntlet/nightstand2/nightstand2_s105_snapped.png,
+106,True,0.0,14,31,47,0.8428,edge_density,WARN,tools/art_lint/candidates/gauntlet/nightstand2/nightstand2_s106_snapped.png,
+107,True,0.0,11,18,29,0.727,edge_density,WARN,tools/art_lint/candidates/gauntlet/nightstand2/nightstand2_s107_snapped.png,

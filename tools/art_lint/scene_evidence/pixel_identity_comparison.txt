@@ -1,8 +1,8 @@
 run1: tools/art_lint/scene_evidence/pixel_identity_run1.png
-  sha256: bf0bbb8b735ad168660a26d642a917fb438d139caeb38bf3a433af14770b3c12
+  sha256: dc48e35bc4a0bacdf124cd6b6e42c69fe2b5f9b63a173f3484173451c0965696
   resolution: (750, 1334)
 run2: tools/art_lint/scene_evidence/pixel_identity_run2.png
-  sha256: bf0bbb8b735ad168660a26d642a917fb438d139caeb38bf3a433af14770b3c12
+  sha256: dc48e35bc4a0bacdf124cd6b6e42c69fe2b5f9b63a173f3484173451c0965696
   resolution: (750, 1334)
 byte_identical: True
 pixel_identical: True

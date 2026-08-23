@@ -81,3 +81,23 @@ ROUND_C = [
 
 def main_c(run_round):
     run_round("review_round_C_rework9", "Review round C — the 9 Round-A rejects reworked. Substitutes: desks->canon 320, shelves->canon 318. Regen (F1-F3 critic + pre-filter): nightstands s3/s5, workbench s2 (marginal), water_barrel s0. Orange = candidate, grey = canon neighbour.", ROUND_C, cols=5)
+
+
+GN = "tools/art_lint/candidates/gauntlet/nightstand2"
+BD = "tools/art_lint/candidates/burndown3"
+ROUND_D = [
+    c(5106, "5106 nightstand -> regen2 s101 [candidate]", f"{GN}/nightstand2_s101_snapped.png"),
+    n(319, "canon 319 table"),
+    c(5107, "5107 nightstand -> regen2 s107 [candidate]", f"{GN}/nightstand2_s107_snapped.png"),
+    n(320, "canon 320 desk"),
+    c(5082, "5082 workbench -> DERIVED (319 + tools) [candidate]", f"{BD}/workbench_derived/workbench_5082_derived.png"),
+    n(319, "canon 319 table"),
+    c(5084, "5084 water_barrel -> DERIVED (268 + water, bright) [candidate]", f"{BD}/water_barrel_derived/water_barrel_5084_derived.png"),
+    n(268, "canon 268 barrel"),
+    c(5085, "5085 water_barrel -> DERIVED (268 + water, calm) [candidate]", f"{BD}/water_barrel_derived/water_barrel_5085_derived.png"),
+    n(268, "canon 268 barrel"),
+]
+
+
+def main_d(run_round):
+    run_round("review_round_D_rework_resubmit", "Review round D — Round-C rejects reworked. Nightstands: regen2 s101/s107 (strict form-coherence). Workbench: DERIVED (canon 319 + tool clutter, regen route closed). Water barrels 5084/5085: DERIVED (canon 268 + water surface, variant pair). Orange = candidate, grey = canon.", ROUND_D, cols=5, map_w=12, map_h=12, player=(6, 5))

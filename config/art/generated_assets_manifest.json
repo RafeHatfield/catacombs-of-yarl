@@ -447,9 +447,11 @@
       "game_key": "desk",
       "notes": "PixelLab s42 \u2014 primary",
       "batch_c_canon_reference": "canon IDs 600;601;602;603;604 \u2014 counter/bar-top cluster \u2014 wood-plank color/material reference only, wrong shape for a desk",
-      "route": "deep_collapse",
+      "route": "canon_substitution",
       "auto_collapsed": true,
-      "deep_collapse_merges": 5
+      "deep_collapse_merges": 5,
+      "canon_source_id": 320,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 320"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5063.png",
@@ -460,8 +462,10 @@
       "lint_exemptions": [],
       "game_key": "desk",
       "notes": "PixelLab s999",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "desk seed 6"
+      "route": "canon_substitution",
+      "pixellab_prompt_seed": "desk seed 6",
+      "canon_source_id": 320,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 320"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5064.png",
@@ -473,7 +477,10 @@
       "game_key": "desk",
       "notes": "PixelLab s137",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 320,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 320"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5065.png",
@@ -906,7 +913,10 @@
       "game_key": "shelf",
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 318,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 318"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5098.png",
@@ -918,7 +928,10 @@
       "game_key": "shelf",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "canon_substitution",
+      "canon_source_id": 318,
+      "pick_source": "Round C APPROVED in-scene: canon substitution world 318"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5099.png",
