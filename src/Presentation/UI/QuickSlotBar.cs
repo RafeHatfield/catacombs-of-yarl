@@ -47,6 +47,9 @@ public sealed partial class QuickSlotBar : Control
     private static readonly Color TintWand    = new(0.4f,  0.1f,  0.5f,  0.7f);
     private static readonly Color TintDefault = new(0.15f, 0.15f, 0.2f,  0.6f);
 
+    /// <summary>Icon tint for a slot the rules would currently refuse (cooldown, no charges).</summary>
+    private static readonly Color UnavailableIconTint = new(0.45f, 0.45f, 0.45f, 0.55f);
+
     // ── Computed geometry (set in _Ready before BuildLayout) ──────────────────
     private int _slotSize;     // height of one item slot
     private int _weaponSlotW;  // width of weapon slot
@@ -102,6 +105,13 @@ public sealed partial class QuickSlotBar : Control
 
     private IdentificationRegistry? _registry;
     private AppearancePool?          _pool;
+
+    /// <summary>
+    /// Per-item availability for the current Refresh, keyed by entity ID. Built from
+    /// QuickSlotModel so the greyed-out state mirrors the rules' own gates rather than
+    /// re-deriving them here.
+    /// </summary>
+    private readonly Dictionary<int, QuickSlotEntry> _slotModel = new();
 
     // ── Paging state ──────────────────────────────────────────────────────────
     private List<Entity> _allItems  = new();
@@ -285,6 +295,10 @@ public sealed partial class QuickSlotBar : Control
         _registry = state.IdentificationRegistry;
         _pool     = state.AppearancePool;
 
+        _slotModel.Clear();
+        foreach (var entry in QuickSlotModel.Build(state))
+            _slotModel[entry.ItemId] = entry;
+
         RefreshWeaponSlot(state);
         RefreshItemSlots(state);
     }
@@ -358,10 +372,15 @@ public sealed partial class QuickSlotBar : Control
         };
         slot.SetMeta("item_id", item.Id);
 
+        // Unavailable = the rules would refuse this tap right now (potion still on cooldown,
+        // wand out of charges). Drawn dimmed so the slot reads as "not yet" rather than silently
+        // doing nothing. Availability comes from QuickSlotModel — never re-derived here.
+        bool unavailable = _slotModel.TryGetValue(item.Id, out var model) && !model.Available;
+
         var bg = new Panel { MouseFilter = MouseFilterEnum.Ignore };
         bg.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         var bgStyle = new StyleBoxFlat();
-        bgStyle.BgColor = SlotTintColor(item);
+        bgStyle.BgColor = unavailable ? SlotTintColor(item).Darkened(0.55f) : SlotTintColor(item);
         bgStyle.CornerRadiusTopLeft     = CornerRadius;
         bgStyle.CornerRadiusTopRight    = CornerRadius;
         bgStyle.CornerRadiusBottomLeft  = CornerRadius;
@@ -371,7 +390,27 @@ public sealed partial class QuickSlotBar : Control
 
         var icon = BuildItemIcon(item);
         icon.MouseFilter = MouseFilterEnum.Ignore;
+        if (unavailable)
+            icon.Modulate = UnavailableIconTint;
         slot.AddChild(icon);
+
+        // Remaining-turns readout, centered over the dimmed icon. Only shown for a real
+        // countdown — a wand out of charges has no turn count to give, its "0" badge says it.
+        if (unavailable && model.CooldownRemaining > 0)
+        {
+            var cooldown = new Label
+            {
+                Text                = $"{model.CooldownRemaining}",
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment   = VerticalAlignment.Center,
+                AnchorLeft   = 0f, AnchorTop    = 0f,
+                AnchorRight  = 1f, AnchorBottom = 1f,
+                MouseFilter  = MouseFilterEnum.Ignore,
+            };
+            cooldown.AddThemeFontSizeOverride("font_size", 26);
+            cooldown.SelfModulate = Colors.White;
+            slot.AddChild(cooldown);
+        }
 
         var badgeText = GetBadgeText(item);
         if (badgeText != null)

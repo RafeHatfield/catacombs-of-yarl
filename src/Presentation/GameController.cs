@@ -1036,6 +1036,11 @@ public sealed partial class GameController : Node
         Diag.Event("ExecuteTurn", new { action = action.Kind.ToString(), turnCount = _state!.TurnCount });
         Diag.Mem("  pre-ProcessTurn");
 
+        // Snapshot what the quick-slot bar currently shows, so the post-turn comparison can
+        // detect a consume the event list doesn't describe (see the inventoryChanged block below).
+        var slotsBefore    = QuickSlotModel.Build(_state!);
+        var mainHandBefore = QuickSlotModel.MainHandItemId(_state!);
+
         var result = TurnController.ProcessTurn(_state!, action, _monsterFactory,
             portalEntityFactory: _portalEntityFactory);
         Diag.Log($"  ProcessTurn done: {result.Events.Count} events, gameOver={result.GameOver}");
@@ -1113,6 +1118,19 @@ public sealed partial class GameController : Node
                 equipmentChanged = true; // weapon stats changed — refresh equipment panel
             }
         }
+
+        // The event flags above drive sprite work that genuinely needs per-event data, but they
+        // are the WRONG signal for "should the quick-slot bar redraw?" — that list has to name
+        // every event type that can imply a consume, and it silently missed SpellEvent /
+        // WandUseEvent. Drinking a buff potion (invisibility, speed) resolves through
+        // ResolveSpellAction, which decrements the stack and emits neither: the bar kept showing
+        // an item already drunk until some later turn happened to fire a listed event, and the
+        // stale slot hit-tested to an entity no longer in the inventory, so tapping it did
+        // nothing. Compare the bar's actual contents instead — no enumeration to drift.
+        if (!inventoryChanged
+            && (mainHandBefore != QuickSlotModel.MainHandItemId(_state!)
+                || !slotsBefore.SequenceEqual(QuickSlotModel.Build(_state!))))
+            inventoryChanged = true;
 
         if (identificationChanged)
             _itemSprites?.RefreshIdentifiedSprites(_state!);
