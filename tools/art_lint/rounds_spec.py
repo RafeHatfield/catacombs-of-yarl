@@ -179,6 +179,28 @@ ROUND_E3_AFTER = [
 ]
 
 
+ROUND_E3FINAL = [
+    c(5058, "5058 bed [E3 signature-led]", f"{RE3}/5058_bed.png"),
+    n(319, "canon 319 table (bed grammar)"),
+    c(5059, "5059 bed [E3 signature-led]", f"{RE3}/5059_bed.png"),
+    c(5060, "5060 bench [E3 backless]", f"{RE3}/5060_bench.png"),
+    n(321, "canon 321 chair (bench grammar)"),
+    c(5061, "5061 bench [E3 backless]", f"{RE3}/5061_bench.png"),
+    c(5115, "5115 bone pile [NEW: canon bone grammar -> mounded heap]"),
+    n(96, "canon 96 bones (grammar ref)"),
+    n(612, "canon 612 skeleton (bone ramp ref)"),
+    c(5116, "5116 flood marker [NEW: deep-water region]"),
+    n(5110, "puddle 5110 (must read distinct)"),
+    n(486, "canon 486 fountain (water ramp ref)"),
+]
+
+
+def main_e3final(run_round):
+    run_round("review_round_E3final_cross_silhouette",
+              "Review round E3-final (sprint-exit cross-silhouette test). Four target silhouettes, donor grammar only. Benches: chair 321 grammar, backless. Beds: table 319 grammar, signature-led (blanket-dominant). Bone pile 5115 [NEW]: canon bone grey-white ramp + skull/long-bone components (tiles 96/612), target silhouette = mounded ossuary heap, two-plane. Flood marker 5116 [NEW]: canon fountain water ramp deepened to a true-blue region filling the cell (distinct from the small teal puddle 5110); water is decal-class (flat top plane, outline-exempt per bible s6). NOTE: no darker/crypt room theme is wired (Crypt->sandstone fallback), so both depths props sit on the standard sandstone floor. Orange = candidate, grey = canon/ref.",
+              ROUND_E3FINAL, cols=3)
+
+
 def main_e3(run_round):
     run_round("review_round_E3_after_candidates",
               "Review round E3 — target-silhouette-led rebuilds. Beds: signature features lead (blanket dominates the top plane, pillow band at head, frame reduced to headboard/footboard edges — no apron); 319 grammar only. Benches: chair 321 grammar, back REMOVED (backless wide seat + legs). Sack: recolor only to canon burlap ramp, shape untouched. Landed E2 items (nightstand 5106, pillar 5093) shown as approved context. Orange = candidate, grey = canon/landed.",
