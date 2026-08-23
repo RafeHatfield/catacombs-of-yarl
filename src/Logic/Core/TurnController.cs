@@ -1539,16 +1539,19 @@ public static class TurnController
         var inventory = state.PlayerInventory;
         if (inventory == null) return;
 
-        // Use specific item if provided (UI), otherwise find first healing potion (bot)
+        // Use specific item if provided (UI), otherwise find first healing potion (bot).
         // For cooldown-gated potions: only pick one whose cooldown allows use right now.
-        // CanUsePotion = cooldown is 0 OR the item has no cooldown (UseCooldownTurns == 0).
-        bool CanUsePotion(Entity item) {
-            var c = item.Get<Consumable>();
-            if (c == null || !c.IsHealing) return false;
-            return c.UseCooldownTurns == 0 || fighter.PotionCooldownRemaining == 0;
-        }
-
-        var potion = specificItem ?? inventory.FindFirst(CanUsePotion);
+        //
+        // QuickSlotModel.CanUseHealingPotion is the single availability answer — the same one
+        // the quick-slot bar dims from. It used to be a private copy of that expression here,
+        // which is how the bar and the rules were free to disagree.
+        //
+        // Note this gates the AUTO-PICK only: a caller that names an item (a UI tap) still
+        // reaches the drink below. The refusal for a named item lives at the tap seam in
+        // GameController, matching the spent-wand precedent — refuse before the turn is
+        // spent rather than half-resolving one inside ProcessTurn.
+        var potion = specificItem
+            ?? inventory.FindFirst(item => QuickSlotModel.CanUseHealingPotion(item, fighter));
 
         if (potion == null) return;
 

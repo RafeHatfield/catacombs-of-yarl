@@ -199,4 +199,93 @@ public class QuickSlotModelTests
         Assert.That(before.SequenceEqual(QuickSlotModel.Build(state)), Is.True,
             "an idle turn must leave the model identical — no needless rebuild.");
     }
+
+    // ── Availability is one answer, and it names its reason ──────────────────
+
+    [Test]
+    public void Availability_NamesTheBlockingRule_ForEachSource()
+    {
+        var player = MakePlayer();
+        var fighter = player.Require<Fighter>();
+
+        var plain = MakePotion(100, "Healing Potion", healAmount: 40);
+        Assert.That(QuickSlotModel.Availability(plain, fighter).Block, Is.EqualTo(QuickSlotBlock.None));
+
+        var gated = MakePotion(101, "Healing Potion", healAmount: 20, useCooldownTurns: 10);
+        Assert.That(QuickSlotModel.Availability(gated, fighter).Block, Is.EqualTo(QuickSlotBlock.None),
+            "no timer running — a cooldown-gated potion is still available.");
+
+        fighter.PotionCooldownRemaining = 4;
+        var gatedNow = QuickSlotModel.Availability(gated, fighter);
+        Assert.That(gatedNow.Block, Is.EqualTo(QuickSlotBlock.PotionCooldown));
+        Assert.That(gatedNow.CooldownRemaining, Is.EqualTo(4));
+
+        var spent = new Entity(102, "Wand of Fire", 0, 0);
+        spent.Add(new WandComponent { Charges = 0, MaxCharges = 5 });
+        Assert.That(QuickSlotModel.Availability(spent, fighter).Block, Is.EqualTo(QuickSlotBlock.NoCharges));
+    }
+
+    [Test]
+    public void SpentWand_ReportsNoCountdown_EvenWhileAPotionCooldownRuns()
+    {
+        // The two sources are independent. CooldownRemaining used to be read off the potion
+        // timer for ANY unavailable slot, so a spent wand would have printed a potion's
+        // countdown over its own empty badge.
+        var player = MakePlayer();
+        player.Require<Fighter>().PotionCooldownRemaining = 7;
+
+        var wand = new Entity(100, "Wand of Fire", 0, 0);
+        wand.Add(new SpellEffect { SpellId = "fireball", Targeting = TargetingMode.SingleTarget });
+        wand.Add(new WandComponent { Charges = 0, MaxCharges = 5 });
+        player.Require<Inventory>().Add(wand);
+
+        var entry = QuickSlotModel.Build(MakeState(player)).Single();
+        Assert.That(entry.Block, Is.EqualTo(QuickSlotBlock.NoCharges));
+        Assert.That(entry.CooldownRemaining, Is.Zero,
+            "a spent wand must not borrow the potion timer's countdown.");
+    }
+
+    [Test]
+    public void CanUseHealingPotion_AgreesWithWhatTheBarDims()
+    {
+        // The single-source property. The rules-side predicate (TurnController's auto-pick,
+        // BotBrain's heal gate) and the bar's dim must never be able to disagree.
+        var player = MakePlayer();
+        var fighter = player.Require<Fighter>();
+        var gated = MakePotion(100, "Healing Potion", healAmount: 20, useCooldownTurns: 10);
+        player.Require<Inventory>().Add(gated);
+
+        var state = MakeState(player);
+
+        foreach (int pending in new[] { 0, 1, 5 })
+        {
+            fighter.PotionCooldownRemaining = pending;
+            Assert.That(QuickSlotModel.CanUseHealingPotion(gated, fighter),
+                Is.EqualTo(QuickSlotModel.Build(state).Single().Available),
+                $"rules gate and bar dim disagreed with {pending} turns pending.");
+        }
+    }
+
+    [Test]
+    public void AutoPick_SkipsABlockedPotion_AndTakesAnUngatedOne()
+    {
+        // Behaviour the shared predicate has to preserve: the bot's FindFirst auto-pick
+        // steps over a potion the timer is holding and drinks one that ignores the timer.
+        var player = MakePlayer();
+        player.Require<Fighter>().Hp = 10;
+        player.Require<Fighter>().PotionCooldownRemaining = 5;
+
+        var gated  = MakePotion(100, "Healing Potion", healAmount: 20, useCooldownTurns: 10);
+        var ungated = MakePotion(101, "Healing Potion", healAmount: 40);
+        player.Require<Inventory>().Add(gated);
+        player.Require<Inventory>().Add(ungated);
+
+        var state = MakeState(player);
+        TurnController.ProcessTurn(state, PlayerAction.UseItem(), monsterFactory: null);
+
+        Assert.That(player.Require<Inventory>().Items, Does.Contain(gated),
+            "the blocked potion must be left alone.");
+        Assert.That(player.Require<Inventory>().Items, Does.Not.Contain(ungated),
+            "the ungated potion is the one the auto-pick should drink.");
+    }
 }
