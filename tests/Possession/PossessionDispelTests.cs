@@ -186,6 +186,51 @@ public class PossessionDispelTests
         Assert.That(host.Has<SlowedEffect>(), Is.True, "SlowedEffect remains — dispel removes one effect.");
     }
 
+    // ─── Dispel targeting a CORPSE (visible-corpses feature — past-Sasha visibility half) ─────
+
+    [Test]
+    public void Dispel_TargetingWardenPossessedCorpse_Resolves()
+    {
+        // The past-Sasha host is a CORPSE (Has<CorpseComponent>, in state.Corpses) that the Warden is
+        // animating via a WardenInitiated PossessionEffect. Until corpses were visible you could neither
+        // see nor tap it; now the presentation resolves a corpse carrying a PossessionEffect as a
+        // SingleTarget (InputHandler.FindPossessedCorpseAt). This guards the Logic half: aiming Spell-
+        // Break at that corpse entity must RESOLVE. The resolver already looks targets up in
+        // state.Monsters (which includes corpses), so a corpse is a valid Spell-Break target.
+        var player = MakePlayer();
+        var host = MakeMonster(species: "hall_warden"); // MakeMonster gives it a Fighter (the animated body)
+        var state = MakeState(player, host);
+
+        // Classify the animated body as a corpse: CorpseComponent + dual membership in state.Corpses.
+        host.Add(new CorpseComponent
+        {
+            OriginalMonsterId = "hall_warden", OriginalName = "Warden",
+            State = CorpseState.Fresh, CorpseId = "c_warden",
+        });
+        state.Corpses.Add(host);
+
+        // Warden animates it (mirrors DungeonFloorBuilder's WardenInitiated PossessionEffect at spawn).
+        host.Add(new PossessionEffect
+        {
+            PossessorEntityId = PossessionConfig.WardenPossessorSentinelId,
+            Source = PossessionSource.WardenInitiated,
+            DrainPerTurn = 0,
+            EnteredTurn = 0,
+            RemainingTurns = int.MaxValue,
+        });
+
+        Assume.That(state.Corpses, Does.Contain(host), "pre-condition: target is a corpse.");
+        Assume.That(host.Has<CorpseComponent>(), Is.True);
+
+        var spell = MakeDispelSpell();
+        var events = SpellResolver.Resolve(player, spell, state, targetEntityId: host.Id);
+
+        Assert.That(events.OfType<SpellEvent>().Single().Success, Is.True,
+            "Dispel aimed at a Warden-possessed corpse must resolve — a corpse is a valid Spell-Break target.");
+        Assert.That(host.Has<PossessionEffect>(), Is.False,
+            "Dispel removes the WardenInitiated effect from the corpse (collapses the host).");
+    }
+
     // ─── Possession immunity (wraith / lich) ──────────────────────────────────
 
     [Test]

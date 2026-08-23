@@ -38,6 +38,7 @@ public sealed partial class GameController : Node
     private InputHandler _input = new();
     private EntitySpriteManager? _entitySprites;
     private ItemSpriteManager? _itemSprites;
+    private CorpseSpriteManager? _corpseSprites;
     private QuickSlotBar? _inventoryPanel;
     private EquipmentPanel? _equipmentPanel;
     private ToastLog? _toastLog;
@@ -140,7 +141,8 @@ public sealed partial class GameController : Node
         EquipmentPanel? equipmentPanel = null, ToastLog? toastLog = null,
         MonsterFactory? monsterFactory = null, IMapRenderer? renderer = null,
         Node2D? gameView = null, EntityFactory? portalEntityFactory = null,
-        VfxOverlay? vfxOverlay = null, bool showPropInspect = true)
+        VfxOverlay? vfxOverlay = null, bool showPropInspect = true,
+        CorpseSpriteManager? corpseSprites = null)
     {
 #if DEBUG
         System.Diagnostics.Debug.Assert(_animator == null,
@@ -151,6 +153,7 @@ public sealed partial class GameController : Node
         _portalEntityFactory = portalEntityFactory;
         _entitySprites = entitySprites;
         _itemSprites = itemSprites;
+        _corpseSprites = corpseSprites;
         _inventoryPanel = inventoryPanel;
         _equipmentPanel = equipmentPanel;
         _toastLog = toastLog;
@@ -750,6 +753,25 @@ public sealed partial class GameController : Node
             }
         }
 
+        // Check for a corpse at this tile. Ranks below live monsters (the alive check above uses
+        // AliveMonsters, which excludes corpses) so a living monster standing on remains inspects as
+        // the monster; only bare remains inspect as remains.
+        var corpseEntity = _state.Corpses.FirstOrDefault(c => c.X == gridX && c.Y == gridY);
+        if (corpseEntity != null)
+        {
+            var cc = corpseEntity.Get<Logic.ECS.CorpseComponent>();
+            // NOTE (flag): "Remains of {Name}" is a proposed label — see docs/systems/visible_corpses.md.
+            string remainsName = cc != null && !string.IsNullOrEmpty(cc.OriginalName)
+                ? $"Remains of {cc.OriginalName}"
+                : "Remains";
+            string desc = cc != null && cc.CanBeRaised
+                ? "The fresh corpse of a slain foe — the dead here can still be raised."
+                : "The spent remains of a slain foe.";
+            _inspectPanel?.ShowFeature(remainsName, desc, screenPos);
+            _inspectPanel?.PositionNear(screenPos, GetViewport()?.GetVisibleRect().Size ?? new Vector2(480, 854));
+            return;
+        }
+
         // Check for a floor item at this tile
         var floorItem = _state.FloorItems.FirstOrDefault(i => i.X == gridX && i.Y == gridY);
         if (floorItem != null)
@@ -1100,6 +1122,20 @@ public sealed partial class GameController : Node
                 {
                     var child = _state!.Monsters.FirstOrDefault(m => m.Id == childId);
                     if (child != null) _entitySprites?.SpawnMonster(child);
+                }
+            }
+            else if (evt is RaiseDeadEvent raised)
+            {
+                // A necromancer/scroll raised a corpse: the SAME entity is transformed in-place from
+                // corpse back to a living monster (RaiseDeadResolver). Its corpse sprite is freed by
+                // the per-turn CorpseSpriteManager.Sync (the entity left state.Corpses); here we spawn
+                // its LIVE sprite so the raised monster is visible immediately — the corpse visual
+                // becomes the raised monster cleanly. RemoveEntity first guards against any stale node.
+                var entity = _state!.Monsters.FirstOrDefault(m => m.Id == raised.RaisedEntityId);
+                if (entity != null)
+                {
+                    _entitySprites?.RemoveEntity(raised.RaisedEntityId);
+                    _entitySprites?.SpawnMonster(entity);
                 }
             }
             else if (evt is CorrosionEvent corrEvt)
