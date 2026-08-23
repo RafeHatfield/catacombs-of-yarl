@@ -183,7 +183,7 @@ public sealed class InputHandler
 
         if (targeting.Mode == TargetingMode.SingleTarget)
         {
-            var target = FindMonsterAt(gridX, gridY);
+            var target = FindMonsterAt(gridX, gridY) ?? FindPossessedCorpseAt(gridX, gridY);
             if (target == null)
             {
                 Diag.Log("HandleTap TARGETING: no monster at tap position");
@@ -243,5 +243,21 @@ public sealed class InputHandler
         // player can walk onto the tile in the very next tap after killing its occupant.
         return _state.Monsters.FirstOrDefault(
             m => m.X == gridX && m.Y == gridY && m.Get<Fighter>()?.IsAlive == true);
+    }
+
+    /// <summary>
+    /// A corpse at this tile that is a valid Spell-Break (dispel) target — one carrying a
+    /// PossessionEffect (a Warden-possessed "past-Sasha" host). This is a narrow fallback for the
+    /// SingleTarget path: living monsters resolve via FindMonsterAt; now that corpses are visible,
+    /// exactly those possessed remains become tappable so the player can dispel them. Ordinary
+    /// corpses carry no PossessionEffect and stay untargetable, so damage spells can't hit remains.
+    /// Range/LOS/effect validity are still enforced by the Logic resolver (ResolveDispel).
+    /// </summary>
+    private Entity? FindPossessedCorpseAt(int gridX, int gridY)
+    {
+        if (_state == null) return null;
+        return _state.Corpses.FirstOrDefault(
+            c => c.X == gridX && c.Y == gridY
+                 && c.Has<CatacombsOfYarl.Logic.Combat.StatusEffects.PossessionEffect>());
     }
 }

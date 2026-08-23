@@ -51,6 +51,8 @@ public partial class Main : Node
     private EntitySpriteManager? _entitySprites;
     // Item sprite manager tracks floor item overlay sprites
     private ItemSpriteManager? _itemSprites;
+    // Corpse sprite manager renders remains of dead monsters (reconciled against state.Corpses)
+    private CorpseSpriteManager? _corpseSprites;
     // Ground hazard overlay — persistent tile tints for burning/poison ground.
     private GroundHazardOverlay? _groundHazardOverlay;
     // Floating HP bars — small red bars above damaged enemy sprites (Phase 4).
@@ -848,6 +850,12 @@ public partial class Main : Node
         _itemSprites = new ItemSpriteManager(entityLayer, _spriteMapping!, _renderer, _tileThemeConfig);
         _itemSprites.Initialize(state);
 
+        // Corpse sprites — remains of dead monsters, rendered under live entities on the same
+        // entityLayer. Reconciled against state.Corpses each turn (Sync); FOV-only like items.
+        // On resume, Initialize rebuilds every corpse the run is carrying on this floor.
+        _corpseSprites = new CorpseSpriteManager(entityLayer, _spriteMapping!, _renderer);
+        _corpseSprites.Initialize(state);
+
         // HUD
         _hud = new HUD();
         hudNode.AddChild(_hud);
@@ -953,6 +961,8 @@ public partial class Main : Node
         _entitySprites?.UpdateVisibility(state);
         _entitySprites?.UpdateStatusTints(state);
         _itemSprites?.UpdateVisibility(state);
+        _corpseSprites?.Sync(state);
+        _corpseSprites?.UpdateVisibility(state);
         // Initial HP bar pass — shows bars for any pre-damaged monsters at floor start.
         if (_entitySprites != null)
             _floatingHpBars?.Refresh(state, _entitySprites);
@@ -1001,7 +1011,7 @@ public partial class Main : Node
         AddChild(_gameController);
         _gameController.Initialize(state, _entitySprites!, this, _itemSprites, _inventoryPanel,
             _equipmentPanel, _toastLog, _monsterFactory, _renderer, _gameView, _entityFactory,
-            _vfxOverlay, showPropInspect: ReadShowPropInspect());
+            _vfxOverlay, showPropInspect: ReadShowPropInspect(), corpseSprites: _corpseSprites);
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
@@ -1114,6 +1124,8 @@ public partial class Main : Node
         _entitySprites?.UpdateVisibility(_state);
         _entitySprites?.UpdateStatusTints(_state);
         _itemSprites?.UpdateVisibility(_state);
+        _corpseSprites?.Sync(_state);
+        _corpseSprites?.UpdateVisibility(_state);
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -1856,6 +1868,8 @@ public partial class Main : Node
         _entitySprites?.UpdateVisibility(_state);
         _entitySprites?.UpdateStatusTints(_state);
         _itemSprites?.UpdateVisibility(_state);
+        _corpseSprites?.Sync(_state);
+        _corpseSprites?.UpdateVisibility(_state);
         // Update floating HP bars after visibility is resolved for this turn.
         if (_entitySprites != null)
             _floatingHpBars?.Refresh(_state, _entitySprites);
