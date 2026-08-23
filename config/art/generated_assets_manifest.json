@@ -887,7 +887,7 @@
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
       "route": "recolor",
-      "pick_source": "rank52 pillar recolored (canon grey stone 258) APPROVED in-scene"
+      "pick_source": "Round E2 LANDED (2026-08): fountain (486) stone ramp recolor, contour kept"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5094.png",
@@ -898,8 +898,8 @@
       "lint_exemptions": [],
       "game_key": "pillar",
       "notes": "PixelLab s1",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "pillar seed 4"
+      "route": "recolor",
+      "pick_source": "Round E2 LANDED (2026-08): fountain (486) stone ramp recolor, de-speckled, contour kept (jaggedness fixed)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5095.png",
@@ -911,9 +911,8 @@
       "game_key": "pillar",
       "notes": "PixelLab s137",
       "batch_c_canon_reference": "canon IDs 218;219 \u2014 stalagmite (already wired, different concept name) \u2014 stone-material reference only, wrong silhouette (natural cone vs built column)",
-      "route": "deep_collapse",
-      "auto_collapsed": true,
-      "deep_collapse_merges": 7
+      "route": "recolor",
+      "pick_source": "Round E2 LANDED (2026-08): original deep-collapse blob was unrecolorable (form, not colour); adopts 5094's clean fluted form + fountain (486) stone ramp"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5096.png",
@@ -1053,8 +1052,8 @@
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "route": "gauntlet_regen",
-      "pick_source": "Round D APPROVED: nightstand regen2 s107 (front-facing). colour flagged for play review \u2014 provisional pending Rafe's next play session"
+      "route": "recolor",
+      "pick_source": "Round E2 LANDED (2026-08): golden desk-320 wood recolor, shape kept + legs thickened 3px->5px (canon stroke). Resolves the play-review colour flag."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5107.png",
@@ -1067,8 +1066,8 @@
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
-      "route": "gauntlet_regen",
-      "pick_source": "Round D APPROVED: nightstand regen2 s107 (canon repetition). colour flagged for play review \u2014 provisional pending Rafe's next play session"
+      "route": "recolor",
+      "pick_source": "Round E2 LANDED (2026-08): golden desk-320 wood recolor, shape kept + legs thickened 3px->5px (canon stroke). Resolves the play-review colour flag."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5108.png",
@@ -1160,6 +1159,7 @@
     }
   ],
   "changelog": [
+    "2026-08 (Round E2 LANDED, Rafe ruling): nightstands 5106/5107 (golden desk-320 recolor + 5px legs) and pillars 5093/5094/5095 (fountain-486 stone ramp, contour kept, jaggedness fixed) landed to live tiles; routes updated to recolor, provisional colour flags cleared. Counts unchanged (all were already conformant). Beds 5058/5059, benches 5060/5061, sack 5102 remain pending_review (reworked in E3, awaiting verdict).",
     "2026-08 (Round E, Rafe ruling): keep-fallback strip \u2014 the 5 parked_keep_fallback entries (beds 5058/5059, benches 5060/5061, sack 5102) had their accepted status reset to pending_review; their notes falsely claimed 'accepted at in-scene review' when the acceptance was fallback (no candidate beat the incumbent). Rule now codified in art-lint-spec Part B: fallback preserves pixels, never confers acceptance. Boundary case NOT stripped, surfaced for Rafe: club 4001 / anvil 5001 (original_accepted 'no candidate beat the live sprite') \u2014 same fallback rationale but original lint-exempt art. Also this round: prop generation retired (bible/PIXELLAB changelogs) \u2014 prop ladder is canon-sub \u2192 canon-derive \u2192 stop-and-discuss.",
     "2026-08 (Rafe ruling): deleted banked items 4002-4004 \u2014 unwired stock, no assigned identity; regenerable via the locked pipeline if ever wanted. Reconciled manifest to 77.",
     "2026-08 (sweep closure): parked-with-dignity set (sack 5102, beds 5058/5059, benches 5060/5061) formalized as accepted-by-eye; anvil 5001 + club 4001 remain accepted. End state: 0 nonconformant."

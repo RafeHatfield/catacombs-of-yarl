@@ -162,6 +162,29 @@ ROUND_E2_AFTER = [
 ]
 
 
+RE3 = "tools/art_lint/candidates/round_e3"
+
+ROUND_E3_AFTER = [
+    c(5058, "5058 bed -> signature-led (blanket-dominant, blue)", f"{RE3}/5058_bed.png"),
+    n(319, "canon 319 table (grammar donor)"),
+    c(5059, "5059 bed -> signature-led (white coverlet)", f"{RE3}/5059_bed.png"),
+    c(5060, "5060 bench -> BACKLESS wide seat + legs", f"{RE3}/5060_bench.png"),
+    n(321, "canon 321 chair (grammar donor)"),
+    c(5061, "5061 bench -> BACKLESS wide seat + legs", f"{RE3}/5061_bench.png"),
+    c(5102, "5102 sack -> RECOLOR only (canon burlap ramp)", f"{RE3}/5102_sack.png"),
+    n(268, "canon 268 barrel (burlap ramp ref)"),
+    n(5106, "5106 nightstand [LANDED E2]"),
+    n(5093, "5093 pillar [LANDED E2]"),
+    n(486, "canon 486 fountain (stone ref)"),
+]
+
+
+def main_e3(run_round):
+    run_round("review_round_E3_after_candidates",
+              "Review round E3 — target-silhouette-led rebuilds. Beds: signature features lead (blanket dominates the top plane, pillow band at head, frame reduced to headboard/footboard edges — no apron); 319 grammar only. Benches: chair 321 grammar, back REMOVED (backless wide seat + legs). Sack: recolor only to canon burlap ramp, shape untouched. Landed E2 items (nightstand 5106, pillar 5093) shown as approved context. Orange = candidate, grey = canon/landed.",
+              ROUND_E3_AFTER, cols=3)
+
+
 def main_e2(run_round):
     run_round("review_round_E2_after_candidates",
               "Review round E2 — structural rebuilds. Beds re-dress canon table 319 (bedding on the top surface, table apron/legs = front face); benches widen canon chair 321 (settle / low-back). Nightstands: legs thickened to canon 5px. Pillars: clean stone recolor, contour kept, jaggedness fixed. Sack carried for verdict. Compare vs the E BEFORE capture. Orange = candidate, grey = canon donor/ref.",

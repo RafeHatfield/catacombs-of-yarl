@@ -137,6 +137,17 @@ Evaluate at the TARGET size (24×24 or 16×16), not at generation size.
   hand-crafted style. Long-term solution: replace Oryx props progressively so the game
   settles into a consistent PixelLab style rather than a mix.
 
+## Structural derivation: grammar from donor, silhouette from target (Rafe ruling, Round E2 2026-08)
+
+A structural derivation borrows the donor's construction **grammar** — stroke weight, colour ramps,
+outline treatment, two-plane treatment — and **nothing else**. The **target's own canonical
+silhouette leads**, assembled from the target's **2–3 signature identity features**. Do NOT re-dress
+the donor's silhouette: that bleeds the donor's identity into the target. Recorded failure (E2): a
+bed re-dressed from table 319's silhouette read as "table with a blanket"; a bench from chair 321's
+silhouette read as "wide chair." Fixes: **bed** = blanket dominating the top plane (~70%+) + pillow
+band at the head + frame reduced to headboard/footboard edges (no apron); **bench** = backless wide
+seat + legs. Same donor grammar (319/321 stroke + wood ramp), target-led silhouette.
+
 ## Structural derivation only + strengthened two-plane filter (Rafe ruling, Round E 2026-08)
 
 **Palette-only derivation is RETIRED for props** (alongside generation). The *only* derivation route
