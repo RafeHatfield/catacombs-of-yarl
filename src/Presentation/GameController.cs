@@ -79,6 +79,30 @@ public sealed partial class GameController : Node
 
     public GamePhase Phase { get; private set; } = GamePhase.WaitingForInput;
 
+    // ── Held quick-slot input ─────────────────────────────────────────────────
+    //
+    // Quick-slot input that arrives while a turn is resolving is HELD, not dropped.
+    // Exactly one is held: a newer press replaces an older one (queue-one,
+    // replace-latest). It fires the moment the phase returns to WaitingForInput.
+    //
+    // Why this exists: the phase gate used to early-return, silently. That is fine for
+    // one animation frame and wrong for the two windows that actually matter — a
+    // click-to-move path and auto-explore both re-enter ExecuteTurn from
+    // OnAnimationComplete, so the phase stays Processing/Animating for the WHOLE run.
+    // Every quick-slot press across those turns vanished, which reads as the bar being
+    // dead for a few turns and then healing itself. Worse, the two gestures disagreed:
+    // a tap on the MAP cancels the run (HandleTap), but the QuickSlotBar calls
+    // AcceptEvent() on its own _GuiInput, so a quick-slot press never reached that path
+    // and died at the gate instead. See #114.
+    //
+    // Deliberately queue-ONE: a roguelike turn is a commitment, and replaying a backlog
+    // of taps against state the player can no longer see is worse than losing the extra
+    // presses. The held press is re-validated on release, so it can never resolve against
+    // an item that has since gone stale.
+    private enum HeldInputKind { None, Tap, LongPress }
+    private HeldInputKind _heldInputKind = HeldInputKind.None;
+    private int           _heldInputItemId;
+
     /// <summary>True while auto-explore is actively running.</summary>
     public bool IsAutoExploreActive => _autoExploreMode;
 
@@ -208,6 +232,7 @@ public sealed partial class GameController : Node
 
         _pendingPath = null;
         _autoExploreMode = false;
+        ClearHeldInput();
     }
 
     /// <summary>
@@ -220,9 +245,12 @@ public sealed partial class GameController : Node
     public void HandleInventoryTap(int itemId)
     {
         Diag.Log($"HandleInventoryTap: itemId={itemId}, phase={Phase}");
-        if (_state == null || Phase != GamePhase.WaitingForInput)
+        if (_state == null) { Diag.Log("  BLOCKED: no state"); return; }
+
+        // Mid-turn: hold it rather than swallow it. Released by DrainHeldInput().
+        if (Phase != GamePhase.WaitingForInput)
         {
-            Diag.Log($"  BLOCKED: state={_state != null}, phase={Phase}");
+            HoldInput(HeldInputKind.Tap, itemId);
             return;
         }
 
@@ -263,6 +291,71 @@ public sealed partial class GameController : Node
 
         Diag.Log($"  -> UseItem({item.Name})");
         OnActionChosen(PlayerAction.UseItem(item));
+    }
+
+    // ─── Held quick-slot input ────────────────────────────────────────────────
+
+    /// <summary>
+    /// Hold a quick-slot press that arrived mid-turn. Replaces whatever was held —
+    /// the newest press is the one the player still means.
+    /// </summary>
+    private void HoldInput(HeldInputKind kind, int itemId)
+    {
+        _heldInputKind   = kind;
+        _heldInputItemId = itemId;
+        Diag.Log($"  HELD ({kind}) itemId={itemId} until phase returns to WaitingForInput (phase={Phase})");
+    }
+
+    /// <summary>
+    /// Forget any held press. Called whenever the player commits to something else —
+    /// they acted by another route, entered targeting, changed floor, or died. A press
+    /// held across one of those would surface at a moment the player is no longer in.
+    /// </summary>
+    private void ClearHeldInput()
+    {
+        if (_heldInputKind == HeldInputKind.None) return;
+        Diag.Log($"  held input ({_heldInputKind}) cleared — superseded");
+        _heldInputKind = HeldInputKind.None;
+    }
+
+    /// <summary>
+    /// Release a held press now that the phase is WaitingForInput again.
+    ///
+    /// Re-validated, never replayed blind: the item must still be in the inventory and
+    /// still available. A potion drunk by a queued heal, or a wand spent during the walk,
+    /// is dropped in silence — the press was made against a bar that no longer exists,
+    /// and a refusal toast for it would be noise about a decision the player has moved on
+    /// from. Refusals the player CAN act on still come from HandleInventoryTap as normal.
+    ///
+    /// Clears the held slot before dispatching: the dispatch re-enters ExecuteTurn and
+    /// sets Phase back to Processing, so a press left in place would re-fire forever.
+    /// </summary>
+    private void DrainHeldInput()
+    {
+        if (_heldInputKind == HeldInputKind.None) return;
+        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+
+        var kind   = _heldInputKind;
+        int itemId = _heldInputItemId;
+        _heldInputKind = HeldInputKind.None;
+
+        var item = FindItemById(itemId);
+        if (item == null)
+        {
+            Diag.Log($"  held input ({kind}) dropped — item {itemId} is gone");
+            return;
+        }
+
+        if (kind == HeldInputKind.Tap
+            && !QuickSlotModel.Availability(item, _state.PlayerFighter).Available)
+        {
+            Diag.Log($"  held tap dropped — {item.Name} is no longer available");
+            return;
+        }
+
+        Diag.Log($"  releasing held input ({kind}) for {item.Name}");
+        if (kind == HeldInputKind.Tap) HandleInventoryTap(itemId);
+        else                           HandleInventoryLongPress(itemId);
     }
 
     /// <summary>
@@ -399,7 +492,17 @@ public sealed partial class GameController : Node
     /// </summary>
     public void HandleInventoryLongPress(int itemId)
     {
-        if (_state == null || Phase != GamePhase.WaitingForInput) return;
+        if (_state == null) return;
+
+        // Held, not swallowed — same reason as the tap. A long-press during a walk was the
+        // second live sighting of the phase-gate swallow: the action sheet simply never
+        // opened, with nothing on screen to say why.
+        if (Phase != GamePhase.WaitingForInput)
+        {
+            HoldInput(HeldInputKind.LongPress, itemId);
+            return;
+        }
+
         var item = FindItemById(itemId);
         if (item == null) return;
 
@@ -541,6 +644,7 @@ public sealed partial class GameController : Node
     private void EnterTargetingMode(TargetingState targeting, bool showGenericToast = true)
     {
         Phase = GamePhase.Targeting;
+        ClearHeldInput();
         _input.EnterTargetingMode(targeting);
         if (showGenericToast)
         {
@@ -1014,6 +1118,7 @@ public sealed partial class GameController : Node
             PlayerCamera.ActiveMode = CameraMode.Deadzone;
             Phase = GamePhase.WaitingForInput;
             _input.SetAcceptingInput(true);
+            DrainHeldInput();
 
             var reason = _state.Player.Get<AutoExploreState>()?.StopReason;
             if (reason != null)
@@ -1221,6 +1326,7 @@ public sealed partial class GameController : Node
         if (result.GameOver)
         {
             Phase = GamePhase.GameOver;
+            ClearHeldInput();
             _animator?.PlayTurn(result);
         }
         else
@@ -1257,6 +1363,9 @@ public sealed partial class GameController : Node
             Diag.Log("  OAC: FloorTransition");
             var descend = _pendingDescend;
             _pendingDescend = null;
+            // A press held on the old floor must not surface on the new one — same items,
+            // entirely different situation. This path returns before the drain below.
+            ClearHeldInput();
             FloorTransitionRequested?.Invoke(descend.NewDepth);
             return;
         }
@@ -1314,6 +1423,11 @@ public sealed partial class GameController : Node
         Diag.Log("  OAC: WaitingForInput");
         Phase = GamePhase.WaitingForInput;
         _input.SetAcceptingInput(true);
+
+        // The turn is over — release anything the player pressed while it was resolving.
+        // This is the end of a single animation AND the end of a whole path/auto-explore
+        // run, because both funnel back through here.
+        DrainHeldInput();
     }
 
     /// <summary>
