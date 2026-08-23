@@ -39,7 +39,7 @@ src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5073.p
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5074.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,5,PASS,0,PASS,0.52,WARN,79,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5075.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,5,PASS,0,PASS,0.6986,WARN,41,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5076.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,5,PASS,0,PASS,0.5517,WARN,22,WARN
-src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5077.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,0,PASS,0.2537,WARN,33,WARN
+src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5077.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,4,PASS,0,PASS,0.2537,WARN,16,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5078.png,decal,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,6,WARN,,EXEMPT,71,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5079.png,decal,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,3,WARN,,EXEMPT,48,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5080.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,5,PASS,0,PASS,0.0,WARN,27,WARN
@@ -50,12 +50,12 @@ src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5084.p
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5085.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,7,PASS,1,PASS,0.0,WARN,33,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5086.png,decal,0,PASS,0,PASS,24x24,24x24,PASS,9,WARN,1,PASS,,EXEMPT,67,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5087.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,0,PASS,0.0145,WARN,22,WARN
-src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5088.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,0,PASS,0.02,WARN,17,WARN
+src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5088.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,6,PASS,0,PASS,0.0,WARN,13,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5089.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,0,PASS,0.0,WARN,24,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5090.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,6,PASS,0,PASS,0.9829,PASS,3,PASS
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5091.png,decal,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,3,WARN,,EXEMPT,56,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5092.png,decal,0,PASS,0,PASS,24x24,24x24,PASS,6,PASS,0,PASS,,EXEMPT,77,PASS
-src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5093.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,8,PASS,0,PASS,0.0,WARN,24,WARN
+src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5093.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,4,PASS,0,PASS,0.2364,WARN,11,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5094.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,1,PASS,0.069,WARN,26,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5095.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,10,WARN,0,PASS,0.0,WARN,18,WARN
 src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5096.png,prop,0,PASS,0,PASS,24x24,24x24,PASS,5,PASS,0,PASS,1.0,PASS,0,PASS

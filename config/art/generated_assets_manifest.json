@@ -635,7 +635,9 @@
       "game_key": "sign",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "recolor",
+      "pick_source": "rank37 sign recolored (canon wood 319) APPROVED in-scene 2026-08"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5078.png",
@@ -776,9 +778,10 @@
       "lint_exemptions": [],
       "game_key": "training_dummy",
       "notes": "PixelLab s42",
-      "route": "deep_collapse",
+      "route": "gauntlet_regen",
       "auto_collapsed": true,
-      "deep_collapse_merges": 7
+      "deep_collapse_merges": 7,
+      "pick_source": "rank67 training_dummy s5 APPROVED in-scene (landed over 5088)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5089.png",
@@ -848,7 +851,9 @@
       "game_key": "pillar",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "recolor",
+      "pick_source": "rank52 pillar recolored (canon grey stone 258) APPROVED in-scene"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5094.png",

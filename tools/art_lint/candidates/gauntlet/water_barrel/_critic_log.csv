@@ -1,0 +1,7 @@
+seed,win,gap,speckle,small_clusters,color_regions,edge_density,largest_gap,lint,path,error
+0,True,0.008,27,40,47,0.8919,edge_density,WARN,tools/art_lint/candidates/gauntlet/water_barrel/water_barrel_s0_snapped.png,
+1,False,0.013,32,60,76,0.8221,color_regions,WARN,tools/art_lint/candidates/gauntlet/water_barrel/water_barrel_s1_snapped.png,
+2,False,1.525,62,94,114,0.896,color_regions,WARN,tools/art_lint/candidates/gauntlet/water_barrel/water_barrel_s2_snapped.png,
+3,True,0.03,24,38,42,0.9118,edge_density,WARN,tools/art_lint/candidates/gauntlet/water_barrel/water_barrel_s3_snapped.png,
+4,True,0.0,21,39,49,0.8595,edge_density,WARN,tools/art_lint/candidates/gauntlet/water_barrel/water_barrel_s4_snapped.png,
+5,True,0.0,30,46,52,0.6726,edge_density,WARN,tools/art_lint/candidates/gauntlet/water_barrel/water_barrel_s5_snapped.png,
