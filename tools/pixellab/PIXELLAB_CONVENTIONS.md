@@ -142,9 +142,17 @@ Evaluate at the TARGET size (24×24 or 16×16), not at generation size.
 **Register ruling.** The target look is the Shattered-Pixel/Oryx school: **chunky, low-detail,
 bold-read**. The dominant PixelLab failure mode is **refinement** (too fine, too many small
 structures) even when palette/colour budget pass. Every generation prompt for a register-critical
-prop MUST carry: `"chunky, minimal detail, bold shapes, thick outline"` + `front-facing, straight-on`
-(props read front-on in this library), and pass the structural-fineness post-filters
-(`config/rubric/art-lint-spec.md` §AF; `tools/art_lint/fineness_metrics.py`) — WARN at canon p90.
+prop MUST carry: `"chunky, minimal detail, bold shapes, thick outline"` + the **two-plane rule**:
+`"only the front face and the top surface are visible; no side faces, orthographic"`. The register's
+projection is exactly two planes — front face + top surface. **Side planes are NEVER visible: a
+single pixel column of side face is a violation**, even on an otherwise front-facing sprite. Then
+pass the structural-fineness post-filters (`config/rubric/art-lint-spec.md` §AF;
+`tools/art_lint/fineness_metrics.py`) — WARN at canon p90.
+
+**Discard filter (blind pre-filter):** the question is now **"is any side face visible?"** — if yes,
+discard, regardless of how clean the sprite is otherwise. *Recorded example:* the Round-D nightstand
+candidate `nightstand2 s101` was metric-clean and read as a nightstand, but showed a sliver of side
+face and was rejected on perspective; `s107` (pure two-plane) was approved.
 
 **Canon-validated-swatch rule.** Build the `color_image` palette-lock swatch from *the concept's own
 canon-or-live sprite's dominant colours* (snapped to the master palette), never a generic swatch and

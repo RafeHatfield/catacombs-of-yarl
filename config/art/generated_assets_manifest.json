@@ -106,7 +106,8 @@
       "triage": "retouch",
       "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=WARN, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=15, final_overall=FAIL.]",
       "batch_c_canon_reference": "canon IDs 159 \u2014 mace \u2014 nearest canon blunt-weapon icon, style/proportion reference only (metal-headed flail, not a wooden club)",
-      "accepted_note": "accepted-as-is at gate review 2026-08; original reads correctly, no candidate improved it"
+      "accepted_note": "accepted-by-eye (sweep closure 2026-08); no candidate beat the live sprite",
+      "route": "original_accepted"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_3001.png",
@@ -138,7 +139,8 @@
       "notes": "RD rd_plus__low_res v2",
       "triage": "redesign",
       "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)). A staged redesign exists at tools/new-sprites-snapped/anvil.png but was rejected on rubric review (2026-07-16, high color-distance from live art, read as a quality downgrade) \u2014 retained as a Tier-3 triage candidate only, not applied.",
-      "accepted_note": "accepted-as-is at gate review 2026-08; original reads correctly, no candidate improved it"
+      "accepted_note": "accepted-by-eye (sweep closure 2026-08); no candidate beat the live sprite",
+      "route": "original_accepted"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5002.png",
@@ -176,7 +178,8 @@
       "game_key": "Chain",
       "notes": "RD rd_plus__low_res v1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "retrodiffusion_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5008.png",
@@ -190,7 +193,8 @@
       "game_key": "Coal Pile",
       "notes": "RD rd_plus__low_res v1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "retrodiffusion_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5010.png",
@@ -243,7 +247,8 @@
       "game_key": "Grate",
       "notes": "RD rd_plus__low_res grate_v3",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "retrodiffusion_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5015.png",
@@ -272,7 +277,8 @@
       "game_key": "Moss",
       "notes": "RD rd_plus__low_res v0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "retrodiffusion_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5039.png",
@@ -284,7 +290,8 @@
       "game_key": "key_item",
       "notes": "Key icon overlay rendered directly from world_24x24 by ItemSpriteManager/DungeonRenderer, bypassing the items_16x16 pipeline \u2014 see src/Presentation/Entities/ItemSpriteManager.cs. 24x24 is correct/intentional for this asset, not a resolution bug. Classified world_tile (not item) so A3 checks the resolution it actually ships at. Flagging for Part B rubric: confirm this classification with Rafe rather than assuming it.",
       "pipeline_pr": "12",
-      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); unaffected by 2026-07-16 rubric-review correction (low redesign distance, not rejected)"
+      "pipeline_stages": "phase2_staged(clean+snap already applied in commit 2b7c2e9); unaffected by 2026-07-16 rubric-review correction (low redesign distance, not rejected)",
+      "route": "canon_overlay"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5051.png",
@@ -394,48 +401,56 @@
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "bed",
       "notes": "PixelLab s2",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5059.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "bed",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5060.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "bench",
       "notes": "PixelLab s3",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5061.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "bench",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5062.png",
@@ -522,7 +537,8 @@
       "game_key": "glowing_mushroom",
       "notes": "PixelLab s1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5068.png",
@@ -534,7 +550,8 @@
       "game_key": "glowing_mushroom",
       "notes": "PixelLab s2",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5069.png",
@@ -546,7 +563,8 @@
       "game_key": "glowing_mushroom",
       "notes": "PixelLab s1337",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5070.png",
@@ -582,7 +600,8 @@
       "game_key": "mural_gold_warm",
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5073.png",
@@ -594,7 +613,8 @@
       "game_key": "mural_gold_warm",
       "notes": "PixelLab s3",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5074.png",
@@ -658,7 +678,8 @@
       "game_key": "rubble",
       "notes": "PixelLab s137",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5079.png",
@@ -672,7 +693,8 @@
       "game_key": "rubble",
       "notes": "PixelLab s2",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5080.png",
@@ -709,8 +731,9 @@
       "lint_exemptions": [],
       "game_key": "workbench",
       "notes": "PixelLab s0",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "workbench seed 2"
+      "route": "canon_derived",
+      "pixellab_prompt_seed": "workbench seed 2",
+      "pick_source": "Round D APPROVED: workbench derived from canon 319 table + tool clutter"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5083.png",
@@ -734,8 +757,8 @@
       "game_key": "water_barrel",
       "notes": "PixelLab s1",
       "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant",
-      "route": "pixellab_regen_locked",
-      "pick_source": "burndown3 fresh palette-locked generation, seed 3 (WARN, 8c)"
+      "route": "canon_derived",
+      "pick_source": "Round D APPROVED: water_barrel derived from canon 268 + water (bright)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5085.png",
@@ -747,8 +770,8 @@
       "game_key": "water_barrel",
       "notes": "PixelLab s999",
       "batch_c_canon_reference": "canon IDs 268;269 \u2014 barrel/barrel_open (already wired) \u2014 wood-grain/banding color reference only, canon has no water-filled variant",
-      "route": "pixellab_regen_locked",
-      "pick_source": "burndown3 fresh palette-locked generation, seed 4 (WARN, 7c)"
+      "route": "canon_derived",
+      "pick_source": "Round D APPROVED: water_barrel derived from canon 268 + water (calm); variant pair with 5084"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5086.png",
@@ -762,7 +785,8 @@
       "game_key": "vine",
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5087.png",
@@ -774,7 +798,8 @@
       "game_key": "training_dummy",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5088.png",
@@ -832,7 +857,8 @@
       "game_key": "straw_pile",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5092.png",
@@ -846,7 +872,8 @@
       "game_key": "straw_pile",
       "notes": "PixelLab s1",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5093.png",
@@ -982,12 +1009,14 @@
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "conformant",
+      "conformance_status": "accepted",
       "lint_exemptions": [],
       "game_key": "sack",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "parked_keep_fallback",
+      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5104.png",
@@ -1023,7 +1052,9 @@
       "game_key": "nightstand",
       "notes": "PixelLab s42",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "gauntlet_regen",
+      "pick_source": "Round D APPROVED: nightstand regen2 s107 (front-facing). colour flagged for play review \u2014 provisional pending Rafe's next play session"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5107.png",
@@ -1035,7 +1066,9 @@
       "game_key": "nightstand",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
+      "route": "gauntlet_regen",
+      "pick_source": "Round D APPROVED: nightstand regen2 s107 (canon repetition). colour flagged for play review \u2014 provisional pending Rafe's next play session"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5108.png",
@@ -1074,7 +1107,8 @@
       "game_key": "puddle",
       "notes": "PixelLab p3 s3",
       "pipeline_pr": "12",
-      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)"
+      "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
+      "route": "pixellab_pipeline"
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5111.png",
@@ -1126,6 +1160,7 @@
     }
   ],
   "changelog": [
-    "2026-08 (Rafe ruling): deleted banked items 4002-4004 \u2014 unwired stock, no assigned identity; regenerable via the locked pipeline if ever wanted. Reconciled manifest to 77."
+    "2026-08 (Rafe ruling): deleted banked items 4002-4004 \u2014 unwired stock, no assigned identity; regenerable via the locked pipeline if ever wanted. Reconciled manifest to 77.",
+    "2026-08 (sweep closure): parked-with-dignity set (sack 5102, beds 5058/5059, benches 5060/5061) formalized as accepted-by-eye; anvil 5001 + club 4001 remain accepted. End state: 0 nonconformant."
   ]
 }

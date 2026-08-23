@@ -65,7 +65,7 @@ Scored by Rafe or delegated reviewer at PR time. Any FAIL blocks merge regardles
 2. **Squint test.** Silhouette reads at 1× on device; threat-relevant entities distinguishable from decor. Pass/fail.
 3. **Same-hand test.** Placed in a row with 4 canon neighbors of the same class at 6×: does it read as drawn by the same artist? Pass/fail.
 4. **Light direction.** Consistent with adjacent canon sprites of the same class. Pass/fail (convention to be documented at first session, bible §7).
-5. **Proportion and perspective.** Matches class conventions (top-down oblique, front-facing props). Pass/fail.
+5. **Proportion and perspective.** Matches class conventions (top-down oblique, front-facing props). **Two-plane rule (2026-08):** only the front face and the top surface may be visible — any side face, even a single pixel column, fails. Pass/fail.
 6. **Ramp-collapse review.** For palette-snapped assets: compare before/after; did snapping destroy a detail the design needs? If yes, redesign the sprite within the palette rather than reverting the snap.
 7. **Names itself at 1× in scene** — a sprite whose object is not identifiable without being told fails, regardless of style conformance.
 
@@ -92,6 +92,8 @@ never scattered.
 - 75 live generated world tiles (IDs 5001–5114) predate this spec and fail A1/A4/A5/A6. They are the Phase 4 burn-down backlog, tracked in the manifest, and are not grandfathered — they are scheduled debt.
 
 ## Changelog
+
+- 2026-08 (Rafe ruling, from the Round-D nightstand rejection): **two-plane perspective rule** — only the front face and top surface are visible; any side face (even one pixel column) fails Part B perspective. Folded into the rubric perspective line.
 
 - 2026-08 (Rafe rulings): **F4 edge_density DEMOTED to advisory/report-only** (over-flags compact props; F1–F3 gate). Added the **in-scene review protocol** to Part B (candidates reviewed only in a production-rendered scene beside approved neighbours; contact sheets are a pre-filter; captures → tools/art_lint/review_scenes/, one PR comment per round).
 

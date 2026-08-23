@@ -57,7 +57,7 @@ If a sprite needs more colors than the ceiling to read, the design is too refine
 
 ## 7. Perspective and proportion
 
-Top-down oblique, front-facing props, consistent with the Oryx sheets. Judgment-level conformance (silhouette language, proportion, "same hand" reading) is assessed against the rubric in the lint spec, not automated. Light direction convention: to be documented from sheet observation at first rubric session; until then, match neighboring canon sprites for the same asset class.
+Top-down oblique, front-facing props, consistent with the Oryx sheets. **Two-plane rule (ruled 2026-08):** the register's projection is exactly two planes — the **front face** and the **top surface**. **Side faces are NEVER visible.** A single pixel column of side plane is a perspective violation, even on an otherwise front-facing sprite (recorded example: Round-D nightstand `s101` rejected for a side-face sliver; `s107` approved). Judgment-level conformance (silhouette language, proportion, "same hand" reading) is assessed against the rubric in the lint spec, not automated. Light direction convention: to be documented from sheet observation at first rubric session; until then, match neighboring canon sprites for the same asset class.
 
 ## 8. Provenance
 
@@ -91,6 +91,9 @@ used later as a rarer secondary pool, not the default. Simplified pictorial mura
 (scene-like compositions) are retired; do not generate or land them.
 
 ## Changelog
+
+- 2026-08 (sweep closure): **style-register sweep complete** — all 67 fineness-ranked assets verdicted via the in-scene review protocol; manifest reconciled to 77 with **0 nonconformant** (every entry canon, canon-derived, eye-approved regen, pipeline-conformant, or accepted-by-eye). F4 (edge_density) demoted-with-evidence to advisory; the fineness family F1-F3 is permanent. Parked-with-dignity set (sack/beds/benches/anvil/club) formalized as accepted-by-eye.
+- 2026-08 (Rafe ruling): **two-plane perspective rule** (bible §7) — the register shows exactly the front face + top surface; side faces are never visible (a single pixel column of side plane is a violation). Recorded example: Round-D nightstand s101 rejected, s107 approved.
 
 - 2026-08 (Rafe ruling): **candidate review is in-scene, not on standalone sheets** — a candidate is judged only as rendered through the production renderer beside approved/canon props (themed floor, normal light, gameplay zoom). Contact sheets pre-filter only. Built `ReviewSceneBuilder` for it. Also demoted fineness F4 (edge_density) to advisory.
 
