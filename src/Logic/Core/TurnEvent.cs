@@ -594,6 +594,33 @@ public sealed class RaiseDeadEvent : TurnEvent
 /// can show appropriate feedback (toast messages) and the harness can measure
 /// how often item usage fires and what outcomes result.
 /// </summary>
+/// <summary>
+/// The player used an item, announced from the use seam rather than inferred from
+/// whatever the item happened to DO.
+///
+/// Separate from <see cref="ItemUseEvent"/> deliberately. That one is emitted only by
+/// ResolveMonsterItemUse and carries the monster fumble table (Success / FailureMode /
+/// EffectAmount); the player has no fumble table, and reusing it would fire the monster's
+/// failure wording on the player's path.
+///
+/// Emitted at the point the use COMMITS - after the silence gate, after the charge check,
+/// alongside the stack decrement - so it never announces a use the rules then refuse.
+///
+/// Exists because the player's item use had no announcement at all. Messaging was derived
+/// per-effect: HealEvent has a formatter, so healing potions looked announced by accident,
+/// while every self-buff potion resolves through ResolveSelfStatusEffect, which emits only
+/// a SpellEvent - an event ToastLog has no case for. Drinking invisibility produced no
+/// message of any kind, and neither did speed, protection, heroism or shield.
+/// </summary>
+public sealed class PlayerItemUseEvent : TurnEvent
+{
+    /// <summary>Display name, already resolved through identification (may be an appearance name).</summary>
+    public string ItemName { get; init; } = "";
+
+    /// <summary>The action verb - "drink", "read", "point". See TurnController.UseVerb.</summary>
+    public string Verb { get; init; } = "use";
+}
+
 public sealed class ItemUseEvent : TurnEvent
 {
     public string ItemName { get; init; } = "";

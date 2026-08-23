@@ -431,6 +431,11 @@ public static class TurnController
             wand.TryConsume();
         }
 
+        // The use has committed: silence didn't block it and the wand had a charge.
+        // Announcing here rather than at the top means a silenced scroll or a spent wand
+        // is never announced as used.
+        AnnounceItemUse(state, item, events);
+
         // ── Scroll: consume one stack ─────────────────────────────────────────
         if (consumable != null)
         {
@@ -1533,6 +1538,46 @@ public static class TurnController
         });
     }
 
+    /// <summary>
+    /// The verb for using this item, read off the components the factories already give it:
+    ///   WandComponent                       -> "point"   (SpellItemFactory.CreateWand)
+    ///   Consumable, potion or healing       -> "drink"   (ConsumableFactory)
+    ///   Consumable, neither                 -> "read"    (SpellItemFactory.CreateScroll,
+    ///                                                     which builds scrolls as
+    ///                                                     Consumable(healAmount: 0))
+    ///
+    /// Derived rather than stored: no new component, no mid-run DTO, no AotObjectFactory
+    /// registration. The composition above is exhaustive for every usable item in content.
+    /// </summary>
+    private static string UseVerb(Entity item)
+    {
+        if (item.Get<WandComponent>() != null) return "point";
+
+        var consumable = item.Get<Consumable>();
+        if (consumable == null) return "use";
+
+        return consumable.IsPotion || consumable.IsHealing ? "drink" : "read";
+    }
+
+    /// <summary>
+    /// Announce an item use. ONE call per resolver arm, at the point the use commits -
+    /// never per-effect, so it fires even when the effect is invisible. Drinking a potion
+    /// of invisibility is the case that proves it: it emits a SpellEvent and nothing else,
+    /// and every message the player used to see came from an effect event.
+    ///
+    /// Emitted before the effect resolves so the log reads in the order it happened:
+    /// "You drink the Healing Potion." then "+40 HP from Healing Potion."
+    /// </summary>
+    private static void AnnounceItemUse(GameState state, Entity item, List<TurnEvent> events)
+    {
+        events.Add(new PlayerItemUseEvent
+        {
+            ActorId  = state.Player.Id,
+            ItemName = ItemDisplay.GetDisplayName(item, state.IdentificationRegistry, state.AppearancePool),
+            Verb     = UseVerb(item),
+        });
+    }
+
     private static void TryHeal(GameState state, Entity? specificItem, List<TurnEvent> events)
     {
         var fighter = state.PlayerFighter;
@@ -1557,6 +1602,9 @@ public static class TurnController
 
         var consumable = potion.Get<Consumable>();
         if (consumable == null) return;
+
+        // The use has committed — announce it. Everything below this point consumes.
+        AnnounceItemUse(state, potion, events);
 
         // Apply cooldown before healing so the set happens even if heal returns 0 (already at max HP).
         if (consumable.UseCooldownTurns > 0)
