@@ -70,4 +70,47 @@ public class MidRunCorpseResumeTests
             Assert.That(loadedLive.Get<Fighter>(), Is.Not.Null, "the live monster keeps its Fighter.");
         });
     }
+
+    /// <summary>
+    /// The LIVE-play death seam must yield the same corpse-classified "visual intent" the resume seam
+    /// guards above. After a real ProcessTurn kill, the dead entity is in BOTH state.Corpses and
+    /// state.Monsters, carries CorpseComponent, has no Fighter, and keeps its SpeciesTag. That composite
+    /// is exactly what the two presentation halves consume: CorpseSpriteManager.Sync builds a corpse
+    /// sprite from state.Corpses (species sprite via the kept SpeciesTag, under the corpse treatment),
+    /// and EntitySpriteManager skips Has&lt;CorpseComponent&gt;() so the remains are never re-sprited as a
+    /// live monster. If a future change stopped emitting this composite at the live seam, corpses would
+    /// silently stop rendering — this test guards that.
+    /// </summary>
+    [Test]
+    public void LiveDeath_YieldsCorpseClassifiedVisualIntent()
+    {
+        var rng = new SeededRandom(1337);
+        var map = GameMap.CreateArena(20, 20);
+
+        var player = new Entity(0, "Player", 5, 10, blocksMovement: true);
+        // dexterity 18 + damage 20 one-shots the 1-HP orc.
+        player.Add(new Fighter(hp: 100, strength: 12, dexterity: 18, constitution: 12,
+            accuracy: 5, evasion: 1, damageMin: 20, damageMax: 20));
+        map.RegisterEntity(player);
+
+        var orc = new Entity(1, "Orc", 6, 10, blocksMovement: true);
+        orc.Add(new Fighter(hp: 1, strength: 10, dexterity: 4, constitution: 10,
+            accuracy: 3, evasion: 1, damageMin: 2, damageMax: 4));
+        orc.Add(new AiComponent { AiType = "basic", Faction = "orc" });
+        orc.Add(new SpeciesTag("orc"));
+        map.RegisterEntity(orc);
+
+        var state = new GameState(player, new List<Entity> { orc }, map, rng);
+
+        TurnController.ProcessTurn(state, PlayerAction.Attack(orc));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(state.Corpses, Does.Contain(orc), "corpse is in state.Corpses — CorpseSpriteManager.Sync renders from here.");
+            Assert.That(state.Monsters, Does.Contain(orc), "corpse keeps dual membership in state.Monsters.");
+            Assert.That(orc.Has<CorpseComponent>(), Is.True, "CorpseComponent is the render-classification signal.");
+            Assert.That(orc.Get<Fighter>(), Is.Null, "a corpse has no Fighter — not a live combatant, so EntitySpriteManager.UpdatePositions leaves it alone.");
+            Assert.That(orc.Get<SpeciesTag>(), Is.Not.Null, "SpeciesTag kept — CorpseSpriteManager.InferSpriteBase resolves the species sprite for the remains.");
+        });
+    }
 }

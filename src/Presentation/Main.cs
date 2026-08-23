@@ -51,6 +51,8 @@ public partial class Main : Node
     private EntitySpriteManager? _entitySprites;
     // Item sprite manager tracks floor item overlay sprites
     private ItemSpriteManager? _itemSprites;
+    // Corpse sprite manager renders remains of dead monsters (reconciled against state.Corpses)
+    private CorpseSpriteManager? _corpseSprites;
     // Ground hazard overlay — persistent tile tints for burning/poison ground.
     private GroundHazardOverlay? _groundHazardOverlay;
     // Floating HP bars — small red bars above damaged enemy sprites (Phase 4).
@@ -853,6 +855,12 @@ public partial class Main : Node
         _itemSprites = new ItemSpriteManager(entityLayer, _spriteMapping!, _renderer, _tileThemeConfig);
         _itemSprites.Initialize(state);
 
+        // Corpse sprites — remains of dead monsters, rendered under live entities on the same
+        // entityLayer. Reconciled against state.Corpses each turn (Sync); FOV-only like items.
+        // On resume, Initialize rebuilds every corpse the run is carrying on this floor.
+        _corpseSprites = new CorpseSpriteManager(entityLayer, _spriteMapping!, _renderer);
+        _corpseSprites.Initialize(state);
+
         // HUD
         _hud = new HUD();
         hudNode.AddChild(_hud);
@@ -916,8 +924,11 @@ public partial class Main : Node
             _memoInboxPanel = new MemoInboxPanel();
             uiLayer.AddChild(_memoInboxPanel);
             _memoInboxPanel.InboxClosed += OnInboxClosed;
-            _memoInboxPanel.Visible = false;
         }
+        // Hide on EVERY setup, not just first creation (mirrors _gameOverScreen above). A modal left
+        // visible from a prior run would keep IsRibbonSurfaceAvailable false for the whole next run,
+        // silencing the ribbon — the device regression where voice never fired for a session.
+        _memoInboxPanel.Visible = false;
 
         PlayerCamera.Update(_gameView!, state.ControlledEntity, _currentZoom, _renderer);
 
@@ -955,6 +966,8 @@ public partial class Main : Node
         _entitySprites?.UpdateVisibility(state);
         _entitySprites?.UpdateStatusTints(state);
         _itemSprites?.UpdateVisibility(state);
+        _corpseSprites?.Sync(state);
+        _corpseSprites?.UpdateVisibility(state);
         // Initial HP bar pass — shows bars for any pre-damaged monsters at floor start.
         if (_entitySprites != null)
             _floatingHpBars?.Refresh(state, _entitySprites);
@@ -1003,7 +1016,7 @@ public partial class Main : Node
         AddChild(_gameController);
         _gameController.Initialize(state, _entitySprites!, this, _itemSprites, _inventoryPanel,
             _equipmentPanel, _toastLog, _monsterFactory, _renderer, _gameView, _entityFactory,
-            _vfxOverlay, showPropInspect: ReadShowPropInspect());
+            _vfxOverlay, showPropInspect: ReadShowPropInspect(), corpseSprites: _corpseSprites);
         _gameController.TurnCompleted += OnTurnCompleted;
         _gameController.GameEnded += OnGameEnded;
         _gameController.FloorTransitionRequested += OnFloorTransitionRequested;
@@ -1032,6 +1045,7 @@ public partial class Main : Node
             _messageLogPanel = new MessageLogPanel();
             GetNode<CanvasLayer>("UILayer").AddChild(_messageLogPanel);
         }
+        _messageLogPanel.Visible = false;   // clean slate each run — see the memo-inbox note above
 
         // Hollowmark ribbon (M1.5b) — its own Control, created once, top band clear of touch controls.
         // History anchor renders the scheduler's serialized last-20; quiet button mutes the current floor.
@@ -1115,6 +1129,8 @@ public partial class Main : Node
         _entitySprites?.UpdateVisibility(_state);
         _entitySprites?.UpdateStatusTints(_state);
         _itemSprites?.UpdateVisibility(_state);
+        _corpseSprites?.Sync(_state);
+        _corpseSprites?.UpdateVisibility(_state);
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -1562,15 +1578,24 @@ public partial class Main : Node
     /// active and no modal is covering it. Never hardcoded true — a false result must keep the scheduler
     /// from consuming.
     /// </summary>
-    private bool IsRibbonSurfaceAvailable()
+    private bool IsRibbonSurfaceAvailable() => RibbonSurfaceBlocker() == null;
+
+    /// <summary>
+    /// The specific condition making the ribbon surface unavailable, or null if it IS available. Split
+    /// out so the device diagnostic can name WHY a line was suppressed — a modal left visible from a
+    /// prior run keeps this false for the whole next run, silencing voice until the modal is dismissed.
+    /// </summary>
+    private string? RibbonSurfaceBlocker()
     {
-        if (_state == null || !_state.IsDungeonMode || _state.IsGameOver) return false;
-        if (GetNodeOrNull<CanvasLayer>("MenuLayer") is { Visible: true }) return false;   // main menu / options
-        if (_equipmentPanel?.Visible == true) return false;
-        if (_memoInboxPanel?.Visible == true) return false;
-        if (_messageLogPanel?.Visible == true) return false;
-        if (_gameOverScreen?.Visible == true) return false;
-        return true;
+        if (_state == null) return "state-null";
+        if (!_state.IsDungeonMode) return "not-dungeon";
+        if (_state.IsGameOver) return "game-over";
+        if (GetNodeOrNull<CanvasLayer>("MenuLayer") is { Visible: true }) return "menu-layer";
+        if (_equipmentPanel?.Visible == true) return "equipment-panel";
+        if (_memoInboxPanel?.Visible == true) return "memo-inbox";
+        if (_messageLogPanel?.Visible == true) return "message-log";
+        if (_gameOverScreen?.Visible == true) return "game-over-screen";
+        return null;
     }
 
     private void OnTurnCompleted(TurnResult result)
@@ -1587,12 +1612,16 @@ public partial class Main : Node
             var families = _voiceTriggerReader.Read(result, _state);
             bool surf = IsRibbonSurfaceAvailable();
             Logic.Voice.VoiceDeliverReason reason = Logic.Voice.VoiceDeliverReason.NoEligibleFamily;
+            // currentRibbonTier: null — the ribbon now STACKS (up to 3 cards), so a new line no longer
+            // needs to supersede whatever is showing. The scheduler still filters by cooldown / mode /
+            // once-per-run and delivers at most one line per turn.
             Logic.Voice.VoiceDelivery? delivery = families.Count > 0
                 ? _voiceScheduler.TryDeliver(families, _voiceSettings.Mode, _state.TurnCount,
-                      _voiceRibbon.CurrentTier, surf, out reason)
+                      currentRibbonTier: null, surf, out reason)
                 : null;
             if (delivery != null)
-                _voiceRibbon.ShowLine(delivery.Line, delivery.Tier, _voiceSettings.DurationSeconds);
+                _voiceRibbon.ShowLine(delivery.Line, _voiceSettings.DurationSeconds,
+                    manualDismiss: _voiceSettings.Dismiss == Logic.Voice.VoiceDismiss.Manual);
 
             if (_voiceDiag)   // debug-only device diagnostic (E)
                 Diag.Event("voice_turn", new
@@ -1601,7 +1630,7 @@ public partial class Main : Node
                     fams = string.Join(",", families),
                     mode = _voiceSettings.Mode.ToString(),
                     surface = surf,
-                    curTier = _voiceRibbon.CurrentTier?.ToString() ?? "null",
+                    surfaceBlocker = RibbonSurfaceBlocker() ?? "(available)",   // WHY surface is unavailable
                     reason = families.Count == 0 ? "no-triggers-derived" : reason.ToString(),
                     delivered = delivery?.Line ?? "(none)",
                     // If a line WAS delivered, dump geometry so a silent widget is caught (suspect a).
@@ -1844,6 +1873,8 @@ public partial class Main : Node
         _entitySprites?.UpdateVisibility(_state);
         _entitySprites?.UpdateStatusTints(_state);
         _itemSprites?.UpdateVisibility(_state);
+        _corpseSprites?.Sync(_state);
+        _corpseSprites?.UpdateVisibility(_state);
         // Update floating HP bars after visibility is resolved for this turn.
         if (_entitySprites != null)
             _floatingHpBars?.Refresh(_state, _entitySprites);
