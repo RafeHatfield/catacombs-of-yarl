@@ -65,7 +65,7 @@ Scored by Rafe or delegated reviewer at PR time. Any FAIL blocks merge regardles
 2. **Squint test.** Silhouette reads at 1× on device; threat-relevant entities distinguishable from decor. Pass/fail.
 3. **Same-hand test.** Placed in a row with 4 canon neighbors of the same class at 6×: does it read as drawn by the same artist? Pass/fail.
 4. **Light direction.** Consistent with adjacent canon sprites of the same class. Pass/fail (convention to be documented at first session, bible §7).
-5. **Proportion and perspective.** Matches class conventions (top-down oblique, front-facing props). **Two-plane rule (2026-08):** only the front face and the top surface may be visible — any side face, even a single pixel column, fails. Pass/fail.
+5. **Proportion and perspective.** Matches class conventions (top-down oblique, front-facing props). **Two-plane rule (2026-08, strengthened Round E):** the projection is exactly two planes — front face **and** top surface. Both questions must pass: (a) no side face is visible (a single pixel column fails), **and** (b) both the front face and the top surface are present. A top-down-only sprite (top, no front) or an elevation-only sprite (front, no top) fails by omission. Applies to every candidate route, derivations included, and is run as a discard filter before review. Pass/fail.
 6. **Ramp-collapse review.** For palette-snapped assets: compare before/after; did snapping destroy a detail the design needs? If yes, redesign the sprite within the palette rather than reverting the snap.
 7. **Names itself at 1× in scene** — a sprite whose object is not identifiable without being told fails, regardless of style conformance.
 
@@ -95,6 +95,7 @@ never scattered.
 
 ## Changelog
 
+- 2026-08 (Rafe ruling, Round E verdicts): **two-plane rule strengthened** — now requires both (a) no side face and (b) front face AND top surface both present (a top-down-only or front-only sprite fails by omission). Run as a discard filter on every candidate route before review. Companion (bible/conventions): **structural derivation only for props** — a derivation re-dresses a canon donor's construction; palette-only derivation (canon colours on an invented form) is retired.
 - 2026-08 (Rafe ruling, post-play-session): added Part B rule **"fallback preserves pixels, never confers acceptance"** — a kept-by-fallback incumbent stays `pending_review` until it earns an actual in-scene verdict. Corrects the sweep-closure hole (beds 5058/5059, benches 5060/5061, sack 5102 were marked accepted-by-eye without a real in-scene look; stripped to pending_review and re-reviewed in Round E). Companion ruling (bible changelog): **prop generation retired** — prop rework ladder is canon-substitution → canon-derivation → stop-and-discuss, no regen route; bank is reference-only.
 - 2026-08 (Rafe ruling, from the Round-D nightstand rejection): **two-plane perspective rule** — only the front face and top surface are visible; any side face (even one pixel column) fails Part B perspective. Folded into the rubric perspective line.
 

@@ -137,6 +137,22 @@ Evaluate at the TARGET size (24×24 or 16×16), not at generation size.
   hand-crafted style. Long-term solution: replace Oryx props progressively so the game
   settles into a consistent PixelLab style rather than a mix.
 
+## Structural derivation only + strengthened two-plane filter (Rafe ruling, Round E 2026-08)
+
+**Palette-only derivation is RETIRED for props** (alongside generation). The *only* derivation route
+is **structural**: start from a **canon donor sprite's actual construction** (its pixels / plane
+structure) and **re-dress** it — never apply canon colours to an invented form. Round E proved why:
+palette-only beds (canon colours, invented form) read **top-down-only** and benches read
+**front-only** — two-plane violations by omission, because an invented form has no canon plane
+structure to inherit.
+
+**Two-plane discard filter — now BOTH questions, on every route incl. derivation, before review:**
+1. **"Is any side face visible?"** → must be **no** (a single side-plane pixel column fails).
+2. **"Are the front face AND the top surface both present?"** → must be **yes**.
+
+A top-down sprite (top only) or an elevation sprite (front only) fails #2 by omission. Run this
+filter on the candidate *before* it reaches in-scene review; a fail is discarded, not submitted.
+
 ## Prop generation RETIRED (Rafe ruling, post-play-session 2026-08)
 
 **There is no regeneration route for props anymore.** The prop rework ladder is:
