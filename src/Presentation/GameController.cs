@@ -258,6 +258,20 @@ public sealed partial class GameController : Node
     {
         Diag.Log($"HandleScrollOrWandUse: {item.Name} targeting={spell.Targeting}");
 
+        // A spent wand is a free no-op — never consume a turn. The quick-slot greys it out, but that
+        // is cosmetic: without this gate the tap falls through to CastSpell and ProcessTurn burns a
+        // turn (monsters act) for a wand that does nothing — the out-of-charges check in
+        // TurnController.ResolveSpellAction returns a failed WandUseEvent WITHOUT marking the action
+        // free. Handle it here, matching the AutoClosest "no visible targets" path below, so the tap
+        // costs neither a turn nor a pointless trip into targeting mode. Infinite wands keep working.
+        var wand = item.Get<WandComponent>();
+        if (wand != null && !wand.HasCharges)
+        {
+            _toastLog?.AddMessage("The wand is spent.");
+            Diag.Log($"HandleScrollOrWandUse: {item.Name} out of charges — free no-op, no turn consumed.");
+            return;
+        }
+
         switch (spell.Targeting)
         {
             case TargetingMode.Self:
