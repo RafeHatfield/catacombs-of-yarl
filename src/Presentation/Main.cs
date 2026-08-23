@@ -911,8 +911,11 @@ public partial class Main : Node
             _memoInboxPanel = new MemoInboxPanel();
             uiLayer.AddChild(_memoInboxPanel);
             _memoInboxPanel.InboxClosed += OnInboxClosed;
-            _memoInboxPanel.Visible = false;
         }
+        // Hide on EVERY setup, not just first creation (mirrors _gameOverScreen above). A modal left
+        // visible from a prior run would keep IsRibbonSurfaceAvailable false for the whole next run,
+        // silencing the ribbon — the device regression where voice never fired for a session.
+        _memoInboxPanel.Visible = false;
 
         PlayerCamera.Update(_gameView!, state.ControlledEntity, _currentZoom, _renderer);
 
@@ -1027,6 +1030,7 @@ public partial class Main : Node
             _messageLogPanel = new MessageLogPanel();
             GetNode<CanvasLayer>("UILayer").AddChild(_messageLogPanel);
         }
+        _messageLogPanel.Visible = false;   // clean slate each run — see the memo-inbox note above
 
         // Hollowmark ribbon (M1.5b) — its own Control, created once, top band clear of touch controls.
         // History anchor renders the scheduler's serialized last-20; quiet button mutes the current floor.
@@ -1557,15 +1561,24 @@ public partial class Main : Node
     /// active and no modal is covering it. Never hardcoded true — a false result must keep the scheduler
     /// from consuming.
     /// </summary>
-    private bool IsRibbonSurfaceAvailable()
+    private bool IsRibbonSurfaceAvailable() => RibbonSurfaceBlocker() == null;
+
+    /// <summary>
+    /// The specific condition making the ribbon surface unavailable, or null if it IS available. Split
+    /// out so the device diagnostic can name WHY a line was suppressed — a modal left visible from a
+    /// prior run keeps this false for the whole next run, silencing voice until the modal is dismissed.
+    /// </summary>
+    private string? RibbonSurfaceBlocker()
     {
-        if (_state == null || !_state.IsDungeonMode || _state.IsGameOver) return false;
-        if (GetNodeOrNull<CanvasLayer>("MenuLayer") is { Visible: true }) return false;   // main menu / options
-        if (_equipmentPanel?.Visible == true) return false;
-        if (_memoInboxPanel?.Visible == true) return false;
-        if (_messageLogPanel?.Visible == true) return false;
-        if (_gameOverScreen?.Visible == true) return false;
-        return true;
+        if (_state == null) return "state-null";
+        if (!_state.IsDungeonMode) return "not-dungeon";
+        if (_state.IsGameOver) return "game-over";
+        if (GetNodeOrNull<CanvasLayer>("MenuLayer") is { Visible: true }) return "menu-layer";
+        if (_equipmentPanel?.Visible == true) return "equipment-panel";
+        if (_memoInboxPanel?.Visible == true) return "memo-inbox";
+        if (_messageLogPanel?.Visible == true) return "message-log";
+        if (_gameOverScreen?.Visible == true) return "game-over-screen";
+        return null;
     }
 
     private void OnTurnCompleted(TurnResult result)
@@ -1600,6 +1613,7 @@ public partial class Main : Node
                     fams = string.Join(",", families),
                     mode = _voiceSettings.Mode.ToString(),
                     surface = surf,
+                    surfaceBlocker = RibbonSurfaceBlocker() ?? "(available)",   // WHY surface is unavailable
                     reason = families.Count == 0 ? "no-triggers-derived" : reason.ToString(),
                     delivered = delivery?.Line ?? "(none)",
                     // If a line WAS delivered, dump geometry so a silent widget is caught (suspect a).
