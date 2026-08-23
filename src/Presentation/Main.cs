@@ -1595,12 +1595,16 @@ public partial class Main : Node
             var families = _voiceTriggerReader.Read(result, _state);
             bool surf = IsRibbonSurfaceAvailable();
             Logic.Voice.VoiceDeliverReason reason = Logic.Voice.VoiceDeliverReason.NoEligibleFamily;
+            // currentRibbonTier: null — the ribbon now STACKS (up to 3 cards), so a new line no longer
+            // needs to supersede whatever is showing. The scheduler still filters by cooldown / mode /
+            // once-per-run and delivers at most one line per turn.
             Logic.Voice.VoiceDelivery? delivery = families.Count > 0
                 ? _voiceScheduler.TryDeliver(families, _voiceSettings.Mode, _state.TurnCount,
-                      _voiceRibbon.CurrentTier, surf, out reason)
+                      currentRibbonTier: null, surf, out reason)
                 : null;
             if (delivery != null)
-                _voiceRibbon.ShowLine(delivery.Line, delivery.Tier, _voiceSettings.DurationSeconds);
+                _voiceRibbon.ShowLine(delivery.Line, _voiceSettings.DurationSeconds,
+                    manualDismiss: _voiceSettings.Dismiss == Logic.Voice.VoiceDismiss.Manual);
 
             if (_voiceDiag)   // debug-only device diagnostic (E)
                 Diag.Event("voice_turn", new
@@ -1610,7 +1614,6 @@ public partial class Main : Node
                     mode = _voiceSettings.Mode.ToString(),
                     surface = surf,
                     surfaceBlocker = RibbonSurfaceBlocker() ?? "(available)",   // WHY surface is unavailable
-                    curTier = _voiceRibbon.CurrentTier?.ToString() ?? "null",
                     reason = families.Count == 0 ? "no-triggers-derived" : reason.ToString(),
                     delivered = delivery?.Line ?? "(none)",
                     // If a line WAS delivered, dump geometry so a silent widget is caught (suspect a).
