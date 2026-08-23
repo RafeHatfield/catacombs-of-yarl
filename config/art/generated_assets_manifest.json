@@ -109,45 +109,6 @@
       "accepted_note": "accepted-as-is at gate review 2026-08; original reads correctly, no candidate improved it"
     },
     {
-      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4002.png",
-      "origin": "retrodiffusion",
-      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
-      "asset_class": "item",
-      "conformance_status": "nonconformant",
-      "lint_exemptions": [],
-      "game_key": null,
-      "notes": "RD rd_plus__low_res v2 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=PASS, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=8, final_overall=FAIL.]",
-      "gate_note": "unwired \u2014 pending exempt-or-delete ruling"
-    },
-    {
-      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4003.png",
-      "origin": "retrodiffusion",
-      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
-      "asset_class": "item",
-      "conformance_status": "nonconformant",
-      "lint_exemptions": [],
-      "game_key": null,
-      "notes": "RD rd_plus__low_res v0 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
-      "triage": "redesign",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh).",
-      "gate_note": "unwired \u2014 pending exempt-or-delete ruling"
-    },
-    {
-      "path": "src/Presentation/assets/sprites_16bf/items_16x16/oryx_16bit_fantasy_items_4004.png",
-      "origin": "retrodiffusion",
-      "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
-      "asset_class": "item",
-      "conformance_status": "nonconformant",
-      "lint_exemptions": [],
-      "game_key": null,
-      "notes": "RD rd_plus__low_res v1 \u2014 banked (status: reserved \u2014 not currently used by any game_key)",
-      "triage": "retouch",
-      "triage_note": "Failed Part A after clean+snap pipeline (clean:no-op(0 partial-alpha at baseline);snap:applied fresh). [Burn-down 2a deep-collapse attempted: A5/A6 already failing pre-merge (A5=WARN, A6=FAIL) \u2014 deep-collapse not attempted, final_colors=10, final_overall=FAIL.]",
-      "gate_note": "unwired \u2014 pending exempt-or-delete ruling"
-    },
-    {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_3001.png",
       "origin": "placeholder",
       "added_commit": "447f5237b440791c5bb2981078caa29ab0cc935e",
@@ -963,8 +924,9 @@
       "lint_exemptions": [],
       "game_key": "shelf_bottles",
       "notes": "PixelLab s1",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "shelf_bottles seed 0"
+      "route": "canon_derived",
+      "pixellab_prompt_seed": "shelf_bottles seed 0",
+      "pick_source": "shelf_bottles derivation APPROVED (rank 9/36): bottles on canon 318 shelf frame, master palette. Family note: shelf_bottles are shelves-with-books for now (5100=canon 317 books); family label/re-key folded into #51."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5100.png",
@@ -993,8 +955,9 @@
       "lint_exemptions": [],
       "game_key": "shelf_bottles",
       "notes": "PixelLab s137",
-      "route": "pixellab_regen",
-      "pixellab_prompt_seed": "shelf_bottles seed 1"
+      "route": "canon_derived",
+      "pixellab_prompt_seed": "shelf_bottles seed 1",
+      "pick_source": "shelf_bottles derivation APPROVED (rank 9/36): bottles on canon 318 shelf frame, master palette. Family note: shelf_bottles are shelves-with-books for now (5100=canon 317 books); family label/re-key folded into #51."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5102.png",
@@ -1143,5 +1106,8 @@
       "route": "canon_substitution",
       "canon_source_id": 263
     }
+  ],
+  "changelog": [
+    "2026-08 (Rafe ruling): deleted banked items 4002-4004 \u2014 unwired stock, no assigned identity; regenerable via the locked pipeline if ever wanted. Reconciled manifest to 77."
   ]
 }

@@ -22,6 +22,7 @@ import fineness_metrics as fm
 MANIFEST = "config/art/generated_assets_manifest.json"
 THRESHOLDS = "tools/art_lint/fineness_thresholds.json"
 OUT = "tools/art_lint/reports/fineness_sweep.csv"
+ADVISORY_METRIC = "edge_density"  # F4 demoted to advisory (Rafe 2026-08) — reported, never gates
 
 
 def sheet_class(path):
@@ -65,14 +66,19 @@ def main():
             warn = ct[metric]["warn_p90"]
             fail = ct[metric]["fail_max"]
             per_metric[metric] = v
+            # F4 edge_density DEMOTED to advisory (Rafe ruling 2026-08): reported, never gates.
+            if metric == ADVISORY_METRIC:
+                per_metric[metric + "_verdict"] = "ADVISORY"
+                continue
             per_metric[metric + "_verdict"] = verdict(v, warn, fail)
             ratio = v / warn if warn else (0.0 if v == 0 else float("inf"))
             total += ratio
             if ratio > worst_ratio:
                 worst_ratio, worst_metric = ratio, metric
 
-        any_warn = any(per_metric[mm + "_verdict"] in ("WARN", "FAIL") for mm in fm.METRICS)
-        any_fail = any(per_metric[mm + "_verdict"] == "FAIL" for mm in fm.METRICS)
+        gating = [mm for mm in fm.METRICS if mm != ADVISORY_METRIC]
+        any_warn = any(per_metric[mm + "_verdict"] in ("WARN", "FAIL") for mm in gating)
+        any_fail = any(per_metric[mm + "_verdict"] == "FAIL" for mm in gating)
         rows.append({
             "id": fid, "class": cls, "game_key": e.get("game_key"),
             "conformance_status": e.get("conformance_status"), "route": e.get("route"),

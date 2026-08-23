@@ -220,7 +220,12 @@ public partial class Main : Node
         {
             _pendingCapture = true;
             _captureOutputPath = captureOutputPath;
-            LaunchArtAcceptanceScene();
+            // --review-scene <json>: boot the ReviewSceneBuilder round (in-scene candidate review)
+            // instead of the fixed acceptance scene, on the same capture path. See ReviewSceneBuilder.
+            if (ReadReviewSceneFlag(out var reviewJson))
+                LaunchReviewScene(reviewJson!);
+            else
+                LaunchArtAcceptanceScene();
         }
         else if (ReadArtSceneFlag())
         {
@@ -2313,6 +2318,25 @@ public partial class Main : Node
         GD.Print("Ready (art acceptance scene) — " +
                  $"{_state.Monsters.Count} monsters, {_state.Props.Count} props, {_state.Features.Count} features, " +
                  $"{_state.FloorItems.Count} floor items.");
+    }
+
+    /// <summary>--review-scene &lt;json&gt;: in-scene candidate-review floor (ReviewSceneBuilder).</summary>
+    private static bool ReadReviewSceneFlag(out string? jsonPath)
+    {
+        jsonPath = null;
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length; i++)
+            if (args[i] == "--review-scene" && i + 1 < args.Length) jsonPath = args[i + 1];
+        return jsonPath != null;
+    }
+
+    private void LaunchReviewScene(string jsonPath)
+    {
+        GetNode<CanvasLayer>("MenuLayer").Visible = false;
+        _currentDepth = 1;
+        _state = ReviewSceneBuilder.Build(jsonPath);
+        SetupPresentation(_state);
+        GD.Print($"Ready (review scene: {jsonPath}) — {_state.Props.Count} props.");
     }
 
     /// <summary>

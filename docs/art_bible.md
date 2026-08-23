@@ -92,6 +92,8 @@ used later as a rarer secondary pool, not the default. Simplified pictorial mura
 
 ## Changelog
 
+- 2026-08 (Rafe ruling): **candidate review is in-scene, not on standalone sheets** — a candidate is judged only as rendered through the production renderer beside approved/canon props (themed floor, normal light, gameplay zoom). Contact sheets pre-filter only. Built `ReviewSceneBuilder` for it. Also demoted fineness F4 (edge_density) to advisory.
+
 - 2026-08 (play review): **style register named explicitly** — the game's look is the
   Shattered-Pixel-Dungeon / Oryx school: **chunky, low-detail, bold-read** sprites. The systemic
   failure mode in generated art is **refinement** (too fine, too detailed, too many small

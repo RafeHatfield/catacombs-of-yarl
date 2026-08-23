@@ -45,7 +45,7 @@ The register is Shattered-Pixel / Oryx school — chunky, low-detail, bold-read.
 - **F1 speckle** — opaque pixels with no same-colour 4-neighbour (isolated singles). (= A7, now thresholded.)
 - **F2 small_clusters** — count of same-colour 4-connected components with area ≤ 4 px ("below meaningful structure size" in the chunky register).
 - **F3 color_regions** — total count of same-colour 4-connected components (region fragmentation).
-- **F4 edge_density** — interior colour-boundary pixels / opaque pixels (an opaque pixel with an opaque, different-coloured 4-neighbour; silhouette edges to transparency excluded).
+- **F4 edge_density** — interior colour-boundary pixels / opaque pixels (an opaque pixel with an opaque, different-coloured 4-neighbour; silhouette edges to transparency excluded). **ADVISORY / report-only (Rafe ruling 2026-08):** compact props legitimately run high on this (even canon-derived sprites and some literal canon tiles exceed its p90), so it over-flags and does not gate. Reported for signal; F1–F3 are the gating fineness metrics.
 
 Canon-derived thresholds (`tools/art_lint/fineness_thresholds.json`, from the full canonical population — world_24x24 n=1784, creatures_24x24 n=396, items_16x16 n=308):
 
@@ -69,6 +69,17 @@ Scored by Rafe or delegated reviewer at PR time. Any FAIL blocks merge regardles
 6. **Ramp-collapse review.** For palette-snapped assets: compare before/after; did snapping destroy a detail the design needs? If yes, redesign the sprite within the palette rather than reverting the snap.
 7. **Names itself at 1× in scene** — a sprite whose object is not identifiable without being told fails, regardless of style conformance.
 
+### Review protocol (ruled by Rafe 2026-08)
+**No candidate is approved from a standalone contact sheet.** A candidate is reviewed only as it is
+**rendered in a game scene through the production renderer** — seated adjacent to approved/canon props
+of its own class, on themed floor, under normal lighting, at gameplay zoom, and captured. Contact
+sheets remain a **pre-filter tool only** (they trim; they never approve). The in-scene review capture
+is produced by `ReviewSceneBuilder` (sibling of `ArtAcceptanceSceneBuilder`, same
+authored-data→production-renderer path); candidates enter via temporary in-place pixel writes in the
+worktree (render → capture → revert; nothing lands until the in-scene verdict returns). Review
+captures are committed to `tools/art_lint/review_scenes/` and linked in **one** PR comment per round —
+never scattered.
+
 ## Part C — Process
 
 - The lint runs over the staged output directory before any asset moves into `src/Presentation/assets/`.
@@ -81,6 +92,8 @@ Scored by Rafe or delegated reviewer at PR time. Any FAIL blocks merge regardles
 - 75 live generated world tiles (IDs 5001–5114) predate this spec and fail A1/A4/A5/A6. They are the Phase 4 burn-down backlog, tracked in the manifest, and are not grandfathered — they are scheduled debt.
 
 ## Changelog
+
+- 2026-08 (Rafe rulings): **F4 edge_density DEMOTED to advisory/report-only** (over-flags compact props; F1–F3 gate). Added the **in-scene review protocol** to Part B (candidates reviewed only in a production-rendered scene beside approved neighbours; contact sheets are a pre-filter; captures → tools/art_lint/review_scenes/, one PR comment per round).
 
 - 2026-08 (play review): promoted A7 speckle to a thresholded check and added the **Structural-fineness family (AF: F1–F4)** — speckle, small_clusters, color_regions, edge_density — baselined on the full canonical population per sheet-class, WARN at canon p90, FAIL at canon max (same philosophy as A4). Named the register explicitly (Shattered-Pixel / Oryx: chunky, low-detail, bold-read) and the failure mode (refinement). Thresholds in `tools/art_lint/fineness_thresholds.json`; derivation `tools/art_lint/fineness_metrics.py`.
 - 2026-08: added Part B item 7 ("Names itself at 1× in scene"), ruled at the Track A gate review after candelabra 5080/5081 were rejected for reading as an unidentifiable shape at gameplay scale despite passing every Part A check.

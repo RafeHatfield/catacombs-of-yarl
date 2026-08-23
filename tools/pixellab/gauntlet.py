@@ -49,7 +49,7 @@ def critic(path, asset_class, sheet_class):
         rep[k] = f[k]
         rep[k + "_p90"] = p90
         rep[k + "_over"] = over
-        if over:
+        if over and k != "edge_density":  # F4 demoted to advisory (Rafe 2026-08) — reported, never gates
             fine_ok = False
     # largest gap (ratio over p90) for the "name the single largest metric gap" step
     gaps = {k: (f[k] / th[k]["warn_p90"] if th[k]["warn_p90"] else 0) for k in fm.METRICS}
