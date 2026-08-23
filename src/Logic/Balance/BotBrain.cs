@@ -600,11 +600,10 @@ public sealed class BotBrain
     private static bool HasUsableHealingPotion(Inventory? inventory, Combat.Fighter fighter)
     {
         if (inventory == null) return false;
-        return inventory.FindFirst(item => {
-            var c = item.Get<Combat.Consumable>();
-            if (c == null || !c.IsHealing) return false;
-            return c.UseCooldownTurns == 0 || fighter.PotionCooldownRemaining == 0;
-        }) != null;
+        // Shared availability answer — see QuickSlotModel. Was a private copy of the same
+        // expression; the bot, the rules, and the bar now read one source.
+        return inventory.FindFirst(item =>
+            Content.QuickSlotModel.CanUseHealingPotion(item, fighter)) != null;
     }
 
     /// <summary>

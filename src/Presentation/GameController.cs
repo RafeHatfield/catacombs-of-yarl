@@ -232,6 +232,25 @@ public sealed partial class GameController : Node
         var item = inventory.FindFirst(e => e.Id == itemId);
         if (item == null) { Diag.Log($"  BLOCKED: no item with id={itemId}"); return; }
 
+        // An unavailable item is a free no-op — never a lost turn, never a lost item.
+        //
+        // This is the spent-wand ruling (PR #113) applied at the seam that covers every
+        // availability source instead of one. It has to sit HERE, before OnActionChosen:
+        // TryHeal drinks whatever item it is handed, so a tap on a cooldown-blocked potion
+        // used to spend the turn, consume the potion AND re-arm the cooldown — on a slot the
+        // bar was drawing dimmed with a countdown at the time. The dim promised a refusal the
+        // rules never made.
+        //
+        // Availability comes from QuickSlotModel, the same call the bar dims from, so the
+        // greyed-out state and the refusal can no longer disagree.
+        var (available, block, cooldownTurns) = QuickSlotModel.Availability(item, _state.PlayerFighter);
+        if (!available)
+        {
+            _toastLog?.AddMessage(RefusalMessage(item, block, cooldownTurns));
+            Diag.Log($"  BLOCKED: {item.Name} unavailable ({block}) — free no-op, no turn consumed.");
+            return;
+        }
+
         // Check if item is a scroll or wand.
         // Throwable potions no longer enter targeting on tap — tap = drink (obvious action).
         // Throw is accessed via long-press → action sheet → Throw.
@@ -247,6 +266,18 @@ public sealed partial class GameController : Node
     }
 
     /// <summary>
+    /// What to tell the player when a tap is refused. One line per QuickSlotBlock, so the
+    /// toast names the same rule the slot is dimmed for. "The wand is spent." is carried over
+    /// verbatim from the spent-wand fix — the wording was already ruled on.
+    /// </summary>
+    private static string RefusalMessage(Entity item, QuickSlotBlock block, int cooldownTurns) => block switch
+    {
+        QuickSlotBlock.NoCharges      => "The wand is spent.",
+        QuickSlotBlock.PotionCooldown => $"Not yet — {cooldownTurns} more turn{(cooldownTurns == 1 ? "" : "s")}.",
+        _                             => $"You cannot use the {item.Name} right now.",
+    };
+
+    /// <summary>
     /// Dispatch a scroll or wand use.
     ///
     /// Self / AutoClosest / AoeSelf: no targeting UI — fire CastSpell immediately.
@@ -258,19 +289,11 @@ public sealed partial class GameController : Node
     {
         Diag.Log($"HandleScrollOrWandUse: {item.Name} targeting={spell.Targeting}");
 
-        // A spent wand is a free no-op — never consume a turn. The quick-slot greys it out, but that
-        // is cosmetic: without this gate the tap falls through to CastSpell and ProcessTurn burns a
-        // turn (monsters act) for a wand that does nothing — the out-of-charges check in
-        // TurnController.ResolveSpellAction returns a failed WandUseEvent WITHOUT marking the action
-        // free. Handle it here, matching the AutoClosest "no visible targets" path below, so the tap
-        // costs neither a turn nor a pointless trip into targeting mode. Infinite wands keep working.
-        var wand = item.Get<WandComponent>();
-        if (wand != null && !wand.HasCharges)
-        {
-            _toastLog?.AddMessage("The wand is spent.");
-            Diag.Log($"HandleScrollOrWandUse: {item.Name} out of charges — free no-op, no turn consumed.");
-            return;
-        }
+        // The spent-wand refusal that used to live here now runs for every availability source
+        // at the tap seam in HandleInventoryTap, which is this method's only caller. Keeping a
+        // second copy of it here is the duplication that let the bar and the rules drift apart
+        // in the first place. The ruling it encodes is unchanged: a spent wand costs neither a
+        // turn nor a trip into targeting mode, and infinite wands keep working.
 
         switch (spell.Targeting)
         {
@@ -368,6 +391,11 @@ public sealed partial class GameController : Node
     /// <summary>
     /// Show the action sheet for a long-pressed inventory slot item.
     /// Determines whether the item is currently equipped so the sheet shows the right actions.
+    ///
+    /// Deliberately NOT availability-gated, and must stay that way. Long-press is how the
+    /// player inspects, drops and throws — all still legal for a spent wand or a potion on
+    /// cooldown. Availability governs USE, not access to the item. (The sheet's own Use entry
+    /// routes back through HandleInventoryTap, which is where the refusal lives.)
     /// </summary>
     public void HandleInventoryLongPress(int itemId)
     {
