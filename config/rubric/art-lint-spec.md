@@ -69,6 +69,8 @@ Scored by Rafe or delegated reviewer at PR time. Any FAIL blocks merge regardles
 6. **Ramp-collapse review.** For palette-snapped assets: compare before/after; did snapping destroy a detail the design needs? If yes, redesign the sprite within the palette rather than reverting the snap.
 7. **Names itself at 1× in scene** — a sprite whose object is not identifiable without being told fails, regardless of style conformance.
 
+**Fallback preserves pixels, never confers acceptance (ruled 2026-08).** When a rework produces no candidate that beats the live incumbent, the incumbent's pixels are *kept* — but "kept by fallback" is **not** an accepted-by-eye verdict. Acceptance is conferred only by an actual in-scene Part B pass on the sprite in question. A kept-by-fallback incumbent stays `pending_review` in the manifest until it earns an in-scene verdict; it is never marked `accepted` on the strength of "no candidate beat it." (This corrects the sweep-closure hole where beds 5058/5059, benches 5060/5061, and sack 5102 were recorded as accepted-by-eye without a real in-scene look.)
+
 ### Review protocol (ruled by Rafe 2026-08)
 **No candidate is approved from a standalone contact sheet.** A candidate is reviewed only as it is
 **rendered in a game scene through the production renderer** — seated adjacent to approved/canon props
@@ -93,6 +95,7 @@ never scattered.
 
 ## Changelog
 
+- 2026-08 (Rafe ruling, post-play-session): added Part B rule **"fallback preserves pixels, never confers acceptance"** — a kept-by-fallback incumbent stays `pending_review` until it earns an actual in-scene verdict. Corrects the sweep-closure hole (beds 5058/5059, benches 5060/5061, sack 5102 were marked accepted-by-eye without a real in-scene look; stripped to pending_review and re-reviewed in Round E). Companion ruling (bible changelog): **prop generation retired** — prop rework ladder is canon-substitution → canon-derivation → stop-and-discuss, no regen route; bank is reference-only.
 - 2026-08 (Rafe ruling, from the Round-D nightstand rejection): **two-plane perspective rule** — only the front face and top surface are visible; any side face (even one pixel column) fails Part B perspective. Folded into the rubric perspective line.
 
 - 2026-08 (Rafe rulings): **F4 edge_density DEMOTED to advisory/report-only** (over-flags compact props; F1–F3 gate). Added the **in-scene review protocol** to Part B (candidates reviewed only in a production-rendered scene beside approved neighbours; contact sheets are a pre-filter; captures → tools/art_lint/review_scenes/, one PR comment per round).

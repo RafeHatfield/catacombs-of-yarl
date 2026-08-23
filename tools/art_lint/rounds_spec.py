@@ -101,3 +101,50 @@ ROUND_D = [
 
 def main_d(run_round):
     run_round("review_round_D_rework_resubmit", "Review round D — Round-C rejects reworked. Nightstands: regen2 s101/s107 (strict form-coherence). Workbench: DERIVED (canon 319 + tool clutter, regen route closed). Water barrels 5084/5085: DERIVED (canon 268 + water surface, variant pair). Orange = candidate, grey = canon.", ROUND_D, cols=5, map_w=12, map_h=12, player=(6, 5))
+
+
+# ---------------------------------------------------------------------------
+# Round E — post-play-session. Two captures (before/after) because a tile ID
+# can only render one sprite per scene. Capture 1 = live incumbents (the
+# fallback-stripped set + colour-failed nightstand + columns). Capture 2 =
+# canon-only candidates temp-written in. Rafe verdicts each pair across the two.
+RE = "tools/art_lint/candidates/round_e"
+
+ROUND_E_BEFORE = [
+    c(5058, "5058 bed — INCUMBENT (fallback-stripped)"),   n(319, "canon 319 table (wood ref)"),
+    c(5059, "5059 bed — INCUMBENT (fallback-stripped)"),
+    c(5060, "5060 bench — INCUMBENT (fallback-stripped)"), n(321, "canon 321 chair (wood ref)"),
+    c(5061, "5061 bench — INCUMBENT (fallback-stripped)"),
+    c(5106, "5106 nightstand — INCUMBENT (colour FAILED play review)"), n(320, "canon 320 desk (wood ref)"),
+    c(5107, "5107 nightstand — INCUMBENT (colour FAILED)"),
+    c(5093, "5093 pillar — INCUMBENT"),                    n(486, "canon 486 fountain (stone ref)"),
+    c(5094, "5094 pillar — INCUMBENT"),                    n(258, "canon 258 wall (stone ref)"),
+    c(5095, "5095 pillar — INCUMBENT (deep-collapse blob)"),
+    c(5102, "5102 sack — INCUMBENT (fallback-stripped; review-as-is)"), n(268, "canon 268 barrel"),
+]
+
+ROUND_E_AFTER = [
+    c(5058, "5058 bed -> DERIVED (canon wood frame + blue blanket)", f"{RE}/5058_bed.png"),
+    n(319, "canon 319 table (wood ref)"),
+    c(5059, "5059 bed -> DERIVED (canon wood + white coverlet)", f"{RE}/5059_bed.png"),
+    c(5060, "5060 bench -> DERIVED (canon 321/319 wood, backed)", f"{RE}/5060_bench.png"),
+    n(321, "canon 321 chair (wood ref)"),
+    c(5061, "5061 bench -> DERIVED (canon wood, open low back)", f"{RE}/5061_bench.png"),
+    c(5106, "5106 nightstand -> RECOLOR (canon desk-320 wood, shape kept)", f"{RE}/5106_wood.png"),
+    n(320, "canon 320 desk (wood ref)"),
+    c(5107, "5107 nightstand -> RECOLOR (canon desk-320 wood)", f"{RE}/5107_wood.png"),
+    c(5093, "5093 pillar -> RECOLOR (fountain stone ramp)", f"{RE}/5093_stone.png"),
+    n(486, "canon 486 fountain (stone ref)"),
+    c(5094, "5094 pillar -> RECOLOR (fountain stone ramp)", f"{RE}/5094_stone.png"),
+    n(258, "canon 258 wall (stone ref)"),
+    c(5095, "5095 pillar -> ADOPT 5094 form (blob unrecolorable)", f"{RE}/5095_altform.png"),
+]
+
+
+def main_e(run_round):
+    run_round("review_round_E_before_incumbents",
+              "Review round E (BEFORE) — live incumbents. Fallback-stripped set (beds 5058/5059, benches 5060/5061, sack 5102), colour-failed nightstands 5106/5107, pillars 5093/5094/5095. Orange = under review, grey = canon ref. Compare against the AFTER capture.",
+              ROUND_E_BEFORE, cols=3)
+    run_round("review_round_E_after_candidates",
+              "Review round E (AFTER) — canon-only candidates. Beds/benches DERIVED from canon furniture wood; nightstands RECOLORED to canon desk-320 wood; pillars RECOLORED to fountain stone ramp (5095 adopts 5094's form — its blob is unrecolorable). No generation used. Orange = candidate, grey = canon ref.",
+              ROUND_E_AFTER, cols=3)

@@ -401,56 +401,56 @@
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "accepted",
+      "conformance_status": "pending_review",
       "lint_exemptions": [],
       "game_key": "bed",
       "notes": "PixelLab s2",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
       "route": "parked_keep_fallback",
-      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
+      "review_note": "keep-fallback strip (Round E 2026-08): the prior 'accepted at in-scene review' note was fallback (no candidate beat the incumbent), not a real in-scene verdict. Status reset to pending_review; re-entered in-scene review. Fallback preserves pixels, never confers acceptance."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5059.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "accepted",
+      "conformance_status": "pending_review",
       "lint_exemptions": [],
       "game_key": "bed",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
       "route": "parked_keep_fallback",
-      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
+      "review_note": "keep-fallback strip (Round E 2026-08): the prior 'accepted at in-scene review' note was fallback (no candidate beat the incumbent), not a real in-scene verdict. Status reset to pending_review; re-entered in-scene review. Fallback preserves pixels, never confers acceptance."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5060.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "accepted",
+      "conformance_status": "pending_review",
       "lint_exemptions": [],
       "game_key": "bench",
       "notes": "PixelLab s3",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
       "route": "parked_keep_fallback",
-      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
+      "review_note": "keep-fallback strip (Round E 2026-08): the prior 'accepted at in-scene review' note was fallback (no candidate beat the incumbent), not a real in-scene verdict. Status reset to pending_review; re-entered in-scene review. Fallback preserves pixels, never confers acceptance."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5061.png",
       "origin": "pixellab",
       "added_commit": "f953c23ae3a7c53a2f552a8b21ce1843fa1ee678",
       "asset_class": "prop",
-      "conformance_status": "accepted",
+      "conformance_status": "pending_review",
       "lint_exemptions": [],
       "game_key": "bench",
       "notes": "PixelLab s999",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
       "route": "parked_keep_fallback",
-      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
+      "review_note": "keep-fallback strip (Round E 2026-08): the prior 'accepted at in-scene review' note was fallback (no candidate beat the incumbent), not a real in-scene verdict. Status reset to pending_review; re-entered in-scene review. Fallback preserves pixels, never confers acceptance."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5062.png",
@@ -1009,14 +1009,14 @@
       "origin": "pixellab",
       "added_commit": "676847ae0d756b10a314ca33917f342cf7cbf1fa",
       "asset_class": "prop",
-      "conformance_status": "accepted",
+      "conformance_status": "pending_review",
       "lint_exemptions": [],
       "game_key": "sack",
       "notes": "PixelLab s0",
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh (own original art, per 2026-07-16 rubric review)",
       "route": "parked_keep_fallback",
-      "accepted_note": "gauntlet parked; live sprite accepted at in-scene review (sweep closure 2026-08)"
+      "review_note": "keep-fallback strip (Round E 2026-08): the prior 'accepted at in-scene review' note was fallback (no candidate beat the incumbent), not a real in-scene verdict. Status reset to pending_review; re-entered in-scene review. Fallback preserves pixels, never confers acceptance. No canon sack exists; if Rafe rules rework, ladder is canon-derive → stop-and-discuss."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5104.png",
@@ -1160,6 +1160,7 @@
     }
   ],
   "changelog": [
+    "2026-08 (Round E, Rafe ruling): keep-fallback strip \u2014 the 5 parked_keep_fallback entries (beds 5058/5059, benches 5060/5061, sack 5102) had their accepted status reset to pending_review; their notes falsely claimed 'accepted at in-scene review' when the acceptance was fallback (no candidate beat the incumbent). Rule now codified in art-lint-spec Part B: fallback preserves pixels, never confers acceptance. Boundary case NOT stripped, surfaced for Rafe: club 4001 / anvil 5001 (original_accepted 'no candidate beat the live sprite') \u2014 same fallback rationale but original lint-exempt art. Also this round: prop generation retired (bible/PIXELLAB changelogs) \u2014 prop ladder is canon-sub \u2192 canon-derive \u2192 stop-and-discuss.",
     "2026-08 (Rafe ruling): deleted banked items 4002-4004 \u2014 unwired stock, no assigned identity; regenerable via the locked pipeline if ever wanted. Reconciled manifest to 77.",
     "2026-08 (sweep closure): parked-with-dignity set (sack 5102, beds 5058/5059, benches 5060/5061) formalized as accepted-by-eye; anvil 5001 + club 4001 remain accepted. End state: 0 nonconformant."
   ]

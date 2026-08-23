@@ -137,6 +137,24 @@ Evaluate at the TARGET size (24×24 or 16×16), not at generation size.
   hand-crafted style. Long-term solution: replace Oryx props progressively so the game
   settles into a consistent PixelLab style rather than a mix.
 
+## Prop generation RETIRED (Rafe ruling, post-play-session 2026-08)
+
+**There is no regeneration route for props anymore.** The prop rework ladder is:
+**canon substitution → canon derivation → stop-and-discuss.** If no canon sprite can be
+substituted and no canon construction can be derived from canon pixels, the item *stops and
+comes back to Rafe* — it is not regenerated. This supersedes the gauntlet/constrained-regen
+route for props below (kept only as a record of why the route was closed): across the sweep,
+constrained regeneration reliably metric-won with the **wrong object** (a "chunky anvil"
+regenerates as a hammer) or produced **metric-clean-but-formless** props (sacks, beds). Canon
+substitution/derivation is the only route that holds the register.
+
+The **candidate bank** (`tools/pixellab/.../bank_*`, the ~1174 speculative gens) is retained as
+**reference / mood material only** — it is never a source of landed prop pixels. A bank sprite may
+inform a *derivation* (as colour/shape reference, like a canon reference) but its pixels do not ship.
+
+Scope: this governs **props**. Items and creatures are not covered by this ruling. See
+`docs/art_bible.md` changelog for the canonical statement.
+
 ## Register language + canon-validated-swatch rule (play review 2026-08, PR #108)
 
 **Register ruling.** The target look is the Shattered-Pixel/Oryx school: **chunky, low-detail,

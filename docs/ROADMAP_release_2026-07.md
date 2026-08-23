@@ -123,7 +123,19 @@ Authoring order is by player exposure, inverting the current corpus:
 
 ## Track A — Art conformance (added 2026-07-24; runs parallel, gates M7 assets)
 
-**Sweep complete (2026-08).** The style-register sweep is closed: the register is named
+**Sweep reopened by play review (Round E, 2026-08).** A device play session found that the
+sweep-closure "accepted-by-eye" set was partly conferred by **keep-fallback, not an actual in-scene
+verdict**. Corrections in flight (PR: `art/style-register-round-e`): prop **generation retired**
+(prop ladder = canon-sub → canon-derive → stop-and-discuss; bank is reference-only); the five
+fallback-accepted entries (beds 5058/5059, benches 5060/5061, sack 5102) **stripped to
+pending_review**; canon-only remediations posted for in-scene verdict (beds/benches **derived** from
+canon furniture wood; nightstands 5106/5107 **recolored** to canon desk-320 wood — the flagged
+colour failure; pillars 5093/5094/5095 **recolored** to the fountain stone ramp). Filed
+Foundation bug #128 (FloorComposer Pass-1 prop-pedestal, sibling of the ruled Pass-2 fix). Manifest:
+77 files → 70 conformant / 2 accepted (club/anvil) / 5 pending_review. Below is the prior
+closure summary, now superseded on those items.
+
+**Sweep (first closure, 2026-08 — superseded on the fallback set above).** The register is named
 (Shattered-Pixel/Oryx — chunky, low-detail, bold-read), and all 67 fineness-ranked assets were
 verdicted via the **in-scene review protocol**, now the standing Part B mechanism (candidates are
 judged only as rendered through the production renderer beside canon neighbours; `ReviewSceneBuilder`
