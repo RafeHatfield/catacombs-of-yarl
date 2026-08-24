@@ -123,6 +123,8 @@ Authoring order is by player exposure, inverting the current corpus:
 
 ## Track A — Art conformance (added 2026-07-24; runs parallel, gates M7 assets)
 
+**Concluded 2026-08 — findings banked, direction superseded by art reimagining (new thread); infrastructure retained.** The Oryx-conformance track is closed by ruling. The sprint-exit finding stands: **canon-component assembly is viable for novel props, but novel concepts without canon vocabulary are not producible by this pipeline** (the bed is the named exhibit). PR #129 (the Round E / E2 / E3 conformance work) was closed as superseded without merging — its pending candidates do not land; its findings are banked (in the closed PR and session memory). Issue #51 (variant/config wiring) closed unstarted. **Retained infrastructure** (already on `main`): the art lint (Part A machine checks + the F1–F3 structural-fineness family), `ReviewSceneBuilder` + the in-scene review protocol, the generated-assets manifest, and the acceptance/capture harness — reusable by the new art-reimagining thread. Foundation bug #128 (FloorComposer Pass-1 prop-pedestal) is an independent engine defect and remains open. The entries below are the prior in-progress record, retained for history.
+
 **Sweep complete (2026-08).** The style-register sweep is closed: the register is named
 (Shattered-Pixel/Oryx — chunky, low-detail, bold-read), and all 67 fineness-ranked assets were
 verdicted via the **in-scene review protocol**, now the standing Part B mechanism (candidates are
