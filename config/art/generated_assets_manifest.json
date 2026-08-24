@@ -408,7 +408,7 @@
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
       "route": "parked_keep_fallback",
-      "review_note": "keep-fallback strip (Round E 2026-08): the prior 'accepted at in-scene review' note was fallback (no candidate beat the incumbent), not a real in-scene verdict. Status reset to pending_review; re-entered in-scene review. Fallback preserves pixels, never confers acceptance."
+      "review_note": "TERMINAL (sprint-exit ruling 2026-08): the bed is the NAMED EXHIBIT — the one prop this canon-assembly pipeline cannot produce (no canon bed silhouette/bedding vocabulary to assemble from; 3 rounds E/E2/E3 failed). pending_review holds; live (non-conforming) art stays; ships to the play-session sitting as the honest hole. Fix requires a different concept-sprite source (hand-authoring / licensed set), not this pipeline."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5059.png",
@@ -422,7 +422,7 @@
       "pipeline_pr": "12",
       "pipeline_stages": "clean:no-op(0 partial-alpha at baseline);snap:applied fresh",
       "route": "parked_keep_fallback",
-      "review_note": "keep-fallback strip (Round E 2026-08): the prior 'accepted at in-scene review' note was fallback (no candidate beat the incumbent), not a real in-scene verdict. Status reset to pending_review; re-entered in-scene review. Fallback preserves pixels, never confers acceptance."
+      "review_note": "TERMINAL (sprint-exit ruling 2026-08): named-exhibit bed (sibling of 5058) — pipeline cannot produce; pending_review holds, live art stays, ships to sitting as the honest hole. See 5058 note."
     },
     {
       "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5060.png",
@@ -1156,9 +1156,22 @@
       "notes": "PixelLab inpaint m40 g9 s42",
       "route": "canon_substitution",
       "canon_source_id": 263
+    },
+    {
+      "path": "src/Presentation/assets/sprites_16bf/world_24x24/oryx_16bit_fantasy_world_5115.png",
+      "origin": "assembled",
+      "added_commit": "art/style-register-round-e (sprint-exit)",
+      "asset_class": "prop",
+      "conformance_status": "conformant",
+      "lint_exemptions": [],
+      "game_key": "bones_pile",
+      "notes": "canon-assembly, mounded ossuary heap",
+      "route": "canon_assembly",
+      "pick_source": "sprint-exit LAND (2026-08): bone pile assembled from canon bone grammar (grey-white ramp 105/145/196/201/243 + skull/long-bone components, tiles 96/612), target-silhouette-led (mounded heap). Two-plane (top-lit skulls + shaded base). A1-A5 PASS, fineness F1-F3 clean. CONFIG WIRING PENDING: add 5115 to bones_pile.tile_ids in config/props.yaml (#51-class config, held for Rafe's go). Sibling banked candidate: big-skull 'warning totem' (tools/art_lint/bank/, wrong concept per Rafe)."
     }
   ],
   "changelog": [
+    "2026-08 (sprint-exit verdicts, Rafe ruling): LANDED bone pile 5115 (canon-assembly, mounded heap; props.yaml wiring pending #51-class). Beds 5058/5059 TERMINAL — named exhibit, pipeline cannot produce, pending_review holds, live art ships to the sitting as the honest hole. BANKED (not landed, labeled): big-skull 'warning totem' candidate + flood-water 'puddle upgrade' candidate (tools/art_lint/bank/). RULINGS PENDING for Rafe: flood adopt-vs-variant-vs-bank for 5110 family; bench land-'barely acceptable'-vs-cut-the-prop. Finding (bible): canon-component assembly works for novel props; novel concepts without canon vocabulary are not producible here. Now 78 entries (77 + bone pile 5115): counts 71 conformant / 2 accepted / 5 pending_review.",
     "2026-08 (Round E2 LANDED, Rafe ruling): nightstands 5106/5107 (golden desk-320 recolor + 5px legs) and pillars 5093/5094/5095 (fountain-486 stone ramp, contour kept, jaggedness fixed) landed to live tiles; routes updated to recolor, provisional colour flags cleared. Counts unchanged (all were already conformant). Beds 5058/5059, benches 5060/5061, sack 5102 remain pending_review (reworked in E3, awaiting verdict).",
     "2026-08 (Round E, Rafe ruling): keep-fallback strip \u2014 the 5 parked_keep_fallback entries (beds 5058/5059, benches 5060/5061, sack 5102) had their accepted status reset to pending_review; their notes falsely claimed 'accepted at in-scene review' when the acceptance was fallback (no candidate beat the incumbent). Rule now codified in art-lint-spec Part B: fallback preserves pixels, never confers acceptance. Boundary case NOT stripped, surfaced for Rafe: club 4001 / anvil 5001 (original_accepted 'no candidate beat the live sprite') \u2014 same fallback rationale but original lint-exempt art. Also this round: prop generation retired (bible/PIXELLAB changelogs) \u2014 prop ladder is canon-sub \u2192 canon-derive \u2192 stop-and-discuss.",
     "2026-08 (Rafe ruling): deleted banked items 4002-4004 \u2014 unwired stock, no assigned identity; regenerable via the locked pipeline if ever wanted. Reconciled manifest to 77.",
