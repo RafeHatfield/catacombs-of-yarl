@@ -27,8 +27,9 @@ straight corridor cannot answer that.
 # one capture
 python3 tools/tier0_harness/capture_corridor.py --out /tmp/corridor.png
 
-# the positive controls — the harness proving it can fail
+# the positive controls — the harness proving it can fail (5 of them)
 python3 tools/tier0_harness/run_controls.py
+python3 tools/tier0_harness/run_controls.py --only junction   # just the MISFED guard
 
 # the §6.4 three-arm receive-light probe, side by side under one identical rig
 python3 tools/tier0_harness/capture_probe_arms.py
@@ -70,7 +71,7 @@ hard-coded `24`, so changing the parameter today produces tiles the renderer sti
 `--tile-theme-config` at a different `tile_root` is the whole seam. The retired Oryx review path
 overwrote live sprite files and reverted afterwards; nothing here has to be reverted.
 
-## Two traps this harness fell into, kept as warnings
+## Four traps this harness fell into, kept as warnings
 
 **A three-wide corridor is a room.** The first capture carved a 3-tile-wide trunk. Every cell in
 it has three or more open neighbours, so the junction check reported `junction=YES at (8,4)` —
@@ -84,6 +85,21 @@ scene-is-real control initially swapped only `floor_primary`, planted its defect
 and passed a swap through with **0.0000%** of pixels changed. **This is an open ruling, not a
 solved problem** — see the session report: a Tier 1 floor candidate reviewed in this corridor is
 only ever seen through its `floor_dark` variant.
+
+**The review scene ended on the first step.** The player never died — `IsAlive` stayed true. The
+builder carried `turnLimit: 1`, copied from `ReviewSceneBuilder` where it is harmless because
+that scene is captured and quit, never walked. `IsGameOver` fired on the turn-limit clause and
+the device showed the end-of-run overlay, which reads as a death. Fixed structurally: the review
+scene now has **no loss conditions at all** — no turn limit, no monsters, no ending, no stairs.
+A bigger number would only have moved the failure to turn N, and a capture surface that can enter
+states unrelated to the art is not a measuring instrument.
+
+**A dark junction still produced a clean capture.** Junction placement is coupled to
+`light.radius_tiles`; shrink it and the junction leaves the lit area. The capture still rendered,
+still looked clean, still passed determinism — and asked the critic which way it would walk in
+front of something it could not see. That is MISFED. `ProbeJunctionLuminance` now samples the
+**actual captured pixels** at the junction, relative to lit floor beside the player, and
+**refuses to write the PNG** if the ratio falls below 0.25. Control 5 proves it goes red.
 
 ## What this harness deliberately does NOT do
 

@@ -248,9 +248,26 @@ def control_device(cfg):
         print("\nNO built .app found — nothing was exported, so nothing can be verified installed.")
         ok = False
 
-    if declared and built_id and declared != built_id:
-        print(f"\nMISMATCH: declared {declared} != built {built_id}")
-        ok = False
+    # A REVIEW BUILD LEGITIMATELY OVERRIDES THE BUNDLE ID.
+    #
+    # build_review_app.sh passes --bundle-id com.<...>.tier0 so the review build installs beside
+    # the real game instead of replacing it. An earlier version of this control compared the built
+    # id to export_presets.cfg and flagged any difference as tampering, so it reported
+    # "MISMATCH ... .tier0" for a build that was correct by design — it had only ever been
+    # exercised against a normal build. The check still has to catch a genuinely unrelated id, so
+    # what is accepted is the declared id or a dotted variant OF it, and which one was found is
+    # reported rather than glossed.
+    build_kind = None
+    if declared and built_id:
+        if built_id == declared:
+            build_kind = "normal build"
+        elif built_id.startswith(declared + "."):
+            build_kind = f"review/variant build (suffix '{built_id[len(declared) + 1:]}')"
+        else:
+            print(f"\nMISMATCH: built id {built_id} is not {declared} nor a variant of it")
+            ok = False
+        if build_kind:
+            print(f"\nbuild kind: {build_kind}")
 
     print(f"\ncommit: {git_commit()}")
     print(f"build id: {build_id}")

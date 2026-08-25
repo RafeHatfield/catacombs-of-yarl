@@ -2511,6 +2511,12 @@ public partial class Main : Node
         Report($"[Tier0] tile_theme_config={TileThemeLoader.ActiveConfigPath}");
         Report($"[Tier0] light rig: {lighting.Describe(_renderer.TileWidth, _renderer.TileHeight)}");
         Report($"[Tier0] review_build_marker={(marker != null ? ReviewBuildMarker.Path : "none (CLI flags)")}");
+        // Reported so the device log proves the no-losable-state fix is actually on the device.
+        // The defect was turn_limit=1, which ended the run on the first step and surfaced as the
+        // end-of-run overlay — read on device as the player dying.
+        Report($"[Tier0] losable-state check: turn_limit={_state.TurnLimit} "
+               + $"monsters={_state.Monsters.Count} ending={_state.Ending} "
+               + $"alive={_state.PlayerFighter.IsAlive} game_over={_state.IsGameOver}");
     }
 
     /// <summary>
