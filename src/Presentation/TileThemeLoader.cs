@@ -28,7 +28,23 @@ namespace CatacombsOfYarl.Presentation;
 /// </summary>
 public static class TileThemeLoader
 {
-    private const string ConfigPath = "res://config/tile_themes.yaml";
+    private const string DefaultConfigPath = "res://config/tile_themes.yaml";
+
+    /// <summary>
+    /// Tile-theme config actually in force. Defaults to the shipped config; overridden only by
+    /// the Tier 0 review harness via --tile-theme-config, so candidate floor/wall tiles and the
+    /// ART-BIBLE-v0 §6.4 probe arms can be rendered by pointing the loader at a different
+    /// tile_root/tile_pattern. This is the whole candidate-injection seam: no file in the
+    /// worktree is overwritten and nothing has to be reverted after a capture, unlike the
+    /// pixel-write approach the retired Oryx review path used.
+    /// </summary>
+    private static string ConfigPath = DefaultConfigPath;
+
+    /// <summary>Point the loader at an alternate config. Review harness only.</summary>
+    public static void OverrideConfigPath(string path) => ConfigPath = path;
+
+    /// <summary>The config path in force — logged with every review capture.</summary>
+    public static string ActiveConfigPath => ConfigPath;
 
     /// <summary>
     /// Load tile theme config from config/tile_themes.yaml.

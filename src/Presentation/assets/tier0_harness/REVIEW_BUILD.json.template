@@ -1,0 +1,32 @@
+{
+  "_what": [
+    "TIER 0 REVIEW BUILD MARKER — ART-BIBLE-v0 §13.1.",
+    "",
+    "This file exists because of a gap the device control exposed: the review corridor was",
+    "reachable only through --corridor-scene, and an iOS app receives no command line. The",
+    "app could be verified installed on the reference device and still have no way to SHOW",
+    "the corridor on it — which is most of the point. §13.1 requires the verdict to come from",
+    "the lit scene at true display size on device, so the scene has to be bootable there.",
+    "",
+    "When a file named REVIEW_BUILD.json is present in this directory at boot AND no",
+    "--corridor-scene flag was given, Main boots straight into the review corridor using the",
+    "values below instead of the menu. Absent, the game boots normally — so a normal build is",
+    "completely unaffected and this cannot leak into a player build by accident.",
+    "",
+    "This is a TEMPLATE. Copy it to REVIEW_BUILD.json to make a review build; the harness does",
+    "that for you (tools/tier0_harness/build_review_app.sh). Install it under its own bundle id",
+    "so it sits side by side with the real game rather than replacing it.",
+    "",
+    "EVERY LIGHT VALUE HERE IS UNDERIVED — §6.2 and §4.3 mark them PLACEHOLDER. They are copied",
+    "from tools/tier0_harness/harness_config.yaml so the device build and the desktop capture",
+    "are lit by the same rig; if they drift, the two stop being comparable."
+  ],
+  "scene": "res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json",
+  "themeConfig": "res://src/Presentation/assets/tier0_harness/tile_themes_stub.yaml",
+  "light": {
+    "ambient": "1a1a22",
+    "color": "ffb066",
+    "energy": 1.6,
+    "radiusTiles": 5.5
+  }
+}

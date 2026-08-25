@@ -1,0 +1,80 @@
+
+==============================================================================
+CONTROL 1 — DETERMINISM  (must be byte-identical; then must DIFFER when a tile changes)
+==============================================================================
+run1 sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+run2 sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+byte_identical: True
+
+-- now PLANT a defect: repaint ONE floor tile, expect the capture to CHANGE --
+planted: src/Presentation/assets/tier0_harness/stub/tier0_stub_9003.png repainted flat red
+run3 sha256: cdc48a0068e213ccae347e706519b2ddc6c14a61ba163feab0e133a35a261271
+differs_from_run1: True
+  10.8648% of pixels differ, mean channel delta 5.8833
+
+restore check — run4 sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+  matches run1: True
+
+RESULT: PASS (identical-when-unchanged=True, differs-when-altered=True)
+
+==============================================================================
+CONTROL 2 — LIGHTING IS LIVE  (energy 0 must visibly change the capture)
+==============================================================================
+lit   sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+unlit sha256: c67b9296103dad3d967866efe889ebe63551470d85b6db6512b98048026cc463
+differ: True
+  44.3609% of pixels differ, mean channel delta 15.7644
+
+RESULT: PASS — lighting is live
+
+==============================================================================
+CONTROL 3 — SCENE IS REAL  (swap the floor tile for a WALL tile; capture must reflect it)
+==============================================================================
+planted: ALL floor roles (9001 etc) -> 9010 (a wall tile) in src/Presentation/assets/tier0_harness/tile_themes_swapped.yaml
+normal  sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+swapped sha256: e97835c571bd709245c11133935350ae0e8100be86026a77d0219fff62cdc91d
+differ: True
+  10.8891% of pixels differ, mean channel delta 3.1621
+
+RESULT: PASS — the scene renders the tiles it is pointed at
+
+==============================================================================
+CONTROL 4 — DEVICE PATH  (bundle id from Info.plist, build id, commit — VERIFIED installed)
+==============================================================================
+declared bundle id (export_presets.cfg): com.rafehatfield.catacombsofyarl
+build root: /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier0-harness/.ios-build  exists=True
+  built app: .ios-build/xcodeproj/dd/Build/Products/Debug-iphoneos/CatacombsOfYarl.app
+
+Info.plist: /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier0-harness/.ios-build/xcodeproj/dd/Build/Products/Debug-iphoneos/CatacombsOfYarl.app/Info.plist  exists=True
+  built bundle id: com.rafehatfield.catacombsofyarl
+  build id (CFBundleVersion): 1.0.0
+  short version: 1.0.0
+
+commit: 1cdc3b282d61abf2a7a1601ec746d69a1215e95e
+build id: 1.0.0
+
+-- devices actually attached --
+Name             Hostname                          Identifier                             State                Model                                  
+--------------   -------------------------------   ------------------------------------   ------------------   ---------------------------------------
+Jiminy Cricket   Jiminy-Cricket.coredevice.local   5DB969FF-269C-5A8A-86EB-99EC9FF22397   available (paired)   iPhone SE (3rd generation) (iPhone14,6)
+
+-- installed-app query on the device --
+23:16:25  Acquired tunnel connection to device.
+23:16:25  Enabling developer disk image services.
+23:16:25  Acquired usage assertion.
+Apps installed:
+Name                Bundle Identifier                  Version   Bundle Version
+-----------------   --------------------------------   -------   --------------
+Catacombs of YARL   com.rafehatfield.catacombsofyarl   1.0.0     1.0.0
+
+RESULT: PASS — install VERIFIED on the connected device
+
+==============================================================================
+SUMMARY
+==============================================================================
+  determinism  PASS
+  lighting     PASS
+  scene        PASS
+  device       PASS
+
+commit: 1cdc3b282d61abf2a7a1601ec746d69a1215e95e

@@ -203,6 +203,14 @@ public partial class Main : Node
         GD.Print($"[Main] Persistence loaded — {_persistentState.RunCounter.TotalRuns} runs ever.");
 
         InitSpriteMapping();
+        // --tile-theme-config <res:// or user:// path>: Tier 0 review harness only. Points the
+        // theme loader at an alternate tile_root/tile_pattern/tile-ID set so candidate floor and
+        // wall tiles (and the ART-BIBLE-v0 §6.4 probe arms) render through the production
+        // renderer without any file in the worktree being overwritten. Must precede the load.
+        if (ReadTileThemeConfigFlag(out var themeConfigPath))
+            TileThemeLoader.OverrideConfigPath(themeConfigPath!);
+        else if (ReviewBuildMarker.TryLoad(out var bootMarker))
+            TileThemeLoader.OverrideConfigPath(bootMarker!.ThemeConfigPath);
         _tileThemeConfig = TileThemeLoader.LoadWithFallback();
         if (_tileThemeConfig.Themes.Count == 0)
             GD.PrintErr("[Main] TileThemeConfig loaded with no themes — dungeon tiles will not render. Check config/tile_themes.yaml.");
@@ -224,7 +232,11 @@ public partial class Main : Node
             _captureOutputPath = captureOutputPath;
             // --review-scene <json>: boot the ReviewSceneBuilder round (in-scene candidate review)
             // instead of the fixed acceptance scene, on the same capture path. See ReviewSceneBuilder.
-            if (ReadReviewSceneFlag(out var reviewJson))
+            // --corridor-scene <json>: boot the Tier 0 review corridor (lit corridor with a
+            // junction) on the same capture path. See CorridorReviewSceneBuilder.
+            if (ReadCorridorSceneFlag(out var corridorJson))
+                LaunchCorridorScene(corridorJson!);
+            else if (ReadReviewSceneFlag(out var reviewJson))
                 LaunchReviewScene(reviewJson!);
             else
                 LaunchArtAcceptanceScene();
@@ -232,6 +244,14 @@ public partial class Main : Node
         else if (ReadArtSceneFlag())
         {
             LaunchArtAcceptanceScene();
+        }
+        else if (ReviewBuildMarker.TryLoad(out var marker))
+        {
+            // TIER 0 REVIEW BUILD (ART-BIBLE-v0 §13.1). An iOS app receives no command line, so
+            // a review build is identified by a marker file baked into the export instead. Absent
+            // — which is every normal build — this branch never runs and boot is unchanged.
+            GD.Print("[Tier0] REVIEW BUILD marker present — booting the review corridor.");
+            LaunchCorridorScene(marker!.ScenePath, marker);
         }
         else
         {
@@ -2368,6 +2388,120 @@ public partial class Main : Node
         _state = ReviewSceneBuilder.Build(jsonPath);
         SetupPresentation(_state);
         GD.Print($"Ready (review scene: {jsonPath}) — {_state.Props.Count} props.");
+    }
+
+    // ---------------------------------------------------------------------------------------
+    // Tier 0 review harness — lit corridor with a junction (ART-BIBLE-v0 §13.1, §6).
+    //
+    // Every value the light rig needs is supplied on the command line by the harness driver and
+    // echoed back into the capture log. Nothing is defaulted here: §6.2 marks the Boundary's
+    // light values PLACEHOLDER, and a default in engine code would quietly become the derived
+    // value that the §6.4 probe is supposed to establish.
+    // ---------------------------------------------------------------------------------------
+
+    /// <summary>--corridor-scene &lt;json&gt;: Tier 0 lit review corridor (CorridorReviewSceneBuilder).</summary>
+    private static bool ReadCorridorSceneFlag(out string? jsonPath)
+    {
+        jsonPath = null;
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length; i++)
+            if (args[i] == "--corridor-scene" && i + 1 < args.Length) jsonPath = args[i + 1];
+        return jsonPath != null;
+    }
+
+    /// <summary>--tile-theme-config &lt;path&gt;: alternate tile theme config (candidate injection).</summary>
+    private static bool ReadTileThemeConfigFlag(out string? path)
+    {
+        path = null;
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length; i++)
+            if (args[i] == "--tile-theme-config" && i + 1 < args.Length) path = args[i + 1];
+        return path != null;
+    }
+
+    private static string? ReadStringArg(string flag)
+    {
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length; i++)
+            if (args[i] == flag && i + 1 < args.Length) return args[i + 1];
+        return null;
+    }
+
+    /// <summary>
+    /// Assemble the light rig from --light-* flags. Every flag is REQUIRED when
+    /// --corridor-scene is used: a missing value aborts the run rather than substituting one,
+    /// so no capture can be produced by an undeclared rig.
+    /// </summary>
+    private static ReviewLighting.Params ReadLightParams()
+    {
+        string Require(string flag)
+        {
+            var v = ReadStringArg(flag);
+            if (string.IsNullOrEmpty(v))
+                throw new System.InvalidOperationException(
+                    $"--corridor-scene requires {flag}. ART-BIBLE-v0 §6.2 marks the light values "
+                    + "PLACEHOLDER, so this harness refuses to supply one — state it explicitly.");
+            return v!;
+        }
+
+        return new ReviewLighting.Params(
+            Ambient:     new Color(Require("--light-ambient")),
+            LightColor:  new Color(Require("--light-color")),
+            Energy:      float.Parse(Require("--light-energy"),
+                             System.Globalization.CultureInfo.InvariantCulture),
+            RadiusTiles: float.Parse(Require("--light-radius-tiles"),
+                             System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    /// <summary>
+    /// Read a spec file through Godot's FileAccess rather than System.IO. On iOS and Android the
+    /// res:// tree is packed inside the .pck and System.IO cannot see it at all — the desktop
+    /// path would work and the device path, which is the one §13.1 actually cares about, would
+    /// fail at runtime.
+    /// </summary>
+    private static string ReadTextOrThrow(string path)
+    {
+        using var f = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
+        if (f == null)
+            throw new System.IO.FileNotFoundException($"Tier 0: cannot read '{path}'.");
+        return f.GetAsText();
+    }
+
+    private void LaunchCorridorScene(string jsonPath, ReviewBuildMarker? marker = null)
+    {
+        GetNode<CanvasLayer>("MenuLayer").Visible = false;
+        _currentDepth = 1;
+
+        var spec = CorridorReviewSceneBuilder.ParseSpecJson(ReadTextOrThrow(jsonPath));
+        _state = CorridorReviewSceneBuilder.Build(spec);
+        SetupPresentation(_state);
+
+        // The junction is load-bearing (the critic is asked which way they would walk), so its
+        // presence is asserted and reported rather than assumed from the spec.
+        bool hasJunction = CorridorReviewSceneBuilder.HasJunction(_state.Map, out var junctionAt);
+        if (!hasJunction)
+            GD.PrintErr("[Tier0] ABORT: carved geometry contains no junction — a straight corridor "
+                        + "cannot answer 'which way would you walk'. Fix the carve list.");
+
+        // CLI flags win over the marker, so a review build can still be driven explicitly on
+        // desktop; the marker only supplies the rig where there is no command line to read.
+        var lighting = new ReviewLighting(marker?.Light ?? ReadLightParams());
+        lighting.Attach(GetNode<Node2D>("GameView"), _renderer!.TileWidth, _renderer.TileHeight,
+                        _state.Player.X, _state.Player.Y);
+
+        // Through Diag as well as GD.Print: on iOS there is no console to read, and GD.Print goes
+        // nowhere retrievable. Diag writes to the app container, which can be pulled back off the
+        // device — which is the only way to show that a review build actually booted the corridor
+        // rather than the menu. Verified, not assumed.
+        void Report(string line) { GD.Print(line); Diag.Log(line); }
+
+        Report($"[Tier0] corridor scene: {spec.Name} ({jsonPath})");
+        Report($"[Tier0] map={spec.Width}x{spec.Height} player=({spec.PlayerX},{spec.PlayerY}) "
+               + $"carve_rects={spec.Carve.Count}");
+        Report($"[Tier0] junction={(hasJunction ? $"YES at ({junctionAt.X},{junctionAt.Y})" : "NO")}");
+        Report($"[Tier0] tile_theme_config={TileThemeLoader.ActiveConfigPath}");
+        Report($"[Tier0] light rig: {lighting.Describe(_renderer.TileWidth, _renderer.TileHeight)}");
+        Report($"[Tier0] review_build_marker={(marker != null ? ReviewBuildMarker.Path : "none (CLI flags)")}");
     }
 
     /// <summary>

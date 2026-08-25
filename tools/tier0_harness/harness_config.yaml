@@ -1,0 +1,84 @@
+# Tier 0 review harness — the apparatus that judges art (ART-BIBLE-v0 §13.1).
+#
+# READ THIS BEFORE CHANGING A NUMBER.
+#
+# Values here fall into exactly two classes, and they are labelled, because the difference
+# decides whether a capture means anything:
+#
+#   RULED       — decided, with the ruling named. Changing one is a ruling, not an edit.
+#   UNDERIVED   — the bible marks it PLACEHOLDER. It has a design purpose and NO derived value.
+#                 It is here because the harness cannot run without *some* number, not because
+#                 this number is right. It is not law, it is not a gate, and it must not be
+#                 cited as a derived value. ART-BIBLE-v0 §4.3, §6.2.
+#
+# Every UNDERIVED value below is echoed into the capture log of every run, so no capture can
+# circulate without carrying the unratified numbers that produced it.
+
+resolution:
+  # RULED — ART-BIBLE-v0 §4.1: reference device is iPhone SE (2nd/3rd gen), 750x1334, portrait.
+  # This is the SE's physical (@2x) pixel resolution; logical points are 375x667.
+  # Same value as tools/art_lint/scene_capture_config.yaml, which the retired Oryx track also
+  # used — the device ruling survived that track's closure and is re-adopted on its own merits.
+  width: 750
+  height: 1334
+
+tile:
+  # UNDERIVED, and this one is load-bearing enough to state plainly.
+  #
+  # ART-BIBLE-v0 §4.3 marks canvas and tile sizes PLACEHOLDER: "Native canvas per layer, and the
+  # integer scale factor to logical pixels, are derived at Phase 5 against the reference device."
+  #
+  # 24 is NOT that derived value. It is the value the shipped renderer currently hard-codes
+  # (src/Presentation/Map/TopDownRenderer.cs: TileWidth => 24), inherited from the Oryx 16bf
+  # world tileset that the closed track used. It is recorded here as a PARAMETER so that when
+  # Phase 5 derives the real number, this file changes and the harness follows — rather than the
+  # number being invisible inside engine code.
+  #
+  # KNOWN LIMIT, reported not worked around: the renderer's 24 is a constant, so setting this to
+  # anything else will produce stub tiles the renderer still draws on a 24px grid. Making tile
+  # size a genuine engine parameter is a separate change and is NOT in this session's scope.
+  size: 24
+  status: UNDERIVED
+
+light:
+  # ALL UNDERIVED — ART-BIBLE-v0 §6.2: "Only the Boundary's values are derived at the pilot.
+  # The rest are PLACEHOLDER." The Boundary's values are not derived yet either; the §6.4 probe
+  # is what derives them, and this harness is what runs that probe.
+  #
+  # The bible gives the Boundary's light a *character*, not a number: "Carried fire; orc fires /
+  # tended by someone who cares whether it stays lit / warm, moving, unreliable" (§6.2). The
+  # values below are a starting rig chosen to be legibly warm and legibly dark so the probe has
+  # something to move away from. They are a starting point for derivation, not a result of it.
+  ambient: "1a1a22"        # UNDERIVED — CanvasModulate; the darkness light is read against
+  color: "ffb066"          # UNDERIVED — carried-fire warmth (§6.2 "warm")
+  energy: 1.6              # UNDERIVED — PointLight2D energy
+  radius_tiles: 5.5        # UNDERIVED — reach in TILES, never pixels, because a pixel radius
+                           #             would silently hard-code the §4.3 PLACEHOLDER tile size
+  status: UNDERIVED
+
+scene:
+  # The corridor spec. Geometry is authored data (see corridor_junction.json) so the shape of
+  # the junction is a review-time decision, not a code change.
+  spec: src/Presentation/assets/tier0_harness/scenes/corridor_junction.json
+
+probe:
+  # ART-BIBLE-v0 §6.4 runs a three-arm receive-light probe immediately after this session.
+  # Each arm is a different AUTHORING of the same fragment, rendered under IDENTICAL lighting —
+  # so an arm is just a different tile directory, selected by pointing the theme config at it.
+  # The harness renders arms through one code path with one light rig; nothing else varies.
+  #
+  #   A — baked directional key light   (positive control: the conventional approach)
+  #   B — no key light, form shading retained  (the likely answer)
+  #   C — flat, material value only     (the strict reading of §6.3)
+  #
+  # NO ARM ART EXISTS. These point at stub directories so the mechanism is exercised and proven
+  # before any asset is drawn. Generating the arms is the NEXT session's work, not this one's.
+  # Arm tile dirs live under src/Presentation/assets/ and NOT under tools/, because
+  # tools/.gdignore makes the whole tools/ tree invisible to Godot's importer — an asset there
+  # can never be rendered. (This is why the retired Oryx review path had to overwrite live
+  # sprite files in place and revert afterwards; pointing the theme config at a Godot-visible
+  # directory removes that whole mechanism.)
+  arms:
+    A: src/Presentation/assets/tier0_harness/arm_A
+    B: src/Presentation/assets/tier0_harness/arm_B
+    C: src/Presentation/assets/tier0_harness/arm_C

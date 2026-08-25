@@ -1,0 +1,86 @@
+using Godot;
+using System.Text.Json;
+
+namespace CatacombsOfYarl.Presentation.Map;
+
+/// <summary>
+/// Tier 0 review-build marker (ART-BIBLE-v0 §13.1).
+///
+/// §13.1 requires the verdict to come from the production renderer, in the lit scene, at true
+/// display size, ON DEVICE. That last word is the problem this class solves: the review corridor
+/// is otherwise reachable only via --corridor-scene, and an iOS app is launched by the OS with
+/// no command line at all. Without this, the app could be verified installed on the reference
+/// device and still have no way to display the corridor — the device leg of the harness would be
+/// an install check wearing a review check's clothes.
+///
+/// A REVIEW BUILD is therefore identified by a data file baked into the export. If
+/// res://src/Presentation/assets/tier0_harness/REVIEW_BUILD.json exists at boot, the app boots
+/// straight into the review corridor with the rig that file names. If it does not exist — which
+/// is every normal build, because only the harness writes it — nothing here runs and boot is
+/// bit-for-bit unchanged. The file is deliberately NOT committed; only REVIEW_BUILD.json.template
+/// is, so a review build cannot be created by accident or leak into a player build.
+///
+/// The rig is carried in the file rather than defaulted in code for the same reason
+/// <see cref="ReviewLighting"/> refuses defaults: §6.2 marks the light values PLACEHOLDER, and a
+/// default compiled into the engine would quietly become the derived value.
+/// </summary>
+public sealed class ReviewBuildMarker
+{
+    public const string Path = "res://src/Presentation/assets/tier0_harness/REVIEW_BUILD.json";
+
+    public string ScenePath { get; private init; } = "";
+    public string ThemeConfigPath { get; private init; } = "";
+    public ReviewLighting.Params Light { get; private init; }
+
+    private static ReviewBuildMarker? _cached;
+    private static bool _looked;
+
+    /// <summary>
+    /// True when this is a review build. Result is cached: boot asks twice (once for the theme
+    /// override, once for the scene) and the file must not be read differently between them.
+    /// </summary>
+    public static bool TryLoad(out ReviewBuildMarker? marker)
+    {
+        if (_looked)
+        {
+            marker = _cached;
+            return _cached != null;
+        }
+        _looked = true;
+        marker = null;
+
+        if (!Godot.FileAccess.FileExists(Path))
+            return false;
+
+        try
+        {
+            using var f = Godot.FileAccess.Open(Path, Godot.FileAccess.ModeFlags.Read);
+            if (f == null) return false;
+
+            using var doc = JsonDocument.Parse(f.GetAsText());
+            var root = doc.RootElement;
+            var light = root.GetProperty("light");
+
+            _cached = new ReviewBuildMarker
+            {
+                ScenePath       = root.GetProperty("scene").GetString() ?? "",
+                ThemeConfigPath = root.GetProperty("themeConfig").GetString() ?? "",
+                Light = new ReviewLighting.Params(
+                    Ambient:     new Color(light.GetProperty("ambient").GetString()),
+                    LightColor:  new Color(light.GetProperty("color").GetString()),
+                    Energy:      (float)light.GetProperty("energy").GetDouble(),
+                    RadiusTiles: (float)light.GetProperty("radiusTiles").GetDouble()),
+            };
+        }
+        catch (System.Exception ex)
+        {
+            // A malformed marker must not silently boot the normal game: a reviewer would then be
+            // looking at the menu and wondering where the corridor went.
+            GD.PrintErr($"[Tier0] REVIEW_BUILD.json present but unreadable — {ex.Message}");
+            return false;
+        }
+
+        marker = _cached;
+        return marker != null;
+    }
+}
