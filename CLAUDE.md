@@ -155,9 +155,36 @@ The original Python prototype lives at `~/development/rlike`. It contains:
 
 Use it as reference when porting systems. Validate that C# harness produces equivalent results for the same scenarios and seeds.
 
+---
+
+## Art
+
+**`docs/ART-BIBLE-v0.md` is the only live art direction.** `docs/ART-LOOP-PROCESS-v0.md`
+governs how a round of art work runs and what may land. Clause markers govern: a
+PLACEHOLDER is not law and is not usable as a gate — if a number you need is marked
+PLACEHOLDER, that is a finding to report, not a gap to fill with a guess.
+
+Two gates: a blind LLM critic ends a round; only Rafe, in-scene on device, lands an
+asset. **No candidate is ever approved from a contact sheet** (bible §13.1).
+
+**The Oryx-conformance track is closed (2026-08).** Its bible, lint spec,
+acceptance-scene spec, gate package, and generation walkthroughs are archived under
+`docs/archive/oryx-track/` with RETIRED banners. Do not work to them. Treat any Oryx
+threshold, palette, or doc you encounter as retired unless `ART-BIBLE-v0.md` says
+otherwise.
+
+`tools/art_lint/` is **retained infrastructure with no live spec** — see its `NOTICE.md`.
+Its results are not a gate: a FAIL blocks nothing and a PASS approves nothing. The
+corpus-agnostic parts (capture, determinism verification, manifest building) remain
+useful; the thresholds do not.
+
 **Register conformance is never instrumented** (bible §13.4). Clauses like *nothing is
 staged*, *the art plays it straight*, and *nothing is ruined, things are used up* are
 carried at the human gate. **Do not build a proxy for them** — a weak instrument
 re-enters the optimisation and silently outcompetes every clause that has no number.
 There is no dread score and no staging detector. The honest `NO INSTRUMENT` row is the
 correct output.
+
+**No instrument's pass counts until it has demonstrated it can fail**
+(`ART-LOOP-PROCESS-v0.md` §4, bible §13.5). This applies to every check built for the new
+track, including the review harness.
