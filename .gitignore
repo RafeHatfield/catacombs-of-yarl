@@ -4,3 +4,13 @@
 
 # Headless iOS build output (tools/ios_build.sh)
 /.ios-build/
+
+# .NET build output
+bin/
+obj/
+
+# macOS
+.DS_Store
+
+# Per-session git worktrees (see CLAUDE.md: one working copy per session)
+/.claude/worktrees/
