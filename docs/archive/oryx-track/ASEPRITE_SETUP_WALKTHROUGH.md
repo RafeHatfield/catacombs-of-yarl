@@ -1,3 +1,14 @@
+> # ⛔ RETIRED — 2026-08-24
+>
+> **This document is part of the closed Oryx-conformance art track. It is superseded by
+> [`docs/ART-BIBLE-v0.md`](../../ART-BIBLE-v0.md).**
+>
+> **Why the track closed:** the hand-edit layer described here existed to close the gap between a generated sprite and Oryx conformance, and that gap is no longer the thing being measured (ART-BIBLE v0 §1.3). Generation and editing tooling are re-decided at Phase 4 (ART-BIBLE v0 §14).
+>
+> Kept for the record, not for reference. **Nothing below is in force.** No rule, threshold, palette, or gate in this file is a live standard, and no asset should be judged against it.
+
+---
+
 # Aseprite + Retro Diffusion Lite setup walkthrough
 
 A guide to setting up a production-quality pixel art workflow for YARL, going beyond pure AI generation to include hand-editing in Aseprite. Written for someone who's never used Aseprite.

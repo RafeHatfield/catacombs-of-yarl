@@ -1,5 +1,13 @@
 # PixelLab API walkthrough (API-only, no MCP)
 
+> **⚠️ Art-direction notice — 2026-08-24.** The PixelLab *setup* here is still live; the **Oryx-conformance art track is
+> closed**, so every instruction below about matching Oryx style, locking to the Oryx palette,
+> or passing the Oryx art lint is **retired** — see
+> [`docs/ART-BIBLE-v0.md`](../../docs/ART-BIBLE-v0.md) §§1.3 and the archived track in
+> [`docs/archive/oryx-track/`](../../docs/archive/oryx-track/). Generation tooling is re-decided at ART-BIBLE v0 §14, Phase 4.
+
+---
+
 A guide to setting up PixelLab for YARL using the official Python SDK, driven via scripts that Claude Code writes and runs. Same execution model as your current Retro Diffusion workflow — no MCP server required.
 
 Specifically targeted at Oryx 16-Bit Fantasy style matching, with 24×24 props and 16×16 items.

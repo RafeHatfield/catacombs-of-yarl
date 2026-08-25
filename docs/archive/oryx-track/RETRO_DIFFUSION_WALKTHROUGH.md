@@ -1,3 +1,14 @@
+> # ⛔ RETIRED — 2026-08-24
+>
+> **This document is part of the closed Oryx-conformance art track. It is superseded by
+> [`docs/ART-BIBLE-v0.md`](../../ART-BIBLE-v0.md).**
+>
+> **Why the track closed:** the pipeline this teaches is retired twice over — Retro Diffusion was superseded by PixelLab in Apr 2026, and its whole purpose, generating Oryx-style sprites against the Oryx palette, is the standard the new bible struck (ART-BIBLE v0 §1.3). Generation tooling is re-decided at Phase 4 (ART-BIBLE v0 §14).
+>
+> Kept for the record, not for reference. **Nothing below is in force.** No rule, threshold, palette, or gate in this file is a live standard, and no asset should be judged against it.
+
+---
+
 # Retro Diffusion walkthrough: generating Oryx-style sprites for YARL
 
 A step-by-step guide for creating 24×24 pixel art sprites that match the Oryx 16-Bit Fantasy tileset, using the Retro Diffusion API. Written for someone who has never done this before.

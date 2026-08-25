@@ -1,3 +1,14 @@
+> # ⛔ RETIRED — 2026-08-24
+>
+> **This document is part of the closed Oryx-conformance art track. It is superseded by
+> [`docs/ART-BIBLE-v0.md`](../../ART-BIBLE-v0.md).**
+>
+> **Why the track closed:** this package is the conformance burn-down at its high-water mark — 74 of 80 assets conformant — and the track was closed anyway, concluded rather than failed (ART-BIBLE v0 revision history). The conformance split it reports measures a bar that no longer exists.
+>
+> Kept for the record, not for reference. **Nothing below is in force.** No rule, threshold, palette, or gate in this file is a live standard, and no asset should be judged against it.
+
+---
+
 # Track A — Gate Package
 
 Prepared for Rafe. Everything mechanical in the Track A art conformance burn-down is done;

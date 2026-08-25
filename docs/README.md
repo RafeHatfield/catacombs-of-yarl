@@ -55,10 +55,15 @@ _Last verified: 2026-07-12 against commit 86b6f10_
 
 - [ios-export-pipeline.md](ios-export-pipeline.md) — **Headless iOS build + install** (`tools/ios_build.sh`): one command from tree to phone, and the failure modes it guards against
 
+## Art
+
+- [ART-BIBLE-v0.md](ART-BIBLE-v0.md) — **The art direction. The only live one.** v0.1 draft; clauses are marked LOCKED / PROVISIONAL / PLACEHOLDER and a PLACEHOLDER is not usable as a gate.
+- The **Oryx-conformance track is closed** (2026-08). Its bible, lint spec, acceptance-scene spec, gate package, and generation walkthroughs are archived under [archive/oryx-track/](archive/oryx-track/), each with a RETIRED banner. Do not work to them.
+
 ## Reference
 
 - [reference_rogue_wizards.md](reference_rogue_wizards.md) — Primary visual/UX reference game analysis
-- [reference_tileset_research.md](reference_tileset_research.md) — Tileset research
+- [archive/oryx-track/reference_tileset_research.md](archive/oryx-track/reference_tileset_research.md) — Tileset research — **RETIRED**, chose the Oryx baseline the art bible reverses
 
 ## Story
 
