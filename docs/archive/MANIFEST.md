@@ -18,6 +18,8 @@ See `reports/doc_reconciliation_2026-07.md`.
 | `archive/story/the_tax_collector_proposal.md` | `docs/story/the_tax_collector_proposal.md` | Proposal for an unimplemented story. |
 | `archive/story/the_tax_collector_design_notes.md` | `docs/story/the_tax_collector_design_notes.md` | Design notes for the unimplemented Tax Collector story. |
 | `archive/story/other-stories-not-implemented/` (11 files) | `docs/story/other-stories-not-implemented/` | Proposals for stories that were never built (vess, long_winter, vale, tax_collector, last_letter, long_rotation, two compass-artifact research dumps, and duplicate under_warden v2/v3 drafts). |
+| `archive/oryx-track/` (8 files + README) | `docs/art_bible.md`, `docs/art_test_scene_spec_v2.md`, `docs/reference_tileset_research.md`, `config/rubric/art-lint-spec.md`, `tools/art_lint/gate_package/GATE.md`, `tools/retrodiffusion/*.md` | The Oryx-conformance art track, closed 2026-08 and superseded by `docs/ART-BIBLE-v0.md`. Archived 2026-08-24. Each file carries a RETIRED banner at the top; see `archive/oryx-track/README.md` for why the track closed and what survives. Moved rather than deleted, and moved rather than left in place, because these documents are detailed and confident enough that a reader could work to the retired standard in good faith. |
+
 
 ## Note on inbound references
 

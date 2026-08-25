@@ -1,3 +1,14 @@
+> # ⛔ RETIRED — 2026-08-24
+>
+> **This document is part of the closed Oryx-conformance art track. It is superseded by
+> [`docs/ART-BIBLE-v0.md`](../../ART-BIBLE-v0.md).**
+>
+> **Why the track closed:** a billing and model-tier finding for a generator that is no longer in the pipeline; Retro Diffusion was superseded by PixelLab in Apr 2026 and the Oryx target it served was struck in Aug 2026 (ART-BIBLE v0 §1.3).
+>
+> Kept for the record, not for reference. **Nothing below is in force.** No rule, threshold, palette, or gate in this file is a live standard, and no asset should be judged against it.
+
+---
+
 # Your custom style runs on RD Pro, the label is wrong
 
 **The `'model': 'rd_fast'` you see in responses for `user__oryx_16_bit_fantasy_style_d970121a` is a misleading label — your custom style is definitively running on RD Pro under the hood.** The $0.18 flat per-image charge is the single unambiguous fingerprint of an RD Pro inference; no other tier in Retro Diffusion's pricing schedule produces that number at any resolution. The official `Retro-Diffusion/api-examples` README states flatly that `POST /v1/styles` *"currently supports only the RD Pro user template. All non-template fields are rejected."* So both of your calls — the `user__*` one and the `rd_pro__fantasy` one — are the same model class being billed the same way; only the response's `model` string disagrees, and that field is not authoritative. The practical consequence: you're paying RD Pro prices, getting RD Pro capabilities, and the field you've been using to distinguish them is essentially cosmetic.

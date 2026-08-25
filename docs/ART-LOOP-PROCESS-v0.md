@@ -1,0 +1,241 @@
+# Yarl Art Loop — PROCESS LAW v0
+
+**Status: v0.1 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
+`ART-BIBLE-v0.md`. Structure transfers wholesale; every number is re-derived.
+
+This document governs *how work is done and certified*. `ART-BIBLE-v0.md` governs *what is
+correct*. A session that has read only one of them is not equipped.
+
+---
+
+## 0. Step zero — before any session
+
+1. **Tag and push.** No loop session starts on an unpushed lane. This project has lost work to
+   a ceiling before.
+2. **Worktree isolation.** One worktree per CC session. Never a shared working copy.
+3. **The session states its Task, its Method, and its Bar** before it starts. A session missing
+   any of the three is malformed and is stopped, not corrected mid-flight.
+
+---
+
+## 1. The two gates — LOCKED
+
+This is the structural spine and it differs from a one-gate loop in a way that matters.
+
+| Gate | Who | What it decides | Basis |
+|---|---|---|---|
+| **Loop gate** | Blind LLM critic | Whether to iterate again | Prose verdict, adversarial |
+| **Landing gate** | Rafe, in-scene, on device | Whether an asset ships | The eye. Final. |
+
+**A critic PASS does not land an asset. It ends a round.** Only the landing gate lands.
+
+**No script ever scores register conformance** (bible §13.4). A script emitting a number is an
+instrument and enters the optimisation, where it will silently outcompete every clause that has
+no number. A blind critic rendering a prose verdict is not an instrument in that sense and may
+hold register questions — but its findings flow to the landing gate as prose, never as
+arithmetic that trades against palette compliance.
+
+**There will be no dread score and no staging detector.** A weak proxy is worse than an
+acknowledged absence.
+
+---
+
+## 2. The round
+
+**build → capture → blind critique → fix → re-verify**
+
+Never build alone. Never fix without re-verifying — **fix rounds regress**, and that is measured
+fact from the predecessor project, not a caution.
+
+### 2.1 Capture is in-scene, lit, and on device — LOCKED
+
+No candidate is captured on a contact sheet or against a void. Capture is the production
+renderer, lit per bible §6, rendering the real scene at true display size.
+
+This is not only discipline. Bible §6.3 authors assets to *receive* light, so **a receive-light
+asset captured unlit is being judged by the wrong instrument** and its rejection is
+uninterpretable.
+
+### 2.2 Every capture declares its own scope
+
+A capture states the contexts it contains and flags any context the shipping game does not
+contain. A creature shown standing somewhere it never stands is evidence about the instrument,
+not about the creature.
+
+### 2.3 Evidence carries its producer's hash
+
+Every evidence file records the commit hash of the code that produced it. **A hash mismatch at
+a ruling invalidates the evidence and forces a re-run.** No exceptions, no "it's probably fine."
+
+---
+
+## 3. Critic law
+
+1. **The critic is a fresh `claude -p` process with cwd outside the repo.** Not a subagent.
+   This is both stronger blindness — no shared context, no CLAUDE.md, no memory, no repo
+   access — and cheaper on the agent pool.
+2. **The critic never receives the bible.** It receives the fiction, the tone, and the
+   questions. Handing a critic the rule list converts it into a compliance checker, which is
+   what scripts are for. What is wanted from an LLM critic is a *reaction*.
+3. **Questions ask what the rule exists to make answerable, never whether the rule was
+   followed.** Bible §8.2 holds that polish means on-path and decay means off-path. Do not ask
+   "is the wear legible." Ask **"which way would you walk, and why."** If it picks the trodden
+   route unprompted, the rule reached the screen. If it picks at random, the rule is an
+   intention that never arrived.
+4. **The critic must demonstrate it can fail before its pass counts** (§4).
+5. **A critic that finds no defect should suspect its own rigour** before crediting the work.
+
+---
+
+## 4. Positive control — no instrument's pass counts until it has demonstrated it can fail
+
+Adopted in full force from Gemfall's Ruling 47. Applies to every critic, census, measure,
+harness, and screen.
+
+**For scripts:** stub the metric to a constant, plant the defect it exists to catch, mutate the
+thing it guards. Show it goes red. Record the verbatim failure.
+
+**For the blind critic, tier one has no shipping corpus to mix in**, so "name them cold" cannot
+run as designed. The substitute is a **plant**: one deliberately wrong candidate seeded into the
+set — for tier one, a picturesquely *ruined* floor, cobwebbed and collapsed, among the *used-up*
+ones (bible §8.1).
+
+**If the critic does not catch the plant, the round is void and its findings are not read.**
+Not discounted — void. A soft critic's findings are worse than no findings, because they will
+be acted on.
+
+**An instrument that cannot be made to fail is decorative and must be labelled so or deleted.**
+
+---
+
+## 5. The bar
+
+**PASS means genuinely wowed.**
+
+The following are **failing** verdicts: *fine, acceptable, good enough for now, improved,
+better than last round, solid, promising, close, nearly there.* Hedging is failing. A verdict
+that requires a qualifier is a FAIL.
+
+On FAIL the critic emits a **mandatory executable flip list**: the specific, concrete changes
+that would flip the verdict. "Needs more atmosphere" is not a flip list item. "The floor's
+value sits too close to the wall base; separate them" is.
+
+**Visual bar** (bible §13.3): blind side-by-side against shipped commercial games, asking
+*which of these looks like the shipped game.* The answer must be Yarl or a tie.
+- **Shattered Pixel Dungeon** — the bar for structure. Gameplay bar; **the look must exceed it.**
+- **Rogue Wizards** — the bar for finish and cohesion. Its projection is explicitly not a target.
+
+This is a **quality** comparison, not a style target. *"Doesn't match SPD"* is not a defect.
+*"Looks like the free one next to the paid one"* is.
+
+---
+
+## 6. Certification
+
+**No convergence calls, ever.** "Each round finds finer issues" is a reason to run the next
+round, not a reason to stop.
+
+**There is no round cap.** What is capped is width and debt:
+
+| Limit | Value | Note |
+|---|---|---|
+| Wave width | 3–4 parallel tracks | |
+| Certification debt | No new track while >2 sit built-but-unjudged | Self-verification retires nothing |
+| Agent budget | ~7 child agents per parent, working average | **Count agents, not tracks** |
+
+**Self-verification retires no debt.** A track is judged by something that did not build it.
+
+---
+
+## 7. Park states
+
+A track that stops writes down which state it stopped in. There are two, and they are not the
+same:
+
+- **Finalised, not iterated** — this is done. It does not reopen because a later tier raised
+  the standard.
+- **Prepared, not generated** — staged, deliberately not spent on.
+
+**Refusals are declared before the run, not after.** Each seat writes *what this seat refuses,
+written before it could be tempted*, and the promotion rule is declared before ranking.
+
+**A failed arm ships to the device as evidence, not as a candidate.** Evidence on the phone
+beats evidence in a paragraph.
+
+---
+
+## 8. Nothing is cut to fit
+
+A clause, a criterion, or a prompt fragment is removable **only if a probe declares its bar
+first and the measurement clears it.** The bar is never re-tuned after the answer is seen.
+
+The worked precedent: bible §6.4's receive-light probe declares its kill criterion before any
+arm runs.
+
+---
+
+## 9. Anything awaiting a ruling is printed in full
+
+A repo path is not a substitute for content. A count is not a substitute for a list. A message
+asking for a decision contains the thing being decided on.
+
+*(Violated once already in this project's own handover: a bible was passed by path and turned
+out to be a stale revision. The rule is cheap and the failure is not.)*
+
+---
+
+## 10. Sequencing — the demo track
+
+Strict order. Each step gates the next.
+
+| # | Step | Gate to proceed |
+|---|---|---|
+| **0** | **Harness.** `ArtAcceptanceSceneBuilder` re-aimed + lighting + device capture. **Track work with its own critic loop** — an orchestrator that writes its own harness and then describes it has no independent check. | Determinism verified; capture reproducible from hash |
+| **1** | **Receive-light probe** (bible §6.4). Three arms, positive control, kill criterion pre-declared. | §6.3 ratified or RETIRED, evidence recorded |
+| **2** | **Palette derivation.** Shared spine + Boundary reserved slots. | Palette locked in bible; `palette_check` built and shown to fail |
+| **3** | **Two-region swatch check.** Mock a deep-region allocation against the spine, both on device. Detects §5.2's flattening risk without building a second region. | Two places, or spine widened |
+| **4** | **Tier one — floors and walls.** The first approved assets ARE the scene. | Landing gate |
+| **5** | **Tier two — 2–3 signature props.** Judged in the scene tier one built. | Landing gate |
+| **6** | **Tier three — one creature.** Tests bible §7.4's second seam: creatures inherit binding through gear, not anatomy. | Landing gate |
+| **7** | **Tier four — Sasha.** Last, per bible §10.5. Rigged from frame one; attachment tolerance instrumented. | Landing gate |
+
+---
+
+## 11. Re-aim inventory — audited against the repo, 2026-08-24
+
+**Survives, corpus-agnostic:**
+`capture_scene.py` · `review_capture.py` · `crop_captures.py` · `scene_capture_config.yaml` ·
+`review_scenes/` · `verify_capture_determinism.py` · `build_generated_manifest.py` ·
+`snap_to_palette.py` · `verify_snap.py`
+
+`verify_snap.py` is already the **compliance-is-not-rescue** audit: the snap makes the palette
+check pass *by construction*, so passing it is not evidence of good art. **Any generation
+needing heavy snapping is regenerated, never shipped**, and mean snap distance is recorded per
+asset as an audit trail of how far the art was reinterpreted.
+
+**Retired with the Oryx track**, because their derivation population was Oryx and under
+Ruling 56 their verdicts over a Yarl corpus would be findings about the instrument:
+`fineness_metrics.py` · `fineness_strips.py` · `fineness_sweep.py` · `fineness_thresholds.json` ·
+`fineness_canon_baseline.csv` · `speckle_canon_baseline.*` · `f4_recalibration.py` ·
+`extract_master_palette.py` · `derive_armor_stand.py` · `derive_bottle_shelf.py` ·
+`derive_tool_rack.py` · `derive_workbench_barrel.py` · `outline_repair.py` (bible §12.1)
+
+**Owed a clause-by-clause audit before any verdict:**
+`art_lint.py` — A1–A7. Some checks are plausibly corpus-independent; some encode Oryx
+construction. **This is a CC task with evidence, not a judgement call from memory.**
+
+---
+
+## 12. PixelLab facts — banked, do not rediscover
+
+- `size` and `style_images` are **mutually exclusive**. The largest reference dictates output
+  dimensions, so **author references at target canvas.**
+- **Single-reference conditioning fails.** Never fewer than two. Maximum eight.
+- Generation prompts live as **auditable files with clause provenance and a self-check that
+  asserts load-bearing clauses survived** — never as a string typed into a chat.
+
+---
+
+*v0.1 — 2026-08-24. Adapted from Gemfall LOOP-PROCESS. Two-gate structure and §3.2 (critic
+never receives the bible) are Yarl-specific additions. §10 sequencing is new: tier zero is the
+harness, not art.*

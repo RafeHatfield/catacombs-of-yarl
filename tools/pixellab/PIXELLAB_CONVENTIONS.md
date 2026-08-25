@@ -1,5 +1,13 @@
 # PixelLab Conventions for YARL
 
+> **⚠️ Art-direction notice — 2026-08-24.** The PixelLab *tooling* here is still live; the **Oryx-conformance art track is
+> closed**, so every instruction below about matching Oryx style, locking to the Oryx palette,
+> or passing the Oryx art lint is **retired** — see
+> [`docs/ART-BIBLE-v0.md`](../../docs/ART-BIBLE-v0.md) §§1.3 and the archived track in
+> [`docs/archive/oryx-track/`](../../docs/archive/oryx-track/). Generation tooling is re-decided at ART-BIBLE v0 §14, Phase 4.
+
+---
+
 **Primary sprite generation tool as of 2026-04-24.**
 Replaces Retro Diffusion for props and items. See `RD_CONVENTIONS.md` for RD reference.
 

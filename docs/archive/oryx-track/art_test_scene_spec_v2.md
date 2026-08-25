@@ -1,3 +1,24 @@
+> # ⛔ RETIRED — 2026-08-24
+>
+> **This document is part of the closed Oryx-conformance art track. It is superseded by
+> [`docs/ART-BIBLE-v0.md`](../../ART-BIBLE-v0.md).**
+>
+> **Why the track closed:** external-corpus matching is now forbidden as a bar, which voids
+> the sticker test this scene operationalised — *can these assets be picked out of the
+> scene?* presumes a corpus to be picked out against (ART-BIBLE v0 §1.3).
+>
+> **The mechanism is retained; the target is struck.** The roadmap ruling that closed the track (`docs/ROADMAP_release_2026-07.md`, Track A) explicitly retains this as reusable infrastructure for the new art thread. `ReviewSceneBuilder`, the in-scene review
+> protocol, the acceptance/capture harness, and the determinism self-test are all live and
+> reusable, and source comments in `src/Logic/Core/`, `src/Presentation/Main.cs`, and
+> `tools/Harness/` still cite this document for that reason. In-scene review in fact
+> *strengthens* under the new bible — ART-BIBLE v0 §13.1 makes it the **only** approval for
+> anything that lands. What is retired is the **verdict criterion**: judge against the
+> register, never against Oryx.
+>
+> Kept for the record, not for reference. **Nothing below is in force.** No rule, threshold, palette, or gate in this file is a live standard, and no asset should be judged against it.
+
+---
+
 # Art Acceptance Test Scene Spec
 
 Status: v2, adopted 2026-07-16 (diorama ruling). Implements `docs/art_bible.md` §9. Companion: `config/rubric/art-lint-spec.md` Part B.

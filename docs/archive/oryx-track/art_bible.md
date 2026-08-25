@@ -1,3 +1,14 @@
+> # ⛔ RETIRED — 2026-08-24
+>
+> **This document is part of the closed Oryx-conformance art track. It is superseded by
+> [`docs/ART-BIBLE-v0.md`](../../ART-BIBLE-v0.md).**
+>
+> **Why the track closed:** it made a corpus nobody here wrote the arbiter of correctness, so no rule in it could say how to draw an object Oryx never drew. The new bible is the target; nothing external is (ART-BIBLE v0 §1.3).
+>
+> Kept for the record, not for reference. **Nothing below is in force.** No rule, threshold, palette, or gate in this file is a live standard, and no asset should be judged against it.
+
+---
+
 # Catacombs of Yarl — Art Bible
 
 Status: adopted 2026-07-16 (PR #4). Companion document: config/rubric/art-lint-spec.md.

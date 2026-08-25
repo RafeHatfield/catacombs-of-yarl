@@ -1,3 +1,23 @@
+> # ⛔ RETIRED — 2026-08-24
+>
+> **This document is part of the closed Oryx-conformance art track. It is superseded by
+> [`docs/ART-BIBLE-v0.md`](../../ART-BIBLE-v0.md).**
+>
+> **Why the track closed:** every threshold here was an observed Oryx value, so the lint
+> could only ever ask *does this match Oryx?* and never *does this look like Yarl?*
+> (ART-BIBLE v0 §1.3).
+>
+> **The mechanism is retained; the target is struck.** The roadmap ruling that closed the track (`docs/ROADMAP_release_2026-07.md`, Track A) explicitly retains this as reusable infrastructure for the new art thread. The Part A machine checks and the F1–F3
+> structural-fineness family still run and are reusable — `tools/art_lint/` is live code.
+> What is retired is the **bar**: the Oryx-derived thresholds and the palette membership
+> test against a corpus this repo did not write. Do not cite a result from it as
+> acceptance evidence. The successor gate is ART-BIBLE v0 §5.1 — same zero-tolerance
+> mechanism, target owned in-repo — and it is not yet built (§15).
+>
+> Kept for the record, not for reference. **Nothing below is in force.** No rule, threshold, palette, or gate in this file is a live standard, and no asset should be judged against it.
+
+---
+
 # Art Lint Spec
 
 Status: adopted 2026-07-16 (PR #4). Thresholds accepted as drafted: color ceilings at observed canon maxima, outline FAIL at 0.90, live generated tiles not grandfathered.

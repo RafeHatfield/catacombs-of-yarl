@@ -1,3 +1,14 @@
+> # ⛔ RETIRED — 2026-08-24
+>
+> **This document is part of the closed Oryx-conformance art track. It is superseded by
+> [`docs/ART-BIBLE-v0.md`](../../ART-BIBLE-v0.md).**
+>
+> **Why the track closed:** this is the research that picked Oryx 16-Bit Fantasy as the baseline, and that choice is the thing the new bible reverses (ART-BIBLE v0 §1.3). Read it as a record of a decision, not as a shortlist to buy from.
+>
+> Kept for the record, not for reference. **Nothing below is in force.** No rule, threshold, palette, or gate in this file is a live standard, and no asset should be judged against it.
+
+---
+
 # Isometric Tileset Research
 
 _Last verified: 2026-07-12 against commit 86b6f10_
