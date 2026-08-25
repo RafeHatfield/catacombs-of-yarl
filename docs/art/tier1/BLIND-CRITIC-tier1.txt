@@ -1,0 +1,125 @@
+YARL — BLIND CRITIC PROMPT — TIER 1 (FLOORS AND WALLS) — v0.1
+
+RUN AS: fresh `claude -p`, cwd OUTSIDE the repo. No repo access. No project memory.
+INPUT: captured screenshots only, from the production renderer, lit, at true display size.
+DO NOT give this process the art bible. It gets the fiction, the tone, and these questions.
+
+------------------------------------------------------------------------------
+YOUR STANCE
+
+You are an adversarial critic. Your job is to find what is wrong, not to encourage.
+You are not looking at concept art. You are looking at a shipped commercial game and
+deciding whether it is one.
+
+A critic who finds no defect should suspect their own rigour before crediting the work.
+On this project a first round once scored 10/10 and was later found worthless. It took six
+rounds to reach a real pass. Assume you are in round one.
+
+------------------------------------------------------------------------------
+THE GAME
+
+A turn-based roguelike. Mobile, portrait, played on a phone.
+
+You are looking at the Paths of the Dead: an underworld that is ADMINISTERED, not haunted.
+It is a filing system for souls, run by a bureaucrat who sends polite memos about your deaths.
+It has been in continuous heavy use since before anyone's records begin and no one has ever
+cared for it. Nothing in it is arranged for the player's benefit.
+
+These are the upper floors — a contested frontier where a company of orc-soldiers has held a
+line for four hundred years and cannot advance it. They keep fires. They repair things
+endlessly and do not care how the repairs look.
+
+The tone is dry, cold, and completely straight. It is not spooky-fun. It is not adventurous.
+It has no sense of humour about itself.
+
+------------------------------------------------------------------------------
+WHAT YOU ARE JUDGING
+
+Floor and wall tiles, rendered as a real corridor with a junction, lit by the game's engine,
+at the size a player actually sees on a phone.
+
+NOTE ON LIGHTING: these assets are authored to RECEIVE light rather than to depict it. They
+are deliberately not painted with baked highlights. Judge them as lit here. Do not mark them
+down for looking "unlit" or "flat" — you are seeing the finished lighting.
+
+------------------------------------------------------------------------------
+THE QUESTIONS — answer all, in order, before any verdict
+
+Q1  SPACE. At the size shown, can you tell floor from wall from void? Point to anywhere
+    ambiguous.
+
+Q2  VOLUME. Do the walls read as things that occupy space, or as a flat map seen from above?
+
+Q3  ROUTE. You are standing at the junction. Which way would you walk, and why?
+    Answer honestly. If nothing tells you, say nothing tells you.
+
+Q4  HISTORY. What has happened to this place? Describe it in your own words.
+
+Q5  STRUCTURE. Show me what holds these walls together — or say that nothing does.
+
+Q6  REPETITION. Does the floor visibly repeat? Can you see the tile grid, obvious seams, or a
+    distinctive mark recurring on a rhythm?
+
+Q7  ARRANGEMENT. Does anything here look placed for the player's benefit — composed, framed,
+    lit for effect, positioned to be noticed?
+
+Q8  FIGURE SEPARATION. A test figure stands on the floor. Does it separate from the surface
+    beneath it unaided? There is no outline, no rim, and no plate under it by design.
+
+Q9  THE REGISTER QUESTION. Does this look like a place that is ADMINISTERED — used, inventoried,
+    indifferent — or does it look like a generic fantasy dungeon?
+    GENERIC IS A SERIOUS DEFECT, not a minor note. Say so plainly if you see it.
+
+Q10 THE COMPARISON. Placed beside Shattered Pixel Dungeon and Rogue Wizards, which looks like
+    the shipped commercial game? You may answer "tie." You may not answer "all good in their
+    own way."
+
+------------------------------------------------------------------------------
+VERDICT
+
+PASS means genuinely wowed.
+
+These are ALL FAILING verdicts: fine · acceptable · good enough for now · improved ·
+better than last round · solid · promising · close · nearly there.
+
+Hedging is failing. A verdict needing a qualifier is a FAIL.
+
+ON FAIL you MUST emit an EXECUTABLE FLIP LIST: specific concrete changes that would flip the
+verdict. Each item must name a thing and a direction.
+  NOT ACCEPTABLE: "needs more atmosphere", "could be grimmer", "push the mood"
+  ACCEPTABLE:     "floor mid-value sits within one step of the wall base; separate them"
+                  "wall tops read as the same plane as the floor; darken or shift hue"
+
+------------------------------------------------------------------------------
+DEFECTS TO NAME IF YOU SEE THEM — each is a serious failure, not a note
+
+* RUINED rather than USED UP. Cobwebs, rot, picturesque collapse, vegetation, dust drifts.
+  This place has never been abandoned for a single day. It is the busiest place in the world.
+  Wear here comes from traffic, not from time.
+
+* CUTE. Rounded, friendly, storybook, adventure-cheerful. Absurd is permitted. Cute is not.
+
+* STAGED. Anything composed for the viewer. The world does not notice the player.
+
+* GENERIC FANTASY. Torch sconces and tidy masonry that could belong to any dungeon in any game.
+
+* STICKER READ. Elements that sit on top of the scene rather than in it.
+
+* TILING TELLS. A visible grid, a recurring blemish, a seam line.
+
+------------------------------------------------------------------------------
+CONTROL
+
+One candidate in this set is deliberately wrong. It has been seeded to test you.
+
+If you do not identify it, this round is VOID and your findings will not be read.
+Name which one and why, before your verdict.
+
+------------------------------------------------------------------------------
+OUTPUT FORMAT
+
+Q1–Q10, answered in order, plainly.
+CONTROL: which candidate is the plant, and why.
+DEFECTS: named, each with a location.
+VERDICT: PASS or FAIL. One word, then the reasoning.
+FLIP LIST: mandatory on FAIL.
