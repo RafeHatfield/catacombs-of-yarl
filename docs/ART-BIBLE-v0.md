@@ -1,6 +1,6 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.5 — DRAFT. Nothing in this document has been derived from a rendered asset.**
+**Status: v0.6 — DRAFT. Nothing in this document has been derived from a rendered asset.**
 
 This bible is written *before* pixel work, deliberately. It records decisions taken in
 conversation during Phase 1–3 of the art-direction rework (2026-08). It graduates to **v1**
@@ -515,7 +515,11 @@ environment declines to compete. A dungeon where the protagonist breathes and ev
 is motionless is unsettling in precisely the right way, and it costs a fraction of animating
 the world.
 
-Scope: walk, a basic attack, taking a hit, and a small number of others. Mild, not lavish.
+**Scope: idle, walk, basic attack, take-a-hit. That is the set.** Against the §9 frame
+arithmetic these four states consume the budget; there is no "and others." **An addition
+displaces a frame rather than extending the count** — proposing a fifth state means naming
+which of the four gives up a frame, and that trade is a ruling, not a default. A budget that
+can be added to is not a budget.
 
 **The bar's arithmetic — read from the asset bar's own sheets (§13.3).** Each Oryx Ultimate
 figure carries approximately **five frames**: a two-frame idle, a two-frame walk, one attack.
@@ -524,8 +528,8 @@ The entire "baseline of animation" that earns the library its wow is single digi
 corrected in place if wrong.
 
 **Sasha's budget accordingly: idle 2, walk 2, attack 1–2, take-a-hit 1 — six to eight frames
-total.** Hero-only animation at this count is a small, bounded ask. "A small number of others"
-(above) is measured against this bar, not against ambition.
+total.** Hero-only animation at this count is a small, bounded ask. The four states above are
+measured against this bar, not against ambition.
 
 ### 9.2 The named failure — LOCKED
 
@@ -763,6 +767,15 @@ good*; only the bible answers *what we should look like*. **DNA and bars never s
 nothing conditions generation that we do not own** (§1.3), and nothing we own is above being
 judged against the best.
 
+**The origination rule — LAW.** The bar may *occasion* a law; only the register may *justify*
+one. Every law in this bible must cite its register derivation, not merely its bar observation
+— the v0.5 pass is the worked precedent: faceless creatures follow from §1.1's division of
+warmth, heraldic stance follows from a world where everything is bound in place; the bar was
+where we noticed, the register is why it's true. **A proposed rule whose only justification is
+"the bar does it" is conformance and is refused**, regardless of how good the bar is. This
+clause exists because the bible now cites the asset bar in nine sections, and the distance
+between "lessons cross" and "style conformance" must be a test, not a paragraph's goodwill.
+
 ### 13.4 Register clauses are carried eye-side and are never instrumented — LOCKED
 
 **This is the most important process clause in this document.**
@@ -828,21 +841,25 @@ banked for a future workstream:
 **A law nobody can measure is decorative. This is the honest audit, and at v0 it is mostly
 gaps — which is the correct state for a bible whose pilot has not run.**
 
-| Clause                                          | Instrument                          | Status                                                       |
-| ----------------------------------------------- | ----------------------------------- | ------------------------------------------------------------ |
-| §5.1 zero off-palette pixels                    | Palette check, adopted from Gemfall | **Portable, not yet built**                                  |
-| §5.2 region slot legality                       | Same check, region-flagged          | **Portable, not yet built**                                  |
-| §5.3 warm-share allocation per asset            | None                                | ⚠ **NO INSTRUMENT.** Purpose stated; threshold may not exist (Ruling 70 applies). |
-| §6.3 receive-light (no baked highlight)         | None                                | ⚠ **NO INSTRUMENT.** A directional-highlight census is owed. Gemfall's equivalent measured as a blunt proxy and was refused a verdict. |
-| §7.1 everything is held                         | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Eye-side, at the gate. |
-| §8.1 wear explained by traffic and indifference | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).**                     |
-| §10.1 attachment-point tolerance across frames  | Buildable and should be built       | **Owed at the Sasha tier.** The one genuinely instrumentable register-adjacent clause in this document. |
-| §12 value separation from surface beneath       | None                                | ⚠ **NO INSTRUMENT.** Gemfall's Ruling 70 found no defensible threshold for their analogue; expect the same and prefer the refusal. |
-| §12 names itself at 1×                          | The human gate (§13.2)              | **Eye-side by design.**                                      |
-| §1 register conformance, all clauses            | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).**                     |
+| Clause                                                 | Instrument                          | Status |
+| ------------------------------------------------------ | ----------------------------------- | ---------- |
+| §5.1 zero off-palette pixels                           | Palette check, adopted from Gemfall | **Portable, not yet built** |
+| §5.2 region slot legality                              | Same check, region-flagged          | **Portable, not yet built** |
+| §5.3 warm-share allocation per asset                   | None                                | ⚠ **NO INSTRUMENT.** Purpose stated; threshold may not exist (Ruling 70 applies). |
+| §5.4 chroma is signal                                  | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN.** **The countable proxy is named and refused:** saturated-pixel share is measurable, but share is not signal — a census can count saturation and cannot see meaning, so the number would gate the wrong thing and win trades it hasn't earned (§13.4). If a saturation census is ever built, it is ordering-only under the worst-ground pattern (§13.2), renders no verdict, and earns promotion like any instrument (§13.5). |
+| §6.3 receive-light (no baked highlight)                | None                                | ⚠ **NO INSTRUMENT.** A directional-highlight census is owed. Gemfall's equivalent measured as a blunt proxy and was refused a verdict. |
+| §6.3 no baked drop shadows                             | None                                | ⚠ **NO INSTRUMENT.** Joins the directional-highlight census as owed; same status, same caution — Gemfall's analogue measured as a blunt proxy and was refused a verdict. |
+| §7.1 everything is held                                | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Eye-side, at the gate. |
+| §7.4 heraldic stance (idle sprites are icons)          | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
+| §8.1 wear explained by traffic and indifference        | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** |
+| §10.1 attachment-point tolerance across frames         | Buildable and should be built       | **Owed at the Sasha tier.** The one genuinely instrumentable register-adjacent clause in this document. |
+| §12 value separation from surface beneath              | None                                | ⚠ **NO INSTRUMENT.** Gemfall's Ruling 70 found no defensible threshold for their analogue; expect the same and prefer the refusal. |
+| §12 names itself at 1×                                 | The human gate (§13.2)              | **Eye-side by design.** |
+| §1.1 zero expression budget (world creatures faceless) | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
+| §1 register conformance, all clauses                   | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** |
 
-**Nine of ten clauses have no working instrument today. None is papered over. Four of them will
-never have one, deliberately, and that is a decision rather than a gap.**
+**Thirteen of fourteen clauses have no working instrument today. None is papered over. Seven of
+them will never have one, deliberately, and that is a decision rather than a gap.**
 
 ---
 
@@ -868,6 +885,11 @@ Recorded so they are not re-derived; deliberately not law.
 
 *Revision history:*
 
+- *v0.6 — 2026-08-25. §15 audit catches up with the v0.5 law: four rows added (three
+  BY-DESIGN, shadows census owed), counts corrected; the chroma share-proxy is named and
+  refused in the row. §9.1 scope line rewritten — the four states are the set, additions
+  displace. §13.3 gains the origination rule: the bar occasions, the register justifies.
+  All three from the v0.5 post-merge review.*
 - *v0.5 — 2026-08-25. The asset-bar study pass, both halves. §9 gains frame arithmetic
   (PROVISIONAL pending source-file count) and Sasha's 6–8 frame budget; §1.1 the zero
   expression budget; §7.4 the heraldic stance rule; §5.4 generalised to chroma-is-signal at all
