@@ -3,6 +3,8 @@
 # record are committed explicitly; these regenerate in one command.
 *.log
 det_run*.png
+# Control 5's RED runs write no PNG at all — that is the point. Listed so nobody adds one.
+junction_lit_red_*.png
 scene_normal.png
 scene_floor_is_wall.png
 probe/arm_*.png

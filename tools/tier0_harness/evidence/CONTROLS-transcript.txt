@@ -46,11 +46,13 @@ build root: /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier0-harne
   built app: .ios-build/xcodeproj/dd/Build/Products/Debug-iphoneos/CatacombsOfYarl.app
 
 Info.plist: /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier0-harness/.ios-build/xcodeproj/dd/Build/Products/Debug-iphoneos/CatacombsOfYarl.app/Info.plist  exists=True
-  built bundle id: com.rafehatfield.catacombsofyarl
+  built bundle id: com.rafehatfield.catacombsofyarl.tier0
   build id (CFBundleVersion): 1.0.0
   short version: 1.0.0
 
-commit: 1cdc3b282d61abf2a7a1601ec746d69a1215e95e
+build kind: review/variant build (suffix 'tier0')
+
+commit: fee6cac573c9bb801df1f993852001df9960738e
 build id: 1.0.0
 
 -- devices actually attached --
@@ -59,15 +61,38 @@ Name             Hostname                          Identifier                   
 Jiminy Cricket   Jiminy-Cricket.coredevice.local   5DB969FF-269C-5A8A-86EB-99EC9FF22397   available (paired)   iPhone SE (3rd generation) (iPhone14,6)
 
 -- installed-app query on the device --
-23:16:25  Acquired tunnel connection to device.
-23:16:25  Enabling developer disk image services.
-23:16:25  Acquired usage assertion.
+08:59:33  Acquired tunnel connection to device.
+08:59:33  Enabling developer disk image services.
+08:59:33  Acquired usage assertion.
 Apps installed:
-Name                Bundle Identifier                  Version   Bundle Version
------------------   --------------------------------   -------   --------------
-Catacombs of YARL   com.rafehatfield.catacombsofyarl   1.0.0     1.0.0
+Name         Bundle Identifier                        Version   Bundle Version
+----------   --------------------------------------   -------   --------------
+YARL Tier0   com.rafehatfield.catacombsofyarl.tier0   1.0.0     1.0.0
 
 RESULT: PASS — install VERIFIED on the connected device
+
+==============================================================================
+CONTROL 5 — JUNCTION IS LIT  (shrink the light; a dark junction must BLOCK the capture)
+==============================================================================
+-- GREEN: at the configured working radius (5.5) --
+  [Tier0] junction-lit probe: junction(8,11) lum=0.1003 at px(411,366) | reference(8,15) lum=0.1892 at px(411,654) | ratio=0.5301 min=0.2500 patch=37px
+  capture written: True  exit=0
+
+-- PLANT: shrink light.radius_tiles below the point where the junction stays lit --
+  [Tier0] junction-lit probe: junction(8,11) lum=0.0295 at px(411,366) | reference(8,15) lum=0.1667 at px(411,654) | ratio=0.1767 min=0.2500 patch=37px
+  [Tier0] JUNCTION-LIT CHECK FAILED — ratio 0.1767 < 0.2500.
+  [Tier0] The junction is outside the carried light's reach. The scene still renders and would still pass determinism, but the critic cannot see the choice it is being asked about — the capture would measure nothing (MISFED).
+  [Tier0] Fix: raise light.radius_tiles, or move the junction closer to the player in the corridor spec. Do NOT lower this threshold.
+  [Tier0] CAPTURE REFUSED — no PNG written.
+  radius=3.5: engine exit=2  capture written=False  -> REFUSED (correct)
+  [Tier0] junction-lit probe: junction(8,11) lum=0.0186 at px(411,366) | reference(8,15) lum=0.1547 at px(411,654) | ratio=0.1200 min=0.2500 patch=37px
+  [Tier0] JUNCTION-LIT CHECK FAILED — ratio 0.1200 < 0.2500.
+  [Tier0] The junction is outside the carried light's reach. The scene still renders and would still pass determinism, but the critic cannot see the choice it is being asked about — the capture would measure nothing (MISFED).
+  [Tier0] Fix: raise light.radius_tiles, or move the junction closer to the player in the corridor spec. Do NOT lower this threshold.
+  [Tier0] CAPTURE REFUSED — no PNG written.
+  radius=3.0: engine exit=2  capture written=False  -> REFUSED (correct)
+
+RESULT: PASS — the junction-lit check blocks a dark junction and passes a lit one
 
 ==============================================================================
 SUMMARY
@@ -76,5 +101,6 @@ SUMMARY
   lighting     PASS
   scene        PASS
   device       PASS
+  junction     PASS
 
-commit: 1cdc3b282d61abf2a7a1601ec746d69a1215e95e
+commit: fee6cac573c9bb801df1f993852001df9960738e
