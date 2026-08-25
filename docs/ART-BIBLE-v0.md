@@ -1,6 +1,6 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.1 — DRAFT. Nothing in this document has been derived from a rendered asset.**
+**Status: v0.4 — DRAFT. Nothing in this document has been derived from a rendered asset.**
 
 This bible is written *before* pixel work, deliberately. It records decisions taken in
 conversation during Phase 1–3 of the art-direction rework (2026-08). It graduates to **v1**
@@ -450,6 +450,22 @@ which matters enormously on a screen with no room for any of those. It also prod
 the unease the register wants: **the safe route is the one worn down by the traffic of the
 dead.**
 
+### 8.2.1 The trodden channel — RULED (Rafe, 2026-08-25)
+
+The primary expression of legible wear on floors is **a polished channel worn through a wider
+hall** — the path of centuries of dead traffic, running down the middle of rooms and corridors
+that are wider than it. Ordinary floor flanks it. The channel leads somewhere: stairs down, or
+rooms that matter. Route legibility comes from the channel, not from signage.
+
+One-tile-wide corridors remain fully in the game — the chokepoint is a load-bearing roguelike
+verb and nothing about the art removes it. A one-wide corridor is either **trodden** (on the
+main route: polished wall to wall, because the traffic had no room to spread) or **neglected**
+(off-path: §8.1 decay). Both states must be drawable and must read apart at 1×.
+
+**Consequence for review scenes:** a floor candidate is not fully reviewed until it has been
+seen in at least: open floor, the channel, a trodden chokepoint, and a neglected passage. A
+review scene shaped only as narrow corridor cannot pose the §8.2 question.
+
 ---
 
 ## 9. Motion — policy LOCKED, specifications PLACEHOLDER
@@ -660,20 +676,39 @@ finds no defect should suspect its own rigour before crediting the work.
 The visual bar is a **blind side-by-side against shipped commercial games**, asking *"which of
 these looks like the shipped game?"* — and the answer must be Yarl, or a tie.
 
-**Reference set:**
+**Reference set — three bars, each assigned to one question. The assignment is what keeps a bar
+from becoming a style target.**
 
-- **Shattered Pixel Dungeon — the bar for structure.** Grid, readability, portrait layout, how
-  much information fits legibly on a phone. It solves Yarl's exact problem.
-- **Rogue Wizards — the bar for finish.** Light, material, depth, polish, and above all
-  **cohesion**: everything made to the same standard, nothing left provisional. It is landscape
-  and isometric, so its projection is explicitly **not** a target (§3).
+- **Shattered Pixel Dungeon — the structure bar.** Grid, readability, portrait layout, how much
+  information fits legibly on a phone. It solves Yarl's exact problem. The gameplay bar; the
+  look must exceed it.
+- **Rogue Wizards — the scene bar.** Light, material, depth, and above all cohesion: everything
+  made to the same standard, nothing left provisional. Landscape and isometric, so its
+  projection is explicitly **not** a target (§3).
+- **Oryx Ultimate Fantasy — the asset bar.** Per-sprite craft: the standard a single Yarl asset
+  must meet or beat on a like-for-like look. Recorded in the owner's words, because they are the
+  bar speaking: *clean, small, detailed, serious; the threats are threatening; a tasteful
+  palette without being overdone; a baseline of animation; wow factor.* This library is also the
+  animation-coverage spec for §9 (basic movement and attack, nothing lavish) and approved plant
+  stock for critic control rounds — professionally drawn and in the wrong register is precisely
+  the failure a soft critic waves through.
+
+**The presentation caveat.** Oryx Ultimate's wow is partly presentational — heroes centred,
+posed, composed for the sheet. Yarl's register forbids staging (§1). The bar is their craft,
+never their presentation: a Yarl asset must stand beside theirs while unposed, indifferent, and
+in a corridor. When a comparison reads "theirs looks better," the first question is **better
+made, or merely better posed?** — and that question belongs in the critic's kit.
 
 **This is a quality comparison, not a style target, and the distinction is thin enough to state
 plainly: we ask whether Yarl looks as finished, never whether Yarl looks like them.** A finding
 that an asset "doesn't match SPD" is not a defect. A finding that it "looks like the free one
 next to the paid one" is.
 
-The gameplay bar is SPD. **The look must exceed it.**
+**The guard — LAW.** A bar may never appear in a flip list. "Make it more like [bar]" is an
+illegal critique in any round, from any critic, machine or human. Comparisons answer *are we as
+good*; only the bible answers *what we should look like*. **DNA and bars never swap roles:
+nothing conditions generation that we do not own** (§1.3), and nothing we own is above being
+judged against the best.
 
 ### 13.4 Register clauses are carried eye-side and are never instrumented — LOCKED
 
@@ -760,6 +795,11 @@ never have one, deliberately, and that is a decision rather than a gap.**
 
 *Revision history:*
 
+- *v0.4 — 2026-08-25. **§8.2.1 added** (Rafe): the trodden channel as the primary legible-wear
+  grammar; one-wide corridors are trodden or neglected, both drawable; review scenes must pose
+  the question in four contexts. **§13.3 restructured** (Rafe): three assigned bars — SPD
+  structure, Rogue Wizards scene, Oryx Ultimate asset — with the presentation caveat and the
+  bar-never-in-a-flip-list guard as LAW. Both from rulings taken in conversation 2026-08-25.*
 - *v0.3 — 2026-08-24. **§12.1 RULED** (Rafe): no baked outline anywhere; separation by value
   floor and §7.1 linear elements. Engine-side rim parked as an unadopted fallback.
   `outline_repair.py` retired. **§13.4 amended** (Rafe): a script emitting a number is an
