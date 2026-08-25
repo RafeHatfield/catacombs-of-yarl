@@ -154,3 +154,10 @@ The original Python prototype lives at `~/development/rlike`. It contains:
 - The balance pipeline methodology
 
 Use it as reference when porting systems. Validate that C# harness produces equivalent results for the same scenarios and seeds.
+
+**Register conformance is never instrumented** (bible §13.4). Clauses like *nothing is
+staged*, *the art plays it straight*, and *nothing is ruined, things are used up* are
+carried at the human gate. **Do not build a proxy for them** — a weak instrument
+re-enters the optimisation and silently outcompetes every clause that has no number.
+There is no dread score and no staging detector. The honest `NO INSTRUMENT` row is the
+correct output.
