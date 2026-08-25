@@ -130,6 +130,9 @@ public partial class Main : Node
     // post-SetupPresentation camera snap (_pendingCameraSnapFrames) has settled to 0.
     private bool _pendingCapture;
     private string? _captureOutputPath;
+    // Tier 0 junction-lit probe state. See ProbeJunctionLuminance.
+    private (int X, int Y)? _junctionTile;
+    private (int X, int Y)? _litReferenceTile;
     private int _captureSettleBuffer = 2; // extra idle frames after camera-snap settles
 
     // Cross-run persistence — loaded once at app start, flushed at narrative-event boundaries.
@@ -2485,6 +2488,12 @@ public partial class Main : Node
 
         // CLI flags win over the marker, so a review build can still be driven explicitly on
         // desktop; the marker only supplies the rig where there is no command line to read.
+        // Remembered for the capture-time luminance probe (see ProbeJunctionLuminance). The
+        // reference cell is one tile BELOW the player: it is lit floor with no sprite standing on
+        // it, so it measures the light rather than the player.
+        _junctionTile = hasJunction ? junctionAt : null;
+        _litReferenceTile = (_state.Player.X, _state.Player.Y + 1);
+
         var lighting = new ReviewLighting(marker?.Light ?? ReadLightParams());
         lighting.Attach(GetNode<Node2D>("GameView"), _renderer!.TileWidth, _renderer.TileHeight,
                         _state.Player.X, _state.Player.Y);
@@ -2509,6 +2518,94 @@ public partial class Main : Node
     /// viewport to --capture-out, and quit. Called once _pendingCameraSnapFrames has
     /// reached 0 and the extra settle buffer has elapsed (see _Process).
     /// </summary>
+    /// <summary>
+    /// Instrument threshold, NOT an art value. The junction must reach at least this fraction of
+    /// the luminance of lit floor beside the player.
+    ///
+    /// Set by measurement, not taste. Sweeping light.radius_tiles against this scene:
+    ///
+    ///     radius  5.5 -> 0.5301   green   (the configured working value)
+    ///     radius  5.0 -> 0.4586   green
+    ///     radius  4.5 -> 0.3724   green
+    ///     radius  4.0 -> 0.2766   green   (marginal)
+    ///     radius  3.5 -> 0.1767   RED
+    ///     radius  3.0 -> 0.1200   RED
+    ///
+    /// 0.25 puts the boundary between radius 4.0 and 3.5, which is where the junction stops being
+    /// legible — matching the coupling reported from the Tier 0 session ("below ~4 the junction
+    /// goes dark"). Note the honest caveat: 4.0 clears the bar by only ~10%, so the threshold is
+    /// NOT comfortably clear of the marginal case. It is comfortably clear of the WORKING case,
+    /// which is the one that matters: 5.5 sits at 2.1x the threshold.
+    ///
+    /// Recorded here rather than in harness_config.yaml because it describes how this check
+    /// works, not how the art should look.
+    /// </summary>
+    private const float JunctionLitMinRatio = 0.25f;
+
+    /// <summary>Mean perceived luminance of a small patch, clipped to the image.</summary>
+    private static float PatchLuminance(Image img, Vector2 centre, int half)
+    {
+        int cx = Mathf.RoundToInt(centre.X), cy = Mathf.RoundToInt(centre.Y);
+        float sum = 0f; int n = 0;
+        for (int y = cy - half; y <= cy + half; y++)
+        {
+            for (int x = cx - half; x <= cx + half; x++)
+            {
+                if (x < 0 || y < 0 || x >= img.GetWidth() || y >= img.GetHeight()) continue;
+                var c = img.GetPixel(x, y);
+                sum += 0.2126f * c.R + 0.7152f * c.G + 0.0722f * c.B;   // Rec.709
+                n++;
+            }
+        }
+        return n == 0 ? 0f : sum / n;
+    }
+
+    /// <summary>
+    /// True when the junction is lit well enough to be seen. Logs the measurement either way, so
+    /// a capture carries the evidence that its junction was legible.
+    /// </summary>
+    private bool ProbeJunctionLuminance(Image image)
+    {
+        if (_junctionTile == null || _litReferenceTile == null || _renderer == null)
+            return true;   // not a corridor review capture — nothing to guard
+
+        var gameView = GetNode<Node2D>("GameView");
+        var xform = gameView.GetGlobalTransform();
+
+        Vector2 ScreenOf((int X, int Y) t)
+            => xform * _renderer.GridToScreenCenter(t.X, t.Y);
+
+        // Half a tile at the current zoom, so the patch stays inside the tile it is measuring.
+        int half = Mathf.Max(1, Mathf.RoundToInt(_renderer.TileWidth * gameView.Scale.X * 0.25f));
+
+        var jScreen = ScreenOf(_junctionTile.Value);
+        var rScreen = ScreenOf(_litReferenceTile.Value);
+
+        float jLum = PatchLuminance(image, jScreen, half);
+        float rLum = PatchLuminance(image, rScreen, half);
+        float ratio = rLum <= 0.0001f ? 0f : jLum / rLum;
+
+        string line =
+            $"[Tier0] junction-lit probe: junction({_junctionTile.Value.X},{_junctionTile.Value.Y}) "
+          + $"lum={jLum:0.0000} at px({jScreen.X:0},{jScreen.Y:0}) | "
+          + $"reference({_litReferenceTile.Value.X},{_litReferenceTile.Value.Y}) lum={rLum:0.0000} "
+          + $"at px({rScreen.X:0},{rScreen.Y:0}) | ratio={ratio:0.0000} "
+          + $"min={JunctionLitMinRatio:0.0000} patch={2 * half + 1}px";
+        GD.Print(line);
+        Diag.Log(line);
+
+        if (ratio >= JunctionLitMinRatio)
+            return true;
+
+        GD.PrintErr($"[Tier0] JUNCTION-LIT CHECK FAILED — ratio {ratio:0.0000} < {JunctionLitMinRatio:0.0000}.");
+        GD.PrintErr("[Tier0] The junction is outside the carried light's reach. The scene still "
+                    + "renders and would still pass determinism, but the critic cannot see the "
+                    + "choice it is being asked about — the capture would measure nothing (MISFED).");
+        GD.PrintErr("[Tier0] Fix: raise light.radius_tiles, or move the junction closer to the "
+                    + "player in the corridor spec. Do NOT lower this threshold.");
+        return false;
+    }
+
     private void CaptureAndQuit()
     {
         _pendingCapture = false;
@@ -2523,6 +2620,32 @@ public partial class Main : Node
         LogWornTilePositions();
 
         var image = GetViewport().GetTexture().GetImage();
+
+        // ── The junction must be VERIFIABLY LIT, not merely present ─────────────────────────
+        //
+        // This is the MISFED guard. Junction placement is coupled to the carried light's reach:
+        // at radius 5.5 the junction sits 3 tiles ahead and reads clearly, but shrink the radius
+        // and the junction falls outside the lit area. The capture still renders, still looks
+        // clean, and still passes the determinism control — and the blind critic is then asked
+        // "which way would you walk" while standing in front of an invisible junction. Its answer
+        // is garbage that reads as data.
+        //
+        // Measured on the ACTUAL CAPTURED PIXELS rather than asserted from the radius arithmetic.
+        // An assertion on the geometry would only re-encode this file's assumptions about the
+        // light model — falloff shape, energy scale, blend mode — and MISFED is exactly the case
+        // where the numbers look fine. Sampling the image measures what the critic will see.
+        //
+        // The test is RELATIVE, not an absolute luminance floor: the junction is compared against
+        // lit floor one tile from the player. That self-calibrates against ambient and energy, so
+        // re-tuning the rig (which the §6.4 probe will do) cannot silently invalidate the check.
+        if (!ProbeJunctionLuminance(image))
+        {
+            // Loud, and it BLOCKS THE CAPTURE. A dark junction must not produce a usable artifact,
+            // because a usable artifact is one that gets reviewed.
+            GD.PrintErr("[Tier0] CAPTURE REFUSED — no PNG written.");
+            GetTree().Quit(2);
+            return;
+        }
         var dir = System.IO.Path.GetDirectoryName(_captureOutputPath);
         if (!string.IsNullOrEmpty(dir))
             System.IO.Directory.CreateDirectory(dir);

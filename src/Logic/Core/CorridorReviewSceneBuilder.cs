@@ -148,7 +148,33 @@ public static class CorridorReviewSceneBuilder
         // satisfied by fog and the harness would be measuring the wrong thing.
         map.RevealAll();
 
-        return new GameState(player, new List<Entity>(), map, new SeededRandom(0), turnLimit: 1)
+        // THE REVIEW SCENE CARRIES NO LOSABLE GAME STATE. This is the fix for "the player dies on
+        // the first step", and the symptom was not what it looked like: the player never died.
+        // IsAlive stayed true. This builder was constructed with turnLimit: 1, copied from
+        // ReviewSceneBuilder where it is harmless because that scene is captured and quit and is
+        // never walked. In dungeon mode IsGameOver is
+        //     !IsAlive || TurnCount >= TurnLimit || Ending != None
+        // so the FIRST step took TurnCount to 1 >= 1 and ended the run. On device that surfaces
+        // as the end-of-run overlay, which reads as a death.
+        //
+        // The fix is structural rather than a larger number, because a larger number only moves
+        // the failure to turn N. This harness exists to produce byte-comparable captures
+        // (LOOP-PROCESS §2.3), and a review surface that can enter ANY state unrelated to the art
+        // is not a measuring instrument: a death overlay, a corpse sprite or a changed HUD would
+        // be read by the determinism control as a difference in the art.
+        //
+        // So every loss condition is removed at the source, and the invariant is asserted by
+        // CorridorReviewSceneBuilderTests rather than left as a comment:
+        //   - no turn limit      — int.MaxValue, so TurnCount can never reach it in a review
+        //   - no monsters        — nothing exists that can deal damage
+        //   - no ending          — EndingType.None, and nothing in this scene sets it
+        //   - no stairs, no traps, no hazards, no props — the carve produces floor and wall only
+        // The player keeps an ordinary Fighter: this scene is walked by a human at the §13.2
+        // gate, and a walker with no stats would take a different code path through the
+        // presentation layer than the game does, which would defeat the point of using the
+        // production renderer.
+        return new GameState(player, new List<Entity>(), map, new SeededRandom(0),
+                             turnLimit: int.MaxValue)
         {
             IsDungeonMode = true,
             CurrentDepth  = 1,

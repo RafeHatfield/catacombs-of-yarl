@@ -131,6 +131,8 @@ def main():
     ap.add_argument("--theme-config", default="res://src/Presentation/assets/tier0_harness/tile_themes_stub.yaml")
     ap.add_argument("--scene-spec", help="Override the corridor spec path")
     ap.add_argument("--light-energy", help="Override light energy (positive control)")
+    ap.add_argument("--light-radius-tiles",
+                    help="Override the carried light's reach (junction-lit positive control)")
     ap.add_argument("--log-out")
     ap.add_argument("--godot", default=DEFAULT_GODOT)
     args = ap.parse_args()
@@ -139,15 +141,25 @@ def main():
     overrides = {}
     if args.light_energy is not None:
         overrides["energy"] = args.light_energy
+    if args.light_radius_tiles is not None:
+        overrides["radius_tiles"] = args.light_radius_tiles
 
     rc, log, cmd = capture(args.out, args.theme_config, cfg, args.godot,
                            light_overrides=overrides, scene_spec=args.scene_spec,
                            log_out=args.log_out)
 
     if not os.path.exists(args.out):
-        print(f"ABORT: capture did not produce {args.out}", file=sys.stderr)
-        print(log, file=sys.stderr)
-        sys.exit(1)
+        # Exit 2 from the engine is a REFUSED capture (junction-lit check failed), not a crash.
+        # Surfaced distinctly so the controls can assert the refusal rather than just "no file".
+        refused = rc == 2 or "CAPTURE REFUSED" in log
+        for line in log.splitlines():
+            if "[Tier0]" in line and ("JUNCTION-LIT" in line or "REFUSED" in line
+                                      or "junction-lit probe" in line or "MISFED" in line
+                                      or "Fix:" in line):
+                print("  " + line.strip(), file=sys.stderr)
+        print(f"{'REFUSED' if refused else 'ABORT'}: no capture written to {args.out}",
+              file=sys.stderr)
+        sys.exit(2 if refused else 1)
 
     print(f"Captured {args.out} at {cfg['resolution']['width']}x{cfg['resolution']['height']} (exit {rc})")
     echo_evidence(args.out, log)

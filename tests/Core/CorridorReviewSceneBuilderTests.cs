@@ -1,4 +1,6 @@
 using CatacombsOfYarl.Logic.Core;
+using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Endgame;
 using NUnit.Framework;
 
 namespace CatacombsOfYarl.Tests.Core;
@@ -97,6 +99,81 @@ public class CorridorReviewSceneBuilderTests
 
         Assert.That(() => CorridorReviewSceneBuilder.ParseSpecJson(noCarve),
             Throws.InvalidOperationException, "solid rock is not a corridor");
+    }
+
+    // ── The review scene carries no losable game state ──────────────────────────────────────
+    //
+    // Regression-locking the "player dies on the first step" defect. The player never actually
+    // died — IsAlive stayed true. The builder was constructed with turnLimit: 1, so the first
+    // step took TurnCount to 1 >= 1 and IsGameOver went true by the turn-limit clause. On device
+    // that surfaces as the end-of-run overlay, which reads as a death.
+    //
+    // These assert the INVARIANT rather than the old number: a review surface that can enter a
+    // game-over state can capture a death overlay or a changed HUD, and the determinism control
+    // would read that as a difference in the art (LOOP-PROCESS §2.3).
+
+    [Test]
+    public void Build_OneStepDoesNotEndTheScene_TheReportedDefect()
+    {
+        var state = CorridorReviewSceneBuilder.Build(
+            CorridorReviewSceneBuilder.ParseSpecJson(TrunkAndBranch));
+
+        Assert.That(state.IsGameOver, Is.False, "the scene must not start over");
+        state.TurnCount = 1;
+        Assert.That(state.IsGameOver, Is.False,
+            "one step ended the review scene — this is the exact reported defect");
+    }
+
+    [Test]
+    public void Build_CannotBeWalkedIntoAGameOver()
+    {
+        var state = CorridorReviewSceneBuilder.Build(
+            CorridorReviewSceneBuilder.ParseSpecJson(TrunkAndBranch));
+
+        // Far more turns than any review would ever take, plus the pathological case.
+        foreach (var turn in new[] { 1, 2, 10, 1_000, 100_000, 10_000_000 })
+        {
+            state.TurnCount = turn;
+            Assert.That(state.IsGameOver, Is.False, $"scene ended at turn {turn}");
+        }
+    }
+
+    [Test]
+    public void Build_HasNoLossConditionsAtAll()
+    {
+        var state = CorridorReviewSceneBuilder.Build(
+            CorridorReviewSceneBuilder.ParseSpecJson(TrunkAndBranch));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(state.TurnLimit, Is.EqualTo(int.MaxValue), "a turn limit is a loss condition");
+            Assert.That(state.Monsters, Is.Empty, "nothing may exist that can deal damage");
+            Assert.That(state.Ending, Is.EqualTo(EndingType.None), "no ending may be pre-set");
+            Assert.That(state.PlayerFighter.IsAlive, Is.True);
+            Assert.That(state.Props, Is.Empty, "props are not part of a floor/wall review");
+        });
+    }
+
+    /// <summary>
+    /// The carve produces floor and wall only. A stair tile would let a walker trigger a descent
+    /// mid-review and leave the scene being judged.
+    /// </summary>
+    [Test]
+    public void Build_ContainsNoStairsOrDoors()
+    {
+        var state = CorridorReviewSceneBuilder.Build(
+            CorridorReviewSceneBuilder.ParseSpecJson(TrunkAndBranch));
+        var map = state.Map;
+
+        for (int x = 0; x < map.Width; x++)
+        {
+            for (int y = 0; y < map.Height; y++)
+            {
+                var kind = map.GetTileKind(x, y);
+                Assert.That(kind, Is.EqualTo(TileKind.Wall).Or.EqualTo(TileKind.Floor),
+                    $"({x},{y}) is {kind} — the review corridor is floor and wall only");
+            }
+        }
     }
 
     [Test]

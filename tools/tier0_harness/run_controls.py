@@ -284,11 +284,57 @@ def control_device(cfg):
     return verdict
 
 
+def control_junction_lit(cfg):
+    hr("CONTROL 5 — JUNCTION IS LIT  (shrink the light; a dark junction must BLOCK the capture)")
+
+    # The MISFED guard. The junction is what makes the scene ask its question — the critic is asked
+    # which way they would walk. Shrink the carried light and the junction falls outside its reach:
+    # the capture still renders, still looks clean, and still passes determinism, while measuring
+    # nothing. This control proves the harness refuses that capture instead of shipping it.
+    working = cfg["light"]["radius_tiles"]
+
+    print(f"-- GREEN: at the configured working radius ({working}) --")
+    out = os.path.join(REPO, EVIDENCE, "junction_lit_green.png")
+    rc, log, _ = capture(out, THEME_MAIN if THEME_MAIN.startswith("res://") else "res://" + THEME_MAIN,
+                         cfg, GODOT, log_out=out.replace(".png", ".log"))
+    for line in log.splitlines():
+        if "junction-lit probe" in line and "DIAG" not in line:
+            print("  " + line.strip())
+    green_ok = rc == 0 and os.path.exists(out)
+    print(f"  capture written: {os.path.exists(out)}  exit={rc}")
+
+    print(f"\n-- PLANT: shrink light.radius_tiles below the point where the junction stays lit --")
+    red_results = []
+    for radius in ("3.5", "3.0"):
+        dark = os.path.join(REPO, EVIDENCE, f"junction_lit_red_r{radius}.png")
+        if os.path.exists(dark):
+            os.remove(dark)
+        rc2, log2, _ = capture(dark, THEME_MAIN if THEME_MAIN.startswith("res://") else "res://" + THEME_MAIN,
+                               cfg, GODOT, light_overrides={"radius_tiles": radius})
+        for line in log2.splitlines():
+            if "DIAG" in line:
+                continue
+            if any(k in line for k in ("junction-lit probe", "JUNCTION-LIT CHECK FAILED",
+                                       "CAPTURE REFUSED", "MISFED", "Fix:")):
+                print("  " + line.strip())
+        wrote = os.path.exists(dark)
+        refused = (rc2 == 2) and not wrote
+        print(f"  radius={radius}: engine exit={rc2}  capture written={wrote}  -> "
+              f"{'REFUSED (correct)' if refused else 'NOT REFUSED'}")
+        red_results.append(refused)
+
+    ok = green_ok and all(red_results)
+    print(f"\nRESULT: {'PASS' if ok else 'FAIL'} — the junction-lit check "
+          f"{'blocks a dark junction and passes a lit one' if ok else 'DID NOT BEHAVE AS REQUIRED'}")
+    return ok
+
+
 CONTROLS = {
     "determinism": control_determinism,
     "lighting":    control_lighting,
     "scene":       control_scene,
     "device":      control_device,
+    "junction":    control_junction_lit,
 }
 
 
