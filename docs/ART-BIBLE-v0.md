@@ -1,6 +1,6 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.4 — DRAFT. Nothing in this document has been derived from a rendered asset.**
+**Status: v0.5 — DRAFT. Nothing in this document has been derived from a rendered asset.**
 
 This bible is written *before* pixel work, deliberately. It records decisions taken in
 conversation during Phase 1–3 of the art-direction rework (2026-08). It graduates to **v1**
@@ -59,6 +59,14 @@ This diagnoses the previous track's failure more precisely than "wrong tone." Or
 doing comedy *too* — a funny voice on top of a funny world, so the voice had nothing to push
 against and the whole thing collapsed toward whimsy. It was not a mismatch. It was
 **redundancy**: the art was making the writing's job impossible.
+
+**The expression budget for world creatures is zero — RULED from the study pass.** The asset
+bar's seriousness is substantially this one refusal: helmets, hoods, shadowed cowls, blank
+skulls; nothing smiles, nothing emotes. Yarl adopts it as law: **world creatures do not have
+readable faces.** Hidden, shadowed, or structural. The one face in this game belongs to Sasha,
+because the warmth is his to carry — and even his is spent sparingly at sprite scale.
+(Portraits, if the game ever wants them, are the sanctioned place for faces at dialogue range —
+see §16.)
 
 ### 1.2 The generative test — LOCKED
 
@@ -162,6 +170,10 @@ before a single prop or creature exists.
 
 **Isometric *objects* are not forbidden** — the ban is on an isometric map.
 
+**Corroboration:** the asset bar's walls are two-plane — front face plus top band, no side
+face — running at full commercial quality. The provisional projection has a shipped precedent
+in the very library named as the per-asset bar. Still ratified only by the pilot.
+
 ---
 
 ## 4. Canvas and density — PLACEHOLDER
@@ -195,6 +207,11 @@ Hollowmark are the warmest thing on screen* are both, read one way, attention-bu
 Adopted in shape from Gemfall §2.6: density is legislated as a **relationship between layers**,
 never as an absolute per layer. The environment is quieter than the figures. Ratios are
 PLACEHOLDER pending the pilot.
+
+**Quiet floors, detail at the edges — corroborated by the bar.** The asset bar's floors are
+large flat fields with sparse texture events, and the events sit at walls and corners while
+centres stay open. Their reason is readability. Our fiction supplies a better one: **traffic
+keeps the centre clear** (§8.2's channel). Bar and register agree about where detail belongs.
 
 ### 4.3 Canvas sizes — PLACEHOLDER
 
@@ -259,6 +276,13 @@ are the last people down here who still tend one. The moment the player leaves t
 warmth withdrawal begins in earnest and never reverses. **The Boundary is not a violation of
 the rule; it is the rule's opening statement.**
 
+**The warmth reservation is one instance of a general law, confirmed at three scales by the
+asset bar: chroma is signal.** Per sprite: two or three material families and **one** saturated
+accent doing identity work. Per room: long neutral stretches, then one saturated event that
+*is* the room's identity. Per item: hue carries state, not decoration. A saturated pixel should
+mean something happened. General richness is forbidden — saturation spent everywhere identifies
+nothing.
+
 ---
 
 ## 6. Light — LOCKED
@@ -300,6 +324,12 @@ look flat and slightly disappointing on a contact sheet. **They come alive only 
 scene.** A critic — or a human at a gate — who rejects a receive-light asset for looking
 underlit in isolation is applying the wrong instrument in the wrong context. This sharpens
 §13.1 from a discipline into a technical necessity.
+
+**Baked drop shadows are depicted lighting and are forbidden with the rest of it.** The asset
+bar ships every item sheet twice — with and without painted shadows — because a baked shadow is
+wrong in every context except the one it was painted for. That manual workaround is this clause
+solved structurally: **the asset never grounds itself; the engine or a composited blob grounds
+it per context.** One asset, every context, and nothing fights the probe.
 
 ### 6.4 Receive-light is PROVISIONAL pending a probe that runs BEFORE the pilot
 
@@ -420,6 +450,12 @@ nobody cared enough to add any.
    their equipment, not their anatomy** — strapped armour, corded bundles, an oath you cannot
    see. This is a real seam and the first creature tier is where it gets tested.
 
+**Creatures stand like they have always been there — RULED from the study pass.** The asset
+bar's figures are heraldic: planted, frontal or near-frontal, weight straight down, at most one
+deliberate asymmetry. No mid-action idle poses, no dynamic lean. This is where its "epic"
+lives — emblem, not drama — and it is exactly right for a world of things bound in place: **the
+stillness is the menace.** Idle sprites are icons; motion is spent only where §9 spends it.
+
 ---
 
 ## 8. Wear — LOCKED
@@ -481,6 +517,16 @@ the world.
 
 Scope: walk, a basic attack, taking a hit, and a small number of others. Mild, not lavish.
 
+**The bar's arithmetic — read from the asset bar's own sheets (§13.3).** Each Oryx Ultimate
+figure carries approximately **five frames**: a two-frame idle, a two-frame walk, one attack.
+The entire "baseline of animation" that earns the library its wow is single digits per figure.
+**PROVISIONAL count** — read from a packed sheet; to be confirmed against source files and
+corrected in place if wrong.
+
+**Sasha's budget accordingly: idle 2, walk 2, attack 1–2, take-a-hit 1 — six to eight frames
+total.** Hero-only animation at this count is a small, bounded ask. "A small number of others"
+(above) is measured against this bar, not against ambition.
+
 ### 9.2 The named failure — LOCKED
 
 **Idle-flicker-everywhere.** Guttering torches, waving banners, ambient sparkle. It reads as
@@ -540,6 +586,13 @@ So: layer by class — long weapon, short weapon, shield, cloak — with variant
 carried by palette rather than shape. A dozen or so layers, not a table of sixty. **A small
 number of silhouette-changing layers delivers nearly all the perceived variety**, because what
 the player registers is *"I look different now,"* not *"that is a mace."*
+
+**Corroborated:** the asset bar's hero sheet is this clause running commercially — one base
+figure, recoloured into families, variety through palette on shared structure. **Caution that
+travels with it:** their recolours roam the whole spectrum; ours run inside the spine plus
+region slots (§5.2). Yarl's families will be narrower and quieter than the bar's. That is the
+register, not a shortfall, and a critic comparing family-variety against the bar must be told
+so.
 
 ### 10.4 Layers bind to the rig — LOCKED
 
@@ -793,8 +846,34 @@ never have one, deliberately, and that is a decision rather than a gap.**
 
 ---
 
+## 16. Banked observations — NOT LEGISLATED
+
+Recorded so they are not re-derived; deliberately not law.
+
+- **Layered portraits.** The asset bar composes portraits from separate base/hair/hood/feature
+  layers — §10.2's additive philosophy applied to faces, and the one place the library permits
+  expression. If the dialogue system ever wants NPC portraits (Borrek, Hael, the Under-Warden's
+  office), the pattern is solved and composes with §1.1's expression rule: faces live at
+  dialogue range, never at sprite range. Owned by the Spine thread if ever scoped.
+- **Hue-coded item states.** Monochrome accent variants (the bar's gold/cyan/magenta weapon
+  rows) are chroma-as-signal at item scale and would give identification/curse/mention
+  mechanics a free visual vocabulary. Game-design surface, not art law. Owned by Combat/Spine
+  if ever scoped.
+- **Plant stock catalogued.** The bar's cobwebbed crypt corners and staged-horror compositions
+  (blood pools, skull altars) are register-illegal in Yarl (§1, §8.1) and therefore ideal
+  critic plants: professionally drawn, wrong register — the exact failure a soft critic waves
+  through. Already sanctioned in §13.3; noted here so the specific sheets are remembered.
+
+---
+
 *Revision history:*
 
+- *v0.5 — 2026-08-25. The asset-bar study pass, both halves. §9 gains frame arithmetic
+  (PROVISIONAL pending source-file count) and Sasha's 6–8 frame budget; §1.1 the zero
+  expression budget; §7.4 the heraldic stance rule; §5.4 generalised to chroma-is-signal at all
+  scales; §4.2/§3 corroborations recorded; §6.3 extended to baked shadows; §10.3 corroborated
+  with the narrower-families caution; §16 added for banked non-law. Sourced from study of
+  licensed sheets in chat; no Oryx pixel enters any pipeline.*
 - *v0.4 — 2026-08-25. **§8.2.1 added** (Rafe): the trodden channel as the primary legible-wear
   grammar; one-wide corridors are trodden or neglected, both drawable; review scenes must pose
   the question in four contexts. **§13.3 restructured** (Rafe): three assigned bars — SPD
