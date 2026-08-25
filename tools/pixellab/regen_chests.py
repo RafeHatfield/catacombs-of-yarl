@@ -10,7 +10,9 @@ import os, time
 from pathlib import Path
 import pixellab
 
-client = pixellab.Client(secret=os.environ["PIXELLAB_API_KEY"])
+import client_compat  # canonical credential lookup: PIXELLAB_API_TOKEN
+
+client = pixellab.Client(secret=client_compat.api_token())
 OUT = Path("tools/pixellab/batch_new_sprites_results/chest/chest_closed")
 OUT.mkdir(parents=True, exist_ok=True)
 

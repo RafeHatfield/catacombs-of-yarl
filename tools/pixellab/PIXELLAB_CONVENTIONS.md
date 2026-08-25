@@ -12,7 +12,10 @@
 Replaces Retro Diffusion for props and items. See `RD_CONVENTIONS.md` for RD reference.
 
 ## API setup
-- API key in `$PIXELLAB_API_KEY` environment variable (set in ~/.bashrc)
+- **Credential: `$PIXELLAB_API_TOKEN` (canonical).** Set in `~/.bashrc`. `PIXELLAB_API_KEY`
+  is accepted as a legacy alias by `client_compat.api_token()`, which is now the single
+  lookup every script uses — do not read the environment directly. The repo's `.mcp.json`
+  reads `PIXELLAB_API_TOKEN` specifically, so that spelling must be the one that is set.
 - Python SDK: `pixellab` package, installed in project venv (`source .venv/bin/activate`)
 - Scripts live in `tools/pixellab/` — run from that directory
 - Cost model: subscription (~2000 images/month), not pay-per-image

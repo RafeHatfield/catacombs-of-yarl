@@ -6,7 +6,9 @@ from pathlib import Path
 from PIL import Image
 import pixellab
 
-client = pixellab.Client(secret=os.environ["PIXELLAB_API_KEY"])
+import client_compat  # canonical credential lookup: PIXELLAB_API_TOKEN
+
+client = pixellab.Client(secret=client_compat.api_token())
 OUT = Path(__file__).parent / "table_results"
 OUT.mkdir(exist_ok=True)
 
