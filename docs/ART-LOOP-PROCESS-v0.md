@@ -22,10 +22,10 @@ correct*. A session that has read only one of them is not equipped.
 
 This is the structural spine and it differs from a one-gate loop in a way that matters.
 
-| Gate | Who | What it decides | Basis |
-|---|---|---|---|
-| **Loop gate** | Blind LLM critic | Whether to iterate again | Prose verdict, adversarial |
-| **Landing gate** | Rafe, in-scene, on device | Whether an asset ships | The eye. Final. |
+| Gate             | Who                       | What it decides          | Basis                      |
+| ---------------- | ------------------------- | ------------------------ | -------------------------- |
+| **Loop gate**    | Blind LLM critic          | Whether to iterate again | Prose verdict, adversarial |
+| **Landing gate** | Rafe, in-scene, on device | Whether an asset ships   | The eye. Final.            |
 
 **A critic PASS does not land an asset. It ends a round.** Only the landing gate lands.
 
@@ -122,6 +122,7 @@ value sits too close to the wall base; separate them" is.
 
 **Visual bar** (bible §13.3): blind side-by-side against shipped commercial games, asking
 *which of these looks like the shipped game.* The answer must be Yarl or a tie.
+
 - **Shattered Pixel Dungeon** — the bar for structure. Gameplay bar; **the look must exceed it.**
 - **Rogue Wizards** — the bar for finish and cohesion. Its projection is explicitly not a target.
 
@@ -137,11 +138,11 @@ round, not a reason to stop.
 
 **There is no round cap.** What is capped is width and debt:
 
-| Limit | Value | Note |
-|---|---|---|
-| Wave width | 3–4 parallel tracks | |
+| Limit              | Value                                        | Note                              |
+| ------------------ | -------------------------------------------- | --------------------------------- |
+| Wave width         | 3–4 parallel tracks                          |                                   |
 | Certification debt | No new track while >2 sit built-but-unjudged | Self-verification retires nothing |
-| Agent budget | ~7 child agents per parent, working average | **Count agents, not tracks** |
+| Agent budget       | ~7 child agents per parent, working average  | **Count agents, not tracks**      |
 
 **Self-verification retires no debt.** A track is judged by something that did not build it.
 
@@ -188,16 +189,16 @@ out to be a stale revision. The rule is cheap and the failure is not.)*
 
 Strict order. Each step gates the next.
 
-| # | Step | Gate to proceed |
-|---|---|---|
-| **0** | **Harness.** `ArtAcceptanceSceneBuilder` re-aimed + lighting + device capture. **Track work with its own critic loop** — an orchestrator that writes its own harness and then describes it has no independent check. | Determinism verified; capture reproducible from hash |
-| **1** | **Receive-light probe** (bible §6.4). Three arms, positive control, kill criterion pre-declared. | §6.3 ratified or RETIRED, evidence recorded |
+| #     | Step                                                         | Gate to proceed                                              |
+| ----- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **0** | **Harness.** `ArtAcceptanceSceneBuilder` re-aimed + lighting + device capture. **Track work with its own critic loop** — an orchestrator that writes its own harness and then describes it has no independent check. | Determinism verified; capture reproducible from hash         |
+| **1** | **Receive-light probe** (bible §6.4). Three arms, positive control, kill criterion pre-declared. | §6.3 ratified or RETIRED, evidence recorded                  |
 | **2** | **Palette derivation.** Shared spine + Boundary reserved slots. | Palette locked in bible; `palette_check` built and shown to fail |
-| **3** | **Two-region swatch check.** Mock a deep-region allocation against the spine, both on device. Detects §5.2's flattening risk without building a second region. | Two places, or spine widened |
-| **4** | **Tier one — floors and walls.** The first approved assets ARE the scene. | Landing gate |
-| **5** | **Tier two — 2–3 signature props.** Judged in the scene tier one built. | Landing gate |
-| **6** | **Tier three — one creature.** Tests bible §7.4's second seam: creatures inherit binding through gear, not anatomy. | Landing gate |
-| **7** | **Tier four — Sasha.** Last, per bible §10.5. Rigged from frame one; attachment tolerance instrumented. | Landing gate |
+| **3** | **Two-region swatch check.** Mock a deep-region allocation against the spine, both on device. Detects §5.2's flattening risk without building a second region. | Two places, or spine widened                                 |
+| **4** | **Tier one — floors and walls.** The first approved assets ARE the scene. | Landing gate                                                 |
+| **5** | **Tier two — 2–3 signature props.** Judged in the scene tier one built. | Landing gate                                                 |
+| **6** | **Tier three — one creature.** Tests bible §7.4's second seam: creatures inherit binding through gear, not anatomy. | Landing gate                                                 |
+| **7** | **Tier four — Sasha.** Last, per bible §10.5. Rigged from frame one; attachment tolerance instrumented. | Landing gate                                                 |
 
 ---
 
@@ -213,12 +214,33 @@ check pass *by construction*, so passing it is not evidence of good art. **Any g
 needing heavy snapping is regenerated, never shipped**, and mean snap distance is recorded per
 asset as an audit trail of how far the art was reinterpreted.
 
-**Retired with the Oryx track**, because their derivation population was Oryx and under
+**Retired with the Oryx track** — these are the Oryx-*derived data and strategies*, and under
 Ruling 56 their verdicts over a Yarl corpus would be findings about the instrument:
-`fineness_metrics.py` · `fineness_strips.py` · `fineness_sweep.py` · `fineness_thresholds.json` ·
-`fineness_canon_baseline.csv` · `speckle_canon_baseline.*` · `f4_recalibration.py` ·
-`extract_master_palette.py` · `derive_armor_stand.py` · `derive_bottle_shelf.py` ·
-`derive_tool_rack.py` · `derive_workbench_barrel.py` · `outline_repair.py` (bible §12.1)
+`fineness_thresholds.json` · `fineness_canon_baseline.csv` · `speckle_canon_baseline.*` ·
+`f4_recalibration.py` · `extract_master_palette.py` · `derive_armor_stand.py` ·
+`derive_bottle_shelf.py` · `derive_tool_rack.py` · `derive_workbench_barrel.py` ·
+`outline_repair.py` (bible §12.1)
+
+> **CORRECTION (v0.2, 2026-08-24).** v0.1 of this document retired the entire fineness family,
+> including its metric code. That was wrong and would have deleted working infrastructure.
+> `docs/archive/oryx-track/README.md` records the roadmap ruling that closed the track, and it
+> draws the line explicitly: **the Part A checks and the F1–F3 structural-fineness family are
+> retained; only the Oryx-derived thresholds and baselines are struck.** The metric code is
+> corpus-agnostic — what dies is the calibration, not the measurement.
+>
+> **Retained, pending re-derivation against the Yarl corpus:** `fineness_metrics.py` ·
+> `fineness_strips.py` · `fineness_sweep.py`. Their thresholds are **PLACEHOLDER** until a Yarl
+> corpus exists to derive them from, and **a retained metric with a struck threshold is not a
+> gate.** F4 was already demoted to advisory on the old track and does not return without a
+> derivation of its own.
+>
+> *Recorded rather than silently edited. The error was mine, caught by the repo.*
+
+**Also retained, and not archived** — noted here because a session reading only the retirement
+list would assume otherwise: `ReviewSceneBuilder`, the in-scene review protocol, the
+acceptance/capture harness, the generated-assets manifest, and `tools/pixellab/` (docs carry an
+in-place notice; the tool is live). `docs/2d-vs-iso.md` also stands — its top-down-over-isometric
+conclusion is independent of the Oryx question and corroborates bible §3.
 
 **Owed a clause-by-clause audit before any verdict:**
 `art_lint.py` — A1–A7. Some checks are plausibly corpus-independent; some encode Oryx
