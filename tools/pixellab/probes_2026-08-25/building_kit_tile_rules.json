@@ -1,0 +1,170 @@
+{
+ "kind": "building",
+ "usage": {
+  "type": "generations",
+  "generations": 20.0
+ },
+ "tile_rules": {
+  "arity": 8,
+  "parts": {
+   "roof": {
+    "ends": {
+     "E": 74,
+     "N": 76,
+     "S": 77,
+     "W": 75
+    },
+    "hips": {
+     "NE": 64,
+     "NW": 67,
+     "SE": 65,
+     "SW": 66
+    },
+    "eaves": {
+     "E": 61,
+     "N": 60,
+     "S": 62,
+     "W": 63
+    },
+    "ridges": {
+     "EW": 72,
+     "NS": 73
+    },
+    "peak_px": 24,
+    "profile": "gable",
+    "pyramid": 78,
+    "valleys": {
+     "NE": 68,
+     "NW": 71,
+     "SE": 69,
+     "SW": 70
+    },
+    "interior": 79,
+    "pitch_reach_px": 16
+   },
+   "doors": {
+    "Ea": 34,
+    "Eb": 35,
+    "Na": 32,
+    "Nb": 33,
+    "Sa": 36,
+    "Sb": 37,
+    "Wa": 38,
+    "Wb": 39
+   },
+   "floor": 0,
+   "sides": {
+    "E": 2,
+    "N": 1,
+    "S": 3,
+    "W": 4
+   },
+   "pillar": 31,
+   "slopes": [
+    56,
+    57
+   ],
+   "stairs": [
+    40,
+    41
+   ],
+   "corners": {
+    "NE": 5,
+    "NW": 8,
+    "SE": 6,
+    "SW": 7
+   },
+   "painted": [
+    0,
+    1,
+    4,
+    8,
+    14,
+    17,
+    31,
+    32,
+    33,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48
+   ],
+   "materials": {
+    "wall": "worn grey stone brick walls, chunky, bold shapes",
+    "floor": "cracked grey flagstone floor, chunky, bold shapes"
+   },
+   "partition": {
+    "E": 15,
+    "N": 14,
+    "S": 16,
+    "W": 17,
+    "hub": 13
+   },
+   "floor_roof": 44,
+   "outer_multi": {
+    "EW": 55,
+    "NS": 54,
+    "ESW": 52,
+    "NES": 49,
+    "NEW": 50,
+    "NSW": 51,
+    "NESW": 53
+   },
+   "slopes_east": [
+    58,
+    59
+   ],
+   "stairs_east": [
+    42,
+    43
+   ],
+   "outer_corners": {
+    "NE": 9,
+    "NW": 12,
+    "SE": 10,
+    "SW": 11
+   },
+   "partition_wall": {
+    "E": 19,
+    "N": 18,
+    "S": 20,
+    "W": 21
+   },
+   "partition_doors": {
+    "Ha": 47,
+    "Hb": 48,
+    "Va": 45,
+    "Vb": 46
+   },
+   "partition_multi": {
+    "ES": 24,
+    "NE": 22,
+    "NW": 23,
+    "SW": 25,
+    "ESW": 29,
+    "NES": 26,
+    "NEW": 28,
+    "NSW": 27,
+    "NESW": 30
+   }
+  },
+  "tiles": {},
+  "terrains": [
+   "wall",
+   "empty"
+  ],
+  "rule_type": "composed",
+  "view_angle": null,
+  "wall_tiles": 2,
+  "mask_source": "floor_absent",
+  "connectivity": "same",
+  "stack_stride_px": 24
+ }
+}

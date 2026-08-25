@@ -56,6 +56,7 @@ MAX_CONSECUTIVE_FAILURES = 5
 
 BANK_ROOT_UNLOCKED = os.path.join(REPO_ROOT, "tools", "art_lint", "candidates", "bank")
 BANK_ROOT_LOCKED = os.path.join(REPO_ROOT, "tools", "art_lint", "candidates", "bank_palette_locked")
+BALANCE_LOG = os.path.join(REPO_ROOT, "tools", "art_lint", "reports", "pixellab_balance_log.tsv")
 PALETTE_PATH = os.path.join(REPO_ROOT, "config", "art", "oryx_master_palette.json")
 
 # Themed 8-color swatches for --palette-locked, hand-picked from oryx_master_palette.json by hue
@@ -323,8 +324,13 @@ CATEGORIES = [MURAL_DESIGN, PROP_VARIETY, FLOOR_WALL_TEXTURE, M3_DESIGN_REFERENC
 # ---------------------------------------------------------------------------
 
 def check_api_key():
-    if not (os.environ.get("PIXELLAB_API_KEY") or os.environ.get("PIXELLAB_API_TOKEN")):
-        print("ERROR: neither PIXELLAB_API_KEY nor PIXELLAB_API_TOKEN is set", file=sys.stderr)
+    # Delegate to the single credential lookup so this guard cannot pass while the
+    # generation path then dies. PIXELLAB_API_TOKEN is canonical (it is also what
+    # .mcp.json reads); PIXELLAB_API_KEY is accepted as a legacy alias.
+    try:
+        client_compat.api_token()
+    except RuntimeError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
         sys.exit(1)
 
 
@@ -411,7 +417,16 @@ def run_category(category, palette_set, max_remaining, consecutive_failures, ban
         try:
             final = run_pipeline(description, seed, out_path, color_image=color_image)
         except Exception as e:
-            print(f"  ERROR generating {cat_name}/{subcat}/{fname}: {e}", file=sys.stderr)
+            # A refusal's reason is unrecoverable after the fact (PIXELLAB-VERIFIED.md §1.7):
+            # the server degrades it to a bare "Generation failed" later. Write the row NOW,
+            # with the classification and the verbatim body, or lose why this call failed.
+            cls = getattr(e, "classification", "unclassified")
+            reason = getattr(e, "reason", str(e))
+            print(f"  ERROR generating {cat_name}/{subcat}/{fname}: [{cls}] {reason}", file=sys.stderr)
+            writer.writerow([cat_name, subcat, concept, description, seed, fname,
+                              f"{FINAL_SIZE}x{FINAL_SIZE}", "", "", f"error:{cls}",
+                              reason.replace("\n", " ")[:500]])
+            f.flush()
             consecutive_failures[0] += 1
             if consecutive_failures[0] >= MAX_CONSECUTIVE_FAILURES:
                 print(f"ABORTING: {consecutive_failures[0]} consecutive failures — "
@@ -483,12 +498,16 @@ def main():
     max_remaining = [remaining_budget]
     consecutive_failures = [0]
 
-    for category in cats:
-        if max_remaining[0] <= 0:
-            print(f"Budget exhausted before category {category['name']}; stopping.")
-            break
-        print(f"=== Category: {category['name']} ({'palette-locked' if args.palette_locked else 'unlocked'}) ===")
-        run_category(category, palette_set, max_remaining, consecutive_failures, bank_root, args.palette_locked)
+    # The subscription is SHARED with Gemfall; get_balance is the only ground truth for
+    # what this run cost, and it cannot be differenced from a single end-of-run reading.
+    label = f"bank_generate:{'locked' if args.palette_locked else 'unlocked'}:{args.category or 'all'}"
+    with client_compat.balance_bracket(label, log_path=BALANCE_LOG):
+        for category in cats:
+            if max_remaining[0] <= 0:
+                print(f"Budget exhausted before category {category['name']}; stopping.")
+                break
+            print(f"=== Category: {category['name']} ({'palette-locked' if args.palette_locked else 'unlocked'}) ===")
+            run_category(category, palette_set, max_remaining, consecutive_failures, bank_root, args.palette_locked)
 
     print(f"Run complete. Total PNGs in {bank_root} now: {count_existing(bank_root)}")
 

@@ -19,9 +19,9 @@ from PIL import Image
 import pixellab
 
 # ---- Setup ----
-API_KEY = os.environ.get("PIXELLAB_API_KEY")
+API_KEY = os.environ.get("PIXELLAB_API_TOKEN") or os.environ.get("PIXELLAB_API_KEY")
 if not API_KEY:
-    print("ERROR: PIXELLAB_API_KEY not set")
+    print("ERROR: PIXELLAB_API_TOKEN not set")
     sys.exit(1)
 
 client = pixellab.Client(secret=API_KEY)

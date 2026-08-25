@@ -18,7 +18,9 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 import pixellab
 
-client = pixellab.Client(secret=os.environ["PIXELLAB_API_KEY"])
+import client_compat  # canonical credential lookup: PIXELLAB_API_TOKEN
+
+client = pixellab.Client(secret=client_compat.api_token())
 
 HERO_32 = Path("tools/pixellab/batch_new_sprites_results/chest/chest_closed/chest_closed_s42_32px.png")
 OUT = Path("tools/pixellab/batch_new_sprites_results/chest")

@@ -77,7 +77,7 @@ pip install pixellab
 Add it to your shell profile (`~/.zshrc` or `~/.bashrc`):
 
 ```bash
-export PIXELLAB_API_KEY="your_key_here"
+export PIXELLAB_API_TOKEN="your_token_here"
 ```
 
 Then `source ~/.zshrc` or restart your terminal. This keeps the key out of any scripts you commit to git, and Claude Code inherits your shell environment automatically.
@@ -90,7 +90,7 @@ Create a test script `test_pixellab.py`:
 import os
 import pixellab
 
-client = pixellab.Client(secret=os.environ["PIXELLAB_API_KEY"])
+client = pixellab.Client(secret=os.environ["PIXELLAB_API_TOKEN"])
 balance = client.get_balance()
 print(f"Balance: {balance.balance} {balance.currency}")
 ```
@@ -114,7 +114,7 @@ import pixellab
 from pixellab import Base64Image
 from PIL import Image
 
-client = pixellab.Client(secret=os.environ["PIXELLAB_API_KEY"])
+client = pixellab.Client(secret=os.environ["PIXELLAB_API_TOKEN"])
 
 # Load the Oryx style reference
 style_image = Base64Image.from_file("oryx_style_reference.png")
@@ -242,9 +242,9 @@ import numpy as np
 # CONFIG
 # ---------------------------------------------------------------------------
 
-API_KEY = os.environ.get("PIXELLAB_API_KEY")
+API_KEY = os.environ.get("PIXELLAB_API_TOKEN")
 if not API_KEY:
-    print("ERROR: Set PIXELLAB_API_KEY environment variable")
+    print("ERROR: Set PIXELLAB_API_TOKEN environment variable")
     sys.exit(1)
 
 STYLE_REF_FILE = "oryx_style_reference.png"
@@ -416,7 +416,7 @@ Create `PIXELLAB_CONVENTIONS.md` in your project root so Claude Code follows con
 # PixelLab Conventions for YARL
 
 ## API setup
-- API key in $PIXELLAB_API_KEY environment variable
+- API token in $PIXELLAB_API_TOKEN environment variable (canonical; PIXELLAB_API_KEY is a legacy alias)
 - Python SDK: `pixellab` package (pip install pixellab)
 - Style reference: oryx_style_reference.png (3x3 grid of Oryx tiles)
 - Default style_strength: 70.0 (high Oryx matching)
@@ -490,7 +490,7 @@ PixelLab uses subscription-based tiers. When you call `client.get_balance()` you
 ## Recommended first session
 
 1. Install the SDK: `pip install pixellab`
-2. Set `PIXELLAB_API_KEY` in your shell
+2. Set `PIXELLAB_API_TOKEN` in your shell
 3. Run `test_pixellab.py` to verify the balance call works
 4. Run `generate_sprite_pixellab.py` for your first 4 clubs
 5. Compare side-by-side with your Retro Diffusion clubs
