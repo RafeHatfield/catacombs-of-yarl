@@ -130,6 +130,9 @@ public partial class Main : Node
     // post-SetupPresentation camera snap (_pendingCameraSnapFrames) has settled to 0.
     private bool _pendingCapture;
     private string? _captureOutputPath;
+    // Tier 0 junction-lit probe state. See ProbeJunctionLuminance.
+    private (int X, int Y)? _junctionTile;
+    private (int X, int Y)? _litReferenceTile;
     private int _captureSettleBuffer = 2; // extra idle frames after camera-snap settles
 
     // Cross-run persistence — loaded once at app start, flushed at narrative-event boundaries.
@@ -203,6 +206,14 @@ public partial class Main : Node
         GD.Print($"[Main] Persistence loaded — {_persistentState.RunCounter.TotalRuns} runs ever.");
 
         InitSpriteMapping();
+        // --tile-theme-config <res:// or user:// path>: Tier 0 review harness only. Points the
+        // theme loader at an alternate tile_root/tile_pattern/tile-ID set so candidate floor and
+        // wall tiles (and the ART-BIBLE-v0 §6.4 probe arms) render through the production
+        // renderer without any file in the worktree being overwritten. Must precede the load.
+        if (ReadTileThemeConfigFlag(out var themeConfigPath))
+            TileThemeLoader.OverrideConfigPath(themeConfigPath!);
+        else if (ReviewBuildMarker.TryLoad(out var bootMarker))
+            TileThemeLoader.OverrideConfigPath(bootMarker!.ThemeConfigPath);
         _tileThemeConfig = TileThemeLoader.LoadWithFallback();
         if (_tileThemeConfig.Themes.Count == 0)
             GD.PrintErr("[Main] TileThemeConfig loaded with no themes — dungeon tiles will not render. Check config/tile_themes.yaml.");
@@ -224,7 +235,11 @@ public partial class Main : Node
             _captureOutputPath = captureOutputPath;
             // --review-scene <json>: boot the ReviewSceneBuilder round (in-scene candidate review)
             // instead of the fixed acceptance scene, on the same capture path. See ReviewSceneBuilder.
-            if (ReadReviewSceneFlag(out var reviewJson))
+            // --corridor-scene <json>: boot the Tier 0 review corridor (lit corridor with a
+            // junction) on the same capture path. See CorridorReviewSceneBuilder.
+            if (ReadCorridorSceneFlag(out var corridorJson))
+                LaunchCorridorScene(corridorJson!);
+            else if (ReadReviewSceneFlag(out var reviewJson))
                 LaunchReviewScene(reviewJson!);
             else
                 LaunchArtAcceptanceScene();
@@ -232,6 +247,14 @@ public partial class Main : Node
         else if (ReadArtSceneFlag())
         {
             LaunchArtAcceptanceScene();
+        }
+        else if (ReviewBuildMarker.TryLoad(out var marker))
+        {
+            // TIER 0 REVIEW BUILD (ART-BIBLE-v0 §13.1). An iOS app receives no command line, so
+            // a review build is identified by a marker file baked into the export instead. Absent
+            // — which is every normal build — this branch never runs and boot is unchanged.
+            GD.Print("[Tier0] REVIEW BUILD marker present — booting the review corridor.");
+            LaunchCorridorScene(marker!.ScenePath, marker);
         }
         else
         {
@@ -2370,11 +2393,225 @@ public partial class Main : Node
         GD.Print($"Ready (review scene: {jsonPath}) — {_state.Props.Count} props.");
     }
 
+    // ---------------------------------------------------------------------------------------
+    // Tier 0 review harness — lit corridor with a junction (ART-BIBLE-v0 §13.1, §6).
+    //
+    // Every value the light rig needs is supplied on the command line by the harness driver and
+    // echoed back into the capture log. Nothing is defaulted here: §6.2 marks the Boundary's
+    // light values PLACEHOLDER, and a default in engine code would quietly become the derived
+    // value that the §6.4 probe is supposed to establish.
+    // ---------------------------------------------------------------------------------------
+
+    /// <summary>--corridor-scene &lt;json&gt;: Tier 0 lit review corridor (CorridorReviewSceneBuilder).</summary>
+    private static bool ReadCorridorSceneFlag(out string? jsonPath)
+    {
+        jsonPath = null;
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length; i++)
+            if (args[i] == "--corridor-scene" && i + 1 < args.Length) jsonPath = args[i + 1];
+        return jsonPath != null;
+    }
+
+    /// <summary>--tile-theme-config &lt;path&gt;: alternate tile theme config (candidate injection).</summary>
+    private static bool ReadTileThemeConfigFlag(out string? path)
+    {
+        path = null;
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length; i++)
+            if (args[i] == "--tile-theme-config" && i + 1 < args.Length) path = args[i + 1];
+        return path != null;
+    }
+
+    private static string? ReadStringArg(string flag)
+    {
+        var args = OS.GetCmdlineArgs();
+        for (int i = 0; i < args.Length; i++)
+            if (args[i] == flag && i + 1 < args.Length) return args[i + 1];
+        return null;
+    }
+
+    /// <summary>
+    /// Assemble the light rig from --light-* flags. Every flag is REQUIRED when
+    /// --corridor-scene is used: a missing value aborts the run rather than substituting one,
+    /// so no capture can be produced by an undeclared rig.
+    /// </summary>
+    private static ReviewLighting.Params ReadLightParams()
+    {
+        string Require(string flag)
+        {
+            var v = ReadStringArg(flag);
+            if (string.IsNullOrEmpty(v))
+                throw new System.InvalidOperationException(
+                    $"--corridor-scene requires {flag}. ART-BIBLE-v0 §6.2 marks the light values "
+                    + "PLACEHOLDER, so this harness refuses to supply one — state it explicitly.");
+            return v!;
+        }
+
+        return new ReviewLighting.Params(
+            Ambient:     new Color(Require("--light-ambient")),
+            LightColor:  new Color(Require("--light-color")),
+            Energy:      float.Parse(Require("--light-energy"),
+                             System.Globalization.CultureInfo.InvariantCulture),
+            RadiusTiles: float.Parse(Require("--light-radius-tiles"),
+                             System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    /// <summary>
+    /// Read a spec file through Godot's FileAccess rather than System.IO. On iOS and Android the
+    /// res:// tree is packed inside the .pck and System.IO cannot see it at all — the desktop
+    /// path would work and the device path, which is the one §13.1 actually cares about, would
+    /// fail at runtime.
+    /// </summary>
+    private static string ReadTextOrThrow(string path)
+    {
+        using var f = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
+        if (f == null)
+            throw new System.IO.FileNotFoundException($"Tier 0: cannot read '{path}'.");
+        return f.GetAsText();
+    }
+
+    private void LaunchCorridorScene(string jsonPath, ReviewBuildMarker? marker = null)
+    {
+        GetNode<CanvasLayer>("MenuLayer").Visible = false;
+        _currentDepth = 1;
+
+        var spec = CorridorReviewSceneBuilder.ParseSpecJson(ReadTextOrThrow(jsonPath));
+        _state = CorridorReviewSceneBuilder.Build(spec);
+        SetupPresentation(_state);
+
+        // The junction is load-bearing (the critic is asked which way they would walk), so its
+        // presence is asserted and reported rather than assumed from the spec.
+        bool hasJunction = CorridorReviewSceneBuilder.HasJunction(_state.Map, out var junctionAt);
+        if (!hasJunction)
+            GD.PrintErr("[Tier0] ABORT: carved geometry contains no junction — a straight corridor "
+                        + "cannot answer 'which way would you walk'. Fix the carve list.");
+
+        // CLI flags win over the marker, so a review build can still be driven explicitly on
+        // desktop; the marker only supplies the rig where there is no command line to read.
+        // Remembered for the capture-time luminance probe (see ProbeJunctionLuminance). The
+        // reference cell is one tile BELOW the player: it is lit floor with no sprite standing on
+        // it, so it measures the light rather than the player.
+        _junctionTile = hasJunction ? junctionAt : null;
+        _litReferenceTile = (_state.Player.X, _state.Player.Y + 1);
+
+        var lighting = new ReviewLighting(marker?.Light ?? ReadLightParams());
+        lighting.Attach(GetNode<Node2D>("GameView"), _renderer!.TileWidth, _renderer.TileHeight,
+                        _state.Player.X, _state.Player.Y);
+
+        // Through Diag as well as GD.Print: on iOS there is no console to read, and GD.Print goes
+        // nowhere retrievable. Diag writes to the app container, which can be pulled back off the
+        // device — which is the only way to show that a review build actually booted the corridor
+        // rather than the menu. Verified, not assumed.
+        void Report(string line) { GD.Print(line); Diag.Log(line); }
+
+        Report($"[Tier0] corridor scene: {spec.Name} ({jsonPath})");
+        Report($"[Tier0] map={spec.Width}x{spec.Height} player=({spec.PlayerX},{spec.PlayerY}) "
+               + $"carve_rects={spec.Carve.Count}");
+        Report($"[Tier0] junction={(hasJunction ? $"YES at ({junctionAt.X},{junctionAt.Y})" : "NO")}");
+        Report($"[Tier0] tile_theme_config={TileThemeLoader.ActiveConfigPath}");
+        Report($"[Tier0] light rig: {lighting.Describe(_renderer.TileWidth, _renderer.TileHeight)}");
+        Report($"[Tier0] review_build_marker={(marker != null ? ReviewBuildMarker.Path : "none (CLI flags)")}");
+        // Reported so the device log proves the no-losable-state fix is actually on the device.
+        // The defect was turn_limit=1, which ended the run on the first step and surfaced as the
+        // end-of-run overlay — read on device as the player dying.
+        Report($"[Tier0] losable-state check: turn_limit={_state.TurnLimit} "
+               + $"monsters={_state.Monsters.Count} ending={_state.Ending} "
+               + $"alive={_state.PlayerFighter.IsAlive} game_over={_state.IsGameOver}");
+    }
+
     /// <summary>
     /// --art-scene-capture: log the worn-tile (3001) in-frame report, save the settled
     /// viewport to --capture-out, and quit. Called once _pendingCameraSnapFrames has
     /// reached 0 and the extra settle buffer has elapsed (see _Process).
     /// </summary>
+    /// <summary>
+    /// Instrument threshold, NOT an art value. The junction must reach at least this fraction of
+    /// the luminance of lit floor beside the player.
+    ///
+    /// Set by measurement, not taste. Sweeping light.radius_tiles against this scene:
+    ///
+    ///     radius  5.5 -> 0.5301   green   (the configured working value)
+    ///     radius  5.0 -> 0.4586   green
+    ///     radius  4.5 -> 0.3724   green
+    ///     radius  4.0 -> 0.2766   green   (marginal)
+    ///     radius  3.5 -> 0.1767   RED
+    ///     radius  3.0 -> 0.1200   RED
+    ///
+    /// 0.25 puts the boundary between radius 4.0 and 3.5, which is where the junction stops being
+    /// legible — matching the coupling reported from the Tier 0 session ("below ~4 the junction
+    /// goes dark"). Note the honest caveat: 4.0 clears the bar by only ~10%, so the threshold is
+    /// NOT comfortably clear of the marginal case. It is comfortably clear of the WORKING case,
+    /// which is the one that matters: 5.5 sits at 2.1x the threshold.
+    ///
+    /// Recorded here rather than in harness_config.yaml because it describes how this check
+    /// works, not how the art should look.
+    /// </summary>
+    private const float JunctionLitMinRatio = 0.25f;
+
+    /// <summary>Mean perceived luminance of a small patch, clipped to the image.</summary>
+    private static float PatchLuminance(Image img, Vector2 centre, int half)
+    {
+        int cx = Mathf.RoundToInt(centre.X), cy = Mathf.RoundToInt(centre.Y);
+        float sum = 0f; int n = 0;
+        for (int y = cy - half; y <= cy + half; y++)
+        {
+            for (int x = cx - half; x <= cx + half; x++)
+            {
+                if (x < 0 || y < 0 || x >= img.GetWidth() || y >= img.GetHeight()) continue;
+                var c = img.GetPixel(x, y);
+                sum += 0.2126f * c.R + 0.7152f * c.G + 0.0722f * c.B;   // Rec.709
+                n++;
+            }
+        }
+        return n == 0 ? 0f : sum / n;
+    }
+
+    /// <summary>
+    /// True when the junction is lit well enough to be seen. Logs the measurement either way, so
+    /// a capture carries the evidence that its junction was legible.
+    /// </summary>
+    private bool ProbeJunctionLuminance(Image image)
+    {
+        if (_junctionTile == null || _litReferenceTile == null || _renderer == null)
+            return true;   // not a corridor review capture — nothing to guard
+
+        var gameView = GetNode<Node2D>("GameView");
+        var xform = gameView.GetGlobalTransform();
+
+        Vector2 ScreenOf((int X, int Y) t)
+            => xform * _renderer.GridToScreenCenter(t.X, t.Y);
+
+        // Half a tile at the current zoom, so the patch stays inside the tile it is measuring.
+        int half = Mathf.Max(1, Mathf.RoundToInt(_renderer.TileWidth * gameView.Scale.X * 0.25f));
+
+        var jScreen = ScreenOf(_junctionTile.Value);
+        var rScreen = ScreenOf(_litReferenceTile.Value);
+
+        float jLum = PatchLuminance(image, jScreen, half);
+        float rLum = PatchLuminance(image, rScreen, half);
+        float ratio = rLum <= 0.0001f ? 0f : jLum / rLum;
+
+        string line =
+            $"[Tier0] junction-lit probe: junction({_junctionTile.Value.X},{_junctionTile.Value.Y}) "
+          + $"lum={jLum:0.0000} at px({jScreen.X:0},{jScreen.Y:0}) | "
+          + $"reference({_litReferenceTile.Value.X},{_litReferenceTile.Value.Y}) lum={rLum:0.0000} "
+          + $"at px({rScreen.X:0},{rScreen.Y:0}) | ratio={ratio:0.0000} "
+          + $"min={JunctionLitMinRatio:0.0000} patch={2 * half + 1}px";
+        GD.Print(line);
+        Diag.Log(line);
+
+        if (ratio >= JunctionLitMinRatio)
+            return true;
+
+        GD.PrintErr($"[Tier0] JUNCTION-LIT CHECK FAILED — ratio {ratio:0.0000} < {JunctionLitMinRatio:0.0000}.");
+        GD.PrintErr("[Tier0] The junction is outside the carried light's reach. The scene still "
+                    + "renders and would still pass determinism, but the critic cannot see the "
+                    + "choice it is being asked about — the capture would measure nothing (MISFED).");
+        GD.PrintErr("[Tier0] Fix: raise light.radius_tiles, or move the junction closer to the "
+                    + "player in the corridor spec. Do NOT lower this threshold.");
+        return false;
+    }
+
     private void CaptureAndQuit()
     {
         _pendingCapture = false;
@@ -2389,6 +2626,32 @@ public partial class Main : Node
         LogWornTilePositions();
 
         var image = GetViewport().GetTexture().GetImage();
+
+        // ── The junction must be VERIFIABLY LIT, not merely present ─────────────────────────
+        //
+        // This is the MISFED guard. Junction placement is coupled to the carried light's reach:
+        // at radius 5.5 the junction sits 3 tiles ahead and reads clearly, but shrink the radius
+        // and the junction falls outside the lit area. The capture still renders, still looks
+        // clean, and still passes the determinism control — and the blind critic is then asked
+        // "which way would you walk" while standing in front of an invisible junction. Its answer
+        // is garbage that reads as data.
+        //
+        // Measured on the ACTUAL CAPTURED PIXELS rather than asserted from the radius arithmetic.
+        // An assertion on the geometry would only re-encode this file's assumptions about the
+        // light model — falloff shape, energy scale, blend mode — and MISFED is exactly the case
+        // where the numbers look fine. Sampling the image measures what the critic will see.
+        //
+        // The test is RELATIVE, not an absolute luminance floor: the junction is compared against
+        // lit floor one tile from the player. That self-calibrates against ambient and energy, so
+        // re-tuning the rig (which the §6.4 probe will do) cannot silently invalidate the check.
+        if (!ProbeJunctionLuminance(image))
+        {
+            // Loud, and it BLOCKS THE CAPTURE. A dark junction must not produce a usable artifact,
+            // because a usable artifact is one that gets reviewed.
+            GD.PrintErr("[Tier0] CAPTURE REFUSED — no PNG written.");
+            GetTree().Quit(2);
+            return;
+        }
         var dir = System.IO.Path.GetDirectoryName(_captureOutputPath);
         if (!string.IsNullOrEmpty(dir))
             System.IO.Directory.CreateDirectory(dir);

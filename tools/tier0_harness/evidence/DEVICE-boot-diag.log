@@ -1,0 +1,7 @@
+[DIAG 00000 F0 T5.400] === Session started ===
+[DIAG 00001 F0 T6.339] [Tier0] corridor scene: tier0_corridor_junction (res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json)
+[DIAG 00002 F0 T6.339] [Tier0] map=17x21 player=(8,14) carve_rects=2
+[DIAG 00003 F0 T6.339] [Tier0] junction=YES at (8,11)
+[DIAG 00004 F0 T6.339] [Tier0] tile_theme_config=res://src/Presentation/assets/tier0_harness/tile_themes_stub.yaml
+[DIAG 00005 F0 T6.339] [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=24x24 tex=264px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
+[DIAG 00006 F0 T6.339] [Tier0] review_build_marker=res://src/Presentation/assets/tier0_harness/REVIEW_BUILD.json

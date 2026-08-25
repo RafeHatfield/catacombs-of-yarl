@@ -1,0 +1,36 @@
+{
+  "name": "tier0_corridor_junction",
+  "_comment": [
+    "Tier 0 review corridor. Geometry is authored here rather than in code so the junction",
+    "shape is a review-time decision (CorridorReviewSceneBuilder).",
+    "",
+    "SHAPE: a one-tile-wide vertical trunk with a one-tile-wide horizontal branch crossing it",
+    "to form a four-way junction three tiles ahead of the player.",
+    "",
+    "TWO THINGS HERE ARE LOAD-BEARING AND WERE BOTH GOT WRONG ON THE FIRST CAPTURE:",
+    "",
+    "1. CORRIDORS ARE ONE TILE WIDE. A three-wide carve is a room, not a corridor: every cell",
+    "   in it has three or more open neighbours, so the junction check passes trivially and the",
+    "   scene stops testing what it claims to. Width is what makes a junction a junction.",
+    "",
+    "2. THE JUNCTION MUST SIT INSIDE THE LIT RADIUS. The critic is asked which way they would",
+    "   walk. With the junction at 6 tiles and the carried light reaching 5.5, the first capture",
+    "   put the choice in the dark and the question could not be answered at all. It is placed",
+    "   at 3 tiles here. If light.radius_tiles in harness_config.yaml is reduced below ~4, this",
+    "   spec must move the junction closer or the scene silently stops posing its question.",
+    "",
+    "Both arms are geometrically symmetric, so any preference the critic reports comes from the",
+    "floor and wall art rather than from the layout. Both run out past the lit radius so the",
+    "corridor reads as continuing rather than as a closed box.",
+    "",
+    "Coordinates are tiles, (0,0) top-left. The outer ring stays solid wall. The camera centres",
+    "on the player, giving a visible rect of roughly 10x14 tiles."
+  ],
+  "width": 17,
+  "height": 21,
+  "player": { "x": 8, "y": 14 },
+  "carve": [
+    { "x0": 8, "y0": 3,  "x1": 8,  "y1": 18 },
+    { "x0": 2, "y0": 11, "x1": 14, "y1": 11 }
+  ]
+}

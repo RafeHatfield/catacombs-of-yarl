@@ -1,0 +1,15 @@
+# Godot's per-capture stdout (~31KB each, almost entirely engine boot noise) and the
+# intermediate captures the controls produce on every run. The captures worth keeping as a
+# record are committed explicitly; these regenerate in one command.
+*.log
+det_run*.png
+# Control 5's RED runs write no PNG at all — that is the point. Listed so nobody adds one.
+junction_lit_red_*.png
+scene_normal.png
+scene_floor_is_wall.png
+probe/arm_*.png
+
+# ...except the device boot log, which is the ONLY artefact proving the corridor renders on the
+# reference device rather than merely being installed there. Pulled off the phone with
+# `devicectl device copy from --domain-type appDataContainer`.
+!DEVICE-boot-diag.log

@@ -1,0 +1,106 @@
+
+==============================================================================
+CONTROL 1 — DETERMINISM  (must be byte-identical; then must DIFFER when a tile changes)
+==============================================================================
+run1 sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+run2 sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+byte_identical: True
+
+-- now PLANT a defect: repaint ONE floor tile, expect the capture to CHANGE --
+planted: src/Presentation/assets/tier0_harness/stub/tier0_stub_9003.png repainted flat red
+run3 sha256: cdc48a0068e213ccae347e706519b2ddc6c14a61ba163feab0e133a35a261271
+differs_from_run1: True
+  10.8648% of pixels differ, mean channel delta 5.8833
+
+restore check — run4 sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+  matches run1: True
+
+RESULT: PASS (identical-when-unchanged=True, differs-when-altered=True)
+
+==============================================================================
+CONTROL 2 — LIGHTING IS LIVE  (energy 0 must visibly change the capture)
+==============================================================================
+lit   sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+unlit sha256: c67b9296103dad3d967866efe889ebe63551470d85b6db6512b98048026cc463
+differ: True
+  44.3609% of pixels differ, mean channel delta 15.7644
+
+RESULT: PASS — lighting is live
+
+==============================================================================
+CONTROL 3 — SCENE IS REAL  (swap the floor tile for a WALL tile; capture must reflect it)
+==============================================================================
+planted: ALL floor roles (9001 etc) -> 9010 (a wall tile) in src/Presentation/assets/tier0_harness/tile_themes_swapped.yaml
+normal  sha256: 3695d88c27055ff127967ae3f3f34947ceb24df9fdbdf71e9e23ebd312ead1ac
+swapped sha256: e97835c571bd709245c11133935350ae0e8100be86026a77d0219fff62cdc91d
+differ: True
+  10.8891% of pixels differ, mean channel delta 3.1621
+
+RESULT: PASS — the scene renders the tiles it is pointed at
+
+==============================================================================
+CONTROL 4 — DEVICE PATH  (bundle id from Info.plist, build id, commit — VERIFIED installed)
+==============================================================================
+declared bundle id (export_presets.cfg): com.rafehatfield.catacombsofyarl
+build root: /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier0-harness/.ios-build  exists=True
+  built app: .ios-build/xcodeproj/dd/Build/Products/Debug-iphoneos/CatacombsOfYarl.app
+
+Info.plist: /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier0-harness/.ios-build/xcodeproj/dd/Build/Products/Debug-iphoneos/CatacombsOfYarl.app/Info.plist  exists=True
+  built bundle id: com.rafehatfield.catacombsofyarl.tier0
+  build id (CFBundleVersion): 1.0.0
+  short version: 1.0.0
+
+build kind: review/variant build (suffix 'tier0')
+
+commit: fee6cac573c9bb801df1f993852001df9960738e
+build id: 1.0.0
+
+-- devices actually attached --
+Name             Hostname                          Identifier                             State                Model                                  
+--------------   -------------------------------   ------------------------------------   ------------------   ---------------------------------------
+Jiminy Cricket   Jiminy-Cricket.coredevice.local   5DB969FF-269C-5A8A-86EB-99EC9FF22397   available (paired)   iPhone SE (3rd generation) (iPhone14,6)
+
+-- installed-app query on the device --
+08:59:33  Acquired tunnel connection to device.
+08:59:33  Enabling developer disk image services.
+08:59:33  Acquired usage assertion.
+Apps installed:
+Name         Bundle Identifier                        Version   Bundle Version
+----------   --------------------------------------   -------   --------------
+YARL Tier0   com.rafehatfield.catacombsofyarl.tier0   1.0.0     1.0.0
+
+RESULT: PASS — install VERIFIED on the connected device
+
+==============================================================================
+CONTROL 5 — JUNCTION IS LIT  (shrink the light; a dark junction must BLOCK the capture)
+==============================================================================
+-- GREEN: at the configured working radius (5.5) --
+  [Tier0] junction-lit probe: junction(8,11) lum=0.1003 at px(411,366) | reference(8,15) lum=0.1892 at px(411,654) | ratio=0.5301 min=0.2500 patch=37px
+  capture written: True  exit=0
+
+-- PLANT: shrink light.radius_tiles below the point where the junction stays lit --
+  [Tier0] junction-lit probe: junction(8,11) lum=0.0295 at px(411,366) | reference(8,15) lum=0.1667 at px(411,654) | ratio=0.1767 min=0.2500 patch=37px
+  [Tier0] JUNCTION-LIT CHECK FAILED — ratio 0.1767 < 0.2500.
+  [Tier0] The junction is outside the carried light's reach. The scene still renders and would still pass determinism, but the critic cannot see the choice it is being asked about — the capture would measure nothing (MISFED).
+  [Tier0] Fix: raise light.radius_tiles, or move the junction closer to the player in the corridor spec. Do NOT lower this threshold.
+  [Tier0] CAPTURE REFUSED — no PNG written.
+  radius=3.5: engine exit=2  capture written=False  -> REFUSED (correct)
+  [Tier0] junction-lit probe: junction(8,11) lum=0.0186 at px(411,366) | reference(8,15) lum=0.1547 at px(411,654) | ratio=0.1200 min=0.2500 patch=37px
+  [Tier0] JUNCTION-LIT CHECK FAILED — ratio 0.1200 < 0.2500.
+  [Tier0] The junction is outside the carried light's reach. The scene still renders and would still pass determinism, but the critic cannot see the choice it is being asked about — the capture would measure nothing (MISFED).
+  [Tier0] Fix: raise light.radius_tiles, or move the junction closer to the player in the corridor spec. Do NOT lower this threshold.
+  [Tier0] CAPTURE REFUSED — no PNG written.
+  radius=3.0: engine exit=2  capture written=False  -> REFUSED (correct)
+
+RESULT: PASS — the junction-lit check blocks a dark junction and passes a lit one
+
+==============================================================================
+SUMMARY
+==============================================================================
+  determinism  PASS
+  lighting     PASS
+  scene        PASS
+  device       PASS
+  junction     PASS
+
+commit: fee6cac573c9bb801df1f993852001df9960738e
