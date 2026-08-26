@@ -3,29 +3,61 @@ using Godot;
 namespace CatacombsOfYarl.Presentation.Map;
 
 /// <summary>
-/// Top-down 2D coordinate renderer using Oryx 16bf world tiles (24x24px).
+/// Top-down 2D coordinate renderer. Grid coordinates map directly to screen pixels:
+/// GridToScreen(x, y) = (x*TileWidth, y*TileHeight). Z-order is row-major.
 ///
-/// Tile size is 24x24 (16bf world tile native size). Grid coordinates map directly
-/// to screen pixels: GridToScreen(x, y) = (x*24, y*24). Z-order is row-major.
+/// TILE SIZE IS A PARAMETER, NOT A CONSTANT. ART-BIBLE-v0 §4.3 marks canvas and tile sizes
+/// PLACEHOLDER — "native canvas per layer, and the integer scale factor to logical pixels, are
+/// derived at Phase 5 against the reference device". A hard-coded 24 asserted a derived value
+/// that does not exist yet, and tools/tier0_harness/README.md already carried it as a known
+/// limit: the harness could declare tile.size in config and the renderer would draw on a 24px
+/// grid regardless, so a capture could disagree with its own manifest without saying so.
 ///
-/// At DefaultZoom 3.0 on a 720px-wide viewport, approximately 10 tiles are visible
-/// horizontally — matching Shattered Pixel Dungeon's density target.
+/// The defaults reproduce the previous hard-coded behaviour EXACTLY — 24px tiles, zoom
+/// 3.0/1.5/6.0 — so every existing call site is unchanged by construction. 24 was never a
+/// derived value either; it is the Oryx 16bf world tile size inherited from the closed track.
 ///
-/// Zoom range (1.5–6.0) prevents the 24px tiles from becoming unreadably small
-/// at min zoom while allowing close pixel-art inspection at max zoom.
+/// Zoom scales with the tile so the on-screen tile pitch is what the caller declared:
+/// MinZoom = scale/2 and MaxZoom = scale*2, which yields exactly 1.5 and 6.0 at the default
+/// scale of 3.0. At 24px x3 that is 72 on-screen px per tile; at 32px x2 it is 64, or ~11.7
+/// tiles across the reference device's 750px width.
 /// </summary>
 public sealed class TopDownRenderer : IMapRenderer
 {
-    public int TileWidth  => 24;
-    public int TileHeight => 24;
+    /// <summary>The previous hard-coded tile size. NOT a derived value (§4.3 is PLACEHOLDER) —
+    /// it is the Oryx 16bf world tile size inherited from the closed track.</summary>
+    public const int DefaultTileSize = 24;
 
-    // Calibrated for 24x24 (16bf world) tiles on a 720x1280 mobile viewport.
-    // DefaultZoom 3.0 gives ~10 tiles wide x ~14 tall — same density as Shattered PD.
-    // MinZoom 1.5 keeps individual tiles recognizable when zoomed out.
-    // MaxZoom 6.0 lets players inspect pixel art detail.
-    public float DefaultZoom => 3.0f;
-    public float MinZoom     => 1.5f;
-    public float MaxZoom     => 6.0f;
+    /// <summary>The previous hard-coded DefaultZoom. Calibrated for 24px tiles on a 720x1280
+    /// viewport: ~10 tiles wide x ~14 tall, the Shattered Pixel Dungeon density target.</summary>
+    public const float DefaultScale = 3.0f;
+
+    private readonly int _tileSize;
+    private readonly float _scale;
+
+    /// <param name="tileSize">Native tile size in pixels. Defaults to the previous constant.</param>
+    /// <param name="scale">Integer scale to logical pixels; becomes DefaultZoom.</param>
+    public TopDownRenderer(int tileSize = DefaultTileSize, float scale = DefaultScale)
+    {
+        if (tileSize <= 0)
+            throw new System.ArgumentOutOfRangeException(nameof(tileSize), tileSize,
+                "Tile size must be positive.");
+        if (scale <= 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(scale), scale,
+                "Scale must be positive.");
+        _tileSize = tileSize;
+        _scale = scale;
+    }
+
+    public int TileWidth  => _tileSize;
+    public int TileHeight => _tileSize;
+
+    // Zoom tracks the tile so on-screen pitch is the caller's declared scale, and the readable
+    // range around it is preserved rather than re-tuned per tile size. At the defaults these
+    // evaluate to exactly the previous 3.0 / 1.5 / 6.0.
+    public float DefaultZoom => _scale;
+    public float MinZoom     => _scale * 0.5f;
+    public float MaxZoom     => _scale * 2.0f;
 
     /// <summary>Screen position of tile top-left corner. Simple grid multiplication.</summary>
     public Vector2 GridToScreen(int gridX, int gridY)

@@ -219,7 +219,7 @@ public partial class Main : Node
             GD.PrintErr("[Main] TileThemeConfig loaded with no themes — dungeon tiles will not render. Check config/tile_themes.yaml.");
         _renderer = CreateRenderer(ReadMapMode());
         _currentZoom = _renderer.DefaultZoom;
-        GD.Print($"[Main] Map renderer: {_renderer.GetType().Name} (zoom default={_renderer.DefaultZoom}, min={_renderer.MinZoom}, max={_renderer.MaxZoom})");
+        GD.Print($"[Main] Map renderer: {_renderer.GetType().Name} (tile={_renderer.TileWidth}x{_renderer.TileHeight}, zoom default={_renderer.DefaultZoom}, min={_renderer.MinZoom}, max={_renderer.MaxZoom})");
         InitFactories();
 
         // --art-scene: dev/debug launch flag (same convention as --tileset/--map-mode) that
@@ -545,18 +545,65 @@ public partial class Main : Node
     /// </summary>
     private static IMapRenderer CreateRenderer(string mode)
     {
+        var (tileSize, scale) = ReadTileParams();
         return mode.ToLowerInvariant() switch
         {
             "iso" => new IsometricRenderer(),
-            "topdown" => new TopDownRenderer(),
+            "topdown" => new TopDownRenderer(tileSize, scale),
             _ => FallbackRenderer(mode),
         };
 
-        static IMapRenderer FallbackRenderer(string value)
+        IMapRenderer FallbackRenderer(string value)
         {
             GD.PrintErr($"[Main] map_mode '{value}' is unknown — falling back to topdown.");
-            return new TopDownRenderer();
+            return new TopDownRenderer(tileSize, scale);
         }
+    }
+
+    /// <summary>
+    /// Tile size and integer scale for the top-down renderer, from --tile-size / --tile-scale.
+    ///
+    /// Unlike the light rig, these DO fall back to the renderer's own defaults when absent, and
+    /// the difference is deliberate. The light values have no defensible default at all
+    /// (ART-BIBLE-v0 §6.2 marks them PLACEHOLDER), so <see cref="ReadLightParams"/> refuses to
+    /// invent one and throws. Tile size has an incumbent: the value the shipped game has always
+    /// drawn at. Refusing to default it would make every ordinary launch require a flag, which
+    /// is a far larger change than this one and not what the harness needs.
+    ///
+    /// The value IS reported at startup either way, so no capture can circulate without naming
+    /// the grid it was drawn on — which is the actual failure this closes.
+    /// </summary>
+    private static (int tileSize, float scale) ReadTileParams()
+    {
+        int tileSize = TopDownRenderer.DefaultTileSize;
+        float scale = TopDownRenderer.DefaultScale;
+
+        var rawSize = ReadStringArg("--tile-size");
+        if (!string.IsNullOrEmpty(rawSize))
+        {
+            if (int.TryParse(rawSize, System.Globalization.NumberStyles.Integer,
+                             System.Globalization.CultureInfo.InvariantCulture, out int parsedSize)
+                && parsedSize > 0)
+                tileSize = parsedSize;
+            else
+                GD.PrintErr($"[Main] --tile-size '{rawSize}' is not a positive integer — "
+                            + $"using {tileSize}.");
+        }
+
+        var rawScale = ReadStringArg("--tile-scale");
+        if (!string.IsNullOrEmpty(rawScale))
+        {
+            if (float.TryParse(rawScale, System.Globalization.NumberStyles.Float,
+                               System.Globalization.CultureInfo.InvariantCulture,
+                               out float parsedScale)
+                && parsedScale > 0f)
+                scale = parsedScale;
+            else
+                GD.PrintErr($"[Main] --tile-scale '{rawScale}' is not a positive number — "
+                            + $"using {scale}.");
+        }
+
+        return (tileSize, scale);
     }
 
     /// <summary>

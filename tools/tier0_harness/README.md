@@ -44,7 +44,8 @@ tools/tier0_harness/build_review_app.sh
 |---|---|
 | `harness_config.yaml` | Resolution, tile size, light rig. Every value labelled **RULED** or **UNDERIVED**. |
 | `capture_corridor.py` | Invokes the engine, captures, prints the evidence trail. |
-| `run_controls.py` | The four positive controls. |
+| `run_controls.py` | The five positive controls. |
+| `control_tile_size.py` | The sixth: proves `--tile-size` moves the rendered grid, not just the log. |
 | `capture_probe_arms.py` | §6.4 arms A/B/C under one identical rig + side-by-side sheet. |
 | `make_stub_tiles.py` | Obviously-fake programmer-art fixtures. Not art, not a palette. |
 | `build_review_app.sh` | Bakes the review marker, builds, installs under its own bundle id. |
@@ -60,12 +61,23 @@ The engine **refuses to default any light value** (`Main.ReadLightParams` throws
 can be produced by an undeclared rig, and every capture logs the rig that made it.
 
 **Tile size is a parameter, never a constant** (§4.3 marks canvas sizes PLACEHOLDER). It is
-declared in config and passed through. *Known limit:* `TopDownRenderer.TileWidth` is still a
-hard-coded `24`, so changing the parameter today produces tiles the renderer still draws on a
-24px grid. Making that a genuine engine parameter is separate work.
+declared in config, passed through as `--tile-size` / `--tile-scale`, and echoed by the engine
+into every capture log — so a capture cannot circulate without naming the grid it was drawn on.
+
+*The known limit recorded here is closed.* `TopDownRenderer.TileWidth` was a hard-coded `24`,
+so this config could declare any number and the renderer would draw a 24px grid regardless: the
+manifest and the pixels could disagree in silence. It is now a constructor parameter whose
+defaults reproduce the previous 24px / 3.0 / 1.5 / 6.0 behaviour exactly.
+
+The harness runs at **32px at ×2** — RULED (Rafe, 2026-08-25), and a ruling rather than a
+derived value; §4.3's derivation has not happened.
 
 **No instrument's pass counts until it has demonstrated it can fail** (§13.5, LOOP-PROCESS §4).
 `run_controls.py` plants a real defect for each control and asserts the harness notices.
+`control_tile_size.py` covers the tile-size parameter itself: the engine echoing `tile=32x32`
+proves the flag was *parsed*, not that it reached the renderer's geometry, so the control
+captures the same scene at 24 and at 32 and requires that the pixels differ. A parameter that
+changed only the log would be decorative, and would have to be labelled so or deleted.
 
 **Candidates are injected by config, never by overwriting files.** Pointing
 `--tile-theme-config` at a different `tile_root` is the whole seam. The retired Oryx review path
