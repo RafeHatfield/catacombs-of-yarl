@@ -1,0 +1,71 @@
+CANDIDATE: r06_00
+CULL: none
+VERDICT: FAIL
+WHY: The top band's divisions (cols 4, 10, 18, 28) share no column with the course beneath it (cols 1, 14, 21, 30), so the light stripe is not the top of those stones but a separate pattern laid above them; a 2px sliver brick straddles cols 31–0 on rows 6–10 and repeats down every vertical seam, the rod at col 17 terminates in mid-air at both ends, and a single chartreuse pixel at (24,21) is the only saturated colour in the entire set.
+
+CANDIDATE: r06_01
+CULL: none
+VERDICT: FAIL
+WHY: The only incident in the whole tile is two identical pale 3×3 bosses carrying a black shadow along their left and bottom edges — a baked upper-right light direction in a tile where every other element is flat — and the top band's five divisions (2, 9, 15, 21, 27) miss all three joints below (3, 16, 25), so there is no thickness, only a stripe.
+
+CANDIDATE: r06_02
+CULL: none
+VERDICT: FAIL
+WHY: Perfect rectangles in perfect courses with an unbroken 1px joint and not one stone chipped, spalled, displaced or replaced — no rope, no pin, no hide, no timber, nothing holds it together — and the top divisions (5, 11, 21, 27) align with none of the joints below (1, 12, 23).
+
+CANDIDATE: r06_03
+CULL: none
+VERDICT: FAIL
+WHY: Stripped down to two top divisions and three joints per course, this is unmarked machine-laid brick with two shadowed bosses stuck on it; four hundred years of a garrison repairing it have left no trace whatsoever.
+
+CANDIDATE: r06_04
+CULL: none
+VERDICT: FAIL
+WHY: The top band is a featureless flat fill whose divisions (0, 8, 15, 22, 28) miss every joint below (5, 18, 25), and the black L along the left and bottom of each pale boss is the only modelling anywhere in the tile — a light bake, and an inconsistent one.
+
+CANDIDATE: r06_05
+CULL: none
+VERDICT: FAIL
+WHY: Rows 17–22 are the darkest value in the tile and hold only two shadowed bosses and two 1px ticks, so the band reads as an open slot rather than wall material, and nothing in the tile can be named as a thing that fastens it.
+
+CANDIDATE: r06_06
+CULL: none
+VERDICT: FAIL
+WHY: The one candidate with per-brick mottle applies the same dither density to every brick, so no stone reads as more used than its neighbour; the top divisions (3, 9, 15, 21, 27) match none of the joints below (11, 20, 29), and the bosses keep the same baked left-and-bottom shadow as the rest of the set.
+
+CANDIDATE: r06_07
+CULL: none
+VERDICT: FAIL
+WHY: A 2px stub brick at cols 0–1, rows 12–15 sits on the wrap and prints a repeating sliver column down every vertical seam, and the top band's divisions (3, 11, 17, 27) correspond to neither joint below (13, 26).
+
+CANDIDATE: r06_08
+CULL: none
+VERDICT: FAIL
+WHY: A 2px brick straddling cols 31–0 on rows 12–15 makes a stub column at every seam, and the remainder is the identical flat template — two shadowed bosses in a black band between four courses of undamaged rectangles.
+
+CANDIDATE: r06_09
+CULL: none
+VERDICT: FAIL
+WHY: The tidiest tiling in the set and still nothing has happened to it — every stone is an intact rectangle, every joint is exactly 1px and unbroken, and the top band's divisions (5, 13, 19, 25) share only col 31 with the course below.
+
+CANDIDATE: r06_plant
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: A saturated teal-and-pink crystal floating on a flat grey field, drawn three-quarter, key-lit from upper left and cast-shadowed to the lower right — four separate culls in one image.
+
+FLIP LIST
+- Carry the front-face joints up through the top band: every division in rows 0–3 must sit at the same column as the joint in rows 5–15 directly beneath it (e.g. in r06_09 move the top divisions from 5, 13, 19, 25 to 4, 15, 22). At present zero to one column matches in every tile, which is why the band reads as paint rather than thickness.
+- Cut a 1px lip at row 4 one value darker than the top band and one value lighter than the face, so the top overhangs the front instead of butting a flat black line against it.
+- Delete the black L along the left and bottom of every pale 3×3 boss. If the boss is proud, rim it on all four sides with one darker value; if it is sunk, rim it on all four sides with one lighter value. Directional darkening on two sides only is a light bake and it is the sole shading in an otherwise flat tile.
+- Replace the pale 3×3 squares with a fixing that can be named. A driven pin: a struck head 3px wide, a 2px shank descending into the joint below it, and one mushroomed pixel where it was hammered over. A lashing: two rope turns crossing a stone with a visible tail hanging past the course.
+- Give rows 17–22 the same stone module as the courses above and below, then step the whole course one value darker. Right now it is the darkest value on the tile and reads as a gap in the wall, not as wall.
+- Break three stones per tile: remove a 2×2 corner from one brick and fill it with the joint value; spall a 4×3 irregular patch one value darker into the face of another; drop a third stone 1px out of course so the joint above it kinks around it.
+- Vary the joint width. Widen the mortar to 2px where a stone has settled, close it to 0px where two stones butt, and let it fail entirely across one 6px run so the two stones touch. The uniform unbroken 1px black line is what makes the set read as graph paper.
+- Move the two bosses off a shared row and change one of them to 4×3 or 2×2. Two identical features at identical coordinates in ten tiles lay down a visible lattice of dots the moment the tile repeats.
+- Widen the wrapped stones at the seam to at least 5px in r06_00 (rows 6–10), r06_07 (rows 12–15) and r06_08 (rows 12–15); each currently leaves a 2px stub column running the full height of the map.
+- Delete the chartreuse pixel at (24,21) and the olive pixel at (24,22) in r06_00. Nothing else in the set exceeds 11 saturation; a lone 54-saturation pixel repeats as a glowing dot on a grid.
+- Terminate r06_00's vertical rod at both ends: a bracket plate at the top with two visible pin heads, and a foot seated into a joint at the bottom. A bar that stops in open air is not hardware.
+- r06_plant needs redrawing from scratch as straight-on wall surface with no background field, no cast shadow and no painted light direction — nothing in it is salvageable as a wall tile.
+
+---
+Model: Claude Opus 5 (1M context)

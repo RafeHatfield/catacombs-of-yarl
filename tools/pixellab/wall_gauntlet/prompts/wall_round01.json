@@ -1,0 +1,51 @@
+{
+  "round": 1,
+  "framing": "architectural section — the middle ground between the two measured failures",
+  "conditioned": false,
+
+  "hypothesis": "Both prior framings failed, in opposite directions, and each failure names what to avoid. OBJECT framing ('a single square dungeon wall tile showing exactly two planes ... squared beams lashed twice') produced wall-shaped THINGS — chests, doors, sarcophagi — 59 of 60. SURFACE framing ('a seamless tileable wall texture ... the pattern continues past all four edges') produced undifferentiated NOISE, 20 of 20: correctly framed, architecturally empty. Round 1 takes the middle: name it as a SECTION OF A BUILT WALL seen straight on — a thing with courses and members, not a thing with edges and not a texture swatch — and describe the structure as structure. 'Seamless' and 'tileable' are deliberately absent: they are the two words most implicated in the noise result.",
+
+  "description": "A section of a dungeon wall seen straight on from the front, filling the frame. Big rough grey stone blocks laid in level courses with deep dark mortar joints between them. A heavy squared timber beam runs horizontally across the wall, bolted flat against the stone with driven iron pins at each end and bound with a turn of rope. Below it a salvaged plank has been pinned across an older repair. The stone is rubbed pale and smooth where shoulders have passed along it, and grimed dark in the joints. Along the very top edge of the wall runs a narrow band of its upper surface, seen from slightly above, so the wall reads as thick. Heavy, over-built and plain: every band and pin is holding something, and nothing on it is decorative.",
+
+  "negative_description": "single object, isolated object, item, icon, prop, sprite on a background, empty background, plain background, floating, border, frame, vignette, drop shadow, cast shadow, chest, box, crate, barrel, door, doorway, gate, coffin, sarcophagus, furniture, candle, torch, lantern, bone, skull, banner, shield, treasure, isometric, three quarter view, tilted, diamond, seamless texture, noise, static, speckle, cobwebs, blood, rubble, collapse, ruins, moss, vines, plants, text, watermark, character, creature",
+
+  "parameters": {
+    "image_size": {"width": 32, "height": 32},
+    "outline": "lineless",
+    "detail": "low detail",
+    "view": "side",
+    "no_background": false
+  },
+
+  "phrase_provenance": [
+    {"phrase": "A section of a dungeon wall seen straight on from the front, filling the frame",
+     "clause": "THE CHANGE UNDER TEST in round 1. 'Section' is a part-of-a-larger-thing noun, which is what a tile is; 'tile' reads as an object and 'texture' reads as a swatch. Both of those are measured failures, not guesses."},
+    {"phrase": "Big rough grey stone blocks laid in level courses with deep dark mortar joints",
+     "clause": "§7.4 seam 1 (found stone) + the direct answer to the noise result: the micro-probe never named a unit of masonry, so it drew none. 'Big' and 'courses' are also the register's chunk lever in words — the register ruling names refinement as the failure mode, and AUDIT 9.2 measured chunkiness rising as the unit gets bigger."},
+    {"phrase": "a heavy squared timber beam ... driven iron pins at each end and bound with a turn of rope",
+     "clause": "§7.3 LOCKED (Boundary): 'lashed twice, over-built, rope, driven pin, hide, timber, salvage'. Named as ONE beam with TWO fixings rather than as a list of materials — a 32px tile cannot hold a list, and the micro-probe's list produced nothing at all."},
+    {"phrase": "a salvaged plank has been pinned across an older repair",
+     "clause": "§7.3: 'repaired on top of prior repairs, because four hundred years of holding a line means everything has been fixed a dozen times'."},
+    {"phrase": "rubbed pale and smooth where shoulders have passed ... grimed dark in the joints",
+     "clause": "§8.1: traffic without care produces polish; 'stone smoothed to a shine at hand height'; 'grime walked into a surface until it is part of it'."},
+    {"phrase": "Along the very top edge ... a narrow band of its upper surface, seen from slightly above, so the wall reads as thick",
+     "clause": "§3 LOCKED: 'objects and walls present exactly two visible planes: a front face and a top surface'. Stated as a band along one edge rather than as 'two planes', which is draughtsman's language the generator did not act on in Stage 1."},
+    {"phrase": "every band and pin is holding something, and nothing on it is decorative",
+     "clause": "§7.3 RULED (Rafe, 2026-08-24): 'competent but tough. No interest in aesthetics — strength only.'"},
+    {"phrase": "negative: seamless texture, noise, static, speckle",
+     "clause": "Names the round-0 failure directly. ⚠ The negative field was measured NOT additive but only weakly honoured (n=4), so this is a hedge, not a mechanism."},
+    {"phrase": "negative: chest, box, crate, door, coffin, sarcophagus",
+     "clause": "The specific objects Stage 1's wall batch actually returned, enumerated from the morgue rather than guessed."},
+    {"phrase": "negative: drop shadow, cast shadow",
+     "clause": "§6.3 — the asset never grounds itself. Now RATIFIED, so this is law rather than a provisional direction."}
+  ],
+
+  "parameter_provenance": {
+    "image_size": {"value": "32x32", "clause": "RULED (Rafe). Frozen for this track; not touched here."},
+    "outline": {"value": "lineless", "clause": "§12.1 LOCKED — no baked outline anywhere. Also a critic mechanical cull, so an outlined candidate dies at step 1."},
+    "detail": {"value": "low detail", "clause": "§4.1/§12 — less interior detail, stronger silhouettes; the register's named failure mode is refinement."},
+    "view": {"value": "side", "clause": "⚠ CHANGED from the micro-probe's 'high top-down', and this is a deliberate lever, not an oversight. A WALL FACE is seen from the side; 'high top-down' asks the model to look down at a wall from above, which is a fair description of the flat speckle it returned. The enum's other values are 'top-down' and 'low top-down', neither of which describes a vertical surface. §3's two-plane rule is carried in the description instead, where the top band is named explicitly."},
+    "no_background": {"value": false, "clause": "Mechanical: a wall tile is opaque and full-bleed."},
+    "seed": {"value": "per-round base + index", "clause": "Recorded, never relied on — the surface is not seed-reproducible."}
+  }
+}

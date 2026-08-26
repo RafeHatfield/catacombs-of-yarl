@@ -1,0 +1,43 @@
+{
+  "round": 3,
+  "framing": "pixel-explicit: the critic's flip list is arithmetic now, so the prompt is too",
+  "conditioned": false,
+
+  "hypothesis": "Two things are now measured rather than suspected. FIRST: the repair has not appeared in 20 generations across two rounds, though it was named as material (r1) and then as physical effect on the stone (r2). A third phrasing is worth one more round, and if it fails again that is a finding about the generator, not about the wording. SECOND, and this is the round's real lever: the critic's r2 note that 'a wall tile has no centre — no element should be complete within one tile.' Every round so far has described a wall as a picture, and a picture has a middle. This round describes it as a fragment of something larger, and makes the timber baulk RUN OFF BOTH SIDE EDGES — which satisfies the no-complete-element rule and forces the repair into the frame at the same time. The critic's numbers (3-4px band, joints at a third of face value, a 1px arris) are transcribed as numbers rather than paraphrased as adjectives.",
+
+  "description": "A fragment of a long dungeon wall, seen straight on from the front, filling the frame with no centre and no edges of its own — every course and every member runs off the sides of the frame and continues beyond it. Cold blue-grey quarried stone in level courses. The blocks are different lengths, some short and some long, and one course sits a pixel lower than the rest. Two or three stones have a corner knocked off. The mortar joints are much darker than the stone faces, about a third of their brightness, and each stone carries a single lighter pixel line along its upper edge so the courses separate at a glance. Running horizontally straight off both the left and right edges of the frame is a squared timber baulk, thick enough to have two visible faces: a flat front and a darker under-edge where it stands off the wall. It is held by two driven iron pins with visible flat heads, and the stone around each pin is bruised dark where it was hammered home. Along the top edge, a band three or four pixels deep of the wall's upper surface, one flat value clearly lighter than the front face, meeting the front on a single hard line. Nothing is green and nothing is warm. Heavy, over-built and plain.",
+
+  "negative_description": "single object, isolated object, item, icon, prop, sprite on a background, empty background, floating, centred object, centred motif, symmetrical, border, frame, framed panel, edge border, vignette, drop shadow, cast shadow, banner, continuous stripe, niche, alcove, recess, arch, window, chest, box, crate, barrel, door, doorway, gate, coffin, sarcophagus, furniture, candle, torch, lantern, bone, skull, shield, treasure, isometric, three quarter view, tilted, diamond, seamless texture, noise, static, speckle, green, moss, mint, teal, turquoise, orange, brown, warm, glowing, emissive, cobwebs, blood, rubble, collapse, ruins, vines, plants, text, watermark, character, creature",
+
+  "parameters": {
+    "image_size": {"width": 32, "height": 32},
+    "outline": "lineless",
+    "detail": "low detail",
+    "view": "side",
+    "no_background": false
+  },
+
+  "flip_list_applied": [
+    {"item": "Nothing in this set carries a single repair. Put the orc work in: a baulk with thickness — a lit-side face and a darker end-grain edge — not a stripe, with a driven pin at each end and a dark bruise in the stone where it was hammered home.",
+     "change": "'thick enough to have two visible faces: a flat front and a darker under-edge where it stands off the wall ... two driven iron pins with visible flat heads, and the stone around each pin is bruised dark where it was hammered home'. THIRD phrasing of this instruction; if it fails again the finding is about the generator."},
+    {"item": "No candidate answers W3. Give each tile a top surface: a narrow 3-4 pixel band along the top edge, one flat value distinct from the front face, terminated by a single hard pixel line.",
+     "change": "Transcribed as arithmetic, not paraphrased: 'a band three or four pixels deep ... one flat value clearly lighter than the front face, meeting the front on a single hard line'."},
+    {"item": "Fix the wrap — column 31 must continue into column 0; the pale band must split across rows 30-31 and 0-1 so stacking reassembles one course.",
+     "change": "Generalised into the framing itself: 'no centre and no edges of its own — every course and every member runs off the sides of the frame and continues beyond it.' A generator cannot be asked for a specific pixel column, but it can be asked for a fragment."},
+    {"item": "Break the period. Vary block length by 2-5 pixels, drop one course by a pixel, knock a corner off two or three stones.",
+     "change": "'The blocks are different lengths, some short and some long, and one course sits a pixel lower than the rest. Two or three stones have a corner knocked off.'"},
+    {"item": "Raise contrast. Push joints to roughly a third of face value and add a one-pixel lighter arris on the upper edge of each stone.",
+     "change": "'about a third of their brightness, and each stone carries a single lighter pixel line along its upper edge'."},
+    {"item": "Delete the saturated green and the warm browns. Nothing in the Paths is green or fresh.",
+     "change": "'Nothing is green and nothing is warm.' Negatives gain green, brown, warm."},
+    {"item": "Remove the centred features. A wall tile has no centre — redistribute so no element is complete within one tile.",
+     "change": "THE ROUND'S PRIMARY LEVER. Promoted into the opening clause and enforced on the baulk, which now 'runs horizontally straight off both the left and right edges of the frame'. Negatives gain centred object, centred motif, symmetrical."},
+    {"item": "Run the bright vertical post to both top and bottom edges as a full-height stud, or replace it with a rope lashing.",
+     "change": "NOT APPLIED. It is one of two alternatives offered for a single r2 candidate, and adding a vertical stud on top of a horizontal baulk would put two structural members in a 32px tile — which the same critic's period and no-centre notes argue against. Recorded as a deliberate non-application rather than an oversight."}
+  ],
+
+  "parameter_provenance": {
+    "note": "Parameters UNCHANGED for the third round running. Every change so far has been content, so the content is what any difference is attributable to. Round 4 will hold this prompt fixed and move ONE parameter-side lever — conditioning — for the same reason.",
+    "seed": {"value": "30300 + index", "clause": "Recorded, never relied on."}
+  }
+}

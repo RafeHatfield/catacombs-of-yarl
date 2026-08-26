@@ -1,0 +1,66 @@
+CANDIDATE: r01_00
+CULL: noise
+VERDICT: FAIL
+WHY: Undifferentiated two-tone dither across the entire field with a green speckle strip at the bottom — no course, no joint, no edge, nothing a wall is made of.
+
+CANDIDATE: r01_01
+CULL: none
+VERDICT: FAIL
+WHY: Perfectly ruled 1px mortar lines at fixed intervals with a pale cream strip on the bottom row that tiles into an unbroken banner across the whole map every 32 pixels; no top surface, no thickness, no repair anywhere.
+
+CANDIDATE: r01_02
+CULL: none
+VERDICT: FAIL
+WHY: A flat green-grey field partitioned by uniform 1px dark lines — reads as a printed maze or circuit trace, not stone, with zero thickness and no top band at all.
+
+CANDIDATE: r01_03
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: A hard-outlined black niche with two panels sits centred on a masonry background and tiles into a polka-dot grid of identical windows.
+
+CANDIDATE: r01_04
+CULL: noise
+VERDICT: FAIL
+WHY: Five rows of blockwork sit on top of two-thirds of a tile that is checkerboard dither and scattered black pixels with no structure under it.
+
+CANDIDATE: r01_05
+CULL: noise
+VERDICT: FAIL
+WHY: Wall-to-wall pale-green static with a solid stripe at the base — no discernible element of any kind.
+
+CANDIDATE: r01_06
+CULL: none
+VERDICT: FAIL
+WHY: Flat horizontal banding with saturated mint lines that read as painted glow and a lone orange blob that tiles into a regular polka-dot; this is shelving or ductwork seen flat-on, not a wall face with a top.
+
+CANDIDATE: r01_07
+CULL: noise
+VERDICT: FAIL
+WHY: The upper two-thirds is structureless dark mottle and the lower third is a flat saturated green slab, giving a baked top-dark/bottom-light value ramp across the tile.
+
+CANDIDATE: r01_08
+CULL: outline
+VERDICT: FAIL
+WHY: A dark 1px border runs down both inset edges and along top and bottom, so it tiles into a visible grid of framed panels rather than continuous surface.
+
+CANDIDATE: r01_09
+CULL: none
+VERDICT: FAIL
+WHY: Single-value flat blocks separated by 1px pen lines, with a wide empty band at the base carrying a repeating row of little arch glyphs that reads as a decorative frieze.
+
+FLIP LIST
+- The pale bottom strip in r01_01, r01_05, r01_07 and r01_09 tiles into a continuous horizontal banner every 32px. Delete it, and instead put the top-surface band along the TOP edge, 4–6px deep, in the same stone family as the face but a distinct value step, with the join between top and face broken irregularly rather than ruled straight — so vertical tiling reads as one wall with one cap, not as striped courses.
+- The mortar joints in r01_01, r01_02 and r01_09 are uniform 1px dark lines. Vary them: 1px where beds are tight, 2–3px where the bed has crumbled out, and let three or four joints be filled with a lighter packing material. Break at least two joints so a block's edge is chipped back and the joint runs into the block face.
+- The blocks in r01_02 and r01_09 are flat single-colour fills. Give each block interior a two- to three-value break with the darker values pooled at the lower edge of the block where dust collects — not a bevel, not a highlight, just uneven stone that reads as quarried rather than filled.
+- r01_00, r01_04, r01_05 and r01_07 have no load path. Draw the actual structure first: coursed blocks or a stacked rubble face with visible course lines, then dither only inside the block faces at a maximum of two adjacent palette values, never as the whole tile.
+- Nothing in the set shows a repair. Add the orc work: a salvaged timber baulk laid horizontally across two or three courses with visible thickness (a 2px darker edge along its underside where it stands proud of the stone, not a painted stripe), and a driven iron pin with a visible head at each end, each pin sitting in a hole that has spalled the stone around it.
+- r01_03: remove the black-outlined niche entirely. If a recess is wanted, it must be authored as a separate tile, not as the repeating surface.
+- r01_08: delete the dark border columns at x=1 and x=30 and the bright row at y=31, and let the block courses run off all four edges mid-block so neighbouring copies interlock instead of butting into a frame.
+- r01_06: drop the mint (124,185,168 / 149,201,176) and the orange blob — they sit outside the cold palette and read as emissive. If a wet or salt-crusted line is wanted, keep it within two steps of the surrounding stone hue and break it so it does not run edge to edge.
+- Every survivor must be checked as a 3x3 tile before submission: any element that produces a continuous line or a regularly-spaced motif at the 32px pitch is disqualifying.
+
+Every candidate in this round fails. Four are structureless dither, two carry repeating strips that banner across the map, one is a framed panel, one is a discrete niche object, and the two nearest to masonry are flat line-drawings with no thickness and no evidence anyone has ever worked on them. Nothing here shows the rope, pins, timber or driven salvage the fiction requires — the set is generic pixel brick and static, and none of it should ship.
+
+The next round is worth judging only if the top-surface band moves to the top edge and at least one repair element is drawn with real thickness; without those two changes the same verdicts will recur.
+
+*Model used: Claude Opus 5 (1M context)*

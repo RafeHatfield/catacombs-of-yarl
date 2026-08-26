@@ -1,0 +1,62 @@
+CANDIDATE: r05_00
+CULL: none
+VERDICT: FAIL
+WHY: Correctly coursed masonry with a real cap band, but nothing has ever happened to it — no wear, no repair, no fixings, and the pale patches inside blocks are unmotivated value noise rather than damage or material.
+
+CANDIDATE: r05_01
+CULL: none
+VERDICT: FAIL
+WHY: The blocks are featureless flat rectangles and the cap is a single untextured near-white stripe, so it reads as a painted brick pattern with a highlight bar rather than a stone surface that has been stood next to for four hundred years.
+
+CANDIDATE: r05_02
+CULL: none
+VERDICT: FAIL
+WHY: The bottom half collapses into an undifferentiated dark field with scattered dashes — the bond stops, the courses become horizontal stripes, and there is nothing holding the lower wall together.
+
+CANDIDATE: r05_03
+CULL: none
+VERDICT: FAIL
+WHY: Alternating near-black and pale courses read as tonal banding, not stone, and the one oversized bright block with its stepped notch becomes a conspicuous repeating motif across the map.
+
+CANDIDATE: r05_04
+CULL: none
+VERDICT: FAIL
+WHY: Four colours, no cap — the top band is the same grey as the front face, so the wall has no thickness — and one full course is rendered as a flat dark stripe that reads as a shadow band.
+
+CANDIDATE: r05_05
+CULL: none
+VERDICT: FAIL
+WHY: No top surface at all — the top rows are darker than the body — so it is a flat brick pattern, and the stubbed vertical joints repeat into a visible "TT" motif when tiled.
+
+CANDIDATE: r05_06
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: A framed six-pane grate floating in a flat grey field with a sill line under it — a prop on a background, not wall surface.
+
+CANDIDATE: r05_07
+CULL: none
+VERDICT: FAIL
+WHY: Full-height dark verticals on a rigid unoffset grid make it read as lattice or graph paper, there is no cap band, and the pale flecks are scattered arbitrarily rather than sitting on any structure.
+
+CANDIDATE: r05_08
+CULL: noise
+VERDICT: FAIL
+WHY: Broken dark ticks at every scale with no surviving coursing — tiled, it is undifferentiated static with a visible vertical seam at the wrap.
+
+CANDIDATE: r05_09
+CULL: none
+VERDICT: FAIL
+WHY: Every block is the identical flat value with no cap and no surface incident, and the stray mauve pixels at the joints are confetti with no material explanation.
+
+FLIP LIST
+- Give every candidate a top band that is a distinct *surface*, not a value: 3–5 rows of the same stone with its own coursing running perpendicular to the face, terminated by a hard dark row at the front edge. r05_04, r05_05, r05_07, r05_09 currently have no thickness at all.
+- Put orc repair into the face on at least one tile: a salvaged timber baulk spanning two courses, with a driven iron pin visible at each end and the timber's end-grain cut square where it was sawn short — not a stripe of a different grey.
+- Where a block is lighter than its neighbours (r05_00, r05_03), make the lightness mean something: a spalled face with the pale unweathered core exposed and a chipped edge, not a rectangle of brighter fill inside an intact block.
+- Replace r05_02's lower field with actual coursing — three offset courses with the same joint width as its upper half — or make the dark field a legible material (packed rubble backing) with its own visible aggregate.
+- Break r05_03's course-to-course tonal alternation: bring the dark course to within about 25 luminance of the pale course so the tile stops reading as horizontal bands, and vary the pale block's silhouette so it doesn't stamp the same motif every 32px.
+- Cut r05_08's dark ticks by roughly two thirds and restrict the survivors to joint lines, so the coursing survives at 32px instead of dissolving into static; fix the right-edge column so it matches the left edge and the vertical seam disappears.
+- Rebuild r05_07 as running bond with courses offset by half a block and no vertical joint crossing more than one course, so the orthogonal grid stops reading as lattice.
+- Give r05_09's joints a reason to be dark — recessed mortar with a one-pixel step at the block edge — and delete the mauve pixels or replace them with a rope lashing that visibly wraps a block and continues off the tile edge so it tiles into a continuous run.
+
+---
+Model: Claude Opus 5 (1M context)

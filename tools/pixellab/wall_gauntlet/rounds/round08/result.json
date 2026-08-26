@@ -1,0 +1,84 @@
+{
+ "round": 8,
+ "generated": 10,
+ "n_requested": 10,
+ "conditioned": null,
+ "seed_base": 30800,
+ "plant": "r08_plant",
+ "plant_src": "C/wall/C_wall_11.png",
+ "plant_caught": true,
+ "round_void": false,
+ "verdicts": {
+  "r08_00": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The four dark round-cornered voids repeat as an identical row of blobs every 32px and nothing visible fastens the wall \u2014 no pin, rope or timber, only mortar lines and a soft diagonal smear bottom-left that has no cause."
+  },
+  "r08_01": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The vertical dark ticks in the mid band are 1px painted stripes with no thickness and no fixing at either end, and the left third of that band is undesigned flat grey."
+  },
+  "r08_02": {
+   "cull": "key-light",
+   "verdict": "FAIL",
+   "why": "Every course carries a light stripe along its top edge and a dark line along its bottom \u2014 a baked overhead light repeated three times inside one tile, which no top surface could explain."
+  },
+  "r08_03": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The lower ten rows are a featureless grey field with two stray light dashes, and the 2px nubs on the block edges are specks rather than readable fixings."
+  },
+  "r08_04": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The staves in the upper band are alternating flat light/dark stripes with no ends, no thickness and no fixing, and the flat rectangle at their right is an unresolved blank patch."
+  },
+  "r08_05": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The dark H-shaped glyph in the upper-right cell is a distinctive stamp that repeats on a visible grid when tiled, and the lighter fills inside the frames are amorphous smudges rather than material."
+  },
+  "r08_06": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Four large undifferentiated panels separated by mortar lines, with scattered light rectangles at the bottom that describe no object \u2014 nothing holds it together and nothing has happened to it."
+  },
+  "r08_07": {
+   "cull": "key-light",
+   "verdict": "FAIL",
+   "why": "Four colours arranged as plain rectangles, each with a highlight stripe on its top edge and shadow on its bottom \u2014 a baked top light on a placeholder brick grid."
+  },
+  "r08_08": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The horizontal tie band and its T-stub are the same grey as the stone so they read as a smear rather than a member, and neither the band nor its junction shows a single pin, strap or lashing."
+  },
+  "r08_09": {
+   "cull": "key-light",
+   "verdict": "FAIL",
+   "why": "Every course has a light stripe on its top edge and an identical row of dark square teeth along its bottom \u2014 a baked overhead light plus a decorative fringe stamped uniformly across all three courses."
+  },
+  "r08_plant": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A single isometric warm-brown lozenge floating in the middle of a flat grey field, black-ringed and lit from upper-left \u2014 it is a prop on a background, not wall surface."
+  }
+ },
+ "flip_list": [
+  "Remove the per-course top highlight and bottom shadow from r08_02, r08_07 and r08_09. Distinguish courses by the mortar recess and by varying the block faces themselves (chipped corners, differing block heights), not by a light stripe that repeats down the tile.",
+  "Every tile in this set is 4\u201313 values of the same grey-blue. Give timber, iron and rope distinct hues and value ranges from stone so a beam is not the same colour as the wall it is pinned to \u2014 r08_08's tie band is invisible for exactly this reason.",
+  "Draw at least one fixing that reads at 32px: a driven pin as a 2x2 head with a 1px dark socket ring sitting proud of the surface, or a rope lashing as three parallel diagonal strands crossing a member with its ends visibly bound. No candidate in this set has one.",
+  "Give the vertical staves in r08_01, r08_04 and r08_06 thickness: a 3px-wide face with a 1px darker edge on one side of each stave, a visible top and bottom end, and a horizontal member crossing them with fixings at each crossing. As drawn they are 1px stripes.",
+  "Fill the dead zones: the lower third of r08_03, the left third of r08_01's mid band, the right rectangle in r08_04. Each is a flat fill larger than 8x8 with no structure; put stone coursing or a repair there.",
+  "The bright 5px band at rows 0\u20134 appears mid-wall when the tile is stacked, so it reads as a shelf, not a top. Either give it a genuine return edge (a 1px darker line at rows 4\u20135 plus a 1\u20132px recess where the top plate overhangs the face) so it reads as thickness in isolation, or remove it and author the top band as a separate cap tile.",
+  "Break the horizontal lockstep. Every tile here resolves into continuous stripes when repeated. Run at least one element \u2014 a leaning brace, a patched-over breach, a vertical post \u2014 across the tile's top and bottom edges so it continues into the neighbour and interrupts the banding.",
+  "Redraw r08_plant entirely: it is straight-on wall surface that is wanted, filling all 32x32 with no background, no black outline and no upper-left light."
+ ],
+ "hedge_conversions": [],
+ "passes": [],
+ "culls": {
+  "key-light": 3,
+  "object-not-surface": 1
+ }
+}

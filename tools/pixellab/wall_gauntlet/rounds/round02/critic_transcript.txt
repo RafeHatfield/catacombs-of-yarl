@@ -1,0 +1,67 @@
+CANDIDATE: r02_00
+CULL: none
+VERDICT: FAIL
+WHY: The repeated rounded U-units read as knitted braid or a row of keycaps rather than stone, and the pattern breaks with a hard vertical discontinuity at the tile edge (edge-wrap delta 45 against an internal 26).
+
+CANDIDATE: r02_01
+CULL: noise
+VERDICT: FAIL
+WHY: Undifferentiated two-tone dither across the whole field with a single dark rule laid over it — one horizontal line is not structure.
+
+CANDIDATE: r02_02
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: A centred arched niche with a stepped plinth inside it is a discrete feature, and tiled it produces a row of identical shrines every 32 pixels.
+
+CANDIDATE: r02_03
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: A pale standing figure occupies the centre of the tile above a saturated green ground stripe, so the repeat is a rank of identical props on grass, not wall.
+
+CANDIDATE: r02_04
+CULL: none
+VERDICT: FAIL
+WHY: Contrast is so compressed that the blockwork dissolves into grey mush and the lower third is a blank field with two thin lines in it.
+
+CANDIDATE: r02_05
+CULL: none
+VERDICT: FAIL
+WHY: Even horizontal ribbing at a fixed period reads as corduroy or woven matting — there are no stones, no joints and nothing fixing anything to anything.
+
+CANDIDATE: r02_06
+CULL: none
+VERDICT: FAIL
+WHY: The flattest tile in the set: faint dotted scratch-lines floating on a plain grey field, with no element that could be named as holding it together.
+
+CANDIDATE: r02_07
+CULL: none
+VERDICT: FAIL
+WHY: The masonry is the most legible here but a full-height dark bar sits on the tile's left edge, so the repeat lays a visible 32-pixel vertical grid across the whole map (edge-wrap delta 45 against an internal 22).
+
+CANDIDATE: r02_08
+CULL: none
+VERDICT: FAIL
+WHY: The regular grid of dark openings reads as a rack or grille rather than a wall face, and the bright vertical post stops dead mid-tile with nothing carrying its load.
+
+CANDIDATE: r02_09
+CULL: none
+VERDICT: FAIL
+WHY: At map scale the brick collapses into uniform speckle, and the blank pale band at the bottom butts straight into dark brick when stacked (edge-wrap delta 67 against an internal 37).
+
+CANDIDATE: r02_plant
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: An isometric wooden crate floating on flat grey with a painted shadow under it and a light source up and to the left — three separate culls in one image.
+
+FLIP LIST
+- Nothing in this set carries a single repair. Put the orc work in: a salvaged timber baulk laid across the face, and at each end of it a driven iron pin with a visible head and a dark bruise in the stone where it was hammered home. The beam must have thickness — a lit-side face and a darker end-grain edge — not a stripe.
+- No candidate answers W3. Give each tile a top surface: a narrow 3–4 pixel band along the top edge, one flat value distinct from the front face, terminated by a single hard pixel line where the top meets the front. That band is what makes it a wall you see the side of.
+- Fix the wrap on r02_07 and r02_00. Column 31 must continue into column 0 — move the full-height dark bar off the edge into the tile interior, or split it so half sits at x=0 and half at x=31 and the two halves meet.
+- Fix the vertical wrap on r02_09 and r02_02. The pale band currently sits entirely inside the bottom rows; split it so its lower half occupies rows 30–31 and its upper half rows 0–1, so stacking reassembles one continuous course instead of a stripe with a hard step above it.
+- Break the period on r02_05 and r02_00. The horizontal units are all the same width and all on the same baseline. Vary block length by 2–5 pixels, drop one course by a pixel, and knock a corner off two or three stones so the eye stops reading a woven pattern.
+- Raise contrast on r02_04 and r02_06. Mortar joints currently sit within 15 levels of the stone face; push joints down to roughly a third of face value and add a one-pixel lighter arris on the upper edge of each stone so blocks separate at 32-pixel viewing size.
+- Delete the saturated green from r02_03 and the warm browns from r02_plant. Nothing in the Paths is green or fresh; pull those hues into the same cold blue-grey range as the rest of the set.
+- Remove the centred features from r02_02 and r02_03 entirely. A wall tile has no centre — redistribute anything you want to keep so that no element is complete within one tile.
+- On r02_08, either run the bright vertical post to both the top and bottom edges so it continues into its neighbours as a full-height stud, or cut it and replace it with a lashing of rope crossing two stones.
+
+Models used: Claude Opus 5 (1M context).
