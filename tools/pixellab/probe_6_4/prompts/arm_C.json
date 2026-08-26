@@ -1,0 +1,29 @@
+{
+  "arm": "C",
+  "treatment": "Flat — material value only",
+  "role": "The strict reading of §6.3",
+
+  "lighting": "Completely flat and unlit. Every material is one single solid value with no shading of any kind — no highlights, no shadows, no gradients, no darkening inside joints or recesses, no soft edges. Surfaces are told apart only by the flat colour value of the material each one is made of.",
+
+  "parameters": {
+    "shading": "flat shading"
+  },
+
+  "phrase_provenance": [
+    {"phrase": "Completely flat and unlit",
+     "clause": "§6.4 arm C — 'Flat — material value only.' This is the STRICT reading of §6.3, included so the strict reading is tested rather than assumed to be what §6.3 meant."},
+    {"phrase": "no darkening inside joints or recesses",
+     "clause": "This single phrase is what separates C from B, and it is the experiment. §6.4 argues that receive-light 'does not necessarily mean flat' and can retain self-occlusion; C is the arm that takes it to mean flat anyway. If B and C are indistinguishable, §6.4's central distinction was not a real one."},
+    {"phrase": "Surfaces are told apart only by the flat colour value of the material",
+     "clause": "§12 — 'value separation from the surface beneath', threshold PLACEHOLDER. C is the arm where value separation is the ONLY readability mechanism in the asset: no ring (§12.1), no shading, no highlight. If §12's PLACEHOLDER threshold is ever derived, this arm is where it would have to hold."},
+    {"phrase": "no gradients, no soft edges",
+     "clause": "§4.3 LOCKED — 'nearest-neighbour filtering; no anti-aliasing.'"}
+  ],
+
+  "parameter_provenance": {
+    "shading": {"value": "flat shading",
+      "clause": "The lever at the floor of the enum — the same axis arm A and arm B move along, taken to its end. This is the value whose live-ness the surface audit established on this endpoint (the column-2 pair was flat-vs-detailed under conditioning, pixdiff 1.0000 vs a 0.3542 noise floor), so C's parameter is the best-evidenced of the three. ⚠ Measurable is not correct-in-direction; the eye rules (§13.2, §13.4)."}
+  },
+
+  "note": "C is expected to look worst on a contact sheet and that expectation must not be allowed to do any work. §6.3 states the trap outright: 'receive-light assets look flat and slightly disappointing on a contact sheet. They come alive only in the lit scene. A critic — or a human at a gate — who rejects a receive-light asset for looking underlit in isolation is applying the wrong instrument in the wrong context.' STOP 1 curation is out-of-scene by necessity and is the exact place this trap bites hardest. It is flagged on this file rather than left to memory."
+}

@@ -1,0 +1,55 @@
+{
+  "subject": "floor",
+  "title": "Boundary stone floor tile",
+  "description": "A single square dungeon floor tile of old grey stone, seen from above, filling the whole frame edge to edge. Flagstones set into bare rock, worn smooth and slightly dished down the middle where centuries of foot traffic have polished them, grime walked into the joints until it is part of the surface. A quiet surface: one large flat field of stone with only two or three small texture events near the edges, the centre left open. Nothing is broken and nothing has collapsed; the stone is used up, not ruined. Nothing decorative, nothing arranged, no objects placed on it.",
+
+  "negative_description": "cobwebs, skulls, bones, blood, rubble, cracks, holes, collapse, ruins, moss, vines, plants, water, treasure, coins, props, furniture, arrangement, ornament, carving, engraving, runes, symbols, decoration, border, frame, outline, drop shadow, vignette, text, watermark, character, creature",
+
+  "parameters": {
+    "image_size": {"width": 32, "height": 32},
+    "outline": "lineless",
+    "detail": "low detail",
+    "view": "high top-down",
+    "no_background": false
+  },
+
+  "phrase_provenance": [
+    {"phrase": "A single square dungeon floor tile ... seen from above",
+     "clause": "§3 — orthogonal square grid, not isometric; the floor stays flat and presents no second plane. 'An isometric floor tile buys nothing; it is a diamond instead of a square.'"},
+    {"phrase": "filling the whole frame edge to edge",
+     "clause": "Mechanical, not a bible clause: a tile must tile. Stated in the prompt rather than bought with `coverage_percentage`, which is an untested parameter on this endpoint and would be a silent billed no-op if it does not apply (AUDIT 9.3)."},
+    {"phrase": "old grey stone ... flagstones set into bare rock",
+     "clause": "§7.4 seam 1 — 'The Boundary is mostly found stone with orc work pinned into it.' The floor is the found half; the wall subject carries the made half."},
+    {"phrase": "worn smooth and slightly dished down the middle ... polished",
+     "clause": "§8.1 — traffic without care produces polish: 'treads worn concave ... thresholds hollowed'. §8.2.1 RULED — the trodden channel is the primary expression of legible wear on floors."},
+    {"phrase": "grime walked into the joints until it is part of the surface",
+     "clause": "§8.1 verbatim — 'grime walked into a surface until it is part of it'."},
+    {"phrase": "A quiet surface ... two or three small texture events near the edges, the centre left open",
+     "clause": "§4.2 — 'quiet floors, detail at the edges ... the events sit at walls and corners while centres stay open', and the register's reason for it: traffic keeps the centre clear (§8.2)."},
+    {"phrase": "Nothing is broken and nothing has collapsed; the stone is used up, not ruined",
+     "clause": "§1 / §8.1 — 'Nothing in the Paths is ruined; everything is used up.' This is the register clause with NO INSTRUMENT (§13.4) and it is therefore carried at the human gate; the phrase exists so the failure is at least argued against in the prompt."},
+    {"phrase": "Nothing decorative, nothing arranged, no objects placed on it",
+     "clause": "§1 — 'Nothing is staged.' §7.3 RULED — 'Nothing on an orc-made object exists for appearance.'"},
+    {"phrase": "negative_description: cobwebs, skulls, blood, ruins, collapse, moss",
+     "clause": "§13.3 / LOOP-PROCESS §4 — this exact vocabulary (a picturesquely RUINED, cobwebbed floor) is the project's named critic plant and its named register failure. It is refused at generation as well as at the gate."},
+    {"phrase": "negative_description: outline, border, frame",
+     "clause": "§12.1 LOCKED — 'Nothing in Yarl carries a baked dark ring.' Belt and braces with the `outline` parameter below."},
+    {"phrase": "negative_description: drop shadow, vignette",
+     "clause": "§6.3 — 'Baked drop shadows are depicted lighting and are forbidden with the rest of it.' Held on ALL THREE arms, arm A included: arm A bakes a key light, which is the thing under test; it does not get to ground itself."}
+  ],
+
+  "parameter_provenance": {
+    "image_size": {"value": "32x32", "constant_across_arms": true,
+      "clause": "RULED (Rafe, this session's brief): 32x32 native at x2 integer scale, declared with its gravity acknowledged — expected to be ratified at tier 1 unless the pilot rejects it. §4.3 keeps canvas sizes PLACEHOLDER, so this is a ruling recorded here, NOT a derived value. Verified against the frozen surface by Precondition A."},
+    "outline": {"value": "lineless", "constant_across_arms": true,
+      "clause": "§12.1 LOCKED (Rafe, 2026-08-24) — no baked outline anywhere. 'A fully outlined sprite reads as a sticker ... it separates as a discrete object regardless of illumination, flattening the light response §6 exists to buy.' Non-negotiable on every arm: an outlined candidate is bible-illegal before its lighting is even looked at."},
+    "detail": {"value": "low detail", "constant_across_arms": true,
+      "clause": "§4.1 — 'expect Yarl's readability rules to be harsher ... less interior detail'; 'an asset that would pass Gemfall's bar can be correctly rejected here for being too good.' §12 — 'interior detail not at all.' Corroborated as a live register lever by AUDIT 9.2, which measured refinement appearing and disappearing purely as a function of scale. Held constant so it cannot explain a difference between arms."},
+    "view": {"value": "high top-down", "constant_across_arms": true,
+      "clause": "§3 — the projection of the scene as a whole. Held identical to the wall subject so that floor and wall belong to one camera. ⚠ Efficacy unverified on this endpoint: PIXELLAB_CONVENTIONS calls `view` 'weakly guiding', and AUDIT 9.3 measured a projection parameter being silently ignored AND fully charged on a neighbouring endpoint. Recorded as declared-not-proven."},
+    "no_background": {"value": false, "constant_across_arms": true,
+      "clause": "Mechanical: a floor tile is opaque and full-bleed; transparency would make it a prop."},
+    "seed": {"value": "1337 + index", "constant_across_arms": false,
+      "clause": "CLAUDE.md requires determinism, and this surface CANNOT provide it: 8 identical calls returned 3 distinct outputs (AUDIT-FINDINGS, column 2). The seed is varied to spread the batch and is RECORDED, never RELIED ON. This is why the ledger stores images rather than parameters."}
+  }
+}

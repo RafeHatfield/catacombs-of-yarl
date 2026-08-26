@@ -1,0 +1,55 @@
+{
+  "subject": "wall",
+  "title": "Boundary stone-and-timber wall tile",
+  "description": "A single square dungeon wall tile showing exactly two planes: a front face standing up toward the viewer and a narrow top surface along its upper edge, no side face, straight-on and not isometric. Rough grey found stone with heavy orc-made timber pinned into it — squared beams lashed twice with rope, driven iron pins, a hide strap, a salvaged plank laid flat over an older repair. Over-built and correct: every band, strap and pin is holding something and nothing is there to be looked at. Stone and timber both rubbed smooth where shoulders and hands pass. Nothing is broken and nothing has collapsed; it is used up, not ruined.",
+
+  "negative_description": "cobwebs, skulls, bones, blood, rubble, cracks, holes, collapse, ruins, moss, vines, plants, torches, lanterns, banners, shields, treasure, props, arrangement, ornament, carving, engraving, runes, symbols, decoration, border, frame, outline, drop shadow, vignette, text, watermark, character, creature, isometric, three quarter view",
+
+  "parameters": {
+    "image_size": {"width": 32, "height": 32},
+    "outline": "lineless",
+    "detail": "low detail",
+    "view": "high top-down",
+    "no_background": false
+  },
+
+  "phrase_provenance": [
+    {"phrase": "exactly two planes: a front face ... and a narrow top surface ... no side face",
+     "clause": "§3 — 'Objects and walls present exactly two visible planes: a front face and a top surface.' Corroborated by the asset bar, whose walls are front face plus top band with no side face — and still PROVISIONAL, ratified only by the Phase 5 pilot. This subject is one of the two assets that ratifies it."},
+    {"phrase": "straight-on and not isometric",
+     "clause": "§3 — 'Orthogonal square grid. Portrait orientation. Not isometric.' Repeated in the negative description because a generator asked for two planes will reach for three-quarter view."},
+    {"phrase": "Rough grey found stone with heavy orc-made timber pinned into it",
+     "clause": "§7.4 seam 1 — 'The Boundary is mostly found stone with orc work pinned into it.' The made/found ratio IS the region signal, so it is stated as a ratio rather than a material list."},
+    {"phrase": "squared beams lashed twice with rope, driven iron pins, a hide strap, a salvaged plank laid flat over an older repair",
+     "clause": "§7.3 LOCKED (Boundary) — 'Lashed twice. Over-built. Repaired on top of prior repairs ... Rope, driven pin, hide, timber, salvage.' Taken as the clause's own vocabulary; §7.1 — everything is held, nothing is monolithic or self-supporting."},
+    {"phrase": "Over-built and correct: every band, strap and pin is holding something and nothing is there to be looked at",
+     "clause": "§7.3 RULED (Rafe, 2026-08-24) — 'competent but tough. No interest in aesthetics — strength only.' 'Nothing on an orc-made object exists for appearance. No carving that is not structural, no ornament, no finish. If it is there, it is holding something.' The rule is stated as a test rather than a style so the generator has something to fail."},
+    {"phrase": "band, strap and pin",
+     "clause": "§12.1 — with no baked ring, separation is carried by '§7.1's linear elements — bands, straps, pins, tags'. These are load-bearing for readability at 1x, not flavour."},
+    {"phrase": "rubbed smooth where shoulders and hands pass",
+     "clause": "§8.1 — 'stone smoothed to a shine at hand height'; traffic without care produces polish. §8.2 — wear is legible, and it is what carries navigation with no signage."},
+    {"phrase": "Nothing is broken and nothing has collapsed; it is used up, not ruined",
+     "clause": "§1 / §8.1 — 'Nothing in the Paths is ruined; everything is used up.' NO INSTRUMENT (§13.4); carried at the human gate."},
+    {"phrase": "negative_description: torches, lanterns",
+     "clause": "§6.1/§6.3 — lighting is engine-rendered. A torch drawn into a wall tile is a light source baked into an asset, which is the §6.3 failure in its most literal form, and it would wreck all three arms equally."},
+    {"phrase": "negative_description: banners, shields, ornament, carving",
+     "clause": "§7.3 RULED — nothing exists for appearance; §1 — nothing is staged."},
+    {"phrase": "negative_description: drop shadow, vignette",
+     "clause": "§6.3 — 'the asset never grounds itself; the engine or a composited blob grounds it per context.' Held on arm A too."}
+  ],
+
+  "parameter_provenance": {
+    "image_size": {"value": "32x32", "constant_across_arms": true,
+      "clause": "RULED (Rafe, this session's brief). Rationale on record: ~11.7 tiles across the reference device at x2, half the craft gap to the 48px asset bar, and room for two-plane wall faces — this subject is the one that spends that room. §4.3 keeps canvas sizes PLACEHOLDER; this is a ruling, not a derived value."},
+    "outline": {"value": "lineless", "constant_across_arms": true,
+      "clause": "§12.1 LOCKED — no baked outline anywhere. Also §12.1 reason 3: 'a ring around everything is a second linear system fighting the first' — and on this subject the first system (bands, straps, pins) is the whole read."},
+    "detail": {"value": "low detail", "constant_across_arms": true,
+      "clause": "§4.1/§12 — less interior detail, stronger silhouettes. The register correction ruled the target chunky with refinement as the named failure mode, and AUDIT 8.7 flagged exactly that risk on a 32px stone kit: 'the brick courses are fine-grained ... precisely the refinement failure mode the register ruling names.' Held constant across arms."},
+    "view": {"value": "high top-down", "constant_across_arms": true,
+      "clause": "§3 — a top-down game whose walls must still show a front face; 'high top-down' is the enum value on this endpoint that describes that camera. Held identical to the floor subject. ⚠ Efficacy unverified here (see subject_floor.json)."},
+    "no_background": {"value": false, "constant_across_arms": true,
+      "clause": "Mechanical: a wall tile is opaque and full-bleed."},
+    "seed": {"value": "1337 + index", "constant_across_arms": false,
+      "clause": "Recorded, never relied on — this surface is not seed-reproducible (AUDIT-FINDINGS, column 2)."}
+  }
+}
