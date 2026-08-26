@@ -68,11 +68,15 @@ OCCLUSION_ROWS = 2    # rows of face immediately under the overhang
 
 # Tile IDs. A distinct 91xx block so a composite can never collide with a shipped tile id or
 # with the tier-0 stubs (90xx).
-FACE_BASE = 9100      # 9100..9103
-SLAB_BASE = 9110      # 9110..9113
+WALL_BASE = 9200      # 9200 + mask*NVAR + variant, for masks 0..15
+CORNER_BASE = 9280    # 9280..9283 — the four mask-15 outer corners
 FLOOR_BASE = 9120     # 9120..9123 — the four §6.4 probe survivors
 STAIR_DOWN, STAIR_UP = 9140, 9141
 NVAR = 4
+
+
+def wall_id(mask, v):
+    return WALL_BASE + mask * NVAR + v
 
 # ---------------------------------------------------------------------------------------
 # THE PARTS BIN. Every entry is a real candidate on disk in the wall gauntlet ledger, with
@@ -311,13 +315,74 @@ def make_face(face_src, top_src, pal, ink, v, bind):
     return snap(a, pal)
 
 
-def make_plant(face_src, top_src, pal, ink):
+NORTH_BIT, SOUTH_BIT_, EAST_BIT, WEST_BIT = 8, 4, 2, 1
+EDGE_STEPS = (0.58, 0.80)   # two rows/columns, outermost darkest
+
+
+def occlude_edges(a, mask):
+    """Darken the wall's own edge wherever the neighbouring cell is FLOOR.
+
+    This is not in the brief and it is not decoration; without it the corridor does not read.
+    The first lit capture (evidence/boundB_solofloor_lit.png, before this) put a lit wall top
+    at luminance 96 beside a lit floor at 122 with no boundary of any kind between them, and
+    a player could not tell which cells they could walk on. The shipped Oryx placeholder tiles
+    this renderer's mask table was fitted to do exactly this — 184 carries a dark band along
+    its bottom edge, 187 dark columns down both sides — so the grammar the engine already
+    expects includes an occluded edge, and §3's two planes do not on their own supply one.
+
+    Occlusion, not illumination (§6.3): a wall edge is occluded from the floor beside it from
+    every azimuth, so nothing here declares a light direction. Flagged for the human gate as a
+    possible §12.1 tension — a dark edge on every wall/floor boundary is a second linear
+    system, and §12.1 reserves that job for straps and bands.
+
+    The SOUTH edge is never treated here: where south is floor the tile already carries a front
+    face, which is §3's answer to that edge.
+    """
+    for k, f in enumerate(EDGE_STEPS):
+        if not (mask & NORTH_BIT):
+            a[k] = (a[k] * f).astype(np.int16)
+        if not (mask & WEST_BIT):
+            a[:, k] = (a[:, k] * f).astype(np.int16)
+        if not (mask & EAST_BIT):
+            a[:, TILE - 1 - k] = (a[:, TILE - 1 - k] * f).astype(np.int16)
+    return a
+
+
+def make_wall(mask, face_src, top_src, pal, ink, v, bind, keylight=False):
+    """One wall tile for one autotile mask.
+
+    SOUTH BIT CLEAR -> floor below -> top band + occlusion + front face (bible §3).
+    SOUTH BIT SET   -> wall below  -> top surface only; the face is behind the wall in front.
+    Then the edges adjacent to floor are occluded.
+    """
+    if mask & SOUTH_BIT_:
+        a = make_slab(top_src, pal, ink, v, bind)
+    elif keylight:
+        a = make_plant(face_src, top_src, pal, ink, v)
+    else:
+        a = make_face(face_src, top_src, pal, ink, v, bind)
+    return snap(occlude_edges(a.copy(), mask), pal)
+
+
+def make_corner(diag_bit, face_src, top_src, pal, ink, v, bind):
+    """A mask-15 outer corner: all four cardinals are wall, one DIAGONAL is floor. Only that
+    corner of the tile touches open space, so only that corner is occluded."""
+    a = make_slab(top_src, pal, ink, v, bind).copy()
+    xs = range(3) if diag_bit in ("nw", "sw") else range(TILE - 3, TILE)
+    ys = range(3) if diag_bit in ("nw", "ne") else range(TILE - 3, TILE)
+    for j in ys:
+        for i in xs:
+            a[j, i] = (a[j, i] * 0.62).astype(np.int16)
+    return snap(a, pal)
+
+
+def make_plant(face_src, top_src, pal, ink, v=0):
     """THE PLANT (LOOP-PROCESS §4, bible §13.5). A composed segment carrying the exact defect
     §6.3 forbids: every course run light at its top rows and dark at its bottom rows - a baked
     overhead key light. The gauntlet's round 8 manufactured this defect by accident and its own
     critic culled three candidates for it. A critic that passes this one has not demonstrated it
     can fail, and its verdicts on the real arms do not count."""
-    a = make_face(face_src, top_src, pal, ink, 0, bind=True).astype(np.float32)
+    a = make_face(face_src, top_src, pal, ink, v, bind=True).astype(np.float32)
     for y in range(TOP_BAND, TILE):
         phase = (y - TOP_BAND) % 8
         a[y] *= (1.28 if phase < 3 else 0.72)
@@ -336,12 +401,11 @@ SOUTH_BIT = 4
 
 
 def theme_yaml(tile_root, pattern, floor_ids):
-    face = "[" + ", ".join(str(FACE_BASE + i) for i in range(NVAR)) + "]"
-    slab = "[" + ", ".join(str(SLAB_BASE + i) for i in range(NVAR)) + "]"
     masks = "\n".join(
-        "      %d: %s   # %s" % (m, slab if (m & SOUTH_BIT) else face,
-                                 "top surface (wall below)" if (m & SOUTH_BIT)
-                                 else "top band + front face (floor below)")
+        "      %d: [%s]   # %s" % (
+            m, ", ".join(str(wall_id(m, v)) for v in range(NVAR)),
+            "top surface (wall below)" if (m & SOUTH_BIT)
+            else "top band + front face (floor below)")
         for m in range(16))
     floors = "[" + ", ".join(str(i) for i in floor_ids) + "]"
     return f"""# GENERATED by tools/composition_spike/compose_walls.py - do not hand-edit.
@@ -360,11 +424,11 @@ themes:
     wall_autotile:
 {masks}
     wall_diagonal:
-      corner_outer_nw: {SLAB_BASE + 0}
-      corner_outer_ne: {SLAB_BASE + 1}
-      corner_outer_sw: {SLAB_BASE + 2}
-      corner_outer_se: {SLAB_BASE + 3}
-      interior_fill: {SLAB_BASE + 3}
+      corner_outer_nw: {CORNER_BASE + 0}
+      corner_outer_ne: {CORNER_BASE + 1}
+      corner_outer_sw: {CORNER_BASE + 2}
+      corner_outer_se: {CORNER_BASE + 3}
+      interior_fill: {wall_id(15, 3)}
     stair_down: [{STAIR_DOWN}]
     stair_up: [{STAIR_UP}]
 
@@ -413,7 +477,7 @@ def position_hash(x, y):
     return abs((x * 7919 + y * 104729) & 0x7FFFFFFF)
 
 
-def render_segment(grid, faces, slabs, floors):
+def render_segment(grid, walls, floors):
     """Reimplements DungeonRenderer's mask + 7/11->3, 13/14->12 collapse + PositionHash pick.
     If this disagrees with the engine, the engine capture is the truth and this is the bug."""
     H, W = len(grid), len(grid[0])
@@ -432,7 +496,7 @@ def render_segment(grid, faces, slabs, floors):
                 c = (8 if isw(x, y - 1) else 0) | (4 if isw(x, y + 1) else 0) \
                     | (2 if isw(x + 1, y) else 0) | (1 if isw(x - 1, y) else 0)
                 c = {7: 3, 11: 3, 13: 12, 14: 12}.get(c, c)
-                pool = slabs if (c & SOUTH_BIT) else faces
+                pool = walls[c]
                 t = pool[position_hash(x, y) % len(pool)]
             out.paste(Image.fromarray(t.astype(np.uint8)), (x * TILE, y * TILE))
     return out
@@ -456,6 +520,14 @@ ARMS = {
                      note="control for boundA - same stones, overlays omitted."),
     "ctrlB":    dict(top="r04_08", match=True, bind=False,
                      note="control for boundB - same stones, overlays omitted."),
+    "plant":    dict(top="r04_08", match=True, bind=True, keylight=True,
+                     note="THE PLANT. Identical to boundB except every course is run light at "
+                          "its top rows and dark at its bottom rows - a baked overhead key "
+                          "light, the exact defect §6.3 forbids and the one the gauntlet's own "
+                          "round 8 manufactured by accident. It goes into the critic set under "
+                          "an anonymous code. A critic that passes it has not demonstrated it "
+                          "can fail and its verdicts on the real arms do not count "
+                          "(LOOP-PROCESS §4, bible §13.5)."),
 }
 
 
@@ -515,8 +587,11 @@ def main():
 
         pal = palette_of(face_src, top_src, *floor_arrs)
         ink = Ink(pal)
-        faces = [make_face(face_src, top_src, pal, ink, v, cfg["bind"]) for v in range(NVAR)]
-        slabs = [make_slab(top_src, pal, ink, v, cfg["bind"]) for v in range(NVAR)]
+        walls = {m: [make_wall(m, face_src, top_src, pal, ink, v, cfg["bind"],
+                              cfg.get("keylight", False)) for v in range(NVAR)]
+                 for m in range(16)}
+        corners = [make_corner(k, face_src, top_src, pal, ink, v, cfg["bind"])
+                   for v, k in enumerate(("nw", "ne", "sw", "se"))]
 
         d = os.path.join(out_root, arm)
         os.makedirs(d, exist_ok=True)
@@ -527,14 +602,15 @@ def main():
             Image.fromarray(arr.astype(np.uint8)).save(p)
             written.append(p)
 
-        for v, a in enumerate(faces):
-            emit(FACE_BASE + v, a)
-        for v, a in enumerate(slabs):
-            emit(SLAB_BASE + v, a)
+        for m in range(16):
+            for v, a in enumerate(walls[m]):
+                emit(wall_id(m, v), a)
+        for i, a in enumerate(corners):
+            emit(CORNER_BASE + i, a)
         for i, fa in enumerate(floor_arrs):
             emit(FLOOR_BASE + i, fa)
-        emit(STAIR_DOWN, slabs[0])    # unused by the review scene; the role must resolve
-        emit(STAIR_UP, slabs[1])
+        emit(STAIR_DOWN, walls[15][0])   # unused by the review scene; the role must resolve
+        emit(STAIR_UP, walls[15][1])
 
         theme = os.path.join(out_root, "tile_themes_%s.yaml" % arm)
         with open(theme, "w") as f:
@@ -542,7 +618,7 @@ def main():
 
         sheets = {}
         for name, grid in SEGMENTS.items():
-            im = render_segment(grid, faces, slabs, floor_arrs)
+            im = render_segment(grid, walls, floor_arrs)
             z = args.sheet_zoom
             im = im.resize((im.width * z, im.height * z), Image.NEAREST)
             p = os.path.join(sheet_dir, "%s_%s.png" % (arm, name))
@@ -568,9 +644,9 @@ def main():
     top_src, _ = match_top(top_src, face_src)
     pal = palette_of(face_src, top_src, *floor_arrs)
     ink = Ink(pal)
-    plant = make_plant(face_src, top_src, pal, ink)
-    slabs = [make_slab(top_src, pal, ink, v, True) for v in range(NVAR)]
-    im = render_segment(SEGMENTS["south_facing_run"], [plant] * NVAR, slabs, floor_arrs)
+    walls = {m: [make_wall(m, face_src, top_src, pal, ink, v, True, keylight=True)
+                 for v in range(NVAR)] for m in range(16)}
+    im = render_segment(SEGMENTS["south_facing_run"], walls, floor_arrs)
     z = args.sheet_zoom
     im.resize((im.width * z, im.height * z), Image.NEAREST).save(
         os.path.join(sheet_dir, "plant_south_facing_run.png"))

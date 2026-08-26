@@ -38,9 +38,7 @@ GODOT = "/Applications/Godot_mono.app/Contents/MacOS/Godot"
 ASSETS = "src/Presentation/assets/composition_spike"
 OUT = os.path.join(REPO, "tools/composition_spike/evidence/controls")
 
-FACE_IDS = [9100, 9101, 9102, 9103]
-SLAB_IDS = [9110, 9111, 9112, 9113]
-FLOOR_IDS = [9120, 9121, 9122, 9123]
+FLOOR_IDS = [9120, 9121, 9122, 9123]   # the four §6.4 probe survivors
 
 
 def derive_theme(name, transform):
