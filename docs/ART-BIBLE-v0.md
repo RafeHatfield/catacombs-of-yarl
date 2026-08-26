@@ -1,6 +1,7 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.6 — DRAFT. Nothing in this document has been derived from a rendered asset.**
+**Status: v0.7 — DRAFT. One clause has now been derived from rendered assets on the device: §6.3.
+Everything else in this document still has not.**
 
 This bible is written *before* pixel work, deliberately. It records decisions taken in
 conversation during Phase 1–3 of the art-direction rework (2026-08). It graduates to **v1**
@@ -307,7 +308,19 @@ menace with almost no gothic vocabulary.
 
 Only the Boundary's values are derived at the pilot. The rest are PLACEHOLDER.
 
-### 6.3 Assets are authored to RECEIVE light, not to DEPICT it — LOCKED
+### 6.3 Assets are authored to RECEIVE light, not to DEPICT it — LOCKED, RATIFIED
+
+**RATIFIED (Rafe, STOP 2, 2026-08-26), on the device, in the lit corridor: the lighting is worth
+the effort.** §6.4's probe ran, its kill criterion was declared before any arm and was not
+re-tuned after, and the clause survives it. This clause is no longer provisional.
+
+⚠ **What was ratified, stated narrowly because the probe's own positive control failed.**
+Stage 1 produced **no arm A** — no candidate in any arm depicted a directional key light, so the
+three arms never separated on the lighting axis. **This ratifies the treatment under light. It
+is not a victory over a baked arm, because no baked arm existed to beat.** §6.4's Ruling 47
+clause governs that outcome and is not overridden here: A and B being indistinguishable is a
+finding about test conditions, never permission to pick either. The comparison §6.4 set out to
+run remains unrun, and nothing in this ratification should be cited as having run it.
 
 **This is a one-way door and the most consequential construction rule in this document.**
 
@@ -331,10 +344,15 @@ wrong in every context except the one it was painted for. That manual workaround
 solved structurally: **the asset never grounds itself; the engine or a composited blob grounds
 it per context.** One asset, every context, and nothing fights the probe.
 
-### 6.4 Receive-light is PROVISIONAL pending a probe that runs BEFORE the pilot
+### 6.4 The receive-light probe — RUN AND CLOSED, §6.3 RATIFIED
 
-§6.3 is a committed direction, **not an unconditional one.** It is the clause in this document
-with the largest unmeasured effort cost, and it is struck if the probe below says so.
+**Status: closed 2026-08-26.** The probe below is preserved as authored, because §13.6 and
+LOOP-PROCESS §8 both turn on the bar having been declared before the answer was visible, and a
+criterion rewritten after the fact cannot demonstrate that. What follows is the probe as it was
+declared; the outcome is recorded at the end of this section.
+
+§6.3 was a committed direction, **not an unconditional one.** It was the clause in this document
+with the largest unmeasured effort cost, and it was to be struck if the probe below said so.
 
 **The named risk, and it is the previous track's shape wearing new clothes.** Generation models
 are trained on art that *depicts* light — baked highlights, a key direction, painted
@@ -374,6 +392,43 @@ place.** The bar is not re-tuned after the answer is seen.
 **This probe runs before the Phase 5 pilot.** It is the cheapest point at which the answer is
 still free: §6.3 is a one-way door, and every asset drawn before it is settled is drawn twice
 if it is wrong.
+
+#### The outcome — RULED (Rafe, STOP 2, on the device, 2026-08-26)
+
+**§6.3 RATIFIED.** The lighting is worth the effort. The kill criterion above was not met and
+was not re-tuned.
+
+**And the probe's own positive control failed, which narrows what that ratification says.**
+Stage 1 ran 120 unconditioned generations across all three arms. **No arm produced a single
+candidate depicting a directional key light — arm A included.** The blind census that measured
+this passed its own control 10/10 against constructed plants, so the reading counts, with one
+limit stated: the plants carry a *hard* key light, so what is licensed is *"no arm produced
+directional lighting at plant strength"*, not *"none produced any"*.
+
+Consequences, recorded rather than smoothed over:
+
+- **The three-arm comparison never ran.** There was no arm A to lose to. Ruling 47's clause
+  applies exactly as written — a finding about test conditions, not permission to pick an arm —
+  and it is not overridden by the ratification.
+- **What Stage 3 showed is real and is what was ruled on:** receive-light assets in the lit
+  corridor, on the reference device, at 32×32 native at ×2, each against its own unlit
+  companion under an otherwise identical rig. §6.3's central claim — that these assets *"look
+  flat and slightly disappointing on a contact sheet"* and *"come alive only in the lit scene"*
+  — is what the device answered, and it answered it yes.
+- **The effort half of the kill criterion never acquired a denominator.** Effort was to be
+  measured as generations-per-accepted-reference per arm, against arm A's. With the arms
+  undifferentiated, the ratio measures subject difficulty, not lighting treatment. It was not
+  computed, and no number should be cited as though it had been.
+
+**Retirement triggers.** This ratification rests on the lit scene, not on a comparison. If a
+baked-key-light arm is ever actually produced and beats receive-light on the device, or if the
+effort ratio is ever measured with a real arm A and lands clearly beyond the abstention band,
+§6.4 reopens. Absent that, §6.3 is settled and the door is shut.
+
+**Evidence.** `tools/pixellab/probe_6_4/` — `AUDIT-FINDINGS.md` (surface freeze),
+`STOP1-REPORT.md`, `STOP2-REPORT.md`, `PARK-STATE.md`, and the image ledgers. Every generation
+is on disk with its full request payload, because nothing on this platform is seed-reproducible
+and a parameter row is therefore not evidence. **Probe total: 174 generations.**
 
 ---
 
@@ -847,7 +902,7 @@ gaps — which is the correct state for a bible whose pilot has not run.**
 | §5.2 region slot legality                              | Same check, region-flagged          | **Portable, not yet built** |
 | §5.3 warm-share allocation per asset                   | None                                | ⚠ **NO INSTRUMENT.** Purpose stated; threshold may not exist (Ruling 70 applies). |
 | §5.4 chroma is signal                                  | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN.** **The countable proxy is named and refused:** saturated-pixel share is measurable, but share is not signal — a census can count saturation and cannot see meaning, so the number would gate the wrong thing and win trades it hasn't earned (§13.4). If a saturation census is ever built, it is ordering-only under the worst-ground pattern (§13.2), renders no verdict, and earns promotion like any instrument (§13.5). |
-| §6.3 receive-light (no baked highlight)                | None                                | ⚠ **NO INSTRUMENT.** A directional-highlight census is owed. Gemfall's equivalent measured as a blunt proxy and was refused a verdict. |
+| §6.3 receive-light (no baked highlight)                | Blind LLM census, plant-controlled   | **BUILT AND PROMOTED, NARROWLY.** `tools/pixellab/probe_6_4/blind_census.py`. A blind read, not a metric (§13.4 v0.3: a script emitting a number is an instrument; a critic rendering a verdict is not). Passed its control **10/10** against *constructed* plants — ground truth taken from the prompt would have been circular. **Licensed for KEY vs not-KEY only, at plant strength.** The FORM-vs-FLAT boundary carries no control and is reported unlicensed, because a donor tile that is already near-flat yields a "flat plant" a truthful eye may correctly read as FORM, and tuning plants until that stopped would manufacture an instrument that cannot fail. |
 | §6.3 no baked drop shadows                             | None                                | ⚠ **NO INSTRUMENT.** Joins the directional-highlight census as owed; same status, same caution — Gemfall's analogue measured as a blunt proxy and was refused a verdict. |
 | §7.1 everything is held                                | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Eye-side, at the gate. |
 | §7.4 heraldic stance (idle sprites are icons)          | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
@@ -858,8 +913,14 @@ gaps — which is the correct state for a bible whose pilot has not run.**
 | §1.1 zero expression budget (world creatures faceless) | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
 | §1 register conformance, all clauses                   | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** |
 
-**Thirteen of fourteen clauses have no working instrument today. None is papered over. Seven of
+**Twelve of fourteen clauses have no working instrument today. None is papered over. Seven of
 them will never have one, deliberately, and that is a decision rather than a gap.**
+
+**One row moved this revision, and only one.** §6.3 gained a plant-controlled blind census —
+the *first* instrument on this track to demonstrate it can fail before its passes were counted
+(§13.5). It is deliberately not a script emitting a number, and its licence is narrow: one axis,
+at plant strength. The unlicensed half is reported as unlicensed rather than quietly folded in,
+which is the whole of §13.4 working as intended.
 
 ---
 
@@ -884,6 +945,16 @@ Recorded so they are not re-derived; deliberately not law.
 ---
 
 *Revision history:*
+
+- *v0.7 — 2026-08-26. **§6.3 RATIFIED** (Rafe, STOP 2, on the reference device): receive-light
+  survives its probe and the clause is no longer provisional. §6.4 closed and preserved as
+  authored, with the outcome appended rather than the criterion rewritten — a bar edited after
+  the answer is visible cannot demonstrate it was declared before it. **The ratification is
+  recorded narrowly:** Stage 1's positive control failed, no arm produced a baked key light, so
+  this ratifies the treatment under light and is not a victory over a baked arm. Retirement
+  triggers named. §15's §6.3 row moves from NO INSTRUMENT to a plant-controlled blind census —
+  the first instrument on this track to demonstrate it can fail — licensed for one axis at plant
+  strength, with the unlicensed half reported as unlicensed. Count 13→12.*
 
 - *v0.6 — 2026-08-25. §15 audit catches up with the v0.5 law: four rows added (three
   BY-DESIGN, shadows census owed), counts corrected; the chroma share-proxy is named and
