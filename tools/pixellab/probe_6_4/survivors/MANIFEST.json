@@ -1,0 +1,57 @@
+{
+ "status": "PROBE REFERENCE \u2014 NOT RATIFIED",
+ "ruled_by": "Rafe, STOP 1, 2026-08-25",
+ "pooled": "floor sheets curated as ONE pool; arm labels treated as carrying no lighting information, per the Stage 1 positive-control failure",
+ "wall_picks": "NONE \u2014 the 1-usable-in-60 finding stands; walls route to the micro-probe",
+ "landing": "These never land. \u00a713.1 governs landing and STOP 1 does not satisfy it. They exist to condition Stage 2 generations and for nothing else.",
+ "survivors": [
+  {
+   "code": "A-VAB",
+   "arm_of_origin": "A",
+   "file": "A-VAB.png",
+   "stage1_source": "A/floor/A_floor_17.png",
+   "sha256": "64519e5b5a5cfd11ad9dc6419f6c7db4a4718d3470d3a6f8bb4b362fa1a5b319",
+   "size": [
+    32,
+    32
+   ],
+   "strongest": true
+  },
+  {
+   "code": "A-HEB",
+   "arm_of_origin": "A",
+   "file": "A-HEB.png",
+   "stage1_source": "A/floor/A_floor_16.png",
+   "sha256": "4b3591d5c15810d72c7bfd0d7e12ca81fadb985b2f1fa627b29860f8be39568d",
+   "size": [
+    32,
+    32
+   ],
+   "strongest": false
+  },
+  {
+   "code": "B-KAB",
+   "arm_of_origin": "B",
+   "file": "B-KAB.png",
+   "stage1_source": "B/floor/B_floor_18.png",
+   "sha256": "950751ae2ec901ce0a72f4a20c4d2c00e5ee54f3c8e14acc6010d78144a6ef09",
+   "size": [
+    32,
+    32
+   ],
+   "strongest": false
+  },
+  {
+   "code": "C-GAB",
+   "arm_of_origin": "C",
+   "file": "C-GAB.png",
+   "stage1_source": "C/floor/C_floor_16.png",
+   "sha256": "1a24a59aa5607c3beebd8d1cf728acc0f43d6fc0bace6015025a7595c3f6db4f",
+   "size": [
+    32,
+    32
+   ],
+   "strongest": true
+  }
+ ]
+}
