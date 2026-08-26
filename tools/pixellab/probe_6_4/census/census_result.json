@@ -1,0 +1,90 @@
+{
+ "control": {
+  "plant_key_ok": 5,
+  "plant_key_n": 5,
+  "plant_notkey_ok": 5,
+  "plant_notkey_n": 5,
+  "passed": true,
+  "gated_axis": "KEY vs not-KEY"
+ },
+ "per_cell": {
+  "A/floor": {
+   "n": 20,
+   "rejected_at_birth_not_tile": 9,
+   "tiles": 11,
+   "light_on_tiles": {
+    "KEY": 0,
+    "FORM": 11,
+    "FLAT": 0
+   },
+   "KEY_all_cells_licensed": 0,
+   "treatment_hold": 0,
+   "treatment_miss": 11
+  },
+  "A/wall": {
+   "n": 20,
+   "rejected_at_birth_not_tile": 20,
+   "tiles": 0,
+   "light_on_tiles": {
+    "KEY": 0,
+    "FORM": 0,
+    "FLAT": 0
+   },
+   "KEY_all_cells_licensed": 0,
+   "treatment_hold": 0,
+   "treatment_miss": 0
+  },
+  "B/floor": {
+   "n": 20,
+   "rejected_at_birth_not_tile": 10,
+   "tiles": 10,
+   "light_on_tiles": {
+    "KEY": 0,
+    "FORM": 10,
+    "FLAT": 0
+   },
+   "KEY_all_cells_licensed": 0,
+   "treatment_hold": 10,
+   "treatment_miss": 0
+  },
+  "B/wall": {
+   "n": 20,
+   "rejected_at_birth_not_tile": 19,
+   "tiles": 1,
+   "light_on_tiles": {
+    "KEY": 0,
+    "FORM": 1,
+    "FLAT": 0
+   },
+   "KEY_all_cells_licensed": 0,
+   "treatment_hold": 1,
+   "treatment_miss": 0
+  },
+  "C/floor": {
+   "n": 20,
+   "rejected_at_birth_not_tile": 11,
+   "tiles": 9,
+   "light_on_tiles": {
+    "KEY": 0,
+    "FORM": 9,
+    "FLAT": 0
+   },
+   "KEY_all_cells_licensed": 0,
+   "treatment_hold": 0,
+   "treatment_miss": 9
+  },
+  "C/wall": {
+   "n": 20,
+   "rejected_at_birth_not_tile": 20,
+   "tiles": 0,
+   "light_on_tiles": {
+    "KEY": 0,
+    "FORM": 0,
+    "FLAT": 0
+   },
+   "KEY_all_cells_licensed": 0,
+   "treatment_hold": 0,
+   "treatment_miss": 0
+  }
+ }
+}

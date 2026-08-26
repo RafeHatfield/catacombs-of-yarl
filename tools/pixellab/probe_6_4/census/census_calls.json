@@ -1,0 +1,522 @@
+{
+ "BAB0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "BAC0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "BEB0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "BIB0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "BOB0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "BUB0": {
+  "frame": "NOT_TILE",
+  "light": "KEY"
+ },
+ "BYB0": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "CAB1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "CAC1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "CEB1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "CIB1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "COB1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "CUB1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "CYB1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "DAB2": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "DAC2": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "DEB2": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "DIB2": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "DOB2": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "DUB2": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "DYB2": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "FAB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "FAC3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "FEB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "FIB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "FOB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "FUB3": {
+  "frame": "NOT_TILE",
+  "light": "KEY"
+ },
+ "FYB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "GAB4": {
+  "frame": "NOT_TILE",
+  "light": "KEY"
+ },
+ "GAC4": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "GEB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "GIB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "GOB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "GUB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "GYB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "HAB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "HAC5": {
+  "frame": "NOT_TILE",
+  "light": "KEY"
+ },
+ "HEB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "HIB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "HOB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "HUB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "HYB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "JAB6": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "JAC6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "JEB6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "JIB6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "JOB6": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "JUB6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "JYB6": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "KAB7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "KAC7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "KEB7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "KIB7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "KOB7": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "KUB7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "KYB7": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "LAB8": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "LAC8": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "LEB8": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "LIB8": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "LOB8": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "LUB8": {
+  "frame": "TILE",
+  "light": "KEY"
+ },
+ "LYB8": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "MAB9": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "MAC9": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "MEB9": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "MIB9": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "MOB9": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "MUB9": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "MYB9": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "NAB0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "NEB0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "NIB0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "NOB0": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "NUB0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "NYB0": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "PAB1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "PEB1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "PIB1": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "POB1": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "PUB1": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "PYB1": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "QAB2": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "QEB2": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "QIB2": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "QOB2": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "QUB2": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "QYB2": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "RAB3": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "REB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "RIB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "ROB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "RUB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "RYB3": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "SAB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "SEB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "SIB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "SOB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "SUB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "SYB4": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "TAB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "TEB5": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "TIB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "TOB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "TUB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "TYB5": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "VAB6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "VEB6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "VIB6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "VOB6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "VUB6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "VYB6": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "WAB7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "WEB7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "WIB7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "WOB7": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "WUB7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "WYB7": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "XAB8": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "XEB8": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "XIB8": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "XOB8": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "XUB8": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "XYB8": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "ZAB9": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "ZEB9": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "ZIB9": {
+  "frame": "TILE",
+  "light": "FORM"
+ },
+ "ZOB9": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "ZUB9": {
+  "frame": "NOT_TILE",
+  "light": "FORM"
+ },
+ "ZYB9": {
+  "frame": "TILE",
+  "light": "FORM"
+ }
+}

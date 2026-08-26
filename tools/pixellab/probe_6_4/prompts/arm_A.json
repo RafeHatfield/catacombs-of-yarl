@@ -1,0 +1,29 @@
+{
+  "arm": "A",
+  "treatment": "Baked directional key light",
+  "role": "POSITIVE CONTROL — the conventional approach",
+
+  "lighting": "Lit by one strong key light from the upper left: painted white highlights along every upward-facing and left-facing edge, and the surfaces facing down and to the right dropped into painted shade, so the direction the light comes from is unmistakable in the artwork itself.",
+
+  "parameters": {
+    "shading": "detailed shading"
+  },
+
+  "phrase_provenance": [
+    {"phrase": "one strong key light from the upper left",
+     "clause": "§6.4 arm A — 'Baked directional key light'. Upper-left is named because §6.3 names it as the failure it describes: 'add a torch on the right and everything is still lit from the upper left.' Arm A is authored to BE that failure, deliberately and well."},
+    {"phrase": "painted white highlights ... painted shade",
+     "clause": "§6.3 — the clause enumerates what receive-light forbids: 'baked highlights', 'a key direction', 'painted specularity'. Arm A asks for each of them by name."},
+    {"phrase": "the direction the light comes from is unmistakable in the artwork itself",
+     "clause": "§6.3 — 'assets are authored to RECEIVE light, not to DEPICT it.' Arm A depicts. Stated as a legibility requirement so the arm can be told apart from B by eye, which is the whole job of a positive control."}
+  ],
+
+  "parameter_provenance": {
+    "shading": {"value": "detailed shading",
+      "clause": "The lever. AUDIT-FINDINGS column 2 measured `shading` as HONOURED on this exact endpoint — pixdiff 1.0000 against a measured noise floor of 0.3542. ⚠ What HONOURED does and does not mean, quoted from the audit so it is not promoted here into something it is not: 'it means the parameter changed the output well above the platform's own variance. It does NOT mean the parameter changed it in the intended direction.' Whether this reads as a key light is an eye question and belongs to the human gate (§13.2, §13.4). The enum's top value, 'highly detailed shading', was NOT taken: it conflicts with the `detail: low detail` constant that all three arms share, and a constant that one arm quietly fights is not a control."}
+  },
+
+  "positive_control_clause": "§6.4, Ruling 47: 'Arm A exists so the instrument can be shown to discriminate. If A and B cannot be told apart in the lit scene, that is a finding about the test conditions — not permission to pick either.' Arm A is also the DENOMINATOR of the kill criterion's effort ratio — every count reported for B and C is reported against A's.",
+
+  "note": "Arm A is the arm the bible would RETIRE §6.3 in favour of. It is authored to win. Nothing here is softened to protect §6.3, and per LOOP-PROCESS §8 nothing is cut to fit: if the conventional approach is easier to generate and looks better lit, that is the result."
+}

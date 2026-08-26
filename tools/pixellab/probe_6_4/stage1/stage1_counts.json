@@ -1,0 +1,46 @@
+{
+ "summary": {
+  "A/floor": {
+   "run": 20,
+   "ok": 20,
+   "refused": 0,
+   "degenerate": 0
+  },
+  "A/wall": {
+   "run": 20,
+   "ok": 20,
+   "refused": 0,
+   "degenerate": 0
+  },
+  "B/floor": {
+   "run": 20,
+   "ok": 20,
+   "refused": 0,
+   "degenerate": 0
+  },
+  "B/wall": {
+   "run": 20,
+   "ok": 20,
+   "refused": 0,
+   "degenerate": 0
+  },
+  "C/floor": {
+   "run": 20,
+   "ok": 20,
+   "refused": 0,
+   "degenerate": 0
+  },
+  "C/wall": {
+   "run": 20,
+   "ok": 20,
+   "refused": 0,
+   "degenerate": 0
+  }
+ },
+ "n_per_cell": 20,
+ "pool_before": 4122.0,
+ "pool_after": 4002.0,
+ "spent": 120.0,
+ "commit": "0bff0923d14b7b11c7cb40527b2d36cfa7e1b285",
+ "surface": "v2-http/create-image-bitforge"
+}

@@ -1,0 +1,782 @@
+{
+ "BAB0": {
+  "arm": "B",
+  "image": "B/wall/B_wall_06.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "BAC0": {
+  "arm": "C",
+  "image": "C/wall/C_wall_02.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "BEB0": {
+  "arm": "A",
+  "image": "A/wall/A_wall_03.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "BIB0": {
+  "arm": "C",
+  "image": "C/floor/C_floor_14.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "BOB0": {
+  "arm": "B",
+  "image": "B/wall/B_wall_05.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "BUB0": {
+  "arm": null,
+  "image": "plants/plant_key_01.png",
+  "subject": "wall",
+  "truth": "PLANT_KEY"
+ },
+ "BYB0": {
+  "arm": "B",
+  "image": "B/floor/B_floor_02.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "CAB1": {
+  "arm": "C",
+  "image": "C/wall/C_wall_12.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "CAC1": {
+  "arm": "B",
+  "image": "B/floor/B_floor_03.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "CEB1": {
+  "arm": "C",
+  "image": "C/floor/C_floor_06.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "CIB1": {
+  "arm": "C",
+  "image": "C/wall/C_wall_18.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "COB1": {
+  "arm": "A",
+  "image": "A/wall/A_wall_09.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "CUB1": {
+  "arm": "A",
+  "image": "A/wall/A_wall_17.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "CYB1": {
+  "arm": "C",
+  "image": "C/floor/C_floor_11.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "DAB2": {
+  "arm": "A",
+  "image": "A/floor/A_floor_10.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "DAC2": {
+  "arm": "A",
+  "image": "A/floor/A_floor_06.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "DEB2": {
+  "arm": "A",
+  "image": "A/wall/A_wall_13.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "DIB2": {
+  "arm": "C",
+  "image": "C/wall/C_wall_14.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "DOB2": {
+  "arm": "C",
+  "image": "C/floor/C_floor_01.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "DUB2": {
+  "arm": "B",
+  "image": "B/floor/B_floor_04.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "DYB2": {
+  "arm": "B",
+  "image": "B/wall/B_wall_04.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "FAB3": {
+  "arm": "C",
+  "image": "C/floor/C_floor_17.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "FAC3": {
+  "arm": "A",
+  "image": "A/floor/A_floor_09.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "FEB3": {
+  "arm": "A",
+  "image": "A/wall/A_wall_10.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "FIB3": {
+  "arm": "B",
+  "image": "B/floor/B_floor_09.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "FOB3": {
+  "arm": null,
+  "image": "plants/plant_flat_08.png",
+  "subject": "wall",
+  "truth": "PLANT_FLAT"
+ },
+ "FUB3": {
+  "arm": null,
+  "image": "plants/plant_key_03.png",
+  "subject": "wall",
+  "truth": "PLANT_KEY"
+ },
+ "FYB3": {
+  "arm": null,
+  "image": "plants/plant_flat_07.png",
+  "subject": "floor",
+  "truth": "PLANT_FLAT"
+ },
+ "GAB4": {
+  "arm": null,
+  "image": "plants/plant_key_02.png",
+  "subject": "floor",
+  "truth": "PLANT_KEY"
+ },
+ "GAC4": {
+  "arm": "B",
+  "image": "B/floor/B_floor_00.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "GEB4": {
+  "arm": "A",
+  "image": "A/floor/A_floor_14.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "GIB4": {
+  "arm": "C",
+  "image": "C/wall/C_wall_10.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "GOB4": {
+  "arm": "B",
+  "image": "B/floor/B_floor_11.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "GUB4": {
+  "arm": "B",
+  "image": "B/wall/B_wall_18.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "GYB4": {
+  "arm": "B",
+  "image": "B/wall/B_wall_19.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "HAB5": {
+  "arm": "B",
+  "image": "B/wall/B_wall_02.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "HAC5": {
+  "arm": null,
+  "image": "plants/plant_key_04.png",
+  "subject": "wall",
+  "truth": "PLANT_KEY"
+ },
+ "HEB5": {
+  "arm": "C",
+  "image": "C/wall/C_wall_03.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "HIB5": {
+  "arm": "B",
+  "image": "B/wall/B_wall_13.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "HOB5": {
+  "arm": "C",
+  "image": "C/wall/C_wall_05.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "HUB5": {
+  "arm": "C",
+  "image": "C/wall/C_wall_04.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "HYB5": {
+  "arm": "A",
+  "image": "A/floor/A_floor_15.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "JAB6": {
+  "arm": "A",
+  "image": "A/floor/A_floor_00.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "JAC6": {
+  "arm": "C",
+  "image": "C/floor/C_floor_05.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "JEB6": {
+  "arm": "B",
+  "image": "B/wall/B_wall_16.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "JIB6": {
+  "arm": "B",
+  "image": "B/wall/B_wall_11.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "JOB6": {
+  "arm": "A",
+  "image": "A/floor/A_floor_01.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "JUB6": {
+  "arm": "A",
+  "image": "A/wall/A_wall_14.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "JYB6": {
+  "arm": "B",
+  "image": "B/floor/B_floor_16.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "KAB7": {
+  "arm": "B",
+  "image": "B/floor/B_floor_14.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "KAC7": {
+  "arm": "B",
+  "image": "B/wall/B_wall_12.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "KEB7": {
+  "arm": "A",
+  "image": "A/floor/A_floor_08.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "KIB7": {
+  "arm": "C",
+  "image": "C/wall/C_wall_09.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "KOB7": {
+  "arm": "B",
+  "image": "B/floor/B_floor_07.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "KUB7": {
+  "arm": "A",
+  "image": "A/wall/A_wall_16.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "KYB7": {
+  "arm": "A",
+  "image": "A/floor/A_floor_12.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "LAB8": {
+  "arm": "B",
+  "image": "B/floor/B_floor_13.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "LAC8": {
+  "arm": "B",
+  "image": "B/floor/B_floor_10.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "LEB8": {
+  "arm": "C",
+  "image": "C/floor/C_floor_08.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "LIB8": {
+  "arm": "B",
+  "image": "B/wall/B_wall_09.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "LOB8": {
+  "arm": "B",
+  "image": "B/wall/B_wall_07.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "LUB8": {
+  "arm": null,
+  "image": "plants/plant_key_00.png",
+  "subject": "floor",
+  "truth": "PLANT_KEY"
+ },
+ "LYB8": {
+  "arm": "C",
+  "image": "C/floor/C_floor_10.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "MAB9": {
+  "arm": "C",
+  "image": "C/floor/C_floor_19.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "MAC9": {
+  "arm": "A",
+  "image": "A/floor/A_floor_03.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "MEB9": {
+  "arm": "A",
+  "image": "A/floor/A_floor_13.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "MIB9": {
+  "arm": "C",
+  "image": "C/wall/C_wall_07.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "MOB9": {
+  "arm": "B",
+  "image": "B/floor/B_floor_06.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "MUB9": {
+  "arm": "C",
+  "image": "C/floor/C_floor_18.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "MYB9": {
+  "arm": "C",
+  "image": "C/floor/C_floor_02.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "NAB0": {
+  "arm": "A",
+  "image": "A/wall/A_wall_06.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "NEB0": {
+  "arm": "C",
+  "image": "C/wall/C_wall_06.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "NIB0": {
+  "arm": "B",
+  "image": "B/wall/B_wall_03.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "NOB0": {
+  "arm": "A",
+  "image": "A/floor/A_floor_16.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "NUB0": {
+  "arm": "B",
+  "image": "B/wall/B_wall_10.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "NYB0": {
+  "arm": "C",
+  "image": "C/wall/C_wall_17.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "PAB1": {
+  "arm": "B",
+  "image": "B/wall/B_wall_15.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "PEB1": {
+  "arm": "A",
+  "image": "A/wall/A_wall_02.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "PIB1": {
+  "arm": "C",
+  "image": "C/floor/C_floor_04.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "POB1": {
+  "arm": "A",
+  "image": "A/floor/A_floor_07.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "PUB1": {
+  "arm": "A",
+  "image": "A/floor/A_floor_02.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "PYB1": {
+  "arm": "A",
+  "image": "A/floor/A_floor_19.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "QAB2": {
+  "arm": "C",
+  "image": "C/floor/C_floor_00.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "QEB2": {
+  "arm": "C",
+  "image": "C/floor/C_floor_16.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "QIB2": {
+  "arm": "A",
+  "image": "A/wall/A_wall_15.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "QOB2": {
+  "arm": "B",
+  "image": "B/wall/B_wall_17.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "QUB2": {
+  "arm": "C",
+  "image": "C/floor/C_floor_09.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "QYB2": {
+  "arm": "A",
+  "image": "A/wall/A_wall_12.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "RAB3": {
+  "arm": "C",
+  "image": "C/floor/C_floor_13.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "REB3": {
+  "arm": "C",
+  "image": "C/floor/C_floor_12.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "RIB3": {
+  "arm": "A",
+  "image": "A/wall/A_wall_11.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "ROB3": {
+  "arm": "B",
+  "image": "B/wall/B_wall_08.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "RUB3": {
+  "arm": "B",
+  "image": "B/wall/B_wall_14.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "RYB3": {
+  "arm": "B",
+  "image": "B/floor/B_floor_17.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "SAB4": {
+  "arm": "C",
+  "image": "C/wall/C_wall_16.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "SEB4": {
+  "arm": "C",
+  "image": "C/floor/C_floor_03.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "SIB4": {
+  "arm": "A",
+  "image": "A/wall/A_wall_19.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "SOB4": {
+  "arm": null,
+  "image": "plants/plant_flat_09.png",
+  "subject": "floor",
+  "truth": "PLANT_FLAT"
+ },
+ "SUB4": {
+  "arm": "A",
+  "image": "A/floor/A_floor_05.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "SYB4": {
+  "arm": "A",
+  "image": "A/wall/A_wall_01.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "TAB5": {
+  "arm": "A",
+  "image": "A/wall/A_wall_18.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "TEB5": {
+  "arm": "A",
+  "image": "A/floor/A_floor_17.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "TIB5": {
+  "arm": "B",
+  "image": "B/floor/B_floor_12.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "TOB5": {
+  "arm": "A",
+  "image": "A/wall/A_wall_04.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "TUB5": {
+  "arm": "C",
+  "image": "C/wall/C_wall_19.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "TYB5": {
+  "arm": "C",
+  "image": "C/wall/C_wall_13.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "VAB6": {
+  "arm": "A",
+  "image": "A/floor/A_floor_04.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "VEB6": {
+  "arm": "C",
+  "image": "C/wall/C_wall_01.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "VIB6": {
+  "arm": "C",
+  "image": "C/wall/C_wall_15.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "VOB6": {
+  "arm": null,
+  "image": "plants/plant_flat_06.png",
+  "subject": "wall",
+  "truth": "PLANT_FLAT"
+ },
+ "VUB6": {
+  "arm": "B",
+  "image": "B/floor/B_floor_05.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "VYB6": {
+  "arm": "C",
+  "image": "C/wall/C_wall_00.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "WAB7": {
+  "arm": "A",
+  "image": "A/floor/A_floor_11.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "WEB7": {
+  "arm": "C",
+  "image": "C/wall/C_wall_08.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "WIB7": {
+  "arm": "A",
+  "image": "A/wall/A_wall_07.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "WOB7": {
+  "arm": "B",
+  "image": "B/floor/B_floor_19.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "WUB7": {
+  "arm": "B",
+  "image": "B/floor/B_floor_15.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "WYB7": {
+  "arm": "C",
+  "image": "C/wall/C_wall_11.png",
+  "subject": "wall",
+  "truth": "armC"
+ },
+ "XAB8": {
+  "arm": "B",
+  "image": "B/wall/B_wall_01.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "XEB8": {
+  "arm": "A",
+  "image": "A/wall/A_wall_05.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "XIB8": {
+  "arm": "B",
+  "image": "B/floor/B_floor_01.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "XOB8": {
+  "arm": "B",
+  "image": "B/floor/B_floor_08.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "XUB8": {
+  "arm": "B",
+  "image": "B/wall/B_wall_00.png",
+  "subject": "wall",
+  "truth": "armB"
+ },
+ "XYB8": {
+  "arm": "A",
+  "image": "A/wall/A_wall_08.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "ZAB9": {
+  "arm": "A",
+  "image": "A/floor/A_floor_18.png",
+  "subject": "floor",
+  "truth": "armA"
+ },
+ "ZEB9": {
+  "arm": null,
+  "image": "plants/plant_flat_05.png",
+  "subject": "floor",
+  "truth": "PLANT_FLAT"
+ },
+ "ZIB9": {
+  "arm": "B",
+  "image": "B/floor/B_floor_18.png",
+  "subject": "floor",
+  "truth": "armB"
+ },
+ "ZOB9": {
+  "arm": "C",
+  "image": "C/floor/C_floor_15.png",
+  "subject": "floor",
+  "truth": "armC"
+ },
+ "ZUB9": {
+  "arm": "A",
+  "image": "A/wall/A_wall_00.png",
+  "subject": "wall",
+  "truth": "armA"
+ },
+ "ZYB9": {
+  "arm": "C",
+  "image": "C/floor/C_floor_07.png",
+  "subject": "floor",
+  "truth": "armC"
+ }
+}

@@ -26,7 +26,24 @@ cleanup() { rm -f "$MARKER"; echo "== marker removed (a leftover would silently 
 trap cleanup EXIT
 
 cp "$TEMPLATE" "$MARKER"
+# TIER0_THEME points the review build at an alternate tile theme — a §6.4 survivor set, say —
+# without editing the committed template. The template stays the default so an ordinary review
+# build is unchanged, and the substitution is echoed because a device build that quietly showed
+# different tiles than the operator expected would be the worst possible review artefact.
+if [ -n "${TIER0_THEME:-}" ]; then
+  python3 - "$MARKER" "$TIER0_THEME" <<'PY'
+import json, sys
+path, theme = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["themeConfig"] = theme
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== theme override: $TIER0_THEME"
+fi
 echo "== marker written: $(basename "$MARKER")"
+echo "== grid: $(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print("tile %s at x%s" % (d.get("tileSize","default"), d.get("tileScale","default")))' "$MARKER")"
 echo "== bundle id: $BUNDLE_ID   name: $NAME"
 
 # The marker is a new res:// file, so it must be imported before it can be packed.

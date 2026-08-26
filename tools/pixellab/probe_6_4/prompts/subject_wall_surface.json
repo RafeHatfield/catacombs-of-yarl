@@ -1,0 +1,59 @@
+{
+  "subject": "wall_surface",
+  "title": "Boundary stone-and-timber wall — SURFACE framing (micro-probe)",
+  "supersedes_for_this_probe_only": "subject_wall.json",
+
+  "why_this_exists": "Stage 1's wall subject returned 1 usable tile in 60. The diagnosis on record is that the description was OBJECT-shaped — 'a single square dungeon wall tile showing exactly two planes ... squared beams lashed twice with rope, driven iron pins, a hide strap, a salvaged plank' — and BitForge is a single-object generator, so it built the strapped timber thing it was asked for: chests, doors, sarcophagi. This file changes the FRAMING, not the register. Every construction, wear and projection clause below is carried over from subject_wall.json unchanged; what is replaced is the noun the generator is being handed. It is asked for a SURFACE, not a THING.",
+
+  "description": "A seamless tileable wall texture, a flat repeating architectural surface filling the entire image edge to edge with no border and no background. Rough grey quarried stone laid in courses, with heavy orc-made timber pinned across it — squared beams lashed with rope, driven iron pins, a hide strap, a salvaged plank laid over an older repair. Over-built and structural: every band, strap and pin is holding something and nothing is there to be looked at. Stone and timber both rubbed smooth where shoulders and hands pass. Nothing is broken and nothing has collapsed; it is used up, not ruined. The pattern continues past all four edges of the frame.",
+
+  "negative_description": "single object, isolated object, item, icon, sprite on a background, empty background, plain background, border, frame, vignette, drop shadow, chest, box, crate, barrel, door, doorway, gate, coffin, sarcophagus, furniture, candle, torch, lantern, bone, skull, banner, shield, treasure, isometric, three quarter view, perspective view, tilted, diamond, cobwebs, blood, rubble, collapse, ruins, moss, vines, plants, text, watermark, character, creature",
+
+  "parameters": {
+    "image_size": {"width": 32, "height": 32},
+    "outline": "lineless",
+    "detail": "low detail",
+    "view": "high top-down",
+    "no_background": false
+  },
+
+  "phrase_provenance": [
+    {"phrase": "A seamless tileable wall texture, a flat repeating architectural surface",
+     "clause": "THE CHANGE UNDER TEST. Not a bible clause — a framing hypothesis, declared as such. Stage 1's wall failure is the evidence that motivates it."},
+    {"phrase": "filling the entire image edge to edge with no border and no background",
+     "clause": "Mechanical. Stage 1's dominant wall failure was a discrete object centred on a grey field; this refuses that composition in the positive prompt as well as the negative."},
+    {"phrase": "The pattern continues past all four edges of the frame",
+     "clause": "Mechanical, and the strongest available statement of tileability without asking for a wang set. §3's orthogonal square grid means a wall tile abuts its neighbours on all four sides."},
+    {"phrase": "Rough grey quarried stone laid in courses, with heavy orc-made timber pinned across it",
+     "clause": "§7.4 seam 1 — 'the Boundary is mostly found stone with orc work pinned into it.' Carried over from subject_wall.json; the made/found ratio is unchanged."},
+    {"phrase": "squared beams lashed with rope, driven iron pins, a hide strap, a salvaged plank laid over an older repair",
+     "clause": "§7.3 LOCKED (Boundary) — the clause's own vocabulary, verbatim from subject_wall.json. ⚠ Retained knowingly: this is the phrase most likely to have produced Stage 1's chests and doors. It is kept because dropping it would change the register at the same time as the framing, and then the micro-probe would not know which change moved the result. One variable."},
+    {"phrase": "Over-built and structural ... nothing is there to be looked at",
+     "clause": "§7.3 RULED (Rafe, 2026-08-24) — 'competent but tough. No interest in aesthetics — strength only.'"},
+    {"phrase": "rubbed smooth where shoulders and hands pass",
+     "clause": "§8.1 — traffic without care produces polish; 'stone smoothed to a shine at hand height'."},
+    {"phrase": "used up, not ruined",
+     "clause": "§1 / §8.1. NO INSTRUMENT (§13.4); carried at the human gate."},
+    {"phrase": "negative: single object, isolated object, icon, sprite on a background",
+     "clause": "Names Stage 1's actual measured failure mode directly, rather than a guess at it."},
+    {"phrase": "negative: chest, box, crate, barrel, door, doorway, gate, coffin, sarcophagus",
+     "clause": "The specific objects Stage 1's wall batch returned, enumerated from the evidence in stage1/*/wall/. ⚠ Worth stating: the negative-description diagnostic found this field NOT additive but only weakly honoured (n=4), so this list is a cheap hedge and not a mechanism to rely on."},
+    {"phrase": "negative: drop shadow, vignette",
+     "clause": "§6.3 — the asset never grounds itself."}
+  ],
+
+  "parameter_provenance": {
+    "note": "Every parameter is IDENTICAL to subject_wall.json. The micro-probe changes the description and nothing else, so that a change in yield is attributable to framing rather than to a parameter moving underneath it.",
+    "image_size": {"value": "32x32", "clause": "RULED (Rafe). Verified on the frozen surface by Precondition A."},
+    "outline": {"value": "lineless", "clause": "§12.1 LOCKED — no baked outline anywhere."},
+    "detail": {"value": "low detail", "clause": "§4.1/§12 — less interior detail; the register's named failure mode is refinement."},
+    "view": {"value": "high top-down", "clause": "§3. ⚠ Efficacy unverified on this endpoint."},
+    "no_background": {"value": false, "clause": "Mechanical: a wall tile is opaque and full-bleed."},
+    "seed": {"value": "9100 + index", "clause": "Recorded, never relied on — this surface is not seed-reproducible."}
+  },
+
+  "arm": {
+    "note": "NO ARM. The micro-probe is not arm-based and carries no lighting treatment sentence and no `shading` parameter. Stage 1 established that the arms do not separate on the lighting axis, so running three of them here would spend three times the budget to re-measure a null result. The question here is framing yield, and only that.",
+    "lighting": ""
+  }
+}

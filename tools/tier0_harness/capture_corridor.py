@@ -82,6 +82,7 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
     light = dict(cfg["light"])
     if light_overrides:
         light.update(light_overrides)
+    tile = dict(cfg["tile"])
 
     spec = scene_spec or cfg["scene"]["spec"]
     # Main reads the spec through Godot's FileAccess (so the same path works inside the packed
@@ -96,6 +97,12 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
         "--capture-width", str(w), "--capture-height", str(h),
         "--corridor-scene", spec,
         "--tile-theme-config", theme_config,
+        # Tile size is a PARAMETER, and until this was passed it was a parameter in name only:
+        # the config could declare 32 and TopDownRenderer would draw a 24px grid regardless, so
+        # a capture could silently disagree with its own manifest. The engine echoes what it
+        # actually used, so the capture log carries the grid it was drawn on.
+        "--tile-size", str(tile["size"]),
+        "--tile-scale", str(tile["scale"]),
         # Every light value is passed explicitly. The engine REFUSES to default any of them
         # (Main.ReadLightParams), so no capture can be produced by an undeclared rig.
         "--light-ambient", str(light["ambient"]),

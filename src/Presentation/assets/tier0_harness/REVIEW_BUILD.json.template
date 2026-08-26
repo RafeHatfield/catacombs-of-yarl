@@ -28,5 +28,20 @@
     "color": "ffb066",
     "energy": 1.6,
     "radiusTiles": 5.5
-  }
+  },
+
+  "_grid": [
+    "Tile size and integer scale, mirroring --tile-size / --tile-scale. Present for the same",
+    "reason the light values are: an iOS app receives no command line, so without these the",
+    "device build would draw at the renderer's default 24 while the desktop captures it is",
+    "meant to be compared against were taken at 32 — and nothing would have said so. The",
+    "device and the capture must share the grid as well as the rig, or the §13.1 verdict is",
+    "taken on the wrong picture.",
+    "",
+    "32 at x2 is RULED (Rafe, 2026-08-25), NOT derived — §4.3's derivation has not happened.",
+    "Copied from tools/tier0_harness/harness_config.yaml; if they drift the two stop being",
+    "comparable."
+  ],
+  "tileSize": 32,
+  "tileScale": 2.0
 }

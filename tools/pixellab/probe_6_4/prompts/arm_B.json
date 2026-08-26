@@ -1,0 +1,31 @@
+{
+  "arm": "B",
+  "treatment": "No key light; form shading, self-occlusion and material value retained",
+  "role": "The likely answer",
+
+  "lighting": "Evenly illuminated from the front with no key light and no cast shadows, so no direction of light is declared anywhere in the artwork. Form is carried by the material itself: joints, recesses and undercuts sit darker because they are enclosed, raised and exposed surfaces sit lighter, and different materials hold plainly different values. No white highlights, no glints, no specular edges, no light source.",
+
+  "parameters": {
+    "shading": "basic shading"
+  },
+
+  "phrase_provenance": [
+    {"phrase": "Evenly illuminated from the front",
+     "clause": "§6.3 — 'sprites are drawn with material and form under relatively even illumination.'"},
+    {"phrase": "no key light and no cast shadows, so no direction of light is declared anywhere",
+     "clause": "§6.4 arm B — 'no key light'; §6.3 — 'highlights are not baked in. Light arrives from the engine.' The stated harm is directional: 'baked highlights fix a single light direction into every asset.' What is forbidden is the DECLARED DIRECTION, and this sentence forbids exactly that and nothing more."},
+    {"phrase": "joints, recesses and undercuts sit darker because they are enclosed, raised and exposed surfaces sit lighter",
+     "clause": "§6.4, the distinction that probably decides it — 'receive-light does NOT necessarily mean flat. It can mean no directional key light while retaining form shading, self-occlusion, and material value differences.' Self-occlusion is direction-free by construction: an enclosed joint is dark from every angle, so it survives a torch arriving from anywhere."},
+    {"phrase": "different materials hold plainly different values",
+     "clause": "§12 — 'value separation from the surface beneath', threshold PLACEHOLDER; §12.1 — with no baked ring, separation is delivered by the value floor. On this arm the value structure is the only separation mechanism left, which is why it is stated explicitly rather than assumed."},
+    {"phrase": "No white highlights, no glints, no specular edges, no light source",
+     "clause": "§6.3 — 'painted specularity' is named as the thing generation models are trained to produce; §6.4 names that as THE risk: 'asking a generator for evenly-illuminated material-only sprites may be asking it to do the thing it least wants to do.' The refusal is stated four ways because reverting to a baked highlight is the expected failure and the count of those reversions is the probe's primary number."}
+  ],
+
+  "parameter_provenance": {
+    "shading": {"value": "basic shading",
+      "clause": "The lever, one step down the same enum arm A uses — the arms move along ONE axis so the comparison is single-variable. 'basic shading' is the enum value that retains shading while refusing elaboration; the arm's distinction from C is that C takes the enum's floor ('flat shading') and B does not. ⚠ HONOURED means measurable, not correct-in-direction (AUDIT column 2) — whether this reads as form-without-key is an eye question for the human gate (§13.2, §13.4)."}
+  },
+
+  "note": "B is the arm §6.4 expects to win, which is precisely why its failures are counted rather than argued away. B reverting toward baked highlights under Stage 2 conditioning is the named expected failure and is the whole question at that stage. §13.3 applies to this arm unchanged: 'promising' and 'close' are failing verdicts."
+}

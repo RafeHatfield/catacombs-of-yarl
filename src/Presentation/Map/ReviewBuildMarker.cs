@@ -32,6 +32,21 @@ public sealed class ReviewBuildMarker
     public string ThemeConfigPath { get; private init; } = "";
     public ReviewLighting.Params Light { get; private init; }
 
+    /// <summary>
+    /// Tile size and integer scale for the review build, mirroring --tile-size / --tile-scale.
+    ///
+    /// These exist for the same reason the light values do, and the omission would have been
+    /// the same bug: an iOS app receives no command line, so a device build had no way to be
+    /// told the grid. It would have rendered at the renderer's default 24 while the desktop
+    /// captures it is meant to be compared against were taken at 32 — and nothing would have
+    /// said so. The device and the capture must be lit by the same rig AND drawn on the same
+    /// grid, or they are not comparable and the §13.1 verdict is taken on the wrong picture.
+    ///
+    /// Null means "not stated in the marker", and the renderer's own defaults apply.
+    /// </summary>
+    public int? TileSize { get; private init; }
+    public float? TileScale { get; private init; }
+
     private static ReviewBuildMarker? _cached;
     private static bool _looked;
 
@@ -70,6 +85,10 @@ public sealed class ReviewBuildMarker
                     LightColor:  new Color(light.GetProperty("color").GetString()),
                     Energy:      (float)light.GetProperty("energy").GetDouble(),
                     RadiusTiles: (float)light.GetProperty("radiusTiles").GetDouble()),
+                TileSize  = root.TryGetProperty("tileSize", out var ts)
+                            ? ts.GetInt32() : (int?)null,
+                TileScale = root.TryGetProperty("tileScale", out var sc)
+                            ? (float)sc.GetDouble() : (float?)null,
             };
         }
         catch (System.Exception ex)
