@@ -1,0 +1,22 @@
+{
+ "FOUR": {
+  "file": "C-GAB_lit.png",
+  "sha256": "40de7c2037e135989b0105863e045e248ab9a8f8da61e1aa4383c8e541fce2cb",
+  "survivor": "C-GAB"
+ },
+ "ONE": {
+  "file": "A-HEB_lit.png",
+  "sha256": "1e34e5812f81c556df273891b5d81ba363416895b8f50876d4b892307e54e878",
+  "survivor": "A-HEB"
+ },
+ "THREE": {
+  "file": "B-KAB_lit.png",
+  "sha256": "600d7e106e8b658cfb0b7b58c1e891f15ec5b905fc4132a94272d436b1f7226e",
+  "survivor": "B-KAB"
+ },
+ "TWO": {
+  "file": "A-VAB_lit.png",
+  "sha256": "ae14a5d5cf5b100ec21b8decda6cb603f1d71e0ec3779a0ff53e30176109de7b",
+  "survivor": "A-VAB"
+ }
+}

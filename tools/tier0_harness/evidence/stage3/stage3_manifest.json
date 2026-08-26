@@ -1,0 +1,73 @@
+{
+ "commit": "0fc4831421077a7743afa4270deb20c1a8dce828",
+ "rig_requested": "ambient=1a1a22 color=ffb066 energy=1.6 radius_tiles=5.5 (ALL UNDERIVED \u2014 \u00a76.2 PLACEHOLDER)",
+ "wall": "wallsurf_14.png",
+ "tile_size": 32,
+ "tile_scale": 2.0,
+ "captures": [
+  {
+   "code": "A-VAB",
+   "lit": true,
+   "file": "A-VAB_lit.png",
+   "sha256": "ae14a5d5cf5b100ec21b8decda6cb603f1d71e0ec3779a0ff53e30176109de7b",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
+  },
+  {
+   "code": "A-VAB",
+   "lit": false,
+   "file": "A-VAB_unlit.png",
+   "sha256": "125301d4f1f2a1743738b3c695f6e0519fb3c250f2d36447b4f985a3f446e37e",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
+  },
+  {
+   "code": "A-HEB",
+   "lit": true,
+   "file": "A-HEB_lit.png",
+   "sha256": "1e34e5812f81c556df273891b5d81ba363416895b8f50876d4b892307e54e878",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
+  },
+  {
+   "code": "A-HEB",
+   "lit": false,
+   "file": "A-HEB_unlit.png",
+   "sha256": "a10f0265190d4bfcadd39fa5fad8384234cc6d627a473c33ffb553150adb7e47",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
+  },
+  {
+   "code": "B-KAB",
+   "lit": true,
+   "file": "B-KAB_lit.png",
+   "sha256": "600d7e106e8b658cfb0b7b58c1e891f15ec5b905fc4132a94272d436b1f7226e",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
+  },
+  {
+   "code": "B-KAB",
+   "lit": false,
+   "file": "B-KAB_unlit.png",
+   "sha256": "780e78ed5b903ecd1939f4c013bb1626570a6a93ba7f4b34850c5261fa915146",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
+  },
+  {
+   "code": "C-GAB",
+   "lit": true,
+   "file": "C-GAB_lit.png",
+   "sha256": "40de7c2037e135989b0105863e045e248ab9a8f8da61e1aa4383c8e541fce2cb",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
+  },
+  {
+   "code": "C-GAB",
+   "lit": false,
+   "file": "C-GAB_unlit.png",
+   "sha256": "4954f2c3a45eff0d85fd1e6c45b93b94aea29c505046f3e418a9ee3c4e9f38e3",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
+  }
+ ]
+}

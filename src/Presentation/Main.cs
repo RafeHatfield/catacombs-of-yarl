@@ -578,6 +578,17 @@ public partial class Main : Node
         int tileSize = TopDownRenderer.DefaultTileSize;
         float scale = TopDownRenderer.DefaultScale;
 
+        // The review-build marker supplies the grid where there is no command line to read —
+        // an iOS app receives none. Without this a device build would draw at the default 24
+        // while the desktop captures it exists to be compared against were taken at 32, and
+        // nothing would have reported the mismatch. CLI flags still win, exactly as they do
+        // for the light rig, so a desktop run can override a marker.
+        if (ReviewBuildMarker.TryLoad(out var marker) && marker != null)
+        {
+            if (marker.TileSize is int ms && ms > 0) tileSize = ms;
+            if (marker.TileScale is float msc && msc > 0f) scale = msc;
+        }
+
         var rawSize = ReadStringArg("--tile-size");
         if (!string.IsNullOrEmpty(rawSize))
         {
