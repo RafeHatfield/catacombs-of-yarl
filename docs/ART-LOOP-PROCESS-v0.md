@@ -1,6 +1,6 @@
 # Yarl Art Loop — PROCESS LAW v0
 
-**Status: v0.1 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
+**Status: v0.3 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
 `ART-BIBLE-v0.md`. Structure transfers wholesale; every number is re-derived.
 
 This document governs *how work is done and certified*. `ART-BIBLE-v0.md` governs *what is
@@ -37,6 +37,38 @@ arithmetic that trades against palette compliance.
 
 **There will be no dread score and no staging detector.** A weak proxy is worse than an
 acknowledged absence.
+
+### 1.1 The gauntlet clause — LAW
+
+**The two gates are correct and unchanged. This clause governs what happens between them:
+long, autonomous, critic-held runs — not checkpointed relay.**
+
+1. **Nothing reaches the human gate that the blind critic would kill.** Any session producing
+   visual candidates runs a critic seat over them BEFORE anything is presented to Rafe.
+   Mechanical disqualifiers (wrong projection, baked outline, baked shadow,
+   object-where-surface-asked, off-canvas) are culled without ceremony; register reaction culls
+   the rest to survivors. Rafe sees survivors and counts — never the morgue. The morgue goes to
+   the ledger.
+2. **The critic's FAIL is not a stop. It is a reprompt.** On FAIL with flip list, the builder
+   applies the flip list and runs again, automatically, without returning to any human. This
+   continues until the critic passes, the declared batch budget is spent, or a genuine
+   ruling-trigger fires (below). "Tried once or twice, then asked" is a malformed session.
+3. **Sessions are bounded by budget and width, never by rounds and never by check-ins**
+   (§6 already says this about rounds; it now explicitly covers check-ins).
+4. **Ruling triggers — the ONLY reasons to return to a human mid-run:** (a) a landing decision
+   (Rafe's gate, §1); (b) an amendment to anything frozen (kill criteria, declared canvas,
+   surface, bar); (c) an instrument shown unable to fail (§4); (d) a precondition fail;
+   (e) budget exhausted below bar. Each return names its trigger. **A return that names no
+   trigger is checkpoint creep and is a process defect.**
+5. **Evidence-required is not approval-required.** Every round logs its evidence (diffs, counts,
+   ledger, verbatim critic verdicts) exactly as before — in the report, read after the run, not
+   as a toll-gate during it. Vetting by the design thread applies to landings and rulings, not
+   to rounds.
+
+**Named failure this clause exists to prevent: CHECKPOINT CREEP** — the entropic drift of an
+autonomous loop toward human relay, observed independently on both projects. Standing test:
+**every human touchpoint in a session prompt must cite the law that requires it.** No citation,
+no touchpoint.
 
 ---
 
@@ -84,6 +116,9 @@ a ruling invalidates the evidence and forces a re-run.** No exceptions, no "it's
    intention that never arrived.
 4. **The critic must demonstrate it can fail before its pass counts** (§4).
 5. **A critic that finds no defect should suspect its own rigour** before crediting the work.
+6. **The critic runs every round, not at the end.** A session that batches N candidates and
+   presents them uncritiqued has not run the loop; it has run a generator with a delivery step.
+   Critic seats are cheap (§3.1) — spend them.
 
 ---
 
@@ -257,6 +292,13 @@ construction. **This is a CC task with evidence, not a judgement call from memor
   asserts load-bearing clauses survived** — never as a string typed into a chat.
 
 ---
+
+*v0.3 — 2026-08-25. **The gauntlet clause** (new §1.1): autonomous critic-held runs restored as
+the default execution mode; ruling triggers enumerated; checkpoint creep named with its standing
+test; evidence-required distinguished from approval-required. **§3 gains item 6**: the critic
+runs every round, not at the end. Prompted by a measured audit — the blind critic had not run
+once since the process was adopted, and unculled candidate sheets reached the human gate. The
+founding Task/Method/Bar block is the reference for this restoration.*
 
 *v0.1 — 2026-08-24. Adapted from Gemfall LOOP-PROCESS. Two-gate structure and §3.2 (critic
 never receives the bible) are Yarl-specific additions. §10 sequencing is new: tier zero is the
