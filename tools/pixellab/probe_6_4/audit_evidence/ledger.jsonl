@@ -1,0 +1,39 @@
+{"claim": "balance:before", "verdict": "INFO", "detail": "credits: $8.11 | generations_remaining: 4326 | generations_used: 674 | generations_total: 5000 | subscription: active (Tier 2: Pixel Artisan) | generations_reset: 2026-09-24 | note: generations_total is this cycle's allowance (prorated on a mid-cycle upgrade); it refills on generations_reset"}
+{"claim": "ref:make 24x24", "verdict": "PASS", "detail": "24x24"}
+{"claim": "ref:make 32x32", "verdict": "PASS", "detail": "32x32"}
+{"claim": "floor:pixflux 24x24_576px", "verdict": "REFUSED", "detail": "error: 24x24 is too small (576px, minimum is 32x32 = 1024px)", "area": 576}
+{"claim": "floor:pixflux 32x32_1024px", "verdict": "ACCEPTED", "detail": "job e8dd3083 in 13s", "area": 1024}
+{"claim": "floor:pixflux 16x64_1024px", "verdict": "ACCEPTED", "detail": "job ac96309f in 13s", "area": 1024}
+{"claim": "floor:pixflux 16x16_256px", "verdict": "REFUSED", "detail": "error: 16x16 is too small (256px, minimum is 32x32 = 1024px)", "area": 256}
+{"claim": "floor:pixflux init24 no-wh", "verdict": "REFUSED", "detail": "error: 24x24 is too small (576px, minimum is 32x32 = 1024px)"}
+{"claim": "cond:v1 style24@24", "verdict": "REFUSED", "detail": "TypeError: Object of type Image is not JSON serializable"}
+{"claim": "cond:v1 style32@24", "verdict": "REFUSED", "detail": "TypeError: Object of type Image is not JSON serializable"}
+{"claim": "cond:pro style24@24", "verdict": "ACCEPTED", "detail": "job 2bd2ecea in 91s"}
+{"claim": "cond:pro refimages@24", "verdict": "ACCEPTED", "detail": "job 8a5a23cd in 114s"}
+{"claim": "cond:pixen style24@24", "verdict": "REFUSED", "detail": "1 validation error for call[create_image_pixen] | style_image_base64 |   Unexpected keyword argument [type=unexpected_keyword_argument, input_value='iVBORw0KGgoAAAANSUhEUgAA...zQOliVDAAAAAElFTkSuQmCC', input_type=str] |     For further information visit https://errors.pydantic.dev/2.13/v/unexpected_keyword_argument", "note": "pixen schema declares no style/reference field"}
+{"claim": "cond:pixflux init32@32", "verdict": "ACCEPTED", "detail": "job 3daa4c60 in 21s"}
+{"claim": "balance:after-col1", "verdict": "INFO", "detail": "credits: $8.11 | generations_remaining: 4281 | generations_used: 719 | generations_total: 5000 | subscription: active (Tier 2: Pixel Artisan) | generations_reset: 2026-09-24 | note: generations_total is this cycle's allowance (prorated on a mid-cycle upgrade); it refills on generations_reset"}
+{"claim": "cond:v1 style24@24", "verdict": "ACCEPTED", "detail": "24x24"}
+{"claim": "cond:v1 style32@24 (mismatch)", "verdict": "REFUSED", "detail": "PixelLabRefusal: [server_error] HTTP 500 on /generate-image-bitforge: {\"detail\":\"style_image must be size (24, 24), not torch.Size([32, 32])\"}"}
+{"claim": "cond:v1 strength 0 vs 100", "verdict": "INFO", "detail": "pixdiff=1.0000", "pixdiff": 1.0}
+{"claim": "lever:v1 shading under style", "verdict": "HONOURED", "detail": "pixdiff=1.0000 (flat vs detailed, style_strength=50, seed fixed)", "pixdiff": 1.0}
+{"claim": "lever:v1 shading UNconditioned (control)", "verdict": "HONOURED", "detail": "pixdiff=1.0000", "pixdiff": 1.0}
+{"claim": "lever:pro style_copy shading on/off", "verdict": "HONOURED", "detail": "pixdiff=1.0000", "pixdiff": 1.0}
+{"claim": "lever:pixflux shading under init_image", "verdict": "HONOURED", "detail": "pixdiff=1.0000", "pixdiff": 1.0}
+{"claim": "balance:after-col2", "verdict": "INFO", "detail": "credits: $8.11 | generations_remaining: 4232 | generations_used: 768 | generations_total: 5000 | subscription: active (Tier 2: Pixel Artisan) | generations_reset: 2026-09-24 | note: generations_total is this cycle's allowance (prorated on a mid-cycle upgrade); it refills on generations_reset"}
+{"claim": "NEGCTRL:v1 identical call x2", "verdict": "DETERMINISTIC", "detail": "pixdiff=0.0000", "pixdiff": 0.0}
+{"claim": "NEGCTRL:pro identical call x2", "verdict": "NON-DETERMINISTIC", "detail": "pixdiff=1.0000", "pixdiff": 1.0}
+{"claim": "NEGCTRL:pixflux identical call x2", "verdict": "NON-DETERMINISTIC", "detail": "pixdiff=1.0000", "pixdiff": 1.0}
+{"claim": "NEGCTRL:pixen identical call x2", "verdict": "NON-DETERMINISTIC", "detail": "pixdiff=1.0000", "pixdiff": 1.0}
+{"claim": "v2http:24x24 + shading", "verdict": "ACCEPTED", "detail": "ok"}
+{"claim": "NEGCTRL:v2http identical x2", "verdict": "NON-DETERMINISTIC", "detail": "pixdiff=0.3541666666666667", "pixdiff": 0.3541666666666667}
+{"claim": "lever:v2http shading", "verdict": "HONOURED", "detail": "pixdiff=1.0", "pixdiff": 1.0}
+{"claim": "cond:v2http style24@24", "verdict": "ACCEPTED", "detail": "ok"}
+{"claim": "lever:v2http shading under style", "verdict": "HONOURED", "detail": "pixdiff=1.0", "pixdiff": 1.0}
+{"claim": "NEGCTRL:v2http same-seed x3", "verdict": "NON-DETERMINISTIC", "detail": "pairwise 0.3542/0.0000/0.3542; different-seed 1.0000"}
+{"claim": "NEGCTRL:v1 same-seed x3", "verdict": "DETERMINISTIC", "detail": "pairwise 0.3542/0.0000/0.3542"}
+{"claim": "NEGCTRL:v1 same-seed x8 variant census", "verdict": "NON-DETERMINISTIC", "detail": "3 distinct outputs in 8 identical calls: {'53eb19d5d6a0': 3, 'e2405750ef4a': 3, '76e20b4c4cb4': 2}"}
+{"claim": "cond:pro 2 refs@24", "verdict": "ACCEPTED", "detail": "job 00f8ebdc in 168s"}
+{"claim": "cond:pro 5 refs@24", "verdict": "REFUSED", "detail": "error: at most 4 reference images, got 5"}
+{"claim": "timing", "verdict": "INFO", "detail": "v1 21.5s/gen, v2 20.6s/gen; MCP pro 91-168s/gen observed"}
+{"claim": "balance:final", "verdict": "INFO", "detail": "credits: $8.11 | generations_remaining: 4125 | generations_used: 875 | generations_total: 5000 | subscription: active (Tier 2: Pixel Artisan) | generations_reset: 2026-09-24 | note: generations_total is this cycle's allowance (prorated on a mid-cycle upgrade); it refills on generations_reset"}
