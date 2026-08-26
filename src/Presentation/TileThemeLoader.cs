@@ -189,18 +189,23 @@ public static class TileThemeLoader
 
             // ------------------------------------------------------------------
             // InAutotile: reading bitmask→tileId pairs at indent >= 6
-            // These are the sub-entries of wall_autotile: { 0: 186, 1: 187, ... }
+            // These are the sub-entries of wall_autotile: { 0: 186, 1: [187, 188], ... }
             // Keys are integers (bitmask 0–15); values are tile IDs.
             // ------------------------------------------------------------------
             if (state == ParseState.InAutotile && indent >= 6)
             {
                 if (currentThemeData == null) continue;
 
-                // Key is the bitmask (0–15), value is the tile ID
-                if (int.TryParse(key, NumberStyles.Integer, CultureInfo.InvariantCulture, out int bitmask) &&
-                    int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int tileId))
+                // Key is the bitmask (0–15). The value is one tile ID ("184") or a bracketed
+                // list of variants ("[184, 185, 186]") — ParseIntList accepts both, so a theme
+                // written before variants existed loads unchanged.
+                if (int.TryParse(key, NumberStyles.Integer, CultureInfo.InvariantCulture, out int bitmask))
                 {
-                    currentThemeData.WallAutotile[bitmask] = tileId;
+                    var variants = ParseIntList(rawValue);
+                    if (variants.Count > 0)
+                        currentThemeData.WallAutotile[bitmask] = variants;
+                    else
+                        GD.PrintErr($"[TileThemeLoader] Could not parse autotile entry '{key}: {value}' in theme '{currentThemeName}'.");
                 }
                 else
                 {

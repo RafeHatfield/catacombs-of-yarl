@@ -1,0 +1,208 @@
+{
+ "what": "MOCK composed wall segments. Not art, not a palette, not a landing candidate.",
+ "api_calls": 0,
+ "generated_by": "tools/composition_spike/compose_walls.py",
+ "parts": [
+  {
+   "role": "floor",
+   "id": 9120,
+   "code": "A-VAB",
+   "provenance": "\u00a76.4 probe survivor A-VAB.png",
+   "mock": false
+  },
+  {
+   "role": "floor",
+   "id": 9121,
+   "code": "A-HEB",
+   "provenance": "\u00a76.4 probe survivor A-HEB.png",
+   "mock": false
+  },
+  {
+   "role": "floor",
+   "id": 9122,
+   "code": "B-KAB",
+   "provenance": "\u00a76.4 probe survivor B-KAB.png",
+   "mock": false
+  },
+  {
+   "role": "floor",
+   "id": 9123,
+   "code": "C-GAB",
+   "provenance": "\u00a76.4 probe survivor C-GAB.png",
+   "mock": false
+  },
+  {
+   "role": "face",
+   "id": "FACE_r07_00",
+   "mock": false,
+   "provenance": "wall gauntlet ledger round07/images/r07_00.png",
+   "rows_used": [
+    5,
+    30
+   ],
+   "why": "coursed masonry, irregular block widths, joints at every course; no key-light cull. Rows 0-4 (its failed cap band) discarded.",
+   "ledger_verdict": "FAIL - 'rows 0-4 use the identical greys as the face, so there is no top band at all ... flat brick wallpaper with zero thickness'"
+  },
+  {
+   "role": "binding overlays",
+   "id": "MOCK",
+   "mock": true,
+   "provenance": "authored in compose_walls.py this session; never generated, never corpus"
+  }
+ ],
+ "arms": {
+  "boundA": {
+   "face_part": "r07_00",
+   "top_part": "r04_08",
+   "top_rows": [
+    0,
+    28
+   ],
+   "top_why": "flat weathered slab with cracks - the closest thing the gauntlet produced to a wall top. Rows 29-31 (its baked floor shadow) discarded.",
+   "bindings": "MOCK - authored in compose_walls.py",
+   "derivation": "",
+   "note": "native R4 slab top. The top plane keeps the part's own value, which is ~30 luminance above the face. That value step is the gauntlet's \u00a75 hazard: at 32px it may read as a key light from above.",
+   "theme": "src/Presentation/assets/composition_spike/tile_themes_boundA.yaml",
+   "segment_sheets": {
+    "south_facing_run": "tools/composition_spike/segments/boundA_south_facing_run.png",
+    "straight_run": "tools/composition_spike/segments/boundA_straight_run.png",
+    "corner": "tools/composition_spike/segments/boundA_corner.png"
+   },
+   "palette_size": 76,
+   "face_plane_lum": 97.0,
+   "top_plane_lum": 125.5,
+   "tiles": {
+    "MOCK_comp_9100.png": "5e3f92940fbe98ef2b80039967f18ee4175ac02bbc9e8d4cada5d15e5c686f4a",
+    "MOCK_comp_9101.png": "5440b941f761f5c79dd7919b5c5d4201992de964aa19607d60ac514f90a26072",
+    "MOCK_comp_9102.png": "91936f6cd05d1e8556717c4c22ebb7543c6c96d03bdd794e24c0d79fdfa930bc",
+    "MOCK_comp_9103.png": "02ea9decd53f396d0575af429853924d2d16ea662cb39f1d8fa63b592ad93e96",
+    "MOCK_comp_9110.png": "fb5ff353cb6a72f479e6f709032633ebf2d5d6fdc6dc7792a3e7a19339532beb",
+    "MOCK_comp_9111.png": "fc7701c0143d2ff74fa69d747eb1fc6076bdbf62a0f9b34f1cae940d9e27b215",
+    "MOCK_comp_9112.png": "168f4de5fe1c7917c86fcc2e2caaab8596a143a67cde2c075d22142c43ee866a",
+    "MOCK_comp_9113.png": "afebcce516f2631017af6ca07441675d3914a483b99df589c21646a0aa4ffdaa",
+    "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
+    "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
+    "MOCK_comp_9122.png": "97b7faa229db71965abd21903049a66eb2dfffad42c1a1a398a33da945defb1f",
+    "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
+    "MOCK_comp_9140.png": "fb5ff353cb6a72f479e6f709032633ebf2d5d6fdc6dc7792a3e7a19339532beb",
+    "MOCK_comp_9141.png": "fc7701c0143d2ff74fa69d747eb1fc6076bdbf62a0f9b34f1cae940d9e27b215"
+   }
+  },
+  "boundB": {
+   "face_part": "r07_00",
+   "top_part": "r04_08",
+   "top_rows": [
+    0,
+    28
+   ],
+   "top_why": "flat weathered slab with cracks - the closest thing the gauntlet produced to a wall top. Rows 29-31 (its baked floor shadow) discarded.",
+   "bindings": "MOCK - authored in compose_walls.py",
+   "derivation": "DERIVATION: luminance scaled by 0.773 to match the face plane (125.5 -> 97.0)",
+   "note": "DERIVED top: the same R4 slab, luminance-matched to the face and snapped back to the parts palette. Plane separation is then carried by material and occlusion ONLY, which is the strict \u00a76.3 reading.",
+   "theme": "src/Presentation/assets/composition_spike/tile_themes_boundB.yaml",
+   "segment_sheets": {
+    "south_facing_run": "tools/composition_spike/segments/boundB_south_facing_run.png",
+    "straight_run": "tools/composition_spike/segments/boundB_straight_run.png",
+    "corner": "tools/composition_spike/segments/boundB_corner.png"
+   },
+   "palette_size": 76,
+   "face_plane_lum": 97.0,
+   "top_plane_lum": 96.2,
+   "tiles": {
+    "MOCK_comp_9100.png": "e559f3089b9bf3497c98e5e4950b78dc64ff208edc2b848684022935bf0225dc",
+    "MOCK_comp_9101.png": "9ea5bd2b1583b159a5140ef000e8f32dfb010c48c760e30c9636ec0950e3b669",
+    "MOCK_comp_9102.png": "27060fef184d2e8481a51e1fbb28232fbe428d857e92deb067b90270fb170d73",
+    "MOCK_comp_9103.png": "7775183d45dd88535610198aea38e9f8bb5e59a3b6377ed9212eccb77dc08943",
+    "MOCK_comp_9110.png": "fd2f9c483e3093164c62afd76e4aabc6b6f20fd2dc0ec73be9165cdc74e48266",
+    "MOCK_comp_9111.png": "7e7501ae39aaff0c001f186b8cefbe867e6c340c7370f533a37b61f52cb3e67a",
+    "MOCK_comp_9112.png": "94edf03c5b9cbc79553ad144b0d076f4c3c2935e25596151a96408ff43921e93",
+    "MOCK_comp_9113.png": "888b8b754639041cac05772c691752d9a2bc153a0bef840fcde01f6f14933676",
+    "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
+    "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
+    "MOCK_comp_9122.png": "97b7faa229db71965abd21903049a66eb2dfffad42c1a1a398a33da945defb1f",
+    "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
+    "MOCK_comp_9140.png": "fd2f9c483e3093164c62afd76e4aabc6b6f20fd2dc0ec73be9165cdc74e48266",
+    "MOCK_comp_9141.png": "7e7501ae39aaff0c001f186b8cefbe867e6c340c7370f533a37b61f52cb3e67a"
+   }
+  },
+  "ctrlA": {
+   "face_part": "r07_00",
+   "top_part": "r04_08",
+   "top_rows": [
+    0,
+    28
+   ],
+   "top_why": "flat weathered slab with cracks - the closest thing the gauntlet produced to a wall top. Rows 29-31 (its baked floor shadow) discarded.",
+   "bindings": "none (control)",
+   "derivation": "",
+   "note": "control for boundA - same stones, overlays omitted.",
+   "theme": "src/Presentation/assets/composition_spike/tile_themes_ctrlA.yaml",
+   "segment_sheets": {
+    "south_facing_run": "tools/composition_spike/segments/ctrlA_south_facing_run.png",
+    "straight_run": "tools/composition_spike/segments/ctrlA_straight_run.png",
+    "corner": "tools/composition_spike/segments/ctrlA_corner.png"
+   },
+   "palette_size": 76,
+   "face_plane_lum": 97.0,
+   "top_plane_lum": 125.5,
+   "tiles": {
+    "MOCK_comp_9100.png": "bd82a343dc33cc5ec21e7e681ae408f1cdce4d9e126c64d6f59fb0b9926c0048",
+    "MOCK_comp_9101.png": "05f84b9deee9413b891ca497608a448367a45c91afa7bc65c94ccbb42cc82c8b",
+    "MOCK_comp_9102.png": "35281e333192ec95a52dd35c9e21ea3ff62aa9e7d9cd1bc8e3035ba3e5fb1724",
+    "MOCK_comp_9103.png": "02ea9decd53f396d0575af429853924d2d16ea662cb39f1d8fa63b592ad93e96",
+    "MOCK_comp_9110.png": "844128e146b6005b522c1e90bbda478b4b199c1753799951bee5e8cb29bee150",
+    "MOCK_comp_9111.png": "f05540a19e3e66af113f4f1a52d686f3ca9302ccb2373d000a84d7ca3c5c1773",
+    "MOCK_comp_9112.png": "86c051d14abc7a9a96f93bccbc91a65756fc71071df7da0d3c42735546d16f9a",
+    "MOCK_comp_9113.png": "afebcce516f2631017af6ca07441675d3914a483b99df589c21646a0aa4ffdaa",
+    "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
+    "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
+    "MOCK_comp_9122.png": "97b7faa229db71965abd21903049a66eb2dfffad42c1a1a398a33da945defb1f",
+    "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
+    "MOCK_comp_9140.png": "844128e146b6005b522c1e90bbda478b4b199c1753799951bee5e8cb29bee150",
+    "MOCK_comp_9141.png": "f05540a19e3e66af113f4f1a52d686f3ca9302ccb2373d000a84d7ca3c5c1773"
+   }
+  },
+  "ctrlB": {
+   "face_part": "r07_00",
+   "top_part": "r04_08",
+   "top_rows": [
+    0,
+    28
+   ],
+   "top_why": "flat weathered slab with cracks - the closest thing the gauntlet produced to a wall top. Rows 29-31 (its baked floor shadow) discarded.",
+   "bindings": "none (control)",
+   "derivation": "DERIVATION: luminance scaled by 0.773 to match the face plane (125.5 -> 97.0)",
+   "note": "control for boundB - same stones, overlays omitted.",
+   "theme": "src/Presentation/assets/composition_spike/tile_themes_ctrlB.yaml",
+   "segment_sheets": {
+    "south_facing_run": "tools/composition_spike/segments/ctrlB_south_facing_run.png",
+    "straight_run": "tools/composition_spike/segments/ctrlB_straight_run.png",
+    "corner": "tools/composition_spike/segments/ctrlB_corner.png"
+   },
+   "palette_size": 76,
+   "face_plane_lum": 97.0,
+   "top_plane_lum": 96.2,
+   "tiles": {
+    "MOCK_comp_9100.png": "1aea44265d19274771e064413c0139bb1cd4cf6b055cd42ee6ab117f639e4aa0",
+    "MOCK_comp_9101.png": "fd5d3f4a3534ed47297f263d58715c643cfcadf86d4845c102c319217c426d3b",
+    "MOCK_comp_9102.png": "b26a3e5d96d4003ac34fd2722ca76da978b5b6a8ad091bf376702b0c01efdbff",
+    "MOCK_comp_9103.png": "7775183d45dd88535610198aea38e9f8bb5e59a3b6377ed9212eccb77dc08943",
+    "MOCK_comp_9110.png": "8a55c2bea351b1bc19a33065c6a57a4eb7064c3e9dfdc195ba6d5bc53efd25ac",
+    "MOCK_comp_9111.png": "f98ec87eee2024788dbce7e0439d7ffc3f314e9e89b73be6c52e9026b299cd02",
+    "MOCK_comp_9112.png": "b7d7f478bd986aeccf5b3f00acd4ff88e28bc05c2074729334532303c2227d87",
+    "MOCK_comp_9113.png": "888b8b754639041cac05772c691752d9a2bc153a0bef840fcde01f6f14933676",
+    "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
+    "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
+    "MOCK_comp_9122.png": "97b7faa229db71965abd21903049a66eb2dfffad42c1a1a398a33da945defb1f",
+    "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
+    "MOCK_comp_9140.png": "8a55c2bea351b1bc19a33065c6a57a4eb7064c3e9dfdc195ba6d5bc53efd25ac",
+    "MOCK_comp_9141.png": "f98ec87eee2024788dbce7e0439d7ffc3f314e9e89b73be6c52e9026b299cd02"
+   }
+  }
+ },
+ "plant": {
+  "file": "tools/composition_spike/segments/plant_south_facing_run.png",
+  "defect": "key-light - every course light at its top rows, dark at its bottom rows",
+  "why": "LOOP-PROCESS \u00a74 / bible \u00a713.5: no instrument's pass counts until it has demonstrated it can fail. A critic that passes this voids its round."
+ }
+}

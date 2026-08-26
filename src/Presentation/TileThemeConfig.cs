@@ -144,7 +144,8 @@ public sealed class TileThemeConfig
     /// Falls back to default_theme if the theme itself is missing.
     /// Returns null only if the theme AND default are both unconfigured.
     /// </summary>
-    public string? GetWallTile(string theme, int cardinalMask, int diagonalFloorMask)
+    public string? GetWallTile(string theme, int cardinalMask, int diagonalFloorMask,
+                               int x = 0, int y = 0)
     {
         var data = ResolveTheme(theme);
         if (data == null) return null;
@@ -158,16 +159,16 @@ public sealed class TileThemeConfig
         // For cardinal mask < 15, the autotile table is authoritative.
         if (cardinalMask < 15)
         {
-            if (!data.WallAutotile.TryGetValue(cardinalMask, out int tileId))
+            if (!data.WallAutotile.TryGetValue(cardinalMask, out var variants) || variants.Count == 0)
             {
                 // Missing entry — fall back to interior fill (mask 15).
-                if (!data.WallAutotile.TryGetValue(15, out tileId))
+                if (!data.WallAutotile.TryGetValue(15, out variants) || variants.Count == 0)
                 {
                     GD.PrintErr($"[TileThemeConfig] Theme '{theme}' missing bitmask {cardinalMask} and fallback 15.");
                     return null;
                 }
             }
-            return GetTexturePath(tileId);
+            return GetTexturePath(PickVariant(variants, x, y));
         }
 
         // cardinalMask == 15: all four cardinal neighbors are walls.
@@ -195,8 +196,8 @@ public sealed class TileThemeConfig
             return GetTexturePath(fillId);
 
         // Final fallback: autotile mask 15 entry.
-        if (data.WallAutotile.TryGetValue(15, out int autofillId))
-            return GetTexturePath(autofillId);
+        if (data.WallAutotile.TryGetValue(15, out var fillVariants) && fillVariants.Count > 0)
+            return GetTexturePath(PickVariant(fillVariants, x, y));
 
         GD.PrintErr($"[TileThemeConfig] Theme '{theme}' has no interior_fill or mask-15 fallback.");
         return null;
@@ -335,6 +336,14 @@ public sealed class TileThemeConfig
     /// </summary>
     private static int PositionHash(int x, int y)
         => Math.Abs((x * 7919 + y * 104729) & 0x7FFFFFFF);
+
+    /// <summary>
+    /// Choose one of a role's tile-ID variants for a grid cell. Single-entry lists resolve to
+    /// their one member without consulting the position, so a scalar-configured mask behaves
+    /// exactly as it did before variants existed.
+    /// </summary>
+    private static int PickVariant(List<int> variants, int x, int y)
+        => variants.Count == 1 ? variants[0] : variants[PositionHash(x, y) % variants.Count];
 }
 
 /// <summary>
@@ -372,11 +381,17 @@ public sealed class TileThemeData
     public List<int> FloorWorn     { get; set; } = new();
 
     /// <summary>
-    /// 4-bit cardinal bitmask → tile ID for connected wall autotiling.
+    /// 4-bit cardinal bitmask → tile ID variants for connected wall autotiling.
     /// Keys 0–15, where the bitmask encodes cardinal wall neighbors:
     /// bit3(8)=North, bit2(4)=South, bit1(2)=East, bit0(1)=West.
+    ///
+    /// A mask may declare one tile ID (`3: 184`) or several (`3: [184, 185, 186]`), in which
+    /// case the variant is chosen by PositionHash exactly as floor roles already are. A wall
+    /// mask that resolves to a single tile stamps that tile at every cell where the mask
+    /// occurs — for a corridor edge that is a repeat every 32px, which is the defect the wall
+    /// gauntlet's critic named in every round it reached.
     /// </summary>
-    public Dictionary<int, int> WallAutotile { get; set; } = new();
+    public Dictionary<int, List<int>> WallAutotile { get; set; } = new();
 
     /// <summary>
     /// Named outer corner and interior fill tile IDs.
