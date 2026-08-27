@@ -1,5 +1,5 @@
 {
- "commit": "ee23e7d4ee1a52b530ca476b6d8ad1ae26d953de",
+ "commit": "33d0c97fecf34ede07e8862caea14049048180eb",
  "rig_requested": "ambient=1a1a22 color=ffb066 energy=1.6 radius_tiles=5.5 (ALL UNDERIVED \u2014 \u00a76.2 PLACEHOLDER)",
  "tile_size": 32,
  "tile_scale": 2.0,
@@ -10,7 +10,7 @@
    "lit": true,
    "file": "before_lit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_before.yaml",
-   "sha256": "c0fc293efc5823b2ed01cd762750aa464f27b1180453622c0a887b5dec02b779",
+   "sha256": "b60ff262eb6dfb7659f22936ca737e54913f09c0bdb604b36dbc0e612f3dd9b0",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
@@ -19,7 +19,7 @@
    "lit": false,
    "file": "before_unlit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_before.yaml",
-   "sha256": "40af529a82682795cd4f2c3bfc3a571a54409ad992ce45d6b5dd7bdcd2c8e7ba",
+   "sha256": "ca1400406067ea88870a2f382e248b16edd9ef0e9446e5f5fbc0fd34a5ff7f3d",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
@@ -28,7 +28,7 @@
    "lit": true,
    "file": "after_lit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after.yaml",
-   "sha256": "497b0b556d8d179912873d9b3b3c4d61b6935edd69e3050e1caaa1b8841c6d4f",
+   "sha256": "7c3f9a8a4b0e37ea8c273612ad13424813dca17f4046575a1f836f153cf9d07d",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
@@ -37,7 +37,7 @@
    "lit": false,
    "file": "after_unlit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after.yaml",
-   "sha256": "a1c863c05c03e2b17fcfb93de396817563f167907dd4cf5f3567a996e0e9822c",
+   "sha256": "d6a376af78a3b7d687d03a21b5ca9c4869ed83d0882a986f7f4fb0b63bf5477d",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
@@ -46,7 +46,7 @@
    "lit": true,
    "file": "after_unbound_lit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after_unbound.yaml",
-   "sha256": "f83f611426059c3a0c358b623feff7b92de7ea76ad0b5b13d9d2a663ddf6cedc",
+   "sha256": "3069bfd05ab4164c301f513a52c0f8baa83e8e6a0b42ba9a1f4e425a699f20eb",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
@@ -55,25 +55,25 @@
    "lit": false,
    "file": "after_unbound_unlit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after_unbound.yaml",
-   "sha256": "2941f8503080a513bcd1432712e665a58df3cdc51c7d6d1385bc921c648a6e57",
+   "sha256": "39d1307d62cbefd3d1069d72317a5554660d06a994a7260d432e061ffc23e9d2",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
   {
-   "arm": "after_noocc",
+   "arm": "after_nocap",
    "lit": true,
-   "file": "after_noocc_lit.png",
-   "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after_noocc.yaml",
-   "sha256": "16f1a3176f770f8c4c5054068f58066ac378de84caf9ebe24ae9752ff2ef138d",
+   "file": "after_nocap_lit.png",
+   "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after_nocap.yaml",
+   "sha256": "c646738706754cee261aa9655c75b3022b46cb0e1b8ce584805d5d4abd504e41",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
   {
-   "arm": "after_noocc",
+   "arm": "after_nocap",
    "lit": false,
-   "file": "after_noocc_unlit.png",
-   "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after_noocc.yaml",
-   "sha256": "8fa61892143015a1c8a7f633ba9742fcd064a42aa9fb4226e0b2f5636fe94c44",
+   "file": "after_nocap_unlit.png",
+   "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after_nocap.yaml",
+   "sha256": "88aae40dcfa61d164f66c437a83632da1804a627bb74218fd087ebe9e332cad0",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
@@ -82,7 +82,7 @@
    "lit": true,
    "file": "plant_lit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_plant.yaml",
-   "sha256": "794fec9ac35b29bbf34178684eea58ac6ef3716f72fc59984e9de3bbca17765d",
+   "sha256": "61433fa4815b389bd614649e0671f3cc54927be98843c0bdc8e20b1d46979199",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
@@ -91,7 +91,7 @@
    "lit": false,
    "file": "plant_unlit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_plant.yaml",
-   "sha256": "e2dd8c8832d1c90ec458a671110ccda992867504827f6206e0a3c0aeb614028f",
+   "sha256": "7f8741c57949bc9423c3481c558f225be9d48640297bc724ed31c0317e15e9de",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
@@ -100,7 +100,7 @@
    "lit": true,
    "file": "after_solofloor_lit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after_solofloor.yaml",
-   "sha256": "6e15647a92f4f40ee57284e55759690c48098af873b96339531f197a85713d09",
+   "sha256": "879f3bbcc491bfe9fd43adf6bcee9a93681fca4d8ceab6b8b03b029763a52f8a",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   },
@@ -109,7 +109,7 @@
    "lit": true,
    "file": "after_unbound_solofloor_lit.png",
    "theme": "res://src/Presentation/assets/composition_spike/tile_themes_after_unbound_solofloor.yaml",
-   "sha256": "634cbf45d9473d3100d505f3a622d6e0f41c4cbd01fea8cc4a70c902004318ad",
+   "sha256": "7a43068d91e01154b648fcc74f38f7f506235743d3913b8881fc3c6a5e4c2b76",
    "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
    "engine_tile": "TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)"
   }

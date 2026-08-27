@@ -26,9 +26,18 @@ import compose_walls as C  # noqa: E402
 def main():
     faces = C.build_face_stock()
     face = faces[0][0]
+    # Mirror the composer EXACTLY, including which floor files it actually loads. Round 8 uses
+    # the de-ringed derivation; a checker still reading the raw survivors reported 391 colours
+    # "outside the parts bin" on tiles that were fine. Second time this check has failed on its
+    # own reference rather than on the tiles, and both are kept on the record: a check that has
+    # never failed is not evidence of anything (§13.5).
     surv = json.load(open(os.path.join(C.SURVIVORS, "MANIFEST.json")))["survivors"]
-    floors = [np.array(Image.open(os.path.join(C.SURVIVORS, s["file"])).convert("RGB"))
-              .astype(np.int16) for s in surv]
+    dering = os.path.join(REPO, C.ASSETS, "floors_deringed")
+    floors = []
+    for i, s in enumerate(surv):
+        d = os.path.join(dering, "MOCK_dering_%d.png" % (C.FLOOR_BASE + i))
+        used = d if os.path.exists(d) else os.path.join(C.SURVIVORS, s["file"])
+        floors.append(np.array(Image.open(used).convert("RGB")).astype(np.int16))
 
     ok = True
     for arm, cfg in C.ARMS.items():
@@ -39,8 +48,9 @@ def main():
         # (§13.5), which is the only thing that makes its passes worth anything.
         floors_lum = float(sum(C.mean_lum(f) for f in floors) / len(floors))
         stock = C.build_top_stock(cfg["tops"], face, cfg.get("albedo"), floors_lum)
+        extra = [C.load_part(C.COPING_PART, C.TOP_PARTS)[0]] if cfg.get("cap") else []
         pal = set(map(tuple, C.palette_of(*[f[0] for f in faces],
-                                          *[t[0] for t in stock], *floors)))
+                                          *[t[0] for t in stock], *extra, *floors)))
         seen, outside, n = set(), 0, 0
         for p in sorted(glob.glob(os.path.join(REPO, C.ASSETS, arm, "*.png"))):
             n += 1

@@ -1,0 +1,70 @@
+CANDIDATE: C1
+CULL: outline
+VERDICT: FAIL
+Q1: North up the corridor — it is the only direction where the floor keeps going into unlit space rather than ending at a wall face.
+Q2: Running-bond brick, one size, one colour, one bond, identical across all four wall masses; wall and floor are easy to tell apart by tone and pattern.
+Q3: Almost nothing — one vertical timber bar right of the player with two pin-dots, and thin maroon lines lying flat on the brick with no fixing, no overlap, no shadow; they are stripes, not straps.
+Q4: No — the wall carries a graded dark rim on all four sides that is equally dark on the edge facing the player's lamp and the edge facing away, so it is a rim, not a thickness; no cap, no lip, no side face.
+Q5: Nothing has happened. Twelve tiles of corridor with no wear path, no chip, no spill, no debris, on a line held for four hundred years.
+WHY: Every floor plate is a lighter square inside a closed, single-value near-black ring measured at 11% of the adjacent floor — four to five times harder than any mortar joint in the same frame — which is a keyline, and it sits on every second tile of every corridor.
+
+CANDIDATE: C2
+CULL: outline
+VERDICT: FAIL
+Q1: North, same reason — the corridor is the only exit that does not terminate in brick.
+Q2: The same single brick bond everywhere; readable as wall, but it is one texture, not a wall anyone built in stages.
+Q3: Nothing. This is C1 with the one timber bar beside the player deleted, so the wall the player is standing against carries no repair at all — only thin maroon lines and cream smudges.
+Q4: No — identical omnidirectional dark rim, no cap, no side face.
+Q5: Nothing. Less than C1, because the single element that suggested a repair has been removed from the one spot the player is looking at.
+WHY: Same near-black closed ring on every floor plate, and the wall in the lit pool is now bare brick with no fixing on it anywhere.
+
+CANDIDATE: C3
+CULL: outline
+VERDICT: FAIL
+Q1: North, but with less conviction than the others — the raised ambient means the walls beyond the lamp are nearly as visible as the corridor, so the corridor stops being the obvious read.
+Q2: Same brick, but washed — joint contrast is the weakest of the set, so the courses stop reading as separate stones and start reading as a printed pattern.
+Q3: Nothing, and the flattening makes it worse: the maroon straps drop to within a few levels of the brick and disappear entirely.
+Q4: No — the wall rim is lifted to 35% of the adjacent surfaces, so even the fake depth cue is gone.
+Q5: Nothing, in an evenly-lit brick room. The underworld reads as a corridor with the lights on.
+WHY: Same floor-plate keyline, plus the ambient lift kills the light pool's edge and drains the joint contrast that was the only thing making the wall read as stacked stone.
+
+CANDIDATE: C4
+CULL: outline
+VERDICT: FAIL
+Q1: North up the corridor; the wall masses read heaviest here, so the corridor is the clearest read of the five.
+Q2: Same single brick bond, but with the deepest joints in the set — the courses read as separate blocks with real gaps between them, which is the one genuine improvement anywhere in this round.
+Q3: Still nothing structural — the deeper joints make the wall look stacked, but no rope, no pin, no bracket crosses a joint; the maroon lines are still painted on.
+Q4: No — deeper joints are not thickness; the perimeter rim is still identical on the lamp-facing and lamp-facing-away edges.
+Q5: Nothing. A better-built wall that still shows no history and stands over a floor with no traffic on it.
+WHY: The joint depth is the right move and it is not enough — the floor plates still carry the near-black closed keyline, and nothing on any wall is doing work.
+
+CANDIDATE: C5
+CULL: outline
+VERDICT: FAIL
+Q1: North; the corridor still reads, but its edges are the softest of the five and the boundary has to be inferred from pattern rather than seen.
+Q2: Same brick; the courses now run to the very edge of the wall mass with no margin at all, which is more honest as material and worse as a wall.
+Q3: Nothing — same painted straps, same ambiguous cream shapes.
+Q4: No, and less than the others: the boundary shading has been deleted (edge value 40 where the rest of the set has 10), so the wall now sits in the same plane as the floor with no edge treatment whatsoever.
+Q5: Nothing. A flat brick area next to a flat stone area.
+WHY: Same floor-plate keyline, and stripping the wall/floor boundary shading removes the last thing making the wall read as a mass rather than a change of pattern.
+
+RANKING
+C4
+C1
+C2
+C5
+C3
+SEPARATOR: The top has the deepest gaps between courses, so the wall reads as stones somebody stacked and something is holding; the bottom has the shallowest, so the same wall reads as a pattern printed on the ground.
+
+FLIP LIST
+- Delete the near-black keyline on the corridor floor plates (currently a closed 1px ring at value 15 against a floor at 135, ten times darker than the surrounding stone and four times harder than any wall mortar joint). Replace it with a rebate: one pixel of floor-tone at ~70% on the plate's inner edge, one pixel at ~115% on the outer edge, and break the ring at two corners per plate so it never closes.
+- Settle the two conflicting plate conventions. Within a single corridor one plate is ringed in near-black and the next in mid-brown double line, for what is meant to be the same object. Keep the mid-brown rebate, delete the black-ringed variant.
+- Break the floor cycle. The vertical corridor currently runs plate / faint-rectangle / square-outline repeated five times end to end, and the horizontal corridor alternates two tiles for twelve tiles unbroken. Author eight floor variants, place them so no motif repeats within three tiles, and leave 30% of tiles carrying no motif at all.
+- Wear a path into the corridor floor: a two-to-three-pixel band down the tile centres, one step lighter and with the plate edges rounded off where it crosses them, so the traffic that has run through here for four hundred years is visible in the stone.
+- The maroon horizontal straps on the wall faces are 1–2px lines lying flat on the brick with no fixing at either end. Give each one a driven pin at both ends — a 2px light dot with a 1px dark pixel beneath it — and let the strap overlap the brick it crosses so a sliver of the brick is hidden behind it.
+- Give the wall a top. The perimeter darkening is currently identical on the edge facing the player's lamp and the edge facing away, which is why it reads as a ring rather than a thickness. Replace it with a 3px cap band drawn in a smoother, paler stone than the wall face, running along the wall's top surface so the cap is a different material from the coursing below it.
+- Pick a meaning for the cream L-shapes and rectangles on the brick faces. Either make them chips — irregular, following the brick's own edge, exposing a paler core tone — or make them hardware — straight, with a visible pin and a one-pixel cast shadow. The same shape must not do both jobs.
+- Cut one 4x3-tile patch of wall to a different bond: irregular rubble or salvaged timber laid flat as a course, with the brick coursing running into it and stopping dead. Right now all four wall masses are one texture at one scale, so the wall has no history of being broken and refilled.
+- Raise the mortar joints' bite to C4's level across the set, and hold the ambient at C1/C2/C4's level rather than C3's — C3's lift flattens the joints and dissolves the edge of the light pool.
+
+Model: Claude Opus 5 (1M context).

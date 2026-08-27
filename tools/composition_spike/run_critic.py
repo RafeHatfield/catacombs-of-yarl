@@ -39,7 +39,7 @@ SET = {
     "C2": "after_unbound_lit.png",
     "C3": "before_lit.png",
     "C4": "plant_lit.png",
-    "C5": "after_noocc_lit.png",
+    "C5": "after_nocap_lit.png",
 }
 PLANT_CODE = "C4"
 

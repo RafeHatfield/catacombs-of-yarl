@@ -401,6 +401,12 @@ FACE_STOCK = ["r07_00"]
 # The ruled rounds hold it constant and vary only what the ruling names.
 TOP_COURSED = ["r07_00", "r07_08", "r07_09"]
 
+# The coping course. r04_00 is R4 slab stock - mottled, smooth, no coursing, and about 28
+# luminance above the coursed material - so a cap drawn from it is a different STONE beside the
+# wall face rather than a brighter band of the same stone. Held at its native value: the point
+# is the material contrast, and scaling it would just make it a highlight again.
+COPING_PART = "r04_00"
+
 
 def build_face_stock():
     out = []
@@ -483,8 +489,26 @@ NORTH_BIT, SOUTH_BIT_, EAST_BIT, WEST_BIT = 8, 4, 2, 1
 EDGE_PROFILES = {
     "round6": (0.42, 0.62, 0.82),               # what rounds 2-6 carried
     "deep":   (0.26, 0.40, 0.56, 0.72, 0.86),   # five steps: form, not a line
-    "none":   (),                               # the isolation arm
+    "none":   (),                               # round 7's isolation arm
+    # ROUND 8. Round 7's seat, blind, said of the five-step version: "the wall carries a graded
+    # dark rim on all four sides that is equally dark on the edge facing the player's lamp and
+    # the edge facing away, so it is a RIM, NOT A THICKNESS". It is right, and the omnidirectional
+    # property it objects to is the very thing that makes the construction legal. Depth cannot
+    # come from making the rim more directional - that is the forbidden move. It has to come from
+    # the edge being a different MATERIAL, which is what it asked for twice:
+    #
+    #   "Replace it with a 3px cap band drawn in a smoother, paler stone than the wall face,
+    #    running along the wall's top surface so the cap is a different material from the
+    #    coursing below it."
+    #
+    # Legal under the 2026-08-26 ruling: §6.3 forbids a light DIRECTION, and a coping course of
+    # smoother, paler stone laid along every floor-facing edge equally declares none. It is a
+    # material, not a lamp. See CAP_ROWS below - "cap" puts the hard occlusion on the outermost
+    # pixel where the mass actually stops, the coping inside it, and a soft step back into the
+    # coursed body.
+    "cap":    (0.30, None, None, None, 0.86),
 }
+CAP_ROWS = (1, 2, 3)      # indices in the "cap" profile that take coping MATERIAL, not shading
 
 # The top plane's ALBEDO as a fraction of the floors' mean luminance. A declared material value
 # and not a light: §6.3 forbids depicting a light DIRECTION, and a stone darker than the floor
@@ -493,7 +517,7 @@ EDGE_PROFILES = {
 TOP_ALBEDO_TARGET = 0.62
 
 
-def occlude_edges(a, mask, steps=EDGE_PROFILES["round6"]):
+def occlude_edges(a, mask, steps=EDGE_PROFILES["round6"], coping=None):
     """Darken the wall's own edge wherever the neighbouring cell is FLOOR.
 
     This is not in the brief and it is not decoration; without it the corridor does not read.
@@ -513,17 +537,45 @@ def occlude_edges(a, mask, steps=EDGE_PROFILES["round6"]):
     face, which is §3's answer to that edge.
     """
     for k, f in enumerate(steps):
+        # f is None where the profile wants COPING MATERIAL rather than shading. The coping is
+        # a different part - paler, smoother, no coursing - so the wall's top edge reads as a
+        # coping course laid on a coursed mass, which is a material change and not a highlight.
         if not (mask & NORTH_BIT):
-            a[k] = (a[k] * f).astype(np.int16)
+            a[k] = coping[k] if (f is None and coping is not None) \
+                else (a[k] * (f if f is not None else 1.0)).astype(np.int16)
         if not (mask & WEST_BIT):
-            a[:, k] = (a[:, k] * f).astype(np.int16)
+            a[:, k] = coping[:, k] if (f is None and coping is not None) \
+                else (a[:, k] * (f if f is not None else 1.0)).astype(np.int16)
         if not (mask & EAST_BIT):
-            a[:, TILE - 1 - k] = (a[:, TILE - 1 - k] * f).astype(np.int16)
+            a[:, TILE - 1 - k] = coping[:, TILE - 1 - k] if (f is None and coping is not None) \
+                else (a[:, TILE - 1 - k] * (f if f is not None else 1.0)).astype(np.int16)
     return a
 
 
+def deepen_joints(a, factor):
+    """Deepen the mortar joints already in the stone. Authored SELF-OCCLUSION between blocks.
+
+    ROUND 8, and it is the variable round 7's seat identified without being asked. Its ranking
+    separator: "The top has the deepest gaps between courses, so the wall reads as stones
+    somebody stacked and something is holding; the bottom has the shallowest, so the same wall
+    reads as a pattern printed on the ground." The arm it ranked first got its deep joints from
+    the PLANT's baked per-course banding - i.e. illegally, and only on one axis. This gets the
+    same read legally: every joint in the material, deepened equally, no direction declared.
+
+    RULED (Rafe, 2026-08-26): authored occlusion is law; receive-light never meant form-free.
+    A joint is the gap between two stones and the shadow in it is form.
+    """
+    if factor >= 1.0:
+        return a
+    L = a[..., 0] * .299 + a[..., 1] * .587 + a[..., 2] * .114
+    joints = L < np.median(L) * 0.82
+    out = a.copy()
+    out[joints] = (out[joints] * factor).astype(np.int16)
+    return out
+
+
 def make_wall(mask, face_src, top_src, pal, ink, v, bind, keylight=False, phase=None,
-              edge="round6"):
+              edge="round6", joints=1.0, coping_src=None):
     """One wall tile for one autotile mask.
 
     SOUTH BIT CLEAR -> floor below -> top band + occlusion + front face (bible §3).
@@ -537,7 +589,11 @@ def make_wall(mask, face_src, top_src, pal, ink, v, bind, keylight=False, phase=
         a = make_plant(face_src, top_src, pal, ink, v, ph)
     else:
         a = make_face(face_src, top_src, pal, ink, v, bind, ph)
-    return snap(occlude_edges(a.copy(), mask, EDGE_PROFILES[edge]), pal)
+    a = deepen_joints(a, joints)
+    coping = None
+    if coping_src is not None and edge == "cap":
+        coping = wrap_window(coping_src, 0, TILE, 0, dy=(v * 11 + 1))
+    return snap(occlude_edges(a.copy(), mask, EDGE_PROFILES[edge], coping), pal)
 
 
 def make_corner(diag_bit, face_src, top_src, pal, ink, v, bind, phase=0):
@@ -692,50 +748,70 @@ def sha256(p):
 # dark stain, no linear signature - so the swap is a parts choice, not a redraw. Exactly the
 # move this spike exists to test: change the material, keep the composition.
 ARMS = {
-    # ROUNDS 7-8 - THE RULED ROUNDS (Rafe, 2026-08-26).
+    # ROUND 8 - the second and last ruled round. Round 7 answered half the ruling and was culled
+    # at step 1 on the other half by something no arm varied:
     #
-    #   "§3 stands unamended pending your two reserved rounds: spend them on edge-occlusion +
-    #    wall-top value separation, with south-facing front faces present in scene. Depth
-    #    arriving ratifies §3; depth failing reopens it with evidence."
+    #   * WALL-TOP VALUE SEPARATION: ANSWERED. `after` at 0.62 of the floors' luminance ranked
+    #     2nd; `before` at 0.76 ranked LAST of five, the seat reading the lighter wall as "the
+    #     ambient lift kills the light pool's edge". The ruled variable moved the right way.
+    #   * PLANE-BOUNDARY OCCLUSION: ANSWERED, and it is the §12.1 ruling's evidence. The arm
+    #     with it switched off was the one the seat said had "no edge treatment whatsoever ...
+    #     stripping the wall/floor boundary shading removes the last thing making the wall read
+    #     as a mass rather than a change of pattern". That isolation is done; its slot is
+    #     reused here.
+    #   * ALL FIVE CULLED `outline` - for the §6.4 SURVIVOR FLOORS' baked keyline, which no arm
+    #     varies. Removed as a labelled MOCK derivation (dering_floors.py) so the wall questions
+    #     can be reached. The finding goes to the gate intact; the survivors are untouched.
     #
-    # So the arms stop varying the parts bin - that question is answered, R7-coursed top won it
-    # in round 4 - and vary exactly the two things the ruling names. Every arm below is the same
-    # stones, the same rig, the same geometry, the same floors, in the wall-face review scene
-    # where 14.5% of wall cells can carry a face instead of 7.3%.
+    # What round 7 did NOT answer is depth, and it said exactly why: "the wall carries a graded
+    # dark rim on all four sides that is equally dark on the edge facing the player's lamp and
+    # the edge facing away, so it is a RIM, NOT A THICKNESS". The omnidirectionality it objects
+    # to is what makes the construction legal, so depth cannot come from making the rim
+    # directional. This round takes the two legal routes it named instead, both of them form
+    # rather than light, and both newly permitted by the 2026-08-26 ruling:
     #
-    #   before        what round 6 shipped: 3-step edge, top matched to the FACE (0.76 of floor)
-    #   after         5-step edge, top albedo set to 0.62 of the FLOOR - both ruled variables
-    #   after_unbound `after` with the overlays omitted - the held control
-    #   after_noocc   `after`'s albedo with NO edge occlusion at all - isolates the §12.1 ruling
-    #   plant         `after` plus a baked key light - the within-arm A/B Rafe named
+    #   JOINTS  deepen the mortar joints already in the stone - self-occlusion between blocks.
+    #           The seat's own separator identified joint depth as the variable dividing "stones
+    #           somebody stacked" from "a pattern printed on the ground", and the arm it ranked
+    #           first got that depth from the PLANT's baked banding. This gets it legally.
+    #   CAP     a coping course of paler, smoother stone along every floor-facing top edge - a
+    #           different MATERIAL, not a lighter value of the same one, laid equally on all
+    #           edges so it declares no direction.
     #
-    # `after` vs `before` is the ruled test. `after` vs `after_noocc` isolates plane-boundary
-    # occlusion as the sole cause of whatever changes. `after` vs `plant` is authored occlusion
-    # against depicted light on identical stone, which is the comparison §6.4 recorded as unrun.
-    "before":        dict(tops=TOP_COURSED, edge="round6", albedo=None, bind=True,
-                          note="round 6 as shipped. 3-step plane-boundary occlusion; top plane "
-                               "matched to the face, which leaves it at ~0.76 of the floors' "
-                               "luminance. Six seats answered the thickness question no."),
-    "after":         dict(tops=TOP_COURSED, edge="deep", albedo=TOP_ALBEDO_TARGET, bind=True,
-                          note="both ruled variables moved: 5-step occlusion so the boundary is "
-                               "form rather than a hairline, and the top plane's albedo set to "
-                               "0.62 of the floors' mean. THE RULED TEST."),
-    "after_unbound": dict(tops=TOP_COURSED, edge="deep", albedo=TOP_ALBEDO_TARGET, bind=False,
+    #   before      round 7's `after`: 5px occlusion, 0.62 albedo, and neither new variable
+    #   after       + deepened joints + coping cap. THE RULED TEST.
+    #   after_unbound   `after` with the MOCK overlays omitted - the held control
+    #   after_nocap `after`'s joints WITHOUT the coping cap - isolates the cap as the cause
+    #   plant       `after` plus a baked key light - the within-arm A/B, now with legal form on
+    #               the same stone it has beaten four times out of seven
+    "before":        dict(tops=TOP_COURSED, edge="deep", albedo=TOP_ALBEDO_TARGET, bind=True,
+                          joints=1.0, cap=False,
+                          note="round 7's `after`, unchanged: 5-step plane-boundary occlusion "
+                               "and a 0.62 top-plane albedo, with neither of round 8's two "
+                               "variables. The baseline the ruled test is measured against."),
+    "after":         dict(tops=TOP_COURSED, edge="cap", albedo=TOP_ALBEDO_TARGET, bind=True,
+                          joints=0.62, cap=True,
+                          note="THE RULED TEST. Mortar joints deepened as self-occlusion, and a "
+                               "coping course of paler stone along every floor-facing top edge. "
+                               "Both are form; neither declares a direction."),
+    "after_unbound": dict(tops=TOP_COURSED, edge="cap", albedo=TOP_ALBEDO_TARGET, bind=False,
+                          joints=0.62, cap=True,
                           note="control for `after` - the same stones with the MOCK overlays "
                                "omitted, so the held question keeps its control."),
-    "after_noocc":   dict(tops=TOP_COURSED, edge="none", albedo=TOP_ALBEDO_TARGET, bind=True,
-                          note="`after` with plane-boundary occlusion switched OFF and nothing "
-                               "else changed. If depth arrives in `after` and not here, the "
-                               "occlusion is the cause and §12.1's ruling has its evidence."),
-    "plant":         dict(tops=TOP_COURSED, edge="deep", albedo=TOP_ALBEDO_TARGET, bind=True,
-                          keylight=True,
-                          note="THE PLANT, and now also the honest within-arm A/B. Identical to "
-                               "`after` except every course runs light at its top rows and dark "
-                               "at its bottom - a baked overhead key light, the construction "
-                               "§6.3 forbids. A critic that passes it has not demonstrated it "
-                               "can fail and its verdicts do not count (LOOP-PROCESS §4, bible "
-                               "§13.5). It ranked first in three of the first six rounds; these "
-                               "two put authored occlusion against it on the same stone."),
+    "after_nocap":   dict(tops=TOP_COURSED, edge="deep", albedo=TOP_ALBEDO_TARGET, bind=True,
+                          joints=0.62, cap=False,
+                          note="`after`'s deepened joints WITHOUT the coping cap. If depth "
+                               "arrives in `after` and not here, the cap is the cause; if it "
+                               "arrives in both, the joints did it."),
+    "plant":         dict(tops=TOP_COURSED, edge="cap", albedo=TOP_ALBEDO_TARGET, bind=True,
+                          joints=0.62, cap=True, keylight=True,
+                          note="THE PLANT, and the within-arm A/B. Identical to `after` except "
+                               "every course runs light at its top rows and dark at its bottom "
+                               "- the baked key light §6.3 forbids. It has ranked first in four "
+                               "of seven rounds on a depth read the legal arms could not "
+                               "produce; this is the first round where they are given legal "
+                               "form to answer it with. A critic that passes it has not "
+                               "demonstrated it can fail (LOOP-PROCESS §4, bible §13.5)."),
 }
 
 
@@ -784,12 +860,23 @@ def main():
     surv = json.load(open(os.path.join(SURVIVORS, "MANIFEST.json")))["survivors"]
     floor_ids = [FLOOR_BASE + i for i in range(len(surv))]
     floor_arrs = []
+    # ROUND 8: the DE-RINGED derivation, not the raw survivors. Round 7 culled all five
+    # candidates `outline` at step 1 for the survivors' baked keyline - a construction §12.1
+    # forbids - so the wall questions were never reached. dering_floors.py removes only the
+    # near-black closed ring (62 pixels, in B-KAB alone) and invents no colour. The survivors
+    # themselves are untouched and the finding goes to the gate intact.
+    dering_dir = os.path.join(REPO, ASSETS, "floors_deringed")
     for i, s in enumerate(surv):
-        fa = np.array(Image.open(os.path.join(SURVIVORS, s["file"])).convert("RGB")).astype(np.int16)
+        d_path = os.path.join(dering_dir, "MOCK_dering_%d.png" % (FLOOR_BASE + i))
+        used = d_path if os.path.exists(d_path) else os.path.join(SURVIVORS, s["file"])
+        fa = np.array(Image.open(used).convert("RGB")).astype(np.int16)
         floor_arrs.append(fa)
         manifest["parts"].append(dict(role="floor", id=FLOOR_BASE + i, code=s["code"],
                                       provenance="§6.4 probe survivor %s" % s["file"],
-                                      mock=False))
+                                      derivation=("MOCK de-ring: the baked keyline §12.1 "
+                                                  "forbids, removed for instrument use only"
+                                                  if used == d_path else ""),
+                                      mock=used == d_path))
     manifest["parts"].append(dict(role="face", id="FACE_%s" % args.face, mock=False,
                                   provenance="wall gauntlet ledger %s/images/%s.png"
                                              % (face_spec["round"], args.face),
@@ -816,11 +903,14 @@ def main():
         else:
             _, derived = scale_top_to(first, cfg["albedo"] * floors_lum)
 
-        pal = palette_of(*[f[0] for f in faces], *[t[0] for t in stock], *floor_arrs)
+        extra = [load_part(COPING_PART, TOP_PARTS)[0]] if cfg.get("cap") else []
+        pal = palette_of(*[f[0] for f in faces], *[t[0] for t in stock], *extra, *floor_arrs)
         ink = Ink(pal)
+        coping_src = load_part(COPING_PART, TOP_PARTS)[0] if cfg.get("cap") else None
         walls = {m: [make_wall(m, faces[v][0], stock[v][0], pal, ink, v, cfg["bind"],
                                cfg.get("keylight", False), phase=stock[v][2],
-                               edge=cfg["edge"])
+                               edge=cfg["edge"], joints=cfg.get("joints", 1.0),
+                               coping_src=coping_src)
                      for v in range(mask_variants(m))]
                  for m in range(16)}
         corners = [make_corner(k, faces[v][0], stock[v][0], pal, ink, v, cfg["bind"],
@@ -869,7 +959,9 @@ def main():
                              for i in range(NVAR)],
             bindings="MOCK - authored in compose_walls.py" if cfg["bind"] else "none (control)",
             derivation=derived, note=cfg["note"],
-            edge_profile=cfg["edge"], edge_steps=list(EDGE_PROFILES[cfg["edge"]]),
+            edge_profile=cfg["edge"], edge_steps=[str(x) for x in EDGE_PROFILES[cfg["edge"]]],
+            joint_deepening=cfg.get("joints", 1.0),
+            coping_part=COPING_PART if cfg.get("cap") else None,
             albedo_target=cfg.get("albedo"),
             floors_mean_lum=round(floors_lum, 1),
             top_over_floor=round(float(np.mean([mean_lum(t[0]) for t in stock])) / floors_lum, 3),
@@ -879,16 +971,18 @@ def main():
             top_plane_lum=round(float(np.mean([mean_lum(t[0]) for t in stock])), 1),
             tiles={os.path.basename(p): sha256(p) for p in written})
         tl = float(np.mean([mean_lum(t[0]) for t in stock]))
-        print("%-14s edge=%-6s(%dpx)  bind=%-5s  top_lum=%5.1f  top/floor=%.2f  palette=%d"
-              % (arm, cfg["edge"], len(EDGE_PROFILES[cfg["edge"]]), cfg["bind"], tl,
+        print("%-14s edge=%-6s joints=%.2f cap=%-5s bind=%-5s top/floor=%.2f palette=%d"
+              % (arm, cfg["edge"], cfg.get("joints", 1.0), bool(cfg.get("cap")), cfg["bind"],
                  tl / floors_lum, len(pal)))
 
     # The plant sheet, built from the same stones so nothing separates it by material.
     stock = build_top_stock(ARMS["plant"]["tops"], face_src, ARMS["plant"]["albedo"], floors_lum)
     pal = palette_of(*[f[0] for f in faces], *[t[0] for t in stock], *floor_arrs)
     ink = Ink(pal)
+    pc = load_part(COPING_PART, TOP_PARTS)[0]
     walls = {m: [make_wall(m, faces[v][0], stock[v][0], pal, ink, v, True, True,
-                           phase=stock[v][2], edge=ARMS["plant"]["edge"])
+                           phase=stock[v][2], edge=ARMS["plant"]["edge"],
+                           joints=ARMS["plant"]["joints"], coping_src=pc)
                  for v in range(NVAR)] for m in range(16)}
     im = render_segment(SEGMENTS["south_facing_run"], walls, floor_arrs)
     z = args.sheet_zoom

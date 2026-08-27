@@ -46,7 +46,7 @@ from capture_corridor import REPO, read_config, capture, sha256, git_commit  # n
 
 GODOT = "/Applications/Godot_mono.app/Contents/MacOS/Godot"
 ASSETS = "src/Presentation/assets/composition_spike"
-ARMS = ["before", "after", "after_unbound", "after_noocc", "plant"]
+ARMS = ["before", "after", "after_unbound", "after_nocap", "plant"]
 SOLO_FLOOR_ARMS = ["after", "after_unbound"]
 
 # RULED (Rafe, 2026-08-26): the ruled rounds run "with south-facing front faces present in
