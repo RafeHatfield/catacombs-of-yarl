@@ -516,8 +516,13 @@ def incident_grit(mat, rng, t=T):
     dens = wrap_noise(t, 3, rng)
     rngspan = max(1e-6, float(dens.max() - dens.min()))
     dens = (dens - dens.min()) / rngspan
-    a = (rng.random((t, t)) < dens * 0.16).astype(float)
-    return rgb_v, a * 0.5
+    # CLUMPED AND SPARSER. At 0.16 flat the speckle was even enough to read as film grain over
+    # the whole room rather than as dust lying somewhere — "it doesn't pool in joints, doesn't
+    # gather at the wall bases". Cubing the density field makes the noise pick a corner of the
+    # tile and mostly stay in it, and the lower coefficient stops the dust competing with the
+    # stone for the eye.
+    a = (rng.random((t, t)) < (dens ** 3) * 0.30).astype(float)
+    return rgb_v, a * 0.45
 
 
 def incident_debris(mat, rng, t=T):
@@ -618,7 +623,7 @@ def incident_repair(mat, rng, t=T):
     return vals, a
 
 
-INCIDENT_FAMILIES = [("repair", incident_repair, 4, 0.05),
+INCIDENT_FAMILIES = [("repair", incident_repair, 9, 0.035),
                      ("crack", incident_crack, 6, 0.11), ("chip", incident_chip, 5, 0.14),
                      ("wear", incident_wear, 6, 0.34), ("grit", incident_grit, 5, 0.85),
                      ("debris", incident_debris, 5, 0.07)]

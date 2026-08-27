@@ -547,9 +547,110 @@ in, and the remaining two would have spent their wall-clock judging an arm the f
 already superseded. `SEATS-r2.json` names them as NOT RUN rather than omitting them — a round
 whose summary lists two seats when four were declared is a round reporting its own convenience.
 
-### 10.3 ROUND 3
+### 10.3 ROUND 3 — valid, the material read is FIXED, and it still FAILS
 
-*(filled in below from `evidence/seats/SEATS-r3.json`)*
+**The plant was CAUGHT** again, on vocabulary exclusive to it — *ruin, moss, mossy, overgrown*:
+
+> **CULL (plant):** *"Warm sunlit mossy earth with visible tile repeats — reads as outdoor ruin,
+> not an administered underworld."*
+
+**Two of round 2's three defects are closed, and the seat confirmed both without being told:**
+
+> **Q1:** *"**Cut stone flagstones** — irregular rectangular slabs, dry-laid or thin-jointed, over
+> a fine grit. **Grey stone; the warmth is entirely the torch.**"*
+
+Round 2 read the same pipeline as *"dried, cracked mud … baked earth, not stone."* The bond
+change did that, and nothing else could have. The second clause is §6.3 working exactly as
+designed: the material is grey and the seat attributed every bit of warmth to the lamp.
+
+> **Q5:** *"**Made** — with a qualification, because I tested this properly and expected the other
+> answer. … correlating the lighting-normalised floor against itself at sixteen shifts gives
+> 0.02–0.27. There is no repeating wallpaper. I then clustered all 42 visible cells: **40 distinct
+> groups out of 42.**"*
+
+That is the `PositionHash` fix independently validated by a blind seat that went looking for the
+opposite result. Round 2's *"eight pairs at exactly (+3 rows, +3 cols) … that is a lattice"* is
+gone.
+
+**And it still fails, on one thing, which three seats have now said in three different ways.**
+
+> **CULL:** *"Nothing has ever happened here — uniform grit everywhere, no wear, no stain, no
+> traffic; the only history is one asset used thrice."*
+>
+> **Q6:** *"YES [it would ship]. Comfortably. … Merely competent. It is a correct floor and not an
+> authored one. A genuinely good floor in this fiction would tell me where the traffic goes … and
+> I would be able to answer Q2 with my eyes closed. **This one made me answer Q2 by finding an
+> object.**"*
+
+**THE CHANNEL EXISTED IN ALL THREE ROUNDS AND WAS NEVER SEEN.** Every seat answered *which way
+would you walk* with a version of *nothing about the ground influenced that*. The third one
+explained why, and it is a §6.3 consequence this session should have reasoned to rather than
+been told:
+
+> *"~1,250 single-pixel dark dots spread evenly over the entire floor, in every cell, at the same
+> density. It is the loudest texture in the image and it has **no shape** — it doesn't pool in
+> joints, doesn't gather at the wall bases, doesn't thin under the lamp. At phone size the floor
+> reads as **static** before it reads as stone."*
+
+Two things were wrong at once. The grit was loud enough and even enough to bury the channel. And
+the channel's polish was delivered as a **value lift** — under a carried lamp, a value lift is
+read as light. The same seat said so in as many words: *"the warmth is entirely the torch."* **An
+asset authored to receive light cannot signal with brightness, because brightness is what the
+light is saying.** §6.3 is usually discussed as a cost paid at authoring time; this is the same
+clause biting at design time, and the wear signal has to be structural.
+
+**The fix follows from §8.1 rather than from the statistic** — traffic clears a floor, and what
+it clears has to go somewhere:
+
+| | grit |
+|---|---|
+| on the channel | swept bare (×0.10) |
+| against a wall base | piled (×1.20) |
+| neglected, off the route | heavier (×1.35) |
+| ordinary floor | sparse (×0.55) |
+
+*"Polish means you are on the path. Decay means you have stepped off it"* (§8.2), carried by the
+**absence of a texture** rather than by the presence of a brightness. The grit overlay itself was
+also thinned and clumped (density field cubed) so it lies somewhere instead of everywhere, and
+the repair family widened from 4 members to 9 at a lower rate — the seat recognised the same
+brace three times in one frame.
+
+**Applied and captured; the round that judges it had not returned when this report was written.**
+
+### 10.4 FLIPS FROM ROUND 3 NOT TAKEN
+
+- *"Break slabs across cell boundaries — joint density is 2× higher on the 32-art-px grid lines
+  than mid-cell."* **Measured, real, and structural.** Without an adjacency-aware autotiler,
+  neighbouring tiles' slabs cannot line up, so the cell boundary carries more edge than the tile
+  interior. The asset bar has the same property. Fixing it properly means slab continuity across
+  cells, which is a different tile system, not a tuning.
+- *"Introduce material variation the light can't explain — two or three slabs at a genuinely
+  different hue or value."* Hue is §5.4's, as with the timber. Value variation is available and
+  is the natural next increment.
+- *"Damage something — at least one broken, sunken, missing or lifted slab per room."* A
+  `broken_slab` family is the obvious addition and was not built this round.
+
+---
+
+## 10.4 THE DEVICE BUILD
+
+Verified end to end, build only, **exit 0**:
+
+```
+TIER0_SCENE=res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json \
+TIER0_THEME=res://src/Presentation/assets/tier1_floors/tile_themes_tier1_floors.yaml \
+TIER1_OVERLAYS=res://src/Presentation/assets/tier1_floors/MANIFEST.json \
+tools/tier0_harness/build_review_app.sh
+```
+
+Export → xcodebuild → bundle identity, all clean, under its own bundle id
+(`com.rafehatfield.catacombsofyarl.tier0`) so it sits beside the real game. Each of the three
+overrides is echoed on build, so a build cannot quietly show a different scene, theme or floor
+system than the operator asked for.
+
+**Run with `--no-install` for this session's verification**, deliberately: LOOP-PROCESS §1.1.1
+holds that nothing reaches the human gate the blind critic would kill, and the install is the
+step that reaches it. Drop the flag to put it on the phone.
 
 ---
 

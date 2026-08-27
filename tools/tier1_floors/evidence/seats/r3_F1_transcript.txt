@@ -1,0 +1,69 @@
+I ran the image through pixel-level analysis rather than eyeballing it. Findings below; every claim is measured.
+
+Baseline facts: the PNG is 750×600 but every pixel is doubled — the actual art is 375×300 at 2× zoom. The floor occupies screen x 183–631, y 17–401, which is exactly 7×6 cells of 64 screen px (32 art px). Grid origin (183, 17).
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone flagstones — irregular rectangular slabs, dry-laid or thin-jointed, over a fine grit. Grey stone; the warmth is entirely the torch.
+
+**Q1_WHY:**
+Two things. First, when I divide out the lighting (image ÷ its own 14px Gaussian blur) the paving reads clearly as rectangular slabs of varying size — roughly 12–40 art px on a side — separated by 1–2 art px dark joints, with occasional joints running across several slabs (`/tmp/F1_flat.png`). They are laid, not cast: no slab is square, no course runs straight.
+
+Second, the material is grey, not brown. Across the lit floor the channel ratios are locked: G/R = 0.731 ±0.045, B/R = 0.498 ±0.060, with the 1st–99th percentile spread only 0.708–0.780 and 0.449–0.625. That is a single greyscale texture multiplied by one light colour. In the unlit south corridor (x 375–440, y 430–560) the same slabs measure G/R 0.815, B/R 0.746 — near-neutral grey. So: grey stone, tinted tan by the lamp.
+
+The grit reads as scattered single dark pixels. 1,254 of the 1,963 dark connected components on the floor are exactly 4 screen pixels — one art pixel each.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+West, into the opening at x 0–180, y ≈145–380 — and I want to be honest that the *paving* did not choose it. The ground in the west opening is the same slab pattern at the same speck density as the ground under my feet and the same as the south corridor at x 375–440. There is no wear lane, no debris drift, no scuff, no stain, no difference in joint width, nothing that says traffic went one way.
+
+What pulled me west is a single object: a small dark brace at x 85–101, y 164–197 — a vertical bar with four square pins flanking it. It's the only thing in the frame that suggests somebody has been there and done something. That is an object cue, not a ground cue. Strip it out and this is a coin flip.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Almost nothing has happened to it. It is evenly, uniformly speckled and otherwise intact. It is not worn, not stained, not broken, not swept, not walked on in any direction more than any other. It reads as a floor that was laid, lightly sanded over, and then left alone in a sealed room — not a corridor a company of soldiers has been tramping through for four centuries.
+
+There are three exceptions, and they are all the same mark: a horizontal brace at x 519–554, y 97–112 (tile r1,c5); a second at x 451–492, y 294–309 (tile r4,c4); the vertical one at x 85–101, y 164–197 in the west opening.
+
+**Q3_WHY:**
+I counted the specks per 64px cell. Over the well-lit interior the counts are 39, 47, 50, 56, 44, 48, 51, 43, 45, 39, 56, 44, 44, 43, 46, 50, 53, 55, 40, 54, 43… — mean ≈47, tight. The three outlier cells (1, 4, 5) are cells so dark that the threshold stops resolving specks, not cells that are actually cleaner. There is no gradient of grime toward a doorway, no concentration in a lane, no bare patch where feet have polished it. The dirt is a uniform field, not a record.
+
+For tonality: after lighting removal the slab-to-slab value variation is small and blotchy in a generic way — no slab is stained a different colour, none is a different stone, none is sunken or cracked through. Joint darkness is essentially one value everywhere.
+
+And I dumped the three braces as pixel maps. Two of them are the same asset: pins 2×2 art px, at row offsets 4–7 and 16–19 in both — identical vertical spacing of 12 — with only the horizontal pin gap differing (18 px vs 16 px). The third is that same thing rotated 90°. Three marks of history on the whole screen, and it's one mark used three times.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Three things.
+
+1. **The pepper.** ~1,250 single-art-pixel dark dots spread evenly over the entire floor, in every cell, at the same density. It is the loudest texture in the image and it has no shape — it doesn't pool in joints, doesn't gather at the wall bases, doesn't thin under the lamp. At phone size the floor reads as *static* before it reads as *stone*. This is the thing I kept snapping back to.
+
+2. **The brace mark, three times.** x 519–554/y 97–112, x 451–492/y 294–309, and x 85–101/y 164–197. Once I saw the second one I recognised it, and after that both of them read as the same sticker rather than two repairs. The pin spacing differs by 2 pixels; that is not variation, that is the same asset nudged.
+
+3. **The 64px cell grid.** It is measurably visible in the paving. I thresholded the lighting-normalised floor into "joint / not joint" and measured joint density by grid phase: at the cell boundary (phase 62,63,0,1) it is 0.250 by column and 0.277 by row; mid-cell (phase 24–40) it is 0.137 and 0.141. A mortar joint is **twice as likely to fall exactly on a 32-art-pixel boundary** as anywhere else. The slabs are pretending to be irregular but they are mostly staying inside their boxes. Once you notice it, the room stops being paving and becomes a spreadsheet.
+
+**Q5: MADE, OR REPEATED?**
+**Made** — with a qualification, because I tested this properly and expected the other answer.
+
+I checked global tiling: correlating the lighting-normalised floor against itself at shifts of (64,0), (0,64), (128,0), (192,192), (256,256) and eleven others gives correlations of 0.02–0.27. There is no repeating wallpaper. I then clustered all 42 visible cells by normalised cross-correlation: 40 distinct groups out of 42. Only two near-duplicate pairs exist — cells (1,6)/(4,6) at 0.940 and (1,3)/(2,5) at 0.932 — and one 32px sub-patch, x 378 y 82 against x 570 y 274, at 0.998, which is a genuinely reused chunk but a small one.
+
+So this is a large hand-varied set, not four tiles on repeat. It was made. What undercuts it is that the *variation itself* is mechanical: every cell is the same recipe — a few rectangles, a joint hugging the cell edge, forty specks — so it has variety without having difference. Nothing in it was placed because something happened there.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** Comfortably. The slab construction is clean, the lamp falloff is handled well, the read at phone size is legible, and it doesn't tile.
+
+Merely competent, or genuinely good? **Merely competent.** It is a correct floor and not an authored one. A genuinely good floor in this fiction would tell me where the traffic goes, where the water stands, which slabs the orcs have replaced and which have been there since before the records — and I would be able to answer Q2 with my eyes closed. This one made me answer Q2 by finding an object.
+
+**CULL:**
+Nothing has ever happened here — uniform grit everywhere, no wear, no stain, no traffic; the only history is one asset used thrice.
+
+**FLIP LIST**
+- Kill the uniform pepper. Cut the global speck density by two-thirds and redistribute it: heavy against wall bases and in joint lines, thinning to bare polished stone along a traffic lane running from the west opening (x 0–180, y 145–380) to the south corridor mouth (x 375–440, y 400).
+- Break slabs across cell boundaries. Right now joint density is 2× higher on the 32-art-px grid lines than mid-cell; author enough multi-cell slabs that the boundary phase measures flat.
+- Give the three brace marks distinct art — different pin counts, bent pins, one with the timber still in it, one with the pins sheared off — or cut it to a single instance. Three copies of one mark is worse than one mark.
+- Introduce material variation the light can't explain: two or three slabs at a genuinely different hue or value (replaced stone, a poured patch, a soaked area), so the floor isn't one greyscale texture under one lamp colour.
+- Damage something. At least one broken, sunken, missing or lifted slab per room, placed where it would plausibly break — a doorway threshold or a corridor mouth — so the surface has a cause somewhere in it.
+
+---
+
+Next thing I'd want to see: the same room lit differently, or a second room from the same tileset. The uniformity finding is the load-bearing one, and one screen can't tell me whether it's this room or the whole generator.
+
+*Model: Claude Opus 5 (1M context).*

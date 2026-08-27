@@ -109,10 +109,48 @@ public static class FloorIncidentPlanner
             // off it" (§8.2) is delivered here, by rate, and carried by the channel above.
             bool neglected = !onRoute && !NearChannel(channel, x, y);
 
+            // Does a wall touch one of this cell's four sides? Used twice below: it is where the
+            // §12.1 contact occlusion goes, and it is where §8.1's loose material piles up.
+            bool occAdjacent = map.IsWallTile(x, y - 1) || map.IsWallTile(x + 1, y)
+                            || map.IsWallTile(x, y + 1) || map.IsWallTile(x - 1, y);
+
+            // GRIT IS SWEPT OFF THE PATH AND PILES UP AGAINST THE WALLS — and this is the
+            // correction three independent seats converged on without any of them being shown
+            // §8.2. Every one of them answered "which way would you walk" with a version of
+            // *nothing about the ground influenced that*, and the third said exactly why:
+            //
+            //     "~1,250 single-pixel dark dots spread evenly over the entire floor, in every
+            //      cell, at the same density. It is the loudest texture in the image and it has
+            //      NO SHAPE — it doesn't pool in joints, doesn't gather at the wall bases,
+            //      doesn't thin under the lamp. At phone size the floor reads as STATIC before
+            //      it reads as stone."
+            //
+            // The channel was there the whole time and could not be seen through it. And the
+            // deeper reason the channel alone was never going to carry §8.2 is §6.3's own logic
+            // turned around: the channel's polish is delivered as a VALUE LIFT, and under a
+            // carried lamp a value lift is read as LIGHT. The same seat said so in as many
+            // words — "the warmth is entirely the torch". An asset authored to receive light
+            // cannot signal with brightness, because brightness is what the light is saying.
+            //
+            // So the wear signal has to be STRUCTURAL, in something the lamp cannot explain:
+            // where the loose material is and is not. §8.1 supplies it directly — traffic
+            // clears a floor, and what it clears has to go somewhere:
+            //
+            //     ON THE CHANNEL   swept bare. Feet take the grit away.
+            //     AGAINST A WALL   piled. It is where the traffic pushes it and nobody sweeps.
+            //     NEGLECTED        heavier. No traffic and no care (§8.1's decay quadrant).
+            //     ORDINARY FLOOR   sparse.
+            //
+            // "Polish means you are on the path. Decay means you have stepped off it" (§8.2),
+            // carried by the absence of a texture rather than by the presence of a brightness.
             int gritId = -1;
             if (cfg.GritIds.Length > 0)
             {
-                float rate = cfg.GritRate * (neglected ? 1.15f : 1.0f);
+                float rate;
+                if (onRoute)          rate = cfg.GritRate * 0.10f;   // swept
+                else if (neglected)   rate = cfg.GritRate * 1.35f;
+                else if (occAdjacent) rate = cfg.GritRate * 1.20f;   // piled at the wall base
+                else                  rate = cfg.GritRate * 0.55f;
                 if (Unit(x, y, seed + 11) < rate)
                     gritId = cfg.GritIds[Hash(x, y, seed + 12) % cfg.GritIds.Length];
             }
