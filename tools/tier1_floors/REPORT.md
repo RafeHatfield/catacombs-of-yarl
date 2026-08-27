@@ -31,8 +31,18 @@ session exists to satisfy.**
 *"eight pairs at exactly (+3 rows, +3 cols) … that is a lattice."* Confirmed independently:
 `h(x+1,y+1) − h(x,y) = 112648`, and `112648 mod 24 = 16`, whose additive order mod 24 is **3**.
 
-**Round 1 of the seats was VOID** under LOOP-PROCESS §4 — the plant was not caught. The diagnosis
-is that the plant was under-built, not that the seat was soft, and it is recorded in §10.
+**And the single most useful finding came from the seats, not from an instrument.** Two blind
+seats, independently, named the floor's *material* wrong: **"dried, cracked mud — a parched
+riverbed or a dry clay pan. Baked earth, not stone."** Two rounds had been spent tuning joint
+width, joint value, stone contrast and grain, and none of them could have worked, because what
+says *laid* is not how the joints look — **it is how they meet.** Voronoi cells meet at curved
+three-way Y-junctions, which is the exact signature of desiccation cracking. Cut stone is bounded
+by straight lines meeting in T-junctions. The bond was replaced (§6), and it is the difference
+between a texture and a floor.
+
+**Round 1 was VOID** under LOOP-PROCESS §4 — the plant was not caught. The diagnosis is that the
+plant was under-built, not that the seat was soft. **Round 2 was valid** — the plant was caught
+on *moss*, vocabulary exclusive to it — **and the family FAILED it.** §10.
 
 ---
 
@@ -197,22 +207,55 @@ the lever claims).
 
 `src/Presentation/assets/tier1_floors/`, `MANIFEST.json`.
 
-**Base — 3 material tiles, all `field_laws` CLEAN.** A wrapping irregular flagstone bond, laid as
-a **Voronoi partition of the torus** with a per-seed rotated superellipse metric. Filled with the
-wave's measured material: pooled ladder, tint and grain amplitude from 8 donors, grain applied as
-**wrapping value noise at two spatial scales**.
+**Base — 3 material tiles, all `field_laws` CLEAN.** A wrapping irregular **ashlar slab bond**:
+one horizontal and one vertical cut at per-variant positions, each wandering by a pixel, then the
+whole pattern rolled by a per-variant offset so every slab crosses a tile edge and continues into
+the neighbour. Filled with the wave's measured material — pooled ladder, tint and grain amplitude
+from 8 donors, grain as wrapping value noise at two spatial scales.
 
-> The first bond was a running brick bond and it **read as brickwork** — uniform coursing, bed
-> joints every ten pixels at one angle. That is §3.1's finding arriving on the ground plane: *a
-> plane textured like elevation reads as elevation.* Coursed masonry is what a wall is a picture
-> of; a found-stone floor (§7.4) is not laid in courses at all.
+**Three bonds were built before this one, and the sequence is the finding.**
+
+> **A running brick bond read as BRICKWORK** — uniform coursing, bed joints every ten pixels at
+> one angle. That is §3.1 arriving on the ground plane: *a plane textured like elevation reads as
+> elevation.* Coursed masonry is what a wall is a picture of.
+>
+> **A Voronoi partition read as DRIED MUD.** Two independent blind seats named it without
+> hedging — *"a parched riverbed or a dry clay pan ... irregular polygons meeting at 3-way
+> junctions, with the cracks drawn as 1px dark lines that thin and taper — the exact signature of
+> desiccation cracking in mud, not of cut, laid or quarried stone. There are no straight edges
+> anywhere, no mortar line."*
+>
+> **Two full rounds were spent tuning the wrong axis** — joint width, joint value, stone value
+> break, grain amplitude — and none of them could have worked. **What says *laid* is not how the
+> joints look, it is how they MEET.** Mud is bounded by curves meeting at 120° Y-junctions; cut
+> stone is bounded by straight lines terminating against each other in T-junctions. That is a
+> property of the partition, and no amount of retouching a Voronoi diagram reaches it.
+
+Four slabs of roughly sixteen pixels is also the right size rather than a convenience: at 32
+native pixels a cell shows about a metre and a half of floor, so a flagstone is twelve to
+eighteen pixels — and the asset bar's own paving is built from a similarly small number of large
+regions, which is the only reason its laid cells can sit at zero contained components 55% of the
+time.
 
 **Oriented — 24 ids.** 3 tiles × 8 orientations of the square, emitted as real assets and each
 **re-screened**. This is §6.3 paying out: an asset authored to *receive* light carries no
 direction, so there is nothing in it to break by turning it. A tile with a baked key light could
 not be rotated at all, and this variety would cost eight times the art.
 
-**Incident overlays — 27, authored (§7).** crack ×6, chip ×5, wear ×6, grit ×5, debris ×5.
+**Incident overlays — 31, authored (§7).** repair ×4, crack ×6, chip ×5, wear ×6, grit ×5,
+debris ×5, at rates derived from §8.1 rather than from the lattice statistic (§13.4: the criteria
+with numbers silently outcompete the ones without, so the rates answer *what has four hundred
+years of traffic and indifference done to this floor*, not *what brings the number down*).
+
+**The repair family is §8.2.1's own tier-one requirement**, and three independent seats asked for
+it unprompted before it was built — *"§7.4's orc work exists on walls and nowhere on the ground"*.
+A cracked slab pinned flat with driven iron pins. **Iron, not timber**, and that is a palette
+decision rather than a preference: §5.4 holds *chroma is signal ... a saturated pixel should mean
+something happened*, a salvaged timber baulk would spend a hue, and whether the Boundary's floors
+are where that hue gets spent is a design question, not a builder's to answer on a first landing
+round. The timber half is left unbuilt and named as unbuilt.
+
+**Contact occlusion — 4, §12.1.** See §8.5.
 
 **Channel — 4, §8.2.1.** An alpha wash at the family's own polished value: it lifts the joints
 more than the stone, which delivers the seat's *"erase the joint detail inside it so joints fade
@@ -353,7 +396,42 @@ boundary** — a straight 32px line, which is §8.3.1's lattice arriving through
 meant to read as wear. Visible in the capture as square steps down the side of the polished path.
 The wander belongs *inside* the shoulder tile, and now lives there.
 
-### 8.6 A silent no-op, caught by the move §4.2 prescribes
+### 8.5 Contact occlusion was drawn as a CELL, not as a boundary
+
+`DungeonRenderer` darkens every wall-adjacent floor cell by multiplying the whole sprite by
+`DarkFloorModulate` (0.92). The intent is §12.1's contact occlusion and **the intent is right** —
+that clause rules the occluded seam mandatory, and the composition spike measured `cannot-read`
+culls twice without it. It is the execution that is cell-quantised, and it fails §12.1's own test
+twice over:
+
+- **Its edge is the CELL's edge**, so it is a hard 32px square step. A blind seat measured it
+  without being told it existed: *"the torchlight steps down in hard-edged 64px squares aligned
+  to the tile grid ... gradient magnitude spikes ~35% above background at a strict 32px pitch ...
+  the room reads as a spreadsheet of cells rather than a continuous floor."*
+- **It does not answer to what adjoins it.** The same 8% multiply lands on a cell with a wall to
+  its north and a cell with a wall to its south-west. §12.1: *"what separates occlusion from a
+  ring is whether the treatment answers to the geometry it sits on ... a uniform ribbon of
+  constant width and constant value applied to every edge answers to nothing."*
+
+Now drawn by the overlay system as a gradient fading in from the edge a wall is actually on, so a
+corner cell gets two and open floor gets none, with the ramp depth jittered along the edge. The
+whole-cell modulate is suppressed where a floor family is active (49 cells in the review scene),
+because leaving both on would double the darkening *and* keep the square step.
+
+⚠ **This is a defect in shipping-game code, not in this session's art**, and it is fixed only for
+scenes that declare a floor family. Every other theme still gets the cell-quantised version.
+
+### 8.6 Two direction-bearing overlays were being flipped by hash
+
+Mine, found by reading my own drawing code rather than by a seat. `Add` applied FlipH/FlipV by
+position hash to *every* overlay, which is legal on an incident — §6.3 authors a mark to receive
+light, so it has no direction to break — and **illegal on the channel's shoulders and the contact
+occlusion**, which are direction-bearing by construction. A `left` shoulder flipped horizontally
+is a `right` shoulder; a north-edge occlusion flipped vertically puts its darkening on the south
+edge, against no wall at all. The distinction is not which overlays look better turned; it is
+which ones **mean** something by their orientation.
+
+### 8.7 A silent no-op, caught by the move §4.2 prescribes
 
 The first capture with `--floor-overlays` produced a PNG **byte-identical** to the run without it
 (`sha256 0110aa69…` both ways). A whitespace-sensitive patch to `capture_corridor.py` had not
@@ -428,34 +506,100 @@ the thing it is controlling for is worse than no control. Tightened to vocabular
 the plant (collapse, cobwebbing, moss, rubble, ruined), and given both controls: it does not fire
 on either round-1 transcript, and does fire on text naming the ruin.
 
-### 10.2 ROUND 2
+### 10.2 ROUND 2 — valid, and the family FAILED it
 
-*(filled in below from `evidence/seats/SEATS-r2.json`)*
+**The plant was CAUGHT.** The plant seat culled and named the ruin on its own axis:
+
+> **CULL:** *"Reads as sunlit outdoor mud-pan with leaf-green moss — not an administered
+> underworld floor."*
+
+`moss` is vocabulary exclusive to the plant. So the round stands and its findings are read.
+
+**The candidate FAILED.**
+
+> **CULL:** *"Untouched natural mud — no wear, repair or incident anywhere; nothing records four
+> hundred years of use."*
+>
+> **Q6:** *"YES [it would ship]. Merely competent. The crack generation is genuinely decent work
+> … But it is one texture doing one thing, with no second material, no wear, no incident and no
+> authored moment anywhere in the room. **Not good.**"*
+
+§13.3 is unambiguous: *"fine", "acceptable", "solid" and "promising" are all failing verdicts.*
+Merely competent is a FAIL.
+
+**Both seats' flip lists converged on the same four things, and all four are now applied** —
+LOOP-PROCESS §1.1.2: *a critic FAIL is not a stop, it is a reprompt.*
+
+| the flip | what was done |
+|---|---|
+| *"replace the dried-mud crack network with cut, laid stone: rectilinear slabs, real joints"* | the ashlar bond — §6 |
+| *"fix the per-tile light quantisation: no square steps at 64px"* | contact occlusion by adjacency; whole-cell modulate suppressed — §8.5 |
+| *"put orc repair on the walkable ground: driven pins"* | the repair family — §6, and §8.2.1 already required it |
+| *"break the tile repeats"* | `PositionHash` — §8.1 |
+
+Two of the flips are **not** taken, and are named rather than quietly dropped:
+
+- *"introduce a second ground material"* — out of this session's scope, which is one material.
+- *"a salvaged timber baulk"* — §5.4. See §6.
+
+**ROUND 2 WAS STOPPED AFTER TWO OF ITS FOUR SEATS.** The verdict and the plant control were both
+in, and the remaining two would have spent their wall-clock judging an arm the flip list had
+already superseded. `SEATS-r2.json` names them as NOT RUN rather than omitting them — a round
+whose summary lists two seats when four were declared is a round reporting its own convenience.
+
+### 10.3 ROUND 3
+
+*(filled in below from `evidence/seats/SEATS-r3.json`)*
 
 ---
 
 ## 11. WHAT IS OWED, AND WHAT THIS BUILD CANNOT ANSWER
 
+**The rig has not been tuned, and that is the point rather than an omission.** §6.2.1 gives that
+pass to the human gate; this session built the knobs and left every default reproducing the
+previous rig exactly. Until the pass runs, §6.2's values stay PLACEHOLDER and the re-derivation
+rule stays unfired.
+
 - **§6.5's value stack cannot be read in this scene.** The walls are the tier-0 programmer-art
   stubs — the honest mock, because the sighted round's walls are *known-culled* and seating the
-  floors beside art the bible has already struck would contaminate any verdict. The cost is that
-  the stack is a relationship between the wall's two planes and the floor, and a stub wall has no
+  floors beside art the bible has already struck would contaminate any verdict. The cost: the
+  stack is a relationship between the wall's two planes and the floor, and a stub wall has no
   meaningful value. This build answers *is the floor legible, and does the rig make it legible
   across the lit radius*. It does not answer *does the floor sit between the planes*. The floor's
-  measured albedo is in the manifest so the wall round that comes next can derive its planes from
-  a floor that exists — the right order, and the one §6.5 was denied when it had to invent the
-  floor.
+  measured albedo is in the manifest so the wall round that follows can derive its planes from a
+  floor that exists — the right order, and the one §6.5 was denied when it had to invent the floor.
 - **The magenta stub walls dominate the frame** and are a known contaminant on any seat's
   reaction. Declared in the seat prompt's scope block rather than worked around.
+- **`PositionHash` has no regression guard.** The defect that made a 24-tile family deliver 3 was
+  invisible for as long as it existed, and nothing goes red if it comes back — §4.2's own
+  question, unanswered. The test project references Logic and Analyst only, and wiring it to the
+  Godot-dependent Presentation assembly would break *"logic layer tests run without Godot"*, which
+  is a worse trade. A Python re-implementation of the hash would be the copy-that-drifts failure
+  this report criticises elsewhere. **Named as owed, not solved.**
+- **The whole-cell wall shadow is fixed only where a floor family is declared.** Every other theme
+  still gets `DarkFloorModulate` at cell resolution (§8.5). That is shipping-game code and a
+  separate change.
+- **Captures taken before this branch will not reproduce byte-for-byte**, because the hash fix
+  moves which variant lands on which cell for every theme. Recorded because LOOP-PROCESS §2.3
+  makes a hash mismatch invalidate evidence, and this is a legitimate reason for one.
+- **The timber half of the floor-repair vocabulary is unbuilt.** §8.2.1 names *"a salvaged timber
+  baulk dropped across a hole and worn smooth on its top edge"* alongside the driven pins, and a
+  seat asked for it by name. It would spend a hue, and §5.4 holds chroma is signal — whether the
+  Boundary's floors are where that hue gets spent is Rafe's, not a builder's.
+- **A second ground material** was asked for by a seat (*"exposed stone sub-floor showing through
+  where the mud has worn away"*). Out of this session's scope, which is one material.
 - **`HasJunction` reports NO on this scene.** It is a corridor-junction assertion; the *which way
   would you walk* choice here is posed by the channel and the neglected passage instead. The
-  harness prints its ABORT line and still writes the capture; not fixed, recorded.
-- **The unspent 48 generations.** The round did not need them: the yield problem was not solved
-  by more samples on a surface measured at architecture 0/100.
-- **A-HEB is still unmeasured.** This session refused it rather than spend 20 generations; §8.2.1
-  item 4 remains open.
-
----
+  harness prints its ABORT line and still writes the capture. Recorded, not fixed.
+- **48 of the 120 generations are unspent.** The round did not need them: the yield problem is not
+  solved by more samples on a surface measured at architecture 0/100.
+- **The plant's assets sit under `res://` and are packed into any export.** Harmless in a review
+  build — the theme points elsewhere — and the same is already true of the tier-0 stubs, so this
+  is pre-existing behaviour rather than a regression. But the plant is *deliberately wrong art*,
+  and deliberately wrong art inside a shipping pack is a hazard of a different kind from a
+  programmer-art stub. Named; not fixed here, because an export-exclusion rule is its own change.
+- **A-HEB is still unmeasured** as a parent. This session refused it rather than spend 20
+  generations; §8.2.1 item 4 stays open.
 
 ## 12. EVIDENCE
 
