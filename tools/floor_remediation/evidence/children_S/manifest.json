@@ -1,0 +1,87 @@
+{
+ "commit": "9d5fdcd2162ada6757c80f4294036dd3ac3d23aa",
+ "rig_requested": "ambient=1a1a22 color=ffb066 energy=1.6 radius_tiles=5.5 (ALL UNDERIVED - \u00a76.2 PLACEHOLDER)",
+ "scene": "src/Presentation/assets/tier0_harness/scenes/wall_face_review.json",
+ "walls": "composition_spike/before, held constant",
+ "tile_size": 32,
+ "tile_scale": 2.0,
+ "captures": [
+  {
+   "label": "S_S_seed9807",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/S/S_seed9807.png",
+   "tile_id": 9400,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.812,
+   "file": "S_S_seed9807.png",
+   "sha256": "3a55dbff4a7de6bd6c2e1832a03993416d7b0247f75e01d750c44e9e64f6428c",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "357c4b3bf8015281d86e5f8c1f6e8a7dcbd695a3382cf359dd9f88752043b908"
+  },
+  {
+   "label": "S_S_seed9801",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/S/S_seed9801.png",
+   "tile_id": 9401,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.803,
+   "file": "S_S_seed9801.png",
+   "sha256": "23c5253dd247d8a77addbd132328e1cc343fc1d10c005bb8ba40e1bc061d0e0c",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "b8c9166a4a592a2af78c5ec08ef05009a1a9e1fa05173593ceb8bcd2fe95bd32"
+  },
+  {
+   "label": "S_S_seed9803",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/S/S_seed9803.png",
+   "tile_id": 9402,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.75,
+   "file": "S_S_seed9803.png",
+   "sha256": "185c5cdc958453187fe559419fe80009c34e179002a9f88ee6a02bd0fb0e7406",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "130f1f5500a9c8533ede682837b81917fe1e009959f861cbd2e0d04e4dd163fe"
+  },
+  {
+   "label": "S_S_seed9806",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/S/S_seed9806.png",
+   "tile_id": 9403,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.71,
+   "file": "S_S_seed9806.png",
+   "sha256": "22b4bc828fb23c04c72d8a0783efbd82708730039e3ae0a65006a1ee208a60ed",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "bd84d9bbca322a2aec028beadf351b3fcd2ce45e749f32e15fa5b978a36dc4cb"
+  },
+  {
+   "label": "CONTROL_ring_S_seed9809",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/S/S_seed9809.png",
+   "tile_id": 9404,
+   "floor_verdict": "RING",
+   "near_ring": 1.0,
+   "file": "CONTROL_ring_S_seed9809.png",
+   "sha256": "0169a2c61ae02a2b76cb02a025db44bcf02b86812f87eb87357bf33b5ce21920",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "ffad3f6ade54c82a52bb4e481dd15cfe9e3d72e0e30d9121ca5be120a4ebd35d"
+  },
+  {
+   "label": "CONTROL_plant_BKAB",
+   "floor_tile": "tools/pixellab/probe_6_4/survivors/B-KAB.png",
+   "tile_id": 9405,
+   "floor_verdict": "RING",
+   "near_ring": 0.992,
+   "file": "CONTROL_plant_BKAB.png",
+   "sha256": "884d0fd5b7a7152c432e5ca41e4872e7e4bd81d4a315d9d16a180605a250ea1f",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "950751ae2ec901ce0a72f4a20c4d2c00e5ee54f3c8e14acc6010d78144a6ef09"
+  },
+  {
+   "label": "CONTROL_parent_CGAB",
+   "floor_tile": "tools/pixellab/probe_6_4/survivors/C-GAB.png",
+   "tile_id": 9406,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.791,
+   "file": "CONTROL_parent_CGAB.png",
+   "sha256": "6b358533cb575d45b24698e4f2881e3cd97472afede6dad1f8531a8d0f7ab7fe",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "1a24a59aa5607c3beebd8d1cf728acc0f43d6fc0bace6015025a7595c3f6db4f"
+  }
+ ]
+}

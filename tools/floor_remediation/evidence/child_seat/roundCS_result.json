@@ -1,0 +1,158 @@
+{
+ "round": "CS",
+ "commit": "9d5fdcd2162ada6757c80f4294036dd3ac3d23aa",
+ "mapping": {
+  "F1": "S_S_seed9803",
+  "F2": "S_S_seed9801",
+  "F3": "S_S_seed9806",
+  "F4": "CONTROL_plant_BKAB",
+  "F5": "S_S_seed9807",
+  "F6": "CONTROL_parent_CGAB",
+  "F7": "CONTROL_ring_S_seed9809"
+ },
+ "plant": "CONTROL_plant_BKAB",
+ "parent": "CONTROL_parent_CGAB",
+ "prior": {
+  "plant": "round A and round B both culled the raw B-KAB `keyline`",
+  "parent": "round A returned `cull: none` on the raw C-GAB"
+ },
+ "verdicts": {
+  "F1": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Every tile carries a closed one-pixel dark rectangle inset 4px from its own edge (rows 4/28, cols 4/29), a second closed rectangle inside that, and four pale corner pips \u2014 the border returns to where it started instead of running into the next cell, so the floor is a tray of stamped cards.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  },
+  "F2": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Same closed inset ring, softened into a rounded rectangle with a second ring around a centre panel; the doubled dark seam at every cell boundary means each tile is edged on all four sides by its own line rather than sharing a joint with its neighbour.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  },
+  "F3": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The floor never resolves into paving, and the identical centred face-like motif in every single cell is the one thing on screen that was arranged to be looked at.",
+   "q1": "North, to the crossing two and a half cells up \u2014 the corridor is the only floor, and the paving itself gives no reason to prefer either direction; I am navigating entirely off the walls.",
+   "q2": "It does not read as a laid surface \u2014 it is a mottled dark-and-light camouflage with no slab edges, no joints and no laying pattern, closer to lichen or churned earth seen from above than to anything anyone put down.",
+   "q3": "Continuous, but only because it is formless; there are no separate objects because there are no objects, and a floor that reads as continuous by having no structure has not solved the problem.",
+   "q4": "Nothing. Every cell is the same art (structural correlation 0.97 across all thirteen visible floor cells once the engine light is divided out) \u2014 no wear line down the corridor, no chipped corner, no patch.",
+   "q5": "Nothing has happened here; it is an undressed cave bottom with a repeating symmetrical two-socket mask stamped dead centre of every cell, which is both a decorative motif in a place where nothing exists to be looked at and the wrong register \u2014 spooky, not administered."
+  },
+  "F4": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "A closed dark ring (rows 7/23, cols 8/25) around a 16x16 patch of stone floating on an otherwise empty gradient with a 7px margin of nothing on every side \u2014 the tiles do not even touch each other; this is a sheet of stickers, not a floor.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  },
+  "F5": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "A closed rounded-corner outline inset from all four tile edges, with a curled rune glyph centred inside it \u2014 a bordered plaque repeated across the whole floor, and the glyph is decoration in a place that has none.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  },
+  "F6": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Inside every cell, in the identical position, a dark rectangle runs down col 9 and col 23 from row 12 to row 20, closes along row 20 and dashes across row 9 \u2014 four sides, one value, returning on itself, with the same tone inside and outside it, so it divides no stone from any other stone; the dashed top does not save it.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  },
+  "F7": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "It is the only one that reads as stone, and it still fails: one tile, no variants, every slab locked inside the cell boundary, and zero evidence of use on a surface whose whole brief is use.",
+   "q1": "North to the nearer crossing \u2014 the walls tell me where I can go and the paving tells me nothing; there is no wear, no drain fall, no direction of laying to read.",
+   "q2": "Cut stone slabs of three distinct tones butted along dark stepped joints, one large pale slab, a wide dark joint band across the lower third \u2014 the only candidate here whose surface has genuine masonry logic.",
+   "q3": "A grid of separate objects. Every joint terminates exactly on the 32-pixel boundary and no slab ever straddles a cell edge, so the lit corridor shows the same pale L-shape at an even 64-pixel beat; at play size that reads as a repeating stamp, not a laid floor.",
+   "q4": "Nothing whatsoever. All thirteen visible floor cells are the same single tile (0.98 structural correlation after dividing out the engine light) \u2014 no sunken slab, no chipped corner, no polished traffic line down the middle, no orc repair, no rope, no pin, no timber.",
+   "q5": "A room was paved once, competently, and then the picture stopped \u2014 this is a floor on its first day, dressed as a floor that has had four hundred years of boots on it, and the fiction's central fact is entirely absent from the art."
+  }
+ },
+ "ranking": [
+  "F7",
+  "F6",
+  "F3",
+  "F2",
+  "F5",
+  "F1",
+  "F4"
+ ],
+ "separator": "The top has stone of more than one tone meeting along a joint that was laid; the bottom has one repeated stamp with a line drawn round it and, in the worst case, a gap of nothing between the stamps.",
+ "flip_list": [
+  "Delete the closed inset ring from F1 (rows 4/28, cols 4/29), F2, F4 (rows 7/23, cols 8/25), F5 and F6 (col 9/col 23, rows 9\u201320). Where a division is genuinely wanted, keep dark pixels only on the tile's left column and bottom row, so the line continues straight into the neighbouring cell instead of turning the corner and coming back.",
+  "Delete F1's four pale corner pips at rows 2\u20133, cols 1\u20133 and 28\u201330. Four bright marks at the four corners of every cell is what makes the grid countable from across the screen.",
+  "Extend F4's stone to the full 32x32 so adjacent tiles touch; the 7-pixel gradient margin on every side is why the tiles float.",
+  "Author the paving on a 4x4-cell canvas and cut it into 16 tiles, so slabs straddle cell boundaries and no joint lands on the 32-pixel line more than about a third of the time. Every candidate here ships exactly one floor tile; the 64-pixel beat this produces is visible in the lit corridor of all seven.",
+  "Ship at least six floor variants for the engine to pick per cell, and make three of them damaged: one slab sunk 1px with its joint darkened two steps, one with 3px broken off a corner and the gap filled with grit, one replaced entirely by a salvaged plank pinned flat at both ends.",
+  "Cut a traffic path: run a band roughly 12 pixels wide down the centre of the corridor where the slab faces are one step lighter and their surface stipple is thinned to nothing, and leave the stipple intact at the wall edges. This is the single thing that would let anyone answer \"what have four hundred years done to this floor\" with something other than \"nothing\".",
+  "In F7, bring the pale slab down so it is at most one step brighter than its neighbours rather than the current two; at play size it currently reads as a bright blob repeating on a fixed rhythm and pulls the eye to the floor.",
+  "In F3, delete the symmetrical two-socket blob at the centre of the tile and replace the mottle with actual slab edges \u2014 straight cuts of at least 8 pixels meeting at joints \u2014 so the surface reads as something laid rather than something grown."
+ ],
+ "plant_caught": true,
+ "round_void": false,
+ "parent_cull": "keyline",
+ "children": [
+  "F1",
+  "F2",
+  "F3",
+  "F5",
+  "F7"
+ ],
+ "children_keylined": [
+  "S_S_seed9803",
+  "S_S_seed9801",
+  "S_S_seed9807"
+ ],
+ "instrument": {
+  "S_S_seed9807": "CLEAN",
+  "S_S_seed9801": "CLEAN",
+  "S_S_seed9803": "CLEAN",
+  "S_S_seed9806": "CLEAN",
+  "CONTROL_ring_S_seed9809": "RING",
+  "CONTROL_plant_BKAB": "RING",
+  "CONTROL_parent_CGAB": "CLEAN"
+ },
+ "near_ring": {
+  "S_S_seed9807": 0.812,
+  "S_S_seed9801": 0.803,
+  "S_S_seed9803": 0.75,
+  "S_S_seed9806": 0.71,
+  "CONTROL_ring_S_seed9809": 1.0,
+  "CONTROL_plant_BKAB": 0.992,
+  "CONTROL_parent_CGAB": 0.791
+ }
+}

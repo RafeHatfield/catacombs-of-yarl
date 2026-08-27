@@ -1,0 +1,191 @@
+{
+ "round": "CP",
+ "commit": "9d5fdcd2162ada6757c80f4294036dd3ac3d23aa",
+ "mapping": {
+  "F1": "CONTROL_ring_P_seed9706",
+  "F2": "P_P_seed9708",
+  "F3": "P_P_seed9709",
+  "F4": "CONTROL_plant_BKAB",
+  "F5": "CONTROL_parent_CGAB",
+  "F6": "P_P_seed9701",
+  "F7": "P_P_seed9705",
+  "F8": "P_P_seed9702",
+  "F9": "P_P_seed9703"
+ },
+ "plant": "CONTROL_plant_BKAB",
+ "parent": "CONTROL_parent_CGAB",
+ "prior": {
+  "plant": "round A and round B both culled the raw B-KAB `keyline`",
+  "parent": "round A returned `cull: none` on the raw C-GAB"
+ },
+ "verdicts": {
+  "F1": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Each tile carries an inset panel ringed on all four sides in one width and one value, and the tile's own outer edge is ringed too, so the floor reads as a row of cards.",
+   "q1": "North or south along the corridor; the cross-passages above and below are legible, but only because the dark gutters between pads mark walkable cells like paving on a map.",
+   "q2": "Not stone \u2014 a run of identical square pads, each a nested set of concentric bevelled frames around a sunken centre, butted together with a dark gap between.",
+   "q3": "A grid of separate objects; each cell is ringed on all four sides and steps down to a gutter before the next begins, so it reads as tiles laid out, not stone laid down.",
+   "q4": "Nothing. Every frame is crisp, every corner square, no chipping, no dirt in the recesses, no difference between the middle of the traffic lane and the edges.",
+   "q5": "Nothing has happened. This is a freshly-fitted ceremonial floor that has never been used, let alone used up."
+  },
+  "F2": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "An ornamental repeating moulding is not a floor, and it is stamped identically in every cell with no wear, damage or repair anywhere.",
+   "q1": "North or south down the corridor; the walkable run is obvious as a continuous pale band between the walls.",
+   "q2": "Not paving \u2014 a repeating ornamental frieze, a stepped moulding with a pale cap over a dark recess, stamped once per cell edge to edge.",
+   "q3": "Continuous, technically: the forms interlock across cell boundaries and no ring encloses a cell. But it reads as one continuous decorated band, not as a surface of separate stones.",
+   "q4": "Nothing. The moulding is unbroken and unworn, the pale caps are equally bright in the traffic centre as against the walls.",
+   "q5": "Someone carved a decorative band and it has been under glass since. The fiction says nothing here exists to be looked at; this exists only to be looked at."
+  },
+  "F3": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The floor does not read as stone or as any surface; it reads as one piece of furniture-shaped clip art stamped in every cell.",
+   "q1": "North or south; the walkable cells are clear enough, marked out by the identical glyph sitting in each one.",
+   "q2": "It does not read as a surface at all \u2014 it reads as a pictogram of a bench or chair repeated once per cell, floating on a flat two-tone field.",
+   "q3": "A grid of separate objects. The field behind splits into an upper and lower band at the same height in every cell, so the eye locks onto the 32-pixel rhythm immediately.",
+   "q4": "Nothing. The glyphs are identical and undamaged; there is no dirt, no chip, no polish.",
+   "q5": "Nothing legible has happened. There is no reading of this as ground \u2014 it reads as furniture icons on a blank sheet."
+  },
+  "F4": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Every cell carries a near-black closed ring of one width around an inset panel with plain ground on all four sides; this is the planted defect and the clearest keyline in the set.",
+   "q1": "North or south; the walkable cells are unmistakable because each contains a floating square, which is a legibility crutch, not a floor.",
+   "q2": "A blank untextured gradient field with one rounded square laid on top of each cell, outlined in near-black.",
+   "q3": "Separate objects, and not even touching \u2014 the squares float with clear blank ground between them, like stickers on paper.",
+   "q4": "Nothing whatsoever. The ground between the squares has no incident of any kind, not a single mark.",
+   "q5": "Nothing. This is the most inert image in the set \u2014 an empty background with a repeated decal on it."
+  },
+  "F5": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The best surface here by a distance, but the set-in block repeats in the identical position in every single cell and four hundred years have left no wear, no damage and no repair.",
+   "q1": "North or south down the paved run; this is the only image where I read the corridor as a floor first and a walkable cell second.",
+   "q2": "Mottled grey-brown stone, laid as large slabs with joints running across the run, with a smaller rectangular block set into the middle of each slab.",
+   "q3": "Continuous. The mottle carries across cell boundaries, the joints connect into a network that runs on tile to tile, and no shape is ringed on itself.",
+   "q4": "Nothing. There is no polished lane down the centre, no grime banked against the walls, no cracked or lifted flag, no replaced stone.",
+   "q5": "A floor was laid competently and evenly and then nothing occurred. It is clean, level and uniform \u2014 it reads as maintained, which is the opposite of the brief."
+  },
+  "F6": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The beaded edging is decoration recurring on a perfect 32-pixel beat, so the floor reads as patterned trim rather than stone, with no wear anywhere.",
+   "q1": "North or south; the run is legible, though the pale beading down both sides reads as a decorative runner and pulls the eye off the path.",
+   "q2": "A broad slab per cell with a recessed panel, flanked by columns of pale beads or drips at each cell edge and a row of pale ticks along the bottom.",
+   "q3": "Continuous by construction \u2014 the dark lines run on across boundaries \u2014 but it reads as a decorated carpet runner because the beading recurs at exactly every cell edge.",
+   "q4": "Nothing. The beads are all equally bright and equally spaced; nothing has been scuffed, knocked off or worn down.",
+   "q5": "Someone laid an ornamental runner with a beaded border and it has never been walked on. Nothing here is heavy, over-built or indifferent to appearance."
+  },
+  "F7": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The repeat is the worst in the set \u2014 identical irregular blobs recur on the grid and chain into an obvious diagonal stripe across the corridor, and each blob is rimmed rather than blended.",
+   "q1": "North or south; walkability is clear from the pale ground, and the patches do not help or hinder.",
+   "q2": "A flat, soft, almost fabric-like ground with large irregular darker patches sitting on it, each patch traced with a darker rim.",
+   "q3": "Separate objects. The patches are outlined rather than blended, so they read as pieces laid onto the ground instead of the ground itself changing.",
+   "q4": "Nothing that reads as use. The patches are not concentrated in a traffic lane or against the walls; they sit in the same place in every cell.",
+   "q5": "Hard to say \u2014 the surface is too soft and undifferentiated to read as an administered stone floor; it reads closer to a cave floor or a worn cloth."
+  },
+  "F8": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "A dark border rings all four sides of every cell and a second ring encloses the glyph inside it, making each tile a framed card laid on the ground.",
+   "q1": "North or south; each walkable cell announces itself as a bordered plaque, which is legibility by labelling rather than by surface.",
+   "q2": "A row of framed plaques, each holding a bright bracket-shaped glyph, with a pale vertical bar standing at one edge of every cell.",
+   "q3": "Separate objects, emphatically. Every cell has a dark border on all four sides and the glyph inside is ringed as well, so it reads as a card in a frame.",
+   "q4": "Nothing. Every frame and glyph is identical and pristine; the pale bar is equally bright in every cell.",
+   "q5": "Nothing has happened. This is signage or ornament, not ground that has carried traffic for four centuries."
+  },
+  "F9": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "A centred, orientation-locked ornamental motif repeated on every cell is decoration, not paving, and it shows no trace of use.",
+   "q1": "North or south; the run is legible, but the upright motif gives the floor a fixed \"up\", which fights the reading of a corridor you walk along.",
+   "q2": "A repeating stamped ornament \u2014 a T-shaped plinth or anvil form \u2014 set once per cell between full-width horizontal bands.",
+   "q3": "Continuous in its line network, since the horizontal bands run unbroken across cells, but it reads as an ornamental frieze rather than as paving.",
+   "q4": "Nothing. The ornaments are identical, sharp-edged and undamaged, with no dirt, no polish and no missing stones.",
+   "q5": "A decorative band was cut and has sat untouched. The same upright motif appears in the east-west corridor as in the north-south one, so it reads as wall ornament laid flat."
+  }
+ },
+ "ranking": [
+  "F4",
+  "F1",
+  "F8",
+  "F9",
+  "F2",
+  "F6",
+  "F3",
+  "F5",
+  "F7"
+ ],
+ "separator": "The top of the list is crisp, centred, machine-regular ornament that looks newly set and never touched, while the bottom two are the only ones whose surfaces carry irregular incident and read as ground rather than as pattern \u2014 though none of them shows a mark left by anyone walking on it.",
+ "flip_list": [
+  "In F1, F4 and F8, delete the closed dark outline around the central panel entirely and let the panel's own value step separate it from the surrounding stone; if the panel then disappears, the panel is too close in value and should be shifted two or three steps, not re-outlined.",
+  "In F4, delete the blank gradient field and draw actual paving across the whole cell so there is no bare ground for the panel to float on; the square must meet neighbouring stone at a joint, not sit in a gap.",
+  "Author four to six distinct floor tiles plus 90-degree rotations and randomise placement, so that no motif lands at the same position in two adjacent cells; every image in this set is one tile repeated verbatim with zero variation.",
+  "Move features off-centre. In all nine, the motif is centred in its 32x32 cell, which is what makes the grid visible; draw paving stones of varying size whose edges deliberately straddle cell boundaries so stone joints and cell joints stop coinciding.",
+  "Add traffic wear that ignores the grid: a lighter, slightly dished, polished channel about ten pixels wide running down the centre of the corridor, and darker accumulated grime in the two-pixel strip where the floor meets each wall, both cutting straight across stone joints rather than stopping at them.",
+  "Add orc repair to roughly one cell in eight: a cracked flag with a wedge driven into the crack, a missing flag backfilled with rammed rubble, a plank of salvaged timber pinned flat across a hole \u2014 heavy, over-built, and not aligned to the stone pattern.",
+  "In F7, remove the darker rim from the worn patches and let each patch be a flat value change against the base with a ragged, non-repeating edge; a worn patch is a change of value, not an outlined shape.",
+  "In F2, F3, F6 and F9, remove the repeating ornamental motif from the floor entirely and replace it with irregular paving; nothing the orcs lay exists to be looked at, so a centred decorative frieze in every cell contradicts the fiction before any craft question arises."
+ ],
+ "plant_caught": true,
+ "round_void": false,
+ "parent_cull": "none",
+ "children": [
+  "F1",
+  "F2",
+  "F3",
+  "F6",
+  "F7",
+  "F8",
+  "F9"
+ ],
+ "children_keylined": [
+  "CONTROL_ring_P_seed9706",
+  "P_P_seed9702"
+ ],
+ "instrument": {
+  "P_P_seed9709": "CLEAN",
+  "P_P_seed9701": "CLEAN",
+  "P_P_seed9702": "CLEAN",
+  "P_P_seed9703": "CLEAN",
+  "P_P_seed9705": "CLEAN",
+  "P_P_seed9708": "CLEAN",
+  "CONTROL_ring_P_seed9706": "RING",
+  "CONTROL_plant_BKAB": "RING",
+  "CONTROL_parent_CGAB": "CLEAN"
+ },
+ "near_ring": {
+  "P_P_seed9709": 0.75,
+  "P_P_seed9701": 0.732,
+  "P_P_seed9702": 0.688,
+  "P_P_seed9703": 0.667,
+  "P_P_seed9705": 0.665,
+  "P_P_seed9708": 0.6,
+  "CONTROL_ring_P_seed9706": 1.0,
+  "CONTROL_plant_BKAB": 0.992,
+  "CONTROL_parent_CGAB": 0.791
+ }
+}
