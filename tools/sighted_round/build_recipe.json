@@ -1,7 +1,7 @@
 {
  "floor_mean": 137.8095,
  "recipe": {
-  "top_albedo": 1.15,
+  "top_albedo": 1.8,
   "face_albedo": 0.6,
   "top_rows": [
    0,
@@ -34,52 +34,52 @@
     13
    ]
   ],
-  "cap_on": false
+  "cap_on": true
  },
  "tiles": [
   {
    "part": "r07_00.png",
    "face_id": 9500,
    "top_id": 9510,
-   "top_band": 142.36125833333335,
-   "face_band": 80.94354296875,
-   "ratio": 0.568578445543266,
-   "top_tile": 150.03125,
-   "top_over_floor": 1.0330293509034816,
-   "face_over_floor": 0.5873582225372705
+   "top_band": 220.86272916666664,
+   "face_band": 85.00930468749999,
+   "ratio": 0.38489655999564587,
+   "top_tile": 235.109375,
+   "top_over_floor": 1.6026669363626356,
+   "face_over_floor": 0.6168609906247391
   },
   {
    "part": "r07_01.png",
    "face_id": 9501,
    "top_id": 9511,
-   "top_band": 141.90876666666662,
-   "face_band": 73.559951171875,
-   "ratio": 0.5183608659263594,
-   "top_tile": 150.03125,
-   "top_over_floor": 1.0297458931834642,
-   "face_over_floor": 0.5337799728746929
+   "top_band": 220.07969375,
+   "face_band": 77.767244140625,
+   "ratio": 0.3533594709058659,
+   "top_tile": 235.109375,
+   "top_over_floor": 1.5969849230278026,
+   "face_over_floor": 0.5643097474457492
   },
   {
    "part": "r07_02.png",
    "face_id": 9502,
    "top_id": 9512,
-   "top_band": 141.9489375,
-   "face_band": 80.4051484375,
-   "ratio": 0.5664371276995293,
-   "top_tile": 150.03125,
-   "top_over_floor": 1.0300373885690028,
-   "face_over_floor": 0.5834514198041499
+   "top_band": 220.17069999999998,
+   "face_band": 84.61053906250001,
+   "ratio": 0.38429518125027545,
+   "top_tile": 235.109375,
+   "top_over_floor": 1.5976453002151518,
+   "face_over_floor": 0.6139673902198325
   },
   {
    "part": "r07_03.png",
    "face_id": 9503,
    "top_id": 9513,
-   "top_band": 142.84098541666665,
-   "face_band": 83.18883398437498,
-   "ratio": 0.5823877071536117,
-   "top_tile": 150.9609375,
-   "top_over_floor": 1.0365104395318656,
-   "face_over_floor": 0.6036509383197455
+   "top_band": 221.57870833333334,
+   "face_band": 87.22256640625,
+   "ratio": 0.3936414606905108,
+   "top_tile": 236.61328125,
+   "top_over_floor": 1.6078623631413895,
+   "face_over_floor": 0.6329212892162731
   }
  ],
  "theme": "src/Presentation/assets/sighted_round/tile_themes_recipe.yaml",

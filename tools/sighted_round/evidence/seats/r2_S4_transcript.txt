@@ -1,0 +1,32 @@
+Q1: A
+Q1_WHY: A has a lit top plane, a shadowed riser and a contact line at the floor; B has the same three parts but the riser is a single flat black value that reads as a hole, not a surface.
+
+Q2: At A's lit column x=240 the wall top ends at y=81 (190,139,99), a warm cap line runs at y=85 (101,72,62), the upper face course sits y=87–98 at (54,38,33)→(59,41,35) — 29% of the top — a lit ledge sliver at y=101 (177,135,97) marks the step down, the lower course y=103–113 ranges (55,38,32) to (96,73,52), and y=115 (35,26,19) is the contact shadow before the floor resumes at y=117 (160,114,77). That face carries a ~40-value internal spread with blocks of unequal width, each with its own fill — so the plane is modelled, not just darkened.
+B at x=260: top is (90,90,90) flat to y=29, one lip row at y=30 (147,143,134), then the entire three-course face y=32–78 is fill (50,50,50) with joints at (44,44,44) and (37,37,37). Thirteen values total across the whole face, every brick the identical fill, uniform running bond — 56% of the top, but with no ramp inside it, so it reads as one black rectangle with lines scribed on it rather than a surface turning away from you.
+B also has no contact shadow: the bottom course (y=78, 37,37,37) abuts the dirt (61,25,14) directly, so the wall does not sit on the floor, it is pasted over it.
+A's vertical pins cross the cap line from top plane into face — occluding the edge is what confirms the two planes are at different heights.
+
+Q3: NEITHER
+Q3_WHY: B has a perpendicular wall down the left — screen x=0–13, full height — and it is (90,90,90) top surface terminating in a single 1-native-px (71,71,71) seam at x=14–15 straight into dirt at x=16, with no flank pixels at all; A has no perpendicular wall in frame and shows only front face.
+
+Q4_A: A row of dark vertical pins driven through the crest and down into the second face course, one per 32px cell at an identical offset with a pale pixel at the foot — and nothing else: no rope, no timber, no straps, no wedges.
+Q4_B: Nothing holds it. The bricks abut; the only non-brick marks are small brown drip stains hanging from the lip and joints (e.g. screen x≈52–58, y≈32–42), stamped at the same offset in every cell.
+
+Q5_A: Not staged — nothing is placed for the frame, but the pins are stamped at identical intervals rather than driven, which is the opposite failure: not arranged at all.
+Q5_B: Staged — two loose bone clusters sit in open floor, balanced left against the two figures, with nothing collected at the wall base where debris would actually pile.
+
+Q6_A: Not stock in material or value structure, but with no repair, no salvage and every cell a clone it is not yet a place with its own rules; floor field repeats per cell and shows no traffic wear, out of scope here.
+Q6_B: Yes — grey brick, black face, white lip, brown dirt and scattered skulls is the off-the-shelf dungeon; its floor repetition is likewise out of scope.
+
+CULL_A: none
+CULL_B: wrong-projection
+RANK: A
+
+FLIP LIST
+- B's three face courses are one fill (50,50,50). Ramp them by depth and break them per stone: course 1 fill ≈58, course 2 ≈48, course 3 ≈40 against the top's 90, then vary each individual brick ±6 around its course fill so no two adjacent bricks share a value. Keep the joints at 37 so they still read as recesses, not as the only drawing.
+- B's left wall has no flank. At its right edge (native x≈7) replace the single 71-value seam with a cross-section: 1px lip at ~130, then 3–4px of flank at the front-face fill (≈50) with the course joints running vertically so you can see the same three courses cut through, then the contact shadow below.
+- B has no base shadow. Along the bottom of the face (native y≈39) lay a 2px strip on the dirt at 55–60% of the local dirt value (78,58,25 → ~45,34,15), and break it irregularly so it is a shadow, not a border.
+- Kill the diagonal staircase where the left wall's grey top (native x 8–30, y 30–40) runs over the front wall's face. Terminate the left wall's top plane at the front wall's cap row and draw an actual corner — the left wall's flank meeting the front face in an L — with the front face carried through unbroken behind it.
+- B's top plane is a single value (90,90,90) plus a few (107,101,95) specks. Give it the same stone division the face has: joints at ~78 laid in plan on the same course pitch, and per-stone fills varying 84–96, so the top reads as the same masonry seen from above rather than as grey paper.
+
+Model: Claude Opus 5 (1M context)

@@ -10,68 +10,18 @@
     418
    ],
    "lit": {
-    "top": 73.32,
-    "face": 56.33,
+    "top": 113.86,
+    "face": 58.94,
     "floor": 102.16,
-    "ratio": 0.768,
-    "top_over_floor": 0.718
+    "ratio": 0.518,
+    "top_over_floor": 1.114
    },
    "unlit": {
-    "top": 14.99,
-    "face": 8.91,
+    "top": 23.17,
+    "face": 9.27,
     "floor": 12.69,
-    "ratio": 0.595,
-    "top_over_floor": 1.181
-   },
-   "persists": true
-  },
-  "before": {
-   "top_rows": [
-    356,
-    386
-   ],
-   "face_rows": [
-    390,
-    418
-   ],
-   "lit": {
-    "top": 42.4,
-    "face": 66.68,
-    "floor": 102.16,
-    "ratio": 1.573,
-    "top_over_floor": 0.415
-   },
-   "unlit": {
-    "top": 8.55,
-    "face": 10.47,
-    "floor": 12.69,
-    "ratio": 1.224,
-    "top_over_floor": 0.674
-   },
-   "persists": false
-  },
-  "plant": {
-   "top_rows": [
-    356,
-    386
-   ],
-   "face_rows": [
-    390,
-    418
-   ],
-   "lit": {
-    "top": 72.37,
-    "face": 56.12,
-    "floor": 102.16,
-    "ratio": 0.776,
-    "top_over_floor": 0.708
-   },
-   "unlit": {
-    "top": 14.78,
-    "face": 8.88,
-    "floor": 12.69,
-    "ratio": 0.601,
-    "top_over_floor": 1.164
+    "ratio": 0.4,
+    "top_over_floor": 1.826
    },
    "persists": true
   }

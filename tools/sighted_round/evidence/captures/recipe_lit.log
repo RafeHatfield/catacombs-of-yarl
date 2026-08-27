@@ -6,7 +6,7 @@ Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
 Catacombs of YARL — loading...
 [DIAG] Logging to: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag.log
 [DIAG] Structured log: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag_structured.jsonl
-[DIAG 00000 F0 T0.561] === Session started ===
+[DIAG 00000 F0 T0.552] === Session started ===
 [Main] Persistence loaded — 6 runs ever.
 [Main] Loading tileset: 16bit_fantasy
 [Main] Tileset loaded: Oryx 16-Bit Fantasy (48px, 2 frames)
@@ -113,19 +113,19 @@ empt
 # Substituted 
 [Main] Memo registry loaded.
 [Tier0] corridor scene: tier0_mixed_distribution (res://src/Presentation/assets/tier0_harness/scenes/mixed_distribution.json)
-[DIAG 00001 F0 T1.098] [Tier0] corridor scene: tier0_mixed_distribution (res://src/Presentation/assets/tier0_harness/scenes/mixed_distribution.json)
+[DIAG 00001 F0 T1.183] [Tier0] corridor scene: tier0_mixed_distribution (res://src/Presentation/assets/tier0_harness/scenes/mixed_distribution.json)
 [Tier0] map=17x21 player=(8,6) carve_rects=3
-[DIAG 00002 F0 T1.098] [Tier0] map=17x21 player=(8,6) carve_rects=3
+[DIAG 00002 F0 T1.184] [Tier0] map=17x21 player=(8,6) carve_rects=3
 [Tier0] junction=NO
-[DIAG 00003 F0 T1.098] [Tier0] junction=NO
+[DIAG 00003 F0 T1.184] [Tier0] junction=NO
 [Tier0] tile_theme_config=res://src/Presentation/assets/sighted_round/tile_themes_recipe.yaml
-[DIAG 00004 F0 T1.098] [Tier0] tile_theme_config=res://src/Presentation/assets/sighted_round/tile_themes_recipe.yaml
+[DIAG 00004 F0 T1.184] [Tier0] tile_theme_config=res://src/Presentation/assets/sighted_round/tile_themes_recipe.yaml
 [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
-[DIAG 00005 F0 T1.099] [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
+[DIAG 00005 F0 T1.184] [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
 [Tier0] review_build_marker=none (CLI flags)
-[DIAG 00006 F0 T1.099] [Tier0] review_build_marker=none (CLI flags)
+[DIAG 00006 F0 T1.184] [Tier0] review_build_marker=none (CLI flags)
 [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
-[DIAG 00007 F0 T1.100] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00007 F0 T1.185] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
 [Main] Visible tile rect: (2,-2)-(13,13)
 [Main] floor_worn (3001) tiles: 1 rendered in the authored room, 1 in frame: (10,6)
 [Main] Capture written: /Users/rafehatfield/development/c-yarl/.claude/worktrees/session-2026-08-27/tools/sighted_round/evidence/captures/recipe_lit.png

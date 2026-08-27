@@ -64,7 +64,16 @@ FACE_IDS = [9500, 9501, 9502, 9503]
 TOP_IDS = [9510, 9511, 9512, 9513]
 
 # --- the recipe, as numbers. Every one of these has a derivation in WALL-RECIPE.md. -----------
-TOP_ALBEDO = 1.15          # §1.1  wear: the floor is walked, the wall top is not
+# ROUND 3 - AUTHOR TO DELIVER, NOT TO STATE. Round 2's seat: "A's face sits at 0.65-0.81 of its
+# top and its wall top is DARKER than its floor" - both true on screen and neither true in the
+# art, because the lamp is the player and the player stands south of a north wall. Measured
+# delivery ratios through this rig (checks.py): top/floor 1.15 authored -> 0.718 delivered
+# (x0.624), face/top 0.52 authored -> 0.77 delivered (x1.48). So the recipe's numbers are
+# DELIVERY targets and the albedo is solved backwards from them.
+DELIVER_TOP_OVER_FLOOR = 1.15
+DELIVER_FACE_OVER_TOP = 0.52
+TOP_DELIVERY = 0.624       # measured, this rig only
+TOP_ALBEDO = 1.80          # = 1.15 / 0.624, clamped just under the clip at 1.85x floor
 FACE_ALBEDO = 0.60         # §1.2  enclosure: a vertical plane is self-occluded under a top ambient
 # ROUND 3. Recipe §4.4, measured not guessed: the carried light sits SOUTH of a north wall, so
 # the face is one tile nearer the lamp than its own top and the engine brightens it relative to
@@ -94,7 +103,19 @@ TOP_JOINT_PX = 2
 TOP_JOINT_RATIO = 0.78     # joint value against the plane, measured on the bar (70.4 / 89.5)
 FACE_SPREAD = 20.0         # contrast within the face (courses)
 OCCLUSION = [(31, 64), (30, 64), (29, 38), (28, 38), (27, 13)]   # §3.2 ladder, wall's own edge
-CAP_ON = False             # §4.1 FLAGGED - uniform pale cap is §12.1's coping ribbon
+# ROUND 4. THREE seats, across three rounds, none shown the others, all named the same missing
+# element - and it is the number §4.1 flagged and switched off:
+#   "rows 30-31 jump to L~125 (a 2px lip catch)"                            (r1 S1, on the bar)
+#   "a 2px cap course at y30-31 at 124-147"                                 (r1 S2, on the bar)
+#   "B has a top plane, a CHAMFERED NEAR EDGE and a front face at three
+#    separated values; A has one flat band"                                 (r3 S1, on ours)
+# The flag was raised because §12.1's worked example culled a pale coping ribbon. The distinction
+# that makes this legal is the one §12.1 itself draws: that ribbon ran along EVERY wall edge for
+# its entire length; this sits only at the top-to-face TURN, which exists only on a tile that has
+# floor to its south. It answers to the geometry. The ring instrument adjudicates rather than
+# this comment - and it is run on every tile below.
+CAP_ON = True
+CAP_RATIO = 1.42           # measured on the bar: 129.8 cap against an 89.5 top band
 QUANT_LEVELS = 6           # keep each band's palette small (§5.1 discipline)
 
 
@@ -167,7 +188,7 @@ def build(part, floor_mean, phase=0):
     top_t = TOP_ALBEDO * floor_mean
     face_t = FACE_ALBEDO * floor_mean
     if COMPENSATE:
-        face_t = top_t * (FACE_ALBEDO / TOP_ALBEDO) / LIGHT_COMPRESSION
+        face_t = top_t * DELIVER_FACE_OVER_TOP / LIGHT_COMPRESSION
 
     # TOP tile: the whole 32 rows are top plane.
     reps = int(np.ceil(T / float(src.shape[0])))
@@ -183,7 +204,10 @@ def build(part, floor_mean, phase=0):
     nf = FACE_ROWS[1] - FACE_ROWS[0]
     face[FACE_ROWS[0]:FACE_ROWS[1]] = retone(stacked[:nf], face_t, FACE_SPREAD)
     # the turn row belongs to the top plane's last course unless the cap is switched on
-    face[TURN_ROW] = face[TURN_ROW - 1] if not CAP_ON else np.clip(face[TURN_ROW - 1] * 1.45, 0, 255)
+    if CAP_ON:
+        face[TURN_ROW] = np.clip(face[TURN_ROW - 1] * CAP_RATIO, 0, 255)
+    else:
+        face[TURN_ROW] = face[TURN_ROW - 1]
     face = apply_occlusion(face)
     return face, top_tile
 

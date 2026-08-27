@@ -1,0 +1,97 @@
+{
+ "round": 5,
+ "commit": "bc2bfd708e1f04ee418cd3393d84bf65a65482fb",
+ "pairs": {
+  "S1": [
+   "recipe_lit.png",
+   "BAR"
+  ],
+  "S2": [
+   "before_lit.png",
+   "BAR"
+  ],
+  "S3": [
+   "recipe_lit.png",
+   "before_lit.png"
+  ],
+  "S4": [
+   "plant_lit.png",
+   "BAR"
+  ]
+ },
+ "slots": {
+  "S1": [
+   "A",
+   "B"
+  ],
+  "S2": [
+   "B",
+   "A"
+  ],
+  "S3": [
+   "B",
+   "A"
+  ],
+  "S4": [
+   "A",
+   "B"
+  ]
+ },
+ "results": {
+  "S1": {
+   "Q1": "A",
+   "Q1_WHY": "A holds three separated planes \u2014 top \u2248165 luma, face \u224855, floor \u2248120 \u2014 with a one-row hard step at y=85 and a different masonry module above and below it; B only does this on its east\u2013west wall and not at all on its north\u2013south one.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "A's wall runs off both frame edges so no flank or cut is exposed; B's only top/face pair besides the main wall is the brown prop at x\u2248328, y=40\u201352 (orange 128,76,22 top over 77,46,13 front), which is an object, not a wall section \u2014 and B's east\u2013west face terminates against the left slab at x=14 with no return, no corner, no visible thickness.",
+   "Q4_A": "Seven iron pins, 2 native px wide, driven along the top's front edge at irregular gaps (44/74/60/78/44/74 screen px), each crossing the y=85 seam and dying inside the second course at y\u224897\u2013116, with rust notches on the shafts \u2014 that is the only fastening; no rope, no timber, no straps.",
+   "Q4_B": "Nothing holds it \u2014 running-bond blocks with a uniform 6-value bevel and a 37 joint, no pin, tie, bracket, cramp or repair anywhere in the face.",
+   "Q5_A": "In use, but the pin row is staged \u2014 all seven the same length, same 2px width, all on the front edge, none set back into the top, none bent, none broken; real driven pins cluster where the wall failed, they don't fringe it evenly.",
+   "Q5_B": "In use at floor level (bone scatter, blood) but the wall itself is posed \u2014 an unbroken, undamaged, unrepaired face across the full frame width with nothing accumulated at its foot.",
+   "Q6_A": "Not generic \u2014 the two-module masonry, the irregular seam grid and the pinned top edge are rules specific to this place.",
+   "Q6_B": "Generic \u2014 charcoal running-bond blocks with an all-round bevel and a white cap line is the off-the-shelf dungeon wall and would drop into any game unchanged; (floor cloning noted in both and out of scope).",
+   "CULL_A": "none",
+   "CULL_B": "cannot-read",
+   "RANK": "A",
+   "Q2": "A's wall top (x=140\u2013220, y=57\u201384) sits at R 160\u2013180 with a coarse seam grid; at y=85 it drops in a single row to R 40\u201358 and the block module changes from large irregular slabs to two short courses ~8 native px tall with near-black joints \u2014 the face is not just darker, it is a different masonry. The face is also darker than the floor below it (55 vs 120), so the wall reads as top > floor > face, which is what puts the face in shadow rather than on the same plane. B's east\u2013west face does this too (top 90, face 44), but B's face is 44 body / 50 rim / 37 joint \u2014 a 13-value total spread that collapses into one flat charcoal panel at play size, so you get a wall *edge* but no stacked *courses*. And B's north\u2013south wall (x=0\u201313) is flat 90-gray for all 240 rows with a single 71 seam at x=14 and no face anywhere \u2014 a vertical wall in B has literally zero thickness.",
+   "flips": [
+    "B's north\u2013south wall (x=0\u201313, y=0\u2013239) is the same 90-gray plan slab as the top surface with only a 71 seam at x=14. Cut 6\u20138 native px off its east edge and redraw that strip at 44 with the 50 rim and 37 joints used by the east\u2013west face, so a vertical wall shows the same top-90 / face-44 pair a horizontal one does.",
+    "B's courses are 44 body / 50 rim / 37 joint \u2014 13 values total, invisible at play size. Hold the joint at 37, drop the block body to 30, and light only the top 1 native px of each course to 62, so courses separate by ~30 values and the face reads as stacked rather than as one dark panel.",
+    "B's face meets the dirt at a single hard row (37-gray at y=78/79 straight into 64,35,14 brown) with nothing at the foot. Add a 2\u20133 native px base: a 26-value contact line plus a broken spall course sitting on the dirt, so the wall is set into the floor instead of pasted over it.",
+    "B's cap line at y=30/31 is 147/124 \u2014 brighter than the 90 wall top it caps, which flattens the top surface into the edge. Drop the cap to ~110 and instead darken the top 2 rows of the face to 30 so the corner is read by the face going dark, not by the edge going white.",
+    "The 87,91,84 wedge (x=16\u201346, y=58\u201382) is 3 values off the 90 wall top, so it reads as a flat gray triangle rather than form. Either take it to ~50 and give its lower-right stair edge a 2 native px face at 44, or cut it."
+   ],
+   "mapping": {
+    "A": "recipe_lit.png",
+    "B": "BAR"
+   }
+  },
+  "S4": {
+   "Q1": "B",
+   "Q1_WHY": "B steps its wall top (flat 90,90,90) down to a face of 44 across a single 1px lip at y=30 \u2014 a hard 2:1 break; A's \"face\" sits at 72\u201379% of its top and never separates.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "Both show only a top and a front face \u2014 B's left column (x=0\u201314) is a north-south wall drawn with its top surface only and no west flank at the frame edge, and B's grey wedge at x=14\u201358/y=50\u2013100 is spill lying *against* the face, not a cut through it; A never shows anything but the top field and its 8px near-edge strip.",
+   "Q4_A": "Nothing holds it \u2014 flat fill with 1px darker lines ruled in a grid, plus eight pixel-identical black bars (4\u00d712 art px, one per cell at the same x-offset) that cross no joint, bind nothing, and touch nothing.",
+   "Q4_B": "Mortar seams at value 37 between courses and a running-bond offset on the second row \u2014 masonry only; not one rope, driven pin, strap or salvaged timber anywhere on the wall, and the lone brown block at x=300 is a prop resting on the lip, not a repair.",
+   "Q5_A": "Staged \u2014 eight identical posts at identical intra-cell positions evenly spaced across the full 464px, and the same inset rectangle stamped in every floor cell; that is a pattern laid out for a viewer.",
+   "Q5_B": "The floor dressing reads as in use (bone scatter off-axis, the crate half out of frame, the spill ragged where it meets dirt) but the wall itself is textbook \u2014 unbroken courses, evenly distributed speckle, not one course disturbed.",
+   "Q6_A": "Generic \u2014 tan flat fill with ruled lines and evenly-spaced fence spikes; nothing in it names this place, and the floor's identical per-cell inset rectangle is the same drawn-outline disease (out of scope).",
+   "Q6_B": "Also generic \u2014 flat grey running-bond brick over brown dirt is the off-the-shelf dungeon wall; it reads as a wall, but not as *this* wall.",
+   "CULL_A": "cannot-read",
+   "CULL_B": "none",
+   "RANK": "B",
+   "Q2": "- B, x=200: top surface is 90/90/90 for 15 art px, one lip row at 124, then face rows at 50/44/44/44/44/50/37 repeating for 24 art px \u2014 three courses, so the face is *taller* than the top band and the wall has body. A, x=200: top field bottoms out at RGB(192,141,101), and the two dark bands beneath it at y=87\u201398 and y=103\u2013114 measure (131,100,73) and (117,88,69) \u2014 72% and 79% of the top. That is a shade, not a plane change.\n- A's total face height is 8 art px against a 41 art px top. B's is 24 against 15. A therefore reads as a floor plane with a shadowed groove ruled across its near edge, not a wall you stand beside; the floor at y=120 (mean 66) is actually *darker* than A's supposed wall face (mean 71), so the face doesn't separate downward either.\n- A's wall is a single flat wash with 1px darker lines ruled onto it \u2014 no block carries its own fill value. B's face blocks at least carry three (44 field, 50 rim, 37 seam), and B's courses are laid in running bond with the second row offset half a block, so the face has masonry logic. But B's whole face lives inside a 13-value band (37\u201350); at play size those three courses collapse into one near-black slab.\n- No painted key light in either: A's top-to-bottom ramp (60 at y=0 to 145 at y=82) is a light falloff, and B's block rims sit on *both* the top and bottom edge of each course, so neither has a baked directional bevel.",
+   "flips": [
+    "A's wall face sits at 72\u201379% of the top's value. Drop it to ~50% \u2014 the top bottoms at RGB(192,141,101), so the face field should be ~(96,70,50) \u2014 and hold that value flat down the full face height so the top/face junction is a hard break rather than a gradient step.",
+    "A's face is 8 art px tall against a 41 art px top. Rebuild it as three 8px courses (24 art px), each with its own fill, so the wall has a standable body; the current 8px strip reads as a groove ruled into the floor.",
+    "A's blocks are a single wash with 1px darker outlines. Delete the outline-only construction: give every block its own fill drawn from a 4-step ramp spanning \u00b112 values around the base, and let the joint be a value change between neighbours rather than a line drawn over an unbroken fill.",
+    "The cream line at A y=101 is RGB(226,164,114), the brightest pixel in the frame, and runs unbroken across all 464px straight through every cell seam and behind every post. Break it at cell seams, drop it 25\u201330 values inside shadowed cells, and let the posts occlude it.",
+    "A's eight posts are pixel-identical, one per cell, same x-offset, and have no top face. Vary them to 0\u20132 per cell at irregular x and 8\u201316px heights, and put 1\u20132px of a lighter value on each one's upper end so it reads as driven into a surface seen from above, not as a stake standing against an elevation."
+   ],
+   "mapping": {
+    "A": "plant_lit.png",
+    "B": "BAR"
+   },
+   "plant_caught": false
+  }
+ }
+}

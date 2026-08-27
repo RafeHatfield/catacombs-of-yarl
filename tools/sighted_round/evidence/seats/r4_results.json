@@ -1,0 +1,68 @@
+{
+ "round": 4,
+ "commit": "bc2bfd708e1f04ee418cd3393d84bf65a65482fb",
+ "pairs": {
+  "S1": [
+   "recipe_lit.png",
+   "BAR"
+  ],
+  "S2": [
+   "before_lit.png",
+   "BAR"
+  ],
+  "S3": [
+   "recipe_lit.png",
+   "before_lit.png"
+  ],
+  "S4": [
+   "plant_lit.png",
+   "BAR"
+  ]
+ },
+ "slots": {
+  "S1": [
+   "A",
+   "B"
+  ],
+  "S2": [
+   "B",
+   "A"
+  ],
+  "S3": [
+   "B",
+   "A"
+  ],
+  "S4": [
+   "A",
+   "B"
+  ]
+ },
+ "results": {
+  "S1": {
+   "Q1": "A",
+   "Q1_WHY": "A puts three distinct planes in a legible stack \u2014 bright top, black seam, dark face, then floor \u2014 and hangs hardware across the seam; B has the value split but nothing on either plane to prove it is a plane.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "B's north\u2013south wall at y=150 goes 90 (top) \u2192 71,71,71 at x=14\u201315 \u2192 floor 92,69,30 \u2014 its entire east flank is one native pixel of joint line, while its north-facing sibling gets 24 native px of face; A's wall runs edge to edge with no end and its left-frame strip (x=0\u20136) is 3 native px of flat lit surface with no coursing, not a cut.",
+   "Q4_A": "A horizontal timber rail pinned along the base of the face at y=109\u2013116, unbroken across the frame, with seven driven pins at x=47\u2013422 crossing the face and topping out together at y=57 \u2014 over-built, stock-length, nobody's idea of a decoration.",
+   "Q4_B": "Nothing. Perfect running bond, uniform block size, mortar lines drawn as a single dark value; no tie, pin, timber, strap or rope anywhere in frame \u2014 the wall is held up by the assertion that it is a wall.",
+   "Q5_A": "Reads as in use, with two composed tells \u2014 six of seven pin tops land on exactly y=57, and every floor slab carries the same recessed panel at the same offset.",
+   "Q5_B": "Posed \u2014 two bone clusters sit isolated in clear floor in the left half with nothing touching a wall or the crate, and the grey wedge fans from the corner into empty floor for the camera's benefit.",
+   "Q6_A": "Not stock \u2014 pinned rail against a coursed face and a floor of recessed panels reads as a specific system, though the panels' pixel-identical repeat (out of scope, tier one) blunts it.",
+   "Q6_B": "Stock \u2014 three greys, textbook running bond, brown dirt and scattered skeletons; the bones alone put it in \"haunted\" rather than \"administered.\"",
+   "CULL_A": "none",
+   "CULL_B": "key-light",
+   "RANK": "A",
+   "Q2": "At x=250 A reads 199,145,103 on the top surface, a 1-native-px black seam at y=85\u201386 (53,38,32), then a face from y=87\u2013116 running 83\u2192115, then floor at 127,93,66. The face is ~45% of the top and darker than the floor \u2014 it is the darkest plane in frame, which is what makes it vertical rather than just shaded.\nA also changes masonry grain across the join: 32-native-px slabs on the top, two courses of small irregular blocks over 16 native px on the face. Different grain per plane is a second, independent depth cue B does not use.\nA's face carries fixtures \u2014 a timber rail at y=109\u2013116 spanning the full width, and seven pins at x=47/91/165/225/303/347/422 that cover the face and continue up over the top surface. Occlusion crossing the join is the strongest statement either image makes.\nB has the arithmetic and nothing under it: top is one value (90,90,90 on 8228 of 9000 sampled px), face is three flat values (44/50/37 = 97% of face px), and the grey wedge at 87,91,84 crosses the face and the dirt floor at an identical value \u2014 asserting they are the same plane and cancelling the split.",
+   "flips": [
+    "Strip the baked bevel from B's face. Every course is 50 on its top native row, 44 through the body, 37 on its bottom row, identical across the whole frame and unaffected by anything. Delete the 50 top-edge row; keep one dark 37 row at the course boundary only, and let the engine light supply direction.",
+    "Give B's east/west walls a real flank. At y=150 the left wall's east side is a single native pixel of 71 between the 90 top and the floor. Replace it with 4\u20136 native px of face at the same value as the north wall's face (44), and at the corner near x=15,y=30 cut the two faces against each other so the meeting shows thickness on both runs.",
+    "Break the grey wedge (87,91,84) at the wall base, y\u224880. Right now it paints the face and the dirt at one value. The portion on the face should be pulled toward the face's own value so it reads as light falling on a vertical surface; it should not touch the top surface at all.",
+    "Widen and re-value B's top lip. The 124,124,124 line at y=30\u201331 is one native pixel doing all the thickness work above a top surface that is a single flat 90. Make the lip 2\u20133 native px of distinct lighter stone and give the top surface a 3-value spread so the cap has depth rather than an outline."
+   ],
+   "mapping": {
+    "A": "recipe_lit.png",
+    "B": "BAR"
+   }
+  }
+ }
+}

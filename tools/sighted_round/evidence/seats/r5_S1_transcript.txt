@@ -1,0 +1,30 @@
+Q1: A
+Q1_WHY: A holds three separated planes — top ≈165 luma, face ≈55, floor ≈120 — with a one-row hard step at y=85 and a different masonry module above and below it; B only does this on its east–west wall and not at all on its north–south one.
+
+Q2: A's wall top (x=140–220, y=57–84) sits at R 160–180 with a coarse seam grid; at y=85 it drops in a single row to R 40–58 and the block module changes from large irregular slabs to two short courses ~8 native px tall with near-black joints — the face is not just darker, it is a different masonry. The face is also darker than the floor below it (55 vs 120), so the wall reads as top > floor > face, which is what puts the face in shadow rather than on the same plane. B's east–west face does this too (top 90, face 44), but B's face is 44 body / 50 rim / 37 joint — a 13-value total spread that collapses into one flat charcoal panel at play size, so you get a wall *edge* but no stacked *courses*. And B's north–south wall (x=0–13) is flat 90-gray for all 240 rows with a single 71 seam at x=14 and no face anywhere — a vertical wall in B has literally zero thickness.
+
+Q3: NEITHER
+Q3_WHY: A's wall runs off both frame edges so no flank or cut is exposed; B's only top/face pair besides the main wall is the brown prop at x≈328, y=40–52 (orange 128,76,22 top over 77,46,13 front), which is an object, not a wall section — and B's east–west face terminates against the left slab at x=14 with no return, no corner, no visible thickness.
+
+Q4_A: Seven iron pins, 2 native px wide, driven along the top's front edge at irregular gaps (44/74/60/78/44/74 screen px), each crossing the y=85 seam and dying inside the second course at y≈97–116, with rust notches on the shafts — that is the only fastening; no rope, no timber, no straps.
+Q4_B: Nothing holds it — running-bond blocks with a uniform 6-value bevel and a 37 joint, no pin, tie, bracket, cramp or repair anywhere in the face.
+
+Q5_A: In use, but the pin row is staged — all seven the same length, same 2px width, all on the front edge, none set back into the top, none bent, none broken; real driven pins cluster where the wall failed, they don't fringe it evenly.
+Q5_B: In use at floor level (bone scatter, blood) but the wall itself is posed — an unbroken, undamaged, unrepaired face across the full frame width with nothing accumulated at its foot.
+
+Q6_A: Not generic — the two-module masonry, the irregular seam grid and the pinned top edge are rules specific to this place.
+Q6_B: Generic — charcoal running-bond blocks with an all-round bevel and a white cap line is the off-the-shelf dungeon wall and would drop into any game unchanged; (floor cloning noted in both and out of scope).
+
+CULL_A: none
+CULL_B: cannot-read
+
+RANK: A
+
+FLIP LIST
+- B's north–south wall (x=0–13, y=0–239) is the same 90-gray plan slab as the top surface with only a 71 seam at x=14. Cut 6–8 native px off its east edge and redraw that strip at 44 with the 50 rim and 37 joints used by the east–west face, so a vertical wall shows the same top-90 / face-44 pair a horizontal one does.
+- B's courses are 44 body / 50 rim / 37 joint — 13 values total, invisible at play size. Hold the joint at 37, drop the block body to 30, and light only the top 1 native px of each course to 62, so courses separate by ~30 values and the face reads as stacked rather than as one dark panel.
+- B's face meets the dirt at a single hard row (37-gray at y=78/79 straight into 64,35,14 brown) with nothing at the foot. Add a 2–3 native px base: a 26-value contact line plus a broken spall course sitting on the dirt, so the wall is set into the floor instead of pasted over it.
+- B's cap line at y=30/31 is 147/124 — brighter than the 90 wall top it caps, which flattens the top surface into the edge. Drop the cap to ~110 and instead darken the top 2 rows of the face to 30 so the corner is read by the face going dark, not by the edge going white.
+- The 87,91,84 wedge (x=16–46, y=58–82) is 3 values off the 90 wall top, so it reads as a flat gray triangle rather than form. Either take it to ~50 and give its lower-right stair edge a 2 native px face at 44, or cut it.
+
+*Model: Claude Opus 5 (1M context).*

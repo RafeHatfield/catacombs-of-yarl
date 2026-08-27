@@ -1,0 +1,30 @@
+Q1: B
+Q1_WHY: B has a flat block-top cap at grey 90 with a 2px lit lip at 124 sitting directly on a face at 44 — a top you look down on and a face you look at; A has neither plane.
+
+Q2: B's cap (B.png y=0–29, RGB 90/90/90) carries **no horizontal course lines at all** — only faint vertical joints every 48px (x=62, 110, 158, 206, 254, 302 at value 71). That absence is the whole trick: you are looking at the tops of blocks, so there is nothing to stack. Below it a 2px lip at 124 (y=30–31), then the face at 44 body / 50 block edge / 37 mortar in running bond, joints every 48px (x=36, 84, 132, 180, 228, 276) staggered course to course. Face is 44 against cap 90 — 49% of the top, one clean step, no ramp.
+A does the opposite. In the band above the floor line (y=117) it draws **six stacked 16px courses** — mortar at y=3, 19, 35, 51, 67, 83 — through the entire zone where the cap should be. That is a seven-course brick elevation occupying the depth axis. There is no cap plane and no lip at the plane change: at x=244 the field ramps smoothly 48→149 from y=0 to y=82, then falls 149 → 79 (y=85) → 67 (y=87) with no bright edge; the only 2px highlight in A (L=143 at y=101–102) sits 14px *below* the junction, in the middle of the shadow band, so it marks a ledge rather than a near edge.
+Sealing it: A's near-black 4px vertical bars at x=131–134, 195–198, 259–262, 323–326 — exactly 64px pitch, value ~17 — run **unbroken and un-offset from y=0 to y=116**, identical at y=10, y=45, y=78 and y=95. A cap joint and a face joint cannot be the same continuous stripe. They are, so the whole 117px band is one texture sheet.
+
+Q3: NEITHER
+Q3_WHY: A's wall runs off both frame edges with no terminus; in B the top wall's face ends at x=16 against the left wall's cap (x=0–13) with only a 2px mortar joint at x=14–15 at value 71 — a butt, not a cut end and not a flank.
+
+Q4_A: Seven identical black silhouettes at x≈40, 104, 168, 232, 296, 360, 424 — exactly 64px pitch, one per tile — spanning y≈57–112 with no plate, no washer, no bearing at either end; they hold nothing to anything, and their metronomic tile-pitch spacing reads as a texture stripe, not hardware.
+Q4_B: Mortar and bond, and nothing else — 37-value 2px joints, blocks offset half a length course to course; no timber, no rope, no pins, no iron anywhere on the run.
+
+Q5_A: Nothing is arranged, but nothing is in use either — a blank repeating field with hardware on a metronome; unposed by accident rather than by observation.
+Q5_B: The wall itself is unposed and the crate at x≈310–336 cropping off the right edge reads as genuinely in use, but the two bone clusters on open floor are laid out in tidy rosettes for the viewer, and the soldier-faces-goblin arrangement is a tableau.
+
+Q6_A: Generic — brown brick courses with an evenly-spaced peg motif; the 64px black lattice is the tiling showing through, not a rule the place obeys. (Floor: the same 64px cell with its rectangular groove repeats unbroken across the frame — out of scope, noted.)
+Q6_B: The most generic wall in the catalogue — flat neutral achromatic grey, uniform 48×16 rectangular blocks, zero repair, zero salvage, zero wear; it wins on depth and loses entirely on specificity. (Floor: single brown cell cloned; out of scope.)
+
+CULL_A: wrong-projection
+CULL_B: none
+RANK: B
+
+FLIP LIST
+- Delete every horizontal course line in A above the plane break — the mortar rows at y=3, 19, 35, 51, 67 and 83 — and rebuild y=0–86 as a cap: block tops separated by vertical joints only, at the block pitch, with no stacked rhythm in the depth axis. Courses survive only in the face band below y=87.
+- Flatten the cap to a single value near L=100 (kill the 48→149 ramp; let the engine light do that), set the face at roughly half of it, L=45–55, and lay a 2px lit row at L≈128 exactly on the seam at y=87. That is the same lip A already draws well at y=101–102 — move it to the actual plane change and remove it from where it currently sits.
+- Break the vertical lattice: the 4px bars at x=131–134, 195–198, 259–262, 323–326 currently run one continuous stripe from y=0 to y=116. Cut them at y=87, offset the cap joints half a block from the face joints below, and lift their value from ~17 to the mortar value ~35 so they stop reading as a tile grid drawn over both planes.
+- Rework the seven posts (x≈40, 104, 168, 232, 296, 360, 424) so they cross the junction as objects: a 6×3 plate at L≈115 sitting **on** the cap above y=87, the shaft crossing the lip, and a bearing block where it meets the face base — and break the exact 64px spacing so two land close and one is missing.
+
+*Model: Claude Opus 5 (1M context).*
