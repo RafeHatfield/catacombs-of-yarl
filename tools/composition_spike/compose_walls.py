@@ -331,9 +331,14 @@ def bind_face(a, ink, v):
         pin(a, ink, x - 1, 18, spall_x=x - 3)         # over-built: pinned top and bottom
     elif v == 1:
         x = joint_in_band(a, 20, 28)
-        cramp(a, ink, x - 4, 22, w=9)                 # spans the two stones either side of it
-        pin(a, ink, x - 4, 25, spall_x=x - 6)
-        pin(a, ink, x + 3, 25, spall_x=x + 6)
+        # ROUND 5: longer, so it runs a full brick past the break at each end, and the pin heads
+        # sit INSIDE the bar's silhouette. The seat: "delete every instance where two pale dots
+        # sit above a dark bar rather than inside it - at played size that arrangement reads as
+        # two eyes over a mouth." It does, and that is bible §1.3's named trap arriving by
+        # accident in a mock.
+        cramp(a, ink, x - 6, 22, w=13)
+        pin(a, ink, x - 6, 22, spall_x=x - 8)
+        pin(a, ink, x + 5, 22, spall_x=x + 8)
     elif v == 2:
         x = joint_in_band(a, TOP_BAND + 2, 24)
         strap(a, ink, x - 1, 0, 26, w=4)
@@ -343,7 +348,8 @@ def bind_face(a, ink, v):
     elif v == 3:
         lash(a, ink, 12, 4)                           # rope over the lip and down the face
         x = joint_in_band(a, 22, 30)
-        cramp(a, ink, x - 4, 25, w=9)                 # a repair laid over a prior repair
+        cramp(a, ink, x - 6, 25, w=13)                # a repair laid over a prior repair
+        pin(a, ink, x - 6, 25, spall_x=x - 8)
     # v 4, 5, 6 are bare stone: a run where every tile carries a repair reads as pattern.
 
 
@@ -352,9 +358,9 @@ def bind_slab(a, ink, v):
     crossing the mass, pins driven into the top. Four of seven variants bare."""
     if v == 0:
         x = joint_in_band(a, 8, 16)
-        cramp(a, ink, x - 5, 11, w=11)
-        pin(a, ink, x - 5, 14, spall_x=x - 7)
-        pin(a, ink, x + 4, 14, spall_x=x + 7)
+        cramp(a, ink, x - 6, 11, w=13)
+        pin(a, ink, x - 6, 11, spall_x=x - 8)         # ROUND 5: heads inside the bar
+        pin(a, ink, x + 5, 11, spall_x=x + 8)
     elif v == 1:
         x = snap_to_joint(a, 18, 4, 28)
         rect(a, x, 5, 3, 21, ink.iron)           # a banding strap seen from above
@@ -363,14 +369,32 @@ def bind_slab(a, ink, v):
         pin(a, ink, x, 21, spall_x=x - 2)
     elif v == 2:
         x = joint_in_band(a, 18, 26)
-        cramp(a, ink, x - 4, 21, w=8)
-        pin(a, ink, snap_to_joint(a, 24, 4, 14), 8, spall_x=None)
+        cramp(a, ink, x - 6, 21, w=13)
+        pin(a, ink, x - 6, 21, spall_x=x - 8)
     # v 3..6 are bare stone.
 
 
 # ---------------------------------------------------------------------------------------
 # TILE CONSTRUCTION
 # ---------------------------------------------------------------------------------------
+# ROUND 5. The face plane gets the same treatment the top plane got in round 4, for the same
+# reason and on the seat's own instruction: "replace whole 32px stretches of wall with re-laid
+# patches using a different brick module, bond and mortar colour, hard-edged against the
+# original brickwork." Three ledger parts with DIFFERENT course rows means neighbouring face
+# tiles do not line up - which in ordinary masonry would be a defect and here is the point.
+# The face is constant across arms by design; the arms vary the top plane.
+FACE_STOCK = ["r07_00", "r07_08", "r07_09"]
+
+
+def build_face_stock():
+    out = []
+    for i in range(NVAR):
+        name = FACE_STOCK[i % len(FACE_STOCK)]
+        src, _, _ = load_part(name, FACE_PARTS)
+        out.append((src, name, i // len(FACE_STOCK)))
+    return out
+
+
 def build_top_stock(part_names, face_src, match):
     """ROUND 4. The top plane's variants come from SEVERAL parts, not several offsets of one.
 
@@ -720,6 +744,7 @@ def main():
     sheet_dir = os.path.join(HERE, "segments")
     os.makedirs(sheet_dir, exist_ok=True)
 
+    faces = build_face_stock()
     for arm, cfg in ARMS.items():
         stock = build_top_stock(cfg["tops"], face_src, cfg["match"])
         derived = ""
@@ -727,13 +752,13 @@ def main():
             _, derived = match_top(load_part(cfg["tops"][0], PART_TABLE(cfg["tops"][0]))[0],
                                    face_src)
 
-        pal = palette_of(face_src, *[t[0] for t in stock], *floor_arrs)
+        pal = palette_of(*[f[0] for f in faces], *[t[0] for t in stock], *floor_arrs)
         ink = Ink(pal)
-        walls = {m: [make_wall(m, face_src, stock[v][0], pal, ink, v, cfg["bind"],
+        walls = {m: [make_wall(m, faces[v][0], stock[v][0], pal, ink, v, cfg["bind"],
                                cfg.get("keylight", False), phase=stock[v][2])
                      for v in range(mask_variants(m))]
                  for m in range(16)}
-        corners = [make_corner(k, face_src, stock[v][0], pal, ink, v, cfg["bind"],
+        corners = [make_corner(k, faces[v][0], stock[v][0], pal, ink, v, cfg["bind"],
                                phase=stock[v][2])
                    for v, k in enumerate(("nw", "ne", "sw", "se"))]
 
@@ -770,7 +795,8 @@ def main():
             sheets[name] = os.path.relpath(p, REPO)
 
         manifest["arms"][arm] = dict(
-            face_part=args.face,
+            face_parts=[dict(variant=i, part=faces[i][1], phase=faces[i][2])
+                        for i in range(NVAR)],
             top_parts=[dict(part=n, rows=list(PART_TABLE(n)[n]["rows"]),
                             why=PART_TABLE(n)[n]["why"],
                             ledger_verdict=PART_TABLE(n)[n]["verdict"]) for n in cfg["tops"]],
@@ -783,16 +809,17 @@ def main():
             face_plane_lum=round(mean_lum(face_src), 1),
             top_plane_lum=round(float(np.mean([mean_lum(t[0]) for t in stock])), 1),
             tiles={os.path.basename(p): sha256(p) for p in written})
-        print("%-8s face=%s tops=%-28s bind=%-5s palette=%d  face_lum=%.1f top_lum=%.1f -> %s"
-              % (arm, args.face, "/".join(cfg["tops"]), cfg["bind"], len(pal),
-                 mean_lum(face_src), float(np.mean([mean_lum(t[0]) for t in stock])),
+        print("%-8s faces=%s tops=%-28s bind=%-5s palette=%d face_lum=%.1f top_lum=%.1f -> %s"
+              % (arm, "/".join(FACE_STOCK), "/".join(cfg["tops"]), cfg["bind"], len(pal),
+                 float(np.mean([mean_lum(f[0]) for f in faces])),
+                 float(np.mean([mean_lum(t[0]) for t in stock])),
                  os.path.relpath(d, REPO)))
 
     # The plant sheet, built from the same stones so nothing separates it by material.
     stock = build_top_stock(ARMS["plant"]["tops"], face_src, True)
-    pal = palette_of(face_src, *[t[0] for t in stock], *floor_arrs)
+    pal = palette_of(*[f[0] for f in faces], *[t[0] for t in stock], *floor_arrs)
     ink = Ink(pal)
-    walls = {m: [make_wall(m, face_src, stock[v][0], pal, ink, v, True, True,
+    walls = {m: [make_wall(m, faces[v][0], stock[v][0], pal, ink, v, True, True,
                            phase=stock[v][2]) for v in range(NVAR)] for m in range(16)}
     im = render_segment(SEGMENTS["south_facing_run"], walls, floor_arrs)
     z = args.sheet_zoom
