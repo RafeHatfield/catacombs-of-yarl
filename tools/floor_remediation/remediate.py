@@ -74,6 +74,26 @@ EVID = os.path.join(HERE, "evidence")
 CODES = ("A-VAB", "A-HEB", "B-KAB", "C-GAB")
 MAX_STRIPS = 8
 
+# RULED (Rafe, 2026-08-27), bible §5.5 corpus status. Carried in the manifest because this is
+# what a future conditioning script must read before it picks a reference - the role is the
+# point of the corpus, and a remediated PNG sitting in a directory says nothing about its job.
+# A-VAB's ruling is deliberately INDEPENDENT of its remediation: de-ringing removes a keyline,
+# it does not make a framed plaque compositionally neutral, and §5.5 measured that it is the
+# COMPOSITION that propagates - 12/12 on the wall campaign, and this session's blind seat
+# rediscovered the same construction on the floor campaign without being told any of it.
+ROLES = {
+    "C-GAB": ("primary-style-parent",
+              "compositionally neutral; carries no ring at any value"),
+    "A-HEB": ("secondary-style-parent",
+              "a joint network, not a keyline; carries no ring"),
+    "A-VAB": ("prop-stock",
+              "charactered. NEVER a conditioning parent, and the ruling holds regardless of "
+              "surgery - the blind seat called it a framed plaque after de-ringing"),
+    "B-KAB": ("retired-from-conditioning",
+              "no remediation; the regenerated candidate is not promoted and the "
+              "un-remediated original stays in the ledger"),
+}
+
 # Below this, stripping the ring leaves the plate with no value separation from its ground and
 # surgery has deleted the tile rather than de-ringed it. Bible §12's clause is the reason the
 # question is asked at all; the clause's own threshold is PLACEHOLDER, so this is NOT presented
@@ -231,6 +251,9 @@ def main():
         changed = int((a != out).any(-1).sum())
         records.append(dict(
             code=code, route=route, file=code + ".png",
+            role=ROLES[code][0], role_reason=ROLES[code][1],
+            role_ruling="RULED (Rafe, 2026-08-27); bible §5.5 corpus status",
+            may_condition=ROLES[code][0].endswith("style-parent"),
             parent=dict(file=code + ".png",
                         path=os.path.relpath(src, REPO),
                         sha256=by_code[code]["sha256"],
@@ -244,6 +267,10 @@ def main():
     manifest = dict(
         status="REMEDIATION CANDIDATES - NOT PROMOTED, NOT LANDED",
         governs="bible §13.1 governs landing; the blind seat gates; Rafe's eye rules",
+        corpus_ruling=("RULED (Rafe, 2026-08-27), bible §5.5: C-GAB primary style parent, "
+                       "A-HEB secondary, A-VAB prop stock REGARDLESS OF SURGERY, B-KAB retired "
+                       "from conditioning with no remediation. Only the two style parents may "
+                       "ever be conditioning references - read `may_condition` per floor."),
         commit=git_commit(),
         instrument="tools/floor_remediation/ring_instrument.py",
         originals_untouched=True,

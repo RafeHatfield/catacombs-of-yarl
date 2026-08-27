@@ -1,7 +1,8 @@
 {
  "status": "REMEDIATION CANDIDATES - NOT PROMOTED, NOT LANDED",
  "governs": "bible \u00a713.1 governs landing; the blind seat gates; Rafe's eye rules",
- "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "corpus_ruling": "RULED (Rafe, 2026-08-27), bible \u00a75.5: C-GAB primary style parent, A-HEB secondary, A-VAB prop stock REGARDLESS OF SURGERY, B-KAB retired from conditioning with no remediation. Only the two style parents may ever be conditioning references - read `may_condition` per floor.",
+ "commit": "270b000e17a9532bffd63b614f61cdae8c2b1c78",
  "instrument": "tools/floor_remediation/ring_instrument.py",
  "originals_untouched": true,
  "floors": [
@@ -9,6 +10,10 @@
    "code": "A-VAB",
    "route": "surgery",
    "file": "A-VAB.png",
+   "role": "prop-stock",
+   "role_reason": "charactered. NEVER a conditioning parent, and the ruling holds regardless of surgery - the blind seat called it a framed plaque after de-ringing",
+   "role_ruling": "RULED (Rafe, 2026-08-27); bible \u00a75.5 corpus status",
+   "may_condition": false,
    "parent": {
     "file": "A-VAB.png",
     "path": "tools/pixellab/probe_6_4/survivors/A-VAB.png",
@@ -163,6 +168,10 @@
    "code": "A-HEB",
    "route": "clean-verified",
    "file": "A-HEB.png",
+   "role": "secondary-style-parent",
+   "role_reason": "a joint network, not a keyline; carries no ring",
+   "role_ruling": "RULED (Rafe, 2026-08-27); bible \u00a75.5 corpus status",
+   "may_condition": true,
    "parent": {
     "file": "A-HEB.png",
     "path": "tools/pixellab/probe_6_4/survivors/A-HEB.png",
@@ -182,6 +191,10 @@
    "code": "B-KAB",
    "route": "surgery-rejected-regenerate",
    "file": "B-KAB.png",
+   "role": "retired-from-conditioning",
+   "role_reason": "no remediation; the regenerated candidate is not promoted and the un-remediated original stays in the ledger",
+   "role_ruling": "RULED (Rafe, 2026-08-27); bible \u00a75.5 corpus status",
+   "may_condition": false,
    "parent": {
     "file": "B-KAB.png",
     "path": "tools/pixellab/probe_6_4/survivors/B-KAB.png",
@@ -343,6 +356,10 @@
    "code": "C-GAB",
    "route": "clean-verified",
    "file": "C-GAB.png",
+   "role": "primary-style-parent",
+   "role_reason": "compositionally neutral; carries no ring at any value",
+   "role_ruling": "RULED (Rafe, 2026-08-27); bible \u00a75.5 corpus status",
+   "may_condition": true,
    "parent": {
     "file": "C-GAB.png",
     "path": "tools/pixellab/probe_6_4/survivors/C-GAB.png",

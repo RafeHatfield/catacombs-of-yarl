@@ -48,6 +48,13 @@ raises the clean rate - and the ring will recur on every floor generated from he
 `--waves` selects which waves to run; results merge into the existing RESULT.json rather than
 replacing it, so wave 1's eight generations are evidence, not something to be paid for twice.
 
+RULING - 2026-08-27, AFTER THIS MODULE RAN
+------------------------------------------
+**B-KAB retires from conditioning with no remediation. The candidate is NOT promoted.** 22 of 24
+children came back ringed, and the blind seat culled the best clean one `keyline`. Promotion is
+therefore off by default and requires `--promote`; the 24 children stay here as evidence and
+none of them becomes the corpus's B-KAB. Bible §5.5 carries the corpus assignment.
+
 SELECTION - AND WHAT THIS FILE REFUSES TO DO
 --------------------------------------------
 The instrument CULLS: a child carrying a ring is out, mechanically, no discussion. Among the
@@ -119,6 +126,42 @@ def material_distance(child, parent):
                 order_key=round(hist - shared, 4))
 
 
+def _record_retirement(results, clean, ringed):
+    """Write the honest state into the remediated manifest: B-KAB has NO remediation.
+
+    The row must exist and must say so. A code silently absent from the manifest reads as an
+    oversight; a row saying "retired, no remediation, and here is what was tried" is the record.
+    """
+    mp = os.path.join(REMEDIATED, "MANIFEST.json")
+    if not os.path.exists(mp):
+        return
+    man = json.load(open(mp))
+    for row in man["floors"]:
+        if row["code"] != CODE:
+            continue
+        for k in ("sha256", "pixels_changed", "strips", "verdict_after", "rings_after",
+                  "generation", "surgery_rejected", "pixels_shared_with_parent", "method"):
+            row.pop(k, None)
+        row["route"] = "retired-no-remediation"
+        row["file"] = None
+        row["ruling"] = ("RULED (Rafe, 2026-08-27): B-KAB retires from conditioning. No "
+                         "remediation. The candidate is not promoted and the un-remediated "
+                         "original stays in the ledger. Bible §5.5 corpus status.")
+        row["surgery_rejected"] = ("plate and ground are the same value (-1.1); stripping the "
+                                   "ring empties the tile rather than de-ringing it")
+        row["regeneration_attempted"] = dict(
+            budget=BUDGET, generations=len(results), ringed=len(ringed), clean=len(clean),
+            clean_children=[r["file"] for r in clean],
+            outcome=("the blind seat culled the best clean child `keyline`; no child is "
+                     "promoted"),
+            evidence="tools/floor_remediation/regen_bkab/")
+    man["note_bkab"] = ("B-KAB has NO remediation. Retired from conditioning by ruling "
+                        "2026-08-27. Its 24 children stay in regen_bkab/ as evidence; none is "
+                        "the corpus's B-KAB. See REPORT.md §4 and §9.")
+    with open(mp, "w") as f:
+        json.dump(man, f, indent=1)
+
+
 def wave_payload(base, wave, ref_b64):
     p = dict(base)
     if wave >= 2:
@@ -134,6 +177,11 @@ def main():
                     help="print the plan and the payload shape, spend nothing")
     ap.add_argument("--waves", default="1,2,3",
                     help="which waves to run; results merge into the existing RESULT.json")
+    ap.add_argument("--promote", action="store_true",
+                    help="copy the top-ordered clean child into remediated/. OFF BY DEFAULT "
+                         "since the 2026-08-27 ruling: B-KAB is retired from conditioning with "
+                         "no remediation and its candidate is not promoted. See the RULING "
+                         "block in this module's docstring.")
     args = ap.parse_args()
 
     os.makedirs(OUT, exist_ok=True)
@@ -265,7 +313,21 @@ def main():
                      sum(1 for r in ws if r["verdict"] == "CLEAN")))
 
     promoted = None
-    if clean:
+    if clean and not args.promote:
+        clean.sort(key=lambda r: r["order_key"])
+        print("\n  NOT PROMOTED - RULED (Rafe, 2026-08-27): B-KAB retires from conditioning")
+        print("  with no remediation. %d clean children exist and stay here as evidence; none"
+              % len(clean))
+        print("  becomes the corpus's B-KAB. The un-remediated original stays in the ledger.")
+        for r in clean:
+            print("    %-16s palette_overlap %.3f  hist_dist %.3f"
+                  % (os.path.basename(r["file"]), r["palette_overlap"], r["hist_distance"]))
+        stale = os.path.join(REMEDIATED, CODE + ".png")
+        if os.path.exists(stale):
+            os.remove(stale)
+            print("  removed a previously-promoted %s.png from remediated/" % CODE)
+        _record_retirement(results, clean, ringed)
+    elif clean:
         clean.sort(key=lambda r: r["order_key"])
         promoted = clean[0]
         src = os.path.join(OUT, promoted["file"])

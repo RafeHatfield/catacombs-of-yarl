@@ -91,7 +91,14 @@ def lay_assets():
         for i, code in enumerate(CODES):
             tid = base + i
             fn = (pat % code) if pat else ("MOCK_dering_%d.png" % (9120 + i))
-            im = Image.open(os.path.join(src, fn)).convert("RGB")
+            path = os.path.join(src, fn)
+            if not os.path.exists(path):
+                # Expected, not an error: B-KAB has no remediation (RULED 2026-08-27), so there
+                # is no remediated tile to lay. Skipped and NAMED below, never silently
+                # substituted with the original - that substitution is exactly the silent
+                # success LOOP-PROCESS §4.2 exists to stop.
+                continue
+            im = Image.open(path).convert("RGB")
             im.save(os.path.join(ASSETS, "fr_%d.png" % tid))
             laid[tid] = "%s/%s" % (setname, code)
     return laid
@@ -133,9 +140,12 @@ def main():
            % (light["ambient"], light["color"], light["energy"], light["radius_tiles"]))
 
     laid = lay_assets()
-    jobs = []
+    jobs, skipped = [], []
     for s in sets:
         for i, code in enumerate(CODES):
+            if not os.path.exists(os.path.join(ASSETS, "fr_%d.png" % (SETS[s][0] + i))):
+                skipped.append("%s/%s" % (s, code))
+                continue
             jobs.append((s, code, write_theme(s, i)))
 
     print("SURVIVOR-FLOOR CAPTURES - the floor is the only variable")
@@ -143,7 +153,11 @@ def main():
     print("tile:   %sx%s at x%s" % (cfg["tile"]["size"], cfg["tile"]["size"], cfg["tile"]["scale"]))
     print("rig:    %s   IDENTICAL for every capture" % rig)
     print("walls:  composition spike `before` arm, unchanged, held constant")
-    print("assets: %d tiles laid in %s\n" % (len(laid), ASSETS_REL))
+    print("assets: %d tiles laid in %s" % (len(laid), ASSETS_REL))
+    if skipped:
+        print("SKIPPED, no such tile (expected where a code has no remediation): %s"
+              % ", ".join(skipped))
+    print()
 
     if args.build_only:
         print("--build-only: %d themes written. Run Godot --headless --import, then re-run."

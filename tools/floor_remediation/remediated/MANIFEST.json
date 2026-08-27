@@ -1,7 +1,8 @@
 {
  "status": "REMEDIATION CANDIDATES - NOT PROMOTED, NOT LANDED",
  "governs": "bible \u00a713.1 governs landing; the blind seat gates; Rafe's eye rules",
- "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "corpus_ruling": "RULED (Rafe, 2026-08-27), bible \u00a75.5: C-GAB primary style parent, A-HEB secondary, A-VAB prop stock REGARDLESS OF SURGERY, B-KAB retired from conditioning with no remediation. Only the two style parents may ever be conditioning references - read `may_condition` per floor.",
+ "commit": "270b000e17a9532bffd63b614f61cdae8c2b1c78",
  "instrument": "tools/floor_remediation/ring_instrument.py",
  "originals_untouched": true,
  "floors": [
@@ -9,6 +10,10 @@
    "code": "A-VAB",
    "route": "surgery",
    "file": "A-VAB.png",
+   "role": "prop-stock",
+   "role_reason": "charactered. NEVER a conditioning parent, and the ruling holds regardless of surgery - the blind seat called it a framed plaque after de-ringing",
+   "role_ruling": "RULED (Rafe, 2026-08-27); bible \u00a75.5 corpus status",
+   "may_condition": false,
    "parent": {
     "file": "A-VAB.png",
     "path": "tools/pixellab/probe_6_4/survivors/A-VAB.png",
@@ -163,6 +168,10 @@
    "code": "A-HEB",
    "route": "clean-verified",
    "file": "A-HEB.png",
+   "role": "secondary-style-parent",
+   "role_reason": "a joint network, not a keyline; carries no ring",
+   "role_ruling": "RULED (Rafe, 2026-08-27); bible \u00a75.5 corpus status",
+   "may_condition": true,
    "parent": {
     "file": "A-HEB.png",
     "path": "tools/pixellab/probe_6_4/survivors/A-HEB.png",
@@ -180,8 +189,12 @@
   },
   {
    "code": "B-KAB",
-   "route": "regenerated",
-   "file": "B-KAB.png",
+   "route": "retired-no-remediation",
+   "file": null,
+   "role": "retired-from-conditioning",
+   "role_reason": "no remediation; the regenerated candidate is not promoted and the un-remediated original stays in the ledger",
+   "role_ruling": "RULED (Rafe, 2026-08-27); bible \u00a75.5 corpus status",
+   "may_condition": false,
    "parent": {
     "file": "B-KAB.png",
     "path": "tools/pixellab/probe_6_4/survivors/B-KAB.png",
@@ -189,9 +202,7 @@
     "sha256_verified": true,
     "stage1_source": "B/floor/B_floor_18.png"
    },
-   "sha256": "c8f9868d75453b78e7e954fa25267879b8507b7f173999efefdd58965739afd9",
    "verdict_before": "RING",
-   "verdict_after": "CLEAN",
    "rings_before": [
     {
      "kind": "dark-set",
@@ -320,46 +331,29 @@
      "levels_agreeing": 2
     }
    ],
-   "rings_after": [],
-   "method": "conditioned on the parent itself; surgery was measured to empty this tile and was rejected",
-   "surgery_rejected": {
-    "reason": "plate/ground value separation with the ring gone was below the floor",
-    "pixels_that_would_have_been_stripped": 62,
-    "strips": [
-     {
-      "strip": 1,
-      "level": "lum<=13.5",
-      "kind": "dark-set",
-      "wall_px": 62,
-      "interior_px": 244,
-      "interior_bbox": [
-       7,
-       7,
-       23,
-       24
-      ],
-      "separation_before": -24.6
-     }
-    ]
-   },
-   "generation": {
-    "source_file": "tools/floor_remediation/regen_bkab/w2/w2_seed9503.png",
-    "wave": 2,
-    "seed_recorded": 9503,
-    "seed_reproducible": false,
-    "style_strength": 50,
+   "ruling": "RULED (Rafe, 2026-08-27): B-KAB retires from conditioning. No remediation. The candidate is not promoted and the un-remediated original stays in the ledger. Bible \u00a75.5 corpus status.",
+   "surgery_rejected": "plate and ground are the same value (-1.1); stripping the ring empties the tile rather than de-ringing it",
+   "regeneration_attempted": {
     "budget": 24,
-    "generations_screened": 24,
-    "generations_ringed": 22,
-    "palette_overlap_with_parent": 0.0,
-    "ordering": "uncalibrated, renders no verdict (bible \u00a713.2)"
-   },
-   "pixels_shared_with_parent": 0
+    "generations": 24,
+    "ringed": 22,
+    "clean": 2,
+    "clean_children": [
+     "w2/w2_seed9503.png",
+     "w3/w3_seed9607.png"
+    ],
+    "outcome": "the blind seat culled the best clean child `keyline`; no child is promoted",
+    "evidence": "tools/floor_remediation/regen_bkab/"
+   }
   },
   {
    "code": "C-GAB",
    "route": "clean-verified",
    "file": "C-GAB.png",
+   "role": "primary-style-parent",
+   "role_reason": "compositionally neutral; carries no ring at any value",
+   "role_ruling": "RULED (Rafe, 2026-08-27); bible \u00a75.5 corpus status",
+   "may_condition": true,
    "parent": {
     "file": "C-GAB.png",
     "path": "tools/pixellab/probe_6_4/survivors/C-GAB.png",
@@ -376,5 +370,5 @@
    "strips": []
   }
  ],
- "note_bkab": "B-KAB is a REGENERATED CANDIDATE, not a derivation of its parent. It shares no pixels with the survivor and the blind seat culled it. See REPORT.md \u00a74 and \u00a77."
+ "note_bkab": "B-KAB has NO remediation. Retired from conditioning by ruling 2026-08-27. Its 24 children stay in regen_bkab/ as evidence; none is the corpus's B-KAB. See REPORT.md \u00a74 and \u00a79."
 }

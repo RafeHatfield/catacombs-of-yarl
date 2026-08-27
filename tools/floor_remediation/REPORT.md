@@ -1,8 +1,19 @@
 # SURVIVOR-FLOOR RING REMEDIATION — session report
 
-**Returning under ruling trigger (b) — an amendment to a frozen bar — and under the brief's own
-character trigger for A-VAB. Nothing has landed. §13.1 governs landing and nothing here
-satisfies it.**
+**RULED (Rafe, 2026-08-27) on all three returns. §9 carries the rulings and what changed
+because of them; the body below is the evidence they were ruled on and is left as it was
+written, except where a ruling corrects it and says so.**
+
+**Nothing has landed. §13.1 governs landing and nothing here satisfies it.**
+
+> **The corpus is reframed, not condemned.** C-GAB is the primary style parent, A-HEB the
+> secondary, A-VAB is prop stock regardless of surgery, and B-KAB retires from conditioning with
+> no remediation. Bible §5.5 carries it; `remediated/MANIFEST.json` carries it per floor with a
+> `may_condition` flag.
+>
+> **Round B's 0-of-4 is a FINDING, not the bar verdict.** The declared bar was ring-clean. The
+> repetition and absent-wear culls measure the absence of tier one's variant and wear systems on
+> a thirty-cell clone field, and they land as tier-one requirements in bible §8.2.1.
 
 Declared before the first measurement, not tuned after:
 
@@ -21,9 +32,15 @@ Declared before the first measurement, not tuned after:
 
 ## 0. THE ANSWER, STATED FIRST
 
-**The four floors were de-ringed. The bar was not met, and it cannot be met by de-ringing them,
-because the ring is not what is wrong with two of them and is not the only thing wrong with the
-other two.**
+**The four floors were measured on geometry rather than value, and two of them carried a ring.
+Both were remediated. The declared bar — ring-clean at the blind seat, all four — came out at
+2 of 4, and the two that failed it are the two the corpus ruling then moved out of the
+conditioning role.**
+
+> *§0 as originally written said "the bar was not met and cannot be met by de-ringing them",
+> reasoning from the seat's whole verdict. Ruling 2 corrects that: the bar was ring-clean, it
+> scores 2 of 4 (§7), and the rest of the seat's verdict is a finding about tier one rather
+> than about the bar.*
 
 Three findings, in order of how much they cost the project if they stay unknown:
 
@@ -42,12 +59,15 @@ Three findings, in order of how much they cost the project if they stay unknown:
    moved it to 7-of-8. **Neither lever did anything.** Screening is what catches this, not
    prompting — and it will recur on every floor generated from this surface.
 
-3. **Ring-free is nowhere near enough.** The blind seat culled all four un-remediated floors and
-   then culled all four remediated ones. Two of the four were never about rings: A-HEB and
-   C-GAB draw honest masonry and fail on *per-cell repetition, zero traffic wear, and value
-   cast*. The seat's own summary, having never seen the bible: *"all five are laid to the same
-   flawless repeating module, which is why not one of them reads as a floor anything has
-   actually happened to."*
+3. **Ring-free is not the same as good, and the gap is a tier-one shopping list.** The blind
+   seat culled all four un-remediated floors and all four remediated ones — but two of those
+   culls were never about rings. A-HEB and C-GAB draw honest masonry (`cull: none`, both rounds)
+   and fail on *per-cell repetition, zero traffic wear, and value cast*. The seat's own summary,
+   having never seen the bible: *"all five are laid to the same flawless repeating module, which
+   is why not one of them reads as a floor anything has actually happened to."* **Ruling 2 banks
+   that as three tier-one requirements (§8.2.1), not as a verdict on the corpus** — you cannot
+   read a variant system or a wear system off a thirty-cell field of one repeated tile, and the
+   one-wide review corridor could not pose the wear question in the first place.
 
 ---
 
@@ -252,46 +272,43 @@ forbids.
 
 ---
 
-## 7. THE BAR, AND THE RULING
+## 7. THE BAR — SCORED ON ITS DECLARED TERMS
 
-**BAR NOT MET.** Round A: 4 of 4 culled — the check can fail. Round B: plant caught, **0 of 4
-passed**.
+> **Corrected by ruling 2 (§9). This section originally scored the bar against the seat's whole
+> verdict and reported "0 of 4". That was the bar growing after declaration.** The declared bar
+> was **ring-clean**; culls for repetition, wear and value cast are findings against tier one,
+> not against the bar. Bars neither shrink nor grow after declaration, and the number below is
+> the one the bar actually asked for.
 
-LOOP-PROCESS §1.1.2 says a FAIL is a reprompt, not a stop. I am returning anyway, and naming the
-trigger, because **the flip list is not executable inside this brief.** Its items:
+| bar clause | result |
+|---|---|
+| the check is shown able to fail | **YES** — round A culled 4 of 4, two of them `keyline` |
+| the round is valid | **YES** — round B's plant was caught, `keyline` |
+| **ring-clean at the seat, all four** | **NO — 2 of 4** |
 
-- author six floor variants with the bond offset by half a stone between them, so no two
-  adjacent cells share a joint at the same column;
-- sand a traffic band down the centre of the corridor run, fade joints inside it, leave them at
-  full depth only near the wall;
-- pull A-HEB off salmon toward the walls' grey-brown and drop it two values;
-- halve floor joint contrast relative to the wall's mortar;
-- put the orcs' repairs on the floor — a cracked slab pinned flat, a salvaged baulk worn smooth.
+Round B, on the ring question alone, per tile:
 
-**None of that is de-ringing.** It is authoring a floor set: new generation, new variants, a
-value ruling, and a wear system. Executing it under a brief that says "produce de-ringed
-versions of the four survivor floors" would be scope I was not given.
+| floor | seat's cull | ring-clean? |
+|---|---|---|
+| remediated **C-GAB** | `none` — *"the joints are honest"* | **yes** |
+| remediated **A-HEB** | `none` | **yes** |
+| remediated **A-VAB** | `keyline` | no |
+| remediated **B-KAB** | `keyline` | no |
 
-**Ruling trigger (b) — the bar.** The bar assumed the ring was what stood between these floors
-and a pass. Two of the four never carried a ring and still fail; the other two fail on
-constructions no ring test separates. The bar needs restating before another round is worth
-running.
+**The bar was not met as declared, and that is the honest score.** What ruling 1 then changes is
+not the score but the corpus: **the two that failed the ring question are the two that leave the
+conditioning role** — A-VAB to prop stock, B-KAB retired. The corpus that remains, C-GAB and
+A-HEB, is exactly the pair the seat cleared, twice, in both rounds. That is a coincidence worth
+naming rather than smoothing over: the ring measurement and the composition ruling sorted the
+same four tiles the same way, from independent evidence.
 
-**The brief's own character trigger — fired, for A-VAB.** Before/after is in
-`evidence/gate_before_after.png`, and the verdict surface is the twelve full captures in
-`evidence/captures/`. Your eye picked A-VAB; the keyline is gone and the slab still reads on its
-own value, but the seat says what remains still rings the slab. **That is a re-curation call and
-it is yours.**
+**The rest of round B — the 0-of-4 on the seat's whole verdict — is §9 ruling 2's finding.**
 
-**What I would put to you, in one line each:**
-
-1. **Is the §6.4 survivor set worth remediating at all?** Three separate seats have now said it
-   does not read as one floor, and this session's seat culled all four before and after. The
-   set exists to condition Stage 2 generations, and it is conditioning them toward a ring —
-   22 of 24.
-2. **A-VAB after surgery — keep, or re-curate?** It is the only tile that improved.
-3. **B-KAB — the regenerated child is worse than the parent.** I would not promote it. The
-   honest state is that B-KAB has no remediation and its original stays in the ledger.
+LOOP-PROCESS §1.1.2 says a FAIL is a reprompt, not a stop. I returned anyway, and named the
+trigger, because **the flip list was not executable inside this brief** — it asks for six bond
+variants, a traffic band, a value shift and a floor-repair vocabulary, which is authoring a
+floor set rather than de-ringing one. Ruling 2 confirms that reading and banks the items as
+tier-one requirements in bible §8.2.1 instead of treating them as this round's homework.
 
 ---
 
@@ -306,6 +323,76 @@ it is yours.**
 
 ---
 
+## 9. THE RULINGS — Rafe, 2026-08-27
+
+### Ruling 1 — the corpus is reframed per §5.5
+
+| survivor | role | what changed on disk |
+|---|---|---|
+| **C-GAB** | primary style parent | `may_condition: true` |
+| **A-HEB** | secondary style parent | `may_condition: true` |
+| **A-VAB** | **prop stock, regardless of surgery** | `may_condition: false`; the remediated tile stays as a candidate for re-curation, but it is not a conditioning reference in any state |
+| **B-KAB** | **retired from conditioning, no remediation** | `remediated/B-KAB.png` **deleted**; `file: null`; promotion in `regenerate.py` now requires an explicit `--promote` and is off by default |
+
+**The cross-confirmation, recorded.** §5.5 already held this, measured 12/12 on the *wall*
+campaign by tracing children back to their reference, and it already named the construction:
+*"every child of a charactered reference — **A-VAB's recessed frame** — inherited its
+composition, not only its material."* This session's blind seat reached the same place from the
+opposite end. Different campaign (floors, not walls), different instrument (a seat reading a lit
+corridor, not a lineage trace), no access to the bible or to the first result — and it culled
+A-VAB with:
+
+> *"Two concentric closed rectangles inset in the middle of every tile, each one width and one
+> value the whole way round — **the tile is a framed plaque**, and the moss clumps repeat at the
+> same corners to confirm it."*
+
+*Framed plaque* is *recessed frame*, found twice, independently. Written into bible §5.5 as a
+CROSS-CONFIRMED block.
+
+**And it is why A-VAB's ruling is independent of its surgery.** De-ringing worked — the keyline
+is gone and the slab still reads on its own value at +11.2. It did not and could not make the
+tile compositionally neutral, because what propagates is the plaque, not the line around it.
+A tile can be perfectly ring-clean and still be the wrong thing to condition on.
+
+### Ruling 2 — round B's 0-of-4 is a finding, not the bar verdict
+
+**Bars neither shrink nor grow after declaration.** The declared bar was ring-clean; §7 is
+rescored on those terms and reads **2 of 4**, which is the honest number. The remaining culls —
+per-cell repetition, no traffic wear, A-HEB's salmon cast — are **measurements of what tier one
+has not built yet**, taken on a thirty-cell field of one repeated tile. They land in bible
+§8.2.1 as three tier-one requirements: a variant system, the wear system §8.2.1 already
+specifies, and a floor-repair vocabulary for §7.4's orc work on the ground.
+
+⚠ **And the review scene owed the seat a fair question.** §8.2.1 already said so, before this
+session: *"a review scene shaped only as narrow corridor cannot pose the §8.2 question."* Every
+capture here is a one-tile-wide corridor, where there is no centre line distinct from the
+flanks — so the seat's *"the middle of the corridor and the edge of the corridor are
+byte-identical"* is partly the scene reporting its own shape. **A floor round that means to ask
+the wear question must build §8.2.1's four scenes first** — open floor, the channel, a trodden
+chokepoint, a neglected passage. Recorded in §8.2.1 as a harness debt, not charged to the tiles.
+
+### Ruling 3 — the instrument stands as labelled, and the MOCK's no-op is logged
+
+The instrument keeps its label: **a floor, not a verdict**, with its limit measured and written
+down (§1, §6). No further tuning; §6's overlap measurement is the reason and it stands.
+
+`dering_floors.py`'s silent no-op on A-VAB is logged as **LOOP-PROCESS §4.2 — a remediation must
+prove it removed something**, a new clause written as §4.1's twin from the other side and as
+Ruling 104's failure mode in opposite clothes. §4.1 is a diff that proves less than it claims;
+§4.2 is **no diff at all, reported as success**: the step ran, removed zero pixels, printed
+`0 ring pixels removed of 1024`, exited 0, and nothing went red — and a round's captures then
+carried a fully ringed floor while being labelled de-ringed.
+
+**Placement note.** Ruling 104's own register is the PixelLab silent-step audit, and this
+instance is not a PixelLab step — it is a local art tool. Filing it there would have misfiled
+it, so it is logged in LOOP-PROCESS §4.2, where the art loop's other control law lives, citing
+Ruling 104 as its parent. The closing check is one line of state, not a new instrument:
+`remediate.py` carries `verdict_before`, `verdict_after` and `pixels_changed` per tile, and
+`capture_floors.py` now **names a skipped tile** rather than silently substituting the original
+where a remediation does not exist.
+
+---
+
 ## FILES
 
 ```
@@ -317,8 +404,10 @@ tools/floor_remediation/
   run_seat.py             the blind seat, two rounds, plant-controlled
   seat_prompt.txt         armed with the ring measurement; never given the bible
   make_gate_sheet.py      before/after crops for the gate (navigation, not a verdict surface)
-  remediated/             the four remediated floors + MANIFEST.json (parent sha256 each)
-  regen_bkab/             24 children, ledger.jsonl, RESULT.json
+  remediated/             A-VAB, A-HEB, C-GAB + MANIFEST.json (parent sha256 and RULED role
+                          per floor, with a may_condition flag). NO B-KAB - it is retired with
+                          no remediation and its row says so.
+  regen_bkab/             24 children, ledger.jsonl, RESULT.json. None promoted.
   controls/               the 10 synthetic control tiles
   evidence/
     before.json after.json mock.json remediation.json

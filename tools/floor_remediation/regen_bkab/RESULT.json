@@ -2,7 +2,7 @@
  "target": "B-KAB",
  "budget": 24,
  "spent": 24,
- "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "commit": "270b000e17a9532bffd63b614f61cdae8c2b1c78",
  "pool_before": 2866.0,
  "pool_after": 2842.0,
  "parent_sha256": "950751ae2ec901ce0a72f4a20c4d2c00e5ee54f3c8e14acc6010d78144a6ef09",
@@ -2331,15 +2331,5 @@
    "order_key": 0.0606
   }
  ],
- "promoted": {
-  "wave": 2,
-  "seed": 9503,
-  "verdict": "CLEAN",
-  "file": "w2/w2_seed9503.png",
-  "sha256": "13415c75a405d769ee2bbad41f0b1d56a1a244ebb6654c6701e1885ac1d95ef4",
-  "rings": [],
-  "palette_overlap": 0.0,
-  "hist_distance": 0.0509,
-  "order_key": 0.0509
- }
+ "promoted": null
 }
