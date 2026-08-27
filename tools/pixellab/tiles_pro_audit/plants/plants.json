@@ -1,0 +1,24 @@
+[
+  {
+    "canvas": [
+      52,
+      87
+    ],
+    "file": "plant_a.png",
+    "plant": "plant_a",
+    "source": "tools/pixellab/probe_6_4/stage1/A/wall/A_wall_11.png",
+    "source_sha256": "36e8a32781b000e11f56079b25cb6823788b76ed1e8f6b04642a40ea61f487c4",
+    "why": "isometric object from the \u00a76.4 wall morgue; background keyed out so only the content can betray it"
+  },
+  {
+    "canvas": [
+      52,
+      87
+    ],
+    "file": "plant_b.png",
+    "plant": "plant_b",
+    "source": "tools/pixellab/wall_gauntlet/rounds/round10/images/r10_06.png",
+    "source_sha256": "42fc31cffa887a72b950d45135894f766ac274b26990450042c81dc73c954bc4",
+    "why": "wall-gauntlet edge-to-edge masonry poured through candidate 01's alpha: the bar's own destination, wearing a real silhouette"
+  }
+]

@@ -1,0 +1,401 @@
+{
+  "baseline": "yield/kit_A0",
+  "instrument": "structural readout (grammar + geometry); pixdiff is NO INSTRUMENT on this endpoint and is recorded blind",
+  "levers": [
+    {
+      "baseline_readout": {
+        "arity": 8,
+        "canvas": [
+          52,
+          87
+        ],
+        "floor_bbox": [
+          10,
+          55,
+          42,
+          79
+        ],
+        "floor_cell": [
+          32,
+          24
+        ],
+        "n_painted": 20,
+        "painted": [
+          0,
+          1,
+          4,
+          8,
+          14,
+          17,
+          31,
+          32,
+          33,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48
+        ],
+        "part_keys": [
+          "corners",
+          "doors",
+          "floor",
+          "floor_roof",
+          "outer_corners",
+          "outer_multi",
+          "partition",
+          "partition_doors",
+          "partition_multi",
+          "partition_wall",
+          "pillar",
+          "roof",
+          "sides",
+          "slopes",
+          "slopes_east",
+          "stairs",
+          "stairs_east"
+        ],
+        "rule_type": "composed",
+        "stack_stride_px": 24,
+        "view_angle": null,
+        "wall_tiles": 2
+      },
+      "lever": "L1_layout_grid",
+      "moved_detail": {
+        "part_keys": [
+          [
+            "corners",
+            "doors",
+            "floor",
+            "floor_roof",
+            "outer_corners",
+            "outer_multi",
+            "partition",
+            "partition_doors",
+            "partition_multi",
+            "partition_wall",
+            "pillar",
+            "roof",
+            "sides",
+            "slopes",
+            "slopes_east",
+            "stairs",
+            "stairs_east"
+          ],
+          [
+            "corners",
+            "doors",
+            "floor",
+            "floor_roof",
+            "outer_corners",
+            "outer_multi",
+            "partition",
+            "partition_doors",
+            "partition_multi",
+            "partition_wall",
+            "pillar",
+            "sides",
+            "stairs",
+            "stairs_east"
+          ]
+        ]
+      },
+      "moved_fields": [
+        "part_keys"
+      ],
+      "n_tiles": 58,
+      "overrides": [
+        "building_layout"
+      ],
+      "pixdiff_BLIND": 0.2583005579438398,
+      "question": "does painting each piece individually change the output at all?",
+      "readout": {
+        "arity": 8,
+        "canvas": [
+          52,
+          87
+        ],
+        "floor_bbox": [
+          10,
+          55,
+          42,
+          79
+        ],
+        "floor_cell": [
+          32,
+          24
+        ],
+        "n_painted": 20,
+        "painted": [
+          0,
+          1,
+          4,
+          8,
+          14,
+          17,
+          31,
+          32,
+          33,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48
+        ],
+        "part_keys": [
+          "corners",
+          "doors",
+          "floor",
+          "floor_roof",
+          "outer_corners",
+          "outer_multi",
+          "partition",
+          "partition_doors",
+          "partition_multi",
+          "partition_wall",
+          "pillar",
+          "sides",
+          "stairs",
+          "stairs_east"
+        ],
+        "rule_type": "composed",
+        "stack_stride_px": 24,
+        "view_angle": null,
+        "wall_tiles": 2
+      },
+      "sizes": [
+        [
+          52,
+          87
+        ]
+      ],
+      "tiles_compared": 58,
+      "tiles_moved": 58,
+      "usage": {
+        "generations": 20.0,
+        "type": "generations"
+      },
+      "verdict": "READOUT MOVED",
+      "wait_seconds": 204.4
+    },
+    {
+      "baseline_readout": {
+        "arity": 8,
+        "canvas": [
+          52,
+          87
+        ],
+        "floor_bbox": [
+          10,
+          55,
+          42,
+          79
+        ],
+        "floor_cell": [
+          32,
+          24
+        ],
+        "n_painted": 20,
+        "painted": [
+          0,
+          1,
+          4,
+          8,
+          14,
+          17,
+          31,
+          32,
+          33,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48
+        ],
+        "part_keys": [
+          "corners",
+          "doors",
+          "floor",
+          "floor_roof",
+          "outer_corners",
+          "outer_multi",
+          "partition",
+          "partition_doors",
+          "partition_multi",
+          "partition_wall",
+          "pillar",
+          "roof",
+          "sides",
+          "slopes",
+          "slopes_east",
+          "stairs",
+          "stairs_east"
+        ],
+        "rule_type": "composed",
+        "stack_stride_px": 24,
+        "view_angle": null,
+        "wall_tiles": 2
+      },
+      "lever": "L2_view_angle_90",
+      "moved_detail": {
+        "canvas": [
+          [
+            52,
+            87
+          ],
+          [
+            52,
+            116
+          ]
+        ],
+        "floor_bbox": [
+          [
+            10,
+            55,
+            42,
+            79
+          ],
+          [
+            10,
+            74,
+            42,
+            106
+          ]
+        ],
+        "floor_cell": [
+          [
+            32,
+            24
+          ],
+          [
+            32,
+            32
+          ]
+        ],
+        "stack_stride_px": [
+          24,
+          32
+        ],
+        "view_angle": [
+          null,
+          90.0
+        ]
+      },
+      "moved_fields": [
+        "canvas",
+        "floor_bbox",
+        "floor_cell",
+        "stack_stride_px",
+        "view_angle"
+      ],
+      "n_tiles": 80,
+      "overrides": [
+        "tile_view_angle"
+      ],
+      "pixdiff_BLIND": 1.0,
+      "question": "is tile_view_angle live where tile_view is a measured silent no-op, and does it buy a square floor cell?",
+      "readout": {
+        "arity": 8,
+        "canvas": [
+          52,
+          116
+        ],
+        "floor_bbox": [
+          10,
+          74,
+          42,
+          106
+        ],
+        "floor_cell": [
+          32,
+          32
+        ],
+        "n_painted": 20,
+        "painted": [
+          0,
+          1,
+          4,
+          8,
+          14,
+          17,
+          31,
+          32,
+          33,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48
+        ],
+        "part_keys": [
+          "corners",
+          "doors",
+          "floor",
+          "floor_roof",
+          "outer_corners",
+          "outer_multi",
+          "partition",
+          "partition_doors",
+          "partition_multi",
+          "partition_wall",
+          "pillar",
+          "roof",
+          "sides",
+          "slopes",
+          "slopes_east",
+          "stairs",
+          "stairs_east"
+        ],
+        "rule_type": "composed",
+        "stack_stride_px": 32,
+        "view_angle": 90.0,
+        "wall_tiles": 2
+      },
+      "sizes": [
+        [
+          52,
+          116
+        ]
+      ],
+      "tiles_compared": 80,
+      "tiles_moved": 80,
+      "usage": {
+        "generations": 20.0,
+        "type": "generations"
+      },
+      "verdict": "READOUT MOVED",
+      "wait_seconds": 129.1
+    },
+    {
+      "lever": "L3_style_images",
+      "question": "are style references honoured, and does the kit geometry survive them?",
+      "reason": "{\"detail\":\"Connectable features (roads/tileset/building) cannot be combined with style tiles \u2014 remove style_images or set tile_feature to null.\"}",
+      "verdict": "REFUSED:invalid_input"
+    }
+  ],
+  "pixdiff_noise_floor": "1.0000 of visible area"
+}

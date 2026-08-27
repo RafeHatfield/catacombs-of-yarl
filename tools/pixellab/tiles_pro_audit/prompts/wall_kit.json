@@ -1,0 +1,82 @@
+{
+  "id": "wall_kit",
+  "surface": "POST /create-tiles-pro",
+  "purpose": "The yield run's subject. A Boundary-region wall and floor construction kit.",
+  "note": "Prompts are auditable files with clause provenance, never a string typed into a chat (LOOP-PROCESS \u00a712). build_payload() re-asserts every load-bearing clause below before the payload is allowed out of the module. The wall description was trimmed from 547 to 494 chars after the self-check refused it at the 500-char cap - recorded because the check catching its author is the evidence that it works.",
+  "payload": {
+    "description": "a top-down dungeon construction kit for a stone catacomb held together by hand: rough found-stone walls with heavy timber and iron work pinned into them, and a worn flagstone floor",
+    "tile_type": "square_topdown",
+    "tile_feature": "building",
+    "tile_size": 32,
+    "building_wall_tiles": 2,
+    "building_wall_description": "rough grey found stone, coursed unevenly, with heavy orc-made repair driven into it: timber beams lashed and pinned flat to the stone, iron straps and driven pins holding cracked blocks together, older repairs overlaid by newer ones. Over-built, unornamented; every band and pin is holding something. Stone used up rather than ruined, edges rounded by traffic. Even ambient illumination, no directional light source, no cast shadow, no highlight from any one side. No outline around the sprite.",
+    "building_floor_description": "worn grey flagstones walked smooth and slightly hollowed at the centre, grime trodden into the joints, edges rounded off. Even ambient illumination, no directional light source, no cast shadow. No outline around the sprite."
+  },
+  "provenance": [
+    {
+      "clause": "bible \u00a73 - two planes",
+      "carried_by": "tile_type square_topdown + tile_feature building",
+      "why": "Structure, not wording. The endpoint's own building grammar is what emits a front face and a top surface; the gauntlet proved text cannot be asked for one. This is the clause under audit and it is deliberately NOT carried by a prompt fragment."
+    },
+    {
+      "clause": "bible \u00a77.4 - the Boundary is mostly found stone with orc work pinned into it",
+      "carried_by": "building_wall_description: 'rough grey found stone' + 'orc-made repair driven into it'",
+      "why": "Region identity. Found geology plus made work, in that ratio."
+    },
+    {
+      "clause": "bible \u00a77.3 - binding authority: redundant, visible, over-built, repair over repair",
+      "carried_by": "building_wall_description: 'timber beams lashed and pinned', 'iron straps and driven pins', 'older repairs overlaid by newer ones', 'over-built and unornamented'",
+      "why": "The gauntlet requested this eight different ways in ten rounds and the critic reported 'nothing in this set is fastened' every single round. It is the sharpest available test of whether this endpoint hears construction grammar at all."
+    },
+    {
+      "clause": "bible \u00a77.3 RULED - nothing on an orc-made object exists for appearance",
+      "carried_by": "building_wall_description: 'every band and pin is holding something'",
+      "why": "States the rule as a positive constraint on the elements rather than as a prohibition, because the gauntlet's r9-r10 failure was a timber band arriving as a DECORATIVE FRIEZE at a constant height - ornament where structure was asked for."
+    },
+    {
+      "clause": "bible \u00a78.1 - nothing is ruined, everything is used up; surfaces record traffic, not time",
+      "carried_by": "'used up rather than ruined', 'edges rounded off by traffic', 'grime walked into the surface'",
+      "why": "The register clause the morgue plant tests. Traffic-and-indifference, never picturesque collapse."
+    },
+    {
+      "clause": "bible \u00a78.2.1 - the trodden channel; polish means on-path",
+      "carried_by": "building_floor_description: 'walked smooth and slightly hollowed at the centre'",
+      "why": "Carried on the floor tile only. A kit emits one floor cell, so the channel cannot be composed here - this asks for the polish axis, and the channel itself is a composer question, recorded as out of scope for this audit."
+    },
+    {
+      "clause": "bible \u00a76.3 RATIFIED - authored to RECEIVE light, not to depict it",
+      "carried_by": "'Even ambient illumination, no directional light source, no cast shadow, no highlight from any one side'",
+      "why": "'no highlight from any one side' is deliberate and is the gauntlet's \u00a75 lesson encoded: at 32px the vocabulary for describing geometry with value and the vocabulary for baking a key light are the same vocabulary, and the surviving distinction is LATERAL DIRECTION. Occlusion is not prohibited here; a side is."
+    },
+    {
+      "clause": "bible \u00a712.1 LOCKED - no baked outline",
+      "carried_by": "'No outline around the sprite.'",
+      "why": "Also available as outline_mode: segmentation, deliberately not spent - see COLUMNS.md. The prompt carries it so the default path is asked, not rescued."
+    },
+    {
+      "clause": "bible \u00a74.1/4.2 - the environment is quieter than the figures",
+      "carried_by": "NOT CARRIED",
+      "why": "Density is a ratio between layers and there are no figures in this kit. A prompt fragment asking for restraint in isolation would be legislating a ratio against one of its two terms. Recorded as deliberately absent rather than forgotten."
+    }
+  ],
+  "load_bearing": [
+    "found stone",
+    "lashed and pinned",
+    "iron straps and driven pins",
+    "older repairs overlaid by newer ones",
+    "every band and pin is holding something",
+    "used up rather than ruined",
+    "Even ambient illumination",
+    "no directional light source",
+    "no highlight from any one side",
+    "No outline around the sprite"
+  ],
+  "seeds": {
+    "kit_a": 1337,
+    "kit_b": 20260826
+  },
+  "not_carried": [
+    "No palette. color_image has no equivalent here and bible \u00a75 values are PLACEHOLDER; a palette asked for in prose would be a guess presented as a lock.",
+    "No canvas ruling. tile_size 32 matches the canvas the \u00a76.4 probe froze and shipped to the device; it is not a bible number, because bible \u00a74.3 is PLACEHOLDER."
+  ]
+}

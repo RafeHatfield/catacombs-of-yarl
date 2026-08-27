@@ -1,0 +1,402 @@
+[
+  {
+    "kind": "plant",
+    "label": "plant_b",
+    "name": "cand_00",
+    "native": [
+      52,
+      98
+    ],
+    "source": "plants/plant_b.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_12",
+    "name": "cand_01",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_12.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_05",
+    "name": "cand_02",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_05.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_54",
+    "name": "cand_03",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_54.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_21",
+    "name": "cand_04",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_21.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_03",
+    "name": "cand_05",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_03.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_11",
+    "name": "cand_06",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_11.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_51",
+    "name": "cand_07",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_51.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_50",
+    "name": "cand_08",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_50.png"
+  },
+  {
+    "kind": "plant",
+    "label": "plant_a",
+    "name": "cand_09",
+    "native": [
+      52,
+      98
+    ],
+    "source": "plants/plant_a.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_53",
+    "name": "cand_10",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_53.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_07",
+    "name": "cand_11",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_07.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_20",
+    "name": "cand_12",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_20.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_31",
+    "name": "cand_13",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_31.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_15",
+    "name": "cand_14",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_15.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_08",
+    "name": "cand_15",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_08.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_02",
+    "name": "cand_16",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_02.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_27",
+    "name": "cand_17",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_27.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_52",
+    "name": "cand_18",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_52.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_01",
+    "name": "cand_19",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_01.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_16",
+    "name": "cand_20",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_16.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_29",
+    "name": "cand_21",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_29.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_24",
+    "name": "cand_22",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_24.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_04",
+    "name": "cand_23",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_04.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_55",
+    "name": "cand_24",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_55.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_22",
+    "name": "cand_25",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_22.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_18",
+    "name": "cand_26",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_18.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_25",
+    "name": "cand_27",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_25.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_09",
+    "name": "cand_28",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_09.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_23",
+    "name": "cand_29",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_23.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_49",
+    "name": "cand_30",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_49.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_14",
+    "name": "cand_31",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_14.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_17",
+    "name": "cand_32",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_17.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_13",
+    "name": "cand_33",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_13.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_30",
+    "name": "cand_34",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_30.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_28",
+    "name": "cand_35",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_28.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_19",
+    "name": "cand_36",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_19.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_06",
+    "name": "cand_37",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_06.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_10",
+    "name": "cand_38",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_10.png"
+  },
+  {
+    "kind": "candidate",
+    "label": "tile_26",
+    "name": "cand_39",
+    "native": [
+      52,
+      98
+    ],
+    "source": "arm3/kit_arm3/tile_26.png"
+  }
+]

@@ -1,0 +1,171 @@
+[
+  {
+    "detail": "Input should be greater than or equal to 16 @ body.tile_size ctx={\"ge\": 16}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "size_15_below_schema_min",
+    "overrides": {
+      "tile_size": 15
+    },
+    "question": "is the documented 16 floor enforced?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "Input should be less than or equal to 128 @ body.tile_size ctx={\"le\": 128}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "size_129_above_schema_max",
+    "overrides": {
+      "tile_size": 129
+    },
+    "question": "is the documented 128 ceiling enforced?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "\u26a0 ACCEPTED AND BILLED usage=None tile_id=30e1af09-3679-4506-b364-e967e26ba0b9",
+    "expected": "REFUSE",
+    "http_status": 202,
+    "label": "size_17_odd",
+    "overrides": {
+      "tile_size": 17
+    },
+    "question": "do building kits accept odd sizes, or is the per-shape range coarser?",
+    "usage": null,
+    "verdict": "ACCEPTED"
+  },
+  {
+    "detail": "\u26a0 ACCEPTED AND BILLED usage=None tile_id=0602d9b4-1797-4aa5-9cdb-c74c5ba04c91",
+    "expected": "REFUSE",
+    "http_status": 202,
+    "label": "size_20_even_nonstandard",
+    "overrides": {
+      "tile_size": 20
+    },
+    "question": "how coarse is the per-shape range for square_topdown building?",
+    "usage": null,
+    "verdict": "ACCEPTED"
+  },
+  {
+    "detail": "Input should be less than or equal to 3 @ body.building_wall_tiles ctx={\"le\": 3}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "wall_tiles_4",
+    "overrides": {
+      "building_wall_tiles": 4
+    },
+    "question": "is the 1-3 wall-height range enforced?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "Input should be greater than or equal to 1 @ body.building_wall_tiles ctx={\"ge\": 1}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "wall_tiles_0",
+    "overrides": {
+      "building_wall_tiles": 0
+    },
+    "question": "is the lower bound enforced?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "\"Roads need tile_size 32-32 for square_topdown.\"",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "roads_at_24",
+    "overrides": {
+      "tile_feature": "roads",
+      "tile_size": 24
+    },
+    "question": "does the error name the exactly-32 rule for square_topdown roads?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "Input should be 'grid' or 'materials' @ body.building_layout ctx={\"expected\": \"'grid' or 'materials'\"}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "bad_layout_enum",
+    "overrides": {
+      "building_layout": "swatches"
+    },
+    "question": "does building_layout validate, i.e. is it a live parameter and not decoration?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "Input should be 'outline' or 'segmentation' @ body.outline_mode ctx={\"expected\": \"'outline' or 'segmentation'\"}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "bad_outline_mode",
+    "overrides": {
+      "outline_mode": "none"
+    },
+    "question": "does outline_mode validate?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "Input should be less than or equal to 90 @ body.building_wall_angle ctx={\"le\": 90.0}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "wall_angle_100",
+    "overrides": {
+      "building_wall_angle": 100
+    },
+    "question": "is building_wall_angle's 5-90 range enforced (a live parameter refuses)?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "Input should be less than or equal to 1 @ body.tile_depth_ratio ctx={\"le\": 1.0}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "depth_ratio_2",
+    "overrides": {
+      "tile_depth_ratio": 2.0
+    },
+    "question": "is tile_depth_ratio's 0-1 range enforced?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "Input should be less than or equal to 90 @ body.tile_view_angle ctx={\"le\": 90.0}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "view_angle_120",
+    "overrides": {
+      "tile_view_angle": 120
+    },
+    "question": "is tile_view_angle's 0-90 range enforced?",
+    "usage": null,
+    "verdict": "REFUSED:invalid_input"
+  },
+  {
+    "detail": "\u26a0 ACCEPTED AND BILLED usage=None tile_id=5a431d7f-cb3d-4dce-a87c-7da765ee2f30",
+    "expected": "REFUSE",
+    "http_status": 202,
+    "label": "style_images_empty_list",
+    "overrides": {
+      "style_images": []
+    },
+    "question": "is a zero-reference conditioning call refused, or silently accepted?",
+    "usage": null,
+    "verdict": "ACCEPTED"
+  },
+  {
+    "detail": "String should have at most 500 characters @ body.building_wall_description ctx={\"max_length\": 500}",
+    "expected": "REFUSE",
+    "http_status": 422,
+    "label": "desc_over_length",
+    "overrides": {
+      "building_wall_description": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "question": "is the 500-char building_wall_description cap enforced?",
+    "usage": null,
+    "verdict": "REFUSED:over_length"
+  }
+]

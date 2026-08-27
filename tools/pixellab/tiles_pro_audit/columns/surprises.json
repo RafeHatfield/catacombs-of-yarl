@@ -1,0 +1,56 @@
+[
+  {
+    "kind": "building",
+    "label": "size_17_odd",
+    "n_tiles": 80,
+    "ok": true,
+    "sizes": [
+      [
+        25,
+        43
+      ]
+    ],
+    "tile_id": "30e1af09-3679-4506-b364-e967e26ba0b9",
+    "usage": {
+      "generations": 20.0,
+      "type": "generations"
+    },
+    "wait_seconds": 0.7
+  },
+  {
+    "kind": "building",
+    "label": "size_20_even_nonstandard",
+    "n_tiles": 80,
+    "ok": true,
+    "sizes": [
+      [
+        32,
+        54
+      ]
+    ],
+    "tile_id": "0602d9b4-1797-4aa5-9cdb-c74c5ba04c91",
+    "usage": {
+      "generations": 20.0,
+      "type": "generations"
+    },
+    "wait_seconds": 0.8
+  },
+  {
+    "kind": "building",
+    "label": "style_images_empty_list",
+    "n_tiles": 80,
+    "ok": true,
+    "sizes": [
+      [
+        52,
+        87
+      ]
+    ],
+    "tile_id": "5a431d7f-cb3d-4dce-a87c-7da765ee2f30",
+    "usage": {
+      "generations": 20.0,
+      "type": "generations"
+    },
+    "wait_seconds": 0.7
+  }
+]

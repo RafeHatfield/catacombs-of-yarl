@@ -1,0 +1,1468 @@
+{
+  "flip_list": [
+    "Nothing in this set is fixed to anything. Every timber crosses over another timber and stops. Redraw each crossing with a visible fixing at the intersection: a 2\u00d72 pale pin head with a one-pixel dark shadow notch below it, or a two-pixel band of rope wrapped over both members with the wrap direction visible. A structural post must show a fixing at its head and its foot, not just terminate.",
+    "The pale top band is flush with the wall face, so it reads as a lighter patch of texture, not a horizontal surface. Give the cap a near edge: one row of the cap's own colour, then a one-pixel dark line, then two to three rows of a distinct third value for the front lip of the cap stones, before the wall face begins. That single lip is what makes a lantern sit on it.",
+    "Wall thickness is not conserved around corners. In cand_01, cand_04, cand_17, cand_22, cand_27, cand_39 the arm that runs left\u2013right shows a slab of top surface and the arm that runs toward the viewer shows none. Draw the cap turning the corner \u2014 carry the cap band down the near arm as a foreshortened strip of the same depth, with the mitre or the overlap of the two cap runs visible at the inside angle.",
+    "The doorway pieces (cand_21, cand_34) show a passage with no wall thickness. Draw the reveal: two to four native pixels of returning face on each jamb, in a value between the cap and the wall face, so the opening reads as cut through something solid. Set the head beam into the jambs rather than in front of them, and put a pin or a strap where it lands.",
+    "At 32 pixels the timber lattice on cand_03, cand_05, cand_06, cand_07, cand_10, cand_12, cand_18, cand_19, cand_26, cand_28, cand_30, cand_32, cand_35, cand_38 collapses into undifferentiated brown-on-grey crosshatch and no role is readable. Cut the timber count to two or three members per tile, make each one at least three pixels thick with a distinct top edge, and leave the stone between them plain so the silhouette of the repairs is legible at ship size.",
+    "The set is not forty pieces. cand_13 and cand_33 are byte-identical; cand_22 and cand_39 are 100% identical across their whole overlap; cand_05/cand_12, cand_29/cand_32, cand_10/cand_18 are 99%+ identical; 105 of 715 overlapping pairs are 90%+ identical. Author each role from scratch instead of re-cropping one master painting, so a corner is drawn as a corner rather than as a rectangle cut out of a length.",
+    "cand_24 contains two disconnected islands of wall with transparent space between them, and cand_18 has a rectangular hole of transparency punched through its top surface. Close both silhouettes, or if the hole is meant to be damage, draw a broken edge for it \u2014 a ragged one-pixel dark line, exposed rubble core in a third value, and displaced stones at the lip.",
+    "cand_00 is a different palette from everything else here, repeats exactly every 32 pixels vertically, and shows a wall in perfect condition with mortar as its only fastening. Rebuild it in the grey-and-brown family, break the vertical repeat by moving at least four stones per 32-row period, and drive at least one repair through it \u2014 a pinned timber, a rope-bound course, a stone replaced with something salvaged and the wrong size.",
+    "cand_09 is not a wall. It is a free-standing lump on a diamond footprint in a peach-and-red palette that appears nowhere else in the set. Remove it.",
+    "cand_11, cand_16, cand_20, cand_23, cand_37 are fragments under 300 native pixels with no cap, no end and no joint. Either delete them or give each one the single feature that defines its role \u2014 a capped end with a visible lip, or a socket where the neighbouring piece keys into it."
+  ],
+  "hedge_conversions": [],
+  "kit_dir": "yield/kit_A0",
+  "label": "kitA0",
+  "n_candidates": 38,
+  "n_plants": 2,
+  "plants_caught": 2,
+  "results": [
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "plant",
+      "label": "plant_b",
+      "name": "cand_00",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction. The value steps follow the material bands, not a source.",
+        "role": "A length of plain wall, and only that \u2014 regular running-bond brick with two tan courses; it has no ends, corners or junctions and its content repeats exactly every 32 native pixels vertically, so it is a wallpaper swatch stamped twice, not a built piece.",
+        "thickness": "No. The one pale band sits in the middle of the sprite and recurs on the repeat, so it cannot be a top surface; there is no cap, no lip, no near edge. Nothing to set a lantern on."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing has happened to it. Every brick is square, every joint is intact, no course has moved and nothing has been put back.",
+        "holds": "Mortar. That is the entire list \u2014 no timber, no pin, no rope, no strap, nothing driven into anything.",
+        "light": "No direction. The value steps follow the material bands, not a source.",
+        "role": "A length of plain wall, and only that \u2014 regular running-bond brick with two tan courses; it has no ends, corners or junctions and its content repeats exactly every 32 native pixels vertically, so it is a wallpaper swatch stamped twice, not a built piece.",
+        "thickness": "No. The one pale band sits in the middle of the sprite and recurs on the repeat, so it cannot be a top surface; there is no cap, no lip, no near edge. Nothing to set a lantern on.",
+        "verdict": "FAIL",
+        "why": "A tidy, undamaged, mechanically repeating brick texture with no top surface and no repair \u2014 it depicts a wall nobody has ever had to hold."
+      },
+      "source": "plants/plant_b.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_12",
+      "name": "cand_01",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 the pale/dark split follows the two arms, not a source.",
+        "role": "An outside corner \u2014 a short arm running left, turning down into a longer arm. I can read the turn from the silhouette only.",
+        "thickness": "No. The left arm is entirely pale stone and the down arm is almost entirely dark timber face, so the two arms of the same wall show completely different amounts of top surface; the wall changes thickness as it turns."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. Stone and timber occupy the same face without either one being shown as damaged or as a response to damage.",
+        "holds": "Dark timber uprights and horizontals crossing over grey stone. I cannot find a single fixing \u2014 no pin head, no lashing, no strap, no wedge. The timbers pass over each other and stop.",
+        "light": "No direction \u2014 the pale/dark split follows the two arms, not a source.",
+        "role": "An outside corner \u2014 a short arm running left, turning down into a longer arm. I can read the turn from the silhouette only.",
+        "thickness": "No. The left arm is entirely pale stone and the down arm is almost entirely dark timber face, so the two arms of the same wall show completely different amounts of top surface; the wall changes thickness as it turns.",
+        "verdict": "FAIL",
+        "why": "The top surface vanishes as the wall turns the corner, and nothing in it is fixed to anything."
+      },
+      "source": "yield/kit_A0/tile_12.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_05",
+      "name": "cand_02",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12-pixel-wide vertical strip, opaque top to bottom, with no distinguishing end, cap or return \u2014 it could be a post, a wall end, or a slice cut out of a longer run.",
+        "thickness": "No. There is no pale cap band anywhere on it; the timber runs to the top edge of the sprite."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Two dark uprights with short horizontal battens between them, over grey stone. No fixings visible.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12-pixel-wide vertical strip, opaque top to bottom, with no distinguishing end, cap or return \u2014 it could be a post, a wall end, or a slice cut out of a longer run.",
+        "thickness": "No. There is no pale cap band anywhere on it; the timber runs to the top edge of the sprite.",
+        "verdict": "FAIL",
+        "why": "No top surface at all and no readable end condition \u2014 it is a cut, not a piece."
+      },
+      "source": "yield/kit_A0/tile_05.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_54",
+      "name": "cand_03",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall, full 32 wide, with a cap band across the top.",
+        "thickness": "Barely, and not reliably \u2014 the pale band is roughly six native pixels deep with no lip and no separate near-edge value, so it reads as a lighter patch of the same face rather than as a horizontal surface. I would not expect a lantern to sit on it."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. The timber grid is regular and undamaged, the stone behind it is undamaged, so nothing indicates the timber is holding anything or replacing anything.",
+        "holds": "A grid of dark timbers \u2014 three verticals, four horizontals \u2014 laid over dressed grey stone, plus one long thin dark diagonal streak mid-face. Every crossing is a plain overlap. There is no pin, no rope, no hide, no strap, no wedge anywhere on the tile.",
+        "light": "No direction.",
+        "role": "A length of wall, full 32 wide, with a cap band across the top.",
+        "thickness": "Barely, and not reliably \u2014 the pale band is roughly six native pixels deep with no lip and no separate near-edge value, so it reads as a lighter patch of the same face rather than as a horizontal surface. I would not expect a lantern to sit on it.",
+        "verdict": "FAIL",
+        "why": "The timbers are flat crossing stripes with no fixings, so nothing in the image explains why the wall stands."
+      },
+      "source": "yield/kit_A0/tile_54.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_21",
+      "name": "cand_04",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 the bright column values sit exactly on the stone region boundary, a hard step, not a falloff.",
+        "role": "An outside corner, narrow \u2014 a stone arm running left, turning down into a 12-wide timber shaft.",
+        "thickness": "No. The down arm is a bare 12-pixel column with no cap at all, so the wall reads as a plank on edge below the turn."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber uprights over stone. No fixings.",
+        "light": "No direction \u2014 the bright column values sit exactly on the stone region boundary, a hard step, not a falloff.",
+        "role": "An outside corner, narrow \u2014 a stone arm running left, turning down into a 12-wide timber shaft.",
+        "thickness": "No. The down arm is a bare 12-pixel column with no cap at all, so the wall reads as a plank on edge below the turn.",
+        "verdict": "FAIL",
+        "why": "The corner loses all thickness the moment it turns, and at ship size the down arm is a brown stick."
+      },
+      "source": "yield/kit_A0/tile_21.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_03",
+      "name": "cand_05",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall, full 32 wide.",
+        "thickness": "No. The cap band is a shallow stripe of lighter stone with no separate front lip, and the timber beam immediately below it is the same value as the beams further down, so there is no step from horizontal to vertical."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell \u2014 no break, no settlement, no patch.",
+        "holds": "The same timber grid as cand_03, pixel-for-pixel over most of the face. No fixings of any kind.",
+        "light": "No direction.",
+        "role": "A length of wall, full 32 wide.",
+        "thickness": "No. The cap band is a shallow stripe of lighter stone with no separate front lip, and the timber beam immediately below it is the same value as the beams further down, so there is no step from horizontal to vertical.",
+        "verdict": "FAIL",
+        "why": "Identical body to several other pieces in the set, unfixed timbers, and no top surface that would carry weight."
+      },
+      "source": "yield/kit_A0/tile_03.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_11",
+      "name": "cand_06",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "An outside corner or a step \u2014 the cap steps down from a high left block to a lower band running right.",
+        "thickness": "No. The stepped cap and the lower cap are the same value with no edge between them, so the step reads as a shape change in a texture, not as two surfaces at different heights."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone. No fixings.",
+        "light": "No direction.",
+        "role": "An outside corner or a step \u2014 the cap steps down from a high left block to a lower band running right.",
+        "thickness": "No. The stepped cap and the lower cap are the same value with no edge between them, so the step reads as a shape change in a texture, not as two surfaces at different heights.",
+        "verdict": "FAIL",
+        "why": "The step is a silhouette event with no surface information behind it, and the face below is the same unfixed lattice as the rest of the set."
+      },
+      "source": "yield/kit_A0/tile_11.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_51",
+      "name": "cand_07",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a notched cap \u2014 I cannot say what the notch is for.",
+        "thickness": "No, for the same reason as cand_03 and cand_05: a lighter stripe, no lip, no near edge."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A length of wall with a notched cap \u2014 I cannot say what the notch is for.",
+        "thickness": "No, for the same reason as cand_03 and cand_05: a lighter stripe, no lip, no near edge.",
+        "verdict": "FAIL",
+        "why": "96\u201399% of its pixels are shared with other pieces in this set and it adds no new structural reading."
+      },
+      "source": "yield/kit_A0/tile_51.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_50",
+      "name": "cand_08",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A T-junction \u2014 a full-width top bar with a 12-wide stem running down from it.",
+        "thickness": "No. The stem is a bare 12-wide shaft with no cap, so a wall 32 thick at the bar becomes 12 thick down the stem with nothing shown at the transition."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber uprights and horizontals over stone. No fixings.",
+        "light": "No direction.",
+        "role": "A T-junction \u2014 a full-width top bar with a 12-wide stem running down from it.",
+        "thickness": "No. The stem is a bare 12-wide shaft with no cap, so a wall 32 thick at the bar becomes 12 thick down the stem with nothing shown at the transition.",
+        "verdict": "FAIL",
+        "why": "A junction where the two arms are different thicknesses and the joint between them is not drawn."
+      },
+      "source": "yield/kit_A0/tile_50.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": true,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": true
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "plant",
+      "label": "plant_a",
+      "name": "cand_09",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "n/a",
+        "role": "Not architecture \u2014 a small free-standing rounded lump in peach, cream and dark red, drawn as a diamond-topped form with a drip hanging off the bottom edge.",
+        "thickness": "n/a"
+      },
+      "raw": {
+        "cull": "object-not-architecture",
+        "happened": "n/a",
+        "holds": "n/a",
+        "light": "n/a",
+        "role": "Not architecture \u2014 a small free-standing rounded lump in peach, cream and dark red, drawn as a diamond-topped form with a drip hanging off the bottom edge.",
+        "thickness": "n/a",
+        "verdict": "FAIL",
+        "why": "A free-standing object on a diamond footprint, in a palette shared with nothing else here."
+      },
+      "source": "plants/plant_a.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_53",
+      "name": "cand_10",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a bitten cap.",
+        "thickness": "No \u2014 same shallow lighter stripe, no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A length of wall with a bitten cap.",
+        "thickness": "No \u2014 same shallow lighter stripe, no lip.",
+        "verdict": "FAIL",
+        "why": "99.4% pixel-identical to cand_18 over their whole overlap; it is a re-crop, not a piece."
+      },
+      "source": "yield/kit_A0/tile_53.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_07",
+      "name": "cand_11",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d79 native scrap \u2014 a brown edge on the left, flat grey to the right. No end, no corner, no cap.",
+        "thickness": "No \u2014 nothing in it reads as a surface at all."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Cannot tell; there is one dark vertical bar and some grey. Nothing holds anything.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d79 native scrap \u2014 a brown edge on the left, flat grey to the right. No end, no corner, no cap.",
+        "thickness": "No \u2014 nothing in it reads as a surface at all.",
+        "verdict": "FAIL",
+        "why": "Under a hundred native pixels carrying no structural information \u2014 at ship size it is a smudge."
+      },
+      "source": "yield/kit_A0/tile_07.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_20",
+      "name": "cand_12",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a raised stub rising from the top centre \u2014 a chimney, a pier or a junction upward, I cannot tell which.",
+        "thickness": "No. The stub's cap and the main cap are the same value with no edge between them, so the stub does not read as standing proud."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A length of wall with a raised stub rising from the top centre \u2014 a chimney, a pier or a junction upward, I cannot tell which.",
+        "thickness": "No. The stub's cap and the main cap are the same value with no edge between them, so the stub does not read as standing proud.",
+        "verdict": "FAIL",
+        "why": "99.9% identical to cand_05 below the cap, and the stub reads as a bump in an outline rather than mass."
+      },
+      "source": "yield/kit_A0/tile_20.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_31",
+      "name": "cand_13",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide vertical slice \u2014 probably a narrow wall run or a pier, but there is no end detail to confirm it.",
+        "thickness": "Weakly. There is a pale cap across the top eight rows, but it is the full width of the strip with no front lip, so the strip reads as a flat ribbon with a light top, not as a solid 12 thick."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "One dark upright and two horizontal battens over grey stone. No fixings.",
+        "light": "No direction.",
+        "role": "A 12-wide vertical slice \u2014 probably a narrow wall run or a pier, but there is no end detail to confirm it.",
+        "thickness": "Weakly. There is a pale cap across the top eight rows, but it is the full width of the strip with no front lip, so the strip reads as a flat ribbon with a light top, not as a solid 12 thick.",
+        "verdict": "FAIL",
+        "why": "Byte-identical to cand_33 \u2014 the same file submitted twice."
+      },
+      "source": "yield/kit_A0/tile_31.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_15",
+      "name": "cand_14",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 22-wide length of wall, cap across the top.",
+        "thickness": "No. The cap is a lighter patch flush with the face; there is no lip and the timber beam under it is not read as an eave or an edge."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone. There is one small dark blob sitting on the cap that I cannot identify \u2014 it is neither a pin nor a bracket nor a stone. No fixings.",
+        "light": "No direction.",
+        "role": "A 22-wide length of wall, cap across the top.",
+        "thickness": "No. The cap is a lighter patch flush with the face; there is no lip and the timber beam under it is not read as an eave or an edge.",
+        "verdict": "FAIL",
+        "why": "97% identical to cand_13 and cand_33 over its overlap; a width variant of the same slice with no new information."
+      },
+      "source": "yield/kit_A0/tile_15.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_08",
+      "name": "cand_15",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide vertical run with a cap.",
+        "thickness": "No. Cap flush with face, no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A single tall dark upright running most of the height, crossed by two battens, over stone. Nothing fixes the upright at either end \u2014 it simply stops.",
+        "light": "No direction.",
+        "role": "A 12-wide vertical run with a cap.",
+        "thickness": "No. Cap flush with face, no lip.",
+        "verdict": "FAIL",
+        "why": "A structural post drawn as a stripe with no footing and no head fixing."
+      },
+      "source": "yield/kit_A0/tile_08.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_02",
+      "name": "cand_16",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d724 fragment with a timber cross near the top and grey stone below and right.",
+        "thickness": "No \u2014 no cap, no surface."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "One horizontal and one vertical timber crossing. No fixing at the crossing.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d724 fragment with a timber cross near the top and grey stone below and right.",
+        "thickness": "No \u2014 no cap, no surface.",
+        "verdict": "FAIL",
+        "why": "Too little of anything to place in a room, and no top surface at all."
+      },
+      "source": "yield/kit_A0/tile_02.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_27",
+      "name": "cand_17",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 the L/R value difference is a hard step at the cap boundary, not a falloff.",
+        "role": "An outside corner \u2014 stone cap running right at the top, turning down into a 12-wide timber shaft on the left.",
+        "thickness": "Partly and inconsistently. The top-right arm shows a genuine slab of pale cap; the down arm shows none, so the same wall is thick where it runs right and paper-thin where it runs down."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "One long dark upright down the shaft, a beam under the cap, battens over stone. No fixings anywhere.",
+        "light": "No direction \u2014 the L/R value difference is a hard step at the cap boundary, not a falloff.",
+        "role": "An outside corner \u2014 stone cap running right at the top, turning down into a 12-wide timber shaft on the left.",
+        "thickness": "Partly and inconsistently. The top-right arm shows a genuine slab of pale cap; the down arm shows none, so the same wall is thick where it runs right and paper-thin where it runs down.",
+        "verdict": "FAIL",
+        "why": "The wall's thickness is not conserved around its own corner."
+      },
+      "source": "yield/kit_A0/tile_27.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_52",
+      "name": "cand_18",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a stepped cap.",
+        "thickness": "No \u2014 and worse, there is a rectangular hole of transparency punched through the middle of the cap region, so a piece of the wall's top is simply missing from the silhouette."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. The transparent bite is not drawn as a break \u2014 it has no broken edge, no rubble, no exposed core. It is an absence, not damage.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A length of wall with a stepped cap.",
+        "thickness": "No \u2014 and worse, there is a rectangular hole of transparency punched through the middle of the cap region, so a piece of the wall's top is simply missing from the silhouette.",
+        "verdict": "FAIL",
+        "why": "A hole in the silhouette where the wall should be continuous, with no broken edge to justify it."
+      },
+      "source": "yield/kit_A0/tile_52.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_01",
+      "name": "cand_19",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall, full width, cap across the top.",
+        "thickness": "No \u2014 flush lighter stripe, no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A length of wall, full width, cap across the top.",
+        "thickness": "No \u2014 flush lighter stripe, no lip.",
+        "verdict": "FAIL",
+        "why": "At ship size the entire face collapses into the same brown-on-grey crosshatch as a dozen other pieces here; nothing distinguishes it as a length rather than a corner."
+      },
+      "source": "yield/kit_A0/tile_01.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_16",
+      "name": "cand_20",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d716 block of flat grey with a brown border down the right side and along the bottom.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing visible.",
+        "holds": "Nothing holds it together. There is one L of dark timber at the edge and an undifferentiated grey field inside it.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d716 block of flat grey with a brown border down the right side and along the bottom.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "A grey rectangle in a brown frame \u2014 it carries no structure, only an edge."
+      },
+      "source": "yield/kit_A0/tile_16.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_29",
+      "name": "cand_21",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A doorway or gateway \u2014 a full-width wall with a rectangular opening running from mid-height down through the bottom edge.",
+        "thickness": "The wall claims a cap along the top, but the opening contradicts it: the reveals of the doorway are cut flat with no returning surface, so the passage has walls of zero thickness. The tile tells me two incompatible things about the same wall."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. An opening this size in a wall held for four hundred years shows no wear at the jambs, no rubbing at the threshold, no bracing.",
+        "holds": "Timber jambs either side and a beam over the head. The lintel is a plain horizontal band that neither bears on the jambs nor is fixed to them \u2014 it crosses in front and stops. No pins, no straps, no corbel.",
+        "light": "No direction.",
+        "role": "A doorway or gateway \u2014 a full-width wall with a rectangular opening running from mid-height down through the bottom edge.",
+        "thickness": "The wall claims a cap along the top, but the opening contradicts it: the reveals of the doorway are cut flat with no returning surface, so the passage has walls of zero thickness. The tile tells me two incompatible things about the same wall.",
+        "verdict": "FAIL",
+        "why": "An opening with no reveal thickness and a lintel that bears on nothing."
+      },
+      "source": "yield/kit_A0/tile_29.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_24",
+      "name": "cand_22",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 a hard step at the cap boundary, not a gradient.",
+        "role": "An outside corner \u2014 a square pale cap block top-left, turning down into a 12-wide shaft on the right.",
+        "thickness": "Partly. The top-left block is a genuine plan-view slab and I could set something on that; the down arm has no cap and is 12 wide, so the answer changes within one tile."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark upright down the shaft, a beam under the cap, battens over stone. No fixings.",
+        "light": "No direction \u2014 a hard step at the cap boundary, not a gradient.",
+        "role": "An outside corner \u2014 a square pale cap block top-left, turning down into a 12-wide shaft on the right.",
+        "thickness": "Partly. The top-left block is a genuine plan-view slab and I could set something on that; the down arm has no cap and is 12 wide, so the answer changes within one tile.",
+        "verdict": "FAIL",
+        "why": "100% pixel-identical to cand_39 across their entire overlap \u2014 the same drawing submitted twice under two roles."
+      },
+      "source": "yield/kit_A0/tile_24.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_04",
+      "name": "cand_23",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d724 fragment, pale stone with a brown vertical at the lower left.",
+        "thickness": "No \u2014 the pale area runs the full width with no lip, so it is a lighter patch, not a surface."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "One short timber upright. Nothing else.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d724 fragment, pale stone with a brown vertical at the lower left.",
+        "thickness": "No \u2014 the pale area runs the full width with no lip, so it is a lighter patch, not a surface.",
+        "verdict": "FAIL",
+        "why": "A fragment too small to place, with no end, cap or joint to place it by."
+      },
+      "source": "yield/kit_A0/tile_04.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_55",
+      "name": "cand_24",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 the sprite contains two separate, disconnected fragments with transparent space between them. It is not one piece.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. The gap is not drawn as a breach \u2014 both fragments have clean cut edges facing each other.",
+        "holds": "Nothing connects the two halves; within each half, timber over stone with no fixings.",
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 the sprite contains two separate, disconnected fragments with transparent space between them. It is not one piece.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "One tile, two unconnected islands of wall \u2014 a broken silhouette, not architecture."
+      },
+      "source": "yield/kit_A0/tile_55.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_22",
+      "name": "cand_25",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 22-wide length of wall with a stepped cap and a stub of cap projecting right.",
+        "thickness": "No. The projecting cap stub is the same value as the main cap with no edge between them, so it does not read as standing proud or as overhanging."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings. The same unidentifiable dark blob sits on the cap as in cand_14.",
+        "light": "No direction.",
+        "role": "A 22-wide length of wall with a stepped cap and a stub of cap projecting right.",
+        "thickness": "No. The projecting cap stub is the same value as the main cap with no edge between them, so it does not read as standing proud or as overhanging.",
+        "verdict": "FAIL",
+        "why": "96.5% identical to cand_31 over its overlap and no fixing is drawn anywhere on it."
+      },
+      "source": "yield/kit_A0/tile_22.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_18",
+      "name": "cand_26",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a stub hanging off the bottom edge \u2014 a downward junction, or an artefact of a crop; I cannot tell which.",
+        "thickness": "No \u2014 flush cap, no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A length of wall with a stub hanging off the bottom edge \u2014 a downward junction, or an artefact of a crop; I cannot tell which.",
+        "thickness": "No \u2014 flush cap, no lip.",
+        "verdict": "FAIL",
+        "why": "The bottom stub is the nearest part of the wall to the viewer and shows no front face or footing at all, which is where thickness would have to be visible."
+      },
+      "source": "yield/kit_A0/tile_18.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_25",
+      "name": "cand_27",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "An outside corner \u2014 cap running right, turning down into a 12-wide shaft.",
+        "thickness": "Inconsistent \u2014 a real slab of cap on the right arm, none on the down arm."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "One long upright, a beam, battens over stone. No fixings.",
+        "light": "No direction.",
+        "role": "An outside corner \u2014 cap running right, turning down into a 12-wide shaft.",
+        "thickness": "Inconsistent \u2014 a real slab of cap on the right arm, none on the down arm.",
+        "verdict": "FAIL",
+        "why": "98% identical to cand_17; a duplicate corner with the same thickness contradiction."
+      },
+      "source": "yield/kit_A0/tile_25.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_09",
+      "name": "cand_28",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall that steps out to the right at the top \u2014 an end, a buttress or a junction; I cannot tell.",
+        "thickness": "No. The stepped-out region is the same value and texture as the wall face beside it, so the step reads as an outline change with no mass behind it."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A length of wall that steps out to the right at the top \u2014 an end, a buttress or a junction; I cannot tell.",
+        "thickness": "No. The stepped-out region is the same value and texture as the wall face beside it, so the step reads as an outline change with no mass behind it.",
+        "verdict": "FAIL",
+        "why": "The step-out has no surface, no edge and no joint, so the piece cannot tell a builder which side is wall and which is return."
+      },
+      "source": "yield/kit_A0/tile_09.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_23",
+      "name": "cand_29",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 22-wide length with a raised cap block at the top centre.",
+        "thickness": "No \u2014 the raised block and the cap beside it are the same value, flush, with no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A 22-wide length with a raised cap block at the top centre.",
+        "thickness": "No \u2014 the raised block and the cap beside it are the same value, flush, with no lip.",
+        "verdict": "FAIL",
+        "why": "99.9% identical to cand_32 over their overlap."
+      },
+      "source": "yield/kit_A0/tile_23.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_49",
+      "name": "cand_30",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. It has two separate pale cap bands stacked one above the other with a timber beam between, which would mean two wall tops in one piece.",
+        "thickness": "No. Two caps at different heights, both the same value, neither with a lip, so I cannot say which one is the top of this wall or how far apart they are."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "Cannot tell. It has two separate pale cap bands stacked one above the other with a timber beam between, which would mean two wall tops in one piece.",
+        "thickness": "No. Two caps at different heights, both the same value, neither with a lip, so I cannot say which one is the top of this wall or how far apart they are.",
+        "verdict": "FAIL",
+        "why": "Two competing top surfaces in one tile with nothing to distinguish their heights."
+      },
+      "source": "yield/kit_A0/tile_49.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_14",
+      "name": "cand_31",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide vertical run with a cap at the top.",
+        "thickness": "No \u2014 cap flush across the full 12, no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "One dark upright, two battens, over stone. No fixings.",
+        "light": "No direction.",
+        "role": "A 12-wide vertical run with a cap at the top.",
+        "thickness": "No \u2014 cap flush across the full 12, no lip.",
+        "verdict": "FAIL",
+        "why": "98% identical to cand_13 and cand_33; a re-crop of an already-duplicated slice."
+      },
+      "source": "yield/kit_A0/tile_14.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_17",
+      "name": "cand_32",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 22-wide length of wall with a cap.",
+        "thickness": "No \u2014 flush cap, no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A 22-wide length of wall with a cap.",
+        "thickness": "No \u2014 flush cap, no lip.",
+        "verdict": "FAIL",
+        "why": "99.9% identical to cand_29 over their overlap."
+      },
+      "source": "yield/kit_A0/tile_17.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_13",
+      "name": "cand_33",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide vertical slice, as cand_13.",
+        "thickness": "Weakly, as cand_13 \u2014 a full-width cap with no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "One upright, two battens, over stone. No fixings.",
+        "light": "No direction.",
+        "role": "A 12-wide vertical slice, as cand_13.",
+        "thickness": "Weakly, as cand_13 \u2014 a full-width cap with no lip.",
+        "verdict": "FAIL",
+        "why": "Byte-identical to cand_13 \u2014 literally the same file."
+      },
+      "source": "yield/kit_A0/tile_13.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_30",
+      "name": "cand_34",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A doorway or gateway, full width, opening running from mid-height down through the bottom edge, with a stepped cap above.",
+        "thickness": "No. As with cand_21, the reveals of the opening are flat cuts with no returning surface \u2014 the passage has walls of no thickness, which contradicts the cap above it."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. No wear at the threshold, no rubbing at the jambs, no propping.",
+        "holds": "Timber jambs and a head beam. The head beam crosses in front of the jambs and is fixed to neither; there is no visible pin, strap, corbel or wedge at the two most loaded points in the whole set.",
+        "light": "No direction.",
+        "role": "A doorway or gateway, full width, opening running from mid-height down through the bottom edge, with a stepped cap above.",
+        "thickness": "No. As with cand_21, the reveals of the opening are flat cuts with no returning surface \u2014 the passage has walls of no thickness, which contradicts the cap above it.",
+        "verdict": "FAIL",
+        "why": "The one piece that must show how the orcs hold a load shows nothing holding it."
+      },
+      "source": "yield/kit_A0/tile_30.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_28",
+      "name": "cand_35",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a stub of cap raised at the top centre.",
+        "thickness": "No \u2014 flush cap, no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A length of wall with a stub of cap raised at the top centre.",
+        "thickness": "No \u2014 flush cap, no lip.",
+        "verdict": "FAIL",
+        "why": "97.7% identical to cand_29 over its overlap and adds no readable structure."
+      },
+      "source": "yield/kit_A0/tile_28.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_19",
+      "name": "cand_36",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "An outside corner with a raised block at the top right \u2014 a corner post, possibly.",
+        "thickness": "No. The raised block and the cap are the same value with no separating edge, so I cannot tell whether the block stands above the wall or sits behind it."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber uprights and a beam over stone, no fixings.",
+        "light": "No direction.",
+        "role": "An outside corner with a raised block at the top right \u2014 a corner post, possibly.",
+        "thickness": "No. The raised block and the cap are the same value with no separating edge, so I cannot tell whether the block stands above the wall or sits behind it.",
+        "verdict": "FAIL",
+        "why": "At ship size the corner turn and the raised block both disappear into the same crosshatch; the piece cannot signal its own role."
+      },
+      "source": "yield/kit_A0/tile_19.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_06",
+      "name": "cand_37",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d79 scrap \u2014 a dark brown bar on the left, flat grey on the right, one dark band along the bottom.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Nothing holds it together.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d79 scrap \u2014 a dark brown bar on the left, flat grey on the right, one dark band along the bottom.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "One hundred and eight native pixels with no structure in them."
+      },
+      "source": "yield/kit_A0/tile_06.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_10",
+      "name": "cand_38",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a tall block raised at the top right \u2014 an end, or a junction upward.",
+        "thickness": "No \u2014 flush cap, no lip, and the raised block has the same cap value as the wall beside it."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Timber grid over stone, no fixings.",
+        "light": "No direction.",
+        "role": "A length of wall with a tall block raised at the top right \u2014 an end, or a junction upward.",
+        "thickness": "No \u2014 flush cap, no lip, and the raised block has the same cap value as the wall beside it.",
+        "verdict": "FAIL",
+        "why": "98.5% identical to cand_18 over its overlap; a re-crop of a piece that itself has a hole in its silhouette."
+      },
+      "source": "yield/kit_A0/tile_10.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_26",
+      "name": "cand_39",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 a hard step at the cap boundary.",
+        "role": "An outside corner \u2014 pale cap block top-left, turning down into a 12-wide shaft on the right.",
+        "thickness": "Inconsistent \u2014 a genuine slab on the left arm, nothing on the down arm."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "An upright, a beam, battens over stone. No fixings.",
+        "light": "No direction \u2014 a hard step at the cap boundary.",
+        "role": "An outside corner \u2014 pale cap block top-left, turning down into a 12-wide shaft on the right.",
+        "thickness": "Inconsistent \u2014 a genuine slab on the left arm, nothing on the down arm.",
+        "verdict": "FAIL",
+        "why": "100% pixel-identical to cand_22 across their entire overlap."
+      },
+      "source": "yield/kit_A0/tile_26.png",
+      "structural": false,
+      "verdict": "FAIL"
+    }
+  ],
+  "seat_seconds": 435.5,
+  "ship_pass_names": [],
+  "ship_passes": 0,
+  "structural_candidates": 0,
+  "structural_names": [],
+  "void": false
+}
