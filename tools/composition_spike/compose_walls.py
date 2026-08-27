@@ -789,6 +789,13 @@ ARMS = {
                           note="round 7's `after`, unchanged: 5-step plane-boundary occlusion "
                                "and a 0.62 top-plane albedo, with neither of round 8's two "
                                "variables. The baseline the ruled test is measured against."),
+    # Built for the DEVICE PAIR, not for a critic round. Round 8 ranked `before` first of five,
+    # so the held/unheld comparison Rafe takes on the device has to be built from that
+    # configuration rather than from the arms round 8 showed to be worse.
+    "before_unbound": dict(tops=TOP_COURSED, edge="deep", albedo=TOP_ALBEDO_TARGET, bind=False,
+                           joints=1.0, cap=False,
+                           note="control for `before` - the same stones with the MOCK overlays "
+                                "omitted. The device pair is built from this and `before`."),
     "after":         dict(tops=TOP_COURSED, edge="cap", albedo=TOP_ALBEDO_TARGET, bind=True,
                           joints=0.62, cap=True,
                           note="THE RULED TEST. Mortar joints deepened as self-occlusion, and a "

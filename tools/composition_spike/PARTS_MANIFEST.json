@@ -256,6 +256,207 @@
     "MOCK_comp_9141.png": "abb8f3fc6269f23642c2ba24f7a9149cfbcc799a26205ebbd853434762ebf899"
    }
   },
+  "before_unbound": {
+   "face_parts": [
+    {
+     "variant": 0,
+     "part": "r07_00",
+     "phase": 0
+    },
+    {
+     "variant": 1,
+     "part": "r07_00",
+     "phase": 1
+    },
+    {
+     "variant": 2,
+     "part": "r07_00",
+     "phase": 2
+    },
+    {
+     "variant": 3,
+     "part": "r07_00",
+     "phase": 3
+    },
+    {
+     "variant": 4,
+     "part": "r07_00",
+     "phase": 4
+    },
+    {
+     "variant": 5,
+     "part": "r07_00",
+     "phase": 5
+    },
+    {
+     "variant": 6,
+     "part": "r07_00",
+     "phase": 6
+    },
+    {
+     "variant": 7,
+     "part": "r07_00",
+     "phase": 7
+    },
+    {
+     "variant": 8,
+     "part": "r07_00",
+     "phase": 8
+    }
+   ],
+   "top_parts": [
+    {
+     "part": "r07_00",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "coursed masonry, irregular block widths, joints at every course; no key-light cull. Rows 0-4 (its failed cap band) discarded.",
+     "ledger_verdict": "FAIL - 'rows 0-4 use the identical greys as the face, so there is no top band at all ... flat brick wallpaper with zero thickness'"
+    },
+    {
+     "part": "r07_08",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "alternate face stock; larger blocks, more wear incident.",
+     "ledger_verdict": "FAIL (ledger)"
+    },
+    {
+     "part": "r07_09",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "alternate face stock; higher contrast between blocks.",
+     "ledger_verdict": "FAIL (ledger)"
+    }
+   ],
+   "variant_sources": [
+    {
+     "variant": 0,
+     "part": "r07_00",
+     "phase": 0
+    },
+    {
+     "variant": 1,
+     "part": "r07_08",
+     "phase": 0
+    },
+    {
+     "variant": 2,
+     "part": "r07_09",
+     "phase": 0
+    },
+    {
+     "variant": 3,
+     "part": "r07_00",
+     "phase": 1
+    },
+    {
+     "variant": 4,
+     "part": "r07_08",
+     "phase": 1
+    },
+    {
+     "variant": 5,
+     "part": "r07_09",
+     "phase": 1
+    },
+    {
+     "variant": 6,
+     "part": "r07_00",
+     "phase": 2
+    },
+    {
+     "variant": 7,
+     "part": "r07_08",
+     "phase": 2
+    },
+    {
+     "variant": 8,
+     "part": "r07_09",
+     "phase": 2
+    }
+   ],
+   "bindings": "none (control)",
+   "derivation": "ALBEDO: top plane scaled by 0.820 to 79.5, 0.62 of the floors' mean (a declared material value, not a light)",
+   "note": "control for `before` - the same stones with the MOCK overlays omitted. The device pair is built from this and `before`.",
+   "edge_profile": "deep",
+   "edge_steps": [
+    "0.26",
+    "0.4",
+    "0.56",
+    "0.72",
+    "0.86"
+   ],
+   "joint_deepening": 1.0,
+   "coping_part": null,
+   "albedo_target": 0.62,
+   "floors_mean_lum": 128.2,
+   "top_over_floor": 0.616,
+   "theme": "src/Presentation/assets/composition_spike/tile_themes_before_unbound.yaml",
+   "segment_sheets": {
+    "south_facing_run": "tools/composition_spike/segments/before_unbound_south_facing_run.png",
+    "straight_run": "tools/composition_spike/segments/before_unbound_straight_run.png",
+    "corner": "tools/composition_spike/segments/before_unbound_corner.png"
+   },
+   "palette_size": 90,
+   "face_plane_lum": 97.0,
+   "top_plane_lum": 79.0,
+   "tiles": {
+    "MOCK_comp_9200.png": "bbf6a7a8596d4c851653b2e6cfc75f732e3e57858b5d66a4f71c2dbc948db299",
+    "MOCK_comp_9209.png": "d2baf15b5ab7b6af5726b73e3cb13beb2b44fb0d292d50cae820d58f5fd03df7",
+    "MOCK_comp_9218.png": "c4f4bde3c8245eb07d03261f6c67248a98d493f6c5e2443c0a82fb4b83c5da32",
+    "MOCK_comp_9227.png": "ff764bd80c90950023f21949107ebd31097dad201f397c10625c52e1a2a41e43",
+    "MOCK_comp_9228.png": "47359a3d5d4219d8482939a5a48d43a04c74614e1758368d0556129eb7f9aa37",
+    "MOCK_comp_9229.png": "d3771d419da3539a881f1e9c8969d17d9f963ace5f08f7e07ecbcd4a78daa393",
+    "MOCK_comp_9230.png": "bf801eefa6825534f558ec66943c9690ccfb714f749016e6d997bf7dee302aa1",
+    "MOCK_comp_9231.png": "38b67cd926c55f93ac1076460f044a65e6280d3bacf86aeb4ed212fbe622c243",
+    "MOCK_comp_9232.png": "7fba12611943d596af6b5cf48f5874360c0ac8956401dcfcfad97a70bc41b17b",
+    "MOCK_comp_9233.png": "e2e62322dd6881421a90328c28e25d37e17a11756139cdf40c09905263bbafb5",
+    "MOCK_comp_9234.png": "c1bc416c7e31f39fc0f06cc19f17d071977235dc7d881e45319c7ee8a0ee4b50",
+    "MOCK_comp_9235.png": "82c7e4664c1fc8ebb739f611db8c631ab602245b700a8c0c50fba3f322a7d8ba",
+    "MOCK_comp_9236.png": "1db7d03daa4309f229c566b348f8d8e6bd89f79fc7d09c5a3bd5ce67c1fe8d2d",
+    "MOCK_comp_9245.png": "f4f3e5095569553b9c887ac110f2701cb34d286c9f843afd0ad18f0b8a06de13",
+    "MOCK_comp_9254.png": "d90a4d0ba3955ff421dd92844e25cf63ffc224a285545fb0e53557997d3003f4",
+    "MOCK_comp_9263.png": "5b1c46518b6a6370eca18710c7161ae9b0053576eb2693aa26c5bd235eba894d",
+    "MOCK_comp_9272.png": "4c8cb2e10b0ce4bb6d68566d52b9cd03c4615504d86cbe25547653cb4caa67df",
+    "MOCK_comp_9281.png": "f9a5c1d71ecf5a6c36c2b94829ded8a962e8123c96b1daab8025ca912819ece1",
+    "MOCK_comp_9290.png": "4e7a8aaf74faf8165c29e3c85242664f3e428cd06b5b1bcefc0befda85dd3b13",
+    "MOCK_comp_9299.png": "8404fb7c4d6f799decacd3bc0aa98f10d58cbc54f6eafcbe57709f75dfe4c76f",
+    "MOCK_comp_9308.png": "f5b9b89f4c6b90b3947a623d73850c7afe17a48fbb7cb73e2078cec559db2cac",
+    "MOCK_comp_9309.png": "916715750782e8bf895154a7d8ab758449a43d3e14cba532e28262a603799e69",
+    "MOCK_comp_9310.png": "dc12895c72f3db0b1b4ab94d93703ac05c4dcdc6e66101c6afa6ee170c050490",
+    "MOCK_comp_9311.png": "ef57a2bae58c0fbeb4095d10303b43672b9655f94a458728bbacf6cb22151a82",
+    "MOCK_comp_9312.png": "6204edaa5aaaf07991d39ebea1dc52aae4fb3b9ef94707e95d08331955d1d36d",
+    "MOCK_comp_9313.png": "cf557be79c9f8490eb67070c4f3fe20fd3b96ccc9355f042c9230397ac424dd8",
+    "MOCK_comp_9314.png": "f13ebdf744cbdf927c863433becfad8a9b6414ba35addcf17c6f4ccf6d7f36f6",
+    "MOCK_comp_9315.png": "2ff7295e0ad593005a5c4f8e6f2227bb109bd1bd940b8ed7c9ea30723220e5c1",
+    "MOCK_comp_9316.png": "8bdab3d75fce30f736a8861f8356611a3275eb15c86bfa82c5b7b0f3df587210",
+    "MOCK_comp_9317.png": "45a513ab4e9a68f485bd4c8ed2592b7766df3485dab05a3b021d48a2f98ce19e",
+    "MOCK_comp_9326.png": "e0d7ccf3d79ab799fa79c565ded933816541ea56caff44c4896ed67d426353a6",
+    "MOCK_comp_9335.png": "61ce7febbd83ef164174773b174b8fbf0ecb4a47885d50ec8ebd53159f8c18e6",
+    "MOCK_comp_9336.png": "87400ef00e49ea7969bc9bf08587d121c7b64420510dd2881321c19f4031c3c0",
+    "MOCK_comp_9337.png": "2a7afb59f3b3b8c05297e0d5b19e87321050de3b5dde5cf3a263dccc23d2cb38",
+    "MOCK_comp_9338.png": "bb864456f55e70e72efea6b5034affdceba4f1dc11115bfe5ba574ab991d66c1",
+    "MOCK_comp_9339.png": "f6bcf900dab7fe05750ac415c72fc458ce824f66d73a66a6fcd3bcf709cc9fb5",
+    "MOCK_comp_9340.png": "0fd4bf5f70640ed5bf7bc55c0f0d86bf5e0b8edc10e9fccf629b9cad4e08faf5",
+    "MOCK_comp_9341.png": "b3bd19a7f8930138ea767dd772f994c322244650ff498f4725afa3d77c9b8d3b",
+    "MOCK_comp_9342.png": "c36a192febb9548934f4a87f585f11ca70f44fa6b0ffbc8037f0c82a5141219a",
+    "MOCK_comp_9343.png": "49007be05131ca2faa1b295933bcce0b566549ddec4d94b4e6bfead4e9955ae2",
+    "MOCK_comp_9280.png": "9cb5a002afc55bb8e45c090c1e2e1eebf95263687a65af61ba718eaeee040a2e",
+    "MOCK_comp_9282.png": "99bb7204bb3b88b3693d3ad177685cb19b419bbb9502865e2cb9d4870ef774c2",
+    "MOCK_comp_9283.png": "143ed1c0f4e612ac8d986f0c24807223e374a95b21455f73918b8ea6a7b166cd",
+    "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
+    "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
+    "MOCK_comp_9122.png": "14f636e6da86f3a3423af3607022c4624011981d50290212c84d8cf843fa57f4",
+    "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
+    "MOCK_comp_9140.png": "61ce7febbd83ef164174773b174b8fbf0ecb4a47885d50ec8ebd53159f8c18e6",
+    "MOCK_comp_9141.png": "87400ef00e49ea7969bc9bf08587d121c7b64420510dd2881321c19f4031c3c0"
+   }
+  },
   "after": {
    "face_parts": [
     {

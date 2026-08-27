@@ -24,6 +24,25 @@ Declared before the first tile was composed, not tuned after (LOOP-PROCESS §0.3
 
 ## 0. THE ANSWER, STATED FIRST
 
+> **UPDATE — THE TWO RULED ROUNDS RAN (rounds 7 and 8). §7 below is their report and it
+> supersedes the ordering of the questions in §0.**
+>
+> **§3's ruled condition fired: depth did not arrive, so §3 is reopened with evidence.** The
+> evidence is the arm the last seat ranked FIRST of five, carrying only the two ruled variables
+> at their best measured settings — not the two constructions the same round showed to be
+> mistakes.
+>
+> **§12.1's ruling is confirmed and gains a worked example against this session:** a *pale* ring
+> is a ring. The coping course built in round 8 was ranked below the arm with no cap at all.
+>
+> **§6.3's rematch went the clause's way.** The plant led four of the first seven rounds and
+> placed 4th of 5 in round 8 — the first round in which the legal arms carried deep
+> plane-boundary occlusion and a separated wall-top albedo. The baked arm's advantage was an
+> advantage over receive-light assets drawn *without form*, and it disappears once they are
+> drawn with it.
+
+
+
 **Composition works. It fixes what the gauntlet could not fix, and it is not enough.**
 
 Six rounds moved measurable things: the 32px stamp, the mirror, the interior fill, the value
@@ -391,44 +410,161 @@ Reported rather than acted on; they are not this spike's to change.
 
 ---
 
-## 7. WHAT IS IN FRONT OF YOU
+## 7. THE RULED ROUNDS (7 and 8), AND WHAT THEY SETTLED
 
-**On the device** (both installed, iPhone SE 3rd gen, `5DB969FF`):
+**RULED (Rafe, 2026-08-26):** *"§3 stands unamended pending your two reserved rounds: spend them
+on edge-occlusion + wall-top value separation, with south-facing front faces present in scene.
+Depth arriving ratifies §3; depth failing reopens it with evidence."*
+
+### 7.1 The scene, because the old one could not ask the question
+
+`corridor_junction.json` puts **7.3%** of its wall cells in the class that can carry a face — 11
+of them truly south-facing — because under §3 a face appears only where floor lies south, and in
+a one-wide north–south corridor no flanking cell qualifies. Six rounds answered the thickness
+question on that strip.
+
+`wall_face_review.json` adds one east–west branch and changes nothing else: **14.5%**, 21 truly
+south-facing, both crossings inside the lit radius. `corridor_junction.json` is **not replaced** —
+it is §6.4's instrument and every earlier capture came through it. Measured by `scene_census.py`.
+
+### 7.2 Round 7 — half the ruling answered, the other half culled by the floors
+
+| code | arm | cull | outcome |
+|---|---|---|---|
+| C1 | after (5px occlusion, 0.62 albedo) | outline | 2nd of 5 |
+| C2 | after_unbound | outline | 3rd |
+| C3 | before (3px, 0.76 albedo) | outline | **5th — last** |
+| C4 | plant | outline | 1st |
+| C5 | after_noocc (occlusion off) | outline | 4th |
+
+**Wall-top value separation: answered, and positively.** 0.62 of floor luminance ranked 2nd;
+0.76 ranked **last**, the seat reading the lighter wall as *"the ambient lift kills the light
+pool's edge and drains the joint contrast that was the only thing making the wall read as
+stacked stone."*
+
+**Plane-boundary occlusion: answered, and it is §12.1's evidence.** Of the arm with it switched
+off: *"stripping the wall/floor boundary shading removes the last thing making the wall read as a
+mass rather than a change of pattern."* A blind seat arrived at the ruling independently.
+
+**And all five were culled `outline` at step 1 — for the §6.4 survivor floors.**
+
+> *"Every floor plate is a lighter square inside a closed, single-value near-black ring measured
+> at 11% of the adjacent floor — four to five times harder than any mortar joint in the same
+> frame — which is a keyline, and it sits on every second tile of every corridor."*
+
+Measured against the survivors, the seat's 11% is exact and the culprit is one tile:
+
+| survivor | median | darkest band | ratio | |
+|---|---:|---:|---:|---|
+| A-VAB | 126 | 60 | 0.48 | a mid-tone rebate — kept |
+| A-HEB | 136 | 78 | 0.57 | a mid-tone rebate — kept |
+| C-GAB | 139 | 74 | 0.53 | a mid-tone rebate — kept |
+| **B-KAB** | 130 | **14** | **0.11** | **a near-black closed ring** |
+
+**§12.1 is LOCKED and the survivors carry a construction it forbids.** `dering_floors.py` removes
+only that ring — 62 pixels, in B-KAB alone, inventing no colour — as a labelled MOCK derivation
+for instrument use. **The survivors are untouched and the finding goes to the gate intact.** As
+it stands, the STOP-1 survivor set culls any review round it appears in before the wall questions
+are reached.
+
+### 7.3 Round 8 — the two legal routes to depth, and both of them failed
+
+Round 7 said why depth was not arriving, and the sentence is the crux of the whole §3 question:
+
+> *"the wall carries a graded dark rim on all four sides that is equally dark on the edge facing
+> the player's lamp and the edge facing away, so it is a **rim, not a thickness**."*
+
+**The omnidirectionality it objects to is exactly what makes the construction legal.** Depth
+cannot be bought by making the rim directional — that is the forbidden move, and it is what the
+plant does. So round 8 took the two legal routes the seat itself named, both newly permitted by
+the same day's ruling that authored occlusion is law:
+
+- **deepened mortar joints** as self-occlusion between blocks — the variable the round-7 seat had
+  identified unprompted as dividing *"stones somebody stacked"* from *"a pattern printed on the
+  ground"*;
+- **a coping course of paler, smoother stone** along every floor-facing top edge — a different
+  material, laid equally on all edges, declaring no direction.
+
+| code | arm | cull | place |
+|---|---|---|---|
+| C3 | **before** — the ruled variables alone, neither addition | none | **1st** |
+| C5 | after_nocap — joints, no cap | none | 2nd |
+| C1 | after — joints + coping cap | none | 3rd |
+| C4 | plant | **key-light** | 4th |
+| C2 | after_unbound | none | 5th |
+
+**Both additions made it worse, and both failures are mine, diagnosed:**
+
+1. **The coping cap became a ring.** *"A flat, featureless ribbon at floor value is applied to
+   every wall edge for its entire length, ringing each mass in bright piping so the quadrants
+   read as cut-out cards rather than stone."* I reasoned that a material change declares no light
+   direction and is therefore legal. The material reasoning was sound and the **construction** was
+   not: a uniform ribbon of constant width and constant value on every edge answers to no
+   geometry, which is the definition of a ring. **The prohibition is value-agnostic and I built a
+   pale one.** Recorded in the bible under §12.1 as a worked example.
+2. **The joint-deepening ate the material's own variation.** A threshold operator cannot tell a
+   mortar joint from a dark stone, so darkening everything below 0.82× the median flattened the
+   block-to-block variation: *"the courses are uniform enough that the wall reads as one printed
+   brick sheet stretched over four quadrants."* The arm without it ranked above the arm with it.
+
+### 7.4 §3 — the ruled condition fired
+
+**Depth did not arrive. Eight rounds, eight times no.** The last, on the arm it ranked **first**:
+
+> *"the reveal at the boundary reads as a shadow gap rather than a cap, so you still cannot
+> distinguish a wall top from a wall face anywhere in the image."*
+
+**The reopening rests on that arm, not on the two constructions I got wrong.** C3 carried only
+the two ruled variables at their best measured settings — 5-step plane-boundary occlusion, top
+albedo at 0.62 of the floor — and neither the ribbon nor the joint pass. It won its round and it
+still failed the thickness question.
+
+What every seat asked for instead, unprompted, none ever having seen §3: **a side face.**
+*"No cap, no cross-section, and no way to tell the top of a wall from the face of it."*
+
+**§3 is reopened with evidence. What replaces it is yours, and this session does not propose it.**
+
+### 7.5 §6.3 — the rematch, and it went the clause's way
+
+| round | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|
+| the plant's place of five | **1st** | 3rd | 3rd | 3rd | **1st** | **1st** | **1st** | **4th** |
+| plant culled `key-light` | — | — | ✓ | ✓ | — | — | — | ✓ |
+
+**Round 8 is the first round in which legal form beat the baked arm**, and it beat it with
+exactly the construction the ruling made law. The same round culled it with the strongest method
+yet: *"differencing against C1 isolates a per-block top-bright/bottom-dark emboss that would
+survive the engine light being switched off."* It lost on the ranking and on the cull together.
+
+**At its true strength and no higher:** one round is one round, the plant led the six before it,
+the arms are mocks, and a ranking is not §13.1's gate. What the record supports is narrower and
+more useful than a verdict — **the baked arm's advantage was an advantage over receive-light
+assets drawn without form, and it disappears once they are drawn with it.** §5.1b stands in the
+caveat trail verbatim, and this is the reading that is consistent with all eight rounds.
+
+### 7.6 What is in front of you
+
+**On the device** (both installed, iPhone SE 3rd gen, `5DB969FF`), built from round 8's
+first-ranked configuration:
 
 | app | bundle | shows |
 |---|---|---|
-| **YARL Held** | `com.rafehatfield.catacombsofyarl.tier0` | boundB — composed wall, MOCK bindings |
-| **YARL Unheld** | `com.rafehatfield.catacombsofyarl.tier0u` | ctrlB — the same stones, overlays omitted |
-
-Flip between them. The delta between the two IS the held question, with nothing else able to
-explain it.
+| **YARL Held** | `com.rafehatfield.catacombsofyarl.tier0` | `before` — 5-step occlusion, 0.62 albedo, MOCK bindings |
+| **YARL Unheld** | `com.rafehatfield.catacombsofyarl.tier0u` | `before_unbound` — the same stones, overlays omitted |
 
 To put a different arm on device:
-`TIER0_THEME=res://src/Presentation/assets/composition_spike/tile_themes_boundA.yaml tools/tier0_harness/build_review_app.sh`
+`TIER0_THEME=res://src/Presentation/assets/composition_spike/tile_themes_after.yaml tools/tier0_harness/build_review_app.sh`
 
-**Side by side**, `evidence/sheets/`: `held_vs_unheld_A`, `held_vs_unheld_B`,
-`top_plane_A_vs_B`, `lit_vs_unlit_B`, `solofloor_pair`.
+**Open for you, in order:**
 
-**The questions, in the order they matter:**
-
-1. **§3 — does a wall get a side?** Six seats asked for one, none having seen §3. Without it a
-   north–south corridor shows two fields of wall-top and no face, and the thickness answer stays
-   no however good the material is. This is a one-way door and it is the road ruling.
-2. **§6.3 — the baked arm exists now, and it outranked everything.** §6.4 recorded that its own
-   ratification "is not a victory over a baked arm, because no baked arm existed to beat" and
-   that "the comparison §6.4 set out to run remains unrun". This session built one as its plant
-   and six blind seats ranked it first three times and never below third of five — while two of
-   them culled it correctly as `key-light`. §5.1b. Evidence, not a ruling, and adverse.
-3. **§12.1 — is an occluded wall/floor edge an outline?** Without it the corridor was unreadable.
-   With it, it is a second linear system where §12.1 reserves one.
-4. **Is the composed material worth continuing with at all**, given that it took six rounds to
-   reach "flat pattern with a path tinted through it"?
-5. **The §6.4 survivors carry a baked dark ring** (§5.5). §12.1 is LOCKED. A blind seat found it
-   unprompted.
+1. **§3 — what replaces it.** The condition you set has fired. Every seat's answer is a side
+   face; that is the one plane §3 forbids, and amending it is a one-way door.
+2. **The §6.4 STOP-1 survivors carry a §12.1 violation** (§7.2) and cull any round they appear
+   in. They are not this session's to repair.
+3. **Whether the composition road continues at all**, now that eight rounds have moved every
+   relationship defect they were pointed at and never moved thickness.
 
 **Taken with the tiles-pro audit beside this report.** This session does not conclude.
-
----
 
 ## 8. EVIDENCE
 
