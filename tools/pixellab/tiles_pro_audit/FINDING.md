@@ -395,11 +395,13 @@ it still owes.
 
 ### What composition still owes, and this audit cannot discharge any of it
 
-4. **The top surface has to come from the composer, because it does not come from here.** Four
-   seats specified it in native pixels — *"5–7 native pixels of top surface"*, *"one row, a
-   one-pixel dark line, then two to three rows of a distinct third value"*, *"the **ends** of the
-   wall stones, joints running across not down"*. That is a drawing instruction, and it is now
-   the composition road's first job rather than a prompt anyone can write.
+4. **The top surface does not come from here — and §10 says the composer may not be able to
+   supply it either.** Four seats specified it in native pixels — *"5–7 native pixels of top
+   surface"*, *"one row, a one-pixel dark line, then two to three rows of a distinct third
+   value"*, *"the **ends** of the wall stones, joints running across not down"*. That is a
+   drawing instruction rather than a prompt. **Read §10 before treating it as the composition
+   road's first task**: the composition spike ran the same question from the other side and
+   located the blocker in bible §3, not in either tool.
 5. ⚠ **The 32-pixel hazard follows the work across the road.** §6.3-at-32px is measured on two
    surfaces through three mechanisms — a prompt, a paired parameter, and a single parameter.
    **A composer that draws its own caps will meet the same wall**, because the vocabulary for
@@ -425,3 +427,60 @@ it still owes.
 `outline_mode: "segmentation"` (guards a defect absent from all four kits) and
 `building_wall_angle` swept alone (only ever tested paired). Neither is on the critical path for
 a composition road; recorded so nobody assumes they were checked.
+
+---
+
+## 10. READ BESIDE THE COMPOSITION SPIKE — the two reports interlock
+
+Rafe's ruling was taken with the composition spike's report beside this one, and the two say
+something jointly that neither says alone. Cited from `tools/composition_spike/SPIKE.md` on
+branch `art/composition-spike` (read at its remote HEAD, not from this worktree — the branch is
+not checked out here, and this section should be re-checked against that file at merge).
+
+**The spike ran the same question from the opposite side and got the mirror-image answer.**
+
+| | this audit | the composition spike |
+|---|---|---|
+| what the scene had | wall pieces that are **all front face** | a N–S corridor that is **all wall-top** |
+| what its blind seats asked for, unprompted | a **top plane** with a near edge | a **side face** that stops |
+| seats | 4, four kits, three projections | 6, six rounds, five arms |
+| the thickness question | **0/38 every kit** | ***"no"* every arm, every round** |
+
+**Ten independent blind seats, across two reports, two tools, and eleven scenes. None was shown
+the bible. Every one of them asked for the plane its scene was missing.** They are not two
+findings; they are one finding seen from two ends — **the wall has no readable thickness** — and
+each report's seats named whichever half was absent in front of them.
+
+⚠ **The spike locates the blocker in the rule, not in either tool**, and that reframes §9 item 4:
+
+> *"That is not a defect in the composition. It is bible §3 meeting an orthogonal grid. §3 grants
+> walls exactly two planes — a front face and a top surface, **no side face** — and the
+> renderer's mask table only ever shows a front face where floor lies to the SOUTH. In a
+> one-tile-wide north–south corridor no wall cell has floor to its south, so the player walks
+> between two fields of wall-*top* with no face anywhere in sight. **Composition cannot supply a
+> plane the rule forbids.**"*
+
+So: **generation cannot paint the plane, and composition is forbidden from adding it.** This
+audit's conclusion — *no camera parameter adds a plane that was never painted* — remains exactly
+what it says about tiles-pro, and it should not be read as "therefore the composer will do it".
+On the spike's evidence the composer cannot, for a reason that is upstream of both tools.
+
+⚠ **And the §6.3 evidence from the two reports points the same way.** The spike's plant — a baked
+per-course key light, §6.3's forbidden construction — was ranked **first by three of its six
+blind seats and never below third of five**, while two correctly culled it as `key-light`; it was
+the only thing in six rounds that produced any depth read. Independently, this audit measured
+that *asking* for depth manufactures directional light: arm 3 at 32/38 and depth 0.5 at 36/38
+against 38/38 at the frozen configuration.
+
+> Two tools, two methods, one shape: **at 32 pixels, the thing that delivers a depth read is
+> directional value, and §6.3 forbids it.** §6.4 recorded that its ratification *"is not a
+> victory over a baked arm, because no baked arm existed to beat"* and that *"the comparison
+> §6.4 set out to run remains unrun"*. A baked arm exists now, and the first result on the depth
+> axis is adverse.
+
+**None of that is ruled here and none of it may be read as a ruling.** §6.3 is RATIFIED and
+stands untouched by this session; §6.4 names its own retirement triggers and whether this
+evidence meets them is Rafe's call, not this seat's. The spike carries the same three open
+rulings (§3's side face, §6.3's baked arm, §12.1's occluded edge) and they are the ones to take
+first — **because on this joint evidence the wall road's next blocker is a bible question, and
+no amount of tooling on either road moves it.**
