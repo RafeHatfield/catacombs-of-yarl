@@ -372,6 +372,26 @@ A tile can be perfectly ring-clean and still be the wrong thing to condition on.
 
 ### Ruling 2 — round B's 0-of-4 is a finding, not the bar verdict
 
+> **COMPLETED RETROACTIVELY by the gate ruling of 2026-08-27 — bible §8.3, the motif trap.**
+>
+> This ruling banked the repetition and absent-wear culls as tier-one requirements rather than
+> as a verdict on the corpus, and it was right, but it could only assert the distinction. §8.3
+> supplies the reason: **any incident baked into a tile becomes a motif when tiled — repetition
+> converts accident into intent — so a tile is the material and the incident is the variant.**
+>
+> Which makes the honest description of every round in this report: **the tiles were BASES, and
+> they were judged as FINISHED FLOORS, before the incident system existed.** The seats were not
+> wrong and the tiles were not being asked a fair question. §8.2.1 already recorded half of that
+> — the one-wide corridor could not pose the wear question — and this is the other half, and the
+> larger one: **a base and a floor are different objects**, and every round here showed a seat
+> the first while calling it the second.
+>
+> It also settles what §6 could not. The seat's objection to the remediated A-VAB — *"turns all
+> four corners and returns rather than running into the neighbour"* and *"the identical U-shaped
+> notch centred on every slab"* — reads as two complaints and is one: **the notch is an incident,
+> and the field made it a motif.** §6 correctly said the instrument cannot see repetition because
+> it looks at one tile. §8.3 says the property genuinely is not there to see.
+
 **Bars neither shrink nor grow after declaration.** The declared bar was ring-clean; §7 is
 rescored on those terms and reads **2 of 4**, which is the honest number. The remaining culls —
 per-cell repetition, no traffic wear, A-HEB's salmon cast — are **measurements of what tier one

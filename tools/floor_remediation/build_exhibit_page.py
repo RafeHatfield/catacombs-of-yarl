@@ -151,6 +151,18 @@ th{
 td{color:var(--ink-soft)}
 tr.split td{background:var(--accent-soft);color:var(--ink)}
 
+.ruled{
+  margin:22px 0 26px; padding:22px 26px; border-radius:3px;
+  background:var(--panel); border:1px solid var(--rule-firm);
+  border-left:4px solid var(--present); box-shadow:var(--shadow);
+}
+.ruled .verdict{
+  font-family:Literata,Georgia,serif; font-size:clamp(19px,2.6vw,24px); font-weight:600;
+  color:var(--ink); margin:0 0 12px; line-height:1.3;
+}
+.ruled p{font-size:15.5px;margin:0 0 12px}
+.ruled .law{padding-top:12px;border-top:1px solid var(--rule)}
+.ruled .foot-note{margin:0;font-size:14px;color:var(--ink-mute)}
 .key{display:flex;gap:22px;flex-wrap:wrap;margin:14px 0 0;font-size:13.5px}
 .key span{display:flex;align-items:center;gap:8px;color:var(--ink-soft)}
 .chip{width:13px;height:13px;border-radius:2px;flex:none;border:1px solid rgba(0,0,0,.25)}
@@ -165,8 +177,24 @@ tr.split td{background:var(--accent-soft);color:var(--ink)}
 
 <div class="wrap">
 <div class="col">
-  <p class="eyebrow">Art bible &sect;5.5 &middot; routed by &sect;13.2 &middot; 2026-08-27</p>
+  <p class="eyebrow">Art bible &sect;5.5 &middot; routed by &sect;13.2 &middot; RULED 2026-08-27</p>
   <h1>C-GAB is at the gate, and no instrument can settle it</h1>
+  <div class="ruled">
+    <p class="verdict">Ruled at the gate: <strong>frame at field scale.</strong></p>
+    <p>The dissenting seat was right at the scale that matters. The majority was not wrong about
+    the pixels &mdash; it was answering at the wrong scale. <strong>The evidence was never in the
+    instrument&rsquo;s input:</strong> it reads one 32&times;32 tile, and a single tile has no
+    neighbour for a line to continue into.</p>
+    <p class="law"><strong>The law it produced &mdash; &sect;8.3, the motif trap.</strong> Any
+    incident baked into a tile becomes a motif when tiled: repetition converts accident into
+    intent, and the eye reads pattern regardless of the incident&rsquo;s quality. So style parents
+    carry <strong>incident-free material only</strong>, and incident arrives at the instance level,
+    randomised, through variants and overlays. <strong>A tile is the material; the incident is the
+    variant.</strong></p>
+    <p class="foot-note">C-GAB keeps its conditioning role &mdash; references never ship, and
+    screening holds at the measured child rate. The plates below are the working, kept as they
+    were put to the gate.</p>
+  </div>
   <p class="lede">Three blind seats judged this floor tile. Two called it clean stone. One called
   it a keyline &mdash; a dark line drawn round a shape <em>because it is a shape</em>, which
   &sect;12.1 bans outright. Same bytes, same lit capture, opposite readings.</p>
@@ -178,8 +206,8 @@ tr.split td{background:var(--accent-soft);color:var(--ink)}
 
 <div class="ask col">
   <p class="q">Crack through the stone, or frame around the tile?</p>
-  <p class="sub">Your answer settles the &sect;5.5 corpus note. Nothing else in the round is
-  waiting on it &mdash; screening carries on regardless, at the measured child rate.</p>
+  <p class="sub"><strong>Answered: frame.</strong> This settled the &sect;5.5 corpus note, which
+  is now resolved rather than flagged.</p>
 </div>
 
 <hr>
@@ -294,12 +322,18 @@ tr.split td{background:var(--accent-soft);color:var(--ink)}
   not a measurement, and building a number to decide it is the move &sect;13.4 forbids.
 </div>
 
-  <h2>What your answer does and does not do</h2>
-  <p><strong>Settles:</strong> the &sect;5.5 corpus note, which currently records this as
-  <em>flagged, unresolved by instrument</em>.</p>
-  <p><strong>Does not touch:</strong> C-GAB's primary-parent status, which is retained either
-  way; and screening, which stays the operative guard at the measured child rate &mdash; 5 of 20
-  mechanically, 9 of 20 at the seat-adjusted upper bound.</p>
+  <h2>What the answer did</h2>
+  <p><strong>Settled:</strong> the &sect;5.5 corpus note, now resolved &mdash; <em>frame at field
+  scale</em>.</p>
+  <p><strong>Sharpened:</strong> the style-parent criterion, from <em>compositionally neutral</em>
+  to <strong>incident-free</strong> (&sect;8.3). C-GAB does not meet the sharpened bar and is
+  retained under screening rather than by satisfying it &mdash; recorded so tier one does not
+  misread the retention. An authored parent can meet it; no &sect;6.4 survivor was built to.</p>
+  <p><strong>Added:</strong> &sect;12.1&rsquo;s scale rule &mdash; a ring is judged <em>as laid</em>,
+  and a single tile cannot answer the clause.</p>
+  <p><strong>Did not touch:</strong> C-GAB's conditioning role, retained; and screening, still the
+  operative guard at the measured child rate &mdash; 5 of 20 mechanically, 9 of 20 at the
+  seat-adjusted upper bound.</p>
   <p>This is not an approval surface. &sect;13.1 is untouched: no candidate is ever approved from
   a sheet, and nothing here lands anything. The question is what the construction <em>is</em>,
   not whether the tile ships.</p>

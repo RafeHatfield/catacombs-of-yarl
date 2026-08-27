@@ -8,11 +8,24 @@ and nothing in this run satisfies it.
 > documents they belong to. The body below is the evidence they were ruled on and is left as
 > written, except where a ruling corrects it and says so.
 >
-> 1. **C-GAB RETAINS primary-parent status.** The 2–1 seat split is recorded in bible §5.5 as
->    **flagged, unresolved by instrument**, and per §13.2 the deadlock **routes to the human
->    gate** as one question — *crack through the stone, or frame around the tile?* Rafe's answer
->    settles the §5.5 note. **Screening remains the operative guard regardless**, at the measured
->    child rate rather than at B-KAB's. Exhibit: `exhibit_cgab/`.
+> 1. **C-GAB RETAINS primary-parent status.** The 2–1 seat split routed to the human gate under
+>    §13.2 as one question — *crack through the stone, or frame around the tile?* Exhibit:
+>    `exhibit_cgab/`. **Screening remains the operative guard regardless**, at the measured child
+>    rate rather than at B-KAB's.
+>
+>    **ANSWERED AT THE GATE (Rafe, 2026-08-27): FRAME AT FIELD SCALE.** The dissenting seat was
+>    right at the scale that matters. §5.5's note is **resolved**, not flagged. C-GAB keeps its
+>    conditioning role because **references never ship** — but it is retained *under screening*,
+>    not because it meets the criterion the ruling then sharpened.
+>
+>    **And the ruling generalised into law: bible §8.3, THE MOTIF TRAP.** *Any incident baked
+>    into a tile becomes a motif when tiled; repetition converts accident into intent, and the
+>    eye reads pattern regardless of the incident's quality.* Therefore style parents carry
+>    **incident-free material only** (§5.5's criterion sharpens from *compositionally neutral*),
+>    and incident — cracks, wear, marks, the §8.2.1 channel — arrives at the **instance level,
+>    randomised**, through the variant and overlay system tier one builds. **A tile is the
+>    material; the incident is the variant.** §12.1 gains the scale rule that follows from it:
+>    **a ring is judged as laid**, and a single tile cannot answer the clause.
 > 2. **The instrument is relabelled**: *measured error in both directions; orders attention,
 >    rules nothing.* §5 of this document is the evidence. `REPORT.md` §6 carries it, and ruling 3
 >    there is superseded in part — the *no further tuning* half stands.
@@ -245,6 +258,24 @@ evidence available and this run does not move it. It is flagged because a corpus
 should know when its supporting clause has been contested, and because **every generation from
 here inherits whatever C-GAB is**.
 
+> **RULED AT THE GATE (Rafe, 2026-08-27): FRAME AT FIELD SCALE. The section above is superseded
+> as a live question and kept as the working.**
+>
+> **The dissenting seat was right, and the majority was not wrong about the pixels — it was
+> answering at the wrong scale.** The 4-of-9 side is really 4 of 9; the instrument's 0.791 is
+> really 0.791. Both of those are properties of *one tile*, and the property that decides the
+> question is a property of *the field*: laid nine-up, the contour turns its corners and returns
+> inside every cell rather than running on into the neighbour.
+>
+> **This retires the "no number settles it" framing in the direction of the number never having
+> been available.** It was not that the measurement was too coarse. **The evidence was not in the
+> instrument's input** — it reads one 32×32 tile, and a single tile has no neighbour for a line
+> to continue into. No threshold reaches that, which is what makes the limit structural.
+>
+> **The exhibit's 3×3 plate is what produced the answer**, and that is the transferable part: the
+> seat prompt had stated the continue-or-return test all along and no seat had ever been given a
+> view that could run it. Bible §8.3 now carries the general law and §12.1 the scale rule.
+
 ---
 
 ## 5. THE REVERSE DIRECTION FIRED TOO — THE INSTRUMENT ALSO OVER-COUNTS
@@ -300,7 +331,9 @@ contradicts the fiction before any craft question arises."*
 - **Not that the channel is clean.** 9 of 20 children of a ring-clean parent still carry a
   keyline at the upper bound. Screening remains necessary.
 - **Not that C-GAB is ring-free.** The instrument says CLEAN and one of three blind seats says
-  otherwise, in a construction sitting inside the instrument's published blind spot.
+  otherwise, in a construction sitting inside the instrument's published blind spot. *(Settled
+  since: **RULED a frame at field scale**. It is not ring-free, and it keeps its conditioning
+  role anyway — references never ship. §5.5, §8.3.)*
 - **Not that any child is good.** Every non-control capture failed both seats. Nothing was
   promoted, nothing landed, and the corpus is exactly as it was before this run.
 - **Not that the seat is a stable instrument.** Two rounds, same bytes, opposite verdicts on the
