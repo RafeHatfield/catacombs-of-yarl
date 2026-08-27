@@ -2,7 +2,15 @@
 
 `ART-LOOP-PROCESS-v0.md` §7. A track that stops writes down which state it stopped in.
 
-**State: PREPARED, NOT GENERATED — for everything past STOP 1.**
+> **SUPERSEDED 2026-08-26 — the probe is CLOSED.** §6.3 was RATIFIED by Rafe at STOP 2, on the
+> device. The park state below is kept as written because §7 is about recording where a track
+> stopped, and rewriting it after the track restarted would destroy the record it exists to be.
+> Final account: `CLOSING-LEDGER.md`. Outcome and its caveat: `ART-BIBLE-v0.md` §6.4.
+>
+> The one item that did NOT close with the probe: **§6.4's three-arm comparison never ran**, and
+> the ratification is explicit that it did not.
+
+**State (as recorded at STOP 1): PREPARED, NOT GENERATED — for everything past STOP 1.**
 Stage 1 is *generated and complete*. Stage 2, Precondition B and Stage 3 are staged and
 deliberately not spent on, because STOP 1 is a mandatory halt and the work past it depends on
 a human pick that has not happened. Nothing here is *finalised* — the probe has not ruled.

@@ -1,0 +1,97 @@
+{
+ "round": 9,
+ "framing": "guide v5 — the guide stops baking light, and the materials stop being one grey",
+ "conditioned": false,
+ "hypothesis": "Round 8 went backwards on the one axis §6.3 governs: key-light culls rose from 0 to 3. The cause is identifiable and it is mine. v4's 1px chamfers — light on a block's top edge, dark on its bottom — were taken literally from ROUND 7'S OWN FLIP LIST, and at 32px a per-course light-top/dark-bottom pattern is indistinguishable from a baked directional light. A critic instruction, executed faithfully, manufactured the violation the same critic then culled. That is worth more than the round's verdicts: at this canvas size the vocabulary for 'describe geometry with value' and the vocabulary for 'bake a key light' are the same vocabulary. v5 deletes the chamfers and separates courses by mortar recess and block variation alone. It also answers round 8's other structural note — 'every tile is 4-13 values of the same grey-blue' — by giving timber and iron their own hue, since a monochrome guide was arguably causing the monochrome output.",
+ "description": "A dungeon wall of cold grey quarried stone, seen straight on from the front. Level courses of blocks, the courses uneven in height and the vertical joints offset irregularly, blocks of different lengths, three or four of them replaced with mismatched salvage stone. The mortar joints are much darker than the block faces, roughly a third of their brightness, and each block carries a single lighter pixel along its top edge. Where a block has been replaced the gap around it is packed with smaller chipped stone in a coarser, paler mortar, so the eye reads old block, new packing, old block. Laid horizontally across the whole width is a squared timber baulk that runs off both the left and right edges and continues past them, standing proud of the stone with a darker under-edge. It is fixed by two driven iron pins, each a small square head with a bitten rim, and the stone around each is bruised dark. One turn of rope is wrapped over the timber where it crosses a joint. The top four rows of the frame are the wall's upper surface: one flat value, clearly lighter than the front face, meeting it on a single hard line. Everything below that is front face, all the way to the bottom of the frame. Stone from edge to edge.",
+ "negative_description": "doorway, door, arch, archway, window, hatch, brazier, hearth, fireplace, fire, opening, gap, entrance, niche, alcove, recess, landmark, feature, centrepiece, centred motif, symmetrical, floor, ground, floorboards, ground band, single object, isolated object, item, icon, prop, sprite on a background, background, empty background, floating, border, frame, framed panel, vignette, drop shadow, cast shadow, banner, continuous stripe, chest, box, crate, barrel, coffin, sarcophagus, furniture, candle, torch, lantern, bone, skull, shield, treasure, isometric, three quarter view, tilted, diamond, seamless texture, noise, static, speckle, green, mint, teal, turquoise, spring green, orange, brown, warm, glowing, emissive, cobwebs, blood, collapse, ruins, moss, vines, plants, text, watermark, character, creature",
+ "parameters": {
+  "image_size": {
+   "width": 32,
+   "height": 32
+  },
+  "outline": "lineless",
+  "detail": "low detail",
+  "view": "side",
+  "no_background": false
+ },
+ "flip_list_applied": [
+  {
+   "item": "Delete every centred feature — the doorway, brazier, hearth mouth, arch, hatch. A wall tile carries no unique landmark; landmarks are separate tiles.",
+   "change": "Every one of those five nouns is now an explicit negative, plus landmark, feature, centrepiece, opening, entrance. The r3 phrase 'no centre and no edges of its own' is DELETED — it is the phrase that produced them."
+  },
+  {
+   "item": "Remove the ground band along the bottom. Wall must run to row 31; the floor is a different tile.",
+   "change": "'Everything below that is front face, all the way to the bottom of the frame.' Negatives gain floor, ground, ground band, floorboards."
+  },
+  {
+   "item": "Move the depth cue to the top edge: rows 0-4 are the top surface, one flat value step and a different hue; rows 5-31 are the front face.",
+   "change": "'The top four rows of the frame are the wall's upper surface: one flat value, clearly lighter than the front face, meeting it on a single hard line.' Transcribed as row counts."
+  },
+  {
+   "item": "Make the tile wrap — no joint, block or band may terminate at the border.",
+   "change": "'Stone from edge to edge'; the baulk 'runs off both the left and right edges and continues past them'. ⚠ Partial: a text-to-image call cannot be told about column 31 wrapping into column 0, and this is now the third round where a wrap instruction has been approximated rather than executed. Recorded as a known limit of the surface, not as an applied fix."
+  },
+  {
+   "item": "Delete the flat teal field entirely; there is no background in a wall tile.",
+   "change": "Negatives gain background, teal, turquoise; 'Stone from edge to edge'."
+  },
+  {
+   "item": "Break the single brick stamp: uneven course heights, irregular vertical joints, three or four blocks replaced with cracked or mismatched salvage.",
+   "change": "'the courses uneven in height and the vertical joints offset irregularly, blocks of different lengths, three or four of them replaced with mismatched salvage stone'."
+  },
+  {
+   "item": "Add the repair hardware: a baulk across the full width running off both edges, two driven pins each a 2x2 head with a bitten-in rim (not a dot), and one rope lashing where the timber crosses a joint.",
+   "change": "Transcribed almost verbatim, including the pin geometry and the lashing. FOURTH phrasing of this instruction across four rounds."
+  },
+  {
+   "item": "Show the pattern of repair: pack the gap around a replaced block with smaller chipped stone and a coarser mortar of a different value, so the eye reads old block / new packing / old block.",
+   "change": "Taken verbatim — the critic's own sentence is better than a paraphrase would be."
+  },
+  {
+   "item": "Drop the saturated mint and spring green by half their chroma toward grey-olive; keep green only as a thin residue in joints, never as a field colour.",
+   "change": "Negatives gain spring green and keep green/mint/teal. The positive text now opens on 'cold grey quarried stone'. ⚠ Simplified to a ban rather than a chroma reduction: a text prompt has no half-chroma control, and the palette is not this probe's to author (§5 forbids creating one)."
+  },
+  {
+   "item": "Rebuild r03_04 from scratch as masonry — stripes with a stencilled motif cannot be edited into stone.",
+   "change": "N/A at prompt level; it is advice about one candidate, and every round rebuilds from scratch by construction."
+  }
+ ],
+ "parameter_provenance": {
+  "note": "The DESCRIPTION and NEGATIVE_DESCRIPTION are byte-identical to round 4's, deliberately. One lever moves this round and it is init_image, so any difference is attributable to it.",
+  "style_reference": {
+   "value": "C-GAB",
+   "clause": "RULED (Rafe): conditioning rounds prefer GAB as compositionally neutral; VAB is charactered stock and not a style parent. The STOP 1 smoke test measured composition propagating along with material, which is exactly why the parent's own composition matters."
+  },
+  "style_strength": {
+   "value": 50,
+   "clause": "The schema's 'balanced'. ⚠ The default is 0, at which a reference does nothing at all — a measured trap on this endpoint."
+  },
+  "seed": {
+   "value": "30400 + index",
+   "clause": "Recorded, never relied on."
+  },
+  "init_image": {
+   "value": "guides/guide_NN.png (v5)",
+   "clause": "Geometry and material separation. Chamfers deleted (they caused round 8's key-light culls). Timber and iron carry their own hue offsets so a beam is not the same colour as the wall it is pinned to. ⚠ Material differentiation, NOT a palette: §5.1 reserves colour authorship to the bible, nothing here proposes a game colour, `color_image` is never set, the guide never reaches the critic and cannot land, and the output's colours still come from the generator."
+  },
+  "init_image_strength": {
+   "value": "350 x10",
+   "clause": "Held FLAT this round, deliberately. Rounds 5, 6 and 7 all moved strength, so holding it now is what makes guide v4 the only thing that changed."
+  }
+ },
+ "init_guide": true,
+ "init_strengths": [
+  350,
+  350,
+  350,
+  350,
+  350,
+  350,
+  350,
+  350,
+  350,
+  350
+ ],
+ "text_unchanged_from_round": 4
+}

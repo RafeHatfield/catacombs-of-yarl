@@ -1,0 +1,80 @@
+{
+ "round": 3,
+ "generated": 10,
+ "n_requested": 10,
+ "conditioned": null,
+ "seed_base": 30300,
+ "plant": null,
+ "plant_src": null,
+ "plant_caught": null,
+ "round_void": false,
+ "verdicts": {
+  "r03_00": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "A dark centred void with a hard material boundary at mid-height, so it tiles into a grid of holes over horizontal stripes; no fixings, no timber, no top band, and column 31 does not continue into column 0."
+  },
+  "r03_01": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A black doorway rectangle standing on a pale floor strip \u2014 that is a scene containing a wall, not a piece of wall, and the brick field behind it is one stamp repeated with nothing holding it together."
+  },
+  "r03_02": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A candle prop and scattered debris sitting on a green ground band, with the upper two thirds collapsing into undifferentiated dark checker that has no courses, joints or fixings."
+  },
+  "r03_03": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A lit brazier \u2014 dark mass, flame, plinth, floor line \u2014 placed centred on a brick backdrop; repeating it produces a rank of braziers, not a wall."
+  },
+  "r03_04": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Flat horizontal stripes with a stencilled hook motif in saturated mint \u2014 reads as woven awning or wallpaper, has zero thickness, no front face, no top surface, and nothing has happened to it."
+  },
+  "r03_05": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A mirror-symmetric hearth mouth with checkered flanking panels and a green mass spilling from it \u2014 a discrete centred feature, and the bottom half is ground plane rather than wall."
+  },
+  "r03_06": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "One brick stamp repeated mechanically with no variation, capped by a black band and a bright line that stripe the whole map and repeat their rust flecks pixel-for-pixel every 32px; nothing structural holds it together and nothing has been done to it."
+  },
+  "r03_07": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A framed archway with a lighter surround and a rubble mound at its foot \u2014 an architectural feature that must be its own tile, not repeatable surface."
+  },
+  "r03_08": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "An arbitrary crop of a scene \u2014 a light column welded to the right edge, a floating T-bracket, a green ground band \u2014 which tiles into a grid of framed dark panels with a hard seam down every column boundary."
+  },
+  "r03_09": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A rectangular checkered slab floating on flat teal with margin on all four sides and a little hatch prop stuck to its base \u2014 a sprite, not a surface."
+  }
+ },
+ "flip_list": [
+  "Delete every centred feature \u2014 the doorway in r03_01, the brazier in r03_03, the hearth mouth in r03_05, the arch in r03_07, the hatch in r03_09 \u2014 from the wall candidates. A wall tile carries no unique landmark; landmarks are separate tiles.",
+  "Remove the ground band along the bottom of r03_00, r03_01, r03_02, r03_04, r03_05, r03_07 and r03_08. Wall must run to row 31; the floor is a different tile.",
+  "Move the depth cue to the top edge: rows 0\u20134 are the wall's top surface, one flat value step off the front face and a different hue, and rows 5\u201331 are the front face. Do this on r03_06 and r03_08, which are the only two with a usable masonry field.",
+  "Make the tile wrap. Column 31 must continue the same course into column 0, and row 31 into row 0. Currently r03_00, r03_02, r03_04, r03_06 and r03_08 break hardest across the horizontal seam and r03_08 across the vertical one \u2014 redraw the outer two pixels of each edge so no joint, block or band terminates at the border.",
+  "On r03_09, bleed the masonry out to all four edges and delete the flat teal field entirely; there is no background in a wall tile.",
+  "Break r03_06's single brick stamp: make the courses uneven in height, offset the vertical joints irregularly, and replace three or four blocks with cracked or mismatched salvage so no 8px region repeats.",
+  "Add the repair hardware the fiction requires and none of these have: a salvaged timber baulk laid horizontally across the full tile width, running off both edges so it continues into the neighbouring tile, with a driven iron pin at two points \u2014 each pin a 2x2 head with a bitten-in rim, not a dot \u2014 and one rope lashing wrapped over the timber where it crosses a joint.",
+  "Where masonry has been repaired, show the pattern of it: pack the gap around a replaced block with smaller chipped stone and a coarser mortar of a different value, so the eye can read old block / new packing / old block.",
+  "Drop the saturated mint and spring green in r03_04, r03_05, r03_07 and r03_08 by roughly half their chroma and pull them toward grey-olive; keep green only as a thin residue in the joints, never as a field colour.",
+  "Rebuild r03_04 from scratch as masonry. Horizontal stripes of alternating hue with a stencilled motif cannot be made to read as stone by editing; it needs courses, joints and a front face."
+ ],
+ "hedge_conversions": [],
+ "passes": [],
+ "culls": {
+  "object-not-surface": 6
+ }
+}

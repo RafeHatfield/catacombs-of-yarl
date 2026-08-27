@@ -1,0 +1,86 @@
+{
+ "round": 4,
+ "generated": 10,
+ "n_requested": 10,
+ "conditioned": "C-GAB",
+ "seed_base": 30400,
+ "plant": "r04_plant",
+ "plant_src": "B/wall/B_wall_11.png",
+ "plant_caught": true,
+ "round_void": false,
+ "verdicts": {
+  "r04_00": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Soft mottled blobs with no joint, no course, no fixing \u2014 nothing holds it together, and the dark bottom rows read as a baked ground shadow rather than wall."
+  },
+  "r04_01": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "Three separate dark-ringed lumps sitting on 61% undifferentiated flat grey \u2014 discrete rocks on a background, not wall surface."
+  },
+  "r04_02": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Mirror-symmetric arrangement of pale rectangles reads as a decorative panel that repeats into wallpaper, and there is no top band or thickness anywhere."
+  },
+  "r04_03": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The bottom seven rows are a single flat dark value with no incident \u2014 a painted floor shadow, not wall \u2014 and the plate above it is a centred motif that stamps identically every tile."
+  },
+  "r04_04": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The vertical dark member is a 2px painted stripe with no thickness and no fixing at either end, and the plus-mark beside it reads as a drawn symbol rather than damage."
+  },
+  "r04_05": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "62% of the tile is two near-identical flat greys with a 1px line glyph floating in it \u2014 a schematic drawn on blank ground, not a wall."
+  },
+  "r04_06": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Perfectly ruled 1px lines with every cell at the identical flat value make a drafting hatch, and the vertical post terminates mid-tile so it connects to nothing above or below."
+  },
+  "r04_07": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A centred dark-bordered box containing two dotted pale blocks over a slotted bar \u2014 a discrete plaque inset in a background, and it reads unmistakably as a face."
+  },
+  "r04_08": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The single high-contrast diagonal crack is a signature that repeats into a visible lattice every 32px, and there is a stray out-of-palette lime pixel at (5,23)."
+  },
+  "r04_09": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A hard-outlined rectangular panel inset inside a five-pixel margin of uniform flat grey on all four sides \u2014 a sticker, not a surface."
+  },
+  "r04_plant": {
+   "cull": "wrong-projection",
+   "verdict": "FAIL",
+   "why": "An isometric diamond object floating on flat grey, in a saturated orange palette with a black outline and a key light from upper left."
+  }
+ },
+ "flip_list": [
+  "Every tile in this set puts its dark band along the bottom and nothing along the top. Move it: give each tile a 3\u20134px band along its **top** edge, drawn as the wall's top surface \u2014 a distinct value from the front face, with the front face's joints running under it and stopping at it, so the wall has a visible thickness you look at the side of.",
+  "r04_06: break the ruled grid. Vary the fill value of individual blocks by \u00b110\u201315 luminance, offset each course horizontally by an irregular amount rather than aligning them, and let joint lines drop or thicken by a pixel where a block has spalled. Then run the vertical post edge-to-edge, top to bottom of the tile, so it continues into the copies above and below.",
+  "r04_06 / r04_04: the vertical member currently ends in mid-air. Take it full height and add a fixing where it crosses each course \u2014 a 2x2 driven pin head with one pixel of dark under it, plus a 1px rope lash wrapping the post at one crossing.",
+  "r04_08: kill the single crack. Replace it with three or four short, unaligned fractures no more than 8px long, none touching a tile edge at a memorable point, so no continuous diagonal can form across copies. Also repaint pixel (5,23) to the local wall value \u2014 it is currently (178,211,159) and out of palette.",
+  "r04_02: destroy the left-right mirror. Shift the right-hand pale blocks down two rows and in three columns, delete one of them entirely, and replace the centred pale bar with an off-centre timber whose ends are cut by the tile edges.",
+  "r04_07: remove the bordered box. If a fitting belongs there, put it off-centre, let it be clipped by a tile edge, and drop the dark surround ring \u2014 let the fitting meet the wall directly with its own joint line rather than a ring of background.",
+  "r04_09 / r04_01: delete the uniform grey field. Fill the entire 32x32 with wall material edge to edge \u2014 courses, joints and fixings must run off all four sides \u2014 so nothing sits *on* anything.",
+  "r04_05: the flat middle is empty, not restrained. Fill it with the actual repair vocabulary at readable scale \u2014 a salvaged timber baulk two-thirds the tile width with a driven pin at each end, and a hide patch stretched over a gap with three lash points \u2014 instead of a 1px line drawing.",
+  "r04_00 / r04_03: replace the amorphous mottle with named structure. Decide what the wall is made of (cut block, rubble-and-mortar, or timber over fill), then draw the joints that separate one unit from the next, at least six of them per tile, running off at least two edges.",
+  "r04_03: the flat dark bottom seven rows are unusable as wall. Either cut it to a 2px joint line or fill it with the same block structure as the rest of the tile at a lower value, with the joint pattern continuing through it."
+ ],
+ "hedge_conversions": [],
+ "passes": [],
+ "culls": {
+  "object-not-surface": 3,
+  "wrong-projection": 1
+ }
+}

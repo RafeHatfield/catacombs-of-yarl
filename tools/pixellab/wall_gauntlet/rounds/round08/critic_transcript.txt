@@ -1,0 +1,68 @@
+CANDIDATE: r08_00
+CULL: none
+VERDICT: FAIL
+WHY: The four dark round-cornered voids repeat as an identical row of blobs every 32px and nothing visible fastens the wall — no pin, rope or timber, only mortar lines and a soft diagonal smear bottom-left that has no cause.
+
+CANDIDATE: r08_01
+CULL: none
+VERDICT: FAIL
+WHY: The vertical dark ticks in the mid band are 1px painted stripes with no thickness and no fixing at either end, and the left third of that band is undesigned flat grey.
+
+CANDIDATE: r08_02
+CULL: key-light
+VERDICT: FAIL
+WHY: Every course carries a light stripe along its top edge and a dark line along its bottom — a baked overhead light repeated three times inside one tile, which no top surface could explain.
+
+CANDIDATE: r08_03
+CULL: none
+VERDICT: FAIL
+WHY: The lower ten rows are a featureless grey field with two stray light dashes, and the 2px nubs on the block edges are specks rather than readable fixings.
+
+CANDIDATE: r08_04
+CULL: none
+VERDICT: FAIL
+WHY: The staves in the upper band are alternating flat light/dark stripes with no ends, no thickness and no fixing, and the flat rectangle at their right is an unresolved blank patch.
+
+CANDIDATE: r08_05
+CULL: none
+VERDICT: FAIL
+WHY: The dark H-shaped glyph in the upper-right cell is a distinctive stamp that repeats on a visible grid when tiled, and the lighter fills inside the frames are amorphous smudges rather than material.
+
+CANDIDATE: r08_06
+CULL: none
+VERDICT: FAIL
+WHY: Four large undifferentiated panels separated by mortar lines, with scattered light rectangles at the bottom that describe no object — nothing holds it together and nothing has happened to it.
+
+CANDIDATE: r08_07
+CULL: key-light
+VERDICT: FAIL
+WHY: Four colours arranged as plain rectangles, each with a highlight stripe on its top edge and shadow on its bottom — a baked top light on a placeholder brick grid.
+
+CANDIDATE: r08_08
+CULL: none
+VERDICT: FAIL
+WHY: The horizontal tie band and its T-stub are the same grey as the stone so they read as a smear rather than a member, and neither the band nor its junction shows a single pin, strap or lashing.
+
+CANDIDATE: r08_09
+CULL: key-light
+VERDICT: FAIL
+WHY: Every course has a light stripe on its top edge and an identical row of dark square teeth along its bottom — a baked overhead light plus a decorative fringe stamped uniformly across all three courses.
+
+CANDIDATE: r08_plant
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: A single isometric warm-brown lozenge floating in the middle of a flat grey field, black-ringed and lit from upper-left — it is a prop on a background, not wall surface.
+
+FLIP LIST
+- Remove the per-course top highlight and bottom shadow from r08_02, r08_07 and r08_09. Distinguish courses by the mortar recess and by varying the block faces themselves (chipped corners, differing block heights), not by a light stripe that repeats down the tile.
+- Every tile in this set is 4–13 values of the same grey-blue. Give timber, iron and rope distinct hues and value ranges from stone so a beam is not the same colour as the wall it is pinned to — r08_08's tie band is invisible for exactly this reason.
+- Draw at least one fixing that reads at 32px: a driven pin as a 2x2 head with a 1px dark socket ring sitting proud of the surface, or a rope lashing as three parallel diagonal strands crossing a member with its ends visibly bound. No candidate in this set has one.
+- Give the vertical staves in r08_01, r08_04 and r08_06 thickness: a 3px-wide face with a 1px darker edge on one side of each stave, a visible top and bottom end, and a horizontal member crossing them with fixings at each crossing. As drawn they are 1px stripes.
+- Fill the dead zones: the lower third of r08_03, the left third of r08_01's mid band, the right rectangle in r08_04. Each is a flat fill larger than 8x8 with no structure; put stone coursing or a repair there.
+- The bright 5px band at rows 0–4 appears mid-wall when the tile is stacked, so it reads as a shelf, not a top. Either give it a genuine return edge (a 1px darker line at rows 4–5 plus a 1–2px recess where the top plate overhangs the face) so it reads as thickness in isolation, or remove it and author the top band as a separate cap tile.
+- Break the horizontal lockstep. Every tile here resolves into continuous stripes when repeated. Run at least one element — a leaning brace, a patched-over breach, a vertical post — across the tile's top and bottom edges so it continues into the neighbour and interrupts the banding.
+- Redraw r08_plant entirely: it is straight-on wall surface that is wanted, filling all 32x32 with no background, no black outline and no upper-left light.
+
+Nothing in this round ships. The set's shared failure is that it is grey masonry with mortar lines and nothing else — the orc repairs the fiction is built on (rope, driven pins, hide, salvaged timber) appear in none of the eleven files, so W2 answers "nothing holds it together" every time.
+
+*Model: Claude Opus 5 (1M context)*

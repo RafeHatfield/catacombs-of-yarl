@@ -1,0 +1,50 @@
+{
+  "round": 2,
+  "framing": "architectural section, round 1's flip list applied — structure first, repair made physical",
+  "conditioned": false,
+
+  "hypothesis": "Round 1 returned 0 passes in 10: 4 culled as NOISE, 1 object-not-surface, 1 outline, and the 4 that survived the mechanical culls failed the wall questions. The critic's single most useful line: 'Nothing in the set shows a repair.' Round 1's prompt DID name a timber beam, driven pins and rope — and the generator dropped all of it and returned bare masonry. That is the same shape as Stage 1, where naming the orc work produced an object made OF orc work. The lever this round is PHYSICALITY: describe the repair by what it does to the stone around it — a pin spalls its hole, a baulk stands proud and darkens its underside — rather than by naming the material and hoping. Round 1's other flip items are structural and are applied literally.",
+
+  "description": "A section of a dungeon wall seen straight on from the front, filling the frame. Big rough grey stone blocks laid in level courses, the courses running right off both side edges mid-block. Each block is uneven quarried stone broken into two or three close values, darker along its lower edge where dust has collected. The mortar beds between them are uneven: tight and thin in places, crumbled wide and dark in others, packed pale in one or two. Several block corners are chipped back so the joint runs into the face. Laid horizontally across three of the courses is a squared timber baulk that stands proud of the stone, dark along its underside where it lifts off the wall, held by two driven iron pins whose heads sit flat and whose holes have cracked the stone around them. Along the top edge only, a narrow band of the wall's upper surface, a clear value step from the face, its lower join broken and irregular rather than ruled straight. Cold grey stone throughout. Heavy, over-built and plain: nothing on it is decorative.",
+
+  "negative_description": "single object, isolated object, item, icon, prop, sprite on a background, empty background, floating, border, frame, framed panel, edge border, vignette, drop shadow, cast shadow, banner, horizontal stripe, continuous stripe, niche, alcove, recess, arch, window, chest, box, crate, barrel, door, doorway, gate, coffin, sarcophagus, furniture, candle, torch, lantern, bone, skull, shield, treasure, isometric, three quarter view, tilted, diamond, seamless texture, noise, static, speckle, mint, teal, turquoise, orange, glowing, emissive, cobwebs, blood, rubble, collapse, ruins, moss, vines, plants, text, watermark, character, creature",
+
+  "parameters": {
+    "image_size": {"width": 32, "height": 32},
+    "outline": "lineless",
+    "detail": "low detail",
+    "view": "side",
+    "no_background": false
+  },
+
+  "flip_list_applied": [
+    {"item": "The pale bottom strip tiles into a continuous horizontal banner every 32px. Put the top-surface band along the TOP edge, 4-6px deep, a distinct value step, join broken irregularly rather than ruled straight.",
+     "change": "'Along the top edge only, a narrow band of the wall's upper surface, a clear value step from the face, its lower join broken and irregular rather than ruled straight.' Negatives gain banner, horizontal stripe, continuous stripe."},
+    {"item": "Mortar joints are uniform 1px dark lines. Vary them — tight, crumbled wide, some packed lighter — and chip block corners so the joint runs into the face.",
+     "change": "'tight and thin in places, crumbled wide and dark in others, packed pale in one or two. Several block corners are chipped back so the joint runs into the face.'"},
+    {"item": "Blocks are flat single-colour fills. Give each a two-to-three value break, darker pooled at the lower edge where dust collects — not a bevel, not a highlight.",
+     "change": "'uneven quarried stone broken into two or three close values, darker along its lower edge where dust has collected'"},
+    {"item": "No load path. Draw the actual structure first: coursed blocks with visible course lines.",
+     "change": "Structure now LEADS the description — 'laid in level courses' precedes every other clause, where round 1 opened on the framing."},
+    {"item": "Nothing in the set shows a repair. Add a salvaged baulk with visible thickness (a 2px darker edge along its underside where it stands proud, not a painted stripe) and a driven iron pin with a visible head at each end, each in a hole that has spalled the stone.",
+     "change": "'stands proud of the stone, dark along its underside where it lifts off the wall, held by two driven iron pins whose heads sit flat and whose holes have cracked the stone around them'. THE ROUND'S PRIMARY LEVER: the repair is described by its effect on the stone, not by its material."},
+    {"item": "Remove the black-outlined niche. A recess must be authored as its own tile, not as the repeating surface.",
+     "change": "Negatives gain niche, alcove, recess, arch, window."},
+    {"item": "Delete the dark border columns and the bright edge row; let block courses run off all four edges mid-block so neighbours interlock instead of butting into a frame.",
+     "change": "'the courses running right off both side edges mid-block'. Negatives gain framed panel, edge border."},
+    {"item": "Drop the mint and the orange blob — outside the cold palette, reads as emissive.",
+     "change": "'Cold grey stone throughout.' Negatives gain mint, teal, turquoise, orange, glowing, emissive."},
+    {"item": "Every survivor must be checked as a 3x3 tile before submission; any element producing a continuous line or regularly-spaced motif at the 32px pitch is disqualifying.",
+     "change": "⚠ NOT APPLIED AS A PROMPT CHANGE, deliberately. It is a verification step, not a generation instruction — it belongs to the survivors sheet, not to the prompt. Recorded here so the omission is visible rather than silent."}
+  ],
+
+  "parameter_provenance": {
+    "note": "Parameters are UNCHANGED from round 1. The flip list was entirely about content, so changing a parameter at the same time would make the round's result unattributable.",
+    "image_size": {"value": "32x32", "clause": "RULED (Rafe). Frozen for this track."},
+    "outline": {"value": "lineless", "clause": "§12.1 LOCKED. Round 1 still returned one outlined candidate, which the critic culled — so the parameter is not sufficient on its own."},
+    "detail": {"value": "low detail", "clause": "§4.1/§12; refinement is the register's named failure mode."},
+    "view": {"value": "side", "clause": "§3 — a wall face is seen from the side. Round 1's four NOISE culls were fewer than the micro-probe's twenty at 'high top-down', which is weak evidence for this change and is not claimed as more."},
+    "no_background": {"value": false, "clause": "Mechanical: opaque, full-bleed."},
+    "seed": {"value": "30200 + index", "clause": "Recorded, never relied on."}
+  }
+}

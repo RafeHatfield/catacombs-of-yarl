@@ -1,0 +1,78 @@
+{
+ "round": 9,
+ "generated": 10,
+ "n_requested": 10,
+ "conditioned": null,
+ "seed_base": 30900,
+ "plant": null,
+ "plant_src": null,
+ "plant_caught": null,
+ "round_void": false,
+ "verdicts": {
+  "r09_00": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The lower half resolves as thin legs standing on a pale floor strip under a shelf, so it reads as racking in a room rather than the face of a wall, and nothing anywhere is fixed to anything \u2014 no pin, no lashing, no bracket."
+  },
+  "r09_01": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The blocks are single dead flat fills of one colour with no stone surface at all, and the brown middle course is unreadable scribble that names no material \u2014 this is a placeholder brick pattern, not a wall."
+  },
+  "r09_02": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The row of dark vertical teeth below the block course has no structural explanation \u2014 it is neither joint, timber, nor void \u2014 and tiled it becomes a repeating comb that overwhelms the masonry it sits under."
+  },
+  "r09_03": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Two courses of almost uniform flat blocks with a decorative cream-and-brown frieze pinned at a fixed height; the frieze repeats identically every 32px as visible wallpaper banding and no element fastens to any other."
+  },
+  "r09_04": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The near-black picket band reads as an open gap rather than wall, the speckle band under it has no structure, and the block course below is flat untouched fill \u2014 three unrelated stripes stacked, not one wall."
+  },
+  "r09_05": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The top pegs stop dead at the cap line and connect to nothing below, the left/right edges do not join \u2014 a doubled joint and 1px block sliver appear at every horizontal seam \u2014 and no fixing holds the courses together."
+  },
+  "r09_06": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "A strip of framed niches floating on a featureless flat grey field that occupies over half the tile, each frame carrying its own dark ring outline."
+  },
+  "r09_07": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The block interiors are tonal mush with no readable stone edges, and the timber shelf band breaks at the tile seam into a narrow orphan compartment with a stray purple hook mark across the join."
+  },
+  "r09_08": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Eight colours, blocks that are pure unbroken fill, and one brown band of tan blobs \u2014 there is no surface here at all, only outlined rectangles."
+  },
+  "r09_09": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Four unrelated materials stacked in fixed stripes \u2014 pale cap, grey course marked with arbitrary L-shaped glyphs, a row of empty brown drawer fronts, and eight rows of featureless purple \u2014 and the drawers read as discrete boxes set into a background."
+  }
+ },
+ "flip_list": [
+  "Every tile puts its dark division lines at exactly y=5, y=14 and y=22, so a tiled wall bands into fixed horizontal stripes. Break the course heights: make the joint rows land at different heights per tile and let at least one block span a division so the eye cannot lock onto a 32px rhythm.",
+  "The bright cap band (rows 0\u20134) is flat fill in every candidate and repeats every 32px vertically, giving a wall with a top surface every course. Either give the cap actual depth \u2014 a chipped front lip 1px darker, aggregate on the top face, and wear only where a hand or shoulder would pass \u2014 or remove it from the body tile and ship the cap as a separate top-edge tile.",
+  "Nothing in this set is fastened. Add explicit fixings that cross a joint: a driven iron pin whose head sits proud of the block face with a 1px bright rim and a matching darker seat where it entered, and a rope or hide strap that passes over a block, tightens visibly at a peg, and leaves the block behind it deformed by the pressure.",
+  "r09_01, r09_03, r09_04 and r09_08 fill blocks with a single flat colour. Give each block two or three tones of the same hue in irregular patches \u2014 the pitted face, the sheared face, the rubbed-smooth band at hand height \u2014 not a gradient and not noise.",
+  "r09_05 and r09_07 do not tile horizontally: r09_05 produces a doubled joint and a 1px block sliver at the seam, r09_07 orphans a narrow shelf compartment. Redraw so a block, a shelf frame and a timber all straddle x=31\u21920 and finish on the other side.",
+  "The brown bands in r09_01, r09_02, r09_03, r09_07, r09_08 and r09_09 read as decorative friezes at a constant height. Make the timber a specific salvaged member: draw its end grain where it is cut off, show it bearing weight \u2014 the stone above it sagging into it, the stone under it crushed \u2014 and let it sit at a different height from tile to tile.",
+  "r09_06 needs rebuilding from scratch: delete the flat grey field, extend masonry to all four edges, and if niches are wanted, cut them into that masonry so the wall material forms their jambs, with no ring outline around any frame.",
+  "r09_00's lower band reads as legs on a floor. Close the gaps between the verticals with wall material so they become pilasters emerging from the same surface, and remove the pale strip they appear to stand on."
+ ],
+ "hedge_conversions": [],
+ "passes": [],
+ "culls": {
+  "object-not-surface": 1
+ }
+}

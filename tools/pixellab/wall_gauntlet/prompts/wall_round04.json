@@ -1,0 +1,51 @@
+{
+  "round": 4,
+  "framing": "r3 flip list applied, AND conditioned on C-GAB — the first parameter-side lever of the gauntlet",
+  "conditioned": true,
+  "style_reference": "C-GAB",
+  "style_strength": 50,
+
+  "hypothesis": "Round 3 went BACKWARDS on the axis it tried to fix: object-not-surface culls rose 3 to 6, and the specific failures were doorways, braziers, hearths, arches and hatches. The 'fragment of a long wall with no centre' framing did not read as 'no landmark' — it read as 'a wall, and therefore a wall WITH SOMETHING IN IT'. Asking a single-object generator for a wall keeps returning the most object-like wall available. Three text framings have now failed in three different ways: object (r1 Stage-1 shape), noise (micro-probe), landmark (r3). This round keeps applying the flip list but adds the one lever that is not text at all — style conditioning on C-GAB, which the STOP 1 smoke test measured as propagating material DNA in 12 of 12 and which Rafe named as the compositionally neutral parent (VAB is charactered stock, not a style parent). If conditioning fixes the palette drift and the material at once, that is worth more than any further wording. Round 5 runs this same prompt BARE so the conditioning is attributable.",
+
+  "description": "A dungeon wall of cold grey quarried stone, seen straight on from the front. Level courses of blocks, the courses uneven in height and the vertical joints offset irregularly, blocks of different lengths, three or four of them replaced with mismatched salvage stone. The mortar joints are much darker than the block faces, roughly a third of their brightness, and each block carries a single lighter pixel along its top edge. Where a block has been replaced the gap around it is packed with smaller chipped stone in a coarser, paler mortar, so the eye reads old block, new packing, old block. Laid horizontally across the whole width is a squared timber baulk that runs off both the left and right edges and continues past them, standing proud of the stone with a darker under-edge. It is fixed by two driven iron pins, each a small square head with a bitten rim, and the stone around each is bruised dark. One turn of rope is wrapped over the timber where it crosses a joint. The top four rows of the frame are the wall's upper surface: one flat value, clearly lighter than the front face, meeting it on a single hard line. Everything below that is front face, all the way to the bottom of the frame. Stone from edge to edge.",
+
+  "negative_description": "doorway, door, arch, archway, window, hatch, brazier, hearth, fireplace, fire, opening, gap, entrance, niche, alcove, recess, landmark, feature, centrepiece, centred motif, symmetrical, floor, ground, floorboards, ground band, single object, isolated object, item, icon, prop, sprite on a background, background, empty background, floating, border, frame, framed panel, vignette, drop shadow, cast shadow, banner, continuous stripe, chest, box, crate, barrel, coffin, sarcophagus, furniture, candle, torch, lantern, bone, skull, shield, treasure, isometric, three quarter view, tilted, diamond, seamless texture, noise, static, speckle, green, mint, teal, turquoise, spring green, orange, brown, warm, glowing, emissive, cobwebs, blood, collapse, ruins, moss, vines, plants, text, watermark, character, creature",
+
+  "parameters": {
+    "image_size": {"width": 32, "height": 32},
+    "outline": "lineless",
+    "detail": "low detail",
+    "view": "side",
+    "no_background": false
+  },
+
+  "flip_list_applied": [
+    {"item": "Delete every centred feature — the doorway, brazier, hearth mouth, arch, hatch. A wall tile carries no unique landmark; landmarks are separate tiles.",
+     "change": "Every one of those five nouns is now an explicit negative, plus landmark, feature, centrepiece, opening, entrance. The r3 phrase 'no centre and no edges of its own' is DELETED — it is the phrase that produced them."},
+    {"item": "Remove the ground band along the bottom. Wall must run to row 31; the floor is a different tile.",
+     "change": "'Everything below that is front face, all the way to the bottom of the frame.' Negatives gain floor, ground, ground band, floorboards."},
+    {"item": "Move the depth cue to the top edge: rows 0-4 are the top surface, one flat value step and a different hue; rows 5-31 are the front face.",
+     "change": "'The top four rows of the frame are the wall's upper surface: one flat value, clearly lighter than the front face, meeting it on a single hard line.' Transcribed as row counts."},
+    {"item": "Make the tile wrap — no joint, block or band may terminate at the border.",
+     "change": "'Stone from edge to edge'; the baulk 'runs off both the left and right edges and continues past them'. ⚠ Partial: a text-to-image call cannot be told about column 31 wrapping into column 0, and this is now the third round where a wrap instruction has been approximated rather than executed. Recorded as a known limit of the surface, not as an applied fix."},
+    {"item": "Delete the flat teal field entirely; there is no background in a wall tile.",
+     "change": "Negatives gain background, teal, turquoise; 'Stone from edge to edge'."},
+    {"item": "Break the single brick stamp: uneven course heights, irregular vertical joints, three or four blocks replaced with cracked or mismatched salvage.",
+     "change": "'the courses uneven in height and the vertical joints offset irregularly, blocks of different lengths, three or four of them replaced with mismatched salvage stone'."},
+    {"item": "Add the repair hardware: a baulk across the full width running off both edges, two driven pins each a 2x2 head with a bitten-in rim (not a dot), and one rope lashing where the timber crosses a joint.",
+     "change": "Transcribed almost verbatim, including the pin geometry and the lashing. FOURTH phrasing of this instruction across four rounds."},
+    {"item": "Show the pattern of repair: pack the gap around a replaced block with smaller chipped stone and a coarser mortar of a different value, so the eye reads old block / new packing / old block.",
+     "change": "Taken verbatim — the critic's own sentence is better than a paraphrase would be."},
+    {"item": "Drop the saturated mint and spring green by half their chroma toward grey-olive; keep green only as a thin residue in joints, never as a field colour.",
+     "change": "Negatives gain spring green and keep green/mint/teal. The positive text now opens on 'cold grey quarried stone'. ⚠ Simplified to a ban rather than a chroma reduction: a text prompt has no half-chroma control, and the palette is not this probe's to author (§5 forbids creating one)."},
+    {"item": "Rebuild r03_04 from scratch as masonry — stripes with a stencilled motif cannot be edited into stone.",
+     "change": "N/A at prompt level; it is advice about one candidate, and every round rebuilds from scratch by construction."}
+  ],
+
+  "parameter_provenance": {
+    "note": "⚠ TWO THINGS CHANGE THIS ROUND — the flip list AND conditioning — which normally makes a result unattributable. It is done knowingly and the attribution is bought back by design: round 5 runs THIS EXACT PROMPT bare, so the conditioned/bare pair isolates the lever. Spending 10 generations to keep the comparison clean is cheaper than a finding nobody can rely on.",
+    "style_reference": {"value": "C-GAB", "clause": "RULED (Rafe): conditioning rounds prefer GAB as compositionally neutral; VAB is charactered stock and not a style parent. The STOP 1 smoke test measured composition propagating along with material, which is exactly why the parent's own composition matters."},
+    "style_strength": {"value": 50, "clause": "The schema's 'balanced'. ⚠ The default is 0, at which a reference does nothing at all — a measured trap on this endpoint."},
+    "seed": {"value": "30400 + index", "clause": "Recorded, never relied on."}
+  }
+}

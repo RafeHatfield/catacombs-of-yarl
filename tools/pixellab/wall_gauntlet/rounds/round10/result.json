@@ -1,0 +1,87 @@
+{
+ "round": 10,
+ "generated": 10,
+ "n_requested": 10,
+ "conditioned": null,
+ "seed_base": 31000,
+ "plant": "r10_plant",
+ "plant_src": "A/wall/A_wall_03.png",
+ "plant_caught": true,
+ "round_void": false,
+ "verdicts": {
+  "r10_00": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "The barred dark field is bounded left and right by flat grey pilasters, so it reads as a grille or gate panel set into a wall rather than wall, and rows 27\u201331 are 160 pixels of one undifferentiated grey."
+  },
+  "r10_01": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Flat single-colour rectangles randomly packed against pure-black gaps is a subdivision diagram, not masonry, and the olive beam near the bottom is a full-width painted stripe with no thickness and not one fixing."
+  },
+  "r10_02": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Reads as industrial shelving \u2014 a slotted upper register, a bench-like beam with a bright rail above it, and a lower storage tier \u2014 and tiled it becomes stacked racking, not a surface you stand beside."
+  },
+  "r10_03": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The brightest element is a discrete white blob floating in the mortar seam and the second brightest is an unmotivated pale smear dripping out from under the beam; both read as props stuck to a flat block diagram."
+  },
+  "r10_04": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Rows 9\u201319 are eleven pixel-identical rows, eight further rows are a single flat colour, one colour covers 52% of the tile, and the only incident is a tapering wedge with a white dot that reads as a hanging spike."
+  },
+  "r10_05": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The strongest of the set and still decorative \u2014 the beam's single metal plate sits entirely inside the beam and grips nothing above or below it, and the cap band's flecks are one motif stamped twice at 13px pitch."
+  },
+  "r10_06": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Nothing holds it together \u2014 the blocks are flat, uniform and untied, the \"pins\" are isolated single purple pixels at corners that read as compression speckle, and the dark ticks in the cap band float with no base."
+  },
+  "r10_07": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "Two pale squares each ringed in hard black read as buttons pasted on the surface, the tan band is camouflage mottle rather than timber with a direction, and the left and right edges do not match so the horizontal repeat seams."
+  },
+  "r10_08": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "A saturated teal starburst sits on the wall as a discrete object in a hue nothing else in the tile supports, the bar field is one row copied six times, and the bottom six rows are structureless brown speckle."
+  },
+  "r10_09": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "why": "The evenly spaced tan squares in a dark frame read as dentil moulding \u2014 deliberate ornament, which this underworld would never have \u2014 and a staircase-shaped pale smear runs down through them with no cause."
+  },
+  "r10_plant": {
+   "cull": "object-not-surface",
+   "verdict": "FAIL",
+   "why": "An isometric diamond slab floating on a flat grey field with a black outline, a shadow under its lower edge, and a lit upper-left face against a darkened lower-right \u2014 four separate culls in one image."
+  }
+ },
+ "flip_list": [
+  "r10_05: extend the beam's metal plate past the beam's top and bottom edges into the masonry courses above and below, and terminate each end in two visible driven pin heads, so the plate ties timber to stone instead of decorating the timber.",
+  "r10_05: the cap band's pale flecks repeat as one identical motif at x=5\u20138 and x=19\u201321; redraw the flecks with different widths and spacings at each position so no two are the same shape, and break the 13px pitch.",
+  "r10_05: replace the arbitrary rectangular tone patches inside each block with damage that has a cause \u2014 spalling that starts at a mortar joint and widens outward, or a chipped corner \u2014 so the variation reads as wear rather than as dithering.",
+  "r10_01, r10_04, r10_06: every block is a single flat colour. Give each block two or three internal values keyed to its own edges (darker where it meets a joint, lighter across a worn face), so a block reads as a stone rather than as a filled rectangle.",
+  "r10_01: the olive band at rows 26\u201328 is a stripe. Add a darker one-pixel underside along its full length to give it thickness, and put a driven pin or a hide strap through it at least twice across the 32px so it is held on rather than drawn on.",
+  "r10_00, r10_04: delete the flat single-colour bands at the bottom of the tile and carry the masonry coursing all the way to row 31, so the tile has no dead area when stacked.",
+  "r10_00, r10_08: the vertical bar fields are one row of pixels extruded downward for ten or more rows. Vary each bar's width by a pixel at two or three heights and break at least one bar with a splice or a lashing, so it reads as timber that was cut and fitted rather than as a stencil.",
+  "r10_08: remove the teal cluster entirely and remove the purple flecks from the cap band; both introduce hues the rest of the tile does not support.",
+  "r10_03, r10_09: remove the pale vertical smears. If a stain running down the wall is wanted, start it at a specific source \u2014 under a beam end, out of a joint \u2014 and make it darker than the wall, not lighter than everything else in the tile.",
+  "r10_09: break the even spacing of the tan squares \u2014 vary their widths, drop one, plug another with a different material \u2014 so the band stops reading as moulding and starts reading as a run of salvaged sockets nobody aligned.",
+  "r10_07: strip the black rings from the two pale squares and set them into the surface with a one-pixel recess on two adjacent sides only, so they read as plates driven flush rather than as stickers.",
+  "All candidates: the bright cap band is a hard horizontal edge at exactly the same row in every tile, so stacking produces a bright stripe every 32 pixels. Ragged the boundary between cap and face by one or two pixels at irregular intervals and let a block or a beam end break upward through it."
+ ],
+ "hedge_conversions": [],
+ "passes": [],
+ "culls": {
+  "object-not-surface": 2
+ }
+}

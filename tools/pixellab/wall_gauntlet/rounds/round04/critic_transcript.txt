@@ -1,0 +1,68 @@
+CANDIDATE: r04_00
+CULL: none
+VERDICT: FAIL
+WHY: Soft mottled blobs with no joint, no course, no fixing — nothing holds it together, and the dark bottom rows read as a baked ground shadow rather than wall.
+
+CANDIDATE: r04_01
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: Three separate dark-ringed lumps sitting on 61% undifferentiated flat grey — discrete rocks on a background, not wall surface.
+
+CANDIDATE: r04_02
+CULL: none
+VERDICT: FAIL
+WHY: Mirror-symmetric arrangement of pale rectangles reads as a decorative panel that repeats into wallpaper, and there is no top band or thickness anywhere.
+
+CANDIDATE: r04_03
+CULL: none
+VERDICT: FAIL
+WHY: The bottom seven rows are a single flat dark value with no incident — a painted floor shadow, not wall — and the plate above it is a centred motif that stamps identically every tile.
+
+CANDIDATE: r04_04
+CULL: none
+VERDICT: FAIL
+WHY: The vertical dark member is a 2px painted stripe with no thickness and no fixing at either end, and the plus-mark beside it reads as a drawn symbol rather than damage.
+
+CANDIDATE: r04_05
+CULL: none
+VERDICT: FAIL
+WHY: 62% of the tile is two near-identical flat greys with a 1px line glyph floating in it — a schematic drawn on blank ground, not a wall.
+
+CANDIDATE: r04_06
+CULL: none
+VERDICT: FAIL
+WHY: Perfectly ruled 1px lines with every cell at the identical flat value make a drafting hatch, and the vertical post terminates mid-tile so it connects to nothing above or below.
+
+CANDIDATE: r04_07
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: A centred dark-bordered box containing two dotted pale blocks over a slotted bar — a discrete plaque inset in a background, and it reads unmistakably as a face.
+
+CANDIDATE: r04_08
+CULL: none
+VERDICT: FAIL
+WHY: The single high-contrast diagonal crack is a signature that repeats into a visible lattice every 32px, and there is a stray out-of-palette lime pixel at (5,23).
+
+CANDIDATE: r04_09
+CULL: object-not-surface
+VERDICT: FAIL
+WHY: A hard-outlined rectangular panel inset inside a five-pixel margin of uniform flat grey on all four sides — a sticker, not a surface.
+
+CANDIDATE: r04_plant
+CULL: wrong-projection
+VERDICT: FAIL
+WHY: An isometric diamond object floating on flat grey, in a saturated orange palette with a black outline and a key light from upper left.
+
+FLIP LIST
+- Every tile in this set puts its dark band along the bottom and nothing along the top. Move it: give each tile a 3–4px band along its **top** edge, drawn as the wall's top surface — a distinct value from the front face, with the front face's joints running under it and stopping at it, so the wall has a visible thickness you look at the side of.
+- r04_06: break the ruled grid. Vary the fill value of individual blocks by ±10–15 luminance, offset each course horizontally by an irregular amount rather than aligning them, and let joint lines drop or thicken by a pixel where a block has spalled. Then run the vertical post edge-to-edge, top to bottom of the tile, so it continues into the copies above and below.
+- r04_06 / r04_04: the vertical member currently ends in mid-air. Take it full height and add a fixing where it crosses each course — a 2x2 driven pin head with one pixel of dark under it, plus a 1px rope lash wrapping the post at one crossing.
+- r04_08: kill the single crack. Replace it with three or four short, unaligned fractures no more than 8px long, none touching a tile edge at a memorable point, so no continuous diagonal can form across copies. Also repaint pixel (5,23) to the local wall value — it is currently (178,211,159) and out of palette.
+- r04_02: destroy the left-right mirror. Shift the right-hand pale blocks down two rows and in three columns, delete one of them entirely, and replace the centred pale bar with an off-centre timber whose ends are cut by the tile edges.
+- r04_07: remove the bordered box. If a fitting belongs there, put it off-centre, let it be clipped by a tile edge, and drop the dark surround ring — let the fitting meet the wall directly with its own joint line rather than a ring of background.
+- r04_09 / r04_01: delete the uniform grey field. Fill the entire 32x32 with wall material edge to edge — courses, joints and fixings must run off all four sides — so nothing sits *on* anything.
+- r04_05: the flat middle is empty, not restrained. Fill it with the actual repair vocabulary at readable scale — a salvaged timber baulk two-thirds the tile width with a driven pin at each end, and a hide patch stretched over a gap with three lash points — instead of a 1px line drawing.
+- r04_00 / r04_03: replace the amorphous mottle with named structure. Decide what the wall is made of (cut block, rubble-and-mortar, or timber over fill), then draw the joints that separate one unit from the next, at least six of them per tile, running off at least two edges.
+- r04_03: the flat dark bottom seven rows are unusable as wall. Either cut it to a 2px joint line or fill it with the same block structure as the rest of the tile at a lower value, with the joint pattern continuing through it.
+
+Model: Claude Opus 5 (1M context).

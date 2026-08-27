@@ -1,0 +1,62 @@
+CANDIDATE: r07_00
+CULL: none
+VERDICT: FAIL
+WHY: Rows 0–4 use the identical greys as the face, so there is no top band at all — tiled, it is flat brick wallpaper with zero thickness, and the only chromatic note is a scatter of green-white 2px specks that repeat on a visible 32px grid.
+
+CANDIDATE: r07_01
+CULL: none
+VERDICT: FAIL
+WHY: Two competing light bands per tile — the cap at 167 and a brighter 170 band at rows 18–19 sitting in the middle of the face — so you cannot tell which edge is the top, and the purple-cast mortar (65,51,69) is the only warm note in an otherwise neutral tile.
+
+CANDIDATE: r07_02
+CULL: none
+VERDICT: FAIL
+WHY: Five-plus courses of ~4px blocks inside 32px reads as woven cloth or a waffle grid rather than stone, and at phone scale it collapses into high-frequency shimmer.
+
+CANDIDATE: r07_03
+CULL: key-light
+VERDICT: FAIL
+WHY: Every course without exception runs light at its top rows and dark at its bottom rows with no reciprocal bottom edge — a baked overhead light direction — and beneath that it is stock running-bond brick with no damage, no salvage and nothing that has happened to it.
+
+CANDIDATE: r07_04
+CULL: none
+VERDICT: FAIL
+WHY: Same undersized block scale as r07_02, and the vertical joints stack into near-continuous columns across several courses, so the bond that should hold it together visibly does not.
+
+CANDIDATE: r07_05
+CULL: none
+VERDICT: FAIL
+WHY: Rows 0–3 are literally the same 128,129,132 as the body courses — no top surface exists — and the two bright tapering forms at rows 19–24 read as wax runs or icicles, stamped at identical coordinates in every tile.
+
+CANDIDATE: r07_06
+CULL: none
+VERDICT: FAIL
+WHY: The cap tone appears 63 more times down the face, and the wide flat light band at rows 11–15 reads as a second wall top; the dark hook and comma shapes at rows 18–23 resolve into nothing nameable.
+
+CANDIDATE: r07_07
+CULL: none
+VERDICT: FAIL
+WHY: The brightest value in the tile is spent on wedge-shaped splats sitting on the front face — they read as glare or droppings, not fixings — and only 5% of the cap is a tone unique to the cap, so the top plane never separates.
+
+CANDIDATE: r07_08
+CULL: none
+VERDICT: FAIL
+WHY: A 44px band of the exact cap value (157) sits at rows 24–26 low on the face, reading as a second top surface, and the L-shaped bright elements float without attaching to anything on either side.
+
+CANDIDATE: r07_09
+CULL: none
+VERDICT: FAIL
+WHY: The near-white 181 dabs on the upper edges of one course are brighter than the wall's own top cap at 139, inverting the plane read and baking in a light-from-above cue that repeats pixel-identically every tile.
+
+FLIP LIST
+- Reserve one tone exclusively for the top band. Pick the lightest grey, confine it to rows 0–4, and step every occurrence of it below row 5 down one value. This is required on 01, 02, 04, 05, 06, 07, 08 and 09, where that tone currently appears 9–63 times on the front face.
+- On r07_00 and r07_05, build a top band that does not exist yet: give rows 0–4 a tone at least 25 lum above the face, seat it on a 1px dark line at row 5, and remove that tone entirely from rows 6–31.
+- On r07_01 delete the 147/166 band at rows 18–19, on r07_08 delete the 157 band at rows 24–26, and on r07_09 drop the 181 dabs to face value. One light horizontal band per tile, at the top only.
+- On r07_02 and r07_04, redraw at no more than three courses per 32px with blocks at least 9px wide, and offset alternate courses by a non-half-block amount so joints stop stacking into columns.
+- On r07_03, remove the per-block vertical gradient: give each block a flat face value and a 1px chamfer on both its top and bottom edge, so the value change describes geometry instead of a light source.
+- Add the repair the fiction requires and none of these carry: run a salvaged timber baulk 4px tall the full width of the tile, sitting proud of the stone so it interrupts the mortar course it crosses, with a driven pin at each end drawn as a 2px head with a 1px dark seat where it bites the wood.
+- On r07_05, rebuild the rows 19–24 forms as a fixing rather than a drip: a horizontal strap 2px tall pinned at both ends, not a bright head with a shaft running downward.
+- On r07_07, replace the wedge splats with an iron plate spanning a joint — a flat rectangle with a visibly darker joint line running under it and a pin at each corner — so the brightest pixels in the tile are explained by an object with edges.
+- Break the 32px repeat: move every bright motif off the same coordinate in each variant, and make at least one course in each tile discontinuous — a block missing, packed with rubble, or crossed by the timber — so the eye has something to land on other than the grid.
+
+Model: Claude Opus 5 (1M context).
