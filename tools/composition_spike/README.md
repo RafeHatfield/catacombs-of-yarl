@@ -19,6 +19,8 @@ for one human question — **does a composed wall read as a wall, and does it re
 
 ---
 
+**The finding is in `SPIKE.md`. Read that first; this file is how to run the thing.**
+
 ## What is in here
 
 | Path | What |
@@ -30,6 +32,10 @@ for one human question — **does a composed wall read as a wall, and does it re
 | `critic_prompt.txt` | Fiction, tone, questions. Never the bible (LOOP-PROCESS §3.2). |
 | `make_sheets.py` | Side-by-side pairs for the human gate. |
 | `PARTS_MANIFEST.json` | Every part's ledger provenance, or its MOCK label. |
+| `SPIKE.md` | **The session report and the findings.** |
+| `verify_palette.py` | Checks that no composed pixel invents a colour. |
+| `measure_field.py` | Measures repetition in the RENDERED field, to check the seat's charge. |
+| `round_table.py` | The six rounds, read out of the evidence. |
 | `segments/` | Straight run, corner, south-facing run, assembled outside the engine. |
 | `evidence/` | Captures + rig logs + critic transcripts + control results. |
 
@@ -40,6 +46,9 @@ python3 tools/composition_spike/control_wall_variants.py  # the controls must pa
 python3 tools/composition_spike/capture_spike.py          # the captures
 python3 tools/composition_spike/run_critic.py 1           # the loop gate
 python3 tools/composition_spike/make_sheets.py            # pairs for the eye
+python3 tools/composition_spike/verify_palette.py         # no invented colour
+python3 tools/composition_spike/measure_field.py          # the repetition charge, measured
+python3 tools/composition_spike/round_table.py            # the rounds in one table
 
 TIER0_THEME=res://src/Presentation/assets/composition_spike/tile_themes_boundB.yaml \
   tools/tier0_harness/build_review_app.sh                 # onto the device
@@ -81,14 +90,26 @@ Fixed at the smallest scope that answers it: a mask may now declare a list, and 
 chosen by `PositionHash(x, y)` exactly as floor roles already are. A scalar entry still
 resolves to itself, so every shipped theme loads unchanged and no existing capture moves.
 
-**The fix is verified the way the tier-0 harness verifies its parameters, not by assertion**
-(§13.5, LOOP-PROCESS §4). `control_wall_variants.py` captures the real scene twice and requires
-the pixels to differ:
+**And the first version of that fix was incomplete, which is the more useful half of the story.**
+It made `wall_autotile` list-valued and left `wall_diagonal.interior_fill` a scalar — and
+`interior_fill` is **267 of the ~300 wall cells** in this corridor. The fix varied the visible 6%
+of the mass and left the other 94% stamping a single PNG. Two full critic rounds were spent
+judging one tile before a blind seat found it. Both roles now take lists.
+
+**Verified the way the tier-0 harness verifies its parameters, not by assertion** (§13.5,
+LOOP-PROCESS §4). `control_wall_variants.py` captures the real scene twice and requires the
+pixels to differ:
 
 | Control | Plant | Result |
 |---|---|---|
-| 1 — variants reach the renderer | every mask pinned to one tile id | 11.121% of pixels differ — PASS |
-| 2 — the mask-3 entry is the one read | mask 3 pointed at the FLOOR tiles | 11.717% of pixels differ — PASS |
+| 1 — variants reach the renderer | every mask pinned to one tile id | 11.999% differ — PASS |
+| 2 — the mask-3 entry is the one read | mask 3 pointed at the FLOOR tiles | 11.689% differ — PASS |
+| 3 — interior_fill's variants reach it | interior_fill pinned to one tile id | 32.641% differ — PASS |
+
+**Control 3 exists because control 1 could not have failed for the bug that actually happened.**
+Control 1's regex pins integer-keyed autotile entries; `interior_fill` is a word-keyed role in a
+different block, which is exactly how the hole survived a passing control. A control that cannot
+fail for the bug in front of it is not a control.
 
 This shape of bug has bitten this harness before: `--tile-size` was echoed into the log while
 `TopDownRenderer` drew a hard-coded 24px grid regardless. A parameter that changed only the log

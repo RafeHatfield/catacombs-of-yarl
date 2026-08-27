@@ -1,0 +1,95 @@
+{
+ "round": 6,
+ "commit": "2650e8ee51c05335b380e0967ee892f488dad20a",
+ "mapping": {
+  "C1": "boundB_lit.png",
+  "C2": "ctrlB_lit.png",
+  "C3": "boundA_lit.png",
+  "C4": "plant_lit.png",
+  "C5": "ctrlA_lit.png"
+ },
+ "plant": "C4",
+ "plant_caught": true,
+ "round_void": false,
+ "verdicts": {
+  "C1": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The wall is a brick elevation pasted flat under a top-down camera, the fixings fix nothing, and the floor is decorated on a regular grid.",
+   "q1": "North up the pink strip \u2014 it is the only line that branches, at the junction four tiles above me; south the same strip runs on with nothing new in view.",
+   "q2": "Running-bond brickwork of small rectangles in three close browns, with long horizontal string courses every dozen rows \u2014 a wall drawn face-on, and the floor is the same brickwork in a pinker tint.",
+   "q3": "Nothing holds it. Short brown pegs and a few dark bars sit scattered on unbroken brick; not one spans a joint, a crack or a break, and there is no rope, hide or salvaged timber anywhere.",
+   "q4": "No thickness \u2014 wall meets floor at a 1\u20132px line, there is no top face, no side face, and no cut edge where the corridor passes through the mass.",
+   "q5": "Nothing has happened. Intact masonry, evenly spaced square panels down the middle of the floor, a little moss \u2014 a tidy tiled corridor, not four hundred years of a line that could not be advanced."
+  },
+  "C2": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Identical failure to C1 with a different random seed \u2014 an elevation used as a ground plane, and no repair anywhere on it.",
+   "q1": "North, same as before \u2014 the junction above is the only branch; the texture is reseeded but the map and every decision it offers are identical.",
+   "q2": "The same face-on running bond, slightly rougher blocks and a few more pale wear streaks; wall and floor remain one material separated only by tint.",
+   "q3": "Nothing. The pegs and bars have moved a little and still sit on sound brick, tying nothing to anything.",
+   "q4": "None \u2014 the same hairline boundary, the same absence of any top or cut face.",
+   "q5": "Nothing. A reseed of C1's noise; the place is in exactly the same condition, which is to say untouched."
+  },
+  "C3": {
+   "cull": "cannot-read",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Wall and floor collide in value and hue at the exact tile where the walk decision is made, so the solid map is unreadable.",
+   "q1": "I cannot commit \u2014 the band immediately left of me is as bright as the tile I stand on and is bounded by its own dark seam, so it reads as a second corridor.",
+   "q2": "I cannot tell a wall from the ground: both are the same mottled tan in two or three close values, with no coursing, no block size and no joint.",
+   "q3": "Small dark bars with a pale dot at each end sit across the surface like cramps, but they lie on flat mottle with nothing broken under them.",
+   "q4": "No \u2014 a flat pattern; the only depth cue is a double dark line along the top edge of some masses, absent everywhere else.",
+   "q5": "Nothing legible has happened; the dark squiggles read as scratches on the image rather than cracks in stone, and the same Y-shaped mark is stamped repeatedly."
+  },
+  "C4": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "A depth cue applied on one axis only is worse than no depth cue \u2014 it asserts a viewing direction the straight-down camera does not have.",
+   "q1": "North to the junction, for the same reason as C1 \u2014 it is the same map, redrawn.",
+   "q2": "C1's face-on running bond with one change: a fine header course laid along the wall edges that face the east\u2013west corridor.",
+   "q3": "Nothing. The added header course is masonry, not repair; the pegs and bars still sit on sound brick holding nothing together.",
+   "q4": "The header course is the one attempt at a wall top, and it is added only where the wall faces the east\u2013west corridor \u2014 the edges flanking the north\u2013south corridor get nothing, so the same wall has thickness on one axis and none on the other.",
+   "q5": "Nothing. Same intact brick, same evenly spaced floor medallions, plus a decorative string course."
+  },
+  "C5": {
+   "cull": "cannot-read",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The solid map is not recoverable from the image \u2014 wall and floor are the same value and the same colour where it matters.",
+   "q1": "I cannot commit \u2014 measured at my own row, the wall beside me sits at L\u2248137 against the corridor's L\u2248135, in the same hue; only the square panel motif says which tile is floor.",
+   "q2": "I cannot tell a wall from the ground; the wall body is amorphous mottle with hairline squiggles and no unit, joint or course anywhere.",
+   "q3": "The same floating cramp-bars, lying on unbroken mottle.",
+   "q4": "No thickness in the body; a double dark band caps some north edges and nothing caps the others.",
+   "q5": "Nothing readable. Repeated stamped marks and vertical dashed seams running through solid mass, which the eye takes for two more corridors."
+  }
+ },
+ "passes": [],
+ "ranking": [
+  "C4",
+  "C1",
+  "C2",
+  "C3",
+  "C5"
+ ],
+ "separator": "The top three at least let you see where the stone stops and the floor begins; the bottom two dissolve that boundary entirely, and none of the five shows a single thing being held together.",
+ "flip_list": [
+  "Redraw the wall tile as the top of a wall rather than its face: drop the running-bond elevation, show block ends and beds in a coursing that turns at corners, and run a 3\u20134px cut face along every edge where the wall meets open floor \u2014 all four sides, not the two C4 does.",
+  "Make every fixing do work: put each driven pin through both halves of a split block with a visible burr where it enters the stone, wrap each rope lashing around a timber that spans two blocks and show the socket it seats in, and delete every peg currently sitting on unbroken masonry.",
+  "Open a value gap at the boundary in C3/C5: the wall adjacent to the corridor measures L\u2248137 against the corridor's L\u2248135 \u2014 drop wall albedo so solid tiles read at least 30% darker than floor tiles at equal distance from the light, and stop letting the panel motif be the only walkability cue.",
+  "Delete the vertical dashed seams running down the middle of the wall mass in C3/C5 at x\u2248315 and x\u2248500; they carry the corridor edge's line weight and read as two extra corridors.",
+  "Replace the evenly spaced square medallions in the corridor floor with irregularly placed salvage \u2014 slabs of visibly different stone, cut short, shimmed with packing at the ends, spaced by what was to hand rather than by a grid.",
+  "Flatten the per-course shading in C1/C2/C4: each mortar line currently has a bright band directly beneath it and a neutral band above, and that asymmetry survives dividing the engine light out \u2014 give each block a single albedo plus chipping so relief comes only from the engine.",
+  "Give C3/C5's wall a legible unit: a block size and a joint the player can count, so \"how many tiles of wall am I looking at\" has an answer from the image alone.",
+  "Remove the saturated yellow-green moss sprigs in all five; they are the only high-chroma hue in the palette and nothing grows without light."
+ ]
+}
