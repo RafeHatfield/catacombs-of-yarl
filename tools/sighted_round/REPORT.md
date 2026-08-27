@@ -1,5 +1,44 @@
 # THE SIGHTED ROUND — session report
 
+> ## GATE VERDICT: **FAIL** — Rafe, 2026-08-27, on the reference device.
+>
+> > **"Gate verdict: FAIL — the phone overrules the stills."**
+> > **"two seats ranked this above the bar; the device says otherwise; §13.2 vindicated again."**
+>
+> **This branch's work is closed. The next art session is tier-one scoping.**
+>
+> **The body of this report is left exactly as written before the gate.** It records what the
+> instruments said, and they said it honestly — two blind seats ranked the candidate above the
+> asset bar with no cull, the differencing check passed, the ring instrument passed, and the
+> delivered numbers hit the bar's measured construction. **All of that remains true and none of
+> it was sufficient.** Read §3 and §4 below as the instrument record they are, not as a verdict
+> they were never entitled to give.
+>
+> **What survives the gate, ruled explicitly and carried into tier one:**
+> - **§3 rides PROVISIONAL** — neither ratified nor rejected, per the bible's original
+>   sequencing, carrying the recipe, the flat-top rule and the Q3 control finding intact.
+> - **The Q3 control finding stands.** The asset bar's north–south walls have no thickness
+>   either; that is a measurement about the bar and is independent of Yarl's execution.
+> - **§6.5 (the value stack) and §3.1 (flat top) stand** — both were ruled on the round's
+>   measurements, not on its verdict.
+>
+> **What the gate took back, and it is part of what this round built:**
+> - **New bible §8.3.1 — the motif trap applies to wall material identically.** Wall tops are
+>   incident-free material; boundary rules and edge ticks are pattern and are out. **This culls
+>   the 16 px joint grid this round used to make the top plane flat** (§2.3 of the recipe, and
+>   `TOP_JOINT_PITCH` in `compose_recipe.py`). §3.1 is not weakened — *flat does not mean
+>   gridded, and a boundary rule is not a material.*
+> - **New bible §6.2.1 — a TIER-ONE PRECONDITION.** The rig's radius, falloff and ambient get a
+>   readability-tuning pass **before any asset is judged through them**. The value stack must be
+>   legible at gameplay distance, not at two tiles. This round's captures were read at 2× on a
+>   desktop; the phone is where that gap became visible.
+>
+> **The honest summary of the round's own error:** it treated a stack of green instruments as
+> evidence of quality. It was evidence that the instruments were satisfied. §13.2 carries this
+> now as its sharpest instance, because everything upstream of the phone was green.
+
+---
+
 **Every wall round on this project ran blind: builder, critic and seats deriving a top-down wall
 grammar from first principles, with no one ever shown a correct answer. This round had sight.**
 

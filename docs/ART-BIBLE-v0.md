@@ -1,6 +1,6 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.11 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
+**Status: v0.12 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
 or ruled at the gate on them (§8.3); §6.5 and §3.1 are measured against the asset bar and ruled,
 awaiting the device gate; §3 remains under test and ratifies at that gate. Everything else in
 this document still has not been derived.**
@@ -149,7 +149,7 @@ been declared finalised does not reopen because a later tier raised the standard
 
 ---
 
-## 3. Projection and grid — PROVISIONAL, under active test by the sighted round
+## 3. Projection and grid — PROVISIONAL, riding into tier one
 
 - **Orthogonal square grid. Portrait orientation. Not isometric.**
 - **Volume lives in what stands up, not in the ground plane.** Objects and walls present
@@ -187,6 +187,30 @@ resort, but named — and named before the round, not after it.
 
 **The reopening evidence stands exactly as recorded below; what it now feeds is that test rather
 than an immediate ruling.**
+
+**STATUS TRAIL (2026-08-27, AT THE DEVICE GATE): FAIL. §3 IS NEITHER RATIFIED NOR REJECTED —
+IT RIDES PROVISIONAL INTO TIER ONE, per this bible's original sequencing, carrying the recipe,
+the flat-top rule (§3.1) and the Q3 control finding intact.**
+
+Rafe's verdict, recorded in his own words because a trail that paraphrases a gate is not a
+trail:
+
+> **"Gate verdict: FAIL — the phone overrules the stills."**
+> **"two seats ranked this above the bar; the device says otherwise; §13.2 vindicated again."**
+
+**What this does and does not overturn.** It does not touch the Q3 control finding below — the
+bar's north–south walls still have no thickness, and that measurement is independent of whether
+Yarl's execution is good enough. It does not touch §3.1 or §6.5, which were ruled on the
+round's measurements rather than on its verdict. **What it overturns is the inference that
+two blind seats ranking the candidate above the bar meant the construction was finished.** It
+did not, and the phone said so.
+
+**Two laws come out of the gate and are recorded where they belong:** the motif trap extends to
+wall material (§8.3), and the rig gets a readability-tuning pass before any asset is judged
+through it (§6.2). **Both are consequences of looking at this on a phone at gameplay distance,
+which is the one thing no still and no seat in this round ever did.**
+
+---
 
 **STATUS TRAIL (2026-08-27): THE PREMISE IS VINDICATED BY THE Q3 CONTROL. §3 STAYS
 PROVISIONAL; RATIFICATION WAITS ON THE DEVICE GATE (§13.1).**
@@ -608,6 +632,41 @@ flatten again.
 > PLACEHOLDER values are ratified.** Whoever ratifies them owns that re-derivation. The honest
 > alternatives — derive the rig before freezing the ratio, or give wall tiles a light-response
 > clamp in the renderer — are both real and both outside the round that found this.
+
+#### 6.2.1 TIER-ONE PRECONDITION — the rig is tuned for readability BEFORE any asset is judged through it. RULED (Rafe, 2026-08-27, at the device gate).
+
+> **The §6.2 rig values — radius, falloff, ambient — get a readability-tuning pass before any
+> asset is judged through them. The value stack must be legible at GAMEPLAY DISTANCE, not at
+> two tiles.**
+
+**This is a precondition, not a task: no tier-one asset round starts until it is done.** The
+ordering is the whole of it. §6.2's values are PLACEHOLDER; every wall round so far has judged
+art through them anyway, and the coupling flag above shows the art bending itself to fit an
+undecided rig. **That is backwards, and the device gate is where it became visible.**
+
+**What the gate saw that no still could.** The sighted round's captures were read at 2× on a
+desktop, where a plane separation three tiles from the lamp is plainly there. On the phone, at
+the distance the game is actually played and across the radius the light actually reaches, the
+same separation is not doing the work — the pool is narrow, the falloff is steep, and §6.5's
+stack is legible in a band around the player and gone outside it. **A value law that only holds
+within two tiles of the lamp is not a value law, it is a vignette.**
+
+**Why the rig is the thing to move rather than the art.** The art has already been solved
+backwards once against these numbers (the coupling flag). Solving it backwards a second time,
+harder, to survive a falloff nobody has ratified, would bake an unratified rig deeper into every
+asset — and §6.5's ratios would then be carrying a lighting decision instead of a material one,
+which is the §6.3 line. **The rig is one table of numbers and the corpus is every asset in the
+game. Tune the cheap thing.**
+
+**What the pass owes, at minimum:**
+
+- **Legibility at gameplay distance**, stated as a distance and measured there — not at the
+  lamp's centre.
+- **The §6.5 stack surviving the falloff** across the lit radius, not only at its middle.
+- **The §6.2 arc preserved**: this is a readability tuning, not a licence to flood the Boundary
+  with light. *You begin as the only thing here that burns* is register and outranks
+  convenience.
+- **The ratified values written back here**, which fires the re-derivation rule above.
 
 This is the first measured instance of art and rig being coupled on this project. It will not be
 the last, and the reason to write it down here rather than in the recipe is that **§6.2 is where
@@ -1152,6 +1211,43 @@ objects**, and every round so far has shown a seat the first while calling it th
 | **base tile** | once, per material | material only — no incident | never alone; only as laid |
 | **variant / overlay** | per instance, randomised | the incident — cracks, wear, marks, channel | in the field it produces |
 
+#### 8.3.1 It applies to WALL material identically — RULED (Rafe, 2026-08-27, at the device gate)
+
+**§8.3 was written from floors. It is not a floor clause.** The device gate looked at the
+sighted round's walls on the phone and found the same arithmetic running:
+
+> **Wall tops are incident-free material. Boundary rules and edge ticks are pattern, and they
+> are out.**
+
+**This culls a construction this bible ruled in four hours earlier, and the sequence is the
+point.** §3.1 established that a wall top is flat — *not face material re-toned* — and the
+sighted round built that flatness with a **regular 2 px joint grid on a 16 px pitch**,
+phase-offset per variant. On a still, at 2×, that reads as the joints between blocks. Tiled
+across a room on a phone, it is **a ruled grid** — an incident at fixed offset in every cell,
+which is exactly what §8.3 forbids, arriving through the one part of the tile §3.1 had just
+made prominent.
+
+**§3.1 is not weakened by this and must not be read as weakened.** *A top surface is not face
+material re-toned* stands. What §8.3.1 removes is the thing that was standing in for material
+once the coursing came off: **flat does not mean gridded, and a boundary rule is not a
+material.** A wall top's material is whatever the stone is; if that reads as empty at 32 px,
+the answer is a variant system, not a lattice.
+
+**Where the boundary between the planes goes instead.** The turn between top and face is
+geometry and stays — it exists only where floor lies south, so it answers to what adjoins it
+(§12.1, §6.5). What may not stay is a rule drawn at a **fixed offset inside every tile**,
+because that offset is what the eye adds up.
+
+**The general form, so the next asset class does not have to earn this a third time:**
+
+> **Any treatment applied at a constant position within a tile becomes a lattice when tiled,
+> whatever it depicts and however well it is drawn.** Joints, ticks, rules, borders, panels,
+> caps. The test is not *what is it* — it is *where does it sit, and does it sit there every
+> time.*
+
+**Floors earned this clause; walls confirmed it; it is now written as a property of tiling
+rather than of either.**
+
 ⚠ **The trap has a mirror and it is not licensed here.** *Incident-free* is not *featureless*.
 Material has structure — joints, bond, grain, value break — and stripping that to avoid a motif
 produces the flat clone field the same seats cull on sight. **The test is whether a feature is a
@@ -1428,6 +1524,30 @@ be judged unlit.
 Machine checks are floors, never verdicts. Every metric ever promoted on this project was
 eventually humbled by an in-context human look.
 
+> **VINDICATED AGAIN — 2026-08-27, the sighted round's device gate. This is the sharpest
+> instance the project has produced, because everything upstream of the phone was green.**
+>
+> The sighted round did not fail its instruments. It passed them:
+>
+> - two independent blind seats ranked the candidate **above the asset bar**, unhedged, with no
+>   cull — §13.3's own bar, met;
+> - the differencing check passed and the arm it was compared against failed it;
+> - the ring instrument passed every composed tile, its own control suite green;
+> - the recipe's delivered numbers hit the bar's measured construction to two decimal places.
+>
+> **Rafe's verdict on the phone: FAIL. "The phone overrules the stills."**
+>
+> Nothing in that list was wrong as far as it went. The seats really did prefer it; the numbers
+> really did land. **What they could not see is the thing the clause exists for** — the work at
+> the size, the distance and the light it is actually played in. Two of them were looking at a
+> 2× crop on a desktop, and one of them was a number.
+>
+> **The operative lesson, and it is about sequencing rather than about seats:** a stack of
+> green instruments is not evidence of quality, it is evidence that the instruments were
+> satisfied. **Instrument agreement raises confidence in the instruments, not in the asset.**
+> The gate produced two laws in one look — §8.3.1 and §6.2.1 — that six critic-held rounds and
+> thirteen seat transcripts did not.
+
 Two gate screens are adopted from Gemfall, and they are the most portable artifacts in that
 project's apparatus:
 
@@ -1689,6 +1809,21 @@ Recorded so they are not re-derived; deliberately not law.
 
 *Revision history:*
 
+- *v0.12 — 2026-08-27. **The sighted round's device gate: FAIL, and two laws come out of it.**
+  Rafe walked the rounds-4/5 build on the phone and overruled the stills. **§3's status trail
+  gains the gate entry** — §3 is neither ratified nor rejected and **rides PROVISIONAL into tier
+  one**, carrying the recipe, §3.1 and the Q3 control finding intact; the two entries beneath it
+  are kept, because a trail that overwrites itself is not a trail. **New §8.3.1:** the motif trap
+  applies to WALL material identically — wall tops are incident-free material, and boundary rules
+  and edge ticks are pattern and are out. This culls the 16 px joint grid §3.1's own round built
+  four hours earlier, and the clause generalises past both asset classes: *any treatment applied
+  at a constant position within a tile becomes a lattice when tiled.* **New §6.2.1, a TIER-ONE
+  PRECONDITION:** the rig's radius, falloff and ambient get a readability-tuning pass **before any
+  asset is judged through them** — the value stack must be legible at gameplay distance, not at
+  two tiles; tune the one table of numbers rather than every asset in the game. **§13.2 gains its
+  sharpest instance**: every instrument upstream of the phone was green — two seats above the bar,
+  differencing passed, ring clean, delivered numbers on target — and the gate still said FAIL.
+  Instrument agreement raises confidence in the instruments, not in the asset.*
 - *v0.11 — 2026-08-27. **The sighted round's rulings land — the first round on this project run
   with sight, under §13.3's origination rule.** **NEW §6.5, THE VALUE STACK**, and it is the wall
   campaign's load-bearing finding: **the floor sits BETWEEN the wall's two planes** — top ≈1.11×
