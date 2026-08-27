@@ -448,6 +448,8 @@ axis this clause's ratification could not test, and a caveat trail that summaris
 evidence in its own words is not a caveat trail. **§6.3 stands.** This is the record, not a
 reopening.
 
+*(Numbering per `tools/composition_spike/SPIKE.md` §5.1b — there is no bible §5.1b.)*
+
 #### 5.1b THE PLANT OUTRANKED THE ARMS — and §6.4 said this comparison had never been run
 
 This was not designed and it is the most consequential thing in the report.
@@ -1239,7 +1241,7 @@ Recorded so they are not re-derived; deliberately not law.
 
 *Revision history:*
 
-- *v0.8 — 2026-08-26. The wall campaign's rulings land. **§6.3 gains the occlusion law** —
+- *v0.8 — 2026-08-27. The wall campaign's rulings land. **§6.3 gains the occlusion law** —
   occlusion, not illumination, stated as a vocabulary — with the **vocabulary-collision record**
   (a 1px chamfer request and a depth parameter manufactured the same violation on two different
   surfaces: a property of the scale, not of any tool) and the **light-off differencing check**

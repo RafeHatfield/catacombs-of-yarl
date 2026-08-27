@@ -329,7 +329,7 @@ images rather than parameters. One home, cited from both documents.
 
 ---
 
-*v0.4 — 2026-08-26. Three clauses, each twice-earned or campaign-earned. **New §4.1:**
+*v0.4 — 2026-08-27. Three clauses, each twice-earned or campaign-earned. **New §4.1:**
 measurable is not effective — a lever is proven on the axis it claims, not on the diff; the
 shading parameter measured HONOURED and never moved the lighting, on two surfaces. **§8 gains
 the destination rule:** a bar drawn from framing clauses alone was cleared 20/20 by
