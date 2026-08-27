@@ -1,0 +1,331 @@
+{
+  "kits": {
+    "yield/kit_A0": {
+      "arity": 8,
+      "canvas": [
+        52,
+        87
+      ],
+      "floor_bbox": [
+        10,
+        55,
+        42,
+        79
+      ],
+      "floor_cell": [
+        32,
+        24
+      ],
+      "n_painted": 20,
+      "painted": [
+        0,
+        1,
+        4,
+        8,
+        14,
+        17,
+        31,
+        32,
+        33,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "part_keys": [
+        "corners",
+        "doors",
+        "floor",
+        "floor_roof",
+        "outer_corners",
+        "outer_multi",
+        "partition",
+        "partition_doors",
+        "partition_multi",
+        "partition_wall",
+        "pillar",
+        "roof",
+        "sides",
+        "slopes",
+        "slopes_east",
+        "stairs",
+        "stairs_east"
+      ],
+      "rule_type": "composed",
+      "stack_stride_px": 24,
+      "view_angle": null,
+      "wall_tiles": 2
+    },
+    "yield/kit_A1": {
+      "arity": 8,
+      "canvas": [
+        52,
+        87
+      ],
+      "floor_bbox": [
+        10,
+        55,
+        42,
+        79
+      ],
+      "floor_cell": [
+        32,
+        24
+      ],
+      "n_painted": 20,
+      "painted": [
+        0,
+        1,
+        4,
+        8,
+        14,
+        17,
+        31,
+        32,
+        33,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "part_keys": [
+        "corners",
+        "doors",
+        "floor",
+        "floor_roof",
+        "outer_corners",
+        "outer_multi",
+        "partition",
+        "partition_doors",
+        "partition_multi",
+        "partition_wall",
+        "pillar",
+        "roof",
+        "sides",
+        "slopes",
+        "slopes_east",
+        "stairs",
+        "stairs_east"
+      ],
+      "rule_type": "composed",
+      "stack_stride_px": 24,
+      "view_angle": null,
+      "wall_tiles": 2
+    },
+    "yield/kit_A2": {
+      "arity": 8,
+      "canvas": [
+        52,
+        87
+      ],
+      "floor_bbox": [
+        10,
+        55,
+        42,
+        79
+      ],
+      "floor_cell": [
+        32,
+        24
+      ],
+      "n_painted": 20,
+      "painted": [
+        0,
+        1,
+        4,
+        8,
+        14,
+        17,
+        31,
+        32,
+        33,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "part_keys": [
+        "corners",
+        "doors",
+        "floor",
+        "floor_roof",
+        "outer_corners",
+        "outer_multi",
+        "partition",
+        "partition_doors",
+        "partition_multi",
+        "partition_wall",
+        "pillar",
+        "roof",
+        "sides",
+        "slopes",
+        "slopes_east",
+        "stairs",
+        "stairs_east"
+      ],
+      "rule_type": "composed",
+      "stack_stride_px": 24,
+      "view_angle": null,
+      "wall_tiles": 2
+    },
+    "yield/kit_A3": {
+      "arity": 8,
+      "canvas": [
+        52,
+        87
+      ],
+      "floor_bbox": [
+        10,
+        55,
+        42,
+        79
+      ],
+      "floor_cell": [
+        32,
+        24
+      ],
+      "n_painted": 20,
+      "painted": [
+        0,
+        1,
+        4,
+        8,
+        14,
+        17,
+        31,
+        32,
+        33,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "part_keys": [
+        "corners",
+        "doors",
+        "floor",
+        "floor_roof",
+        "outer_corners",
+        "outer_multi",
+        "partition",
+        "partition_doors",
+        "partition_multi",
+        "partition_wall",
+        "pillar",
+        "roof",
+        "sides",
+        "slopes",
+        "slopes_east",
+        "stairs",
+        "stairs_east"
+      ],
+      "rule_type": "composed",
+      "stack_stride_px": 24,
+      "view_angle": null,
+      "wall_tiles": 2
+    },
+    "yield/kit_B": {
+      "arity": 8,
+      "canvas": [
+        52,
+        87
+      ],
+      "floor_bbox": [
+        10,
+        55,
+        42,
+        79
+      ],
+      "floor_cell": [
+        32,
+        24
+      ],
+      "n_painted": 20,
+      "painted": [
+        0,
+        1,
+        4,
+        8,
+        14,
+        17,
+        31,
+        32,
+        33,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "part_keys": [
+        "corners",
+        "doors",
+        "floor",
+        "floor_roof",
+        "outer_corners",
+        "outer_multi",
+        "partition",
+        "partition_doors",
+        "partition_multi",
+        "partition_wall",
+        "pillar",
+        "roof",
+        "sides",
+        "slopes",
+        "slopes_east",
+        "stairs",
+        "stairs_east"
+      ],
+      "rule_type": "composed",
+      "stack_stride_px": 24,
+      "view_angle": null,
+      "wall_tiles": 2
+    }
+  },
+  "stable": {
+    "arity": true,
+    "canvas": true,
+    "floor_cell": true,
+    "n_painted": true,
+    "painted": true,
+    "part_keys": true,
+    "rule_type": true,
+    "stack_stride_px": true,
+    "view_angle": true,
+    "wall_tiles": true
+  }
+}

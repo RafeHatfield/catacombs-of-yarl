@@ -1,0 +1,1468 @@
+{
+  "flip_list": [
+    "Draw a top plane on every piece. Reserve the top 8\u201310 rows of each tile for the wall's upper surface, drawn as the *ends* of the wall stones \u2014 short rectangles running across the wall's thickness, not the long face-on running-bond currently used \u2014 and put a single hard 1px lip line where that top meets the front face. Right now the entire directory except cand_00 is flat front elevation, so no piece answers the thickness question.",
+    "Redraw the top surface separately for each run direction. A 12-wide north\u2013south piece (cand_02, 13, 15, 31, 33) must show a long top band running down the screen with the stone ends reading vertically; it currently shows the same horizontal courses as an east\u2013west piece, which is impossible in this view.",
+    "Give every silhouette cut a return face. On cand_04, 17, 22, 27, 28, 36, 39 and on both jambs of cand_18, 21, 24, 34, add a 2\u20133px vertical strip of top-surface value along the cut edge with a hard dark line at the corner, so the eye sees the wall turn instead of the artwork ending mid-stone.",
+    "Redraw each footprint from scratch instead of masking one painting. cand_10/18 share 98.2% of their pixels, cand_17/27 99.2%, cand_21/34 99.0%, cand_29/32 97.9%, and cand_13/33 are byte-identical; laying five different tiles in a row reproduces the same brace, the same pale bar and the same X mark once every 32 pixels. Move the brace, the plank and the pale bar to different heights and different columns in each piece, and delete cand_33 outright.",
+    "Open up the value range in the brown family. Every brown tile tops out at luminance 131 with 50% of its pixels inside a ~25-level band. Push the stone faces up to around 170 and the joints and recesses down below 25 so that at 32px the coursing still separates; the current spread turns the lower two-thirds of every piece into one brown rectangle.",
+    "Replace the stepped one-pixel diagonals with real timber. The diagonal brace in cand_03/05/06/07/10/18/24/28/30/38 is a single-pixel staircase with no ends; make it 3px thick, give it a lighter top edge and a darker underside, and terminate each end against a stone with a visible driven pin or a lashed rope wrap.",
+    "Put the repair story where it can be seen. In each piece, replace two or three of the dark unreadable clumps with one legible act of repair at a size that survives 32px: a 6\u00d710 salvaged plank pinned flat over a missing stone with four dark pin-heads, or a rope wrap of 3\u20134 parallel light strokes around a post. Nothing currently in the brown family reads as rope, hide, or a driven pin.",
+    "Cut cand_11, 16, 20, 23 and 37 and redraw them. Each is a flat field with random dark rectangles and no coursing, no edges and no ends; a post needs a visible cap, two visible sides, and a base where it meets the floor.",
+    "Redraw cand_00 so it stops repeating and starts showing use. Its rows 0\u201328 and 29\u201357 are pixel-identical: break that by shifting the tan course's cream blocks and the brick bond in the second half. Then remove the ornamental cream-blocked band entirely, replace three or four brick faces with mismatched salvaged stone, chip two arrises, and break up the flat single-colour cap with stone joints and two or three worn hollows.",
+    "Cut cand_09. It is a free-standing rounded object with a dark ring around its lower edge and a saturated orange-cream palette that appears in no other file in the directory."
+  ],
+  "hedge_conversions": [],
+  "kit_dir": "arm3/kit_arm3",
+  "label": "arm3",
+  "n_candidates": 38,
+  "n_plants": 2,
+  "plants_caught": 2,
+  "results": [
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "plant",
+      "label": "plant_b",
+      "name": "cand_00",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction \u2014 measured top-vs-bottom and left-vs-right differences are both under 3 levels.",
+        "role": "A length of plain wall meant to tile vertically \u2014 the whole 32\u00d758 image is one 29-row motif stamped twice, pixel for pixel.",
+        "thickness": "Yes \u2014 rows 22\u201326 are a pale flat cap with a darker lip under it, the only genuine top plane in the whole directory; but the cap is a single unbroken colour across all 32 columns, so it reads as a painted stripe rather than a surface a lantern could sit on."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing. There is not a single crack, replacement block, patch, or worn edge anywhere in it \u2014 it is a new wall, and the cream-blocked tan band is ornament, laid to be looked at.",
+        "holds": "Regular running-bond brick with even mortar joints, a tan course with cream blocks set at even intervals, and one small brown vertical pin through the cap. No rope, no straps, no braces, no patches.",
+        "light": "No direction \u2014 measured top-vs-bottom and left-vs-right differences are both under 3 levels.",
+        "role": "A length of plain wall meant to tile vertically \u2014 the whole 32\u00d758 image is one 29-row motif stamped twice, pixel for pixel.",
+        "thickness": "Yes \u2014 rows 22\u201326 are a pale flat cap with a darker lip under it, the only genuine top plane in the whole directory; but the cap is a single unbroken colour across all 32 columns, so it reads as a painted stripe rather than a surface a lantern could sit on.",
+        "verdict": "FAIL",
+        "why": "An undamaged decorative brick wall with a flat colour cap, duplicated exactly within its own height \u2014 it contradicts both the fiction and the requirement that pieces not read as stamped repeats."
+      },
+      "source": "plants/plant_b.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_12",
+      "name": "cand_01",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No named direction, but the upper-left masonry is pale and the lower-right is dark using the identical stone pattern, which reads as a value shift, not as two materials.",
+        "role": "A corner \u2014 full 32-wide run across the top, dropping to an 18-wide leg down the right.",
+        "thickness": "No. Both the top region and the leg are drawn as the same face-on running-bond masonry; nothing anywhere shows a horizontal plane, an edge, or a return. Nowhere to set a lantern."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. There are dark marks in the lower half but none resolve into damage, repair, or wear.",
+        "holds": "A few dark clumps that might be brackets, one horizontal plank low down, a couple of thin vertical poles. Nothing terminates in a visible fixing.",
+        "light": "No named direction, but the upper-left masonry is pale and the lower-right is dark using the identical stone pattern, which reads as a value shift, not as two materials.",
+        "role": "A corner \u2014 full 32-wide run across the top, dropping to an 18-wide leg down the right.",
+        "thickness": "No. Both the top region and the leg are drawn as the same face-on running-bond masonry; nothing anywhere shows a horizontal plane, an edge, or a return. Nowhere to set a lantern.",
+        "verdict": "FAIL",
+        "why": "The corner has no return and no top \u2014 it is a flat elevation folded around nothing, and 91% of its pixels are identical to cand_02's in the region they share."
+      },
+      "source": "arm3/kit_arm3/tile_12.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_05",
+      "name": "cand_02",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 a 12-wide, 58-tall strip.",
+        "thickness": "No, and worse than no: a wall running north\u2013south seen from above should present its top, and this presents front-elevation courses instead."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell \u2014 the lower two-thirds is undifferentiated dark brown with black flecks.",
+        "holds": "Two short vertical bars near the top, a horizontal dark line about a third down, and one small square fitting on the right. Below that nothing is legible.",
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 a 12-wide, 58-tall strip.",
+        "thickness": "No, and worse than no: a wall running north\u2013south seen from above should present its top, and this presents front-elevation courses instead.",
+        "verdict": "FAIL",
+        "why": "A wall running into the screen is showing the same face-on brickwork as a wall running across it, which is geometrically impossible in the stated view."
+      },
+      "source": "arm3/kit_arm3/tile_05.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_54",
+      "name": "cand_03",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No single direction; a light upper band over a dark lower band on identical masonry.",
+        "role": "A plain length of wall, full 32 wide by 78 tall.",
+        "thickness": "No. Top to bottom it is one continuous face-on elevation; the pale horizontal bar at about 40% height is another course, not a lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. The middle third is a black tangle that does not resolve into any object.",
+        "holds": "A stepped diagonal of single dark pixels, a short pale bar, two thin vertical poles, and a horizontal plank low down.",
+        "light": "No single direction; a light upper band over a dark lower band on identical masonry.",
+        "role": "A plain length of wall, full 32 wide by 78 tall.",
+        "thickness": "No. Top to bottom it is one continuous face-on elevation; the pale horizontal bar at about 40% height is another course, not a lip.",
+        "verdict": "FAIL",
+        "why": "92.7% of its pixels are identical to cand_07's and 92.1% to cand_30's \u2014 laid in a row these three produce visible 32-pixel wallpaper, not a wall."
+      },
+      "source": "arm3/kit_arm3/tile_54.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_21",
+      "name": "cand_04",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "The pale masonry sits in the upper-left and the dark in the lower-right, measured at +26 left-of-right and +23 top-of-bottom.",
+        "role": "A stepped corner \u2014 a 12-wide stub, widening to 22, then a 12-wide leg running down the right.",
+        "thickness": "No. The step in the silhouette is a straight vertical cut through the artwork; the masonry simply stops mid-stone with no side face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark cross shape in the upper-left block that could be a driven pin, and a vertical bar down the leg. Nothing else reads.",
+        "light": "The pale masonry sits in the upper-left and the dark in the lower-right, measured at +26 left-of-right and +23 top-of-bottom.",
+        "role": "A stepped corner \u2014 a 12-wide stub, widening to 22, then a 12-wide leg running down the right.",
+        "thickness": "No. The step in the silhouette is a straight vertical cut through the artwork; the masonry simply stops mid-stone with no side face.",
+        "verdict": "FAIL",
+        "why": "The step exposes a raw cut with no reveal, and the diagonal pale-to-dark falloff is a light direction painted into a tile that is meant to carry none."
+      },
+      "source": "arm3/kit_arm3/tile_21.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_03",
+      "name": "cand_05",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A plain length of wall, 32 wide by 58 tall.",
+        "thickness": "No \u2014 continuous elevation, no top plane, no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. Half its pixels sit inside a 19-level luminance band, so the lower two-thirds is brown mush.",
+        "holds": "A short pale bar near the top, a stepped diagonal above it, one horizontal plank near the bottom, one thin vertical pole.",
+        "light": "No direction.",
+        "role": "A plain length of wall, 32 wide by 58 tall.",
+        "thickness": "No \u2014 continuous elevation, no top plane, no lip.",
+        "verdict": "FAIL",
+        "why": "96.3% identical to cand_07 and 96.1% to cand_38 \u2014 this is the same painting cropped, not a distinct piece."
+      },
+      "source": "arm3/kit_arm3/tile_03.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_11",
+      "name": "cand_06",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No single direction; light upper band, dark lower band, same stone in both.",
+        "role": "A junction \u2014 a 12-wide leg at the top-left meeting a full 32-wide run below.",
+        "thickness": "No. The leg and the run are both face-on masonry with no top surface and no joint between them."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A stepped diagonal brace, a short pale bar, a plank low down. The diagonal is one pixel wide and has no ends.",
+        "light": "No single direction; light upper band, dark lower band, same stone in both.",
+        "role": "A junction \u2014 a 12-wide leg at the top-left meeting a full 32-wide run below.",
+        "thickness": "No. The leg and the run are both face-on masonry with no top surface and no joint between them.",
+        "verdict": "FAIL",
+        "why": "96.3% identical to cand_18 and 96.1% to cand_10, and the two arms of the junction pass through each other without any acknowledgement that they meet."
+      },
+      "source": "arm3/kit_arm3/tile_11.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_51",
+      "name": "cand_07",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No single direction; a top-lighter, bottom-darker split across identical masonry.",
+        "role": "A plain length of wall, 32 wide by 78 tall.",
+        "thickness": "No. Nothing in it depicts a horizontal surface."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Short pale bar, stepped diagonal, two vertical poles, one plank.",
+        "light": "No single direction; a top-lighter, bottom-darker split across identical masonry.",
+        "role": "A plain length of wall, 32 wide by 78 tall.",
+        "thickness": "No. Nothing in it depicts a horizontal surface.",
+        "verdict": "FAIL",
+        "why": "Near-clone of cand_03 (92.7%), cand_05 (96.3%) and cand_10 (90.1%) \u2014 the set has no variety to place."
+      },
+      "source": "arm3/kit_arm3/tile_51.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_50",
+      "name": "cand_08",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A T-junction \u2014 32-wide run across the top with a 12-wide leg dropping from the centre.",
+        "thickness": "No. The leg is elevation masonry, so a wall running toward the viewer is showing its face where its top should be."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A short pale bar over the leg reading as a lintel, and a stepped diagonal to the right of it.",
+        "light": "No direction.",
+        "role": "A T-junction \u2014 32-wide run across the top with a 12-wide leg dropping from the centre.",
+        "thickness": "No. The leg is elevation masonry, so a wall running toward the viewer is showing its face where its top should be.",
+        "verdict": "FAIL",
+        "why": "The dropping leg is drawn in the wrong plane for its direction of run, and it shares 96.6% of its pixels with cand_23."
+      },
+      "source": "arm3/kit_arm3/tile_50.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": true,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": true
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "plant",
+      "label": "plant_a",
+      "name": "cand_09",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "n/a",
+        "role": "Not architecture \u2014 a 14\u00d715 lumpy tan and maroon blob on transparency.",
+        "thickness": "n/a"
+      },
+      "raw": {
+        "cull": "object-not-architecture",
+        "happened": "n/a",
+        "holds": "n/a",
+        "light": "n/a",
+        "role": "Not architecture \u2014 a 14\u00d715 lumpy tan and maroon blob on transparency.",
+        "thickness": "n/a",
+        "verdict": "FAIL",
+        "why": "A free-standing rounded object with a dark ring around its lower edge (edge pixels average 57 levels darker than the interior) and a saturated orange-cream palette found nowhere else in the set."
+      },
+      "source": "plants/plant_a.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_53",
+      "name": "cand_10",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No single direction; top band lighter than bottom on the same brickwork.",
+        "role": "A plain length of wall, 32 wide by 78 tall.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Stepped diagonal, pale bar, two poles, one plank.",
+        "light": "No single direction; top band lighter than bottom on the same brickwork.",
+        "role": "A plain length of wall, 32 wide by 78 tall.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "98.2% pixel-identical to cand_18 \u2014 these are the same tile with a notch cut in one of them."
+      },
+      "source": "arm3/kit_arm3/tile_53.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_07",
+      "name": "cand_11",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d712 patch with no coursing, no edge, and no silhouette to read.",
+        "thickness": "No \u2014 it is a flat field of one grey-brown with two darker horizontal rows."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing readable has happened to it.",
+        "holds": "Nothing holds it together. There are no joints, no timbers, no fixings.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d712 patch with no coursing, no edge, and no silhouette to read.",
+        "thickness": "No \u2014 it is a flat field of one grey-brown with two darker horizontal rows.",
+        "verdict": "FAIL",
+        "why": "A featureless swatch with no architecture in it at all \u2014 it cannot be placed because it says nothing about what it is."
+      },
+      "source": "arm3/kit_arm3/tile_07.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_20",
+      "name": "cand_12",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A junction \u2014 12-wide stub at the top centre over a 32-wide run.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale bar, a stepped diagonal, a plank, thin poles.",
+        "light": "No direction.",
+        "role": "A junction \u2014 12-wide stub at the top centre over a 32-wide run.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "95.4% identical to cand_38 and 94.8% to cand_05, and the stub sits on the run with no lintel, no bond and no visible joint."
+      },
+      "source": "arm3/kit_arm3/tile_20.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_31",
+      "name": "cand_13",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 a 12-wide, 58-tall strip.",
+        "thickness": "No. It shows front-elevation courses where the top of the wall should be."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell \u2014 outside the pole and the plank it is a flat dark field.",
+        "holds": "A single thin vertical pole running most of its height, a horizontal plank near the bottom, one pale block at the top.",
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 a 12-wide, 58-tall strip.",
+        "thickness": "No. It shows front-elevation courses where the top of the wall should be.",
+        "verdict": "FAIL",
+        "why": "Pixel-for-pixel identical to cand_33, and wrong-plane for the direction it runs."
+      },
+      "source": "arm3/kit_arm3/tile_31.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_15",
+      "name": "cand_14",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall two cells wide, 22 by 58.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Two vertical poles, a bracket-shaped dark clump at the right, a plank near the bottom.",
+        "light": "No direction.",
+        "role": "A length of wall two cells wide, 22 by 58.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "95.8% identical to cand_25, and half its pixels sit inside a 19-level luminance band, so nothing in it survives being seen at 32 pixels."
+      },
+      "source": "arm3/kit_arm3/tile_15.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_08",
+      "name": "cand_15",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 12 wide, 58 tall.",
+        "thickness": "No \u2014 elevation masonry presented where the top should be."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A heavy black horizontal clump about a fifth down and a vertical bar below it; nothing below mid-height reads as anything.",
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 12 wide, 58 tall.",
+        "thickness": "No \u2014 elevation masonry presented where the top should be.",
+        "verdict": "FAIL",
+        "why": "The bottom two-thirds is undifferentiated brown with black flecks and carries no structure at all."
+      },
+      "source": "arm3/kit_arm3/tile_08.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_02",
+      "name": "cand_16",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 a 12\u00d732 strip with no coursing and no readable ends.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing readable.",
+        "holds": "Nothing. There are scattered dark rectangles but no joints, timbers or fixings.",
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 a 12\u00d732 strip with no coursing and no readable ends.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Flat mid-brown field with random darker blocks dropped into it \u2014 there is no wall in this image to place."
+      },
+      "source": "arm3/kit_arm3/tile_02.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_27",
+      "name": "cand_17",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "The pale masonry sits upper-right and the dark lower-left, measured at 21 levels right-of-left.",
+        "role": "A stepped piece running from the top-right down to the bottom-left \u2014 in a square grid that is a diagonal, which a builder cannot place against orthogonal neighbours.",
+        "thickness": "No. Both cuts are straight vertical slices through the artwork with no side face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale block and a dark clump top-right, a vertical bar down the left leg.",
+        "light": "The pale masonry sits upper-right and the dark lower-left, measured at 21 levels right-of-left.",
+        "role": "A stepped piece running from the top-right down to the bottom-left \u2014 in a square grid that is a diagonal, which a builder cannot place against orthogonal neighbours.",
+        "thickness": "No. Both cuts are straight vertical slices through the artwork with no side face.",
+        "verdict": "FAIL",
+        "why": "99.2% pixel-identical to cand_27, and its two legs step diagonally with no corner drawn where they turn."
+      },
+      "source": "arm3/kit_arm3/tile_27.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_52",
+      "name": "cand_18",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No single direction; light upper band over dark lower band.",
+        "role": "A wall with an opening in it \u2014 two 12-wide piers with an 8-wide gap over a solid 32-wide run.",
+        "thickness": "No, and the opening proves it: the gap is a straight vertical cut and both piers stop mid-stone with no jamb and no reveal."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "The pale bar, the stepped diagonal, a plank. Nothing spans the opening.",
+        "light": "No single direction; light upper band over dark lower band.",
+        "role": "A wall with an opening in it \u2014 two 12-wide piers with an 8-wide gap over a solid 32-wide run.",
+        "thickness": "No, and the opening proves it: the gap is a straight vertical cut and both piers stop mid-stone with no jamb and no reveal.",
+        "verdict": "FAIL",
+        "why": "An opening cut through a wall with no jambs and no lintel over it, in a tile 98.2% identical to cand_10."
+      },
+      "source": "arm3/kit_arm3/tile_52.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_01",
+      "name": "cand_19",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A plain length of wall, 32 by 58.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale bar near the top, a plank near the bottom, two thin poles.",
+        "light": "No direction.",
+        "role": "A plain length of wall, 32 by 58.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Same base painting as the rest of the wide family, with 75% of its pixels inside a 24-level band \u2014 at 32 pixels it is a brown rectangle."
+      },
+      "source": "arm3/kit_arm3/tile_01.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_16",
+      "name": "cand_20",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 a 12\u00d722 fragment with no coursing and no ends.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing readable.",
+        "holds": "Nothing readable.",
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 a 12\u00d722 fragment with no coursing and no ends.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "A flat grey-brown patch with a few dark rectangles in it \u2014 it carries no information about what it is or where it goes."
+      },
+      "source": "arm3/kit_arm3/tile_16.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_29",
+      "name": "cand_21",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A wall with an opening below it \u2014 solid 32-wide across the top, splitting into an 8-wide pier and a 12-wide pier with a gap between.",
+        "thickness": "No. The gap is a straight cut with no jamb faces."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A curved pale form top-left that does not read as masonry, a dark horizontal clump, a stepped diagonal.",
+        "light": "No direction.",
+        "role": "A wall with an opening below it \u2014 solid 32-wide across the top, splitting into an 8-wide pier and a 12-wide pier with a gap between.",
+        "thickness": "No. The gap is a straight cut with no jamb faces.",
+        "verdict": "FAIL",
+        "why": "99.0% pixel-identical to cand_34, and the opening cuts through the artwork rather than being built into it."
+      },
+      "source": "arm3/kit_arm3/tile_29.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_24",
+      "name": "cand_22",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "Pale upper-left to dark lower-right, 23 levels left-of-right.",
+        "role": "A corner \u2014 22 wide across the top turning into a 12-wide leg down the right.",
+        "thickness": "No. The turn is a straight vertical cut with no return face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark horizontal beam near the top and a vertical bar; below that nothing legible.",
+        "light": "Pale upper-left to dark lower-right, 23 levels left-of-right.",
+        "role": "A corner \u2014 22 wide across the top turning into a 12-wide leg down the right.",
+        "thickness": "No. The turn is a straight vertical cut with no return face.",
+        "verdict": "FAIL",
+        "why": "A corner with no corner drawn in it \u2014 the two arms are a single flat elevation with a bite taken out of the silhouette."
+      },
+      "source": "arm3/kit_arm3/tile_24.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_04",
+      "name": "cand_23",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 a 12\u00d732 strip, possibly a post, but nothing in it says so.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing readable.",
+        "holds": "Nothing. Scattered dark rectangles, no joints, no fixings.",
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 a 12\u00d732 strip, possibly a post, but nothing in it says so.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Featureless brown with random blocks, and 96.6% identical to cand_08 in the region they share."
+      },
+      "source": "arm3/kit_arm3/tile_04.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_55",
+      "name": "cand_24",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A doorway or gap piece \u2014 two 12-wide piers flanking an 8-wide opening, 32 tall.",
+        "thickness": "No. Both jamb faces are raw vertical cuts through mid-stone with no reveal, no return and no depth."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark cross in the left pier that could be a driven pin, a dark beam and a stepped diagonal in the right pier.",
+        "light": "No direction.",
+        "role": "A doorway or gap piece \u2014 two 12-wide piers flanking an 8-wide opening, 32 tall.",
+        "thickness": "No. Both jamb faces are raw vertical cuts through mid-stone with no reveal, no return and no depth.",
+        "verdict": "FAIL",
+        "why": "An opening in a wall that shows no wall thickness at either jamb \u2014 the single thing this piece exists to depict is the thing it does not depict."
+      },
+      "source": "arm3/kit_arm3/tile_55.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_22",
+      "name": "cand_25",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A junction \u2014 12-wide stub at the top over a 22-wide run.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale block at the top, a horizontal dark beam, two vertical poles, a plank at the bottom.",
+        "light": "No direction.",
+        "role": "A junction \u2014 12-wide stub at the top over a 22-wide run.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "95.8% identical to cand_14, and the stub meets the run with no bond, lintel or joint of any kind."
+      },
+      "source": "arm3/kit_arm3/tile_22.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_18",
+      "name": "cand_26",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No single direction; light top band, dark bottom band, same brick in both.",
+        "role": "A T-junction \u2014 32-wide run with a 12-wide leg dropping from the centre at the bottom.",
+        "thickness": "No \u2014 the leg shows face-on courses where a wall running toward the viewer would show its top."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A large pale block near the top, a dark tangle beneath it, a plank low down.",
+        "light": "No single direction; light top band, dark bottom band, same brick in both.",
+        "role": "A T-junction \u2014 32-wide run with a 12-wide leg dropping from the centre at the bottom.",
+        "thickness": "No \u2014 the leg shows face-on courses where a wall running toward the viewer would show its top.",
+        "verdict": "FAIL",
+        "why": "The leg is drawn in the wrong plane for the direction it runs, and the junction where it leaves the run is not drawn at all."
+      },
+      "source": "arm3/kit_arm3/tile_18.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_25",
+      "name": "cand_27",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "Pale upper-right, dark lower-left, 20 levels right-of-left.",
+        "role": "A corner \u2014 22 wide at the top turning into an 8-wide leg down the left.",
+        "thickness": "No; both cuts are straight slices with no return."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale block and a dark clump at the top; the leg has one vertical bar and nothing else.",
+        "light": "Pale upper-right, dark lower-left, 20 levels right-of-left.",
+        "role": "A corner \u2014 22 wide at the top turning into an 8-wide leg down the left.",
+        "thickness": "No; both cuts are straight slices with no return.",
+        "verdict": "FAIL",
+        "why": "99.2% pixel-identical to cand_17 \u2014 it is the same tile mirrored in the silhouette only, not redrawn."
+      },
+      "source": "arm3/kit_arm3/tile_25.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_09",
+      "name": "cand_28",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner \u2014 32 wide across the top stepping to 22 wide on the left below.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale bar, a dark beam with a bracket at the right, a stepped diagonal, a plank.",
+        "light": "No direction.",
+        "role": "A corner \u2014 32 wide across the top stepping to 22 wide on the left below.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "The step is a raw vertical cut with no side face, and the piece carries the same stamped brace and plank as every other tile in its family."
+      },
+      "source": "arm3/kit_arm3/tile_09.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_23",
+      "name": "cand_29",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A junction \u2014 12-wide stub at the top over a 22-wide run.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale block at the top, a dark horizontal clump, a vertical pole, a plank near the bottom.",
+        "light": "No direction.",
+        "role": "A junction \u2014 12-wide stub at the top over a 22-wide run.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "97.9% identical to cand_32 and 93.8% to cand_35 \u2014 the kit is one painting wearing different outlines."
+      },
+      "source": "arm3/kit_arm3/tile_23.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_49",
+      "name": "cand_30",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No single direction; the top third is pale stone and the rest is dark stone drawn identically.",
+        "role": "A plain length of wall, 32 wide by 78 tall.",
+        "thickness": "No. I read every one of its 78 rows: it is running-bond elevation top to bottom, with the same stone pattern above and below the pale bar, so no horizontal surface exists anywhere in it."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. Its rows 76\u201377 are pixel-identical to its rows 32\u201333, so the face repeats inside its own height.",
+        "holds": "A stepped one-pixel diagonal, a short pale bar, two thin vertical poles, a horizontal plank near the bottom, and a dark X at the bottom-left.",
+        "light": "No single direction; the top third is pale stone and the rest is dark stone drawn identically.",
+        "role": "A plain length of wall, 32 wide by 78 tall.",
+        "thickness": "No. I read every one of its 78 rows: it is running-bond elevation top to bottom, with the same stone pattern above and below the pale bar, so no horizontal surface exists anywhere in it.",
+        "verdict": "FAIL",
+        "why": "A flat elevation with no top plane, repeating within itself, and 94.5% identical to cand_10."
+      },
+      "source": "arm3/kit_arm3/tile_49.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_14",
+      "name": "cand_31",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 12 wide, 68 tall.",
+        "thickness": "No \u2014 front-elevation courses where the top should be."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale block at the top, one long thin vertical pole, a plank near the bottom.",
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 12 wide, 68 tall.",
+        "thickness": "No \u2014 front-elevation courses where the top should be.",
+        "verdict": "FAIL",
+        "why": "Wrong plane for its run direction, and 93.0% identical to cand_13."
+      },
+      "source": "arm3/kit_arm3/tile_14.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_17",
+      "name": "cand_32",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall two cells wide, 22 by 58.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale block at the top, a dark diagonal clump, a vertical pole, a plank.",
+        "light": "No direction.",
+        "role": "A length of wall two cells wide, 22 by 58.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "97.9% identical to cand_29 and 95.1% to cand_35 \u2014 placing it next to either produces a visible repeat."
+      },
+      "source": "arm3/kit_arm3/tile_17.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_13",
+      "name": "cand_33",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 12 wide, 58 tall.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "One thin vertical pole, a plank near the bottom, a pale block at the top.",
+        "light": "No direction.",
+        "role": "A wall running away from the viewer \u2014 12 wide, 58 tall.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Byte-for-byte identical to cand_13 \u2014 it is not a candidate, it is the same file twice."
+      },
+      "source": "arm3/kit_arm3/tile_13.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_30",
+      "name": "cand_34",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A junction with an opening \u2014 12-wide stub at the top, 32-wide run, then two piers with a gap below.",
+        "thickness": "No; the gap and the stub are both straight cuts with no side faces."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale curved form top-left that does not read as stone, a dark beam, a stepped diagonal.",
+        "light": "No direction.",
+        "role": "A junction with an opening \u2014 12-wide stub at the top, 32-wide run, then two piers with a gap below.",
+        "thickness": "No; the gap and the stub are both straight cuts with no side faces.",
+        "verdict": "FAIL",
+        "why": "99.0% pixel-identical to cand_21, and the opening below has neither jamb nor lintel."
+      },
+      "source": "arm3/kit_arm3/tile_30.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_28",
+      "name": "cand_35",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No single direction; light upper band over dark lower band.",
+        "role": "A junction \u2014 12-wide stub at the top over a 32-wide run.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale block, a dark tangle, a stepped diagonal, two poles, a plank.",
+        "light": "No single direction; light upper band over dark lower band.",
+        "role": "A junction \u2014 12-wide stub at the top over a 32-wide run.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "95.1% identical to cand_32 and 93.8% to cand_29, with no joint drawn where the stub meets the run."
+      },
+      "source": "arm3/kit_arm3/tile_28.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_19",
+      "name": "cand_36",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A staggered junction \u2014 12-wide at the top right, 22-wide in the middle, 12-wide at the bottom centre.",
+        "thickness": "No; all three steps are raw vertical cuts."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark horizontal beam across the middle with a clump at its left end, a vertical pole below.",
+        "light": "No direction.",
+        "role": "A staggered junction \u2014 12-wide at the top right, 22-wide in the middle, 12-wide at the bottom centre.",
+        "thickness": "No; all three steps are raw vertical cuts.",
+        "verdict": "FAIL",
+        "why": "Three silhouette steps and not one of them shows a return face \u2014 the artwork simply stops mid-stone at each."
+      },
+      "source": "arm3/kit_arm3/tile_19.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_06",
+      "name": "cand_37",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 a 12\u00d712 patch with no coursing, no edges and no ends.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing readable.",
+        "holds": "Nothing. There are dark blocky patches but no joints, timbers or fixings.",
+        "light": "No direction.",
+        "role": "Cannot tell \u2014 a 12\u00d712 patch with no coursing, no edges and no ends.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "A twelve-pixel square of brown with dark blotches in it \u2014 there is no architecture here to judge."
+      },
+      "source": "arm3/kit_arm3/tile_06.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_10",
+      "name": "cand_38",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "No single direction; light top band, dark bottom band.",
+        "role": "A corner \u2014 12-wide leg at the top right dropping into a 32-wide run below.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale bar, a stepped diagonal, two poles, a plank.",
+        "light": "No single direction; light top band, dark bottom band.",
+        "role": "A corner \u2014 12-wide leg at the top right dropping into a 32-wide run below.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "96.1% identical to cand_05 and 95.4% to cand_12, and the leg meets the run with no corner drawn."
+      },
+      "source": "arm3/kit_arm3/tile_10.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_26",
+      "name": "cand_39",
+      "native": [
+        52,
+        98
+      ],
+      "notes": {
+        "light": "Pale upper-left to dark lower-right, 24 levels left-of-right.",
+        "role": "A staggered corner \u2014 12-wide stub, 22-wide middle, 12-wide leg down the right.",
+        "thickness": "No; every step is a straight cut through mid-stone."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark horizontal beam near the top, a vertical bar, a small fitting on the right leg.",
+        "light": "Pale upper-left to dark lower-right, 24 levels left-of-right.",
+        "role": "A staggered corner \u2014 12-wide stub, 22-wide middle, 12-wide leg down the right.",
+        "thickness": "No; every step is a straight cut through mid-stone.",
+        "verdict": "FAIL",
+        "why": "94.4% identical to cand_34 and 93.1% to cand_21, with a falloff from light upper-left to dark lower-right painted into it."
+      },
+      "source": "arm3/kit_arm3/tile_26.png",
+      "structural": false,
+      "verdict": "FAIL"
+    }
+  ],
+  "seat_seconds": 605.3,
+  "ship_pass_names": [],
+  "ship_passes": 0,
+  "structural_candidates": 0,
+  "structural_names": [],
+  "void": false
+}

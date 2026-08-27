@@ -1,0 +1,38 @@
+{
+  "arm3": {
+    "counts": {
+      "no_baked_outline": 38,
+      "no_key_light": 32,
+      "segment_identity": 33,
+      "two_planes": 0
+    },
+    "culled": 0,
+    "culls": {},
+    "n": 38,
+    "structural": 0
+  },
+  "kitA0": {
+    "counts": {
+      "no_baked_outline": 38,
+      "no_key_light": 38,
+      "segment_identity": 26,
+      "two_planes": 0
+    },
+    "culled": 0,
+    "culls": {},
+    "n": 38,
+    "structural": 0
+  },
+  "kitB": {
+    "counts": {
+      "no_baked_outline": 38,
+      "no_key_light": 38,
+      "segment_identity": 35,
+      "two_planes": 0
+    },
+    "culled": 0,
+    "culls": {},
+    "n": 38,
+    "structural": 0
+  }
+}

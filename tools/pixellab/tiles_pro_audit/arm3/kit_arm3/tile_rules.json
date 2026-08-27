@@ -1,0 +1,163 @@
+{
+  "arity": 8,
+  "connectivity": "same",
+  "mask_source": "floor_absent",
+  "parts": {
+    "corners": {
+      "NE": 5,
+      "NW": 8,
+      "SE": 6,
+      "SW": 7
+    },
+    "doors": {
+      "Ea": 34,
+      "Eb": 35,
+      "Na": 32,
+      "Nb": 33,
+      "Sa": 36,
+      "Sb": 37,
+      "Wa": 38,
+      "Wb": 39
+    },
+    "floor": 0,
+    "floor_roof": 44,
+    "materials": {
+      "floor": "worn grey flagstones walked smooth and slightly hollowed at the centre, grime trodden into the joints, edges rounded off. Even ambient illumination, no directional light source, no cast shadow. No outline around the sprite.",
+      "wall": "rough grey found stone, coursed unevenly, with heavy orc-made repair driven into it: timber beams lashed and pinned flat to the stone, iron straps and driven pins holding cracked blocks together, older repairs overlaid by newer ones. Over-built, unornamented; every band and pin is holding something. Stone used up rather than ruined, edges rounded by traffic. Even ambient illumination, no directional light source, no cast shadow, no highlight from any one side. No outline around the sprite."
+    },
+    "outer_corners": {
+      "NE": 9,
+      "NW": 12,
+      "SE": 10,
+      "SW": 11
+    },
+    "outer_multi": {
+      "ESW": 52,
+      "EW": 55,
+      "NES": 49,
+      "NESW": 53,
+      "NEW": 50,
+      "NS": 54,
+      "NSW": 51
+    },
+    "painted": [
+      0,
+      1,
+      4,
+      8,
+      14,
+      17,
+      31,
+      32,
+      33,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48
+    ],
+    "partition": {
+      "E": 15,
+      "N": 14,
+      "S": 16,
+      "W": 17,
+      "hub": 13
+    },
+    "partition_doors": {
+      "Ha": 47,
+      "Hb": 48,
+      "Va": 45,
+      "Vb": 46
+    },
+    "partition_multi": {
+      "ES": 24,
+      "ESW": 29,
+      "NE": 22,
+      "NES": 26,
+      "NESW": 30,
+      "NEW": 28,
+      "NSW": 27,
+      "NW": 23,
+      "SW": 25
+    },
+    "partition_wall": {
+      "E": 19,
+      "N": 18,
+      "S": 20,
+      "W": 21
+    },
+    "pillar": 31,
+    "roof": {
+      "eaves": {
+        "E": 61,
+        "N": 60,
+        "S": 62,
+        "W": 63
+      },
+      "ends": {
+        "E": 74,
+        "N": 76,
+        "S": 77,
+        "W": 75
+      },
+      "hips": {
+        "NE": 64,
+        "NW": 67,
+        "SE": 65,
+        "SW": 66
+      },
+      "interior": 79,
+      "peak_px": 23,
+      "pitch_reach_px": 16,
+      "profile": "gable",
+      "pyramid": 78,
+      "ridges": {
+        "EW": 72,
+        "NS": 73
+      },
+      "valleys": {
+        "NE": 68,
+        "NW": 71,
+        "SE": 69,
+        "SW": 70
+      }
+    },
+    "sides": {
+      "E": 2,
+      "N": 1,
+      "S": 3,
+      "W": 4
+    },
+    "slopes": [
+      56,
+      57
+    ],
+    "slopes_east": [
+      58,
+      59
+    ],
+    "stairs": [
+      40,
+      41
+    ],
+    "stairs_east": [
+      42,
+      43
+    ]
+  },
+  "rule_type": "composed",
+  "stack_stride_px": 23,
+  "terrains": [
+    "wall",
+    "empty"
+  ],
+  "tiles": {},
+  "view_angle": 90.0,
+  "wall_tiles": 2
+}

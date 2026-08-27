@@ -1,0 +1,419 @@
+I read all 40 PNGs at 1:1, magnified the ambiguous regions, and ran pixel diffs across the set. Two facts drive most of this: **cand_13 and cand_33 are byte-identical**, and **cand_03/07/10/18/30 differ from each other by 4–11% of their pixels** — the set has fewer distinct pieces than it has files.
+
+The decisive finding is projection. The brief says these are drawn from above and slightly in front. They are not. On the 12-wide pieces — the ones that must represent wall running away from the camera — there is no receding top strip; cand_15 magnified is horizontal courses and a vertical post, a front elevation exactly like the 32-wide pieces, just narrower. The 4px pale band at the top of every piece appears identically on both orientations, so it is a trim beam on the face, not a foreshortened top plane. Nothing in this kit has a top you could set anything on.
+
+CANDIDATE: cand_00
+CULL: none
+ROLE: A straight length of wall, mid-run; but it is a repeating brick swatch, not a kit piece — no ends, no joins, no way to terminate it.
+THICKNESS: None. Pure front elevation, no top plane, no returns; you could not set anything on it.
+LIGHT: No direction.
+HOLDS: Mortar joints between regular cut bricks. No timber, no rope, no pins — nothing an orc company put there.
+HAPPENED: Nothing. The bricks are square, intact and evenly coursed; one pale grey bar crosses the middle and does not resolve into anything.
+VERDICT: FAIL
+WHY: Cold blue-grey palette and tidy undamaged masonry that belongs to no other tile here, and it is a flat texture rather than a piece of built structure.
+
+CANDIDATE: cand_01
+CULL: none
+ROLE: A corner — wall running left-right across the top, turning and running down the right side.
+THICKNESS: No. The turn is a silhouette change only; the corner shows no returning face and no top surface, so the wall reads as a bent sheet.
+LIGHT: No direction.
+HOLDS: A vertical timber and a horizontal timber crossing near the turn, over grey coursed stone. No fixing is visible where they cross.
+HAPPENED: Timber has been laid over the stone. Whether it is shoring, patching or facing is not stated by the image.
+VERDICT: FAIL
+WHY: The corner is drawn as an outline change with no returning plane, so the piece has no thickness at the one place a corner must prove it.
+
+CANDIDATE: cand_02
+CULL: none
+ROLE: A narrow vertical strip on the right-hand side of the square — an edge or the side of a run.
+THICKNESS: No. Twelve pixels wide and drawn as face courses top to bottom; nothing indicates it is a wall seen edge-on rather than a thin slab.
+LIGHT: No direction.
+HOLDS: A dark vertical post down the right, crossed by two short horizontals. No visible pin, lashing or bracket.
+HAPPENED: Cannot tell. The interior is blocky mottle without a legible event.
+VERDICT: FAIL
+WHY: A wall running away from the camera would show a long top strip; this shows front-face courses instead, so its orientation is unreadable.
+
+CANDIDATE: cand_03
+CULL: none
+ROLE: A straight length of wall, full square width, tallest variant.
+THICKNESS: No. A 4px pale beam caps the top, but it is the same band that appears on the edge-on pieces, so it reads as face trim, not a surface.
+LIGHT: No direction.
+HOLDS: At magnification the crossing timbers dissolve into brown blocks separated by 1px black lines. No pin, rope, hide or bracket resolves anywhere.
+HAPPENED: Cannot tell. There is no legible damage and no legible repair — only variation.
+VERDICT: FAIL
+WHY: Magnified, the construction has no elements — the dark lines are separators between colour blocks, not joints between things.
+
+CANDIDATE: cand_04
+CULL: none
+ROLE: A corner — short wall stub at top left turning down into a leg on the right.
+THICKNESS: No. Same flat elevation; the turn is a silhouette step with no returning face.
+LIGHT: No direction.
+HOLDS: A vertical timber down the leg, a short horizontal at the turn. Nothing fixes them together.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The leg is a narrow front elevation, so the corner never turns in depth — it only turns in outline.
+
+CANDIDATE: cand_05
+CULL: none
+ROLE: A straight length of wall, shorter than cand_03.
+THICKNESS: No. Same 4px face trim, no top plane.
+LIGHT: No direction.
+HOLDS: Same crossing timbers as cand_03, unfixed.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Row-for-row identical to cand_03 from its top edge down — this is cand_03 with rows removed, not a separate piece.
+
+CANDIDATE: cand_06
+CULL: none
+ROLE: A length of wall with a stub rising at the top left — a junction where another run meets it.
+THICKNESS: No. The stub is drawn with horizontal face courses, not as a top surface receding away.
+LIGHT: No direction.
+HOLDS: Crossing timbers over stone, no visible fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The stub is the one element that could have shown a wall top, and it is drawn as another front face.
+
+CANDIDATE: cand_07
+CULL: none
+ROLE: A straight length of wall, full width, tallest variant.
+THICKNESS: No. Face trim only.
+LIGHT: No direction.
+HOLDS: Nothing legible; the timbers have no joints.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: It differs from cand_03 by 211 of 2304 pixels — the same tile with noise reshuffled, not a variant worth a slot.
+
+CANDIDATE: cand_08
+CULL: none
+ROLE: A T-junction — a run across the top with a leg dropping from near the centre.
+THICKNESS: No. The leg is a flat strip; where it meets the run there is no corner return.
+LIGHT: No direction.
+HOLDS: A vertical timber and a horizontal beam meeting near the junction. No fixing at the meeting.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A T-junction is the piece that most needs a readable top to show which way the branch runs, and there is none.
+
+CANDIDATE: cand_09
+CULL: object-not-architecture
+ROLE: Not a wall piece — a small free-standing block.
+THICKNESS: Not applicable.
+LIGHT: Strong key from the upper left; the lower right is painted dark.
+HOLDS: Nothing.
+HAPPENED: Nothing.
+VERDICT: FAIL
+WHY: Free-standing isometric cube in warm orange and cream with a hard black ring around the whole silhouette and a baked light direction — it fires four culls at once.
+
+CANDIDATE: cand_10
+CULL: none
+ROLE: A straight length of wall, full width, tallest variant.
+THICKNESS: No. Face trim only.
+LIGHT: No direction.
+HOLDS: Nothing legible.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A near-clone of cand_07 and cand_18; the kit is paying three slots for one piece.
+
+CANDIDATE: cand_11
+CULL: none
+ROLE: Cannot tell. A 12×9 scrap sitting in the middle of empty canvas, aligned to nothing.
+THICKNESS: No. Two or three courses of face, no top, no base.
+LIGHT: No direction.
+HOLDS: A dark vertical bar at the right edge and a lighter band. Nothing reads as a fixing.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: At a third of a floor square with no ground line and no join, it reads as a loose fragment rather than a piece of structure.
+
+CANDIDATE: cand_12
+CULL: none
+ROLE: A straight length of wall with a stub rising at the top centre — a junction.
+THICKNESS: No. Same face trim; the stub shows courses, not a top.
+LIGHT: No direction.
+HOLDS: Nothing legible.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Identical row-for-row to cand_03 below its top edge — another crop of the same body.
+
+CANDIDATE: cand_13
+CULL: none
+ROLE: A narrow vertical strip through the middle of the square.
+THICKNESS: No. Front-face courses full height.
+LIGHT: No direction.
+HOLDS: A dark vertical timber and two short crossing horizontals, unfixed.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Byte-identical to cand_33 — the same file submitted twice.
+
+CANDIDATE: cand_14
+CULL: none
+ROLE: A corner, occupying the right two-thirds of the square.
+THICKNESS: No. The turn is a silhouette step only.
+LIGHT: No direction.
+HOLDS: Crossing timbers with no visible joint.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Same flat-elevation corner as cand_01 and cand_04, offset sideways; it never turns in depth.
+
+CANDIDATE: cand_15
+CULL: none
+ROLE: A narrow vertical strip on the left side of the square.
+THICKNESS: No — and this is the piece that proves it for the whole set. Magnified it is horizontal courses and a vertical post, with a 4px cap at the very top only; a wall running away from the camera would show a long top strip down its length.
+LIGHT: No direction.
+HOLDS: A dark post at the left, a short horizontal bracket mid-height. No pin or lashing.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: It is a narrow front elevation, not a wall seen edge-on, so it cannot do the job its width implies.
+
+CANDIDATE: cand_16
+CULL: none
+ROLE: A short vertical stub at the right of the square — a post, or the end of a run.
+THICKNESS: No. Front-face courses with a 4px cap, no top plane.
+LIGHT: No direction.
+HOLDS: A pale vertical member centre, a dark bar down the right edge. Nothing fixes them.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The hard black bar down the right edge reads as a cut rather than as a joint, so the piece looks sliced from a larger image.
+
+CANDIDATE: cand_17
+CULL: none
+ROLE: A corner — a stub top right, a leg running down the left.
+THICKNESS: No returning face at the turn.
+LIGHT: No direction.
+HOLDS: A vertical timber down the leg, a short horizontal at the head. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Same corner geometry as cand_27 with the interior reshuffled; neither shows depth at the turn.
+
+CANDIDATE: cand_18
+CULL: none
+ROLE: A length of wall with a notch cut into the top centre — an opening, or a place where a beam is missing.
+THICKNESS: No. The notch's cut faces are transparent, showing no reveal or wall depth inside the gap.
+LIGHT: No direction.
+HOLDS: Nothing legible.
+HAPPENED: The notch could be a missing block or an authored slot; the image does not say which.
+VERDICT: FAIL
+WHY: A notch is the strongest chance in the set to show wall thickness on its cut faces, and both faces are blank alpha.
+
+CANDIDATE: cand_19
+CULL: none
+ROLE: A straight length of wall, full width, shorter variant.
+THICKNESS: No. A 4px pale beam caps it and nothing more.
+LIGHT: No direction.
+HOLDS: The only legible construction in the set — a horizontal beam crossed by a vertical post, with a small dark dot on the post at the crossing that reads as a driven pin, over a grey stone panel.
+HAPPENED: A post has been driven past a beam and pinned to it, against a stone panel behind.
+VERDICT: FAIL
+WHY: The best-built piece here still has no top surface, and its detail density will collapse to brown mush at 32 pixels to a floor square.
+
+CANDIDATE: cand_20
+CULL: none
+ROLE: Cannot tell. A 12×16 scrap floating clear of every edge of the canvas.
+THICKNESS: No. A few courses of face, no top, no base.
+LIGHT: No direction.
+HOLDS: A short horizontal band and a dark block. Nothing reads as a fixing.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Half a floor square of wall face touching no edge and no ground — it cannot be placed anywhere in a room.
+
+CANDIDATE: cand_21
+CULL: none
+ROLE: A doorway — a lintel spanning between two jambs, opening running to the bottom edge.
+THICKNESS: No. The opening's underside is where the alpha stops; there is no soffit under the lintel and no reveal on either jamb.
+LIGHT: No direction.
+HOLDS: A horizontal beam across the head sitting on two uprights. No visible fixing where beam meets upright.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A doorway you walk through must show the wall's depth in the reveal; this one is a hole punched in a flat sheet.
+
+CANDIDATE: cand_22
+CULL: none
+ROLE: A corner — run across the top right, leg dropping on the right.
+THICKNESS: No returning face at the turn.
+LIGHT: No direction. The left-bright/right-dark split is the flat wall run against the dark post, not a painted light.
+HOLDS: A dark vertical post, a horizontal band at the head. No joint visible.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Another flat-elevation corner; the leg is a narrow face, so the turn happens only in silhouette.
+
+CANDIDATE: cand_23
+CULL: none
+ROLE: A short vertical stub at the left of the square — a post or a run end.
+THICKNESS: No. Face courses with a cap band.
+LIGHT: No direction.
+HOLDS: A dark vertical member and a pale horizontal band. Nothing joins them.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A wall end must show its cut face; this one is capped with the same front-face trim as a mid-run piece, so it does not terminate anything.
+
+CANDIDATE: cand_24
+CULL: none
+ROLE: Two separate stubs with a transparent gap between them — presumably the two sides of an opening, with no lintel.
+THICKNESS: No. Both facing edges of the gap are blank alpha, showing no reveal.
+LIGHT: No direction.
+HOLDS: A vertical member in each stub. Nothing spans between them.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Two disconnected islands in one tile with nothing bridging them — as a single placeable piece it has no structural sense.
+
+CANDIDATE: cand_25
+CULL: none
+ROLE: A corner with a stub rising above the top line — a junction on the right two-thirds.
+THICKNESS: No. The raised stub shows horizontal face courses rather than a top plane.
+LIGHT: No direction.
+HOLDS: Crossing timbers, no fixings visible.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The stub is the piece's whole reason to exist and it is drawn as another front face.
+
+CANDIDATE: cand_26
+CULL: none
+ROLE: A junction — a full-width run with a stub dropping below the bottom line toward the viewer.
+THICKNESS: No. The dropping stub shows face courses, not a top surface running toward the camera.
+LIGHT: No direction.
+HOLDS: Nothing. Magnified, the interior is blocky grey-and-brown mottle separated by 1px black grid lines; no member, joint or fixing resolves.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: At magnification the wall body has no construction in it at all — it is texture pretending to be assembly.
+
+CANDIDATE: cand_27
+CULL: none
+ROLE: A corner — stub top right, leg down the left.
+THICKNESS: No returning face at the turn.
+LIGHT: No direction.
+HOLDS: A vertical post down the leg. No joint at the corner.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Duplicates cand_17's geometry with a reshuffled interior; the turn still has no depth.
+
+CANDIDATE: cand_28
+CULL: none
+ROLE: A T-junction — run across the top, leg dropping from the centre-left.
+THICKNESS: No. Flat throughout.
+LIGHT: No direction.
+HOLDS: A vertical timber meeting a horizontal beam near the junction, unfixed.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The branch and the run meet with no corner return and no top, so which way the branch runs is unreadable.
+
+CANDIDATE: cand_29
+CULL: none
+ROLE: A corner — stub rising at top right, leg down the left.
+THICKNESS: No. Stub drawn as face courses.
+LIGHT: No direction.
+HOLDS: A vertical post and a horizontal beam. No fixing at the crossing.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: It differs from cand_32 by 151 of 1350 pixels — the same corner twice.
+
+CANDIDATE: cand_30
+CULL: none
+ROLE: A straight length of wall, full width, tallest variant.
+THICKNESS: No. Face trim only.
+LIGHT: No direction.
+HOLDS: Nothing legible.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: It differs from cand_03 by 102 of 2304 pixels — a 4% reshuffle occupying a separate slot in the set.
+
+CANDIDATE: cand_31
+CULL: none
+ROLE: A narrow vertical strip through the middle of the square, taller than cand_13.
+THICKNESS: No. Front-face courses full height.
+LIGHT: No direction.
+HOLDS: A dark vertical timber, two short crossing pieces. No visible joint.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Same failure as cand_15 — a narrow front elevation standing in for a wall seen edge-on.
+
+CANDIDATE: cand_32
+CULL: none
+ROLE: A corner — stub top right, leg down the left.
+THICKNESS: No returning face.
+LIGHT: No direction.
+HOLDS: A vertical post, a horizontal beam, no fixing.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A near-clone of cand_29 with no depth at the turn.
+
+CANDIDATE: cand_33
+CULL: none
+ROLE: A narrow vertical strip through the middle of the square.
+THICKNESS: No. Front-face courses full height.
+LIGHT: No direction.
+HOLDS: A dark vertical timber with two short crossings, unfixed.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Byte-identical to cand_13 — zero differing pixels across the entire image.
+
+CANDIDATE: cand_34
+CULL: none
+ROLE: A doorway with a stub rising above the lintel — an opening at a junction.
+THICKNESS: No. Magnified, the raised stub is a dark row, a tan row and grey rows — horizontal face courses, exactly like the front of cand_16. It is a wall face standing on end, not a top surface.
+LIGHT: No direction.
+HOLDS: A beam across the head carried on two uprights. No fixing where they meet.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The one element in the set positioned to read as a wall top is drawn with front-face courses, which settles it: nothing here has a top.
+
+CANDIDATE: cand_35
+CULL: none
+ROLE: A length of wall with a stub rising at the top centre — a junction.
+THICKNESS: No. Stub shows face courses.
+LIGHT: No direction.
+HOLDS: Nothing legible.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Same body as cand_12 and cand_03 with the stub moved; no top, no fixings, no event.
+
+CANDIDATE: cand_36
+CULL: none
+ROLE: A corner — stub top right, leg down the left, right two-thirds of the square.
+THICKNESS: No returning face at the turn.
+LIGHT: No direction.
+HOLDS: A vertical post at the right, a horizontal band at the head. No joint.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Another mirrored repeat of the same flat corner; it turns in outline only.
+
+CANDIDATE: cand_37
+CULL: none
+ROLE: Cannot tell. A 12×9 scrap floating clear of every canvas edge.
+THICKNESS: No. Two or three courses, no top, no base.
+LIGHT: No direction.
+HOLDS: A dark vertical bar and a lighter band. No fixing.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A third of a floor square, touching no edge and no ground, with no join to anything — unplaceable.
+
+CANDIDATE: cand_38
+CULL: none
+ROLE: A junction — full-width run with a stub rising at the top right.
+THICKNESS: No. Magnified, the stub is horizontal face banding; the wall body below has no top plane.
+LIGHT: No direction.
+HOLDS: A horizontal beam running left across the body, meeting a vertical member. The crossing has no pin, strap or lashing.
+HAPPENED: Cannot tell. Timber crosses stone with no story about why.
+VERDICT: FAIL
+WHY: The timber crossing the stone is exactly the painted-stripe problem — it sits on the surface with no thickness and no fixing at either end.
+
+CANDIDATE: cand_39
+CULL: none
+ROLE: A corner — run across the top left, leg dropping on the right.
+THICKNESS: No returning face.
+LIGHT: No direction. The bright-left/dark-right split is the wall run against the post, not a painted light.
+HOLDS: A dark vertical post down the leg. No joint at the turn.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The fourth near-repeat of the same flat corner, and like the rest it has no depth where it turns.
+
+FLIP LIST
+- Every piece is a front elevation. Redraw with an actual top plane: for a wall running left-right, 5–7 native pixels of top surface at the top of the tile in a value clearly separated from the front face, with the front face starting below it. Test it by asking whether a lantern sprite could sit on that band.
+- The 12-wide pieces must show a wall running away from the camera, not a narrow front elevation. Redraw them as a top strip running the full height of the tile with a thin front face only at the near end — not as horizontal courses top to bottom (cand_15, cand_02, cand_13, cand_31).
+- On the corner pieces, draw the returning face: where the run turns, show 5–7 pixels of the second wall's top plane meeting the first at a visible mitre or a butt joint. Right now the turn exists only in the silhouette (cand_01, cand_04, cand_14, cand_17, cand_22, cand_27, cand_36, cand_39).
+- On the doorway pieces, put a reveal in the opening: 3–4 pixels of wall depth on each jamb face and a soffit under the lintel, in a darker value than the front face. Currently the opening's cut faces are blank alpha (cand_21, cand_34, cand_24).
+- The stubs that rise above the wall line are drawn with horizontal front-face courses. Redraw them as top surface — a flat plane in the top-face value with grain running along the wall, not banded courses (cand_34, cand_35, cand_12, cand_25, cand_38).
+- The timbers are painted stripes. Give each one two pixels of edge value along one long side so it stands proud of the stone, and put a driven pin or a rope lashing at both ends where it meets the wall. cand_19's pin is the only fixing in the set — do that everywhere.
+- Cut the interior detail by roughly half. Magnified, cand_26 and cand_03 resolve into colour blocks divided by 1px black lines with no members in them; at 32 pixels to a floor square that becomes brown mush. Fewer, larger, nameable elements — one beam, one post, three stone courses.
+- Delete cand_33 (byte-identical to cand_13). Collapse cand_03/07/10/18/30 to one tile plus genuinely distinct variants, and collapse cand_29/32. Replace the freed slots with the pieces the kit is missing: a wall end that shows its cut face, and an inside corner.
+- cand_11, cand_20 and cand_37 float clear of every canvas edge with no ground line. Either anchor them to a tile edge so they join something, or cut them.
+- cand_24 is two disconnected islands. Either span them with a lintel or split into two separate end pieces.
+- cand_00 is in a different game — cold blue-grey, regular undamaged brick, black mortar outlines on every unit. Either repalette to the set's warm brown-grey and break the coursing with orc timber, or cut it.
+- cand_09 is not a wall: isometric cube, black outline, key light from the upper left. Cut it.
+
+Models used: Claude Opus 5 (1M context).

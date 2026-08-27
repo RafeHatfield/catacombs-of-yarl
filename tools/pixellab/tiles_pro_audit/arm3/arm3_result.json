@@ -1,0 +1,138 @@
+{
+  "baseline_readout": {
+    "arity": 8,
+    "canvas": [
+      52,
+      87
+    ],
+    "floor_bbox": [
+      10,
+      55,
+      42,
+      79
+    ],
+    "floor_cell": [
+      32,
+      24
+    ],
+    "n_painted": 20,
+    "painted": [
+      0,
+      1,
+      4,
+      8,
+      14,
+      17,
+      31,
+      32,
+      33,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48
+    ],
+    "part_keys": [
+      "corners",
+      "doors",
+      "floor",
+      "floor_roof",
+      "outer_corners",
+      "outer_multi",
+      "partition",
+      "partition_doors",
+      "partition_multi",
+      "partition_wall",
+      "pillar",
+      "roof",
+      "sides",
+      "slopes",
+      "slopes_east",
+      "stairs",
+      "stairs_east"
+    ],
+    "rule_type": "composed",
+    "stack_stride_px": 24,
+    "view_angle": null,
+    "wall_tiles": 2
+  },
+  "n_tiles": 80,
+  "overrides": {
+    "building_wall_angle": 45,
+    "tile_view_angle": 90
+  },
+  "readout": {
+    "arity": 8,
+    "canvas": [
+      52,
+      98
+    ],
+    "floor_bbox": [
+      10,
+      56,
+      42,
+      88
+    ],
+    "floor_cell": [
+      32,
+      32
+    ],
+    "n_painted": 20,
+    "painted": [
+      0,
+      1,
+      4,
+      8,
+      14,
+      17,
+      31,
+      32,
+      33,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48
+    ],
+    "part_keys": [
+      "corners",
+      "doors",
+      "floor",
+      "floor_roof",
+      "outer_corners",
+      "outer_multi",
+      "partition",
+      "partition_doors",
+      "partition_multi",
+      "partition_wall",
+      "pillar",
+      "roof",
+      "sides",
+      "slopes",
+      "slopes_east",
+      "stairs",
+      "stairs_east"
+    ],
+    "rule_type": "composed",
+    "stack_stride_px": 23,
+    "view_angle": 90.0,
+    "wall_tiles": 2
+  },
+  "role": "LEAD \u2014 not counted toward the declared yield bar",
+  "usage": {
+    "generations": 20.0,
+    "type": "generations"
+  }
+}

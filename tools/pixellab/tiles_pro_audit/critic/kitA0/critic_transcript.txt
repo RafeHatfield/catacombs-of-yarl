@@ -1,0 +1,413 @@
+CANDIDATE: cand_00
+CULL: none
+ROLE: A length of plain wall, and only that — regular running-bond brick with two tan courses; it has no ends, corners or junctions and its content repeats exactly every 32 native pixels vertically, so it is a wallpaper swatch stamped twice, not a built piece.
+THICKNESS: No. The one pale band sits in the middle of the sprite and recurs on the repeat, so it cannot be a top surface; there is no cap, no lip, no near edge. Nothing to set a lantern on.
+LIGHT: No direction. The value steps follow the material bands, not a source.
+HOLDS: Mortar. That is the entire list — no timber, no pin, no rope, no strap, nothing driven into anything.
+HAPPENED: Nothing has happened to it. Every brick is square, every joint is intact, no course has moved and nothing has been put back.
+VERDICT: FAIL
+WHY: A tidy, undamaged, mechanically repeating brick texture with no top surface and no repair — it depicts a wall nobody has ever had to hold.
+
+CANDIDATE: cand_01
+CULL: none
+ROLE: An outside corner — a short arm running left, turning down into a longer arm. I can read the turn from the silhouette only.
+THICKNESS: No. The left arm is entirely pale stone and the down arm is almost entirely dark timber face, so the two arms of the same wall show completely different amounts of top surface; the wall changes thickness as it turns.
+LIGHT: No direction — the pale/dark split follows the two arms, not a source.
+HOLDS: Dark timber uprights and horizontals crossing over grey stone. I cannot find a single fixing — no pin head, no lashing, no strap, no wedge. The timbers pass over each other and stop.
+HAPPENED: Cannot tell. Stone and timber occupy the same face without either one being shown as damaged or as a response to damage.
+VERDICT: FAIL
+WHY: The top surface vanishes as the wall turns the corner, and nothing in it is fixed to anything.
+
+CANDIDATE: cand_02
+CULL: none
+ROLE: Cannot tell. A 12-pixel-wide vertical strip, opaque top to bottom, with no distinguishing end, cap or return — it could be a post, a wall end, or a slice cut out of a longer run.
+THICKNESS: No. There is no pale cap band anywhere on it; the timber runs to the top edge of the sprite.
+LIGHT: No direction.
+HOLDS: Two dark uprights with short horizontal battens between them, over grey stone. No fixings visible.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: No top surface at all and no readable end condition — it is a cut, not a piece.
+
+CANDIDATE: cand_03
+CULL: none
+ROLE: A length of wall, full 32 wide, with a cap band across the top.
+THICKNESS: Barely, and not reliably — the pale band is roughly six native pixels deep with no lip and no separate near-edge value, so it reads as a lighter patch of the same face rather than as a horizontal surface. I would not expect a lantern to sit on it.
+LIGHT: No direction.
+HOLDS: A grid of dark timbers — three verticals, four horizontals — laid over dressed grey stone, plus one long thin dark diagonal streak mid-face. Every crossing is a plain overlap. There is no pin, no rope, no hide, no strap, no wedge anywhere on the tile.
+HAPPENED: Cannot tell. The timber grid is regular and undamaged, the stone behind it is undamaged, so nothing indicates the timber is holding anything or replacing anything.
+VERDICT: FAIL
+WHY: The timbers are flat crossing stripes with no fixings, so nothing in the image explains why the wall stands.
+
+CANDIDATE: cand_04
+CULL: none
+ROLE: An outside corner, narrow — a stone arm running left, turning down into a 12-wide timber shaft.
+THICKNESS: No. The down arm is a bare 12-pixel column with no cap at all, so the wall reads as a plank on edge below the turn.
+LIGHT: No direction — the bright column values sit exactly on the stone region boundary, a hard step, not a falloff.
+HOLDS: Timber uprights over stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The corner loses all thickness the moment it turns, and at ship size the down arm is a brown stick.
+
+CANDIDATE: cand_05
+CULL: none
+ROLE: A length of wall, full 32 wide.
+THICKNESS: No. The cap band is a shallow stripe of lighter stone with no separate front lip, and the timber beam immediately below it is the same value as the beams further down, so there is no step from horizontal to vertical.
+LIGHT: No direction.
+HOLDS: The same timber grid as cand_03, pixel-for-pixel over most of the face. No fixings of any kind.
+HAPPENED: Cannot tell — no break, no settlement, no patch.
+VERDICT: FAIL
+WHY: Identical body to several other pieces in the set, unfixed timbers, and no top surface that would carry weight.
+
+CANDIDATE: cand_06
+CULL: none
+ROLE: An outside corner or a step — the cap steps down from a high left block to a lower band running right.
+THICKNESS: No. The stepped cap and the lower cap are the same value with no edge between them, so the step reads as a shape change in a texture, not as two surfaces at different heights.
+LIGHT: No direction.
+HOLDS: Timber grid over stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The step is a silhouette event with no surface information behind it, and the face below is the same unfixed lattice as the rest of the set.
+
+CANDIDATE: cand_07
+CULL: none
+ROLE: A length of wall with a notched cap — I cannot say what the notch is for.
+THICKNESS: No, for the same reason as cand_03 and cand_05: a lighter stripe, no lip, no near edge.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 96–99% of its pixels are shared with other pieces in this set and it adds no new structural reading.
+
+CANDIDATE: cand_08
+CULL: none
+ROLE: A T-junction — a full-width top bar with a 12-wide stem running down from it.
+THICKNESS: No. The stem is a bare 12-wide shaft with no cap, so a wall 32 thick at the bar becomes 12 thick down the stem with nothing shown at the transition.
+LIGHT: No direction.
+HOLDS: Timber uprights and horizontals over stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A junction where the two arms are different thicknesses and the joint between them is not drawn.
+
+CANDIDATE: cand_09
+CULL: object-not-architecture
+ROLE: Not architecture — a small free-standing rounded lump in peach, cream and dark red, drawn as a diamond-topped form with a drip hanging off the bottom edge.
+THICKNESS: n/a
+LIGHT: n/a
+HOLDS: n/a
+HAPPENED: n/a
+VERDICT: FAIL
+WHY: A free-standing object on a diamond footprint, in a palette shared with nothing else here.
+
+CANDIDATE: cand_10
+CULL: none
+ROLE: A length of wall with a bitten cap.
+THICKNESS: No — same shallow lighter stripe, no lip.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 99.4% pixel-identical to cand_18 over their whole overlap; it is a re-crop, not a piece.
+
+CANDIDATE: cand_11
+CULL: none
+ROLE: Cannot tell. A 12×9 native scrap — a brown edge on the left, flat grey to the right. No end, no corner, no cap.
+THICKNESS: No — nothing in it reads as a surface at all.
+LIGHT: No direction.
+HOLDS: Cannot tell; there is one dark vertical bar and some grey. Nothing holds anything.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Under a hundred native pixels carrying no structural information — at ship size it is a smudge.
+
+CANDIDATE: cand_12
+CULL: none
+ROLE: A length of wall with a raised stub rising from the top centre — a chimney, a pier or a junction upward, I cannot tell which.
+THICKNESS: No. The stub's cap and the main cap are the same value with no edge between them, so the stub does not read as standing proud.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 99.9% identical to cand_05 below the cap, and the stub reads as a bump in an outline rather than mass.
+
+CANDIDATE: cand_13
+CULL: none
+ROLE: A 12-wide vertical slice — probably a narrow wall run or a pier, but there is no end detail to confirm it.
+THICKNESS: Weakly. There is a pale cap across the top eight rows, but it is the full width of the strip with no front lip, so the strip reads as a flat ribbon with a light top, not as a solid 12 thick.
+LIGHT: No direction.
+HOLDS: One dark upright and two horizontal battens over grey stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Byte-identical to cand_33 — the same file submitted twice.
+
+CANDIDATE: cand_14
+CULL: none
+ROLE: A 22-wide length of wall, cap across the top.
+THICKNESS: No. The cap is a lighter patch flush with the face; there is no lip and the timber beam under it is not read as an eave or an edge.
+LIGHT: No direction.
+HOLDS: Timber grid over stone. There is one small dark blob sitting on the cap that I cannot identify — it is neither a pin nor a bracket nor a stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 97% identical to cand_13 and cand_33 over its overlap; a width variant of the same slice with no new information.
+
+CANDIDATE: cand_15
+CULL: none
+ROLE: A 12-wide vertical run with a cap.
+THICKNESS: No. Cap flush with face, no lip.
+LIGHT: No direction.
+HOLDS: A single tall dark upright running most of the height, crossed by two battens, over stone. Nothing fixes the upright at either end — it simply stops.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A structural post drawn as a stripe with no footing and no head fixing.
+
+CANDIDATE: cand_16
+CULL: none
+ROLE: Cannot tell. A 12×24 fragment with a timber cross near the top and grey stone below and right.
+THICKNESS: No — no cap, no surface.
+LIGHT: No direction.
+HOLDS: One horizontal and one vertical timber crossing. No fixing at the crossing.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Too little of anything to place in a room, and no top surface at all.
+
+CANDIDATE: cand_17
+CULL: none
+ROLE: An outside corner — stone cap running right at the top, turning down into a 12-wide timber shaft on the left.
+THICKNESS: Partly and inconsistently. The top-right arm shows a genuine slab of pale cap; the down arm shows none, so the same wall is thick where it runs right and paper-thin where it runs down.
+LIGHT: No direction — the L/R value difference is a hard step at the cap boundary, not a falloff.
+HOLDS: One long dark upright down the shaft, a beam under the cap, battens over stone. No fixings anywhere.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The wall's thickness is not conserved around its own corner.
+
+CANDIDATE: cand_18
+CULL: none
+ROLE: A length of wall with a stepped cap.
+THICKNESS: No — and worse, there is a rectangular hole of transparency punched through the middle of the cap region, so a piece of the wall's top is simply missing from the silhouette.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell. The transparent bite is not drawn as a break — it has no broken edge, no rubble, no exposed core. It is an absence, not damage.
+VERDICT: FAIL
+WHY: A hole in the silhouette where the wall should be continuous, with no broken edge to justify it.
+
+CANDIDATE: cand_19
+CULL: none
+ROLE: A length of wall, full width, cap across the top.
+THICKNESS: No — flush lighter stripe, no lip.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: At ship size the entire face collapses into the same brown-on-grey crosshatch as a dozen other pieces here; nothing distinguishes it as a length rather than a corner.
+
+CANDIDATE: cand_20
+CULL: none
+ROLE: Cannot tell. A 12×16 block of flat grey with a brown border down the right side and along the bottom.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Nothing holds it together. There is one L of dark timber at the edge and an undifferentiated grey field inside it.
+HAPPENED: Nothing visible.
+VERDICT: FAIL
+WHY: A grey rectangle in a brown frame — it carries no structure, only an edge.
+
+CANDIDATE: cand_21
+CULL: none
+ROLE: A doorway or gateway — a full-width wall with a rectangular opening running from mid-height down through the bottom edge.
+THICKNESS: The wall claims a cap along the top, but the opening contradicts it: the reveals of the doorway are cut flat with no returning surface, so the passage has walls of zero thickness. The tile tells me two incompatible things about the same wall.
+LIGHT: No direction.
+HOLDS: Timber jambs either side and a beam over the head. The lintel is a plain horizontal band that neither bears on the jambs nor is fixed to them — it crosses in front and stops. No pins, no straps, no corbel.
+HAPPENED: Cannot tell. An opening this size in a wall held for four hundred years shows no wear at the jambs, no rubbing at the threshold, no bracing.
+VERDICT: FAIL
+WHY: An opening with no reveal thickness and a lintel that bears on nothing.
+
+CANDIDATE: cand_22
+CULL: none
+ROLE: An outside corner — a square pale cap block top-left, turning down into a 12-wide shaft on the right.
+THICKNESS: Partly. The top-left block is a genuine plan-view slab and I could set something on that; the down arm has no cap and is 12 wide, so the answer changes within one tile.
+LIGHT: No direction — a hard step at the cap boundary, not a gradient.
+HOLDS: A dark upright down the shaft, a beam under the cap, battens over stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 100% pixel-identical to cand_39 across their entire overlap — the same drawing submitted twice under two roles.
+
+CANDIDATE: cand_23
+CULL: none
+ROLE: Cannot tell. A 12×24 fragment, pale stone with a brown vertical at the lower left.
+THICKNESS: No — the pale area runs the full width with no lip, so it is a lighter patch, not a surface.
+LIGHT: No direction.
+HOLDS: One short timber upright. Nothing else.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A fragment too small to place, with no end, cap or joint to place it by.
+
+CANDIDATE: cand_24
+CULL: none
+ROLE: Cannot tell — the sprite contains two separate, disconnected fragments with transparent space between them. It is not one piece.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Nothing connects the two halves; within each half, timber over stone with no fixings.
+HAPPENED: Cannot tell. The gap is not drawn as a breach — both fragments have clean cut edges facing each other.
+VERDICT: FAIL
+WHY: One tile, two unconnected islands of wall — a broken silhouette, not architecture.
+
+CANDIDATE: cand_25
+CULL: none
+ROLE: A 22-wide length of wall with a stepped cap and a stub of cap projecting right.
+THICKNESS: No. The projecting cap stub is the same value as the main cap with no edge between them, so it does not read as standing proud or as overhanging.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings. The same unidentifiable dark blob sits on the cap as in cand_14.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 96.5% identical to cand_31 over its overlap and no fixing is drawn anywhere on it.
+
+CANDIDATE: cand_26
+CULL: none
+ROLE: A length of wall with a stub hanging off the bottom edge — a downward junction, or an artefact of a crop; I cannot tell which.
+THICKNESS: No — flush cap, no lip.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The bottom stub is the nearest part of the wall to the viewer and shows no front face or footing at all, which is where thickness would have to be visible.
+
+CANDIDATE: cand_27
+CULL: none
+ROLE: An outside corner — cap running right, turning down into a 12-wide shaft.
+THICKNESS: Inconsistent — a real slab of cap on the right arm, none on the down arm.
+LIGHT: No direction.
+HOLDS: One long upright, a beam, battens over stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 98% identical to cand_17; a duplicate corner with the same thickness contradiction.
+
+CANDIDATE: cand_28
+CULL: none
+ROLE: A length of wall that steps out to the right at the top — an end, a buttress or a junction; I cannot tell.
+THICKNESS: No. The stepped-out region is the same value and texture as the wall face beside it, so the step reads as an outline change with no mass behind it.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The step-out has no surface, no edge and no joint, so the piece cannot tell a builder which side is wall and which is return.
+
+CANDIDATE: cand_29
+CULL: none
+ROLE: A 22-wide length with a raised cap block at the top centre.
+THICKNESS: No — the raised block and the cap beside it are the same value, flush, with no lip.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 99.9% identical to cand_32 over their overlap.
+
+CANDIDATE: cand_30
+CULL: none
+ROLE: Cannot tell. It has two separate pale cap bands stacked one above the other with a timber beam between, which would mean two wall tops in one piece.
+THICKNESS: No. Two caps at different heights, both the same value, neither with a lip, so I cannot say which one is the top of this wall or how far apart they are.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Two competing top surfaces in one tile with nothing to distinguish their heights.
+
+CANDIDATE: cand_31
+CULL: none
+ROLE: A 12-wide vertical run with a cap at the top.
+THICKNESS: No — cap flush across the full 12, no lip.
+LIGHT: No direction.
+HOLDS: One dark upright, two battens, over stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 98% identical to cand_13 and cand_33; a re-crop of an already-duplicated slice.
+
+CANDIDATE: cand_32
+CULL: none
+ROLE: A 22-wide length of wall with a cap.
+THICKNESS: No — flush cap, no lip.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 99.9% identical to cand_29 over their overlap.
+
+CANDIDATE: cand_33
+CULL: none
+ROLE: A 12-wide vertical slice, as cand_13.
+THICKNESS: Weakly, as cand_13 — a full-width cap with no lip.
+LIGHT: No direction.
+HOLDS: One upright, two battens, over stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Byte-identical to cand_13 — literally the same file.
+
+CANDIDATE: cand_34
+CULL: none
+ROLE: A doorway or gateway, full width, opening running from mid-height down through the bottom edge, with a stepped cap above.
+THICKNESS: No. As with cand_21, the reveals of the opening are flat cuts with no returning surface — the passage has walls of no thickness, which contradicts the cap above it.
+LIGHT: No direction.
+HOLDS: Timber jambs and a head beam. The head beam crosses in front of the jambs and is fixed to neither; there is no visible pin, strap, corbel or wedge at the two most loaded points in the whole set.
+HAPPENED: Cannot tell. No wear at the threshold, no rubbing at the jambs, no propping.
+VERDICT: FAIL
+WHY: The one piece that must show how the orcs hold a load shows nothing holding it.
+
+CANDIDATE: cand_35
+CULL: none
+ROLE: A length of wall with a stub of cap raised at the top centre.
+THICKNESS: No — flush cap, no lip.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 97.7% identical to cand_29 over its overlap and adds no readable structure.
+
+CANDIDATE: cand_36
+CULL: none
+ROLE: An outside corner with a raised block at the top right — a corner post, possibly.
+THICKNESS: No. The raised block and the cap are the same value with no separating edge, so I cannot tell whether the block stands above the wall or sits behind it.
+LIGHT: No direction.
+HOLDS: Timber uprights and a beam over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: At ship size the corner turn and the raised block both disappear into the same crosshatch; the piece cannot signal its own role.
+
+CANDIDATE: cand_37
+CULL: none
+ROLE: Cannot tell. A 12×9 scrap — a dark brown bar on the left, flat grey on the right, one dark band along the bottom.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Nothing holds it together.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: One hundred and eight native pixels with no structure in them.
+
+CANDIDATE: cand_38
+CULL: none
+ROLE: A length of wall with a tall block raised at the top right — an end, or a junction upward.
+THICKNESS: No — flush cap, no lip, and the raised block has the same cap value as the wall beside it.
+LIGHT: No direction.
+HOLDS: Timber grid over stone, no fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 98.5% identical to cand_18 over its overlap; a re-crop of a piece that itself has a hole in its silhouette.
+
+CANDIDATE: cand_39
+CULL: none
+ROLE: An outside corner — pale cap block top-left, turning down into a 12-wide shaft on the right.
+THICKNESS: Inconsistent — a genuine slab on the left arm, nothing on the down arm.
+LIGHT: No direction — a hard step at the cap boundary.
+HOLDS: An upright, a beam, battens over stone. No fixings.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 100% pixel-identical to cand_22 across their entire overlap.
+
+FLIP LIST
+- Nothing in this set is fixed to anything. Every timber crosses over another timber and stops. Redraw each crossing with a visible fixing at the intersection: a 2×2 pale pin head with a one-pixel dark shadow notch below it, or a two-pixel band of rope wrapped over both members with the wrap direction visible. A structural post must show a fixing at its head and its foot, not just terminate.
+- The pale top band is flush with the wall face, so it reads as a lighter patch of texture, not a horizontal surface. Give the cap a near edge: one row of the cap's own colour, then a one-pixel dark line, then two to three rows of a distinct third value for the front lip of the cap stones, before the wall face begins. That single lip is what makes a lantern sit on it.
+- Wall thickness is not conserved around corners. In cand_01, cand_04, cand_17, cand_22, cand_27, cand_39 the arm that runs left–right shows a slab of top surface and the arm that runs toward the viewer shows none. Draw the cap turning the corner — carry the cap band down the near arm as a foreshortened strip of the same depth, with the mitre or the overlap of the two cap runs visible at the inside angle.
+- The doorway pieces (cand_21, cand_34) show a passage with no wall thickness. Draw the reveal: two to four native pixels of returning face on each jamb, in a value between the cap and the wall face, so the opening reads as cut through something solid. Set the head beam into the jambs rather than in front of them, and put a pin or a strap where it lands.
+- At 32 pixels the timber lattice on cand_03, cand_05, cand_06, cand_07, cand_10, cand_12, cand_18, cand_19, cand_26, cand_28, cand_30, cand_32, cand_35, cand_38 collapses into undifferentiated brown-on-grey crosshatch and no role is readable. Cut the timber count to two or three members per tile, make each one at least three pixels thick with a distinct top edge, and leave the stone between them plain so the silhouette of the repairs is legible at ship size.
+- The set is not forty pieces. cand_13 and cand_33 are byte-identical; cand_22 and cand_39 are 100% identical across their whole overlap; cand_05/cand_12, cand_29/cand_32, cand_10/cand_18 are 99%+ identical; 105 of 715 overlapping pairs are 90%+ identical. Author each role from scratch instead of re-cropping one master painting, so a corner is drawn as a corner rather than as a rectangle cut out of a length.
+- cand_24 contains two disconnected islands of wall with transparent space between them, and cand_18 has a rectangular hole of transparency punched through its top surface. Close both silhouettes, or if the hole is meant to be damage, draw a broken edge for it — a ragged one-pixel dark line, exposed rubble core in a third value, and displaced stones at the lip.
+- cand_00 is a different palette from everything else here, repeats exactly every 32 pixels vertically, and shows a wall in perfect condition with mortar as its only fastening. Rebuild it in the grey-and-brown family, break the vertical repeat by moving at least four stones per 32-row period, and drive at least one repair through it — a pinned timber, a rope-bound course, a stone replaced with something salvaged and the wrong size.
+- cand_09 is not a wall. It is a free-standing lump on a diamond footprint in a peach-and-red palette that appears nowhere else in the set. Remove it.
+- cand_11, cand_16, cand_20, cand_23, cand_37 are fragments under 300 native pixels with no cap, no end and no joint. Either delete them or give each one the single feature that defines its role — a capped end with a visible lip, or a socket where the neighbouring piece keys into it.
+
+Models used: Claude Opus 5 (1M context).

@@ -1,0 +1,413 @@
+CANDIDATE: cand_00
+CULL: none
+ROLE: A length of plain wall meant to tile vertically — the whole 32×58 image is one 29-row motif stamped twice, pixel for pixel.
+THICKNESS: Yes — rows 22–26 are a pale flat cap with a darker lip under it, the only genuine top plane in the whole directory; but the cap is a single unbroken colour across all 32 columns, so it reads as a painted stripe rather than a surface a lantern could sit on.
+LIGHT: No direction — measured top-vs-bottom and left-vs-right differences are both under 3 levels.
+HOLDS: Regular running-bond brick with even mortar joints, a tan course with cream blocks set at even intervals, and one small brown vertical pin through the cap. No rope, no straps, no braces, no patches.
+HAPPENED: Nothing. There is not a single crack, replacement block, patch, or worn edge anywhere in it — it is a new wall, and the cream-blocked tan band is ornament, laid to be looked at.
+VERDICT: FAIL
+WHY: An undamaged decorative brick wall with a flat colour cap, duplicated exactly within its own height — it contradicts both the fiction and the requirement that pieces not read as stamped repeats.
+
+CANDIDATE: cand_01
+CULL: none
+ROLE: A corner — full 32-wide run across the top, dropping to an 18-wide leg down the right.
+THICKNESS: No. Both the top region and the leg are drawn as the same face-on running-bond masonry; nothing anywhere shows a horizontal plane, an edge, or a return. Nowhere to set a lantern.
+LIGHT: No named direction, but the upper-left masonry is pale and the lower-right is dark using the identical stone pattern, which reads as a value shift, not as two materials.
+HOLDS: A few dark clumps that might be brackets, one horizontal plank low down, a couple of thin vertical poles. Nothing terminates in a visible fixing.
+HAPPENED: Cannot tell. There are dark marks in the lower half but none resolve into damage, repair, or wear.
+VERDICT: FAIL
+WHY: The corner has no return and no top — it is a flat elevation folded around nothing, and 91% of its pixels are identical to cand_02's in the region they share.
+
+CANDIDATE: cand_02
+CULL: none
+ROLE: A wall running away from the viewer — a 12-wide, 58-tall strip.
+THICKNESS: No, and worse than no: a wall running north–south seen from above should present its top, and this presents front-elevation courses instead.
+LIGHT: No direction.
+HOLDS: Two short vertical bars near the top, a horizontal dark line about a third down, and one small square fitting on the right. Below that nothing is legible.
+HAPPENED: Cannot tell — the lower two-thirds is undifferentiated dark brown with black flecks.
+VERDICT: FAIL
+WHY: A wall running into the screen is showing the same face-on brickwork as a wall running across it, which is geometrically impossible in the stated view.
+
+CANDIDATE: cand_03
+CULL: none
+ROLE: A plain length of wall, full 32 wide by 78 tall.
+THICKNESS: No. Top to bottom it is one continuous face-on elevation; the pale horizontal bar at about 40% height is another course, not a lip.
+LIGHT: No single direction; a light upper band over a dark lower band on identical masonry.
+HOLDS: A stepped diagonal of single dark pixels, a short pale bar, two thin vertical poles, and a horizontal plank low down.
+HAPPENED: Cannot tell. The middle third is a black tangle that does not resolve into any object.
+VERDICT: FAIL
+WHY: 92.7% of its pixels are identical to cand_07's and 92.1% to cand_30's — laid in a row these three produce visible 32-pixel wallpaper, not a wall.
+
+CANDIDATE: cand_04
+CULL: none
+ROLE: A stepped corner — a 12-wide stub, widening to 22, then a 12-wide leg running down the right.
+THICKNESS: No. The step in the silhouette is a straight vertical cut through the artwork; the masonry simply stops mid-stone with no side face.
+LIGHT: The pale masonry sits in the upper-left and the dark in the lower-right, measured at +26 left-of-right and +23 top-of-bottom.
+HOLDS: A dark cross shape in the upper-left block that could be a driven pin, and a vertical bar down the leg. Nothing else reads.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The step exposes a raw cut with no reveal, and the diagonal pale-to-dark falloff is a light direction painted into a tile that is meant to carry none.
+
+CANDIDATE: cand_05
+CULL: none
+ROLE: A plain length of wall, 32 wide by 58 tall.
+THICKNESS: No — continuous elevation, no top plane, no lip.
+LIGHT: No direction.
+HOLDS: A short pale bar near the top, a stepped diagonal above it, one horizontal plank near the bottom, one thin vertical pole.
+HAPPENED: Cannot tell. Half its pixels sit inside a 19-level luminance band, so the lower two-thirds is brown mush.
+VERDICT: FAIL
+WHY: 96.3% identical to cand_07 and 96.1% to cand_38 — this is the same painting cropped, not a distinct piece.
+
+CANDIDATE: cand_06
+CULL: none
+ROLE: A junction — a 12-wide leg at the top-left meeting a full 32-wide run below.
+THICKNESS: No. The leg and the run are both face-on masonry with no top surface and no joint between them.
+LIGHT: No single direction; light upper band, dark lower band, same stone in both.
+HOLDS: A stepped diagonal brace, a short pale bar, a plank low down. The diagonal is one pixel wide and has no ends.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 96.3% identical to cand_18 and 96.1% to cand_10, and the two arms of the junction pass through each other without any acknowledgement that they meet.
+
+CANDIDATE: cand_07
+CULL: none
+ROLE: A plain length of wall, 32 wide by 78 tall.
+THICKNESS: No. Nothing in it depicts a horizontal surface.
+LIGHT: No single direction; a top-lighter, bottom-darker split across identical masonry.
+HOLDS: Short pale bar, stepped diagonal, two vertical poles, one plank.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Near-clone of cand_03 (92.7%), cand_05 (96.3%) and cand_10 (90.1%) — the set has no variety to place.
+
+CANDIDATE: cand_08
+CULL: none
+ROLE: A T-junction — 32-wide run across the top with a 12-wide leg dropping from the centre.
+THICKNESS: No. The leg is elevation masonry, so a wall running toward the viewer is showing its face where its top should be.
+LIGHT: No direction.
+HOLDS: A short pale bar over the leg reading as a lintel, and a stepped diagonal to the right of it.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The dropping leg is drawn in the wrong plane for its direction of run, and it shares 96.6% of its pixels with cand_23.
+
+CANDIDATE: cand_09
+CULL: object-not-architecture
+ROLE: Not architecture — a 14×15 lumpy tan and maroon blob on transparency.
+THICKNESS: n/a
+LIGHT: n/a
+HOLDS: n/a
+HAPPENED: n/a
+VERDICT: FAIL
+WHY: A free-standing rounded object with a dark ring around its lower edge (edge pixels average 57 levels darker than the interior) and a saturated orange-cream palette found nowhere else in the set.
+
+CANDIDATE: cand_10
+CULL: none
+ROLE: A plain length of wall, 32 wide by 78 tall.
+THICKNESS: No.
+LIGHT: No single direction; top band lighter than bottom on the same brickwork.
+HOLDS: Stepped diagonal, pale bar, two poles, one plank.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 98.2% pixel-identical to cand_18 — these are the same tile with a notch cut in one of them.
+
+CANDIDATE: cand_11
+CULL: none
+ROLE: Cannot tell. A 12×12 patch with no coursing, no edge, and no silhouette to read.
+THICKNESS: No — it is a flat field of one grey-brown with two darker horizontal rows.
+LIGHT: No direction.
+HOLDS: Nothing holds it together. There are no joints, no timbers, no fixings.
+HAPPENED: Nothing readable has happened to it.
+VERDICT: FAIL
+WHY: A featureless swatch with no architecture in it at all — it cannot be placed because it says nothing about what it is.
+
+CANDIDATE: cand_12
+CULL: none
+ROLE: A junction — 12-wide stub at the top centre over a 32-wide run.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A pale bar, a stepped diagonal, a plank, thin poles.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 95.4% identical to cand_38 and 94.8% to cand_05, and the stub sits on the run with no lintel, no bond and no visible joint.
+
+CANDIDATE: cand_13
+CULL: none
+ROLE: A wall running away from the viewer — a 12-wide, 58-tall strip.
+THICKNESS: No. It shows front-elevation courses where the top of the wall should be.
+LIGHT: No direction.
+HOLDS: A single thin vertical pole running most of its height, a horizontal plank near the bottom, one pale block at the top.
+HAPPENED: Cannot tell — outside the pole and the plank it is a flat dark field.
+VERDICT: FAIL
+WHY: Pixel-for-pixel identical to cand_33, and wrong-plane for the direction it runs.
+
+CANDIDATE: cand_14
+CULL: none
+ROLE: A length of wall two cells wide, 22 by 58.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Two vertical poles, a bracket-shaped dark clump at the right, a plank near the bottom.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 95.8% identical to cand_25, and half its pixels sit inside a 19-level luminance band, so nothing in it survives being seen at 32 pixels.
+
+CANDIDATE: cand_15
+CULL: none
+ROLE: A wall running away from the viewer — 12 wide, 58 tall.
+THICKNESS: No — elevation masonry presented where the top should be.
+LIGHT: No direction.
+HOLDS: A heavy black horizontal clump about a fifth down and a vertical bar below it; nothing below mid-height reads as anything.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The bottom two-thirds is undifferentiated brown with black flecks and carries no structure at all.
+
+CANDIDATE: cand_16
+CULL: none
+ROLE: Cannot tell — a 12×32 strip with no coursing and no readable ends.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Nothing. There are scattered dark rectangles but no joints, timbers or fixings.
+HAPPENED: Nothing readable.
+VERDICT: FAIL
+WHY: Flat mid-brown field with random darker blocks dropped into it — there is no wall in this image to place.
+
+CANDIDATE: cand_17
+CULL: none
+ROLE: A stepped piece running from the top-right down to the bottom-left — in a square grid that is a diagonal, which a builder cannot place against orthogonal neighbours.
+THICKNESS: No. Both cuts are straight vertical slices through the artwork with no side face.
+LIGHT: The pale masonry sits upper-right and the dark lower-left, measured at 21 levels right-of-left.
+HOLDS: A pale block and a dark clump top-right, a vertical bar down the left leg.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 99.2% pixel-identical to cand_27, and its two legs step diagonally with no corner drawn where they turn.
+
+CANDIDATE: cand_18
+CULL: none
+ROLE: A wall with an opening in it — two 12-wide piers with an 8-wide gap over a solid 32-wide run.
+THICKNESS: No, and the opening proves it: the gap is a straight vertical cut and both piers stop mid-stone with no jamb and no reveal.
+LIGHT: No single direction; light upper band over dark lower band.
+HOLDS: The pale bar, the stepped diagonal, a plank. Nothing spans the opening.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: An opening cut through a wall with no jambs and no lintel over it, in a tile 98.2% identical to cand_10.
+
+CANDIDATE: cand_19
+CULL: none
+ROLE: A plain length of wall, 32 by 58.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A pale bar near the top, a plank near the bottom, two thin poles.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Same base painting as the rest of the wide family, with 75% of its pixels inside a 24-level band — at 32 pixels it is a brown rectangle.
+
+CANDIDATE: cand_20
+CULL: none
+ROLE: Cannot tell — a 12×22 fragment with no coursing and no ends.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Nothing readable.
+HAPPENED: Nothing readable.
+VERDICT: FAIL
+WHY: A flat grey-brown patch with a few dark rectangles in it — it carries no information about what it is or where it goes.
+
+CANDIDATE: cand_21
+CULL: none
+ROLE: A wall with an opening below it — solid 32-wide across the top, splitting into an 8-wide pier and a 12-wide pier with a gap between.
+THICKNESS: No. The gap is a straight cut with no jamb faces.
+LIGHT: No direction.
+HOLDS: A curved pale form top-left that does not read as masonry, a dark horizontal clump, a stepped diagonal.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 99.0% pixel-identical to cand_34, and the opening cuts through the artwork rather than being built into it.
+
+CANDIDATE: cand_22
+CULL: none
+ROLE: A corner — 22 wide across the top turning into a 12-wide leg down the right.
+THICKNESS: No. The turn is a straight vertical cut with no return face.
+LIGHT: Pale upper-left to dark lower-right, 23 levels left-of-right.
+HOLDS: A dark horizontal beam near the top and a vertical bar; below that nothing legible.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: A corner with no corner drawn in it — the two arms are a single flat elevation with a bite taken out of the silhouette.
+
+CANDIDATE: cand_23
+CULL: none
+ROLE: Cannot tell — a 12×32 strip, possibly a post, but nothing in it says so.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Nothing. Scattered dark rectangles, no joints, no fixings.
+HAPPENED: Nothing readable.
+VERDICT: FAIL
+WHY: Featureless brown with random blocks, and 96.6% identical to cand_08 in the region they share.
+
+CANDIDATE: cand_24
+CULL: none
+ROLE: A doorway or gap piece — two 12-wide piers flanking an 8-wide opening, 32 tall.
+THICKNESS: No. Both jamb faces are raw vertical cuts through mid-stone with no reveal, no return and no depth.
+LIGHT: No direction.
+HOLDS: A dark cross in the left pier that could be a driven pin, a dark beam and a stepped diagonal in the right pier.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: An opening in a wall that shows no wall thickness at either jamb — the single thing this piece exists to depict is the thing it does not depict.
+
+CANDIDATE: cand_25
+CULL: none
+ROLE: A junction — 12-wide stub at the top over a 22-wide run.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A pale block at the top, a horizontal dark beam, two vertical poles, a plank at the bottom.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 95.8% identical to cand_14, and the stub meets the run with no bond, lintel or joint of any kind.
+
+CANDIDATE: cand_26
+CULL: none
+ROLE: A T-junction — 32-wide run with a 12-wide leg dropping from the centre at the bottom.
+THICKNESS: No — the leg shows face-on courses where a wall running toward the viewer would show its top.
+LIGHT: No single direction; light top band, dark bottom band, same brick in both.
+HOLDS: A large pale block near the top, a dark tangle beneath it, a plank low down.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The leg is drawn in the wrong plane for the direction it runs, and the junction where it leaves the run is not drawn at all.
+
+CANDIDATE: cand_27
+CULL: none
+ROLE: A corner — 22 wide at the top turning into an 8-wide leg down the left.
+THICKNESS: No; both cuts are straight slices with no return.
+LIGHT: Pale upper-right, dark lower-left, 20 levels right-of-left.
+HOLDS: A pale block and a dark clump at the top; the leg has one vertical bar and nothing else.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 99.2% pixel-identical to cand_17 — it is the same tile mirrored in the silhouette only, not redrawn.
+
+CANDIDATE: cand_28
+CULL: none
+ROLE: A corner — 32 wide across the top stepping to 22 wide on the left below.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A pale bar, a dark beam with a bracket at the right, a stepped diagonal, a plank.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The step is a raw vertical cut with no side face, and the piece carries the same stamped brace and plank as every other tile in its family.
+
+CANDIDATE: cand_29
+CULL: none
+ROLE: A junction — 12-wide stub at the top over a 22-wide run.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A pale block at the top, a dark horizontal clump, a vertical pole, a plank near the bottom.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 97.9% identical to cand_32 and 93.8% to cand_35 — the kit is one painting wearing different outlines.
+
+CANDIDATE: cand_30
+CULL: none
+ROLE: A plain length of wall, 32 wide by 78 tall.
+THICKNESS: No. I read every one of its 78 rows: it is running-bond elevation top to bottom, with the same stone pattern above and below the pale bar, so no horizontal surface exists anywhere in it.
+LIGHT: No single direction; the top third is pale stone and the rest is dark stone drawn identically.
+HOLDS: A stepped one-pixel diagonal, a short pale bar, two thin vertical poles, a horizontal plank near the bottom, and a dark X at the bottom-left.
+HAPPENED: Cannot tell. Its rows 76–77 are pixel-identical to its rows 32–33, so the face repeats inside its own height.
+VERDICT: FAIL
+WHY: A flat elevation with no top plane, repeating within itself, and 94.5% identical to cand_10.
+
+CANDIDATE: cand_31
+CULL: none
+ROLE: A wall running away from the viewer — 12 wide, 68 tall.
+THICKNESS: No — front-elevation courses where the top should be.
+LIGHT: No direction.
+HOLDS: A pale block at the top, one long thin vertical pole, a plank near the bottom.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Wrong plane for its run direction, and 93.0% identical to cand_13.
+
+CANDIDATE: cand_32
+CULL: none
+ROLE: A length of wall two cells wide, 22 by 58.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A pale block at the top, a dark diagonal clump, a vertical pole, a plank.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 97.9% identical to cand_29 and 95.1% to cand_35 — placing it next to either produces a visible repeat.
+
+CANDIDATE: cand_33
+CULL: none
+ROLE: A wall running away from the viewer — 12 wide, 58 tall.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: One thin vertical pole, a plank near the bottom, a pale block at the top.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Byte-for-byte identical to cand_13 — it is not a candidate, it is the same file twice.
+
+CANDIDATE: cand_34
+CULL: none
+ROLE: A junction with an opening — 12-wide stub at the top, 32-wide run, then two piers with a gap below.
+THICKNESS: No; the gap and the stub are both straight cuts with no side faces.
+LIGHT: No direction.
+HOLDS: A pale curved form top-left that does not read as stone, a dark beam, a stepped diagonal.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 99.0% pixel-identical to cand_21, and the opening below has neither jamb nor lintel.
+
+CANDIDATE: cand_35
+CULL: none
+ROLE: A junction — 12-wide stub at the top over a 32-wide run.
+THICKNESS: No.
+LIGHT: No single direction; light upper band over dark lower band.
+HOLDS: A pale block, a dark tangle, a stepped diagonal, two poles, a plank.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 95.1% identical to cand_32 and 93.8% to cand_29, with no joint drawn where the stub meets the run.
+
+CANDIDATE: cand_36
+CULL: none
+ROLE: A staggered junction — 12-wide at the top right, 22-wide in the middle, 12-wide at the bottom centre.
+THICKNESS: No; all three steps are raw vertical cuts.
+LIGHT: No direction.
+HOLDS: A dark horizontal beam across the middle with a clump at its left end, a vertical pole below.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Three silhouette steps and not one of them shows a return face — the artwork simply stops mid-stone at each.
+
+CANDIDATE: cand_37
+CULL: none
+ROLE: Cannot tell — a 12×12 patch with no coursing, no edges and no ends.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Nothing. There are dark blocky patches but no joints, timbers or fixings.
+HAPPENED: Nothing readable.
+VERDICT: FAIL
+WHY: A twelve-pixel square of brown with dark blotches in it — there is no architecture here to judge.
+
+CANDIDATE: cand_38
+CULL: none
+ROLE: A corner — 12-wide leg at the top right dropping into a 32-wide run below.
+THICKNESS: No.
+LIGHT: No single direction; light top band, dark bottom band.
+HOLDS: A pale bar, a stepped diagonal, two poles, a plank.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 96.1% identical to cand_05 and 95.4% to cand_12, and the leg meets the run with no corner drawn.
+
+CANDIDATE: cand_39
+CULL: none
+ROLE: A staggered corner — 12-wide stub, 22-wide middle, 12-wide leg down the right.
+THICKNESS: No; every step is a straight cut through mid-stone.
+LIGHT: Pale upper-left to dark lower-right, 24 levels left-of-right.
+HOLDS: A dark horizontal beam near the top, a vertical bar, a small fitting on the right leg.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: 94.4% identical to cand_34 and 93.1% to cand_21, with a falloff from light upper-left to dark lower-right painted into it.
+
+FLIP LIST
+- Draw a top plane on every piece. Reserve the top 8–10 rows of each tile for the wall's upper surface, drawn as the *ends* of the wall stones — short rectangles running across the wall's thickness, not the long face-on running-bond currently used — and put a single hard 1px lip line where that top meets the front face. Right now the entire directory except cand_00 is flat front elevation, so no piece answers the thickness question.
+- Redraw the top surface separately for each run direction. A 12-wide north–south piece (cand_02, 13, 15, 31, 33) must show a long top band running down the screen with the stone ends reading vertically; it currently shows the same horizontal courses as an east–west piece, which is impossible in this view.
+- Give every silhouette cut a return face. On cand_04, 17, 22, 27, 28, 36, 39 and on both jambs of cand_18, 21, 24, 34, add a 2–3px vertical strip of top-surface value along the cut edge with a hard dark line at the corner, so the eye sees the wall turn instead of the artwork ending mid-stone.
+- Redraw each footprint from scratch instead of masking one painting. cand_10/18 share 98.2% of their pixels, cand_17/27 99.2%, cand_21/34 99.0%, cand_29/32 97.9%, and cand_13/33 are byte-identical; laying five different tiles in a row reproduces the same brace, the same pale bar and the same X mark once every 32 pixels. Move the brace, the plank and the pale bar to different heights and different columns in each piece, and delete cand_33 outright.
+- Open up the value range in the brown family. Every brown tile tops out at luminance 131 with 50% of its pixels inside a ~25-level band. Push the stone faces up to around 170 and the joints and recesses down below 25 so that at 32px the coursing still separates; the current spread turns the lower two-thirds of every piece into one brown rectangle.
+- Replace the stepped one-pixel diagonals with real timber. The diagonal brace in cand_03/05/06/07/10/18/24/28/30/38 is a single-pixel staircase with no ends; make it 3px thick, give it a lighter top edge and a darker underside, and terminate each end against a stone with a visible driven pin or a lashed rope wrap.
+- Put the repair story where it can be seen. In each piece, replace two or three of the dark unreadable clumps with one legible act of repair at a size that survives 32px: a 6×10 salvaged plank pinned flat over a missing stone with four dark pin-heads, or a rope wrap of 3–4 parallel light strokes around a post. Nothing currently in the brown family reads as rope, hide, or a driven pin.
+- Cut cand_11, 16, 20, 23 and 37 and redraw them. Each is a flat field with random dark rectangles and no coursing, no edges and no ends; a post needs a visible cap, two visible sides, and a base where it meets the floor.
+- Redraw cand_00 so it stops repeating and starts showing use. Its rows 0–28 and 29–57 are pixel-identical: break that by shifting the tan course's cream blocks and the brick bond in the second half. Then remove the ornamental cream-blocked band entirely, replace three or four brick faces with mismatched salvaged stone, chip two arrises, and break up the flat single-colour cap with stone joints and two or three worn hollows.
+- Cut cand_09. It is a free-standing rounded object with a dark ring around its lower edge and a saturated orange-cream palette that appears in no other file in the directory.
+
+Models used: claude-opus-5[1m]

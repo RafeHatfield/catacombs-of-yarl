@@ -1,0 +1,1462 @@
+{
+  "kitA0": {
+    "disagreements": [],
+    "loose_structural": 0,
+    "n_candidates": 38,
+    "rows": [
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_12"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_05"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_54"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_21"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_03"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_11"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_51"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_50"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_53"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_07"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_20"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_31"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_15"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_08"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_02"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_27"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_52"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_01"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_16"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_29"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_24"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_04"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_55"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_22"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_18"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_25"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_09"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_23"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_49"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_14"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_17"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_13"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_30"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_28"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_19"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_06"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_10"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_26"
+      }
+    ],
+    "strict_structural": 0
+  },
+  "kitB": {
+    "disagreements": [],
+    "loose_structural": 0,
+    "n_candidates": 38,
+    "rows": [
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_12"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_05"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_54"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_21"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_03"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_11"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_51"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_50"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_53"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_07"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_20"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_31"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_15"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_08"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_02"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_27"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_52"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_01"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_16"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_29"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_24"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_04"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_55"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_22"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_18"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_25"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_09"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_23"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_49"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_14"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_17"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_13"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_30"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_28"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_19"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": false,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_06"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_10"
+      },
+      {
+        "loose": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "loose_structural": false,
+        "strict": {
+          "culled": false,
+          "no_baked_outline": true,
+          "no_key_light": true,
+          "segment_identity": true,
+          "two_planes": false
+        },
+        "strict_structural": false,
+        "tile": "tile_26"
+      }
+    ],
+    "strict_structural": 0
+  }
+}

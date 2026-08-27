@@ -1,0 +1,1470 @@
+{
+  "flip_list": [
+    "Every piece is a front elevation. Redraw with an actual top plane: for a wall running left-right, 5\u20137 native pixels of top surface at the top of the tile in a value clearly separated from the front face, with the front face starting below it. Test it by asking whether a lantern sprite could sit on that band.",
+    "The 12-wide pieces must show a wall running away from the camera, not a narrow front elevation. Redraw them as a top strip running the full height of the tile with a thin front face only at the near end \u2014 not as horizontal courses top to bottom (cand_15, cand_02, cand_13, cand_31).",
+    "On the corner pieces, draw the returning face: where the run turns, show 5\u20137 pixels of the second wall's top plane meeting the first at a visible mitre or a butt joint. Right now the turn exists only in the silhouette (cand_01, cand_04, cand_14, cand_17, cand_22, cand_27, cand_36, cand_39).",
+    "On the doorway pieces, put a reveal in the opening: 3\u20134 pixels of wall depth on each jamb face and a soffit under the lintel, in a darker value than the front face. Currently the opening's cut faces are blank alpha (cand_21, cand_34, cand_24).",
+    "The stubs that rise above the wall line are drawn with horizontal front-face courses. Redraw them as top surface \u2014 a flat plane in the top-face value with grain running along the wall, not banded courses (cand_34, cand_35, cand_12, cand_25, cand_38).",
+    "The timbers are painted stripes. Give each one two pixels of edge value along one long side so it stands proud of the stone, and put a driven pin or a rope lashing at both ends where it meets the wall. cand_19's pin is the only fixing in the set \u2014 do that everywhere.",
+    "Cut the interior detail by roughly half. Magnified, cand_26 and cand_03 resolve into colour blocks divided by 1px black lines with no members in them; at 32 pixels to a floor square that becomes brown mush. Fewer, larger, nameable elements \u2014 one beam, one post, three stone courses.",
+    "Delete cand_33 (byte-identical to cand_13). Collapse cand_03/07/10/18/30 to one tile plus genuinely distinct variants, and collapse cand_29/32. Replace the freed slots with the pieces the kit is missing: a wall end that shows its cut face, and an inside corner.",
+    "cand_11, cand_20 and cand_37 float clear of every canvas edge with no ground line. Either anchor them to a tile edge so they join something, or cut them.",
+    "cand_24 is two disconnected islands. Either span them with a lintel or split into two separate end pieces.",
+    "cand_00 is in a different game \u2014 cold blue-grey, regular undamaged brick, black mortar outlines on every unit. Either repalette to the set's warm brown-grey and break the coursing with orc timber, or cut it.",
+    "cand_09 is not a wall: isometric cube, black outline, key light from the upper left. Cut it."
+  ],
+  "hedge_conversions": [],
+  "kit_dir": "yield/kit_B",
+  "label": "kitB",
+  "n_candidates": 38,
+  "n_plants": 2,
+  "plants_caught": 2,
+  "results": [
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "plant",
+      "label": "plant_b",
+      "name": "cand_00",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A straight length of wall, mid-run; but it is a repeating brick swatch, not a kit piece \u2014 no ends, no joins, no way to terminate it.",
+        "thickness": "None. Pure front elevation, no top plane, no returns; you could not set anything on it."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing. The bricks are square, intact and evenly coursed; one pale grey bar crosses the middle and does not resolve into anything.",
+        "holds": "Mortar joints between regular cut bricks. No timber, no rope, no pins \u2014 nothing an orc company put there.",
+        "light": "No direction.",
+        "role": "A straight length of wall, mid-run; but it is a repeating brick swatch, not a kit piece \u2014 no ends, no joins, no way to terminate it.",
+        "thickness": "None. Pure front elevation, no top plane, no returns; you could not set anything on it.",
+        "verdict": "FAIL",
+        "why": "Cold blue-grey palette and tidy undamaged masonry that belongs to no other tile here, and it is a flat texture rather than a piece of built structure."
+      },
+      "source": "plants/plant_b.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_12",
+      "name": "cand_01",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner \u2014 wall running left-right across the top, turning and running down the right side.",
+        "thickness": "No. The turn is a silhouette change only; the corner shows no returning face and no top surface, so the wall reads as a bent sheet."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Timber has been laid over the stone. Whether it is shoring, patching or facing is not stated by the image.",
+        "holds": "A vertical timber and a horizontal timber crossing near the turn, over grey coursed stone. No fixing is visible where they cross.",
+        "light": "No direction.",
+        "role": "A corner \u2014 wall running left-right across the top, turning and running down the right side.",
+        "thickness": "No. The turn is a silhouette change only; the corner shows no returning face and no top surface, so the wall reads as a bent sheet.",
+        "verdict": "FAIL",
+        "why": "The corner is drawn as an outline change with no returning plane, so the piece has no thickness at the one place a corner must prove it."
+      },
+      "source": "yield/kit_B/tile_12.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_05",
+      "name": "cand_02",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A narrow vertical strip on the right-hand side of the square \u2014 an edge or the side of a run.",
+        "thickness": "No. Twelve pixels wide and drawn as face courses top to bottom; nothing indicates it is a wall seen edge-on rather than a thin slab."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. The interior is blocky mottle without a legible event.",
+        "holds": "A dark vertical post down the right, crossed by two short horizontals. No visible pin, lashing or bracket.",
+        "light": "No direction.",
+        "role": "A narrow vertical strip on the right-hand side of the square \u2014 an edge or the side of a run.",
+        "thickness": "No. Twelve pixels wide and drawn as face courses top to bottom; nothing indicates it is a wall seen edge-on rather than a thin slab.",
+        "verdict": "FAIL",
+        "why": "A wall running away from the camera would show a long top strip; this shows front-face courses instead, so its orientation is unreadable."
+      },
+      "source": "yield/kit_B/tile_05.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_54",
+      "name": "cand_03",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A straight length of wall, full square width, tallest variant.",
+        "thickness": "No. A 4px pale beam caps the top, but it is the same band that appears on the edge-on pieces, so it reads as face trim, not a surface."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. There is no legible damage and no legible repair \u2014 only variation.",
+        "holds": "At magnification the crossing timbers dissolve into brown blocks separated by 1px black lines. No pin, rope, hide or bracket resolves anywhere.",
+        "light": "No direction.",
+        "role": "A straight length of wall, full square width, tallest variant.",
+        "thickness": "No. A 4px pale beam caps the top, but it is the same band that appears on the edge-on pieces, so it reads as face trim, not a surface.",
+        "verdict": "FAIL",
+        "why": "Magnified, the construction has no elements \u2014 the dark lines are separators between colour blocks, not joints between things."
+      },
+      "source": "yield/kit_B/tile_54.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_21",
+      "name": "cand_04",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner \u2014 short wall stub at top left turning down into a leg on the right.",
+        "thickness": "No. Same flat elevation; the turn is a silhouette step with no returning face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A vertical timber down the leg, a short horizontal at the turn. Nothing fixes them together.",
+        "light": "No direction.",
+        "role": "A corner \u2014 short wall stub at top left turning down into a leg on the right.",
+        "thickness": "No. Same flat elevation; the turn is a silhouette step with no returning face.",
+        "verdict": "FAIL",
+        "why": "The leg is a narrow front elevation, so the corner never turns in depth \u2014 it only turns in outline."
+      },
+      "source": "yield/kit_B/tile_21.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_03",
+      "name": "cand_05",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A straight length of wall, shorter than cand_03.",
+        "thickness": "No. Same 4px face trim, no top plane."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Same crossing timbers as cand_03, unfixed.",
+        "light": "No direction.",
+        "role": "A straight length of wall, shorter than cand_03.",
+        "thickness": "No. Same 4px face trim, no top plane.",
+        "verdict": "FAIL",
+        "why": "Row-for-row identical to cand_03 from its top edge down \u2014 this is cand_03 with rows removed, not a separate piece."
+      },
+      "source": "yield/kit_B/tile_03.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_11",
+      "name": "cand_06",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a stub rising at the top left \u2014 a junction where another run meets it.",
+        "thickness": "No. The stub is drawn with horizontal face courses, not as a top surface receding away."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Crossing timbers over stone, no visible fixings.",
+        "light": "No direction.",
+        "role": "A length of wall with a stub rising at the top left \u2014 a junction where another run meets it.",
+        "thickness": "No. The stub is drawn with horizontal face courses, not as a top surface receding away.",
+        "verdict": "FAIL",
+        "why": "The stub is the one element that could have shown a wall top, and it is drawn as another front face."
+      },
+      "source": "yield/kit_B/tile_11.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_51",
+      "name": "cand_07",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A straight length of wall, full width, tallest variant.",
+        "thickness": "No. Face trim only."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Nothing legible; the timbers have no joints.",
+        "light": "No direction.",
+        "role": "A straight length of wall, full width, tallest variant.",
+        "thickness": "No. Face trim only.",
+        "verdict": "FAIL",
+        "why": "It differs from cand_03 by 211 of 2304 pixels \u2014 the same tile with noise reshuffled, not a variant worth a slot."
+      },
+      "source": "yield/kit_B/tile_51.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_50",
+      "name": "cand_08",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A T-junction \u2014 a run across the top with a leg dropping from near the centre.",
+        "thickness": "No. The leg is a flat strip; where it meets the run there is no corner return."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A vertical timber and a horizontal beam meeting near the junction. No fixing at the meeting.",
+        "light": "No direction.",
+        "role": "A T-junction \u2014 a run across the top with a leg dropping from near the centre.",
+        "thickness": "No. The leg is a flat strip; where it meets the run there is no corner return.",
+        "verdict": "FAIL",
+        "why": "A T-junction is the piece that most needs a readable top to show which way the branch runs, and there is none."
+      },
+      "source": "yield/kit_B/tile_50.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": true,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "plant",
+      "label": "plant_a",
+      "name": "cand_09",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "Strong key from the upper left; the lower right is painted dark.",
+        "role": "Not a wall piece \u2014 a small free-standing block.",
+        "thickness": "Not applicable."
+      },
+      "raw": {
+        "cull": "object-not-architecture",
+        "happened": "Nothing.",
+        "holds": "Nothing.",
+        "light": "Strong key from the upper left; the lower right is painted dark.",
+        "role": "Not a wall piece \u2014 a small free-standing block.",
+        "thickness": "Not applicable.",
+        "verdict": "FAIL",
+        "why": "Free-standing isometric cube in warm orange and cream with a hard black ring around the whole silhouette and a baked light direction \u2014 it fires four culls at once."
+      },
+      "source": "plants/plant_a.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_53",
+      "name": "cand_10",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A straight length of wall, full width, tallest variant.",
+        "thickness": "No. Face trim only."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Nothing legible.",
+        "light": "No direction.",
+        "role": "A straight length of wall, full width, tallest variant.",
+        "thickness": "No. Face trim only.",
+        "verdict": "FAIL",
+        "why": "A near-clone of cand_07 and cand_18; the kit is paying three slots for one piece."
+      },
+      "source": "yield/kit_B/tile_53.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_07",
+      "name": "cand_11",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d79 scrap sitting in the middle of empty canvas, aligned to nothing.",
+        "thickness": "No. Two or three courses of face, no top, no base."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark vertical bar at the right edge and a lighter band. Nothing reads as a fixing.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d79 scrap sitting in the middle of empty canvas, aligned to nothing.",
+        "thickness": "No. Two or three courses of face, no top, no base.",
+        "verdict": "FAIL",
+        "why": "At a third of a floor square with no ground line and no join, it reads as a loose fragment rather than a piece of structure."
+      },
+      "source": "yield/kit_B/tile_07.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_20",
+      "name": "cand_12",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A straight length of wall with a stub rising at the top centre \u2014 a junction.",
+        "thickness": "No. Same face trim; the stub shows courses, not a top."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Nothing legible.",
+        "light": "No direction.",
+        "role": "A straight length of wall with a stub rising at the top centre \u2014 a junction.",
+        "thickness": "No. Same face trim; the stub shows courses, not a top.",
+        "verdict": "FAIL",
+        "why": "Identical row-for-row to cand_03 below its top edge \u2014 another crop of the same body."
+      },
+      "source": "yield/kit_B/tile_20.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_31",
+      "name": "cand_13",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A narrow vertical strip through the middle of the square.",
+        "thickness": "No. Front-face courses full height."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark vertical timber and two short crossing horizontals, unfixed.",
+        "light": "No direction.",
+        "role": "A narrow vertical strip through the middle of the square.",
+        "thickness": "No. Front-face courses full height.",
+        "verdict": "FAIL",
+        "why": "Byte-identical to cand_33 \u2014 the same file submitted twice."
+      },
+      "source": "yield/kit_B/tile_31.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_15",
+      "name": "cand_14",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner, occupying the right two-thirds of the square.",
+        "thickness": "No. The turn is a silhouette step only."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Crossing timbers with no visible joint.",
+        "light": "No direction.",
+        "role": "A corner, occupying the right two-thirds of the square.",
+        "thickness": "No. The turn is a silhouette step only.",
+        "verdict": "FAIL",
+        "why": "Same flat-elevation corner as cand_01 and cand_04, offset sideways; it never turns in depth."
+      },
+      "source": "yield/kit_B/tile_15.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_08",
+      "name": "cand_15",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A narrow vertical strip on the left side of the square.",
+        "thickness": "No \u2014 and this is the piece that proves it for the whole set. Magnified it is horizontal courses and a vertical post, with a 4px cap at the very top only; a wall running away from the camera would show a long top strip down its length."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark post at the left, a short horizontal bracket mid-height. No pin or lashing.",
+        "light": "No direction.",
+        "role": "A narrow vertical strip on the left side of the square.",
+        "thickness": "No \u2014 and this is the piece that proves it for the whole set. Magnified it is horizontal courses and a vertical post, with a 4px cap at the very top only; a wall running away from the camera would show a long top strip down its length.",
+        "verdict": "FAIL",
+        "why": "It is a narrow front elevation, not a wall seen edge-on, so it cannot do the job its width implies."
+      },
+      "source": "yield/kit_B/tile_08.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_02",
+      "name": "cand_16",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A short vertical stub at the right of the square \u2014 a post, or the end of a run.",
+        "thickness": "No. Front-face courses with a 4px cap, no top plane."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A pale vertical member centre, a dark bar down the right edge. Nothing fixes them.",
+        "light": "No direction.",
+        "role": "A short vertical stub at the right of the square \u2014 a post, or the end of a run.",
+        "thickness": "No. Front-face courses with a 4px cap, no top plane.",
+        "verdict": "FAIL",
+        "why": "The hard black bar down the right edge reads as a cut rather than as a joint, so the piece looks sliced from a larger image."
+      },
+      "source": "yield/kit_B/tile_02.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_27",
+      "name": "cand_17",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner \u2014 a stub top right, a leg running down the left.",
+        "thickness": "No returning face at the turn."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A vertical timber down the leg, a short horizontal at the head. No fixings.",
+        "light": "No direction.",
+        "role": "A corner \u2014 a stub top right, a leg running down the left.",
+        "thickness": "No returning face at the turn.",
+        "verdict": "FAIL",
+        "why": "Same corner geometry as cand_27 with the interior reshuffled; neither shows depth at the turn."
+      },
+      "source": "yield/kit_B/tile_27.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_52",
+      "name": "cand_18",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a notch cut into the top centre \u2014 an opening, or a place where a beam is missing.",
+        "thickness": "No. The notch's cut faces are transparent, showing no reveal or wall depth inside the gap."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "The notch could be a missing block or an authored slot; the image does not say which.",
+        "holds": "Nothing legible.",
+        "light": "No direction.",
+        "role": "A length of wall with a notch cut into the top centre \u2014 an opening, or a place where a beam is missing.",
+        "thickness": "No. The notch's cut faces are transparent, showing no reveal or wall depth inside the gap.",
+        "verdict": "FAIL",
+        "why": "A notch is the strongest chance in the set to show wall thickness on its cut faces, and both faces are blank alpha."
+      },
+      "source": "yield/kit_B/tile_52.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_01",
+      "name": "cand_19",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A straight length of wall, full width, shorter variant.",
+        "thickness": "No. A 4px pale beam caps it and nothing more."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "A post has been driven past a beam and pinned to it, against a stone panel behind.",
+        "holds": "The only legible construction in the set \u2014 a horizontal beam crossed by a vertical post, with a small dark dot on the post at the crossing that reads as a driven pin, over a grey stone panel.",
+        "light": "No direction.",
+        "role": "A straight length of wall, full width, shorter variant.",
+        "thickness": "No. A 4px pale beam caps it and nothing more.",
+        "verdict": "FAIL",
+        "why": "The best-built piece here still has no top surface, and its detail density will collapse to brown mush at 32 pixels to a floor square."
+      },
+      "source": "yield/kit_B/tile_01.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_16",
+      "name": "cand_20",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d716 scrap floating clear of every edge of the canvas.",
+        "thickness": "No. A few courses of face, no top, no base."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A short horizontal band and a dark block. Nothing reads as a fixing.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d716 scrap floating clear of every edge of the canvas.",
+        "thickness": "No. A few courses of face, no top, no base.",
+        "verdict": "FAIL",
+        "why": "Half a floor square of wall face touching no edge and no ground \u2014 it cannot be placed anywhere in a room."
+      },
+      "source": "yield/kit_B/tile_16.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_29",
+      "name": "cand_21",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A doorway \u2014 a lintel spanning between two jambs, opening running to the bottom edge.",
+        "thickness": "No. The opening's underside is where the alpha stops; there is no soffit under the lintel and no reveal on either jamb."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A horizontal beam across the head sitting on two uprights. No visible fixing where beam meets upright.",
+        "light": "No direction.",
+        "role": "A doorway \u2014 a lintel spanning between two jambs, opening running to the bottom edge.",
+        "thickness": "No. The opening's underside is where the alpha stops; there is no soffit under the lintel and no reveal on either jamb.",
+        "verdict": "FAIL",
+        "why": "A doorway you walk through must show the wall's depth in the reveal; this one is a hole punched in a flat sheet."
+      },
+      "source": "yield/kit_B/tile_29.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_24",
+      "name": "cand_22",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction. The left-bright/right-dark split is the flat wall run against the dark post, not a painted light.",
+        "role": "A corner \u2014 run across the top right, leg dropping on the right.",
+        "thickness": "No returning face at the turn."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark vertical post, a horizontal band at the head. No joint visible.",
+        "light": "No direction. The left-bright/right-dark split is the flat wall run against the dark post, not a painted light.",
+        "role": "A corner \u2014 run across the top right, leg dropping on the right.",
+        "thickness": "No returning face at the turn.",
+        "verdict": "FAIL",
+        "why": "Another flat-elevation corner; the leg is a narrow face, so the turn happens only in silhouette."
+      },
+      "source": "yield/kit_B/tile_24.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_04",
+      "name": "cand_23",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A short vertical stub at the left of the square \u2014 a post or a run end.",
+        "thickness": "No. Face courses with a cap band."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark vertical member and a pale horizontal band. Nothing joins them.",
+        "light": "No direction.",
+        "role": "A short vertical stub at the left of the square \u2014 a post or a run end.",
+        "thickness": "No. Face courses with a cap band.",
+        "verdict": "FAIL",
+        "why": "A wall end must show its cut face; this one is capped with the same front-face trim as a mid-run piece, so it does not terminate anything."
+      },
+      "source": "yield/kit_B/tile_04.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_55",
+      "name": "cand_24",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Two separate stubs with a transparent gap between them \u2014 presumably the two sides of an opening, with no lintel.",
+        "thickness": "No. Both facing edges of the gap are blank alpha, showing no reveal."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A vertical member in each stub. Nothing spans between them.",
+        "light": "No direction.",
+        "role": "Two separate stubs with a transparent gap between them \u2014 presumably the two sides of an opening, with no lintel.",
+        "thickness": "No. Both facing edges of the gap are blank alpha, showing no reveal.",
+        "verdict": "FAIL",
+        "why": "Two disconnected islands in one tile with nothing bridging them \u2014 as a single placeable piece it has no structural sense."
+      },
+      "source": "yield/kit_B/tile_55.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_22",
+      "name": "cand_25",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner with a stub rising above the top line \u2014 a junction on the right two-thirds.",
+        "thickness": "No. The raised stub shows horizontal face courses rather than a top plane."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Crossing timbers, no fixings visible.",
+        "light": "No direction.",
+        "role": "A corner with a stub rising above the top line \u2014 a junction on the right two-thirds.",
+        "thickness": "No. The raised stub shows horizontal face courses rather than a top plane.",
+        "verdict": "FAIL",
+        "why": "The stub is the piece's whole reason to exist and it is drawn as another front face."
+      },
+      "source": "yield/kit_B/tile_22.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_18",
+      "name": "cand_26",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A junction \u2014 a full-width run with a stub dropping below the bottom line toward the viewer.",
+        "thickness": "No. The dropping stub shows face courses, not a top surface running toward the camera."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Nothing. Magnified, the interior is blocky grey-and-brown mottle separated by 1px black grid lines; no member, joint or fixing resolves.",
+        "light": "No direction.",
+        "role": "A junction \u2014 a full-width run with a stub dropping below the bottom line toward the viewer.",
+        "thickness": "No. The dropping stub shows face courses, not a top surface running toward the camera.",
+        "verdict": "FAIL",
+        "why": "At magnification the wall body has no construction in it at all \u2014 it is texture pretending to be assembly."
+      },
+      "source": "yield/kit_B/tile_18.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_25",
+      "name": "cand_27",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner \u2014 stub top right, leg down the left.",
+        "thickness": "No returning face at the turn."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A vertical post down the leg. No joint at the corner.",
+        "light": "No direction.",
+        "role": "A corner \u2014 stub top right, leg down the left.",
+        "thickness": "No returning face at the turn.",
+        "verdict": "FAIL",
+        "why": "Duplicates cand_17's geometry with a reshuffled interior; the turn still has no depth."
+      },
+      "source": "yield/kit_B/tile_25.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_09",
+      "name": "cand_28",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A T-junction \u2014 run across the top, leg dropping from the centre-left.",
+        "thickness": "No. Flat throughout."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A vertical timber meeting a horizontal beam near the junction, unfixed.",
+        "light": "No direction.",
+        "role": "A T-junction \u2014 run across the top, leg dropping from the centre-left.",
+        "thickness": "No. Flat throughout.",
+        "verdict": "FAIL",
+        "why": "The branch and the run meet with no corner return and no top, so which way the branch runs is unreadable."
+      },
+      "source": "yield/kit_B/tile_09.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_23",
+      "name": "cand_29",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner \u2014 stub rising at top right, leg down the left.",
+        "thickness": "No. Stub drawn as face courses."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A vertical post and a horizontal beam. No fixing at the crossing.",
+        "light": "No direction.",
+        "role": "A corner \u2014 stub rising at top right, leg down the left.",
+        "thickness": "No. Stub drawn as face courses.",
+        "verdict": "FAIL",
+        "why": "It differs from cand_32 by 151 of 1350 pixels \u2014 the same corner twice."
+      },
+      "source": "yield/kit_B/tile_23.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_49",
+      "name": "cand_30",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A straight length of wall, full width, tallest variant.",
+        "thickness": "No. Face trim only."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Nothing legible.",
+        "light": "No direction.",
+        "role": "A straight length of wall, full width, tallest variant.",
+        "thickness": "No. Face trim only.",
+        "verdict": "FAIL",
+        "why": "It differs from cand_03 by 102 of 2304 pixels \u2014 a 4% reshuffle occupying a separate slot in the set."
+      },
+      "source": "yield/kit_B/tile_49.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_14",
+      "name": "cand_31",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A narrow vertical strip through the middle of the square, taller than cand_13.",
+        "thickness": "No. Front-face courses full height."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark vertical timber, two short crossing pieces. No visible joint.",
+        "light": "No direction.",
+        "role": "A narrow vertical strip through the middle of the square, taller than cand_13.",
+        "thickness": "No. Front-face courses full height.",
+        "verdict": "FAIL",
+        "why": "Same failure as cand_15 \u2014 a narrow front elevation standing in for a wall seen edge-on."
+      },
+      "source": "yield/kit_B/tile_14.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_17",
+      "name": "cand_32",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner \u2014 stub top right, leg down the left.",
+        "thickness": "No returning face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A vertical post, a horizontal beam, no fixing.",
+        "light": "No direction.",
+        "role": "A corner \u2014 stub top right, leg down the left.",
+        "thickness": "No returning face.",
+        "verdict": "FAIL",
+        "why": "A near-clone of cand_29 with no depth at the turn."
+      },
+      "source": "yield/kit_B/tile_17.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_13",
+      "name": "cand_33",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A narrow vertical strip through the middle of the square.",
+        "thickness": "No. Front-face courses full height."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark vertical timber with two short crossings, unfixed.",
+        "light": "No direction.",
+        "role": "A narrow vertical strip through the middle of the square.",
+        "thickness": "No. Front-face courses full height.",
+        "verdict": "FAIL",
+        "why": "Byte-identical to cand_13 \u2014 zero differing pixels across the entire image."
+      },
+      "source": "yield/kit_B/tile_13.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_30",
+      "name": "cand_34",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A doorway with a stub rising above the lintel \u2014 an opening at a junction.",
+        "thickness": "No. Magnified, the raised stub is a dark row, a tan row and grey rows \u2014 horizontal face courses, exactly like the front of cand_16. It is a wall face standing on end, not a top surface."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A beam across the head carried on two uprights. No fixing where they meet.",
+        "light": "No direction.",
+        "role": "A doorway with a stub rising above the lintel \u2014 an opening at a junction.",
+        "thickness": "No. Magnified, the raised stub is a dark row, a tan row and grey rows \u2014 horizontal face courses, exactly like the front of cand_16. It is a wall face standing on end, not a top surface.",
+        "verdict": "FAIL",
+        "why": "The one element in the set positioned to read as a wall top is drawn with front-face courses, which settles it: nothing here has a top."
+      },
+      "source": "yield/kit_B/tile_30.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_28",
+      "name": "cand_35",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A length of wall with a stub rising at the top centre \u2014 a junction.",
+        "thickness": "No. Stub shows face courses."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Nothing legible.",
+        "light": "No direction.",
+        "role": "A length of wall with a stub rising at the top centre \u2014 a junction.",
+        "thickness": "No. Stub shows face courses.",
+        "verdict": "FAIL",
+        "why": "Same body as cand_12 and cand_03 with the stub moved; no top, no fixings, no event."
+      },
+      "source": "yield/kit_B/tile_28.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_19",
+      "name": "cand_36",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A corner \u2014 stub top right, leg down the left, right two-thirds of the square.",
+        "thickness": "No returning face at the turn."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A vertical post at the right, a horizontal band at the head. No joint.",
+        "light": "No direction.",
+        "role": "A corner \u2014 stub top right, leg down the left, right two-thirds of the square.",
+        "thickness": "No returning face at the turn.",
+        "verdict": "FAIL",
+        "why": "Another mirrored repeat of the same flat corner; it turns in outline only."
+      },
+      "source": "yield/kit_B/tile_19.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_06",
+      "name": "cand_37",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d79 scrap floating clear of every canvas edge.",
+        "thickness": "No. Two or three courses, no top, no base."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark vertical bar and a lighter band. No fixing.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d79 scrap floating clear of every canvas edge.",
+        "thickness": "No. Two or three courses, no top, no base.",
+        "verdict": "FAIL",
+        "why": "A third of a floor square, touching no edge and no ground, with no join to anything \u2014 unplaceable."
+      },
+      "source": "yield/kit_B/tile_06.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_10",
+      "name": "cand_38",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A junction \u2014 full-width run with a stub rising at the top right.",
+        "thickness": "No. Magnified, the stub is horizontal face banding; the wall body below has no top plane."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. Timber crosses stone with no story about why.",
+        "holds": "A horizontal beam running left across the body, meeting a vertical member. The crossing has no pin, strap or lashing.",
+        "light": "No direction.",
+        "role": "A junction \u2014 full-width run with a stub rising at the top right.",
+        "thickness": "No. Magnified, the stub is horizontal face banding; the wall body below has no top plane.",
+        "verdict": "FAIL",
+        "why": "The timber crossing the stone is exactly the painted-stripe problem \u2014 it sits on the surface with no thickness and no fixing at either end."
+      },
+      "source": "yield/kit_B/tile_10.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_26",
+      "name": "cand_39",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction. The bright-left/dark-right split is the wall run against the post, not a painted light.",
+        "role": "A corner \u2014 run across the top left, leg dropping on the right.",
+        "thickness": "No returning face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark vertical post down the leg. No joint at the turn.",
+        "light": "No direction. The bright-left/dark-right split is the wall run against the post, not a painted light.",
+        "role": "A corner \u2014 run across the top left, leg dropping on the right.",
+        "thickness": "No returning face.",
+        "verdict": "FAIL",
+        "why": "The fourth near-repeat of the same flat corner, and like the rest it has no depth where it turns."
+      },
+      "source": "yield/kit_B/tile_26.png",
+      "structural": false,
+      "verdict": "FAIL"
+    }
+  ],
+  "seat_seconds": 484.9,
+  "ship_pass_names": [],
+  "ship_passes": 0,
+  "structural_candidates": 0,
+  "structural_names": [],
+  "void": false
+}
