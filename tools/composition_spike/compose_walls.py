@@ -72,7 +72,14 @@ WALL_BASE = 9200      # 9200 + mask*NVAR + variant, for masks 0..15
 CORNER_BASE = 9280    # 9280..9283 — the four mask-15 outer corners
 FLOOR_BASE = 9120     # 9120..9123 — the four §6.4 probe survivors
 STAIR_DOWN, STAIR_UP = 9140, 9141
-NVAR = 4
+# ROUND 2 (critic flip list, "break the mirror"). The review corridor is deliberately
+# symmetric about the player's column, and PositionHash is 7919x + 104729y, so with N=4 the
+# variant index is (3x + y) mod 4 and mirrored cells x=c+d, x=c-d collide whenever d is EVEN —
+# half the map is an exact reflection of the other half, which the seat measured (MAD 6.1
+# against a local texture std of 34.5) and spent a whole flip item on.
+# Collisions need 2*7919*d congruent to 0 mod N. N=4 gives every 2nd tile; N=7 gives every 7th.
+# Seven also lengthens the repeat along a wall run from 4 tiles to 7.
+NVAR = 7
 
 
 def wall_id(mask, v):
@@ -207,26 +214,51 @@ def rect(a, x, y, w, h, c):
 
 def strap(a, ink, x, y0, y1, w=3):
     """Vertical iron strap. Starts ON the top plane (y0=0) and runs down the face: the wrap IS
-    the grip. Contact shadow on both sides and under the foot - symmetric, so no direction."""
+    the grip.
+
+    ROUND 2 — THE RING IS GONE. Round 1 drew a 1px shadow down BOTH sides and called it a
+    symmetric contact occlusion. A dark line on every side of a small element is a closed
+    keyline, and the seat read the result exactly as §12.1 warns: "each sits on top of the brick
+    inside a hard black keyline ... nothing is held", "stickers laid on wallpaper". It also
+    swallowed the mortar courses running up to the strap, so nothing could be seen to be
+    crossed. Occlusion is now only UNDER the lip - the foot of the strap - which is what the
+    drafting rule actually asks for, and the courses now run visibly into the strap on both
+    sides."""
     rect(a, x, y0, w, y1 - y0 + 1, ink.iron)
-    for j in range(y0, y1 + 1):
-        px(a, x - 1, j, ink.shadow)
-        px(a, x + w, j, ink.shadow)
-    rect(a, x - 1, y1 + 1, w + 2, 1, ink.shadow)
+    rect(a, x, y1 + 1, w, 1, ink.shadow)
 
 
-def pin(a, ink, x, y):
-    """Driven pin: pale head, 1px occlusion under the head, sunk into the stone."""
+def pin(a, ink, x, y, spall_x=None):
+    """Driven pin: pale head, 1px occlusion under the head, sunk into the stone.
+
+    ROUND 2: a driven pin chips the stone it is driven into. `spall_x` puts two light pixels in
+    the brick beside the head, so the fixing has left a mark and reads as having gone IN rather
+    than having been placed on top. The seat's words: "no pin passes into the stone"."""
     rect(a, x, y, 2, 2, ink.pale)
     rect(a, x, y + 2, 2, 1, ink.shadow)
+    if spall_x is not None:
+        px(a, spall_x, y, ink.pale)
+        px(a, spall_x, y + 1, ink.pale)
 
 
 def cramp(a, ink, x, y, w=9):
-    """Iron cramp spanning two stones: a bar with a foot driven into the stone at each end."""
+    """Iron cramp spanning two stones: a bar with a foot driven into each stone.
+
+    ROUND 2: the caller now centres this on a real vertical joint found in the stone, and the
+    bar is short enough that the joint is visible entering above it and leaving below it. A
+    cramp that covers the joint it spans cannot be seen to span anything - the seat's "none
+    bridges a joint or a crack"."""
     rect(a, x, y, w, 2, ink.iron)
     rect(a, x, y + 2, w, 1, ink.shadow)
     rect(a, x, y - 1, 2, 1, ink.iron)
     rect(a, x + w - 2, y - 1, 2, 1, ink.iron)
+
+
+def joint_in_band(a, y0, y1, x_lo=3, x_hi=TILE - 3):
+    """The darkest column over a course band - a vertical mortar joint in the real stone."""
+    band = a[y0:y1, x_lo:x_hi]
+    scores = (band[..., 0] * .299 + band[..., 1] * .587 + band[..., 2] * .114).mean(0)
+    return x_lo + int(scores.argmin())
 
 
 def lash(a, ink, x, y0, turns=3):
@@ -234,7 +266,7 @@ def lash(a, ink, x, y0, turns=3):
     for t in range(turns):
         yy = y0 + t * 3
         rect(a, x, yy, 7, 2, ink.rope)
-        rect(a, x, yy + 2, 7, 1, ink.shadow)
+        rect(a, x, yy + 2, 7, 1, ink.shadow)   # under the turn only
 
 
 def tag(a, ink, x, y):
@@ -251,55 +283,75 @@ def tag(a, ink, x, y):
 # repair reads as pattern, not as repair. Two of four face variants are heavily bound, one is
 # lightly bound, one is bare stone.
 def bind_face(a, ink, v):
+    """ROUND 2. Seven variants, three of them bare stone.
+
+    Every element is now placed against a joint FOUND in the stone rather than at a nominal x,
+    and is narrow enough that the joint is visible arriving and leaving. The seat's round-1
+    charge was that the hardware "crosses nothing" and "none bears on anything"; position now
+    has to explain itself.
+    """
     if v == 0:
-        x = snap_to_joint(a, 7, TOP_BAND, TILE)
-        strap(a, ink, x, 0, 21)
-        pin(a, ink, x, 2)
-        pin(a, ink, x, 18)                       # lashed twice: pinned top and bottom
-        x2 = snap_to_joint(a, 22, TOP_BAND, TILE)
-        cramp(a, ink, x2 - 4, 25)
+        x = joint_in_band(a, TOP_BAND + 2, TILE)      # a vertical joint in the face
+        strap(a, ink, x - 1, 0, 21)                   # straddles it, wraps the top lip
+        pin(a, ink, x - 1, 2, spall_x=x + 3)
+        pin(a, ink, x - 1, 18, spall_x=x - 3)         # over-built: pinned top and bottom
     elif v == 1:
-        x = snap_to_joint(a, 20, TOP_BAND, TILE)
-        strap(a, ink, x, 0, 26, w=4)
-        pin(a, ink, x + 1, 3)
-        pin(a, ink, x + 1, 23)
-        cramp(a, ink, 3, 14, w=8)
-        tag(a, ink, 5, 22)
+        x = joint_in_band(a, 20, 28)
+        cramp(a, ink, x - 4, 22, w=9)                 # spans the two stones either side of it
+        pin(a, ink, x - 4, 25, spall_x=x - 6)
+        pin(a, ink, x + 3, 25, spall_x=x + 6)
     elif v == 2:
-        lash(a, ink, 11, 5)                      # wraps the lip: over the top band and down
-    # v == 3 is bare stone.
+        x = joint_in_band(a, TOP_BAND + 2, 24)
+        strap(a, ink, x - 1, 0, 26, w=4)
+        pin(a, ink, x, 3, spall_x=x + 4)
+        pin(a, ink, x, 23, spall_x=x - 3)
+        tag(a, ink, 4, 20)                            # §7.1: things wear their paperwork
+    elif v == 3:
+        lash(a, ink, 12, 4)                           # rope over the lip and down the face
+        x = joint_in_band(a, 22, 30)
+        cramp(a, ink, x - 4, 25, w=9)                 # a repair laid over a prior repair
+    # v 4, 5, 6 are bare stone: a run where every tile carries a repair reads as pattern.
 
 
 def bind_slab(a, ink, v):
+    """ROUND 2. The wall seen from above: cramps between coping stones, banding straps
+    crossing the mass, pins driven into the top. Four of seven variants bare."""
     if v == 0:
-        cramp(a, ink, 6, 11, w=11)               # cramp across two coping stones
+        x = joint_in_band(a, 8, 16)
+        cramp(a, ink, x - 5, 11, w=11)
+        pin(a, ink, x - 5, 14, spall_x=x - 7)
+        pin(a, ink, x + 4, 14, spall_x=x + 7)
     elif v == 1:
         x = snap_to_joint(a, 18, 4, 28)
         rect(a, x, 5, 3, 21, ink.iron)           # a banding strap seen from above
-        for j in range(5, 26):
-            px(a, x - 1, j, ink.shadow)
-            px(a, x + 3, j, ink.shadow)
-        rect(a, x - 1, 26, 5, 1, ink.shadow)
-        pin(a, ink, x, 7)
-        pin(a, ink, x, 21)
+        rect(a, x, 26, 3, 1, ink.shadow)         # under the end only - no keyline (round 2)
+        pin(a, ink, x, 7, spall_x=x + 4)
+        pin(a, ink, x, 21, spall_x=x - 2)
     elif v == 2:
-        cramp(a, ink, 4, 22, w=8)
-        pin(a, ink, snap_to_joint(a, 24, 0, TILE), 8)
-    # v == 3 is bare stone.
+        x = joint_in_band(a, 18, 26)
+        cramp(a, ink, x - 4, 21, w=8)
+        pin(a, ink, snap_to_joint(a, 24, 4, 14), 8, spall_x=None)
+    # v 3..6 are bare stone.
 
 
 # ---------------------------------------------------------------------------------------
 # TILE CONSTRUCTION
 # ---------------------------------------------------------------------------------------
 def make_slab(top_src, pal, ink, v, bind):
-    a = wrap_window(top_src, 0, TILE, v * 9 + 3, dy=v * 6 + 1)
+    # ROUND 2: dy only, dx=0. Rolling the slab in x gave every variant different left and right
+    # edges, so a wall mass built from mixed variants carried a hard vertical seam at EVERY tile
+    # boundary — and the seat could not then tell the corridor edge from those, reporting the
+    # boundary line as "identical to seams that recur every two tiles inside the solid mass".
+    # With dx=0 all variants share the part's own left/right edges and the only line left on a
+    # wall/floor boundary is the occlusion, which now means exactly one thing.
+    a = wrap_window(top_src, 0, TILE, 0, dy=v * 5 + 1)
     if bind:
         bind_slab(a, ink, v)
     return snap(a, pal)
 
 
 def make_face(face_src, top_src, pal, ink, v, bind):
-    band = wrap_window(top_src, 0, TOP_BAND, v * 9 + 3, dy=v * 6 + 1)
+    band = wrap_window(top_src, 0, TOP_BAND, 0, dy=v * 5 + 1)
     body_h = TILE - TOP_BAND
     body = wrap_window(face_src, 0, body_h, v * 8)
     a = np.vstack([band, body]).astype(np.int16)
@@ -316,7 +368,11 @@ def make_face(face_src, top_src, pal, ink, v, bind):
 
 
 NORTH_BIT, SOUTH_BIT_, EAST_BIT, WEST_BIT = 8, 4, 2, 1
-EDGE_STEPS = (0.58, 0.80)   # two rows/columns, outermost darkest
+# ROUND 2: three steps rather than two. The seat culled both native-top arms `cannot-read` at
+# 8 and 6 grey levels of wall-to-floor separation and asked for 25 or more, holding under low
+# light. The value-matched arm already carries 26 by material; this deepens the boundary itself
+# so the mass edge reads as an edge on all four orientations, not only where a face exists.
+EDGE_STEPS = (0.42, 0.62, 0.82)
 
 
 def occlude_edges(a, mask):
@@ -506,21 +562,26 @@ def sha256(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
 
 
+# ROUND 2 - TOP PART SWAPPED. r04_08 carries one strong branching crack, and with four variants
+# it landed on a regular two-tile pitch in mirrored pairs; the seat called it "bird tracks" and
+# spent a flip item on it. r04_00 is the alternate slab already in the parts bin - mottled, one
+# dark stain, no linear signature - so the swap is a parts choice, not a redraw. Exactly the
+# move this spike exists to test: change the material, keep the composition.
 ARMS = {
     # arm            top part   value-match the top plane to the face?  bindings?
-    "boundA":   dict(top="r04_08", match=False, bind=True,
+    "boundA":   dict(top="r04_00", match=False, bind=True,
                      note="native R4 slab top. The top plane keeps the part's own value, which "
                           "is ~30 luminance above the face. That value step is the gauntlet's "
                           "§5 hazard: at 32px it may read as a key light from above."),
-    "boundB":   dict(top="r04_08", match=True, bind=True,
+    "boundB":   dict(top="r04_00", match=True, bind=True,
                      note="DERIVED top: the same R4 slab, luminance-matched to the face and "
                           "snapped back to the parts palette. Plane separation is then carried "
                           "by material and occlusion ONLY, which is the strict §6.3 reading."),
-    "ctrlA":    dict(top="r04_08", match=False, bind=False,
+    "ctrlA":    dict(top="r04_00", match=False, bind=False,
                      note="control for boundA - same stones, overlays omitted."),
-    "ctrlB":    dict(top="r04_08", match=True, bind=False,
+    "ctrlB":    dict(top="r04_00", match=True, bind=False,
                      note="control for boundB - same stones, overlays omitted."),
-    "plant":    dict(top="r04_08", match=True, bind=True, keylight=True,
+    "plant":    dict(top="r04_00", match=True, bind=True, keylight=True,
                      note="THE PLANT. Identical to boundB except every course is run light at "
                           "its top rows and dark at its bottom rows - a baked overhead key "
                           "light, the exact defect §6.3 forbids and the one the gauntlet's own "
