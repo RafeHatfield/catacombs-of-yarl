@@ -85,18 +85,64 @@ ASSETS_REL = "src/Presentation/assets/tier1_floors"
 ASSETS = os.path.join(REPO, ASSETS_REL)
 
 T = 32
-N_VARIANTS = 3            # §8.3's variant system. Three is the width the brief declares.
+N_MATERIALS = 3           # §8.3: THE MATERIAL. Three is the width the brief declares, and it is
+                          # a count of materials, not of tiles.
+N_BONDS = 4               # bond layouts per material. §8.2.1's tier-one requirement item 1, in
+                          # the blind seat's own words: "author variants whose bond is OFFSET
+                          # BETWEEN THEM, so a joint starting at x=8 in one cell lands mid-stone
+                          # in the next." Same stone, laid differently — still one material.
+N_VARIANTS = N_MATERIALS * N_BONDS
+# 3 materials x 4 bonds x 8 orientations = 96 ids, and the number is DERIVED rather than chosen.
+#
+# A blind seat measured the old pool's failure exactly: "42 floor tiles visible ... at least 21
+# are duplicates of another tile on the same screen. Four distinct tiles each appear 3-4 times."
+# That is not a defect in any tile. It is the arithmetic of the pool: for N ids drawn uniformly
+# across 42 cells, the expected number of cells sharing an id with another is
+# 42 - N(1-(1-1/N)^42), which at N=24 is **22.0**. The seat measured 21.
+#
+#     N=24   22.0 cells with a twin      N=96    7.8
+#     N=48   13.8                        N=200   4.0
+#
+# So no amount of better drawing reaches it, and neither does a plausible number of hand-authored
+# assets — 200 variants of one material is not a floor system, it is a spritesheet.
+#
+# ⚠ THE REAL SCALING LEVER IS THE OVERLAY, NOT THE TILE, and this is §8.3's mechanism showing why
+# it is a law rather than a preference: a base-variant system is O(assets), an overlay system is
+# COMBINATORIAL. 96 base ids times an incident drawn per instance from six families at four flips
+# is a space no screen can exhaust. Widening the bond pool is the cheap half; making the incident
+# individuate every cell is the half that actually solves it, and it is the next round's work.
 PALETTE_LEVELS = 7        # §5's values are PLACEHOLDER; this is a quantisation, not a palette law.
 
 # Tile ids. 9600 block: clear of the composition spike's sparse wall ids (which reach 9343) and
 # of the floor-remediation captures at 9400 — the id collision LOOP-PROCESS §4.2 logs as its
 # second instance was exactly this kind of quiet overlap, so the block is chosen to not touch
 # anything any existing theme names.
-BASE_IDS    = [9600, 9601, 9602]
-CHANNEL_IDS = [9610, 9611, 9612, 9613]      # left edge, full, right edge, chokepoint full-width
-OCCLUSION_IDS = [9614, 9615, 9616, 9617]    # contact occlusion: N, E, S, W edges
-INCIDENT_ID0 = 9620                          # incident overlays are numbered from here
-ORIENT_ID0   = 9700                          # the 24 oriented base variants
+# ID BLOCKS, SPACED AND ASSERTED.
+#
+# Widening the bond pool from 3 to 12 pushed BASE_IDS from 9600-9602 to 9600-9611, and the
+# channel block started at 9610 — **two of the new base tiles and two channel overlays would have
+# shared an id.** Nothing about that would have been visible: the theme would have resolved a
+# floor id to a channel wash, or the overlay loader to a base tile, and the scene would have
+# rendered something plausible.
+#
+# It is LOOP-PROCESS §4.2's second logged instance repeating in a new session — `capture_children`
+# staged floor candidates from id 9200, which was `wall_autotile: 0` in the theme it was using,
+# and every capture quietly made the floor tile double as a wall. That clause's generalisation is
+# the one that binds here: **any step that asserts something is HELD CONSTANT must be able to go
+# red when it is not.** So the blocks are spaced with room to grow AND checked, because a comment
+# saying "these do not overlap" is a docstring with no enforcement behind it.
+BASE_IDS      = list(range(9600, 9600 + 12))   # 3 materials x 4 bond layouts
+CHANNEL_IDS   = [9620, 9621, 9622, 9623]       # left edge, mid, right edge, chokepoint full-width
+OCCLUSION_IDS = [9630, 9631, 9632, 9633]       # contact occlusion: N, E, S, W edges
+INCIDENT_ID0  = 9640                           # incident overlays are numbered from here
+ORIENT_ID0    = 9700                           # the oriented base variants
+
+_FIXED = BASE_IDS + CHANNEL_IDS + OCCLUSION_IDS
+if len(set(_FIXED)) != len(_FIXED):
+    raise SystemExit("REFUSING: tier-one floor id blocks collide: %s"
+                     % sorted(i for i in _FIXED if _FIXED.count(i) > 1))
+if max(BASE_IDS) >= min(CHANNEL_IDS) or INCIDENT_ID0 <= max(OCCLUSION_IDS):
+    raise SystemExit("REFUSING: tier-one floor id blocks are out of order.")
 
 
 # =============================================================================================
@@ -259,6 +305,32 @@ def slab_bond(variant, seed, t=T):
     # THE ROLL. Without it every slab sits wholly inside the tile, which is a contained component
     # at a constant position — the seat's own cull, "the identical bracket-shaped stone sits at
     # the identical position inside every single cell". Rolled, all four cross an edge.
+    # THE ROLL, CONSTRAINED SO NO JOINT LANDS ON A TILE EDGE.
+    #
+    # Unconstrained, a roll can put a joint at x=0 or y=31, and then the tile is literally
+    # outlined — its own mortar drawn along the cell boundary. Across 24 ids several landed that
+    # way, and with the uniform grit removed there was nothing left masking them. A blind seat
+    # put it first: "**Every tile is outlined.** I measured dark-pixel density by position within
+    # the cell", and its flip named the fix in pixels — "move mortar off the 64px boundary: no
+    # seam within 6px of a tile edge".
+    #
+    # ⚠ AND THE GRIT REMOVAL IS WHAT EXPOSED IT, which the previous round's seat predicted almost
+    # exactly: "fixing the light terracing will make the crack repeats MORE visible, not less —
+    # the vignette is currently hiding some of them." A texture loud enough to hide a lattice was
+    # hiding this one too. Two defects, one masking the other, and removing the mask is what a
+    # round is for.
+    # THE ROLL IS UNIFORM, AND A KEEP-OUT BAND WAS TRIED AND REVERTED.
+    #
+    # Constraining the roll so no joint lands within 5px of a tile edge does stop the cell being
+    # outlined — and it puts the joint cross near the MIDDLE of every cell instead, which is the
+    # same law broken at a different offset. §8.3.1: "any treatment applied at a constant position
+    # within a tile becomes a lattice when tiled, whatever it depicts". Offset 16 is as constant
+    # as offset 0. Measured on the field instrument, not judged by eye: see below.
+    #
+    # What actually removes the preferred offset is a UNIFORM roll across a POOL WIDE ENOUGH for
+    # the distribution to be flat. At 24 ids a handful landed on the edge and the eye found them;
+    # at 96 the joint offsets are spread over the whole cell with no mode, so no offset adds up.
+    # The fix for a lattice is width, not a keep-out — a keep-out only moves the mode.
     dy, dx = int(rng.integers(t)), int(rng.integers(t))
     joints = np.roll(np.roll(joints, dy, axis=0), dx, axis=1)
     lab = np.roll(np.roll(lab, dy, axis=0), dx, axis=1)
@@ -861,7 +933,7 @@ def main():
     # A wrapping tile stays wrapping under every rotation and flip of the square, so the seam
     # criterion survives the operation untouched. Each oriented tile is screened again anyway,
     # because "it must still pass" and "it was not re-checked" are how §4.2's no-op fixes happen.
-    print("\nORIENTED VARIANTS — 3 base tiles x 8 orientations of the square")
+    print("\nORIENTED VARIANTS — %d base tiles x 8 orientations of the square" % len(manifest["base"]))
     oriented, oid = [], ORIENT_ID0
     for b in manifest["base"]:
         src = np.asarray(Image.open(os.path.join(a.out, b["file"])).convert("RGB"))
@@ -889,6 +961,17 @@ def main():
         note=("Rates are derived from §8.1 (traffic and indifference), never from the lattice "
               "statistic — §13.4. Single source of truth: the engine planner and "
               "field_preview.py both read these, neither carries its own copy."))
+
+    # EVERY id in the finished manifest, checked. The block constants above are asserted at
+    # import; this catches the case they cannot — a family growing past its block at run time.
+    all_ids = [e["id"] for k in ("base", "channel", "occlusion", "incident", "oriented")
+               for e in manifest.get(k, [])]
+    if len(set(all_ids)) != len(all_ids):
+        dupes = sorted({i for i in all_ids if all_ids.count(i) > 1})
+        raise SystemExit("REFUSING: the composed family assigns the same id twice: %s. A tile "
+                         "resolving to two different images renders something plausible and says "
+                         "nothing (LOOP-PROCESS §4.2)." % dupes)
+    print("\nid check: %d ids, all distinct, %d..%d" % (len(all_ids), min(all_ids), max(all_ids)))
 
     mp = os.path.join(a.out, "MANIFEST.json")
     with open(mp, "w") as f:

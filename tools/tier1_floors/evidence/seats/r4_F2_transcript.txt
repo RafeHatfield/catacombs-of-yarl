@@ -1,0 +1,44 @@
+Looked at it at native size, then flattened the light gradient off it and ran the grid down — the torch vignette is hiding the structure, and once it's divided out the floor is a different picture.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone flagging — irregular rectangular slabs, mortarless, under a heavy carpet of moss.
+
+**Q1_WHY:** Dark 1–2px seams enclose slabs of slightly differing tone, e.g. the clean vertical seam at x≈288 running y≈20–130, and the T-junction at (302, 128). The slabs are flat, hard-edged, and read as laid, not as bedrock or packed earth. The warm tan is the torch, not the material: in the unlit left corridor (x 0–180, y 140–290) the identical stone reads grey-blue with a green cast. That's grey stone lit orange.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+The bottom corridor (x≈374–440, heading down off-screen). **Nothing about the ground influenced that** — I picked it off the room's shape, because it's the only opening with a clear "this continues" silhouette. The ground gave me nothing to go on. I measured moss coverage per 64px cell across the whole room: 14.5, 15.3, 13.7, 14.8, 18.2, 11.2, 14.5 / 17.2, 20.4, 23.6, 17.1, 16.7, 21.0, 22.6 / … every cell in the room sits between 10% and 24%, mean 15.6%. There is no swept lane, no polished track, no drift of debris toward a wall, no clear ground anywhere. A floor in continuous heavy use since before records began should be telling me where the traffic goes. This one is uniformly furred edge to edge.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+No. It is *decorated* as if things happened to it, but nothing localised has happened. It's evenly overgrown, evenly scratched, evenly scuffed — an unbroken statistical average of "old" with no single event anywhere in it.
+
+**Q3_WHY:** Three things. (1) The moss density above — flat across 40 of 42 tiles; the only low cells (3.4%, 2.9%) are the corridor mouth, and that's a lighting/geometry artefact, not attrition. (2) Moss grows at the same density in the pitch-black left corridor as directly under the torch. (3) The scratch marks are spread at equal density over stone faces, seams and corners alike — including the middle of the 2-tile-wide bottom corridor at (400, 480), which is the one place in frame that should be scoured smooth by four hundred years of a company walking through it.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Not NOTHING — three things, and one of them is a hard clone.
+
+- **The diagonal hatch fan.** A splayed set of ~6 pale parallel scratches at 45°. It appears **pixel-identical** at (460, 36) and (524, 228) — normalised correlation 0.99 against itself, versus 0.55 for its own mirror image. Template-matching finds ~48 further instances across the floor, and they nearly all run the same way, lower-left to upper-right. Clearest cluster: (224,68), (308,98), (342,80), (428,134), (490,68), (572,44) — six in the top band alone, all the same angle.
+- **A whole tile stamped twice, side by side, at the top of the screen.** The 64px tile at x 310–374 and the one at x 374–438, both y 16–80, are the same art. They are immediate neighbours. Same seam, same moss blob, same hatch, same dark hook-blotch, shifted 64px right. It's the first thing above the figure's head.
+- **The moss confetti.** Mid-green blobs of near-identical size scattered at even spacing with no clustering into wall junctions, low points, or damp lines — it reads as noise laid over the floor rather than something growing on it.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+An image that was repeated. 42 floor tiles visible; clustering them after normalising out the lighting, **at least 21 are duplicates of another tile on the same screen**. Four distinct tiles each appear 3–4 times: {(310,16),(374,16),(182,144),(310,208)}; {(502,16),(438,144),(566,144),(502,272)}; {(374,80),(566,80),(502,144),(566,272)}; {(246,16),(182,208),(246,336)}. No rotation, no mirroring, no per-instance variation — every stamp is the raw tile. Half the floor is four pictures.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES. The palette is disciplined, the seams are clean, the moss reads at phone size, and the torch falloff is genuinely good.
+
+Merely competent. Not good. It's a well-drawn tile losing to its own tiling, and the fiction it's supposed to carry — administered, endlessly repaired, four centuries of boots — is nowhere in it. There is not one pin, one rope lashing, one salvaged board, one patch on this floor. It's a ruin, not a workplace.
+
+**CULL:** Same 64px tile stamped side-by-side at screen top; one scratch motif cloned pixel-exact twice. Reads as wallpaper.
+
+**FLIP LIST**
+- Break the clone at x 310–438, y 16–80 — that pair of identical adjacent tiles is the single most visible failure in frame; it needs 8–12 distinct floor tiles minimum, plus mirroring/rotation at stamp time.
+- Vary the diagonal hatch fan: mirror it, rotate it to at least three angles, and cut its frequency by half. Right now ~48 instances all rake the same direction.
+- Break the flat moss field into a gradient — heavy in wall junctions and corners, thinning to bare stone through the corridor mouth at (374–440, 360–440) and along the room's main axis. Moss should mark where feet don't go.
+- Add repair to the ground itself: two or three tiles with a driven iron pin, a lashed timber plank over a broken slab, a hide patch. The orcs have held this for four hundred years and have touched nothing you can see.
+- Cut one or two cracked/subsided slabs with a real depth offset, placed deliberately rather than scattered, so the eye has a non-repeating landmark to navigate by.
+
+Next thing worth checking: whether the tiler supports per-stamp mirror/rotate at all. If it doesn't, that's the fix that unblocks four of the five items above, and it's cheaper than drawing more tiles.
+
+*Model: Claude Opus 5 (1M context)*

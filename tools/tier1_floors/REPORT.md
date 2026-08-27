@@ -724,6 +724,83 @@ step that reaches it. Drop the flag to put it on the phone.
 
 ---
 
+### 10.6 ROUND 4 — the fix worked, and it uncovered the defect underneath
+
+Valid (plant caught on *moss, overgrown*). The swept grit did what it was built to do and both
+seats immediately measured what it had been hiding.
+
+> **F1 CULL:** *"Tile grid is drawn on the floor by the mortar, and three tiles repeat four times
+> each per screen."*
+> **F1 Q4:** *"**Every tile is outlined.** I measured dark-pixel density by position within the
+> cell."*
+
+**Round 3's seat predicted this exactly**, unprompted, in its closing line: *"fixing the light
+terracing will make the crack repeats MORE visible, not less — the vignette is currently hiding
+some of them."* A texture loud enough to bury the channel was burying a lattice too. Two defects,
+one masking the other; removing the mask is what a round is for.
+
+**And the repeat finding is arithmetic, not a drawing fault — which is the session's most useful
+measurement.** The plant seat put a number on it:
+
+> *"42 floor tiles visible … **at least 21 are duplicates** of another tile on the same screen.
+> Four distinct tiles each appear 3–4 times. No rotation, no mirroring, no per-instance
+> variation."*
+
+For N ids drawn uniformly across 42 cells, the expected number of cells sharing an id with
+another is `42 − N(1−(1−1/N)^42)`:
+
+| pool | cells with a twin, on a 42-cell screen |
+|---:|---:|
+| **24** (3 materials × 8 orientations) | **22.0** — the seat measured 21 |
+| 48 | 13.8 |
+| 96 | 7.8 |
+| 200 | 4.0 |
+
+**No amount of better drawing reaches that, and neither does a plausible number of hand-authored
+assets** — 200 variants of one material is not a floor system, it is a spritesheet.
+
+> **THIS IS WHY §8.3 IS A LAW AND NOT A PREFERENCE, and the session did not understand it until
+> the number appeared.** A base-variant system is **O(assets)**. An overlay system is
+> **combinatorial**: 96 base ids × an incident drawn per instance from six families at four flips
+> is a space no screen can exhaust. *"A tile is the material; the incident is the variant"* is not
+> a division of labour for tidiness — it is the only one of the two that scales.
+
+Applied: the bond pool widened from 3 to **12 base tiles — 3 materials × 4 bond layouts**, which
+is §8.2.1's tier-one requirement item 1 in the seat's own words (*"author variants whose bond is
+offset between them, so a joint starting at x=8 in one cell lands mid-stone in the next"*). Still
+three materials, as the brief declares; the bond is the variant. **96 oriented ids.**
+
+**A keep-out band was tried for the outlining and REVERTED, measured rather than judged.**
+Forcing every joint at least 5px from a tile edge stops the cell being outlined and puts the
+joint cross near the **middle** of every cell instead — the same law broken at a different offset.
+§8.3.1: *any treatment applied at a constant position*. Offset 16 is as constant as offset 0.
+**A keep-out only moves the mode; what removes it is a uniform roll over a pool wide enough for
+the distribution to be flat.**
+
+| field lattice | |
+|---|---:|
+| 3 variants, linear hash | 0.31 |
+| 24 variants, mixed hash | 0.04 – 0.06 |
+| **96 variants, uniform roll** | **0.019 base / 0.024 with incident** |
+| independent-cell anchor | 0.029 |
+
+The field is now **at or below** the score of a field where every cell is its own unique tile.
+
+⚠ **And widening the pool created a live id collision that the composer now refuses.** BASE_IDS
+grew from 9600–9602 to 9600–9611 and the channel block began at 9610: two base tiles and two
+channel overlays would have shared an id, resolving to whichever image was asked for last, and
+the scene would have rendered something plausible. That is LOOP-PROCESS §4.2's second logged
+instance repeating in a new session. Blocks re-spaced, and asserted at import *and* over the
+finished manifest — 152 ids, all distinct — because a comment saying "these do not overlap" is a
+docstring with no enforcement behind it.
+
+### 10.7 ROUND 5
+
+Running against the 96-variant build at the time of writing. Its transcripts and verdict are in
+`evidence/seats/` and `SEATS-r5.json`.
+
+---
+
 ## 11. WHAT IS OWED, AND WHAT THIS BUILD CANNOT ANSWER
 
 **The rig has not been tuned, and that is the point rather than an omission.** §6.2.1 gives that

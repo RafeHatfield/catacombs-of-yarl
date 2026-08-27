@@ -6,7 +6,7 @@ Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
 Catacombs of YARL — loading...
 [DIAG] Logging to: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag.log
 [DIAG] Structured log: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag_structured.jsonl
-[DIAG 00000 F0 T0.505] === Session started ===
+[DIAG 00000 F0 T0.533] === Session started ===
 [Main] Persistence loaded — 6 runs ever.
 [Main] Loading tileset: 16bit_fantasy
 [Main] Tileset loaded: Oryx 16-Bit Fantasy (48px, 2 frames)
@@ -113,17 +113,17 @@ empt
 # Substituted 
 [Main] Memo registry loaded.
 [Tier1] rig:start: radius=5.5 falloff=1 ambient=1 (1a1a22) energy=1.6
-[DIAG 00001 F0 T1.016] [Tier1] rig:start: radius=5.5 falloff=1 ambient=1 (1a1a22) energy=1.6
+[DIAG 00001 F0 T1.006] [Tier1] rig:start: radius=5.5 falloff=1 ambient=1 (1a1a22) energy=1.6
 [Tier0] corridor scene: tier1_floor_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json)
-[DIAG 00002 F0 T1.019] [Tier0] corridor scene: tier1_floor_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json)
+[DIAG 00002 F0 T1.008] [Tier0] corridor scene: tier1_floor_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json)
 [Tier0] map=17x21 player=(8,6) carve_rects=5
-[DIAG 00003 F0 T1.019] [Tier0] map=17x21 player=(8,6) carve_rects=5
+[DIAG 00003 F0 T1.008] [Tier0] map=17x21 player=(8,6) carve_rects=5
 [Tier0] junction=NO
-[DIAG 00004 F0 T1.019] [Tier0] junction=NO
+[DIAG 00004 F0 T1.008] [Tier0] junction=NO
 [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_plant/tile_themes_tier1_plant.yaml
-[DIAG 00005 F0 T1.019] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_plant/tile_themes_tier1_plant.yaml
+[DIAG 00005 F0 T1.008] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_plant/tile_themes_tier1_plant.yaml
 [Tier0] light rig: ambient=1a1a22@1 (effective 1a1a22) light=ffb066 energy=1.6 radius_tiles=5.5 falloff=1 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
-[DIAG 00006 F0 T1.019] [Tier0] light rig: ambient=1a1a22@1 (effective 1a1a22) light=ffb066 energy=1.6 radius_tiles=5.5 falloff=1 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
+[DIAG 00006 F0 T1.009] [Tier0] light rig: ambient=1a1a22@1 (effective 1a1a22) light=ffb066 energy=1.6 radius_tiles=5.5 falloff=1 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
 [Tier1] floor overlays: cells=74 channel=21 neglected=12 drawn(grit=45 event=44 channel=21 occlusion=0) cell_shadow_suppressed=49 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_plant/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
@@ -147,7 +147,7 @@ empt
 [Tier1]   #####.......#####
 [Tier1]   #################
 [Tier1]   #################
-[DIAG 00007 F0 T1.036] [Tier1] floor overlays: cells=74 channel=21 neglected=12 drawn(grit=45 event=44 channel=21 occlusion=0) cell_shadow_suppressed=49 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_plant/MANIFEST.json
+[DIAG 00007 F0 T1.024] [Tier1] floor overlays: cells=74 channel=21 neglected=12 drawn(grit=45 event=44 channel=21 occlusion=0) cell_shadow_suppressed=49 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_plant/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
 [Tier1]   #################
@@ -171,9 +171,9 @@ empt
 [Tier1]   #################
 [Tier1]   #################
 [Tier0] review_build_marker=none (CLI flags)
-[DIAG 00008 F0 T1.036] [Tier0] review_build_marker=none (CLI flags)
+[DIAG 00008 F0 T1.024] [Tier0] review_build_marker=none (CLI flags)
 [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
-[DIAG 00009 F0 T1.037] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00009 F0 T1.025] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
 [Main] Visible tile rect: (2,-2)-(13,13)
 [Main] floor_worn (3001) tiles: 1 rendered in the authored room, 1 in frame: (10,6)
 [Main] Capture written: tools/tier1_floors/evidence/scene_plant.png

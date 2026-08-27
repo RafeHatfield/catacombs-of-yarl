@@ -1,5 +1,5 @@
 {
- "commit": "06102638ec4fc93dc5da54d7ab6ed404e581b0c5",
+ "commit": "3a58297c8cf674bf9da7698688cfabe76f8304b7",
  "assets": "src/Presentation/assets/tier1_floors",
  "grid": [
   8,
@@ -20,36 +20,37 @@
    "oriented": false
   },
   {
-   "lattice": 0.0187,
-   "var_total": 254.01,
-   "var_per_position": 249.27,
+   "lattice": 0.0294,
+   "var_total": 258.33,
+   "var_per_position": 250.74,
    "cells": 64,
    "label": "anchor_independent",
    "file": "tools/tier1_floors/evidence/field_anchor_independent.png",
    "note": "every cell its own composed tile, own seed, own bond"
   },
   {
-   "lattice": 0.064,
-   "var_total": 245.71,
-   "var_per_position": 229.98,
+   "lattice": 0.0194,
+   "var_total": 247.83,
+   "var_per_position": 243.02,
    "cells": 64,
    "label": "base_only",
    "file": "tools/tier1_floors/evidence/field_base_only.png",
-   "variants": 3,
+   "variants": 12,
    "overlays": 0,
    "rates": {},
    "oriented": true
   },
   {
-   "lattice": 0.0643,
-   "var_total": 256.23,
-   "var_per_position": 239.75,
+   "lattice": 0.0244,
+   "var_total": 273.0,
+   "var_per_position": 266.34,
    "cells": 64,
    "label": "base_plus_incident",
    "file": "tools/tier1_floors/evidence/field_base_plus_incident.png",
-   "variants": 3,
-   "overlays": 27,
+   "variants": 12,
+   "overlays": 36,
    "rates": {
+    "repair": 0.035,
     "crack": 0.11,
     "chip": 0.14,
     "wear": 0.34,
