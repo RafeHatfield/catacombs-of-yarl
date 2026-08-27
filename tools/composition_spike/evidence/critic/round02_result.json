@@ -1,0 +1,94 @@
+{
+ "round": 2,
+ "commit": "fd8a995a8a270693af2b659fa58771bbbc541a0d",
+ "mapping": {
+  "C1": "boundB_lit.png",
+  "C2": "ctrlB_lit.png",
+  "C3": "boundA_lit.png",
+  "C4": "plant_lit.png",
+  "C5": "ctrlA_lit.png"
+ },
+ "plant": "C4",
+ "plant_caught": true,
+ "round_void": false,
+ "verdicts": {
+  "C1": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The solid field is one 32px tile stamped ~150 times with no variation (median tile-to-mean correlation 0.94), so at play size it reads as vertical wallpaper striping rather than built stone.",
+   "q1": "North up the pale paved strip to the crossing, because that strip is the only thing whose brick coursing and hatch plates differ from the field either side of it, and the crossing is the only place the strip opens laterally.",
+   "q2": "Two unrelated walls that never meet \u2014 a fine grey brick coursing, two cells thick, bounding the horizontal corridor, and everywhere else an unbounded field of vertical boards with a dashed seam every cell.",
+   "q3": "A stem-and-cleat mark in every field cell and a dashed pin-line down each seam; vertical dark straps crossing the brick courses \u2014 but every mark lands on the identical coordinate in every cell, so they read as printed pattern, not as fixings.",
+   "q4": "No \u2014 the corridor meets the solid field across a single dark pixel line; nowhere is a wall top distinguished from a wall side.",
+   "q5": "Nothing legible has happened: a pale cross of paving with hatch plates, two weed tufts, a few dropped brackets, over a field that is byte-identical in every cell from edge to edge."
+  },
+  "C2": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Adding a few loose props does not change that the entire solid mass is one tile repeated verbatim across the screen with no thickness at any edge.",
+   "q1": "North, same as C1 \u2014 the paved strip is the only differentiated surface and the crossing above is the only branch.",
+   "q2": "Same two walls \u2014 coursed grey brick on the horizontal corridor, an unbounded board field everywhere else, with no material logic connecting them.",
+   "q3": "The same repeated stem-and-cleat and seam pins, plus a handful more scattered brackets than C1; the brackets are the only marks that vary, and they sit on top of the field rather than fixing anything in it.",
+   "q4": "No \u2014 a one-pixel seam is the entire boundary; no top surface, no side.",
+   "q5": "Nothing that reads as an event; the extra brackets are the only evidence of any hand having touched it."
+  },
+  "C3": {
+   "cull": "cannot-read",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Under identical light the solid field sits at 93% of the corridor's luminance (112 vs 120), so the lit area reads as one wide open hall and the walkable cells cannot be separated from the solid ones at play size.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  },
+  "C4": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The wall band's coursing has collapsed into continuous horizontal stripes with no vertical joints, so it reads as painted banding rather than stone, on top of the same repeated-tile field.",
+   "q1": "North to the crossing; the paved strip is still the only surface that reads differently from its surroundings.",
+   "q2": "A brick band whose middle course has lost its vertical joints and now runs as unbroken horizontal bars the full width of the screen, and the same repeated board field elsewhere.",
+   "q3": "Vertical straps cross the brick band and terminate in a pin, which is the one honest fixing in the set \u2014 but the course they cross no longer has stones to hold, so the strap binds a stripe.",
+   "q4": "No \u2014 same single-pixel boundary, no wall top anywhere.",
+   "q5": "Less than C1: the wall band has flattened into banding, so even the masonry no longer reads as stacked."
+  },
+  "C5": {
+   "cull": "cannot-read",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The solid field sits at 95% of the corridor's luminance (114 vs 120) under identical light \u2014 the worst separation in the set \u2014 and walkable cannot be told from solid.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  }
+ },
+ "passes": [],
+ "ranking": [
+  "C1",
+  "C2",
+  "C4",
+  "C3",
+  "C5"
+ ],
+ "separator": "The top images keep a real value break between paving and solid mass and keep vertical joints in their masonry; the bottom images have neither, and the solid field dissolves into the floor.",
+ "flip_list": [
+  "The solid field is a single 32px tile stamped on a perfect grid across the whole screen; every cell carries the same stem-and-cleat mark and the same dashed seam at the same coordinates. Author at least four board-field variants with the cleat position, pin spacing and board widths at different offsets, and place them so no two orthogonally adjacent cells use the same variant.",
+  "Give the solid field a top surface: on every field cell that touches a corridor, draw a 4\u20136px cap strip one value step lighter than the cell body along the touching edge, so the mass reads as having a top and a side instead of stopping at a hairline.",
+  "Fix the value separation as a palette rule: a lit solid cell must sit at no more than 70% of a lit floor cell's luminance. C3 is at 93% and C5 at 95%; C1/C2/C4 are at 72\u201374% and are the target.",
+  "In C4, the middle course of the horizontal wall band runs as unbroken horizontal bars edge to edge. Restore a vertical joint every 2\u20133 stones, offset the joint pattern per course, and force a joint break at every cell boundary so the run cannot exceed one cell.",
+  "The vertical corridor is bounded by the raw board field while the horizontal corridor is bounded by coursed brick. Use the brick band on both \u2014 rotate it 90\u00b0 and add dedicated edge cells down the vertical corridor's flanks.",
+  "The cell the player stands on is flat untextured colour with no coursing. Give that floor variant the same brick bed as its neighbours so there is no bald cell in the paving.",
+  "The seam between corridor and solid is a 1px dashed line with nothing on either side of it. Put a real fixing there: a driven pin with a visible washer biting into the board face, or a timber sole plate the boards sit on, drawn so the two materials overlap rather than abut."
+ ]
+}

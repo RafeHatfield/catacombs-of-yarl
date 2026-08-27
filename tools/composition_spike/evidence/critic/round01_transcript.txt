@@ -1,0 +1,71 @@
+CANDIDATE: C1
+CULL: none
+VERDICT: FAIL
+Q1: North, six tiles, to the only branch point visible — an east-west corridor crosses there; east and west of my own row is solid, and south the same column runs on until it dead-ends against a band of brick near the bottom of the screen.
+Q2: Small-format brick, roughly five courses to a tile, laid in a machine-even running bond with a mortar seam ruled along the top edge of every tile — laid masonry, not cut rock, and it is the same brick in the same condition everywhere on screen, no second period, no salvage, no patch.
+Q3: Dark timber battens with two cream pins each, scattered singly across the wall face at random angles — but each sits on top of the brick inside a hard black keyline, none bears on anything, none bridges a joint or a crack, and no pin passes into the stone; nothing is held.
+Q4: No — the wall is coplanar with the floor, with no cap, no side face, no edge shadow and no occlusion; the corridor boundary is a 1px salmon seam identical to seams that recur every two tiles inside the solid mass.
+Q5: Nothing has happened to it — the brick is unworn and uniform, there is no traffic path, no accumulation, no failed-and-refailed repair, and bright green vegetation is sprouting at the crossing.
+WHY: The walls have no mass and the ironmongery is stickers laid on wallpaper — and the left half of the dungeon is a near-exact mirror of the right (MAD 6.1 vs 31.7 unmirrored), so every crack and every batten has a twin.
+
+CANDIDATE: C2
+CULL: none
+VERDICT: FAIL
+Q1: North to the crossing, same as C1 — it is the only place the geometry offers a decision.
+Q2: The same small running-bond brick, but now completely bare: even courses, even mortar, uniform colour, no interruption of any kind across the entire visible field.
+Q3: Nothing holds them together. There is not one pin, strap, timber, rope or plate anywhere on screen.
+Q4: No — flat pattern, no depth, corridor edge is a single seam line.
+Q5: Nothing. This wall was pointed last week; it does not read as four hundred years of anything.
+WHY: A bare, evenly-pointed brick field with zero fixings is the opposite of a place held by soldiers with rope and driven pins, and it is mirror-symmetric on both axes.
+
+CANDIDATE: C3
+CULL: cannot-read
+VERDICT: FAIL
+Q1: —
+Q2: —
+Q3: —
+Q4: —
+Q5: —
+WHY: The wall value has been raised to floor value — corridor-to-wall separation is 8 grey levels in the lit zone against a texture noise of ~34, and in the unlit zone it inverts (wall reads brighter than floor), so solid and walkable are indistinguishable outside the light pool.
+
+CANDIDATE: C4
+CULL: none
+VERDICT: FAIL
+Q1: North to the crossing; the two dark rails running the full width of the wall bands read as a barrier along the north and south sides of the east-west corridor, which reinforces that north is the only opening.
+Q2: Small running-bond brick, finer and more regular than C1, overlaid on the wall bands by long horizontal timbers.
+Q3: Dead-straight, unbroken, uniform-width horizontal lines spanning eleven-plus tiles through the wall bands, passing straight through the vertical posts, with no ends, no joints, no scarfs, no sag and no fixings — plus the same free-floating dark-ringed battens as C1. It is a ruled stripe, not a ledger; nothing attaches it to the stone.
+Q4: No — same flat plane, and the rails make it worse by drawing a hard graphic line where a mass edge should be.
+Q5: Nothing has happened; a perfectly regular installation has been ruled over intact brick.
+WHY: The one element that is supposed to carry the whole fiction of over-built salvage repair is a pixel-perfect continuous stripe with no terminations and no attachment — the most obviously planted defect in the set.
+
+CANDIDATE: C5
+CULL: cannot-read
+VERDICT: FAIL
+Q1: —
+Q2: —
+Q3: —
+Q4: —
+Q5: —
+WHY: Worst separation in the set — corridor reads 5.8 levels above wall when lit and 1.1 levels *below* it when unlit, so with no hardware to break the field the screen is one continuous brick surface with two arbitrary vertical seams standing in for the corridor edges.
+
+RANKING
+C4
+C1
+C2
+C3
+C5
+SEPARATOR: The top of the list has hardware sitting on the masonry and a floor you can pick out of the wall by value; the bottom has neither, and in the last two the wall is the same brightness as the ground.
+
+FLIP LIST
+- Give the wall an actual top surface distinct from its side: draw a 4–6px cap band along every wall edge that faces a corridor, in a colour one step lighter and one step desaturated from the wall top, and drop a 2px hard-edged occlusion shadow from that cap onto the adjoining floor tile. Do it on all four edge orientations, not just north/south.
+- Stop using the same 1px salmon seam for the corridor boundary and for the decorative joints inside the solid mass. Delete every salmon seam that is not a floor/wall boundary, so that line means exactly one thing.
+- Raise wall-to-floor value separation to at least 25 grey levels at full engine light, and verify it stays positive at 10% light. C3 and C5 sit at 8 and 6 and invert in shadow; that is the cull.
+- Break the mirror. The map is a near-exact reflection about the player's column and about a horizontal line just above them (MAD 6.1 against a local texture std of 34.5). Generate wall detail from a per-tile hash of world coordinates with no mirrored variants in the pool.
+- Kill C4's continuous ledger. Replace each full-width rail with three or four separate timbers of different lengths, each ending in a visible termination — a squared-off butt, a lapped joint over a post, or a strap wrapping the end — and offset their vertical positions by 1–3px so no two are collinear.
+- Every batten and post needs a fixing where it meets the stone: a driven pin drawn as a dark hole with a bright rim on the timber and a chipped light spall in the brick beneath it, plus a 1px contact shadow on the down-side of the timber. Remove the closed black ring around each prop — it is what makes them read as stickers.
+- Place the hardware where it does work. Currently the battens are scattered evenly at random angles and cross nothing. Each one must span a crack, a broken course, or a corner, so its position explains itself.
+- Replace the repeating branching "twig" crack sprite. It is placed at a regular two-tile pitch in mirrored pairs and reads as bird tracks. Use stepped fractures that follow mortar courses and jog at brick ends, at irregular density.
+- Remove the square-in-square medallion stamped identically at the centre of every corridor tile. Replace with a worn path: a 12–16px band of smoothed, lighter, crack-free stone down the middle of the corridor, with the untrodden margins holding grit and darker mortar.
+- Delete the saturated yellow-green vegetation tufts. They are the only high-chroma pixels in the dungeon and they read as overgrowth in a place that has no light and no weather. If something must grow there, make it a desaturated grey-ochre crust in the mortar lines.
+
+Model used: Claude Opus 5 (1M context)

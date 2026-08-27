@@ -144,7 +144,8 @@ public sealed class TileThemeConfig
     /// Falls back to default_theme if the theme itself is missing.
     /// Returns null only if the theme AND default are both unconfigured.
     /// </summary>
-    public string? GetWallTile(string theme, int cardinalMask, int diagonalFloorMask)
+    public string? GetWallTile(string theme, int cardinalMask, int diagonalFloorMask,
+                               int x = 0, int y = 0)
     {
         var data = ResolveTheme(theme);
         if (data == null) return null;
@@ -158,16 +159,16 @@ public sealed class TileThemeConfig
         // For cardinal mask < 15, the autotile table is authoritative.
         if (cardinalMask < 15)
         {
-            if (!data.WallAutotile.TryGetValue(cardinalMask, out int tileId))
+            if (!data.WallAutotile.TryGetValue(cardinalMask, out var variants) || variants.Count == 0)
             {
                 // Missing entry — fall back to interior fill (mask 15).
-                if (!data.WallAutotile.TryGetValue(15, out tileId))
+                if (!data.WallAutotile.TryGetValue(15, out variants) || variants.Count == 0)
                 {
                     GD.PrintErr($"[TileThemeConfig] Theme '{theme}' missing bitmask {cardinalMask} and fallback 15.");
                     return null;
                 }
             }
-            return GetTexturePath(tileId);
+            return GetTexturePath(PickVariant(variants, x, y));
         }
 
         // cardinalMask == 15: all four cardinal neighbors are walls.
@@ -177,26 +178,34 @@ public sealed class TileThemeConfig
             // Priority: NW outer corner > NE outer corner > SW outer corner > SE outer corner.
             // A diagonal floor in direction D means THIS tile is the outer corner facing D.
             // bit1(2) = SE diagonal is floor → this wall is NW outer corner
-            if ((diagonalFloorMask & 2) != 0 && data.WallDiagonal.TryGetValue("corner_outer_nw", out int nwId))
-                return GetTexturePath(nwId);
+            if ((diagonalFloorMask & 2) != 0 && data.WallDiagonal.TryGetValue("corner_outer_nw", out var nwIds) && nwIds.Count > 0)
+                return GetTexturePath(PickVariant(nwIds, x, y));
             // bit0(1) = SW diagonal is floor → this wall is NE outer corner
-            if ((diagonalFloorMask & 1) != 0 && data.WallDiagonal.TryGetValue("corner_outer_ne", out int neId))
-                return GetTexturePath(neId);
+            if ((diagonalFloorMask & 1) != 0 && data.WallDiagonal.TryGetValue("corner_outer_ne", out var neIds) && neIds.Count > 0)
+                return GetTexturePath(PickVariant(neIds, x, y));
             // bit3(8) = NE diagonal is floor → this wall is SW outer corner
-            if ((diagonalFloorMask & 8) != 0 && data.WallDiagonal.TryGetValue("corner_outer_sw", out int swId))
-                return GetTexturePath(swId);
+            if ((diagonalFloorMask & 8) != 0 && data.WallDiagonal.TryGetValue("corner_outer_sw", out var swIds) && swIds.Count > 0)
+                return GetTexturePath(PickVariant(swIds, x, y));
             // bit2(4) = NW diagonal is floor → this wall is SE outer corner
-            if ((diagonalFloorMask & 4) != 0 && data.WallDiagonal.TryGetValue("corner_outer_se", out int seId))
-                return GetTexturePath(seId);
+            if ((diagonalFloorMask & 4) != 0 && data.WallDiagonal.TryGetValue("corner_outer_se", out var seIds) && seIds.Count > 0)
+                return GetTexturePath(PickVariant(seIds, x, y));
         }
 
         // No diagonal floor, or WallDiagonal not configured: interior fill.
-        if (data.WallDiagonal.TryGetValue("interior_fill", out int fillId))
-            return GetTexturePath(fillId);
+        //
+        // THIS IS THE ONE THAT MATTERS. In any ordinary map interior_fill is the overwhelming
+        // majority of wall cells - 267 of ~300 in the tier-0 review corridor - so a scalar here
+        // stamps one tile across nearly the whole solid mass however many variants the autotile
+        // masks declare. The blind critic measured exactly that and culled on it: "the solid
+        // field is one 32px tile stamped ~150 times with no variation (median tile-to-mean
+        // correlation 0.94)". Making the masks list-valued and leaving this scalar fixed the
+        // visible 6% and left the invisible 94% alone.
+        if (data.WallDiagonal.TryGetValue("interior_fill", out var fillIds) && fillIds.Count > 0)
+            return GetTexturePath(PickVariant(fillIds, x, y));
 
         // Final fallback: autotile mask 15 entry.
-        if (data.WallAutotile.TryGetValue(15, out int autofillId))
-            return GetTexturePath(autofillId);
+        if (data.WallAutotile.TryGetValue(15, out var fillVariants) && fillVariants.Count > 0)
+            return GetTexturePath(PickVariant(fillVariants, x, y));
 
         GD.PrintErr($"[TileThemeConfig] Theme '{theme}' has no interior_fill or mask-15 fallback.");
         return null;
@@ -335,6 +344,14 @@ public sealed class TileThemeConfig
     /// </summary>
     private static int PositionHash(int x, int y)
         => Math.Abs((x * 7919 + y * 104729) & 0x7FFFFFFF);
+
+    /// <summary>
+    /// Choose one of a role's tile-ID variants for a grid cell. Single-entry lists resolve to
+    /// their one member without consulting the position, so a scalar-configured mask behaves
+    /// exactly as it did before variants existed.
+    /// </summary>
+    private static int PickVariant(List<int> variants, int x, int y)
+        => variants.Count == 1 ? variants[0] : variants[PositionHash(x, y) % variants.Count];
 }
 
 /// <summary>
@@ -372,18 +389,28 @@ public sealed class TileThemeData
     public List<int> FloorWorn     { get; set; } = new();
 
     /// <summary>
-    /// 4-bit cardinal bitmask → tile ID for connected wall autotiling.
+    /// 4-bit cardinal bitmask → tile ID variants for connected wall autotiling.
     /// Keys 0–15, where the bitmask encodes cardinal wall neighbors:
     /// bit3(8)=North, bit2(4)=South, bit1(2)=East, bit0(1)=West.
+    ///
+    /// A mask may declare one tile ID (`3: 184`) or several (`3: [184, 185, 186]`), in which
+    /// case the variant is chosen by PositionHash exactly as floor roles already are. A wall
+    /// mask that resolves to a single tile stamps that tile at every cell where the mask
+    /// occurs — for a corridor edge that is a repeat every 32px, which is the defect the wall
+    /// gauntlet's critic named in every round it reached.
     /// </summary>
-    public Dictionary<int, int> WallAutotile { get; set; } = new();
+    public Dictionary<int, List<int>> WallAutotile { get; set; } = new();
 
     /// <summary>
-    /// Named outer corner and interior fill tile IDs.
+    /// Named outer corner and interior fill tile ID variants.
     /// Used when cardinalMask==15 to distinguish outer corners from true interior.
     /// Keys: corner_outer_nw, corner_outer_ne, corner_outer_sw, corner_outer_se, interior_fill.
+    ///
+    /// Like WallAutotile, a role may declare one tile ID or a bracketed list; a list is chosen
+    /// from by PositionHash. interior_fill is the role where this matters most - it is the bulk
+    /// of every map's solid mass.
     /// </summary>
-    public Dictionary<string, int> WallDiagonal { get; set; } = new();
+    public Dictionary<string, List<int>> WallDiagonal { get; set; } = new();
 
     public List<int> StairDown         { get; set; } = new();
     public List<int> StairUp           { get; set; } = new();

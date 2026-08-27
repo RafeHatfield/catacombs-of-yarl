@@ -1,0 +1,73 @@
+CANDIDATE: C1
+CULL: none
+VERDICT: FAIL
+Q1: Straight up the pale corridor, because it is the only continuously bright surface and the pale piping on both sides tells me exactly where the solid stops.
+Q2: Coursed brick of varied block sizes in a warm brown, mortar rendered as near-black recessed joints, laid as a flat elevation over the whole solid mass rather than as a wall seen from above.
+Q3: One rose-coloured horizontal baulk with cream pin-heads at each end near the left wall, a few flat brown vertical posts, and some pale L-brackets — all of them bracing undamaged masonry, so nothing is actually being held.
+Q4: No — the brick elevation runs to the boundary and terminates in a flat pale ribbon, so there is no cap, no cross-section, and no way to tell the top of a wall from the face of it.
+Q5: Nothing has happened to it; the stone is intact, the joints are sound, and a few coloured bars have been pinned to walls that show no damage.
+WHY: A flat, featureless ribbon at floor value is applied to every wall edge for its entire length, ringing each mass in bright piping so the quadrants read as cut-out cards rather than stone.
+
+CANDIDATE: C2
+CULL: none
+VERDICT: FAIL
+Q1: Up the corridor, for the same reason as C1 — the bright piping outlines the walkable slot unambiguously.
+Q2: The same coursed brown brick elevation as C1, unbroken and uniform across every quadrant, with black recessed mortar.
+Q3: Nothing holds them together — the baulk, pins and brackets present in C1 have been removed and what remains is bare masonry with no rope, pin, timber or hide anywhere in frame.
+Q4: No — identical to C1: elevation to a hairline boundary, then a pale stripe, no top surface.
+Q5: Nothing has happened here at all; this is new wall, well laid, never touched.
+WHY: A four-hundred-year contested line with zero repair hardware in the entire frame answers Q3 with nothing, and it carries C1's pale outline ribbon on top of that.
+
+CANDIDATE: C3
+CULL: none
+VERDICT: FAIL
+Q1: Up the corridor — the walls read as dark solid mass and the floor as a distinctly paler band, so the walkable slot is unmistakable without any help from an edge marker.
+Q2: Coursed brick in varied course heights with patches of smaller rubble infill and a red-brown mortar, bounded at every opening by a recessed reveal cut in the wall's own joint colour.
+Q3: A rose horizontal baulk with cream pin-heads left of the player, flat brown vertical posts lower left and lower right, and pale L-brackets in the upper wall — each a single flat colour with square-cut ends, fixed over sound stone.
+Q4: No — the reveal at the boundary reads as a shadow gap rather than a cap, so you still cannot distinguish a wall top from a wall face anywhere in the image.
+Q5: The masonry has been laid and varied by hand and a few braces have been added, but nothing is broken, worn, stained or displaced — it is used-looking wall with no evidence of use.
+WHY: The corridor floor is a strict four-tile repeat — measured 0.52 correlation at lag 4 and 0.80 at lag 8 — cycling the same ornamental square panel and the same moss tuft in the same position, so the ground the player walks on is wallpaper.
+
+CANDIDATE: C4
+CULL: key-light
+VERDICT: FAIL
+Q1: —
+Q2: —
+Q3: —
+Q4: —
+Q5: —
+WHY: Every brick in every wall-face row carries a highlight band along its top edge and a shadow band along its bottom edge in one identical direction — differencing against C1 isolates a per-block top-bright/bottom-dark emboss that would survive the engine light being switched off.
+
+CANDIDATE: C5
+CULL: none
+VERDICT: FAIL
+Q1: Up the corridor — same clean dark-mass-versus-pale-band read as C3.
+Q2: Coursed brick in one dominant course height, far more regular than C3, with the same recessed reveal at the openings.
+Q3: The same rose baulk with cream pins, flat brown posts and pale L-brackets as C3, in the same places, bracing the same undamaged stone.
+Q4: No — reveal only, no cap, no cross-section, no top-versus-face distinction.
+Q5: Less than in C3: the courses are uniform enough that the wall reads as one printed brick sheet stretched over four quadrants.
+WHY: It keeps C3's honest boundary but reverts to the flatter, evenly-coursed wall body, so the masonry loses the hand-laid variation that was the only thing carrying the fiction, and it inherits the same repeating floor.
+
+RANKING
+C3
+C5
+C1
+C4
+C2
+
+SEPARATOR: The top of the list builds its wall boundaries and its damage out of the wall's own material — varied courses, mortar-coloured reveals, hardware set into stone — while the bottom substitutes uniform applied trim, a repeated bevel, or nothing at all, and none of them yet shows a wall that has been broken and then held.
+
+FLIP LIST
+- Delete the pale edge ribbon in C1, C2 and C4 and rebuild the wall/floor junction the way C3 does it: carry the brick courses right to the edge, then a 2–3px reveal in the same value as the internal mortar, so the boundary is the wall's own joint and not a stripe laid over it.
+- Break the masonry under every repair element: put a dropped stone, a stepped crack, or a sagging course beneath the rose baulk, each brown post and each L-bracket, so the brace is resisting something instead of decorating sound wall.
+- Terminate every bar in a real fixing — a driven pin with a countersunk head, a split in the timber radiating from the pin, and a rust bloom running down the stone beneath it — instead of a square-cut end that stops in mid-course.
+- Drop the cream pin-heads two to three steps below lit-floor value and ring each with a dull darker pixel so they read as struck metal, not as the brightest sparkle in the frame.
+- Redraw the corridor floor as at least twelve non-symmetric variants and break the cycle: the current strip repeats identically every four tiles and near-identically every eight, which is visible as three matching panels in a single screen.
+- Cut the square-in-square floor panel or make it a thing — give it a recessed pull on one side, a chipped lip, and a scored arc in the stone where it has been dragged open — because a centred symmetric undamaged frame is ornament in a place where nothing is arranged for anyone's benefit.
+- Lift the moss out of the floor tile art so it stops repeating on the same grid position every cycle, and desaturate it from chartreuse to a grey-green lichen crust that runs down from damp joints rather than sitting in tile corners.
+- Give each wall a cap band drawn as the stones seen end-on, with a course rhythm different from the face, so the top of a wall is not the same drawing as its side.
+- Wear the floor where it is walked: a paler polished track down the traffic line of each corridor, grit and dark accumulation in the joints at the wall bases, so the most-used surface stops being the emptiest one in frame.
+- Remove the per-brick top-highlight/bottom-shadow emboss from C4's wall-face rows entirely; get relief instead from individual stones sitting proud or sunk relative to their neighbours, which survives any light direction.
+
+---
+Model used: Claude Opus 5 (1M context)

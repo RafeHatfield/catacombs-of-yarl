@@ -1,0 +1,69 @@
+CANDIDATE: C1
+CULL: none
+VERDICT: FAIL
+Q1: North up the pink strip — it is the only line that branches, at the junction four tiles above me; south the same strip runs on with nothing new in view.
+Q2: Running-bond brickwork of small rectangles in three close browns, with long horizontal string courses every dozen rows — a wall drawn face-on, and the floor is the same brickwork in a pinker tint.
+Q3: Nothing holds it. Short brown pegs and a few dark bars sit scattered on unbroken brick; not one spans a joint, a crack or a break, and there is no rope, hide or salvaged timber anywhere.
+Q4: No thickness — wall meets floor at a 1–2px line, there is no top face, no side face, and no cut edge where the corridor passes through the mass.
+Q5: Nothing has happened. Intact masonry, evenly spaced square panels down the middle of the floor, a little moss — a tidy tiled corridor, not four hundred years of a line that could not be advanced.
+WHY: The wall is a brick elevation pasted flat under a top-down camera, the fixings fix nothing, and the floor is decorated on a regular grid.
+
+CANDIDATE: C2
+CULL: none
+VERDICT: FAIL
+Q1: North, same as before — the junction above is the only branch; the texture is reseeded but the map and every decision it offers are identical.
+Q2: The same face-on running bond, slightly rougher blocks and a few more pale wear streaks; wall and floor remain one material separated only by tint.
+Q3: Nothing. The pegs and bars have moved a little and still sit on sound brick, tying nothing to anything.
+Q4: None — the same hairline boundary, the same absence of any top or cut face.
+Q5: Nothing. A reseed of C1's noise; the place is in exactly the same condition, which is to say untouched.
+WHY: Identical failure to C1 with a different random seed — an elevation used as a ground plane, and no repair anywhere on it.
+
+CANDIDATE: C3
+CULL: cannot-read
+VERDICT: FAIL
+Q1: I cannot commit — the band immediately left of me is as bright as the tile I stand on and is bounded by its own dark seam, so it reads as a second corridor.
+Q2: I cannot tell a wall from the ground: both are the same mottled tan in two or three close values, with no coursing, no block size and no joint.
+Q3: Small dark bars with a pale dot at each end sit across the surface like cramps, but they lie on flat mottle with nothing broken under them.
+Q4: No — a flat pattern; the only depth cue is a double dark line along the top edge of some masses, absent everywhere else.
+Q5: Nothing legible has happened; the dark squiggles read as scratches on the image rather than cracks in stone, and the same Y-shaped mark is stamped repeatedly.
+WHY: Wall and floor collide in value and hue at the exact tile where the walk decision is made, so the solid map is unreadable.
+
+CANDIDATE: C4
+CULL: none
+VERDICT: FAIL
+Q1: North to the junction, for the same reason as C1 — it is the same map, redrawn.
+Q2: C1's face-on running bond with one change: a fine header course laid along the wall edges that face the east–west corridor.
+Q3: Nothing. The added header course is masonry, not repair; the pegs and bars still sit on sound brick holding nothing together.
+Q4: The header course is the one attempt at a wall top, and it is added only where the wall faces the east–west corridor — the edges flanking the north–south corridor get nothing, so the same wall has thickness on one axis and none on the other.
+Q5: Nothing. Same intact brick, same evenly spaced floor medallions, plus a decorative string course.
+WHY: A depth cue applied on one axis only is worse than no depth cue — it asserts a viewing direction the straight-down camera does not have.
+
+CANDIDATE: C5
+CULL: cannot-read
+VERDICT: FAIL
+Q1: I cannot commit — measured at my own row, the wall beside me sits at L≈137 against the corridor's L≈135, in the same hue; only the square panel motif says which tile is floor.
+Q2: I cannot tell a wall from the ground; the wall body is amorphous mottle with hairline squiggles and no unit, joint or course anywhere.
+Q3: The same floating cramp-bars, lying on unbroken mottle.
+Q4: No thickness in the body; a double dark band caps some north edges and nothing caps the others.
+Q5: Nothing readable. Repeated stamped marks and vertical dashed seams running through solid mass, which the eye takes for two more corridors.
+WHY: The solid map is not recoverable from the image — wall and floor are the same value and the same colour where it matters.
+
+RANKING
+C4
+C1
+C2
+C3
+C5
+SEPARATOR: The top three at least let you see where the stone stops and the floor begins; the bottom two dissolve that boundary entirely, and none of the five shows a single thing being held together.
+
+FLIP LIST
+- Redraw the wall tile as the top of a wall rather than its face: drop the running-bond elevation, show block ends and beds in a coursing that turns at corners, and run a 3–4px cut face along every edge where the wall meets open floor — all four sides, not the two C4 does.
+- Make every fixing do work: put each driven pin through both halves of a split block with a visible burr where it enters the stone, wrap each rope lashing around a timber that spans two blocks and show the socket it seats in, and delete every peg currently sitting on unbroken masonry.
+- Open a value gap at the boundary in C3/C5: the wall adjacent to the corridor measures L≈137 against the corridor's L≈135 — drop wall albedo so solid tiles read at least 30% darker than floor tiles at equal distance from the light, and stop letting the panel motif be the only walkability cue.
+- Delete the vertical dashed seams running down the middle of the wall mass in C3/C5 at x≈315 and x≈500; they carry the corridor edge's line weight and read as two extra corridors.
+- Replace the evenly spaced square medallions in the corridor floor with irregularly placed salvage — slabs of visibly different stone, cut short, shimmed with packing at the ends, spaced by what was to hand rather than by a grid.
+- Flatten the per-course shading in C1/C2/C4: each mortar line currently has a bright band directly beneath it and a neutral band above, and that asymmetry survives dividing the engine light out — give each block a single albedo plus chipping so relief comes only from the engine.
+- Give C3/C5's wall a legible unit: a block size and a joint the player can count, so "how many tiles of wall am I looking at" has an answer from the image alone.
+- Remove the saturated yellow-green moss sprigs in all five; they are the only high-chroma hue in the palette and nothing grows without light.
+
+Model: Claude Opus 5 (1M context).

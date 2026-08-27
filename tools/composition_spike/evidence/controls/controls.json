@@ -1,0 +1,24 @@
+{
+ "commit": "33d0c97fecf34ede07e8862caea14049048180eb",
+ "results": [
+  {
+   "control": "CONTROL 1  variants vs one-tile-per-mask",
+   "differing_pixel_fraction": 0.09629285357321339,
+   "floor": 0.005,
+   "passed": true
+  },
+  {
+   "control": "CONTROL 2  mask 3 planted with floor tiles",
+   "differing_pixel_fraction": 0.11531234382808596,
+   "floor": 0.005,
+   "passed": true
+  },
+  {
+   "control": "CONTROL 3  interior_fill pinned to one tile",
+   "differing_pixel_fraction": 0.2973303348325837,
+   "floor": 0.005,
+   "passed": true
+  }
+ ],
+ "all_passed": true
+}

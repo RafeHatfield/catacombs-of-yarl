@@ -1,0 +1,68 @@
+CANDIDATE: C1
+CULL: none
+VERDICT: FAIL
+Q1: North, into the crossing four tiles up — it is the only branch I can see, since the strip I stand on dies against a panelled slab about eight tiles south and the arms east and west run out of the light.
+Q2: Small brick, roughly 11px courses in a loose running bond with dark joints, laid as one continuous field edge to edge — but it sits in exactly the same picture plane as the walkable slab, so it reads as a second floor material rather than as a mass.
+Q3: Vertical rust-brown straps crossing three or four courses, and short horizontal bars; almost all of them are flat stripes lying on the brick with no fixing — I found one 3px anchor plate near the left of the frame, and that is the entire evidence of anything being held.
+Q4: No thickness. There is no cap, no side, no base and no shadow anywhere in the frame; where the horizontal arm terminates the masonry simply butts flat against it with no end wall.
+Q5: Nothing has happened. Bricks are cut clean through by the corridor seam with no bond or return, the course lines run unbroken across the whole frame, and every strap on the left half has a mirror twin on the right — this is wallpaper stamped through a stencil, not a place that has been used.
+WHY: The masonry has no thickness and no bond, and the ironwork is painted stripes with no fixing into the stone.
+
+CANDIDATE: C2
+CULL: none
+VERDICT: FAIL
+Q1: North to the crossing, same as C1 — the only visible branch; south the strip terminates and both side arms leave the light.
+Q2: Identical brick field to C1 — 11px running-bond courses with dark joints, continuous across the entire frame, in the same plane as the floor slab.
+Q3: Nothing. This is C1 with every strap, bar and anchor plate deleted; there is not one fixing, tie, pin or patch in the frame.
+Q4: No thickness — flat pattern, no cap, no side, no base, no edge shadow.
+Q5: Nothing has happened to it and nobody has ever touched it. Four hundred years of a garrison repairing things has left no mark at all; the brick is unbroken, unpatched and machine-regular.
+WHY: A wall with nothing holding it together and no thickness is a texture swatch, not a four-hundred-year-old contested line.
+
+CANDIDATE: C3
+CULL: noise
+VERDICT: FAIL
+Q1: —
+Q2: —
+Q3: —
+Q4: —
+Q5: —
+WHY: Inside the light pool the wall mass has no discernible unit — vertical autocorrelation shows no course period at all, and at play size it is an undifferentiated tan mottle crossed by wandering diagonal scribbles.
+
+CANDIDATE: C4
+CULL: none
+VERDICT: FAIL
+Q1: North to the crossing — the only branch in view; the strip ends south and the arms run out of the light east and west.
+Q2: Same 11px running-bond brick as C1, with extra bands of long flat stones added above and below the lit crossing; still a single continuous field in the same plane as the floor.
+Q3: The most ironwork of the set — vertical straps crossing several courses, horizontal bars with 2px end dots, one anchor plate — but the dots are invisible at 750px wide and the straps still sit on the surface without biting into stone.
+Q4: No thickness — no cap, no side, no base, nothing that separates the top of a wall from its face.
+Q5: Someone has ruled lines on it. The added courses are single-pixel, perfectly straight and unbroken across the full 750px, passing straight through the straps; that is a drafting rule, not a joint in a wall that orcs have been patching with driven pins and salvaged timber.
+WHY: Perfectly straight full-width ruled course lines over a wall with no thickness — the drawing is a diagram of masonry rather than masonry.
+
+CANDIDATE: C5
+CULL: noise
+VERDICT: FAIL
+Q1: —
+Q2: —
+Q3: —
+Q4: —
+Q5: —
+WHY: Same structureless mass as C3 with the iron removed — no course period, no readable block, just irregular tan patches and branching dark scribbles.
+
+RANKING
+C4
+C1
+C2
+C3
+C5
+SEPARATOR: The top of the list at least has legible masonry units with visible intervention on them, while the bottom has neither a readable block nor a hand that touched it — but none of them has a wall with a top and a side, so the whole set is a flat pattern with a path tinted through it.
+
+FLIP LIST
+- Give a wall tile a cap and a side: inset the top face 4px from the tile edge and run a darker, cooler 4px band around all four sides, so a solid cell reads as a block with a top surface rather than a patch of texture in the floor plane.
+- At every wall/floor seam, bond the masonry instead of cropping it: draw a header course of full-depth stones turning the corner along the corridor edge so no brick is cut through by the seam, and drop a 2px contact shadow from the wall onto the floor slab.
+- Fix every strap and pin: a 3x3 driven plate with a bright top pixel and a dark underside at each end of every iron element, plus a 1px dark line along its down-side, so the metal reads as fastened through the stone instead of painted on it.
+- Break every horizontal course line at least once every three tiles with a jog, a lost stone or a mortar patch, so no joint runs unbroken across the frame; the full-width single-pixel rules in C4 are the clearest tell that nothing here was built by hand.
+- Re-place the wall decoration independently on each side of the corridor: pins, bars, panels and patches are currently mirrored about the centreline (measured: mirror error 11 vs 34 baseline), so every repair has an identical twin opposite it.
+- For the C3/C5 stone, draw block edges as continuous joints at least 30% darker than the stone face, on a consistent course height, and cut the wandering diagonal cracks to a third of their current density — the units currently dissolve entirely inside the light pool.
+- Stop using the square framed panel in both the floor slab and the solid mass: keep it as a floor plate, and replace the wall version with a recessed niche that shows an interior side face, so the motif tells the player which cells are solid.
+
+Models used: claude-opus-5[1m]

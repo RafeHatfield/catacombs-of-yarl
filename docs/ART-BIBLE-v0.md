@@ -164,6 +164,41 @@ The two-plane rule survives from the retired Oryx track unchanged. It was never 
 it was a way to draw volume without paying isometry's tax, and it is re-adopted on its own
 merits.
 
+**STATUS (2026-08-26): THE RULED CONDITION FIRED. §3 IS REOPENED, WITH EVIDENCE — and what
+replaces it, if anything, is Rafe's ruling and not the spike's.**
+
+The ruling was *"depth arriving ratifies §3; depth failing reopens it with evidence"*, against
+two rounds spent on plane-boundary occlusion and wall-top value separation with south-facing
+front faces present in scene. Both rounds ran. **Depth did not arrive.** Eight blind critic
+rounds have now answered the thickness question and every one of them answered no; the last, on
+the arm it ranked FIRST of five, said:
+
+> *"the reveal at the boundary reads as a shadow gap rather than a cap, so you still cannot
+> distinguish a wall top from a wall face anywhere in the image."*
+
+**The reopening rests on that arm and not on the two constructions the same round showed to be
+mistakes.** Round 8 tried a coping course and a joint-deepening pass; the seat ranked both BELOW
+the arm that had neither, and both failures are diagnosed in
+`tools/composition_spike/SPIKE.md` §5.7. The arm that ranked first carried only the two ruled
+variables at their best measured settings, and it still failed. That is the evidence.
+
+What every seat asked for instead, unprompted and without ever being shown this section, was a
+**side face** — *"no cap, no cross-section, and no way to tell the top of a wall from the face of
+it"* — which is the one plane §3 forbids.
+
+**Previous status, kept because a status trail that overwrites itself is not a trail:**
+**STANDS UNAMENDED, PENDING EVIDENCE (Rafe, 2026-08-26).** The composition spike ran
+six blind critic rounds against composed two-plane walls and the thickness question came back
+**no on every arm in every round** — *"none of them has a wall with a top and a side, so the
+whole set is a flat pattern with a path tinted through it."* Six independent seats asked for a
+**side face**, unprompted, none having been shown this section.
+
+Two further rounds are ruled to run on plane-boundary occlusion and wall-top value separation,
+in a scene where south-facing front faces are actually present — the review corridor could only
+ever show a face on 7.3% of its wall cells, which is what every one of those six verdicts rested
+on. **Depth arriving ratifies §3. Depth failing reopens it, with evidence.** The evidence trail
+is `tools/composition_spike/SPIKE.md`.
+
 **Why PROVISIONAL:** this has not been tested on a Yarl asset at Yarl's density. The Phase 5
 pilot builds floors and walls first, which makes it the natural probe. If two-plane walls in a
 portrait orthogonal grid do not deliver the volume we want, we find out in the cheapest tier,
@@ -321,6 +356,113 @@ is not a victory over a baked arm, because no baked arm existed to beat.** §6.4
 clause governs that outcome and is not overridden here: A and B being indistinguishable is a
 finding about test conditions, never permission to pick either. The comparison §6.4 set out to
 run remains unrun, and nothing in this ratification should be cited as having run it.
+
+**RULED (Rafe, 2026-08-26): AUTHORED OCCLUSION IS LAW. Receive-light never meant form-free.**
+
+The clause has been read once too often as *draw nothing that could be mistaken for light*, and
+that reading is wrong and is now closed. What §6.3 forbids is a DIRECTION: a highlight, a
+gradient, a bevel, a bake that says *the light is over there* and that a torch arriving from
+somewhere else contradicts. What §6.3 has never forbidden, and now positively requires, is
+**form** — the occlusion a shape casts on itself and on the plane it meets, which is identical
+under every azimuth and therefore contradicts nothing.
+
+Self-occlusion, contact occlusion under a lip, and **plane-boundary occlusion (§12.1)** are all
+form. An asset that omits them is not obeying this clause more strictly; it is under-drawn, and
+it will read flat under any light the engine supplies.
+
+⚠ **CAVEAT TRAIL — the baked arm exists now, and it outranked every receive-light arm built
+against it.** Recorded verbatim from the composition spike's report
+(`tools/composition_spike/SPIKE.md` §5.1b, 2026-08-26) because it is adverse evidence on the
+axis this clause's ratification could not test, and a caveat trail that summarises adverse
+evidence in its own words is not a caveat trail. **§6.3 stands.** This is the record, not a
+reopening.
+
+#### 5.1b THE PLANT OUTRANKED THE ARMS — and §6.4 said this comparison had never been run
+
+This was not designed and it is the most consequential thing in the report.
+
+The plant is boundB **plus** a baked per-course key light: identical stones, identical rig,
+identical geometry, one forbidden construction added. Six independent blind seats ranked the
+five captures best-to-worst:
+
+| round | ranking, best → worst | plant | plant cull |
+|---|---|---|---|
+| 1 | **plant** > boundB > ctrlB > boundA > ctrlA | **1 of 5** | none |
+| 2 | boundB > ctrlB > **plant** > boundA > ctrlA | 3 of 5 | none |
+| 3 | boundB > boundA > **plant** > ctrlB > ctrlA | 3 of 5 | key-light |
+| 4 | ctrlB > boundB > **plant** > boundA > ctrlA | 3 of 5 | key-light |
+| 5 | **plant** > boundB > ctrlB > boundA > ctrlA | **1 of 5** | none |
+| 6 | **plant** > boundB > ctrlB > boundA > ctrlA | **1 of 5** | none |
+
+**First in three rounds of six. Never below third of five. Not once last.**
+
+Round 6 named the mechanism: *"a depth cue applied on one axis only is worse than no depth cue
+— it asserts a viewing direction the rest of the frame contradicts."* It read as depth. In six
+rounds it is **the only thing that produced any depth read at all**, in a set where the
+thickness question was otherwise answered no every single time.
+
+**Why this matters more than a ranking usually would.** §6.3 is RATIFIED, and §6.4 states its
+own limit in as many words:
+
+> *"Stage 1 produced no arm A — no candidate in any arm depicted a directional key light, so the
+> three arms never separated on the lighting axis. This ratifies the treatment under light. It
+> is not a victory over a baked arm, because no baked arm existed to beat ... The comparison
+> §6.4 set out to run remains unrun, and nothing in this ratification should be cited as having
+> run it."*
+
+**A baked arm now exists.** This session built one because LOOP-PROCESS §4 requires a plant, and
+it is in one respect a *cleaner* comparison than §6.4's design: the plant and boundB are the
+same stones under the same rig, differing by exactly the baked light, so it is a within-arm A/B
+rather than three separately-generated arms.
+
+**What this is NOT.** It is not a ruling and not a candidate for one:
+
+- **The plant never passed.** It failed in all six rounds and was culled `key-light` in two,
+  with a method — *"still present in the far-left corner at 6× exposure where the engine pool
+  never reaches"* — and a measurement, *"+8.7/−6.2 top/bottom split against +2.3/−1.0 for every
+  other image in the set."* The clause's own instrument works.
+- **A ranking is not the gate.** §13.1 gives the verdict to Rafe on the device, and a seat
+  preferring a still image is exactly the "wrong instrument in the wrong context" §6.3 warns
+  about — except that these are lit in-scene captures, which is the *right* context, which is
+  why it is being reported rather than dismissed.
+- **The arms it beat are mocks.** A better-composed wall might beat it. Six rounds did not
+  produce one.
+- **It was built to be caught**, which biases it toward being conspicuous, not toward being
+  liked.
+
+**The honest statement: on the depth axis, in the lit scene, at the ruled canvas, the forbidden
+construction outperformed every receive-light arm this session could build, six times out of
+six — while remaining correctly detectable as forbidden.** §6.4's unrun comparison has run
+incidentally and its first result is adverse. That is a finding for the record and a ruling for
+Rafe; it is not this session's to resolve, and §6.3 stands untouched by it.
+
+**What that record does and does not change.** It does not reopen §6.3: the plant never passed,
+was culled `key-light` in two rounds by a seat that had demonstrated it could fail, and a
+ranking is not §13.1's gate. It does close the sentence above that said the comparison "remains
+unrun" — it has now been run once, incidentally, on a within-arm A/B, and its first result is
+adverse on the depth axis. Anyone citing this clause should cite that too.
+
+**THE REMATCH RAN, AND IT WENT THE CLAUSE'S WAY.** The two ruled rounds put authored occlusion
+against the baked plant on identical stone, with plane-boundary occlusion deepened to the
+requirement above and the wall-top albedo separated from the floor's. Across eight rounds the
+plant's ranking among five captures went:
+
+| round | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|
+| plant's place | **1st** | 3rd | 3rd | 3rd | **1st** | **1st** | **1st** | **4th** |
+
+**Round 8 is the first round in which legal form beat the baked arm**, and it beat it with
+exactly the construction this ruling made law. The plant was also culled `key-light` that round
+by a method stronger than any before it — *"differencing against C1 isolates a per-block
+top-bright/bottom-dark emboss that would survive the engine light being switched off"* — so it
+lost on the ranking and on the cull in the same round.
+
+**Stated at its true strength and no higher.** One round is one round; the plant led the six
+that preceded it; the arms are mocks; and a ranking is not §13.1's gate. What the record now
+supports is narrower and more useful than a verdict: **the baked arm's advantage was an
+advantage over receive-light assets drawn WITHOUT form, and it disappears once they are drawn
+with it.** That is the strongest available reading of §5.1b and it is consistent with every
+round in the trail.
 
 **This is a one-way door and the most consequential construction rule in this document.**
 
@@ -735,6 +877,49 @@ argument is soft and is not the basis of this ruling. The three that hold:
 floors, an engine-side rim remains available with **no redraw**. Leaning against it: §12 already
 holds that the institution does not help you, and a ring under every creature is help. Recorded
 so the door stays on its hinges.
+
+**RULED (Rafe, 2026-08-26): PLANE-BOUNDARY OCCLUSION IS FORM. Legal, and required. The ring
+stays banned.**
+
+The distinction, because the composition spike flagged this as a live tension and it is now
+settled: a **ring** is a dark edge drawn around a thing *because it is a thing*, present on every
+side regardless of what adjoins it, and it is what makes a sprite read as a sticker. **Plane-
+boundary occlusion** is a dark edge drawn where one plane stops and another begins — on the
+wall's own edge, only where floor is adjacent, absent where wall meets wall. The two look alike
+listed as pixels and are opposite constructions: one describes the object, the other describes
+the *geometry between* objects.
+
+The evidence that forced the ruling: composed two-plane walls rendered without it put a lit wall
+top at luminance 96 beside a lit floor at 122 with no boundary of any kind, and a blind critic
+could not tell solid from walkable — a `cannot-read` cull, twice. The shipped placeholder tiles
+this renderer's mask table was fitted to had always carried it. §3's two planes do not, on their
+own, separate wall from floor; this is what does.
+
+**It does not compete with §7.1's linear elements — it is not on the object at all.** Straps,
+bands and tags still carry the read across a sprite; occlusion carries the read across a
+boundary. Both, not either.
+
+**A WORKED EXAMPLE, because the spike got this wrong on its first attempt and the error is the
+instructive part. THE RING PROHIBITION IS VALUE-AGNOSTIC: A PALE RING IS A RING.**
+
+Round 8 of the composition spike answered a critic's request for a cap band by laying a coping
+course of paler, smoother stone along every floor-facing wall edge, and reasoned that a
+*material* change declares no light direction and is therefore legal. The material reasoning was
+sound and the construction was not. The blind seat:
+
+> *"A flat, featureless ribbon at floor value is applied to every wall edge for its entire
+> length, ringing each mass in bright piping so the quadrants read as cut-out cards rather than
+> stone."*
+
+Cut-out cards is the sticker read, arrived at from the opposite end of the value scale. The
+ruling above already excludes it — *drawn around a thing because it is a thing, present on every
+side regardless of what adjoins it* — and nothing in that sentence says dark. **What separates
+occlusion from a ring is whether the treatment answers to the geometry it sits on, not whether
+it is lighter or darker than its surroundings.** A uniform ribbon of constant width and constant
+value applied to every edge answers to nothing.
+
+The same round's ranking is the corroboration: the arm carrying the coping ribbon placed third
+of five, below the arm with no cap at all.
 
 **Consequence for the re-aim audit:** `tools/art_lint/outline_repair.py` has no successor under
 this ruling and is retired with the Oryx track.

@@ -1,0 +1,98 @@
+{
+ "round": 4,
+ "commit": "910ceacad300587d3c9c2d5d163535053b98db67",
+ "mapping": {
+  "C1": "boundB_lit.png",
+  "C2": "ctrlB_lit.png",
+  "C3": "boundA_lit.png",
+  "C4": "plant_lit.png",
+  "C5": "ctrlA_lit.png"
+ },
+ "plant": "C4",
+ "plant_caught": true,
+ "round_void": false,
+ "verdicts": {
+  "C1": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The walls have no thickness and the repairs hold nothing \u2014 the plank, bar and pins are decoration laid over intact brickwork, so the fiction of continuous heavy repair is asserted rather than drawn.",
+   "q1": "South, down the pale strip \u2014 it is the only material that changes, and it keeps going under stronger light past another set plate, while north it runs out into black and the crossing above only offers two more of the same.",
+   "q2": "Running-bond brick, even courses, uniform brick size, drawn face-on and then laid flat as a top-down fill \u2014 it reads as a brick pavement at least as readily as a wall, and only the corridor's smoother salmon slab tells me which is which.",
+   "q3": "A dark plank spanning three bricks with two pale dots above it, a rust-coloured vertical bar, and scattered pale L-marks \u2014 the plank crosses no crack and no joint, the dots sit beside it on the brick face rather than through it, and the bar has no fixing at either end; nothing is actually held.",
+   "q4": "No \u2014 the corridor edge is a one-pixel dark seam with wall and floor on the same plane, no cap course, no return, no top-versus-side anywhere.",
+   "q5": "Nothing has happened to it: the bond is unbroken, the courses are level, the floor slab is unworn down its centre, and a little bright moss has come up at the edges \u2014 this reads as newly laid and slightly damp, not four hundred years of traffic."
+  },
+  "C2": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Adding chipped brick faces to a flat, unattached wall does not give it thickness or a repair history \u2014 the same two failures stand.",
+   "q1": "South again \u2014 same reading as before, the strip is the only changed material and it continues lit; the difference from its neighbour is a few extra chipped brick faces, which changes nothing about where I can go.",
+   "q2": "The same face-on running bond with slightly more per-brick variation \u2014 a few more scuffed and part-lightened brick faces \u2014 but the same even courses and the same uniform module, so the wall still reads as a flat pattern rather than a mass.",
+   "q3": "The same plank-with-two-dots, the same pale staple marks; here the rust bars are largely gone, so there is even less claiming to hold anything, and what remains still bridges no break.",
+   "q4": "No \u2014 identical hairline seam, no cap, no side face, no depth.",
+   "q5": "Nothing; slightly more surface scuffing than its neighbour, but the structure is intact, the floor is untrodden, and the moss is the same bright green."
+  },
+  "C3": {
+   "cull": "cannot-read",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Wall and floor share albedo, hue and texture, so the walkable cells survive only as a hairline and the image fails the readability cull outright.",
+   "q1": "I cannot answer it \u2014 there are four vertical lanes of the same tan mottle separated by identical dark hairlines, and only the column of square plates hints which lane is floor.",
+   "q2": "I cannot tell a wall from the ground: both are the same value, the same hue and the same blotchy mottle, and the wall has no coursing or block structure at all, just a field of patches with thin dark cracks.",
+   "q3": "Small dark bars with two pale dots, scattered over the mottle; they sit on nothing, span nothing and repeat identically.",
+   "q4": "No \u2014 no top, no side, no edge; the seams that mark the corridor are indistinguishable from the seams that do not.",
+   "q5": "I cannot say from what is here \u2014 there is not enough structure left to read a history off."
+  },
+  "C4": {
+   "cull": "key-light",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "In the two wall rows flanking each horizontal corridor, every course carries a pale band on its top edge and a dark band on its bottom edge \u2014 measured on light-normalised pixels the top/bottom split is +8.7/\u22126.2 in the band below the corridor against +2.3/\u22121.0 for every other image in the set, and the rest of this same wall shows no such split at all, so a north-lit bevel is painted into the stone and the light direction changes as you walk away from a corridor.",
+   "q1": "n/a \u2014 culled at step 1.",
+   "q2": "n/a \u2014 culled at step 1.",
+   "q3": "n/a \u2014 culled at step 1.",
+   "q4": "n/a \u2014 culled at step 1.",
+   "q5": "n/a \u2014 culled at step 1."
+  },
+  "C5": {
+   "cull": "cannot-read",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Same failure as its twin and slightly worse \u2014 wall and floor are one undifferentiated tan mass, so solid and walkable cannot be told apart.",
+   "q1": "I cannot answer it \u2014 same four indistinguishable lanes, same reliance on the plate column to guess the corridor.",
+   "q2": "I cannot tell a wall from the ground; this one has even less block definition than its twin, the flattest course structure in the set, so the wall is a continuous blotch.",
+   "q3": "The same scattered dark bars with two pale dots, holding nothing and attached to nothing.",
+   "q4": "No.",
+   "q5": "I cannot say."
+  }
+ },
+ "passes": [],
+ "ranking": [
+  "C2",
+  "C1",
+  "C4",
+  "C3",
+  "C5"
+ ],
+ "separator": "The top images give the wall its own material and a value roughly half the floor's, so the solid cells read at a glance; the bottom ones give wall and floor the same tan mottle at the same brightness, so the corridor survives only as a hairline.",
+ "flip_list": [
+  "Give every wall tile a visible top surface: a 6px cap course along the wall's floor-facing edge in a coarser, unmortared stone distinct from the wall's interior fill, so the top of a wall reads separately from its side at 32px.",
+  "Re-cut the corridor edge from a 1px seam into a 3\u20134px return \u2014 darken the outer 2px of the wall's top surface and add a 2px lip of floor material at its base \u2014 so the wall has measurable thickness.",
+  "Make the timber brace do work: run it across an actual course break or a split block, extend it one full brick past the break at each end, and move the pin heads onto the timber's ends, each pin a 2px dark seat under a 1px pale head, so the fixing visibly passes through the wood into the stone.",
+  "Delete every instance where two pale dots sit above a dark bar rather than inside it \u2014 at played size that arrangement reads as two eyes over a mouth; put both pins within the bar's silhouette.",
+  "Give the rust-coloured vertical bars a fixing at each end and a 1px dark drop-shadow along one side, or remove them; as drawn they are painted stripes lying in the same plane as the brick.",
+  "Replace the single concentric-square floor plate with at least four hand-cut variants differing in size, rotation and damage, and break the regular spacing \u2014 let two sit adjacent, then none for six tiles.",
+  "Remove the saturated yellow-green moss sprigs, or desaturate them to a grey-ochre crust confined to the corridor's base seam.",
+  "Wear the floor: run a 12px band of smoothed, lighter, mortar-free stone down the centre of each corridor and leave the outer 10px rough, so the traffic is in the surface rather than only in the description.",
+  "Break the running bond: replace whole 32px stretches of wall with re-laid patches using a different brick module, bond and mortar colour, hard-edged against the original brickwork.",
+  "In C4, strip the top-edge highlight and bottom-edge shadow from the courses in the two rows flanking each corridor so they match the un-bevelled courses in the rest of the same wall.",
+  "In C3 and C5, drop the wall's base value to roughly 0.45 of the floor's so the two cannot share a tone at any engine light level, and restore visible coursing to the wall so its structure differs from the floor's as well as its brightness."
+ ]
+}

@@ -1,0 +1,17 @@
+finding_before_edge_occlusion.png
+
+PRODUCED BY COMMIT 339ec105ff3db915361b25337f7be7c04f67cd83 — not by the commit this file is
+stored under. LOOP-PROCESS §2.3 requires evidence to carry its producer's hash, so it is stated
+here rather than inferred from the tree.
+
+This is the capture that forced the per-mask restructure. It is the boundB arm as first
+composed: bible §3's two planes and nothing else — top band plus front face where the south
+neighbour is floor, top surface where it is wall, with no occlusion on any other edge.
+
+What it shows: in a one-tile-wide north-south corridor every flanking wall cell has wall to its
+south, so no front face appears anywhere along its length, and a lit wall top at luminance 96
+sits beside a lit floor at 122 with no boundary of any kind between them. The player cannot
+tell which cells are walkable.
+
+The current boundB_solofloor_lit.png is the same arm after edge occlusion was added. The two
+files are the before and after of that finding.

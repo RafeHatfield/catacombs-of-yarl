@@ -182,7 +182,7 @@ public sealed class DungeonRenderer
                         _ => cardinal,
                     };
 
-                    tilePath = themeConfig.GetWallTile(themeName, effectiveCardinal, diagonal);
+                    tilePath = themeConfig.GetWallTile(themeName, effectiveCardinal, diagonal, gx, gy);
                 }
 
                 if (tilePath == null)

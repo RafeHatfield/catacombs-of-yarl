@@ -1,0 +1,239 @@
+/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup --resolution 750x1334 --art-scene-capture --capture-out /Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/tools/composition_spike/evidence/boundA_unlit.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json --tile-theme-config res://src/Presentation/assets/composition_spike/tile_themes_boundA.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 0.0 --light-radius-tiles 5.5
+
+Godot Engine v4.7.stable.mono.official.5b4e0cb0f - https://godotengine.org
+Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
+
+Catacombs of YARL — loading...
+[DIAG] Logging to: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag.log
+[DIAG] Structured log: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag_structured.jsonl
+[DIAG 00000 F0 T0.437] === Session started ===
+[Main] Persistence loaded — 6 runs ever.
+[Main] Loading tileset: 16bit_fantasy
+[Main] Tileset loaded: Oryx 16-Bit Fantasy (48px, 2 frames)
+[TileThemeLoader] Loaded 1 theme(s): sandstone
+[Main] Map renderer: TopDownRenderer (tile=32x32, zoom default=2, min=1, max=4)
+[ReadGodotResource] res://config/entities.yaml: 58297 chars, starts with: monsters:
+  orc:
+    name: "Orc"
+    threat_archetype: "baseline"   # §2 durable
+[ReadGodotResource] res://config/level_templates.yaml: 3412 chars, starts with: # Level template overrides for procedurally generated dungeon floors.
+# Keys are
+Content loaded: 44 monsters, 41 items, 16 consumables
+  Monster: orc → Orc, hp=40
+  Monster: orc_grunt → Grunt, hp=40
+  Monster: orc_brute → Orc Brute, hp=42
+  Monster: orc_scout → Orc Scout, hp=15
+  Monster: orc_veteran → Orc Veteran, hp=25
+  Monster: orc_skirmisher → Orc Skirmisher, hp=24
+  Monster: orc_shaman → Orc Shaman, hp=24
+  Monster: orc_chieftain → Orc Chieftain, hp=35
+  Monster: troll → Troll, hp=48
+  Monster: troll_probe_regen3 → Troll, hp=30
+  Monster: troll_probe_regen4 → Troll, hp=30
+  Monster: troll_probe_countered → Troll, hp=30
+  Monster: troll_probe_h36_r0 → Troll, hp=36
+  Monster: troll_probe_h36_r2 → Troll, hp=36
+  Monster: troll_probe_h36_r3 → Troll, hp=36
+  Monster: troll_probe_h36_r4 → Troll, hp=36
+  Monster: troll_probe_h40_r0 → Troll, hp=40
+  Monster: troll_probe_h40_r2 → Troll, hp=40
+  Monster: troll_probe_h40_r3 → Troll, hp=40
+  Monster: troll_probe_h40_r4 → Troll, hp=40
+  Monster: troll_probe_h44_r0 → Troll, hp=44
+  Monster: troll_probe_h44_r2 → Troll, hp=44
+  Monster: troll_probe_h44_r3 → Troll, hp=44
+  Monster: troll_probe_h44_r4 → Troll, hp=44
+  Monster: troll_probe_h48_r0 → Troll, hp=48
+  Monster: troll_probe_h48_r2 → Troll, hp=48
+  Monster: troll_probe_h48_r3 → Troll, hp=48
+  Monster: troll_probe_h48_r4 → Troll, hp=48
+  Monster: skeleton → Skeleton, hp=20
+  Monster: cave_spider → Cave Spider, hp=16
+  Monster: web_spider → Web Spider, hp=20
+  Monster: fire_beetle → Fire Beetle, hp=12
+  Monster: necromancer → Necromancer, hp=28
+  Monster: plague_necromancer → Plague Necromancer, hp=28
+  Monster: giant_spider → Giant Spider, hp=18
+  Monster: cultist_blademaster → Cultist Blademaster, hp=30
+  Monster: zombie → Zombie, hp=24
+  Monster: slime → Slime, hp=15
+  Monster: large_slime → Large Slime, hp=40
+  Monster: plague_zombie → Plague Zombie, hp=30
+  Monster: troll_ancient → Ancient Troll, hp=50
+  Monster: greater_slime → Greater Slime, hp=80
+  Monster: wraith → Wraith, hp=20
+  Monster: lich → Lich, hp=60
+[ReadGodotResource] res://config/depth_boons.yaml: 629 chars, starts with: depth_boons:
+  1: {id: fortitude_10, display_name: "Fortitude", description: "+1
+Depth boons loaded: 5 entries
+[ReadGodotResource] res://config/props.yaml: 19724 chars, starts with: # Room Props Definition
+#
+# Each prop has:
+#   tile_ids:        Array of tile ID
+Props loaded: 63 prop definitions
+[ReadGodotResource] res://config/interactive_props.yaml: 2307 chars, starts with: # Interactive prop definitions for Catacombs of YARL
+# Barrels, bookshelves, bon
+[Main] PropDescriptionRegistry loaded
+[ReadGodotResource] res://config/signpost_messages.yaml: 5842 chars, starts with: # Signpost Messages Configuration
+#
+# Messages appear on signposts throughout th
+Signpost registry loaded
+[ReadGodotResource] res://config/murals_inscriptions.yaml: 6106 chars, starts with: # Murals & Inscriptions Configuration
+#
+# Examinable wall murals and ancient ins
+Mural registry loaded: 15 entries
+[ReadGodotResource] res://config/loot_tags.yaml: 12537 chars, starts with: # Item loot tags — category assignments, weights, and band availability.
+# Each 
+Loot tag registry loaded: 92 entries
+[ReadGodotResource] res://config/loot_policy.yaml: 2341 chars, starts with: # Loot policy configuration for the 5-band dungeon system.
+# Controls how often 
+Loot policy loaded
+[ReadGodotResource] res://config/voice_lines/hollowmark.yaml: 22746 chars, starts with: past_sasha_encounter.looted_body:
+  - "Sasha a la Tuesday. A bold vintage. Notes
+[ReadGodotResource] res://config/voice_lines/quipping_shade.yaml: 2878 chars, starts with: oil_slick_fire:
+  - "I lit the oil. The oil was where you're standing. You'll no
+[ReadGodotResource] res://config/voice_lines/catalog_past_selves.yaml: 2554 chars, starts with: header:
+  - "The ones we got back. Not all of them. The ones we got back."
+
+empt
+[ReadGodotResource] res://config/voice_lines/possession.yaml: 5939 chars, starts with: # Hollowmark possession commentary.
+#
+# ENTER POOLS (occasional fire, compound-k
+[Main] Voice line registry loaded.
+[ReadGodotResource] res://config/voice_lines/voice_tiers.yaml: 2146 chars, starts with: # Hollowmark ribbon — voice delivery tiers (M1.5, scheme Option A ruled 2026-08-
+[Main] Voice tiers loaded — 12 families; ribbon uses hollowmark.yaml pools.
+[ReadGodotResource] res://config/voice_lines/weighing_audit.yaml: 29505 chars, starts with: # Weighing Audit Dialogue
+# Format: flat keys → list of page objects with speake
+[Main] Weighing audit registry loaded.
+[ReadGodotResource] res://config/under_warden/memos.yaml: 21821 chars, starts with: # Under-Warden memo content pools.
+#
+# Key format: {tone}.{incident_type}
+# Tone
+[ReadGodotResource] res://config/under_warden/cause_display_names.yaml: 1936 chars, starts with: # Bureaucratic display phrases for engine cause-of-death strings.
+# Substituted 
+[Main] Memo registry loaded.
+[Tier0] corridor scene: tier0_corridor_junction (res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json)
+[DIAG 00001 F0 T0.851] [Tier0] corridor scene: tier0_corridor_junction (res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json)
+[Tier0] map=17x21 player=(8,14) carve_rects=2
+[DIAG 00002 F0 T0.851] [Tier0] map=17x21 player=(8,14) carve_rects=2
+[Tier0] junction=YES at (8,11)
+[DIAG 00003 F0 T0.851] [Tier0] junction=YES at (8,11)
+[Tier0] tile_theme_config=res://src/Presentation/assets/composition_spike/tile_themes_boundA.yaml
+[DIAG 00004 F0 T0.851] [Tier0] tile_theme_config=res://src/Presentation/assets/composition_spike/tile_themes_boundA.yaml
+[Tier0] light rig: ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
+[DIAG 00005 F0 T0.852] [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=0 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
+[Tier0] review_build_marker=none (CLI flags)
+[DIAG 00006 F0 T0.852] [Tier0] review_build_marker=none (CLI flags)
+[Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00007 F0 T0.853] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[Main] Visible tile rect: (2,6)-(13,21)
+[Main] floor_worn (3001) tiles: 0 rendered in the authored room, 0 in frame: 
+[Tier0] junction-lit probe: junction(8,11) lum=0.0470 at px(407,386) | reference(8,15) lum=0.0470 at px(407,642) | ratio=1.0000 min=0.2500 patch=33px
+[DIAG 00008 F5 T0.955] [Tier0] junction-lit probe: junction(8,11) lum=0.0470 at px(407,386) | reference(8,15) lum=0.0470 at px(407,642) | ratio=1.0000 min=0.2500 patch=33px
+[Main] Capture written: /Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/tools/composition_spike/evidence/boundA_unlit.png
+WARNING: Nodes with non-equal opposite anchors will have their size overridden after _ready(). 
+If you want to set size, change the anchors or consider using set_deferred().
+     at: _set_size (scene/gui/control.cpp:1519)
+     C# backtrace (most recent call first):
+         [0] void Godot.NativeCalls.godot_icall_1_36(nint, nint, Godot.Vector2*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/NativeCalls.cs:322)
+         [1] void Godot.Control._SetSize(Godot.Vector2) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:1941)
+         [2] void Godot.Control.set_Size(Godot.Vector2) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:691)
+         [3] System.ValueTuple`4[Godot.ColorRect,Godot.ColorRect,Godot.Label,Godot.Label] CatacombsOfYarl.Presentation.UI.PossessionOverlay.BuildBarRow(Godot.VBoxContainer, string, Godot.Color, Godot.FontFile, Godot.FontFile) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/PossessionOverlay.cs:144)
+         [4] void CatacombsOfYarl.Presentation.UI.PossessionOverlay.BuildLayout() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/PossessionOverlay.cs:94)
+         [5] void CatacombsOfYarl.Presentation.UI.PossessionOverlay._Ready() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/PossessionOverlay.cs:44)
+         [6] bool Godot.Node.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:2660)
+         [7] bool Godot.CanvasItem.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/CanvasItem.cs:1845)
+         [8] bool Godot.Control.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:4029)
+         [9] bool CatacombsOfYarl.Presentation.UI.PossessionOverlay.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/CatacombsOfYarl.Presentation.UI.PossessionOverlay_ScriptMethods.generated.cs:80)
+         [10] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+         [11] void Godot.NativeInterop.NativeFuncs.godotsharp_method_bind_ptrcall(nint, nint, System.Void**, System.Void*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Godot.SourceGenerators.Internal/Godot.SourceGenerators.Internal.UnmanagedCallbacksGenerator/Godot.NativeInterop.NativeFuncs.generated.cs:380)
+         [12] void Godot.NativeCalls.godot_icall_3_912(nint, nint, nint, Godot.NativeInterop.godot_bool, int) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/NativeCalls.cs:8061)
+         [13] void Godot.Node.AddChild(Godot.Node, bool, Godot.Node+InternalMode) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:848)
+         [14] void CatacombsOfYarl.Presentation.UI.HUD.BuildLayout() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/HUD.cs:144)
+         [15] void CatacombsOfYarl.Presentation.UI.HUD._Ready() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/HUD.cs:36)
+         [16] bool Godot.Node.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:2660)
+         [17] bool Godot.CanvasItem.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/CanvasItem.cs:1845)
+         [18] bool Godot.Control.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:4029)
+         [19] bool CatacombsOfYarl.Presentation.UI.HUD.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/CatacombsOfYarl.Presentation.UI.HUD_ScriptMethods.generated.cs:80)
+         [20] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+         [21] void Godot.NativeInterop.NativeFuncs.godotsharp_method_bind_ptrcall(nint, nint, System.Void**, System.Void*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Godot.SourceGenerators.Internal/Godot.SourceGenerators.Internal.UnmanagedCallbacksGenerator/Godot.NativeInterop.NativeFuncs.generated.cs:380)
+         [22] void Godot.NativeCalls.godot_icall_3_912(nint, nint, nint, Godot.NativeInterop.godot_bool, int) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/NativeCalls.cs:8061)
+         [23] void Godot.Node.AddChild(Godot.Node, bool, Godot.Node+InternalMode) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:848)
+         [24] void CatacombsOfYarl.Presentation.Main.SetupPresentation(CatacombsOfYarl.Logic.Core.GameState) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:947)
+         [25] void CatacombsOfYarl.Presentation.Main.LaunchCorridorScene(string, CatacombsOfYarl.Presentation.Map.ReviewBuildMarker) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:2538)
+         [26] void CatacombsOfYarl.Presentation.Main._Ready() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:241)
+         [27] bool Godot.Node.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:2660)
+         [28] bool CatacombsOfYarl.Presentation.Main.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/CatacombsOfYarl.Presentation.Main_ScriptMethods.generated.cs:570)
+         [29] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+WARNING: Nodes with non-equal opposite anchors will have their size overridden after _ready(). 
+If you want to set size, change the anchors or consider using set_deferred().
+     at: _set_size (scene/gui/control.cpp:1519)
+     C# backtrace (most recent call first):
+         [0] void Godot.NativeCalls.godot_icall_1_36(nint, nint, Godot.Vector2*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/NativeCalls.cs:322)
+         [1] void Godot.Control._SetSize(Godot.Vector2) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:1941)
+         [2] void Godot.Control.set_Size(Godot.Vector2) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:691)
+         [3] System.ValueTuple`4[Godot.ColorRect,Godot.ColorRect,Godot.Label,Godot.Label] CatacombsOfYarl.Presentation.UI.PossessionOverlay.BuildBarRow(Godot.VBoxContainer, string, Godot.Color, Godot.FontFile, Godot.FontFile) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/PossessionOverlay.cs:144)
+         [4] void CatacombsOfYarl.Presentation.UI.PossessionOverlay.BuildLayout() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/PossessionOverlay.cs:97)
+         [5] void CatacombsOfYarl.Presentation.UI.PossessionOverlay._Ready() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/PossessionOverlay.cs:44)
+         [6] bool Godot.Node.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:2660)
+         [7] bool Godot.CanvasItem.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/CanvasItem.cs:1845)
+         [8] bool Godot.Control.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:4029)
+         [9] bool CatacombsOfYarl.Presentation.UI.PossessionOverlay.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/CatacombsOfYarl.Presentation.UI.PossessionOverlay_ScriptMethods.generated.cs:80)
+         [10] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+         [11] void Godot.NativeInterop.NativeFuncs.godotsharp_method_bind_ptrcall(nint, nint, System.Void**, System.Void*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Godot.SourceGenerators.Internal/Godot.SourceGenerators.Internal.UnmanagedCallbacksGenerator/Godot.NativeInterop.NativeFuncs.generated.cs:380)
+         [12] void Godot.NativeCalls.godot_icall_3_912(nint, nint, nint, Godot.NativeInterop.godot_bool, int) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/NativeCalls.cs:8061)
+         [13] void Godot.Node.AddChild(Godot.Node, bool, Godot.Node+InternalMode) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:848)
+         [14] void CatacombsOfYarl.Presentation.UI.HUD.BuildLayout() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/HUD.cs:144)
+         [15] void CatacombsOfYarl.Presentation.UI.HUD._Ready() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/HUD.cs:36)
+         [16] bool Godot.Node.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:2660)
+         [17] bool Godot.CanvasItem.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/CanvasItem.cs:1845)
+         [18] bool Godot.Control.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:4029)
+         [19] bool CatacombsOfYarl.Presentation.UI.HUD.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/CatacombsOfYarl.Presentation.UI.HUD_ScriptMethods.generated.cs:80)
+         [20] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+         [21] void Godot.NativeInterop.NativeFuncs.godotsharp_method_bind_ptrcall(nint, nint, System.Void**, System.Void*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Godot.SourceGenerators.Internal/Godot.SourceGenerators.Internal.UnmanagedCallbacksGenerator/Godot.NativeInterop.NativeFuncs.generated.cs:380)
+         [22] void Godot.NativeCalls.godot_icall_3_912(nint, nint, nint, Godot.NativeInterop.godot_bool, int) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/NativeCalls.cs:8061)
+         [23] void Godot.Node.AddChild(Godot.Node, bool, Godot.Node+InternalMode) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:848)
+         [24] void CatacombsOfYarl.Presentation.Main.SetupPresentation(CatacombsOfYarl.Logic.Core.GameState) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:947)
+         [25] void CatacombsOfYarl.Presentation.Main.LaunchCorridorScene(string, CatacombsOfYarl.Presentation.Map.ReviewBuildMarker) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:2538)
+         [26] void CatacombsOfYarl.Presentation.Main._Ready() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:241)
+         [27] bool Godot.Node.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:2660)
+         [28] bool CatacombsOfYarl.Presentation.Main.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/CatacombsOfYarl.Presentation.Main_ScriptMethods.generated.cs:570)
+         [29] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+WARNING: Nodes with non-equal opposite anchors will have their size overridden after _ready(). 
+If you want to set size, change the anchors or consider using set_deferred().
+     at: _set_size (scene/gui/control.cpp:1519)
+     C# backtrace (most recent call first):
+         [0] void Godot.NativeCalls.godot_icall_1_36(nint, nint, Godot.Vector2*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/NativeCalls.cs:322)
+         [1] void Godot.Control._SetSize(Godot.Vector2) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:1941)
+         [2] void Godot.Control.set_Size(Godot.Vector2) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:691)
+         [3] void CatacombsOfYarl.Presentation.UI.HUD.BuildLayout() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/HUD.cs:168)
+         [4] void CatacombsOfYarl.Presentation.UI.HUD._Ready() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/HUD.cs:36)
+         [5] bool Godot.Node.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:2660)
+         [6] bool Godot.CanvasItem.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/CanvasItem.cs:1845)
+         [7] bool Godot.Control.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:4029)
+         [8] bool CatacombsOfYarl.Presentation.UI.HUD.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/CatacombsOfYarl.Presentation.UI.HUD_ScriptMethods.generated.cs:80)
+         [9] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+         [10] void Godot.NativeInterop.NativeFuncs.godotsharp_method_bind_ptrcall(nint, nint, System.Void**, System.Void*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Godot.SourceGenerators.Internal/Godot.SourceGenerators.Internal.UnmanagedCallbacksGenerator/Godot.NativeInterop.NativeFuncs.generated.cs:380)
+         [11] void Godot.NativeCalls.godot_icall_3_912(nint, nint, nint, Godot.NativeInterop.godot_bool, int) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/NativeCalls.cs:8061)
+         [12] void Godot.Node.AddChild(Godot.Node, bool, Godot.Node+InternalMode) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:848)
+         [13] void CatacombsOfYarl.Presentation.Main.SetupPresentation(CatacombsOfYarl.Logic.Core.GameState) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:947)
+         [14] void CatacombsOfYarl.Presentation.Main.LaunchCorridorScene(string, CatacombsOfYarl.Presentation.Map.ReviewBuildMarker) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:2538)
+         [15] void CatacombsOfYarl.Presentation.Main._Ready() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:241)
+         [16] bool Godot.Node.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:2660)
+         [17] bool CatacombsOfYarl.Presentation.Main.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/CatacombsOfYarl.Presentation.Main_ScriptMethods.generated.cs:570)
+         [18] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
+WARNING: Nodes with non-equal opposite anchors will have their size overridden after _ready(). 
+If you want to set size, change the anchors or consider using set_deferred().
+     at: _set_size (scene/gui/control.cpp:1519)
+     C# backtrace (most recent call first):
+         [0] void Godot.NativeCalls.godot_icall_1_36(nint, nint, Godot.Vector2*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/NativeCalls.cs:322)
+         [1] void Godot.Control._SetSize(Godot.Vector2) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:1941)
+         [2] void Godot.Control.set_Size(Godot.Vector2) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Control.cs:691)
+         [3] void CatacombsOfYarl.Presentation.UI.HUD.Refresh() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/HUD.cs:80)
+         [4] void CatacombsOfYarl.Presentation.UI.HUD.SetState(CatacombsOfYarl.Logic.Core.GameState) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/UI/HUD.cs:42)
+         [5] void CatacombsOfYarl.Presentation.Main.SetupPresentation(CatacombsOfYarl.Logic.Core.GameState) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:948)
+         [6] void CatacombsOfYarl.Presentation.Main.LaunchCorridorScene(string, CatacombsOfYarl.Presentation.Map.ReviewBuildMarker) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:2538)
+         [7] void CatacombsOfYarl.Presentation.Main._Ready() (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/src/Presentation/Main.cs:241)
+         [8] bool Godot.Node.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:2660)
+         [9] bool CatacombsOfYarl.Presentation.Main.InvokeGodotClassMethod(Godot.NativeInterop.godot_string_name&, Godot.NativeInterop.NativeVariantPtrArgs, Godot.NativeInterop.godot_variant&) (/Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/.godot/mono/temp/obj/Debug/Godot.SourceGenerators/Godot.SourceGenerators.ScriptMethodsGenerator/CatacombsOfYarl.Presentation.Main_ScriptMethods.generated.cs:570)
+         [10] Godot.NativeInterop.godot_bool Godot.Bridge.CSharpInstanceBridge.Call(nint, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant**, int, Godot.NativeInterop.godot_variant_call_error*, Godot.NativeInterop.godot_variant*) (/root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/Bridge/CSharpInstanceBridge.cs:24)
