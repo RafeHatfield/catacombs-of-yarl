@@ -1,0 +1,900 @@
+{
+ "parent": "C-GAB",
+ "parent_sha256": "1a24a59aa5607c3beebd8d1cf728acc0f43d6fc0bace6015025a7595c3f6db4f",
+ "parent_verdict": "CLEAN",
+ "parent_near_ring": 0.791,
+ "budget": 20,
+ "spent": 20,
+ "style_strength": 50,
+ "ring_refusal_added": false,
+ "pool_before": 2842.0,
+ "pool_after": 2822.0,
+ "seat_triage_at": 0.6,
+ "payload_diff_vs_bkab": {
+  "P": {
+   "arm": "arm_B",
+   "differing_keys": [],
+   "expected": [],
+   "unexpected": [],
+   "style_strength": 50,
+   "ring_refusal_added": false,
+   "style_image": "the reference differs in every cell - that is the variable under test"
+  },
+  "S": {
+   "arm": "arm_C",
+   "differing_keys": [
+    "description",
+    "shading"
+   ],
+   "expected": [
+    "description",
+    "shading"
+   ],
+   "unexpected": [],
+   "style_strength": 50,
+   "ring_refusal_added": false,
+   "style_image": "the reference differs in every cell - that is the variable under test"
+  }
+ },
+ "compare_against": {
+  "pooled_ringed": 22,
+  "pooled_n": 24,
+  "wave1_ringed": 8,
+  "wave1_n": 8,
+  "source": "tools/floor_remediation/REPORT.md \u00a74; regen_bkab/RESULT.json"
+ },
+ "results": [
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9700,
+   "file": "P/P_seed9700.png",
+   "sha256": "11425844050b6b2967a9efd219f96f1a10bf3743749af2130a4269f65d4b3856",
+   "call_verdict": "OK",
+   "verdict": "RING",
+   "rings": [
+    {
+     "kind": "exact-colour",
+     "level": "rgb126,126,124",
+     "contour_px": 232,
+     "interior_px": 792,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.99,
+     "regions_separated": 1,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      0,
+      31,
+      31
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "light-set",
+     "level": "lum>=125.8",
+     "contour_px": 279,
+     "interior_px": 745,
+     "pieces": 1,
+     "hollowness": 0.857,
+     "side_coverage": 0.989,
+     "regions_separated": 1,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      0,
+      31,
+      31
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 2
+    }
+   ],
+   "near_ring": 0.99,
+   "near_ring_detail": {
+    "kind": "exact-colour",
+    "level": "rgb126,126,124",
+    "side_coverage": 0.99,
+    "contour_px": 232,
+    "interior_px": 792,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     0,
+     0,
+     31,
+     31
+    ]
+   }
+  },
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9701,
+   "file": "P/P_seed9701.png",
+   "sha256": "9015eaac5c2686f0e1998a6991e2cec85d8d3f2aa4a4526b96709207fe7f62fc",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.732,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=92.3",
+    "side_coverage": 0.732,
+    "contour_px": 27,
+    "interior_px": 41,
+    "wall_thickness": 1.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     20,
+     8,
+     23,
+     24
+    ]
+   }
+  },
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9702,
+   "file": "P/P_seed9702.png",
+   "sha256": "c903767b188241ffb14cd47a9206b3ac8f3dfb6df49e633b745caff5da5a6288",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.688,
+   "near_ring_detail": {
+    "kind": "exact-colour",
+    "level": "rgb72,63,66",
+    "side_coverage": 0.688,
+    "contour_px": 99,
+    "interior_px": 925,
+    "wall_thickness": 1.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     0,
+     0,
+     31,
+     31
+    ]
+   }
+  },
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9703,
+   "file": "P/P_seed9703.png",
+   "sha256": "f8bd7a3d8da9a8a22b0289b500e210d694510d8b049c13656859776730bc8ec5",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.667,
+   "near_ring_detail": {
+    "kind": "band",
+    "level": "79.8<=lum<=102.1",
+    "side_coverage": 0.667,
+    "contour_px": 69,
+    "interior_px": 27,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     23,
+     0,
+     25,
+     31
+    ]
+   }
+  },
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9704,
+   "file": "P/P_seed9704.png",
+   "sha256": "a85dffcf2d34999cbcc500101483ed4270f7900bb72dcafe80b7e3737a47c703",
+   "call_verdict": "OK",
+   "verdict": "RING",
+   "rings": [
+    {
+     "kind": "dark-set",
+     "level": "lum<=80.7",
+     "contour_px": 119,
+     "interior_px": 905,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.923,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      0,
+      31,
+      31
+     ],
+     "wall_colours": 3,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "exact-colour",
+     "level": "rgb82,80,81",
+     "contour_px": 116,
+     "interior_px": 190,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.989,
+     "regions_separated": 2,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "76.4<=lum<=80.7",
+     "contour_px": 119,
+     "interior_px": 187,
+     "pieces": 1,
+     "hollowness": 0.983,
+     "side_coverage": 0.989,
+     "regions_separated": 2,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=80.7",
+     "contour_px": 126,
+     "interior_px": 180,
+     "pieces": 1,
+     "hollowness": 0.937,
+     "side_coverage": 0.989,
+     "regions_separated": 2,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 3,
+     "levels_agreeing": 2
+    }
+   ],
+   "near_ring": 0.989,
+   "near_ring_detail": {
+    "kind": "exact-colour",
+    "level": "rgb82,80,81",
+    "side_coverage": 0.989,
+    "contour_px": 116,
+    "interior_px": 190,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     7,
+     7,
+     23,
+     24
+    ]
+   }
+  },
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9705,
+   "file": "P/P_seed9705.png",
+   "sha256": "5d656e34d4236ca711387b4fccb535341ce1886b830533100792a09125a0f329",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.665,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=69.5",
+    "side_coverage": 0.665,
+    "contour_px": 72,
+    "interior_px": 120,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     16,
+     20,
+     31,
+     31
+    ]
+   }
+  },
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9706,
+   "file": "P/P_seed9706.png",
+   "sha256": "7263853b88bfe44321ac7a7b1401b7a61d910df428aae751d000f662343c4418",
+   "call_verdict": "OK",
+   "verdict": "RING",
+   "rings": [
+    {
+     "kind": "dark-set",
+     "level": "lum<=90.5",
+     "contour_px": 166,
+     "interior_px": 858,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 1,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      0,
+      31,
+      31
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 6
+    },
+    {
+     "kind": "band",
+     "level": "90.5<=lum<=108.5",
+     "contour_px": 207,
+     "interior_px": 605,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.985,
+     "regions_separated": 2,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      2,
+      1,
+      29,
+      29
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "101.6<=lum<=108.5",
+     "contour_px": 204,
+     "interior_px": 580,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.997,
+     "regions_separated": 2,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      2,
+      2,
+      29,
+      29
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=101.6",
+     "contour_px": 100,
+     "interior_px": 140,
+     "pieces": 1,
+     "hollowness": 0.89,
+     "side_coverage": 0.912,
+     "regions_separated": 1,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      8,
+      9,
+      23,
+      23
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 2
+    }
+   ],
+   "near_ring": 1.0,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=90.5",
+    "side_coverage": 1.0,
+    "contour_px": 166,
+    "interior_px": 858,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     0,
+     0,
+     31,
+     31
+    ]
+   }
+  },
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9707,
+   "file": "P/P_seed9707.png",
+   "sha256": "e12e5aa431cb9fddf90896c02977bf7ba76793246bb58ab248a98f3c29f55348",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.556,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=72.2",
+    "side_coverage": 0.556,
+    "contour_px": 14,
+    "interior_px": 18,
+    "wall_thickness": 1.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     0,
+     28,
+     7,
+     31
+    ]
+   }
+  },
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9708,
+   "file": "P/P_seed9708.png",
+   "sha256": "966b745627def116046b9929d0a4c1871c36268c9fc3e1373c3f149fd468831b",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.6,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=71.7",
+    "side_coverage": 0.6,
+    "contour_px": 31,
+    "interior_px": 25,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     12,
+     11,
+     15,
+     24
+    ]
+   }
+  },
+  {
+   "cell": "P",
+   "arm": "arm_B",
+   "seed": 9709,
+   "file": "P/P_seed9709.png",
+   "sha256": "1cb11b09e52880b366c80ace30629701a4b26eac17a5ab014a514c97109797bb",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.75,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=68.4",
+    "side_coverage": 0.75,
+    "contour_px": 44,
+    "interior_px": 28,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     16,
+     7,
+     19,
+     24
+    ]
+   }
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9800,
+   "file": "S/S_seed9800.png",
+   "sha256": "7ab553a3bc6fd70f233706b20cf5688e1495e8e1060e3f397dd7fea284da5fbf",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.545,
+   "near_ring_detail": {
+    "kind": "band",
+    "level": "86.3<=lum<=89.8",
+    "side_coverage": 0.545,
+    "contour_px": 66,
+    "interior_px": 542,
+    "wall_thickness": 1.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     2,
+     0,
+     20,
+     31
+    ]
+   }
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9801,
+   "file": "S/S_seed9801.png",
+   "sha256": "ccb2a74a3a2927efb5803a5703eea44dbed664e760bb8cd000c921d86e7b1039",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.803,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=81.1",
+    "side_coverage": 0.803,
+    "contour_px": 40,
+    "interior_px": 104,
+    "wall_thickness": 1.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     12,
+     7,
+     20,
+     22
+    ]
+   }
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9802,
+   "file": "S/S_seed9802.png",
+   "sha256": "e13ff1562012f7d735ccc14d9e4c2c6247ca1c2bd203b257606c4b670e1c5989",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.0,
+   "near_ring_detail": null
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9803,
+   "file": "S/S_seed9803.png",
+   "sha256": "e57a8103f83510b0196a92c3f216e9e8aec08bc7de13e557ea521445cede2335",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.75,
+   "near_ring_detail": {
+    "kind": "band",
+    "level": "103.5<=lum<=111.9",
+    "side_coverage": 0.75,
+    "contour_px": 26,
+    "interior_px": 54,
+    "wall_thickness": 1.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     12,
+     11,
+     19,
+     20
+    ]
+   }
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9804,
+   "file": "S/S_seed9804.png",
+   "sha256": "c18a936d44b36d36f0c3957b316af4e78cc95f923c2ff7b7f7956b1ccf32ac50",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.534,
+   "near_ring_detail": {
+    "kind": "light-set",
+    "level": "lum>=197.7",
+    "side_coverage": 0.534,
+    "contour_px": 14,
+    "interior_px": 22,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.5,
+    "interior_bbox": [
+     0,
+     1,
+     5,
+     6
+    ]
+   }
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9805,
+   "file": "S/S_seed9805.png",
+   "sha256": "a49754eef1ecbc01c3ffdf1f15ed5d6b80329bbacf7b4888d3c25ebdd85cd498",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.5,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=77.3",
+    "side_coverage": 0.5,
+    "contour_px": 27,
+    "interior_px": 148,
+    "wall_thickness": 1.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     21,
+     7,
+     27,
+     31
+    ]
+   }
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9806,
+   "file": "S/S_seed9806.png",
+   "sha256": "97a74c9c063f7ec306c7c3126a1b21060ff52db4d802c8afb607490cb17cc301",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.71,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=87.4",
+    "side_coverage": 0.71,
+    "contour_px": 104,
+    "interior_px": 920,
+    "wall_thickness": 1.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     0,
+     0,
+     31,
+     31
+    ]
+   }
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9807,
+   "file": "S/S_seed9807.png",
+   "sha256": "ca8e0964706408a02ff7fc4fe4dbbc2b3fd27b5dadc3d6546e1e0beb5020ab83",
+   "call_verdict": "OK",
+   "verdict": "CLEAN",
+   "rings": [],
+   "near_ring": 0.812,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=66.3",
+    "side_coverage": 0.812,
+    "contour_px": 36,
+    "interior_px": 24,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     13,
+     12,
+     18,
+     21
+    ]
+   }
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9808,
+   "file": "S/S_seed9808.png",
+   "sha256": "e06fada1ef16882852302d175fdd1414968900948268ce6a3e5e77a54c63d9a5",
+   "call_verdict": "OK",
+   "verdict": "RING",
+   "rings": [
+    {
+     "kind": "dark-set",
+     "level": "lum<=73.8",
+     "contour_px": 59,
+     "interior_px": 73,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.904,
+     "regions_separated": 2,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      10,
+      21,
+      21
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 8
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=127.2",
+     "contour_px": 61,
+     "interior_px": 71,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.908,
+     "regions_separated": 2,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      10,
+      21,
+      21
+     ],
+     "wall_colours": 3,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "band",
+     "level": "73.8<=lum<=88.0",
+     "contour_px": 58,
+     "interior_px": 62,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.976,
+     "regions_separated": 2,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      12,
+      10,
+      21,
+      21
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 4
+    }
+   ],
+   "near_ring": 0.976,
+   "near_ring_detail": {
+    "kind": "band",
+    "level": "73.8<=lum<=88.0",
+    "side_coverage": 0.976,
+    "contour_px": 58,
+    "interior_px": 62,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     12,
+     10,
+     21,
+     21
+    ]
+   }
+  },
+  {
+   "cell": "S",
+   "arm": "arm_C",
+   "seed": 9809,
+   "file": "S/S_seed9809.png",
+   "sha256": "20e27da2fa9060c2b4d1f9cf367c11dae4f14f1479a6358e56483648eb72ce1e",
+   "call_verdict": "OK",
+   "verdict": "RING",
+   "rings": [
+    {
+     "kind": "dark-set",
+     "level": "lum<=83.8",
+     "contour_px": 191,
+     "interior_px": 833,
+     "pieces": 1,
+     "hollowness": 0.974,
+     "side_coverage": 1.0,
+     "regions_separated": 1,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      0,
+      31,
+      31
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 4
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=99.3",
+     "contour_px": 235,
+     "interior_px": 789,
+     "pieces": 1,
+     "hollowness": 0.83,
+     "side_coverage": 1.0,
+     "regions_separated": 1,
+     "wall_thickness": 2.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      0,
+      31,
+      31
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 2
+    }
+   ],
+   "near_ring": 1.0,
+   "near_ring_detail": {
+    "kind": "dark-set",
+    "level": "lum<=83.8",
+    "side_coverage": 1.0,
+    "contour_px": 191,
+    "interior_px": 833,
+    "wall_thickness": 2.0,
+    "wall_thickness_spread": 0.0,
+    "interior_bbox": [
+     0,
+     0,
+     31,
+     31
+    ]
+   }
+  }
+ ],
+ "summary": {
+  "pooled_ringed": 5,
+  "pooled_n": 20,
+  "per_cell": {
+   "P": {
+    "ringed": 3,
+    "n": 10
+   },
+   "S": {
+    "ringed": 2,
+    "n": 10
+   }
+  },
+  "borderline": [
+   "S/S_seed9807.png",
+   "S/S_seed9801.png",
+   "P/P_seed9709.png",
+   "S/S_seed9803.png",
+   "P/P_seed9701.png",
+   "S/S_seed9806.png",
+   "P/P_seed9702.png",
+   "P/P_seed9703.png",
+   "P/P_seed9705.png",
+   "P/P_seed9708.png"
+  ]
+ }
+}

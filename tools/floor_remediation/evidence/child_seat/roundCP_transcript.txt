@@ -1,0 +1,113 @@
+CANDIDATE: F1
+CULL: keyline
+VERDICT: FAIL
+Q1: North or south along the corridor; the cross-passages above and below are legible, but only because the dark gutters between pads mark walkable cells like paving on a map.
+Q2: Not stone — a run of identical square pads, each a nested set of concentric bevelled frames around a sunken centre, butted together with a dark gap between.
+Q3: A grid of separate objects; each cell is ringed on all four sides and steps down to a gutter before the next begins, so it reads as tiles laid out, not stone laid down.
+Q4: Nothing. Every frame is crisp, every corner square, no chipping, no dirt in the recesses, no difference between the middle of the traffic lane and the edges.
+Q5: Nothing has happened. This is a freshly-fitted ceremonial floor that has never been used, let alone used up.
+WHY: Each tile carries an inset panel ringed on all four sides in one width and one value, and the tile's own outer edge is ringed too, so the floor reads as a row of cards.
+
+CANDIDATE: F2
+CULL: none
+VERDICT: FAIL
+Q1: North or south down the corridor; the walkable run is obvious as a continuous pale band between the walls.
+Q2: Not paving — a repeating ornamental frieze, a stepped moulding with a pale cap over a dark recess, stamped once per cell edge to edge.
+Q3: Continuous, technically: the forms interlock across cell boundaries and no ring encloses a cell. But it reads as one continuous decorated band, not as a surface of separate stones.
+Q4: Nothing. The moulding is unbroken and unworn, the pale caps are equally bright in the traffic centre as against the walls.
+Q5: Someone carved a decorative band and it has been under glass since. The fiction says nothing here exists to be looked at; this exists only to be looked at.
+WHY: An ornamental repeating moulding is not a floor, and it is stamped identically in every cell with no wear, damage or repair anywhere.
+
+CANDIDATE: F3
+CULL: none
+VERDICT: FAIL
+Q1: North or south; the walkable cells are clear enough, marked out by the identical glyph sitting in each one.
+Q2: It does not read as a surface at all — it reads as a pictogram of a bench or chair repeated once per cell, floating on a flat two-tone field.
+Q3: A grid of separate objects. The field behind splits into an upper and lower band at the same height in every cell, so the eye locks onto the 32-pixel rhythm immediately.
+Q4: Nothing. The glyphs are identical and undamaged; there is no dirt, no chip, no polish.
+Q5: Nothing legible has happened. There is no reading of this as ground — it reads as furniture icons on a blank sheet.
+WHY: The floor does not read as stone or as any surface; it reads as one piece of furniture-shaped clip art stamped in every cell.
+
+CANDIDATE: F4
+CULL: keyline
+VERDICT: FAIL
+Q1: North or south; the walkable cells are unmistakable because each contains a floating square, which is a legibility crutch, not a floor.
+Q2: A blank untextured gradient field with one rounded square laid on top of each cell, outlined in near-black.
+Q3: Separate objects, and not even touching — the squares float with clear blank ground between them, like stickers on paper.
+Q4: Nothing whatsoever. The ground between the squares has no incident of any kind, not a single mark.
+Q5: Nothing. This is the most inert image in the set — an empty background with a repeated decal on it.
+WHY: Every cell carries a near-black closed ring of one width around an inset panel with plain ground on all four sides; this is the planted defect and the clearest keyline in the set.
+
+CANDIDATE: F5
+CULL: none
+VERDICT: FAIL
+Q1: North or south down the paved run; this is the only image where I read the corridor as a floor first and a walkable cell second.
+Q2: Mottled grey-brown stone, laid as large slabs with joints running across the run, with a smaller rectangular block set into the middle of each slab.
+Q3: Continuous. The mottle carries across cell boundaries, the joints connect into a network that runs on tile to tile, and no shape is ringed on itself.
+Q4: Nothing. There is no polished lane down the centre, no grime banked against the walls, no cracked or lifted flag, no replaced stone.
+Q5: A floor was laid competently and evenly and then nothing occurred. It is clean, level and uniform — it reads as maintained, which is the opposite of the brief.
+WHY: The best surface here by a distance, but the set-in block repeats in the identical position in every single cell and four hundred years have left no wear, no damage and no repair.
+
+CANDIDATE: F6
+CULL: none
+VERDICT: FAIL
+Q1: North or south; the run is legible, though the pale beading down both sides reads as a decorative runner and pulls the eye off the path.
+Q2: A broad slab per cell with a recessed panel, flanked by columns of pale beads or drips at each cell edge and a row of pale ticks along the bottom.
+Q3: Continuous by construction — the dark lines run on across boundaries — but it reads as a decorated carpet runner because the beading recurs at exactly every cell edge.
+Q4: Nothing. The beads are all equally bright and equally spaced; nothing has been scuffed, knocked off or worn down.
+Q5: Someone laid an ornamental runner with a beaded border and it has never been walked on. Nothing here is heavy, over-built or indifferent to appearance.
+WHY: The beaded edging is decoration recurring on a perfect 32-pixel beat, so the floor reads as patterned trim rather than stone, with no wear anywhere.
+
+CANDIDATE: F7
+CULL: none
+VERDICT: FAIL
+Q1: North or south; walkability is clear from the pale ground, and the patches do not help or hinder.
+Q2: A flat, soft, almost fabric-like ground with large irregular darker patches sitting on it, each patch traced with a darker rim.
+Q3: Separate objects. The patches are outlined rather than blended, so they read as pieces laid onto the ground instead of the ground itself changing.
+Q4: Nothing that reads as use. The patches are not concentrated in a traffic lane or against the walls; they sit in the same place in every cell.
+Q5: Hard to say — the surface is too soft and undifferentiated to read as an administered stone floor; it reads closer to a cave floor or a worn cloth.
+WHY: The repeat is the worst in the set — identical irregular blobs recur on the grid and chain into an obvious diagonal stripe across the corridor, and each blob is rimmed rather than blended.
+
+CANDIDATE: F8
+CULL: keyline
+VERDICT: FAIL
+Q1: North or south; each walkable cell announces itself as a bordered plaque, which is legibility by labelling rather than by surface.
+Q2: A row of framed plaques, each holding a bright bracket-shaped glyph, with a pale vertical bar standing at one edge of every cell.
+Q3: Separate objects, emphatically. Every cell has a dark border on all four sides and the glyph inside is ringed as well, so it reads as a card in a frame.
+Q4: Nothing. Every frame and glyph is identical and pristine; the pale bar is equally bright in every cell.
+Q5: Nothing has happened. This is signage or ornament, not ground that has carried traffic for four centuries.
+WHY: A dark border rings all four sides of every cell and a second ring encloses the glyph inside it, making each tile a framed card laid on the ground.
+
+CANDIDATE: F9
+CULL: none
+VERDICT: FAIL
+Q1: North or south; the run is legible, but the upright motif gives the floor a fixed "up", which fights the reading of a corridor you walk along.
+Q2: A repeating stamped ornament — a T-shaped plinth or anvil form — set once per cell between full-width horizontal bands.
+Q3: Continuous in its line network, since the horizontal bands run unbroken across cells, but it reads as an ornamental frieze rather than as paving.
+Q4: Nothing. The ornaments are identical, sharp-edged and undamaged, with no dirt, no polish and no missing stones.
+Q5: A decorative band was cut and has sat untouched. The same upright motif appears in the east-west corridor as in the north-south one, so it reads as wall ornament laid flat.
+WHY: A centred, orientation-locked ornamental motif repeated on every cell is decoration, not paving, and it shows no trace of use.
+
+RANKING
+F4
+F1
+F8
+F9
+F2
+F6
+F3
+F5
+F7
+SEPARATOR: The top of the list is crisp, centred, machine-regular ornament that looks newly set and never touched, while the bottom two are the only ones whose surfaces carry irregular incident and read as ground rather than as pattern — though none of them shows a mark left by anyone walking on it.
+
+FLIP LIST
+- In F1, F4 and F8, delete the closed dark outline around the central panel entirely and let the panel's own value step separate it from the surrounding stone; if the panel then disappears, the panel is too close in value and should be shifted two or three steps, not re-outlined.
+- In F4, delete the blank gradient field and draw actual paving across the whole cell so there is no bare ground for the panel to float on; the square must meet neighbouring stone at a joint, not sit in a gap.
+- Author four to six distinct floor tiles plus 90-degree rotations and randomise placement, so that no motif lands at the same position in two adjacent cells; every image in this set is one tile repeated verbatim with zero variation.
+- Move features off-centre. In all nine, the motif is centred in its 32x32 cell, which is what makes the grid visible; draw paving stones of varying size whose edges deliberately straddle cell boundaries so stone joints and cell joints stop coinciding.
+- Add traffic wear that ignores the grid: a lighter, slightly dished, polished channel about ten pixels wide running down the centre of the corridor, and darker accumulated grime in the two-pixel strip where the floor meets each wall, both cutting straight across stone joints rather than stopping at them.
+- Add orc repair to roughly one cell in eight: a cracked flag with a wedge driven into the crack, a missing flag backfilled with rammed rubble, a plank of salvaged timber pinned flat across a hole — heavy, over-built, and not aligned to the stone pattern.
+- In F7, remove the darker rim from the worn patches and let each patch be a flat value change against the base with a ragged, non-repeating edge; a worn patch is a change of value, not an outlined shape.
+- In F2, F3, F6 and F9, remove the repeating ornamental motif from the floor entirely and replace it with irregular paving; nothing the orcs lay exists to be looked at, so a centred decorative frieze in every cell contradicts the fiction before any craft question arises.
+
+Model used: Claude Opus 5 (1M context).

@@ -1,8 +1,8 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.8 — DRAFT. One clause has been derived from rendered assets on the device (§6.3);
-one more is under active test in the sighted round (§3). Everything else in this document still
-has not been derived.**
+**Status: v0.10 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
+or ruled at the gate on them (§8.3); one more is under active test in the sighted round (§3).
+Everything else in this document still has not been derived.**
 
 This bible is written *before* pixel work, deliberately. It records decisions taken in
 conversation during Phase 1–3 of the art-direction rework (2026-08). It graduates to **v1**
@@ -354,13 +354,27 @@ material. A reference does not hand down a surface; it hands down whatever it is
 
 References therefore divide by job, and the division is load-bearing:
 
-- **Compositionally neutral references are style parents.** C-GAB's crack-through-a-field is the
-  shape of one: a material, evenly presented, that is a picture of nothing in particular.
+- **Compositionally neutral references are style parents.** ~~C-GAB's crack-through-a-field is
+  the shape of one~~ — a material, evenly presented, that is a picture of nothing in particular.
 - **Charactered references are prop stock.** One-off assets in waiting — never conditioning
   parents, however good they are as images.
 
 **The seed corpus wants the boring ones.** A reference chosen because it is handsome is a
 composition about to be copied twelve times.
+
+> **CRITERION SHARPENED — RULED (Rafe, 2026-08-27, at the gate). Compositionally neutral is not
+> enough. The criterion is INCIDENT-FREE: §8.3.**
+>
+> The example struck through above is why. *Crack-through-a-field* was offered as the very shape
+> of a neutral parent — and the gate ruled that same tile a **frame at field scale**. A crack is
+> a *composition* of nothing in particular and it is still an **incident**, and §8.3 measures
+> what happens to an incident when it is tiled: **repetition converts accident into intent.**
+> One crack is an accident; the same crack in every cell is a motif, and the eye reads the
+> pattern whatever the crack's quality.
+>
+> So the division by job survives and its test gets stricter. **A style parent carries material
+> and nothing that happened to it.** Incident — cracks, wear, marks, the §8.2.1 channel — is not
+> a property of a good parent; it is what the instance system adds later, per §8.3.
 
 **CROSS-CONFIRMED (2026-08-27), by a different instrument on a different campaign.** This
 clause's composition finding was measured 12/12 on the *wall* campaign, by tracing children back
@@ -380,7 +394,7 @@ instrument with no access to the first result. The clause is not resting on one 
 
 | survivor | role | why |
 |---|---|---|
-| **C-GAB** | **primary style parent** | compositionally neutral; carries no ring, at any value |
+| **C-GAB** | **primary style parent** — retained under screening; see the corpus note below | compositionally neutral ⚠ *"carries no ring, at any value" is **superseded**: RULED a **frame at field scale** (2026-08-27). Retained because references never ship, not because it meets the sharpened §8.3 criterion* |
 | **A-HEB** | **secondary style parent** | a joint network, not a keyline; carries no ring |
 | **A-VAB** | **prop stock — never a conditioning parent** | charactered. **The ruling holds regardless of surgery:** de-ringing removes a keyline, it does not make a framed plaque neutral, and it is the composition that propagates |
 | **B-KAB** | **retired from conditioning. No remediation.** | 24 children conditioned on it came back 22 ringed; the regenerated candidate was culled by the seat and is **not promoted**. Its original stays in the ledger, un-remediated, and nothing conditions on it |
@@ -398,6 +412,67 @@ Remediated, provenance-linked versions supersede an original **upon Rafe's re-cu
 originals stay in the ledger untouched, because a ledger that edits its own history is not
 evidence. **Nothing conditions on an un-remediated survivor**, and after this ruling nothing
 conditions on A-VAB or B-KAB in any state.
+
+**CORPUS NOTE — RESOLVED AT THE GATE (Rafe, 2026-08-27): FRAME AT FIELD SCALE.**
+
+> **The dissenting seat was right at the scale that matters.** C-GAB's inset rectangle is a
+> **frame**, not a crack through the stone — and what settles it is the field, not the tile.
+> Laid nine-up, the rectangle turns its corners and returns inside every cell instead of running
+> on into the neighbour. **The instrument could not have decided this and it is not its fault:
+> it only ever looks at one 32×32 tile** (`REPORT.md` §6, stated there before this question
+> arose), and the property in dispute does not exist at that scale.
+>
+> **C-GAB retains its conditioning role. References never ship**, and screening holds at the
+> measured child rate — 5 of 20 mechanically, 9 of 20 at the seat-adjusted upper bound.
+>
+> ⚠ **Recorded so tier one does not misread the retention:** the criterion this clause now
+> carries is **incident-free** (§8.3), and C-GAB *does not meet it*. It is retained as the best
+> available parent under screening, not as one that satisfies the sharpened bar. **When tier one
+> authors or selects parents, incident-free is the bar** — and an authored parent can actually
+> meet it, which no §6.4 survivor was ever built to do.
+
+The generalisation this ruling produced is law, and it is larger than this tile: **§8.3, the
+motif trap.**
+
+*The paragraphs below record what was contested and how it was measured, because a resolved
+question should still show its working.*
+
+Three blind seats have now judged the *same bytes* — the identical lit capture, sha256
+`6b358533…`, re-derived byte-for-byte at two different commits:
+
+| seat | cull |
+|---|---|
+| floor-remediation round A | `none` |
+| parent-rate round CP | `none` — *"the best surface here by a distance"* |
+| **parent-rate round CS** | **`keyline`** |
+
+2–1. The dissenting seat named a four-sided contour *"one value, returning on itself… the dashed
+top does not save it"*. **Its geometry was checked and is partly wrong**: the side it calls
+closed is dark in 4 of 9 pixels. The instrument measures that same construction at side coverage
+**0.791 against its 0.90 requirement** — a nearly-closed rectangle with one broken side, which
+is an accurate description of what is there.
+
+**And that is exactly why the instrument cannot settle it.** §12.1's own text holds that gaps do
+not excuse a keyline — *"a border with a bite out of one corner, or one drawn as a dashed run of
+ticks, is still a keyline"* — while `REPORT.md` §1 records the instrument's KNOWN LIMIT as
+precisely this case, and the decision not to lower the threshold *because C-GAB's 0.791 was
+taken to be a mortar joint network*. Whether a side present at 4-of-9 reads as a broken keyline
+or as an absent one is not a measurement. **Per §13.2 the deadlock routes to the human gate**,
+where it sits as one question — *crack through the stone, or frame around the tile?* — and
+Rafe's answer settles this note. Building a number to break the tie is the move §13.4 forbids.
+
+**Screening remains the operative guard regardless of how that question lands**, at the measured
+child rate rather than at B-KAB's: 5 of 20 mechanically, 9 of 20 at the seat-adjusted upper
+bound. Evidence: `tools/floor_remediation/REPORT-PARENT-RATE.md` §4.
+
+**And the ring rate is a property of the reference, not of the surface — MEASURED
+(2026-08-27).** Conditioning 20 generations on C-GAB, at levers and prompt held identical to the
+B-KAB run's first wave, returned **5 of 20** ringed against B-KAB's **22 of 24** and its **8 of
+8** on the matching wave (one-sided exact p = 6.4e-06 and 0.0038). This clause's whole thesis —
+that *a reference hands down whatever it is a picture of* — now has a second, quantitative
+measurement behind it, from the ring rather than from the composition. `REPORT.md` §4's
+*"it will recur on every floor generated from this surface"* is corrected to **"from that
+reference"**.
 
 ---
 
@@ -820,6 +895,9 @@ repeated tile:
 1. **A variant system.** One tile per role is a clone field, and a seat reads a clone field as
    printed paper at any quality of tile. The seat's own figure: author variants whose bond is
    offset between them, so a joint starting at x=8 in one cell lands mid-stone in the next.
+   **§8.3 gives this its mechanism and raises its priority: the variant system is not only how
+   a field stops looking printed, it is the ONLY place incident is allowed to live.** Until it
+   exists there is nowhere to put a crack that does not turn it into a motif.
 2. **A wear system, which is this clause.** The channel is what the seat asked for, unprompted
    and having never seen §8.2.1 — *"sand a 12-unit band down the centre, erase the joint detail
    inside it so joints fade where feet cross them, and leave joints at full depth only within
@@ -827,6 +905,15 @@ repeated tile:
 3. **A floor-repair vocabulary.** §7.4's orc work exists on walls and nowhere on the ground —
    *"a cracked slab pinned flat with four driven iron pins, or a salvaged timber baulk dropped
    across a hole and worn smooth on its top edge."*
+4. **A-HEB IS UNMEASURED AS A PARENT — twenty generations, or an explicit unknown-rate marker,
+   before anything conditions on it (RULED, 2026-08-27).** Two of §5.5's four survivors now have
+   a measured child ring rate: B-KAB 22 of 24, C-GAB 5 of 20. The secondary style parent has
+   none, and the parent-rate run stopped short of taking it by its own declared fork. A
+   `may_condition: true` flag is an authorisation, not a measurement, and after this week the
+   two are no longer interchangeable — the same flag covers a reference that produced 92% ringed
+   children and one that produced 25%. So A-HEB is either measured on the same twenty before it
+   parents anything, or it carries an explicit unknown-rate marker wherever it is used, and the
+   round using it budgets for screening at a rate nobody has measured.
 
 ⚠ **And the review scene owed the seat a fair question, which this clause had already said.**
 Those verdicts were rendered on a one-tile-wide corridor, where there is no centre line distinct
@@ -834,6 +921,71 @@ from the flanks — so *"the middle of the corridor and the edge of the corridor
 is partly the scene reporting its own shape. The paragraph above is the standing rule and it was
 not met. **A floor round that means to pose the §8.2 question must build the four-scene set
 first**; until it does, a wear cull is not fully chargeable to the tile.
+
+---
+
+### 8.3 The motif trap — RULED (Rafe, 2026-08-27, at the gate). LAW.
+
+> **Any incident baked into a tile becomes a motif when tiled.**
+>
+> **Repetition converts accident into intent, and the eye reads pattern regardless of the
+> incident's quality.**
+
+**Therefore:**
+
+- **Style parents carry incident-free material only.** §5.5's parent criterion sharpens from
+  *compositionally neutral* to **incident-free**.
+- **Incident arrives at the instance level, randomised** — cracks, wear, marks, and §8.2.1's
+  channel — via **variants and overlays**: the floor system tier one builds.
+- **A tile is the material; the incident is the variant.**
+
+**Why this is a law and not a preference.** A tile is authored once and drawn hundreds of times,
+and *drawn hundreds of times* is not a neutral operation — it is the operation that turns a
+detail into a statement. Nothing about the incident changes; the **frequency** changes, and
+frequency is read as intent. This is why a beautifully drawn crack is not a smaller version of
+the problem than a clumsy one: **quality does not enter into it.** A perfect crack in every cell
+is a perfect crack announcing itself thirty times, which is a wallpaper motif, which is
+§1's *nothing is staged* broken by arithmetic rather than by intent.
+
+**It explains the culls that had no other explanation.** Every blind seat that has looked at a
+floor field said a version of this without being given the clause — *"the identical
+bracket-shaped stone sits at the identical position inside every single cell"*, *"one bitmap
+repeated edge to edge"*, *"the identical U-shaped notch centred on every slab"*, *"a centred,
+orientation-locked ornamental motif repeated on every cell is decoration, not paving"*. Five
+independent seats, four rounds, one finding. **They were not culling the tiles. They were
+culling the tiling.**
+
+**THE SCALE RULE, which is the part that bites hardest.** *The property lives at field scale and
+does not exist at tile scale.* A single tile is not enough evidence to judge one, and neither is
+a contact sheet of single tiles. **Judge a tile as laid** — this is what §13.1's in-scene rule
+has always been protecting, now with a mechanism behind it. It is also why the ring instrument
+could not settle C-GAB and was never going to: it looks at one 32×32 tile, and no amount of
+tuning reaches a property that is not in its input (`REPORT.md` §6, §12.1's cross-reference).
+
+**Consequence for review scenes, on top of §8.2.1's four:** a floor is reviewed **tiled**, over
+enough cells for a repeat to become visible. A one-cell view cannot pose this question any more
+than a one-wide corridor can pose the §8.2 one.
+
+**RETROACTIVELY, and it completes a finding that was left open.** `REPORT.md`'s Round B rescore
+banked the repetition and absent-wear culls as tier-one requirements rather than as a verdict on
+the corpus, and could not fully say *why* the distinction was principled. This clause says it:
+**those tiles were BASES, judged as FINISHED FLOORS, before the incident system existed.** The
+seats were right and the tiles were not being asked a fair question — not because the review
+corridor was one wide (that too, §8.2.1), but because **a base and a floor are different
+objects**, and every round so far has shown a seat the first while calling it the second.
+
+**The division this establishes, which tier one inherits:**
+
+| | authored | carries | judged |
+|---|---|---|---|
+| **base tile** | once, per material | material only — no incident | never alone; only as laid |
+| **variant / overlay** | per instance, randomised | the incident — cracks, wear, marks, channel | in the field it produces |
+
+⚠ **The trap has a mirror and it is not licensed here.** *Incident-free* is not *featureless*.
+Material has structure — joints, bond, grain, value break — and stripping that to avoid a motif
+produces the flat clone field the same seats cull on sight. **The test is whether a feature is a
+property of the material (a joint between two stones) or a thing that happened to it (a crack
+through one).** The first belongs in the tile; the second does not.
 
 ---
 
@@ -1063,6 +1215,24 @@ value applied to every edge answers to nothing.
 The same round's ranking is the corroboration: the arm carrying the coping ribbon placed third
 of five, below the arm with no cap at all.
 
+**AND THE PROHIBITION IS SCALE-DEPENDENT AS WELL AS VALUE-AGNOSTIC — RULED (Rafe, 2026-08-27,
+at the gate).** The worked example above established that a pale ring is a ring. This
+establishes where you have to stand to see one.
+
+C-GAB was called ring-clean by an instrument and by two blind seats, and **a frame at field
+scale** by the gate. Nothing about the tile changed between those readings; the number of copies
+did. A contour that turns its corners and returns *inside its own cell* is invisible as a ring
+when you hold one tile and unmistakable as one when you lay nine — because the test that
+separates a ring from a joint is **whether it continues into the neighbour**, and a single tile
+has no neighbour to continue into.
+
+> **A ring is judged AS LAID. A single tile — and a contact sheet of single tiles — cannot
+> answer this clause.**
+
+This is §8.3's scale rule reaching §12.1, and it is why the ring instrument's limit is
+structural rather than a tuning failure: it reads one 32×32 tile, so the evidence is not in its
+input at any threshold.
+
 **Consequence for the re-aim audit:** `tools/art_lint/outline_repair.py` has no successor under
 this ruling and is retired with the Oryx track.
 
@@ -1260,16 +1430,28 @@ gaps — which is the correct state for a bible whose pilot has not run.**
 | §7.1 everything is held                                | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Eye-side, at the gate. |
 | §7.4 heraldic stance (idle sprites are icons)          | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
 | §8.1 wear explained by traffic and indifference        | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** |
+| §8.3 the motif trap — no incident baked into a base tile | **Split, and the split is the point** | ⚠ **HALF INSTRUMENTABLE, HALF NEVER.** *Verbatim repetition* is trivially checkable and should be — a field laid from one tile is a byte comparison, and the check would have gone red on every floor round to date. **Whether a mark is material or incident is NOT**, and no proxy for it will be built: it is the difference between a joint between two stones and a crack through one, which is a reading, not a measurement (§13.4). Build the cheap half, refuse the other, and never let the cheap half's green stand in for the whole clause. |
+| §12.1 ring judged as laid (scale rule)                 | None at tile scale — structurally    | ⚠ **NO INSTRUMENT, AND THE EXISTING ONE IS DISQUALIFIED BY INPUT.** `ring_instrument.py` reads one 32×32 tile; the property lives at field scale, so no threshold reaches it. Recorded because this is the audit's sharpest lesson to date: **an instrument can be correct, controlled, and still be answering at the wrong scale** — and its label now says so (`REPORT.md` §6). |
 | §10.1 attachment-point tolerance across frames         | Buildable and should be built       | **Owed at the Sasha tier.** The one genuinely instrumentable register-adjacent clause in this document. |
 | §12 value separation from surface beneath              | None                                | ⚠ **NO INSTRUMENT.** Gemfall's Ruling 70 found no defensible threshold for their analogue; expect the same and prefer the refusal. |
 | §12 names itself at 1×                                 | The human gate (§13.2)              | **Eye-side by design.** |
 | §1.1 zero expression budget (world creatures faceless) | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
 | §1 register conformance, all clauses                   | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** |
 
-**Thirteen of sixteen clauses have no working instrument today. None is papered over. Seven of
+**Fifteen of eighteen clauses have no working instrument today. None is papered over. Eight of
 them will never have one, deliberately, and that is a decision rather than a gap.**
 
-**Two rows are new at v0.8, and they move in opposite directions — which is the audit working.**
+**Two rows are new at v0.10, and both are red — which is the audit working in the direction that
+costs something.** §8.3 arrives as law with its instrument **split**: build the byte-comparison
+half, refuse the material-vs-incident half outright. §12.1's scale row is worse than a gap and is
+recorded as such: an instrument that exists, passed its controls, and is **disqualified by its
+input** — it reads one tile and the property is in the field. *An instrument can be correct,
+controlled, and answering at the wrong scale*, and nothing in §13.5's promotion procedure catches
+that, because a positive control built at tile scale confirms tile-scale behaviour perfectly.
+**§13.5 gains an implied question a future revision should make explicit: at what scale does this
+control prove anything?**
+
+**Two rows were new at v0.8, and they move in opposite directions — which is the audit working.**
 §6.3 gained a second instrument, the light-off differencing check, promoted on a demonstrated
 fail and licensed to one axis; §5.5 arrived as law with **no** instrument and the countable proxy
 named and refused in the row. A revision that only ever adds green rows is not auditing itself.
@@ -1303,6 +1485,26 @@ Recorded so they are not re-derived; deliberately not law.
 ---
 
 *Revision history:*
+
+- *v0.10 — 2026-08-27. **The gate answered the C-GAB question and the answer generalised into
+  law. NEW §8.3 — THE MOTIF TRAP:** any incident baked into a tile becomes a motif when tiled;
+  repetition converts accident into intent, and the eye reads pattern regardless of the
+  incident's quality. Therefore **a tile is the material and the incident is the variant** —
+  incident (cracks, wear, marks, the §8.2.1 channel) arrives at the instance level, randomised,
+  through the variant and overlay system tier one builds. **§5.5's parent criterion sharpens**
+  from *compositionally neutral* to **incident-free**, which strikes its own worked example: the
+  crack-through-a-field offered as the shape of a neutral parent is the tile the gate then ruled
+  a frame. **§5.5's flagged note is RESOLVED — frame at field scale**; C-GAB retains its
+  conditioning role because references never ship, and is recorded as retained under screening
+  rather than as meeting the sharpened bar. **§12.1 gains the scale rule:** the ring prohibition
+  is scale-dependent as well as value-agnostic — **a ring is judged as laid**, and a single tile,
+  or a contact sheet of single tiles, cannot answer the clause. The ring instrument's limit is
+  therefore structural, not a tuning failure: it reads one 32×32 tile and the evidence is not in
+  its input. **§8.2.1's variant system is re-scoped** as the only place incident is permitted to
+  live. Retroactively, this completes the floor-remediation round B finding: those tiles were
+  bases judged as finished floors before the incident system existed. Evidence:
+  `tools/floor_remediation/REPORT-PARENT-RATE.md` and its `exhibit_cgab/` 3×3 plate — the view
+  that could run the continue-or-return test no seat had ever been given.*
 
 - *v0.9 — 2026-08-27. The floor campaign's rulings land. **§5.5 gains its corpus assignment**
   (Rafe): C-GAB primary style parent, A-HEB secondary, **A-VAB prop stock regardless of
