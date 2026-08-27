@@ -178,22 +178,30 @@ public sealed class TileThemeConfig
             // Priority: NW outer corner > NE outer corner > SW outer corner > SE outer corner.
             // A diagonal floor in direction D means THIS tile is the outer corner facing D.
             // bit1(2) = SE diagonal is floor → this wall is NW outer corner
-            if ((diagonalFloorMask & 2) != 0 && data.WallDiagonal.TryGetValue("corner_outer_nw", out int nwId))
-                return GetTexturePath(nwId);
+            if ((diagonalFloorMask & 2) != 0 && data.WallDiagonal.TryGetValue("corner_outer_nw", out var nwIds) && nwIds.Count > 0)
+                return GetTexturePath(PickVariant(nwIds, x, y));
             // bit0(1) = SW diagonal is floor → this wall is NE outer corner
-            if ((diagonalFloorMask & 1) != 0 && data.WallDiagonal.TryGetValue("corner_outer_ne", out int neId))
-                return GetTexturePath(neId);
+            if ((diagonalFloorMask & 1) != 0 && data.WallDiagonal.TryGetValue("corner_outer_ne", out var neIds) && neIds.Count > 0)
+                return GetTexturePath(PickVariant(neIds, x, y));
             // bit3(8) = NE diagonal is floor → this wall is SW outer corner
-            if ((diagonalFloorMask & 8) != 0 && data.WallDiagonal.TryGetValue("corner_outer_sw", out int swId))
-                return GetTexturePath(swId);
+            if ((diagonalFloorMask & 8) != 0 && data.WallDiagonal.TryGetValue("corner_outer_sw", out var swIds) && swIds.Count > 0)
+                return GetTexturePath(PickVariant(swIds, x, y));
             // bit2(4) = NW diagonal is floor → this wall is SE outer corner
-            if ((diagonalFloorMask & 4) != 0 && data.WallDiagonal.TryGetValue("corner_outer_se", out int seId))
-                return GetTexturePath(seId);
+            if ((diagonalFloorMask & 4) != 0 && data.WallDiagonal.TryGetValue("corner_outer_se", out var seIds) && seIds.Count > 0)
+                return GetTexturePath(PickVariant(seIds, x, y));
         }
 
         // No diagonal floor, or WallDiagonal not configured: interior fill.
-        if (data.WallDiagonal.TryGetValue("interior_fill", out int fillId))
-            return GetTexturePath(fillId);
+        //
+        // THIS IS THE ONE THAT MATTERS. In any ordinary map interior_fill is the overwhelming
+        // majority of wall cells - 267 of ~300 in the tier-0 review corridor - so a scalar here
+        // stamps one tile across nearly the whole solid mass however many variants the autotile
+        // masks declare. The blind critic measured exactly that and culled on it: "the solid
+        // field is one 32px tile stamped ~150 times with no variation (median tile-to-mean
+        // correlation 0.94)". Making the masks list-valued and leaving this scalar fixed the
+        // visible 6% and left the invisible 94% alone.
+        if (data.WallDiagonal.TryGetValue("interior_fill", out var fillIds) && fillIds.Count > 0)
+            return GetTexturePath(PickVariant(fillIds, x, y));
 
         // Final fallback: autotile mask 15 entry.
         if (data.WallAutotile.TryGetValue(15, out var fillVariants) && fillVariants.Count > 0)
@@ -394,11 +402,15 @@ public sealed class TileThemeData
     public Dictionary<int, List<int>> WallAutotile { get; set; } = new();
 
     /// <summary>
-    /// Named outer corner and interior fill tile IDs.
+    /// Named outer corner and interior fill tile ID variants.
     /// Used when cardinalMask==15 to distinguish outer corners from true interior.
     /// Keys: corner_outer_nw, corner_outer_ne, corner_outer_sw, corner_outer_se, interior_fill.
+    ///
+    /// Like WallAutotile, a role may declare one tile ID or a bracketed list; a list is chosen
+    /// from by PositionHash. interior_fill is the role where this matters most - it is the bulk
+    /// of every map's solid mass.
     /// </summary>
-    public Dictionary<string, int> WallDiagonal { get; set; } = new();
+    public Dictionary<string, List<int>> WallDiagonal { get; set; } = new();
 
     public List<int> StairDown         { get; set; } = new();
     public List<int> StairUp           { get; set; } = new();

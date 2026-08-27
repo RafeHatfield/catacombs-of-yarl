@@ -12,28 +12,28 @@ themes:
     floor_interior: [9120, 9121, 9122, 9123]
     floor_worn: [9120, 9121, 9122, 9123]
     wall_autotile:
-      0: [9100, 9101, 9102, 9103]   # top band + front face (floor below)
-      1: [9100, 9101, 9102, 9103]   # top band + front face (floor below)
-      2: [9100, 9101, 9102, 9103]   # top band + front face (floor below)
+      0: [9200, 9201, 9202, 9203, 9204, 9205, 9206]   # top band + front face (floor below)
+      1: [9207, 9208, 9209, 9210, 9211, 9212, 9213]   # top band + front face (floor below)
+      2: [9214, 9215, 9216, 9217, 9218, 9219, 9220]   # top band + front face (floor below)
       3: [9120, 9121, 9122, 9123]   # top band + front face (floor below)
-      4: [9110, 9111, 9112, 9113]   # top surface (wall below)
-      5: [9110, 9111, 9112, 9113]   # top surface (wall below)
-      6: [9110, 9111, 9112, 9113]   # top surface (wall below)
-      7: [9110, 9111, 9112, 9113]   # top surface (wall below)
-      8: [9100, 9101, 9102, 9103]   # top band + front face (floor below)
-      9: [9100, 9101, 9102, 9103]   # top band + front face (floor below)
-      10: [9100, 9101, 9102, 9103]   # top band + front face (floor below)
-      11: [9100, 9101, 9102, 9103]   # top band + front face (floor below)
-      12: [9110, 9111, 9112, 9113]   # top surface (wall below)
-      13: [9110, 9111, 9112, 9113]   # top surface (wall below)
-      14: [9110, 9111, 9112, 9113]   # top surface (wall below)
-      15: [9110, 9111, 9112, 9113]   # top surface (wall below)
+      4: [9228, 9229, 9230, 9231, 9232, 9233, 9234]   # top surface (wall below)
+      5: [9235, 9236, 9237, 9238, 9239, 9240, 9241]   # top surface (wall below)
+      6: [9242, 9243, 9244, 9245, 9246, 9247, 9248]   # top surface (wall below)
+      7: [9249, 9250, 9251, 9252, 9253, 9254, 9255]   # top surface (wall below)
+      8: [9256, 9257, 9258, 9259, 9260, 9261, 9262]   # top band + front face (floor below)
+      9: [9263, 9264, 9265, 9266, 9267, 9268, 9269]   # top band + front face (floor below)
+      10: [9270, 9271, 9272, 9273, 9274, 9275, 9276]   # top band + front face (floor below)
+      11: [9277, 9278, 9279, 9280, 9281, 9282, 9283]   # top band + front face (floor below)
+      12: [9284, 9285, 9286, 9287, 9288, 9289, 9290]   # top surface (wall below)
+      13: [9291, 9292, 9293, 9294, 9295, 9296, 9297]   # top surface (wall below)
+      14: [9298, 9299, 9300, 9301, 9302, 9303, 9304]   # top surface (wall below)
+      15: [9305, 9306, 9307, 9308, 9309, 9310, 9311]   # top surface (wall below)
     wall_diagonal:
-      corner_outer_nw: 9110
-      corner_outer_ne: 9111
-      corner_outer_sw: 9112
-      corner_outer_se: 9113
-      interior_fill: 9113
+      corner_outer_nw: 9280
+      corner_outer_ne: 9281
+      corner_outer_sw: 9282
+      corner_outer_se: 9283
+      interior_fill: 9308
     stair_down: [9140]
     stair_up: [9141]
 

@@ -158,7 +158,89 @@ discovered later.
 
 ## 5. THE BLIND CRITIC
 
-*(filled in below from `evidence/critic/`)*
+A fresh `claude -p` per round, cwd outside the repo, five lit captures under anonymous codes,
+never the bible (LOOP-PROCESS §3). Verbatim transcripts and parsed verdicts in
+`evidence/critic/`.
+
+**Blindness, stated precisely rather than claimed.** The seat runs with cwd in a scratch
+directory containing only the five PNGs; it has no project `CLAUDE.md`, no memory directory, no
+ledger, and no bible. It was launched with `--allowedTools Read` but demonstrably wrote files
+(its own zooms, brightness passes and difference images), so tool restriction did not hold and
+the blindness rests on cwd and on the process having no reason to look elsewhere — not on a
+sandbox. Recorded because the gauntlet's report claimed the stronger version.
+
+### Round 1 — 0 passes of 5. Plant CAUGHT.
+
+| code | arm | cull | verdict |
+|---|---|---|---|
+| C1 | boundB | none | FAIL — *"the walls have no mass and the ironmongery is stickers laid on wallpaper"* |
+| C2 | ctrlB | none | FAIL — *"a bare, evenly-pointed brick field with zero fixings"* |
+| C3 | boundA | **cannot-read** | FAIL — *"the wall value has been raised to floor value ... 8 grey levels against a texture noise of ~34, and in the unlit zone it inverts"* |
+| C4 | **plant** | none | FAIL — *"the most obviously planted defect in the set"* |
+| C5 | ctrlA | **cannot-read** | FAIL — *"worst separation in the set ... 5.8 levels above wall when lit and 1.1 levels below it when unlit"* |
+
+**The plant control held, and how it held is itself the finding.** The seat failed the plant and
+named it as planted, so the round stands. But **it did not tick the `key-light` cull.** It read
+the baked per-course light/dark banding — repeated across eleven tiles of face — as *continuous
+horizontal timbers*: "dead-straight, unbroken, uniform-width horizontal lines ... with no ends,
+no joints, no scarfs, no sag and no fixings ... a ruled stripe, not a ledger."
+
+That extends the gauntlet's §5 finding by one term. The gauntlet found that at 32px the
+vocabulary for *describe geometry with value* and the vocabulary for *bake a key light* are the
+same vocabulary. **They are also the same vocabulary as *draw a timber band*.** A baked light
+laid across a coursed face does not read as light at all — it reads as hardware. Anything
+built to detect key-light by asking a critic will, at this canvas, get an object report back.
+
+### What the round found that this session had not
+
+1. **The two-plane composition delivered no perceived thickness.** Q4, on both composed arms:
+   *"No — the wall is coplanar with the floor, with no cap, no side face, no edge shadow and no
+   occlusion."* This is §4's corridor problem arriving at the eye: with ~6% of wall cells able
+   to show a face, a correct §3 composition still reads as a flat brick field.
+2. **The bindings failed the held question, precisely.** *"Each sits on top of the brick inside
+   a hard black keyline, none bears on anything, none bridges a joint or a crack, and no pin
+   passes into the stone."* Round 1's symmetric contact shadow — drawn on both sides of every
+   strap in the name of direction-agnostic occlusion — **is a closed keyline**, which is the
+   §12.1 sticker read arriving by the back door. It also swallowed the mortar courses running
+   up to the strap, so nothing could be seen to be crossed.
+3. **The review corridor renders a mirrored dungeon.** *"The left half is a near-exact mirror of
+   the right (MAD 6.1 vs 31.7 unmirrored), so every crack and every batten has a twin."* The
+   scene is deliberately symmetric about the player's column; `PositionHash` is
+   `7919x + 104729y`, so at four variants the index is `(3x + y) mod 4` and mirrored cells
+   collide whenever their offset is even. **Half the art is a reflection of the other half.**
+   This is a property of the harness, not of this session's tiles, and every capture taken in
+   this corridor — §6.4's included — carries it.
+4. **The §6.4 survivor floors were culled by a blind seat, in this session's incidental
+   evidence.** *"the square-in-square medallion stamped identically at the centre of every
+   corridor tile"* and *"the saturated yellow-green vegetation tufts ... the only high-chroma
+   pixels in the dungeon ... overgrowth in a place that has no light and no weather."* Not this
+   session's to fix, and reported rather than acted on, but it bears on STOP 1's curation.
+
+### Two flip-list items were REFUSED
+
+- *"drop a 2px hard-edged occlusion shadow from that cap onto the adjoining floor tile"* — a
+  baked drop shadow in the asset, which §6.3 forbids outright: *the asset never grounds itself;
+  the engine or a composited blob grounds it per context.* `FloorComposer` Pass 2 already
+  darkens wall-adjacent floor.
+- *"a colour one step lighter and one step desaturated"* for the cap band — a highlight. The cap
+  is delivered by material change and occlusion instead.
+
+**This is the second time a critic flip list has asked for a §6.3 violation.** The gauntlet's
+round-7 list asked for a 1px chamfer per course and its own round 8 then culled three
+candidates for `key-light`. A flip list is a reaction, not a spec, and executing one literally
+is how the last loop manufactured the defect it was trying to avoid.
+
+### Round 2 — the flip list applied
+
+Changes, each traceable to a charge above: keyline removed and occlusion moved under the lip
+only; elements placed on joints found in the stone, with driven pins chipping the brick;
+variants 4 → 7 (mirror collisions from every 2nd tile to every 7th, run repeat 4 → 7); slab
+variants no longer rolled in x, so the occluded boundary is the only line that means
+wall-meets-floor; edge occlusion deepened to three steps; top part swapped `r04_08` → `r04_00`,
+killing the branching crack the seat called "bird tracks" — a parts choice out of the same bin,
+not a redraw.
+
+*(Round 2 verdict below.)*
 
 ---
 

@@ -6,7 +6,7 @@ Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
 Catacombs of YARL — loading...
 [DIAG] Logging to: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag.log
 [DIAG] Structured log: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag_structured.jsonl
-[DIAG 00000 F0 T0.436] === Session started ===
+[DIAG 00000 F0 T0.425] === Session started ===
 [Main] Persistence loaded — 6 runs ever.
 [Main] Loading tileset: 16bit_fantasy
 [Main] Tileset loaded: Oryx 16-Bit Fantasy (48px, 2 frames)
@@ -113,23 +113,23 @@ empt
 # Substituted 
 [Main] Memo registry loaded.
 [Tier0] corridor scene: tier0_corridor_junction (res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json)
-[DIAG 00001 F0 T0.854] [Tier0] corridor scene: tier0_corridor_junction (res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json)
+[DIAG 00001 F0 T0.830] [Tier0] corridor scene: tier0_corridor_junction (res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json)
 [Tier0] map=17x21 player=(8,14) carve_rects=2
-[DIAG 00002 F0 T0.854] [Tier0] map=17x21 player=(8,14) carve_rects=2
+[DIAG 00002 F0 T0.830] [Tier0] map=17x21 player=(8,14) carve_rects=2
 [Tier0] junction=YES at (8,11)
-[DIAG 00003 F0 T0.854] [Tier0] junction=YES at (8,11)
+[DIAG 00003 F0 T0.830] [Tier0] junction=YES at (8,11)
 [Tier0] tile_theme_config=res://src/Presentation/assets/composition_spike/tile_themes_plant.yaml
-[DIAG 00004 F0 T0.854] [Tier0] tile_theme_config=res://src/Presentation/assets/composition_spike/tile_themes_plant.yaml
+[DIAG 00004 F0 T0.830] [Tier0] tile_theme_config=res://src/Presentation/assets/composition_spike/tile_themes_plant.yaml
 [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
-[DIAG 00005 F0 T0.855] [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
+[DIAG 00005 F0 T0.830] [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
 [Tier0] review_build_marker=none (CLI flags)
-[DIAG 00006 F0 T0.855] [Tier0] review_build_marker=none (CLI flags)
+[DIAG 00006 F0 T0.830] [Tier0] review_build_marker=none (CLI flags)
 [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
-[DIAG 00007 F0 T0.856] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00007 F0 T0.831] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
 [Main] Visible tile rect: (2,6)-(13,21)
 [Main] floor_worn (3001) tiles: 0 rendered in the authored room, 0 in frame: 
 [Tier0] junction-lit probe: junction(8,11) lum=0.2747 at px(407,386) | reference(8,15) lum=0.5218 at px(407,642) | ratio=0.5264 min=0.2500 patch=33px
-[DIAG 00008 F5 T0.927] [Tier0] junction-lit probe: junction(8,11) lum=0.2747 at px(407,386) | reference(8,15) lum=0.5218 at px(407,642) | ratio=0.5264 min=0.2500 patch=33px
+[DIAG 00008 F5 T0.926] [Tier0] junction-lit probe: junction(8,11) lum=0.2747 at px(407,386) | reference(8,15) lum=0.5218 at px(407,642) | ratio=0.5264 min=0.2500 patch=33px
 [Main] Capture written: /Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/tools/composition_spike/evidence/plant_lit.png
 WARNING: Nodes with non-equal opposite anchors will have their size overridden after _ready(). 
 If you want to set size, change the anchors or consider using set_deferred().

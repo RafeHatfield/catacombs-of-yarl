@@ -226,9 +226,10 @@ public static class TileThemeLoader
             {
                 if (currentThemeData == null) continue;
 
-                if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int diagTileId))
+                var diagIds = ParseIntList(rawValue);
+                if (diagIds.Count > 0)
                 {
-                    currentThemeData.WallDiagonal[key] = diagTileId;
+                    currentThemeData.WallDiagonal[key] = diagIds;
                 }
                 else
                 {
