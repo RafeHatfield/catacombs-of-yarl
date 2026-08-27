@@ -37,7 +37,8 @@ def main():
         # reference from one, it reported 175 colours "outside the parts bin" - the checker was
         # wrong, not the tiles. Recorded because that is this check demonstrating it can fail
         # (§13.5), which is the only thing that makes its passes worth anything.
-        stock = C.build_top_stock(cfg["tops"], face, cfg["match"])
+        floors_lum = float(sum(C.mean_lum(f) for f in floors) / len(floors))
+        stock = C.build_top_stock(cfg["tops"], face, cfg.get("albedo"), floors_lum)
         pal = set(map(tuple, C.palette_of(*[f[0] for f in faces],
                                           *[t[0] for t in stock], *floors)))
         seen, outside, n = set(), 0, 0

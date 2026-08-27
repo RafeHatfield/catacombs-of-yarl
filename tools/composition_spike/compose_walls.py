@@ -396,6 +396,11 @@ def bind_slab(a, ink, v):
 # material has no period to destroy, and not on the face, whose whole legibility is its period.
 FACE_STOCK = ["r07_00"]
 
+# The top-plane question is settled: round 4 put R7-coursed material against R4 slab stock and
+# the coursed top took the top two ranking places while R4 was culled `cannot-read` five times.
+# The ruled rounds hold it constant and vary only what the ruling names.
+TOP_COURSED = ["r07_00", "r07_08", "r07_09"]
+
 
 def build_face_stock():
     out = []
@@ -406,7 +411,7 @@ def build_face_stock():
     return out
 
 
-def build_top_stock(part_names, face_src, match):
+def build_top_stock(part_names, face_src, albedo=None, floors_lum=None):
     """ROUND 4. The top plane's variants come from SEVERAL parts, not several offsets of one.
 
     Round 3 measured 0.441 tile-to-mean correlation across nine interior_fill variants and
@@ -425,8 +430,10 @@ def build_top_stock(part_names, face_src, match):
         name = part_names[i % len(part_names)]
         table = TOP_PARTS if name in TOP_PARTS else FACE_PARTS
         src, _, spec = load_part(name, table)
-        if match:
-            src, _ = match_top(src, face_src)
+        if albedo is None:
+            src, _ = match_top(src, face_src)          # rounds 1-6: match the FACE
+        else:
+            src, _ = scale_top_to(src, albedo * floors_lum)   # ruled rounds: target the FLOOR
         stock.append((src, name, i // len(part_names)))
     return stock
 
@@ -463,14 +470,30 @@ def make_face(face_src, top_src, pal, ink, v, bind, phase=None):
 
 
 NORTH_BIT, SOUTH_BIT_, EAST_BIT, WEST_BIT = 8, 4, 2, 1
-# ROUND 2: three steps rather than two. The seat culled both native-top arms `cannot-read` at
-# 8 and 6 grey levels of wall-to-floor separation and asked for 25 or more, holding under low
-# light. The value-matched arm already carries 26 by material; this deepens the boundary itself
-# so the mass edge reads as an edge on all four orientations, not only where a face exists.
-EDGE_STEPS = (0.42, 0.62, 0.82)
+# PLANE-BOUNDARY OCCLUSION - RULED (Rafe, 2026-08-26): "plane-boundary occlusion is form,
+# legal and required; the ring stays banned." The §12.1 tension this session flagged is resolved
+# and this is no longer a risk to hedge, it is a requirement. What the two ruled rounds spend
+# themselves on is how DEEP it has to be before the boundary reads as a plane rather than as a
+# hairline - six critic rounds called it "a 1-2px line", "a single dark pixel line", "a hairline".
+#
+# Legal because it sits on the wall's own edge, only where floor is adjacent, and is identical
+# under every azimuth. Banned would be a RING: a dark outline around a thing regardless of what
+# adjoins it. This is the opposite construction - not on the sprite, on the boundary between two
+# planes - and under the ruling it is form.
+EDGE_PROFILES = {
+    "round6": (0.42, 0.62, 0.82),               # what rounds 2-6 carried
+    "deep":   (0.26, 0.40, 0.56, 0.72, 0.86),   # five steps: form, not a line
+    "none":   (),                               # the isolation arm
+}
+
+# The top plane's ALBEDO as a fraction of the floors' mean luminance. A declared material value
+# and not a light: §6.3 forbids depicting a light DIRECTION, and a stone darker than the floor
+# beneath it is a stone, not a lamp. Every seat that culled `cannot-read` measured this ratio,
+# and round 4's asked for 0.70 or below in as many words.
+TOP_ALBEDO_TARGET = 0.62
 
 
-def occlude_edges(a, mask):
+def occlude_edges(a, mask, steps=EDGE_PROFILES["round6"]):
     """Darken the wall's own edge wherever the neighbouring cell is FLOOR.
 
     This is not in the brief and it is not decoration; without it the corridor does not read.
@@ -489,7 +512,7 @@ def occlude_edges(a, mask):
     The SOUTH edge is never treated here: where south is floor the tile already carries a front
     face, which is §3's answer to that edge.
     """
-    for k, f in enumerate(EDGE_STEPS):
+    for k, f in enumerate(steps):
         if not (mask & NORTH_BIT):
             a[k] = (a[k] * f).astype(np.int16)
         if not (mask & WEST_BIT):
@@ -499,7 +522,8 @@ def occlude_edges(a, mask):
     return a
 
 
-def make_wall(mask, face_src, top_src, pal, ink, v, bind, keylight=False, phase=None):
+def make_wall(mask, face_src, top_src, pal, ink, v, bind, keylight=False, phase=None,
+              edge="round6"):
     """One wall tile for one autotile mask.
 
     SOUTH BIT CLEAR -> floor below -> top band + occlusion + front face (bible §3).
@@ -513,7 +537,7 @@ def make_wall(mask, face_src, top_src, pal, ink, v, bind, keylight=False, phase=
         a = make_plant(face_src, top_src, pal, ink, v, ph)
     else:
         a = make_face(face_src, top_src, pal, ink, v, bind, ph)
-    return snap(occlude_edges(a.copy(), mask), pal)
+    return snap(occlude_edges(a.copy(), mask, EDGE_PROFILES[edge]), pal)
 
 
 def make_corner(diag_bit, face_src, top_src, pal, ink, v, bind, phase=0):
@@ -668,42 +692,50 @@ def sha256(p):
 # dark stain, no linear signature - so the swap is a parts choice, not a redraw. Exactly the
 # move this spike exists to test: change the material, keep the composition.
 ARMS = {
-    # ROUND 4. The A/B axis is now the TOP PLANE'S MATERIAL, which is what three critic rounds
-    # kept pointing at, rather than only its value.
+    # ROUNDS 7-8 - THE RULED ROUNDS (Rafe, 2026-08-26).
     #
-    # A is the brief's primary: R4's flat weathered slabs, "the closest thing the gauntlet
-    # produced to wall-tops". Three seats have now culled it - twice as `cannot-read` at 8 and 6
-    # grey levels of wall-to-floor separation, once for sitting "within ten percent of the
-    # walkable floor". R4's slabs are the same value family as the §6.4 survivor floors.
+    #   "§3 stands unamended pending your two reserved rounds: spend them on edge-occlusion +
+    #    wall-top value separation, with south-facing front faces present in scene. Depth
+    #    arriving ratifies §3; depth failing reopens it with evidence."
     #
-    # B is the brief's own fallback, and the evidence for triggering it is now on disk: "also
-    # derive top bands from R6/R7 material by crop/recolour where R4 falls short". R4 falls
-    # short in a way no value change fixes - it has NO JOINTS. A cramp on a mottled slab has
-    # nothing to span, which is exactly why round 3 read the same overlays as "genuinely held"
-    # on the coursed face band and as decals that "fix nothing to nothing" on the mottled mass.
-    # Coursed R7 material gives the top plane joints for the hardware to grip.
+    # So the arms stop varying the parts bin - that question is answered, R7-coursed top won it
+    # in round 4 - and vary exactly the two things the ruling names. Every arm below is the same
+    # stones, the same rig, the same geometry, the same floors, in the wall-face review scene
+    # where 14.5% of wall cells can carry a face instead of 7.3%.
     #
-    # Each arm's variants cycle through SEVERAL parts, not several offsets of one - see
-    # build_top_stock.
-    "boundA":   dict(tops=["r04_00", "r04_08", "r04_03"], match=False, bind=True,
-                     note="the brief's primary: R4 slab stock at its native value. Three seats "
-                          "have culled it for sitting on top of the floor's value family."),
-    "boundB":   dict(tops=["r07_00", "r07_08", "r07_09"], match=True, bind=True,
-                     note="DERIVATION, authorised by the brief: top plane cropped from R6/R7 "
-                          "coursed masonry and luminance-matched to the face. The top plane now "
-                          "has joints, so a cramp can be seen to span two stones."),
-    "ctrlA":    dict(tops=["r04_00", "r04_08", "r04_03"], match=False, bind=False,
-                     note="control for boundA - same stones, overlays omitted."),
-    "ctrlB":    dict(tops=["r07_00", "r07_08", "r07_09"], match=True, bind=False,
-                     note="control for boundB - same stones, overlays omitted."),
-    "plant":    dict(tops=["r07_00", "r07_08", "r07_09"], match=True, bind=True, keylight=True,
-                     note="THE PLANT. Identical to boundB except every course runs light at its "
-                          "top rows and dark at its bottom rows - a baked overhead key light, "
-                          "the exact defect §6.3 forbids and the one the gauntlet's own round 8 "
-                          "manufactured by accident. It goes into the critic set under an "
-                          "anonymous code. A critic that passes it has not demonstrated it can "
-                          "fail and its verdicts on the real arms do not count "
-                          "(LOOP-PROCESS §4, bible §13.5)."),
+    #   before        what round 6 shipped: 3-step edge, top matched to the FACE (0.76 of floor)
+    #   after         5-step edge, top albedo set to 0.62 of the FLOOR - both ruled variables
+    #   after_unbound `after` with the overlays omitted - the held control
+    #   after_noocc   `after`'s albedo with NO edge occlusion at all - isolates the §12.1 ruling
+    #   plant         `after` plus a baked key light - the within-arm A/B Rafe named
+    #
+    # `after` vs `before` is the ruled test. `after` vs `after_noocc` isolates plane-boundary
+    # occlusion as the sole cause of whatever changes. `after` vs `plant` is authored occlusion
+    # against depicted light on identical stone, which is the comparison §6.4 recorded as unrun.
+    "before":        dict(tops=TOP_COURSED, edge="round6", albedo=None, bind=True,
+                          note="round 6 as shipped. 3-step plane-boundary occlusion; top plane "
+                               "matched to the face, which leaves it at ~0.76 of the floors' "
+                               "luminance. Six seats answered the thickness question no."),
+    "after":         dict(tops=TOP_COURSED, edge="deep", albedo=TOP_ALBEDO_TARGET, bind=True,
+                          note="both ruled variables moved: 5-step occlusion so the boundary is "
+                               "form rather than a hairline, and the top plane's albedo set to "
+                               "0.62 of the floors' mean. THE RULED TEST."),
+    "after_unbound": dict(tops=TOP_COURSED, edge="deep", albedo=TOP_ALBEDO_TARGET, bind=False,
+                          note="control for `after` - the same stones with the MOCK overlays "
+                               "omitted, so the held question keeps its control."),
+    "after_noocc":   dict(tops=TOP_COURSED, edge="none", albedo=TOP_ALBEDO_TARGET, bind=True,
+                          note="`after` with plane-boundary occlusion switched OFF and nothing "
+                               "else changed. If depth arrives in `after` and not here, the "
+                               "occlusion is the cause and §12.1's ruling has its evidence."),
+    "plant":         dict(tops=TOP_COURSED, edge="deep", albedo=TOP_ALBEDO_TARGET, bind=True,
+                          keylight=True,
+                          note="THE PLANT, and now also the honest within-arm A/B. Identical to "
+                               "`after` except every course runs light at its top rows and dark "
+                               "at its bottom - a baked overhead key light, the construction "
+                               "§6.3 forbids. A critic that passes it has not demonstrated it "
+                               "can fail and its verdicts do not count (LOOP-PROCESS §4, bible "
+                               "§13.5). It ranked first in three of the first six rounds; these "
+                               "two put authored occlusion against it on the same stone."),
 }
 
 
@@ -712,6 +744,21 @@ def match_top(top_src, face_src):
     scaled = np.clip(top_src.astype(np.float32) * (fl / tl), 0, 255).astype(np.int16)
     return scaled, ("DERIVATION: luminance scaled by %.3f to match the face plane (%.1f -> %.1f)"
                     % (fl / tl, tl, fl))
+
+
+def scale_top_to(top_src, target_lum):
+    """Set the top plane's albedo to a declared value rather than to the face's.
+
+    Rounds 1-6 matched the top plane to the FACE, which left it at roughly 0.76 of the floors'
+    luminance; every seat that culled `cannot-read` measured that ratio and round 4's asked for
+    0.70 or below. This targets the floor instead, because the floor is what the wall has to be
+    told apart from.
+    """
+    tl = mean_lum(top_src)
+    k = target_lum / tl
+    scaled = np.clip(top_src.astype(np.float32) * k, 0, 255).astype(np.int16)
+    return scaled, ("ALBEDO: top plane scaled by %.3f to %.1f, %.2f of the floors' mean "
+                    "(a declared material value, not a light)" % (k, target_lum, TOP_ALBEDO_TARGET))
 
 
 def main():
@@ -756,17 +803,24 @@ def main():
     os.makedirs(sheet_dir, exist_ok=True)
 
     faces = build_face_stock()
+    # The floors are the thing a wall has to be told apart from, so their mean luminance is the
+    # denominator the ruled albedo target is expressed against. Held constant across every arm.
+    floors_lum = float(np.mean([mean_lum(f) for f in floor_arrs]))
+    print("floors mean luminance %.1f   ruled top-plane albedo target %.2f -> %.1f\n"
+          % (floors_lum, TOP_ALBEDO_TARGET, TOP_ALBEDO_TARGET * floors_lum))
     for arm, cfg in ARMS.items():
-        stock = build_top_stock(cfg["tops"], face_src, cfg["match"])
-        derived = ""
-        if cfg["match"]:
-            _, derived = match_top(load_part(cfg["tops"][0], PART_TABLE(cfg["tops"][0]))[0],
-                                   face_src)
+        stock = build_top_stock(cfg["tops"], face_src, cfg.get("albedo"), floors_lum)
+        first = load_part(cfg["tops"][0], PART_TABLE(cfg["tops"][0]))[0]
+        if cfg.get("albedo") is None:
+            _, derived = match_top(first, face_src)
+        else:
+            _, derived = scale_top_to(first, cfg["albedo"] * floors_lum)
 
         pal = palette_of(*[f[0] for f in faces], *[t[0] for t in stock], *floor_arrs)
         ink = Ink(pal)
         walls = {m: [make_wall(m, faces[v][0], stock[v][0], pal, ink, v, cfg["bind"],
-                               cfg.get("keylight", False), phase=stock[v][2])
+                               cfg.get("keylight", False), phase=stock[v][2],
+                               edge=cfg["edge"])
                      for v in range(mask_variants(m))]
                  for m in range(16)}
         corners = [make_corner(k, faces[v][0], stock[v][0], pal, ink, v, cfg["bind"],
@@ -815,23 +869,27 @@ def main():
                              for i in range(NVAR)],
             bindings="MOCK - authored in compose_walls.py" if cfg["bind"] else "none (control)",
             derivation=derived, note=cfg["note"],
+            edge_profile=cfg["edge"], edge_steps=list(EDGE_PROFILES[cfg["edge"]]),
+            albedo_target=cfg.get("albedo"),
+            floors_mean_lum=round(floors_lum, 1),
+            top_over_floor=round(float(np.mean([mean_lum(t[0]) for t in stock])) / floors_lum, 3),
             theme=os.path.relpath(theme, REPO), segment_sheets=sheets,
             palette_size=int(len(pal)),
             face_plane_lum=round(mean_lum(face_src), 1),
             top_plane_lum=round(float(np.mean([mean_lum(t[0]) for t in stock])), 1),
             tiles={os.path.basename(p): sha256(p) for p in written})
-        print("%-8s faces=%s tops=%-28s bind=%-5s palette=%d face_lum=%.1f top_lum=%.1f -> %s"
-              % (arm, "/".join(FACE_STOCK), "/".join(cfg["tops"]), cfg["bind"], len(pal),
-                 float(np.mean([mean_lum(f[0]) for f in faces])),
-                 float(np.mean([mean_lum(t[0]) for t in stock])),
-                 os.path.relpath(d, REPO)))
+        tl = float(np.mean([mean_lum(t[0]) for t in stock]))
+        print("%-14s edge=%-6s(%dpx)  bind=%-5s  top_lum=%5.1f  top/floor=%.2f  palette=%d"
+              % (arm, cfg["edge"], len(EDGE_PROFILES[cfg["edge"]]), cfg["bind"], tl,
+                 tl / floors_lum, len(pal)))
 
     # The plant sheet, built from the same stones so nothing separates it by material.
-    stock = build_top_stock(ARMS["plant"]["tops"], face_src, True)
+    stock = build_top_stock(ARMS["plant"]["tops"], face_src, ARMS["plant"]["albedo"], floors_lum)
     pal = palette_of(*[f[0] for f in faces], *[t[0] for t in stock], *floor_arrs)
     ink = Ink(pal)
     walls = {m: [make_wall(m, faces[v][0], stock[v][0], pal, ink, v, True, True,
-                           phase=stock[v][2]) for v in range(NVAR)] for m in range(16)}
+                           phase=stock[v][2], edge=ARMS["plant"]["edge"])
+                 for v in range(NVAR)] for m in range(16)}
     im = render_segment(SEGMENTS["south_facing_run"], walls, floor_arrs)
     z = args.sheet_zoom
     im.resize((im.width * z, im.height * z), Image.NEAREST).save(

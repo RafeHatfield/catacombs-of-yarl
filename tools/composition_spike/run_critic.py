@@ -35,11 +35,11 @@ WORK_ROOT = ("/private/tmp/claude-501/-Users-rafehatfield-development-c-yarl/"
 
 # code -> capture. Deliberately not in arm order.
 SET = {
-    "C1": "boundB_lit.png",
-    "C2": "ctrlB_lit.png",
-    "C3": "boundA_lit.png",
+    "C1": "after_lit.png",
+    "C2": "after_unbound_lit.png",
+    "C3": "before_lit.png",
     "C4": "plant_lit.png",
-    "C5": "ctrlA_lit.png",
+    "C5": "after_noocc_lit.png",
 }
 PLANT_CODE = "C4"
 

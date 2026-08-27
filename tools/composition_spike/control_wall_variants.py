@@ -42,7 +42,7 @@ FLOOR_IDS = [9120, 9121, 9122, 9123]   # the four §6.4 probe survivors
 
 
 def derive_theme(name, transform):
-    src = os.path.join(REPO, ASSETS, "tile_themes_boundB.yaml")
+    src = os.path.join(REPO, ASSETS, "tile_themes_after.yaml")
     dst = os.path.join(REPO, ASSETS, "tile_themes_%s.yaml" % name)
     with open(dst, "w") as f:
         f.write(transform(open(src).read()))
@@ -111,7 +111,7 @@ def main():
     print("WALL-VARIANT POSITIVE CONTROLS")
     print("commit: %s\n" % git_commit())
 
-    real = shoot("res://%s/tile_themes_boundB.yaml" % ASSETS, "variants", cfg)
+    real = shoot("res://%s/tile_themes_after.yaml" % ASSETS, "variants", cfg)
     pinned = shoot(themes["control_pinned"], "pinned", cfg)
     planted = shoot(themes["control_plant3"], "plant_mask3", cfg)
     fill1 = shoot(themes["control_fill1"], "interior_fill_pinned", cfg)

@@ -10,21 +10,26 @@ WHAT VARIES AND WHAT DOES NOT
 Varies: the WALL tiles, and only the wall tiles.
 Constant: the corridor geometry, the light rig, the tile size, the resolution, the floor tiles.
 
-The four arms:
-    boundA  composed wall, MOCK bindings, top plane at the R4 part's native value
-    boundB  composed wall, MOCK bindings, top plane luminance-matched to the face (derived)
-    ctrlA   the same stones as boundA with the overlays omitted
-    ctrlB   the same stones as boundB with the overlays omitted
+THE RULED ROUNDS (Rafe, 2026-08-26): "spend them on edge-occlusion + wall-top value
+separation, with south-facing front faces present in scene. Depth arriving ratifies §3; depth
+failing reopens it with evidence."
 
-ctrlA/ctrlB are the held-vs-unheld control. They differ from their bound arm by exactly one
-thing — whether the binding overlays were drawn — so the delta between the pair IS the answer
-to "does it read as HELD", with nothing else able to explain it.
+    before         round 6 as shipped: 3px plane-boundary occlusion, top plane at 0.76 of floor
+    after          5px occlusion, top plane albedo at 0.62 of floor — THE RULED TEST
+    after_unbound  `after` with the MOCK overlays omitted — the held control
+    after_noocc    `after`'s albedo with occlusion OFF — isolates §12.1's ruled construction
+    plant          `after` plus a baked key light — the within-arm A/B against depicted light
+
+Every arm is the same stones, the same rig, the same geometry and the same floors. `after` vs
+`before` is the ruled test; `after` vs `after_noocc` isolates plane-boundary occlusion as the
+sole cause of any difference; `after` vs `plant` is authored occlusion against depicted light on
+identical stone, which is the comparison §6.4 recorded as never having been run.
 
 THE SOLO-FLOOR PAIR
 -------------------
-The briefed floor is the four §6.4 survivors, and that is what the eight arm captures use. The
+The briefed floor is the four §6.4 survivors, and that is what the ten arm captures use. The
 survivors are four visibly different flagstones and mixing them makes the corridor floor a
-patchwork, which competes with the wall for the eye. Two extra captures repeat boundB and ctrlB
+patchwork, which competes with the wall for the eye. Two extra captures repeat `after` and `after_unbound`
 with the floor held to the single strongest survivor (A-VAB), so the wall question can also be
 read without that competition. Stated rather than substituted: the briefed configuration is
 what the arms ran on.
@@ -41,8 +46,15 @@ from capture_corridor import REPO, read_config, capture, sha256, git_commit  # n
 
 GODOT = "/Applications/Godot_mono.app/Contents/MacOS/Godot"
 ASSETS = "src/Presentation/assets/composition_spike"
-ARMS = ["boundA", "boundB", "ctrlA", "ctrlB", "plant"]
-SOLO_FLOOR_ARMS = ["boundB", "ctrlB"]
+ARMS = ["before", "after", "after_unbound", "after_noocc", "plant"]
+SOLO_FLOOR_ARMS = ["after", "after_unbound"]
+
+# RULED (Rafe, 2026-08-26): the ruled rounds run "with south-facing front faces present in
+# scene". corridor_junction.json puts 7.3% of its wall cells in the class that can carry a face;
+# wall_face_review.json puts 14.5% there and both crossings inside the lit radius. The original
+# spec is NOT replaced - it is §6.4's instrument and every capture already on disk was taken
+# through it - so the scene is selected per capture and named in the manifest.
+SCENE = "src/Presentation/assets/tier0_harness/scenes/wall_face_review.json"
 SOLO_FLOOR_ID = 9120           # FLOOR_BASE + 0 = A-VAB, the survivor manifest's `strongest`
 
 
@@ -97,7 +109,7 @@ def main():
         # so the pair differs by the carried light and by nothing else.
         overrides = None if lit else {"energy": 0.0}
         rc, log, _ = capture(out, theme, cfg, GODOT, light_overrides=overrides,
-                             log_out=out.replace(".png", ".log"))
+                             scene_spec=SCENE, log_out=out.replace(".png", ".log"))
         if not os.path.exists(out):
             print("ABORT: %s produced no capture (exit %d)" % (fn, rc), file=sys.stderr)
             print(log[-3000:], file=sys.stderr)
@@ -115,7 +127,7 @@ def main():
     with open(os.path.join(out_dir, "manifest.json"), "w") as f:
         json.dump(dict(commit=git_commit(), rig_requested=rig,
                        tile_size=cfg["tile"]["size"], tile_scale=cfg["tile"]["scale"],
-                       scene=cfg["scene"]["spec"], captures=records), f, indent=1)
+                       scene=SCENE, captures=records), f, indent=1)
     print("\n%d captures -> %s" % (len(records), out_dir))
     return 0
 

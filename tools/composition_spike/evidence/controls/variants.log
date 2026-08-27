@@ -1,4 +1,4 @@
-/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup --resolution 750x1334 --art-scene-capture --capture-out /Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/tools/composition_spike/evidence/controls/variants.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json --tile-theme-config res://src/Presentation/assets/composition_spike/tile_themes_boundB.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.5
+/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup --resolution 750x1334 --art-scene-capture --capture-out /Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/tools/composition_spike/evidence/controls/variants.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json --tile-theme-config res://src/Presentation/assets/composition_spike/tile_themes_after.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.5
 
 Godot Engine v4.7.stable.mono.official.5b4e0cb0f - https://godotengine.org
 Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
@@ -6,7 +6,7 @@ Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
 Catacombs of YARL — loading...
 [DIAG] Logging to: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag.log
 [DIAG] Structured log: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag_structured.jsonl
-[DIAG 00000 F0 T0.565] === Session started ===
+[DIAG 00000 F0 T0.723] === Session started ===
 [Main] Persistence loaded — 6 runs ever.
 [Main] Loading tileset: 16bit_fantasy
 [Main] Tileset loaded: Oryx 16-Bit Fantasy (48px, 2 frames)
@@ -113,23 +113,23 @@ empt
 # Substituted 
 [Main] Memo registry loaded.
 [Tier0] corridor scene: tier0_corridor_junction (res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json)
-[DIAG 00001 F0 T1.093] [Tier0] corridor scene: tier0_corridor_junction (res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json)
+[DIAG 00001 F0 T1.450] [Tier0] corridor scene: tier0_corridor_junction (res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json)
 [Tier0] map=17x21 player=(8,14) carve_rects=2
-[DIAG 00002 F0 T1.093] [Tier0] map=17x21 player=(8,14) carve_rects=2
+[DIAG 00002 F0 T1.450] [Tier0] map=17x21 player=(8,14) carve_rects=2
 [Tier0] junction=YES at (8,11)
-[DIAG 00003 F0 T1.093] [Tier0] junction=YES at (8,11)
-[Tier0] tile_theme_config=res://src/Presentation/assets/composition_spike/tile_themes_boundB.yaml
-[DIAG 00004 F0 T1.093] [Tier0] tile_theme_config=res://src/Presentation/assets/composition_spike/tile_themes_boundB.yaml
+[DIAG 00003 F0 T1.450] [Tier0] junction=YES at (8,11)
+[Tier0] tile_theme_config=res://src/Presentation/assets/composition_spike/tile_themes_after.yaml
+[DIAG 00004 F0 T1.450] [Tier0] tile_theme_config=res://src/Presentation/assets/composition_spike/tile_themes_after.yaml
 [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
-[DIAG 00005 F0 T1.094] [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
+[DIAG 00005 F0 T1.451] [Tier0] light rig: ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)
 [Tier0] review_build_marker=none (CLI flags)
-[DIAG 00006 F0 T1.094] [Tier0] review_build_marker=none (CLI flags)
+[DIAG 00006 F0 T1.451] [Tier0] review_build_marker=none (CLI flags)
 [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
-[DIAG 00007 F0 T1.095] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00007 F0 T1.452] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
 [Main] Visible tile rect: (2,6)-(13,21)
 [Main] floor_worn (3001) tiles: 0 rendered in the authored room, 0 in frame: 
 [Tier0] junction-lit probe: junction(8,11) lum=0.2747 at px(407,386) | reference(8,15) lum=0.5218 at px(407,642) | ratio=0.5264 min=0.2500 patch=33px
-[DIAG 00008 F5 T1.208] [Tier0] junction-lit probe: junction(8,11) lum=0.2747 at px(407,386) | reference(8,15) lum=0.5218 at px(407,642) | ratio=0.5264 min=0.2500 patch=33px
+[DIAG 00008 F5 T1.718] [Tier0] junction-lit probe: junction(8,11) lum=0.2747 at px(407,386) | reference(8,15) lum=0.5218 at px(407,642) | ratio=0.5264 min=0.2500 patch=33px
 [Main] Capture written: /Users/rafehatfield/development/c-yarl/.claude/worktrees/art-6-4-followup/tools/composition_spike/evidence/controls/variants.png
 WARNING: Nodes with non-equal opposite anchors will have their size overridden after _ready(). 
 If you want to set size, change the anchors or consider using set_deferred().
