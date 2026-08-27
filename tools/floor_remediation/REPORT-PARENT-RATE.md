@@ -4,6 +4,25 @@
 no corpus file changed, and no constant in any instrument was altered.** §13.1 governs landing
 and nothing in this run satisfies it.
 
+> **RULED ON THIS REPORT (Rafe, 2026-08-27).** Four rulings, recorded here and carried in the
+> documents they belong to. The body below is the evidence they were ruled on and is left as
+> written, except where a ruling corrects it and says so.
+>
+> 1. **C-GAB RETAINS primary-parent status.** The 2–1 seat split is recorded in bible §5.5 as
+>    **flagged, unresolved by instrument**, and per §13.2 the deadlock **routes to the human
+>    gate** as one question — *crack through the stone, or frame around the tile?* Rafe's answer
+>    settles the §5.5 note. **Screening remains the operative guard regardless**, at the measured
+>    child rate rather than at B-KAB's. Exhibit: `exhibit_cgab/`.
+> 2. **The instrument is relabelled**: *measured error in both directions; orders attention,
+>    rules nothing.* §5 of this document is the evidence. `REPORT.md` §6 carries it, and ruling 3
+>    there is superseded in part — the *no further tuning* half stands.
+> 3. **The rig defect is logged** in LOOP-PROCESS §4.2 as the week's **second measured-harmless
+>    silent-success catch**, alongside the MOCK no-op. The clause generalises from *a
+>    remediation* to *any step asserting an invariant*.
+> 4. **Tier-one gains a precondition** (bible §8.2.1, item 4): **A-HEB is unmeasured as a
+>    parent** — twenty generations, or an explicit unknown-rate marker, before anything
+>    conditions on it.
+
 Declared before the first call, not tuned after:
 
 > **QUESTION** — `REPORT.md` §4 measured 22 of 24 children ringed from B-KAB, and concluded the
@@ -15,7 +34,10 @@ Declared before the first call, not tuned after:
 > **BUDGET** — 20 generations, two cells of 10, **both spent in full whatever cell P showed**.
 > **LEVERS** — held at wave 1's setting: `style_strength` 50, no ring refusal. Neither lever the
 > B-KAB run moved is touched. This is a measurement, not a search.
-> **SCREEN** — `ring_instrument.py` on every child, mechanically. A floor, not a verdict.
+> **SCREEN** — `ring_instrument.py` on every child, mechanically. *(Labelled "a floor, not a
+> verdict" when this was declared. §5 below disproved the one-directional claim in that label,
+> and Rafe relabelled it on this evidence: **measured error in both directions; orders
+> attention, rules nothing.** `REPORT.md` §6.)*
 > **SEAT** — a blind spot-check on the borderline, at a cut declared before the data.
 > **REFUSALS** — no promotion in any state; nothing written to `remediated/`; the corpus, the
 > survivors and `MANIFEST.json` untouched; no lever tuned toward a nicer number.

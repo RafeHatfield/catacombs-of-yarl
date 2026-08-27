@@ -1,0 +1,56 @@
+{
+ "tile": "tools/pixellab/probe_6_4/survivors/C-GAB.png",
+ "tile_sha256": "1a24a59aa5607c3beebd8d1cf728acc0f43d6fc0bace6015025a7595c3f6db4f",
+ "lit_capture": "tools/floor_remediation/evidence/children_P/CONTROL_parent_CGAB.png",
+ "lit_sha256": "6b358533cb575d45b24698e4f2881e3cd97472afede6dad1f8531a8d0f7ab7fe",
+ "size": [
+  32,
+  32
+ ],
+ "colours": 8,
+ "luminance_median": 139.2,
+ "instrument_verdict": "CLEAN",
+ "instrument_findings": [],
+ "side_coverage": 0.791,
+ "min_side_coverage_required": 0.9,
+ "best_near_ring_contour": {
+  "kind": "dark-set",
+  "level": "lum<=108.0",
+  "side_coverage": 0.791,
+  "contour_px": 47,
+  "interior_px": 133,
+  "wall_thickness": 1.0,
+  "wall_thickness_spread": 0.0,
+  "interior_bbox": [
+   12,
+   7,
+   21,
+   24
+  ]
+ },
+ "claimed_sides": {
+  "col 9, rows 12-20": {
+   "dark": 4,
+   "of": 9
+  },
+  "col 23, rows 12-20": {
+   "dark": 9,
+   "of": 9
+  },
+  "row 20, cols 9-23": {
+   "dark": 15,
+   "of": 15
+  },
+  "row 9, cols 9-23": {
+   "dark": 15,
+   "of": 15
+  }
+ },
+ "seats": {
+  "floor-remediation round A": "cull: none",
+  "parent-rate round CP": "cull: none",
+  "parent-rate round CS": "cull: keyline"
+ },
+ "question": "crack through the stone, or frame around the tile?",
+ "note": "This exhibit measures nothing and recommends nothing. Per bible \u00a713.2 the instrument deadlock routes to the eye; per \u00a713.1 nothing here approves anything."
+}

@@ -380,7 +380,7 @@ instrument with no access to the first result. The clause is not resting on one 
 
 | survivor | role | why |
 |---|---|---|
-| **C-GAB** | **primary style parent** | compositionally neutral; carries no ring, at any value |
+| **C-GAB** | **primary style parent** — retained; see the flagged note below | compositionally neutral; carries no ring, at any value ⚠ *the second clause is contested and unresolved by instrument* |
 | **A-HEB** | **secondary style parent** | a joint network, not a keyline; carries no ring |
 | **A-VAB** | **prop stock — never a conditioning parent** | charactered. **The ruling holds regardless of surgery:** de-ringing removes a keyline, it does not make a framed plaque neutral, and it is the composition that propagates |
 | **B-KAB** | **retired from conditioning. No remediation.** | 24 children conditioned on it came back 22 ringed; the regenerated candidate was culled by the seat and is **not promoted**. Its original stays in the ledger, un-remediated, and nothing conditions on it |
@@ -398,6 +398,48 @@ Remediated, provenance-linked versions supersede an original **upon Rafe's re-cu
 originals stay in the ledger untouched, because a ledger that edits its own history is not
 evidence. **Nothing conditions on an un-remediated survivor**, and after this ruling nothing
 conditions on A-VAB or B-KAB in any state.
+
+**CORPUS NOTE — C-GAB's ring-clean clause is FLAGGED, UNRESOLVED BY INSTRUMENT (2026-08-27).**
+
+**C-GAB retains primary-parent status. RULED. This note changes nothing operational** — it
+records a contested clause so that the next reader does not mistake settled for unexamined.
+
+Three blind seats have now judged the *same bytes* — the identical lit capture, sha256
+`6b358533…`, re-derived byte-for-byte at two different commits:
+
+| seat | cull |
+|---|---|
+| floor-remediation round A | `none` |
+| parent-rate round CP | `none` — *"the best surface here by a distance"* |
+| **parent-rate round CS** | **`keyline`** |
+
+2–1. The dissenting seat named a four-sided contour *"one value, returning on itself… the dashed
+top does not save it"*. **Its geometry was checked and is partly wrong**: the side it calls
+closed is dark in 4 of 9 pixels. The instrument measures that same construction at side coverage
+**0.791 against its 0.90 requirement** — a nearly-closed rectangle with one broken side, which
+is an accurate description of what is there.
+
+**And that is exactly why the instrument cannot settle it.** §12.1's own text holds that gaps do
+not excuse a keyline — *"a border with a bite out of one corner, or one drawn as a dashed run of
+ticks, is still a keyline"* — while `REPORT.md` §1 records the instrument's KNOWN LIMIT as
+precisely this case, and the decision not to lower the threshold *because C-GAB's 0.791 was
+taken to be a mortar joint network*. Whether a side present at 4-of-9 reads as a broken keyline
+or as an absent one is not a measurement. **Per §13.2 the deadlock routes to the human gate**,
+where it sits as one question — *crack through the stone, or frame around the tile?* — and
+Rafe's answer settles this note. Building a number to break the tie is the move §13.4 forbids.
+
+**Screening remains the operative guard regardless of how that question lands**, at the measured
+child rate rather than at B-KAB's: 5 of 20 mechanically, 9 of 20 at the seat-adjusted upper
+bound. Evidence: `tools/floor_remediation/REPORT-PARENT-RATE.md` §4.
+
+**And the ring rate is a property of the reference, not of the surface — MEASURED
+(2026-08-27).** Conditioning 20 generations on C-GAB, at levers and prompt held identical to the
+B-KAB run's first wave, returned **5 of 20** ringed against B-KAB's **22 of 24** and its **8 of
+8** on the matching wave (one-sided exact p = 6.4e-06 and 0.0038). This clause's whole thesis —
+that *a reference hands down whatever it is a picture of* — now has a second, quantitative
+measurement behind it, from the ring rather than from the composition. `REPORT.md` §4's
+*"it will recur on every floor generated from this surface"* is corrected to **"from that
+reference"**.
 
 ---
 
@@ -827,6 +869,15 @@ repeated tile:
 3. **A floor-repair vocabulary.** §7.4's orc work exists on walls and nowhere on the ground —
    *"a cracked slab pinned flat with four driven iron pins, or a salvaged timber baulk dropped
    across a hole and worn smooth on its top edge."*
+4. **A-HEB IS UNMEASURED AS A PARENT — twenty generations, or an explicit unknown-rate marker,
+   before anything conditions on it (RULED, 2026-08-27).** Two of §5.5's four survivors now have
+   a measured child ring rate: B-KAB 22 of 24, C-GAB 5 of 20. The secondary style parent has
+   none, and the parent-rate run stopped short of taking it by its own declared fork. A
+   `may_condition: true` flag is an authorisation, not a measurement, and after this week the
+   two are no longer interchangeable — the same flag covers a reference that produced 92% ringed
+   children and one that produced 25%. So A-HEB is either measured on the same twenty before it
+   parents anything, or it carries an explicit unknown-rate marker wherever it is used, and the
+   round using it budgets for screening at a rate nobody has measured.
 
 ⚠ **And the review scene owed the seat a fair question, which this clause had already said.**
 Those verdicts were rendered on a one-tile-wide corridor, where there is no centre line distinct

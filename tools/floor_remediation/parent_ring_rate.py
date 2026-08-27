@@ -35,8 +35,11 @@ rounds and never by check-ins:
     LEVERS   HELD CONSTANT, at wave 1's setting: `style_strength` 50, and NO ring refusal in the
              negative description. Neither of the two levers the B-KAB run moved is touched
              here. This is a measurement, not a search.
-    SCREEN   `ring_instrument.py`, mechanically, every child. It is a FLOOR, NOT A VERDICT
-             (bible §13.2, REPORT §6) and its known limit stands unchanged and untuned.
+    SCREEN   `ring_instrument.py`, mechanically, every child. RELABELLED after this run by
+             Rafe's ruling of 2026-08-27: MEASURED ERROR IN BOTH DIRECTIONS; ORDERS ATTENTION,
+             RULES NOTHING (REPORT.md §6). It was labelled `a floor, not a verdict` when this
+             module was written - a claim of one-directional error that THIS RUN DISPROVED.
+             Its constants stand unchanged and untuned.
     SEAT     a blind spot-check on the BORDERLINE ones only - see THE SEAT TRIAGE below.
     REPORT   ring rate against the B-KAB run's 22/24. Ruling trigger: report only.
 
