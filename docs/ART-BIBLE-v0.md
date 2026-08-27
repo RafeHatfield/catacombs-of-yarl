@@ -1,7 +1,8 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.7 — DRAFT. One clause has now been derived from rendered assets on the device: §6.3.
-Everything else in this document still has not.**
+**Status: v0.8 — DRAFT. One clause has been derived from rendered assets on the device (§6.3);
+one more is under active test in the sighted round (§3). Everything else in this document still
+has not been derived.**
 
 This bible is written *before* pixel work, deliberately. It records decisions taken in
 conversation during Phase 1–3 of the art-direction rework (2026-08). It graduates to **v1**
@@ -147,7 +148,7 @@ been declared finalised does not reopen because a later tier raised the standard
 
 ---
 
-## 3. Projection and grid — PROVISIONAL, ratified by the Phase 5 pilot
+## 3. Projection and grid — PROVISIONAL, under active test by the sighted round
 
 - **Orthogonal square grid. Portrait orientation. Not isometric.**
 - **Volume lives in what stands up, not in the ground plane.** Objects and walls present
@@ -164,8 +165,30 @@ The two-plane rule survives from the retired Oryx track unchanged. It was never 
 it was a way to draw volume without paying isometry's tax, and it is re-adopted on its own
 merits.
 
-**STATUS (2026-08-26): THE RULED CONDITION FIRED. §3 IS REOPENED, WITH EVIDENCE — and what
-replaces it, if anything, is Rafe's ruling and not the spike's.**
+**STATUS (2026-08-26): PROVISIONAL — UNDER ACTIVE TEST BY THE SIGHTED ROUND.**
+
+The composition spike's condition fired: two-plane construction with invented numbers, judged
+absolutely, in an all-top adversarial scene, did not deliver depth — eight rounds, eight noes,
+every seat asking for a side face. **Three confounds are named against that evidence, and they
+are why the section is under test rather than struck:**
+
+1. **The scene contained zero §3-qualifying face cells.** A §2.2 violation in spirit: the
+   shipping game is rooms and reveals, not only chokepoints.
+2. **The seats judged in the absolute, with no genre grammar.** §13.3's comparative frame exists
+   for exactly this.
+3. **The construction numbers were invented**, where the bars' are measurable.
+
+**Declared criterion, before the sighted round runs:** recipe-driven construction — measured
+from the bars, pixels never crossing — judged **comparatively**, in a fair mixed scene. **Depth
+arriving ratifies §3. Depth failing at budget reopens §3 for real**, side faces become a live
+design question, and the licensing fallback becomes a real option to be argued honestly. Last
+resort, but named — and named before the round, not after it.
+
+**The reopening evidence stands exactly as recorded below; what it now feeds is that test rather
+than an immediate ruling.**
+
+**STATUS TRAIL (2026-08-26): THE RULED CONDITION FIRED. §3 WAS REOPENED, WITH EVIDENCE — and
+what replaces it, if anything, is Rafe's ruling and not the spike's.**
 
 The ruling was *"depth arriving ratifies §3; depth failing reopens it with evidence"*, against
 two rounds spent on plane-boundary occlusion and wall-top value separation with south-facing
@@ -319,6 +342,32 @@ accent doing identity work. Per room: long neutral stretches, then one saturated
 mean something happened. General richness is forbidden — saturation spent everywhere identifies
 nothing.
 
+### 5.5 Reference neutrality is a criterion — RULED (2026-08-26)
+
+§5.1 adopts a locked palette partly because **style-conditioned generation requires on-palette
+reference images**. This clause governs *which* images may be that reference, and it is a
+measured rule, not a preference.
+
+**Composition propagates with material.** Measured at 12/12 on the wall campaign: every child of
+a charactered reference — A-VAB's recessed frame — inherited its *composition*, not only its
+material. A reference does not hand down a surface; it hands down whatever it is a picture of.
+
+References therefore divide by job, and the division is load-bearing:
+
+- **Compositionally neutral references are style parents.** C-GAB's crack-through-a-field is the
+  shape of one: a material, evenly presented, that is a picture of nothing in particular.
+- **Charactered references are prop stock.** One-off assets in waiting — never conditioning
+  parents, however good they are as images.
+
+**The seed corpus wants the boring ones.** A reference chosen because it is handsome is a
+composition about to be copied twelve times.
+
+**Corpus status (2026-08-26).** The four §6.4 survivors carry a measured §12.1 defect: a uniform
+~3px near-black ring, B-KAB at luminance 14 against a median of 130. Remediated,
+provenance-linked versions supersede them **upon Rafe's re-curation**; the originals stay in the
+ledger untouched, because a ledger that edits its own history is not evidence. **Nothing
+conditions on an un-remediated survivor.**
+
 ---
 
 ## 6. Light — LOCKED
@@ -369,6 +418,28 @@ under every azimuth and therefore contradicts nothing.
 Self-occlusion, contact occlusion under a lip, and **plane-boundary occlusion (§12.1)** are all
 form. An asset that omits them is not obeying this clause more strictly; it is under-drawn, and
 it will read flat under any light the engine supplies.
+
+**OCCLUSION, NOT ILLUMINATION — the vocabulary is the rule.** Geometry is drawn with
+**occlusion** — dark where light cannot reach: crevices, under-edges, recesses, the shadow under
+a strap's lip — and never with **illumination** — bright where light would strike: top chamfers,
+lit crowns, directional ramps. Same information, opposite vocabulary. **A plane separates from
+its neighbour by the dark seam where they meet, not by a highlight along its edge.**
+
+**The vocabulary collision, recorded because it manufactured violations twice.** At 32px,
+*"describe geometry with value"* and *"bake a key light"* share a vocabulary. The wall gauntlet's
+own critic asked for a 1px chamfer top-and-bottom and received the gauntlet's only key-light
+culls; the tiles-pro audit reproduced the same failure through a depth parameter instead of a
+prompt. Two surfaces, two mechanisms — **a property of the scale, not of any tool.** Asking any
+generator or any author for "depth" without specifying the occlusion vocabulary will manufacture
+directional light. **Every future critic kit and prompt file carries this distinction
+explicitly.**
+
+**The instrument that enforces it — PROMOTED (§13.5), one axis.** The differencing check
+(composition spike, round 8): **authored form must persist identically with the engine light
+switched off.** A per-block top-bright/bottom-dark emboss that encodes a light direction fails
+the diff. Its demonstrated fail is on the record — it is the method that culled the round-8
+plant, quoted verbatim below — so its passes count, on its one axis. **It measures light
+direction and nothing else; the eye still rules the rest** (§13.4). Audited in §15.
 
 ⚠ **CAVEAT TRAIL — the baked arm exists now, and it outranked every receive-light arm built
 against it.** Recorded verbatim from the composition spike's report
@@ -899,6 +970,12 @@ own, separate wall from floor; this is what does.
 bands and tags still carry the read across a sprite; occlusion carries the read across a
 boundary. Both, not either.
 
+**And it is mandatory, not merely permitted: a wall-top meeting floor without its occluded edge
+is not purity, it is a missing plane.** This is construction grammar (§7), not outline — an
+occluded seam exists only where two planes actually meet, varies with what adjoins it, and is
+therefore form (§6.3). The test that separates it from a ring is stated in the worked example
+below.
+
 **A WORKED EXAMPLE, because the spike got this wrong on its first attempt and the error is the
 instructive part. THE RING PROHIBITION IS VALUE-AGNOSTIC: A PALE RING IS A RING.**
 
@@ -1059,6 +1136,30 @@ Where a constant must be calibrated, derive it from the corpus already accepted,
 work seeking acceptance. **The eye leads the number: calibrate after the verdict, never before
 it.**
 
+### 13.7 Platform facts — measured, recorded once so nobody re-buys them
+
+Not law, and not banked speculation either: each line below was paid for by a run and is cited
+to the audit that paid. They are here rather than in the tooling notes because each one closes a
+question a future session would otherwise re-open with generations.
+
+- **Architecture and conditioning do not exist on the same surface.** BitForge conditions
+  (12/12 propagation, §5.5) and produced architecture **0/100**; tiles-pro produces clean parts
+  (0 mechanical culls in 114) and refuses style conditioning on connectable features. **Any
+  pipeline needing both composes across surfaces.**
+- **tiles-pro is a parts supplier, not an instrument.** Promoted to the stock role on the
+  audit's evidence; failed as a standalone wall instrument (**0/114** two-plane).
+- **The wall road is composition.** Six-for-six on relationship defects (the composition spike);
+  generation supplies materials and parts only.
+- **All three camera parameters are spent.** `tile_view` is a silent no-op; `tile_view_angle` and
+  `building_wall_angle` are live but reach only the front elevation; `tile_depth_ratio` extrudes
+  thickness downward. **No parameter adds a plane that was never painted.**
+- **Nothing on this platform is seed-reproducible** — measured on every surface tried. The ledger
+  therefore stores **images, not parameters**, and that is process law rather than preference
+  (§6.4's evidence note says the same thing from the other end: a parameter row is not evidence).
+
+Sources: PRs #142 (probe 6.4 surface audit), #144 (wall gauntlet), #145 (tiles-pro audit), #146
+(composition spike).
+
 ---
 
 ## 14. Out of scope for this document
@@ -1087,7 +1188,9 @@ gaps — which is the correct state for a bible whose pilot has not run.**
 | §5.2 region slot legality                              | Same check, region-flagged          | **Portable, not yet built** |
 | §5.3 warm-share allocation per asset                   | None                                | ⚠ **NO INSTRUMENT.** Purpose stated; threshold may not exist (Ruling 70 applies). |
 | §5.4 chroma is signal                                  | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN.** **The countable proxy is named and refused:** saturated-pixel share is measurable, but share is not signal — a census can count saturation and cannot see meaning, so the number would gate the wrong thing and win trades it hasn't earned (§13.4). If a saturation census is ever built, it is ordering-only under the worst-ground pattern (§13.2), renders no verdict, and earns promotion like any instrument (§13.5). |
+| §5.5 reference neutrality (style parent vs prop stock) | None                                | ⚠ **NO INSTRUMENT.** Applied when a reference is chosen, by eye. The 12/12 propagation measurement is the *evidence for the rule*, not a gate over candidates — a "composition similarity" score would be exactly the weak proxy §13.4 refuses. |
 | §6.3 receive-light (no baked highlight)                | Blind LLM census, plant-controlled   | **BUILT AND PROMOTED, NARROWLY.** `tools/pixellab/probe_6_4/blind_census.py`. A blind read, not a metric (§13.4 v0.3: a script emitting a number is an instrument; a critic rendering a verdict is not). Passed its control **10/10** against *constructed* plants — ground truth taken from the prompt would have been circular. **Licensed for KEY vs not-KEY only, at plant strength.** The FORM-vs-FLAT boundary carries no control and is reported unlicensed, because a donor tile that is already near-flat yields a "flat plant" a truthful eye may correctly read as FORM, and tuning plants until that stopped would manufacture an instrument that cannot fail. |
+| §6.3 occlusion, not illumination (no encoded light direction) | Differencing check, light-off      | **BUILT AND PROMOTED, ONE AXIS.** Authored form must survive the engine light being switched off; a per-block top-bright/bottom-dark emboss fails the diff. Demonstrated its fail on the round-8 plant before any pass was counted (§13.5). **Licensed for encoded-light-direction only** — it says nothing about whether the form that survives is any good, which stays eye-side (§13.4). |
 | §6.3 no baked drop shadows                             | None                                | ⚠ **NO INSTRUMENT.** Joins the directional-highlight census as owed; same status, same caution — Gemfall's analogue measured as a blunt proxy and was refused a verdict. |
 | §7.1 everything is held                                | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Eye-side, at the gate. |
 | §7.4 heraldic stance (idle sprites are icons)          | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
@@ -1098,10 +1201,15 @@ gaps — which is the correct state for a bible whose pilot has not run.**
 | §1.1 zero expression budget (world creatures faceless) | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
 | §1 register conformance, all clauses                   | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** |
 
-**Twelve of fourteen clauses have no working instrument today. None is papered over. Seven of
+**Thirteen of sixteen clauses have no working instrument today. None is papered over. Seven of
 them will never have one, deliberately, and that is a decision rather than a gap.**
 
-**One row moved this revision, and only one.** §6.3 gained a plant-controlled blind census —
+**Two rows are new at v0.8, and they move in opposite directions — which is the audit working.**
+§6.3 gained a second instrument, the light-off differencing check, promoted on a demonstrated
+fail and licensed to one axis; §5.5 arrived as law with **no** instrument and the countable proxy
+named and refused in the row. A revision that only ever adds green rows is not auditing itself.
+
+**One row moved at v0.7, and only one.** §6.3 gained a plant-controlled blind census —
 the *first* instrument on this track to demonstrate it can fail before its passes were counted
 (§13.5). It is deliberately not a script emitting a number, and its licence is narrow: one axis,
 at plant strength. The unlicensed half is reported as unlicensed rather than quietly folded in,
@@ -1130,6 +1238,23 @@ Recorded so they are not re-derived; deliberately not law.
 ---
 
 *Revision history:*
+
+- *v0.8 — 2026-08-26. The wall campaign's rulings land. **§6.3 gains the occlusion law** —
+  occlusion, not illumination, stated as a vocabulary — with the **vocabulary-collision record**
+  (a 1px chamfer request and a depth parameter manufactured the same violation on two different
+  surfaces: a property of the scale, not of any tool) and the **light-off differencing check**
+  promoted per §13.5 with its demonstrated fail on the record, one axis only. **§12.1** gains the
+  mandatory half: a wall-top meeting floor without its occluded edge is a missing plane, not
+  purity — construction grammar, not outline (the value-agnostic ruling and the pale-ring worked
+  example landed with the spike and are unchanged here). **§3 is PROVISIONAL under active test**
+  rather than reopened: three confounds named against the spike's evidence, and the sighted
+  round's criterion declared before it runs, with the licensing fallback named as a last resort.
+  **New §5.5:** composition propagates with material at 12/12, so reference neutrality is a
+  criterion — neutral references are style parents, charactered ones are prop stock — carrying
+  the corpus note that nothing conditions on an un-remediated §6.4 survivor. **New §13.7:**
+  platform facts recorded once, so no future session re-buys them with generations. §15 gains
+  two rows, one instrumented and one deliberately not. Sources: PRs #142–#146 and the
+  design-thread rulings of 2026-08-25/26.*
 
 - *v0.7 — 2026-08-26. **§6.3 RATIFIED** (Rafe, STOP 2, on the reference device): receive-light
   survives its probe and the clause is no longer provisional. §6.4 closed and preserved as

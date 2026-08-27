@@ -1,6 +1,6 @@
 # Yarl Art Loop — PROCESS LAW v0
 
-**Status: v0.3 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
+**Status: v0.4 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
 `ART-BIBLE-v0.md`. Structure transfers wholesale; every number is re-derived.
 
 This document governs *how work is done and certified*. `ART-BIBLE-v0.md` governs *what is
@@ -64,6 +64,13 @@ long, autonomous, critic-held runs — not checkpointed relay.**
    ledger, verbatim critic verdicts) exactly as before — in the report, read after the run, not
    as a toll-gate during it. Vetting by the design thread applies to landings and rulings, not
    to rounds.
+6. **Before an asset class burns a second blind budget, measure how the bar builds it.** The wall
+   campaign ran ~250 generations of first-principles derivation while the solved construction sat
+   in the owned bars, measurable. **When any asset class stalls** — the critic converging on the
+   same missing property round after round — **the next session is a measurement pass, not
+   another blind batch** (bible §13.3: lessons cross, pixels don't). Builders get recipes with
+   numbers; seats get the comparative frame. **Absolute verdicts in a vacuum are how ten
+   independent judges ask for the same wrong thing.**
 
 **Named failure this clause exists to prevent: CHECKPOINT CREEP** — the entropic drift of an
 autonomous loop toward human relay, observed independently on both projects. Standing test:
@@ -141,6 +148,20 @@ be acted on.
 
 **An instrument that cannot be made to fail is decorative and must be labelled so or deleted.**
 
+### 4.1 A lever is proven on its axis, not on the diff — LAW
+
+**Moving pixels above the noise floor proves a lever is connected. It does not prove the lever
+does its job.**
+
+The worked case, twice-earned: the integration audit measured the shading parameter **HONOURED**
+— pixdiff 1.0 against a 0.354 noise floor — and Stage 1 of bible §6.4 then showed it had never
+moved the *lighting* at all. The same gap reproduced on a second surface, through a parameter
+rather than a prompt, in the tiles-pro audit.
+
+**Consequence for every positive control:** the plant must carry the defect **on the axis the
+lever claims**, and the lever must move *that*. A control that only asks "did anything change?"
+certifies connectivity and reports it as efficacy.
+
 ---
 
 ## 5. The bar
@@ -207,6 +228,17 @@ first and the measurement clears it.** The bar is never re-tuned after the answe
 
 The worked precedent: bible §6.4's receive-light probe declares its kill criterion before any
 arm runs.
+
+**A bar's clauses must name the destination, not just the road — LAW.** The wall micro-probe's
+bar was drawn from framing clauses only (*"surface, not object"*) and was cleared **20/20 by
+undifferentiated wallpaper**. Framing was the easy half; the clause left out — *"reads as a
+wall"* — was the destination. **A bar that can be cleared without reaching the thing the probe
+exists to reach is a mis-drawn bar.**
+
+The remedy is not to re-tune it, because that is what the rule above forbids. When a mis-drawn
+bar is discovered mid-probe it is **held as frozen, cleared honestly, and impeached in the same
+report** — the reader sees both the pass and why the pass is worthless. The micro-probe is the
+worked example.
 
 ---
 
@@ -291,7 +323,22 @@ construction. **This is a CC task with evidence, not a judgement call from memor
 - Generation prompts live as **auditable files with clause provenance and a self-check that
   asserts load-bearing clauses survived** — never as a string typed into a chat.
 
+**The measured surface facts live in bible §13.7 and are not repeated here** — which surface
+conditions, which supplies parts, which camera parameters are spent, and why the ledger stores
+images rather than parameters. One home, cited from both documents.
+
 ---
+
+*v0.4 — 2026-08-26. Three clauses, each twice-earned or campaign-earned. **New §4.1:**
+measurable is not effective — a lever is proven on the axis it claims, not on the diff; the
+shading parameter measured HONOURED and never moved the lighting, on two surfaces. **§8 gains
+the destination rule:** a bar drawn from framing clauses alone was cleared 20/20 by
+undifferentiated wallpaper, and a mis-drawn bar is held frozen, cleared honestly, and impeached
+in the same report. **§1.1 gains item 6, the sighted-round rule:** when an asset class stalls,
+the next session measures how the bar builds it instead of burning a second blind budget — ~250
+generations of derivation ran against a construction the owned bars already carried. §12 now
+points at bible §13.7 for the measured platform facts rather than mirroring them. Sources: PRs
+#144–#146.*
 
 *v0.3 — 2026-08-25. **The gauntlet clause** (new §1.1): autonomous critic-held runs restored as
 the default execution mode; ruling triggers enumerated; checkpoint creep named with its standing
