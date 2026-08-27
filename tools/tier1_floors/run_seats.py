@@ -134,11 +134,13 @@ def run(work, prompt):
 # Labels the prompt asks for, longest first so Q1_WHY is matched before Q1.
 LABELS = ["Q1_WHY", "Q3_WHY", "Q1_A", "Q1_B", "Q5_A", "Q5_B", "Q6_A", "Q6_B",
           "CULL_A", "CULL_B", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "CULL", "RANK", "FLIP LIST"]
-_LABEL_RE = re.compile(r"^\s*\**(" + "|".join(re.escape(l) for l in LABELS) + r")\**\s*:?\**\s*",
-                       re.MULTILINE)
+# Leading markdown of ANY kind: heading hashes, bold stars, or nothing. A seat writes its labels
+# however it likes and the parser's job is to find them, not to legislate their formatting.
+_LABEL_RE = re.compile(r"^\s*#{0,6}\s*\**(" + "|".join(re.escape(l) for l in LABELS)
+                       + r")\**\s*:?\**\s*", re.MULTILINE)
 
 
-def parse(text):
+def parse(text, strict=True):
     """Split the transcript on its labels and take everything up to the next one.
 
     ⚠ THE FIRST VERSION OF THIS FUNCTION READ THE QUESTIONS, NOT THE ANSWERS. It matched
@@ -168,6 +170,24 @@ def parse(text):
         out.setdefault(k, "")
     out["flips"] = [l.strip()[2:].strip() for l in out.get("FLIP LIST", "").splitlines()
                     if l.strip().startswith("- ")]
+
+    # WHAT GOES RED IF THIS SILENTLY DOES NOTHING (LOOP-PROCESS §4.2). A field that comes back
+    # empty because the seat did not answer and a field that comes back empty because the parser
+    # could not find the answer are indistinguishable downstream — and the second one nearly
+    # voided a valid round. Round 5's plant seat culled under a markdown heading (`## CULL`)
+    # rather than a bold label, the parser returned "", and the plant control reported MISSED.
+    # It was the parser's third defect in this session and the first that would have thrown away
+    # a real result.
+    #
+    # So: if the transcript contains a label as a word and the parser extracted nothing for it,
+    # that is an ERROR rather than an absent answer.
+    if strict:
+        for name in ("CULL", "Q1", "Q6"):
+            if not out.get(name) and re.search(r"\b%s\b" % name, text):
+                raise ValueError(
+                    "PARSE FAILURE: the transcript mentions %s but nothing was extracted for it. "
+                    "An empty field and an unparsed field are not the same thing, and treating "
+                    "them alike voids valid rounds." % name)
     return out
 
 

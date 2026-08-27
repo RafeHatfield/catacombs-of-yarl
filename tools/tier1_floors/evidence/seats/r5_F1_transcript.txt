@@ -1,0 +1,53 @@
+Measured the image rather than eyeballing it. Findings below are anchored to screen pixels in the 750×600 frame; floor occupies x 180–628, y 0–400, plus the corridor stub at x 372–436 running down to ~y 520. Figure stands at x 385–437, y 152–200. Logical pixel is 2 screen px (every feature edge in the floor lands on an even coordinate), so the art is authored at 32px per 64px game cell.
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Flat orange-brown stone — or dry packed earth. I genuinely cannot tell which, and that is not a close call I'm ducking. It has the colour of fired clay, the flatness of rammed earth, and the straight lines of cut slab, and none of the three wins.
+
+**Q1_WHY:**
+Across the whole lit body of the floor (sampled x 250–560, y 100–300, mid-values only) the hue spread is **1.2°** — 27.9° to 29.1°, median 28.6° — and saturation runs 0.53 to 0.55. That is one swatch. The 443 "distinct colours" in that region are the torch multiplying a single flat brown. There is no mineral variation, no damp patch, no staining, no second material anywhere in the room. Nothing tells me whether this was quarried or tamped down, because the only cue a material gets to give — how its colour varies — has been set to zero.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 372–436. **Nothing about the ground influenced that.** I chose it from the walls — the placeholder blocks stop at y 400 and leave a gap, so that's the exit. The ground contributed nothing: I checked mark density across sixteen equal sectors of the floor and it runs 10.3%–22.2%, mean 15.8%, with the corridor mouth sitting at 17.3% — statistically indistinguishable from the far corners. There is no worn path, no polish, no grit swept to the sides, no threshold where the room meets the corridor. The dark opening on the left (x 0–180, y 150–290) and the south corridor are equally mute. I picked south because it's centred under the figure, which is to say: at random.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been evenly abraded by nothing in particular. It is not damaged, it is *textured* — the marks describe a uniform condition rather than a history. Nobody has walked a route across it, nothing has been dragged over it, nothing has been dropped on it, nothing has been repaired, and no part of it is in worse shape than any other part.
+
+**Q3_WHY:**
+Three things, all measured after dividing out the torch falloff (Gaussian σ=20) so I'm reading the authored art, not the light.
+
+- The flat density figure above — 10–22% in every sector, with no clustering at chokepoints and no clean stretches.
+- The value range. The authored albedo has essentially four levels: stone body at 1.00–1.09, a lighter overlay at 1.11–1.16, and one dark line value bottoming at 0.67. Every dark mark on this floor — joint, crack, chip, speckle — sits at that same 0.67. There is no such thing on this surface as *deeper* damage. A hairline scratch and a structural joint are the same colour.
+- Nothing is out of line. I dumped the joint structure as ASCII at three separate places (x 500–580 y 120–136; x 580–640 y 88–104; x 240–330 y 130–146). All three are the identical construction: a mathematically straight 2-logical-px bar with a random ±1px fringe stubbing off the top and bottom edges. Same treatment, same weight, same jitter amplitude, in all three. Four hundred years of continuous heavy traffic and not one stone has settled, heaved, tilted, or slipped out of course. The only "age" applied is a noise fringe, applied everywhere equally.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Two things, and both are overlay layers rather than surface.
+
+**The soft light blobs.** There are 73 of them over the 42 visible floor cells — roughly 1.7 per cell, median area 252px, amorphous with dithered fuzzy edges. The one that snagged me is a row of three near-identical blobs in the upper right: centred at **(475, 116) 41×37px**, **(540, 108) 37×41px**, and **(593, 116) 37×41px**. Same size to within four pixels, same softness, same value lift, marching left to right in a band. I zoomed x 450–628, y 80–150 to confirm and they read as three clouds sitting on top of the floor, not as three stones. They ignore the joints entirely — the leftmost one straddles the vertical joint at x≈455 and continues across it unchanged. Stone character doesn't cross a joint. A noise octave does.
+
+**The speckle.** Scattered single logical-pixels of the dark value, at even density over every square inch including *inside* the light blobs. Once seen it stops being dirt and becomes a filter pass, and then it's the only thing on the floor I can see.
+
+**Q5: MADE, OR REPEATED?**
+**Repeated** — though not in the way that's usually meant, and the way it is repeated is worse.
+
+I tested for literal tiling and found none: correlating all 42 cells pairwise after normalisation gives a mean of 0.023, and the detrended autocorrelation at a 64px shift is 0.108 with no periodic peak — just smooth decay. No rectangle in this room is a copy of another rectangle. So it isn't stamped.
+
+But the *recipe* is identical at every point: straight line + fringe, plus crack, plus blob, plus speckle, at constant density, in one colour. That's what the eye picks up, and it's the reason the floor reads as generated. Literal tiling you can fix by drawing more variants. This you can't spot-fix — there's nothing to vary.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It's clean, it's consistent, the pixel discipline is correct, the joints don't fight the 64px gameplay grid (I checked — the long joints sit at x 210, 291, 336, 526, 588, none of which are cell boundaries, which is a deliberate and correct choice), and at phone size it will not embarrass anyone.
+
+Merely competent. Not genuinely good. It clears the bar for shipping and does not clear the bar for being the floor of *this* place.
+
+**CULL:**
+Joints enclose nothing — 99.1% of the floor is one connected region. No stones, only scratches.
+
+That number is the whole problem. I ran connected components on the inverse of the dark-mark mask: the entire 440×376 floor contains **two** enclosed cells of meaningful size. Every "stone" leaks into every other stone. It reads as masonry at a glance and dissolves the moment you trace any single joint — each one dies within 40–80px without meeting another. Nothing was laid here. For an underworld whose whole premise is that it is *administered* — built, catalogued, maintained on a schedule by somebody — a floor that cannot show a single completed stone is arguing the opposite case.
+
+**FLIP LIST**
+- Close the joints. Every stone must be a completed outline. Vary stone sizes 1×1, 2×1, 1×2 cells, and use T-junctions from a running bond — the perfect + crossings visible at (345,180) and (365,225) are four corners meeting at a point, which no mason cuts.
+- Break the straightness. Displace joint centrelines by 1–2 logical px along their length so courses wander, and tilt or sink individual stones so their edges sit proud of their neighbours. Right now every joint is a ruler line with noise sprinkled on it.
+- Separate joint from crack by value and width. Manufactured joints get their own darker, wider, more regular treatment; fractures get thinner and lighter and must cross stones rather than follow them. Currently both bottom out at the identical 0.67 albedo.
+- Delete the soft blob layer — specifically the three at (475,116), (540,108), (593,116) and their 70 siblings — and put that tonal variation *into the stones*, clipped to stone boundaries, with real hue movement. The current 1.2° hue spread needs to become 15–20° so some stones are grey, some are yellowed, some are stained.
+- Give the room a history: a worn traffic lane running from the left opening (y 150–290) to the south corridor mouth (x 372–436, y 400), grit accumulated against the joints outside it, and at least one orc repair on the walkable ground — driven pins, a salvaged timber patch — so the floor shows somebody has been holding this line.
+
+*Model: Claude Opus 5 (1M context)*

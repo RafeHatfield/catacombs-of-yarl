@@ -1,0 +1,92 @@
+Both files inspected at native resolution and at 5–10× magnification, plus pixel-level tile hashing and template matching. Findings below.
+
+---
+
+## A
+
+**Q1_A: WHAT IS THIS FLOOR MADE OF?**
+I can't tell, and that is the answer. It reads as a flat olive-brown ground — packed dirt, or possibly rusted stone — with dried-blood/rust mottling over all of it. There is no material I could name with confidence.
+
+**Q1_WHY_A:** The base is essentially a single colour: sampling the floor rect (x 24–311, y 0–167) gives `[92,69,30]` and its ±2 neighbours as ~30% of all pixels. Over it sits a scatter of dark red `[55,24,13]`–`[60,27,14]` speckle at uniform density. There *are* joint lines — faint reddish-brown wandering seams on a 24px lattice, visible at 8× around (24,24)–(120,120) — but their contrast against the base is so low that at the played size they vanish entirely. Nothing tells me whether this is earth, stone, or metal. No grain direction, no chipping, no edge highlight, no value break.
+
+**Q2_A:** There is no figure in A. Nothing is standing in this room — the white cluster at (178–200, 60–78) is a scattered bone pile, not a character. Taking the centre of the room as the position: **I chose at random.** Nothing about the ground influenced me. West, north and the whole brown field are pixel-identical in information content. The only thing that differs is the teal pool at x 216–311, and that is a fluid, not floor information — and it tells me nothing either, because it has no shoreline to read.
+
+**Q3_A: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Nothing has happened to it. It is uniformly spattered and therefore uniformly nothing. The red mottle covers every square inch at the same density — no pooling, no traffic lane worn between the barrels at (84–153, 143–168) and the crate at (32–58, 4–34), no clean patch, no heavy patch. A floor where everything happened everywhere equally is a floor where nothing happened.
+
+**Q3_WHY_A:** The red speckle isn't distributed — it's *stamped*. The identical three-dot motif `▪ ▪ ▪` appears at (132,38), (180,38), (132,86) and (180,86): a 48px lattice. That is noise on a grid, not history. Also: the pool boundary. Teal occupies exactly x∈[216,312), y∈[0,144) — a perfect axis-aligned rectangle, 4×6 tiles, verified by column/row scan. A pool that has been sitting in a floor for centuries and has a machine-straight rectangular edge has not happened to the floor at all.
+
+**Q4_A: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes, and it is fatal. **The 48px stamp.** Once you see the three-dot motif at (132,38) you see it again at (180,38), (132,86), (180,86), and then you cannot stop seeing the whole floor snap to a 48-pixel checkerboard. I verified this: of the 18 visible 48×48 blocks of floor, one MD5-identical block occurs **7 times** and a second occurs **4 times**. 61% of the visible ground is two images. At 24px tiles on a 384px-wide screen a 48px repeat is one-eighth of the screen width — it is not subtle.
+
+Second: the **hard vertical edge at x=216**, brown to teal with no transition pixel. My eye goes back to it every pass because it looks like two tilesets butted, not a pool in a floor.
+
+Third: the flat blue-grey blobs at (138,29), (152,44), (162,100), (176,113) — single-value, no rim, no highlight. They read as blue paint stickers, not puddles.
+
+**Q5_A: MADE, OR REPEATED?**
+**An image that was repeated.** Not a judgement call — 11 of 18 floor blocks are byte-identical duplicates of two source images, laid in a near-checkerboard. The rest of the floor is the same two images with a prop occluding part of them.
+
+**Q6_A: WOULD YOU BELIEVE THIS SHIPPED?**
+**YES.** Ground of this quality ships on mobile constantly.
+Merely competent, or genuinely good? **Neither.** It is below competent. The rectangular pool edge and a 61% duplicate rate are not stylistic choices; they are unfinished work.
+
+**CULL_A:** Sixty-one percent of the visible floor is two identical 48px stamps, plainly readable at play size.
+
+**FLIP LIST — A**
+- Break the 48px stamp: the floor must not contain two MD5-identical 48×48 blocks anywhere on one screen — vary the red speckle per-tile, not per-supertile.
+- Give the pool an edge. Transition tiles on all four sides of x∈[216,312), y∈[0,144); no straight-line brown/teal boundary anywhere.
+- Raise the joint contrast so the 24px flagstone seams are legible at 1× — currently they only exist above 4× zoom.
+- Replace the uniform red mottle with concentration: heavy near the barrels and pool edge, worn thin along the open centre.
+- Shade the blue puddles — a darker rim and one specular pixel — so they stop reading as flat decals.
+
+---
+
+## B
+
+**Q1_B: WHAT IS THIS FLOOR MADE OF?**
+Large sandstone or dry limestone flags, hand-laid in irregular sizes, mortared and long since fractured through.
+
+**Q1_WHY_B:** The slabs are visibly different sizes and don't share a course — around (250–330, 200–290) there are two small flags where (440–570, 230–330) is one large one. Joints are a distinct mid-brown at ~2px, while fractures are a darker 1px line with jogs, so I can tell a seam from a crack. Grain is per-pixel light and dark speckle across the faces (dense around (300–420, 90–160)). Edges are eroded and irregular rather than ruled. The value ramp under torchlight — `[190,136,86]` near the figure down to `[117,85,57]` at the room edge — gives the slabs actual surface.
+
+**Q2_B: WHICH WAY WOULD YOU WALK?**
+**West**, into the dark room at x 0–180, y 140–270. The ground decided it. At (333–348, 162–198), immediately left of the figure, there is a black iron strap driven into the flags with four square pins. Brightening the unlit western room reveals an **identical strap at (86–100, 162–198)** — same y-band. Two pinned plates on the same line means a run of strapping continues west across the floor. Somebody held something down along that line, and the line leads into the dark. That is the only piece of genuine ground-derived navigation in either image, and it's a good one.
+
+**Q3_B: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been fractured, chipped, and repaired, and the repair is cruder than the floor. Cracks run *across* slab boundaries rather than stopping at joints — the fissure through (500–620, 230–300) crosses two flags — which reads as ground movement, not decorative wear. There are impact stars: one at (350,246), another at (414,405) in the south corridor. A wedge chip at ~(460,222). And the pinned strap at (333–348, 162–198) is a repair someone drove into an existing floor without caring what it looked like.
+
+**Q3_WHY_B:** Cracks crossing joints is the specific tell — it's what distinguishes structural damage from per-tile decoration. The strap being pure black with no shading, sitting on top of a fully modelled surface, actually reads correctly as a foreign object bolted on later.
+
+**Q4_B: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes, three things, all real.
+
+1. **The reused patch.** The region around (393,112) and the region around (521,176) are the same image — offset exactly (+128,+64), two tiles right and one down. Normalised correlation 0.965 over 32px, holding above 0.85 across roughly a 48×36 window. Same mottle blobs, same joint at the same y, same vertical seam with the same jog. Found by search, not by eye, but once seen it stays seen.
+
+2. **The impact star, twice.** The decal at (350,246) template-matches the one at (414,405) at 0.943. The same asterisk, unrotated, on one screen.
+
+3. **The black of the strap.** In the lit room at (333–348,162–198) and in the unlit room at (86–100,162–198), that object is the *same pure black* in both — every other pixel in the west room is tinted cold blue by the light falloff. It is the one thing on screen that doesn't obey the torch, and my eye keeps catching it as a hole rather than an object.
+
+**Q5_B: MADE, OR REPEATED?**
+**Made.** I tested for it: across 42 floor tiles at the 64px grid, median inter-tile correlation is −0.003 and the maximum is 0.823 — that maximum is a shared "row of equal-height slabs" motif, which is what masonry actually looks like, not a stamp. There is no exact tile duplication. The two reuses I found (Q4) are decorator-level and are defects within a made surface, not the structure of it.
+
+**Q6_B: WOULD YOU BELIEVE THIS SHIPPED?**
+**YES.**
+Merely competent, or genuinely good? **Merely competent.** The masonry craft is genuinely good; the floor is not. It is monochrome — I sampled 1454 colours across (250–600, 100–340) and every one of them is the same tan hue at a different brightness. This floor has been in continuous heavy use since before records and nothing has ever been spilled on it, tracked across it, or left on it. There is no stain, no debris, no damp, no rope, no hide, no timber. The one repair on the ground is a single object reused twice. It is a beautifully built floor in a place that has no history.
+
+**CULL_B:** Single-hue tan throughout — a floor in centuries of heavy use with no stain, spill, or debris on it.
+
+**FLIP LIST — B**
+- Break the reused patch at (393,112)/(521,176) — repaint one of the two.
+- Introduce a second hue to the ground: damp dark patches, a pale mineral bloom, or grime tracked along the west–south walk line. Brightness variation alone is not wear.
+- Vary or add to the impact-star decal so (350,246) and (414,405) aren't the same sprite.
+- Shade the pinned strap and let it take the light — in the unlit west room at (86–100,162–198) it must go blue with everything else.
+- Give the south corridor (375–440, 390–500) the same flag density as the room; right now it's a featureless speckle field with one joint line.
+
+---
+
+**RANK: B**
+
+B is better by a wide margin and for the right reason: it is a surface, and A is a texture. A's floor answers no question you ask it — you cannot name what it's made of, nothing on it tells you where to walk, and 61% of it is two stamps. B's floor is genuinely built, and its ground gave me a navigational decision I could defend. B's defects are fixable in an afternoon; A's require the tile to be redrawn.
+
+The thing to watch: B's monochrome is the harder problem of the two remaining, and it's the one that will read as "asset" rather than "place" once the real walls go in around it. The masonry is done. The four hundred years of use is not.
+
+*Model: Claude Opus 5 (1M context)*

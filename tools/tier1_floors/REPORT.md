@@ -6,6 +6,41 @@ to it.
 
 ---
 
+## 0a. THE VERDICT, AND WHAT GOES TO THE PHONE
+
+**The floor family does NOT go to the landing gate.** Five seat rounds, four valid, and the blind
+critic culls it in every one. LOOP-PROCESS §1.1.1 is unambiguous: *nothing reaches the human gate
+that the blind critic would kill.* Presenting it would be the checkpoint creep that clause exists
+to prevent.
+
+**The RIG LADDER does, and it goes now.** §6.2.1 is a **precondition**, ruled at the last gate:
+
+> *The §6.2 rig values — radius, falloff, ambient — get a readability-tuning pass before any
+> asset is judged through them. **This is a precondition, not a task: no tier-one asset round
+> starts until it is done.***
+
+The pass cannot run against a void — it needs a real floor in front of it, at gameplay distance,
+across the lit radius — and that floor now exists and is walkable on device. **Tuning the rig
+against this floor is not a landing judgement on this floor**, and the two must not be conflated:
+Ruling 56 ratifies rig values for the Boundary; the floor comes back for another round after.
+
+That ordering is also the one §6.2's coupling flag demands. Every authored ratio derived against
+the current rig is re-derived when the rig is ratified — so ratifying the rig **first** is what
+stops the next floor round from being solved backwards against numbers nobody has decided.
+
+```
+TIER0_SCENE=res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json \
+TIER0_THEME=res://src/Presentation/assets/tier1_floors/tile_themes_tier1_floors.yaml \
+TIER1_OVERLAYS=res://src/Presentation/assets/tier1_floors/MANIFEST.json \
+tools/tier0_harness/build_review_app.sh
+```
+
+**What the next floor round needs is named and measured, not guessed:** an edge-matched
+(Wang/blob) tile set, because a joint network cannot close unless joints match across cell
+boundaries — §10.7.
+
+---
+
 ## 0. THE HEADLINE
 
 **A floor family exists, it is the first real candidate art this project has composed, and the
@@ -794,10 +829,78 @@ instance repeating in a new session. Blocks re-spaced, and asserted at import *a
 finished manifest — 152 ids, all distinct — because a comment saying "these do not overlap" is a
 docstring with no enforcement behind it.
 
-### 10.7 ROUND 5
+### 10.7 ROUND 5 — valid, and it found the structural limit
 
-Running against the 96-variant build at the time of writing. Its transcripts and verdict are in
-`evidence/seats/` and `SEATS-r5.json`.
+Plant caught (*moss, rubble, overgrown*, with a cull). **The previous round's defects are closed
+and the seat confirmed each without being told:**
+
+> *"I tested for literal tiling and found none: correlating all 42 cells pairwise after
+> normalisation gives a mean of **0.023**."* — the widened pool
+> *"the joints don't fight the 64px gameplay grid (I checked — the long joints sit at x 210, 291,
+> 336, 526, 588, **none of which are cell boundaries**, which is a deliberate and correct
+> choice)"* — the outlining, gone
+
+**And it culled on something none of the four earlier rounds had reached:**
+
+> **CULL:** *"**Joints enclose nothing — 99.1% of the floor is one connected region. No stones,
+> only scratches.** … I ran connected components on the inverse of the dark-mark mask: the entire
+> 440×376 floor contains **two** enclosed cells of meaningful size. Every 'stone' leaks into every
+> other stone. It reads as masonry at a glance and dissolves the moment you trace any single joint
+> — each one dies within 40–80px without meeting another. Nothing was laid here. For an underworld
+> whose whole premise is that it is **administered** — built, catalogued, maintained on a schedule
+> by somebody — a floor that cannot show a single completed stone is arguing the opposite case."*
+
+**This is a limit of the TILE SYSTEM, not of the art, and it is the session's terminal finding.**
+
+Each tile carries a joint cross that runs edge to edge, so within one cell four regions are
+enclosed. Across the field they are not: tile A's joints meet tile B's stone rather than B's
+joints, so every region leaks diagonally through the whole room. Nothing in the bond, the palette,
+the grain or the incident reaches it — **a joint network can only close if joints MATCH ACROSS
+CELL BOUNDARIES**, and that requires the variant chosen for a cell to depend on its neighbours.
+
+That is an **edge-matched tile set** — Wang tiles, or a blob autotiler — and it is a different
+tile system, not a tuning of this one. Round 3's seat had already pointed at its shadow (*"joint
+density is 2× higher on the grid lines than mid-cell"*) and this round measured the cause.
+
+⚠ **AND IT IS IN TENSION WITH §8.3, WHICH IS WHY IT IS A RULING AND NOT A TASK.** Edge matching
+constrains which tile may sit where; §8.3's motif trap is defeated by the opposite move, free
+randomisation. The two are reconcilable — Wang sets randomise *within* an edge class — but the
+pool must then be large enough to randomise inside every class, and §8.3's arithmetic (§10.6)
+applies per class rather than overall. **Whoever builds it owns that reconciliation.**
+
+⚠ **A THIRD PARSER DEFECT, AND THE FIRST THAT WOULD HAVE DESTROYED A REAL RESULT.** Round 5 was
+first reported **VOID**: the plant seat wrote its cull under a markdown heading (`## CULL`) rather
+than a bold label, the parser returned `""`, and the plant control read MISSED. The seat had
+culled, squarely, on the plant's own axis. **A valid round was one command away from being
+discarded.**
+
+The parser now accepts any leading markdown — but the real fix is the one §4.2 asks for: **a
+field that is empty because the seat did not answer and a field that is empty because the parser
+could not find the answer are indistinguishable downstream.** `parse()` now raises when a
+transcript contains a label as a word and nothing was extracted for it. An unparsed field is an
+error, not an absent answer.
+
+### 10.8 THE COMPARATIVE SEAT, THREE ROUNDS RUNNING
+
+Rounds 3, 4 and 5 each ran §13.3's blind side-by-side against the asset bar, and each returned
+Yarl:
+
+> **r5 RANK:** *"B is better by a wide margin and for the right reason: **it is a surface, and A
+> is a texture.** A's floor answers no question you ask it — you cannot name what it's made of,
+> nothing on it tells you where to walk, and 61% of it is two stamps. B's floor is genuinely…"*
+> **r5 Q6 (Yarl):** *"Merely competent. **The masonry craft is genuinely good; the floor is
+> not.**"*
+> **r5 CULL (Yarl):** *"Single-hue tan throughout — a floor in centuries of heavy use with no
+> stain, spill, or debris on it."*
+
+**Consistent across every round: the craft clears the bar and the CONTENT does not.** The floor is
+better made than the standard it is measured against and still does not say what the fiction needs
+it to say. §13.3's *"the answer must be Yarl, or a tie"* is met; §13.3's *"PASS means genuinely
+wowed"* is not.
+
+> ⚠ Carried at full strength, every time: **this is the shape of result that preceded the last
+> gate's FAIL.** §13.2 — *instrument agreement raises confidence in the instruments, not in the
+> asset.*
 
 ---
 
