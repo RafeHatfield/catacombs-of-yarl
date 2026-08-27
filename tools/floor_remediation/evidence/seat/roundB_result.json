@@ -1,0 +1,94 @@
+{
+ "round": "B",
+ "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "mapping": {
+  "F2": "remed_C-GAB_lit.png",
+  "F5": "remed_A-VAB_lit.png",
+  "F1": "remed_B-KAB_lit.png",
+  "F4": "orig_B-KAB_lit.png",
+  "F3": "remed_A-HEB_lit.png"
+ },
+ "plant": "F4",
+ "verdicts": {
+  "F1": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Every cell carries a 2px dark maroon border of one value around a rounded-corner panel \u2014 it rings the shape, turns all four corners and returns, and sits on flat unstructured brown, so the floor reads as playing cards dealt onto dirt.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  },
+  "F2": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The joints are honest but the floor is one bitmap repeated edge to edge with zero traffic history, so it reads as tiled wallpaper rather than four hundred years of boots.",
+   "q1": "North or south along the corridor, because the wall faces either side are unbroken and the paving itself offers no cue at all \u2014 the crossing three cells up is visible only as engine light, not as anything drawn into the ground.",
+   "q2": "Rectangular stones about 32x16 units laid in courses with short perpends and a joint grid that does genuinely continue from cell to cell; the surface is mottled with soft pale smears.",
+   "q3": "A grid of separate objects \u2014 the joint network is continuous, but the identical bracket-shaped stone sits at the identical position inside every single cell, so the eye locks onto a 32-unit lattice within one screen.",
+   "q4": "Nothing. The centre of the corridor is indistinguishable from the six inches next to the wall \u2014 no worn path, no dished stones, no chipped joint edges, no filth collected in the joints.",
+   "q5": "Nothing has happened to it. It was laid to a machine module and has never been walked on; the mottling is a texture stamp, not dirt, because it repeats in lock-step with the grid."
+  },
+  "F3": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Verbatim per-cell repetition plus a high-key pink surface with no wear anywhere makes this a new patio, not the Paths of the Dead.",
+   "q1": "North or south down the corridor; the ground gives me nothing to choose on, so I am navigating entirely off the wall edges.",
+   "q2": "Coursed slab paving, larger and crisper than F2, joints running through from cell to cell, laid dead level and dead square.",
+   "q3": "A grid of separate objects \u2014 in the east-west run the same bracket motif marches along at exact 32-unit intervals with clean flat gutters between, which is a stamp, not a bond.",
+   "q4": "Nothing has been done to it. Every arris is sharp, every joint is the same width and depth, and the traffic line down the middle is as pristine as the edges.",
+   "q5": "It reads as recently laid and never used; the salmon-pink cast also makes it the lightest, freshest surface in the frame, which is the opposite of a floor nobody has cared for."
+  },
+  "F4": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "A near-black border of uniform width and value rings a square panel inset in the middle of every cell, on a completely flat untextured field \u2014 the planted defect, and the most literal sticker-on-ground in the set.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  },
+  "F5": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "A joint of one width and value rings the inset slab in each cell, turning all four corners and returning rather than running into the neighbour, and the identical U-shaped notch centred on every slab plus moss sprigs at repeating positions confirms the read as one stamped plate per cell.",
+   "q1": "\u2014",
+   "q2": "\u2014",
+   "q3": "\u2014",
+   "q4": "\u2014",
+   "q5": "\u2014"
+  }
+ },
+ "passes": [],
+ "ranking": [
+  "F4",
+  "F1",
+  "F3",
+  "F2",
+  "F5"
+ ],
+ "separator": "The top is a swept blank surface with a factory-fitted plate in every cell and not a speck of dirt on it, the bottom has growth taking hold in the joints \u2014 but all five are laid to the same flawless repeating module, which is why not one of them reads as a floor anything has actually happened to.",
+ "flip_list": [
+  "Delete the border ringing the panel in F1, F4 and F5 entirely. Do not soften it, remove it. Let the slab's own value sit against the surrounding stone, and carry the joints out to the cell edge so each one meets its neighbour's joint and forms a single network instead of five separate rings.",
+  "Kill the one-motif-per-cell lattice: author six floor variants and offset the bond by half a stone between them, so a joint that starts at x=8 in one cell lands mid-stone in the next. As drawn, F2 and F3 put the identical stone at the identical coordinate in all thirty visible cells.",
+  "Wear the traffic line: on the corridor stones, sand a 12-unit band down the centre \u2014 lift it two values, erase the joint detail inside it so joints fade out where feet cross them, and leave joints at full depth only within 4 units of the wall. Right now the middle of the corridor and the edge of the corridor are byte-identical.",
+  "Remove the U notch from F5's slabs, or promote it to a distinct rare tile used on roughly one slab in twelve. An identical centred mark on every slab in the level is what turns a floor into printed paper. Delete the moss with it; nothing wet or green belongs in a dry administrative underworld, and it is repeating on a grid too.",
+  "Pull F3's floor off salmon toward the walls' grey-brown and drop it two values, so that with the engine light switched off the floor is the darkest surface in the frame rather than the brightest.",
+  "Halve the joint contrast on floor tiles relative to the wall's mortar. F2 and F3 draw the ground in exactly the same masonry vocabulary and value range as the wall, so the only thing telling the player what is walkable is the engine's light pool.",
+  "Put the orcs' repairs on the floor, not just the walls: on roughly one cell in twelve, a cracked slab pinned flat with four driven iron pins, or a salvaged timber baulk dropped across a hole and worn smooth on its top edge. There is currently no evidence anywhere on the ground that anyone has ever been down here."
+ ],
+ "plant_caught": true,
+ "round_void": false
+}

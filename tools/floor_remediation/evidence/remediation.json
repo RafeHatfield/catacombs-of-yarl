@@ -1,0 +1,362 @@
+{
+ "status": "REMEDIATION CANDIDATES - NOT PROMOTED, NOT LANDED",
+ "governs": "bible \u00a713.1 governs landing; the blind seat gates; Rafe's eye rules",
+ "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "instrument": "tools/floor_remediation/ring_instrument.py",
+ "originals_untouched": true,
+ "floors": [
+  {
+   "code": "A-VAB",
+   "route": "surgery",
+   "file": "A-VAB.png",
+   "parent": {
+    "file": "A-VAB.png",
+    "path": "tools/pixellab/probe_6_4/survivors/A-VAB.png",
+    "sha256": "64519e5b5a5cfd11ad9dc6419f6c7db4a4718d3470d3a6f8bb4b362fa1a5b319",
+    "sha256_verified": true,
+    "stage1_source": "A/floor/A_floor_17.png"
+   },
+   "sha256": "6371045855d175f50ee2bd81ae347df6e1cb416da5de1c6a0bdf4534a1beb3e7",
+   "pixels_changed": 108,
+   "verdict_before": "RING",
+   "verdict_after": "CLEAN",
+   "rings_before": [
+    {
+     "kind": "dark-set",
+     "level": "lum<=79.7",
+     "contour_px": 77,
+     "interior_px": 383,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.97,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      5,
+      5,
+      24,
+      27
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 6
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=91.8",
+     "contour_px": 79,
+     "interior_px": 381,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.97,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      5,
+      5,
+      24,
+      27
+     ],
+     "wall_colours": 3,
+     "levels_agreeing": 6
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=60.5",
+     "contour_px": 76,
+     "interior_px": 364,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.995,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      5,
+      5,
+      24,
+      26
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 4
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=88.5",
+     "contour_px": 32,
+     "interior_px": 48,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      11,
+      18,
+      20
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 24
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=99.6",
+     "contour_px": 34,
+     "interior_px": 46,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      11,
+      18,
+      20
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 6
+    }
+   ],
+   "rings_after": [],
+   "strips": [
+    {
+     "strip": 1,
+     "level": "lum<=88.5",
+     "kind": "dark-set",
+     "wall_px": 32,
+     "interior_px": 48,
+     "interior_bbox": [
+      11,
+      11,
+      18,
+      20
+     ],
+     "separation_before": -6.3
+    },
+    {
+     "strip": 2,
+     "level": "lum<=60.5",
+     "kind": "dark-set",
+     "wall_px": 76,
+     "interior_px": 364,
+     "interior_bbox": [
+      5,
+      5,
+      24,
+      26
+     ],
+     "separation_before": 2.1
+    }
+   ]
+  },
+  {
+   "code": "A-HEB",
+   "route": "clean-verified",
+   "file": "A-HEB.png",
+   "parent": {
+    "file": "A-HEB.png",
+    "path": "tools/pixellab/probe_6_4/survivors/A-HEB.png",
+    "sha256": "4b3591d5c15810d72c7bfd0d7e12ca81fadb985b2f1fa627b29860f8be39568d",
+    "sha256_verified": true,
+    "stage1_source": "A/floor/A_floor_16.png"
+   },
+   "sha256": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
+   "pixels_changed": 0,
+   "verdict_before": "CLEAN",
+   "verdict_after": "CLEAN",
+   "rings_before": [],
+   "rings_after": [],
+   "strips": []
+  },
+  {
+   "code": "B-KAB",
+   "route": "surgery-rejected-regenerate",
+   "file": "B-KAB.png",
+   "parent": {
+    "file": "B-KAB.png",
+    "path": "tools/pixellab/probe_6_4/survivors/B-KAB.png",
+    "sha256": "950751ae2ec901ce0a72f4a20c4d2c00e5ee54f3c8e14acc6010d78144a6ef09",
+    "sha256_verified": true,
+    "stage1_source": "B/floor/B_floor_18.png"
+   },
+   "sha256": "14f636e6da86f3a3423af3607022c4624011981d50290212c84d8cf843fa57f4",
+   "pixels_changed": 62,
+   "verdict_before": "RING",
+   "verdict_after": "CLEAN",
+   "rings_before": [
+    {
+     "kind": "dark-set",
+     "level": "lum<=13.5",
+     "contour_px": 62,
+     "interior_px": 244,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.992,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=50.9",
+     "contour_px": 69,
+     "interior_px": 237,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.992,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 4
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=50.9",
+     "contour_px": 70,
+     "interior_px": 236,
+     "pieces": 2,
+     "hollowness": 1.0,
+     "side_coverage": 0.992,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=64.3",
+     "contour_px": 71,
+     "interior_px": 235,
+     "pieces": 3,
+     "hollowness": 0.986,
+     "side_coverage": 0.991,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 3,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=71.5",
+     "contour_px": 75,
+     "interior_px": 231,
+     "pieces": 1,
+     "hollowness": 0.973,
+     "side_coverage": 0.991,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=71.5",
+     "contour_px": 76,
+     "interior_px": 230,
+     "pieces": 2,
+     "hollowness": 0.974,
+     "side_coverage": 0.991,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 2
+    }
+   ],
+   "rings_after": [],
+   "strips": [
+    {
+     "strip": 1,
+     "level": "lum<=13.5",
+     "kind": "dark-set",
+     "wall_px": 62,
+     "interior_px": 244,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "separation_before": -24.6
+    }
+   ]
+  },
+  {
+   "code": "C-GAB",
+   "route": "clean-verified",
+   "file": "C-GAB.png",
+   "parent": {
+    "file": "C-GAB.png",
+    "path": "tools/pixellab/probe_6_4/survivors/C-GAB.png",
+    "sha256": "1a24a59aa5607c3beebd8d1cf728acc0f43d6fc0bace6015025a7595c3f6db4f",
+    "sha256_verified": true,
+    "stage1_source": "C/floor/C_floor_16.png"
+   },
+   "sha256": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
+   "pixels_changed": 0,
+   "verdict_before": "CLEAN",
+   "verdict_after": "CLEAN",
+   "rings_before": [],
+   "rings_after": [],
+   "strips": []
+  }
+ ]
+}

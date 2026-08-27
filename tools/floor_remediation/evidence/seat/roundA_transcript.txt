@@ -1,0 +1,57 @@
+CANDIDATE: F1
+CULL: none
+VERDICT: FAIL
+Q1: North up the corridor — I am in a one-tile channel with wall hard on both sides, and the only branches are the east–west crossings one screen-length above and below me.
+Q2: Grey-brown flagstones laid flat in courses roughly 14px deep with vertical breaks in them, butted tight, no bedding or fill visible — but the courses land on the same two rows and the breaks on the same two columns inside every 32px cell, so it is one stamped panel repeated, not a laid floor.
+Q3: A grid of separate objects — every tile carries an unbroken dark rule down its left and right edge at relative luminance 0.81 against a field of 1.10, darker and straighter than any mortar joint inside it, so the horizontal corridor reads as a row of identical butted panels.
+Q4: Nothing — no wear path down the centre line, no rounding or silting of the joints where feet fall, no dishing; the chipping is uniform noise spread equally over stone and over the walking line.
+Q5: Nothing has happened to it. It is fresh pavement with a light dusting of generic pitting, and four hundred years have left no mark I can point at.
+WHY: Every tile is fenced left and right by a hard uniform rule and stamped with the same rectangular stone in the same place, so the floor reads as repeated panels rather than continuous paving.
+
+CANDIDATE: F2
+CULL: keyline
+VERDICT: FAIL
+Q1: not asked — culled at step 1.
+Q2: not asked — culled at step 1.
+Q3: not asked — culled at step 1.
+Q4: not asked — culled at step 1.
+Q5: not asked — culled at step 1.
+WHY: Each tile is a dark rounded-corner border ringing an inset panel, complete on all four sides at one width and one value, floating on empty ground — a card laid on the floor, not stone.
+
+CANDIDATE: F3
+CULL: none
+VERDICT: FAIL
+Q1: North up the corridor — same one-tile channel, walls both sides, two crossings above and below and nothing else open.
+Q2: Small squarish flagstones in a denser joint network than F1 — more courses, more break joints, more grit in the faces — which at the pixel level is the most convincing masonry in the set.
+Q3: A grid of separate objects — identical failure to F1: the same 0.81-value unbroken rule down both tile edges against a 1.10 field, and the same closed rectangular stone sitting at the same offset in every cell.
+Q4: Nothing — the wear reads as evenly scattered speckle; there is no darkened or polished lane where a company has walked the same line for four centuries, and no joint is more open than any other.
+Q5: Nothing has happened. It is a competent new pavement with noise on it; the place has no history in its floor.
+WHY: The best-drawn stone in the set is undone by a hard uniform border down both edges of every tile and a joint skeleton that repeats in lockstep at 32px.
+
+CANDIDATE: F4
+CULL: keyline
+VERDICT: FAIL
+Q1: not asked — culled at step 1.
+Q2: not asked — culled at step 1.
+Q3: not asked — culled at step 1.
+Q4: not asked — culled at step 1.
+Q5: not asked — culled at step 1.
+WHY: Two concentric closed rectangles inset in the middle of every tile, each one width and one value the whole way round — the tile is a framed plaque, and the moss clumps repeat at the same corners to confirm it.
+
+RANKING
+F3
+F1
+F4
+F2
+SEPARATOR: The top two at least draw stone with joints between it, while the bottom two draw a bordered object once and repeat it, and F2 does not even fill the tile — it leaves bare ground showing between its cards.
+
+FLIP LIST
+- In F1 and F3, delete the dark column at art x=0 and x=31 of every floor tile. Measured over nine tiles it sits at 0.81 relative luminance against a 1.10 field, darker than the deepest interior joint (0.93); nothing should mark where one tile ends and the next begins. Let the paving's own break joints fall wherever they fall.
+- In F1 and F3, move the joint skeleton off its fixed phase: horizontal courses currently land on art rows 13 and 27 and vertical breaks on cols 7 and 23 in every tile. Draw four variants with the course rows offset 3–7px from each other and the break columns staggered so no two adjacent tiles share a break at the same column.
+- In F1 and F3, the same closed rectangular stone sits at the same offset in every tile. Draw six variants: two where that stone is a different size, two where it sits at a different offset, and two where it is absent and the area is covered by three or four smaller stones.
+- In F4, delete both concentric rectangles inset in each tile and replace them with the same joint network used elsewhere on the floor, so the lines that remain are boundaries between stones rather than a frame around the cell.
+- In F4, the moss clump appears at the same tile corner in every instance. Move moss to a separate decal placed by the engine at joint junctions, at roughly one clump per six tiles, not one per tile.
+- In F2, delete the rounded-corner border and the flat empty gutter around each card, and extend the stone to the full 32x32 so the tile has no background left showing.
+- Add the traffic that four hundred years would leave: lighten the centre 10–14 art px of the corridor run by one step, erode the joint edges inside that lane so they read blunter and shallower than the joints at the corridor sides, and leave the outer 6–8px darker and sharper where no one walks.
+
+Model: Claude Opus 5 (1M context).

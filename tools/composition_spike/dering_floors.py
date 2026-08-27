@@ -1,5 +1,30 @@
 #!/usr/bin/env python3
-"""Strip the baked keyline from the §6.4 survivor floors, as a labelled MOCK derivation.
+"""SUPERSEDED 2026-08-27 by tools/floor_remediation/ - DO NOT USE AS A RING TEST.
+
+This file decides what is a ring with a luminance threshold (RING_FRACTION = 0.30 of the tile's
+own median). Bible §12.1's worked example - written into the bible by this same spike, one round
+after this file was written - holds that THE RING PROHIBITION IS VALUE-AGNOSTIC: A PALE RING IS
+A RING, and that what separates occlusion from a ring "is whether the treatment answers to the
+geometry it sits on, not whether it is lighter or darker than its surroundings".
+
+Measured consequence, not a theoretical objection. This file's table kept A-VAB as "a mid-tone
+rebate" at 0.48 of the median. A-VAB carries TWO closed 1px loops - 76 px and 32 px, each of one
+width and one value the whole way round - and this file removed neither. The de-ringed floor it
+produced for A-VAB is byte-identical to the raw survivor, and so is its lit in-scene capture
+(sha256 9e9890c0fa4db115 either way). A blind seat, shown that capture and never shown §12.1,
+culled it `keyline`: "Two concentric closed rectangles inset in the middle of every tile, each
+one width and one value the whole way round - the tile is a framed plaque."
+
+Its removal of B-KAB's 62px near-black ring was correct, and its fill rule - the MODAL non-ring
+neighbour, never a per-channel median, so no colour is invented - was right and is kept
+unchanged in the successor.
+
+Retained because the round-8 captures on disk were taken through it and their provenance must
+stay readable. Nothing new should call it.
+
+--- ORIGINAL HEADER FOLLOWS ---
+
+Strip the baked keyline from the §6.4 survivor floors, as a labelled MOCK derivation.
 
 WHY THIS EXISTS, AND WHY IT IS NOT A CORRECTION OF SOMEONE ELSE'S WORK
 ---------------------------------------------------------------------
