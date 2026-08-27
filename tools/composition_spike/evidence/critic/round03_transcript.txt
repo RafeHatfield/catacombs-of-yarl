@@ -1,0 +1,67 @@
+CANDIDATE: C1
+CULL: none
+VERDICT: FAIL
+Q1: North — the corridor I'm standing in is one tile wide and terminates six tiles south in a coursed brick end wall, while six tiles north it opens into an east–west crossing; north is the only branch, so north.
+Q2: Two unrelated walls in one frame — the east–west walls are grey coursed brick with real staggered bond, and the north–south walls flanking me are an olive-tan mottled field carrying the same 32px stamp repeated identically for roughly twenty columns by twenty-eight rows without a single variation.
+Q3: On the east–west band, a dark vertical post driven down through the courses with pale pins where it crosses a full-width horizontal rail — genuinely held; on the north–south mass, isolated straps with two or four pale pins that float mid-tile and cross no joint, span no crack and tie nothing to anything.
+Q4: Split — the east–west band's coursing implies a face and therefore height, but the north–south wall meets the corridor at a single dark dashed pixel line with no cap, no side and no bedding, so the mass I'm walking between reads as flat floor of a different colour.
+Q5: Nothing has happened. It is a clean grid of one stone stamped over and over with a few straps bolted on afterward and moss in the corridor joints; there is no wear pattern, no traffic, no sequence of repairs, no history in it.
+WHY: The wall mass is a single tile wallpapered across the whole frame and the fittings on it are decals that fix nothing to nothing.
+
+CANDIDATE: C2
+CULL: none
+VERDICT: FAIL
+Q1: North, for the same reason — one-tile corridor, brick cap to the south, an east–west crossing six tiles north.
+Q2: Same two languages as C1, but now the north–south mass is completely bare: the identical stamp, tile after tile, with a faint dashed vertical seam every 32px and nothing else on it at all.
+Q3: Nothing holds these walls together. I searched the full field and found no post, no strap, no pin, no plate, no band — the masonry is unfixed everywhere the light reaches and everywhere I brightened the dark.
+Q4: No — the north–south wall abuts the corridor at one dashed dark line; there is no top, no side, no thickness anywhere.
+Q5: Nothing. This is an untouched surface, not a used one — no company has held anything here for four hundred years or four days.
+WHY: Nothing in it is fixed, repaired, or held, which is the one thing this place is supposed to be.
+
+CANDIDATE: C3
+CULL: none
+VERDICT: FAIL
+Q1: North to the crossing; the corridor caps in brick to the south.
+Q2: Same construction as C1 — grey coursed brick east–west, one repeated mottled stamp north–south — but the wall material has been lifted about 27% in value, so the solid mass now sits within ten percent of the walkable floor.
+Q3: The same posts, rails and pinned straps as C1 — properly pinned where the post crosses the rail on the east–west band, floating and unattached everywhere on the north–south mass.
+Q4: No thickness on the north–south walls; a single dashed line separates solid from walkable, and with the raised wall value that line is now doing almost all the work.
+Q5: Nothing legible has happened, and the raised albedo makes it worse — the stone looks new and unworn where it should look used up.
+WHY: The wall was brightened until it nearly matches the floor it is supposed to bound, and it still has no thickness and no variation.
+
+CANDIDATE: C4
+CULL: key-light
+VERDICT: FAIL
+Q1: —
+Q2: —
+Q3: —
+Q4: —
+Q5: —
+WHY: Every masonry course ramps from dark at its top edge to a bright band at its bottom edge with a shadow line beneath — measured at y445–454, y461–470 and y317–326, the same direction above and below the player, and still present in the far-left corner at 6× exposure where the engine pool never reaches; that is a south light painted into the stone.
+
+CANDIDATE: C5
+CULL: none
+VERDICT: FAIL
+Q1: North to the crossing; brick cap to the south.
+Q2: The lightened wall material of C3 on the bare stamp of C2 — the north–south mass is one identical tile repeated edge to edge with nothing on it, at a value that sits ten percent below the floor.
+Q3: Nothing holds these walls together — no post, strap, pin or band anywhere in the frame.
+Q4: No — flat pattern, one dashed pixel line between solid and walkable, no cap and no side.
+Q5: Nothing. An unmarked, unrepaired, unworn surface at almost the same value as the ground.
+WHY: It combines the worst of the set — no fixings at all and the wall value pushed up against the floor value.
+
+RANKING
+C1
+C3
+C4
+C2
+C5
+SEPARATOR: The top has driven posts crossing pinned rails on at least one wall type, the bottom has no fixing of any kind on any wall, and none of them survive the fact that the wall mass is one tile stamped hundreds of times with no thickness where it meets the floor.
+
+FLIP LIST
+- The north–south wall mass is a single 32×32 tile repeated identically over roughly 500 cells — the dark Y-mark and dark bar land on the same pixel row in every tile. Author at least six non-repeating variants of the mottled wall tile plus four edge-condition tiles, and break every vertical run so no identical tile appears within three cells of itself in either axis.
+- The north–south walls have no thickness: the wall meets the corridor at a single 1px dashed line. Give every wall cell adjacent to walkable floor a 6–8px cap band along its floor-facing edge, drawn as the top arris of the block with the course line reading over it, so the wall has a top you can see and a side that stops.
+- The timber straps and pins on the wall mass float mid-tile and cross no joint. Move every strap so it spans a vertical seam between two piers, and place its pins on both sides of that seam — a strap that does not bridge anything is decoration.
+- The inset floor slabs carry a uniform 3px near-black ring on all four sides sitting on a flat field (e.g. the slab at x≈470,y≈370 in C1). Replace the ring with a bedding condition: mortar packing on two sides, a chipped lip on a third, and let the surrounding paving courses run up to and break against the slab rather than stopping clear of it.
+- The corridor paving changes hue family across hard tile seams — salmon, grey-brown and olive tiles abut with no transition (visible around x≈370–500, y≈340–480 in C1). Pull all floor tiles onto one base hue and carry variation in value and wear only, so the floor reads as one surface that has been walked on rather than three tilesets pushed together.
+- C4's coursing has lost its vertical joints and become continuous horizontal striping. Restore staggered vertical joints at irregular intervals across every course and delete the per-course bottom-edge highlight entirely — the stone must carry no light direction of its own.
+
+Model used: Claude Opus 5 (1M context).

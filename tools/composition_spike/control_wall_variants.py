@@ -57,6 +57,20 @@ def pin_to_first(text):
     return re.sub(r"^(      \d+: )(\[[^\]]*\])", sub, text, flags=re.MULTILINE)
 
 
+def pin_interior_fill(text):
+    """interior_fill pinned to one tile - the behaviour round 1's fix left in place.
+
+    CONTROL 1 does not cover this. Its regex pins integer-keyed autotile entries; interior_fill
+    is a word-keyed role in the wall_diagonal block, which is exactly why round 1 shipped a fix
+    that varied 6% of the wall and left 94% stamping a single PNG. A control that cannot fail
+    for the bug that actually occurred is not a control, so this one exists.
+    """
+    def sub(m):
+        ids = [int(v) for v in re.findall(r"\d+", m.group(2))]
+        return "%s[%d]" % (m.group(1), ids[0])
+    return re.sub(r"^(      interior_fill: )(\[[^\]]*\])", sub, text, flags=re.MULTILINE)
+
+
 def plant_mask3(text):
     """Mask 3 - the south-facing run - pointed at the floor tiles."""
     return re.sub(r"^(      3: )\[[^\]]*\]",
@@ -87,6 +101,7 @@ def main():
     themes = {
         "control_pinned": derive_theme("control_pinned", pin_to_first),
         "control_plant3": derive_theme("control_plant3", plant_mask3),
+        "control_fill1": derive_theme("control_fill1", pin_interior_fill),
     }
     if "--build-only" in sys.argv:
         print("derived: %s" % ", ".join(themes))
@@ -99,11 +114,13 @@ def main():
     real = shoot("res://%s/tile_themes_boundB.yaml" % ASSETS, "variants", cfg)
     pinned = shoot(themes["control_pinned"], "pinned", cfg)
     planted = shoot(themes["control_plant3"], "plant_mask3", cfg)
+    fill1 = shoot(themes["control_fill1"], "interior_fill_pinned", cfg)
 
     results, ok = [], True
     for label, other, floor in (
             ("CONTROL 1  variants vs one-tile-per-mask", pinned, 0.005),
-            ("CONTROL 2  mask 3 planted with floor tiles", planted, 0.005)):
+            ("CONTROL 2  mask 3 planted with floor tiles", planted, 0.005),
+            ("CONTROL 3  interior_fill pinned to one tile", fill1, 0.005)):
         frac = diff_fraction(real, other)
         passed = frac >= floor
         ok &= passed

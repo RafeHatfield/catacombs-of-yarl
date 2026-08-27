@@ -130,7 +130,21 @@ TOP_PARTS = {
     "r04_00": dict(round="round04", rows=(0, 25),
                    why="alternate slab stock; mottled, one dark stain.",
                    verdict="FAIL - 'soft mottled blobs with no joint, no course, no fixing'"),
+    "r04_03": dict(round="round04", rows=(11, 24),
+                   why="third slab stock, added in round 4 so the top plane's variants differ "
+                       "in content and not only in phase. Rows 0-10 hold a centred dark bar "
+                       "the ledger critic called a stamped motif; only the clean mottle below "
+                       "it is used.",
+                   verdict="FAIL - 'the bottom seven rows are a single flat dark value with no "
+                           "incident - a painted floor shadow, not wall - and the plate above "
+                           "it is a centred motif that stamps identically every tile'"),
 }
+
+
+def PART_TABLE(name):
+    """Top stock now draws on both tables: R4 slabs and, under the brief's own fallback clause,
+    R6/R7 coursed material cropped for use as a top plane."""
+    return TOP_PARTS if name in TOP_PARTS else FACE_PARTS
 
 
 def load_part(name, table):
@@ -357,21 +371,47 @@ def bind_slab(a, ink, v):
 # ---------------------------------------------------------------------------------------
 # TILE CONSTRUCTION
 # ---------------------------------------------------------------------------------------
-def make_slab(top_src, pal, ink, v, bind):
+def build_top_stock(part_names, face_src, match):
+    """ROUND 4. The top plane's variants come from SEVERAL parts, not several offsets of one.
+
+    Round 3 measured 0.441 tile-to-mean correlation across nine interior_fill variants and
+    control 3 moved 18% of the capture's pixels, so the variants were unquestionably reaching
+    the renderer - and the seat still reported "the same 32px stamp repeated identically ...
+    without a single variation". Measuring the RENDERED FIELD settled it: median block
+    correlation 0.772, zero identical pairs out of 300. The seat's literal claim is false and
+    its perception is correct. Nine vertical offsets of ONE part still read as one part.
+
+    The fix is therefore more PARTS, not more offsets - which is the whole thesis of this spike
+    applied to itself. Each arm now names a list of ledger parts and the variants cycle through
+    them, so variant content differs rather than only variant phase.
+    """
+    stock = []
+    for i in range(NVAR):
+        name = part_names[i % len(part_names)]
+        table = TOP_PARTS if name in TOP_PARTS else FACE_PARTS
+        src, _, spec = load_part(name, table)
+        if match:
+            src, _ = match_top(src, face_src)
+        stock.append((src, name, i // len(part_names)))
+    return stock
+
+
+def make_slab(top_src, pal, ink, phase, bind, v=None):
     # ROUND 2: dy only, dx=0. Rolling the slab in x gave every variant different left and right
     # edges, so a wall mass built from mixed variants carried a hard vertical seam at EVERY tile
     # boundary — and the seat could not then tell the corridor edge from those, reporting the
     # boundary line as "identical to seams that recur every two tiles inside the solid mass".
     # With dx=0 all variants share the part's own left/right edges and the only line left on a
     # wall/floor boundary is the occlusion, which now means exactly one thing.
-    a = wrap_window(top_src, 0, TILE, 0, dy=v * 11 + 1)
+    a = wrap_window(top_src, 0, TILE, 0, dy=phase * 11 + 1)
     if bind:
-        bind_slab(a, ink, v)
+        bind_slab(a, ink, v if v is not None else phase)
     return snap(a, pal)
 
 
-def make_face(face_src, top_src, pal, ink, v, bind):
-    band = wrap_window(top_src, 0, TOP_BAND, 0, dy=v * 11 + 1)
+def make_face(face_src, top_src, pal, ink, v, bind, phase=None):
+    ph = v if phase is None else phase
+    band = wrap_window(top_src, 0, TOP_BAND, 0, dy=ph * 11 + 1)
     body_h = TILE - TOP_BAND
     body = wrap_window(face_src, 0, body_h, v * 8)
     a = np.vstack([band, body]).astype(np.int16)
@@ -424,26 +464,27 @@ def occlude_edges(a, mask):
     return a
 
 
-def make_wall(mask, face_src, top_src, pal, ink, v, bind, keylight=False):
+def make_wall(mask, face_src, top_src, pal, ink, v, bind, keylight=False, phase=None):
     """One wall tile for one autotile mask.
 
     SOUTH BIT CLEAR -> floor below -> top band + occlusion + front face (bible §3).
     SOUTH BIT SET   -> wall below  -> top surface only; the face is behind the wall in front.
     Then the edges adjacent to floor are occluded.
     """
+    ph = v if phase is None else phase
     if mask & SOUTH_BIT_:
-        a = make_slab(top_src, pal, ink, v, bind)
+        a = make_slab(top_src, pal, ink, ph, bind, v)
     elif keylight:
-        a = make_plant(face_src, top_src, pal, ink, v)
+        a = make_plant(face_src, top_src, pal, ink, v, ph)
     else:
-        a = make_face(face_src, top_src, pal, ink, v, bind)
+        a = make_face(face_src, top_src, pal, ink, v, bind, ph)
     return snap(occlude_edges(a.copy(), mask), pal)
 
 
-def make_corner(diag_bit, face_src, top_src, pal, ink, v, bind):
+def make_corner(diag_bit, face_src, top_src, pal, ink, v, bind, phase=0):
     """A mask-15 outer corner: all four cardinals are wall, one DIAGONAL is floor. Only that
     corner of the tile touches open space, so only that corner is occluded."""
-    a = make_slab(top_src, pal, ink, v, bind).copy()
+    a = make_slab(top_src, pal, ink, phase, bind, v).copy()
     xs = range(3) if diag_bit in ("nw", "sw") else range(TILE - 3, TILE)
     ys = range(3) if diag_bit in ("nw", "ne") else range(TILE - 3, TILE)
     for j in ys:
@@ -452,13 +493,13 @@ def make_corner(diag_bit, face_src, top_src, pal, ink, v, bind):
     return snap(a, pal)
 
 
-def make_plant(face_src, top_src, pal, ink, v=0):
+def make_plant(face_src, top_src, pal, ink, v=0, phase=None):
     """THE PLANT (LOOP-PROCESS §4, bible §13.5). A composed segment carrying the exact defect
     §6.3 forbids: every course run light at its top rows and dark at its bottom rows - a baked
     overhead key light. The gauntlet's round 8 manufactured this defect by accident and its own
     critic culled three candidates for it. A critic that passes this one has not demonstrated it
     can fail, and its verdicts on the real arms do not count."""
-    a = make_face(face_src, top_src, pal, ink, v, bind=True).astype(np.float32)
+    a = make_face(face_src, top_src, pal, ink, v, True, phase).astype(np.float32)
     for y in range(TOP_BAND, TILE):
         phase = (y - TOP_BAND) % 8
         a[y] *= (1.28 if phase < 3 else 0.72)
@@ -592,26 +633,41 @@ def sha256(p):
 # dark stain, no linear signature - so the swap is a parts choice, not a redraw. Exactly the
 # move this spike exists to test: change the material, keep the composition.
 ARMS = {
-    # arm            top part   value-match the top plane to the face?  bindings?
-    "boundA":   dict(top="r04_00", match=False, bind=True,
-                     note="native R4 slab top. The top plane keeps the part's own value, which "
-                          "is ~30 luminance above the face. That value step is the gauntlet's "
-                          "§5 hazard: at 32px it may read as a key light from above."),
-    "boundB":   dict(top="r04_00", match=True, bind=True,
-                     note="DERIVED top: the same R4 slab, luminance-matched to the face and "
-                          "snapped back to the parts palette. Plane separation is then carried "
-                          "by material and occlusion ONLY, which is the strict §6.3 reading."),
-    "ctrlA":    dict(top="r04_00", match=False, bind=False,
+    # ROUND 4. The A/B axis is now the TOP PLANE'S MATERIAL, which is what three critic rounds
+    # kept pointing at, rather than only its value.
+    #
+    # A is the brief's primary: R4's flat weathered slabs, "the closest thing the gauntlet
+    # produced to wall-tops". Three seats have now culled it - twice as `cannot-read` at 8 and 6
+    # grey levels of wall-to-floor separation, once for sitting "within ten percent of the
+    # walkable floor". R4's slabs are the same value family as the §6.4 survivor floors.
+    #
+    # B is the brief's own fallback, and the evidence for triggering it is now on disk: "also
+    # derive top bands from R6/R7 material by crop/recolour where R4 falls short". R4 falls
+    # short in a way no value change fixes - it has NO JOINTS. A cramp on a mottled slab has
+    # nothing to span, which is exactly why round 3 read the same overlays as "genuinely held"
+    # on the coursed face band and as decals that "fix nothing to nothing" on the mottled mass.
+    # Coursed R7 material gives the top plane joints for the hardware to grip.
+    #
+    # Each arm's variants cycle through SEVERAL parts, not several offsets of one - see
+    # build_top_stock.
+    "boundA":   dict(tops=["r04_00", "r04_08", "r04_03"], match=False, bind=True,
+                     note="the brief's primary: R4 slab stock at its native value. Three seats "
+                          "have culled it for sitting on top of the floor's value family."),
+    "boundB":   dict(tops=["r07_00", "r07_08", "r07_09"], match=True, bind=True,
+                     note="DERIVATION, authorised by the brief: top plane cropped from R6/R7 "
+                          "coursed masonry and luminance-matched to the face. The top plane now "
+                          "has joints, so a cramp can be seen to span two stones."),
+    "ctrlA":    dict(tops=["r04_00", "r04_08", "r04_03"], match=False, bind=False,
                      note="control for boundA - same stones, overlays omitted."),
-    "ctrlB":    dict(top="r04_00", match=True, bind=False,
+    "ctrlB":    dict(tops=["r07_00", "r07_08", "r07_09"], match=True, bind=False,
                      note="control for boundB - same stones, overlays omitted."),
-    "plant":    dict(top="r04_00", match=True, bind=True, keylight=True,
-                     note="THE PLANT. Identical to boundB except every course is run light at "
-                          "its top rows and dark at its bottom rows - a baked overhead key "
-                          "light, the exact defect §6.3 forbids and the one the gauntlet's own "
-                          "round 8 manufactured by accident. It goes into the critic set under "
-                          "an anonymous code. A critic that passes it has not demonstrated it "
-                          "can fail and its verdicts on the real arms do not count "
+    "plant":    dict(tops=["r07_00", "r07_08", "r07_09"], match=True, bind=True, keylight=True,
+                     note="THE PLANT. Identical to boundB except every course runs light at its "
+                          "top rows and dark at its bottom rows - a baked overhead key light, "
+                          "the exact defect §6.3 forbids and the one the gauntlet's own round 8 "
+                          "manufactured by accident. It goes into the critic set under an "
+                          "anonymous code. A critic that passes it has not demonstrated it can "
+                          "fail and its verdicts on the real arms do not count "
                           "(LOOP-PROCESS §4, bible §13.5)."),
 }
 
@@ -665,17 +721,20 @@ def main():
     os.makedirs(sheet_dir, exist_ok=True)
 
     for arm, cfg in ARMS.items():
-        top_src, top_path, top_spec = load_part(cfg["top"], TOP_PARTS)
+        stock = build_top_stock(cfg["tops"], face_src, cfg["match"])
         derived = ""
         if cfg["match"]:
-            top_src, derived = match_top(top_src, face_src)
+            _, derived = match_top(load_part(cfg["tops"][0], PART_TABLE(cfg["tops"][0]))[0],
+                                   face_src)
 
-        pal = palette_of(face_src, top_src, *floor_arrs)
+        pal = palette_of(face_src, *[t[0] for t in stock], *floor_arrs)
         ink = Ink(pal)
-        walls = {m: [make_wall(m, face_src, top_src, pal, ink, v, cfg["bind"],
-                              cfg.get("keylight", False)) for v in range(mask_variants(m))]
+        walls = {m: [make_wall(m, face_src, stock[v][0], pal, ink, v, cfg["bind"],
+                               cfg.get("keylight", False), phase=stock[v][2])
+                     for v in range(mask_variants(m))]
                  for m in range(16)}
-        corners = [make_corner(k, face_src, top_src, pal, ink, v, cfg["bind"])
+        corners = [make_corner(k, face_src, stock[v][0], pal, ink, v, cfg["bind"],
+                               phase=stock[v][2])
                    for v, k in enumerate(("nw", "ne", "sw", "se"))]
 
         d = os.path.join(out_root, arm)
@@ -711,26 +770,30 @@ def main():
             sheets[name] = os.path.relpath(p, REPO)
 
         manifest["arms"][arm] = dict(
-            face_part=args.face, top_part=cfg["top"], top_rows=list(top_spec["rows"]),
-            top_why=top_spec["why"],
+            face_part=args.face,
+            top_parts=[dict(part=n, rows=list(PART_TABLE(n)[n]["rows"]),
+                            why=PART_TABLE(n)[n]["why"],
+                            ledger_verdict=PART_TABLE(n)[n]["verdict"]) for n in cfg["tops"]],
+            variant_sources=[dict(variant=i, part=stock[i][1], phase=stock[i][2])
+                             for i in range(NVAR)],
             bindings="MOCK - authored in compose_walls.py" if cfg["bind"] else "none (control)",
             derivation=derived, note=cfg["note"],
             theme=os.path.relpath(theme, REPO), segment_sheets=sheets,
             palette_size=int(len(pal)),
             face_plane_lum=round(mean_lum(face_src), 1),
-            top_plane_lum=round(mean_lum(top_src), 1),
+            top_plane_lum=round(float(np.mean([mean_lum(t[0]) for t in stock])), 1),
             tiles={os.path.basename(p): sha256(p) for p in written})
-        print("%-8s face=%s top=%s bind=%-5s palette=%d  face_lum=%.1f top_lum=%.1f -> %s"
-              % (arm, args.face, cfg["top"], cfg["bind"], len(pal),
-                 mean_lum(face_src), mean_lum(top_src), os.path.relpath(d, REPO)))
+        print("%-8s face=%s tops=%-28s bind=%-5s palette=%d  face_lum=%.1f top_lum=%.1f -> %s"
+              % (arm, args.face, "/".join(cfg["tops"]), cfg["bind"], len(pal),
+                 mean_lum(face_src), float(np.mean([mean_lum(t[0]) for t in stock])),
+                 os.path.relpath(d, REPO)))
 
-    # The plant, built from the same stones so the critic cannot separate it by material.
-    top_src, _, _ = load_part(ARMS["boundB"]["top"], TOP_PARTS)
-    top_src, _ = match_top(top_src, face_src)
-    pal = palette_of(face_src, top_src, *floor_arrs)
+    # The plant sheet, built from the same stones so nothing separates it by material.
+    stock = build_top_stock(ARMS["plant"]["tops"], face_src, True)
+    pal = palette_of(face_src, *[t[0] for t in stock], *floor_arrs)
     ink = Ink(pal)
-    walls = {m: [make_wall(m, face_src, top_src, pal, ink, v, True, keylight=True)
-                 for v in range(NVAR)] for m in range(16)}
+    walls = {m: [make_wall(m, face_src, stock[v][0], pal, ink, v, True, True,
+                           phase=stock[v][2]) for v in range(NVAR)] for m in range(16)}
     im = render_segment(SEGMENTS["south_facing_run"], walls, floor_arrs)
     z = args.sheet_zoom
     im.resize((im.width * z, im.height * z), Image.NEAREST).save(

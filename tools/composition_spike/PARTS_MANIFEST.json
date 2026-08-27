@@ -53,156 +53,366 @@
  "arms": {
   "boundA": {
    "face_part": "r07_00",
-   "top_part": "r04_00",
-   "top_rows": [
-    0,
-    25
+   "top_parts": [
+    {
+     "part": "r04_00",
+     "rows": [
+      0,
+      25
+     ],
+     "why": "alternate slab stock; mottled, one dark stain.",
+     "ledger_verdict": "FAIL - 'soft mottled blobs with no joint, no course, no fixing'"
+    },
+    {
+     "part": "r04_08",
+     "rows": [
+      0,
+      28
+     ],
+     "why": "flat weathered slab with cracks - the closest thing the gauntlet produced to a wall top. Rows 29-31 (its baked floor shadow) discarded.",
+     "ledger_verdict": "FAIL (ledger)"
+    },
+    {
+     "part": "r04_03",
+     "rows": [
+      11,
+      24
+     ],
+     "why": "third slab stock, added in round 4 so the top plane's variants differ in content and not only in phase. Rows 0-10 hold a centred dark bar the ledger critic called a stamped motif; only the clean mottle below it is used.",
+     "ledger_verdict": "FAIL - 'the bottom seven rows are a single flat dark value with no incident - a painted floor shadow, not wall - and the plate above it is a centred motif that stamps identically every tile'"
+    }
    ],
-   "top_why": "alternate slab stock; mottled, one dark stain.",
+   "variant_sources": [
+    {
+     "variant": 0,
+     "part": "r04_00",
+     "phase": 0
+    },
+    {
+     "variant": 1,
+     "part": "r04_08",
+     "phase": 0
+    },
+    {
+     "variant": 2,
+     "part": "r04_03",
+     "phase": 0
+    },
+    {
+     "variant": 3,
+     "part": "r04_00",
+     "phase": 1
+    },
+    {
+     "variant": 4,
+     "part": "r04_08",
+     "phase": 1
+    },
+    {
+     "variant": 5,
+     "part": "r04_03",
+     "phase": 1
+    },
+    {
+     "variant": 6,
+     "part": "r04_00",
+     "phase": 2
+    },
+    {
+     "variant": 7,
+     "part": "r04_08",
+     "phase": 2
+    },
+    {
+     "variant": 8,
+     "part": "r04_03",
+     "phase": 2
+    }
+   ],
    "bindings": "MOCK - authored in compose_walls.py",
    "derivation": "",
-   "note": "native R4 slab top. The top plane keeps the part's own value, which is ~30 luminance above the face. That value step is the gauntlet's \u00a75 hazard: at 32px it may read as a key light from above.",
+   "note": "the brief's primary: R4 slab stock at its native value. Three seats have culled it for sitting on top of the floor's value family.",
    "theme": "src/Presentation/assets/composition_spike/tile_themes_boundA.yaml",
    "segment_sheets": {
     "south_facing_run": "tools/composition_spike/segments/boundA_south_facing_run.png",
     "straight_run": "tools/composition_spike/segments/boundA_straight_run.png",
     "corner": "tools/composition_spike/segments/boundA_corner.png"
    },
-   "palette_size": 73,
+   "palette_size": 83,
    "face_plane_lum": 97.0,
-   "top_plane_lum": 124.2,
+   "top_plane_lum": 127.6,
    "tiles": {
-    "MOCK_comp_9200.png": "a58170f6419be9506a30cd77e954db668b5df5e0f3e3eddfe183cb48e7134388",
-    "MOCK_comp_9209.png": "50319eef5fd7988d70ad6ef52c15ce4e79ce56073166a35829b0575ee50a4064",
-    "MOCK_comp_9218.png": "8aa21287e21f0dd43dfe610ce0d729235377cb255d520e14c3783f62d318bbd4",
-    "MOCK_comp_9227.png": "26175e7f4427fd6059d13ac01034d164fce74d6c1b183c126a2d77c8b17ac94c",
-    "MOCK_comp_9228.png": "ee7de06177e3a51e53708793e2e715cee98bc5591511cf8392e53543d88dab0b",
-    "MOCK_comp_9229.png": "f9bdab2bdc7710426d412d266bb237bc149504266d937455a727f8a0856b6127",
-    "MOCK_comp_9230.png": "747032f7d9760f9e00680a0c6c26a41dcc0d4e8cfdc295fd408fa15f2fb220ec",
-    "MOCK_comp_9231.png": "0c29d50d5e9c3530d6a018ac1ccced7b0a2df4ac2c53b17b18417d91badd268e",
-    "MOCK_comp_9232.png": "ffa3d9c3eaf935c1d8dcd4b68141c4af88b825b3e554c89d8f713d7be6915d50",
-    "MOCK_comp_9233.png": "a1a218d262e4cc0d346f7ae6df990a3ea6c3ad69cfeba3f74c1d4399cd341673",
-    "MOCK_comp_9234.png": "9df0109d97a86ab2d98a8575b6731c8c63266bfaf84ee2410e2d603cd42e2d8e",
-    "MOCK_comp_9235.png": "be397f309acdcae2d285d428b29af3fa5e0a5bcbb09d39438b9b51d9c346571b",
-    "MOCK_comp_9236.png": "dd2fc6ccf30d657317709877748b68b1e1e5a09531e5c74888ab0870e19d3459",
-    "MOCK_comp_9245.png": "653443148440ccf3331170933c90e8f36bf1d5239cb4c671327a022d3f507927",
-    "MOCK_comp_9254.png": "44c634be9bfb6ad09aa8ae68c3a0e49d33469c27f2dbc933c59aa202603078c8",
-    "MOCK_comp_9263.png": "abafc5ba24b54ff34fd39520ad7fccc44cc06efce33439b8d1b74b95a9c2708c",
-    "MOCK_comp_9272.png": "51879d601251763eaf50523edb955ee7d6ccdee4f7a4cb1cd4d94e6d6929ea53",
-    "MOCK_comp_9281.png": "f8d40ef606cf95cafb9127d1bcf0b69b0e91912d5fa682bb302d53d030f5bd0f",
-    "MOCK_comp_9290.png": "339d3bf85d3455f9f4e10b30dd0ef5353c2b39a547151f1c0ff12b4716bd2d04",
-    "MOCK_comp_9299.png": "1db8c61d01b210e4beb63547bf5cb44fd2c90b21ee984d9387c70b486ffcb895",
-    "MOCK_comp_9308.png": "675c4c4b33d9c7bba052d4dcd7a47a1ac00df02c1ff086228b00b8736445b454",
-    "MOCK_comp_9309.png": "d8e234c78cb5ed7aafceba6504fd5768a31b953bb37ed380414e90b3786971a8",
-    "MOCK_comp_9310.png": "4f439d1e8f99c6d66b556a2532e95164b36cc49f6677169d023c83d05a236c49",
-    "MOCK_comp_9311.png": "1975edc6ee6ce8a7c01d7166a6536c2b1bca7489fb5aa7dcd8be292107e96121",
-    "MOCK_comp_9312.png": "a564a320483d6f97a88ae097b3b8579cb5d7ec4d47ea5528b5c138fb4661c65c",
-    "MOCK_comp_9313.png": "4571006ecdb3bf41f78cc808edc6bcb99a7ccc3048158507f1e3782c12bf746f",
-    "MOCK_comp_9314.png": "e71cbe9da13504950bdc068238699fb653640236afe6e647fcbf72aa341ed785",
-    "MOCK_comp_9315.png": "e635838ce0cf6644d1de670dc1d23a4c5a33eba3effaa84305a5c3b6b305576c",
-    "MOCK_comp_9316.png": "b6c941f264376be1df65e28f22000f0b67cdfb8d01d90747f23eda19b2675996",
-    "MOCK_comp_9317.png": "38553c9a6b8406e0d115ea66dd512488bac9acc160360d72ec68bf3c758e5ef3",
-    "MOCK_comp_9326.png": "b731d91b82e34fe170f9b2601d3b0e2cf95bacd6f2e6cd2e315e4166b3c52fea",
-    "MOCK_comp_9335.png": "35e4c6d2ac30d491f1ca221201d1440eccb4d2f6fd4b7647249dc9ac1af4868f",
-    "MOCK_comp_9336.png": "34a053bef34abe2d4ba83295f67243c5b1b74cf86cf2736dbe6a003f53bc9e37",
-    "MOCK_comp_9337.png": "a8e0b0c1a80ceaf061205fbcec95e95add61e695f14d5897e3248147edb4fa43",
-    "MOCK_comp_9338.png": "677df93d951167d2a367d307d6f582ed2918ad735fe84b56da7efcec063f6f86",
-    "MOCK_comp_9339.png": "874be42baef8ed659a6d88496fc935bab29047d2f0231e5f3021a95e4213beeb",
-    "MOCK_comp_9340.png": "0384648c6abe4ba3fddb95a5c87fea8a0dfa96e357a256e7fb286a4b8897aa9e",
-    "MOCK_comp_9341.png": "e4e12815d42624ec071d886d4298d3ebbe4557740d7c4e9534b3bd72408d2f85",
-    "MOCK_comp_9342.png": "18ce0c83e5295b9420d7d3a515a4cc0c29f0bb8308866b8518fe5d4f6ed63eee",
-    "MOCK_comp_9343.png": "4a8ab252d7385bc8273dcae597dd20424c6330385116cc38361783795bb8f440",
-    "MOCK_comp_9280.png": "47aecb46aabd617dde77269e69fce9913c68a8f8fa0b82130a7360505446c947",
-    "MOCK_comp_9282.png": "e866303995d761cd6c4a991b399a3cf0e5f88873a6b8993cbbcbe7d943686a04",
-    "MOCK_comp_9283.png": "b149f9a264c59c42db900f97df052bb020a02cb2882f956d48fbf622f8f8574e",
+    "MOCK_comp_9200.png": "b7db1249cd2cfec82447e14ee6ae561142bbf8de591b4406de911e1e179b497c",
+    "MOCK_comp_9209.png": "621428ce43f3b253268d5de35b6b1e68a2399d138b08912866b09c97af935771",
+    "MOCK_comp_9218.png": "0df242443ea5b68834b2b94a22a59da485e4cf542c9d2743cac2948439dca8ae",
+    "MOCK_comp_9227.png": "c83eec76bcf87bc16ac260d9dda77f7a55259f85207f85afbc8f2dd36a301061",
+    "MOCK_comp_9228.png": "4384112961fd58efb7aa3bf4404b8fd4da506f68eadcf1e2ecc20cfa9aecb712",
+    "MOCK_comp_9229.png": "1124994c3ecb2267b8da9374b8bfcfc212a151a03dea0887e35bf4f701a415f2",
+    "MOCK_comp_9230.png": "7e32c08a4ce66fd57dc1faacb6dae86de368eab122018d255c974d0551c28ba5",
+    "MOCK_comp_9231.png": "077572c613337e29f195ea86e3b12868e8c385be3059f0d9515eca71539c4579",
+    "MOCK_comp_9232.png": "096d55b83bf28b24d7f881372822375b5840da7ae9a11a1bea06a7d49dc71702",
+    "MOCK_comp_9233.png": "1b5f79af27e5c5534665eb80667c4f4dc19b2aa569f349539b9b4d40f34c3a84",
+    "MOCK_comp_9234.png": "14d7e4a98949afd1d3eed35ded75c1533516973e3003b71edf791541a8495463",
+    "MOCK_comp_9235.png": "ef622926dfdd106d2b1317ae6c6bf8bdad6e89dd63acee2b90cf9f4d5a117429",
+    "MOCK_comp_9236.png": "f9885667ff4f6eb2bbb4ce7351a195fbc132361a218357bf156d759655698511",
+    "MOCK_comp_9245.png": "113f55f1a70ce8ae1897a73b3eb6904dd6061aeb0cf555dfff1ea1b0f5228449",
+    "MOCK_comp_9254.png": "c4e373d30bf62eff157278b515b05aded648723c2c1c4efeee8b4d4af97ce877",
+    "MOCK_comp_9263.png": "9cc23287f1b69a4fde6ec47d022a4e5c54b4b7b8180fbd39b9f6914fb434f234",
+    "MOCK_comp_9272.png": "1c262b08432d76024a648d8a35aa86862780c62256e48127c6077d4b6f34c736",
+    "MOCK_comp_9281.png": "6cf121f50f1ff4d2a85e0b302aea6b24c066615ff92b0374f088c788e328dc2b",
+    "MOCK_comp_9290.png": "bd53d03ecbfc435504534c5bdb30d20b0a40d283e0c1324d2c5f9dc0dc694605",
+    "MOCK_comp_9299.png": "c8816ce5409aeb8367dc539f2263a483719e0fa27dbda194a55c9f1274e115fa",
+    "MOCK_comp_9308.png": "4ae83045a88a96d9e98276ac3fa2c7bd3f7dc8e84b57df753ee1f0f37be1b582",
+    "MOCK_comp_9309.png": "262fbcb4f625705e01545b4e9a9e8923271dc7a5b9bb80f2f7ca6a9f063f4f1d",
+    "MOCK_comp_9310.png": "bda39185a409e86a1ae62379b2308e645eb7957ae40e7e7e5092c1f017e41fe0",
+    "MOCK_comp_9311.png": "e8b5e3a18d8c574476a5a8075657de5b35c31b952b52db289072b31c308ded8e",
+    "MOCK_comp_9312.png": "fade739a152af0529f90097d47506a925b4a6ca7c721825dd21673002cc297e6",
+    "MOCK_comp_9313.png": "12e9e9ddd9a44f7d8cb736a9921a557d87e97cc76cd9faedf33eb21c839c7c1f",
+    "MOCK_comp_9314.png": "952d90e1da3566b0577adc6f9c42d2bfe2c9da0e157448592e062aa4ed942f20",
+    "MOCK_comp_9315.png": "05d0c1aef254248e3603f9b17a8868bb3fc7c5e74e992c05f6043730380b59b4",
+    "MOCK_comp_9316.png": "2d01428359150cc611e84e45d949c0b98927a172ebec92362629401d73d34fa4",
+    "MOCK_comp_9317.png": "dec639eab348194d456061929b9266eda74e472c071121f615bb2a4c516eeb81",
+    "MOCK_comp_9326.png": "5620ec3547d65534f28fb3691def6e3d4244b73bcd81d3ce84e2bb801221e2f4",
+    "MOCK_comp_9335.png": "ce0f1304c070f5f4204cf307f02506e6d97ef3bd4b80d6a6b44277eaaa0ab7cb",
+    "MOCK_comp_9336.png": "f2632acbfc57128411e3d820e36aaa3e03f1459a7b4d2e1c5b3e0602a3548450",
+    "MOCK_comp_9337.png": "c75c1fcb93dc586bf748d864b76930b7932fc66ee71b152bb526738df56a6906",
+    "MOCK_comp_9338.png": "c7243c09f35a4ab404960f2b46063f193baa0c048a3363762fd780e7c797941d",
+    "MOCK_comp_9339.png": "e93f6e04ba1a65873ab2a7280c8eb439223c7d20212857896fde081a61971c2e",
+    "MOCK_comp_9340.png": "2caa9fe42de5f557f900973e4c8f97fa5f28024030cc02eba9e82bb87431ff66",
+    "MOCK_comp_9341.png": "fa5ae551a7c7ef6bef4ea3fe3bb755e63e7b845f1d56150cb943c9f0c6185154",
+    "MOCK_comp_9342.png": "41ac40132baeac7463d55d3d4ab1c7bd4d4973ddc8ecaead1a4adfbc99e4430f",
+    "MOCK_comp_9343.png": "41569754d08e9198b3c959d709d2015154012cf26d677d87ad79f8c2090f2d34",
+    "MOCK_comp_9280.png": "47829d0e30033f9423d2ee32b2a8cc35b5c4e6274e6c918c1d5e9e42abe3f1bb",
+    "MOCK_comp_9282.png": "613d4eaa4da96ba816684b324a8a217963f66cab7528ae7a45064b1f5ab379f1",
+    "MOCK_comp_9283.png": "1e38d72d5d76c861f7ca0621e21d2e2bbdfadd1858123fb363ec3eb5f3c7e15b",
     "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
     "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
     "MOCK_comp_9122.png": "97b7faa229db71965abd21903049a66eb2dfffad42c1a1a398a33da945defb1f",
     "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
-    "MOCK_comp_9140.png": "35e4c6d2ac30d491f1ca221201d1440eccb4d2f6fd4b7647249dc9ac1af4868f",
-    "MOCK_comp_9141.png": "34a053bef34abe2d4ba83295f67243c5b1b74cf86cf2736dbe6a003f53bc9e37"
+    "MOCK_comp_9140.png": "ce0f1304c070f5f4204cf307f02506e6d97ef3bd4b80d6a6b44277eaaa0ab7cb",
+    "MOCK_comp_9141.png": "f2632acbfc57128411e3d820e36aaa3e03f1459a7b4d2e1c5b3e0602a3548450"
    }
   },
   "boundB": {
    "face_part": "r07_00",
-   "top_part": "r04_00",
-   "top_rows": [
-    0,
-    25
+   "top_parts": [
+    {
+     "part": "r07_00",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "coursed masonry, irregular block widths, joints at every course; no key-light cull. Rows 0-4 (its failed cap band) discarded.",
+     "ledger_verdict": "FAIL - 'rows 0-4 use the identical greys as the face, so there is no top band at all ... flat brick wallpaper with zero thickness'"
+    },
+    {
+     "part": "r07_08",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "alternate face stock; larger blocks, more wear incident.",
+     "ledger_verdict": "FAIL (ledger)"
+    },
+    {
+     "part": "r07_09",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "alternate face stock; higher contrast between blocks.",
+     "ledger_verdict": "FAIL (ledger)"
+    }
    ],
-   "top_why": "alternate slab stock; mottled, one dark stain.",
+   "variant_sources": [
+    {
+     "variant": 0,
+     "part": "r07_00",
+     "phase": 0
+    },
+    {
+     "variant": 1,
+     "part": "r07_08",
+     "phase": 0
+    },
+    {
+     "variant": 2,
+     "part": "r07_09",
+     "phase": 0
+    },
+    {
+     "variant": 3,
+     "part": "r07_00",
+     "phase": 1
+    },
+    {
+     "variant": 4,
+     "part": "r07_08",
+     "phase": 1
+    },
+    {
+     "variant": 5,
+     "part": "r07_09",
+     "phase": 1
+    },
+    {
+     "variant": 6,
+     "part": "r07_00",
+     "phase": 2
+    },
+    {
+     "variant": 7,
+     "part": "r07_08",
+     "phase": 2
+    },
+    {
+     "variant": 8,
+     "part": "r07_09",
+     "phase": 2
+    }
+   ],
    "bindings": "MOCK - authored in compose_walls.py",
-   "derivation": "DERIVATION: luminance scaled by 0.781 to match the face plane (124.2 -> 97.0)",
-   "note": "DERIVED top: the same R4 slab, luminance-matched to the face and snapped back to the parts palette. Plane separation is then carried by material and occlusion ONLY, which is the strict \u00a76.3 reading.",
+   "derivation": "DERIVATION: luminance scaled by 1.000 to match the face plane (97.0 -> 97.0)",
+   "note": "DERIVATION, authorised by the brief: top plane cropped from R6/R7 coursed masonry and luminance-matched to the face. The top plane now has joints, so a cramp can be seen to span two stones.",
    "theme": "src/Presentation/assets/composition_spike/tile_themes_boundB.yaml",
    "segment_sheets": {
     "south_facing_run": "tools/composition_spike/segments/boundB_south_facing_run.png",
     "straight_run": "tools/composition_spike/segments/boundB_straight_run.png",
     "corner": "tools/composition_spike/segments/boundB_corner.png"
    },
-   "palette_size": 73,
+   "palette_size": 86,
    "face_plane_lum": 97.0,
-   "top_plane_lum": 96.5,
+   "top_plane_lum": 96.6,
    "tiles": {
-    "MOCK_comp_9200.png": "e5f406387dcc9cac22a3074288ad38ceb591983e4fa002c7cee6daf378deaada",
-    "MOCK_comp_9209.png": "267e711a0190b07f0339097b7840f88598ab54a550ad73a373d304d97abe1c66",
-    "MOCK_comp_9218.png": "957f3dbce3aabdb0bc8f8e04c572b2a7ba083b3056702f89e4342980aa22bffa",
-    "MOCK_comp_9227.png": "2f5556f548edef299085ab058b35e1ea0c1ef8b6b10d1bb8e768edc028181ea6",
-    "MOCK_comp_9228.png": "1fe94aa69b0c34732968a23960ac239fcd7809cfd18e2cc7dcd0a9f792037108",
-    "MOCK_comp_9229.png": "faf8abbcca09a3558df09ef1a31e3a608a73e8eee090d5f686151958b1e7a26e",
-    "MOCK_comp_9230.png": "c77152e59569241f0cca892b1d827fe4186510e1a2215732d857b6544e2f4a99",
-    "MOCK_comp_9231.png": "5a75641926ad4653dfee27cd79c82fc4aacad912e9e168d608d7ca74b5c8f45d",
-    "MOCK_comp_9232.png": "b57f61539c3dad7402dda692d84d18b49fcf05c06fad882b24b2fe51116b8e23",
-    "MOCK_comp_9233.png": "4d4ac91cb9ed42edca38da4b540cd42224460fc6b1e710adaa7748579ceebb14",
-    "MOCK_comp_9234.png": "bc0592cffaad55ea2bba89d79a1e69bd487ecfdc73ce3887a9fce9d8d428ff5d",
-    "MOCK_comp_9235.png": "3d9ae77676a7a8e540d1c8ee433e4752b5dd263e798899626c9be1f986546e03",
-    "MOCK_comp_9236.png": "a3365f7b7a0e99cde5aa622f403e39edc9d3ad935d883b0ce39cfa0cecfd4122",
-    "MOCK_comp_9245.png": "1d6223b034921fffa412c2d6eca59b764818fffd2d732ae5a6092b54b52cc2ea",
-    "MOCK_comp_9254.png": "353c6f4849e07095d421a729e4b87ceb9087904e9d47db87d9a5699d5f813e09",
-    "MOCK_comp_9263.png": "7fa2ed7e35160a70de76cd9eb194210abc0236b7bccde4a6d8ccbe5e6f506279",
-    "MOCK_comp_9272.png": "261d94532e50bc1017107fe39ca3d2291b0fd3ae59a0c12a495d82b13276460e",
-    "MOCK_comp_9281.png": "47648f3139092c4dbc5dade1dde9f716b40d450eb6d459a4b6d425761e67db80",
-    "MOCK_comp_9290.png": "eb90d62c39d6dfef3da75974707200890d364fa589d4e7d954d49a71f9cca77e",
-    "MOCK_comp_9299.png": "7200c281221e2a39cfed9c027a18b648c734ecfdb889de3fed7aec32b8aa200b",
-    "MOCK_comp_9308.png": "894c44f9dcca438d78272dbb49032a85433293859bdc8807a35f9f3aa5065915",
-    "MOCK_comp_9309.png": "ea65dbbd6065252ac58aaf41c45e1ee4da5d9c8b16836a86454b7d2736275237",
-    "MOCK_comp_9310.png": "fc2f8249c7d9fb3ceaaf9763630841b770aab94a36c4e1f8bc6e7979324ad0ed",
-    "MOCK_comp_9311.png": "e8e9ff1d9674dbc5720800740cefc8a17ac0b7ec9ff49a5c6f8412535af34769",
-    "MOCK_comp_9312.png": "c6d9e1b46ff6de57ecdace20291cdd024e6cc2d7377975738af0c697bb1a19f2",
-    "MOCK_comp_9313.png": "88c44d6336de3845b3a361c38cc3a0ac90d6e1934e898c44d73af41cb6d7bfd5",
-    "MOCK_comp_9314.png": "afa345c3b3460bcc9a36cd5ca57afe229f968cd2e8947ab5725b69b9d9d37d52",
-    "MOCK_comp_9315.png": "00fc0dbfaaf5d4beb6e1a6b0dbfcf003d8395f52a3f9957de9e05cfcb5c05089",
-    "MOCK_comp_9316.png": "79caabbd895e7fe6cc71f5185bab00a311bf2e157e7ca9b1ae618d30b5602f74",
-    "MOCK_comp_9317.png": "610128b379b5992d965ddb5f4a4b9dbf685ad2c30f8103d07effb00ee3e38e59",
-    "MOCK_comp_9326.png": "cf4abd97fdbdf37ed47cd56da766f574e78d69626a6e1b50d6ca2c7c30b21303",
-    "MOCK_comp_9335.png": "aab3d165f5e29b828dd38e6953f331a66b6c250ef728fa382634354b2e9cc0bc",
-    "MOCK_comp_9336.png": "c6c7dcb61a29414189335d970393a3158bd0d2494948e06577c4529f9f62511e",
-    "MOCK_comp_9337.png": "bcea1f31c42bff1f5b2776d1f995a83a014f4b82322c0cb2b7e34c86cf7bf71f",
-    "MOCK_comp_9338.png": "967d214330148c954383dc34a80b97e09a9dcfc1ae762079669ef6818589e352",
-    "MOCK_comp_9339.png": "4a81d8b2d32ad3db6c732e115b63acd4f0e2f2ae9ea05070cfe907fb6a872828",
-    "MOCK_comp_9340.png": "3c239b91a7de2b73462f5e981b212c25c7ba5a4e74f905d1d6cee6146bfb3eb3",
-    "MOCK_comp_9341.png": "0f3294a03222653a3ecc46f497fddd0047e34597c605967d0fe269b9567e2016",
-    "MOCK_comp_9342.png": "af502a22f3a6e98739037e1bc43b2098a7b8bf2a6b35d5e00b82ec56de082d22",
-    "MOCK_comp_9343.png": "f74a82ec2654e72fa68dfae17b36a0662beaa3e7517cfc2f9b1f89f0532e244e",
-    "MOCK_comp_9280.png": "91614722a2043c02f7251f5ee19a950f3ac0b961ad645518b2746b153188fdf7",
-    "MOCK_comp_9282.png": "115c41a2e17f9a4ac9ebc238e33464619d4fa9016e3dab8144a621fc3d918c1c",
-    "MOCK_comp_9283.png": "c17e93668db44caeef6f4db93ebe45e9b6007e92b0cba910ac9aad15bc946fc8",
+    "MOCK_comp_9200.png": "3aec9f9b7175e4b5c18187379cb14eb77033d17b14e15e9e53c768b2492300e9",
+    "MOCK_comp_9209.png": "047ec94bf56def934a606b0c3edf983bbee8a153932164bd04cfb8030a0e3474",
+    "MOCK_comp_9218.png": "d7097b726f5a9d66470f87b2bbeced5c5f6a18016de695d32063258784ca3fb4",
+    "MOCK_comp_9227.png": "718e293762ba95ccca76fd1fa7cee1fb82fafa10bfd35fe143e3f3d097f87d7e",
+    "MOCK_comp_9228.png": "8391d15a1c9f16e17e314661df512d905765591c5cb4f07b843bf05dcfd2d8f4",
+    "MOCK_comp_9229.png": "82b862a536278252562fae5178134f38295266019c535c383f2c8afbc60e80e4",
+    "MOCK_comp_9230.png": "1a797442e32b4997d14112d8c26f05f4ec8703d1be2681ae9b7872375dcbc862",
+    "MOCK_comp_9231.png": "55dbf34735ba097aa8990ecaa60bb0a0d423f4a28307f05b43c2040a97e8c10f",
+    "MOCK_comp_9232.png": "ab6a511c255292e0dd9e2994f31fbc0d06b08579f828d0e5fc09deb5249ffa8a",
+    "MOCK_comp_9233.png": "852383cd38eca15713395d9f89941f2805bece8eecfaf5bcd38a0f86be1fb92c",
+    "MOCK_comp_9234.png": "d3a11d9920103984bb1b5ef37a035015b0eeb08e2f821fb04c24c7aeb3ade162",
+    "MOCK_comp_9235.png": "08867f2d6e7a55e41c1a5dd8bb3627664a6dda46aba20a31f1b5d1f1ffdc9326",
+    "MOCK_comp_9236.png": "1368993b1b2fd7df014e56ccea10d40af74fcb20ca5e7fccfef80f1fb976e285",
+    "MOCK_comp_9245.png": "613ada8713c30b9e247343b673d3c0ec3372515a8e34dd33f2675c4a617c4a56",
+    "MOCK_comp_9254.png": "fe9ed261d48159d893ce2b693ac2ebbc36a2eb5b1fa5ef4e73abd4e3abbecfab",
+    "MOCK_comp_9263.png": "66d45081ce8845a6851c4017e4d991b6f8521f0a6ddf838b05e8d5e3a433cb7f",
+    "MOCK_comp_9272.png": "eaf8513697138e2ec68ca9429a12649669c4cc4d724745db1121aac9ef961299",
+    "MOCK_comp_9281.png": "8dc1963620a21bc57e964ebc8b66160ac701cbd9ff080f6e33f360130db27332",
+    "MOCK_comp_9290.png": "3d92381cb31ac95965faf37eb7af58b77f1f9df881f9ab4e35e2f6e37a5e69da",
+    "MOCK_comp_9299.png": "363287ccc42995788d2f2132a798668869a7d965a3ecb4b335b6c374329da1be",
+    "MOCK_comp_9308.png": "629a4d9e25098e8a1e1221620d1e17a171640d35e0b178fd5c8738e71ffbbc2c",
+    "MOCK_comp_9309.png": "e15945cc3438f5e0aaf50d1875a978149e977770ba2ed87ed6f7bcf5a84e8f6a",
+    "MOCK_comp_9310.png": "f6a122f240504f3c38ecab8938dbd45137231d74909288bc146d2bc6cb9d7698",
+    "MOCK_comp_9311.png": "a709c701edd32ab97ffab9da8c73ed54bc6a0ba02fe47d8575d782844b34f20e",
+    "MOCK_comp_9312.png": "9a3496b28a93ccb69f5d40be2532e669cd68e2f978e716d895fc4a41a7968ac5",
+    "MOCK_comp_9313.png": "2d13eee48c18f37948d38258c445c57d3182a097f1adbb46e9943f1264b22976",
+    "MOCK_comp_9314.png": "924e5376ef2efb2fad817acf156a9a00f1264afd1401d79b78df1db8d6c45628",
+    "MOCK_comp_9315.png": "3d07ee637fec55fe8dbcff9f8a6f68075978017a7703f1e8da240e6c67b85217",
+    "MOCK_comp_9316.png": "1f42072d82784ef72fd82b82f12ca4b431dc1430238b1bfe6a73926487ab8ce0",
+    "MOCK_comp_9317.png": "b7e74f2c4a7f358889583a941d4688d5ef83e660682243a88a3f81178f867823",
+    "MOCK_comp_9326.png": "b5adc8116af680bf24df2474d516757353fe2af15138a7b2db0a1994d972b2ed",
+    "MOCK_comp_9335.png": "fa60b4b19737a5ac01f17c3bbc97747c854145716cfea89e449bed52f6970b8c",
+    "MOCK_comp_9336.png": "3996ad956d2cfb1feb640815575ee390b335cb1724f72aef7f1bbcc0581d100f",
+    "MOCK_comp_9337.png": "b3eaca84cbb5a5930534ea09740aca9ba26037ccf397016d56332a510e0423b6",
+    "MOCK_comp_9338.png": "37588923b08244f35a9fb40dae2c83fd1b2f2015a88d078c34ba3e145e26b3f6",
+    "MOCK_comp_9339.png": "9b0093efc0ecd5318dd9e782fae25855600ce26e6c195218851b65bf6e2cbc89",
+    "MOCK_comp_9340.png": "1efe92c25efc83c2146ad707c71243224a81302c8537c80de782693765ebef57",
+    "MOCK_comp_9341.png": "195edeb9e0db98c0b73ea2c33710c61e14cd14b7749c5bc791455fffa0924d36",
+    "MOCK_comp_9342.png": "b3fe6f3acb5de1ecd58999734ec6d93f54b564a5753412764cb0bf14847581ff",
+    "MOCK_comp_9343.png": "c3bcb0e54e7d785ba70b74581799a69c03fe98d0c047b7853bd4c12cc16330c9",
+    "MOCK_comp_9280.png": "2d6a8a919dd3a3d1bb80ef56ee67e28636d35bb3ba8816365a20a9fc2c025497",
+    "MOCK_comp_9282.png": "302c413a6b47cda13bda9fbe5a08983d22e98b25889845e089a14895e91fad94",
+    "MOCK_comp_9283.png": "1f6a39643f46826b1cc82f160b880fa015a16dff051cb15761ce7be55c495964",
     "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
     "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
     "MOCK_comp_9122.png": "97b7faa229db71965abd21903049a66eb2dfffad42c1a1a398a33da945defb1f",
     "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
-    "MOCK_comp_9140.png": "aab3d165f5e29b828dd38e6953f331a66b6c250ef728fa382634354b2e9cc0bc",
-    "MOCK_comp_9141.png": "c6c7dcb61a29414189335d970393a3158bd0d2494948e06577c4529f9f62511e"
+    "MOCK_comp_9140.png": "fa60b4b19737a5ac01f17c3bbc97747c854145716cfea89e449bed52f6970b8c",
+    "MOCK_comp_9141.png": "3996ad956d2cfb1feb640815575ee390b335cb1724f72aef7f1bbcc0581d100f"
    }
   },
   "ctrlA": {
    "face_part": "r07_00",
-   "top_part": "r04_00",
-   "top_rows": [
-    0,
-    25
+   "top_parts": [
+    {
+     "part": "r04_00",
+     "rows": [
+      0,
+      25
+     ],
+     "why": "alternate slab stock; mottled, one dark stain.",
+     "ledger_verdict": "FAIL - 'soft mottled blobs with no joint, no course, no fixing'"
+    },
+    {
+     "part": "r04_08",
+     "rows": [
+      0,
+      28
+     ],
+     "why": "flat weathered slab with cracks - the closest thing the gauntlet produced to a wall top. Rows 29-31 (its baked floor shadow) discarded.",
+     "ledger_verdict": "FAIL (ledger)"
+    },
+    {
+     "part": "r04_03",
+     "rows": [
+      11,
+      24
+     ],
+     "why": "third slab stock, added in round 4 so the top plane's variants differ in content and not only in phase. Rows 0-10 hold a centred dark bar the ledger critic called a stamped motif; only the clean mottle below it is used.",
+     "ledger_verdict": "FAIL - 'the bottom seven rows are a single flat dark value with no incident - a painted floor shadow, not wall - and the plate above it is a centred motif that stamps identically every tile'"
+    }
    ],
-   "top_why": "alternate slab stock; mottled, one dark stain.",
+   "variant_sources": [
+    {
+     "variant": 0,
+     "part": "r04_00",
+     "phase": 0
+    },
+    {
+     "variant": 1,
+     "part": "r04_08",
+     "phase": 0
+    },
+    {
+     "variant": 2,
+     "part": "r04_03",
+     "phase": 0
+    },
+    {
+     "variant": 3,
+     "part": "r04_00",
+     "phase": 1
+    },
+    {
+     "variant": 4,
+     "part": "r04_08",
+     "phase": 1
+    },
+    {
+     "variant": 5,
+     "part": "r04_03",
+     "phase": 1
+    },
+    {
+     "variant": 6,
+     "part": "r04_00",
+     "phase": 2
+    },
+    {
+     "variant": 7,
+     "part": "r04_08",
+     "phase": 2
+    },
+    {
+     "variant": 8,
+     "part": "r04_03",
+     "phase": 2
+    }
+   ],
    "bindings": "none (control)",
    "derivation": "",
    "note": "control for boundA - same stones, overlays omitted.",
@@ -212,71 +422,141 @@
     "straight_run": "tools/composition_spike/segments/ctrlA_straight_run.png",
     "corner": "tools/composition_spike/segments/ctrlA_corner.png"
    },
-   "palette_size": 73,
+   "palette_size": 83,
    "face_plane_lum": 97.0,
-   "top_plane_lum": 124.2,
+   "top_plane_lum": 127.6,
    "tiles": {
-    "MOCK_comp_9200.png": "75bff8c8db9cb91f246a64902de74b819afda7891bb08a6e28be3e0619e734de",
-    "MOCK_comp_9209.png": "f360592aab9e4b338669b3247f8e448681828e80f0e8cb56b2bfcad99541bd2e",
-    "MOCK_comp_9218.png": "717bd6bd619f94bb6ad01a94b5f386a692368a634ecba2e81163741d90fdfcb3",
-    "MOCK_comp_9227.png": "b5475bdc33a29b75eab7ee7040690b2c50bcb09af6f31888e4e03b47531eaf29",
-    "MOCK_comp_9228.png": "b95e4c7f97fb156e25bd2df8810bc948b3accad900570c50871b09e1c47aefe6",
-    "MOCK_comp_9229.png": "3ca3a61f629d19547084f83244c62dcf5533d0233b7e93a4711d869f55bb6e42",
-    "MOCK_comp_9230.png": "9c2a7377c3ce48193043e38230d313abbb900fbe683058e6d137d066975e232c",
-    "MOCK_comp_9231.png": "0c29d50d5e9c3530d6a018ac1ccced7b0a2df4ac2c53b17b18417d91badd268e",
-    "MOCK_comp_9232.png": "ffa3d9c3eaf935c1d8dcd4b68141c4af88b825b3e554c89d8f713d7be6915d50",
-    "MOCK_comp_9233.png": "a1a218d262e4cc0d346f7ae6df990a3ea6c3ad69cfeba3f74c1d4399cd341673",
-    "MOCK_comp_9234.png": "9df0109d97a86ab2d98a8575b6731c8c63266bfaf84ee2410e2d603cd42e2d8e",
-    "MOCK_comp_9235.png": "be397f309acdcae2d285d428b29af3fa5e0a5bcbb09d39438b9b51d9c346571b",
-    "MOCK_comp_9236.png": "0ef164d4e2dcf0626f3e7d12f6c9bc1819a8e70fa14c37e46fee44fa54f9c209",
-    "MOCK_comp_9245.png": "a947da0be2a575a0d284ab370f3a44ac7c69a4f437e47f1ab1def7334097a678",
-    "MOCK_comp_9254.png": "0a4b349a8f7aa3f918ed17649a83c606dd991f6360568011a1937d49656a9734",
-    "MOCK_comp_9263.png": "2dc73c65b8deafac6cd94bfdd8388cf730fda434199756cb95815c6d3da0582f",
-    "MOCK_comp_9272.png": "78b312cca29979c03dda339a444a2983e14433a5372cbc83eb1831d00ed96e90",
-    "MOCK_comp_9281.png": "7774ca78e8671456e3e18b5a67b77bb90fd095053117601bbc090be6587e2372",
-    "MOCK_comp_9290.png": "40633cba302aca355b08d1d632760078990490fb176761f269d717352f2fae33",
-    "MOCK_comp_9299.png": "30dca92d3f53a82e966887a6c1b0765af4ebe84cede59396e34a876f215fcbd8",
-    "MOCK_comp_9308.png": "7ddb873f2221512e2faee1a301605e539f6a371605130a62e981a9d33c4e6047",
-    "MOCK_comp_9309.png": "3b41d8ad09cd48cbc52000ef798ef819705a560f3c05a02abe277c1be5e89e29",
-    "MOCK_comp_9310.png": "dc3c4cd5202098f28a237dde0686e8d84b890d5e0ed7a70d9d4fd86f75aaa36d",
-    "MOCK_comp_9311.png": "1975edc6ee6ce8a7c01d7166a6536c2b1bca7489fb5aa7dcd8be292107e96121",
-    "MOCK_comp_9312.png": "a564a320483d6f97a88ae097b3b8579cb5d7ec4d47ea5528b5c138fb4661c65c",
-    "MOCK_comp_9313.png": "4571006ecdb3bf41f78cc808edc6bcb99a7ccc3048158507f1e3782c12bf746f",
-    "MOCK_comp_9314.png": "e71cbe9da13504950bdc068238699fb653640236afe6e647fcbf72aa341ed785",
-    "MOCK_comp_9315.png": "e635838ce0cf6644d1de670dc1d23a4c5a33eba3effaa84305a5c3b6b305576c",
-    "MOCK_comp_9316.png": "b6c941f264376be1df65e28f22000f0b67cdfb8d01d90747f23eda19b2675996",
-    "MOCK_comp_9317.png": "64263c2c3fd4ed8f2daa921ae0ae7e59c91b6c6fae3d5826347276dabd992b1a",
-    "MOCK_comp_9326.png": "dc2438178494b61e1b82d6e4bfe3c7f2b9539979a585bff6d4348ca2a20e1f15",
+    "MOCK_comp_9200.png": "6b3056b90d9922b85b47380574dbe62820e7eab9a86ecab300cbd54d043c554f",
+    "MOCK_comp_9209.png": "2a4eca1a9d39083a62e98018ad792f8a31e48f7b30464c19a1cdd6f8c9e69678",
+    "MOCK_comp_9218.png": "595c80a8405ad44dfbe126a670edb6c6733619e834d4bd546dabd93af317de05",
+    "MOCK_comp_9227.png": "8c1565255bdad88fa54a0259924f9dd9f03241c63a3cff6fbb4ed46bc7f31fee",
+    "MOCK_comp_9228.png": "7d43a14010dd44ba097e535c7276918b1d678804f98f0fd99bc530976731355d",
+    "MOCK_comp_9229.png": "ac9cd026a567e16d95d3483c67771df59fa9914f0eec8f9180f36b17d855d15d",
+    "MOCK_comp_9230.png": "fec63e64cad95eb88868c2aea9de08b570df4a8cb2a821b214ce96b9726ec57b",
+    "MOCK_comp_9231.png": "077572c613337e29f195ea86e3b12868e8c385be3059f0d9515eca71539c4579",
+    "MOCK_comp_9232.png": "096d55b83bf28b24d7f881372822375b5840da7ae9a11a1bea06a7d49dc71702",
+    "MOCK_comp_9233.png": "1b5f79af27e5c5534665eb80667c4f4dc19b2aa569f349539b9b4d40f34c3a84",
+    "MOCK_comp_9234.png": "14d7e4a98949afd1d3eed35ded75c1533516973e3003b71edf791541a8495463",
+    "MOCK_comp_9235.png": "ef622926dfdd106d2b1317ae6c6bf8bdad6e89dd63acee2b90cf9f4d5a117429",
+    "MOCK_comp_9236.png": "89cab5ad9f83b68cea1ade18feda837a0f1f627cf705cef6558c1ace65b6d05e",
+    "MOCK_comp_9245.png": "eb2145e74a95643b445b325d73b01cda500b9cc20d5e9f14e83d916c31cb9da0",
+    "MOCK_comp_9254.png": "4b45e207c05bf08e297a108275baa18870ecaee83d2cf5cfa8b338c8dda4d37c",
+    "MOCK_comp_9263.png": "6db02843a6c83d3ea66df9930764342efeb7b2c24f56d88baae0aeff01113e9c",
+    "MOCK_comp_9272.png": "0cd6cacb0527dfd293ee8d12d57ea8d44b65aac98a370a6174bed24d1f76364f",
+    "MOCK_comp_9281.png": "f51fb8763494d4fd7ce161336000e7324fa6ca1b0619ef043185e294a4a1ca41",
+    "MOCK_comp_9290.png": "b6e129981da3c0991d645da893def596b43a2815281dd48040d47fa4a3c1af05",
+    "MOCK_comp_9299.png": "90b2148143a99604cf44df3077ff38ecc69cfc114c76438e237b102cb1f65c42",
+    "MOCK_comp_9308.png": "1bb6d607c8172b6790da2160458fee54d9f516ccc5f28208cfd3c977e217d7ea",
+    "MOCK_comp_9309.png": "b4d9afb2371324d3ed077cdff38bed70ffe52b31a3743014ffa55cc6f2b428c3",
+    "MOCK_comp_9310.png": "c23342feba8be890247a63ad916fc09b6f26f19c8e1551f0e55f8c3434661e79",
+    "MOCK_comp_9311.png": "e8b5e3a18d8c574476a5a8075657de5b35c31b952b52db289072b31c308ded8e",
+    "MOCK_comp_9312.png": "fade739a152af0529f90097d47506a925b4a6ca7c721825dd21673002cc297e6",
+    "MOCK_comp_9313.png": "12e9e9ddd9a44f7d8cb736a9921a557d87e97cc76cd9faedf33eb21c839c7c1f",
+    "MOCK_comp_9314.png": "952d90e1da3566b0577adc6f9c42d2bfe2c9da0e157448592e062aa4ed942f20",
+    "MOCK_comp_9315.png": "05d0c1aef254248e3603f9b17a8868bb3fc7c5e74e992c05f6043730380b59b4",
+    "MOCK_comp_9316.png": "2d01428359150cc611e84e45d949c0b98927a172ebec92362629401d73d34fa4",
+    "MOCK_comp_9317.png": "b6e5e6facc31b6d3de692f71df8e2693819579b30e60cbccea345440bad6b288",
+    "MOCK_comp_9326.png": "513993467968ffe28ab760c2d0be8a3742c6d5e3b9a60cc257d15dff78ad5106",
     "MOCK_comp_9335.png": "5b8537e9e5e8d60f68e9c88e561d8343bb821ae0abdece2881039162485455f0",
-    "MOCK_comp_9336.png": "c7243c09f35a4ab404960f2b46063f193baa0c048a3363762fd780e7c797941d",
-    "MOCK_comp_9337.png": "fa5ae551a7c7ef6bef4ea3fe3bb755e63e7b845f1d56150cb943c9f0c6185154",
-    "MOCK_comp_9338.png": "677df93d951167d2a367d307d6f582ed2918ad735fe84b56da7efcec063f6f86",
-    "MOCK_comp_9339.png": "874be42baef8ed659a6d88496fc935bab29047d2f0231e5f3021a95e4213beeb",
-    "MOCK_comp_9340.png": "0384648c6abe4ba3fddb95a5c87fea8a0dfa96e357a256e7fb286a4b8897aa9e",
-    "MOCK_comp_9341.png": "e4e12815d42624ec071d886d4298d3ebbe4557740d7c4e9534b3bd72408d2f85",
-    "MOCK_comp_9342.png": "18ce0c83e5295b9420d7d3a515a4cc0c29f0bb8308866b8518fe5d4f6ed63eee",
-    "MOCK_comp_9343.png": "4a8ab252d7385bc8273dcae597dd20424c6330385116cc38361783795bb8f440",
-    "MOCK_comp_9280.png": "96a49992d7884524c43c22429e5c17487fb42e18f4855e49f79a2dc98e4680cb",
-    "MOCK_comp_9282.png": "079a7723b4423881646f8a876af089e38254ed51d34795213dffeccd25796ce3",
-    "MOCK_comp_9283.png": "b149f9a264c59c42db900f97df052bb020a02cb2882f956d48fbf622f8f8574e",
+    "MOCK_comp_9336.png": "ee0f6864742104386a25acc3cfd350704d09821b3c558cbf810fe6d865a6dd04",
+    "MOCK_comp_9337.png": "59ed2d2c480605e4ecabc1b76cc52e73d08412d5c9af97efb7fcfe00962af933",
+    "MOCK_comp_9338.png": "c7243c09f35a4ab404960f2b46063f193baa0c048a3363762fd780e7c797941d",
+    "MOCK_comp_9339.png": "e93f6e04ba1a65873ab2a7280c8eb439223c7d20212857896fde081a61971c2e",
+    "MOCK_comp_9340.png": "2caa9fe42de5f557f900973e4c8f97fa5f28024030cc02eba9e82bb87431ff66",
+    "MOCK_comp_9341.png": "fa5ae551a7c7ef6bef4ea3fe3bb755e63e7b845f1d56150cb943c9f0c6185154",
+    "MOCK_comp_9342.png": "41ac40132baeac7463d55d3d4ab1c7bd4d4973ddc8ecaead1a4adfbc99e4430f",
+    "MOCK_comp_9343.png": "41569754d08e9198b3c959d709d2015154012cf26d677d87ad79f8c2090f2d34",
+    "MOCK_comp_9280.png": "14f945202d806c3897fcc8f1975aeb507b2a53d1b7e3820c1d2f0bf7d20ec892",
+    "MOCK_comp_9282.png": "b7c0a0b260ba1087d36872312d4f4ffafbc38946a656ed16e1d7a59aa1e2a318",
+    "MOCK_comp_9283.png": "1e38d72d5d76c861f7ca0621e21d2e2bbdfadd1858123fb363ec3eb5f3c7e15b",
     "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
     "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
     "MOCK_comp_9122.png": "97b7faa229db71965abd21903049a66eb2dfffad42c1a1a398a33da945defb1f",
     "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
     "MOCK_comp_9140.png": "5b8537e9e5e8d60f68e9c88e561d8343bb821ae0abdece2881039162485455f0",
-    "MOCK_comp_9141.png": "c7243c09f35a4ab404960f2b46063f193baa0c048a3363762fd780e7c797941d"
+    "MOCK_comp_9141.png": "ee0f6864742104386a25acc3cfd350704d09821b3c558cbf810fe6d865a6dd04"
    }
   },
   "ctrlB": {
    "face_part": "r07_00",
-   "top_part": "r04_00",
-   "top_rows": [
-    0,
-    25
+   "top_parts": [
+    {
+     "part": "r07_00",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "coursed masonry, irregular block widths, joints at every course; no key-light cull. Rows 0-4 (its failed cap band) discarded.",
+     "ledger_verdict": "FAIL - 'rows 0-4 use the identical greys as the face, so there is no top band at all ... flat brick wallpaper with zero thickness'"
+    },
+    {
+     "part": "r07_08",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "alternate face stock; larger blocks, more wear incident.",
+     "ledger_verdict": "FAIL (ledger)"
+    },
+    {
+     "part": "r07_09",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "alternate face stock; higher contrast between blocks.",
+     "ledger_verdict": "FAIL (ledger)"
+    }
    ],
-   "top_why": "alternate slab stock; mottled, one dark stain.",
+   "variant_sources": [
+    {
+     "variant": 0,
+     "part": "r07_00",
+     "phase": 0
+    },
+    {
+     "variant": 1,
+     "part": "r07_08",
+     "phase": 0
+    },
+    {
+     "variant": 2,
+     "part": "r07_09",
+     "phase": 0
+    },
+    {
+     "variant": 3,
+     "part": "r07_00",
+     "phase": 1
+    },
+    {
+     "variant": 4,
+     "part": "r07_08",
+     "phase": 1
+    },
+    {
+     "variant": 5,
+     "part": "r07_09",
+     "phase": 1
+    },
+    {
+     "variant": 6,
+     "part": "r07_00",
+     "phase": 2
+    },
+    {
+     "variant": 7,
+     "part": "r07_08",
+     "phase": 2
+    },
+    {
+     "variant": 8,
+     "part": "r07_09",
+     "phase": 2
+    }
+   ],
    "bindings": "none (control)",
-   "derivation": "DERIVATION: luminance scaled by 0.781 to match the face plane (124.2 -> 97.0)",
+   "derivation": "DERIVATION: luminance scaled by 1.000 to match the face plane (97.0 -> 97.0)",
    "note": "control for boundB - same stones, overlays omitted.",
    "theme": "src/Presentation/assets/composition_spike/tile_themes_ctrlB.yaml",
    "segment_sheets": {
@@ -284,131 +564,201 @@
     "straight_run": "tools/composition_spike/segments/ctrlB_straight_run.png",
     "corner": "tools/composition_spike/segments/ctrlB_corner.png"
    },
-   "palette_size": 73,
+   "palette_size": 86,
    "face_plane_lum": 97.0,
-   "top_plane_lum": 96.5,
+   "top_plane_lum": 96.6,
    "tiles": {
-    "MOCK_comp_9200.png": "cd3bca02f4064e437a4a8baa5792be6d1cbca90d4826cfca0214be65eff0b84f",
-    "MOCK_comp_9209.png": "86bd94009e44428a9842ad0abbded33af1395a7c3871be47645de5ac6e287dff",
-    "MOCK_comp_9218.png": "dbd09039d6c8f93db3df84e578ac32f25657ad0fa8849191c77d60bafdd2bb23",
-    "MOCK_comp_9227.png": "fbba12b4e6f9a699c0ce9c7e1f525abb0d572373a88cd46564fe6b4a38b562b0",
-    "MOCK_comp_9228.png": "be63191d5b7f87402642c0a72016936fd68c3bda6656fc51963286db26de8ec0",
-    "MOCK_comp_9229.png": "46259fc0b5c0822d83e70a7562f209ee7e87cce68a1c00e9b16de69eb02d0b43",
-    "MOCK_comp_9230.png": "34726c5666d034465442342250b7d2b1a0575e9f07fac66ca7182885cc03387f",
-    "MOCK_comp_9231.png": "5a75641926ad4653dfee27cd79c82fc4aacad912e9e168d608d7ca74b5c8f45d",
-    "MOCK_comp_9232.png": "b57f61539c3dad7402dda692d84d18b49fcf05c06fad882b24b2fe51116b8e23",
-    "MOCK_comp_9233.png": "4d4ac91cb9ed42edca38da4b540cd42224460fc6b1e710adaa7748579ceebb14",
-    "MOCK_comp_9234.png": "bc0592cffaad55ea2bba89d79a1e69bd487ecfdc73ce3887a9fce9d8d428ff5d",
-    "MOCK_comp_9235.png": "3d9ae77676a7a8e540d1c8ee433e4752b5dd263e798899626c9be1f986546e03",
-    "MOCK_comp_9236.png": "cb4c61773b60a77995061270295cd60c1632e05793e976847b0cc7ccd47e995b",
-    "MOCK_comp_9245.png": "4d03a6cb22561e49fff55297b52691ad73e30528228c7ec8af5f4977a43f25b9",
-    "MOCK_comp_9254.png": "3ce5d14dacc91e9a998c499b5215ccfc149f63b66940bbce6bdfbb4393471695",
-    "MOCK_comp_9263.png": "3ecf9fd6d0aeed1e3c2bac41d23993959954576a029a08c9afad23c56d5d9919",
-    "MOCK_comp_9272.png": "85eef0a9a80fcc71990739ee6249b2436a68aeaf2a750ba2fa7dc07f9241c993",
-    "MOCK_comp_9281.png": "9fa68306cfa91926acaa7519ee2f2f576acc9c045522f2acb1db664907d548bb",
-    "MOCK_comp_9290.png": "9f277bcc7e0496b06f72f48ec46c3699a781d51fed00b4869ab7b9cfb5649831",
-    "MOCK_comp_9299.png": "695cfb574a1e00b7573fffcae704704b60c9ea464ff299cc76e41d2270aaa211",
-    "MOCK_comp_9308.png": "990010358b595ac4484bf4931495d182c48c0c46153686ed95e089190998d4b3",
-    "MOCK_comp_9309.png": "221bb0ac46143554012fdf5011165ad5e9315b919b21876aef6a3af712029395",
-    "MOCK_comp_9310.png": "d07578db5bb3433db7812e7a47fa66df94acffa1c764fb2e5564d566442cf6f9",
-    "MOCK_comp_9311.png": "e8e9ff1d9674dbc5720800740cefc8a17ac0b7ec9ff49a5c6f8412535af34769",
-    "MOCK_comp_9312.png": "c6d9e1b46ff6de57ecdace20291cdd024e6cc2d7377975738af0c697bb1a19f2",
-    "MOCK_comp_9313.png": "88c44d6336de3845b3a361c38cc3a0ac90d6e1934e898c44d73af41cb6d7bfd5",
-    "MOCK_comp_9314.png": "afa345c3b3460bcc9a36cd5ca57afe229f968cd2e8947ab5725b69b9d9d37d52",
-    "MOCK_comp_9315.png": "00fc0dbfaaf5d4beb6e1a6b0dbfcf003d8395f52a3f9957de9e05cfcb5c05089",
-    "MOCK_comp_9316.png": "79caabbd895e7fe6cc71f5185bab00a311bf2e157e7ca9b1ae618d30b5602f74",
-    "MOCK_comp_9317.png": "291cafcc90748cebd289fe27a1bb44fd9d516cd51141288814ce3183a976eb30",
-    "MOCK_comp_9326.png": "d7b9741067ed18582d9e0f0d436d16e479e39e32fd2593d797ce6b713b535c2a",
-    "MOCK_comp_9335.png": "264104104c5daaec5c14957319f8a1ef1f6ab7b41fcfca9e00934e4212059570",
-    "MOCK_comp_9336.png": "04048611fecbab310207c4f6721c4767439ea6fd216caba2e5737af5a951b164",
-    "MOCK_comp_9337.png": "dd282370e1b8745fd28584c610a3d698dd200f477d596fa6449457b2af1a8197",
-    "MOCK_comp_9338.png": "967d214330148c954383dc34a80b97e09a9dcfc1ae762079669ef6818589e352",
-    "MOCK_comp_9339.png": "4a81d8b2d32ad3db6c732e115b63acd4f0e2f2ae9ea05070cfe907fb6a872828",
-    "MOCK_comp_9340.png": "3c239b91a7de2b73462f5e981b212c25c7ba5a4e74f905d1d6cee6146bfb3eb3",
-    "MOCK_comp_9341.png": "0f3294a03222653a3ecc46f497fddd0047e34597c605967d0fe269b9567e2016",
-    "MOCK_comp_9342.png": "af502a22f3a6e98739037e1bc43b2098a7b8bf2a6b35d5e00b82ec56de082d22",
-    "MOCK_comp_9343.png": "f74a82ec2654e72fa68dfae17b36a0662beaa3e7517cfc2f9b1f89f0532e244e",
-    "MOCK_comp_9280.png": "b0dd8fe8986e2d71d5c2fac06f80ed13f4d641c2173edb3179c9ac9e48eb8a0a",
-    "MOCK_comp_9282.png": "d5036c3e6922163f69844fcfe782d81903a12036921fd7cb3b81b4cd306edaeb",
-    "MOCK_comp_9283.png": "c17e93668db44caeef6f4db93ebe45e9b6007e92b0cba910ac9aad15bc946fc8",
+    "MOCK_comp_9200.png": "e3122e087e1a6f33bf87bea8e31bfc4f208a934fd9cd0444ea98b268ef6cb9fe",
+    "MOCK_comp_9209.png": "954e68b279ab229c89edefb056b18c304e89880b0624754ce33b99a52780dabc",
+    "MOCK_comp_9218.png": "1c96b94b46c42762989ec36a7cc7117e59497864845ef1113c0c74540b9861d5",
+    "MOCK_comp_9227.png": "7ebab65e133e8d74ce5eef055187eed4b5e7a235cc311de61daa69a7ae0764ed",
+    "MOCK_comp_9228.png": "4d50de3801fcef42d386808481bd39f67862e4040a6a9827a07d9c91c29de297",
+    "MOCK_comp_9229.png": "306112e1f6695d5c65c627a09a440e9b3b2dcf3adb01174e101df3f48a42fc11",
+    "MOCK_comp_9230.png": "541df00f511f5cc3abd9dd2e66e43d4a7816cfc2a904da6db855ea261cc30b3f",
+    "MOCK_comp_9231.png": "55dbf34735ba097aa8990ecaa60bb0a0d423f4a28307f05b43c2040a97e8c10f",
+    "MOCK_comp_9232.png": "ab6a511c255292e0dd9e2994f31fbc0d06b08579f828d0e5fc09deb5249ffa8a",
+    "MOCK_comp_9233.png": "852383cd38eca15713395d9f89941f2805bece8eecfaf5bcd38a0f86be1fb92c",
+    "MOCK_comp_9234.png": "d3a11d9920103984bb1b5ef37a035015b0eeb08e2f821fb04c24c7aeb3ade162",
+    "MOCK_comp_9235.png": "08867f2d6e7a55e41c1a5dd8bb3627664a6dda46aba20a31f1b5d1f1ffdc9326",
+    "MOCK_comp_9236.png": "cd3a2e87add79c85664ee979a142cf37ebaf4b498244636dffecb826ceef401c",
+    "MOCK_comp_9245.png": "9eef9a700bea81a4fab4930969a45116aebbd286fc6151d442618c540b6d9eb0",
+    "MOCK_comp_9254.png": "842a35de22af1a9ba8c75c6e764a7320542ac491b91d3621a0bd8b8ccd2e9703",
+    "MOCK_comp_9263.png": "e93227f1f9525c1d8adea7562e5e7d1620a832dc80ec7da44289caaaac850e38",
+    "MOCK_comp_9272.png": "8062ae950daef68c2e20aa5b41190d4b0435ddca61a8c5bb353e809fc277522b",
+    "MOCK_comp_9281.png": "4f2588c663a8cbb33f88def6bb38e440ed20177f2f0c1a0aa5c8ad5f66447522",
+    "MOCK_comp_9290.png": "b38de7928801611481211a0193ffebfd7efc9e20845234792f5b999b5b2044f3",
+    "MOCK_comp_9299.png": "59eaaccb16037eeb04f9c4d160b5f58faf8400f42d2f556e40c68b82d9e1d243",
+    "MOCK_comp_9308.png": "1079436f94041a81b7cf06819b114318f20afa01d1a87a1da473afd47511a764",
+    "MOCK_comp_9309.png": "611f816cbecaf5204ca6c6b9595a37d133ee0b79d7a667c0b3fbf350b5d225b3",
+    "MOCK_comp_9310.png": "c97ec767bf087e58ccdbf9c73b6763c7da6d1d89763d69a573c40f12335e6470",
+    "MOCK_comp_9311.png": "a709c701edd32ab97ffab9da8c73ed54bc6a0ba02fe47d8575d782844b34f20e",
+    "MOCK_comp_9312.png": "9a3496b28a93ccb69f5d40be2532e669cd68e2f978e716d895fc4a41a7968ac5",
+    "MOCK_comp_9313.png": "2d13eee48c18f37948d38258c445c57d3182a097f1adbb46e9943f1264b22976",
+    "MOCK_comp_9314.png": "924e5376ef2efb2fad817acf156a9a00f1264afd1401d79b78df1db8d6c45628",
+    "MOCK_comp_9315.png": "3d07ee637fec55fe8dbcff9f8a6f68075978017a7703f1e8da240e6c67b85217",
+    "MOCK_comp_9316.png": "1f42072d82784ef72fd82b82f12ca4b431dc1430238b1bfe6a73926487ab8ce0",
+    "MOCK_comp_9317.png": "7f2bab0c5a410abfec7ea7f3838069cf46ca57e5a6a6cb5fd1afff39c006a32d",
+    "MOCK_comp_9326.png": "a3d2fbc1d004a084e09196d5a0ec4a21336d0834d6ddbea8d49b458a70750e38",
+    "MOCK_comp_9335.png": "50c38956d3e75415246d4ba56453151b7682e7cb6187bc6bd0f3d5ff61e781a5",
+    "MOCK_comp_9336.png": "de6d4d2ebb5cc37803be163dc2738eb27eb90c90ec37cf02518a0ca0e4227a45",
+    "MOCK_comp_9337.png": "8417fe3c0e6a13eb8d9a60a390e274add038fa7586c41dccf4bd5819ce6b5271",
+    "MOCK_comp_9338.png": "37588923b08244f35a9fb40dae2c83fd1b2f2015a88d078c34ba3e145e26b3f6",
+    "MOCK_comp_9339.png": "9b0093efc0ecd5318dd9e782fae25855600ce26e6c195218851b65bf6e2cbc89",
+    "MOCK_comp_9340.png": "1efe92c25efc83c2146ad707c71243224a81302c8537c80de782693765ebef57",
+    "MOCK_comp_9341.png": "195edeb9e0db98c0b73ea2c33710c61e14cd14b7749c5bc791455fffa0924d36",
+    "MOCK_comp_9342.png": "b3fe6f3acb5de1ecd58999734ec6d93f54b564a5753412764cb0bf14847581ff",
+    "MOCK_comp_9343.png": "c3bcb0e54e7d785ba70b74581799a69c03fe98d0c047b7853bd4c12cc16330c9",
+    "MOCK_comp_9280.png": "bd4cc629de883a172d6daab967f15acc25fe7aaed7fffcc1d547c0e079e86b99",
+    "MOCK_comp_9282.png": "f378e2c7b73e9af6ff6566fccb169fff3a5e0d9da1e4d5074c6762f5346d231d",
+    "MOCK_comp_9283.png": "1f6a39643f46826b1cc82f160b880fa015a16dff051cb15761ce7be55c495964",
     "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
     "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
     "MOCK_comp_9122.png": "97b7faa229db71965abd21903049a66eb2dfffad42c1a1a398a33da945defb1f",
     "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
-    "MOCK_comp_9140.png": "264104104c5daaec5c14957319f8a1ef1f6ab7b41fcfca9e00934e4212059570",
-    "MOCK_comp_9141.png": "04048611fecbab310207c4f6721c4767439ea6fd216caba2e5737af5a951b164"
+    "MOCK_comp_9140.png": "50c38956d3e75415246d4ba56453151b7682e7cb6187bc6bd0f3d5ff61e781a5",
+    "MOCK_comp_9141.png": "de6d4d2ebb5cc37803be163dc2738eb27eb90c90ec37cf02518a0ca0e4227a45"
    }
   },
   "plant": {
    "face_part": "r07_00",
-   "top_part": "r04_00",
-   "top_rows": [
-    0,
-    25
+   "top_parts": [
+    {
+     "part": "r07_00",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "coursed masonry, irregular block widths, joints at every course; no key-light cull. Rows 0-4 (its failed cap band) discarded.",
+     "ledger_verdict": "FAIL - 'rows 0-4 use the identical greys as the face, so there is no top band at all ... flat brick wallpaper with zero thickness'"
+    },
+    {
+     "part": "r07_08",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "alternate face stock; larger blocks, more wear incident.",
+     "ledger_verdict": "FAIL (ledger)"
+    },
+    {
+     "part": "r07_09",
+     "rows": [
+      5,
+      30
+     ],
+     "why": "alternate face stock; higher contrast between blocks.",
+     "ledger_verdict": "FAIL (ledger)"
+    }
    ],
-   "top_why": "alternate slab stock; mottled, one dark stain.",
+   "variant_sources": [
+    {
+     "variant": 0,
+     "part": "r07_00",
+     "phase": 0
+    },
+    {
+     "variant": 1,
+     "part": "r07_08",
+     "phase": 0
+    },
+    {
+     "variant": 2,
+     "part": "r07_09",
+     "phase": 0
+    },
+    {
+     "variant": 3,
+     "part": "r07_00",
+     "phase": 1
+    },
+    {
+     "variant": 4,
+     "part": "r07_08",
+     "phase": 1
+    },
+    {
+     "variant": 5,
+     "part": "r07_09",
+     "phase": 1
+    },
+    {
+     "variant": 6,
+     "part": "r07_00",
+     "phase": 2
+    },
+    {
+     "variant": 7,
+     "part": "r07_08",
+     "phase": 2
+    },
+    {
+     "variant": 8,
+     "part": "r07_09",
+     "phase": 2
+    }
+   ],
    "bindings": "MOCK - authored in compose_walls.py",
-   "derivation": "DERIVATION: luminance scaled by 0.781 to match the face plane (124.2 -> 97.0)",
-   "note": "THE PLANT. Identical to boundB except every course is run light at its top rows and dark at its bottom rows - a baked overhead key light, the exact defect \u00a76.3 forbids and the one the gauntlet's own round 8 manufactured by accident. It goes into the critic set under an anonymous code. A critic that passes it has not demonstrated it can fail and its verdicts on the real arms do not count (LOOP-PROCESS \u00a74, bible \u00a713.5).",
+   "derivation": "DERIVATION: luminance scaled by 1.000 to match the face plane (97.0 -> 97.0)",
+   "note": "THE PLANT. Identical to boundB except every course runs light at its top rows and dark at its bottom rows - a baked overhead key light, the exact defect \u00a76.3 forbids and the one the gauntlet's own round 8 manufactured by accident. It goes into the critic set under an anonymous code. A critic that passes it has not demonstrated it can fail and its verdicts on the real arms do not count (LOOP-PROCESS \u00a74, bible \u00a713.5).",
    "theme": "src/Presentation/assets/composition_spike/tile_themes_plant.yaml",
    "segment_sheets": {
     "south_facing_run": "tools/composition_spike/segments/plant_south_facing_run.png",
     "straight_run": "tools/composition_spike/segments/plant_straight_run.png",
     "corner": "tools/composition_spike/segments/plant_corner.png"
    },
-   "palette_size": 73,
+   "palette_size": 86,
    "face_plane_lum": 97.0,
-   "top_plane_lum": 96.5,
+   "top_plane_lum": 96.6,
    "tiles": {
-    "MOCK_comp_9200.png": "c46a39acbc2a295777b51b7d231277bd9391bc53736786ef198918c47d9c5991",
-    "MOCK_comp_9209.png": "e9ac264f2e7cedaee4b597156fa0a8156ad2ef562f8b0761821ae03d32e4e44e",
-    "MOCK_comp_9218.png": "d7d46231c09e569cec996d9537e9ef172704c46958080893c13b85e60bd1ceef",
-    "MOCK_comp_9227.png": "b56197075c569303befe70d62464983ce058d40e97448c2e8badc127194cf554",
-    "MOCK_comp_9228.png": "e36f5c826419c9c14c45d3253bb54b69079c39a16d1d927fa3caee9be3d96756",
-    "MOCK_comp_9229.png": "8b8d5e55c552a352ef7eddc72dac35ce99e18507aec022d778b14ec225e8a96f",
-    "MOCK_comp_9230.png": "7c271ad197c2f6f910cdfffd19359b6c15fac0212085269a2f772818f4efc02c",
-    "MOCK_comp_9231.png": "3ba624dd90ac0fe685f9fcad4b75249162e88199ea80ba5440cd9631f376e67f",
-    "MOCK_comp_9232.png": "7c917ecb042e627b63565c2d30e29820a6a1ef448f82c99270d4824745062a7c",
-    "MOCK_comp_9233.png": "8ebf019c26ab9ae9d97ccc7f1decfd3fc89ab928bc996117de5cd7a2cd602f2f",
-    "MOCK_comp_9234.png": "566531b7ecb4c27d75ef5170cf804945c6b36a5e85008a5dce5832e1cf6bb77f",
-    "MOCK_comp_9235.png": "c9047da4b3401ee5cab3c0aae749058538a62f62f38ebda6e843f08b58c09dea",
-    "MOCK_comp_9236.png": "a3365f7b7a0e99cde5aa622f403e39edc9d3ad935d883b0ce39cfa0cecfd4122",
-    "MOCK_comp_9245.png": "1d6223b034921fffa412c2d6eca59b764818fffd2d732ae5a6092b54b52cc2ea",
-    "MOCK_comp_9254.png": "353c6f4849e07095d421a729e4b87ceb9087904e9d47db87d9a5699d5f813e09",
-    "MOCK_comp_9263.png": "7fa2ed7e35160a70de76cd9eb194210abc0236b7bccde4a6d8ccbe5e6f506279",
-    "MOCK_comp_9272.png": "5dc7496a8ef06b696b8fbb5c19117c473e5cb49b9f4de8471469c46fdc12e52c",
-    "MOCK_comp_9281.png": "47648f3139092c4dbc5dade1dde9f716b40d450eb6d459a4b6d425761e67db80",
-    "MOCK_comp_9290.png": "ea1c89338dfa06f8b2392f5701c93704482b60443124b1f441e572ff85607a81",
-    "MOCK_comp_9299.png": "8d552ba3134e0d7c1bddb2c3bce4121e1eff53c414fad77907345b420559d5c2",
-    "MOCK_comp_9308.png": "894c44f9dcca438d78272dbb49032a85433293859bdc8807a35f9f3aa5065915",
-    "MOCK_comp_9309.png": "ea65dbbd6065252ac58aaf41c45e1ee4da5d9c8b16836a86454b7d2736275237",
-    "MOCK_comp_9310.png": "fc2f8249c7d9fb3ceaaf9763630841b770aab94a36c4e1f8bc6e7979324ad0ed",
-    "MOCK_comp_9311.png": "e8e9ff1d9674dbc5720800740cefc8a17ac0b7ec9ff49a5c6f8412535af34769",
-    "MOCK_comp_9312.png": "c6d9e1b46ff6de57ecdace20291cdd024e6cc2d7377975738af0c697bb1a19f2",
-    "MOCK_comp_9313.png": "88c44d6336de3845b3a361c38cc3a0ac90d6e1934e898c44d73af41cb6d7bfd5",
-    "MOCK_comp_9314.png": "afa345c3b3460bcc9a36cd5ca57afe229f968cd2e8947ab5725b69b9d9d37d52",
-    "MOCK_comp_9315.png": "00fc0dbfaaf5d4beb6e1a6b0dbfcf003d8395f52a3f9957de9e05cfcb5c05089",
-    "MOCK_comp_9316.png": "79caabbd895e7fe6cc71f5185bab00a311bf2e157e7ca9b1ae618d30b5602f74",
-    "MOCK_comp_9317.png": "610128b379b5992d965ddb5f4a4b9dbf685ad2c30f8103d07effb00ee3e38e59",
-    "MOCK_comp_9326.png": "cf4abd97fdbdf37ed47cd56da766f574e78d69626a6e1b50d6ca2c7c30b21303",
-    "MOCK_comp_9335.png": "aab3d165f5e29b828dd38e6953f331a66b6c250ef728fa382634354b2e9cc0bc",
-    "MOCK_comp_9336.png": "c6c7dcb61a29414189335d970393a3158bd0d2494948e06577c4529f9f62511e",
-    "MOCK_comp_9337.png": "bcea1f31c42bff1f5b2776d1f995a83a014f4b82322c0cb2b7e34c86cf7bf71f",
-    "MOCK_comp_9338.png": "967d214330148c954383dc34a80b97e09a9dcfc1ae762079669ef6818589e352",
-    "MOCK_comp_9339.png": "4a81d8b2d32ad3db6c732e115b63acd4f0e2f2ae9ea05070cfe907fb6a872828",
-    "MOCK_comp_9340.png": "3c239b91a7de2b73462f5e981b212c25c7ba5a4e74f905d1d6cee6146bfb3eb3",
-    "MOCK_comp_9341.png": "0f3294a03222653a3ecc46f497fddd0047e34597c605967d0fe269b9567e2016",
-    "MOCK_comp_9342.png": "af502a22f3a6e98739037e1bc43b2098a7b8bf2a6b35d5e00b82ec56de082d22",
-    "MOCK_comp_9343.png": "f74a82ec2654e72fa68dfae17b36a0662beaa3e7517cfc2f9b1f89f0532e244e",
-    "MOCK_comp_9280.png": "91614722a2043c02f7251f5ee19a950f3ac0b961ad645518b2746b153188fdf7",
-    "MOCK_comp_9282.png": "115c41a2e17f9a4ac9ebc238e33464619d4fa9016e3dab8144a621fc3d918c1c",
-    "MOCK_comp_9283.png": "c17e93668db44caeef6f4db93ebe45e9b6007e92b0cba910ac9aad15bc946fc8",
+    "MOCK_comp_9200.png": "29a2a3819c32f4fea01637d6ca72d9acc0116862124ce8b7cd2d983880d5c469",
+    "MOCK_comp_9209.png": "bbac27313ef55935dee34dd1157d1c4e99f527aaad736406de4252d8705dcd54",
+    "MOCK_comp_9218.png": "d8fe89851f382ab773a1dcb28c212994c592cc54fbd07a737a748bf7fa0e5526",
+    "MOCK_comp_9227.png": "c046ab78dde4e66919a053d7c42869dd7b8fd4ef8cf2440893dd074b9bea87a1",
+    "MOCK_comp_9228.png": "2420b6929d2c752a0af95cebf830f4a8b654c49538bb72db244a0e4bc839cebd",
+    "MOCK_comp_9229.png": "50e0b37d4f99b70c40a9618bafc4e4469f723e93c6623167f5771009dbc43a57",
+    "MOCK_comp_9230.png": "ff66b225b9a2eb5f2cb08abdeb9dceb37a89245fa55cebff2e0f8b64b4195970",
+    "MOCK_comp_9231.png": "1a6da5d94e3e219a1f52e89815c94a74896ce620fed5848593d312eaf58ee695",
+    "MOCK_comp_9232.png": "0c0ea5871d3141b6609a11db2fccd7fd9a8d703e6c2ecb22997cdc74a5087f19",
+    "MOCK_comp_9233.png": "1e45e3138eef8313c115bb4044f49123bf7e0258a95ce09c53656013e8f3d20a",
+    "MOCK_comp_9234.png": "57445261f8b910907c53ca0fa5511d5b23634cf9f891d613a2473577b69b9a21",
+    "MOCK_comp_9235.png": "de3d02a4ae84680c4fb33d8151cd96eb18fc981cead3bc39e5a6218c51e9683e",
+    "MOCK_comp_9236.png": "1368993b1b2fd7df014e56ccea10d40af74fcb20ca5e7fccfef80f1fb976e285",
+    "MOCK_comp_9245.png": "613ada8713c30b9e247343b673d3c0ec3372515a8e34dd33f2675c4a617c4a56",
+    "MOCK_comp_9254.png": "fe9ed261d48159d893ce2b693ac2ebbc36a2eb5b1fa5ef4e73abd4e3abbecfab",
+    "MOCK_comp_9263.png": "66d45081ce8845a6851c4017e4d991b6f8521f0a6ddf838b05e8d5e3a433cb7f",
+    "MOCK_comp_9272.png": "b6d99b9c271c4b9814780ea206ca945b53a3bc03140040c1d5f03c3fb1baa5fb",
+    "MOCK_comp_9281.png": "8dc1963620a21bc57e964ebc8b66160ac701cbd9ff080f6e33f360130db27332",
+    "MOCK_comp_9290.png": "3df210a8bdbcc9d1671e07e7eea91318a2446035558969359167626cbcc4c518",
+    "MOCK_comp_9299.png": "0c0fd74fb9ce715cb5abaf506c1b71439f74dfc61e129a808369a0d3b558903e",
+    "MOCK_comp_9308.png": "629a4d9e25098e8a1e1221620d1e17a171640d35e0b178fd5c8738e71ffbbc2c",
+    "MOCK_comp_9309.png": "e15945cc3438f5e0aaf50d1875a978149e977770ba2ed87ed6f7bcf5a84e8f6a",
+    "MOCK_comp_9310.png": "f6a122f240504f3c38ecab8938dbd45137231d74909288bc146d2bc6cb9d7698",
+    "MOCK_comp_9311.png": "a709c701edd32ab97ffab9da8c73ed54bc6a0ba02fe47d8575d782844b34f20e",
+    "MOCK_comp_9312.png": "9a3496b28a93ccb69f5d40be2532e669cd68e2f978e716d895fc4a41a7968ac5",
+    "MOCK_comp_9313.png": "2d13eee48c18f37948d38258c445c57d3182a097f1adbb46e9943f1264b22976",
+    "MOCK_comp_9314.png": "924e5376ef2efb2fad817acf156a9a00f1264afd1401d79b78df1db8d6c45628",
+    "MOCK_comp_9315.png": "3d07ee637fec55fe8dbcff9f8a6f68075978017a7703f1e8da240e6c67b85217",
+    "MOCK_comp_9316.png": "1f42072d82784ef72fd82b82f12ca4b431dc1430238b1bfe6a73926487ab8ce0",
+    "MOCK_comp_9317.png": "b7e74f2c4a7f358889583a941d4688d5ef83e660682243a88a3f81178f867823",
+    "MOCK_comp_9326.png": "b5adc8116af680bf24df2474d516757353fe2af15138a7b2db0a1994d972b2ed",
+    "MOCK_comp_9335.png": "fa60b4b19737a5ac01f17c3bbc97747c854145716cfea89e449bed52f6970b8c",
+    "MOCK_comp_9336.png": "3996ad956d2cfb1feb640815575ee390b335cb1724f72aef7f1bbcc0581d100f",
+    "MOCK_comp_9337.png": "b3eaca84cbb5a5930534ea09740aca9ba26037ccf397016d56332a510e0423b6",
+    "MOCK_comp_9338.png": "37588923b08244f35a9fb40dae2c83fd1b2f2015a88d078c34ba3e145e26b3f6",
+    "MOCK_comp_9339.png": "9b0093efc0ecd5318dd9e782fae25855600ce26e6c195218851b65bf6e2cbc89",
+    "MOCK_comp_9340.png": "1efe92c25efc83c2146ad707c71243224a81302c8537c80de782693765ebef57",
+    "MOCK_comp_9341.png": "195edeb9e0db98c0b73ea2c33710c61e14cd14b7749c5bc791455fffa0924d36",
+    "MOCK_comp_9342.png": "b3fe6f3acb5de1ecd58999734ec6d93f54b564a5753412764cb0bf14847581ff",
+    "MOCK_comp_9343.png": "c3bcb0e54e7d785ba70b74581799a69c03fe98d0c047b7853bd4c12cc16330c9",
+    "MOCK_comp_9280.png": "2d6a8a919dd3a3d1bb80ef56ee67e28636d35bb3ba8816365a20a9fc2c025497",
+    "MOCK_comp_9282.png": "302c413a6b47cda13bda9fbe5a08983d22e98b25889845e089a14895e91fad94",
+    "MOCK_comp_9283.png": "1f6a39643f46826b1cc82f160b880fa015a16dff051cb15761ce7be55c495964",
     "MOCK_comp_9120.png": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
     "MOCK_comp_9121.png": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
     "MOCK_comp_9122.png": "97b7faa229db71965abd21903049a66eb2dfffad42c1a1a398a33da945defb1f",
     "MOCK_comp_9123.png": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
-    "MOCK_comp_9140.png": "aab3d165f5e29b828dd38e6953f331a66b6c250ef728fa382634354b2e9cc0bc",
-    "MOCK_comp_9141.png": "c6c7dcb61a29414189335d970393a3158bd0d2494948e06577c4529f9f62511e"
+    "MOCK_comp_9140.png": "fa60b4b19737a5ac01f17c3bbc97747c854145716cfea89e449bed52f6970b8c",
+    "MOCK_comp_9141.png": "3996ad956d2cfb1feb640815575ee390b335cb1724f72aef7f1bbcc0581d100f"
    }
   }
  },
