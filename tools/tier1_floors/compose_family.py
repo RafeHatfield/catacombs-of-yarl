@@ -94,6 +94,7 @@ PALETTE_LEVELS = 7        # §5's values are PLACEHOLDER; this is a quantisation
 # anything any existing theme names.
 BASE_IDS    = [9600, 9601, 9602]
 CHANNEL_IDS = [9610, 9611, 9612, 9613]      # left edge, full, right edge, chokepoint full-width
+OCCLUSION_IDS = [9614, 9615, 9616, 9617]    # contact occlusion: N, E, S, W edges
 INCIDENT_ID0 = 9620                          # incident overlays are numbered from here
 ORIENT_ID0   = 9700                          # the 24 oriented base variants
 
@@ -195,60 +196,79 @@ def wrap_noise(t, cells, rng):
     return top * (1 - f)[:, None] + bot * f[:, None]
 
 
-def voronoi_bond(variant, seed, t=T, n_seeds=4):
-    """A wrapping irregular flagstone bond, as a Voronoi partition of the torus.
+def slab_bond(variant, seed, t=T):
+    """A wrapping irregular ASHLAR bond — straight joints, T-junctions, unequal slabs.
 
-    THE FIRST BOND WAS A RUNNING BRICK BOND AND IT READ AS BRICKWORK. Laid as a field it was
-    uniform coursed masonry — bed joints every ten pixels, everywhere, at one angle — which is
-    the printed-paper read five independent seats have culled, and it is also §3.1's finding
-    arriving on the ground plane: *a plane textured like elevation reads as elevation.* Coursed
-    masonry is what a WALL is a picture of. A floor is a picture of the tops of stones, and the
-    stones of a found-stone dungeon floor (§7.4: "the Boundary is mostly found stone") are not
-    laid in courses at all.
+    ⚠ THIS REPLACES A VORONOI PARTITION, AND THE REASON IS THE JUNCTION TOPOLOGY.
 
-    A Voronoi partition gives what coursing cannot: joints at varied angles, stones of unequal
-    size and shape, and no repeating pitch in either axis for `field_laws.grid` to find. Distance
-    is measured WRAPPED, so every cell boundary continues into the neighbouring tile — §12.1's
-    test for a joint, and the reason the bond tiles.
+    Voronoi cells meet at three-way Y-junctions at roughly 120 degrees, with boundaries that
+    curve. That is not a stylistic near-miss for paving — **it is the exact signature of
+    desiccation cracking**, and a blind seat named the material off it without hedging:
 
-    Four seeds on a 32px tile gives stones of roughly 250px each. That is coarse on purpose: at
-    32 native pixels a cell is a window onto a few large stones, not a tray holding several small
-    ones, and the asset bar's own paving is built the same way (its laid cells sit at zero
-    contained components 55% of the time, which is only possible if the stones run off the edges).
+        "Dried, cracked mud — a parched riverbed or a dry clay pan. Baked earth, not stone. ...
+         irregular polygons meeting at 3-way junctions, with the cracks drawn as 1px dark lines
+         that thin and taper — the exact signature of desiccation cracking in mud, not of cut,
+         laid or quarried stone. There are no straight edges anywhere, no mortar line."
+
+    Two rounds were spent tuning the wrong axis: joint width, joint value, stone value break,
+    grain amplitude. None of them could work, because what says *laid* is not how the joints look
+    — it is **how they meet**. Cut stone is bounded by straight lines that terminate against each
+    other in T-junctions. Mud is bounded by curves that meet in Y-junctions.
+
+    So: one horizontal and one vertical cut, at positions that differ per variant, then the whole
+    pattern ROLLED by a per-variant offset. The roll is what makes every slab wrap — after it,
+    all four cross a tile edge and continue into the neighbour, which is §12.1's test for a joint
+    and the reason no slab reads as a contained incident (`field_laws` screens for exactly that).
+
+    Four slabs of roughly sixteen pixels is also the right size rather than a convenience: at
+    32 native pixels a cell shows something like a metre and a half of floor, so a flagstone is
+    twelve to eighteen pixels. The asset bar's own paving tiles are built from a similarly small
+    number of large regions — it is the only way a floor tile at this scale is not a mosaic.
+
+    The cuts WANDER by a pixel. A perfectly ruled line is a machine's edge; a laid joint is
+    straight to the eye and not straight to a ruler. It is also what keeps `field_laws.grid` a
+    meaningful check rather than one this bond happens to slip past.
+
+    ⚠ Not a grid, and the distinction is §8.3.1's own: it culled "a regular 2px joint grid on a
+    16px pitch" from the wall tops, where REGULAR is the operative word — a fixed pitch at a
+    fixed offset in every cell. Two cuts per axis is below `GRID_MIN_TERMS`, their positions are
+    unequal and differ per variant, and the roll moves them again.
     """
     rng = np.random.default_rng(seed + variant * 7919)
-    yy, xx = np.mgrid[0:t, 0:t]
-    pts = rng.integers(0, t, (n_seeds, 2))
-    best = np.full((t, t), 1e18)
-    lab = np.zeros((t, t), dtype=int)
-    for i, (py, px) in enumerate(pts):
-        dy = np.minimum(np.abs(yy - py), t - np.abs(yy - py)).astype(float)
-        dx = np.minimum(np.abs(xx - px), t - np.abs(xx - px)).astype(float)
-        # A per-seed ROTATED SUPERELLIPSE metric, not a circle. Euclidean distance gives round
-        # cells whose boundaries meet in curves, and the field came back reading as leaf shapes
-        # and crazy paving rather than as stone. Raising the exponent flattens the sides toward
-        # straight, and rotating each seed's frame stops every stone from being axis-aligned —
-        # between them they give angular, slabby, unequally-oriented flagstones, which is what
-        # found stone (§7.4) actually looks like from above.
-        th = rng.random() * 3.14159
-        ct, st = np.cos(th), np.sin(th)
-        u = np.abs(dy * ct + dx * st)
-        v = np.abs(-dy * st + dx * ct)
-        ay = 0.80 + 0.40 * rng.random()          # slabby: unequal in its own frame
-        d = (u * ay) ** 4 + (v / ay) ** 4
-        m = d < best
-        best[m] = d[m]
-        lab[m] = i
+    cut_y = int(rng.integers(11, 22))
+    cut_x = int(rng.integers(11, 22))
+    wob_y = np.clip(np.cumsum(rng.normal(0, 0.55, t)), -1.4, 1.4)
+    wob_x = np.clip(np.cumsum(rng.normal(0, 0.55, t)), -1.4, 1.4)
+
     joints = np.zeros((t, t), dtype=bool)
-    for ax in (0, 1):
-        joints |= (lab != np.roll(lab, 1, axis=ax))
+    lab = np.zeros((t, t), dtype=int)
+    for i in range(t):
+        yy = int(round(cut_y + wob_y[i])) % t
+        joints[yy, i] = True
+        joints[(yy + 1) % t, i] = True          # a joint is two pixels: consistent width is
+        xx = int(round(cut_x + wob_x[i])) % t   # what a mortar joint has and a crack does not
+        joints[i, xx] = True
+        joints[i, (xx + 1) % t] = True
+
+    for y in range(t):
+        for x in range(t):
+            below = y > int(round(cut_y + wob_y[x]))
+            right = x > int(round(cut_x + wob_x[y]))
+            lab[y, x] = (2 if below else 0) + (1 if right else 0)
+
+    # THE ROLL. Without it every slab sits wholly inside the tile, which is a contained component
+    # at a constant position — the seat's own cull, "the identical bracket-shaped stone sits at
+    # the identical position inside every single cell". Rolled, all four cross an edge.
+    dy, dx = int(rng.integers(t)), int(rng.integers(t))
+    joints = np.roll(np.roll(joints, dy, axis=0), dx, axis=1)
+    lab = np.roll(np.roll(lab, dy, axis=0), dx, axis=1)
     return lab, joints
 
 
 def build_base(variant, mat, seed):
     """One base tile: an irregular wrapping bond, filled with the wave's measured material."""
     rng = np.random.default_rng(seed + variant * 977)
-    lab, joints = voronoi_bond(variant, seed)
+    lab, joints = slab_bond(variant, seed)
 
     stone_v = mat["lum_median"]
     L = np.full((T, T), stone_v, dtype=float)
@@ -259,20 +279,33 @@ def build_base(variant, mat, seed):
     # and every stone came out the same value. Sized against the ladder rather than guessed.
     step = (mat["lum_hi"] - mat["lum_lo"]) / (PALETTE_LEVELS - 1)
     for cid in np.unique(lab):
-        L[lab == cid] += rng.normal(0, step * 0.95)
+        # SIZED AGAINST THE LADDER, and both directions have been overshot getting here. At
+        # 0.75 of a step the break vanished under quantisation and every stone came out one
+        # value; at 1.25 adjacent slabs landed three levels apart and the field read as a
+        # high-contrast mosaic of broken tile. Half a step keeps most neighbours within one
+        # level of each other — present, and not the loudest thing in the cell, which is what
+        # "no single stone stands out from its neighbours" asks for.
+        L[lab == cid] += rng.normal(0, step * 0.5)
 
     # GRAIN, at the amplitude measured off the donors and at two spatial scales. This is the
     # wave's actual contribution: the texture of the stone, carried as a statistic rather than
     # as a picture (§13.7 — conditioning supplies material, not architecture).
+    # GRAIN, at the amplitude measured off the donors and at two spatial scales — but QUIETER
+    # than the first pass. A seat read the surface as "fine dark speckle over the whole surface
+    # reading as dust or grit", which is the base tile competing with the grit OVERLAY for the
+    # same job. §8.3's division applies to texture as well as to shape: the tile carries the
+    # material's tooth, the overlay carries the dust. Cut stone is fairly flat.
     amp = max(mat["grain_mad"], 1.0)
-    L += wrap_noise(T, 8, rng) * amp * 0.55       # patchiness within a stone
-    L += wrap_noise(T, 16, rng) * amp * 0.30      # finer tooth
+    L += wrap_noise(T, 8, rng) * amp * 0.34       # patchiness within a stone
+    L += wrap_noise(T, 16, rng) * amp * 0.14      # a fine tooth, not speckle
 
     # JOINTS: darker because ENCLOSED, which is §6.5's own derivation ("joints, recesses and
     # undercuts sit darker because they are enclosed") and is direction-free, so it survives
     # §6.3. Grime along EVERY joint, not some — §8.1's "walked into a surface until it is part
     # of it" is distributed material; grime in one place would be a stain, which is incident.
-    L[joints] = stone_v * 0.66 + rng.normal(0, 2.0, int(joints.sum()))
+    # Joints at a CONSISTENT value as well as a consistent width — a crack varies in depth
+    # along its length, a mortar joint does not.
+    L[joints] = stone_v * 0.62 + rng.normal(0, 1.0, int(joints.sum()))
 
     # NORMALISE THE TILE'S OWN MEAN to the family's, keeping the variation INSIDE it.
     #
@@ -527,16 +560,136 @@ def incident_debris(mat, rng, t=T):
 # A cell may carry grit AND one event; two events on one cell reads as damage rather than as
 # use, and §8.1's failure test is "is the state of this thing explained by traffic and
 # indifference?"
-INCIDENT_FAMILIES = [("crack", incident_crack, 6, 0.11), ("chip", incident_chip, 5, 0.14),
+def incident_repair(mat, rng, t=T):
+    """A cracked slab PINNED FLAT with driven iron pins. §7.4's orc work, on the ground.
+
+    §8.2.1's tier-one requirements name this family in its own words, banked from a blind seat
+    that had never seen the clause:
+
+        A floor-repair vocabulary. §7.4's orc work exists on walls and nowhere on the ground —
+        "a cracked slab pinned flat with four driven iron pins, or a salvaged timber baulk
+        dropped across a hole and worn smooth on its top edge."
+
+    Two further independent seats asked for it unprompted in this session's own rounds — *"add
+    orc repair to the ground itself: driven pins, a lashed timber, a hide patch"*, and *"there is
+    no repair anywhere on the walkable ground ... for a place held for four hundred years by a
+    company that repairs things endlessly, the floor is untouched by hands."* Three seats, three
+    rounds, one finding, and a clause that already required it.
+
+    THE SPLIT AND THE PINS ARE ONE OBJECT, deliberately. Four dots on a floor are four dots; four
+    dots straddling a split are a repair. §7.3 — nothing on an orc-made object exists for
+    appearance — so the pins sit where the work needed them and nowhere else.
+
+    IRON, NOT TIMBER, and that is a palette decision rather than a preference. §5.4 LOCKED:
+    warmth is reserved, and *"chroma is signal ... a saturated pixel should mean something
+    happened; general richness is forbidden."* A salvaged timber baulk is the clause's other
+    example and it would spend a hue. Whether the Boundary's floors are where that hue gets spent
+    is a real design question and not a builder's to answer on a first landing round, so this
+    family is achromatic — dark iron in grey stone — and the timber half is left unbuilt and
+    named as unbuilt.
+    """
+    dark = mat["lum_lo"] * 0.38
+    iron = mat["lum_lo"] * 0.30
+    a = np.zeros((t, t))
+    vals = np.zeros((t, t))
+
+    horiz = rng.random() < 0.5
+    pos = int(rng.integers(9, t - 9))
+    lo, hi = int(rng.integers(4, 10)), int(rng.integers(t - 10, t - 4))
+    wob = np.clip(np.cumsum(rng.normal(0, 0.5, t)), -2, 2)
+    for i in range(lo, hi):
+        j = int(round(pos + wob[i])) % t
+        y, x = (j, i) if horiz else (i, j)
+        a[y, x] = 1.0
+        vals[y, x] = dark
+
+    # Pins in pairs, straddling the split — driven either side of the break, which is what
+    # pinning a slab flat actually requires.
+    for k in range(2):
+        at = lo + 3 + int((hi - lo - 6) * (0.15 + 0.6 * k) + rng.integers(-2, 3))
+        at = max(lo + 1, min(hi - 2, at))
+        j = int(round(pos + wob[min(at, t - 1)]))
+        for side in (-3, 3):
+            cy, cx = (j + side, at) if horiz else (at, j + side)
+            for dy in range(2):
+                for dx in range(2):
+                    a[(cy + dy) % t, (cx + dx) % t] = 1.0
+                    vals[(cy + dy) % t, (cx + dx) % t] = iron
+    return vals, a
+
+
+INCIDENT_FAMILIES = [("repair", incident_repair, 4, 0.05),
+                     ("crack", incident_crack, 6, 0.11), ("chip", incident_chip, 5, 0.14),
                      ("wear", incident_wear, 6, 0.34), ("grit", incident_grit, 5, 0.85),
                      ("debris", incident_debris, 5, 0.07)]
 
 
 def build_incident(fn, mat, rng):
+    """A family builder returns (value, alpha). `value` is a scalar for a single-value mark, or
+    a full field where a mark is made of more than one material — the repair's iron pins sit at a
+    different value from the split they hold, and one object with two materials is what makes it
+    read as a repair rather than as four dots."""
     v, a = fn(mat, rng)
-    rgb = np.zeros((T, T, 3), dtype=float)
-    rgb[:] = np.array(colourise(np.array([[v]]), mat["tint"])[0, 0])
+    if np.isscalar(v) or np.ndim(v) == 0:
+        rgb = np.zeros((T, T, 3), dtype=float)
+        rgb[:] = np.array(colourise(np.array([[float(v)]]), mat["tint"])[0, 0])
+    else:
+        rgb = colourise(np.asarray(v, dtype=float), mat["tint"])
     return np.dstack([rgb, np.clip(a * 255, 0, 255)]).astype(np.uint8)
+
+
+def build_occlusion(side, mat, rng, t=T):
+    """CONTACT OCCLUSION at a wall edge — §12.1, RULED: form, legal, and REQUIRED.
+
+    §12.1 (Rafe, 2026-08-26): *"a wall-top meeting floor without its occluded edge is not purity,
+    it is a missing plane"*, and the composition spike measured the consequence — a lit wall top
+    at 96 beside a lit floor at 122 with no boundary of any kind, and a blind critic that could
+    not tell solid from walkable. `cannot-read`, twice.
+
+    WHY IT IS BUILT HERE RATHER THAN LEFT TO THE RENDERER. `DungeonRenderer` already darkens
+    wall-adjacent floor, by applying `DarkFloorModulate` — a flat 0.92 multiply — to the WHOLE
+    CELL. That is contact occlusion drawn as a cell rather than as a boundary, and it fails
+    §12.1's own test twice over:
+
+      * its edge is the CELL's edge, so it is a hard 32px square step. §8.3.1: a treatment at a
+        constant position within a tile becomes a lattice when tiled. A blind seat measured it
+        without being told it existed — *"the torchlight steps down in hard-edged 64px squares
+        aligned to the tile grid ... gradient magnitude spikes ~35% above background at a strict
+        32px pitch ... the room reads as a spreadsheet of cells rather than a continuous floor."*
+      * it does not answer to WHAT ADJOINS IT. The same 8% darkening lands on a cell with a wall
+        to its north and a cell with a wall to its south-west. §12.1: *"what separates occlusion
+        from a ring is whether the treatment answers to the geometry it sits on ... a uniform
+        ribbon of constant width and constant value applied to every edge answers to nothing."*
+
+    So this family draws it as the clause describes: a gradient fading inward from ONE named
+    edge, placed only on the side a wall actually lies, so a cell in a corner gets two and a cell
+    in open floor gets none. Direction-free as a material claim — it is darker BECAUSE ENCLOSED
+    (§6.5's derivation), which is true from every azimuth, so it survives §6.3 exactly as the
+    plane-boundary ruling says form does.
+
+    The ramp's depth is jittered per row along the edge so the band is not a ruled stripe either
+    — the same correction the channel's shoulders needed.
+    """
+    depth = 7.0
+    a = np.zeros((t, t))
+    jitter = np.cumsum(rng.normal(0, 0.6, t))
+    jitter = np.clip(jitter - jitter.mean(), -1.6, 1.6)
+    for i in range(t):
+        d = max(2.0, depth + jitter[i])
+        for k in range(t):
+            v = max(0.0, 1.0 - k / d)
+            v = v * v                       # falls away fast, as an enclosed edge does
+            if side == "N":
+                a[k, i] = max(a[k, i], v)
+            elif side == "S":
+                a[t - 1 - k, i] = max(a[t - 1 - k, i], v)
+            elif side == "W":
+                a[i, k] = max(a[i, k], v)
+            else:                            # "E"
+                a[i, t - 1 - k] = max(a[i, t - 1 - k], v)
+    rgb = np.zeros((t, t, 3), dtype=float)
+    rgb[:] = np.array(colourise(np.array([[mat["lum_lo"] * 0.30]]), mat["tint"])[0, 0])
+    return np.dstack([rgb, np.clip(a * 0.72 * 255, 0, 255)]).astype(np.uint8)
 
 
 def screen_overlay(path):
@@ -632,6 +785,20 @@ def main():
         print("  %-6s id %d  coverage %.3f" % (kind, tid, cov))
         manifest["channel"].append(dict(id=tid, kind=kind, file=os.path.basename(p),
                                         sha256=FL.sha256_file(p), coverage=round(cov, 4)))
+
+    # --- contact occlusion, §12.1 --------------------------------------------------------------
+    print("\nCONTACT OCCLUSION — §12.1, one per wall edge, placed by adjacency")
+    rng_occ = np.random.default_rng(a.seed + 991)
+    manifest["occlusion"] = []
+    for i, side in enumerate(("N", "E", "S", "W")):
+        img = build_occlusion(side, mat, rng_occ)
+        tid = OCCLUSION_IDS[i]
+        p = os.path.join(a.out, "tier1_floor_%d.png" % tid)
+        Image.fromarray(img).save(p)
+        cov = float((img[..., 3] > 40).mean())
+        print("  %-2s id %d  coverage %.3f" % (side, tid, cov))
+        manifest["occlusion"].append(dict(id=tid, side=side, file=os.path.basename(p),
+                                          sha256=FL.sha256_file(p), coverage=round(cov, 4)))
 
     # --- incident overlays, from the wave ----------------------------------------------------
     print("\nINCIDENT OVERLAYS — the generated wave, screened against the declared band")

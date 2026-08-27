@@ -83,9 +83,22 @@ def compose_field(variants, overlays, ny, nx, seed, rates=None, t=T, orient=True
     events = [f for f in by_family if f != "grit"]
 
     def put(cell, img):
-        ov = np.rot90(img.astype(float), int(rng.integers(4)))
+        # FLIP ONLY — four orientations, not eight, because that is what the ENGINE does.
+        #
+        # `Tier1FloorOverlays` sets FlipH/FlipV on a Sprite2D and cannot rotate: a floor sprite
+        # is positioned by its top-left corner (`Centered = false`), so a rotation would turn the
+        # tile about that corner and place it somewhere else entirely. The base tiles get their
+        # eight orientations as baked assets instead, which is why they are not affected.
+        #
+        # This preview rotated. It was therefore laying a field the engine cannot produce, which
+        # makes it evidence about the preview — the same failure `compose_field`'s own docstring
+        # warns about for the position hash. Aligned to the engine rather than the engine to it.
+        ov = img.astype(float)
         if rng.random() < 0.5:
             ov = ov[:, ::-1]
+        if rng.random() < 0.5:
+            ov = ov[::-1, :]
+        ov = np.ascontiguousarray(ov)
         a = ov[..., 3:4] / 255.0
         return cell * (1 - a) + ov[..., :3] * a
 

@@ -42,7 +42,24 @@ public static class Tier1FloorOverlays
         if (cfg == null) return $"floor overlays: NOT ATTACHED — {load}";
 
         var plan = FloorIncidentPlanner.Plan(map, cfg, seed);
-        int grit = 0, events = 0, chan = 0, missing = 0;
+        int grit = 0, events = 0, chan = 0, occl = 0, missing = 0;
+
+        // THE RENDERER'S WHOLE-CELL WALL SHADOW IS TURNED OFF WHERE THIS FAMILY IS ACTIVE.
+        //
+        // `DungeonRenderer` darkens every wall-adjacent floor cell by multiplying the WHOLE
+        // SPRITE by DarkFloorModulate (0.92). The intent is §12.1's contact occlusion and the
+        // intent is right — it is the execution that is cell-quantised: the treatment's edge is
+        // the cell's edge, and it does not vary with which side the wall is on. §8.3.1 calls
+        // that a lattice and §12.1 calls it a ribbon that answers to nothing, and a blind seat
+        // measured it as "hard-edged 64px squares aligned to the tile grid ... the room reads as
+        // a spreadsheet of cells".
+        //
+        // This family draws the same occlusion by adjacency, as a gradient fading in from the
+        // edge the wall is actually on. Leaving both on would double the darkening AND keep the
+        // square step, so the keys are cleared: `UpdateVisibility` then has nothing to modulate
+        // and the geometry-shaped version is the only one in the scene.
+        int suppressed = tileLayer.DarkTileKeys.Count;
+        tileLayer.DarkTileKeys.Clear();
 
         foreach (var (pos, inc) in plan)
         {
@@ -51,16 +68,18 @@ public static class Tier1FloorOverlays
             // Order matters and follows the material: the channel is a wash the floor was worn
             // INTO, so it goes under the loose stuff lying on top of it. Grit then sits on the
             // polished surface, and an event (a crack, a chip) is in the stone itself.
-            void Draw(int id, int z, ref int counter)
+            void Draw(int id, int z, ref int counter, bool orientable)
             {
                 if (id < 0) return;
-                if (Add(host, cfg, id, pos, z)) counter++;
+                if (Add(host, cfg, id, pos, z, orientable)) counter++;
                 else missing++;
             }
 
-            Draw(inc.ChannelId, 1, ref chan);
-            Draw(inc.EventId,   2, ref events);
-            Draw(inc.GritId,    3, ref grit);
+            Draw(inc.ChannelId, 1, ref chan, orientable: false);   // left/right mean their side
+            foreach (var oid in inc.OcclusionIds)
+                Draw(oid, 2, ref occl, orientable: false);         // N/E/S/W mean their edge
+            Draw(inc.EventId,   3, ref events, orientable: true);
+            Draw(inc.GritId,    4, ref grit,   orientable: true);
         }
 
         int channelCells = 0, neglected = 0;
@@ -71,7 +90,8 @@ public static class Tier1FloorOverlays
         }
 
         return $"floor overlays: cells={plan.Count} channel={channelCells} neglected={neglected} "
-             + $"drawn(grit={grit} event={events} channel={chan}) missing_texture={missing} "
+             + $"drawn(grit={grit} event={events} channel={chan} occlusion={occl}) "
+             + $"cell_shadow_suppressed={suppressed} missing_texture={missing} "
              + $"seed={seed} manifest={manifestResPath}\n"
              + AsciiChannelMap(map, plan);
     }
@@ -117,16 +137,28 @@ public static class Tier1FloorOverlays
         return sb.ToString().TrimEnd();
     }
 
-    private static bool Add(Node2D host, Config cfg, int id, (int X, int Y) pos, int z)
+    private static bool Add(Node2D host, Config cfg, int id, (int X, int Y) pos, int z,
+                            bool orientable = true)
     {
         if (!cfg.Path.TryGetValue(id, out var path)) return false;
         var tex = GD.Load<Texture2D>(path);
         if (tex == null) return false;
 
         // Orientation per cell, by the same position hash the base variants are picked with.
-        // Legal for the same reason it is legal on the base tiles: §6.3 authors these to RECEIVE
-        // light, so there is no baked direction in them to break by turning them.
-        int h = Mathf.Abs((pos.X * 7919 + pos.Y * 104729 + id * 15485863) & 0x7FFFFFFF);
+        // Legal on an INCIDENT for the reason §6.3 buys: a mark authored to receive light carries
+        // no direction, so there is nothing in it to break by turning it.
+        //
+        // ⚠ IT IS NOT LEGAL ON EVERY OVERLAY, and `orientable` is that distinction. The channel's
+        // shoulders and the contact occlusion are DIRECTION-BEARING BY CONSTRUCTION — a `left`
+        // shoulder flipped horizontally is a `right` shoulder, and a north-edge occlusion flipped
+        // vertically lands its darkening on the south edge, against no wall at all. Flipping them
+        // does not vary the field, it puts the treatment in the wrong place; and for the occlusion
+        // it would also break the one thing §12.1 requires of it — that it answer to the geometry
+        // it sits on. The distinction is not "which overlays look better turned", it is which ones
+        // MEAN something by their orientation.
+        int h = orientable
+            ? Mathf.Abs((pos.X * 7919 + pos.Y * 104729 + id * 15485863) & 0x7FFFFFFF)
+            : 0;
         var s = new Sprite2D
         {
             Texture       = tex,
@@ -209,6 +241,18 @@ public static class Tier1FloorOverlays
             foreach (var e in root.GetProperty("channel").EnumerateArray())
                 chan.Add(e.GetProperty("id").GetInt32());
             cfg.ChannelIds = chan.ToArray();
+
+            if (root.TryGetProperty("occlusion", out var occArr))
+            {
+                var occIds = new List<int>();
+                foreach (var e in occArr.EnumerateArray())
+                {
+                    int id = e.GetProperty("id").GetInt32();
+                    cfg.Path[id] = dir + e.GetProperty("file").GetString();
+                    occIds.Add(id);
+                }
+                cfg.OcclusionIds = occIds.ToArray();
+            }
 
             status = "ok";
             return cfg;

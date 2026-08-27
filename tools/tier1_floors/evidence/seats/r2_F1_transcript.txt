@@ -1,0 +1,50 @@
+The floor is one material edge to edge, and I measured it rather than eyeballed it. Findings below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dried, cracked mud — a parched riverbed or a dry clay pan. Baked earth, not stone.
+
+**Q1_WHY:** The whole walkable area is a single warm ochre-brown (roughly #b3μ8a5f in the lit centre, x400–500 / y150–250) broken by a continuous dark Voronoi crack network. The cells are irregular polygons 8–20px across, meeting at 3-way junctions, with the cracks drawn as 1px dark lines that thin and taper — the exact signature of desiccation cracking in mud, not of cut, laid or quarried stone. There are no straight edges anywhere, no repeating rectangle, no mortar line, no joint that runs more than ~20px before wandering. There is also fine dark speckle over the whole surface reading as dust or grit. Nothing in it reads as flagstone, brick, plank, or worked masonry.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+At random. Nothing about the ground influenced the choice. There are exits north (the gap at x≈300–430, y<20), south (the corridor at x≈378–443 running down to y=600), and west (the unlit floor at x<183, y≈150–280) — I brightened all three, and the ground in each is the identical crack pattern at the identical density. No path is worn smoother, no direction is more scuffed, no threshold, no debris trail, no drainage fall. The only differentiator is the light falloff, which is the torch, not the floor. If pressed I'd go south because the corridor is narrow, but that's wall information, not ground information.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+No. Nothing has happened to it. It is cracked at exactly one intensity from wall to wall — the crack density at the top-left corner (x190–250, y25–85) is indistinguishable from the density under the figure's feet (x380–440, y180–240) and from the far right (x560–620, y300–360). Cracking is a *natural* process, so this is a surface that has weathered but has never been used: no worn track between the north gap and the south corridor, no polish, no rut, no chipping at the corners where the walls meet, no spill or stain, no dropped material, no patch, no repair. Nothing has been pinned, roped, timbered or shimmed. For a place in continuous heavy use since before records and held by a company of soldiers for four hundred years, the floor records zero events. It is a natural surface, not an administered one.
+
+**Q3_WHY:** Uniform crack density measured across three widely separated regions; absence of any localised feature. The only non-crack marks are six or seven small dark smudges — at (407,235), (489,183), (528,167), (598,60), (257,35) — and I template-matched the one at (406,226) across the whole floor: it appears exactly once. They're unique, but they read as slightly deeper pits in the mud, not as anything that was *done* to the floor.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes, two things.
+
+**(a) Square terracing in the light pool.** The torchlight does not fall off smoothly — it steps down in hard-edged 64px squares aligned to the tile grid. Most visible as a distinctly *lighter* square at x≈308–373, y≈141–206 (just left of and above the figure) whose left and top edges are straight vertical/horizontal lines cutting across the crack pattern, and a *darker* square at x≈503–568, y≈81–146. I measured the edge energy: gradient magnitude spikes ~35% above background at a strict 32px pitch, at two consistent phases. Once seen, the room reads as a spreadsheet of cells rather than a continuous floor, and my eye goes to the block corners instead of the space.
+
+**(b) Repeated crack motifs.** Four pairs of pixel-identical crack geometry, correlation ≥0.90, differing only in baked brightness:
+- x382–426/y88–132 ↔ x574–618/y280–324 (offset exactly +192,+192)
+- x390–434/y24–68 ↔ x198–242/y152–196
+- x202–246/y84–128 ↔ x266–310/y276–320
+- x578–622/y220–264 ↔ x450–494/y348–392
+
+The one I noticed unaided before measuring is a small blocky hooked cluster — a crack that turns two near-right angles and encloses a stubby rectangle — which appears at roughly (215,290), (295,290) and (270,340). Every duplicate offset I found is an exact multiple of 64px in both axes.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+Repeated. The crack network is convincing enough at a glance that I initially read it as one authored field, and the reuse is spaced far apart (three tiles) rather than adjacent, which is competent placement. But the duplicates are exact to the pixel, the offsets are all multiples of the tile pitch, and the identity runs ~48px into each tile before the borders diverge — a small stamp set on a grid, not a surface.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The crack generation is genuinely decent work — the cell shapes are irregular, the junctions are correct, the line weight tapers, the speckle sells the dust. That's above the floor of what ships. But it is one texture doing one thing, with no second material, no wear, no incident and no authored moment anywhere in the room, and it is undercut by the square light terracing. Not good.
+
+**CULL:** Untouched natural mud — no wear, repair or incident anywhere; nothing records four hundred years of use.
+
+**FLIP LIST**
+- Fix the per-tile light quantisation: the torch pool must fall off per-pixel, no square steps at 64px (worst at x308–373/y141–206).
+- Break the uniform crack density: authored wear — a smoothed, crack-free traffic track running north gap to south corridor, cracks surviving only at the room's edges.
+- Add orc repair to the ground itself: driven pins, a lashed timber laid over a subsidence, a hide patch — at least two instances, one near the south corridor mouth.
+- Introduce a second ground material so the floor isn't one note: exposed stone sub-floor or a laid slab showing through where the mud has worn away.
+- Kill the four exact duplicate crack patches (list above) — mirror, rotate or hand-alter so no two 44px regions are pixel-identical.
+
+Next thing to watch: fixing the light terracing will make the crack repeats *more* visible, not less — the vignette is currently hiding some of them. Do the duplicates before you touch the lighting.
+
+*Model: Claude Opus 5 (1M context)*

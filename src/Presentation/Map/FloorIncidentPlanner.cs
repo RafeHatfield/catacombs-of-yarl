@@ -25,7 +25,8 @@ public readonly record struct FloorIncident(
     int EventId,       // -1 for none — at most one event per cell
     int ChannelId,     // -1 for none
     ChannelKind Channel,
-    bool Neglected);   // off the route: §8.1 decay rather than §8.1 polish
+    bool Neglected,    // off the route: §8.1 decay rather than §8.1 polish
+    int[] OcclusionIds);  // §12.1 contact occlusion, one per wall edge this cell actually has
 
 /// <summary>
 /// THE INCIDENT SYSTEM — ART-BIBLE-v0 §8.3's other half, which this project has never had.
@@ -70,6 +71,8 @@ public static class FloorIncidentPlanner
         public float GritRate;
         /// Left, Mid, Right, Full — index by (int)ChannelKind - 1.
         public int[] ChannelIds = System.Array.Empty<int>();
+        /// §12.1 contact occlusion, in the order N, E, S, W.
+        public int[] OcclusionIds = System.Array.Empty<int>();
     }
 
     /// <summary>Deterministic per-cell hash. Same shape the tile-variant picker already uses.</summary>
@@ -130,7 +133,30 @@ public static class FloorIncidentPlanner
             if (kind != ChannelKind.None && cfg.ChannelIds.Length >= 4)
                 channelId = cfg.ChannelIds[(int)kind - 1];
 
-            result[(x, y)] = new FloorIncident(gritId, eventId, channelId, kind, neglected);
+            // §12.1 CONTACT OCCLUSION — RULED form, legal and REQUIRED: "a wall-top meeting
+            // floor without its occluded edge is not purity, it is a missing plane". Placed by
+            // ADJACENCY, one per edge that actually has a wall behind it, so a corner cell gets
+            // two and an open-floor cell gets none. That is the clause's own test — the
+            // treatment must answer to the geometry it sits on — and it is what the renderer's
+            // whole-cell `DarkFloorModulate` cannot do: the same 8% multiply lands on a cell
+            // with a wall to its north and one with a wall to its south-west, and its edge is
+            // the cell's edge, which is a 32px square step and §8.3.1's lattice.
+            //
+            // IsWallTile, not !IsWalkable — the same predicate the wall autotiler and
+            // FloorComposer's edge pass use. Walkability also excludes blocking props, and
+            // borrowing it here is what produced the "pedestal halo" render bug around
+            // furniture (ruled, Rafe 2026-08). Occlusion answers to walls.
+            var occ = new List<int>(2);
+            if (cfg.OcclusionIds.Length >= 4)
+            {
+                if (map.IsWallTile(x, y - 1)) occ.Add(cfg.OcclusionIds[0]);   // N
+                if (map.IsWallTile(x + 1, y)) occ.Add(cfg.OcclusionIds[1]);   // E
+                if (map.IsWallTile(x, y + 1)) occ.Add(cfg.OcclusionIds[2]);   // S
+                if (map.IsWallTile(x - 1, y)) occ.Add(cfg.OcclusionIds[3]);   // W
+            }
+
+            result[(x, y)] = new FloorIncident(gritId, eventId, channelId, kind, neglected,
+                                               occ.ToArray());
         }
         return result;
     }
