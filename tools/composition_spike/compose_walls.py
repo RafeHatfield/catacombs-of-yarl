@@ -383,7 +383,18 @@ def bind_slab(a, ink, v):
 # original brickwork." Three ledger parts with DIFFERENT course rows means neighbouring face
 # tiles do not line up - which in ordinary masonry would be a defect and here is the point.
 # The face is constant across arms by design; the arms vary the top plane.
-FACE_STOCK = ["r07_00", "r07_08", "r07_09"]
+# ROUND 6 — REVERTED. Round 5 gave the face plane three parts on the seat's instruction to lay
+# "re-laid patches using a different brick module ... hard-edged against the original
+# brickwork", and it REGRESSED both arms it touched: the R4 arms went from `cannot-read` to
+# `noise` ("vertical autocorrelation shows no course period at all"), because three parts with
+# three different course rows destroy the course period that made the masonry read as masonry
+# in the first place. LOOP-PROCESS §2 says fix rounds regress and that it is measured fact
+# rather than caution; this is the measurement.
+#
+# The face keeps ONE part, therefore, and one course period. The round-5 overlay fixes stay —
+# they were a real defect and they did not regress. Mixing parts works on the top plane, whose
+# material has no period to destroy, and not on the face, whose whole legibility is its period.
+FACE_STOCK = ["r07_00"]
 
 
 def build_face_stock():
