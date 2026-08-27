@@ -18,6 +18,13 @@ composite, in any reference, or in the corpus (§1.3).
 their Tiled `.tmx`, so structure is read from map data rather than guessed off a screenshot.
 548 wall tiles classified, 152 face tiles, 166 shadow placements.
 
+> **RULED (Rafe, 2026-08-27): the SPD gap is the PROMPT's error, not this session's.** Reporting
+> the absence rather than substituting a nearby source was correct. Rafe will supply SPD
+> captures for an **optional measurement addendum** — the value and proportion work below stands
+> on 23 independent face tiles and is not re-derived. **The full Oryx library is at
+> `~/development/assets/oryx`** for future measurement; **pixels never cross (§13.3)**, and a
+> known path does not relax that.
+>
 > ⚠ **The brief named "SPD screenshots" as a second source. There are none on this machine** —
 > `find` across the repo, `~/development`, `~/Downloads`, `~/Documents` and `~/Desktop` returns
 > nothing for Shattered Pixel Dungeon. **Every number below is single-sourced from the asset

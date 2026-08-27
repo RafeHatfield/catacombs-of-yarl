@@ -600,3 +600,50 @@ Every capture ran under one identical rig, echoed by the engine into its own log
   questions went to a prose seat and from there to you.
 - **Did not execute a flip list that violated a locked clause**, three times.
 - **Did not conclude.** The road ruling is yours.
+
+---
+
+## 10. CORRECTION ENTRY — the `before` arm's plane structure was ENGINE LIGHT, NOT ART
+
+**Appended 2026-08-27, by Rafe's ruling, from evidence this spike could not have produced.
+Nothing above is rewritten; a trail that edits itself is not a trail.**
+
+The sighted round ran a **differencing check** — authored plane separation must survive the
+engine light being switched off, since anything that exists only lit is depicted light and not
+form (§6.3). Run against this spike's arms:
+
+| arm | unlit face ÷ top | verdict |
+|---|---:|---|
+| sighted round's recipe arm | **0.40** | **PERSISTS** |
+| **this spike's `before` arm** | **1.22** | **DISAPPEARS — CULL** |
+
+**Unlit, the `before` arm's face is BRIGHTER than its top.** It has no authored plane separation
+at all. Whatever plane structure it appeared to have in these captures was the engine's light
+drawing it — the falloff between a face one tile nearer the lamp and the top behind it — and not
+the art.
+
+**This is the arm this document rests on**, in three places that now read differently:
+
+1. **§5's rounds** measured eight noes on the thickness question against an arm with no authored
+   thickness to measure.
+2. **Round 8's seat ranked it FIRST of five**, and §7.4 used that ranking as the load-bearing
+   evidence for reopening §3 — *"the arm that ranked first carried only the two ruled variables
+   at their best measured settings, and it still failed."* It failed carrying **neither**
+   variable in the art.
+3. **The wall-top albedo sweep** (0.62 and 0.76 of floor) was run on that arm and reasoned toward
+   darker. Both samples sat on the same side of the floor value; §6.5 puts the answer above 1.0.
+
+**What this does and does not overturn.** It does **not** make the seats wrong — they reported
+what they saw, and what they saw was a wall without plane separation, which is exactly what this
+correction says was there. It **does** overturn the inference drawn from their verdicts: §3's
+two-plane rule was never actually on trial here, because no arm in this spike put two planes in
+the art. Bible §3's status trail (2026-08-27) carries that, and §6.5 carries the value stack
+that replaced the invented numbers.
+
+**The general lesson, and it is the one worth carrying forward: a capture taken only lit cannot
+tell authored form from delivered light.** The differencing check is cheap, it is one extra
+capture with the rig off, and it would have caught this on day one. It is now a standing check
+(`tools/sighted_round/checks.py`), shown able to fail before its passes were counted (§13.5).
+
+**Evidence:** `tools/sighted_round/checks.py --prove`, `tools/sighted_round/REPORT.md` §4, and
+`tools/sighted_round/evidence/captures/` — lit and unlit for every arm.

@@ -210,6 +210,21 @@ exactly **once**. Under §4.1 that is a control that discriminates but does not 
 identify, so **the favourable comparative result is reported as evidence, not as a validated
 pass.** Rafe's ruling should weigh it at that strength and no higher.
 
+> **RULED (Rafe, 2026-08-27), on both halves, and the section stands exactly as written.**
+>
+> **Round 2 stays VOID per §4.** Not discounted, not partially read, not rehabilitated by the
+> fact that its finding was corroborated elsewhere. A round whose plant seat waved the plant
+> through is void, and the corroboration from rounds 3–5 is what makes that cost nothing — it
+> is not a reason to reopen it.
+>
+> **The comparative result is weighed at 4-of-5-seat strength, exactly as marked.** The round
+> asked for that reading and it gets it: evidence, not a validated pass. §3's status trail
+> carries the qualification at full strength rather than quoting the favourable verdicts alone.
+>
+> *Recorded because the round proposed its own discount and was right to. A session that grades
+> its best result down, unprompted, is doing the job — and the ruling's only work here is to
+> hold that grading rather than let a later reader promote it.*
+
 ---
 
 ## 4. THE CHECKS, BOTH SHOWN ABLE TO FAIL
@@ -243,6 +258,22 @@ therefore count; a round whose seats pass the plant is void.
 
 1. **No SPD source.** §1's caveat: the recipe is single-sourced from the asset bar. SPD is the
    structure bar and is not on this machine.
+
+   > **RULED (Rafe, 2026-08-27): THE SPD GAP IS THE PROMPT'S ERROR, NOT THE SESSION'S.** The
+   > brief named a source that was not on the machine. Searching for it, failing to find it,
+   > and reporting the absence as a gap in the recipe was the correct behaviour — the failure
+   > mode to avoid was substituting a nearby source and calling the recipe two-sourced.
+   >
+   > **Rafe will supply SPD captures.** They feed an **optional measurement addendum** to
+   > `WALL-RECIPE.md`, not a re-run: the value and proportion work stands on 23 independent face
+   > tiles and does not need re-deriving. SPD is the *structure* bar (§13.3) and what it can add
+   > is layout-and-readability, which is where single-sourcing actually costs something.
+   >
+   > **The full Oryx library lives at `~/development/assets/oryx`**, recorded here so future
+   > measurement does not re-hunt for it. **Pixels never cross, per §13.3** — `measure_bar.py`
+   > reads a licensed local library and emits numbers only. No bar pixel is in this repo, in any
+   > composite, reference, or corpus, and that refusal is not relaxed by the library having a
+   > known path.
 2. **Captures are at the reference device's pixel size through the production renderer, not on
    the handset.** §2.1 is LOCKED on in-scene, lit, on device. This round's iteration captures
    run headless at 750×1334 — the same path every prior round used for its rounds — and **no

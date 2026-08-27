@@ -1,8 +1,12 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.8 — DRAFT. One clause has been derived from rendered assets on the device (§6.3);
-one more is under active test in the sighted round (§3). Everything else in this document still
-has not been derived.**
+**Status: v0.11 — DRAFT. One clause has been derived from rendered assets on the device (§6.3);
+§6.5 and §3.1 are measured against the asset bar and ruled, awaiting the device gate; §3 remains
+under test and ratifies at that gate. Everything else in this document still has not been
+derived.**
+
+*(v0.11 sits on top of v0.10, the motif trap — PR #150. If this lands first, the two revision
+entries and this banner are the merge conflict, and both entries are keepers.)*
 
 This bible is written *before* pixel work, deliberately. It records decisions taken in
 conversation during Phase 1–3 of the art-direction rework (2026-08). It graduates to **v1**
@@ -187,8 +191,47 @@ resort, but named — and named before the round, not after it.
 **The reopening evidence stands exactly as recorded below; what it now feeds is that test rather
 than an immediate ruling.**
 
+**STATUS TRAIL (2026-08-27): THE PREMISE IS VINDICATED BY THE Q3 CONTROL. §3 STAYS
+PROVISIONAL; RATIFICATION WAITS ON THE DEVICE GATE (§13.1).**
+
+The sighted round asked its seats a control question every round — *does either image show a
+side face?* — and the answer came back **NEITHER, in every round**. That is the finding, because
+the second image was **the asset bar**, running at full commercial quality:
+
+> *"B's north–south wall (x=0–13) is flat 90-gray for all 240 rows with a single 71 seam at
+> x=14 and no face anywhere — **a vertical wall in B has literally zero thickness**."* — r5
+> *"its entire east flank is one native pixel of joint line, while its north-facing sibling gets
+> 24 native px of face"* — r3
+
+**The standard we measure against carries the exact limitation §3 imposes.** Two independent
+seats measured it, unasked, never having been shown this section and with no idea they were
+auditing a bible clause. **The eight rounds of "no thickness" were therefore not evidence that
+two-plane construction fails — they were evidence that Yarl was executing it badly**, against a
+bar that has the same missing plane and does not suffer for it.
+
+**What was actually wrong was the value stack, and it was inverted** — see §6.5, which this
+round produced. In rounds 4 and 5 two independent blind seats ranked the Yarl candidate **above
+the bar** on wall depth, unhedged and with no cull, once the stack was corrected. §13.3's bar is
+*"the answer must be Yarl, or a tie"*.
+
+⚠ **QUALIFIED, and the qualification is carried at full strength.** The plant control was mixed:
+rejected by 4 of the 5 seats that saw it, named on its own axis only once, and waved through by
+one seat — which voided round 2 (§4). **The favourable result is evidence, not a validated
+pass, and is weighed at 4-of-5-seat strength exactly as the round marked it.** `REPORT.md` §3a.
+
+**RULED (Rafe, 2026-08-27): the premise stands vindicated; the clause is not yet ratified.**
+§13.1 governs: in-scene, on device, by eye. A device build of the rounds-4/5 configuration is
+owed and is the next step — the round's own captures are headless at device pixel size and are
+**round evidence, not gate evidence** (`REPORT.md` §4a). §3 graduates from PROVISIONAL when that
+walk happens and not before.
+
 **STATUS TRAIL (2026-08-26): THE RULED CONDITION FIRED. §3 WAS REOPENED, WITH EVIDENCE — and
 what replaces it, if anything, is Rafe's ruling and not the spike's.**
+
+*Kept below in full. The reopening was correct on its evidence; what the sighted round changed
+is the diagnosis, not the honesty of the record — and the confound named first at the time,
+**"the construction numbers were invented, where the bars' are measurable"**, is exactly the one
+that turned out to be carrying the failure.*
 
 The ruling was *"depth arriving ratifies §3; depth failing reopens it with evidence"*, against
 two rounds spent on plane-boundary occlusion and wall-top value separation with south-facing
@@ -232,6 +275,46 @@ before a single prop or creature exists.
 **Corroboration:** the asset bar's walls are two-plane — front face plus top band, no side
 face — running at full commercial quality. The provisional projection has a shipped precedent
 in the very library named as the per-asset bar. Still ratified only by the pilot.
+
+**And the corroboration is now measured rather than asserted.** The sighted round's Q3 control
+had two independent seats read the bar's own north–south walls and report **zero face** — *"a
+vertical wall in B has literally zero thickness"*. The shipped precedent carries §3's limitation
+exactly, which is the status trail's 2026-08-27 entry above.
+
+### 3.1 The top plane is FLAT — RULED (Rafe, 2026-08-27). A top surface is not face material re-toned.
+
+**A plane is not made by changing the value of a texture. It is made by changing what the
+texture is a picture of.**
+
+The face is coursed because you are looking at *courses*. The top is not, because you are
+looking at *the tops of stones*. Re-toning the same coursed masonry and laying it flat produces
+a surface that reads as more elevation, whatever value it is given.
+
+**Two blind seats found this independently, neither shown the other's verdict, and both culled
+`wrong-projection` for it:**
+
+> *"A top surface does not show five courses of face-brick."*
+> *"the brick coursing above it has the same pitch, proportion and orientation as below, so it
+> is not a top surface — **it is more face**."*
+
+**And no value change reaches it.** The round that was culled already had §6.5's value stack
+broadly right — one of those same seats measured the bar at *"face at 0.49× the top"* and
+proposed §6.5's own ratio back as its flip list — and culled the arm anyway. **A plane textured
+like elevation reads as elevation at any value.** This clause therefore sits with the projection
+rule it protects, not with the values it is independent of.
+
+**Register derivation — §8.1 wear, the same derivation §6.5 runs on.** Decay is traffic-driven
+and **nothing walks on a wall top**. A surface nothing has ever touched has accumulated no
+incident, so it carries nothing but the joints between the blocks it is made of. A material
+derivation: it declares no light direction and survives §6.3.
+
+**As built:** plane flat at its target value, 2 px joints on a 16 px grid at 0.78 of the plane,
+phase-offset per variant. Measured on the bar at 91.5% of top-plane pixels holding one exact
+value, joints at half-tile pitch. `tools/sighted_round/WALL-RECIPE.md` §2.3.
+
+⚠ **Worth stating why this matters beyond walls: it is §8.3 in different clothes.** Coursing on
+a top plane is *material describing the wrong thing*, repeated in every cell. The tile was not
+badly drawn — it was a picture of the wrong surface, thirty times over.
 
 ---
 
@@ -422,6 +505,41 @@ light hides nothing and reveals nothing worth seeing — which is how the Weighi
 menace with almost no gothic vocabulary.
 
 Only the Boundary's values are derived at the pilot. The rest are PLACEHOLDER.
+
+**⚠ COUPLING FLAG — RULED (Rafe, 2026-08-27): THE ART IS NOW DOWNSTREAM OF THIS PLACEHOLDER.**
+
+The sighted round measured that **the engine compresses the authored value ratio**, and by a
+factor it had to solve backwards on Yarl's own rig:
+
+| | authored face ÷ top | delivered, lit | factor |
+|---|---:|---:|---:|
+| recipe arm, room A north wall | 0.52 | **0.77** | **1.48** |
+
+**The player is the lamp**, and stands south of a north wall — so the face is always one tile
+nearer the light than its own top, everywhere, by construction. The engine brightens the face
+relative to the top and flattens the separation §6.5 exists to create. A seat measured the
+consequence without being told any of it: *"at x=40 that step is 42→28, only 14 points, and at
+x=400 it is 56→21 — A's corner therefore exists only where the light happens to land."*
+
+**So authored ratios are derived backwards from delivered targets on the current rig.** To
+deliver 0.52 through this rig you author ≈ 0.35. **The bar cannot supply this number and never
+could** — its scene is uniformly lit with no run-time light at all. It is the first quantity in
+the recipe that had to come from Yarl's own engine.
+
+**The dependency is named, not solved.** Compensating for a measured falloff is a material
+decision and declares no light direction, so it survives §6.3. But **a recipe number that
+depends on an underived rig value is a number with a fuse in it**: if this table's energy,
+radius or ambient move when they are finally derived, the compensation is wrong and the walls
+flatten again.
+
+> **RULE: every authored ratio derived against the current rig is RE-DERIVED when §6.2's
+> PLACEHOLDER values are ratified.** Whoever ratifies them owns that re-derivation. The honest
+> alternatives — derive the rig before freezing the ratio, or give wall tiles a light-response
+> clamp in the renderer — are both real and both outside the round that found this.
+
+This is the first measured instance of art and rig being coupled on this project. It will not be
+the last, and the reason to write it down here rather than in the recipe is that **§6.2 is where
+someone will be standing when they break it.**
 
 ### 6.3 Assets are authored to RECEIVE light, not to DEPICT it — LOCKED, RATIFIED
 
@@ -675,6 +793,62 @@ effort ratio is ever measured with a real arm A and lands clearly beyond the abs
 `STOP1-REPORT.md`, `STOP2-REPORT.md`, `PARK-STATE.md`, and the image ledgers. Every generation
 is on disk with its full request payload, because nothing on this platform is seed-reproducible
 and a parameter row is therefore not evidence. **Probe total: 174 generations.**
+
+---
+
+### 6.5 The value stack — RULED (Rafe, 2026-08-27). The recipe's load-bearing law.
+
+> **The floor sits BETWEEN the wall's two planes.**
+>
+> | | target, floor-relative |
+> |---|---|
+> | **wall top** | **≈ 1.11 × floor** — lighter than the floor |
+> | **floor** | 1.00 |
+> | **wall face** | **≈ 0.5–0.6 × floor** — darker than the floor |
+>
+> **Each plane is separated from the floor in a different direction.** That is the law; the
+> exact figures are targets carrying §5's PLACEHOLDER status, not constants.
+
+**Register derivation — §6.3, occlusion expressed as a ratio.** The top catches light; the face
+is where light cannot easily reach. A horizontal plane under a top-down ambient is open to it; a
+vertical plane faces the wall opposite rather than the ceiling, and is the largest recess in the
+scene. §6.4 arm B's own words — *"joints, recesses and undercuts sit darker because they are
+enclosed"* — applied at the scale of a whole plane. **Enclosure is direction-free by
+construction**: dark from every angle, so a torch arriving from anywhere does not contradict it.
+This is why the stack is material and not depiction, and why it survives §6.3.
+
+The floor's own position follows from §8.1 and is the half that is easy to miss: *"grime walked
+into a surface until it is part of it."* **The floor is dark because it is used. The wall top is
+light because nothing has ever touched it.** Two independent derivations — enclosure below,
+traffic above — meeting on the same floor value from opposite sides.
+
+**WHY IT IS LOAD-BEARING, and this is the finding of the whole wall campaign.** Yarl's walls had
+the relationship **inverted**:
+
+| | top | floor | face | face ÷ top |
+|---|---:|---:|---:|---:|
+| the bar | **1.11** | 1.00 | **0.59** | **0.53** |
+| Yarl, composition spike `before` arm | **0.49** | 1.00 | **0.65** | **1.30** |
+
+Both planes below the floor, 0.16 apart, with **the face brighter than the top**. Not mistuned —
+inverted. **Eight blind rounds of "this wall has no thickness" were reading a plane relationship
+that the values contradicted, and no side face is required to explain any of it.** Corrected,
+two independent seats ranked the Yarl candidate above the bar on depth.
+
+⚠ **The methodological lesson, banked because it will recur.** The spike swept wall-top albedo
+at 0.62 and 0.76 of floor, found 0.62 better, and reasoned toward *darker*. Both samples sat on
+the **same side** of the floor's value; the answer was on the other side, above 1.0. **A
+two-point sweep entirely on one side of the true value points confidently in the wrong direction
+and looks like clean evidence while doing it.** Bracket the target or say you have not.
+
+**AND THE ENGINE COMPRESSES IT — COUPLING FLAG, see §6.2.** The authored ratio is not the
+delivered ratio. Authored 0.52 arrives as 0.77 under the carried light, a compression factor of
+1.48, because the player *is* the lamp and stands south of a north wall — so the face is always
+one tile nearer the light than its own top. **Authored ratios are therefore derived backwards
+from delivered targets on the current rig.** That dependency is named in §6.2 and is not solved.
+
+**Evidence:** `tools/sighted_round/WALL-RECIPE.md` §0–§1 (measurement and register derivation
+per number, under §13.3's origination rule), `bar_measurements.json`, and the seat transcripts.
 
 ---
 
@@ -1149,6 +1323,30 @@ good*; only the bible answers *what we should look like*. **DNA and bars never s
 nothing conditions generation that we do not own** (§1.3), and nothing we own is above being
 judged against the best.
 
+**WHERE THE BARS LIVE, and the one rule that governs reading them — RECORDED (2026-08-27).**
+
+| bar | location | status |
+|---|---|---|
+| **Oryx Ultimate Fantasy** — asset bar | **`~/development/assets/oryx`** — the full library, licensed, local | available for measurement |
+| **Shattered Pixel Dungeon** — structure bar | not on this machine; **Rafe supplies captures** | outstanding |
+| **Rogue Wizards** — scene bar | not on this machine | outstanding |
+
+Recorded so a future round does not re-hunt for a source it already has, and so an absent one is
+known to be absent rather than discovered mid-round. The sighted round lost its second source
+that way: the brief named SPD, nothing on the machine matched, and the recipe went out
+**single-sourced and said so** (`tools/sighted_round/WALL-RECIPE.md` §1).
+
+> **RULED (Rafe, 2026-08-27): naming a source that is not there is the PROMPT's error, not the
+> session's.** The correct response to a missing bar is to report the gap, not to substitute a
+> nearby source and call the work two-sourced. A recipe that says *single-sourced, and here is
+> what that costs* is worth more than one that quietly fills the hole.
+
+**MEASUREMENTS LEAVE; PIXELS NEVER DO.** A tool may read a licensed local library and emit
+numbers — `measure_bar.py` is the pattern: it wrote `bar_measurements.json` and nothing else.
+**No bar pixel enters this repo, in any composite, reference, or corpus (§1.3), and a known path
+does not relax that by one pixel.** The path above is an instruction for measurement tools, not
+an invitation to the asset pipeline.
+
 **The origination rule — LAW.** The bar may *occasion* a law; only the register may *justify*
 one. Every law in this bible must cite its register derivation, not merely its bar observation
 — the v0.5 pass is the worked precedent: faceless creatures follow from §1.1's division of
@@ -1255,7 +1453,8 @@ gaps — which is the correct state for a bible whose pilot has not run.**
 | §5.4 chroma is signal                                  | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN.** **The countable proxy is named and refused:** saturated-pixel share is measurable, but share is not signal — a census can count saturation and cannot see meaning, so the number would gate the wrong thing and win trades it hasn't earned (§13.4). If a saturation census is ever built, it is ordering-only under the worst-ground pattern (§13.2), renders no verdict, and earns promotion like any instrument (§13.5). |
 | §5.5 reference neutrality (style parent vs prop stock) | None                                | ⚠ **NO INSTRUMENT.** Applied when a reference is chosen, by eye. The 12/12 propagation measurement is the *evidence for the rule*, not a gate over candidates — a "composition similarity" score would be exactly the weak proxy §13.4 refuses. |
 | §6.3 receive-light (no baked highlight)                | Blind LLM census, plant-controlled   | **BUILT AND PROMOTED, NARROWLY.** `tools/pixellab/probe_6_4/blind_census.py`. A blind read, not a metric (§13.4 v0.3: a script emitting a number is an instrument; a critic rendering a verdict is not). Passed its control **10/10** against *constructed* plants — ground truth taken from the prompt would have been circular. **Licensed for KEY vs not-KEY only, at plant strength.** The FORM-vs-FLAT boundary carries no control and is reported unlicensed, because a donor tile that is already near-flat yields a "flat plant" a truthful eye may correctly read as FORM, and tuning plants until that stopped would manufacture an instrument that cannot fail. |
-| §6.3 occlusion, not illumination (no encoded light direction) | Differencing check, light-off      | **BUILT AND PROMOTED, ONE AXIS.** Authored form must survive the engine light being switched off; a per-block top-bright/bottom-dark emboss fails the diff. Demonstrated its fail on the round-8 plant before any pass was counted (§13.5). **Licensed for encoded-light-direction only** — it says nothing about whether the form that survives is any good, which stays eye-side (§13.4). |
+| §6.3 occlusion, not illumination (no encoded light direction) | Differencing check, light-off      | **BUILT AND PROMOTED, ONE AXIS.** Authored form must survive the engine light being switched off; a per-block top-bright/bottom-dark emboss fails the diff. Demonstrated its fail on the round-8 plant before any pass was counted (§13.5). **Licensed for encoded-light-direction only** — it says nothing about whether the form that survives is any good, which stays eye-side (§13.4). **AND IT HAS NOW CAUGHT A REAL ARM, not only a plant (2026-08-27):** the composition spike's `before` arm measures unlit face÷top **1.22** — face brighter than top, no authored plane separation at all — so the plane structure eight rounds were measured against was the engine's light, not the art. That is the arm its own round-8 seat ranked first of five. An instrument's first real catch is worth more than its control, and this one overturned an inference rather than a candidate. |
+| §6.5 the value stack (floor between the planes) | Plane-ratio measurement, `tools/sighted_round/checks.py` | **BUILT, AND HONESTLY NARROW.** Reads top/floor and face/top off a lit capture and off an unlit one. It measures whether the ratios are *present*, which is real and was the finding; it does **not** measure whether they read as planes to an eye — rounds 1 and 2 had the ratios broadly right and were culled `wrong-projection` for §3.1, which no ratio detects. **Licensed for ratio-presence only.** Its delivered numbers are also rig-coupled (§6.2's flag), so a pass is a pass *on this rig*. |
 | §6.3 no baked drop shadows                             | None                                | ⚠ **NO INSTRUMENT.** Joins the directional-highlight census as owed; same status, same caution — Gemfall's analogue measured as a blunt proxy and was refused a verdict. |
 | §7.1 everything is held                                | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Eye-side, at the gate. |
 | §7.4 heraldic stance (idle sprites are icons)          | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
@@ -1266,8 +1465,15 @@ gaps — which is the correct state for a bible whose pilot has not run.**
 | §1.1 zero expression budget (world creatures faceless) | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** Blind critic eye + human gate. |
 | §1 register conformance, all clauses                   | None, and none will be built        | ⚠ **NO INSTRUMENT — BY DESIGN (§13.4).** |
 
-**Thirteen of sixteen clauses have no working instrument today. None is papered over. Seven of
-them will never have one, deliberately, and that is a decision rather than a gap.**
+**Thirteen of seventeen clauses have no working instrument today. None is papered over. Seven
+of them will never have one, deliberately, and that is a decision rather than a gap.**
+
+**At v0.11 one row goes GREEN on evidence and one existing row earns its keep — the first
+revision where the audit moved in the project's favour without a new instrument being built.**
+§6.5 arrives with a real measurement behind it and a narrow licence. The §6.3 differencing check
+made its **first catch on a real arm** rather than a plant, and what it caught was an inference
+that eight rounds had rested on. **The caution attached to both: a ratio check cannot see §3.1** —
+rounds 1 and 2 had the values broadly right and were culled `wrong-projection` anyway.
 
 **Two rows are new at v0.8, and they move in opposite directions — which is the audit working.**
 §6.3 gained a second instrument, the light-off differencing check, promoted on a demonstrated
@@ -1303,6 +1509,28 @@ Recorded so they are not re-derived; deliberately not law.
 ---
 
 *Revision history:*
+
+- *v0.11 — 2026-08-27. **The sighted round's rulings land — the first round on this project run
+  with sight, under §13.3's origination rule.** **NEW §6.5, THE VALUE STACK**, and it is the wall
+  campaign's load-bearing finding: **the floor sits BETWEEN the wall's two planes** — top ≈1.11×
+  floor, face ≈0.5–0.6× floor. Register derivation is §6.3 occlusion expressed as a ratio: the
+  top catches light, the face is where light cannot easily reach, and enclosure is direction-free
+  so the stack is material rather than depiction. Yarl had the relationship **inverted** (face
+  brighter than top, both below the floor), which is the whole of the eight-round "no thickness"
+  finding — no side face required to explain it. Corrected, two blind seats ranked Yarl **above
+  the asset bar** on depth. **NEW §3.1, THE FLAT-TOP RULE:** a top surface is not face material
+  re-toned; a plane is made by changing what the texture is a picture of, not its value. Two
+  seats culled `wrong-projection` for it independently, and no value change reaches it. **§3's
+  premise is VINDICATED by the Q3 control** — the bar carries §3's own limitation, measured by
+  two seats unasked ("a vertical wall in B has literally zero thickness"), so the clause was
+  never on trial; §3 stays PROVISIONAL and ratification waits on the device gate (§13.1).
+  **§6.2 gains a COUPLING FLAG:** the engine compresses the authored ratio by a measured 1.48
+  because the player is the lamp, so authored ratios are derived backwards from delivered targets
+  on the current rig and **must be re-derived when §6.2's PLACEHOLDER values are ratified** — the
+  art-to-rig dependency is named, not solved. **§13.3 records where the bars live** and restates
+  that measurements leave while pixels never do. All results are qualified at **4-of-5-seat
+  strength**: the plant was waved through once, voiding round 2, which stays void. Evidence:
+  `tools/sighted_round/`.*
 
 - *v0.9 — 2026-08-27. The floor campaign's rulings land. **§5.5 gains its corpus assignment**
   (Rafe): C-GAB primary style parent, A-HEB secondary, **A-VAB prop stock regardless of
