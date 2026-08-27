@@ -1,0 +1,78 @@
+{
+ "round": "A",
+ "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "mapping": {
+  "F3": "orig_A-HEB_lit.png",
+  "F1": "orig_C-GAB_lit.png",
+  "F4": "orig_A-VAB_lit.png",
+  "F2": "orig_B-KAB_lit.png"
+ },
+ "plant": null,
+ "verdicts": {
+  "F1": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Every tile is fenced left and right by a hard uniform rule and stamped with the same rectangular stone in the same place, so the floor reads as repeated panels rather than continuous paving.",
+   "q1": "North up the corridor \u2014 I am in a one-tile channel with wall hard on both sides, and the only branches are the east\u2013west crossings one screen-length above and below me.",
+   "q2": "Grey-brown flagstones laid flat in courses roughly 14px deep with vertical breaks in them, butted tight, no bedding or fill visible \u2014 but the courses land on the same two rows and the breaks on the same two columns inside every 32px cell, so it is one stamped panel repeated, not a laid floor.",
+   "q3": "A grid of separate objects \u2014 every tile carries an unbroken dark rule down its left and right edge at relative luminance 0.81 against a field of 1.10, darker and straighter than any mortar joint inside it, so the horizontal corridor reads as a row of identical butted panels.",
+   "q4": "Nothing \u2014 no wear path down the centre line, no rounding or silting of the joints where feet fall, no dishing; the chipping is uniform noise spread equally over stone and over the walking line.",
+   "q5": "Nothing has happened to it. It is fresh pavement with a light dusting of generic pitting, and four hundred years have left no mark I can point at."
+  },
+  "F2": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Each tile is a dark rounded-corner border ringing an inset panel, complete on all four sides at one width and one value, floating on empty ground \u2014 a card laid on the floor, not stone.",
+   "q1": "not asked \u2014 culled at step 1.",
+   "q2": "not asked \u2014 culled at step 1.",
+   "q3": "not asked \u2014 culled at step 1.",
+   "q4": "not asked \u2014 culled at step 1.",
+   "q5": "not asked \u2014 culled at step 1."
+  },
+  "F3": {
+   "cull": "none",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "The best-drawn stone in the set is undone by a hard uniform border down both edges of every tile and a joint skeleton that repeats in lockstep at 32px.",
+   "q1": "North up the corridor \u2014 same one-tile channel, walls both sides, two crossings above and below and nothing else open.",
+   "q2": "Small squarish flagstones in a denser joint network than F1 \u2014 more courses, more break joints, more grit in the faces \u2014 which at the pixel level is the most convincing masonry in the set.",
+   "q3": "A grid of separate objects \u2014 identical failure to F1: the same 0.81-value unbroken rule down both tile edges against a 1.10 field, and the same closed rectangular stone sitting at the same offset in every cell.",
+   "q4": "Nothing \u2014 the wear reads as evenly scattered speckle; there is no darkened or polished lane where a company has walked the same line for four centuries, and no joint is more open than any other.",
+   "q5": "Nothing has happened. It is a competent new pavement with noise on it; the place has no history in its floor."
+  },
+  "F4": {
+   "cull": "keyline",
+   "verdict": "FAIL",
+   "raw_verdict": "FAIL",
+   "hedge_converted": false,
+   "why": "Two concentric closed rectangles inset in the middle of every tile, each one width and one value the whole way round \u2014 the tile is a framed plaque, and the moss clumps repeat at the same corners to confirm it.",
+   "q1": "not asked \u2014 culled at step 1.",
+   "q2": "not asked \u2014 culled at step 1.",
+   "q3": "not asked \u2014 culled at step 1.",
+   "q4": "not asked \u2014 culled at step 1.",
+   "q5": "not asked \u2014 culled at step 1."
+  }
+ },
+ "passes": [],
+ "ranking": [
+  "F3",
+  "F1",
+  "F4",
+  "F2"
+ ],
+ "separator": "The top two at least draw stone with joints between it, while the bottom two draw a bordered object once and repeat it, and F2 does not even fill the tile \u2014 it leaves bare ground showing between its cards.",
+ "flip_list": [
+  "In F1 and F3, delete the dark column at art x=0 and x=31 of every floor tile. Measured over nine tiles it sits at 0.81 relative luminance against a 1.10 field, darker than the deepest interior joint (0.93); nothing should mark where one tile ends and the next begins. Let the paving's own break joints fall wherever they fall.",
+  "In F1 and F3, move the joint skeleton off its fixed phase: horizontal courses currently land on art rows 13 and 27 and vertical breaks on cols 7 and 23 in every tile. Draw four variants with the course rows offset 3\u20137px from each other and the break columns staggered so no two adjacent tiles share a break at the same column.",
+  "In F1 and F3, the same closed rectangular stone sits at the same offset in every tile. Draw six variants: two where that stone is a different size, two where it sits at a different offset, and two where it is absent and the area is covered by three or four smaller stones.",
+  "In F4, delete both concentric rectangles inset in each tile and replace them with the same joint network used elsewhere on the floor, so the lines that remain are boundaries between stones rather than a frame around the cell.",
+  "In F4, the moss clump appears at the same tile corner in every instance. Move moss to a separate decal placed by the engine at joint junctions, at roughly one clump per six tiles, not one per tile.",
+  "In F2, delete the rounded-corner border and the flat empty gutter around each card, and extend the stone to the full 32x32 so the tile has no background left showing.",
+  "Add the traffic that four hundred years would leave: lighten the centre 10\u201314 art px of the corridor run by one step, erode the joint edges inside that lane so they read blunter and shallower than the joints at the corridor sides, and leave the outer 6\u20138px darker and sharper where no one walks."
+ ]
+}

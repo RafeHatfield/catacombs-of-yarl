@@ -162,6 +162,36 @@ rather than a prompt, in the tiles-pro audit.
 lever claims**, and the lever must move *that*. A control that only asks "did anything change?"
 certifies connectivity and reports it as efficacy.
 
+### 4.2 A remediation must prove it removed something — LAW
+
+**§4.1's twin, from the other side. §4.1 is a diff that proves less than it claims. This is NO
+DIFF AT ALL, reported as success.**
+
+Ruling 104 (`PIXELLAB-VERIFIED.md`): *a documented step with no enforcement is not a step, it is
+a wish*, and its named failure mode is a step whose absence has no observable consequence at the
+time — only later, and somewhere else. **A fix that runs, changes nothing, and says so quietly
+is the same failure wearing the opposite clothes: the step did run, and it was still a wish.**
+
+**LOGGED INSTANCE — `dering_floors.py` on A-VAB, 2026-08-26 to 2026-08-27.**
+
+The composition spike's de-ring step ran on all four §6.4 survivors and removed **zero pixels
+from A-VAB**, because it thresholds luminance at 0.30× the tile median and A-VAB's two rings sit
+at 0.48×. It printed `0 ring pixels removed of 1024` and exited 0. Nothing went red. The
+"de-ringed" A-VAB it wrote is **byte-identical to the raw survivor**, and so is its lit in-scene
+capture — `sha256 9e9890c0fa4db115` either way. Round 8's captures were taken through it and
+carried a fully ringed floor on every tile while being labelled de-ringed; A-VAB is the tile the
+survivor manifest marks `strongest` and the one the spike's own solo-floor arm used as its
+single floor. The defect surfaced a round later, somewhere else, exactly as Ruling 104 predicts.
+
+**The check that closes it, and it is one line of state, not a new instrument:** a remediation
+records **what its own target measured before and after**, and reds when a tile it was pointed
+at is unchanged *and* still fails. `remediate.py` carries `verdict_before`, `verdict_after` and
+`pixels_changed` per tile in its manifest for this reason.
+
+**Ask of any fix: what goes red if it silently does nothing?** "The output looks fine" cannot
+answer it — in this instance the output *was* the input, and it looked exactly as fine as the
+thing it was supposed to have repaired.
+
 ---
 
 ## 5. The bar
@@ -328,6 +358,16 @@ conditions, which supplies parts, which camera parameters are spent, and why the
 images rather than parameters. One home, cited from both documents.
 
 ---
+
+*v0.5 — 2026-08-27. **New §4.2: a remediation must prove it removed something** — §4.1's twin
+from the other side, and Ruling 104's failure mode wearing the opposite clothes. §4.1 is a diff
+that proves less than it claims; §4.2 is no diff at all, reported as success. Logged instance:
+`dering_floors.py` removed zero pixels from A-VAB, printed `0 ring pixels removed of 1024`,
+exited 0, and nothing went red — its "de-ringed" output is byte-identical to the raw survivor
+and so is the lit capture taken through it (sha256 `9e9890c0fa4db115` either way), which is how
+a round's captures carried a fully ringed floor while being labelled de-ringed. The check is one
+line of state, not a new instrument: record the target's own verdict before and after, and red
+when a tile you were pointed at is unchanged and still failing.*
 
 *v0.4 — 2026-08-27. Three clauses, each twice-earned or campaign-earned. **New §4.1:**
 measurable is not effective — a lever is proven on the axis it claims, not on the diff; the

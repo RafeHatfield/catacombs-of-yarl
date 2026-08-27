@@ -1,0 +1,577 @@
+{
+ "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "min_side_coverage": 0.9,
+ "max_thickness": 2.0,
+ "max_thickness_spread": 0.5,
+ "min_interior": 16,
+ "max_regions_separated": 2,
+ "controls": {
+  "suite_pass": true,
+  "cases": [
+   {
+    "name": "ctrl_clean",
+    "expect": "CLEAN",
+    "got": "CLEAN",
+    "pass_": true,
+    "why": "plain speckled field, no drawn contour anywhere",
+    "findings": []
+   },
+   {
+    "name": "ctrl_dark_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "near-black closed loop - the construction round 7 measured at 0.11 of the median",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 68,
+      "interior_px": 256,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 2,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       7,
+       7,
+       24,
+       24
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_pale_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "PALE closed loop, same geometry - \u00a712.1's worked example. The 0.30-of-median threshold in dering_floors.py cannot see this at all.",
+    "findings": [
+     {
+      "kind": "light-set",
+      "level": "lum>=197.7",
+      "contour_px": 68,
+      "interior_px": 256,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 2,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       7,
+       7,
+       24,
+       24
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_midtone_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "mid-tone closed loop at 0.48 of the median - the value the spike table called 'a mid-tone rebate - kept'",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=109.1",
+      "contour_px": 109,
+      "interior_px": 515,
+      "pieces": 1,
+      "hollowness": 0.826,
+      "side_coverage": 0.904,
+      "regions_separated": 2,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       4,
+       4,
+       29,
+       27
+      ],
+      "wall_colours": 2,
+      "levels_agreeing": 2
+     },
+     {
+      "kind": "dark-set",
+      "level": "lum<=60.5",
+      "contour_px": 84,
+      "interior_px": 400,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 2,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       5,
+       5,
+       26,
+       26
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_nicked_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "the same loop with a TWO-PIXEL bite out of one side. A topological-closure test calls this innocent; three regenerated B-KAB children passed that test and read as ringed tiles on sight. Criterion 1 measures presence on every side, not watertightness.",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 66,
+      "interior_px": 258,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 0.967,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       7,
+       7,
+       24,
+       24
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_split_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "a ring drawn as TWO overlapping L-brackets. Neither is on every side; together they are. The per-contour pass scored the real instance of this 0.57 and 0.65 and passed it; the blind seat culled it on sight. Caught by the union pass.",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 70,
+      "interior_px": 330,
+      "pieces": 2,
+      "hollowness": 1.0,
+      "side_coverage": 0.936,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       6,
+       6,
+       25,
+       25
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_dashed_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "a ring drawn as a dashed run of ticks, one pixel in nine missing - every dash its own component. Invisible to the per-contour pass by construction. Caught by the union pass. See KNOWN LIMIT in the docstring for how broken a ring has to be to escape.",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 63,
+      "interior_px": 261,
+      "pieces": 4,
+      "hollowness": 1.0,
+      "side_coverage": 0.929,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       7,
+       7,
+       24,
+       24
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_edge_frame",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "a frame on the tile's OWN border. A does-it-touch-the-border test calls this innocent; it is a ring around a thing and the thing is the tile. Criterion 4 catches it because removing it leaves ONE region, not a network of cells.",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 124,
+      "interior_px": 900,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": true,
+      "interior_bbox": [
+       0,
+       0,
+       31,
+       31
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     },
+     {
+      "kind": "dark-set",
+      "level": "lum<=109.1",
+      "contour_px": 132,
+      "interior_px": 892,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": true,
+      "interior_bbox": [
+       0,
+       0,
+       31,
+       31
+      ],
+      "wall_colours": 2,
+      "levels_agreeing": 2
+     },
+     {
+      "kind": "dark-set",
+      "level": "lum<=123.6",
+      "contour_px": 185,
+      "interior_px": 839,
+      "pieces": 1,
+      "hollowness": 0.849,
+      "side_coverage": 1.0,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": true,
+      "interior_bbox": [
+       0,
+       0,
+       31,
+       31
+      ],
+      "wall_colours": 3,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_joint_net",
+    "expect": "CLEAN",
+    "got": "CLEAN",
+    "pass_": true,
+    "why": "SAME colour, SAME 1px width and the SAME measured constancy as ctrl_midtone_ring, and it too runs to the tile border like ctrl_edge_frame. It differs from BOTH of them by criterion 4 alone: removing it leaves five cells rather than a thing and its surround.",
+    "findings": []
+   },
+   {
+    "name": "ctrl_occlusion",
+    "expect": "CLEAN",
+    "got": "CLEAN",
+    "pass_": true,
+    "why": "plane-boundary occlusion: near-black, on the floor-facing side only, open contour. \u00a712.1 RULED this legal and required.",
+    "findings": []
+   }
+  ]
+ },
+ "survivors": [
+  {
+   "file": "A-VAB.png",
+   "path": "tools/pixellab/probe_6_4/survivors/A-VAB.png",
+   "sha256": "64519e5b5a5cfd11ad9dc6419f6c7db4a4718d3470d3a6f8bb4b362fa1a5b319",
+   "verdict": "RING",
+   "median_lum": 125.6,
+   "rings": [
+    {
+     "kind": "dark-set",
+     "level": "lum<=79.7",
+     "contour_px": 77,
+     "interior_px": 383,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.97,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      5,
+      5,
+      24,
+      27
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 6
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=91.8",
+     "contour_px": 79,
+     "interior_px": 381,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.97,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      5,
+      5,
+      24,
+      27
+     ],
+     "wall_colours": 3,
+     "levels_agreeing": 6
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=60.5",
+     "contour_px": 76,
+     "interior_px": 364,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.995,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      5,
+      5,
+      24,
+      26
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 4
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=88.5",
+     "contour_px": 32,
+     "interior_px": 48,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      11,
+      18,
+      20
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 24
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=99.6",
+     "contour_px": 34,
+     "interior_px": 46,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      11,
+      18,
+      20
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 6
+    }
+   ]
+  },
+  {
+   "file": "A-HEB.png",
+   "path": "tools/pixellab/probe_6_4/survivors/A-HEB.png",
+   "sha256": "4b3591d5c15810d72c7bfd0d7e12ca81fadb985b2f1fa627b29860f8be39568d",
+   "verdict": "CLEAN",
+   "median_lum": 136.4,
+   "rings": []
+  },
+  {
+   "file": "B-KAB.png",
+   "path": "tools/pixellab/probe_6_4/survivors/B-KAB.png",
+   "sha256": "950751ae2ec901ce0a72f4a20c4d2c00e5ee54f3c8e14acc6010d78144a6ef09",
+   "verdict": "RING",
+   "median_lum": 129.5,
+   "rings": [
+    {
+     "kind": "dark-set",
+     "level": "lum<=13.5",
+     "contour_px": 62,
+     "interior_px": 244,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.992,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=50.9",
+     "contour_px": 69,
+     "interior_px": 237,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.992,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 4
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=50.9",
+     "contour_px": 70,
+     "interior_px": 236,
+     "pieces": 2,
+     "hollowness": 1.0,
+     "side_coverage": 0.992,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=64.3",
+     "contour_px": 71,
+     "interior_px": 235,
+     "pieces": 3,
+     "hollowness": 0.986,
+     "side_coverage": 0.991,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 3,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=71.5",
+     "contour_px": 75,
+     "interior_px": 231,
+     "pieces": 1,
+     "hollowness": 0.973,
+     "side_coverage": 0.991,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 2
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=71.5",
+     "contour_px": 76,
+     "interior_px": 230,
+     "pieces": 2,
+     "hollowness": 0.974,
+     "side_coverage": 0.991,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      7,
+      7,
+      23,
+      24
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 2
+    }
+   ]
+  },
+  {
+   "file": "C-GAB.png",
+   "path": "tools/pixellab/probe_6_4/survivors/C-GAB.png",
+   "sha256": "1a24a59aa5607c3beebd8d1cf728acc0f43d6fc0bace6015025a7595c3f6db4f",
+   "verdict": "CLEAN",
+   "median_lum": 139.2,
+   "rings": []
+  }
+ ]
+}

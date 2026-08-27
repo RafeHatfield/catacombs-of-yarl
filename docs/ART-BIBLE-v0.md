@@ -362,11 +362,42 @@ References therefore divide by job, and the division is load-bearing:
 **The seed corpus wants the boring ones.** A reference chosen because it is handsome is a
 composition about to be copied twelve times.
 
-**Corpus status (2026-08-26).** The four §6.4 survivors carry a measured §12.1 defect: a uniform
-~3px near-black ring, B-KAB at luminance 14 against a median of 130. Remediated,
-provenance-linked versions supersede them **upon Rafe's re-curation**; the originals stay in the
-ledger untouched, because a ledger that edits its own history is not evidence. **Nothing
-conditions on an un-remediated survivor.**
+**CROSS-CONFIRMED (2026-08-27), by a different instrument on a different campaign.** This
+clause's composition finding was measured 12/12 on the *wall* campaign, by tracing children back
+to their reference. A blind seat then rediscovered it from the opposite end: shown the *floor*
+campaign's lit corridor, never given this bible, never told which tile was which, it culled
+A-VAB and named the construction —
+
+> *"Two concentric closed rectangles inset in the middle of every tile, each one width and one
+> value the whole way round — **the tile is a framed plaque**, and the moss clumps repeat at the
+> same corners to confirm it."*
+
+*A framed plaque* is *a recessed frame* arrived at independently, in a different medium, by an
+instrument with no access to the first result. The clause is not resting on one campaign.
+
+**Corpus status — RULED (Rafe, 2026-08-27), superseding the 2026-08-26 paragraph.** The four
+§6.4 survivors divide by job, and the division is now assigned rather than pending:
+
+| survivor | role | why |
+|---|---|---|
+| **C-GAB** | **primary style parent** | compositionally neutral; carries no ring, at any value |
+| **A-HEB** | **secondary style parent** | a joint network, not a keyline; carries no ring |
+| **A-VAB** | **prop stock — never a conditioning parent** | charactered. **The ruling holds regardless of surgery:** de-ringing removes a keyline, it does not make a framed plaque neutral, and it is the composition that propagates |
+| **B-KAB** | **retired from conditioning. No remediation.** | 24 children conditioned on it came back 22 ringed; the regenerated candidate was culled by the seat and is **not promoted**. Its original stays in the ledger, un-remediated, and nothing conditions on it |
+
+**The 2026-08-26 measurement in this paragraph was wrong and is corrected.** It read *"a uniform
+~3px near-black ring, B-KAB at luminance 14 against a median of 130"* — a value framing, from an
+instrument that thresholded luminance at 0.30× the tile median. §12.1's own worked example holds
+the prohibition is value-agnostic. Measured on geometry instead: **two of the four carry rings,
+not one and not four.** A-VAB carries *two* closed 1px loops (76 px and 32 px, each one width
+the whole way round) at 0.48× median, which the value threshold could not see; B-KAB carries one
+closed 1px loop of 62 px. A-HEB and C-GAB carry mortar joint networks and **never carried a ring
+at all**. Instrument, controls and evidence: `tools/floor_remediation/`.
+
+Remediated, provenance-linked versions supersede an original **upon Rafe's re-curation**; the
+originals stay in the ledger untouched, because a ledger that edits its own history is not
+evidence. **Nothing conditions on an un-remediated survivor**, and after this ruling nothing
+conditions on A-VAB or B-KAB in any state.
 
 ---
 
@@ -771,6 +802,38 @@ main route: polished wall to wall, because the traffic had no room to spread) or
 **Consequence for review scenes:** a floor candidate is not fully reviewed until it has been
 seen in at least: open floor, the channel, a trodden chokepoint, and a neglected passage. A
 review scene shaped only as narrow corridor cannot pose the §8.2 question.
+
+**TIER-ONE REQUIREMENTS, banked from the floor-remediation seat — RULED (Rafe, 2026-08-27).**
+A blind seat shown the survivor floors in the lit corridor culled every one of them, before and
+after remediation, and the reasons that were *not* about keylines are the most useful thing it
+produced. They are **requirements landing on tier one, not a verdict on the corpus** — they
+measure the absence of systems tier one has not built yet, on a thirty-cell field of one
+repeated tile:
+
+> *"Nothing has been done to it. Every arris is sharp, every joint is the same width and depth,
+> and the traffic line down the middle is as pristine as the edges."*
+> *"the identical bracket-shaped stone sits at the identical position inside every single cell,
+> so the eye locks onto a 32-unit lattice within one screen."*
+> *"all five are laid to the same flawless repeating module, which is why not one of them reads
+> as a floor anything has actually happened to."*
+
+1. **A variant system.** One tile per role is a clone field, and a seat reads a clone field as
+   printed paper at any quality of tile. The seat's own figure: author variants whose bond is
+   offset between them, so a joint starting at x=8 in one cell lands mid-stone in the next.
+2. **A wear system, which is this clause.** The channel is what the seat asked for, unprompted
+   and having never seen §8.2.1 — *"sand a 12-unit band down the centre, erase the joint detail
+   inside it so joints fade where feet cross them, and leave joints at full depth only within
+   4 units of the wall."*
+3. **A floor-repair vocabulary.** §7.4's orc work exists on walls and nowhere on the ground —
+   *"a cracked slab pinned flat with four driven iron pins, or a salvaged timber baulk dropped
+   across a hole and worn smooth on its top edge."*
+
+⚠ **And the review scene owed the seat a fair question, which this clause had already said.**
+Those verdicts were rendered on a one-tile-wide corridor, where there is no centre line distinct
+from the flanks — so *"the middle of the corridor and the edge of the corridor are byte-identical"*
+is partly the scene reporting its own shape. The paragraph above is the standing rule and it was
+not met. **A floor round that means to pose the §8.2 question must build the four-scene set
+first**; until it does, a wear cull is not fully chargeable to the tile.
 
 ---
 
@@ -1241,6 +1304,23 @@ Recorded so they are not re-derived; deliberately not law.
 
 *Revision history:*
 
+- *v0.9 — 2026-08-27. The floor campaign's rulings land. **§5.5 gains its corpus assignment**
+  (Rafe): C-GAB primary style parent, A-HEB secondary, **A-VAB prop stock regardless of
+  surgery** — de-ringing removes a keyline and does not make a framed plaque neutral, and it is
+  the composition that propagates — and **B-KAB retired from conditioning with no remediation**,
+  its regenerated candidate not promoted. §5.5 also gains a **cross-confirmation**: a blind seat
+  on the floor campaign, never given this bible, rediscovered the clause's own composition
+  finding by culling A-VAB as "a framed plaque" — the wall campaign's "recessed frame" reached
+  independently, in a different medium. And **its 2026-08-26 measurement is corrected**: the
+  ring was recorded in luminance ("~3px near-black, B-KAB at 14 against a median of 130") by an
+  instrument that thresholded value at 0.30× the median; measured on geometry instead, **two of
+  the four carry rings, not one** — A-VAB's two 1px loops sit at 0.48× and were invisible to it,
+  while A-HEB and C-GAB never carried a ring at all. **§8.2.1 gains the tier-one requirements**
+  the same seat produced — a variant system, the wear system this clause already specifies, and
+  a floor-repair vocabulary — banked as requirements rather than as a verdict on the corpus,
+  with the standing note that a one-wide corridor cannot pose the §8.2 question and this round's
+  scene did not meet §8.2.1's own four-scene rule. Instrument, controls, verbatim seat
+  transcripts: `tools/floor_remediation/`.*
 - *v0.8 — 2026-08-27. The wall campaign's rulings land. **§6.3 gains the occlusion law** —
   occlusion, not illumination, stated as a vocabulary — with the **vocabulary-collision record**
   (a 1px chamfer request and a depth parameter manufactured the same violation on two different

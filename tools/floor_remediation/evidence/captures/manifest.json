@@ -1,0 +1,132 @@
+{
+ "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "rig_requested": "ambient=1a1a22 color=ffb066 energy=1.6 radius_tiles=5.5 (ALL UNDERIVED - \u00a76.2 PLACEHOLDER)",
+ "scene": "src/Presentation/assets/tier0_harness/scenes/wall_face_review.json",
+ "walls": "composition_spike/before, held constant",
+ "tile_size": 32,
+ "tile_scale": 2.0,
+ "captures": [
+  {
+   "set": "orig",
+   "code": "A-VAB",
+   "file": "orig_A-VAB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_orig_A-VAB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9120.png",
+   "floor_verdict": "RING",
+   "sha256": "9e9890c0fa4db115583d81441d58a83e3471b43adba33723a3fb1519e20cf796",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "orig",
+   "code": "A-HEB",
+   "file": "orig_A-HEB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_orig_A-HEB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9121.png",
+   "floor_verdict": "CLEAN",
+   "sha256": "884635eaf0a3883f5a61ee76b65c2cf02e6d1e2bbba07cf655875b5550dd75ee",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "orig",
+   "code": "B-KAB",
+   "file": "orig_B-KAB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_orig_B-KAB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9122.png",
+   "floor_verdict": "RING",
+   "sha256": "884d0fd5b7a7152c432e5ca41e4872e7e4bd81d4a315d9d16a180605a250ea1f",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "orig",
+   "code": "C-GAB",
+   "file": "orig_C-GAB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_orig_C-GAB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9123.png",
+   "floor_verdict": "CLEAN",
+   "sha256": "6b358533cb575d45b24698e4f2881e3cd97472afede6dad1f8531a8d0f7ab7fe",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "remed",
+   "code": "A-VAB",
+   "file": "remed_A-VAB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_remed_A-VAB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9124.png",
+   "floor_verdict": "CLEAN",
+   "sha256": "2010fc9bfcdfc2552f6a9b8091383553074b81e732c7ac7c847664e95f83eda9",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "remed",
+   "code": "A-HEB",
+   "file": "remed_A-HEB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_remed_A-HEB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9125.png",
+   "floor_verdict": "CLEAN",
+   "sha256": "884635eaf0a3883f5a61ee76b65c2cf02e6d1e2bbba07cf655875b5550dd75ee",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "remed",
+   "code": "B-KAB",
+   "file": "remed_B-KAB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_remed_B-KAB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9126.png",
+   "floor_verdict": "CLEAN",
+   "sha256": "82c489980274915bd0a1186ab671aada648d11d0643e1505e82ca5c5970bb2db",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "remed",
+   "code": "C-GAB",
+   "file": "remed_C-GAB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_remed_C-GAB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9127.png",
+   "floor_verdict": "CLEAN",
+   "sha256": "6b358533cb575d45b24698e4f2881e3cd97472afede6dad1f8531a8d0f7ab7fe",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "mock",
+   "code": "A-VAB",
+   "file": "mock_A-VAB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_mock_A-VAB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9128.png",
+   "floor_verdict": "RING",
+   "sha256": "9e9890c0fa4db115583d81441d58a83e3471b43adba33723a3fb1519e20cf796",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "mock",
+   "code": "A-HEB",
+   "file": "mock_A-HEB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_mock_A-HEB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9129.png",
+   "floor_verdict": "CLEAN",
+   "sha256": "884635eaf0a3883f5a61ee76b65c2cf02e6d1e2bbba07cf655875b5550dd75ee",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "mock",
+   "code": "B-KAB",
+   "file": "mock_B-KAB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_mock_B-KAB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9130.png",
+   "floor_verdict": "CLEAN",
+   "sha256": "dfa83b5d3270a9e3da333ec86d2621bb16906a42bda7380b831b690ad671ba37",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  },
+  {
+   "set": "mock",
+   "code": "C-GAB",
+   "file": "mock_C-GAB_lit.png",
+   "theme": "res://src/Presentation/assets/floor_remediation/tile_themes_mock_C-GAB.yaml",
+   "floor_tile": "src/Presentation/assets/floor_remediation/fr_9131.png",
+   "floor_verdict": "CLEAN",
+   "sha256": "6b358533cb575d45b24698e4f2881e3cd97472afede6dad1f8531a8d0f7ab7fe",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)"
+  }
+ ],
+ "note_remed_B_KAB": "`remed_B-KAB_lit.png` shows the REGENERATED CANDIDATE that the blind seat then culled `keyline`. RULED (Rafe, 2026-08-27): B-KAB retires from conditioning with no remediation and this candidate is NOT promoted. The capture keeps its filename because the round-B seat transcript maps to it by name and evidence is not renamed after the fact.",
+ "note_roles": "Corpus roles ruled 2026-08-27 (bible \u00a75.5): C-GAB primary style parent, A-HEB secondary, A-VAB prop stock regardless of surgery, B-KAB retired. See tools/floor_remediation/remediated/MANIFEST.json for the per-floor record."
+}

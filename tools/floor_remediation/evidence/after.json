@@ -1,0 +1,40 @@
+{
+ "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "max_thickness": 4.0,
+ "min_interior": 16,
+ "border_ring_interior": 0.4,
+ "files": [
+  {
+   "file": "A-HEB.png",
+   "path": "tools/floor_remediation/remediated/A-HEB.png",
+   "sha256": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
+   "verdict": "CLEAN",
+   "median_lum": 136.4,
+   "rings": []
+  },
+  {
+   "file": "A-VAB.png",
+   "path": "tools/floor_remediation/remediated/A-VAB.png",
+   "sha256": "6371045855d175f50ee2bd81ae347df6e1cb416da5de1c6a0bdf4534a1beb3e7",
+   "verdict": "CLEAN",
+   "median_lum": 125.6,
+   "rings": []
+  },
+  {
+   "file": "B-KAB.png",
+   "path": "tools/floor_remediation/remediated/B-KAB.png",
+   "sha256": "c8f9868d75453b78e7e954fa25267879b8507b7f173999efefdd58965739afd9",
+   "verdict": "CLEAN",
+   "median_lum": 123.4,
+   "rings": []
+  },
+  {
+   "file": "C-GAB.png",
+   "path": "tools/floor_remediation/remediated/C-GAB.png",
+   "sha256": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
+   "verdict": "CLEAN",
+   "median_lum": 139.2,
+   "rings": []
+  }
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "commit": "ce9e2ea5e504c87a6eff80c8c77aad2719e7579d",
+ "max_thickness": 4.0,
+ "min_interior": 16,
+ "border_ring_interior": 0.4,
+ "files": [
+  {
+   "file": "MOCK_dering_9120.png",
+   "path": "src/Presentation/assets/composition_spike/floors_deringed/MOCK_dering_9120.png",
+   "sha256": "20bcd38447cfc0c84f24bbebc34018ec4faa0ce52d1ecff252f800d3a3744e88",
+   "verdict": "RING",
+   "median_lum": 125.6,
+   "rings": [
+    {
+     "kind": "dark-set",
+     "level": "lum<=60.5",
+     "contour_px": 76,
+     "interior_px": 360,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      6,
+      6,
+      23,
+      25
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 8
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=88.5",
+     "contour_px": 32,
+     "interior_px": 48,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      12,
+      12,
+      17,
+      19
+     ],
+     "wall_colours": 1,
+     "levels_agreeing": 24
+    },
+    {
+     "kind": "dark-set",
+     "level": "lum<=99.6",
+     "contour_px": 34,
+     "interior_px": 46,
+     "wall_thickness": 1.06,
+     "wall_thickness_spread": 0.24,
+     "touches_border": false,
+     "interior_bbox": [
+      12,
+      12,
+      17,
+      19
+     ],
+     "wall_colours": 2,
+     "levels_agreeing": 6
+    }
+   ]
+  },
+  {
+   "file": "MOCK_dering_9121.png",
+   "path": "src/Presentation/assets/composition_spike/floors_deringed/MOCK_dering_9121.png",
+   "sha256": "46f2fe165ae23424dbc415aeca5dbd67ac48e83c1429b119b0d878369c8194bb",
+   "verdict": "CLEAN",
+   "median_lum": 136.4,
+   "rings": []
+  },
+  {
+   "file": "MOCK_dering_9122.png",
+   "path": "src/Presentation/assets/composition_spike/floors_deringed/MOCK_dering_9122.png",
+   "sha256": "14f636e6da86f3a3423af3607022c4624011981d50290212c84d8cf843fa57f4",
+   "verdict": "CLEAN",
+   "median_lum": 129.5,
+   "rings": []
+  },
+  {
+   "file": "MOCK_dering_9123.png",
+   "path": "src/Presentation/assets/composition_spike/floors_deringed/MOCK_dering_9123.png",
+   "sha256": "ecba422d8c7bb31e72121caf485071ea24fdd8ac7547568bd76231fd17a4460f",
+   "verdict": "CLEAN",
+   "median_lum": 139.2,
+   "rings": []
+  }
+ ]
+}
