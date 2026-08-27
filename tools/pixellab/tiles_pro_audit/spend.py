@@ -22,7 +22,9 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CEILING = 220
+CEILING = 240   # 220 declared + 20 authorised by ruling for the tile_depth_ratio call
+                #   (DECLARATION.md AMENDMENT, PREDICTION.md). Raised by the human gate,
+                #   never by this seat.
 PER_CALL = 20
 
 

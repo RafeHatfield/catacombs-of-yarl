@@ -158,3 +158,26 @@ point, and a bracket whose reads never settle prints **LOWER BOUND, not a measur
   directory.
 - **The bar is not re-read after the images are seen.** It is above, in this commit, before
   them.
+
+---
+
+## AMENDMENT — 2026-08-26, after the audit closed at its ceiling
+
+**Recorded here rather than applied silently, because the original number is the only thing
+that makes it checkable (LOOP-PROCESS §11's precedent: recorded rather than silently edited).**
+
+The 220-generation ceiling above stands as declared and was met exactly. Rafe's ruling on this
+audit's finding authorises **one further call** — `tile_depth_ratio`, the only camera parameter
+the audit did not spend — with the condition that the prediction be committed before the request
+is sent. The ceiling is therefore raised to **240** for that one call, and `spend.CEILING` is
+changed to match.
+
+- Authorising ruling, verbatim: *"Approved: the one `tile_depth_ratio` call, your prediction on
+  file before it runs."*
+- Prediction: `PREDICTION.md`, committed before the call.
+- This is ruling trigger (b) — an amendment to something frozen — granted by the human gate.
+  **A bar changed by ruling is not a bar tuned to a result.**
+
+The ruling also settles what this audit was for, and that is recorded in `FINDING.md §0`:
+tiles-pro is promoted to **parts supplier, not instrument**; the wall road is composition; the
+architecture/conditioning surface split is platform fact.
