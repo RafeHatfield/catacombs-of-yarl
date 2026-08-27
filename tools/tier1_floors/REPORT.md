@@ -40,9 +40,27 @@ three-way Y-junctions, which is the exact signature of desiccation cracking. Cut
 by straight lines meeting in T-junctions. The bond was replaced (§6), and it is the difference
 between a texture and a floor.
 
-**Round 1 was VOID** under LOOP-PROCESS §4 — the plant was not caught. The diagnosis is that the
-plant was under-built, not that the seat was soft. **Round 2 was valid** — the plant was caught
-on *moss*, vocabulary exclusive to it — **and the family FAILED it.** §10.
+**Round 1 was VOID** under LOOP-PROCESS §4 — the plant was not caught; the plant was under-built,
+not the seat soft. **Rounds 2 and 3 were valid** and the family **FAILED both** on the same
+thing, which three seats have now said three different ways: *nothing has ever happened to this
+floor.* By round 3 the material read was fixed — *"cut stone flagstones … the warmth is entirely
+the torch"* — and the lattice was gone — *"40 distinct groups out of 42; there is no repeating
+wallpaper"* — but the trodden channel had been in every capture from round 1 and **no seat ever
+saw it.**
+
+**The reason is §6.3 biting at design time rather than at authoring time.** The channel's polish
+was delivered as a *value lift*, and under a carried lamp a value lift is read as **light** — the
+same seat said so in as many words, *"the warmth is entirely the torch."* An asset authored to
+receive light cannot signal with brightness, because brightness is what the light is saying. The
+wear signal has to be structural, so it is now carried by **where the loose grit is and is not**
+(§8.1: traffic clears a floor, and what it clears has to go somewhere). §10.3.
+
+> ⚠ **Round 3's comparative seat placed this floor ABOVE the asset bar** — *"genuinely good, not
+> merely competent"* against the bar's *"merely competent"*, CULL **NONE** — which meets §13.3's
+> *"the answer must be Yarl, or a tie."* **It is reported here with its caveat attached, because
+> that is the exact result that preceded the last gate's FAIL.** §13.2: *"a stack of green
+> instruments is not evidence of quality, it is evidence that the instruments were satisfied."*
+> And in the same round, on the same pixels, the absolute seat culled it. §10.3.1.
 
 ---
 
@@ -616,6 +634,58 @@ the repair family widened from 4 members to 9 at a lower rate — the seat recog
 brace three times in one frame.
 
 **Applied and captured; the round that judges it had not returned when this report was written.**
+
+### 10.3.1 THE COMPARATIVE SEAT — and the two seats disagree, which is the finding
+
+Round 3's fourth seat ran §13.3's frame: the same Yarl capture beside a crop of the **asset bar's**
+own floor, blind, slots randomised, neither labelled. The bar's pixels were written to the seat's
+working directory outside the repo and nowhere else (§13.3 — measurements leave, pixels never do).
+
+> **Q6 — Yarl:** *"YES. And it is **genuinely good** — not merely competent. The … pinned strap
+> are authored decisions that carry the fiction rather than decorate it, and the non-repeating
+> slab layout is the real thing, not a variant shuffle."*
+> **Q6 — the bar:** *"YES, this would ship. And it is **merely competent** — it is a working
+> tileset, not good art."*
+> **CULL — Yarl:** *"Should not be rejected … **NONE**."*
+> **CULL — the bar:** *"Dirt is a 2×2 stamp on a 48px lattice; four tiles cover half the visible
+> ground."*
+
+§13.3's bar is *"the answer must be Yarl, or a tie."* The answer was Yarl, unhedged.
+
+> ⚠ **AND THAT IS EXACTLY THE RESULT THAT PRECEDED THE LAST GATE'S FAIL, SO IT IS REPORTED WITH
+> THE CAVEAT ATTACHED RATHER THAN AS A HEADLINE.** §13.2, updated at that gate: *two independent
+> blind seats ranked the sighted round's candidate above the bar, unhedged, with no cull — and
+> Rafe's verdict on the phone was FAIL.* The clause's own conclusion is the one that governs
+> here: **"a stack of green instruments is not evidence of quality, it is evidence that the
+> instruments were satisfied. Instrument agreement raises confidence in the instruments, not in
+> the asset."** One seat preferring this floor to the asset bar is not a pass. §13.1 gives the
+> pass to the phone.
+
+**THE TWO SEATS IN THE SAME ROUND, ON THE SAME IMAGE, DISAGREED.** F1 judged it absolutely and
+culled — *"merely competent … nothing has ever happened here."* F4 judged it against the bar and
+returned **CULL: NONE, genuinely good.** Same pixels, same round, opposite verdicts.
+
+**That is LOOP-PROCESS §1.1.6 demonstrated rather than asserted**: *"absolute verdicts in a
+vacuum are how ten independent judges ask for the same wrong thing."* It is the first time this
+project has run the two frames on one image, and the honest reading is that **the comparative
+frame is measuring "is this as good as what ships" and the absolute frame is measuring "is this
+what the fiction needs" — and this floor currently passes the first and fails the second.** Both
+are real questions and the bible asks both; §13.3 owns the first and §1/§8 own the second.
+
+**And the two frames converged on the same two defects**, which is what makes the disagreement
+readable rather than noise:
+
+| F1, absolute | F4, comparative |
+|---|---|
+| *"uniform grit everywhere … reads as static before it reads as stone"* | *"uniform grain density on a floor in continuous heavy use — it reads dusty but not **used**"* |
+| *"the only history is one asset used thrice"* | *"the strap decal repeated identically, once pinning nothing, is a real fault"* |
+
+Both fixes were already applied off F1's verdict before F4 returned. Two independent frames
+naming the same two things is the strongest warrant this round produced.
+
+⚠ *"Once pinning nothing"* is a specific defect not yet closed: a repair overlay can land on a
+cell where its own split falls under a slab edge, so the pins read as four dots with nothing
+between them. The repair should be placed against a crack rather than carrying its own.
 
 ### 10.4 FLIPS FROM ROUND 3 NOT TAKEN
 
