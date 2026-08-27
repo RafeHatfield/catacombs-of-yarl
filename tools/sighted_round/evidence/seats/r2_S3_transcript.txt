@@ -1,0 +1,31 @@
+Q1: B
+Q1_WHY: B is cut into two surfaces by a single full-width hard edge at y=85–86, with the part above it read as a top and the part below it read as a face; A is one continuous brick field from the top of the frame to the floor with no such cut anywhere.
+
+Q2: B's cap runs y=0–84 as large slabs with 1px joints, its base row averaging luminance 88; a 2px lip at y=85–86 drops to (47,31,30); the face below runs y=87–116 averaging 38–42, roughly 0.45× the cap it hangs from — and that lip is the only unbroken full-width edge in the frame, so it wins as structure rather than as texture.
+A has no such division: at x=300 its last wall rows (y=111–116) sit at R=107–111 and the floor at y=117 is R=136, a 0.81× step — while A's own interior mortar line at y=107–108 is (39,25,24) against (73,55,39) on both sides, a 0.53× step. A's joints out-contrast its wall's base, so the wall doesn't end, it just stops.
+Scale compounds it: the floor's slab pitch is 64px in both images; B's face is 30px deep, roughly half a tile, while A's coursing runs at a 6–14px pitch across the full 117px band — one-sixth the floor's grain, which reads as wallpaper, not as built mass.
+B is not clean, though: its posts are flat single values across their full 6px width (x=89–94 all (22,17,17); x=345–350 all (26,20,19)) with no lit flank and no cast shadow, they cross the y=85 lip at constant width with no occlusion or kink, and the floor rows below y=117 are pixel-identical to A's except at the frame edges — B's wall throws nothing onto the ground it stands on.
+
+Q3: NEITHER
+Q3_WHY: B's y=85–86 line is the top edge of a front face, not a flank, and that face runs x=0–463 with no opening, corner or return; the posts are flat silhouettes with no side either, and A has no face at all to have a side of.
+
+Q4_A: Mortar only — a uniform 2px dark joint grid on every course — plus exactly one vertical timber at x≈99–104 running y=53 to y=98 with a short foot turning right at y=95–96 and two warm pixels at y=89–92; one fixing in 464px of wall.
+Q4_B: Seven driven pins ~6px wide at x≈47, 91, 165, 225, 303, 347, 422, each carrying two 2px warm heads (on the x=163 pin at y=61–64 (61,41,41) and y=101–104 (86,56,54)), entering on the cap and running down across the lip into the face — the right idea, drawn as silhouettes rather than objects.
+
+Q5_A: Not posed, but not in use either — the single timber is the only incident along the whole run, so the wall reads as an unbroken pattern nobody has ever touched.
+Q5_B: In use — the pin spacings are 44, 74, 58, 76, 44, 75px, irregular and off the floor's 64px grid, with nothing centred or paired.
+
+Q6_A: Generic — off-the-shelf stacked dungeon brick at one-sixth the floor's grain, no rule about how this place is built; (the floor's per-cell cloning is out of scope and equally present in both).
+Q6_B: Not generic — pin-through-cap-into-face is a specific construction rule with a load path, undercut only by the pins being unlit flat shapes.
+
+CULL_A: wrong-projection
+CULL_B: none
+RANK: B
+
+FLIP LIST
+- Cut A's brick field with one horizontal line 30px above the floor (half the floor's 64px slab pitch) and rebuild the two halves to different rules: above the line, replace the 6–14px coursing with slabs at the floor's own 64px grain and 1px joints no darker than 0.85× the slab body; below it, keep the fine coursing but pull the whole band down to ~0.45× the value of the slab immediately above the line — at present the wall's base (R=111 against a floor of R=136) is a weaker edge than A's own mortar (R=39 against R=73).
+- Lay a 2px lip on that cut line at roughly (47,31,30), darker than any mortar joint in the field, running unbroken x=0 to x=463 with no brick, timber or noise pixel crossing it — it must be the single strongest horizontal edge in the image, because that is the only thing telling the eye where the top stops and the face starts.
+- Replace A's one timber with pins driven at irregular 44–76px spacing, each starting on the new top surface, disappearing for 2px behind the lip, then resuming down the face 1px narrower; give each pin a 1px flank one step lighter on the side facing frame centre and a 2px shadow on the opposite side, so it is a solid standing above a surface rather than a slot painted into it.
+- Darken the first 3 floor rows below the wall base by ~0.7× across the full width, deepening to ~0.5× directly beneath each pin — currently A's floor (and B's) is byte-identical whether a wall is above it or not.
+
+Model: Claude Opus 5 (1M context).

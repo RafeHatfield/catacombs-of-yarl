@@ -1,0 +1,95 @@
+{
+ "round": 3,
+ "commit": "bc2bfd708e1f04ee418cd3393d84bf65a65482fb",
+ "pairs": {
+  "S1": [
+   "recipe_lit.png",
+   "BAR"
+  ],
+  "S2": [
+   "before_lit.png",
+   "BAR"
+  ],
+  "S3": [
+   "recipe_lit.png",
+   "before_lit.png"
+  ],
+  "S4": [
+   "plant_lit.png",
+   "BAR"
+  ]
+ },
+ "slots": {
+  "S1": [
+   "A",
+   "B"
+  ],
+  "S2": [
+   "B",
+   "A"
+  ],
+  "S3": [
+   "B",
+   "A"
+  ],
+  "S4": [
+   "A",
+   "B"
+  ]
+ },
+ "results": {
+  "S1": {
+   "Q1": "B",
+   "Q1_WHY": "B has a top plane, a chamfered near edge and a front face at three separated values; A has one flat band that is darker than both surfaces it sits between.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "B shows only a top surface (grey 90) and a front face (44) \u2014 its west wall at native x=0\u201314 terminates against the dirt in a single 1px joint with zero flank pixels; A shows no flank and no cut anywhere, and its posts are flat silhouette stripes, not sectioned members.",
+   "Q4_A": "Seven driven posts standing in the north band plus a continuous dark rail along the band's foot at y\u2248109\u2013116 \u2014 but the posts hold a value of 33\u201350 whether they cross a 175 background or a 60 one, never change width, never lean, and cast nothing where they meet the band at y=85, so they are laid over the wall rather than driven into it.",
+   "Q4_B": "Nothing holds it \u2014 mortared ashlar and one wooden beam-end at x\u2248300 sitting proud of the second course with a small cast shadow beneath it; no pins, rope, straps, plates or salvaged timber anywhere in the fabric.",
+   "Q5_A": "Staged \u2014 seven posts of identical 3px width, all topping out at exactly y=57, all plumb, spaced evenly across the full 464px run: that is a fence, and a fence made of identical members is decoration.",
+   "Q5_B": "In use \u2014 the debris wedge at the wall base spills irregularly and is cut by the frame, the lip is broken by one asymmetric 4px chip at x\u2248180, and the two paler replacement blocks sit in different courses and match nothing.",
+   "Q6_A": "Generic in execution though not in intent \u2014 the wall planes are the off-the-shelf thin-line stone grid, and the floor is a small clone set with the same recessed-rectangle slab repeating on a regular checker (out of scope, noted).",
+   "Q6_B": "The wall construction is specific and rule-following, but the dressing is stock \u2014 bone scatter and rust stains on brown dirt is the default fantasy-dungeon floor.",
+   "CULL_A": "wrong-projection",
+   "CULL_B": "none",
+   "RANK": "B",
+   "Q2": "B's wall top runs a dead-flat 90,90,90; the near edge is a 1-native-px lip at 124\u2013128; the face below is 44 interior / 50 block border / 37 joint \u2014 the face sits at almost exactly half the top's value, and the dirt floor (60\u201368) falls *between* them, so the read is lip > top > floor > face and the face is unambiguously a vertical plane turned away from the light.\nA has no such step: the plane above the band means 104, the band itself means 39\u201352 across its whole 16-native-px height, the floor below means 78\u201392. The band is the darkest thing in the column, so it reads as a groove or a shadow gap, not a mass standing above the floor.\nWithin A's band there is no top-to-face progression either \u2014 at x=200 the band's top rows read 82, its middle 90, its bottom 75. That is noise, not a plane change.\nA's west edge settles it: the floor slabs simply stop at x=24 and the same gridded plane resumes, with no band, no lip, no value step at all \u2014 the north \"wall\" and the west \"wall\" are not the same object.",
+   "flips": [
+    "Split A's north band into two bands with a hard 1px joint. The upper ~6 native px becomes the wall TOP and must sit *above* the floor's value \u2014 floor means 78\u201392, so the top wants 115\u2013125. The lower ~10 native px becomes the face at roughly half the top, ~55\u201360. Right now the entire 16px band sits at 39\u201352, below the floor, which is why it reads as a trench.",
+    "Build the west wall the same way. Where the floor slabs stop at x=24 (native 12), put a top plane at the north wall's new top value, and at the north-west corner cap the north face's left end with a 1\u20132 native px flank column at a value between top and face, so the two walls resolve as one continuous mass instead of two unrelated treatments.",
+    "Rework the posts so they cross the top/face boundary. Break the shared top y (all currently 57) by 4\u201310 native px per post, lean two off plumb, add a 1px dark contact shadow on the face at each post's base, and give each a foreshortened cap on the top plane \u2014 a post that passes from a horizontal surface onto a vertical one cannot hold one flat value of 33\u201350 across both.",
+    "Add a 1\u20132 native px dark contact line where the north face meets the floor at y=117, and vary the face's height by a course in two or three places along the run so the wall's foot is not a single ruled horizontal."
+   ],
+   "mapping": {
+    "A": "recipe_lit.png",
+    "B": "BAR"
+   }
+  },
+  "S4": {
+   "Q1": "B",
+   "Q1_WHY": "Only B declares a top plane, an edge, and a face as three separate value bands with a hard boundary between them; A gives you one continuous lit elevation from the frame top to the floor.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "B is the harder failure \u2014 columns x=0\u201313 from y=100 to y=230 are flat 90,90,90, the *top* value, running straight into dirt at x=16 with only a 2px 71-grey seam at x=14\u201315; the west wall has no east flank at all, so the same stone is 48px thick facing south and zero thick facing east. A shows no wall end, return or jamb anywhere in frame to test.",
+   "Q4_A": "Iron pins driven into the face (16 of them, ~10px \u00d7 42px, dark 27\u201338) plus two full-width horizontal rails at y=85\u201386 and y=101\u2013102 \u2014 a real fixing vocabulary, but every pin is the same size at a constant 64px pitch and both rails run the entire 464px without one splice, lap or break.",
+   "Q4_B": "Nothing. Mortar gaps at 37,37,37 and a single 77,77,77 block at x\u2248140\u2013155, y=48\u201349 are the only marks on the whole wall; no tie, pin, timber, rope or bracket exists in it.",
+   "Q5_A": "Staged \u2014 the pins form an evenly spaced frieze at a fixed pitch, all bottoming on the same continuous rail; that is a decorative course, not four hundred years of patching.",
+   "Q5_B": "Neither staged nor in use \u2014 the wall is empty, and empty is not the same as unmaintained.",
+   "Q6_A": "Not generic in vocabulary, but the regular pin-and-rail frieze over a receding elevation reads as a painted backdrop rather than a floor plan of a place. (Out-of-scope, noted per instruction: A's floor repeats one bracket-shaped slab motif identically in every 32px cell.)",
+   "Q6_B": "Fully generic \u2014 flat grey stacked blocks with a bright bevel line is the off-the-shelf dungeon wall, and the untextured 87,91,84 wedge at x\u224816\u201360, y\u224862\u201381 is a flat blob with no material in it.",
+   "CULL_A": "wrong-projection",
+   "CULL_B": "none",
+   "RANK": "B",
+   "Q2": "B holds three fixed values with a single unbroken horizontal break at y=30: top surface flat RGB 90,90,90 (rows 0\u201329), a 2px cap at 147,143,134 (rows 30\u201331), face at 44,44,44 (rows 32\u201379) with 50/37 course edges. Face = 0.49\u00d7 top. That ratio and that one line do all the work.\nA has no such break. At x=180 the stone runs monotonically from R=66 at y=0 to R=179 at y=82 through six 16px courses (mortar at y=3, 19, 35, 51, 67, 83) and the value never resets at a joint \u2014 and it also falls off horizontally (y=50: x180=131, x300=123, x420=52), so that ramp is runtime radial light centred on the player, not a change of plane. Not a key-light defect; also not depth.\nA's only candidate top/face edge is the 1px mauve line at y=85\u201386 (100,65,64), and the band beneath it is broken at y=101\u2013102 by a 168,129,90 rail \u2014 brighter than everything in the supposed face and within 6% of the \"top\" directly above it. A face containing its own brightest pixel is not a face.\nNet: A's wall is 84+px of coursed elevation glued to a 32px-tile plan floor. Two projections in one image, no plane you are looking down on.",
+   "flips": [
+    "Give A an actual top plane and cap it. Draw the wall's top surface in plan (joints running both axes, reading as slabs seen from above), terminate it at a hard 1px silhouette edge, and put exactly one tile's worth (32px) of face below that edge at ~0.45\u00d7 the top's value *at the same distance from the light* \u2014 at x=180 that is top R\u2248179 / face R\u224880. Nothing inside the face may exceed that value.",
+    "Kill the y=101\u2013102 rail (168,129,90) and the y=85\u201386 mauve line (100,65,64) as full-width runs. Replace with a single 2px contact shadow at the wall foot at ~0.35\u00d7 the adjacent floor (\u224820,15,10 at x=180). Any timber returns as short discrete lengths with visible cut ends, lapped over each other, never as an unbroken 464px stripe.",
+    "Break the pin rhythm and seat the pins. Vary per 64px bay \u2014 0 pins in one, 2 in the next, 5 in another \u2014 vary length \u00b130%, cant a few off vertical, and add a 1px darker column on one side of each pin so it reads as driven into the face rather than laid on it.",
+    "Make the stated thickness honest: 84px of face over a 32px floor tile claims a 2.6-tile-thick wall. Pick one thickness, hold it, and let the top plane's width be the thing that states it."
+   ],
+   "mapping": {
+    "A": "plant_lit.png",
+    "B": "BAR"
+   },
+   "plant_caught": false
+  }
+ }
+}

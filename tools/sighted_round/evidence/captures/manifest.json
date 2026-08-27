@@ -1,0 +1,19 @@
+{
+ "commit": "bc2bfd708e1f04ee418cd3393d84bf65a65482fb",
+ "scene": "src/Presentation/assets/tier0_harness/scenes/mixed_distribution.json",
+ "rig": "ambient=1a1a22 color=ffb066 energy=1.6 radius_tiles=5.5",
+ "captures": [
+  {
+   "arm": "plant",
+   "lit": true,
+   "file": "plant_lit.png",
+   "sha256": "930a7f2ddcc50ba42688055ae22c4ba5bfc7ed65f04fc467ba500543fed0824f"
+  },
+  {
+   "arm": "plant",
+   "lit": false,
+   "file": "plant_unlit.png",
+   "sha256": "03426a60ffbfe88f4ef468a49c7fef75623f9260abdea159100e3c7b7f615028"
+  }
+ ]
+}

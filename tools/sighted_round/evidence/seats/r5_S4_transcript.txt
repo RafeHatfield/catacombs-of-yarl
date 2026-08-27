@@ -1,0 +1,40 @@
+Q1: B
+
+Q1_WHY: B steps its wall top (flat 90,90,90) down to a face of 44 across a single 1px lip at y=30 — a hard 2:1 break; A's "face" sits at 72–79% of its top and never separates.
+
+Q2:
+- B, x=200: top surface is 90/90/90 for 15 art px, one lip row at 124, then face rows at 50/44/44/44/44/50/37 repeating for 24 art px — three courses, so the face is *taller* than the top band and the wall has body. A, x=200: top field bottoms out at RGB(192,141,101), and the two dark bands beneath it at y=87–98 and y=103–114 measure (131,100,73) and (117,88,69) — 72% and 79% of the top. That is a shade, not a plane change.
+- A's total face height is 8 art px against a 41 art px top. B's is 24 against 15. A therefore reads as a floor plane with a shadowed groove ruled across its near edge, not a wall you stand beside; the floor at y=120 (mean 66) is actually *darker* than A's supposed wall face (mean 71), so the face doesn't separate downward either.
+- A's wall is a single flat wash with 1px darker lines ruled onto it — no block carries its own fill value. B's face blocks at least carry three (44 field, 50 rim, 37 seam), and B's courses are laid in running bond with the second row offset half a block, so the face has masonry logic. But B's whole face lives inside a 13-value band (37–50); at play size those three courses collapse into one near-black slab.
+- No painted key light in either: A's top-to-bottom ramp (60 at y=0 to 145 at y=82) is a light falloff, and B's block rims sit on *both* the top and bottom edge of each course, so neither has a baked directional bevel.
+
+Q3: NEITHER
+
+Q3_WHY: Both show only a top and a front face — B's left column (x=0–14) is a north-south wall drawn with its top surface only and no west flank at the frame edge, and B's grey wedge at x=14–58/y=50–100 is spill lying *against* the face, not a cut through it; A never shows anything but the top field and its 8px near-edge strip.
+
+Q4_A: Nothing holds it — flat fill with 1px darker lines ruled in a grid, plus eight pixel-identical black bars (4×12 art px, one per cell at the same x-offset) that cross no joint, bind nothing, and touch nothing.
+
+Q4_B: Mortar seams at value 37 between courses and a running-bond offset on the second row — masonry only; not one rope, driven pin, strap or salvaged timber anywhere on the wall, and the lone brown block at x=300 is a prop resting on the lip, not a repair.
+
+Q5_A: Staged — eight identical posts at identical intra-cell positions evenly spaced across the full 464px, and the same inset rectangle stamped in every floor cell; that is a pattern laid out for a viewer.
+
+Q5_B: The floor dressing reads as in use (bone scatter off-axis, the crate half out of frame, the spill ragged where it meets dirt) but the wall itself is textbook — unbroken courses, evenly distributed speckle, not one course disturbed.
+
+Q6_A: Generic — tan flat fill with ruled lines and evenly-spaced fence spikes; nothing in it names this place, and the floor's identical per-cell inset rectangle is the same drawn-outline disease (out of scope).
+
+Q6_B: Also generic — flat grey running-bond brick over brown dirt is the off-the-shelf dungeon wall; it reads as a wall, but not as *this* wall.
+
+CULL_A: cannot-read
+CULL_B: none
+RANK: B
+
+B wins this comparison and still does not clear the bar. Its face is three courses inside a 13-value band, its top is one flat grey with confetti speckle, its rubble spill is a flat polygon at the same value as the wall top, and nothing on it says a company has been repairing it for four hundred years.
+
+FLIP LIST
+- A's wall face sits at 72–79% of the top's value. Drop it to ~50% — the top bottoms at RGB(192,141,101), so the face field should be ~(96,70,50) — and hold that value flat down the full face height so the top/face junction is a hard break rather than a gradient step.
+- A's face is 8 art px tall against a 41 art px top. Rebuild it as three 8px courses (24 art px), each with its own fill, so the wall has a standable body; the current 8px strip reads as a groove ruled into the floor.
+- A's blocks are a single wash with 1px darker outlines. Delete the outline-only construction: give every block its own fill drawn from a 4-step ramp spanning ±12 values around the base, and let the joint be a value change between neighbours rather than a line drawn over an unbroken fill.
+- The cream line at A y=101 is RGB(226,164,114), the brightest pixel in the frame, and runs unbroken across all 464px straight through every cell seam and behind every post. Break it at cell seams, drop it 25–30 values inside shadowed cells, and let the posts occlude it.
+- A's eight posts are pixel-identical, one per cell, same x-offset, and have no top face. Vary them to 0–2 per cell at irregular x and 8–16px heights, and put 1–2px of a lighter value on each one's upper end so it reads as driven into a surface seen from above, not as a stake standing against an elevation.
+
+Model: Claude Opus 5 (1M context).

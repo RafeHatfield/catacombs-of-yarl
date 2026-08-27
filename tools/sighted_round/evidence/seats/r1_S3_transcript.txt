@@ -1,0 +1,31 @@
+Q1: B
+Q1_WHY: B breaks the wall into a top plane and a face plane separated by a hard 2-px shadow line at rows 85–86; A is one continuous coursed field from the top of the frame to the floor with no plane change anywhere.
+
+Q2: B's face band (rows 87–116) sits at a median of 33–43 against a floor of 74 — I sampled columns x=40, 150, 300 and 400 and got face/floor ratios of 0.49, 0.47, 0.51, 0.49. That constant half-value across four columns of wildly different engine brightness is the whole trick: it's an orientation relationship, not a gradient. Above it B runs a joint-free cap strip (rows 79–84, median 68–71 — essentially floor value, as a horizontal surface should be), then a 2-px near-black arris shadow at rows 85–86 (median 29) before the face drops away.
+A has none of this: its lowest wall rows (111–116) measure 59–62 against the same 74 floor — ratios of 0.81 to 0.93 at those same four columns — so the base of the wall and the floor it meets are within a few values of each other and the wall dissolves into the ground plane. A's six horizontal dark lines (rows 53, 65, 69, 79, 93–96, 107) are all equal-weight mortar joints; not one of them is heavier than the others, so there is no candidate for a top edge. B has exactly one dominant horizontal residual in the whole band, at rows 85–91, and it is in the right place. A also carries a faint painted top-light on every course — each course opens bright at its top row and dims to its bottom (rows 81→92: 53→46; rows 97→106: 53→48) *against* the global gradient, which brightens downward.
+
+Q3: NEITHER
+Q3_WHY: In both, the wall band runs off frame at x=0 and x=463 with no return, opening or wall end, so no flank is ever presented; B's timbers are flat 6-px columns of a single value (12–17 at x=45, no lit or shaded edge column), so they show no side either.
+
+Q4_A: Nothing holds it — mortar joints only, plus one lone 6-px timber at x≈99–105 running y=57 to y=98 that terminates in open brick and is tied to nothing, and a few pale scratch marks near x=290 and x=350.
+Q4_B: Seven timber props at x=45, 89, 163, 223, 301, 345, 419, each 6 px wide, each crossing the cap and the arris shadow and running down the face, with pale pin or strap pixels at rows 61–64 and 101–104; they occlude the joints they cross, so they read as in front of the stone rather than painted into it.
+
+Q5_A: In use by default rather than by intent — nothing is arranged because nothing is there to arrange.
+Q5_B: The prop spacing is properly irregular (44, 74, 60, 78, 44, 74 px), but all seven are the same sprite — identical 6-px width, identical top row y=57, identical foot y≈106, pins at the same two rows — which reads as a fitted rail rather than salvage driven in where the wall was failing, and they stop ~10 px short of the floor line at 117 so nothing visibly bears on the ground.
+
+Q6_A: Yes — generic: a brick wall receding into darkness, with nothing in it that could only be here (and the floor tile repeats per-cell, out of scope).
+Q6_B: No — the cap-and-face stack with pinned props is a specific construction, though the seven identical props are the one place it slips toward fence-shaped stock.
+
+CULL_A: cannot-read
+CULL_B: none
+RANK: B
+
+FLIP LIST
+- Reserve the bottom 32 px of A's wall (rows 85–116) as the inner face and drop it to ~0.5 of the floor's value at every column — floor median is 74, so the face should sit at 35–38 median and hold that ratio into the dark left edge (x=40: floor 51, face 25) as well as the lit centre (x=300: floor 101, face 50). A currently runs 59–62 there.
+- Lay a 2-px near-black line (value ~28) across the full 464-px width at the top of that face band, so the wall band contains exactly one dominant horizontal edge instead of six equal-weight course joints at rows 53, 65, 69, 79, 93 and 107.
+- Insert a 4–6 px joint-free cap strip immediately above that shadow line, held at roughly floor value (~70), with no vertical joints crossing it — it is the arris, and it is the only element that tells the eye where the top plane ends.
+- Redraw the coursing above and below the arris at different scales: larger, low-contrast units above (stone tops seen in plan) and smaller, hard-jointed units below (stone faces in elevation). A's joint scale currently runs 18 px in the upper band and 8 px at the base, which is backwards and reinforces the single-plane read.
+- Darken the last 4 px of the face at the floor junction into a contact shadow. A does the opposite — at x=300 rows 113–116 climb to 82–85 against a 101 floor, so the wall brightens as it meets the ground.
+- Remove the per-course bevel: flatten each course so its top row and bottom row are within 1–2 values (currently 53→46 and 53→48), leaving only the recessed joint to describe the stone. That highlight survives the engine light being switched off.
+
+Model: Claude Opus 5 (1M context).

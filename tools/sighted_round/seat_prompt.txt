@@ -1,0 +1,112 @@
+YARL — BLIND COMPARATIVE SEAT — WALL DEPTH — v0.1
+
+RUN AS: fresh `claude -p`, cwd OUTSIDE the repo. No repo access. No project memory.
+INPUT: the two PNG files in this directory, nothing else.
+This process is NOT given the art bible. It gets the fiction, the tone, and these questions.
+
+------------------------------------------------------------------------------
+WHAT YOU ARE LOOKING AT
+
+Two images, named A.png and B.png. **They are from two different games.** Each is a top-down
+dungeon seen straight from above, drawn on a square grid, and each is shown at the size its own
+game is actually played — so the pixels are not the same size in both, and that is not a defect
+in either.
+
+You are NOT told which game is which, and you must not guess or speculate about it. Nothing in
+your answer should depend on which one you think is which.
+
+------------------------------------------------------------------------------
+THE PLACE
+
+Both are dungeons. The one being developed is the Paths of the Dead: an underworld that is
+ADMINISTERED, not haunted — a filing system for souls. In continuous heavy use since before
+anyone's records begin, and no one has ever cared for it. Nothing in it is arranged for
+anyone's benefit.
+
+The upper floors are a contested frontier where a company of orc-soldiers has held a line for
+four hundred years and cannot advance it. They repair things endlessly, with rope, driven pins,
+hide and salvaged timber, and they do not care how the repairs look. Their work is heavy,
+over-built and competent. Nothing they make exists to be looked at.
+
+The tone is dry, cold and completely straight. Not spooky-fun. Not adventurous. No sense of
+humour about itself. Nothing is ruined; things are used up.
+
+------------------------------------------------------------------------------
+SCOPE — READ THIS AND HOLD TO IT
+
+**The floor field in these captures is a small set of tiles cloned across the scene; per-cell
+repetition and absent traffic wear on the floor are known artifacts of the variantless test
+corpus and are out of scope — variant families and wear states are tier one's job, not this
+round's. The question in front of you is wall depth.**
+
+If your instinct is to write about the floor repeating, note it in one clause under Q6 and then
+answer the wall question anyway.
+
+Lighting: in at least one of these images the light is cast by the game engine at run time, not
+painted into the art. Do not mark an image down for the light being even, or for darkness at
+the edges of the frame. **Do** mark it down if a light direction is PAINTED INTO the stone
+itself — one edge of every course highlighted and the opposite edge darkened, in a pattern that
+would still be there if the light were switched off.
+
+------------------------------------------------------------------------------
+THE QUESTIONS
+
+Q1  DEPTH. Which of the two reads as having depth — walls you could stand beside, with a top
+    you are looking down on and a face you are looking at? Answer A, B, BOTH, or NEITHER.
+
+Q2  WHAT IT DOES. If one achieves it and the other does not, name concretely and specifically
+    what the successful one is doing that the other is not. Point at pixels: values, widths,
+    where things sit relative to each other. "It looks better" is not an answer. If NEITHER
+    achieves it, say what both are missing, in the same concrete terms.
+
+Q3  SIDE FACE. Does either image show a side face or a cross-section — a wall's flank, or a cut
+    through it — as opposed to only a top surface and a front face? Answer A, B, BOTH, or
+    NEITHER, and say which pixels you are pointing at. Be careful and literal here.
+
+Q4  HELD. Show me what holds these walls together, in each image. Name the specific elements and
+    say where they are. If nothing holds them together, say so plainly.
+
+Q5  STAGED. Is anything in either image arranged for the viewer's benefit — posed, composed,
+    placed to look good? Or does it read as a place that is simply in use? Answer per image.
+
+Q6  GENERIC. Does either read as generic fantasy-dungeon stock — the off-the-shelf version of
+    this idea — rather than a specific place with its own rules? Answer per image, one line.
+    Put any out-of-scope floor observation here, in one clause.
+
+------------------------------------------------------------------------------
+THE BAR
+
+You are deciding whether this belongs in a shipped commercial game. A critic who finds no defect
+should suspect their own rigour before crediting the work.
+
+"Fine", "acceptable", "good enough", "improved", "solid", "promising", "close", "nearly there",
+"has potential", "serviceable", "decent", "workable" are all FAILING verdicts. Hedging is
+failing.
+
+------------------------------------------------------------------------------
+OUTPUT FORMAT — follow exactly, no preamble
+
+Q1: <A | B | BOTH | NEITHER>
+Q1_WHY: <one line>
+Q2: <two to four lines, concrete, pointing at pixels>
+Q3: <A | B | BOTH | NEITHER>
+Q3_WHY: <one line naming the pixels you mean>
+Q4_A: <one line>
+Q4_B: <one line>
+Q5_A: <one line>
+Q5_B: <one line>
+Q6_A: <one line>
+Q6_B: <one line>
+CULL_A: <none | key-light | cannot-read | wrong-projection | noise>
+CULL_B: <none | key-light | cannot-read | wrong-projection | noise>
+RANK: <the better of the two on wall depth: A or B or TIE>
+
+Then:
+
+FLIP LIST
+- <a specific, executable change to the WEAKER image's walls that would close the gap>
+- <another>
+
+A flip list item must be actionable by someone redrawing the art. "Needs more depth" is not one.
+"The wall's top surface and its front face are within a few values of each other; separate them
+so the face sits at roughly half the top's brightness" is.

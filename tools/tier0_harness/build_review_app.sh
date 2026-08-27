@@ -42,6 +42,24 @@ with open(path, "w") as f:
 PY
   echo "== theme override: $TIER0_THEME"
 fi
+# TIER0_SCENE points the review build at an alternate scene spec. Added for the sighted round's
+# §13.1 gate build: that round was judged on the MIXED DISTRIBUTION scene (§2.2 — room, corners
+# and a one-wide chokepoint), not on the corridor junction the template names, and a device build
+# showing a different scene than the round it is meant to ratify is the wrong picture. Same
+# reasoning and same echo as TIER0_THEME: the substitution is announced, because the operator
+# must be able to see which scene they are walking.
+if [ -n "${TIER0_SCENE:-}" ]; then
+  python3 - "$MARKER" "$TIER0_SCENE" <<'PY'
+import json, sys
+path, scene = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["scene"] = scene
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== scene override: $TIER0_SCENE"
+fi
 echo "== marker written: $(basename "$MARKER")"
 echo "== grid: $(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print("tile %s at x%s" % (d.get("tileSize","default"), d.get("tileScale","default")))' "$MARKER")"
 echo "== bundle id: $BUNDLE_ID   name: $NAME"

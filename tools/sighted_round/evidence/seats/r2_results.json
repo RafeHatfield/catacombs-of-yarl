@@ -1,0 +1,124 @@
+{
+ "round": 2,
+ "commit": "bc2bfd708e1f04ee418cd3393d84bf65a65482fb",
+ "pairs": {
+  "S1": [
+   "recipe_lit.png",
+   "BAR"
+  ],
+  "S2": [
+   "before_lit.png",
+   "BAR"
+  ],
+  "S3": [
+   "recipe_lit.png",
+   "before_lit.png"
+  ],
+  "S4": [
+   "plant_lit.png",
+   "BAR"
+  ]
+ },
+ "slots": {
+  "S1": [
+   "A",
+   "B"
+  ],
+  "S2": [
+   "B",
+   "A"
+  ],
+  "S3": [
+   "B",
+   "A"
+  ],
+  "S4": [
+   "A",
+   "B"
+  ]
+ },
+ "results": {
+  "S1": {
+   "Q1": "B",
+   "Q1_WHY": "B holds a measurable plane hierarchy \u2014 top L\u224890, front-edge lip L\u2248122\u2013134, face L\u224845\u201353 \u2014 while A's face sits at 0.65\u20130.81 of its top and its wall top is *darker* than its floor.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "Both walls run frame-edge to frame-edge with no return, jamb, doorway reveal or broken end \u2014 A's rubble band terminates flush at x=0 and x=463, B's brick courses at x=0 and x=335; the only candidate in B, the black recess beside the wooden block at x\u2248326, y\u224852\u201372, is unlit void with no jamb thickness drawn, and A's posts have no side at all.",
+   "Q4_A": "Nothing holds it \u2014 seven identical black verticals stand on the top surface at an exact even pitch with one stray mid-brown pixel each (y\u224862 and y\u2248108) and no bracket, pin head, rope wrap, wedge or shadow where timber meets stone; there are two short horizontal bars in the face around x=380\u2013460, y\u2248107, but they too just overlap the masonry rather than bind it.",
+   "Q4_B": "Nothing holds it \u2014 three courses of uniform running-bond brick with uniform joints, no timber, no rope, no pin, no metal anywhere; the only non-masonry element in the whole wall is a single brown block with a socket at x\u2248320\u2013336, y\u224852\u201372, cut off by the frame.",
+   "Q5_A": "Staged \u2014 seven posts, all one height, all one silhouette, all on the same y, at a metronomic pitch across the full width; that is a row laid out for the picture, not a line held by anyone.",
+   "Q5_B": "Not staged, but only because nothing is placed \u2014 the strewn bones and the rust spatter on the dirt are unposed, and the wall itself carries no decision at all.",
+   "Q6_A": "Not stock in intent \u2014 small rubble courses under large slabs, timber verticals \u2014 but executed at a pitch regular enough that it reads as decorative palisade rather than four hundred years of over-built repair.",
+   "Q6_B": "Fully stock \u2014 grey running-bond brick under grey slab is the off-the-shelf dungeon wall, and it buys its depth with the cheapest available convention; out of scope, A's floor clones one slab with its scuffs landing in identical positions every 64 px while B's dirt has no cell structure at all.",
+   "CULL_A": "cannot-read",
+   "CULL_B": "none",
+   "RANK": "B",
+   "Q2": "B separates the two planes by value and by edge: the grey top slabs run a flat L\u224890, a 1-native-px lip at L\u2248122\u2013134 marks the top-front corner, and the face drops immediately to L\u224845\u201353 across three 8-px courses of running-bond brick with 1px black joints \u2014 a 50% step, held identically at x=20, 100, 180, 260. It also lands the wall on the floor: the dirt darkens from L\u224857 at the base up to L\u224887 about 10 native px out, an occlusion band that makes the face bottom a contact rather than a cut.\nA does none of this. At x=180 the top reads L=83.9, the face L=56.6, and the floor L=103.1 \u2014 the vertical face is only 27 values off the horizontal top, while two same-facing horizontal planes (wall top, floor) are 19 apart in the wrong order. A's plane values are governed by the torch gradient, not by orientation: the face at x=180 (56.6) is brighter than the wall top at x=340 (51.5). The top\u2192face boundary is a single dark seam identical in width and value to the mortar joints inside the face itself, so it doesn't register as a corner. And the base is a 2-px hairline against floor at full brightness \u2014 no ramp, no contact.\nThe worst of it is the posts: each is a flat 5-px black silhouette with no top face and no lit side, and it crosses the top\u2192face boundary at unchanged width and unchanged value, welding the two planes into one surface at seven points along the wall.",
+   "flips": [
+    "A's face sits at 0.65\u20130.81 of its top's local value in the same hue. Take it to ~0.45\u20130.50 and cool it \u2014 drop the red channel harder than the blue \u2014 so that at the lit centre where the top reads L\u224884 the face reads L\u224838\u201342, and hold that ratio across the full width so it survives the torch falloff at x=20 and x=420.",
+    "Replace A's top\u2192face boundary. It is currently a 1-native-px dark seam identical to the mortar joints inside the face, so it reads as one more joint. Build it as three rows: a 1px capstone lip at ~1.4\u00d7 the top's local value, then a 2px joint at ~0.4\u00d7 the face value, then the face. B's equivalent runs L=90 \u2192 130 \u2192 48.",
+    "Add a base occlusion band to A. The floor currently jumps from face L\u224857 to floor L\u2248103 in 2 native px. Ramp 4\u20135 native px of floor along the wall from ~0.55\u00d7 floor value at the wall to full floor value out, so the face bottom reads as contact instead of a cut edge.",
+    "Break every post in A at the plane change. On the top surface, redraw it as a foreshortened stub with a lit top face at ~1.2\u00d7 the top's value and a visible butt end; on the face, redraw it as full-height timber with a 1px lit left edge and 1px dark right edge, and a 1\u20132px cast shadow onto the stone to its right. Currently one 5px black rectangle spans both planes at constant width and value, which is the single strongest thing flattening the wall.",
+    "Fix the horizontal-plane order in A: the wall top (L\u224884) is darker than the floor (L\u2248103) at the same x, so two surfaces facing the same way read in reverse. Lift the wall top above the floor's value, and stop using the floor's slab texture on it \u2014 give the top a coarser slab with wider joints so the two horizontals are not the same material.",
+    "Vary A's post pitch and length. Seven identical verticals on one y at an exact even spacing is the tell. Give them three or four different heights, shift two of them off the tile grid by 3\u20135 px, lean one, and let two sit in the face rather than on the top so the row has a reason to be where it is."
+   ],
+   "mapping": {
+    "A": "recipe_lit.png",
+    "B": "BAR"
+   }
+  },
+  "S3": {
+   "Q1": "B",
+   "Q1_WHY": "B is cut into two surfaces by a single full-width hard edge at y=85\u201386, with the part above it read as a top and the part below it read as a face; A is one continuous brick field from the top of the frame to the floor with no such cut anywhere.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "B's y=85\u201386 line is the top edge of a front face, not a flank, and that face runs x=0\u2013463 with no opening, corner or return; the posts are flat silhouettes with no side either, and A has no face at all to have a side of.",
+   "Q4_A": "Mortar only \u2014 a uniform 2px dark joint grid on every course \u2014 plus exactly one vertical timber at x\u224899\u2013104 running y=53 to y=98 with a short foot turning right at y=95\u201396 and two warm pixels at y=89\u201392; one fixing in 464px of wall.",
+   "Q4_B": "Seven driven pins ~6px wide at x\u224847, 91, 165, 225, 303, 347, 422, each carrying two 2px warm heads (on the x=163 pin at y=61\u201364 (61,41,41) and y=101\u2013104 (86,56,54)), entering on the cap and running down across the lip into the face \u2014 the right idea, drawn as silhouettes rather than objects.",
+   "Q5_A": "Not posed, but not in use either \u2014 the single timber is the only incident along the whole run, so the wall reads as an unbroken pattern nobody has ever touched.",
+   "Q5_B": "In use \u2014 the pin spacings are 44, 74, 58, 76, 44, 75px, irregular and off the floor's 64px grid, with nothing centred or paired.",
+   "Q6_A": "Generic \u2014 off-the-shelf stacked dungeon brick at one-sixth the floor's grain, no rule about how this place is built; (the floor's per-cell cloning is out of scope and equally present in both).",
+   "Q6_B": "Not generic \u2014 pin-through-cap-into-face is a specific construction rule with a load path, undercut only by the pins being unlit flat shapes.",
+   "CULL_A": "wrong-projection",
+   "CULL_B": "none",
+   "RANK": "B",
+   "Q2": "B's cap runs y=0\u201384 as large slabs with 1px joints, its base row averaging luminance 88; a 2px lip at y=85\u201386 drops to (47,31,30); the face below runs y=87\u2013116 averaging 38\u201342, roughly 0.45\u00d7 the cap it hangs from \u2014 and that lip is the only unbroken full-width edge in the frame, so it wins as structure rather than as texture.\nA has no such division: at x=300 its last wall rows (y=111\u2013116) sit at R=107\u2013111 and the floor at y=117 is R=136, a 0.81\u00d7 step \u2014 while A's own interior mortar line at y=107\u2013108 is (39,25,24) against (73,55,39) on both sides, a 0.53\u00d7 step. A's joints out-contrast its wall's base, so the wall doesn't end, it just stops.\nScale compounds it: the floor's slab pitch is 64px in both images; B's face is 30px deep, roughly half a tile, while A's coursing runs at a 6\u201314px pitch across the full 117px band \u2014 one-sixth the floor's grain, which reads as wallpaper, not as built mass.\nB is not clean, though: its posts are flat single values across their full 6px width (x=89\u201394 all (22,17,17); x=345\u2013350 all (26,20,19)) with no lit flank and no cast shadow, they cross the y=85 lip at constant width with no occlusion or kink, and the floor rows below y=117 are pixel-identical to A's except at the frame edges \u2014 B's wall throws nothing onto the ground it stands on.",
+   "flips": [
+    "Cut A's brick field with one horizontal line 30px above the floor (half the floor's 64px slab pitch) and rebuild the two halves to different rules: above the line, replace the 6\u201314px coursing with slabs at the floor's own 64px grain and 1px joints no darker than 0.85\u00d7 the slab body; below it, keep the fine coursing but pull the whole band down to ~0.45\u00d7 the value of the slab immediately above the line \u2014 at present the wall's base (R=111 against a floor of R=136) is a weaker edge than A's own mortar (R=39 against R=73).",
+    "Lay a 2px lip on that cut line at roughly (47,31,30), darker than any mortar joint in the field, running unbroken x=0 to x=463 with no brick, timber or noise pixel crossing it \u2014 it must be the single strongest horizontal edge in the image, because that is the only thing telling the eye where the top stops and the face starts.",
+    "Replace A's one timber with pins driven at irregular 44\u201376px spacing, each starting on the new top surface, disappearing for 2px behind the lip, then resuming down the face 1px narrower; give each pin a 1px flank one step lighter on the side facing frame centre and a 2px shadow on the opposite side, so it is a solid standing above a surface rather than a slot painted into it.",
+    "Darken the first 3 floor rows below the wall base by ~0.7\u00d7 across the full width, deepening to ~0.5\u00d7 directly beneath each pin \u2014 currently A's floor (and B's) is byte-identical whether a wall is above it or not."
+   ],
+   "mapping": {
+    "B": "recipe_lit.png",
+    "A": "before_lit.png"
+   }
+  },
+  "S4": {
+   "Q1": "A",
+   "Q1_WHY": "A has a lit top plane, a shadowed riser and a contact line at the floor; B has the same three parts but the riser is a single flat black value that reads as a hole, not a surface.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "B has a perpendicular wall down the left \u2014 screen x=0\u201313, full height \u2014 and it is (90,90,90) top surface terminating in a single 1-native-px (71,71,71) seam at x=14\u201315 straight into dirt at x=16, with no flank pixels at all; A has no perpendicular wall in frame and shows only front face.",
+   "Q4_A": "A row of dark vertical pins driven through the crest and down into the second face course, one per 32px cell at an identical offset with a pale pixel at the foot \u2014 and nothing else: no rope, no timber, no straps, no wedges.",
+   "Q4_B": "Nothing holds it. The bricks abut; the only non-brick marks are small brown drip stains hanging from the lip and joints (e.g. screen x\u224852\u201358, y\u224832\u201342), stamped at the same offset in every cell.",
+   "Q5_A": "Not staged \u2014 nothing is placed for the frame, but the pins are stamped at identical intervals rather than driven, which is the opposite failure: not arranged at all.",
+   "Q5_B": "Staged \u2014 two loose bone clusters sit in open floor, balanced left against the two figures, with nothing collected at the wall base where debris would actually pile.",
+   "Q6_A": "Not stock in material or value structure, but with no repair, no salvage and every cell a clone it is not yet a place with its own rules; floor field repeats per cell and shows no traffic wear, out of scope here.",
+   "Q6_B": "Yes \u2014 grey brick, black face, white lip, brown dirt and scattered skulls is the off-the-shelf dungeon; its floor repetition is likewise out of scope.",
+   "CULL_A": "none",
+   "CULL_B": "wrong-projection",
+   "RANK": "A",
+   "Q2": "At A's lit column x=240 the wall top ends at y=81 (190,139,99), a warm cap line runs at y=85 (101,72,62), the upper face course sits y=87\u201398 at (54,38,33)\u2192(59,41,35) \u2014 29% of the top \u2014 a lit ledge sliver at y=101 (177,135,97) marks the step down, the lower course y=103\u2013113 ranges (55,38,32) to (96,73,52), and y=115 (35,26,19) is the contact shadow before the floor resumes at y=117 (160,114,77). That face carries a ~40-value internal spread with blocks of unequal width, each with its own fill \u2014 so the plane is modelled, not just darkened.\nB at x=260: top is (90,90,90) flat to y=29, one lip row at y=30 (147,143,134), then the entire three-course face y=32\u201378 is fill (50,50,50) with joints at (44,44,44) and (37,37,37). Thirteen values total across the whole face, every brick the identical fill, uniform running bond \u2014 56% of the top, but with no ramp inside it, so it reads as one black rectangle with lines scribed on it rather than a surface turning away from you.\nB also has no contact shadow: the bottom course (y=78, 37,37,37) abuts the dirt (61,25,14) directly, so the wall does not sit on the floor, it is pasted over it.\nA's vertical pins cross the cap line from top plane into face \u2014 occluding the edge is what confirms the two planes are at different heights.",
+   "flips": [
+    "B's three face courses are one fill (50,50,50). Ramp them by depth and break them per stone: course 1 fill \u224858, course 2 \u224848, course 3 \u224840 against the top's 90, then vary each individual brick \u00b16 around its course fill so no two adjacent bricks share a value. Keep the joints at 37 so they still read as recesses, not as the only drawing.",
+    "B's left wall has no flank. At its right edge (native x\u22487) replace the single 71-value seam with a cross-section: 1px lip at ~130, then 3\u20134px of flank at the front-face fill (\u224850) with the course joints running vertically so you can see the same three courses cut through, then the contact shadow below.",
+    "B has no base shadow. Along the bottom of the face (native y\u224839) lay a 2px strip on the dirt at 55\u201360% of the local dirt value (78,58,25 \u2192 ~45,34,15), and break it irregularly so it is a shadow, not a border.",
+    "Kill the diagonal staircase where the left wall's grey top (native x 8\u201330, y 30\u201340) runs over the front wall's face. Terminate the left wall's top plane at the front wall's cap row and draw an actual corner \u2014 the left wall's flank meeting the front face in an L \u2014 with the front face carried through unbroken behind it.",
+    "B's top plane is a single value (90,90,90) plus a few (107,101,95) specks. Give it the same stone division the face has: joints at ~78 laid in plan on the same course pitch, and per-stone fills varying 84\u201396, so the top reads as the same masonry seen from above rather than as grey paper."
+   ],
+   "mapping": {
+    "A": "plant_lit.png",
+    "B": "BAR"
+   },
+   "plant_caught": false
+  }
+ }
+}

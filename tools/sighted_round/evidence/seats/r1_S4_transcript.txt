@@ -1,0 +1,31 @@
+Q1: B
+Q1_WHY: B is the only one that puts a flat top plane and a separate darker front face on screen at once; A is face only, top to bottom.
+
+Q2: B holds a top surface at a constant 90,90,90 from y=0 to y=29, ends it with a single 1-art-pixel arris at y=30–31 (147,143,134), then drops straight to a front face at 44,44,44 — the face sits at 49% of the top's value, a hard step with nothing between them. That face then has real extent: three block courses from y=32 to y=79, ~24 art px, with the middle course's vertical joints offset half a block from the courses above and below, so it reads as a masonry plane rather than a stripe. B also carries the read around the corner — the north-south wall at x=0–15 is the same 90 grey with block seams and *no* face at all, which is what that wall must look like from directly overhead, so the projection is consistent across both runs.
+A never produces a top plane anywhere in frame: y=0 through y=116 is six repeats of one rhythm — dark line (9–30), bright line (36–109), body ramping downward (20→73) — and then a contact-shadow row at y=115–116 and floor. There is not one horizontal band in A free of course texture, so the wall is an elevation pasted above the floor with no measurable thickness, and it is also close to unreadable at played size: mean luminance across the wall band runs 15–70 of 255, and the posts and bottom rail only resolve when the image is brightened 2×.
+
+Q3: NEITHER
+Q3_WHY: B's left wall (x=0–15) shows only its top, and where the south wall's face terminates against it the face stops on a straight vertical at x≈16, y=32–79 — a butt cut with a 1px dark seam, no revealed core; A has no wall end in frame at all.
+
+Q4_A: Seven identical vertical posts at x≈37, 100, 165, 227, 292, 355, 420, ~5px wide, running y≈58–110 into a horizontal bottom rail at y≈101–114 that carries a continuous row of small rectangular corbel teeth beneath it — structure, but perfectly pitched and identical, with no rope, hide, driven pin or salvaged timber anywhere.
+
+Q4_B: Nothing holds it together — the blocks are outlined at value 50 with a 37 joint gap and body 44, dry-stacked, and the only non-stone objects in the whole capture are a brown crate at x≈300, y≈78 and loose bone on the floor; not one tie, strap, brace or patch on the wall.
+
+Q5_A: Staged — the seven posts are on an exact 64px pitch at identical length and identical height, the corbel teeth form an unbroken even frieze the full width, and the floor's inset rectangle lands in the same position in every cell; it is a facade, arranged front-on for the camera.
+
+Q5_B: Not posed, but not in use either — the wall is unarranged because there is nothing on it to arrange, and the two bone scatters (x≈25–95, y≈95–135 and x≈115–200, y≈175–215) sit as two discrete blobs on otherwise unmarked ground.
+
+Q6_A: Reads as ornamental architecture — posted, railed and corbelled on a perfect pitch, closer to a temple frontage than to a four-hundred-year-old repair line; the floor's identical inset-rectangle cell in every tile is out of scope but is what makes the regularity read as decoration.
+
+Q6_B: Yes, stock — flat grey block wall on brown dirt with bones, the off-the-shelf dungeon; out of scope, its floor is one low-frequency brown mottle tiling with no traffic path.
+
+CULL_A: key-light
+CULL_B: none
+RANK: B
+
+FLIP LIST
+- Cap A's wall. Insert a horizontal top surface of at least 16 art px at the wall's upper edge, flat and carrying no course texture, at roughly twice the face body's value (face body currently 20–73 across the frame, so the top should sit 50–110 on the same columns), and terminate it with a single 1-art-pixel arris one step above the top's value at the row where top meets face. As it stands there is no row between y=0 and y=116 without a face texture on it.
+- Strip the baked light out of every course boundary. A currently runs dark(9)/bright(36)/body(23) at x=40 and dark(9)/bright(32)/body(21) at x=430 — columns where the runtime light has fallen to near black — so the rhythm is in the texture, not the lamp. Replace the 1px top highlight and the 1px bottom shadow with one neutral recessed joint a single step below the body value (e.g. body 44 → joint 38), so courses read by recess. Test: sample x=40 with the light disabled; the course rhythm should collapse to the joint alone.
+- Give A a measurable thickness where a wall run ends. Cut the south-facing face on a straight vertical at the wall's end and expose 2–3 art px of core at a value between the new top and the face (top 90 / core ~65 / face 44 in B's terms), so the wall has a stated depth rather than an implied one — neither image does this now, and A, having no top at all, has nothing to state it against.
+
+Model: Claude Opus 5 (1M context).

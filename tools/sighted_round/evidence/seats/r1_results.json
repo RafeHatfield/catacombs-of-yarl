@@ -1,0 +1,96 @@
+{
+ "round": 1,
+ "commit": "bc2bfd708e1f04ee418cd3393d84bf65a65482fb",
+ "pairs": {
+  "S1": [
+   "recipe_lit.png",
+   "BAR"
+  ],
+  "S2": [
+   "before_lit.png",
+   "BAR"
+  ],
+  "S3": [
+   "recipe_lit.png",
+   "before_lit.png"
+  ],
+  "S4": [
+   "plant_lit.png",
+   "BAR"
+  ]
+ },
+ "slots": {
+  "S1": [
+   "A",
+   "B"
+  ],
+  "S2": [
+   "B",
+   "A"
+  ],
+  "S3": [
+   "B",
+   "A"
+  ],
+  "S4": [
+   "A",
+   "B"
+  ]
+ },
+ "results": {
+  "S3": {
+   "Q1": "B",
+   "Q1_WHY": "B breaks the wall into a top plane and a face plane separated by a hard 2-px shadow line at rows 85\u201386; A is one continuous coursed field from the top of the frame to the floor with no plane change anywhere.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "In both, the wall band runs off frame at x=0 and x=463 with no return, opening or wall end, so no flank is ever presented; B's timbers are flat 6-px columns of a single value (12\u201317 at x=45, no lit or shaded edge column), so they show no side either.",
+   "Q4_A": "Nothing holds it \u2014 mortar joints only, plus one lone 6-px timber at x\u224899\u2013105 running y=57 to y=98 that terminates in open brick and is tied to nothing, and a few pale scratch marks near x=290 and x=350.",
+   "Q4_B": "Seven timber props at x=45, 89, 163, 223, 301, 345, 419, each 6 px wide, each crossing the cap and the arris shadow and running down the face, with pale pin or strap pixels at rows 61\u201364 and 101\u2013104; they occlude the joints they cross, so they read as in front of the stone rather than painted into it.",
+   "Q5_A": "In use by default rather than by intent \u2014 nothing is arranged because nothing is there to arrange.",
+   "Q5_B": "The prop spacing is properly irregular (44, 74, 60, 78, 44, 74 px), but all seven are the same sprite \u2014 identical 6-px width, identical top row y=57, identical foot y\u2248106, pins at the same two rows \u2014 which reads as a fitted rail rather than salvage driven in where the wall was failing, and they stop ~10 px short of the floor line at 117 so nothing visibly bears on the ground.",
+   "Q6_A": "Yes \u2014 generic: a brick wall receding into darkness, with nothing in it that could only be here (and the floor tile repeats per-cell, out of scope).",
+   "Q6_B": "No \u2014 the cap-and-face stack with pinned props is a specific construction, though the seven identical props are the one place it slips toward fence-shaped stock.",
+   "CULL_A": "cannot-read",
+   "CULL_B": "none",
+   "RANK": "B",
+   "Q2": "B's face band (rows 87\u2013116) sits at a median of 33\u201343 against a floor of 74 \u2014 I sampled columns x=40, 150, 300 and 400 and got face/floor ratios of 0.49, 0.47, 0.51, 0.49. That constant half-value across four columns of wildly different engine brightness is the whole trick: it's an orientation relationship, not a gradient. Above it B runs a joint-free cap strip (rows 79\u201384, median 68\u201371 \u2014 essentially floor value, as a horizontal surface should be), then a 2-px near-black arris shadow at rows 85\u201386 (median 29) before the face drops away.\nA has none of this: its lowest wall rows (111\u2013116) measure 59\u201362 against the same 74 floor \u2014 ratios of 0.81 to 0.93 at those same four columns \u2014 so the base of the wall and the floor it meets are within a few values of each other and the wall dissolves into the ground plane. A's six horizontal dark lines (rows 53, 65, 69, 79, 93\u201396, 107) are all equal-weight mortar joints; not one of them is heavier than the others, so there is no candidate for a top edge. B has exactly one dominant horizontal residual in the whole band, at rows 85\u201391, and it is in the right place. A also carries a faint painted top-light on every course \u2014 each course opens bright at its top row and dims to its bottom (rows 81\u219292: 53\u219246; rows 97\u2192106: 53\u219248) *against* the global gradient, which brightens downward.",
+   "flips": [
+    "Reserve the bottom 32 px of A's wall (rows 85\u2013116) as the inner face and drop it to ~0.5 of the floor's value at every column \u2014 floor median is 74, so the face should sit at 35\u201338 median and hold that ratio into the dark left edge (x=40: floor 51, face 25) as well as the lit centre (x=300: floor 101, face 50). A currently runs 59\u201362 there.",
+    "Lay a 2-px near-black line (value ~28) across the full 464-px width at the top of that face band, so the wall band contains exactly one dominant horizontal edge instead of six equal-weight course joints at rows 53, 65, 69, 79, 93 and 107.",
+    "Insert a 4\u20136 px joint-free cap strip immediately above that shadow line, held at roughly floor value (~70), with no vertical joints crossing it \u2014 it is the arris, and it is the only element that tells the eye where the top plane ends.",
+    "Redraw the coursing above and below the arris at different scales: larger, low-contrast units above (stone tops seen in plan) and smaller, hard-jointed units below (stone faces in elevation). A's joint scale currently runs 18 px in the upper band and 8 px at the base, which is backwards and reinforces the single-plane read.",
+    "Darken the last 4 px of the face at the floor junction into a contact shadow. A does the opposite \u2014 at x=300 rows 113\u2013116 climb to 82\u201385 against a 101 floor, so the wall brightens as it meets the ground.",
+    "Remove the per-course bevel: flatten each course so its top row and bottom row are within 1\u20132 values (currently 53\u219246 and 53\u219248), leaving only the recessed joint to describe the stone. That highlight survives the engine light being switched off."
+   ],
+   "mapping": {
+    "B": "recipe_lit.png",
+    "A": "before_lit.png"
+   }
+  },
+  "S4": {
+   "Q1": "B",
+   "Q1_WHY": "B is the only one that puts a flat top plane and a separate darker front face on screen at once; A is face only, top to bottom.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "B's left wall (x=0\u201315) shows only its top, and where the south wall's face terminates against it the face stops on a straight vertical at x\u224816, y=32\u201379 \u2014 a butt cut with a 1px dark seam, no revealed core; A has no wall end in frame at all.",
+   "Q4_A": "Seven identical vertical posts at x\u224837, 100, 165, 227, 292, 355, 420, ~5px wide, running y\u224858\u2013110 into a horizontal bottom rail at y\u2248101\u2013114 that carries a continuous row of small rectangular corbel teeth beneath it \u2014 structure, but perfectly pitched and identical, with no rope, hide, driven pin or salvaged timber anywhere.",
+   "Q4_B": "Nothing holds it together \u2014 the blocks are outlined at value 50 with a 37 joint gap and body 44, dry-stacked, and the only non-stone objects in the whole capture are a brown crate at x\u2248300, y\u224878 and loose bone on the floor; not one tie, strap, brace or patch on the wall.",
+   "Q5_A": "Staged \u2014 the seven posts are on an exact 64px pitch at identical length and identical height, the corbel teeth form an unbroken even frieze the full width, and the floor's inset rectangle lands in the same position in every cell; it is a facade, arranged front-on for the camera.",
+   "Q5_B": "Not posed, but not in use either \u2014 the wall is unarranged because there is nothing on it to arrange, and the two bone scatters (x\u224825\u201395, y\u224895\u2013135 and x\u2248115\u2013200, y\u2248175\u2013215) sit as two discrete blobs on otherwise unmarked ground.",
+   "Q6_A": "Reads as ornamental architecture \u2014 posted, railed and corbelled on a perfect pitch, closer to a temple frontage than to a four-hundred-year-old repair line; the floor's identical inset-rectangle cell in every tile is out of scope but is what makes the regularity read as decoration.",
+   "Q6_B": "Yes, stock \u2014 flat grey block wall on brown dirt with bones, the off-the-shelf dungeon; out of scope, its floor is one low-frequency brown mottle tiling with no traffic path.",
+   "CULL_A": "key-light",
+   "CULL_B": "none",
+   "RANK": "B",
+   "Q2": "B holds a top surface at a constant 90,90,90 from y=0 to y=29, ends it with a single 1-art-pixel arris at y=30\u201331 (147,143,134), then drops straight to a front face at 44,44,44 \u2014 the face sits at 49% of the top's value, a hard step with nothing between them. That face then has real extent: three block courses from y=32 to y=79, ~24 art px, with the middle course's vertical joints offset half a block from the courses above and below, so it reads as a masonry plane rather than a stripe. B also carries the read around the corner \u2014 the north-south wall at x=0\u201315 is the same 90 grey with block seams and *no* face at all, which is what that wall must look like from directly overhead, so the projection is consistent across both runs.\nA never produces a top plane anywhere in frame: y=0 through y=116 is six repeats of one rhythm \u2014 dark line (9\u201330), bright line (36\u2013109), body ramping downward (20\u219273) \u2014 and then a contact-shadow row at y=115\u2013116 and floor. There is not one horizontal band in A free of course texture, so the wall is an elevation pasted above the floor with no measurable thickness, and it is also close to unreadable at played size: mean luminance across the wall band runs 15\u201370 of 255, and the posts and bottom rail only resolve when the image is brightened 2\u00d7.",
+   "flips": [
+    "Cap A's wall. Insert a horizontal top surface of at least 16 art px at the wall's upper edge, flat and carrying no course texture, at roughly twice the face body's value (face body currently 20\u201373 across the frame, so the top should sit 50\u2013110 on the same columns), and terminate it with a single 1-art-pixel arris one step above the top's value at the row where top meets face. As it stands there is no row between y=0 and y=116 without a face texture on it.",
+    "Strip the baked light out of every course boundary. A currently runs dark(9)/bright(36)/body(23) at x=40 and dark(9)/bright(32)/body(21) at x=430 \u2014 columns where the runtime light has fallen to near black \u2014 so the rhythm is in the texture, not the lamp. Replace the 1px top highlight and the 1px bottom shadow with one neutral recessed joint a single step below the body value (e.g. body 44 \u2192 joint 38), so courses read by recess. Test: sample x=40 with the light disabled; the course rhythm should collapse to the joint alone.",
+    "Give A a measurable thickness where a wall run ends. Cut the south-facing face on a straight vertical at the wall's end and expose 2\u20133 art px of core at a value between the new top and the face (top 90 / core ~65 / face 44 in B's terms), so the wall has a stated depth rather than an implied one \u2014 neither image does this now, and A, having no top at all, has nothing to state it against."
+   ],
+   "mapping": {
+    "A": "plant_lit.png",
+    "B": "BAR"
+   },
+   "plant_caught": true
+  }
+ }
+}

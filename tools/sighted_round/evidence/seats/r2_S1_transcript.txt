@@ -1,0 +1,32 @@
+Q1: B
+Q1_WHY: B holds a measurable plane hierarchy — top L≈90, front-edge lip L≈122–134, face L≈45–53 — while A's face sits at 0.65–0.81 of its top and its wall top is *darker* than its floor.
+
+Q2: B separates the two planes by value and by edge: the grey top slabs run a flat L≈90, a 1-native-px lip at L≈122–134 marks the top-front corner, and the face drops immediately to L≈45–53 across three 8-px courses of running-bond brick with 1px black joints — a 50% step, held identically at x=20, 100, 180, 260. It also lands the wall on the floor: the dirt darkens from L≈57 at the base up to L≈87 about 10 native px out, an occlusion band that makes the face bottom a contact rather than a cut.
+A does none of this. At x=180 the top reads L=83.9, the face L=56.6, and the floor L=103.1 — the vertical face is only 27 values off the horizontal top, while two same-facing horizontal planes (wall top, floor) are 19 apart in the wrong order. A's plane values are governed by the torch gradient, not by orientation: the face at x=180 (56.6) is brighter than the wall top at x=340 (51.5). The top→face boundary is a single dark seam identical in width and value to the mortar joints inside the face itself, so it doesn't register as a corner. And the base is a 2-px hairline against floor at full brightness — no ramp, no contact.
+The worst of it is the posts: each is a flat 5-px black silhouette with no top face and no lit side, and it crosses the top→face boundary at unchanged width and unchanged value, welding the two planes into one surface at seven points along the wall.
+
+Q3: NEITHER
+Q3_WHY: Both walls run frame-edge to frame-edge with no return, jamb, doorway reveal or broken end — A's rubble band terminates flush at x=0 and x=463, B's brick courses at x=0 and x=335; the only candidate in B, the black recess beside the wooden block at x≈326, y≈52–72, is unlit void with no jamb thickness drawn, and A's posts have no side at all.
+
+Q4_A: Nothing holds it — seven identical black verticals stand on the top surface at an exact even pitch with one stray mid-brown pixel each (y≈62 and y≈108) and no bracket, pin head, rope wrap, wedge or shadow where timber meets stone; there are two short horizontal bars in the face around x=380–460, y≈107, but they too just overlap the masonry rather than bind it.
+Q4_B: Nothing holds it — three courses of uniform running-bond brick with uniform joints, no timber, no rope, no pin, no metal anywhere; the only non-masonry element in the whole wall is a single brown block with a socket at x≈320–336, y≈52–72, cut off by the frame.
+
+Q5_A: Staged — seven posts, all one height, all one silhouette, all on the same y, at a metronomic pitch across the full width; that is a row laid out for the picture, not a line held by anyone.
+Q5_B: Not staged, but only because nothing is placed — the strewn bones and the rust spatter on the dirt are unposed, and the wall itself carries no decision at all.
+
+Q6_A: Not stock in intent — small rubble courses under large slabs, timber verticals — but executed at a pitch regular enough that it reads as decorative palisade rather than four hundred years of over-built repair.
+Q6_B: Fully stock — grey running-bond brick under grey slab is the off-the-shelf dungeon wall, and it buys its depth with the cheapest available convention; out of scope, A's floor clones one slab with its scuffs landing in identical positions every 64 px while B's dirt has no cell structure at all.
+
+CULL_A: cannot-read
+CULL_B: none
+RANK: B
+
+FLIP LIST
+- A's face sits at 0.65–0.81 of its top's local value in the same hue. Take it to ~0.45–0.50 and cool it — drop the red channel harder than the blue — so that at the lit centre where the top reads L≈84 the face reads L≈38–42, and hold that ratio across the full width so it survives the torch falloff at x=20 and x=420.
+- Replace A's top→face boundary. It is currently a 1-native-px dark seam identical to the mortar joints inside the face, so it reads as one more joint. Build it as three rows: a 1px capstone lip at ~1.4× the top's local value, then a 2px joint at ~0.4× the face value, then the face. B's equivalent runs L=90 → 130 → 48.
+- Add a base occlusion band to A. The floor currently jumps from face L≈57 to floor L≈103 in 2 native px. Ramp 4–5 native px of floor along the wall from ~0.55× floor value at the wall to full floor value out, so the face bottom reads as contact instead of a cut edge.
+- Break every post in A at the plane change. On the top surface, redraw it as a foreshortened stub with a lit top face at ~1.2× the top's value and a visible butt end; on the face, redraw it as full-height timber with a 1px lit left edge and 1px dark right edge, and a 1–2px cast shadow onto the stone to its right. Currently one 5px black rectangle spans both planes at constant width and value, which is the single strongest thing flattening the wall.
+- Fix the horizontal-plane order in A: the wall top (L≈84) is darker than the floor (L≈103) at the same x, so two surfaces facing the same way read in reverse. Lift the wall top above the floor's value, and stop using the floor's slab texture on it — give the top a coarser slab with wider joints so the two horizontals are not the same material.
+- Vary A's post pitch and length. Seven identical verticals on one y at an exact even spacing is the tell. Give them three or four different heights, shift two of them off the tile grid by 3–5 px, lean one, and let two sit in the face rather than on the top so the row has a reason to be where it is.
+
+Model: Claude Opus 5 (1M context).

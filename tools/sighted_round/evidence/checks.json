@@ -1,0 +1,49 @@
+{
+ "differencing": {
+  "recipe": {
+   "top_rows": [
+    356,
+    386
+   ],
+   "face_rows": [
+    390,
+    418
+   ],
+   "lit": {
+    "top": 113.86,
+    "face": 58.94,
+    "floor": 102.16,
+    "ratio": 0.518,
+    "top_over_floor": 1.114
+   },
+   "unlit": {
+    "top": 23.17,
+    "face": 9.27,
+    "floor": 12.69,
+    "ratio": 0.4,
+    "top_over_floor": 1.826
+   },
+   "persists": true
+  }
+ },
+ "rings": {
+  "sr_9401.png": "CLEAN",
+  "sr_9402.png": "CLEAN",
+  "sr_9500.png": "CLEAN",
+  "sr_9501.png": "CLEAN",
+  "sr_9502.png": "CLEAN",
+  "sr_9503.png": "CLEAN",
+  "sr_9510.png": "CLEAN",
+  "sr_9511.png": "CLEAN",
+  "sr_9512.png": "CLEAN",
+  "sr_9513.png": "CLEAN",
+  "sr_9540.png": "CLEAN",
+  "sr_9541.png": "CLEAN",
+  "sr_9542.png": "CLEAN",
+  "sr_9543.png": "CLEAN",
+  "sr_9550.png": "CLEAN",
+  "sr_9551.png": "CLEAN",
+  "sr_9552.png": "CLEAN",
+  "sr_9553.png": "CLEAN"
+ }
+}

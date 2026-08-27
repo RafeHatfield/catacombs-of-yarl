@@ -1,0 +1,34 @@
+Q1: B
+Q1_WHY: B has a top plane, a chamfered near edge and a front face at three separated values; A has one flat band that is darker than both surfaces it sits between.
+
+Q2: B's wall top runs a dead-flat 90,90,90; the near edge is a 1-native-px lip at 124–128; the face below is 44 interior / 50 block border / 37 joint — the face sits at almost exactly half the top's value, and the dirt floor (60–68) falls *between* them, so the read is lip > top > floor > face and the face is unambiguously a vertical plane turned away from the light.
+A has no such step: the plane above the band means 104, the band itself means 39–52 across its whole 16-native-px height, the floor below means 78–92. The band is the darkest thing in the column, so it reads as a groove or a shadow gap, not a mass standing above the floor.
+Within A's band there is no top-to-face progression either — at x=200 the band's top rows read 82, its middle 90, its bottom 75. That is noise, not a plane change.
+A's west edge settles it: the floor slabs simply stop at x=24 and the same gridded plane resumes, with no band, no lip, no value step at all — the north "wall" and the west "wall" are not the same object.
+
+Q3: NEITHER
+Q3_WHY: B shows only a top surface (grey 90) and a front face (44) — its west wall at native x=0–14 terminates against the dirt in a single 1px joint with zero flank pixels; A shows no flank and no cut anywhere, and its posts are flat silhouette stripes, not sectioned members.
+
+Q4_A: Seven driven posts standing in the north band plus a continuous dark rail along the band's foot at y≈109–116 — but the posts hold a value of 33–50 whether they cross a 175 background or a 60 one, never change width, never lean, and cast nothing where they meet the band at y=85, so they are laid over the wall rather than driven into it.
+
+Q4_B: Nothing holds it — mortared ashlar and one wooden beam-end at x≈300 sitting proud of the second course with a small cast shadow beneath it; no pins, rope, straps, plates or salvaged timber anywhere in the fabric.
+
+Q5_A: Staged — seven posts of identical 3px width, all topping out at exactly y=57, all plumb, spaced evenly across the full 464px run: that is a fence, and a fence made of identical members is decoration.
+
+Q5_B: In use — the debris wedge at the wall base spills irregularly and is cut by the frame, the lip is broken by one asymmetric 4px chip at x≈180, and the two paler replacement blocks sit in different courses and match nothing.
+
+Q6_A: Generic in execution though not in intent — the wall planes are the off-the-shelf thin-line stone grid, and the floor is a small clone set with the same recessed-rectangle slab repeating on a regular checker (out of scope, noted).
+
+Q6_B: The wall construction is specific and rule-following, but the dressing is stock — bone scatter and rust stains on brown dirt is the default fantasy-dungeon floor.
+
+CULL_A: wrong-projection
+CULL_B: none
+RANK: B
+
+FLIP LIST
+- Split A's north band into two bands with a hard 1px joint. The upper ~6 native px becomes the wall TOP and must sit *above* the floor's value — floor means 78–92, so the top wants 115–125. The lower ~10 native px becomes the face at roughly half the top, ~55–60. Right now the entire 16px band sits at 39–52, below the floor, which is why it reads as a trench.
+- Build the west wall the same way. Where the floor slabs stop at x=24 (native 12), put a top plane at the north wall's new top value, and at the north-west corner cap the north face's left end with a 1–2 native px flank column at a value between top and face, so the two walls resolve as one continuous mass instead of two unrelated treatments.
+- Rework the posts so they cross the top/face boundary. Break the shared top y (all currently 57) by 4–10 native px per post, lean two off plumb, add a 1px dark contact shadow on the face at each post's base, and give each a foreshortened cap on the top plane — a post that passes from a horizontal surface onto a vertical one cannot hold one flat value of 33–50 across both.
+- Add a 1–2 native px dark contact line where the north face meets the floor at y=117, and vary the face's height by a course in two or three places along the run so the wall's foot is not a single ruled horizontal.
+
+Model: Claude Opus 5 (1M context)

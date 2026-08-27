@@ -1,0 +1,31 @@
+Q1: B
+Q1_WHY: Only B declares a top plane, an edge, and a face as three separate value bands with a hard boundary between them; A gives you one continuous lit elevation from the frame top to the floor.
+
+Q2: B holds three fixed values with a single unbroken horizontal break at y=30: top surface flat RGB 90,90,90 (rows 0–29), a 2px cap at 147,143,134 (rows 30–31), face at 44,44,44 (rows 32–79) with 50/37 course edges. Face = 0.49× top. That ratio and that one line do all the work.
+A has no such break. At x=180 the stone runs monotonically from R=66 at y=0 to R=179 at y=82 through six 16px courses (mortar at y=3, 19, 35, 51, 67, 83) and the value never resets at a joint — and it also falls off horizontally (y=50: x180=131, x300=123, x420=52), so that ramp is runtime radial light centred on the player, not a change of plane. Not a key-light defect; also not depth.
+A's only candidate top/face edge is the 1px mauve line at y=85–86 (100,65,64), and the band beneath it is broken at y=101–102 by a 168,129,90 rail — brighter than everything in the supposed face and within 6% of the "top" directly above it. A face containing its own brightest pixel is not a face.
+Net: A's wall is 84+px of coursed elevation glued to a 32px-tile plan floor. Two projections in one image, no plane you are looking down on.
+
+Q3: NEITHER
+Q3_WHY: B is the harder failure — columns x=0–13 from y=100 to y=230 are flat 90,90,90, the *top* value, running straight into dirt at x=16 with only a 2px 71-grey seam at x=14–15; the west wall has no east flank at all, so the same stone is 48px thick facing south and zero thick facing east. A shows no wall end, return or jamb anywhere in frame to test.
+
+Q4_A: Iron pins driven into the face (16 of them, ~10px × 42px, dark 27–38) plus two full-width horizontal rails at y=85–86 and y=101–102 — a real fixing vocabulary, but every pin is the same size at a constant 64px pitch and both rails run the entire 464px without one splice, lap or break.
+Q4_B: Nothing. Mortar gaps at 37,37,37 and a single 77,77,77 block at x≈140–155, y=48–49 are the only marks on the whole wall; no tie, pin, timber, rope or bracket exists in it.
+
+Q5_A: Staged — the pins form an evenly spaced frieze at a fixed pitch, all bottoming on the same continuous rail; that is a decorative course, not four hundred years of patching.
+Q5_B: Neither staged nor in use — the wall is empty, and empty is not the same as unmaintained.
+
+Q6_A: Not generic in vocabulary, but the regular pin-and-rail frieze over a receding elevation reads as a painted backdrop rather than a floor plan of a place. (Out-of-scope, noted per instruction: A's floor repeats one bracket-shaped slab motif identically in every 32px cell.)
+Q6_B: Fully generic — flat grey stacked blocks with a bright bevel line is the off-the-shelf dungeon wall, and the untextured 87,91,84 wedge at x≈16–60, y≈62–81 is a flat blob with no material in it.
+
+CULL_A: wrong-projection
+CULL_B: none
+RANK: B
+
+FLIP LIST
+- Give A an actual top plane and cap it. Draw the wall's top surface in plan (joints running both axes, reading as slabs seen from above), terminate it at a hard 1px silhouette edge, and put exactly one tile's worth (32px) of face below that edge at ~0.45× the top's value *at the same distance from the light* — at x=180 that is top R≈179 / face R≈80. Nothing inside the face may exceed that value.
+- Kill the y=101–102 rail (168,129,90) and the y=85–86 mauve line (100,65,64) as full-width runs. Replace with a single 2px contact shadow at the wall foot at ~0.35× the adjacent floor (≈20,15,10 at x=180). Any timber returns as short discrete lengths with visible cut ends, lapped over each other, never as an unbroken 464px stripe.
+- Break the pin rhythm and seat the pins. Vary per 64px bay — 0 pins in one, 2 in the next, 5 in another — vary length ±30%, cant a few off vertical, and add a 1px darker column on one side of each pin so it reads as driven into the face rather than laid on it.
+- Make the stated thickness honest: 84px of face over a 32px floor tile claims a 2.6-tile-thick wall. Pick one thickness, hold it, and let the top plane's width be the thing that states it.
+
+Model: Claude Opus 5 (1M context).
