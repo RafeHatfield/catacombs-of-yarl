@@ -1,7 +1,10 @@
 # Yarl Art Loop — PROCESS LAW v0
 
-**Status: v0.4 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
+**Status: v0.6 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
 `ART-BIBLE-v0.md`. Structure transfers wholesale; every number is re-derived.
+
+*(The banner read v0.4 while the revision log below already carried v0.5 — corrected here rather
+than left, since the banner is what a reader checks first.)*
 
 This document governs *how work is done and certified*. `ART-BIBLE-v0.md` governs *what is
 correct*. A session that has read only one of them is not equipped.
@@ -188,9 +191,41 @@ records **what its own target measured before and after**, and reds when a tile 
 at is unchanged *and* still fails. `remediate.py` carries `verdict_before`, `verdict_after` and
 `pixels_changed` per tile in its manifest for this reason.
 
+**LOGGED INSTANCE 2 — `capture_children.py`'s id block, 2026-08-27. The week's second, and it
+generalises the clause.**
+
+The parent-rate run's capture module staged candidate floor tiles from `ID_BASE = 9200`. **Tile
+9200 is `wall_autotile: 0`** in the composition spike's theme, whose wall ids are sparse and
+reach 9343. Every capture therefore quietly made the candidate floor tile double as a wall tile
+— **in a rig whose entire stated claim is that the walls are held constant and the floor is the
+only variable.** The captures rendered, the manifests recorded success, and nothing went red.
+
+**It did no damage, and that was measured rather than argued.** Three runs staged three
+*different* tiles into `fr_9200` and the plant and parent captures came out byte-identical every
+time, and identical to survivor captures taken before the module existed — autotile mask 0 never
+fires in a one-wide corridor. The id block was corrected to 9400 and **all sixteen captures
+re-taken under it reproduce byte-for-byte**, which is what allowed the seat rounds to stand
+rather than be re-run.
+
+**What the second instance adds.** §4.2 was written about a *remediation* that removed nothing.
+This one removed nothing either — but it was not a remediation, it was a **rig invariant**. The
+clause generalises accordingly:
+
+> **Any step that asserts something is HELD CONSTANT must be able to go red when it is not.**
+> A no-op fix and a violated invariant are the same failure: a claim in a docstring with no
+> enforcement behind it, discovered later and somewhere else.
+
+Both instances this week were caught by the same move, and it is the cheap one: **compare bytes
+you already have.** The MOCK was caught because its output was byte-identical to its input when
+it should have differed; the rig was cleared because its output was byte-identical across three
+runs when it should not have mattered. Neither needed a new instrument. Where a rig holds
+something constant, capture the constant part twice under deliberately different conditions and
+diff it — that is the closing check, and it is one comparison, not a system.
+
 **Ask of any fix: what goes red if it silently does nothing?** "The output looks fine" cannot
-answer it — in this instance the output *was* the input, and it looked exactly as fine as the
-thing it was supposed to have repaired.
+answer it — in the first instance the output *was* the input, and it looked exactly as fine as
+the thing it was supposed to have repaired. **And ask of any invariant: what goes red if it
+silently stops holding?**
 
 ---
 
@@ -358,6 +393,18 @@ conditions, which supplies parts, which camera parameters are spent, and why the
 images rather than parameters. One home, cited from both documents.
 
 ---
+
+*v0.6 — 2026-08-27. **§4.2 gains its second logged instance and generalises.**
+`capture_children.py` staged candidate floors from id 9200, which is `wall_autotile: 0` in the
+spike's theme — silently making the floor tile double as a wall in a rig whose claim is that the
+walls are held constant. Nothing went red. Measured harmless (three runs, three different tiles
+at that id, byte-identical controls every time; mask 0 never fires in a one-wide corridor),
+corrected to 9400, and all sixteen captures re-taken reproduce byte-for-byte — which is why the
+seat rounds stood instead of being re-run. The clause now covers **any step asserting an
+invariant**, not only a remediation: a no-op fix and a violated "held constant" are the same
+failure. Both of this week's instances were caught by the same cheap move — compare bytes you
+already have — so the closing check is one comparison, not a system. The status banner also read
+v0.4 against a v0.5 log; corrected.*
 
 *v0.5 — 2026-08-27. **New §4.2: a remediation must prove it removed something** — §4.1's twin
 from the other side, and Ruling 104's failure mode wearing the opposite clothes. §4.1 is a diff

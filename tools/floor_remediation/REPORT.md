@@ -270,6 +270,22 @@ loops, and the seat independently confirmed both. It does not catch every constr
 calls a keyline, and building a repetition proxy to close the gap is precisely the move §13.4
 forbids.
 
+> **RELABELLED (Rafe, 2026-08-27), superseding the sentence above.** The label is now:
+>
+> > **MEASURED ERROR IN BOTH DIRECTIONS; ORDERS ATTENTION, RULES NOTHING.**
+>
+> *"A floor, not a verdict"* claimed only one direction of error — that the instrument
+> under-counts, and that its number can therefore only be too low. **The parent ring-rate run
+> measured the other direction and it is real.** A child the instrument called RING at side
+> coverage 1.000 was returned `cull: none` by a blind seat, which called it *"the only one that
+> reads as stone… the only candidate here whose surface has genuine masonry logic"*. The
+> instrument is not a lower bound. It is wrong both ways, by measured amounts, and its output
+> is an **ordering of what deserves a look** — not a floor beneath a verdict, and not a verdict.
+>
+> This does not weaken any comparison the instrument has been used for, because it was applied
+> unchanged to both sides of each: whatever bias it carries, it carried equally. Evidence:
+> `REPORT-PARENT-RATE.md` §5.
+
 ---
 
 ## 7. THE BAR — SCORED ON ITS DECLARED TERMS
@@ -356,6 +372,26 @@ A tile can be perfectly ring-clean and still be the wrong thing to condition on.
 
 ### Ruling 2 — round B's 0-of-4 is a finding, not the bar verdict
 
+> **COMPLETED RETROACTIVELY by the gate ruling of 2026-08-27 — bible §8.3, the motif trap.**
+>
+> This ruling banked the repetition and absent-wear culls as tier-one requirements rather than
+> as a verdict on the corpus, and it was right, but it could only assert the distinction. §8.3
+> supplies the reason: **any incident baked into a tile becomes a motif when tiled — repetition
+> converts accident into intent — so a tile is the material and the incident is the variant.**
+>
+> Which makes the honest description of every round in this report: **the tiles were BASES, and
+> they were judged as FINISHED FLOORS, before the incident system existed.** The seats were not
+> wrong and the tiles were not being asked a fair question. §8.2.1 already recorded half of that
+> — the one-wide corridor could not pose the wear question — and this is the other half, and the
+> larger one: **a base and a floor are different objects**, and every round here showed a seat
+> the first while calling it the second.
+>
+> It also settles what §6 could not. The seat's objection to the remediated A-VAB — *"turns all
+> four corners and returns rather than running into the neighbour"* and *"the identical U-shaped
+> notch centred on every slab"* — reads as two complaints and is one: **the notch is an incident,
+> and the field made it a motif.** §6 correctly said the instrument cannot see repetition because
+> it looks at one tile. §8.3 says the property genuinely is not there to see.
+
 **Bars neither shrink nor grow after declaration.** The declared bar was ring-clean; §7 is
 rescored on those terms and reads **2 of 4**, which is the honest number. The remaining culls —
 per-cell repetition, no traffic wear, A-HEB's salmon cast — are **measurements of what tier one
@@ -375,6 +411,11 @@ chokepoint, a neglected passage. Recorded in §8.2.1 as a harness debt, not char
 
 The instrument keeps its label: **a floor, not a verdict**, with its limit measured and written
 down (§1, §6). No further tuning; §6's overlap measurement is the reason and it stands.
+
+> **SUPERSEDED IN PART (Rafe, 2026-08-27).** The *no further tuning* half stands and is
+> unchanged. The **label** is replaced by **"measured error in both directions; orders
+> attention, rules nothing"** — see the relabel block in §6. Ruling 3 was made when only the
+> under-count had been measured; the over-count has since been measured too.
 
 `dering_floors.py`'s silent no-op on A-VAB is logged as **LOOP-PROCESS §4.2 — a remediation must
 prove it removed something**, a new clause written as §4.1's twin from the other side and as

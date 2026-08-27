@@ -1,0 +1,109 @@
+{
+ "commit": "9d5fdcd2162ada6757c80f4294036dd3ac3d23aa",
+ "rig_requested": "ambient=1a1a22 color=ffb066 energy=1.6 radius_tiles=5.5 (ALL UNDERIVED - \u00a76.2 PLACEHOLDER)",
+ "scene": "src/Presentation/assets/tier0_harness/scenes/wall_face_review.json",
+ "walls": "composition_spike/before, held constant",
+ "tile_size": 32,
+ "tile_scale": 2.0,
+ "captures": [
+  {
+   "label": "P_P_seed9709",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/P/P_seed9709.png",
+   "tile_id": 9400,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.75,
+   "file": "P_P_seed9709.png",
+   "sha256": "7ed320761b0405debfa02b1c5327bd307400e1b0f22306ce3d40b13f6b3aa0d3",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "8fa924300f7bf46018831ad8246c811ec44362137f16a4e58723203daa787f4a"
+  },
+  {
+   "label": "P_P_seed9701",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/P/P_seed9701.png",
+   "tile_id": 9401,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.732,
+   "file": "P_P_seed9701.png",
+   "sha256": "06f05822b5084b1d8e185559153dd6232061b60c064756a5e26bf6d7e4a127ee",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "321c7811b5e828b0bde4aa18703693d48ffbfa95ddbe064b23e93fc46d78a527"
+  },
+  {
+   "label": "P_P_seed9702",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/P/P_seed9702.png",
+   "tile_id": 9402,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.688,
+   "file": "P_P_seed9702.png",
+   "sha256": "d021df0fcb58fd3c81c49a04f9dced0ddb73dc2aeaeb1cd4c4b31e30b6ea0054",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "1d51c7a480fb9beb3c58e6990f5d13e82ae3354a70082ef47262929ea40e8441"
+  },
+  {
+   "label": "P_P_seed9703",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/P/P_seed9703.png",
+   "tile_id": 9403,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.667,
+   "file": "P_P_seed9703.png",
+   "sha256": "d828bf213da417bdb114ce7889d0467471678e56da8c96f33e9da95a9e55219c",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "46f720402edcda1f671e2b5133d0d4d74050aa28aa639e397f52d8924e91388e"
+  },
+  {
+   "label": "P_P_seed9705",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/P/P_seed9705.png",
+   "tile_id": 9404,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.665,
+   "file": "P_P_seed9705.png",
+   "sha256": "7710715fe68b8446e1274be52035b8b47b60d8b69ffb47552cd58e250f6f222e",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "727211cac5fd103436b81a4de4d563a34c69d7f2ac3eb5874176b951fc0a8279"
+  },
+  {
+   "label": "P_P_seed9708",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/P/P_seed9708.png",
+   "tile_id": 9405,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.6,
+   "file": "P_P_seed9708.png",
+   "sha256": "dbfc856722550bb153f3b0bcb3772648f5b4bc5cf4af7817b2d59916f958d14f",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "d62b7bfcc0d5d87a620f337f5b1cdb89ba148a98f4b82849ff6f85078304c441"
+  },
+  {
+   "label": "CONTROL_ring_P_seed9706",
+   "floor_tile": "tools/floor_remediation/parent_rate_cgab/P/P_seed9706.png",
+   "tile_id": 9406,
+   "floor_verdict": "RING",
+   "near_ring": 1.0,
+   "file": "CONTROL_ring_P_seed9706.png",
+   "sha256": "e4a7e211ce424d5f7a520215685d2a0f9d67d79461624842e0436dcb146e2a73",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "f3755c8dce0d32b680a761c1f64be37fb1342457a3269e34f7832f3bdcb89ed8"
+  },
+  {
+   "label": "CONTROL_plant_BKAB",
+   "floor_tile": "tools/pixellab/probe_6_4/survivors/B-KAB.png",
+   "tile_id": 9407,
+   "floor_verdict": "RING",
+   "near_ring": 0.992,
+   "file": "CONTROL_plant_BKAB.png",
+   "sha256": "884d0fd5b7a7152c432e5ca41e4872e7e4bd81d4a315d9d16a180605a250ea1f",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "950751ae2ec901ce0a72f4a20c4d2c00e5ee54f3c8e14acc6010d78144a6ef09"
+  },
+  {
+   "label": "CONTROL_parent_CGAB",
+   "floor_tile": "tools/pixellab/probe_6_4/survivors/C-GAB.png",
+   "tile_id": 9408,
+   "floor_verdict": "CLEAN",
+   "near_ring": 0.791,
+   "file": "CONTROL_parent_CGAB.png",
+   "sha256": "6b358533cb575d45b24698e4f2881e3cd97472afede6dad1f8531a8d0f7ab7fe",
+   "engine_rig": "ambient=1a1a22 light=ffb066 energy=1.6 radius_tiles=5.5 tile=32x32 tex=352px (ALL VALUES UNDERIVED \u2014 ART-BIBLE-v0 \u00a76.2/\u00a74.3 PLACEHOLDER)",
+   "tile_sha256": "1a24a59aa5607c3beebd8d1cf728acc0f43d6fc0bace6015025a7595c3f6db4f"
+  }
+ ]
+}
