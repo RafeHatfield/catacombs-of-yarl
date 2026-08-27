@@ -1,0 +1,412 @@
+CANDIDATE: cand_00
+CULL: none
+ROLE: A length of straight wall, one floor square wide — but it belongs to a different set: 7 colours, cool blue-grey blocks on pure black mortar, two sand-coloured rubble courses, and a pale grey slab band across the middle.
+THICKNESS: No. The whole image is a flat elevation; the grey band is the only horizontal element and it has no front lip, no foreshortening and no change of plane, so nothing reads as a top you could stand a lantern on.
+LIGHT: No direction — left quarter and right quarter measure 92.6 and 92.4, and no block carries a bevel.
+HOLDS: Nothing. Regular machine-cut blocks in perfect running bond with no timber, no iron, no pins, no lashing, no bracket. The masonry is holding itself.
+HAPPENED: Nothing has happened to it. Every joint is intact, every block is square, the rubble courses are neat. It has never been used, let alone used up.
+VERDICT: FAIL
+WHY: Tidy, undamaged, brightly-contrasted platformer brick with no repair and no thickness — it is a different game's wall.
+
+CANDIDATE: cand_01
+CULL: none
+ROLE: A wall that is full-width across its top third and then drops to its right half — an outside corner or a step-back. Timber post on the right edge, pale rubble patch top-left, dark iron strap hooking over at the top.
+THICKNESS: No. There is a lighter band about 9 pixels deep at the top, but it is drawn as one more masonry course — same colours, same joint pattern, no foreshortening, no front lip. It reads as brick, not as a top surface.
+LIGHT: No direction. Measured edge-to-interior and left-to-right deltas are under 2 levels.
+HOLDS: A vertical timber post with a lashed cross-boss, two horizontal timber rails, one iron strap at the top, one diagonal iron bar lower-left. None of them is fixed to anything — no pin heads, no plates, no bracket landing on stone; the rails pass the post rather than entering it and the diagonal bar ends mid-brick.
+HAPPENED: The upper-left has been patched with a lighter rubble of different stone, and an iron strap at the top has come away at one end. Below that, nothing legible — a uniform mottle.
+VERDICT: FAIL
+WHY: The silhouette where it steps back cuts straight through the masonry with no return face and no rim, so the wall simply stops mid-brick.
+
+CANDIDATE: cand_02
+CULL: none
+ROLE: The timber post alone, 12 pixels wide and full height — a post, or the right-hand jamb of a wall run.
+THICKNESS: No. It is a vertical strip with no cap and no top plane; the iron cap at the top is drawn face-on.
+LIGHT: No direction.
+HOLDS: The post itself, an iron cap at the head and a lashed cross-boss near the foot. Nothing fixes the post to a floor or to a wall — no foot plate, no driven pin, no wedge.
+HAPPENED: Cannot tell. The grain is mottled but nothing reads as split, crushed or spliced.
+VERDICT: FAIL
+WHY: The post sits within ten luminance levels of the wall it will stand against, separated only by two single-pixel dark lines, so at 32 pixels on a phone it will vanish into the masonry.
+
+CANDIDATE: cand_03
+CULL: none
+ROLE: A full-height length of straight wall, one floor square wide, with the timber post on its right edge — the base piece of the set.
+THICKNESS: No. The top 9 rows are 10–15 levels lighter than the face, but they carry the same vertical joints in the same course rhythm, so they read as another brick course rather than as a plane turned toward the camera.
+LIGHT: No direction — left quarter 73.6, right quarter 74.0, total range 37–110.
+HOLDS: Timber post with a lashed cross-boss, two horizontal timber rails top and bottom, an iron angle-bracket at the top right, a diagonal iron bar across the lower left. None of them has a visible fixing at either end.
+HAPPENED: An iron bracket has hooked over the top and hangs loose; a diagonal bar has fallen across the face and lies there. The masonry itself shows no crack, no crush, no missing block.
+VERDICT: FAIL
+WHY: Total luminance range 37–110 out of 255 with a standard deviation of 16 — post, rail, brace and stone all sit inside the same 70-level band, so at play size it is one flat brown rectangle.
+
+CANDIDATE: cand_04
+CULL: none
+ROLE: A narrow L — 12 wide at the top, 22 wide in the middle, 10 wide down the bottom. An inside corner or a jog, though which side it turns to is not stated by anything drawn.
+THICKNESS: No. Same top band as the rest of the family; nothing distinguishes it as a plane.
+LIGHT: No direction.
+HOLDS: A horizontal timber rail near the foot and a patch of pale rubble at the head. No post in this crop, no visible fastening on the rail.
+HAPPENED: The head has been rebuilt in a paler, coarser rubble than the courses below it. Below that, nothing legible.
+VERDICT: FAIL
+WHY: The three steps in the silhouette all slice through whole bricks with no jamb, cap or return, so the shape reads as a mask over a painting rather than as built structure.
+
+CANDIDATE: cand_05
+CULL: none
+ROLE: A length of straight wall with the timber post on the right, shorter than cand_03 by the top band — a mid-height wall run.
+THICKNESS: No. The top of this one lands directly on a horizontal timber rail with masonry above it in the frame, and there is no cap plane at all.
+LIGHT: No direction — left quarter 71.0, right quarter 73.8.
+HOLDS: Post with lashed boss, two horizontal rails, an iron bracket at the top right, a diagonal iron bar lower-left. No pins, plates or lashings connect any of them to the stone.
+HAPPENED: An iron bar lies diagonally across the lower left. Otherwise nothing has happened to this wall that I can name.
+VERDICT: FAIL
+WHY: It is cand_03 with the top band removed — 5.5% of pixels differ across 1,824 shared pixels, which is jitter, not a second piece.
+
+CANDIDATE: cand_06
+CULL: none
+ROLE: A wall run with a 12-wide stub at its head then full width below — a T-junction or a wall meeting another at its top-left.
+THICKNESS: No. Same undifferentiated top band.
+LIGHT: No direction.
+HOLDS: The same post, boss, two rails, top bracket and diagonal bar. Nothing fastens them.
+HAPPENED: Rubble patch at the head, loose bracket at the top, a bar fallen across the lower left.
+VERDICT: FAIL
+WHY: 7.2% of its pixels differ from cand_03 — it is the same painting with a rectangle taken out of the top right, not a junction piece.
+
+CANDIDATE: cand_07
+CULL: none
+ROLE: A full-height straight wall run, post on the right edge.
+THICKNESS: No, for the same reason — the top band is another course.
+LIGHT: No direction.
+HOLDS: Post, lashed boss, two rails, iron bracket, diagonal bar. No fixings visible on any of them.
+HAPPENED: A loose bracket at the top and a fallen bar at the lower left; the stone itself is unmarked.
+VERDICT: FAIL
+WHY: 3.3% of 2,304 pixels differ from cand_03 — this is the same tile submitted twice with noise on it.
+
+CANDIDATE: cand_08
+CULL: none
+ROLE: Full width across the top, then an 8-pixel tongue running down the middle. A T-junction where a wall meets a corridor, if I read it charitably; a chequered basket panel sits top-right.
+THICKNESS: No. No cap, no top plane, no lip.
+LIGHT: No direction; the alpha edge measures 10.7 levels darker than the interior, but that is the texture the cut happens to land on, not a rim.
+HOLDS: A chequered lashed panel top-right, timber rails, and the masonry itself. Nothing on the 8-pixel tongue holds anything — it is bare mottle.
+HAPPENED: Cannot tell. The top right has been filled with a woven or lashed panel; the tongue below shows no event.
+VERDICT: FAIL
+WHY: An 8-pixel-wide wall stub is a quarter of a floor square — too thin to read as built structure at play size, and the cut leaves the stone unfinished on both sides.
+
+CANDIDATE: cand_09
+CULL: wrong-projection
+ROLE: —
+THICKNESS: —
+LIGHT: —
+HOLDS: —
+HAPPENED: —
+VERDICT: FAIL
+WHY: A 14×15 lozenge in cream, peach and maroon with a near-black rim measuring 72 levels darker than its interior — a diamond-shaped, ringed, self-lit object from an entirely different palette.
+
+CANDIDATE: cand_10
+CULL: none
+ROLE: A full-height straight wall run with the post on the right edge.
+THICKNESS: No. Same top band, same course rhythm, no plane change.
+LIGHT: No direction.
+HOLDS: Post with boss, two rails, top bracket, diagonal bar — none fixed.
+HAPPENED: Loose bracket, fallen bar, rubble at the head.
+VERDICT: FAIL
+WHY: 7.1% pixel difference from cand_03 and 0.7% from cand_18 — sixteen pixels of difference across 2,184 is not a distinct piece.
+
+CANDIDATE: cand_11
+CULL: noise
+ROLE: —
+THICKNESS: —
+LIGHT: —
+HOLDS: —
+HAPPENED: —
+VERDICT: FAIL
+WHY: 12×9 pixels of undifferentiated grey-brown mottle with no edge, joint, member or silhouette in it.
+
+CANDIDATE: cand_12
+CULL: none
+ROLE: A wall run with a 12-wide stub at the head then full width — a T-junction, with both top corners bitten away.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Post, boss, two rails, bracket, diagonal bar. No fixings.
+HAPPENED: The same loose bracket and fallen bar as every other tile in the set.
+VERDICT: FAIL
+WHY: 9.2% pixel difference from cand_03; the two missing top corners land mid-brick and mid-rail, so the junction it claims to be has no jamb on either side.
+
+CANDIDATE: cand_13
+CULL: none
+ROLE: A 12-wide full-height strip of wall face with no post and no end treatment — cannot tell what it is for.
+THICKNESS: No. No top plane; the strip runs to the top edge as face.
+LIGHT: No direction.
+HOLDS: A horizontal timber rail near the foot and one near the head. Nothing else; the masonry is holding itself.
+HAPPENED: Cannot tell. Some blocks are darker than others; nothing reads as a specific event.
+VERDICT: FAIL
+WHY: Byte-for-byte identical to cand_33 — the same file counted twice.
+
+CANDIDATE: cand_14
+CULL: none
+ROLE: A 22-wide full-height wall with the post on its right edge — a shortened wall run or a right-hand end.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Post with lashed cross-boss, two horizontal rails, an iron strap at the head. The rails run past the post rather than into it and no pin, plate or wedge joins them.
+HAPPENED: An iron strap has come loose at the head; below that nothing legible.
+VERDICT: FAIL
+WHY: The left edge is a straight vertical cut through whole bricks with no quoin, jamb or return, so the wall has no end where it ends.
+
+CANDIDATE: cand_15
+CULL: none
+ROLE: A 12-wide full-height strip carrying the diagonal iron bar — cannot tell whether it is a wall length, a fragment or a decal.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A horizontal timber rail near the foot. The diagonal bar crosses the face but is fixed at neither end.
+HAPPENED: An iron bar has fallen across it and stayed.
+VERDICT: FAIL
+WHY: At 12 pixels wide with no post, no end and no cap, there is nothing in it that tells a builder where it goes.
+
+CANDIDATE: cand_16
+CULL: none
+ROLE: A 12×24 head-of-post piece — the top of the timber post with its iron cap and a lighter panel below.
+THICKNESS: No. The cap is drawn face-on with no top surface; you would be setting the lantern on a drawing of a cap.
+LIGHT: No direction.
+HOLDS: An iron cap over the head of a timber post, and a dark bar down the left. No pin, no strap-end, no visible fixing between cap and post.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: The post head is exactly the place a top plane must be stated and there is none — the piece ends on the same elevation drawing it started on.
+
+CANDIDATE: cand_17
+CULL: none
+ROLE: A narrow L turning the other way from cand_04 — 12 wide at the head, 22 in the middle, 10 down the left. An inside corner.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A horizontal timber rail near the foot; a rubble patch at the head. No post in this crop, nothing pinned.
+HAPPENED: The head has been rebuilt in coarser pale rubble.
+VERDICT: FAIL
+WHY: Both steps in the silhouette cut through whole bricks with no return face, so the corner has no inside.
+
+CANDIDATE: cand_18
+CULL: none
+ROLE: A full-height wall run with a rectangular hole punched through the top middle — the hole matches no drawn feature, so I cannot tell what it is meant to be.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Post, boss, two rails, bracket, diagonal bar; no fixings.
+HAPPENED: Loose bracket, fallen bar, and a rectangle of wall that is simply absent.
+VERDICT: FAIL
+WHY: The transparent rectangle sits in the interior of the face, not at an edge, and cuts across masonry and the top rail with no jamb, sill or head — that is an authoring error, not a window.
+
+CANDIDATE: cand_19
+CULL: none
+ROLE: A straight wall run one floor square wide, post on the right edge, mid height.
+THICKNESS: No. Row means climb from about 75 on the face to 85–95 across the top 9 rows, but the joints up there run on the same 7-pixel course pitch as the face below, so it is another course.
+LIGHT: No direction — left quarter 73.6, right quarter 74.0.
+HOLDS: Post at columns 25–28, defined against the wall only by single-pixel dark lines at columns 24 and 29; two horizontal rails; an iron bracket at the head; a diagonal bar lower left. Nothing is pinned, lashed or bolted to the stone.
+HAPPENED: A bracket at the head has pulled loose and a bar has fallen across the lower left. The stone is unbroken.
+VERDICT: FAIL
+WHY: The post sits 5–10 luminance levels above the wall behind it, so the one element that should organise the whole tile is carried entirely by two single-pixel lines.
+
+CANDIDATE: cand_20
+CULL: none
+ROLE: Cannot tell. A 12×16 fragment with a dark near-black block at the top right and faint horizontal banding below it.
+THICKNESS: No. Nothing in it reads as a plane.
+LIGHT: No direction.
+HOLDS: Nothing. There is no member, joint or fixing in it.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: At play size this is a 12×16 smudge with one dark corner — it states no role and holds nothing.
+
+CANDIDATE: cand_21
+CULL: none
+ROLE: A wall run with a tall transparent slot cut out of the middle of its face. Cannot tell what the slot is for.
+THICKNESS: No.
+LIGHT: No direction — alpha edge and interior differ by 0.7 levels.
+HOLDS: Post with boss, two rails, top bracket, diagonal bar. No fixings.
+HAPPENED: Loose bracket, fallen bar, and a rectangular column of wall missing from the middle.
+VERDICT: FAIL
+WHY: The interior slot cuts through the bottom timber rail mid-span and through whole bricks with no edge treatment, leaving a rail that ends in mid-air.
+
+CANDIDATE: cand_22
+CULL: none
+ROLE: A 22-wide head narrowing to a 10-wide leg on the right — a step-in or a corner, post on the right edge.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Post with lashed cross-boss, an iron strap at the head, a horizontal rail. Nothing pins them to the stone.
+HAPPENED: Cannot tell. A strap hangs loose at the head; below that, nothing.
+VERDICT: FAIL
+WHY: Where it narrows, the masonry is cut straight across with no quoin or return, so the step reads as a hole in the sprite rather than a change of plan in the wall.
+
+CANDIDATE: cand_23
+CULL: none
+ROLE: A 12×24 fragment of wall face with a dark vertical bar down the left and a dark horizontal band across the middle. Cannot tell whether it is a post base, a wall head or filler.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A dark horizontal member and a dark vertical one; whether either is timber or iron is not legible, and neither is fixed to anything.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Two dark bars over mottle with no discernible material, joint or fixing — the piece names nothing.
+
+CANDIDATE: cand_24
+CULL: none
+ROLE: A 32×24 top band of wall with a transparent slot down its middle. Cannot tell — as a wall head it has a hole in it.
+THICKNESS: No. This is the piece that should be the cap, and it is drawn as the same masonry elevation as the face.
+LIGHT: No direction.
+HOLDS: A dark angular iron piece at the top right and a chequered lashed panel at the lower right. Nothing joins them to the stone.
+HAPPENED: A section of the head is missing and something woven has been fitted at the right.
+VERDICT: FAIL
+WHY: A wall-head piece with a hole through its middle and no top surface fails at the one job the piece exists to do.
+
+CANDIDATE: cand_25
+CULL: none
+ROLE: A 12-wide post head over a 22-wide wall body — a wall run with a post standing proud at its head.
+THICKNESS: No. The post head at the top is drawn face-on, no cap plane.
+LIGHT: No direction.
+HOLDS: Timber post with lashed cross-boss at the foot, an iron cap at the head, two horizontal rails, a dark iron bar. The rails cross the post without entering it.
+HAPPENED: Cannot tell. Nothing in the masonry reads as damaged, repaired or replaced.
+VERDICT: FAIL
+WHY: The post standing proud at the head is the strongest idea in the set and it is drawn without a single fixing — no pin, no strap, no wedge tying it to the wall it supposedly holds.
+
+CANDIDATE: cand_26
+CULL: none
+ROLE: A full-width wall dropping to a 12-wide foot at the bottom — a wall end with a post carrying down past the wall base.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Post with lashed boss, two rails, iron bracket at the head, diagonal bar lower left. No fixings visible.
+HAPPENED: Loose bracket at the head, bar fallen across the lower left.
+VERDICT: FAIL
+WHY: The 12-wide foot is a straight cut through the bottom rail and the bottom course with no plinth or base, so the wall appears to hover above its own foot.
+
+CANDIDATE: cand_27
+CULL: none
+ROLE: A 22-wide head narrowing to a 10-wide leg on the left — the mirror of cand_22, an inside corner.
+THICKNESS: No.
+LIGHT: No direction — alpha edge and interior differ by 0.5 levels.
+HOLDS: Two horizontal timber rails and the diagonal iron bar. No post in this crop; nothing fastened.
+HAPPENED: An iron bar has fallen across it.
+VERDICT: FAIL
+WHY: A corner with no quoin, no return face and no jamb — the cut runs through whole bricks and stops.
+
+CANDIDATE: cand_28
+CULL: none
+ROLE: Full width at the head, 20 wide down the left below — a step-back, with a chequered lashed panel at the top right.
+THICKNESS: No.
+LIGHT: No direction on the left-right axis, though the right quarter measures 84.6 against 73.5 on the left; that comes from the woven panel occupying the right side, not from a light.
+HOLDS: A chequered lashed panel top-right, two horizontal rails, a diagonal iron bar. The panel is the only element that reads as deliberately fitted, and it too has no fixing at its border.
+HAPPENED: The top right has been filled in with a woven or lashed panel; a bar has fallen across the lower left.
+VERDICT: FAIL
+WHY: The panel that would justify the piece is bounded by nothing — no frame, no pins, no let-in — so it reads as a texture swap rather than a repair.
+
+CANDIDATE: cand_29
+CULL: none
+ROLE: A 12-wide post head over a 22-wide wall body — a wall run with the post proud at its head, mirrored from cand_25.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A horizontal timber rail, the diagonal iron bar, and an iron strap at the head. Nothing pins any of them.
+HAPPENED: A strap has come loose at the head, a bar has fallen across the face.
+VERDICT: FAIL
+WHY: The alpha edge at the step measures 22 levels brighter than the interior because the cut lands on the pale rubble patch — the silhouette is decided by where the mask fell, not by anything drawn.
+
+CANDIDATE: cand_30
+CULL: none
+ROLE: A full-height straight wall run, post on the right edge.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Post, boss, two rails, bracket, diagonal bar. No fixings.
+HAPPENED: Loose bracket, fallen bar, rubble at the head.
+VERDICT: FAIL
+WHY: 4.5% pixel difference from cand_03 across 2,304 shared pixels — the same tile again.
+
+CANDIDATE: cand_31
+CULL: none
+ROLE: A 12-wide full-height right-hand column — a post, or the right end of a wall run.
+THICKNESS: No. No cap, no top plane; the strip runs to the top edge as face.
+LIGHT: No direction.
+HOLDS: A dark iron strap at the head, a horizontal timber rail below it, courses of stone below that. Nothing ties the strap to the wall.
+HAPPENED: A strap has come loose at the head. Nothing else is legible.
+VERDICT: FAIL
+WHY: The strap at the head hangs against the stone with no pin, plate or bearing point — iron floating on brick.
+
+CANDIDATE: cand_32
+CULL: none
+ROLE: A 22-wide full-height wall face with no post — a length of wall, though which end is which is not stated.
+THICKNESS: No.
+LIGHT: No direction — left quarter 69.9, right quarter 70.6.
+HOLDS: Two horizontal timber rails and the diagonal iron bar. No post, no pins; the rails run edge to edge and terminate at the cut.
+HAPPENED: A bar has fallen diagonally across the face.
+VERDICT: FAIL
+WHY: Its whole luminance range is 27–110 with a standard deviation of 15 — at 32 pixels this is a brown rectangle with a faint diagonal scratch.
+
+CANDIDATE: cand_33
+CULL: none
+ROLE: A 12-wide full-height strip of wall face with no post and no end treatment — cannot tell what it is for.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Two horizontal timber rails. Nothing else.
+HAPPENED: Cannot tell.
+VERDICT: FAIL
+WHY: Byte-for-byte identical to cand_13 — the same file submitted twice under two names.
+
+CANDIDATE: cand_34
+CULL: none
+ROLE: A 12-wide post head, full width below, then a transparent slot through the lower face — cannot tell what the slot represents.
+THICKNESS: No.
+LIGHT: No direction — the alpha edge runs 2.8 levels above the interior across 130 edge pixels, which is texture, not a rim.
+HOLDS: Post with lashed boss, iron cap at the head, two rails, diagonal bar. Nothing pinned.
+HAPPENED: Loose bracket, fallen bar, and a rectangle of wall absent from the lower middle.
+VERDICT: FAIL
+WHY: The interior slot severs the bottom timber rail mid-span and leaves both cut ends floating with no plate or joint.
+
+CANDIDATE: cand_35
+CULL: none
+ROLE: A 12-wide post head over a full-width wall body — a wall run with the post standing proud at its head.
+THICKNESS: No. The post head has no top plane and the wall head is the same masonry as the face.
+LIGHT: No direction.
+HOLDS: Post with lashed cross-boss, iron cap at the head, two horizontal rails, an iron bracket, a diagonal bar. None of it is fastened to the stone.
+HAPPENED: A bracket has pulled loose at the head; a bar lies across the lower left.
+VERDICT: FAIL
+WHY: The notch beside the proud post cuts through masonry and rail with no reveal, so the post reads as pasted over a hole rather than rising out of the wall.
+
+CANDIDATE: cand_36
+CULL: none
+ROLE: A 12-wide head at the right, 22 wide in the middle, 10 wide at the foot — a stepped corner or junction.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: A chequered lashed panel at the head, horizontal timber rails, courses of stone. No pins, no plates, no strap ends.
+HAPPENED: The head has been filled with a woven or lashed panel; below it, nothing legible.
+VERDICT: FAIL
+WHY: Three separate steps in the silhouette, all of them straight cuts through whole bricks with no quoin or return on any of them.
+
+CANDIDATE: cand_37
+CULL: noise
+ROLE: —
+THICKNESS: —
+LIGHT: —
+HOLDS: —
+HAPPENED: —
+VERDICT: FAIL
+WHY: 12×9 pixels of brown-grey mottle with a slightly darker band along the bottom and no structure of any kind.
+
+CANDIDATE: cand_38
+CULL: none
+ROLE: A 12-wide stub at the top right over a full-width wall — a T-junction or wall-meets-wall.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Post, boss, two rails, bracket, diagonal bar. No fixings.
+HAPPENED: Loose bracket at the head, bar across the lower left.
+VERDICT: FAIL
+WHY: 12% pixel difference from cand_03 — the same painting with a different rectangle removed from the top left, and the junction it implies has no jamb.
+
+CANDIDATE: cand_39
+CULL: none
+ROLE: A 12-wide post head, 22 wide in the middle, 10 wide at the foot on the right — a stepped corner with a post at its head.
+THICKNESS: No.
+LIGHT: No direction.
+HOLDS: Timber post with an iron cap and a lashed cross-boss at the foot, a horizontal rail, an iron strap. The rail crosses the post without entering it.
+HAPPENED: Cannot tell. A strap hangs at the head; the stone shows no event.
+VERDICT: FAIL
+WHY: The post has an iron cap at the top and a lashing at the bottom and is attached to the wall at neither — it stands in front of the masonry, not in it.
+
+FLIP LIST
+- The set is one painting with rectangles masked out of it: cand_13 and cand_33 are byte-identical, and cand_03/05/06/07/10/12/18/30/38 differ from each other by 3–12% of their pixels. Draw the pieces separately — at minimum three genuinely different 32-wide wall runs whose brick coursing, crack positions and repair placement do not line up when set side by side, so a three-square corridor does not repeat the same diagonal bar three times at the same height.
+- No piece states a top surface. On every piece whose top edge is the top of the wall, draw a distinct cap band 5–7 pixels deep: change the block proportion (wider and shallower than the face bricks, joints running across not down), lift its value 25–35 levels above the face, and put a single hard 1-pixel dark line where the cap meets the face as the front lip. Right now the top band is 10–15 levels lighter and uses the identical 7-pixel course pitch, so it reads as one more course.
+- The whole family lives in luminance 37–110 with a standard deviation of 16. Rebuild the value structure: put the timber post at 130–150, the horizontal rails at 105–120, the stone face at 60–80, and the mortar and iron at 30–45. The post currently sits 5–10 levels above the wall behind it and survives only on two 1-pixel dark lines.
+- Nothing in this set is fastened. Draw the fixings: two square pin heads where each horizontal rail crosses the post, a driven wedge at the post foot, an iron strap wrapping the post with visible strap ends and pin, and a plate with two pins at each end of the diagonal brace. As drawn the brace ends mid-brick and the rails pass behind the post.
+- Every step, notch and end in the silhouette is a straight cut through whole bricks. Where a piece ends or turns, draw the return: a column of quoin stones alternating long and short, a timber jamb post on the cut face, and change the brick coursing on the last 4 pixels so the wall visibly finishes rather than being clipped.
+- cand_18, cand_21, cand_24 and cand_34 have transparent rectangles in the interior of the wall face that sever timber rails mid-span. Either remove those holes, or if they are openings, draw them as openings: a head timber, two jamb posts, a sill, and cut ends on the severed rail that land on the jambs.
+- cand_09 is a diamond in a cream-and-maroon palette with a rim 72 levels darker than its interior. Redraw it as a square-footprint post cap in the set's 23-colour palette, with the dark rim removed and the top face lifted in value instead.
+- cand_00 is a different set: 7 colours, cool blue-grey, pure black mortar, no timber, no iron, no repair, every joint intact. Either drop it or rebuild it in the family palette with the post, rails and at least one visible repair.
+- cand_11 (12×9), cand_37 (12×9) and cand_20 (12×16) carry no structure at all. Either give each one a single legible element that names its role — a strap end with two pins, a rail terminating on a plate, a quoin corner — or cut them from the set.
+
+Model: Claude Opus 5 (1M context).

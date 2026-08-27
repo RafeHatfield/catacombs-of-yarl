@@ -1,0 +1,1467 @@
+{
+  "flip_list": [
+    "The set is one painting with rectangles masked out of it: cand_13 and cand_33 are byte-identical, and cand_03/05/06/07/10/12/18/30/38 differ from each other by 3\u201312% of their pixels. Draw the pieces separately \u2014 at minimum three genuinely different 32-wide wall runs whose brick coursing, crack positions and repair placement do not line up when set side by side, so a three-square corridor does not repeat the same diagonal bar three times at the same height.",
+    "No piece states a top surface. On every piece whose top edge is the top of the wall, draw a distinct cap band 5\u20137 pixels deep: change the block proportion (wider and shallower than the face bricks, joints running across not down), lift its value 25\u201335 levels above the face, and put a single hard 1-pixel dark line where the cap meets the face as the front lip. Right now the top band is 10\u201315 levels lighter and uses the identical 7-pixel course pitch, so it reads as one more course.",
+    "The whole family lives in luminance 37\u2013110 with a standard deviation of 16. Rebuild the value structure: put the timber post at 130\u2013150, the horizontal rails at 105\u2013120, the stone face at 60\u201380, and the mortar and iron at 30\u201345. The post currently sits 5\u201310 levels above the wall behind it and survives only on two 1-pixel dark lines.",
+    "Nothing in this set is fastened. Draw the fixings: two square pin heads where each horizontal rail crosses the post, a driven wedge at the post foot, an iron strap wrapping the post with visible strap ends and pin, and a plate with two pins at each end of the diagonal brace. As drawn the brace ends mid-brick and the rails pass behind the post.",
+    "Every step, notch and end in the silhouette is a straight cut through whole bricks. Where a piece ends or turns, draw the return: a column of quoin stones alternating long and short, a timber jamb post on the cut face, and change the brick coursing on the last 4 pixels so the wall visibly finishes rather than being clipped.",
+    "cand_18, cand_21, cand_24 and cand_34 have transparent rectangles in the interior of the wall face that sever timber rails mid-span. Either remove those holes, or if they are openings, draw them as openings: a head timber, two jamb posts, a sill, and cut ends on the severed rail that land on the jambs.",
+    "cand_09 is a diamond in a cream-and-maroon palette with a rim 72 levels darker than its interior. Redraw it as a square-footprint post cap in the set's 23-colour palette, with the dark rim removed and the top face lifted in value instead.",
+    "cand_00 is a different set: 7 colours, cool blue-grey, pure black mortar, no timber, no iron, no repair, every joint intact. Either drop it or rebuild it in the family palette with the post, rails and at least one visible repair.",
+    "cand_11 (12\u00d79), cand_37 (12\u00d79) and cand_20 (12\u00d716) carry no structure at all. Either give each one a single legible element that names its role \u2014 a strap end with two pins, a rail terminating on a plate, a quoin corner \u2014 or cut them from the set."
+  ],
+  "hedge_conversions": [],
+  "kit_dir": "depth/kit_depth",
+  "label": "depth",
+  "n_candidates": 38,
+  "n_plants": 2,
+  "plants_caught": 2,
+  "results": [
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "plant",
+      "label": "plant_b",
+      "name": "cand_00",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 left quarter and right quarter measure 92.6 and 92.4, and no block carries a bevel.",
+        "role": "A length of straight wall, one floor square wide \u2014 but it belongs to a different set: 7 colours, cool blue-grey blocks on pure black mortar, two sand-coloured rubble courses, and a pale grey slab band across the middle.",
+        "thickness": "No. The whole image is a flat elevation; the grey band is the only horizontal element and it has no front lip, no foreshortening and no change of plane, so nothing reads as a top you could stand a lantern on."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Nothing has happened to it. Every joint is intact, every block is square, the rubble courses are neat. It has never been used, let alone used up.",
+        "holds": "Nothing. Regular machine-cut blocks in perfect running bond with no timber, no iron, no pins, no lashing, no bracket. The masonry is holding itself.",
+        "light": "No direction \u2014 left quarter and right quarter measure 92.6 and 92.4, and no block carries a bevel.",
+        "role": "A length of straight wall, one floor square wide \u2014 but it belongs to a different set: 7 colours, cool blue-grey blocks on pure black mortar, two sand-coloured rubble courses, and a pale grey slab band across the middle.",
+        "thickness": "No. The whole image is a flat elevation; the grey band is the only horizontal element and it has no front lip, no foreshortening and no change of plane, so nothing reads as a top you could stand a lantern on.",
+        "verdict": "FAIL",
+        "why": "Tidy, undamaged, brightly-contrasted platformer brick with no repair and no thickness \u2014 it is a different game's wall."
+      },
+      "source": "plants/plant_b.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_12",
+      "name": "cand_01",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction. Measured edge-to-interior and left-to-right deltas are under 2 levels.",
+        "role": "A wall that is full-width across its top third and then drops to its right half \u2014 an outside corner or a step-back. Timber post on the right edge, pale rubble patch top-left, dark iron strap hooking over at the top.",
+        "thickness": "No. There is a lighter band about 9 pixels deep at the top, but it is drawn as one more masonry course \u2014 same colours, same joint pattern, no foreshortening, no front lip. It reads as brick, not as a top surface."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "The upper-left has been patched with a lighter rubble of different stone, and an iron strap at the top has come away at one end. Below that, nothing legible \u2014 a uniform mottle.",
+        "holds": "A vertical timber post with a lashed cross-boss, two horizontal timber rails, one iron strap at the top, one diagonal iron bar lower-left. None of them is fixed to anything \u2014 no pin heads, no plates, no bracket landing on stone; the rails pass the post rather than entering it and the diagonal bar ends mid-brick.",
+        "light": "No direction. Measured edge-to-interior and left-to-right deltas are under 2 levels.",
+        "role": "A wall that is full-width across its top third and then drops to its right half \u2014 an outside corner or a step-back. Timber post on the right edge, pale rubble patch top-left, dark iron strap hooking over at the top.",
+        "thickness": "No. There is a lighter band about 9 pixels deep at the top, but it is drawn as one more masonry course \u2014 same colours, same joint pattern, no foreshortening, no front lip. It reads as brick, not as a top surface.",
+        "verdict": "FAIL",
+        "why": "The silhouette where it steps back cuts straight through the masonry with no return face and no rim, so the wall simply stops mid-brick."
+      },
+      "source": "depth/kit_depth/tile_12.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_05",
+      "name": "cand_02",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "The timber post alone, 12 pixels wide and full height \u2014 a post, or the right-hand jamb of a wall run.",
+        "thickness": "No. It is a vertical strip with no cap and no top plane; the iron cap at the top is drawn face-on."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. The grain is mottled but nothing reads as split, crushed or spliced.",
+        "holds": "The post itself, an iron cap at the head and a lashed cross-boss near the foot. Nothing fixes the post to a floor or to a wall \u2014 no foot plate, no driven pin, no wedge.",
+        "light": "No direction.",
+        "role": "The timber post alone, 12 pixels wide and full height \u2014 a post, or the right-hand jamb of a wall run.",
+        "thickness": "No. It is a vertical strip with no cap and no top plane; the iron cap at the top is drawn face-on.",
+        "verdict": "FAIL",
+        "why": "The post sits within ten luminance levels of the wall it will stand against, separated only by two single-pixel dark lines, so at 32 pixels on a phone it will vanish into the masonry."
+      },
+      "source": "depth/kit_depth/tile_05.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_54",
+      "name": "cand_03",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 left quarter 73.6, right quarter 74.0, total range 37\u2013110.",
+        "role": "A full-height length of straight wall, one floor square wide, with the timber post on its right edge \u2014 the base piece of the set.",
+        "thickness": "No. The top 9 rows are 10\u201315 levels lighter than the face, but they carry the same vertical joints in the same course rhythm, so they read as another brick course rather than as a plane turned toward the camera."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "An iron bracket has hooked over the top and hangs loose; a diagonal bar has fallen across the face and lies there. The masonry itself shows no crack, no crush, no missing block.",
+        "holds": "Timber post with a lashed cross-boss, two horizontal timber rails top and bottom, an iron angle-bracket at the top right, a diagonal iron bar across the lower left. None of them has a visible fixing at either end.",
+        "light": "No direction \u2014 left quarter 73.6, right quarter 74.0, total range 37\u2013110.",
+        "role": "A full-height length of straight wall, one floor square wide, with the timber post on its right edge \u2014 the base piece of the set.",
+        "thickness": "No. The top 9 rows are 10\u201315 levels lighter than the face, but they carry the same vertical joints in the same course rhythm, so they read as another brick course rather than as a plane turned toward the camera.",
+        "verdict": "FAIL",
+        "why": "Total luminance range 37\u2013110 out of 255 with a standard deviation of 16 \u2014 post, rail, brace and stone all sit inside the same 70-level band, so at play size it is one flat brown rectangle."
+      },
+      "source": "depth/kit_depth/tile_54.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_21",
+      "name": "cand_04",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A narrow L \u2014 12 wide at the top, 22 wide in the middle, 10 wide down the bottom. An inside corner or a jog, though which side it turns to is not stated by anything drawn.",
+        "thickness": "No. Same top band as the rest of the family; nothing distinguishes it as a plane."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "The head has been rebuilt in a paler, coarser rubble than the courses below it. Below that, nothing legible.",
+        "holds": "A horizontal timber rail near the foot and a patch of pale rubble at the head. No post in this crop, no visible fastening on the rail.",
+        "light": "No direction.",
+        "role": "A narrow L \u2014 12 wide at the top, 22 wide in the middle, 10 wide down the bottom. An inside corner or a jog, though which side it turns to is not stated by anything drawn.",
+        "thickness": "No. Same top band as the rest of the family; nothing distinguishes it as a plane.",
+        "verdict": "FAIL",
+        "why": "The three steps in the silhouette all slice through whole bricks with no jamb, cap or return, so the shape reads as a mask over a painting rather than as built structure."
+      },
+      "source": "depth/kit_depth/tile_21.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_03",
+      "name": "cand_05",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 left quarter 71.0, right quarter 73.8.",
+        "role": "A length of straight wall with the timber post on the right, shorter than cand_03 by the top band \u2014 a mid-height wall run.",
+        "thickness": "No. The top of this one lands directly on a horizontal timber rail with masonry above it in the frame, and there is no cap plane at all."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "An iron bar lies diagonally across the lower left. Otherwise nothing has happened to this wall that I can name.",
+        "holds": "Post with lashed boss, two horizontal rails, an iron bracket at the top right, a diagonal iron bar lower-left. No pins, plates or lashings connect any of them to the stone.",
+        "light": "No direction \u2014 left quarter 71.0, right quarter 73.8.",
+        "role": "A length of straight wall with the timber post on the right, shorter than cand_03 by the top band \u2014 a mid-height wall run.",
+        "thickness": "No. The top of this one lands directly on a horizontal timber rail with masonry above it in the frame, and there is no cap plane at all.",
+        "verdict": "FAIL",
+        "why": "It is cand_03 with the top band removed \u2014 5.5% of pixels differ across 1,824 shared pixels, which is jitter, not a second piece."
+      },
+      "source": "depth/kit_depth/tile_03.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_11",
+      "name": "cand_06",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A wall run with a 12-wide stub at its head then full width below \u2014 a T-junction or a wall meeting another at its top-left.",
+        "thickness": "No. Same undifferentiated top band."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Rubble patch at the head, loose bracket at the top, a bar fallen across the lower left.",
+        "holds": "The same post, boss, two rails, top bracket and diagonal bar. Nothing fastens them.",
+        "light": "No direction.",
+        "role": "A wall run with a 12-wide stub at its head then full width below \u2014 a T-junction or a wall meeting another at its top-left.",
+        "thickness": "No. Same undifferentiated top band.",
+        "verdict": "FAIL",
+        "why": "7.2% of its pixels differ from cand_03 \u2014 it is the same painting with a rectangle taken out of the top right, not a junction piece."
+      },
+      "source": "depth/kit_depth/tile_11.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_51",
+      "name": "cand_07",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A full-height straight wall run, post on the right edge.",
+        "thickness": "No, for the same reason \u2014 the top band is another course."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "A loose bracket at the top and a fallen bar at the lower left; the stone itself is unmarked.",
+        "holds": "Post, lashed boss, two rails, iron bracket, diagonal bar. No fixings visible on any of them.",
+        "light": "No direction.",
+        "role": "A full-height straight wall run, post on the right edge.",
+        "thickness": "No, for the same reason \u2014 the top band is another course.",
+        "verdict": "FAIL",
+        "why": "3.3% of 2,304 pixels differ from cand_03 \u2014 this is the same tile submitted twice with noise on it."
+      },
+      "source": "depth/kit_depth/tile_51.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_50",
+      "name": "cand_08",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction; the alpha edge measures 10.7 levels darker than the interior, but that is the texture the cut happens to land on, not a rim.",
+        "role": "Full width across the top, then an 8-pixel tongue running down the middle. A T-junction where a wall meets a corridor, if I read it charitably; a chequered basket panel sits top-right.",
+        "thickness": "No. No cap, no top plane, no lip."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. The top right has been filled with a woven or lashed panel; the tongue below shows no event.",
+        "holds": "A chequered lashed panel top-right, timber rails, and the masonry itself. Nothing on the 8-pixel tongue holds anything \u2014 it is bare mottle.",
+        "light": "No direction; the alpha edge measures 10.7 levels darker than the interior, but that is the texture the cut happens to land on, not a rim.",
+        "role": "Full width across the top, then an 8-pixel tongue running down the middle. A T-junction where a wall meets a corridor, if I read it charitably; a chequered basket panel sits top-right.",
+        "thickness": "No. No cap, no top plane, no lip.",
+        "verdict": "FAIL",
+        "why": "An 8-pixel-wide wall stub is a quarter of a floor square \u2014 too thin to read as built structure at play size, and the cut leaves the stone unfinished on both sides."
+      },
+      "source": "depth/kit_depth/tile_50.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": true,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": true
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "plant",
+      "label": "plant_a",
+      "name": "cand_09",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "\u2014",
+        "role": "\u2014",
+        "thickness": "\u2014"
+      },
+      "raw": {
+        "cull": "wrong-projection",
+        "happened": "\u2014",
+        "holds": "\u2014",
+        "light": "\u2014",
+        "role": "\u2014",
+        "thickness": "\u2014",
+        "verdict": "FAIL",
+        "why": "A 14\u00d715 lozenge in cream, peach and maroon with a near-black rim measuring 72 levels darker than its interior \u2014 a diamond-shaped, ringed, self-lit object from an entirely different palette."
+      },
+      "source": "plants/plant_a.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_53",
+      "name": "cand_10",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A full-height straight wall run with the post on the right edge.",
+        "thickness": "No. Same top band, same course rhythm, no plane change."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Loose bracket, fallen bar, rubble at the head.",
+        "holds": "Post with boss, two rails, top bracket, diagonal bar \u2014 none fixed.",
+        "light": "No direction.",
+        "role": "A full-height straight wall run with the post on the right edge.",
+        "thickness": "No. Same top band, same course rhythm, no plane change.",
+        "verdict": "FAIL",
+        "why": "7.1% pixel difference from cand_03 and 0.7% from cand_18 \u2014 sixteen pixels of difference across 2,184 is not a distinct piece."
+      },
+      "source": "depth/kit_depth/tile_53.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": true,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": true
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_07",
+      "name": "cand_11",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "\u2014",
+        "role": "\u2014",
+        "thickness": "\u2014"
+      },
+      "raw": {
+        "cull": "noise",
+        "happened": "\u2014",
+        "holds": "\u2014",
+        "light": "\u2014",
+        "role": "\u2014",
+        "thickness": "\u2014",
+        "verdict": "FAIL",
+        "why": "12\u00d79 pixels of undifferentiated grey-brown mottle with no edge, joint, member or silhouette in it."
+      },
+      "source": "depth/kit_depth/tile_07.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_20",
+      "name": "cand_12",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A wall run with a 12-wide stub at the head then full width \u2014 a T-junction, with both top corners bitten away.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "The same loose bracket and fallen bar as every other tile in the set.",
+        "holds": "Post, boss, two rails, bracket, diagonal bar. No fixings.",
+        "light": "No direction.",
+        "role": "A wall run with a 12-wide stub at the head then full width \u2014 a T-junction, with both top corners bitten away.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "9.2% pixel difference from cand_03; the two missing top corners land mid-brick and mid-rail, so the junction it claims to be has no jamb on either side."
+      },
+      "source": "depth/kit_depth/tile_20.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_31",
+      "name": "cand_13",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide full-height strip of wall face with no post and no end treatment \u2014 cannot tell what it is for.",
+        "thickness": "No. No top plane; the strip runs to the top edge as face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. Some blocks are darker than others; nothing reads as a specific event.",
+        "holds": "A horizontal timber rail near the foot and one near the head. Nothing else; the masonry is holding itself.",
+        "light": "No direction.",
+        "role": "A 12-wide full-height strip of wall face with no post and no end treatment \u2014 cannot tell what it is for.",
+        "thickness": "No. No top plane; the strip runs to the top edge as face.",
+        "verdict": "FAIL",
+        "why": "Byte-for-byte identical to cand_33 \u2014 the same file counted twice."
+      },
+      "source": "depth/kit_depth/tile_31.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_15",
+      "name": "cand_14",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 22-wide full-height wall with the post on its right edge \u2014 a shortened wall run or a right-hand end.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "An iron strap has come loose at the head; below that nothing legible.",
+        "holds": "Post with lashed cross-boss, two horizontal rails, an iron strap at the head. The rails run past the post rather than into it and no pin, plate or wedge joins them.",
+        "light": "No direction.",
+        "role": "A 22-wide full-height wall with the post on its right edge \u2014 a shortened wall run or a right-hand end.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "The left edge is a straight vertical cut through whole bricks with no quoin, jamb or return, so the wall has no end where it ends."
+      },
+      "source": "depth/kit_depth/tile_15.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_08",
+      "name": "cand_15",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide full-height strip carrying the diagonal iron bar \u2014 cannot tell whether it is a wall length, a fragment or a decal.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "An iron bar has fallen across it and stayed.",
+        "holds": "A horizontal timber rail near the foot. The diagonal bar crosses the face but is fixed at neither end.",
+        "light": "No direction.",
+        "role": "A 12-wide full-height strip carrying the diagonal iron bar \u2014 cannot tell whether it is a wall length, a fragment or a decal.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "At 12 pixels wide with no post, no end and no cap, there is nothing in it that tells a builder where it goes."
+      },
+      "source": "depth/kit_depth/tile_08.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_02",
+      "name": "cand_16",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12\u00d724 head-of-post piece \u2014 the top of the timber post with its iron cap and a lighter panel below.",
+        "thickness": "No. The cap is drawn face-on with no top surface; you would be setting the lantern on a drawing of a cap."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "An iron cap over the head of a timber post, and a dark bar down the left. No pin, no strap-end, no visible fixing between cap and post.",
+        "light": "No direction.",
+        "role": "A 12\u00d724 head-of-post piece \u2014 the top of the timber post with its iron cap and a lighter panel below.",
+        "thickness": "No. The cap is drawn face-on with no top surface; you would be setting the lantern on a drawing of a cap.",
+        "verdict": "FAIL",
+        "why": "The post head is exactly the place a top plane must be stated and there is none \u2014 the piece ends on the same elevation drawing it started on."
+      },
+      "source": "depth/kit_depth/tile_02.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_27",
+      "name": "cand_17",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A narrow L turning the other way from cand_04 \u2014 12 wide at the head, 22 in the middle, 10 down the left. An inside corner.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "The head has been rebuilt in coarser pale rubble.",
+        "holds": "A horizontal timber rail near the foot; a rubble patch at the head. No post in this crop, nothing pinned.",
+        "light": "No direction.",
+        "role": "A narrow L turning the other way from cand_04 \u2014 12 wide at the head, 22 in the middle, 10 down the left. An inside corner.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Both steps in the silhouette cut through whole bricks with no return face, so the corner has no inside."
+      },
+      "source": "depth/kit_depth/tile_27.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_52",
+      "name": "cand_18",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A full-height wall run with a rectangular hole punched through the top middle \u2014 the hole matches no drawn feature, so I cannot tell what it is meant to be.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Loose bracket, fallen bar, and a rectangle of wall that is simply absent.",
+        "holds": "Post, boss, two rails, bracket, diagonal bar; no fixings.",
+        "light": "No direction.",
+        "role": "A full-height wall run with a rectangular hole punched through the top middle \u2014 the hole matches no drawn feature, so I cannot tell what it is meant to be.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "The transparent rectangle sits in the interior of the face, not at an edge, and cuts across masonry and the top rail with no jamb, sill or head \u2014 that is an authoring error, not a window."
+      },
+      "source": "depth/kit_depth/tile_52.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_01",
+      "name": "cand_19",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 left quarter 73.6, right quarter 74.0.",
+        "role": "A straight wall run one floor square wide, post on the right edge, mid height.",
+        "thickness": "No. Row means climb from about 75 on the face to 85\u201395 across the top 9 rows, but the joints up there run on the same 7-pixel course pitch as the face below, so it is another course."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "A bracket at the head has pulled loose and a bar has fallen across the lower left. The stone is unbroken.",
+        "holds": "Post at columns 25\u201328, defined against the wall only by single-pixel dark lines at columns 24 and 29; two horizontal rails; an iron bracket at the head; a diagonal bar lower left. Nothing is pinned, lashed or bolted to the stone.",
+        "light": "No direction \u2014 left quarter 73.6, right quarter 74.0.",
+        "role": "A straight wall run one floor square wide, post on the right edge, mid height.",
+        "thickness": "No. Row means climb from about 75 on the face to 85\u201395 across the top 9 rows, but the joints up there run on the same 7-pixel course pitch as the face below, so it is another course.",
+        "verdict": "FAIL",
+        "why": "The post sits 5\u201310 luminance levels above the wall behind it, so the one element that should organise the whole tile is carried entirely by two single-pixel lines."
+      },
+      "source": "depth/kit_depth/tile_01.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_16",
+      "name": "cand_20",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d716 fragment with a dark near-black block at the top right and faint horizontal banding below it.",
+        "thickness": "No. Nothing in it reads as a plane."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Nothing. There is no member, joint or fixing in it.",
+        "light": "No direction.",
+        "role": "Cannot tell. A 12\u00d716 fragment with a dark near-black block at the top right and faint horizontal banding below it.",
+        "thickness": "No. Nothing in it reads as a plane.",
+        "verdict": "FAIL",
+        "why": "At play size this is a 12\u00d716 smudge with one dark corner \u2014 it states no role and holds nothing."
+      },
+      "source": "depth/kit_depth/tile_16.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_29",
+      "name": "cand_21",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 alpha edge and interior differ by 0.7 levels.",
+        "role": "A wall run with a tall transparent slot cut out of the middle of its face. Cannot tell what the slot is for.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Loose bracket, fallen bar, and a rectangular column of wall missing from the middle.",
+        "holds": "Post with boss, two rails, top bracket, diagonal bar. No fixings.",
+        "light": "No direction \u2014 alpha edge and interior differ by 0.7 levels.",
+        "role": "A wall run with a tall transparent slot cut out of the middle of its face. Cannot tell what the slot is for.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "The interior slot cuts through the bottom timber rail mid-span and through whole bricks with no edge treatment, leaving a rail that ends in mid-air."
+      },
+      "source": "depth/kit_depth/tile_29.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_24",
+      "name": "cand_22",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 22-wide head narrowing to a 10-wide leg on the right \u2014 a step-in or a corner, post on the right edge.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. A strap hangs loose at the head; below that, nothing.",
+        "holds": "Post with lashed cross-boss, an iron strap at the head, a horizontal rail. Nothing pins them to the stone.",
+        "light": "No direction.",
+        "role": "A 22-wide head narrowing to a 10-wide leg on the right \u2014 a step-in or a corner, post on the right edge.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Where it narrows, the masonry is cut straight across with no quoin or return, so the step reads as a hole in the sprite rather than a change of plan in the wall."
+      },
+      "source": "depth/kit_depth/tile_24.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_04",
+      "name": "cand_23",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12\u00d724 fragment of wall face with a dark vertical bar down the left and a dark horizontal band across the middle. Cannot tell whether it is a post base, a wall head or filler.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "A dark horizontal member and a dark vertical one; whether either is timber or iron is not legible, and neither is fixed to anything.",
+        "light": "No direction.",
+        "role": "A 12\u00d724 fragment of wall face with a dark vertical bar down the left and a dark horizontal band across the middle. Cannot tell whether it is a post base, a wall head or filler.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Two dark bars over mottle with no discernible material, joint or fixing \u2014 the piece names nothing."
+      },
+      "source": "depth/kit_depth/tile_04.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_55",
+      "name": "cand_24",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 32\u00d724 top band of wall with a transparent slot down its middle. Cannot tell \u2014 as a wall head it has a hole in it.",
+        "thickness": "No. This is the piece that should be the cap, and it is drawn as the same masonry elevation as the face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "A section of the head is missing and something woven has been fitted at the right.",
+        "holds": "A dark angular iron piece at the top right and a chequered lashed panel at the lower right. Nothing joins them to the stone.",
+        "light": "No direction.",
+        "role": "A 32\u00d724 top band of wall with a transparent slot down its middle. Cannot tell \u2014 as a wall head it has a hole in it.",
+        "thickness": "No. This is the piece that should be the cap, and it is drawn as the same masonry elevation as the face.",
+        "verdict": "FAIL",
+        "why": "A wall-head piece with a hole through its middle and no top surface fails at the one job the piece exists to do."
+      },
+      "source": "depth/kit_depth/tile_55.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_22",
+      "name": "cand_25",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide post head over a 22-wide wall body \u2014 a wall run with a post standing proud at its head.",
+        "thickness": "No. The post head at the top is drawn face-on, no cap plane."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. Nothing in the masonry reads as damaged, repaired or replaced.",
+        "holds": "Timber post with lashed cross-boss at the foot, an iron cap at the head, two horizontal rails, a dark iron bar. The rails cross the post without entering it.",
+        "light": "No direction.",
+        "role": "A 12-wide post head over a 22-wide wall body \u2014 a wall run with a post standing proud at its head.",
+        "thickness": "No. The post head at the top is drawn face-on, no cap plane.",
+        "verdict": "FAIL",
+        "why": "The post standing proud at the head is the strongest idea in the set and it is drawn without a single fixing \u2014 no pin, no strap, no wedge tying it to the wall it supposedly holds."
+      },
+      "source": "depth/kit_depth/tile_22.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_18",
+      "name": "cand_26",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A full-width wall dropping to a 12-wide foot at the bottom \u2014 a wall end with a post carrying down past the wall base.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Loose bracket at the head, bar fallen across the lower left.",
+        "holds": "Post with lashed boss, two rails, iron bracket at the head, diagonal bar lower left. No fixings visible.",
+        "light": "No direction.",
+        "role": "A full-width wall dropping to a 12-wide foot at the bottom \u2014 a wall end with a post carrying down past the wall base.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "The 12-wide foot is a straight cut through the bottom rail and the bottom course with no plinth or base, so the wall appears to hover above its own foot."
+      },
+      "source": "depth/kit_depth/tile_18.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_25",
+      "name": "cand_27",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 alpha edge and interior differ by 0.5 levels.",
+        "role": "A 22-wide head narrowing to a 10-wide leg on the left \u2014 the mirror of cand_22, an inside corner.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "An iron bar has fallen across it.",
+        "holds": "Two horizontal timber rails and the diagonal iron bar. No post in this crop; nothing fastened.",
+        "light": "No direction \u2014 alpha edge and interior differ by 0.5 levels.",
+        "role": "A 22-wide head narrowing to a 10-wide leg on the left \u2014 the mirror of cand_22, an inside corner.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "A corner with no quoin, no return face and no jamb \u2014 the cut runs through whole bricks and stops."
+      },
+      "source": "depth/kit_depth/tile_25.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_09",
+      "name": "cand_28",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction on the left-right axis, though the right quarter measures 84.6 against 73.5 on the left; that comes from the woven panel occupying the right side, not from a light.",
+        "role": "Full width at the head, 20 wide down the left below \u2014 a step-back, with a chequered lashed panel at the top right.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "The top right has been filled in with a woven or lashed panel; a bar has fallen across the lower left.",
+        "holds": "A chequered lashed panel top-right, two horizontal rails, a diagonal iron bar. The panel is the only element that reads as deliberately fitted, and it too has no fixing at its border.",
+        "light": "No direction on the left-right axis, though the right quarter measures 84.6 against 73.5 on the left; that comes from the woven panel occupying the right side, not from a light.",
+        "role": "Full width at the head, 20 wide down the left below \u2014 a step-back, with a chequered lashed panel at the top right.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "The panel that would justify the piece is bounded by nothing \u2014 no frame, no pins, no let-in \u2014 so it reads as a texture swap rather than a repair."
+      },
+      "source": "depth/kit_depth/tile_09.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_23",
+      "name": "cand_29",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide post head over a 22-wide wall body \u2014 a wall run with the post proud at its head, mirrored from cand_25.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "A strap has come loose at the head, a bar has fallen across the face.",
+        "holds": "A horizontal timber rail, the diagonal iron bar, and an iron strap at the head. Nothing pins any of them.",
+        "light": "No direction.",
+        "role": "A 12-wide post head over a 22-wide wall body \u2014 a wall run with the post proud at its head, mirrored from cand_25.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "The alpha edge at the step measures 22 levels brighter than the interior because the cut lands on the pale rubble patch \u2014 the silhouette is decided by where the mask fell, not by anything drawn."
+      },
+      "source": "depth/kit_depth/tile_23.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_49",
+      "name": "cand_30",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A full-height straight wall run, post on the right edge.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Loose bracket, fallen bar, rubble at the head.",
+        "holds": "Post, boss, two rails, bracket, diagonal bar. No fixings.",
+        "light": "No direction.",
+        "role": "A full-height straight wall run, post on the right edge.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "4.5% pixel difference from cand_03 across 2,304 shared pixels \u2014 the same tile again."
+      },
+      "source": "depth/kit_depth/tile_49.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_14",
+      "name": "cand_31",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide full-height right-hand column \u2014 a post, or the right end of a wall run.",
+        "thickness": "No. No cap, no top plane; the strip runs to the top edge as face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "A strap has come loose at the head. Nothing else is legible.",
+        "holds": "A dark iron strap at the head, a horizontal timber rail below it, courses of stone below that. Nothing ties the strap to the wall.",
+        "light": "No direction.",
+        "role": "A 12-wide full-height right-hand column \u2014 a post, or the right end of a wall run.",
+        "thickness": "No. No cap, no top plane; the strip runs to the top edge as face.",
+        "verdict": "FAIL",
+        "why": "The strap at the head hangs against the stone with no pin, plate or bearing point \u2014 iron floating on brick."
+      },
+      "source": "depth/kit_depth/tile_14.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_17",
+      "name": "cand_32",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 left quarter 69.9, right quarter 70.6.",
+        "role": "A 22-wide full-height wall face with no post \u2014 a length of wall, though which end is which is not stated.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "A bar has fallen diagonally across the face.",
+        "holds": "Two horizontal timber rails and the diagonal iron bar. No post, no pins; the rails run edge to edge and terminate at the cut.",
+        "light": "No direction \u2014 left quarter 69.9, right quarter 70.6.",
+        "role": "A 22-wide full-height wall face with no post \u2014 a length of wall, though which end is which is not stated.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Its whole luminance range is 27\u2013110 with a standard deviation of 15 \u2014 at 32 pixels this is a brown rectangle with a faint diagonal scratch."
+      },
+      "source": "depth/kit_depth/tile_17.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_13",
+      "name": "cand_33",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide full-height strip of wall face with no post and no end treatment \u2014 cannot tell what it is for.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell.",
+        "holds": "Two horizontal timber rails. Nothing else.",
+        "light": "No direction.",
+        "role": "A 12-wide full-height strip of wall face with no post and no end treatment \u2014 cannot tell what it is for.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Byte-for-byte identical to cand_13 \u2014 the same file submitted twice under two names."
+      },
+      "source": "depth/kit_depth/tile_13.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": false,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_30",
+      "name": "cand_34",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction \u2014 the alpha edge runs 2.8 levels above the interior across 130 edge pixels, which is texture, not a rim.",
+        "role": "A 12-wide post head, full width below, then a transparent slot through the lower face \u2014 cannot tell what the slot represents.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Loose bracket, fallen bar, and a rectangle of wall absent from the lower middle.",
+        "holds": "Post with lashed boss, iron cap at the head, two rails, diagonal bar. Nothing pinned.",
+        "light": "No direction \u2014 the alpha edge runs 2.8 levels above the interior across 130 edge pixels, which is texture, not a rim.",
+        "role": "A 12-wide post head, full width below, then a transparent slot through the lower face \u2014 cannot tell what the slot represents.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "The interior slot severs the bottom timber rail mid-span and leaves both cut ends floating with no plate or joint."
+      },
+      "source": "depth/kit_depth/tile_30.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_28",
+      "name": "cand_35",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide post head over a full-width wall body \u2014 a wall run with the post standing proud at its head.",
+        "thickness": "No. The post head has no top plane and the wall head is the same masonry as the face."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "A bracket has pulled loose at the head; a bar lies across the lower left.",
+        "holds": "Post with lashed cross-boss, iron cap at the head, two horizontal rails, an iron bracket, a diagonal bar. None of it is fastened to the stone.",
+        "light": "No direction.",
+        "role": "A 12-wide post head over a full-width wall body \u2014 a wall run with the post standing proud at its head.",
+        "thickness": "No. The post head has no top plane and the wall head is the same masonry as the face.",
+        "verdict": "FAIL",
+        "why": "The notch beside the proud post cuts through masonry and rail with no reveal, so the post reads as pasted over a hole rather than rising out of the wall."
+      },
+      "source": "depth/kit_depth/tile_28.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_19",
+      "name": "cand_36",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide head at the right, 22 wide in the middle, 10 wide at the foot \u2014 a stepped corner or junction.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "The head has been filled with a woven or lashed panel; below it, nothing legible.",
+        "holds": "A chequered lashed panel at the head, horizontal timber rails, courses of stone. No pins, no plates, no strap ends.",
+        "light": "No direction.",
+        "role": "A 12-wide head at the right, 22 wide in the middle, 10 wide at the foot \u2014 a stepped corner or junction.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "Three separate steps in the silhouette, all of them straight cuts through whole bricks with no quoin or return on any of them."
+      },
+      "source": "depth/kit_depth/tile_19.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": true,
+        "no_baked_outline": true,
+        "no_key_light": false,
+        "segment_identity": true,
+        "two_planes": true
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_06",
+      "name": "cand_37",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "\u2014",
+        "role": "\u2014",
+        "thickness": "\u2014"
+      },
+      "raw": {
+        "cull": "noise",
+        "happened": "\u2014",
+        "holds": "\u2014",
+        "light": "\u2014",
+        "role": "\u2014",
+        "thickness": "\u2014",
+        "verdict": "FAIL",
+        "why": "12\u00d79 pixels of brown-grey mottle with a slightly darker band along the bottom and no structure of any kind."
+      },
+      "source": "depth/kit_depth/tile_06.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_10",
+      "name": "cand_38",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide stub at the top right over a full-width wall \u2014 a T-junction or wall-meets-wall.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Loose bracket at the head, bar across the lower left.",
+        "holds": "Post, boss, two rails, bracket, diagonal bar. No fixings.",
+        "light": "No direction.",
+        "role": "A 12-wide stub at the top right over a full-width wall \u2014 a T-junction or wall-meets-wall.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "12% pixel difference from cand_03 \u2014 the same painting with a different rectangle removed from the top left, and the junction it implies has no jamb."
+      },
+      "source": "depth/kit_depth/tile_10.png",
+      "structural": false,
+      "verdict": "FAIL"
+    },
+    {
+      "clauses": {
+        "culled": false,
+        "no_baked_outline": true,
+        "no_key_light": true,
+        "segment_identity": true,
+        "two_planes": false
+      },
+      "hedge_converted": false,
+      "hedge_word": null,
+      "kind": "candidate",
+      "label": "tile_26",
+      "name": "cand_39",
+      "native": [
+        52,
+        87
+      ],
+      "notes": {
+        "light": "No direction.",
+        "role": "A 12-wide post head, 22 wide in the middle, 10 wide at the foot on the right \u2014 a stepped corner with a post at its head.",
+        "thickness": "No."
+      },
+      "raw": {
+        "cull": "none",
+        "happened": "Cannot tell. A strap hangs at the head; the stone shows no event.",
+        "holds": "Timber post with an iron cap and a lashed cross-boss at the foot, a horizontal rail, an iron strap. The rail crosses the post without entering it.",
+        "light": "No direction.",
+        "role": "A 12-wide post head, 22 wide in the middle, 10 wide at the foot on the right \u2014 a stepped corner with a post at its head.",
+        "thickness": "No.",
+        "verdict": "FAIL",
+        "why": "The post has an iron cap at the top and a lashing at the bottom and is attached to the wall at neither \u2014 it stands in front of the masonry, not in it."
+      },
+      "source": "depth/kit_depth/tile_26.png",
+      "structural": false,
+      "verdict": "FAIL"
+    }
+  ],
+  "seat_seconds": 472.7,
+  "ship_pass_names": [],
+  "ship_passes": 0,
+  "structural_candidates": 0,
+  "structural_names": [],
+  "void": false
+}

@@ -11,6 +11,20 @@
     "n": 38,
     "structural": 0
   },
+  "depth": {
+    "counts": {
+      "no_baked_outline": 38,
+      "no_key_light": 36,
+      "segment_identity": 29,
+      "two_planes": 0
+    },
+    "culled": 2,
+    "culls": {
+      "noise": 2
+    },
+    "n": 38,
+    "structural": 0
+  },
   "kitA0": {
     "counts": {
       "no_baked_outline": 38,

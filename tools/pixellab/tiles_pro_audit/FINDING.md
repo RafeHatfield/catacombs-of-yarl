@@ -1,7 +1,33 @@
 # `/create-tiles-pro` — INSTRUMENT AUDIT: THE FINDING
 
-**Bar failed. Returning under ruling trigger (b) — an instrument ruling that is Rafe's — and
-under no other.**
+## 0. THE RULING — taken by Rafe, 2026-08-26, on the evidence below
+
+> **The wall road is composition. tiles-pro is promoted to parts supplier, not instrument —
+> zero mechanical culls in 114 earns the stock role. The architecture/conditioning surface split
+> is recorded as platform fact.**
+>
+> Approved: the one `tile_depth_ratio` call, prediction on file before it runs.
+
+**What that settles, so no later session has to re-derive it:**
+
+- **tiles-pro is a parts supplier.** Its grammar, its canvas registration, its connectable set —
+  taken. Its generated art is not the wall instrument and this audit is not a step toward making
+  it one. The zero-mechanical-cull record is what earns the stock role: whatever comes out of
+  this endpoint is at least the right *kind* of thing.
+- **The wall road is composition**, not generation. §9 is written to that ruling.
+- **Platform fact, not a finding to re-measure:** set-coherent architecture and style
+  conditioning **do not sit on the same surface** on this platform. Building kits refuse style
+  tiles outright; BitForge takes them and cannot make architecture. Anyone planning a pipeline
+  that wants both needs a third mechanism, and none exists here today.
+
+The `tile_depth_ratio` call was made after this ruling, with its prediction committed first at
+`069aff5`. It scored **4 of 5**, the central claim held, and it did not disturb the ruling —
+`PREDICTION.md`, `PREDICTION-RESULT.md`, §3.
+
+---
+
+**Bar failed. The audit returned under ruling trigger (b) — an instrument ruling that is
+Rafe's — and under no other.**
 
 Declared before the first call and committed before it (`DECLARATION.md`, commit `d783728`),
 not tuned after (LOOP-PROCESS §8):
@@ -14,9 +40,10 @@ not tuned after (LOOP-PROCESS §8):
 
 **Result: two kits, 76 candidates, two blind seats, 0 structural candidates.** Bar was 5.
 
-**A third kit in a different configuration, judged by a third seat, also returned 0 of 38** —
-reported as a lead and not as a bar outcome (§5), and it is the most informative call of the
-audit because it says *why*.
+**Two further kits in two further configurations, judged by two further seats, also returned
+0 of 38 each** — reported as leads and not as bar outcomes (§5). They are the most informative
+calls of the audit, because between them they say *why*, and the last of them was run under
+ruling with its prediction committed first.
 
 **No adoption is proposed and none is available from this seat.** Nothing here is ratified,
 promoted, landed, or made a precondition of any later work. §13.1 governs landing and no
@@ -30,27 +57,34 @@ candidate reached a gate.
 outright.** That is a categorically different object from the incumbent, which failed all of
 them.
 
-| clause | kit A | kit B | *arm 3 (lead, not the bar)* |
-|---|---|---|---|
-| **1. two planes** — a top surface, not a stripe | **0/38 (0%)** | **0/38 (0%)** | **0/38 (0%)** |
-| 2. segment identity — the piece has a role | 26/38 (68%) | 35/38 (92%) | 33/38 (87%) |
-| 3. §6.3-legal — no named light direction | **38/38 (100%)** | **38/38 (100%)** | 32/38 (84%) |
-| 4. §12.1 — no baked outline | **38/38 (100%)** | **38/38 (100%)** | 38/38 (100%) |
-| **all four = structural candidate** | **0/38** | **0/38** | **0/38** |
-| mechanically culled | **0/38** | **0/38** | **0/38** |
+Four kits, four independent blind seats, 152 candidates.
 
-**Zero mechanical culls in 114 candidates across three seats.** The wall gauntlet culled 31 of
-100 before the wall questions were even asked — wrong projection, object-not-surface, baked
-outline, key light, noise. On this endpoint that entire cull class is empty. Straight-on
-projection, no sticker ring, and a piece rather than a swatch arrive **by construction**, not by
-prompt luck.
+| clause | kit A | kit B | *arm 3* | *depth 0.5* |
+|---|---|---|---|---|
+| **1. two planes** — a top surface, not a stripe | **0/38 (0%)** | **0/38 (0%)** | **0/38 (0%)** | **0/38 (0%)** |
+| 2. segment identity — the piece has a role | 26/38 (68%) | 35/38 (92%) | 33/38 (87%) | 29/38 (76%) |
+| 3. §6.3-legal — no named light direction | **38/38 (100%)** | **38/38 (100%)** | 32/38 (84%) | 36/38 (95%) |
+| 4. §12.1 — no baked outline | **38/38 (100%)** | **38/38 (100%)** | 38/38 (100%) | 38/38 (100%) |
+| **all four = structural candidate** | **0/38** | **0/38** | **0/38** | **0/38** |
+| mechanically culled | **0/38** | **0/38** | **0/38** | 2/38 (noise) |
+
+*Kits A and B are the declared yield run and decide the bar. Arm 3 and depth 0.5 are camera-
+parameter arms chosen after those results were seen; they are leads, not bar outcomes (§5).*
+
+**Zero mechanical culls in the 114 candidates of the first three seats** — and the audit's only
+two culls came from pushing depth. The wall gauntlet culled 31 of 100 before the wall questions
+were even asked: wrong projection, object-not-surface, baked outline, key light, noise. On this
+endpoint that entire cull class is empty at the frozen configuration. Straight-on projection, no
+sticker ring, and a piece rather than a swatch arrive **by construction**, not by prompt luck.
+**That record is what the ruling promoted to the stock role.**
 
 And then every candidate dies on the same clause.
 
-## 2. THREE SEATS CONVERGED ON ONE SENTENCE
+## 2. FOUR SEATS CONVERGED ON ONE SENTENCE
 
-Three blind seats, three different kits in two different projections, no shared context, no
-repo access, no bible. All three flip lists open with the same instruction.
+Four blind seats, four different kits in three distinct projections, no shared context, no repo
+access, no bible, no knowledge of each other. All four flip lists open with the same
+instruction. The fourth is quoted in §3 with the prediction it settled.
 
 **Kit A, item 2, verbatim:**
 
@@ -96,8 +130,8 @@ unexecutable**:
 > turned out to be a blend control, not a composition control — "there is no operating point
 > where you pin the composition and generate the surface."
 
-Here, the blocking clause **has live parameters attached to it** — and I spent the audit's last
-20 generations finding out that they do not reach it.
+Here, the blocking clause **has live parameters attached to it** — and the audit's last 60
+generations went on finding out that none of them reaches it.
 
 | what the seats asked for | the parameter | measured |
 |---|---|---|
@@ -141,10 +175,39 @@ asking the endpoint for more wall-storey geometry manufactured the same violatio
 
 > **At 32 pixels the vocabulary for "describe geometry with value" and the vocabulary for "bake
 > a key light" are the same vocabulary.** That was a wall-gauntlet finding about one surface. It
-> is now measured on two surfaces, through two different mechanisms, and should be treated as a
-> property of the canvas size rather than of any tool. §6.3 is RATIFIED, so anything reading as
+> is now measured on two surfaces, through **three** mechanisms — a prompt (gauntlet round 8), a
+> paired parameter (arm 3), and a single parameter (depth 0.5, below) — and should be treated as
+> a property of the canvas size rather than of any tool. §6.3 is RATIFIED, so anything reading as
 > directional at 32px is a defect — and the most natural way to draw volume at that size trips
 > it.
+
+### The last camera parameter, run under ruling, with its prediction on file
+
+`tile_depth_ratio` was the only geometry parameter the audit had not spent. Rafe's ruling
+authorised one call on condition the prediction was committed first; it was, at `069aff5`,
+before `run_depth.py` ran. Full scoring in `PREDICTION-RESULT.md`. **4 of 5.**
+
+The prediction named its own falsifier — *any* candidate clearing clause 1 would have made this
+section's central claim wrong and forced a correction in place. **None did: 0 of 38 from a
+fourth blind seat that caught both its plants.** The seat gave the mechanism unprompted:
+
+> *"This is the piece that should be the cap, and it is drawn as the same masonry elevation as
+> the face."*
+> *"The cap is drawn face-on with no top surface; **you would be setting the lantern on a drawing
+> of a cap.**"*
+
+⚠ **And the prediction I got wrong is the more useful half.** I predicted the floor cell would
+foreshorten to ~32×16. It went the other way — **32×24 → 32×35**, taller than the tile is wide,
+stride unchanged at 24. `tile_depth_ratio` does not tip the camera; it **extrudes thickness
+downward, below the footprint**, arriving on the floor tile as a timber sill along its bottom
+edge. **It adds thickness in the one place §3 does not want it — under the floor, not on top of
+the wall.** That is a sharper result than the prediction, and it was reached by being wrong out
+loud first.
+
+> **All three camera parameters are now spent** — `tile_view_angle`, `building_wall_angle`,
+> `tile_depth_ratio`. All three are live. **None of them reaches clause 1.** The geometry
+> parameter space this endpoint exposes is exhausted, and the compositor explanation is the one
+> left standing.
 
 ## 4. WHAT THIS ENDPOINT ALSO CANNOT DO, AND IT CLOSES A DOOR
 
@@ -177,10 +240,10 @@ Two more limits, both bearing on any adoption:
 
 ## 5. WHAT I WILL NOT CLAIM
 
-- **Not that no configuration passes.** Three configurations is three configurations. The claim
-  is about the mechanism: a compositor that masks one front elevation into every silhouette has
-  no top plane to expose, and `tile_view_angle`/`building_wall_angle` were measured not to reach
-  it. `tile_depth_ratio` was never spent and is the one camera parameter left untested.
+- **Not that no configuration passes.** Four configurations is four configurations. The claim is
+  about the mechanism: a compositor that masks one front elevation into every silhouette has no
+  top plane to expose, and all three camera parameters were measured not to reach it. What is
+  now closed is the *parameter* route, not the space of all possible calls.
 - **`arm3/` is not a bar outcome and is not counted as one.** It was chosen **after** the yield
   run's results were seen, so counting it toward the bar would be rolling until a pass (bible
   §13.6). It is reported separately, judged by a fresh seat under the same unchanged bar. It
@@ -191,16 +254,16 @@ Two more limits, both bearing on any adoption:
   and stops."* Kit B: *"cand_19's pin is the only fixing in the set."* **The §7.3 failure is now
   identical across two endpoints and 220 generations**, which starts to look like a property of
   the platform rather than of a surface. Not proven; flagged.
-- **`outline_mode: "segmentation"`, `tile_depth_ratio`, and `building_wall_angle` alone were
-  never spent.** The first guards a defect that is not present; the other two ran out of ceiling.
-  They are the cheapest untried things and they are named for whoever runs next.
+- **`outline_mode: "segmentation"` and `building_wall_angle` swept alone were never spent.** The
+  first guards a defect that is not present in any of the four kits; the second ran out of
+  ceiling and was only ever tested paired with `tile_view_angle`. Named rather than omitted.
 - **Nothing about register.** There is no dread score and no staging detector, and this audit did
   not build a proxy for one (bible §13.4). The seats' prose reaction is the only register
   evidence here and it flows to the human gate as prose.
 
 ## 6. THE CONTROL HELD — twice, and on the plant that mattered
 
-Two plants per set (§4), three sets. **Caught 6 of 6. No round void.**
+Two plants per set (§4), four sets. **Caught 8 of 8. No round void.**
 
 - **Plant A — mechanical.** A morgue object, its grey field keyed out so it could not be spotted
   by its background. Culled `object-not-architecture` by both seats. Kit B: *"isometric cube,
@@ -243,8 +306,12 @@ zero clause-level disagreements, on both kits.** The stricter reading governs.
 
 ## 7. SPEND — and this time the bracket closes
 
-**220 generations attributed, against a declared ceiling of 220.** `spend.check()` refused to
-authorise any phase that would cross it; the last call landed exactly on it.
+**240 generations attributed, against a ceiling of 240** — 220 declared before the first call
+and met exactly, plus the 20 Rafe's ruling authorised for `tile_depth_ratio`. `spend.check()`
+refused to authorise any phase that would cross the ceiling, and it refused the depth call until
+the amendment was written into `DECLARATION.md` and `PREDICTION.md` was committed. **The ceiling
+was raised by the human gate, never by this seat**, and the original 220 stands unedited above
+the amendment.
 
 | phase | brackets | pool | delta |
 |---|---|---:|---:|
@@ -255,9 +322,10 @@ authorise any phase that would cross it; the last call landed exactly on it.
 | yield open → close (5 calls) | 16:43:51 → 16:58:58 | 3206 → 3106 | −100 |
 | levers open → close (2 billed, 1 free refusal) | 17:02:17 → 17:09:43 | 3106 → 3066 | −40 |
 | arm3 open → close (1 call) | 17:12:19 → 17:16:18 | 3066 → 3046 | −20 |
-| | | **3286 → 3046** | **−240** |
+| depth open → close (1 call, ruling-authorised) | 3046 → 3026 | −20 |
+| | | **3286 → 3026** | **−260** |
 
-**240 by balance, 220 by my own calls, and the 20-generation difference is LOCALISED** to
+**260 by balance, 240 by my own calls, and the 20-generation difference is LOCALISED** to
 16:37:59–16:43:51, a window in which this audit had nothing outstanding. The leading explanation
 is the shared subscription (`PIXELLAB-UW-AUDIT-2026-08-25`), and I cannot verify it from here.
 
@@ -283,15 +351,17 @@ Every generation on disk with its full request payload: `yield/kit_*/`, `levers/
 `arm3/kit_arm3/`, `columns/surprise_*/`, each beside a `ledger.jsonl` carrying the redacted
 payload, `usage`, poll count, wall clock, and the producing commit.
 
-- `DECLARATION.md` — bar, budget, method and refusals, committed before the first call
+- `DECLARATION.md` — bar, budget, method and refusals, committed before the first call, with the
+  ruling-authorised ceiling amendment appended rather than applied silently
+- `PREDICTION.md` — committed at `069aff5` before the `tile_depth_ratio` call and **unedited**;
+  `PREDICTION-RESULT.md` scores it afterwards without touching it
 - `COLUMNS.md` — the five columns, with verbatim measurements
 - `prompts/wall_kit.json` — the generation prompt with per-clause provenance and its
   `load_bearing` list; `prompt.py` asserts them on every load
-- `critic/kitA0/`, `critic/kitB/`, `critic/arm3/` — verbatim seat transcripts, the staged
-  blind mapping, parsed verdicts, plant outcomes, flip lists
-- `critic/kitA0/sheet_kitA0.png`, `critic/kitB/sheet_kitB.png`, `critic/arm3/sheet_arm3.png` —
-  **every file each seat saw, unfiltered, plants included**, labelled with the clause that
-  killed it
+- `critic/kitA0/`, `critic/kitB/`, `critic/arm3/`, `critic/depth/` — verbatim seat transcripts,
+  the staged blind mapping, parsed verdicts, plant outcomes, flip lists
+- `critic/*/sheet_*.png` — **every file each of the four seats saw, unfiltered, plants
+  included**, labelled with the clause that killed it
 - `critic/clause_table.json`, `critic/rescore.json` — the clause counts and the dual derivation
 - `columns/dup_kitA0.json`, `columns/dup_kitB.json` — the duplication measurement
 - `columns/structural_readout.json` — the lever instrument's own control
@@ -301,30 +371,57 @@ payload, `usage`, poll count, wall clock, and the producing commit.
 
 ---
 
-## 9. WHERE THIS LEAVES THE WALL PIPELINE
+## 9. WHERE THIS LEAVES THE WALL PIPELINE — written to the ruling
 
-Stated as options for the ruling, not as a recommendation this seat is entitled to make.
+The ruling in §0 has been taken: **the wall road is composition, and tiles-pro is a parts
+supplier.** This section is no longer a menu of options. It records what that inherits and what
+it still owes.
 
-1. **The generated-art half of this endpoint does not clear the bar, and the reason is
-   structural rather than a tuning miss.** The compositor masks one front-elevation painting
-   into every silhouette; there is no top plane in the source art for a camera parameter to
-   reveal, and the one configuration that made the geometry most §3-conformant also
-   reintroduced baked directional light. Three seats, 114 candidates, one clause, zero passes.
-2. **The grammar half is real, and it is a separable decision.** `arity: 8`, a 9-case partition
-   set, outer corners, `stack_stride_px`, a pre-registered canvas — that is a genuine autotiler,
-   it is the thing the one-prop-at-a-time process has never had, and unlike the art it **is
-   deterministic**: 10 of 10 structural fields identical across five kits whose every pixel
-   differed. **A kit's grammar can be taken without taking its art.** Those two decisions do not
-   have to be made together, and this audit's evidence separates them cleanly.
-3. **The conditioning door is shut on this endpoint**, by a free refusal, and the gauntlet's
-   preferred re-plan does not survive contact with it. Any pipeline wanting both set-coherent
-   architecture *and* style conditioning needs a third mechanism, and none is visible on this
-   platform today.
-4. **The one cheap thing still untried** is `tile_depth_ratio`, the only camera parameter this
-   audit did not spend — one call, 20 generations. On the arm-3 mechanism it should not work
-   either, and saying so before it runs is what makes it worth running.
-5. **The §6.3-at-32px result deserves to leave this report.** It is now measured on two
-   surfaces through two mechanisms, and it constrains every tier-one asset, not just walls.
-   Whether it belongs in the bible is Rafe's call, not this seat's.
+### What the parts-supplier role inherits, and it is more than tiles
 
-**The instrument ruling is Rafe's, taken with the composition spike's report beside this one.**
+1. **The grammar is the product, and it is the half that is deterministic.** `arity: 8`, a
+   9-case partition set with multi-junctions, a separate outer-corner set, `stack_stride_px`, a
+   pre-registered canvas with the floor footprint anchored identically in every tile. That is an
+   autotiler, not a sprite sheet, and it is the thing the one-prop-at-a-time process has never
+   had. **10 of 10 structural fields identical across five kits whose every visible pixel
+   differed** — so a composer can be built against this grammar and rely on it, even though it
+   can never rely on the art.
+2. **The stock is the right kind of thing.** Zero mechanical culls in 114 candidates at the
+   frozen configuration: straight-on projection, no baked ring, no key light, pieces rather than
+   swatches. That is what a parts supplier has to guarantee and it is exactly what was measured.
+3. **`building_layout: "grid"` suppresses the roof** — 80 tiles → 58, dropping the gable set
+   §8.7 called useless for a top-down interior. It does **not** reduce the price. For a parts
+   supplier that is still worth taking: fewer junk parts in the bin.
+
+### What composition still owes, and this audit cannot discharge any of it
+
+4. **The top surface has to come from the composer, because it does not come from here.** Four
+   seats specified it in native pixels — *"5–7 native pixels of top surface"*, *"one row, a
+   one-pixel dark line, then two to three rows of a distinct third value"*, *"the **ends** of the
+   wall stones, joints running across not down"*. That is a drawing instruction, and it is now
+   the composition road's first job rather than a prompt anyone can write.
+5. ⚠ **The 32-pixel hazard follows the work across the road.** §6.3-at-32px is measured on two
+   surfaces through three mechanisms — a prompt, a paired parameter, and a single parameter.
+   **A composer that draws its own caps will meet the same wall**, because the vocabulary for
+   *describe geometry with value* and the vocabulary for *bake a key light* are the same
+   vocabulary at this size. This is the single most transferable finding in the report and it
+   constrains every tier-one asset, not only walls. Whether it belongs in the bible is Rafe's
+   call, not this seat's.
+6. ⚠ **The stock is thinner than its count and a composer must not assume otherwise.** 20 of 80
+   tiles are painted and the rest are masked from them; in kit A's 38 wall pieces, 112 of 694
+   overlapping pairs are ≥90% identical and a partition hub and a pillar are the same 684 pixels.
+   Four independent seats detected this from pixels alone. **Laying the parts side by side
+   reproduces the same brace, the same pale bar and the same mark once every 32 pixels** — a
+   composer that tiles this stock naively will ship visible repetition.
+7. **§7.3 is unresolved and is now a cross-surface fact.** The timber arrives here, which ten
+   gauntlet rounds never achieved, and every seat says it is unfixed: *"Every timber crosses over
+   another timber and stops"*, *"cand_19's pin is the only fixing in the set"*, *"Nothing in this
+   set is fastened"*. **Identical across two endpoints and 240 generations.** Whether the
+   composer supplies the fixings or the bible's binding grammar needs re-scoping at 32px is an
+   open question this audit deliberately does not answer.
+
+### Named, not spent
+
+`outline_mode: "segmentation"` (guards a defect absent from all four kits) and
+`building_wall_angle` swept alone (only ever tested paired). Neither is on the critical path for
+a composition road; recorded so nobody assumes they were checked.

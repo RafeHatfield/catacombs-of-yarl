@@ -7,7 +7,7 @@ is the row and the schema line is the footnote.**
 Legend: **[API]** measured here · **[SCHEMA]** read from the live OpenAPI document (free) ·
 **[PRIOR]** measured on this account by an earlier session, cited with its evidence path.
 
-Evidence: `columns/`, `yield/`, `levers/`, `arm3/` — ledgers, payloads, and every tile.
+Evidence: `columns/`, `yield/`, `levers/`, `arm3/`, `depth/` — ledgers, payloads, and every tile.
 
 ---
 
@@ -21,6 +21,8 @@ Evidence: `columns/`, `yield/`, `levers/`, `arm3/` — ledgers, payloads, and ev
 | 20 | 32 × 54 | 20 × 15 | 15 | 0.750 |
 | 32 | 52 × 87 | **32 × 24** | 24 | 0.750 |
 | 32, `tile_view_angle: 90` | 52 × 116 | **32 × 32** | 32 | **1.000** |
+| 32, `tile_view_angle: 90` + `building_wall_angle: 45` | 52 × 98 | **32 × 32** | **23** | 1.000 |
+| 32, `tile_depth_ratio: 0.5` | 52 × 87 | **32 × 35** | 24 | **1.094** |
 
 **The floor cell is `tile_size` wide by 0.75 × `tile_size` tall by default** — a 4:3 cell, not
 the square one bible §3 asks for. The sprite canvas is much larger than either, because it
@@ -35,8 +37,9 @@ box, the cell, the stride, and echoes itself back as `view_angle: 90.0` in the r
 grammar. §9.3's conclusion is correct about `tile_view` and does not transfer to
 `tile_view_angle`. ⚠ **The cost of the square cell is the top surface** — 90 is straight
 top-down, zero ground pitch, and the wall pieces come back with no cap band at all. §3 asks for
-both halves and this parameter trades one for the other. `building_wall_angle` is documented to
-decouple them; see `arm3/`.
+both halves and this parameter trades one for the other. `building_wall_angle` decouples them as
+documented — `arm3/` holds the ground cell square at 32×32 while moving the wall stride to 23 —
+**and the top surface still does not arrive.** All three camera parameters are spent; see §3.
 
 ### Enforced ranges — all free, all named by the server
 
@@ -130,9 +133,25 @@ moves under a lever has moved something the generative noise cannot fake.
 |---|---|---|
 | `building_layout: "grid"` | **READOUT MOVED** | `roof`, `slopes`, `slopes_east` gone from the grammar; **80 tiles → 58**; `painted` list byte-identical |
 | `tile_view_angle: 90` | **READOUT MOVED** | canvas 52×87 → 52×116; floor cell 32×24 → **32×32**; stride 24 → 32; `view_angle` null → **90.0** |
+| `building_wall_angle: 45` (with angle 90) | **READOUT MOVED** | stride 32 → **23** with the ground cell held square — the documented decoupling, confirmed |
+| `tile_depth_ratio: 0.5` | **READOUT MOVED** | floor cell 32×24 → **32×35**; canvas and stride **unchanged** |
 | `style_images` × 2 | **REFUSED, free** | see column 2 |
-| `outline_mode: "segmentation"` | **NOT SPENT** | guards §12.1, and no baseline kit carries a dark ring — the lever protects a defect that is not present. A gap, named. |
-| `building_wall_angle` alone | **NOT SPENT** | tested only in combination, in `arm3/`. Its solo effect is unmeasured. |
+| `outline_mode: "segmentation"` | **NOT SPENT** | guards §12.1, and no kit of the four carries a dark ring — the lever protects a defect that is not present. A gap, named. |
+| `building_wall_angle` alone | **NOT SPENT** | tested only paired, in `arm3/`. Its solo effect is unmeasured. |
+
+⭐ **`tile_depth_ratio` extrudes DOWNWARD, and this was predicted wrong before it was measured
+right.** `PREDICTION.md` (committed before the call) said the cell would foreshorten to ~32×16.
+It went the other way: **32×35, taller than the tile is wide**, with the canvas and the stride
+both unchanged. The parameter does not tip the camera — it **hangs additional thickness below
+the footprint**, which arrives on the floor tile as a timber sill along its bottom edge. **It
+adds thickness in the one place bible §3 does not want it: under the floor, not on top of the
+wall.**
+
+⚠ **It is also a register lever with a price.** At 0.5 the masonry comes back chunkier and
+larger-scaled — the same axis `tile_size` moves (§9.2) — and it charges §6.3 for it: the seat
+scored **36/38** on directional light against 38/38 at the frozen configuration, and produced
+**the audit's only two mechanical culls** (`noise`). All three camera parameters are now spent,
+all three are live, and **none of them reaches the top surface.**
 
 ⭐ **`building_layout: "grid"` is the roof suppressor**, and that answers an open question.
 `PIXELLAB-INTEGRATION-AUDIT` §8.7 recorded *"A quarter of it is roof — 20 of 80 tiles are gable
