@@ -1,0 +1,151 @@
+{
+ "commit": "da1b2a9e16dd568ee23fe3d1641e73ffbcd1319f",
+ "instrument": "tools/tier1_floors/field_laws.py",
+ "instrument_sha256": "56a3c6cad1e3d60e01adc7e06773675d911ec0be619c88dff9e505f07481d8ca",
+ "constants": {
+  "MIN_INCIDENT_FRAC": 0.01171875,
+  "MIN_INCIDENT_BBOX": 3,
+  "MIN_CONTRAST": 15.0,
+  "MIN_FRAME_INTERIOR": 16,
+  "MAX_SEAM_RATIO": 2.0,
+  "GRID_MIN_TERMS": 3,
+  "GRID_MAX_PERIOD": 16
+ },
+ "controls": [
+  {
+   "control": "clean_material",
+   "why": "the legal construction \u2014 bond and grain, no incident",
+   "expect": [
+    "CLEAN"
+   ],
+   "got": "CLEAN",
+   "codes": [],
+   "passed": true,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 49.41,
+    "interior_p95_x": 18.33,
+    "interior_p95_y": 49.41,
+    "ratio_x": 0.0,
+    "ratio_y": 1.0,
+    "seamed": false
+   },
+   "n_incidents": 0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "mad": 0.0,
+   "sha256": "93a74d3986eea21efa8708a846d01eafd2a502e38a8fa0a2c91d2850a868e6f8"
+  },
+  {
+   "control": "planted_incident",
+   "why": "a crack that stops inside the cell",
+   "expect": [
+    "INCIDENT"
+   ],
+   "got": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ],
+   "passed": true,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 49.41,
+    "interior_p95_x": 18.33,
+    "interior_p95_y": 46.91,
+    "ratio_x": 0.0,
+    "ratio_y": 1.05,
+    "seamed": false
+   },
+   "n_incidents": 1,
+   "n_frames": 0,
+   "n_grid": 0,
+   "mad": 0.0,
+   "sha256": "92f1cdcb5bfb23cabb2733ea244f13089644bda3755fe343a0d2798eccc7e379"
+  },
+  {
+   "control": "planted_frame",
+   "why": "an inset closed rectangle",
+   "expect": [
+    "FRAME",
+    "INCIDENT"
+   ],
+   "got": "FRAME+GRID+INCIDENT+RING",
+   "codes": [
+    "FRAME",
+    "GRID",
+    "INCIDENT",
+    "RING"
+   ],
+   "passed": true,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 49.41,
+    "interior_p95_x": 29.66,
+    "interior_p95_y": 46.22,
+    "ratio_x": 0.0,
+    "ratio_y": 1.07,
+    "seamed": false
+   },
+   "n_incidents": 6,
+   "n_frames": 1,
+   "n_grid": 2,
+   "mad": 0.0,
+   "sha256": "6e07f763de8dad0a91eafa0873d810a59cfdbc88189d7845dc777266428608c8"
+  },
+  {
+   "control": "planted_seam",
+   "why": "a tile that does not meet itself",
+   "expect": [
+    "SEAM"
+   ],
+   "got": "SEAM",
+   "codes": [
+    "SEAM"
+   ],
+   "passed": true,
+   "seam": {
+    "wrap_x": 122.78,
+    "wrap_y": 47.81,
+    "interior_p95_x": 19.12,
+    "interior_p95_y": 47.81,
+    "ratio_x": 6.42,
+    "ratio_y": 1.0,
+    "seamed": true
+   },
+   "n_incidents": 0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "mad": 0.0,
+   "sha256": "04f76cc87c6e0f780cf6f2134469a2e7c02bf2cef9b37e306a8e7e5bcc6455af"
+  },
+  {
+   "control": "planted_grid",
+   "why": "a regular 2px joint grid on a 16px pitch",
+   "expect": [
+    "GRID"
+   ],
+   "got": "GRID+INCIDENT",
+   "codes": [
+    "GRID",
+    "INCIDENT"
+   ],
+   "passed": true,
+   "seam": {
+    "wrap_x": 37.5,
+    "wrap_y": 37.5,
+    "interior_p95_x": 37.5,
+    "interior_p95_y": 37.5,
+    "ratio_x": 1.0,
+    "ratio_y": 1.0,
+    "seamed": false
+   },
+   "n_incidents": 16,
+   "n_frames": 0,
+   "n_grid": 2,
+   "mad": 0.0,
+   "sha256": "8ad82a79eb1957c01c12ce422c387bfce0b66c54c9787840183f4e7bff52784a"
+  }
+ ],
+ "all_passed": true,
+ "verbatim_failures": []
+}

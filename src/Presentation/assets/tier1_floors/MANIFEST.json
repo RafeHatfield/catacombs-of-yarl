@@ -1,0 +1,940 @@
+{
+ "family": "boundary_floor_v1",
+ "commit": "da1b2a9e16dd568ee23fe3d1641e73ffbcd1319f",
+ "seed": 1337,
+ "material": {
+  "lum_lo": 75.016,
+  "lum_hi": 154.376,
+  "lum_median": 113.80399999999999,
+  "grain_sd": 26.977820266232715,
+  "grain_mad": 11.64700000000002,
+  "tint": [
+   1.0013446350520276,
+   1.0068452207279461,
+   0.9918101442200262
+  ],
+  "ladder": [
+   75.016,
+   88.24266666666668,
+   101.46933333333334,
+   114.696,
+   127.92266666666667,
+   141.14933333333335,
+   154.376
+  ],
+  "n_donors": 8
+ },
+ "donors": [
+  "tools/tier1_floors/gen/base/base_13407.png",
+  "tools/tier1_floors/gen/base/base_13405.png",
+  "tools/tier1_floors/gen/base/base_13378.png",
+  "tools/tier1_floors/gen/base/base_13398.png",
+  "tools/tier1_floors/gen/base/base_13391.png",
+  "tools/tier1_floors/gen/base/base_13376.png",
+  "tools/tier1_floors/gen/base/base_13397.png",
+  "tools/tier1_floors/gen/base/base_13402.png"
+ ],
+ "instrument": "tools/tier1_floors/field_laws.py",
+ "instrument_sha256": "56a3c6cad1e3d60e01adc7e06773675d911ec0be619c88dff9e505f07481d8ca",
+ "base": [
+  {
+   "id": 9600,
+   "variant": 0,
+   "file": "tier1_floor_9600.png",
+   "sha256": "51ad6e11665c49354d55d1381408fe4ec6f79220681e2daf3fca2819442d5b24",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 5.81,
+    "wrap_y": 11.64,
+    "interior_p95_x": 18.2,
+    "interior_p95_y": 13.1,
+    "ratio_x": 0.32,
+    "ratio_y": 0.89,
+    "seamed": false
+   },
+   "joint_px": 160,
+   "bond_seed": 1337,
+   "seeds_rejected": 0
+  },
+  {
+   "id": 9601,
+   "variant": 1,
+   "file": "tier1_floor_9601.png",
+   "sha256": "f44c52ea1ec9027840c6a06429826fb0d58266c91b33f949e582f92a9cba8b23",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 11.98,
+    "wrap_y": 13.21,
+    "interior_p95_x": 14.7,
+    "interior_p95_y": 14.45,
+    "ratio_x": 0.81,
+    "ratio_y": 0.91,
+    "seamed": false
+   },
+   "joint_px": 127,
+   "bond_seed": 629711,
+   "seeds_rejected": 6
+  },
+  {
+   "id": 9602,
+   "variant": 2,
+   "file": "tier1_floor_9602.png",
+   "sha256": "551f7afb97f97db721580f819822a2e275a4d86c8f5aee3591f9d44d9dbb4e95",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 4.56,
+    "wrap_y": 8.67,
+    "interior_p95_x": 21.12,
+    "interior_p95_y": 12.2,
+    "ratio_x": 0.22,
+    "ratio_y": 0.71,
+    "seamed": false
+   },
+   "joint_px": 146,
+   "bond_seed": 315524,
+   "seeds_rejected": 3
+  }
+ ],
+ "channel": [
+  {
+   "id": 9610,
+   "kind": "left",
+   "file": "tier1_floor_9610.png",
+   "sha256": "bf6a953fef575208a234f072e9cd23f34ffd8d411dd5a3c11dc496291d0d11ef",
+   "coverage": 0.4385
+  },
+  {
+   "id": 9611,
+   "kind": "mid",
+   "file": "tier1_floor_9611.png",
+   "sha256": "9c1925c9e75cc8a58dc45c30e6bf6829b1940cfc17ca46b5a6cd4b8592d5cb8a",
+   "coverage": 0.8125
+  },
+  {
+   "id": 9612,
+   "kind": "right",
+   "file": "tier1_floor_9612.png",
+   "sha256": "7cfdd0724498247eee89ac28f1942f9ba0ddba41c05592b4ebefd6522497cff3",
+   "coverage": 0.4365
+  },
+  {
+   "id": 9613,
+   "kind": "full",
+   "file": "tier1_floor_9613.png",
+   "sha256": "4e847ed9bae5641930b838c86530b03da8281903a1175289318f85d92bbc5a79",
+   "coverage": 0.8125
+  }
+ ],
+ "incident": [
+  {
+   "id": 9620,
+   "family": "crack",
+   "file": "tier1_floor_9620.png",
+   "sha256": "811603abcad7d26370aab5baa44cc1e23956e3d9121d76fff6065d825aae1c07",
+   "coverage": 0.0186,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9621,
+   "family": "crack",
+   "file": "tier1_floor_9621.png",
+   "sha256": "2612ecb90a883b0987af7159359879715320926c98af49e0d2eb14cb8b076be8",
+   "coverage": 0.0332,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9622,
+   "family": "crack",
+   "file": "tier1_floor_9622.png",
+   "sha256": "8481d6f98164f6c089d6bacc01b3d2691d6d1c1a596a615576b1aaf258a3dbfc",
+   "coverage": 0.0244,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9623,
+   "family": "crack",
+   "file": "tier1_floor_9623.png",
+   "sha256": "077e295069db6976e4523bd9cd84a34a9e1b6e1b5876b8f0f9df4adae7eecaf7",
+   "coverage": 0.0273,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9624,
+   "family": "crack",
+   "file": "tier1_floor_9624.png",
+   "sha256": "d035d32e259630a079be5bf64f4e97eb6201cc70db6cf990a64d8e311d3f858c",
+   "coverage": 0.0332,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9625,
+   "family": "crack",
+   "file": "tier1_floor_9625.png",
+   "sha256": "03158aa982f43bd5c2c51255e135d8397f89ffa5b185ebeefbe993cb80d8a94f",
+   "coverage": 0.0273,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9626,
+   "family": "chip",
+   "file": "tier1_floor_9626.png",
+   "sha256": "630a707519d89313039c51e7b2804498580ac6136efc1db03e98b9536118c21b",
+   "coverage": 0.0293,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9627,
+   "family": "chip",
+   "file": "tier1_floor_9627.png",
+   "sha256": "12739febbae843d4435089e9a99a4e31ce889530e7de48039789b1496f9fbf2c",
+   "coverage": 0.0488,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9628,
+   "family": "chip",
+   "file": "tier1_floor_9628.png",
+   "sha256": "09b3b2e972c321307ed2f35fd8c919304be3a9ab63d5d29cae46f50591920583",
+   "coverage": 0.0508,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9629,
+   "family": "chip",
+   "file": "tier1_floor_9629.png",
+   "sha256": "d76c28e46fc0f1126b401fa4244f4fe51ff641154dbc052abeaea1a3cb92ef82",
+   "coverage": 0.0244,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9630,
+   "family": "chip",
+   "file": "tier1_floor_9630.png",
+   "sha256": "bcb77e4961c736e155d6922ce8c088242d79c2e648de0556c3446d95d9d4a928",
+   "coverage": 0.0264,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9631,
+   "family": "wear",
+   "file": "tier1_floor_9631.png",
+   "sha256": "39c1d3865ce2d094d02e3f990c629366a0437b78bbb497e14942769e7910c915",
+   "coverage": 0.0254,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9632,
+   "family": "wear",
+   "file": "tier1_floor_9632.png",
+   "sha256": "5fd5dce117a9dea50d6fdf0524c64c3d30a29c819e4eda2f1cb297d3c78d8aa1",
+   "coverage": 0.0205,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9633,
+   "family": "wear",
+   "file": "tier1_floor_9633.png",
+   "sha256": "6c3f934bbe80dd4c2bbaa285b7ce31d06c87d9ed73a0b1d6644e2cc34790a1b7",
+   "coverage": 0.0312,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9634,
+   "family": "wear",
+   "file": "tier1_floor_9634.png",
+   "sha256": "8f8ed903579188cae8f70e1d253e3d1cdffaca918fd1f19f968aaf720721d97e",
+   "coverage": 0.0352,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9635,
+   "family": "wear",
+   "file": "tier1_floor_9635.png",
+   "sha256": "f465ed514eeefd84e93131f71e88f6a821bcb25a918d8a270028c49dbf70841b",
+   "coverage": 0.0576,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9636,
+   "family": "wear",
+   "file": "tier1_floor_9636.png",
+   "sha256": "f7a2ee9d3a937d1e0b39e8857ac705a246505de433d78fa69b6d30114e3534cb",
+   "coverage": 0.0293,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9637,
+   "family": "grit",
+   "file": "tier1_floor_9637.png",
+   "sha256": "913f0ecab14540a24b6a0f4f990bd47488cd62eef5a468e955c0e9f237cc283b",
+   "coverage": 0.0752,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9638,
+   "family": "grit",
+   "file": "tier1_floor_9638.png",
+   "sha256": "42729345852d24ab1695abf404be8ec3033e659527c4debb86be6e0dd64e763a",
+   "coverage": 0.083,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9639,
+   "family": "grit",
+   "file": "tier1_floor_9639.png",
+   "sha256": "1bd1dc66568cf4924e27103cd545adc346fd4638dae2f6cc4497776cf87a65d5",
+   "coverage": 0.1104,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9640,
+   "family": "grit",
+   "file": "tier1_floor_9640.png",
+   "sha256": "3ed50e41e80e17f377d22dd379645274ab99dc53fb948f14d15cdc55e2da6831",
+   "coverage": 0.0752,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9641,
+   "family": "grit",
+   "file": "tier1_floor_9641.png",
+   "sha256": "e3e968c31ade9985fbd748f33d3fb33a44ad93c2a623d0213815341a164f75f2",
+   "coverage": 0.0752,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9642,
+   "family": "debris",
+   "file": "tier1_floor_9642.png",
+   "sha256": "84fc5d518721e647687a0be5f2fab6e525d22674870d9e6c10c5d9ff6c8e3f9a",
+   "coverage": 0.0225,
+   "origin": "authored",
+   "rate": 0.07
+  },
+  {
+   "id": 9643,
+   "family": "debris",
+   "file": "tier1_floor_9643.png",
+   "sha256": "00f8ef6fb18a1e312efbaa27ed9252d4222f5a9732de8fbca33c355d66ae80d4",
+   "coverage": 0.0264,
+   "origin": "authored",
+   "rate": 0.07
+  },
+  {
+   "id": 9644,
+   "family": "debris",
+   "file": "tier1_floor_9644.png",
+   "sha256": "d6d2f8a31733aec69180ed9465fe0a68b56d28cd8641cc2fe9a7b8a08b7b6b59",
+   "coverage": 0.0244,
+   "origin": "authored",
+   "rate": 0.07
+  },
+  {
+   "id": 9645,
+   "family": "debris",
+   "file": "tier1_floor_9645.png",
+   "sha256": "d470aacd10a42446844f39c020b7cd412020fc7f89a6a578c4c21e76cf3d85a6",
+   "coverage": 0.0215,
+   "origin": "authored",
+   "rate": 0.07
+  },
+  {
+   "id": 9646,
+   "family": "debris",
+   "file": "tier1_floor_9646.png",
+   "sha256": "ed3aeb649507ccbc4aca79dff27989adc7a9c3edda94d5320d1d791c9ae7591e",
+   "coverage": 0.0205,
+   "origin": "authored",
+   "rate": 0.07
+  }
+ ],
+ "incident_screen": {
+  "generated": 32,
+  "kept_by_screen": 1,
+  "culled": 31,
+  "used_from_wave": 0,
+  "why": "The generated overlay wave is NOT used. Unconditioned, the surface drew objects rather than marks on a surface \u2014 closed, centred, off-palette blobs. What the wave DID buy is the base donors' ladder, tint and grain amplitude, which every authored mark is drawn with.",
+  "detail": [
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14370.png",
+    "why": [
+     "mean chroma 24.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14371.png",
+    "why": [
+     "mean chroma 25.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14372.png",
+    "why": [
+     "mean chroma 19.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14373.png",
+    "why": [
+     "mean chroma 20.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14374.png",
+    "why": [
+     "mean chroma 27.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14375.png",
+    "why": [
+     "mean chroma 18.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14376.png",
+    "why": [
+     "mean chroma 23.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14377.png",
+    "why": [
+     "mean chroma 19.7 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14386.png",
+    "why": [
+     "mean chroma 16.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14387.png",
+    "why": [
+     "mean chroma 14.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14388.png",
+    "why": [
+     "mean chroma 21.8 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14389.png",
+    "why": [
+     "mean chroma 12.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14390.png",
+    "why": [
+     "mean chroma 16.7 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14391.png",
+    "why": [
+     "mean chroma 13.9 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14392.png",
+    "why": [
+     "mean chroma 15.3 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14394.png",
+    "why": [
+     "mean chroma 17.4 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14395.png",
+    "why": [
+     "mean chroma 19.4 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14396.png",
+    "why": [
+     "mean chroma 19.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14397.png",
+    "why": [
+     "mean chroma 13.1 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14398.png",
+    "why": [
+     "mean chroma 16.1 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14399.png",
+    "why": [
+     "mean chroma 19.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14400.png",
+    "why": [
+     "mean chroma 15.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14401.png",
+    "why": [
+     "mean chroma 24.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14378.png",
+    "why": [
+     "mean chroma 21.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14379.png",
+    "why": [
+     "mean chroma 25.7 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14380.png",
+    "why": [
+     "mean chroma 23.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14381.png",
+    "why": [
+     "mean chroma 29.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14382.png",
+    "why": [
+     "mean chroma 20.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14383.png",
+    "why": [
+     "mean chroma 18.4 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14384.png",
+    "why": [
+     "mean chroma 36.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14385.png",
+    "why": [
+     "mean chroma 36.3 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   }
+  ]
+ },
+ "oriented": [
+  {
+   "id": 9700,
+   "of": 9600,
+   "orientation": 0,
+   "file": "tier1_floor_9700.png",
+   "sha256": "51ad6e11665c49354d55d1381408fe4ec6f79220681e2daf3fca2819442d5b24",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9701,
+   "of": 9600,
+   "orientation": 1,
+   "file": "tier1_floor_9701.png",
+   "sha256": "f72418afd30d013ca1ea582fb40473d02b43cd599178544ef75f7771feb8a9d9",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9702,
+   "of": 9600,
+   "orientation": 2,
+   "file": "tier1_floor_9702.png",
+   "sha256": "d86bd11e83eecf43087bcd54a42285ac97371a79814e09a6ba7b76e225ff42c2",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9703,
+   "of": 9600,
+   "orientation": 3,
+   "file": "tier1_floor_9703.png",
+   "sha256": "df59443d59bbdf5b4da85deb82061bc990c0562abd3ee7fd8ed4384288660733",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9704,
+   "of": 9600,
+   "orientation": 4,
+   "file": "tier1_floor_9704.png",
+   "sha256": "c1b9218747cafecd92fadc4abfacc3728a7433a4453a9d88644eb1e633b53c7b",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9705,
+   "of": 9600,
+   "orientation": 5,
+   "file": "tier1_floor_9705.png",
+   "sha256": "6f52dcbf0792167b2a8ce367931d57ad133d59624e86df01c9cb422b7b472b6e",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9706,
+   "of": 9600,
+   "orientation": 6,
+   "file": "tier1_floor_9706.png",
+   "sha256": "efd08df97372ec943bf4ce504ea753d72b38942df36fa0d97ab5de8f5a48b175",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9707,
+   "of": 9600,
+   "orientation": 7,
+   "file": "tier1_floor_9707.png",
+   "sha256": "4c08b055b9c5f1028a721d758cf540fd9cf00f6905a40c87fd1077bef96feec5",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9708,
+   "of": 9601,
+   "orientation": 0,
+   "file": "tier1_floor_9708.png",
+   "sha256": "f44c52ea1ec9027840c6a06429826fb0d58266c91b33f949e582f92a9cba8b23",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9709,
+   "of": 9601,
+   "orientation": 1,
+   "file": "tier1_floor_9709.png",
+   "sha256": "c68d604a460a3f1f04c004be693465d02214b905fffc2e1c3d5d95871fb20c76",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9710,
+   "of": 9601,
+   "orientation": 2,
+   "file": "tier1_floor_9710.png",
+   "sha256": "678c9b75637b87c899431c3725defb6df59acf89b07ecd22bb21971b4a84c690",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9711,
+   "of": 9601,
+   "orientation": 3,
+   "file": "tier1_floor_9711.png",
+   "sha256": "35501648412d065815eceffa9e2e23c2cc1bd551261b7a8b2c08a1ca629a3183",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9712,
+   "of": 9601,
+   "orientation": 4,
+   "file": "tier1_floor_9712.png",
+   "sha256": "54dd9b9cdd4f8f47d80d19e049404d468cf91356570e0857b80612e94fee9437",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9713,
+   "of": 9601,
+   "orientation": 5,
+   "file": "tier1_floor_9713.png",
+   "sha256": "f05ba229f4124bc95e2972594539fcb6179be4ec696d7c0a23aeec5bf1b2c79a",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9714,
+   "of": 9601,
+   "orientation": 6,
+   "file": "tier1_floor_9714.png",
+   "sha256": "d70bb0d72e3f266de1d025d1dea069cd67a0c96b0204d942c0142f65cc6e85d2",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9715,
+   "of": 9601,
+   "orientation": 7,
+   "file": "tier1_floor_9715.png",
+   "sha256": "7c69365a6261554f0135d6d93ae45f7ec6f181a0083aae6f24e680f606e43b10",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9716,
+   "of": 9602,
+   "orientation": 0,
+   "file": "tier1_floor_9716.png",
+   "sha256": "551f7afb97f97db721580f819822a2e275a4d86c8f5aee3591f9d44d9dbb4e95",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9717,
+   "of": 9602,
+   "orientation": 1,
+   "file": "tier1_floor_9717.png",
+   "sha256": "8664f83609a5299e728a61493bd2fac1f4b4f28754ea0807d3e1a7fd86fcce1f",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9718,
+   "of": 9602,
+   "orientation": 2,
+   "file": "tier1_floor_9718.png",
+   "sha256": "b5f269f094f3c027c41f484cd3bc1f563147dc35a73538087387947bc7b805b4",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9719,
+   "of": 9602,
+   "orientation": 3,
+   "file": "tier1_floor_9719.png",
+   "sha256": "94f9277c8f3b0cc695f860770331f4981b4f46d009f26cfaeebaf3e9a4ca316b",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9720,
+   "of": 9602,
+   "orientation": 4,
+   "file": "tier1_floor_9720.png",
+   "sha256": "6d34251cfa76c4ab9f5586da118eddfa00ccbc6bc77cdf2f4317708208855773",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9721,
+   "of": 9602,
+   "orientation": 5,
+   "file": "tier1_floor_9721.png",
+   "sha256": "e631d3f438e5ad32a255eb11801a234ccb51063b1623d62a4eff85dc10ada49a",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9722,
+   "of": 9602,
+   "orientation": 6,
+   "file": "tier1_floor_9722.png",
+   "sha256": "452780e95ebfd258ccd85bbbdc5a0c97209365df0cbedcc4b9aa7fb4f7ea4f1b",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9723,
+   "of": 9602,
+   "orientation": 7,
+   "file": "tier1_floor_9723.png",
+   "sha256": "0c558a0df27c201efe80c0d7320a1a76e87138315f3f2b32237e742f67b7f18d",
+   "verdict": "CLEAN"
+  }
+ ],
+ "placement": {
+  "rates": {
+   "crack": 0.11,
+   "chip": 0.14,
+   "wear": 0.34,
+   "grit": 0.85,
+   "debris": 0.07
+  },
+  "max_events_per_cell": 1,
+  "note": "Rates are derived from \u00a78.1 (traffic and indifference), never from the lattice statistic \u2014 \u00a713.4. Single source of truth: the engine planner and field_preview.py both read these, neither carries its own copy."
+ },
+ "wall_mocks": [
+  {
+   "id": 9010,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9010.png",
+   "file": "tier1_floor_9010.png",
+   "sha256": "bb03a5f27478c942701010ed904e133fb6fdf70610789589cf02462ab7e4b6e5",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9011,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9011.png",
+   "file": "tier1_floor_9011.png",
+   "sha256": "4ca7ca7e32a976437e32711812d704cf5fbde6485823b017fa3ac3bb4a1b13b7",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9012,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9012.png",
+   "file": "tier1_floor_9012.png",
+   "sha256": "82d1a7ed96e506e6d3422824f265e493e37a4849b63827a97890c65d409b171d",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9013,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9013.png",
+   "file": "tier1_floor_9013.png",
+   "sha256": "6709b68ddcbce8b878fea3b240355e2394d4788925e6b05b8cbcc8851d5ce215",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9014,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9014.png",
+   "file": "tier1_floor_9014.png",
+   "sha256": "ac0bc988c03411716414d3cd155aac49073077e7533377290f90f3481674c334",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9015,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9015.png",
+   "file": "tier1_floor_9015.png",
+   "sha256": "fb13868ca84b855b42def0c64c366bbd0f71fd769178eb3e4c381250b8384119",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9016,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9016.png",
+   "file": "tier1_floor_9016.png",
+   "sha256": "13fd730443f63dbf2bafdbf6dda32e817aa8dc139a491bc5ad5caffa8bfc7c3a",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9017,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9017.png",
+   "file": "tier1_floor_9017.png",
+   "sha256": "463f534952c9d0388e166aa2b5767150e063d0cd41a739aa2ef572f1b69fe2a1",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9018,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9018.png",
+   "file": "tier1_floor_9018.png",
+   "sha256": "d562e0969959f17e1dea61baa535bf3377379b4f3c17ad7d56376e5857a5c847",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9019,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9019.png",
+   "file": "tier1_floor_9019.png",
+   "sha256": "e49e210622e5ca9fef351c5af7496a4599d7a346e8e0fc02283590d404f1d99f",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9020,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9020.png",
+   "file": "tier1_floor_9020.png",
+   "sha256": "307703f15cb7f06c108346fcfbf4b7180a76fb84c0ca538607b1c349c3d3baff",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9021,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9021.png",
+   "file": "tier1_floor_9021.png",
+   "sha256": "6835f338d3ad3df7c21f4d6d1970f9bbc8f7d7627fad51568918504f5f137745",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9022,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9022.png",
+   "file": "tier1_floor_9022.png",
+   "sha256": "6fe1bffc220912d203db47b7debf57a67197186de21321e3c80024fe4f53e593",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9023,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9023.png",
+   "file": "tier1_floor_9023.png",
+   "sha256": "2e830a0e860ef4c555d9cbe0197aaf331e890cb0c6fb7287d559c6174ccc0dfe",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9024,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9024.png",
+   "file": "tier1_floor_9024.png",
+   "sha256": "96967bd511806d756206db13ea6473c13e6b33d3d00f637ab97c4b447b6301b7",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9025,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9025.png",
+   "file": "tier1_floor_9025.png",
+   "sha256": "44380cc39d4b3f76b92281eb9b5bef4cf70217bdb43544fd8f667710c1706abc",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9030,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9030.png",
+   "file": "tier1_floor_9030.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9031,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9031.png",
+   "file": "tier1_floor_9031.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9032,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9032.png",
+   "file": "tier1_floor_9032.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9033,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9033.png",
+   "file": "tier1_floor_9033.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9034,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9034.png",
+   "file": "tier1_floor_9034.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9040,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9040.png",
+   "file": "tier1_floor_9040.png",
+   "sha256": "dbc7c20f6414cdd689d73c10233cc7b3624cd37d9f0c6bd6148ea7649fd9656e",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9041,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9041.png",
+   "file": "tier1_floor_9041.png",
+   "sha256": "803fe0edee650d5cc670ab3ba8fefb8dc9aee99f44ecbf10a11369c987b2841d",
+   "role": "wall mock, unchanged"
+  }
+ ],
+ "theme": "src/Presentation/assets/tier1_floors/tile_themes_tier1_floors.yaml"
+}

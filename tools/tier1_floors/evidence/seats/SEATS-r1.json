@@ -1,0 +1,91 @@
+{
+ "round": 1,
+ "commit": "da1b2a9e16dd568ee23fe3d1641e73ffbcd1319f",
+ "seats": {
+  "F1": {
+   "Q1": "WHAT IS THIS FLOOR MADE OF?**",
+   "Q1_WHY": "**",
+   "Q2": "WHICH WAY WOULD YOU WALK, AND WHY?**",
+   "Q3": "HAS ANYTHING HAPPENED TO THIS FLOOR?**",
+   "Q3_WHY": "**",
+   "Q4": "IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**",
+   "Q5": "DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**",
+   "Q6": "WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**",
+   "CULL": "**",
+   "RANK": "",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "flips": [
+    "Kill the 3-tile diagonal repeat \u2014 (372, 82) and (564, 274) are the identical crack map, as are (308, 82)/(500, 274) and (244, 82)/(436, 274). Enough variants, or non-tiling generation, that no crack shape recurs anywhere on one screen.",
+    "Delete the two tile-sized rectangular outlines at (376, 141)\u2013(441, 201) and (500, 141)\u2013(571, 201) \u2014 they read as selection highlights on the player's cell, and no floor feature should be a grid-aligned right-angled box.",
+    "Stop stamping the soft dark smudge \u2014 8+ instances including (415, 231), (465, 246), (531, 167), (559, 161), (469, 275), (525, 343), (329, 339). Replace with a few hand-drawn, hard-edged marks that each mean a specific thing, at much lower density.",
+    "Break the single cell scale: every polygon is 20\u201335 px across at (200, 40), (460, 250), (600, 370) alike. Introduce large intact slabs and zones of small shattered chip, and give individual flags their own base tone, so the surface has regions with different histories.",
+    "Put use and repair into the ground: a worn, polished channel running through the room into the corridor mouth at (372\u2013436, 402), and at least one visible orc repair \u2014 driven pins, a lashed plate, a timber patch over a broken-through flag \u2014 so four hundred years of traffic leave a mark."
+   ],
+   "mapping": {
+    "A": "scene_family.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r1_F1_transcript.txt"
+  },
+  "F2": {
+   "Q1": "WHAT IS THIS FLOOR MADE OF?**",
+   "Q1_WHY": "** The whole surface is one continuous polygonal crack network with no straight joints, no repeating rectilinear module, and no mortar. Cells are irregular five- and six-sided plates, 20\u201350px across, meeting at Y-junctions \u2014 that is shrinkage cracking, not masonry. Base colour sampled at (400,250) is `181,130,83`, a mid-brown; the crack lines sit at `143,103,66` and are hue-shifted toward olive, not simply darker. There are no cut edges anywhere on the floor. The only rectilinear marks are a handful of small stamped rectangle outlines drawn in the crack colour \u2014 one at x\u2248540\u2013560, y\u2248275\u2013295, another at x\u2248320\u2013340, y\u2248343\u2013362 \u2014 and they sit *on top of* the organic crack net rather than under it, so they read as a different material's leftovers rather than as the floor's structure. They contradict the answer rather than support it.",
+   "Q2": "WHICH WAY WOULD YOU WALK, AND WHY?**",
+   "Q3": "HAS ANYTHING HAPPENED TO THIS FLOOR?**",
+   "Q3_WHY": "**",
+   "Q4": "IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**",
+   "Q5": "DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**",
+   "Q6": "WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**",
+   "CULL": "** A three-tile strip of floor is duplicated pixel-for-pixel twice on the same screen.",
+   "RANK": "",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "flips": [
+    "Break the (+3,+3) / (+4,\u22124) repeat lattice \u2014 randomise or hash tile selection by world position so no two identical tiles appear within one screen, and grow the variant count past the current handful.",
+    "Cut the round dark discs to a third of their number, and vary diameter and edge shape; 55 identical 14px circles at 1.3 per tile is the loudest thing on the ground and it reads as a stamp.",
+    "Flatten the per-tile brightness offsets so the 64px grid stops showing as straight seams across the room \u2014 the steps at y=144, y=272 and x=308 must drop below the crack contrast.",
+    "Add a contact transition where floor meets wall: a darkened band and accumulated spoil/grit along the full wall line, x=180 and x=628 and y=16, so the floor stops looking like it was cut out with a rectangle tool.",
+    "Put history on it: a worn, crack-free traffic lane through the south corridor mouth (x372\u2013436) and the west doorway (y208\u2013272), and at least one visible orc repair \u2014 driven pins, lashed timber, a hammered patch over a break \u2014 somewhere in the lit area."
+   ],
+   "mapping": {
+    "A": "scene_plant.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r1_F2_transcript.txt",
+   "plant_caught": false,
+   "plant_words_hit": []
+  }
+ },
+ "plant_seat": "F2",
+ "round_void": true,
+ "plant_words_declared": [
+  "cobweb",
+  "web",
+  "collapse",
+  "collapsed",
+  "ruin",
+  "ruined",
+  "rubble",
+  "moss",
+  "hole",
+  "holes",
+  "broken",
+  "shatter",
+  "crack",
+  "cracked",
+  "damage",
+  "destroyed"
+ ],
+ "law": "LOOP-PROCESS \u00a74: if the critic does not catch the plant, the round is VOID and its findings are not read."
+}

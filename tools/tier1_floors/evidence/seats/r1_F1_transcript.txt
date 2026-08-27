@@ -1,0 +1,53 @@
+Grid measured off the placeholder blocks: 64 px cells, vertical seams at x = 180, 244, 308, 372, 436, 500, 564, 628; horizontal at y = 18, 82, 146, 210, 274, 338, 402. All coordinates below are in the 750×600 image.
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Crazy paving — irregular polygonal stone flags laid flush, hairline dark joints, mid-brown. But I want to be honest about a wobble: it reads about equally as a dried, cracked mud pan. It is not confidently one thing.
+
+**Q1_WHY:**
+The joints argue for paving: at (405–480, 300–360) the dark lines are closed polygons with clean junctions and occasional 90° corners, which is masonry, not desiccation. And there are small rectangular slabs set into the crazy paving at (347, 84), (355, 105), (512, 90), (588, 285) — deliberate rectangles, so someone cut stone. Against that: there is no value separation between flag and joint beyond a 1 px darker line. Real paving has each flag at its own tone; here at (405–480, 300–360) every cell sits within a few percent of its neighbours, so the "stones" have no individual identity and the surface flattens into one skin with lines scored on it. That is what pushes it toward mud.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor mouth at x 372–436, y 402 → 600. **Nothing about the ground influenced that.** I picked it on geometry alone — it is a corridor shape, so it must go somewhere.
+
+The ground is identical in all three available directions. West passage (x 0–180, y 140–270, brightened to check) has the same cell scale, same joint width, same speckle density, and even the same smudge decal at (78, 230) as the room centre. The corridor mouth at (372–436, 402) has no threshold, no sill, no scuffing, no debris drift at its edges, no polish. If you rotated the room 90° I would make the same choice for the same non-reason.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+No. Nothing has happened to it. It is uniformly cracked at exactly one scale, edge to edge, and that is the whole of its condition. It is not worn, not repaired, not fouled, not settled, not broken through. It has the look of distress that was applied at manufacture rather than accumulated.
+
+**Q3_WHY:**
+Cell size is constant everywhere I measure — every polygon is roughly 20–35 px across, at (200, 40), at (460, 250), at (600, 370), in the dark west passage at (60, 190). There is no patch of large intact slab and no patch of shattered chip, so there is nowhere the floor is older or newer than anywhere else. The 1–2 px dark speckles are scattered at the same density in the room centre (430, 250) as in the far corner (600, 60) — grit does not distribute itself evenly, it collects. For a place in continuous heavy use since before records began, held by a garrison for four hundred years, there is not one driven pin, one lashed plate, one timber patch, one cracked-out flag someone gave up on. The only marks on it are the smudges in Q4, and those are the same smudge.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes, three things.
+
+1. **Two rectangular outlines at (376, 141)–(441, 201) and (500, 141)–(571, 201).** The first sits exactly around the player's cell. Both are axis-aligned right-angled boxes about 60 px tall sharing the same top and bottom edge, in a field that is otherwise entirely irregular polygons. Side by side in the same row, tile-sized and near tile-aligned, they read as a UI selection highlight on the player and a second highlight on the cell three over. They are texture, not UI, but that is not what the eye concludes. This is the single loudest thing in the frame for me and I kept snapping back to it.
+
+2. **A soft dark smudge, repeated.** Clearest at (415, 231) and (465, 246) — two of them within 50 px of each other. Template-matching that decal across the floor returns it again at (531, 167), (559, 161), (469, 275), (529, 214), (525, 343), (329, 339), and once more in the south corridor at about (405, 533). Roughly one per tile and a half. It is also blurrier than everything around it: soft radial falloff against 1 px hard-edged crack lines, so it sits in a different drawing language than the surface it is on.
+
+3. **A diagonal rhythm.** I could not name it by eye but I kept feeling a down-right cadence. It is measurable — see Q5.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+An image that was repeated. Not arguable — I checked it.
+
+Removing the lighting field and correlating every 64 px floor cell against every other, the strongest matches are, in order: tile at (372, 82) vs (564, 274) at 0.94; (308, 82) vs (500, 274) at 0.87; (244, 82) vs (436, 274) at 0.85; then (180, 18)/(372, 210), (180, 146)/(372, 338), (244, 18)/(436, 210), (180, 82)/(372, 274), (244, 146)/(436, 338) — all in the 0.6–0.75 band. Every one of those pairs is at the same offset: **exactly +3 tiles right, +3 tiles down (192, 192 px)**. Rendered side by side, (372, 82) and (564, 274) are the same crack map pixel for pixel; only the lighting differs. That is one texture indexed on a three-cell diagonal period, and a diagonal is the worst period to have, because the eye reads diagonals as stripes.
+
+Second finding in the same pass: per-cell flat brightness offsets baked into the texture. With the light field divided out, albedo steps hard at grid seams — +5% across y = 146, +4.3% across y = 210, −6.9% across y = 274, −3.9% across x = 436. Those are not lighting (the light field itself is smooth, no derivative above 2 units anywhere on row y = 300). They are the tiles themselves being different brightnesses, and they produce the faint rectangular checker visible around (390–630, 210–270).
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The cell shapes are drawn with a steady hand, the joints are legible at phone size, the light sits on it without muddying it, and the sprite reads clearly against it. That is the job done. It is not good: it has no material conviction — I could not tell you in Q1 whether it is stone or mud — and it carries no information. A player walking this floor for an hour learns nothing from it about where they are, where they have been, or where anyone else has been. It is a surface that stops the character falling through the world.
+
+**CULL:**
+The same 64 px crack pattern repeats every three tiles down-right; the floor visibly loops.
+
+**FLIP LIST**
+- Kill the 3-tile diagonal repeat — (372, 82) and (564, 274) are the identical crack map, as are (308, 82)/(500, 274) and (244, 82)/(436, 274). Enough variants, or non-tiling generation, that no crack shape recurs anywhere on one screen.
+- Delete the two tile-sized rectangular outlines at (376, 141)–(441, 201) and (500, 141)–(571, 201) — they read as selection highlights on the player's cell, and no floor feature should be a grid-aligned right-angled box.
+- Stop stamping the soft dark smudge — 8+ instances including (415, 231), (465, 246), (531, 167), (559, 161), (469, 275), (525, 343), (329, 339). Replace with a few hand-drawn, hard-edged marks that each mean a specific thing, at much lower density.
+- Break the single cell scale: every polygon is 20–35 px across at (200, 40), (460, 250), (600, 370) alike. Introduce large intact slabs and zones of small shattered chip, and give individual flags their own base tone, so the surface has regions with different histories.
+- Put use and repair into the ground: a worn, polished channel running through the room into the corridor mouth at (372–436, 402), and at least one visible orc repair — driven pins, a lashed plate, a timber patch over a broken-through flag — so four hundred years of traffic leave a mark.
+
+Watch for the same 192 px diagonal in any other floor from this generator — if the repeat is in the placement rule rather than the tileset, fixing this one room will not fix the next.
+
+*Model: Claude Opus 5 (1M context)*
