@@ -126,6 +126,22 @@ be mistaken for an edge will be.**
 
 ### 2.3 The top plane is FLAT. One value, broken only by joints. **ADDED IN ROUND 2 — the seats found this, not the tape measure.**
 
+> ⚠ **SUPERSEDED IN PART AT THE DEVICE GATE (2026-08-27). The "broken only by joints" half is
+> CULLED by bible §8.3.1.** The flatness stands and is now bible §3.1. What does not stand is
+> how this round delivered it: a **regular 2 px joint grid on a 16 px pitch**, at a fixed offset
+> inside every tile. On a still at 2× that reads as the joints between blocks; tiled across a
+> room on a phone it is a **ruled lattice**, which is the motif trap arriving through the one
+> feature §3.1 had just made prominent.
+>
+> **The measurement below is not withdrawn** — the bar's top plane really is 91.5% one value with
+> 2 px joints on a half-tile grid. What is withdrawn is the inference that Yarl should copy the
+> joints. **The bar is a baked-light, hand-laid tileset; a fixed-offset rule inside a tile is
+> exactly the kind of thing that survives there and does not survive being tiled by a renderer
+> at a constant phase.**
+>
+> **Tier one inherits the open question:** a wall top's material is whatever the stone is, and if
+> that reads as empty at 32 px the answer is a variant system, not a lattice.
+
 Round 1 built the top plane by re-toning the same coursed masonry the face uses. **Both blind
 seats culled both Yarl arms `wrong-projection`, independently, for the same reason** — and
 neither was shown the other's verdict:
