@@ -1,0 +1,31 @@
+{
+ "commit": "9d5fdcd2162ada6757c80f4294036dd3ac3d23aa",
+ "scene": "src/Presentation/assets/tier0_harness/scenes/mixed_distribution.json",
+ "rig": "ambient=1a1a22 color=ffb066 energy=1.6 radius_tiles=5.5",
+ "captures": [
+  {
+   "arm": "recipe",
+   "lit": true,
+   "file": "recipe_lit.png",
+   "sha256": "906a0a0c9fc79ee1b8a0d92aa381c7339fa3cd91164bfcafdbc600b11028e332"
+  },
+  {
+   "arm": "recipe",
+   "lit": false,
+   "file": "recipe_unlit.png",
+   "sha256": "eae0ac2b11ac49f5ed74371fe8a605c44e7f65c4b5e58f70458b90112d8da6e6"
+  },
+  {
+   "arm": "plant",
+   "lit": true,
+   "file": "plant_lit.png",
+   "sha256": "d0eb43bf2ffee64a896b27f96c705eeef91f755ff9f2e1cc1f57813fea4c990f"
+  },
+  {
+   "arm": "plant",
+   "lit": false,
+   "file": "plant_unlit.png",
+   "sha256": "9c7d5d0428347c2e535af9b56988061adc179d99682a2d8363f18b070c54d704"
+  }
+ ]
+}

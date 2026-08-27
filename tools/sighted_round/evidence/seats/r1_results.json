@@ -1,0 +1,95 @@
+{
+ "round": 1,
+ "commit": "9d5fdcd2162ada6757c80f4294036dd3ac3d23aa",
+ "pairs": {
+  "S1": [
+   "recipe_lit.png",
+   "BAR"
+  ],
+  "S2": [
+   "before_lit.png",
+   "BAR"
+  ],
+  "S3": [
+   "recipe_lit.png",
+   "before_lit.png"
+  ],
+  "S4": [
+   "plant_lit.png",
+   "BAR"
+  ]
+ },
+ "slots": {
+  "S1": [
+   "A",
+   "B"
+  ],
+  "S2": [
+   "B",
+   "A"
+  ],
+  "S3": [
+   "B",
+   "A"
+  ],
+  "S4": [
+   "A",
+   "B"
+  ]
+ },
+ "results": {
+  "S1": {
+   "Q1": "B",
+   "Q1_WHY": "Only B has a plane you look down on sitting above a plane you look at, separated by a hard value step that holds across the entire frame.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "In B, at rows 32\u201379 the columns x=0\u201313 read 90 (the left wall's top) and x=16 reads 50 then x=20 reads 44 \u2014 that 50 is the same joint value used at every block boundary in the image, so the two walls abut with no intermediate plane; in A the pins are 6px flat bars whose only interior variation is a 2px lighter column, no cap and no flank, and no wall run in either image is cut or turned to show a flank.",
+   "Q4_A": "Seven black pins at x=45, 89, 163, 223, 301, 345, 419, each 6px wide spanning y\u224858\u2013110 \u2014 standing proud of the y=85 lip and dying on the y=116 base line \u2014 crossing two black horizontal rails at y=85\u201386 and y=114\u2013116; note x=301/345/419 is x=45/89/163 cloned exactly 256px right, so it is one four-pin cluster repeated, and not one pin casts a shadow.",
+   "Q4_B": "Nothing holds it \u2014 the face is literally two values, 44 with 50-value joint columns, and the only non-tile object in 336px of wall is a ~14px brown block at x\u2248322\u2013336, y\u224840\u201352.",
+   "Q5_A": "Staged \u2014 the pins are an even decorative cadence stamped in a 256px cycle, all the same length, all the same silhouette, all vertical; that is a frieze, not four hundred years of repair.",
+   "Q5_B": "Not staged, because nothing is there to stage; the one arranged thing is the 45\u00b0 stair-stepped grey wedge at x\u224815\u201360, y\u224855\u201380, which is a mechanical staircase of pixels rather than material piled against a corner.",
+   "Q6_A": "Generic \u2014 brown brick and iron spikes is the off-the-shelf dungeon, and the spike rhythm is the only idea in it; the floor's per-cell repeat is noted and out of scope.",
+   "Q6_B": "Generic \u2014 a three-value grey block wall with no wear, no repair and no material is the default tileset before anyone decided what the place was; same floor-clone caveat, out of scope.",
+   "CULL_A": "wrong-projection",
+   "CULL_B": "none",
+   "RANK": "B",
+   "Q2": "B's wall top is a flat L\u224890 for rows 0\u201329 \u2014 constant at every x, no gradient \u2014 then rows 30\u201331 jump to L\u2248125 (a 2px lip catch), then rows 32\u201379 sit at L\u224844 with L\u224850 joint columns. That is a 46-point drop in two pixels, face at 0.49\u00d7 the top, and the ratio is identical at x=8 and x=320. A has no such step: at x=232 the masonry runs 37\u2192107 as a continuous run-time gradient down 85 rows, breaks to 65 at the y=85 line, climbs back to 89, then the floor starts at 101 \u2014 so the \"top\" plane's own internal gradient (70 points) is larger than its step to the \"face\" (42 points), and at x=40 that step is 42\u219228, only 14 points, and at x=400 it is 56\u219221. A's corner therefore exists only where the light happens to land; B's exists as material.\nThe second failure in A is what sits above the break: five stacked masonry courses at ~16px pitch with light mortar, receding into darkness to the top of frame. A top surface does not show five courses of face-brick. B shows one plane, 30px deep, with only cross-joints in it.",
+   "flips": [
+    "Cut A's masonry field above y=85 from five stacked receding courses to a single top band ~28px deep, and turn its joints perpendicular to the run \u2014 short cross-joints every ~36px, matching the pin spacing \u2014 so the plane reads as stone tops rather than as elevation. Everything currently above that band stops being wall.",
+    "Author A's face-to-top relationship as a fixed material ratio instead of letting run-time light carry it: paint the face texture at ~0.5\u00d7 the top texture's base value, and clamp the light's contribution on wall tiles so the top-lip-to-face step never falls below 35 luminance points anywhere in frame. At x=40 that step is currently 42\u219228; 14 points reads as fog, not as a corner.",
+    "Replace A's y=85 break \u2014 currently a flat 2px black line \u2014 with an actual lip: 1px light catch on the topmost row of the face, then 2\u20133px of hard shadow beneath it, so the crease has thickness rather than being an outline.",
+    "Give A's pins a third dimension: a 2\u20133px lighter cap across each pin's top edge, a 2px dark column down one consistent side, and a hard 4\u20136px cast shadow from each pin onto the wall face below and to one side. Nothing in A casts a shadow onto anything at present.",
+    "Break A's 256px pin clone: pins at 45/89/163/223 repeat verbatim at 301/345/419. Vary length by \u00b130%, lean two or three of them off vertical, and let the spacing follow where the wall actually failed rather than a constant cadence."
+   ],
+   "mapping": {
+    "A": "recipe_lit.png",
+    "B": "BAR"
+   }
+  },
+  "S2": {
+   "Q1": "A",
+   "Q1_WHY": "A separates two planes by value \u2014 a flat top surface at 90 and a face at 47, roughly 2:1, with a 127 cap line on the seam between them; B's wall band and its floor are the same value once the run-time light is divided out.",
+   "Q3": "NEITHER",
+   "Q3_WHY": "A's left wall (x0\u201313) is top-plane only at value 89 with no flank drawn, and the one object with two visible planes \u2014 the timber at x326\u2013336, y40\u201353, orange top edge at y40\u201341 over a brown body \u2014 is clipped by the frame; B is elevation throughout, nothing in it terminates in a way that shows thickness.",
+   "Q4_A": "1px recessed mortar at value 37 on a running bond, a full-width 2px capping course at y30\u201331, one warmer replacement block set into the second course at x150\u2013190, and a timber baulk jammed at x326\u2013336, y40\u201353 \u2014 no rope, no driven pins, no iron, no hide.",
+   "Q4_B": "Dark 2px joints outlining every brick and an irregular rubble bond over two regular stretcher courses \u2014 nothing else; the one non-masonry element, a dark vertical strip at x200\u2013207, y28\u201346 with two cream pixels at its base, is too small to read as anything, so effectively nothing holds it together.",
+   "Q5_A": "In use \u2014 bones scattered in loose clusters rather than laid out, drips running from joints where water would run \u2014 except the two pale grey debris shapes at x16\u201360,y58\u201380 and x285\u2013292,y68\u201395, which are smooth-edged flat silhouettes with no stones in them and read as placed decals, not accumulation.",
+   "Q5_B": "Not posed, but not in use either \u2014 the same brick set tiled across the band and the floor's identical inscribed panel repeating on an exact grid make it read as a pattern rather than a place anything happened in.",
+   "Q6_A": "Generic \u2014 grey coursed masonry, brown dirt, skeletons is the stock version; only the replacement block and the timber suggest anywhere with its own rules. (Floor, out of scope: one dirt mottle cloned.)",
+   "Q6_B": "Generic \u2014 warm sandstone over rubble core reads as off-the-shelf tomb, and nothing in the wall states a rule. (Floor, out of scope: one panel tile cloned identically across the entire field.)",
+   "CULL_A": "none",
+   "CULL_B": "wrong-projection",
+   "RANK": "A",
+   "Q2": "A's north wall is three tone-bands stacked in a fixed order down the screen: top plane y0\u201329 held at exactly 90 (91.5% of those pixels are literally 90) with 2px vertical joints at x=60,108,158,206,252,300; a 2px cap course at y30\u201331 at 124\u2013147; then the face y32\u201379 at 44 body / 50 course-top / 37 mortar recess, on a 16px course pitch. The face at 47 mean is darker than the floor at 64, so the wall reads as under the light rather than in it, and rust drips hang *downward* from the joints at (150,73) and (175,72) \u2014 a cue that only works on a vertical surface.\nB has none of this. Dividing out the torch falloff, B's upper rubble band (y4\u201348) reads 110, its brick courses (y74\u2013104) read 117, its floor (y118\u2013300) reads 113 \u2014 three planes within seven values of each other. The only mark at the presumed top/face seam is a black line at y50\u201353, and the brick coursing above it has the same pitch, proportion and orientation as below, so it is not a top surface \u2014 it is more face.\nB's wall/floor junction at y\u2248107 is a single 2px black line with no lit lip above it, so the wall has no measurable thickness; the only reason it separates from the floor at all is that the torch happens to be low in frame.",
+   "flips": [
+    "Split B's wall band into two albedo planes and hold them apart in the source art, before any run-time light: re-tone everything above the y\u224852 seam as top surface at roughly twice the face's value, and keep only y\u224874\u2013107 as face. Target A's ratio \u2014 top \u224890, face \u224847 \u2014 not B's current 110 vs 117.",
+    "Add a cap: a 2px full-width band one to two steps brighter than the top plane, sitting on the near edge of the top where it meets the face, at B's y\u224870\u201373. A's equivalent is y30\u201331 at 124\u2013147 against a 90 top and a 47 face; B currently has a bare black line at y107 and no lip anywhere.",
+    "Re-lay the coursing on the new top plane so it is not the same bond as the face: A shows vertical joints only, at 48px pitch, with no horizontal courses on the top. B's rubble band currently repeats the face's horizontal coursing at identical pitch and brick proportion, which is what makes the seam read as a crack instead of an edge.",
+    "Separate the wall from the floor it stands on: B's floor field is 113 and its wall band is 110\u2013117, so the silhouette exists only while the torch is close. Push the floor down or the top plane up to three distinct steps, as A does at 47 face / 64 floor / 90 top."
+   ],
+   "mapping": {
+    "B": "before_lit.png",
+    "A": "BAR"
+   }
+  }
+ }
+}

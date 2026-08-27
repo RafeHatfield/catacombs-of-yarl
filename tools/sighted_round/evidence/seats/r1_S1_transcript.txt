@@ -1,0 +1,30 @@
+Q1: B
+Q1_WHY: Only B has a plane you look down on sitting above a plane you look at, separated by a hard value step that holds across the entire frame.
+
+Q2: B's wall top is a flat L≈90 for rows 0–29 — constant at every x, no gradient — then rows 30–31 jump to L≈125 (a 2px lip catch), then rows 32–79 sit at L≈44 with L≈50 joint columns. That is a 46-point drop in two pixels, face at 0.49× the top, and the ratio is identical at x=8 and x=320. A has no such step: at x=232 the masonry runs 37→107 as a continuous run-time gradient down 85 rows, breaks to 65 at the y=85 line, climbs back to 89, then the floor starts at 101 — so the "top" plane's own internal gradient (70 points) is larger than its step to the "face" (42 points), and at x=40 that step is 42→28, only 14 points, and at x=400 it is 56→21. A's corner therefore exists only where the light happens to land; B's exists as material.
+The second failure in A is what sits above the break: five stacked masonry courses at ~16px pitch with light mortar, receding into darkness to the top of frame. A top surface does not show five courses of face-brick. B shows one plane, 30px deep, with only cross-joints in it.
+
+Q3: NEITHER
+Q3_WHY: In B, at rows 32–79 the columns x=0–13 read 90 (the left wall's top) and x=16 reads 50 then x=20 reads 44 — that 50 is the same joint value used at every block boundary in the image, so the two walls abut with no intermediate plane; in A the pins are 6px flat bars whose only interior variation is a 2px lighter column, no cap and no flank, and no wall run in either image is cut or turned to show a flank.
+
+Q4_A: Seven black pins at x=45, 89, 163, 223, 301, 345, 419, each 6px wide spanning y≈58–110 — standing proud of the y=85 lip and dying on the y=116 base line — crossing two black horizontal rails at y=85–86 and y=114–116; note x=301/345/419 is x=45/89/163 cloned exactly 256px right, so it is one four-pin cluster repeated, and not one pin casts a shadow.
+Q4_B: Nothing holds it — the face is literally two values, 44 with 50-value joint columns, and the only non-tile object in 336px of wall is a ~14px brown block at x≈322–336, y≈40–52.
+
+Q5_A: Staged — the pins are an even decorative cadence stamped in a 256px cycle, all the same length, all the same silhouette, all vertical; that is a frieze, not four hundred years of repair.
+Q5_B: Not staged, because nothing is there to stage; the one arranged thing is the 45° stair-stepped grey wedge at x≈15–60, y≈55–80, which is a mechanical staircase of pixels rather than material piled against a corner.
+
+Q6_A: Generic — brown brick and iron spikes is the off-the-shelf dungeon, and the spike rhythm is the only idea in it; the floor's per-cell repeat is noted and out of scope.
+Q6_B: Generic — a three-value grey block wall with no wear, no repair and no material is the default tileset before anyone decided what the place was; same floor-clone caveat, out of scope.
+
+CULL_A: wrong-projection
+CULL_B: none
+RANK: B
+
+FLIP LIST
+- Cut A's masonry field above y=85 from five stacked receding courses to a single top band ~28px deep, and turn its joints perpendicular to the run — short cross-joints every ~36px, matching the pin spacing — so the plane reads as stone tops rather than as elevation. Everything currently above that band stops being wall.
+- Author A's face-to-top relationship as a fixed material ratio instead of letting run-time light carry it: paint the face texture at ~0.5× the top texture's base value, and clamp the light's contribution on wall tiles so the top-lip-to-face step never falls below 35 luminance points anywhere in frame. At x=40 that step is currently 42→28; 14 points reads as fog, not as a corner.
+- Replace A's y=85 break — currently a flat 2px black line — with an actual lip: 1px light catch on the topmost row of the face, then 2–3px of hard shadow beneath it, so the crease has thickness rather than being an outline.
+- Give A's pins a third dimension: a 2–3px lighter cap across each pin's top edge, a 2px dark column down one consistent side, and a hard 4–6px cast shadow from each pin onto the wall face below and to one side. Nothing in A casts a shadow onto anything at present.
+- Break A's 256px pin clone: pins at 45/89/163/223 repeat verbatim at 301/345/419. Vary length by ±30%, lean two or three of them off vertical, and let the spacing follow where the wall actually failed rather than a constant cadence.
+
+Model: Claude Opus 5 (1M context).
