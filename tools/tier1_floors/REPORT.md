@@ -6,7 +6,70 @@ to it.
 
 ---
 
-## 0a. THE VERDICT, AND WHAT GOES TO THE PHONE
+## 0. RULING 56 — THE BOUNDARY'S RIG IS RATIFIED. SESSION PARKED.
+
+**§6.2.1's precondition is discharged.** Rafe ran the readability pass on the reference device, at
+gameplay distance, against the tier-one floor family, and ratified:
+
+| knob | value | unit — stated, because a knob position is not a value |
+|---|---:|---|
+| **radius** | **5.0** | **TILES**, not pixels — a 320px radius at the RULED 32px tile |
+| **falloff** | **1.00** | **EXPONENT** on `(1 − smoothstep(0,1,d))^f`. 1.00 is the identity curve, ratified as a decision |
+| **ambient level** | **0.70** | **SCALAR on the hue**, not a colour: `#1a1a22 × 0.70 → rgb(18,18,24) = #121218` |
+
+Hue `1a1a22`, light `ffb066`, energy `1.6` unchanged. **Boundary only** — every other region
+derives its own at its own gate. Landed in `harness_config.yaml` (status `RULED (Boundary only)`)
+and the device marker; bible §6.2 and §6.2.1 updated. Tier-0 controls **5/5** on the ratified rig.
+
+**The pass took light AWAY** (ambient 1.0 → 0.70), so §6.2's arc — *you begin as the only thing
+here that burns* — is not weakened by it.
+
+⚠ **§6.5's stack was NOT answered and could not be.** The clause asks whether the value stack
+survives the falloff, and the stack is a wall-to-floor relationship; this scene's walls are
+programmer-art mocks. **The rig is ratified on floor legibility alone**, and the first round that
+puts real walls in the scene inherits that question rather than a settled answer.
+
+⚠ **The re-derivation rule has fired.** `WALL-RECIPE.md`'s face ÷ top ≈ 0.35 was authored to
+deliver 0.52 through the *old* rig and is now stale. Those walls were culled at the 2026-08-27
+gate so nothing shipping depends on it — but the number must not be picked up and reused. The
+floor family derives no ratio against the rig, so it needs none.
+
+⚠ **The scene the rig was ratified on has no automated legibility guard.**
+`ProbeJunctionLuminance` refuses a capture whose junction is dark, but only runs where the
+geometry has one — and `tier1_floor_review` reports `junction=NO`. The corridor scene is
+protected; the floor scene is not. **Recorded for session two**, not built, because the
+instruction was to land and park.
+
+**Backlog:** issue #154 — a bounded player brightness/gamma option (~±15–20%) layered *above* the
+authored values. Players adjust their screen; they never adjust the region's meaning.
+
+**ON THE DEVICE.** The ratified rig was rebuilt and **installed** (`devicectl` confirms the bundle
+present). **Its boot verification did not complete: the handset was locked and refused the
+launch** —
+
+```
+Unable to launch com.rafehatfield.catacombsofyarl.tier0 because the device was not,
+or could not be, unlocked.  (FBSOpenApplicationErrorDomain error 7)
+```
+
+So the last *fully verified* build remains the pre-ruling one, commit `a1c6782c` — installed,
+launched, booted into `tier1_floor_review` with the rig live, read back off the phone. **The
+build now on the device carries the ratified rig and has not had its boot read back.** One
+command closes it, with the phone unlocked:
+
+```
+tools/tier0_harness/verify_on_device.sh
+```
+
+It re-reads the bundle id from the device, launches, pulls `Documents/diag.log`, and requires the
+scene, theme, overlays and rig panel — exiting non-zero on any of them. Stated this way rather
+than as "deployed" because that is the distinction this session already got wrong once.
+
+**PARKED.** Floor session two resumes under the edge-matching ruling (§10.7).
+
+---
+
+## 0a. THE FLOOR'S VERDICT, AND WHAT WENT TO THE PHONE
 
 **The floor family does NOT go to the landing gate.** Five seat rounds, four valid, and the blind
 critic culls it in every one. LOOP-PROCESS §1.1.1 is unambiguous: *nothing reaches the human gate
@@ -56,7 +119,7 @@ boundaries — §10.7.
 
 ---
 
-## 0. THE HEADLINE
+## 0b. THE HEADLINE
 
 **A floor family exists, it is the first real candidate art this project has composed, and the
 thing that made it possible was not generation.** Forty generations conditioned on C-GAB at the
