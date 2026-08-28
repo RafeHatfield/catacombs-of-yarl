@@ -312,11 +312,49 @@ This is offered as a candidate clause rather than assumed.
 
 ### (b) §8.2.1's "signals by absence" has a floor, and it has now been located
 
-Absence is bounded: subtract enough and there is nothing left to subtract. Three seat rounds
-missed the channel at grain 0.38 / spread 0.45. It now measures 0.350 / 0.578 / 0.775 against the
-same stones unpolished — most of what there is to take. **If a seat still cannot find it, absence
-alone cannot carry the channel and §8.2.1 needs a ruling**, because the alternative the clause
-forbids (brightness) is the only lever left.
+**This is the trigger this session most wants a ruling on, and it is no longer a prediction.**
+
+Absence is bounded: subtract enough and there is nothing left to subtract. The channel was
+strengthened to the limit of what subtraction can do —
+
+| | before | now |
+|---|---:|---:|
+| grain a trodden stone keeps | 0.38 | **0.08** |
+| value spread it keeps | 0.45 | **0.20** |
+| arris (joint depth lost beside worn stone) | none | **0.45** |
+
+— which measures **0.350 / 0.578 / 0.775** against the same stones unpolished. Two thirds of the
+grain, two fifths of the value variety and a quarter of the joint depth, all gone.
+
+**Round 7's two independent blind seats still did not see it.** Not "found it weak" — did not
+report it at all, in a capture carrying 20 channel cells, with one of them checking for it
+explicitly:
+
+> *"I checked specifically for a floor-based reason and there isn't one: the paving in the corridor
+> mouth is the identical bond, identical joint width, identical stone tone as the paving in the far
+> corner. No path is worn smoother, no direction is more scuffed, no threshold is dished from feet.
+> **If you rotated the room 180° the floor would give me exactly the same amount of information:
+> none.**"*
+
+That is four seat rounds across two sessions. The clause's own words are *"polish signals by
+ABSENCE, never brightness"*, and the reasoning behind it is sound — under a carried lamp,
+brightness is what the light is saying, and session two watched a seat read the old channel's
+value lift as the torch. But the measurement now says the permitted lever, driven to its limit,
+is **below the perceptual floor at 32px under that lamp**.
+
+**Three ways out, and the choice is not mine:**
+
+1. **Absence stands, and the channel is abandoned** as a thing the floor can express — traffic is
+   carried by incident (debris drift, worn edges, damage at chokepoints) rather than by polish.
+2. **§8.2.1 is amended** to permit a bounded value change on trodden stone, with the amount
+   derived rather than chosen, and with the torch-confusion risk carried explicitly.
+3. **The channel changes shape** — polish widened from stones to a route the eye can follow at
+   room scale, rather than a two-cell band, so that absence has enough *extent* to read even
+   though it has little *contrast*.
+
+Option 3 is the one this session would try next under its own steam; it is the only one that does
+not need a clause changed. It is not attempted here because it is a scene-design change, not a
+family change, and the family is what was briefed.
 
 ### (c) The cull axis is §8.1 damage and repair, which the FLOOR FAMILY cannot supply
 
