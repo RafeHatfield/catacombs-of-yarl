@@ -719,6 +719,40 @@ game. Tune the cheap thing.**
 >   rather than adding it, so *you begin as the only thing here that burns* is not weakened by it.
 > - *The values written back* — above.
 >
+> **NOMINAL RADIUS IS NOT DELIVERED REACH — RECORDED (Rafe, 2026-08-28), and it is a note on the
+> clause rather than a qualification of the ruling.**
+>
+> The ratified `radius_tiles` is **5.0**. Measured on the ratified rig, floor luminance as a
+> fraction of lit floor one tile from the lamp:
+>
+> | distance from the lamp | ratio |
+> |---:|---:|
+> | 2.0 tiles | 0.659 |
+> | 3.2 | 0.341 / 0.328 |
+> | **4.0** | **0.159** |
+> | **5.0** | **0.060** |
+> | ground declared dark (5–6 tiles) | 0.057 / 0.059 |
+>
+> **At the nominal radius the floor reads the same as ground the scene declares dark** — 0.060
+> against an ambient floor of ~0.058. The lamp's *delivered* reach is about **four** tiles.
+>
+> **RATIFICATION STANDS, per §13.2.** The rig was ratified on the device, by eye, at gameplay
+> distance — and the eye is the final instrument. A luminance ratio has never been calibrated
+> against *legible to a person holding a phone in a dark room*, and a number does not get to
+> overturn a look. What the measurement establishes is narrower and still useful: **nominal and
+> delivered are different quantities, and scene design must use the delivered one.** A subject
+> placed at the nominal radius is placed in the dark.
+>
+> **CONSEQUENCE FOR EVERY REGION AFTER THIS ONE — RULED: future regions ratify by DELIVERED
+> REACH.** The Boundary's 5.0 is now a number with a known meaning; a second region ratifying its
+> own 5.0 by eye would be adopting the Boundary's *label* without its measurement. Each region
+> states the distance at which its light actually carries, measured, alongside whatever radius
+> parameter produces it.
+>
+> ⚠ **The delivered figure is rig-shaped, not universal.** It follows from radius, falloff, energy
+> and ambient together — change any of them and it moves. It is recorded here because §6.2 is
+> where someone will be standing when they place something at "the edge of the light".
+>
 > **AND THE RE-DERIVATION RULE HAS FIRED.** The rig moved: radius 5.5 → 5.0, ambient 1.0 → 0.70.
 > Every authored ratio derived against the old numbers is now compensating against a rig that no
 > longer exists. Concretely: the sighted round's `WALL-RECIPE.md` authored face ÷ top at ≈0.35 to
