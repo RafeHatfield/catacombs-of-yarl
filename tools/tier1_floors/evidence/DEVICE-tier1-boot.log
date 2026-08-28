@@ -1,12 +1,13 @@
-[DIAG 00000 F0 T0.272] === Session started ===
-[DIAG 00001 F0 T1.132] [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
-[DIAG 00002 F0 T1.135] [Tier1] BUILD IDENTITY: commit=416f105c124be41dbe286494e08efc7ee51cf587 built=2026-08-28T05:09:52Z app=Catacombs of YARL
-[DIAG 00003 F0 T1.135] [Tier0] corridor scene: tier1_floor_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json)
-[DIAG 00004 F0 T1.135] [Tier0] map=17x21 player=(8,6) carve_rects=5
-[DIAG 00005 F0 T1.135] [Tier0] junction=NO
-[DIAG 00006 F0 T1.135] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_floors/tile_themes_tier1_floors.yaml
-[DIAG 00007 F0 T1.135] [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
-[DIAG 00008 F0 T1.144] [Tier1] floor overlays: cells=74 channel=21 neglected=12 drawn(grit=45 event=44 channel=21 occlusion=64) cell_shadow_suppressed=49 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
+[DIAG 00000 F0 T0.553] === Session started ===
+[DIAG 00001 F0 T1.482] [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
+[DIAG 00002 F0 T1.486] [Tier1] BUILD IDENTITY: commit=080b32ce31647f95a2fea1046b668c63ce879fed built=2026-08-28T22:10:50Z app=Catacombs of YARL
+[DIAG 00003 F0 T1.486] [Tier0] corridor scene: tier1_floor_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json)
+[DIAG 00004 F0 T1.486] [Tier0] map=17x21 player=(8,6) carve_rects=5
+[DIAG 00005 F0 T1.486] [Tier0] junction=NO
+[DIAG 00006 F0 T1.486] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
+[DIAG 00007 F0 T1.486] [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
+[DIAG 00008 F0 T1.487] [Tier1] variant census: cells=74 distinct=1 max_multiplicity=74  step_top2: row=1.000(58/58) col=1.000(58/58) diag=1.000(47/47) anti=1.000(46/46)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
+[DIAG 00009 F0 T1.493] [Tier1] floor overlays: cells=74 channel=21 neglected=12 drawn(grit=0 event=0 channel=0 occlusion=64) cell_shadow_suppressed=49 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
 [Tier1]   #################
@@ -29,5 +30,7 @@
 [Tier1]   #####.......#####
 [Tier1]   #################
 [Tier1]   #################
-[DIAG 00009 F0 T1.144] [Tier0] review_build_marker=res://src/Presentation/assets/tier0_harness/REVIEW_BUILD.json
-[DIAG 00010 F0 T1.145] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00010 F0 T1.493] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
+[DIAG 00011 F0 T1.642] [Tier1] ashlar floor: laid=74 channel_cells=20 missing=0 families=5 seed=1337 atlases=100 edge_check=128/OK stone_check=144/OK paint_check=96/OK manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
+[DIAG 00012 F0 T1.642] [Tier0] review_build_marker=res://src/Presentation/assets/tier0_harness/REVIEW_BUILD.json
+[DIAG 00013 F0 T1.642] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
