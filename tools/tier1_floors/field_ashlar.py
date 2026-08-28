@@ -56,6 +56,19 @@ T = CA.T
 # ASSEMBLY — the tiles supply material and bond; this supplies the stone values.
 # =================================================================================================
 
+def _one_course_split():
+    """Index of the degenerate split the constant-pitch plant needs, appended once.
+
+    ⚠ IT MUTATES `CA.SPLITS`, WHICH THE COMPOSER WRITES INTO THE MANIFEST. In separate processes
+    that is harmless and in one process it is a bogus split shipped to the engine, so the append
+    is idempotent and the composer asserts the table it writes is the one it declared. A landmine
+    that only goes off when two tools share an interpreter is still a landmine.
+    """
+    if [T, 0] not in CA.SPLITS:
+        CA.SPLITS.append([T, 0])
+    return CA.SPLITS.index([T, 0])
+
+
 def stone_worn(worn, kind, x, y):
     """Is this stone in the trodden channel?
 
@@ -108,9 +121,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
             # joints in the world are the tile boundaries themselves — the corner theorem's bill
             # paid in full, with nothing else on the floor to hide it behind.
             if defect == "one_course":
-                if [T, 0] not in CA.SPLITS:
-                    CA.SPLITS.append([T, 0])
-                split_i = CA.SPLITS.index([T, 0])
+                split_i = _one_course_split()
             _tile, jm, cls, L = CA.build_tile(n, e, s_, wf, mat, seed, drops, split_i)
             L = L.astype(float)
 

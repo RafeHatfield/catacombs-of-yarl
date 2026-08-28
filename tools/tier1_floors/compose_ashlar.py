@@ -526,6 +526,13 @@ def main():
     ap.add_argument("--out", default=ASSETS)
     a = ap.parse_args()
 
+    # The constant-pitch plant appends a degenerate split to this table at runtime. If a caller
+    # ever runs the plants and the composer in one interpreter, that split would be written into
+    # the manifest and shipped to the engine as if it were art.
+    if SPLITS != [[16, 16], [11, 21], [21, 11], [13, 19]]:
+        raise SystemExit("REFUSING: SPLITS is not the declared table — %s. Something mutated it; "
+                         "a manifest written now would ship a split nobody authored." % SPLITS)
+
     src = json.load(open(os.path.join(CF.ASSETS, "MANIFEST.json")))
     mat = src["material"]
     os.makedirs(a.out, exist_ok=True)
