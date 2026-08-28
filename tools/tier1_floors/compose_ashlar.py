@@ -430,7 +430,13 @@ def build_tile(n, e, s, w, mat, seed, drops=(0, 0), split_i=0):
             prof = (1 - t_axis) * (0.30 + 0.20 * w) + t_axis * (0.30 + 0.20 * e)
             rows = [Y - 1, Y]
         for r in rows:
-            bed_rows.append((r, prof))
+            # Bounds-guarded: a split whose interior line lands on the far boundary (which is how
+            # the one-course plant is built) asks for row T, and an unguarded write there is an
+            # IndexError rather than a floor. Cheap, and it keeps degenerate splits expressible —
+            # which matters, because the plant for the corner theorem's own cost IS a degenerate
+            # split.
+            if 0 <= r < T:
+                bed_rows.append((r, prof))
 
     # ---- HEAD JOINTS and the class map, course by course.
     for c in range(COURSES):

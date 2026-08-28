@@ -103,6 +103,14 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
             # THE PLANT FOR BANDING: every row on the same split, which is what the geometry did
             # before the seat objected to it.
             split_i = 0 if defect == "uniform_courses" else CA.row_split(y, seed)
+            # THE PLANT FOR CONSTANT PITCH: a split of [T, 0] puts the interior bed line exactly
+            # on top of the next boundary, so ONE course fills the tile and the only full-width
+            # joints in the world are the tile boundaries themselves — the corner theorem's bill
+            # paid in full, with nothing else on the floor to hide it behind.
+            if defect == "one_course":
+                if [T, 0] not in CA.SPLITS:
+                    CA.SPLITS.append([T, 0])
+                split_i = CA.SPLITS.index([T, 0])
             _tile, jm, cls, L = CA.build_tile(n, e, s_, wf, mat, seed, drops, split_i)
             L = L.astype(float)
 
@@ -441,6 +449,45 @@ def channel_legibility(img, baseline, joints, worn_cells, w, h):
                 inside_px=a["inside_px"])
 
 
+def constant_pitch_lines(joints, w, h):
+    """HOW MUCH OF THE COURSING SITS AT THE ONE PITCH THAT CAN NEVER MOVE?
+
+    A blind seat found this and culled for it, in one sentence:
+
+        "Five continuous unbroken full-width joints at exact 64px pitch, which no slab ever
+         bridges. That is a tile edge, not a mason's decision. A mason lays a long stone across a
+         course line; a tiling engine cannot."
+
+    It is right, and it is not a defect that can be fixed inside the family. No stone may cross a
+    horizontal tile boundary — four tiles meet at a grid corner and the diagonal pair share nothing
+    to address a stone with — so a full-width joint sits at exactly one tile pitch for ever, in
+    every region, in any floor that wants its stone values addressed at runtime. That is the
+    corner theorem's bill, and this measures it.
+
+    `grid_hiding` cannot see it: it asks whether the boundary line LOOKS different from the
+    mid-tile line, and the answer is no, they are identical. The seat's question is different and
+    sharper — how many of the lines are at a pitch a viewer can predict? The interior lines move
+    with the row's split; the boundary line never does.
+
+    Reported as the share of full-width lines sitting at the tile phase. Two courses per tile puts
+    it at 0.5. It cannot reach 0 without abandoning runtime addressing.
+    """
+    full = np.where(joints.mean(axis=1) > 0.8)[0]
+    if not len(full):
+        return dict(full_width_lines=0, at_tile_phase=0, share=None)
+    # A line is 2px, drawn half either side of its own y; count each line once.
+    lines, last = [], -9
+    for y in full:
+        if y - last > 1:
+            lines.append(int(y))
+        last = y
+    at = [y for y in lines if (y % T) in (0, T - 1)]
+    return dict(full_width_lines=len(lines), at_tile_phase=len(at),
+                share=round(len(at) / len(lines), 3),
+                floor=("cannot reach 0 while stone values are addressed at runtime: no stone may "
+                       "cross a horizontal tile boundary"))
+
+
 def skeleton_repeats(joints, w, h):
     """DOES THE SAME JOINT SKELETON APPEAR TWICE IN ONE ROOM?
 
@@ -518,6 +565,7 @@ def measure(img, joints, w, h, transitions=(), seed=1337):
                 continuity=continuity(joints, w, h),
                 grid_hiding=grid_hiding(img, joints, w, h, seed), banding=banding(joints),
                 skeleton=skeleton_repeats(joints, w, h),
+                constant_pitch=constant_pitch_lines(joints, w, h),
                 crossings=crossing_spread(joints, w, h))
 
 
@@ -544,6 +592,10 @@ PLANTS = [
              "field — the stack of stripes the seat named, restored on purpose",
          test=lambda m: m["banding"]["distinct_spacings"] <= 1
          or (m["banding"]["modal_share"] or 0) > 0.9),
+    dict(name="one_course", must_fire="constant_pitch",
+         why="one course per tile, so EVERY full-width joint is a tile boundary — the corner "
+             "theorem's bill paid in full and nothing else on the floor to hide it behind",
+         test=lambda m: (m["constant_pitch"]["share"] or 0) > 0.95),
     dict(name="one_family", must_fire="skeleton",
          why="every boundary collapsed to one family, so every cell of a row draws the same bond "
              "— the 0.99+ duplicates at one-tile displacement the seat measured, restored whole",
@@ -678,6 +730,10 @@ def main():
         print("     banding:      %d courses at %d distinct heights %s, modal share %s, sd %s"
               % (bn.get("courses", 0), bn["distinct_spacings"], bn.get("spacings"),
                  bn["modal_share"], bn["sd"]))
+        cp = m["constant_pitch"]
+        print("     tile-phase:   %d of %d full-width joints sit at the tile pitch (%.0f%%) — "
+              "the corner theorem's bill; cannot reach 0 with runtime addressing"
+              % (cp["at_tile_phase"], cp["full_width_lines"], 100 * (cp["share"] or 0)))
         sk = m["skeleton"]
         print("     skeletons:    %d distinct in %d cells; %d cells share one (%.1f%%); "
               "identical neighbours %d of %d"
