@@ -2585,6 +2585,15 @@ public partial class Main : Node
         // rather than the menu. Verified, not assumed.
         void Report(string line) { GD.Print(line); Diag.Log(line); }
 
+        // FIRST LINE, DELIBERATELY. A device walk is only evidence if the walk can say what it
+        // was built from (LOOP-PROCESS §2.3), and this is the line a log-pull greps for.
+        // The BUNDLE ID is deliberately NOT self-reported: an app claiming its own identity is
+        // the weakest possible evidence of it. It is read back off the handset with devicectl,
+        // which is the authority. What only the app can supply is what SOURCE it was built from,
+        // and that is what this line carries.
+        Report($"[Tier1] BUILD IDENTITY: commit={marker?.Commit ?? "UNSTAMPED"} "
+               + $"built={marker?.BuiltAt ?? "UNSTAMPED"} "
+               + $"app={ProjectSettings.GetSetting("application/config/name")}");
         Report($"[Tier0] corridor scene: {spec.Name} ({jsonPath})");
         Report($"[Tier0] map={spec.Width}x{spec.Height} player=({spec.PlayerX},{spec.PlayerY}) "
                + $"carve_rects={spec.Carve.Count}");

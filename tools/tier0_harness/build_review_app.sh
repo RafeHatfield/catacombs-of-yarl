@@ -78,6 +78,32 @@ with open(path, "w") as f:
 PY
   echo "== floor overlays: $TIER1_OVERLAYS"
 fi
+# STAMP THE BUILD'S OWN IDENTITY INTO THE MARKER.
+#
+# LOOP-PROCESS §2.3: every evidence file records the commit hash of the code that produced it,
+# and a hash mismatch at a ruling invalidates the evidence. A DEVICE BUILD carried none — the
+# headless captures stamp their commit, the app did not — so "is the thing on the phone the thing
+# in the branch?" could only be answered by trusting whoever built it.
+#
+# That is exactly the question a device verification exists to answer, and it is why exit 0 from
+# an export is not a deployment. The app now reports its commit and build time into Diag at boot,
+# where they can be pulled back off the handset.
+COMMIT="$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || echo UNKNOWN)"
+if [ -n "$(git -C "$ROOT" status --porcelain 2>/dev/null | head -1)" ]; then
+  COMMIT="$COMMIT+dirty"
+fi
+BUILT_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+python3 - "$MARKER" "$COMMIT" "$BUILT_AT" <<'PY'
+import json, sys
+path, commit, built = sys.argv[1], sys.argv[2], sys.argv[3]
+with open(path) as f:
+    d = json.load(f)
+d["commit"] = commit
+d["builtAt"] = built
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+echo "== build identity: commit=$COMMIT built=$BUILT_AT"
 echo "== marker written: $(basename "$MARKER")"
 echo "== grid: $(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print("tile %s at x%s" % (d.get("tileSize","default"), d.get("tileScale","default")))' "$MARKER")"
 echo "== bundle id: $BUNDLE_ID   name: $NAME"

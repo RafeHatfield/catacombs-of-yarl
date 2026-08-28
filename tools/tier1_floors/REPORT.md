@@ -20,8 +20,8 @@ to prevent.
 > starts until it is done.***
 
 The pass cannot run against a void — it needs a real floor in front of it, at gameplay distance,
-across the lit radius — and that floor now exists and is walkable on device. **Tuning the rig
-against this floor is not a landing judgement on this floor**, and the two must not be conflated:
+across the lit radius — and that floor now exists. **Tuning the rig against this floor is not a
+landing judgement on this floor**, and the two must not be conflated:
 Ruling 56 ratifies rig values for the Boundary; the floor comes back for another round after.
 
 That ordering is also the one §6.2's coupling flag demands. Every authored ratio derived against
@@ -34,6 +34,9 @@ TIER0_THEME=res://src/Presentation/assets/tier1_floors/tile_themes_tier1_floors.
 TIER1_OVERLAYS=res://src/Presentation/assets/tier1_floors/MANIFEST.json \
 tools/tier0_harness/build_review_app.sh
 ```
+
+Verified on the handset rather than assumed from the export — see §10.5 for the correction that
+required, and `evidence/DEVICE-tier1-boot.log` for the three identifiers.
 
 **What the next floor round needs is named and measured, not guessed:** an edge-matched
 (Wang/blob) tile set, because a joint network cannot close unless joints match across cell
