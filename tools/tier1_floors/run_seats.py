@@ -249,13 +249,44 @@ def parse(text, strict=True):
 # What follows is only what the plant has and the family does not: collapse, cobwebbing, moss,
 # rubble, and the word "ruined" itself, which is §8.1's own term for the failure.
 PLANT_WORDS = ("cobweb", "cobwebbing", "web", "webbing", "collapse", "collapsed", "caved",
-               "ruin", "ruined", "rubble", "moss", "mossy", "overgrown", "lichen")
+               "ruin", "ruined", "rubble", "moss", "mossy", "overgrown", "lichen",
+               # ADDED FOR THE ASHLAR PLANT, DECLARED IN ADVANCE OF ANY ROUND THAT USES THEM.
+               # The list above was written for session two's plant, which had moss in the joints
+               # and a cobweb dither. The ashlar plant has neither: its ruin is collapse VOIDS,
+               # bright strands and dramatic cracks, so a seat could read the register perfectly
+               # and describe it in words the matcher had never heard of. Round 8's did exactly
+               # that — "punctured, repeatedly", "twenty-two identical black blobs", "damage
+               # stamped on, not a surface anyone used" — and scored no hit on its own merits.
+               "punctured", "puncture", "voids", "blown", "shot at", "eaten", "holed")
+
+
+# ⚠ NEGATION. Round 8's plant seat scored a hit on the word "collapse" — inside the sentence
+# "Not one large collapse." The verdict was right for a reason the matcher had nothing to do with:
+# the seat culled on register, in Q3 and in CULL, and the matcher agreed with it by accident.
+#
+# A check that returns the right verdict from the wrong input is not a check (LOOP-PROCESS §4.2),
+# and this one would have said CAUGHT for a seat that had declared the floor CLEAN of every defect
+# in the list. Hits inside a negation are discarded.
+NEGATIONS = ("no ", "not ", "none", "nothing", "never", "without", "free of", "n't")
+
+
+def _negated(blob, at):
+    """Is this hit inside a clause that DENIES it? Looks back to the start of the sentence."""
+    start = max(blob.rfind(".", 0, at), blob.rfind(";", 0, at), blob.rfind("\n", 0, at)) + 1
+    return any(n in blob[start:at] for n in NEGATIONS)
 
 
 def plant_caught(r, text):
     """Caught if the seat CULLS and names the ruin on its own axis (§4.1: on the axis claimed)."""
     blob = " ".join([r.get(k, "") for k in ("Q1", "Q3", "Q3_WHY", "Q4", "Q5", "CULL")]).lower()
-    hit = [w for w in PLANT_WORDS if w in blob]
+    hit = []
+    for w in PLANT_WORDS:
+        at = blob.find(w)
+        while at >= 0:
+            if not _negated(blob, at):
+                hit.append(w)
+                break
+            at = blob.find(w, at + 1)
     culled = bool(r.get("CULL")) and r["CULL"].strip().upper().rstrip(".") != "NONE"
     return (culled and bool(hit)), hit, culled
 
