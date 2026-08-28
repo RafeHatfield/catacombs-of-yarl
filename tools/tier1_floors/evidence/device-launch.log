@@ -1,4 +1,14 @@
-15:28:19  Acquired tunnel connection to device.
-15:28:19  Enabling developer disk image services.
-15:28:20  Acquired usage assertion.
-Launched application with com.rafehatfield.catacombsofyarl.tier0 bundle identifier.
+16:10:45  Acquired tunnel connection to device.
+16:10:45  Enabling developer disk image services.
+16:10:45  Acquired usage assertion.
+ERROR: The application failed to launch. (com.apple.dt.CoreDeviceError error 10002 (0x2712))
+       BundleIdentifier = com.rafehatfield.catacombsofyarl.tier0
+       ----------------------------------------
+           The request to open "com.rafehatfield.catacombsofyarl.tier0" failed. (FBSOpenApplicationServiceErrorDomain error 1 (0x01))
+           FBSOpenApplicationRequestID = 0xe4c6
+           BSErrorCodeDescription = RequestDenied
+           NSLocalizedFailureReason = The request was denied by service delegate (SBMainWorkspace) for reason: Locked ("Unable to launch com.rafehatfield.catacombsofyarl.tier0 because the device was not, or could not be, unlocked").
+       ----------------------------------------
+               The operation couldn’t be completed. Unable to launch com.rafehatfield.catacombsofyarl.tier0 because the device was not, or could not be, unlocked. (FBSOpenApplicationErrorDomain error 7 (0x07))
+               NSLocalizedFailureReason = Unable to launch com.rafehatfield.catacombsofyarl.tier0 because the device was not, or could not be, unlocked.
+               BSErrorCodeDescription = Locked
