@@ -388,6 +388,50 @@ is the live half of the cull the family cannot answer.
 
 ---
 
+### (d) THE RIG DISSOLVES THE PALETTE, and this is not a floor finding
+
+Round 7's comparative seat ranked this floor **above the asset bar, "by a wide margin"** — the
+bar's ground *"fails on a measurable, disqualifying defect: a single 48×48 tile stamped
+bitwise-identically across the entire floor, and a material that cannot be identified"*, against
+*"a real authored surface with genuine slab-level variation that no repeat test can catch"*. Then
+it named something nobody had looked for:
+
+> *"The art is drawn at 2× (every pixel is a 2×2 block — I confirmed the column-duplication
+> pattern directly), but the lighting is a smooth per-screen-pixel ramp (red channel walking
+> 62→166→42 in single-unit steps along y=250), and the soft stain blobs are gaussian smudges.
+> **Soft unquantised gradients sitting on top of hard chunky pixels. Mixed resolution.**"*
+
+Measured on the round-8 capture, over the lit ground:
+
+| | |
+|---|---:|
+| 2×2 screen blocks that are a single flat colour | **7.58%** |
+| mean colour spread *inside* one 2×2 block | 8.20 |
+| **distinct luminance values in the lit ground** | **1,013** |
+| rungs in the family's ladder | **7** |
+
+**Every rung of palette discipline in the composer is dissolved before the image reaches the
+eye.** §4.3 forbids anti-aliasing and §5.1 is a zero-mercy palette; the family is quantised to
+seven values and refuses to emit anything off them, and `verify_atlas_path` proves the shipped
+asset is exact to the rung. The renderer then multiplies it by a light computed at screen
+resolution and delivers a thousand.
+
+**This is not a floor finding and cannot be fixed in a floor family.** It is a property of the rig
+— `PointLight2D` and `CanvasModulate` evaluating per screen pixel while the art is authored at
+32px and displayed at 2×. It affects every asset in the game equally; floors are simply where it
+was first measured, because floors are most of the screen.
+
+Whether it is *wrong* is a ruling and not mine to make. §6.3 holds that assets **receive** light
+rather than depicting it, and a smoothly-lit chunky sprite is receiving light. But the register
+the bible names is chunky, and a game that authors to seven values and ships a thousand is not
+working to the palette it wrote down. The narrow shape of a fix, if one is wanted, is a renderer
+setting rather than an art change: render the lit scene at art resolution and upscale
+nearest-neighbour, so the light lands on the same grid the art does.
+
+Recorded with its measurement, and left alone.
+
+---
+
 ## 8. State
 
 - `K` — **RULED RUNTIME**, on 0 unaddressable stones, re-measured after every geometry change.
@@ -395,8 +439,13 @@ is the live half of the cull the family cannot answer.
   0.59 after it.
 - Preconditions 1–4 — carried forward from session two, precondition 4 closed at commit
   `416f105c`.
-- Round 7 seats — running on `scene_ashlar_r7.png` (sha `69008da5…`) and
-  `scene_ashlar_plant_r7.png` (sha `aa878a77…`).
+- Round 7 seats — **complete and valid** (plant caught). Material named correctly by both solo
+  seats and as flagstone rather than brick; culled by both on §8.1 use; ranked **above the asset
+  bar** by the comparative seat.
+- Round 8 seats — running on the five-family build, `scene_ashlar_r8.png` (sha `f4fe90b0…`) and
+  `scene_ashlar_plant_r8.png` (sha `3a08c85e…`).
+- The engine reproduces the composer's **finished pixels**: `paint_check=96/OK`, proven failable
+  on one channel of one pixel.
 - Device — `TIER1_ASHLAR` knob exists and the family has **not** been to the handset. Nothing here
   has been to the device and nothing here is claimed to have passed a gate. The device leg is one
   command with the phone unlocked:
