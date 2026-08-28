@@ -33,6 +33,15 @@ public sealed class ReviewBuildMarker
     public ReviewLighting.Params Light { get; private init; }
 
     /// <summary>
+    /// res:// path to a floor family's MANIFEST.json, or null. Present because ART-BIBLE-v0
+    /// §8.3's overlays are NOT a tile role — a cell may carry none, one or two of them, chosen
+    /// per instance — so they cannot be selected the way `themeConfig` selects tiles, and a
+    /// review build has no command line to pass them on. Absent, the scene draws base tiles
+    /// only, which is exactly what every review build before tier one did.
+    /// </summary>
+    public string? FloorOverlays { get; private init; }
+
+    /// <summary>
     /// Tile size and integer scale for the review build, mirroring --tile-size / --tile-scale.
     ///
     /// These exist for the same reason the light values do, and the omission would have been
@@ -85,6 +94,8 @@ public sealed class ReviewBuildMarker
                     LightColor:  new Color(light.GetProperty("color").GetString()),
                     Energy:      (float)light.GetProperty("energy").GetDouble(),
                     RadiusTiles: (float)light.GetProperty("radiusTiles").GetDouble()),
+                FloorOverlays = root.TryGetProperty("floorOverlays", out var fo)
+                            ? fo.GetString() : null,
                 TileSize  = root.TryGetProperty("tileSize", out var ts)
                             ? ts.GetInt32() : (int?)null,
                 TileScale = root.TryGetProperty("tileScale", out var sc)

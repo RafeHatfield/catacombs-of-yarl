@@ -1,0 +1,52 @@
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+I can't tell. Flat tan blocks with dark lines drawn between them. If forced: sandstone or unfired brick. Nothing in the image commits to a material.
+
+**Q1_WHY:**
+I sampled every pixel of the walkable area (x 180–628, y 16–400). The entire floor sits at hue 27–28° and saturation 0.49 — one hue, one saturation, only brightness changes. There is no grain, no aggregate, no chip, no fracture face, no edge where one stone is a different stock than its neighbour. The dark lines between blocks (e.g. the long horizontal run at y≈272 spanning x 180–370) are the same brown at lower value, not a different substance. It is a colour, not a material.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 372–436 — and **nothing about the ground influenced that.** I picked it because it's the only place the *room shape* changes, and that's geometry, not floor.
+
+The three exits are ground-identical. West (x 0–180, y 145–290), north, and south are the same tiles at the same speckle density with the same hue. The only difference between them is how dark they're drawn, and that's the lantern falloff, not the surface. Walking one way rather than another, I'd learn nothing from what's under my feet. So: effectively random.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+No. It is untouched. Nothing has been dragged across it, dropped on it, worn into it, patched, or spilled. This is the newest thing in the fiction.
+
+**Q3_WHY:**
+I measured dark-speckle density per 64px tile across the whole room. Every tile lands between 0.12 and 0.19 — the tile the figure stands on, the tile in the far corner, the tile at the corridor mouth, all the same. Wear is not uniform; noise is. That flat number is a noise layer, and it's the only "damage" present.
+
+Searching for actual incident, I found three marks total: an eight-pointed dark blob at (355, 255), the same blob again at (430, 415) in the corridor mouth, and again at (147, 232) in the unlit west. Three of one thing, pixel-identical, is not a history.
+
+For a place in continuous heavy use since before records, held by a garrison that repairs everything with rope and driven pins for four hundred years, there is not one pin, one rope-scuff, one board, one dark patch where the traffic goes. The orcs have never walked here.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Four things.
+
+1. **Every tile is outlined.** I measured dark-pixel density by position within the 64px tile: 0.34 at the tile's own edge (offset 0), 0.27 at offset 63, and 0.071 in the middle. A 4.5× spike exactly on the boundary, both axes. The mortar draws the game's grid. Once seen at the room's centre it can't be unseen anywhere — the top edge at y≈16, the row at y≈272, the column at x≈436.
+
+2. **The same tile, four times.** Tiles at (x 372, y 80), (x 564, y 80), (x 500, y 144) and (x 564, y 272) are the same image: same jog in the vertical seam, same L-notch, same speckle blobs in the same places. Two other tiles also appear four times each, and six more appear twice. Of 40 visible floor tiles, 24 are duplicates of something else on the same screen.
+
+3. **The blob**, described above — three copies, unshaded, sitting on top of the floor rather than in it.
+
+4. **A prop glyph — two black squares either side of a thin vertical line — appears twice at nearly the same height**: (335, 175) beside the figure and (85, 170) out west. I take that to be an entity rather than floor, so I'm not scoring it, but my eye went to it repeatedly and I'd want to know why there are two.
+
+**Q5: MADE, OR REPEATED?**
+Repeated. Three tiles used four times apiece within one phone screen, with no rotation, no mirroring, and no offset to break the match. The masonry snaps to the same 64px lattice as the walls, so the "slabs" are not slabs — they're cells. And every seam is a symmetric dark groove: I measured brightness 4px above versus below every horizontal mortar run (8.07 vs 7.55) and left versus right of every vertical one (7.79 vs 7.57). No side is lit. There is no relief and no light direction. It is a drawing of masonry laid over a grid, not a surface with depth.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The value range is controlled, the lantern falloff is clean, it reads instantly as walkable, and it never fights the sprite. That is the whole of it. It has no point of view about what this place is, and at the size it's played you see the lattice before you see the room.
+
+**CULL:**
+Tile grid is drawn on the floor by the mortar, and three tiles repeat four times each per screen.
+
+**FLIP LIST**
+- Move mortar off the 64px boundary — no seam within 6px of a tile edge; run masonry courses across tile joins so a block can be 1×2 or 2×1 tiles.
+- Cut the shared-edge duplication: no tile appears more than twice per screen, and repeats must be mirrored or rotated.
+- Replace the uniform speckle with directed wear — brighter, smoother, less-speckled ground along the room's through-lines (corridor mouth at x 372–436 into the room centre), heavier grit and debris in the corners.
+- Give the stone a light direction: a one-pixel bright lip on the north/west side of each block and a darker groove on the south/east, so slabs sit proud instead of being outlined.
+- Add four hundred years of the garrison at floor level — a driven pin, a rope-worn groove, a salvaged plank bridging a broken slab, one stained patch — placed sparsely, not tiled.
+
+---
+*Model: Claude Opus 5 (1M context)*

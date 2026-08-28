@@ -1,0 +1,58 @@
+Analysis complete. Answers below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dried, cracked earth — a mud pan or clay flat — with moss in the cracks. Not worked stone.
+
+**Q1_WHY:**
+The crack network is polygonal and irregular, not rectilinear. Nowhere in the lit room (x 182–646, y 8–392) is there a straight-edged slab, a joint line, a corner, or a repeated block size. The cracks are the wide, tapering, branching kind that dry mud makes, and they enclose lobed cells 15–40px across at every size, with no dominant module. Base colour under the lamp is (161,130,72) — hue 0.11, an orange-tan sand. The moss averages (47,68,21), a yellow-leaf green at 0.69 saturation. Measured: moss lands on or within 2px of a crack 22.9% of the time, and on unbroken surface 0.1% of the time. So the moss is genuinely growing *out of* the cracks — that relationship is real and deliberate. But everything the material says is "outdoor ground, dried by sun, seeded from above." Nothing in it says built, cut, laid, or administered.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x≈374–460.
+
+The ground made me pick it. There is a moss-free channel running the full height of the room at x≈378–442. Measured moss coverage in that column, north to south: 0.19, 0.08, 0.08, 0.04, 0.01, 0.01 — against a room average of 0.145 and neighbouring columns running 0.2–0.35. It thins as it goes south and dies out entirely by y≈330, right at the corridor mouth. The surface there is also smoother and paler than the tiles either side of it, with fewer crack cells. That is a desire path: the one strip nothing grows on because feet keep going over it. It reads before you think about it, and it points at an exit. This is the single best thing on the floor.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has dried out, split all over, and been colonised. Something walks the middle of it often enough to keep one lane bare. Beyond that — no. Nothing has been dropped on it, broken on it, spilled on it, or fixed. There is no repair anywhere on the walkable ground: no timber laid across a split, no driven pin, no rope, no hide, no patch, no fill. For a place held for four hundred years by a company that repairs things endlessly, the floor is untouched by hands.
+
+**Q3_WHY:**
+Cracks: continuous branching network across the whole room, crossing tile boundaries cleanly (checked at x=310, 374, 438, 502, 566 and y=80, 144, 208, 272 — the crack lines carry through the seams, which is real work). Moss: bound to those cracks statistically, as above. Wear lane: the x≈378–442 channel. Damage: the only two dark spots I can find that aren't cracks or moss are small round scuffs at approximately (452,232) and (548,252), both under 12px, both ambiguous. Repair: none. I looked at all 37 floor cells; there is no straight line, no fastener, no foreign material, no colour that isn't earth-brown, moss-green, or shadow.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes — the diagonal hatch. Clusters of 4–8 parallel light strokes, ~3px apart, at 45°, sometimes with short cross-rungs so they read as tiny ladders. It is everywhere. Clear instances at (232,10), (498,8), (594,8), (314,110), (396,150) — this one is the most legible, a full ladder with rungs — (418,96), (344,198), (220,258), (276,264), (370,272), (282,324), (224,336), (440,302), (190,240). When I threshold the floor's brightest 7.5% of pixels, the resulting mask *is* this motif and almost nothing else, scattered across every quadrant.
+
+It is always the same angle, always the same stroke pitch, always the same length range. Two things follow. It stops being scratches in the ground and becomes a brush someone dragged over the whole surface — the same mark, distributed. And because it's the brightest thing on the floor, it takes the top of the value range that ought to belong to the lamp. The lit pool around the figure has to compete with hatch flaring at x=594 and x=224, well outside where the light reaches.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+Repeated. This is not an impression — it's measurable.
+
+The floor is on a 64px grid (seam energy peaks at period 64 in both axes, 4.2σ and 4.4σ above the mean of all other periods; vertical seams at x = 246, 310, 374, 438, 502, 566; horizontal at y = 16, 80, 144, 208, 272). Across the 37 floor cells on screen there are only about 20 distinct stamps. Correlating them after dividing out the lamp gradient:
+
+- (246,16) and (566,16) — same tile, r=0.965. Identical crack fork, identical moss blob, identical hatch cluster.
+- (374,80), (566,80), (502,144), (566,272) — one tile, four times.
+- (502,16), (438,144), (566,144), (502,272) — one tile, four times.
+- (310,16) and (374,16) — same tile, **side by side**, sharing an edge at the top of the room. That one is visible without any tooling.
+- (310,208) — a third copy of the same stamp.
+- In the south corridor, (438,400), (438,464), (438,528) are the same tile stacked three deep in a straight vertical run; (374,400) and (374,464) likewise.
+
+No stamp is ever mirrored or rotated — I tested all four orientations against the full set, and flipped/rotated correlations top out at 0.27/0.50 while identity hits 0.91+. So the variation you get is exactly the number of tiles drawn, and nothing more. The lamp gradient is doing all the disguising; brighten the image and the repetition is flatly obvious.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. Two things in it are better than competent — the moss-follows-cracks rule and the worn lane at x≈378 — and I want to be clear those are real craft, not accidents. But a floor whose most eye-catching feature is one repeated brush mark, and which puts the same 64px stamp down four times and twice side-by-side inside a single phone screen, is not genuinely good. Good would mean I could look at any square of it and not be able to find its twin.
+
+**CULL:**
+Reads as sunlit outdoor mud-pan with leaf-green moss — not an administered underworld floor.
+
+**FLIP LIST**
+- Replace the dried-mud crack network with cut, laid stone: rectilinear slabs, real joints, courses that run in a direction, so the ground reads as built and administered rather than weathered.
+- Delete the 45° hatch brush entirely, then reintroduce scratches only where something specific caused them — under a door swing, along the worn lane — at no more than four places on this screen, at varied angles.
+- Break the tile repeats: no stamp used more than twice per screen, never in adjoining cells, and never stacked in the corridor. Fix (310,16)/(374,16) and the (438,400/464/528) run first.
+- Put orc repair on the walkable ground: at least two split slabs bridged with salvaged timber and driven pins, laid across the crack, not aligned to the tile grid.
+- Desaturate and cool the moss (0.69 sat is a lit-from-above green) and pull its brightest pixels below the lamp's, so the light the figure carries stays the brightest thing on the floor.
+
+---
+
+Model: Claude Opus 5 (1M context).

@@ -1,0 +1,134 @@
+{
+ "round": 5,
+ "commit": "97b86cb89dfd19acc53d65f75e4f882efba88f70",
+ "seats": {
+  "F1": {
+   "Q1": "Flat orange-brown stone \u2014 or dry packed earth. I genuinely cannot tell which, and that is not a close call I'm ducking. It has the colour of fired clay, the flatness of rammed earth, and the straight lines of cut slab, and none of the three wins.",
+   "Q1_WHY": "Across the whole lit body of the floor (sampled x 250\u2013560, y 100\u2013300, mid-values only) the hue spread is **1.2\u00b0** \u2014 27.9\u00b0 to 29.1\u00b0, median 28.6\u00b0 \u2014 and saturation runs 0.53 to 0.55. That is one swatch. The 443 \"distinct colours\" in that region are the torch multiplying a single flat brown. There is no mineral variation, no damp patch, no staining, no second material anywhere in the room. Nothing tells me whether this was quarried or tamped down, because the only cue a material gets to give \u2014 how its colour varies \u2014 has been set to zero.",
+   "Q2": "South, down the corridor at x 372\u2013436. **Nothing about the ground influenced that.** I chose it from the walls \u2014 the placeholder blocks stop at y 400 and leave a gap, so that's the exit. The ground contributed nothing: I checked mark density across sixteen equal sectors of the floor and it runs 10.3%\u201322.2%, mean 15.8%, with the corridor mouth sitting at 17.3% \u2014 statistically indistinguishable from the far corners. There is no worn path, no polish, no grit swept to the sides, no threshold where the room meets the corridor. The dark opening on the left (x 0\u2013180, y 150\u2013290) and the south corridor are equally mute. I picked south because it's centred under the figure, which is to say: at random.",
+   "Q3": "It has been evenly abraded by nothing in particular. It is not damaged, it is *textured* \u2014 the marks describe a uniform condition rather than a history. Nobody has walked a route across it, nothing has been dragged over it, nothing has been dropped on it, nothing has been repaired, and no part of it is in worse shape than any other part.",
+   "Q3_WHY": "Three things, all measured after dividing out the torch falloff (Gaussian \u03c3=20) so I'm reading the authored art, not the light.\n\n- The flat density figure above \u2014 10\u201322% in every sector, with no clustering at chokepoints and no clean stretches.\n- The value range. The authored albedo has essentially four levels: stone body at 1.00\u20131.09, a lighter overlay at 1.11\u20131.16, and one dark line value bottoming at 0.67. Every dark mark on this floor \u2014 joint, crack, chip, speckle \u2014 sits at that same 0.67. There is no such thing on this surface as *deeper* damage. A hairline scratch and a structural joint are the same colour.\n- Nothing is out of line. I dumped the joint structure as ASCII at three separate places (x 500\u2013580 y 120\u2013136; x 580\u2013640 y 88\u2013104; x 240\u2013330 y 130\u2013146). All three are the identical construction: a mathematically straight 2-logical-px bar with a random \u00b11px fringe stubbing off the top and bottom edges. Same treatment, same weight, same jitter amplitude, in all three. Four hundred years of continuous heavy traffic and not one stone has settled, heaved, tilted, or slipped out of course. The only \"age\" applied is a noise fringe, applied everywhere equally.",
+   "Q4": "Two things, and both are overlay layers rather than surface.\n\n**The soft light blobs.** There are 73 of them over the 42 visible floor cells \u2014 roughly 1.7 per cell, median area 252px, amorphous with dithered fuzzy edges. The one that snagged me is a row of three near-identical blobs in the upper right: centred at **(475, 116) 41\u00d737px**, **(540, 108) 37\u00d741px**, and **(593, 116) 37\u00d741px**. Same size to within four pixels, same softness, same value lift, marching left to right in a band. I zoomed x 450\u2013628, y 80\u2013150 to confirm and they read as three clouds sitting on top of the floor, not as three stones. They ignore the joints entirely \u2014 the leftmost one straddles the vertical joint at x\u2248455 and continues across it unchanged. Stone character doesn't cross a joint. A noise octave does.\n\n**The speckle.** Scattered single logical-pixels of the dark value, at even density over every square inch including *inside* the light blobs. Once seen it stops being dirt and becomes a filter pass, and then it's the only thing on the floor I can see.",
+   "Q5": "**Repeated** \u2014 though not in the way that's usually meant, and the way it is repeated is worse.\n\nI tested for literal tiling and found none: correlating all 42 cells pairwise after normalisation gives a mean of 0.023, and the detrended autocorrelation at a 64px shift is 0.108 with no periodic peak \u2014 just smooth decay. No rectangle in this room is a copy of another rectangle. So it isn't stamped.\n\nBut the *recipe* is identical at every point: straight line + fringe, plus crack, plus blob, plus speckle, at constant density, in one colour. That's what the eye picks up, and it's the reason the floor reads as generated. Literal tiling you can fix by drawing more variants. This you can't spot-fix \u2014 there's nothing to vary.",
+   "Q6": "**YES.** It's clean, it's consistent, the pixel discipline is correct, the joints don't fight the 64px gameplay grid (I checked \u2014 the long joints sit at x 210, 291, 336, 526, 588, none of which are cell boundaries, which is a deliberate and correct choice), and at phone size it will not embarrass anyone.\n\nMerely competent. Not genuinely good. It clears the bar for shipping and does not clear the bar for being the floor of *this* place.",
+   "CULL": "Joints enclose nothing \u2014 99.1% of the floor is one connected region. No stones, only scratches.\n\nThat number is the whole problem. I ran connected components on the inverse of the dark-mark mask: the entire 440\u00d7376 floor contains **two** enclosed cells of meaningful size. Every \"stone\" leaks into every other stone. It reads as masonry at a glance and dissolves the moment you trace any single joint \u2014 each one dies within 40\u201380px without meeting another. Nothing was laid here. For an underworld whose whole premise is that it is *administered* \u2014 built, catalogued, maintained on a schedule by somebody \u2014 a floor that cannot show a single completed stone is arguing the opposite case.",
+   "FLIP LIST": "- Close the joints. Every stone must be a completed outline. Vary stone sizes 1\u00d71, 2\u00d71, 1\u00d72 cells, and use T-junctions from a running bond \u2014 the perfect + crossings visible at (345,180) and (365,225) are four corners meeting at a point, which no mason cuts.\n- Break the straightness. Displace joint centrelines by 1\u20132 logical px along their length so courses wander, and tilt or sink individual stones so their edges sit proud of their neighbours. Right now every joint is a ruler line with noise sprinkled on it.\n- Separate joint from crack by value and width. Manufactured joints get their own darker, wider, more regular treatment; fractures get thinner and lighter and must cross stones rather than follow them. Currently both bottom out at the identical 0.67 albedo.\n- Delete the soft blob layer \u2014 specifically the three at (475,116), (540,108), (593,116) and their 70 siblings \u2014 and put that tonal variation *into the stones*, clipped to stone boundaries, with real hue movement. The current 1.2\u00b0 hue spread needs to become 15\u201320\u00b0 so some stones are grey, some are yellowed, some are stained.\n- Give the room a history: a worn traffic lane running from the left opening (y 150\u2013290) to the south corridor mouth (x 372\u2013436, y 400), grit accumulated against the joints outside it, and at least one orc repair on the walkable ground \u2014 driven pins, a salvaged timber patch \u2014 so the floor shows somebody has been holding this line.\n\n*Model: Claude Opus 5 (1M context)*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "transcript": "tools/tier1_floors/evidence/seats/r5_F1_transcript.txt",
+   "flips": [
+    "Close the joints. Every stone must be a completed outline. Vary stone sizes 1\u00d71, 2\u00d71, 1\u00d72 cells, and use T-junctions from a running bond \u2014 the perfect + crossings visible at (345,180) and (365,225) are four corners meeting at a point, which no mason cuts.",
+    "Break the straightness. Displace joint centrelines by 1\u20132 logical px along their length so courses wander, and tilt or sink individual stones so their edges sit proud of their neighbours. Right now every joint is a ruler line with noise sprinkled on it.",
+    "Separate joint from crack by value and width. Manufactured joints get their own darker, wider, more regular treatment; fractures get thinner and lighter and must cross stones rather than follow them. Currently both bottom out at the identical 0.67 albedo.",
+    "Delete the soft blob layer \u2014 specifically the three at (475,116), (540,108), (593,116) and their 70 siblings \u2014 and put that tonal variation *into the stones*, clipped to stone boundaries, with real hue movement. The current 1.2\u00b0 hue spread needs to become 15\u201320\u00b0 so some stones are grey, some are yellowed, some are stained.",
+    "Give the room a history: a worn traffic lane running from the left opening (y 150\u2013290) to the south corridor mouth (x 372\u2013436, y 400), grit accumulated against the joints outside it, and at least one orc repair on the walkable ground \u2014 driven pins, a salvaged timber patch \u2014 so the floor shows somebody has been holding this line."
+   ]
+  },
+  "F2": {
+   "Q1": "Mossy tan flagstone paving \u2014 rectangular cut slabs, heavily overgrown.",
+   "Q1_WHY": "At 4x on the lit centre (orig 300,120\u2013540,300) the slab layout is unambiguous: thin darker joint lines enclosing rectangles of mixed size, mostly ~32px square with some 32\u00d716 halves, laid in a broken bond rather than a clean checker. The long horizontal joint at y\u2248258 runs unbroken from x\u2248300 to x\u2248540. Colour is warm sandy tan (lit stone sits around RGB mid-tan, not grey), which reads sandstone or a dry cut limestone, not the cold grave-stone the fiction implies. On top of it: green clumps covering **17.2%** of the lit floor, and light dotted diagonal scoring.\n\nOne thing to name plainly: that green is **chlorophyll green**, and it is 17% of the surface. In a sunless administered underworld that is the wrong organism. Lichen pallor, black mould, salt bloom, nitre \u2014 those grow in the dark. This grows in daylight.",
+   "Q2": "South, down the one-tile corridor at x\u2248380\u2013445 leaving the bottom of the room.\n\n**Nothing about the ground influenced that.** I picked it because the placeholder blocks open there and the west passage (x 0\u2013180, y 145\u2013260) is the same distance away \u2014 it was effectively arbitrary.\n\nI want to be exact about why, because I nearly credited the floor with something it doesn't do. There *is* an apparent clean lane running from the figure to the south corridor mouth: raw moss coverage drops to 3.3% in the column x=378\u2013410 against a 13\u201329% field. It looks like a wear path. It isn't. Divide the light gradient out and the dip collapses to 17.8% against a 23% field average \u2014 the lamp is at (410,180) and it was washing the green out of its own hotspot. The floor paints no traffic, no polish, no debris drift, no directional cue of any kind.",
+   "Q3": "It has been overgrown. Nothing else has happened to it.",
+   "Q3_WHY": "I looked for damage and found essentially none. No cracked slab, no lifted or tilted slab, no missing slab, no spall, no subsidence, no hole, no repair. Four hundred years of a garrison hauling material over this ground and there is not one plank, pin, rope-lashing, patch plate or packed rubble fill anywhere in the room. The only non-moss marks are a dark radial blot at (357,255) and another at (425,400) \u2014 stains, not injury.\n\nThe moss itself doesn't behave like moss, which is what gives the damage away as decoration rather than history. Growth follows water, so it should pool in the joints and dead corners first. Here it does the opposite: the long joint at y\u2248258, x 300\u2013540 is bare along nearly its entire run, while a large clump sits centred on open slab face at (415\u2013430, 265\u2013271), touching no joint at all. It's scattered at even density across the whole room \u2014 12\u201327% in every 32px row I sampled \u2014 like a spray, not a colony.",
+   "Q4": "Yes. The diagonal hatch decal \u2014 a small fan of light dotted parallel lines with a hooked end, about 26\u00d726px.\n\nI template-matched one instance and found **five pixel-identical copies on this single screen** (NCC 0.99\u20131.00, no flip, no rotation, no recolour): **(394,86), (394,214), (522,150), (586,86), (586,278)**. Every offset between them is a multiple of 64 in both axes \u2014 (394,86)\u2192(394,214) is dy=128; \u2192(522,150) is dx=128, dy=64; (586,86)\u2192(586,278) is dy=192. There is a 64px stamp lattice under this floor and the hatch is nailed to it.\n\nThat decal is not an isolated case. Sweeping every 20\u00d720 block of the floor against every other, **46% of blocks have a \u22650.90-NCC twin elsewhere on the same screen**; 54% clear 0.85. Dominant translation offsets are 64, 128 and 192 in both axes. The south corridor is the worst of it \u2014 four hatch fans inside a strip 64px wide.\n\nThird thing, smaller: a faint dark `+` mark at **(317,48), (317,240) and (481,240)** \u2014 two sharing an x, two sharing a y, 192px apart. It reads as a registration mark left on the stamp.",
+   "Q5": "**Repeated.** Not a judgement call \u2014 five bit-identical copies of one decal on a 64px lattice, and near-half the surface having a verbatim twin, is the measurement. What was authored is a 64\u00d764 tile set; what's on screen is that set laid down. Nothing here was placed for where it is.",
+   "Q6": "**YES.** The slab bond is varied rather than gridded, the joint work is clean, the palette is coherent, it reads instantly at phone size.\n\nMerely competent. Not good. Good would mean the floor told me something \u2014 where I am in the complex, which way the traffic goes, that someone maintains this. This floor tells me it is a floor. And at the size it's actually played, the tan-and-green blotching resolves into woodland camouflage \u2014 the first read of the thumbnail is jungle canopy from the air, which is the opposite of an administered underworld.",
+   "CULL": "Five pixel-identical hatch decals on a 64px lattice; the floor reads as camouflage, not stone.",
+   "FLIP LIST": "- Kill the 26\u00d726 hatch decal or authorise at least six variants with mirroring and rotation \u2014 five verbatim copies at (394,86), (394,214), (522,150), (586,86), (586,278) is the single loudest defect.\n- Cut moss coverage from 17% to under 6%, move what remains into the joints and slab edges, and take it off open slab faces like (415\u2013430, 265\u2013271).\n- Re-hue the growth from chlorophyll green to lichen grey-white, black mould and nitre bloom \u2014 nothing photosynthetic survives here, and the green is what makes the thumbnail read as camouflage.\n- Break the 64px stamp lattice: place decals on the slab grid with per-slab offset and flip, so no two blocks 64/128/192px apart are identical.\n- Add real damage and real repair \u2014 cracked and lifted slabs, a packed rubble fill, one timber-and-pin patch \u2014 and remove the `+` registration marks at (317,48), (317,240), (481,240).\n\n---\n\nWhere this goes next: the fix that buys the most is the moss, not the hatch. Recolour and thin it and the camouflage read dies immediately; the decal repetition is the harder, slower job and it only starts to matter once the surface stops reading as foliage.\n\n*Model: Claude Opus 5 (1M context).*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "transcript": "tools/tier1_floors/evidence/seats/r5_F2_transcript.txt",
+   "plant_caught": true,
+   "plant_words_hit": [
+    "rubble",
+    "moss",
+    "mossy",
+    "overgrown"
+   ],
+   "culled": true,
+   "flips": [
+    "Kill the 26\u00d726 hatch decal or authorise at least six variants with mirroring and rotation \u2014 five verbatim copies at (394,86), (394,214), (522,150), (586,86), (586,278) is the single loudest defect.",
+    "Cut moss coverage from 17% to under 6%, move what remains into the joints and slab edges, and take it off open slab faces like (415\u2013430, 265\u2013271).",
+    "Re-hue the growth from chlorophyll green to lichen grey-white, black mould and nitre bloom \u2014 nothing photosynthetic survives here, and the green is what makes the thumbnail read as camouflage.",
+    "Break the 64px stamp lattice: place decals on the slab grid with per-slab offset and flip, so no two blocks 64/128/192px apart are identical.",
+    "Add real damage and real repair \u2014 cracked and lifted slabs, a packed rubble fill, one timber-and-pin patch \u2014 and remove the `+` registration marks at (317,48), (317,240), (481,240)."
+   ]
+  },
+  "F3": {
+   "status": "NOT RUN \u2014 round stopped after the verdict and the plant control were both in; the flip list had already superseded the arm these would have judged"
+  },
+  "F4": {
+   "Q1_A": "I can't tell, and that is the answer. It reads as a flat olive-brown ground \u2014 packed dirt, or possibly rusted stone \u2014 with dried-blood/rust mottling over all of it. There is no material I could name with confidence.",
+   "Q1_WHY": "_A:** The base is essentially a single colour: sampling the floor rect (x 24\u2013311, y 0\u2013167) gives `[92,69,30]` and its \u00b12 neighbours as ~30% of all pixels. Over it sits a scatter of dark red `[55,24,13]`\u2013`[60,27,14]` speckle at uniform density. There *are* joint lines \u2014 faint reddish-brown wandering seams on a 24px lattice, visible at 8\u00d7 around (24,24)\u2013(120,120) \u2014 but their contrast against the base is so low that at the played size they vanish entirely. Nothing tells me whether this is earth, stone, or metal. No grain direction, no chipping, no edge highlight, no value break.",
+   "Q2": "**West**, into the dark room at x 0\u2013180, y 140\u2013270. The ground decided it. At (333\u2013348, 162\u2013198), immediately left of the figure, there is a black iron strap driven into the flags with four square pins. Brightening the unlit western room reveals an **identical strap at (86\u2013100, 162\u2013198)** \u2014 same y-band. Two pinned plates on the same line means a run of strapping continues west across the floor. Somebody held something down along that line, and the line leads into the dark. That is the only piece of genuine ground-derived navigation in either image, and it's a good one.",
+   "Q3": "It has been fractured, chipped, and repaired, and the repair is cruder than the floor. Cracks run *across* slab boundaries rather than stopping at joints \u2014 the fissure through (500\u2013620, 230\u2013300) crosses two flags \u2014 which reads as ground movement, not decorative wear. There are impact stars: one at (350,246), another at (414,405) in the south corridor. A wedge chip at ~(460,222). And the pinned strap at (333\u2013348, 162\u2013198) is a repair someone drove into an existing floor without caring what it looked like.",
+   "Q3_WHY": "_A:** The red speckle isn't distributed \u2014 it's *stamped*. The identical three-dot motif `\u25aa \u25aa \u25aa` appears at (132,38), (180,38), (132,86) and (180,86): a 48px lattice. That is noise on a grid, not history. Also: the pool boundary. Teal occupies exactly x\u2208[216,312), y\u2208[0,144) \u2014 a perfect axis-aligned rectangle, 4\u00d76 tiles, verified by column/row scan. A pool that has been sitting in a floor for centuries and has a machine-straight rectangular edge has not happened to the floor at all.",
+   "Q4": "Yes, three things, all real.\n\n1. **The reused patch.** The region around (393,112) and the region around (521,176) are the same image \u2014 offset exactly (+128,+64), two tiles right and one down. Normalised correlation 0.965 over 32px, holding above 0.85 across roughly a 48\u00d736 window. Same mottle blobs, same joint at the same y, same vertical seam with the same jog. Found by search, not by eye, but once seen it stays seen.\n\n2. **The impact star, twice.** The decal at (350,246) template-matches the one at (414,405) at 0.943. The same asterisk, unrotated, on one screen.\n\n3. **The black of the strap.** In the lit room at (333\u2013348,162\u2013198) and in the unlit room at (86\u2013100,162\u2013198), that object is the *same pure black* in both \u2014 every other pixel in the west room is tinted cold blue by the light falloff. It is the one thing on screen that doesn't obey the torch, and my eye keeps catching it as a hole rather than an object.",
+   "Q5_A": "**An image that was repeated.** Not a judgement call \u2014 11 of 18 floor blocks are byte-identical duplicates of two source images, laid in a near-checkerboard. The rest of the floor is the same two images with a prop occluding part of them.",
+   "Q6_A": "**YES.** Ground of this quality ships on mobile constantly.\nMerely competent, or genuinely good? **Neither.** It is below competent. The rectangular pool edge and a 61% duplicate rate are not stylistic choices; they are unfinished work.",
+   "CULL_A": "Sixty-one percent of the visible floor is two identical 48px stamps, plainly readable at play size.",
+   "FLIP LIST": "- Break the 48px stamp: the floor must not contain two MD5-identical 48\u00d748 blocks anywhere on one screen \u2014 vary the red speckle per-tile, not per-supertile.\n- Give the pool an edge. Transition tiles on all four sides of x\u2208[216,312), y\u2208[0,144); no straight-line brown/teal boundary anywhere.\n- Raise the joint contrast so the 24px flagstone seams are legible at 1\u00d7 \u2014 currently they only exist above 4\u00d7 zoom.\n- Replace the uniform red mottle with concentration: heavy near the barrels and pool edge, worn thin along the open centre.\n- Shade the blue puddles \u2014 a darker rim and one specular pixel \u2014 so they stop reading as flat decals.\n\n---\n\n## B",
+   "Q1_B": "Large sandstone or dry limestone flags, hand-laid in irregular sizes, mortared and long since fractured through.",
+   "Q5_B": "**Made.** I tested for it: across 42 floor tiles at the 64px grid, median inter-tile correlation is \u22120.003 and the maximum is 0.823 \u2014 that maximum is a shared \"row of equal-height slabs\" motif, which is what masonry actually looks like, not a stamp. There is no exact tile duplication. The two reuses I found (Q4) are decorator-level and are defects within a made surface, not the structure of it.",
+   "Q6_B": "**YES.**\nMerely competent, or genuinely good? **Merely competent.** The masonry craft is genuinely good; the floor is not. It is monochrome \u2014 I sampled 1454 colours across (250\u2013600, 100\u2013340) and every one of them is the same tan hue at a different brightness. This floor has been in continuous heavy use since before records and nothing has ever been spilled on it, tracked across it, or left on it. There is no stain, no debris, no damp, no rope, no hide, no timber. The one repair on the ground is a single object reused twice. It is a beautifully built floor in a place that has no history.",
+   "CULL_B": "Single-hue tan throughout \u2014 a floor in centuries of heavy use with no stain, spill, or debris on it.",
+   "RANK": "B is better by a wide margin and for the right reason: it is a surface, and A is a texture. A's floor answers no question you ask it \u2014 you cannot name what it's made of, nothing on it tells you where to walk, and 61% of it is two stamps. B's floor is genuinely built, and its ground gave me a navigational decision I could defend. B's defects are fixable in an afternoon; A's require the tile to be redrawn.\n\nThe thing to watch: B's monochrome is the harder problem of the two remaining, and it's the one that will read as \"asset\" rather than \"place\" once the real walls go in around it. The masonry is done. The four hundred years of use is not.\n\n*Model: Claude Opus 5 (1M context)*",
+   "Q1": "",
+   "Q5": "",
+   "Q6": "",
+   "CULL": "",
+   "transcript": "tools/tier1_floors/evidence/seats/r5_F4_transcript.txt",
+   "flips": [
+    "Break the 48px stamp: the floor must not contain two MD5-identical 48\u00d748 blocks anywhere on one screen \u2014 vary the red speckle per-tile, not per-supertile.",
+    "Give the pool an edge. Transition tiles on all four sides of x\u2208[216,312), y\u2208[0,144); no straight-line brown/teal boundary anywhere.",
+    "Raise the joint contrast so the 24px flagstone seams are legible at 1\u00d7 \u2014 currently they only exist above 4\u00d7 zoom.",
+    "Replace the uniform red mottle with concentration: heavy near the barrels and pool edge, worn thin along the open centre.",
+    "Shade the blue puddles \u2014 a darker rim and one specular pixel \u2014 so they stop reading as flat decals."
+   ]
+  }
+ },
+ "seats_run": [
+  "F1",
+  "F2",
+  "F4"
+ ],
+ "seats_declared": [
+  "F1",
+  "F2",
+  "F3",
+  "F4"
+ ],
+ "plant_seat": "F2",
+ "round_void": false,
+ "plant_words_declared": [
+  "cobweb",
+  "cobwebbing",
+  "web",
+  "webbing",
+  "collapse",
+  "collapsed",
+  "caved",
+  "ruin",
+  "ruined",
+  "rubble",
+  "moss",
+  "mossy",
+  "overgrown",
+  "lichen"
+ ],
+ "law": "LOOP-PROCESS \u00a74: if the critic does not catch the plant, the round is VOID and its findings are not read."
+}

@@ -1,0 +1,51 @@
+Measured, not eyeballed. Grid pitch is 64px; floor occupies x180–628, y16–400, with corridors west (y208–272) and south (x372–436).
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dried, crazed earth — a clay or mud pan that has shrunk and cracked. Not cut stone, not flagstone, not paving.
+
+**Q1_WHY:** The whole surface is one continuous polygonal crack network with no straight joints, no repeating rectilinear module, and no mortar. Cells are irregular five- and six-sided plates, 20–50px across, meeting at Y-junctions — that is shrinkage cracking, not masonry. Base colour sampled at (400,250) is `181,130,83`, a mid-brown; the crack lines sit at `143,103,66` and are hue-shifted toward olive, not simply darker. There are no cut edges anywhere on the floor. The only rectilinear marks are a handful of small stamped rectangle outlines drawn in the crack colour — one at x≈540–560, y≈275–295, another at x≈320–340, y≈343–362 — and they sit *on top of* the organic crack net rather than under it, so they read as a different material's leftovers rather than as the floor's structure. They contradict the answer rather than support it.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x372–436 — and **nothing about the ground influenced that**. I picked it because the light reaches about 60px into the south mouth (luminance at (400,470) = 25) versus effectively zero into the west mouth ((100,250) = 14, near black at the threshold). That is a lighting-and-geometry decision, not a floor decision.
+
+The floor gives me no directional information at all. I checked: the west corridor at y208–272 carries the *identical* texture as the room — same crack net, same dark discs visible at roughly (60,235) and (155,225) — with no threshold, no change of material, no trodden lane, no scuff at the doorway. Same for the south corridor. If both exits were unlit I would be choosing at random.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has cracked, uniformly, everywhere, at the same density, and nothing else has happened to it. It is aged rather than used. There is no history written on it: no wear path down the middle where four hundred years of traffic would polish it, no dirt or spoil piled where the floor meets the wall, no debris in corners, no patch, no repair, no rope, no driven pin, no timber, no salvage — nothing the fiction says has been done to this place continuously since before records. The damage is a surface treatment applied evenly, not a record of events.
+
+**Q3_WHY:**
+- Crack density is the same in the centre of the room (x350–450, y150–250) as in the doorway mouth at x180–200, y208–272. Traffic funnels through a doorway; nothing here registers that.
+- Floor luminance at equal distance from the light: near the north wall (405,32) = 86.1; open floor (257,180) = 88.7 and (553,180) = 84.6. Statistically identical. There is **no contact shading and no accumulation** at the wall junction — the floor texture runs to a hard line under the wall block and stops.
+- ~55 dark round pits are scattered across the floor at 1.3 per tile — but they are the same 14px diameter everywhere and cluster nowhere. Real pitting concentrates where feet, water or weight go.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Three things.
+
+1. **The dark round discs.** I counted 55 across the visible floor. Median diameter 14px, essentially one size, one soft-round shape, no variation. Roughly 1.3 per 64px tile, evenly spread — e.g. (471,153), (525,195), (443,276), (612,231), and one sitting alone in the south corridor at about (405,455), where it is the *only* thing visible in the dark. They are the highest-contrast feature on the ground and they read as a stamp, not as damage.
+
+2. **A verbatim duplicated strip.** The three tiles spanning **x244–436, y80–144** reappear pixel-for-pixel as the three tiles at **x436–628, y272–336** — same three discs in the same relative positions, same rectangle outline, same crack junctions, down to the same individual white speckle pixels. Both copies are on screen at once, about 200px apart. Correlation of the highest-frequency detail after removing all lighting: 0.94, 0.93, 0.99 for the three tile pairs.
+
+3. **The tile grid showing through.** Brightness steps at the 64px boundaries: +9.0 at y=144, −6.1 at y=272, +6.0 at x=308. Against a crack-to-stone contrast of only ~35 luminance units, a 9-unit seam is a quarter of the strongest feature on the floor. At 3x you can see straight lines crossing the full width of the room at y=208 and y=336. The grid draws itself onto the ground.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+**Repeated.** Not a judgement call — I clustered all 42 visible floor tiles by high-frequency detail with lighting divided out. Five pairs match above 0.80, and the offsets are not random: eight pairs at exactly (+3 rows, +3 cols), six at (+4 rows, −4 cols). That is a lattice. The atlas is being indexed by a function of position that repeats every 3 tiles along one diagonal and every 4 along the other, so 24% of the tiles on this single screen have a visible twin also on this screen, arranged in a regular diagonal rhythm the eye picks up even before it identifies why.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It is clean, readable at phone size, correctly lit, tonally in the right register, and there are no rendering errors.
+
+Merely competent. Not genuinely good. It is a well-executed texture, and a texture is not a floor. It tells me what the ground is made of and nothing about what has been done to it, which is the one thing this fiction needs the ground to say.
+
+**CULL:** A three-tile strip of floor is duplicated pixel-for-pixel twice on the same screen.
+
+**FLIP LIST**
+- Break the (+3,+3) / (+4,−4) repeat lattice — randomise or hash tile selection by world position so no two identical tiles appear within one screen, and grow the variant count past the current handful.
+- Cut the round dark discs to a third of their number, and vary diameter and edge shape; 55 identical 14px circles at 1.3 per tile is the loudest thing on the ground and it reads as a stamp.
+- Flatten the per-tile brightness offsets so the 64px grid stops showing as straight seams across the room — the steps at y=144, y=272 and x=308 must drop below the crack contrast.
+- Add a contact transition where floor meets wall: a darkened band and accumulated spoil/grit along the full wall line, x=180 and x=628 and y=16, so the floor stops looking like it was cut out with a rectangle tool.
+- Put history on it: a worn, crack-free traffic lane through the south corridor mouth (x372–436) and the west doorway (y208–272), and at least one visible orc repair — driven pins, lashed timber, a hammered patch over a break — somewhere in the lit area.
+
+---
+
+*Model: Claude Opus 5 (1M context)*

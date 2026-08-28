@@ -341,9 +341,48 @@ public sealed class TileThemeConfig
     /// <summary>
     /// Deterministic position hash for tile variation.
     /// Same (x, y) always produces the same hash — dungeon looks stable across re-renders.
+    ///
+    /// THE PREVIOUS VERSION WAS LINEAR AND THEREFORE DREW A LATTICE. It was
+    /// <c>|(x*7919 + y*104729) &amp; 0x7FFFFFFF|</c>, and a linear function has a constant
+    /// difference along any straight line: stepping (+1,+1) always changes the hash by exactly
+    /// 7919 + 104729 = 112648. Taken modulo a variant count that becomes a fixed ADDITIVE STEP,
+    /// so the chosen variant cycles with period <c>N / gcd(step, N)</c> along every row, column
+    /// and diagonal. It is not a weak hash; it is periodic by construction, at every N.
+    ///
+    /// With this session's 24 floor variants the diagonal step is 112648 mod 24 = 16, whose
+    /// additive order mod 24 is 3 — **the same tile recurs every third cell down the diagonal**,
+    /// out of a pool of twenty-four. A blind seat measured it before the arithmetic was checked:
+    ///
+    ///     "eight pairs at exactly (+3 rows, +3 cols), six at (+4 rows, -4 cols). That is a
+    ///      lattice ... 24% of the tiles on this single screen have a visible twin also on this
+    ///      screen, arranged in a regular diagonal rhythm the eye picks up even before it
+    ///      identifies why."
+    ///
+    /// ART-BIBLE-v0 §8.3 is the clause it breaks, and it breaks it in the worst possible place:
+    /// the variant system is the ONLY mechanism the bible gives for keeping a tiled field off
+    /// the motif trap, and this function was quietly undoing it. A twenty-four tile family was
+    /// delivering three.
+    ///
+    /// The fix is a bit-mixing finalizer (xor-shift / multiply / xor-shift), which destroys the
+    /// linear relationship so no straight line through the map carries a constant step. It is
+    /// deterministic, cheap, and the same construction <c>FloorIncidentPlanner.Hash</c> uses.
+    ///
+    /// ⚠ IT CHANGES WHICH VARIANT LANDS ON WHICH CELL for every existing theme. Nothing looks
+    /// worse for it — a role with one variant is untouched, and a role with several was drawing
+    /// a periodic pattern it should not have — but captures taken before this commit will not
+    /// reproduce byte-for-byte, and that is a real cost recorded rather than discovered.
     /// </summary>
     private static int PositionHash(int x, int y)
-        => Math.Abs((x * 7919 + y * 104729) & 0x7FFFFFFF);
+    {
+        unchecked
+        {
+            int h = x * 7919 + y * 104729;
+            h ^= h >> 13;
+            h *= 1274126177;
+            h ^= h >> 16;
+            return h & 0x7FFFFFFF;
+        }
+    }
 
     /// <summary>
     /// Choose one of a role's tile-ID variants for a grid cell. Single-entry lists resolve to

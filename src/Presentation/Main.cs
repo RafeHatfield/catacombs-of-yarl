@@ -121,6 +121,15 @@ public partial class Main : Node
     private float _currentZoom;   // initialised in _Ready after renderer is created
     private const float ZoomStep = 0.5f;
 
+    // The Tier 0 review light rig, RETAINED. It used to be a local in LaunchCorridorScene: the
+    // light was positioned once on the player's spawn tile and the object was then dropped, so
+    // walking moved the figure out of a stationary pool. Headless captures never noticed because
+    // they are all taken on the spawn frame. The device walk is where it mattered, and §6.2.1's
+    // tuning pass — legibility ACROSS the lit radius, at gameplay distance — cannot run through
+    // a lamp that does not move. Held here so _Process can keep it on the player and so
+    // ReviewRigPanel can turn its knobs. Null outside a review build.
+    private ReviewLighting? _reviewLighting;
+
     // Dungeon run state
     private int _baseSeed = 1337;
     private int _currentDepth = 1;
@@ -295,6 +304,14 @@ public partial class Main : Node
             _pendingCameraSnapFrames--;
             _DoInitialCameraSnap();
         }
+
+        // THE PLAYER IS THE LAMP (§6.2, and §6.5's whole derivation rests on it: "the face is
+        // always one tile nearer the light than its own top"). Driven from _Process rather than
+        // from a turn-completion hook because the carried light belongs to the figure, not to a
+        // turn — and because a review build must not depend on which of several turn paths ran.
+        // Cheap: one Vector2 assignment, no texture work.
+        if (_reviewLighting != null && _state != null)
+            _reviewLighting.Follow(_state.Player.X, _state.Player.Y);
 
         // --art-scene-capture: wait for the camera-snap sequence above to fully settle
         // (_pendingCameraSnapFrames reaches 0), then a couple more idle frames as a buffer
@@ -2555,6 +2572,12 @@ public partial class Main : Node
         var lighting = new ReviewLighting(marker?.Light ?? ReadLightParams());
         lighting.Attach(GetNode<Node2D>("GameView"), _renderer!.TileWidth, _renderer.TileHeight,
                         _state.Player.X, _state.Player.Y);
+        _reviewLighting = lighting;   // retained so _Process can keep the lamp on the player
+
+        // THE RIG LADDER — §6.2.1's tuning pass, on device, in Rafe's hands. Review builds only:
+        // this is reached from LaunchCorridorScene, which a player build never enters.
+        var rigPanel = new ReviewRigPanel(lighting);
+        GetNode<Control>("UILayer/ViewportOverlay").AddChild(rigPanel);
 
         // Through Diag as well as GD.Print: on iOS there is no console to read, and GD.Print goes
         // nowhere retrievable. Diag writes to the app container, which can be pulled back off the
@@ -2568,6 +2591,22 @@ public partial class Main : Node
         Report($"[Tier0] junction={(hasJunction ? $"YES at ({junctionAt.X},{junctionAt.Y})" : "NO")}");
         Report($"[Tier0] tile_theme_config={TileThemeLoader.ActiveConfigPath}");
         Report($"[Tier0] light rig: {lighting.Describe(_renderer.TileWidth, _renderer.TileHeight)}");
+
+        // THE INCIDENT SYSTEM — §8.3's overlays and §8.2.1's trodden channel, placed per cell.
+        // Reported unconditionally, including when there is no manifest: a scene that quietly
+        // drew no overlays looks exactly like a scene whose floor has no incident in it, and
+        // LOOP-PROCESS §4.2 asks of every step what goes red if it silently does nothing.
+        // CLI wins over the marker, same precedence the light rig already uses: a review build
+        // has no command line, and a headless capture has no marker. Both paths must be able to
+        // reach the overlay system or the seats would be judging a floor with no incident on it
+        // while the device showed one — two different floors under one name.
+        string? overlayManifest = ReadStringArg("--floor-overlays") ?? marker?.FloorOverlays;
+        if (_tileLayer != null && overlayManifest is { Length: > 0 })
+            Report("[Tier1] " + Tier1FloorOverlays.Attach(_tileLayer, _state.Map,
+                                                          overlayManifest, _baseSeed));
+        else
+            Report("[Tier1] floor overlays: none declared (no --floor-overlays, no marker "
+                   + "floorOverlays) — base tiles only");
         Report($"[Tier0] review_build_marker={(marker != null ? ReviewBuildMarker.Path : "none (CLI flags)")}");
         // Reported so the device log proves the no-losable-state fix is actually on the device.
         // The defect was turn_limit=1, which ended the run on the first step and surfaced as the

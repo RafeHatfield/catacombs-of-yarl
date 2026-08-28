@@ -75,7 +75,8 @@ def git_commit():
 
 
 def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
-            light_overrides=None, scene_spec=None, log_out=None, timeout=180):
+            light_overrides=None, scene_spec=None, log_out=None, timeout=180,
+            floor_overlays=None):
     """Invoke the engine. Returns (returncode, log, cmd)."""
     w = cfg["resolution"]["width"]
     h = cfg["resolution"]["height"]
@@ -110,6 +111,12 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
         "--light-energy", str(light["energy"]),
         "--light-radius-tiles", str(light["radius_tiles"]),
     ]
+    # ART-BIBLE-v0 §8.3's incident overlays, added for the tier-one floor round. Optional: a
+    # capture taken without it draws base tiles only, which is what every capture before tier
+    # one did. The engine reports which branch it took either way, so a capture cannot silently
+    # be missing the incident system and look like a floor that simply has no incident on it.
+    if floor_overlays:
+        cmd += ["--floor-overlays", floor_overlays]
 
     os.makedirs(os.path.dirname(out_png) or ".", exist_ok=True)
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
@@ -140,6 +147,10 @@ def main():
     ap.add_argument("--light-energy", help="Override light energy (positive control)")
     ap.add_argument("--light-radius-tiles",
                     help="Override the carried light's reach (junction-lit positive control)")
+    ap.add_argument("--floor-overlays",
+                    help="res:// path to a floor family MANIFEST.json — ART-BIBLE-v0 §8.3's "
+                         "incident overlays and §8.2.1's trodden channel. Omitted, the capture "
+                         "draws base tiles only and the engine says so in the log.")
     ap.add_argument("--log-out")
     ap.add_argument("--godot", default=DEFAULT_GODOT)
     args = ap.parse_args()
@@ -153,7 +164,7 @@ def main():
 
     rc, log, cmd = capture(args.out, args.theme_config, cfg, args.godot,
                            light_overrides=overrides, scene_spec=args.scene_spec,
-                           log_out=args.log_out)
+                           log_out=args.log_out, floor_overlays=args.floor_overlays)
 
     if not os.path.exists(args.out):
         # Exit 2 from the engine is a REFUSED capture (junction-lit check failed), not a crash.

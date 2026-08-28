@@ -60,6 +60,24 @@ with open(path, "w") as f:
 PY
   echo "== scene override: $TIER0_SCENE"
 fi
+# TIER1_OVERLAYS points the review build at a floor family's MANIFEST.json — ART-BIBLE-v0 §8.3's
+# incident overlays and §8.2.1's trodden channel. Same reasoning and same echo as the two
+# overrides above: an overlay is NOT a tile role (a cell may carry none, one or two of them,
+# chosen per instance), so it cannot ride in on TIER0_THEME. And a device build that quietly
+# showed a floor with no incident on it would be the wrong picture at the one gate that decides
+# anything (§13.1), which is why the substitution is announced rather than assumed.
+if [ -n "${TIER1_OVERLAYS:-}" ]; then
+  python3 - "$MARKER" "$TIER1_OVERLAYS" <<'PY'
+import json, sys
+path, manifest = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["floorOverlays"] = manifest
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== floor overlays: $TIER1_OVERLAYS"
+fi
 echo "== marker written: $(basename "$MARKER")"
 echo "== grid: $(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print("tile %s at x%s" % (d.get("tileSize","default"), d.get("tileScale","default")))' "$MARKER")"
 echo "== bundle id: $BUNDLE_ID   name: $NAME"

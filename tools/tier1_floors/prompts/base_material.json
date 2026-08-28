@@ -1,0 +1,112 @@
+{
+  "subject": "floor_base_material",
+  "title": "Boundary floor MATERIAL — incident-free, for the base tile",
+
+  "_what_this_is": [
+    "This prompt asks for MATERIAL and nothing else. It is not asking for a floor.",
+    "",
+    "ART-BIBLE-v0 §8.3 (LAW, 2026-08-27) divides the two objects and this file sits on one",
+    "side of that division:",
+    "",
+    "    base tile        authored once per material    carries material only, NO incident",
+    "    variant/overlay  authored per instance         carries the incident",
+    "",
+    "Every previous floor round on this project asked for a FLOOR and got incident baked into",
+    "the tile — a crack, a dished centre, a bracket-shaped stone — which §8.3 measures becoming",
+    "a motif the moment it is tiled. Five independent seats culled four rounds for it. The",
+    "prompt was part of that: `probe_6_4/prompts/subject_floor.json` asks in terms for a centre",
+    "'worn smooth and slightly dished' and for 'two or three small texture events near the",
+    "edges'. Both are incident, and the second is incident AT A POSITION, which is §8.3.1's",
+    "lattice in one phrase.",
+    "",
+    "So this is a re-authored subject, not a tweak of that one, and the deleted phrases are",
+    "listed in `deleted_from_subject_floor` below so the difference is auditable rather than",
+    "implied.",
+    "",
+    "⚠ AND IT MUST NOT OVERSHOOT. §8.3.1's mirror clause: 'Incident-free is not featureless.",
+    "Material has structure — joints, bond, grain, value break — and stripping that to avoid a",
+    "motif produces the flat clone field the same seats cull on sight.' The test named there is",
+    "the one this prompt is written to: a joint between two stones is a property of the",
+    "material and belongs here; a crack through one stone is a thing that happened to it and",
+    "does not."
+  ],
+
+  "description": "A field of old grey dungeon flagstones seen from directly above, filling the whole frame edge to edge. Large flat paving stones of the same quarried grey stone, laid tight against each other in an irregular bond, their joints running right off all four edges of the frame. The stone is plain: a close even grain, small differences of value from one stone to the next, dark grime settled along every joint. Every stone is whole and flat and the surface is continuous. No single stone stands out from its neighbours. Nothing is broken, nothing is chipped, nothing has collapsed, and nothing has been put down on it.",
+
+  "negative_description": "crack, cracks, split, chip, chipped, hole, pit, gouge, rubble, debris, gravel, scatter, collapse, ruin, broken stone, missing stone, cobweb, skull, bones, blood, moss, vines, plants, water, puddle, stain, treasure, coins, props, furniture, arrangement, ornament, carving, engraving, runes, symbols, decoration, mosaic, tile pattern, checkerboard, regular grid, ruled lines, border, frame, panel, inset rectangle, cartouche, plaque, centred feature, medallion, outline, drop shadow, vignette, spotlight, text, watermark, character, creature",
+
+  "parameters": {
+    "image_size": {"width": 32, "height": 32},
+    "outline": "lineless",
+    "detail": "low detail",
+    "view": "high top-down",
+    "shading": "flat shading",
+    "no_background": false
+  },
+
+  "deleted_from_subject_floor": [
+    {"deleted": "worn smooth and slightly dished down the middle where centuries of foot traffic have polished them",
+     "why": "§8.2.1's trodden channel, baked into the tile. RULED (§8.3) to live at the instance level: it is an overlay family this session builds, not a property of the base material. Baked, it is a polished centre in every cell — the seat's own cull, 'the traffic line down the middle is as pristine as the edges', from the opposite direction."},
+    {"deleted": "A quiet surface: one large flat field of stone with only two or three small texture events near the edges, the centre left open",
+     "why": "§8.3.1 in one sentence: 'Any treatment applied at a constant position within a tile becomes a lattice when tiled.' Two or three events NEAR THE EDGES is a position. Tiled, the events land at the same offset in every cell and the eye adds them up into a 32-unit grid — which is verbatim what a blind seat reported."},
+    {"deleted": "Nothing is broken and nothing has collapsed; the stone is used up, not ruined",
+     "why": "NOT deleted as a clause — §1/§8.1 stand and the register is carried at the human gate (§13.4). Restated harder in the description ('Every stone is whole and flat') and expanded in the negatives, because 'used up, not ruined' asked the generator to draw wear, and wear on a BASE tile is the incident §8.3 forbids. The used-up reading is delivered by the overlay and channel families instead, where §8.3 puts it."}
+  ],
+
+  "phrase_provenance": [
+    {"phrase": "seen from directly above, filling the whole frame edge to edge",
+     "clause": "§3 — orthogonal square grid, not isometric; the floor stays flat and presents no second plane. Full-bleed is mechanical: a tile must tile. Stated in the prompt rather than bought with `coverage_percentage`, an untested parameter that would be a silent billed no-op (AUDIT 9.3)."},
+    {"phrase": "old grey dungeon flagstones ... the same quarried grey stone",
+     "clause": "§7.4 seam 1 — 'The Boundary is mostly found stone with orc work pinned into it.' The floor is the found half. One stone family per tile so the variants read as one material (§13.3's cohesion question, the scene bar's own criterion)."},
+    {"phrase": "laid tight against each other in an irregular bond",
+     "clause": "§8.3.1's MIRROR, the clause this phrase exists to satisfy: 'Material has structure — joints, bond, grain, value break.' IRREGULAR is doing the work — §8.3.1 culled a REGULAR 2px joint grid on a 16px pitch from the sighted round's wall tops for being 'a ruled grid ... an incident at fixed offset in every cell'. A bond is licensed; a grid is not."},
+    {"phrase": "their joints running right off all four edges of the frame",
+     "clause": "§12.1 RULED (2026-08-27) — the test that separates a joint from a ring is 'whether it continues into the neighbour', and C-GAB failed it by turning its corners and returning inside its own cell. This phrase asks for the passing case in the generator's own vocabulary. It is also the mechanical precondition for the seamless bond that `compose_family.py` lays over this material."},
+    {"phrase": "a close even grain, small differences of value from one stone to the next",
+     "clause": "§8.3.1's mirror again ('grain, value break') and §12 — 'interior detail not at all', so the grain is close and even rather than described. Stone-to-stone value difference is what keeps the field off the flat clone read without adding an incident to any one stone."},
+    {"phrase": "dark grime settled along every joint",
+     "clause": "§8.1 verbatim — 'grime walked into a surface until it is part of it.' EVERY joint, not some: a grime that is part of the surface is distributed material; grime in one place is a stain, which is incident. This is the §8.3 test applied to a wear phrase rather than to a shape."},
+    {"phrase": "No single stone stands out from its neighbours",
+     "clause": "§8.3 directly — 'the identical bracket-shaped stone sits at the identical position inside every single cell' is the cull this refuses at generation. A stone that stands out is an incident whatever it is made of."},
+    {"phrase": "nothing has been put down on it",
+     "clause": "§1 — 'Nothing is staged.' §7.3 RULED — 'Nothing on an orc-made object exists for appearance.' NO INSTRUMENT (§13.4); carried at the human gate, argued against here."},
+    {"phrase": "negative_description: crack, chip, hole, rubble, debris, scatter",
+     "clause": "§8.3 — this is the exact vocabulary of the OVERLAY family this session also builds. It is refused HERE and requested THERE, and the two prompts are the division the law draws. A base tile that arrives with a crack in it is not a better base tile."},
+    {"phrase": "negative_description: cobweb, skull, blood, ruin, collapse, moss",
+     "clause": "§13.3 / LOOP-PROCESS §4 — a picturesquely RUINED, cobwebbed floor is this project's named critic plant and its named register failure (§8.1: 'nothing is ruined; everything is used up'). Refused at generation as well as at the gate."},
+    {"phrase": "negative_description: border, frame, panel, inset rectangle, cartouche, plaque, centred feature, medallion",
+     "clause": "§5.5 + §12.1, and this block is aimed at a MEASURED propagation rather than at a generic risk. Composition propagates with material at 12/12, and the conditioning parent for this wave (C-GAB) was RULED 'a frame at field scale' at the 2026-08-27 gate — a blind seat, shown a different campaign, independently called the corpus's other framed tile 'a framed plaque'. Those are the two words in this list that are there because an instrument found them."},
+    {"phrase": "negative_description: regular grid, ruled lines, mosaic, checkerboard, tile pattern",
+     "clause": "§8.3.1 — the wall-top joint grid's cull, refused at generation for floors before it can be earned a third time."},
+    {"phrase": "negative_description: outline",
+     "clause": "§12.1 LOCKED — 'Nothing in Yarl carries a baked dark ring.' Belt and braces with the `outline` parameter."},
+    {"phrase": "negative_description: drop shadow, vignette, spotlight",
+     "clause": "§6.3 LOCKED, RATIFIED — assets are authored to RECEIVE light, not to depict it. A baked light is a direction a carried torch arriving from elsewhere contradicts."}
+  ],
+
+  "parameter_provenance": {
+    "image_size": {"value": "32x32",
+      "clause": "RULED (Rafe, 2026-08-25) as to value; §4.3 keeps canvas sizes PLACEHOLDER as to derivation. Also mechanical here: `size` and `style_images` are mutually exclusive and the largest reference dictates output dimensions (LOOP-PROCESS §12), and C-GAB is 32x32."},
+    "outline": {"value": "lineless",
+      "clause": "§12.1 LOCKED (Rafe, 2026-08-24). An outlined candidate is bible-illegal before anything else about it is looked at."},
+    "detail": {"value": "low detail",
+      "clause": "§4.1 — 'expect Yarl's readability rules to be harsher ... less interior detail'; §12 — 'interior detail not at all'. Measured as a live register lever by AUDIT 9.2."},
+    "view": {"value": "high top-down",
+      "clause": "§3 — one camera for the whole scene. ⚠ Efficacy unverified on this endpoint: PIXELLAB_CONVENTIONS calls `view` 'weakly guiding' and AUDIT 9.3 measured a projection parameter silently ignored and fully charged. Declared-not-proven."},
+    "shading": {"value": "flat shading",
+      "clause": "§6.3 — the strict receive-light reading, and the ONE lever on this endpoint whose liveness is measured rather than assumed (pixdiff 1.0000 against a 0.3542 noise floor, AUDIT column 2). ⚠ §4.1 LAW: measurable is not effective. This buys flatness, not correctness, and the eye rules."},
+    "no_background": {"value": false,
+      "clause": "Mechanical: a floor tile is opaque and full-bleed. The OVERLAY prompt sets this true, which is most of what makes it a different object."},
+    "style_image": {"value": "C-GAB, single reference",
+      "clause": "§5.5 RULED (2026-08-27): C-GAB is the primary style parent; A-VAB is prop stock and never a conditioning parent in any state; B-KAB is retired with no remediation; A-HEB is UNMEASURED and this session refuses it rather than spend twenty generations measuring it. ⚠ RECORDED, because §5.5 records it: C-GAB does NOT meet the sharpened incident-free criterion — it is retained as the best available parent UNDER SCREENING, at a measured child ring rate of 5/20 mechanically and 9/20 at the seat-adjusted upper bound. This wave budgets for that rate. Single reference is the surface's own shape: `create-image-bitforge` takes `style_image` singular, and the two-reference minimum banked in LOOP-PROCESS §12 is a fact about the MCP `style_images` list, not about this endpoint — the B-KAB (24) and C-GAB (20) runs both conditioned singly and returned usable children."},
+    "style_strength": {"value": 50,
+      "clause": "The value held constant through the B-KAB and C-GAB parent-rate runs, so this wave's ring rate is comparable to the 5/20 those runs measured. Not a lever here; this is material acquisition, not a search."},
+    "seed": {"value": "varied and recorded, never relied on",
+      "clause": "CLAUDE.md requires determinism and this surface cannot supply it — 8 identical calls returned 3 distinct outputs (AUDIT-FINDINGS column 2). This is why the ledger stores images rather than parameters."}
+  },
+
+  "what_this_prompt_is_NOT_asked_to_deliver": [
+    "ARCHITECTURE. Bible §13.7, measured: 'Architecture and conditioning do not exist on the same surface' — BitForge conditions at 12/12 propagation and produced architecture 0/100. This wave buys MATERIAL: colour, value distribution, grain, joint character. The seamless irregular bond, the phase offsets between variants, and the wrap continuity are laid procedurally by `compose_family.py`, on the other surface, exactly as §13.7 says a pipeline needing both must do.",
+    "A FINISHED FLOOR. §8.3 retroactively: 'those tiles were BASES, judged as FINISHED FLOORS, before the incident system existed. The seats were right and the tiles were not being asked a fair question.' Nothing from this wave is shown to a seat alone, and nothing from it is shown to Rafe alone. It is judged as laid, in the scene, with the overlay and channel families running over it."
+  ]
+}

@@ -1,0 +1,75 @@
+Both read. Findings below; I ran duplicate-block and translation-autocorrelation tests on each floor to check repetition rather than eyeball it.
+
+---
+
+## A
+
+**Q1_A:** Two floors, actually. The main one is packed dirt/earth, heavily stained dark red-brown. The lower band (y≈178–226) is flat grey flagstone. Neither is ambiguous — but they're two different qualities of work sharing a screen.
+
+**Q1_WHY_A:** The dirt (x 16–216, y 0–176) has no joints, no slab edges, just a granular brown field at #5C451E with maroon mottling laid over it — reads as loose ground. The grey band below has a perfectly regular 24px grid with 1px dark grout, so: cut slabs. The colour census on the grey band returns **17 total colours**, 63% of it a single flat #5A5A5A. That's not a stone I can name; it's a fill value.
+
+**Q2_A:** There is no figure in this image, so I'll answer for the space. I'd go north across the dirt, and I chose that **at random** — or rather, on non-ground cues: the teal field at x 216–312 reads as liquid, so east is out by elimination. Nothing in the dirt itself argued for anything. No worn track, no drag mark, no thinning of the stain, no accumulation toward any exit. The ground is directionless.
+
+**Q3_A:** Stained, not worn. Something has been spilled repeatedly on the dirt and dried dark, and something has been broken there: a scatter of white chips at (168–190, 60–78) that reads as bone, and six or seven small turquoise shards at roughly (130,17), (151,30), (141,110), (152,104), (178,114), (128,132). But the *stone* below has had nothing happen to it at all. It is spotless. Two floors, one of which has a history and one of which has never been touched.
+
+**Q3_WHY_A:** The maroon isn't in the grout of the flagstone one pixel below it. The dirt/stone boundary at y=176 is a straight horizontal line with a **pure #FFFFFF 3px lip running the full 384px width** — 1152 pixels of unmodulated white in a lightless dungeon. The dirt stops dead at it; nothing has been tracked across. Same at the dirt/water seam at x=216: razor-straight, axis-aligned, no wet margin, no silt.
+
+**Q4_A:** Yes, two things.
+
+First, the maroon mottling. It resolves into a recurring blot shape — a rough four-lobed rosette — and once I saw it at (40,30) I saw it at (88,30), (136,30), (184,30). Same shape, same lattice.
+
+Second, the bone scatter at (168–190, 60–78). It is the only near-white on 200×176 pixels of brown and it sits off-centre, so my eye lands there on every pass and has nothing else to move to. It's carrying the whole scene alone.
+
+**Q5_A:** **An image that was repeated**, and this is measurable, not an impression. Autocorrelation of the dirt field shows a sharp minimum at dx=48 and dy=48 with no minimum at 16, 32, 64 or 80 — a 48×48 stamp on a 24px tile grid. Hashing the 24px tiles: **56 tiles, 32 unique, and the four most common account for 24 of them**, at x ∈ {24,72,120,168} and {48,96,144,192}, y ∈ {2,50,98}. A strict lattice. Nearly half the visible dirt is four tiles laid down in a 2×2 loop. The grey band is worse in kind: 32 blocks, 16 unique, one tile used 7 times and another 6.
+
+**Q6_A:** YES, this would ship. And it is **merely competent** — it is a working tileset, not good art. The dirt has a plausible base colour and the stain idea is right; the execution is a small stamp on a visible lattice over a floor with no interior structure.
+
+**CULL_A:** Dirt is a 2×2 stamp on a 48px lattice; four tiles cover half the visible ground.
+
+**FLIP LIST — A**
+- Break the 48×48 loop: enough dirt variants that no tile recurs on a fixed lattice within one screen, and offset/flip what remains.
+- Give the grey flagstone actual stone — value range, per-slab tone variation, chipped edges. 17 colours and one flat grey is a placeholder.
+- Kill the pure-white 3px lip at y=176; replace with a broken, tinted slab edge.
+- Carry the maroon stain and dirt across the y=176 and x=216 seams — into the grout, onto the stone, a silt margin at the water.
+- Redesign the stain blot so it isn't one four-lobed shape repeated; two or three distinct spill shapes at different scales.
+
+---
+
+## B
+
+**Q1_B:** Large irregular stone slabs, sandstone-coloured, dry and dusty. You'd feel grit underfoot.
+
+**Q1_WHY_B:** The joint network (clearest at x 190–390, y 180–380) is irregular — slabs of visibly different sizes and proportions, joints that step and offset rather than run true, and joints that **do not align to the 50px tile grid**. Cracks branch across slab faces independently of the joints, e.g. the one running down through (525,110). Every slab carries a slightly different base tone, and a fine 2px speckle sits over all of it. The colour census returns **2,444 colours with no single one above 0.5%** — continuous tonal variation, not fill-and-outline.
+
+**Q2_B:** South, down the channel at x≈380–430 that runs off the bottom edge. The ground read that made the choice: the floor *continues* into it, same slabs, same joints, unbroken — it's a floor narrowing, not a hole. But I want to be honest about the limit of that: it's the aperture shape telling me, not the surface. Nothing about the stone itself — no wear polish, no dirt track, no drag scar — leans one way. The floor doesn't know where people walk on it.
+
+**Q3_B:** It has cracked and been repaired, badly and functionally. Slabs have split, and someone has driven iron across the splits and pinned it down rather than lift and replace. It's dusty and unswept, but not fouled — no spills, no bones, nothing organic.
+
+**Q3_WHY_B:** The mark at (515–545, 95–110) is the clearest thing in the image: a horizontal iron bar laid across a vertical crack, with **four black pins driven at its corners**. It sits directly on the crack it's holding. Below it at (500–560, 130–150) are two dashed horizontal runs that read as lacing or stitching across a joint. That is exactly the fiction — repair with driven pins, by people who don't care how it looks.
+
+**Q4_B:** Yes. **The pinned strap is used twice, identically.** Once at (515–545, 95–110) and again at (455–490, 292–305). Same horizontal orientation, same bar, same four-pin arrangement, same size. The first one crosses a crack; the second is pinning **nothing** — it lies across an almost featureless slab face with no split under it. My eye found the second one and immediately went back to the first to compare, and after that both read as a decal rather than as a repair. It's the one asset in this floor that behaves like a stamp.
+
+Secondary: the speckle grain is at the same density and the same 2px size everywhere, edge to edge, including the middle of slabs where nothing would collect it.
+
+**Q5_B:** **A surface that was made.** Autocorrelation over the floor (x 190–620, y 0–400) tested to a 200px offset in both axes shows **no periodic minimum whatsoever** — error rises monotonically with offset, meaning nothing in the visible ground repeats at any tile multiple. Combined with joints that ignore the 50px grid and cracks that cross slab boundaries, this is authored, not tiled.
+
+**Q6_B:** YES. And it is **genuinely good** — not merely competent. The crack network and the pinned strap are authored decisions that carry the fiction rather than decorate it, and the non-repeating slab layout is the real thing, not a variant shuffle. I'm holding that verdict despite the duplicated strap, which is a fixable defect on a good floor rather than evidence of a shallow one.
+
+**CULL_B:** Should not be rejected — but it is not defect-free. The strap decal repeated identically, once pinning nothing, is a real fault; so is uniform grain density on a floor in continuous heavy use, which means it reads dusty but not *used*. Neither is grounds for rejection. **NONE.**
+
+**FLIP LIST — B**
+- Vary the pinned strap: different lengths, angles, pin counts. Never two identical instances on one screen.
+- Move the (470,300) strap onto an actual crack, or delete it. A repair holding nothing breaks the read.
+- Vary grain density — heavier in joints, in slab corners, at the room edges; scrubbed thinner along the centre channel.
+- Add one wear track through the south channel at x≈380–430: polished, grain-free stone where feet have gone for four hundred years.
+- Introduce a second repair vocabulary — driven pins alone read as one idea. Rope lashing, a hide patch, a timber shim across a subsided slab.
+
+---
+
+**RANK: B**
+
+A is a functioning tileset with a measurable 48px loop and a stone band that is 17 colours of flat grey. B is a made surface with a repeated decal on it. Those are not the same class of problem — A's fault is in the floor's construction, B's is in a sticker sitting on top of a sound floor.
+
+The thing to watch: B has solved *material* and hasn't touched *traffic*. Nothing on that floor records that anyone walks on it. That's the next gap, and it's the one that will start to show once the strap decal is varied and there's nothing else pulling the eye.
+
+**Model used:** Claude Opus 5 (1M context)

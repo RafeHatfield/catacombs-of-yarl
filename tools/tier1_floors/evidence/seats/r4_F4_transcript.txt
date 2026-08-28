@@ -1,0 +1,80 @@
+Both examined at native pixels and with numerical repeat analysis. Findings below.
+
+---
+
+## A
+
+**Q1_A:** Dry packed earth — rammed dirt or clay, with a faint reddish grid of cracks in it. Two other surfaces are also in frame and I'll name them since they're all floor: a flat mid-grey tile field (left edge, and the band from y≈180 down), and a flat dark-green field (right of x≈222). I cannot tell what that green one is — water, algae, moss, or paint. It has no material read at all.
+
+**Q1_A_WHY:** The brown zone (x≈32–222, y≈0–180) is a warm ochre with dark-red speckle and thin darker-red lines that cross in rough squares — that reads as dried mud that has shrunk and cracked. The grey zone is uniform flat grey rectangles about 24px with *bright white* seams between them (visible clearly across y≈185–225) — that reads as laid tile, not stone. The green zone (zoomed at 215–300 × 10–140) is a single dark teal with a barely-visible lattice under it and three identical green blobs stamped on it; nothing in it says stone, water, or growth.
+
+**Q2_A:** At random, or near enough. There is no figure and no light source in this image, so there's no "here" to walk from. If forced: west, toward the grey tile at the left edge, because it's the only zone with a visible opening (the orange sliver at x≈0, y≈110–140). Nothing about the ground itself pushed me — the dirt is equally passable in every direction, the boundaries between the three surfaces are perfectly straight lines (a dead-vertical edge at x=222, a dead-horizontal one at y=180) with no scuff, spill, or transition across them, so no surface suggests it leads anywhere.
+
+**Q3_A:** Nothing has happened to it. It is clean, level, and undisturbed. There is a scatter of bone fragments at (176–205, 60–82) — three skull-ish pieces and some chips — and about a dozen small blue-grey flecks across the dirt, and two barrels at (85–160, 140–170). That is decoration placed on top of the floor. The floor under it has no wear at all: no path where anything walks, no darkening near the barrels, no crumbling at the edges where dirt meets tile, no repair.
+
+**Q3_A_WHY:** The dirt at (60,40) is the same value, hue and speckle density as the dirt at (200,160) — I checked, they're literally the same pixels. The grey tile seams at y=190 and y=214 are *lighter* than the tile faces, which is backwards for a floor in continuous heavy use; grout collects grime and goes dark. And the bone scatter casts nothing and displaces nothing.
+
+**Q4_A:** YES, badly. Two things.
+
+1. The dirt has a plaid in it. Once you see the dark-red crack lines at (48, 24), (96, 24), (48, 72) you cannot stop seeing that the same crack cluster is at (144, 24), (48, 120), (144, 120) — the same shape, same angle, every 48 pixels in both directions. I measured it: shifting the dirt region 48px right makes **76–98% of pixels exactly identical**, against ~9% of noise baseline. It's one 48×48 stamp laid down in a grid.
+2. The grey tile field. Every rectangle from x=0 to x=384 along y=185–225 is the same rectangle; a 48px shift is 90.6% pixel-identical. The white seams turn into a ruled sheet of graph paper across the bottom third of the screen.
+
+Third, smaller: the green blob at (270,120) and the one at (245,95) are the same sprite.
+
+**Q5_A:** An image that was repeated. Not arguable — a 48px translation reproduces the dirt at up to 98% exact pixel identity, and 90.6% for the grey. Three flat colour fields with one stamp each, butted together on straight lines.
+
+**Q6_A:** YES, it would ship — plenty of released mobile roguelikes look like this. Merely competent, and only just. Not good. It is a placeholder-grade tile set: one material, one stamp, no variation, no wear, no lighting.
+
+**CULL_A:** Dirt is one 48px stamp repeated verbatim — up to 98% pixel-identical — so the ground reads as plaid.
+
+**FLIP LIST — A**
+- Break the 48px repeat: at minimum 6–8 dirt variants plus randomised flip/rotate, and move the crack lines off the tile grid so no seam repeats within a screen.
+- Darken the grey floor's seams below the tile face and vary their width; bright white grout reads as a modern bathroom, not four centuries of traffic.
+- Give the dirt/tile boundary at y=180 and the dirt/green boundary at x=222 an actual transition — dirt spilled over the tile edge, tiles lifting, a broken lip.
+- Put wear where feet go: a lighter polished lane through the middle of the dirt, darkening and debris in the corners and against the barrels.
+- Give the green field a material identity or cut it — right now it is a flat colour with three copies of one blob on it.
+
+---
+
+## B
+
+**Q1_B:** Cut stone flagging — big rectangular slabs of a soft tan sandstone or limestone, laid unevenly and worn smooth.
+
+**Q1_B_WHY:** The slabs are visibly different sizes and don't line up: the large one at roughly (255–350, 40–120) is about twice the width of the narrow one at (200–255, 280–370), and seams jog rather than running through. The seams are dark, thin and slightly ragged — mortar gone or never there. The faces carry a fine two-value speckle that reads as grit and pitting rather than noise, and there are lighter patches on individual slabs, like different stone from different sources. The cracks (e.g. the long one at ~(500–600, 250)) run *across* slab faces, not along seams, which is how stone actually fails.
+
+**Q2_B:** South, down the corridor at x≈385–440 leading off the bottom of the room. The ground picked it: it's the only exit where the flagging visibly continues — the slab courses run through the gap between the wall blocks and keep going into the dark, so I read it as a passage rather than a niche. The west opening (x≈0–180, y≈145–380) shows a *different*, darker, colder stone and no continuity of course with the room floor, so it reads as somewhere else rather than onward.
+
+**Q3_B:** It's old and has been walked on, but nothing has been *done* to it. The stone is worn — faces smoothed, edges of slabs rounded off, seams opened up where mortar has gone. There's genuine damage: a dark star-shaped chip at (355,255) where a corner has broken out, a smaller triangular one at (585,220), fine spider cracks in the upper-left slabs around (250,60) and (300,100). But no dirt, no debris, no stain, no repair. Nothing on this floor records that anyone has ever tried to fix it, and nothing records anything ever having been spilled or dragged on it.
+
+**Q3_B_WHY:** The seams are the same width and the same dark-brown value in the corner at (220,340) as they are in the open middle at (450,220) — a floor in continuous heavy use accumulates grime in the joints and against the walls, and the value is flat everywhere. The wear that is present is uniform across the whole room; there's no lane where traffic actually goes.
+
+**Q4_B:** YES, one, and it's a real defect. The region **(370–420, 110–160) is the same pixels as (498–548, 174–224)** — I pulled both and compared them: identical slab corner, identical seam junction, identical speckle placement, identical pale flecks, differing only in brightness from the light falloff. Correlation 0.999 on the high-passed image. So the tile set is reused verbatim; it's just larger and offset diagonally, which hides it. There are several more such pairs at 64px multiples.
+
+Second, weaker: the vertical seam running from about (380,210) to (380,400) is unbroken and dead straight for roughly three tiles, which stands out against the otherwise irregular coursing.
+
+I did *not* find a global repeat — shifting the floor 21, 42, 64 or 128px produces ~1% pixel identity, versus A's 76–98%. The reuse is local, not wholesale.
+
+**Q5_B:** An image that was repeated — but only just, and I had to measure to say it. At a glance it reads as made: slab sizes vary, cracks cross seams, no motif recurs within a screen. The verbatim duplicate at (370,110)/(498,174) is what settles it. Honestly: a made surface assembled from a reused tile set, with the reuse mostly successfully disguised.
+
+**Q6_B:** YES. And it is genuinely good — not merely competent. The tell is that the irregularity is *structural*, not noise: slab boundaries ignore the tile grid, damage sits where a floor would actually fail, and the reuse takes measurement to find rather than jumping out. That is real craft.
+
+It is not finished, though. It's good stone and an empty stage.
+
+**CULL_B:** Floor is spotless — no grime, no debris, no repair anywhere, in a place used continuously for centuries.
+
+**FLIP LIST — B**
+- Break the verbatim duplicate at (370,110)/(498,174) and the other 64px-offset repeats — hand-vary the speckle, or add a second variation layer that doesn't move with the tile.
+- Add accumulated filth: darken the seams progressively toward walls and corners, and grey down the joints in low-traffic areas.
+- Put the orc repairs on the ground — driven pins, a timber plank bridging a broken slab, rope lashing, patched fill in the chip at (355,255). The fiction's central fact is currently absent from the floor.
+- Add a traffic lane: polish and lighten the stone along the line from the south corridor through the room, and leave the edges rougher.
+- Break the unbroken vertical seam at x≈380, y=210–400 with a slab offset or a course jog.
+
+---
+
+**RANK: B**
+
+Not close. A's dirt is a single 48-pixel stamp repeated with up to 98% pixel identity and its grey field is graph paper; B's floor survives the same measurement at ~1% and only fails on one hidden duplicate. B's remaining problem is content — the floor is too clean for the fiction — which is additive work. A's problem is the tile set itself, which is a rebuild.
+
+Watch for: B's cleanliness is the thing that will start to read as wrong once the walls are finished and the room is dressed. Fix the grime and the repairs before adding more props.
+
+*Model: Claude Opus 5 (1M context)*

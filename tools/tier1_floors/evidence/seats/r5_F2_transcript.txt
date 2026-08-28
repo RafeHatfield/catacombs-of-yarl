@@ -1,0 +1,61 @@
+## Q1: WHAT IS THIS FLOOR MADE OF?
+
+Mossy tan flagstone paving — rectangular cut slabs, heavily overgrown.
+
+**Q1_WHY:** At 4x on the lit centre (orig 300,120–540,300) the slab layout is unambiguous: thin darker joint lines enclosing rectangles of mixed size, mostly ~32px square with some 32×16 halves, laid in a broken bond rather than a clean checker. The long horizontal joint at y≈258 runs unbroken from x≈300 to x≈540. Colour is warm sandy tan (lit stone sits around RGB mid-tan, not grey), which reads sandstone or a dry cut limestone, not the cold grave-stone the fiction implies. On top of it: green clumps covering **17.2%** of the lit floor, and light dotted diagonal scoring.
+
+One thing to name plainly: that green is **chlorophyll green**, and it is 17% of the surface. In a sunless administered underworld that is the wrong organism. Lichen pallor, black mould, salt bloom, nitre — those grow in the dark. This grows in daylight.
+
+## Q2: WHICH WAY WOULD YOU WALK, AND WHY?
+
+South, down the one-tile corridor at x≈380–445 leaving the bottom of the room.
+
+**Nothing about the ground influenced that.** I picked it because the placeholder blocks open there and the west passage (x 0–180, y 145–260) is the same distance away — it was effectively arbitrary.
+
+I want to be exact about why, because I nearly credited the floor with something it doesn't do. There *is* an apparent clean lane running from the figure to the south corridor mouth: raw moss coverage drops to 3.3% in the column x=378–410 against a 13–29% field. It looks like a wear path. It isn't. Divide the light gradient out and the dip collapses to 17.8% against a 23% field average — the lamp is at (410,180) and it was washing the green out of its own hotspot. The floor paints no traffic, no polish, no debris drift, no directional cue of any kind.
+
+## Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?
+
+It has been overgrown. Nothing else has happened to it.
+
+**Q3_WHY:** I looked for damage and found essentially none. No cracked slab, no lifted or tilted slab, no missing slab, no spall, no subsidence, no hole, no repair. Four hundred years of a garrison hauling material over this ground and there is not one plank, pin, rope-lashing, patch plate or packed rubble fill anywhere in the room. The only non-moss marks are a dark radial blot at (357,255) and another at (425,400) — stains, not injury.
+
+The moss itself doesn't behave like moss, which is what gives the damage away as decoration rather than history. Growth follows water, so it should pool in the joints and dead corners first. Here it does the opposite: the long joint at y≈258, x 300–540 is bare along nearly its entire run, while a large clump sits centred on open slab face at (415–430, 265–271), touching no joint at all. It's scattered at even density across the whole room — 12–27% in every 32px row I sampled — like a spray, not a colony.
+
+## Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?
+
+Yes. The diagonal hatch decal — a small fan of light dotted parallel lines with a hooked end, about 26×26px.
+
+I template-matched one instance and found **five pixel-identical copies on this single screen** (NCC 0.99–1.00, no flip, no rotation, no recolour): **(394,86), (394,214), (522,150), (586,86), (586,278)**. Every offset between them is a multiple of 64 in both axes — (394,86)→(394,214) is dy=128; →(522,150) is dx=128, dy=64; (586,86)→(586,278) is dy=192. There is a 64px stamp lattice under this floor and the hatch is nailed to it.
+
+That decal is not an isolated case. Sweeping every 20×20 block of the floor against every other, **46% of blocks have a ≥0.90-NCC twin elsewhere on the same screen**; 54% clear 0.85. Dominant translation offsets are 64, 128 and 192 in both axes. The south corridor is the worst of it — four hatch fans inside a strip 64px wide.
+
+Third thing, smaller: a faint dark `+` mark at **(317,48), (317,240) and (481,240)** — two sharing an x, two sharing a y, 192px apart. It reads as a registration mark left on the stamp.
+
+## Q5: MADE, OR REPEATED?
+
+**Repeated.** Not a judgement call — five bit-identical copies of one decal on a 64px lattice, and near-half the surface having a verbatim twin, is the measurement. What was authored is a 64×64 tile set; what's on screen is that set laid down. Nothing here was placed for where it is.
+
+## Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?
+
+**YES.** The slab bond is varied rather than gridded, the joint work is clean, the palette is coherent, it reads instantly at phone size.
+
+Merely competent. Not good. Good would mean the floor told me something — where I am in the complex, which way the traffic goes, that someone maintains this. This floor tells me it is a floor. And at the size it's actually played, the tan-and-green blotching resolves into woodland camouflage — the first read of the thumbnail is jungle canopy from the air, which is the opposite of an administered underworld.
+
+## CULL
+
+Five pixel-identical hatch decals on a 64px lattice; the floor reads as camouflage, not stone.
+
+## FLIP LIST
+
+- Kill the 26×26 hatch decal or authorise at least six variants with mirroring and rotation — five verbatim copies at (394,86), (394,214), (522,150), (586,86), (586,278) is the single loudest defect.
+- Cut moss coverage from 17% to under 6%, move what remains into the joints and slab edges, and take it off open slab faces like (415–430, 265–271).
+- Re-hue the growth from chlorophyll green to lichen grey-white, black mould and nitre bloom — nothing photosynthetic survives here, and the green is what makes the thumbnail read as camouflage.
+- Break the 64px stamp lattice: place decals on the slab grid with per-slab offset and flip, so no two blocks 64/128/192px apart are identical.
+- Add real damage and real repair — cracked and lifted slabs, a packed rubble fill, one timber-and-pin patch — and remove the `+` registration marks at (317,48), (317,240), (481,240).
+
+---
+
+Where this goes next: the fix that buys the most is the moss, not the hatch. Recolour and thin it and the camouflage read dies immediately; the decal repetition is the harder, slower job and it only starts to matter once the surface stops reading as foliage.
+
+*Model: Claude Opus 5 (1M context).*

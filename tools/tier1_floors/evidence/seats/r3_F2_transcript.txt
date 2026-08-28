@@ -1,0 +1,42 @@
+Looked at `A.png` (750×600) at 1×, 2× and 3×, plus template-matching and autocorrelation over the floor region only (x≈195–645, y≈10–390, and the dark passages west and south).
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dried, cracked packed earth — sun-baked hardpan or mud-flat — heavily overgrown with green moss.
+
+**Q1_WHY:**
+The crack network is the giveaway: irregular closed polygons with thin dark seams and no mortar, no tooled edges, no rectilinear slabs anywhere in the room (see the crazing at 3× around 500–620 px x, 200–330 px y). That is desiccation crazing, not masonry. The base colour is a warm sandy tan — sampling the lit centre (400–470, 180–250) gives RGB 151,122,68, hue ≈39°, i.e. clay/sand, not stone. 17.5% of floor pixels are chlorophyll-green. Nothing in it reads as cut, laid, or administered.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the dark corridor at x≈400–460 below y=400 — **and I chose it at random.** Nothing about the ground influenced it. I checked for a reason and there isn't one: moss coverage in the corridor-aligned band (x400–460) is 15.9% versus 17.1% for the rest of the room, 16.2% along the west approach, 16.9% in the dead northeast corner. Flat to within noise. There is no worn lane, no polish, no scuff, no drift of debris, no threshold, no drainage fall. The floor in front of the two exits is indistinguishable from the floor in the corner nobody has ever stood in. I picked south because the corridor was the most visible hole, not because the ground said anything.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Weather has happened to it. It has dried out and cracked, and moss has grown over roughly a fifth of it. Nothing else has happened to it. Nobody has walked on it, dragged anything across it, dropped anything on it, repaired it, or bled on it. It is undisturbed ground with an even coat of growth — a floor in a place that has been in continuous heavy use since before records began should not look untouched.
+
+**Q3_WHY:**
+Three specific readings. (1) The moss is *inverted*: coverage within 24 px of the walls is 12.6%, interior is 18.1%. Real damp growth accumulates at wall bases, in corners, in the cracks, where feet don't reach — here it's thinnest exactly where it should be thickest and thickest in the middle of the room where traffic would kill it. It's scattered noise, not a growth. (2) Column-by-column moss density bounces 9–25% with no gradient in any direction — no water source, no fall line, no dry side. (3) The only damage-like marks are two small dark divots below the figure at approximately (440,240) and (465,235), and some soft dark blotching; there is not one pin, rope lashing, hide patch or timber baulk in the walkable surface, despite this being a floor a garrison has been holding for four hundred years.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes. A 45° **ladder-shaped hatch stamp** — two parallel light rails with short rungs between them, about 28×28 px — repeated across the entire floor at one size and one angle. I counted eight or more in the northeast quadrant alone (roughly (394,88), (586,88), (522,152), (394,216), (586,280), plus more at (200,300), (330,340), (490,320)). Template-matching the instance at (586,88) returns three matches at ≥0.96 normalized correlation — (586,88), (394,88), (586,280) — which is pixel-identical, and those three sit on a 192 px lattice: same row, then same column three tiles down. Once seen, the eye tracks it instead of the scene.
+
+It goes further than the stamp. Autocorrelation of the high-passed floor peaks at exactly d=64 and d=128 in both axes (0.11–0.15, well clear of everything else), and whole 64×64 blocks match: **(584,82) against (584,274) at 0.962**, and **(456,146) against (520,274) at 0.939**. I cropped those four and put them side by side — pairs 1/2 share the same hatch stamp, the same crack polygon and the same moss blob in the same places. Two full tile repeats visible on screen simultaneously.
+
+**Q5: MADE, OR REPEATED?**
+**Repeated.** Not a judgement call — a 64 px tile at (584,82) and its copy at (584,274) are on screen at the same time at 0.96 correlation, and the ladder motif recurs on a 192 px grid. The lighting falloff from the lamp is doing all the work of disguising it; strip the gradient and the lattice is plain. Nothing on this floor is bespoke to its location: no tile knows it is next to a wall, next to a doorway, or in the middle of a room.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The pixel craft is real — the crack network is drawn with a confident hand, the falloff is nicely tuned, the figure's silhouette holds against it — but it is a stock overgrown-ruin ground texture. It could be lifted into any temple, any canyon, any surface ruin without changing a pixel, because it says nothing about this place. It is not genuinely good.
+
+**CULL:**
+Warm sunlit mossy earth with visible tile repeats — reads as outdoor ruin, not an administered underworld.
+
+**FLIP LIST**
+- Kill the 45° ladder/hatch stamp or cut it to one or two instances per screen; no motif at one fixed size and angle repeating on a 192 px grid.
+- Break the 64/128 px repeat — the block at (584,82) and its twin at (584,274) must not both be on screen; add per-tile rotation, offset or overlay variation.
+- Invert the moss: heavy at wall bases, in corners and inside the crack seams; scrub it off the room centre and off both doorway approaches. Currently 12.6% at edges vs 18.1% interior — backwards.
+- Cut a wear lane through the traffic axis — polished, moss-free, slightly darkened ground running from the west opening through the room centre to the south corridor mouth, so the floor tells you where feet have gone.
+- Pull the hue off 39° toward neutral cold grey-brown and drop saturation; put in the garrison's repairs — driven pins, lashed timber, hide patched over a hole — as actual raised elements with cast shadow, not inscribed marks.
+
+---
+*Model: claude-opus-5[1m]*

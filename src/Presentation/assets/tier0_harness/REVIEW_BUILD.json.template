@@ -30,6 +30,21 @@
     "radiusTiles": 5.5
   },
 
+  "_floorOverlays": [
+    "ART-BIBLE-v0 §8.3's incident overlays and §8.2.1's trodden channel, as a res:// path to a",
+    "floor family's MANIFEST.json. Absent, the scene draws base tiles only — which is what every",
+    "review build before tier one did, so an old marker keeps working unchanged.",
+    "",
+    "It is a separate key rather than part of themeConfig because an overlay is NOT A TILE ROLE.",
+    "A cell may carry none, one or two of them, chosen per instance, and TileThemeLoader's schema",
+    "has one id list per role and no shape for that. §8.3: a tile is the material, the incident",
+    "is the variant.",
+    "",
+    "The engine reports which branch it took on every boot, so a device build that silently drew",
+    "no incident at all cannot be mistaken for a floor that simply has none (LOOP-PROCESS §4.2)."
+  ],
+  "floorOverlays": null,
+
   "_grid": [
     "Tile size and integer scale, mirroring --tile-size / --tile-scale. Present for the same",
     "reason the light values are: an iOS app receives no command line, so without these the",

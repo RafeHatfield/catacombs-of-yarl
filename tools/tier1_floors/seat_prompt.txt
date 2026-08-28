@@ -1,0 +1,75 @@
+YARL — BLIND SEAT — THE FLOOR — v0.1
+
+RUN AS: fresh `claude -p`, cwd OUTSIDE the repo. No repo access. No project memory.
+INPUT: the PNG file(s) in this directory, nothing else.
+This process is NOT given the art bible. It gets the fiction, the tone, and these questions.
+
+------------------------------------------------------------------------------
+WHAT YOU ARE LOOKING AT
+
+A top-down dungeon seen straight from above, drawn on a square grid, shown at the size the game
+is actually played on a phone. A figure stands in the middle carrying the only light there is.
+
+------------------------------------------------------------------------------
+THE PLACE
+
+The Paths of the Dead: an underworld that is ADMINISTERED, not haunted — a filing system for
+souls. In continuous heavy use since before anyone's records begin, and no one has ever cared
+for it. Nothing in it is arranged for anyone's benefit.
+
+The upper floors are a contested frontier where a company of orc-soldiers has held a line for
+four hundred years and cannot advance it. They repair things endlessly, with rope, driven pins,
+hide and salvaged timber, and they do not care how the repairs look.
+
+The tone is dry, cold and completely straight. Not spooky-fun. Not adventurous. No sense of
+humour about itself.
+
+------------------------------------------------------------------------------
+SCOPE — READ THIS AND HOLD TO IT
+
+**THE WALLS IN THIS IMAGE ARE PLACEHOLDER PROGRAMMER ART.** They are flat coloured blocks
+standing in for tiles nobody has drawn yet. They are deliberately garish so that no one can
+mistake them for finished work. Do not judge them, do not comment on their colour, and do not
+let them influence anything you say about the ground.
+
+**THE SUBJECT IS THE FLOOR** — the walkable ground the figure is standing on and walking
+through. That is the only thing being judged.
+
+The on-screen buttons and bars are the game's interface and are also out of scope.
+
+------------------------------------------------------------------------------
+QUESTIONS
+
+Answer every one. Use the exact labels. Be specific about WHERE you are looking — give pixel
+regions or describe the location — and quote what you actually see rather than what you expect.
+
+Q1: WHAT IS THIS FLOOR MADE OF? Name the material in a few words, as if telling someone what
+    they are standing on. If you cannot tell, say so plainly.
+Q1_WHY: what in the image tells you that.
+
+Q2: WHICH WAY WOULD YOU WALK, AND WHY? The figure can go in more than one direction. Pick one,
+    and say what about the GROUND made you pick it. If nothing about the ground influenced you
+    and you chose at random, say that instead — that is a real and useful answer.
+
+Q3: HAS ANYTHING HAPPENED TO THIS FLOOR? Describe its condition in your own words.
+Q3_WHY: what specifically you are reading.
+
+Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO? Anything you notice more than once, anything
+    that starts to feel like a pattern, anything that pulls attention away from the scene. Say
+    exactly what and exactly where. If there is nothing, say NOTHING.
+
+Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED? One or the
+    other, then why.
+
+Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME? Answer YES or NO. Then, separately:
+    is it merely competent, or is it genuinely good? "Fine", "acceptable", "solid" and
+    "promising" all mean NO to the second question.
+
+CULL: If this floor should be rejected, give the single strongest reason in under twenty words.
+      If it should not be rejected, write NONE.
+      A critic who finds no defect should suspect its own rigour before crediting the work. Look
+      again before writing NONE.
+
+FLIP LIST
+Then a list, one per line starting with "- ", of the specific changes you would require before
+this floor could ship. Concrete and visual. No more than five. If there are none, write "- none".

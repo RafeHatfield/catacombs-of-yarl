@@ -1,0 +1,129 @@
+{
+ "round": 3,
+ "commit": "385ab49468442ac358a96fcc1c7dd106b595ce90",
+ "seats": {
+  "F2": {
+   "Q1": "Dried, cracked packed earth \u2014 sun-baked hardpan or mud-flat \u2014 heavily overgrown with green moss.",
+   "Q1_WHY": "The crack network is the giveaway: irregular closed polygons with thin dark seams and no mortar, no tooled edges, no rectilinear slabs anywhere in the room (see the crazing at 3\u00d7 around 500\u2013620 px x, 200\u2013330 px y). That is desiccation crazing, not masonry. The base colour is a warm sandy tan \u2014 sampling the lit centre (400\u2013470, 180\u2013250) gives RGB 151,122,68, hue \u224839\u00b0, i.e. clay/sand, not stone. 17.5% of floor pixels are chlorophyll-green. Nothing in it reads as cut, laid, or administered.",
+   "Q2": "South, down the dark corridor at x\u2248400\u2013460 below y=400 \u2014 **and I chose it at random.** Nothing about the ground influenced it. I checked for a reason and there isn't one: moss coverage in the corridor-aligned band (x400\u2013460) is 15.9% versus 17.1% for the rest of the room, 16.2% along the west approach, 16.9% in the dead northeast corner. Flat to within noise. There is no worn lane, no polish, no scuff, no drift of debris, no threshold, no drainage fall. The floor in front of the two exits is indistinguishable from the floor in the corner nobody has ever stood in. I picked south because the corridor was the most visible hole, not because the ground said anything.",
+   "Q3": "Weather has happened to it. It has dried out and cracked, and moss has grown over roughly a fifth of it. Nothing else has happened to it. Nobody has walked on it, dragged anything across it, dropped anything on it, repaired it, or bled on it. It is undisturbed ground with an even coat of growth \u2014 a floor in a place that has been in continuous heavy use since before records began should not look untouched.",
+   "Q3_WHY": "Three specific readings. (1) The moss is *inverted*: coverage within 24 px of the walls is 12.6%, interior is 18.1%. Real damp growth accumulates at wall bases, in corners, in the cracks, where feet don't reach \u2014 here it's thinnest exactly where it should be thickest and thickest in the middle of the room where traffic would kill it. It's scattered noise, not a growth. (2) Column-by-column moss density bounces 9\u201325% with no gradient in any direction \u2014 no water source, no fall line, no dry side. (3) The only damage-like marks are two small dark divots below the figure at approximately (440,240) and (465,235), and some soft dark blotching; there is not one pin, rope lashing, hide patch or timber baulk in the walkable surface, despite this being a floor a garrison has been holding for four hundred years.",
+   "Q4": "Yes. A 45\u00b0 **ladder-shaped hatch stamp** \u2014 two parallel light rails with short rungs between them, about 28\u00d728 px \u2014 repeated across the entire floor at one size and one angle. I counted eight or more in the northeast quadrant alone (roughly (394,88), (586,88), (522,152), (394,216), (586,280), plus more at (200,300), (330,340), (490,320)). Template-matching the instance at (586,88) returns three matches at \u22650.96 normalized correlation \u2014 (586,88), (394,88), (586,280) \u2014 which is pixel-identical, and those three sit on a 192 px lattice: same row, then same column three tiles down. Once seen, the eye tracks it instead of the scene.\n\nIt goes further than the stamp. Autocorrelation of the high-passed floor peaks at exactly d=64 and d=128 in both axes (0.11\u20130.15, well clear of everything else), and whole 64\u00d764 blocks match: **(584,82) against (584,274) at 0.962**, and **(456,146) against (520,274) at 0.939**. I cropped those four and put them side by side \u2014 pairs 1/2 share the same hatch stamp, the same crack polygon and the same moss blob in the same places. Two full tile repeats visible on screen simultaneously.",
+   "Q5": "**Repeated.** Not a judgement call \u2014 a 64 px tile at (584,82) and its copy at (584,274) are on screen at the same time at 0.96 correlation, and the ladder motif recurs on a 192 px grid. The lighting falloff from the lamp is doing all the work of disguising it; strip the gradient and the lattice is plain. Nothing on this floor is bespoke to its location: no tile knows it is next to a wall, next to a doorway, or in the middle of a room.",
+   "Q6": "YES.\n\nMerely competent. The pixel craft is real \u2014 the crack network is drawn with a confident hand, the falloff is nicely tuned, the figure's silhouette holds against it \u2014 but it is a stock overgrown-ruin ground texture. It could be lifted into any temple, any canyon, any surface ruin without changing a pixel, because it says nothing about this place. It is not genuinely good.",
+   "CULL": "Warm sunlit mossy earth with visible tile repeats \u2014 reads as outdoor ruin, not an administered underworld.",
+   "FLIP LIST": "- Kill the 45\u00b0 ladder/hatch stamp or cut it to one or two instances per screen; no motif at one fixed size and angle repeating on a 192 px grid.\n- Break the 64/128 px repeat \u2014 the block at (584,82) and its twin at (584,274) must not both be on screen; add per-tile rotation, offset or overlay variation.\n- Invert the moss: heavy at wall bases, in corners and inside the crack seams; scrub it off the room centre and off both doorway approaches. Currently 12.6% at edges vs 18.1% interior \u2014 backwards.\n- Cut a wear lane through the traffic axis \u2014 polished, moss-free, slightly darkened ground running from the west opening through the room centre to the south corridor mouth, so the floor tells you where feet have gone.\n- Pull the hue off 39\u00b0 toward neutral cold grey-brown and drop saturation; put in the garrison's repairs \u2014 driven pins, lashed timber, hide patched over a hole \u2014 as actual raised elements with cast shadow, not inscribed marks.\n\n---\n*Model: claude-opus-5[1m]*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Kill the 45\u00b0 ladder/hatch stamp or cut it to one or two instances per screen; no motif at one fixed size and angle repeating on a 192 px grid.",
+    "Break the 64/128 px repeat \u2014 the block at (584,82) and its twin at (584,274) must not both be on screen; add per-tile rotation, offset or overlay variation.",
+    "Invert the moss: heavy at wall bases, in corners and inside the crack seams; scrub it off the room centre and off both doorway approaches. Currently 12.6% at edges vs 18.1% interior \u2014 backwards.",
+    "Cut a wear lane through the traffic axis \u2014 polished, moss-free, slightly darkened ground running from the west opening through the room centre to the south corridor mouth, so the floor tells you where feet have gone.",
+    "Pull the hue off 39\u00b0 toward neutral cold grey-brown and drop saturation; put in the garrison's repairs \u2014 driven pins, lashed timber, hide patched over a hole \u2014 as actual raised elements with cast shadow, not inscribed marks."
+   ],
+   "mapping": {
+    "A": "scene_plant.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r3_F2_transcript.txt",
+   "plant_caught": true,
+   "plant_words_hit": [
+    "ruin",
+    "moss",
+    "mossy",
+    "overgrown"
+   ]
+  },
+  "F1": {
+   "Q1": "Cut stone flagstones \u2014 irregular rectangular slabs, dry-laid or thin-jointed, over a fine grit. Grey stone; the warmth is entirely the torch.",
+   "Q1_WHY": "Two things. First, when I divide out the lighting (image \u00f7 its own 14px Gaussian blur) the paving reads clearly as rectangular slabs of varying size \u2014 roughly 12\u201340 art px on a side \u2014 separated by 1\u20132 art px dark joints, with occasional joints running across several slabs (`/tmp/F1_flat.png`). They are laid, not cast: no slab is square, no course runs straight.\n\nSecond, the material is grey, not brown. Across the lit floor the channel ratios are locked: G/R = 0.731 \u00b10.045, B/R = 0.498 \u00b10.060, with the 1st\u201399th percentile spread only 0.708\u20130.780 and 0.449\u20130.625. That is a single greyscale texture multiplied by one light colour. In the unlit south corridor (x 375\u2013440, y 430\u2013560) the same slabs measure G/R 0.815, B/R 0.746 \u2014 near-neutral grey. So: grey stone, tinted tan by the lamp.\n\nThe grit reads as scattered single dark pixels. 1,254 of the 1,963 dark connected components on the floor are exactly 4 screen pixels \u2014 one art pixel each.",
+   "Q2": "West, into the opening at x 0\u2013180, y \u2248145\u2013380 \u2014 and I want to be honest that the *paving* did not choose it. The ground in the west opening is the same slab pattern at the same speck density as the ground under my feet and the same as the south corridor at x 375\u2013440. There is no wear lane, no debris drift, no scuff, no stain, no difference in joint width, nothing that says traffic went one way.\n\nWhat pulled me west is a single object: a small dark brace at x 85\u2013101, y 164\u2013197 \u2014 a vertical bar with four square pins flanking it. It's the only thing in the frame that suggests somebody has been there and done something. That is an object cue, not a ground cue. Strip it out and this is a coin flip.",
+   "Q3": "Almost nothing has happened to it. It is evenly, uniformly speckled and otherwise intact. It is not worn, not stained, not broken, not swept, not walked on in any direction more than any other. It reads as a floor that was laid, lightly sanded over, and then left alone in a sealed room \u2014 not a corridor a company of soldiers has been tramping through for four centuries.\n\nThere are three exceptions, and they are all the same mark: a horizontal brace at x 519\u2013554, y 97\u2013112 (tile r1,c5); a second at x 451\u2013492, y 294\u2013309 (tile r4,c4); the vertical one at x 85\u2013101, y 164\u2013197 in the west opening.",
+   "Q3_WHY": "I counted the specks per 64px cell. Over the well-lit interior the counts are 39, 47, 50, 56, 44, 48, 51, 43, 45, 39, 56, 44, 44, 43, 46, 50, 53, 55, 40, 54, 43\u2026 \u2014 mean \u224847, tight. The three outlier cells (1, 4, 5) are cells so dark that the threshold stops resolving specks, not cells that are actually cleaner. There is no gradient of grime toward a doorway, no concentration in a lane, no bare patch where feet have polished it. The dirt is a uniform field, not a record.\n\nFor tonality: after lighting removal the slab-to-slab value variation is small and blotchy in a generic way \u2014 no slab is stained a different colour, none is a different stone, none is sunken or cracked through. Joint darkness is essentially one value everywhere.\n\nAnd I dumped the three braces as pixel maps. Two of them are the same asset: pins 2\u00d72 art px, at row offsets 4\u20137 and 16\u201319 in both \u2014 identical vertical spacing of 12 \u2014 with only the horizontal pin gap differing (18 px vs 16 px). The third is that same thing rotated 90\u00b0. Three marks of history on the whole screen, and it's one mark used three times.",
+   "Q4": "Three things.\n\n1. **The pepper.** ~1,250 single-art-pixel dark dots spread evenly over the entire floor, in every cell, at the same density. It is the loudest texture in the image and it has no shape \u2014 it doesn't pool in joints, doesn't gather at the wall bases, doesn't thin under the lamp. At phone size the floor reads as *static* before it reads as *stone*. This is the thing I kept snapping back to.\n\n2. **The brace mark, three times.** x 519\u2013554/y 97\u2013112, x 451\u2013492/y 294\u2013309, and x 85\u2013101/y 164\u2013197. Once I saw the second one I recognised it, and after that both of them read as the same sticker rather than two repairs. The pin spacing differs by 2 pixels; that is not variation, that is the same asset nudged.\n\n3. **The 64px cell grid.** It is measurably visible in the paving. I thresholded the lighting-normalised floor into \"joint / not joint\" and measured joint density by grid phase: at the cell boundary (phase 62,63,0,1) it is 0.250 by column and 0.277 by row; mid-cell (phase 24\u201340) it is 0.137 and 0.141. A mortar joint is **twice as likely to fall exactly on a 32-art-pixel boundary** as anywhere else. The slabs are pretending to be irregular but they are mostly staying inside their boxes. Once you notice it, the room stops being paving and becomes a spreadsheet.",
+   "Q5": "**Made** \u2014 with a qualification, because I tested this properly and expected the other answer.\n\nI checked global tiling: correlating the lighting-normalised floor against itself at shifts of (64,0), (0,64), (128,0), (192,192), (256,256) and eleven others gives correlations of 0.02\u20130.27. There is no repeating wallpaper. I then clustered all 42 visible cells by normalised cross-correlation: 40 distinct groups out of 42. Only two near-duplicate pairs exist \u2014 cells (1,6)/(4,6) at 0.940 and (1,3)/(2,5) at 0.932 \u2014 and one 32px sub-patch, x 378 y 82 against x 570 y 274, at 0.998, which is a genuinely reused chunk but a small one.\n\nSo this is a large hand-varied set, not four tiles on repeat. It was made. What undercuts it is that the *variation itself* is mechanical: every cell is the same recipe \u2014 a few rectangles, a joint hugging the cell edge, forty specks \u2014 so it has variety without having difference. Nothing in it was placed because something happened there.",
+   "Q6": "**YES.** Comfortably. The slab construction is clean, the lamp falloff is handled well, the read at phone size is legible, and it doesn't tile.\n\nMerely competent, or genuinely good? **Merely competent.** It is a correct floor and not an authored one. A genuinely good floor in this fiction would tell me where the traffic goes, where the water stands, which slabs the orcs have replaced and which have been there since before the records \u2014 and I would be able to answer Q2 with my eyes closed. This one made me answer Q2 by finding an object.",
+   "CULL": "Nothing has ever happened here \u2014 uniform grit everywhere, no wear, no stain, no traffic; the only history is one asset used thrice.",
+   "FLIP LIST": "- Kill the uniform pepper. Cut the global speck density by two-thirds and redistribute it: heavy against wall bases and in joint lines, thinning to bare polished stone along a traffic lane running from the west opening (x 0\u2013180, y 145\u2013380) to the south corridor mouth (x 375\u2013440, y 400).\n- Break slabs across cell boundaries. Right now joint density is 2\u00d7 higher on the 32-art-px grid lines than mid-cell; author enough multi-cell slabs that the boundary phase measures flat.\n- Give the three brace marks distinct art \u2014 different pin counts, bent pins, one with the timber still in it, one with the pins sheared off \u2014 or cut it to a single instance. Three copies of one mark is worse than one mark.\n- Introduce material variation the light can't explain: two or three slabs at a genuinely different hue or value (replaced stone, a poured patch, a soaked area), so the floor isn't one greyscale texture under one lamp colour.\n- Damage something. At least one broken, sunken, missing or lifted slab per room, placed where it would plausibly break \u2014 a doorway threshold or a corridor mouth \u2014 so the surface has a cause somewhere in it.\n\n---\n\nNext thing I'd want to see: the same room lit differently, or a second room from the same tileset. The uniformity finding is the load-bearing one, and one screen can't tell me whether it's this room or the whole generator.\n\n*Model: Claude Opus 5 (1M context).*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Kill the uniform pepper. Cut the global speck density by two-thirds and redistribute it: heavy against wall bases and in joint lines, thinning to bare polished stone along a traffic lane running from the west opening (x 0\u2013180, y 145\u2013380) to the south corridor mouth (x 375\u2013440, y 400).",
+    "Break slabs across cell boundaries. Right now joint density is 2\u00d7 higher on the 32-art-px grid lines than mid-cell; author enough multi-cell slabs that the boundary phase measures flat.",
+    "Give the three brace marks distinct art \u2014 different pin counts, bent pins, one with the timber still in it, one with the pins sheared off \u2014 or cut it to a single instance. Three copies of one mark is worse than one mark.",
+    "Introduce material variation the light can't explain: two or three slabs at a genuinely different hue or value (replaced stone, a poured patch, a soaked area), so the floor isn't one greyscale texture under one lamp colour.",
+    "Damage something. At least one broken, sunken, missing or lifted slab per room, placed where it would plausibly break \u2014 a doorway threshold or a corridor mouth \u2014 so the surface has a cause somewhere in it."
+   ],
+   "mapping": {
+    "A": "scene_family.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r3_F1_transcript.txt"
+  },
+  "F4": {
+   "Q1_A": "Two floors, actually. The main one is packed dirt/earth, heavily stained dark red-brown. The lower band (y\u2248178\u2013226) is flat grey flagstone. Neither is ambiguous \u2014 but they're two different qualities of work sharing a screen.",
+   "Q1_WHY": "_B:** The joint network (clearest at x 190\u2013390, y 180\u2013380) is irregular \u2014 slabs of visibly different sizes and proportions, joints that step and offset rather than run true, and joints that **do not align to the 50px tile grid**. Cracks branch across slab faces independently of the joints, e.g. the one running down through (525,110). Every slab carries a slightly different base tone, and a fine 2px speckle sits over all of it. The colour census returns **2,444 colours with no single one above 0.5%** \u2014 continuous tonal variation, not fill-and-outline.",
+   "Q2": "_B:** South, down the channel at x\u2248380\u2013430 that runs off the bottom edge. The ground read that made the choice: the floor *continues* into it, same slabs, same joints, unbroken \u2014 it's a floor narrowing, not a hole. But I want to be honest about the limit of that: it's the aperture shape telling me, not the surface. Nothing about the stone itself \u2014 no wear polish, no dirt track, no drag scar \u2014 leans one way. The floor doesn't know where people walk on it.",
+   "Q3": "_A:** Stained, not worn. Something has been spilled repeatedly on the dirt and dried dark, and something has been broken there: a scatter of white chips at (168\u2013190, 60\u201378) that reads as bone, and six or seven small turquoise shards at roughly (130,17), (151,30), (141,110), (152,104), (178,114), (128,132). But the *stone* below has had nothing happen to it at all. It is spotless. Two floors, one of which has a history and one of which has never been touched.",
+   "Q3_WHY": "_B:** The mark at (515\u2013545, 95\u2013110) is the clearest thing in the image: a horizontal iron bar laid across a vertical crack, with **four black pins driven at its corners**. It sits directly on the crack it's holding. Below it at (500\u2013560, 130\u2013150) are two dashed horizontal runs that read as lacing or stitching across a joint. That is exactly the fiction \u2014 repair with driven pins, by people who don't care how it looks.",
+   "Q4": "_B:** Yes. **The pinned strap is used twice, identically.** Once at (515\u2013545, 95\u2013110) and again at (455\u2013490, 292\u2013305). Same horizontal orientation, same bar, same four-pin arrangement, same size. The first one crosses a crack; the second is pinning **nothing** \u2014 it lies across an almost featureless slab face with no split under it. My eye found the second one and immediately went back to the first to compare, and after that both read as a decal rather than as a repair. It's the one asset in this floor that behaves like a stamp.\n\nSecondary: the speckle grain is at the same density and the same 2px size everywhere, edge to edge, including the middle of slabs where nothing would collect it.",
+   "Q5_A": "**An image that was repeated**, and this is measurable, not an impression. Autocorrelation of the dirt field shows a sharp minimum at dx=48 and dy=48 with no minimum at 16, 32, 64 or 80 \u2014 a 48\u00d748 stamp on a 24px tile grid. Hashing the 24px tiles: **56 tiles, 32 unique, and the four most common account for 24 of them**, at x \u2208 {24,72,120,168} and {48,96,144,192}, y \u2208 {2,50,98}. A strict lattice. Nearly half the visible dirt is four tiles laid down in a 2\u00d72 loop. The grey band is worse in kind: 32 blocks, 16 unique, one tile used 7 times and another 6.",
+   "Q6_A": "YES, this would ship. And it is **merely competent** \u2014 it is a working tileset, not good art. The dirt has a plausible base colour and the stain idea is right; the execution is a small stamp on a visible lattice over a floor with no interior structure.",
+   "CULL_A": "Dirt is a 2\u00d72 stamp on a 48px lattice; four tiles cover half the visible ground.",
+   "FLIP LIST": "- Break the 48\u00d748 loop: enough dirt variants that no tile recurs on a fixed lattice within one screen, and offset/flip what remains.\n- Give the grey flagstone actual stone \u2014 value range, per-slab tone variation, chipped edges. 17 colours and one flat grey is a placeholder.\n- Kill the pure-white 3px lip at y=176; replace with a broken, tinted slab edge.\n- Carry the maroon stain and dirt across the y=176 and x=216 seams \u2014 into the grout, onto the stone, a silt margin at the water.\n- Redesign the stain blot so it isn't one four-lobed shape repeated; two or three distinct spill shapes at different scales.\n\n---\n\n## B",
+   "Q1_B": "Large irregular stone slabs, sandstone-coloured, dry and dusty. You'd feel grit underfoot.",
+   "Q5_B": "**A surface that was made.** Autocorrelation over the floor (x 190\u2013620, y 0\u2013400) tested to a 200px offset in both axes shows **no periodic minimum whatsoever** \u2014 error rises monotonically with offset, meaning nothing in the visible ground repeats at any tile multiple. Combined with joints that ignore the 50px grid and cracks that cross slab boundaries, this is authored, not tiled.",
+   "Q6_B": "YES. And it is **genuinely good** \u2014 not merely competent. The crack network and the pinned strap are authored decisions that carry the fiction rather than decorate it, and the non-repeating slab layout is the real thing, not a variant shuffle. I'm holding that verdict despite the duplicated strap, which is a fixable defect on a good floor rather than evidence of a shallow one.",
+   "CULL_B": "Should not be rejected \u2014 but it is not defect-free. The strap decal repeated identically, once pinning nothing, is a real fault; so is uniform grain density on a floor in continuous heavy use, which means it reads dusty but not *used*. Neither is grounds for rejection. **NONE.**",
+   "RANK": "A is a functioning tileset with a measurable 48px loop and a stone band that is 17 colours of flat grey. B is a made surface with a repeated decal on it. Those are not the same class of problem \u2014 A's fault is in the floor's construction, B's is in a sticker sitting on top of a sound floor.\n\nThe thing to watch: B has solved *material* and hasn't touched *traffic*. Nothing on that floor records that anyone walks on it. That's the next gap, and it's the one that will start to show once the strap decal is varied and there's nothing else pulling the eye.\n\n**Model used:** Claude Opus 5 (1M context)",
+   "Q1": "",
+   "Q5": "",
+   "Q6": "",
+   "CULL": "",
+   "flips": [
+    "Break the 48\u00d748 loop: enough dirt variants that no tile recurs on a fixed lattice within one screen, and offset/flip what remains.",
+    "Give the grey flagstone actual stone \u2014 value range, per-slab tone variation, chipped edges. 17 colours and one flat grey is a placeholder.",
+    "Kill the pure-white 3px lip at y=176; replace with a broken, tinted slab edge.",
+    "Carry the maroon stain and dirt across the y=176 and x=216 seams \u2014 into the grout, onto the stone, a silt margin at the water.",
+    "Redesign the stain blot so it isn't one four-lobed shape repeated; two or three distinct spill shapes at different scales."
+   ],
+   "mapping": {
+    "B": "scene_family.png",
+    "A": "BAR"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r3_F4_transcript.txt"
+  }
+ },
+ "plant_seat": "F2",
+ "round_void": false,
+ "plant_words_declared": [
+  "cobweb",
+  "cobwebbing",
+  "web",
+  "webbing",
+  "collapse",
+  "collapsed",
+  "caved",
+  "ruin",
+  "ruined",
+  "rubble",
+  "moss",
+  "mossy",
+  "overgrown",
+  "lichen"
+ ],
+ "law": "LOOP-PROCESS \u00a74: if the critic does not catch the plant, the round is VOID and its findings are not read."
+}

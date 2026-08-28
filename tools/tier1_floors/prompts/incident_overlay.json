@@ -1,0 +1,97 @@
+{
+  "subject": "floor_incident_overlay",
+  "title": "Boundary floor INCIDENT — the overlay family",
+
+  "_what_this_is": [
+    "The other half of ART-BIBLE-v0 §8.3's division, and the half that has never existed on",
+    "this project:",
+    "",
+    "    base tile        material only, no incident      `base_material.json`",
+    "    variant/overlay  THE INCIDENT, randomised        this file",
+    "",
+    "§8.3: 'Incident arrives at the instance level, randomised — cracks, wear, marks, and",
+    "§8.2.1's channel — via variants and overlays: the floor system tier one builds.' And the",
+    "sentence that makes this prompt load-bearing rather than decorative: 'Until it exists",
+    "there is nowhere to put a crack that does not turn it into a motif.'",
+    "",
+    "So the vocabulary REFUSED in `base_material.json`'s negatives is REQUESTED here. That is",
+    "not an inconsistency between the two files, it IS the law: a tile is the material, the",
+    "incident is the variant. The same crack is correct in one file and forbidden in the other",
+    "because of where it ends up, not because of what it is.",
+    "",
+    "WHY AN OVERLAY AND NOT A SECOND TILE. A crack baked into a floor TILE is drawn wherever",
+    "that tile is drawn, which is §8.3's arithmetic. A crack on an overlay is placed by the",
+    "compositor at a chosen cell, at a chosen orientation, at a chosen density — so the same",
+    "eight source images produce a field in which no two cells repeat. The randomisation is the",
+    "point of the object."
+  ],
+
+  "families": [
+    {
+      "family": "crack",
+      "n": 8,
+      "description": "A single thin dark crack running across an empty transparent square, seen from directly above. One continuous hairline split in stone, one or two pixels wide, wandering from one edge of the square to another and thinning to nothing at its ends. Dark inside because it is a narrow opening light cannot reach into. Nothing else in the square at all — no stone, no surface, no background, just the crack itself on empty transparency.",
+      "clause": "§8.1 decay, and §7.4 seam — floor damage the institution neither repairs nor removes. The crack is DARK BECAUSE ENCLOSED, which is §6.5's own derivation ('joints, recesses and undercuts sit darker because they are enclosed') and is why a crack survives §6.3: enclosure is direction-free, so a torch arriving from anywhere does not contradict it. A crack drawn with a lit side and a shaded side would be depicted lighting and would be culled."
+    },
+    {
+      "family": "wear_mark",
+      "n": 8,
+      "description": "A soft irregular patch of polish on an empty transparent square, seen from directly above. A shapeless area where stone has been rubbed smoother and slightly paler than its surroundings, its edges fading out gradually, with no outline and no defined shape. Nothing else in the square at all — no stone, no surface, no background, just the patch itself on empty transparency.",
+      "clause": "§8.1 — 'traffic without care produces polish: treads worn concave, edges rounded off, stone smoothed to a shine.' PALER because polished stone scatters less and reads lighter under one ambient — a MATERIAL derivation, §6.5's own move, so it declares no light direction. §8.2 makes this the navigational signal: 'polish means you are on the path.' Deliberately shapeless: a wear mark with a defined shape is an ornament, and §12.1's worked example is the record of what a constant-width constant-value treatment does to a field."
+    },
+    {
+      "family": "debris",
+      "n": 8,
+      "description": "A few small loose chips of grey stone lying on an empty transparent square, seen from directly above. Three or four little angular fragments of the same stone, scattered loosely and not arranged, each one flat on the ground. Nothing else in the square at all — no floor, no surface, no background, just the fragments themselves on empty transparency.",
+      "clause": "§8.1 — 'old things persist in place and the traffic simply routes around them'; the institution neither repairs nor removes. Fragments of THE SAME STONE, because the Boundary is found stone (§7.4) and debris that is a different material is a prop, not wear. 'Scattered loosely and not arranged' is §1's 'nothing is staged', which has NO INSTRUMENT (§13.4) and is argued for here and carried at the gate."
+    },
+    {
+      "family": "grit",
+      "n": 8,
+      "description": "A thin scatter of fine dark grit on an empty transparent square, seen from directly above. Loose dust and sand blown into a corner, a sparse uneven speckle that is denser in one part of the square and thins away to nothing across the rest. Nothing else in the square at all — no floor, no surface, no background, just the speckle itself on empty transparency.",
+      "clause": "§8.1 — the residue of traffic and indifference. Its job in the field is different from the other three and worth stating: crack, wear and debris are EVENTS and are placed sparsely, while grit is a low-contrast dither placed densely, and it is what stops the un-incidented cells between events from reading as a clone field. §8.3.1's mirror — 'incident-free is not featureless' — applies to the FIELD as well as to the tile, and this is the family that answers it."
+    }
+  ],
+
+  "negative_description": "background, backdrop, floor, ground, surface, stone slab, tile, square, panel, border, frame, outline, drop shadow, cast shadow, highlight, gradient, glow, spotlight, arrangement, pattern, symmetry, centred, ornament, carving, runes, symbols, text, watermark, character, creature, skull, bones, blood, cobweb, moss, plants, treasure, coins",
+
+  "parameters": {
+    "image_size": {"width": 32, "height": 32},
+    "outline": "lineless",
+    "detail": "low detail",
+    "view": "high top-down",
+    "shading": "flat shading",
+    "no_background": true
+  },
+
+  "parameter_provenance": {
+    "no_background": {"value": true,
+      "clause": "THE parameter that makes this a different object from `base_material.json`, where it is false. An overlay must be mostly transparent or it is a tile, and `alpha_coverage` in the screen below is the check that goes red when the surface ignores this."},
+    "image_size": {"value": "32x32",
+      "clause": "One overlay covers at most one cell, so it is authored at cell size. Placement, orientation and density are the compositor's, not the image's."},
+    "outline": {"value": "lineless",
+      "clause": "§12.1 LOCKED. Sharper here than on the base tile: a decal on transparency is exactly where a generator reaches for a contour, and an outlined decal would ring every cell it landed on — §12.1's 'drawn around a thing because it is a thing'."},
+    "shading": {"value": "flat shading",
+      "clause": "§6.3 — the incident must receive light like everything under it. A crack with a baked lit edge declares a direction the carried torch will contradict, and it would do so in every cell the compositor placed it in."},
+    "view": {"value": "high top-down",
+      "clause": "§3 — one camera. An incident lying on the floor is seen from the same place the floor is."},
+    "style_image": {"value": "NONE — unconditioned",
+      "clause": "DELIBERATE, and it is a departure from the base wave that must not be read as an oversight. §5.5 measures that composition propagates with material at 12/12: 'a reference does not hand down a surface; it hands down whatever it is a picture of.' C-GAB is a picture of a FULL-BLEED TILE WITH A FRAME. Conditioning a transparent decal on it would hand down the tile-ness and the frame — the two properties this object must not have — which is the propagation finding pointed at the wrong object. The cost is stated rather than hidden: these are unconditioned, so palette and grain coherence with the base family is NOT bought at generation and must be delivered by the compositor's palette-lock, and any candidate whose material disagrees with the base family is culled for it."}
+  },
+
+  "screen": [
+    {"check": "alpha_coverage", "band": "0.02 to 0.45",
+     "why": "An overlay must be mostly transparent. Below 0.02 there is nothing there and the generation is a no-op; above 0.45 the surface has drawn a tile and ignored `no_background`, which is the failure this check exists to catch. Stated as a band before the wave runs, per §13.6 — a candidate never contributes to its own acceptance bar."},
+    {"check": "touches_all_four_edges", "verdict": "CULL",
+     "why": "A decal that reaches every edge is a full-frame object wearing an alpha channel. Same failure as above, caught by geometry rather than by area."},
+    {"check": "ring_instrument", "verdict": "CULL on RING",
+     "why": "§12.1, unchanged and untuned. `tools/floor_remediation/ring_instrument.py`, whose constants are not touched by this session."},
+    {"check": "closed_contour_inset_from_edges", "verdict": "CULL",
+     "why": "§12.1 RULED (2026-08-27) — the test that separates a joint from a ring is whether it continues into the neighbour, and an overlay is judged AS LAID like everything else."}
+  ],
+
+  "what_this_family_must_not_become": [
+    "A MOTIF SET. §8.3 is not satisfied by moving one crack from the tile to an overlay and then drawing that one crack in a fifth of all cells. The law's mechanism is randomisation, so the family needs enough distinct members that a field does not repeat: 8 per family, times 8 orientations from flip and rotate, is the width this wave buys. If a family comes back with fewer than 3 usable members it is REPORTED SHORT rather than padded by lowering the screen — §8 of LOOP-PROCESS, nothing is cut to fit.",
+    "A STAGING SYSTEM. §1: nothing is staged. The compositor places incident by seeded noise, never by composition, and never in a way that reads as arranged. NO INSTRUMENT (§13.4): carried at the human gate."
+  ]
+}

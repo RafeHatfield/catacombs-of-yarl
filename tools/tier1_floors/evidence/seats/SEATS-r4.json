@@ -1,0 +1,127 @@
+{
+ "round": 4,
+ "commit": "3a58297c8cf674bf9da7698688cfabe76f8304b7",
+ "seats": {
+  "F2": {
+   "Q1": "Cut stone flagging \u2014 irregular rectangular slabs, mortarless, under a heavy carpet of moss.",
+   "Q1_WHY": "Dark 1\u20132px seams enclose slabs of slightly differing tone, e.g. the clean vertical seam at x\u2248288 running y\u224820\u2013130, and the T-junction at (302, 128). The slabs are flat, hard-edged, and read as laid, not as bedrock or packed earth. The warm tan is the torch, not the material: in the unlit left corridor (x 0\u2013180, y 140\u2013290) the identical stone reads grey-blue with a green cast. That's grey stone lit orange.",
+   "Q2": "The bottom corridor (x\u2248374\u2013440, heading down off-screen). **Nothing about the ground influenced that** \u2014 I picked it off the room's shape, because it's the only opening with a clear \"this continues\" silhouette. The ground gave me nothing to go on. I measured moss coverage per 64px cell across the whole room: 14.5, 15.3, 13.7, 14.8, 18.2, 11.2, 14.5 / 17.2, 20.4, 23.6, 17.1, 16.7, 21.0, 22.6 / \u2026 every cell in the room sits between 10% and 24%, mean 15.6%. There is no swept lane, no polished track, no drift of debris toward a wall, no clear ground anywhere. A floor in continuous heavy use since before records began should be telling me where the traffic goes. This one is uniformly furred edge to edge.",
+   "Q3": "No. It is *decorated* as if things happened to it, but nothing localised has happened. It's evenly overgrown, evenly scratched, evenly scuffed \u2014 an unbroken statistical average of \"old\" with no single event anywhere in it.",
+   "Q3_WHY": "Three things. (1) The moss density above \u2014 flat across 40 of 42 tiles; the only low cells (3.4%, 2.9%) are the corridor mouth, and that's a lighting/geometry artefact, not attrition. (2) Moss grows at the same density in the pitch-black left corridor as directly under the torch. (3) The scratch marks are spread at equal density over stone faces, seams and corners alike \u2014 including the middle of the 2-tile-wide bottom corridor at (400, 480), which is the one place in frame that should be scoured smooth by four hundred years of a company walking through it.",
+   "Q4": "Not NOTHING \u2014 three things, and one of them is a hard clone.\n\n- **The diagonal hatch fan.** A splayed set of ~6 pale parallel scratches at 45\u00b0. It appears **pixel-identical** at (460, 36) and (524, 228) \u2014 normalised correlation 0.99 against itself, versus 0.55 for its own mirror image. Template-matching finds ~48 further instances across the floor, and they nearly all run the same way, lower-left to upper-right. Clearest cluster: (224,68), (308,98), (342,80), (428,134), (490,68), (572,44) \u2014 six in the top band alone, all the same angle.\n- **A whole tile stamped twice, side by side, at the top of the screen.** The 64px tile at x 310\u2013374 and the one at x 374\u2013438, both y 16\u201380, are the same art. They are immediate neighbours. Same seam, same moss blob, same hatch, same dark hook-blotch, shifted 64px right. It's the first thing above the figure's head.\n- **The moss confetti.** Mid-green blobs of near-identical size scattered at even spacing with no clustering into wall junctions, low points, or damp lines \u2014 it reads as noise laid over the floor rather than something growing on it.",
+   "Q5": "An image that was repeated. 42 floor tiles visible; clustering them after normalising out the lighting, **at least 21 are duplicates of another tile on the same screen**. Four distinct tiles each appear 3\u20134 times: {(310,16),(374,16),(182,144),(310,208)}; {(502,16),(438,144),(566,144),(502,272)}; {(374,80),(566,80),(502,144),(566,272)}; {(246,16),(182,208),(246,336)}. No rotation, no mirroring, no per-instance variation \u2014 every stamp is the raw tile. Half the floor is four pictures.",
+   "Q6": "YES. The palette is disciplined, the seams are clean, the moss reads at phone size, and the torch falloff is genuinely good.\n\nMerely competent. Not good. It's a well-drawn tile losing to its own tiling, and the fiction it's supposed to carry \u2014 administered, endlessly repaired, four centuries of boots \u2014 is nowhere in it. There is not one pin, one rope lashing, one salvaged board, one patch on this floor. It's a ruin, not a workplace.",
+   "CULL": "Same 64px tile stamped side-by-side at screen top; one scratch motif cloned pixel-exact twice. Reads as wallpaper.",
+   "FLIP LIST": "- Break the clone at x 310\u2013438, y 16\u201380 \u2014 that pair of identical adjacent tiles is the single most visible failure in frame; it needs 8\u201312 distinct floor tiles minimum, plus mirroring/rotation at stamp time.\n- Vary the diagonal hatch fan: mirror it, rotate it to at least three angles, and cut its frequency by half. Right now ~48 instances all rake the same direction.\n- Break the flat moss field into a gradient \u2014 heavy in wall junctions and corners, thinning to bare stone through the corridor mouth at (374\u2013440, 360\u2013440) and along the room's main axis. Moss should mark where feet don't go.\n- Add repair to the ground itself: two or three tiles with a driven iron pin, a lashed timber plank over a broken slab, a hide patch. The orcs have held this for four hundred years and have touched nothing you can see.\n- Cut one or two cracked/subsided slabs with a real depth offset, placed deliberately rather than scattered, so the eye has a non-repeating landmark to navigate by.\n\nNext thing worth checking: whether the tiler supports per-stamp mirror/rotate at all. If it doesn't, that's the fix that unblocks four of the five items above, and it's cheaper than drawing more tiles.\n\n*Model: Claude Opus 5 (1M context)*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Break the clone at x 310\u2013438, y 16\u201380 \u2014 that pair of identical adjacent tiles is the single most visible failure in frame; it needs 8\u201312 distinct floor tiles minimum, plus mirroring/rotation at stamp time.",
+    "Vary the diagonal hatch fan: mirror it, rotate it to at least three angles, and cut its frequency by half. Right now ~48 instances all rake the same direction.",
+    "Break the flat moss field into a gradient \u2014 heavy in wall junctions and corners, thinning to bare stone through the corridor mouth at (374\u2013440, 360\u2013440) and along the room's main axis. Moss should mark where feet don't go.",
+    "Add repair to the ground itself: two or three tiles with a driven iron pin, a lashed timber plank over a broken slab, a hide patch. The orcs have held this for four hundred years and have touched nothing you can see.",
+    "Cut one or two cracked/subsided slabs with a real depth offset, placed deliberately rather than scattered, so the eye has a non-repeating landmark to navigate by."
+   ],
+   "mapping": {
+    "A": "scene_plant.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r4_F2_transcript.txt",
+   "plant_caught": true,
+   "plant_words_hit": [
+    "moss",
+    "overgrown"
+   ]
+  },
+  "F1": {
+   "Q1": "I can't tell. Flat tan blocks with dark lines drawn between them. If forced: sandstone or unfired brick. Nothing in the image commits to a material.",
+   "Q1_WHY": "I sampled every pixel of the walkable area (x 180\u2013628, y 16\u2013400). The entire floor sits at hue 27\u201328\u00b0 and saturation 0.49 \u2014 one hue, one saturation, only brightness changes. There is no grain, no aggregate, no chip, no fracture face, no edge where one stone is a different stock than its neighbour. The dark lines between blocks (e.g. the long horizontal run at y\u2248272 spanning x 180\u2013370) are the same brown at lower value, not a different substance. It is a colour, not a material.",
+   "Q2": "South, down the corridor at x 372\u2013436 \u2014 and **nothing about the ground influenced that.** I picked it because it's the only place the *room shape* changes, and that's geometry, not floor.\n\nThe three exits are ground-identical. West (x 0\u2013180, y 145\u2013290), north, and south are the same tiles at the same speckle density with the same hue. The only difference between them is how dark they're drawn, and that's the lantern falloff, not the surface. Walking one way rather than another, I'd learn nothing from what's under my feet. So: effectively random.",
+   "Q3": "No. It is untouched. Nothing has been dragged across it, dropped on it, worn into it, patched, or spilled. This is the newest thing in the fiction.",
+   "Q3_WHY": "I measured dark-speckle density per 64px tile across the whole room. Every tile lands between 0.12 and 0.19 \u2014 the tile the figure stands on, the tile in the far corner, the tile at the corridor mouth, all the same. Wear is not uniform; noise is. That flat number is a noise layer, and it's the only \"damage\" present.\n\nSearching for actual incident, I found three marks total: an eight-pointed dark blob at (355, 255), the same blob again at (430, 415) in the corridor mouth, and again at (147, 232) in the unlit west. Three of one thing, pixel-identical, is not a history.\n\nFor a place in continuous heavy use since before records, held by a garrison that repairs everything with rope and driven pins for four hundred years, there is not one pin, one rope-scuff, one board, one dark patch where the traffic goes. The orcs have never walked here.",
+   "Q4": "Four things.\n\n1. **Every tile is outlined.** I measured dark-pixel density by position within the 64px tile: 0.34 at the tile's own edge (offset 0), 0.27 at offset 63, and 0.071 in the middle. A 4.5\u00d7 spike exactly on the boundary, both axes. The mortar draws the game's grid. Once seen at the room's centre it can't be unseen anywhere \u2014 the top edge at y\u224816, the row at y\u2248272, the column at x\u2248436.\n\n2. **The same tile, four times.** Tiles at (x 372, y 80), (x 564, y 80), (x 500, y 144) and (x 564, y 272) are the same image: same jog in the vertical seam, same L-notch, same speckle blobs in the same places. Two other tiles also appear four times each, and six more appear twice. Of 40 visible floor tiles, 24 are duplicates of something else on the same screen.\n\n3. **The blob**, described above \u2014 three copies, unshaded, sitting on top of the floor rather than in it.\n\n4. **A prop glyph \u2014 two black squares either side of a thin vertical line \u2014 appears twice at nearly the same height**: (335, 175) beside the figure and (85, 170) out west. I take that to be an entity rather than floor, so I'm not scoring it, but my eye went to it repeatedly and I'd want to know why there are two.",
+   "Q5": "Repeated. Three tiles used four times apiece within one phone screen, with no rotation, no mirroring, and no offset to break the match. The masonry snaps to the same 64px lattice as the walls, so the \"slabs\" are not slabs \u2014 they're cells. And every seam is a symmetric dark groove: I measured brightness 4px above versus below every horizontal mortar run (8.07 vs 7.55) and left versus right of every vertical one (7.79 vs 7.57). No side is lit. There is no relief and no light direction. It is a drawing of masonry laid over a grid, not a surface with depth.",
+   "Q6": "YES.\n\nMerely competent. The value range is controlled, the lantern falloff is clean, it reads instantly as walkable, and it never fights the sprite. That is the whole of it. It has no point of view about what this place is, and at the size it's played you see the lattice before you see the room.",
+   "CULL": "Tile grid is drawn on the floor by the mortar, and three tiles repeat four times each per screen.",
+   "FLIP LIST": "- Move mortar off the 64px boundary \u2014 no seam within 6px of a tile edge; run masonry courses across tile joins so a block can be 1\u00d72 or 2\u00d71 tiles.\n- Cut the shared-edge duplication: no tile appears more than twice per screen, and repeats must be mirrored or rotated.\n- Replace the uniform speckle with directed wear \u2014 brighter, smoother, less-speckled ground along the room's through-lines (corridor mouth at x 372\u2013436 into the room centre), heavier grit and debris in the corners.\n- Give the stone a light direction: a one-pixel bright lip on the north/west side of each block and a darker groove on the south/east, so slabs sit proud instead of being outlined.\n- Add four hundred years of the garrison at floor level \u2014 a driven pin, a rope-worn groove, a salvaged plank bridging a broken slab, one stained patch \u2014 placed sparsely, not tiled.\n\n---\n*Model: Claude Opus 5 (1M context)*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Move mortar off the 64px boundary \u2014 no seam within 6px of a tile edge; run masonry courses across tile joins so a block can be 1\u00d72 or 2\u00d71 tiles.",
+    "Cut the shared-edge duplication: no tile appears more than twice per screen, and repeats must be mirrored or rotated.",
+    "Replace the uniform speckle with directed wear \u2014 brighter, smoother, less-speckled ground along the room's through-lines (corridor mouth at x 372\u2013436 into the room centre), heavier grit and debris in the corners.",
+    "Give the stone a light direction: a one-pixel bright lip on the north/west side of each block and a darker groove on the south/east, so slabs sit proud instead of being outlined.",
+    "Add four hundred years of the garrison at floor level \u2014 a driven pin, a rope-worn groove, a salvaged plank bridging a broken slab, one stained patch \u2014 placed sparsely, not tiled."
+   ],
+   "mapping": {
+    "A": "scene_family.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r4_F1_transcript.txt"
+  },
+  "F4": {
+   "Q1_A": "_WHY:** The brown zone (x\u224832\u2013222, y\u22480\u2013180) is a warm ochre with dark-red speckle and thin darker-red lines that cross in rough squares \u2014 that reads as dried mud that has shrunk and cracked. The grey zone is uniform flat grey rectangles about 24px with *bright white* seams between them (visible clearly across y\u2248185\u2013225) \u2014 that reads as laid tile, not stone. The green zone (zoomed at 215\u2013300 \u00d7 10\u2013140) is a single dark teal with a barely-visible lattice under it and three identical green blobs stamped on it; nothing in it says stone, water, or growth.",
+   "Q2": "_A:** At random, or near enough. There is no figure and no light source in this image, so there's no \"here\" to walk from. If forced: west, toward the grey tile at the left edge, because it's the only zone with a visible opening (the orange sliver at x\u22480, y\u2248110\u2013140). Nothing about the ground itself pushed me \u2014 the dirt is equally passable in every direction, the boundaries between the three surfaces are perfectly straight lines (a dead-vertical edge at x=222, a dead-horizontal one at y=180) with no scuff, spill, or transition across them, so no surface suggests it leads anywhere.",
+   "Q3": "_B:** It's old and has been walked on, but nothing has been *done* to it. The stone is worn \u2014 faces smoothed, edges of slabs rounded off, seams opened up where mortar has gone. There's genuine damage: a dark star-shaped chip at (355,255) where a corner has broken out, a smaller triangular one at (585,220), fine spider cracks in the upper-left slabs around (250,60) and (300,100). But no dirt, no debris, no stain, no repair. Nothing on this floor records that anyone has ever tried to fix it, and nothing records anything ever having been spilled or dragged on it.",
+   "Q4": "_B:** YES, one, and it's a real defect. The region **(370\u2013420, 110\u2013160) is the same pixels as (498\u2013548, 174\u2013224)** \u2014 I pulled both and compared them: identical slab corner, identical seam junction, identical speckle placement, identical pale flecks, differing only in brightness from the light falloff. Correlation 0.999 on the high-passed image. So the tile set is reused verbatim; it's just larger and offset diagonally, which hides it. There are several more such pairs at 64px multiples.\n\nSecond, weaker: the vertical seam running from about (380,210) to (380,400) is unbroken and dead straight for roughly three tiles, which stands out against the otherwise irregular coursing.\n\nI did *not* find a global repeat \u2014 shifting the floor 21, 42, 64 or 128px produces ~1% pixel identity, versus A's 76\u201398%. The reuse is local, not wholesale.",
+   "Q5_A": "An image that was repeated. Not arguable \u2014 a 48px translation reproduces the dirt at up to 98% exact pixel identity, and 90.6% for the grey. Three flat colour fields with one stamp each, butted together on straight lines.",
+   "Q6_A": "YES, it would ship \u2014 plenty of released mobile roguelikes look like this. Merely competent, and only just. Not good. It is a placeholder-grade tile set: one material, one stamp, no variation, no wear, no lighting.",
+   "CULL_A": "Dirt is one 48px stamp repeated verbatim \u2014 up to 98% pixel-identical \u2014 so the ground reads as plaid.",
+   "FLIP LIST": "- Break the 48px repeat: at minimum 6\u20138 dirt variants plus randomised flip/rotate, and move the crack lines off the tile grid so no seam repeats within a screen.\n- Darken the grey floor's seams below the tile face and vary their width; bright white grout reads as a modern bathroom, not four centuries of traffic.\n- Give the dirt/tile boundary at y=180 and the dirt/green boundary at x=222 an actual transition \u2014 dirt spilled over the tile edge, tiles lifting, a broken lip.\n- Put wear where feet go: a lighter polished lane through the middle of the dirt, darkening and debris in the corners and against the barrels.\n- Give the green field a material identity or cut it \u2014 right now it is a flat colour with three copies of one blob on it.\n\n---\n\n## B",
+   "Q1_B": "_WHY:** The slabs are visibly different sizes and don't line up: the large one at roughly (255\u2013350, 40\u2013120) is about twice the width of the narrow one at (200\u2013255, 280\u2013370), and seams jog rather than running through. The seams are dark, thin and slightly ragged \u2014 mortar gone or never there. The faces carry a fine two-value speckle that reads as grit and pitting rather than noise, and there are lighter patches on individual slabs, like different stone from different sources. The cracks (e.g. the long one at ~(500\u2013600, 250)) run *across* slab faces, not along seams, which is how stone actually fails.",
+   "Q5_B": "An image that was repeated \u2014 but only just, and I had to measure to say it. At a glance it reads as made: slab sizes vary, cracks cross seams, no motif recurs within a screen. The verbatim duplicate at (370,110)/(498,174) is what settles it. Honestly: a made surface assembled from a reused tile set, with the reuse mostly successfully disguised.",
+   "Q6_B": "YES. And it is genuinely good \u2014 not merely competent. The tell is that the irregularity is *structural*, not noise: slab boundaries ignore the tile grid, damage sits where a floor would actually fail, and the reuse takes measurement to find rather than jumping out. That is real craft.\n\nIt is not finished, though. It's good stone and an empty stage.",
+   "CULL_B": "Floor is spotless \u2014 no grime, no debris, no repair anywhere, in a place used continuously for centuries.",
+   "RANK": "Not close. A's dirt is a single 48-pixel stamp repeated with up to 98% pixel identity and its grey field is graph paper; B's floor survives the same measurement at ~1% and only fails on one hidden duplicate. B's remaining problem is content \u2014 the floor is too clean for the fiction \u2014 which is additive work. A's problem is the tile set itself, which is a rebuild.\n\nWatch for: B's cleanliness is the thing that will start to read as wrong once the walls are finished and the room is dressed. Fix the grime and the repairs before adding more props.\n\n*Model: Claude Opus 5 (1M context)*",
+   "Q1_WHY": "",
+   "Q3_WHY": "",
+   "Q1": "",
+   "Q5": "",
+   "Q6": "",
+   "CULL": "",
+   "flips": [
+    "Break the 48px repeat: at minimum 6\u20138 dirt variants plus randomised flip/rotate, and move the crack lines off the tile grid so no seam repeats within a screen.",
+    "Darken the grey floor's seams below the tile face and vary their width; bright white grout reads as a modern bathroom, not four centuries of traffic.",
+    "Give the dirt/tile boundary at y=180 and the dirt/green boundary at x=222 an actual transition \u2014 dirt spilled over the tile edge, tiles lifting, a broken lip.",
+    "Put wear where feet go: a lighter polished lane through the middle of the dirt, darkening and debris in the corners and against the barrels.",
+    "Give the green field a material identity or cut it \u2014 right now it is a flat colour with three copies of one blob on it."
+   ],
+   "mapping": {
+    "B": "scene_family.png",
+    "A": "BAR"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r4_F4_transcript.txt"
+  }
+ },
+ "plant_seat": "F2",
+ "round_void": false,
+ "plant_words_declared": [
+  "cobweb",
+  "cobwebbing",
+  "web",
+  "webbing",
+  "collapse",
+  "collapsed",
+  "caved",
+  "ruin",
+  "ruined",
+  "rubble",
+  "moss",
+  "mossy",
+  "overgrown",
+  "lichen"
+ ],
+ "law": "LOOP-PROCESS \u00a74: if the critic does not catch the plant, the round is VOID and its findings are not read."
+}

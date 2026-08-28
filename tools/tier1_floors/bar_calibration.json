@@ -1,0 +1,1124 @@
+{
+ "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2",
+ "maps": [
+  "uf_example_1.tmx",
+  "uf_example_2.tmx",
+  "uf_example_3.tmx",
+  "uf_example_4.tmx",
+  "uf_example_simple.tmx",
+  "uf_map_example.tmx"
+ ],
+ "commit": "da1b2a9e16dd568ee23fe3d1641e73ffbcd1319f",
+ "instrument": "tools/tier1_floors/field_laws.py",
+ "instrument_sha256": "72d9e67a220b6b9030e16a5eca93a0164243cc9e40233ead3c537223610e2953",
+ "note": "Statistics only. No bar pixel is written by this module or by anything it calls. Bar tiles are 48px against Yarl's 32px, so only FRACTIONS are carried forward.",
+ "summary": {
+  "n_floor_tiles": 29,
+  "max_contained_frac": {
+   "min": 0.0,
+   "p50": 0.0191,
+   "p90": 0.7983800000000001,
+   "max": 0.8277,
+   "n_zero": 14
+  },
+  "seam_ratio": {
+   "min": 0.0,
+   "p50": 0.68,
+   "p90": 1.552,
+   "max": 1.64
+  },
+  "n_with_frame": 7,
+  "n_with_grid": 3,
+  "n_seamed_at_current_threshold": 0
+ },
+ "tiles": [
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 62,
+   "map_cells": 9,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    15.54,
+    17.07
+   ],
+   "n_contained": 5,
+   "contained_px": [
+    1907,
+    1907,
+    1907,
+    209,
+    180
+   ],
+   "max_contained_px": 1907,
+   "max_contained_frac": 0.8277,
+   "contained_frac": [
+    0.8277,
+    0.8277,
+    0.8277,
+    0.0907,
+    0.0781
+   ],
+   "max_contrast": 20.3,
+   "n_frames": 3,
+   "n_grid": 0,
+   "other_codes": [
+    "FRAME"
+   ]
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 63,
+   "map_cells": 2,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    14.05,
+    12.51
+   ],
+   "n_contained": 4,
+   "contained_px": [
+    1836,
+    1836,
+    199,
+    172
+   ],
+   "max_contained_px": 1836,
+   "max_contained_frac": 0.7969,
+   "contained_frac": [
+    0.7969,
+    0.7969,
+    0.0864,
+    0.0747
+   ],
+   "max_contrast": 19.2,
+   "n_frames": 2,
+   "n_grid": 0,
+   "other_codes": [
+    "FRAME"
+   ]
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 64,
+   "map_cells": 1,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    13.06,
+    13.88
+   ],
+   "n_contained": 4,
+   "contained_px": [
+    1871,
+    1871,
+    195,
+    173
+   ],
+   "max_contained_px": 1871,
+   "max_contained_frac": 0.8121,
+   "contained_frac": [
+    0.8121,
+    0.8121,
+    0.0846,
+    0.0751
+   ],
+   "max_contrast": 19.0,
+   "n_frames": 2,
+   "n_grid": 0,
+   "other_codes": [
+    "FRAME"
+   ]
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 66,
+   "map_cells": 1,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    12.58,
+    16.51
+   ],
+   "n_contained": 4,
+   "contained_px": [
+    1853,
+    1853,
+    206,
+    177
+   ],
+   "max_contained_px": 1853,
+   "max_contained_frac": 0.8043,
+   "contained_frac": [
+    0.8043,
+    0.8043,
+    0.0894,
+    0.0768
+   ],
+   "max_contrast": 19.6,
+   "n_frames": 2,
+   "n_grid": 0,
+   "other_codes": [
+    "FRAME"
+   ]
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 67,
+   "map_cells": 7,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    16.04,
+    16.08
+   ],
+   "n_contained": 16,
+   "contained_px": [
+    437,
+    437,
+    418,
+    418,
+    417,
+    417,
+    398,
+    398
+   ],
+   "max_contained_px": 437,
+   "max_contained_frac": 0.1897,
+   "contained_frac": [
+    0.1897,
+    0.1897,
+    0.1814,
+    0.1814,
+    0.181,
+    0.181,
+    0.1727,
+    0.1727
+   ],
+   "max_contrast": 17.8,
+   "n_frames": 8,
+   "n_grid": 0,
+   "other_codes": [
+    "FRAME"
+   ]
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 102,
+   "map_cells": 15,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    2.06,
+    2.08
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 112,
+   "map_cells": 17,
+   "cell": 48,
+   "seam_ratio": [
+    1.0,
+    0.9
+   ],
+   "wrap": [
+    18.02,
+    16.74
+   ],
+   "interior_p95": [
+    17.95,
+    18.53
+   ],
+   "n_contained": 318,
+   "contained_px": [
+    104,
+    104,
+    104,
+    104,
+    104,
+    104,
+    103,
+    103
+   ],
+   "max_contained_px": 104,
+   "max_contained_frac": 0.0451,
+   "contained_frac": [
+    0.0451,
+    0.0451,
+    0.0451,
+    0.0451,
+    0.0451,
+    0.0451,
+    0.0447,
+    0.0447
+   ],
+   "max_contrast": 28.4,
+   "n_frames": 3,
+   "n_grid": 22,
+   "other_codes": [
+    "FRAME",
+    "GRID"
+   ]
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 122,
+   "map_cells": 18,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    2.03,
+    2.05
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 123,
+   "map_cells": 14,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    2.03,
+    2.05
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 124,
+   "map_cells": 10,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    2.97,
+    2.62
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 125,
+   "map_cells": 6,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    2.47,
+    2.95
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 142,
+   "map_cells": 82,
+   "cell": 48,
+   "seam_ratio": [
+    1.21,
+    1.64
+   ],
+   "wrap": [
+    6.97,
+    9.95
+   ],
+   "interior_p95": [
+    5.79,
+    6.05
+   ],
+   "n_contained": 6,
+   "contained_px": [
+    44,
+    41,
+    38,
+    36,
+    33,
+    31
+   ],
+   "max_contained_px": 44,
+   "max_contained_frac": 0.0191,
+   "contained_frac": [
+    0.0191,
+    0.0178,
+    0.0165,
+    0.0156,
+    0.0143,
+    0.0135
+   ],
+   "max_contrast": 17.1,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 143,
+   "map_cells": 21,
+   "cell": 48,
+   "seam_ratio": [
+    1.34,
+    1.55
+   ],
+   "wrap": [
+    7.4,
+    9.95
+   ],
+   "interior_p95": [
+    5.53,
+    6.42
+   ],
+   "n_contained": 10,
+   "contained_px": [
+    61,
+    50,
+    46,
+    37,
+    35,
+    33,
+    32,
+    28
+   ],
+   "max_contained_px": 61,
+   "max_contained_frac": 0.0265,
+   "contained_frac": [
+    0.0265,
+    0.0217,
+    0.02,
+    0.0161,
+    0.0152,
+    0.0143,
+    0.0139,
+    0.0122
+   ],
+   "max_contrast": 20.1,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 144,
+   "map_cells": 13,
+   "cell": 48,
+   "seam_ratio": [
+    1.64,
+    1.21
+   ],
+   "wrap": [
+    9.95,
+    6.97
+   ],
+   "interior_p95": [
+    6.05,
+    5.79
+   ],
+   "n_contained": 7,
+   "contained_px": [
+    50,
+    47,
+    44,
+    39,
+    36,
+    34,
+    33
+   ],
+   "max_contained_px": 50,
+   "max_contained_frac": 0.0217,
+   "contained_frac": [
+    0.0217,
+    0.0204,
+    0.0191,
+    0.0169,
+    0.0156,
+    0.0148,
+    0.0143
+   ],
+   "max_contrast": 17.6,
+   "n_frames": 0,
+   "n_grid": 3,
+   "other_codes": [
+    "GRID"
+   ]
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 145,
+   "map_cells": 4,
+   "cell": 48,
+   "seam_ratio": [
+    1.26,
+    1.55
+   ],
+   "wrap": [
+    6.97,
+    9.95
+   ],
+   "interior_p95": [
+    5.53,
+    6.42
+   ],
+   "n_contained": 10,
+   "contained_px": [
+    61,
+    50,
+    46,
+    37,
+    35,
+    33,
+    32,
+    28
+   ],
+   "max_contained_px": 61,
+   "max_contained_frac": 0.0265,
+   "contained_frac": [
+    0.0265,
+    0.0217,
+    0.02,
+    0.0161,
+    0.0152,
+    0.0143,
+    0.0139,
+    0.0122
+   ],
+   "max_contrast": 20.1,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 154,
+   "map_cells": 48,
+   "cell": 48,
+   "seam_ratio": [
+    0.0,
+    0.0
+   ],
+   "wrap": [
+    0.0,
+    0.0
+   ],
+   "interior_p95": [
+    0.0,
+    0.0
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 156,
+   "map_cells": 18,
+   "cell": 48,
+   "seam_ratio": [
+    1.18,
+    1.12
+   ],
+   "wrap": [
+    2.49,
+    1.83
+   ],
+   "interior_p95": [
+    2.11,
+    1.64
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 166,
+   "map_cells": 41,
+   "cell": 48,
+   "seam_ratio": [
+    0.6,
+    0.69
+   ],
+   "wrap": [
+    14.67,
+    15.98
+   ],
+   "interior_p95": [
+    24.26,
+    23.15
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 2,
+   "other_codes": [
+    "GRID"
+   ]
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 167,
+   "map_cells": 10,
+   "cell": 48,
+   "seam_ratio": [
+    0.59,
+    0.68
+   ],
+   "wrap": [
+    14.67,
+    15.98
+   ],
+   "interior_p95": [
+    24.66,
+    23.55
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 168,
+   "map_cells": 4,
+   "cell": 48,
+   "seam_ratio": [
+    0.6,
+    0.68
+   ],
+   "wrap": [
+    14.67,
+    15.98
+   ],
+   "interior_p95": [
+    24.26,
+    23.46
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 169,
+   "map_cells": 3,
+   "cell": 48,
+   "seam_ratio": [
+    0.6,
+    0.7
+   ],
+   "wrap": [
+    14.67,
+    15.98
+   ],
+   "interior_p95": [
+    24.26,
+    22.91
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 176,
+   "map_cells": 10,
+   "cell": 48,
+   "seam_ratio": [
+    1.18,
+    1.12
+   ],
+   "wrap": [
+    3.34,
+    2.45
+   ],
+   "interior_p95": [
+    2.83,
+    2.19
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 191,
+   "map_cells": 16,
+   "cell": 48,
+   "seam_ratio": [
+    1.39,
+    1.46
+   ],
+   "wrap": [
+    74.49,
+    79.14
+   ],
+   "interior_p95": [
+    53.68,
+    54.36
+   ],
+   "n_contained": 8,
+   "contained_px": [
+    552,
+    534,
+    534,
+    520,
+    506,
+    485,
+    485,
+    482
+   ],
+   "max_contained_px": 552,
+   "max_contained_frac": 0.2396,
+   "contained_frac": [
+    0.2396,
+    0.2318,
+    0.2318,
+    0.2257,
+    0.2196,
+    0.2105,
+    0.2105,
+    0.2092
+   ],
+   "max_contrast": 113.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 202,
+   "map_cells": 9,
+   "cell": 48,
+   "seam_ratio": [
+    0.95,
+    1.09
+   ],
+   "wrap": [
+    10.08,
+    10.95
+   ],
+   "interior_p95": [
+    10.61,
+    10.01
+   ],
+   "n_contained": 7,
+   "contained_px": [
+    107,
+    88,
+    74,
+    49,
+    43,
+    39,
+    30
+   ],
+   "max_contained_px": 107,
+   "max_contained_frac": 0.0464,
+   "contained_frac": [
+    0.0464,
+    0.0382,
+    0.0321,
+    0.0213,
+    0.0187,
+    0.0169,
+    0.013
+   ],
+   "max_contrast": 19.8,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 203,
+   "map_cells": 1,
+   "cell": 48,
+   "seam_ratio": [
+    0.56,
+    0.63
+   ],
+   "wrap": [
+    12.51,
+    12.68
+   ],
+   "interior_p95": [
+    22.33,
+    19.98
+   ],
+   "n_contained": 79,
+   "contained_px": [
+    191,
+    175,
+    155,
+    131,
+    111,
+    105,
+    100,
+    93
+   ],
+   "max_contained_px": 191,
+   "max_contained_frac": 0.0829,
+   "contained_frac": [
+    0.0829,
+    0.076,
+    0.0673,
+    0.0569,
+    0.0482,
+    0.0456,
+    0.0434,
+    0.0404
+   ],
+   "max_contrast": 50.6,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 204,
+   "map_cells": 1,
+   "cell": 48,
+   "seam_ratio": [
+    0.63,
+    0.63
+   ],
+   "wrap": [
+    12.53,
+    12.77
+   ],
+   "interior_p95": [
+    19.77,
+    20.25
+   ],
+   "n_contained": 26,
+   "contained_px": [
+    159,
+    137,
+    130,
+    120,
+    83,
+    76,
+    70,
+    57
+   ],
+   "max_contained_px": 159,
+   "max_contained_frac": 0.069,
+   "contained_frac": [
+    0.069,
+    0.0595,
+    0.0564,
+    0.0521,
+    0.036,
+    0.033,
+    0.0304,
+    0.0247
+   ],
+   "max_contrast": 40.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 205,
+   "map_cells": 3,
+   "cell": 48,
+   "seam_ratio": [
+    0.78,
+    0.73
+   ],
+   "wrap": [
+    15.53,
+    13.44
+   ],
+   "interior_p95": [
+    19.99,
+    18.38
+   ],
+   "n_contained": 74,
+   "contained_px": [
+    146,
+    135,
+    118,
+    115,
+    111,
+    103,
+    97,
+    86
+   ],
+   "max_contained_px": 146,
+   "max_contained_frac": 0.0634,
+   "contained_frac": [
+    0.0634,
+    0.0586,
+    0.0512,
+    0.0499,
+    0.0482,
+    0.0447,
+    0.0421,
+    0.0373
+   ],
+   "max_contrast": 49.1,
+   "n_frames": 10,
+   "n_grid": 0,
+   "other_codes": [
+    "FRAME"
+   ]
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 206,
+   "map_cells": 44,
+   "cell": 48,
+   "seam_ratio": [
+    1.3,
+    1.56
+   ],
+   "wrap": [
+    5.85,
+    7.2
+   ],
+   "interior_p95": [
+    4.51,
+    4.62
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 216,
+   "map_cells": 3,
+   "cell": 48,
+   "seam_ratio": [
+    1.18,
+    1.12
+   ],
+   "wrap": [
+    7.2,
+    5.28
+   ],
+   "interior_p95": [
+    6.1,
+    4.73
+   ],
+   "n_contained": 0,
+   "contained_px": [],
+   "max_contained_px": 0,
+   "max_contained_frac": 0.0,
+   "contained_frac": [],
+   "max_contrast": 0.0,
+   "n_frames": 0,
+   "n_grid": 0,
+   "other_codes": []
+  }
+ ],
+ "excluded": [
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 421,
+   "map_cells": 1,
+   "opaque_fraction": 0.0178,
+   "why": "not opaque: padding, or not a floor tile"
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 428,
+   "map_cells": 1,
+   "opaque_fraction": 0.0178,
+   "why": "not opaque: padding, or not a floor tile"
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 441,
+   "map_cells": 8,
+   "opaque_fraction": 0.0382,
+   "why": "not opaque: padding, or not a floor tile"
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 448,
+   "map_cells": 8,
+   "opaque_fraction": 0.0382,
+   "why": "not opaque: padding, or not a floor tile"
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 461,
+   "map_cells": 1,
+   "opaque_fraction": 0.036,
+   "why": "not opaque: padding, or not a floor tile"
+  },
+  {
+   "sheet": "uf_terrain.png",
+   "gid": 468,
+   "map_cells": 1,
+   "opaque_fraction": 0.036,
+   "why": "not opaque: padding, or not a floor tile"
+  }
+ ],
+ "firstgid_collisions": [
+  {
+   "firstgid": 1,
+   "map": "uf_map_example.tmx",
+   "sheets": [
+    "uf_map.png",
+    "uf_terrain.png"
+   ]
+  }
+ ]
+}

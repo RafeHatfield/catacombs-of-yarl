@@ -1,0 +1,3021 @@
+{
+ "wave": "overlay",
+ "commit": "06102638ec4fc93dc5da54d7ab6ed404e581b0c5",
+ "instrument": "tools/tier1_floors/field_laws.py",
+ "instrument_sha256": "56a3c6cad1e3d60e01adc7e06773675d911ec0be619c88dff9e505f07481d8ca",
+ "instrument_controls": "tools/tier1_floors/controls/CONTROLS.json",
+ "constants": {
+  "MIN_INCIDENT_FRAC": 0.01171875,
+  "MIN_INCIDENT_BBOX": 3,
+  "MIN_CONTRAST": 15.0,
+  "MIN_FRAME_INTERIOR": 16,
+  "MAX_SEAM_RATIO": 2.0
+ },
+ "generated": 32,
+ "survived": 0,
+ "culled_by_code": {
+  "FRAME": 13,
+  "GRID": 2,
+  "INCIDENT": 32
+ },
+ "children": [
+  {
+   "file": "tools/tier1_floors/gen/overlay/crack/crack_14370.png",
+   "sha256": "8dc36a5360f8be9fffbd1bc665abe736c12089f426c1a7a05573b9be608bf05e",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "dark",
+     "level": 37.0,
+     "px": 35,
+     "bbox": [
+      8,
+      8
+     ],
+     "contrast": 110.0,
+     "at": [
+      12,
+      12
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 37.0,
+     "px": 111,
+     "bbox": [
+      14,
+      13
+     ],
+     "contrast": 125.8,
+     "at": [
+      9,
+      10
+     ]
+    },
+    {
+     "kind": "dark",
+     "level": 45.0,
+     "px": 36,
+     "bbox": [
+      9,
+      8
+     ],
+     "contrast": 118.2,
+     "at": [
+      12,
+      12
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 45.0,
+     "px": 105,
+     "bbox": [
+      14,
+      13
+     ],
+     "contrast": 128.9,
+     "at": [
+      9,
+      10
+     ]
+    }
+   ],
+   "n_incidents": 18,
+   "frames": [
+    {
+     "kind": "dark",
+     "level": 37.0,
+     "px": 35,
+     "bbox": [
+      8,
+      8
+     ],
+     "contrast": 110.0,
+     "at": [
+      12,
+      12
+     ],
+     "interior": 28
+    },
+    {
+     "kind": "light",
+     "level": 37.0,
+     "px": 111,
+     "bbox": [
+      14,
+      13
+     ],
+     "contrast": 125.8,
+     "at": [
+      9,
+      10
+     ],
+     "interior": 37
+    }
+   ],
+   "n_frames": 15,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 26.69,
+    "interior_p95_y": 30.59,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [
+    {
+     "kind": "dark",
+     "level": 132.0,
+     "axis": "columns",
+     "period": 11.0,
+     "terms": 3
+    },
+    {
+     "kind": "dark",
+     "level": 141.0,
+     "axis": "columns",
+     "period": 11.0,
+     "terms": 3
+    }
+   ],
+   "n_grid": 2,
+   "verdict": "FRAME+GRID+INCIDENT",
+   "codes": [
+    "FRAME",
+    "GRID",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/crack/crack_14371.png",
+   "sha256": "355253a4dd740b7df09ecc495544988e2c19d1a83362560ece13f0ec5d749c42",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 32.0,
+     "px": 162,
+     "bbox": [
+      12,
+      18
+     ],
+     "contrast": 90.7,
+     "at": [
+      10,
+      7
+     ]
+    },
+    {
+     "kind": "dark",
+     "level": 40.0,
+     "px": 15,
+     "bbox": [
+      5,
+      6
+     ],
+     "contrast": 74.9,
+     "at": [
+      15,
+      10
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 40.0,
+     "px": 137,
+     "bbox": [
+      12,
+      18
+     ],
+     "contrast": 91.3,
+     "at": [
+      10,
+      7
+     ]
+    },
+    {
+     "kind": "dark",
+     "level": 47.0,
+     "px": 27,
+     "bbox": [
+      7,
+      8
+     ],
+     "contrast": 94.3,
+     "at": [
+      13,
+      9
+     ]
+    }
+   ],
+   "n_incidents": 16,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 40.0,
+     "px": 137,
+     "bbox": [
+      12,
+      18
+     ],
+     "contrast": 91.3,
+     "at": [
+      10,
+      7
+     ],
+     "interior": 16
+    },
+    {
+     "kind": "dark",
+     "level": 47.0,
+     "px": 27,
+     "bbox": [
+      7,
+      8
+     ],
+     "contrast": 94.3,
+     "at": [
+      13,
+      9
+     ],
+     "interior": 27
+    }
+   ],
+   "n_frames": 8,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 30.61,
+    "interior_p95_y": 17.21,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/crack/crack_14372.png",
+   "sha256": "6fb76d3d00750a7585a062093ff64aa0067759ad0b79320937f585f3a0432a42",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 41.0,
+     "px": 154,
+     "bbox": [
+      14,
+      18
+     ],
+     "contrast": 82.3,
+     "at": [
+      9,
+      7
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 47.0,
+     "px": 153,
+     "bbox": [
+      14,
+      18
+     ],
+     "contrast": 82.1,
+     "at": [
+      9,
+      7
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 55.0,
+     "px": 135,
+     "bbox": [
+      14,
+      18
+     ],
+     "contrast": 78.3,
+     "at": [
+      9,
+      7
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 59.0,
+     "px": 106,
+     "bbox": [
+      13,
+      18
+     ],
+     "contrast": 81.9,
+     "at": [
+      9,
+      7
+     ]
+    }
+   ],
+   "n_incidents": 12,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 21.5,
+    "interior_p95_y": 15.13,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [
+    {
+     "kind": "dark",
+     "level": 108.0,
+     "axis": "columns",
+     "period": 9.5,
+     "terms": 3
+    }
+   ],
+   "n_grid": 1,
+   "verdict": "GRID+INCIDENT",
+   "codes": [
+    "GRID",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/crack/crack_14373.png",
+   "sha256": "f17cdcc377f176456053cc37daf895be8f10337174cc8f2a01ab0e2117ecccd4",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 28.0,
+     "px": 77,
+     "bbox": [
+      12,
+      13
+     ],
+     "contrast": 68.8,
+     "at": [
+      10,
+      9
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 43.0,
+     "px": 45,
+     "bbox": [
+      10,
+      11
+     ],
+     "contrast": 73.3,
+     "at": [
+      11,
+      9
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 80.0,
+     "px": 45,
+     "bbox": [
+      10,
+      11
+     ],
+     "contrast": 73.3,
+     "at": [
+      11,
+      9
+     ]
+    }
+   ],
+   "n_incidents": 3,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 12.73,
+    "interior_p95_y": 8.43,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/crack/crack_14374.png",
+   "sha256": "87e5981a2e838e242f3e5b86ea8fd35f3d01a7c56cd7897818451af2266bde52",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 54.0,
+     "px": 164,
+     "bbox": [
+      22,
+      22
+     ],
+     "contrast": 93.4,
+     "at": [
+      4,
+      4
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 57.0,
+     "px": 140,
+     "bbox": [
+      22,
+      22
+     ],
+     "contrast": 103.3,
+     "at": [
+      4,
+      4
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 59.0,
+     "px": 137,
+     "bbox": [
+      22,
+      22
+     ],
+     "contrast": 103.7,
+     "at": [
+      4,
+      4
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 71.0,
+     "px": 124,
+     "bbox": [
+      21,
+      21
+     ],
+     "contrast": 103.4,
+     "at": [
+      5,
+      5
+     ]
+    }
+   ],
+   "n_incidents": 19,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 54.0,
+     "px": 164,
+     "bbox": [
+      22,
+      22
+     ],
+     "contrast": 93.4,
+     "at": [
+      4,
+      4
+     ],
+     "interior": 118
+    },
+    {
+     "kind": "light",
+     "level": 57.0,
+     "px": 140,
+     "bbox": [
+      22,
+      22
+     ],
+     "contrast": 103.3,
+     "at": [
+      4,
+      4
+     ],
+     "interior": 143
+    }
+   ],
+   "n_frames": 5,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 17.36,
+    "interior_p95_y": 25.81,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/crack/crack_14375.png",
+   "sha256": "b9bd37aef0a49cebf62210fe417497381f2ddd5618eda5a731dfb7de3357e704",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 28.0,
+     "px": 217,
+     "bbox": [
+      15,
+      19
+     ],
+     "contrast": 77.3,
+     "at": [
+      8,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 33.0,
+     "px": 191,
+     "bbox": [
+      15,
+      19
+     ],
+     "contrast": 74.8,
+     "at": [
+      8,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 38.0,
+     "px": 191,
+     "bbox": [
+      15,
+      19
+     ],
+     "contrast": 74.8,
+     "at": [
+      8,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 42.0,
+     "px": 171,
+     "bbox": [
+      15,
+      19
+     ],
+     "contrast": 73.9,
+     "at": [
+      8,
+      6
+     ]
+    }
+   ],
+   "n_incidents": 16,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 19.16,
+    "interior_p95_y": 20.02,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/crack/crack_14376.png",
+   "sha256": "a76a0548d713f954489a45b766a46ee2bca4a7475860dee938d96b2bca16214a",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 31.0,
+     "px": 147,
+     "bbox": [
+      16,
+      16
+     ],
+     "contrast": 97.9,
+     "at": [
+      8,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 38.0,
+     "px": 144,
+     "bbox": [
+      16,
+      16
+     ],
+     "contrast": 97.6,
+     "at": [
+      8,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 41.0,
+     "px": 144,
+     "bbox": [
+      16,
+      16
+     ],
+     "contrast": 97.6,
+     "at": [
+      8,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 47.0,
+     "px": 113,
+     "bbox": [
+      16,
+      16
+     ],
+     "contrast": 98.4,
+     "at": [
+      8,
+      8
+     ]
+    }
+   ],
+   "n_incidents": 12,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 21.43,
+    "interior_p95_y": 26.22,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/crack/crack_14377.png",
+   "sha256": "e23b4a3aa52e570bc8f17b96596e137a2e99acbfe448e4210f3b76a081faf3e3",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 25.0,
+     "px": 168,
+     "bbox": [
+      17,
+      16
+     ],
+     "contrast": 78.8,
+     "at": [
+      7,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 27.0,
+     "px": 167,
+     "bbox": [
+      17,
+      16
+     ],
+     "contrast": 78.8,
+     "at": [
+      7,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 33.0,
+     "px": 167,
+     "bbox": [
+      17,
+      16
+     ],
+     "contrast": 78.8,
+     "at": [
+      7,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 39.0,
+     "px": 138,
+     "bbox": [
+      17,
+      15
+     ],
+     "contrast": 78.1,
+     "at": [
+      7,
+      9
+     ]
+    }
+   ],
+   "n_incidents": 16,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 13.48,
+    "interior_p95_y": 28.03,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/debris/debris_14386.png",
+   "sha256": "d51393baabff8347eefe128eee6b3f633b34707fcc7ce6da71c474f0ac8f7e88",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 42.0,
+     "px": 243,
+     "bbox": [
+      18,
+      17
+     ],
+     "contrast": 99.6,
+     "at": [
+      7,
+      7
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 73.0,
+     "px": 243,
+     "bbox": [
+      18,
+      17
+     ],
+     "contrast": 99.6,
+     "at": [
+      7,
+      7
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 97.0,
+     "px": 200,
+     "bbox": [
+      18,
+      17
+     ],
+     "contrast": 98.5,
+     "at": [
+      7,
+      7
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 111.0,
+     "px": 141,
+     "bbox": [
+      18,
+      17
+     ],
+     "contrast": 95.2,
+     "at": [
+      7,
+      7
+     ]
+    }
+   ],
+   "n_incidents": 7,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 15.43,
+    "interior_p95_y": 17.0,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/debris/debris_14387.png",
+   "sha256": "e4d14ddda95b4feb200272cf15e40ccc926a90c1e78e75ffb344de9c50666aec",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 47.0,
+     "px": 411,
+     "bbox": [
+      27,
+      25
+     ],
+     "contrast": 113.8,
+     "at": [
+      2,
+      3
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 66.0,
+     "px": 336,
+     "bbox": [
+      25,
+      24
+     ],
+     "contrast": 99.3,
+     "at": [
+      3,
+      3
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 70.0,
+     "px": 336,
+     "bbox": [
+      25,
+      24
+     ],
+     "contrast": 99.3,
+     "at": [
+      3,
+      3
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 76.0,
+     "px": 289,
+     "bbox": [
+      25,
+      23
+     ],
+     "contrast": 91.1,
+     "at": [
+      3,
+      3
+     ]
+    }
+   ],
+   "n_incidents": 15,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 66.0,
+     "px": 336,
+     "bbox": [
+      25,
+      24
+     ],
+     "contrast": 99.3,
+     "at": [
+      3,
+      3
+     ],
+     "interior": 31
+    },
+    {
+     "kind": "light",
+     "level": 70.0,
+     "px": 336,
+     "bbox": [
+      25,
+      24
+     ],
+     "contrast": 99.3,
+     "at": [
+      3,
+      3
+     ],
+     "interior": 31
+    }
+   ],
+   "n_frames": 8,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 22.91,
+    "interior_p95_y": 28.79,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/debris/debris_14388.png",
+   "sha256": "805314264176988b2b6348b4691ef965f3c32ab88a6481c8b5c9a374ab4c6bd7",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 22.0,
+     "px": 405,
+     "bbox": [
+      30,
+      20
+     ],
+     "contrast": 105.8,
+     "at": [
+      1,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 65.0,
+     "px": 344,
+     "bbox": [
+      30,
+      19
+     ],
+     "contrast": 98.9,
+     "at": [
+      1,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 68.0,
+     "px": 328,
+     "bbox": [
+      30,
+      18
+     ],
+     "contrast": 91.6,
+     "at": [
+      1,
+      7
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 76.0,
+     "px": 306,
+     "bbox": [
+      28,
+      18
+     ],
+     "contrast": 84.6,
+     "at": [
+      2,
+      7
+     ]
+    }
+   ],
+   "n_incidents": 6,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 16.57,
+    "interior_p95_y": 21.64,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/debris/debris_14389.png",
+   "sha256": "3570a2a21b2b539e5ecbac614053dc50fa676bc70dc0c366cf20e928490eceee",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 44.0,
+     "px": 247,
+     "bbox": [
+      16,
+      20
+     ],
+     "contrast": 119.7,
+     "at": [
+      8,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 53.0,
+     "px": 242,
+     "bbox": [
+      16,
+      20
+     ],
+     "contrast": 118.4,
+     "at": [
+      8,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 59.0,
+     "px": 228,
+     "bbox": [
+      16,
+      19
+     ],
+     "contrast": 111.4,
+     "at": [
+      8,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 65.0,
+     "px": 228,
+     "bbox": [
+      16,
+      19
+     ],
+     "contrast": 111.4,
+     "at": [
+      8,
+      5
+     ]
+    }
+   ],
+   "n_incidents": 20,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 111.0,
+     "px": 134,
+     "bbox": [
+      16,
+      18
+     ],
+     "contrast": 90.3,
+     "at": [
+      8,
+      6
+     ],
+     "interior": 24
+    },
+    {
+     "kind": "light",
+     "level": 115.0,
+     "px": 108,
+     "bbox": [
+      16,
+      18
+     ],
+     "contrast": 92.1,
+     "at": [
+      8,
+      6
+     ],
+     "interior": 24
+    }
+   ],
+   "n_frames": 9,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 27.36,
+    "interior_p95_y": 25.85,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/debris/debris_14390.png",
+   "sha256": "333de9a148a8fd2a60bad1df63b3eebaa62cb6502d4d90133c16fe79eae77224",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 39.0,
+     "px": 218,
+     "bbox": [
+      18,
+      17
+     ],
+     "contrast": 106.7,
+     "at": [
+      7,
+      7
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 71.0,
+     "px": 147,
+     "bbox": [
+      16,
+      15
+     ],
+     "contrast": 95.8,
+     "at": [
+      8,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 77.0,
+     "px": 138,
+     "bbox": [
+      16,
+      15
+     ],
+     "contrast": 94.1,
+     "at": [
+      8,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 81.0,
+     "px": 138,
+     "bbox": [
+      16,
+      15
+     ],
+     "contrast": 94.1,
+     "at": [
+      8,
+      8
+     ]
+    }
+   ],
+   "n_incidents": 12,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 16.82,
+    "interior_p95_y": 14.97,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/debris/debris_14391.png",
+   "sha256": "ffd87c182ce75387ac1c0bede7e5c9e67d070124871b791265f7754e4d6a9f11",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 46.0,
+     "px": 416,
+     "bbox": [
+      26,
+      24
+     ],
+     "contrast": 122.5,
+     "at": [
+      3,
+      4
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 68.0,
+     "px": 353,
+     "bbox": [
+      24,
+      22
+     ],
+     "contrast": 105.8,
+     "at": [
+      4,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 74.0,
+     "px": 333,
+     "bbox": [
+      24,
+      22
+     ],
+     "contrast": 102.5,
+     "at": [
+      4,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 84.0,
+     "px": 333,
+     "bbox": [
+      24,
+      22
+     ],
+     "contrast": 102.5,
+     "at": [
+      4,
+      5
+     ]
+    }
+   ],
+   "n_incidents": 14,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 117.0,
+     "px": 228,
+     "bbox": [
+      24,
+      22
+     ],
+     "contrast": 97.7,
+     "at": [
+      4,
+      5
+     ],
+     "interior": 21
+    },
+    {
+     "kind": "light",
+     "level": 135.0,
+     "px": 228,
+     "bbox": [
+      24,
+      22
+     ],
+     "contrast": 97.7,
+     "at": [
+      4,
+      5
+     ],
+     "interior": 21
+    }
+   ],
+   "n_frames": 5,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 21.94,
+    "interior_p95_y": 25.65,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/debris/debris_14392.png",
+   "sha256": "4717c6dd3a24faabddf12ab9fd0f42881ab7f2fdad398aa56e83e66ca3bcea81",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 39.0,
+     "px": 301,
+     "bbox": [
+      25,
+      19
+     ],
+     "contrast": 110.0,
+     "at": [
+      3,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 69.0,
+     "px": 301,
+     "bbox": [
+      25,
+      19
+     ],
+     "contrast": 110.0,
+     "at": [
+      3,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 73.0,
+     "px": 281,
+     "bbox": [
+      25,
+      19
+     ],
+     "contrast": 104.1,
+     "at": [
+      3,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 78.0,
+     "px": 266,
+     "bbox": [
+      25,
+      19
+     ],
+     "contrast": 98.9,
+     "at": [
+      3,
+      6
+     ]
+    }
+   ],
+   "n_incidents": 8,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 73.0,
+     "px": 281,
+     "bbox": [
+      25,
+      19
+     ],
+     "contrast": 104.1,
+     "at": [
+      3,
+      6
+     ],
+     "interior": 17
+    },
+    {
+     "kind": "light",
+     "level": 78.0,
+     "px": 266,
+     "bbox": [
+      25,
+      19
+     ],
+     "contrast": 98.9,
+     "at": [
+      3,
+      6
+     ],
+     "interior": 18
+    }
+   ],
+   "n_frames": 6,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 17.42,
+    "interior_p95_y": 24.93,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/debris/debris_14393.png",
+   "sha256": "5c501500e3c73fe723d4cad0dee409c933d18b3949ff1e2d257f58cef7c35e48",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 44.0,
+     "px": 316,
+     "bbox": [
+      28,
+      18
+     ],
+     "contrast": 118.6,
+     "at": [
+      2,
+      7
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 57.0,
+     "px": 252,
+     "bbox": [
+      26,
+      16
+     ],
+     "contrast": 105.8,
+     "at": [
+      3,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 74.0,
+     "px": 241,
+     "bbox": [
+      26,
+      16
+     ],
+     "contrast": 104.1,
+     "at": [
+      3,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 78.0,
+     "px": 241,
+     "bbox": [
+      26,
+      16
+     ],
+     "contrast": 104.1,
+     "at": [
+      3,
+      8
+     ]
+    }
+   ],
+   "n_incidents": 15,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 118.0,
+     "px": 160,
+     "bbox": [
+      26,
+      16
+     ],
+     "contrast": 83.7,
+     "at": [
+      3,
+      8
+     ],
+     "interior": 23
+    }
+   ],
+   "n_frames": 1,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 14.34,
+    "interior_p95_y": 29.88,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/grit/grit_14394.png",
+   "sha256": "1407925601ca593b35f047c3ca3e519e1a950c5891cb6be41c3521c3b17c3762",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 24.0,
+     "px": 106,
+     "bbox": [
+      18,
+      10
+     ],
+     "contrast": 66.8,
+     "at": [
+      7,
+      12
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 58.0,
+     "px": 106,
+     "bbox": [
+      18,
+      10
+     ],
+     "contrast": 66.8,
+     "at": [
+      7,
+      12
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 86.0,
+     "px": 80,
+     "bbox": [
+      17,
+      9
+     ],
+     "contrast": 50.8,
+     "at": [
+      7,
+      12
+     ]
+    }
+   ],
+   "n_incidents": 3,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 4.05,
+    "interior_p95_y": 10.8,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/grit/grit_14395.png",
+   "sha256": "f7709d1449710094fe98a7924494b16b55bfa8454b263316cb19ab374f9e3f4c",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 41.0,
+     "px": 169,
+     "bbox": [
+      22,
+      16
+     ],
+     "contrast": 47.1,
+     "at": [
+      5,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 61.0,
+     "px": 169,
+     "bbox": [
+      22,
+      16
+     ],
+     "contrast": 47.1,
+     "at": [
+      5,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 69.0,
+     "px": 30,
+     "bbox": [
+      22,
+      9
+     ],
+     "contrast": 115.1,
+     "at": [
+      5,
+      15
+     ]
+    }
+   ],
+   "n_incidents": 3,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 41.0,
+     "px": 169,
+     "bbox": [
+      22,
+      16
+     ],
+     "contrast": 47.1,
+     "at": [
+      5,
+      8
+     ],
+     "interior": 16
+    },
+    {
+     "kind": "light",
+     "level": 61.0,
+     "px": 169,
+     "bbox": [
+      22,
+      16
+     ],
+     "contrast": 47.1,
+     "at": [
+      5,
+      8
+     ],
+     "interior": 16
+    }
+   ],
+   "n_frames": 2,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 13.11,
+    "interior_p95_y": 35.76,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/grit/grit_14396.png",
+   "sha256": "1e3e641c6c4cff9717e04a7ab4cc8c806a89a3e30f1443978f175f61228bb410",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 26.0,
+     "px": 77,
+     "bbox": [
+      15,
+      9
+     ],
+     "contrast": 59.4,
+     "at": [
+      8,
+      11
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 48.0,
+     "px": 43,
+     "bbox": [
+      11,
+      7
+     ],
+     "contrast": 44.8,
+     "at": [
+      10,
+      12
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 76.0,
+     "px": 43,
+     "bbox": [
+      11,
+      7
+     ],
+     "contrast": 44.8,
+     "at": [
+      10,
+      12
+     ]
+    }
+   ],
+   "n_incidents": 3,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 3.26,
+    "interior_p95_y": 8.35,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/grit/grit_14397.png",
+   "sha256": "24ce165dbdc497ee82257eed02cd932181ea287fd7b937f1233155c553251eb4",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 22.0,
+     "px": 286,
+     "bbox": [
+      26,
+      20
+     ],
+     "contrast": 65.4,
+     "at": [
+      3,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 45.0,
+     "px": 286,
+     "bbox": [
+      26,
+      20
+     ],
+     "contrast": 65.4,
+     "at": [
+      3,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 48.0,
+     "px": 263,
+     "bbox": [
+      26,
+      20
+     ],
+     "contrast": 61.3,
+     "at": [
+      3,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 80.0,
+     "px": 16,
+     "bbox": [
+      13,
+      12
+     ],
+     "contrast": 74.3,
+     "at": [
+      16,
+      13
+     ]
+    }
+   ],
+   "n_incidents": 5,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 48.0,
+     "px": 263,
+     "bbox": [
+      26,
+      20
+     ],
+     "contrast": 61.3,
+     "at": [
+      3,
+      6
+     ],
+     "interior": 18
+    }
+   ],
+   "n_frames": 1,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 13.51,
+    "interior_p95_y": 18.14,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/grit/grit_14398.png",
+   "sha256": "539963966173a187650ad57ab335ad95e3c5e2a15654de42800adf0ade683271",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 25.0,
+     "px": 204,
+     "bbox": [
+      16,
+      18
+     ],
+     "contrast": 51.9,
+     "at": [
+      8,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 34.0,
+     "px": 204,
+     "bbox": [
+      16,
+      18
+     ],
+     "contrast": 51.9,
+     "at": [
+      8,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 45.0,
+     "px": 119,
+     "bbox": [
+      16,
+      18
+     ],
+     "contrast": 58.4,
+     "at": [
+      8,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 48.0,
+     "px": 81,
+     "bbox": [
+      14,
+      10
+     ],
+     "contrast": 57.9,
+     "at": [
+      9,
+      7
+     ]
+    }
+   ],
+   "n_incidents": 5,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 9.18,
+    "interior_p95_y": 8.74,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/grit/grit_14399.png",
+   "sha256": "0f2c4ab3858459aeadf7e4db5401ca2392f1d5b1ae3eaa8cffe6225e84318eca",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 38.0,
+     "px": 248,
+     "bbox": [
+      21,
+      20
+     ],
+     "contrast": 64.7,
+     "at": [
+      6,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 62.0,
+     "px": 248,
+     "bbox": [
+      21,
+      20
+     ],
+     "contrast": 64.7,
+     "at": [
+      6,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 107.0,
+     "px": 54,
+     "bbox": [
+      21,
+      20
+     ],
+     "contrast": 127.6,
+     "at": [
+      6,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 113.0,
+     "px": 54,
+     "bbox": [
+      21,
+      20
+     ],
+     "contrast": 127.6,
+     "at": [
+      6,
+      6
+     ]
+    }
+   ],
+   "n_incidents": 6,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 23.94,
+    "interior_p95_y": 20.7,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/grit/grit_14400.png",
+   "sha256": "fbfcbb552984e41f1b26106b553ec22afde37771cd1cb8f693cd6594dcf3ff2a",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 23.0,
+     "px": 149,
+     "bbox": [
+      18,
+      14
+     ],
+     "contrast": 53.8,
+     "at": [
+      7,
+      9
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 44.0,
+     "px": 113,
+     "bbox": [
+      16,
+      12
+     ],
+     "contrast": 50.0,
+     "at": [
+      8,
+      10
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 68.0,
+     "px": 87,
+     "bbox": [
+      13,
+      11
+     ],
+     "contrast": 40.6,
+     "at": [
+      9,
+      10
+     ]
+    }
+   ],
+   "n_incidents": 3,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 4.26,
+    "interior_p95_y": 7.12,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/grit/grit_14401.png",
+   "sha256": "f150939d90ed85e5fd862c4e403b790dc53a8beca1eaffcc4de66cfe425d6be0",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 36.0,
+     "px": 338,
+     "bbox": [
+      29,
+      19
+     ],
+     "contrast": 75.9,
+     "at": [
+      2,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 43.0,
+     "px": 298,
+     "bbox": [
+      29,
+      19
+     ],
+     "contrast": 77.4,
+     "at": [
+      2,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 59.0,
+     "px": 271,
+     "bbox": [
+      28,
+      19
+     ],
+     "contrast": 73.2,
+     "at": [
+      3,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 61.0,
+     "px": 224,
+     "bbox": [
+      26,
+      16
+     ],
+     "contrast": 65.4,
+     "at": [
+      3,
+      5
+     ]
+    }
+   ],
+   "n_incidents": 7,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 2.25,
+    "wrap_y": 0.0,
+    "interior_p95_x": 7.25,
+    "interior_p95_y": 15.12,
+    "ratio_x": 0.31,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14378.png",
+   "sha256": "0916a705c4c2b38046597040c15ed7eb5e9b902eba83bf930e93ac8449cbe4c7",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 32.0,
+     "px": 134,
+     "bbox": [
+      12,
+      15
+     ],
+     "contrast": 121.7,
+     "at": [
+      10,
+      9
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 50.0,
+     "px": 104,
+     "bbox": [
+      10,
+      13
+     ],
+     "contrast": 122.8,
+     "at": [
+      11,
+      10
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 68.0,
+     "px": 104,
+     "bbox": [
+      10,
+      13
+     ],
+     "contrast": 122.8,
+     "at": [
+      11,
+      10
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 109.0,
+     "px": 68,
+     "bbox": [
+      10,
+      13
+     ],
+     "contrast": 145.8,
+     "at": [
+      11,
+      10
+     ]
+    }
+   ],
+   "n_incidents": 8,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 17.83,
+    "interior_p95_y": 15.3,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14379.png",
+   "sha256": "921d062702025ab1619ecf30bf51b86a76448e7c109ec55ed91ca383601e990a",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 19.0,
+     "px": 438,
+     "bbox": [
+      28,
+      23
+     ],
+     "contrast": 137.5,
+     "at": [
+      2,
+      4
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 52.0,
+     "px": 373,
+     "bbox": [
+      26,
+      21
+     ],
+     "contrast": 132.4,
+     "at": [
+      3,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 75.0,
+     "px": 359,
+     "bbox": [
+      26,
+      21
+     ],
+     "contrast": 128.8,
+     "at": [
+      3,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 79.0,
+     "px": 359,
+     "bbox": [
+      26,
+      21
+     ],
+     "contrast": 128.8,
+     "at": [
+      3,
+      5
+     ]
+    }
+   ],
+   "n_incidents": 13,
+   "frames": [
+    {
+     "kind": "dark",
+     "level": 157.0,
+     "px": 67,
+     "bbox": [
+      13,
+      10
+     ],
+     "contrast": 27.7,
+     "at": [
+      9,
+      8
+     ],
+     "interior": 58
+    },
+    {
+     "kind": "light",
+     "level": 157.0,
+     "px": 178,
+     "bbox": [
+      26,
+      20
+     ],
+     "contrast": 68.3,
+     "at": [
+      3,
+      5
+     ],
+     "interior": 72
+    }
+   ],
+   "n_frames": 4,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 19.59,
+    "interior_p95_y": 25.96,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14380.png",
+   "sha256": "b3f8357d969f405c1ee5f6e528e93eea4c4a42ef9cb4eb36b09f53b064428377",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 36.0,
+     "px": 268,
+     "bbox": [
+      17,
+      24
+     ],
+     "contrast": 134.1,
+     "at": [
+      7,
+      3
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 75.0,
+     "px": 268,
+     "bbox": [
+      17,
+      24
+     ],
+     "contrast": 134.1,
+     "at": [
+      7,
+      3
+     ]
+    },
+    {
+     "kind": "dark",
+     "level": 79.0,
+     "px": 19,
+     "bbox": [
+      4,
+      8
+     ],
+     "contrast": 41.2,
+     "at": [
+      15,
+      12
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 79.0,
+     "px": 246,
+     "bbox": [
+      17,
+      24
+     ],
+     "contrast": 129.4,
+     "at": [
+      7,
+      3
+     ]
+    }
+   ],
+   "n_incidents": 29,
+   "frames": [
+    {
+     "kind": "light",
+     "level": 79.0,
+     "px": 246,
+     "bbox": [
+      17,
+      24
+     ],
+     "contrast": 129.4,
+     "at": [
+      7,
+      3
+     ],
+     "interior": 19
+    },
+    {
+     "kind": "light",
+     "level": 84.0,
+     "px": 230,
+     "bbox": [
+      16,
+      23
+     ],
+     "contrast": 122.2,
+     "at": [
+      8,
+      4
+     ],
+     "interior": 21
+    }
+   ],
+   "n_frames": 10,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 31.42,
+    "interior_p95_y": 20.82,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14381.png",
+   "sha256": "abe6eb3795c051bd15795bca6ac1ad6bd6c72385b54351e99a5441a866159834",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "dark",
+     "level": 47.0,
+     "px": 17,
+     "bbox": [
+      15,
+      6
+     ],
+     "contrast": 95.1,
+     "at": [
+      10,
+      14
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 47.0,
+     "px": 277,
+     "bbox": [
+      22,
+      19
+     ],
+     "contrast": 128.8,
+     "at": [
+      5,
+      6
+     ]
+    },
+    {
+     "kind": "dark",
+     "level": 83.0,
+     "px": 17,
+     "bbox": [
+      15,
+      6
+     ],
+     "contrast": 95.1,
+     "at": [
+      10,
+      14
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 83.0,
+     "px": 277,
+     "bbox": [
+      22,
+      19
+     ],
+     "contrast": 128.8,
+     "at": [
+      5,
+      6
+     ]
+    }
+   ],
+   "n_incidents": 26,
+   "frames": [
+    {
+     "kind": "dark",
+     "level": 47.0,
+     "px": 17,
+     "bbox": [
+      15,
+      6
+     ],
+     "contrast": 95.1,
+     "at": [
+      10,
+      14
+     ],
+     "interior": 73
+    },
+    {
+     "kind": "light",
+     "level": 47.0,
+     "px": 277,
+     "bbox": [
+      22,
+      19
+     ],
+     "contrast": 128.8,
+     "at": [
+      5,
+      6
+     ],
+     "interior": 26
+    }
+   ],
+   "n_frames": 11,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 23.29,
+    "interior_p95_y": 42.26,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "FRAME+INCIDENT",
+   "codes": [
+    "FRAME",
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14382.png",
+   "sha256": "b4383877d2c63d0e7a0f92a965d313a62e3e98a1fdcc13143b7b9f3a95d31664",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 7.0,
+     "px": 102,
+     "bbox": [
+      13,
+      11
+     ],
+     "contrast": 142.5,
+     "at": [
+      9,
+      10
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 52.0,
+     "px": 102,
+     "bbox": [
+      13,
+      11
+     ],
+     "contrast": 142.5,
+     "at": [
+      9,
+      10
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 56.0,
+     "px": 87,
+     "bbox": [
+      12,
+      10
+     ],
+     "contrast": 141.2,
+     "at": [
+      10,
+      11
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 80.0,
+     "px": 87,
+     "bbox": [
+      12,
+      10
+     ],
+     "contrast": 141.2,
+     "at": [
+      10,
+      11
+     ]
+    }
+   ],
+   "n_incidents": 12,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 19.31,
+    "interior_p95_y": 20.35,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14383.png",
+   "sha256": "e8c51ba88253fd9ab0995b609c2c209599432d132a2e1d9221ff548597d3cb39",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 31.0,
+     "px": 167,
+     "bbox": [
+      26,
+      22
+     ],
+     "contrast": 151.2,
+     "at": [
+      3,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 71.0,
+     "px": 119,
+     "bbox": [
+      25,
+      22
+     ],
+     "contrast": 167.3,
+     "at": [
+      3,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 77.0,
+     "px": 116,
+     "bbox": [
+      24,
+      21
+     ],
+     "contrast": 166.8,
+     "at": [
+      4,
+      5
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 128.0,
+     "px": 107,
+     "bbox": [
+      24,
+      21
+     ],
+     "contrast": 161.9,
+     "at": [
+      4,
+      5
+     ]
+    }
+   ],
+   "n_incidents": 9,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 17.66,
+    "interior_p95_y": 22.0,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14384.png",
+   "sha256": "c41c2251f1bd365b9932a64a6b5032b370cf9d74e0e1ad2003e2c5009d2ec124",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 56.0,
+     "px": 228,
+     "bbox": [
+      18,
+      19
+     ],
+     "contrast": 155.5,
+     "at": [
+      7,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 85.0,
+     "px": 188,
+     "bbox": [
+      16,
+      18
+     ],
+     "contrast": 146.6,
+     "at": [
+      8,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 95.0,
+     "px": 188,
+     "bbox": [
+      16,
+      18
+     ],
+     "contrast": 146.6,
+     "at": [
+      8,
+      6
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 117.0,
+     "px": 161,
+     "bbox": [
+      16,
+      17
+     ],
+     "contrast": 131.6,
+     "at": [
+      8,
+      7
+     ]
+    }
+   ],
+   "n_incidents": 20,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 28.4,
+    "interior_p95_y": 23.93,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  },
+  {
+   "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14385.png",
+   "sha256": "3c0de2a5c67c14d16a1fff02de2d5f5105ddf54ea6a4e0fb8989a295eeb58c1e",
+   "cell": 32,
+   "ring_instrument": "CLEAN",
+   "mad": 0.0,
+   "incidents": [
+    {
+     "kind": "light",
+     "level": 39.0,
+     "px": 265,
+     "bbox": [
+      24,
+      16
+     ],
+     "contrast": 146.0,
+     "at": [
+      4,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 80.0,
+     "px": 238,
+     "bbox": [
+      24,
+      15
+     ],
+     "contrast": 145.1,
+     "at": [
+      4,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 83.0,
+     "px": 217,
+     "bbox": [
+      22,
+      15
+     ],
+     "contrast": 135.1,
+     "at": [
+      5,
+      8
+     ]
+    },
+    {
+     "kind": "light",
+     "level": 87.0,
+     "px": 217,
+     "bbox": [
+      22,
+      15
+     ],
+     "contrast": 135.1,
+     "at": [
+      5,
+      8
+     ]
+    }
+   ],
+   "n_incidents": 19,
+   "frames": [],
+   "n_frames": 0,
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.0,
+    "interior_p95_x": 13.52,
+    "interior_p95_y": 26.7,
+    "ratio_x": 0.0,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "grid": [],
+   "n_grid": 0,
+   "verdict": "INCIDENT",
+   "codes": [
+    "INCIDENT"
+   ]
+  }
+ ],
+ "survivors": []
+}

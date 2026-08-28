@@ -1,0 +1,1808 @@
+{
+ "family": "boundary_floor_v1",
+ "commit": "3a58297c8cf674bf9da7698688cfabe76f8304b7",
+ "seed": 1337,
+ "material": {
+  "lum_lo": 75.016,
+  "lum_hi": 154.376,
+  "lum_median": 113.80399999999999,
+  "grain_sd": 26.977820266232715,
+  "grain_mad": 11.64700000000002,
+  "tint": [
+   1.0013446350520276,
+   1.0068452207279461,
+   0.9918101442200262
+  ],
+  "ladder": [
+   75.016,
+   88.24266666666668,
+   101.46933333333334,
+   114.696,
+   127.92266666666667,
+   141.14933333333335,
+   154.376
+  ],
+  "n_donors": 8
+ },
+ "donors": [
+  "tools/tier1_floors/gen/base/base_13407.png",
+  "tools/tier1_floors/gen/base/base_13405.png",
+  "tools/tier1_floors/gen/base/base_13378.png",
+  "tools/tier1_floors/gen/base/base_13398.png",
+  "tools/tier1_floors/gen/base/base_13391.png",
+  "tools/tier1_floors/gen/base/base_13376.png",
+  "tools/tier1_floors/gen/base/base_13397.png",
+  "tools/tier1_floors/gen/base/base_13402.png"
+ ],
+ "instrument": "tools/tier1_floors/field_laws.py",
+ "instrument_sha256": "56a3c6cad1e3d60e01adc7e06773675d911ec0be619c88dff9e505f07481d8ca",
+ "base": [
+  {
+   "id": 9600,
+   "variant": 0,
+   "file": "tier1_floor_9600.png",
+   "sha256": "b19e924486031c43761f06aa33ff66dece6d69eef99594578e309d8fcd319d68",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 8.25,
+    "wrap_y": 0.83,
+    "interior_p95_x": 16.32,
+    "interior_p95_y": 17.56,
+    "ratio_x": 0.51,
+    "ratio_y": 0.05,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 1337,
+   "seeds_rejected": 0
+  },
+  {
+   "id": 9601,
+   "variant": 1,
+   "file": "tier1_floor_9601.png",
+   "sha256": "0f1fba237cad34715657279e1d20463e48be742d0efb2e95f18200dc859c6686",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 2.08,
+    "wrap_y": 3.31,
+    "interior_p95_x": 18.97,
+    "interior_p95_y": 20.84,
+    "ratio_x": 0.11,
+    "ratio_y": 0.16,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 1337,
+   "seeds_rejected": 0
+  },
+  {
+   "id": 9602,
+   "variant": 2,
+   "file": "tier1_floor_9602.png",
+   "sha256": "a9f89a8fcc83837c27f7f58e13d732019e8a352af91fd6d834024360cb748434",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 0.42,
+    "wrap_y": 10.32,
+    "interior_p95_x": 20.26,
+    "interior_p95_y": 17.32,
+    "ratio_x": 0.02,
+    "ratio_y": 0.6,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 1337,
+   "seeds_rejected": 0
+  },
+  {
+   "id": 9603,
+   "variant": 3,
+   "file": "tier1_floor_9603.png",
+   "sha256": "8693bd325390ace3c9c09d2f00efb59db3bd41d8279c171fc246ef5d18f13fdb",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 2.08,
+    "wrap_y": 4.55,
+    "interior_p95_x": 19.0,
+    "interior_p95_y": 18.37,
+    "ratio_x": 0.11,
+    "ratio_y": 0.25,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 106066,
+   "seeds_rejected": 1
+  },
+  {
+   "id": 9604,
+   "variant": 4,
+   "file": "tier1_floor_9604.png",
+   "sha256": "d65911da8140898cde1b7bdb4c8f64beee36ce1632a019410c5296c8e35572c3",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 0.0,
+    "wrap_y": 0.83,
+    "interior_p95_x": 21.47,
+    "interior_p95_y": 17.96,
+    "ratio_x": 0.0,
+    "ratio_y": 0.05,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 1337,
+   "seeds_rejected": 0
+  },
+  {
+   "id": 9605,
+   "variant": 5,
+   "file": "tier1_floor_9605.png",
+   "sha256": "7030f10dbed848683908aa0ee4cdce997df8c89450e7e39817e4c6656d49525f",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 0.41,
+    "wrap_y": 1.24,
+    "interior_p95_x": 22.95,
+    "interior_p95_y": 22.13,
+    "ratio_x": 0.02,
+    "ratio_y": 0.06,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 1337,
+   "seeds_rejected": 0
+  },
+  {
+   "id": 9606,
+   "variant": 6,
+   "file": "tier1_floor_9606.png",
+   "sha256": "04bc38a9b00b1fb98d5ab865df18156827105d9c4eb9e9523059cfeff4eed77c",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 1.66,
+    "wrap_y": 2.08,
+    "interior_p95_x": 17.74,
+    "interior_p95_y": 17.94,
+    "ratio_x": 0.09,
+    "ratio_y": 0.12,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 106066,
+   "seeds_rejected": 1
+  },
+  {
+   "id": 9607,
+   "variant": 7,
+   "file": "tier1_floor_9607.png",
+   "sha256": "275fcf1da0fa7e6402271f83d939def5c4f46601a7c489d8468c234723bc011a",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 3.31,
+    "wrap_y": 10.71,
+    "interior_p95_x": 21.9,
+    "interior_p95_y": 19.23,
+    "ratio_x": 0.15,
+    "ratio_y": 0.56,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 106066,
+   "seeds_rejected": 1
+  },
+  {
+   "id": 9608,
+   "variant": 8,
+   "file": "tier1_floor_9608.png",
+   "sha256": "7058020ec904265e085584cdcd6ccdfe92ac1e1c51efa90914a4f28fb8d34727",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 2.49,
+    "wrap_y": 4.55,
+    "interior_p95_x": 19.4,
+    "interior_p95_y": 19.2,
+    "ratio_x": 0.13,
+    "ratio_y": 0.24,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 1337,
+   "seeds_rejected": 0
+  },
+  {
+   "id": 9609,
+   "variant": 9,
+   "file": "tier1_floor_9609.png",
+   "sha256": "a61945897bbe56a55ca223500e5a0449d334bbc97d2a11e09937c3b17dbfa880",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 4.97,
+    "wrap_y": 0.0,
+    "interior_p95_x": 22.5,
+    "interior_p95_y": 18.78,
+    "ratio_x": 0.22,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 106066,
+   "seeds_rejected": 1
+  },
+  {
+   "id": 9610,
+   "variant": 10,
+   "file": "tier1_floor_9610.png",
+   "sha256": "b4e18b367c2d59bb3319faa181fe4002c480c7ed889c645a2917673045b92350",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 2.08,
+    "wrap_y": 0.0,
+    "interior_p95_x": 21.29,
+    "interior_p95_y": 20.65,
+    "ratio_x": 0.1,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 1337,
+   "seeds_rejected": 0
+  },
+  {
+   "id": 9611,
+   "variant": 11,
+   "file": "tier1_floor_9611.png",
+   "sha256": "e3e8362b01c28725b3a93a1e948f023a8c91130fdd7e65b314e08369cd290c27",
+   "verdict": "CLEAN",
+   "codes": [],
+   "seam": {
+    "wrap_x": 0.41,
+    "wrap_y": 0.0,
+    "interior_p95_x": 25.59,
+    "interior_p95_y": 16.73,
+    "ratio_x": 0.02,
+    "ratio_y": 0.0,
+    "seamed": false
+   },
+   "joint_px": 124,
+   "bond_seed": 1337,
+   "seeds_rejected": 0
+  }
+ ],
+ "channel": [
+  {
+   "id": 9620,
+   "kind": "left",
+   "file": "tier1_floor_9620.png",
+   "sha256": "aab34dd9494adcd0e09f25dc3a94bdbc128e599480a9b7f34c5bb3406a63fc58",
+   "coverage": 0.4512
+  },
+  {
+   "id": 9621,
+   "kind": "mid",
+   "file": "tier1_floor_9621.png",
+   "sha256": "9c1925c9e75cc8a58dc45c30e6bf6829b1940cfc17ca46b5a6cd4b8592d5cb8a",
+   "coverage": 0.8125
+  },
+  {
+   "id": 9622,
+   "kind": "right",
+   "file": "tier1_floor_9622.png",
+   "sha256": "79206294149158c0cb73f7d1d5fe4541ed29d68c76649b46c1dd46bcd900c579",
+   "coverage": 0.4336
+  },
+  {
+   "id": 9623,
+   "kind": "full",
+   "file": "tier1_floor_9623.png",
+   "sha256": "4e847ed9bae5641930b838c86530b03da8281903a1175289318f85d92bbc5a79",
+   "coverage": 0.8125
+  }
+ ],
+ "incident": [
+  {
+   "id": 9640,
+   "family": "repair",
+   "file": "tier1_floor_9640.png",
+   "sha256": "2e7a077b9895223270daabb6da3c11d8281ca284db5ca43b818a68ab5e725163",
+   "coverage": 0.0361,
+   "origin": "authored",
+   "rate": 0.035
+  },
+  {
+   "id": 9641,
+   "family": "repair",
+   "file": "tier1_floor_9641.png",
+   "sha256": "016a7bf7dcbd5e6b07b0f4c48ca914758acaf8fc0c141f4789bd8400d7250150",
+   "coverage": 0.0322,
+   "origin": "authored",
+   "rate": 0.035
+  },
+  {
+   "id": 9642,
+   "family": "repair",
+   "file": "tier1_floor_9642.png",
+   "sha256": "733bbc2900d64c564d94634e4f03cb6b70640d30b9d0cdcdd9389cecc71ee3bc",
+   "coverage": 0.0332,
+   "origin": "authored",
+   "rate": 0.035
+  },
+  {
+   "id": 9643,
+   "family": "repair",
+   "file": "tier1_floor_9643.png",
+   "sha256": "db52648d3e95fc80f934de60f494a981f3d25751dd22ea6a54a798e00e7f5420",
+   "coverage": 0.0312,
+   "origin": "authored",
+   "rate": 0.035
+  },
+  {
+   "id": 9644,
+   "family": "repair",
+   "file": "tier1_floor_9644.png",
+   "sha256": "1505e22a1a4720f8cb7a87e8beef7a7e521d37d4dccfe178055b4bd2d873c802",
+   "coverage": 0.0332,
+   "origin": "authored",
+   "rate": 0.035
+  },
+  {
+   "id": 9645,
+   "family": "repair",
+   "file": "tier1_floor_9645.png",
+   "sha256": "fe7680082cf1b41a64fb0d56bb3b96e5e9bd0ad56ac1bb827954942d24969c59",
+   "coverage": 0.0342,
+   "origin": "authored",
+   "rate": 0.035
+  },
+  {
+   "id": 9646,
+   "family": "repair",
+   "file": "tier1_floor_9646.png",
+   "sha256": "e0e99da39a501b36be0ab18c1a711b61de2c62419296d75c050af843914c9200",
+   "coverage": 0.0361,
+   "origin": "authored",
+   "rate": 0.035
+  },
+  {
+   "id": 9647,
+   "family": "repair",
+   "file": "tier1_floor_9647.png",
+   "sha256": "06494dc8012b992b50cfb3f3f40ce6bd823414532c83387b2c914cc8bc38d1c1",
+   "coverage": 0.0332,
+   "origin": "authored",
+   "rate": 0.035
+  },
+  {
+   "id": 9648,
+   "family": "repair",
+   "file": "tier1_floor_9648.png",
+   "sha256": "36f6219f6d6f9d7e0a591e949a98d3765f079cf7f16ab4948a67b66eb49e6647",
+   "coverage": 0.0371,
+   "origin": "authored",
+   "rate": 0.035
+  },
+  {
+   "id": 9649,
+   "family": "crack",
+   "file": "tier1_floor_9649.png",
+   "sha256": "7143e320b48e0e9a2b9b860a8fcc1368efe6c90e32c5ebf34db07734e2973981",
+   "coverage": 0.0352,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9650,
+   "family": "crack",
+   "file": "tier1_floor_9650.png",
+   "sha256": "01cd9948d1a0950fbb401ae4571d32da5e5915dc10165fea1be0563f47ceefda",
+   "coverage": 0.0283,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9651,
+   "family": "crack",
+   "file": "tier1_floor_9651.png",
+   "sha256": "f6ad833c5487a11835b459f1d9c00b261ffdeecf065cc5bccb920f5808ddbb32",
+   "coverage": 0.0322,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9652,
+   "family": "crack",
+   "file": "tier1_floor_9652.png",
+   "sha256": "883a2881100abb17a6d375ddcfa2fa489833db1d26e649156b9390e9b0a68216",
+   "coverage": 0.0254,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9653,
+   "family": "crack",
+   "file": "tier1_floor_9653.png",
+   "sha256": "a008f2755c24fd52d9f59e19efcba3be03d437424d80037a430dfed01c5469b2",
+   "coverage": 0.0146,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9654,
+   "family": "crack",
+   "file": "tier1_floor_9654.png",
+   "sha256": "b5dd5010dee0ce6d56d2c765ead42ddfbb3d2c509755672730013761b01aaf94",
+   "coverage": 0.04,
+   "origin": "authored",
+   "rate": 0.11
+  },
+  {
+   "id": 9655,
+   "family": "chip",
+   "file": "tier1_floor_9655.png",
+   "sha256": "25733021749aa000939f7e2f8318222d102c638869072851bcab0e500b512496",
+   "coverage": 0.0586,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9656,
+   "family": "chip",
+   "file": "tier1_floor_9656.png",
+   "sha256": "f937bfe643d00323e86b5402b4edf332fb7c4f77a00c4b86881648a5ad35a5de",
+   "coverage": 0.0508,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9657,
+   "family": "chip",
+   "file": "tier1_floor_9657.png",
+   "sha256": "126e83f3ccda9b9d5013d9fbb96874e4ad029fb53c80def734e1b02cc94adcf9",
+   "coverage": 0.0527,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9658,
+   "family": "chip",
+   "file": "tier1_floor_9658.png",
+   "sha256": "91ce5236d9842af1da5a8b79eb0711f066646ee7c53e27950d8244ad89d49184",
+   "coverage": 0.0244,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9659,
+   "family": "chip",
+   "file": "tier1_floor_9659.png",
+   "sha256": "516e0f5dec413255181c62434ce48cc4968d7175702c324b811a073b7725638b",
+   "coverage": 0.0254,
+   "origin": "authored",
+   "rate": 0.14
+  },
+  {
+   "id": 9660,
+   "family": "wear",
+   "file": "tier1_floor_9660.png",
+   "sha256": "32dd71608a971cf01943425ab15c56927bd46659e6f49f8cb05f048cfd5e05b0",
+   "coverage": 0.0537,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9661,
+   "family": "wear",
+   "file": "tier1_floor_9661.png",
+   "sha256": "992efe1a7accaf83a814e72204acee1206b8c3652631e95c8a8077314e027f6b",
+   "coverage": 0.0547,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9662,
+   "family": "wear",
+   "file": "tier1_floor_9662.png",
+   "sha256": "0ed46276ef090bc20c11ae671bdaf4f40cb59d9aea90549e7b79e320206607b4",
+   "coverage": 0.0537,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9663,
+   "family": "wear",
+   "file": "tier1_floor_9663.png",
+   "sha256": "a15dfb7659879d03ccd92f0ceb4ef92a1722c03912730f6c2d907833eba45b26",
+   "coverage": 0.0361,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9664,
+   "family": "wear",
+   "file": "tier1_floor_9664.png",
+   "sha256": "b1af406bca5268087232636a78f9db35ca8f544cbec75fcfd1cf2a5fa8a4ad5a",
+   "coverage": 0.0176,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9665,
+   "family": "wear",
+   "file": "tier1_floor_9665.png",
+   "sha256": "9088ce92feab748926ff8a086729fb0284446be772244b01aa11249d5c65cbfe",
+   "coverage": 0.0342,
+   "origin": "authored",
+   "rate": 0.34
+  },
+  {
+   "id": 9666,
+   "family": "grit",
+   "file": "tier1_floor_9666.png",
+   "sha256": "1a2068cd262672dfd07765110ad350186f3e489ceae3fe819a4e63dd9ed164da",
+   "coverage": 0.0889,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9667,
+   "family": "grit",
+   "file": "tier1_floor_9667.png",
+   "sha256": "35e4aea7c5895227f91204b7cff4b84a5b673ef9a45d92dbaa136036c15d6a56",
+   "coverage": 0.0439,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9668,
+   "family": "grit",
+   "file": "tier1_floor_9668.png",
+   "sha256": "a86c25e28260af42cfdb3efdb96d8f37f91a4f9e121fe21712921592613c6215",
+   "coverage": 0.0684,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9669,
+   "family": "grit",
+   "file": "tier1_floor_9669.png",
+   "sha256": "448937870750a62a5181fd0e6c0b496a88555c4f0287c9de470d17c7dc2413d9",
+   "coverage": 0.126,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9670,
+   "family": "grit",
+   "file": "tier1_floor_9670.png",
+   "sha256": "5b5cb42927c4dd92b93ae3042111b97a9c0003101c8ea6f779ed586401d6d6d3",
+   "coverage": 0.0479,
+   "origin": "authored",
+   "rate": 0.85
+  },
+  {
+   "id": 9671,
+   "family": "debris",
+   "file": "tier1_floor_9671.png",
+   "sha256": "275102783004a5a1f9bdd61dab97fbd528a45114dfa0630e794e88213bd3bd0f",
+   "coverage": 0.0166,
+   "origin": "authored",
+   "rate": 0.07
+  },
+  {
+   "id": 9672,
+   "family": "debris",
+   "file": "tier1_floor_9672.png",
+   "sha256": "db5dc4b00f27b75c4e1916b89a71c5dcc336a850c15a570a6525a65768bd5c79",
+   "coverage": 0.0176,
+   "origin": "authored",
+   "rate": 0.07
+  },
+  {
+   "id": 9673,
+   "family": "debris",
+   "file": "tier1_floor_9673.png",
+   "sha256": "b66b6c18fa52541a2b8816db0db1c4ca8f185ae84302e6cf7a4c8b3faed977b6",
+   "coverage": 0.0146,
+   "origin": "authored",
+   "rate": 0.07
+  },
+  {
+   "id": 9674,
+   "family": "debris",
+   "file": "tier1_floor_9674.png",
+   "sha256": "76f81a2f14ece7a81b8115b807c64e8611c7dd23aee3a248083c3e9a55fcf6cf",
+   "coverage": 0.0205,
+   "origin": "authored",
+   "rate": 0.07
+  },
+  {
+   "id": 9675,
+   "family": "debris",
+   "file": "tier1_floor_9675.png",
+   "sha256": "249ffa8a73a692fe1ee2b9f0b841d9c4a8939b4dd94ba65e5dc6d28725587a9e",
+   "coverage": 0.0234,
+   "origin": "authored",
+   "rate": 0.07
+  }
+ ],
+ "occlusion": [
+  {
+   "id": 9630,
+   "side": "N",
+   "file": "tier1_floor_9630.png",
+   "sha256": "adebb30e3067ec5b5f2630cc9805c96fecf21e9afb553e3538982e73cbebf394",
+   "coverage": 0.1309
+  },
+  {
+   "id": 9631,
+   "side": "E",
+   "file": "tier1_floor_9631.png",
+   "sha256": "3ef7e5378f4ae3c4d288f72d44f8b1f4b61bccfda8d44e83ad895d7509fc4235",
+   "coverage": 0.127
+  },
+  {
+   "id": 9632,
+   "side": "S",
+   "file": "tier1_floor_9632.png",
+   "sha256": "6bd7ecd7559c1cc503201a71059aee6a792cb988a45403ed18cee6afeca3206c",
+   "coverage": 0.1348
+  },
+  {
+   "id": 9633,
+   "side": "W",
+   "file": "tier1_floor_9633.png",
+   "sha256": "0678e5fe3d32ee248ddf286f98544bf368aa8b576133a20cb572dbd873b3835e",
+   "coverage": 0.1309
+  }
+ ],
+ "incident_screen": {
+  "generated": 32,
+  "kept_by_screen": 1,
+  "culled": 31,
+  "used_from_wave": 0,
+  "why": "The generated overlay wave is NOT used. Unconditioned, the surface drew objects rather than marks on a surface \u2014 closed, centred, off-palette blobs. What the wave DID buy is the base donors' ladder, tint and grain amplitude, which every authored mark is drawn with.",
+  "detail": [
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14370.png",
+    "why": [
+     "mean chroma 24.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14371.png",
+    "why": [
+     "mean chroma 25.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14372.png",
+    "why": [
+     "mean chroma 19.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14373.png",
+    "why": [
+     "mean chroma 20.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14374.png",
+    "why": [
+     "mean chroma 27.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14375.png",
+    "why": [
+     "mean chroma 18.0 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14376.png",
+    "why": [
+     "mean chroma 23.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/crack/crack_14377.png",
+    "why": [
+     "mean chroma 19.7 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14386.png",
+    "why": [
+     "mean chroma 16.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14387.png",
+    "why": [
+     "mean chroma 14.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14388.png",
+    "why": [
+     "mean chroma 21.8 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14389.png",
+    "why": [
+     "mean chroma 12.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14390.png",
+    "why": [
+     "mean chroma 16.7 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14391.png",
+    "why": [
+     "mean chroma 13.9 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/debris/debris_14392.png",
+    "why": [
+     "mean chroma 15.3 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14394.png",
+    "why": [
+     "mean chroma 17.4 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14395.png",
+    "why": [
+     "mean chroma 19.4 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14396.png",
+    "why": [
+     "mean chroma 19.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14397.png",
+    "why": [
+     "mean chroma 13.1 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14398.png",
+    "why": [
+     "mean chroma 16.1 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14399.png",
+    "why": [
+     "mean chroma 19.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14400.png",
+    "why": [
+     "mean chroma 15.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/grit/grit_14401.png",
+    "why": [
+     "mean chroma 24.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14378.png",
+    "why": [
+     "mean chroma 21.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14379.png",
+    "why": [
+     "mean chroma 25.7 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14380.png",
+    "why": [
+     "mean chroma 23.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14381.png",
+    "why": [
+     "mean chroma 29.2 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14382.png",
+    "why": [
+     "mean chroma 20.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14383.png",
+    "why": [
+     "mean chroma 18.4 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14384.png",
+    "why": [
+     "mean chroma 36.5 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   },
+   {
+    "file": "tools/tier1_floors/gen/overlay/wear_mark/wear_mark_14385.png",
+    "why": [
+     "mean chroma 36.3 > 12 \u2014 off-palette; not made of this stone (\u00a75.1)"
+    ]
+   }
+  ]
+ },
+ "oriented": [
+  {
+   "id": 9700,
+   "of": 9600,
+   "orientation": 0,
+   "file": "tier1_floor_9700.png",
+   "sha256": "b19e924486031c43761f06aa33ff66dece6d69eef99594578e309d8fcd319d68",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9701,
+   "of": 9600,
+   "orientation": 1,
+   "file": "tier1_floor_9701.png",
+   "sha256": "2c36bc68a8c434bc2d38df1cfc2015fcb863de6aee75100e7d540bcc115ba54a",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9702,
+   "of": 9600,
+   "orientation": 2,
+   "file": "tier1_floor_9702.png",
+   "sha256": "a0846f0b6b378b26eb6e784c3a6b7db89401e23835eda03f035acebda1c73ec1",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9703,
+   "of": 9600,
+   "orientation": 3,
+   "file": "tier1_floor_9703.png",
+   "sha256": "7820c16a642a298fe7d612682ea3f9d5d8bd95e95ea9c9a6d0df4dced005b602",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9704,
+   "of": 9600,
+   "orientation": 4,
+   "file": "tier1_floor_9704.png",
+   "sha256": "7d307325bca2ecc310096293fe729a34aa07d79dadd810a90c31f10d0703e0ec",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9705,
+   "of": 9600,
+   "orientation": 5,
+   "file": "tier1_floor_9705.png",
+   "sha256": "f379bda23e4e4003147bfc41e70bca7e036f0910fa5aa9323567608286d879a9",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9706,
+   "of": 9600,
+   "orientation": 6,
+   "file": "tier1_floor_9706.png",
+   "sha256": "c353b0386a47cada8d9fc0e6217af8f196046be40378b97034da8fec61591157",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9707,
+   "of": 9600,
+   "orientation": 7,
+   "file": "tier1_floor_9707.png",
+   "sha256": "dc4c4e1e8d29ea75594dda245cc452bdd737c8f688f9c76233a41e86f6484c11",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9708,
+   "of": 9601,
+   "orientation": 0,
+   "file": "tier1_floor_9708.png",
+   "sha256": "0f1fba237cad34715657279e1d20463e48be742d0efb2e95f18200dc859c6686",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9709,
+   "of": 9601,
+   "orientation": 1,
+   "file": "tier1_floor_9709.png",
+   "sha256": "6ae5915cc7cc0b68d0e9d0651098eb97847f6f4daba8538a5cc38ebbe740fff8",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9710,
+   "of": 9601,
+   "orientation": 2,
+   "file": "tier1_floor_9710.png",
+   "sha256": "0804e76fc212982db7e8bf737367acf5f6720e20cb913a9cfc788980a26addc4",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9711,
+   "of": 9601,
+   "orientation": 3,
+   "file": "tier1_floor_9711.png",
+   "sha256": "b7625fd826f2c999d7f875e4217d0387d103a6563308d2c00fcd645dc0973d9d",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9712,
+   "of": 9601,
+   "orientation": 4,
+   "file": "tier1_floor_9712.png",
+   "sha256": "331f755c341123c2a2a5595934cea5175b932eba19890039209e1594e7b31b24",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9713,
+   "of": 9601,
+   "orientation": 5,
+   "file": "tier1_floor_9713.png",
+   "sha256": "167ac1a8c54a40b0803c3e81ed2dc45b274864281344f26f85a8053028099370",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9714,
+   "of": 9601,
+   "orientation": 6,
+   "file": "tier1_floor_9714.png",
+   "sha256": "c16b620c811c0651770103eff789877e9f267eb72cec85ea22bfb49825aef5cb",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9715,
+   "of": 9601,
+   "orientation": 7,
+   "file": "tier1_floor_9715.png",
+   "sha256": "b027ae5a4288e1c90723d3dce54a65fa69e91d521b1bcf0c1710d66f390e0b42",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9716,
+   "of": 9602,
+   "orientation": 0,
+   "file": "tier1_floor_9716.png",
+   "sha256": "a9f89a8fcc83837c27f7f58e13d732019e8a352af91fd6d834024360cb748434",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9717,
+   "of": 9602,
+   "orientation": 1,
+   "file": "tier1_floor_9717.png",
+   "sha256": "139bdae2d7177064972ae722b8d2721aca8259beda01a42254c3a37c75c3bd1a",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9718,
+   "of": 9602,
+   "orientation": 2,
+   "file": "tier1_floor_9718.png",
+   "sha256": "dad86f035861c38a96f1b149dd93e039044b67652ddd08e33010754de52d83ae",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9719,
+   "of": 9602,
+   "orientation": 3,
+   "file": "tier1_floor_9719.png",
+   "sha256": "0a8a96fd10b9b23fe3c6b7f3548b6a67b4bfda8330a290838aad10d94ffe5587",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9720,
+   "of": 9602,
+   "orientation": 4,
+   "file": "tier1_floor_9720.png",
+   "sha256": "9b177574b4023d3ea1c57354ae4ea3b62e1d44efe5e561794096fa690a52f50f",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9721,
+   "of": 9602,
+   "orientation": 5,
+   "file": "tier1_floor_9721.png",
+   "sha256": "8bff5f3138ce33335eaa6bbe743ffb8e2568d5961e09d1122b21ac14bb77150c",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9722,
+   "of": 9602,
+   "orientation": 6,
+   "file": "tier1_floor_9722.png",
+   "sha256": "492fb547060dd154698a22699bb3137fd0c418f633937c62f123cc02f1dc8276",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9723,
+   "of": 9602,
+   "orientation": 7,
+   "file": "tier1_floor_9723.png",
+   "sha256": "a2e9226d9b051f864e9d0050ff69395f13cdad79f281d06c4ed24d9f977d3336",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9724,
+   "of": 9603,
+   "orientation": 0,
+   "file": "tier1_floor_9724.png",
+   "sha256": "8693bd325390ace3c9c09d2f00efb59db3bd41d8279c171fc246ef5d18f13fdb",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9725,
+   "of": 9603,
+   "orientation": 1,
+   "file": "tier1_floor_9725.png",
+   "sha256": "3b95890e2ac621c9b1c5476d30eb407edb689e7d258cbed25d4b3259f1cd4c4b",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9726,
+   "of": 9603,
+   "orientation": 2,
+   "file": "tier1_floor_9726.png",
+   "sha256": "cbd9ef28a5cb9cb0f6569f9f3cefbd73e13e537ca2bd9cb9430c588985801c30",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9727,
+   "of": 9603,
+   "orientation": 3,
+   "file": "tier1_floor_9727.png",
+   "sha256": "eef30fd372534a199a0858aeb1aa79ac5eb1d1ef246bc0e86ba5ca6cf39718f7",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9728,
+   "of": 9603,
+   "orientation": 4,
+   "file": "tier1_floor_9728.png",
+   "sha256": "c196e295e9639fec1f3d88b4e0e07b6b7ee324f1cf333231734be1263379df07",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9729,
+   "of": 9603,
+   "orientation": 5,
+   "file": "tier1_floor_9729.png",
+   "sha256": "298966aaa8c3f30028205431447cd372fc7b8434618948b258f2153d0e90ba9b",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9730,
+   "of": 9603,
+   "orientation": 6,
+   "file": "tier1_floor_9730.png",
+   "sha256": "f2dd72213b2b3927b26d6a232c86b8725f709409b510c3a5a4248dfb998e330b",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9731,
+   "of": 9603,
+   "orientation": 7,
+   "file": "tier1_floor_9731.png",
+   "sha256": "d55426b2894bf65b2d16b9d072e21d41a5abf688c52f7da773e649dc078783a7",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9732,
+   "of": 9604,
+   "orientation": 0,
+   "file": "tier1_floor_9732.png",
+   "sha256": "d65911da8140898cde1b7bdb4c8f64beee36ce1632a019410c5296c8e35572c3",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9733,
+   "of": 9604,
+   "orientation": 1,
+   "file": "tier1_floor_9733.png",
+   "sha256": "2d5e92a1ee61cea30ee6c1d14d59cac397e52ad17dac8d8df081a6cc8d531f0b",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9734,
+   "of": 9604,
+   "orientation": 2,
+   "file": "tier1_floor_9734.png",
+   "sha256": "4b2b4421addafa4b2da53292811c1b9eda01f84685b03cbcc372b5d286e329dc",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9735,
+   "of": 9604,
+   "orientation": 3,
+   "file": "tier1_floor_9735.png",
+   "sha256": "3d8b772684d68c94ba0d83951c24d43592f86ce8a72564a43dec9dc6dc810263",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9736,
+   "of": 9604,
+   "orientation": 4,
+   "file": "tier1_floor_9736.png",
+   "sha256": "86db08c40095fd3258f2c95698b51b7e0f38d40a635727feed41c6e016a9e228",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9737,
+   "of": 9604,
+   "orientation": 5,
+   "file": "tier1_floor_9737.png",
+   "sha256": "15b1d7b6c9ce168f6f2faedc4409a1dc7258627812f8ef7d5e7fe85d20bc9b1f",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9738,
+   "of": 9604,
+   "orientation": 6,
+   "file": "tier1_floor_9738.png",
+   "sha256": "cabab31e757a3889433d8c6922f2da36c83e9d84c54fd8a2aef29f3aa6f9b1f2",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9739,
+   "of": 9604,
+   "orientation": 7,
+   "file": "tier1_floor_9739.png",
+   "sha256": "eb8a807ca5d9b8a5962b183a78367155e5f2ddfad7839c78b537ac8afbbc4f63",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9740,
+   "of": 9605,
+   "orientation": 0,
+   "file": "tier1_floor_9740.png",
+   "sha256": "7030f10dbed848683908aa0ee4cdce997df8c89450e7e39817e4c6656d49525f",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9741,
+   "of": 9605,
+   "orientation": 1,
+   "file": "tier1_floor_9741.png",
+   "sha256": "99564da4a75a4d4c4ade06a9cca5d17e1b7ade77b24f055f12757763b588b95e",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9742,
+   "of": 9605,
+   "orientation": 2,
+   "file": "tier1_floor_9742.png",
+   "sha256": "a74588677d2642815d40292590acaa9d2b52301e9a1a27865ee853a741912725",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9743,
+   "of": 9605,
+   "orientation": 3,
+   "file": "tier1_floor_9743.png",
+   "sha256": "640eb2e53246b7ae77aaa7a044c7b3060e0519f0452e8eeac24f33bf2698a29e",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9744,
+   "of": 9605,
+   "orientation": 4,
+   "file": "tier1_floor_9744.png",
+   "sha256": "73180b2eb139e9872951900cacc73e52e51504525208ce99a9c2f29fea736411",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9745,
+   "of": 9605,
+   "orientation": 5,
+   "file": "tier1_floor_9745.png",
+   "sha256": "e996e1cc9426a4bdb3d893f39331172b346fda71543ef352e95ffcc5fde30424",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9746,
+   "of": 9605,
+   "orientation": 6,
+   "file": "tier1_floor_9746.png",
+   "sha256": "34aa120ab7aac3bd76504dd0db113bbc5d075b9a13c0f17b951bff8e0d5cfe2e",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9747,
+   "of": 9605,
+   "orientation": 7,
+   "file": "tier1_floor_9747.png",
+   "sha256": "0ef549d8b6235c4bb69836eaa00fb52e2dc982c672a4912a08b9788f0e9c0b06",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9748,
+   "of": 9606,
+   "orientation": 0,
+   "file": "tier1_floor_9748.png",
+   "sha256": "04bc38a9b00b1fb98d5ab865df18156827105d9c4eb9e9523059cfeff4eed77c",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9749,
+   "of": 9606,
+   "orientation": 1,
+   "file": "tier1_floor_9749.png",
+   "sha256": "c57ceaf3806cffccbe8c478998d7ac2aa97555422d210144e694a6c755cd86ef",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9750,
+   "of": 9606,
+   "orientation": 2,
+   "file": "tier1_floor_9750.png",
+   "sha256": "0f457205d32ca15b2800dc6c3d3eabe21b3357bdc78679ab6b6626b08a0cff2d",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9751,
+   "of": 9606,
+   "orientation": 3,
+   "file": "tier1_floor_9751.png",
+   "sha256": "48a167a6f33ff6b44fee202e7a2ee8a504ca35462581a1845e36409cc8a8954a",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9752,
+   "of": 9606,
+   "orientation": 4,
+   "file": "tier1_floor_9752.png",
+   "sha256": "edb0bc1b2c5de46723bf7db18e36aba0adcbaca819531a56a23341b4d9b2ffea",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9753,
+   "of": 9606,
+   "orientation": 5,
+   "file": "tier1_floor_9753.png",
+   "sha256": "b5f418840b5ad2a9243c0dc280777e072ca97edfea5da6036e5afa7552df3856",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9754,
+   "of": 9606,
+   "orientation": 6,
+   "file": "tier1_floor_9754.png",
+   "sha256": "2f8ad6cf539953f6e66983ff86a853f06fb6321de4726f82941d2f0d3dbfa818",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9755,
+   "of": 9606,
+   "orientation": 7,
+   "file": "tier1_floor_9755.png",
+   "sha256": "677ed229e35addbff04a058d8c4d27a7c4b6cbaf055247bc609af240eec01c0d",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9756,
+   "of": 9607,
+   "orientation": 0,
+   "file": "tier1_floor_9756.png",
+   "sha256": "275fcf1da0fa7e6402271f83d939def5c4f46601a7c489d8468c234723bc011a",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9757,
+   "of": 9607,
+   "orientation": 1,
+   "file": "tier1_floor_9757.png",
+   "sha256": "86503ab96d563cfff08104758794fa310f60f208f8cbba8e48892a620285c57f",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9758,
+   "of": 9607,
+   "orientation": 2,
+   "file": "tier1_floor_9758.png",
+   "sha256": "d349e7e305fdeb8af27c1b95dbce4ef52dbb888b9ac42b8a9ef78db2311ea997",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9759,
+   "of": 9607,
+   "orientation": 3,
+   "file": "tier1_floor_9759.png",
+   "sha256": "80962cd8796ca61183d52458554efd5e18cba29b4d84f575b61a9d652e0faef6",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9760,
+   "of": 9607,
+   "orientation": 4,
+   "file": "tier1_floor_9760.png",
+   "sha256": "ef347ced8b97e747a5ada919e9ed51d1096ad3b7ed5dd0c1e4184a7b865315e6",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9761,
+   "of": 9607,
+   "orientation": 5,
+   "file": "tier1_floor_9761.png",
+   "sha256": "6461a2820907e4cc35d8274859a639751421ad054032c6e477cf2e042b5b8b58",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9762,
+   "of": 9607,
+   "orientation": 6,
+   "file": "tier1_floor_9762.png",
+   "sha256": "beae24734e8c0ff669cfbbb515b5a60f08617fbfaa1a3e37cb52aa17a04b6554",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9763,
+   "of": 9607,
+   "orientation": 7,
+   "file": "tier1_floor_9763.png",
+   "sha256": "e66490a67322893e99af9e7527919b40247b94eddb80d10424d45187254c6643",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9764,
+   "of": 9608,
+   "orientation": 0,
+   "file": "tier1_floor_9764.png",
+   "sha256": "7058020ec904265e085584cdcd6ccdfe92ac1e1c51efa90914a4f28fb8d34727",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9765,
+   "of": 9608,
+   "orientation": 1,
+   "file": "tier1_floor_9765.png",
+   "sha256": "12c03dda4c78e021a3b6b324737b8ad9b2ccdfafbdb99d461fe7550850833632",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9766,
+   "of": 9608,
+   "orientation": 2,
+   "file": "tier1_floor_9766.png",
+   "sha256": "e7782222f404a818ac483ad00b8ee8fbba6fb513d4fcca1dc0df360b68735fd9",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9767,
+   "of": 9608,
+   "orientation": 3,
+   "file": "tier1_floor_9767.png",
+   "sha256": "dd71606b0b719309a3d26113a1e20770108e1621041829b387ebad34ef208f4d",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9768,
+   "of": 9608,
+   "orientation": 4,
+   "file": "tier1_floor_9768.png",
+   "sha256": "144c3295b85b96e3f83d5f499a8f055b6ee02d9cd5f620ecc11c94374a2a349c",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9769,
+   "of": 9608,
+   "orientation": 5,
+   "file": "tier1_floor_9769.png",
+   "sha256": "ddd3b6d3cc4281c1cb1eee0ba8ba7e7774d60c396697e7bc3536832d1bfbf52e",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9770,
+   "of": 9608,
+   "orientation": 6,
+   "file": "tier1_floor_9770.png",
+   "sha256": "0c9007ff3677bac73dc3aca859e91fb2f060f316ddd649bfb3e6ab0292143909",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9771,
+   "of": 9608,
+   "orientation": 7,
+   "file": "tier1_floor_9771.png",
+   "sha256": "4512e62f4771e4e004d711b3675c0c989872d89ac4eb6e78e2f7c695b093d7b6",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9772,
+   "of": 9609,
+   "orientation": 0,
+   "file": "tier1_floor_9772.png",
+   "sha256": "a61945897bbe56a55ca223500e5a0449d334bbc97d2a11e09937c3b17dbfa880",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9773,
+   "of": 9609,
+   "orientation": 1,
+   "file": "tier1_floor_9773.png",
+   "sha256": "e4eecf98150272c4b1e42ecd8994bfac3fd55e8e786ecf98f632e058c9a8c1ea",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9774,
+   "of": 9609,
+   "orientation": 2,
+   "file": "tier1_floor_9774.png",
+   "sha256": "7e038a995a4c713ae7e2694bbf188fde105a09f7fdf6f208b047da798e201601",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9775,
+   "of": 9609,
+   "orientation": 3,
+   "file": "tier1_floor_9775.png",
+   "sha256": "bea1ec1e26a08952937e6351771506759e2f89aa08f31c221f30326a85946e29",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9776,
+   "of": 9609,
+   "orientation": 4,
+   "file": "tier1_floor_9776.png",
+   "sha256": "0a8f7ed74844397e22e27f8cdc30a22057d03687f7fe424c461be8f178ae53d9",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9777,
+   "of": 9609,
+   "orientation": 5,
+   "file": "tier1_floor_9777.png",
+   "sha256": "51ec6ce997fdfe65b25d228c74a3c23413b59de9f47f9d220eda2326e29b1c93",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9778,
+   "of": 9609,
+   "orientation": 6,
+   "file": "tier1_floor_9778.png",
+   "sha256": "4c3fab91f7cf23afa48fabf969952570618754e36c6efb2b6f51bd0824210258",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9779,
+   "of": 9609,
+   "orientation": 7,
+   "file": "tier1_floor_9779.png",
+   "sha256": "f3a13f4130b0cb2f52825d307542a6cc3c9504b48a8bdc13083bf37443b5d7aa",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9780,
+   "of": 9610,
+   "orientation": 0,
+   "file": "tier1_floor_9780.png",
+   "sha256": "b4e18b367c2d59bb3319faa181fe4002c480c7ed889c645a2917673045b92350",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9781,
+   "of": 9610,
+   "orientation": 1,
+   "file": "tier1_floor_9781.png",
+   "sha256": "7f57ebf64255b0aa53571408fe45b1828031f0021df5f4c52f8e73d9a958fa4c",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9782,
+   "of": 9610,
+   "orientation": 2,
+   "file": "tier1_floor_9782.png",
+   "sha256": "a46d781a0d0705d95b280bbabe754b1db79845b9ef31c34525a6c3969d2723b0",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9783,
+   "of": 9610,
+   "orientation": 3,
+   "file": "tier1_floor_9783.png",
+   "sha256": "8350c4dc40ba62124c349a4efa35987ef6d0f513b35f32df0585f1d89e5ad661",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9784,
+   "of": 9610,
+   "orientation": 4,
+   "file": "tier1_floor_9784.png",
+   "sha256": "26016e46a5b578623938b3054036cfb284cba1f31f018f52a80a28d3a58874b8",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9785,
+   "of": 9610,
+   "orientation": 5,
+   "file": "tier1_floor_9785.png",
+   "sha256": "86ce26fb7c867f8e9247550ff8b8a190854a2e4969cb1c64dfc81042f706af4d",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9786,
+   "of": 9610,
+   "orientation": 6,
+   "file": "tier1_floor_9786.png",
+   "sha256": "26f01fb8b33186cb4c7771719961630261ef9d24713043f94b0c917965eccf84",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9787,
+   "of": 9610,
+   "orientation": 7,
+   "file": "tier1_floor_9787.png",
+   "sha256": "9d9d4aa1916d64f646afd261a08fdb1912435a12d2835cb74cb91153f6384ddb",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9788,
+   "of": 9611,
+   "orientation": 0,
+   "file": "tier1_floor_9788.png",
+   "sha256": "e3e8362b01c28725b3a93a1e948f023a8c91130fdd7e65b314e08369cd290c27",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9789,
+   "of": 9611,
+   "orientation": 1,
+   "file": "tier1_floor_9789.png",
+   "sha256": "8ddb8543c8804d182cf177fa330447f9d5acb121afb05cda314427986c816638",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9790,
+   "of": 9611,
+   "orientation": 2,
+   "file": "tier1_floor_9790.png",
+   "sha256": "ab149434c5e60c1f598f6b6194eda8a5e86dcc3e580f56e12666be0d76eab31b",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9791,
+   "of": 9611,
+   "orientation": 3,
+   "file": "tier1_floor_9791.png",
+   "sha256": "5e8179ade55a3efa81aff04fef8e68c1b7d0186f6d473a21bc8ed6d1f51f9b16",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9792,
+   "of": 9611,
+   "orientation": 4,
+   "file": "tier1_floor_9792.png",
+   "sha256": "6d0f14c8b34335bfb2bda815fc387d0de11c0d6f145251877489fe942d87b0a2",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9793,
+   "of": 9611,
+   "orientation": 5,
+   "file": "tier1_floor_9793.png",
+   "sha256": "e5fa581568d71d9f2a279b7547c7d9db1803d4ab25562631e8029c5208b87475",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9794,
+   "of": 9611,
+   "orientation": 6,
+   "file": "tier1_floor_9794.png",
+   "sha256": "c8057ff7fa194b19c27c015e47057f95e377454092d651f7da159179c8cadff7",
+   "verdict": "CLEAN"
+  },
+  {
+   "id": 9795,
+   "of": 9611,
+   "orientation": 7,
+   "file": "tier1_floor_9795.png",
+   "sha256": "19b2fc7b56fbcb4ba476202189e216c1011496df297697472750096924c08095",
+   "verdict": "CLEAN"
+  }
+ ],
+ "placement": {
+  "rates": {
+   "repair": 0.035,
+   "crack": 0.11,
+   "chip": 0.14,
+   "wear": 0.34,
+   "grit": 0.85,
+   "debris": 0.07
+  },
+  "max_events_per_cell": 1,
+  "note": "Rates are derived from \u00a78.1 (traffic and indifference), never from the lattice statistic \u2014 \u00a713.4. Single source of truth: the engine planner and field_preview.py both read these, neither carries its own copy."
+ },
+ "wall_mocks": [
+  {
+   "id": 9010,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9010.png",
+   "file": "tier1_floor_9010.png",
+   "sha256": "bb03a5f27478c942701010ed904e133fb6fdf70610789589cf02462ab7e4b6e5",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9011,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9011.png",
+   "file": "tier1_floor_9011.png",
+   "sha256": "4ca7ca7e32a976437e32711812d704cf5fbde6485823b017fa3ac3bb4a1b13b7",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9012,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9012.png",
+   "file": "tier1_floor_9012.png",
+   "sha256": "82d1a7ed96e506e6d3422824f265e493e37a4849b63827a97890c65d409b171d",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9013,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9013.png",
+   "file": "tier1_floor_9013.png",
+   "sha256": "6709b68ddcbce8b878fea3b240355e2394d4788925e6b05b8cbcc8851d5ce215",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9014,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9014.png",
+   "file": "tier1_floor_9014.png",
+   "sha256": "ac0bc988c03411716414d3cd155aac49073077e7533377290f90f3481674c334",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9015,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9015.png",
+   "file": "tier1_floor_9015.png",
+   "sha256": "fb13868ca84b855b42def0c64c366bbd0f71fd769178eb3e4c381250b8384119",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9016,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9016.png",
+   "file": "tier1_floor_9016.png",
+   "sha256": "13fd730443f63dbf2bafdbf6dda32e817aa8dc139a491bc5ad5caffa8bfc7c3a",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9017,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9017.png",
+   "file": "tier1_floor_9017.png",
+   "sha256": "463f534952c9d0388e166aa2b5767150e063d0cd41a739aa2ef572f1b69fe2a1",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9018,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9018.png",
+   "file": "tier1_floor_9018.png",
+   "sha256": "d562e0969959f17e1dea61baa535bf3377379b4f3c17ad7d56376e5857a5c847",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9019,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9019.png",
+   "file": "tier1_floor_9019.png",
+   "sha256": "e49e210622e5ca9fef351c5af7496a4599d7a346e8e0fc02283590d404f1d99f",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9020,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9020.png",
+   "file": "tier1_floor_9020.png",
+   "sha256": "307703f15cb7f06c108346fcfbf4b7180a76fb84c0ca538607b1c349c3d3baff",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9021,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9021.png",
+   "file": "tier1_floor_9021.png",
+   "sha256": "6835f338d3ad3df7c21f4d6d1970f9bbc8f7d7627fad51568918504f5f137745",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9022,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9022.png",
+   "file": "tier1_floor_9022.png",
+   "sha256": "6fe1bffc220912d203db47b7debf57a67197186de21321e3c80024fe4f53e593",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9023,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9023.png",
+   "file": "tier1_floor_9023.png",
+   "sha256": "2e830a0e860ef4c555d9cbe0197aaf331e890cb0c6fb7287d559c6174ccc0dfe",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9024,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9024.png",
+   "file": "tier1_floor_9024.png",
+   "sha256": "96967bd511806d756206db13ea6473c13e6b33d3d00f637ab97c4b447b6301b7",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9025,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9025.png",
+   "file": "tier1_floor_9025.png",
+   "sha256": "44380cc39d4b3f76b92281eb9b5bef4cf70217bdb43544fd8f667710c1706abc",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9030,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9030.png",
+   "file": "tier1_floor_9030.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9031,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9031.png",
+   "file": "tier1_floor_9031.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9032,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9032.png",
+   "file": "tier1_floor_9032.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9033,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9033.png",
+   "file": "tier1_floor_9033.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9034,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9034.png",
+   "file": "tier1_floor_9034.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9040,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9040.png",
+   "file": "tier1_floor_9040.png",
+   "sha256": "dbc7c20f6414cdd689d73c10233cc7b3624cd37d9f0c6bd6148ea7649fd9656e",
+   "role": "wall mock, unchanged"
+  },
+  {
+   "id": 9041,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9041.png",
+   "file": "tier1_floor_9041.png",
+   "sha256": "803fe0edee650d5cc670ab3ba8fefb8dc9aee99f44ecbf10a11369c987b2841d",
+   "role": "wall mock, unchanged"
+  }
+ ],
+ "theme": "src/Presentation/assets/tier1_floors/tile_themes_tier1_floors.yaml"
+}
