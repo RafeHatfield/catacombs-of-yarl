@@ -20,8 +20,8 @@ to prevent.
 > starts until it is done.***
 
 The pass cannot run against a void — it needs a real floor in front of it, at gameplay distance,
-across the lit radius — and that floor now exists and is walkable on device. **Tuning the rig
-against this floor is not a landing judgement on this floor**, and the two must not be conflated:
+across the lit radius — and that floor now exists. **Tuning the rig against this floor is not a
+landing judgement on this floor**, and the two must not be conflated:
 Ruling 56 ratifies rig values for the Boundary; the floor comes back for another round after.
 
 That ordering is also the one §6.2's coupling flag demands. Every authored ratio derived against
@@ -33,6 +33,28 @@ TIER0_SCENE=res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_revie
 TIER0_THEME=res://src/Presentation/assets/tier1_floors/tile_themes_tier1_floors.yaml \
 TIER1_OVERLAYS=res://src/Presentation/assets/tier1_floors/MANIFEST.json \
 tools/tier0_harness/build_review_app.sh
+```
+
+**VERIFIED ON THE HANDSET**, not assumed from the export — see §10.5 for the correction that
+required. Read back from the device, `evidence/DEVICE-tier1-boot.log`:
+
+| | |
+|---|---|
+| **bundle id** *(read off the device, not self-reported)* | `com.rafehatfield.catacombsofyarl.tier0` — "YARL Tier0", 1.0.0 |
+| **build** | `--export-debug`, installed to iPhone SE 3rd gen `5DB969FF-269C-5A8A-86EB-99EC9FF22397` |
+| **commit** | `a1c6782c4563ec06ae79faf2a1f7da2d43477b7f` — clean, no `+dirty` |
+
+Boots into `tier1_floor_review`, tier-one theme in force, overlay system attached, rig panel
+constructed. The device log carries the channel map and it is identical to the headless capture's
+— the incident system runs on the phone, not only in the harness.
+
+⚠ **That read-back was taken at commit `a1c6782c`, BEFORE Ruling 56.** A build carrying the
+ratified rig was installed afterwards and its boot read-back did not complete: the handset was
+locked and `devicectl` refused the launch. **Recorded as installed-not-verified**, which is the
+distinction this section exists to keep. One command closes it with the phone unlocked:
+
+```
+tools/tier0_harness/verify_on_device.sh
 ```
 
 **What the next floor round needs is named and measured, not guessed:** an edge-matched

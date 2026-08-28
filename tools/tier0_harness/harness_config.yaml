@@ -52,20 +52,52 @@ tile:
   status: RULED (value) / PLACEHOLDER (derivation) — ART-BIBLE-v0 §4.3
 
 light:
-  # ALL UNDERIVED — ART-BIBLE-v0 §6.2: "Only the Boundary's values are derived at the pilot.
-  # The rest are PLACEHOLDER." The Boundary's values are not derived yet either; the §6.4 probe
-  # is what derives them, and this harness is what runs that probe.
+  # ============================================================================================
+  # RULED (Rafe, 2026-08-28, at the §6.2.1 gate). RULING 56 — THE BOUNDARY'S RIG.
   #
-  # The bible gives the Boundary's light a *character*, not a number: "Carried fire; orc fires /
-  # tended by someone who cares whether it stays lit / warm, moving, unreliable" (§6.2). The
-  # values below are a starting rig chosen to be legibly warm and legibly dark so the probe has
-  # something to move away from. They are a starting point for derivation, not a result of it.
-  ambient: "1a1a22"        # UNDERIVED — CanvasModulate; the darkness light is read against
-  color: "ffb066"          # UNDERIVED — carried-fire warmth (§6.2 "warm")
-  energy: 1.6              # UNDERIVED — PointLight2D energy
-  radius_tiles: 5.5        # UNDERIVED — reach in TILES, never pixels, because a pixel radius
-                           #             would silently hard-code the §4.3 PLACEHOLDER tile size
-  status: UNDERIVED
+  # ART-BIBLE-v0 §6.2 read "Only the Boundary's values are derived at the pilot. The rest are
+  # PLACEHOLDER" — and the Boundary's were not derived either. They are now. **The PLACEHOLDER is
+  # CLEARED FOR THE BOUNDARY AND FOR NOTHING ELSE**: every other region derives its own at its own
+  # gate, and copying these into one would be conformance to a neighbouring region's answer.
+  #
+  # Ratified by walking the tier-one floor family on the reference device (iPhone SE 3rd gen) at
+  # gameplay distance, per §6.2.1's requirement that the rig is tuned for readability BEFORE any
+  # asset is judged through it. Evidence: tools/tier1_floors/evidence/DEVICE-tier1-boot.log.
+  #
+  # THE UNITS, STATED, because a knob position is not a value and "ambient 0.7" alone is
+  # ambiguous — 0.7 of what:
+  #
+  #   radius_tiles   5.0    REACH IN TILES, never pixels. At the RULED 32px tile that is a 320px
+  #                         radius / 640px light texture. Tiles rather than pixels so the number
+  #                         does not silently hard-code §4.3's still-PLACEHOLDER tile size.
+  #   falloff        1.00   EXPONENT on the radial ramp `(1 - smoothstep(0,1,d))^falloff`.
+  #                         1.00 is the identity curve — the plain smoothstep. Above 1 pulls the
+  #                         pool in tight; below 1 carries light out to the radius. Ratified AT
+  #                         the identity, which is a decision and not an absence of one.
+  #   ambient_level  0.70   SCALAR on the ambient HUE below, not a colour. Multiplies each
+  #                         channel: #1a1a22 x 0.70 -> rgb(18,18,24) = #121218, which is the
+  #                         CanvasModulate actually applied. Hue is held and only brightness
+  #                         moves, so a readability pass cannot restyle the region (§6.2.1).
+  #   ambient        1a1a22 the HUE. Unchanged by the pass.
+  #   color          ffb066 carried-fire warmth (§6.2 "warm"). Unchanged by the pass.
+  #   energy         1.6    PointLight2D energy. Unchanged by the pass; 0.0 remains the
+  #                         "lighting is live" positive control.
+  #
+  # ⚠ THIS FIRES §6.2's RE-DERIVATION RULE. "Every authored ratio derived against the current rig
+  # is RE-DERIVED when §6.2's PLACEHOLDER values are ratified." The rig moved — radius 5.5 -> 5.0,
+  # ambient 1.0 -> 0.7 — so the sighted round's wall recipe, which authored face/top at ~0.35 to
+  # deliver 0.52 through the OLD numbers, is now compensating against a rig that no longer exists.
+  # Those walls were culled at the 2026-08-27 gate and are not in the tier-one scene, so nothing
+  # shipping depends on it; the stale compensation is recorded in WALL-RECIPE.md rather than
+  # silently carried. The tier-one FLOOR family derives no ratio against the rig at all — its
+  # values come from the measured donor material — so it needs no re-derivation.
+  ambient: "1a1a22"        # RULED (hue) — Ruling 56
+  ambient_level: 0.70      # RULED — Ruling 56. Scalar on the hue; effective CanvasModulate #121218
+  color: "ffb066"          # RULED — Ruling 56, carried-fire warmth (§6.2 "warm")
+  energy: 1.6              # RULED — Ruling 56
+  radius_tiles: 5.0        # RULED — Ruling 56. Reach in TILES.
+  falloff: 1.00            # RULED — Ruling 56. Exponent on the radial ramp; 1.00 is identity.
+  status: RULED (Boundary only) — Ruling 56, Rafe, 2026-08-28. Other regions derive their own.
 
 scene:
   # The corridor spec. Geometry is authored data (see corridor_junction.json) so the shape of

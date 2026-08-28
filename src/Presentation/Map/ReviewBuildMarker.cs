@@ -42,6 +42,16 @@ public sealed class ReviewBuildMarker
     public string? FloorOverlays { get; private init; }
 
     /// <summary>
+    /// The commit the build was made from, and when — stamped into the marker by
+    /// build_review_app.sh. LOOP-PROCESS §2.3: evidence carries its producer's hash, and a
+    /// hash mismatch at a ruling invalidates the evidence. Headless captures have always
+    /// stamped their commit; the DEVICE BUILD did not, so the one artefact that decides
+    /// anything (§13.1) was the one that could not say what it was made from.
+    /// </summary>
+    public string? Commit { get; private init; }
+    public string? BuiltAt { get; private init; }
+
+    /// <summary>
     /// Tile size and integer scale for the review build, mirroring --tile-size / --tile-scale.
     ///
     /// These exist for the same reason the light values do, and the omission would have been
@@ -89,13 +99,24 @@ public sealed class ReviewBuildMarker
             {
                 ScenePath       = root.GetProperty("scene").GetString() ?? "",
                 ThemeConfigPath = root.GetProperty("themeConfig").GetString() ?? "",
+                // falloff and ambientLevel are RULED (§6.2.1, Ruling 56) but read with a
+                // fallback to the identity, because a marker written before the ruling has
+                // neither key and must still boot to the rig it was built with rather than
+                // crash. A marker written after it always carries both — build_review_app.sh
+                // copies the config — and the boot log echoes what was actually used.
                 Light = new ReviewLighting.Params(
-                    Ambient:     new Color(light.GetProperty("ambient").GetString()),
-                    LightColor:  new Color(light.GetProperty("color").GetString()),
-                    Energy:      (float)light.GetProperty("energy").GetDouble(),
-                    RadiusTiles: (float)light.GetProperty("radiusTiles").GetDouble()),
+                    Ambient:      new Color(light.GetProperty("ambient").GetString()),
+                    LightColor:   new Color(light.GetProperty("color").GetString()),
+                    Energy:       (float)light.GetProperty("energy").GetDouble(),
+                    RadiusTiles:  (float)light.GetProperty("radiusTiles").GetDouble(),
+                    Falloff:      light.TryGetProperty("falloff", out var fo2)
+                                      ? (float)fo2.GetDouble() : 1.0f,
+                    AmbientLevel: light.TryGetProperty("ambientLevel", out var al)
+                                      ? (float)al.GetDouble() : 1.0f),
                 FloorOverlays = root.TryGetProperty("floorOverlays", out var fo)
                             ? fo.GetString() : null,
+                Commit  = root.TryGetProperty("commit",  out var cm) ? cm.GetString() : null,
+                BuiltAt = root.TryGetProperty("builtAt", out var ba) ? ba.GetString() : null,
                 TileSize  = root.TryGetProperty("tileSize", out var ts)
                             ? ts.GetInt32() : (int?)null,
                 TileScale = root.TryGetProperty("tileScale", out var sc)
