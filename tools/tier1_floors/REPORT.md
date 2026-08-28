@@ -35,8 +35,20 @@ TIER1_OVERLAYS=res://src/Presentation/assets/tier1_floors/MANIFEST.json \
 tools/tier0_harness/build_review_app.sh
 ```
 
-Verified on the handset rather than assumed from the export — see §10.5 for the correction that
-required, and `evidence/DEVICE-tier1-boot.log` for the three identifiers.
+**VERIFIED ON THE HANDSET**, not assumed from the export — see §10.5 for the correction that
+required. Read back from the device, `evidence/DEVICE-tier1-boot.log`:
+
+| | |
+|---|---|
+| **bundle id** *(read off the device, not self-reported)* | `com.rafehatfield.catacombsofyarl.tier0` — "YARL Tier0", 1.0.0 |
+| **build** | `2026-08-28T04:48:34Z`, `--export-debug`, installed to iPhone SE 3rd gen `5DB969FF-269C-5A8A-86EB-99EC9FF22397` |
+| **commit** | `a1c6782c4563ec06ae79faf2a1f7da2d43477b7f` — clean, no `+dirty` |
+
+Boots into `tier1_floor_review`, tier-one theme in force, overlay system attached
+(`cells=74 channel=21 neglected=12 grit=45 event=44 occlusion=64 missing_texture=0`), rig panel
+constructed at `radius=5.5 falloff=1 ambient=1`. **The device log carries the channel map**, and it
+is identical to the headless capture's — the incident system runs on the phone, not only in the
+harness.
 
 **What the next floor round needs is named and measured, not guessed:** an edge-matched
 (Wang/blob) tile set, because a joint network cannot close unless joints match across cell
