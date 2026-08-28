@@ -139,6 +139,11 @@ public partial class Main : Node
     // post-SetupPresentation camera snap (_pendingCameraSnapFrames) has settled to 0.
     private bool _pendingCapture;
     private string? _captureOutputPath;
+    // Floor session two, precondition 2: the points a floor scene declares it must be able to
+    // see, and the points it declares must stay dark. See ProbeFloorLegibility.
+    private IReadOnlyList<CatacombsOfYarl.Logic.Core.CorridorReviewSceneBuilder.LegibilityPoint>?
+        _legibility;
+
     // Tier 0 junction-lit probe state. See ProbeJunctionLuminance.
     private (int X, int Y)? _junctionTile;
     private (int X, int Y)? _litReferenceTile;
@@ -2577,6 +2582,7 @@ public partial class Main : Node
         // it, so it measures the light rather than the player.
         _junctionTile = hasJunction ? junctionAt : null;
         _litReferenceTile = (_state.Player.X, _state.Player.Y + 1);
+        _legibility = spec.Legibility;
 
         var lighting = new ReviewLighting(marker?.Light ?? ReadLightParams());
         lighting.Attach(GetNode<Node2D>("GameView"), _renderer!.TileWidth, _renderer.TileHeight,
@@ -2669,6 +2675,41 @@ public partial class Main : Node
     /// </summary>
     private const float JunctionLitMinRatio = 0.25f;
 
+    /// <summary>
+    /// Floor-scene legibility bounds, as a fraction of lit floor one tile from the player.
+    /// INSTRUMENT THRESHOLDS, not art values — set by measurement, like JunctionLitMinRatio above.
+    ///
+    /// Swept on the ratified rig (Ruling 56: radius 5.0, falloff 1.00, ambient 0.70) with
+    /// tools/tier1_floors/sweep_legibility.py. Ratios against lit floor at (8,7):
+    ///
+    ///     RADIUS DOWN, ambient held at 0.70          AMBIENT UP, radius held at 5.0
+    ///       9.0   min lit 0.427                        0.3   max dark 0.025
+    ///       6.0   min lit 0.126                        0.7   max dark 0.059   &lt;- the rig
+    ///       5.0   min lit 0.060  &lt;- the rig            1.5   max dark 0.115
+    ///       4.0   min lit 0.064                        3.0   max dark 0.203
+    ///
+    /// THE AMBIENT FLOOR IS ~0.058, and it is what makes these numbers derivable rather than
+    /// chosen. Both declared dark points sit there at the ratified rig, and so does a point at
+    /// the nominal 5.0-tile radius — 0.060. A "lit" point is one meaningfully ABOVE that floor,
+    /// not one above some absolute brightness, which is why the outermost declared lit point is
+    /// at four tiles (0.159, 2.7x the floor) and not at five.
+    ///
+    ///   0.12  LIT MINIMUM — twice the ambient floor. The weakest declared lit point clears it by
+    ///         33%; a point at the nominal radius does not clear it at all, which is the honest
+    ///         result rather than a threshold tuned until it did.
+    ///   0.10  DARK MAXIMUM — the dark points clear it by 41% at the ratified ambient and breach
+    ///         it at roughly ambient 1.3, so the guard reds when the arc has been flooded to
+    ///         about twice its ratified level. §6.2.1: the pass is "not a licence to flood the
+    ///         Boundary with light", and a brightness-only check cannot see that failure at all.
+    ///
+    /// ⚠ These bound the INSTRUMENT, and the eye still rules (§13.2). A ratio of 0.06 may well be
+    /// perfectly visible on a phone in a dark room; what the sweep establishes is that nominal
+    /// radius and delivered reach are different quantities, not that any particular tile is
+    /// invisible to a person. Do NOT lower them to make a capture pass.
+    /// </summary>
+    private const float FloorLegibleMinRatio = 0.12f;
+    private const float FloorDarkMaxRatio = 0.10f;
+
     /// <summary>Mean perceived luminance of a small patch, clipped to the image.</summary>
     private static float PatchLuminance(Image img, Vector2 centre, int half)
     {
@@ -2691,6 +2732,100 @@ public partial class Main : Node
     /// True when the junction is lit well enough to be seen. Logs the measurement either way, so
     /// a capture carries the evidence that its junction was legible.
     /// </summary>
+    /// <summary>
+    /// The floor scene's declared points must read, and the dark ones must stay dark.
+    ///
+    /// Same shape and same reasoning as <see cref="ProbeJunctionLuminance"/> — measured on the
+    /// captured pixels rather than asserted from radius arithmetic, and RELATIVE to lit floor
+    /// beside the player so it self-calibrates against ambient and energy. What it adds is the
+    /// second direction: a point declared dark must not brighten. §6.2.1 rules the readability
+    /// pass "not a licence to flood the Boundary with light", so a guard that only asked whether
+    /// the scene was bright enough would green a drowned arc — the opposite failure, equally
+    /// fatal, and the one a brightness check is blind to by construction.
+    /// </summary>
+    private bool ProbeFloorLegibility(Image image)
+    {
+        if (_legibility == null || _legibility.Count == 0 || _litReferenceTile == null
+            || _renderer == null)
+            return true;   // no declared points — nothing to guard
+
+        var gameView = GetNode<Node2D>("GameView");
+        var xform = gameView.GetGlobalTransform();
+        Vector2 ScreenOf(int x, int y) => xform * _renderer.GridToScreenCenter(x, y);
+        int half = Mathf.Max(1, Mathf.RoundToInt(_renderer.TileWidth * gameView.Scale.X * 0.25f));
+
+        float rLum = PatchLuminance(image,
+            ScreenOf(_litReferenceTile.Value.X, _litReferenceTile.Value.Y), half);
+
+        bool ok = true;
+        foreach (var p in _legibility)
+        {
+            var at = ScreenOf(p.X, p.Y);
+
+            // A DECLARED POINT THAT IS NOT ON SCREEN CANNOT BE CHECKED, and silently measuring it
+            // anyway is the exact failure this guard exists to prevent, occurring inside the
+            // guard. PatchLuminance clips to the image, so an off-screen point returns the
+            // luminance of whatever sits at the clipped edge — the HUD, the letterbox — and the
+            // probe reports a confident number about the interface.
+            //
+            // Measured: the first two dark points declared for this scene landed at x=-9 and
+            // y=1371 on a 750x1334 capture, and read 0.059 and 0.160. Neither was floor. One
+            // "dark" point came back brighter than a "lit" one, which is what sent this back for
+            // a look. A point off the edge is a SPEC error and fails loudly rather than passing.
+            //
+            // AND IMAGE BOUNDS ALONE WERE NOT ENOUGH. The replacement point landed at y=1307 —
+            // inside a 1334-tall image and inside the HUD's button row. It read 0.796 and got
+            // DARKER as ambient rose, which is backwards for floor and is the signature of
+            // measuring interface. The region that matters is where the DUNGEON is drawn, and the
+            // game already names it: UILayer/ViewportOverlay is the control whose rect is the
+            // viewing area. A point must be inside THAT, not merely inside the PNG.
+            int m = half + 1;
+            var vp = GetNodeOrNull<Control>("UILayer/ViewportOverlay");
+            var band = vp != null ? vp.GetGlobalRect()
+                                  : new Rect2(0, 0, image.GetWidth(), image.GetHeight());
+            if (at.X < band.Position.X + m || at.Y < band.Position.Y + m
+                || at.X >= band.End.X - m || at.Y >= band.End.Y - m)
+            {
+                string off =
+                    $"[Tier1] legibility({p.X},{p.Y}) OUTSIDE THE DUNGEON VIEW at "
+                  + $"px({at.X:0},{at.Y:0}) — view is "
+                  + $"({band.Position.X:0},{band.Position.Y:0})..({band.End.X:0},{band.End.Y:0}). "
+                  + $"A declared point that cannot be seen cannot be checked. — {p.Why}";
+                GD.PrintErr(off);
+                Diag.Log(off);
+                ok = false;
+                continue;
+            }
+
+            float lum = PatchLuminance(image, at, half);
+            float ratio = rLum <= 0.0001f ? 0f : lum / rLum;
+            bool pass = p.MustBeLit ? ratio >= FloorLegibleMinRatio
+                                    : ratio <= FloorDarkMaxRatio;
+            string line =
+                $"[Tier1] legibility({p.X},{p.Y}) expect={(p.MustBeLit ? "lit " : "dark")} "
+              + $"ratio={ratio:0.0000} at px({at.X:0},{at.Y:0}) "
+              + $"bound={(p.MustBeLit ? FloorLegibleMinRatio : FloorDarkMaxRatio):0.0000} "
+              + $"{(pass ? "OK" : "FAIL")}  - {p.Why}";
+            GD.Print(line);
+            Diag.Log(line);
+            if (!pass) ok = false;
+        }
+
+        string summary = $"[Tier1] floor-legibility probe: {_legibility.Count} declared points, "
+                       + $"reference lum={rLum:0.0000}, verdict={(ok ? "PASS" : "FAIL")}";
+        GD.Print(summary);
+        Diag.Log(summary);
+
+        if (!ok)
+        {
+            GD.PrintErr("[Tier1] FLOOR-LEGIBILITY CHECK FAILED. Either the subject has fallen "
+                        + "outside the carried light, or the arc has been flooded and ground the "
+                        + "scene declares should be dark is not. Fix the rig or the scene - do "
+                        + "NOT lower these thresholds.");
+        }
+        return ok;
+    }
+
     private bool ProbeJunctionLuminance(Image image)
     {
         if (_junctionTile == null || _litReferenceTile == null || _renderer == null)
@@ -2765,6 +2900,19 @@ public partial class Main : Node
         // The test is RELATIVE, not an absolute luminance floor: the junction is compared against
         // lit floor one tile from the player. That self-calibrates against ambient and energy, so
         // re-tuning the rig (which the §6.4 probe will do) cannot silently invalidate the check.
+        // The floor scene's own declared points. The junction guard above no-ops where the
+        // geometry has no junction, which is every floor review scene — junction=NO, guard
+        // skipped, capture written. A floor capture therefore had no legibility check at all,
+        // and MISFED could walk straight through the one artefact §13.1 gives the verdict to.
+        if (!ProbeFloorLegibility(image))
+        {
+            GD.PrintErr("[Tier1] CAPTURE REFUSED — a declared legibility point failed.");
+            if (!string.IsNullOrEmpty(_captureOutputPath))
+                GD.PrintErr($"[Tier1] No PNG written to {_captureOutputPath}.");
+            GetTree().Quit(2);
+            return;
+        }
+
         if (!ProbeJunctionLuminance(image))
         {
             // Loud, and it BLOCKS THE CAPTURE. A dark junction must not produce a usable artifact,

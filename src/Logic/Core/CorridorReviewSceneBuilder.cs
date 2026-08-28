@@ -32,14 +32,38 @@ namespace CatacombsOfYarl.Logic.Core;
 ///   "width":  int, "height": int,                      // map extent, in tiles
 ///   "player": { "x": int, "y": int },                  // where the carried light is anchored
 ///   "carve":  [ { "x0":int,"y0":int,"x1":int,"y1":int } ... ]   // inclusive rects, floor
+///   "legibility": [ { "x":int,"y":int,"expect":"lit"|"dark","why":string } ... ]   // optional
 /// }
+///
+/// THE LEGIBILITY LIST — floor session two, precondition 2. Optional, so every existing spec
+/// still parses; present, it declares the points a capture is REQUIRED to be able to see and the
+/// points it is required to leave dark.
+///
+/// It exists because `ProbeJunctionLuminance` guards a junction, and a floor review scene has
+/// none — it reports `junction=NO` and the guard silently no-ops, so floor captures had no
+/// legibility check of any kind. A scene whose subject had fallen outside the carried light
+/// would still render, still pass determinism, and measure nothing (MISFED).
+///
+/// BOTH DIRECTIONS ARE DECLARED, and the second half is the one that is easy to leave out.
+/// `expect: "dark"` points must STAY dark. §6.2.1 rules the readability pass "not a licence to
+/// flood the Boundary with light" — *you begin as the only thing here that burns* is register and
+/// outranks convenience — so a guard that only asked "is it bright enough" would green a scene
+/// that had drowned the arc, which is the opposite failure and just as fatal.
 /// </summary>
 public static class CorridorReviewSceneBuilder
 {
     /// <summary>Parsed geometry, exposed so tests can assert the junction without Godot.</summary>
     public readonly record struct Spec(
         string Name, int Width, int Height, int PlayerX, int PlayerY,
-        IReadOnlyList<(int X0, int Y0, int X1, int Y1)> Carve);
+        IReadOnlyList<(int X0, int Y0, int X1, int Y1)> Carve,
+        IReadOnlyList<LegibilityPoint> Legibility);
+
+    /// <summary>
+    /// A point the capture must be able to see, or must leave dark. <paramref name="Why"/> is
+    /// carried so the capture log says what each point is FOR — a coordinate with no reason
+    /// beside it is a number nobody can maintain.
+    /// </summary>
+    public readonly record struct LegibilityPoint(int X, int Y, bool MustBeLit, string Why);
 
     public static Spec ParseSpec(string roundJsonPath)
         => ParseSpecJson(System.IO.File.ReadAllText(roundJsonPath));
@@ -69,7 +93,24 @@ public static class CorridorReviewSceneBuilder
         if (carve.Count == 0)
             throw new InvalidOperationException($"Corridor spec '{name}': carve list is empty — that is solid rock, not a corridor.");
 
-        return new Spec(name, w, h, px, py, carve);
+        var legibility = new List<LegibilityPoint>();
+        if (root.TryGetProperty("legibility", out var legEl))
+        {
+            foreach (var e in legEl.EnumerateArray())
+            {
+                string expect = e.TryGetProperty("expect", out var ex) ? (ex.GetString() ?? "") : "";
+                if (expect != "lit" && expect != "dark")
+                    throw new InvalidOperationException(
+                        $"Corridor spec '{name}': legibility point must declare expect \"lit\" or "
+                        + $"\"dark\", got \"{expect}\". An undeclared expectation cannot be checked.");
+                legibility.Add(new LegibilityPoint(
+                    e.GetProperty("x").GetInt32(), e.GetProperty("y").GetInt32(),
+                    expect == "lit",
+                    e.TryGetProperty("why", out var wy) ? (wy.GetString() ?? "") : ""));
+            }
+        }
+
+        return new Spec(name, w, h, px, py, carve, legibility);
     }
 
     /// <summary>

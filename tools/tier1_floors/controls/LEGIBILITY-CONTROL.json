@@ -1,0 +1,336 @@
+{
+ "commit": "4f9e631cc5f8f628677168835e60e566d44bf587",
+ "instrument": "Main.ProbeFloorLegibility",
+ "bounds": {
+  "lit_min": 0.12,
+  "dark_max": 0.1
+ },
+ "law": "LOOP-PROCESS \u00a74.1 \u2014 each plant carries the defect on the axis the guard claims, and each failing arm must also REFUSE the artefact: a guard that logs FAIL and writes the PNG anyway has done nothing.",
+ "arms": {
+  "ratified": {
+   "tag": "ratified",
+   "overrides": {},
+   "rc": 0,
+   "png_written": true,
+   "verdict": "PASS",
+   "points": [
+    {
+     "x": 8,
+     "y": 4,
+     "expect": "lit",
+     "ratio": 0.6588,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 4,
+     "expect": "lit",
+     "ratio": 0.6588,
+     "verdict": "OK"
+    },
+    {
+     "x": 5,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.3405,
+     "verdict": "OK"
+    },
+    {
+     "x": 5,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.3405,
+     "verdict": "OK"
+    },
+    {
+     "x": 11,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.3279,
+     "verdict": "OK"
+    },
+    {
+     "x": 11,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.3279,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 10,
+     "expect": "lit",
+     "ratio": 0.159,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 10,
+     "expect": "lit",
+     "ratio": 0.159,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 12,
+     "expect": "dark",
+     "ratio": 0.0592,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 12,
+     "expect": "dark",
+     "ratio": 0.0592,
+     "verdict": "OK"
+    },
+    {
+     "x": 3,
+     "y": 7,
+     "expect": "dark",
+     "ratio": 0.0574,
+     "verdict": "OK"
+    },
+    {
+     "x": 3,
+     "y": 7,
+     "expect": "dark",
+     "ratio": 0.0574,
+     "verdict": "OK"
+    }
+   ],
+   "log": "tools/tier1_floors/controls/legib_ratified.log"
+  },
+  "dark": {
+   "tag": "dark",
+   "overrides": {
+    "radius_tiles": 4.0
+   },
+   "rc": 2,
+   "png_written": false,
+   "verdict": "FAIL",
+   "points": [
+    {
+     "x": 8,
+     "y": 4,
+     "expect": "lit",
+     "ratio": 0.5606,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 4,
+     "expect": "lit",
+     "ratio": 0.5606,
+     "verdict": "OK"
+    },
+    {
+     "x": 5,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.172,
+     "verdict": "OK"
+    },
+    {
+     "x": 5,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.172,
+     "verdict": "OK"
+    },
+    {
+     "x": 11,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.1647,
+     "verdict": "OK"
+    },
+    {
+     "x": 11,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.1647,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 10,
+     "expect": "lit",
+     "ratio": 0.0644,
+     "verdict": "FAIL"
+    },
+    {
+     "x": 8,
+     "y": 10,
+     "expect": "lit",
+     "ratio": 0.0644,
+     "verdict": "FAIL"
+    },
+    {
+     "x": 8,
+     "y": 12,
+     "expect": "dark",
+     "ratio": 0.063,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 12,
+     "expect": "dark",
+     "ratio": 0.063,
+     "verdict": "OK"
+    },
+    {
+     "x": 3,
+     "y": 7,
+     "expect": "dark",
+     "ratio": 0.0611,
+     "verdict": "OK"
+    },
+    {
+     "x": 3,
+     "y": 7,
+     "expect": "dark",
+     "ratio": 0.0611,
+     "verdict": "OK"
+    }
+   ],
+   "log": "tools/tier1_floors/controls/legib_dark.log"
+  },
+  "flooded": {
+   "tag": "flooded",
+   "overrides": {
+    "ambient_level": 2.0
+   },
+   "rc": 2,
+   "png_written": false,
+   "verdict": "FAIL",
+   "points": [
+    {
+     "x": 8,
+     "y": 4,
+     "expect": "lit",
+     "ratio": 0.6836,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 4,
+     "expect": "lit",
+     "ratio": 0.6836,
+     "verdict": "OK"
+    },
+    {
+     "x": 5,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.4,
+     "verdict": "OK"
+    },
+    {
+     "x": 5,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.4,
+     "verdict": "OK"
+    },
+    {
+     "x": 11,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.3858,
+     "verdict": "OK"
+    },
+    {
+     "x": 11,
+     "y": 7,
+     "expect": "lit",
+     "ratio": 0.3858,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 10,
+     "expect": "lit",
+     "ratio": 0.2412,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 10,
+     "expect": "lit",
+     "ratio": 0.2412,
+     "verdict": "OK"
+    },
+    {
+     "x": 8,
+     "y": 12,
+     "expect": "dark",
+     "ratio": 0.1492,
+     "verdict": "FAIL"
+    },
+    {
+     "x": 8,
+     "y": 12,
+     "expect": "dark",
+     "ratio": 0.1492,
+     "verdict": "FAIL"
+    },
+    {
+     "x": 3,
+     "y": 7,
+     "expect": "dark",
+     "ratio": 0.1464,
+     "verdict": "FAIL"
+    },
+    {
+     "x": 3,
+     "y": 7,
+     "expect": "dark",
+     "ratio": 0.1464,
+     "verdict": "FAIL"
+    }
+   ],
+   "log": "tools/tier1_floors/controls/legib_flooded.log"
+  }
+ },
+ "checks": [
+  {
+   "check": "ratified rig PASSES and writes an image",
+   "passed": true
+  },
+  {
+   "check": "shrinking the radius FAILS the guard",
+   "passed": true
+  },
+  {
+   "check": "...and it fails on LIT points (the axis the radius moves)",
+   "passed": true
+  },
+  {
+   "check": "...while its DARK points still pass (so the scene is not merely broken)",
+   "passed": true
+  },
+  {
+   "check": "...and NO image is written",
+   "passed": true
+  },
+  {
+   "check": "flooding the ambient FAILS the guard",
+   "passed": true
+  },
+  {
+   "check": "...and it fails on DARK points (the axis ambient moves)",
+   "passed": true
+  },
+  {
+   "check": "...while its LIT points still pass",
+   "passed": true
+  },
+  {
+   "check": "...and NO image is written",
+   "passed": true
+  }
+ ],
+ "all_passed": true
+}
