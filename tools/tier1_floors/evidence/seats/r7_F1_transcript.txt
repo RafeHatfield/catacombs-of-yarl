@@ -1,0 +1,52 @@
+I looked at the floor at 1:1, then again with the torch falloff divided out so the actual paint was visible without the lighting doing its work for it. Answers below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dressed rectangular stone slabs — sandstone or a warm limestone — laid dry in a running bond, thin dark joints between them. Flagstone paving.
+
+**Q1_WHY**
+Every unit is a hard-edged rectangle with a square corner and a flat single-value fill (stone-face luminance std is 0.09 across the whole floor — essentially one tone). Joints are consistent 4 px dark lines, 24% of floor area, and rows are offset so vertical joints don't stack: at y≈195–225 the joints sit at x≈250, 315, 380; the row below at y≈230–260 puts them at x≈290, 355, 420. That's a deliberate masonry bond, not rubble, not cut rock, not earth. The colour is uniform sand-tan with no mineral variation between slabs.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x≈377–441. **Nothing about the ground influenced that.** I picked it because it is the only gap in the walls — the wall geometry chose for me. I checked specifically for a floor-based reason and there isn't one: the paving in the corridor mouth (x 377–441, y 396–470) is the identical bond, identical joint width, identical stone tone as the paving in the far corner of the room (x 200–260, y 300–360). No path is worn smoother, no direction is more scuffed, no threshold is dished from feet. If you rotated the room 180° the floor would give me exactly the same amount of information: none.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Almost nothing. It is a freshly-laid floor. Not one slab is cracked, chipped, split, tilted, sunken, missing, or replaced with something else. No rubble, no grit swept into the corners, no staining along a traffic line, no water damage, no repair of any kind. The total inventory of damage is three small dark splats — at roughly (359,256), (206,285) and (423,415) — plus a scatter of 2×2 px dark specks on maybe half the slabs, and a few soft airbrushed pale blotches (e.g. x 480–540, y 95–130, and x 300–330, y 245–270).
+
+This does not read as a floor in continuous heavy use since before records began that nobody has ever cared for. It reads as a floor commissioned last month by someone with a budget.
+
+**Q3_WHY**
+Specifics I'm reading: at x 505–570, y 255–290 there is a run of four consecutive slabs whose every corner is a clean 90°, no chip, no rounding. Along the corridor mouth (x 377–441, y 390–400) — the one place in the image where all foot traffic must funnel through — the joints are exactly as crisp and exactly as deep as they are in the dead corner at x 190–250, y 30–90. A floor that has been walked for four hundred years cannot have identical joint wear at a chokepoint and at a corner. The joint depth measured across the entire floor has a std of 0.108 with a mean of 0.718 — every joint in the room is the same depth. Nothing has ground any of them shallower.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+
+Yes — three things.
+
+1. **The splat decal, used three times unmodified.** At (359,256), (206,285) and (423,415). Same ~14 px starburst, same silhouette, same colour, no rotation, no mirror, no scale change between the three. Once I saw the second one the third was inevitable, and now they're the only things I look at on the floor.
+
+2. **The 2×2 px speck stipple.** It's on the majority of slabs and it's the same speck at the same size at the same value everywhere. It reads as a texture-noise layer painted over the top rather than as anything on the stone. Look at x 500–560, y 40–70 and then at x 230–290, y 300–340 — different slabs, indistinguishable dirt.
+
+3. **A small dark triangle, twice.** At (462,225) and (295,137). Identical shape and value, sitting on the slab face. I can't tell whether these are floor art or markers belonging to something else, but my eye finds them and pairs them.
+
+**Q5: MADE, OR REPEATED?**
+**Repeated.** The joint layout has a hard 64 px period. Correlating the mortar-joint mask against itself, the strongest horizontal peak is at dx=64 (0.497 vs 0.36 at dx=48 and 0.35 at dx=80) and the strongest vertical peak at dy=64. Concretely: the 64×64 block at (349,268) and the block at (413,268) have the same joint skeleton — same slab widths, same offsets — and so do (349,12)/(413,12). Searching for duplicate 32×32 patches across the whole floor, the top matches are all at displacement exactly (64,0) or (0,64), correlating 0.99+: (378,280)↔(442,280) at 0.997, (378,312)↔(442,312) at 0.995, (458,248)↔(458,312) at 0.991.
+
+The speck layer is scattered more freely and partly covers this, which is why the tiling isn't obvious at first pass — but the stone underneath is a small set of tiles stepping across a grid, and once the lighting is divided out you can see the columns line up.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It's clean, readable, correctly bonded, and the light sits on it without artefacting.
+
+Merely competent. Not good. Competent is exactly the word: it is a correct floor and it says nothing. There is no single slab in this room I could describe to you afterwards.
+
+**CULL**
+Reject: an unworn, undamaged, unrepaired floor contradicts a place in heavy use and never maintained.
+
+**FLIP LIST**
+- Break the 64 px joint period: hand-vary slab widths across tile seams so the bond doesn't restart at x=349/413 and x=377/441.
+- Damage the stone itself — cracked slabs, chipped corners, one or two slabs sunk below their neighbours or lifted proud, at least one gone entirely and backfilled.
+- Put wear where feet go: shallower joints and polished slab faces through the corridor mouth at x 377–441, dirt and grit accumulated in the dead corners (x 190–250, y 30–90).
+- Add orc repair to the ground — driven pins, a salvaged timber plank laid over a broken slab, rope lashing — visible in at least one place in a room this size.
+- Replace the three copies of the single splat decal with distinct marks, and cut the uniform 2×2 speck stipple; let dirt collect against joints and edges instead of sitting evenly on slab faces.
+
+Model: Opus 5 (1M context)
