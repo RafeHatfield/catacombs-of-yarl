@@ -130,6 +130,10 @@ def main():
                    "bond so it goes through the identical engine painter. Never lands, never "
                    "shown to Rafe. If the seat does not catch it, the round is VOID.")
     man["base"] = []
+    # The candidate's finished-pixel check describes the CANDIDATE's pixels. Inherited here it
+    # would make the plant refuse to lay — the control arm silenced by the candidate's evidence.
+    # `emit_paint_check.py --assets ...` writes the plant its own afterwards.
+    man.pop("paint_check", None)
 
     print("THE PLANT — the course-aligned ashlar family, ruined")
     for e in src["base"]:

@@ -1,0 +1,71 @@
+Both examined at native resolution and at pixel level. Findings below are measured, not impressions.
+
+---
+
+## A
+
+**Q1_A:** Packed brown dirt — or mud. That's a guess. Honestly: I cannot tell what this is. It is brown noise with a reddish speckle and no structure of any kind.
+
+**Q1_A_WHY:** I sampled the floor field (x 24–216, y 0–168). Inside a single tile the value range is 31–64 out of 255 — 13% of the available range — with std 5.0. Gradient analysis inside the tile shows no seam, no edge, no joint, no stone boundary anywhere: horizontal and vertical gradients sit at 1–7 across all 48 columns and rows with no peak. There is nothing in it that is *shaped* like anything. The tile has 441 unique colours in 2,304 pixels, adjacent values differing by 1 ([92 69 30], [92 68 29], [91 67 27]) — this is continuous-tone procedural noise, not authored pixel art. It sits next to grey flagstone (y 168–215) that uses **nine** colours. Two incompatible idioms in one image.
+
+**Q2_A:** Down, onto the grey flagstone at y≥168. But the ground did not choose that for me — the flagstone is legible as *floor* and the brown is not, so I moved toward the surface I could read. Within the brown field itself nothing influenced me at all. There is no wear, no path, no drift, no threshold, no direction. It is isotropic. If the flagstone weren't there I would have chosen at random.
+
+**Q3_A:** Nothing has happened to it. It is uniform to the pixel.
+
+**Q3_A_WHY:** This is measurable, not subjective. Sampling row brightness down the dirt column at x=100 gives: 58.3, 51.7, 62.0, 62.3, **58.3, 51.7, 62.0, 62.3, 58.3, 51.7, 62.0, 62.3** — the sequence repeats exactly, three times, at a 48px period. Pairwise comparison of the twelve aligned 48×48 tiles at origins (24,0)…(168,96) returns **mean absolute difference of 0.00** between every pair that has no prop drawn over it. Not "similar" — byte-identical. There is one tile in this floor, stamped. Also: the dirt/flagstone boundary at y=168 (x 24–216) is a razor-straight horizontal line with zero transition — no spill, no scatter, no dirt tracked onto the stone. Two materials butt-jointed like a spec sheet. In a place in continuous heavy use, that edge is the least believable thing in the image.
+
+**Q4_A:** Yes, and I found it before I knew what it was. A specific dark-red mark sits at **(103,24), (151,24), (199,24), (103,72), (151,72), (199,72), (103,120), (151,120), (199,120)** — the same mark, identical pixels, on a 3×3 lattice at 48px pitch. Once seen it is the only thing in the field. Secondary: the grey flagstones at y 168–215 are also identical to each other (slabs at x=120, 168, 216 differ by 0.00), so the lower floor is a perfect unvarying 24px lattice with the same grey in every cell.
+
+**Q5_A:** An image that was repeated. This is not a judgement call — the tiles are bitwise identical at 48px offsets, and the whole floor is one stamp with zero variants, zero rotation, zero overlay breakup, and zero lighting.
+
+**Q6_A:** **NO.** I would not believe this shipped. And on the second question it does not reach "merely competent" — a floor whose material cannot be named and whose repeat is visible as a 3×3 lattice of identical marks on a 384px screen is below the competent line, not at it.
+
+**CULL_A:** One 48px tile stamped bitwise-identically everywhere; the material is unreadable brown noise.
+
+**FLIP LIST — A**
+- Name the material and build it: give the surface actual forms — packed earth clods, sunken slabs, rubble — not undifferentiated noise. Right now nothing in the tile has an edge.
+- Break the 48px repeat. At minimum 4–6 tile variants plus a scatter layer of overlay decals so no mark lands on a 48px lattice.
+- Raise the internal value range well past the current 33/255 so the surface has form, and quantise the dirt to a hard palette matching the flagstone's nine colours instead of 441-colour continuous noise.
+- Author a transition at y=168 where dirt meets flagstone: dirt spilling over the first course, stone showing through the dirt, no straight butt-joint.
+- Vary the grey flagstones — they are currently one identical 24px slab repeated with a flat black 1px grid. Per-slab tonal variation and broken joints.
+
+---
+
+## B
+
+**Q1_B:** Cut stone paving — large rectangular flagstones laid in courses, dusty. I can say this without hesitation.
+
+**Q1_B_WHY:** The slabs are individually resolved: at x 440–630, y 20–180 I can count distinct blocks of genuinely different sizes — a wide slab spanning x 250–470, narrow uprights at x 545–600, small squares at x 480–520 — separated by consistent recessed joints. Individual slabs carry their own base tone (the noticeably darker slab at roughly x 340–470, y 250–280; the dark band at x 200–270, y 290–330) and their own pitting density: some slabs are speckled, some are clean. That per-slab difference is what makes the material name itself.
+
+**Q2_B:** Down, into the corridor at x≈375–440 below y=400. What made me pick it is the ground: the same paving continues into that gap, unbroken and at the same course pitch, so it reads as floor rather than a dark hole. The other lit exits do not read as continuing surface in the same way. That said — I want to be exact — no *wear* on this floor pointed me anywhere. There is no path, no rut, no polished track. The choice was continuity of material, not evidence of traffic.
+
+**Q3_B:** Almost nothing has happened to it. It's dusty and pitted and there are two or three stains. Structurally it is intact.
+
+**Q3_B_WHY:** This is the finding on B. Every slab in the image is a perfect rectangle with square corners, sitting flush with its neighbours, axis-aligned, unbroken. Not one slab is cracked through, sunken, tilted, lifted, missing, or replaced. The joints are a uniform 2px dark line of the same value and the same width across the entire floor — the joint at y≈210 runs unbroken from x=190 to x=628 without a single interruption, and so does y≈274. The only incident marks are a small dark starburst at approximately (355,255), a smaller one at (215,290), a hairline double-line at (215,90), and a few soft mottled stains near (520,165). That is the entire history of this floor. Four hundred years of unmaintained heavy use, and a company repairing things with rope and driven pins, has left dust.
+
+**Q4_B:** Yes. Two things. First, the joint lines: they are the same 2px, same colour, same straightness everywhere, and the long uninterrupted horizontal ones at y≈210 and y≈274 pull the eye across the whole room. Combined with the strict horizontal running bond, the floor reads as a *wall* pattern laid flat rather than paving — courses only run one way and never break. Second, the speckle: the same fine single-pixel dark dot scatter appears at similar density on many unrelated slabs — e.g. the slab at (500–560, 60–110), the one at (250–310, 290–340), the one at (400–460, 180–210) — reading as one noise pass applied over the sheet rather than dirt that arrived somewhere for a reason.
+
+**Q5_B:** Made. I ran a near-duplicate scan over 156 blocks of the floor with the lighting divided out: median inter-block difference 24.9, and the lowest-scoring pairs (0.7–2.1) are all featureless slab interiors matching other featureless slab interiors, not structural repeats. Autocorrelation shows no minimum at any offset — only shallow dips at multiples of 32 from grid alignment. There is no stamped tile here.
+
+**Q6_B:** **YES**, I would believe this shipped. On the second question: it is competent, not genuinely good. It is clean, readable, well-lit paving that would pass unremarked in a commercial roguelike — and that is the problem. It reads as generic dungeon flagstone. Nothing in it says *administered filing system for souls, never once cared for*. A floor that is merely undamaged is a floor that has no fiction in it.
+
+One further defect worth naming: the art is drawn at 2× (every pixel is a 2×2 block — I confirmed the column-duplication pattern directly), but the lighting is a smooth per-screen-pixel ramp (red channel walking 62→166→42 in single-unit steps along y=250), and the soft stain blobs near (520,165) and (255,330) are gaussian smudges. Soft unquantised gradients sitting on top of hard chunky pixels. Mixed resolution.
+
+**CULL_B:** Undamaged square-cornered slabs and unbroken uniform joints — four hundred years of use left no mark.
+
+**FLIP LIST — B**
+- Break the floor. Cracked-through slabs, one or two sunken or lifted out of plane, gaps where a slab is simply gone and the substrate shows. At present zero slabs are damaged.
+- Break the joints. The 2px line must vary in width, value and straightness, and must be interrupted — packed with debris in places, spalled open in others. Kill the unbroken runs at y≈210 and y≈274.
+- Break the bond. Strict one-directional running bond reads as a wall laid flat; turn some slabs, interrupt some courses, vary a patch to a different laying pattern.
+- Replace the uniform speckle pass with placed dirt: accumulation against joints and in the lee of things, clean tracks where feet actually fall. Dirt should have a reason for being where it is.
+- Quantise the lighting and the soft stain blobs to the 2× art grid so they stop floating at a different resolution from the pixels underneath.
+
+---
+
+**RANK: B**
+
+B by a wide margin, and not because B is good. A fails on a measurable, disqualifying defect — a single 48×48 tile stamped bitwise-identically across the entire floor, with a repeated mark visible on a 3×3 lattice at native size, and a material that cannot be identified. B is a real authored surface with genuine slab-level variation that no repeat test can catch. B's problem is the opposite one and a much better problem to have: it is well made and says nothing. B needs damage and history. A needs to be built.
+
+What to watch: B's fix list is all additive and low-risk — you are adding incident to a sound base. A's fix list is a rebuild, and the tile identity means there is nothing in the current asset to build on.
+
+*Model: Claude Opus 5 (1M context).*

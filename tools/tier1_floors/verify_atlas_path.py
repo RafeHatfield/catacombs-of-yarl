@@ -36,10 +36,10 @@ import field_laws as FL          # noqa: E402
 T = CA.T
 
 
-def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None):
+def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
     """The engine's algorithm, in Python. Deliberately written from the C# rather than from the
     composer, so a shared mistake in the composer cannot hide behind a shared implementation."""
-    A = CA.ASSETS
+    A = assets or CA.ASSETS
     mat = man["material"]
     ladder = np.array(mat["ladder"])
     tint = mat["tint"]

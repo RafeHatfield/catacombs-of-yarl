@@ -76,6 +76,8 @@ public static class Tier1AshlarFloor
         public string GrainPath = "";
         public readonly List<(int X, int Y, int Salt, int Family)> EdgeCheck = new();
         public readonly List<(int X, int K, int Kind, int Drop, int Steps)> StoneCheck = new();
+        public readonly List<(int X, int Y, int Px, int Py, int R, int G, int B)> PaintCheck = new();
+        public int[] PaintCheckWornColumns = System.Array.Empty<int>();
     }
 
     private static int Mix(int x, int y, int salt)
@@ -197,6 +199,9 @@ public static class Tier1AshlarFloor
             return $"[Tier1] ashlar floor: NOT APPLIED — grain bank unreadable: {cfg.GrainPath}";
 
         var atlasCache = new Dictionary<int, Image>();
+        var paintFail = SelfCheck(cfg, grainImg, atlasCache);
+        if (paintFail != null) return $"[Tier1] ashlar floor: REFUSED — {paintFail}";
+
         int laid = 0, channel = 0, missing = 0;
 
         foreach (var (pos, node) in tileLayer.TileSprites)
@@ -218,131 +223,8 @@ public static class Tier1AshlarFloor
                 atlasCache[idx] = atlas;
             }
 
-            var drops = new int[Courses];
-            for (int c = 0; c < Courses; c++)
-                drops[c] = DropChoice(cfg, pos.X, pos.Y * Courses + c);
-            int splitI = RowSplit(cfg, pos.Y);
-            int cellIndex = splitI * 9 + drops[0] * 3 + drops[1];
-
-            // Per-class parameters computed ONCE, then a single pass over the pixels. The
-            // first version looped the whole tile once per class: seven passes and about 7k
-            // GetPixel calls per cell before a single pixel was written.
-            var offset = new double[7];
-            var gmul = new double[7];
-            var bankX = new int[7];
-            var bankY = new int[7];
-            var ox = new int[7];
-            var oy = new int[7];
-            var wornClass = new bool[7];
-            bool anyWorn = false;
-
-            for (int c = 0; c < Courses; c++)
-            {
-                int courseK = pos.Y * Courses + c;
-                for (int kind = 0; kind < 3; kind++)
-                {
-                    int cls = 1 + c * 3 + kind;
-                    int addr = Address(kind, drops[c]);
-                    int bx = addr == 2 ? pos.X + 1 : pos.X;
-                    int key = addr == 1 ? Mix(pos.X, courseK, cfg.InteriorSalt + cfg.Seed)
-                                        : Mix(bx, courseK, cfg.SpanSalt + cfg.Seed);
-                    int steps = OffsetSteps(cfg, key, ClusterBias(cfg, bx, courseK));
-
-                    // Wear is read off the MAP, which both tiles either side of a boundary can
-                    // read, and never off "which tile am I". So the channel ends at a JOINT rather
-                    // than at a tile edge - the soft boundary section 8.2.1 asks for, delivered
-                    // structurally instead of by feathering.
-                    bool worn = isChannel != null && (addr switch
-                    {
-                        0 => isChannel(pos.X - 1, pos.Y) && isChannel(pos.X, pos.Y),
-                        2 => isChannel(pos.X, pos.Y) && isChannel(pos.X + 1, pos.Y),
-                        _ => isChannel(pos.X, pos.Y),
-                    });
-                    if (worn) anyWorn = true;
-                    wornClass[cls] = worn;
-
-                    offset[cls] = steps * (cfg.Ladder[1] - cfg.Ladder[0])
-                                * (worn ? cfg.WearSpread : 1.0);
-                    gmul[cls] = cfg.GrainAmp * (worn ? cfg.WornMul : 1.0);
-                    int bank = key % cfg.GrainBank;
-                    bankX[cls] = (bank % BankCols) * GrainSide;
-                    bankY[cls] = (bank / BankCols) * GrainSide;
-                    ox[cls] = StoneOrigin(cfg, fw, kind, c, drops[c]);
-                    oy[cls] = CourseOriginY(cfg, splitI, c);
-                }
-            }
-
-            var outImg = Image.CreateEmpty(T, T, false, Image.Format.Rgb8);
-            int ax = (cellIndex % AtlasCols) * T, ay = (cellIndex / AtlasCols) * T;
-            for (int py = 0; py < T; py++)
-            {
-                for (int px = 0; px < T; px++)
-                {
-                    var src = atlas.GetPixel(ax + px, ay + py);
-                    int cls = (int)System.Math.Round(src.G * 255.0);
-                    double L = cfg.Ladder[(int)System.Math.Round(src.R * 255.0)];
-
-                    // Class 0 is a joint. It is copied straight across and NEVER offset: the
-                    // ladder's bottom is where the occlusion lives, an offset applied to every
-                    // pixel clips 30.16% of them at the floor of the palette, and section 6.3
-                    // holds that authored occlusion is form rather than decoration.
-                    if (cls > 0 && cls < 7)
-                    {
-                        int lx = ((px - ox[cls]) % GrainSide + GrainSide) % GrainSide;
-                        int ly = ((py - oy[cls]) % GrainSide + GrainSide) % GrainSide;
-                        var gp = grainImg.GetPixel(bankX[cls] + lx, bankY[cls] + ly);
-                        double g = (gp.R * 255.0 - 128.0) / 64.0 * cfg.Coarse
-                                 + (gp.G * 255.0 - 128.0) / 64.0 * cfg.Fine;
-                        L = System.Math.Clamp(L + offset[cls] + g * gmul[cls],
-                                              cfg.Ladder[0], cfg.Ladder[^1]);
-                        L = cfg.Ladder[LadderIndex(cfg, L)];
-                    }
-
-                    outImg.SetPixel(px, py, new Color(
-                        (float)(L * cfg.Tint[0] / 255.0), (float)(L * cfg.Tint[1] / 255.0),
-                        (float)(L * cfg.Tint[2] / 255.0)));
-                }
-            }
-
-            // THE ARRIS PASS. A joint beside a trodden stone is shallower, because feet round the
-            // edges off — geometry, not light (§6.3), and a subtraction rather than an addition,
-            // which is what §8.2.1 requires of polish. Each joint pixel takes its wear from the
-            // stones it actually touches, so the channel ends where a STONE ends and never draws
-            // a straight line on the tile grid.
-            //
-            // Bounds-checked, not wrapped. The Python reference used a circular shift here and
-            // was rounding the arris of joints a whole tile away; the two would have disagreed
-            // precisely where the channel meets a tile edge.
-            if (anyWorn && cfg.WearArris > 0.0)
-            {
-                for (int py = 0; py < T; py++)
-                {
-                    for (int px = 0; px < T; px++)
-                    {
-                        if ((int)System.Math.Round(atlas.GetPixel(ax + px, ay + py).G * 255.0) != 0)
-                            continue;
-                        bool nearWorn = false;
-                        for (int d = 0; d < 4 && !nearWorn; d++)
-                        {
-                            int ny = py + (d == 0 ? -1 : d == 1 ? 1 : 0);
-                            int nx = px + (d == 2 ? -1 : d == 3 ? 1 : 0);
-                            if (ny < 0 || ny >= T || nx < 0 || nx >= T) continue;
-                            int nc = (int)System.Math.Round(
-                                atlas.GetPixel(ax + nx, ay + ny).G * 255.0);
-                            if (nc > 0 && nc < 7 && wornClass[nc]) nearWorn = true;
-                        }
-                        if (!nearWorn) continue;
-                        double jl = cfg.Ladder[(int)System.Math.Round(
-                            atlas.GetPixel(ax + px, ay + py).R * 255.0)];
-                        jl += (cfg.LumMedian - jl) * cfg.WearArris;
-                        jl = cfg.Ladder[LadderIndex(cfg, System.Math.Clamp(
-                            jl, cfg.Ladder[0], cfg.Ladder[^1]))];
-                        outImg.SetPixel(px, py, new Color(
-                            (float)(jl * cfg.Tint[0] / 255.0), (float)(jl * cfg.Tint[1] / 255.0),
-                            (float)(jl * cfg.Tint[2] / 255.0)));
-                    }
-                }
-            }
+            var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw,
+                                   isChannel, out bool anyWorn);
 
             // NO FLIP, NO ROTATION. Orientation is meaning on an edge-matched tile, and the
             // coursing has a direction: turning one would stand its bed joints on end.
@@ -356,7 +238,200 @@ public static class Tier1AshlarFloor
         return $"[Tier1] ashlar floor: laid={laid} channel_cells={channel} missing={missing} "
              + $"families={cfg.Families} seed={cfg.Seed} atlases={atlasCache.Count} "
              + $"edge_check={cfg.EdgeCheck.Count}/OK stone_check={cfg.StoneCheck.Count}/OK "
+             + $"paint_check={cfg.PaintCheck.Count}/OK "
              + $"manifest={manifestResPath}";
+    }
+
+
+    /// <summary>
+    /// Paint one cell. Extracted so that the SELF-CHECK below runs the very code that lays the
+    /// floor rather than a second copy of it — a check against a reimplementation only proves the
+    /// reimplementation.
+    /// </summary>
+    private static Image PaintCell(Config cfg, Image atlas, Image grainImg, int tx, int ty,
+                                   int fw, System.Func<int, int, bool>? isChannel,
+                                   out bool anyWorn)
+    {
+        var drops = new int[Courses];
+        for (int c = 0; c < Courses; c++)
+            drops[c] = DropChoice(cfg, tx, ty * Courses + c);
+        int splitI = RowSplit(cfg, ty);
+        int cellIndex = splitI * 9 + drops[0] * 3 + drops[1];
+
+        // Per-class parameters computed ONCE, then a single pass over the pixels. The
+        // first version looped the whole tile once per class: seven passes and about 7k
+        // GetPixel calls per cell before a single pixel was written.
+        var offset = new double[7];
+        var gmul = new double[7];
+        var bankX = new int[7];
+        var bankY = new int[7];
+        var ox = new int[7];
+        var oy = new int[7];
+        var wornClass = new bool[7];
+        anyWorn = false;
+
+        for (int c = 0; c < Courses; c++)
+        {
+            int courseK = ty * Courses + c;
+            for (int kind = 0; kind < 3; kind++)
+            {
+                int cls = 1 + c * 3 + kind;
+                int addr = Address(kind, drops[c]);
+                int bx = addr == 2 ? tx + 1 : tx;
+                int key = addr == 1 ? Mix(tx, courseK, cfg.InteriorSalt + cfg.Seed)
+                                    : Mix(bx, courseK, cfg.SpanSalt + cfg.Seed);
+                int steps = OffsetSteps(cfg, key, ClusterBias(cfg, bx, courseK));
+
+                // Wear is read off the MAP, which both tiles either side of a boundary can
+                // read, and never off "which tile am I". So the channel ends at a JOINT rather
+                // than at a tile edge - the soft boundary section 8.2.1 asks for, delivered
+                // structurally instead of by feathering.
+                bool worn = isChannel != null && (addr switch
+                {
+                    0 => isChannel(tx - 1, ty) && isChannel(tx, ty),
+                    2 => isChannel(tx, ty) && isChannel(tx + 1, ty),
+                    _ => isChannel(tx, ty),
+                });
+                if (worn) anyWorn = true;
+                wornClass[cls] = worn;
+
+                offset[cls] = steps * (cfg.Ladder[1] - cfg.Ladder[0])
+                            * (worn ? cfg.WearSpread : 1.0);
+                gmul[cls] = cfg.GrainAmp * (worn ? cfg.WornMul : 1.0);
+                int bank = key % cfg.GrainBank;
+                bankX[cls] = (bank % BankCols) * GrainSide;
+                bankY[cls] = (bank / BankCols) * GrainSide;
+                ox[cls] = StoneOrigin(cfg, fw, kind, c, drops[c]);
+                oy[cls] = CourseOriginY(cfg, splitI, c);
+            }
+        }
+
+        var outImg = Image.CreateEmpty(T, T, false, Image.Format.Rgb8);
+        int ax = (cellIndex % AtlasCols) * T, ay = (cellIndex / AtlasCols) * T;
+        for (int py = 0; py < T; py++)
+        {
+            for (int px = 0; px < T; px++)
+            {
+                var src = atlas.GetPixel(ax + px, ay + py);
+                int cls = (int)System.Math.Round(src.G * 255.0);
+                double L = cfg.Ladder[(int)System.Math.Round(src.R * 255.0)];
+
+                // Class 0 is a joint. It is copied straight across and NEVER offset: the
+                // ladder's bottom is where the occlusion lives, an offset applied to every
+                // pixel clips 30.16% of them at the floor of the palette, and section 6.3
+                // holds that authored occlusion is form rather than decoration.
+                if (cls > 0 && cls < 7)
+                {
+                    int lx = ((px - ox[cls]) % GrainSide + GrainSide) % GrainSide;
+                    int ly = ((py - oy[cls]) % GrainSide + GrainSide) % GrainSide;
+                    var gp = grainImg.GetPixel(bankX[cls] + lx, bankY[cls] + ly);
+                    double g = (gp.R * 255.0 - 128.0) / 64.0 * cfg.Coarse
+                             + (gp.G * 255.0 - 128.0) / 64.0 * cfg.Fine;
+                    L = System.Math.Clamp(L + offset[cls] + g * gmul[cls],
+                                          cfg.Ladder[0], cfg.Ladder[^1]);
+                    L = cfg.Ladder[LadderIndex(cfg, L)];
+                }
+
+                outImg.SetPixel(px, py, new Color(
+                    (float)(L * cfg.Tint[0] / 255.0), (float)(L * cfg.Tint[1] / 255.0),
+                    (float)(L * cfg.Tint[2] / 255.0)));
+            }
+        }
+
+        // THE ARRIS PASS. A joint beside a trodden stone is shallower, because feet round the
+        // edges off — geometry, not light (§6.3), and a subtraction rather than an addition,
+        // which is what §8.2.1 requires of polish. Each joint pixel takes its wear from the
+        // stones it actually touches, so the channel ends where a STONE ends and never draws
+        // a straight line on the tile grid.
+        //
+        // Bounds-checked, not wrapped. The Python reference used a circular shift here and
+        // was rounding the arris of joints a whole tile away; the two would have disagreed
+        // precisely where the channel meets a tile edge.
+        if (anyWorn && cfg.WearArris > 0.0)
+        {
+            for (int py = 0; py < T; py++)
+            {
+                for (int px = 0; px < T; px++)
+                {
+                    if ((int)System.Math.Round(atlas.GetPixel(ax + px, ay + py).G * 255.0) != 0)
+                        continue;
+                    bool nearWorn = false;
+                    for (int d = 0; d < 4 && !nearWorn; d++)
+                    {
+                        int ny = py + (d == 0 ? -1 : d == 1 ? 1 : 0);
+                        int nx = px + (d == 2 ? -1 : d == 3 ? 1 : 0);
+                        if (ny < 0 || ny >= T || nx < 0 || nx >= T) continue;
+                        int nc = (int)System.Math.Round(
+                            atlas.GetPixel(ax + nx, ay + ny).G * 255.0);
+                        if (nc > 0 && nc < 7 && wornClass[nc]) nearWorn = true;
+                    }
+                    if (!nearWorn) continue;
+                    double jl = cfg.Ladder[(int)System.Math.Round(
+                        atlas.GetPixel(ax + px, ay + py).R * 255.0)];
+                    jl += (cfg.LumMedian - jl) * cfg.WearArris;
+                    jl = cfg.Ladder[LadderIndex(cfg, System.Math.Clamp(
+                        jl, cfg.Ladder[0], cfg.Ladder[^1]))];
+                    outImg.SetPixel(px, py, new Color(
+                        (float)(jl * cfg.Tint[0] / 255.0), (float)(jl * cfg.Tint[1] / 255.0),
+                        (float)(jl * cfg.Tint[2] / 255.0)));
+                }
+            }
+        }
+
+        return outImg;
+    }
+
+    /// <summary>
+    /// DOES THE ENGINE PRODUCE THE RIGHT PIXELS, not merely the right numbers?
+    ///
+    /// The edge-family and stone-offset vectors prove this code agrees with the composer about
+    /// which family a boundary has and how many ladder steps a stone moves. They prove nothing
+    /// about the two largest pieces of arithmetic in the painter: WHERE IN THE GRAIN BANK a stone
+    /// samples, and WHICH JOINTS the arris pass rounds. Both could have been wrong in a way that
+    /// produced a plausible floor, on the device, with every existing check green.
+    ///
+    /// So the manifest carries finished RGB for a scatter of pixels — joints, plain stone, trodden
+    /// stone, and joints beside trodden stone — and this refuses to lay anything if a single one
+    /// of them disagrees.
+    /// </summary>
+    private static string? SelfCheck(Config cfg, Image grainImg,
+                                     Dictionary<int, Image> atlasCache)
+    {
+        if (cfg.PaintCheck.Count == 0) return null;
+        var cols = new HashSet<int>(cfg.PaintCheckWornColumns);
+        System.Func<int, int, bool> worn = (x, y) => cols.Contains(x);
+        var cells = new Dictionary<(int, int), Image>();
+
+        foreach (var s in cfg.PaintCheck)
+        {
+            if (!cells.TryGetValue((s.X, s.Y), out var img))
+            {
+                int n = EdgeFamily(s.X, s.Y, cfg.HorizSalt, cfg.Seed, cfg.Families);
+                int so = EdgeFamily(s.X, s.Y + 1, cfg.HorizSalt, cfg.Seed, cfg.Families);
+                int fw = EdgeFamily(s.X, s.Y, cfg.VertSalt, cfg.Seed, cfg.Families);
+                int fe = EdgeFamily(s.X + 1, s.Y, cfg.VertSalt, cfg.Seed, cfg.Families);
+                int idx = TileIndex(n, fe, so, fw, cfg.Families);
+                if (!cfg.Atlas.TryGetValue(idx, out var path)) return
+                    $"paint check: no atlas for tile index {idx} at ({s.X},{s.Y})";
+                if (!atlasCache.TryGetValue(idx, out var atlas))
+                {
+                    atlas = LoadImage(path);
+                    if (atlas == null) return $"paint check: atlas unreadable: {path}";
+                    atlasCache[idx] = atlas;
+                }
+                img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, worn, out _);
+                cells[(s.X, s.Y)] = img;
+            }
+            var c = img.GetPixel(s.Px, s.Py);
+            int r = (int)System.Math.Round(c.R * 255.0);
+            int g = (int)System.Math.Round(c.G * 255.0);
+            int bl = (int)System.Math.Round(c.B * 255.0);
+            if (r != s.R || g != s.G || bl != s.B)
+                return $"paint check FAILED at cell ({s.X},{s.Y}) pixel ({s.Px},{s.Py}): "
+                     + $"composer says rgb({s.R},{s.G},{s.B}), engine paints rgb({r},{g},{bl}). "
+                     + $"The two agree about the numbers and disagree about the picture.";
+        }
+        return null;
     }
 
     private static Image? LoadImage(string resPath)
@@ -450,6 +525,19 @@ public static class Tier1AshlarFloor
                 cfg.StoneCheck.Add((e.GetProperty("x").GetInt32(), e.GetProperty("k").GetInt32(),
                                     e.GetProperty("kind").GetInt32(), e.GetProperty("drop").GetInt32(),
                                     e.GetProperty("steps").GetInt32()));
+
+            if (root.TryGetProperty("paint_check", out var pc))
+            {
+                var wc = new List<int>();
+                foreach (var v in pc.GetProperty("worn_columns").EnumerateArray())
+                    wc.Add(v.GetInt32());
+                cfg.PaintCheckWornColumns = wc.ToArray();
+                foreach (var e in pc.GetProperty("samples").EnumerateArray())
+                    cfg.PaintCheck.Add((e.GetProperty("x").GetInt32(), e.GetProperty("y").GetInt32(),
+                                        e.GetProperty("px").GetInt32(), e.GetProperty("py").GetInt32(),
+                                        e.GetProperty("r").GetInt32(), e.GetProperty("g").GetInt32(),
+                                        e.GetProperty("b").GetInt32()));
+            }
 
             status = "ok";
             return cfg;
