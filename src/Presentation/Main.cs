@@ -2610,6 +2610,12 @@ public partial class Main : Node
         Report($"[Tier0] tile_theme_config={TileThemeLoader.ActiveConfigPath}");
         Report($"[Tier0] light rig: {lighting.Describe(_renderer.TileWidth, _renderer.TileHeight)}");
 
+        // PRECONDITION 1 (floor session two): what did the variant picker ACTUALLY lay?
+        // Emitted on every review capture, overlays or not, so the linear-hash defect cannot
+        // return unnoticed — LOOP-PROCESS §4.2's "what goes red if it silently stops holding?"
+        if (_tileLayer != null)
+            Report(FloorVariantCensus.Describe(_tileLayer, _state.Map));
+
         // THE INCIDENT SYSTEM — §8.3's overlays and §8.2.1's trodden channel, placed per cell.
         // Reported unconditionally, including when there is no manifest: a scene that quietly
         // drew no overlays looks exactly like a scene whose floor has no incident in it, and

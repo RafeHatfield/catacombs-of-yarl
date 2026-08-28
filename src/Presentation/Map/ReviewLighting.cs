@@ -59,8 +59,9 @@ namespace CatacombsOfYarl.Presentation.Map;
 public sealed class ReviewLighting
 {
     /// <summary>
-    /// All values UNDERIVED per §6.2/§4.3. Carried as a record so the exact rig that produced a
-    /// capture can be logged verbatim and reproduced.
+    /// The rig, carried as a record so the exact values that produced a capture can be logged
+    /// verbatim and reproduced. RULED for the Boundary (§6.2.1, Ruling 56, 2026-08-28); still
+    /// PLACEHOLDER for every other region, which derives its own at its own gate.
     /// </summary>
     public readonly record struct Params(
         Color Ambient,        // CanvasModulate hue — the darkness the light is read against
@@ -68,9 +69,18 @@ public sealed class ReviewLighting
         float Energy,         // PointLight2D energy; 0.0 is the "lighting is live" control
         float RadiusTiles,    // reach of the carried light, in TILES, not pixels — §4.3 marks
                               // tile size PLACEHOLDER and a pixel radius would hard-code one
-        float Falloff = 1.0f,       // shape of the radial ramp. 1.0 is the plain smoothstep this
-                                    // class has always drawn: the identity, not a new default.
-        float AmbientLevel = 1.0f); // scales Ambient's brightness, hue held. 1.0 is unscaled.
+        float Falloff,        // shape of the radial ramp. 1.00 is the plain smoothstep — the
+                              // identity curve, and RULED as such (§6.2.1, Ruling 56).
+        float AmbientLevel);  // scales Ambient's brightness, hue held. RULED at 0.70.
+
+    // ⚠ NO PARAMETER HERE HAS A C# DEFAULT, and that is deliberate rather than an oversight.
+    //
+    // Falloff and AmbientLevel were declared with `= 1.0f` when they were introduced, so that
+    // adding them broke no caller. Once Ruling 56 made them law that convenience became the
+    // hazard: a caller omitting them would be silently lit by the identity while claiming the
+    // ratified rig. Removing the defaults makes the compiler the enforcement — every construction
+    // site must state all six values, which is the same discipline the engine already applies to
+    // its command line.
 
     // Knob ranges. NOT art values and NOT rig values — they are the ends of the travel the
     // review panel offers, wide enough that Rafe's pass is not fenced in by a builder's guess

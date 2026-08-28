@@ -99,20 +99,27 @@ public sealed class ReviewBuildMarker
             {
                 ScenePath       = root.GetProperty("scene").GetString() ?? "",
                 ThemeConfigPath = root.GetProperty("themeConfig").GetString() ?? "",
-                // falloff and ambientLevel are RULED (§6.2.1, Ruling 56) but read with a
-                // fallback to the identity, because a marker written before the ruling has
-                // neither key and must still boot to the rig it was built with rather than
-                // crash. A marker written after it always carries both — build_review_app.sh
-                // copies the config — and the boot log echoes what was actually used.
+                // EVERY RIG VALUE IS REQUIRED. No key here has a fallback.
+                //
+                // The first version of this defaulted falloff and ambientLevel to the identity
+                // "so a marker written before Ruling 56 still boots to the rig it was built
+                // with". That reasoning is wrong and it is the exact failure the same session
+                // spent a commit message warning about: a ratified value that can be silently
+                // defaulted is a ratified value that can silently drift. A pre-ruling marker
+                // SHOULD fail here — it describes a rig that is no longer law, and booting it
+                // quietly under the ratified rig's name is how a walk gets taken through numbers
+                // nobody decided.
+                //
+                // GetProperty throws when the key is absent; TryLoad's catch reports it and the
+                // app boots the menu instead of the corridor, which is a loud, visible failure
+                // rather than a silent substitution.
                 Light = new ReviewLighting.Params(
                     Ambient:      new Color(light.GetProperty("ambient").GetString()),
                     LightColor:   new Color(light.GetProperty("color").GetString()),
                     Energy:       (float)light.GetProperty("energy").GetDouble(),
                     RadiusTiles:  (float)light.GetProperty("radiusTiles").GetDouble(),
-                    Falloff:      light.TryGetProperty("falloff", out var fo2)
-                                      ? (float)fo2.GetDouble() : 1.0f,
-                    AmbientLevel: light.TryGetProperty("ambientLevel", out var al)
-                                      ? (float)al.GetDouble() : 1.0f),
+                    Falloff:      (float)light.GetProperty("falloff").GetDouble(),
+                    AmbientLevel: (float)light.GetProperty("ambientLevel").GetDouble()),
                 FloorOverlays = root.TryGetProperty("floorOverlays", out var fo)
                             ? fo.GetString() : null,
                 Commit  = root.TryGetProperty("commit",  out var cm) ? cm.GetString() : null,
