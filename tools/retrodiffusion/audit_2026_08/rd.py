@@ -266,10 +266,20 @@ def credits():
 
 
 def _pool(obj):
-    """The spendable figure. RD documents `{"credits": n, "balance": n}`; which of the two moves
-    when a generation is billed is COLUMN 6 of the audit and is not assumed here. Both are
-    recorded; this returns the one the audit measured as moving, defaulting to `credits`."""
-    for k in ("credits", "balance"):
+    """The spendable figure.
+
+    COLUMN 6, MEASURED 2026-08-28: `/inferences/credits` returns BOTH `{"credits": 50,
+    "balance": 0.412}`, and **`balance` is the spendable one.** Four billed generations moved
+    `balance` 0.412 -> 0.312 (exactly 4 x $0.025) and left `credits` pinned at 50.0 throughout.
+
+    THE ORDER OF THIS TUPLE WAS A BUG AND IT IS RECORDED RATHER THAN QUIETLY SWAPPED. It read
+    ("credits", "balance") on the first live run, so the bracket sampled a field that never
+    moves, and `Session.close()` correctly went RECONCILE_RED — a pool delta of 0.0 against
+    0.025 billed. That is LOOP-PROCESS §4.2 catching a real defect on its first contact with
+    the live surface: a bracket reading the wrong field is a bracket that measures nothing, and
+    without the reconciliation step it would have printed "50.0 -> 50.0" and looked fine.
+    """
+    for k in ("balance", "credits"):
         try:
             return float(obj[k])
         except (KeyError, TypeError, ValueError):
@@ -453,6 +463,10 @@ class Session:
 
     def open(self):
         preflight()
+        try:
+            self._offset = sum(1 for _ in open(self.led.path))
+        except FileNotFoundError:
+            self._offset = 0
         if self.settle:
             self.before, self.stable_before = settled_credits()
         else:
@@ -468,31 +482,56 @@ class Session:
         return self
 
     def note_billed(self, row):
+        """Retained so existing callers keep working, but the reconciliation NO LONGER DEPENDS
+        ON IT — see `billed_from_ledger`. On the first live run this method was the second half
+        of the RECONCILE_RED: `audit.py` called it for column 1 and not for columns 2 and 3, so
+        `billed_sum` came out 0.025 against 0.100 actually spent. A reconciliation that can be
+        defeated by forgetting to call something is a wish, not a check (Ruling 104)."""
         c = row.get("actual_cost")
         if isinstance(c, (int, float)):
             self.billed += float(c)
 
+    def billed_from_ledger(self):
+        """Sum `actual_cost` over every row this session appended. Authoritative, because it
+        reads what was WRITTEN rather than what a caller remembered to report — the same
+        'compare numbers you already have' move LOOP-PROCESS §4.2 closes both its logged
+        instances with."""
+        total = 0.0
+        try:
+            with open(self.led.path) as f:
+                for i, line in enumerate(f):
+                    if i < self._offset:
+                        continue
+                    c = json.loads(line).get("actual_cost")
+                    if isinstance(c, (int, float)):
+                        total += float(c)
+        except FileNotFoundError:
+            pass
+        return round(total, 6)
+
     def close(self):
         after, stable = (settled_credits() if self.settle
                          else (_pool(credits()), False))
+        billed = self.billed_from_ledger()
         row = {"claim": self.claim + ":close", "verdict": "INFO", "kind": "close",
                "credits_before": self.before, "credits_after": after, "settled_after": stable,
-               "generations_spent": self.budget.spent, "billed_sum": round(self.billed, 6)}
+               "generations_spent": self.budget.spent, "billed_sum": billed,
+               "billed_reported_by_caller": round(self.billed, 6)}
         if self.before is not None and after is not None:
             delta = round(self.before - after, 6)
             row["credits_delta"] = delta
-            row["reconciled"] = abs(delta - round(self.billed, 6)) < 1e-6
+            row["reconciled"] = abs(delta - billed) < 1e-6
             if not row["reconciled"]:
                 row["verdict"] = "RECONCILE_RED"
                 row["INVARIANT_RED"] = (
                     "pool moved %s but calls billed %s — the bracket and the per-call costs "
-                    "disagree" % (delta, round(self.billed, 6)))
+                    "disagree" % (delta, billed))
         else:
             row["verdict"] = "RECONCILE_RED"
             row["INVARIANT_RED"] = "balance unreadable at one or both ends of the bracket"
         self.led.write(row)
         print("credits after:  %s (settled=%s)   spent=%d gen   billed=%s   %s"
-              % (after, stable, self.budget.spent, round(self.billed, 6), row["verdict"]))
+              % (after, stable, self.budget.spent, billed, row["verdict"]))
         return row
 
 

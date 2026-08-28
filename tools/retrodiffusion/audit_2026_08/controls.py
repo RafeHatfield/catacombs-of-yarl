@@ -311,14 +311,25 @@ def control_reconcile():
     _set_key(FAKE_KEY)
     try:
         def run(pool_before, pool_after, billed):
+            """The billed figure is planted THROUGH THE LEDGER, not by setting an attribute.
+
+            The first version of this control set `s.billed` directly, and that made it a
+            control over a code path the live run does not use: `close()` reconciles against
+            `billed_from_ledger()`, because a reconciliation a caller can defeat by forgetting
+            to call `note_billed()` is a wish rather than a check — which is exactly how the
+            live audit run produced a spurious RECONCILE_RED (billed 0.025 reported against
+            0.100 actually spent). §4.1: the plant must sit on the axis the guard measures.
+            """
             tmp = tempfile.mkdtemp()
-            fake = FakeRequests([FakeResp(200, {"credits": pool_before}),
-                                 FakeResp(200, {"credits": pool_after})])
+            fake = FakeRequests([FakeResp(200, {"balance": pool_before}),
+                                 FakeResp(200, {"balance": pool_after})])
             saved_req, rd.requests = rd.requests, fake
             try:
                 s = rd.Session(tmp, "control", budget=rd.Budget(ceiling=2), settle=False)
                 s.open()
-                s.billed = billed
+                if billed:
+                    s.led.write({"claim": "control:planted_spend", "kind": "generate",
+                                 "verdict": "OK", "actual_cost": billed})
                 return s.close()
             finally:
                 rd.requests = saved_req
