@@ -1,5 +1,5 @@
 {
- "commit": "ad74f6b2bfe579e64eec71de32a64fbd81c63a86",
+ "commit": "d5ff2dba8348caaf9ee4df216627bef3931be5bc",
  "rung": 13.227,
  "crop": [
   400,
@@ -9,21 +9,21 @@
  ],
  "rows": [
   {
-   "capture": "tools/tier1_floors/evidence/scene_ashlar_r9.png",
-   "label": "r9 \u2014 walked, 'linoleum'",
-   "faces_measured": 178,
-   "network_amplitude_rungs": 0.215,
-   "interior_amplitude_rungs": 0.097,
-   "interior_p90_rungs": 0.211,
-   "rung": 13.227
-  },
-  {
    "capture": "tools/tier1_floors/evidence/scene_ashlar_r11.png",
    "label": "r11 \u2014 dressed",
    "faces_measured": 146,
    "network_amplitude_rungs": 0.207,
    "interior_amplitude_rungs": 0.148,
    "interior_p90_rungs": 0.272,
+   "rung": 13.227
+  },
+  {
+   "capture": "tools/tier1_floors/evidence/scene_ashlar_r12.png",
+   "label": "r12 \u2014 differential",
+   "faces_measured": 140,
+   "network_amplitude_rungs": 0.194,
+   "interior_amplitude_rungs": 0.142,
+   "interior_p90_rungs": 0.255,
    "rung": 13.227
   }
  ],

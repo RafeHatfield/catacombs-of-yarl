@@ -166,6 +166,7 @@ SPAN, INTERIOR = 3001, 3002        # stone-address salts
 DROP, CLUSTER = 3003, 3004         # merged-stone and value-cluster salts
 CRACK = 3006                       # the field-scale crack network
 MARKS = 3007                       # the worked surface of a stone
+WEAR = 3008                        # the differential-wear field
 CLUSTER_TABLE = [-1, 0, 0, 1]      # the coarse patch bias; more zeros than not, so most of the
                                    # field keeps the family median and the patches read as runs
 
@@ -586,7 +587,7 @@ def stone_extent(fw, fe, kind, c, drop, split_i):
     return 0, mv_e - a_w, v_hi                     # interior
 
 
-def stone_marks(key, seed, extent, worn=False):
+def stone_marks(key, seed, extent, worn=False, wear=0.0):
     """The dressing on one stone, in STONE-LOCAL pixels: [(u, v, depth_in_rungs), ...].
 
     Addressed by the stone, like its value and its grain, so it cannot repeat on the tile grid —
@@ -613,7 +614,11 @@ def stone_marks(key, seed, extent, worn=False):
     # while staying ragged. At three bands the delivered contrast sat at 0.148 against a
     # floor of 0.144 — a 3% margin is not a proof of readable amplitude, which is what the
     # law asks for.
-    n = (WEAR_BANDS if worn else MARK_BANDS) + ((st >> 9) % 2)
+    # (c) TRAFFICKED STONES POLISH SMOOTHER AS THEIR JOINTS OPEN; sheltered stones stay sharp
+    # and tight. The dressing is what traffic takes off first, so its count and its depth both
+    # fall with wear — a continuous quantity now, where it used to be a binary channel flag.
+    keep = 1.0 - DRESSING_KEEP * wear
+    n = max(1, int(round(((WEAR_BANDS if worn else MARK_BANDS) + ((st >> 9) % 2)) * keep)))
     for _ in range(n):
         st = _lcg(st)
         u = u_lo + (st >> 5) % u_span
@@ -634,9 +639,9 @@ def stone_marks(key, seed, extent, worn=False):
             st = _lcg(st)
             ln = max(MARK_MIN_LEN, length - (st >> 8) % 3)
             for i in range(ln):
-                out.append((ou + dx * i, ov + dy * i, MARK_DEPTH))
+                out.append((ou + dx * i, ov + dy * i, MARK_DEPTH * keep))
 
-    m = (WEAR_PITS if worn else MARK_PITS) + ((st >> 11) % 3)
+    m = max(0, int(round(((WEAR_PITS if worn else MARK_PITS) + ((st >> 11) % 3)) * keep)))
     for _ in range(m):
         st = _lcg(st)
         u = u_lo + (st >> 5) % u_span
@@ -646,8 +651,163 @@ def stone_marks(key, seed, extent, worn=False):
         wdt = 2 + (st >> 13) % 2          # 2 or 3 across — never the 1px speck
         for a in range(wdt):
             for b in range(2):
-                out.append((u + a, v + b, PIT_DEPTH))
+                out.append((u + a, v + b, PIT_DEPTH * keep))
     return out
+
+
+# =================================================================================================
+# THE WEAR FIELD — one scalar, sampled by world position, driving everything differential
+# =================================================================================================
+#
+# THE DEVICE GATE, second walk: *"all the gaps look standardized… freshly laid and mortared, like
+# someone scoured new stone to make it look old."* Ruled: **uniform joints are staged age, and
+# staging is a register violation. Wear is EARNED, differentially.**
+#
+# The four things asked for are not four systems. A joint opens where feet passed; the stones
+# beside an open joint lose their arrises and polish smooth; a sheltered joint stays tight and its
+# stones stay sharp. That is ONE quantity with several consequences, so it is built as one:
+#
+#     W(x, y) in [0,1], sampled by WORLD PIXEL, drives
+#         joint width and darkness      (a)
+#         chipping and spall at arrises (b)
+#         stone dressing amplitude      (c)   worn stones polish; sheltered stones stay sharp
+#         and it takes a bias along the traffic line (d)
+#
+# NOTHING LATTICES, and the periods are why. The field is two octaves of value noise at FIVE and
+# ELEVEN tiles — coprime with each other and with 1, so nothing in it lands on the tile grid or on
+# any harmonic of it. A single octave at any period would draw its own grid.
+#
+# BOTH TILES EITHER SIDE OF A BOUNDARY COMPUTE THE SAME W, because it is a function of world
+# position and nothing else. That is the same discipline as the stone address, applied to the
+# joint — which is what "keyed to joint identity, boundaries agree" asks for.
+WEAR_OCTAVES = ((5, 160), (11, 96))     # (period in tiles, weight out of 256)
+
+
+def _wear_octave(px, py, period, seed):
+    """One octave, bilinear, in integer arithmetic so C# reproduces it exactly."""
+    span = period * T
+    gx, gy = px // span, py // span
+    fx, fy = px - gx * span, py - gy * span
+    v00 = mix(gx, gy, WEAR + seed) & 255
+    v10 = mix(gx + 1, gy, WEAR + seed) & 255
+    v01 = mix(gx, gy + 1, WEAR + seed) & 255
+    v11 = mix(gx + 1, gy + 1, WEAR + seed) & 255
+    top = v00 * (span - fx) + v10 * fx
+    bot = v01 * (span - fx) + v11 * fx
+    return (top * (span - fy) + bot * fy) // (span * span)
+
+
+def _mix_np(x, y, salt):
+    """`mix`, vectorised. Verified against the scalar version element for element.
+
+    The scalar one is the definition and the C# reproduces IT; this exists only because a
+    per-pixel Python loop over the wear field killed the plant run outright (exit 137). A fast
+    path that disagreed with the definition would be worse than a slow one, so `--check-wear`
+    asserts they agree over a large sample before anything trusts this.
+    """
+    with np.errstate(over="ignore", invalid="ignore"):
+        h = (x.astype(np.int64) * 7919 + y.astype(np.int64) * 104729
+             + np.int64(salt) * 15485863).astype(np.int32)
+        h = (h ^ (h >> 13)).astype(np.int32)
+        h = (h.astype(np.int64) * 1274126177).astype(np.int32)
+        h = (h ^ (h >> 16)).astype(np.int32)
+    return h.astype(np.int64) & 0x7FFFFFFF
+
+
+def wear_block(x0, y0, n, seed):
+    """The wear scalar over an n x n block of world pixels whose top-left is (x0, y0)."""
+    yy, xx = np.mgrid[0:n, 0:n]
+    px, py = xx + x0, yy + y0
+    total = np.zeros((n, n), dtype=np.int64)
+    wsum = 0
+    for period, weight in WEAR_OCTAVES:
+        span = period * T
+        gx, gy = px // span, py // span
+        fx, fy = px - gx * span, py - gy * span
+        v00 = _mix_np(gx, gy, WEAR + seed) & 255
+        v10 = _mix_np(gx + 1, gy, WEAR + seed) & 255
+        v01 = _mix_np(gx, gy + 1, WEAR + seed) & 255
+        v11 = _mix_np(gx + 1, gy + 1, WEAR + seed) & 255
+        top = v00 * (span - fx) + v10 * fx
+        bot = v01 * (span - fx) + v11 * fx
+        total += ((top * (span - fy) + bot * fy) // (span * span)) * weight
+        wsum += weight
+    return total // wsum
+
+
+def wear01_block(raw, channel=False):
+    """`wear01`, vectorised. Snapped to the same four ages."""
+    r = np.maximum(raw, CHANNEL_WEAR) if channel else raw
+    f = np.clip((r - WEAR_LO) / float(WEAR_HI - WEAR_LO), 0.0, 1.0)
+    ages = np.array(WEAR_AGES)
+    return ages[np.abs(f[..., None] - ages).argmin(-1)]
+
+
+def wear_at(px, py, seed):
+    """The wear scalar at a world pixel, 0..255. Integer throughout."""
+    total = wsum = 0
+    for period, weight in WEAR_OCTAVES:
+        total += _wear_octave(px, py, period, seed) * weight
+        wsum += weight
+    return total // wsum
+
+
+# HOW THE SCALAR IS SPENT. Every one of these is a SUBTRACTION or a widening — occlusion
+# vocabulary only, as ruled. Nothing here brightens anything.
+# TIGHT IS THE MINORITY, and that is an authored ratio rather than a fitted one. The device
+# gate approved the OPEN joint — dark, deep, the cobbled read — and complained only that
+# every joint looked the same. A split that made most joints tight would answer the
+# complaint by inverting the thing that passed: measured, at 70/200 it put 71% of the room's
+# joints in the tight state and the network contrast fell 0.207 -> 0.162.
+#
+# At 30/150 roughly a third are sheltered. The floor keeps the look it earned and gains an
+# age gradient across it.
+WEAR_LO, WEAR_HI = 30, 150
+DRESSING_KEEP = 0.45            # how much of its dressing a fully worn stone LOSES.
+                                # Carried in the manifest because the first version of this
+                                # was a bare 0.75 written into both languages, changed in
+                                # one of them, and caught only by the paint check — a magic
+                                # number duplicated across a language boundary is the exact
+                                # drift this project has already paid for twice.
+JOINT_TIGHT_RUNGS = 1.0         # how much SHALLOWER a fully sheltered joint is
+JOINT_TIGHT_KNEE = 0.4          # a joint at or below this age is TIGHT — a full rung
+                                # shallower. Above it, open, and it chips instead.
+CHIP_RATE = 0.55                # of stone pixels beside a fully-open joint, how many go with it
+SPALL_RATE = 0.10               # of those, how many take a second pixel — a corner gone
+CHANNEL_WEAR = 235              # what the trodden channel raises W to. Nulled by the plant.
+CHIP = 3009
+
+
+# A JOINT HAS AN AGE, NOT A REAL NUMBER — and this is a correctness fix before it is a taste one.
+#
+# A continuous scalar against a seven-rung ladder puts pixels on quantisation knife-edges: at
+# exactly w=0.5 the joint lands HALF A RUNG between two levels, the tie is broken by floating-
+# point noise in how `step` was computed, and the composer and its mirror disagreed on 65 pixels
+# for no reason either of them could be said to be wrong about. A third implementation would have
+# been a third coin flip.
+#
+# Snapping to four ages removes the knife-edge — none of 0.00, 0.34, 0.67, 1.00 rungs lands on a
+# half — and it is what the material wants anyway: mortar is tight, opening, open, or gone.
+WEAR_AGES = (0.0, 0.34, 0.67, 1.0)
+
+
+def _snap_age(f):
+    best = WEAR_AGES[0]
+    for a in WEAR_AGES:
+        if abs(a - f) < abs(best - f):
+            best = a
+    return best
+
+
+def wear01(raw, channel=False):
+    """The wear scalar as one of four ages, with the channel's bias folded in (ruling (d))."""
+    if channel:
+        raw = max(raw, CHANNEL_WEAR)
+    if raw <= WEAR_LO:
+        return 0.0
+    if raw >= WEAR_HI:
+        return 1.0
+    return _snap_age((raw - WEAR_LO) / float(WEAR_HI - WEAR_LO))
 
 
 def build_tile(n, e, s, w, mat, seed, drops=(0, 0), split_i=0):
@@ -757,6 +917,24 @@ def build_tile(n, e, s, w, mat, seed, drops=(0, 0), split_i=0):
     # wearing a channel's name. The channel signals through its STONES, by absence of grain.
     # Head and bed joints sit at the SAME depth. They are equally enclosed, so §6.5 gives them
     # the same value; drawing the bed deeper was what tipped the field into horizontal banding.
+    # A TIGHT JOINT MUST HAVE SOMEWHERE TO GO. At 0.42 the joint quantised to the BOTTOM RUNG of
+    # the ladder — every joint in the world already as dark as the palette can hold — so the
+    # differential-wear pass had no headroom and measured a spread of 0.000 rungs. That is the
+    # standardized-gap defect stated in numbers: not that the joints were the wrong darkness, but
+    # that they were all the SAME darkness because they were all clipped against the floor.
+    #
+    # The bond now bakes a SHALLOWER joint, one rung up, and wear deepens it to the floor. The
+    # deepest joints are exactly as dark as they were; the sheltered ones are visibly tighter.
+    # Pure subtraction at paint time, which is what "occlusion vocabulary only" requires.
+    # ANCHORED AT THE DARK END. The first attempt baked a shallow joint and let wear deepen it,
+    # which moved EVERY joint in the world up a rung and only brought the worn ones back — and
+    # since most of a room is not a thoroughfare, most joints simply got lighter. The whole floor
+    # washed out: the network contrast the device gate had praised fell 0.207 -> 0.160.
+    #
+    # The complaint was never that the gaps were too dark. It was that they were all the SAME.
+    # So the bond keeps the dark joint it had, and the differential is spent the only way the
+    # palette leaves room for: a SHELTERED joint is shallower, and an open one takes the arris off
+    # the stones beside it instead of going darker, because it cannot.
     depth = np.full((T, T), 0.42, dtype=float)
     for r, prof in bed_rows:
         depth[r, :] = 0.44 - prof * 0.09
@@ -813,7 +991,7 @@ def main():
                a_table=A_TABLE, mv_table=MV_TABLE,
                salts=dict(horizontal=HORIZ, vertical=VERT, span=SPAN, interior=INTERIOR,
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
-                          marks=MARKS),
+                          marks=MARKS, wear=WEAR, chip=CHIP),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,
@@ -913,6 +1091,16 @@ def main():
     man["atlas_encoding"] = ("6x6 of 32px; cell = split*9 + drop0*3 + drop1, row-major. "
                              "R = index into ladder, G = stone class 0..6")
     man["grain_scales"] = dict(coarse=0.34, fine=0.14, worn_multiplier=WEAR_GRAIN)
+    man["differential"] = dict(octaves=[list(o) for o in WEAR_OCTAVES],
+                               lo=WEAR_LO, hi=WEAR_HI, joint_tight=JOINT_TIGHT_RUNGS,
+                               tight_knee=JOINT_TIGHT_KNEE,
+                               chip_rate=CHIP_RATE, spall_rate=SPALL_RATE,
+                               dressing_keep=DRESSING_KEEP,
+                               channel_wear=CHANNEL_WEAR, ages=list(WEAR_AGES),
+                               law=("one scalar sampled by world position drives joint opening, "
+                                    "chipping, dressing amplitude and the traffic bias. Periods "
+                                    "5 and 11 tiles: coprime with each other and with the tile, "
+                                    "so nothing lands on the grid."))
     man["wear"] = dict(grain=WEAR_GRAIN, spread=WEAR_SPREAD, arris=WEAR_ARRIS,
                        bands=WEAR_BANDS, pits=WEAR_PITS,
                        bands_ordinary=MARK_BANDS, pits_ordinary=MARK_PITS,

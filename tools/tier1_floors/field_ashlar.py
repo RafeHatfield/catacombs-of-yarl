@@ -102,6 +102,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
     joints = np.zeros((h * T, w * T), dtype=bool)
     cracks = np.zeros((h * T, w * T), dtype=bool)
     dressing = np.zeros((h * T, w * T), dtype=bool)
+    chips = np.zeros((h * T, w * T), dtype=bool)
     yy, xx = np.mgrid[0:T, 0:T]
 
     for y in range(h):
@@ -152,6 +153,8 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
 
                     is_worn = stone_worn(worn, addr, x, y)
                     wear_of_class[1 + c * 3 + kind] = is_worn
+                    w_raw = CA.wear_at(x * T + T // 2, y * T + T // 2, seed)
+                    w01 = 0.0 if defect == "uniform_wear" else CA.wear01(w_raw, is_worn)
                     ox = CA.stone_origin(wf, e, kind, c, drops[c])
                     oy = CA.course_origin_y(split_i, c)
                     lx, ly = (xx - ox) % (2 * T), (yy - oy) % (2 * T)
@@ -168,7 +171,8 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
                     # and both tiles either side of a spanning stone dress it identically.
                     if defect != "no_marks":
                         ext = CA.stone_extent(wf, e, kind, c, drops[c], split_i)
-                        for (u, v, depth) in CA.stone_marks(key, seed, ext, worn=is_worn):
+                        for (u, v, depth) in CA.stone_marks(key, seed, ext, worn=is_worn,
+                                                            wear=w01):
                             lx, ly = u + ox, v + oy
                             if 0 <= lx < T and 0 <= ly < T and m[ly, lx]:
                                 L[ly, lx] -= depth * step
@@ -213,6 +217,52 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
                 if jw.any():
                     L = np.where(jw, L + (mat["lum_median"] - L) * CA.WEAR_ARRIS, L)
 
+            # ================= THE DIFFERENTIAL-WEAR PASS =================
+            #
+            # THE DEVICE GATE: "all the gaps look standardized... freshly laid and mortared, like
+            # someone scoured new stone to make it look old." Ruled: uniform joints are STAGED
+            # AGE, and staging is a register violation — wear is earned, differentially.
+            #
+            # (a) a joint OPENS where feet passed: deeper, and therefore darker. Keyed on world
+            #     position, so both tiles either side of a boundary agree about it by
+            #     construction — the stone address discipline, applied to the joint.
+            # (b) the stones beside an open joint lose their arrises: a pixel of stone goes with
+            #     the joint, and occasionally a second — a corner gone.
+            #
+            # Occlusion vocabulary throughout: everything here is a recess getting deeper or
+            # wider. Nothing brightens.
+            if defect != "uniform_wear":
+                jm_pix = (cls == 0) & jm
+                wblk = CA.wear_block(x * T, y * T, T, seed)
+                w01b = CA.wear01_block(wblk, bool(worn and worn(x, y)))
+                open_amt = np.where(jm_pix, w01b, 0.0)
+                # A SHELTERED joint is shallower. An open one keeps the dark it already had —
+                # there is no rung below it — and spends its wear on the arrises instead.
+                # A WHOLE RUNG OR NOTHING — §13.8 applied to this very change. Scaling the
+                # lightening continuously with wear produced sub-rung shifts on a joint sitting
+                # exactly on the ladder's bottom rung, and quantisation ate every one of them:
+                # measured spread 0.000. The law says a signal below the floor is absent, and it
+                # does not stop being true because the signal is mine.
+                #
+                # So a joint is TIGHT or it is OPEN. Tight sits a full rung shallower; open keeps
+                # the dark it had and spends its wear on the arrises beside it.
+                tight = (open_amt <= CA.JOINT_TIGHT_KNEE).astype(float)
+                L = L + np.where(jm_pix, tight, 0.0) * CA.JOINT_TIGHT_RUNGS * step
+
+                # (b) THE ARRIS GOES WITH THE JOINT. A stone pixel touching an open joint is
+                # chipped off in proportion to how open that joint is — occlusion vocabulary,
+                # a recess getting wider rather than anything getting brighter.
+                near = np.zeros((T, T), dtype=float)
+                near[1:, :] = np.maximum(near[1:, :], open_amt[:-1, :])
+                near[:-1, :] = np.maximum(near[:-1, :], open_amt[1:, :])
+                near[:, 1:] = np.maximum(near[:, 1:], open_amt[:, :-1])
+                near[:, :-1] = np.maximum(near[:, :-1], open_amt[:, 1:])
+                stone_px = (cls != 0) & ~jm_pix
+                hsh = (CA._mix_np(xx + x * T, yy + y * T, CA.CHIP + seed) % 1000) / 1000.0
+                chip = stone_px & (near > 0) & (hsh < CA.CHIP_RATE * near)
+                L = np.where(chip, L - near * CA.JOINT_TIGHT_RUNGS * step * 1.6, L)
+                chips[y * T:(y + 1) * T, x * T:(x + 1) * T] = chip
+
             # THE CRACK NETWORK, drawn last so it crosses stones and joints alike. Not an
             # overlay and not alpha: authored pixels on the family's own ladder, which is what
             # §5.1 and §4.3 govern.
@@ -253,7 +303,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
     # NO TRANSITION LIST. Wear is now decided per stone, so the channel's edge falls on a joint
     # rather than on a tile boundary, and there is no longer an intended material step at any
     # vertical boundary to exclude. The empty list is the finding, not an omission.
-    return img, joints, [], cracks, dressing
+    return img, joints, [], cracks, dressing | chips
 
 
 # =================================================================================================
@@ -509,6 +559,32 @@ def channel_legibility(img, baseline, joints, worn_cells, w, h):
                 inside_px=a["inside_px"])
 
 
+def joint_variation(img, joints, w, h, rung):
+    """ARE THE JOINTS ALL THE SAME AGE?
+
+    The device gate, second walk: *"all the gaps look standardized… freshly laid and mortared,
+    like someone scoured new stone to make it look old."* Ruled a register violation — uniform
+    joints are STAGED age, and wear is earned differentially.
+
+    So the thing to measure is not how dark the joints are, which was never the complaint, but
+    HOW MUCH THEY DIFFER FROM ONE ANOTHER. Reported as the gap between the most-open decile of
+    joint pixels and the most-tight decile, in ladder rungs. A floor of uniformly mortared gaps
+    reads near zero however dark those gaps are.
+
+    §13.8 applies to the variation itself: a differential authored below the perceptual floor is
+    a floor that is still uniform.
+    """
+    L = RI.lum(img.astype(float))
+    v = np.sort(L[joints])
+    if len(v) < 20:
+        return dict(joint_px=int(len(v)), spread_rungs=0.0)
+    k = max(1, len(v) // 10)
+    return dict(joint_px=int(len(v)),
+                open_decile=round(float(np.median(v[:k])), 2),
+                tight_decile=round(float(np.median(v[-k:])), 2),
+                spread_rungs=round((float(np.median(v[-k:])) - float(np.median(v[:k]))) / rung, 3))
+
+
 def crack_field(cracks, w, h):
     """IS A CRACK LONG ENOUGH TO BE A CRACK, AND DOES IT CROSS A TILE?
 
@@ -664,7 +740,8 @@ def crossing_spread(joints, w, h):
     return dict(horizontal_boundaries=stats(ys), vertical_boundaries=stats(xs))
 
 
-def measure(img, joints, w, h, transitions=(), seed=1337, cracks=None, dressing=None):
+def measure(img, joints, w, h, transitions=(), seed=1337, cracks=None, dressing=None,
+            rung=13.23):
     return dict(enclosure=enclosure(joints),
                 boundary_step=boundary_step(img, joints, w, h, transitions, cracks, dressing),
                 continuity=continuity(joints, w, h),
@@ -672,6 +749,7 @@ def measure(img, joints, w, h, transitions=(), seed=1337, cracks=None, dressing=
                 skeleton=skeleton_repeats(joints, w, h),
                 constant_pitch=constant_pitch_lines(joints, w, h),
                 cracks=crack_field(cracks, w, h) if cracks is not None else None,
+                joint_variation=joint_variation(img, joints, w, h, rung),
                 crossings=crossing_spread(joints, w, h))
 
 
@@ -707,6 +785,10 @@ PLANTS = [
              "defect restored, marks that stop at a tile edge",
          test=lambda m: m["cracks"] is not None and m["cracks"]["share_crossing"] is not None
          and m["cracks"]["share_crossing"] < 0.2),
+    dict(name="uniform_wear", must_fire="joint_variation",
+         why="every joint the same age — the staged-age defect the second device walk culled, "
+             "restored by nulling the wear field",
+         test=lambda m: m["joint_variation"]["spread_rungs"] < 0.35),
     dict(name="one_family", must_fire="skeleton",
          why="every boundary collapsed to one family, so every cell of a row draws the same bond "
              "— the 0.99+ duplicates at one-tile displacement the seat measured, restored whole",
@@ -737,9 +819,16 @@ def channel_plant(w, h, seed, mat):
     # 1.0 erases the joint completely. Setting all three to 1.0 therefore delivered the most worn
     # floor the system can make, the instrument correctly reported a very visible channel, and the
     # plant read that as the instrument failing. Two mistakes agreeing on a verdict.
-    keep = (CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS, CA.WEAR_BANDS, CA.WEAR_PITS)
+    # FIVE TERMS NOW, AND THE PLANT HAS CAUGHT EVERY ONE OF THEM AS IT WAS ADDED — the arris, then
+    # the dressing counts, now the channel's bias on the wear field. Each time, a term was written
+    # where it belonged in the art and not where it belonged in the wear block, the plant went
+    # SILENT, and the channel stayed visible through the one term the null could not reach. That
+    # is what a control is for, and it is the reason this list is checked rather than remembered.
+    keep = (CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS, CA.WEAR_BANDS, CA.WEAR_PITS,
+            CA.CHANNEL_WEAR)
     CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS = 1.0, 1.0, 0.0
     CA.WEAR_BANDS, CA.WEAR_PITS = CA.MARK_BANDS, CA.MARK_PITS
+    CA.CHANNEL_WEAR = 0
     try:
         band = lambda x, y: w // 2 - 1 <= x <= w // 2
         img, joints, _, _c, _d = assemble(w, h, seed, mat, band)
@@ -748,7 +837,7 @@ def channel_plant(w, h, seed, mat):
         m = channel_legibility(img, base, joints | _c | _d, cells, w, h)
     finally:
         (CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS,
-         CA.WEAR_BANDS, CA.WEAR_PITS) = keep
+         CA.WEAR_BANDS, CA.WEAR_PITS, CA.CHANNEL_WEAR) = keep
     flat = all(abs((m[k] or 1.0) - 1.0) < 0.02
                for k in ("texture_ratio", "variety_ratio", "arris_ratio"))
     return flat, m
@@ -778,11 +867,11 @@ def run_plants(w, h, seed, mat):
         ok &= fired
         print("  %-16s -> %-14s %s" % (p["name"], p["must_fire"], "FIRED" if fired else "SILENT"))
         print("       %s" % p["why"])
-        print("       boundary_step %s | continuity %s | col_density %s | course heights %s | "
-              "duplicate skeletons %.1f%%"
+        print("       boundary_step %s | continuity %s | course heights %s | duplicate "
+              "skeletons %.1f%% | joint spread %s rungs"
               % (m["boundary_step"]["ratio"], m["continuity"]["continued"],
-                 m["grid_hiding"]["col_density_ratio"], m["banding"]["distinct_spacings"],
-                 100 * m["skeleton"]["duplicate_rate"]))
+                 m["banding"]["distinct_spacings"], 100 * m["skeleton"]["duplicate_rate"],
+                 m["joint_variation"]["spread_rungs"]))
         if not fired:
             print("       ^^ THIS INSTRUMENT HAS NOT SHOWN IT CAN FAIL. Its pass does not count.")
     print()
@@ -791,8 +880,15 @@ def run_plants(w, h, seed, mat):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--w", type=int, default=8)
-    ap.add_argument("--h", type=int, default=8)
+    # SIXTEEN, NOT EIGHT — the field has to be big enough to contain the thing being measured.
+    #
+    # The wear field varies over five and eleven tiles, and an 8x8 field at the origin happens to
+    # sit entirely inside one high-wear region: every joint there is open, `joint_variation`
+    # reported a spread of 0.000, and it looked exactly like the uniform-mortar defect it exists
+    # to catch. The floor was varying; the window was too small to see it. A window that cannot
+    # contain the variation reports its absence, which is a false negative dressed as a measurement.
+    ap.add_argument("--w", type=int, default=16)
+    ap.add_argument("--h", type=int, default=16)
     ap.add_argument("--seed", type=int, default=1337)
     ap.add_argument("--plants", action="store_true")
     ap.add_argument("--out", default=os.path.join(HERE, "evidence"))
@@ -853,6 +949,10 @@ def main():
                   "boundary (%.0f%%). The retired overlay's median mark was 4px."
                   % (ck_["marks"], ck_["median_px"], ck_["max_px"], ck_["crossing_a_boundary"],
                      100 * (ck_["share_crossing"] or 0)))
+        jv = m["joint_variation"]
+        print("     joint age:    open decile %s vs tight decile %s — a spread of %s rungs "
+              "(uniform mortar reads ~0)"
+              % (jv.get("open_decile"), jv.get("tight_decile"), jv["spread_rungs"]))
         sk = m["skeleton"]
         print("     skeletons:    %d distinct in %d cells; %d cells share one (%.1f%%); "
               "identical neighbours %d of %d"

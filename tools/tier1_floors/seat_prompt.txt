@@ -72,6 +72,12 @@ Q7: AT THE SIZE SHOWN, WITHOUT ZOOMING IN, WHAT CAN YOU ACTUALLY SEE ON THE SURF
     seeing.
 Q7_WHY: name the pixel regions you checked at 1:1, and separately the ones you had to magnify.
 
+Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU? Give an age or an age range in your own terms —
+    laid last year, a century, older than the records — and then the specific evidence you read
+    it from. If different parts of the floor read as different ages, say which parts and how you
+    can tell. If it reads as one age everywhere, say that.
+Q8_WHY: name the pixel regions your answer comes from.
+
 CULL: If this floor should be rejected, give the single strongest reason in under twenty words.
       If it should not be rejected, write NONE.
       A critic who finds no defect should suspect its own rigour before crediting the work. Look

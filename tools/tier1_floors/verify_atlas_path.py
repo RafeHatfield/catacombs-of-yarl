@@ -93,6 +93,7 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
                                     + CA.cluster_bias(bx, course_k, seed)))
                     is_worn = FA.stone_worn(worn, addr, x, y)
                     wornc[cid] = is_worn
+                    w01 = CA.wear01(CA.wear_at(x * T + T // 2, y * T + T // 2, seed), is_worn)
                     off = k * step * (man["wear"]["spread"] if is_worn else 1.0)
                     gm = amp * (gs["worn_multiplier"] if is_worn else 1.0)
                     b = key % man["grain_bank"]
@@ -105,12 +106,17 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
                     vv = L + off + g * gm
                     marks = np.zeros((T, T), dtype=float)
                     ext = CA.stone_extent(fw, fe, kind, c, drops[c], split_i)
-                    for (u, vloc, depth) in CA.stone_marks(key, seed, ext, worn=is_worn):
+                    for (u, vloc, depth) in CA.stone_marks(key, seed, ext, worn=is_worn,
+                                                           wear=w01):
                         lx, ly = u + ox, vloc + oy
                         if 0 <= lx < T and 0 <= ly < T and m[ly, lx]:
                             marks[ly, lx] -= depth * step
-                    vv = np.clip(vv + marks, ladder[0], ladder[-1])
-                    L = np.where(m, ladder[np.abs(vv[..., None] - ladder).argmin(-1)], L)
+                    # NO QUANTISE HERE. The composer accumulates the whole tile unquantised and
+                    # rounds ONCE at the end; rounding per class and then subtracting wear gives
+                    # quantise(quantise(x) + w), which is not quantise(x + w). It disagreed on
+                    # 1368 pixels — every one of them a chipped arris, because a chip is the only
+                    # thing that subtracts from a STONE pixel after the class loop has run.
+                    L = np.where(m, vv + marks, L)
 
             # The arris pass, walked the way the engine walks it: bounds-checked, from the class
             # mask, quantised back onto the ladder.
@@ -126,9 +132,26 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
                 jw[:, :-1] |= ws[:, 1:]
                 jw &= (cls == 0)
                 if jw.any():
-                    v = L + (mat["lum_median"] - L) * man["wear"]["arris"]
-                    v = np.clip(v, ladder[0], ladder[-1])
-                    L = np.where(jw, ladder[np.abs(v[..., None] - ladder).argmin(-1)], L)
+                    L = np.where(jw, L + (mat["lum_median"] - L) * man["wear"]["arris"], L)
+
+            # THE DIFFERENTIAL-WEAR PASS, mirrored: joints open where feet passed, and the
+            # arris beside an open joint goes with it.
+            jm_pix = (cls == 0)
+            wblk = CA.wear_block(x * T, y * T, T, seed)
+            w01b = CA.wear01_block(wblk, bool(worn and worn(x, y)))
+            open_amt = np.where(jm_pix, w01b, 0.0)
+            tight = (open_amt <= CA.JOINT_TIGHT_KNEE).astype(float)
+            L = L + np.where(jm_pix, tight, 0.0) * CA.JOINT_TIGHT_RUNGS * step
+            near = np.zeros((T, T), dtype=float)
+            near[1:, :] = np.maximum(near[1:, :], open_amt[:-1, :])
+            near[:-1, :] = np.maximum(near[:-1, :], open_amt[1:, :])
+            near[:, 1:] = np.maximum(near[:, 1:], open_amt[:, :-1])
+            near[:, :-1] = np.maximum(near[:, :-1], open_amt[:, 1:])
+            hsh = (CA._mix_np(xx + x * T, yy + y * T, CA.CHIP + seed) % 1000) / 1000.0
+            chip = (~jm_pix) & (near > 0) & (hsh < CA.CHIP_RATE * near)
+            L = np.where(chip, L - near * CA.JOINT_TIGHT_RUNGS * step * 1.6, L)
+            L = ladder[np.abs(np.clip(L, ladder[0], ladder[-1])[..., None]
+                              - ladder).argmin(-1)]
 
             for (ly, lx) in CA.crack_pixels(x, y, seed, crack_cache):
                 L[ly, lx] = ladder[int(np.abs(crack_v - ladder).argmin())]

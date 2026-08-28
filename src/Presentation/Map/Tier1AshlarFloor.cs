@@ -73,6 +73,10 @@ public static class Tier1AshlarFloor
         public int MarksSalt = 3007, MarkMinLen = 5, MarkMaxLen = 10;
         public double MarkDepth = 1.0, PitDepth = 1.0;
         public int MarkBands = 5, MarkPits = 3, WearBands = 3, WearPits = 1;
+        public int WearSalt = 3008, ChipSalt = 3009, WearLo = 70, WearHi = 200, ChannelWear = 235;
+        public double JointTight = 1.0, TightKnee = 0.4, ChipRate = 0.55, DressingKeep = 0.45;
+        public int[][] WearOctaves = System.Array.Empty<int[]>();
+        public double[] WearAges = { 0.0, 0.34, 0.67, 1.0 };
         public int[][] MarkDirs = System.Array.Empty<int[]>();
         public int[] OffsetSteps = System.Array.Empty<int>();
         public int[] ClusterTable = { -1, 0, 0, 1 };
@@ -285,8 +289,13 @@ public static class Tier1AshlarFloor
     }
 
     private static List<(int U, int V, double D)> StoneMarks(Config c, int key, bool worn,
-                                                             (int Lo, int Hi, int VHi) ext)
+                                                             (int Lo, int Hi, int VHi) ext,
+                                                             double wear)
     {
+        // TRAFFICKED STONES POLISH SMOOTHER AS THEIR JOINTS OPEN; sheltered stones stay sharp and
+        // tight. The dressing is what traffic takes off first, so its count and its depth both
+        // fall with wear — continuous now, where it used to be a binary channel flag.
+        double keep = 1.0 - c.DressingKeep * wear;
         var outp = new List<(int, int, double)>();
         int st = Lcg((key ^ (c.MarksSalt + c.Seed)) | 1);
         int uSpan = System.Math.Max(1, ext.Hi - ext.Lo - 1);
@@ -304,7 +313,8 @@ public static class Tier1AshlarFloor
         // MORE BANDS, NOT MORE TEETH PER BAND. Teeth raise regularity; bands raise
         // coverage while staying ragged. At three bands the delivered contrast sat at
         // 0.148 against a floor of 0.144, and a 3% margin proves nothing.
-        int n = (worn ? c.WearBands : c.MarkBands) + ((st >> 9) % 2);
+        int n = System.Math.Max(1, (int)System.Math.Round(
+            ((worn ? c.WearBands : c.MarkBands) + ((st >> 9) % 2)) * keep));
         for (int j = 0; j < n; j++)
         {
             st = Lcg(st); int u = ext.Lo + (st >> 5) % uSpan;
@@ -325,11 +335,12 @@ public static class Tier1AshlarFloor
                 st = Lcg(st);
                 int ln = System.Math.Max(c.MarkMinLen, length - (st >> 8) % 3);
                 for (int i = 0; i < ln; i++)
-                    outp.Add((ou + dx * i, ov + dy * i, c.MarkDepth));
+                    outp.Add((ou + dx * i, ov + dy * i, c.MarkDepth * keep));
             }
         }
 
-        int m = (worn ? c.WearPits : c.MarkPits) + ((st >> 11) % 3);
+        int m = System.Math.Max(0, (int)System.Math.Round(
+            ((worn ? c.WearPits : c.MarkPits) + ((st >> 11) % 3)) * keep));
         for (int j = 0; j < m; j++)
         {
             st = Lcg(st); int u = ext.Lo + (st >> 5) % uSpan;
@@ -338,9 +349,57 @@ public static class Tier1AshlarFloor
             int wdt = 2 + (st >> 13) % 2;      // 2 or 3 across — never the 1px speck
             for (int aa = 0; aa < wdt; aa++)
                 for (int bb = 0; bb < 2; bb++)
-                    outp.Add((u + aa, v + bb, c.PitDepth));
+                    outp.Add((u + aa, v + bb, c.PitDepth * keep));
         }
         return outp;
+    }
+
+    /// <summary>
+    /// The wear scalar at a world pixel, 0..255 — two octaves of value noise at FIVE and ELEVEN
+    /// tiles, bilinear, integer throughout so the composer is reproduced exactly.
+    ///
+    /// Coprime periods, coprime with the tile: nothing in the field lands on the grid or on any
+    /// harmonic of it. A single octave at any period would draw its own.
+    /// </summary>
+    private static int WearAt(Config c, int px, int py)
+    {
+        long total = 0;
+        int wsum = 0;
+        foreach (var oct in c.WearOctaves)
+        {
+            int span = oct[0] * T, weight = oct[1];
+            int gx = FloorDiv(px, span), gy = FloorDiv(py, span);
+            int fx = px - gx * span, fy = py - gy * span;
+            long v00 = Mix(gx, gy, c.WearSalt + c.Seed) & 255;
+            long v10 = Mix(gx + 1, gy, c.WearSalt + c.Seed) & 255;
+            long v01 = Mix(gx, gy + 1, c.WearSalt + c.Seed) & 255;
+            long v11 = Mix(gx + 1, gy + 1, c.WearSalt + c.Seed) & 255;
+            long top = v00 * (span - fx) + v10 * fx;
+            long bot = v01 * (span - fx) + v11 * fx;
+            total += ((top * (span - fy) + bot * fy) / ((long)span * span)) * weight;
+            wsum += weight;
+        }
+        return (int)(total / wsum);
+    }
+
+    /// <summary>
+    /// The wear scalar as one of four AGES. Not taste — a correctness fix: a continuous scalar
+    /// against a seven-rung ladder puts pixels on quantisation knife-edges, and at exactly w=0.5
+    /// a joint lands HALF A RUNG between two levels where the tie is broken by floating-point
+    /// noise. The composer and its mirror disagreed on 65 pixels for no reason either could be
+    /// said to be wrong about, and a third implementation would have been a third coin flip.
+    /// Mortar is tight, opening, open, or gone.
+    /// </summary>
+    private static double Wear01(Config c, int raw, bool channel)
+    {
+        if (channel) raw = System.Math.Max(raw, c.ChannelWear);
+        if (raw <= c.WearLo) return 0.0;
+        if (raw >= c.WearHi) return 1.0;
+        double f = (raw - c.WearLo) / (double)(c.WearHi - c.WearLo);
+        double best = c.WearAges[0];
+        foreach (var age in c.WearAges)
+            if (System.Math.Abs(age - f) < System.Math.Abs(best - f)) best = age;
+        return best;
     }
 
     private static int LadderIndex(Config c, double v)
@@ -505,7 +564,8 @@ public static class Tier1AshlarFloor
                 // composer's do.
                 int mAx = (cellIndex % AtlasCols) * T, mAy = (cellIndex / AtlasCols) * T;
                 var mExt = StoneExtent(cfg, fw, fe, kind, c, drops[c], splitI);
-                foreach (var (mu, mv, md) in StoneMarks(cfg, key, worn, mExt))
+                double sw = Wear01(cfg, WearAt(cfg, tx * T + T / 2, ty * T + T / 2), worn);
+                foreach (var (mu, mv, md) in StoneMarks(cfg, key, worn, mExt, sw))
                 {
                     int mlx = mu + ox[cls], mly = mv + oy[cls];
                     if (mlx < 0 || mlx >= T || mly < 0 || mly >= T) continue;
@@ -516,20 +576,25 @@ public static class Tier1AshlarFloor
             }
         }
 
-        var outImg = Image.CreateEmpty(T, T, false, Image.Format.Rgb8);
+        // ONE RAW ACCUMULATION, THEN ONE QUANTISE, and the order is load-bearing rather than
+        // tidy. The composer rounds the whole tile once at the end; rounding per pixel and then
+        // subtracting wear computes quantise(quantise(x) + w), which is not quantise(x + w). The
+        // mirror did exactly that and disagreed on 1368 pixels — every one a chipped arris,
+        // because a chip is the only thing that subtracts from a STONE pixel after the class
+        // loop has run.
+        var raw = new double[T, T];
+        var clsArr = new int[T, T];
         int ax = (cellIndex % AtlasCols) * T, ay = (cellIndex / AtlasCols) * T;
+
         for (int py = 0; py < T; py++)
         {
             for (int px = 0; px < T; px++)
             {
                 var src = atlas.GetPixel(ax + px, ay + py);
                 int cls = (int)System.Math.Round(src.G * 255.0);
+                clsArr[py, px] = cls;
                 double L = cfg.Ladder[(int)System.Math.Round(src.R * 255.0)];
 
-                // Class 0 is a joint. It is copied straight across and NEVER offset: the
-                // ladder's bottom is where the occlusion lives, an offset applied to every
-                // pixel clips 30.16% of them at the floor of the palette, and section 6.3
-                // holds that authored occlusion is form rather than decoration.
                 if (cls > 0 && cls < 7)
                 {
                     int lx = ((px - ox[cls]) % GrainSide + GrainSide) % GrainSide;
@@ -537,54 +602,91 @@ public static class Tier1AshlarFloor
                     var gp = grainImg.GetPixel(bankX[cls] + lx, bankY[cls] + ly);
                     double g = (gp.R * 255.0 - 128.0) / 64.0 * cfg.Coarse
                              + (gp.G * 255.0 - 128.0) / 64.0 * cfg.Fine;
-                    L = System.Math.Clamp(L + offset[cls] + g * gmul[cls] + markDepth[py, px],
-                                          cfg.Ladder[0], cfg.Ladder[^1]);
-                    L = cfg.Ladder[LadderIndex(cfg, L)];
+                    L += offset[cls] + g * gmul[cls] + markDepth[py, px];
                 }
-
-                outImg.SetPixel(px, py, new Color(
-                    (float)(L * cfg.Tint[0] / 255.0), (float)(L * cfg.Tint[1] / 255.0),
-                    (float)(L * cfg.Tint[2] / 255.0)));
+                raw[py, px] = L;
             }
         }
 
         // THE ARRIS PASS. A joint beside a trodden stone is shallower, because feet round the
-        // edges off — geometry, not light (§6.3), and a subtraction rather than an addition,
-        // which is what §8.2.1 requires of polish. Each joint pixel takes its wear from the
-        // stones it actually touches, so the channel ends where a STONE ends and never draws
-        // a straight line on the tile grid.
-        //
-        // Bounds-checked, not wrapped. The Python reference used a circular shift here and
-        // was rounding the arris of joints a whole tile away; the two would have disagreed
-        // precisely where the channel meets a tile edge.
+        // edges off — geometry, not light, and a subtraction rather than an addition. Each joint
+        // pixel takes its wear from the stones it actually TOUCHES, bounds-checked, never wrapped.
         if (anyWorn && cfg.WearArris > 0.0)
         {
             for (int py = 0; py < T; py++)
             {
                 for (int px = 0; px < T; px++)
                 {
-                    if ((int)System.Math.Round(atlas.GetPixel(ax + px, ay + py).G * 255.0) != 0)
-                        continue;
+                    if (clsArr[py, px] != 0) continue;
                     bool nearWorn = false;
                     for (int d = 0; d < 4 && !nearWorn; d++)
                     {
                         int ny = py + (d == 0 ? -1 : d == 1 ? 1 : 0);
                         int nx = px + (d == 2 ? -1 : d == 3 ? 1 : 0);
                         if (ny < 0 || ny >= T || nx < 0 || nx >= T) continue;
-                        int nc = (int)System.Math.Round(
-                            atlas.GetPixel(ax + nx, ay + ny).G * 255.0);
+                        int nc = clsArr[ny, nx];
                         if (nc > 0 && nc < 7 && wornClass[nc]) nearWorn = true;
                     }
-                    if (!nearWorn) continue;
-                    double jl = cfg.Ladder[(int)System.Math.Round(
-                        atlas.GetPixel(ax + px, ay + py).R * 255.0)];
-                    jl += (cfg.LumMedian - jl) * cfg.WearArris;
-                    jl = cfg.Ladder[LadderIndex(cfg, System.Math.Clamp(
-                        jl, cfg.Ladder[0], cfg.Ladder[^1]))];
-                    outImg.SetPixel(px, py, new Color(
-                        (float)(jl * cfg.Tint[0] / 255.0), (float)(jl * cfg.Tint[1] / 255.0),
-                        (float)(jl * cfg.Tint[2] / 255.0)));
+                    if (nearWorn)
+                        raw[py, px] += (cfg.LumMedian - raw[py, px]) * cfg.WearArris;
                 }
+            }
+        }
+
+        // ================= THE DIFFERENTIAL-WEAR PASS =================
+        //
+        // THE DEVICE GATE, second walk: "all the gaps look standardized... freshly laid and
+        // mortared, like someone scoured new stone to make it look old." Ruled a register
+        // violation: uniform joints are STAGED AGE, and wear is earned differentially.
+        //
+        // (a) a joint OPENS where feet passed — deeper, therefore darker. Keyed on world position
+        //     alone, so both tiles either side of a boundary agree by construction.
+        // (b) the stones beside an open joint lose their arrises: a pixel of stone goes with the
+        //     joint, and sometimes a second — a corner gone.
+        bool channelHere = isChannel != null && isChannel(tx, ty);
+        var openAmt = new double[T, T];
+        for (int py = 0; py < T; py++)
+            for (int px = 0; px < T; px++)
+                if (clsArr[py, px] == 0)
+                {
+                    openAmt[py, px] = Wear01(cfg, WearAt(cfg, tx * T + px, ty * T + py), channelHere);
+                    // A WHOLE RUNG OR NOTHING. Scaling the lightening continuously produced
+                    // sub-rung shifts on a joint sitting on the ladder's bottom rung, and
+                    // quantisation ate every one: measured spread 0.000. §13.8 does not stop
+                    // applying because the signal is ours. A joint is TIGHT — a full rung
+                    // shallower — or OPEN, keeping the dark it had and spending its wear on the
+                    // arrises beside it, because there is no rung below it to take.
+                    if (openAmt[py, px] <= cfg.TightKnee)
+                        raw[py, px] += cfg.JointTight * rung;
+                }
+
+        for (int py = 0; py < T; py++)
+        {
+            for (int px = 0; px < T; px++)
+            {
+                if (clsArr[py, px] == 0) continue;
+                double near = 0.0;
+                if (py > 0) near = System.Math.Max(near, openAmt[py - 1, px]);
+                if (py < T - 1) near = System.Math.Max(near, openAmt[py + 1, px]);
+                if (px > 0) near = System.Math.Max(near, openAmt[py, px - 1]);
+                if (px < T - 1) near = System.Math.Max(near, openAmt[py, px + 1]);
+                if (near <= 0.0) continue;
+                int h = Mix(tx * T + px, ty * T + py, cfg.ChipSalt + cfg.Seed);
+                if ((h % 1000) / 1000.0 < cfg.ChipRate * near)
+                    raw[py, px] -= near * cfg.JointTight * rung * 1.6;
+            }
+        }
+
+        var outImg = Image.CreateEmpty(T, T, false, Image.Format.Rgb8);
+        for (int py = 0; py < T; py++)
+        {
+            for (int px = 0; px < T; px++)
+            {
+                double L = cfg.Ladder[LadderIndex(cfg, System.Math.Clamp(
+                    raw[py, px], cfg.Ladder[0], cfg.Ladder[^1]))];
+                outImg.SetPixel(px, py, new Color(
+                    (float)(L * cfg.Tint[0] / 255.0), (float)(L * cfg.Tint[1] / 255.0),
+                    (float)(L * cfg.Tint[2] / 255.0)));
             }
         }
 
@@ -753,6 +855,21 @@ public static class Tier1AshlarFloor
             cfg.MarkDepth = mk.GetProperty("depth").GetDouble();
             cfg.PitDepth = mk.GetProperty("pit_depth").GetDouble();
             cfg.MarkDirs = Table(mk.GetProperty("dirs"));
+
+            var df = root.GetProperty("differential");
+            cfg.WearSalt = salts.GetProperty("wear").GetInt32();
+            cfg.ChipSalt = salts.GetProperty("chip").GetInt32();
+            cfg.WearOctaves = Table(df.GetProperty("octaves"));
+            cfg.WearLo = df.GetProperty("lo").GetInt32();
+            cfg.WearHi = df.GetProperty("hi").GetInt32();
+            cfg.JointTight = df.GetProperty("joint_tight").GetDouble();
+            cfg.TightKnee = df.GetProperty("tight_knee").GetDouble();
+            cfg.ChipRate = df.GetProperty("chip_rate").GetDouble();
+            cfg.DressingKeep = df.GetProperty("dressing_keep").GetDouble();
+            cfg.ChannelWear = df.GetProperty("channel_wear").GetInt32();
+            var ages = new List<double>();
+            foreach (var v in df.GetProperty("ages").EnumerateArray()) ages.Add(v.GetDouble());
+            cfg.WearAges = ages.ToArray();
             cfg.MvTable = Table(root.GetProperty("mv_table"));
 
             foreach (var e in root.GetProperty("base").EnumerateArray())
