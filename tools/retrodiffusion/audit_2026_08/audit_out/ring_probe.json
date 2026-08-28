@@ -1,0 +1,531 @@
+{
+ "commit": "84094d2167d06ce2743f7e180f6545af1b0d63fc",
+ "min_side_coverage": 0.9,
+ "max_thickness": 2.0,
+ "max_thickness_spread": 0.5,
+ "min_interior": 16,
+ "max_regions_separated": 2,
+ "files": [
+  {
+   "file": "plus_tiled_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/audit_out/probe_style/plus_tiled_0.png",
+   "sha256": "9adc1a74e90cfcff4c2eab350ebd989c69501b4ee3c7cfceec86d5eea8ec21e9",
+   "verdict": "RING",
+   "median_lum": 118.0,
+   "rings": [
+    {
+     "kind": "band",
+     "level": "77.6<=lum<=112.1",
+     "contour_px": 36,
+     "interior_px": 64,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      22,
+      9,
+      31
+     ],
+     "wall_colours": 5,
+     "levels_agreeing": 15
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=110.2",
+     "contour_px": 36,
+     "interior_px": 64,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      11,
+      20,
+      20
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 3
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=118.0",
+     "contour_px": 36,
+     "interior_px": 64,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      11,
+      9,
+      20
+     ],
+     "wall_colours": 7,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=118.0",
+     "contour_px": 37,
+     "interior_px": 63,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.964,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      11,
+      22,
+      20,
+      31
+     ],
+     "wall_colours": 7,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=127.1",
+     "contour_px": 37,
+     "interior_px": 63,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      11,
+      0,
+      20,
+      9
+     ],
+     "wall_colours": 6,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "95.9<=lum<=118.0",
+     "contour_px": 39,
+     "interior_px": 61,
+     "pieces": 1,
+     "hollowness": 0.949,
+     "side_coverage": 0.926,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      11,
+      20,
+      20
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "77.6<=lum<=127.1",
+     "contour_px": 41,
+     "interior_px": 59,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.966,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      22,
+      11,
+      31,
+      20
+     ],
+     "wall_colours": 6,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=127.1",
+     "contour_px": 41,
+     "interior_px": 59,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      11,
+      22,
+      20,
+      31
+     ],
+     "wall_colours": 8,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "111.7<=lum<=127.1",
+     "contour_px": 31,
+     "interior_px": 59,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.911,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      22,
+      11,
+      30,
+      20
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=127.1",
+     "contour_px": 45,
+     "interior_px": 55,
+     "pieces": 1,
+     "hollowness": 0.978,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      11,
+      9,
+      20
+     ],
+     "wall_colours": 8,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=127.1",
+     "contour_px": 35,
+     "interior_px": 55,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.941,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      22,
+      11,
+      30,
+      20
+     ],
+     "wall_colours": 5,
+     "levels_agreeing": 4
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=118.0",
+     "contour_px": 47,
+     "interior_px": 53,
+     "pieces": 1,
+     "hollowness": 0.957,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      11,
+      20,
+      20
+     ],
+     "wall_colours": 5,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "95.9<=lum<=127.1",
+     "contour_px": 52,
+     "interior_px": 48,
+     "pieces": 1,
+     "hollowness": 0.885,
+     "side_coverage": 0.943,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      11,
+      11,
+      20,
+      20
+     ],
+     "wall_colours": 7,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "77.6<=lum<=135.1",
+     "contour_px": 55,
+     "interior_px": 45,
+     "pieces": 1,
+     "hollowness": 0.964,
+     "side_coverage": 0.956,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      22,
+      11,
+      31,
+      20
+     ],
+     "wall_colours": 7,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=135.1",
+     "contour_px": 55,
+     "interior_px": 45,
+     "pieces": 1,
+     "hollowness": 0.873,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      11,
+      22,
+      20,
+      31
+     ],
+     "wall_colours": 9,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "95.9<=lum<=135.1",
+     "contour_px": 55,
+     "interior_px": 45,
+     "pieces": 1,
+     "hollowness": 0.873,
+     "side_coverage": 0.9,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      11,
+      9,
+      20
+     ],
+     "wall_colours": 8,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "111.7<=lum<=135.1",
+     "contour_px": 45,
+     "interior_px": 45,
+     "pieces": 1,
+     "hollowness": 0.978,
+     "side_coverage": 0.922,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      22,
+      11,
+      30,
+      20
+     ],
+     "wall_colours": 5,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=135.1",
+     "contour_px": 49,
+     "interior_px": 41,
+     "pieces": 1,
+     "hollowness": 0.98,
+     "side_coverage": 0.957,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      22,
+      11,
+      30,
+      20
+     ],
+     "wall_colours": 6,
+     "levels_agreeing": 4
+    },
+    {
+     "kind": "band",
+     "level": "92.0<=lum<=135.1",
+     "contour_px": 61,
+     "interior_px": 39,
+     "pieces": 1,
+     "hollowness": 0.885,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      0,
+      11,
+      9,
+      20
+     ],
+     "wall_colours": 9,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "band",
+     "level": "77.6<=lum<=118.0",
+     "contour_px": 52,
+     "interior_px": 38,
+     "pieces": 1,
+     "hollowness": 0.808,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": true,
+     "interior_bbox": [
+      22,
+      0,
+      30,
+      9
+     ],
+     "wall_colours": 6,
+     "levels_agreeing": 3
+    },
+    {
+     "kind": "band",
+     "level": "148.1<=lum<=159.7",
+     "contour_px": 26,
+     "interior_px": 38,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.941,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      1,
+      23,
+      8,
+      30
+     ],
+     "wall_colours": 3,
+     "levels_agreeing": 1
+    },
+    {
+     "kind": "light-set",
+     "level": "lum>=144.1",
+     "contour_px": 27,
+     "interior_px": 37,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.905,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      12,
+      23,
+      19,
+      30
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 4
+    },
+    {
+     "kind": "light-set",
+     "level": "lum>=148.1",
+     "contour_px": 27,
+     "interior_px": 37,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 0.953,
+     "regions_separated": 1,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      1,
+      23,
+      8,
+      30
+     ],
+     "wall_colours": 4,
+     "levels_agreeing": 4
+    },
+    {
+     "kind": "light-set",
+     "level": "lum>=142.5",
+     "contour_px": 28,
+     "interior_px": 36,
+     "pieces": 1,
+     "hollowness": 1.0,
+     "side_coverage": 1.0,
+     "regions_separated": 2,
+     "wall_thickness": 1.0,
+     "wall_thickness_spread": 0.0,
+     "touches_border": false,
+     "interior_bbox": [
+      1,
+      23,
+      8,
+      30
+     ],
+     "wall_colours": 5,
+     "levels_agreeing": 4
+    }
+   ]
+  },
+  {
+   "file": "tilestyle_plain_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/audit_out/probe_style/tilestyle_plain_0.png",
+   "sha256": "91d56e390ffe9e7ec1c87dfd52785b981db2dba958848d60991b6e86e421df26",
+   "verdict": "CLEAN",
+   "median_lum": 138.0,
+   "rings": []
+  }
+ ]
+}

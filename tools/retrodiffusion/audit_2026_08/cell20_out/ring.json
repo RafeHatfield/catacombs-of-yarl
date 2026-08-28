@@ -1,0 +1,472 @@
+{
+ "commit": "0d536ce5657478373dff97fb55f3325f7d3e81e6",
+ "min_side_coverage": 0.9,
+ "max_thickness": 2.0,
+ "max_thickness_spread": 0.5,
+ "min_interior": 16,
+ "max_regions_separated": 2,
+ "controls": {
+  "suite_pass": true,
+  "cases": [
+   {
+    "name": "ctrl_clean",
+    "expect": "CLEAN",
+    "got": "CLEAN",
+    "pass_": true,
+    "why": "plain speckled field, no drawn contour anywhere",
+    "findings": []
+   },
+   {
+    "name": "ctrl_dark_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "near-black closed loop - the construction round 7 measured at 0.11 of the median",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 68,
+      "interior_px": 256,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 2,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       7,
+       7,
+       24,
+       24
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_pale_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "PALE closed loop, same geometry - \u00a712.1's worked example. The 0.30-of-median threshold in dering_floors.py cannot see this at all.",
+    "findings": [
+     {
+      "kind": "light-set",
+      "level": "lum>=197.7",
+      "contour_px": 68,
+      "interior_px": 256,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 2,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       7,
+       7,
+       24,
+       24
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_midtone_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "mid-tone closed loop at 0.48 of the median - the value the spike table called 'a mid-tone rebate - kept'",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=109.1",
+      "contour_px": 109,
+      "interior_px": 515,
+      "pieces": 1,
+      "hollowness": 0.826,
+      "side_coverage": 0.904,
+      "regions_separated": 2,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       4,
+       4,
+       29,
+       27
+      ],
+      "wall_colours": 2,
+      "levels_agreeing": 2
+     },
+     {
+      "kind": "dark-set",
+      "level": "lum<=60.5",
+      "contour_px": 84,
+      "interior_px": 400,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 2,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       5,
+       5,
+       26,
+       26
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_nicked_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "the same loop with a TWO-PIXEL bite out of one side. A topological-closure test calls this innocent; three regenerated B-KAB children passed that test and read as ringed tiles on sight. Criterion 1 measures presence on every side, not watertightness.",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 66,
+      "interior_px": 258,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 0.967,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       7,
+       7,
+       24,
+       24
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_split_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "a ring drawn as TWO overlapping L-brackets. Neither is on every side; together they are. The per-contour pass scored the real instance of this 0.57 and 0.65 and passed it; the blind seat culled it on sight. Caught by the union pass.",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 70,
+      "interior_px": 330,
+      "pieces": 2,
+      "hollowness": 1.0,
+      "side_coverage": 0.936,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       6,
+       6,
+       25,
+       25
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_dashed_ring",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "a ring drawn as a dashed run of ticks, one pixel in nine missing - every dash its own component. Invisible to the per-contour pass by construction. Caught by the union pass. See KNOWN LIMIT in the docstring for how broken a ring has to be to escape.",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 63,
+      "interior_px": 261,
+      "pieces": 4,
+      "hollowness": 1.0,
+      "side_coverage": 0.929,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": false,
+      "interior_bbox": [
+       7,
+       7,
+       24,
+       24
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_edge_frame",
+    "expect": "RING",
+    "got": "RING",
+    "pass_": true,
+    "why": "a frame on the tile's OWN border. A does-it-touch-the-border test calls this innocent; it is a ring around a thing and the thing is the tile. Criterion 4 catches it because removing it leaves ONE region, not a network of cells.",
+    "findings": [
+     {
+      "kind": "dark-set",
+      "level": "lum<=13.5",
+      "contour_px": 124,
+      "interior_px": 900,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": true,
+      "interior_bbox": [
+       0,
+       0,
+       31,
+       31
+      ],
+      "wall_colours": 1,
+      "levels_agreeing": 2
+     },
+     {
+      "kind": "dark-set",
+      "level": "lum<=109.1",
+      "contour_px": 132,
+      "interior_px": 892,
+      "pieces": 1,
+      "hollowness": 1.0,
+      "side_coverage": 1.0,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": true,
+      "interior_bbox": [
+       0,
+       0,
+       31,
+       31
+      ],
+      "wall_colours": 2,
+      "levels_agreeing": 2
+     },
+     {
+      "kind": "dark-set",
+      "level": "lum<=123.6",
+      "contour_px": 185,
+      "interior_px": 839,
+      "pieces": 1,
+      "hollowness": 0.849,
+      "side_coverage": 1.0,
+      "regions_separated": 1,
+      "wall_thickness": 1.0,
+      "wall_thickness_spread": 0.0,
+      "touches_border": true,
+      "interior_bbox": [
+       0,
+       0,
+       31,
+       31
+      ],
+      "wall_colours": 3,
+      "levels_agreeing": 2
+     }
+    ]
+   },
+   {
+    "name": "ctrl_joint_net",
+    "expect": "CLEAN",
+    "got": "CLEAN",
+    "pass_": true,
+    "why": "SAME colour, SAME 1px width and the SAME measured constancy as ctrl_midtone_ring, and it too runs to the tile border like ctrl_edge_frame. It differs from BOTH of them by criterion 4 alone: removing it leaves five cells rather than a thing and its surround.",
+    "findings": []
+   },
+   {
+    "name": "ctrl_occlusion",
+    "expect": "CLEAN",
+    "got": "CLEAN",
+    "pass_": true,
+    "why": "plane-boundary occlusion: near-black, on the floor-facing side only, open contour. \u00a712.1 RULED this legal and required.",
+    "findings": []
+   }
+  ]
+ },
+ "files": [
+  {
+   "file": "cell20_30000_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30000_0.png",
+   "sha256": "d5c33ea8b9e55098035893665d6f84ea1f68a498adf30e8fd5b43c7cb3e6b6df",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30001_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30001_0.png",
+   "sha256": "65538bff1838274412f052c6e5f8b7489d71846f3896eec910f2a452cdf1f268",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30002_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30002_0.png",
+   "sha256": "c991d9c4c2c2f1ddb263d2012e4afa00fac6edba08f4042cb9936f710355fceb",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30003_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30003_0.png",
+   "sha256": "54cc909bd2b1c7e1464617e6a4e92f660abbbd5470ea5b4f1b43db6a13a49f13",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30004_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30004_0.png",
+   "sha256": "636d0235436dc6d2e36eff4338c6db8369b277262f9caee25b03bb857d4ebf91",
+   "verdict": "CLEAN",
+   "median_lum": 122.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30005_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30005_0.png",
+   "sha256": "9207615a40f898a3de26de5552896357a1699d49597d208394b97b76959c978e",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30006_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30006_0.png",
+   "sha256": "e5106f3a74ea34eb02bb495bcd06cda1bb6cb85caf6a2d7a9d2d8bd210a1e4ce",
+   "verdict": "CLEAN",
+   "median_lum": 122.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30007_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30007_0.png",
+   "sha256": "cb41e9f164bc7037ea3362d50ad12e93230257c41fdf8fd093c3da823832a02b",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30008_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30008_0.png",
+   "sha256": "fbd2ad3dd1e9f752711db292b438e0806358d135d6731d2240726db29ef817a6",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30009_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30009_0.png",
+   "sha256": "8943bebc200ef973ff1f6cf5ec48cf0601dcc702c3bbaaefabd223fdd2315ed3",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30010_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30010_0.png",
+   "sha256": "2321abf743a1d7b96abf55688215b52cd2daecedb82409d2c867e77d79cca573",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30011_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30011_0.png",
+   "sha256": "91bdf2beef13b7980317baa1e6e9ad17138effb2955b8a879f17a9253190e813",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30012_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30012_0.png",
+   "sha256": "3c2f9733423fd814d85fe6be2940ed8e3f43f6b170255c811c7ffb1f3d983ee5",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30013_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30013_0.png",
+   "sha256": "4a85a662144ad78c5b6564e35079803d505d9a35e504af4201882f8a1f93200c",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30014_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30014_0.png",
+   "sha256": "c0de8a6f4a2ebebe2e1c777659e153992b6fcebd069a9285a0c12f51252c2e04",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30015_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30015_0.png",
+   "sha256": "ccc288c963c66f5b9a385fb8a2dd2cbdaafa14a6bce3890990e27830b1f944a7",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30016_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30016_0.png",
+   "sha256": "555678e6141cc185260330e10e06ed6d48716e3143350dc41af855ef1e0d6044",
+   "verdict": "CLEAN",
+   "median_lum": 122.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30017_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30017_0.png",
+   "sha256": "431da8f95b06f50a6560b7dd362d94cc2bce7d03c3c94ac1dfab26f820073c4d",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30018_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30018_0.png",
+   "sha256": "ef5fcd16a503b67ad79772df9bb784e909cf58bda2bbf4da9fbd1ed21ddb4ff8",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  },
+  {
+   "file": "cell20_30019_0.png",
+   "path": "tools/retrodiffusion/audit_2026_08/cell20_out/tiles/cell20_30019_0.png",
+   "sha256": "8700889f0d4a7a710852bf808650259592386f71b60d2d7927b44fdff2278943",
+   "verdict": "CLEAN",
+   "median_lum": 96.5,
+   "rings": []
+  }
+ ]
+}

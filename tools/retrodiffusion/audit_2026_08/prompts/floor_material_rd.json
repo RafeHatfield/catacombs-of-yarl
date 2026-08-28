@@ -1,0 +1,116 @@
+{
+  "subject": "floor_base_material",
+  "title": "Boundary floor MATERIAL, translated to the Retro Diffusion v1 payload shape",
+  "surface": "rd-v1-rest /inferences",
+
+  "_what_this_is": [
+    "The RD-side twin of `tools/tier1_floors/prompts/base_material.json`. It asks the SAME",
+    "subject in the SAME register so the two surfaces can be compared on the one thing under",
+    "test — the surface — rather than on a prompt rewrite.",
+    "",
+    "It is a TRANSLATION, not a copy, and the translation is lossy in one load-bearing place.",
+    "That loss is stated in `translation_losses` below rather than buried, because it caps what",
+    "the ring-rate comparison in AUDIT-RD.md column 7 is allowed to claim.",
+    "",
+    "§8.3 LAW governs what is being asked for: a base tile carries MATERIAL and no incident.",
+    "The crack, the dished centre, the wear channel are the OVERLAY's job and are refused here.",
+    "§8.3.1's mirror caps the refusal: incident-free is not featureless — joints, bond, grain",
+    "and value break are properties of the material and belong in the tile."
+  ],
+
+  "translation_losses": [
+    {
+      "lost": "negative_description",
+      "detail": "The v1 REST surface documents no negative-prompt field. BitForge's run carried 31 negative terms, INCLUDING the three ring refusals `border, frame, outline` that were in play for every measured BitForge ring rate this audit compares against.",
+      "handled_by": "The refusals are restated as positive assertions inside `prompt` — 'every stone whole', 'the joints run off all four edges', 'no border, no frame, no outline around the edge of the image'. This is weaker: a negative list is a hard exclusion and a sentence is a request.",
+      "caps_the_claim": "If RD's ring rate comes back WORSE than BitForge's, the comparison cannot separate 'the surface rings more' from 'the surface was denied the ring refusals'. That reading is stated in the report and is the honest ceiling on a negative result. A ring rate BETTER than BitForge's is NOT affected — it would be achieved with fewer refusals in hand, which is a stronger result, not a weaker one."
+    },
+    {
+      "lost": "outline: lineless / detail: low detail / view: high top-down / shading: flat shading",
+      "detail": "Four BitForge parameters with no v1 REST equivalent. `outline: lineless` is the §12.1 belt to the negative list's braces; `shading: flat shading` is the ONE BitForge lever measured live (pixdiff 1.0000 against a 0.3542 noise floor).",
+      "handled_by": "Folded into the prompt text and into the choice of `prompt_style`, which is RD's own way of carrying register.",
+      "caps_the_claim": "Same direction as above. RD is asked for the same picture with fewer handles on it."
+    },
+    {
+      "lost": "style_image + style_strength (single-reference conditioning at strength 50)",
+      "detail": "RD's nearest equivalent is `reference_images` (RD Pro only, up to 9) and `input_image` + `strength` (image-to-image, a different operation). Neither is `style_strength` and neither is measured on this surface.",
+      "handled_by": "Column 2 of the audit measures the mechanism, its limits and its sizes. The YIELD RUN is deliberately UNCONDITIONED on both cells.",
+      "caps_the_claim": "The ring-rate baseline it is compared against (5/20 instrument, 9/20 seat-adjusted) is a CONDITIONED rate — C-GAB children. An unconditioned RD rate and a conditioned BitForge rate are not the same measurement. Stated in the report; see `baseline_comparability` below."
+    }
+  ],
+
+  "baseline_comparability": {
+    "baseline": "C-GAB line on BitForge — 5/20 instrument, 9/20 seat-adjusted (REPORT-PARENT-RATE.md §2). The brief's 25-45% band is those two figures.",
+    "why_unconditioned_here": "Conditioning RD on C-GAB would introduce a second uncontrolled variable — RD's reference mechanism is documented as RD Pro `reference_images`, a different mechanism at a different price, and its efficacy is UNMEASURED. §4.1 LAW: a lever is proven on its axis. This run measures the SURFACE's ring rate; it does not claim to measure RD-conditioned-on-C-GAB.",
+    "the_honest_frame": "The question the yield run can answer is 'does raw RD floor material ring less than conditioned BitForge floor material'. If the answer is materially yes, that is a finding worth Rafe's ruling. If it is no, RD offers no screening relief and the bar's first limb fails on the harder-to-dispute side."
+  },
+
+  "prompt": "A field of old grey dungeon flagstones seen from directly above, filling the whole frame edge to edge. Large flat paving stones of the same quarried grey stone, laid tight against each other in an irregular bond, their joints running right off all four edges of the frame. The stone is plain: a close even grain, small differences of value from one stone to the next, dark grime settled along every joint. Every stone is whole and flat and the surface is continuous. No single stone stands out from its neighbours. Nothing is broken, nothing is chipped, nothing has collapsed, and nothing has been put down on it. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+
+  "phrase_provenance": [
+    {"phrase": "seen from directly above, filling the whole frame edge to edge",
+     "clause": "§3 — orthogonal square grid, not isometric. Full-bleed is mechanical: a tile must tile.",
+     "same_as_bitforge": true},
+    {"phrase": "old grey dungeon flagstones ... the same quarried grey stone",
+     "clause": "§7.4 seam 1 — 'The Boundary is mostly found stone with orc work pinned into it.' The floor is the found half.",
+     "same_as_bitforge": true},
+    {"phrase": "laid tight against each other in an irregular bond",
+     "clause": "§8.3.1's MIRROR — 'Material has structure — joints, bond, grain, value break.' IRREGULAR does the work: a bond is licensed, a grid is not (the wall-top cull).",
+     "same_as_bitforge": true},
+    {"phrase": "their joints running right off all four edges of the frame",
+     "clause": "§12.1 RULED (2026-08-27) — the test that separates a joint from a ring is whether it CONTINUES INTO THE NEIGHBOUR. Also the mechanical precondition for a seamless bond, which makes it the phrase the `tile_x`/`tile_y` cell is testing against.",
+     "same_as_bitforge": true},
+    {"phrase": "a close even grain, small differences of value from one stone to the next",
+     "clause": "§8.3.1's mirror; §12 — 'interior detail not at all', so the grain is close and even rather than described.",
+     "same_as_bitforge": true},
+    {"phrase": "dark grime settled along every joint",
+     "clause": "§8.1 verbatim — 'grime walked into a surface until it is part of it.' EVERY joint: distributed grime is material, grime in one place is a stain, which is incident.",
+     "same_as_bitforge": true},
+    {"phrase": "No single stone stands out from its neighbours",
+     "clause": "§8.3 — 'the identical bracket-shaped stone sits at the identical position inside every single cell' is the cull this refuses at generation.",
+     "same_as_bitforge": true},
+    {"phrase": "nothing has been put down on it",
+     "clause": "§1 — 'Nothing is staged.' NO INSTRUMENT (§13.4); carried at the human gate, argued against here.",
+     "same_as_bitforge": true},
+    {"phrase": "No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette",
+     "clause": "ADDED BY THE TRANSLATION. This sentence carries what BitForge put in `negative_description` and in `outline`/`shading`. §12.1 (no baked ring), §5.5/§12.1 (border, frame — the two words a measured propagation put on that list), §8.3.1 (pattern, grid), §6.3 (drop shadow, vignette — assets receive light, they do not depict it).",
+     "same_as_bitforge": false,
+     "note": "This is the whole of `translation_losses` item 1 and 2, expressed. It is a request where BitForge had an exclusion."}
+  ],
+
+  "parameters": {
+    "width": 32,
+    "height": 32,
+    "num_images": 1,
+    "remove_bg": false,
+    "upscale_output_factor": 1,
+    "bypass_prompt_expansion": true
+  },
+
+  "parameter_provenance": {
+    "width_height": {"value": "32x32",
+      "clause": "RULED (Rafe, 2026-08-25) as to value; §4.3 keeps canvas sizes PLACEHOLDER as to derivation. This is the canvas the whole tier-one floor family is authored at, so a surface that cannot produce it natively is a surface that must downscale — which is COLUMN 1 and is the audit's first question, not an assumption. If 32 is not legal on the cheap styles the run says so and records what it cost to reach it."},
+    "num_images": {"value": 1,
+      "clause": "One image per call so that latency, cost, and the estimate/actual comparison are per-generation figures rather than per-batch figures divided by four. Batching is cheaper in wall-clock and destroys column 4 and column 5."},
+    "remove_bg": {"value": false,
+      "clause": "Mechanical: a floor tile is opaque and full-bleed. Transparency would make it a prop."},
+    "upscale_output_factor": {"value": 1,
+      "clause": "Native only. An upscaled output is not evidence about the native canvas, and column 1 is about the native canvas. RD documents this as nearest-neighbour, which would be indistinguishable from our own downscale/upscale and would silently answer column 1 with a fabrication."},
+    "bypass_prompt_expansion": {"value": true,
+      "clause": "RD documents an automatic LLM prompt-enrichment step. LEFT ON, it means the prompt actually sent is NOT the prompt in this file — every clause-provenance line above would be a claim about a string the model never saw, and LOOP-PROCESS §12 requires a generation prompt to be an auditable file. Bypassed so the audit measures the declared prompt. ⚠ ITS EFFICACY IS UNVERIFIED on this surface and is COLUMN 8: a parameter that is silently ignored and fully charged is a measured failure mode on the neighbouring platform (PixelLab AUDIT 9.3), and this audit does not assume RD is different."},
+    "seed": {"value": "varied and recorded; reproducibility CLAIMED BY THE VENDOR and tested in column 3",
+      "clause": "Bible §13.7 records 'nothing on this platform is seed-reproducible' as a measured fact about PixelLab. RD DOCUMENTS a reproducible seed. That is a real difference if it holds and it is worth a column: a reproducible surface is one where a ledger could store parameters instead of images. Until column 3 measures it, this ledger stores images, exactly as §13.7 requires."},
+    "tile_x_tile_y": {"value": "OFF in cell N, ON in cell T",
+      "clause": "RD documents per-axis seamless tiling. BitForge has no equivalent, so switching it on would confound the ring-rate comparison with a lever BitForge never had. Cell N holds it OFF for the like-for-like rate; cell T turns it ON for the seamless census. §4.1: the flag is then proven on its own axis — the difference between two cells that differ in nothing else — rather than on a diff."},
+    "input_palette": {"value": "UNUSED in the yield run; mechanism measured in column 2",
+      "clause": "§5.1's palette values are PLACEHOLDER, so there is no palette to lock to and locking to the retired Oryx palette would be working to a closed track. The MECHANISM is still measured, because §5.1's LOCKED philosophy — 'style-conditioned generation requires on-palette reference images' — makes palette-image support the thing that will matter the moment the values exist."},
+    "prompt_style": {"value": "resolved live from GET /v1/styles/selector, recorded in the ledger",
+      "clause": "NOT taken from `../../RD_CONVENTIONS.md`. That file's style ruling (`rd_plus__low_res` primary, the custom `user__oryx_16_bit_fantasy_style_d970121a` disqualified on cost) was decided against the RETIRED Oryx corpus and carries a retirement banner. Its style IDs may also no longer exist. The audit resolves the live list and records what it found."}
+  },
+
+  "what_this_prompt_is_NOT_asked_to_deliver": [
+    "ARCHITECTURE. Bible §13.7, measured: 'Architecture and conditioning do not exist on the same surface.' This audit does not test whether RD lays a seamless irregular bond across a family — that is `compose_family.py`'s job on tier one and tier one is FROZEN on BitForge to completion regardless of anything measured here.",
+    "A FINISHED FLOOR. §8.3: a base tile is judged as laid, never alone. The seamless census tiles every survivor 2x2 for exactly this reason, and the blind A/B is run on tiled plates rather than on single tiles.",
+    "AN ADOPTION. Nothing generated here is promoted to reference or to corpus in any state. The adoption bar is declared in AUDIT-RD.md before the first call and the ruling is Rafe's, taken after the tier-one floor gate."
+  ]
+}

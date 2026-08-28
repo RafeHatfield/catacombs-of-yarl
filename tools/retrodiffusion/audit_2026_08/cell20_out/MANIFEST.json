@@ -1,0 +1,1880 @@
+{
+ "actual_usd": 0.5,
+ "declared_budget_usd": 0.5,
+ "difference": 0.0,
+ "entries": [
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30000_0.png",
+   "image_sha256": "5b44e0d0cb2cb61286284290f7dc950e9b706cf9a2c256f88502d0106a91fad4",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30000,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 6,
+    "distribution": [
+     0,
+     103,
+     172,
+     222,
+     278,
+     177,
+     72,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.1006,
+     0.168,
+     0.2168,
+     0.2715,
+     0.1729,
+     0.0703,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 6
+   },
+   "seconds": 13.2,
+   "seed": 30000,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30001_0.png",
+   "image_sha256": "2e4eb7591a5c91fada871025d4eb4965808af143ca1fa0a095995dca3d2475fe",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30001,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 4,
+    "distribution": [
+     0,
+     0,
+     0,
+     342,
+     373,
+     234,
+     75,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0,
+     0.334,
+     0.3643,
+     0.2285,
+     0.0732,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 4
+   },
+   "seconds": 14.58,
+   "seed": 30001,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30002_0.png",
+   "image_sha256": "66984b0801bb30d62255496ef463181fbc02f8b7a8f0bae6f7845442a6519667",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30002,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     113,
+     287,
+     357,
+     180,
+     87,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.1104,
+     0.2803,
+     0.3486,
+     0.1758,
+     0.085,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 14.91,
+   "seed": 30002,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30003_0.png",
+   "image_sha256": "99767cec5005f4a5d001c4566cdce5bdd3904cbaedca99ad05875113239fd761",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30003,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 4,
+    "distribution": [
+     0,
+     0,
+     0,
+     243,
+     551,
+     135,
+     95,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0,
+     0.2373,
+     0.5381,
+     0.1318,
+     0.0928,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 4
+   },
+   "seconds": 12.46,
+   "seed": 30003,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30004_0.png",
+   "image_sha256": "3c08fac8f6a246c8864b2434b0029385e041ce0572517904fec96c3c9d9cf165",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30004,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 7,
+    "distribution": [
+     0,
+     2,
+     58,
+     111,
+     213,
+     437,
+     200,
+     3
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.002,
+     0.0566,
+     0.1084,
+     0.208,
+     0.4268,
+     0.1953,
+     0.0029
+    ],
+    "steps_total": 8,
+    "steps_used": 7
+   },
+   "seconds": 12.04,
+   "seed": 30004,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30005_0.png",
+   "image_sha256": "bd2def11e7c32f640bad070a7a151d08c7041eb344a3f7438849286f69a1e2a8",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30005,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     108,
+     169,
+     336,
+     274,
+     137,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.1055,
+     0.165,
+     0.3281,
+     0.2676,
+     0.1338,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 11.96,
+   "seed": 30005,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30006_0.png",
+   "image_sha256": "41446d90f313cd14fd7b4d036e251e5335f9a9ee5841517acea3149d41f056a6",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30006,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     0,
+     9,
+     203,
+     379,
+     331,
+     102
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0,
+     0.0088,
+     0.1982,
+     0.3701,
+     0.3232,
+     0.0996
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 11.07,
+   "seed": 30006,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30007_0.png",
+   "image_sha256": "bcccd65780f39e5006188ddde891c765eca737850c610274606649776d4a726d",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30007,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     46,
+     231,
+     375,
+     304,
+     68,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0449,
+     0.2256,
+     0.3662,
+     0.2969,
+     0.0664,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 14.67,
+   "seed": 30007,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30008_0.png",
+   "image_sha256": "6888f350abcd7ec806c4d50bf29b066c5b1b98531e27788bcd06c252ba9fbea6",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30008,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     3,
+     224,
+     355,
+     344,
+     98,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0029,
+     0.2188,
+     0.3467,
+     0.3359,
+     0.0957,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 11.93,
+   "seed": 30008,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30009_0.png",
+   "image_sha256": "7b56068622c4600bf66925ff7e731713636a147ada44648200ca102a01c983d9",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30009,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 4,
+    "distribution": [
+     0,
+     0,
+     33,
+     473,
+     377,
+     141,
+     0,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0322,
+     0.4619,
+     0.3682,
+     0.1377,
+     0.0,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 4
+   },
+   "seconds": 15.71,
+   "seed": 30009,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30010_0.png",
+   "image_sha256": "04c5a14fef19ad1c1810f8b802e73a52305f4128ce48e65e71e1834c29cc1551",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30010,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 4,
+    "distribution": [
+     0,
+     0,
+     0,
+     275,
+     487,
+     242,
+     20,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0,
+     0.2686,
+     0.4756,
+     0.2363,
+     0.0195,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 4
+   },
+   "seconds": 12.75,
+   "seed": 30010,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30011_0.png",
+   "image_sha256": "b7e9f747687585a33841ee83923085adc2df9d93dbefa1e8809fd406d73a6e4d",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30011,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     86,
+     183,
+     280,
+     401,
+     74,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.084,
+     0.1787,
+     0.2734,
+     0.3916,
+     0.0723,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 14.52,
+   "seed": 30011,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30012_0.png",
+   "image_sha256": "3d3eac177249d78388802566086068b77efeb1db4248f49af6e710b5b4fe9946",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30012,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 4,
+    "distribution": [
+     0,
+     0,
+     0,
+     178,
+     372,
+     341,
+     133,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0,
+     0.1738,
+     0.3633,
+     0.333,
+     0.1299,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 4
+   },
+   "seconds": 13.35,
+   "seed": 30012,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30013_0.png",
+   "image_sha256": "5a035ba2ce69033e2519e5ecdb6dcf69f3f01c9b0c0e7548f5d5a3094dea9ea7",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30013,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     149,
+     130,
+     390,
+     260,
+     95,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.1455,
+     0.127,
+     0.3809,
+     0.2539,
+     0.0928,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 14.87,
+   "seed": 30013,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30014_0.png",
+   "image_sha256": "2f9cbf739277465326ecc4fef1fbca2a0a175fea19043b9c0a3e03ee5b454e07",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30014,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 4,
+    "distribution": [
+     0,
+     0,
+     162,
+     327,
+     403,
+     132,
+     0,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.1582,
+     0.3193,
+     0.3936,
+     0.1289,
+     0.0,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 4
+   },
+   "seconds": 10.89,
+   "seed": 30014,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30015_0.png",
+   "image_sha256": "b62a80f3f6fe7a233b9c6758c962572b884137463bdb570fa52678b11f5bb545",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30015,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 4,
+    "distribution": [
+     0,
+     0,
+     0,
+     195,
+     404,
+     311,
+     114,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0,
+     0.1904,
+     0.3945,
+     0.3037,
+     0.1113,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 4
+   },
+   "seconds": 12.87,
+   "seed": 30015,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30016_0.png",
+   "image_sha256": "74cfd2504ef2fddea2039dec8187f231a54e7addfc8528aded5ecf33449e7531",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30016,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 4,
+    "distribution": [
+     0,
+     0,
+     0,
+     0,
+     235,
+     382,
+     322,
+     85
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.2295,
+     0.373,
+     0.3145,
+     0.083
+    ],
+    "steps_total": 8,
+    "steps_used": 4
+   },
+   "seconds": 12.64,
+   "seed": 30016,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30017_0.png",
+   "image_sha256": "9d3894c865d17892ade493c4e429f7a0c87bcd71577d9ed152765c03dc5301fc",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30017,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     76,
+     273,
+     345,
+     221,
+     109,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0742,
+     0.2666,
+     0.3369,
+     0.2158,
+     0.1064,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 12.49,
+   "seed": 30017,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30018_0.png",
+   "image_sha256": "b0826c8fd94dc95cae44fb272aeae0f67c5179ae24db0c5c4d4245dd44b7ee55",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30018,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     92,
+     210,
+     310,
+     288,
+     124,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0898,
+     0.2051,
+     0.3027,
+     0.2812,
+     0.1211,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 17.56,
+   "seed": 30018,
+   "verdict": "OK"
+  },
+  {
+   "actual_cost": 0.025,
+   "estimate_matched": true,
+   "estimated_cost": 0.025,
+   "image": "tiles/cell20_30019_0.png",
+   "image_sha256": "799929bab3234906d0d2bf381655a3fd2b16bc9da69d40a81cafbc53c1f215c2",
+   "input_palette_ramp": [
+    [
+     18,
+     18,
+     22
+    ],
+    [
+     34,
+     34,
+     38
+    ],
+    [
+     52,
+     52,
+     56
+    ],
+    [
+     74,
+     74,
+     78
+    ],
+    [
+     96,
+     96,
+     100
+    ],
+    [
+     122,
+     122,
+     126
+    ],
+    [
+     150,
+     150,
+     154
+    ],
+    [
+     182,
+     182,
+     186
+    ]
+   ],
+   "model": "rd_fast",
+   "params": {
+    "bypass_prompt_expansion": true,
+    "height": 32,
+    "num_images": 1,
+    "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+    "prompt_style": "rd_tile__single_tile",
+    "remove_bg": false,
+    "seed": 30019,
+    "upscale_output_factor": 1,
+    "width": 32
+   },
+   "ramp_coverage": {
+    "distinct_colours": 5,
+    "distribution": [
+     0,
+     0,
+     80,
+     305,
+     385,
+     192,
+     62,
+     0
+    ],
+    "exact_fraction": 1.0,
+    "exact_on_ramp_px": 1024,
+    "fraction": [
+     0.0,
+     0.0,
+     0.0781,
+     0.2979,
+     0.376,
+     0.1875,
+     0.0605,
+     0.0
+    ],
+    "steps_total": 8,
+    "steps_used": 5
+   },
+   "seconds": 16.01,
+   "seed": 30019,
+   "verdict": "OK"
+  }
+ ],
+ "n": 20,
+ "ramp": [
+  [
+   18,
+   18,
+   22
+  ],
+  [
+   34,
+   34,
+   38
+  ],
+  [
+   52,
+   52,
+   56
+  ],
+  [
+   74,
+   74,
+   78
+  ],
+  [
+   96,
+   96,
+   100
+  ],
+  [
+   122,
+   122,
+   126
+  ],
+  [
+   150,
+   150,
+   154
+  ],
+  [
+   182,
+   182,
+   186
+  ]
+ ],
+ "ramp_sha": "e15e467393ac9d10",
+ "reconciliation": {
+  "billed_sum": 0.5,
+  "credits_after": 9.76,
+  "credits_before": 10.26,
+  "credits_delta": 0.5,
+  "first_reported": "RECONCILE_RED, billed 0.0 \u2014 instrumentation artefact, see ledger",
+  "reconciled": true
+ },
+ "seed0": 30000
+}

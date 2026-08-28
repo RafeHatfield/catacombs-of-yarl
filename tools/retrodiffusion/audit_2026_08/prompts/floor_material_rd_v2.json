@@ -1,0 +1,99 @@
+{
+  "subject": "floor_base_material",
+  "title": "Boundary floor MATERIAL v2 — reworked toward §8.3.1's MIRROR, for rd_tile__single_tile",
+  "surface": "rd-v1-rest /inferences",
+  "supersedes": "floor_material_rd.json (v1), which was written for rd_plus__low_res",
+
+  "_why_v2_exists": [
+    "v1 ran on `rd_plus__low_res` and framed the canvas on every generation — a §12.1 keyline",
+    "plus a §8.3.1 regular lattice inside it (AUDIT-RD.md Finding 1). `rd_tile__single_tile`",
+    "at the same price returned a FULL-BLEED, UNFRAMED, instrument-CLEAN field on the first",
+    "call, which fixed the composition and exposed the next problem:",
+    "",
+    "    IT CAME BACK AS GRAVEL. An even noise field. No bond, no joints, no stone-to-stone",
+    "    value break.",
+    "",
+    "That is bible §8.3.1's MIRROR, quoted here because it is the entire brief for this file:",
+    "",
+    "    'Incident-free is not featureless. Material has structure — joints, bond, grain, value",
+    "     break — and stripping that to avoid a motif produces the flat clone field the same",
+    "     seats cull on sight. The test is whether a feature is a property of the MATERIAL (a",
+    "     joint between two stones) or a thing that HAPPENED to it (a crack through one). The",
+    "     first belongs in the tile; the second does not.'",
+    "",
+    "So v2 asks HARDER for the first list and keeps refusing the second. It is not a loosening",
+    "of §8.3 — every incident term v1 refused is still refused. It is the mirror clause being",
+    "given the same weight as the clause it mirrors."
+  ],
+
+  "_what_changed_from_v1": [
+    {"change": "SHORTER. v1's description ran 88 words; v2 runs 52.",
+     "why": "A surface fact the retired track measured and `../NOTICE.md` keeps as still-true: 'Keep prompts short and simple — overspecification causes hallucinations at small canvases.' v1 was authored for BitForge, which takes a long structured description; this is a different surface and the length is not free. The gravel result is consistent with a long prompt being averaged into texture."},
+    {"change": "FLAGSTONE-FORWARD. The first clause now names large flat cut slabs and their joints, before any texture word.",
+     "why": "v1 opened with 'A field of old grey dungeon flagstones' and then spent most of its length on grain, value and grime — the texture half. On a tile-dedicated style that reads as an instruction to make texture. The bond is now stated first and stated as geometry."},
+    {"change": "JOINTS GIVEN A WIDTH AND A COUNT.",
+     "why": "§8.3.1's mirror names 'joints, bond' as material structure. 'Joints' alone produced none; a 1-pixel dark line between slabs and 'five or six slabs' is the same request with something the model can actually draw at 32px."},
+    {"change": "'irregular' KEPT and strengthened to 'no two the same size'.",
+     "why": "§8.3.1 culled a REGULAR 2px joint grid on a 16px pitch from the sighted round's wall tops — 'a ruled grid ... an incident at fixed offset in every cell'. A bond is licensed; a grid is not. This is the one word that separates them and it must not be lost while asking harder for joints."},
+    {"change": "The refusal sentence is retained verbatim from v1.",
+     "why": "It carries what BitForge put in `negative_description` and in `outline`/`shading`, and the surface still has no negative-prompt field. Unchanged so that this variable does not also move."}
+  ],
+
+  "prompt": "Old grey dungeon paving seen from directly above, filling the frame edge to edge. Five or six large flat cut slabs of the same quarried grey stone, no two the same size, laid tight in an irregular bond with a thin dark joint between them and every joint running off the edge of the frame. Each slab a slightly different grey, close even grain, dark grime settled in the joints. Every slab whole and flat. No border, no frame and no outline around the edge of the image; no decoration, no carving, no pattern, no centred feature; flat even light with no drop shadow and no vignette.",
+
+  "phrase_provenance": [
+    {"phrase": "seen from directly above, filling the frame edge to edge",
+     "clause": "§3 — orthogonal square grid, not isometric. Full-bleed is mechanical: a tile must tile.",
+     "carried_from_v1": true},
+    {"phrase": "Five or six large flat cut slabs ... no two the same size",
+     "clause": "§8.3.1's MIRROR — 'material has structure ... bond'. A COUNT and a size-variation instruction, because v1's unquantified 'large flat paving stones' returned an even noise field with no slabs in it at all. 'No two the same size' is the anti-grid clause: §8.3.1 culled a regular grid on a fixed pitch, and a bond that varies is the licensed form.",
+     "carried_from_v1": false},
+    {"phrase": "the same quarried grey stone",
+     "clause": "§7.4 seam 1 — 'The Boundary is mostly found stone with orc work pinned into it.' One stone family per tile so the variants read as one material.",
+     "carried_from_v1": true},
+    {"phrase": "a thin dark joint between them and every joint running off the edge of the frame",
+     "clause": "§12.1 RULED (2026-08-27) — the test separating a joint from a ring is whether it CONTINUES INTO THE NEIGHBOUR; C-GAB failed it by turning its corners and returning inside its own cell. 'Thin' is added because §12.1's criterion 2 reads constant-width mass as a drawn edge rather than a joint. This is also the mechanical precondition for edge continuity, which is what the post-hoc seam census now measures.",
+     "carried_from_v1": "strengthened"},
+    {"phrase": "Each slab a slightly different grey, close even grain",
+     "clause": "§8.3.1's mirror — 'grain, value break'. Stone-to-stone value difference is what keeps the field off the flat clone read without adding an incident to any one stone. §12 keeps the grain close and even rather than described.",
+     "carried_from_v1": "strengthened"},
+    {"phrase": "dark grime settled in the joints",
+     "clause": "§8.1 verbatim — 'grime walked into a surface until it is part of it.' Distributed grime is material; grime in one place is a stain, which is incident.",
+     "carried_from_v1": true},
+    {"phrase": "Every slab whole and flat",
+     "clause": "§8.3 — the base tile carries material and NO incident. Cracks, chips and wear are the overlay's job. Compressed from v1's four-clause sentence because the refusal sentence below already carries the list.",
+     "carried_from_v1": "compressed"},
+    {"phrase": "No border, no frame and no outline ... no drop shadow and no vignette",
+     "clause": "§12.1 (no baked ring), §5.5/§12.1 (border, frame — the two words a measured propagation put on that list), §8.3.1 (pattern, centred feature), §6.3 (drop shadow, vignette — assets receive light, they do not depict it). VERBATIM FROM v1 and deliberately unchanged: the surface has no negative-prompt field, so this sentence IS the refusal list, and it must not move while other things do.",
+     "carried_from_v1": true}
+  ],
+
+  "parameters": {
+    "prompt_style": "rd_tile__single_tile",
+    "width": 32,
+    "height": 32,
+    "num_images": 1,
+    "remove_bg": false,
+    "upscale_output_factor": 1,
+    "bypass_prompt_expansion": true
+  },
+
+  "parameter_provenance": {
+    "prompt_style": {"value": "rd_tile__single_tile",
+      "clause": "AUDIT-RD.md Finding 1, MEASURED: the only style tried that returns a full-bleed unframed tile. Accepts 16-64. Same $0.025 as rd_plus__low_res. ⚠ It REFUSES tile_x/tile_y with HTTP 400 inference_failed (Finding 3), which is why this cell carries no tiling flags and why the seam measurement is post-hoc."},
+    "input_palette": {"value": "the 8-step neutral grey ramp, applied",
+      "clause": "Carried so that AMENDMENT ITEM 9 — per-tile ramp coverage — is measurable at all. It is also one of the two capabilities BitForge does not have (measured: 8 colours in, 5 distinct out), so 'RD's best-known configuration' includes it. ⚠ THIS IS A FOURTH SIMULTANEOUS CHANGE and is named in the header caveat alongside the other three. The ramp is built in code, not taken from the retired Oryx palette: §5.1's values are PLACEHOLDER and locking to a closed track's palette would be working to a retired bar."},
+    "width_height": {"value": "32x32",
+      "clause": "RULED (Rafe, 2026-08-25) as to value; §4.3 keeps canvas sizes PLACEHOLDER as to derivation. Measured native on this surface — requested 32x32, returned 32x32, no upscale."},
+    "bypass_prompt_expansion": {"value": true,
+      "clause": "RD documents an automatic LLM prompt-enrichment step. Left on, the prompt actually sent is NOT the prompt in this file and every clause-provenance line above would be a claim about a string the model never saw (LOOP-PROCESS §12). ⚠ Efficacy UNVERIFIED — accepted is not honoured (§4.1)."},
+    "seed": {"value": "30000 + index, recorded per call",
+      "clause": "MEASURED REPRODUCIBLE on this surface (column 3: two identical calls, one distinct sha256 of two). Recorded as PROVENANCE, never as a storage substitute — see RD_CONVENTIONS.md, 'seed-reproducibility is provenance, not storage'. The manifest stores the full parameter set AND the returned bytes."}
+  },
+
+  "what_this_prompt_is_NOT_asked_to_deliver": [
+    "ARCHITECTURE. Bible §13.7: 'Architecture and conditioning do not exist on the same surface.' This cell buys material only.",
+    "A FINISHED FLOOR. §8.3: a base tile is judged as laid, never alone. The seam census tiles every survivor 2x2 for that reason.",
+    "AN ADOPTION. Nothing generated here is promoted to reference or corpus in any state, and no sentence of the report argues for one. Adoption is ruled in the design thread after the tier-one floor gate."
+  ]
+}

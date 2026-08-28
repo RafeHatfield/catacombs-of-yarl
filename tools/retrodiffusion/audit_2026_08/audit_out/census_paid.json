@@ -1,0 +1,114 @@
+{
+ "seam_sigmas": 3.0,
+ "seam_sigma_floor": 0.5,
+ "vignette_band": [
+  0.87,
+  1.15
+ ],
+ "centre_frac": 0.375,
+ "ring_px": 4,
+ "census": [
+  {
+   "file": "audit_out/col1/col1_native_rd_plus__low_res_0.png",
+   "size": [
+    32,
+    32
+   ],
+   "wrap_x": 12.937,
+   "cut_x": 40.0678,
+   "sigma_x": 8.2786,
+   "margin_x": -27.1308,
+   "seam_x": false,
+   "wrap_y": 25.6554,
+   "cut_y": 41.8077,
+   "sigma_y": 8.6547,
+   "margin_y": -16.1522,
+   "seam_y": false,
+   "SEAM": false,
+   "centre_mean": 107.588,
+   "ring_mean": 110.985,
+   "ratio": 0.9694,
+   "VIGNETTE": false,
+   "PASS": true,
+   "plate": "audit_out/plates/col1_native_rd_plus__low_res_0_2x2.png"
+  },
+  {
+   "file": "audit_out/col2/col2_palette_0.png",
+   "size": [
+    32,
+    32
+   ],
+   "wrap_x": 19.9375,
+   "cut_x": 41.7903,
+   "sigma_x": 8.6176,
+   "margin_x": -21.8528,
+   "seam_x": false,
+   "wrap_y": 19.9375,
+   "cut_y": 33.2156,
+   "sigma_y": 6.3011,
+   "margin_y": -13.2781,
+   "seam_y": false,
+   "SEAM": false,
+   "centre_mean": 119.275,
+   "ring_mean": 104.887,
+   "ratio": 1.1372,
+   "VIGNETTE": false,
+   "PASS": true,
+   "plate": "audit_out/plates/col2_palette_0_2x2.png"
+  },
+  {
+   "file": "audit_out/col3/col3_seed999001_0_0.png",
+   "size": [
+    32,
+    32
+   ],
+   "wrap_x": 0.2412,
+   "cut_x": 37.9494,
+   "sigma_x": 4.4046,
+   "margin_x": -37.7082,
+   "seam_x": false,
+   "wrap_y": 0.3793,
+   "cut_y": 38.7081,
+   "sigma_y": 3.8355,
+   "margin_y": -38.3288,
+   "seam_y": false,
+   "SEAM": false,
+   "centre_mean": 118.188,
+   "ring_mean": 113.268,
+   "ratio": 1.0434,
+   "VIGNETTE": false,
+   "PASS": true,
+   "plate": "audit_out/plates/col3_seed999001_0_0_2x2.png"
+  },
+  {
+   "file": "audit_out/col3/col3_seed999001_1_0.png",
+   "size": [
+    32,
+    32
+   ],
+   "wrap_x": 0.2412,
+   "cut_x": 37.9494,
+   "sigma_x": 4.4046,
+   "margin_x": -37.7082,
+   "seam_x": false,
+   "wrap_y": 0.3793,
+   "cut_y": 38.7081,
+   "sigma_y": 3.8355,
+   "margin_y": -38.3288,
+   "seam_y": false,
+   "SEAM": false,
+   "centre_mean": 118.188,
+   "ring_mean": 113.268,
+   "ratio": 1.0434,
+   "VIGNETTE": false,
+   "PASS": true,
+   "plate": "audit_out/plates/col3_seed999001_1_0_2x2.png"
+  }
+ ],
+ "summary": {
+  "n": 4,
+  "passed": 4,
+  "seam": 0,
+  "vignette": 0
+ }
+}
