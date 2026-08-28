@@ -7,7 +7,7 @@ material the donor manifest already carries. The budget is untouched and availab
 
 ---
 
-## 1. K IS RUNTIME. The tile set stays at 81 and no K is authored at all.
+## 1. K IS RUNTIME. No K is authored at all.
 
 The question on the record: *can the stone class live at compose/shader time as a per-stone value
 remap keyed on shared coordinates — tile set stays small, K becomes runtime — or does §6.3's
@@ -95,32 +95,40 @@ vertical boundaries, which is unaddressable. The constraint decides it, not tast
 
 ## 3. The measurements
 
+Final build, 8×8 field, seed 1337. Everything re-measured after every geometry change.
+
 | | ordinary | with channel |
 |---|---:|---:|
-| largest connected region (session one: **99.1%**) | **1.3%** | 1.3% |
-| stones ≥64px | 226 | 226 |
-| boundary step ratio | **0.59** | 0.42 |
+| largest connected region (session one: **99.1%**) | **1.5%** | 1.5% |
+| stones ≥64px, median size | 223, 190px | 223, 190px |
+| **boundary step ratio** (7.44× → 2.95× → …) | **0.63** | 0.45 |
 | continuity — lines crossing a vertical boundary | **1.00** (224/224) | 1.00 |
 | grid hiding — boundary bed vs mid bed, density / value | **1.00 / 1.00** | 1.00 / 1.00 |
 | boundary column vs other columns | 0.56 | 0.56 |
 | course heights | **5 distinct** [10,12,15,18,20], modal 0.25 | same |
-| lattice score | 0.273 | 0.280 |
+| distinct joint skeletons in 64 cells | **60**; 12.5% share one, **0 adjacent** | same |
+| **full-width joints at the tile pitch** | **9 of 17 — 53%** | same |
+| lattice score | 0.254 | 0.257 |
 
-**Channel legibility**, measured against *the same stones unpolished* (1.000 = delivered nothing):
+**Channel legibility**, against *the same stones unpolished* (1.000 = delivered nothing):
 
 | texture | variety | arris |
 |---:|---:|---:|
-| **0.350** | **0.578** | **0.775** |
+| **0.372** | **0.582** | **0.786** |
 
 Every wear term is a **subtraction**. §8.2.1 is binding — polish signals by absence, never
 brightness, because under a carried lamp brightness is what the light is saying.
 
----
+**The shipped asset reproduces all of it.** `verify_atlas_path` walks the atlases the engine
+actually reads and compares against the composer, on both arms: **0 of 65536 pixels differ** with
+no channel and 0 with the channel declared, and a single altered ladder index is caught. The
+engine then reproduces the composer's **finished pixels** — `paint_check=96/OK`, proven failable
+on one channel of one pixel.
 
-## 4. Instruments, and the eight defects their own plants found
+## 4. Instruments, and the ten defects their own plants found
 
-No instrument's pass counts until it has demonstrated it can fail (§4, bible §13.5). Six plants
-fire; building them found eight real defects, five of them in the instruments themselves.
+No instrument's pass counts until it has demonstrated it can fail (§4, bible §13.5). **Eight
+plants fire**; building them found ten real defects, seven of them in the instruments themselves.
 
 | plant | fires | on the clean field |
 |---|---:|---:|
@@ -129,7 +137,9 @@ fire; building them found eight real defects, five of them in the instruments th
 | `boundary_frame` — a joint along the tile's own edge | 4.48 | 0.56 |
 | `broken_courses` — coursing that does not travel | 0.00 | 1.00 |
 | `uniform_courses` — one course height everywhere | 1 spacing | 5 |
-| `flat_channel` — wear that takes nothing away | 1.000 exactly | 0.35 |
+| `flat_channel` — wear that takes nothing away | 1.000 exactly | 0.37 |
+| `one_family` — every boundary collapsed to one family | 89.1% duplicate | 12.5% |
+| `one_course` — one course per tile, every joint a tile edge | 100% at tile pitch | 53% |
 
 **What the plants caught:**
 
@@ -154,6 +164,17 @@ fire; building them found eight real defects, five of them in the instruments th
 8. **The channel ratio was mostly the band's own content.** On a field with *no* channel, the
    inside/outside ratio for a 2-cell band runs 0.74–1.39 across the seven bands of an 8×8 field —
    wider than the effect being looked for. The band is now differenced against itself.
+9. **The plant matcher agreed with a seat by accident.** Round 8's plant seat scored its hit on
+   the word *collapse* — inside the sentence *"Not one large collapse."* The verdict was right and
+   the matcher had nothing to do with it; it would have said CAUGHT for a seat declaring the floor
+   **clean** of every defect in its list. Now negation-aware, and its vocabulary matched to the
+   plant this session actually builds rather than session two's mossy one. Both corrections
+   declared for the **next** round, not applied retroactively — §4's whole discipline is that the
+   test is fixed before the seats run.
+10. **A plant mutating shipping data.** The constant-pitch plant appends a degenerate split to the
+    splits table, and the composer writes that table into the manifest. In separate processes
+    harmless; in one interpreter it would ship a split nobody authored, as art. The composer now
+    refuses if the table it is about to write is not the table it declared.
 
 ### The gap nobody was watching: between the tool and the game
 
@@ -296,6 +317,72 @@ against the same stones unpolished — most of what absence has left to take. Se
 
 ---
 
+## 6c. Round 8 — the five-family build, and the finding that ends the session
+
+Captures pinned: `scene_ashlar_r8.png` (sha `f4fe90b0…`), `scene_ashlar_plant_r8.png`
+(sha `3a08c85e…`). **Round valid — plant caught.** The control seat culled it and read the
+*register*, not merely the craft: *"It has been punctured, repeatedly, by one thing — and it has
+never been walked on"*; **CULL:** *"Twenty-two identical black blobs and a single 3° hue: damage
+stamped on, not a surface anyone used."* Damage without use is exactly the §8.1 failure the plant
+is built to be.
+
+**The material is named correctly by both solo seats, for the second round running:**
+
+> **F1:** *"Cut stone slabs — flat rectangular flagstones of varying size, laid in an irregular
+> running bond with a recessed joint between them. Neutral grey stone; **the warm tan is the lamp,
+> not the material**."*
+>
+> **F3:** *"Cut stone flagstones — rectangular slabs of a soft sandstone or dressed limestone,
+> laid in courses with thin mortar joints."*
+
+F1's parenthesis is worth keeping: a seat that has never read §6.3 has separated the asset from
+the light on it, unprompted. That is the clause working.
+
+**The five-family fix landed, and the seat that would have caught it says so.** F3, on Q5:
+
+> *"The slab **layout** is generated, not tiled — course pitch is fixed at ~30px but slab widths
+> and joint positions vary continuously across the field, so **there's no repeating block**."*
+
+Round 7's F1 had found duplicate 32×32 patches at exactly one-tile displacement correlating
+0.99+. After 3 → 5 families the same class of seat reports the layout as generated. The
+`skeleton_repeats` numbers agree: 48.4% of cells shared a bond, now 12.5%, none of them adjacent.
+
+**And then F1 located the constraint itself, which is where this session ends.**
+
+> *"That hand-work is confined inside a 64px band, and the band boundary is exposed: five
+> continuous unbroken full-width joints at exact 64px pitch, which no slab ever bridges."*
+>
+> **CULL:** *"A full-width unbroken joint every 64px exposes the tile grid — no slab ever crosses
+> it."*
+
+That is the corner theorem, found by a blind critic from the pixels alone, and it is not a defect
+in the build — it is the price of runtime stone addressing. Now measured (`constant_pitch_lines`:
+9 of 17, **53%**) and instrumented with a plant that fires at 100%. See §7(a).
+
+### Where the three seats agree, across both rounds
+
+| | |
+|---|---|
+| **would it ship?** | YES, all four solo seats, both rounds |
+| **is it good?** | *"Merely competent"*, all four, unanimously |
+| **material** | named correctly by all four; **flagstone, not brick** |
+| **against the asset bar** | ranked **above it, "by a wide margin"** |
+| **what they cull** | **use**, not craft — and one of them, the tile pitch |
+
+> **F3, round 8 CULL:** *"One hue, random per-slab tone, zero wear or repair — reads generic
+> dungeon, not four-hundred-year contested underworld."*
+
+**One hue is not a defect and should not be "fixed" without a ruling.** §5.4 reserves warmth and
+holds that chroma is signal, so a floor with no hue variation is the clause obeyed, not broken — a
+seat that has not read the bible cannot know that, and this is exactly the case §13.4 anticipates,
+where an unbriefed critic asks for something a clause forbids. *"Random per-slab tone"* is the
+half of that cull worth taking: the per-stone values are drawn from a distribution and clustered
+in coarse patches, and they carry no meaning. Values that meant something — a batch of stone
+replaced, a wet corner, a patch scorched — would need a **cause** in the map to key on, which is
+scene information the floor family is not given.
+
+---
+
 ## 7. On the record for ruling
 
 ### (a) The corner theorem constrains the ART, permanently, and should be written down
@@ -324,8 +411,8 @@ instrument `constant_pitch_lines`, with plant `one_course`:
 
 | | |
 |---|---:|
-| full-width joints in an 8×8 field | 16 |
-| **sitting at the tile pitch** | **9 — 56%** |
+| full-width joints in an 8×8 field | 17 |
+| **sitting at the tile pitch** | **9 of 17 — 53%** |
 | the same field with one course per tile (the plant) | 100% |
 | **the floor this number can reach** | **not 0, while K is runtime** |
 
@@ -334,7 +421,7 @@ instrument `constant_pitch_lines`, with plant `one_course`:
 | | runtime K (this build) | authored value on the tile |
 |---|---|---|
 | stone value across a vertical boundary | exact, 0.000 before grain | a step, or a blend that hides one |
-| horizontal joints | **constant pitch, seat-visible, 56%** | free — a slab may cross anything |
+| horizontal joints | **constant pitch, seat-visible, 53%** | free — a slab may cross anything |
 | tile count | 625 | 625 × K⁴ *and the corner is still unaddressable* |
 
 The third column is the one worth staring at: **authoring K does not buy the geometry back.** It
@@ -345,7 +432,7 @@ addressed stone values there**, and accepting whatever seam that leaves.
 
 **Mitigations that do not need a ruling**, in the order I would try them:
 
-1. **More courses per tile.** Three courses puts the boundary at 1 line in 3 — 56% → ~33% — at the
+1. **More courses per tile.** Three courses puts the boundary at 1 line in 3 — 53% → ~33% — at the
    cost of ~10px courses, so ~8px stones. The register may not want stones that short.
 2. **Interrupt the line with incident rather than with stone.** A slab may not *cross* the
    boundary, but nothing stops debris, a driven pin, a lashed plank or a spalled edge from sitting
@@ -489,8 +576,14 @@ Recorded with its measurement, and left alone.
 - Round 7 seats — **complete and valid** (plant caught). Material named correctly by both solo
   seats and as flagstone rather than brick; culled by both on §8.1 use; ranked **above the asset
   bar** by the comparative seat.
-- Round 8 seats — running on the five-family build, `scene_ashlar_r8.png` (sha `f4fe90b0…`) and
-  `scene_ashlar_plant_r8.png` (sha `3a08c85e…`).
+- Round 8 seats — **complete and valid** (plant caught). The five-family fix confirmed by the
+  seat class that found the defect; material named correctly by both solo seats; culled on **use**
+  by both, and on the **tile pitch** by one — the corner theorem, found from the pixels alone.
+- **The floor is not gate-ready and is not offered as such.** Four solo seats across two rounds
+  say it would ship and none says it is good. Every remaining cull traces to something outside the
+  family: the corner theorem (§7a), §8.2.1's absence floor (§7b), the overlay system's 4px median
+  mark (§7c), and §5.4's reserved chroma, which a blind seat reads as a defect and the bible
+  requires.
 - The engine reproduces the composer's **finished pixels**: `paint_check=96/OK`, proven failable
   on one channel of one pixel.
 - Device — `TIER1_ASHLAR` knob exists and the family has **not** been to the handset. Nothing here

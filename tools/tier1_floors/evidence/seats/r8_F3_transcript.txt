@@ -1,0 +1,99 @@
+Looked at the raw pixels, then flattened the lantern falloff to see the floor without the lighting doing its work for it, then template-matched for repetition. Findings below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+
+Cut stone flagstones — rectangular slabs of a soft sandstone or dressed limestone, laid in courses with thin mortar joints.
+
+**Q1_WHY:**
+The floor (x 185–632, y 0–400, plus the corridor at x 376–437 running south off-screen) resolves into rectangles separated by 2–3px darker lines. I measured the horizontal joints: they fall at y ≈ 50, 79, 108, 146, 169, 207, 240, 271, 296, 336, 378 — a consistent ~30px course pitch, two courses per 62px game tile. Within each course, slab widths vary (from ~25px up to ~110px, e.g. the long slab at x 190–285, y 297–330). Corners are clean right angles; a few carry a 2px stair-stepped chip bitten out of the top-left, clearest at (299–306, 205–212). That's masonry, not poured, not natural rock, not tile.
+
+The material read stops there. It is stone because it's laid in courses — not because of anything in the stone itself. There is no grain, no bedding, no vein, no aggregate, no visible tool marks. Sandstone versus limestone versus granite is a guess I'm making from the warm hue, and the hue is the lantern's.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+
+South, into the corridor at x 376–437.
+
+Nothing about the ground influenced that. I picked it because it is the only exit — the room is walled north (y 0–20), east (x 632+) and west (x 185−), and the corridor mouth is the one gap. That is a level-design read, not a floor read.
+
+I want to be exact about this, because it's the most useful thing I can tell you: I flattened out the lighting and looked for any directional cue in the slab work — a worn path, a polish lane, a scuff trail, a run of dished slabs, joints packed with tread-in dirt on one axis. There is none. The per-slab brightness variation is scattered at random; bright slabs and dark slabs are distributed with no gradient, no lane, no convergence on the corridor mouth. A place in *continuous heavy use since before anyone's records begin* should have a groove worn toward its only door. This floor does not know where its door is.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+
+Almost nothing. It is a clean, intact, well-laid pavement with a light dusting of incident.
+
+The full inventory of things that have happened, across roughly 14×12 game tiles of visible ground:
+- One hairline fracture, x 214–242, y 53–70 — a short dark bar with a hook at the left end, stopping abruptly mid-slab.
+- Three dark asterisk-shaped splats, at (357, 257), (206, 285), and (422, 415) in the corridor mouth.
+- Three small dark triangular wedges: (462, 224) pointing right, (503, 247) pointing down, (585, 352) as a diagonal chevron.
+- A scatter of soft, out-of-focus blurred smudges, densest at x 415–485, y 88–120, with matching ones at (313, 130), (570, 225), (215, 253).
+- A speckle overlay — fields of 1px darker dots — present on maybe 30% of slabs, absent on the rest.
+
+**Q3_WHY:**
+Two things I'm reading against the fiction, and both are absences rather than defects in what's there.
+
+First: no repair. The orcs have held this line four hundred years with rope, driven pins, hide and salvaged timber, and none of it has touched the floor. Not one pin, not one plank over a gap, not one slab reseated crooked, not one course interrupted. Every slab is present, level, square and in its correct course. Nothing has been prised up, nothing has subsided, nothing has been patched with the wrong stone.
+
+Second: no administration. This is a filing system for souls and its floor bears no mark of the filing. No numbering, no incised channel, no socket, no drain, no grating, no threshold plate, no wear at the corridor mouth where every soul must funnel through.
+
+The speckle is the tell that this is decoration rather than history. Where it appears it fills a slab edge-to-edge at uniform density and stops dead at the joint — e.g. the slabs at (455–570, 205–232) and (490–560, 330–360). Real grit pools in joints, banks against edges, thins where feet pass. This sits *inside* slabs, evenly, like a texture flag toggled per-slab. It is not dirt. It is a checkbox.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+
+Yes. Four things, in descending order of how much they cost.
+
+1. **The per-slab flat tone lottery.** This is the big one and it is what the eye actually sees. Every slab is a single flat value pulled at random from a small set, and neighbouring slabs land far apart on that range. With the lighting flattened it reads as a patchwork quilt — random light/dark rectangles with no physical cause. Worst case is the long slab at **x 190–285, y 297–330**: it is dramatically darker than every neighbour at the same distance from the lamp. My eye went back to it three times reading it as a pit or a hole. It isn't. It's just a slab that lost the dice roll. When your value noise is wide enough to fake a floor opening, it's too wide.
+
+2. **The repeated decals.** I template-matched these rather than trusting my impression. The asterisk splat at **(357, 257)** and the one at **(206, 285)** are the same sprite, pixel for pixel; a third sits at **(422, 415)**. The triangular wedge at **(462, 224)** and the one at **(503, 247)** are the same sprite rotated. The soft smear at **(313, 130)** and the one at **(570, 225)** are the same blob. Six of the roughly ten discrete marks on this floor are two-or-three copies of three sprites. Once you catch the first pair you start hunting for the rest, and hunting for stamps is not looking at a dungeon.
+
+3. **The blurred smudges near the lamp, x 415–485, y 88–120.** These are Gaussian-soft — no pixel discipline at all — sitting on top of crisply-aliased pixel slabs, and they run *across* the joint lines at x ≈ 430 and x ≈ 448 as though the mortar weren't there. Everything else in the frame respects the pixel grid. These don't, and the mismatch snags every time.
+
+4. **The triangles read as UI.** The wedge at **(462, 224)** is a clean right-pointing triangle on a bright slab. It is the same shape as the "RIG ▸" affordance in the bar at y 363. I clocked it as an interactive marker before I clocked it as a chip in the stone.
+
+---
+
+**Q5: MADE, OR REPEATED?**
+
+Repeated.
+
+The slab *layout* is generated, not tiled — course pitch is fixed at ~30px but slab widths and joint positions vary continuously across the field, so there's no repeating block. Credit where due; that part is doing real work.
+
+But everything laid on top of that layout is stamped. Three sprites accounting for most of the marks, verified by correlation. A binary speckle flag applied per-slab. A single stair-step corner chip motif recurring across the field. And the tone variation, which is the loudest element by area, is per-slab random draw — the most recognisable "procedural" signature there is, because randomness distributed evenly is the one thing real surfaces never are.
+
+The clinching evidence is colour. I measured hue across every floor pixel: **the 25th percentile is 27.4° and the 75th is 28.7°.** Half the floor sits inside a 1.3-degree hue band. Ninety percent of it falls between 24° and 29°. Saturation is equally locked, 0.35 to 0.56 from the 5th to the 95th percentile. There is exactly one colour on this floor. Every apparent variation is that one colour multiplied by a brightness number — either the lamp's falloff or the per-slab dice roll. A made surface has more than one mineral in it. This has one, sampled at different exposures.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+
+**YES.** It is clean, correctly constructed, well-lit, readable at phone size, and nothing in it is broken. It would pass unremarked in a great many shipped roguelikes.
+
+Merely competent. Not genuinely good.
+
+The distinction matters here, so: a good floor tells you about the place before anyone narrates it. This one tells you nothing. Strip the magenta placeholder walls and the lamp, and the ground would serve equally well as a temple, a cellar, a barracks or a road. There is no evidence on it of four hundred years, of heavy use, of an administration, of a repair crew, or of the fact that nothing here was ever arranged for anyone's benefit. It is a generic dungeon floor rendered carefully. The lantern gradient is doing all the atmospheric work, and the moment I flattened that gradient the floor had nothing left to say.
+
+---
+
+**CULL:**
+
+One hue, random per-slab tone, zero wear or repair — reads generic dungeon, not four-hundred-year contested underworld.
+
+---
+
+**FLIP LIST**
+
+- Kill the random per-slab tone lottery. Cut the value spread to roughly a third of its current range, and never let a slab land as dark as the one at x 190–285, y 297–330 — it currently reads as a hole in the floor.
+- Introduce a second and third stone in the pavement — cooler grey-green and a paler bone tone, 15–25° off the current 28° hue — placed as patches and replacement slabs, so the surface has more than one mineral in it. Right now half the floor sits in a 1.3-degree hue band.
+- Wear the traffic in. Polish and dish the slabs into a lane converging on the south corridor mouth at x 376–437: joints scoured clean along the lane, grit and dark packing surviving only at the room's edges. Give the ground a direction.
+- Put the orcs on the floor. Driven pins and rope lashing across at least one fractured slab, a salvaged timber plank over a subsided course, a slab reseated at the wrong height so the course steps. Ugly, functional, and it should break the course rhythm somewhere.
+- Redraw the four blurred smudges at x 415–485, y 88–120 (and their copies at (313,130), (570,225), (215,253)) as hard-edged pixel art that stops at slab joints; retire the right-pointing triangle at (462, 224), which reads as a UI affordance, and give the asterisk splat at least three genuine variants since it appears three times in one screen.
+
+---
+*Model: Claude Opus 5 (1M context)*
