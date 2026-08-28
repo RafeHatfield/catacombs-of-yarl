@@ -300,15 +300,62 @@ against the same stones unpolished — most of what absence has left to take. Se
 
 ### (a) The corner theorem constrains the ART, permanently, and should be written down
 
-Runtime K is bought with a geometric constraint that no later floor family can escape: **no stone
-may span a horizontal tile boundary**, therefore a joint runs along every one, therefore the floor
-is coursed at a pitch dividing the tile — for ever, in every region. The course *rhythm* can be
-varied (5 heights, per row) and the boundary line can be made indistinguishable from the mid-tile
-line (density and value both 1.00), but **the coursing itself is not a style choice**. A future
-region wanting crazy paving, cobbles, or any bond without continuous horizontal joints cannot have
-runtime stone addressing, and would pay for it in the value domain instead.
+**A blind seat found this constraint on its own and culled for it.** It is no longer a candidate
+clause offered on reasoning; it is a measured, disqualifying defect with a structural cause.
 
-This is offered as a candidate clause rather than assumed.
+> *"Five continuous unbroken full-width joints at exact 64px pitch, which no slab ever bridges.
+> **That is a tile edge, not a mason's decision. A mason lays a long stone across a course line; a
+> tiling engine cannot.** The variety is decoration painted onto a grid that is still visible
+> underneath it."*
+>
+> **CULL:** *"A full-width unbroken joint every 64px exposes the tile grid — no slab ever crosses
+> it."*
+
+Runtime K is bought with a geometric constraint no floor family can escape: **no stone may span a
+horizontal tile boundary**, because four tiles meet at a grid corner and the diagonal pair share
+nothing to address a stone with. Therefore a full-width joint sits at exactly one tile pitch, for
+ever, in every region, in any floor whose stone values are addressed at runtime.
+
+`grid_hiding` could not see it and was never going to. It asks whether the boundary line *looks*
+different from the mid-tile line — and the answer is no, they are identical, 1.00 on both density
+and value. The seat's question is sharper: **how many of the lines sit at a pitch a viewer can
+predict?** The interior lines move with their row's split; the boundary line never does. New
+instrument `constant_pitch_lines`, with plant `one_course`:
+
+| | |
+|---|---:|
+| full-width joints in an 8×8 field | 16 |
+| **sitting at the tile pitch** | **9 — 56%** |
+| the same field with one course per tile (the plant) | 100% |
+| **the floor this number can reach** | **not 0, while K is runtime** |
+
+**The trade, stated plainly, because it is a ruling and not a tuning pass:**
+
+| | runtime K (this build) | authored value on the tile |
+|---|---|---|
+| stone value across a vertical boundary | exact, 0.000 before grain | a step, or a blend that hides one |
+| horizontal joints | **constant pitch, seat-visible, 56%** | free — a slab may cross anything |
+| tile count | 625 | 625 × K⁴ *and the corner is still unaddressable* |
+
+The third column is the one worth staring at: **authoring K does not buy the geometry back.** It
+was measured on the crossing-joint family and it is a theorem, not a budget — corner classes as an
+index dimension make the same assumption about stones mapping to corners, and the 27 unaddressable
+stones fail identically. The only thing that buys a slab crossing a course line is **giving up
+addressed stone values there**, and accepting whatever seam that leaves.
+
+**Mitigations that do not need a ruling**, in the order I would try them:
+
+1. **More courses per tile.** Three courses puts the boundary at 1 line in 3 — 56% → ~33% — at the
+   cost of ~10px courses, so ~8px stones. The register may not want stones that short.
+2. **Interrupt the line with incident rather than with stone.** A slab may not *cross* the
+   boundary, but nothing stops debris, a driven pin, a lashed plank or a spalled edge from sitting
+   *over* it. Incident is world-placed overlay, not bond (§8.3), so it costs nothing structurally
+   — and it is what every seat has asked for anyway. This is the one I would do next, and it is
+   blocked behind §7(c): the overlay system currently emits marks with a **median size of 4px**.
+
+Option 2 answers both live culls at once — the floor gets its four hundred years of history, and
+the one line that can never move stops being continuously visible. It is not attempted here
+because it is overlay work, and the family was what was briefed.
 
 ### (b) §8.2.1's "signals by absence" has a floor, and it has now been located
 
