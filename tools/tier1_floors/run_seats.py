@@ -68,12 +68,20 @@ BAR_IMG = ("/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.
 BAR_CROP = (336, 240, 720, 528)
 YARL_CROP = (0, 400, 750, 1000)      # the lit ground around the figure, HUD excluded
 
-SEATS = {
-    "F1": dict(img="scene_family.png", what="family", solo=True),
-    "F2": dict(img="scene_plant.png",  what="PLANT",  solo=True),
-    "F3": dict(img="scene_family.png", what="family", solo=True),
-    "F4": dict(img="scene_family.png", what="family", solo=False),   # comparative, vs the bar
-}
+# Which capture each seat looks at. Overridable with --family/--plant so a later round can seat a
+# new build without overwriting the captures an earlier round's verdicts were taken on — a seat
+# transcript citing a filename whose bytes have since changed is not evidence (LOOP-PROCESS §2.3).
+FAMILY_IMG = "scene_family.png"
+PLANT_IMG = "scene_plant.png"
+
+
+def SEATS():
+    return {
+        "F1": dict(img=FAMILY_IMG, what="family", solo=True),
+        "F2": dict(img=PLANT_IMG,  what="PLANT",  solo=True),
+        "F3": dict(img=FAMILY_IMG, what="family", solo=True),
+        "F4": dict(img=FAMILY_IMG, what="family", solo=False),   # comparative, vs the bar
+    }
 PLANT_SEAT = "F2"
 # Which slot the Yarl image lands in for the comparative seat, so a seat cannot learn "A is ours".
 F4_YARL_SLOT = "B"
@@ -95,7 +103,7 @@ def bar_crop():
 
 
 def build_work(seat):
-    cfg = SEATS[seat]
+    cfg = SEATS()[seat]
     d = os.path.join(WORK, seat)
     shutil.rmtree(d, ignore_errors=True)
     os.makedirs(d)
@@ -110,7 +118,7 @@ def build_work(seat):
 
 def prompt_for(seat):
     base = open(os.path.join(HERE, "seat_prompt.txt")).read()
-    if SEATS[seat]["solo"]:
+    if SEATS()[seat]["solo"]:
         return base.replace("INPUT: the PNG file(s) in this directory, nothing else.",
                             "INPUT: the file A.png in this directory, nothing else.")
     return base.replace(
@@ -218,7 +226,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("seats", nargs="*", default=["F1", "F2", "F3", "F4"])
     ap.add_argument("--round", type=int, default=1)
+    ap.add_argument("--family", help="capture filename in evidence/ for the candidate seats")
+    ap.add_argument("--plant", help="capture filename in evidence/ for the plant control")
     a = ap.parse_args()
+    global FAMILY_IMG, PLANT_IMG
+    if a.family:
+        FAMILY_IMG = a.family
+    if a.plant:
+        PLANT_IMG = a.plant
     os.makedirs(OUT, exist_ok=True)
 
     results, void = {}, False

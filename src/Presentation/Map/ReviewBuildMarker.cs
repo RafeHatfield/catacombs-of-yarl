@@ -42,6 +42,14 @@ public sealed class ReviewBuildMarker
     public string? FloorOverlays { get; private init; }
 
     /// <summary>
+    /// res:// path to the EDGE-MATCHED floor family's MANIFEST.json, or null. Separate from
+    /// <see cref="FloorOverlays"/> because they are different objects: the overlays are the
+    /// incident placed per instance, this is the BASE tile set whose edges must agree with the
+    /// edges of their neighbours.
+    /// </summary>
+    public string? WangFloor { get; private init; }
+
+    /// <summary>
     /// The commit the build was made from, and when — stamped into the marker by
     /// build_review_app.sh. LOOP-PROCESS §2.3: evidence carries its producer's hash, and a
     /// hash mismatch at a ruling invalidates the evidence. Headless captures have always
@@ -122,6 +130,7 @@ public sealed class ReviewBuildMarker
                     AmbientLevel: (float)light.GetProperty("ambientLevel").GetDouble()),
                 FloorOverlays = root.TryGetProperty("floorOverlays", out var fo)
                             ? fo.GetString() : null,
+                WangFloor = root.TryGetProperty("wangFloor", out var wf) ? wf.GetString() : null,
                 Commit  = root.TryGetProperty("commit",  out var cm) ? cm.GetString() : null,
                 BuiltAt = root.TryGetProperty("builtAt", out var ba) ? ba.GetString() : null,
                 TileSize  = root.TryGetProperty("tileSize", out var ts)

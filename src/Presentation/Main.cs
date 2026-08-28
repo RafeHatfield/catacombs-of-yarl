@@ -2616,6 +2616,7 @@ public partial class Main : Node
         Report($"[Tier0] tile_theme_config={TileThemeLoader.ActiveConfigPath}");
         Report($"[Tier0] light rig: {lighting.Describe(_renderer.TileWidth, _renderer.TileHeight)}");
 
+
         // PRECONDITION 1 (floor session two): what did the variant picker ACTUALLY lay?
         // Emitted on every review capture, overlays or not, so the linear-hash defect cannot
         // return unnoticed — LOOP-PROCESS §4.2's "what goes red if it silently stops holding?"
@@ -2631,12 +2632,32 @@ public partial class Main : Node
         // reach the overlay system or the seats would be judging a floor with no incident on it
         // while the device showed one — two different floors under one name.
         string? overlayManifest = ReadStringArg("--floor-overlays") ?? marker?.FloorOverlays;
+        Dictionary<(int X, int Y), FloorIncident>? incidentPlan = null;
         if (_tileLayer != null && overlayManifest is { Length: > 0 })
+        {
             Report("[Tier1] " + Tier1FloorOverlays.Attach(_tileLayer, _state.Map,
-                                                          overlayManifest, _baseSeed));
+                                                          overlayManifest, _baseSeed,
+                                                          out incidentPlan));
+        }
         else
             Report("[Tier1] floor overlays: none declared (no --floor-overlays, no marker "
                    + "floorOverlays) — base tiles only");
+
+        // THE EDGE-MATCHED FLOOR. Runs AFTER the overlays so it can use their channel decision,
+        // and swapping a sprite's texture does not disturb the overlay children already parented
+        // to it. --wang-floor selects it; absent, the scene keeps whatever the theme picked.
+        string? wangManifest = ReadStringArg("--wang-floor") ?? marker?.WangFloor;
+        if (_tileLayer != null && wangManifest is { Length: > 0 })
+        {
+            var plan = incidentPlan;
+            Report(Tier1WangFloor.Apply(_tileLayer, _state.Map, wangManifest,
+                (x, y) => plan != null && plan.TryGetValue((x, y), out var inc)
+                          && inc.Channel != ChannelKind.None));
+        }
+        else
+        {
+            Report("[Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)");
+        }
         Report($"[Tier0] review_build_marker={(marker != null ? ReviewBuildMarker.Path : "none (CLI flags)")}");
         // Reported so the device log proves the no-losable-state fix is actually on the device.
         // The defect was turn_limit=1, which ended the run on the first step and surfaced as the

@@ -37,11 +37,21 @@ public static class Tier1FloorOverlays
     /// goes red if it silently does nothing).
     /// </summary>
     public static string Attach(TileLayer tileLayer, GameMap map, string manifestResPath, int seed)
+        => Attach(tileLayer, map, manifestResPath, seed, out _);
+
+    /// <summary>
+    /// As above, and hands back the plan. The edge-matched floor pass needs to know which cells
+    /// the channel runs through, and it must be THE SAME decision the overlays were placed from —
+    /// two independent channel derivations would be a copy that drifts.
+    /// </summary>
+    public static string Attach(TileLayer tileLayer, GameMap map, string manifestResPath, int seed,
+                                out Dictionary<(int X, int Y), FloorIncident> plan)
     {
+        plan = new Dictionary<(int X, int Y), FloorIncident>();
         var cfg = LoadConfig(manifestResPath, out string load);
         if (cfg == null) return $"floor overlays: NOT ATTACHED — {load}";
 
-        var plan = FloorIncidentPlanner.Plan(map, cfg, seed);
+        plan = FloorIncidentPlanner.Plan(map, cfg, seed);
         int grit = 0, events = 0, chan = 0, occl = 0, missing = 0;
 
         // THE RENDERER'S WHOLE-CELL WALL SHADOW IS TURNED OFF WHERE THIS FAMILY IS ACTIVE.

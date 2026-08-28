@@ -76,7 +76,7 @@ def git_commit():
 
 def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
             light_overrides=None, scene_spec=None, log_out=None, timeout=180,
-            floor_overlays=None):
+            floor_overlays=None, wang_floor=None):
     """Invoke the engine. Returns (returncode, log, cmd)."""
     w = cfg["resolution"]["width"]
     h = cfg["resolution"]["height"]
@@ -124,6 +124,11 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
     # be missing the incident system and look like a floor that simply has no incident on it.
     if floor_overlays:
         cmd += ["--floor-overlays", floor_overlays]
+    # The EDGE-MATCHED base family (floor session two). Optional and reported either way, for the
+    # same reason the overlays are: a capture silently missing it looks like a floor whose joints
+    # simply do not meet, which is the finding it exists to answer.
+    if wang_floor:
+        cmd += ["--wang-floor", wang_floor]
 
     os.makedirs(os.path.dirname(out_png) or ".", exist_ok=True)
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
@@ -158,6 +163,10 @@ def main():
                     help="res:// path to a floor family MANIFEST.json — ART-BIBLE-v0 §8.3's "
                          "incident overlays and §8.2.1's trodden channel. Omitted, the capture "
                          "draws base tiles only and the engine says so in the log.")
+    ap.add_argument("--wang-floor",
+                    help="res:// path to the edge-matched family MANIFEST.json. Its edges must "
+                         "agree with their neighbours', which a position hash cannot express, so "
+                         "the engine lays it rather than the theme.")
     ap.add_argument("--log-out")
     ap.add_argument("--godot", default=DEFAULT_GODOT)
     args = ap.parse_args()
@@ -171,7 +180,8 @@ def main():
 
     rc, log, cmd = capture(args.out, args.theme_config, cfg, args.godot,
                            light_overrides=overrides, scene_spec=args.scene_spec,
-                           log_out=args.log_out, floor_overlays=args.floor_overlays)
+                           log_out=args.log_out, floor_overlays=args.floor_overlays,
+                           wang_floor=args.wang_floor)
 
     if not os.path.exists(args.out):
         # Exit 2 from the engine is a REFUSED capture (junction-lit check failed), not a crash.

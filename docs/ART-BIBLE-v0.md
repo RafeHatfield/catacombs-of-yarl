@@ -1040,6 +1040,36 @@ from delivered targets on the current rig.** That dependency is named in §6.2 a
 **Evidence:** `tools/sighted_round/WALL-RECIPE.md` §0–§1 (measurement and register derivation
 per number, under §13.3's origination rule), `bar_measurements.json`, and the seat transcripts.
 
+> **THE FLOOR'S 1.00 IS NOW A MEASURED CONSTANT, NOT A PLACEHOLDER — RECORDED (floor session two,
+> 2026-08-28).**
+>
+> §6.5 states its whole table *floor-relative*, and until now there was no floor to be relative
+> to: the wall recipe had to invent one, which is how it came to author ratios against a rig and
+> a floor that both moved underneath it. The edge-matched Boundary family fixes the reference.
+>
+> | | value |
+> |---|---:|
+> | **median luminance, as authored, unlit** | **114.5** |
+> | mean | 113.3 |
+> | per-tile mean spread across the 81 tiles | 3.3 |
+> | p5 / p95 | 74.9 / 127.8 |
+>
+> **114.5 is §6.5's 1.00 for the Boundary.** Walls derive against it; it does not drift after
+> landing. Measured on the tiles themselves rather than on a capture, deliberately — a lit
+> measurement would fold the rig into the constant, and §6.2's re-derivation rule exists precisely
+> because a number with a rig baked into it is a number with a fuse in it.
+>
+> ⚠ **`WALL-RECIPE.md`'s face ÷ top ≈ 0.35 is STALE and is not to be reused.** It was authored to
+> deliver 0.52 through the pre-Ruling-56 rig. Those walls were culled at the 2026-08-27 gate, so
+> nothing shipping depends on it — but the next wall round derives against the floor above and the
+> rig in §6.2, from scratch.
+>
+> ⚠ **The per-tile spread of 3.3 is itself load-bearing.** Session one measured a 6.4-point spread
+> between variants and a blind seat read it as *"the grid draws itself onto the ground"* — the
+> cell's own average brightness sitting at a constant position is §8.3.1 with no feature in it at
+> all. Every tile in this family is normalised to the family's value for that reason, and the
+> spread is reported so the next family can be held to it.
+
 ---
 
 ## 7. Construction grammar — everything is held — LOCKED
@@ -1306,6 +1336,59 @@ because that offset is what the eye adds up.
 
 **Floors earned this clause; walls confirmed it; it is now written as a property of tiling
 rather than of either.**
+
+#### 8.3.2 MATCHING IS AGREEMENT, NOT CONSTANCY — RULED (Rafe, 2026-08-28). Edge-matched sets are legal.
+
+**§8.3.1 forbids a treatment at a CONSTANT POSITION. It does not forbid two neighbouring tiles
+from AGREEING about where their shared boundary is crossed** — and the difference between those
+two things is the difference between a lattice and a floor.
+
+The clause needed saying because the honest reading of §8.3.1 alone would have banned the only
+construction that answers floor session one's terminal finding:
+
+> *"Joints enclose nothing — 99.1% of the floor is one connected region. No stones, only
+> scratches. … Every 'stone' leaks into every other stone. For an underworld whose whole premise
+> is that it is ADMINISTERED, a floor that cannot show a single completed stone is arguing the
+> opposite case."*
+
+A joint network can only close if joints **agree across cell boundaries**, which requires the tile
+chosen for a cell to depend on its neighbours. That is an edge-matched (Wang) set, and it is
+hereby legal.
+
+**THE DEGENERATE CASE IS NAMED, AND IT IS CHECKABLE.** A set is *lattice-degenerate* when its edge
+families are too few to vary the crossing positions — agreement collapses into constancy and
+§8.3.1's lattice returns wearing the fix's clothes. Two floors:
+
+1. **At least THREE edge families per boundary orientation.** Two would make every boundary a
+   coin-flip between the same two offsets; one is a ruled grid by definition.
+2. **Crossing-position variance measured across the ASSEMBLED FIELD, and reported.** A field whose
+   joint crossings cluster at constant offsets has re-derived the lattice and **fails**, whatever
+   its family count says. §8.3's scale rule again: the property lives at field scale, so a table
+   of intended families is not evidence — the pixels are.
+
+**Register derivation**, because §13.3's origination rule requires one and "it makes the floor
+close" is a mechanism, not a justification. §1 holds the Paths are **administered** — built,
+catalogued, maintained by somebody. A floor of closed, laid stones is that claim in material; a
+floor of open scratches is the opposite claim, and a blind seat reached exactly that conclusion
+from the pixels without ever being shown the clause. Agreement between neighbours is what
+*laid* means: a mason sets a stone against the one already there. Constancy is what *printed*
+means. The law distinguishes them because the register does.
+
+**First measured under this clause** (floor session two, `tools/tier1_floors/field_wang.py`):
+3 families per orientation, 81 combinations, an 8×8 assembled field —
+
+| | session one | under this clause |
+|---|---:|---:|
+| largest single region, share of floor | **99.1%** | **3.9%** |
+| enclosed regions | 2 of meaningful size | **147**, median 177 px, 77 ≥ 64 px |
+| crossing offsets, distinct per orientation | n/a | 3–4, modal share **0.375** (≈ 1/3) |
+
+⚠ **AND THE MECHANISM COSTS SOMETHING, RECORDED SO IT IS NOT DISCOVERED LATER.** An edge-matched
+tile **cannot be rotated or flipped** — its orientation *is* its meaning, and turning one relabels
+its four edges so it stops agreeing with its neighbours. Session one bought most of its variety
+from eight free orientations of every tile (§6.3 paying out: a receive-light asset has no up to
+break). That variety must now be bought with combinations instead, which is why the family count
+per orientation is a floor rather than a target.
 
 ⚠ **The trap has a mirror and it is not licensed here.** *Incident-free* is not *featureless*.
 Material has structure — joints, bond, grain, value break — and stripping that to avoid a motif
