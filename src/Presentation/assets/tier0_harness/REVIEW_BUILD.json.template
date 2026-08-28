@@ -17,17 +17,28 @@
     "that for you (tools/tier0_harness/build_review_app.sh). Install it under its own bundle id",
     "so it sits side by side with the real game rather than replacing it.",
     "",
-    "EVERY LIGHT VALUE HERE IS UNDERIVED — §6.2 and §4.3 mark them PLACEHOLDER. They are copied",
-    "from tools/tier0_harness/harness_config.yaml so the device build and the desktop capture",
-    "are lit by the same rig; if they drift, the two stop being comparable."
+    "THE LIGHT VALUES HERE ARE RULED FOR THE BOUNDARY — §6.2.1, Ruling 56 (Rafe, 2026-08-28),",
+    "ratified by walking the tier-one floor family on the reference device at gameplay distance.",
+    "They are copied from tools/tier0_harness/harness_config.yaml so the device build and the",
+    "desktop capture are lit by the same rig; if they drift, the two stop being comparable.",
+    "",
+    "THE UNITS, because a knob position is not a value:",
+    "  radiusTiles   reach in TILES, not pixels (32px tile -> 320px radius)",
+    "  falloff       exponent on the radial ramp; 1.00 is the plain smoothstep, the identity",
+    "  ambientLevel  SCALAR on the ambient hue, not a colour: 1a1a22 x 0.70 -> #121218",
+    "",
+    "RULED FOR THE BOUNDARY AND NOTHING ELSE. Every other region derives its own at its own",
+    "gate; copying these into one would be conformance to a neighbouring region's answer."
   ],
   "scene": "res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json",
   "themeConfig": "res://src/Presentation/assets/tier0_harness/tile_themes_stub.yaml",
   "light": {
     "ambient": "1a1a22",
+    "ambientLevel": 0.70,
     "color": "ffb066",
     "energy": 1.6,
-    "radiusTiles": 5.5
+    "radiusTiles": 5.0,
+    "falloff": 1.00
   },
 
   "_floorOverlays": [

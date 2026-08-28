@@ -231,7 +231,14 @@ public sealed class ReviewLighting
            $"light={_p.LightColor.ToHtml(false)} energy={_p.Energy:0.###} " +
            $"radius_tiles={_p.RadiusTiles:0.###} falloff={_p.Falloff:0.##} " +
            $"tile={tileWidth}x{tileHeight} tex={ResolveTextureSize()}px " +
-           $"(ALL VALUES UNDERIVED — ART-BIBLE-v0 §6.2/§4.3 PLACEHOLDER)";
+           // The light values are RULED FOR THE BOUNDARY (§6.2.1, Ruling 56, 2026-08-28) and this
+           // string used to stamp every capture "ALL VALUES UNDERIVED". Left alone it would
+           // mislabel the evidence in the opposite direction from before — a capture claiming its
+           // rig was a guess when the rig is law. Tile size is separate and unchanged: RULED as to
+           // value, PLACEHOLDER as to derivation (§4.3), which is not the same status and is not
+           // collapsed into one phrase.
+           "(light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. " +
+           "tile: RULED value, §4.3 derivation outstanding)";
 
     /// <summary>
     /// The three §6.2.1 knobs alone, in the form a settings log wants: short, greppable, and
