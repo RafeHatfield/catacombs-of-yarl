@@ -383,12 +383,60 @@ scene information the floor family is not given.
 
 ---
 
-## 6d. Round 9 — the crack integration, seated
+## 6d. Round 9 — VOID, and what may and may not be taken from it
 
 Captures pinned: `scene_ashlar_r9.png` (sha `572878d8…`), `scene_ashlar_plant_r9.png`
 (sha `1a4f4903…`).
 
-**The integration worked, and the seat says so unprompted:**
+> ### ⚠ ROUND 9 IS VOID. `plant_caught: false`, zero vocabulary hits.
+>
+> §4 is unambiguous: *if the critic does not catch the plant, the round is VOID and its findings
+> are not read. Not discounted — void.* **Its seat opinions below are recorded as PROVISIONAL and
+> are not rulings.** They are written down because the round happened, not because it counts.
+
+**The critic was not soft; the MATCHER's vocabulary was short.** The plant seat culled, and named
+the plant's damage plainly:
+
+> *"It's been shot through with **holes** and scribbled on, evenly, everywhere, by nothing in
+> particular. There are roughly twenty punched-through black **holes** across a floor of about 92
+> tiles."*
+> **CULL:** *"Damage is uniform decorative scatter — the ground records no traffic, no event, and
+> no repair."*
+
+It used *hole* fourteen times. **The plainest word for the plant's most prominent feature had never
+been in the declared list**, through three rounds — while the list carried *lichen*, which this
+plant has never contained. The matcher's two `collapse` hits were correctly rejected: one is the
+negation *"no collapse edge"*, the other is in the flip list.
+
+So the test worked exactly as designed and the round is genuinely void. The defect is that the
+vocabulary was inherited from session two's mossy, cobwebbed plant and then widened, after round
+8, **by reading round 8's transcript** — which is the same error as relaxing a threshold after
+seeing a result: the test ends up derived from the outcome.
+
+**Corrected for the next round, and not applied to this one.** The list is now derived from
+`plant_ashlar.py`'s three draw calls and nothing else, as stems, with a standing obligation to
+change when the plant's construction changes. Verified four ways: it catches rounds 8 and 9 on
+their own words; it rejects a transcript that *denies* every defect; and it rejects one naming only
+the family's legal cracks — which matters more than ever now that the FAMILY draws cracks as its
+primary incident.
+
+> **Round 9 is not re-declared valid by that correction.** It ran under the list that was declared
+> when it ran.
+
+### What survives the void: the measurements
+
+Instrument output is not a seat opinion and does not depend on the round. These stand:
+
+| | retired per-tile overlay | field-scale network |
+|---|---:|---:|
+| connected marks over the field | 127 | **4** |
+| **median mark** | **4 px** | **129 px** |
+| marks crossing a tile boundary | — | **75%** |
+| crack-meets-bed-joint junctions (8×8 field) | — | 42, components 1–4px |
+
+### Provisional, from a void round
+
+**The integration appears to have worked, and the seat said so unprompted:**
 
 > *"The cracks are real and **they're the best thing here** — I count 23 distinct strokes over 10px
 > in both axes, individually drawn, sweeping across the room (the long arc from ~(250,290) curving
@@ -433,7 +481,8 @@ criticism:
 > side, and **spall the mortar where a crack meets a joint**."*
 
 **Not done in this session, deliberately.** The bound was one integration and one seat check, and
-both are spent. Making the change now would put in front of the human gate a state no critic has
+both are spent — and the seat check came back void, so acting on its finding would be acting on a
+reading §4 says is not read. Making the change now would put in front of the human gate a state no critic has
 seen — which is the failure §1.1.1 exists to prevent, in the other direction. The walk build is
 therefore **exactly what round 9's seat looked at**, and Rafe's eye is the next instrument under
 the three-outcome rule.

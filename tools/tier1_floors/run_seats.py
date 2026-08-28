@@ -248,16 +248,39 @@ def parse(text, strict=True):
 #
 # What follows is only what the plant has and the family does not: collapse, cobwebbing, moss,
 # rubble, and the word "ruined" itself, which is §8.1's own term for the failure.
-PLANT_WORDS = ("cobweb", "cobwebbing", "web", "webbing", "collapse", "collapsed", "caved",
-               "ruin", "ruined", "rubble", "moss", "mossy", "overgrown", "lichen",
-               # ADDED FOR THE ASHLAR PLANT, DECLARED IN ADVANCE OF ANY ROUND THAT USES THEM.
-               # The list above was written for session two's plant, which had moss in the joints
-               # and a cobweb dither. The ashlar plant has neither: its ruin is collapse VOIDS,
-               # bright strands and dramatic cracks, so a seat could read the register perfectly
-               # and describe it in words the matcher had never heard of. Round 8's did exactly
-               # that — "punctured, repeatedly", "twenty-two identical black blobs", "damage
-               # stamped on, not a surface anyone used" — and scored no hit on its own merits.
-               "punctured", "puncture", "voids", "blown", "shot at", "eaten", "holed")
+# THE VOCABULARY IS DERIVED FROM WHAT THE PLANT CONTAINS, NOT FROM WHAT A SEAT ONCE SAID.
+#
+# That sentence is the correction, and it took three rounds to earn. The list began as session
+# two's, whose plant had moss in the joints and a cobweb dither. The ashlar plant draws COLLAPSE
+# VOIDS, bright strands and dramatic cracks — and after round 8 the list was widened by reading
+# round 8's transcript and adding the words that seat happened to use. Round 9's seat then
+# described the same plant in different words again and scored NOTHING:
+#
+#     "It's been shot through with HOLES and scribbled on, evenly, everywhere, by nothing in
+#      particular. There are roughly twenty punched-through black HOLES across a floor of about
+#      92 tiles"
+#     CULL: "Damage is uniform decorative scatter — the ground records no traffic, no event, and
+#      no repair."
+#
+# It used "hole" fourteen times. **The plainest word for the plant's most prominent feature had
+# never been in the list**, through three rounds — while the list carried "lichen", which the
+# plant has never contained. Chasing a critic's vocabulary one transcript at a time is the same
+# error as relaxing a threshold after seeing a result: the test ends up derived from the outcome.
+#
+# So the list is now derived from `plant_ashlar.py`'s three draw calls and nothing else, as STEMS,
+# and it is a standing obligation: **when the plant's construction changes, this changes with it,
+# before the next round runs.**
+#
+#     collapse voids   -> hole, void, collaps, cave, punct, crater, pit
+#     cobweb strands   -> web, cobweb, strand, silk
+#     the register     -> ruin, rubble, moss, lichen, overgrown, derelict
+#
+# ⚠ "CRACK" IS AND REMAINS EXCLUDED, and now emphatically so: the FAMILY draws cracks, at field
+# scale, as its primary incident. A seat naming a crack has said nothing that separates plant from
+# candidate, and a control that greens on the thing it is controlling for is worse than no control.
+PLANT_WORDS = ("hole", "void", "collaps", "cave", "punct", "crater",
+               "web", "strand", "silk",
+               "ruin", "rubble", "moss", "lichen", "overgrown", "derelict")
 
 
 # ⚠ NEGATION. Round 8's plant seat scored a hit on the word "collapse" — inside the sentence

@@ -1,0 +1,66 @@
+I looked at the full frame, then quadrant crops at 3×, center and dark-edge zooms at 4×, and ran measurements on the floor region (x 182–634, y 15–392) for tiling period, hole-decal similarity, and whether the damage layer responds to the torch.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut sandstone flagstones, mortared, laid in courses like brickwork. Sandy tan under the torch, cold brown out at range.
+
+**Q1_WHY:** The seam grid is unambiguous. Horizontal seams sit at y ≈ 48, 79, 123, 146, 167, 208, 241, 272, 294, 337 — courses about 21–22 px tall, with stones roughly 43 px long, and vertical joints staggered course to course (clearest in the 4× center zoom around x 255–455, y 120–300). Stones come in two lengths, full and half, exactly as coursed masonry does. The seams are drawn as recessed dark lines, not painted grid lines, and the stone faces are a soft warm ochre with a fine dither in them. Nothing about it reads as packed earth, cut bedrock, or wood.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor mouth at the bottom of the room (x ≈ 380–450). **Nothing about the ground influenced that.** I picked it off the architecture — it's the one opening whose shape I can actually read.
+
+I went looking for a ground cue and there isn't one. No wear path, no polished lane, no scuffing where feet would go, no debris pushed to the sides, no drag marks, no threshold stone, no directional grain. The flagstones by the south mouth (x 380–450, y 340–390) are the identical material, identical tone jitter and identical damage density as the flagstones at the far west edge (x 185–260, y 200–300). A room that has been in continuous heavy use since before records began has no traffic written on it anywhere. If you turned the walls off, I could not tell you which way anyone has ever walked.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It's been shot through with holes and scribbled on, evenly, everywhere, by nothing in particular.
+
+There are roughly twenty punched-through black holes across a floor of about 92 tiles — one every four or five tiles — plus a dense mesh of thin cracks in two colours running over everything. It is comprehensively damaged and completely uninformative. Nothing has *happened* to it in the sense of an event: there's no impact centre, no spall radiating from anything, no collapse edge, no subsidence, no patch, no repair. For a floor held by a company that repairs things endlessly with rope, pins, hide and salvaged timber, there is not one pin, plank, or rope on it. Nobody has ever touched this ground.
+
+**Q3_WHY:** What I'm reading specifically:
+
+- The holes are all one size class. Measured bounding boxes: 20×22, 22×20, 18×24, 22×20, 18×20, 20×18, 20×16, 18×16, 16×18, 18×14. Every hole in the room is between 14 and 24 px across — about half a flagstone. No small pits, no big collapses, nothing merged, nothing partial at an edge.
+- Their spacing is even. There is no cluster and no clear ground. They read as scatter density, not as consequence.
+- Every hole carries a complete pale ring around its full circumference. Look at the two holes at (y 190, x 580) and (y 226, x 613), out on the dark right edge — they sit in near-blackness with a bright unbroken rim on all sides, including the side facing away from the torch. That's a baked-in highlight, not lit geometry.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes. Two things, and the second one is the serious one.
+
+**The pale cream scratch strokes.** They cover about 5% of the floor (9,144 pixels above local background). They are all the same 1 px weight and the same cream hue, and they wander freely across flagstone seams as though the stones weren't there. Worse, the same stroke shape keeps coming back — a comma/hook with a short tail. I count it at (y 247, x 462), (y 245, x 522), (y 307, x 492), (y 307, x 522) in the bottom-right alone, and again in the knot at (y 230–300, x 280–360) where a dozen of them bundle together and stop reading as stone damage entirely. At that density and that colour they read as pale hairs or worms lying on the floor, not as cracks in it. Cracks are dark. My eye kept going back to that knot thinking something was on the ground there.
+
+**The pale layer does not dim.** This is measurable. Sampling pale stroke pixels against surrounding floor by distance from the torch at (406, 180):
+
+| distance | floor luminance | stroke luminance | ratio |
+|---|---|---|---|
+| 0–60 px | 112.7 | 158.5 | 1.41× |
+| 60–110 | 100.0 | 140.8 | 1.41× |
+| 110–160 | 75.1 | 119.1 | 1.59× |
+| 160–210 | 49.5 | 89.7 | 1.81× |
+| 210–300 | 25.7 | 56.4 | **2.19×** |
+
+The absolute gap holds near-constant (+46, +41, +44, +40, +31) while the floor itself falls to a quarter of its lit value. The scratch layer is being added *after* the light, so the further into the dark you go the more it shouts. In the far corner it is the highest-contrast thing on screen. The one place the room should be giving me nothing is where the damage is loudest — my eye is pulled out to the black edges instead of to the lit ground I can act on.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+**Made** — but assembled from a stamp library, not authored.
+
+It genuinely does not tile. I ran shifted mean-absolute-difference across the floor after high-passing out the lighting gradient, horizontal and vertical, at every offset from 3 to 90 px: no periodic minimum, monotonic rise. And the hole decals are not literal copies — best pairwise shape agreement between any two is IoU 0.79, median across all pairs 0.545. Stone lengths vary. So there's no repeated bitmap here and I won't call one.
+
+What it is instead is a base masonry pattern with two decal sets scattered over it by an even random distribution. That's why the room has no places in it. Every square metre carries the same statistical dose of hole and crack. A made floor has a corner nobody goes to and a lane everybody does.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES. The masonry construction is correct, the running bond is right, the torch falloff is handled, it's legible at phone size.
+
+Merely competent. Not genuinely good. It is a well-built floor with nothing to say — it describes a material, not a place, and it does not survive the fiction it's carrying. "Administered, in continuous heavy use, never cared for, held for four hundred years by soldiers who patch everything" should be readable off the ground alone, and none of it is. What I can read off the ground is: sandstone, damaged evenly.
+
+**CULL:** Damage is uniform decorative scatter — the ground records no traffic, no event, and no repair.
+
+**FLIP LIST**
+- Multiply the crack and hole-rim layer by the light instead of adding it — at 210+ px from the torch the strokes sit at 2.19× local floor and glow out of the dark; they must fall with it.
+- Recolour the cracks dark and let the light do the highlighting: a pale lip only on the torch-facing side, nothing on the far side. Kill the free-floating cream strokes entirely — they read as hairs, not fissures.
+- Break the hole size class. Every hole in the room is 14–24 px; add sub-tile pitting and at least one multi-tile collapse with a broken edge and spall radiating from it, so damage has a cause and a scale.
+- Author traffic: a lane of worn, seam-softened, tone-lifted flagstone running from the south mouth (x 380–450) through the room, with holes and debris cleared out of it and pushed to the flanks. Right now the ground by the exit is indistinguishable from the ground at the west wall.
+- Put the orcs on the floor: two or three driven pins, a salvaged plank bridging a hole, rope lashing across a seam — crude, on top of the stone, breaking the coursing. One or two per room, not scattered.
+
+---
+
+Model: Claude Opus 5 (1M context).
