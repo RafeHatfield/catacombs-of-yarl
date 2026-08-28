@@ -89,7 +89,7 @@
    "got": "key_present=False redacted_present=True",
    "half": "RED",
    "ok": true,
-   "verbatim": "{\"budget_ceiling\": 40, \"budget_spent\": 1, \"claim\": \"control\", \"commit\": \"84094d2167d06ce2743f7e180f6545af1b0d63fc\", \"estimate_error\": null, \"estimated_cost\": null, \"http_status\": 401, \"images\": [], \"kind\": \"generate\", \"r"
+   "verbatim": "{\"budget_ceiling\": 40, \"budget_spent\": 1, \"claim\": \"control\", \"commit\": \"0d536ce5657478373dff97fb55f3325f7d3e81e6\", \"estimate_error\": null, \"estimated_cost\": null, \"http_status\": 401, \"images\": [], \"kind\": \"generate\", \"r"
   },
   {
    "control": "ledger/image_digested",

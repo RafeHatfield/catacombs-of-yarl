@@ -452,8 +452,16 @@ class Session:
     RECONCILE_RED into the ledger.
     """
 
-    def __init__(self, out_dir, claim, budget=None, declaration=None, settle=True):
-        self.led = Ledger(out_dir)
+    def __init__(self, out_dir, claim, budget=None, declaration=None, settle=True, ledger=None):
+        # `ledger` MUST be the same Ledger the run's generate() calls write to. It was not a
+        # parameter at first, and Session built its own `ledger.jsonl` beside a run that was
+        # writing `cell20_ledger.jsonl` — so `billed_from_ledger()` summed an empty file and
+        # `close()` reported RECONCILE_RED with billed 0.0 against $0.500 actually spent. The
+        # money was right; the instrument was reading the wrong file. Third instance this
+        # session of LOOP-PROCESS §4.2's family, and the third time the guard caught it rather
+        # than a silent pass. Defaulting to a fresh Ledger is retained for callers that make
+        # only one, but passing the run's own is now the documented shape.
+        self.led = ledger or Ledger(out_dir)
         self.claim = claim
         self.budget = budget or Budget()
         self.settle = settle
