@@ -78,6 +78,31 @@ with open(path, "w") as f:
 PY
   echo "== floor overlays: $TIER1_OVERLAYS"
 fi
+
+# TIER1_ASHLAR points the review build at the course-aligned ashlar family's MANIFEST.json.
+#
+# IT NEEDS ITS OWN KNOB, and the absence of one is a gap this session found rather than inherited
+# deliberately: the edge-matched family that preceded it had `--wang-floor` on the capture harness
+# and NOTHING here, so every device build since it was written has shown whatever the theme
+# picked, under the family's name, at the one gate that decides anything (section 13.1).
+#
+# It cannot ride in on TIER0_THEME for the same reason the overlays cannot: the family is not a
+# tile role. The theme's floor entry is a magenta placeholder that exists only so a sprite is
+# present to repaint, and every walkable cell is repainted by Tier1AshlarFloor from that cell's
+# stone addresses. Set the theme and forget this, and the phone shows magenta — loud, which is
+# the point (LOOP-PROCESS section 4.2), but still the wrong picture.
+if [ -n "${TIER1_ASHLAR:-}" ]; then
+  python3 - "$MARKER" "$TIER1_ASHLAR" <<'PY'
+import json, sys
+path, manifest = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["ashlarFloor"] = manifest
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== ashlar floor: $TIER1_ASHLAR"
+fi
 # STAMP THE BUILD'S OWN IDENTITY INTO THE MARKER.
 #
 # LOOP-PROCESS §2.3: every evidence file records the commit hash of the code that produced it,
