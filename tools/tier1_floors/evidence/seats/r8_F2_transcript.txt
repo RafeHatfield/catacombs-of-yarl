@@ -1,0 +1,112 @@
+Read the image, then measured it — the interesting findings here are the ones that survive a pixel test.
+
+---
+
+## Q1: WHAT IS THIS FLOOR MADE OF?
+
+**Rectangular dressed slabs laid in running bond, with recessed dark joints — but I can only name the *format*, not the *substance*.**
+
+I can tell you it's cut rectangular blocks about one tile tall, offset course to course, set with sunken joints. I cannot tell you whether they're stone, fired brick, or rammed earth blocks. Nothing in the pixels decides it.
+
+**Q1_WHY:** The bond is legible and regular. Horizontal joint lines sit at y = 15, 47, 79, 111, 143, 175, 207, 239, 271, 303, 335, 367 — exactly 32px apart, one grid cell. Joints are a uniform 4px dark recess. Blocks are mostly 32px square with occasional double-width (64px) slabs, staggered roughly half a block per course.
+
+What's *missing* is what would name the material: there is no grain, no bedding plane, no mineral variation, no aggregate, no chip on any corner. The only intra-slab detail is scattered 2×2 dark dots that read as generic pitting. A slab at (452,120) is a flat field of one value plus dots; so is a slab at (556,272). Strip the joints and you could not say what you were standing on.
+
+---
+
+## Q2: WHICH WAY WOULD YOU WALK, AND WHY?
+
+**South, down the corridor at x≈376–438 — and the ground contributed almost nothing to that choice.**
+
+Two exits: the south corridor, and a west passage at x<180, y≈145–235 (unlit floor, four more holes visible in it at (77,164), (27,229), (69,243), (159,225)).
+
+The only ground-derived reason I have is negative: the west floor sits so close in value to the surrounding blocks that I can't read it as walkable ground, while the corridor floor is legible. That's a lighting-contrast fact, not a property of the surface.
+
+The one genuine ground signal in the whole frame is the hole at (331,159)–(344,176) — the only hole with a straight 2px black tail running south to y≈200, plus two detached 4×4 black squares below it at ~(336,188) and (348,187). It's the single mark that implies a direction. It also happens to be the most artificial-looking thing on the floor (see Q4).
+
+Everything else is directionless. No trodden lane, no lighter path where feet have polished the slabs, no debris drifted against a wall, no accumulation at either doorway. If I remove the lighting, **the ground does not vote.**
+
+---
+
+## Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?
+
+**It has been punctured, repeatedly, by one thing — and it has never been walked on.**
+
+Those are two separate statements and both are visible.
+
+**Q3_WHY:**
+
+*Punctured.* I count **22 hole-blobs** on one phone screen (excluding the `Msg` button). Their bounding boxes: 22×18, 12×18, 20×22, 18×18, 12×20, 20×18, 20×22, 24×34, 20×18, 20×20, 10×18, 20×20, 20×20, 18×20, 22×18, 18×20, 20×20, 18×20, 18×18, 20×18, 14×18, 20×18. **Every single one is ~20×20 px** — 0.6 of a slab. Not one hairline. Not one whole missing slab. Not one large collapse. Twenty-two events, one calibre. Interiors are flat `#090603` with no depth, no lip, no visible edge thickness. They read as stickers, not openings.
+
+*Never used.* Every joint runs perfectly straight at a uniform 4px. Every slab corner is square. No slab is sunk, tilted, cracked out, replaced with a mismatched one, or wedged back with timber. There is no dirt packed into any joint. Where the room meets the corridor at y≈410 — the one place all traffic funnels — the surface is pixel-for-pixel the same treatment as the middle of the room.
+
+For a place in continuous heavy use since before records begin, and repaired for four hundred years with rope and driven pins, this floor shows **damage without history**. Something shot it. Nobody ever crossed it.
+
+---
+
+## Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?
+
+Three things, and the first two are measurable.
+
+**1 — The pale hook strokes, and specifically the fact that they get *brighter as the room gets darker*.**
+
+Same comma/hook/candy-cane shape everywhere: (373,51)–(396,78); (495,125)–(518,142); (347,147)–(368,206); (449,211)–(500,238); (309,211)–(328,238); (441,23)–(456,46); and — most conspicuously — down in the unlit corridor around (395,545)–(420,590), where a pale hook is one of the most legible things on the whole screen.
+
+I measured decal brightness against the local floor by distance from the lamp:
+
+| distance from lamp | decal | local floor | ratio | **delta** |
+|---|---|---|---|---|
+| 0–60px | 153.1 | 121.3 | 1.27× | **+31.8** |
+| 60–110px | 143.3 | 110.5 | 1.30× | **+32.8** |
+| 110–160px | 112.2 | 83.4 | 1.36× | **+28.8** |
+| 160–210px | 86.2 | 54.8 | 1.61× | **+31.4** |
+| 210–300px | 53.0 | 26.2 | **2.06×** | **+26.8** |
+
+The delta is constant. **The decals are added to the lit floor, not multiplied by the light.** Under the lamp they barely read at 1.27×; out in the dark they're twice the brightness of the stone they sit on. That is exactly backwards, and it's why my eye keeps getting dragged into the corners.
+
+The same bug makes the pale halo ring every hole — full strength on all four sides, including the side facing away from the only light in the world.
+
+**2 — The uniform hole calibre.** Once I noticed the 20×20, I couldn't stop counting them. 22 of them, evenly spread, no clustering, no clear ground.
+
+**3 — The tail on the hole at (331,159).** A perfectly straight, 2px-wide, non-tapering black line running down to y≈200 with a hard flat end, plus two floating 4×4 black squares. It crosses the joint at y=175 without changing. It doesn't pool, wander, or thin. It reads as a stray drawn line, not a spill.
+
+---
+
+## Q5: MADE, OR REPEATED?
+
+**Repeated.** Four independent measurements say so.
+
+- **The floor is one hue.** Across 105,711 floor pixels (player and UI excluded), hue spans **26.2°–29.5°** — a 3° band — and saturation 0.47–0.57. Value ranges 0.24–0.86. Stone, mortar, cracks, chalk marks, hole rims: every one of them is the identical orange-brown at a different brightness. This is a greyscale detail map multiplied by a single tint. Nothing on this floor is a *different colour* from anything else on this floor.
+- **22 hole blobs, one size.** Not pixel-identical (best pairwise IoU ~0.82) — so they're procedurally varied — but varied around a single idea at a single scale.
+- **Three or four stroke shapes.** Template-matching the pale marks returns non-self IoU up to 0.84 across the room. Same generator, same length, same curvature, same density in a corridor as in an open room.
+- **Per-slab flat random albedo.** Sampling slab medians along a course: row y=112 runs 74, 82, **108**, 88, 90, **133**, 122, 116; row y=48 runs 86, 93, 101, 95, 101, **66**, 94. That's a ±30 value swing per slab with no spatial logic — **the same magnitude as the lamp's entire falloff across four tiles.** Blur the image and the floor is a quilt of random rectangles, not a lit room.
+
+A made surface accumulates from causes. This one is a tint over a noise field with three stamps scattered on top.
+
+---
+
+## Q6: WOULD YOU BELIEVE THIS SHIPPED?
+
+**YES.** The bond is correct, the joints are clean, the pixel discipline is consistent, the read at phone size is clear. Plenty of shipped roguelikes look worse.
+
+**Merely competent.** Not good. Good would mean I could name the stone, read where people walk, and tell what made the holes. I can't do any of the three.
+
+---
+
+## CULL
+
+Twenty-two identical black blobs and a single 3° hue: damage stamped on, not a surface anyone used.
+
+---
+
+## FLIP LIST
+
+- Multiply the pale marks and hole halos by the lightmap instead of adding them — measured constant +30 at every distance, so scratches read at 2.06× the floor in the dark corners and 1.27× under the lamp.
+- Break the calibre: replace two-thirds of the 22 blobs with a range — hairline joint gaps, one chipped corner, one whole slab missing to a dark void with visible edge thickness — and cluster the survivors instead of spreading them evenly.
+- Break the hue lock: give the floor at least two stone tones and cool the joint shadows off the 26–29° band, so mortar, stone and damage aren't the same colour at different brightness.
+- Cut per-slab random albedo from ±30 to roughly ±8 so the lamp's falloff, not the noise, owns the value structure; keep large tone shifts for deliberate patches only.
+- Put history at the doorway (y≈410) and along the corridor centre: polished slabs on the traffic line, dirt packed into the joints away from it, debris drifted at the wall bases.
+
+---
+
+*Model: Claude Opus 5 (1M context).*
