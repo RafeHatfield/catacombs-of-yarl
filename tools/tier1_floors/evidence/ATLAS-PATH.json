@@ -1,5 +1,5 @@
 {
- "commit": "864f44f9b25155e33888dfc3b3823a171f7ffcf0",
+ "commit": "6357f06b217169ed17e90ee559fa56fc907f61e2",
  "grid": [
   8,
   8
@@ -20,7 +20,7 @@
  },
  "plant": {
   "corrupted": {
-   "tile_index": 53,
+   "tile_index": 326,
    "cell": [
     4,
     0
@@ -35,7 +35,7 @@
    "pixels": 65536,
    "differing": 1,
    "differing_pct": 0.0015,
-   "max_channel_delta": 14
+   "max_channel_delta": 27
   }
  }
 }

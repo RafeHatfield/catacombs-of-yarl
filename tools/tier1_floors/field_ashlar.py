@@ -90,10 +90,14 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
 
     for y in range(h):
         for x in range(w):
-            n = CA.edge_family(x, y, CA.HORIZ, seed)
-            s_ = CA.edge_family(x, y + 1, CA.HORIZ, seed)
-            wf = CA.edge_family(x, y, CA.VERT, seed)
-            e = CA.edge_family(x + 1, y, CA.VERT, seed)
+            # THE PLANT FOR SKELETON REPETITION: one family everywhere.
+            if defect == "one_family":
+                n = s_ = wf = e = 0
+            else:
+                n = CA.edge_family(x, y, CA.HORIZ, seed)
+                s_ = CA.edge_family(x, y + 1, CA.HORIZ, seed)
+                wf = CA.edge_family(x, y, CA.VERT, seed)
+                e = CA.edge_family(x + 1, y, CA.VERT, seed)
             drops = tuple(CA.drop_choice(x, y * CA.COURSES + c, seed)
                           for c in range(CA.COURSES))
             # THE PLANT FOR BANDING: every row on the same split, which is what the geometry did
@@ -437,6 +441,48 @@ def channel_legibility(img, baseline, joints, worn_cells, w, h):
                 inside_px=a["inside_px"])
 
 
+def skeleton_repeats(joints, w, h):
+    """DOES THE SAME JOINT SKELETON APPEAR TWICE IN ONE ROOM?
+
+    The fifth instrument this session, and the fifth found by a blind seat rather than by design:
+
+        "The joint layout has a hard 64px period. Searching for duplicate 32x32 patches across the
+         whole floor, the top matches are all at displacement exactly (64,0) or (0,64),
+         correlating 0.99+."
+
+    Enclosure, boundary step, continuity, grid hiding and banding all pass a field that repeats
+    its bond, because none of them compares one CELL to another. A cell's skeleton is fixed by its
+    four families, its row's split and its two merges; two cells agreeing on all of those are
+    pixel-identical, and at three families per boundary that happened two or three times per room.
+
+    Reported as the exact-duplicate rate among cell pairs, and separately at one-tile displacement,
+    which is where a duplicate is most visible because both copies are on screen together.
+    """
+    seen = {}
+    grid = {}
+    for y in range(h):
+        for x in range(w):
+            key = joints[y * T:(y + 1) * T, x * T:(x + 1) * T].tobytes()
+            grid[(x, y)] = key
+            seen.setdefault(key, []).append((x, y))
+    cells = w * h
+    dup_cells = sum(len(v) for v in seen.values() if len(v) > 1)
+    adjacent = same = 0
+    for y in range(h):
+        for x in range(w):
+            for dx, dy in ((1, 0), (0, 1)):
+                nx, ny = x + dx, y + dy
+                if nx < w and ny < h:
+                    adjacent += 1
+                    if grid[(x, y)] == grid[(nx, ny)]:
+                        same += 1
+    return dict(cells=cells, distinct_skeletons=len(seen),
+                cells_sharing_a_skeleton=dup_cells,
+                duplicate_rate=round(dup_cells / cells, 4),
+                neighbour_pairs=adjacent, identical_neighbours=same,
+                identical_neighbour_rate=round(same / adjacent, 4) if adjacent else None)
+
+
 def crossing_spread(joints, w, h):
     """Where joints cross each boundary, and how spread those offsets are. n=0 where a joint runs
     ALONG the boundary instead of across it, which under an ashlar bond is the horizontal case."""
@@ -471,6 +517,7 @@ def measure(img, joints, w, h, transitions=(), seed=1337):
                 boundary_step=boundary_step(img, joints, w, h, transitions),
                 continuity=continuity(joints, w, h),
                 grid_hiding=grid_hiding(img, joints, w, h, seed), banding=banding(joints),
+                skeleton=skeleton_repeats(joints, w, h),
                 crossings=crossing_spread(joints, w, h))
 
 
@@ -497,6 +544,10 @@ PLANTS = [
              "field — the stack of stripes the seat named, restored on purpose",
          test=lambda m: m["banding"]["distinct_spacings"] <= 1
          or (m["banding"]["modal_share"] or 0) > 0.9),
+    dict(name="one_family", must_fire="skeleton",
+         why="every boundary collapsed to one family, so every cell of a row draws the same bond "
+             "— the 0.99+ duplicates at one-tile displacement the seat measured, restored whole",
+         test=lambda m: m["skeleton"]["duplicate_rate"] > 0.5),
     dict(name="broken_courses", must_fire="continuity",
          why="bed joints stopping short of the vertical boundaries — coursing that does not travel",
          # `x or 1.0` on a measured 0.0 yields 1.0, because 0.0 is falsy — so the plant that
@@ -562,11 +613,11 @@ def run_plants(w, h, seed, mat):
         ok &= fired
         print("  %-16s -> %-14s %s" % (p["name"], p["must_fire"], "FIRED" if fired else "SILENT"))
         print("       %s" % p["why"])
-        print("       boundary_step %s | continuity %s | col_density %s | course heights %s "
-              "(modal %s)"
+        print("       boundary_step %s | continuity %s | col_density %s | course heights %s | "
+              "duplicate skeletons %.1f%%"
               % (m["boundary_step"]["ratio"], m["continuity"]["continued"],
                  m["grid_hiding"]["col_density_ratio"], m["banding"]["distinct_spacings"],
-                 m["banding"]["modal_share"]))
+                 100 * m["skeleton"]["duplicate_rate"]))
         if not fired:
             print("       ^^ THIS INSTRUMENT HAS NOT SHOWN IT CAN FAIL. Its pass does not count.")
     print()
@@ -627,6 +678,11 @@ def main():
         print("     banding:      %d courses at %d distinct heights %s, modal share %s, sd %s"
               % (bn.get("courses", 0), bn["distinct_spacings"], bn.get("spacings"),
                  bn["modal_share"], bn["sd"]))
+        sk = m["skeleton"]
+        print("     skeletons:    %d distinct in %d cells; %d cells share one (%.1f%%); "
+              "identical neighbours %d of %d"
+              % (sk["distinct_skeletons"], sk["cells"], sk["cells_sharing_a_skeleton"],
+                 100 * sk["duplicate_rate"], sk["identical_neighbours"], sk["neighbour_pairs"]))
         if worn:
             cells = [(x, y) for y in range(a.h) for x in range(a.w) if worn(x, y)]
             base, _bj, _bt = assemble(a.w, a.h, a.seed, mat, None)

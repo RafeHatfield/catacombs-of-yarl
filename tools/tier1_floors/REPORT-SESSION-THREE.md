@@ -232,6 +232,70 @@ The three findings, all answered in this branch:
 
 ---
 
+## 6b. Round 7 — two independent seats, and the finding that ends the round
+
+Captures pinned: `scene_ashlar_r7.png` (sha `69008da5…`), `scene_ashlar_plant_r7.png`
+(sha `aa878a77…`). **Plant caught** — the control seat culled and named the damage
+(*"It has been shot at, or something has been eating holes in it. Fifteen black voids…"*), so the
+round is valid and its findings are read.
+
+**The material is now named correctly by both seats, and named as flagstone rather than brick.**
+
+| seat | Q1 |
+|---|---|
+| F1 | *"Dressed rectangular stone slabs — sandstone or a warm limestone — laid dry in a running bond, thin dark joints between them. **Flagstone paving.**"* |
+| F3 | *"Cut sandstone flags — rectangular slabs of one honey-brown stone, laid in courses with thin mortar joints. Dry, indoor, quarried. **Not natural rock, not tile, not brick.**"* |
+
+That is the ruling (2) objective delivered and independently confirmed. Session one drew
+*brickwork* and then *dried mud*; the pre-split ashlar drew *"a tidy generic dungeon brick floor"*.
+Straight head joints and varied course heights moved it the rest of the way.
+
+**The two seats disagreed about tiling, and an instrument settled it.**
+
+> **F1:** *"The joint layout has a hard 64px period… duplicate 32×32 patches across the whole
+> floor, the top matches are all at displacement exactly (64,0) or (0,64), correlating 0.99+."*
+>
+> **F3:** *"It doesn't tile: no periodic peak in x at any offset from 1 to 44, and only a weak
+> 0.068 bump at dy=32 which is just the course pitch."*
+
+F1 was right and F3's method was too blunt: an image-wide autocorrelation averages a handful of
+exact duplicates into nothing, while a duplicate-patch search finds them. A cell's skeleton is
+fixed by its four families, its row's split and its two merges, and two cells agreeing on all of
+those are pixel-identical. Nothing in this session was comparing one cell to another. New
+instrument `skeleton_repeats`, with plant `one_family`:
+
+| families | atlases | distinct skeletons in 64 cells | cells sharing one | identical neighbours |
+|---:|---:|---:|---:|---:|
+| 3 (what the seats saw) | 81 | 47 | **31 — 48.4%** | 1 of 112 |
+| 4 | 256 | 51 | 22 — 34.4% | 0 |
+| **5 (now)** | **625** | **60** | **8 — 12.5%** | **0 of 112** |
+
+Nearly half the room was drawing a bond some other cell in the same room was already drawing. The
+fix is the one axis where more is simply better and the cost is linear — 625 atlases, ~2 MB, a
+minute to generate. **More joint POSITIONS per family is not available**: a position must be
+agreed by both tiles either side of a boundary, and the boundary's family is the only thing they
+share, so position variety *is* family count.
+
+**Both seats culled on the same axis, and it is not the one the family can answer.**
+
+> **F1:** *"Almost nothing. It is a freshly-laid floor… It reads as a floor commissioned last
+> month by someone with a budget."*
+> **F3:** *"Four hundred years of unrepaired heavy use, and the stone is unworn, unbroken,
+> unpatched — reads new."*
+
+And **neither seat found the trodden channel**, in a capture that carried it at the strengthened
+values. F1 checked for it explicitly:
+
+> *"I checked specifically for a floor-based reason and there isn't one: the paving in the corridor
+> mouth is the identical bond, identical joint width, identical stone tone as the paving in the far
+> corner… If you rotated the room 180° the floor would give me exactly the same amount of
+> information: none."*
+
+That is four seat rounds now, the last of them against a channel measuring 0.350 / 0.578 / 0.775
+against the same stones unpolished — most of what absence has left to take. See §7(b).
+
+---
+
 ## 7. On the record for ruling
 
 ### (a) The corner theorem constrains the ART, permanently, and should be written down

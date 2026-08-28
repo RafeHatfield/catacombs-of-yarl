@@ -111,7 +111,24 @@ import compose_family as CF      # noqa: E402
 import field_laws as FL          # noqa: E402
 
 T = 32
-FAMILIES = 3
+# FIVE, NOT THREE, AND THE THIRD FAMILY COUNT A SEAT HAS RULED ON.
+#
+# Three families put only 3^4 = 81 joint skeletons in the world, and a blind seat measured the
+# consequence directly:
+#
+#   "The joint layout has a hard 64px period. Duplicate 32x32 patches across the whole floor: the
+#    top matches are all at displacement exactly (64,0) or (0,64), correlating 0.99+."
+#
+# Two cells share a skeleton when all four of their families agree. Horizontally adjacent cells
+# already share one boundary by construction, so at three families the other three agree once in
+# 27 — about 2% of adjacent pairs after the merges are accounted for, which over a 74-cell room is
+# the two or three exact duplicates the seat found and named. At five families it is once in 125.
+#
+# This is the one axis where more is simply better and the cost is linear: 625 atlases instead of
+# 81, about 2 MB, a minute to generate. The alternative — more joint POSITIONS per family — is not
+# available, because a position must be agreed by both tiles either side of a boundary and the
+# boundary's family is the only thing they share. Position variety IS family count.
+FAMILIES = 5
 COURSES = 2                        # courses fully inside one tile
 
 # WHERE THE INTERIOR BED JOINT SITS, AND WHY IT MOVES.
@@ -162,13 +179,17 @@ CLUSTER_TABLE = [-1, 0, 0, 1]      # the coarse patch bias; more zeros than not,
 # spanning width as well as the interior one, under two constraints:
 #   min(MV[.][c]) - max(A[.][c]) >= 9   so no interior stone is a sliver
 #   32 + A[f][c] - MV[f][c]      >= 10  so no spanning stone is either
-A_TABLE = [[4, 12], [7, 15], [10, 18]]      # joint just east of the west boundary
+# Five rows now, under the same two constraints, and they bind hard at T=32: interior width is
+# MV[fe] - A[fw] and must clear 9, so max(A) <= min(MV) - 9; spanning width is 32 + A[f] - MV[f]
+# with the SAME family both times and must clear 10, so MV[f] - A[f] <= 22. Five distinct values
+# each is very nearly all this tile size will hold.
+A_TABLE = [[3, 8], [6, 11], [9, 14], [13, 16], [16, 5]]
 # MV is capped at 29 so that a head joint plus its 2px width plus its waver cannot reach the
 # tile's own edge column. At 30 it did, which put a short vertical joint hard against the boundary
 # in every tile whose east family was 1 — legal by agreement (both tiles place it identically) but
 # a line at a constant position all the same, and the continuity instrument saw it before the eye
 # would have.
-MV_TABLE = [[26, 28], [19, 29], [23, 27]]   # this tile's interior joint
+MV_TABLE = [[25, 26], [26, 29], [29, 25], [27, 28], [28, 27]]
 
 # ARRIS PROFILES for the bed joints. Each returns to 0.0 at t=0 and t=1 so that neighbouring
 # spans meet without a step — continuity by construction, which is what lets fN and fS vary at
@@ -579,7 +600,8 @@ def main():
                     Image.fromarray(at).save(p)
                     man["base"].append(dict(id=BASE_ID0 + idx, n=n, e=e, s=s_, w=w,
                                             file=os.path.basename(p), sha256=FL.sha256_file(p)))
-    print("  atlases: %d files, 3x3 of %dpx, R=luminance G=class" % (len(man["base"]), T))
+    print("  atlases: %d files, 6x6 of %dpx (4 course splits x 9 merge cases), "
+          "R=ladder index G=stone class" % (len(man["base"]), T))
 
     # ---- THE GRAIN BANK, one file. 8x8 patches of 64px, R and G carrying the two scales.
     bank = np.zeros((8 * 2 * T, 8 * 2 * T, 3), dtype=np.uint8)
