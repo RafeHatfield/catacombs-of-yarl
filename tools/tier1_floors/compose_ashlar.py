@@ -112,8 +112,33 @@ import field_laws as FL          # noqa: E402
 
 T = 32
 FAMILIES = 3
-COURSE_H = 16                      # MUST divide T. That is the corner theorem, as a constant.
-COURSES = T // COURSE_H            # courses fully inside one tile
+COURSES = 2                        # courses fully inside one tile
+
+# WHERE THE INTERIOR BED JOINT SITS, AND WHY IT MOVES.
+#
+# The first version put it dead centre, so every course in the world was 16px tall and a bed joint
+# ran unbroken across the whole map at every 16px. The blind seat's loudest finding was exactly
+# that: *"the floor reads as a stack of horizontal stripes before it reads as stone"*, and
+# *"real floors under four hundred years of traffic do not hold a ruled line like that."*
+#
+# The joint at the TILE BOUNDARY cannot move — the corner theorem requires one through every grid
+# corner, or a stone spans a horizontal boundary and becomes unaddressable. But the INTERIOR one
+# is free, and moving it costs nothing: it is chosen per TILE ROW, so every tile in a row agrees
+# and the joint stays continuous across every vertical boundary, while successive rows give
+# courses of genuinely different heights. The 16px stripe becomes a bond.
+SPLITS = [[16, 16], [11, 21], [21, 11], [13, 19]]
+SPLIT_SALT = 3005
+
+
+def row_split(r, seed):
+    """Which course split this TILE ROW uses. A property of the row, so a whole row agrees."""
+    return mix(0, r, SPLIT_SALT + seed) % len(SPLITS)
+
+
+def course_rows(split_i, c):
+    """(first row, last row exclusive) of course c under this split, excluding its bed joints."""
+    a = SPLITS[split_i][0]
+    return (1, a - 1) if c == 0 else (a + 1, T - 1)
 ASSETS_REL = "src/Presentation/assets/tier1_ashlar"
 ASSETS = os.path.join(REPO, ASSETS_REL)
 
@@ -202,6 +227,11 @@ def stone_origin(fw, fe, kind, c, drop=0):
     if drop == 2:                        # merged eastward: also a spanning stone
         return 0
     return A_TABLE[fw][c]                # interior; nobody else can see it
+
+
+def course_origin_y(split_i, c):
+    """Stone-local y = 0 for this course. Moves with the split, like everything else about it."""
+    return course_rows(split_i, c)[0]
 
 
 def stone_kind_address(kind, drop):
@@ -306,16 +336,30 @@ def cluster_bias(bx, course_k, seed):
 OFFSET_STEPS = [-2, -1, -1, 0, 0, 0, 0, 1, 1, 2]
 
 
+# HOW MUCH A TRODDEN STONE LOSES. Named here, carried in the manifest, and reproduced by the
+# engine, because these are the only three numbers that make the channel visible at all and a
+# blind seat could not find it: *"There is no wear lane, no debris drift, no scuff, no stain, no
+# difference in joint width, nothing that says traffic went one way."*
+#
+# Every one of them is a SUBTRACTION. §8.2.1 is binding — polish signals by ABSENCE, never by
+# brightness, because under a carried lamp brightness is what the light is saying and a lift is
+# read as the torch. So a trodden stone has its grain walked off, its value closed up toward the
+# family median, and its arris rounded so the joint beside it holds less shadow. Nothing is added.
+WEAR_GRAIN = 0.08          # grain amplitude multiplier on a trodden stone
+WEAR_SPREAD = 0.20         # value-offset multiplier on a trodden stone
+WEAR_ARRIS = 0.45          # how far a joint beside trodden stone rises toward the stone
+
+
 def stone_offset(key, step, worn=False, bias=0):
     """Additive value offset, in luminance. WHOLE LADDER STEPS ONLY — a value off the ladder is
     not a legal value (§5.1 zero-mercy, §4.3 no anti-aliasing), so the bias is added before the
     multiply and clamped in steps, never blended in afterwards."""
     k = OFFSET_STEPS[key % len(OFFSET_STEPS)] + bias
     k = max(-3, min(3, k))
-    return k * step * (0.45 if worn else 1.0)
+    return k * step * (WEAR_SPREAD if worn else 1.0)
 
 
-def build_tile(n, e, s, w, mat, seed, drops=(0, 0)):
+def build_tile(n, e, s, w, mat, seed, drops=(0, 0), split_i=0):
     """One ashlar tile: two courses, three bed lines, two head joints per course. THE BOND ONLY.
 
     `drops` is one entry per course: 0 keep both head joints, 1 sand the A joint away, 2 sand the
@@ -354,8 +398,7 @@ def build_tile(n, e, s, w, mat, seed, drops=(0, 0)):
     # thinner for being on a boundary — the first place a grid would show.
     t_axis = np.arange(T) / float(T - 1)
     bed_rows = []
-    for k in range(COURSES + 1):
-        Y = k * COURSE_H
+    for k, Y in enumerate((0, SPLITS[split_i][0], T)):
         if k == 0:
             prof, rows = arris_profile(n, t_axis), [0]
         elif k == COURSES:
@@ -370,27 +413,25 @@ def build_tile(n, e, s, w, mat, seed, drops=(0, 0)):
 
     # ---- HEAD JOINTS and the class map, course by course.
     for c in range(COURSES):
-        y0 = c * COURSE_H + 1
-        y1 = (c + 1) * COURSE_H - 1        # exclusive of the bed rows either side
+        y0, y1 = course_rows(split_i, c)
         xa = A_TABLE[w][c]
         xm = MV_TABLE[e][c]
         drop = drops[c]
-        # A HEAD JOINT WANDERS COHERENTLY OR NOT AT ALL. The first version drew an independent
-        # offset for every row, which made the vertical joints zigzag pixel by pixel: at 1x they
-        # stopped reading as joints and read as stitching, and the field came back as horizontal
-        # banding because only the bed joints were legible. A joint between two blocks drifts over
-        # its length; it does not shiver. This is a bounded random walk, one per joint.
-        wa = wm = 0.0
+        # STRAIGHT. The first version wandered each head joint down its length, and the seat found
+        # the wander before it found the floor: *"the same little two-step zigzag jog appears on
+        # vertical seams at (420,218), (450,245), (345,150), (485,60), (430,335)... it is the SAME
+        # shape every time, which converts it from irregularity into a motif."*
+        #
+        # That is §8.3.1 exactly. A wander is an INCIDENT, the tile is a PARENT, and an incident
+        # baked into a parent becomes a motif the moment the parent tiles. The wander was seeded
+        # per tile index, so every tile sharing four families drew the identical jog, everywhere
+        # on the map, forever. There is no amplitude of it that is safe.
+        #
+        # So the joints run true and the irregularity comes from the things that are addressed by
+        # WORLD POSITION and therefore cannot repeat on the grid: stone width (9..23px), the
+        # merges, the course split, the value, the grain.
         for yy in range(y0, y1):
-            wa = float(np.clip(wa + rng.normal(0, 0.22), -1.2, 1.2))
-            wm = float(np.clip(wm + rng.normal(0, 0.22), -1.2, 1.2))
-            ja = xa + int(round(wa))
-            jm = xm + int(round(wm))
-            # THE CLASS BOUNDARY IS TAKEN FROM WHERE THE JOINT ACTUALLY WENT, not from the nominal
-            # offset. Splitting the classes at the nominal xa/xm while the joint wandered either
-            # side left a sliver of one stone carrying its NEIGHBOUR's value with no joint between
-            # them — two stone values touching, the very seam this construction exists to prevent,
-            # reintroduced 1px wide beside every head joint.
+            ja, jm = xa, xm
             if drop == 1:
                 cls[yy, :jm] = 1 + c * 3 + 0               # merged: spans the WEST boundary
                 cls[yy, jm:] = 1 + c * 3 + 2
@@ -464,10 +505,10 @@ def main():
     step = (mat["lum_hi"] - mat["lum_lo"]) / (CF.PALETTE_LEVELS - 1)
 
     man = dict(family="boundary_floor_ashlar_v1", commit=FL.git_commit(), seed=a.seed,
-               material=mat, families=FAMILIES, tile=T, course_h=COURSE_H, courses=COURSES,
+               material=mat, families=FAMILIES, tile=T, courses=COURSES, splits=SPLITS,
                a_table=A_TABLE, mv_table=MV_TABLE,
                salts=dict(horizontal=HORIZ, vertical=VERT, span=SPAN, interior=INTERIOR,
-                          drop=DROP, cluster=CLUSTER),
+                          drop=DROP, cluster=CLUSTER, split=SPLIT_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE, ladder_step=round(step, 3),
                edge_family_check=cross_check_vector(a.seed),
                grain_bank=GRAIN_BANK, donors=src.get("donors", []), base=[],
@@ -484,7 +525,8 @@ def main():
 
     print("COURSE-ALIGNED ASHLAR — %d families/orientation, %d combinations"
           % (FAMILIES, FAMILIES ** 4))
-    print("  courses: %dpx pitch, %d per tile, bed joint through every grid corner" % (COURSE_H, COURSES))
+    print("  courses: %d per tile, splits %s, bed joint through every grid corner"
+          % (COURSES, SPLITS))
     print("  head joints: A=%s  MV=%s" % (A_TABLE, MV_TABLE))
     print("  material: median %.1f, ladder step %.2f" % (mat["lum_median"], step))
     print("  tiles carry the BOND ONLY; value and grain are applied per stone at compose time")
@@ -495,8 +537,8 @@ def main():
             spanning.append(T + A_TABLE[fw][c] - MV_TABLE[fw][c])
             for fe in range(FAMILIES):
                 interior.append(MV_TABLE[fe][c] - A_TABLE[fw][c])
-    print("  stone widths: interior %d..%d, spanning %d..%d, against a %dpx course"
-          % (min(interior), max(interior), min(spanning), max(spanning), COURSE_H - 2))
+    print("  stone widths: interior %d..%d, spanning %d..%d, shortest course %dpx"
+          % (min(interior), max(interior), min(spanning), max(spanning), min(min(x) for x in SPLITS) - 2))
     if min(interior) < 9 or min(spanning) < 9:
         raise SystemExit("REFUSING: a stone narrower than 9px is a sliver, not a stone.")
     if len(set(spanning)) == 1:
@@ -515,20 +557,24 @@ def main():
             for s_ in range(FAMILIES):
                 for w in range(FAMILIES):
                     idx = tile_index(n, e, s_, w)
-                    at = np.zeros((3 * T, 3 * T, 3), dtype=np.uint8)
-                    for d0 in range(3):
-                        for d1 in range(3):
-                            _img, _j, cls, L = build_tile(n, e, s_, w, mat, a.seed, (d0, d1))
-                            # R carries the LADDER INDEX, not a luminance, and it is taken from
-                            # the composer's own quantised L rather than reconstructed from the
-                            # colourised pixels. Reconstruction was off by a rung on 0.5% of the
-                            # field — a seam living in the gap between the tool and the game,
-                            # where none of the field instruments are looking.
-                            lad = np.array(mat["ladder"])
-                            li = np.abs(L[..., None] - lad[None, None, :]).argmin(axis=-1)
-                            cell = at[d1 * T:(d1 + 1) * T, d0 * T:(d0 + 1) * T]
-                            cell[..., 0] = li
-                            cell[..., 1] = cls
+                    at = np.zeros((6 * T, 6 * T, 3), dtype=np.uint8)
+                    for sp in range(len(SPLITS)):
+                        for d0 in range(3):
+                            for d1 in range(3):
+                                cell_i = sp * 9 + d0 * 3 + d1
+                                cr, cc = cell_i // 6, cell_i % 6
+                                _img, _j, cls, L = build_tile(n, e, s_, w, mat, a.seed,
+                                                              (d0, d1), sp)
+                                # R carries the LADDER INDEX, not a luminance, and it is taken
+                                # from the composer's own quantised L rather than reconstructed
+                                # from the colourised pixels. Reconstruction was off by a rung on
+                                # 0.5% of the field — a seam living in the gap between the tool
+                                # and the game, where none of the field instruments look.
+                                lad = np.array(mat["ladder"])
+                                li = np.abs(L[..., None] - lad[None, None, :]).argmin(axis=-1)
+                                cell = at[cr * T:(cr + 1) * T, cc * T:(cc + 1) * T]
+                                cell[..., 0] = li
+                                cell[..., 1] = cls
                     p = os.path.join(a.out, "tier1_ashlar_%d.png" % (BASE_ID0 + idx))
                     Image.fromarray(at).save(p)
                     man["base"].append(dict(id=BASE_ID0 + idx, n=n, e=e, s=s_, w=w,
@@ -547,9 +593,12 @@ def main():
     Image.fromarray(bank).save(bp)
     man["grain_file"] = os.path.basename(bp)
     man["grain_encoding"] = "value = (channel - 128) / 64; R = 8-cell scale, G = 16-cell scale"
-    man["atlas_encoding"] = ("3x3 of 32px indexed [drop_course1][drop_course0]; R = index into "
-                             "ladder, G = stone class 0..6")
-    man["grain_scales"] = dict(coarse=0.34, fine=0.14, worn_multiplier=0.38)
+    man["atlas_encoding"] = ("6x6 of 32px; cell = split*9 + drop0*3 + drop1, row-major. "
+                             "R = index into ladder, G = stone class 0..6")
+    man["grain_scales"] = dict(coarse=0.34, fine=0.14, worn_multiplier=WEAR_GRAIN)
+    man["wear"] = dict(grain=WEAR_GRAIN, spread=WEAR_SPREAD, arris=WEAR_ARRIS,
+                       law="every term is a subtraction; §8.2.1 forbids signalling polish by "
+                           "brightness, so nothing is added anywhere")
     man["grain_amp"] = round(max(mat["grain_mad"], 1.0), 4)
     man["stone_check"] = stone_check_vector(a.seed)
     print("  grain bank: %d patches in one %dx%d file" % (GRAIN_BANK, bank.shape[1], bank.shape[0]))

@@ -1,0 +1,60 @@
+I ran the image at native size, at 2× and 4×, and then with the light falloff divided out so I could judge the floor's own drawing rather than its lighting.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone slabs — dry-laid rectangular flags in running bond, sandy tan, close-jointed.
+
+**Q1_WHY:** Every unit is a hard-edged rectangle with a 1px dark joint on all four sides and no mortar bed — the joint is a gap, not fill. Interiors are flat, matte, faintly mottled, with no grain, no crystal, no aggregate, no bedding lines. Slabs run in courses ~32px tall at 750×600, with widths varying roughly 32–96px, offset course to course. A few carry a jagged bitten notch out of one edge (e.g. the slab at x≈300–345, y≈176–208 has a chewed left edge). That combination — flat face, chipped edge, tight dry joint — reads as cut stone paving. The reading is confident; nothing about it is ambiguous. It is also generic: I could not tell you if it is limestone, sandstone, or a rendered screed, and nothing in the image is trying to tell me.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, toward the dark gap at x≈340–390 below y≈395.
+
+But I have to be straight about the reason: **nothing about the ground influenced that.** I picked it off the wall silhouette — the wall blocks break open at the bottom centre and don't break anywhere else. The floor is identical in all four directions from the figure. There is no worn lane, no polished traffic path, no accumulation of grit against a wall, no drag scar, no direction of any kind in the surface. I covered the walls and re-checked: with only the floor visible I would have chosen at random.
+
+The one thing on the floor that could have been a cue is the object at x≈333–352, y≈168–200 — two pairs of black square studs flanking a vertical dark line, immediately left of the figure. I can't tell if that is floor art, a driven-pin repair, a grating, or an entity sprite. It doesn't point anywhere either.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Almost nothing. It is dusty and slightly chipped, and that is the whole story.
+
+Two events are legible on the entire visible floor. One is a dark radial burst at x≈349–365, y≈246–262 — a splatter or scorch, off-centre, asymmetric, with outflung specks. I template-matched it across the whole floor: it is genuinely unique, correlation 1.0 at its own location and 0.75 for the next-best, which is unrelated speckle. It's the best mark in the image. The other is the edge-notching on maybe a dozen slabs.
+
+Everything else is uniform soiling. No slab is cracked through. No slab is sunken, tilted, rotated, lifted, or missing. No joint has spread. Nothing has been repaired. For a place in continuous heavy use since before records, with a garrison four centuries deep that fixes things with rope and driven pins, this floor has taken no traffic and received no maintenance. It looks laid, not used.
+
+**Q3_WHY:** Concretely — I traced the horizontal joint at y≈114 and again at 176, 240, 303, sampling every 10px from x=200 to x=620. The seam holds within ±2–3px across 420 pixels. Four hundred years of boots and no course has settled by one pixel. Vertical autocorrelation on the lighting-normalised floor peaks at lag 32 with 0.71 and again at 64 with 0.62; the course pitch is exactly 32 and never varies.
+
+Second: every mark stops at a slab boundary. The speckle clusters, the soft stains, the notches — all of them sit inside one slab and none crosses a joint. There is no spill, no smear, no tracked-in mud, no burn shadow that spans two flags. Nothing has happened *to the floor*; things have only happened *to individual tiles*.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes. Two things, and both are the same underlying problem.
+
+**The speckle stamp.** A cluster of scattered 1px dark dots, roughly 20×16, at a fixed density. Reference instance at x≈469–491, y≈100–118. I template-matched it with lighting divided out and non-max suppression: **80 instances** across the lit floor. That is roughly one on every second slab. Once seen it is unmissable — a rash of identical freckling at x≈253,228 / 261,132 / 301,132 / 311,196 / 447,196 / 507,356 / 533,36 / 575,132 and seventy-odd more. It's the same dot density and the same dot size every time; only the crop moves.
+
+**The joint corners.** I pulled matching 24px patches from far-apart locations. (383,208) vs (447,272), 64px apart diagonally, correlate at 0.998. (307,220) vs (403,220), 96px apart on the same row, at 0.994. (543,112) vs (347,144), nearly 200px apart, at 0.992. Rendered side by side these are pixel-for-pixel the same corner: same 1px joint width, same dark rule along the top edge, same flat interior, no variation whatsoever. Every offset in the duplicate list is a multiple of the 32px grid.
+
+Third, smaller, but it kept catching me: the soft blobs — e.g. the pale smear at x≈395–430, y≈118–140 and the one at x≈540–575, y≈90–110 — are anti-aliased airbrush gradients dropped onto an otherwise hard-edged pixel image. The floor region contains 1,942 unique colours. Those stains don't belong to the same drawing as the joints.
+
+**Q5: MADE, OR REPEATED?**
+**Repeated.** Unambiguously.
+
+The evidence is arithmetic, not impression: an exact 32px vertical period, eleven dead-straight uninterrupted seams spanning the full width, joint corners duplicating at 0.99+ across the screen, and one decoration stamp placed eighty times. When lighting is removed, each slab resolves into a flat rectangle assigned a random brightness from a small set — the variety between slabs is a value lottery, not a difference in material or history.
+
+What the floor is missing is the thing that would make it read as made: a mark that belongs to the room rather than to a tile. The burst at (349,246) is the sole exception and it proves the point — it's the only thing on the floor that couldn't have come out of an atlas.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It's clean, it's readable at phone size, the values hold under the light falloff, the sprite separates from the ground, and the silhouette of the room is legible. This is shippable work.
+
+Is it genuinely good, or merely competent? **Merely competent.** It is a well-executed generic dungeon floor. Nothing in it says *administered*, nothing says *four hundred years of boots*, nothing says *nobody has ever cared for this*. It says "stone floor tileset." I could drop it into a cheerful crawler and it would not object — and this fiction is not cheerful and has no sense of humour about itself. The floor does.
+
+**CULL:** Nothing has happened to it — no wear, no settlement, no mark crosses a joint. Eighty copies of one speckle stamp.
+
+**FLIP LIST**
+- Break the horizontal courses. The seams at y≈49/82/114/144/176/210/240/272/303/333/369 must not run dead straight across 420px — settle slabs by 1–2px, tilt a few, sink one below its neighbours so the joint steps.
+- Kill the 80-instance speckle stamp. Replace with grime that accumulates by *position* — heavy in joints and against walls, scoured bare where feet fall — so it crosses slab boundaries.
+- Add a traffic lane. A polished, grit-free path running through the room toward the south opening at x≈340–390, worn into the stone across many slabs. It must be visible without the walls.
+- Break at least four slabs properly: a crack running through a whole flag corner to corner, one flag missing to the substrate below, and orc repair — driven pins, a salvaged timber board pinned over a gap.
+- Redraw the soft blobs (x≈395–430,y≈118–140 and x≈540–575,y≈90–110) at the same pixel resolution as the joints, or remove them. Airbrushed gradients don't sit in this image.
+
+---
+
+*Model: Claude Opus 5 (1M context)*

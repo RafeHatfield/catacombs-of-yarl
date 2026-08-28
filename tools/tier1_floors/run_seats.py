@@ -46,6 +46,7 @@ that reports collapse and cobwebs as a defect has read the register. A seat that
 atmospheric has not, and F1 and F3 are then unreadable.
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -85,6 +86,43 @@ def SEATS():
 PLANT_SEAT = "F2"
 # Which slot the Yarl image lands in for the comparative seat, so a seat cannot learn "A is ours".
 F4_YARL_SLOT = "B"
+
+
+# ---- THE CAPTURE MUST NOT MOVE UNDER THE ROUND ------------------------------------------------
+#
+# LOOP-PROCESS §2.3: evidence carries its producer's hash, and a seat transcript citing a filename
+# whose bytes have since changed is not evidence. That was written as a caution and then violated
+# in the obvious way: a round was left running, the family was rebuilt, the capture was overwritten
+# in place, and the seats still queued went on to judge A DIFFERENT BUILD THAN THE FIRST SEAT SAW.
+# Nothing failed. The round would have been written up as four opinions of one floor.
+#
+# So the bytes are hashed before the first seat and re-hashed before every seat after it, and the
+# run REFUSES rather than continuing across a change. Use round-scoped capture names
+# (scene_ashlar_r4.png) so a later round cannot need to overwrite an earlier round's evidence at
+# all — a rule that removes the hazard beats a check that catches it.
+def sha256_of(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        h.update(f.read())
+    return h.hexdigest()
+
+
+def freeze_captures():
+    seen = {}
+    for name in {FAMILY_IMG, PLANT_IMG}:
+        seen[name] = sha256_of(os.path.join(EV, name))
+    return seen
+
+
+def check_captures(frozen):
+    for name, want in frozen.items():
+        got = sha256_of(os.path.join(EV, name))
+        if got != want:
+            raise SystemExit(
+                "REFUSING: %s changed while the round was running.\n"
+                "  was %s\n  now %s\n"
+                "Seats already run judged different pixels than the ones left to run would. "
+                "Re-capture under a round-scoped name and start the round again." % (name, want, got))
 
 
 def git_commit():
@@ -235,9 +273,15 @@ def main():
     if a.plant:
         PLANT_IMG = a.plant
     os.makedirs(OUT, exist_ok=True)
+    frozen = freeze_captures()
+    print("captures frozen for this round:")
+    for k, v in sorted(frozen.items()):
+        print("  %-28s %s" % (k, v))
+    print()
 
     results, void = {}, False
     for seat in a.seats:
+        check_captures(frozen)
         d, mapping = build_work(seat)
         print("=" * 78)
         print("SEAT %s  round %d%s" % (seat, a.round,
@@ -275,7 +319,8 @@ def main():
             for fx in r["flips"][:5]:
                 print("     flip: %s" % fx[:90])
 
-    res = dict(round=a.round, commit=git_commit(), seats=results,
+    check_captures(frozen)
+    res = dict(round=a.round, commit=git_commit(), seats=results, captures=frozen,
                plant_seat=PLANT_SEAT, round_void=void,
                plant_words_declared=list(PLANT_WORDS),
                law=("LOOP-PROCESS §4: if the critic does not catch the plant, the round is VOID "

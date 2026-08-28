@@ -134,17 +134,22 @@ def main():
     print("THE PLANT — the course-aligned ashlar family, ruined")
     for e in src["base"]:
         atlas = np.asarray(Image.open(os.path.join(CA.ASSETS, e["file"])).convert("RGB")).copy()
-        for d0 in range(3):
-            for d1 in range(3):
-                sl = (slice(d1 * T, (d1 + 1) * T), slice(d0 * T, (d0 + 1) * T))
+        # EVERY CELL OF THE ATLAS, and the count is read from the image rather than assumed. The
+        # first version hard-coded a 3x3 and kept it after the atlas grew to 6x6 for the course
+        # splits — which would have left three quarters of the plant UNRUINED and handed the
+        # control seat a floor that was mostly the candidate.
+        cells = atlas.shape[0] // T
+        for cr in range(cells):
+            for cc in range(cells):
+                sl = (slice(cr * T, (cr + 1) * T), slice(cc * T, (cc + 1) * T))
                 li, cls = ruin(atlas[sl][..., 0], atlas[sl][..., 1],
-                               a.seed + e["id"] * 9 + d0 * 3 + d1, mat)
+                               a.seed + e["id"] * 64 + cr * cells + cc, mat)
                 atlas[sl][..., 0] = li
                 atlas[sl][..., 1] = cls
         p = os.path.join(ASSETS, e["file"].replace("tier1_ashlar_", "tier1_ashlarp_"))
         Image.fromarray(atlas).save(p)
         man["base"].append(dict(e, file=os.path.basename(p), sha256=FL.sha256_file(p)))
-    print("  %d atlases ruined (9 merge cases each)" % len(man["base"]))
+    print("  %d atlases ruined, every cell of each" % len(man["base"]))
 
     # Same grain bank, byte for byte. A different one would be a second variable.
     shutil.copyfile(os.path.join(CA.ASSETS, src["grain_file"]),

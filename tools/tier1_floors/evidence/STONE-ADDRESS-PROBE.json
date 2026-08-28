@@ -1,5 +1,5 @@
 {
- "commit": "8405c9e6b3b95d2d17781e84feda25cbc042086c",
+ "commit": "864f44f9b25155e33888dfc3b3823a171f7ffcf0",
  "geometry": "ashlar",
  "grid": [
   8,
@@ -16,10 +16,10 @@
   "wholly_inside_one_tile": 114,
   "unaddressable": 0,
   "unaddressable_pixel_share": 0.0,
-  "median_stone_px": 203
+  "median_stone_px": 198
  },
  "occlusion": {
-  "joint_to_stone_contrast": 43.24,
+  "joint_to_stone_contrast": 43.1,
   "additive_retained": 1.0,
   "replacement_retained": 0.0,
   "replacement_note": "a flat per-stone value erases every within-stone difference; measured 0.0% on the crossing-joint geometry and unchanged by topology \u2014 the remap must be additive",
@@ -31,30 +31,30 @@
    {
     "steps": 1,
     "offset": 13.23,
-    "clip_low_pct": 6.52,
-    "clip_high_pct": 16.34
+    "clip_low_pct": 6.47,
+    "clip_high_pct": 15.33
    },
    {
     "steps": 2,
     "offset": 26.45,
-    "clip_low_pct": 6.52,
-    "clip_high_pct": 16.34
+    "clip_low_pct": 6.47,
+    "clip_high_pct": 15.33
    },
    {
     "steps": 3,
     "offset": 39.68,
-    "clip_low_pct": 58.67,
-    "clip_high_pct": 41.33
+    "clip_low_pct": 58.52,
+    "clip_high_pct": 41.48
    }
   ],
   "if_applied_to_every_pixel": [
    {
     "steps": 1,
-    "clip_low_pct": 26.99
+    "clip_low_pct": 27.05
    },
    {
     "steps": 2,
-    "clip_low_pct": 26.99
+    "clip_low_pct": 27.05
    }
   ]
  },

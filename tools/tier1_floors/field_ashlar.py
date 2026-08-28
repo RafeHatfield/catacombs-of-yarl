@@ -96,9 +96,13 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
             e = CA.edge_family(x + 1, y, CA.VERT, seed)
             drops = tuple(CA.drop_choice(x, y * CA.COURSES + c, seed)
                           for c in range(CA.COURSES))
-            _tile, jm, cls, L = CA.build_tile(n, e, s_, wf, mat, seed, drops)
+            # THE PLANT FOR BANDING: every row on the same split, which is what the geometry did
+            # before the seat objected to it.
+            split_i = 0 if defect == "uniform_courses" else CA.row_split(y, seed)
+            _tile, jm, cls, L = CA.build_tile(n, e, s_, wf, mat, seed, drops, split_i)
             L = L.astype(float)
 
+            wear_of_class = {}
             for c in range(CA.COURSES):
                 course_k = y * CA.COURSES + c
                 for kind in (0, 1, 2):
@@ -121,8 +125,9 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
                         key = CA.mix(x * 31 + kind, course_k, CA.INTERIOR + seed)
 
                     is_worn = stone_worn(worn, addr, x, y)
+                    wear_of_class[1 + c * 3 + kind] = is_worn
                     ox = CA.stone_origin(wf, e, kind, c, drops[c])
-                    oy = c * CA.COURSE_H + 1
+                    oy = CA.course_origin_y(split_i, c)
                     lx, ly = (xx - ox) % (2 * T), (yy - oy) % (2 * T)
                     g = (CA.grain_patch(key, 8, seed)[ly, lx] * 0.34
                          + CA.grain_patch(key, 16, seed)[ly, lx] * 0.14)
@@ -130,7 +135,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
                     # on the family median. No brightening anywhere — §8.2.1.
                     bias = CA.cluster_bias(bx, course_k, seed)
                     L = L + m * (CA.stone_offset(key, step, worn=is_worn, bias=bias)
-                                 + g * amp * (0.38 if is_worn else 1.0))
+                                 + g * amp * (CA.WEAR_GRAIN if is_worn else 1.0))
 
             if defect == "boundary_frame":
                 # THE PLANT FOR GRID HIDING: an extra joint along the tile's own edge.
@@ -147,6 +152,29 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
                     L[:, col] = np.where(jm[:, col], mat["lum_median"], L[:, col])
                 jm = jm.copy()
                 jm[:, T - 2:] = False
+
+            # THE ARRIS PASS. A joint beside a trodden stone is shallower, because feet round the
+            # edges off — geometry, not light (§6.3). Each joint pixel takes the wear of the
+            # nearest stone it touches, so the polish ends where a STONE ends and never draws a
+            # straight line on the tile grid.
+            if worn is not None:
+                # NO WRAP. `np.roll` is circular, so a worn stone on the top row was rounding
+                # the arris of a joint on the BOTTOM row of the same tile — 32px away, across a
+                # course boundary, for no reason a neighbour could reproduce. The engine walks
+                # this with bounds checks and would not have wrapped, so the two would have
+                # disagreed exactly where the channel meets a tile edge.
+                worn_stone = np.zeros((T, T), dtype=bool)
+                for cid, w_ in wear_of_class.items():
+                    if w_:
+                        worn_stone |= (cls == cid)
+                jw = np.zeros((T, T), dtype=bool)
+                jw[1:, :] |= worn_stone[:-1, :]
+                jw[:-1, :] |= worn_stone[1:, :]
+                jw[:, 1:] |= worn_stone[:, :-1]
+                jw[:, :-1] |= worn_stone[:, 1:]
+                jw &= jm
+                if jw.any():
+                    L = np.where(jw, L + (mat["lum_median"] - L) * CA.WEAR_ARRIS, L)
 
             L = CF.quantise(np.clip(L, mat["lum_lo"], mat["lum_hi"]), mat["ladder"])
             img[y * T:(y + 1) * T, x * T:(x + 1) * T] = \
@@ -269,7 +297,7 @@ def continuity(joints, w, h):
                 continued=round(carry / arrive, 4) if arrive else None)
 
 
-def grid_hiding(img, joints, w, h):
+def grid_hiding(img, joints, w, h, seed=1337):
     """Is the bed joint ON a tile boundary distinguishable from the one halfway up the tile?
 
     If it is, the coursing has revealed the grid instead of hiding it, whatever its continuity
@@ -280,9 +308,17 @@ def grid_hiding(img, joints, w, h):
     """
     L = RI.lum(img.astype(float))
     H, W = joints.shape
+    # The boundary bed line is at a fixed phase; the INTERIOR one moves with the row's split, so
+    # both masks are built row by row rather than by a phase constant. Using a constant here after
+    # the split was introduced would have compared the boundary line against ordinary stone and
+    # reported a ratio of about 4 — an instrument reading its own stale assumption as a defect.
     ry = np.arange(H) % T
-    bnd = (ry == 0) | (ry == T - 1)                       # the boundary bed line, both halves
-    mid = (ry == CA.COURSE_H - 1) | (ry == CA.COURSE_H)    # the mid-tile bed line
+    bnd = (ry == 0) | (ry == T - 1)
+    mid = np.zeros(H, dtype=bool)
+    for r in range(h):
+        a0 = CA.SPLITS[CA.row_split(r, seed)][0]
+        mid[r * T + a0 - 1] = True
+        mid[r * T + a0] = True
     bd, md = float(joints[bnd].mean()), float(joints[mid].mean())
     bv, mv = float(L[bnd].mean()), float(L[mid].mean())
 
@@ -296,6 +332,109 @@ def grid_hiding(img, joints, w, h):
                 bed_value_ratio=round(bv / mv, 4) if mv else None,
                 col_density_boundary=round(cbd, 4), col_density_other=round(cod, 4),
                 col_density_ratio=round(cbd / cod, 4) if cod else None)
+
+
+def banding(joints):
+    """ARE THE COURSES A BOND OR A STACK OF STRIPES?
+
+    This instrument exists because a blind seat found what four field instruments had passed:
+
+        "The horizontal banding. The ruled seam every 32px is the single loudest thing on screen
+         after the figure. Because the courses never break, the floor reads as a stack of
+         horizontal stripes before it reads as stone."
+        "Real floors under four hundred years of traffic do not hold a ruled line like that."
+
+    Nothing was measuring it. Enclosure counts stones, boundary-step watches value, continuity
+    and grid-hiding watch the tile grid — and a perfectly regular course rhythm passes all four,
+    because it is not a tile artefact at all. It is a property of the MATERIAL, and it was the
+    first thing a human eye reported.
+
+    Measured as the spacing between full-width bed joints. A single spacing repeated is a stripe
+    pattern; several, in no fixed order, is a bond.
+    """
+    full = np.where(joints.mean(axis=1) > 0.8)[0]
+    if len(full) < 3:
+        return dict(bed_rows=int(len(full)), distinct_spacings=0, modal_share=None, sd=0.0)
+    gaps = np.diff(full)
+    gaps = gaps[gaps > 1]                     # a 2px joint is two adjacent rows, not a course
+    if not len(gaps):
+        return dict(bed_rows=int(len(full)), distinct_spacings=0, modal_share=None, sd=0.0)
+    vals, counts = np.unique(gaps, return_counts=True)
+    return dict(bed_rows=int(len(full)), courses=int(len(gaps)),
+                distinct_spacings=int(len(vals)),
+                modal_share=round(float(counts.max()) / len(gaps), 3),
+                sd=round(float(gaps.std()), 2),
+                spacings=[int(v) for v in vals[:8]])
+
+
+def _band_ratios(img, joints, worn_cells):
+    """IS THE TRODDEN CHANNEL VISIBLE AT ALL?
+
+    §8.2.1 binds the channel to signal by ABSENCE — polish takes grain and value variety away, it
+    never adds brightness, because under a carried lamp brightness is what the light is saying.
+    The obvious risk in that law is that absence has a floor: subtract enough and there is nothing
+    left to subtract, and if the eye still cannot see it, the channel does not exist.
+
+    A blind seat could not find it. This measures what it was looking for:
+
+      TEXTURE   local variation on the stone faces, inside the channel against outside. Polish
+                takes it away, so a working channel reads well below 1.0.
+      VARIETY   the spread of stone values, inside against outside. Same direction.
+      ARRIS     joint-to-stone contrast, inside against outside. A rounded arris holds less
+                shadow, so again below 1.0.
+
+    Reported as ratios, with no threshold pretending to be a verdict — the seat decides whether it
+    reads. The number says whether there is anything there TO read.
+    """
+    L = RI.lum(img.astype(float))
+    H, W = L.shape
+    inside = np.zeros((H, W), dtype=bool)
+    for (cx, cy) in worn_cells:
+        inside[cy * T:(cy + 1) * T, cx * T:(cx + 1) * T] = True
+    outside = ~inside
+    face = ~joints
+
+    from numpy.lib.stride_tricks import sliding_window_view
+    sd = sliding_window_view(L, (3, 3)).std(axis=(2, 3))
+    # ONLY WINDOWS WHOLLY INSIDE A STONE. Counting a window that straddles a joint measures the
+    # JOINT's contrast and calls it grain, so erasing joints inside the channel made "texture"
+    # collapse to 0.536 on a field whose grain had not been touched at all.
+    allface = sliding_window_view(face, (3, 3)).all(axis=(2, 3))
+    fi = allface & inside[1:-1, 1:-1]
+    fo = allface & outside[1:-1, 1:-1]
+    tex_i, tex_o = float(sd[fi].mean()), float(sd[fo].mean())
+    var_i, var_o = float(L[face & inside].std()), float(L[face & outside].std())
+    ai = float(L[face & inside].mean() - L[joints & inside].mean()) if (joints & inside).any() else 0.0
+    ao = float(L[face & outside].mean() - L[joints & outside].mean())
+    return dict(texture=tex_i / tex_o if tex_o else 1.0,
+                variety=var_i / var_o if var_o else 1.0,
+                arris=ai / ao if ao else 1.0, inside_px=int(inside.sum()))
+
+
+def channel_legibility(img, baseline, joints, worn_cells, w, h):
+    """The channel's effect, measured AGAINST THE SAME STONES UNPOLISHED.
+
+    The first version reported inside-vs-outside on the channel field alone, and the number was
+    mostly the band's own content. Measured on a field with NO channel at all, the inside/outside
+    ratio for a 2-cell band ranges from 0.74 to 1.39 across the seven bands of an 8x8 field —
+    wider than the effect being looked for. A ratio of 0.738 was read as a failing instrument
+    when it was simply what columns 3 and 4 happen to look like.
+
+    So the band is differenced against ITSELF: the identical field painted with the channel off.
+    Whatever those stones were going to be, they were going to be it in both, and what is left is
+    the polish. 1.000 means the channel delivered nothing.
+    """
+    a = _band_ratios(img, joints, worn_cells)
+    b = _band_ratios(baseline, joints, worn_cells)
+    return dict(texture_ratio=round(a["texture"] / b["texture"], 3),
+                variety_ratio=round(a["variety"] / b["variety"], 3),
+                arris_ratio=round(a["arris"] / b["arris"], 3),
+                band_alone=dict(texture=round(a["texture"], 3), variety=round(a["variety"], 3),
+                                arris=round(a["arris"], 3)),
+                same_band_unpolished=dict(texture=round(b["texture"], 3),
+                                          variety=round(b["variety"], 3),
+                                          arris=round(b["arris"], 3)),
+                inside_px=a["inside_px"])
 
 
 def crossing_spread(joints, w, h):
@@ -327,10 +466,11 @@ def crossing_spread(joints, w, h):
     return dict(horizontal_boundaries=stats(ys), vertical_boundaries=stats(xs))
 
 
-def measure(img, joints, w, h, transitions=()):
+def measure(img, joints, w, h, transitions=(), seed=1337):
     return dict(enclosure=enclosure(joints),
                 boundary_step=boundary_step(img, joints, w, h, transitions),
-                continuity=continuity(joints, w, h), grid_hiding=grid_hiding(img, joints, w, h),
+                continuity=continuity(joints, w, h),
+                grid_hiding=grid_hiding(img, joints, w, h, seed), banding=banding(joints),
                 crossings=crossing_spread(joints, w, h))
 
 
@@ -352,6 +492,11 @@ PLANTS = [
     dict(name="boundary_frame", must_fire="grid_hiding",
          why="an extra joint drawn along the tile's own edge: a treatment at a constant position",
          test=lambda m: (m["grid_hiding"]["col_density_ratio"] or 0) > 1.5),
+    dict(name="uniform_courses", must_fire="banding",
+         why="every tile row on the same 16/16 split, so one spacing repeats down the whole "
+             "field — the stack of stripes the seat named, restored on purpose",
+         test=lambda m: m["banding"]["distinct_spacings"] <= 1
+         or (m["banding"]["modal_share"] or 0) > 0.9),
     dict(name="broken_courses", must_fire="continuity",
          why="bed joints stopping short of the vertical boundaries — coursing that does not travel",
          # `x or 1.0` on a measured 0.0 yields 1.0, because 0.0 is falsy — so the plant that
@@ -362,21 +507,66 @@ PLANTS = [
 ]
 
 
+def channel_plant(w, h, seed, mat):
+    """THE PLANT FOR CHANNEL LEGIBILITY: wear that takes nothing away.
+
+    The three wear terms are set to 1.0 — a trodden stone keeps all its grain, all its value
+    spread and a full-depth arris — so the channel is declared and delivers nothing. The
+    instrument must report ratios at 1.0 and therefore NOTHING TO READ. If it reports a visible
+    channel here, it is reading the channel's declaration rather than its pixels, which is the
+    failure mode that let a real channel go unseen by three rounds of seats.
+    """
+    # ⚠ THE THREE CONSTANTS DO NOT SHARE A NULL, and this plant is what found that out.
+    #
+    # WEAR_GRAIN and WEAR_SPREAD are MULTIPLIERS on what a stone keeps, so 1.0 is "no wear".
+    # WEAR_ARRIS is a FRACTION of the way the joint rises toward the stone, so its null is 0.0 and
+    # 1.0 erases the joint completely. Setting all three to 1.0 therefore delivered the most worn
+    # floor the system can make, the instrument correctly reported a very visible channel, and the
+    # plant read that as the instrument failing. Two mistakes agreeing on a verdict.
+    keep = (CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS)
+    CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS = 1.0, 1.0, 0.0
+    try:
+        band = lambda x, y: w // 2 - 1 <= x <= w // 2
+        img, joints, _ = assemble(w, h, seed, mat, band)
+        base, _j, _t = assemble(w, h, seed, mat, None)
+        cells = [(x, y) for y in range(h) for x in range(w) if band(x, y)]
+        m = channel_legibility(img, base, joints, cells, w, h)
+    finally:
+        CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS = keep
+    flat = all(abs((m[k] or 1.0) - 1.0) < 0.02
+               for k in ("texture_ratio", "variety_ratio", "arris_ratio"))
+    return flat, m
+
+
 def run_plants(w, h, seed, mat):
     print("PLANTS — every instrument must demonstrate it can fail (§4, bible §13.5)\n")
     rows, ok = [], True
+    flat, cm = channel_plant(w, h, seed, mat)
+    print("  %-16s -> %-14s %s" % ("flat_channel", "channel", "FIRED" if flat else "SILENT"))
+    print("       wear that takes nothing away — the channel declared and not delivered")
+    print("       texture %s | variety %s | arris %s  (all 1.0 = nothing to read)"
+          % (cm["texture_ratio"], cm["variety_ratio"], cm["arris_ratio"]))
+    if not flat:
+        print("       ^^ the instrument reports a channel where none was delivered. It is "
+              "reading the declaration, not the pixels.")
+    ok &= flat
+    rows.append(dict(plant="flat_channel", must_fire="channel_legibility", fired=flat,
+                     why="wear multipliers set to 1.0: the channel is declared and delivers "
+                         "nothing", measured=cm))
     for p in PLANTS:
         img, joints, tr = assemble(w, h, seed, mat, defect=p["name"])
-        m = measure(img, joints, w, h, tr)
+        m = measure(img, joints, w, h, tr, seed)
         fired = bool(p["test"](m))
         rows.append(dict(plant=p["name"], must_fire=p["must_fire"], why=p["why"],
                          fired=fired, measured=m))
         ok &= fired
         print("  %-16s -> %-14s %s" % (p["name"], p["must_fire"], "FIRED" if fired else "SILENT"))
         print("       %s" % p["why"])
-        print("       boundary_step ratio %s | continuity %s | col_density_ratio %s"
+        print("       boundary_step %s | continuity %s | col_density %s | course heights %s "
+              "(modal %s)"
               % (m["boundary_step"]["ratio"], m["continuity"]["continued"],
-                 m["grid_hiding"]["col_density_ratio"]))
+                 m["grid_hiding"]["col_density_ratio"], m["banding"]["distinct_spacings"],
+                 m["banding"]["modal_share"]))
         if not fired:
             print("       ^^ THIS INSTRUMENT HAS NOT SHOWN IT CAN FAIL. Its pass does not count.")
     print()
@@ -410,7 +600,7 @@ def main():
         img, joints, tr = assemble(a.w, a.h, a.seed, mat, worn)
         p = os.path.join(a.out, "ashlar_%s.png" % label)
         Image.fromarray(img).save(p)
-        m = measure(img, joints, a.w, a.h, tr)
+        m = measure(img, joints, a.w, a.h, tr, a.seed)
         try:
             import field_preview as FP
             m["lattice"] = FP.lattice_score(img)
@@ -433,6 +623,18 @@ def main():
         print("     grid hiding:  boundary bed vs mid bed — density %s, value %s; "
               "boundary column vs others %s"
               % (g["bed_density_ratio"], g["bed_value_ratio"], g["col_density_ratio"]))
+        bn = m["banding"]
+        print("     banding:      %d courses at %d distinct heights %s, modal share %s, sd %s"
+              % (bn.get("courses", 0), bn["distinct_spacings"], bn.get("spacings"),
+                 bn["modal_share"], bn["sd"]))
+        if worn:
+            cells = [(x, y) for y in range(a.h) for x in range(a.w) if worn(x, y)]
+            base, _bj, _bt = assemble(a.w, a.h, a.seed, mat, None)
+            cl = channel_legibility(img, base, joints, cells, a.w, a.h)
+            rows[label]["channel_legibility"] = cl
+            print("     channel:      texture %s, variety %s, arris %s "
+                  "(the same stones unpolished = 1.000; below it, polish took something away)"
+                  % (cl["texture_ratio"], cl["variety_ratio"], cl["arris_ratio"]))
         if m["lattice"]:
             print("     lattice:      %.4f" % m["lattice"]["lattice"])
 

@@ -19,18 +19,24 @@ namespace CatacombsOfYarl.Presentation.Map;
 ///     same value onto the same stone, and the seam is zero rather than small.
 ///
 /// Measured on the assembled field: 7.44x boundary-to-interior value step under the old geometry,
-/// 2.95x after blending it, and 0.75x here — below 1.00, meaning a tile boundary is no longer
+/// 2.95x after blending it, and 0.59x here — below 1.00, meaning a tile boundary is no longer
 /// distinguishable from anywhere else on the floor.
 ///
 /// WHY NO STONE MAY CONTAIN A GRID CORNER, which is what forces the coursing.
 /// Four tiles meet at a grid corner. Tile (x,r) shares one boundary family with its eastern
 /// neighbour and one with its southern, and shares NOTHING with its diagonal. So a stone covering
-/// a corner cannot be addressed at all. Bed joints at every 16px put a joint through every corner
-/// — 32 being a multiple of 16 — and the problem does not arise. Measured: 0 unaddressable stones,
-/// against 27 of 77 (19.9% of stone pixels) under the crossing-joint geometry that preceded it.
+/// a corner cannot be addressed at all. A bed joint on every tile boundary puts one through every
+/// corner and the problem does not arise. Measured: 0 unaddressable stones, against 27 of 77
+/// (19.9% of stone pixels) under the crossing-joint geometry that preceded it.
+///
+/// The INTERIOR bed joint is not so constrained, and it moves per tile row. When it did not, every
+/// course in the world was 16px tall and a blind seat read the floor as "a stack of horizontal
+/// stripes before it reads as stone". Four course splits, chosen by row, give 5 distinct course
+/// heights across a field where there was 1.
 ///
 /// WHAT SHIPS
-///   * 81 atlases, one per family combination, each a 3x3 of the nine head-joint merge cases.
+///   * 81 atlases, one per family combination, each a 6x6 of the four course splits by the nine
+///     head-joint merge cases.
 ///     R is an INDEX INTO THE LADDER (exact — a byte of luminance would round, and a rounding
 ///     error lands as a value seam). G is the stone class, 0 for joints.
 ///   * one 512x512 grain bank, 64 patches, two scales packed into R and G.
@@ -45,8 +51,8 @@ namespace CatacombsOfYarl.Presentation.Map;
 public static class Tier1AshlarFloor
 {
     private const int T = 32;
-    private const int CourseH = 16;
-    private const int Courses = T / CourseH;
+    private const int Courses = 2;
+    private const int AtlasCols = 6;
     private const int GrainSide = 2 * T;      // one patch
     private const int BankCols = 8;
 
@@ -55,9 +61,11 @@ public static class Tier1AshlarFloor
         public int Families = 3;
         public int Seed;
         public int HorizSalt = 101, VertSalt = 202, SpanSalt = 3001, InteriorSalt = 3002;
-        public int DropSalt = 3003, ClusterSalt = 3004;
+        public int DropSalt = 3003, ClusterSalt = 3004, SplitSalt = 3005;
+        public int[][] Splits = System.Array.Empty<int[]>();
         public int GrainBank = 64;
         public double GrainAmp = 1.0, Coarse = 0.34, Fine = 0.14, WornMul = 0.38;
+        public double WearSpread = 0.20, WearArris = 0.45, LumMedian = 114.0;
         public int[] OffsetSteps = System.Array.Empty<int>();
         public int[] ClusterTable = { -1, 0, 0, 1 };
         public double[] Ladder = System.Array.Empty<double>();
@@ -101,6 +109,22 @@ public static class Tier1AshlarFloor
     /// differently. This one line is the difference between a merge and a seam.
     /// </summary>
     private static int Address(int kind, int drop) => (kind == 1 && drop == 2) ? 2 : kind;
+
+    /// <summary>
+    /// Which course split this TILE ROW uses.
+    ///
+    /// The joint ON a tile boundary cannot move — the corner theorem needs one through every grid
+    /// corner. The INTERIOR one is free, and it moves, because when it did not a blind seat read
+    /// the floor as "a stack of horizontal stripes before it reads as stone": one unbroken ruled
+    /// line every 16px across the whole map. Chosen per ROW so every tile in a row agrees and the
+    /// joint stays continuous across every vertical boundary, while successive rows give courses
+    /// of genuinely different heights.
+    /// </summary>
+    private static int RowSplit(Config c, int r) => Mix(0, r, c.SplitSalt + c.Seed) % c.Splits.Length;
+
+    /// <summary>Stone-local y = 0 for this course under this split.</summary>
+    private static int CourseOriginY(Config c, int splitI, int course)
+        => course == 0 ? 1 : c.Splits[splitI][0] + 1;
 
     private static int ClusterBias(Config c, int bx, int courseK)
         => c.ClusterTable[Mix(bx / 3, courseK / 2, c.ClusterSalt + c.Seed) % c.ClusterTable.Length];
@@ -197,6 +221,8 @@ public static class Tier1AshlarFloor
             var drops = new int[Courses];
             for (int c = 0; c < Courses; c++)
                 drops[c] = DropChoice(cfg, pos.X, pos.Y * Courses + c);
+            int splitI = RowSplit(cfg, pos.Y);
+            int cellIndex = splitI * 9 + drops[0] * 3 + drops[1];
 
             // Per-class parameters computed ONCE, then a single pass over the pixels. The
             // first version looped the whole tile once per class: seven passes and about 7k
@@ -207,6 +233,7 @@ public static class Tier1AshlarFloor
             var bankY = new int[7];
             var ox = new int[7];
             var oy = new int[7];
+            var wornClass = new bool[7];
             bool anyWorn = false;
 
             for (int c = 0; c < Courses; c++)
@@ -232,19 +259,21 @@ public static class Tier1AshlarFloor
                         _ => isChannel(pos.X, pos.Y),
                     });
                     if (worn) anyWorn = true;
+                    wornClass[cls] = worn;
 
-                    offset[cls] = steps * (cfg.Ladder[1] - cfg.Ladder[0]) * (worn ? 0.45 : 1.0);
+                    offset[cls] = steps * (cfg.Ladder[1] - cfg.Ladder[0])
+                                * (worn ? cfg.WearSpread : 1.0);
                     gmul[cls] = cfg.GrainAmp * (worn ? cfg.WornMul : 1.0);
                     int bank = key % cfg.GrainBank;
                     bankX[cls] = (bank % BankCols) * GrainSide;
                     bankY[cls] = (bank / BankCols) * GrainSide;
                     ox[cls] = StoneOrigin(cfg, fw, kind, c, drops[c]);
-                    oy[cls] = c * CourseH + 1;
+                    oy[cls] = CourseOriginY(cfg, splitI, c);
                 }
             }
 
             var outImg = Image.CreateEmpty(T, T, false, Image.Format.Rgb8);
-            int ax = drops[0] * T, ay = drops[1] * T;
+            int ax = (cellIndex % AtlasCols) * T, ay = (cellIndex / AtlasCols) * T;
             for (int py = 0; py < T; py++)
             {
                 for (int px = 0; px < T; px++)
@@ -272,6 +301,46 @@ public static class Tier1AshlarFloor
                     outImg.SetPixel(px, py, new Color(
                         (float)(L * cfg.Tint[0] / 255.0), (float)(L * cfg.Tint[1] / 255.0),
                         (float)(L * cfg.Tint[2] / 255.0)));
+                }
+            }
+
+            // THE ARRIS PASS. A joint beside a trodden stone is shallower, because feet round the
+            // edges off — geometry, not light (§6.3), and a subtraction rather than an addition,
+            // which is what §8.2.1 requires of polish. Each joint pixel takes its wear from the
+            // stones it actually touches, so the channel ends where a STONE ends and never draws
+            // a straight line on the tile grid.
+            //
+            // Bounds-checked, not wrapped. The Python reference used a circular shift here and
+            // was rounding the arris of joints a whole tile away; the two would have disagreed
+            // precisely where the channel meets a tile edge.
+            if (anyWorn && cfg.WearArris > 0.0)
+            {
+                for (int py = 0; py < T; py++)
+                {
+                    for (int px = 0; px < T; px++)
+                    {
+                        if ((int)System.Math.Round(atlas.GetPixel(ax + px, ay + py).G * 255.0) != 0)
+                            continue;
+                        bool nearWorn = false;
+                        for (int d = 0; d < 4 && !nearWorn; d++)
+                        {
+                            int ny = py + (d == 0 ? -1 : d == 1 ? 1 : 0);
+                            int nx = px + (d == 2 ? -1 : d == 3 ? 1 : 0);
+                            if (ny < 0 || ny >= T || nx < 0 || nx >= T) continue;
+                            int nc = (int)System.Math.Round(
+                                atlas.GetPixel(ax + nx, ay + ny).G * 255.0);
+                            if (nc > 0 && nc < 7 && wornClass[nc]) nearWorn = true;
+                        }
+                        if (!nearWorn) continue;
+                        double jl = cfg.Ladder[(int)System.Math.Round(
+                            atlas.GetPixel(ax + px, ay + py).R * 255.0)];
+                        jl += (cfg.LumMedian - jl) * cfg.WearArris;
+                        jl = cfg.Ladder[LadderIndex(cfg, System.Math.Clamp(
+                            jl, cfg.Ladder[0], cfg.Ladder[^1]))];
+                        outImg.SetPixel(px, py, new Color(
+                            (float)(jl * cfg.Tint[0] / 255.0), (float)(jl * cfg.Tint[1] / 255.0),
+                            (float)(jl * cfg.Tint[2] / 255.0)));
+                    }
                 }
             }
 
@@ -316,6 +385,7 @@ public static class Tier1AshlarFloor
             };
             var salts = root.GetProperty("salts");
             cfg.HorizSalt = salts.GetProperty("horizontal").GetInt32();
+            cfg.SplitSalt = salts.GetProperty("split").GetInt32();
             cfg.VertSalt = salts.GetProperty("vertical").GetInt32();
             cfg.SpanSalt = salts.GetProperty("span").GetInt32();
             cfg.InteriorSalt = salts.GetProperty("interior").GetInt32();
@@ -326,6 +396,9 @@ public static class Tier1AshlarFloor
             cfg.Coarse = gs.GetProperty("coarse").GetDouble();
             cfg.Fine = gs.GetProperty("fine").GetDouble();
             cfg.WornMul = gs.GetProperty("worn_multiplier").GetDouble();
+            var wear = root.GetProperty("wear");
+            cfg.WearSpread = wear.GetProperty("spread").GetDouble();
+            cfg.WearArris = wear.GetProperty("arris").GetDouble();
 
             var steps = new List<int>();
             foreach (var v in root.GetProperty("offset_steps").EnumerateArray())
@@ -340,6 +413,7 @@ public static class Tier1AshlarFloor
             var lad = new List<double>();
             foreach (var v in mat.GetProperty("ladder").EnumerateArray()) lad.Add(v.GetDouble());
             cfg.Ladder = lad.ToArray();
+            cfg.LumMedian = mat.GetProperty("lum_median").GetDouble();
             var tint = new List<double>();
             foreach (var v in mat.GetProperty("tint").EnumerateArray()) tint.Add(v.GetDouble());
             cfg.Tint = tint.ToArray();
@@ -356,6 +430,7 @@ public static class Tier1AshlarFloor
                 return rows.ToArray();
             }
             cfg.ATable = Table(root.GetProperty("a_table"));
+            cfg.Splits = Table(root.GetProperty("splits"));
             cfg.MvTable = Table(root.GetProperty("mv_table"));
 
             foreach (var e in root.GetProperty("base").EnumerateArray())

@@ -54,8 +54,8 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None):
         idx = CA.tile_index(e["n"], e["e"], e["s"], e["w"])
         a = np.asarray(Image.open(os.path.join(A, e["file"])).convert("RGB")).copy()
         if corrupt is not None and idx == corrupt[0]:
-            d0, d1, py, px = corrupt[1:]
-            a[d1 * T + py, d0 * T + px, 0] = (int(a[d1 * T + py, d0 * T + px, 0]) + 3) % len(ladder)
+            cr, cc, py, px = corrupt[1:]
+            a[cr * T + py, cc * T + px, 0] = (int(a[cr * T + py, cc * T + px, 0]) + 3) % len(ladder)
         atlases[idx] = a
 
     img = np.zeros((h * T, w * T, 3), dtype=np.uint8)
@@ -68,10 +68,14 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None):
             fe = CA.edge_family(x + 1, y, CA.VERT, seed)
             at = atlases[CA.tile_index(n, fe, s_, fw)]
             drops = [CA.drop_choice(x, y * CA.COURSES + c, seed) for c in range(CA.COURSES)]
-            cell = at[drops[1] * T:(drops[1] + 1) * T, drops[0] * T:(drops[0] + 1) * T]
+            split_i = CA.row_split(y, seed)
+            ci = split_i * 9 + drops[0] * 3 + drops[1]
+            cr, cc = ci // 6, ci % 6
+            cell = at[cr * T:(cr + 1) * T, cc * T:(cc + 1) * T]
             L = ladder[cell[..., 0]].astype(float)
             cls = cell[..., 1]
 
+            wornc = {}
             for c in range(CA.COURSES):
                 course_k = y * CA.COURSES + c
                 for kind in (0, 1, 2):
@@ -86,17 +90,36 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None):
                     k = max(-3, min(3, CA.OFFSET_STEPS[key % len(CA.OFFSET_STEPS)]
                                     + CA.cluster_bias(bx, course_k, seed)))
                     is_worn = FA.stone_worn(worn, addr, x, y)
-                    off = k * step * (0.45 if is_worn else 1.0)
+                    wornc[cid] = is_worn
+                    off = k * step * (man["wear"]["spread"] if is_worn else 1.0)
                     gm = amp * (gs["worn_multiplier"] if is_worn else 1.0)
                     b = key % man["grain_bank"]
                     bx0, by0 = (b % 8) * side, (b // 8) * side
                     ox = CA.stone_origin(fw, fe, kind, c, drops[c])
-                    oy = c * CA.COURSE_H + 1
+                    oy = CA.course_origin_y(split_i, c)
                     lx, ly = (xx - ox) % side, (yy - oy) % side
                     g = ((bank[by0 + ly, bx0 + lx, 0] - 128) / 64.0 * gs["coarse"]
                          + (bank[by0 + ly, bx0 + lx, 1] - 128) / 64.0 * gs["fine"])
                     v = np.clip(L + off + g * gm, ladder[0], ladder[-1])
                     L = np.where(m, ladder[np.abs(v[..., None] - ladder).argmin(-1)], L)
+
+            # The arris pass, walked the way the engine walks it: bounds-checked, from the class
+            # mask, quantised back onto the ladder.
+            if any(wornc.values()) and man["wear"]["arris"] > 0:
+                ws = np.zeros((T, T), dtype=bool)
+                for cid, w_ in wornc.items():
+                    if w_:
+                        ws |= (cls == cid)
+                jw = np.zeros((T, T), dtype=bool)
+                jw[1:, :] |= ws[:-1, :]
+                jw[:-1, :] |= ws[1:, :]
+                jw[:, 1:] |= ws[:, :-1]
+                jw[:, :-1] |= ws[:, 1:]
+                jw &= (cls == 0)
+                if jw.any():
+                    v = L + (mat["lum_median"] - L) * man["wear"]["arris"]
+                    v = np.clip(v, ladder[0], ladder[-1])
+                    L = np.where(jw, ladder[np.abs(v[..., None] - ladder).argmin(-1)], L)
 
             img[y * T:(y + 1) * T, x * T:(x + 1) * T] = \
                 np.clip(np.stack([L * tint[0], L * tint[1], L * tint[2]], -1), 0, 255)
@@ -118,7 +141,8 @@ def a_byte_the_field_actually_reads(w, h, seed):
             fw = CA.edge_family(x, y, CA.VERT, seed)
             fe = CA.edge_family(x + 1, y, CA.VERT, seed)
             drops = [CA.drop_choice(x, y * CA.COURSES + c, seed) for c in range(CA.COURSES)]
-            return (CA.tile_index(n, fe, s_, fw), drops[0], drops[1], 8, 8)
+            ci = CA.row_split(y, seed) * 9 + drops[0] * 3 + drops[1]
+            return (CA.tile_index(n, fe, s_, fw), ci // 6, ci % 6, 8, 8)
     raise SystemExit("no cells in the field")
 
 
@@ -153,6 +177,18 @@ def main():
           % (c["differing"], c["pixels"], c["differing_pct"], c["max_channel_delta"],
              "IDENTICAL" if ok else "DISAGREE"))
 
+    # THE CHANNEL ARM. Wear is the half of the family with the most arithmetic in it and it was
+    # verified nowhere: the comparison above runs with no channel declared, so every wear term
+    # could have been wrong in both directions and this file would still have said IDENTICAL.
+    band = lambda x, y: a.w // 2 - 1 <= x <= a.w // 2
+    d2, _j2, _t2 = FA.assemble(a.w, a.h, a.seed, mat, band)
+    s2 = paint_from_atlas(a.w, a.h, a.seed, man, worn=band)
+    c2 = compare(d2, s2)
+    ok = ok and c2["differing"] == 0
+    print("  with the trodden channel declared:  %d of %d pixels differ (%.4f%%)  -> %s"
+          % (c2["differing"], c2["pixels"], c2["differing_pct"],
+             "IDENTICAL" if c2["differing"] == 0 else "DISAGREE"))
+
     plant = None
     if a.plants:
         corrupt = a_byte_the_field_actually_reads(a.w, a.h, a.seed)
@@ -162,7 +198,7 @@ def main():
         plant = dict(corrupted=dict(tile_index=corrupt[0], cell=[corrupt[1], corrupt[2]],
                                     pixel=[corrupt[3], corrupt[4]]),
                      fired=fired, measured=cb)
-        print("  PLANT: ONE ladder index altered — tile %d, merge cell (%d,%d), pixel (%d,%d)"
+        print("  PLANT: ONE ladder index altered — tile %d, atlas cell (%d,%d), pixel (%d,%d)"
               % corrupt)
         print("         -> %s (%d pixels differ)"
               % ("CAUGHT" if fired else "MISSED — this check is decorative", cb["differing"]))
@@ -171,7 +207,7 @@ def main():
             ok = False
 
     out = dict(commit=FL.git_commit(), grid=[a.w, a.h], seed=a.seed, identical=ok,
-               comparison=c, plant=plant)
+               comparison=c, comparison_with_channel=c2, plant=plant)
     p = os.path.join(HERE, "evidence", "ATLAS-PATH.json")
     with open(p, "w") as f:
         json.dump(out, f, indent=1)

@@ -1,5 +1,5 @@
 {
- "commit": "8405c9e6b3b95d2d17781e84feda25cbc042086c",
+ "commit": "864f44f9b25155e33888dfc3b3823a171f7ffcf0",
  "grid": [
   8,
   8
@@ -10,232 +10,23 @@
   "unblended": 7.44,
   "blended": 2.95
  },
- "plants": [
-  {
-   "plant": "per_tile_value",
-   "must_fire": "boundary_step",
-   "why": "stones addressed by the tile they are seen from instead of by the boundary they straddle \u2014 ruling (1)'s defect, restated exactly",
-   "fired": true,
-   "measured": {
-    "enclosure": {
-     "regions": 236,
-     "floor_px": 51184,
-     "largest_share": 0.0128,
-     "median_region": 200,
-     "regions_over_64px": 226
-    },
-    "boundary_step": {
-     "boundary_mean": 15.401,
-     "interior_mean": 0.289,
-     "ratio": 53.38,
-     "boundary_max": 66.59,
-     "n": 1527,
-     "channel_edge_mean": null,
-     "channel_edge_n": 0
-    },
-    "continuity": {
-     "arriving": 224,
-     "continuing": 224,
-     "continued": 1.0
-    },
-    "grid_hiding": {
-     "bed_density_boundary": 1.0,
-     "bed_density_mid": 1.0,
-     "bed_density_ratio": 1.0,
-     "bed_value_boundary": 74.89,
-     "bed_value_mid": 74.89,
-     "bed_value_ratio": 1.0,
-     "col_density_boundary": 0.125,
-     "col_density_other": 0.222,
-     "col_density_ratio": 0.563
-    },
-    "crossings": {
-     "horizontal_boundaries": {
-      "n": 0
-     },
-     "vertical_boundaries": {
-      "n": 224,
-      "distinct": 4,
-      "sd": 10.97,
-      "spread": 31,
-      "modal_share": 0.25
-     }
-    }
-   }
-  },
-  {
-   "plant": "value_lattice",
-   "must_fire": "boundary_step",
-   "why": "a value ramp locked to the tile grid \u2014 session one's tint lattice in its purest form",
-   "fired": true,
-   "measured": {
-    "enclosure": {
-     "regions": 236,
-     "floor_px": 51184,
-     "largest_share": 0.0128,
-     "median_region": 200,
-     "regions_over_64px": 226
-    },
-    "boundary_step": {
-     "boundary_mean": 13.172,
-     "interior_mean": 0.238,
-     "ratio": 55.454,
-     "boundary_max": 26.89,
-     "n": 1527,
-     "channel_edge_mean": null,
-     "channel_edge_n": 0
-    },
-    "continuity": {
-     "arriving": 224,
-     "continuing": 224,
-     "continued": 1.0
-    },
-    "grid_hiding": {
-     "bed_density_boundary": 1.0,
-     "bed_density_mid": 1.0,
-     "bed_density_ratio": 1.0,
-     "bed_value_boundary": 81.39,
-     "bed_value_mid": 81.39,
-     "bed_value_ratio": 1.0,
-     "col_density_boundary": 0.125,
-     "col_density_other": 0.222,
-     "col_density_ratio": 0.563
-    },
-    "crossings": {
-     "horizontal_boundaries": {
-      "n": 0
-     },
-     "vertical_boundaries": {
-      "n": 224,
-      "distinct": 4,
-      "sd": 10.97,
-      "spread": 31,
-      "modal_share": 0.25
-     }
-    }
-   }
-  },
-  {
-   "plant": "boundary_frame",
-   "must_fire": "grid_hiding",
-   "why": "an extra joint drawn along the tile's own edge: a treatment at a constant position",
-   "fired": true,
-   "measured": {
-    "enclosure": {
-     "regions": 350,
-     "floor_px": 49392,
-     "largest_share": 0.008,
-     "median_region": 138,
-     "regions_over_64px": 255
-    },
-    "boundary_step": {
-     "boundary_mean": 0.0,
-     "interior_mean": 0.249,
-     "ratio": 0.0,
-     "boundary_max": 0.0,
-     "n": 0,
-     "channel_edge_mean": null,
-     "channel_edge_n": 0
-    },
-    "continuity": {
-     "arriving": 224,
-     "continuing": 224,
-     "continued": 1.0
-    },
-    "grid_hiding": {
-     "bed_density_boundary": 1.0,
-     "bed_density_mid": 1.0,
-     "bed_density_ratio": 1.0,
-     "bed_value_boundary": 74.89,
-     "bed_value_mid": 74.89,
-     "bed_value_ratio": 1.0,
-     "col_density_boundary": 1.0,
-     "col_density_other": 0.222,
-     "col_density_ratio": 4.504
-    },
-    "crossings": {
-     "horizontal_boundaries": {
-      "n": 0
-     },
-     "vertical_boundaries": {
-      "n": 1792,
-      "distinct": 32,
-      "sd": 9.23,
-      "spread": 31,
-      "modal_share": 0.031
-     }
-    }
-   }
-  },
-  {
-   "plant": "broken_courses",
-   "must_fire": "continuity",
-   "why": "bed joints stopping short of the vertical boundaries \u2014 coursing that does not travel",
-   "fired": true,
-   "measured": {
-    "enclosure": {
-     "regions": 108,
-     "floor_px": 51981,
-     "largest_share": 0.1811,
-     "median_region": 178,
-     "regions_over_64px": 107
-    },
-    "boundary_step": {
-     "boundary_mean": 0.665,
-     "interior_mean": 0.31,
-     "ratio": 2.145,
-     "boundary_max": 40.0,
-     "n": 1568,
-     "channel_edge_mean": null,
-     "channel_edge_n": 0
-    },
-    "continuity": {
-     "arriving": 224,
-     "continuing": 0,
-     "continued": 0.0
-    },
-    "grid_hiding": {
-     "bed_density_boundary": 0.9375,
-     "bed_density_mid": 0.9375,
-     "bed_density_ratio": 1.0,
-     "bed_value_boundary": 77.36,
-     "bed_value_mid": 77.36,
-     "bed_value_ratio": 1.0,
-     "col_density_boundary": 0.125,
-     "col_density_other": 0.2095,
-     "col_density_ratio": 0.5967
-    },
-    "crossings": {
-     "horizontal_boundaries": {
-      "n": 0
-     },
-     "vertical_boundaries": {
-      "n": 224,
-      "distinct": 4,
-      "sd": 10.97,
-      "spread": 31,
-      "modal_share": 0.25
-     }
-    }
-   }
-  }
- ],
+ "plants": null,
  "fields": {
   "ordinary": {
    "file": "tools/tier1_floors/evidence/ashlar_ordinary.png",
    "enclosure": {
     "regions": 236,
-    "floor_px": 51184,
-    "largest_share": 0.0128,
-    "median_region": 200,
+    "floor_px": 51112,
+    "largest_share": 0.0134,
+    "median_region": 196,
     "regions_over_64px": 226
    },
    "boundary_step": {
-    "boundary_mean": 0.15,
-    "interior_mean": 0.249,
-    "ratio": 0.601,
+    "boundary_mean": 0.155,
+    "interior_mean": 0.261,
+    "ratio": 0.592,
     "boundary_max": 13.59,
-    "n": 1527,
+    "n": 1568,
     "channel_edge_mean": null,
     "channel_edge_n": 0
    },
@@ -252,8 +43,22 @@
     "bed_value_mid": 74.89,
     "bed_value_ratio": 1.0,
     "col_density_boundary": 0.125,
-    "col_density_other": 0.222,
-    "col_density_ratio": 0.563
+    "col_density_other": 0.2232,
+    "col_density_ratio": 0.5601
+   },
+   "banding": {
+    "bed_rows": 32,
+    "courses": 16,
+    "distinct_spacings": 5,
+    "modal_share": 0.25,
+    "sd": 3.57,
+    "spacings": [
+     10,
+     12,
+     15,
+     18,
+     20
+    ]
    },
    "crossings": {
     "horizontal_boundaries": {
@@ -261,16 +66,16 @@
     },
     "vertical_boundaries": {
      "n": 224,
-     "distinct": 4,
-     "sd": 10.97,
+     "distinct": 8,
+     "sd": 11.25,
      "spread": 31,
      "modal_share": 0.25
     }
    },
    "lattice": {
-    "lattice": 0.3775,
-    "var_total": 510.61,
-    "var_per_position": 317.85,
+    "lattice": 0.2728,
+    "var_total": 505.13,
+    "var_per_position": 367.33,
     "cells": 64
    }
   },
@@ -278,17 +83,17 @@
    "file": "tools/tier1_floors/evidence/ashlar_with_channel.png",
    "enclosure": {
     "regions": 236,
-    "floor_px": 51184,
-    "largest_share": 0.0128,
-    "median_region": 200,
+    "floor_px": 51112,
+    "largest_share": 0.0134,
+    "median_region": 196,
     "regions_over_64px": 226
    },
    "boundary_step": {
-    "boundary_mean": 0.114,
-    "interior_mean": 0.273,
-    "ratio": 0.417,
+    "boundary_mean": 0.094,
+    "interior_mean": 0.225,
+    "ratio": 0.419,
     "boundary_max": 13.59,
-    "n": 1527,
+    "n": 1568,
     "channel_edge_mean": null,
     "channel_edge_n": 0
    },
@@ -301,12 +106,26 @@
     "bed_density_boundary": 1.0,
     "bed_density_mid": 1.0,
     "bed_density_ratio": 1.0,
-    "bed_value_boundary": 74.89,
-    "bed_value_mid": 74.89,
+    "bed_value_boundary": 76.76,
+    "bed_value_mid": 76.76,
     "bed_value_ratio": 1.0,
     "col_density_boundary": 0.125,
-    "col_density_other": 0.222,
-    "col_density_ratio": 0.563
+    "col_density_other": 0.2232,
+    "col_density_ratio": 0.5601
+   },
+   "banding": {
+    "bed_rows": 32,
+    "courses": 16,
+    "distinct_spacings": 5,
+    "modal_share": 0.25,
+    "sd": 3.57,
+    "spacings": [
+     10,
+     12,
+     15,
+     18,
+     20
+    ]
    },
    "crossings": {
     "horizontal_boundaries": {
@@ -314,17 +133,33 @@
     },
     "vertical_boundaries": {
      "n": 224,
-     "distinct": 4,
-     "sd": 10.97,
+     "distinct": 8,
+     "sd": 11.25,
      "spread": 31,
      "modal_share": 0.25
     }
    },
    "lattice": {
-    "lattice": 0.3954,
-    "var_total": 480.26,
-    "var_per_position": 290.36,
+    "lattice": 0.2802,
+    "var_total": 444.78,
+    "var_per_position": 320.16,
     "cells": 64
+   },
+   "channel_legibility": {
+    "texture_ratio": 0.35,
+    "variety_ratio": 0.578,
+    "arris_ratio": 0.775,
+    "band_alone": {
+     "texture": 0.258,
+     "variety": 0.585,
+     "arris": 0.775
+    },
+    "same_band_unpolished": {
+     "texture": 0.738,
+     "variety": 1.011,
+     "arris": 1.0
+    },
+    "inside_px": 16384
    }
   }
  }
