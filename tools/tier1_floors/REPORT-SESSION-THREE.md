@@ -383,6 +383,75 @@ scene information the floor family is not given.
 
 ---
 
+## 6d. Round 9 — the crack integration, seated
+
+Captures pinned: `scene_ashlar_r9.png` (sha `572878d8…`), `scene_ashlar_plant_r9.png`
+(sha `1a4f4903…`).
+
+**The integration worked, and the seat says so unprompted:**
+
+> *"The cracks are real and **they're the best thing here** — I count 23 distinct strokes over 10px
+> in both axes, individually drawn, sweeping across the room (the long arc from ~(250,290) curving
+> to ~(470,395), the X crossing at ~(430,320))."*
+
+Against the system it replaced, whose median mark was four pixels and which the same class of seat
+reported as *"No cracks. Not one. Across ~140 visible blocks."* Material named correctly for the
+fifth consecutive seat: *"Cut stone paving — rectangular flagstones of varying width laid in
+courses, dark mortar joints between them."*
+
+### And then it found the next one, and it is §8.3.1 in a place the clause has not been before
+
+> **CULL:** *"All damage snaps to a grid — 138 copies of one 4×4 wedge, every one glued to a
+> joint."*
+>
+> *"Every single one is locked to a horizontal mortar joint… Each value is exactly 5px above or
+> 3px below a joint. Never mid-slab, never on a vertical joint, never off-grid. So the room has
+> ten horizontal ribbons of identical little arrowheads… they read as UI ticks, not damage."*
+
+**Measured rather than guessed.** The composed field's own 2×2 pattern census shows nothing
+anomalous beside the bed lines (158 distinct patterns adjacent, 171 well away) — so the motif is
+not *in* the tiles. It is an **interaction**:
+
+```
+crack-meets-bed-joint junctions in an 8x8 field : 42
+their component sizes                           : 1-4 px  (a 2x2 art shape at 2x display)
+scaled to the seat's room                       : ~119
+the seat's count                                : 138
+```
+
+**Every crack crosses every bed line the same way, because neither one deflects.** So the junction
+is the same little shape every time, in ribbons along the horizontals — and §8.3.1's motif trap has
+arrived through an *interaction between two systems*, where both systems are individually
+incident-free and world-addressed. That is a genuinely new location for the clause and it is
+recorded here as one.
+
+The seat's own flip list already names the fix, and it is the same sentence as its other crack
+criticism:
+
+> *"They sit **on** the floor rather than **in** it."*
+> *"Give the cracks physical consequence: widen them at the mid-span, drop the slab a value on one
+> side, and **spall the mortar where a crack meets a joint**."*
+
+**Not done in this session, deliberately.** The bound was one integration and one seat check, and
+both are spent. Making the change now would put in front of the human gate a state no critic has
+seen — which is the failure §1.1.1 exists to prevent, in the other direction. The walk build is
+therefore **exactly what round 9's seat looked at**, and Rafe's eye is the next instrument under
+the three-outcome rule.
+
+### The rest of round 9, for the record
+
+- **Q2 is still directionally silent** — expected, and no longer a defect at this gate: Ruling 70
+  removed the channel from scope.
+- *"Put texture inside the slab faces — 2–3 value steps of grain or pitting per face"*. The grain
+  is there and is world-addressed; at the delivered contrast it is not reading as grain. A real
+  finding for the next round, not a regression.
+- *"Break the courses… so the eye can cross the room instead of riding stripes"* — the corner
+  theorem again (§8.3.3), independently found for the second round running, and now ruled
+  permanent.
+- **Q6: YES it would ship; merely competent.** Five for five across three rounds.
+
+---
+
 ## 7. On the record for ruling
 
 ### (a) The corner theorem constrains the ART, permanently, and should be written down
