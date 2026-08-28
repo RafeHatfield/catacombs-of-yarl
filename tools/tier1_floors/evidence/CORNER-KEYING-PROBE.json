@@ -1,0 +1,43 @@
+{
+ "commit": "d1840977246cc80d6510e31947a28e063278c2d0",
+ "keying": {
+  "stones": 147,
+  "stones_over_64px": 77,
+  "corners_checked": 49,
+  "stones_with_exactly_one_corner": 43,
+  "stones_with_no_corner": 31,
+  "stones_with_multiple_corners": 3,
+  "max_corners_in_a_stone": 2,
+  "corners_claimed_by_multiple_stones": 0
+ },
+ "occlusion": {
+  "n": 21,
+  "additive_contrast_retained": 1.0,
+  "replacement_contrast_retained": 0.0
+ },
+ "ladder": {
+  "ladder_step": 13.23,
+  "lo": 75.0,
+  "hi": 154.4,
+  "rows": [
+   {
+    "steps": 1,
+    "offset": 13.23,
+    "clip_low_pct": 17.02,
+    "clip_high_pct": 0.66
+   },
+   {
+    "steps": 2,
+    "offset": 26.45,
+    "clip_low_pct": 17.02,
+    "clip_high_pct": 0.66
+   },
+   {
+    "steps": 3,
+    "offset": 39.68,
+    "clip_low_pct": 62.73,
+    "clip_high_pct": 37.27
+   }
+  ]
+ }
+}
