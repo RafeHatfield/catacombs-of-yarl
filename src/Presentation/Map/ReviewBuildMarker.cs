@@ -42,6 +42,16 @@ public sealed class ReviewBuildMarker
     public string? FloorOverlays { get; private init; }
 
     /// <summary>
+    /// The commit the build was made from, and when — stamped into the marker by
+    /// build_review_app.sh. LOOP-PROCESS §2.3: evidence carries its producer's hash, and a
+    /// hash mismatch at a ruling invalidates the evidence. Headless captures have always
+    /// stamped their commit; the DEVICE BUILD did not, so the one artefact that decides
+    /// anything (§13.1) was the one that could not say what it was made from.
+    /// </summary>
+    public string? Commit { get; private init; }
+    public string? BuiltAt { get; private init; }
+
+    /// <summary>
     /// Tile size and integer scale for the review build, mirroring --tile-size / --tile-scale.
     ///
     /// These exist for the same reason the light values do, and the omission would have been
@@ -96,6 +106,8 @@ public sealed class ReviewBuildMarker
                     RadiusTiles: (float)light.GetProperty("radiusTiles").GetDouble()),
                 FloorOverlays = root.TryGetProperty("floorOverlays", out var fo)
                             ? fo.GetString() : null,
+                Commit  = root.TryGetProperty("commit",  out var cm) ? cm.GetString() : null,
+                BuiltAt = root.TryGetProperty("builtAt", out var ba) ? ba.GetString() : null,
                 TileSize  = root.TryGetProperty("tileSize", out var ts)
                             ? ts.GetInt32() : (int?)null,
                 TileScale = root.TryGetProperty("tileScale", out var sc)
