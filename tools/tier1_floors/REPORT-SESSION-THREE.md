@@ -397,8 +397,42 @@ is the live half of the cull the family cannot answer.
   `416f105c`.
 - Round 7 seats — running on `scene_ashlar_r7.png` (sha `69008da5…`) and
   `scene_ashlar_plant_r7.png` (sha `aa878a77…`).
-- Device — `TIER1_ASHLAR` knob exists and the family has **not** yet been verified on the handset.
-  Nothing here has been to the device, and nothing here is claimed to have passed a gate.
+- Device — `TIER1_ASHLAR` knob exists and the family has **not** been to the handset. Nothing here
+  has been to the device and nothing here is claimed to have passed a gate. The device leg is one
+  command with the phone unlocked:
+
+  ```
+  TIER0_SCENE=res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json \
+  TIER0_THEME=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml \
+  TIER1_OVERLAYS=res://src/Presentation/assets/tier1_floors/MANIFEST.json \
+  TIER1_ASHLAR=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json \
+  tools/tier0_harness/build_review_app.sh
+
+  tools/tier0_harness/verify_on_device.sh
+  ```
+
+  **All four environment variables are load-bearing.** Omit `TIER1_ASHLAR` and the phone shows the magenta
+  placeholder, which is the point of its being magenta. Omit `TIER1_OVERLAYS` and the incident
+  disappears. Read the painter's line back off the device log before believing anything: it must
+  say `laid=…  missing=0  edge_check=…/OK  stone_check=…/OK`.
+
+### Reproducing everything in this report
+
+```
+python3 tools/tier1_floors/compose_ashlar.py          # 625 atlases + the grain bank
+python3 tools/tier1_floors/plant_ashlar.py            # LOOP-PROCESS §4's plant
+python3 tools/tier1_floors/export_theme_ashlar.py --plant
+python3 tools/tier1_floors/field_ashlar.py --plants   # 7 plants, then the field
+python3 tools/tier1_floors/probe_stone_address.py     # the K ruling
+python3 tools/tier1_floors/verify_atlas_path.py --plants   # tool vs shipped asset
+python3 tools/tier1_floors/measure_overlay_legibility.py   # needs both captures
+
+dotnet build CatacombsOfYarl.Presentation.csproj      # ⚠ THE ROOT ONE
+/Applications/Godot_mono.app/Contents/MacOS/Godot --headless --path . --import   # ⚠ ROOT PATH
+```
+
+⚠ **Both of those warnings are load-bearing** — see §5. Building
+`src/Presentation/CatacombsOfYarl.Presentation.csproj` succeeds and changes nothing Godot runs.
 
 **A round's evidence must not move under it.** Round 3 was left running while the family was
 rebuilt and its capture overwritten in place, so the seats still queued would have judged a
