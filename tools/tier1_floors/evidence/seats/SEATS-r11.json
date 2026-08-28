@@ -1,0 +1,102 @@
+{
+ "round": 11,
+ "commit": "b3fe0194211c239c58ead565cfbaa3dcfaa14d3c",
+ "seats": {
+  "F1": {
+   "Q1": "Cut sandstone flagging \u2014 dry laid rectangular slabs in courses, with recessed dark joints.",
+   "Q1_WHY": "The slabs are hard-edged rectangles with a consistent 2\u20133px darker gutter between them, laid in unbroken horizontal courses of varying height (measured joint spacing: 25, 30, 40, 21, 27, 35, 30, 31, 20, 40, 41 px) with staggered vertical joints. That's masonry, not poured, not packed earth, not rock. The material is warm mid-brown throughout. I can name it, but only from the shape of the pieces \u2014 the faces themselves don't tell me what the stone is.",
+   "Q2": "South, down the narrow corridor mouth at roughly x 385\u2013430, y 400\u2013480. **Nothing about the ground influenced that.** I picked it off the gap in the wall.\n\nI looked for a reason on the floor and didn't find one. The floor north of the figure, the floor west toward the dark at x<190, and the floor south toward the corridor are indistinguishable \u2014 same slab sizes, same joint width, same mark density, same colour. The closest thing to a directional cue is the set of long hairlines in the lower third that converge near (420, 370), which is roughly the corridor mouth \u2014 but they read as drawn lines rather than as stress, so I didn't trust it and it isn't what moved me.",
+   "Q3": "It is evenly and mildly scuffed everywhere, and nothing in particular has happened to it anywhere. There is no threshold wear, no traffic lane, no corner that took a beating, no spill, no stain, no repair, no missing slab, no debris. Nothing has been dragged across it, dropped on it, or fixed on it. It has been scratched at a constant rate over its entire area, which is not how floors get used.",
+   "Q3_WHY": "With the torch gradient divided out, mark coverage measures **0.358 of the surface, and every 25\u00d725px block across the floor sits between roughly 0.30 and 0.45.** That variance is noise, not structure. The one slab that is nearly clean \u2014 the wide slab at (455\u2013530, 218\u2013248), coverage 0.04 \u2014 is clean by accident, not because anything in the scene explains it.\n\nSecond reading: the entire floor is **one hue.** Sampling lit pixels across x 195\u2013625, y 10\u2013395, hue runs 27.4\u00b0\u201329.4\u00b0 at the 5th/95th percentile \u2014 a 2-degree spread \u2014 with saturation 0.51\u20130.57. Value is the only channel doing any work, and value is dominated by the torch falloff. There is no mineral variation, no damp, no salt bloom, no soot, no rust from the pins, no discolouration of any kind. For a filing system for souls in continuous heavy use, nothing has been spilled here.\n\nThird: there are darker slabs \u2014 (490\u2013620, 205\u2013265), (268\u2013318, 78\u2013112), (196\u2013262, 300\u2013332) \u2014 but they're the same hue at the same saturation, only darker. They read as a value knob, not as a different material, a wet patch, or a hole.",
+   "Q4": "Yes. The **\u00b145\u00b0 diagonal hatch bundle.** It is on nearly every slab in the image and it is always at exactly 45\u00b0. Clearest examples: (200\u2013235, 30\u201360), (330\u2013360, 55\u201385), (415\u2013445, 25\u201355), (555\u2013590, 95\u2013125), (245\u2013275, 195\u2013225), (480\u2013520, 300\u2013335). Once you see it you see it on every slab, and it stops being scratches and becomes a stamp.\n\nThere are only three marks on this entire floor: the 45\u00b0 hatch bundle, a run of 1px horizontal dashes, and a set of short vertical tally strokes. A gradient-orientation histogram over the flattened floor confirms it \u2014 the marks are quantized to 0\u00b0, 90\u00b0 and \u00b145\u00b0, with spikes of 14,920 / 19,235 / 6,396 / 6,414 counts at those angles against a flat background of ~900 everywhere else. **There is nothing on this floor at 20\u00b0, or 65\u00b0, or 110\u00b0.** Real scratching lands at arbitrary angles. This lands on three.\n\nSecond thing the eye returns to: the horizontal joints run edge to edge, uninterrupted, across the full width of the room. The courses never break, never wander, never get patched around.",
+   "Q5": "**Repeated** \u2014 though not in the way that phrase usually means. I checked: there is no literal tiling. 36,539 sampled 10\u00d710 patches yielded 36,523 unique, and autocorrelation out to 200px shows no periodic peak. Every slab is independently generated.\n\nBut the *motif* repeats, and that's what the eye reads. Three stamps, three angles, one hue, one density, applied uniformly to a few hundred slabs. Procedural variation without variety. The generator has run everywhere and decided nothing.",
+   "Q6": "**YES.** It is clean, readable, consistently lit, and the slab layout is well proportioned.\n\nSeparately: **merely competent.** It is not genuinely good. Good would mean the floor told me something \u2014 where people walk, what leaked, what got repaired, which way is out. This floor withholds all of it and is pleasant to look at while doing so.",
+   "Q7": "Legible at 1:1:\n- The slab outlines and the joint grid. Layout reads instantly.\n- The lighting falloff, which is smooth and radially symmetric.\n- The darker slabs at (490\u2013620, 205\u2013265) and (196\u2013262, 300\u2013332), as value blocks.\n- Three or four long hairlines in the lower third, y \u2248 300\u2013395, crossing several slabs. These are the only things on a slab face that resolve as a *thing* at 1:1.\n- On the faces themselves: an even grain. I can tell something is there. I cannot tell what.\n\nOnly on magnification:\n- That the grain is diagonal hatching, horizontal dashes and vertical tallies \u2014 three distinct marks.\n- That the hatching is at exactly 45\u00b0.\n- The small light-orange blob at (487, 232), which at 1:1 is a lighting artefact and at 5\u00d7 is a discrete object.\n- That the long hairlines are 1px stepped polylines that cross the mortar joints without any width change, branching, or spalling at the slab edge.\n\n**The faces are effectively blank at 1:1.** They carry tone, not information. Everything I described in Q3 and Q4 required magnification and a flattening pass \u2014 that is hunting, and I'm counting it as hunting.",
+   "Q7_WHY": "Checked at 1:1 in the 450\u00d7400 crop (185,0)\u2013(635,400): upper-left field (195,10)\u2013(430,150); the area around the figure (300,140)\u2013(480,240); the lower floor (250,290)\u2013(500,395); the dark band (490,205)\u2013(620,265). Magnified: (190,10)\u2013(430,250) and (390,150)\u2013(630,390) at 3\u00d7; (300,280)\u2013(480,400) and (430,180)\u2013(560,280) at 5\u00d7; plus the full floor lighting-flattened at 2\u00d7.",
+   "CULL": "Every mark sits at 0\u00b0, 45\u00b0 or 90\u00b0 at uniform density \u2014 reads as texture, not as history.",
+   "FLIP LIST": "- Break the angle quantization: no mark at exactly 45\u00b0. Scratches at 12\u00b0, 31\u00b0, 68\u00b0, 103\u00b0, varying length and weight.\n- Vary damage density by location, not per-slab-randomly \u2014 a worn lane running from the north opening to the south corridor mouth at 2\u20133\u00d7 surrounding density, with slab faces near the room's dead corners left almost clean.\n- Add hue variation. At least three material states in the 15\u00b0\u201345\u00b0 range plus one desaturated cool contaminant \u2014 damp, salt bloom, soot \u2014 so value is not the only channel carrying the surface.\n- Put at least one orc repair on the walkable ground: a driven pin with rust bleed, a salvaged timber board over a gap, a rope-lashed slab. Currently the floor shows four hundred years of holding a line and zero evidence of it.\n- Make the cracks fracture rather than draw \u2014 variable width, one branch, a chipped edge or a displaced slab corner where they cross a joint at (330\u2013470, 300\u2013395).\n\n---\n\n*Model: Claude Opus 5 (1M context)*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Break the angle quantization: no mark at exactly 45\u00b0. Scratches at 12\u00b0, 31\u00b0, 68\u00b0, 103\u00b0, varying length and weight.",
+    "Vary damage density by location, not per-slab-randomly \u2014 a worn lane running from the north opening to the south corridor mouth at 2\u20133\u00d7 surrounding density, with slab faces near the room's dead corners left almost clean.",
+    "Add hue variation. At least three material states in the 15\u00b0\u201345\u00b0 range plus one desaturated cool contaminant \u2014 damp, salt bloom, soot \u2014 so value is not the only channel carrying the surface.",
+    "Put at least one orc repair on the walkable ground: a driven pin with rust bleed, a salvaged timber board over a gap, a rope-lashed slab. Currently the floor shows four hundred years of holding a line and zero evidence of it.",
+    "Make the cracks fracture rather than draw \u2014 variable width, one branch, a chipped edge or a displaced slab corner where they cross a joint at (330\u2013470, 300\u2013395)."
+   ],
+   "mapping": {
+    "A": "scene_ashlar_r11.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r11_F1_transcript.txt"
+  },
+  "F2": {
+   "Q1": "Cut stone slabs \u2014 rectangular flagstones laid in rough courses, unmortared or with the mortar long gone.",
+   "Q1_WHY": "The floor is divided into horizontal courses about 24 px tall (row joints at y \u2248 12, 40, 64, 88, 112 \u2026) with slabs of varying width offset course-to-course in a running bond. The joints are dark recessed lines, not drawn lines \u2014 they read as gaps. At 4\u00d7 on the region around the figure (330\u2013530, 120\u2013270) the slab faces carry diagonal chisel-hatching and rows of short horizontal dashes, which is tooled stone, not brick or tile. There is nothing else on the ground anywhere: I sampled the whole floor region (182\u2013628, 14\u2013396) and hue sits at 24\u201329\u00b0 for the 5th\u201395th percentile, saturation 0.26\u20130.40. One material, one hue, unbroken from the room out into the south corridor.",
+   "Q2": "South, down the corridor at x \u2248 300\u2013450 below y = 398.\n\nNothing about the ground influenced that, and I want to be exact about it: I picked it from the *layout* \u2014 the corridor is the only narrow, obviously-authored exit. I went back and looked for a ground reason and found none. There is no wear path, no polish where feet have gone, no dirt or debris drift against the walls, no drag marks, no direction of any kind. The slab courses run east-west uniformly across the entire room and do not steer. I did notice the patch at roughly (430\u2013560, 120\u2013260) is the one sizeable area with no holes in it, but that reads as scatter randomness, not as a cleared route, so I did not act on it.\n\nTreat this as the random answer.",
+   "Q3": "It has been punched through in about eighteen places and cracked across, and that is the whole story. No traffic, no repair, no accumulation, no staining, no subsidence. It is uniformly damaged everywhere at once and equally damaged at every point \u2014 the middle of the room is in the same condition as the corners.",
+   "Q3_WHY": "I isolated the dark blobs by threshold and connected components. Within the floor there are ~18 holes, centres at approximately (336,46), (455,49), (395,95), (277,111), (189,113), (211,157), (331,159), (580,182), (603,217), (393,227), (332,289), (391,309), (411,357), (469,367), (307,383), (443,393), (515,391). They are all the same size class \u2014 bounding boxes 14\u201324 px wide, 16\u201322 px tall, areas 152\u2013284 px. Spacing is roughly even across the entire room: one hole per ~13 slabs, no clustering, no bare stretches, no dense stretches.\n\nThe cracks are real and better: several run continuously across multiple slabs and ignore the joints \u2014 the long one through (430\u2013560, 280\u2013330) crosses four slabs without breaking. That is authored, not per-tile.\n\nWhat is absent: the orcs repair endlessly with rope, driven pins, hide and salvaged timber, and there is not one repair on this floor. Eighteen holes, zero patches, zero pins, zero planks. I checked for it directly \u2014 the hue lock above means there is no second material anywhere on the ground to be a repair with.",
+   "Q4": "Yes. The black holes.\n\nThey are the first thing I saw, the thing I counted, and the thing I had to deliberately look past to see the stone at all. Eighteen ragged black lumps at the coordinates listed above, each with a bright rim on its upper-left. I compared them pixelwise: (455,49) against (211,157) \u2014 same 20\u00d722 bounding box, same 268 px area, 0.88 pixel agreement, 0.72 IoU. Same silhouette family, slightly varied. They read as one brush stamped eighteen times, evenly distributed by a scatter pass with the density set too high and no clustering rule.\n\nSecondary, weaker: the pale hairline marks. Every one of them is the same colour \u2014 ~(186,132,81) \u2014 and 2 px wide (2 304 of 3 800 horizontal runs are exactly 2 px). One value, one width, everywhere from the lit centre to the dim corners, which is why they start to feel like a single decal set rather than damage.",
+   "Q5": "Made.\n\nI tested for repetition rather than eyeballing it. High-pass autocorrelation across the floor region shows no periodic peak at any offset \u2265 4 px \u2014 the best candidates are 0.115 at dx=24 and 0.111 at dx=25, which is noise. Then I template-matched sixty 20\u00d720 patches against the whole floor: median best match 0.55, top 0.87, and when I rendered the top pairs side by side \u2014 (182,238) vs (273,238), (532,154) vs (595,154) \u2014 they are visibly different stone. The correlation was coming from the shared course structure, not copied content. Slab widths genuinely vary; face detail genuinely varies.\n\nThe layout was made. The holes were repeated. Those are different passes and it shows.",
+   "Q6": "YES.\n\nMerely competent. The bond pattern, the cross-slab cracks and the light falloff are all done properly and I would not stop on any of them in a shipped product. But it does not tell me anything. It is a well-built generic dungeon flagstone that would sit unchanged in any of a hundred games \u2014 there is nothing in the ground that says *administered*, nothing that says *four hundred years of a held line*, nothing that says *in continuous heavy use and never once cared for*. The one element that gestures at the fiction \u2014 the rows of dashes on the slab faces, which could be a register, names, a tally \u2014 is invisible at the size the game is played. Competent, not good.",
+   "Q7": "Legible at 1:1:\n- The joints between slabs. Unambiguous everywhere.\n- The holes. Unmissable.\n- The pale 2 px hairlines. After the figure, the highest-contrast thing in frame.\n- The light falloff.\n\nOn the face of the material at 1:1 \u2014 within roughly 120 px of the torch, a mottled grain and a hint of horizontal striation. I could see *something was there*. I could not resolve it into anything. Beyond that radius, the faces are blank.\n\nThat is measured, not impressionistic. High-pass grain by distance from the figure at (405,180): std 22\u201323 at r = 30\u201390, 17 at r = 90\u2013150, 12 at r = 150\u2013180, 10 at r = 180\u2013210, 7.5 at r = 210\u2013240, 5.9 beyond. Below about std 10 on a mean luminance of 45 there is nothing a phone will show. That threshold falls at roughly r = 180, which means **over half the visible floor has no surface on it at all \u2014 it is a value, not a material.**\n\nOnly under 4\u00d7 magnification: the diagonal chisel-hatching, and the rows of short horizontal dashes clustered on individual slabs \u2014 the one detail with any fiction in it. I had to hunt for those. They do not count as seen.",
+   "Q7_WHY": "Checked at 1:1 \u2014 (440\u2013470, 130\u2013150) lit faces right of the figure, grain std 21.1 on mean lum 117; (250\u2013300, 60\u201380) upper-left mid-lit, std 8.3 on mean 61; (540\u2013600, 250\u2013290) dim lower-right, std 7.0 on mean 49; (300\u2013450, 400\u2013520) the south corridor, effectively featureless.\nMagnified 4\u00d7 before content resolved \u2014 (330\u2013530, 120\u2013270), (185\u2013385, 15\u2013165), (430\u2013630, 240\u2013390).",
+   "CULL": "Eighteen near-identical black holes stamped evenly across it, and not one repair anywhere \u2014 reads procedural.",
+   "FLIP LIST": "- Cut the holes from eighteen to four or five, redraw each one individually, and cluster them where the fiction puts stress \u2014 against walls, at the corridor mouth \u2014 instead of spreading them evenly.\n- Put orc repair on the ground: two or three of the remaining holes bridged with salvaged timber laid across and driven pins, in grey or bleached-wood value against the brown, so a second material breaks the single-hue lock at 24\u201329\u00b0.\n- Wear the walked line. Polish the slabs along the room-to-corridor route to a lighter, smoother value and let grime build in the joints away from it, so the ground answers Q2 by itself.\n- Raise face-detail contrast in the outer field so the grain still reads at r > 180 px where it currently measures std 7 \u2014 the material must survive the falloff, not vanish into it.\n- Give the pale hairlines depth and variety: a dark inner line under the ~(186,132,81) highlight, and widths other than 2 px, so they read as fissures in stone rather than as one decal reused.\n\n---\n\nModel: Claude Opus 5 (1M context).\n\nWorth watching next: the two defects that matter here \u2014 scatter density and the absence of repair \u2014 are both pipeline decisions, not drawing problems. Fixing the drawing won't fix them.",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Cut the holes from eighteen to four or five, redraw each one individually, and cluster them where the fiction puts stress \u2014 against walls, at the corridor mouth \u2014 instead of spreading them evenly.",
+    "Put orc repair on the ground: two or three of the remaining holes bridged with salvaged timber laid across and driven pins, in grey or bleached-wood value against the brown, so a second material breaks the single-hue lock at 24\u201329\u00b0.",
+    "Wear the walked line. Polish the slabs along the room-to-corridor route to a lighter, smoother value and let grime build in the joints away from it, so the ground answers Q2 by itself.",
+    "Raise face-detail contrast in the outer field so the grain still reads at r > 180 px where it currently measures std 7 \u2014 the material must survive the falloff, not vanish into it.",
+    "Give the pale hairlines depth and variety: a dark inner line under the ~(186,132,81) highlight, and widths other than 2 px, so they read as fissures in stone rather than as one decal reused."
+   ],
+   "mapping": {
+    "A": "scene_ashlar_plant_r11.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r11_F2_transcript.txt",
+   "plant_caught": true,
+   "plant_words_hit": [
+    "hole"
+   ]
+  }
+ },
+ "captures": {
+  "scene_ashlar_plant_r11.png": "61d811fb24779544489087a7ff5fec3f82175e1ef054f42329d51a13a7180bf9",
+  "scene_ashlar_r11.png": "c870a1b9727717b03d50e1035ebc809a6b622af7ee0501198e813be1ac25fd2d"
+ },
+ "plant_seat": "F2",
+ "round_void": false,
+ "plant_words_declared": [
+  "hole",
+  "void",
+  "collaps",
+  "cave",
+  "punct",
+  "crater",
+  "web",
+  "strand",
+  "silk",
+  "ruin",
+  "rubble",
+  "moss",
+  "lichen",
+  "overgrown",
+  "derelict"
+ ],
+ "law": "LOOP-PROCESS \u00a74: if the critic does not catch the plant, the round is VOID and its findings are not read."
+}

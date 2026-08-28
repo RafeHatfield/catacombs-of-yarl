@@ -1,0 +1,79 @@
+Read the image, then measured it — palette, autocorrelation, blob shapes, and grain contrast by radius. Findings below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone slabs — rectangular flagstones laid in rough courses, unmortared or with the mortar long gone.
+
+**Q1_WHY:**
+The floor is divided into horizontal courses about 24 px tall (row joints at y ≈ 12, 40, 64, 88, 112 …) with slabs of varying width offset course-to-course in a running bond. The joints are dark recessed lines, not drawn lines — they read as gaps. At 4× on the region around the figure (330–530, 120–270) the slab faces carry diagonal chisel-hatching and rows of short horizontal dashes, which is tooled stone, not brick or tile. There is nothing else on the ground anywhere: I sampled the whole floor region (182–628, 14–396) and hue sits at 24–29° for the 5th–95th percentile, saturation 0.26–0.40. One material, one hue, unbroken from the room out into the south corridor.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x ≈ 300–450 below y = 398.
+
+Nothing about the ground influenced that, and I want to be exact about it: I picked it from the *layout* — the corridor is the only narrow, obviously-authored exit. I went back and looked for a ground reason and found none. There is no wear path, no polish where feet have gone, no dirt or debris drift against the walls, no drag marks, no direction of any kind. The slab courses run east-west uniformly across the entire room and do not steer. I did notice the patch at roughly (430–560, 120–260) is the one sizeable area with no holes in it, but that reads as scatter randomness, not as a cleared route, so I did not act on it.
+
+Treat this as the random answer.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been punched through in about eighteen places and cracked across, and that is the whole story. No traffic, no repair, no accumulation, no staining, no subsidence. It is uniformly damaged everywhere at once and equally damaged at every point — the middle of the room is in the same condition as the corners.
+
+**Q3_WHY:**
+I isolated the dark blobs by threshold and connected components. Within the floor there are ~18 holes, centres at approximately (336,46), (455,49), (395,95), (277,111), (189,113), (211,157), (331,159), (580,182), (603,217), (393,227), (332,289), (391,309), (411,357), (469,367), (307,383), (443,393), (515,391). They are all the same size class — bounding boxes 14–24 px wide, 16–22 px tall, areas 152–284 px. Spacing is roughly even across the entire room: one hole per ~13 slabs, no clustering, no bare stretches, no dense stretches.
+
+The cracks are real and better: several run continuously across multiple slabs and ignore the joints — the long one through (430–560, 280–330) crosses four slabs without breaking. That is authored, not per-tile.
+
+What is absent: the orcs repair endlessly with rope, driven pins, hide and salvaged timber, and there is not one repair on this floor. Eighteen holes, zero patches, zero pins, zero planks. I checked for it directly — the hue lock above means there is no second material anywhere on the ground to be a repair with.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes. The black holes.
+
+They are the first thing I saw, the thing I counted, and the thing I had to deliberately look past to see the stone at all. Eighteen ragged black lumps at the coordinates listed above, each with a bright rim on its upper-left. I compared them pixelwise: (455,49) against (211,157) — same 20×22 bounding box, same 268 px area, 0.88 pixel agreement, 0.72 IoU. Same silhouette family, slightly varied. They read as one brush stamped eighteen times, evenly distributed by a scatter pass with the density set too high and no clustering rule.
+
+Secondary, weaker: the pale hairline marks. Every one of them is the same colour — ~(186,132,81) — and 2 px wide (2 304 of 3 800 horizontal runs are exactly 2 px). One value, one width, everywhere from the lit centre to the dim corners, which is why they start to feel like a single decal set rather than damage.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+Made.
+
+I tested for repetition rather than eyeballing it. High-pass autocorrelation across the floor region shows no periodic peak at any offset ≥ 4 px — the best candidates are 0.115 at dx=24 and 0.111 at dx=25, which is noise. Then I template-matched sixty 20×20 patches against the whole floor: median best match 0.55, top 0.87, and when I rendered the top pairs side by side — (182,238) vs (273,238), (532,154) vs (595,154) — they are visibly different stone. The correlation was coming from the shared course structure, not copied content. Slab widths genuinely vary; face detail genuinely varies.
+
+The layout was made. The holes were repeated. Those are different passes and it shows.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The bond pattern, the cross-slab cracks and the light falloff are all done properly and I would not stop on any of them in a shipped product. But it does not tell me anything. It is a well-built generic dungeon flagstone that would sit unchanged in any of a hundred games — there is nothing in the ground that says *administered*, nothing that says *four hundred years of a held line*, nothing that says *in continuous heavy use and never once cared for*. The one element that gestures at the fiction — the rows of dashes on the slab faces, which could be a register, names, a tally — is invisible at the size the game is played. Competent, not good.
+
+**Q7: AT THE SIZE SHOWN, WITHOUT ZOOMING IN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1:
+- The joints between slabs. Unambiguous everywhere.
+- The holes. Unmissable.
+- The pale 2 px hairlines. After the figure, the highest-contrast thing in frame.
+- The light falloff.
+
+On the face of the material at 1:1 — within roughly 120 px of the torch, a mottled grain and a hint of horizontal striation. I could see *something was there*. I could not resolve it into anything. Beyond that radius, the faces are blank.
+
+That is measured, not impressionistic. High-pass grain by distance from the figure at (405,180): std 22–23 at r = 30–90, 17 at r = 90–150, 12 at r = 150–180, 10 at r = 180–210, 7.5 at r = 210–240, 5.9 beyond. Below about std 10 on a mean luminance of 45 there is nothing a phone will show. That threshold falls at roughly r = 180, which means **over half the visible floor has no surface on it at all — it is a value, not a material.**
+
+Only under 4× magnification: the diagonal chisel-hatching, and the rows of short horizontal dashes clustered on individual slabs — the one detail with any fiction in it. I had to hunt for those. They do not count as seen.
+
+**Q7_WHY:**
+Checked at 1:1 — (440–470, 130–150) lit faces right of the figure, grain std 21.1 on mean lum 117; (250–300, 60–80) upper-left mid-lit, std 8.3 on mean 61; (540–600, 250–290) dim lower-right, std 7.0 on mean 49; (300–450, 400–520) the south corridor, effectively featureless.
+Magnified 4× before content resolved — (330–530, 120–270), (185–385, 15–165), (430–630, 240–390).
+
+**CULL:**
+Eighteen near-identical black holes stamped evenly across it, and not one repair anywhere — reads procedural.
+
+**FLIP LIST**
+- Cut the holes from eighteen to four or five, redraw each one individually, and cluster them where the fiction puts stress — against walls, at the corridor mouth — instead of spreading them evenly.
+- Put orc repair on the ground: two or three of the remaining holes bridged with salvaged timber laid across and driven pins, in grey or bleached-wood value against the brown, so a second material breaks the single-hue lock at 24–29°.
+- Wear the walked line. Polish the slabs along the room-to-corridor route to a lighter, smoother value and let grime build in the joints away from it, so the ground answers Q2 by itself.
+- Raise face-detail contrast in the outer field so the grain still reads at r > 180 px where it currently measures std 7 — the material must survive the falloff, not vanish into it.
+- Give the pale hairlines depth and variety: a dark inner line under the ~(186,132,81) highlight, and widths other than 2 px, so they read as fissures in stone rather than as one decal reused.
+
+---
+
+Model: Claude Opus 5 (1M context).
+
+Worth watching next: the two defects that matter here — scatter density and the absence of repair — are both pipeline decisions, not drawing problems. Fixing the drawing won't fix them.

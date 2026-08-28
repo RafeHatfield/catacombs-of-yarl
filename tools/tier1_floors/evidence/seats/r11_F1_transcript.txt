@@ -1,0 +1,71 @@
+Read the image at 750×600, then at 3× and 5× on specific floor regions, plus a lighting-flattened pass to separate albedo from the torch gradient.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut sandstone flagging — dry laid rectangular slabs in courses, with recessed dark joints.
+
+**Q1_WHY:** The slabs are hard-edged rectangles with a consistent 2–3px darker gutter between them, laid in unbroken horizontal courses of varying height (measured joint spacing: 25, 30, 40, 21, 27, 35, 30, 31, 20, 40, 41 px) with staggered vertical joints. That's masonry, not poured, not packed earth, not rock. The material is warm mid-brown throughout. I can name it, but only from the shape of the pieces — the faces themselves don't tell me what the stone is.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the narrow corridor mouth at roughly x 385–430, y 400–480. **Nothing about the ground influenced that.** I picked it off the gap in the wall.
+
+I looked for a reason on the floor and didn't find one. The floor north of the figure, the floor west toward the dark at x<190, and the floor south toward the corridor are indistinguishable — same slab sizes, same joint width, same mark density, same colour. The closest thing to a directional cue is the set of long hairlines in the lower third that converge near (420, 370), which is roughly the corridor mouth — but they read as drawn lines rather than as stress, so I didn't trust it and it isn't what moved me.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It is evenly and mildly scuffed everywhere, and nothing in particular has happened to it anywhere. There is no threshold wear, no traffic lane, no corner that took a beating, no spill, no stain, no repair, no missing slab, no debris. Nothing has been dragged across it, dropped on it, or fixed on it. It has been scratched at a constant rate over its entire area, which is not how floors get used.
+
+**Q3_WHY:** With the torch gradient divided out, mark coverage measures **0.358 of the surface, and every 25×25px block across the floor sits between roughly 0.30 and 0.45.** That variance is noise, not structure. The one slab that is nearly clean — the wide slab at (455–530, 218–248), coverage 0.04 — is clean by accident, not because anything in the scene explains it.
+
+Second reading: the entire floor is **one hue.** Sampling lit pixels across x 195–625, y 10–395, hue runs 27.4°–29.4° at the 5th/95th percentile — a 2-degree spread — with saturation 0.51–0.57. Value is the only channel doing any work, and value is dominated by the torch falloff. There is no mineral variation, no damp, no salt bloom, no soot, no rust from the pins, no discolouration of any kind. For a filing system for souls in continuous heavy use, nothing has been spilled here.
+
+Third: there are darker slabs — (490–620, 205–265), (268–318, 78–112), (196–262, 300–332) — but they're the same hue at the same saturation, only darker. They read as a value knob, not as a different material, a wet patch, or a hole.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes. The **±45° diagonal hatch bundle.** It is on nearly every slab in the image and it is always at exactly 45°. Clearest examples: (200–235, 30–60), (330–360, 55–85), (415–445, 25–55), (555–590, 95–125), (245–275, 195–225), (480–520, 300–335). Once you see it you see it on every slab, and it stops being scratches and becomes a stamp.
+
+There are only three marks on this entire floor: the 45° hatch bundle, a run of 1px horizontal dashes, and a set of short vertical tally strokes. A gradient-orientation histogram over the flattened floor confirms it — the marks are quantized to 0°, 90° and ±45°, with spikes of 14,920 / 19,235 / 6,396 / 6,414 counts at those angles against a flat background of ~900 everywhere else. **There is nothing on this floor at 20°, or 65°, or 110°.** Real scratching lands at arbitrary angles. This lands on three.
+
+Second thing the eye returns to: the horizontal joints run edge to edge, uninterrupted, across the full width of the room. The courses never break, never wander, never get patched around.
+
+**Q5: MADE, OR REPEATED?**
+**Repeated** — though not in the way that phrase usually means. I checked: there is no literal tiling. 36,539 sampled 10×10 patches yielded 36,523 unique, and autocorrelation out to 200px shows no periodic peak. Every slab is independently generated.
+
+But the *motif* repeats, and that's what the eye reads. Three stamps, three angles, one hue, one density, applied uniformly to a few hundred slabs. Procedural variation without variety. The generator has run everywhere and decided nothing.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It is clean, readable, consistently lit, and the slab layout is well proportioned.
+
+Separately: **merely competent.** It is not genuinely good. Good would mean the floor told me something — where people walk, what leaked, what got repaired, which way is out. This floor withholds all of it and is pleasant to look at while doing so.
+
+**Q7: WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF AT 1:1?**
+
+Legible at 1:1:
+- The slab outlines and the joint grid. Layout reads instantly.
+- The lighting falloff, which is smooth and radially symmetric.
+- The darker slabs at (490–620, 205–265) and (196–262, 300–332), as value blocks.
+- Three or four long hairlines in the lower third, y ≈ 300–395, crossing several slabs. These are the only things on a slab face that resolve as a *thing* at 1:1.
+- On the faces themselves: an even grain. I can tell something is there. I cannot tell what.
+
+Only on magnification:
+- That the grain is diagonal hatching, horizontal dashes and vertical tallies — three distinct marks.
+- That the hatching is at exactly 45°.
+- The small light-orange blob at (487, 232), which at 1:1 is a lighting artefact and at 5× is a discrete object.
+- That the long hairlines are 1px stepped polylines that cross the mortar joints without any width change, branching, or spalling at the slab edge.
+
+**The faces are effectively blank at 1:1.** They carry tone, not information. Everything I described in Q3 and Q4 required magnification and a flattening pass — that is hunting, and I'm counting it as hunting.
+
+**Q7_WHY:** Checked at 1:1 in the 450×400 crop (185,0)–(635,400): upper-left field (195,10)–(430,150); the area around the figure (300,140)–(480,240); the lower floor (250,290)–(500,395); the dark band (490,205)–(620,265). Magnified: (190,10)–(430,250) and (390,150)–(630,390) at 3×; (300,280)–(480,400) and (430,180)–(560,280) at 5×; plus the full floor lighting-flattened at 2×.
+
+**CULL:** Every mark sits at 0°, 45° or 90° at uniform density — reads as texture, not as history.
+
+**FLIP LIST**
+- Break the angle quantization: no mark at exactly 45°. Scratches at 12°, 31°, 68°, 103°, varying length and weight.
+- Vary damage density by location, not per-slab-randomly — a worn lane running from the north opening to the south corridor mouth at 2–3× surrounding density, with slab faces near the room's dead corners left almost clean.
+- Add hue variation. At least three material states in the 15°–45° range plus one desaturated cool contaminant — damp, salt bloom, soot — so value is not the only channel carrying the surface.
+- Put at least one orc repair on the walkable ground: a driven pin with rust bleed, a salvaged timber board over a gap, a rope-lashed slab. Currently the floor shows four hundred years of holding a line and zero evidence of it.
+- Make the cracks fracture rather than draw — variable width, one branch, a chipped edge or a displaced slab corner where they cross a joint at (330–470, 300–395).
+
+---
+
+*Model: Claude Opus 5 (1M context)*
