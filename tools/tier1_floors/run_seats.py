@@ -178,8 +178,9 @@ def run(work, prompt):
 
 
 # Labels the prompt asks for, longest first so Q1_WHY is matched before Q1.
-LABELS = ["Q1_WHY", "Q3_WHY", "Q1_A", "Q1_B", "Q5_A", "Q5_B", "Q6_A", "Q6_B",
-          "CULL_A", "CULL_B", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "CULL", "RANK", "FLIP LIST"]
+LABELS = ["Q1_WHY", "Q3_WHY", "Q7_WHY", "Q1_A", "Q1_B", "Q5_A", "Q5_B", "Q6_A", "Q6_B",
+          "CULL_A", "CULL_B", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "CULL", "RANK",
+          "FLIP LIST"]
 # Leading markdown of ANY kind: heading hashes, bold stars, or nothing. A seat writes its labels
 # however it likes and the parser's job is to find them, not to legislate their formatting.
 _LABEL_RE = re.compile(r"^\s*#{0,6}\s*\**(" + "|".join(re.escape(l) for l in LABELS)

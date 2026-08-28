@@ -102,8 +102,15 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
                     lx, ly = (xx - ox) % side, (yy - oy) % side
                     g = ((bank[by0 + ly, bx0 + lx, 0] - 128) / 64.0 * gs["coarse"]
                          + (bank[by0 + ly, bx0 + lx, 1] - 128) / 64.0 * gs["fine"])
-                    v = np.clip(L + off + g * gm, ladder[0], ladder[-1])
-                    L = np.where(m, ladder[np.abs(v[..., None] - ladder).argmin(-1)], L)
+                    vv = L + off + g * gm
+                    marks = np.zeros((T, T), dtype=float)
+                    ext = CA.stone_extent(fw, fe, kind, c, drops[c], split_i)
+                    for (u, vloc, depth) in CA.stone_marks(key, seed, ext, worn=is_worn):
+                        lx, ly = u + ox, vloc + oy
+                        if 0 <= lx < T and 0 <= ly < T and m[ly, lx]:
+                            marks[ly, lx] -= depth * step
+                    vv = np.clip(vv + marks, ladder[0], ladder[-1])
+                    L = np.where(m, ladder[np.abs(vv[..., None] - ladder).argmin(-1)], L)
 
             # The arris pass, walked the way the engine walks it: bounds-checked, from the class
             # mask, quantised back onto the ladder.
@@ -173,7 +180,7 @@ def main():
     print("DOES THE SHIPPED ASSET REPRODUCE THE MEASURED FIELD? — %dx%d, seed %d\n"
           % (a.w, a.h, a.seed))
 
-    direct, _joints, _, _cr = FA.assemble(a.w, a.h, a.seed, mat)
+    direct, _joints, _, _cr, _dr = FA.assemble(a.w, a.h, a.seed, mat)
     shipped = paint_from_atlas(a.w, a.h, a.seed, man)
     c = compare(direct, shipped)
     ok = c["differing"] == 0
@@ -186,7 +193,7 @@ def main():
     # verified nowhere: the comparison above runs with no channel declared, so every wear term
     # could have been wrong in both directions and this file would still have said IDENTICAL.
     band = lambda x, y: a.w // 2 - 1 <= x <= a.w // 2
-    d2, _j2, _t2, _c2 = FA.assemble(a.w, a.h, a.seed, mat, band)
+    d2, _j2, _t2, _c2, _d2 = FA.assemble(a.w, a.h, a.seed, mat, band)
     s2 = paint_from_atlas(a.w, a.h, a.seed, man, worn=band)
     c2 = compare(d2, s2)
     ok = ok and c2["differing"] == 0

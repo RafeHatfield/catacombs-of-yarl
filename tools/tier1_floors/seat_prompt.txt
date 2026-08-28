@@ -65,6 +65,13 @@ Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME? Answer YES or NO. Then,
     is it merely competent, or is it genuinely good? "Fine", "acceptable", "solid" and
     "promising" all mean NO to the second question.
 
+Q7: AT THE SIZE SHOWN, WITHOUT ZOOMING IN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF —
+    not the layout, not the joints between pieces, but the face of the material? List what is
+    legible at 1:1 and what only appears once you magnify. If the faces are blank at 1:1, say so
+    plainly; if something is there but you had to hunt for it, that counts as hunting, not as
+    seeing.
+Q7_WHY: name the pixel regions you checked at 1:1, and separately the ones you had to magnify.
+
 CULL: If this floor should be rejected, give the single strongest reason in under twenty words.
       If it should not be rejected, write NONE.
       A critic who finds no defect should suspect its own rigour before crediting the work. Look

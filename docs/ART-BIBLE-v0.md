@@ -1962,6 +1962,55 @@ Where a constant must be calibrated, derive it from the corpus already accepted,
 work seeking acceptance. **The eye leads the number: calibrate after the verdict, never before
 it.**
 
+### 13.8 The perceptual floor — LOCKED (Rafe, 2026-08-29, at the device gate)
+
+> **A signal authored below the perceptual floor is ABSENT. Everything authored proves readable
+> amplitude under the ratified rig at 1×.**
+
+It is law because it is the third instance of one family, and the third time it cost a gate:
+
+| | authored | delivered |
+|---|---|---|
+| **the trodden channel** | wear driven to the limit of subtraction — 0.350 / 0.578 / 0.775 against unpolished stone | four seat rounds did not report it; *"if you rotated the room 180° the floor would give me exactly the same amount of information: none"*. Ruling 70. |
+| **the incident overlays** | 127 marks, `event=44` in the log | **median mark 4px**, mean delta 8.18 luminance — below one rung. *"The pepper."* *"No cracks. Not one."* |
+| **the stone grain** | ±4 luminance against a 13.23 rung | faces quantise flat. **"The floor reads as linoleum."** |
+
+Each was authored, present in the source, and verified shipped byte-for-byte. Each was absent.
+
+**THE TRAP IS SPECIFIC AND IT IS NOT CARELESSNESS.** Every one of those signals was *correct*: on
+the right axis, in the right vocabulary, world-addressed, defensible clause by clause. Each was
+also verifiable — a source instrument could confirm its presence exactly, and did. Nothing in the
+loop asked the only question that mattered, which is not *is it there* but **is it there loudly
+enough to exist**.
+
+**WHAT THIS OBLIGES.** Any authored signal — texture, wear, incident, damage, anything meant to be
+seen rather than merely to be true — carries a measurement of its **delivered amplitude in a lit
+capture at 1×**, alongside the source check that proves it is present. A source check alone no
+longer discharges anything.
+
+**HOW THE FLOOR IS SET, AND IT IS NEVER PICKED.** §13.6 forbids a candidate contributing to its own
+bar, and an invented threshold is worse still — a number defending itself. The floor is derived
+from **verdicts already given**: one signal a human ruled present and one the same human ruled
+absent, measured the same way, in the same capture, under the same rig. The tier-one floor's are
+the crack network (*"excellent"*) and the stone interior (*"linoleum"*), and the floor is their
+geometric mean.
+
+⚠ **MEASURE BOTH ENDPOINTS THE SAME WAY.** The first version of this instrument compared a
+within-population range against a between-population difference and derived a floor from two
+quantities that were not commensurable. ⚠ **AND DO NOT FLATTEN THE LAMP TO MEASURE AMPLITUDE.**
+Dividing by a local blur — the right move for judging *layout*, and what a blind seat does —
+normalises away any signal that covers a large fraction of its own neighbourhood, which is exactly
+what a surface texture is. Raising the dressing depth by half a rung moved the flattened number
+from 0.123 to 0.125: **the instrument was cancelling the signal it existed to measure, and would
+have reported the fix as a failure.** Amplitude is Weber contrast against the feature's own local
+brightness; the lamp divides out of a ratio for free.
+
+**THE FLOOR IS NOT A TARGET.** Clearing it by 3% proves nothing — that is the geometric midpoint
+between *present* and *absent*, which is precisely the ambiguous point. And the ruled-present
+signal is not automatically the target either: a dressing mark that matched the joint network's
+contrast would have stopped being a dressing mark and become a joint. The obligation is to state
+where the signal sits between the two ruled points, and why it sits there rather than higher.
+
 ### 13.7 Platform facts — measured, recorded once so nobody re-buys them
 
 Not law, and not banked speculation either: each line below was paid for by a run and is cited

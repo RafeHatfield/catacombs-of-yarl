@@ -159,7 +159,7 @@ def main():
 
     man = json.load(open(os.path.join(CA.ASSETS, "MANIFEST.json")))
     mat = man["material"]
-    img, joints, _, _cr = FA.assemble(a.w, a.h, a.seed, mat)
+    img, joints, _, _cr, _dr = FA.assemble(a.w, a.h, a.seed, mat)
 
     print("IS EVERY STONE ADDRESSABLE? — ashlar geometry, %dx%d cells, seed %d\n"
           % (a.w, a.h, a.seed))

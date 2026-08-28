@@ -101,6 +101,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
     img = np.zeros((h * T, w * T, 3), dtype=np.uint8)
     joints = np.zeros((h * T, w * T), dtype=bool)
     cracks = np.zeros((h * T, w * T), dtype=bool)
+    dressing = np.zeros((h * T, w * T), dtype=bool)
     yy, xx = np.mgrid[0:T, 0:T]
 
     for y in range(h):
@@ -161,6 +162,17 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
                     bias = CA.cluster_bias(bx, course_k, seed)
                     L = L + m * (CA.stone_offset(key, step, worn=is_worn, bias=bias)
                                  + g * amp * (CA.WEAR_GRAIN if is_worn else 1.0))
+
+                    # THE WORKED SURFACE. Applied in STONE-LOCAL coordinates and masked by the
+                    # stone's own class, so a mark that falls past a joint is simply not drawn —
+                    # and both tiles either side of a spanning stone dress it identically.
+                    if defect != "no_marks":
+                        ext = CA.stone_extent(wf, e, kind, c, drops[c], split_i)
+                        for (u, v, depth) in CA.stone_marks(key, seed, ext, worn=is_worn):
+                            lx, ly = u + ox, v + oy
+                            if 0 <= lx < T and 0 <= ly < T and m[ly, lx]:
+                                L[ly, lx] -= depth * step
+                                dressing[y * T + ly, x * T + lx] = True
 
             if defect == "boundary_frame":
                 # THE PLANT FOR GRID HIDING: an extra joint along the tile's own edge.
@@ -241,7 +253,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
     # NO TRANSITION LIST. Wear is now decided per stone, so the channel's edge falls on a joint
     # rather than on a tile boundary, and there is no longer an intended material step at any
     # vertical boundary to exclude. The empty list is the finding, not an omission.
-    return img, joints, [], cracks
+    return img, joints, [], cracks, dressing
 
 
 # =================================================================================================
@@ -277,7 +289,7 @@ def enclosure(joints):
                 regions_over_64px=sum(1 for s in sizes if s >= 64))
 
 
-def boundary_step(img, joints, w, h, transitions=(), cracks=None):
+def boundary_step(img, joints, w, h, transitions=(), cracks=None, dressing=None):
     """RULING (1)'s metric: is a value step at a tile boundary bigger than one inside a tile?
 
     Measured on STONE pixels only. A joint is meant to be a step — measuring across joints would
@@ -287,7 +299,15 @@ def boundary_step(img, joints, w, h, transitions=(), cracks=None):
     # A CRACK IS NOT STONE. It is dark because enclosed, exactly as a joint is, and counting it as
     # stone made this instrument read 1.69 on a field whose boundaries had not moved at all — an
     # instrument reporting the new feature as the old defect.
-    stone = ~joints if cracks is None else ~(joints | cracks)
+    # A DRESSING MARK IS NOT STONE EITHER, and leaving it in read 1.362 — above 1.00 for the
+    # first time in three sessions, on an axis the device gate had already passed. It was the
+    # instrument counting the EDGE OF EVERY CHISEL STROKE as a stone-to-stone step. Same defect as
+    # counting cracks as stone, one feature later, and it nearly sent a good floor back for a
+    # regression it did not have. With the dressing excluded: 0.66.
+    not_stone = joints if cracks is None else (joints | cracks)
+    if dressing is not None:
+        not_stone = not_stone | dressing
+    stone = ~not_stone
     dx = np.abs(np.diff(L, axis=1))
     ok = stone[:, :-1] & stone[:, 1:]
     cols = np.arange(dx.shape[1])
@@ -644,9 +664,9 @@ def crossing_spread(joints, w, h):
     return dict(horizontal_boundaries=stats(ys), vertical_boundaries=stats(xs))
 
 
-def measure(img, joints, w, h, transitions=(), seed=1337, cracks=None):
+def measure(img, joints, w, h, transitions=(), seed=1337, cracks=None, dressing=None):
     return dict(enclosure=enclosure(joints),
-                boundary_step=boundary_step(img, joints, w, h, transitions, cracks),
+                boundary_step=boundary_step(img, joints, w, h, transitions, cracks, dressing),
                 continuity=continuity(joints, w, h),
                 grid_hiding=grid_hiding(img, joints, w, h, seed), banding=banding(joints),
                 skeleton=skeleton_repeats(joints, w, h),
@@ -717,16 +737,18 @@ def channel_plant(w, h, seed, mat):
     # 1.0 erases the joint completely. Setting all three to 1.0 therefore delivered the most worn
     # floor the system can make, the instrument correctly reported a very visible channel, and the
     # plant read that as the instrument failing. Two mistakes agreeing on a verdict.
-    keep = (CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS)
+    keep = (CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS, CA.WEAR_BANDS, CA.WEAR_PITS)
     CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS = 1.0, 1.0, 0.0
+    CA.WEAR_BANDS, CA.WEAR_PITS = CA.MARK_BANDS, CA.MARK_PITS
     try:
         band = lambda x, y: w // 2 - 1 <= x <= w // 2
-        img, joints, _, _c = assemble(w, h, seed, mat, band)
-        base, _j, _t, _c2 = assemble(w, h, seed, mat, None)
+        img, joints, _, _c, _d = assemble(w, h, seed, mat, band)
+        base, _j, _t, _c2, _d2 = assemble(w, h, seed, mat, None)
         cells = [(x, y) for y in range(h) for x in range(w) if band(x, y)]
-        m = channel_legibility(img, base, joints | _c, cells, w, h)
+        m = channel_legibility(img, base, joints | _c | _d, cells, w, h)
     finally:
-        CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS = keep
+        (CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS,
+         CA.WEAR_BANDS, CA.WEAR_PITS) = keep
     flat = all(abs((m[k] or 1.0) - 1.0) < 0.02
                for k in ("texture_ratio", "variety_ratio", "arris_ratio"))
     return flat, m
@@ -748,8 +770,8 @@ def run_plants(w, h, seed, mat):
                      why="wear multipliers set to 1.0: the channel is declared and delivers "
                          "nothing", measured=cm))
     for p in PLANTS:
-        img, joints, tr, ck = assemble(w, h, seed, mat, defect=p["name"])
-        m = measure(img, joints, w, h, tr, seed, ck)
+        img, joints, tr, ck, dr = assemble(w, h, seed, mat, defect=p["name"])
+        m = measure(img, joints, w, h, tr, seed, ck, dr)
         fired = bool(p["test"](m))
         rows.append(dict(plant=p["name"], must_fire=p["must_fire"], why=p["why"],
                          fired=fired, measured=m))
@@ -791,10 +813,10 @@ def main():
     rows = {}
     for label, worn in (("ordinary", None),
                         ("with_channel", lambda x, y: a.w // 2 - 1 <= x <= a.w // 2)):
-        img, joints, tr, ck = assemble(a.w, a.h, a.seed, mat, worn)
+        img, joints, tr, ck, dr = assemble(a.w, a.h, a.seed, mat, worn)
         p = os.path.join(a.out, "ashlar_%s.png" % label)
         Image.fromarray(img).save(p)
-        m = measure(img, joints, a.w, a.h, tr, a.seed, ck)
+        m = measure(img, joints, a.w, a.h, tr, a.seed, ck, dr)
         try:
             import field_preview as FP
             m["lattice"] = FP.lattice_score(img)
@@ -838,10 +860,10 @@ def main():
                  100 * sk["duplicate_rate"], sk["identical_neighbours"], sk["neighbour_pairs"]))
         if worn:
             cells = [(x, y) for y in range(a.h) for x in range(a.w) if worn(x, y)]
-            base, _bj, _bt, _bc = assemble(a.w, a.h, a.seed, mat, None)
+            base, _bj, _bt, _bc, _bd = assemble(a.w, a.h, a.seed, mat, None)
             # Cracks are not stone faces, and leaving them in diluted the ratio from 0.37 to 0.74
             # — the channel's own signal halved by a feature that has nothing to do with it.
-            cl = channel_legibility(img, base, joints | ck, cells, a.w, a.h)
+            cl = channel_legibility(img, base, joints | ck | dr, cells, a.w, a.h)
             rows[label]["channel_legibility"] = cl
             print("     channel:      texture %s, variety %s, arris %s "
                   "(the same stones unpolished = 1.000; below it, polish took something away)"

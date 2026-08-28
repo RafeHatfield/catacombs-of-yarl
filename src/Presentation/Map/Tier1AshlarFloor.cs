@@ -70,6 +70,10 @@ public static class Tier1AshlarFloor
         public int CrackScale = 1024, CrackTurn = 5;
         public double CrackDepth = 0.42;
         public int[][] CrackDirs = System.Array.Empty<int[]>();
+        public int MarksSalt = 3007, MarkMinLen = 5, MarkMaxLen = 10;
+        public double MarkDepth = 1.0, PitDepth = 1.0;
+        public int MarkBands = 5, MarkPits = 3, WearBands = 3, WearPits = 1;
+        public int[][] MarkDirs = System.Array.Empty<int[]>();
         public int[] OffsetSteps = System.Array.Empty<int>();
         public int[] ClusterTable = { -1, 0, 0, 1 };
         public double[] Ladder = System.Array.Empty<double>();
@@ -235,6 +239,110 @@ public static class Tier1AshlarFloor
         return outp;
     }
 
+    /// <summary>
+    /// The dressing on one stone, in STONE-LOCAL pixels: (u, v, depth in ladder rungs).
+    ///
+    /// The device gate: *"material texture is below the perceptual floor — the floor reads as
+    /// linoleum."* The grain this replaces was authored at about ±4 luminance against a 13.23
+    /// rung, so it never survived quantisation and a stone face was one flat value with a border.
+    ///
+    /// What replaces it is not louder noise. These are the marks of a stone that was DRESSED —
+    /// claw-chisel striations running ONE WAY PER STONE, because one mason worked one stone one
+    /// way, and pits where the tooth tore out rather than cut. All of it is occlusion vocabulary
+    /// and nothing else: every mark is a recess, so every mark is darker, and none has a lit side
+    /// and a shaded side. A dressing mark drawn with a highlight would be depicted lighting.
+    ///
+    /// Addressed by the stone and sampled in stone-local coordinates measured from the boundary,
+    /// so it cannot repeat on the tile grid and both tiles either side of a spanning stone dress
+    /// it identically.
+    /// </summary>
+    /// <summary>
+    /// The stone's own extent in stone-local coordinates: (uLo, uHi, vHi).
+    ///
+    /// Marks were first scattered across the whole 64×32 stone-local box, and a stone occupies a
+    /// fraction of it — so roughly three quarters of every stone's dressing landed outside the
+    /// class mask and was discarded. The interior amplitude moved 0.068 → 0.073 of a rung, which
+    /// is nothing, on the change that was supposed to be the whole point.
+    ///
+    /// Derivable from the family tables both tiles already share, so it needs no new agreement
+    /// between them. Mirrors <see cref="StoneOrigin"/> case for case.
+    /// </summary>
+    private static (int Lo, int Hi, int VHi) StoneExtent(Config c, int fw, int fe, int kind,
+                                                         int course, int drop, int splitI)
+    {
+        int aW = c.ATable[fw][course], mvW = c.MvTable[fw][course];
+        int aE = c.ATable[fe][course], mvE = c.MvTable[fe][course];
+        int vHi = (course == 0 ? c.Splits[splitI][0] - 1 : T - 1) - CourseOriginY(c, splitI, course);
+
+        // THE EXTENT MUST BE DERIVED FROM THE BOUNDARY ALONE, never from the merge. A merged
+        // stone's real extent depends on this tile's drop and on the family of its far side,
+        // neither of which the tile across the boundary can see — so the two dressed the same
+        // stone from different extents and the seam landed on the boundary. Caught by the
+        // boundary-step instrument at 1.277, on an axis the device gate had already passed.
+        if (kind == 0) return (mvW, T + aW, vHi);
+        if (kind == 2 || drop == 2) return (mvE, T + aE, vHi);
+        return (0, mvE - aW, vHi);
+    }
+
+    private static List<(int U, int V, double D)> StoneMarks(Config c, int key, bool worn,
+                                                             (int Lo, int Hi, int VHi) ext)
+    {
+        var outp = new List<(int, int, double)>();
+        int st = Lcg((key ^ (c.MarksSalt + c.Seed)) | 1);
+        int uSpan = System.Math.Max(1, ext.Hi - ext.Lo - 1);
+        int vSpan = System.Math.Max(1, ext.VHi - 1);
+
+        // ONE DIRECTION PER STONE. A mason does not change hands halfway across a flag.
+        var d = c.MarkDirs[(st >> 6) % c.MarkDirs.Length];
+        int dx = d[0], dy = d[1];
+
+        // STROKES COME IN BANDS, because a claw chisel has several teeth and a mason works in
+        // passes. Scattered singly they read as SCRATCHES — a few long slashes at odd angles
+        // across a face, which is damage, not dressing. Clustered into parallel runs 2px apart
+        // they read as tooling, and each stroke still clears the readable-extent bar on its own.
+        int pxp = -dy, pyp = dx;
+        // MORE BANDS, NOT MORE TEETH PER BAND. Teeth raise regularity; bands raise
+        // coverage while staying ragged. At three bands the delivered contrast sat at
+        // 0.148 against a floor of 0.144, and a 3% margin proves nothing.
+        int n = (worn ? c.WearBands : c.MarkBands) + ((st >> 9) % 2);
+        for (int j = 0; j < n; j++)
+        {
+            st = Lcg(st); int u = ext.Lo + (st >> 5) % uSpan;
+            st = Lcg(st); int v = (st >> 5) % vSpan;
+            st = Lcg(st);
+            int length = c.MarkMinLen + (st >> 7) % (c.MarkMaxLen - c.MarkMinLen + 1);
+            st = Lcg(st);
+            int teeth = 2 + (st >> 10) % 2;
+            st = Lcg(st);
+            int gap = 2 + (st >> 12) % 2;      // 2 or 3 px between teeth, not always 2
+            for (int t = 0; t < teeth; t++)
+            {
+                int ou = u + pxp * t * gap, ov = v + pyp * t * gap;
+                // EVERY TOOTH A DIFFERENT LENGTH. Equal-length teeth on an equal pitch is a
+                // barcode: the first clustered version read as tally marks on some stones. A
+                // chisel skips and bites unevenly, and a ragged end is the difference between
+                // tooling and hatching.
+                st = Lcg(st);
+                int ln = System.Math.Max(c.MarkMinLen, length - (st >> 8) % 3);
+                for (int i = 0; i < ln; i++)
+                    outp.Add((ou + dx * i, ov + dy * i, c.MarkDepth));
+            }
+        }
+
+        int m = (worn ? c.WearPits : c.MarkPits) + ((st >> 11) % 3);
+        for (int j = 0; j < m; j++)
+        {
+            st = Lcg(st); int u = ext.Lo + (st >> 5) % uSpan;
+            st = Lcg(st); int v = (st >> 5) % vSpan;
+            st = Lcg(st);
+            int wdt = 2 + (st >> 13) % 2;      // 2 or 3 across — never the 1px speck
+            for (int aa = 0; aa < wdt; aa++)
+                for (int bb = 0; bb < 2; bb++)
+                    outp.Add((u + aa, v + bb, c.PitDepth));
+        }
+        return outp;
+    }
+
     private static int LadderIndex(Config c, double v)
     {
         int best = 0;
@@ -308,7 +416,7 @@ public static class Tier1AshlarFloor
                 atlasCache[idx] = atlas;
             }
 
-            var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw,
+            var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw, fe,
                                    isChannel, crackCache, out bool anyWorn);
 
             // NO FLIP, NO ROTATION. Orientation is meaning on an edge-matched tile, and the
@@ -334,7 +442,7 @@ public static class Tier1AshlarFloor
     /// reimplementation.
     /// </summary>
     private static Image PaintCell(Config cfg, Image atlas, Image grainImg, int tx, int ty,
-                                   int fw, System.Func<int, int, bool>? isChannel,
+                                   int fw, int fe, System.Func<int, int, bool>? isChannel,
                                    Dictionary<(int, int), List<(int X, int Y)>> crackCache,
                                    out bool anyWorn)
     {
@@ -354,6 +462,8 @@ public static class Tier1AshlarFloor
         var ox = new int[7];
         var oy = new int[7];
         var wornClass = new bool[7];
+        var markDepth = new double[T, T];
+        double rung = cfg.Ladder[1] - cfg.Ladder[0];
         anyWorn = false;
 
         for (int c = 0; c < Courses; c++)
@@ -389,6 +499,20 @@ public static class Tier1AshlarFloor
                 bankY[cls] = (bank / BankCols) * GrainSide;
                 ox[cls] = StoneOrigin(cfg, fw, kind, c, drops[c]);
                 oy[cls] = CourseOriginY(cfg, splitI, c);
+
+                // THE WORKED SURFACE, masked by the stone's own class so a mark falling past a
+                // joint is simply not drawn. Overlapping marks accumulate, exactly as the
+                // composer's do.
+                int mAx = (cellIndex % AtlasCols) * T, mAy = (cellIndex / AtlasCols) * T;
+                var mExt = StoneExtent(cfg, fw, fe, kind, c, drops[c], splitI);
+                foreach (var (mu, mv, md) in StoneMarks(cfg, key, worn, mExt))
+                {
+                    int mlx = mu + ox[cls], mly = mv + oy[cls];
+                    if (mlx < 0 || mlx >= T || mly < 0 || mly >= T) continue;
+                    int atCls = (int)System.Math.Round(
+                        atlas.GetPixel(mAx + mlx, mAy + mly).G * 255.0);
+                    if (atCls == cls) markDepth[mly, mlx] -= md * rung;
+                }
             }
         }
 
@@ -413,7 +537,7 @@ public static class Tier1AshlarFloor
                     var gp = grainImg.GetPixel(bankX[cls] + lx, bankY[cls] + ly);
                     double g = (gp.R * 255.0 - 128.0) / 64.0 * cfg.Coarse
                              + (gp.G * 255.0 - 128.0) / 64.0 * cfg.Fine;
-                    L = System.Math.Clamp(L + offset[cls] + g * gmul[cls],
+                    L = System.Math.Clamp(L + offset[cls] + g * gmul[cls] + markDepth[py, px],
                                           cfg.Ladder[0], cfg.Ladder[^1]);
                     L = cfg.Ladder[LadderIndex(cfg, L)];
                 }
@@ -519,7 +643,7 @@ public static class Tier1AshlarFloor
                     if (atlas == null) return $"paint check: atlas unreadable: {path}";
                     atlasCache[idx] = atlas;
                 }
-                img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, worn, checkCracks, out _);
+                img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, fe, worn, checkCracks, out _);
                 cells[(s.X, s.Y)] = img;
             }
             var c = img.GetPixel(s.Px, s.Py);
@@ -574,6 +698,10 @@ public static class Tier1AshlarFloor
             var wear = root.GetProperty("wear");
             cfg.WearSpread = wear.GetProperty("spread").GetDouble();
             cfg.WearArris = wear.GetProperty("arris").GetDouble();
+            cfg.WearBands = wear.GetProperty("bands").GetInt32();
+            cfg.WearPits = wear.GetProperty("pits").GetInt32();
+            cfg.MarkBands = wear.GetProperty("bands_ordinary").GetInt32();
+            cfg.MarkPits = wear.GetProperty("pits_ordinary").GetInt32();
 
 
             var steps = new List<int>();
@@ -617,6 +745,14 @@ public static class Tier1AshlarFloor
             cfg.CrackTurn = cr.GetProperty("turn").GetInt32();
             cfg.CrackDepth = cr.GetProperty("depth").GetDouble();
             cfg.CrackDirs = Table(cr.GetProperty("dirs"));
+
+            var mk = root.GetProperty("marks");
+            cfg.MarksSalt = salts.GetProperty("marks").GetInt32();
+            cfg.MarkMinLen = mk.GetProperty("min_len").GetInt32();
+            cfg.MarkMaxLen = mk.GetProperty("max_len").GetInt32();
+            cfg.MarkDepth = mk.GetProperty("depth").GetDouble();
+            cfg.PitDepth = mk.GetProperty("pit_depth").GetDouble();
+            cfg.MarkDirs = Table(mk.GetProperty("dirs"));
             cfg.MvTable = Table(root.GetProperty("mv_table"));
 
             foreach (var e in root.GetProperty("base").EnumerateArray())

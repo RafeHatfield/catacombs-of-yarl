@@ -165,6 +165,7 @@ HORIZ, VERT = 101, 202             # boundary-lattice salts
 SPAN, INTERIOR = 3001, 3002        # stone-address salts
 DROP, CLUSTER = 3003, 3004         # merged-stone and value-cluster salts
 CRACK = 3006                       # the field-scale crack network
+MARKS = 3007                       # the worked surface of a stone
 CLUSTER_TABLE = [-1, 0, 0, 1]      # the coarse patch bias; more zeros than not, so most of the
                                    # field keeps the family median and the patches read as runs
 
@@ -486,6 +487,16 @@ WEAR_GRAIN = 0.08          # grain amplitude multiplier on a trodden stone
 WEAR_SPREAD = 0.20         # value-offset multiplier on a trodden stone
 WEAR_ARRIS = 0.45          # how far a joint beside trodden stone rises toward the stone
 
+# WEAR'S FOURTH TERM, and it was nearly shipped unnamed. Feet take the dressing off a stone before
+# they take anything else off it, so a trodden stone carries fewer tool bands and fewer pits. That
+# is correct — but it was written inline as `3 if worn else 5`, outside the wear block, and so the
+# `flat_channel` plant (which nulls the wear terms and asserts the channel then delivers NOTHING)
+# went silent: it nulled three terms out of four and the channel stayed visible through the one it
+# could not see. The plant caught an omission that would otherwise have ridden along as a channel
+# nobody had agreed to.
+MARK_BANDS, MARK_PITS = 5, 3        # on ordinary stone
+WEAR_BANDS, WEAR_PITS = 3, 1        # on trodden stone
+
 
 def stone_offset(key, step, worn=False, bias=0):
     """Additive value offset, in luminance. WHOLE LADDER STEPS ONLY — a value off the ladder is
@@ -494,6 +505,149 @@ def stone_offset(key, step, worn=False, bias=0):
     k = OFFSET_STEPS[key % len(OFFSET_STEPS)] + bias
     k = max(-3, min(3, k))
     return k * step * (WEAR_SPREAD if worn else 1.0)
+
+
+# =================================================================================================
+# THE WORKED SURFACE — dressing marks, tool striations, pits
+# =================================================================================================
+#
+# THE DEVICE GATE: *"material texture is below the perceptual floor — the floor reads as
+# linoleum."* And the law that came with it: **a signal authored below the perceptual floor is
+# ABSENT; everything authored proves readable amplitude under the ratified rig at 1x.**
+#
+# The grain this replaces was authored at about +/-4 luminance against a 13.23 rung. It never
+# survived quantisation, so a stone face was one flat value with a border — which is exactly what
+# linoleum is. Measured after the lantern is divided out: 0.068 of a rung inside a face, against
+# 0.332 for the crack network the same gate called excellent. A 4.9x gap, and the wrong side of it.
+#
+# WHAT REPLACES IT IS NOT LOUDER NOISE. Noise at any amplitude is still noise, and §8.1 asks for a
+# floor that is USED UP, not textured. These are the marks of a stone that was DRESSED:
+#
+#   STRIATIONS  the parallel grooves a claw chisel leaves. One direction per stone, because one
+#               mason worked one stone one way — and that is the material identity the ruling
+#               asks for. Four directions in the world, chosen by the stone's address.
+#   PITS        where the tooth of the stone tore out rather than cut.
+#
+# ALL OF IT IS OCCLUSION VOCABULARY AND NOTHING ELSE (§6.3, §6.5). Every mark is a RECESS, so
+# every mark is darker, and none of them has a lit side and a shaded side. A dressing mark drawn
+# with a highlight would be depicted lighting and would be illegal.
+#
+# MINIMUM READABLE EXTENT, DERIVED RATHER THAN GUESSED. The gate ruled the cracks — 1px wide,
+# tens of pixels long — as excellent, and ruled 4px overlay marks as absent. So a 1px-wide feature
+# is readable IF IT IS LONG: striations are 1px by 5..10. A blob is not, so pits are at least 2x2,
+# never the 1px speck a seat once called "the pepper".
+MARK_DIRS = ((1, 0), (0, 1), (1, 1), (1, -1))
+MARK_MIN_LEN = 5
+MARK_MAX_LEN = 8
+# DEPTH IN LADDER RUNGS, and deliberately NOT whole numbers.
+#
+# A whole rung lands every mark on exactly one value. A rung and a half lands between two, so
+# quantisation resolves it up or down depending on what the stone underneath is already worth —
+# and a dressed face ends up with marks of two depths instead of one, which is what a claw chisel
+# actually leaves and also raises the delivered amplitude. A pit is deeper than a scratch because
+# the tooth tore out rather than cut.
+MARK_DEPTH = 1.5
+PIT_DEPTH = 2.0
+
+
+def stone_extent(fw, fe, kind, c, drop, split_i):
+    """The stone's own extent in STONE-LOCAL coordinates: (u_lo, u_hi, v_hi).
+
+    Marks were first scattered across the whole 64x32 stone-local box, and a stone occupies a
+    fraction of it — so roughly three quarters of every stone's dressing landed outside the class
+    mask and was thrown away. Measured: the interior amplitude moved 0.068 -> 0.073 of a rung,
+    which is nothing, on a change that was supposed to be the whole point.
+
+    The extent is derivable from the same family tables both tiles already share, so this needs no
+    new agreement between them. It mirrors `stone_origin` case for case, and the head joints are
+    straight, so the numbers are exact rather than approximate.
+    """
+    a_w, mv_w = A_TABLE[fw][c], MV_TABLE[fw][c]
+    a_e, mv_e = A_TABLE[fe][c], MV_TABLE[fe][c]
+    y0, y1 = course_rows(split_i, c)
+    v_hi = y1 - y0
+
+    # THE EXTENT MUST BE DERIVED FROM THE BOUNDARY ALONE, never from the merge.
+    #
+    # The first version let a merged stone report the extent it actually occupies, which depends
+    # on THIS tile's drop and on the family of its FAR side — neither of which the tile across the
+    # boundary can see. So the two tiles dressed the same stone from different extents, the marks
+    # desynced, and the seam landed exactly on the tile boundary. The boundary-step instrument
+    # caught it at 1.277, above 1.00 for the first time in three sessions, on an axis the device
+    # gate had already passed.
+    #
+    # The shared, un-merged extent is a SUBSET of the real one, so a merged stone simply gets no
+    # dressing in its extension. That costs a little coverage and buys back the one property this
+    # whole construction exists for.
+    if kind == 0 or (kind == 0 and drop == 1):     # spans the WEST boundary
+        return mv_w, T + a_w, v_hi
+    if kind == 2 or drop == 2:                     # spans the EAST boundary
+        return mv_e, T + a_e, v_hi
+    return 0, mv_e - a_w, v_hi                     # interior
+
+
+def stone_marks(key, seed, extent, worn=False):
+    """The dressing on one stone, in STONE-LOCAL pixels: [(u, v, depth_in_rungs), ...].
+
+    Addressed by the stone, like its value and its grain, so it cannot repeat on the tile grid —
+    and sampled in stone-local coordinates measured from the boundary, so both tiles either side
+    of a spanning stone dress it identically.
+    """
+    st = _lcg((key ^ (MARKS + seed)) | 1)
+    u_lo, u_hi, v_hi = extent
+    u_span = max(1, u_hi - u_lo - 1)
+    v_span = max(1, v_hi - 1)
+    out = []
+
+    # ONE DIRECTION PER STONE. A mason does not change hands halfway across a flag.
+    dx, dy = MARK_DIRS[(st >> 6) % len(MARK_DIRS)]
+
+    # STROKES COME IN BANDS, because a claw chisel has several teeth and a mason works in passes.
+    #
+    # Scattered singly they read as SCRATCHES — a few long slashes at odd angles across a face,
+    # which is damage, not dressing. Clustered into parallel runs 2px apart they read as tooling.
+    # Each stroke still clears the readable-extent bar on its own (the gate ruled 1px-wide-but-
+    # long readable, and 4px blobs absent), so the clustering costs nothing and buys the register.
+    px_, py_ = -dy, dx                      # perpendicular, for the offset between teeth
+    # MORE BANDS, NOT MORE TEETH PER BAND. Teeth raise regularity; bands raise coverage
+    # while staying ragged. At three bands the delivered contrast sat at 0.148 against a
+    # floor of 0.144 — a 3% margin is not a proof of readable amplitude, which is what the
+    # law asks for.
+    n = (WEAR_BANDS if worn else MARK_BANDS) + ((st >> 9) % 2)
+    for _ in range(n):
+        st = _lcg(st)
+        u = u_lo + (st >> 5) % u_span
+        st = _lcg(st)
+        v = (st >> 5) % v_span
+        st = _lcg(st)
+        length = MARK_MIN_LEN + (st >> 7) % (MARK_MAX_LEN - MARK_MIN_LEN + 1)
+        st = _lcg(st)
+        teeth = 2 + (st >> 10) % 2
+        st = _lcg(st)
+        gap = 2 + (st >> 12) % 2            # 2 or 3 px between teeth, not always 2
+        for t in range(teeth):
+            ou = u + px_ * t * gap
+            ov = v + py_ * t * gap
+            # EVERY TOOTH A DIFFERENT LENGTH. Equal-length teeth on an equal pitch is a barcode:
+            # the first clustered version read as tally marks on some stones. A chisel skips and
+            # bites unevenly, and a ragged end is the difference between tooling and hatching.
+            st = _lcg(st)
+            ln = max(MARK_MIN_LEN, length - (st >> 8) % 3)
+            for i in range(ln):
+                out.append((ou + dx * i, ov + dy * i, MARK_DEPTH))
+
+    m = (WEAR_PITS if worn else MARK_PITS) + ((st >> 11) % 3)
+    for _ in range(m):
+        st = _lcg(st)
+        u = u_lo + (st >> 5) % u_span
+        st = _lcg(st)
+        v = (st >> 5) % v_span
+        st = _lcg(st)
+        wdt = 2 + (st >> 13) % 2          # 2 or 3 across — never the 1px speck
+        for a in range(wdt):
+            for b in range(2):
+                out.append((u + a, v + b, PIT_DEPTH))
+    return out
 
 
 def build_tile(n, e, s, w, mat, seed, drops=(0, 0), split_i=0):
@@ -658,8 +812,15 @@ def main():
                material=mat, families=FAMILIES, tile=T, courses=COURSES, splits=SPLITS,
                a_table=A_TABLE, mv_table=MV_TABLE,
                salts=dict(horizontal=HORIZ, vertical=VERT, span=SPAN, interior=INTERIOR,
-                          drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK),
+                          drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
+                          marks=MARKS),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
+               marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
+                          max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,
+                          law=("occlusion vocabulary only — every mark is a recess, so every mark "
+                               "is darker and none has a lit side. Minimum extent derived from "
+                               "the device gate: 1px is readable if long (the cracks), a blob is "
+                               "not (the retired 4px overlay marks).")),
                crack=dict(rate=CRACK_RATE, min_tiles=CRACK_MIN_TILES, max_tiles=CRACK_MAX_TILES,
                           dirs=DIRS, scale=CRACK_SCALE, depth=CRACK_DEPTH, turn=CRACK_TURN,
                           law=("field scale, minimum readable extent as a refusal, no taper and "
@@ -753,6 +914,8 @@ def main():
                              "R = index into ladder, G = stone class 0..6")
     man["grain_scales"] = dict(coarse=0.34, fine=0.14, worn_multiplier=WEAR_GRAIN)
     man["wear"] = dict(grain=WEAR_GRAIN, spread=WEAR_SPREAD, arris=WEAR_ARRIS,
+                       bands=WEAR_BANDS, pits=WEAR_PITS,
+                       bands_ordinary=MARK_BANDS, pits_ordinary=MARK_PITS,
                        law="every term is a subtraction; §8.2.1 forbids signalling polish by "
                            "brightness, so nothing is added anywhere")
     man["grain_amp"] = round(max(mat["grain_mad"], 1.0), 4)
