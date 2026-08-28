@@ -600,7 +600,43 @@ somewhere that was lit before you arrived and will be lit after you are filed.**
 light hides nothing and reveals nothing worth seeing — which is how the Weighing gets genuine
 menace with almost no gothic vocabulary.
 
-Only the Boundary's values are derived at the pilot. The rest are PLACEHOLDER.
+~~Only the Boundary's values are derived at the pilot. The rest are PLACEHOLDER.~~
+
+> **RULED (Rafe, 2026-08-28) — RULING 56. THE BOUNDARY'S RIG IS RATIFIED. PLACEHOLDER CLEARED FOR
+> THIS REGION AND FOR NO OTHER.**
+>
+> Ratified by §6.2.1's readability pass: walked on the reference device (iPhone SE 3rd gen), at
+> gameplay distance, across the lit radius, against the tier-one floor family — which is the
+> ordering §6.2.1 demands, the rig before the asset.
+>
+> | knob | value | unit — stated, because a knob position is not a value |
+> |---|---:|---|
+> | **radius** | **5.0** | **TILES**, not pixels. At the RULED 32px tile: a 320px radius, 640px light texture. Tiles so the number cannot silently hard-code §4.3's still-undecided tile size. |
+> | **falloff** | **1.00** | **EXPONENT** on the radial ramp `(1 − smoothstep(0,1,d))^falloff`. 1.00 is the identity — the plain smoothstep. Above 1 tightens the pool, below 1 carries light outward. **Ratified AT the identity, which is a decision and not an absence of one.** |
+> | **ambient level** | **0.70** | **SCALAR on the ambient HUE, not a colour.** `#1a1a22 × 0.70 → rgb(18,18,24) = #121218`, which is the CanvasModulate actually applied. Hue held, brightness only — so a readability pass cannot restyle the region. |
+> | ambient hue | `1a1a22` | unchanged by the pass |
+> | light colour | `ffb066` | unchanged by the pass — §6.2's carried-fire warmth |
+> | energy | 1.6 | unchanged by the pass; 0.0 remains the "lighting is live" control |
+>
+> **BOUNDARY ONLY.** Every other region derives its own at its own gate. Copying these into one
+> would be conformance to a neighbouring region's answer, which is the same error §13.3 refuses
+> when the neighbour is a commercial bar.
+>
+> Landed in `tools/tier0_harness/harness_config.yaml` (status `RULED (Boundary only)`) and in the
+> device marker template. The two knobs that were previously code defaults — falloff and ambient
+> level — are now **passed explicitly and required by the engine**, on the standing discipline
+> that no capture is produced by an undeclared rig: *a ratified value that can be silently
+> defaulted is a ratified value that can silently drift.*
+>
+> **Delivered profile, measured once on the ratified rig** (mean luminance by ring, floor-and-wall
+> sample, a datum rather than a gate): flat to ~3 tiles, **0.73 at the radius edge**, 0.19 beyond
+> it. Legible across the radius and dark outside it, which is what the pass was for.
+>
+> ⚠ **The scene it was ratified on has NO automated legibility guard.** `ProbeJunctionLuminance`
+> refuses to write a capture whose junction is unlit, but it only runs where the geometry has a
+> junction — and `tier1_floor_review` reports `junction=NO`, so the guard is skipped entirely. The
+> corridor scene is protected and the floor scene is not. **Recorded for floor session two**; not
+> built here, because the gate's instruction was to land the values and park.
 
 **⚠ COUPLING FLAG — RULED (Rafe, 2026-08-27): THE ART IS NOW DOWNSTREAM OF THIS PLACEHOLDER.**
 
@@ -667,6 +703,29 @@ game. Tune the cheap thing.**
   with light. *You begin as the only thing here that burns* is register and outranks
   convenience.
 - **The ratified values written back here**, which fires the re-derivation rule above.
+
+> **DONE — RULING 56 (Rafe, 2026-08-28).** The values are in the §6.2 table above. What the pass
+> owed, answered:
+>
+> - *Legibility at gameplay distance, stated as a distance and measured there* — walked on the SE
+>   at the distance the game is played, not read off a 2× desktop crop. That was the specific
+>   failure this clause was written to prevent.
+> - *The §6.5 stack surviving the falloff across the lit radius* — ⚠ **NOT ANSWERED, and it could
+>   not be.** §6.5's stack is a relationship between the wall's two planes and the floor, and the
+>   scene's walls are programmer-art mocks. **The rig is ratified on floor legibility alone.**
+>   Whether the value stack survives this falloff is owed by the first round that puts real walls
+>   in the scene, and that round inherits the re-derivation below rather than a settled answer.
+> - *The §6.2 arc preserved* — ambient moved 1.0 → 0.70, i.e. **darker**. The pass took light away
+>   rather than adding it, so *you begin as the only thing here that burns* is not weakened by it.
+> - *The values written back* — above.
+>
+> **AND THE RE-DERIVATION RULE HAS FIRED.** The rig moved: radius 5.5 → 5.0, ambient 1.0 → 0.70.
+> Every authored ratio derived against the old numbers is now compensating against a rig that no
+> longer exists. Concretely: the sighted round's `WALL-RECIPE.md` authored face ÷ top at ≈0.35 to
+> deliver 0.52 through the OLD rig. **That compensation is stale.** Those walls were culled at the
+> 2026-08-27 gate and are in nothing shipping, so no live asset is invalidated — but the number is
+> not to be picked up and reused. The tier-one FLOOR family derives no ratio against the rig at
+> all (its values come from measured donor material), so it needs no re-derivation.
 
 This is the first measured instance of art and rig being coupled on this project. It will not be
 the last, and the reason to write it down here rather than in the recipe is that **§6.2 is where

@@ -99,11 +99,20 @@ public sealed class ReviewBuildMarker
             {
                 ScenePath       = root.GetProperty("scene").GetString() ?? "",
                 ThemeConfigPath = root.GetProperty("themeConfig").GetString() ?? "",
+                // falloff and ambientLevel are RULED (§6.2.1, Ruling 56) but read with a
+                // fallback to the identity, because a marker written before the ruling has
+                // neither key and must still boot to the rig it was built with rather than
+                // crash. A marker written after it always carries both — build_review_app.sh
+                // copies the config — and the boot log echoes what was actually used.
                 Light = new ReviewLighting.Params(
-                    Ambient:     new Color(light.GetProperty("ambient").GetString()),
-                    LightColor:  new Color(light.GetProperty("color").GetString()),
-                    Energy:      (float)light.GetProperty("energy").GetDouble(),
-                    RadiusTiles: (float)light.GetProperty("radiusTiles").GetDouble()),
+                    Ambient:      new Color(light.GetProperty("ambient").GetString()),
+                    LightColor:   new Color(light.GetProperty("color").GetString()),
+                    Energy:       (float)light.GetProperty("energy").GetDouble(),
+                    RadiusTiles:  (float)light.GetProperty("radiusTiles").GetDouble(),
+                    Falloff:      light.TryGetProperty("falloff", out var fo2)
+                                      ? (float)fo2.GetDouble() : 1.0f,
+                    AmbientLevel: light.TryGetProperty("ambientLevel", out var al)
+                                      ? (float)al.GetDouble() : 1.0f),
                 FloorOverlays = root.TryGetProperty("floorOverlays", out var fo)
                             ? fo.GetString() : null,
                 Commit  = root.TryGetProperty("commit",  out var cm) ? cm.GetString() : null,

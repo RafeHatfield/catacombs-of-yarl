@@ -110,6 +110,13 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
         "--light-color", str(light["color"]),
         "--light-energy", str(light["energy"]),
         "--light-radius-tiles", str(light["radius_tiles"]),
+        # RULED at the §6.2.1 gate (Ruling 56) and therefore PASSED EXPLICITLY, not defaulted.
+        # These two were code defaults until the pass ratified them, and a ratified value that
+        # can be silently defaulted is a ratified value that can silently drift. The engine
+        # requires both, on the same discipline as the other four: no capture is produced by an
+        # undeclared rig.
+        "--light-falloff", str(light["falloff"]),
+        "--light-ambient-level", str(light["ambient_level"]),
     ]
     # ART-BIBLE-v0 §8.3's incident overlays, added for the tier-one floor round. Optional: a
     # capture taken without it draws base tiles only, which is what every capture before tier

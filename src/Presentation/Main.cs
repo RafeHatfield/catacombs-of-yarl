@@ -2517,8 +2517,10 @@ public partial class Main : Node
             var v = ReadStringArg(flag);
             if (string.IsNullOrEmpty(v))
                 throw new System.InvalidOperationException(
-                    $"--corridor-scene requires {flag}. ART-BIBLE-v0 §6.2 marks the light values "
-                    + "PLACEHOLDER, so this harness refuses to supply one — state it explicitly.");
+                    $"--corridor-scene requires {flag}. The Boundary's rig is RULED (§6.2.1, "
+                    + "Ruling 56) and every other region's is still PLACEHOLDER; either way this "
+                    + "harness refuses to supply one — state it explicitly, so no capture can be "
+                    + "produced by an undeclared rig.");
             return v!;
         }
 
@@ -2528,6 +2530,13 @@ public partial class Main : Node
             Energy:      float.Parse(Require("--light-energy"),
                              System.Globalization.CultureInfo.InvariantCulture),
             RadiusTiles: float.Parse(Require("--light-radius-tiles"),
+                             System.Globalization.CultureInfo.InvariantCulture),
+            // RULED at the §6.2.1 gate (Ruling 56). REQUIRED rather than defaulted: these two
+            // were code defaults while the values were PLACEHOLDER, and now that they are law a
+            // default would let a ratified rig drift without anything saying so.
+            Falloff:     float.Parse(Require("--light-falloff"),
+                             System.Globalization.CultureInfo.InvariantCulture),
+            AmbientLevel: float.Parse(Require("--light-ambient-level"),
                              System.Globalization.CultureInfo.InvariantCulture));
     }
 
