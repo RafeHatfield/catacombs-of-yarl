@@ -48,6 +48,7 @@ public sealed class ReviewBuildMarker
     /// edges of their neighbours.
     /// </summary>
     public string? WangFloor { get; private init; }
+    public string? AshlarFloor { get; private init; }
 
     /// <summary>
     /// The commit the build was made from, and when — stamped into the marker by
@@ -131,6 +132,7 @@ public sealed class ReviewBuildMarker
                 FloorOverlays = root.TryGetProperty("floorOverlays", out var fo)
                             ? fo.GetString() : null,
                 WangFloor = root.TryGetProperty("wangFloor", out var wf) ? wf.GetString() : null,
+                AshlarFloor = root.TryGetProperty("ashlarFloor", out var af) ? af.GetString() : null,
                 Commit  = root.TryGetProperty("commit",  out var cm) ? cm.GetString() : null,
                 BuiltAt = root.TryGetProperty("builtAt", out var ba) ? ba.GetString() : null,
                 TileSize  = root.TryGetProperty("tileSize", out var ts)

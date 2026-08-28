@@ -76,7 +76,7 @@ def git_commit():
 
 def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
             light_overrides=None, scene_spec=None, log_out=None, timeout=180,
-            floor_overlays=None, wang_floor=None):
+            floor_overlays=None, wang_floor=None, ashlar_floor=None):
     """Invoke the engine. Returns (returncode, log, cmd)."""
     w = cfg["resolution"]["width"]
     h = cfg["resolution"]["height"]
@@ -130,6 +130,12 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
     if wang_floor:
         cmd += ["--wang-floor", wang_floor]
 
+    # THE COURSE-ALIGNED ASHLAR FAMILY, which supersedes the edge-matched one. Passed for the
+    # same reason as the two above: a capture silently missing it shows the theme's fallback
+    # tiles under the new family's name, and a seat would be judging the wrong floor.
+    if ashlar_floor:
+        cmd += ["--ashlar-floor", ashlar_floor]
+
     os.makedirs(os.path.dirname(out_png) or ".", exist_ok=True)
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
     log = proc.stdout + proc.stderr
@@ -163,6 +169,10 @@ def main():
                     help="res:// path to a floor family MANIFEST.json — ART-BIBLE-v0 §8.3's "
                          "incident overlays and §8.2.1's trodden channel. Omitted, the capture "
                          "draws base tiles only and the engine says so in the log.")
+    ap.add_argument("--ashlar-floor",
+                    help="MANIFEST.json (res:// path) for the course-aligned ashlar family. The "
+                         "engine paints each stone from its world address, so this is not merely "
+                         "a texture swap.")
     ap.add_argument("--wang-floor",
                     help="res:// path to the edge-matched family MANIFEST.json. Its edges must "
                          "agree with their neighbours', which a position hash cannot express, so "
@@ -181,7 +191,7 @@ def main():
     rc, log, cmd = capture(args.out, args.theme_config, cfg, args.godot,
                            light_overrides=overrides, scene_spec=args.scene_spec,
                            log_out=args.log_out, floor_overlays=args.floor_overlays,
-                           wang_floor=args.wang_floor)
+                           wang_floor=args.wang_floor, ashlar_floor=args.ashlar_floor)
 
     if not os.path.exists(args.out):
         # Exit 2 from the engine is a REFUSED capture (junction-lit check failed), not a crash.

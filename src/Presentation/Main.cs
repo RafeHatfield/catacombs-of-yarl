@@ -2639,6 +2639,8 @@ public partial class Main : Node
             // carries the channel in its own material, and drawing the wash on top of it puts a
             // flat per-cell value block over the very thing it is meant to express.
             bool wangActive = (ReadStringArg("--wang-floor") ?? marker?.WangFloor)
+                              is { Length: > 0 }
+                              || (ReadStringArg("--ashlar-floor") ?? marker?.AshlarFloor)
                               is { Length: > 0 };
             Report("[Tier1] " + Tier1FloorOverlays.Attach(_tileLayer, _state.Map,
                                                           overlayManifest, _baseSeed,
@@ -2663,6 +2665,25 @@ public partial class Main : Node
         else
         {
             Report("[Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)");
+        }
+
+        // THE COURSE-ALIGNED ASHLAR FLOOR, which supersedes the edge-matched one under rulings
+        // (1) and (2). It does not merely choose a texture: the shipped asset is the BOND, and
+        // every stone's value and grain are painted here from that stone's world address, because
+        // anything the TILE knows repeats wherever the family pattern repeats and a value on the
+        // tile lattice is section 8.3.1 arriving through value instead of shape.
+        string? ashlarManifest = ReadStringArg("--ashlar-floor") ?? marker?.AshlarFloor;
+        if (_tileLayer != null && ashlarManifest is { Length: > 0 })
+        {
+            var aplan = incidentPlan;
+            Report(Tier1AshlarFloor.Apply(_tileLayer, _state.Map, ashlarManifest,
+                (x, y) => aplan != null && aplan.TryGetValue((x, y), out var inc)
+                          && inc.Channel != ChannelKind.None));
+        }
+        else
+        {
+            Report("[Tier1] ashlar floor: none declared (no --ashlar-floor, no marker "
+                   + "ashlarFloor)");
         }
         Report($"[Tier0] review_build_marker={(marker != null ? ReviewBuildMarker.Path : "none (CLI flags)")}");
         // Reported so the device log proves the no-losable-state fix is actually on the device.

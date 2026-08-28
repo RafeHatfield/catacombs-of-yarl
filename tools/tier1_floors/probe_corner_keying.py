@@ -35,11 +35,25 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, HERE)
-import compose_wang as CW      # noqa: E402
-import field_wang as FW        # noqa: E402
 import field_laws as FL        # noqa: E402
 
+# GEOMETRY UNDER TEST. The probe's answer is a property of the joint topology, not of the keying
+# idea, so it is re-run whenever the topology changes — which is the whole reason the crossing-
+# joint result did not settle K.
+GEOM = os.environ.get("PROBE_GEOMETRY", "ashlar")
+if GEOM == "wang":
+    import compose_wang as CW      # noqa: E402
+    import field_wang as FW        # noqa: E402
+else:
+    import compose_ashlar as CW    # noqa: E402
+    import field_ashlar as FW      # noqa: E402
+
 T = CW.T
+
+
+def _assemble(w, h, seed, mat):
+    r = FW.assemble(w, h, seed, mat, None)
+    return r[0], r[1]
 
 
 def stones_and_corners(joints, w, h):
@@ -146,7 +160,7 @@ def occlusion_preserved(mat):
 def main():
     man = json.load(open(os.path.join(CW.ASSETS, "MANIFEST.json")))
     mat = man["material"]
-    print("CAN THE CORNER CLASS LIVE AT RUNTIME? — three measurements\n")
+    print("CAN THE CORNER CLASS LIVE AT RUNTIME? — geometry under test: %s\n" % GEOM)
 
     print("A. IS THE KEYING WELL-DEFINED? (every stone must contain exactly one grid corner)")
     _img, joints, _f = FW.assemble(8, 8, 1337, mat, None)
@@ -173,8 +187,8 @@ def main():
         print("     +/-%d step (%.1f): clips %.2f%% low, %.2f%% high"
               % (r["steps"], r["offset"], r["clip_low_pct"], r["clip_high_pct"]))
 
-    out = dict(commit=FL.git_commit(), keying=k, occlusion=o, ladder=lc)
-    p = os.path.join(HERE, "evidence", "CORNER-KEYING-PROBE.json")
+    out = dict(commit=FL.git_commit(), geometry=GEOM, keying=k, occlusion=o, ladder=lc)
+    p = os.path.join(HERE, "evidence", "CORNER-KEYING-PROBE-%s.json" % GEOM)
     os.makedirs(os.path.dirname(p), exist_ok=True)
     with open(p, "w") as f:
         json.dump(out, f, indent=1)

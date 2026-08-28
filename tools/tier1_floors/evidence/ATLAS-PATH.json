@@ -1,0 +1,35 @@
+{
+ "commit": "8405c9e6b3b95d2d17781e84feda25cbc042086c",
+ "grid": [
+  8,
+  8
+ ],
+ "seed": 1337,
+ "identical": true,
+ "comparison": {
+  "pixels": 65536,
+  "differing": 0,
+  "differing_pct": 0.0,
+  "max_channel_delta": 0
+ },
+ "plant": {
+  "corrupted": {
+   "tile_index": 53,
+   "cell": [
+    2,
+    0
+   ],
+   "pixel": [
+    8,
+    8
+   ]
+  },
+  "fired": true,
+  "measured": {
+   "pixels": 65536,
+   "differing": 1,
+   "differing_pct": 0.0015,
+   "max_channel_delta": 14
+  }
+ }
+}
