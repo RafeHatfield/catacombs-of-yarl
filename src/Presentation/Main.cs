@@ -2642,10 +2642,14 @@ public partial class Main : Node
                               is { Length: > 0 }
                               || (ReadStringArg("--ashlar-floor") ?? marker?.AshlarFloor)
                               is { Length: > 0 };
+            // The ashlar family draws its own incident at field scale and carries the channel in
+            // its own stones, so both of the overlay system's per-tile treatments are switched
+            // off under it. What remains is the occlusion, which is §12.1's form and not a mark.
             Report("[Tier1] " + Tier1FloorOverlays.Attach(_tileLayer, _state.Map,
                                                           overlayManifest, _baseSeed,
                                                           out incidentPlan,
-                                                          drawChannel: !wangActive));
+                                                          drawChannel: !wangActive,
+                                                          drawMarks: !wangActive));
         }
         else
             Report("[Tier1] floor overlays: none declared (no --floor-overlays, no marker "

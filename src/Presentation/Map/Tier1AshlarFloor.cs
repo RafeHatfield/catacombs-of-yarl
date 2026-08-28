@@ -66,6 +66,10 @@ public static class Tier1AshlarFloor
         public int GrainBank = 64;
         public double GrainAmp = 1.0, Coarse = 0.34, Fine = 0.14, WornMul = 0.38;
         public double WearSpread = 0.20, WearArris = 0.45, LumMedian = 114.0;
+        public int CrackSalt = 3006, CrackRate = 7, CrackMinTiles = 3, CrackMaxTiles = 7;
+        public int CrackScale = 1024, CrackTurn = 5;
+        public double CrackDepth = 0.42;
+        public int[][] CrackDirs = System.Array.Empty<int[]>();
         public int[] OffsetSteps = System.Array.Empty<int>();
         public int[] ClusterTable = { -1, 0, 0, 1 };
         public double[] Ladder = System.Array.Empty<double>();
@@ -151,6 +155,86 @@ public static class Tier1AshlarFloor
         return c.ATable[fw][course];
     }
 
+    // ---- THE CRACK NETWORK, AT FIELD SCALE ------------------------------------------------
+    //
+    // A crack belongs to an ANCHOR TILE and runs for whole tiles beyond it, so every cell it
+    // crosses generates the same polyline from the same world address — the construction that
+    // makes a stone continuous, applied to a line.
+    //
+    // ⚠ TWO INTEGER TRAPS, both of which would desync this from the composer silently and only
+    // near the map's origin, which is exactly where a review scene sits:
+    //
+    //   FLOOR DIVISION. Python's `//` floors toward negative infinity; C#'s `/` truncates toward
+    //   zero. The anchor scan reaches eight tiles left and up of the cell being painted, so at
+    //   x=0 it visits negative tiles and the polyline carries negative pixel coordinates.
+    //   -1 / 1024 is 0 here and -1 there.
+    //
+    //   MODULO OF A NEGATIVE. Python's `%` returns non-negative; C#'s can return negative. The
+    //   direction index random-walks by -1, so it reaches -1 and must wrap to 31, not to -1.
+    //
+    // Neither would throw. Both would draw a different crack on one side of the origin.
+    private static int FloorDiv(int a, int b) => (int)System.Math.Floor((double)a / b);
+
+    private static int Mod(int a, int m) => ((a % m) + m) % m;
+
+    private static int Lcg(int state) => (int)(((long)state * 1103515245 + 12345) & 0x7FFFFFFF);
+
+    private static List<(int X, int Y)> CrackPolyline(Config c, int ax, int ay)
+    {
+        var pts = new List<(int, int)>();
+        int h = Mix(ax, ay, c.CrackSalt + c.Seed);
+        if (h % 100 >= c.CrackRate) return pts;
+
+        int st = Lcg(h | 1);
+        int length = c.CrackMinTiles + (st >> 7) % (c.CrackMaxTiles - c.CrackMinTiles + 1);
+        st = Lcg(st);
+        int x = ax * T + (st >> 5) % T;
+        st = Lcg(st);
+        int y = ay * T + (st >> 5) % T;
+        st = Lcg(st);
+        int d = (st >> 9) % c.CrackDirs.Length;
+
+        int px = x * c.CrackScale, py = y * c.CrackScale;
+        for (int i = 0; i < length * T; i++)
+        {
+            st = Lcg(st);
+            if ((st >> 11) % c.CrackTurn == 0)
+            {
+                st = Lcg(st);
+                d = Mod(d + (((st >> 13) % 2) != 0 ? 1 : -1), c.CrackDirs.Length);
+            }
+            px += c.CrackDirs[d][0];
+            py += c.CrackDirs[d][1];
+            pts.Add((FloorDiv(px, c.CrackScale), FloorDiv(py, c.CrackScale)));
+        }
+        return pts;
+    }
+
+    private static HashSet<(int, int)> CrackPixels(Config c, int tx, int ty,
+                                                   Dictionary<(int, int), List<(int X, int Y)>> cache)
+    {
+        var outp = new HashSet<(int, int)>();
+        int reach = c.CrackMaxTiles + 1;
+        int x0 = tx * T, y0 = ty * T;
+        for (int ay = ty - reach; ay <= ty + reach; ay++)
+        {
+            for (int ax = tx - reach; ax <= tx + reach; ax++)
+            {
+                if (!cache.TryGetValue((ax, ay), out var line))
+                {
+                    line = CrackPolyline(c, ax, ay);
+                    cache[(ax, ay)] = line;
+                }
+                foreach (var (wx, wy) in line)
+                {
+                    int lx = wx - x0, ly = wy - y0;
+                    if (lx >= 0 && lx < T && ly >= 0 && ly < T) outp.Add((ly, lx));
+                }
+            }
+        }
+        return outp;
+    }
+
     private static int LadderIndex(Config c, double v)
     {
         int best = 0;
@@ -202,6 +286,7 @@ public static class Tier1AshlarFloor
         var paintFail = SelfCheck(cfg, grainImg, atlasCache);
         if (paintFail != null) return $"[Tier1] ashlar floor: REFUSED — {paintFail}";
 
+        var crackCache = new Dictionary<(int, int), List<(int X, int Y)>>();
         int laid = 0, channel = 0, missing = 0;
 
         foreach (var (pos, node) in tileLayer.TileSprites)
@@ -224,7 +309,7 @@ public static class Tier1AshlarFloor
             }
 
             var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw,
-                                   isChannel, out bool anyWorn);
+                                   isChannel, crackCache, out bool anyWorn);
 
             // NO FLIP, NO ROTATION. Orientation is meaning on an edge-matched tile, and the
             // coursing has a direction: turning one would stand its bed joints on end.
@@ -250,6 +335,7 @@ public static class Tier1AshlarFloor
     /// </summary>
     private static Image PaintCell(Config cfg, Image atlas, Image grainImg, int tx, int ty,
                                    int fw, System.Func<int, int, bool>? isChannel,
+                                   Dictionary<(int, int), List<(int X, int Y)>> crackCache,
                                    out bool anyWorn)
     {
         var drops = new int[Courses];
@@ -378,6 +464,19 @@ public static class Tier1AshlarFloor
             }
         }
 
+        // THE CRACK NETWORK, drawn last so it crosses stones and joints alike. Authored pixels
+        // on the family's own ladder — not an overlay, no alpha, no feather, no taper. The
+        // per-tile overlay this replaces had a median mark of four pixels and blind seats
+        // reported "No cracks. Not one." in captures whose log said event=44.
+        if (crackCache != null)
+        {
+            double cv = cfg.Ladder[LadderIndex(cfg, cfg.LumMedian * cfg.CrackDepth)];
+            var col = new Color((float)(cv * cfg.Tint[0] / 255.0), (float)(cv * cfg.Tint[1] / 255.0),
+                                (float)(cv * cfg.Tint[2] / 255.0));
+            foreach (var (ly, lx) in CrackPixels(cfg, tx, ty, crackCache))
+                outImg.SetPixel(lx, ly, col);
+        }
+
         return outImg;
     }
 
@@ -398,6 +497,7 @@ public static class Tier1AshlarFloor
                                      Dictionary<int, Image> atlasCache)
     {
         if (cfg.PaintCheck.Count == 0) return null;
+        var checkCracks = new Dictionary<(int, int), List<(int X, int Y)>>();
         var cols = new HashSet<int>(cfg.PaintCheckWornColumns);
         System.Func<int, int, bool> worn = (x, y) => cols.Contains(x);
         var cells = new Dictionary<(int, int), Image>();
@@ -419,7 +519,7 @@ public static class Tier1AshlarFloor
                     if (atlas == null) return $"paint check: atlas unreadable: {path}";
                     atlasCache[idx] = atlas;
                 }
-                img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, worn, out _);
+                img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, worn, checkCracks, out _);
                 cells[(s.X, s.Y)] = img;
             }
             var c = img.GetPixel(s.Px, s.Py);
@@ -475,6 +575,7 @@ public static class Tier1AshlarFloor
             cfg.WearSpread = wear.GetProperty("spread").GetDouble();
             cfg.WearArris = wear.GetProperty("arris").GetDouble();
 
+
             var steps = new List<int>();
             foreach (var v in root.GetProperty("offset_steps").EnumerateArray())
                 steps.Add(v.GetInt32());
@@ -506,6 +607,16 @@ public static class Tier1AshlarFloor
             }
             cfg.ATable = Table(root.GetProperty("a_table"));
             cfg.Splits = Table(root.GetProperty("splits"));
+
+            var cr = root.GetProperty("crack");
+            cfg.CrackSalt = salts.GetProperty("crack").GetInt32();
+            cfg.CrackRate = cr.GetProperty("rate").GetInt32();
+            cfg.CrackMinTiles = cr.GetProperty("min_tiles").GetInt32();
+            cfg.CrackMaxTiles = cr.GetProperty("max_tiles").GetInt32();
+            cfg.CrackScale = cr.GetProperty("scale").GetInt32();
+            cfg.CrackTurn = cr.GetProperty("turn").GetInt32();
+            cfg.CrackDepth = cr.GetProperty("depth").GetDouble();
+            cfg.CrackDirs = Table(cr.GetProperty("dirs"));
             cfg.MvTable = Table(root.GetProperty("mv_table"));
 
             foreach (var e in root.GetProperty("base").EnumerateArray())

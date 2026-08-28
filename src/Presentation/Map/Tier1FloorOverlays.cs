@@ -46,7 +46,7 @@ public static class Tier1FloorOverlays
     /// </summary>
     public static string Attach(TileLayer tileLayer, GameMap map, string manifestResPath, int seed,
                                 out Dictionary<(int X, int Y), FloorIncident> plan,
-                                bool drawChannel = true)
+                                bool drawChannel = true, bool drawMarks = true)
     {
         plan = new Dictionary<(int X, int Y), FloorIncident>();
         var cfg = LoadConfig(manifestResPath, out string load);
@@ -103,10 +103,30 @@ public static class Tier1FloorOverlays
             // so nothing in the ART was ever making that step. It was entirely this overlay.
             if (drawChannel)
                 Draw(inc.ChannelId, 1, ref chan, orientable: false);   // left/right mean their side
+
+            // OCCLUSION IS NOT A MARK and is never retired: it is §12.1's plane boundary, the
+            // form that says the floor stops where the wall begins.
             foreach (var oid in inc.OcclusionIds)
                 Draw(oid, 2, ref occl, orientable: false);         // N/E/S/W mean their edge
-            Draw(inc.EventId,   3, ref events, orientable: true);
-            Draw(inc.GritId,    4, ref grit,   orientable: true);
+
+            // PER-TILE MARKS, RETIRED BY RULING when the family draws its own incident.
+            //
+            // They were measured before they were retired. Over the lit ground they changed
+            // 48.72% of pixels but only 7.21% by a whole ladder rung, in 127 connected marks with
+            // a MEDIAN SIZE OF FOUR PIXELS — at 2x display, a two-by-two speck. Blind seats read
+            // them as "the pepper", as "static before it reads as stone", and as "the splat decal
+            // used three times unmodified"; one reported "No cracks. Not one. Across ~140 visible
+            // blocks" in a capture whose log said event=44.
+            //
+            // A decal small enough to be missed is not cheap, it is expensive: it spends contrast
+            // and returns noise. Incident now runs at FIELD SCALE, drawn into the tile's own
+            // authored pixels on the family's ladder, with a minimum readable extent enforced as
+            // a refusal.
+            if (drawMarks)
+            {
+                Draw(inc.EventId, 3, ref events, orientable: true);
+                Draw(inc.GritId,  4, ref grit,   orientable: true);
+            }
         }
 
         int channelCells = 0, neglected = 0;

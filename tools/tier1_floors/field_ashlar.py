@@ -97,8 +97,10 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
     """
     step = (mat["lum_hi"] - mat["lum_lo"]) / (CF.PALETTE_LEVELS - 1)
     amp = max(mat["grain_mad"], 1.0)
+    crack_cache, crack_v = {}, mat["lum_median"] * CA.CRACK_DEPTH
     img = np.zeros((h * T, w * T, 3), dtype=np.uint8)
     joints = np.zeros((h * T, w * T), dtype=bool)
+    cracks = np.zeros((h * T, w * T), dtype=bool)
     yy, xx = np.mgrid[0:T, 0:T]
 
     for y in range(h):
@@ -199,6 +201,30 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
                 if jw.any():
                     L = np.where(jw, L + (mat["lum_median"] - L) * CA.WEAR_ARRIS, L)
 
+            # THE CRACK NETWORK, drawn last so it crosses stones and joints alike. Not an
+            # overlay and not alpha: authored pixels on the family's own ladder, which is what
+            # §5.1 and §4.3 govern.
+            # THE PLANT FOR CRACK EXTENT: draw only the crack this tile ANCHORS, clipped to this
+            # tile — which is what the overlay system this replaces did, and produced 127 marks
+            # with a median size of four pixels.
+            #
+            # The first version of this plant clipped on `lx` and did nothing at all, because
+            # `lx` is already tile-local and the test was tautological. It reported SILENT, which
+            # was the right verdict about a plant that was not planting anything.
+            if defect == "tile_confined_cracks":
+                px_set = set()
+                for (wx, wy) in CA.crack_polyline(x, y, seed):
+                    lx, ly = wx - x * T, wy - y * T
+                    if 0 <= lx < T and 0 <= ly < T:
+                        px_set.add((ly, lx))
+            elif defect == "no_cracks":
+                px_set = set()
+            else:
+                px_set = CA.crack_pixels(x, y, seed, crack_cache)
+            for (ly, lx) in px_set:
+                L[ly, lx] = crack_v
+                cracks[y * T + ly, x * T + lx] = True
+
             L = CF.quantise(np.clip(L, mat["lum_lo"], mat["lum_hi"]), mat["ladder"])
             img[y * T:(y + 1) * T, x * T:(x + 1) * T] = \
                 CF.colourise(L, mat["tint"]).astype(np.uint8)
@@ -215,7 +241,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
     # NO TRANSITION LIST. Wear is now decided per stone, so the channel's edge falls on a joint
     # rather than on a tile boundary, and there is no longer an intended material step at any
     # vertical boundary to exclude. The empty list is the finding, not an omission.
-    return img, joints, []
+    return img, joints, [], cracks
 
 
 # =================================================================================================
@@ -251,14 +277,17 @@ def enclosure(joints):
                 regions_over_64px=sum(1 for s in sizes if s >= 64))
 
 
-def boundary_step(img, joints, w, h, transitions=()):
+def boundary_step(img, joints, w, h, transitions=(), cracks=None):
     """RULING (1)'s metric: is a value step at a tile boundary bigger than one inside a tile?
 
     Measured on STONE pixels only. A joint is meant to be a step — measuring across joints would
     report the bond as a defect and would have let the real defect hide behind it.
     """
     L = RI.lum(img.astype(float))
-    stone = ~joints
+    # A CRACK IS NOT STONE. It is dark because enclosed, exactly as a joint is, and counting it as
+    # stone made this instrument read 1.69 on a field whose boundaries had not moved at all — an
+    # instrument reporting the new feature as the old defect.
+    stone = ~joints if cracks is None else ~(joints | cracks)
     dx = np.abs(np.diff(L, axis=1))
     ok = stone[:, :-1] & stone[:, 1:]
     cols = np.arange(dx.shape[1])
@@ -460,6 +489,51 @@ def channel_legibility(img, baseline, joints, worn_cells, w, h):
                 inside_px=a["inside_px"])
 
 
+def crack_field(cracks, w, h):
+    """IS A CRACK LONG ENOUGH TO BE A CRACK, AND DOES IT CROSS A TILE?
+
+    The system this replaces was measured before it was replaced: 127 connected marks over the lit
+    ground with a MEDIAN SIZE OF FOUR PIXELS, of which only 26 exceeded 20px, while blind seats
+    reported "No cracks. Not one. Across ~140 visible blocks."
+
+    So the two things that were wrong are the two things measured. EXTENT, because a mark too
+    small to read costs contrast and returns noise. And CROSSING, because a crack that stops at a
+    tile edge is not a crack, it is a decal the size of a tile — and it is the tell that would say
+    the world-addressed polyline had quietly become per-tile again.
+    """
+    H, W = cracks.shape
+    lab = np.zeros((H, W), int)
+    nxt, sizes = 0, []
+    for sy in range(H):
+        for sx in range(W):
+            if not cracks[sy, sx] or lab[sy, sx]:
+                continue
+            nxt += 1
+            st, n = [(sy, sx)], 0
+            lab[sy, sx] = nxt
+            while st:
+                yy, xx = st.pop()
+                n += 1
+                for dy in (-1, 0, 1):
+                    for dx in (-1, 0, 1):
+                        ny, nx = yy + dy, xx + dx
+                        if 0 <= ny < H and 0 <= nx < W and cracks[ny, nx] and not lab[ny, nx]:
+                            lab[ny, nx] = nxt
+                            st.append((ny, nx))
+            sizes.append(n)
+    if not sizes:
+        return dict(marks=0, median_px=0, max_px=0, crossing_a_boundary=0, share_crossing=None)
+    crossing = 0
+    for i in range(1, nxt + 1):
+        ys, xs = np.where(lab == i)
+        if len(set(xs // T)) > 1 or len(set(ys // T)) > 1:
+            crossing += 1
+    return dict(marks=len(sizes), median_px=int(np.median(sizes)), max_px=int(max(sizes)),
+                min_px=int(min(sizes)), crossing_a_boundary=crossing,
+                share_crossing=round(crossing / len(sizes), 3),
+                retired_system_median_px=4)
+
+
 def constant_pitch_lines(joints, w, h):
     """HOW MUCH OF THE COURSING SITS AT THE ONE PITCH THAT CAN NEVER MOVE?
 
@@ -570,13 +644,14 @@ def crossing_spread(joints, w, h):
     return dict(horizontal_boundaries=stats(ys), vertical_boundaries=stats(xs))
 
 
-def measure(img, joints, w, h, transitions=(), seed=1337):
+def measure(img, joints, w, h, transitions=(), seed=1337, cracks=None):
     return dict(enclosure=enclosure(joints),
-                boundary_step=boundary_step(img, joints, w, h, transitions),
+                boundary_step=boundary_step(img, joints, w, h, transitions, cracks),
                 continuity=continuity(joints, w, h),
                 grid_hiding=grid_hiding(img, joints, w, h, seed), banding=banding(joints),
                 skeleton=skeleton_repeats(joints, w, h),
                 constant_pitch=constant_pitch_lines(joints, w, h),
+                cracks=crack_field(cracks, w, h) if cracks is not None else None,
                 crossings=crossing_spread(joints, w, h))
 
 
@@ -607,6 +682,11 @@ PLANTS = [
          why="one course per tile, so EVERY full-width joint is a tile boundary — the corner "
              "theorem's bill paid in full and nothing else on the floor to hide it behind",
          test=lambda m: (m["constant_pitch"]["share"] or 0) > 0.95),
+    dict(name="tile_confined_cracks", must_fire="cracks",
+         why="every crack clipped to the tile that anchors it — the retired overlay system's "
+             "defect restored, marks that stop at a tile edge",
+         test=lambda m: m["cracks"] is not None and m["cracks"]["share_crossing"] is not None
+         and m["cracks"]["share_crossing"] < 0.2),
     dict(name="one_family", must_fire="skeleton",
          why="every boundary collapsed to one family, so every cell of a row draws the same bond "
              "— the 0.99+ duplicates at one-tile displacement the seat measured, restored whole",
@@ -641,10 +721,10 @@ def channel_plant(w, h, seed, mat):
     CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS = 1.0, 1.0, 0.0
     try:
         band = lambda x, y: w // 2 - 1 <= x <= w // 2
-        img, joints, _ = assemble(w, h, seed, mat, band)
-        base, _j, _t = assemble(w, h, seed, mat, None)
+        img, joints, _, _c = assemble(w, h, seed, mat, band)
+        base, _j, _t, _c2 = assemble(w, h, seed, mat, None)
         cells = [(x, y) for y in range(h) for x in range(w) if band(x, y)]
-        m = channel_legibility(img, base, joints, cells, w, h)
+        m = channel_legibility(img, base, joints | _c, cells, w, h)
     finally:
         CA.WEAR_GRAIN, CA.WEAR_SPREAD, CA.WEAR_ARRIS = keep
     flat = all(abs((m[k] or 1.0) - 1.0) < 0.02
@@ -668,8 +748,8 @@ def run_plants(w, h, seed, mat):
                      why="wear multipliers set to 1.0: the channel is declared and delivers "
                          "nothing", measured=cm))
     for p in PLANTS:
-        img, joints, tr = assemble(w, h, seed, mat, defect=p["name"])
-        m = measure(img, joints, w, h, tr, seed)
+        img, joints, tr, ck = assemble(w, h, seed, mat, defect=p["name"])
+        m = measure(img, joints, w, h, tr, seed, ck)
         fired = bool(p["test"](m))
         rows.append(dict(plant=p["name"], must_fire=p["must_fire"], why=p["why"],
                          fired=fired, measured=m))
@@ -711,10 +791,10 @@ def main():
     rows = {}
     for label, worn in (("ordinary", None),
                         ("with_channel", lambda x, y: a.w // 2 - 1 <= x <= a.w // 2)):
-        img, joints, tr = assemble(a.w, a.h, a.seed, mat, worn)
+        img, joints, tr, ck = assemble(a.w, a.h, a.seed, mat, worn)
         p = os.path.join(a.out, "ashlar_%s.png" % label)
         Image.fromarray(img).save(p)
-        m = measure(img, joints, a.w, a.h, tr, a.seed)
+        m = measure(img, joints, a.w, a.h, tr, a.seed, ck)
         try:
             import field_preview as FP
             m["lattice"] = FP.lattice_score(img)
@@ -745,6 +825,12 @@ def main():
         print("     tile-phase:   %d of %d full-width joints sit at the tile pitch (%.0f%%) — "
               "the corner theorem's bill; cannot reach 0 with runtime addressing"
               % (cp["at_tile_phase"], cp["full_width_lines"], 100 * (cp["share"] or 0)))
+        ck_ = m.get("cracks")
+        if ck_:
+            print("     cracks:       %d marks, median %dpx, max %dpx; %d of them cross a tile "
+                  "boundary (%.0f%%). The retired overlay's median mark was 4px."
+                  % (ck_["marks"], ck_["median_px"], ck_["max_px"], ck_["crossing_a_boundary"],
+                     100 * (ck_["share_crossing"] or 0)))
         sk = m["skeleton"]
         print("     skeletons:    %d distinct in %d cells; %d cells share one (%.1f%%); "
               "identical neighbours %d of %d"
@@ -752,8 +838,10 @@ def main():
                  100 * sk["duplicate_rate"], sk["identical_neighbours"], sk["neighbour_pairs"]))
         if worn:
             cells = [(x, y) for y in range(a.h) for x in range(a.w) if worn(x, y)]
-            base, _bj, _bt = assemble(a.w, a.h, a.seed, mat, None)
-            cl = channel_legibility(img, base, joints, cells, a.w, a.h)
+            base, _bj, _bt, _bc = assemble(a.w, a.h, a.seed, mat, None)
+            # Cracks are not stone faces, and leaving them in diluted the ratio from 0.37 to 0.74
+            # — the channel's own signal halved by a feature that has nothing to do with it.
+            cl = channel_legibility(img, base, joints | ck, cells, a.w, a.h)
             rows[label]["channel_legibility"] = cl
             print("     channel:      texture %s, variety %s, arris %s "
                   "(the same stones unpolished = 1.000; below it, polish took something away)"

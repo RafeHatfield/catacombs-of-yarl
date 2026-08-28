@@ -396,6 +396,44 @@ This is adopted from Gemfall wholesale and for a mechanical reason as much as an
 one: **style-conditioned generation requires on-palette reference images**, so a locked palette
 is what makes the generation recipe work at all.
 
+**SCOPE — RULED (Rafe, 2026-08-28): §5.1 AND §4.3 GOVERN AUTHORED PIXELS. THE LIT CONTINUUM IS BY
+DESIGN.**
+
+The clause needed stating because a blind seat measured the gap and read it as a defect:
+
+> *"The art is drawn at 2× (every pixel is a 2×2 block — I confirmed the column-duplication
+> pattern directly), but the lighting is a smooth per-screen-pixel ramp… **Soft unquantised
+> gradients sitting on top of hard chunky pixels. Mixed resolution.**"*
+
+It is right about the pixels and wrong about the verdict. Measured over the lit ground of a
+tier-one floor capture:
+
+| | |
+|---|---:|
+| 2×2 screen blocks that are a single flat colour | 7.58% |
+| **distinct luminance values in the lit ground** | **1,013** |
+| rungs in the source family's ladder | **7** |
+
+**The source is exact and the screen is continuous, and both are correct.** The floor family
+quantises to seven values, refuses to emit anything off them, and its shipped atlases are verified
+exact to the rung. The renderer then multiplies that by a light evaluated per screen pixel. §6.3
+holds that assets **receive** light rather than depicting it — and a smoothly-lit chunky sprite is
+an asset receiving light.
+
+**THE DIVISION OF LABOUR THAT FOLLOWS, AND IT SETTLES WHAT EVERY INSTRUMENT IS FOR:**
+
+> **Instruments measure SOURCES. Captures measure LEGIBILITY.**
+
+A palette check, a ladder check, an anti-aliasing check — every one of them runs on the authored
+asset, where the answer is exact and a violation is a fact. Running any of them on a lit capture
+measures the rig and reports the renderer as an art defect. What a capture is for is the other
+question entirely, the one no source check can answer: **can a person holding a phone in a dark
+room see what this is?**
+
+A consequence worth naming: **do not "fix" the continuum by quantising the light.** Nothing about
+the register requires the lamp to land on the art grid, no clause asks for it, and it would be a
+renderer change made to satisfy an instrument that was pointed at the wrong artefact.
+
 ### 5.2 Shared spine plus reserved region slots — LOCKED (mechanism), PLACEHOLDER (values)
 
 The register requires five distinct regions and a light that withdraws with depth. Five
@@ -1231,6 +1269,32 @@ main route: polished wall to wall, because the traffic had no room to spread) or
 seen in at least: open floor, the channel, a trodden chokepoint, and a neglected passage. A
 review scene shaped only as narrow corridor cannot pose the §8.2 question.
 
+**RULING 70 — ABSENCE-ONLY IS BELOW THE PERCEPTUAL FLOOR UNDER A CARRIED LAMP (Rafe,
+2026-08-28).**
+
+The clause's reasoning stands and is not withdrawn: under a carried lamp brightness is what the
+*light* is saying, and a value lift on a trodden stone is read as the torch. A blind seat did read
+an earlier channel's lift exactly that way.
+
+**But absence is bounded, and the bound has now been located.** Wear was driven to the limit of
+what subtraction can do — grain kept 0.38 → **0.08**, value spread 0.45 → **0.20**, plus a new
+arris pass taking **0.45** of the joint's depth beside a trodden stone — measuring **0.350 /
+0.578 / 0.775** against the same stones unpolished. **Four rounds of blind seats did not report
+it at all.** One checked for it explicitly:
+
+> *"I checked specifically for a floor-based reason and there isn't one… **If you rotated the room
+> 180° the floor would give me exactly the same amount of information: none.**"*
+
+**Consequence: the trodden channel is REMOVED from the tier-one floor gate's scope.** It is not
+abandoned and the implementation stands — wear is decided per stone from the map, so the channel
+ends at a joint rather than at a tile edge, which is what §8.2.1 asked for and a per-cell channel
+could never give. What is withdrawn is the requirement that a floor candidate *demonstrate* the
+channel to pass, because the clause as written cannot be satisfied at 32px under this rig.
+
+**The successor experiment is filed, not decided:** §5.4 holds that chroma is signal, and the
+channel is exactly the kind of thing signal is for. Whether a bounded chroma shift can carry
+polish where value cannot is a **polish-pass** question, and it is not this gate's.
+
 **TIER-ONE REQUIREMENTS, banked from the floor-remediation seat — RULED (Rafe, 2026-08-27).**
 A blind seat shown the survivor floors in the lit corridor culled every one of them, before and
 after remediation, and the reasons that were *not* about keylines are the most useful thing it
@@ -1388,6 +1452,42 @@ construction that answers floor session one's terminal finding:
 A joint network can only close if joints **agree across cell boundaries**, which requires the tile
 chosen for a cell to depend on its neighbours. That is an edge-matched (Wang) set, and it is
 hereby legal.
+
+#### 8.3.3 The corner theorem — RULED (Rafe, 2026-08-28), and it is a PLATFORM THEOREM
+
+**No stone may cross a horizontal tile boundary, so a full-width joint sits at exactly one tile
+pitch — for ever, in every region, in any floor whose stone values are addressed at runtime.**
+
+The proof is short and does not depend on the art. Four tiles meet at a grid corner. A tile shares
+one boundary family with its eastern neighbour and one with its southern, and shares **nothing
+with its diagonal**. So a stone covering a grid corner is seen by four tiles that have no common
+data, and no scheme can make them agree what it is worth. Measured on the crossing-joint geometry
+that preceded the ashlar bond: **27 of 77 stones, 19.9% of stone pixels, unaddressable**.
+
+**Authoring the value class into the tile index does not buy the geometry back.** Corner classes
+as an index dimension make the same assumption — that a tile's regions map to its corners — and
+fail identically. This is a theorem, not a budget: the only thing that permits a slab crossing a
+course line is **giving up addressed stone values there**, and accepting the seam that leaves.
+
+A blind seat found the consequence unaided and culled for it, which is why it is written down
+rather than left as an implementation note:
+
+> *"Five continuous unbroken full-width joints at exact 64px pitch, which no slab ever bridges.
+> **That is a tile edge, not a mason's decision. A mason lays a long stone across a course line; a
+> tiling engine cannot.**"*
+
+**ACCEPTED, AND REGISTER-JUSTIFIED.** Institutional masonry is coursed to spec — the Paths are
+ADMINISTERED, and a filing system for souls is laid by contractors working to a standard, not by
+a mason improvising. **The tell is provenance, not irregularity.** Through-stone irregularity
+belongs to the orc layer *above* the floor: salvage, driven pins, lashed timber, the things a
+company of soldiers puts on top of a floor it did not lay and cannot replace.
+
+**MEASURED AND BOUNDED.** `constant_pitch_lines` reports the share of full-width joints sitting at
+the tile pitch. Two courses per tile gives ~53%; three gives ~33% at the cost of ~9px courses.
+**It cannot reach 0 while stone values are addressed at runtime, and that is not a defect to be
+chased.** The mitigation that does not cost course height: a slab may not *cross* the boundary,
+but debris, a driven pin, a lashed plank or a spalled edge may sit *over* it, and incident is
+world-placed (§8.3) rather than part of the bond.
 
 **THE DEGENERATE CASE IS NAMED, AND IT IS CHECKABLE.** A set is *lattice-degenerate* when its edge
 families are too few to vary the crossing positions — agreement collapses into constancy and

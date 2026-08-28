@@ -566,6 +566,89 @@ Recorded with its measurement, and left alone.
 
 ---
 
+## 7b. The four rulings, and what was done with each
+
+### (1) Corner theorem — ACCEPTED as a permanent platform theorem. Landed as bible **§8.3.3**.
+
+Register-justified: institutional masonry is coursed to spec, the tell is provenance, and
+through-stone irregularity belongs to the orc layer *above* the floor. Recorded with its proof,
+its measurement, and the note that authoring K does not buy the geometry back.
+
+**"Push toward the 33% floor only if cheap" — it is not cheap, and it would trade away the thing
+the seats praised.** Examined rather than asserted:
+
+| what a third course costs | |
+|---|---|
+| course height | 16 → **~10px**, so stones ~9px tall against today's 14–20 |
+| atlas cells per family | 36 (4 splits × 9 merges) → **108** (× 27 merges) |
+| atlas size | 192×192 → 352×352; the set 2 MB → ~5.6 MB |
+| class model | ids 1..6 → 1..9, arrays and both cross-check vectors regenerate |
+| engine | `Courses`, cell indexing, `CourseOriginY`, the per-class arrays |
+| **what it buys** | the boundary line is 1 line in 3 rather than 1 in 2 |
+
+The last row is the argument against it. **The boundary line stays the only line at a predictable
+pitch either way** — three courses dilutes it, it does not hide it — while ~9px courses put stone
+height back near the brick reading that two rounds of work moved it away from. Both seats that
+have praised this floor praised the same thing: *"flat rectangular flagstones of varying size"*,
+*"somebody deliberately mixing widths"*. Not taken.
+
+### (2) Channel — **Ruling 70** recorded in §8.2.1; removed from this gate's scope.
+
+The clause's reasoning is carried forward intact, the bound is recorded with its numbers, and the
+implementation stands (wear is per stone from the map, so the channel ends at a joint). The §5.4
+chroma-signal experiment is filed as **issue #159**, M5, `thread:art`, `type:idea` — with the
+condition that it fails if the shift reads as *warmer light here* rather than *different stone
+here*.
+
+### (3) §5.1/§4.3 scoped to authored pixels. Landed in **§5.1**.
+
+> **Instruments measure SOURCES. Captures measure LEGIBILITY.**
+
+With the consequence stated where someone will look for it: **do not "fix" the continuum by
+quantising the light.** No clause asks for it, and it would be a renderer change made to satisfy
+an instrument pointed at the wrong artefact.
+
+### (4) Incident at field scale — done, and the per-tile marks are retired.
+
+A crack is now one event that happened once, and it is long. It belongs to an **anchor tile** and
+runs for whole tiles beyond it; every cell it crosses generates the same polyline from the same
+world address, which is the construction that makes a stone continuous, applied to a line.
+
+| | retired per-tile overlay | field-scale network |
+|---|---:|---:|
+| connected marks over the field | 127 | **4** |
+| **median mark** | **4 px** | **129 px** |
+| largest mark | 4838 px *(the occlusion band, not a mark)* | 559 px |
+| marks crossing a tile boundary | — | **75%** |
+| mean delta where changed | 8.18 — *below one rung* | on-ladder, exact |
+
+**Minimum readable extent is a refusal, not a preference:** a crack shorter than three tiles is
+not drawn. A mark too small to read is not cheap — it spends contrast and returns noise.
+
+**No taper, no feather, no alpha.** The old crack tapered to nothing at both ends and was
+feathered into the floor, which is most of why its median mark was four pixels — and a feathered
+edge is an anti-aliased edge, which §4.3 forbids in authored pixels. Cracks are now drawn into
+the cell's own pixels on the family's ladder, at the joint's own depth, because a crack is dark
+for the same reason a joint is (§6.5) and one that met a joint at a different value would announce
+itself as a decal laid over the bond rather than a split through it.
+
+**Retired:** `event` and `grit` per-tile overlays under this family (`drawn(grit=0 event=0)`).
+**Kept:** the occlusion overlays — §12.1's plane boundary is form, not a mark.
+
+Two integer traps were caught on the way, both of which would have desynced the engine from the
+composer **silently and only near the map's origin**, which is exactly where a review scene sits:
+Python's `//` floors where C#'s `/` truncates, and Python's `%` returns non-negative where C#'s
+does not. The anchor scan reaches eight tiles left and up of the cell being painted, so at x=0 it
+visits negative tiles. Neither would have thrown.
+
+New instrument `crack_field` — extent and boundary-crossing — with plant `tile_confined_cracks`,
+which restores the retired system's defect by clipping every crack to the tile that anchors it.
+**Nine plants now, all firing.** The first version of that plant clipped on a tile-local
+coordinate and was tautological; it reported SILENT, which was the correct verdict about a plant
+that was not planting anything.
+
+---
+
 ## 8. State
 
 - `K` — **RULED RUNTIME**, on 0 unaddressable stones, re-measured after every geometry change.

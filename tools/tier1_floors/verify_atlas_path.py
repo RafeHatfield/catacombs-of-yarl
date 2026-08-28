@@ -58,6 +58,8 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
             a[cr * T + py, cc * T + px, 0] = (int(a[cr * T + py, cc * T + px, 0]) + 3) % len(ladder)
         atlases[idx] = a
 
+    crack_cache = {}
+    crack_v = mat["lum_median"] * man["crack"]["depth"]
     img = np.zeros((h * T, w * T, 3), dtype=np.uint8)
     yy, xx = np.mgrid[0:T, 0:T]
     for y in range(h):
@@ -121,6 +123,9 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
                     v = np.clip(v, ladder[0], ladder[-1])
                     L = np.where(jw, ladder[np.abs(v[..., None] - ladder).argmin(-1)], L)
 
+            for (ly, lx) in CA.crack_pixels(x, y, seed, crack_cache):
+                L[ly, lx] = ladder[int(np.abs(crack_v - ladder).argmin())]
+
             img[y * T:(y + 1) * T, x * T:(x + 1) * T] = \
                 np.clip(np.stack([L * tint[0], L * tint[1], L * tint[2]], -1), 0, 255)
     return img
@@ -168,7 +173,7 @@ def main():
     print("DOES THE SHIPPED ASSET REPRODUCE THE MEASURED FIELD? — %dx%d, seed %d\n"
           % (a.w, a.h, a.seed))
 
-    direct, _joints, _ = FA.assemble(a.w, a.h, a.seed, mat)
+    direct, _joints, _, _cr = FA.assemble(a.w, a.h, a.seed, mat)
     shipped = paint_from_atlas(a.w, a.h, a.seed, man)
     c = compare(direct, shipped)
     ok = c["differing"] == 0
@@ -181,7 +186,7 @@ def main():
     # verified nowhere: the comparison above runs with no channel declared, so every wear term
     # could have been wrong in both directions and this file would still have said IDENTICAL.
     band = lambda x, y: a.w // 2 - 1 <= x <= a.w // 2
-    d2, _j2, _t2 = FA.assemble(a.w, a.h, a.seed, mat, band)
+    d2, _j2, _t2, _c2 = FA.assemble(a.w, a.h, a.seed, mat, band)
     s2 = paint_from_atlas(a.w, a.h, a.seed, man, worn=band)
     c2 = compare(d2, s2)
     ok = ok and c2["differing"] == 0

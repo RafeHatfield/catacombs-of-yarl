@@ -164,6 +164,7 @@ BASE_ID0 = 10100
 HORIZ, VERT = 101, 202             # boundary-lattice salts
 SPAN, INTERIOR = 3001, 3002        # stone-address salts
 DROP, CLUSTER = 3003, 3004         # merged-stone and value-cluster salts
+CRACK = 3006                       # the field-scale crack network
 CLUSTER_TABLE = [-1, 0, 0, 1]      # the coarse patch bias; more zeros than not, so most of the
                                    # field keeps the family median and the patches read as runs
 
@@ -265,6 +266,121 @@ def stone_kind_address(kind, drop):
     if kind == 1 and drop == 2:
         return 2
     return kind
+
+
+# =================================================================================================
+# THE CRACK NETWORK, AT FIELD SCALE
+# =================================================================================================
+#
+# RULING: incident moves to field scale, minimum readable extent, per-tile marks retired.
+#
+# The overlay system it replaces was measured before it was replaced: over the lit ground it
+# changed 48.72% of pixels but only 7.21% by a whole ladder rung, in 127 connected marks with a
+# MEDIAN SIZE OF FOUR PIXELS. At the review build's 2x display that is a two-by-two speck. Blind
+# seats read it as "the pepper", "static before it reads as stone", and — decisively — reported
+# "No cracks. Not one. Across ~140 visible blocks" in a capture whose log said event=44.
+#
+# A crack is not a decal. It is one event that happened once, and it is long. So:
+#
+#   * A crack belongs to an ANCHOR TILE and runs for whole tiles beyond it. Both the anchor's own
+#     cell and every cell it crosses generate the SAME polyline from the SAME world address, so it
+#     is continuous across tile boundaries by the same construction that makes a stone continuous.
+#   * MINIMUM READABLE EXTENT is a refusal, not a preference: a crack shorter than
+#     CRACK_MIN_TILES is not drawn at all. A mark too small to read is worse than no mark, because
+#     it costs contrast and returns noise.
+#   * NO TAPER AND NO FEATHER. The old crack tapered to nothing at both ends and was feathered
+#     into the floor, which is most of why its median mark was four pixels — and a feathered edge
+#     is an anti-aliased edge, which §4.3 forbids in authored pixels.
+#
+# ⚠ THE WALK USES NO TRIGONOMETRY AND NO FLOATING-POINT RNG, because it has to run identically in
+# Python and in C#. Direction is an INDEX into a fixed table of unit vectors held as integers in
+# the manifest, and it random-walks by one step at a time. A `cos()` agreeing to the last bit
+# across two runtimes is an assumption; a table lookup is not.
+CRACK_RATE = 7             # anchors in a hundred that carry a crack
+CRACK_MIN_TILES = 3        # the minimum readable extent, as a refusal
+CRACK_MAX_TILES = 7
+CRACK_DIRS = 32
+CRACK_TURN = 5             # turn on one pixel in five, not on two in three
+CRACK_SCALE = 1024
+
+
+def crack_dir_table():
+    """Unit vectors as integers. Written into the manifest so both sides read one table."""
+    import math
+    return [[int(round(math.cos(2 * math.pi * i / CRACK_DIRS) * CRACK_SCALE)),
+             int(round(math.sin(2 * math.pi * i / CRACK_DIRS) * CRACK_SCALE))]
+            for i in range(CRACK_DIRS)]
+
+
+DIRS = crack_dir_table()
+
+
+CRACK_DEPTH = 0.42         # the joint's own depth: a crack is dark because ENCLOSED (§6.5),
+                           # and one that met a joint at a different value would announce itself
+                           # as a decal laid over the bond rather than a split through it.
+
+
+def _lcg(state):
+    """The same pseudo-random step in both languages. Nothing clever, and nothing float."""
+    return (state * 1103515245 + 12345) & 0x7FFFFFFF
+
+
+def crack_polyline(ax, ay, seed):
+    """The crack anchored at tile (ax, ay), in WORLD PIXELS, or [] if this anchor carries none.
+
+    Deterministic from the anchor's own coordinates and nothing else, so every cell the crack
+    crosses computes the identical line.
+    """
+    h = mix(ax, ay, CRACK + seed)
+    if h % 100 >= CRACK_RATE:
+        return []
+    st = _lcg(h | 1)
+    length = CRACK_MIN_TILES + (st >> 7) % (CRACK_MAX_TILES - CRACK_MIN_TILES + 1)
+    st = _lcg(st)
+    x = ax * T + (st >> 5) % T
+    st = _lcg(st)
+    y = ay * T + (st >> 5) % T
+    st = _lcg(st)
+    d = (st >> 9) % CRACK_DIRS
+
+    pts, px, py = [], x * CRACK_SCALE, y * CRACK_SCALE
+    # A CRACK IS NOT A VINE. Turning by one step of the direction table on two thirds of pixels
+    # gave a heavy meander that read as root or creeper rather than as a split through stone —
+    # 11.25 degrees at almost every pixel is a random walk, not a fracture. Stone parts along a
+    # line and changes its mind rarely, so the walk turns on one pixel in CRACK_TURN.
+    for _ in range(length * T):
+        st = _lcg(st)
+        if (st >> 11) % CRACK_TURN == 0:
+            st = _lcg(st)
+            d = (d + (1 if (st >> 13) % 2 else -1)) % CRACK_DIRS
+        px += DIRS[d][0]
+        py += DIRS[d][1]
+        pts.append((px // CRACK_SCALE, py // CRACK_SCALE))
+    return pts
+
+
+def crack_pixels(tx, ty, seed, cache=None):
+    """Which pixels of tile (tx, ty) a crack passes through, in tile-local coordinates.
+
+    Scans every anchor whose crack could possibly reach this tile. The polylines are cached
+    because a crack seven tiles long is regenerated by seven cells, and it must be the same seven
+    times — caching is an optimisation here and the determinism is in the address, not the cache.
+    """
+    if cache is None:
+        cache = {}
+    out = set()
+    reach = CRACK_MAX_TILES + 1
+    x0, y0 = tx * T, ty * T
+    for ay in range(ty - reach, ty + reach + 1):
+        for ax in range(tx - reach, tx + reach + 1):
+            key = (ax, ay)
+            if key not in cache:
+                cache[key] = crack_polyline(ax, ay, seed)
+            for (wx, wy) in cache[key]:
+                lx, ly = wx - x0, wy - y0
+                if 0 <= lx < T and 0 <= ly < T:
+                    out.add((ly, lx))
+    return out
 
 
 def _i32(v):
@@ -542,8 +658,13 @@ def main():
                material=mat, families=FAMILIES, tile=T, courses=COURSES, splits=SPLITS,
                a_table=A_TABLE, mv_table=MV_TABLE,
                salts=dict(horizontal=HORIZ, vertical=VERT, span=SPAN, interior=INTERIOR,
-                          drop=DROP, cluster=CLUSTER, split=SPLIT_SALT),
-               offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE, ladder_step=round(step, 3),
+                          drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK),
+               offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
+               crack=dict(rate=CRACK_RATE, min_tiles=CRACK_MIN_TILES, max_tiles=CRACK_MAX_TILES,
+                          dirs=DIRS, scale=CRACK_SCALE, depth=CRACK_DEPTH, turn=CRACK_TURN,
+                          law=("field scale, minimum readable extent as a refusal, no taper and "
+                               "no feather. Replaces a per-tile overlay whose median mark was "
+                               "4px.")), ladder_step=round(step, 3),
                edge_family_check=cross_check_vector(a.seed),
                grain_bank=GRAIN_BANK, donors=src.get("donors", []), base=[],
                classes={"0": "joint — offset is defined zero, never remapped",
