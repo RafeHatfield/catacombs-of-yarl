@@ -1,5 +1,5 @@
 {
- "commit": "74b7099c6311f3f12409be403cca88e01cab9afb",
+ "commit": "f1bb3776ff97b93664367330e81c4ca84007a94e",
  "grid": [
   8,
   8
@@ -51,9 +51,9 @@
     }
    },
    "lattice": {
-    "lattice": 0.1041,
-    "var_total": 329.08,
-    "var_per_position": 294.81,
+    "lattice": 0.119,
+    "var_total": 331.09,
+    "var_per_position": 291.69,
     "cells": 64
    }
   },
@@ -95,9 +95,9 @@
     }
    },
    "lattice": {
-    "lattice": 0.1003,
-    "var_total": 271.03,
-    "var_per_position": 243.83,
+    "lattice": 0.1138,
+    "var_total": 271.55,
+    "var_per_position": 240.65,
     "cells": 64
    }
   }

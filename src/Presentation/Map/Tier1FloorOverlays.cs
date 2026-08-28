@@ -45,7 +45,8 @@ public static class Tier1FloorOverlays
     /// two independent channel derivations would be a copy that drifts.
     /// </summary>
     public static string Attach(TileLayer tileLayer, GameMap map, string manifestResPath, int seed,
-                                out Dictionary<(int X, int Y), FloorIncident> plan)
+                                out Dictionary<(int X, int Y), FloorIncident> plan,
+                                bool drawChannel = true)
     {
         plan = new Dictionary<(int X, int Y), FloorIncident>();
         var cfg = LoadConfig(manifestResPath, out string load);
@@ -85,7 +86,23 @@ public static class Tier1FloorOverlays
                 else missing++;
             }
 
-            Draw(inc.ChannelId, 1, ref chan, orientable: false);   // left/right mean their side
+            // THE CHANNEL WASH IS SUPPRESSED WHERE THE EDGE-MATCHED FAMILY SUPPLIES THE CHANNEL,
+            // and leaving both on was a real defect a blind seat caught before this comment
+            // existed: "hard 64px tile-tint squares cut straight across the crack network; the
+            // grid reads before the floor does", measured as a -25.9 luminance step held across
+            // a cell boundary.
+            //
+            // The wash is a UNIFORM PER-CELL ALPHA LIFT. That is a flat value block at exactly
+            // cell granularity — §8.3.1's lattice — and it is also the thing floor session two
+            // was told not to do at all: a value lift cannot signal under a carried lamp,
+            // because brightness is what the light is saying. The edge-matched family carries
+            // the channel STRUCTURALLY instead (fewer, shallower joints; tighter grain), so the
+            // wash is not merely redundant here, it contradicts the design.
+            //
+            // Measured after the fix: the channel and base tiles differ by -0.32 luminance unlit,
+            // so nothing in the ART was ever making that step. It was entirely this overlay.
+            if (drawChannel)
+                Draw(inc.ChannelId, 1, ref chan, orientable: false);   // left/right mean their side
             foreach (var oid in inc.OcclusionIds)
                 Draw(oid, 2, ref occl, orientable: false);         // N/E/S/W mean their edge
             Draw(inc.EventId,   3, ref events, orientable: true);

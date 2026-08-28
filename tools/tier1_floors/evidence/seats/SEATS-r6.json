@@ -1,0 +1,127 @@
+{
+ "round": 6,
+ "commit": "f1bb3776ff97b93664367330e81c4ca84007a94e",
+ "seats": {
+  "F2": {
+   "Q1": "Wet dirt with grass growing in it. A woodland path or a churned mud yard \u2014 outdoors.",
+   "Q1_WHY": "At 5\u00d7 on the best-lit patch (x 430\u2013560, y 90\u2013200) the substrate is a mid-brown, mid-saturation earth (dominant values cluster around RGB 100\u2013142 / 72\u2013101 / 47\u201364) with soft rounded dark channels running through it. Nothing in it is orthogonal, jointed, or tooled. There is no slab edge, no joint line, no chisel mark, no butted seam, no edge worn rounder than its neighbour \u2014 no evidence of any human act anywhere on the surface. The dark network is blobby and soft-cornered, which reads as dried mud or standing damp, not fracture: fractures are thin, straighter, and stop at something. And 16.4% of the visible floor is a two-tone grass green with a lighter top edge on each clump \u2014 that is grass rendered as grass, sunlit-green, growing in soil.",
+   "Q2": "South, down the corridor at x 380\u2013450. **Nothing about the ground influenced that.** It's the only gap in the wall I can see, and the walls are placeholder, so that is not the floor's doing. The floor itself offered no reason to prefer any direction: I measured the moss distribution against distance from the figure and it's flat (15.8% coverage in the lit centre, 14.3% at the outer edge) \u2014 the ground is statistically the same everywhere. There is no traffic polish, no worn lane, no directional drag, no threshold, no place where the surface has been walked more than another place. A room in continuous heavy use since before records began should tell me where everyone before me went. This one doesn't.",
+   "Q3": "Weather has happened to it. Nothing else. It's damp, overgrown, and rutted the way ground is rutted by rain. Nobody has walked on it, dropped anything on it, dragged anything across it, repaired it, marked it, or drained it.",
+   "Q3_WHY": "Every mark on it is of the same two kinds and both are natural: soft damp channels, and grass. No repair vocabulary at all \u2014 no rope, no driven pin, no hide patch, no salvaged timber, no plate over a hole, nothing lashed down. No administrative vocabulary either \u2014 no numbering, no channel, no gutter, no kerb, no boundary, nothing arranged. A floor held by a company for four hundred years and repaired endlessly should carry four hundred years of ugly fixes. This carries none. It is untouched ground.",
+   "Q4": "Three things, all confirmed by measurement.\n\n1. **The \"/\" scuff-hatch.** A cluster of parallel pale-tan dashes, ~8 px long, fixed spacing, running lower-left to upper-right. I count it at least ten times: (215,35), (355,30), (495,25), (605,35), (610,275), (255,290), (505,290), (300,335), (610,345), (335,300). Every single instance runs the same diagonal. It is never mirrored, never rotated, never a different length. In the crop x 430\u2013560 / y 90\u2013200 alone it appears three times.\n\n2. **The rimmed divot.** A round dark blob ~30 px across with a pale crescent on its right arc. Three of them sit in a near-straight row at y \u2248 100\u2013145, x \u2248 470, 530, 590 \u2014 same diameter, same silhouette, same rim on the same side. Side by side they are plainly the same stamp.\n\n3. **The moss is the loudest thing on screen and it isn't the character.** Measured mean saturation: moss 0.70, ground 0.52, the hero sprite 0.61. The grass out-saturates the protagonist, covers 16.4% of the floor, and is spread by flat random noise \u2014 it doesn't pool at walls, follow the damp channels, or gather in the low ground. It just speckles. My eye goes to green, then hunts for the figure.",
+   "Q5": "**Repeated.** Not a judgement call \u2014 the tile grid is measurable. Vertical brightness discontinuities run the full height of the room at x = 247, 311, 375, 439, 503, 567 \u2014 exactly 64 px apart \u2014 with horizontal seams at y = 81, 145, 209, 337. After dividing out the torch falloff, per-tile mean brightness varies by 29% across the room, and the steps across those seams are hard: **+7.3% at x=247, \u221213.9% at x=375, +10.4% at x=439.** The x=375 seam is a visible vertical line down the whole room. On top of that, the tile at (247,23) and the tile at (503,279) are near-identical (3.5\u00d7 closer to each other than the median tile pair), as are (311,23) and (567,151). The variation is doing its job at a glance and falling apart the moment you look for the grid \u2014 which on a phone, standing still, you will.",
+   "Q6": "YES.\n\nMerely competent. The pixel craft is clean, the lighting falloff is handled, the value read is fine, and the character separates from the ground. It is well-executed generic outdoor dirt. It is not good, because it is not *this place* \u2014 it carries no fiction. Nothing about it could only be the Paths of the Dead, and quite a lot about it argues it isn't.",
+   "CULL": "Reads as outdoor mud and grass, not a made, used, administered underworld floor.",
+   "FLIP LIST": "- Replace the grass-green clumps entirely; if anything grows here it should be a desaturated grey-ochre bloom at wall bases and in damp channels only, never mid-floor, and never out-saturating the character.\n- Give the surface a made structure: hard-edged slab joints on a consistent module, with slabs that are individually cracked, lifted, sunk and mismatched \u2014 the eye needs orthogonal evidence that someone laid this.\n- Put the four hundred years of repair on the ground: driven pins, lashed rope over a split slab, a hide sheet pegged down, salvaged planks bridging a broken run \u2014 at least two visible in this room.\n- Kill the 64 px quilt: flatten per-tile base brightness so the \u00b114% steps at x=375 and x=439 disappear, and move all remaining variation into detail that crosses seams.\n- Retire the \"/\" scuff-hatch and the rimmed divot as stamps \u2014 mirror, rotate, vary and break them, and add a genuine traffic path (polished, moss-free, debris pushed to the sides) running between the exits.\n\n---\n\nForward look: the tile-brightness quilt is a shader/atlas fix and cheap. The fiction gap is not \u2014 \"outdoor dirt\" is the wrong base material, and no amount of decal pass will convert it. I'd re-authoring the base tile as worn stone before spending another hour on detail.\n\n*Model: Claude Opus 5 (1M context).*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Replace the grass-green clumps entirely; if anything grows here it should be a desaturated grey-ochre bloom at wall bases and in damp channels only, never mid-floor, and never out-saturating the character.",
+    "Give the surface a made structure: hard-edged slab joints on a consistent module, with slabs that are individually cracked, lifted, sunk and mismatched \u2014 the eye needs orthogonal evidence that someone laid this.",
+    "Put the four hundred years of repair on the ground: driven pins, lashed rope over a split slab, a hide sheet pegged down, salvaged planks bridging a broken run \u2014 at least two visible in this room.",
+    "Kill the 64 px quilt: flatten per-tile base brightness so the \u00b114% steps at x=375 and x=439 disappear, and move all remaining variation into detail that crosses seams.",
+    "Retire the \"/\" scuff-hatch and the rimmed divot as stamps \u2014 mirror, rotate, vary and break them, and add a genuine traffic path (polished, moss-free, debris pushed to the sides) running between the exits."
+   ],
+   "mapping": {
+    "A": "scene_wang_plant.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r6_F2_transcript.txt",
+   "plant_caught": true,
+   "plant_words_hit": [
+    "moss",
+    "overgrown"
+   ]
+  },
+  "F1": {
+   "Q1": "Dried mud or clay \u2014 a shrunk, cracked pan. Not stone, not masonry, not anything laid or cut.",
+   "Q1_WHY": "The crack network is shrinkage topology, not fracture topology. It's continuous across the entire room, edge to edge, with no joints, no slab edges and no mortar anywhere. The junctions are three-way Ys at roughly 120\u00b0 \u2014 visible clearly at ~(295,215), ~(350,255) and ~(365,125) \u2014 which is what a drying surface does, not what a walked-on stone floor does. Every cell is the same ochre-brown; nothing is a discrete piece of anything. The colour is a warm pale ochre (sampled `(164,116,73)` at 500,215) with a fine uniform 1\u20132px speckle laid over the whole surface at constant density, which reads as silt.\n\nThat's a problem for the fiction before anything else is discussed. An underworld that is *administered* \u2014 a filing system, engineered, in continuous heavy use since before records \u2014 should be underfoot as something someone made. This is a dry lakebed. Nothing in the ground says a bureaucracy built it or that four hundred years of orc-soldiers walk it.\n\n---",
+   "Q2": "South, into the corridor mouth at x\u2248380\u2013440, y\u2248395 and down.\n\nBut be clear on the reason: **nothing about the ground influenced that.** I picked the south corridor because it is a hole in the room's shape \u2014 architecture, not surface. I tested the floor for anything directional and it has none: no wear path, no traffic polish, no debris drift, no slope, no drain, no dirt gradient toward or away from anything. Crack density measured per 64px cell across the lit area runs 0.08\u20130.24 with no vector to it. The surface between the figure and the west opening is identical to the surface between the figure and the south opening. Take the floor away and my choice is unchanged, which means the floor contributed nothing.\n\n---",
+   "Q3": "One thing happened to it, once, everywhere, all at the same moment: it cracked. After that, nothing. It has no history of use.",
+   "Q3_WHY": "The cracking is a single register. I measured stroke width across 2,203 crack runs in the lit area: median 3 game pixels, 10th percentile 1, 90th percentile 5 \u2014 essentially one weight of fracture over the entire floor. Real broken ground spans orders of magnitude, hairline to open gap. There is no hairline spidering and there is no gap anywhere wide enough to have depth in it.\n\nThe cracks also have no depth. Cross-sectioning at y=120 through the crack at x\u2248348\u2013362, the profile is a flat two-value dark stroke \u2014 `78,77,77,78` through the middle, no interior shadow, no consistent lip. I tested whether the brighter pixels flanking cracks form a lit edge: they fall on all four sides in near-equal proportion (left 3042 / right 2841 / up 2828 / down 3283). That's noise, not a bevel. The cracks are ink on the surface, not gaps in it.\n\nAnd there is no accumulation. The floor runs straight into the wall at x=625 and simply stops \u2014 the crack at (612,190) is cut off mid-stroke at the boundary. No swept debris at the wall base, no dirt build-up in the corners, no spall. Nothing has ever been dropped, dragged, repaired, or worn here. The only marks besides cracks are three or four dark blotch decals \u2014 the one at ~(354,255) is a 14px circle of a single flat value with a scalloped edge, no highlight, no soak-in.\n\n---",
+   "Q4": "Yes. Two things, and the first is severe.\n\n**1. A grid of hard-edged flat squares sitting on top of the floor.** These are not cracks and not lighting. They are axis-aligned value blocks on an exact 64-pixel lattice. Confirmed seams:\n\n- Vertical at **x = 246, 310, 438, 502** \u2014 all \u2261 54 mod 64\n- Horizontal at **y = 80, 144, 208, 272, 336** \u2014 all \u2261 16 mod 64\n\nThe worst one is at **x=503, from y=209 to y=239**: a luminance step of exactly \u221225 held dead constant for 31 consecutive rows, zero variation row to row. Sampling across it, `(164,116,73)` at x=502 drops to `(128,92,57)` at x=504 in a single pixel pair \u2014 roughly a 22% darkening \u2014 and holds identically at y=215, 220 and 225. The block it bounds is a flat square. It cuts straight through the crack shapes and ignores them completely.\n\nThis is the thing my eye lands on first and keeps coming back to. Every other line on this floor is organic. These are perfectly square, and because they are the only straight edges present, they announce the tile grid louder than they would in almost any other context. The value variation on this floor is grid-shaped instead of slab-shaped \u2014 which is exactly backwards.\n\n**2. A duplicated tile, stamped twice in the same view.** The cell at **(246,16)\u2013(310,80)** and the cell at **(502,272)\u2013(566,336)** are the same asset, pixel for pixel, only relit. Same vertical crack descending from top-right into the same diagonal junction, and the same small light fleck in the upper middle of both. Correlation on the detail layer: r = 0.80, against a median of 0.035 for all other cell pairs. Two duplicates in ~25 visible floor cells, placed on opposite diagonal corners of the lit area \u2014 the worst possible placement, because the eye can hold both at once.\n\nTo the floor's credit, that is the *only* duplicate. The rest of the crack network genuinely does not repeat.\n\n*(Separately, and flagged as not-floor: the small black cross-and-dots sprite appears at ~(345,175) and again at ~(93,177) in the remembered west area. It's a world object, not the ground, so it's outside what I'm judging \u2014 but it does pull my eye, so I'm reporting it.)*\n\n---",
+   "Q5": "**Made** \u2014 with one visible seam in that claim.\n\nThe crack network is authored across the whole room, not tiled. I checked every 64px cell against every other and the median correlation is 0.035; the polygons cross cell boundaries freely, the junction placement is irregular, and no cell-to-cell pattern emerges. That is real work and it is the best thing on this floor.\n\nThe one exception is the duplicated pair above. And the tint grid undercuts the whole achievement \u2014 the drawn layer says \"made,\" the value layer says \"repeated,\" and because the tint layer is the one with hard square edges, it is the one that wins at a glance.\n\n---",
+   "Q6": "**YES.** Plenty of shipped games have exactly this \u2014 a decent hand-drawn detail pass with per-tile flat tint variation underneath it.\n\nMerely competent, or genuinely good? **Merely competent.** The crack network is good work by itself. But it is carrying a tint layer that contradicts it, it has no depth, no scale variation, no wear, no edge condition, and it doesn't say anything about the place it's in. Genuinely good would mean the floor told me something before the fiction did. It tells me nothing.\n\n---",
+   "CULL": "Hard 64px tile-tint squares cut straight across the crack network; the grid reads before the floor does.",
+   "FLIP LIST": "- Delete the per-tile flat multiplicative tint entirely \u2014 seams at x=246/310/438/502 and y=80/144/208/272/336, worst case the \u221225 step at x=503,y=209\u2013239 \u2014 and move every bit of that value variation onto the crack-bounded shapes instead, so no square edge survives anywhere on the ground.\n- Redraw the cell at (502,272)\u2013(566,336); it is (246,16)\u2013(310,80) verbatim, and both are in the lit area at once.\n- Give the cracks depth: darker interior, and a single-pixel lit lip on the lantern-facing side only, so the network turns as the figure moves instead of reading as a flat uniform outline.\n- Introduce at least three fracture scales \u2014 hairline spidering, the current 2\u20133px network, and one or two genuinely open gaps with visible depth \u2014 instead of the single stroke weight used across the entire floor.\n- Make the ground record use: a worn traffic path through the room, and an edge condition where the floor meets wall at x=625 and y=16 (dirt build-up, spall, swept debris) rather than a straight cut through mid-stroke cracks. Related \u2014 the shrinkage-crack topology reads as dried mud, not as anything an administration built; decide whether this floor is worked stone and change the joint language accordingly.\n\n---\n\nWatch the tint layer specifically \u2014 if it's a shader-side per-tile random applied globally, everything downstream of it will inherit the same square-grid tell no matter how well the tiles themselves are drawn.\n\n*Model: Claude Opus 5 (1M context)*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Delete the per-tile flat multiplicative tint entirely \u2014 seams at x=246/310/438/502 and y=80/144/208/272/336, worst case the \u221225 step at x=503,y=209\u2013239 \u2014 and move every bit of that value variation onto the crack-bounded shapes instead, so no square edge survives anywhere on the ground.",
+    "Redraw the cell at (502,272)\u2013(566,336); it is (246,16)\u2013(310,80) verbatim, and both are in the lit area at once.",
+    "Give the cracks depth: darker interior, and a single-pixel lit lip on the lantern-facing side only, so the network turns as the figure moves instead of reading as a flat uniform outline.",
+    "Introduce at least three fracture scales \u2014 hairline spidering, the current 2\u20133px network, and one or two genuinely open gaps with visible depth \u2014 instead of the single stroke weight used across the entire floor.",
+    "Make the ground record use: a worn traffic path through the room, and an edge condition where the floor meets wall at x=625 and y=16 (dirt build-up, spall, swept debris) rather than a straight cut through mid-stroke cracks. Related \u2014 the shrinkage-crack topology reads as dried mud, not as anything an administration built; decide whether this floor is worked stone and change the joint language accordingly."
+   ],
+   "mapping": {
+    "A": "scene_wang.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r6_F1_transcript.txt"
+  },
+  "F4": {
+   "Q1_A": "Dried mud / packed earth, with plain grey flagstone at the edges.**",
+   "Q1_WHY": "_B:** Across x\u2248190\u2013630, y\u22480\u2013395 the surface is a warm tan broken by dark, irregular, hand-drawn crack lines into plates roughly 80\u2013150px across (e.g. the big plate at (300\u2013400, 60\u2013160), another at (480\u2013570, 90\u2013200)). The cracks taper and branch and have a soft dark bloom either side rather than a hard outline \u2014 that is shrinkage cracking, not masonry jointing. Fine dark stipple sits inside the plates. There is a puncture with a small starburst of radiating cracks at \u2248(355,255), and a second dark mark at \u2248(460,215).",
+   "Q2": "_B:** Down, into the corridor at x\u2248380\u2013430, y\u2248395\u2013600. The ground drove this one: the crack network across the lower half of the lit area is not uniform \u2014 cracks converge toward the corridor mouth around (390\u2013420, 380), and the long near-vertical fissure running from \u2248(395,205) down to \u2248(408,395) points straight at it. The floor also darkens continuously toward that gap, so the corridor reads as the direction the room drains and the direction the room is used. The unlit area to the west (x<190, y 130\u2013390) shows only faint crack shapes at (60\u2013120, 150\u2013210) and offers no comparable pull.",
+   "Q3": "_A:** Nothing has happened to it. It is clean. The mud is undisturbed and evenly cracked wall-to-wall; the flagstones have no chips, no wear at the doorway, no settlement, no repair. The only incident in the whole frame is decal-level: a bone scatter at (185\u2013205, 60\u201375), a few blue-grey flecks in the mud at (128,32), (140,105), (155,110), (198,127), and small teal mould blots on the grey at (0,105), (0,150), (320,110), (105,170).",
+   "Q3_WHY": "_B:** The cracks vary in width \u2014 the one through (250,80)\u2013(330,120) is thick and open, the ones around (540,300) are hairline \u2014 so they didn't all happen at once. The starburst at (355,255) has short radial cracks propagating out of a single point, which is impact, not shrinkage. And the crack density is not even: (280\u2013420, 250\u2013380) is broken far smaller than the plate at (300\u2013400, 60\u2013160).",
+   "Q4": "_B: YES \u2014 a quilt of hard-edged squares on a 50px grid, sitting on top of the cracks.** Individual tiles carry a random brightness offset with a straight edge at the tile boundary. The clearest is the square at (500\u2013550, 200\u2013250): after removing the light falloff it measures ~0.91 against 1.10 and 1.08 for the tiles immediately left and right \u2014 an ~18% step with a dead-straight vertical seam at x=500 and x=550 running right through the crack drawing. Others at (450\u2013500, 300\u2013350) and (250\u2013300, 50\u2013100). Once noticed, the room reads as a chequerboard the cracks are printed over. Second, smaller thing: that long fissure at x\u2248395\u2013408, y 205\u2013395 sits almost exactly on the x=400 tile column edge, which makes it read as a seam rather than as a crack.",
+   "Q5_A": "An image that was repeated.** Provably \u2014 see above. Nine copies of one mud stamp and seven copies of one flagstone stamp are on screen simultaneously, unrotated, unbroken, on a strict lattice.",
+   "Q6_A": "YES**, this would ship \u2014 it is at the level of a stock asset-pack tileset and plenty of commercial games ship exactly this. Genuinely good: **no.** It is competent at best, and the repeat pushes it below that.",
+   "CULL_A": "One 48px stamp tiled nine times unbroken; the whole floor is visibly the same square repeating.",
+   "FLIP LIST": "- Break the 48px repeat: at minimum 4\u20136 mud variants plus rotation, so no identical block appears twice within a screen.\n- Kill the regular waffle \u2014 the crack cells must not converge on tile corners; run cracks across boundaries at scales larger than one tile.\n- Give the flagstone band actual per-slab difference: value spread between slabs, chipped corners, one slab sunk or lifted, grit packed into joints.\n- Wear the threshold at y=176 where mud meets stone \u2014 trodden-in earth, a scuffed lead-in, something that says traffic passed here.\n- Add repair the orcs would have made: driven pins, a plank laid over a soft patch, rope-lashed timber let into the ground \u2014 not decorative flecks.\n\n---\n\n## B",
+   "Q1_B": "A cracked, dried-out clay or mud floor \u2014 broken into large plates.**",
+   "Q5_B": "A surface that was made.** I tested for a repeat and there isn't one \u2014 after dividing out the light falloff and quantising, all 154 tiles in the frame are distinct, and more importantly the crack lines run continuously across tile boundaries (e.g. the crack entering the tile at (400,100) from the left exits its right edge and continues into (450,100) without a kink). The plate shapes are all different sizes and none of them are square. This was drawn as a field, not stamped.",
+   "Q6_B": "YES.** Genuinely good: **no** \u2014 competent-plus. The crack network itself is good work and the incident at (355,255) and the pin at (340,180) are the right instinct. But the per-tile brightness quilt is a visible manufacturing artefact, and the material still reads as a natural mud-flat rather than as a floor in an administered building that nobody maintains. There is no evidence of the place having been *made* \u2014 no slab, no channel, no laid surface for the mud to be failing *over*, and one pin is the only human mark in a 440\u00d7395 area.",
+   "CULL_B": "Random per-tile brightness prints a hard-edged 50px chequerboard across the whole floor, fighting the crack drawing.",
+   "RANK": "A is a stamp repeated nine times on screen; B is a drawn surface with a real defect in how it's assembled. The gap isn't close. But B's win is on craft, not on fiction \u2014 neither floor currently says *administered*, and that's the note I'd carry into the next pass on both.\n\n*Model: Claude Opus 5 (1M context).*",
+   "Q1": "",
+   "Q5": "",
+   "Q6": "",
+   "CULL": "",
+   "flips": [
+    "Break the 48px repeat: at minimum 4\u20136 mud variants plus rotation, so no identical block appears twice within a screen.",
+    "Kill the regular waffle \u2014 the crack cells must not converge on tile corners; run cracks across boundaries at scales larger than one tile.",
+    "Give the flagstone band actual per-slab difference: value spread between slabs, chipped corners, one slab sunk or lifted, grit packed into joints.",
+    "Wear the threshold at y=176 where mud meets stone \u2014 trodden-in earth, a scuffed lead-in, something that says traffic passed here.",
+    "Add repair the orcs would have made: driven pins, a plank laid over a soft patch, rope-lashed timber let into the ground \u2014 not decorative flecks."
+   ],
+   "mapping": {
+    "B": "scene_wang.png",
+    "A": "BAR"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r6_F4_transcript.txt"
+  }
+ },
+ "plant_seat": "F2",
+ "round_void": false,
+ "plant_words_declared": [
+  "cobweb",
+  "cobwebbing",
+  "web",
+  "webbing",
+  "collapse",
+  "collapsed",
+  "caved",
+  "ruin",
+  "ruined",
+  "rubble",
+  "moss",
+  "mossy",
+  "overgrown",
+  "lichen"
+ ],
+ "law": "LOOP-PROCESS \u00a74: if the critic does not catch the plant, the round is VOID and its findings are not read."
+}

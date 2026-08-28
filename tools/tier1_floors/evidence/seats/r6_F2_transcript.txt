@@ -1,0 +1,51 @@
+Looked at it at 1:1, then flattened the torch falloff to see the texture underneath, and measured the tile grid directly.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Wet dirt with grass growing in it. A woodland path or a churned mud yard — outdoors.
+
+**Q1_WHY:**
+At 5× on the best-lit patch (x 430–560, y 90–200) the substrate is a mid-brown, mid-saturation earth (dominant values cluster around RGB 100–142 / 72–101 / 47–64) with soft rounded dark channels running through it. Nothing in it is orthogonal, jointed, or tooled. There is no slab edge, no joint line, no chisel mark, no butted seam, no edge worn rounder than its neighbour — no evidence of any human act anywhere on the surface. The dark network is blobby and soft-cornered, which reads as dried mud or standing damp, not fracture: fractures are thin, straighter, and stop at something. And 16.4% of the visible floor is a two-tone grass green with a lighter top edge on each clump — that is grass rendered as grass, sunlit-green, growing in soil.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 380–450. **Nothing about the ground influenced that.** It's the only gap in the wall I can see, and the walls are placeholder, so that is not the floor's doing. The floor itself offered no reason to prefer any direction: I measured the moss distribution against distance from the figure and it's flat (15.8% coverage in the lit centre, 14.3% at the outer edge) — the ground is statistically the same everywhere. There is no traffic polish, no worn lane, no directional drag, no threshold, no place where the surface has been walked more than another place. A room in continuous heavy use since before records began should tell me where everyone before me went. This one doesn't.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Weather has happened to it. Nothing else. It's damp, overgrown, and rutted the way ground is rutted by rain. Nobody has walked on it, dropped anything on it, dragged anything across it, repaired it, marked it, or drained it.
+
+**Q3_WHY:**
+Every mark on it is of the same two kinds and both are natural: soft damp channels, and grass. No repair vocabulary at all — no rope, no driven pin, no hide patch, no salvaged timber, no plate over a hole, nothing lashed down. No administrative vocabulary either — no numbering, no channel, no gutter, no kerb, no boundary, nothing arranged. A floor held by a company for four hundred years and repaired endlessly should carry four hundred years of ugly fixes. This carries none. It is untouched ground.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Three things, all confirmed by measurement.
+
+1. **The "/" scuff-hatch.** A cluster of parallel pale-tan dashes, ~8 px long, fixed spacing, running lower-left to upper-right. I count it at least ten times: (215,35), (355,30), (495,25), (605,35), (610,275), (255,290), (505,290), (300,335), (610,345), (335,300). Every single instance runs the same diagonal. It is never mirrored, never rotated, never a different length. In the crop x 430–560 / y 90–200 alone it appears three times.
+
+2. **The rimmed divot.** A round dark blob ~30 px across with a pale crescent on its right arc. Three of them sit in a near-straight row at y ≈ 100–145, x ≈ 470, 530, 590 — same diameter, same silhouette, same rim on the same side. Side by side they are plainly the same stamp.
+
+3. **The moss is the loudest thing on screen and it isn't the character.** Measured mean saturation: moss 0.70, ground 0.52, the hero sprite 0.61. The grass out-saturates the protagonist, covers 16.4% of the floor, and is spread by flat random noise — it doesn't pool at walls, follow the damp channels, or gather in the low ground. It just speckles. My eye goes to green, then hunts for the figure.
+
+**Q5: MADE, OR REPEATED?**
+**Repeated.** Not a judgement call — the tile grid is measurable. Vertical brightness discontinuities run the full height of the room at x = 247, 311, 375, 439, 503, 567 — exactly 64 px apart — with horizontal seams at y = 81, 145, 209, 337. After dividing out the torch falloff, per-tile mean brightness varies by 29% across the room, and the steps across those seams are hard: **+7.3% at x=247, −13.9% at x=375, +10.4% at x=439.** The x=375 seam is a visible vertical line down the whole room. On top of that, the tile at (247,23) and the tile at (503,279) are near-identical (3.5× closer to each other than the median tile pair), as are (311,23) and (567,151). The variation is doing its job at a glance and falling apart the moment you look for the grid — which on a phone, standing still, you will.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The pixel craft is clean, the lighting falloff is handled, the value read is fine, and the character separates from the ground. It is well-executed generic outdoor dirt. It is not good, because it is not *this place* — it carries no fiction. Nothing about it could only be the Paths of the Dead, and quite a lot about it argues it isn't.
+
+**CULL:**
+Reads as outdoor mud and grass, not a made, used, administered underworld floor.
+
+**FLIP LIST**
+- Replace the grass-green clumps entirely; if anything grows here it should be a desaturated grey-ochre bloom at wall bases and in damp channels only, never mid-floor, and never out-saturating the character.
+- Give the surface a made structure: hard-edged slab joints on a consistent module, with slabs that are individually cracked, lifted, sunk and mismatched — the eye needs orthogonal evidence that someone laid this.
+- Put the four hundred years of repair on the ground: driven pins, lashed rope over a split slab, a hide sheet pegged down, salvaged planks bridging a broken run — at least two visible in this room.
+- Kill the 64 px quilt: flatten per-tile base brightness so the ±14% steps at x=375 and x=439 disappear, and move all remaining variation into detail that crosses seams.
+- Retire the "/" scuff-hatch and the rimmed divot as stamps — mirror, rotate, vary and break them, and add a genuine traffic path (polished, moss-free, debris pushed to the sides) running between the exits.
+
+---
+
+Forward look: the tile-brightness quilt is a shader/atlas fix and cheap. The fiction gap is not — "outdoor dirt" is the wrong base material, and no amount of decal pass will convert it. I'd re-authoring the base tile as worn stone before spending another hour on detail.
+
+*Model: Claude Opus 5 (1M context).*

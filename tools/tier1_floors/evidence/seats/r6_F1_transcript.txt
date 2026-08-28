@@ -1,0 +1,84 @@
+Looked at the image at 1:1, then at 3–10× on the floor specifically, and ran seam/duplicate/crack-width measurements on it. Findings below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dried mud or clay — a shrunk, cracked pan. Not stone, not masonry, not anything laid or cut.
+
+**Q1_WHY:**
+The crack network is shrinkage topology, not fracture topology. It's continuous across the entire room, edge to edge, with no joints, no slab edges and no mortar anywhere. The junctions are three-way Ys at roughly 120° — visible clearly at ~(295,215), ~(350,255) and ~(365,125) — which is what a drying surface does, not what a walked-on stone floor does. Every cell is the same ochre-brown; nothing is a discrete piece of anything. The colour is a warm pale ochre (sampled `(164,116,73)` at 500,215) with a fine uniform 1–2px speckle laid over the whole surface at constant density, which reads as silt.
+
+That's a problem for the fiction before anything else is discussed. An underworld that is *administered* — a filing system, engineered, in continuous heavy use since before records — should be underfoot as something someone made. This is a dry lakebed. Nothing in the ground says a bureaucracy built it or that four hundred years of orc-soldiers walk it.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, into the corridor mouth at x≈380–440, y≈395 and down.
+
+But be clear on the reason: **nothing about the ground influenced that.** I picked the south corridor because it is a hole in the room's shape — architecture, not surface. I tested the floor for anything directional and it has none: no wear path, no traffic polish, no debris drift, no slope, no drain, no dirt gradient toward or away from anything. Crack density measured per 64px cell across the lit area runs 0.08–0.24 with no vector to it. The surface between the figure and the west opening is identical to the surface between the figure and the south opening. Take the floor away and my choice is unchanged, which means the floor contributed nothing.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+One thing happened to it, once, everywhere, all at the same moment: it cracked. After that, nothing. It has no history of use.
+
+**Q3_WHY:**
+The cracking is a single register. I measured stroke width across 2,203 crack runs in the lit area: median 3 game pixels, 10th percentile 1, 90th percentile 5 — essentially one weight of fracture over the entire floor. Real broken ground spans orders of magnitude, hairline to open gap. There is no hairline spidering and there is no gap anywhere wide enough to have depth in it.
+
+The cracks also have no depth. Cross-sectioning at y=120 through the crack at x≈348–362, the profile is a flat two-value dark stroke — `78,77,77,78` through the middle, no interior shadow, no consistent lip. I tested whether the brighter pixels flanking cracks form a lit edge: they fall on all four sides in near-equal proportion (left 3042 / right 2841 / up 2828 / down 3283). That's noise, not a bevel. The cracks are ink on the surface, not gaps in it.
+
+And there is no accumulation. The floor runs straight into the wall at x=625 and simply stops — the crack at (612,190) is cut off mid-stroke at the boundary. No swept debris at the wall base, no dirt build-up in the corners, no spall. Nothing has ever been dropped, dragged, repaired, or worn here. The only marks besides cracks are three or four dark blotch decals — the one at ~(354,255) is a 14px circle of a single flat value with a scalloped edge, no highlight, no soak-in.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes. Two things, and the first is severe.
+
+**1. A grid of hard-edged flat squares sitting on top of the floor.** These are not cracks and not lighting. They are axis-aligned value blocks on an exact 64-pixel lattice. Confirmed seams:
+
+- Vertical at **x = 246, 310, 438, 502** — all ≡ 54 mod 64
+- Horizontal at **y = 80, 144, 208, 272, 336** — all ≡ 16 mod 64
+
+The worst one is at **x=503, from y=209 to y=239**: a luminance step of exactly −25 held dead constant for 31 consecutive rows, zero variation row to row. Sampling across it, `(164,116,73)` at x=502 drops to `(128,92,57)` at x=504 in a single pixel pair — roughly a 22% darkening — and holds identically at y=215, 220 and 225. The block it bounds is a flat square. It cuts straight through the crack shapes and ignores them completely.
+
+This is the thing my eye lands on first and keeps coming back to. Every other line on this floor is organic. These are perfectly square, and because they are the only straight edges present, they announce the tile grid louder than they would in almost any other context. The value variation on this floor is grid-shaped instead of slab-shaped — which is exactly backwards.
+
+**2. A duplicated tile, stamped twice in the same view.** The cell at **(246,16)–(310,80)** and the cell at **(502,272)–(566,336)** are the same asset, pixel for pixel, only relit. Same vertical crack descending from top-right into the same diagonal junction, and the same small light fleck in the upper middle of both. Correlation on the detail layer: r = 0.80, against a median of 0.035 for all other cell pairs. Two duplicates in ~25 visible floor cells, placed on opposite diagonal corners of the lit area — the worst possible placement, because the eye can hold both at once.
+
+To the floor's credit, that is the *only* duplicate. The rest of the crack network genuinely does not repeat.
+
+*(Separately, and flagged as not-floor: the small black cross-and-dots sprite appears at ~(345,175) and again at ~(93,177) in the remembered west area. It's a world object, not the ground, so it's outside what I'm judging — but it does pull my eye, so I'm reporting it.)*
+
+---
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+**Made** — with one visible seam in that claim.
+
+The crack network is authored across the whole room, not tiled. I checked every 64px cell against every other and the median correlation is 0.035; the polygons cross cell boundaries freely, the junction placement is irregular, and no cell-to-cell pattern emerges. That is real work and it is the best thing on this floor.
+
+The one exception is the duplicated pair above. And the tint grid undercuts the whole achievement — the drawn layer says "made," the value layer says "repeated," and because the tint layer is the one with hard square edges, it is the one that wins at a glance.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** Plenty of shipped games have exactly this — a decent hand-drawn detail pass with per-tile flat tint variation underneath it.
+
+Merely competent, or genuinely good? **Merely competent.** The crack network is good work by itself. But it is carrying a tint layer that contradicts it, it has no depth, no scale variation, no wear, no edge condition, and it doesn't say anything about the place it's in. Genuinely good would mean the floor told me something before the fiction did. It tells me nothing.
+
+---
+
+**CULL:**
+Hard 64px tile-tint squares cut straight across the crack network; the grid reads before the floor does.
+
+**FLIP LIST**
+- Delete the per-tile flat multiplicative tint entirely — seams at x=246/310/438/502 and y=80/144/208/272/336, worst case the −25 step at x=503,y=209–239 — and move every bit of that value variation onto the crack-bounded shapes instead, so no square edge survives anywhere on the ground.
+- Redraw the cell at (502,272)–(566,336); it is (246,16)–(310,80) verbatim, and both are in the lit area at once.
+- Give the cracks depth: darker interior, and a single-pixel lit lip on the lantern-facing side only, so the network turns as the figure moves instead of reading as a flat uniform outline.
+- Introduce at least three fracture scales — hairline spidering, the current 2–3px network, and one or two genuinely open gaps with visible depth — instead of the single stroke weight used across the entire floor.
+- Make the ground record use: a worn traffic path through the room, and an edge condition where the floor meets wall at x=625 and y=16 (dirt build-up, spall, swept debris) rather than a straight cut through mid-stroke cracks. Related — the shrinkage-crack topology reads as dried mud, not as anything an administration built; decide whether this floor is worked stone and change the joint language accordingly.
+
+---
+
+Watch the tint layer specifically — if it's a shader-side per-tile random applied globally, everything downstream of it will inherit the same square-grid tell no matter how well the tiles themselves are drawn.
+
+*Model: Claude Opus 5 (1M context)*

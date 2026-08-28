@@ -210,8 +210,45 @@ def build_tile(n, e, s, w, mat, seed, worn=False):
                         lab[ny, nx2] = cur
                         stack.append((ny, nx2))
 
+    # STONE-TO-STONE VALUE, BLENDED TO AN EDGE VALUE THE NEIGHBOUR ALSO COMPUTES.
+    #
+    # The first version gave each region an independent random offset, and that put a hard value
+    # step through every stone that spans a cell boundary — the two halves are separate regions in
+    # separate tiles and drew separate values. Measured across an assembled field: boundary steps
+    # averaged 8.72 against 1.17 inside a tile, 7.4x, max 39.9. A blind seat found it before the
+    # measurement did — "axis-aligned value blocks on an exact 64-pixel lattice ... the grid reads
+    # before the floor does" — and it is §8.3.1 arriving through VALUE rather than through shape,
+    # which is the same way session one's mean-spread defect arrived.
+    #
+    # Edge matching fixed WHERE the joints cross. It said nothing about what the stone either side
+    # of the crossing is worth, and a stone is not one stone if its two halves are different
+    # colours.
+    #
+    # The fix: every boundary carries a value derived from ITS OWN FAMILY — data both neighbours
+    # already share — and each tile's material is blended toward that value as it approaches the
+    # edge. At the seam itself the blend is complete, so both tiles compute the identical value
+    # and the step is zero by construction. Away from the edges each region keeps its own offset,
+    # so stone-to-stone variation survives where it is legible and vanishes only where it would
+    # have drawn a lattice.
+    edge_value = {f: (f - (FAMILIES - 1) / 2.0) * step * 0.55 for f in range(FAMILIES)}
+    yy, xx = np.mgrid[0:T, 0:T]
+    dN, dS, dW, dE = yy, (T - 1 - yy), xx, (T - 1 - xx)
+    reach = 9                         # px over which a tile hands over to its boundary's value
+    wN = np.clip(1.0 - dN / reach, 0, 1)
+    wS = np.clip(1.0 - dS / reach, 0, 1)
+    wW = np.clip(1.0 - dW / reach, 0, 1)
+    wE = np.clip(1.0 - dE / reach, 0, 1)
+    wsum = wN + wS + wW + wE
+    edge_field = np.where(wsum > 0,
+                          (wN * edge_value[n] + wS * edge_value[s]
+                           + wW * edge_value[w] + wE * edge_value[e]) / np.maximum(wsum, 1e-6),
+                          0.0)
+    blend = np.clip(wsum, 0, 1)       # 1 at the edges, 0 in the tile's interior
+
+    region = np.zeros((T, T), dtype=float)
     for cid in range(nxt):
-        L[lab == cid] += rng.normal(0, step * (0.30 if worn else 0.50))
+        region[lab == cid] = rng.normal(0, step * (0.30 if worn else 0.50))
+    L += region * (1 - blend) + edge_field * blend
 
     amp = max(mat["grain_mad"], 1.0)
     # WORN: tighter grain. Traffic polishes tooth away — §8.1, "stone smoothed to a shine".
@@ -222,7 +259,13 @@ def build_tile(n, e, s, w, mat, seed, worn=False):
     # feet round the arrises off. §8.1's polish, delivered as depth rather than as brightness.
     L[joints] = stone * (0.80 if worn else 0.62) + rng.normal(0, 1.0, int(joints.sum()))
 
-    L += (mat["lum_median"] - float(L.mean()))    # hold the family's value; no tile drifts
+    # HOLD THE FAMILY'S VALUE. Applied to the whole tile, and the alternative was MEASURED rather
+    # than reasoned about: normalising only the interior — to leave the edge band exactly as the
+    # shared boundary value set it — made both numbers worse. Boundary steps 3.99 -> 4.93 and the
+    # per-tile mean spread 8.40, past the 6.4 a seat culled in session one as "the grid draws
+    # itself onto the ground". Two lattices are not better than one, so the whole-tile
+    # normalisation stays and the residual boundary step is carried as a named limitation.
+    L += (mat["lum_median"] - float(L.mean()))
     L = CF.quantise(L, mat["ladder"])
     return CF.colourise(L, mat["tint"]).astype(np.uint8), joints
 

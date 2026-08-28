@@ -2635,9 +2635,15 @@ public partial class Main : Node
         Dictionary<(int X, int Y), FloorIncident>? incidentPlan = null;
         if (_tileLayer != null && overlayManifest is { Length: > 0 })
         {
+            // The channel wash is suppressed when the edge-matched family is in play: that family
+            // carries the channel in its own material, and drawing the wash on top of it puts a
+            // flat per-cell value block over the very thing it is meant to express.
+            bool wangActive = (ReadStringArg("--wang-floor") ?? marker?.WangFloor)
+                              is { Length: > 0 };
             Report("[Tier1] " + Tier1FloorOverlays.Attach(_tileLayer, _state.Map,
                                                           overlayManifest, _baseSeed,
-                                                          out incidentPlan));
+                                                          out incidentPlan,
+                                                          drawChannel: !wangActive));
         }
         else
             Report("[Tier1] floor overlays: none declared (no --floor-overlays, no marker "

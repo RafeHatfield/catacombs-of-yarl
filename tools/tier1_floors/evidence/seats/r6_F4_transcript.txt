@@ -1,0 +1,67 @@
+Both read. Numbers below are native pixel coordinates in each image's own file (A is 384×288, B is 750×600).
+
+---
+
+## A
+
+**Q1_A: Dried mud / packed earth, with plain grey flagstone at the edges.**
+
+**Q1_WHY_A:** The large field from x≈80–224, y≈0–176 is a flat ochre (mean RGB ≈ 87,65,29) carrying a network of thin dark-red hairlines that close into rounded cells — that reads as cracked dried mud, not stone. The border band (y≈176–240, plus x<80 and x>312) is a different material: flat mid-grey rectangles, 16px, each with a one-pixel dark seam on the top/left and a pale highlight along the bottom, plus scattered single tan/dark pixels. Green standing water at x≈224–312, y≈0–140.
+
+**Q2_A:** Down, onto the grey flagstone band at y≈176. Not because of anything the ground told me — I picked it because it is the only direction that isn't water or the frame edge. The two barrels at (88,144) and (128,144) are objects, not ground. The ground itself gives me nothing: the mud is the same value everywhere, there is no path worn into it, no drainage, no direction of travel, no lit/unlit distinction. So: effectively random, constrained by obstacles.
+
+**Q3_A:** Nothing has happened to it. It is clean. The mud is undisturbed and evenly cracked wall-to-wall; the flagstones have no chips, no wear at the doorway, no settlement, no repair. The only incident in the whole frame is decal-level: a bone scatter at (185–205, 60–75), a few blue-grey flecks in the mud at (128,32), (140,105), (155,110), (198,127), and small teal mould blots on the grey at (0,105), (0,150), (320,110), (105,170).
+
+**Q3_WHY_A:** The flagstone slabs at y=176–240 are byte-identical to each other. There is no slab that is more worn than the slab beside it, no slab that sits lower, nothing lodged in a joint. Four hundred years of traffic would show first at the threshold between the mud and the stone at y=176 — that line is perfectly clean.
+
+**Q4_A: YES — a 48-pixel grid, everywhere.** The mud is one 48×48 stamp repeated with zero variation. I verified it: sampling 16px blocks across x=80–224, y=0–144, the block at (80,0) is pixel-identical to (128,0), (176,0), (80,48), (128,48), (176,48), (80,96), (176,96) — exactly period 48 in both axes, eight identical copies inside one screen. The grey band does the same thing: (0,192) = (48,192) = (96,192) = (192,192) = (240,192) = (288,192) = (336,192). Once you see the crack cells converging into the same little X at every tile corner, you cannot stop counting them across the room.
+
+**Q5_A: An image that was repeated.** Provably — see above. Nine copies of one mud stamp and seven copies of one flagstone stamp are on screen simultaneously, unrotated, unbroken, on a strict lattice.
+
+**Q6_A: YES**, this would ship — it is at the level of a stock asset-pack tileset and plenty of commercial games ship exactly this. Genuinely good: **no.** It is competent at best, and the repeat pushes it below that.
+
+**CULL_A:** One 48px stamp tiled nine times unbroken; the whole floor is visibly the same square repeating.
+
+**FLIP LIST — A**
+- Break the 48px repeat: at minimum 4–6 mud variants plus rotation, so no identical block appears twice within a screen.
+- Kill the regular waffle — the crack cells must not converge on tile corners; run cracks across boundaries at scales larger than one tile.
+- Give the flagstone band actual per-slab difference: value spread between slabs, chipped corners, one slab sunk or lifted, grit packed into joints.
+- Wear the threshold at y=176 where mud meets stone — trodden-in earth, a scuffed lead-in, something that says traffic passed here.
+- Add repair the orcs would have made: driven pins, a plank laid over a soft patch, rope-lashed timber let into the ground — not decorative flecks.
+
+---
+
+## B
+
+**Q1_B: A cracked, dried-out clay or mud floor — broken into large plates.**
+
+**Q1_WHY_B:** Across x≈190–630, y≈0–395 the surface is a warm tan broken by dark, irregular, hand-drawn crack lines into plates roughly 80–150px across (e.g. the big plate at (300–400, 60–160), another at (480–570, 90–200)). The cracks taper and branch and have a soft dark bloom either side rather than a hard outline — that is shrinkage cracking, not masonry jointing. Fine dark stipple sits inside the plates. There is a puncture with a small starburst of radiating cracks at ≈(355,255), and a second dark mark at ≈(460,215).
+
+**Q2_B:** Down, into the corridor at x≈380–430, y≈395–600. The ground drove this one: the crack network across the lower half of the lit area is not uniform — cracks converge toward the corridor mouth around (390–420, 380), and the long near-vertical fissure running from ≈(395,205) down to ≈(408,395) points straight at it. The floor also darkens continuously toward that gap, so the corridor reads as the direction the room drains and the direction the room is used. The unlit area to the west (x<190, y 130–390) shows only faint crack shapes at (60–120, 150–210) and offers no comparable pull.
+
+**Q3_B:** It has dried out and failed under load. The plates have separated from each other and the whole surface has broken up into a coarse mosaic; something has punched through it at ≈(355,255), and there's been an attempt to fix something at ≈(340,165)–(348,195) — a short dark vertical stroke with two dots either side of it, which reads as a driven pin or staple set into the ground.
+
+**Q3_WHY_B:** The cracks vary in width — the one through (250,80)–(330,120) is thick and open, the ones around (540,300) are hairline — so they didn't all happen at once. The starburst at (355,255) has short radial cracks propagating out of a single point, which is impact, not shrinkage. And the crack density is not even: (280–420, 250–380) is broken far smaller than the plate at (300–400, 60–160).
+
+**Q4_B: YES — a quilt of hard-edged squares on a 50px grid, sitting on top of the cracks.** Individual tiles carry a random brightness offset with a straight edge at the tile boundary. The clearest is the square at (500–550, 200–250): after removing the light falloff it measures ~0.91 against 1.10 and 1.08 for the tiles immediately left and right — an ~18% step with a dead-straight vertical seam at x=500 and x=550 running right through the crack drawing. Others at (450–500, 300–350) and (250–300, 50–100). Once noticed, the room reads as a chequerboard the cracks are printed over. Second, smaller thing: that long fissure at x≈395–408, y 205–395 sits almost exactly on the x=400 tile column edge, which makes it read as a seam rather than as a crack.
+
+**Q5_B: A surface that was made.** I tested for a repeat and there isn't one — after dividing out the light falloff and quantising, all 154 tiles in the frame are distinct, and more importantly the crack lines run continuously across tile boundaries (e.g. the crack entering the tile at (400,100) from the left exits its right edge and continues into (450,100) without a kink). The plate shapes are all different sizes and none of them are square. This was drawn as a field, not stamped.
+
+**Q6_B: YES.** Genuinely good: **no** — competent-plus. The crack network itself is good work and the incident at (355,255) and the pin at (340,180) are the right instinct. But the per-tile brightness quilt is a visible manufacturing artefact, and the material still reads as a natural mud-flat rather than as a floor in an administered building that nobody maintains. There is no evidence of the place having been *made* — no slab, no channel, no laid surface for the mud to be failing *over*, and one pin is the only human mark in a 440×395 area.
+
+**CULL_B:** Random per-tile brightness prints a hard-edged 50px chequerboard across the whole floor, fighting the crack drawing.
+
+**FLIP LIST — B**
+- Remove the per-tile brightness offsets, or blend them across tile edges — no straight-edged value steps at (500,200), (450,300), (250,50).
+- Move the fissure at x≈400, y 205–395 off the tile column edge so it stops reading as a seam.
+- Put a made surface underneath the failure: exposed slab edges, a worn channel, a laid course showing through where the mud has broken away.
+- More orc repair at ground level — driven pins, lashed timber, hide patched over a hole — the single pin at (340,180) is not enough for a four-hundred-year holding line.
+- Cool the ground's base albedo. Under the lamp it reads warm and dry; it needs to read cold when the light moves off it.
+
+---
+
+**RANK: B**
+
+A is a stamp repeated nine times on screen; B is a drawn surface with a real defect in how it's assembled. The gap isn't close. But B's win is on craft, not on fiction — neither floor currently says *administered*, and that's the note I'd carry into the next pass on both.
+
+*Model: Claude Opus 5 (1M context).*
