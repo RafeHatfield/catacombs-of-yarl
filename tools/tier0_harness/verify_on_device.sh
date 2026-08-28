@@ -37,9 +37,28 @@ while [ $# -gt 0 ]; do
 	esac
 done
 
+# DEVICE RESOLUTION FROM STRUCTURED OUTPUT, NOT FROM COLUMNS.
+#
+# The first version parsed `devicectl list devices` with awk, taking $(NF-2) as the identifier.
+# The Model column contains spaces — "iPhone SE (3rd generation)" — so it picked up "(3rd" and
+# then queried a device that does not exist. `device info apps` returned nothing, and the script
+# reported NOT INSTALLED about an app that was installed. **A confident wrong answer from a bad
+# input**, which is the failure this whole harness exists to prevent.
 if [ -z "$DEVICE" ]; then
-	DEVICE="$(xcrun devicectl list devices 2>/dev/null \
-		| awk '/available/ {print $(NF-2); exit}')"
+	DEVJSON="$(mktemp)"
+	xcrun devicectl list devices --json-output "$DEVJSON" >/dev/null 2>&1 || true
+	DEVICE="$(python3 - "$DEVJSON" <<'PY'
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+except Exception:
+    sys.exit(0)
+for x in d.get("result", {}).get("devices", []):
+    print(x.get("identifier", ""))
+    break
+PY
+)"
+	rm -f "$DEVJSON"
 fi
 [ -n "$DEVICE" ] || { echo "no paired device found (xcrun devicectl list devices)" >&2; exit 1; }
 
@@ -47,12 +66,29 @@ mkdir -p "$OUT"
 echo "== device: $DEVICE"
 
 # ---- 1. IS IT ACTUALLY INSTALLED? -----------------------------------------------------------
+#
+# "COULD NOT ASK" AND "THE DEVICE SAID NO" ARE DIFFERENT ANSWERS and must not share an exit path.
+# A disconnected or locked handset returns no app list, and reporting that as NOT INSTALLED sends
+# somebody to rebuild and redeploy something that is already there.
 echo "== installed apps, as the DEVICE reports them"
-APPS="$(xcrun devicectl device info apps --device "$DEVICE" 2>/dev/null || true)"
+if ! APPS="$(xcrun devicectl device info apps --device "$DEVICE" 2>&1)"; then
+	echo ""
+	echo "CANNOT ASK THE DEVICE — the query failed. This is NOT a statement about whether the" >&2
+	echo "app is installed; it means the handset did not answer. Is it connected and unlocked?" >&2
+	echo "  xcrun devicectl list devices" >&2
+	echo "$APPS" | tail -5 >&2
+	exit 7
+fi
 echo "$APPS" | grep -iE "catacombs|yarl" || true
+if ! echo "$APPS" | grep -qE "^[[:space:]]*[A-Za-z]"; then
+	echo ""
+	echo "CANNOT ASK THE DEVICE — it returned an empty app list, which no paired device does." >&2
+	echo "Treating this as unanswered rather than as 'not installed'." >&2
+	exit 7
+fi
 if ! echo "$APPS" | grep -q "$BUNDLE"; then
 	echo ""
-	echo "NOT INSTALLED: $BUNDLE is not on this device." >&2
+	echo "NOT INSTALLED: the device answered, and $BUNDLE is not among the apps it listed." >&2
 	echo "An export exiting 0 is not a deployment. Run build_review_app.sh WITHOUT --no-install." >&2
 	exit 3
 fi
