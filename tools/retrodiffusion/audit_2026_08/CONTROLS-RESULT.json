@@ -1,0 +1,193 @@
+{
+ "failed": 0,
+ "green_halves": 6,
+ "red_halves": 17,
+ "results": [
+  {
+   "control": "preflight/absent",
+   "expected": "SystemExit naming the env var",
+   "got": "SystemExit",
+   "half": "RED",
+   "ok": true,
+   "verbatim": "STOP \u2014 no Retro Diffusion credential.\n  Set RD_API_KEY in the environment before running anything in this directory.\n  The key is never committed, never printed, and never written to the ledger.\n  See tools/retrodiffusion/audit_2026_08/README.md."
+  },
+  {
+   "control": "preflight/wrong_shape",
+   "expected": "SystemExit refusing to send",
+   "got": "SystemExit",
+   "half": "RED",
+   "ok": true,
+   "verbatim": "STOP \u2014 RD_API_KEY is set but is not a Retro Diffusion key (len=34 prefix_ok=False).\n  Vendor keys begin 'rdpk-'. Refusing to send a credential to an endpoint it does not\n  belong to."
+  },
+  {
+   "control": "preflight/wrong_shape_no_leak",
+   "expected": "the rejected value absent from the message",
+   "got": "absent",
+   "half": "RED",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "preflight/valid",
+   "expected": "shape string with no key material",
+   "got": "len=32 prefix_ok=True",
+   "half": "GREEN",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "budget/inside",
+   "expected": "3 of 3 reserved",
+   "got": "spent=3",
+   "half": "GREEN",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "budget/over",
+   "expected": "BudgetExceeded naming the ceiling",
+   "got": "BudgetExceeded",
+   "half": "RED",
+   "ok": true,
+   "verbatim": "REFUSING: 1 generation(s) would take this session to 4 of a hard ceiling of 3. Nothing was called and nothing was billed."
+  },
+  {
+   "control": "budget/session_ceiling",
+   "expected": "refusal to exceed the declared session ceiling",
+   "got": "BudgetExceeded",
+   "half": "RED",
+   "ok": true,
+   "verbatim": "REFUSING: ceiling 41 exceeds the session ceiling 40 declared in the brief."
+  },
+  {
+   "control": "budget/no_network",
+   "expected": "BudgetExceeded, zero HTTP calls",
+   "got": "BudgetExceeded, 0 HTTP calls",
+   "half": "RED",
+   "ok": true,
+   "verbatim": "REFUSING: 1 generation(s) would take this session to 2 of a hard ceiling of 1. Nothing was called and nothing was billed."
+  },
+  {
+   "control": "divergence/agree",
+   "expected": "estimate_matched True, divergence 0",
+   "got": "matched=True divergence=0.0",
+   "half": "GREEN",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "divergence/diverge",
+   "expected": "estimate_matched False, divergence 0.12",
+   "got": "matched=False divergence=0.12",
+   "half": "RED",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "ledger/no_key_on_disk",
+   "expected": "credential absent, <redacted> present",
+   "got": "key_present=False redacted_present=True",
+   "half": "RED",
+   "ok": true,
+   "verbatim": "{\"budget_ceiling\": 40, \"budget_spent\": 1, \"claim\": \"control\", \"commit\": \"0d536ce5657478373dff97fb55f3325f7d3e81e6\", \"estimate_error\": null, \"estimated_cost\": null, \"http_status\": 401, \"images\": [], \"kind\": \"generate\", \"r"
+  },
+  {
+   "control": "ledger/image_digested",
+   "expected": "dict with sha256 + size, no base64 body",
+   "got": "{\"_ref\": \"sha256:46c445073a59cc0289b0c492b33507c1a6b0d7dd2ee28d0bd960e70f345d858b\", \"_bytes\": 184, \"_size\": [64, 64]}",
+   "half": "GREEN",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "partial/complete",
+   "expected": "no INVARIANT_RED",
+   "got": "none",
+   "half": "GREEN",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "partial/short",
+   "expected": "INVARIANT_RED naming 4 vs 3",
+   "got": "requested 4 images, received 3",
+   "half": "RED",
+   "ok": true,
+   "verbatim": "requested 4 images, received 3"
+  },
+  {
+   "control": "reconcile/agree",
+   "expected": "verdict INFO, reconciled True",
+   "got": "INFO reconciled=True",
+   "half": "GREEN",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "reconcile/disagree",
+   "expected": "verdict RECONCILE_RED with an INVARIANT_RED line",
+   "got": "RECONCILE_RED reconciled=False",
+   "half": "RED",
+   "ok": true,
+   "verbatim": "pool moved 0.5 but calls billed 0.12 \u2014 the bracket and the per-call costs disagree"
+  },
+  {
+   "control": "reconcile/unreadable",
+   "expected": "RECONCILE_RED on an unreadable pool",
+   "got": "RECONCILE_RED",
+   "half": "RED",
+   "ok": true,
+   "verbatim": "balance unreadable at one or both ends of the bracket"
+  },
+  {
+   "control": "refusal/400_insufficient_balance",
+   "expected": "REFUSED:insufficient_balance with the server's own words retained",
+   "got": "REFUSED:insufficient_balance | reason='insufficient balance for this request'",
+   "half": "RED",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "refusal/400_invalid_input",
+   "expected": "REFUSED:invalid_input with the server's own words retained",
+   "got": "REFUSED:invalid_input | reason='width must be between 64 and 384'",
+   "half": "RED",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "refusal/422_validation",
+   "expected": "REFUSED:validation with the server's own words retained",
+   "got": "REFUSED:validation | reason='validation error: prompt_style'",
+   "half": "RED",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "refusal/429_rate_limit",
+   "expected": "REFUSED:rate_limit with the server's own words retained",
+   "got": "REFUSED:rate_limit | reason='slow down'",
+   "half": "RED",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "refusal/401_auth",
+   "expected": "REFUSED:auth with the server's own words retained",
+   "got": "REFUSED:auth | reason='bad token'",
+   "half": "RED",
+   "ok": true,
+   "verbatim": ""
+  },
+  {
+   "control": "refusal/500_server_error",
+   "expected": "REFUSED:server_error with the server's own words retained",
+   "got": "REFUSED:server_error | reason='upstream exploded'",
+   "half": "RED",
+   "ok": true,
+   "verbatim": ""
+  }
+ ],
+ "total": 23,
+ "verdict": "PASS"
+}

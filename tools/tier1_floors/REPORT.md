@@ -113,6 +113,17 @@ constructed at `radius=5.5 falloff=1 ambient=1`. **The device log carries the ch
 is identical to the headless capture's — the incident system runs on the phone, not only in the
 harness.
 
+⚠ **That read-back was taken at commit `a1c6782c`, BEFORE Ruling 56** — which is why the rig line
+above reads 5.5/1/1 rather than the ratified 5.0/1.00/0.70. It was recorded at the time as
+**installed-not-verified** for the ratified build: one carrying Ruling 56 was installed afterwards
+and its boot read-back did not complete, because the handset was locked and `devicectl` refused
+the launch.
+
+**That gap is now closed.** `tools/tier0_harness/verify_on_device.sh` — itself repaired in #157,
+having reported NOT INSTALLED about an app that was installed — returned the ratified build's
+read-back from the handset at commit `416f105c`, with the rig echoed by the phone's own log as
+`ambient=1a1a22@0.7 (effective 121218) … radius_tiles=5 falloff=1`.
+
 **What the next floor round needs is named and measured, not guessed:** an edge-matched
 (Wang/blob) tile set, because a joint network cannot close unless joints match across cell
 boundaries — §10.7.

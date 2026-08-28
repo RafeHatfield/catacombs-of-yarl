@@ -1,5 +1,51 @@
 # Retro Diffusion Conventions for YARL
 
+## ⬛ STANDING LAW — LIVE, 2026-08-28. Everything below the next banner is RETIRED; this section is not.
+
+Two rules banked from the 2026-08 adoption audit
+(`tools/retrodiffusion/audit_2026_08/AUDIT-RD.md`). They are **measured**, they are **not
+Oryx-track material**, and they survive the retirement of everything under them. They are
+recorded here rather than in the audit alone because the next person to reach for RD will open
+this file first.
+
+### LAW 1 — The seamless census can never be read without the ring screen beside it
+
+> **A framed tile always passes a seamless census — a border makes every edge identical.
+> Vendor seamless claims are satisfiable by the one construction §12.1 forbids. The census can
+> never be read without the ring screen beside it.**
+
+Measured: all four tiles of the column audit passed both census measures, **including the two
+the ring instrument called RING**. The census is not broken — a keyline round the canvas makes
+the wrap join perfectly value-continuous, so the tile lays without a seam *because* it is
+fenced. Any surface can therefore satisfy a "seamless tiling" claim by drawing a baked outline,
+which is bible §12.1's prohibited construction.
+
+**Operationally:** a seam result is reported **in the same table row** as that tile's ring
+result, never on its own line, never in its own table, never as a headline. A seam pass with no
+ring verdict beside it is not evidence and must not be quoted as any.
+
+### LAW 2 — Seed-reproducibility is PROVENANCE, not a storage substitute
+
+RD **is** seed-reproducible (measured: two identical calls, same seed, byte-identical PNG —
+which is a real difference from PixelLab, where bible §13.7 records the opposite). It is
+tempting to conclude that a ledger may therefore store parameters instead of images. **It may
+not.**
+
+> **The manifest stores `(prompt, seed, model, full params)` per generation AND the returned
+> bytes. Reproducibility holds only while the vendor serves the same weights; a hosted deploy
+> can invalidate parameters-only entries silently.**
+
+The failure mode is the one this project has already been bitten by twice — *a step that runs,
+changes nothing, and says so quietly* (LOOP-PROCESS §4.2). A parameters-only ledger keeps
+working, keeps validating, and keeps returning *a* tile right up until the vendor ships new
+weights, at which point every historical entry silently means a different image and nothing
+goes red. The bytes are the evidence; the parameters are how you say where they came from.
+
+`audit_2026_08/run20.py` writes both, and its `MANIFEST.json` is the shape to copy.
+
+---
+
+
 > **⚠️ Art-direction notice — 2026-08-24.** This document was already secondary (PixelLab superseded RD in Apr 2026); the **Oryx-conformance art track is
 > closed**, so every instruction below about matching Oryx style, locking to the Oryx palette,
 > or passing the Oryx art lint is **retired** — see
