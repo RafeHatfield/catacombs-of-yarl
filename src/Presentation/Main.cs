@@ -130,6 +130,13 @@ public partial class Main : Node
     // ReviewRigPanel can turn its knobs. Null outside a review build.
     private ReviewLighting? _reviewLighting;
 
+    // Review-build only, and reached solely from LaunchCorridorScene. The wall family is held so
+    // the rig panel's VOID row can re-lay it live: §13.1 gives the void to Rafe at the gate, and
+    // three candidates rebuilt one at a time are three walks rather than one comparison.
+    private ReviewRigPanel? _rigPanel;
+    private string? _wallManifest;
+    private int _voidChoice;
+
     // Dungeon run state
     private int _baseSeed = 1337;
     private int _currentDepth = 1;
@@ -2592,6 +2599,7 @@ public partial class Main : Node
         // THE RIG LADDER — §6.2.1's tuning pass, on device, in Rafe's hands. Review builds only:
         // this is reached from LaunchCorridorScene, which a player build never enters.
         var rigPanel = new ReviewRigPanel(lighting);
+        _rigPanel = rigPanel;
         GetNode<Control>("UILayer/ViewportOverlay").AddChild(rigPanel);
 
         // Through Diag as well as GD.Print: on iOS there is no console to read, and GD.Print goes
@@ -2615,6 +2623,31 @@ public partial class Main : Node
         Report($"[Tier0] junction={(hasJunction ? $"YES at ({junctionAt.X},{junctionAt.Y})" : "NO")}");
         Report($"[Tier0] tile_theme_config={TileThemeLoader.ActiveConfigPath}");
         Report($"[Tier0] light rig: {lighting.Describe(_renderer.TileWidth, _renderer.TileHeight)}");
+
+        // THE GRID, IN CAPTURED PIXELS. Emitted so an off-line measurement does not have to
+        // reverse-engineer the camera to know which pixels are which tile.
+        //
+        // Every measurement this project takes off a capture — the value stack, the perceptual
+        // floor, a field census — needs the tile lattice in image coordinates, and until now each
+        // one either guessed it or measured something adjacent to it. A guessed grid does not
+        // fail loudly: it reports a confident number about the wrong pixels, which is the failure
+        // mode §13.5 exists for. The engine already knows the answer exactly; it just never said
+        // it out loud.
+        {
+            var gv = GetNodeOrNull<Node2D>("GameView");
+            if (gv != null)
+            {
+                var gx = gv.GetGlobalTransform();
+                var o = gx * _renderer.GridToScreenCenter(0, 0);
+                var o1 = gx * _renderer.GridToScreenCenter(1, 1);
+                var vp = GetNodeOrNull<Control>("UILayer/ViewportOverlay");
+                var band = vp != null ? vp.GetGlobalRect() : new Rect2(0, 0, 0, 0);
+                Report($"[Tier0] grid map: centre00=({o.X:0.###},{o.Y:0.###}) "
+                     + $"pitch=({o1.X - o.X:0.###},{o1.Y - o.Y:0.###}) "
+                     + $"view=({band.Position.X:0.###},{band.Position.Y:0.###})..."
+                     + $"({band.End.X:0.###},{band.End.Y:0.###})");
+            }
+        }
 
 
         // PRECONDITION 1 (floor session two): what did the variant picker ACTUALLY lay?
@@ -2688,6 +2721,35 @@ public partial class Main : Node
         {
             Report("[Tier1] ashlar floor: none declared (no --ashlar-floor, no marker "
                    + "ashlarFloor)");
+        }
+        // THE WALLS. Last, because it replaces sprites the floor systems never touch and because
+        // a wall family that failed to attach must be visible as the magenta mock rather than as
+        // a plausible grey — the same reasoning that made the floor's fallback tile magenta.
+        string? wallManifest = ReadStringArg("--boundary-wall") ?? marker?.BoundaryWall;
+        if (_tileLayer != null && wallManifest is { Length: > 0 })
+        {
+            string? vArg = ReadStringArg("--void-choice");
+            int voidChoice = vArg != null && int.TryParse(vArg, out int vv) ? vv
+                           : marker?.VoidChoice ?? 0;
+            _wallManifest = wallManifest;
+            _voidChoice = voidChoice;
+            string? bindings = ReadStringArg("--wall-bindings") ?? marker?.WallBindings;
+            Report(Tier1BoundaryWall.Apply(_tileLayer, _state.Map, wallManifest, voidChoice,
+                                           bindings));
+            var layer = _tileLayer;
+            var map = _state.Map;
+            _rigPanel?.AddVoidRow(Tier1BoundaryWall.LastVoidCount, () => _voidChoice, v =>
+            {
+                _voidChoice = v;
+                string line = Tier1BoundaryWall.Apply(layer, map, wallManifest, v, bindings);
+                GD.Print(line);
+                Diag.Log(line);
+            });
+        }
+        else
+        {
+            Report("[Tier1] boundary wall: none declared (no --boundary-wall, no marker "
+                   + "boundaryWall) — the walls in this capture are the tier-0 magenta mocks");
         }
         Report($"[Tier0] review_build_marker={(marker != null ? ReviewBuildMarker.Path : "none (CLI flags)")}");
         // Reported so the device log proves the no-losable-state fix is actually on the device.
