@@ -45,7 +45,12 @@ BAR_IMG = ("/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.
 # here, and not re-picked per round: a crop chosen after seeing a verdict is a crop chosen to
 # produce one.
 BAR_CROP = (96, 96, 672, 672)
-YARL_CROP = (0, 150, 750, 950)      # the dungeon view, HUD excluded
+# THE DUNGEON VIEW EXACTLY, and round 1 is why it is not a tighter crop. The first crop trimmed
+# 60px off the top and 50 off the bottom "to exclude the HUD", and it trimmed away the VOID with
+# them — the seat reported *"the image contains no beyond … the wall's outer face and the canvas
+# edge are the same line"*, which was true of the crop and not of the scene. A crop that removes
+# the subject is the review scene's own §2.2 failure moved into the review harness.
+YARL_CROP = (0, 91, 750, 1000)
 
 # THE RUIN VOCABULARY. §8.1 holds that nothing in the Paths is ruined and everything is used up,
 # so a seat that has read the register reports the plant's collapse, cobweb, moss and applied

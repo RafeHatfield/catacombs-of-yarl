@@ -65,13 +65,31 @@ BIND_BASE = 9800
 # of the tile set: the Boundary is a line held for four centuries by people who over-build and
 # repair on top of repairs, so bindings are COMMON on the reveals a player walks past and rarer
 # on wall the player only sees the top of.
-RATES = dict(face=0.34, top=0.11)
+RATES = dict(face=0.45, top=0.14)
 
 
-def ink(ladder):
-    """Iron, rope, timber and shadow, all taken from the family's own ladder."""
+def ink(ladder, plane_rung):
+    """Iron, rope, timber and shadow, taken from the family's ladder RELATIVE TO THE PLANE.
+
+    ⚠ ONE INK SET FOR BOTH PLANES DOES NOT WORK, and round 1's second seat found the consequence
+    without being told there were bindings at all:
+
+        *"There is exactly one made object anywhere on the standing structure … It sits in the
+        middle of a wall course. It does not span a joint, does not bridge a break, does not
+        cross the corner it sits beside. IT IS HOLDING NOTHING."*
+
+    Part of that is range - at four percent luminance nothing reads - and part of it is this: iron
+    fixed at rung 1 sits two rungs under a top plane and reads, and sits half a rung under the
+    FACE, where §6.5 has already put the stone, and vanishes. A strap you cannot see is not a
+    strap that failed to grip; it is a strap that is not there (§13.8).
+
+    So the ink is derived from the plane it lands on. Iron is three rungs under its own plane
+    wherever that plane sits, which keeps the ratio - and a ratio is the thing the rig preserves.
+    """
     L = list(ladder)
-    return dict(shadow=L[0], iron=L[1], rope=L[3], timber=L[2], pale=L[5])
+    def at(off):
+        return L[max(0, min(len(L) - 1, plane_rung + off))]
+    return dict(shadow=at(-4), iron=at(-3), rope=at(-1), timber=at(-2), pale=at(+2))
 
 
 def _rect(a, x, y, w, h, v):
@@ -146,8 +164,9 @@ def compose(out_dir, arm):
     man = json.load(open(os.path.join(REPO, CW.ASSETS_REL if arm == "material"
                                       else CW.ASSETS_REL + "_" + arm, "MANIFEST.json")))
     ladder = man["ladder"]
+    top_rung = man["planes"]["top_rung"]
+    face_rung = man["planes"]["face_rung"]
     global ink_v
-    ink_v = ink(ladder)
     tint = np.array(json.load(open(os.path.join(
         REPO, "src/Presentation/assets/tier1_ashlar/MANIFEST.json")))["material"]["tint"])
 
@@ -160,6 +179,8 @@ def compose(out_dir, arm):
     for kind in sorted(KINDS):
         for face in (True, False):
             for k in range(3):
+                ink_v.clear()
+                ink_v.update(ink(ladder, face_rung if face else top_rung))
                 a = np.zeros((T, T), dtype=float)
                 alpha = np.zeros((T, T), dtype=float)
                 before = a.copy()
@@ -186,7 +207,8 @@ def compose(out_dir, arm):
                           "its own copy.",
                law="Section 8.3.1 - incident arrives at the INSTANCE level, randomised. Nothing "
                    "here may be baked into a wall segment.",
-               ink={k: round(float(v), 2) for k, v in ink_v.items()},
+               ink=dict(face={k: round(float(v), 2) for k, v in ink(ladder, face_rung).items()},
+                        top={k: round(float(v), 2) for k, v in ink(ladder, top_rung).items()}),
                tiles=tiles)
     mp = os.path.join(out_dir, "MANIFEST.json")
     json.dump(out, open(mp, "w"), indent=2)

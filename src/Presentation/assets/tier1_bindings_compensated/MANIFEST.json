@@ -1,19 +1,28 @@
 {
   "family": "boundary_binding_v1",
   "arm": "compensated",
-  "commit": "4de46a87fc32441a91a3c64bb752317955d89eba",
+  "commit": "c241f421f97c7fdc5f21ce0fea0a7b75eeadc6d9",
   "rates": {
-    "face": 0.34,
-    "top": 0.11
+    "face": 0.45,
+    "top": 0.14
   },
   "rates_note": "Properties of the world (section 7.3), never of the tile set. The engine planner and this file read the same numbers; neither carries its own copy.",
   "law": "Section 8.3.1 - incident arrives at the INSTANCE level, randomised. Nothing here may be baked into a wall segment.",
   "ink": {
-    "shadow": 48.56,
-    "iron": 61.79,
-    "rope": 88.24,
-    "timber": 75.02,
-    "pale": 114.7
+    "face": {
+      "shadow": 48.56,
+      "iron": 48.56,
+      "rope": 61.79,
+      "timber": 48.56,
+      "pale": 101.47
+    },
+    "top": {
+      "shadow": 101.47,
+      "iron": 114.7,
+      "rope": 141.15,
+      "timber": 127.92,
+      "pale": 154.38
+    }
   },
   "tiles": [
     {
@@ -26,7 +35,7 @@
       "grips": [
         "cramp"
       ],
-      "sha256": "8044fd275a6364df3e3e0a7e8ae1236e9429a16e231f96e00f8379618775ea05"
+      "sha256": "8c9d0437a2631ab66ffb0e4bb3c1ea11388e5bbe6313d3cb7d76b130a6d3113b"
     },
     {
       "id": 9801,
@@ -38,7 +47,7 @@
       "grips": [
         "cramp"
       ],
-      "sha256": "3def1125c0d487e697ecb23bc85fb51b293c4966334694ea6cb42ab55a455275"
+      "sha256": "ddef06211a072190fb63b97ddf8821ecb11526c5a37f7570ca51bbe96a9a7715"
     },
     {
       "id": 9802,
@@ -50,7 +59,7 @@
       "grips": [
         "cramp"
       ],
-      "sha256": "5b142e10c63c4b5376a171cff20909542bb53ea82d992e5b15331047e5f620f8"
+      "sha256": "003d22ece07c6072468c1f615ca7a68beda75fb3c09d776e8dc28715a8f6654b"
     },
     {
       "id": 9803,
@@ -62,7 +71,7 @@
       "grips": [
         "cramp"
       ],
-      "sha256": "f61ab82223acfb73bb8324fbfaf8175d22fd0cb1ca1c0076fcfd6de304cefaf8"
+      "sha256": "c7fe910961d4406980976eb5fe33727350b914dcc33322e0ad8e16fdad229002"
     },
     {
       "id": 9804,
@@ -74,7 +83,7 @@
       "grips": [
         "cramp"
       ],
-      "sha256": "739949819b634da05afe69efdc8b658443ac4239209ce57819d45bfc213e1c84"
+      "sha256": "dc1cacf5bc0dadd33c422eea7b3e8de1d953c030b9d81da6b1ea818c992bd045"
     },
     {
       "id": 9805,
@@ -86,7 +95,7 @@
       "grips": [
         "cramp"
       ],
-      "sha256": "d94cc0fabe382530fbdd65ebddb9012a3e5ba0af310467a2630571035d52efe2"
+      "sha256": "613e14c1aa65323c1b02aeb127d19ccdc2adc3dc0cde3ce927201e49f48eb694"
     },
     {
       "id": 9806,
@@ -98,7 +107,7 @@
       "grips": [
         "lash"
       ],
-      "sha256": "1efff9ac89887705b8a6d1a64a00836af4cbdc0e60fb852871cdf92b0108b80f"
+      "sha256": "f0a853057a2c20bf9a5ae8bfd73b8c0980e62a9801deb83329af95d081db8588"
     },
     {
       "id": 9807,
@@ -110,7 +119,7 @@
       "grips": [
         "lash"
       ],
-      "sha256": "6100d35f312717e5eebb93d95501c23df617dbab406fd771d75245e06c5ccbf2"
+      "sha256": "a714499b3cd57a2aeaf175c6b8903cebb89605e81176efb5f1367d7000ece4fe"
     },
     {
       "id": 9808,
@@ -122,7 +131,7 @@
       "grips": [
         "lash"
       ],
-      "sha256": "58335dda3ce99b5fc9911fe6a4d0c0129f3d318449df3e3412e4d7befe0cf978"
+      "sha256": "e6a13ad4fba5c191456d2293e3e23a100a87fe79df691f435a4230a67ffb2240"
     },
     {
       "id": 9809,
@@ -134,7 +143,7 @@
       "grips": [
         "lash"
       ],
-      "sha256": "6a948ffa102af9509b384f696cbfb3f5b91b35d27301995882792031e1ea15dc"
+      "sha256": "fec2229af60082dbe8f4996dc6d6be4473227e521e66eed97dbe3a341bd84d35"
     },
     {
       "id": 9810,
@@ -146,7 +155,7 @@
       "grips": [
         "lash"
       ],
-      "sha256": "9299334cffc02072d14e5cb63f568920e66e2cd2f30340dfdabff13129575ddc"
+      "sha256": "3ec6de1f21a526650e2fecdd7a39faa46f36dcb5a1ce6a58b3cf2ca1dce430a7"
     },
     {
       "id": 9811,
@@ -158,7 +167,7 @@
       "grips": [
         "lash"
       ],
-      "sha256": "da18f5b1b209347d46a7da8ca5ccc3bdc1d6c4cc53e48c2e6c410edc2497527a"
+      "sha256": "cf239719f075edefc0f14ed5bb5cf1d351cd6db7fbba841c8033c7cd1e0eb878"
     },
     {
       "id": 9812,
@@ -170,7 +179,7 @@
       "grips": [
         "patch"
       ],
-      "sha256": "3a0af110397b559d3fac973f8e42dd86d1b1480f5f0b103f09affac73193ba56"
+      "sha256": "2faf51b391d8c5475599a3431d8f993afa27254be1946e11d005da2c0068bc7c"
     },
     {
       "id": 9813,
@@ -182,7 +191,7 @@
       "grips": [
         "patch"
       ],
-      "sha256": "9c3ea442dd8168b6a1a14aafc02a355107dd21b336d9238c7493d4d441db8512"
+      "sha256": "17719d6c40dd5ac059412222c7e6966c9c459ec8592033262b924628d12ec048"
     },
     {
       "id": 9814,
@@ -194,7 +203,7 @@
       "grips": [
         "patch"
       ],
-      "sha256": "33eb2a3bf4e85c4b40324f2efa8e9a1d09d30cf287871d3f5b0e70fd783383a4"
+      "sha256": "3321bdd60a901e2516b88de285c4efd7d87a3efe85f1e4d4f627fb08af080ce7"
     },
     {
       "id": 9815,
@@ -206,7 +215,7 @@
       "grips": [
         "patch"
       ],
-      "sha256": "3a44fef0c1f5c4457e8ca0c5e1b8e2d733f1fe6d1648b19cdc2e0f10a8065838"
+      "sha256": "9b4161869a64ff44d8b41ffbe558fb04588ea105b5f977924f9668914109796f"
     },
     {
       "id": 9816,
@@ -218,7 +227,7 @@
       "grips": [
         "patch"
       ],
-      "sha256": "0278a8f52346c6ed8fcbaae36f64fe174cb5488664645a8f2716b838781c51d0"
+      "sha256": "4f5e35149af261c110b18d617cb57a7ec4bc48f4e2aaa96b049429e2a2604d78"
     },
     {
       "id": 9817,
@@ -230,7 +239,7 @@
       "grips": [
         "patch"
       ],
-      "sha256": "da88929e256e5016cab522be81ca06200c3a76913054c342a770adf4e90c6abf"
+      "sha256": "bf1f09282ba20b891e4219277b8566f2ae06f928c513b369141568612a430c1b"
     },
     {
       "id": 9818,
@@ -242,7 +251,7 @@
       "grips": [
         "pin"
       ],
-      "sha256": "0975dac2920835e49e72c8c6063a6441aec937d3322aec189e016087d28e3a4f"
+      "sha256": "6e673526c28e293bd82d3ac5db3f4354ac8a1d7f3427c21f7d8683cfaa6f1e9a"
     },
     {
       "id": 9819,
@@ -254,7 +263,7 @@
       "grips": [
         "pin"
       ],
-      "sha256": "7b60e0a9136333b7a96a2b6ba7bb6d56d87b84319041e425c77b1a87364b1579"
+      "sha256": "d435e9e181c2555c9a0d4ef492c3f010364701af1bd05706baf05d15f1655603"
     },
     {
       "id": 9820,
@@ -266,7 +275,7 @@
       "grips": [
         "pin"
       ],
-      "sha256": "736c9b36f9bb6cc0b4b8d6ab3a629bbfc850b50f2d3db845fa92becd7ac203a7"
+      "sha256": "e83961ae8ef2f8507c91d5f90e3474a2c615e49cd1b5b7d2bc372a2f77411229"
     },
     {
       "id": 9821,
@@ -278,7 +287,7 @@
       "grips": [
         "pin"
       ],
-      "sha256": "f06244cd58a763b60bbc78868d9cbb90f67afa513b1e8fd3d75a4ffc6cb775c6"
+      "sha256": "f6de8f2b5601e6309da235d07ac7eb69024b0f84fad728ed25c674d6d0918b2f"
     },
     {
       "id": 9822,
@@ -290,7 +299,7 @@
       "grips": [
         "pin"
       ],
-      "sha256": "c26c91161ea1b40f6e8d1126f2962b2854aca37c8d4f9f6a7b65dd8167d88886"
+      "sha256": "7ef1bfb85d30c103d8ec2d410246afc383e9d5144d43f61bc2f3dfb29b005eac"
     },
     {
       "id": 9823,
@@ -302,7 +311,7 @@
       "grips": [
         "pin"
       ],
-      "sha256": "2ec04188440ab19ad327afdcdd10ae6255bb926cd8c7bcd3dbb241e4f357b20d"
+      "sha256": "5ccb73f6c202a410eb55b5c32ceb012272efac7b3a29327abcdbf916032a8b34"
     },
     {
       "id": 9824,
@@ -314,7 +323,7 @@
       "grips": [
         "strap"
       ],
-      "sha256": "c038ba08552b6844b722e4e2ee5ce3bde62f9913c25a33197cedf2f94f7cca21"
+      "sha256": "209f80697a8b99da3187bbed104686964bbc931dc2f43a3da6e379165ca653d9"
     },
     {
       "id": 9825,
@@ -326,7 +335,7 @@
       "grips": [
         "strap"
       ],
-      "sha256": "ac73f63bdcdc1f9a0dd36f55809f4c70a7fac118f9c64caa8279304e97709f25"
+      "sha256": "0b8bc89b54e919301b87a00fb7e2ecd5e5f0db693eb4815cddabddf5476d7db1"
     },
     {
       "id": 9826,
@@ -338,7 +347,7 @@
       "grips": [
         "strap"
       ],
-      "sha256": "4768bb36f4fcc80542506132f7bf04065c6a8f92cb088cae418829c066507219"
+      "sha256": "84b819cdc0a1d2f3d4a3cac244545fcb65f54803da95a116a4f4ac7ecad16063"
     },
     {
       "id": 9827,
@@ -350,7 +359,7 @@
       "grips": [
         "strap"
       ],
-      "sha256": "51c91a47f93454d5ff2dcebceb91e20df280848d541ee82185816c99e6ab4b12"
+      "sha256": "15b9effd0c0b246d27f2c25eb3873d10464f6f88bf5a2ad04c8ed625803ca789"
     },
     {
       "id": 9828,
@@ -362,7 +371,7 @@
       "grips": [
         "strap"
       ],
-      "sha256": "4d2fa6c674442d2d7bec8d1d9eac7545356ffce4942b87d7fd06d292c6d6beb5"
+      "sha256": "883b7b5bd571d0f6324636e2c467df79cf401a113ac976552a25cd8dbb7db2f1"
     },
     {
       "id": 9829,
@@ -374,7 +383,7 @@
       "grips": [
         "strap"
       ],
-      "sha256": "d018801936f4ab06bfe7904d47a683339fc81f07473f671ddde7a9da69e7ab44"
+      "sha256": "471cdaa1eab4637ae4e6be461ab93ed8fa6ea166ca7ccc0a364cb4c2a062ec74"
     }
   ]
 }

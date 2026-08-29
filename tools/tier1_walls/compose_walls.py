@@ -235,8 +235,19 @@ class Family:
         """
         if key == 0:
             return 0, 0, 0
-        a = (5, 11)[key - 1]
-        b = (12, 6)[key - 1]
+        # THE OFFSET DEPENDS ON THE COURSE, AND ROUND 1's SEAT IS WHY.
+        #
+        # It did not: `a` and `b` were the same for every course, so at every tile boundary both
+        # courses of the face broke at the same x, and the wall had no BOND. The seat measured
+        # exactly that and culled it as construction rather than as value: *"two courses of
+        # rectangles of identical height, unstaggered, running the full width with no bond and no
+        # break. It is a ladder diagram of a wall."*
+        #
+        # Staggering the boundary offset by course is the mason's answer and costs nothing: the
+        # two tiles either side still read the SAME key and the SAME course index, so they still
+        # agree about where the block breaks — agreement, not constancy (section 8.3.2).
+        a = ((5, 11), (9, 4))[course % 2][key - 1]
+        b = ((12, 6), (8, 13))[course % 2][key - 1]
         v = (h(SALT_V, course, key) % 5) - 2
         return a, b, v
 
@@ -315,11 +326,26 @@ class Family:
         a blind seat called the result linoleum. So the grain here is scaled to a fraction of a
         RUNG rather than to an absolute, and the composer reports what fraction.
         """
-        p = grain_patch(h(SALT_G, tag), cells=11, seed=self.seed)
-        ph, pw = p.shape
-        ys = (np.arange(hgt) + y0) % ph
-        xs = (np.arange(w) + gx) % pw
-        return p[np.ix_(ys, xs)]
+        # TWO SCALES, NOT ONE, and the comparative seat is why. Ranked against the asset bar it
+        # put Yarl ahead on the face and then culled on this: *"Wall tops carry zero texture - the
+        # lit stub at (183,393) is flat bars beside densely worked floor."* One noise scale reads
+        # as a blur laid over a flat block; two read as stone that was cut. It is the same
+        # construction the floor family uses (coarse 0.34, fine 0.14) and it is legal under
+        # §8.3.1's mirror clause - *incident-free is not featureless; material has structure -
+        # joints, bond, grain, value break.*
+        #
+        # ⚠ WHAT IS NOT ADDED, AND WHY IT IS FLAGGED RATHER THAN DONE: dressing marks. The floor
+        # carries them and they would answer this cull directly, but §3.1 says a wall top *"carries
+        # nothing but the joints between the blocks it is made of"* in those words. Whether tooling
+        # counts as incident or as material is a RULING, not a builder's call.
+        out = np.zeros((hgt, w))
+        for cells, weight in ((11, 1.0), (26, 0.45)):
+            p = grain_patch(h(SALT_G, tag, cells), cells=cells, seed=self.seed)
+            ph, pw = p.shape
+            ys = (np.arange(hgt) + y0) % ph
+            xs = (np.arange(w) + gx) % pw
+            out += p[np.ix_(ys, xs)] * weight
+        return out / 1.45
 
     def paint_plane(self, img, cls, y0, y1, rung_index, keys, grain_amp, var=0):
         """Lay one plane's blocks between rows [y0, y1)."""
