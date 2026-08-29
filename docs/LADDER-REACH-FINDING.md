@@ -128,3 +128,29 @@ A 1.5° hue spread across an entire floor, against §5.4's *chroma is signal*.
 2. **Fire #159 chroma** as the path lever, on the faces.
 3. Neither is started. Both want a ruling first, because §5's palette is the one thing every
    other clause is measured against.
+
+---
+
+## POSTSCRIPT — ruled and landed (2026-08-28)
+
+All four rulings granted. What changed, and the one number in this document that the ruling
+itself moved:
+
+- **The ladder ships at nine rungs**, 48.56 … 154.38. Recorded as bible §5.6 with the provenance
+  above, count 7→9 flagged for the palette-derivation pass. The ladder is now *derived* at every
+  consumption point (`compose_family.ladder_for` / `rehydrate`), never stored and trusted — the
+  base family's manifest predates the ruling and would otherwise have kept handing out seven.
+- **Measured after the rebuild:** joint age spread **2.992 → 5.024 rungs**; joint-lever ceiling
+  **0.0745 → 0.1253**; delivered path signal **0.1009 → 0.1123**. All ten field plants fire, the
+  shipped path is bit-identical, and the engine agrees with the reference painter
+  (`edge_check=128/OK stone_check=144/OK paint_check=96/OK`).
+- **The anchor moved again, because of this ruling.** §6 measured 105.91 on the seven-rung floor.
+  Dropping the sheltered joints two rungs darkened the floor as seen by a further 4.5%:
+  **the anchor is 101.16** (103.00 at 12×12 — stable to 1.8%). The *law* in bible §5.7 is what
+  survives re-derivation; the *value* is expected to move whenever the floor does, and did.
+- **Chroma is approved** — faces-only, traffic-keyed, on the restored ladder. The test is the
+  **combined** signal, joint travel plus chroma channel, against the same 0.1440 floor. §5.4's
+  reserve is spent there by design. The 1.5° material hue-spread finding is filed for palette
+  derivation and is out of that round's scope.
+- **Ladder step three stands as declared:** combined failure closes the channel under Ruling 70,
+  and wear ships as ambience.
