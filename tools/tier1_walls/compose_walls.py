@@ -118,6 +118,7 @@ ARMS = {
 ASSETS_REL = "src/Presentation/assets/tier1_walls"
 IDS = dict(face=9400, top_h=9500, top_v=9600, void=9900)
 VARIANTS = 3   # free interior variants per key pair - see the compose loop
+VOID_RING = 1  # rings of stone drawn before the void; see the manifest note
 
 
 def h(*parts):
@@ -504,6 +505,24 @@ def compose(arm, out_dir, grain_amp, void_values):
                                                        / ladder[fam.top_rung]), 4),
                     face_top_row=FACE_TOP_ROW, occlusion_rows=OCCLUSION_ROWS),
         edge_families=EDGE_FAMILIES,
+        # HOW MANY RINGS OF STONE ARE DRAWN BEFORE THE VOID BEGINS.
+        #
+        # It started at 2, from WALL-RECIPE section 2.2's measured "every room boundary in the bar
+        # is two tiles or more". That number is about MAP GEOMETRY - the mass must be two cells -
+        # and it was read here as a statement about how many of them are DRAWN AS LIT STONE, which
+        # it is not. Round 2's seat found the consequence: *"More of the same stuff ... it is wall,
+        # and it goes on. What it is NOT is dark."* At two rings the void only appears where a mass
+        # is five cells or more, and an ordinary dungeon's masses are two to four - so the darkness
+        # beyond the walls would essentially never be seen.
+        #
+        # One ring is also the truer statement. From above, in the dark, with a lamp at floor
+        # level, you see the top of the wall nearest you; what stands behind it is not visible
+        # rock, it is what the lamp does not reach. The map still has its two cells of mass; you
+        # simply cannot see through the first one.
+        #
+        # Kept as a parameter, and both settings captured, because this is a LOOK and section 13.1
+        # gives a look to Rafe.
+        void_ring=VOID_RING,
         salts=dict(v=SALT_V, h=SALT_H, s=SALT_S, g=SALT_G),
         grain=dict(amp_rungs=grain_amp, bank=GRAIN_BANK, synthesised=True,
                    donor_pool_sd=round(pool_sd, 4),

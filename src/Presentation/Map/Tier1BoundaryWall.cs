@@ -40,10 +40,17 @@ namespace CatacombsOfYarl.Presentation.Map;
 /// A cell with no floor anywhere near it is not masonry anybody can see — it is the dark beyond
 /// the room. Drawing it as stone spends the scene's whole value range on rock nobody looks at and
 /// leaves the wall that bounds the room reading as a bright ribbon around a floor. So wall cells
-/// are laid in RINGS: ring 1 is the wall a room actually has, ring 2 is its thickness
-/// (`WALL-RECIPE.md` §2.2 measured every room boundary in the bar at two tiles or more, and §7.4
-/// derives it — *a held line is thick because thickness is what holding costs*), and everything
-/// past that is void.
+/// are laid in RINGS: ring 1 is the wall a room actually has, and everything past `void_ring` is
+/// void.
+///
+/// **`void_ring` STARTED AT 2 AND THE SEATS MOVED IT TO 1.** Two came from `WALL-RECIPE.md` §2.2's
+/// measured *"every room boundary in the bar is two tiles or more"* — which is a statement about
+/// MAP GEOMETRY, and was read here as one about how many rings are drawn as lit stone. Round 2's
+/// seat found the consequence: *"More of the same stuff … it is wall, and it goes on. What it is
+/// NOT is dark."* At two rings the void only appears where a mass is five cells deep or more, and
+/// an ordinary dungeon's masses are two to four — so the darkness beyond the walls would
+/// essentially never be seen. The map still has its two cells of mass; you simply cannot see
+/// through the first one, which is also what a lamp at floor level actually shows you.
 ///
 /// ⚠ **THE VOID VALUE IS NOT RULED HERE.** Three candidates ship and the panel switches between
 /// them; §13.1 gives the choice to Rafe, in scene, on the device.
@@ -64,7 +71,7 @@ public static class Tier1BoundaryWall
         public string Root = "";
         public int Families = 3;
         public int SaltV, SaltH;
-        public int VoidRing = 3;
+        public int VoidRing = 2;
         public int Variants = 1;
         public readonly Dictionary<string, int> Face = new();
         public readonly Dictionary<string, int> TopH = new();
@@ -105,6 +112,7 @@ public static class Tier1BoundaryWall
             Family = r.GetProperty("family").GetString() ?? "",
             Root = resPath.Substring(0, resPath.LastIndexOf('/') + 1),
             Families = r.GetProperty("edge_families").GetInt32(),
+            VoidRing = r.TryGetProperty("void_ring", out var vr) ? vr.GetInt32() : 2,
             SaltV = r.GetProperty("salts").GetProperty("v").GetInt32(),
             SaltH = r.GetProperty("salts").GetProperty("h").GetInt32(),
             TopValue = r.GetProperty("planes").GetProperty("top_value").GetDouble(),
@@ -249,10 +257,10 @@ public static class Tier1BoundaryWall
                 if (!tileLayer.TileSprites.TryGetValue((x, y), out var node) || node is not Sprite2D s)
                     continue;
 
-                int ring = RingOf(map, x, y, 2);
+                int ring = RingOf(map, x, y, cfg.VoidRing);
                 bool southOpenCache = !map.IsWallTile(x, y + 1) && map.InBounds(x, y + 1);
                 int id;
-                if (ring > 2)
+                if (ring > cfg.VoidRing)
                 {
                     id = cfg.Void[vc];
                     voidCells++;
@@ -277,7 +285,7 @@ public static class Tier1BoundaryWall
                               || southOpenCache;
                     bool ew = (!map.IsWallTile(x - 1, y) && map.InBounds(x - 1, y))
                               || (!map.IsWallTile(x + 1, y) && map.InBounds(x + 1, y));
-                    if (ring == 2)
+                    if (ring > 1)
                     {
                         // Ring 2 has no floor of its own to face; it takes the orientation of the
                         // ring-1 cell it stands behind, so a wall's two courses agree.
@@ -356,7 +364,8 @@ public static class Tier1BoundaryWall
         string kinds = boundKinds.Count == 0 ? "-"
             : string.Join(",", boundKinds.OrderBy(k => k.Key).Select(k => $"{k.Key}:{k.Value}"));
         return $"[Tier1] boundary wall: family={cfg.Family} face={face} top={top} "
-             + $"void={voidCells}(choice={vc}) missing={missing} face_suppressed={faceSuppressed} "
+             + $"void={voidCells}(choice={vc},ring>{cfg.VoidRing}) missing={missing} "
+             + $"face_suppressed={faceSuppressed} "
              + $"planes(top={cfg.TopValue:0.##} face={cfg.FaceValue:0.##}) "
              + $"edge_check={cfg.EdgeCheck.Count}/OK bindings={bound}({kinds}) "
              + $"manifest={manifestResPath}";

@@ -166,12 +166,30 @@ check() {   # a name, and the pattern that proves it
 #   THE FLOOR ACTUALLY LAID. `missing=0` and all three cross-checks green, ON THE HANDSET. The old
 #   check could not see whether a single tile had been placed, let alone whether the engine
 #   reproduced the composer's bond arithmetic, its material arithmetic and its finished pixels.
-check "booted the review scene"        "corridor scene: tier1_floor_review"
+# THE SCENE NAME IS A PARAMETER, and it became one the first time a build was verified that was
+# not the floor gate's. It read `tier1_floor_review` literally, so the WALL review build - the
+# correct scene, correctly booted - came back MISS. The fix is not to widen it to `tier1_.*`,
+# which would green a build that booted the wrong tier-one scene; it is to state which scene the
+# operator asked for and check for THAT.
+check "booted the review scene"        "corridor scene: ${TIER0_EXPECT_SCENE:-tier1_floor_review}"
 check "incident overlays attached"     "floor overlays: cells="
 check "rig panel constructed"          "\[Tier1\] rig:start:"
 check "no losable state"               "losable-state check:"
 check "floor family laid, every cross-check green" \
       "floor: laid=[1-9][0-9]* .*missing=0 .*edge_check=[0-9]*/OK stone_check=[0-9]*/OK paint_check=[0-9]*/OK"
+# THE WALL FAMILY, CHECKED ONLY WHERE ONE WAS ASKED FOR. Set TIER0_EXPECT_WALLS=1 for a wall
+# review build. It is opt-in rather than always-on because a floor gate build legitimately has no
+# wall family, and a check that fails on a build that was never meant to satisfy it teaches the
+# operator to ignore checks.
+#
+# What it requires is the same shape the floor's does: tiles actually laid, nothing missing, and
+# the composer's boundary arithmetic reproduced BY THE ENGINE, on the handset. `missing=0` alone
+# would pass a build that laid every cell from the wrong side of a disagreement.
+if [ -n "${TIER0_EXPECT_WALLS:-}" ]; then
+	check "wall family laid, edge families reproduced" \
+	      "boundary wall: .*missing=0 .*edge_check=[0-9]*/OK"
+	check "orc bindings placed"            "boundary wall: .*bindings=[1-9][0-9]*("
+fi
 
 # `|| true` ON BOTH, AND IT IS NOT DECORATION. Under `set -euo pipefail` a grep that matches
 # nothing fails, and a failing command substitution ABORTS THE SCRIPT — so the single likeliest
@@ -198,7 +216,9 @@ grep -m1 "light rig:" "$LOG" | sed 's/^/  /' || true
 
 echo ""
 if [ "$FAIL" = "0" ]; then
-	echo "VERIFIED ON DEVICE — installed, launched, booted into tier1_floor_review, rig live."
+	# The scene NAME is read back from the log rather than restated, because a summary that names
+	# a scene it did not check is the same class of claim as an app asserting its own bundle id.
+	echo "VERIFIED ON DEVICE — installed, launched, booted into ${TIER0_EXPECT_SCENE:-tier1_floor_review}, rig live."
 	echo "log: ${LOG#$ROOT/}"
 else
 	echo "NOT VERIFIED — the app is installed but did not report what it should have." >&2

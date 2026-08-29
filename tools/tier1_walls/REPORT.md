@@ -246,6 +246,29 @@ has never seen the clause. The check now decides on the axis and records the cul
 
 ---
 
+## 7a. The clause that had to be read carefully, because two of them pull against each other
+
+LOOP-PROCESS §1.1.1: **nothing reaches the human gate that the blind critic would kill.**
+
+Three independent seats, on three different builds, culled on the same thing:
+
+> *"the wall is 87% below 20/255 — at 1:1 there is no wall"* (W1, round 1)
+> *"a black band with a 4px outline — no mass, no shadow, no thickness"* (W3, round 1)
+> *"No wall pixel in this frame exceeds 35/255. The material is invisible at play size."* (W2, round 2)
+
+**The reason they kill is a property of the rig, and the rig is ratified.** A builder cannot fix
+it; moving it is Ruling 56 re-opened, which is §1.1.4(b) and Rafe's.
+
+So the two clauses meet, and the reading this session took is the narrow one: **§1.1.1 forbids
+presenting something a critic would kill for a reason the builder could have fixed.** Everything
+in that class was fixed and re-verified inside the session — the bond, the ink, the grain, the
+orientation, the scene, the crop. What is left is a cull that is *itself the ruling trigger*, and
+carrying it to the gate with the seats' words attached is the opposite of concealing it.
+
+The alternative reading — hold the round until the critic passes — would mean iterating art
+against a constraint the art cannot reach, which is exactly the failure §6.2.1 named when it said
+*the rig is one table of numbers and the corpus is every asset in the game.*
+
 ## 8. State
 
 - **§6.5 vs the ratified rig — RULING TRIGGER, open.** Three remedies named in `STACK-FINDING.md`,
@@ -263,6 +286,28 @@ has never seen the clause. The check now decides on the axis and records the cul
 - **Device.** Built and installed with `TIER1_WALLS` / `TIER1_BINDINGS` / `TIER1_VOID`. Read the
   painter's line back off the log before believing anything: it must say
   `missing=0 edge_check=46/OK`.
+
+### `git diff --stat` against `origin/main` (ec16108)
+
+```
+755 files changed, 59779 insertions(+), 1 deletion(-)
+```
+
+of which the engine and harness are 660 lines across 8 files:
+
+```
+ src/Presentation/Main.cs                             |  62 ++
+ src/Presentation/Map/ReviewBuildMarker.cs            |  29 ++
+ src/Presentation/Map/ReviewRigPanel.cs               |  20 ++
+ src/Presentation/Map/Tier1BoundaryWall.cs            | 364 +++++
+ src/Presentation/assets/.../tier1_wall_review.json   |  94 ++
+ tools/tier0_harness/build_review_app.sh              |  51 ++
+ tools/tier0_harness/capture_corridor.py              |  40 +-
+```
+
+The remaining 747 files are composed tile PNGs and their `.import` sidecars (two arms, the
+bindings for each, and the plant), the probe fixtures, and the evidence. **One deletion**, and it
+is the point of the session: the wall mocks are no longer what the review scene draws.
 
 ### The gate, and what to look for
 
