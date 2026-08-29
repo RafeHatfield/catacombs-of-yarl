@@ -1,0 +1,76 @@
+Read A.png at 1:1 first, then magnified. Findings below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut sandstone flagstones — dressed rectangular slabs, warm ochre-tan, laid in an irregular running bond with recessed dark-brown mortar joints.
+
+**Q1_WHY:** In the lit corridor (x 375–439, y 0–405) the blocks have straight machined edges and square corners, not fractured or natural ones. Joints are a consistent 2–3px recess in a colder brown than the faces. Block sizes vary within the course — at y 210–240 the run is split into two stones of unequal width, at y 250–276 it is a single full-width slab — which is masonry coursing, not tiling. Colour is uniformly ochre with no mineral variation, so: sandstone or a soft limestone, quarried and dressed.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+North, up the corridor. **The ground played no part in that choice.** I picked north because the corridor is exactly one tile wide (measured: x 375 to 438, 64px) and the walls funnel me, and because south at y>405 is black at 1:1 and I can't see into it. If you deleted the walls and showed me only the flagstone, I could not tell you where the corridor is or which end I came from. That is a random choice dressed up as a decision.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Nothing has happened to it. It is intact, level, complete and clean. No stone is cracked through, sunk, tilted, chipped at a corner, or missing. No stone has been replaced. No mortar has fallen out. There is no dirt, no staining, no spill, no rubble, no drift against the wall bases, no scuff. The condition is "recently laid, not yet used."
+
+**Q3_WHY:** Every mortar joint in the lit run reads full-depth and continuous — check y 139, y 209, y 236 across x 378–430; these are the highest-contrast lines in the whole floor and they are unbroken. The corridor mouth at (x 370–445, y 380–420), where a one-tile chokepoint meets an open room and every single person passing this level must step, has no threshold wear, no rounded corner on the jamb stone, no dishing, no debris — the bond simply continues across the doorway line as if nothing walks there. The only marks present anywhere are two texture motifs (see Q4), and they are distributed evenly rather than concentrated where feet would go, which makes them read as quarry tool-marks, not as wear.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes, three things.
+
+1. **A "/" diagonal hatch motif**, same angle, same size, same placement on the upper-left of the face, reused down the corridor: (x 380–402, y 112–136), (x 378–404, y 210–236), (x 378–412, y 298–328). Directional test confirms it — at (380–402, 112–136) the anti-diagonal difference is 5.95 against 12.77 down-diagonal, so those are genuinely parallel "/" lines, and they are the same "/" every time.
+2. **A vertical-striation motif** (short vertical dashes), reused at (x 400–424, y 248–268) and (x 410–428, y 310–330). Vertical difference 2.61 and 1.90 against horizontal 8.29 and 6.34 — same stamp, twice.
+3. **Per-stone flat tone stepping.** Sampling mean brightness down the corridor: y 224 → 168.6, y 284 → 96.6, y 124 → 137.4. The stone at y 224 is 50px from the lamp and reads 168; the stone at y 124 is also ~50px from the lamp and reads 137. That 30-level gap is not lighting, it is the stones being painted different flat values. At 1:1 the corridor reads as a stack of alternating light and dark flat rectangles, and my eye kept going back to that checkering rather than to anything on the stone.
+
+**Q5: MADE, OR REPEATED?**
+**Made** — at the layout level, and I'll defend that. Vertical autocorrelation down the lit corridor (x 377–437, y 0–400) finds no meaningful period: lag 64 scores 25.75 against a 25.15 floor at lag 22, i.e. no tile repeat is detectable. The coursing genuinely varies stone to stone. Somebody laid this.
+
+But it is made only in its joints. The faces are not authored at all — see Q7. And in the wider floor south of the corridor, horizontal autocorrelation has a sharp, unambiguous minimum at exactly dx = 64 (1.815, against 1.886 at 63 and 1.841 at 65, on a 2.08 baseline). So the layout was made and the surface was repeated.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES. It is clean, consistent, correctly bonded, well-valued, and nothing in it is broken.
+
+Merely competent, or genuinely good? **Merely competent.** It is the floor a good technician makes when told "stone corridor." It has no point of view, tells no story, and contains no single element I would remember five minutes after closing the image.
+
+**Q7: WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF, AT 1:1?**
+
+**Legible at 1:1:** the joints, and the flat tone of each stone. That is the entire list. The faces are blank. What I read at full size was tan rectangles of slightly differing value, separated by dark lines.
+
+**Only appears once magnified:** the "/" diagonal hatch; the vertical striations; the slight tonal grading inside individual faces. All of it required 4–6x, and I had to go looking. That is hunting, not seeing.
+
+**Q7_WHY:** Measured. Masking mortar out and taking face pixels only: (388–428, 118–142) std 9.08 on mean 148.5 — that is the hatched stone, the strongest face in the corridor. (384–424, 214–238) std **1.78** on mean 175.4. (388–428, 252–276) std 3.38. (384–428, 300–326) std 4.14. (388–428, 72–92) std 3.01. A standard deviation of 2–4 grey levels on a 140-level face is not visible on a phone. Separately, ranking every 6x6 patch of the corridor by local contrast, the top twelve are all either the wall boundary at x 434 or the mortar rows at y 139 / 209 / 236 — the joints carry effectively all the contrast in this floor, and the median face patch scores 10 against the sprite's 84.
+
+Checked at 1:1: (375–439, 60–140), (375–439, 205–340), (370–445, 380–420), (375–439, 0–55).
+Magnified: (360–460, 0–160) at 6x, (360–460, 190–410) at 6x, (370–445, 0–405) at 4x, (330–490, 350–450) at 5x, (180–750, 400–600) at 2x with gamma lift.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+**Laid last year, and nobody has walked on it yet.** It reads as one age everywhere — corridor and room mouth are indistinguishable in condition.
+
+**Q8_WHY:** The evidence is what is absent from specific places where four centuries would have to show. At the corridor mouth (370–445, 380–420) — a one-tile pinch that every soul, every orc patrol, every load of salvaged timber must funnel through — the jamb stones have square unbroken corners and the floor across the threshold is flush and unmarked. Along the corridor centreline (395–420, y 60–340) the tone is not distinguishable from the corridor edges (378–392) beyond what the lamp falloff accounts for, so there is no polished or dished walking track. Every joint from y 15 to y 370 is at full recess depth; not one is packed with grime or spalled open. And the two texture motifs (Q4) are distributed at even density regardless of position — the stone at the doorway carries the same amount of mark as the stone at the far end. Wear concentrates; this does not, so it is not wear.
+
+For a place in continuous heavy use since before anyone's records begin, held by a company that repairs everything with rope and driven pins and does not care how it looks, this floor is the wrong age by four hundred years. There is not one pin, one patch, one plank, one wrong-coloured replacement slab anywhere in the lit ground.
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES?**
+The route runs **north–south**, and **I read it entirely off the walls.** The ground told me nothing.
+
+**Q9_WHY:** Along the route — (375–439, 0–150) and (375–439, 205–400) — the coursing runs horizontally, perpendicular to travel, in stacked bands. It does the same thing in the room I rejected, at (185–640, 410–600), at the same scale, in the same bond, with the same joint weight. There is no directional grain, no lengthwise slab, no kerb, no drain line, no centre track, nothing that runs *with* the corridor. The one place the ground had an obvious job to do is the mouth at (370–445, 395–415): the floor crosses from one-tile passage into open room and does not change by a single pixel. Same stone, same course height, same joint colour, no sill, no lip, no threshold slab. So the only difference between the ground I would walk and the ground I rejected is that pink placeholder blocks are sitting on top of the latter. Take those away and the floor is silent about its own shape.
+
+**Q10: WHICH WAY IS USED MOST, AND WHICH LEAST?**
+**They all look the same.** Two openings are within the light: the corridor continuing north off-frame at (375–439, y 0), and the corridor mouth opening south into the room at (375–439, y ≈405). The ground in front of both is identical — same bond, same joint depth, same absence of wear, same absence of debris. Nothing tells me one is a daily route and the other is sealed and forgotten. In a place that is a filing system for souls, where traffic *is* the story, the floor has no traffic in it.
+
+---
+
+**CULL:** Walked daily for centuries, yet no wear track, no repair, no damage — the floor reads brand new.
+
+**FLIP LIST**
+- Put a wear track down the corridor centreline (x 395–420, y 0–400): lighter, joint-softened stone through the middle, dirtier and sharper-edged at the wall margins — legible at 1:1, not on magnification.
+- Break the threshold at the corridor mouth (370–445, 395–415): round the jamb corners, dish the crossing stone, drop a step or a sill so the ground itself says a passage begins here.
+- Retire the two reused stamps and give the corridor 4–6 genuinely different events at 1:1 scale — one cracked-through slab, one sunk stone with a lipped edge, one missing slab showing what's beneath, one replacement in the wrong stone.
+- Add the orcs' repairs: at least one driven-pin plate or salvaged timber patch across a failed slab in the lit run, cut in at the wrong angle and not cleaned up.
+- Raise face detail from std 2–4 to something that survives at 1:1 — grit, drift and staining collecting along the wall lines at x 378–384 and x 428–434, so the joints stop being the only thing carrying contrast.
+
+---
+
+Where this goes next: the joint work is the strong part and is worth keeping as-is. Every fix above is additive on top of it — none require relaying the bond. The one that buys the most per pixel is the wear track, because it fixes Q2, Q9 and Q10 simultaneously: it makes the ground navigable without the walls.
+
+*Model: Claude Opus 5 (1M context)*

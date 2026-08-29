@@ -1,0 +1,103 @@
+Read the image, then magnified five regions and measured the grid, joint spacing, and blotch positions against the game's 64px tile lattice. Findings below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut sandstone-coloured stone slabs, laid dry in courses. A warm tan-to-brown ashlar paving.
+
+**Q1_WHY:** The floor (x 186–630, y 148–338) is divided by continuous dark joint lines into rectangular units. Horizontal joints sit at y = 166, 208, 250, 272, 298, 334 — a running-bond course structure. Vertical joints are irregularly spaced (x = 300, 325, 367, 428, 464, 492, 558 among others), so slabs vary in width within a course. The joints are dark voids, not mortar-coloured, so it reads as dry-laid stone. The value range across faces (roughly 3-4 distinct tans on adjacent slabs) says cut stone from a mixed quarry rather than cast or poured material.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+North, up the corridor at x 373–437.
+
+Nothing about the ground influenced that. It is the only opening in the room — I checked the left boundary (floor terminates at x≈186), the right (terminates at x≈630) and the bottom (terminates at y≈338); all three are solid. I chose north because it is the only choice, and I read that off the wall silhouette, not off the paving. The paving at the corridor mouth (x 376–436, y 152–196) is the same slab, same joint rhythm, same stain density as the paving in front of the blind north wall at x 300–360 and x 452–512. I measured it: light-normalised brightness 1.083 at the mouth vs 1.103 and 1.117 at the two blind stretches, and high-pass detail σ of 34.8 in the corridor throat vs 30.4 in the room centre. Those are inside the noise. The ground gave me nothing.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been stained and lightly cracked, and that is all. Nothing has been broken, moved, replaced, worn down, or repaired.
+
+**Q3_WHY:** What is actually present: (a) roughly 22 dark spiky blotches scattered over the lit floor, ~20–24px across, some solid discs, some drawn as outline rings only — same silhouette family in both cases; (b) three or four thin hairline cracks, the longest running from about (250,166) down through (285,262) to (283,300), plus one on the right at x≈575–620, y 240–330, and one in the corridor from (412,10) bending left to (386,140); (c) a faint diagonal streak on nearly every slab face.
+
+What is absent, and this is the point: no slab is chipped at a corner, no slab is sunken or tipped relative to its neighbours, no joint is spread wider than the rest, no slab has been lifted and replaced with a different one. There is no rubble, no spall, no debris. And in a place held for four hundred years by a company that repairs everything with rope, pins and salvaged timber — there is not one repair on this floor. No packed joint, no driven pin, no laid board, no plate over a hole. The floor has stains on it. Nothing has happened *to* it.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes. The dark spiky blotch. It is the single loudest element on the floor at 1:1 and I counted 22 of them in one small room.
+
+The bottom course is the worst of it — crop x 186–632, y 285–325 contains seven of them in a row, all on the same course line, at x ≈ 224, 293, 349, 408, 469, 529, 601. Spacings of 69, 56, 59, 61, 60, 72 px. The game tile is 64px (I measured it off the placeholder wall seams at x = 181, 245, 567, 629 — pitch 64 and 62). So that row is one blotch per tile, marching across the screen.
+
+It is not just that row. Binning all 22 detected blotches by position modulo the 64px tile grid: 14 of 22 land within ±11px of a tile centre in x, against 7.6 expected by chance, and 17 of 22 cluster in the middle 27px of the tile in y against 9.3 expected. This is a per-tile decal with a small random offset, and the offset is not large enough to hide it. Once you see the lattice you cannot stop seeing it — the room reads as polka dots.
+
+---
+
+**Q5: MADE, OR REPEATED?**
+Repeated.
+
+Three things say so. The blotch lattice above is the decisive one — a made floor does not get stained on a 64px pitch. Second, the diagonal streak: on the magnified crop at x 186–420, y 240–290 every slab face carries the same light diagonal band, all running the same "/" direction, lower-left to upper-right. Real slabs cut from a quarry do not all share one grain direction, and one light source does not put an identical diagonal on every stone. That is one texture, or one overlay, applied everywhere. Third, the two blotch renderings — filled disc and hollow ring — are the same silhouette drawn two ways, which is what a small variant set looks like, not what accumulated damage looks like.
+
+Credit where it's due: I hashed every 16×16 block in the lit floor (74,472 of them) and found zero exact duplicates, and template-matching one blotch against the rest returned correlations of 0.60–0.62, not 1.0. So the artist did vary the instances. The variation is real. It is just operating one level below the level where the repeat lives — the *placement* is periodic, and no amount of per-instance jitter fixes that.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The masonry is genuinely well-built — irregular slab widths, varying course heights (42, 42, 22, 26, 36 px), no visible tiling seam in the joint network, good value separation between adjacent stones. That craft is real. But competent is where it stops: the surface has one idea on it, repeated 22 times on a grid, and the floor communicates nothing about the place it is in.
+
+---
+
+**Q7: AT THE SIZE SHOWN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1 — only two things, and one of them is not really surface: the joint network, and the dark blotches. That's it. The blotches read at 1:1 as a scatter of dark spots and they dominate.
+
+The faces between the joints are effectively blank at 1:1. Everything I described in Q3 as surface incident — the diagonal streak, the hairline cracks, the value differences between adjacent slabs, the distinction between filled and outline blotches — I only found by magnifying to 3× and 4×. At 1:1 the slab interiors are flat tan fields.
+
+That is the failure the fiction cares about most. A floor walked daily for four hundred years, at the size the game is actually played, gives the player a grid and some dots.
+
+**Q7_WHY:** Checked at 1:1 in the native crop x 186–632, y 145–340: the joint lines and the blotch field are the only things I could name without magnifying. Regions I had to magnify to read anything at all: x 185–375 / y 145–335 at 4× (revealed the diagonal hatch and the long crack at x 250–288); x 440–630 / y 145–335 at 4× (revealed the outline-only blotch variants and the right-hand crack); x 186–420 / y 240–290 at 3× (revealed the uniform "/" streak direction); x 186–632 / y 285–325 at 3× (revealed that the bottom-course blotches are the same motif seven times).
+
+---
+
+**Q8: HOW OLD IS THIS FLOOR?**
+It reads as one age everywhere, and that age is roughly *a few decades of weather* — not centuries, and nothing like "older than the records."
+
+**Q8_WHY:** The cracks are hairlines — the longest, running x 250–288 / y 166–300, is 1–2px wide along its whole length and has not opened, forked into a network, or lifted the slab on either side. Real cracked pavement widens toward the middle and drops one side. Nothing here does. The joints are uniform width everywhere I measured (the horizontal joint bands at y 166, 208, 250, 272, 298 are all 3–4px). No joint has spread from settlement, none has been packed. The slab corners are all sharp; magnifying x 186–420 / y 240–290 shows crisp 90° corners on every stone, where centuries of traffic would round and dish them. And there is no polish, no dished track, no lowered centre — I normalised brightness against the lamp falloff and got 1.04 in the room centre against 1.10–1.12 at the north wall, meaning the middle of the room is if anything *fainter*, the opposite of a worn path.
+
+Everything ages together. The corridor (x 378–436, y 100–145) has the same crack density, blotch density and joint condition as the far corner of the room (x 540–620, y 280–330). Nothing was laid later, nothing was repaired earlier, nothing is a patch. For a floor in continuous heavy use since before the records, uniform age is itself the tell — the traffic should have carved a history into it and did not.
+
+---
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES?**
+The ground told me nothing. I read the route off the walls.
+
+The route is north, through x 373–437 at y≈148. But I know that because the wall silhouette opens there, not because the paving indicated it.
+
+**Q9_WHY:** Along the route — corridor mouth x 376–436 / y 152–196, and corridor throat x 378–436 / y 100–145 — the paving is the same course structure, same slab widths, same faint diagonal, and carries its own share of blotches (one at approximately (410,105), squarely on the walking line, which is where a stain would have been scuffed out first). Detail σ 34.8 in the throat.
+
+Regions I rejected — the floor against the blind north wall at x 300–360 / y 152–196 and x 452–512 / y 152–196, and the dead corner at x 540–620 / y 280–330 — measure detail σ 31.4, 31.8 and comparable, with light-normalised brightness 1.10 and 1.12 against the corridor's 1.08.
+
+The difference between the ground you must walk on and the ground nobody has stood on in four hundred years is two percent of brightness and three points of texture variance. There is no threshold, no scuff cone spreading from the corridor mouth into the room, no darkening of the joints where dirt would pack along the line of travel, no smoothed centre. Cover the walls and this floor does not know where its own door is.
+
+---
+
+**Q10: WHICH WAY IS USED MOST, AND WHICH LEAST?**
+There is only one opening — the corridor at x 373–437 — so there is nothing to rank. But the answer that matters is the comparison I can make: the ground in front of that opening is indistinguishable from the ground in front of the solid wall beside it. Numbers in Q9. If you swapped the paving at the corridor mouth with the paving from the dead right-hand corner, no one could tell.
+
+---
+
+**CULL:** One stain motif repeated 22 times on the 64px tile grid — the floor reads as polka dots.
+
+**FLIP LIST**
+- Cut the blotch count in that room by two thirds and break the lattice: no blotch within 20px of a tile centre, and at least three adjacent tiles with nothing on them at all.
+- Put a wear track on the ground: a lightened, joint-darkened band roughly two tiles wide running from the corridor mouth (x 373–437) into and across the room, with the stains scrubbed out of it and the slab corners rounded inside it.
+- Give the slab faces something legible at 1:1 — the diagonal streak and hairline cracks currently need 3× magnification. Raise their contrast until the faces are not blank fields at native size.
+- Kill the shared "/" diagonal: vary streak direction and strength per slab, or remove it. Every stone carrying the same grain is the loudest repeat tell after the blotches.
+- Add at least one orc repair to this room — a joint packed with driven pins, a plank laid over a broken slab, a rope-lashed patch — sized to read at 1:1. The floor currently has no history of the four hundred years it is supposed to have survived.
+
+---
+
+*Model: Claude Opus 5 (1M context).*

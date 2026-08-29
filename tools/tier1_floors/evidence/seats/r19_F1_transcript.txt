@@ -1,0 +1,68 @@
+Looked at `A.png` (750×600) at 1:1, then at 4×/6× on the lit floor (x 182–628, y 143–337), plus a brightened pass to establish the room's openings.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone slabs — dressed rectangular flagstones, mixed sizes, laid in staggered courses with recessed joints. Tan/buff sandstone or limestone. Confident on "cut stone slabs"; the specific stone is unreadable.
+
+**Q1_WHY:** At 6× around (330–470, 150–260) the units are clearly rectangular blocks of *varying* dimension — a 42×30 slab sits beside a 26×30 one in the same course, and the vertical joints stagger between courses rather than lining up. That variation rules out manufactured tile. Joints are 2–3px, darker than the face, and recessed rather than raised — mortar or dry-set, not grout. Faces are flat mid-tan with a slight per-slab value offset, which reads as separate quarried pieces.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+North, up the corridor at x 375–440 — but **nothing about the ground influenced that**. It's the only opening in the room; I read it off the walls. When I brightened the image, the lit rectangle is closed on the left (x≈182), right (x≈628) and bottom (y≈337); the north corridor is the sole break. The ground at the corridor mouth (375–440, 143–165) is indistinguishable from the ground in the sealed left corner (190–260, 280–330). Had I been shown only the floor with the walls masked, I would have been choosing at random.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Almost nothing. It is intact, clean and unworn. Two hairline cracks, and that is the complete inventory of damage. No chips, no spalled corners, no dishing, no dirt, no stains, no water, no debris, no missing slabs, no repair of any kind. It reads as if it were laid, swept, and then nobody walked on it.
+
+**Q3_WHY:** The long crack runs from ~(258,163) to ~(288,268) — one pixel wide, crossing four slabs and two joints. A shorter one runs ~(545,262) to ~(585,272). Both are drawn in the *same value as the mortar joints*, so at 1:1 they don't read as damage; they read as two more joints. Every slab arris in the bright zone (340–470, 155–260) is a clean hard step from face value to joint value — no rounding, no crumbled edge. The joint at the corridor threshold (375–440, y≈145) is the same crisp width as the joint in the dead corner at (600,320).
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes. **The diagonal hatch band.** A soft 45° stripe running lower-left → upper-right, one value step darker than the face, sitting on the majority of slabs. Same angle, same direction, same contrast, same rough position within the slab every time. Visible at (346,160), (420,205), (470,190), (250,250), (300,300), (555,205), and again in the corridor at (395,60) and (400,105). Once I saw it I could not stop counting it — it is the only mark on the surface, so the eye has nothing else to land on and keeps re-finding the same shape. Secondary, weaker repeat: clusters of 2–4px vertical ticks near a slab's left edge, e.g. (487,195)–(492,215) and (330,180).
+
+**Q5: MADE, OR REPEATED?**
+**Made** — narrowly, and only at the level of layout. A shift-correlation sweep over the floor found no tiling period: the strongest non-adjacent offset peaks at r=0.37, so the slab courses genuinely do not repeat as a block. The arrangement was authored.
+
+But that verdict is carried entirely by the joint layout. The *surface* is repeated: one motif, applied per-slab, with position jittered. If the joints were removed, what's left would not survive the question.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The masonry logic is correct, the lighting falloff is clean, it doesn't tile visibly, and nothing about it looks broken. That is competence. It is not genuinely good — a good floor gives you information, and this one gives you none: it does not tell you where you are, which way people go, or that anything has ever happened here.
+
+**Q7: WHAT CAN YOU ACTUALLY SEE ON THE SURFACE AT 1:1?**
+**The faces are blank at 1:1.** Plainly.
+
+Legible at 1:1: the joint grid, the lamp's falloff gradient, and the two cracks — which read as joints, not cracks. That is all. The face of the material contributes nothing.
+
+Only on magnification: the diagonal hatch band (needs ~4×); the vertical chisel ticks (needs ~6×); the per-slab value offsets (~4×). All three are hunting, not seeing. I did not know the hatch existed until I upscaled, and I had to go looking for the ticks after the hatch told me to expect something.
+
+**Q7_WHY:** Checked at 1:1 — the brightest floor (330–470, 150–260), which is the best case the image offers; mid-left (200–320, 240–300); bottom course (400–500, 295–335); right side (540–620, 190–240). Every one of those reads as flat fill under a gradient. Magnified to 4×/6× — the same four regions, plus the corridor (370–450, 0–150). The hatch and ticks appear only there.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+Laid recently — call it within a decade, and swept since. Nothing in the image supports four hundred years, let alone "older than the records."
+
+**Q8_WHY:** Sharp arrises on every slab in (340–470, 155–260) — a floor in continuous heavy use rounds its edges first, and none are rounded. Joint depth is uniform across the whole room: the joint at the corridor mouth (400,146) is identical to the joint in the unreachable corner (612,325), when the threshold should be the most worn line in the room. Joints are clean — no accumulated dark fill, no silt, and joint colour is constant everywhere I sampled. No slab sits proud or sunk relative to its neighbours.
+
+It reads as **one age everywhere.** Not one slab is older or newer than another; nothing has been replaced, patched, or reset. The two cracks (258,163)–(288,268) and (545,262)–(585,272) are the only age signal present, and they read as the same event.
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES?**
+No. **The ground told me nothing.** I read the route off the walls.
+
+The route does go north — corridor at x 375–440 — and the lamp reaches it, so this is not a case of the answer lying outside the light. The ground inside the light simply does not indicate it.
+
+**Q9_WHY:** Along the route: the mouth (375–440, 145–200) and the corridor floor above it (378–438, 60–143). Rejected: the left arm (190–280, 190–330), the right arm (555–625, 180–330), and the bottom courses (250–560, 300–335). The difference between the route and the rejected regions is **lamp brightness only.** Same slab size distribution, same joint contrast, same hatch density, same absence of dirt, same absence of a worn lane. The corridor floor uses the identical slab vocabulary as the room with no threshold, no sill, no change of course direction, and no darkening from traffic. Nothing narrows, nothing polishes, nothing points.
+
+**Q10: WHICH WAY IS USED MOST, WHICH LEAST?**
+There is only one opening — north, x 375–440 — so there is no comparison to make between exits. But the more damning version of the question does have an answer: **the ground in front of the one opening is identical to the ground in the corners that go nowhere.** The sole route in this room and the dead stone behind the figure's left shoulder are drawn the same. Judged on the ground alone, this floor has no used direction and no unused one.
+
+---
+
+**CULL:** Reads newly laid and swept: no wear, no traffic path, no repair, faces blank at 1:1.
+
+**FLIP LIST**
+- Give the slab faces something legible at 1:1 — pitting, dishing, stain, grit — at 2–3 value steps of contrast, not the current 1. Right now everything below the joint grid is invisible at play size.
+- Retire the single 45° hatch band as the only surface motif. Replace with at least four unrelated face treatments (broken corner, dished centre, scored face, blank) distributed so no two neighbours match.
+- Wear a traffic lane through the corridor mouth (375–440, 145–200): darker, smoother, edges rounded, joints filled — and carry it 2–3 slabs into the room so the route is readable from the floor with the walls masked.
+- Differentiate the dead ends. The left and right arms (190–280 and 555–625) must not be drawn with the same cleanliness as the route — put grit in the joints and leave the arrises sharp there.
+- Add at least one orc repair to the walkable surface: a slab reset out of course, a pinned timber patch, packed rubble in a gap. The floor currently shows four hundred years of use and zero interventions.
+
+*Model: Claude Opus 5 (1M context).*
