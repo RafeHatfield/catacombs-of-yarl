@@ -300,7 +300,12 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
                 L[ly, lx] = crack_v
                 cracks[y * T + ly, x * T + lx] = True
 
-            L = CF.quantise(np.clip(L, mat["lum_lo"], mat["lum_hi"]), mat["ladder"])
+            # CLIP AGAINST THE LADDER'S OWN ENDS, not against the donors' band. They used to be
+            # the same pair of numbers; since the ladder gained two rungs below the donors they
+            # are not, and clipping at `lum_lo` here would have pinned the reference painter to
+            # 75.02 while the engine — which has always clipped at `Ladder[0]` — went to 48.56.
+            # The paint check would have caught it as a 96-sample disagreement with no cause.
+            L = CF.quantise(np.clip(L, mat["ladder"][0], mat["ladder"][-1]), mat["ladder"])
             img[y * T:(y + 1) * T, x * T:(x + 1) * T] = \
                 CF.colourise(L, mat["tint"]).astype(np.uint8)
             joints[y * T:(y + 1) * T, x * T:(x + 1) * T] = jm
@@ -310,7 +315,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
         L = RI.lum(img.astype(float))
         _, gx = np.mgrid[0:h * T, 0:w * T]
         L = L + ((gx // T) % 2) * step * 1.2
-        L = CF.quantise(np.clip(L, mat["lum_lo"], mat["lum_hi"]), mat["ladder"])
+        L = CF.quantise(np.clip(L, mat["ladder"][0], mat["ladder"][-1]), mat["ladder"])
         img = CF.colourise(L, mat["tint"]).astype(np.uint8)
 
     # NO TRANSITION LIST. Wear is now decided per stone, so the channel's edge falls on a joint

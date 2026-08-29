@@ -1,5 +1,5 @@
 {
- "commit": "4cf4ee25f64ae6cf110921ae3aef0b385e918817",
+ "commit": "cbf5ad2189fb1fee45e31a3c4496eea5ab97b8bd",
  "grid": [
   16,
   16
@@ -21,14 +21,14 @@
     "variety_ratio": 1.0,
     "arris_ratio": 1.0,
     "band_alone": {
-     "texture": 0.983,
+     "texture": 0.968,
      "variety": 0.834,
-     "arris": 0.943
+     "arris": 0.962
     },
     "same_band_unpolished": {
-     "texture": 0.983,
+     "texture": 0.968,
      "variety": 0.834,
-     "arris": 0.943
+     "arris": 0.962
     },
     "inside_px": 32768
    }
@@ -47,9 +47,9 @@
      "regions_over_64px": 882
     },
     "boundary_step": {
-     "boundary_mean": 15.628,
-     "interior_mean": 0.258,
-     "ratio": 60.552,
+     "boundary_mean": 15.643,
+     "interior_mean": 0.261,
+     "ratio": 60.047,
      "boundary_max": 66.59,
      "n": 3467,
      "channel_edge_mean": null,
@@ -64,9 +64,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 94.99,
-     "bed_value_mid": 95.23,
-     "bed_value_ratio": 0.9975,
+     "bed_value_boundary": 75.41,
+     "bed_value_mid": 75.76,
+     "bed_value_ratio": 0.9954,
      "col_density_boundary": 0.125,
      "col_density_other": 0.2215,
      "col_density_ratio": 0.5644
@@ -111,9 +111,9 @@
     },
     "joint_variation": {
      "joint_px": 57268,
-     "open_decile": 74.89,
+     "open_decile": 48.0,
      "tight_decile": 114.47,
-     "spread_rungs": 2.992
+     "spread_rungs": 5.024
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -143,9 +143,9 @@
      "regions_over_64px": 882
     },
     "boundary_step": {
-     "boundary_mean": 12.998,
-     "interior_mean": 0.231,
-     "ratio": 56.246,
+     "boundary_mean": 12.995,
+     "interior_mean": 0.233,
+     "ratio": 55.733,
      "boundary_max": 26.89,
      "n": 3636,
      "channel_edge_mean": null,
@@ -160,9 +160,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 101.61,
-     "bed_value_mid": 101.85,
-     "bed_value_ratio": 0.9977,
+     "bed_value_boundary": 82.07,
+     "bed_value_mid": 82.42,
+     "bed_value_ratio": 0.9958,
      "col_density_boundary": 0.125,
      "col_density_other": 0.2215,
      "col_density_ratio": 0.5644
@@ -207,9 +207,9 @@
     },
     "joint_variation": {
      "joint_px": 57268,
-     "open_decile": 74.89,
+     "open_decile": 48.0,
      "tight_decile": 127.77,
-     "spread_rungs": 3.997
+     "spread_rungs": 6.03
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -240,7 +240,7 @@
     },
     "boundary_step": {
      "boundary_mean": 0.0,
-     "interior_mean": 0.242,
+     "interior_mean": 0.244,
      "ratio": 0.0,
      "boundary_max": 0.0,
      "n": 0,
@@ -256,9 +256,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 89.86,
-     "bed_value_mid": 94.92,
-     "bed_value_ratio": 0.9467,
+     "bed_value_boundary": 71.92,
+     "bed_value_mid": 75.55,
+     "bed_value_ratio": 0.9519,
      "col_density_boundary": 1.0,
      "col_density_other": 0.2215,
      "col_density_ratio": 4.5152
@@ -303,9 +303,9 @@
     },
     "joint_variation": {
      "joint_px": 64436,
-     "open_decile": 74.89,
+     "open_decile": 48.0,
      "tight_decile": 114.47,
-     "spread_rungs": 2.992
+     "spread_rungs": 5.024
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -335,9 +335,9 @@
      "regions_over_64px": 888
     },
     "boundary_step": {
-     "boundary_mean": 0.097,
-     "interior_mean": 0.23,
-     "ratio": 0.422,
+     "boundary_mean": 0.101,
+     "interior_mean": 0.232,
+     "ratio": 0.435,
      "boundary_max": 13.59,
      "n": 3579,
      "channel_edge_mean": null,
@@ -352,9 +352,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 0.3301,
      "bed_density_ratio": 3.0296,
-     "bed_value_boundary": 94.99,
-     "bed_value_mid": 104.76,
-     "bed_value_ratio": 0.9068,
+     "bed_value_boundary": 75.41,
+     "bed_value_mid": 97.83,
+     "bed_value_ratio": 0.7708,
      "col_density_boundary": 0.125,
      "col_density_other": 0.2215,
      "col_density_ratio": 0.5644
@@ -395,9 +395,9 @@
     },
     "joint_variation": {
      "joint_px": 57268,
-     "open_decile": 74.89,
+     "open_decile": 48.0,
      "tight_decile": 114.47,
-     "spread_rungs": 2.992
+     "spread_rungs": 5.024
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -428,8 +428,8 @@
     },
     "boundary_step": {
      "boundary_mean": 0.104,
-     "interior_mean": 0.225,
-     "ratio": 0.463,
+     "interior_mean": 0.229,
+     "ratio": 0.456,
      "boundary_max": 13.59,
      "n": 4984,
      "channel_edge_mean": null,
@@ -444,9 +444,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 0.2214,
      "bed_density_ratio": 4.516,
-     "bed_value_boundary": 94.99,
-     "bed_value_mid": 107.93,
-     "bed_value_ratio": 0.8801,
+     "bed_value_boundary": 75.41,
+     "bed_value_mid": 103.43,
+     "bed_value_ratio": 0.7292,
      "col_density_boundary": 0.0625,
      "col_density_other": 0.1688,
      "col_density_ratio": 0.3702
@@ -487,9 +487,9 @@
     },
     "joint_variation": {
      "joint_px": 43384,
-     "open_decile": 74.89,
+     "open_decile": 48.0,
      "tight_decile": 114.47,
-     "spread_rungs": 2.992
+     "spread_rungs": 5.024
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -519,9 +519,9 @@
      "regions_over_64px": 827
     },
     "boundary_step": {
-     "boundary_mean": 0.115,
-     "interior_mean": 0.239,
-     "ratio": 0.481,
+     "boundary_mean": 0.118,
+     "interior_mean": 0.241,
+     "ratio": 0.492,
      "boundary_max": 13.59,
      "n": 3827,
      "channel_edge_mean": null,
@@ -536,9 +536,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 95.18,
-     "bed_value_mid": 95.12,
-     "bed_value_ratio": 1.0006,
+     "bed_value_boundary": 75.67,
+     "bed_value_mid": 75.5,
+     "bed_value_ratio": 1.0022,
      "col_density_boundary": 0.1172,
      "col_density_other": 0.214,
      "col_density_ratio": 0.5475
@@ -584,9 +584,9 @@
     },
     "joint_variation": {
      "joint_px": 55312,
-     "open_decile": 74.89,
+     "open_decile": 48.0,
      "tight_decile": 114.47,
-     "spread_rungs": 2.992
+     "spread_rungs": 5.024
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -616,9 +616,9 @@
      "regions_over_64px": 827
     },
     "boundary_step": {
-     "boundary_mean": 0.126,
-     "interior_mean": 0.241,
-     "ratio": 0.522,
+     "boundary_mean": 0.13,
+     "interior_mean": 0.243,
+     "ratio": 0.533,
      "boundary_max": 13.59,
      "n": 3684,
      "channel_edge_mean": null,
@@ -633,9 +633,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 74.89,
-     "bed_value_mid": 74.89,
-     "bed_value_ratio": 1.0,
+     "bed_value_boundary": 48.05,
+     "bed_value_mid": 48.01,
+     "bed_value_ratio": 1.0009,
      "col_density_boundary": 0.1172,
      "col_density_other": 0.214,
      "col_density_ratio": 0.5475
@@ -681,8 +681,8 @@
     },
     "joint_variation": {
      "joint_px": 55312,
-     "open_decile": 74.89,
-     "tight_decile": 74.89,
+     "open_decile": 48.0,
+     "tight_decile": 48.0,
      "spread_rungs": 0.0
     },
     "crossings": {
@@ -713,9 +713,9 @@
      "regions_over_64px": 821
     },
     "boundary_step": {
-     "boundary_mean": 0.126,
-     "interior_mean": 0.235,
-     "ratio": 0.534,
+     "boundary_mean": 0.129,
+     "interior_mean": 0.238,
+     "ratio": 0.544,
      "boundary_max": 13.59,
      "n": 3603,
      "channel_edge_mean": null,
@@ -730,9 +730,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 94.99,
-     "bed_value_mid": 94.98,
-     "bed_value_ratio": 1.0001,
+     "bed_value_boundary": 75.37,
+     "bed_value_mid": 75.32,
+     "bed_value_ratio": 1.0008,
      "col_density_boundary": 0.1172,
      "col_density_other": 0.214,
      "col_density_ratio": 0.5475
@@ -778,9 +778,9 @@
     },
     "joint_variation": {
      "joint_px": 55312,
-     "open_decile": 74.89,
+     "open_decile": 48.0,
      "tight_decile": 114.47,
-     "spread_rungs": 2.992
+     "spread_rungs": 5.024
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -810,9 +810,9 @@
      "regions_over_64px": 382
     },
     "boundary_step": {
-     "boundary_mean": 0.111,
-     "interior_mean": 0.324,
-     "ratio": 0.343,
+     "boundary_mean": 0.114,
+     "interior_mean": 0.325,
+     "ratio": 0.351,
      "boundary_max": 13.59,
      "n": 4191,
      "channel_edge_mean": null,
@@ -827,9 +827,9 @@
      "bed_density_boundary": 0.9375,
      "bed_density_mid": 0.9375,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 96.24,
-     "bed_value_mid": 96.18,
-     "bed_value_ratio": 1.0006,
+     "bed_value_boundary": 77.92,
+     "bed_value_mid": 77.71,
+     "bed_value_ratio": 1.0027,
      "col_density_boundary": 0.1172,
      "col_density_other": 0.202,
      "col_density_ratio": 0.58
@@ -875,9 +875,9 @@
     },
     "joint_variation": {
      "joint_px": 52271,
-     "open_decile": 74.89,
+     "open_decile": 48.0,
      "tight_decile": 114.47,
-     "spread_rungs": 2.992
+     "spread_rungs": 5.024
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -905,9 +905,9 @@
     "regions_over_64px": 827
    },
    "boundary_step": {
-    "boundary_mean": 0.112,
-    "interior_mean": 0.239,
-    "ratio": 0.47,
+    "boundary_mean": 0.116,
+    "interior_mean": 0.241,
+    "ratio": 0.481,
     "boundary_max": 13.59,
     "n": 3787,
     "channel_edge_mean": null,
@@ -922,9 +922,9 @@
     "bed_density_boundary": 1.0,
     "bed_density_mid": 1.0,
     "bed_density_ratio": 1.0,
-    "bed_value_boundary": 94.99,
-    "bed_value_mid": 94.98,
-    "bed_value_ratio": 1.0001,
+    "bed_value_boundary": 75.41,
+    "bed_value_mid": 75.32,
+    "bed_value_ratio": 1.0012,
     "col_density_boundary": 0.1172,
     "col_density_other": 0.214,
     "col_density_ratio": 0.5475
@@ -970,9 +970,9 @@
    },
    "joint_variation": {
     "joint_px": 55312,
-    "open_decile": 74.89,
+    "open_decile": 48.0,
     "tight_decile": 114.47,
-    "spread_rungs": 2.992
+    "spread_rungs": 5.024
    },
    "crossings": {
     "horizontal_boundaries": {
@@ -987,9 +987,9 @@
     }
    },
    "lattice": {
-    "lattice": 0.0472,
-    "var_total": 350.41,
-    "var_per_position": 333.85,
+    "lattice": 0.1182,
+    "var_total": 630.35,
+    "var_per_position": 555.86,
     "cells": 256
    }
   },
@@ -1003,9 +1003,9 @@
     "regions_over_64px": 827
    },
    "boundary_step": {
-    "boundary_mean": 0.094,
-    "interior_mean": 0.217,
-    "ratio": 0.434,
+    "boundary_mean": 0.098,
+    "interior_mean": 0.219,
+    "ratio": 0.446,
     "boundary_max": 13.59,
     "n": 3809,
     "channel_edge_mean": null,
@@ -1020,9 +1020,9 @@
     "bed_density_boundary": 1.0,
     "bed_density_mid": 1.0,
     "bed_density_ratio": 1.0,
-    "bed_value_boundary": 96.97,
-    "bed_value_mid": 96.96,
-    "bed_value_ratio": 1.0001,
+    "bed_value_boundary": 78.57,
+    "bed_value_mid": 78.45,
+    "bed_value_ratio": 1.0014,
     "col_density_boundary": 0.1172,
     "col_density_other": 0.214,
     "col_density_ratio": 0.5475
@@ -1068,9 +1068,9 @@
    },
    "joint_variation": {
     "joint_px": 55312,
-    "open_decile": 74.89,
+    "open_decile": 48.0,
     "tight_decile": 114.47,
-    "spread_rungs": 2.992
+    "spread_rungs": 5.024
    },
    "crossings": {
     "horizontal_boundaries": {
@@ -1085,24 +1085,24 @@
     }
    },
    "lattice": {
-    "lattice": 0.0406,
-    "var_total": 333.7,
-    "var_per_position": 320.16,
+    "lattice": 0.1053,
+    "var_total": 592.36,
+    "var_per_position": 529.97,
     "cells": 256
    },
    "channel_legibility": {
-    "texture_ratio": 0.102,
-    "variety_ratio": 0.549,
-    "arris_ratio": 0.696,
+    "texture_ratio": 0.101,
+    "variety_ratio": 0.545,
+    "arris_ratio": 0.634,
     "band_alone": {
-     "texture": 0.383,
+     "texture": 0.38,
      "variety": 0.467,
-     "arris": 0.596
+     "arris": 0.583
     },
     "same_band_unpolished": {
-     "texture": 3.765,
-     "variety": 0.85,
-     "arris": 0.855
+     "texture": 3.769,
+     "variety": 0.856,
+     "arris": 0.92
     },
     "inside_px": 32768
    }

@@ -89,7 +89,8 @@ def audit(ladder, mat, jf, jtravel_face, anchor, label):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--extend", type=int, default=2, help="rungs to add below, for the control")
+    ap.add_argument("--strip", type=int, default=2,
+                    help="rungs to take OFF the bottom, for the control")
     a = ap.parse_args()
 
     man = json.load(open(os.path.join(CA.ASSETS, "MANIFEST.json")))
@@ -137,29 +138,36 @@ def main():
     print("  the anchor §6.5 was written against  114.50")
     print("  one rung                  %6.2f" % step)
 
-    now = audit(ladder, mat, jf, face, anchor, "AS SHIPPED — seven rungs")
+    now = audit(ladder, mat, jf, face, anchor, "AS SHIPPED — %d rungs" % len(ladder))
 
-    ext = [ladder[0] - step * (a.extend - i) for i in range(a.extend)] + ladder
-    ctrl = audit(ext, mat, jf, face, anchor,
-                 "THE CONTROL — %d rungs added below, same spacing, same tint" % a.extend)
+    # THE CONTROL RUNS DOWNWARD, deliberately. While the ladder was short, the honest control was
+    # to add the missing rungs and watch the clamps clear. Now that it reaches, that control would
+    # pass twice and prove nothing — so the control is the ladder the ruling replaced: take the
+    # two rungs back off and the instrument must go red. A check that cannot fail is not a check
+    # (LOOP-PROCESS §4, bible §13.5), and a check whose control stops failing has quietly become
+    # one.
+    ctrl = audit(ladder[a.strip:], mat, jf, face, anchor,
+                 "THE CONTROL — the %d bottom rungs taken back off" % a.strip)
 
     print()
-    if now["all_reached"]:
-        print("  INSTRUMENT SILENT: the shipped ladder reaches everything, so this file has")
-        print("  nothing to report and has not shown it can fail. (LOOP-PROCESS §4.2)")
+    if not now["all_reached"]:
+        print("  THE SHIPPED LADDER CLAMPS. Rows marked above have no rung within half a step;")
+        print("  whatever wants them is being pinned against the end of the palette.")
         ok = False
-    elif not ctrl["all_reached"]:
-        print("  CONTROL FAILED TOO: %d rungs is not enough, or the test is wrong." % a.extend)
+    elif ctrl["all_reached"]:
+        print("  CONTROL PASSED TOO: stripping %d rungs changed nothing, so this instrument has"
+              % a.strip)
+        print("  not shown it can fail and its pass does not count. (LOOP-PROCESS §4)")
         ok = False
     else:
-        print("  CAUGHT AND CURED: the shipped ladder clamps; %d rungs below fixes every row."
-              % a.extend)
-        print("  The joint lever's ceiling moves %.4f -> %.4f against a floor of %.4f."
+        print("  REACHES, AND THE CONTROL FAILS: every row lands on the shipped ladder, and")
+        print("  taking the bottom %d rungs back off puts them back against the clamp." % a.strip)
+        print("  The joint lever's ceiling: %.4f shipped vs %.4f stripped, floor %.4f."
               % (now["joint_ceiling_weber"], ctrl["joint_ceiling_weber"], FLOOR))
         ok = True
 
     out = dict(commit=FL.git_commit(), anchor=round(anchor, 3), joint_coverage=round(jf, 4),
-               floor=FLOOR, shipped=now, extended=ctrl, decisive=ok)
+               floor=FLOOR, shipped=now, stripped_control=ctrl, decisive=ok)
     p = os.path.join(HERE, "evidence", "LADDER-REACH.json")
     json.dump(out, open(p, "w"), indent=1)
     print("  written: %s" % os.path.relpath(p, REPO))

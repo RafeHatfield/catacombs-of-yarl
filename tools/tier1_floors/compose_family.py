@@ -113,6 +113,28 @@ N_VARIANTS = N_MATERIALS * N_BONDS
 # individuate every cell is the half that actually solves it, and it is the next round's work.
 PALETTE_LEVELS = 7        # §5's values are PLACEHOLDER; this is a quantisation, not a palette law.
 
+# ============================ TWO RUNGS BELOW THE DONORS ============================
+#
+# RULED, and the provenance is recorded here because the working ladder is a PLACEHOLDER scaffold
+# rather than §5.1 law — a later palette-derivation pass inherits this, so it inherits the reason.
+#
+# EARNED BY `measure_ladder_reach.py`. The seven rungs above are the donors' own 5th-to-95th
+# percentile band, and a FLOOR DONOR HAS NO REASON TO CONTAIN THE DARKEST VALUE IN THE ROOM. Two
+# things need one and neither was in the frame when the band was cut:
+#
+#   THE FLOOR'S OWN JOINTS   the bond authors a sheltered joint at 0.42 x its stone — about 47.8
+#                            — and the quantiser clamped every one of them to the bottom rung,
+#                            75.02. Not the wrong darkness: the SAME darkness, all of them, with
+#                            zero spread. That is the device gate's second verdict, *"all the gaps
+#                            look standardized,"* stated as a number.
+#   THE WALL FACE            §6.5 puts it at 0.50-0.60 x the floor. Against the corrected anchor
+#                            that is 52.95 and 63.55, and both landed under 75.02, so a wall face
+#                            could not be authored on this palette at either end of its own band.
+#
+# Same spacing, same tint, two rungs down: 48.56 and 61.79. Count 7 -> 9, noted for the future
+# palette-derivation pass, which should derive this reach rather than extend it after the fact.
+PALETTE_EXTEND_BELOW = 2
+
 # Tile ids. 9600 block: clear of the composition spike's sparse wall ids (which reach 9343) and
 # of the floor-remediation captures at 9400 — the id collision LOOP-PROCESS §4.2 logs as its
 # second instance was exactly this kind of quiet overlap, so the block is chosen to not touch
@@ -170,6 +192,32 @@ def rank_donors(paths):
     return scored
 
 
+def ladder_for(lo, hi, n_levels=PALETTE_LEVELS, extend_below=PALETTE_EXTEND_BELOW):
+    """The family's value ladder, DERIVED — never stored and trusted.
+
+    `lo` and `hi` are the donors' 5th and 95th percentiles, so this function is a pure restatement
+    of them and reproduces the donors' own derivation without needing the donors. That matters
+    because the extension below was ruled after the base family's manifest was already written:
+    a stored ladder is a snapshot of whatever the rule was on the day, and every consumer that
+    trusted one would have gone on quantising against seven rungs while the rule said nine.
+    """
+    step = (hi - lo) / (n_levels - 1)
+    return ([lo - step * (extend_below - i) for i in range(extend_below)]
+            + [lo + step * i for i in range(n_levels)])
+
+
+def rehydrate(mat):
+    """Re-derive a stored material's ladder from its own band, in place.
+
+    Called by every consumer that loads a manifest someone else wrote. `lum_lo`/`lum_hi` are the
+    measurement; the ladder is a rule applied to it, and the rule is allowed to change.
+    """
+    mat["ladder"] = [float(v) for v in ladder_for(mat["lum_lo"], mat["lum_hi"])]
+    mat["derived_levels"] = PALETTE_LEVELS
+    mat["extended_below"] = PALETTE_EXTEND_BELOW
+    return mat
+
+
 def material_stats(donor_paths, n_levels=PALETTE_LEVELS):
     """The family's palette and grain, pooled across donors.
 
@@ -197,10 +245,14 @@ def material_stats(donor_paths, n_levels=PALETTE_LEVELS):
     tint = mean_rgb / max(mean_rgb.mean(), 1e-6)
 
     lo, hi = float(np.percentile(L, 5)), float(np.percentile(L, 95))
-    ladder = [lo + (hi - lo) * i / (n_levels - 1) for i in range(n_levels)]
+    # `lum_lo`/`lum_hi` stay the DONORS' band — every `step` in this codebase is derived from
+    # them, and moving them would silently rescale the grain, the offsets and the crack depth.
+    # The extension is on the LADDER only, which is what quantises and what clips.
+    ladder = ladder_for(lo, hi, n_levels)
     return dict(lum_lo=lo, lum_hi=hi, lum_median=float(np.median(L)),
                 grain_sd=float(np.std(G)), grain_mad=float(np.median(np.abs(G))),
                 tint=[float(t) for t in tint], ladder=[float(v) for v in ladder],
+                derived_levels=n_levels, extended_below=PALETTE_EXTEND_BELOW,
                 n_donors=len(donor_paths))
 
 

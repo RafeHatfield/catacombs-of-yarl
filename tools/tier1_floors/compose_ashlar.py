@@ -1040,7 +1040,11 @@ def main():
                          "a manifest written now would ship a split nobody authored." % SPLITS)
 
     src = json.load(open(os.path.join(CF.ASSETS, "MANIFEST.json")))
-    mat = src["material"]
+    # RE-DERIVE THE LADDER rather than inherit it. The base family's manifest was written before
+    # the ruling that put two rungs below the donors' band, and a stored ladder is a snapshot of
+    # the rule on the day it was written. `lum_lo`/`lum_hi` are the measurement; the ladder is a
+    # rule applied to it.
+    mat = CF.rehydrate(src["material"])
     os.makedirs(a.out, exist_ok=True)
     step = (mat["lum_hi"] - mat["lum_lo"]) / (CF.PALETTE_LEVELS - 1)
 

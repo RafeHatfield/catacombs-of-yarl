@@ -1,5 +1,5 @@
 {
- "commit": "4cf4ee25f64ae6cf110921ae3aef0b385e918817",
+ "commit": "cbf5ad2189fb1fee45e31a3c4496eea5ab97b8bd",
  "geometry": "ashlar",
  "grid": [
   8,
@@ -19,7 +19,7 @@
   "median_stone_px": 198
  },
  "occlusion": {
-  "joint_to_stone_contrast": 7.94,
+  "joint_to_stone_contrast": 23.03,
   "additive_retained": 1.0,
   "replacement_retained": 0.0,
   "replacement_note": "a flat per-stone value erases every within-stone difference; measured 0.0% on the crossing-joint geometry and unchanged by topology \u2014 the remap must be additive",
@@ -50,11 +50,11 @@
   "if_applied_to_every_pixel": [
    {
     "steps": 1,
-    "clip_low_pct": 15.91
+    "clip_low_pct": 25.85
    },
    {
     "steps": 2,
-    "clip_low_pct": 15.91
+    "clip_low_pct": 25.85
    }
   ]
  },
