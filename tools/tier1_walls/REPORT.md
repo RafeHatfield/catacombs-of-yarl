@@ -246,6 +246,49 @@ has never seen the clause. The check now decides on the axis and records the cul
 
 ---
 
+## 7b. Rounds 2 and 3 — two fixes bought something, measured
+
+**The chokepoint, across three rounds and three seats:**
+
+| round | build | verdict |
+|---|---|---|
+| 1 | before the bond stagger | *"a smear of light, not a passage … what makes a passage readable is its jambs, and the jambs here are at 5/255"* |
+| 2 | after it | *"I read it as **a passage**, and the thing that made the difference was the block course: the face terminates cleanly at x=375 and resumes at x=440 with proper end-blocks. **That is a doorway.**"* |
+
+A fix that moved a seat from *smear of light* to *that is a doorway* is a fix that
+did what it claimed, and it was re-verified rather than assumed (LOOP-PROCESS §2:
+fix rounds regress).
+
+**The void, in two valid rounds, both saying the same thing:**
+
+> *"beyond the walls is black. That black reads as empty screen, not as unlit stone."* (r1)
+> *"More of the same stuff … it is wall, and it goes on. What it is NOT is dark."* (r2)
+
+`void_ring` was 2. It is 1 now, and §8's state records what that changed.
+
+## 7c. ROUND 3 IS VOID, and the reason is not an unrelated accident
+
+Round 3's plant seat culled — *"walls are half-resolution art with duplicated decals, invisible at
+play brightness — the subject isn't rendered"* — and **named nothing on the plant's own axis**.
+Under LOOP-PROCESS §4 that is not a soft catch to be weighed at reduced strength; the round is
+**VOID and its findings are not read.** They are not read here, and a reading of the island that
+had already been written into `STACK-FINDING.md` was withdrawn rather than downgraded.
+
+**Why it went void matters more than that it did.** The plant is a *picturesquely ruined* wall —
+collapse, cobweb, moss, a forked crack. At the range the gate scene's walls occupy, the whole wall
+delivers 2–3 levels of 255, and **the ruin is as invisible as the material it was drawn over.**
+The seat's own cull says exactly that: *the subject isn't rendered.*
+
+> **So the plant control is marginal on this rig rather than sound.** It caught on axis in rounds
+> 1 and 2 and missed in round 3, and the miss is the same rig property as every other finding in
+> this session, arriving in the one place that is supposed to be independent of them.
+
+This is reported as a **LOOP-PROCESS §1.1.4(c) condition — an instrument that cannot reliably
+demonstrate the thing it exists to demonstrate.** It does not invalidate rounds 1 and 2, whose
+plants were caught. It does mean **no wall round can be relied on to validate itself until the
+rig question is answered**, and that is one more reason the answer belongs at the gate rather
+than in another round of authoring.
+
 ## 7a. The clause that had to be read carefully, because two of them pull against each other
 
 LOOP-PROCESS §1.1.1: **nothing reaches the human gate that the blind critic would kill.**
@@ -283,9 +326,21 @@ against a constraint the art cannot reach, which is exactly the failure §6.2.1 
 - **The void.** Three candidates, unruled, on the panel.
 - **Instruments.** Six, all proven failable, legal family clean, both arms clean.
 - **Generations spent: 0 of 60.**
-- **Device.** Built and installed with `TIER1_WALLS` / `TIER1_BINDINGS` / `TIER1_VOID`. Read the
-  painter's line back off the log before believing anything: it must say
-  `missing=0 edge_check=46/OK`.
+- **Device — VERIFIED.** Commit `7e64cdb`, clean tree, all eight checks green on the handset,
+  including the two the wall round added:
+
+  ```
+  [Tier1] BUILD IDENTITY: commit=7e64cdbb4385f3ab98adb126a807a1cf59805c33 built=2026-08-29T21:03:26Z
+  [Tier1] boundary wall: family=boundary_wall_compensated_v1 face=24 top=63
+          void=129(choice=0,ring>1) missing=0 face_suppressed=63
+          planes(top=154.38 face=75.02) edge_check=46/OK
+          bindings=18(cramp:2,lash:5,patch:1,pin:6,strap:4)
+  ```
+
+  `verify_on_device.sh` named `tier1_floor_review` literally and returned MISS on a correct wall
+  build; the scene is a parameter now, and the wall checks are opt-in so a floor build is not
+  failed for lacking walls. Both new checks were shown able to fail against the floor gate's own
+  log before either was believed (§13.5).
 
 ### `git diff --stat` against `origin/main` (ec16108)
 

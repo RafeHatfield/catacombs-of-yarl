@@ -21,8 +21,9 @@ token batch to show willing.
 | 1 | binding family | 30 overlays, 5 kinds × 2 planes × 3 variants | placed per cell, never baked |
 | 1 | plant (ruined wall) | 84 tiles | never lands, never shown to Rafe |
 | 1 | blind seats | 4 (W1, W2, W3, W4) | VALID — plant caught on axis |
-| 2 | rebuild after the grain fix | — | round superseded by the round-1 flip list |
-| 3 | rebuild after bond / ink / two-scale grain | — | seats W1, W2 |
+| 2 | rebuild after the grain fix + bond stagger | — | seats W1, W2 — VALID |
+| 3 | rebuild after ink + two-scale grain | — | seats W1, W2 — **VOID**, the plant was missed on axis |
+| 4 | rebuild at void_ring 1 | — | seats W1, W2 — the build offered to the gate |
 
 ## 2. The captures
 
@@ -44,7 +45,8 @@ holds this together* would be answered with nothing and the answer would look de
 | `r08_*.png` | after the boundary-grain fix | `r08_void{1,2}` are the void candidates |
 | `r09_family.png` | after the six-deep mass | the first capture with the void actually in frame |
 | `r10_{family,plant}.png` | after the bond stagger | round 2 |
-| `r11_{family,plant}.png` | after ink + two-scale grain | **the build offered to the gate**, round 3 |
+| `r11_{family,plant}.png` | after ink + two-scale grain | round 3 — VOID |
+| `r12_{family,plant}.png` | after void_ring 2 → 1 | **the build offered to the gate**, round 4 |
 | `rig_{ratified,f070,f050,r065,r080}.png` | rig probe | evidence for a ruling, not a proposal |
 
 ## 3. The instruments, and the four bounds that were wrong
@@ -121,7 +123,15 @@ laying its bond with them. No generated pixel is in a shipped tile.
 | 1 | W2 **plant** | r07 | **CAUGHT ON AXIS** (Q11: *"Nothing has happened to it. Cracks were applied to it."*) — the cull it gave was one the family shares and does not count |
 | 1 | W3 family | r07 | CULL: *"a black band with a 4px outline — no mass, no shadow, no thickness, no damage, no repairs"*; Q4 **NOTHING** holds it |
 | 1 | W4 comparative | r07 vs the asset bar | **RANK: B — Yarl.** *"on the face band … genuinely good"*; CULL: wall tops carry zero texture |
-| 3 | W1 family | r11 | see `evidence/seats/r3_W1.json` |
-| 3 | W2 **plant** | r11 | see `evidence/seats/r3_W2.json` |
+| 2 | W1 family | r10 | CULL: *"wall tops are unlit flat fill — three of four room edges are invisible at played size, two inverted"*; and the chokepoint: *"That is a doorway."* |
+| 2 | W2 **plant** | r10 | **CAUGHT ON AXIS** (`rubble`, `applied to it`, `stamped`) |
+| 3 | W1 family | r11 | **NOT READ — the round is VOID** |
+| 3 | W2 **plant** | r11 | **MISSED ON AXIS.** Culled for *"invisible at play brightness — the subject isn't rendered"*, which is the family's defect, not the plant's. `REPORT.md` §7c. |
+| 4 | W1 family | r12 | the build offered to the gate |
+| 4 | W2 **plant** | r12 | the control on it |
 
-Round 2 (r10) was superseded inside the session by round 1's flip list and is not read.
+**Round 3 is VOID and its findings are not read.** Not discounted — void. A reading of the island
+that had already been drafted into `STACK-FINDING.md` was withdrawn rather than downgraded when
+the plant seat came back. The reason the plant was missed is the session's own finding arriving
+in the control: at the range the gate scene's walls occupy, the ruin is as invisible as the
+material it was drawn over, so **the plant control is marginal on this rig rather than sound.**

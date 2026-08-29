@@ -106,6 +106,17 @@ a wall to the ground at its foot — and it is reported as the primary. The equa
 the material reading, and it is reported because a measurement that supports only one reading of
 a clause should say which reading it measured.
 
+## 4a. A NOTE ON WHAT IS *NOT* CITED HERE
+
+An earlier draft of this document quoted a seat's reading of the island — the one place where the
+`compensated` arm's top plane does deliver above the floor — as evidence bearing on the ruling.
+**That seat sat in a round whose plant control failed, so the round is VOID and its findings are
+not read** (LOOP-PROCESS §4: *not discounted — void*). The quotation is withdrawn rather than
+downgraded, and the observation is not carried forward under any other cover. If it is true it
+will turn up again in a round that is valid.
+
+`REPORT.md` §7c records why that round went void, and it is not an unrelated accident.
+
 ## 5. Status — RULING TRIGGER, and what this session did with it
 
 This is a **§6.2 coupling finding, not a tuning task**, and it is returned under LOOP-PROCESS
