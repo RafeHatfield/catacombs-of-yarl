@@ -1,6 +1,6 @@
 {
- "commit": "ff9edbca6556a0b5be1c505c8e9875b9e57e05cd",
- "capture": "tools/tier1_floors/evidence/scene_ashlar_r14.png",
+ "commit": "4cf4ee25f64ae6cf110921ae3aef0b385e918817",
+ "capture": "tools/tier1_floors/evidence/scene_ashlar_r15.png",
  "levels": [
   {
    "level": 1,
@@ -10,32 +10,32 @@
   {
    "level": 2,
    "tiles": 5,
-   "roughness": 3.4652
+   "roughness": 3.8188
   },
   {
    "level": 3,
    "tiles": 5,
-   "roughness": 5.1712
+   "roughness": 5.308
   },
   {
    "level": 4,
    "tiles": 1,
-   "roughness": 4.8731
+   "roughness": 5.2329
   },
   {
    "level": 5,
    "tiles": 6,
-   "roughness": 5.3916
+   "roughness": 5.4385
   },
   {
    "level": 6,
    "tiles": 5,
-   "roughness": 5.0372
+   "roughness": 5.1669
   },
   {
    "level": 8,
    "tiles": 2,
-   "roughness": 4.0311
+   "roughness": 3.7336
   }
  ]
 }

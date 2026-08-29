@@ -247,8 +247,20 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
                 #
                 # So a joint is TIGHT or it is OPEN. Tight sits a full rung shallower; open keeps
                 # the dark it had and spends its wear on the arrises beside it.
-                tight = (open_amt <= CA.JOINT_TIGHT_KNEE).astype(float)
-                L = L + np.where(jm_pix, tight, 0.0) * CA.JOINT_TIGHT_RUNGS * step
+                # THE JOINT CARRIES THE TRAFFIC NOW. Off-route it stays as deep and as dark as
+                # the bond drew it; trodden it is packed with grit, and a packed joint is a
+                # shallower one. Some of it fills level with the floor entirely, so the line
+                # between two stones stops being a line — which is what "stones wearing into one
+                # another" looks like at 32px.
+                ages = np.array(CA.WEAR_AGES)
+                idx = np.abs(open_amt[..., None] - ages).argmin(-1)
+                fill = np.array(CA.JOINT_FILL_RUNGS)[idx]
+                brk = np.array(CA.JOINT_BREAK)[idx]
+                hb = (CA._mix_np(xx + x * T, yy + y * T, CA.JOINT_BREAK_SALT + seed)
+                      % 1000) / 1000.0
+                broken = jm_pix & (hb < brk)
+                L = L + np.where(jm_pix & ~broken, fill, 0.0) * step
+                L = np.where(broken, mat["lum_median"], L)
 
                 # (b) THE ARRIS GOES WITH THE JOINT. A stone pixel touching an open joint is
                 # chipped off in proportion to how open that joint is — occlusion vocabulary,
@@ -261,7 +273,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
                 stone_px = (cls != 0) & ~jm_pix
                 hsh = (CA._mix_np(xx + x * T, yy + y * T, CA.CHIP + seed) % 1000) / 1000.0
                 chip = stone_px & (near > 0) & (hsh < CA.CHIP_RATE * near)
-                L = np.where(chip, L - near * CA.JOINT_TIGHT_RUNGS * step * 1.6, L)
+                L = np.where(chip, L - near * step * 1.6, L)
                 chips[y * T:(y + 1) * T, x * T:(x + 1) * T] = chip
 
             # THE CRACK NETWORK, drawn last so it crosses stones and joints alike. Not an

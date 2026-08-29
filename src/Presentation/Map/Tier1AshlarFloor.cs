@@ -74,7 +74,10 @@ public static class Tier1AshlarFloor
         public double MarkDepth = 1.0, PitDepth = 1.0;
         public int MarkBands = 5, MarkPits = 3, WearBands = 3, WearPits = 1;
         public int WearSalt = 3008, ChipSalt = 3009, WearLo = 70, WearHi = 200, ChannelWear = 235;
-        public double JointTight = 1.0, TightKnee = 0.4, ChipRate = 0.55, DressingKeep = 0.45;
+        public double ChipRate = 0.55, DressingKeep = 0.45;
+        public int JointBreakSalt = 3010;
+        public double[] JointFill = { 0.0, 0.0, 1.0, 2.0 };
+        public double[] JointBreak = { 0.0, 0.0, 0.20, 0.45 };
         public int[][] WearOctaves = System.Array.Empty<int[]>();
         public double[] WearAges = { 0.0, 0.34, 0.67, 1.0 };
         public int[][] MarkDirs = System.Array.Empty<int[]>();
@@ -443,6 +446,15 @@ public static class Tier1AshlarFloor
         return best;
     }
 
+    /// <summary>Which of the four wear ages this scalar snapped to.</summary>
+    private static int AgeIndex(Config c, double w)
+    {
+        int best = 0;
+        for (int i = 1; i < c.WearAges.Length; i++)
+            if (System.Math.Abs(c.WearAges[i] - w) < System.Math.Abs(c.WearAges[best] - w)) best = i;
+        return best;
+    }
+
     private static int LadderIndex(Config c, double v)
     {
         int best = 0;
@@ -714,14 +726,23 @@ public static class Tier1AshlarFloor
                 if (clsArr[py, px] == 0)
                 {
                     openAmt[py, px] = Wear01(cfg, WearScalar(cfg, traffic, tx * T + px, ty * T + py), channelHere);
-                    // A WHOLE RUNG OR NOTHING. Scaling the lightening continuously produced
-                    // sub-rung shifts on a joint sitting on the ladder's bottom rung, and
-                    // quantisation ate every one: measured spread 0.000. §13.8 does not stop
-                    // applying because the signal is ours. A joint is TIGHT — a full rung
-                    // shallower — or OPEN, keeping the dark it had and spending its wear on the
-                    // arrises beside it, because there is no rung below it to take.
-                    if (openAmt[py, px] <= cfg.TightKnee)
-                        raw[py, px] += cfg.JointTight * rung;
+
+                    // THE JOINT CARRIES THE TRAFFIC. Off-route it stays as deep and as dark as
+                    // the bond drew it; trodden it is packed with grit, and a packed joint is a
+                    // shallower one — lighter as a consequence of geometry, never as paint. Some
+                    // of it fills level with the floor entirely, so the line between two stones
+                    // stops being a line, which is what "stones wearing into one another" looks
+                    // like at 32px.
+                    //
+                    // The BOND is untouched: the class mask still divides the stones, so every
+                    // stone keeps its address and the corner theorem is unaffected. What degrades
+                    // along a path is the VISIBLE enclosure, deliberately.
+                    int age = AgeIndex(cfg, openAmt[py, px]);
+                    int hb = Mix(tx * T + px, ty * T + py, cfg.JointBreakSalt + cfg.Seed);
+                    if ((hb % 1000) / 1000.0 < cfg.JointBreak[age])
+                        raw[py, px] = cfg.LumMedian;
+                    else
+                        raw[py, px] += cfg.JointFill[age] * rung;
                 }
 
         for (int py = 0; py < T; py++)
@@ -737,7 +758,7 @@ public static class Tier1AshlarFloor
                 if (near <= 0.0) continue;
                 int h = Mix(tx * T + px, ty * T + py, cfg.ChipSalt + cfg.Seed);
                 if ((h % 1000) / 1000.0 < cfg.ChipRate * near)
-                    raw[py, px] -= near * cfg.JointTight * rung * 1.6;
+                    raw[py, px] -= near * rung * 1.6;
             }
         }
 
@@ -927,8 +948,13 @@ public static class Tier1AshlarFloor
             cfg.WearOctaves = Table(df.GetProperty("octaves"));
             cfg.WearLo = df.GetProperty("lo").GetInt32();
             cfg.WearHi = df.GetProperty("hi").GetInt32();
-            cfg.JointTight = df.GetProperty("joint_tight").GetDouble();
-            cfg.TightKnee = df.GetProperty("tight_knee").GetDouble();
+            cfg.JointBreakSalt = salts.GetProperty("joint_break").GetInt32();
+            var jf = new List<double>();
+            foreach (var v in df.GetProperty("joint_fill").EnumerateArray()) jf.Add(v.GetDouble());
+            cfg.JointFill = jf.ToArray();
+            var jb = new List<double>();
+            foreach (var v in df.GetProperty("joint_break").EnumerateArray()) jb.Add(v.GetDouble());
+            cfg.JointBreak = jb.ToArray();
             cfg.ChipRate = df.GetProperty("chip_rate").GetDouble();
             cfg.DressingKeep = df.GetProperty("dressing_keep").GetDouble();
             cfg.ChannelWear = df.GetProperty("channel_wear").GetInt32();
