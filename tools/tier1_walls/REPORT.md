@@ -26,6 +26,11 @@ be.** Everything below was produced on the ratified rig (radius 5.0 / falloff 1.
 The walls were built anyway, as two arms, because the ruling in (1) is Rafe's and a gate needs
 something to rule on. Six instruments were built and all six have demonstrated they can fail.
 
+`evidence/SESSION-before-after.png` is the session in one image: the magenta mocks on the left,
+the walls and the void on the right. ⚠ **It is a before-and-after of the SESSION, not an A/B of a
+single variable** — the scenes differ, because the wall gate needed a scene the floor gate did not
+have. It is offered as a record of what changed, never as a comparison of two arms.
+
 ---
 
 ## 1. §6.2.1's owed item, answered

@@ -67,20 +67,25 @@ def predict(spec, man):
     wall, w, h = build(spec)
     sv, sh = man["salts"]["v"], man["salts"]["h"]
     ef, nv = man["edge_families"], man["variants"]
+    # READ FROM THE MANIFEST, not assumed. This was a hard-coded 2 and the cross-check below
+    # caught it the moment `void_ring` moved to 1 - engine 63 tops / 129 void against this file's
+    # 136 / 56. Exactly the failure the guard exists for: without it the amplitude table would
+    # have been computed against tiles the engine never laid.
+    ring_cap = man.get("void_ring", 2)
     out = {}
     for y in range(h):
         for x in range(w):
             if not wall[y][x]:
                 continue
-            ring = ring_of(wall, w, h, x, y)
-            if ring > 2:
+            ring = ring_of(wall, w, h, x, y, cap=ring_cap)
+            if ring > ring_cap:
                 out[(x, y)] = ("void", man["table"]["void"]["0"])
                 continue
             south_open = (0 <= y + 1 < h) and not wall[y + 1][x]
             ns = ((0 <= y - 1 < h) and not wall[y - 1][x]) or south_open
             ew = ((0 <= x - 1 < w) and not wall[y][x - 1]) \
                 or ((0 <= x + 1 < w) and not wall[y][x + 1])
-            if ring == 2:
+            if ring > 1:
                 ns = _facing(wall, w, h, x, y, vertical=False)
                 ew = _facing(wall, w, h, x, y, vertical=True)
             horiz = ns or not ew
