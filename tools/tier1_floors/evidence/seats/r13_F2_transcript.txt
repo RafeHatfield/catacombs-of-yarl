@@ -1,0 +1,102 @@
+I ran the image at 1:1, then magnified and measured. Findings below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Rectangular cut stone flags — a warm mid-brown sandstone or limestone — laid in offset courses. But that's me naming the most likely rock, not reading one. The material has no identity of its own; it is generic brown dungeon stone.
+
+**Q1_WHY:** The grid is unambiguous — regular courses ~33–37px apart (row joints at y=47, 82, 122, 171, 207, 240, 273, 333) with vertical joints offset course-to-course, and every joint darkened. That gives me "cut slabs, laid." What it does not give me is grain, bedding, grit, crystal, pitting, or any tooling that distinguishes sandstone from limestone from cast concrete. Sampled slab interiors in the brightest part of the room (x300–470, y130–230) are flat fills with 2–3 value mottle blotches over them. If you recoloured this grey it would read as concrete; green, as slate. Nothing in the face objects.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the two-tile corridor at x≈330–400 below y=395.
+
+**And I chose it for reasons that have nothing to do with the ground.** I picked it because it is the only opening I can see and because the tile grid continues into it — pure layout reading. I checked the ground for a reason and found none. Specifically, I measured lighting-normalised damage density at the corridor mouth (x330–400, y330–392) and got **0.152 — the lowest of the ten regions I sampled**, against 0.451 in the NW corner (x195–280, y25–100) where nobody would ever walk. There is no wear lane, no polish, no smoothed run of slabs, no scuffing, no drift of grit against a wall, nothing dragged. The floor of a place in continuous heavy use is telling me the threshold everyone must cross is its *cleanest* stone. That's backwards, and it means the surface contributed nothing to my decision.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Things have been *applied* to it. Nothing has happened to it.
+
+It is covered in damage marks — bright squiggling crack-strokes and round dark pits — at a fairly even density from wall to wall. But the damage is scattered rather than sited. It doesn't concentrate where a floor gets hit, doesn't thin where nothing touches it, doesn't connect to anything. No spalled corners at the joints, no slab tipped or settled, no repair — which is conspicuous in a place where the fiction says a garrison has been patching things with pins and salvaged timber for four hundred years. Nothing has ever been fixed here, and nothing has ever been worn.
+
+**Q3_WHY:** Two specific readings.
+
+*The cracks are lit backwards.* I counted 3,465 floor pixels (excluding the sprite) sitting more than 40 levels **above** their local surroundings, with a mean luminance of 150 on a floor whose median is 63. 1,033 of them are more than 150px from the lantern. Cracks are voids — they should be the darkest marks on a lit surface. These are the brightest. And they don't dim: in the south corridor at y≈555–590, in ground that is otherwise black, the crack strokes are still the most legible thing on screen. They read as glowing chalk lines drawn over the stone, not as fissures in it.
+
+*The damage ignores the light.* Relative-contrast damage density: N wall edge 0.433, SE corner 0.357, room centre 0.323, SW corner 0.274, mid-west 0.214, mid-east 0.206, corridor mouth 0.152. That's noise, not a pattern. It's an even sprinkle from a decorator pass.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes — **the round dark pits, and they are one stamped sprite.**
+
+I count at least twelve, at (208,42), (345,44), (466,45), (283,90), (405,97), (240,148), (403,233), (587,190), (610,300), (411,307), (263,353), (411,353). I pulled eight of them into a contact sheet at 9× and the ones at **(345,44), (405,97) and (587,190) are the same shape** — same ~24px diameter, same lumpy circumference silhouette, same broken ring of cream rim pixels at the same clock positions. They are the only round things in a room built entirely from rectangles, which is why the eye snags on them, and once you've seen two you see the rest.
+
+Worse, I measured their rim highlight against the lantern direction. **The highlight doesn't track the light.** The pit at (587,190) has its brightest rim at 0° (pointing right) while the lantern is at 183° (pointing left). The pit at (411,353) is brightest at 0° with the lantern at 268°. The shading is baked into the decal and points the same way everywhere, contradicting the single light source that the entire scene is built around. In a game whose one visual premise is "the figure carries the only light there is," a dozen objects lit from a private sun is the thing my eye kept catching on and couldn't stop catching on.
+
+---
+
+**Q5: MADE, OR REPEATED?**
+**Repeated** — though not in the way I first expected, and the distinction matters.
+
+I autocorrelated the lighting-normalised floor (x185–630, y15–395) across all offsets up to 200×120. There is no tiling period: the top correlations are 0.71 at dy=1 and 0.69 at dx=1, i.e. plain neighbour-pixel correlation, decaying smoothly with no peak anywhere. So this is not a bitmap stamped on a grid. Someone did place things individually.
+
+But the vocabulary being placed is tiny and closed. Three motifs — hatch scribble, cream crack-stroke, round pit — scattered across an otherwise blank field. I ran a near-duplicate search over ~1,959 detail-bearing patches and got 2,297 pairs above 0.72 correlation, with distant pairs hitting 0.96: (539,57)≡(283,153), (507,73)≡(531,73), (547,57)≡(355,185). When I rendered those pairs to look at them, the reason for the match was itself the finding — **the matching content is a joint line and a flat fill.** They correlate because there is nothing on the faces to tell them apart. The pits are duplicates of each other outright.
+
+So: a hand scattered a decal set over blank stone. That is repetition wearing the costume of construction.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It has a coherent palette, a correct running-bond layout, a genuinely good lantern falloff, and it does not look broken. Plenty of shipped games have floors weaker than this.
+
+**Merely competent.** Not good. The lighting is the only part doing real work, and it is carrying a surface that has nothing under it. Strip the falloff and you have brown rectangles with squiggles on them. Good work would survive being lit flatly; this doesn't.
+
+---
+
+**Q7: WHAT CAN YOU ACTUALLY SEE AT 1:1?**
+**The faces are effectively blank at 1:1.**
+
+Legible without magnifying — and this is the complete list:
+1. The joint grid, and the value difference between adjacent slabs.
+2. The bright cream crack-strokes.
+3. The round dark pits with their bright rims.
+
+That is layout, joints, and stamped decals. Of the face of the material itself — the thing you are standing on — I can see nothing at 1:1. There is a faint sense that *something* is on some slabs, but it does not resolve into a material.
+
+Only on magnification: the diagonal chisel hatching (groups of 3–6 parallel strokes, some crosshatched), small chip marks at slab corners, and the 2–3 value blotch mottle. **I had to hunt for all of it.** It exists, someone drew it, and at play size it is doing nothing — it contributes a slight grubbiness and no information. That is hunting, not seeing.
+
+**Q7_WHY:** Checked at 1:1: the full 750×600 frame, and a native-resolution crop of the brightest ground at x250–560, y90–290 — which includes the best-lit slabs in the image (x300–470, y130–230), i.e. the most favourable possible case. Had to magnify: x190–330 y20–140 at 4×, x210–350 y150–270 at 4×, x330–470 y120–240 at 4×, and the pit contact sheets at 6× and 9×. The hatching only appeared in the 4× passes.
+
+---
+
+**Q8: HOW OLD IS THIS FLOOR?**
+**It reads as one age everywhere, and that age is "distressed last week."**
+
+If forced to a number from the marks alone: a few decades of moderate use. It cannot read as older, because age in stone is *cumulative and located* — it pools. Here it doesn't pool anywhere.
+
+The fiction wants older than the records, in continuous heavy use, never cared for. This floor cannot support that, and the reason is specific: **it has damage but no history.** Damage tells you something struck the stone. History tells you the order things happened in — a crack that runs under a later stain, a slab replaced with a slightly wrong stone, a chip whose sharp edge has since been rounded off by traffic, a repair that has itself begun to fail. There is not one instance of one mark overlapping another mark on this entire floor. Every scratch and pit sits alone on clean stone, mutually exclusive, as if applied in a single pass. That is exactly what it was.
+
+The one thing that would genuinely date it — a four-hundred-year walk line polished into the stone between the entrances — is absent, and the measurement says worse than absent: it's inverted, with the corridor mouth at 0.152 damage and the dead corners at up to 0.451.
+
+**Q8_WHY:** Corridor mouth x330–400 y330–392 (0.152) against NW corner x195–280 y25–100 (0.451) and SE corner x540–620 y310–388 (0.357). Slab interiors x300–470 y130–230 for absence of accumulated staining. The pit sheet at (345,44), (405,97), (587,190) for identical, un-weathered, un-overlapped damage. South corridor x300–470 y370–600 for the crack strokes still reading at full brightness in unlit ground.
+
+---
+
+**CULL:**
+Damage is stamped from a three-motif decal set — glowing cracks, cloned pits — onto blank stone.
+
+---
+
+**FLIP LIST**
+- Invert the cracks: make every fissure darker than the stone it sits in, with at most a one-pixel lit lip on the side facing the lantern. Right now 3,465 floor pixels are brighter than their surroundings and 1,033 of those are more than 150px from the light.
+- Kill the cloned pits. The circles at (345,44), (405,97) and (587,190) are the same sprite with the same baked highlight pointing right regardless of where the lantern is. Either draw each hole individually with rim light derived from the actual light position, or cut them entirely.
+- Put material on the faces so it reads at 1:1 without magnifying. The hatching at 4× is invisible at play size — it needs roughly double the value separation, or replace it with something structural (bedding lines, grit, a pitted surface) that survives the lantern falloff.
+- Site the wear. Polish and smooth the slabs along the line between the south corridor mouth (x330–400) and the room, and let the corners at x195–280 y25–100 and x540–620 y310–388 stay comparatively intact. The current distribution has the threshold as the least-damaged stone in the room.
+- Let marks overlap so the floor has an order of events, and add at least one visible orc repair — a slab pinned, packed with timber, or swapped for one that doesn't match. Four hundred years of a garrison patching things should leave something on the ground.
+
+---
+
+Model: Opus 5 (1M context)
