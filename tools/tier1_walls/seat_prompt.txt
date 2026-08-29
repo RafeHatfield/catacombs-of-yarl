@@ -1,0 +1,99 @@
+YARL — BLIND SEAT — THE WALL AND THE DARK BEYOND IT — v0.1
+
+RUN AS: fresh `claude -p`, cwd OUTSIDE the repo. No repo access. No project memory.
+INPUT: the PNG file(s) in this directory, nothing else.
+This process is NOT given the art bible. It gets the fiction, the tone, and these questions.
+
+------------------------------------------------------------------------------
+WHAT YOU ARE LOOKING AT
+
+A top-down dungeon seen straight from above, drawn on a square grid, shown at the size the game
+is actually played on a phone. A figure stands in the middle carrying the only light there is,
+so the picture gets darker the further it is from that figure. That is intended.
+
+------------------------------------------------------------------------------
+THE PLACE
+
+The Paths of the Dead: an underworld that is ADMINISTERED, not haunted — a filing system for
+souls. In continuous heavy use since before anyone's records begin, and no one has ever cared
+for it. Nothing in it is arranged for anyone's benefit.
+
+The upper floors are a contested frontier where a company of orc-soldiers has held a line for
+four hundred years and cannot advance it. They repair things endlessly, with rope, driven pins,
+hide and salvaged timber, and they do not care how the repairs look. They are extremely good at
+it and have never once cared how it looks.
+
+The tone is dry, cold and completely straight. Not spooky-fun. Not adventurous. No sense of
+humour about itself.
+
+------------------------------------------------------------------------------
+SCOPE — READ THIS AND HOLD TO IT
+
+**THE SUBJECT IS THE STANDING STRUCTURE** — the walls, whatever they are made of, and the
+darkness beyond them.
+
+**THE GROUND IS FINISHED WORK AND IS OUT OF SCOPE.** It was judged in an earlier round. Do not
+comment on the floor's material, its cracks, its wear or its colour, and do not let it influence
+anything you say about what stands on it. If the only thing you can find to say is about the
+floor, say that instead.
+
+The on-screen buttons and bars are the game's interface and are also out of scope.
+
+------------------------------------------------------------------------------
+QUESTIONS
+
+Answer every one. Use the exact labels. Be specific about WHERE you are looking — give pixel
+regions or describe the location — and quote what you actually see rather than what you expect.
+
+Q1: WHAT IS STANDING AROUND THIS ROOM MADE OF? Name the material in a few words, as if telling
+    someone what they would put a hand on. If you cannot tell, say so plainly.
+Q1_WHY: what in the image tells you that.
+
+Q2: IS THAT SOLID MASS, OR A FLAT PATTERN AROUND THE EDGE? Pick one, then say what made you pick
+    it. If you cannot tell whether the room is bounded by something with thickness or by a
+    change of colour, say that — it is a real answer.
+
+Q3: WHERE EXACTLY DOES THE GROUND STOP? Point at the transition. Describe what happens across
+    it — over how many pixels, and what changes.
+
+Q4: WHAT IS HOLDING THIS PLACE TOGETHER, AND WHAT WOULD FALL DOWN IF YOU CUT IT? Name the
+    specific thing you would cut and what it is holding. If nothing in the image is visibly
+    holding anything, say NOTHING — that is a real and useful answer.
+
+Q5: DOES THIS LOOK LIKE SOMETHING THAT WAS BUILT, OR LIKE AN IMAGE THAT WAS REPEATED? One or the
+    other, then why.
+
+Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME? Answer YES or NO. Then, separately:
+    is it merely competent, or is it genuinely good? "Fine", "acceptable", "solid" and
+    "promising" all mean NO to the second question.
+
+Q7: AT THE SIZE SHOWN, WITHOUT ZOOMING IN, WHAT CAN YOU ACTUALLY SEE ON THE STANDING SURFACES —
+    not the layout, not the outline, but the face of the material itself? List what is legible at
+    1:1 and what only appears once you magnify. Say whether that changes with distance from the
+    figure, and where. If a surface is blank at 1:1, say so plainly; if something is there but
+    you had to hunt for it, that counts as hunting, not as seeing.
+Q7_WHY: name the pixel regions you checked at 1:1, and separately the ones you had to magnify.
+
+Q8: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO? Anything you notice more than once, anything
+    that starts to feel like a pattern, anything at the same place in every cell. Say exactly
+    what and exactly where. If there is nothing, say NOTHING.
+
+Q9: WHAT IS BEYOND THE WALLS? Describe it in your own words. Is it more of the same stuff, is it
+    empty space, is it another room you cannot see into, or is it something you cannot name? Say
+    which, and what in the image told you.
+
+Q10: COULD YOU TELL A WAY THROUGH FROM A DEAD END WITHOUT WALKING INTO IT? Find the narrow gap
+     in the structure north of the figure. Say whether you read it as a passage leading somewhere
+     or as a notch in a pattern, and what made the difference. If you cannot find it, say so.
+
+Q11: HAS ANYTHING HAPPENED TO THIS STRUCTURE? Describe its condition in your own words, and say
+     what you read it from.
+
+CULL: If this should be rejected, give the single strongest reason in under twenty words.
+      If it should not be rejected, write NONE.
+      A critic who finds no defect should suspect its own rigour before crediting the work. Look
+      again before writing NONE.
+
+FLIP LIST
+Then a list, one per line starting with "- ", of the specific changes you would require before
+this could ship. Concrete and visual. No more than five. If there are none, write "- none".

@@ -247,16 +247,29 @@ class Family:
     def stones_in_row(self, course, kw, ke, var=0, width=T):
         """The head joints of one course, given the two boundary keys.
 
-        Returns a list of (x0, x1, rung_offset). The straddling blocks at either end carry the
-        offset their KEY dictates - that is what both neighbours agree on - and the interior
-        blocks carry an offset hashed from the whole triple, which is what stops a course from
-        being the same three blocks every time.
+        Returns (x0, x1, rung_offset, grain_key, grain_x). The straddling blocks at either end
+        carry the offset their KEY dictates - that is what both neighbours agree on - and the
+        interior blocks carry an offset hashed from the whole triple, which is what stops a course
+        from being the same three blocks every time.
+
+        ⚠ THE GRAIN OF A STRADDLING BLOCK IS MEASURED FROM ITS BOUNDARY, NEVER FROM THE TILE'S
+        OWN LEFT EDGE, and `edge_agreement` found this by failing at 4.22x before the fix. Value
+        agreement alone is not agreement: two tiles can paint the same rung on the two halves of
+        one block and still put different grain on them, and the seam is then a texture
+        discontinuity down every boundary in the wall. The west tile draws the block's columns
+        from 0 and the east tile continues at its width, both indexed by the SHARED KEY, so the
+        material runs through the block unbroken. It is the same construction the floor family
+        calls `stone_origin`, and it is load-bearing for the same reason.
         """
         aw, _, vw = self.vjoint(course, kw)
         _, be, ve = self.vjoint(course, ke)
         spans = []
         if aw > 0:
-            spans.append((0, aw, vw))            # the tail of the block crossing the west edge
+            # The tail of the block crossing the WEST edge. Its grain is the boundary's, and this
+            # tile holds the columns AFTER the ones the western neighbour drew - so the sampling
+            # offset is that neighbour's width, `bw`.
+            bw = self.vjoint(course, kw)[1]
+            spans.append((0, aw, vw, ("bx", course, kw), bw))
         left = aw + (BED_ROWS if aw > 0 else 0)
         left = aw
         right = width - be
@@ -287,12 +300,14 @@ class Family:
         cuts.append(right)
         for i in range(len(cuts) - 1):
             off = (h(SALT_S, "v", course, kw, ke, var, i) % 5) - 2
-            spans.append((cuts[i], cuts[i + 1], off))
+            spans.append((cuts[i], cuts[i + 1], off, ("in", course, kw, ke, var, i), cuts[i]))
         if be > 0:
-            spans.append((width - be, width, ve))   # the head of the block crossing the east edge
-        return [(x0, x1, o) for x0, x1, o in spans if x1 > x0]
+            # The head of the block crossing the EAST edge: the same boundary key, sampled from 0,
+            # so the neighbour's tail continues it.
+            spans.append((width - be, width, ve, ("bx", course, ke), 0))
+        return [s for s in spans if s[1] > s[0]]
 
-    def grain_for(self, tag, x0, y0, w, hgt):
+    def grain_for(self, tag, gx, y0, w, hgt):
         """Residual stone surface, tiled from the donor bank.
 
         Section 13.8: an authored signal below the perceptual floor is ABSENT. The floor family
@@ -300,10 +315,10 @@ class Family:
         a blind seat called the result linoleum. So the grain here is scaled to a fraction of a
         RUNG rather than to an absolute, and the composer reports what fraction.
         """
-        p = grain_patch(h(SALT_G, tag, x0, y0), cells=11, seed=self.seed)
+        p = grain_patch(h(SALT_G, tag), cells=11, seed=self.seed)
         ph, pw = p.shape
         ys = (np.arange(hgt) + y0) % ph
-        xs = (np.arange(w) + x0) % pw
+        xs = (np.arange(w) + gx) % pw
         return p[np.ix_(ys, xs)]
 
     def paint_plane(self, img, cls, y0, y1, rung_index, keys, grain_amp, var=0):
@@ -324,9 +339,9 @@ class Family:
         courses = [(y0, y1)] if cls == "top" else [c for c in FACE_COURSES
                                                    if c[0] >= y0 and c[1] <= y1]
         for ci, (cy0, cy1) in enumerate(courses):
-            for (x0, x1, off) in self.stones_in_row(ci, kw, ke, var):
+            for (x0, x1, off, gkey, gx) in self.stones_in_row(ci, kw, ke, var):
                 v = self.rung(rung_index, off)
-                g = self.grain_for("%s%d" % (cls, ci), x0, cy0, x1 - x0, cy1 - cy0)
+                g = self.grain_for((cls, gkey), gx, 0, x1 - x0, cy1 - cy0)
                 block = v + g * grain_amp * step
                 img[cy0:cy1, x0:x1] = block
                 # A block is bounded by its joints, and the joint is TWO pixels because one is

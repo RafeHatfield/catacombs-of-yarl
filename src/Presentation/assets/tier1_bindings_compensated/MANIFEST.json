@@ -1,7 +1,7 @@
 {
   "family": "boundary_binding_v1",
   "arm": "compensated",
-  "commit": "ec16108609cc26e6a40c8e221e50dae4688b4166",
+  "commit": "4de46a87fc32441a91a3c64bb752317955d89eba",
   "rates": {
     "face": 0.34,
     "top": 0.11
