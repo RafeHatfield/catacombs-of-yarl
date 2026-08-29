@@ -1,0 +1,115 @@
+Looked at A.png at 1:1, then magnified specific regions, and separately built a lighting-flattened albedo map (divide by a 24px Gaussian blur) so I could read the floor's own values without the torch vignette biasing me. Coordinates below are pixels in the 750×600 original, origin top-left.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone flagging — grey-brown rectangular slabs laid in irregular courses. But I am naming that from the *layout*, not the *surface*. If you covered the joints I could not tell you whether it is stone, poured concrete, or rammed earth blocks.
+
+**Q1_WHY:** The joint grid is unambiguous — slabs of varying width (16, 32, 48, 64px) in courses of varying height, e.g. the run at (460–620, 165–200) where a 32-wide, a 48-wide and a 64-wide sit in one course. That's cut masonry. What's absent is any material tell on the face: no grain, no aggregate, no bedding planes, no differential polish, no colour variation between slabs beyond a flat value shift. Slab interiors measure std 11–18 of 255 — about 7% contrast. That's mottle, not material.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, into the corridor mouth at (370–437, 395).
+
+Nothing about the ground influenced that. I chose it from the walls — the south gap is the only opening I can see *continue* off the bottom edge of the frame, so it reads as leading somewhere. The floor inside that mouth is indistinguishable from the floor at the west mouth at (185, 150–290) and indistinguishable from the floor under the figure's feet. If you swapped the two mouths I would not notice.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been cracked and pocked, and nothing else. A branching dark fracture network runs across it — one large system entering at (365, 0), descending through (330, 120), (300, 230), (270, 300) to (240, 355); a second from (450, 215) through (500, 340) to (470, 390); a third at (530, 270)→(625, 330). Scattered across it are circular ring-shaped spalls roughly 20–24px across.
+
+Beyond that: nothing has happened. No wear. No traffic. No repair. No debris, no spill, no stain, no accumulation in corners, no chipped edges at the doorways. No rope, no pins, no timber, no hide — nothing from the orcs who are supposedly four centuries into holding this line.
+
+**Q3_WHY:** I flattened the lighting and measured mean albedo in 32px blocks across the room. Interior values run 0.86–1.00 with essentially no structure — no gradient, no path, no darker zone, no lighter zone. The variation that does exist is per-slab value jitter, not spatial. The lower edge values (0.65–0.77) are normalization artefacts at the room boundary, not real. The floor at (250, 220) and the floor at (560, 120) are, statistically, the same floor.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes — the circular ring motif. A ring of pale pixels around a dark mottled centre, ~20–24px diameter. I count roughly fifteen in one screen:
+
+(335, 42), (475, 45), (400, 100), (215, 152), (585, 190), (610, 232), (490, 290), (412, 292), (605, 305), (267, 355), (415, 375), (472, 372) — plus four more in the unlit west corridor at (30, 185), (72, 178), (35, 232), (150, 258).
+
+They are evenly scattered — roughly one per 100px — which is what makes them read as a distribution rather than as events. I want to be precise about the nature of the repetition: I template-matched one against the rest and got correlations of only 0.30–0.33, so they are **not** pixel-identical copies. They are individually varied instances of one idea. But the idea is the same idea fifteen times, at the same scale, with no visible cause. Several of them — (335, 42), (585, 190), (610, 232) — sit nowhere near a crack. That decoupling is the tell. If they were spall from the fracture network they would cluster on it. They don't, so they read as scatter, and once I noticed that I could not stop counting them.
+
+---
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+Split, and the split is the problem: **the layout was made, the surface was repeated.**
+
+Made: I tested for global tiling and found none. Vertical autocorrelation across the floor peaks at 0.12 at a 64px shift and sits at 0.06–0.10 everywhere else — there is no repeating tile period. The slab sizes and course breaks genuinely vary.
+
+Repeated: the *faces* draw from a vocabulary of about four marks and nothing else — 45° hatch strokes, clusters of short axis-aligned notches, blank, and the ring. You can see the whole vocabulary in one crop at (460–620, 90–200): hatched slab, notched slab, hatched slab, blank slab, notched slab. A gradient-orientation histogram over the floor gives peaks at 0°/90° (joints and notches, ~1900 each) and near-equal peaks at 45° and 135° (~1650/1590) — so the hatching does run both ways, which is better than I first suspected. But it is the same stroke weight and the same spacing in every instance. Nothing on this floor was authored for its position. Every slab could be swapped with any other slab.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It is more than assembled enough to ship; the masonry variety alone puts it above a lot of what does ship.
+
+Is it genuinely good? **No.** It is competent. The competence is real and it's in the layout — irregular ashlar with no detectable tile period is not easy and someone did it properly. But competence in the layout is doing all the work, and the surface is not holding up its end. Good would mean the ground carries information. This ground carries decoration.
+
+---
+
+**Q7: AT THE SIZE SHOWN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1:
+- The joint grid.
+- The dark branching fracture network, and the pale thread-cracks that shadow it.
+- The ring motifs — these do read at 1:1, as pale smudged circles. They're the only face-level feature that survives.
+- Two or three solid dark slabs that read as holes or as tonal gaps.
+- Beneath all that, an undifferentiated brown mottle.
+
+Only appears once magnified:
+- The 45° hatching. At 1:1 it is dither noise.
+- The notch clusters — the short bars and L-shapes that at 4× look like tool marks or illegible inscription. At 1:1 they are indistinguishable from the hatching.
+- All per-slab differentiation. At 1:1 the slabs differ in value, not in character.
+
+So: **the faces are effectively blank at 1:1.** There is detail on them — measurably, std 11–18 — but it resolves as texture-grain, not as anything a player could read. Everything that gives this floor its character at 4× is hunting, not seeing.
+
+**Q7_WHY:** Checked at 1:1: the full 750×600 view, and a native-size crop of (460–620, 90–200) viewed without scaling — in that crop I can distinguish light rectangles from dark rectangles and see two bright thread-cracks, and that is all. Also 1:1 at the south mouth, (340–470, 340–440). Had to magnify: (480–620, 60–200) at 4× to resolve the notch marks; (370–440, 70–140) at 5× to resolve the ring at (400,100) as a ring rather than a smudge; (190–330, 10–150) at 4× to find the hatching.
+
+---
+
+**Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU?**
+It reads as **one age everywhere** — and that uniformity is itself the finding.
+
+Age: a few centuries. Old enough to have fractured through, not old enough to have been touched since. What it does *not* read as is a floor that has been in continuous heavy use since before the records begin, because such a floor would be a palimpsest — original slabs, replacements, replacements of replacements, patches over the patches. This is one casting.
+
+**Q8_WHY:** The 32px albedo grid across the room interior returns 0.86–1.00 with no spatial structure — no zone is more worn, weathered or replaced than another. The mark vocabulary is identical in every quarter: compare (200–340, 20–160) in the far corner against (460–620, 90–200) near the right wall and (340–470, 300–395) at the south mouth — same hatch, same notches, same ring density, same joint weight. There is not one slab that is a different age from its neighbours. No slab sits proud or sunken. No joint is wider than another. No slab is a replacement.
+
+And nowhere on this floor is there a repair. The fiction says these floors are held by a company that has been mending things with rope and driven pins and salvaged timber for four hundred years. On the ground itself I can find no pin, no plank, no lashing, no packed rubble in a gap — not at the doorways where wear concentrates, not on the fracture line at (300, 230) where it would be needed most.
+
+---
+
+**Q9: WHERE WOULD YOU WALK TO CROSS THIS LEVEL — DOES THE FLOOR ALREADY KNOW?**
+Route, west mouth to south mouth: enter at (185, 220) → east along y≈220 through (250, 220) and (330, 230) → (400, 260) → turn south → (405, 330) → (405, 395) into the corridor mouth.
+
+**The ground told me nothing. I routed entirely by the walls.** That is the plain answer.
+
+**Q9_WHY:** Along the route — (250, 220), (330, 230), (400, 260), (405, 330) — flattened albedo runs 0.90, 0.94, 0.96, 0.93. Regions I rejected as off-route — (560, 120), (230, 330), (600, 250) — run 0.95, 0.89, 0.92. There is no difference between the ground I would walk on and the ground I would not. Nothing is smoother, darker, more polished, more scuffed, more swept.
+
+The one large-scale feature that could have guided me actively works against the route: the main fracture running (365, 0) → (240, 355) is the strongest directional line on the floor, and it cuts diagonally *across* my path. It's the only thing on this ground with any sense of direction to it, and it points the wrong way — because it's damage, not a way through.
+
+---
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST OR NEVER?**
+**They all look the same.** I cannot tell.
+
+Two openings. West mouth, ground at (185, 150–290): standard slabs, one hatched, one notched, a ring at (150, 258) just inside, albedo 0.88–0.93. South mouth, ground at (370–437, 380–400): standard slabs, notch marks, albedo 0.90–0.93, and the texture carries straight through the threshold into the corridor without a single change — no sill, no darkening, no smoothing, no scatter of grit either side.
+
+If one of these is the door the orc company has walked through twice a day for four hundred years and the other has not been opened in living memory, the floor does not say which.
+
+---
+
+**CULL:** Ground is uniform everywhere — no wear, no traffic, no repair. Reads as decorated tile, not four centuries of use.
+
+**FLIP LIST**
+- Cut the ring motif to two or three instances per screen and place each one where something caused it — on the fracture line at (300, 230), at a doorway threshold — instead of scattering fifteen at even spacing.
+- Darken and smooth a traffic lane from the west mouth (185, 220) through to the south mouth (405, 395): drop albedo ~15% and suppress face marks along it, so the route is legible before the walls are.
+- Differentiate the two thresholds. Wear, polish and grit-scatter at (370–437, 385–400); intact sharp-edged slabs and accumulated debris at (185, 150–290) — or the reverse. Make one door obviously the used one.
+- Put orc repair on the ground: driven pins and lashed timber across the fracture at (300, 230) and (480, 300), packed rubble in the gap, at least two slabs that are visibly later replacements sitting proud of their neighbours.
+- Raise face contrast so something reads at 1:1. Slab-interior std is 11–18 of 255 and resolves as noise — either push the notch marks to roughly double that amplitude so they read as worked stone at phone size, or drop them and let the faces be honestly bare.
+
+---
+
+*Model: Claude Opus 5 (1M context).*

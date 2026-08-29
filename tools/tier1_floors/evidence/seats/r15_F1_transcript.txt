@@ -1,0 +1,103 @@
+Read the image at 1:1 first, then flattened the torch gradient out of it (divide-by-blur) so I could judge the surface honestly rather than judging the lighting. Everything below is from the original image plus that normalised pass and NEAREST-scaled crops.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dressed stone slabs — cut rectangular flagging, sandy-brown, laid tight with thin joints. Not brick, not tile, not dirt. Something like a sandstone or limestone paving.
+
+**Q1_WHY:** The rectangles are *cut sizes*, not modules — at x460–620/y40–150 a single slab runs ~85px wide and ~28px tall, sitting beside squares of ~30×30 and a tall ~24×55. That size spread is stonecutting, not manufacture. Joints are thin dark lines, not raked mortar beds. And the cracks at x415/y16 running south, and the arc across x280–620/y300–388, propagate *across* slab boundaries and change direction without stopping — stone fails like that, wood and tile don't.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+West, toward the opening at x0–188 / y145–265.
+
+Nothing about the ground drove that. I picked it because it's a two-tile-wide opening versus a one-tile corridor south, and because it's closer. I checked the ground in front of both before answering and it is the same ground: same slab sizes, same mark density, same hue. The floor did not vote.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been cracked and it has been scratched, and that is the whole list. A real crack network runs through it — a main fracture entering the north wall at x≈415 and travelling south-southwest past the figure to about x355/y250, then on down to the bottom edge; a second from the west wall at (188,205) angling down-right; a branching set of arcs through the lower third. Those are good. Over the rest of it, every slab carries the same handful of scratch motifs at the same density.
+
+What has *not* happened to it: nothing has been spilled on it, nothing has been dragged across it, nothing has been repaired, nothing has been worn. There is no dirt. For a floor in an administered underworld under four hundred years of orc garrison and however many centuries before that, it is remarkably clean.
+
+**Q3_WHY:** Detail density measured per 20px cell across the normalised floor sits in a band of roughly 0.08–0.18 across essentially the entire room — the only cells that fall outside are the sprite and the blank slabs listed in Q4. There is no contiguous low-detail region (polish) and no contiguous high-detail region (accumulation). Six flat dark slabs read at first glance as stains or pits, but magnified at (530,200)–(624,236) the rectangle has hard edges exactly on the slab bounds, no rim, no shadow, no falloff. It is not a stain and not a hole. It is a slab with the texture layer left off.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Two things.
+
+**The blank slabs.** Six of them: (285,128)–(345,152), (370,120)–(414,145), (500,86)–(556,116), (455,190)–(508,216), (530,200)–(624,236), (200,290)–(276,325). They are flat value blocks with no marks at all. Because everything else on the floor is mid-frequency scratch, these read as holes in the texture and the eye snaps to them. The one at (455,190)–(508,216) sits immediately right of the figure and competes with the character sprite at 1:1.
+
+**The "/" hatch.** A set of parallel 45° scratches running bottom-left to top-right. Once you see it you cannot stop seeing it — (470,50)–(556,80), (555,120)–(600,150), (490,240)–(540,270), (420,300)–(470,330), (240,60)–(300,110), and dozens more. It is on the majority of marked slabs, at the same angle, at the same spacing, in roughly the same quantity. It stops being scratches and becomes a screen door.
+
+**Q5: MADE, OR REPEATED?**
+**Made** — but only just, and it's the layout doing the work, not the surface.
+
+The slab arrangement is genuinely non-repeating. I ran autocorrelation on the flattened floor and there is no periodic peak at any lag from 1 to 60px; the correlation decays monotonically. I also block-matched at every plausible tile size (24/28/30/31/32/36px) and found no exact duplicate anywhere. Nobody stamped a tileset here.
+
+What saves it is the crack network. Cracks are the one element that knows about the room as a whole rather than about individual slabs.
+
+What undercuts it is the mark vocabulary. There are four motifs — the 45° hatch, rows of short horizontal dashes, vertical tally strokes of three to six, and blank. Roughly 150 slabs, four motifs, randomised offset. It isn't a repeated *image*, but it is a repeated *decision*, and at a glance those feel the same.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.**
+
+Merely competent, or genuinely good? **Merely competent.** The layout is above average and the cracks are properly good. The surface is not. A floor that is genuinely good tells you something you didn't know before you looked at it; this one tells you "stone, old" and stops.
+
+**Q7: AT 1:1, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+*Legible at 1:1, unmagnified:*
+- The joints between slabs, and therefore the slab sizes — but that's layout, which you excluded.
+- The crack network. Clearly. This is the only surface event that reads at playing size.
+- The blank dark rectangles as value blocks.
+- In the brightest zone only, a faint directional streaking — enough to know the surface isn't smooth, not enough to know what made the marks.
+
+*Only appears once magnified:*
+- That the streaking is 45° parallel hatch sets.
+- The rows of horizontal dashes. Completely invisible at 1:1.
+- The vertical tally strokes. Same.
+- Individual chips and pits.
+- That many slabs in the centre have *dotted* border lines rather than solid ones.
+
+So: the faces are not blank at 1:1, but they are **generic**. You get "texture" and no information. Everything that distinguishes one slab from another required magnification, which is hunting.
+
+**Q7_WHY:**
+Checked at 1:1: x460–620/y40–150 (the brightest slabs, best case) — read as mottled with faint streaks, no motif identifiable. x340–470/y150–230, the halo around the figure — same. x200–300/y290–370 — read as flat brown, nothing. x250–430/y18–60 along the north wall — nothing.
+
+Had to magnify (4× NEAREST): (440,40)–(570,110) to resolve the hatch and a chip; (510,190)–(640,250) to establish the dark rectangle had no rim; (180,180)–(340,380) to find the dashes and tallies; (185,275)–(300,340) to confirm the dark slab was blank rather than dim.
+
+Supporting number: median floor luminance is 66/255, and **53.6% of the floor sits below luminance 70** — surface marks in that half are physically not resolvable at 1:1. Half the surface work is being spent where nobody can see it.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+**One age everywhere — a few centuries. Old, but not older than the records.** And that uniformity is the problem, because this place should be a palimpsest and it reads as a single pour.
+
+**Q8_WHY:** The cracking at x415/y16→x355/y250 and the arcs at x280–620/y300–388 are mature — they've propagated across many slabs, which takes long settlement. That's the "centuries" read. But nothing anywhere reads *older* or *newer* than anything else: no slab is more broken than its neighbour, no section is replacement stone, no patch is fresher. I checked (200,290)–(276,325) in the south-west against (500,86)–(556,116) in the north-east — opposite corners of the room, and their mark density and mark type are indistinguishable.
+
+Most telling: there is no repair. The fiction says a garrison has been holding and mending this place for four hundred years with rope, pins, hide and salvaged timber. Not one slab here has been lifted, replaced, shimmed, pinned or planked over. A floor under that kind of custody would be a patchwork of ages. This one has no seams of history in it at all — which, read straight, means it was laid once and abandoned, not administered.
+
+**Q9: WHERE WOULD YOU CROSS, AND DOES THE FLOOR ALREADY KNOW?**
+Route: enter west at (0–188, 145–265), cross east-southeast through (250,230) → (340,260) → (400,320), then south into the corridor mouth at (377–437, 388) and out the bottom. Roughly 12 tiles.
+
+**The ground told me nothing. I routed entirely off the walls.** That is the honest answer.
+
+**Q9_WHY:** Along the route — (200,220), (280,250), (350,290), (400,350) — the ground is slab, hatched, mid-brown, undifferentiated. The regions I rejected — the north strip at (250–450, 20–80), the whole east third at (500–620, 60–340) — are slab, hatched, mid-brown, undifferentiated. **The difference between the ground I walked on and the ground I rejected is zero.** Measured: normalised detail density along the route averages ~0.12; in the rejected east third it averages ~0.16, and that gap is lighting, not surface. The only spatial signal on this floor is the crack running near the route, and cracks are geology — they tell you the building settled, not where anyone walked.
+
+**Q10: WHICH WAY IS USED MOST, WHICH LEAST?**
+**They look the same.**
+
+In front of the west opening — x188–250, y150–265 — the slabs are the same size, the same hue, carry the same hatch, at the same density as the room's interior. In front of the south corridor mouth — x360–450, y340–388 — identical. Neither threshold is darkened, polished, chipped, dished, or scuffed. Neither has debris pushed to its sides.
+
+A one-tile corridor south is a choke point; four hundred years of a garrison moving through it would have dished the stone in the middle of that opening and left the corners of the room untouched. Nothing distinguishes them. The floor has no opinion about its own doors.
+
+---
+
+**CULL:**
+Wear is uniform everywhere; four centuries of traffic recorded as evenly-scattered noise and no path.
+
+I should add the hard version of that, because it's what causes it: across the entire lit floor, hue runs 27.9°–29.4° and saturation 0.53–0.56 at the 5th–95th percentiles. Every mark on this surface is the same colour as the slab under it, differing only in value. That isn't stone — that's a single ramp with noise on it.
+
+**FLIP LIST**
+- Carve a traffic lane: a band ~2 tiles wide from the west opening (188,200) through (350,280) to the south corridor mouth (400,388), rendered as *smoothed and darkened* stone — reduce mark density inside it by half and drop its value ~15%, with the untrodden corners at (500–620,60–160) and (200–280,300–380) keeping full scratch.
+- Dish the south corridor mouth at (377–437, 360–400): the centre of a one-tile choke worn concave and lipped, with the walked stone visibly lower and rounder than the slabs flanking it.
+- Introduce hue variation to the surface. Marks must not be the parent slab's colour darkened. Add at minimum a cool grey-green damp cast in the unlit south-west (200–300, 300–388) and a desaturated soot-grey in the crack channels — target a hue spread of at least 20°, not the current 1.5°.
+- Fill or justify the six blank slabs — (285,128), (370,120), (500,86), (455,190), (530,200), (200,290). Either give them surface treatment matching their neighbours, or commit and make them actual absences: broken-out voids with a chipped rim, an interior shadow, and one salvaged timber plank pinned across the largest.
+- Replace the "/" hatch monoculture. Cap any single mark motif at roughly a third of marked slabs, and add at least two motifs that read at 1:1 in the lit halo — gouges with a lifted lighter edge, and a driven pin or cramp repairing a cracked slab where the main fracture crosses (355,250).
+
+---
+*Model: Claude Opus 5 (1M context).*
