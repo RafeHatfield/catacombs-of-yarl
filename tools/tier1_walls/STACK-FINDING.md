@@ -117,6 +117,43 @@ will turn up again in a round that is valid.
 
 `REPORT.md` §7c records why that round went void, and it is not an unrelated accident.
 
+## 4b. ⚠ A QUALIFICATION THAT ARRIVED FROM THE FLOOR SESSION, AND IT BITES HERE TOO
+
+**Every range in this document was measured on a STATIC capture with the player standing still.**
+While this session ran, the concurrent floor session voided its own Ruling 70 closure for exactly
+that: §13.9's second consequence — *name the illumination or the ruling is wrong* — and the
+observation that
+
+> **the path signal is keyed to where the player walks, and the player carries the lamp, so a
+> static scene-wide capture measures the signal exactly where its reader never is.**
+
+Their standing design ruling follows: **the path is built for LIT legibility, player-as-light-
+source is the normal case, and dark illegibility is accepted by design.**
+
+That correction reaches this document, and it is applied rather than argued with. **The parts of
+the finding it changes:**
+
+- *"The wall's material is quantised out beyond four tiles"* is **true and largely EXPECTED.** A
+  wall's joints, grain and bindings are near-field signal; the player walks up to the wall, and at
+  one to two tiles they deliver 30 levels. Under the standing ruling that is the design, not a
+  defect. **The amplitude table's rows past four tiles are therefore a datum about the dark, not a
+  charge against the asset.**
+- §6.5's stack is different in kind and the correction does **not** dissolve it. `k_top` is a
+  LOCAL ratio — a wall against the floor it faces, both at the same place — so it is not a
+  measurement taken where the reader never is. It fails at every range including the ones the
+  player occupies: at **two tiles**, standing right beside the wall, `k_top` is 0.670 and no
+  authorable value reaches 1.11×. That row stands.
+
+**The part it sharpens.** What the walls are actually short of is not texture in the dark, it is
+**the mass read at a distance** — *"a wall you cannot distinguish from an open corridor by
+brightness"*, measured by a seat at identical luminance 18 for wall and open passage at the same
+row. Telling you where you cannot go is a far-field job, and no amount of walking closer answers
+it, because by then you are already there.
+
+⚠ **This branch predates that ruling and does not contain it.** It is cited from the sibling
+session's record (`docs/ROUND-18-LIT-POPULATION.md`, PR #163), and the reconciliation above should
+be re-checked against the merged text rather than against this paragraph.
+
 ## 5. Status — RULING TRIGGER, and what this session did with it
 
 This is a **§6.2 coupling finding, not a tuning task**, and it is returned under LOOP-PROCESS

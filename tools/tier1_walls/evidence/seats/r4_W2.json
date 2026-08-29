@@ -29,5 +29,6 @@
   "ruin_named": [
     "stamped"
   ],
-  "caught": true
+  "caught": true,
+  "round_verdict": "VALID"
 }

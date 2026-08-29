@@ -196,9 +196,39 @@ def main():
             print("   plant: culled=%s (not the test) ruin_named=%s -> %s"
                   % (culled, named, "CAUGHT ON AXIS" if rec["caught"]
                      else "MISSED — ROUND IS VOID"))
+        # ── THE ROUND'S VERDICT IS STAMPED INTO EVERY RECORD, AND FAMILY TRANSCRIPTS ARE
+        #    WITHHELD UNTIL THE CONTROL HAS CLEARED. ──────────────────────────────────────────
+        #
+        # §4 says a round whose plant is missed is VOID and its findings are NOT READ. That is a
+        # rule about a human's attention, and this file was doing nothing to help: it printed each
+        # seat's answers the moment they arrived, so a family transcript could be read — and acted
+        # on — before the plant seat had returned at all.
+        #
+        # It happened, twice, on the same day. Round 3 here had a reading of the island drafted
+        # into STACK-FINDING.md before its plant came back MISSED, and the concurrent floor
+        # session logged the identical defect in its own words: *"run_seats.py shows the family
+        # transcript before the plant verdict returns, and I read a VOID round's findings that
+        # way."* Withdrawing a quotation is more expensive than never printing it.
+        #
+        # So: a family seat's answers are printed only when a plant verdict for the same round is
+        # already on disk and CAUGHT. Otherwise the record is written — evidence is never
+        # withheld from the FILE — and the console says why it is not being shown.
         p = os.path.join(OUT, "r%d_%s.json" % (a.round, seat))
+        pp = os.path.join(OUT, "r%d_W2.json" % a.round)
+        control = json.load(open(pp)) if (seat != "W2" and os.path.exists(pp)) else None
+        if seat == "W2":
+            rec["round_verdict"] = "VALID" if rec["caught"] else "VOID"
+        elif control is None:
+            rec["round_verdict"] = "PENDING — no plant seat for this round yet"
+        else:
+            rec["round_verdict"] = "VALID" if control.get("caught") else "VOID"
         json.dump(rec, open(p, "w"), indent=2)
-        print("   wrote %s" % os.path.relpath(p, REPO))
+        print("   wrote %s   [round: %s]" % (os.path.relpath(p, REPO), rec["round_verdict"]))
+        if seat != "W2" and not str(rec["round_verdict"]).startswith("VALID"):
+            print("   ── answers WITHHELD: %s. §4 — a void round's findings are not read, and a"
+                  % rec["round_verdict"])
+            print("      pending one's have not earned being read yet. Run W2 for this round.")
+            continue
         for k in ("Q1", "Q2", "Q4", "Q6", "Q9", "Q10", "CULL", "RANK"):
             if k in fields:
                 print("   %-5s %s" % (k, fields[k].splitlines()[0][:150] if fields[k] else ""))

@@ -31,5 +31,6 @@
     "applied to it",
     "stamped"
   ],
-  "caught": true
+  "caught": true,
+  "round_verdict": "VALID"
 }

@@ -101,6 +101,33 @@ the one it was built for.
 
 ---
 
+### ⚠ 2a. And a qualification that arrived from the floor session while this one ran
+
+The concurrent floor session **voided its own Ruling 70 closure** for measuring a
+player-carried-lamp signal on a static capture — *"the path signal is keyed to where the player
+walks, and the player carries the lamp, so a static scene-wide capture measures the signal exactly
+where its reader never is"* — and issued a standing design ruling: **the path is built for LIT
+legibility, player-as-light-source is the normal case, and dark illegibility is accepted by
+design.**
+
+Every range in §2 was measured on a static capture. The correction is applied rather than argued
+with, and it lands unevenly:
+
+- **The amplitude rows past four tiles are a datum about the dark, not a charge against the
+  asset.** A wall's joints, grain and bindings are near-field signal; the player walks up to the
+  wall and at one to two tiles they deliver 30 levels. Under the standing ruling that is the
+  design.
+- **§1's finding is not dissolved by it.** `k_top` is a LOCAL ratio — a wall against the floor it
+  faces, both in the same place — so it is not a number taken where the reader never is. At **two
+  tiles**, standing beside the wall, it is 0.670 and no authorable value reaches §6.5's 1.11×.
+- **And it sharpens what the walls are actually short of:** not texture in the dark, but the
+  **mass read at a distance**. A seat measured wall and open passage at *identical* luminance 18
+  at the same row. Telling you where you cannot go is a far-field job, and walking closer does not
+  answer it, because by then you are already there.
+
+⚠ This branch predates that ruling; it is cited from the sibling session's record (PR #163) and
+should be re-checked against the merged text.
+
 ## 3. The §3 violation the mocks were hiding
 
 `DungeonRenderer` collapses cardinal masks **7 and 11 both to 3**. Mask 11 has floor to its south
