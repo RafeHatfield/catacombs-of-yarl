@@ -160,11 +160,24 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
             L = ladder[np.abs(np.clip(L, ladder[0], ladder[-1])[..., None]
                               - ladder).argmin(-1)]
 
+            # THE CHROMA CHANNEL, mirrored. Faces only, from the same wear scalar; cracks and
+            # joints are enclosure and enclosure has no hue.
+            # From `w01b`, NOT from `open_amt`. `open_amt` is the wear scalar MASKED TO JOINTS,
+            # so indexing chroma with it would have given every stone face age 0 and shipped a
+            # floor with no chroma channel at all — while the reference painter, which reads the
+            # scalar directly, drew one. A silent, whole-channel divergence.
+            chr_blk = np.where(~jm_pix,
+                               CA.chroma_strength_block(x * T, y * T, T, seed, traffic,
+                                                        bool(worn and worn(x, y))), 0.0)
+
             for (ly, lx) in CA.crack_pixels(x, y, seed, crack_cache):
                 L[ly, lx] = ladder[int(np.abs(crack_v - ladder).argmin())]
+                chr_blk[ly, lx] = 0.0
 
+            tmap = np.stack([CA.chroma_tint(tint, v) for v in CA.CHROMA_BY_AGE])
+            ci = np.abs(chr_blk[..., None] - np.array(CA.CHROMA_BY_AGE)).argmin(-1)
             img[y * T:(y + 1) * T, x * T:(x + 1) * T] = \
-                np.clip(np.stack([L * tint[0], L * tint[1], L * tint[2]], -1), 0, 255)
+                np.clip(L[..., None] * tmap[ci], 0, 255)
     return img
 
 
@@ -230,6 +243,27 @@ def main():
     print("  with the trodden channel declared:  %d of %d pixels differ (%.4f%%)  -> %s"
           % (c2["differing"], c2["pixels"], c2["differing_pct"],
              "IDENTICAL" if c2["differing"] == 0 else "DISAGREE"))
+
+    # THE TRAFFIC ARM. The two arms above run with no traffic field, and with no field there is
+    # no chroma by construction (§5.4: no path, no cast) — so every line of the chroma channel
+    # could have been wrong in both painters and both arms would still have said IDENTICAL. A
+    # verification that does not exercise a channel is worse than none, because it reads as
+    # coverage. LOOP-PROCESS §4.2 logs its third instance here.
+    spine = np.zeros((a.w, a.h), dtype=np.uint8)
+    spine[a.w // 2 - 1:a.w // 2 + 1, :] = 255
+    d3, _j3, _t3, _c3, _d3 = FA.assemble(a.w, a.h, a.seed, mat, traffic=spine)
+    s3 = paint_from_atlas(a.w, a.h, a.seed, man, traffic=spine)
+    c3 = compare(d3, s3)
+    ok = ok and c3["differing"] == 0
+    cast = float((np.abs(d3.astype(int).max(-1) - d3.astype(int).min(-1))
+                  > 0.03 * np.maximum(d3.astype(int).max(-1), 1)).mean())
+    print("  with a traffic spine (chroma live): %d of %d pixels differ (%.4f%%)  -> %s"
+          % (c3["differing"], c3["pixels"], c3["differing_pct"],
+             "IDENTICAL" if c3["differing"] == 0 else "DISAGREE"))
+    print("      and the arm is not vacuous: %.1f%% of the floor carries the cast" % (cast * 100))
+    if cast < 0.02:
+        print("      SILENT: the traffic arm drew no chroma, so it verified nothing.")
+        ok = False
 
     plant = None
     if a.plants:

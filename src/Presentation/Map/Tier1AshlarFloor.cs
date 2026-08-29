@@ -85,6 +85,8 @@ public static class Tier1AshlarFloor
         public int[] ClusterTable = { -1, 0, 0, 1 };
         public double[] Ladder = System.Array.Empty<double>();
         public double[] Tint = { 1, 1, 1 };
+        public double[] ChromaByAge = { 0, 0, 0, 0 };
+        public double[] ChromaDir = { 0, 0, 0 };
         public int[][] ATable = System.Array.Empty<int[]>();
         public int[][] MvTable = System.Array.Empty<int[]>();
         public readonly Dictionary<int, string> Atlas = new();
@@ -455,6 +457,26 @@ public static class Tier1AshlarFloor
         return best;
     }
 
+    /// <summary>
+    /// THE CHROMA CHANNEL's tint for one wear age: the material tint rotated toward the ruled
+    /// direction at CONSTANT LUMINANCE.
+    ///
+    /// The luminance component of the direction is projected out here rather than baked into the
+    /// manifest, so that the invariant — this lever moves colour and no value — is enforced in
+    /// the code that uses it and cannot drift if the direction is ever re-ruled.
+    /// </summary>
+    private static double[] ChromaTint(Config c, int age)
+    {
+        double[] w = { 0.299, 0.587, 0.114 };
+        double s = c.ChromaByAge[age];
+        double num = 0, den = 0;
+        for (int i = 0; i < 3; i++) { num += w[i] * c.Tint[i] * c.ChromaDir[i]; den += w[i] * c.Tint[i]; }
+        double k = den == 0 ? 0 : num / den;
+        var outv = new double[3];
+        for (int i = 0; i < 3; i++) outv[i] = c.Tint[i] * (1.0 + s * (c.ChromaDir[i] - k));
+        return outv;
+    }
+
     private static int LadderIndex(Config c, double v)
     {
         int best = 0;
@@ -762,6 +784,26 @@ public static class Tier1AshlarFloor
             }
         }
 
+        // ================= THE CHROMA CHANNEL =================
+        //
+        // Step two of the pre-declared ladder, after the joint lever was discharged BY PROOF: a
+        // lever confined to the joints owns 21.85% of the surface and cannot reach §13.8's floor
+        // at any setting. This one runs on the 78.14% the joints never touch.
+        //
+        // A ratio between channels survives the light rig's multiplication, which an authored
+        // value difference does not — and more than half this floor sits below luminance 70,
+        // where value work is spent where nobody can see it.
+        //
+        // FACES ONLY, and at constant luminance. A joint is dark because it is ENCLOSED, and
+        // enclosure has no hue; a colour that also darkened would be an occlusion claim with no
+        // recess behind it.
+        //
+        // Read from the UNMASKED wear scalar, not from `openAmt` — that array is the same scalar
+        // masked to joints, and indexing chroma with it would give every stone face age 0 and
+        // ship a floor with no chroma channel while the reference painter drew one.
+        var tints = new double[cfg.ChromaByAge.Length][];
+        for (int i = 0; i < tints.Length; i++) tints[i] = ChromaTint(cfg, i);
+
         var outImg = Image.CreateEmpty(T, T, false, Image.Format.Rgb8);
         for (int py = 0; py < T; py++)
         {
@@ -769,9 +811,13 @@ public static class Tier1AshlarFloor
             {
                 double L = cfg.Ladder[LadderIndex(cfg, System.Math.Clamp(
                     raw[py, px], cfg.Ladder[0], cfg.Ladder[^1]))];
+                double[] t = cfg.Tint;
+                if (clsArr[py, px] != 0)
+                    t = tints[AgeIndex(cfg, Wear01(cfg,
+                            WearScalar(cfg, traffic, tx * T + px, ty * T + py), channelHere))];
                 outImg.SetPixel(px, py, new Color(
-                    (float)(L * cfg.Tint[0] / 255.0), (float)(L * cfg.Tint[1] / 255.0),
-                    (float)(L * cfg.Tint[2] / 255.0)));
+                    (float)(L * t[0] / 255.0), (float)(L * t[1] / 255.0),
+                    (float)(L * t[2] / 255.0)));
             }
         }
 
@@ -909,6 +955,12 @@ public static class Tier1AshlarFloor
             var tint = new List<double>();
             foreach (var v in mat.GetProperty("tint").EnumerateArray()) tint.Add(v.GetDouble());
             cfg.Tint = tint.ToArray();
+            var cba = new List<double>();
+            foreach (var v in mat.GetProperty("chroma_by_age").EnumerateArray()) cba.Add(v.GetDouble());
+            cfg.ChromaByAge = cba.ToArray();
+            var cdir = new List<double>();
+            foreach (var v in mat.GetProperty("chroma_dir").EnumerateArray()) cdir.Add(v.GetDouble());
+            cfg.ChromaDir = cdir.ToArray();
 
             static int[][] Table(JsonElement e)
             {

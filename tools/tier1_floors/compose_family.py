@@ -263,6 +263,17 @@ def quantise(L, ladder):
     return lad[idx]
 
 
+def colourise_map(L, tint_map):
+    """`colourise` with a PER-PIXEL tint — the chroma channel's only entry point.
+
+    `tint_map` is (H, W, 3). Nothing here changes a pixel's value: the tints handed in are
+    projected onto the plane of constant luminance by `compose_ashlar.chroma_tint` before they
+    ever arrive, so this multiplies colour and leaves the ladder alone.
+    """
+    return np.clip(np.asarray(L, dtype=float)[..., None] * np.asarray(tint_map, dtype=float),
+                   0, 255)
+
+
 def colourise(L, tint):
     a = np.stack([L * tint[0], L * tint[1], L * tint[2]], axis=-1)
     return np.clip(a, 0, 255)

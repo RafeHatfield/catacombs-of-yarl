@@ -826,6 +826,79 @@ DRESSING_KEEP = 0.45            # how much of its dressing a fully worn stone LO
 # divides the stones, so every stone keeps its address and the corner theorem is unaffected. What
 # degrades along a path is the VISIBLE enclosure, deliberately, because "stones wearing into one
 # another" is the thing being drawn.
+# ============================ THE CHROMA CHANNEL — STEP TWO OF THE LADDER ============================
+#
+# RULED, after the joint lever was discharged BY PROOF rather than by defeat: a lever confined to
+# the joints owns 21.85% of the surface, and at its physical ceiling reaches 0.1253 Weber against
+# §13.8's floor of 0.1440. No setting of it closes the value channel. So the path is carried by a
+# second channel, on the 78.14% the joints never touched.
+#
+# WHY COLOUR IS THE RIGHT SECOND CHANNEL, and it is not just "the next thing on the list":
+# the light rig multiplies every channel by the same falloff, so an authored VALUE difference
+# arrives at the dark end of a room scaled down along with everything else. A RATIO BETWEEN
+# CHANNELS SURVIVES THAT MULTIPLICATION UNTOUCHED. A stone 7% greener than its neighbour is still
+# 7% greener in the dark, and half of this floor is dark — the seat measured 53.6% of it below
+# luminance 70, where value work is spent where nobody can see it.
+#
+# §5.4 SANCTIONS IT AND ALSO CONSTRAINS IT. *Chroma is signal; a saturated pixel should mean
+# something happened; general richness is forbidden.* A worn path is the clearest "something
+# happened" a floor has. And the direction is not free: warmth is reserved for Sasha, for
+# Hollowmark and for the Boundary's own fires, and spending warmth on the ground would compete
+# with the one thing that must never be lost on a small screen. So the path goes COOL — the
+# grey-green of stone walked free of its dry warm dust, and of what gets tracked into it.
+#
+# A CONSTANT-LUMINANCE ROTATION, deliberately. The multiplier below is projected onto the plane
+# of constant luminance before it is used, so the chroma lever moves NO value at all. Three things
+# follow, and each of them is a defect avoided rather than a nicety:
+#   * the combined verdict is not double-counting one lever under two names;
+#   * §6.5's value stack and the floor's anchor are untouched, so the wall session's numbers do
+#     not move under it;
+#   * a colour that also darkened would be an occlusion claim, and there is no recess here.
+#
+# FACES ONLY. The additive-remap law — offsets land on stone faces, joints are never touched —
+# governs colour exactly as it governs value. A joint is dark because it is ENCLOSED (§6.5), and
+# enclosure has no hue.
+CHROMA_DIR = (-1.0, 0.35, -0.15)          # toward a cool grey-green, before the luminance projection
+CHROMA_BY_AGE = (0.0, 0.0, 0.06, 0.12)    # by wear age; the first two are silent ON PURPOSE — a
+                                          # signal that starts at the first hint of traffic is a
+                                          # wash over the whole floor, and washes identify nothing
+
+
+def chroma_strength_block(x0, y0, n, seed, traffic, channel=False):
+    """The chroma channel's strength over an n x n block. ONE definition, three painters.
+
+    NO TRAFFIC MODEL MEANS NO CHROMA, and that is a semantic rather than a convenience. The joint
+    lever consumes `wear_scalar_block`, which falls back to raw noise when no field is supplied —
+    correct there, because a joint's AGE is a property of the stone whether or not anyone has
+    modelled the routes. Chroma marks the PATH, and a floor with no traffic model has no path to
+    mark. Letting it fall back to noise painted 77% of a fieldless floor with the cast: general
+    richness, which §5.4 forbids by name, and a signal that means nothing because it is everywhere.
+    """
+    import numpy as _np
+    if traffic is None:
+        return _np.zeros((n, n), dtype=float)
+    # THE CHANNEL FLAG IS NOT OPTIONAL. Omitting it read the wear scalar one way in the
+    # composer and another in the engine, and the paint check caught the two painting the same
+    # pixel a different colour — rgb(108,118,113) against rgb(102,121,113), one wear age apart.
+    w = wear01_block(wear_scalar_block(x0, y0, n, seed, traffic), channel)
+    ages = _np.array(WEAR_AGES)
+    return _np.array(CHROMA_BY_AGE)[_np.abs(w[..., None] - ages).argmin(-1)]
+
+
+def chroma_tint(tint, strength):
+    """The material tint rotated toward CHROMA_DIR at constant luminance.
+
+    Projecting out the luminance component is what makes this a colour lever and not a second,
+    quieter value lever wearing colour's clothes.
+    """
+    import numpy as _np
+    w = _np.array([0.299, 0.587, 0.114])
+    t = _np.asarray(tint, dtype=float)
+    d = _np.asarray(CHROMA_DIR, dtype=float)
+    d = d - (w @ (t * d)) / (w @ t)       # the component that changes hue and nothing else
+    return t * (1.0 + strength * d)
+
+
 JOINT_FILL_RUNGS = (0.0, 0.0, 1.0, 2.0)   # by wear age: how far up the ladder a joint is packed
 JOINT_BREAK = (0.0, 0.0, 0.20, 0.45)      # by wear age: share of the joint packed level with the
                                           # floor, so the line stops being continuous
@@ -1045,6 +1118,11 @@ def main():
     # the rule on the day it was written. `lum_lo`/`lum_hi` are the measurement; the ladder is a
     # rule applied to it.
     mat = CF.rehydrate(src["material"])
+    # The chroma channel travels in the material, beside the tint it rotates. The DIRECTION ships
+    # unprojected and the projection happens in each painter, so the constant-luminance invariant
+    # is enforced where the tint is used rather than trusted to a number in a file.
+    mat["chroma_dir"] = list(CHROMA_DIR)
+    mat["chroma_by_age"] = list(CHROMA_BY_AGE)
     os.makedirs(a.out, exist_ok=True)
     step = (mat["lum_hi"] - mat["lum_lo"]) / (CF.PALETTE_LEVELS - 1)
 
