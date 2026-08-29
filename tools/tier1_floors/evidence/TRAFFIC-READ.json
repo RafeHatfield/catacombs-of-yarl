@@ -1,0 +1,41 @@
+{
+ "commit": "ff9edbca6556a0b5be1c505c8e9875b9e57e05cd",
+ "capture": "tools/tier1_floors/evidence/scene_ashlar_r14.png",
+ "levels": [
+  {
+   "level": 1,
+   "tiles": 1,
+   "roughness": 5.7751
+  },
+  {
+   "level": 2,
+   "tiles": 5,
+   "roughness": 3.4652
+  },
+  {
+   "level": 3,
+   "tiles": 5,
+   "roughness": 5.1712
+  },
+  {
+   "level": 4,
+   "tiles": 1,
+   "roughness": 4.8731
+  },
+  {
+   "level": 5,
+   "tiles": 6,
+   "roughness": 5.3916
+  },
+  {
+   "level": 6,
+   "tiles": 5,
+   "roughness": 5.0372
+  },
+  {
+   "level": 8,
+   "tiles": 2,
+   "roughness": 4.0311
+  }
+ ]
+}

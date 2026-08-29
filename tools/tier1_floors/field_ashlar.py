@@ -86,7 +86,7 @@ def stone_worn(worn, kind, x, y):
     return bool(worn(x, y))
 
 
-def assemble(w, h, seed, mat, worn=None, defect=None):
+def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
     """Lay a w x h field, then paint the material onto it one stone at a time.
 
     The tiles supply the bond. Everything else — a stone's value and a stone's grain — is chosen
@@ -153,7 +153,8 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
 
                     is_worn = stone_worn(worn, addr, x, y)
                     wear_of_class[1 + c * 3 + kind] = is_worn
-                    w_raw = CA.wear_at(x * T + T // 2, y * T + T // 2, seed)
+                    w_raw = int(CA.wear_scalar_block(x * T + T // 2, y * T + T // 2,
+                                                     1, seed, traffic)[0, 0])
                     w01 = 0.0 if defect == "uniform_wear" else CA.wear01(w_raw, is_worn)
                     ox = CA.stone_origin(wf, e, kind, c, drops[c])
                     oy = CA.course_origin_y(split_i, c)
@@ -233,7 +234,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None):
             # wider. Nothing brightens.
             if defect != "uniform_wear":
                 jm_pix = (cls == 0) & jm
-                wblk = CA.wear_block(x * T, y * T, T, seed)
+                wblk = CA.wear_scalar_block(x * T, y * T, T, seed, traffic)
                 w01b = CA.wear01_block(wblk, bool(worn and worn(x, y)))
                 open_amt = np.where(jm_pix, w01b, 0.0)
                 # A SHELTERED joint is shallower. An open one keeps the dark it already had —

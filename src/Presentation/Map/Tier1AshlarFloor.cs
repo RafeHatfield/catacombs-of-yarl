@@ -90,6 +90,12 @@ public static class Tier1AshlarFloor
         public readonly List<(int X, int K, int Kind, int Drop, int Steps)> StoneCheck = new();
         public readonly List<(int X, int Y, int Px, int Py, int R, int G, int B)> PaintCheck = new();
         public int[] PaintCheckWornColumns = System.Array.Empty<int>();
+        // THE CHECK'S OWN TRAFFIC FIELD. The real one is derived from the level graph and
+        // the composer has no map, so the finished-pixel check carries a SYNTHETIC field
+        // that both sides agree on. What it verifies is the PAINTING given a field; the
+        // derivation is verified by the Logic layer's own tests, where a hierarchy can be
+        // asserted without a scene, a device or a capture.
+        public byte[,]? CheckTraffic;
     }
 
     private static int Mix(int x, int y, int salt)
@@ -355,7 +361,42 @@ public static class Tier1AshlarFloor
     }
 
     /// <summary>
-    /// The wear scalar at a world pixel, 0..255 — two octaves of value noise at FIVE and ELEVEN
+    /// THE TRAFFIC FIELD, sampled at a world pixel — bilinear between TILE CENTRES.
+    ///
+    /// Per-tile is what the level graph can say; per-pixel is what the floor needs. Consuming the
+    /// per-tile scalar directly would paint the traffic model onto the tile grid, which is
+    /// §8.3.1's lattice with a better excuse. Interpolating between centres means a route crosses
+    /// a tile boundary without knowing there was one.
+    /// </summary>
+    private static int TrafficAt(byte[,] f, int wx, int wy)
+    {
+        int w = f.GetLength(0), h = f.GetLength(1);
+        int sx = wx - T / 2, sy = wy - T / 2;
+        int gx = FloorDiv(sx, T), gy = FloorDiv(sy, T);
+        int fx = sx - gx * T, fy = sy - gy * T;
+        int Smp(int x, int y) => f[System.Math.Clamp(x, 0, w - 1), System.Math.Clamp(y, 0, h - 1)];
+        int top = Smp(gx, gy) * (T - fx) + Smp(gx + 1, gy) * fx;
+        int bot = Smp(gx, gy + 1) * (T - fx) + Smp(gx + 1, gy + 1) * fx;
+        return (top * (T - fy) + bot * fy) / (T * T);
+    }
+
+    /// <summary>
+    /// What the wear pass actually consumes: the traffic field, FRAYED by the old noise.
+    ///
+    /// The register guardrail is that the path is discovered, never staged — and a pure
+    /// interpolation of an accumulated route is a smooth ribbon, which is exactly what "reads as
+    /// a drawn route" means. A quarter of the old two-octave field is mixed back in so the edges
+    /// break up and the width wanders, without moving where the route goes.
+    /// </summary>
+    private static int WearScalar(Config c, byte[,]? traffic, int wx, int wy)
+    {
+        int noise = WearAt(c, wx, wy);
+        if (traffic == null) return noise;
+        return (TrafficAt(traffic, wx, wy) * 3 + noise) / 4;
+    }
+
+    /// <summary>
+    /// The old wear scalar at a world pixel, 0..255 — two octaves of value noise at FIVE and ELEVEN
     /// tiles, bilinear, integer throughout so the composer is reproduced exactly.
     ///
     /// Coprime periods, coprime with the tile: nothing in the field lands on the grid or on any
@@ -453,6 +494,28 @@ public static class Tier1AshlarFloor
         var paintFail = SelfCheck(cfg, grainImg, atlasCache);
         if (paintFail != null) return $"[Tier1] ashlar floor: REFUSED — {paintFail}";
 
+        // WHERE PEOPLE ACTUALLY WALK — derived from the level graph, once, before anything is
+        // laid. The review scenes carry no Room records, so the map-only derivation is used: the
+        // spine is the level's own longest walk and every leaf hanging off it is a branch.
+        var tf = TrafficField.ComputeFromMap(map);
+        var traffic = tf.Field;
+
+        // THE FIELD, IN THE LOG, so it can be audited rather than trusted. Counts alone cannot
+        // say WHERE the traffic went, and a route through the wrong part of a room would look
+        // exactly like a route through the right one in any summary statistic. Ten levels, '.'
+        // for unwalked through '#' for the busiest.
+        var ramp = " .:-=+*#%@";
+        var sb = new System.Text.StringBuilder();
+        sb.Append("[Tier1] traffic field (space=unwalked .. @=busiest)\n");
+        for (int y = 0; y < map.Height; y++)
+        {
+            sb.Append("[Tier1]   ");
+            for (int x = 0; x < map.Width; x++)
+                sb.Append(map.IsWalkable(x, y)
+                    ? ramp[System.Math.Clamp(traffic[x, y] * (ramp.Length - 1) / 255, 0, ramp.Length - 1)]
+                    : '#');
+            sb.Append('\n');
+        }
         var crackCache = new Dictionary<(int, int), List<(int X, int Y)>>();
         int laid = 0, channel = 0, missing = 0;
 
@@ -475,7 +538,7 @@ public static class Tier1AshlarFloor
                 atlasCache[idx] = atlas;
             }
 
-            var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw, fe,
+            var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw, fe, traffic,
                                    isChannel, crackCache, out bool anyWorn);
 
             // NO FLIP, NO ROTATION. Orientation is meaning on an edge-matched tile, and the
@@ -491,7 +554,8 @@ public static class Tier1AshlarFloor
              + $"families={cfg.Families} seed={cfg.Seed} atlases={atlasCache.Count} "
              + $"edge_check={cfg.EdgeCheck.Count}/OK stone_check={cfg.StoneCheck.Count}/OK "
              + $"paint_check={cfg.PaintCheck.Count}/OK "
-             + $"manifest={manifestResPath}";
+             + $"traffic=spine:{tf.SpineLength:F0}/routes:{tf.Routes} "
+             + $"manifest={manifestResPath}\n" + sb.ToString().TrimEnd();
     }
 
 
@@ -501,7 +565,7 @@ public static class Tier1AshlarFloor
     /// reimplementation.
     /// </summary>
     private static Image PaintCell(Config cfg, Image atlas, Image grainImg, int tx, int ty,
-                                   int fw, int fe, System.Func<int, int, bool>? isChannel,
+                                   int fw, int fe, byte[,]? traffic, System.Func<int, int, bool>? isChannel,
                                    Dictionary<(int, int), List<(int X, int Y)>> crackCache,
                                    out bool anyWorn)
     {
@@ -564,7 +628,7 @@ public static class Tier1AshlarFloor
                 // composer's do.
                 int mAx = (cellIndex % AtlasCols) * T, mAy = (cellIndex / AtlasCols) * T;
                 var mExt = StoneExtent(cfg, fw, fe, kind, c, drops[c], splitI);
-                double sw = Wear01(cfg, WearAt(cfg, tx * T + T / 2, ty * T + T / 2), worn);
+                double sw = Wear01(cfg, WearScalar(cfg, traffic, tx * T + T / 2, ty * T + T / 2), worn);
                 foreach (var (mu, mv, md) in StoneMarks(cfg, key, worn, mExt, sw))
                 {
                     int mlx = mu + ox[cls], mly = mv + oy[cls];
@@ -649,7 +713,7 @@ public static class Tier1AshlarFloor
             for (int px = 0; px < T; px++)
                 if (clsArr[py, px] == 0)
                 {
-                    openAmt[py, px] = Wear01(cfg, WearAt(cfg, tx * T + px, ty * T + py), channelHere);
+                    openAmt[py, px] = Wear01(cfg, WearScalar(cfg, traffic, tx * T + px, ty * T + py), channelHere);
                     // A WHOLE RUNG OR NOTHING. Scaling the lightening continuously produced
                     // sub-rung shifts on a joint sitting on the ladder's bottom rung, and
                     // quantisation ate every one: measured spread 0.000. §13.8 does not stop
@@ -745,7 +809,8 @@ public static class Tier1AshlarFloor
                     if (atlas == null) return $"paint check: atlas unreadable: {path}";
                     atlasCache[idx] = atlas;
                 }
-                img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, fe, worn, checkCracks, out _);
+                img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, fe, cfg.CheckTraffic, worn,
+                                checkCracks, out _);
                 cells[(s.X, s.Y)] = img;
             }
             var c = img.GetPixel(s.Px, s.Py);
@@ -896,6 +961,24 @@ public static class Tier1AshlarFloor
                 foreach (var v in pc.GetProperty("worn_columns").EnumerateArray())
                     wc.Add(v.GetInt32());
                 cfg.PaintCheckWornColumns = wc.ToArray();
+                if (pc.TryGetProperty("traffic", out var tr))
+                {
+                    var rowsList = new List<int[]>();
+                    foreach (var row in tr.EnumerateArray())
+                    {
+                        var vals = new List<int>();
+                        foreach (var v in row.EnumerateArray()) vals.Add(v.GetInt32());
+                        rowsList.Add(vals.ToArray());
+                    }
+                    if (rowsList.Count > 0)
+                    {
+                        var t = new byte[rowsList[0].Length, rowsList.Count];
+                        for (int yy = 0; yy < rowsList.Count; yy++)
+                            for (int xx = 0; xx < rowsList[yy].Length; xx++)
+                                t[xx, yy] = (byte)rowsList[yy][xx];
+                        cfg.CheckTraffic = t;
+                    }
+                }
                 foreach (var e in pc.GetProperty("samples").EnumerateArray())
                     cfg.PaintCheck.Add((e.GetProperty("x").GetInt32(), e.GetProperty("y").GetInt32(),
                                         e.GetProperty("px").GetInt32(), e.GetProperty("py").GetInt32(),

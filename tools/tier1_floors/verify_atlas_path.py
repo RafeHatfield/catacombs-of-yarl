@@ -36,7 +36,7 @@ import field_laws as FL          # noqa: E402
 T = CA.T
 
 
-def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
+def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traffic=None):
     """The engine's algorithm, in Python. Deliberately written from the C# rather than from the
     composer, so a shared mistake in the composer cannot hide behind a shared implementation."""
     A = assets or CA.ASSETS
@@ -93,7 +93,8 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
                                     + CA.cluster_bias(bx, course_k, seed)))
                     is_worn = FA.stone_worn(worn, addr, x, y)
                     wornc[cid] = is_worn
-                    w01 = CA.wear01(CA.wear_at(x * T + T // 2, y * T + T // 2, seed), is_worn)
+                    w01 = CA.wear01(int(CA.wear_scalar_block(
+                        x * T + T // 2, y * T + T // 2, 1, seed, traffic)[0, 0]), is_worn)
                     off = k * step * (man["wear"]["spread"] if is_worn else 1.0)
                     gm = amp * (gs["worn_multiplier"] if is_worn else 1.0)
                     b = key % man["grain_bank"]
@@ -137,7 +138,7 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None):
             # THE DIFFERENTIAL-WEAR PASS, mirrored: joints open where feet passed, and the
             # arris beside an open joint goes with it.
             jm_pix = (cls == 0)
-            wblk = CA.wear_block(x * T, y * T, T, seed)
+            wblk = CA.wear_scalar_block(x * T, y * T, T, seed, traffic)
             w01b = CA.wear01_block(wblk, bool(worn and worn(x, y)))
             open_amt = np.where(jm_pix, w01b, 0.0)
             tight = (open_amt <= CA.JOINT_TIGHT_KNEE).astype(float)

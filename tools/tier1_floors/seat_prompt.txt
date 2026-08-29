@@ -78,6 +78,16 @@ Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU? Give an age or an age range in yo
     can tell. If it reads as one age everywhere, say that.
 Q8_WHY: name the pixel regions your answer comes from.
 
+Q9: WHERE WOULD YOU WALK TO CROSS THIS LEVEL — DOES THE FLOOR ALREADY KNOW? Trace the route you
+    would take from one opening to another. Then say whether the GROUND ITSELF told you that
+    route before you worked it out from the walls. If the ground told you nothing and you routed
+    by the walls alone, say so plainly — that is a real answer.
+Q9_WHY: name the pixel regions along your route, and the regions you rejected, and say what is
+    different about the ground between them.
+
+Q10: WHICH WAY IN OR OUT OF THIS PLACE IS USED MOST, AND WHICH IS USED LEAST OR NEVER? Judge only
+    from the ground in front of each opening. If they all look the same, say so.
+
 CULL: If this floor should be rejected, give the single strongest reason in under twenty words.
       If it should not be rejected, write NONE.
       A critic who finds no defect should suspect its own rigour before crediting the work. Look

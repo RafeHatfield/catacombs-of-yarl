@@ -735,6 +735,41 @@ def wear_block(x0, y0, n, seed):
     return total // wsum
 
 
+def traffic_block(traffic, x0, y0, n):
+    """THE TRAFFIC FIELD sampled over an n x n block, bilinear between TILE CENTRES.
+
+    Per-tile is what the level graph can say; per-pixel is what the floor needs. Consuming the
+    per-tile scalar directly would paint the traffic model onto the tile grid — §8.3.1's lattice
+    with a better excuse — so a route crosses a tile boundary without knowing there was one.
+    """
+    tw, th = traffic.shape
+    yy, xx = np.mgrid[0:n, 0:n]
+    sx, sy = xx + x0 - T // 2, yy + y0 - T // 2
+    gx, gy = sx // T, sy // T
+    fx, fy = sx - gx * T, sy - gy * T
+
+    def smp(ax, ay):
+        return traffic[np.clip(ax, 0, tw - 1), np.clip(ay, 0, th - 1)].astype(np.int64)
+
+    top = smp(gx, gy) * (T - fx) + smp(gx + 1, gy) * fx
+    bot = smp(gx, gy + 1) * (T - fx) + smp(gx + 1, gy + 1) * fx
+    return (top * (T - fy) + bot * fy) // (T * T)
+
+
+def wear_scalar_block(x0, y0, n, seed, traffic=None):
+    """What the wear pass consumes: the traffic field FRAYED by the old noise.
+
+    The register guardrail is that the path is discovered, never staged — and a pure interpolation
+    of an accumulated route is a smooth ribbon, which is what "reads as a drawn route" means. A
+    quarter of the old two-octave field is mixed back in so the edges break up and the width
+    wanders, without moving where the route goes.
+    """
+    noise = wear_block(x0, y0, n, seed)
+    if traffic is None:
+        return noise
+    return (traffic_block(traffic, x0, y0, n) * 3 + noise) // 4
+
+
 def wear01_block(raw, channel=False):
     """`wear01`, vectorised. Snapped to the same four ages."""
     r = np.maximum(raw, CHANNEL_WEAR) if channel else raw

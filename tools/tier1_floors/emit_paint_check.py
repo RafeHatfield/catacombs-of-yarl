@@ -60,7 +60,22 @@ def main():
                          % (man["seed"], a.seed))
 
     worn = lambda x, y: x in WORN_COLUMNS
-    img = VP.paint_from_atlas(a.w, a.h, a.seed, man, worn=worn, assets=assets)
+
+    # A SYNTHETIC TRAFFIC FIELD, and the reason it is synthetic is worth stating rather than
+    # hiding. The real field is derived from the LEVEL GRAPH — spine, branches, thresholds,
+    # weighted by what the generator says each room is for — and the composer has no map. So the
+    # finished-pixel check carries a field both sides agree on, and what it proves is that the
+    # engine PAINTS the same pixels given the same field.
+    #
+    # The derivation is verified separately and better: in the Logic layer, by tests that assert
+    # the hierarchy itself — spine busier than an off-route corner, a sealed room unwalked, a
+    # threshold busier than the room it serves — without needing a scene, a device or a capture.
+    traffic = np.zeros((a.w, a.h), dtype=np.uint8)
+    for ty in range(a.h):
+        for tx in range(a.w):
+            traffic[tx, ty] = CA.mix(tx, ty, 4242 + a.seed) & 255
+
+    img = VP.paint_from_atlas(a.w, a.h, a.seed, man, worn=worn, assets=assets, traffic=traffic)
 
     # Deliberate spread: the trodden columns and their neighbours (so the arris pass and the
     # channel's edge are both covered), and cells away from them for the plain case.
@@ -80,6 +95,7 @@ def main():
 
     man["paint_check"] = dict(
         worn_columns=WORN_COLUMNS, grid=[a.w, a.h], samples=picks,
+        traffic=[[int(traffic[tx, ty]) for tx in range(a.w)] for ty in range(a.h)],
         what=("finished RGB from the shipped path. The engine reproduces every one of these or "
               "refuses to lay the floor. Covers joints, plain stone, trodden stone, joints beside "
               "trodden stone, and spanning stones seen from both sides."))
