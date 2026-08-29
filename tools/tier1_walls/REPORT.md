@@ -317,6 +317,27 @@ The alternative reading — hold the round until the critic passes — would mea
 against a constraint the art cannot reach, which is exactly the failure §6.2.1 named when it said
 *the rig is one table of numbers and the corpus is every asset in the game.*
 
+## 7d. Round 4 — the build offered to the gate
+
+`r12`, `void_ring` 1, the `compensated` arm. The seat's cull is **the fifth independent statement
+of the same sentence**, across four builds:
+
+> *"Walls sit at 4–7% of floor luminance — at 1:1 the room has no visible structure, only
+> darkness."*
+
+Two things did move, and both are the round's own fixes reporting back:
+
+- **The void now reads as a distinct thing.** *"Above y≈195 the pixels are exactly (1,1,2) with
+  zero variance. Not dark — **empty**. Authored void. Everywhere else is more of the same place,
+  simply unlit."* At `void_ring` 2 the same seat class read the beyond as *"wall, and it goes on"*.
+- **The passage is still found**, though this seat found it by the void behind it rather than by
+  the jambs: *"I read it as a passage — barely, and for the wrong reason."*
+
+And Q4 is still **NOTHING**, after the ink fix. At 4–7% of floor luminance the orc layer is
+present, correct, world-placed, and unrepresentable — which is the same law as everything else in
+this report, arriving on the one clause (§7.1) that was supposed to be carried by *linear
+elements that still read at 1×*.
+
 ## 8. State
 
 - **§6.5 vs the ratified rig — RULING TRIGGER, open.** Three remedies named in `STACK-FINDING.md`,
@@ -328,7 +349,27 @@ against a constraint the art cannot reach, which is exactly the failure §6.2.1 
   from a still.
 - **The two arms.** `material` (top 114.70 / face 61.79) and `compensated` (154.38 / 75.02). The
   measurement in §2 favours `compensated`; the §6.3 hygiene argument favours `material`.
-- **The void.** Three candidates, unruled, on the panel.
+- **The void — three candidates, unruled, on the panel, AND the measurement says the choice may
+  not be the interesting one.** Delivered, on the gate build:
+
+  | candidate | authored | delivered | |
+  |---|---:|---:|---|
+  | choice 0 | 18 | **1.073** | |
+  | choice 1 | 10 | **1.000** | |
+  | choice 2 | 0 | **0.001** | |
+  | *unlit wall top past six tiles* | 154.38 | **10.445** | for comparison |
+
+  **The three candidates span 1.07 luminance. The unlit wall sits 10.44 above the darkest of
+  them.** So the void is an order of magnitude darker than the stone beside it and the three
+  choices are within a level of each other — which means the question at the gate is probably not
+  *which near-black*, it is *should the void be darker than unlit stone at all, or should unlit
+  stone fall toward it*. The panel still switches all three, because §13.2 makes the eye final and
+  a luminance figure has never been calibrated against a person holding a phone in a dark room.
+
+  A blind seat separated them unaided and then said the thing that matters: *"Above y≈195 the
+  pixels are exactly (1,1,2) with zero variance. Not dark — **empty**. Authored void. Everywhere
+  else is more of the same place, simply unlit. **The image gives you no way to tell them apart at
+  1:1.**"*
 - **Instruments.** Six, all proven failable, legal family clean, both arms clean.
 - **Generations spent: 0 of 60.**
 - **Device — VERIFIED.** Commit `7e64cdb`, clean tree, all eight checks green on the handset,
