@@ -63,7 +63,16 @@ MARGIN = 1.25
 LAMP_RADIUS = 200
 
 
-def bands(capture, log, tile, plant=None, shuffle=False, hue=None):
+def bands_many(captures, logs, tile, **kw):
+    """Pool several stations into one set of traffic buckets."""
+    out = {}
+    for c, l in zip(captures, logs):
+        for lvl, vs in bands(c, l, tile, **kw).items():
+            out.setdefault(lvl, []).extend(vs)
+    return out
+
+
+def bands(capture, log, tile, plant=None, shuffle=False, hue=None, min_illum=0.0):
     """Per traffic level: lamp-corrected colour, value and roughness, over lit floor pixels."""
     f = MTR.read_field(log)
     if f is None:
@@ -133,6 +142,18 @@ def bands(capture, log, tile, plant=None, shuffle=False, hue=None):
             m = lit[y0:y0 + tile, x0:x0 + tile][1:-1, 1:-1]
             if m.sum() < 200:
                 continue
+            # ================= INSIDE THE LAMP'S POOL, OR NOT AT ALL =================
+            #
+            # RULED at the gate, overturning Ruling 70's execution: the path signal is keyed to
+            # where the player WALKS, and the player carries the lamp. Measuring it across a
+            # static scene samples it where its reader never is — the capture that closed the
+            # channel had its busiest tiles at 7/255, where the whole nine-rung palette renders
+            # into four 8-bit values. That was a true measurement of the wrong population.
+            #
+            # So a tile is only compared if the lamp actually reaches it. Dark illegibility is
+            # accepted by design and is no longer evidence about the floor.
+            if float(np.median(MPF.lum(img)[y0:y0 + tile, x0:x0 + tile])) < min_illum:
+                continue
             v = flat[y0:y0 + tile, x0:x0 + tile][1:-1, 1:-1]
             r = sd[y0 - 1:y0 + tile - 1, x0 - 1:x0 + tile - 1][:m.shape[0], :m.shape[1]]
             c = norm[y0:y0 + tile, x0:x0 + tile][1:-1, 1:-1]
@@ -148,6 +169,9 @@ def weber(a, b):
     return abs(a - b) / base if base else 0.0
 
 
+OFF_MAX, TRODDEN_MIN = 2, 7
+
+
 def report(bk, label):
     rows = []
     for lvl in sorted(bk):
@@ -157,8 +181,14 @@ def report(bk, label):
                      float(np.mean([x[1] for x in vs])),
                      np.mean([x[2] for x in vs], axis=0),
                      [x[3] for x in vs]))
-    quiet = [r for r in rows if r[0] <= 2]
-    busy = [r for r in rows if r[0] >= 7]
+    # THE BUCKETS ARE A PARAMETER INSIDE THE POOL, and widening the quiet one is a CONSERVATIVE
+    # move rather than a convenient one. Restricted to tiles the lamp actually reaches, the
+    # traffic field's own dynamic range narrows — a station standing in room A has nothing at
+    # level 0-2 inside its pool, because the unwalked ground is also the unlit ground. Comparing
+    # level 4 against level 8 is a SMALLER traffic contrast than 0 against 9, so a signal that
+    # reads here reads more easily at the extremes.
+    quiet = [r for r in rows if r[0] <= OFF_MAX]
+    busy = [r for r in rows if r[0] >= TRODDEN_MIN]
     if not (quiet and busy):
         raise SystemExit("the scene has no trodden and sheltered ground to compare")
 
@@ -212,10 +242,10 @@ def report(bk, label):
         print("  %-8s %6d %12.2f %12.3f %10.4f"
               % (MTR.RAMP[lvl] * 3, n, v, r, float(P.relative_chroma(c))))
     print()
-    print("  off-route (0-2)   value %7.2f   roughness %6.3f   relchroma %.4f   over %d tiles"
-          % (qv, qr, q_rc, sum(r[1] for r in quiet)))
-    print("  trodden   (7-9)   value %7.2f   roughness %6.3f   relchroma %.4f   over %d tiles"
-          % (bv, br, b_rc, sum(r[1] for r in busy)))
+    print("  off-route (0-%d)   value %7.2f   roughness %6.3f   relchroma %.4f   over %d tiles"
+          % (OFF_MAX, qv, qr, q_rc, sum(r[1] for r in quiet)))
+    print("  trodden   (%d-9)   value %7.2f   roughness %6.3f   relchroma %.4f   over %d tiles"
+          % (TRODDEN_MIN, bv, br, b_rc, sum(r[1] for r in busy)))
     print()
     print("  PER-CHANNEL, WEBER (the value channel is directly comparable to §13.8)")
     print("    value channel     %.4f   %s" % (wv, "ABOVE" if wv >= FLOOR else "below"))
@@ -244,24 +274,38 @@ def report(bk, label):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--capture", required=True)
-    ap.add_argument("--log", required=True)
+    # ================= THE POPULATION IS THE WALK, NOT ONE FRAME =================
+    #
+    # Several stations pooled, deliberately. One player-centered capture puts a handful of tiles
+    # inside the lamp — that is what a lamp is — and a paired design over four tiles has no more
+    # power than the scene-wide one it replaced, for the opposite reason. Pooling the stations of
+    # a traversal restores the sample WITHOUT leaving the corrected population: every tile in it
+    # is still a tile the player is standing near, lit by the lamp the player carries.
+    ap.add_argument("--capture", required=True, action="append")
+    ap.add_argument("--log", required=True, action="append")
     ap.add_argument("--tile", type=int, default=64)
     ap.add_argument("--plant", type=float, default=0.20,
                     help="absorbed control: darken every trodden tile by this fraction")
+    ap.add_argument("--off-max", type=int, default=2, dest="off_max")
+    ap.add_argument("--trodden-min", type=int, default=7, dest="trodden_min")
+    ap.add_argument("--min-illum", type=float, default=0.0, dest="min_illum",
+                    help="only compare tiles whose delivered median luminance reaches this")
     ap.add_argument("--hue", type=float, default=0.15,
                     help="plant: rotate every trodden tile toward green by this fraction")
     a = ap.parse_args()
 
-    real = report(bands(a.capture, a.log, a.tile), "AS SHIPPED")
-    ctrl = report(bands(a.capture, a.log, a.tile, hue=a.hue),
+    global OFF_MAX, TRODDEN_MIN
+    OFF_MAX, TRODDEN_MIN = a.off_max, a.trodden_min
+    real = report(bands_many(a.capture, a.log, a.tile, min_illum=a.min_illum),
+                  "AS SHIPPED — tiles inside the lamp's pool (delivered >= %.0f)" % a.min_illum)
+    ctrl = report(bands_many(a.capture, a.log, a.tile, hue=a.hue, min_illum=a.min_illum),
                   "THE PLANT — every trodden tile rotated %.0f%% toward green" % (a.hue * 100))
     # THE SECOND CONTROL, AND IT MUST FAIL TO FIRE. Matching each trodden tile to the off-route
     # tile nearest it in luminance is what removes the lamp — so a plant that changes only
     # lightness has to be invisible here, absorbed by the matching. If darkening every trodden
     # tile by a fifth DID move this number, the pairing would not be doing its job and every
     # reading above would be part illumination.
-    absorbed = report(bands(a.capture, a.log, a.tile, plant=a.plant),
+    absorbed = report(bands_many(a.capture, a.log, a.tile, plant=a.plant, min_illum=a.min_illum),
                       "THE ABSORBED CONTROL — every trodden tile darkened %.0f%%, which the "
                       "luminance matching must swallow" % (a.plant * 100))
     # FOUR NULLS, AND THE MEDIAN OF THEM. One flip is a single draw and it can be an unlucky
@@ -272,7 +316,7 @@ def main():
     nulls = []
     for k in (1, 2, 3, 4):
         try:
-            nulls.append(report(bands(a.capture, a.log, a.tile, shuffle=k),
+            nulls.append(report(bands_many(a.capture, a.log, a.tile, shuffle=k, min_illum=a.min_illum),
                                 "NULL %d — the traffic field rearranged, so no label matches "
                                 "its floor" % k))
         except SystemExit as e:
@@ -351,7 +395,8 @@ def main():
           % ("THE SIGNAL CLEARS THE FLOOR" if verdict else "THE SIGNAL IS BELOW THE FLOOR",
              " — seat to confirm it reads as a path" if (verdict and not null_usable) else ""))
 
-    out = dict(commit=FL.git_commit(), capture=os.path.relpath(a.capture, REPO),
+    out = dict(commit=FL.git_commit(),
+               captures=[os.path.relpath(c, REPO) for c in a.capture],
                floor=FLOOR, margin=MARGIN, shipped=real, plant=ctrl, null=null,
                null_usable=bool(null_usable), verdict=bool(verdict), absorbed=absorbed)
     p = os.path.join(HERE, "evidence", "PATH-SIGNAL.json")

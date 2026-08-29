@@ -87,6 +87,8 @@ public static class Tier1AshlarFloor
         public double[] Tint = { 1, 1, 1 };
         public double[] ChromaByAge = { 0, 0, 0, 0 };
         public double[] ChromaDir = { 0, 0, 0 };
+        public double[] PolishByAge = { 0, 0, 0, 0 };
+        public double PolishExp = 2.0, PolishGain = 1.0;
         public int[][] ATable = System.Array.Empty<int[]>();
         public int[][] MvTable = System.Array.Empty<int[]>();
         public readonly Dictionary<int, string> Atlas = new();
@@ -551,7 +553,13 @@ public static class Tier1AshlarFloor
             sb.Append('\n');
         }
         var crackCache = new Dictionary<(int, int), List<(int X, int Y)>>();
-        int laid = 0, channel = 0, missing = 0;
+        int laid = 0, channel = 0, missing = 0, polished = 0;
+
+        // §4.2: A STEP THAT DOES NOTHING MUST GO RED. If the shader fails to load, the floor
+        // still lays and still looks almost right — the chroma and the joints carry on — and the
+        // one lever this round exists to test would be silently absent. So its absence is
+        // counted and reported on the same line as everything else.
+        var polishShader = ResourceLoader.Load<Shader>(PolishShaderPath);
 
         foreach (var (pos, node) in tileLayer.TileSprites)
         {
@@ -573,13 +581,26 @@ public static class Tier1AshlarFloor
             }
 
             var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw, fe, traffic,
-                                   isChannel, crackCache, out bool anyWorn);
+                                   isChannel, crackCache, out bool anyWorn, out var polishImg);
 
             // NO FLIP, NO ROTATION. Orientation is meaning on an edge-matched tile, and the
             // coursing has a direction: turning one would stand its bed joints on end.
             sprite.Texture = ImageTexture.CreateFromImage(outImg);
             sprite.FlipH = false;
             sprite.FlipV = false;
+
+            // THE POLISH LEVER, attached per sprite. A ShaderMaterial each, because the mask is
+            // per tile — 74 of them on this scene, which is the cost of a floor that answers the
+            // lamp rather than being painted as if it had.
+            if (polishShader != null)
+            {
+                var pm = new ShaderMaterial { Shader = polishShader };
+                pm.SetShaderParameter("polish_tex", ImageTexture.CreateFromImage(polishImg));
+                pm.SetShaderParameter("polish_exp", (float)cfg.PolishExp);
+                pm.SetShaderParameter("polish_gain", (float)cfg.PolishGain);
+                sprite.Material = pm;
+                polished++;
+            }
             laid++;
             if (anyWorn) channel++;
         }
@@ -588,6 +609,7 @@ public static class Tier1AshlarFloor
              + $"families={cfg.Families} seed={cfg.Seed} atlases={atlasCache.Count} "
              + $"edge_check={cfg.EdgeCheck.Count}/OK stone_check={cfg.StoneCheck.Count}/OK "
              + $"paint_check={cfg.PaintCheck.Count}/OK "
+             + $"polished={polished}{(polishShader == null ? "/SHADER-MISSING" : "")} "
              + $"traffic=spine:{tf.SpineLength:F0}/routes:{tf.Routes} "
              + $"manifest={manifestResPath}\n" + sb.ToString().TrimEnd();
     }
@@ -598,10 +620,12 @@ public static class Tier1AshlarFloor
     /// floor rather than a second copy of it — a check against a reimplementation only proves the
     /// reimplementation.
     /// </summary>
+    private const string PolishShaderPath = "res://src/Presentation/assets/shaders/tier1_polish.gdshader";
+
     private static Image PaintCell(Config cfg, Image atlas, Image grainImg, int tx, int ty,
                                    int fw, int fe, byte[,]? traffic, System.Func<int, int, bool>? isChannel,
                                    Dictionary<(int, int), List<(int X, int Y)>> crackCache,
-                                   out bool anyWorn)
+                                   out bool anyWorn, out Image polish)
     {
         var drops = new int[Courses];
         for (int c = 0; c < Courses; c++)
@@ -804,7 +828,14 @@ public static class Tier1AshlarFloor
         var tints = new double[cfg.ChromaByAge.Length][];
         for (int i = 0; i < tints.Length; i++) tints[i] = ChromaTint(cfg, i);
 
+        // ================= POLISH: THE MASK, NOT THE BRIGHTNESS =================
+        //
+        // A trodden stone reflects more. That is a response to light, and it is written into a
+        // separate single-channel mask that only the shader's light() pass ever reads — never
+        // into the colour below. Faces only: a joint is dark because it is ENCLOSED and a crack
+        // is a hole, and neither takes a shine.
         var outImg = Image.CreateEmpty(T, T, false, Image.Format.Rgb8);
+        var polishImg = Image.CreateEmpty(T, T, false, Image.Format.L8);
         for (int py = 0; py < T; py++)
         {
             for (int px = 0; px < T; px++)
@@ -812,12 +843,18 @@ public static class Tier1AshlarFloor
                 double L = cfg.Ladder[LadderIndex(cfg, System.Math.Clamp(
                     raw[py, px], cfg.Ladder[0], cfg.Ladder[^1]))];
                 double[] t = cfg.Tint;
+                double refl = 0.0;
                 if (clsArr[py, px] != 0)
-                    t = tints[AgeIndex(cfg, Wear01(cfg,
-                            WearScalar(cfg, traffic, tx * T + px, ty * T + py), channelHere))];
+                {
+                    int fa = AgeIndex(cfg, Wear01(cfg,
+                        WearScalar(cfg, traffic, tx * T + px, ty * T + py), channelHere));
+                    t = tints[fa];
+                    refl = cfg.PolishByAge[fa];
+                }
                 outImg.SetPixel(px, py, new Color(
                     (float)(L * t[0] / 255.0), (float)(L * t[1] / 255.0),
                     (float)(L * t[2] / 255.0)));
+                polishImg.SetPixel(px, py, new Color((float)refl, (float)refl, (float)refl));
             }
         }
 
@@ -831,9 +868,13 @@ public static class Tier1AshlarFloor
             var col = new Color((float)(cv * cfg.Tint[0] / 255.0), (float)(cv * cfg.Tint[1] / 255.0),
                                 (float)(cv * cfg.Tint[2] / 255.0));
             foreach (var (ly, lx) in CrackPixels(cfg, tx, ty, crackCache))
+            {
                 outImg.SetPixel(lx, ly, col);
+                polishImg.SetPixel(lx, ly, new Color(0, 0, 0));
+            }
         }
 
+        polish = polishImg;
         return outImg;
     }
 
@@ -877,7 +918,7 @@ public static class Tier1AshlarFloor
                     atlasCache[idx] = atlas;
                 }
                 img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, fe, cfg.CheckTraffic, worn,
-                                checkCracks, out _);
+                                checkCracks, out _, out _);
                 cells[(s.X, s.Y)] = img;
             }
             var c = img.GetPixel(s.Px, s.Py);
@@ -961,6 +1002,19 @@ public static class Tier1AshlarFloor
             var cdir = new List<double>();
             foreach (var v in mat.GetProperty("chroma_dir").EnumerateArray()) cdir.Add(v.GetDouble());
             cfg.ChromaDir = cdir.ToArray();
+            var pba = new List<double>();
+            foreach (var v in mat.GetProperty("polish_by_age").EnumerateArray()) pba.Add(v.GetDouble());
+            cfg.PolishByAge = pba.ToArray();
+            cfg.PolishExp = mat.GetProperty("polish_exp").GetDouble();
+            cfg.PolishGain = mat.GetProperty("polish_gain").GetDouble();
+            // THE ONE ASSERTION THAT KEEPS THIS LEVER HONEST. At an exponent of 1.0 the specular
+            // term is linear in delivered light, which is arithmetically identical to changing the
+            // stone's albedo — the baked value-lift §8.2.1 bans, wearing this lever's name. It is
+            // checked here rather than trusted to a comment.
+            if (cfg.PolishExp <= 1.0)
+                throw new System.InvalidOperationException(
+                    $"polish_exp is {cfg.PolishExp}: at or below 1.0 the polish lever IS a baked "
+                    + "value-lift, which §8.2.1 bans. Response modulation must be superlinear.");
 
             static int[][] Table(JsonElement e)
             {

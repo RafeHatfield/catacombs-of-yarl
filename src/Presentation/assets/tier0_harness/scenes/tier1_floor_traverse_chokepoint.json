@@ -1,0 +1,86 @@
+{
+  "name": "tier1_floor_traverse_chokepoint",
+  "_comment": [
+    "ROUND 18 - A PLAYER-CENTERED TRAVERSAL STATION.",
+    "",
+    "RULED (Rafe, 2026-08-29), overturning Ruling 70's execution by \u00a713.9's own second consequence:",
+    "the closure named the WRONG ILLUMINATION. The path signal is keyed to where the player walks,",
+    "and the player CARRIES THE LAMP - so a static scene-wide capture measures the signal precisely",
+    "where its reader never is. Measured on the capture that closed the channel: the tiles the",
+    "traffic field calls busiest sat at illumination 7.1/255, and the whole nine-rung palette",
+    "rendered there into four 8-bit values. That is a true finding about scene-dark delivery and it",
+    "is retained as bible \u00a713.9. It is not a finding about the path.",
+    "",
+    "So the population is corrected. The player STANDS ON THE ROUTE and the route lies inside the",
+    "lamp's delivered pool, which is the only condition under which the question 'does the floor",
+    "know where it goes' was ever going to be answerable.",
+    "",
+    "DESIGN RULING recorded with it: the path is built for LIT LEGIBILITY. Player-as-light-source is",
+    "the normal case, some corridors will carry fixed light later (orc fires), and DARK ILLEGIBILITY",
+    "IS ACCEPTED BY DESIGN. A floor is not required to state its route into the dark.",
+    "",
+    "Geometry, carve list and mocked walls are IDENTICAL to tier1_floor_review.json - only the",
+    "player's station moves, so every comparison through that spec stays valid.",
+    "",
+    "THIS STATION: mid-chokepoint, one tile wide, polished wall to wall because the traffic had no room to spread. The route runs both ways out of the pool."
+  ],
+  "_legibility": [
+    "Derived from the ratified rig (Ruling 56, radius 5.0 tiles) and the sweep recorded in",
+    "tier1_floor_review.json: two tiles delivers ~0.66 and anything past five is ambient.",
+    "The lit point is ON THE ROUTE inside the pool; the dark point is on the same route",
+    "beyond the lamp, which is the condition the design ruling accepts rather than fights.",
+    "A point at 7 tiles lands at py 1026 against a view that ends at 1001 and the probe REFUSED the capture rather than measuring the letterbox - the same class of mistake the parent spec records at its own two tries. Six tiles is the furthest declarable dark."
+  ],
+  "legibility": [
+    {
+      "x": 8,
+      "y": 10,
+      "expect": "lit",
+      "why": "on the route, 2 tiles - inside the delivered pool, where the reader stands"
+    },
+    {
+      "x": 8,
+      "y": 6,
+      "expect": "dark",
+      "why": "the same route at 6 tiles - past the lamp's delivered reach and still inside the dungeon view; dark illegibility accepted by design"
+    }
+  ],
+  "width": 17,
+  "height": 21,
+  "player": {
+    "x": 8,
+    "y": 12
+  },
+  "carve": [
+    {
+      "x0": 5,
+      "y0": 4,
+      "x1": 11,
+      "y1": 9
+    },
+    {
+      "x0": 8,
+      "y0": 10,
+      "x1": 8,
+      "y1": 15
+    },
+    {
+      "x0": 5,
+      "y0": 16,
+      "x1": 11,
+      "y1": 18
+    },
+    {
+      "x0": 4,
+      "y0": 7,
+      "x1": 4,
+      "y1": 7
+    },
+    {
+      "x0": 2,
+      "y0": 6,
+      "x1": 3,
+      "y1": 7
+    }
+  ]
+}

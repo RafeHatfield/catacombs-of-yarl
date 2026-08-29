@@ -858,6 +858,30 @@ DRESSING_KEEP = 0.45            # how much of its dressing a fully worn stone LO
 # FACES ONLY. The additive-remap law — offsets land on stone faces, joints are never touched —
 # governs colour exactly as it governs value. A joint is dark because it is ENCLOSED (§6.5), and
 # enclosure has no hue.
+# ============================ POLISH AS LIGHT RESPONSE ============================
+#
+# RULED after Ruling 70's execution was overturned at the gate: the closure named the wrong
+# illumination, because the path signal is keyed to where the player walks and THE PLAYER CARRIES
+# THE LAMP. A static scene-wide capture measures the signal precisely where its reader never is.
+#
+# This lever is the one that could not have been reached from the wrong population, and it is the
+# physics of the thing being drawn: a stone walked smooth REFLECTS MORE, and reflection is a
+# response to light rather than a property of pigment.
+#
+#   BANNED, still (§8.2.1): baked value-lift. Painting a trodden stone brighter makes it brighter
+#   in the dark too, spends the delta where nobody is, and reads as wear drawn on.
+#   LEGAL: engine response modulation. The mask below feeds a shader that touches ONLY the light
+#   pass, so a polished stone and a rough one are identical in ambient, and the difference grows
+#   FASTER THAN LINEARLY with the light actually delivered.
+#
+# The perceptual-floor law applies to the delivered LIT delta, which is the quantity the corrected
+# captures measure and the quantity §13.9 was always about.
+POLISH_BY_AGE = (0.0, 0.05, 0.22, 0.45)   # reflectivity by wear age; sheltered stone is matte
+POLISH_EXP = 2.0                          # how much faster than linear. 1.0 would BE an albedo
+                                          # change, which is the banned lever wearing this one's
+                                          # name, so the engine asserts it is greater than 1.
+POLISH_GAIN = 1.0
+
 CHROMA_DIR = (-1.0, 0.35, -0.15)          # toward a cool grey-green, before the luminance projection
 CHROMA_BY_AGE = (0.0, 0.0, 0.06, 0.12)    # by wear age; the first two are silent ON PURPOSE — a
                                           # signal that starts at the first hint of traffic is a
@@ -1123,6 +1147,9 @@ def main():
     # is enforced where the tint is used rather than trusted to a number in a file.
     mat["chroma_dir"] = list(CHROMA_DIR)
     mat["chroma_by_age"] = list(CHROMA_BY_AGE)
+    mat["polish_by_age"] = list(POLISH_BY_AGE)
+    mat["polish_exp"] = POLISH_EXP
+    mat["polish_gain"] = POLISH_GAIN
     os.makedirs(a.out, exist_ok=True)
     step = (mat["lum_hi"] - mat["lum_lo"]) / (CF.PALETTE_LEVELS - 1)
 
