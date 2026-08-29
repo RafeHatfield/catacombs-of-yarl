@@ -1,0 +1,102 @@
+{
+ "round": 9,
+ "commit": "080b32ce31647f95a2fea1046b668c63ce879fed",
+ "seats": {
+  "F1": {
+   "Q1": "Cut stone paving \u2014 rectangular flagstones of varying width laid in courses, dark mortar joints between them. Grey stone under a warm lantern; no other material anywhere on the walkable ground.",
+   "Q1_WHY": "With the vignette flattened, every slab is a discrete rectangle with a hard 2px darker line on all four sides. Slab widths vary (I measure faces from ~14px up to ~90px wide) but course heights are constant per row, and vertical joints stagger between rows \u2014 that is laid masonry paving, not poured, not packed earth, not tile. What I can't tell you is *which* stone: the slab interiors are flat fills. At 6\u00d7 (region x 330\u2013520, y 180\u2013300) a slab face is one value with a faint gradient and nothing else \u2014 no grain, no aggregate, no speckle, no pitting. So \"stone\" comes from the joint pattern alone, not from the surface.",
+   "Q2": "South, down the corridor mouth at x\u2248375\u2013440 below y=398.\n\nAnd I have to give you the honest version: **nothing about the ground influenced that.** I picked it because there is a gap in the walls there and nowhere else obvious. I went back and looked specifically for ground evidence \u2014 a worn lane, a polished centre, a scuff run, mortar loss along a traffic line, anything the four-hundred-year garrison would have ground into the flags \u2014 and there is none. The darker slabs at (490\u2013640, y 205\u2013240) and the lighter run at (200\u2013320, y 155\u2013175) don't chain into a direction; they're isolated value swaps. The floor is directionally silent. In a game where the floor is most of what you see, that's the finding.",
+   "Q3": "Almost nothing. It's cracked and it is otherwise untouched \u2014 no wear, no dirt, no debris, no repair, no history. It reads as a floor that was built cracked, then left alone in a clean room.",
+   "Q3_WHY": "Three specific reads.\n\nThe cracks are real and they're the best thing here \u2014 I count 23 distinct strokes over 10px in both axes, individually drawn, sweeping across the room (the long arc from ~(250,290) curving to ~(470,395), the X crossing at ~(430,320)). But they're 1px, constant width along their whole length, uniform value, and they cross mortar joints without deflecting or widening. Nothing is displaced on either side. No spalling where they terminate. They sit *on* the floor rather than *in* it.\n\nThe damage vocabulary is one shape. A single 4\u00d74 wedge:\n\n```\n#...      ####      ...#      ####\n#...      ..##      ...#      ##..\n##..      ...#      ..##      #...\n####      ...#      ####      #...\n```\nFour rotations, **138 instances**, and that is the complete inventory of chipping on this entire floor.\n\nAnd the room is spotless. Zero rubble, zero dust drift into the joints, zero standing damp, zero stains, no threshold or kerb where the paving meets the wall \u2014 it just stops at a straight line. Nothing of the orcs: no pinned plate, no roped-down board, no packed timber shim, no patch of any kind. For a place in continuous heavy use that nobody has ever cared for, the ground carries no record of either the use or the neglect.",
+   "Q4": "Yes \u2014 two things, and they're the same thing.\n\n**The wedge stamp.** Those 138 instances aren't scattered. Every single one is locked to a horizontal mortar joint: I get them at y = 43/51, 75/83, 117/125, 139/147, 165/173, 203/211, 235/243, 267/275, 289/297, 331/339, 373. Each value is exactly 5px above or 3px below a joint. Never mid-slab, never on a vertical joint, never off-grid. So the room has ten horizontal *ribbons* of identical little arrowheads. Look at (940,275) and (1040,140) and (1040,200) in my 6\u00d7 crop of x 330\u2013520 / y 180\u2013300 \u2014 the same wedge, light and dark, hugging the joint line, not attached to any stone corner. Once you see one you see all ten rows, and they read as UI ticks, not damage.\n\n**The unbroken courses.** Every horizontal mortar line runs wall-to-wall without a single break. I measured it: at y = 48, 80, 144, 208, 272, 294, 336 the joint is dark across **100%** of the 456px width; the weakest, y=378, is still 90.8%. Eleven full-width stripes. Only the vertical joints stagger. The result is a striped room, and the wedge ribbons sit on the stripes and reinforce them. My eye rides the horizontals and never crosses the room.",
+   "Q5": "**Repeated.** The slab layout itself is genuinely varied \u2014 I ran autocorrelation on the tile value field in both axes and found no periodic peak at any lag from 8 to 200px, so no tileset is literally tiling. But variety in the layout doesn't save it, because the *detail* is four sprites at 138 placements on a fixed grid offset. A surface that was made has damage where damage happens \u2014 at corners, at edges people tread, where water sits. This one has damage where the algorithm put it: 5px above the joint, every time.",
+   "Q6": "**YES.** It's clean, readable, correctly lit, the palette holds together under the lantern, and the crack work is above average for the category.\n\nMerely competent. Not genuinely good. Genuinely good would mean the ground told me something \u2014 where to go, who's been here, what this place does to the people filed through it. This ground tells me it is grey and rectangular. In a game viewed from directly above, where the floor is 70% of every frame, competent is a structural problem rather than an acceptable baseline.",
+   "CULL": "All damage snaps to a grid \u2014 138 copies of one 4\u00d74 wedge, every one glued to a joint.",
+   "FLIP LIST": "- Kill the grid lock: re-place the wedge chips at actual stone corners and along broken edges, off the \u00b15px joint offset, and add at least four more chip silhouettes at differing sizes so no ribbon of identical marks forms.\n- Break the courses: interrupt every full-width horizontal joint at 2\u20133 points per row with an oversized slab, a sunken slab, or a missing one, so the eye can cross the room instead of riding stripes.\n- Put texture inside the slab faces \u2014 2\u20133 value steps of grain or pitting per face \u2014 so a slab is a stone rather than a flat fill with a border.\n- Give the cracks physical consequence: widen them at the mid-span, drop the slab a value on one side, and spall the mortar where a crack meets a joint.\n- Add one traffic read through the room \u2014 a lighter polished lane from the south corridor mouth (x\u2248375\u2013440) into the room, with mortar worn shallow along it \u2014 plus at least one orc repair on the ground itself: a pinned plate or a roped-down timber over a broken flag.\n\nThe through-line on all five: this floor currently has no memory. Everything above is a way of putting four hundred years back into it, and the crack work already proves the artist can draw \u2014 it just isn't being asked to mean anything yet.\n\n*Model used: claude-opus-5[1m]*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Kill the grid lock: re-place the wedge chips at actual stone corners and along broken edges, off the \u00b15px joint offset, and add at least four more chip silhouettes at differing sizes so no ribbon of identical marks forms.",
+    "Break the courses: interrupt every full-width horizontal joint at 2\u20133 points per row with an oversized slab, a sunken slab, or a missing one, so the eye can cross the room instead of riding stripes.",
+    "Put texture inside the slab faces \u2014 2\u20133 value steps of grain or pitting per face \u2014 so a slab is a stone rather than a flat fill with a border.",
+    "Give the cracks physical consequence: widen them at the mid-span, drop the slab a value on one side, and spall the mortar where a crack meets a joint.",
+    "Add one traffic read through the room \u2014 a lighter polished lane from the south corridor mouth (x\u2248375\u2013440) into the room, with mortar worn shallow along it \u2014 plus at least one orc repair on the ground itself: a pinned plate or a roped-down timber over a broken flag."
+   ],
+   "mapping": {
+    "A": "scene_ashlar_r9.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r9_F1_transcript.txt"
+  },
+  "F2": {
+   "Q1": "Cut sandstone flagstones, mortared, laid in courses like brickwork. Sandy tan under the torch, cold brown out at range.",
+   "Q1_WHY": "The seam grid is unambiguous. Horizontal seams sit at y \u2248 48, 79, 123, 146, 167, 208, 241, 272, 294, 337 \u2014 courses about 21\u201322 px tall, with stones roughly 43 px long, and vertical joints staggered course to course (clearest in the 4\u00d7 center zoom around x 255\u2013455, y 120\u2013300). Stones come in two lengths, full and half, exactly as coursed masonry does. The seams are drawn as recessed dark lines, not painted grid lines, and the stone faces are a soft warm ochre with a fine dither in them. Nothing about it reads as packed earth, cut bedrock, or wood.",
+   "Q2": "South, down the corridor mouth at the bottom of the room (x \u2248 380\u2013450). **Nothing about the ground influenced that.** I picked it off the architecture \u2014 it's the one opening whose shape I can actually read.\n\nI went looking for a ground cue and there isn't one. No wear path, no polished lane, no scuffing where feet would go, no debris pushed to the sides, no drag marks, no threshold stone, no directional grain. The flagstones by the south mouth (x 380\u2013450, y 340\u2013390) are the identical material, identical tone jitter and identical damage density as the flagstones at the far west edge (x 185\u2013260, y 200\u2013300). A room that has been in continuous heavy use since before records began has no traffic written on it anywhere. If you turned the walls off, I could not tell you which way anyone has ever walked.",
+   "Q3": "It's been shot through with holes and scribbled on, evenly, everywhere, by nothing in particular.\n\nThere are roughly twenty punched-through black holes across a floor of about 92 tiles \u2014 one every four or five tiles \u2014 plus a dense mesh of thin cracks in two colours running over everything. It is comprehensively damaged and completely uninformative. Nothing has *happened* to it in the sense of an event: there's no impact centre, no spall radiating from anything, no collapse edge, no subsidence, no patch, no repair. For a floor held by a company that repairs things endlessly with rope, pins, hide and salvaged timber, there is not one pin, plank, or rope on it. Nobody has ever touched this ground.",
+   "Q3_WHY": "What I'm reading specifically:\n\n- The holes are all one size class. Measured bounding boxes: 20\u00d722, 22\u00d720, 18\u00d724, 22\u00d720, 18\u00d720, 20\u00d718, 20\u00d716, 18\u00d716, 16\u00d718, 18\u00d714. Every hole in the room is between 14 and 24 px across \u2014 about half a flagstone. No small pits, no big collapses, nothing merged, nothing partial at an edge.\n- Their spacing is even. There is no cluster and no clear ground. They read as scatter density, not as consequence.\n- Every hole carries a complete pale ring around its full circumference. Look at the two holes at (y 190, x 580) and (y 226, x 613), out on the dark right edge \u2014 they sit in near-blackness with a bright unbroken rim on all sides, including the side facing away from the torch. That's a baked-in highlight, not lit geometry.",
+   "Q4": "Yes. Two things, and the second one is the serious one.\n\n**The pale cream scratch strokes.** They cover about 5% of the floor (9,144 pixels above local background). They are all the same 1 px weight and the same cream hue, and they wander freely across flagstone seams as though the stones weren't there. Worse, the same stroke shape keeps coming back \u2014 a comma/hook with a short tail. I count it at (y 247, x 462), (y 245, x 522), (y 307, x 492), (y 307, x 522) in the bottom-right alone, and again in the knot at (y 230\u2013300, x 280\u2013360) where a dozen of them bundle together and stop reading as stone damage entirely. At that density and that colour they read as pale hairs or worms lying on the floor, not as cracks in it. Cracks are dark. My eye kept going back to that knot thinking something was on the ground there.\n\n**The pale layer does not dim.** This is measurable. Sampling pale stroke pixels against surrounding floor by distance from the torch at (406, 180):\n\n| distance | floor luminance | stroke luminance | ratio |\n|---|---|---|---|\n| 0\u201360 px | 112.7 | 158.5 | 1.41\u00d7 |\n| 60\u2013110 | 100.0 | 140.8 | 1.41\u00d7 |\n| 110\u2013160 | 75.1 | 119.1 | 1.59\u00d7 |\n| 160\u2013210 | 49.5 | 89.7 | 1.81\u00d7 |\n| 210\u2013300 | 25.7 | 56.4 | **2.19\u00d7** |\n\nThe absolute gap holds near-constant (+46, +41, +44, +40, +31) while the floor itself falls to a quarter of its lit value. The scratch layer is being added *after* the light, so the further into the dark you go the more it shouts. In the far corner it is the highest-contrast thing on screen. The one place the room should be giving me nothing is where the damage is loudest \u2014 my eye is pulled out to the black edges instead of to the lit ground I can act on.",
+   "Q5": "**Made** \u2014 but assembled from a stamp library, not authored.\n\nIt genuinely does not tile. I ran shifted mean-absolute-difference across the floor after high-passing out the lighting gradient, horizontal and vertical, at every offset from 3 to 90 px: no periodic minimum, monotonic rise. And the hole decals are not literal copies \u2014 best pairwise shape agreement between any two is IoU 0.79, median across all pairs 0.545. Stone lengths vary. So there's no repeated bitmap here and I won't call one.\n\nWhat it is instead is a base masonry pattern with two decal sets scattered over it by an even random distribution. That's why the room has no places in it. Every square metre carries the same statistical dose of hole and crack. A made floor has a corner nobody goes to and a lane everybody does.",
+   "Q6": "YES. The masonry construction is correct, the running bond is right, the torch falloff is handled, it's legible at phone size.\n\nMerely competent. Not genuinely good. It is a well-built floor with nothing to say \u2014 it describes a material, not a place, and it does not survive the fiction it's carrying. \"Administered, in continuous heavy use, never cared for, held for four hundred years by soldiers who patch everything\" should be readable off the ground alone, and none of it is. What I can read off the ground is: sandstone, damaged evenly.",
+   "CULL": "Damage is uniform decorative scatter \u2014 the ground records no traffic, no event, and no repair.",
+   "FLIP LIST": "- Multiply the crack and hole-rim layer by the light instead of adding it \u2014 at 210+ px from the torch the strokes sit at 2.19\u00d7 local floor and glow out of the dark; they must fall with it.\n- Recolour the cracks dark and let the light do the highlighting: a pale lip only on the torch-facing side, nothing on the far side. Kill the free-floating cream strokes entirely \u2014 they read as hairs, not fissures.\n- Break the hole size class. Every hole in the room is 14\u201324 px; add sub-tile pitting and at least one multi-tile collapse with a broken edge and spall radiating from it, so damage has a cause and a scale.\n- Author traffic: a lane of worn, seam-softened, tone-lifted flagstone running from the south mouth (x 380\u2013450) through the room, with holes and debris cleared out of it and pushed to the flanks. Right now the ground by the exit is indistinguishable from the ground at the west wall.\n- Put the orcs on the floor: two or three driven pins, a salvaged plank bridging a hole, rope lashing across a seam \u2014 crude, on top of the stone, breaking the coursing. One or two per room, not scattered.\n\n---\n\nModel: Claude Opus 5 (1M context).",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Multiply the crack and hole-rim layer by the light instead of adding it \u2014 at 210+ px from the torch the strokes sit at 2.19\u00d7 local floor and glow out of the dark; they must fall with it.",
+    "Recolour the cracks dark and let the light do the highlighting: a pale lip only on the torch-facing side, nothing on the far side. Kill the free-floating cream strokes entirely \u2014 they read as hairs, not fissures.",
+    "Break the hole size class. Every hole in the room is 14\u201324 px; add sub-tile pitting and at least one multi-tile collapse with a broken edge and spall radiating from it, so damage has a cause and a scale.",
+    "Author traffic: a lane of worn, seam-softened, tone-lifted flagstone running from the south mouth (x 380\u2013450) through the room, with holes and debris cleared out of it and pushed to the flanks. Right now the ground by the exit is indistinguishable from the ground at the west wall.",
+    "Put the orcs on the floor: two or three driven pins, a salvaged plank bridging a hole, rope lashing across a seam \u2014 crude, on top of the stone, breaking the coursing. One or two per room, not scattered."
+   ],
+   "mapping": {
+    "A": "scene_ashlar_plant_r9.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r9_F2_transcript.txt",
+   "plant_caught": false,
+   "plant_words_hit": []
+  }
+ },
+ "captures": {
+  "scene_ashlar_plant_r9.png": "1a4f4903d1de607873f0c014128969ad42f63c45c395f805ee537dc1e457d7a9",
+  "scene_ashlar_r9.png": "572878d80393786dbb69fdf0193cbd8b8ad12569da715362c51e40907e0dd52b"
+ },
+ "plant_seat": "F2",
+ "round_void": true,
+ "plant_words_declared": [
+  "cobweb",
+  "cobwebbing",
+  "web",
+  "webbing",
+  "collapse",
+  "collapsed",
+  "caved",
+  "ruin",
+  "ruined",
+  "rubble",
+  "moss",
+  "mossy",
+  "overgrown",
+  "lichen",
+  "punctured",
+  "puncture",
+  "voids",
+  "blown",
+  "shot at",
+  "eaten",
+  "holed"
+ ],
+ "law": "LOOP-PROCESS \u00a74: if the critic does not catch the plant, the round is VOID and its findings are not read."
+}

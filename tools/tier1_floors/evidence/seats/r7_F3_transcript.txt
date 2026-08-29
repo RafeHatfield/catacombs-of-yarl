@@ -1,0 +1,56 @@
+Measured before writing. Numbers below are from the image itself.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut sandstone flags — rectangular slabs of one honey-brown stone, laid in courses with thin mortar joints. Dry, indoor, quarried. Not natural rock, not tile, not brick.
+
+**Q1_WHY:**
+Slabs are axis-aligned rectangles, 8–30 px wide, with 2 px dark joints between them (measured across the lit strip at y=30–70: joint columns at x=199, 213, 229, 237, 267, 283, 293, 301, 331, 347, 369, 389, 405, 413, 433, 453, 469, 491, 511, 557). Corners are square and unbroken. Surface is matte with sparse 1–2 px darker flecks on maybe a third of the slabs — reads as grain, not damage. Colour is the tell: across the whole lit floor, hue runs 26.7°–29.3° and saturation 0.48–0.56. That is one stone, one quarry, one bed. Only value changes, and that's the torch.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, into the dark gap at x≈365–405 below y≈400.
+
+Nothing about the ground influenced that, and I want to be plain about it: I picked the direction because it is the only opening in the wall silhouette. I read the *wall*. The floor at the figure's feet (≈405,175) is identical in all four directions — same slab size, same colour, same speckle density, same joint weight. There is no worn track, no polish, no scuffed lane, no threshold stone, nothing that says people go this way and not that way. In a place that has been a filing system in heavy use since before records begin, the ground should be the first thing telling me where the traffic goes. It tells me nothing.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Almost nothing. It is intact and swept. Every slab is present, square, and level with its neighbours. No cracks, no chips, no spalling, no lifted or sunken flags, no missing stone, no infill, no patch, no repair of any kind — no rope, no pins, no timber, no hide. Nothing has ever been dragged across it, dropped on it, or worn into it.
+
+The complete inventory of events on this surface is four items:
+- a dark irregular splat at ≈(358, 256), about 16 px across, straddling a vertical joint
+- a second, smaller dark mark at ≈(205, 283)
+- three or four soft pale smudges — ≈(250, 150), ≈(430, 140), ≈(300, 175) — which read as light bloom more than stain
+- the flecking, which is uniform grain, not incident
+
+**Q3_WHY:**
+Every horizontal joint is a single ruled line running the full width of the room. I checked twelve of them — y = 15, 47, 79, 121, 143, 169, 207, 240, 273, 293, 336, 379 — and each is continuous over 73–100% of the lit width. Not one slab ever spans two courses. Not one course ever breaks or steps. The top three courses are on an exact 32 px pitch. Slab *widths* vary; slab *heights* never do within a course. That is a floor that was ruled, not laid — and a floor that was ruled and then never touched again.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Two things.
+
+The horizontal joint lines. They are the strongest signal in the frame and they are perfectly straight, perfectly parallel, all the same 2 px width and the same darkness from x=200 to x=620. My eye rides them left-to-right instead of resting on the scene. Worst at y=143, y=169 and y=207 — three ruled lines in a 64 px band directly beside the figure.
+
+The splat at (358, 256). It is the only high-contrast dark shape anywhere on the ground, so in a floor this uniform it becomes a landmark. It pulls harder than the character does in the lower half of the frame, and it does not mean anything.
+
+**Q5: MADE, OR REPEATED?**
+Neither, exactly — and that is the problem. It doesn't tile: I ran autocorrelation across the floor region and there is no periodic peak in x at any offset from 1 to 44, and only a weak 0.068 bump at dy=32 which is just the course pitch. So it isn't a stamped tile grid.
+
+But it doesn't read as *made* either. It reads as **generated** — a rectangle-packing routine given a course height and a width range, filled with one flat colour, dusted with random noise, and lit. Made surfaces carry history: this stone was cut later, this one cracked and was shimmed, this corner is rounded because forty generations turned on it. There is no such record here. The variation is statistical, not causal.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES. It is clean, legible at phone size, tonally coherent with the lighting, and it doesn't fight the character sprite.
+
+Merely competent or genuinely good? **Merely competent.** It is a correct floor. It is not a floor from this place. A stranger shown this could not tell me it belongs to an administered underworld in continuous use for centuries; they'd say "sandstone dungeon." The fiction is doing no work here and the floor is giving the fiction nothing back.
+
+**CULL:**
+Four hundred years of unrepaired heavy use, and the stone is unworn, unbroken, unpatched — reads new.
+
+**FLIP LIST**
+- Break the ruled courses: make individual slabs span two courses in at least a dozen places, and step the horizontal joints so no line crosses the full room.
+- Add a traffic lane through the room on the axis between the two exits — slabs visibly smoother, joints half-filled with packed grime, edges rounded — so the ground says which way people go.
+- Replace 5–10% of slabs with stone of a different hue (grey, iron-stained red) — visible patching, later cuts, mismatched sizes — so the floor is not one quarry.
+- Put orc repair on the ground: a driven pin holding a split flag, a timber board over a broken slab, a rope-lashed patch. At least three instances, none matching.
+- Break at least four slabs outright — cracks running across the stone and through the joint, one corner spalled away, one flag sunk below its neighbours casting a shadow line.
+
+---
+*Model: Claude Opus 5 (1M context)*

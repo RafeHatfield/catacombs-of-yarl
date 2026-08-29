@@ -1,0 +1,49 @@
+{
+ "commit": "4ca745a14f2ccc9984a186c7355251af43aafaf4",
+ "instrument": "src/Presentation/Map/FloorVariantCensus.cs",
+ "plant": "TileThemeConfig.PositionHash restored to the linear body that shipped",
+ "law": "LOOP-PROCESS \u00a74.1 \u2014 the plant carries the defect on the axis the lever claims; a control that only asks 'did anything change?' certifies connectivity and reports it as efficacy.",
+ "arms": {
+  "fixed": {
+   "cells": 74,
+   "distinct": 50,
+   "max_mult": 5,
+   "row": 0.086,
+   "col": 0.086,
+   "diag": 0.106,
+   "anti": 0.087,
+   "worst": 0.106,
+   "line": "variant census: cells=74 distinct=50 max_multiplicity=5  step_top2: row=0.086(5/58) col=0.086(5/58) diag=0.106(5/47) anti=0.087(4/46)  worst_top2=0.106"
+  },
+  "linear": {
+   "cells": 74,
+   "distinct": 57,
+   "max_mult": 3,
+   "row": 1.0,
+   "col": 1.0,
+   "diag": 1.0,
+   "anti": 1.0,
+   "worst": 1.0,
+   "line": "variant census: cells=74 distinct=57 max_multiplicity=3  step_top2: row=1.000(58/58) col=1.000(58/58) diag=1.000(47/47) anti=1.000(46/46)  worst_top2=1.000"
+  }
+ },
+ "checks": [
+  {
+   "check": "every axis saturates under the linear hash (top2 = 1.000)",
+   "passed": true
+  },
+  {
+   "check": "no axis saturates under the fixed hash",
+   "passed": true
+  },
+  {
+   "check": "the fixed arm sits within an order of magnitude of chance (0.020)",
+   "passed": true
+  },
+  {
+   "check": "the two arms are not the same measurement",
+   "passed": true
+  }
+ ],
+ "all_passed": true
+}

@@ -1,0 +1,61 @@
+## Q1: WHAT IS THIS FLOOR MADE OF?
+Large sawn sandstone slabs, laid in running bond like brickwork, with thin dark mortar joints. Dry, sandy, one colour throughout.
+
+## Q1_WHY
+Rectangular units roughly 30px tall and 25–60px wide, staggered course to course, each with a flat face and a soft top-to-bottom value gradient — that's cut block, not rubble, not packed earth, not tile. The joints are a uniform 2–3px dark line, so the units are set tight rather than fitted dry.
+
+The material read is weakened by the colour. I sampled the floor rectangle (x192–636, y12–396): 2,696 unique colours, but every dominant one sits on the *same* hue ramp — `[3,2,1]`, `[43,31,22]`, `[93,67,44]`, `[133,95,60]`, `[186,132,81]`. R:G:B holds at roughly 1 : 0.71 : 0.45 from black to highlight. There is not one cool pixel, one grey pixel, one mineral stain, one slab that is a different stone from its neighbour. So it reads as sandstone by default — because sepia is the only thing it can read as. It could equally be sandstone, clay brick, or dried mud; the palette refuses to say.
+
+## Q2: WHICH WAY WOULD YOU WALK, AND WHY?
+South, down the corridor at x≈378–440 that leaves the room at y≈400.
+
+**And I chose it for geometry, not ground.** Nothing about the surface influenced me. I want to be exact about this: I compared the floor east of the figure, west of it, and north of it, and they are the same floor. Same bond, same slab size, same joint width, same mark density, same tone. There is no worn lane, no polished centre, no scuffed threshold, no debris drift, no direction of any kind. Four hundred years of a garrison walking this room and the ground records none of it.
+
+The corridor won because it is narrower and darker, which is architecture. The ground told me nothing.
+
+## Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?
+It has been shot at, or something has been eating holes in it. Fifteen black voids, all of them the same size — I measured eleven of the unobstructed ones and they run 224–292 px in area, so 16–19px across, every one. Between them, a scatter of cracks and a scatter of bright scratches.
+
+What has *not* happened: nobody has walked on it, nothing has been dragged across it, nothing has settled, nothing has been repaired. There is no rope, no pin, no timber, no patch — none of the endless salvage repair the fiction says defines this place. The damage is present; the use is absent.
+
+## Q3_WHY
+The holes (e.g. x348,y246; x210,y112; x528,y250) are flat `#080603` octagonal blobs with hard edges, zero interior gradient, no lip, no slab thickness, no rubble at the bottom. At 10× they are ink splats with loose peach specks orbiting them like crumbs. They punch out of the picture rather than sinking into it.
+
+The dark zigzag cracks are the one genuinely good element on this floor: I found 110 of them and 108 are pixel-unique. They wander, they cross joints, they don't repeat. Somebody drew those.
+
+Every joint in the room is the same width and the same darkness. Nothing has spalled, nothing is proud of its neighbour, no corner is chipped. A floor in continuous heavy use since before records has zero settlement.
+
+## Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?
+Three things.
+
+**The pale diagonal streaks.** Cream-coloured strokes, brighter than the lit stone around them, all leaning the same way. I isolated the bright marks: of 71 elongated ones, 33 fall in the 45°–89° band — nearly half the floor's brightest detail rakes in one direction. Densest in x223–370, y115–330. They cross mortar joints as if the joints aren't there. They don't read as anything: too bright for cracks, too straight for wear, too uniform for damage. They read as brush strokes on a photo.
+
+**They are also literally copy-pasted.** 83 bright marks, 59 distinct shapes. One 6×6 stroke appears **seven times** — (263,129), (293,139), (369,139), (337,177), (553,193), (315,203), (347,299). A 4×14 stroke appears **five times** — (307,115), (341,127), (497,131), (561,193), (537,289). A 2×6 five times, a 6×8 four times. Pixel-for-pixel identical, no rotation, no mirror, no recolour. Three copies of the same mark sit within 100px of the figure.
+
+**A vertical column of four holes at x≈210–215**, at y=110, 160, 225 and 307. Four of the fifteen holes stacked in a five-pixel-wide column running two hundred pixels down the left edge, each sitting in roughly the same spot inside its slab. Once I saw it I couldn't stop seeing it.
+
+Minor, but it kept catching me: a hard-edged filled triangle at roughly (467, 220), sitting in the middle of a clean slab. It reads as a UI glyph that fell onto the ground.
+
+## Q5: MADE, OR REPEATED?
+**Repeated.** Not arguable — measured. Nine bright-mark shapes recur, one of them seven times, in a single 750×600 frame. Fifteen holes of one diameter. One hue ramp with no local variation. A running bond with no border course, no threshold, no orientation.
+
+The dark cracks are the exception and they prove the point: they were *made*, they're all unique, and they sit in the middle of a surface that otherwise stamps.
+
+## Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?
+**YES.** It would pass without comment in a mid-tier roguelike.
+
+**Merely competent.** The lighting is the only thing on this floor doing real work — I traced brightness against distance from the figure and it falls off cleanly and monotonically, 134 → 41 across a ~200px radius, centred correctly. That's honest. Everything else is a texture that fills the space. It has no point of view about being a floor in a filing system for souls, and it contradicts its own fiction: it is damaged but unused, and unrepaired in a place defined by four centuries of ugly repair.
+
+One thing that is a genuine defect and not just a taste call: the hole cores sample at `[8,6,3]` and the unlit corridor floor at (400,470) samples at `[12,11,12]`. **A pit and unlit ground are the same value.** Outside the light radius a hole in the floor is invisible. That is a readability failure on a walkable surface, not an aesthetic one.
+
+## CULL
+Bright surface marks are stamped copies — one 6×6 stroke appears seven times in a single screen.
+
+## FLIP LIST
+- Delete the pale cream streaks entirely and redraw as unique marks, or drop them below the lit-stone value so they stop being the brightest thing on the floor; no shape may appear twice on screen.
+- Give the holes an interior: a lit near lip, a dark far lip keyed to the figure's light, visible slab thickness, and rubble on the floor of the pit. Vary diameter across at least three sizes, and break up the x≈210 column of four.
+- Raise the hole cores above the unlit-floor value (or add a rim that survives darkness) so a pit stays visible past the light radius.
+- Push hue apart across slabs — cool grey, iron stain, damp green-black in low spots — so at least a third of slabs read as different stone from their neighbours. Right now the entire floor is one sepia ramp.
+- Add the use and the repair the place is built on: a worn pale lane running through the traffic axis, settled and canted slabs with uneven joints, and at least one crossing patched in salvaged timber, driven pins and rope.
+
+**Model:** claude-opus-5[1m]

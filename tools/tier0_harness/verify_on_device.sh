@@ -27,16 +27,29 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 DEVICE="${TIER0_DEVICE:-}"
 BUNDLE="${TIER0_BUNDLE_ID:-com.rafehatfield.catacombsofyarl.tier0}"
 OUT="$ROOT/tools/tier1_floors/evidence"
+CHECK_ONLY=""
 
 while [ $# -gt 0 ]; do
 	case "$1" in
 		--device) DEVICE="$2"; shift 2 ;;
 		--bundle) BUNDLE="$2"; shift 2 ;;
 		--out)    OUT="$2"; shift 2 ;;
+		# --check-log runs THE CHECKS ONLY, against a log already on disk, and touches no device.
+		# It exists so the checks can be shown to FAIL — bible §13.5, no instrument's pass counts
+		# until it has demonstrated it can fail — WITHOUT copying their expressions into a test.
+		# A test that reimplements the thing it tests proves the reimplementation.
+		--check-log) CHECK_ONLY="$2"; shift 2 ;;
 		*) echo "unknown arg: $1" >&2; exit 2 ;;
 	esac
 done
 
+if [ -n "$CHECK_ONLY" ]; then
+	LOG="$CHECK_ONLY"
+	[ -f "$LOG" ] || { echo "no such log: $LOG" >&2; exit 2; }
+	echo "== CHECKS ONLY, against $LOG (no device touched)"
+fi
+
+if [ -z "$CHECK_ONLY" ]; then
 # DEVICE RESOLUTION FROM STRUCTURED OUTPUT, NOT FROM COLUMNS.
 #
 # The first version parsed `devicectl list devices` with awk, taking $(NF-2) as the identifier.
@@ -123,6 +136,8 @@ echo "== the three identifiers, from the handset"
 grep -m1 "BUILD IDENTITY" "$LOG" || echo "  (no BUILD IDENTITY line — build predates the stamp)"
 echo "  bundle (device): $BUNDLE"
 
+fi   # end of the device interaction
+
 echo ""
 echo "== did it boot into the right scene, with the rig live?"
 FAIL=0
@@ -134,11 +149,48 @@ check() {   # a name, and the pattern that proves it
 		FAIL=1
 	fi
 }
+# THE THEME CHECK USED TO NAME A DIRECTORY, AND THE DIRECTORY MOVED.
+#
+# It read `tile_theme_config=.*tier1_floors`, which was true when the tier-one family lived in
+# `assets/tier1_floors/`. The course-aligned ashlar family lives in `assets/tier1_ashlar/`, so a
+# correct build failed this check while the log plainly showed the right theme in force.
+#
+# The temptation is to widen the pattern until it passes. That is relaxing a test after reading a
+# result, and it is the same error as deriving a plant's word list from a transcript. What follows
+# is STRICTER than what it replaces, in two ways it could not manage before:
+#
+#   CONSISTENCY. The theme and the floor family must name the SAME directory. A hardcoded path
+#   could never catch a build that laid one family's tiles under another family's theme — the
+#   failure that actually costs a gate, because it looks entirely plausible.
+#
+#   THE FLOOR ACTUALLY LAID. `missing=0` and all three cross-checks green, ON THE HANDSET. The old
+#   check could not see whether a single tile had been placed, let alone whether the engine
+#   reproduced the composer's bond arithmetic, its material arithmetic and its finished pixels.
 check "booted the review scene"        "corridor scene: tier1_floor_review"
-check "tier-one floor theme in force"  "tile_theme_config=.*tier1_floors"
 check "incident overlays attached"     "floor overlays: cells="
 check "rig panel constructed"          "\[Tier1\] rig:start:"
 check "no losable state"               "losable-state check:"
+check "floor family laid, every cross-check green" \
+      "floor: laid=[1-9][0-9]* .*missing=0 .*edge_check=[0-9]*/OK stone_check=[0-9]*/OK paint_check=[0-9]*/OK"
+
+# `|| true` ON BOTH, AND IT IS NOT DECORATION. Under `set -euo pipefail` a grep that matches
+# nothing fails, and a failing command substitution ABORTS THE SCRIPT — so the single likeliest
+# real failure, the floor never being laid at all, exited 1 with a bare shell error instead of
+# reporting NOT VERIFIED. An abort and a verdict are different things, which is the same
+# distinction this script already draws between "could not ask the device" and "the device said
+# no". Caught by the failability test, not by reading the code.
+THEME_DIR="$(grep -o 'tile_theme_config=res://[^ ]*' "$LOG" 2>/dev/null | head -1 \
+	| sed 's#.*/assets/\([^/]*\)/.*#\1#' || true)"
+FAMILY_DIR="$(grep -o 'floor: laid=.*manifest=res://[^ ]*' "$LOG" 2>/dev/null | head -1 \
+	| sed 's#.*/assets/\([^/]*\)/.*#\1#' || true)"
+if [ -n "$THEME_DIR" ] && [ "$THEME_DIR" = "$FAMILY_DIR" ]; then
+	echo "  OK    theme and floor family agree   ($THEME_DIR)"
+else
+	echo "  MISS  theme and floor family disagree   (theme=${THEME_DIR:-none} family=${FAMILY_DIR:-none})"
+	echo "        A build laying one family's tiles under another family's theme looks entirely"
+	echo "        plausible in a screenshot. That is why this is checked and not assumed."
+	FAIL=1
+fi
 
 echo ""
 grep -m1 "floor overlays: cells=" "$LOG" | sed 's/^/  /' || true

@@ -1,0 +1,113 @@
+---
+
+## Q1: WHAT IS THIS FLOOR MADE OF?
+
+Cut sandstone flags — dry, warm, sawn-square, set in a running bond with a recessed mortar joint. Not granite, not slate, not anything cold or wet.
+
+**Q1_WHY:** Every floor pixel sits at hue 28.4° ± 1.2° with saturation 0.54 ± 0.04 (sampled across the whole lit area, x180–628 / y14–400). That is one pigment. The only variation in the entire floor is value — p5 to p95 runs 0.25→0.69 brightness. A single warm-ochre hue at that saturation reads as sandstone or adobe. The slabs are rectangles in a coursed bond (visible at 1:1 across x300–560 / y80–300), joints ~3–4px and recessed dark, corners square and unbroken. Nothing on the face suggests bedding planes, cleavage, or grain direction, so it is a sedimentary block, sawn.
+
+## Q2: WHICH WAY WOULD YOU WALK, AND WHY?
+
+South, toward the corridor mouth at x378–432, y400+.
+
+Nothing about the ground influenced that. I picked it because it is the only opening the light reaches — the walls stop and a gap continues. I checked the slabs in the corridor mouth (x378–432, y400–440) against the slabs the figure is standing on (x380–430, y160–200) and they are the same: same hue, same mark density, same joint treatment, same value once you correct for the torch falloff. The floor did not vote.
+
+## Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?
+
+It has been scuffed, evenly, everywhere, once — and nothing else. There is no history in it. No traffic, no spill, no repair, no settling, no place where something was dragged or stood or dropped. It has damage but no events.
+
+**Q3_WHY:** I binned relative surface detail (local contrast normalised against the local mean, so the vignette can't fake it) into 16×16 cells across the whole floor. The map saturates at the top of the scale in nearly every cell. There is no low-detail region anywhere inside the light radius — not at the corridor mouth, not in the room centre, not against the walls. Wear that is uniform to that degree is not wear; it is a texture.
+
+And the damage that exists is only ever one kind: shallow surface abrasion. Slab corners are square everywhere — check (445,215), (520,145), (300,255) — nothing is rounded, chipped, dished, or lipped. Joints are full and crisp along their whole length; nothing has been re-pointed, nothing has spalled at an edge, no slab sits proud of or below its neighbours. For a place in continuous heavy use with a garrison repairing it by hand, there is not one repair on this floor.
+
+## Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?
+
+Two things, and both are problems.
+
+**The blank slabs.** Roughly eight slabs inside the lit core carry no marks at all and are filled flat at almost exactly the mortar value: (530,214)–(595,235), (517,87)–(548,116), (372,125)–(405,141), (477,179)–(500,200), (455,217)–(491,231), (340,304)–(362,328), and the large one at (200,293)–(280,336). At 1:1 they are the highest-contrast features on the entire floor — dark rectangles that pull the eye off the figure. But they carry no information. They are not holes, not different stone, not shadow: I magnified (360,100)–(440,150) to 6× and the slab is a solid fill with no interior edge and no falloff. They read as slabs that missed their texture pass, and the eye keeps going back to them because they are the only large shapes present.
+
+**The arcs.** Three or four long, thin, gently-curving dark lines cross the floor at a shallow angle, ignoring the slab joints — one runs roughly (250,375) up to (430,285), another (340,395) out to (620,300), and they cross in an X at about (385–400, 315–330). Once you see one you find the rest, and they start to read as a system laid over the floor rather than as damage in it. More on why in Q5.
+
+## Q5: MADE, OR REPEATED?
+
+**Repeated.** Specifically: a real, hand-built slab layout with a small library of decals stamped over it.
+
+The layout itself is authored — I cross-correlated the high-passed floor against itself over every offset from 0 to 200px horizontally and 140px vertically, and there is no repeat peak (best non-adjacent value 0.165 at dx=12). Nobody tiled a bitmap. The bond pattern, the slab sizes, the courses: those were placed.
+
+The faces were not. I binarised the surface detail with the joints masked out and searched for identical patches. A single 10×10 mark pattern occurs **32 times** across the floor. Twenty-plus distinct 10×10 patterns each occur 19–32 times. Going bigger, an identical **24×24** block appears at (467,51) and again at (467,173) — the same 576 pixels, twice, 122px apart. That is a stamp library, and it is a small one.
+
+You can see the whole vocabulary by eye at 4× on (440,14)–(630,200): 45° hatch strokes, rows of short horizontal dashes, clusters of vertical ticks. Three motifs. They are on every slab, at the same density, in the same proportions. There is also a short-range rhythm underneath — elevated self-correlation at ~12px horizontally and ~9px vertically — so the marks land on a beat. That beat is what makes the surface read as woven cloth rather than stone at 1:1.
+
+The arcs from Q4 are the same failure at level scale. I traced the one near (425,300) pixel by pixel: at y=301–302 it runs **perfectly horizontal for 28 pixels, x=425 through 452**, then steps away in symmetric 4px and 6px runs on both sides, at a constant 2px width the entire way. That is a rasterised parabola. A fracture has a width that varies, an origin, branches, a termination, and something on one side displaced relative to the other. This has a flat apex.
+
+## Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?
+
+**YES.** Plenty of shipped games have floors exactly this good. The bond is convincing, the values are controlled, the lighting sits on it correctly, and it does not read as broken.
+
+Merely competent. Not good. It is a texture that survives being looked at and gives you nothing for looking.
+
+## Q7: WHAT CAN YOU ACTUALLY SEE AT 1:1?
+
+**The faces are effectively blank at 1:1.** What is legible is layout and value, not surface.
+
+Legible without magnifying, from the full 750×600 view:
+- the slab layout and joints (everywhere)
+- the value differences between slabs — some flags lighter, some darker
+- the long arcs (the one through (250,375)→(430,285) is genuinely readable)
+- the blank dark slabs from Q4
+- a fine woven grain over everything, the way hessian reads across a room — present, uniform, and not resolvable into anything
+
+That last item is the whole answer. I could see *that* the faces had texture. I could not see *what* the texture was.
+
+Only on magnification:
+- that the grain is 45° hatch strokes at all
+- the rows of short horizontal dashes
+- the vertical tick clusters — these are the interesting ones, they read almost like scored inscription, tallies cut into the stone, exactly the mark an administered underworld would leave. At 1:1 they are completely invisible. I found them at 3× in (440,14)–(630,200) and had to go back and hunt for them elsewhere. That counts as hunting.
+
+**Q7_WHY:** Checked at 1:1 — the whole floor as rendered, with attention on the figure's surroundings (330,140)–(520,230), the lower-left field (180,240)–(460,410), and the corridor approach (300,360)–(520,410). Had to magnify — (300,80)–(560,300) at 3×, (440,14)–(630,200) at 3×, (230,250)–(470,400) at 3×, (360,100)–(440,150) at 6×, (380,280)–(480,345) at 6×. Everything in the second list is invisible in the first.
+
+## Q8: HOW OLD IS THIS FLOOR?
+
+**Laid recently — a year or two — and walked on hard by the crew that laid it.** It reads as exactly one age everywhere; I could not find a region that reads older or younger than any other.
+
+That is the wrong answer for this place by two and a half orders of magnitude.
+
+**Q8_WHY:** Age in stone is carried by the transitions, not the faces, and every transition here is new. Slab corners at (445,215), (520,145), (300,255), (405,90) are square to the pixel — no rounding, no chipping, no crushed arrises. Joints across (300,80)–(560,300) are full, even in width, and uninterrupted; nothing has washed out, nothing has been re-packed. No slab is displaced vertically against its neighbour anywhere I looked. There is no dishing along the corridor approach (x378–432, y360–400), where a few centuries of boots would have worn a tray into the stone.
+
+The single-hue finding cuts the same way. Hue standard deviation of 1.23° across the entire floor means no slab has weathered differently from any other, nothing has stained, nothing damp has sat anywhere. Old floors are patchy in colour before they are patchy in shape, and this one is not patchy at all.
+
+The abrasion on the faces is real but it is all shallow and all the same depth, which is what you get from one pass of a texture, not from four hundred years of anything.
+
+## Q9: WHERE WOULD YOU WALK TO CROSS THIS LEVEL — DOES THE FLOOR ALREADY KNOW?
+
+Route: from the figure at (405,180), straight down the middle through (405,240), (405,300), (400,360), into the corridor mouth at (405,400) and south into the dark.
+
+**The floor told me nothing.** I routed by the walls and by the edge of the torchlight, and only by those.
+
+**Q9_WHY:** Along the route — (405,240), (405,300), (400,360), (405,400) — the ground is the same warm sandstone at the same mark density as everything beside it. The regions I rejected — the left field around (230,250), the right field around (570,250), the upper courses around (450,60) — are *also* the same. I compared them cell by cell in the relative-detail map and there is no measurable difference between the ground on my route and the ground I chose not to walk on. The corridor mouth at (378–432, 400–440), which every soul filed through this place would have to cross, has the same hatch density as the far corner at (600,80), which leads nowhere.
+
+Nothing is polished. Nothing is scuffed more. There is no drag scar, no cart rut, no darkened lane. The floor has no memory of anyone.
+
+## Q10: WHICH WAY IS USED MOST, WHICH LEAST?
+
+Only one opening is inside the light: the south corridor at x378–432. The rest of the room's boundary is beyond the torch, so I can't judge those.
+
+For the one I can see: the ground in front of it is indistinguishable from the ground everywhere else. Same hue, same value once the falloff is corrected, same mark density in the 16×16 detail map. If this is the way in and out of a room in a place under continuous heavy use, the floor does not admit it.
+
+---
+
+## CULL
+
+Every slab is scuffed identically — uniform texture noise, no traffic, no history, no wear anywhere.
+
+## FLIP LIST
+
+- Cut a traffic lane: polish the slabs along the south corridor approach (roughly x370–440, y240–400) smoother and darker than their neighbours, and thin the surface marks to near-zero in that lane so the route is visible before the walls are.
+- Replace the drawn arcs — including the one with a flat 28px apex at y301, x425–452 — with real fractures: varying width, a visible origin, branching, spalled ends, and a slab edge displaced across the break.
+- Texture the ~8 blank slabs at (530,214), (517,87), (372,125), (477,179), (455,217), (340,304), (200,293), or commit to them as deliberate features — sunken, lifted, or missing, with a visible edge — so they stop being the loudest thing on screen for no reason.
+- Break the single-hue lock: shift a minority of slabs off hue 28° toward cooler grey and desaturate them, so the floor stops reading as one uniform new-laid batch and starts reading as stone replaced piecemeal over centuries.
+- Move detail from the face to the edges: round and chip the slab corners, wash out and re-pack sections of joint, and drop the per-face hatch density by at least half — the marks are invisible at 1:1 and only make the surface read as woven cloth.
+
+---
+
+*Model: Claude Opus 5 (1M context)*

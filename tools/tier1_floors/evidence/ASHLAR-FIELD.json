@@ -1,0 +1,1111 @@
+{
+ "commit": "ff9edbca6556a0b5be1c505c8e9875b9e57e05cd",
+ "grid": [
+  16,
+  16
+ ],
+ "seed": 1337,
+ "session_one_largest_share": 0.991,
+ "prior_boundary_step_ratio": {
+  "unblended": 7.44,
+  "blended": 2.95
+ },
+ "plants": [
+  {
+   "plant": "flat_channel",
+   "must_fire": "channel_legibility",
+   "fired": true,
+   "why": "wear multipliers set to 1.0: the channel is declared and delivers nothing",
+   "measured": {
+    "texture_ratio": 1.0,
+    "variety_ratio": 1.0,
+    "arris_ratio": 1.0,
+    "band_alone": {
+     "texture": 0.983,
+     "variety": 0.834,
+     "arris": 1.004
+    },
+    "same_band_unpolished": {
+     "texture": 0.983,
+     "variety": 0.834,
+     "arris": 1.004
+    },
+    "inside_px": 32768
+   }
+  },
+  {
+   "plant": "per_tile_value",
+   "must_fire": "boundary_step",
+   "why": "stones addressed by the tile they are seen from instead of by the boundary they straddle \u2014 ruling (1)'s defect, restated exactly",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 907,
+     "floor_px": 204876,
+     "largest_share": 0.0042,
+     "median_region": 190,
+     "regions_over_64px": 882
+    },
+    "boundary_step": {
+     "boundary_mean": 15.628,
+     "interior_mean": 0.258,
+     "ratio": 60.552,
+     "boundary_max": 66.59,
+     "n": 3467,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 960,
+     "continuing": 960,
+     "continued": 1.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 1.0,
+     "bed_density_mid": 1.0,
+     "bed_density_ratio": 1.0,
+     "bed_value_boundary": 77.85,
+     "bed_value_mid": 77.85,
+     "bed_value_ratio": 0.9999,
+     "col_density_boundary": 0.125,
+     "col_density_other": 0.2215,
+     "col_density_ratio": 0.5644
+    },
+    "banding": {
+     "bed_rows": 64,
+     "courses": 32,
+     "distinct_spacings": 5,
+     "modal_share": 0.25,
+     "sd": 3.84,
+     "spacings": [
+      10,
+      12,
+      15,
+      18,
+      20
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 191,
+     "cells_sharing_a_skeleton": 116,
+     "duplicate_rate": 0.4531,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 2,
+     "identical_neighbour_rate": 0.0042
+    },
+    "constant_pitch": {
+     "full_width_lines": 33,
+     "at_tile_phase": 17,
+     "share": 0.515,
+     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 99,
+     "max_px": 1091,
+     "min_px": 6,
+     "crossing_a_boundary": 11,
+     "share_crossing": 0.846,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 57268,
+     "open_decile": 74.89,
+     "tight_decile": 87.89,
+     "spread_rungs": 0.983
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 960,
+      "distinct": 10,
+      "sd": 11.29,
+      "spread": 31,
+      "modal_share": 0.25
+     }
+    }
+   }
+  },
+  {
+   "plant": "value_lattice",
+   "must_fire": "boundary_step",
+   "why": "a value ramp locked to the tile grid \u2014 session one's tint lattice in its purest form",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 907,
+     "floor_px": 204876,
+     "largest_share": 0.0042,
+     "median_region": 190,
+     "regions_over_64px": 882
+    },
+    "boundary_step": {
+     "boundary_mean": 12.998,
+     "interior_mean": 0.231,
+     "ratio": 56.246,
+     "boundary_max": 26.89,
+     "n": 3636,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 960,
+     "continuing": 960,
+     "continued": 1.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 1.0,
+     "bed_density_mid": 1.0,
+     "bed_density_ratio": 1.0,
+     "bed_value_boundary": 84.42,
+     "bed_value_mid": 84.43,
+     "bed_value_ratio": 0.9999,
+     "col_density_boundary": 0.125,
+     "col_density_other": 0.2215,
+     "col_density_ratio": 0.5644
+    },
+    "banding": {
+     "bed_rows": 64,
+     "courses": 32,
+     "distinct_spacings": 5,
+     "modal_share": 0.25,
+     "sd": 3.84,
+     "spacings": [
+      10,
+      12,
+      15,
+      18,
+      20
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 191,
+     "cells_sharing_a_skeleton": 116,
+     "duplicate_rate": 0.4531,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 2,
+     "identical_neighbour_rate": 0.0042
+    },
+    "constant_pitch": {
+     "full_width_lines": 33,
+     "at_tile_phase": 17,
+     "share": 0.515,
+     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 99,
+     "max_px": 1091,
+     "min_px": 6,
+     "crossing_a_boundary": 11,
+     "share_crossing": 0.846,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 57268,
+     "open_decile": 74.89,
+     "tight_decile": 101.47,
+     "spread_rungs": 2.01
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 960,
+      "distinct": 10,
+      "sd": 11.29,
+      "spread": 31,
+      "modal_share": 0.25
+     }
+    }
+   }
+  },
+  {
+   "plant": "boundary_frame",
+   "must_fire": "grid_hiding",
+   "why": "an extra joint drawn along the tile's own edge: a treatment at a constant position",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 1387,
+     "floor_px": 197708,
+     "largest_share": 0.0027,
+     "median_region": 112,
+     "regions_over_64px": 939
+    },
+    "boundary_step": {
+     "boundary_mean": 0.0,
+     "interior_mean": 0.242,
+     "ratio": 0.0,
+     "boundary_max": 0.0,
+     "n": 0,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 960,
+     "continuing": 960,
+     "continued": 1.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 1.0,
+     "bed_density_mid": 1.0,
+     "bed_density_ratio": 1.0,
+     "bed_value_boundary": 76.38,
+     "bed_value_mid": 77.77,
+     "bed_value_ratio": 0.9821,
+     "col_density_boundary": 1.0,
+     "col_density_other": 0.2215,
+     "col_density_ratio": 4.5152
+    },
+    "banding": {
+     "bed_rows": 64,
+     "courses": 32,
+     "distinct_spacings": 5,
+     "modal_share": 0.25,
+     "sd": 3.84,
+     "spacings": [
+      10,
+      12,
+      15,
+      18,
+      20
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 191,
+     "cells_sharing_a_skeleton": 116,
+     "duplicate_rate": 0.4531,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 2,
+     "identical_neighbour_rate": 0.0042
+    },
+    "constant_pitch": {
+     "full_width_lines": 33,
+     "at_tile_phase": 17,
+     "share": 0.515,
+     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 99,
+     "max_px": 1091,
+     "min_px": 6,
+     "crossing_a_boundary": 11,
+     "share_crossing": 0.846,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 64436,
+     "open_decile": 74.89,
+     "tight_decile": 87.89,
+     "spread_rungs": 0.983
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 7680,
+      "distinct": 32,
+      "sd": 9.23,
+      "spread": 31,
+      "modal_share": 0.031
+     }
+    }
+   }
+  },
+  {
+   "plant": "uniform_courses",
+   "must_fire": "banding",
+   "why": "every tile row on the same 16/16 split, so one spacing repeats down the whole field \u2014 the stack of stripes the seat named, restored on purpose",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 907,
+     "floor_px": 204876,
+     "largest_share": 0.0036,
+     "median_region": 210,
+     "regions_over_64px": 888
+    },
+    "boundary_step": {
+     "boundary_mean": 0.097,
+     "interior_mean": 0.23,
+     "ratio": 0.422,
+     "boundary_max": 13.59,
+     "n": 3579,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 960,
+     "continuing": 960,
+     "continued": 1.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 1.0,
+     "bed_density_mid": 0.3301,
+     "bed_density_ratio": 3.0296,
+     "bed_value_boundary": 77.85,
+     "bed_value_mid": 99.42,
+     "bed_value_ratio": 0.783,
+     "col_density_boundary": 0.125,
+     "col_density_other": 0.2215,
+     "col_density_ratio": 0.5644
+    },
+    "banding": {
+     "bed_rows": 64,
+     "courses": 32,
+     "distinct_spacings": 1,
+     "modal_share": 1.0,
+     "sd": 0.0,
+     "spacings": [
+      15
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 105,
+     "cells_sharing_a_skeleton": 215,
+     "duplicate_rate": 0.8398,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 2,
+     "identical_neighbour_rate": 0.0042
+    },
+    "constant_pitch": {
+     "full_width_lines": 33,
+     "at_tile_phase": 17,
+     "share": 0.515,
+     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 99,
+     "max_px": 1091,
+     "min_px": 6,
+     "crossing_a_boundary": 11,
+     "share_crossing": 0.846,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 57268,
+     "open_decile": 74.89,
+     "tight_decile": 87.89,
+     "spread_rungs": 0.983
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 960,
+      "distinct": 4,
+      "sd": 10.97,
+      "spread": 31,
+      "modal_share": 0.25
+     }
+    }
+   }
+  },
+  {
+   "plant": "one_course",
+   "must_fire": "constant_pitch",
+   "why": "one course per tile, so EVERY full-width joint is a tile boundary \u2014 the corner theorem's bill paid in full and nothing else on the floor to hide it behind",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 466,
+     "floor_px": 218760,
+     "largest_share": 0.0059,
+     "median_region": 465,
+     "regions_over_64px": 463
+    },
+    "boundary_step": {
+     "boundary_mean": 0.104,
+     "interior_mean": 0.225,
+     "ratio": 0.463,
+     "boundary_max": 13.59,
+     "n": 4984,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 480,
+     "continuing": 480,
+     "continued": 1.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 1.0,
+     "bed_density_mid": 0.2214,
+     "bed_density_ratio": 4.516,
+     "bed_value_boundary": 77.85,
+     "bed_value_mid": 103.88,
+     "bed_value_ratio": 0.7494,
+     "col_density_boundary": 0.0625,
+     "col_density_other": 0.1688,
+     "col_density_ratio": 0.3702
+    },
+    "banding": {
+     "bed_rows": 32,
+     "courses": 16,
+     "distinct_spacings": 1,
+     "modal_share": 1.0,
+     "sd": 0.0,
+     "spacings": [
+      31
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 35,
+     "cells_sharing_a_skeleton": 256,
+     "duplicate_rate": 1.0,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 12,
+     "identical_neighbour_rate": 0.025
+    },
+    "constant_pitch": {
+     "full_width_lines": 17,
+     "at_tile_phase": 17,
+     "share": 1.0,
+     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 99,
+     "max_px": 1091,
+     "min_px": 6,
+     "crossing_a_boundary": 11,
+     "share_crossing": 0.846,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 43384,
+     "open_decile": 74.89,
+     "tight_decile": 87.89,
+     "spread_rungs": 0.983
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 480,
+      "distinct": 2,
+      "sd": 15.5,
+      "spread": 31,
+      "modal_share": 0.5
+     }
+    }
+   }
+  },
+  {
+   "plant": "tile_confined_cracks",
+   "must_fire": "cracks",
+   "why": "every crack clipped to the tile that anchors it \u2014 the retired overlay system's defect restored, marks that stop at a tile edge",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 848,
+     "floor_px": 206832,
+     "largest_share": 0.0062,
+     "median_region": 204,
+     "regions_over_64px": 827
+    },
+    "boundary_step": {
+     "boundary_mean": 0.115,
+     "interior_mean": 0.239,
+     "ratio": 0.481,
+     "boundary_max": 13.59,
+     "n": 3827,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 900,
+     "continuing": 900,
+     "continued": 1.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 1.0,
+     "bed_density_mid": 1.0,
+     "bed_density_ratio": 1.0,
+     "bed_value_boundary": 77.86,
+     "bed_value_mid": 77.92,
+     "bed_value_ratio": 0.9993,
+     "col_density_boundary": 0.1172,
+     "col_density_other": 0.214,
+     "col_density_ratio": 0.5475
+    },
+    "banding": {
+     "bed_rows": 60,
+     "courses": 30,
+     "distinct_spacings": 6,
+     "modal_share": 0.2,
+     "sd": 5.28,
+     "spacings": [
+      10,
+      12,
+      15,
+      18,
+      20,
+      31
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 191,
+     "cells_sharing_a_skeleton": 110,
+     "duplicate_rate": 0.4297,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 3,
+     "identical_neighbour_rate": 0.0063
+    },
+    "constant_pitch": {
+     "full_width_lines": 31,
+     "at_tile_phase": 17,
+     "share": 0.548,
+     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 8,
+     "max_px": 27,
+     "min_px": 2,
+     "crossing_a_boundary": 0,
+     "share_crossing": 0.0,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 55312,
+     "open_decile": 74.89,
+     "tight_decile": 87.89,
+     "spread_rungs": 0.983
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 900,
+      "distinct": 10,
+      "sd": 11.58,
+      "spread": 31,
+      "modal_share": 0.267
+     }
+    }
+   }
+  },
+  {
+   "plant": "uniform_wear",
+   "must_fire": "joint_variation",
+   "why": "every joint the same age \u2014 the staged-age defect the second device walk culled, restored by nulling the wear field",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 848,
+     "floor_px": 206832,
+     "largest_share": 0.0062,
+     "median_region": 204,
+     "regions_over_64px": 827
+    },
+    "boundary_step": {
+     "boundary_mean": 0.126,
+     "interior_mean": 0.241,
+     "ratio": 0.522,
+     "boundary_max": 13.59,
+     "n": 3684,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 900,
+     "continuing": 900,
+     "continued": 1.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 1.0,
+     "bed_density_mid": 1.0,
+     "bed_density_ratio": 1.0,
+     "bed_value_boundary": 74.89,
+     "bed_value_mid": 74.89,
+     "bed_value_ratio": 1.0,
+     "col_density_boundary": 0.1172,
+     "col_density_other": 0.214,
+     "col_density_ratio": 0.5475
+    },
+    "banding": {
+     "bed_rows": 60,
+     "courses": 30,
+     "distinct_spacings": 6,
+     "modal_share": 0.2,
+     "sd": 5.28,
+     "spacings": [
+      10,
+      12,
+      15,
+      18,
+      20,
+      31
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 191,
+     "cells_sharing_a_skeleton": 110,
+     "duplicate_rate": 0.4297,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 3,
+     "identical_neighbour_rate": 0.0063
+    },
+    "constant_pitch": {
+     "full_width_lines": 31,
+     "at_tile_phase": 17,
+     "share": 0.548,
+     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 99,
+     "max_px": 1091,
+     "min_px": 6,
+     "crossing_a_boundary": 11,
+     "share_crossing": 0.846,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 55312,
+     "open_decile": 74.89,
+     "tight_decile": 74.89,
+     "spread_rungs": 0.0
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 900,
+      "distinct": 10,
+      "sd": 11.58,
+      "spread": 31,
+      "modal_share": 0.267
+     }
+    }
+   }
+  },
+  {
+   "plant": "one_family",
+   "must_fire": "skeleton",
+   "why": "every boundary collapsed to one family, so every cell of a row draws the same bond \u2014 the 0.99+ duplicates at one-tile displacement the seat measured, restored whole",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 848,
+     "floor_px": 206832,
+     "largest_share": 0.0044,
+     "median_region": 220,
+     "regions_over_64px": 821
+    },
+    "boundary_step": {
+     "boundary_mean": 0.126,
+     "interior_mean": 0.235,
+     "ratio": 0.534,
+     "boundary_max": 13.59,
+     "n": 3603,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 900,
+     "continuing": 900,
+     "continued": 1.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 1.0,
+     "bed_density_mid": 1.0,
+     "bed_density_ratio": 1.0,
+     "bed_value_boundary": 77.85,
+     "bed_value_mid": 77.9,
+     "bed_value_ratio": 0.9994,
+     "col_density_boundary": 0.1172,
+     "col_density_other": 0.214,
+     "col_density_ratio": 0.5475
+    },
+    "banding": {
+     "bed_rows": 60,
+     "courses": 30,
+     "distinct_spacings": 6,
+     "modal_share": 0.2,
+     "sd": 5.28,
+     "spacings": [
+      10,
+      12,
+      15,
+      18,
+      20,
+      31
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 32,
+     "cells_sharing_a_skeleton": 251,
+     "duplicate_rate": 0.9805,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 78,
+     "identical_neighbour_rate": 0.1625
+    },
+    "constant_pitch": {
+     "full_width_lines": 31,
+     "at_tile_phase": 17,
+     "share": 0.548,
+     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 99,
+     "max_px": 1091,
+     "min_px": 6,
+     "crossing_a_boundary": 11,
+     "share_crossing": 0.846,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 55312,
+     "open_decile": 74.89,
+     "tight_decile": 87.89,
+     "spread_rungs": 0.983
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 900,
+      "distinct": 10,
+      "sd": 11.58,
+      "spread": 31,
+      "modal_share": 0.267
+     }
+    }
+   }
+  },
+  {
+   "plant": "broken_courses",
+   "must_fire": "continuity",
+   "why": "bed joints stopping short of the vertical boundaries \u2014 coursing that does not travel",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 384,
+     "floor_px": 209873,
+     "largest_share": 0.046,
+     "median_region": 198,
+     "regions_over_64px": 382
+    },
+    "boundary_step": {
+     "boundary_mean": 0.111,
+     "interior_mean": 0.324,
+     "ratio": 0.343,
+     "boundary_max": 13.59,
+     "n": 4191,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 900,
+     "continuing": 0,
+     "continued": 0.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 0.9375,
+     "bed_density_mid": 0.9375,
+     "bed_density_ratio": 1.0,
+     "bed_value_boundary": 80.12,
+     "bed_value_mid": 80.16,
+     "bed_value_ratio": 0.9996,
+     "col_density_boundary": 0.1172,
+     "col_density_other": 0.202,
+     "col_density_ratio": 0.58
+    },
+    "banding": {
+     "bed_rows": 60,
+     "courses": 30,
+     "distinct_spacings": 6,
+     "modal_share": 0.2,
+     "sd": 5.28,
+     "spacings": [
+      10,
+      12,
+      15,
+      18,
+      20,
+      31
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 191,
+     "cells_sharing_a_skeleton": 110,
+     "duplicate_rate": 0.4297,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 3,
+     "identical_neighbour_rate": 0.0063
+    },
+    "constant_pitch": {
+     "full_width_lines": 31,
+     "at_tile_phase": 17,
+     "share": 0.548,
+     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 99,
+     "max_px": 1091,
+     "min_px": 6,
+     "crossing_a_boundary": 11,
+     "share_crossing": 0.846,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 52271,
+     "open_decile": 74.89,
+     "tight_decile": 87.89,
+     "spread_rungs": 0.983
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 900,
+      "distinct": 10,
+      "sd": 11.58,
+      "spread": 31,
+      "modal_share": 0.267
+     }
+    }
+   }
+  }
+ ],
+ "fields": {
+  "ordinary": {
+   "file": "tools/tier1_floors/evidence/ashlar_ordinary.png",
+   "enclosure": {
+    "regions": 848,
+    "floor_px": 206832,
+    "largest_share": 0.0062,
+    "median_region": 204,
+    "regions_over_64px": 827
+   },
+   "boundary_step": {
+    "boundary_mean": 0.112,
+    "interior_mean": 0.239,
+    "ratio": 0.47,
+    "boundary_max": 13.59,
+    "n": 3787,
+    "channel_edge_mean": null,
+    "channel_edge_n": 0
+   },
+   "continuity": {
+    "arriving": 900,
+    "continuing": 900,
+    "continued": 1.0
+   },
+   "grid_hiding": {
+    "bed_density_boundary": 1.0,
+    "bed_density_mid": 1.0,
+    "bed_density_ratio": 1.0,
+    "bed_value_boundary": 77.85,
+    "bed_value_mid": 77.9,
+    "bed_value_ratio": 0.9994,
+    "col_density_boundary": 0.1172,
+    "col_density_other": 0.214,
+    "col_density_ratio": 0.5475
+   },
+   "banding": {
+    "bed_rows": 60,
+    "courses": 30,
+    "distinct_spacings": 6,
+    "modal_share": 0.2,
+    "sd": 5.28,
+    "spacings": [
+     10,
+     12,
+     15,
+     18,
+     20,
+     31
+    ]
+   },
+   "skeleton": {
+    "cells": 256,
+    "distinct_skeletons": 191,
+    "cells_sharing_a_skeleton": 110,
+    "duplicate_rate": 0.4297,
+    "neighbour_pairs": 480,
+    "identical_neighbours": 3,
+    "identical_neighbour_rate": 0.0063
+   },
+   "constant_pitch": {
+    "full_width_lines": 31,
+    "at_tile_phase": 17,
+    "share": 0.548,
+    "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+   },
+   "cracks": {
+    "marks": 13,
+    "median_px": 99,
+    "max_px": 1091,
+    "min_px": 6,
+    "crossing_a_boundary": 11,
+    "share_crossing": 0.846,
+    "retired_system_median_px": 4
+   },
+   "joint_variation": {
+    "joint_px": 55312,
+    "open_decile": 74.89,
+    "tight_decile": 87.89,
+    "spread_rungs": 0.983
+   },
+   "crossings": {
+    "horizontal_boundaries": {
+     "n": 0
+    },
+    "vertical_boundaries": {
+     "n": 900,
+     "distinct": 10,
+     "sd": 11.58,
+     "spread": 31,
+     "modal_share": 0.267
+    }
+   },
+   "lattice": {
+    "lattice": 0.1501,
+    "var_total": 442.19,
+    "var_per_position": 375.84,
+    "cells": 256
+   }
+  },
+  "with_channel": {
+   "file": "tools/tier1_floors/evidence/ashlar_with_channel.png",
+   "enclosure": {
+    "regions": 848,
+    "floor_px": 206832,
+    "largest_share": 0.0062,
+    "median_region": 204,
+    "regions_over_64px": 827
+   },
+   "boundary_step": {
+    "boundary_mean": 0.094,
+    "interior_mean": 0.217,
+    "ratio": 0.434,
+    "boundary_max": 13.59,
+    "n": 3809,
+    "channel_edge_mean": null,
+    "channel_edge_n": 0
+   },
+   "continuity": {
+    "arriving": 900,
+    "continuing": 900,
+    "continued": 1.0
+   },
+   "grid_hiding": {
+    "bed_density_boundary": 1.0,
+    "bed_density_mid": 1.0,
+    "bed_density_ratio": 1.0,
+    "bed_value_boundary": 78.63,
+    "bed_value_mid": 78.67,
+    "bed_value_ratio": 0.9996,
+    "col_density_boundary": 0.1172,
+    "col_density_other": 0.214,
+    "col_density_ratio": 0.5475
+   },
+   "banding": {
+    "bed_rows": 60,
+    "courses": 30,
+    "distinct_spacings": 6,
+    "modal_share": 0.2,
+    "sd": 5.28,
+    "spacings": [
+     10,
+     12,
+     15,
+     18,
+     20,
+     31
+    ]
+   },
+   "skeleton": {
+    "cells": 256,
+    "distinct_skeletons": 191,
+    "cells_sharing_a_skeleton": 110,
+    "duplicate_rate": 0.4297,
+    "neighbour_pairs": 480,
+    "identical_neighbours": 3,
+    "identical_neighbour_rate": 0.0063
+   },
+   "constant_pitch": {
+    "full_width_lines": 31,
+    "at_tile_phase": 17,
+    "share": 0.548,
+    "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+   },
+   "cracks": {
+    "marks": 13,
+    "median_px": 99,
+    "max_px": 1091,
+    "min_px": 6,
+    "crossing_a_boundary": 11,
+    "share_crossing": 0.846,
+    "retired_system_median_px": 4
+   },
+   "joint_variation": {
+    "joint_px": 55312,
+    "open_decile": 74.89,
+    "tight_decile": 87.89,
+    "spread_rungs": 0.983
+   },
+   "crossings": {
+    "horizontal_boundaries": {
+     "n": 0
+    },
+    "vertical_boundaries": {
+     "n": 900,
+     "distinct": 10,
+     "sd": 11.58,
+     "spread": 31,
+     "modal_share": 0.267
+    }
+   },
+   "lattice": {
+    "lattice": 0.1501,
+    "var_total": 423.62,
+    "var_per_position": 360.02,
+    "cells": 256
+   },
+   "channel_legibility": {
+    "texture_ratio": 0.102,
+    "variety_ratio": 0.549,
+    "arris_ratio": 0.998,
+    "band_alone": {
+     "texture": 0.383,
+     "variety": 0.467,
+     "arris": 0.95
+    },
+    "same_band_unpolished": {
+     "texture": 3.765,
+     "variety": 0.85,
+     "arris": 0.952
+    },
+    "inside_px": 32768
+   }
+  }
+ }
+}

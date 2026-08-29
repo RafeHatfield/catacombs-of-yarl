@@ -1,0 +1,64 @@
+## Q1: WHAT IS THIS FLOOR MADE OF?
+
+Cut stone blocks — rectangular sandstone-brown pavers laid in a running bond, mortared.
+
+**Q1_WHY:** The whole area from roughly x=190–630, y=20–395 is filled with hard-edged rectangles, most about 64×32px (two grid cells wide, one tall), separated by 2–3px seams a shade or two darker than the block faces. Every block face is flat and matte — no grain, no bedding lines, no aggregate. The seams read as mortar joints rather than gaps because they're a lighter dark-brown, not black, and they have consistent width. The block faces carry a faint dusty speckle (scattered 2×2 dark pixels — densest on the block at 222–286, 84–114, and on 350–414, 276–306), which is what pushes it toward sandstone rather than granite. But I want to be plain about the limit: I'm reading the *shape* of the blocks, not the *material*. Sample the colour and 99% of the walkable floor sits in a hue band from 24° to 29.6°, saturation pinned between 0.45 and 0.56. One hue. The only thing that varies across this entire floor is brightness, and that variation is the torch, not the stone. Strip the lighting and there is no material information left in the image.
+
+## Q2: WHICH WAY WOULD YOU WALK, AND WHY?
+
+South, down the corridor at x≈350–420 that runs off the bottom of the frame past y=395.
+
+Nothing about the ground made me pick it. I picked it because it is the only reading of the *walls* that suggests an exit — the dark gap between the blocks at the bottom edge. The floor is identical in every direction. There is no wear path, no dragged scuff, no run of stone that looks more travelled than the stone beside it, no threshold, no change in joint width, no direction to the speckle. I moved my eye from the figure at (400,180) out to (200,180), (600,180), (400,60) and (400,380) and the ground told me nothing different in any of those four directions. In a game where the floor is most of the screen, that's the answer that matters: this surface does not participate in navigation at all.
+
+## Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?
+
+Nothing has happened to it. It is a new floor. It looks like it was laid last week by a careful mason and has not been walked on since.
+
+**Q3_WHY:** I went looking for damage specifically and found none.
+
+- **No cracks.** Not one. Across ~140 visible blocks there is no fracture, no split running through a block face, no corner broken off.
+- **No missing or replaced stones.** Every socket in the bond has its block. Nothing is sunken, nothing tilted, nothing patched.
+- **Joints are perfect.** I measured the horizontal courses: unbroken full-width mortar bands at y=47, 79, 111, 143, 175, 207, 239, 271, 303, 335, 367 — every 32 pixels, dead level, running clean from x=195 to x=625 without a single break, jog, or course of a different height. Real floors under four hundred years of traffic do not hold a ruled line like that.
+- **No wear.** No traffic polish down the middle of the corridor, no cupping at the centre of blocks, no rounded arrises. Block edges are as crisp at the corridor mouth as in the corners.
+- **No dirt, no water, no drainage.** Nothing pooled in the joints, no staining, no dark ring anywhere, no slope.
+- **Above all, no repair.** The fiction is a company that has been patching this place for four centuries with rope, driven pins, hide and salvaged timber. There is not one pin, one plank, one lashing, one wedge, one shim on this floor. The floor is the surface that soldiers stand on, drag things across and mend first — and it is the one surface in the frame showing zero evidence that anyone has ever been here.
+
+The only marks that aren't brick are the small cluster of black dots and a vertical stroke at roughly (335–350, 165–200), just left of the figure. That reads as a dropped item or an entity, not as floor condition.
+
+## Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?
+
+Yes, three things.
+
+1. **The horizontal banding.** The ruled seam every 32px, listed above, is the single loudest thing on screen after the figure. Because the courses never break, the floor reads as a stack of horizontal stripes before it reads as stone. I kept re-noticing it at y=207 and y=239, where the light is strongest and the lines are most visible — they run the full 430px width uninterrupted, and once you see the stripe you can't stop seeing the stripe.
+
+2. **A repeated notch on the vertical joints.** The same little two-step zigzag jog — a 2px offset, down then back — appears on vertical seams at approximately (420, 218), (450, 245), (345, 150), (485, 60) and (430, 335). It is meant to read as irregular mortar, but it is the *same shape* every time, which converts it from irregularity into a motif. I noticed it, then started hunting for it, then found it everywhere. That's the failure mode: a detail that's supposed to break the pattern becomes the pattern.
+
+3. **The speckle.** The scattered 2×2 dark pixels are one texture applied at different densities. Some blocks have a lot (222–286, 84–114), some have none (the whole run at 190–286, y=308–370). The density has no logic to it — it isn't heavier near walls, near the corridor, or anywhere traffic would put it. It reads as noise switched on and off per block rather than as dirt.
+
+## Q5: MADE, OR REPEATED?
+
+**Repeated.** An image that was repeated, with variation applied on top of it.
+
+The 32px vertical rhythm never once deviates. The block width is 64px or 32px and never anything else — no half-course, no long slab, no undersized fill piece. The variation that does exist is applied per-block by a rule (rotate the shade slightly, sprinkle the speckle, jog the seam by 2px) rather than arising from anything that happened at a particular spot. A made floor has *reasons* in it — a stone replaced after it cracked, a course that had to narrow where the wall came in crooked, a patch where something was dug out. There are no reasons anywhere in this image. There is only the grid, decorated.
+
+## Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?
+
+**YES.** It is clean, correctly lit, correctly pixel-aligned at the play size, and the torch falloff is genuinely handled well — the value ramp from 0.81 at the figure to 0.07 at the frame edge is smooth and doesn't band.
+
+Is it merely competent, or genuinely good? **Merely competent.** It is a tidy generic dungeon brick floor. It could be dropped into any of two hundred pixel roguelikes without anyone noticing, which is exactly the problem: it says nothing about *this* underworld. An administered filing system for souls in continuous heavy use since before records began, held by soldiers who mend everything badly and never clean anything, should not produce a floor that looks freshly laid and swept. The floor is the largest single surface the player looks at, and this one is carrying no fiction at all.
+
+## CULL
+
+Four hundred years of heavy use and endless crude repair, and the floor is unmarked, uncracked, unpatched, unworn.
+
+## FLIP LIST
+
+- Break the horizontal courses. Right now a full-width, dead-level mortar line runs at every 32px from y=47 to y=367 without one interruption — vary course heights, run some blocks tall through two rows, and let seams die out.
+- Put damage on it: cracked block faces, broken corners, at least one stone missing or sunk below its neighbours, ideally in the open ground around (250–350, 250–350) where the light is good.
+- Add the orcs' repairs to the *floor*, not just the walls — driven pins, a lashed timber plank over a gap, a hide patch — so the ground shows it has been mended by people who don't care how it looks.
+- Wear a traffic path through the corridor: polish and cupping down the centre line at x≈350–420, dirt driven into the joints at the edges, so the ground tells the player where people actually walk.
+- Kill the repeated two-step seam notch (recurs at ~(420,218), (450,245), (345,150), (485,60), (430,335)) and give the floor hue variation beyond its current 5.6° band — cold grey and green-black stones among the brown, so the surface isn't one colour lit two ways.
+
+---
+
+*Model: Claude Opus 5 (1M context)*

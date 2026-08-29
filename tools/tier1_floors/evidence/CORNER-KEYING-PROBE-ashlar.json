@@ -1,0 +1,44 @@
+{
+ "commit": "8405c9e6b3b95d2d17781e84feda25cbc042086c",
+ "geometry": "ashlar",
+ "keying": {
+  "stones": 271,
+  "stones_over_64px": 257,
+  "corners_checked": 49,
+  "stones_with_exactly_one_corner": 0,
+  "stones_with_no_corner": 257,
+  "stones_with_multiple_corners": 0,
+  "max_corners_in_a_stone": 0,
+  "corners_claimed_by_multiple_stones": 0
+ },
+ "occlusion": {
+  "n": 0,
+  "additive_contrast_retained": NaN,
+  "replacement_contrast_retained": NaN
+ },
+ "ladder": {
+  "ladder_step": 13.23,
+  "lo": 75.0,
+  "hi": 154.4,
+  "rows": [
+   {
+    "steps": 1,
+    "offset": 13.23,
+    "clip_low_pct": 23.44,
+    "clip_high_pct": 0.0
+   },
+   {
+    "steps": 2,
+    "offset": 26.45,
+    "clip_low_pct": 23.44,
+    "clip_high_pct": 0.0
+   },
+   {
+    "steps": 3,
+    "offset": 39.68,
+    "clip_low_pct": 100.0,
+    "clip_high_pct": 0.0
+   }
+  ]
+ }
+}

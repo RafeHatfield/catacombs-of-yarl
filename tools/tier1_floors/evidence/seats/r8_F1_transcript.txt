@@ -1,0 +1,66 @@
+I read the image at native size, then re-read the floor with the lighting divided out and ran periodicity checks on it. Findings below are anchored to pixel coordinates in the 750×600 image.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone slabs — flat rectangular flagstones of varying size, laid in an irregular running bond with a recessed joint between them. Neutral grey stone; the warm tan is the lamp, not the material.
+
+**Q1_WHY:** Every unit is a hard-edged rectangle with square corners and a uniform ~4px darker joint on all sides — that reads as masonry, not tile, not packed earth, not board. When I divide the lighting out (`/tmp/flat.png`), the slabs go flat neutral grey, so the tan is a multiply and the stone is uncoloured. The bond is irregular — a course at y 208–240 runs slabs of width 40, 88, 82, 60, 44 — which is quarried-and-fitted stone rather than a manufactured module.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, into the corridor mouth at x 377–442, y 400 onward.
+
+But the ground had nothing to do with it. I picked it because it is the only gap in the wall colour — an architectural read, not a floor read. The floor gave me no steer at all: the slab pattern, slab scale, joint width, and speckle density in that corridor (x 380–440, y 400–500) are identical to the room floor I'm standing on. There is no path worn into it, no traffic polish, no debris drift, no directional wear, nothing thinning or roughening toward the exit. Walk east and the floor looks the same; walk west and the floor looks the same. In a room where the floor is the majority of the pixels, the floor is telling me nothing about where to go.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Almost nothing. It is a clean, intact, freshly-laid stone floor with a light scatter of grit on it.
+
+Not one slab is cracked. Not one is chipped, lifted, sunken, missing, or replaced. Every corner is a perfect right angle. Every joint is the same width along its whole length. Nothing has been patched, wedged, pinned or bridged.
+
+The total inventory of "damage" on ~450×380 pixels of ground is: a dark spiky stain at x 350–368, y 246–266; a smaller one at x 195–215, y 265–280; two faint scratch strokes at x 240–275, y 55–70; and a scatter of 1–2px dark specks over maybe half the slabs.
+
+**Q3_WHY:** Specifically the joints. In the best-lit, highest-information part of the whole image — the slabs at x 300–470, y 205–275, examined at 5× — the joint lines are dead straight, unbroken, constant width, with sharp square terminations at every intersection. That is the signature of a floor laid last week. There is also no value difference between adjacent slabs: flattened, the whole field sits at one grey. A floor in continuous heavy use since before records began would have slabs at different heights, different tones, worn-round edges, and a hollow down the middle of the traffic line. This has none of those. The fiction says nobody has ever cared for this place; the ground says somebody finished it on Tuesday.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Three things.
+
+**1. A full-width horizontal joint every 64 pixels.** At y = 80, 144, 208, 272 and 336 there is a mortar line that runs the entire width of the room, edge to edge, unbroken — and no slab anywhere ever crosses it. I measured joint continuity per row: those five rows score 0.85–0.94 (fraction of width that is joint), and they are spaced at exactly 64px with zero drift. Autocorrelation on the de-lit floor confirms it: shift the texture down 64px and correlation jumps to 0.33 and at 128px to 0.35, against ~0.1 for every neighbouring offset — and it collapses to ~0.0 if I add any horizontal shift at all. Once I saw it I could not stop seeing it. The masonry bond gets interrupted by an invisible ruled line five times down the room.
+
+**2. The speckle.** 1–2px dark dots scattered across slab faces — heavy on the slabs at x 200–260, y 85–130 and x 490–560, y 60–100; completely absent on the slabs at x 375–450, y 215–270. It doesn't behave like dirt (it doesn't pool at joints or in corners), it doesn't behave like aggregate (it's the same size everywhere), and it doesn't behave like wear (it's not concentrated where feet go). It reads as noise that was applied, and my eye keeps counting it instead of reading the room.
+
+**3. Soft airbrushed smudges at the wrong resolution.** Around x 405–470, y 85–120 and x 500–560, y 130–165 there are broad, blurry, gradient-edged grey clouds sitting on top of hard-edged pixel art. They have no pixel structure — they're smooth at a scale where everything else is chunky. They pull attention because they look like something has gone wrong with the render rather than like a stain.
+
+---
+
+**Q5: MADE, OR REPEATED?**
+**Repeated.** The slab *shapes* were varied by hand — I can see somebody deliberately mixing widths so the bond looks irregular. But that hand-work is confined inside a 64px band, and the band boundary is exposed: five continuous unbroken full-width joints at exact 64px pitch, which no slab ever bridges. That is a tile edge, not a mason's decision. A mason lays a long stone across a course line; a tiling engine cannot. The variety is decoration painted onto a grid that is still visible underneath it.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It is clean, consistent, correctly lit, and reads instantly as a stone floor at phone size.
+
+**Merely competent.** Not genuinely good. It is a competent stone-floor texture that would pass in almost any dungeon crawler, and that is precisely the problem — it is *any* dungeon's floor. It carries no information: not about age, not about use, not about the four hundred years of soldiers walking it, not about which way is out. All the atmosphere in this image is coming from the lamp falloff. Take the light off it and there is nothing there.
+
+---
+
+**CULL:** A full-width unbroken joint every 64px exposes the tile grid — no slab ever crosses it.
+
+---
+
+**FLIP LIST**
+- Break the 64px seam: run slabs across y = 80, 144, 208, 272, 336 so no continuous joint spans the room width — at minimum, one long stone straddling each of those lines.
+- Give slabs individual value: 4–6 distinct stone tones so adjacent slabs differ by 8–15% luminance, instead of the single flat grey the whole field currently sits at.
+- Damage it. Cracked slabs, chipped corners, at least one slab sunk or missing with fill beneath it, and joints that vary in width and break down where the stone has spalled.
+- Wear a traffic line: a lighter, smoother, speck-free channel through the room centre and into the south corridor mouth (x 377–442), so the ground says where four hundred years of feet have gone.
+- Delete the soft airbrushed smudges at x 405–470, y 85–120 and x 500–560, y 130–165, and redraw any staining at the same pixel resolution as the slabs.
+
+---
+
+*Model: Claude Opus 5 (1M context)*

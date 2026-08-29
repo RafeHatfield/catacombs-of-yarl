@@ -46,6 +46,7 @@ that reports collapse and cobwebs as a defect has read the register. A seat that
 atmospheric has not, and F1 and F3 are then unreadable.
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -68,15 +69,60 @@ BAR_IMG = ("/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.
 BAR_CROP = (336, 240, 720, 528)
 YARL_CROP = (0, 400, 750, 1000)      # the lit ground around the figure, HUD excluded
 
-SEATS = {
-    "F1": dict(img="scene_family.png", what="family", solo=True),
-    "F2": dict(img="scene_plant.png",  what="PLANT",  solo=True),
-    "F3": dict(img="scene_family.png", what="family", solo=True),
-    "F4": dict(img="scene_family.png", what="family", solo=False),   # comparative, vs the bar
-}
+# Which capture each seat looks at. Overridable with --family/--plant so a later round can seat a
+# new build without overwriting the captures an earlier round's verdicts were taken on — a seat
+# transcript citing a filename whose bytes have since changed is not evidence (LOOP-PROCESS §2.3).
+FAMILY_IMG = "scene_family.png"
+PLANT_IMG = "scene_plant.png"
+
+
+def SEATS():
+    return {
+        "F1": dict(img=FAMILY_IMG, what="family", solo=True),
+        "F2": dict(img=PLANT_IMG,  what="PLANT",  solo=True),
+        "F3": dict(img=FAMILY_IMG, what="family", solo=True),
+        "F4": dict(img=FAMILY_IMG, what="family", solo=False),   # comparative, vs the bar
+    }
 PLANT_SEAT = "F2"
 # Which slot the Yarl image lands in for the comparative seat, so a seat cannot learn "A is ours".
 F4_YARL_SLOT = "B"
+
+
+# ---- THE CAPTURE MUST NOT MOVE UNDER THE ROUND ------------------------------------------------
+#
+# LOOP-PROCESS §2.3: evidence carries its producer's hash, and a seat transcript citing a filename
+# whose bytes have since changed is not evidence. That was written as a caution and then violated
+# in the obvious way: a round was left running, the family was rebuilt, the capture was overwritten
+# in place, and the seats still queued went on to judge A DIFFERENT BUILD THAN THE FIRST SEAT SAW.
+# Nothing failed. The round would have been written up as four opinions of one floor.
+#
+# So the bytes are hashed before the first seat and re-hashed before every seat after it, and the
+# run REFUSES rather than continuing across a change. Use round-scoped capture names
+# (scene_ashlar_r4.png) so a later round cannot need to overwrite an earlier round's evidence at
+# all — a rule that removes the hazard beats a check that catches it.
+def sha256_of(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        h.update(f.read())
+    return h.hexdigest()
+
+
+def freeze_captures():
+    seen = {}
+    for name in {FAMILY_IMG, PLANT_IMG}:
+        seen[name] = sha256_of(os.path.join(EV, name))
+    return seen
+
+
+def check_captures(frozen):
+    for name, want in frozen.items():
+        got = sha256_of(os.path.join(EV, name))
+        if got != want:
+            raise SystemExit(
+                "REFUSING: %s changed while the round was running.\n"
+                "  was %s\n  now %s\n"
+                "Seats already run judged different pixels than the ones left to run would. "
+                "Re-capture under a round-scoped name and start the round again." % (name, want, got))
 
 
 def git_commit():
@@ -95,7 +141,7 @@ def bar_crop():
 
 
 def build_work(seat):
-    cfg = SEATS[seat]
+    cfg = SEATS()[seat]
     d = os.path.join(WORK, seat)
     shutil.rmtree(d, ignore_errors=True)
     os.makedirs(d)
@@ -110,7 +156,7 @@ def build_work(seat):
 
 def prompt_for(seat):
     base = open(os.path.join(HERE, "seat_prompt.txt")).read()
-    if SEATS[seat]["solo"]:
+    if SEATS()[seat]["solo"]:
         return base.replace("INPUT: the PNG file(s) in this directory, nothing else.",
                             "INPUT: the file A.png in this directory, nothing else.")
     return base.replace(
@@ -132,8 +178,9 @@ def run(work, prompt):
 
 
 # Labels the prompt asks for, longest first so Q1_WHY is matched before Q1.
-LABELS = ["Q1_WHY", "Q3_WHY", "Q1_A", "Q1_B", "Q5_A", "Q5_B", "Q6_A", "Q6_B",
-          "CULL_A", "CULL_B", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "CULL", "RANK", "FLIP LIST"]
+LABELS = ["Q1_WHY", "Q3_WHY", "Q7_WHY", "Q8_WHY", "Q9_WHY", "Q1_A", "Q1_B", "Q5_A", "Q5_B",
+          "Q6_A", "Q6_B", "CULL_A", "CULL_B", "Q10", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7",
+          "Q8", "Q9", "CULL", "RANK", "FLIP LIST"]
 # Leading markdown of ANY kind: heading hashes, bold stars, or nothing. A seat writes its labels
 # however it likes and the parser's job is to find them, not to legislate their formatting.
 _LABEL_RE = re.compile(r"^\s*#{0,6}\s*\**(" + "|".join(re.escape(l) for l in LABELS)
@@ -202,14 +249,68 @@ def parse(text, strict=True):
 #
 # What follows is only what the plant has and the family does not: collapse, cobwebbing, moss,
 # rubble, and the word "ruined" itself, which is §8.1's own term for the failure.
-PLANT_WORDS = ("cobweb", "cobwebbing", "web", "webbing", "collapse", "collapsed", "caved",
-               "ruin", "ruined", "rubble", "moss", "mossy", "overgrown", "lichen")
+# THE VOCABULARY IS DERIVED FROM WHAT THE PLANT CONTAINS, NOT FROM WHAT A SEAT ONCE SAID.
+#
+# That sentence is the correction, and it took three rounds to earn. The list began as session
+# two's, whose plant had moss in the joints and a cobweb dither. The ashlar plant draws COLLAPSE
+# VOIDS, bright strands and dramatic cracks — and after round 8 the list was widened by reading
+# round 8's transcript and adding the words that seat happened to use. Round 9's seat then
+# described the same plant in different words again and scored NOTHING:
+#
+#     "It's been shot through with HOLES and scribbled on, evenly, everywhere, by nothing in
+#      particular. There are roughly twenty punched-through black HOLES across a floor of about
+#      92 tiles"
+#     CULL: "Damage is uniform decorative scatter — the ground records no traffic, no event, and
+#      no repair."
+#
+# It used "hole" fourteen times. **The plainest word for the plant's most prominent feature had
+# never been in the list**, through three rounds — while the list carried "lichen", which the
+# plant has never contained. Chasing a critic's vocabulary one transcript at a time is the same
+# error as relaxing a threshold after seeing a result: the test ends up derived from the outcome.
+#
+# So the list is now derived from `plant_ashlar.py`'s three draw calls and nothing else, as STEMS,
+# and it is a standing obligation: **when the plant's construction changes, this changes with it,
+# before the next round runs.**
+#
+#     collapse voids   -> hole, void, collaps, cave, punct, crater, pit
+#     cobweb strands   -> web, cobweb, strand, silk
+#     the register     -> ruin, rubble, moss, lichen, overgrown, derelict
+#
+# ⚠ "CRACK" IS AND REMAINS EXCLUDED, and now emphatically so: the FAMILY draws cracks, at field
+# scale, as its primary incident. A seat naming a crack has said nothing that separates plant from
+# candidate, and a control that greens on the thing it is controlling for is worse than no control.
+PLANT_WORDS = ("hole", "void", "collaps", "cave", "punct", "crater",
+               "web", "strand", "silk",
+               "ruin", "rubble", "moss", "lichen", "overgrown", "derelict")
+
+
+# ⚠ NEGATION. Round 8's plant seat scored a hit on the word "collapse" — inside the sentence
+# "Not one large collapse." The verdict was right for a reason the matcher had nothing to do with:
+# the seat culled on register, in Q3 and in CULL, and the matcher agreed with it by accident.
+#
+# A check that returns the right verdict from the wrong input is not a check (LOOP-PROCESS §4.2),
+# and this one would have said CAUGHT for a seat that had declared the floor CLEAN of every defect
+# in the list. Hits inside a negation are discarded.
+NEGATIONS = ("no ", "not ", "none", "nothing", "never", "without", "free of", "n't")
+
+
+def _negated(blob, at):
+    """Is this hit inside a clause that DENIES it? Looks back to the start of the sentence."""
+    start = max(blob.rfind(".", 0, at), blob.rfind(";", 0, at), blob.rfind("\n", 0, at)) + 1
+    return any(n in blob[start:at] for n in NEGATIONS)
 
 
 def plant_caught(r, text):
     """Caught if the seat CULLS and names the ruin on its own axis (§4.1: on the axis claimed)."""
     blob = " ".join([r.get(k, "") for k in ("Q1", "Q3", "Q3_WHY", "Q4", "Q5", "CULL")]).lower()
-    hit = [w for w in PLANT_WORDS if w in blob]
+    hit = []
+    for w in PLANT_WORDS:
+        at = blob.find(w)
+        while at >= 0:
+            if not _negated(blob, at):
+                hit.append(w)
+                break
+            at = blob.find(w, at + 1)
     culled = bool(r.get("CULL")) and r["CULL"].strip().upper().rstrip(".") != "NONE"
     return (culled and bool(hit)), hit, culled
 
@@ -218,11 +319,24 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("seats", nargs="*", default=["F1", "F2", "F3", "F4"])
     ap.add_argument("--round", type=int, default=1)
+    ap.add_argument("--family", help="capture filename in evidence/ for the candidate seats")
+    ap.add_argument("--plant", help="capture filename in evidence/ for the plant control")
     a = ap.parse_args()
+    global FAMILY_IMG, PLANT_IMG
+    if a.family:
+        FAMILY_IMG = a.family
+    if a.plant:
+        PLANT_IMG = a.plant
     os.makedirs(OUT, exist_ok=True)
+    frozen = freeze_captures()
+    print("captures frozen for this round:")
+    for k, v in sorted(frozen.items()):
+        print("  %-28s %s" % (k, v))
+    print()
 
     results, void = {}, False
     for seat in a.seats:
+        check_captures(frozen)
         d, mapping = build_work(seat)
         print("=" * 78)
         print("SEAT %s  round %d%s" % (seat, a.round,
@@ -260,7 +374,8 @@ def main():
             for fx in r["flips"][:5]:
                 print("     flip: %s" % fx[:90])
 
-    res = dict(round=a.round, commit=git_commit(), seats=results,
+    check_captures(frozen)
+    res = dict(round=a.round, commit=git_commit(), seats=results, captures=frozen,
                plant_seat=PLANT_SEAT, round_void=void,
                plant_words_declared=list(PLANT_WORDS),
                law=("LOOP-PROCESS §4: if the critic does not catch the plant, the round is VOID "

@@ -1,0 +1,162 @@
+{
+ "round": 7,
+ "commit": "94481fd11ea8869fd4fa59c82b2a6c6d1a89cdb4",
+ "seats": {
+  "F1": {
+   "Q1": "Dressed rectangular stone slabs \u2014 sandstone or a warm limestone \u2014 laid dry in a running bond, thin dark joints between them. Flagstone paving.",
+   "Q1_WHY": "Every unit is a hard-edged rectangle with a square corner and a flat single-value fill (stone-face luminance std is 0.09 across the whole floor \u2014 essentially one tone). Joints are consistent 4 px dark lines, 24% of floor area, and rows are offset so vertical joints don't stack: at y\u2248195\u2013225 the joints sit at x\u2248250, 315, 380; the row below at y\u2248230\u2013260 puts them at x\u2248290, 355, 420. That's a deliberate masonry bond, not rubble, not cut rock, not earth. The colour is uniform sand-tan with no mineral variation between slabs.",
+   "Q2": "South, down the corridor at x\u2248377\u2013441. **Nothing about the ground influenced that.** I picked it because it is the only gap in the walls \u2014 the wall geometry chose for me. I checked specifically for a floor-based reason and there isn't one: the paving in the corridor mouth (x 377\u2013441, y 396\u2013470) is the identical bond, identical joint width, identical stone tone as the paving in the far corner of the room (x 200\u2013260, y 300\u2013360). No path is worn smoother, no direction is more scuffed, no threshold is dished from feet. If you rotated the room 180\u00b0 the floor would give me exactly the same amount of information: none.",
+   "Q3": "Almost nothing. It is a freshly-laid floor. Not one slab is cracked, chipped, split, tilted, sunken, missing, or replaced with something else. No rubble, no grit swept into the corners, no staining along a traffic line, no water damage, no repair of any kind. The total inventory of damage is three small dark splats \u2014 at roughly (359,256), (206,285) and (423,415) \u2014 plus a scatter of 2\u00d72 px dark specks on maybe half the slabs, and a few soft airbrushed pale blotches (e.g. x 480\u2013540, y 95\u2013130, and x 300\u2013330, y 245\u2013270).\n\nThis does not read as a floor in continuous heavy use since before records began that nobody has ever cared for. It reads as a floor commissioned last month by someone with a budget.",
+   "Q3_WHY": "Specifics I'm reading: at x 505\u2013570, y 255\u2013290 there is a run of four consecutive slabs whose every corner is a clean 90\u00b0, no chip, no rounding. Along the corridor mouth (x 377\u2013441, y 390\u2013400) \u2014 the one place in the image where all foot traffic must funnel through \u2014 the joints are exactly as crisp and exactly as deep as they are in the dead corner at x 190\u2013250, y 30\u201390. A floor that has been walked for four hundred years cannot have identical joint wear at a chokepoint and at a corner. The joint depth measured across the entire floor has a std of 0.108 with a mean of 0.718 \u2014 every joint in the room is the same depth. Nothing has ground any of them shallower.",
+   "Q4": "Yes \u2014 three things.\n\n1. **The splat decal, used three times unmodified.** At (359,256), (206,285) and (423,415). Same ~14 px starburst, same silhouette, same colour, no rotation, no mirror, no scale change between the three. Once I saw the second one the third was inevitable, and now they're the only things I look at on the floor.\n\n2. **The 2\u00d72 px speck stipple.** It's on the majority of slabs and it's the same speck at the same size at the same value everywhere. It reads as a texture-noise layer painted over the top rather than as anything on the stone. Look at x 500\u2013560, y 40\u201370 and then at x 230\u2013290, y 300\u2013340 \u2014 different slabs, indistinguishable dirt.\n\n3. **A small dark triangle, twice.** At (462,225) and (295,137). Identical shape and value, sitting on the slab face. I can't tell whether these are floor art or markers belonging to something else, but my eye finds them and pairs them.",
+   "Q5": "**Repeated.** The joint layout has a hard 64 px period. Correlating the mortar-joint mask against itself, the strongest horizontal peak is at dx=64 (0.497 vs 0.36 at dx=48 and 0.35 at dx=80) and the strongest vertical peak at dy=64. Concretely: the 64\u00d764 block at (349,268) and the block at (413,268) have the same joint skeleton \u2014 same slab widths, same offsets \u2014 and so do (349,12)/(413,12). Searching for duplicate 32\u00d732 patches across the whole floor, the top matches are all at displacement exactly (64,0) or (0,64), correlating 0.99+: (378,280)\u2194(442,280) at 0.997, (378,312)\u2194(442,312) at 0.995, (458,248)\u2194(458,312) at 0.991.\n\nThe speck layer is scattered more freely and partly covers this, which is why the tiling isn't obvious at first pass \u2014 but the stone underneath is a small set of tiles stepping across a grid, and once the lighting is divided out you can see the columns line up.",
+   "Q6": "**YES.** It's clean, readable, correctly bonded, and the light sits on it without artefacting.\n\nMerely competent. Not good. Competent is exactly the word: it is a correct floor and it says nothing. There is no single slab in this room I could describe to you afterwards.",
+   "CULL": "Reject: an unworn, undamaged, unrepaired floor contradicts a place in heavy use and never maintained.",
+   "FLIP LIST": "- Break the 64 px joint period: hand-vary slab widths across tile seams so the bond doesn't restart at x=349/413 and x=377/441.\n- Damage the stone itself \u2014 cracked slabs, chipped corners, one or two slabs sunk below their neighbours or lifted proud, at least one gone entirely and backfilled.\n- Put wear where feet go: shallower joints and polished slab faces through the corridor mouth at x 377\u2013441, dirt and grit accumulated in the dead corners (x 190\u2013250, y 30\u201390).\n- Add orc repair to the ground \u2014 driven pins, a salvaged timber plank laid over a broken slab, rope lashing \u2014 visible in at least one place in a room this size.\n- Replace the three copies of the single splat decal with distinct marks, and cut the uniform 2\u00d72 speck stipple; let dirt collect against joints and edges instead of sitting evenly on slab faces.\n\nModel: Opus 5 (1M context)",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Break the 64 px joint period: hand-vary slab widths across tile seams so the bond doesn't restart at x=349/413 and x=377/441.",
+    "Damage the stone itself \u2014 cracked slabs, chipped corners, one or two slabs sunk below their neighbours or lifted proud, at least one gone entirely and backfilled.",
+    "Put wear where feet go: shallower joints and polished slab faces through the corridor mouth at x 377\u2013441, dirt and grit accumulated in the dead corners (x 190\u2013250, y 30\u201390).",
+    "Add orc repair to the ground \u2014 driven pins, a salvaged timber plank laid over a broken slab, rope lashing \u2014 visible in at least one place in a room this size.",
+    "Replace the three copies of the single splat decal with distinct marks, and cut the uniform 2\u00d72 speck stipple; let dirt collect against joints and edges instead of sitting evenly on slab faces."
+   ],
+   "mapping": {
+    "A": "scene_ashlar_r7.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r7_F1_transcript.txt"
+  },
+  "F2": {
+   "Q1": "Large sawn sandstone slabs, laid in running bond like brickwork, with thin dark mortar joints. Dry, sandy, one colour throughout.",
+   "Q1_WHY": "Rectangular units roughly 30px tall and 25\u201360px wide, staggered course to course, each with a flat face and a soft top-to-bottom value gradient \u2014 that's cut block, not rubble, not packed earth, not tile. The joints are a uniform 2\u20133px dark line, so the units are set tight rather than fitted dry.\n\nThe material read is weakened by the colour. I sampled the floor rectangle (x192\u2013636, y12\u2013396): 2,696 unique colours, but every dominant one sits on the *same* hue ramp \u2014 `[3,2,1]`, `[43,31,22]`, `[93,67,44]`, `[133,95,60]`, `[186,132,81]`. R:G:B holds at roughly 1 : 0.71 : 0.45 from black to highlight. There is not one cool pixel, one grey pixel, one mineral stain, one slab that is a different stone from its neighbour. So it reads as sandstone by default \u2014 because sepia is the only thing it can read as. It could equally be sandstone, clay brick, or dried mud; the palette refuses to say.",
+   "Q2": "South, down the corridor at x\u2248378\u2013440 that leaves the room at y\u2248400.\n\n**And I chose it for geometry, not ground.** Nothing about the surface influenced me. I want to be exact about this: I compared the floor east of the figure, west of it, and north of it, and they are the same floor. Same bond, same slab size, same joint width, same mark density, same tone. There is no worn lane, no polished centre, no scuffed threshold, no debris drift, no direction of any kind. Four hundred years of a garrison walking this room and the ground records none of it.\n\nThe corridor won because it is narrower and darker, which is architecture. The ground told me nothing.",
+   "Q3": "It has been shot at, or something has been eating holes in it. Fifteen black voids, all of them the same size \u2014 I measured eleven of the unobstructed ones and they run 224\u2013292 px in area, so 16\u201319px across, every one. Between them, a scatter of cracks and a scatter of bright scratches.\n\nWhat has *not* happened: nobody has walked on it, nothing has been dragged across it, nothing has settled, nothing has been repaired. There is no rope, no pin, no timber, no patch \u2014 none of the endless salvage repair the fiction says defines this place. The damage is present; the use is absent.",
+   "Q3_WHY": "The holes (e.g. x348,y246; x210,y112; x528,y250) are flat `#080603` octagonal blobs with hard edges, zero interior gradient, no lip, no slab thickness, no rubble at the bottom. At 10\u00d7 they are ink splats with loose peach specks orbiting them like crumbs. They punch out of the picture rather than sinking into it.\n\nThe dark zigzag cracks are the one genuinely good element on this floor: I found 110 of them and 108 are pixel-unique. They wander, they cross joints, they don't repeat. Somebody drew those.\n\nEvery joint in the room is the same width and the same darkness. Nothing has spalled, nothing is proud of its neighbour, no corner is chipped. A floor in continuous heavy use since before records has zero settlement.",
+   "Q4": "Three things.\n\n**The pale diagonal streaks.** Cream-coloured strokes, brighter than the lit stone around them, all leaning the same way. I isolated the bright marks: of 71 elongated ones, 33 fall in the 45\u00b0\u201389\u00b0 band \u2014 nearly half the floor's brightest detail rakes in one direction. Densest in x223\u2013370, y115\u2013330. They cross mortar joints as if the joints aren't there. They don't read as anything: too bright for cracks, too straight for wear, too uniform for damage. They read as brush strokes on a photo.\n\n**They are also literally copy-pasted.** 83 bright marks, 59 distinct shapes. One 6\u00d76 stroke appears **seven times** \u2014 (263,129), (293,139), (369,139), (337,177), (553,193), (315,203), (347,299). A 4\u00d714 stroke appears **five times** \u2014 (307,115), (341,127), (497,131), (561,193), (537,289). A 2\u00d76 five times, a 6\u00d78 four times. Pixel-for-pixel identical, no rotation, no mirror, no recolour. Three copies of the same mark sit within 100px of the figure.\n\n**A vertical column of four holes at x\u2248210\u2013215**, at y=110, 160, 225 and 307. Four of the fifteen holes stacked in a five-pixel-wide column running two hundred pixels down the left edge, each sitting in roughly the same spot inside its slab. Once I saw it I couldn't stop seeing it.\n\nMinor, but it kept catching me: a hard-edged filled triangle at roughly (467, 220), sitting in the middle of a clean slab. It reads as a UI glyph that fell onto the ground.",
+   "Q5": "**Repeated.** Not arguable \u2014 measured. Nine bright-mark shapes recur, one of them seven times, in a single 750\u00d7600 frame. Fifteen holes of one diameter. One hue ramp with no local variation. A running bond with no border course, no threshold, no orientation.\n\nThe dark cracks are the exception and they prove the point: they were *made*, they're all unique, and they sit in the middle of a surface that otherwise stamps.",
+   "Q6": "**YES.** It would pass without comment in a mid-tier roguelike.\n\n**Merely competent.** The lighting is the only thing on this floor doing real work \u2014 I traced brightness against distance from the figure and it falls off cleanly and monotonically, 134 \u2192 41 across a ~200px radius, centred correctly. That's honest. Everything else is a texture that fills the space. It has no point of view about being a floor in a filing system for souls, and it contradicts its own fiction: it is damaged but unused, and unrepaired in a place defined by four centuries of ugly repair.\n\nOne thing that is a genuine defect and not just a taste call: the hole cores sample at `[8,6,3]` and the unlit corridor floor at (400,470) samples at `[12,11,12]`. **A pit and unlit ground are the same value.** Outside the light radius a hole in the floor is invisible. That is a readability failure on a walkable surface, not an aesthetic one.",
+   "CULL": "Bright surface marks are stamped copies \u2014 one 6\u00d76 stroke appears seven times in a single screen.",
+   "FLIP LIST": "- Delete the pale cream streaks entirely and redraw as unique marks, or drop them below the lit-stone value so they stop being the brightest thing on the floor; no shape may appear twice on screen.\n- Give the holes an interior: a lit near lip, a dark far lip keyed to the figure's light, visible slab thickness, and rubble on the floor of the pit. Vary diameter across at least three sizes, and break up the x\u2248210 column of four.\n- Raise the hole cores above the unlit-floor value (or add a rim that survives darkness) so a pit stays visible past the light radius.\n- Push hue apart across slabs \u2014 cool grey, iron stain, damp green-black in low spots \u2014 so at least a third of slabs read as different stone from their neighbours. Right now the entire floor is one sepia ramp.\n- Add the use and the repair the place is built on: a worn pale lane running through the traffic axis, settled and canted slabs with uneven joints, and at least one crossing patched in salvaged timber, driven pins and rope.\n\n**Model:** claude-opus-5[1m]",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Delete the pale cream streaks entirely and redraw as unique marks, or drop them below the lit-stone value so they stop being the brightest thing on the floor; no shape may appear twice on screen.",
+    "Give the holes an interior: a lit near lip, a dark far lip keyed to the figure's light, visible slab thickness, and rubble on the floor of the pit. Vary diameter across at least three sizes, and break up the x\u2248210 column of four.",
+    "Raise the hole cores above the unlit-floor value (or add a rim that survives darkness) so a pit stays visible past the light radius.",
+    "Push hue apart across slabs \u2014 cool grey, iron stain, damp green-black in low spots \u2014 so at least a third of slabs read as different stone from their neighbours. Right now the entire floor is one sepia ramp.",
+    "Add the use and the repair the place is built on: a worn pale lane running through the traffic axis, settled and canted slabs with uneven joints, and at least one crossing patched in salvaged timber, driven pins and rope."
+   ],
+   "mapping": {
+    "A": "scene_ashlar_plant_r7.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r7_F2_transcript.txt",
+   "plant_caught": true,
+   "plant_words_hit": [
+    "rubble"
+   ]
+  },
+  "F3": {
+   "Q1": "Cut sandstone flags \u2014 rectangular slabs of one honey-brown stone, laid in courses with thin mortar joints. Dry, indoor, quarried. Not natural rock, not tile, not brick.",
+   "Q1_WHY": "Slabs are axis-aligned rectangles, 8\u201330 px wide, with 2 px dark joints between them (measured across the lit strip at y=30\u201370: joint columns at x=199, 213, 229, 237, 267, 283, 293, 301, 331, 347, 369, 389, 405, 413, 433, 453, 469, 491, 511, 557). Corners are square and unbroken. Surface is matte with sparse 1\u20132 px darker flecks on maybe a third of the slabs \u2014 reads as grain, not damage. Colour is the tell: across the whole lit floor, hue runs 26.7\u00b0\u201329.3\u00b0 and saturation 0.48\u20130.56. That is one stone, one quarry, one bed. Only value changes, and that's the torch.",
+   "Q2": "South, into the dark gap at x\u2248365\u2013405 below y\u2248400.\n\nNothing about the ground influenced that, and I want to be plain about it: I picked the direction because it is the only opening in the wall silhouette. I read the *wall*. The floor at the figure's feet (\u2248405,175) is identical in all four directions \u2014 same slab size, same colour, same speckle density, same joint weight. There is no worn track, no polish, no scuffed lane, no threshold stone, nothing that says people go this way and not that way. In a place that has been a filing system in heavy use since before records begin, the ground should be the first thing telling me where the traffic goes. It tells me nothing.",
+   "Q3": "Almost nothing. It is intact and swept. Every slab is present, square, and level with its neighbours. No cracks, no chips, no spalling, no lifted or sunken flags, no missing stone, no infill, no patch, no repair of any kind \u2014 no rope, no pins, no timber, no hide. Nothing has ever been dragged across it, dropped on it, or worn into it.\n\nThe complete inventory of events on this surface is four items:\n- a dark irregular splat at \u2248(358, 256), about 16 px across, straddling a vertical joint\n- a second, smaller dark mark at \u2248(205, 283)\n- three or four soft pale smudges \u2014 \u2248(250, 150), \u2248(430, 140), \u2248(300, 175) \u2014 which read as light bloom more than stain\n- the flecking, which is uniform grain, not incident",
+   "Q3_WHY": "Every horizontal joint is a single ruled line running the full width of the room. I checked twelve of them \u2014 y = 15, 47, 79, 121, 143, 169, 207, 240, 273, 293, 336, 379 \u2014 and each is continuous over 73\u2013100% of the lit width. Not one slab ever spans two courses. Not one course ever breaks or steps. The top three courses are on an exact 32 px pitch. Slab *widths* vary; slab *heights* never do within a course. That is a floor that was ruled, not laid \u2014 and a floor that was ruled and then never touched again.",
+   "Q4": "Two things.\n\nThe horizontal joint lines. They are the strongest signal in the frame and they are perfectly straight, perfectly parallel, all the same 2 px width and the same darkness from x=200 to x=620. My eye rides them left-to-right instead of resting on the scene. Worst at y=143, y=169 and y=207 \u2014 three ruled lines in a 64 px band directly beside the figure.\n\nThe splat at (358, 256). It is the only high-contrast dark shape anywhere on the ground, so in a floor this uniform it becomes a landmark. It pulls harder than the character does in the lower half of the frame, and it does not mean anything.",
+   "Q5": "Neither, exactly \u2014 and that is the problem. It doesn't tile: I ran autocorrelation across the floor region and there is no periodic peak in x at any offset from 1 to 44, and only a weak 0.068 bump at dy=32 which is just the course pitch. So it isn't a stamped tile grid.\n\nBut it doesn't read as *made* either. It reads as **generated** \u2014 a rectangle-packing routine given a course height and a width range, filled with one flat colour, dusted with random noise, and lit. Made surfaces carry history: this stone was cut later, this one cracked and was shimmed, this corner is rounded because forty generations turned on it. There is no such record here. The variation is statistical, not causal.",
+   "Q6": "YES. It is clean, legible at phone size, tonally coherent with the lighting, and it doesn't fight the character sprite.\n\nMerely competent or genuinely good? **Merely competent.** It is a correct floor. It is not a floor from this place. A stranger shown this could not tell me it belongs to an administered underworld in continuous use for centuries; they'd say \"sandstone dungeon.\" The fiction is doing no work here and the floor is giving the fiction nothing back.",
+   "CULL": "Four hundred years of unrepaired heavy use, and the stone is unworn, unbroken, unpatched \u2014 reads new.",
+   "FLIP LIST": "- Break the ruled courses: make individual slabs span two courses in at least a dozen places, and step the horizontal joints so no line crosses the full room.\n- Add a traffic lane through the room on the axis between the two exits \u2014 slabs visibly smoother, joints half-filled with packed grime, edges rounded \u2014 so the ground says which way people go.\n- Replace 5\u201310% of slabs with stone of a different hue (grey, iron-stained red) \u2014 visible patching, later cuts, mismatched sizes \u2014 so the floor is not one quarry.\n- Put orc repair on the ground: a driven pin holding a split flag, a timber board over a broken slab, a rope-lashed patch. At least three instances, none matching.\n- Break at least four slabs outright \u2014 cracks running across the stone and through the joint, one corner spalled away, one flag sunk below its neighbours casting a shadow line.\n\n---\n*Model: Claude Opus 5 (1M context)*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Break the ruled courses: make individual slabs span two courses in at least a dozen places, and step the horizontal joints so no line crosses the full room.",
+    "Add a traffic lane through the room on the axis between the two exits \u2014 slabs visibly smoother, joints half-filled with packed grime, edges rounded \u2014 so the ground says which way people go.",
+    "Replace 5\u201310% of slabs with stone of a different hue (grey, iron-stained red) \u2014 visible patching, later cuts, mismatched sizes \u2014 so the floor is not one quarry.",
+    "Put orc repair on the ground: a driven pin holding a split flag, a timber board over a broken slab, a rope-lashed patch. At least three instances, none matching.",
+    "Break at least four slabs outright \u2014 cracks running across the stone and through the joint, one corner spalled away, one flag sunk below its neighbours casting a shadow line."
+   ],
+   "mapping": {
+    "A": "scene_ashlar_r7.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r7_F3_transcript.txt"
+  },
+  "F4": {
+   "Q1_A": "_WHY:** I sampled the floor field (x 24\u2013216, y 0\u2013168). Inside a single tile the value range is 31\u201364 out of 255 \u2014 13% of the available range \u2014 with std 5.0. Gradient analysis inside the tile shows no seam, no edge, no joint, no stone boundary anywhere: horizontal and vertical gradients sit at 1\u20137 across all 48 columns and rows with no peak. There is nothing in it that is *shaped* like anything. The tile has 441 unique colours in 2,304 pixels, adjacent values differing by 1 ([92 69 30], [92 68 29], [91 67 27]) \u2014 this is continuous-tone procedural noise, not authored pixel art. It sits next to grey flagstone (y 168\u2013215) that uses **nine** colours. Two incompatible idioms in one image.",
+   "Q2": "_B:** Down, into the corridor at x\u2248375\u2013440 below y=400. What made me pick it is the ground: the same paving continues into that gap, unbroken and at the same course pitch, so it reads as floor rather than a dark hole. The other lit exits do not read as continuing surface in the same way. That said \u2014 I want to be exact \u2014 no *wear* on this floor pointed me anywhere. There is no path, no rut, no polished track. The choice was continuity of material, not evidence of traffic.",
+   "Q3": "_A_WHY:** This is measurable, not subjective. Sampling row brightness down the dirt column at x=100 gives: 58.3, 51.7, 62.0, 62.3, **58.3, 51.7, 62.0, 62.3, 58.3, 51.7, 62.0, 62.3** \u2014 the sequence repeats exactly, three times, at a 48px period. Pairwise comparison of the twelve aligned 48\u00d748 tiles at origins (24,0)\u2026(168,96) returns **mean absolute difference of 0.00** between every pair that has no prop drawn over it. Not \"similar\" \u2014 byte-identical. There is one tile in this floor, stamped. Also: the dirt/flagstone boundary at y=168 (x 24\u2013216) is a razor-straight horizontal line with zero transition \u2014 no spill, no scatter, no dirt tracked onto the stone. Two materials butt-jointed like a spec sheet. In a place in continuous heavy use, that edge is the least believable thing in the image.",
+   "Q4": "_B:** Yes. Two things. First, the joint lines: they are the same 2px, same colour, same straightness everywhere, and the long uninterrupted horizontal ones at y\u2248210 and y\u2248274 pull the eye across the whole room. Combined with the strict horizontal running bond, the floor reads as a *wall* pattern laid flat rather than paving \u2014 courses only run one way and never break. Second, the speckle: the same fine single-pixel dark dot scatter appears at similar density on many unrelated slabs \u2014 e.g. the slab at (500\u2013560, 60\u2013110), the one at (250\u2013310, 290\u2013340), the one at (400\u2013460, 180\u2013210) \u2014 reading as one noise pass applied over the sheet rather than dirt that arrived somewhere for a reason.",
+   "Q5_A": "An image that was repeated. This is not a judgement call \u2014 the tiles are bitwise identical at 48px offsets, and the whole floor is one stamp with zero variants, zero rotation, zero overlay breakup, and zero lighting.",
+   "Q6_A": "**NO.** I would not believe this shipped. And on the second question it does not reach \"merely competent\" \u2014 a floor whose material cannot be named and whose repeat is visible as a 3\u00d73 lattice of identical marks on a 384px screen is below the competent line, not at it.",
+   "CULL_A": "One 48px tile stamped bitwise-identically everywhere; the material is unreadable brown noise.",
+   "FLIP LIST": "- Break the floor. Cracked-through slabs, one or two sunken or lifted out of plane, gaps where a slab is simply gone and the substrate shows. At present zero slabs are damaged.\n- Break the joints. The 2px line must vary in width, value and straightness, and must be interrupted \u2014 packed with debris in places, spalled open in others. Kill the unbroken runs at y\u2248210 and y\u2248274.\n- Break the bond. Strict one-directional running bond reads as a wall laid flat; turn some slabs, interrupt some courses, vary a patch to a different laying pattern.\n- Replace the uniform speckle pass with placed dirt: accumulation against joints and in the lee of things, clean tracks where feet actually fall. Dirt should have a reason for being where it is.\n- Quantise the lighting and the soft stain blobs to the 2\u00d7 art grid so they stop floating at a different resolution from the pixels underneath.\n\n---",
+   "Q1_B": "_WHY:** The slabs are individually resolved: at x 440\u2013630, y 20\u2013180 I can count distinct blocks of genuinely different sizes \u2014 a wide slab spanning x 250\u2013470, narrow uprights at x 545\u2013600, small squares at x 480\u2013520 \u2014 separated by consistent recessed joints. Individual slabs carry their own base tone (the noticeably darker slab at roughly x 340\u2013470, y 250\u2013280; the dark band at x 200\u2013270, y 290\u2013330) and their own pitting density: some slabs are speckled, some are clean. That per-slab difference is what makes the material name itself.",
+   "Q5_B": "Made. I ran a near-duplicate scan over 156 blocks of the floor with the lighting divided out: median inter-block difference 24.9, and the lowest-scoring pairs (0.7\u20132.1) are all featureless slab interiors matching other featureless slab interiors, not structural repeats. Autocorrelation shows no minimum at any offset \u2014 only shallow dips at multiples of 32 from grid alignment. There is no stamped tile here.",
+   "Q6_B": "**YES**, I would believe this shipped. On the second question: it is competent, not genuinely good. It is clean, readable, well-lit paving that would pass unremarked in a commercial roguelike \u2014 and that is the problem. It reads as generic dungeon flagstone. Nothing in it says *administered filing system for souls, never once cared for*. A floor that is merely undamaged is a floor that has no fiction in it.\n\nOne further defect worth naming: the art is drawn at 2\u00d7 (every pixel is a 2\u00d72 block \u2014 I confirmed the column-duplication pattern directly), but the lighting is a smooth per-screen-pixel ramp (red channel walking 62\u2192166\u219242 in single-unit steps along y=250), and the soft stain blobs near (520,165) and (255,330) are gaussian smudges. Soft unquantised gradients sitting on top of hard chunky pixels. Mixed resolution.",
+   "CULL_B": "Undamaged square-cornered slabs and unbroken uniform joints \u2014 four hundred years of use left no mark.",
+   "RANK": "B by a wide margin, and not because B is good. A fails on a measurable, disqualifying defect \u2014 a single 48\u00d748 tile stamped bitwise-identically across the entire floor, with a repeated mark visible on a 3\u00d73 lattice at native size, and a material that cannot be identified. B is a real authored surface with genuine slab-level variation that no repeat test can catch. B's problem is the opposite one and a much better problem to have: it is well made and says nothing. B needs damage and history. A needs to be built.\n\nWhat to watch: B's fix list is all additive and low-risk \u2014 you are adding incident to a sound base. A's fix list is a rebuild, and the tile identity means there is nothing in the current asset to build on.\n\n*Model: Claude Opus 5 (1M context).*",
+   "Q1_WHY": "",
+   "Q3_WHY": "",
+   "Q1": "",
+   "Q5": "",
+   "Q6": "",
+   "CULL": "",
+   "flips": [
+    "Break the floor. Cracked-through slabs, one or two sunken or lifted out of plane, gaps where a slab is simply gone and the substrate shows. At present zero slabs are damaged.",
+    "Break the joints. The 2px line must vary in width, value and straightness, and must be interrupted \u2014 packed with debris in places, spalled open in others. Kill the unbroken runs at y\u2248210 and y\u2248274.",
+    "Break the bond. Strict one-directional running bond reads as a wall laid flat; turn some slabs, interrupt some courses, vary a patch to a different laying pattern.",
+    "Replace the uniform speckle pass with placed dirt: accumulation against joints and in the lee of things, clean tracks where feet actually fall. Dirt should have a reason for being where it is.",
+    "Quantise the lighting and the soft stain blobs to the 2\u00d7 art grid so they stop floating at a different resolution from the pixels underneath."
+   ],
+   "mapping": {
+    "B": "scene_ashlar_r7.png",
+    "A": "BAR"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r7_F4_transcript.txt"
+  }
+ },
+ "captures": {
+  "scene_ashlar_plant_r7.png": "aa878a7708cca4e2afc89d41925ab7d4e3dfcf020ae0591d8f8d2d539f0a18cb",
+  "scene_ashlar_r7.png": "69008da569a30e43536e1c285dd92f3073909f464f328eb7cf93b7aa9bf11477"
+ },
+ "plant_seat": "F2",
+ "round_void": false,
+ "plant_words_declared": [
+  "cobweb",
+  "cobwebbing",
+  "web",
+  "webbing",
+  "collapse",
+  "collapsed",
+  "caved",
+  "ruin",
+  "ruined",
+  "rubble",
+  "moss",
+  "mossy",
+  "overgrown",
+  "lichen"
+ ],
+ "law": "LOOP-PROCESS \u00a74: if the critic does not catch the plant, the round is VOID and its findings are not read."
+}

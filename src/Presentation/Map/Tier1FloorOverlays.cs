@@ -37,11 +37,22 @@ public static class Tier1FloorOverlays
     /// goes red if it silently does nothing).
     /// </summary>
     public static string Attach(TileLayer tileLayer, GameMap map, string manifestResPath, int seed)
+        => Attach(tileLayer, map, manifestResPath, seed, out _);
+
+    /// <summary>
+    /// As above, and hands back the plan. The edge-matched floor pass needs to know which cells
+    /// the channel runs through, and it must be THE SAME decision the overlays were placed from —
+    /// two independent channel derivations would be a copy that drifts.
+    /// </summary>
+    public static string Attach(TileLayer tileLayer, GameMap map, string manifestResPath, int seed,
+                                out Dictionary<(int X, int Y), FloorIncident> plan,
+                                bool drawChannel = true, bool drawMarks = true)
     {
+        plan = new Dictionary<(int X, int Y), FloorIncident>();
         var cfg = LoadConfig(manifestResPath, out string load);
         if (cfg == null) return $"floor overlays: NOT ATTACHED — {load}";
 
-        var plan = FloorIncidentPlanner.Plan(map, cfg, seed);
+        plan = FloorIncidentPlanner.Plan(map, cfg, seed);
         int grit = 0, events = 0, chan = 0, occl = 0, missing = 0;
 
         // THE RENDERER'S WHOLE-CELL WALL SHADOW IS TURNED OFF WHERE THIS FAMILY IS ACTIVE.
@@ -75,11 +86,47 @@ public static class Tier1FloorOverlays
                 else missing++;
             }
 
-            Draw(inc.ChannelId, 1, ref chan, orientable: false);   // left/right mean their side
+            // THE CHANNEL WASH IS SUPPRESSED WHERE THE EDGE-MATCHED FAMILY SUPPLIES THE CHANNEL,
+            // and leaving both on was a real defect a blind seat caught before this comment
+            // existed: "hard 64px tile-tint squares cut straight across the crack network; the
+            // grid reads before the floor does", measured as a -25.9 luminance step held across
+            // a cell boundary.
+            //
+            // The wash is a UNIFORM PER-CELL ALPHA LIFT. That is a flat value block at exactly
+            // cell granularity — §8.3.1's lattice — and it is also the thing floor session two
+            // was told not to do at all: a value lift cannot signal under a carried lamp,
+            // because brightness is what the light is saying. The edge-matched family carries
+            // the channel STRUCTURALLY instead (fewer, shallower joints; tighter grain), so the
+            // wash is not merely redundant here, it contradicts the design.
+            //
+            // Measured after the fix: the channel and base tiles differ by -0.32 luminance unlit,
+            // so nothing in the ART was ever making that step. It was entirely this overlay.
+            if (drawChannel)
+                Draw(inc.ChannelId, 1, ref chan, orientable: false);   // left/right mean their side
+
+            // OCCLUSION IS NOT A MARK and is never retired: it is §12.1's plane boundary, the
+            // form that says the floor stops where the wall begins.
             foreach (var oid in inc.OcclusionIds)
                 Draw(oid, 2, ref occl, orientable: false);         // N/E/S/W mean their edge
-            Draw(inc.EventId,   3, ref events, orientable: true);
-            Draw(inc.GritId,    4, ref grit,   orientable: true);
+
+            // PER-TILE MARKS, RETIRED BY RULING when the family draws its own incident.
+            //
+            // They were measured before they were retired. Over the lit ground they changed
+            // 48.72% of pixels but only 7.21% by a whole ladder rung, in 127 connected marks with
+            // a MEDIAN SIZE OF FOUR PIXELS — at 2x display, a two-by-two speck. Blind seats read
+            // them as "the pepper", as "static before it reads as stone", and as "the splat decal
+            // used three times unmodified"; one reported "No cracks. Not one. Across ~140 visible
+            // blocks" in a capture whose log said event=44.
+            //
+            // A decal small enough to be missed is not cheap, it is expensive: it spends contrast
+            // and returns noise. Incident now runs at FIELD SCALE, drawn into the tile's own
+            // authored pixels on the family's ladder, with a minimum readable extent enforced as
+            // a refusal.
+            if (drawMarks)
+            {
+                Draw(inc.EventId, 3, ref events, orientable: true);
+                Draw(inc.GritId,  4, ref grit,   orientable: true);
+            }
         }
 
         int channelCells = 0, neglected = 0;

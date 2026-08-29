@@ -1,0 +1,105 @@
+{
+ "commit": "f1bb3776ff97b93664367330e81c4ca84007a94e",
+ "grid": [
+  8,
+  8
+ ],
+ "seed": 1337,
+ "families": 3,
+ "crossings": [
+  7,
+  15,
+  24
+ ],
+ "session_one_largest_share": 0.991,
+ "fields": {
+  "ordinary": {
+   "file": "tools/tier1_floors/evidence/wang_ordinary.png",
+   "enclosure": {
+    "regions": 147,
+    "floor_px": 54446,
+    "largest_px": 2109,
+    "largest_share": 0.0387,
+    "median_region": 177,
+    "regions_over_64px": 77
+   },
+   "crossings": {
+    "horizontal_boundaries": {
+     "n": 56,
+     "distinct": 4,
+     "sd": 6.82,
+     "spread": 17,
+     "modal_share": 0.375,
+     "offsets": [
+      7,
+      8,
+      15,
+      24
+     ]
+    },
+    "vertical_boundaries": {
+     "n": 56,
+     "distinct": 3,
+     "sd": 6.97,
+     "spread": 17,
+     "modal_share": 0.375,
+     "offsets": [
+      7,
+      15,
+      24
+     ]
+    }
+   },
+   "lattice": {
+    "lattice": 0.119,
+    "var_total": 331.09,
+    "var_per_position": 291.69,
+    "cells": 64
+   }
+  },
+  "with_channel": {
+   "file": "tools/tier1_floors/evidence/wang_with_channel.png",
+   "enclosure": {
+    "regions": 145,
+    "floor_px": 54454,
+    "largest_px": 2109,
+    "largest_share": 0.0387,
+    "median_region": 142,
+    "regions_over_64px": 75
+   },
+   "crossings": {
+    "horizontal_boundaries": {
+     "n": 56,
+     "distinct": 4,
+     "sd": 6.82,
+     "spread": 17,
+     "modal_share": 0.375,
+     "offsets": [
+      7,
+      8,
+      15,
+      24
+     ]
+    },
+    "vertical_boundaries": {
+     "n": 56,
+     "distinct": 3,
+     "sd": 6.97,
+     "spread": 17,
+     "modal_share": 0.375,
+     "offsets": [
+      7,
+      15,
+      24
+     ]
+    }
+   },
+   "lattice": {
+    "lattice": 0.1138,
+    "var_total": 271.55,
+    "var_per_position": 240.65,
+    "cells": 64
+   }
+  }
+ }
+}

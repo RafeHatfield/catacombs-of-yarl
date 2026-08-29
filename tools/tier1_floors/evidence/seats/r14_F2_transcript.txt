@@ -1,0 +1,82 @@
+I read the image at 1:1 first, then magnified. Analysis below is anchored to pixel coordinates in the 750×600 frame. The lit room is x≈185–630, y≈15–395; a corridor runs south at x≈330–430, y≈395–600; another runs west at x≈0–185, y≈150–290.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone slabs — brick-shaped flags, dry-laid in a rough running bond. I can tell it's stone and I can tell it's cut rather than natural. I cannot tell you *which* stone, and that's the problem: it has no grain, no bedding, no colour, no mineral. It is "generic dungeon slab."
+
+**Q1_WHY:** The joint network at (196–620, 30–390) is continuous, dark, and consistent-width — that's mortarless flagging, not planks or packed earth. Slab pitch is ~37px with slabs subdivided into halves and thirds. But I measured the face colour across 108 tiles after normalising out the lamp falloff: mean normalised brightness 0.997, **std 0.076**; R/B hue ratio 2.073, **std 0.216** — and the hue outliers are near-black tiles where the ratio is noise. Every slab on this floor is the same value and the same colour as every other slab. One material, mixed nowhere, stained nowhere, replaced nowhere.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, into the corridor at (330–430, 395+).
+
+Nothing about the ground influenced that. I picked it because it is the only opening whose far end I cannot see — the west corridor at (0–185, 150–290) is already visible to its edge, so south is the only unexplored direction. That is a wall-and-camera decision, not a floor decision. I want to be plain about this: I looked at the ground in front of both mouths specifically to see if it would break the tie, and it did not.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Something has been applied to it. Nothing has happened to it.
+
+It carries three marks: dark round patches ~22–28px across, branching cream lines, and a 45° hatch. All three are spread at even intervals over the entire lit area *and* over the unlit corridors. They do not concentrate anywhere, they do not respect the room's shape, they do not respect the doorways, and they do not accumulate where feet would go. Even distribution is the signature of a texture pass, not of use. This floor has been *aged*; it has not been *used*.
+
+**Q3_WHY:** I removed the lamp's radial falloff and mapped the residual albedo in 40×40 blocks across (200–620, 30–390). Result: everything sits within ±10 of a ~100 mean, i.e. under 10%, with no coherent structure — no darker lane, no lighter lane, no polished centre, no grime at the edges. And the ~15 dark patches are spaced roughly one per seven slabs with no clustering — including in the south corridor at (330–430, 400–560), which under the fiction is a throat that four hundred years of traffic has poured through, and which is textured identically to the middle of the room.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Three things, in this order.
+
+1. **The cream squiggles.** Densest at (280–360, 250–320) and (455–520, 55–125). I counted 4,482 pixels on the lit floor sitting more than 25 levels above their local surround. They do dim with the lamp, but their *contrast ratio against the floor rises with distance* — 1.4× at 20–60px from the light, 2.2× at 220–260px. So in the outer dark, they are the only thing left visible: a field of disconnected glowing worms floating on near-black. My eye went to them before it went to the character.
+
+2. **The two blank slabs.** (373–410, 120–145), directly above the figure — the single most-lit tile on the screen, and it is a flat empty rectangle. And (530–590, 205–235), a double-width slab with literally zero surface detail. In a field where every neighbour is hatched, these read as holes in the art, not as smooth stone.
+
+3. **The dark patches wearing dotted cream necklaces.** At high zoom, e.g. (325–375, 20–70), the bright rim runs *all the way around* the patch as a broken dotted contour. That is an outline, not a rim light. A hole or a scorch lit by a lamp 150px to the lower-right would have a crescent on one side. This has a necklace. Once I saw it on one, I saw it on all fifteen.
+
+**Q5: MADE, OR REPEATED?**
+**Repeated.** Not by literal tile duplication — I checked, and the honest result is in the work's favour: I ran normalised cross-correlation on 3,521 24×24 patches across the whole floor, and the top non-adjacent match was 0.94 at (206,288)/(254,288), which on inspection is two low-contrast dark patches sharing a joint line, not a copied tile. The blobs are individually varied too: template-matching the blob at (392,222) against the entire floor returned a best non-self score of 0.52. No two tiles are the same tile.
+
+It is repeated at the level above that — the vocabulary. I histogrammed gradient orientation over the whole lit floor: energy piles up at 0°/90° (11,609 and 11,631 samples) and at 45°/135° (6,025 and 5,735), with every off-axis bin under 1,000. Roughly 92% of every mark on this surface lies on one of four axes. Each tile then draws from a set of four states — 45° hatch, vertical comb-ticks, 1px random noise, or blank — and the hatch is the same angle and the same ~5px spacing everywhere it appears, from (500–590, 20–130) to (536,217) to (255–360, 70–110). Real tooling marks vary per slab because a different hand cut each slab on a different day. These do not vary. The randomness is in the pixels; the decisions are all the same decision.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** The lighting falloff is clean and correctly warm, the bond pattern varies its slab widths, and nothing is visibly broken.
+
+**Merely competent.** Not good. A good floor gives you information you didn't ask it for. This one gives you none — I ran three separate measurements looking for something the ground was telling me, and each came back flat.
+
+**Q7: WHAT CAN YOU ACTUALLY SEE AT 1:1?**
+**The faces are blank at 1:1.** What I could read without magnifying: the joint grid, the cream squiggles, and the dark patches. That's the whole list, and note that two of those three are *joints and blobs*, not the face of the material.
+
+What I only got by magnifying: the 45° hatch — at 1:1 it does not read as tooling or as anything else, it reads as undifferentiated grubbiness. The vertical comb-ticks, which I did not see at all at 1:1 and which look like inscribed tallies at 6×. The single-pixel noise dither. And the fact that the blob rims are dotted rather than solid.
+
+There is a scale problem underneath this. I sampled the character sprite's pixels at (391–392, 161–162) and (399–400, 161–162): the sprite is drawn in **2×2 pixel blocks**. The floor's noise dither at (430–490, 140–200) is drawn in **1×1 pixels**. The floor's detail is authored at half the character's pixel size, so it physically cannot survive to the same viewing distance. That is why the faces read as mush.
+
+**Q7_WHY:** Checked at 1:1 — (185–630, 15–395) whole room; specifically (350–500, 120–270) around the figure, (480–630, 40–190), (200–350, 260–410). Had to magnify — (430–490, 140–200) at 10× to find the noise dither; (240–360, 60–180) at 6× to resolve the hatch and the comb-ticks; (325–375, 20–70) at 8× to see the rims were dotted contours; (505–600, 195–240) at 8× to confirm the blank slab was blank rather than dark.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+It reads as **one age everywhere**, and that age is *unspecified* — I cannot give you a number, because the floor does not contain the evidence a number would come from.
+
+What it does not have: a single replaced slab, a single patch, a single repair. No rope, no driven pin, no salvaged timber, no hide. Nothing settled, nothing tilted, nothing lipped up so you'd trip. No second stone. No edge worn round while its neighbour stayed sharp. Slab-to-slab normalised brightness varies by std 0.076 — under 8% — and hue not at all.
+
+If I have to answer: it reads as **laid all at once and untouched since**, which is exactly the age the fiction says it cannot be. A frontier held for four hundred years by a company that repairs everything with whatever is to hand should leave the ground as the most heavily annotated surface in the game. This ground is the least annotated surface in the frame.
+
+**Q8_WHY:** (200–615, 32–385), 108 tiles sampled on a 37px grid after lighting normalisation — brightness std 0.076, range 0.753–1.244, and both extremes are the two blank slabs at (373–410, 120–145) and (530–590, 205–235), not stone of a different age. Joint width and slab pitch are constant from (200,35) to (600,380). The mouth of the south corridor at (335–425, 390–410) is cut with the same crisp joints as the room's interior at (400, 200).
+
+**Q9: WHERE WOULD YOU WALK TO CROSS THIS LEVEL?**
+From the west mouth at ~(185, 220), east across the room's middle band through (250, 215) → (330, 210) → (400, 230), then turn south at ~(390, 300) and down through (390, 350) into the corridor throat at (380, 400).
+
+**The ground told me nothing. I routed by the walls alone.** Every metre of that path is indistinguishable from every metre I rejected.
+
+**Q9_WHY:** Along the route — (185–430, 200–240) and (365–420, 240–400). Rejected — (200–320, 40–120) upper-left, (480–620, 40–190) upper-right, (200–330, 300–390) lower-left. What is different about the ground between them: nothing I can measure. All six regions carry the same slab pitch, the same joint value, the same hatch angle, the same blob frequency, and the same normalised albedo to within the 7.6% tile-to-tile spread. My residual map covers exactly these regions and the route blocks are not brighter, darker, smoother, or dirtier than the rejected ones. I chose the middle band because it is the shortest line between two doors, which is a statement about the doors.
+
+**Q10: WHICH WAY IS USED MOST, AND WHICH LEAST?**
+**They all look the same.** I can't rank them.
+
+Judging only the ground in front of each: the west mouth at (150–210, 190–260) and the south mouth at (335–425, 385–420) have identical slab pitch, identical joint treatment, and the same scattered dark patches at the same frequency. The south corridor's interior at (330–430, 430–580) — which I lifted with a gamma pass to see past the darkness — carries the same blobs and the same cracks at the same density as the middle of the room. Nothing is polished, nothing is grooved, no threshold is dished, no mouth is dirtier or cleaner than the other. If one of these is a dead end nobody has opened in a century and the other is the road the garrison walks daily, the floor does not know it.
+
+**CULL:** Reject — the ground records no traffic, no repair, and no age; three exits read identically.
+
+**FLIP LIST**
+- Wear the traffic in: darken and smooth the slab faces along the west-mouth→south-mouth line at (185–430, 200–240) and (365–420, 240–400), and leave the corners at (200–320, 40–120) and (200–330, 300–390) sharp-jointed and rough — a measurable albedo split of at least 20%, not the current 7.6%.
+- Put orc repair on the ground: at minimum three patches — a replaced slab in a different stone value, a plank-and-driven-pin bridge over a broken flag, a rope-lashed timber shim — sited near the south mouth at (350–430, 360–400) where the load is.
+- Redraw the dark patches: replace the full dotted cream necklace (see (325–375, 20–70)) with a single crescent whose side is driven by the lamp position, and cut their count from ~15 to 5 so they read as specific events rather than as scatter.
+- Kill the blank slabs at (373–410, 120–145) and (530–590, 205–235), and either give the 45° hatch a per-slab angle and spacing or remove it — at 1:1 it reads as grubbiness, not as tooling.
+- Author the floor at the character's pixel scale: the sprite uses 2×2 pixel blocks, the floor uses 1×1, so no face detail survives to viewing distance. Redraw the surface at 2× and let the cream cracks drop below the joint value so they stop out-reading the character.
+
+Forward look: the fix that changes the most per unit of work is the wear pass — one albedo split along the walked line would answer Q2, Q9 and Q10 at once, and it can go in before any tile is redrawn. The pixel-scale mismatch is the expensive one and it invalidates any face detail authored before it's settled, so I'd resolve that before commissioning new tiles.
+
+*Model: Claude Opus 5 (1M context).*
