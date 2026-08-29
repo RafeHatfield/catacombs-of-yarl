@@ -2038,6 +2038,7 @@ It is law because it is the third instance of one family, and the third time it 
 | | authored | delivered |
 |---|---|---|
 | **the trodden channel** | wear driven to the limit of subtraction — 0.350 / 0.578 / 0.775 against unpolished stone | four seat rounds did not report it; *"if you rotated the room 180° the floor would give me exactly the same amount of information: none"*. Ruling 70. |
+| **the trodden channel, EXECUTED (2026-08-29)** | three further levers: joints packed with grit (age spread 0.98 → 5.02 rungs), two palette rungs below the donors, a constant-luminance chroma rotation delivering 11.25° of hue | seven seat rounds did not report it. CLOSED — and the reason is §13.9, not 32px: at the busiest tile the whole ladder renders to 8-bit 1…4 and a rotation worth ΔE 10.12 at full light rounds to ΔE 0.00. See `docs/RULING-70-CHANNEL-CLOSED.md`. |
 | **the incident overlays** | 127 marks, `event=44` in the log | **median mark 4px**, mean delta 8.18 luminance — below one rung. *"The pepper."* *"No cracks. Not one."* |
 | **the stone grain** | ±4 luminance against a 13.23 rung | faces quantise flat. **"The floor reads as linoleum."** |
 
@@ -2100,6 +2101,47 @@ question a future session would otherwise re-open with generations.
 
 Sources: PRs #142 (probe 6.4 surface audit), #144 (wall gauntlet), #145 (tiles-pro audit), #146
 (composition spike).
+
+---
+
+### 13.9 The representable floor — LAW (2026-08-29)
+
+§13.8 rules that **a signal authored below the perceptual floor is absent**, and it is measured on
+the source. This clause is its sibling and it is measured on the delivered frame:
+
+> **A signal is absent if the rig does not deliver enough of it to be represented.** Everything
+> authored must clear the perceptual floor *at the illumination it is actually seen under*, not at
+> the illumination of the source file.
+
+The difference is not academic. The tier-one floor's palette is a nine-rung ladder spanning 48.6
+to 154.4, and its path was authored on it in three separate channels. Measured on the shipped
+capture, at the tiles the traffic field calls busiest:
+
+| illumination | the whole nine-rung ladder becomes | the full chroma rotation moves |
+|---|---|---|
+| full | 8-bit 49 … 154 | rgb(115,115,114) → rgb(103,122,113), **ΔE 10.12** |
+| mean trodden tile (24.3/255) | 8-bit 5 … 15 | rgb(11,11,11) → rgb(10,12,11), **ΔE 1.06** |
+| **the busiest tile (7.1/255)** | **8-bit 1 … 4** | **rgb(3,3,3) → rgb(3,3,3), ΔE 0.00** |
+
+At the one tile the level's own graph says is walked most, the entire palette collapses into four
+8-bit values and a colour rotation worth ten ΔE at full light **rounds to nothing at all**. The
+signal is not faint there. It does not exist: it was quantised out of the frame before any eye,
+instrument or seat was involved.
+
+**87% of that scene's laid floor sits below luminance 70**, and its trodden tiles are *darker* than
+its off-route tiles — mean 24.3 against 30.7 — because corridors are where traffic concentrates
+and corridors are where the lamp is not.
+
+**Consequences, and they bind every future round:**
+
+1. **An instrument that measures the source has not measured the asset.** Report the delivered
+   amplitude at the illumination the thing is seen under, or report nothing.
+2. **A channel cannot be ruled impossible from one scene.** What failed above is *this* rig
+   delivering *this* scene's route; the same lever at full light is worth ΔE 10.12, which is well
+   clear of any floor. Name the illumination in the ruling or the ruling is wrong.
+3. **Where a signal must read, either the light must reach it or the signal must not be surface
+   material.** Value, texture and colour are all multiplied by the same falloff. No amount of
+   authoring beats a multiplication by 0.03.
 
 ---
 
