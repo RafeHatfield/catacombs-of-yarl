@@ -317,10 +317,18 @@ The alternative reading — hold the round until the critic passes — would mea
 against a constraint the art cannot reach, which is exactly the failure §6.2.1 named when it said
 *the rig is one table of numbers and the corpus is every asset in the game.*
 
-## 7d. Round 4 — the build offered to the gate
+## 7d. Round 4 — the build offered to the gate, and it is VALID
 
-`r12`, `void_ring` 1, the `compensated` arm. The seat's cull is **the fifth independent statement
-of the same sentence**, across four builds:
+`r12`, `void_ring` 1, the `compensated` arm. **The plant was caught on axis** (`stamped`), so
+§1.1.1 is satisfied for the thing actually being presented rather than for an ancestor of it.
+Three of the four rounds are valid; the void one is §7c.
+
+The plant seat's own cull, incidentally, is the finding stated more sharply than any instrument
+managed: *"walls receive no light — **0% of standing pixels above 128/255**; every crack, course
+and repair is dark-on-dark."*
+
+The family seat's cull is **the fifth independent statement of the same sentence**, across four
+builds:
 
 > *"Walls sit at 4–7% of floor luminance — at 1:1 the room has no visible structure, only
 > darkness."*

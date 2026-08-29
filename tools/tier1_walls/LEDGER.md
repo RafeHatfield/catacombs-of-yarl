@@ -128,7 +128,10 @@ laying its bond with them. No generated pixel is in a shipped tile.
 | 3 | W1 family | r11 | **NOT READ — the round is VOID** |
 | 3 | W2 **plant** | r11 | **MISSED ON AXIS.** Culled for *"invisible at play brightness — the subject isn't rendered"*, which is the family's defect, not the plant's. `REPORT.md` §7c. |
 | 4 | W1 family | r12 | CULL: *"walls sit at 4-7% of floor luminance — at 1:1 the room has no visible structure, only darkness"*. The void now reads: *"exactly (1,1,2) with zero variance. Not dark — empty. Authored void."* |
-| 4 | W2 **plant** | r12 | see `evidence/seats/r4_W2.json` |
+| 4 | W2 **plant** | r12 | **CAUGHT ON AXIS** (`stamped`). CULL: *"walls receive no light — 0% of standing pixels above 128/255; every crack, course and repair is dark-on-dark"* |
+
+**Three of the four rounds are VALID and the build offered to the gate is behind one of them.**
+Round 4's plant was caught on axis, so §1.1.1 is satisfied for the thing actually being presented.
 
 **Round 3 is VOID and its findings are not read.** Not discounted — void. A reading of the island
 that had already been drafted into `STACK-FINDING.md` was withdrawn rather than downgraded when
