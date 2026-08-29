@@ -804,9 +804,32 @@ DRESSING_KEEP = 0.45            # how much of its dressing a fully worn stone LO
                                 # one of them, and caught only by the paint check — a magic
                                 # number duplicated across a language boundary is the exact
                                 # drift this project has already paid for twice.
-JOINT_TIGHT_RUNGS = 1.0         # how much SHALLOWER a fully sheltered joint is
-JOINT_TIGHT_KNEE = 0.4          # a joint at or below this age is TIGHT — a full rung
-                                # shallower. Above it, open, and it chips instead.
+# ============================ THE JOINT AS A TRAFFIC LEVER ============================
+#
+# RULING, after the measured ceiling: unfreeze the joints. The lever set that was available —
+# dressing count, dressing depth, chipping — has a ceiling of 0.875 trodden-to-off-route
+# roughness EVEN WITH A TRODDEN STONE STRIPPED COMPLETELY BARE, because local contrast is
+# dominated by the joints, which sat at full depth everywhere regardless of traffic. A blind seat
+# routed by the walls and the torchlight and said the floor told it nothing.
+#
+# So the joints carry it now, and the direction is the opposite of what was there before:
+#
+#     OFF-ROUTE   deep, tight, dark, continuous — nothing has happened to it
+#     TRODDEN     compacted, FILLED, interrupted — grit packed into the gap, stones worn into
+#                 one another until the line between them stops being a line
+#
+# OCCLUSION-LEGAL BY CONSTRUCTION, which is the whole reason this is allowed at all: a filled
+# joint is a SHALLOWER joint, and a shallower recess holds less shadow. Lighter is a consequence
+# of geometry, never a coat of paint. Nothing here brightens anything; it fills a hole.
+#
+# THE BOND IS UNTOUCHED. Filling changes what is VISIBLE, not what is there — the class mask still
+# divides the stones, so every stone keeps its address and the corner theorem is unaffected. What
+# degrades along a path is the VISIBLE enclosure, deliberately, because "stones wearing into one
+# another" is the thing being drawn.
+JOINT_FILL_RUNGS = (0.0, 0.0, 1.0, 2.0)   # by wear age: how far up the ladder a joint is packed
+JOINT_BREAK = (0.0, 0.0, 0.20, 0.45)      # by wear age: share of the joint packed level with the
+                                          # floor, so the line stops being continuous
+JOINT_BREAK_SALT = 3010
 CHIP_RATE = 0.55                # of stone pixels beside a fully-open joint, how many go with it
 SPALL_RATE = 0.10               # of those, how many take a second pixel — a corner gone
 CHANNEL_WEAR = 235              # what the trodden channel raises W to. Nulled by the plant.
@@ -1017,7 +1040,11 @@ def main():
                          "a manifest written now would ship a split nobody authored." % SPLITS)
 
     src = json.load(open(os.path.join(CF.ASSETS, "MANIFEST.json")))
-    mat = src["material"]
+    # RE-DERIVE THE LADDER rather than inherit it. The base family's manifest was written before
+    # the ruling that put two rungs below the donors' band, and a stored ladder is a snapshot of
+    # the rule on the day it was written. `lum_lo`/`lum_hi` are the measurement; the ladder is a
+    # rule applied to it.
+    mat = CF.rehydrate(src["material"])
     os.makedirs(a.out, exist_ok=True)
     step = (mat["lum_hi"] - mat["lum_lo"]) / (CF.PALETTE_LEVELS - 1)
 
@@ -1026,7 +1053,7 @@ def main():
                a_table=A_TABLE, mv_table=MV_TABLE,
                salts=dict(horizontal=HORIZ, vertical=VERT, span=SPAN, interior=INTERIOR,
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
-                          marks=MARKS, wear=WEAR, chip=CHIP),
+                          marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,
@@ -1127,8 +1154,8 @@ def main():
                              "R = index into ladder, G = stone class 0..6")
     man["grain_scales"] = dict(coarse=0.34, fine=0.14, worn_multiplier=WEAR_GRAIN)
     man["differential"] = dict(octaves=[list(o) for o in WEAR_OCTAVES],
-                               lo=WEAR_LO, hi=WEAR_HI, joint_tight=JOINT_TIGHT_RUNGS,
-                               tight_knee=JOINT_TIGHT_KNEE,
+                               lo=WEAR_LO, hi=WEAR_HI,
+                               joint_fill=list(JOINT_FILL_RUNGS), joint_break=list(JOINT_BREAK),
                                chip_rate=CHIP_RATE, spall_rate=SPALL_RATE,
                                dressing_keep=DRESSING_KEEP,
                                channel_wear=CHANNEL_WEAR, ages=list(WEAR_AGES),

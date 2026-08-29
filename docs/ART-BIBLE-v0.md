@@ -616,6 +616,72 @@ measurement behind it, from the ring rather than from the composition. `REPORT.m
 *"it will recur on every floor generated from this surface"* is corrected to **"from that
 reference"**.
 
+### 5.6 The working ladder — RULED (Rafe, 2026-08-28), PLACEHOLDER scaffold
+
+**This clause governs a scaffold, not §5.1.** The tier-one families quantise onto a *working
+ladder* derived from their donors, and that ladder is a stand-in for the global palette §5.1
+will eventually name. It is recorded here so the palette-derivation pass inherits the reasoning
+along with the numbers, rather than finding an unexplained pair of rungs.
+
+**The ladder is DERIVED, never stored and trusted.** `lum_lo` and `lum_hi` are the donors' 5th and
+95th percentiles — the measurement. The ladder is a rule applied to that measurement, and the rule
+is allowed to change. Every consumer of a written manifest re-derives (`compose_family.ladder_for`,
+`compose_family.rehydrate`); a manifest written under an older rule cannot silently keep it.
+
+**Count: 7 derived rungs, plus 2 below the donors' band. Total 9** — noted for the palette pass,
+which should derive that reach rather than extend it afterwards.
+
+**Provenance of the two rungs — earned by `tools/tier1_floors/measure_ladder_reach.py`.** A floor
+donor has no reason to contain the darkest value in the room, so the derived band held neither of
+the two things that need one:
+
+| | wants | seven rungs gave it |
+|---|---:|---|
+| the floor's own sheltered joint (§6.5: dark **because enclosed**) | 47.80 | clamped to 75.02 |
+| §6.5's wall face at 0.60 × floor | 60.70 | clamped to 75.02 |
+| §6.5's wall face at 0.50 × floor | 50.58 | clamped to 75.02 |
+
+The joint clamp is the device gate's second verdict stated as a number: *"all the gaps look
+standardized"* was not the wrong darkness but the **same** darkness — every sheltered joint in the
+world quantising to one rung with zero spread, because the palette ended there. The wall clamp is
+the same rung seen from the other side: a wall face could not be authored at either end of its own
+ruled band.
+
+**Two rungs at the derived spacing — 48.56 and 61.79 — land all three.** The joint lever's ceiling
+(coverage × travel, the most any joint-confined lever can move a tile's mean) improves 0.0745 →
+0.1253 against §13.8's floor of 0.1440. Still short: **the extension does not make the joints a
+sufficient path lever**, and was never ruled to. It restores their variation and it makes a wall
+face possible.
+
+### 5.7 An anchor must be stable under field size — LAW (Rafe, 2026-08-28)
+
+**A median may not be used as an anchor.** On a quantised surface the median *is* a rung, so it
+snaps, and it jumps a whole rung the moment the 50th percentile crosses over. Measured on one
+unchanged floor:
+
+| field | median | mean |
+|---|---:|---:|
+| 12×12 | 113.85 | 107.30 |
+| 16×16 | **100.86** | 105.91 |
+
+The median moved 13.0 units — a full rung, 12% — while nothing about the floor changed. The mean
+moved 1.3%. A reported anchor that is really a report of the measuring window will send every
+ratio derived from it the wrong way, and §6.5's whole stack is ratios.
+
+**Any value another clause takes ratios against must be shown stable across at least two field
+sizes, and the statistic must be area-weighted.** For a plane, that means the mean including its
+joints: §6.5 separates *planes*, and a median steps straight over the 21.85% of a floor that is
+joint — ratios against it would be ratios against a floor with no joints in it, which is not the
+floor anyone looks at.
+
+**The tier-one floor's anchor: 101.16** (101.16 at 16×16, 103.00 at 12×12 — stable to 1.8%),
+measured on the landed family under §5.6's nine-rung ladder. It replaces 114.50, and the fall is
+real: the differential-wear pass deepened the joints, and §5.6's two rungs let the sheltered ones
+reach the depth the bond had always authored. Wall work reads **101.16**.
+
+> The 100.86 that opened the wall session was the median artefact above, not a moved floor. Both
+> the correction and the law come out of the same measurement.
+
 ---
 
 ## 6. Light — LOCKED

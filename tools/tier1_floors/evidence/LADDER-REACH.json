@@ -1,0 +1,39 @@
+{
+ "commit": "cbf5ad2189fb1fee45e31a3c4496eea5ab97b8bd",
+ "anchor": 101.162,
+ "joint_coverage": 0.2185,
+ "floor": 0.144,
+ "shipped": {
+  "label": "AS SHIPPED \u2014 9 rungs",
+  "ladder": [
+   48.563,
+   61.789,
+   75.016,
+   88.243,
+   101.469,
+   114.696,
+   127.923,
+   141.149,
+   154.376
+  ],
+  "step": 13.227,
+  "all_reached": true,
+  "joint_ceiling_weber": 0.1253
+ },
+ "stripped_control": {
+  "label": "THE CONTROL \u2014 the 2 bottom rungs taken back off",
+  "ladder": [
+   75.016,
+   88.243,
+   101.469,
+   114.696,
+   127.923,
+   141.149,
+   154.376
+  ],
+  "step": 13.227,
+  "all_reached": false,
+  "joint_ceiling_weber": 0.0745
+ },
+ "decisive": true
+}

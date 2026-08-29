@@ -1,0 +1,110 @@
+{
+ "commit": "cbf5ad2189fb1fee45e31a3c4496eea5ab97b8bd",
+ "capture": "tools/tier1_floors/evidence/scene_ashlar_r16.png",
+ "floor": 0.144,
+ "shipped": {
+  "value_weber": 0.1123,
+  "texture_weber": 0.0639,
+  "off_value": 131.559,
+  "trodden_value": 117.575,
+  "off_rough": 8.5837,
+  "trodden_rough": 8.0518,
+  "levels": [
+   {
+    "level": 1,
+    "tiles": 1,
+    "value": 166.894,
+    "roughness": 13.9727
+   },
+   {
+    "level": 2,
+    "tiles": 5,
+    "value": 124.492,
+    "roughness": 7.506
+   },
+   {
+    "level": 3,
+    "tiles": 5,
+    "value": 169.681,
+    "roughness": 10.5584
+   },
+   {
+    "level": 4,
+    "tiles": 1,
+    "value": 124.293,
+    "roughness": 9.4045
+   },
+   {
+    "level": 5,
+    "tiles": 6,
+    "value": 205.562,
+    "roughness": 11.2162
+   },
+   {
+    "level": 6,
+    "tiles": 5,
+    "value": 131.625,
+    "roughness": 10.5995
+   },
+   {
+    "level": 8,
+    "tiles": 2,
+    "value": 117.575,
+    "roughness": 8.0518
+   }
+  ]
+ },
+ "plant": {
+  "value_weber": 0.319,
+  "texture_weber": 0.2624,
+  "off_value": 132.043,
+  "trodden_value": 95.716,
+  "off_rough": 8.6212,
+  "trodden_rough": 6.6216,
+  "levels": [
+   {
+    "level": 1,
+    "tiles": 1,
+    "value": 168.114,
+    "roughness": 14.0945
+   },
+   {
+    "level": 2,
+    "tiles": 5,
+    "value": 124.829,
+    "roughness": 7.5265
+   },
+   {
+    "level": 3,
+    "tiles": 5,
+    "value": 171.251,
+    "roughness": 10.6815
+   },
+   {
+    "level": 4,
+    "tiles": 1,
+    "value": 125.78,
+    "roughness": 9.5197
+   },
+   {
+    "level": 5,
+    "tiles": 6,
+    "value": 207.464,
+    "roughness": 11.3614
+   },
+   {
+    "level": 6,
+    "tiles": 5,
+    "value": 133.767,
+    "roughness": 10.8125
+   },
+   {
+    "level": 8,
+    "tiles": 2,
+    "value": 95.716,
+    "roughness": 6.6216
+   }
+  ]
+ },
+ "plant_caught": true
+}
