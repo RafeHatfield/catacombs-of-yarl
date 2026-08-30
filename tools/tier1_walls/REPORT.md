@@ -8,6 +8,11 @@ be.** Everything below was produced on the ratified rig (radius 5.0 / falloff 1.
 
 ## 0. What this session is returning, in one page
 
+**⚠ THIS SECTION IS THE STATE AT THE FIRST GATE. Two rounds of rulings have landed since —
+§9 and §9d — and where they disagree with what follows, they win.** The original text is kept
+because a report that overwrites itself is not a record: the findings below are what was true
+before Rafe walked it, and reading them in order is how the reversals make sense.
+
 **Three findings, one ruling trigger, two arms and a scene.**
 
 1. **§6.5's value stack does not survive §6.2's falloff.** The wall top cannot be made brighter
@@ -25,6 +30,18 @@ be.** Everything below was produced on the ratified rig (radius 5.0 / falloff 1.
 
 The walls were built anyway, as two arms, because the ruling in (1) is Rafe's and a gate needs
 something to rule on. Six instruments were built and all six have demonstrated they can fail.
+
+**Where the two ruling sets have since taken it, in five lines:**
+
+- §6.5 is **re-scoped to a standing-distance law**; the 1.11× came from a lightless screenshot and
+  is not chased. Inversion past three tiles is physics, recorded as dark-by-design.
+- The defect is **wall-versus-FLOOR, not wall-versus-void**, and the remedy is **the material
+  arm** — wall stone as its own darker material. Wall-vs-floor now delivers **23.27 levels** at the
+  standing case against an 8-level bar.
+- **The walls have a history**: aging at the base courses, keyed to the floor's own traffic field.
+- **The §3 mask collapse is fixed** as a correctness bug, in the logic layer, with tests.
+- **Two review scenes were dead** — traffic field exactly zero — for a reason that is neither the
+  scene nor the art.
 
 `evidence/SESSION-before-after.png` is the session in one image: the magenta mocks on the left,
 the walls and the void on the right. ⚠ **It is a before-and-after of the SESSION, not an A/B of a
