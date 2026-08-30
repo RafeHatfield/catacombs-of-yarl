@@ -524,6 +524,41 @@ not a return to baked overlays.
 merged** — PRs #162, #163, #165 and #166 are all open — so the trail cannot be in the scene. The
 walk covers walls-vs-floor separation and the aged bases.
 
+## 9f. ROUND 7 — VALID, and it is the fresh round the ruling asked for
+
+**The plant was caught on axis with four hits** — `rubble`, `was applied`, `stamped`, `nothing has
+happened` — the strongest catch of the session, and it makes round 7 the valid round behind the
+material build.
+
+**Its family seat was run on the GATE SCENE**, with the player in the middle of the room, and that
+matters for reading what it says. Three of its findings confirm the instruments almost to the
+decimal:
+
+| the seat said | the instrument said |
+|---|---|
+| *"walls render at mean **8/255** against a void at **1/255**"* | L(wall, void) beyond four tiles = **7.39** |
+| *"at x=400 the boundary is y 773→774: (5,5,5) → (10,9,10). The step is 5 levels and it goes the wrong way — the wall is **brighter** than the ground"* | L(wall, floor) beyond four tiles = **+1.65**, sign flipped |
+| *"Nothing has happened to it … every run is uniform end to end … the south run is a single flat value for 665 pixels"* | the age signal at 3–4 tiles is 0.75 / 7.5 / 12.2 **levels** by age, and most gate-scene faces are at 5–7 |
+
+**So the aging is present, keyed, and invisible at the range the gate scene looks from.** That is
+not a failure of the aging — it is the mass-read defect again, wearing the history clause's
+clothes. At the standing station the same material delivers Weber 0.181 and 12.2 levels at age 3.
+The two measurements are not in conflict; **they are the same fact about range, and the seat found
+it from the other end.**
+
+⚠ **AND ONE NEW THING, FOR THE DEFERRED VOID RULING.** The seat separated the void by measurement
+and then said what it read as:
+
+> *"**Empty space — and not in a way that reads as fiction.** The region x 0–300, y 0–190 contains
+> **exactly one colour, RGB(1,1,2), across 57,000 pixels, standard deviation 0.00**. It is not
+> more of the same stuff, it is not a room I cannot see into, it is not something I cannot name.
+> It is a flat fill."*
+
+A zero-variance flat colour reads as **nothing was drawn there**, not as darkness. That is a
+finding about the void's *construction* rather than its value, and it is new: all three candidates
+share it, because all three are flat fills. It belongs to the deferred void gate and nothing is
+done about it here.
+
 ## 9e. The review scenes were dead, and not for the reason yesterday's report gave
 
 Audited across the whole set rather than assumed, because the first dead scene was found by

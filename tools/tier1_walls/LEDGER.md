@@ -26,7 +26,7 @@ token batch to show willing.
 | 4 | rebuild at void_ring 1 | — | seats W1, W2 — VALID. **Walked by Rafe on the SE; five rulings returned.** |
 | 5 | the gate's items: mask fix, tops cleaned, aging keyed to traffic | 162 tiles + 3 void | seats W1, W2 — W1 WITHHELD by the new rule, no plant verdict |
 | 6 | rebuild after the ID-COLLISION fix | 162 tiles + 3 void | seats W1, W2 — **VOID**, the plant missed on axis |
-| 7 | **the material arm as the family** (gate ruling 1) + the fixed corridor scene | 162 tiles + 3 void | seats W1, W2 — the fresh valid round the ruling asked for |
+| 7 | **the material arm as the family** (gate ruling 1) + the fixed corridor scene | 162 tiles + 3 void | seats W1, W2 — **VALID**, plant caught on axis with four hits |
 
 ## 2. The captures
 
@@ -152,7 +152,9 @@ laying its bond with them. No generated pixel is in a shipped tile.
 | 6 | W1 family | r17 | **NOT READ — VOID**, withheld by the harness before anyone saw it |
 | 6 | W2 **plant** | r17 | **MISSED ON AXIS.** CULL: *"walls and floor render on one flat plane at equal value"* — the family's defect, not the plant's |
 
-**Four of six rounds VALID (1, 2, 4, 5); two VOID (3, 6).** Both misses culled on a defect the
+**Five of seven rounds VALID (1, 2, 4, 5, 7); two VOID (3, 6).** Round 7 is the fresh valid round
+the second ruling set asked for, and its plant catch is the strongest of the session — `rubble`,
+`was applied`, `stamped`, `nothing has happened`. Both misses culled on a defect the
 FAMILY carries rather than the plant's ruin — *"invisible at play brightness"* and *"walls and
 floor render on one flat plane at equal value"*. **A plant control is uninformative whenever the
 candidate carries a defect louder than the plant's**, and the one doing the outshouting is the
