@@ -442,6 +442,35 @@ headline: **the rig cannot fix it** (the pipeline is multiplicative, so the lamp
 floor together — measured at five thousandths of Weber across a falloff change from 1.00 to 0.50),
 and **the remedy that can is free and already on disk.**
 
+## 9c. THE POST-RULING BUILD HAS NO VALID ROUND BEHIND IT, and the reason is structural
+
+Plant catches across six rounds: **1, 2, 4, 5 CAUGHT on axis. 3 and 6 MISSED — void.**
+
+Round 6 is the round for the build this report offers, and **its findings are not read.** The
+family seat ran, its record is on disk, and its answers were withheld by the harness before anyone
+could see them — which is the fix this session made after round 3 doing its job.
+
+**The two misses share a cause and it is not luck.** In both, the plant seat culled — and both
+times it culled on something the FAMILY carries rather than on the plant's ruin:
+
+> round 3: *"invisible at play brightness — the subject isn't rendered."*
+> round 6: *"walls and floor render on one flat plane at equal value."*
+
+**A plant control is uninformative whenever the candidate carries a defect louder than the plant's.**
+The seat spends its cull on the loudest thing in the frame and never reaches the ruin, and §4's
+test — *did it catch the plant on the plant's axis* — then returns no on a seat that was reading
+carefully and reporting something true.
+
+The defect doing the outshouting is **the mass-read one**, which is item (5). So:
+
+> **The plant control becomes reliable again only after (5) rules.** The process finding and the
+> design finding are the same finding, and neither can be closed from inside this session.
+
+⚠ **What was NOT done about it.** Round 6 was not re-run. Running the same round again on the same
+build until the plant is caught is exactly the laundering §4 exists to forbid, and it would have
+been easy — rounds 1, 2, 4 and 5 all caught, so a re-roll had good odds. Three misses out of six on
+one structural cause is evidence; four rolls until a green one is not.
+
 ## 9a. Two defects the instruments found, both mine, both after they were built
 
 - **The scuff reached 1.83 rungs** and pushed some faces brighter than their own top planes.

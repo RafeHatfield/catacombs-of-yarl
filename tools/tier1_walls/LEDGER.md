@@ -140,6 +140,17 @@ laying its bond with them. No generated pixel is in a shipped tile.
 | 3 | W2 **plant** | r11 | **MISSED ON AXIS.** Culled for *"invisible at play brightness — the subject isn't rendered"*, which is the family's defect, not the plant's. `REPORT.md` §7c. |
 | 4 | W1 family | r12 | CULL: *"walls sit at 4-7% of floor luminance — at 1:1 the room has no visible structure, only darkness"*. The void now reads: *"exactly (1,1,2) with zero variance. Not dark — empty. Authored void."* |
 | 4 | W2 **plant** | r12 | **CAUGHT ON AXIS** (`stamped`). CULL: *"walls receive no light — 0% of standing pixels above 128/255; every crack, course and repair is dark-on-dark"* |
+| 5 | W1 family | r16 | **WITHHELD** by the harness — the plant verdict had not returned. The fix working. |
+| 5 | W2 **plant** | r16 | **CAUGHT ON AXIS** (`rubble`, `ruin`, `abandoned`) |
+| 6 | W1 family | r17 | **NOT READ — VOID**, withheld by the harness before anyone saw it |
+| 6 | W2 **plant** | r17 | **MISSED ON AXIS.** CULL: *"walls and floor render on one flat plane at equal value"* — the family's defect, not the plant's |
+
+**Four of six rounds VALID (1, 2, 4, 5); two VOID (3, 6).** Both misses culled on a defect the
+FAMILY carries rather than the plant's ruin — *"invisible at play brightness"* and *"walls and
+floor render on one flat plane at equal value"*. **A plant control is uninformative whenever the
+candidate carries a defect louder than the plant's**, and the one doing the outshouting is the
+mass-read defect item (5) exists to rule. Round 6 was NOT re-run: re-rolling until the plant is
+caught is the laundering §4 forbids, and with four catches in six the odds were good.
 
 **Three of the four rounds are VALID and the build offered to the gate is behind one of them.**
 Round 4's plant was caught on axis, so §1.1.1 is satisfied for the thing actually being presented.
