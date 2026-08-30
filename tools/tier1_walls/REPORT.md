@@ -610,9 +610,29 @@ standing.
           age0..3=2/11/7/4 traffic=spine:18/routes:25
   ```
 
-  The two commits after `ea9eedf5` are documentation only, so the binary matches the code.
-  **The other arm is one environment variable away** — `TIER1_WALLS` /`TIER1_BINDINGS` pointed at
-  `tier1_walls_compensated` — and nothing about which arm ships is decided here.
+  The other arm is one environment variable away — `TIER1_WALLS` / `TIER1_BINDINGS` pointed at
+  `tier1_walls_compensated`.
+
+- ⚠ **The post-ruling walk build is INSTALLED, NOT VERIFIED.** It exported, built and installed
+  cleanly onto the SE, and then `verify_on_device.sh` could not launch it:
+
+  ```
+  Unable to launch com.rafehatfield.catacombsofyarl.tier0 because the device was not,
+  or could not be, unlocked.
+  ```
+
+  **Installed and verified are different things on this project and the distinction is not
+  cosmetic** — a session once reported a build "verified on device" on the strength of an export
+  exiting 0, and it had not been installed at all. So this one says what it is. One command with
+  the phone unlocked closes it:
+
+  ```
+  TIER0_EXPECT_SCENE=tier1_wall_review TIER0_EXPECT_WALLS=1 \
+  tools/tier0_harness/verify_on_device.sh
+  ```
+
+  It must come back with all eight checks green and the wall line reading
+  `family=boundary_wall_material_v1 … missing=0 … edge_check=46/OK … age0..3=…`.
 
   `verify_on_device.sh` named `tier1_floor_review` literally and returned MISS on a correct wall
   build; the scene is a parameter now, and the wall checks are opt-in so a floor build is not
