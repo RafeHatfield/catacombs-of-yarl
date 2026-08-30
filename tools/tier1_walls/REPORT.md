@@ -495,16 +495,22 @@ standing.
   1:1.**"*
 - **Instruments.** Six, all proven failable, legal family clean, both arms clean.
 - **Generations spent: 0 of 60.**
-- **Device — VERIFIED.** Commit `7e64cdb`, clean tree, all eight checks green on the handset,
-  including the two the wall round added:
+- **Device — VERIFIED, twice.** The gate build was `7e64cdb`. **The post-ruling build is
+  `ea9eedf5`**, all eight checks green on the handset, and it carries the `material` arm because
+  that is what `MASS-READ-REMEDIES.md` recommends:
 
   ```
-  [Tier1] BUILD IDENTITY: commit=7e64cdbb4385f3ab98adb126a807a1cf59805c33 built=2026-08-29T21:03:26Z
-  [Tier1] boundary wall: family=boundary_wall_compensated_v1 face=24 top=63
+  [Tier1] BUILD IDENTITY: commit=ea9eedf5b78e7986921568c1d1b22b5bff5bd7cf built=2026-08-30T07:03:53Z
+  [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=63
           void=129(choice=0,ring>1) missing=0 face_suppressed=63
-          planes(top=154.38 face=75.02) edge_check=46/OK
-          bindings=18(cramp:2,lash:5,patch:1,pin:6,strap:4)
+          planes(top=114.7 face=61.79) edge_check=46/OK
+          bindings=11(cramp:2,lash:3,patch:1,pin:3,strap:2)
+          age0..3=2/11/7/4 traffic=spine:18/routes:25
   ```
+
+  The two commits after `ea9eedf5` are documentation only, so the binary matches the code.
+  **The other arm is one environment variable away** — `TIER1_WALLS` /`TIER1_BINDINGS` pointed at
+  `tier1_walls_compensated` — and nothing about which arm ships is decided here.
 
   `verify_on_device.sh` named `tier1_floor_review` literally and returned MISS on a correct wall
   build; the scene is a parameter now, and the wall checks are opt-in so a floor build is not
