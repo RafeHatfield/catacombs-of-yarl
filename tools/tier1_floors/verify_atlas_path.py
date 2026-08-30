@@ -167,6 +167,20 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
             _fl = np.array(CA.DEFORM_FLATTEN)[_fage]
             L = np.where(~jm_pix, L + (mat["lum_median"] - L) * _fl, L)
 
+            # THE ADDITIVE LAYER, mirrored — AND AFTER THE FLATTEN, NOT BEFORE IT. Flatten is a
+            # PROPORTIONAL pull toward the median and the dish and the grit are FIXED
+            # subtractions, so the two orders give different pixels with no error to point at.
+            # Placed before, this disagreed with the reference painter on 2079 pixels; the route
+            # arm added last round is what caught it, one round after being added.
+            # THE ADDITIVE LAYER, mirrored: the lane's dish and the margin's grit, both keyed
+            # off the same line geometry the engine reads.
+            _wxb, _wyb = xx + x * T, yy + y * T
+            _ld, _ltx, _lty = CA.line_geometry_block(x * T, y * T, T)
+            _stone = ~jm_pix
+            L = np.where(_stone, L - CA.lane_dish_block(_ld, _wxb, _wyb, seed) * step, L)
+            L = np.where(CA.grit_block(_ld, _wxb, _wyb, seed) & _stone,
+                         L - CA.GRIT_DEPTH * step, L)
+
             near = np.zeros((T, T), dtype=float)
             near[1:, :] = np.maximum(near[1:, :], open_amt[:-1, :])
             near[:-1, :] = np.maximum(near[:-1, :], open_amt[1:, :])

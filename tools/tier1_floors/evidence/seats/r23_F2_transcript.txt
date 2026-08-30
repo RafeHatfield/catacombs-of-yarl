@@ -1,0 +1,91 @@
+Read the image at 1:1, then magnified and lighting-flattened it to separate what's actually drawn from what the lamp is doing to it.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone slabs — pale sandstone or limestone flagging, laid in courses with dark mortar joints.
+
+**Q1_WHY:** The colour under the lamp (300,180) is `255,192,114` — a warm bone-cream, not the grey of granite or the red of brick. The pieces are rectangular, laid in horizontal courses about 25px deep with widths varying between roughly 25 and 75px (visible across 190–630, 8–255), which is dressed slab, not cobble and not poured. Magnified 6× at 500–630, 20–180 the faces carry short parallel 45° strokes, which read as chisel-dressing. The joints are consistently 2px and darker than the faces, so the pieces are set with something between them rather than butted.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 370–445.
+
+I picked it off the **walls, not the ground.** The wall line at y≈265 has exactly one gap in it and the corridor runs from there to the bottom of the frame — that's a layout read, not a surface read. The ground in that gap (372–446, 225–264) is indistinguishable from the ground in the room's dead corners: I measured dark-mark coverage of 0.334 at the doorway against 0.366 to the west (240–314, same row) and 0.282 to the east. The doorway is, if anything, *cleaner* than the corner nobody goes to. Nothing about the floor moved me.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been cracked and it has been spotted, and that is the whole story. A web of thin fractures crosses it, and about fourteen dark rosette-shaped blots are scattered across it. What has *not* happened: nothing is worn, nothing is polished, nothing is chipped, no slab has sunk or lifted or gone missing, no edge is rounded, there is no grit, no dust, no accumulation in the joints, no threshold stone at the doorway. It reads as a floor that has been *damaged* but never *used*.
+
+**Q3_WHY:** Sampling in the bright zone: slab face (300,180) = `255,192,114`; vertical joint (347,175) = `112,80,52`; crack pixel (303,206) = `92,67,44`; stain core (268,232) = `96,70,48`. **Structure, damage and filth are all rendered at the same value** — within about 20 levels of each other. At 1:1 they collapse into one uniform black web and I cannot tell a joint from a break. Every slab face in that web is the same clean cream. In the corridor (360–450, 265–430) it's the same: one long crack down the centre and otherwise pristine slabs, on a route the fiction says is walked daily. Nobody's feet have touched this.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Two things.
+
+First, **the hard diagonal seam in the lighting** running down-left through roughly (330,60) → (200,190), clearest magnified at 190–340, 60–200. It's a stair-stepped edge between two light levels, cutting straight across slab faces and joints alike with no regard for the geometry. At 1:1 it is the single strongest feature on the floor — a light artefact out-reading every piece of art underneath it.
+
+Second, **the rosettes.** Same spiky-ringed silhouette, same ~20px diameter, roughly fourteen of them: (223,38), (237,48), (376,48), (429,22), (300,86), (543,86), (563,86), (405,106), (537,150), (341,166), (217,172), (225,194), (269,230), (543,214). Template-matching one against the others returns a best score of 0.436, so they're genuinely varied rather than one stamp copied — but they are all the *same size* and spread at near-uniform density, about one every three tiles, right across the room including the corners the light barely reaches. They don't cluster under anything, don't trail anywhere, don't thin out. After the third one my eye starts reading them as a scatter setting rather than as marks.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+**Made** — but made by a process, not by a hand.
+
+I ran an autocorrelation over the lighting-normalised floor (190–625, 10–255) across every offset up to dy=120, dx=200. The best non-trivial score is 0.27 at dx=60 — no periodicity worth the name. The slab layout, the crack routes and the blots are all unique across the room. That's genuinely authored, and it's more than most floors manage.
+
+What gives away the machine is the orientation histogram. Weighted gradient energy over the floor lives at 0–10° (3104), 90–100° (3198), 40–50° (1384) and 130–140° (1462). The bins in between — 20–30°, 60–70°, 110–120°, 150–160° — sit at 221–231, essentially empty. **Every mark on this floor is at 0°, 45° or 90° and nothing else.** Real fracture and real wear spray across every angle. This is a generator drawing with a pixel-perfect brush at four canonical headings.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.**
+
+Merely competent. The layout variation is real work and the crack routing is better than placeholder. But it's competent, not good — the faces are empty, the value separation between structure and damage doesn't exist, and the surface carries no information a player could act on.
+
+**Q7: AT THE SIZE SHOWN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1 — but all of it is *edges between* pieces, not the face of the material:
+- the joint grid
+- the crack web (indistinguishable from the joint grid)
+- the dark rosette blots
+- a soft diagonal shading on the mid-lit slabs
+
+**The faces themselves are blank at 1:1.** In the bright zone the slabs at (280–400, 150–220) are flat unbroken cream. Nothing on them.
+
+Only appears once magnified: the parallel 45° chisel hatch, and stacks of 3–5 short horizontal dashes. I found those at 4× and had to push contrast 2.2× to be sure they were marks rather than dither. **That is hunting, not seeing.** At 1:1 they register as a vague tonal smudge, and in the brightest third of the floor they register as nothing at all, because the red channel is clipped to 255 across 8.2% of the floor in a blob spanning x 289–426, y 87–254 — directly under and around the figure. The lamp is bleaching out the exact area the player is looking at. Measured face variance is 0.136 under the lamp against 0.22–0.26 everywhere else: the light is destroying more detail than the art is supplying.
+
+**Q7_WHY:** Checked at 1:1 — (440–630, 20–180) mid-lit right side; (260–450, 140–300) bright zone with the figure; (190–380, 0–160) upper left; (360–450, 265–590) corridor. Had to magnify — (500–630, 20–180) at 6× with contrast for the hatch and dashes; (190–340, 60–200) at 5× for the light seam; (180–380, 110–265) at 4× for the rosette edges.
+
+**Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU?**
+
+It reads as **one age everywhere, and that age is roughly a decade** — a sound floor that has been shaken hard and stained, not an ancient one.
+
+The cracking argues for a lot of time, or one violent event. But everything that only accumulates *slowly* is missing, and its absence is what caps the age. Across the whole lit floor there is no rounding on a single slab edge — every corner in (192–608, 8–255) is a clean 90° pixel corner. No joint has widened or lost its fill; joint width is a uniform 2px from (195,20) to (600,250). No slab is displaced in height, dished, or replaced with a different stone. There is no accumulated grime gradient — dark-mark coverage measures 0.334, 0.366, 0.282, 0.342 across four widely separated regions, i.e. flat, when age produces gradients.
+
+Set against the fiction, this is the wrong reading: a filing system for souls, in continuous heavy use since before the records, ought to have slabs polished into hollows and joints packed solid with centuries of tread. Nothing here is worn. **The corridor at (360–450, 265–430) — a daily route — is the newest-looking ground in the image.**
+
+**Q8_WHY:** (192–608, 8–255) for edge condition and joint width; (240–314, 225–264), (372–446, 225–264), (500–574, 225–264), (300–374, 60–110) for the coverage comparison; (360–450, 265–430) for the corridor.
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES, TO THE EDGE OF YOUR LIGHT?**
+
+The corridor runs south and the light gives up around y≈430. So yes, I can see where it goes — **but I read it off the walls, not the ground.** The ground told me almost nothing.
+
+The one thing the ground contributes is accidental: a single long crack runs down the corridor's centre line from about (398,280) to (410,590), nearly parallel with the axis of travel. It happens to point the right way. But it's damage, not a path — there's no wear channel, no darkened centre, no clean margin where feet don't fall, no debris pushed to the sides. If that crack had been routed across the corridor instead of along it, my read of the route would be unchanged, which tells you it isn't actually carrying the information.
+
+**Q9_WHY:** Route regions — (372–446, 225–264) the doorway approach, (368–448, 265–430) the lit corridor. Rejected — (240–314, 225–264) west floor, (500–574, 225–264) east floor, (300–374, 60–110) north-west interior. **What is different about the ground between them: nothing measurable.** Dark-mark coverage 0.334 / 0.395 on the route against 0.366 / 0.282 / 0.342 off it. The route is inside the noise band of the non-route. The floor does not know where people walk.
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST?**
+
+There are two openings: the south corridor mouth at x 370–445, y≈265, and the room continuing north off the top of the frame across its full width (that's the camera edge, not a doorway — the east wall at x≈630 and the west wall at x≈180 are solid).
+
+Judged on the ground in front of them, **they look the same.** The apron in front of the south mouth (372–446, 225–264) measures 0.334 dark-mark coverage; the north strip (192–608, 8–40) measures within the same band. No threshold, no darkening, no polish, no scatter differential, no directional smear at either. If one of these is the door four hundred years of orc-soldiers use and the other is sealed, the floor does not say which.
+
+**CULL:**
+Slab faces are blank at 1:1; joints, cracks and stains share one value and collapse into a single black web.
+
+**FLIP LIST**
+- Separate the three dark elements by value: keep mortar joints mid-tone (around `140,105,70`), push cracks darker and thinner than joints, and give stains a colour cast so they don't read as holes — right now (347,175), (303,206) and (268,232) are all within 20 levels.
+- Put wear on the route: darken and smooth a 2-slab-wide tread band through the doorway at (372–446, 225–264) and down the corridor centre, with grit and unwalked texture surviving at the corridor edges. The player should be able to find the exit with the lamp alone.
+- Get legible texture onto the faces at 1:1 — pitting, scattered dark aggregate specks, uneven fill — and clamp the lamp's highlight so it stops clipping to `255` across (289–426, 87–254) and bleaching the slabs under the figure.
+- Break the 0/45/90 lock: cracks and stain silhouettes need mark angles off the four cardinals, and slab edges need chipping and rounding so corners aren't all clean 90° pixels.
+- Cut the rosette count by half and cluster what remains — pooled at a wall base, trailing from one point — instead of one every ~3 tiles at uniform density across the whole room.
+
+---
+
+Worth flagging beyond the questions: the biggest single hit to this floor isn't drawn at all. The stair-stepped light seam through (330,60)→(200,190) and the highlight clipping under the lamp are lighting-pipeline problems, and they're currently louder than every mark the floor artist made. Fixing the art without fixing the light band will not change what a player sees.
+
+Model: Claude Opus 5 (1M context)

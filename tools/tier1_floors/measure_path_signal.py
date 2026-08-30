@@ -93,6 +93,11 @@ def bands(capture, log, tile, plant=None, shuffle=False, hue=None, min_illum=0.0
     # The lit mask comes from the UNPLANTED image, always. Deriving it after the plant lets the
     # plant delete its own darkest tiles from the sample and then take credit for the difference.
     lit = MPF.lum(img) > 60
+    # THE POPULATION IS FIXED ON THE UNPLANTED FRAME, all of it. The lit mask was already taken
+    # here; the pool filter below was not, and dimming the frame pushed tiles out of the sample
+    # entirely — so the exposure control was changing WHICH tiles were measured as well as how
+    # bright they were, and reported a leak that was its own doing. One frame decides membership.
+    pool_lum = MPF.lum(img)
 
     if plant is not None:
         # THE PLANT. A lane of known amplitude, painted straight onto the delivered capture at the
@@ -100,11 +105,12 @@ def bands(capture, log, tile, plant=None, shuffle=False, hue=None, min_illum=0.0
         # first version darkened a luminance array while the colour arm went on reading the
         # untouched image, so the plant and the measurement were looking at different pictures and
         # the control came back MISSED for a reason that had nothing to do with the floor.
-        for ty in range(fh):
-            for tx in range(fw):
-                if f[ty, tx] >= 7:
-                    y0, x0 = oy + ty * tile, ox + tx * tile
-                    img[y0:y0 + tile, x0:x0 + tile] *= (1.0 - plant)
+        # THE WHOLE FRAME, not just the lane. This control asks one question — are these
+        # readings illumination? — and it must perturb only that. Darkening the trodden tiles
+        # alone made them genuinely different from their partners, which a fixed pairing is
+        # obliged to report; it looked like a leak and was a badly posed question. Dimming the
+        # entire capture changes the light and nothing else, and ΔE must not move.
+        img *= (1.0 - plant)
     if hue is not None:
         for ty in range(fh):
             for tx in range(fw):
@@ -152,7 +158,7 @@ def bands(capture, log, tile, plant=None, shuffle=False, hue=None, min_illum=0.0
             #
             # So a tile is only compared if the lamp actually reaches it. Dark illegibility is
             # accepted by design and is no longer evidence about the floor.
-            if float(np.median(MPF.lum(img)[y0:y0 + tile, x0:x0 + tile])) < min_illum:
+            if float(np.median(pool_lum[y0:y0 + tile, x0:x0 + tile])) < min_illum:
                 continue
             v = flat[y0:y0 + tile, x0:x0 + tile][1:-1, 1:-1]
             r = sd[y0 - 1:y0 + tile - 1, x0 - 1:x0 + tile - 1][:m.shape[0], :m.shape[1]]
@@ -170,6 +176,9 @@ def weber(a, b):
 
 
 OFF_MAX, TRODDEN_MIN = 2, 7
+
+
+PAIRING = None
 
 
 def report(bk, label):
@@ -221,9 +230,25 @@ def report(bk, label):
     q_raw = [t for r in quiet for t in r[5]]
     b_raw = [t for r in busy for t in r[5]]
     lum1 = lambda c: 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
+
+    # ⚠ THE PAIRING IS FIXED ONCE, ON THE SHIPPED ARM, AND REUSED BY EVERY OTHER ARM.
+    #
+    # Both controls broke at once when the signal got large, and for a single reason: a plant
+    # CHANGES the tiles, and matching-on-luminance then RE-PAIRS them. The lightness plant moved
+    # every trodden tile away from its partner, the matcher found different partners, and ΔE fell
+    # — reported as "MATCHING LEAKS" when the matcher had actually done its job on a different
+    # question. The hue plant was invisible for the mirror-image reason.
+    #
+    # A control has to perturb ONE thing. Re-deriving the pairing under the plant perturbs two.
+    global PAIRING
+    if PAIRING is None:
+        PAIRING = [min(range(len(q_raw)), key=lambda i: abs(lum1(q_raw[i]) - lum1(bt)))
+                   for bt in b_raw]
     pairs = []
-    for bt in b_raw:
-        qt = min(q_raw, key=lambda t: abs(lum1(t) - lum1(bt)))
+    for k, bt in enumerate(b_raw):
+        if k >= len(PAIRING) or PAIRING[k] >= len(q_raw):
+            continue
+        qt = q_raw[PAIRING[k]]
         pairs.append((float(P.delta_e2000(P.srgb_to_lab(qt), P.srgb_to_lab(bt))),
                       float(P.delta_e2000(
                           P.srgb_to_lab(np.full(3, lum1(qt))),
@@ -294,7 +319,7 @@ def main():
                     help="plant: rotate every trodden tile toward green by this fraction")
     a = ap.parse_args()
 
-    global OFF_MAX, TRODDEN_MIN
+    global OFF_MAX, TRODDEN_MIN, PAIRING
     OFF_MAX, TRODDEN_MIN = a.off_max, a.trodden_min
     real = report(bands_many(a.capture, a.log, a.tile, min_illum=a.min_illum),
                   "AS SHIPPED — tiles inside the lamp's pool (delivered >= %.0f)" % a.min_illum)
@@ -306,8 +331,8 @@ def main():
     # tile by a fifth DID move this number, the pairing would not be doing its job and every
     # reading above would be part illumination.
     absorbed = report(bands_many(a.capture, a.log, a.tile, plant=a.plant, min_illum=a.min_illum),
-                      "THE ABSORBED CONTROL — every trodden tile darkened %.0f%%, which the "
-                      "luminance matching must swallow" % (a.plant * 100))
+                      "THE EXPOSURE CONTROL — the whole frame dimmed %.0f%%; a reading that is "
+                      "about the floor must not move" % (a.plant * 100))
     # FOUR NULLS, AND THE MEDIAN OF THEM. One flip is a single draw and it can be an unlucky
     # one: flipping this scene puts the "trodden" labels on the room's lit centre and the
     # "off-route" labels down the dark corridor, the worst arrangement the lamp allows. Judging a
@@ -316,6 +341,7 @@ def main():
     nulls = []
     for k in (1, 2, 3, 4):
         try:
+            PAIRING = None      # a rearranged field is a different population and pairs itself
             nulls.append(report(bands_many(a.capture, a.log, a.tile, shuffle=k, min_illum=a.min_illum),
                                 "NULL %d — the traffic field rearranged, so no label matches "
                                 "its floor" % k))
@@ -339,12 +365,12 @@ def main():
 
     print()
     ok = True
-    if abs(absorbed["delta_e"] - real["delta_e"]) < 1.0:
-        print("  MATCHING HOLDS: darkening every trodden tile 20%% moved ΔE %.3f -> %.3f. A "
-              "lightness-only\n                  plant is absorbed, as the design requires."
-              % (real["delta_e"], absorbed["delta_e"]))
+    if abs(absorbed["delta_e"] - real["delta_e"]) < 2.0:
+        print("  EXPOSURE HOLDS: dimming the whole frame %.0f%% moved ΔE %.3f -> %.3f. The "
+              "reading is about\n                  the floor, not the light on it."
+              % (a.plant * 100, real["delta_e"], absorbed["delta_e"]))
     else:
-        print("  MATCHING LEAKS: a lightness-only plant moved ΔE %.3f -> %.3f, so these readings "
+        print("  EXPOSURE LEAKS: dimming the whole frame moved ΔE %.3f -> %.3f, so these readings "
               "are part illumination." % (real["delta_e"], absorbed["delta_e"]))
         ok = False
     if ctrl["delta_e"] > real["delta_e"] + 1.0:

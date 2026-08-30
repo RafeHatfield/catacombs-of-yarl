@@ -1,0 +1,117 @@
+Analysis complete. Answers below; all coordinates are in the 750×600 source image, origin top-left.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dry-laid cut stone paving — rectangular ashlar slabs, pale sandstone/limestone colour, set in a recessed dark joint grid.
+
+**Q1_WHY:** Slabs sit on a 32px grid with horizontal joints landing at y≡15–18 mod 32 (measured, not guessed), in a staggered bond with mixed widths — singles and doubles. The joints are a consistent 3–4px band, darker than the slab and recessed, which reads as a mortarless butt joint packed with dirt. What tells me it's stone and not anything else is negative evidence: no grain, no plank ends, no tile repeat, no brick module. What I can't tell you is *what* stone. The faces at (270–420, 100–270) are a single flat value. There is no aggregate, no bedding plane, no colour variation within a slab, no tonal difference between one slab and its neighbour. It is stone-shaped, not stone-surfaced.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 370–440.
+
+**Nothing about the ground influenced that.** I read it entirely off the walls — the placeholder blocks pinch to a channel and that's the only gap in the south side. I checked the ground in front of it first: the corridor mouth at (370–440, 250–300) is indistinguishable from the middle of the room. Same slab sizes, same blank faces, same joint darkness. If I deleted the walls from this image I would have no reason to walk south rather than north, east or west.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been cracked, and that is the entire event history. A network of thin fractures runs through the chamber. Beyond that the floor is in delivery condition.
+
+**Q3_WHY:** What I looked for and did not find, by region:
+
+- **No traffic.** The corridor at (355–445, 270–520), brightened 2.2×, is completely bare — not one mark, chip or scuff over roughly 40 slab faces on the one route the figure must take.
+- **No wear differential.** The centre of the chamber and the corners are the same. No polish, no dishing, no lightened track.
+- **No dirt.** Joints are the same value everywhere; nothing has drifted into a corner or banked against a wall.
+- **No damage other than cracks.** Slab corners at (470–630, 60–250) are all square. Nothing spalled, nothing lipped, nothing sunk out of plane.
+- **No repair.** This is the floor of a place held by a company that patches everything with rope, pins and salvaged timber for four hundred years. There is not one driven pin, one packed shim, one board over a hole, anywhere on the walkable ground.
+
+The cracks themselves don't behave like damage. Magnified 7× at (200–320, 90–180), the crack running down x≈257 passes straight through the horizontal joints at y≈115 and y≈147 — no deflection, no widening at the joint, and it resumes in near-perfect alignment on the far slab. Stone fractures divert into joints; this one ignores them. It's a polyline drawn over the finished tilemap.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Two things.
+
+1. **The cracks read as unlit ink.** I sampled crack pixels against their surrounding slab: at (257,140) the crack is value 22 against a slab at 139; at (600,160) the crack is 36 against a slab at 36. The crack sits at a fixed near-black across the entire lighting range while the stone under it swings by 100+ levels. In the lit core it is therefore the highest-contrast thing on screen — higher than the joints, higher than anything on the figure's own sprite — and my eye goes to it every time instead of to the lamp or the exit.
+
+2. **The diagonal hatch motif.** Groups of parallel 45° scratch lines recur across the dim band at (470–660, 60–250) and again along the top at (190–470, 0–55) — same angle, same spacing, same 1px weight, on slab after slab. Six or seven instances within the crop at (470–660, 60–250) alone. It stops being marks on stone and becomes one texture stamped repeatedly.
+
+---
+
+**Q5: MADE, OR REPEATED?**
+**Made.** I tested it rather than eyeballing it: high-passed the image to strip the lighting, masked out the joint pixels, and correlated all 98 floor tile faces pairwise. Median correlation 0.118. The handful of matches above 0.85 — (212,83) vs (276,115) vs (468,115) — turned out on inspection to be *blank* faces matching each other on their shared joint edge, not repeated texture. The masonry layout is genuinely authored: varied widths, real staggering, no tiling period.
+
+The caveat matters though. What was made here is the *layout*. The layout is then faced with a surface that wasn't made at all — flat fill. So it passes the repetition test by having nothing to repeat.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.**
+
+Merely competent. The lighting is handsome, the masonry layout is well varied, and it would not embarrass anyone on a store page. It is not genuinely good. Genuinely good floor art tells you where you are and what has happened there; this tells you neither, and its strongest visual element — the cracks — is a rendering bug.
+
+---
+
+**Q7: WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF, AT 1:1?**
+
+**Legible at 1:1:** the joint grid, the slab layout, the crack lines, the lamp gradient, and one soft diagonal light streak running roughly (420,20) → (200,270). Every one of those is layout or lighting. **On the faces themselves, at 1:1, in the lit core: nothing.** They are blank.
+
+**Only appears once magnified:** the diagonal hatch groups and the short horizontal dash stacks. And "magnified" undersells it — 4× alone wasn't enough on the dim band; I had to magnify *and* brighten 2.6× before those marks resolved into anything I could name.
+
+**The middle case, stated honestly:** in the dim band at 1:1 there is a scratchy something on the faces. I can see that the faces aren't empty. I cannot tell you what any of it is. That is texture as noise, not texture as information.
+
+**The measurement:** counting non-joint pixels that sit between 66% and 93% of their local brightness — i.e. actual marks on a face — gives **0.6% of face area in the lit core (270–420, 100–270)** against **13.9% in the dim right band (470–660, 60–250)**. Nothing is clipped in the core; zero pixels reach 250. The detail isn't blown out. It was never drawn there.
+
+**Q7_WHY:**
+- *Checked at 1:1:* (260–420, 60–270) lit core — blank faces. (200–440, 180–300) lower lit — blank faces, two crack lines. (440–680, 60–240) dim right — scratchy noise, unresolvable. (355–445, 270–520) corridor — blank.
+- *Had to magnify:* (470–660, 60–250) at 5× **and** +2.6 brightness to resolve hatch groups and dash stacks. (200–320, 90–180) at 7× to establish the crack/joint behaviour. (355–445, 270–520) at 6× **and** +2.2 brightness to confirm the corridor is empty rather than merely dark.
+
+---
+
+**Q8: HOW OLD IS THIS FLOOR?**
+It reads as **two ages that contradict each other**, and the contradiction is the answer.
+
+**Under the lamp — (270–420, 100–270) — it reads as laid last year.** Square corners, faces flat and unmarked, joints uniform, no dishing, no dirt. Then someone drew century-old fractures across it. That's the conflict: the cracks assert great age and the surface they're drawn on refuses to corroborate it. The cracks lose, because they're the thing that reads as ink.
+
+**In the dim band — (470–660, 60–250) and (190–470, 0–55) — it reads older**, maybe a few centuries: the faces are covered in marks. But I only know that because I brightened the image. At the size the game is played, that age is not communicated.
+
+So: the parts you can see read new, and the parts that read old you can't see. Nowhere on this floor does it read as older than the records — nothing here has been in continuous heavy use for an unrecorded span. Heavy use leaves a shape, and this floor has no shape.
+
+---
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES, TO THE EDGE OF YOUR LIGHT?**
+**No. The ground told me nothing.** I read the corridor off the walls.
+
+**Q9_WHY:**
+- *Route I'd take:* south through (370–440, 250–300), then (370–440, 300–430), which is still inside useful light — the slab faces there hold value 66–100, well above black.
+- *Regions I rejected:* north across (220–620, 0–60); east toward (560–630, 100–250); west toward (185–260, 100–250). All within the lamp.
+- *What is different about the ground between them:* **nothing.** Same slab module, same joint value, same blank faces, same absence of dirt or polish. I ran the mark-density measure on the corridor thinking I'd found something at 9.7% — magnifying and brightening it showed that number was the lamp falloff gradient, not marks. The corridor floor is bare.
+
+A route walked daily should be the easiest thing in this image to read, and it is invisible. If I turned the walls off, the ground would leave me standing still.
+
+---
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST?**
+**They all look the same.** There are two openings: the south corridor mouth at (370–440, 250–275) and the north continuation across the full top edge (220–620, 0–15). The ground immediately in front of each is identical — same slab sizes, same blank faces, same joint darkness, no dirt tracked in from either, no threshold wear, no fan of scuffing spreading from either mouth into the room. A door nobody has opened in three hundred years and a door a company marches through daily are, on this floor, the same door.
+
+---
+
+**CULL:**
+Under the lamp the slab faces are blank; the only detail is unlit cracks drawn over the joints.
+
+---
+
+**FLIP LIST**
+- Put legible material on the faces inside the lamp's bright core (270–420, 100–270) — pitting, chipped arrises, colour variation slab-to-slab — at a contrast that survives at 1:1 without magnifying.
+- Light the cracks with the scene: multiply them into the slab rather than compositing at fixed near-black, so they stop out-contrasting everything at (257,110–180) and fade with the falloff like the stone does.
+- Break the cracks at the joints — deflect them into the joint line or terminate them there, and vary width and value along the run instead of a uniform 1px.
+- Wear the route: darken and smooth the slabs along (370–440, 250–520) and fan that wear into the chamber from both openings, so the corridor and the north edge stop reading identically to a dead corner.
+- Add the garrison's repairs to the walkable ground — driven pins, packed shims, a salvaged board over a broken slab — at least three instances inside the lit chamber.
+
+---
+
+Nothing here is unrecoverable. The layout work and the lighting are the expensive parts and both are already done well; what's missing is the material pass on the slab faces and one blend-mode fix on the crack overlay. The floor's real problem isn't quality, it's that it carries no information — a player standing on it learns nothing about where to go or what this place has been through, which for a dungeon floor is the whole job.
+
+**Model:** Claude Opus 5 (1M context)
