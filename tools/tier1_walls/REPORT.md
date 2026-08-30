@@ -471,6 +471,79 @@ build until the plant is caught is exactly the laundering §4 exists to forbid, 
 been easy — rounds 1, 2, 4 and 5 all caught, so a re-roll had good odds. Three misses out of six on
 one structural cause is evidence; four rolls until a green one is not.
 
+## 9d. THE SECOND SET OF RULINGS (Rafe, 2026-08-30) — five more, four executed
+
+**(1) The material arm is the remedy, run as a bounded round.** Done. `tier1_walls` is the family
+the walk carries; the wall stone is now its own darker material rather than the floor's at a
+different brightness.
+
+**(2) The perceptual-floor law reads in DELIVERED LEVELS.** The bar is **8 levels**, ruled at
+"barely met" — a human verdict on a measured quantity, which is the only way §13.8 lets a floor
+exist. Both separations, both arms, at the standing station:
+
+| band | arm | L(wall, void) | L(wall, floor) |
+|---|---|---:|---:|
+| standing ≤2 | compensated | 80.63 | 14.31 |
+| standing ≤2 | **material** | 61.64 | **23.27** |
+| 3–4 tiles | **material** | 19.77 | 7.62 |
+| beyond 4 | **material** | 7.39 | 1.65 |
+
+**Wall-vs-floor at the standing case is 23.27 levels — 2.9× the bar, and 1.6× the arm it
+replaces.** Wall-vs-void drops to 61.64 and still clears by 7.7×. At 3–4 tiles wall-vs-floor is
+**7.62, just under** — reported, not chased: a further step down the ladder exists and was not
+taken, because the ruling names this arm and the band beyond it is already dark-by-design.
+
+**(3) The review scenes — fixed, and the audit's own diagnosis was wrong.** See §9e.
+
+**(4) Round 6 stands VOID, correctly not re-rolled.** Round 7 on the material build is the fresh
+valid round.
+
+**(5) Aging and the binding relocation approved as built.** The no-orc-work-from-above cost is
+logged as **issue #167** for the prop/overlay pass — the fix there is world-placed *objects*
+standing on a wall top, which are objects rather than tile incident and so are outside §8.3.1,
+not a return to baked overlays.
+
+**And the walk's third subject is not available.** The floor session's additive round is **not
+merged** — PRs #162, #163, #165 and #166 are all open — so the trail cannot be in the scene. The
+walk covers walls-vs-floor separation and the aged bases.
+
+## 9e. The review scenes were dead, and not for the reason yesterday's report gave
+
+Audited across the whole set rather than assumed, because the first dead scene was found by
+accident:
+
+| spec | spine | routes | worn cells | |
+|---|---:|---:|---:|---|
+| `corridor_junction` | 0 | 0 | **0** | **dead** |
+| `wall_face_review` | 0 | 0 | **0** | **dead** |
+| `tier1_corridor_traffic` | 16 | 14 | 55 / 66 | live — **new** |
+| `mixed_distribution`, `tier1_floor_review`, `tier1_wall_review`, `tier1_wall_standing` | | | | live |
+
+**The cause is not the missing rooms.** An empty one-wide cross accumulates traffic perfectly
+well. It is the PLAYER, and the mechanism is two pathfinders disagreeing: `FarthestWalkable` picks
+the spine's endpoints with a Dijkstra map that **walks through a blocking entity** — measured, all
+forty cells still "reachable" with the figure in place — and the spine itself is an A* that does
+not. Every route between the halves of a one-wide corridor runs through the figure, A* returns
+null, and the field goes to **exactly zero**. A cliff, not a degradation: 40 cells → 0, 5 routes →
+0, from one person standing still.
+
+⚠ **Not fixed here.** `TrafficField` is the floor session's live surface (four open PRs on it), and
+a concurrent edit would collide with work in flight. Pinned by four logic-layer tests instead.
+
+`tier1_corridor_traffic` carries destinations, a dead end, **and a loop**, so no single figure can
+sever it — the right scene design however the disagreement is settled. The two dead specs are left
+untouched: both are cited by evidence on disk, and the repo's own rule is that a scene swap
+silently invalidates every comparison against that record.
+
+**Re-checkable under the fixed scene:** any verdict about wear, aging or route legibility taken
+through those two since the traffic pass landed. The art was there; the field that drives it was
+not.
+
+⚠ **And the new scene declares no dark point**, which is a scope statement rather than an omission:
+its furthest in-frame floor cell is 5.8 tiles and reads 0.212 against a 0.10 bound. **This scene
+fits inside the delivered reach and cannot test the arc.** The arc is tested by `tier1_wall_review`,
+which holds two dark points.
+
 ## 9a. Two defects the instruments found, both mine, both after they were built
 
 - **The scuff reached 1.83 rungs** and pushed some faces brighter than their own top planes.

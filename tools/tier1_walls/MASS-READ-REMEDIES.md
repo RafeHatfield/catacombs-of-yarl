@@ -136,11 +136,46 @@ into this tier, and it is not a builder's suggestion.
 
 ---
 
+## 2a. RULED — R3, and the bar moved to levels (Rafe, 2026-08-30)
+
+> *"The diagnosis is accepted as measured — the defect is wall-vs-floor, not wall-vs-void; the
+> remedy is the material arm (wall stone becomes its own darker material). Run it as the next
+> bounded round."*
+>
+> *"The perceptual-floor law reads in delivered levels, not ratios — 8 levels is 'barely met', and
+> wall-vs-floor must clear the same bar after the material change; measure both."*
+
+**The bar is therefore 8 delivered levels**, and it is a bar rather than an invention because it
+is a human verdict on a measured quantity — the only way §13.8 permits a floor to come into
+existence. Eight is explicitly the AMBIGUOUS point, so a signal that means to exist should sit
+clearly above it.
+
+**Both separations, both arms, in levels** (`measure_mass_read.py`, standing station):
+
+| band | arm | L(wall, void) | L(wall, floor) | verdict |
+|---|---|---:|---:|---|
+| standing ≤2 | compensated | 80.63 | 14.31 | both clear |
+| standing ≤2 | **material** | 61.64 | **23.27** | both clear — floor at **2.9× the bar** |
+| 3–4 tiles | compensated | 27.06 | 5.66 | void clears, floor under |
+| 3–4 tiles | **material** | 19.77 | **7.62** | void clears, floor **just under** |
+| beyond 4 | compensated | 9.53 | 2.68 | void clears, floor under |
+| beyond 4 | **material** | 7.39 | 1.65 | both under — dark-by-design |
+
+**The material arm delivers wall-vs-floor at 23.27 levels at the standing case against the
+compensated arm's 14.31** — 1.6× more separation from the ground, on the defect the ruling named.
+Wall-vs-void drops from 80.63 to 61.64 and still clears the bar by 7.7×, because the arm is darker
+overall and the void has nowhere to go.
+
+⚠ **At 3–4 tiles wall-vs-floor is 7.62 — just under.** That is reported rather than chased. A
+further step down the ladder exists (top rung 4 at 101.47, keeping face/top near 2:1), and **it was
+not taken**: the ruling specifies the −0.235 arm, and darkening further to clear a band the
+standing ruling has already declared dark-by-design would be tuning past what was asked for.
+
 ## 3. The recommendation, stated so it can be disagreed with
 
-**R3, at zero cost, and it is already sitting on disk.** Take the `material` arm to the walk; it is
-five times better at the one distance the stack law now lives at, and it costs nothing to try
-because it is built.
+**RULED: R3.** *(Recorded before the ruling, and it stands.)* The `material` arm goes to the walk;
+it is nearly five times better in ratio and 1.6× in levels at the one distance the stack law now
+lives at, and it costs nothing because it is built.
 
 **R1 second, for a different job.** The falloff lever buys representability past four tiles and
 does not spend the arc. It is not a mass-read fix and should not be sold as one.

@@ -25,7 +25,8 @@ token batch to show willing.
 | 3 | rebuild after ink + two-scale grain | — | seats W1, W2 — **VOID**, the plant was missed on axis |
 | 4 | rebuild at void_ring 1 | — | seats W1, W2 — VALID. **Walked by Rafe on the SE; five rulings returned.** |
 | 5 | the gate's items: mask fix, tops cleaned, aging keyed to traffic | 162 tiles + 3 void | seats W1, W2 — W1 WITHHELD by the new rule, no plant verdict |
-| 6 | rebuild after the ID-COLLISION fix | 162 tiles + 3 void | seats W1, W2 — the build offered after the rulings |
+| 6 | rebuild after the ID-COLLISION fix | 162 tiles + 3 void | seats W1, W2 — **VOID**, the plant missed on axis |
+| 7 | **the material arm as the family** (gate ruling 1) + the fixed corridor scene | 162 tiles + 3 void | seats W1, W2 — the fresh valid round the ruling asked for |
 
 ## 2. The captures
 
@@ -53,7 +54,10 @@ holds this together* would be answered with nothing and the answer would look de
 | `r13_family.png` | first build with aging + the §3 mask fix | age keyed, `age0..3=2/11/7/4` |
 | `r14_{family,ageless}.png` | the A/B pair | every lighting term cancels between them |
 | `r16_standing*.png` | the standing station | where the standing-case numbers are taken |
-| `r17_standing{,_mat,_ageless}.png`, `r17_plant.png` | after the ID fix | **the build offered after the rulings**, both arms |
+| `r17_standing{,_mat,_ageless}.png`, `r17_plant.png` | after the ID fix | both arms at the standing station |
+| `audit_*.png/.log` | one per review spec | the traffic audit — the engine's own field, not a re-derivation |
+| `r18_{family,plant}.png` | **the material arm**, gate scene | round 7, the build the walk carries |
+| `r18_corridor.png` | the material arm, `tier1_corridor_traffic` | the corridor scene with its traffic actually on |
 
 ## 3. The instruments, and the four bounds that were wrong
 
@@ -94,6 +98,9 @@ and it is listed because a discarded construction is the cheapest thing a later 
 | scuff at 1.83 rungs | pushed some faces brighter than their own top planes | `two_planes` at −0.329 rungs |
 | id blocks spaced 100 | the aged face set is 108 tiles; eight of them collided with `top_h` and drew top-plane files | the same `two_planes` failure, one layer down |
 | the corridor scene as an aging instrument | its traffic field is exactly ZERO | `r15_choke.log` age map: all `0` |
+| the audit's first diagnosis ("no rooms") | an EMPTY one-wide cross accumulates traffic fine; it is the PLAYER, via two pathfinders disagreeing about whether a blocking entity is passable | `TrafficFieldReviewSceneTests`: 40 cells → 0, 5 routes → 0 |
+| three legibility points on the new corridor scene | a wall cell, a cell off the frame, and one at 5.8 tiles reading 0.212 against a 0.10 bound | the scene fits inside the delivered reach and says so |
+| darkening the wall further to clear the 3-4 tile band | the ruling names the −0.235 arm, and the band beyond it is already dark-by-design | L(wall,floor) 7.62 at 3-4, reported not chased |
 
 ## 5. The rig probe
 
