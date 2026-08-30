@@ -73,6 +73,7 @@ public static class Tier1BoundaryWall
         public int SaltV, SaltH;
         public int VoidRing = 2;
         public int Variants = 1;
+        public int Ages = 1;
         public readonly Dictionary<string, int> Face = new();
         public readonly Dictionary<string, int> TopH = new();
         public readonly Dictionary<string, int> TopV = new();
@@ -119,6 +120,7 @@ public static class Tier1BoundaryWall
             FaceValue = r.GetProperty("planes").GetProperty("face_value").GetDouble(),
         };
         c.Variants = r.GetProperty("variants").GetInt32();
+        c.Ages = r.TryGetProperty("ages", out var ag) ? ag.GetInt32() : 1;
         var table = r.GetProperty("table");
         foreach (var e in table.GetProperty("face").EnumerateObject()) c.Face[e.Name] = e.Value.GetInt32();
         foreach (var e in table.GetProperty("top_h").EnumerateObject()) c.TopH[e.Name] = e.Value.GetInt32();
@@ -191,7 +193,7 @@ public static class Tier1BoundaryWall
     private sealed class Bindings
     {
         public string Root = "";
-        public double FaceRate, TopRate;
+        public double FaceRate;
         public readonly List<(int Id, string Kind, string Plane, string File)> Tiles = new();
     }
 
@@ -205,8 +207,11 @@ public static class Tier1BoundaryWall
         var b = new Bindings
         {
             Root = resPath.Substring(0, resPath.LastIndexOf('/') + 1),
+            // FACE ONLY. §8.3.1, ruled at the gate: wall tops are incident-free, and an overlay
+            // at a hashed position on a top plane is incident whatever it depicts. The manifest
+            // no longer declares a top rate; reading one would be reading a key the composer
+            // deliberately stopped writing.
             FaceRate = r.GetProperty("rates").GetProperty("face").GetDouble(),
-            TopRate = r.GetProperty("rates").GetProperty("top").GetDouble(),
         };
         foreach (var t in r.GetProperty("tiles").EnumerateArray())
             b.Tiles.Add((t.GetProperty("id").GetInt32(),
@@ -246,8 +251,17 @@ public static class Tier1BoundaryWall
             if (bind == null) return $"[Tier1] boundary wall: REFUSED — {bindStatus}";
         }
 
+        // The floor's field, computed the same way the floor computes it. Not cached across the
+        // two systems on purpose: sharing a mutable field between the floor painter and the wall
+        // painter would couple two things that only need to AGREE, and agreement here is free —
+        // it is a pure function of the map.
+        var tf = TrafficField.ComputeFromMap(map);
+        var traffic = tf.Field;
+
         int face = 0, top = 0, voidCells = 0, missing = 0, faceSuppressed = 0;
         int bound = 0;
+        var ageHist = new int[System.Math.Max(1, 8)];
+        var ageMap = new Dictionary<(int X, int Y), int>();
         var boundKinds = new Dictionary<string, int>();
         for (int y = 0; y < map.Height; y++)
         {
@@ -306,7 +320,28 @@ public static class Tier1BoundaryWall
                         kb = Key(cfg, cfg.SaltH, "h", x, y + 1);
                     }
                     int var = (int)(Fnv(90777, horizontal ? "h" : "v", x, y) % (ulong)cfg.Variants);
-                    string k = $"{ka},{kb},{var}";
+
+                    // ── AGE, AND IT COMES FROM THE FLOOR'S OWN FIELD ────────────────────────
+                    // RULED at the gate: *"walls have opted out of history … wall aging at the
+                    // base courses, keyed to the existing traffic/age fields."*
+                    //
+                    // A wall's traffic is not its own — nobody walks on a wall. It is the traffic
+                    // of the FLOOR IT FACES, which is the ground whose boots have been rubbing
+                    // its foot for four hundred years. So the age of a reveal is read from the
+                    // cell to its south, the same cell §6.5 measures it against.
+                    //
+                    // TrafficField puts vaults and shrines at exactly zero, and that zero is what
+                    // makes this keyed rather than noised: a sealed room's wall stays sharp, and
+                    // sharpness then MEANS something — nobody comes here.
+                    int age = 0;
+                    if (southOpen && traffic != null && cfg.Ages > 1)
+                    {
+                        int t = traffic[x, y + 1];
+                        age = System.Math.Clamp(t * cfg.Ages / 256, 0, cfg.Ages - 1);
+                        ageHist[age]++;
+                        ageMap[(x, y)] = age;
+                    }
+                    string k = southOpen ? $"{ka},{kb},{var},{age}" : $"{ka},{kb},{var}";
                     var tbl = southOpen ? cfg.Face : (horizontal ? cfg.TopH : cfg.TopV);
                     if (!tbl.TryGetValue(k, out id)) { missing++; continue; }
                     if (southOpen) face++; else top++;
@@ -328,10 +363,10 @@ public static class Tier1BoundaryWall
                 // thirty times.
                 var old = s.GetNodeOrNull<Sprite2D>(BindNode);
                 if (old != null) { s.RemoveChild(old); old.QueueFree(); }
-                if (bind != null && ring == 1)
+                if (bind != null && ring == 1 && southOpenCache)
                 {
-                    string plane = southOpenCache ? "face" : "top";
-                    double rate = southOpenCache ? bind.FaceRate : bind.TopRate;
+                    const string plane = "face";
+                    double rate = bind.FaceRate;
                     // A separate salt from the tile keys, so a cell's binding is independent of
                     // the tile it landed on. Sharing one would correlate the two and put the same
                     // strap on the same tile every time — §8.3.1 arriving one level up.
@@ -361,6 +396,24 @@ public static class Tier1BoundaryWall
             }
         }
 
+        string ages = string.Join("/", System.Linq.Enumerable.Range(0, 4).Select(i => ageHist[i]));
+
+        // THE AGE MAP, PRINTED. An off-line measurement needs to know which age landed on which
+        // cell, and both alternatives were worse than the engine simply saying so: reimplement
+        // TrafficField in Python — a fourth copy of arithmetic, and the one most likely to drift —
+        // or infer the age from the pixels, which is an instrument reading its own subject to
+        // decide what its subject is. The floor's channel map set the precedent.
+        var am = new System.Text.StringBuilder();
+        am.Append("[Tier1] wall age map (. not a reveal, 0=sharp/sealed .. 3=on the spine)\n");
+        for (int ay = 0; ay < map.Height; ay++)
+        {
+            am.Append("[Tier1]   ");
+            for (int ax = 0; ax < map.Width; ax++)
+                am.Append(ageMap.TryGetValue((ax, ay), out int av) ? (char)('0' + av) : '.');
+            am.Append('\n');
+        }
+        GD.Print(am.ToString().TrimEnd());
+        Diag.Log(am.ToString().TrimEnd());
         string kinds = boundKinds.Count == 0 ? "-"
             : string.Join(",", boundKinds.OrderBy(k => k.Key).Select(k => $"{k.Key}:{k.Value}"));
         return $"[Tier1] boundary wall: family={cfg.Family} face={face} top={top} "
@@ -368,6 +421,7 @@ public static class Tier1BoundaryWall
              + $"face_suppressed={faceSuppressed} "
              + $"planes(top={cfg.TopValue:0.##} face={cfg.FaceValue:0.##}) "
              + $"edge_check={cfg.EdgeCheck.Count}/OK bindings={bound}({kinds}) "
+             + $"age0..3={ages} traffic=spine:{tf.SpineLength:F0}/routes:{tf.Routes} "
              + $"manifest={manifestResPath}";
     }
 }

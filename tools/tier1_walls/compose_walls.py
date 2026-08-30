@@ -116,9 +116,46 @@ ARMS = {
 }
 
 ASSETS_REL = "src/Presentation/assets/tier1_walls"
-IDS = dict(face=9400, top_h=9500, top_v=9600, void=9900)
+# ⚠ THE BLOCKS ARE 200 WIDE, NOT 100, AND THE AGE DIMENSION IS WHY.
+#
+# The face set is edge keys x variants x AGES = 3 x 3 x 3 x 4 = 108 tiles, and the blocks were
+# spaced 100 apart. Face ids ran 9400..9507 straight into top_h at 9500, the manifest listed both,
+# and the engine's id->file map takes the last writer - so EIGHT FACE TILES WERE DRAWING TOP-PLANE
+# FILES, which is a top plane's material laid where a reveal should be.
+#
+# It surfaced through `two_planes`, which reported a minimum plane separation of -0.329 rungs and
+# named the tile. Nothing else would have said so: the count was right, `missing=0` was right, the
+# edge check was right, and the picture looked like a wall.
+IDS = dict(face=9400, top_h=9600, top_v=9700, void=9900)
 VARIANTS = 3   # free interior variants per key pair - see the compose loop
 VOID_RING = 1  # rings of stone drawn before the void; see the manifest note
+
+# ── AGE, AT THE BASE COURSES ──────────────────────────────────────────────────────────────────
+#
+# RULED (Rafe, at the gate): *"south faces workable in kind — but walls have opted out of history.
+# Bounded round: wall aging at the base courses, keyed to the existing traffic/age fields (scuff,
+# arris-rounding, patina rising 1-2 courses where routes run adjacent; sealed rooms stay sharp)."*
+#
+# FOUR STEPS, and the field that picks between them is the floor's own. `TrafficField` is
+# accumulated traversal over the level graph - the spine at full weight, remote branches decaying,
+# **vaults and shrines at exactly zero** - so a wall beside a route ages and the wall of a room
+# nobody is admitted to does not. That zero is the most useful value in the table and it is why
+# this is keyed rather than noised: an unaged threshold is readable as *nobody comes here*.
+#
+# WHAT AGE IS ALLOWED TO BE, and one thing it is NOT allowed to be:
+#
+#   scuff            sub-rung mottling in the base rows, amplitude rising with age
+#   arris-rounding   the block's bottom corners lose pixels; the base joint opens
+#   patina           a DARKENING of the base course, rising into the second at high age
+#
+#   NOT a pale value lift. §8.2.1 banned exactly that for the floor's channel and the floor
+#   session paid for the lesson twice: *"a value lift cannot signal under a carried lamp, because
+#   brightness is what the light is saying."* The polish that four hundred years of shoulders and
+#   gear leaves is expressed as ROUNDING - a change of form - and the grime is expressed as
+#   darkening. Neither asks the lamp for permission.
+AGES = 4
+AGE_BASE_ROWS = 6          # how deep the base treatment reaches at age 1, in native px
+AGE_SECOND_COURSE = 3      # the age at which patina climbs into the course above
 
 
 def h(*parts):
@@ -382,7 +419,61 @@ class Family:
                     img[cy0:cy1, max(x0, x1 - jw):x1] = joint
         return img
 
-    def tile(self, cls, keys, grain_amp, var=0):
+    def age_face(self, img, age, grain_amp):
+        """Lay the base-course aging on a face tile. Age 0 is untouched, and must stay so."""
+        if age <= 0:
+            return img
+        step = float(self.ladder[1] - self.ladder[0])
+        base_row = FACE_COURSES[-1][0]                      # the bottom course only, at first
+        if age >= AGE_SECOND_COURSE:
+            base_row = FACE_COURSES[0][0]                   # patina climbs one course
+        rows = slice(base_row, T)
+
+        # PATINA: grime walked into the surface until it is part of it (§8.1). A fraction of a
+        # rung, graded so the top of the treated band is barely touched and the foot carries it -
+        # the dirt is deepest where the floor meets the wall, which is where it comes from.
+        band = img[rows, :]
+        h = band.shape[0]
+        ramp = np.linspace(0.25, 1.0, h)[:, None]
+        # THE CURVE IS SUPERLINEAR IN AGE, AND THE FIRST MEASUREMENT IS WHY.
+        # At 0.28 rungs per step the ages came back monotonic and correctly signed - the keying
+        # works - but the top step landed at Weber 0.1453 against the floor family's 0.1440, which
+        # is over by nine tenths of one percent. §13.8: *"clearing it by 3% proves nothing - that
+        # is the geometric midpoint between present and absent, which is precisely the ambiguous
+        # point."* Ages 1 and 2 sitting under it is not the same problem and is not corrected:
+        # light traffic on a remote branch SHOULD be almost nothing, and a wall that is visibly
+        # grimy everywhere has stopped saying where people walk.
+        img[rows, :] = band - ramp * (0.30 * age ** 1.6) * step
+
+        # SCUFF: sub-rung mottling, at its own scale, keyed to the tile so two aged neighbours do
+        # not scuff identically. It is deliberately BELOW a rung: this is the surface losing its
+        # evenness, not a mark. §13.8 governs whether it survives, and the amplitude table reports
+        # it rather than this comment claiming it.
+        g = self.grain_for(("scuff", age), 0, 0, T, h)
+        # ⚠ SUB-RUNG, AND `two_planes` CAUGHT THIS AT 1.83 RUNGS. Raising the age curve for the
+        # patina raised the scuff with it, and at age 3 the scuff was swinging the base course by
+        # a third of its own value - which is not a surface losing its evenness, it is damage, and
+        # on some tiles it pushed the face's mean ABOVE the top plane's. The instrument reported a
+        # minimum plane separation of -0.329 rungs and was right to.
+        #
+        # It is also NOT multiplied by grain_amp any more. grain_amp is the base material's knob;
+        # compounding the two meant a change to the stone's texture silently changed how worn the
+        # walls looked, which is two levers wearing one name.
+        img[rows, :] = img[rows, :] + g * (0.22 * age ** 1.1) * step
+
+        # ARRIS-ROUNDING: the block's bottom corners give up pixels and the base joint opens.
+        # A change of FORM, not of value - which is the half of §8.1's polish that survives a
+        # carried lamp.
+        joint = self.rung(self.face_rung, -3)
+        r = min(2, age)
+        for i in range(r):
+            img[T - 1 - i, :i + 1] = joint
+            img[T - 1 - i, T - 1 - i:] = joint
+        if age >= 2:
+            img[T - 1, :] = np.minimum(img[T - 1, :], joint + 0.4 * step)
+        return img
+
+    def tile(self, cls, keys, grain_amp, var=0, age=0):
         """One tile.
 
         ── COURSES RUN ALONG THE WALL, AND THAT IS WHY THERE ARE TWO TOP CLASSES ────────────────
@@ -429,6 +520,7 @@ class Family:
             lip = img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :]
             img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :] = np.minimum(
                 lip * 0.55, self.rung(self.face_rung, -2))
+            self.age_face(img, age, grain_amp)
         return img
 
     def rgb(self, img):
@@ -458,23 +550,31 @@ def compose(arm, out_dir, grain_amp, void_values):
     # them - §8.3.1's trap arriving through the fix for §8.3.3. The variant changes only what
     # happens BETWEEN the boundaries: the straddling blocks at either end are still the key's,
     # value and all, so agreement is untouched and the interior stops being a function of it.
+    # AGE IS A FOURTH INDEX, AND IT IS ON THE FACE ONLY. The top planes take no age: nothing walks
+    # on a wall top, so there is no traffic to key one to, and §8.3.1 has just had incident removed
+    # from them by ruling. A wall's history is at its foot, because that is where the world
+    # touches it.
     tiles, table = [], {"face": {}, "top_h": {}, "top_v": {}, "void": {}}
     for cls, base in (("face", IDS["face"]), ("top_h", IDS["top_h"]), ("top_v", IDS["top_v"])):
         n = 0
+        ages = range(AGES) if cls == "face" else (0,)
         for ka in range(EDGE_FAMILIES):
             for kb in range(EDGE_FAMILIES):
                 for var in range(VARIANTS):
-                    keys = dict(w=ka, e=kb, n=0)
-                    img = fam.tile(cls, keys, grain_amp, var)
-                    tid = base + n
-                    p = os.path.join(out_dir, "tier1_wall_%d.png" % tid)
-                    Image.fromarray(fam.rgb(img)).save(p)
-                    table[cls]["%d,%d,%d" % (ka, kb, var)] = tid
-                    tiles.append(dict(id=tid, cls=cls, ka=ka, kb=kb, var=var,
-                                      file=os.path.basename(p),
-                                      mean=round(float(img.mean()), 3),
-                                      sha256=hashlib.sha256(open(p, "rb").read()).hexdigest()))
-                    n += 1
+                    for age in ages:
+                        keys = dict(w=ka, e=kb, n=0)
+                        img = fam.tile(cls, keys, grain_amp, var, age)
+                        tid = base + n
+                        p = os.path.join(out_dir, "tier1_wall_%d.png" % tid)
+                        Image.fromarray(fam.rgb(img)).save(p)
+                        key = ("%d,%d,%d,%d" % (ka, kb, var, age) if cls == "face"
+                               else "%d,%d,%d" % (ka, kb, var))
+                        table[cls][key] = tid
+                        tiles.append(dict(id=tid, cls=cls, ka=ka, kb=kb, var=var, age=age,
+                                          file=os.path.basename(p),
+                                          mean=round(float(img.mean()), 3),
+                                          sha256=hashlib.sha256(open(p, "rb").read()).hexdigest()))
+                        n += 1
 
     # THE VOID. Bible has no clause for it yet, which is exactly why nothing here rules it: three
     # near-black candidates are emitted and Rafe picks one at the gate (section 13.1). All three
@@ -536,6 +636,14 @@ def compose(arm, out_dir, grain_amp, void_values):
         # an enforcement (LOOP-PROCESS section 4.2 - a step that runs and changes nothing quietly
         # is a wish).
         variants=VARIANTS,
+        ages=AGES,
+        age_second_course=AGE_SECOND_COURSE,
+        age_note=("RULED (Rafe, at the gate): the walls had opted out of history. Age is keyed to "
+                  "TrafficField - the floor's own accumulated-traversal field, in which vaults "
+                  "and shrines sit at exactly zero - so a wall beside a route ages and a sealed "
+                  "room's wall stays sharp. Base courses only; patina climbs one course at the "
+                  "age above. Expressed as darkening and as ROUNDING, never as a pale value lift "
+                  "(section 8.2.1)."),
         edge_check=[[SALT_V, "v", x, y, h(SALT_V, "v", x, y) % EDGE_FAMILIES]
                     for x in range(0, 17, 3) for y in range(0, 21, 5)]
                    + [[SALT_H, "h", x, y, h(SALT_H, "h", x, y) % EDGE_FAMILIES]
@@ -557,10 +665,21 @@ if __name__ == "__main__":
                     help="grain amplitude in LADDER RUNGS. Section 13.8: a signal below the "
                          "perceptual floor is absent, and the floor family's +-4 luminance "
                          "against a 13.23 rung quantised flat.")
+    ap.add_argument("--ageless", action="store_true",
+                    help="compose with AGES=1 — the aging switched off, everything else "
+                         "identical. This is the control arm for measure_age_signal: the same "
+                         "cells, in the same scene, under the same lamp, so the lighting "
+                         "gradient cancels instead of being modelled.")
+    ap.add_argument("--out-suffix", default="",
+                    help="append to the asset directory name, so a control arm does not "
+                         "overwrite the candidate it is a control for")
     ap.add_argument("--void", default="18,10,0",
                     help="three near-black void candidates; Rafe rules one at the gate")
     a = ap.parse_args()
+    if a.ageless:
+        globals()["AGES"] = 1
     out = os.path.join(REPO, ASSETS_REL if a.arm == "material" else ASSETS_REL + "_" + a.arm)
+    out += a.out_suffix
     voids = [int(v) for v in a.void.split(",")]
     man, mp = compose(a.arm, out, a.grain_amp, voids)
     print("arm=%s  top=%.2f (rung %d)  face=%.2f (rung %d)  authored face/top=%.4f"

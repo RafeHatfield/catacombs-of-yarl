@@ -65,7 +65,21 @@ BIND_BASE = 9800
 # of the tile set: the Boundary is a line held for four centuries by people who over-build and
 # repair on top of repairs, so bindings are COMMON on the reveals a player walks past and rarer
 # on wall the player only sees the top of.
-RATES = dict(face=0.45, top=0.14)
+# FACE ONLY. There is no `top` rate any more and there must not be one.
+#
+# RULED (Rafe, at the gate): *"the comb/spike marks on the top band — if they are bindings on
+# tops, remove (incident-free tops)."* They were. Identified: `lash` is a vertical iron strap with
+# three rope turns across it, which at 32px on a wall top is a comb; `strap` is the plain vertical
+# bar, which is the spike; `patch` is four sawn-grain strokes, which is a second comb. Three blind
+# seats had already described the first one without knowing what it was — *"a vertical post with
+# three horizontal crossbars"*, *"a stake or rack"* — and every one of them said it was holding
+# nothing.
+#
+# §8.3.1 outranks §7.1 here and the ruling says so: an overlay at a hashed position on a plane the
+# bible says carries no incident is still incident on that plane. What it costs is real and is not
+# hidden: **a wall mass seen from above now shows no orc work at all**, and §7.1's *show me what
+# holds this together* is answered only where a reveal is.
+RATES = dict(face=0.45)
 
 
 def ink(ladder, plane_rung):
@@ -177,7 +191,7 @@ def compose(out_dir, arm):
 
     tiles, n = [], 0
     for kind in sorted(KINDS):
-        for face in (True, False):
+        for face in (True,):
             for k in range(3):
                 ink_v.clear()
                 ink_v.update(ink(ladder, face_rung if face else top_rung))
@@ -207,8 +221,14 @@ def compose(out_dir, arm):
                           "its own copy.",
                law="Section 8.3.1 - incident arrives at the INSTANCE level, randomised. Nothing "
                    "here may be baked into a wall segment.",
-               ink=dict(face={k: round(float(v), 2) for k, v in ink(ladder, face_rung).items()},
-                        top={k: round(float(v), 2) for k, v in ink(ladder, top_rung).items()}),
+               ink=dict(face={k: round(float(v), 2) for k, v in ink(ladder, face_rung).items()}),
+               tops="NO BINDINGS ON TOP PLANES - ruled at the gate, §8.3.1. See RATES.",
+               age_by_implication=(
+                   "RECORDED (Rafe, at the gate): the orc repairs ARE age. A strap over a joint "
+                   "means the joint moved; a patch means a course broke; a lash over a strap "
+                   "means the first repair failed and nobody replaced it (§7.3, repaired on top "
+                   "of prior repairs). The wall's history is carried by the binding family as "
+                   "much as by the aging pass, and neither is decoration."),
                tiles=tiles)
     mp = os.path.join(out_dir, "MANIFEST.json")
     json.dump(out, open(mp, "w"), indent=2)

@@ -5,8 +5,8 @@
     "two_planes": {
       "pass_": true,
       "min_rungs": 4.576,
-      "mean_rungs": 5.529,
-      "n": 27,
+      "mean_rungs": 5.894,
+      "n": 108,
       "bound": "min separation >= 1.5 rungs"
     },
     "flat_top": {
@@ -14,7 +14,7 @@
       "joint_rows_in_top_band": 0,
       "tile": null,
       "mean": 0.0,
-      "n": 27,
+      "n": 108,
       "bound": "zero rows in the top band a full rung below its own median"
     },
     "incident_free_top": {
@@ -37,7 +37,7 @@
     "no_ring": {
       "pass_": true,
       "worst": 0.034,
-      "tile": 9501,
+      "tile": 9601,
       "bound": "no tile with all four borders deviating >12% the same way"
     },
     "edge_agreement": {

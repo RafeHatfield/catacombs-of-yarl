@@ -56,7 +56,7 @@ def ring_of(wall, w, h, x, y, cap=2):
     return cap + 1
 
 
-def predict(spec, man):
+def predict(spec, man, age_map=None):
     """Which tile the engine laid on each wall cell — the same rules, restated.
 
     A third copy of this arithmetic would be indefensible if it were not CHECKED: the engine
@@ -97,7 +97,38 @@ def predict(spec, man):
                 kb = CW.h(sh, "h", x, y + 1) % ef
             var = CW.h(90777, "h" if horiz else "v", x, y) % nv
             cls = "face" if south_open else ("top_h" if horiz else "top_v")
-            out[(x, y)] = (cls, man["table"][cls]["%d,%d,%d" % (ka, kb, var)])
+            # AGE COMES FROM THE ENGINE'S OWN MAP, never recomputed here. It is a function of
+            # TrafficField, which is C# logic; a Python reimplementation would be a fourth copy of
+            # arithmetic and the one most likely to drift unnoticed, because unlike the tile keys
+            # there is no cross-check that could catch it. The engine prints the map; this reads it.
+            if cls == "face":
+                age = age_map.get((x, y), 0) if age_map else 0
+                key = "%d,%d,%d,%d" % (ka, kb, var, age)
+            else:
+                key = "%d,%d,%d" % (ka, kb, var)
+            out[(x, y)] = (cls, man["table"][cls][key])
+    return out
+
+
+def read_age_map(log_path):
+    """The `[Tier1] wall age map` block, as the engine printed it."""
+    txt = open(log_path, "rb").read().decode("utf8", "replace").splitlines()
+    rows, on = [], False
+    for line in txt:
+        if "wall age map" in line and "DIAG" not in line:
+            on = True
+            continue
+        if on:
+            if "[Tier1]   " not in line or "DIAG" in line:
+                if rows:
+                    break
+                continue
+            rows.append(line.split("[Tier1]   ", 1)[1])
+    out = {}
+    for y, r in enumerate(rows):
+        for x, ch in enumerate(r):
+            if ch.isdigit():
+                out[(x, y)] = int(ch)
     return out
 
 
@@ -146,7 +177,7 @@ def main():
 
     spec = json.load(open(os.path.join(REPO, a.scene)))
     man = json.load(open(os.path.join(a.assets, "MANIFEST.json")))
-    pred = predict(spec, man)
+    pred = predict(spec, man, read_age_map(os.path.join(REPO, a.log)))
 
     # THE CROSS-CHECK, BEFORE A SINGLE PIXEL IS MEASURED.
     eng = engine_counts(os.path.join(REPO, a.log))

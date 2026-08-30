@@ -1,10 +1,9 @@
 {
   "family": "boundary_binding_v1",
   "arm": "material",
-  "commit": "c241f421f97c7fdc5f21ce0fea0a7b75eeadc6d9",
+  "commit": "8ed98f5f699b4ce14e5c828af29948ef6d99e5f3",
   "rates": {
-    "face": 0.45,
-    "top": 0.14
+    "face": 0.45
   },
   "rates_note": "Properties of the world (section 7.3), never of the tile set. The engine planner and this file read the same numbers; neither carries its own copy.",
   "law": "Section 8.3.1 - incident arrives at the INSTANCE level, randomised. Nothing here may be baked into a wall segment.",
@@ -15,15 +14,10 @@
       "rope": 48.56,
       "timber": 48.56,
       "pale": 88.24
-    },
-    "top": {
-      "shadow": 61.79,
-      "iron": 75.02,
-      "rope": 101.47,
-      "timber": 88.24,
-      "pale": 141.15
     }
   },
+  "tops": "NO BINDINGS ON TOP PLANES - ruled at the gate, \u00a78.3.1. See RATES.",
+  "age_by_implication": "RECORDED (Rafe, at the gate): the orc repairs ARE age. A strap over a joint means the joint moved; a patch means a course broke; a lash over a strap means the first repair failed and nobody replaced it (\u00a77.3, repaired on top of prior repairs). The wall's history is carried by the binding family as much as by the aging pass, and neither is decoration.",
   "tiles": [
     {
       "id": 9800,
@@ -63,46 +57,10 @@
     },
     {
       "id": 9803,
-      "kind": "cramp",
-      "plane": "top",
-      "variant": 0,
-      "file": "tier1_bind_9803.png",
-      "coverage": 0.0312,
-      "grips": [
-        "cramp"
-      ],
-      "sha256": "4dd0c159838deea4af10ac8ed76bd7bf78b3e1cc5f13b53a68db8534c4b0ad92"
-    },
-    {
-      "id": 9804,
-      "kind": "cramp",
-      "plane": "top",
-      "variant": 1,
-      "file": "tier1_bind_9804.png",
-      "coverage": 0.0312,
-      "grips": [
-        "cramp"
-      ],
-      "sha256": "fb7baa5a595700f3c64dac8669c3015f9db374be001ddcfbbc47360009fd89aa"
-    },
-    {
-      "id": 9805,
-      "kind": "cramp",
-      "plane": "top",
-      "variant": 2,
-      "file": "tier1_bind_9805.png",
-      "coverage": 0.0312,
-      "grips": [
-        "cramp"
-      ],
-      "sha256": "d07b8a82273f977fb566c6299e34c2181e8c0f1c280e84c1bcfc05986ad2b016"
-    },
-    {
-      "id": 9806,
       "kind": "lash",
       "plane": "face",
       "variant": 0,
-      "file": "tier1_bind_9806.png",
+      "file": "tier1_bind_9803.png",
       "coverage": 0.0967,
       "grips": [
         "lash"
@@ -110,11 +68,11 @@
       "sha256": "6a697c488b381ce6f250762c1d76da9ffed2a4e296de875ffda6a4d11c844961"
     },
     {
-      "id": 9807,
+      "id": 9804,
       "kind": "lash",
       "plane": "face",
       "variant": 1,
-      "file": "tier1_bind_9807.png",
+      "file": "tier1_bind_9804.png",
       "coverage": 0.0967,
       "grips": [
         "lash"
@@ -122,11 +80,11 @@
       "sha256": "f11b5d66f2f7b883ddac05c944283b240ae9e850ede77b2eaca17926c737b298"
     },
     {
-      "id": 9808,
+      "id": 9805,
       "kind": "lash",
       "plane": "face",
       "variant": 2,
-      "file": "tier1_bind_9808.png",
+      "file": "tier1_bind_9805.png",
       "coverage": 0.0967,
       "grips": [
         "lash"
@@ -134,47 +92,11 @@
       "sha256": "6212058b399e235e9b7236717474bd302ac613dabca0159487803480b8daf1f8"
     },
     {
-      "id": 9809,
-      "kind": "lash",
-      "plane": "top",
-      "variant": 0,
-      "file": "tier1_bind_9809.png",
-      "coverage": 0.1143,
-      "grips": [
-        "lash"
-      ],
-      "sha256": "27fbafa8f18f313ad331a40c8c7ff08eb0d172ce1ca132d06a901001f9f89b78"
-    },
-    {
-      "id": 9810,
-      "kind": "lash",
-      "plane": "top",
-      "variant": 1,
-      "file": "tier1_bind_9810.png",
-      "coverage": 0.1143,
-      "grips": [
-        "lash"
-      ],
-      "sha256": "f8dcb14741cd4bf7842e15d5409418449f043bcea7788c7f222a6509ea49250f"
-    },
-    {
-      "id": 9811,
-      "kind": "lash",
-      "plane": "top",
-      "variant": 2,
-      "file": "tier1_bind_9811.png",
-      "coverage": 0.1143,
-      "grips": [
-        "lash"
-      ],
-      "sha256": "989f2b5eddc08b85c675f7776040daad6eae663d9711f5604eda67fb3149654d"
-    },
-    {
-      "id": 9812,
+      "id": 9806,
       "kind": "patch",
       "plane": "face",
       "variant": 0,
-      "file": "tier1_bind_9812.png",
+      "file": "tier1_bind_9806.png",
       "coverage": 0.0889,
       "grips": [
         "patch"
@@ -182,11 +104,11 @@
       "sha256": "2faf51b391d8c5475599a3431d8f993afa27254be1946e11d005da2c0068bc7c"
     },
     {
-      "id": 9813,
+      "id": 9807,
       "kind": "patch",
       "plane": "face",
       "variant": 1,
-      "file": "tier1_bind_9813.png",
+      "file": "tier1_bind_9807.png",
       "coverage": 0.0889,
       "grips": [
         "patch"
@@ -194,11 +116,11 @@
       "sha256": "17719d6c40dd5ac059412222c7e6966c9c459ec8592033262b924628d12ec048"
     },
     {
-      "id": 9814,
+      "id": 9808,
       "kind": "patch",
       "plane": "face",
       "variant": 2,
-      "file": "tier1_bind_9814.png",
+      "file": "tier1_bind_9808.png",
       "coverage": 0.0889,
       "grips": [
         "patch"
@@ -206,47 +128,11 @@
       "sha256": "3321bdd60a901e2516b88de285c4efd7d87a3efe85f1e4d4f627fb08af080ce7"
     },
     {
-      "id": 9815,
-      "kind": "patch",
-      "plane": "top",
-      "variant": 0,
-      "file": "tier1_bind_9815.png",
-      "coverage": 0.0889,
-      "grips": [
-        "patch"
-      ],
-      "sha256": "d5e2a8d176ab9ae16c6ead2b7cef480d71b90059e28ed704e59df5f493641e23"
-    },
-    {
-      "id": 9816,
-      "kind": "patch",
-      "plane": "top",
-      "variant": 1,
-      "file": "tier1_bind_9816.png",
-      "coverage": 0.0889,
-      "grips": [
-        "patch"
-      ],
-      "sha256": "30ae2a8cdcd2b19c1cdc877dcd90024678f4ec3483aa57202559dabb925a27f4"
-    },
-    {
-      "id": 9817,
-      "kind": "patch",
-      "plane": "top",
-      "variant": 2,
-      "file": "tier1_bind_9817.png",
-      "coverage": 0.0889,
-      "grips": [
-        "patch"
-      ],
-      "sha256": "9e277f70fb76fbbbb20b738d22885237d9ae59f4bb5f2e95378d2c5fba9af89b"
-    },
-    {
-      "id": 9818,
+      "id": 9809,
       "kind": "pin",
       "plane": "face",
       "variant": 0,
-      "file": "tier1_bind_9818.png",
+      "file": "tier1_bind_9809.png",
       "coverage": 0.0059,
       "grips": [
         "pin"
@@ -254,11 +140,11 @@
       "sha256": "6e673526c28e293bd82d3ac5db3f4354ac8a1d7f3427c21f7d8683cfaa6f1e9a"
     },
     {
-      "id": 9819,
+      "id": 9810,
       "kind": "pin",
       "plane": "face",
       "variant": 1,
-      "file": "tier1_bind_9819.png",
+      "file": "tier1_bind_9810.png",
       "coverage": 0.0059,
       "grips": [
         "pin"
@@ -266,11 +152,11 @@
       "sha256": "d435e9e181c2555c9a0d4ef492c3f010364701af1bd05706baf05d15f1655603"
     },
     {
-      "id": 9820,
+      "id": 9811,
       "kind": "pin",
       "plane": "face",
       "variant": 2,
-      "file": "tier1_bind_9820.png",
+      "file": "tier1_bind_9811.png",
       "coverage": 0.0059,
       "grips": [
         "pin"
@@ -278,47 +164,11 @@
       "sha256": "e83961ae8ef2f8507c91d5f90e3474a2c615e49cd1b5b7d2bc372a2f77411229"
     },
     {
-      "id": 9821,
-      "kind": "pin",
-      "plane": "top",
-      "variant": 0,
-      "file": "tier1_bind_9821.png",
-      "coverage": 0.0059,
-      "grips": [
-        "pin"
-      ],
-      "sha256": "65b5c5a2b676f8677161c91d6de595c1ba24ab1196b79d067c492041cb731fa8"
-    },
-    {
-      "id": 9822,
-      "kind": "pin",
-      "plane": "top",
-      "variant": 1,
-      "file": "tier1_bind_9822.png",
-      "coverage": 0.0059,
-      "grips": [
-        "pin"
-      ],
-      "sha256": "88ddd93608f4e9923168b63b93477d0870272a75d58828b86031e65434cbc7c9"
-    },
-    {
-      "id": 9823,
-      "kind": "pin",
-      "plane": "top",
-      "variant": 2,
-      "file": "tier1_bind_9823.png",
-      "coverage": 0.0059,
-      "grips": [
-        "pin"
-      ],
-      "sha256": "cd485eca8c6afcffbd7e317cc0cd6111bb737f4f0f9e2944f1204eeb855883b2"
-    },
-    {
-      "id": 9824,
+      "id": 9812,
       "kind": "strap",
       "plane": "face",
       "variant": 0,
-      "file": "tier1_bind_9824.png",
+      "file": "tier1_bind_9812.png",
       "coverage": 0.0557,
       "grips": [
         "strap"
@@ -326,11 +176,11 @@
       "sha256": "209f80697a8b99da3187bbed104686964bbc931dc2f43a3da6e379165ca653d9"
     },
     {
-      "id": 9825,
+      "id": 9813,
       "kind": "strap",
       "plane": "face",
       "variant": 1,
-      "file": "tier1_bind_9825.png",
+      "file": "tier1_bind_9813.png",
       "coverage": 0.0557,
       "grips": [
         "strap"
@@ -338,52 +188,16 @@
       "sha256": "0b8bc89b54e919301b87a00fb7e2ecd5e5f0db693eb4815cddabddf5476d7db1"
     },
     {
-      "id": 9826,
+      "id": 9814,
       "kind": "strap",
       "plane": "face",
       "variant": 2,
-      "file": "tier1_bind_9826.png",
+      "file": "tier1_bind_9814.png",
       "coverage": 0.0557,
       "grips": [
         "strap"
       ],
       "sha256": "84b819cdc0a1d2f3d4a3cac244545fcb65f54803da95a116a4f4ac7ecad16063"
-    },
-    {
-      "id": 9827,
-      "kind": "strap",
-      "plane": "top",
-      "variant": 0,
-      "file": "tier1_bind_9827.png",
-      "coverage": 0.0732,
-      "grips": [
-        "strap"
-      ],
-      "sha256": "8ae1647dc2a994b7d241b9dba7c9e052ddefedeb9cd57f65d5f7e37a4c7bd802"
-    },
-    {
-      "id": 9828,
-      "kind": "strap",
-      "plane": "top",
-      "variant": 1,
-      "file": "tier1_bind_9828.png",
-      "coverage": 0.0732,
-      "grips": [
-        "strap"
-      ],
-      "sha256": "d577ab4d2a2788bf80b28ae3be2c7b1e8a82a45a714f93fd1e48bd891cccfad6"
-    },
-    {
-      "id": 9829,
-      "kind": "strap",
-      "plane": "top",
-      "variant": 2,
-      "file": "tier1_bind_9829.png",
-      "coverage": 0.0732,
-      "grips": [
-        "strap"
-      ],
-      "sha256": "40d2ff4a95c651980e7638f28fea9ca76f0af6fe02a71a2cf16367ba7f8c7de5"
     }
   ]
 }
