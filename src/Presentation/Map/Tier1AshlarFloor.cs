@@ -492,15 +492,29 @@ public static class Tier1AshlarFloor
     /// </summary>
     private static int TravelAxis(byte[,]? t, int tx, int ty)
     {
+        // THE ROUTE RUNS WHERE THE TRAFFIC CONTINUES. Sum the two neighbours along each of the
+        // four axes a pixel grid allows; the busiest axis is the way the feet went. Walls carry
+        // no traffic, so a corridor's own walls vote against crossing them.
+        //
+        // The first version took the perpendicular of the gradient and was wrong in a one-tile
+        // corridor — both across-neighbours are wall, the across-gradient is identically zero,
+        // and the perpendicular then reads the along-route variation as a route running the other
+        // way. It labelled the review scene's north-south chokepoint E-W down its whole length.
         if (t == null) return -1;
         int w = t.GetLength(0), h = t.GetLength(1);
-        double At(int x, int y) => t[System.Math.Clamp(x, 0, w - 1), System.Math.Clamp(y, 0, h - 1)];
-        double gx = At(tx + 1, ty) - At(tx - 1, ty);
-        double gy = At(tx, ty + 1) - At(tx, ty - 1);
-        if (gx * gx + gy * gy < 36.0) return -1;          // DIR_MIN_GRAD = 6
-        double ang = System.Math.Atan2(-gx, gy) * 180.0 / System.Math.PI;
-        ang = ((ang % 180.0) + 180.0) % 180.0;
-        return ((int)System.Math.Round(ang / 45.0)) % 4;
+        double At(int x, int y) =>
+            (x < 0 || y < 0 || x >= w || y >= h) ? 0.0 : t[x, y];
+        int[] dxs = { 1, 1, 0, 1 };
+        int[] dys = { 0, -1, 1, 1 };
+        double best = -1, worst = double.MaxValue;
+        int bi = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            double v = At(tx + dxs[i], ty + dys[i]) + At(tx - dxs[i], ty - dys[i]);
+            if (v > best) { best = v; bi = i; }
+            if (v < worst) worst = v;
+        }
+        return (best - worst < 12.0) ? -1 : bi;      // DIR_MIN_GRAD * 2
     }
 
     /// <summary>How much a bed joint and a head joint each compact, on this travel axis.</summary>

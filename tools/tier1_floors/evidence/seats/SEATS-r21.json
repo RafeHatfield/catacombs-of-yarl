@@ -1,0 +1,112 @@
+{
+ "round": 21,
+ "commit": "958b6d8318b6c770420aeba982a83c7bfaaa358d",
+ "seats": {
+  "F2": {
+   "Q1": "Flat tan blocks. I cannot tell you the material \u2014 it reads as \"generic brick-or-stone paving\", and that is as far as it goes.",
+   "Q1_WHY": "Every tile face across the lit region (x 185\u2013625, y 0\u2013265) is a single mid-ochre fill with a faint low-frequency mottle of \u00b13\u20135 luminance values. Magnified 9\u00d7 at (230\u2013320, 95\u2013140) the face is essentially one colour with two neighbouring shades blotching it. There is no grain, no bedding, no aggregate, no tool marks, no chisel work, no pitting. Fired brick, mud brick, sandstone and cast concrete would all look exactly like this. The joints (dark brown, 2\u20133px) tell me it is laid in units; the faces tell me nothing about what the units are.",
+   "Q2": "South, down the corridor at x 370\u2013435. **Nothing about the ground influenced that.** I picked it because it is the one opening whose interior is lit \u2014 the light runs down it to y\u2248470 while the west mouth at (0\u2013185, y 85\u2013148) is black at 8px in. That is the lamp and the wall layout choosing for me, not the floor. The tiles inside the south doorway at (370\u2013435, 240\u2013265) are indistinguishable from the tiles in the middle of the room at (300, 120).",
+   "Q3": "It has been cracked, and it has been stained in eleven places. Nothing else has happened to it. It has not been walked on, swept, dragged over, patched, burned, flooded or repaired. It is undamaged material with damage drawn on top.",
+   "Q3_WHY": "Two effects, and only two. (1) Thin dark 1px lines wandering everywhere. (2) A dark round stain ~22\u201326px across with a ragged fringed rim, at (215,45), (335,42), (407,60), (585,55), (400,105), (610,100), (330,175), (267,232), (417,240), (478,243), (553,240) \u2014 eleven in the lit floor, plus more visible in the unlit west corridor at (30,30) and (95,107). After I removed a radial lighting model, the remaining brightness variation is **quantised to whole tiles** \u2014 each brick is a slightly different flat value. There is no sub-tile or cross-tile variation at all: no traffic polish, no dirt accumulating in corners, no gradient toward any doorway.",
+   "Q4": "Yes, two things.\n\nThe **stain blob**. Eleven of them in the lit floor at the coordinates above. They are not pixel-identical \u2014 cross-correlating the one at (267,232) against the rest peaks at 0.40, so they are variants, not stamps \u2014 but they are unmistakably one motif: same diameter, same ragged spiky rim, same slightly-lighter mottled centre. Three of them sit in a near-row along y\u2248240 at x=417, 478, 553. Once you see it you count them instead of reading the room.\n\nThe **cracks crossing joints**. At (480\u2013580, 140\u2013160) a single crack runs through three tiles and across two vertical joints without deflecting, offsetting or stopping. Same at (200\u2013320, 190\u2013215). A crack in laid masonry either terminates at the joint or steps along it. These do neither, which reads as a scribble layer composited over the grid rather than damage to the stones \u2014 and once I noticed it I could not stop seeing it everywhere.",
+   "Q5": "**Made** \u2014 but barely, and for the wrong reason. The bond is genuinely irregular: brick widths vary along every course, courses vary in height, and 2D autocorrelation over the lit floor (x 195\u2013620, y 5\u2013255) finds no periodic peak above 0.27 at any offset, so nothing is verbatim-tiled. The layout was authored. The *surface* was not \u2014 it is one flat fill plus two stamped effects, which is the repetition problem moved up a level from the geometry to the material.",
+   "Q6": "YES.\n\nMerely competent. The palette is controlled, the lighting falloff is clean, the bond is irregular in the right ways, nothing is broken. It is not genuinely good: a genuinely good floor tells you what it is made of and where people walk, and this one does neither.",
+   "Q7": "At 1:1 the faces are blank. What I can see on the floor at 1:1 is the joint grid, the crack lines, and the blobs \u2014 and the blobs I read as \"something dark\" without being able to say what. Nothing on the face of the material itself is legible.\n\nOnly on magnification does anything appear: a 2\u20133 value mottle within each tile, and faint vertical striations on a minority of tiles. That is hunting, not seeing \u2014 and even magnified, the striations do not resolve into anything I can name.",
+   "Q7_WHY": "Checked at 1:1: (200\u2013300, 10\u201360), (280\u2013360, 100\u2013150), (440\u2013520, 90\u2013140), (500\u2013600, 130\u2013190), (380\u2013440, 210\u2013260) \u2014 all read as flat fill plus overlay marks. Magnified (4\u20139\u00d7): (230\u2013320, 95\u2013140), (460\u2013550, 95\u2013140), (190\u2013280, 150\u2013200), (180\u2013640, 0\u201340). The mottle and the striations only exist in that second set. Quantitatively, 10\u00d710 windows across the lit floor are flat (\u03c3<2) in only 7% of positions \u2014 but the median \u03c3 of 20.2 is produced almost entirely by joints and crack lines, not by the faces.",
+   "Q8": "It reads as **one age everywhere**, and that age is roughly \"damaged last week.\" Not old \u2014 broken. The distinction matters here.",
+   "Q8_WHY": "Cracks are the only age signal, and they are evenly distributed at even weight across the whole lit region \u2014 same density and same line value at (210,30) near the wall as at (410,180) under the figure's feet as at (400,430) far down the corridor. Age normally arrives as *differential*: edges rounder than centres, hollows where feet land, joints filled at the margins and scoured in the traffic line, one patch newer than its neighbours. None of that is present. Regions checked: (185\u2013320, 0\u2013100), (320\u2013500, 100\u2013200), (370\u2013435, 265\u2013470), (500\u2013625, 60\u2013200). In a place described as in continuous heavy use since before the records, this floor has no accumulated time on it at all.",
+   "Q9": "No. The ground told me nothing. I read the route off the walls and the lamp.",
+   "Q9_WHY": "My route runs (415,200) \u2192 (400,265) \u2192 (400,400). The ground along it \u2014 (380\u2013430, 200\u2013260), (375\u2013430, 270\u2013350), (375\u2013430, 350\u2013450) \u2014 is the same bond, same fill value, same crack density, same nothing as the regions I rejected: (230\u2013330, 100\u2013200) to the west and (500\u2013600, 100\u2013200) to the east. I compared the tiles immediately inside the south doorway at (370\u2013435, 240\u2013265) against room-interior tiles at (300, 120): identical. There is no threshold, no sill, no scuff, no worn hollow, no dishing, no dirt tracked in or out. The bond simply runs through the doorway as if the doorway were not there. The only difference between my route and the parts I rejected is that the lamp reaches further down it \u2014 which is a lighting fact, not a floor fact.",
+   "Q10": "They all look the same. Three openings \u2014 north (floor runs off the top edge across x 185\u2013625), west (x 0\u2013185, y 85\u2013148), south (x 370\u2013435, y 265+) \u2014 and the ground in front of each is the identical tile at the identical value with the identical crack treatment. Nothing distinguishes a door used a thousand times a day from one nobody has opened in four hundred years.\n\n---",
+   "CULL": "At 1:1 the tile faces are blank \u2014 all surface information is an overlay of scribbled cracks plus one repeated stain.",
+   "FLIP LIST": "- Put a legible material on the tile face at 1:1 \u2014 pitting, grain, chipped arrises, aggregate \u2014 so a player can name what they are standing on without magnifying.\n- Break every crack at the joints. Terminate or step it; a crack must not run unbroken across (480\u2013580, 140\u2013160) or (200\u2013320, 190\u2013215).\n- Cut the stain-blob count in the lit floor from eleven to two or three, and make the survivors read as something specific rather than as generic dark splat.\n- Wear the route: dish and lighten the tiles along the south corridor line (375\u2013435, 200\u2013470) and in the mouths of the west and north openings, and let dirt and grit collect where feet do not go, so the ground carries the traffic instead of the lamp.\n- Differentiate age across the room \u2014 one patch of coarse orc repair with driven pins and salvaged timber, or one course reset out of bond \u2014 so the floor is not uniformly the same day old everywhere.\n\nModel: Claude Opus 5 (1M context)",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Put a legible material on the tile face at 1:1 \u2014 pitting, grain, chipped arrises, aggregate \u2014 so a player can name what they are standing on without magnifying.",
+    "Break every crack at the joints. Terminate or step it; a crack must not run unbroken across (480\u2013580, 140\u2013160) or (200\u2013320, 190\u2013215).",
+    "Cut the stain-blob count in the lit floor from eleven to two or three, and make the survivors read as something specific rather than as generic dark splat.",
+    "Wear the route: dish and lighten the tiles along the south corridor line (375\u2013435, 200\u2013470) and in the mouths of the west and north openings, and let dirt and grit collect where feet do not go, so the ground carries the traffic instead of the lamp.",
+    "Differentiate age across the room \u2014 one patch of coarse orc repair with driven pins and salvaged timber, or one course reset out of bond \u2014 so the floor is not uniformly the same day old everywhere."
+   ],
+   "mapping": {
+    "A": "r18_plant_approach.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r21_F2_transcript.txt",
+   "plant_caught": true,
+   "plant_words_hit": [
+    "hole"
+   ]
+  },
+  "F1": {
+   "Q1": "Cut sandstone slabs \u2014 rectangular blocks, laid in courses, mortared.",
+   "Q1_WHY": "The joint network at (190\u2013640, 0\u2013265) is a running-bond brick pattern: continuous horizontal courses about 26\u201330px apart, vertical joints staggered between rows. Blocks are roughly 55\u00d728px, all within a narrow size band. Colour is a flat warm tan, uniform except for the lamp falloff. It reads as masonry because of the layout, not because of anything on the stone itself.",
+   "Q2": "South, down the corridor at (375\u2013440, 265\u2013600).\n\nNothing about the ground influenced that. I picked it off the wall shape \u2014 the placeholder blocks pinch into a channel and that is obviously a corridor. The floor inside the corridor at (380\u2013435, 290\u2013420) is the same tan block fill as the room floor at (300\u2013380, 200\u2013260); same value, same joint weight, no scuffing, no path. If I deleted the walls I would have no idea which way to go.",
+   "Q3": "It has been cracked and nothing else. A network of thin dark fissures runs across the room. There is no dirt, no staining, no chipped corners, no missing block, no repair, no wear where feet fall. It is a clean new floor with cracks drawn on it.",
+   "Q3_WHY": "The cracks at (200\u2013620, 0\u2013265) are uniformly 1px, uniformly the same near-black, and they cross block faces and mortar joints without changing behaviour \u2014 see the long diagonal at (330\u2013360, 190\u2013260), which runs straight through three horizontal joints as though the joints were not there. Real stone splits *along* joints or terminates at them. Meanwhile every block edge in the frame is a clean unbroken rectangle, and the mortar lines are continuous and even at, e.g., (430\u2013620, 145) \u2014 no crumbling, no gaps, no fill.",
+   "Q4": "Yes \u2014 two things.\n\nFirst, a repeated crack stamp. There is a shallow-U shape with a flat bottom and stepped upticks at both ends at **(258\u2013314, 88\u2013114)**. The same silhouette, same stair-step cadence, same length, appears again at **(448\u2013504, 165\u2013191)**. Magnified 8x side by side they are the same asset placed twice. Once you see it, the \"X\" crossing at (300\u2013325, 85\u2013115) and the near-vertical drop at (355\u2013370, 25\u201390) start reading as members of the same small stamp library too.\n\nSecond, the cracks stop dead at the room boundary. There is not one crack anywhere in the corridor at (375\u2013440, 265\u2013600), and none in the strip at (190\u2013260, 200\u2013265). The damage layer has a footprint, and the footprint is visible.",
+   "Q5": "Repeated. The block *layout* is varied enough to pass \u2014 autocorrelation over (190\u2013640, 10\u2013260) finds no hard period, top correlation 0.36 at 24px, which is broad-bump noise, not a tiling seam. But the *content* is two elements composited: one flat tan fill with a soft gradient, plus a crack decal set that is demonstrably reused (Q4) and that ignores the geometry underneath it. Nothing on this floor was made in response to anything else on this floor.",
+   "Q6": "YES.\n\nMerely competent. The lighting falloff is genuinely well-judged and the block layout is disciplined, but the surface is a fill with stickers on it. Nothing here is good.",
+   "Q7": "Legible at 1:1: the joint grid, the lamp gradient, and the cracks. That is the complete list. **The block faces are blank.** Each one is a single tan value with a slow diagonal lightening across it. Between one joint and the next there is no information at all.\n\nOnly on magnification: at 4x a handful of blocks carry a barely-there diagonal streak one or two shades off the fill \u2014 (245\u2013275, 130\u2013150) has one, (500\u2013530, 195\u2013215) has another \u2014 and there are two or three soft round blotches, e.g. (270\u2013290, 165\u2013180). I had to hunt for all of it. At 1:1 none of it exists. It is below the threshold where it does any work.",
+   "Q7_WHY": "Checked at 1:1: (200\u2013300, 30\u201390); (450\u2013600, 100\u2013200); (300\u2013380, 200\u2013260); (380\u2013435, 290\u2013420). Faces blank in all four. Magnified 4x: (200\u2013400, 60\u2013200); (440\u2013640, 120\u2013240); (200\u2013440, 20\u2013140); (260\u2013520, 230\u2013360). Magnified 8x: (258\u2013314, 88\u2013114) and (448\u2013504, 165\u2013191).",
+   "Q8": "It reads as two contradictory ages in the same pixels, which is why it doesn't land as any age.\n\nThe cracks say centuries \u2014 a fracture network that dense implies long settling. The surface says laid last month \u2014 no dishing, no polish, no grime in the joints, no rounded arrises, no replaced block, no orc repair of any kind despite four hundred years of a company living on it.\n\nSpatially it reads as one age everywhere, with one false exception: the corridor at (375\u2013440, 265\u2013600) looks *newer* than the room at (190\u2013640, 0\u2013265), purely because no cracks were stamped there. That is a coverage gap, not an age story \u2014 the fill, joint weight and block size are identical, so there is no actual reason for the corridor to be younger.",
+   "Q8_WHY": "Cracks read from (200\u2013620, 0\u2013265). Absence of wear read from the joints at (430\u2013620, 145) and (250\u2013430, 90), which are unbroken and clean, and from the block corners throughout (190\u2013640, 0\u2013265), all of which are square. The corridor/room age split read from comparing (380\u2013435, 300\u2013420) against (300\u2013380, 200\u2013260).",
+   "Q9": "The ground told me nothing. I read the route entirely off the walls.\n\nInside the lamp, the floor is directionless. It is a flat field of identical blocks in every direction from the figure at (410, 175). There is no darkened lane, no polish, no smoothing, no debris pushed to the sides, no lighter stripe \u2014 nothing that says this line gets walked and that line does not.",
+   "Q9_WHY": "Along the route I would take: (395\u2013435, 200\u2013265), the room floor between the figure and the corridor mouth, then (380\u2013435, 270\u2013330) just inside the corridor. Regions I rejected: (230\u2013300, 150\u2013220) to the west, and (500\u2013570, 150\u2013220) to the east \u2014 both well inside the light. What is different about the ground between them: **nothing.** Same fill value allowing for falloff, same block size, same joint weight, same absence of surface detail. The only difference between my route and the rejected regions is that the placeholder walls stop at the route.",
+   "Q10": "They all look the same. The corridor mouth at (375\u2013440, 260\u2013280) is the one genuine pinch point in the frame \u2014 every soul filed through this room goes through that gap \u2014 and the threshold ground there is indistinguishable from the open floor two metres west at (280\u2013340, 260\u2013280). No darkening, no dishing, no scuffing at the jambs. The floor records no traffic anywhere, so it cannot rank anything.",
+   "CULL": "Cracked but never walked on \u2014 the ground shows damage yet records no traffic at all.",
+   "FLIP LIST": "- Put a traffic lane on the ground: a smoothed, slightly darker, slightly lower-contrast band about 40px wide running from the room's north side through (395\u2013435, 200\u2013265) and down the corridor, with the joint lines within it worn faint. It must be legible at 1:1 without the walls.\n- Kill the reused crack stamp \u2014 the identical shallow-U at (258\u2013314, 88\u2013114) and (448\u2013504, 165\u2013191). Cracks must be authored per-location, and must break *along* mortar joints or terminate at them, not run straight through as the diagonal at (330\u2013360, 190\u2013260) does.\n- Give the block faces something readable at 1:1: pitting, tool marks, grain, or grime pooled against the downhill joint. At least three distinct face variants at strengths visible without magnification \u2014 the current faint diagonals are invisible at play size.\n- Break the perfect masonry: two or three chipped or spalled corners, one block sunk below its neighbours, one missing entirely, in the lit area (190\u2013640, 0\u2013265).\n- Add one orc repair on the ground \u2014 driven pins, a lashed timber baulk, a hide patch over a broken slab \u2014 near the corridor mouth (360\u2013460, 240\u2013300), where 400 years of holding a line would actually put it.\n\nNext thing to watch: once a traffic lane exists, the crack layer will fight it \u2014 cracks running *through* the worn lane will look wrong, since a walked lane should have its cracks polished shut. The wear pass and the damage pass need to know about each other, or you'll ship two independent decal layers instead of one floor.\n\n*Model: Claude Opus 5 (1M context)*",
+   "Q1_A": "",
+   "Q1_B": "",
+   "Q5_A": "",
+   "Q5_B": "",
+   "Q6_A": "",
+   "Q6_B": "",
+   "CULL_A": "",
+   "CULL_B": "",
+   "RANK": "",
+   "flips": [
+    "Put a traffic lane on the ground: a smoothed, slightly darker, slightly lower-contrast band about 40px wide running from the room's north side through (395\u2013435, 200\u2013265) and down the corridor, with the joint lines within it worn faint. It must be legible at 1:1 without the walls.",
+    "Kill the reused crack stamp \u2014 the identical shallow-U at (258\u2013314, 88\u2013114) and (448\u2013504, 165\u2013191). Cracks must be authored per-location, and must break *along* mortar joints or terminate at them, not run straight through as the diagonal at (330\u2013360, 190\u2013260) does.",
+    "Give the block faces something readable at 1:1: pitting, tool marks, grain, or grime pooled against the downhill joint. At least three distinct face variants at strengths visible without magnification \u2014 the current faint diagonals are invisible at play size.",
+    "Break the perfect masonry: two or three chipped or spalled corners, one block sunk below its neighbours, one missing entirely, in the lit area (190\u2013640, 0\u2013265).",
+    "Add one orc repair on the ground \u2014 driven pins, a lashed timber baulk, a hide patch over a broken slab \u2014 near the corridor mouth (360\u2013460, 240\u2013300), where 400 years of holding a line would actually put it."
+   ],
+   "mapping": {
+    "A": "r18_approach.png"
+   },
+   "transcript": "tools/tier1_floors/evidence/seats/r21_F1_transcript.txt"
+  }
+ },
+ "captures": {
+  "r18_approach.png": "b656fccbbdc38419e4f8d5665568ffd599f0e83e64f29a3df329cec45a65499c",
+  "r18_plant_approach.png": "8b8e93351272623a02694d13698e405b1be920678383e8244c8190740b3e9d9c"
+ },
+ "plant_seat": "F2",
+ "round_void": false,
+ "plant_words_declared": [
+  "hole",
+  "void",
+  "collaps",
+  "cave",
+  "punct",
+  "crater",
+  "web",
+  "strand",
+  "silk",
+  "ruin",
+  "rubble",
+  "moss",
+  "lichen",
+  "overgrown",
+  "derelict"
+ ],
+ "law": "LOOP-PROCESS \u00a74: if the critic does not catch the plant, the round is VOID and its findings are not read."
+}

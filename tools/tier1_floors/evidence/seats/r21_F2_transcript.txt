@@ -1,0 +1,64 @@
+Read the image at 1:1, then magnified specific regions and ran a lighting-normalised pass to separate what's painted on the tile faces from what's the lamp.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Flat tan blocks. I cannot tell you the material — it reads as "generic brick-or-stone paving", and that is as far as it goes.
+
+**Q1_WHY:** Every tile face across the lit region (x 185–625, y 0–265) is a single mid-ochre fill with a faint low-frequency mottle of ±3–5 luminance values. Magnified 9× at (230–320, 95–140) the face is essentially one colour with two neighbouring shades blotching it. There is no grain, no bedding, no aggregate, no tool marks, no chisel work, no pitting. Fired brick, mud brick, sandstone and cast concrete would all look exactly like this. The joints (dark brown, 2–3px) tell me it is laid in units; the faces tell me nothing about what the units are.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 370–435. **Nothing about the ground influenced that.** I picked it because it is the one opening whose interior is lit — the light runs down it to y≈470 while the west mouth at (0–185, y 85–148) is black at 8px in. That is the lamp and the wall layout choosing for me, not the floor. The tiles inside the south doorway at (370–435, 240–265) are indistinguishable from the tiles in the middle of the room at (300, 120).
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been cracked, and it has been stained in eleven places. Nothing else has happened to it. It has not been walked on, swept, dragged over, patched, burned, flooded or repaired. It is undamaged material with damage drawn on top.
+
+**Q3_WHY:** Two effects, and only two. (1) Thin dark 1px lines wandering everywhere. (2) A dark round stain ~22–26px across with a ragged fringed rim, at (215,45), (335,42), (407,60), (585,55), (400,105), (610,100), (330,175), (267,232), (417,240), (478,243), (553,240) — eleven in the lit floor, plus more visible in the unlit west corridor at (30,30) and (95,107). After I removed a radial lighting model, the remaining brightness variation is **quantised to whole tiles** — each brick is a slightly different flat value. There is no sub-tile or cross-tile variation at all: no traffic polish, no dirt accumulating in corners, no gradient toward any doorway.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes, two things.
+
+The **stain blob**. Eleven of them in the lit floor at the coordinates above. They are not pixel-identical — cross-correlating the one at (267,232) against the rest peaks at 0.40, so they are variants, not stamps — but they are unmistakably one motif: same diameter, same ragged spiky rim, same slightly-lighter mottled centre. Three of them sit in a near-row along y≈240 at x=417, 478, 553. Once you see it you count them instead of reading the room.
+
+The **cracks crossing joints**. At (480–580, 140–160) a single crack runs through three tiles and across two vertical joints without deflecting, offsetting or stopping. Same at (200–320, 190–215). A crack in laid masonry either terminates at the joint or steps along it. These do neither, which reads as a scribble layer composited over the grid rather than damage to the stones — and once I noticed it I could not stop seeing it everywhere.
+
+**Q5: MADE, OR REPEATED?**
+**Made** — but barely, and for the wrong reason. The bond is genuinely irregular: brick widths vary along every course, courses vary in height, and 2D autocorrelation over the lit floor (x 195–620, y 5–255) finds no periodic peak above 0.27 at any offset, so nothing is verbatim-tiled. The layout was authored. The *surface* was not — it is one flat fill plus two stamped effects, which is the repetition problem moved up a level from the geometry to the material.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The palette is controlled, the lighting falloff is clean, the bond is irregular in the right ways, nothing is broken. It is not genuinely good: a genuinely good floor tells you what it is made of and where people walk, and this one does neither.
+
+**Q7: WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF AT 1:1?**
+At 1:1 the faces are blank. What I can see on the floor at 1:1 is the joint grid, the crack lines, and the blobs — and the blobs I read as "something dark" without being able to say what. Nothing on the face of the material itself is legible.
+
+Only on magnification does anything appear: a 2–3 value mottle within each tile, and faint vertical striations on a minority of tiles. That is hunting, not seeing — and even magnified, the striations do not resolve into anything I can name.
+
+**Q7_WHY:** Checked at 1:1: (200–300, 10–60), (280–360, 100–150), (440–520, 90–140), (500–600, 130–190), (380–440, 210–260) — all read as flat fill plus overlay marks. Magnified (4–9×): (230–320, 95–140), (460–550, 95–140), (190–280, 150–200), (180–640, 0–40). The mottle and the striations only exist in that second set. Quantitatively, 10×10 windows across the lit floor are flat (σ<2) in only 7% of positions — but the median σ of 20.2 is produced almost entirely by joints and crack lines, not by the faces.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+It reads as **one age everywhere**, and that age is roughly "damaged last week." Not old — broken. The distinction matters here.
+
+**Q8_WHY:** Cracks are the only age signal, and they are evenly distributed at even weight across the whole lit region — same density and same line value at (210,30) near the wall as at (410,180) under the figure's feet as at (400,430) far down the corridor. Age normally arrives as *differential*: edges rounder than centres, hollows where feet land, joints filled at the margins and scoured in the traffic line, one patch newer than its neighbours. None of that is present. Regions checked: (185–320, 0–100), (320–500, 100–200), (370–435, 265–470), (500–625, 60–200). In a place described as in continuous heavy use since before the records, this floor has no accumulated time on it at all.
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES?**
+No. The ground told me nothing. I read the route off the walls and the lamp.
+
+**Q9_WHY:** My route runs (415,200) → (400,265) → (400,400). The ground along it — (380–430, 200–260), (375–430, 270–350), (375–430, 350–450) — is the same bond, same fill value, same crack density, same nothing as the regions I rejected: (230–330, 100–200) to the west and (500–600, 100–200) to the east. I compared the tiles immediately inside the south doorway at (370–435, 240–265) against room-interior tiles at (300, 120): identical. There is no threshold, no sill, no scuff, no worn hollow, no dishing, no dirt tracked in or out. The bond simply runs through the doorway as if the doorway were not there. The only difference between my route and the parts I rejected is that the lamp reaches further down it — which is a lighting fact, not a floor fact.
+
+**Q10: WHICH WAY IS USED MOST, AND WHICH LEAST?**
+They all look the same. Three openings — north (floor runs off the top edge across x 185–625), west (x 0–185, y 85–148), south (x 370–435, y 265+) — and the ground in front of each is the identical tile at the identical value with the identical crack treatment. Nothing distinguishes a door used a thousand times a day from one nobody has opened in four hundred years.
+
+---
+
+**CULL:** At 1:1 the tile faces are blank — all surface information is an overlay of scribbled cracks plus one repeated stain.
+
+**FLIP LIST**
+- Put a legible material on the tile face at 1:1 — pitting, grain, chipped arrises, aggregate — so a player can name what they are standing on without magnifying.
+- Break every crack at the joints. Terminate or step it; a crack must not run unbroken across (480–580, 140–160) or (200–320, 190–215).
+- Cut the stain-blob count in the lit floor from eleven to two or three, and make the survivors read as something specific rather than as generic dark splat.
+- Wear the route: dish and lighten the tiles along the south corridor line (375–435, 200–470) and in the mouths of the west and north openings, and let dirt and grit collect where feet do not go, so the ground carries the traffic instead of the lamp.
+- Differentiate age across the room — one patch of coarse orc repair with driven pins and salvaged timber, or one course reset out of bond — so the floor is not uniformly the same day old everywhere.
+
+Model: Claude Opus 5 (1M context)

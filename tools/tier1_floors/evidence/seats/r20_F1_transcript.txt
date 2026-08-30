@@ -1,0 +1,90 @@
+Looked at A.png at 1:1 (750×600), then magnified specific regions. Walls and UI excluded throughout; everything below is about the tan ground.
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Large sandstone-coloured flagstones, laid in irregular courses with deep dark joints. Dressed rectangular slabs, roughly 30–40px on a side, no two quite the same size.
+
+**Q1_WHY:** The joint lattice is unambiguous — running-bond-ish courses with staggered vertical joints, clearly visible at 1:1 across the whole lit area (x 185–620, y 0–272). The material read comes almost entirely from the *silhouette* of the pieces, not from the pieces themselves. Colour is a uniform warm tan: I sampled face pixels in six separate regions and the hue is 34.0° ± 0.3 in every one of them, saturation 0.53 ± 0.01. One stone, one batch, no variation.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 375–438.
+
+And I have to be straight about this: **nothing about the ground influenced that.** I picked it off the walls. The corridor is the only bounded opening in the lit area, so it's the only thing that reads as a route. The floor inside the corridor (x 375–438, y 272–440) is the same slab size, same course direction, same joint width and same hue as the floor in the middle of the room. If you deleted the walls and showed me only the ground, I could not tell you where the corridor was.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It is cracked and otherwise untouched. There is a network of long thin dark lines wandering across it — I count roughly six or seven strands. Beyond those lines: nothing. No chips, no missing corners, no spalled edges, no debris, no staining, no damp, no patched-in replacement slabs, no wear path, no scuffing, no accumulation in the joints. For a floor that is supposedly walked daily in a place in continuous heavy use, and held by a garrison that repairs everything with rope and pins, there is not one repair and not one mark of traffic on it.
+
+**Q3_WHY:** Two specific things.
+
+First, the crack lines don't behave like fractures. At x 396–460, y 196–244 (directly under the lamp, the best-lit stone in the image) a crack staircases left-to-right and runs *straight through* the vertical joint at x≈446, y≈222 without stopping, deflecting, or widening. Stone breaks to the joint or along it; it doesn't ignore it. There's another strand running dead straight from about (264, 10) to (364, 130) — 120px, near-perfectly linear, crossing four course joints. These are strokes laid over the tiles, not damage in them.
+
+Second, the crack lines are hard-edged 1–2px near-black with nothing either side of them — no lighter lip, no dust, no shadow, no chipped-out mouth where the fracture opens. A crack in stone has a bottom you can't see and edges you can; these have neither.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes — the crack strands, and specifically the fact that they all have the same handwriting. They share one gesture: a long shallow arc or a long shallow diagonal, low curvature, no branching to speak of, no sharp angular turns. The strand arcing across x 250–560 at y 215–250 and the strand at x 470–620, y 200–240 are close to the same shape. Once I saw it in two places I started finding it everywhere, and after that the cracks stopped reading as damage and started reading as an overlay — a decal layer sitting on top of the floor rather than part of it.
+
+Second thing my eye returns to: the joints. They are the same weight, the same width and the same darkness at the corridor mouth (x 375–438, y 272) as in the far corner (x 570–614, y 60–200) as under the lamp. Once noticed, the uniformity is loud.
+
+**Q5: MADE, OR REPEATED?**
+Made — but barely, and not in the way that helps. I tested this rather than eyeballing it: autocorrelation of the lighting-corrected floor at shifts of 8/16/24/32/48/64/96/128px gives no periodic spike (0.14–0.35 across the board, no peak at any tile stride). Nothing is stamped. The joint layout is genuinely irregular and the crack strands are individually placed.
+
+The problem is that "not repeated" isn't the same as "made". Nothing repeats because there is almost nothing there to repeat. The floor is a hand-varied lattice drawn on a single flat colour. It has authored *layout* and no authored *surface*.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. Not good. The masonry layout is clean, the lamp falloff is nicely tuned, the read at a glance is legible. It would pass in a mid-tier release without anyone filing a bug. But there's no moment in it — no place where the floor tells you something the walls don't, nothing you'd stop on, nothing you'd remember about this room as opposed to the next one.
+
+**Q7: AT THE SIZE SHOWN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1:
+- The joint lattice (that's the edges between pieces, so by your framing it doesn't count).
+- The crack strands. These are genuinely visible at 1:1 — near-black on tan, high contrast.
+
+That is the complete list. **The faces themselves are blank at 1:1.** Between the joints and the cracks there is flat colour and nothing else.
+
+Only on magnification:
+- A faint mottle of slightly-lighter and slightly-darker patches, roughly 4px square, scattered sparsely across the faces.
+
+**Q7_WHY:** At 1:1 I checked the brightest ground in the image — the slabs immediately around the figure, x 360–470, y 145–240 — because if anything is going to be legible it's there, under the lamp. Flat. I also checked x 185–330, y 40–200 and x 470–620, y 40–200 at 1:1: flat, plus crack strands.
+
+Magnified: at 10× on x 396–460, y 196–244 the mottle appears — a couple of 4×4 patches, one below-left of centre, two more along the top joint. Same at 10× on x 300–364, y 60–108. I measured the amplitude: face-pixel variation after removing the lamp gradient is a standard deviation of about 4 out of 255, roughly 1.5% contrast, with about 1 level of variation *within* each 4px cell. That is below the threshold of a phone screen. It is texture that exists in the file and does not exist on the device.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+It reads as one age everywhere — and that age is *laid recently and never used*, with a crack overlay applied afterwards to suggest otherwise.
+
+**Q8_WHY:** The evidence for age is exclusively the crack strands, and I've already said why I don't believe them (Q3_WHY). Set them aside and every other age signal points the other way:
+
+- Uniform hue across the entire lit floor (34.0° ± 0.3, sampled at x 240–330 / x 470–570 / x 190–240 / x 300–520 y 0–40 / corridor x 378–436). No weathering differential, no darkening in the corners, no bleaching on the traffic line.
+- Joint darkness and width identical everywhere, including the corridor mouth at x 375–438, y 258–300. Old joints fill, or scour out, or both, and they don't do it evenly.
+- Slab edges are crisp everywhere. Not one rounded or broken corner in the whole lit area.
+- No repair. In a place where a garrison has been pinning and roping things together for four hundred years, there is not one replaced slab, not one packed-out gap, not one plate over a hole.
+
+A floor in continuous heavy use since before the records should have at least two ages visible in it — the original and whatever was done to it since. This has one, and the one is "new".
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES, TO THE EDGE OF YOUR LIGHT?**
+The route goes south, through the corridor at x 375–438. **The walls told me. The ground told me nothing.**
+
+**Q9_WHY:** Along the route I checked x 378–436 at y 215–255 (room floor immediately north of the corridor mouth), y 258–300 (the mouth itself), and y 300–360 (inside the corridor, still lit). Against that I checked the rejected directions: x 240–330, y 150–210 (west of the figure), x 470–570, y 150–210 (east), and x 300–520, y 0–40 (the open north edge, where the floor runs off the top of the frame at full room width).
+
+What's different about the ground between them: **nothing measurable.** Same hue to within 0.3°, same saturation to within 0.01, same slab scale, same course direction, same joint weight. The corridor floor doesn't run its courses along the direction of travel; it runs them across, exactly as the room does. There is no worn strip, no polished centre, no darker margin where feet don't go, no scatter pushed to the edges. The only thing that changes between the corridor and the room is the lamp getting dimmer, and that's the light, not the ground.
+
+The corridor is legible as a route because it is a 60px gap between two walls. Turn the walls off and it disappears.
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST OR NEVER?**
+They all look the same. There are two openings in the lit area — the corridor south (x 375–438) and the open north edge (floor visible x 217–578 at y 0) — and the ground in front of each is indistinguishable from the ground in front of the other and from the ground in the middle of the room. I measured them separately hoping to find something; hue 34.1 north, 34.0 at the corridor mouth. No approach fan, no threshold wear, no drift of debris, no darkening. Nothing in front of either opening says anyone has ever gone through it.
+
+**CULL:**
+Slab faces are blank at 1:1; the only surface detail is crack lines drawn over the joints.
+
+**FLIP LIST**
+- Put legible detail on the slab faces themselves — pitting, tooling marks, grain, tonal breakup at an amplitude visible on a phone. Current face variation is ~1.5% contrast at 4px; it needs to be several times that to survive the screen.
+- Make the cracks stop at the joints or run along them. Every strand that crosses a vertical joint uninterrupted (e.g. x≈446, y≈222) has to be broken there, and given chipped mouths and a lighter lip so it reads as depth rather than ink.
+- Break the single-hue floor. Slabs need to differ from one another in tone and slightly in hue — replaced pieces, damper corners, a patch of different stone. Right now the entire floor is hue 34.0 ± 0.3.
+- Add traffic and its absence: a worn, polished, cleaner strip running through the corridor mouth (x 375–438) and out into the room, with debris and dirt accumulated in the joints and at the room edges where feet don't go.
+- Add at least one orc repair to the ground — a plate pinned over a broken slab, timber packed into a gap. A four-hundred-year-held floor with no repairs on it contradicts the fiction more than any texture problem does.
+
+---
+
+The through-line in all ten answers is one defect wearing different clothes: this floor has authored layout and no authored surface. Every question I could answer, I answered off the joint lattice or off the walls. Every question that needed the *face* of the material — age, wear, traffic, which door gets used — came back empty. Fix the faces and most of the flip list dissolves on its own.
+
+*Model: Claude Opus 5 (1M context)*

@@ -6,7 +6,7 @@ Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
 Catacombs of YARL — loading...
 [DIAG] Logging to: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag.log
 [DIAG] Structured log: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag_structured.jsonl
-[DIAG 00000 F0 T0.473] === Session started ===
+[DIAG 00000 F0 T0.470] === Session started ===
 [Main] Persistence loaded — 6 runs ever.
 [Main] Loading tileset: 16bit_fantasy
 [Main] Tileset loaded: Oryx 16-Bit Fantasy (48px, 2 frames)
@@ -113,21 +113,21 @@ empt
 # Substituted 
 [Main] Memo registry loaded.
 [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
-[DIAG 00001 F0 T0.904] [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
+[DIAG 00001 F0 T0.884] [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
 [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED app=Catacombs of YARL
-[DIAG 00002 F0 T0.906] [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED app=Catacombs of YARL
+[DIAG 00002 F0 T0.887] [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED app=Catacombs of YARL
 [Tier0] corridor scene: tier1_floor_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json)
-[DIAG 00003 F0 T0.907] [Tier0] corridor scene: tier1_floor_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json)
+[DIAG 00003 F0 T0.887] [Tier0] corridor scene: tier1_floor_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_review.json)
 [Tier0] map=17x21 player=(8,6) carve_rects=5
-[DIAG 00004 F0 T0.907] [Tier0] map=17x21 player=(8,6) carve_rects=5
+[DIAG 00004 F0 T0.888] [Tier0] map=17x21 player=(8,6) carve_rects=5
 [Tier0] junction=NO
-[DIAG 00005 F0 T0.907] [Tier0] junction=NO
+[DIAG 00005 F0 T0.888] [Tier0] junction=NO
 [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
-[DIAG 00006 F0 T0.907] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
+[DIAG 00006 F0 T0.888] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
 [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
-[DIAG 00007 F0 T0.907] [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
+[DIAG 00007 F0 T0.888] [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
 [Tier1] variant census: cells=74 distinct=1 max_multiplicity=74  step_top2: row=1.000(58/58) col=1.000(58/58) diag=1.000(47/47) anti=1.000(46/46)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
-[DIAG 00008 F0 T0.910] [Tier1] variant census: cells=74 distinct=1 max_multiplicity=74  step_top2: row=1.000(58/58) col=1.000(58/58) diag=1.000(47/47) anti=1.000(46/46)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
+[DIAG 00008 F0 T0.890] [Tier1] variant census: cells=74 distinct=1 max_multiplicity=74  step_top2: row=1.000(58/58) col=1.000(58/58) diag=1.000(47/47) anti=1.000(46/46)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
 [Tier1] floor overlays: cells=74 channel=21 neglected=12 drawn(grit=0 event=0 channel=0 occlusion=64) cell_shadow_suppressed=49 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
@@ -151,7 +151,7 @@ empt
 [Tier1]   #####.......#####
 [Tier1]   #################
 [Tier1]   #################
-[DIAG 00009 F0 T0.923] [Tier1] floor overlays: cells=74 channel=21 neglected=12 drawn(grit=0 event=0 channel=0 occlusion=64) cell_shadow_suppressed=49 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
+[DIAG 00009 F0 T0.902] [Tier1] floor overlays: cells=74 channel=21 neglected=12 drawn(grit=0 event=0 channel=0 occlusion=64) cell_shadow_suppressed=49 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
 [Tier1]   #################
@@ -175,7 +175,7 @@ empt
 [Tier1]   #################
 [Tier1]   #################
 [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
-[DIAG 00010 F0 T0.923] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
+[DIAG 00010 F0 T0.902] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
 [Tier1] ashlar floor: laid=74 channel_cells=20 missing=0 families=5 seed=1337 atlases=100 edge_check=128/OK stone_check=144/OK paint_check=96/OK mouths=13 polished=74 traffic=spine:14/routes:16 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
 [Tier1] traffic field (space=unwalked .. @=busiest)
 [Tier1]   #################
@@ -199,7 +199,7 @@ empt
 [Tier1]   #####-=+++-:#####
 [Tier1]   #################
 [Tier1]   #################
-[DIAG 00011 F0 T1.113] [Tier1] ashlar floor: laid=74 channel_cells=20 missing=0 families=5 seed=1337 atlases=100 edge_check=128/OK stone_check=144/OK paint_check=96/OK mouths=13 polished=74 traffic=spine:14/routes:16 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
+[DIAG 00011 F0 T1.085] [Tier1] ashlar floor: laid=74 channel_cells=20 missing=0 families=5 seed=1337 atlases=100 edge_check=128/OK stone_check=144/OK paint_check=96/OK mouths=13 polished=74 traffic=spine:14/routes:16 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
 [Tier1] traffic field (space=unwalked .. @=busiest)
 [Tier1]   #################
 [Tier1]   #################
@@ -223,25 +223,25 @@ empt
 [Tier1]   #################
 [Tier1]   #################
 [Tier0] review_build_marker=none (CLI flags)
-[DIAG 00012 F0 T1.113] [Tier0] review_build_marker=none (CLI flags)
+[DIAG 00012 F0 T1.085] [Tier0] review_build_marker=none (CLI flags)
 [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
-[DIAG 00013 F0 T1.114] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00013 F0 T1.086] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
 [Main] Visible tile rect: (2,-2)-(13,13)
 [Main] floor_worn (3001) tiles: 1 rendered in the authored room, 1 in frame: (10,6)
-[Tier1] legibility(8,4) expect=lit  ratio=0.5191 at px(407,450) bound=0.1200 OK  - room A north row, 2 tiles - open floor, the easy case
-[DIAG 00014 F5 T1.201] [Tier1] legibility(8,4) expect=lit  ratio=0.5191 at px(407,450) bound=0.1200 OK  - room A north row, 2 tiles - open floor, the easy case
-[Tier1] legibility(5,7) expect=lit  ratio=0.3713 at px(215,642) bound=0.1200 OK  - room A west flank, 3.2 tiles - ordinary floor beside the channel
-[DIAG 00015 F5 T1.201] [Tier1] legibility(5,7) expect=lit  ratio=0.3713 at px(215,642) bound=0.1200 OK  - room A west flank, 3.2 tiles - ordinary floor beside the channel
-[Tier1] legibility(11,7) expect=lit  ratio=0.1949 at px(599,642) bound=0.1200 OK  - room A east flank, 3.2 tiles - the mirror of the above
-[DIAG 00016 F5 T1.202] [Tier1] legibility(11,7) expect=lit  ratio=0.1949 at px(599,642) bound=0.1200 OK  - room A east flank, 3.2 tiles - the mirror of the above
-[Tier1] legibility(8,10) expect=lit  ratio=0.1513 at px(407,834) bound=0.1200 OK  - chokepoint mouth, 4 tiles - the trodden one-wide state
-[DIAG 00017 F5 T1.202] [Tier1] legibility(8,10) expect=lit  ratio=0.1513 at px(407,834) bound=0.1200 OK  - chokepoint mouth, 4 tiles - the trodden one-wide state
-[Tier1] legibility(8,12) expect=dark ratio=0.0573 at px(407,962) bound=0.1000 OK  - chokepoint, 6 tiles - past the ratified 5.0 radius, the arc's outside
-[DIAG 00018 F5 T1.202] [Tier1] legibility(8,12) expect=dark ratio=0.0573 at px(407,962) bound=0.1000 OK  - chokepoint, 6 tiles - past the ratified 5.0 radius, the arc's outside
-[Tier1] legibility(3,7) expect=dark ratio=0.0521 at px(87,642) bound=0.1000 OK  - the NEGLECTED passage, 5 tiles - off the route and off the light
-[DIAG 00019 F5 T1.202] [Tier1] legibility(3,7) expect=dark ratio=0.0521 at px(87,642) bound=0.1000 OK  - the NEGLECTED passage, 5 tiles - off the route and off the light
-[Tier1] floor-legibility probe: 6 declared points, reference lum=0.5543, verdict=PASS
-[DIAG 00020 F5 T1.202] [Tier1] floor-legibility probe: 6 declared points, reference lum=0.5543, verdict=PASS
+[Tier1] legibility(8,4) expect=lit  ratio=0.5230 at px(407,450) bound=0.1200 OK  - room A north row, 2 tiles - open floor, the easy case
+[DIAG 00014 F5 T1.165] [Tier1] legibility(8,4) expect=lit  ratio=0.5230 at px(407,450) bound=0.1200 OK  - room A north row, 2 tiles - open floor, the easy case
+[Tier1] legibility(5,7) expect=lit  ratio=0.3771 at px(215,642) bound=0.1200 OK  - room A west flank, 3.2 tiles - ordinary floor beside the channel
+[DIAG 00015 F5 T1.165] [Tier1] legibility(5,7) expect=lit  ratio=0.3771 at px(215,642) bound=0.1200 OK  - room A west flank, 3.2 tiles - ordinary floor beside the channel
+[Tier1] legibility(11,7) expect=lit  ratio=0.1963 at px(599,642) bound=0.1200 OK  - room A east flank, 3.2 tiles - the mirror of the above
+[DIAG 00016 F5 T1.166] [Tier1] legibility(11,7) expect=lit  ratio=0.1963 at px(599,642) bound=0.1200 OK  - room A east flank, 3.2 tiles - the mirror of the above
+[Tier1] legibility(8,10) expect=lit  ratio=0.1526 at px(407,834) bound=0.1200 OK  - chokepoint mouth, 4 tiles - the trodden one-wide state
+[DIAG 00017 F5 T1.166] [Tier1] legibility(8,10) expect=lit  ratio=0.1526 at px(407,834) bound=0.1200 OK  - chokepoint mouth, 4 tiles - the trodden one-wide state
+[Tier1] legibility(8,12) expect=dark ratio=0.0558 at px(407,962) bound=0.1000 OK  - chokepoint, 6 tiles - past the ratified 5.0 radius, the arc's outside
+[DIAG 00018 F5 T1.166] [Tier1] legibility(8,12) expect=dark ratio=0.0558 at px(407,962) bound=0.1000 OK  - chokepoint, 6 tiles - past the ratified 5.0 radius, the arc's outside
+[Tier1] legibility(3,7) expect=dark ratio=0.0528 at px(87,642) bound=0.1000 OK  - the NEGLECTED passage, 5 tiles - off the route and off the light
+[DIAG 00019 F5 T1.166] [Tier1] legibility(3,7) expect=dark ratio=0.0528 at px(87,642) bound=0.1000 OK  - the NEGLECTED passage, 5 tiles - off the route and off the light
+[Tier1] floor-legibility probe: 6 declared points, reference lum=0.5502, verdict=PASS
+[DIAG 00020 F5 T1.166] [Tier1] floor-legibility probe: 6 declared points, reference lum=0.5502, verdict=PASS
 [Main] Capture written: tools/tier1_floors/evidence/r18_room.png
 [TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
 [TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.

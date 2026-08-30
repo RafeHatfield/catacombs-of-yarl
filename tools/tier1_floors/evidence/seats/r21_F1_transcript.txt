@@ -1,0 +1,73 @@
+Looked at it at 1:1, then magnified four floor regions and ran an autocorrelation pass over the lit area.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut sandstone slabs — rectangular blocks, laid in courses, mortared.
+
+**Q1_WHY:** The joint network at (190–640, 0–265) is a running-bond brick pattern: continuous horizontal courses about 26–30px apart, vertical joints staggered between rows. Blocks are roughly 55×28px, all within a narrow size band. Colour is a flat warm tan, uniform except for the lamp falloff. It reads as masonry because of the layout, not because of anything on the stone itself.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at (375–440, 265–600).
+
+Nothing about the ground influenced that. I picked it off the wall shape — the placeholder blocks pinch into a channel and that is obviously a corridor. The floor inside the corridor at (380–435, 290–420) is the same tan block fill as the room floor at (300–380, 200–260); same value, same joint weight, no scuffing, no path. If I deleted the walls I would have no idea which way to go.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been cracked and nothing else. A network of thin dark fissures runs across the room. There is no dirt, no staining, no chipped corners, no missing block, no repair, no wear where feet fall. It is a clean new floor with cracks drawn on it.
+
+**Q3_WHY:** The cracks at (200–620, 0–265) are uniformly 1px, uniformly the same near-black, and they cross block faces and mortar joints without changing behaviour — see the long diagonal at (330–360, 190–260), which runs straight through three horizontal joints as though the joints were not there. Real stone splits *along* joints or terminates at them. Meanwhile every block edge in the frame is a clean unbroken rectangle, and the mortar lines are continuous and even at, e.g., (430–620, 145) — no crumbling, no gaps, no fill.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes — two things.
+
+First, a repeated crack stamp. There is a shallow-U shape with a flat bottom and stepped upticks at both ends at **(258–314, 88–114)**. The same silhouette, same stair-step cadence, same length, appears again at **(448–504, 165–191)**. Magnified 8x side by side they are the same asset placed twice. Once you see it, the "X" crossing at (300–325, 85–115) and the near-vertical drop at (355–370, 25–90) start reading as members of the same small stamp library too.
+
+Second, the cracks stop dead at the room boundary. There is not one crack anywhere in the corridor at (375–440, 265–600), and none in the strip at (190–260, 200–265). The damage layer has a footprint, and the footprint is visible.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+Repeated. The block *layout* is varied enough to pass — autocorrelation over (190–640, 10–260) finds no hard period, top correlation 0.36 at 24px, which is broad-bump noise, not a tiling seam. But the *content* is two elements composited: one flat tan fill with a soft gradient, plus a crack decal set that is demonstrably reused (Q4) and that ignores the geometry underneath it. Nothing on this floor was made in response to anything else on this floor.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The lighting falloff is genuinely well-judged and the block layout is disciplined, but the surface is a fill with stickers on it. Nothing here is good.
+
+**Q7: AT THE SIZE SHOWN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1: the joint grid, the lamp gradient, and the cracks. That is the complete list. **The block faces are blank.** Each one is a single tan value with a slow diagonal lightening across it. Between one joint and the next there is no information at all.
+
+Only on magnification: at 4x a handful of blocks carry a barely-there diagonal streak one or two shades off the fill — (245–275, 130–150) has one, (500–530, 195–215) has another — and there are two or three soft round blotches, e.g. (270–290, 165–180). I had to hunt for all of it. At 1:1 none of it exists. It is below the threshold where it does any work.
+
+**Q7_WHY:** Checked at 1:1: (200–300, 30–90); (450–600, 100–200); (300–380, 200–260); (380–435, 290–420). Faces blank in all four. Magnified 4x: (200–400, 60–200); (440–640, 120–240); (200–440, 20–140); (260–520, 230–360). Magnified 8x: (258–314, 88–114) and (448–504, 165–191).
+
+**Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU?**
+It reads as two contradictory ages in the same pixels, which is why it doesn't land as any age.
+
+The cracks say centuries — a fracture network that dense implies long settling. The surface says laid last month — no dishing, no polish, no grime in the joints, no rounded arrises, no replaced block, no orc repair of any kind despite four hundred years of a company living on it.
+
+Spatially it reads as one age everywhere, with one false exception: the corridor at (375–440, 265–600) looks *newer* than the room at (190–640, 0–265), purely because no cracks were stamped there. That is a coverage gap, not an age story — the fill, joint weight and block size are identical, so there is no actual reason for the corridor to be younger.
+
+**Q8_WHY:** Cracks read from (200–620, 0–265). Absence of wear read from the joints at (430–620, 145) and (250–430, 90), which are unbroken and clean, and from the block corners throughout (190–640, 0–265), all of which are square. The corridor/room age split read from comparing (380–435, 300–420) against (300–380, 200–260).
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES, TO THE EDGE OF YOUR LIGHT?**
+The ground told me nothing. I read the route entirely off the walls.
+
+Inside the lamp, the floor is directionless. It is a flat field of identical blocks in every direction from the figure at (410, 175). There is no darkened lane, no polish, no smoothing, no debris pushed to the sides, no lighter stripe — nothing that says this line gets walked and that line does not.
+
+**Q9_WHY:** Along the route I would take: (395–435, 200–265), the room floor between the figure and the corridor mouth, then (380–435, 270–330) just inside the corridor. Regions I rejected: (230–300, 150–220) to the west, and (500–570, 150–220) to the east — both well inside the light. What is different about the ground between them: **nothing.** Same fill value allowing for falloff, same block size, same joint weight, same absence of surface detail. The only difference between my route and the rejected regions is that the placeholder walls stop at the route.
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST?**
+They all look the same. The corridor mouth at (375–440, 260–280) is the one genuine pinch point in the frame — every soul filed through this room goes through that gap — and the threshold ground there is indistinguishable from the open floor two metres west at (280–340, 260–280). No darkening, no dishing, no scuffing at the jambs. The floor records no traffic anywhere, so it cannot rank anything.
+
+**CULL:** Cracked but never walked on — the ground shows damage yet records no traffic at all.
+
+**FLIP LIST**
+- Put a traffic lane on the ground: a smoothed, slightly darker, slightly lower-contrast band about 40px wide running from the room's north side through (395–435, 200–265) and down the corridor, with the joint lines within it worn faint. It must be legible at 1:1 without the walls.
+- Kill the reused crack stamp — the identical shallow-U at (258–314, 88–114) and (448–504, 165–191). Cracks must be authored per-location, and must break *along* mortar joints or terminate at them, not run straight through as the diagonal at (330–360, 190–260) does.
+- Give the block faces something readable at 1:1: pitting, tool marks, grain, or grime pooled against the downhill joint. At least three distinct face variants at strengths visible without magnification — the current faint diagonals are invisible at play size.
+- Break the perfect masonry: two or three chipped or spalled corners, one block sunk below its neighbours, one missing entirely, in the lit area (190–640, 0–265).
+- Add one orc repair on the ground — driven pins, a lashed timber baulk, a hide patch over a broken slab — near the corridor mouth (360–460, 240–300), where 400 years of holding a line would actually put it.
+
+Next thing to watch: once a traffic lane exists, the crack layer will fight it — cracks running *through* the worn lane will look wrong, since a walked lane should have its cracks polished shut. The wear pass and the damage pass need to know about each other, or you'll ship two independent decal layers instead of one floor.
+
+*Model: Claude Opus 5 (1M context)*

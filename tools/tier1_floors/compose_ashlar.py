@@ -886,24 +886,40 @@ DIR_MIN_GRAD = 6                 # below this the gradient is noise, not a route
 def travel_axis(traffic, tx, ty):
     """The local axis of travel: 0 = E-W, 1 = NE-SW, 2 = N-S, 3 = NW-SE, or DIR_NONE.
 
+    THE ROUTE RUNS WHERE THE TRAFFIC CONTINUES. For each of the four axes a pixel grid allows,
+    sum the traffic of the two neighbours that lie along it; the busiest axis is the way the feet
+    went. Walls carry no traffic, so they contribute zero and a corridor's own walls vote against
+    crossing them, which is exactly right.
+
+    ⚠ THE FIRST VERSION OF THIS TOOK THE PERPENDICULAR OF THE GRADIENT and was wrong in the one
+    place the floor most needed it — a one-tile corridor. Both across-neighbours are wall there,
+    so the across-gradient is identically zero and cannot be measured at all; the only signal left
+    is the variation ALONG the route, which the perpendicular then reads as a route running the
+    other way. Mapped over the review scene it labelled the north-south chokepoint E-W down its
+    whole length and scattered the room into diagonals. The lever was live, measured, plant-tested
+    and aimed ninety degrees away from the truth, which no plant would have caught: the plants ask
+    whether direction is expressed, not whether it is the right direction.
+
     `traffic` is indexed [x, y], matching `traffic_block`.
     """
-    import numpy as _np
     if traffic is None:
         return DIR_NONE
     w, h = traffic.shape
 
     def at(x, y):
-        return float(traffic[min(max(x, 0), w - 1), min(max(y, 0), h - 1)])
+        if x < 0 or y < 0 or x >= w or y >= h:
+            return 0.0
+        return float(traffic[x, y])
 
-    gx = at(tx + 1, ty) - at(tx - 1, ty)
-    gy = at(tx, ty + 1) - at(tx, ty - 1)
-    if gx * gx + gy * gy < DIR_MIN_GRAD * DIR_MIN_GRAD:
+    # (dx, dy) for E-W, NE-SW, N-S, NW-SE
+    axes = ((1, 0), (1, -1), (0, 1), (1, 1))
+    sums = [at(tx + dx, ty + dy) + at(tx - dx, ty - dy) for dx, dy in axes]
+    best = max(range(4), key=lambda i: sums[i])
+    # A route has to be a route: the busiest axis must beat the quietest by a real margin, or the
+    # ground is open floor with no direction in it and must not acquire a grain.
+    if sums[best] - min(sums) < DIR_MIN_GRAD * 2:
         return DIR_NONE
-    # perpendicular to the gradient, folded to a 180-degree axis rather than a 360-degree heading:
-    # a route worn by feet going both ways has an axis, not a direction.
-    ang = _np.degrees(_np.arctan2(-gx, gy)) % 180.0
-    return int(round(ang / 45.0)) % 4
+    return best
 
 
 # THE THREE EROSION LEVERS, all keyed to the field that already exists.

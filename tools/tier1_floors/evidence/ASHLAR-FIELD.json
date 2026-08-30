@@ -1,5 +1,5 @@
 {
- "commit": "c0fa321af059face60157cb83aac728d1a329ce1",
+ "commit": "958b6d8318b6c770420aeba982a83c7bfaaa358d",
  "grid": [
   16,
   16
@@ -63,11 +63,11 @@
    "fired": true,
    "why": "the chroma channel nulled while the joints keep working \u2014 the combined verdict must fall back to what the joint lever alone can carry",
    "measured": {
-    "trodden": 0.015226013671135505,
-    "off_route": 0.012743620536289557,
-    "separation": 0.002482393134845948,
+    "trodden": 0.01519364429897691,
+    "off_route": 0.01275388151907941,
+    "separation": 0.0024397627798975006,
     "cast_share": 0.0,
-    "parity_ratio": 1.000137657838023
+    "parity_ratio": 1.0016739221515205
    }
   },
   {
@@ -76,11 +76,11 @@
    "fired": true,
    "why": "chroma keyed to the tile a stone is SEEN FROM rather than to the world \u2014 \u00a78.3.1's lattice restated in the colour domain",
    "measured": {
-    "trodden": 0.06964722487647718,
-    "off_route": 0.06734934123014699,
-    "separation": 0.0022978836463301844,
+    "trodden": 0.06961485550431858,
+    "off_route": 0.06735960221293687,
+    "separation": 0.002255253291381709,
     "cast_share": 0.38805389404296875,
-    "parity_ratio": 9.361933218796402
+    "parity_ratio": 9.350831889787383
    }
   },
   {
