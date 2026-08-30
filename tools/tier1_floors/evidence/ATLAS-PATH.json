@@ -1,5 +1,5 @@
 {
- "commit": "3e6f9d18ad00eafa21406599bf30d3b791ccf180",
+ "commit": "c0fa321af059face60157cb83aac728d1a329ce1",
  "grid": [
   8,
   8
@@ -35,7 +35,7 @@
    "pixels": 65536,
    "differing": 1,
    "differing_pct": 0.0015,
-   "max_channel_delta": 27
+   "max_channel_delta": 14
   }
  }
 }

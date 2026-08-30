@@ -89,6 +89,10 @@ public static class Tier1AshlarFloor
         public double[] ChromaDir = { 0, 0, 0 };
         public double[] PolishByAge = { 0, 0, 0, 0 };
         public double PolishExp = 2.0, PolishGain = 1.0;
+        public double[] DeformFlatten = { 0, 0, 0, 0 };
+        public double DeformAniso = 0.8;
+        public double HollowDepth = 1.3, HollowRim = 0.45;
+        public int HollowSalt = 3011;
         public int[][] ATable = System.Array.Empty<int[]>();
         public int[][] MvTable = System.Array.Empty<int[]>();
         public readonly Dictionary<int, string> Atlas = new();
@@ -479,6 +483,65 @@ public static class Tier1AshlarFloor
         return outv;
     }
 
+    /// <summary>
+    /// The local axis of travel, derived from the traffic field alone: 0 = E-W, 1 = NE-SW,
+    /// 2 = N-S, 3 = NW-SE, -1 = none. Traffic is roughly constant ALONG a route and falls away
+    /// ACROSS it, so the gradient points across the path and the travel axis is perpendicular.
+    /// Derived rather than carried beside the field, so both painters reach the same answer from
+    /// the same numbers with no second channel to fall out of sync.
+    /// </summary>
+    private static int TravelAxis(byte[,]? t, int tx, int ty)
+    {
+        if (t == null) return -1;
+        int w = t.GetLength(0), h = t.GetLength(1);
+        double At(int x, int y) => t[System.Math.Clamp(x, 0, w - 1), System.Math.Clamp(y, 0, h - 1)];
+        double gx = At(tx + 1, ty) - At(tx - 1, ty);
+        double gy = At(tx, ty + 1) - At(tx, ty - 1);
+        if (gx * gx + gy * gy < 36.0) return -1;          // DIR_MIN_GRAD = 6
+        double ang = System.Math.Atan2(-gx, gy) * 180.0 / System.Math.PI;
+        ang = ((ang % 180.0) + 180.0) % 180.0;
+        return ((int)System.Math.Round(ang / 45.0)) % 4;
+    }
+
+    /// <summary>How much a bed joint and a head joint each compact, on this travel axis.</summary>
+    private static (double bed, double head) AnisoWeights(Config c, int axis)
+    {
+        double k = 1.0 - c.DeformAniso;
+        if (axis < 0) return (1.0, 1.0);
+        if (axis == 2) return (1.0, k);                   // north-south: the bed joints are crossed
+        if (axis == 0) return (k, 1.0);                   // east-west: the head joints are crossed
+        double d = 1.0 - c.DeformAniso / 2.0;
+        return (d, d);
+    }
+
+    /// <summary>
+    /// Is this cell a MOUTH — the place a narrow way meets an open one?
+    ///
+    /// Derived from the map's own shape, never hand-placed: a walkable cell with two or fewer
+    /// orthogonal walkable neighbours, standing next to a cell that has three or more. That is a
+    /// doorway or a corridor end by construction, and it is where routes converge and the stone
+    /// dishes.
+    ///
+    /// It is NOT a sill and NOT a kerb. Nothing is built here — the register is found-and-annexed
+    /// with thin administration, so traffic carved what it needed and nobody installed a piece.
+    /// </summary>
+    private static bool IsMouth(GameMap map, int x, int y)
+    {
+        if (!map.IsWalkable(x, y)) return false;
+        int Open(int cx, int cy)
+        {
+            int n = 0;
+            if (map.IsWalkable(cx, cy - 1)) n++;
+            if (map.IsWalkable(cx, cy + 1)) n++;
+            if (map.IsWalkable(cx - 1, cy)) n++;
+            if (map.IsWalkable(cx + 1, cy)) n++;
+            return n;
+        }
+        if (Open(x, y) > 2) return false;
+        return Open(x, y - 1) >= 3 || Open(x, y + 1) >= 3
+            || Open(x - 1, y) >= 3 || Open(x + 1, y) >= 3;
+    }
+
     private static int LadderIndex(Config c, double v)
     {
         int best = 0;
@@ -553,7 +616,7 @@ public static class Tier1AshlarFloor
             sb.Append('\n');
         }
         var crackCache = new Dictionary<(int, int), List<(int X, int Y)>>();
-        int laid = 0, channel = 0, missing = 0, polished = 0;
+        int laid = 0, channel = 0, missing = 0, polished = 0, mouths = 0;
 
         // §4.2: A STEP THAT DOES NOTHING MUST GO RED. If the shader fails to load, the floor
         // still lays and still looks almost right — the chroma and the joints carry on — and the
@@ -580,8 +643,11 @@ public static class Tier1AshlarFloor
                 atlasCache[idx] = atlas;
             }
 
+            bool mouthHere = IsMouth(map, pos.X, pos.Y);
+            if (mouthHere) mouths++;
             var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw, fe, traffic,
-                                   isChannel, crackCache, out bool anyWorn, out var polishImg);
+                                   isChannel, crackCache, mouthHere, out bool anyWorn,
+                                   out var polishImg);
 
             // NO FLIP, NO ROTATION. Orientation is meaning on an edge-matched tile, and the
             // coursing has a direction: turning one would stand its bed joints on end.
@@ -609,7 +675,7 @@ public static class Tier1AshlarFloor
              + $"families={cfg.Families} seed={cfg.Seed} atlases={atlasCache.Count} "
              + $"edge_check={cfg.EdgeCheck.Count}/OK stone_check={cfg.StoneCheck.Count}/OK "
              + $"paint_check={cfg.PaintCheck.Count}/OK "
-             + $"polished={polished}{(polishShader == null ? "/SHADER-MISSING" : "")} "
+             + $"mouths={mouths} polished={polished}{(polishShader == null ? "/SHADER-MISSING" : "")} "
              + $"traffic=spine:{tf.SpineLength:F0}/routes:{tf.Routes} "
              + $"manifest={manifestResPath}\n" + sb.ToString().TrimEnd();
     }
@@ -625,7 +691,7 @@ public static class Tier1AshlarFloor
     private static Image PaintCell(Config cfg, Image atlas, Image grainImg, int tx, int ty,
                                    int fw, int fe, byte[,]? traffic, System.Func<int, int, bool>? isChannel,
                                    Dictionary<(int, int), List<(int X, int Y)>> crackCache,
-                                   out bool anyWorn, out Image polish)
+                                   bool isMouth, out bool anyWorn, out Image polish)
     {
         var drops = new int[Courses];
         for (int c = 0; c < Courses; c++)
@@ -766,6 +832,8 @@ public static class Tier1AshlarFloor
         // (b) the stones beside an open joint lose their arrises: a pixel of stone goes with the
         //     joint, and sometimes a second — a corner gone.
         bool channelHere = isChannel != null && isChannel(tx, ty);
+        int travelAxis = TravelAxis(traffic, tx, ty);
+        var (anisoBed, anisoHead) = AnisoWeights(cfg, travelAxis);
         var openAmt = new double[T, T];
         for (int py = 0; py < T; py++)
             for (int px = 0; px < T; px++)
@@ -784,12 +852,67 @@ public static class Tier1AshlarFloor
                     // stone keeps its address and the corner theorem is unaffected. What degrades
                     // along a path is the VISIBLE enclosure, deliberately.
                     int age = AgeIndex(cfg, openAmt[py, px]);
+                    // A joint lying ACROSS the route is crossed and packed shut; one running WITH
+                    // it stays open and dark. Along a north-south corridor the bed joints close
+                    // and the head joints survive as continuous lines: the directional grain,
+                    // out of the bond that was already there.
+                    double kw = 1.0;
+                    if (travelAxis >= 0)
+                    {
+                        bool bedJ = px > 0 && px < T - 1
+                                    && clsArr[py, px - 1] == 0 && clsArr[py, px + 1] == 0;
+                        bool headJ = py > 0 && py < T - 1
+                                     && clsArr[py - 1, px] == 0 && clsArr[py + 1, px] == 0;
+                        if (bedJ && !headJ) kw = anisoBed;
+                        else if (headJ && !bedJ) kw = anisoHead;
+                    }
                     int hb = Mix(tx * T + px, ty * T + py, cfg.JointBreakSalt + cfg.Seed);
-                    if ((hb % 1000) / 1000.0 < cfg.JointBreak[age])
+                    if ((hb % 1000) / 1000.0 < cfg.JointBreak[age] * kw)
                         raw[py, px] = cfg.LumMedian;
                     else
-                        raw[py, px] += cfg.JointFill[age] * rung;
+                        raw[py, px] += cfg.JointFill[age] * kw * rung;
                 }
+
+        // ORDER IS LOAD-BEARING, and the paint check is what said so. These two passes run
+        // HERE — after the joints compact, before the arrises chip — because that is where
+        // the reference painter runs them. Flatten is a PROPORTIONAL pull toward the median
+        // and chipping is a FIXED subtraction, so swapping them gives a different pixel with
+        // no error anywhere to point at: composer rgb(90,107,100) against engine
+        // rgb(102,121,113) at cell (2,7), one rung apart, both arithmetically correct.
+        // GROUND LOWER AND FLATTER. A walked stone loses its crown: its value collapses toward
+        // the material's median. A pull to the median is symmetric, so it takes contrast away
+        // without darkening anything on average — a stone that merely got darker would be a
+        // stone that got painted.
+        for (int py = 0; py < T; py++)
+            for (int px = 0; px < T; px++)
+                if (clsArr[py, px] != 0)
+                {
+                    double fl = cfg.DeformFlatten[AgeIndex(cfg, Wear01(cfg,
+                        WearScalar(cfg, traffic, tx * T + px, ty * T + py), channelHere))];
+                    raw[py, px] += (cfg.LumMedian - raw[py, px]) * fl;
+                }
+
+        // THRESHOLD HOLLOW. Where routes converge on a mouth the stone dishes: genuinely lower
+        // in the middle, with a rim that shadows just inside its edge. Occlusion-legal by
+        // construction — this is a recess, drawn as a recess — and salted so two mouths in one
+        // level are not the same dish (§8.3.1: an incident repeated is a motif).
+        if (isMouth)
+        {
+            double cc = (T - 1) / 2.0;
+            for (int py = 0; py < T; py++)
+                for (int px = 0; px < T; px++)
+                {
+                    if (clsArr[py, px] == 0) continue;
+                    double dy = (py - cc) / cc, dx = (px - cc) / cc;
+                    double rr = System.Math.Sqrt(dy * dy + dx * dx);
+                    double jit = (Mix(tx * T + px, ty * T + py, cfg.HollowSalt + cfg.Seed) % 100)
+                                 / 400.0;
+                    double dish = System.Math.Clamp(1.0 - rr - jit, 0.0, 1.0) * cfg.HollowDepth;
+                    double rim = (rr > 0.82 && rr < 1.02) ? cfg.HollowRim : 0.0;
+                    raw[py, px] -= (dish + rim) * rung;
+                }
+        }
+
 
         for (int py = 0; py < T; py++)
         {
@@ -918,7 +1041,7 @@ public static class Tier1AshlarFloor
                     atlasCache[idx] = atlas;
                 }
                 img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, fe, cfg.CheckTraffic, worn,
-                                checkCracks, out _, out _);
+                                checkCracks, false, out _, out _);
                 cells[(s.X, s.Y)] = img;
             }
             var c = img.GetPixel(s.Px, s.Py);
@@ -1007,6 +1130,13 @@ public static class Tier1AshlarFloor
             cfg.PolishByAge = pba.ToArray();
             cfg.PolishExp = mat.GetProperty("polish_exp").GetDouble();
             cfg.PolishGain = mat.GetProperty("polish_gain").GetDouble();
+            var dfl = new List<double>();
+            foreach (var v in mat.GetProperty("deform_flatten").EnumerateArray()) dfl.Add(v.GetDouble());
+            cfg.DeformFlatten = dfl.ToArray();
+            cfg.DeformAniso = mat.GetProperty("deform_aniso").GetDouble();
+            cfg.HollowDepth = mat.GetProperty("hollow_depth").GetDouble();
+            cfg.HollowRim = mat.GetProperty("hollow_rim").GetDouble();
+            cfg.HollowSalt = salts.GetProperty("hollow").GetInt32();
             // THE ONE ASSERTION THAT KEEPS THIS LEVER HONEST. At an exponent of 1.0 the specular
             // term is linear in delivered light, which is arithmetically identical to changing the
             // stone's albedo — the baked value-lift §8.2.1 bans, wearing this lever's name. It is

@@ -145,10 +145,27 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
             idx = np.abs(open_amt[..., None] - ages).argmin(-1)
             fill = np.array(CA.JOINT_FILL_RUNGS)[idx]
             brk = np.array(CA.JOINT_BREAK)[idx]
+
+            # THE COMPACTION KNOWS WHICH WAY THE FEET WENT, mirrored.
+            axis0 = CA.travel_axis(traffic, x, y)
+            if axis0 != CA.DIR_NONE:
+                bedj = np.zeros((T, T), dtype=bool)
+                bedj[:, 1:-1] = jm_pix[:, :-2] & jm_pix[:, 2:]
+                headj = np.zeros((T, T), dtype=bool)
+                headj[1:-1, :] = jm_pix[:-2, :] & jm_pix[2:, :]
+                wv0, wh0 = CA.aniso_weights(axis0)
+                kw = np.where(bedj & ~headj, wv0, np.where(headj & ~bedj, wh0, 1.0))
+                fill = fill * kw
+                brk = brk * kw
             hb = (CA._mix_np(xx + x * T, yy + y * T, CA.JOINT_BREAK_SALT + seed) % 1000) / 1000.0
             broken = jm_pix & (hb < brk)
             L = L + np.where(jm_pix & ~broken, fill, 0.0) * step
             L = np.where(broken, mat["lum_median"], L)
+            # FLATTEN, mirrored: a walked stone's value collapses toward the material median.
+            _fage = np.abs(w01b[..., None] - np.array(CA.WEAR_AGES)).argmin(-1)
+            _fl = np.array(CA.DEFORM_FLATTEN)[_fage]
+            L = np.where(~jm_pix, L + (mat["lum_median"] - L) * _fl, L)
+
             near = np.zeros((T, T), dtype=float)
             near[1:, :] = np.maximum(near[1:, :], open_amt[:-1, :])
             near[:-1, :] = np.maximum(near[:-1, :], open_amt[1:, :])

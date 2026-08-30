@@ -858,6 +858,107 @@ DRESSING_KEEP = 0.45            # how much of its dressing a fully worn stone LO
 # FACES ONLY. The additive-remap law — offsets land on stone faces, joints are never touched —
 # governs colour exactly as it governs value. A joint is dark because it is ENCLOSED (§6.5), and
 # enclosure has no hue.
+# ============================ FORM AS EROSION ============================
+#
+# RULED (Rafe, 2026-08-29) on the seat's own finding, which was not about amplitude:
+#
+#   "There is no directional grain, no lengthwise slab, no kerb, no drain line, no centre track,
+#    nothing that runs WITH the corridor. The mouth does not change by a single pixel."
+#
+# Every lever before this one modulated the same stones per pixel. None of them changed the
+# floor's FORM, and a path is read from form. So the route is WORN, NEVER BUILT — the register
+# governs the mechanism, not just the look: the Boundary is found-and-annexed and administration
+# is thin at this depth, so traffic carved what it needed. Nobody laid a path here. (A paved
+# route is at most a deep-region dialect, filed for later.)
+#
+# THE TRAVEL AXIS. Erosion has a direction, so the floor needs one, and it is DERIVED FROM THE
+# TRAFFIC FIELD rather than added beside it — one field, one source of truth, and both painters
+# reach the same answer from the same numbers without a second channel to fall out of sync.
+#
+# Traffic is roughly constant ALONG a route and falls away ACROSS it. So the gradient points
+# across the path and the travel axis is perpendicular to it. Quantised to four axes because the
+# floor is 32px and there are only four directions a line can take on a pixel grid without
+# anti-aliasing, which §4.3 forbids.
+DIR_NONE = -1                    # no usable gradient: flat ground, and erosion has no story there
+DIR_MIN_GRAD = 6                 # below this the gradient is noise, not a route
+
+
+def travel_axis(traffic, tx, ty):
+    """The local axis of travel: 0 = E-W, 1 = NE-SW, 2 = N-S, 3 = NW-SE, or DIR_NONE.
+
+    `traffic` is indexed [x, y], matching `traffic_block`.
+    """
+    import numpy as _np
+    if traffic is None:
+        return DIR_NONE
+    w, h = traffic.shape
+
+    def at(x, y):
+        return float(traffic[min(max(x, 0), w - 1), min(max(y, 0), h - 1)])
+
+    gx = at(tx + 1, ty) - at(tx - 1, ty)
+    gy = at(tx, ty + 1) - at(tx, ty - 1)
+    if gx * gx + gy * gy < DIR_MIN_GRAD * DIR_MIN_GRAD:
+        return DIR_NONE
+    # perpendicular to the gradient, folded to a 180-degree axis rather than a 360-degree heading:
+    # a route worn by feet going both ways has an axis, not a direction.
+    ang = _np.degrees(_np.arctan2(-gx, gy)) % 180.0
+    return int(round(ang / 45.0)) % 4
+
+
+# THE THREE EROSION LEVERS, all keyed to the field that already exists.
+#
+# (a) STONES GROUND LOWER AND FLATTER. A walked stone loses its crown: its own value collapses
+#     toward the material's median (flatter) and it sits below its neighbours, which is drawn the
+#     only legal way — as shadow at its edges, never as an overall darkening, because a stone that
+#     is merely darker is a stone that was painted.
+DEFORM_FLATTEN = (0.0, 0.10, 0.35, 0.60)   # by wear age: how far a stone's value is pulled to the
+                                           # material median. Flat is what ground-down looks like.
+#
+# (b) THE COMPACTION ITSELF IS THE DIRECTIONAL LEVER, and the first attempt at this had it
+#     backwards. Rounding the arris beside a crossed joint was tried first and MEASURED WORSE
+#     (bed/head 1.111 where it should have fallen below 1.00) for a reason worth keeping: on
+#     trodden ground the joint has already been packed UP toward the stone, so darkening the face
+#     pixel beside it moves that pixel AWAY from the joint's value rather than toward it. The two
+#     levers were fighting, and the arris one lost.
+#
+#     So the direction weights the compaction that already works. Feet cross the joints lying
+#     ACROSS a route and pack them shut; a joint running WITH the route takes far less of that,
+#     and stays open and dark. In a north-south corridor the bed joints close up and the head
+#     joints survive as continuous dark lines — long unbroken runs in the direction of travel,
+#     out of geometry that was already there, with no new families and no new bond. That is the
+#     seat's "something that runs with the corridor", and it is the joint lever doing it.
+DEFORM_ROUND = (0.0, 0.0, 0.0, 0.0)        # RETIRED, kept at its null so the manifest key and the
+                                           # engine path stay live and any revival is deliberate
+DEFORM_ANISO = 0.80                        # 0 = rounding ignores direction (isotropic, the old
+                                           # behaviour); 1 = only the crossed edges round at all
+
+
+def aniso_weights(axis):
+    """How much a north-south-normal edge and an east-west-normal edge each round, on this axis.
+
+    An edge is CROSSED by travel when its normal lies along the travel axis, and a crossed edge is
+    the one feet actually hit. With no usable gradient there is no route and the old isotropic
+    behaviour is correct — an unwalked floor should not acquire a grain.
+    """
+    k = 1.0 - DEFORM_ANISO
+    if axis == DIR_NONE:
+        return 1.0, 1.0
+    if axis == 2:            # travelling north-south: the bed joints are crossed
+        return 1.0, k
+    if axis == 0:            # travelling east-west: the head joints are crossed
+        return k, 1.0
+    d = 1.0 - DEFORM_ANISO / 2.0
+    return d, d              # diagonal travel crosses both, and neither cleanly                        # 0 = rounding ignores direction (isotropic, the old
+                                           # behaviour); 1 = only the crossed edges round at all
+#
+# (c) THRESHOLD HOLLOWS. Where routes converge on a mouth the stone dishes: genuinely lower in the
+#     middle, with a rim that shadows. Occlusion-legal by construction and NEVER a sill, a kerb or
+#     an installed piece — nothing is built here, things are used up (§8.1).
+HOLLOW_DEPTH = 1.30                        # ladder rungs at the centre of the dish
+HOLLOW_RIM = 0.45                          # rungs of extra shadow just inside the rim
+HOLLOW_SALT = 3011                         # so two mouths are not the same dish (§8.3.1)
+
 # ============================ POLISH AS LIGHT RESPONSE ============================
 #
 # RULED after Ruling 70's execution was overturned at the gate: the closure named the wrong
@@ -1150,6 +1251,11 @@ def main():
     mat["polish_by_age"] = list(POLISH_BY_AGE)
     mat["polish_exp"] = POLISH_EXP
     mat["polish_gain"] = POLISH_GAIN
+    mat["deform_flatten"] = list(DEFORM_FLATTEN)
+    mat["deform_round"] = list(DEFORM_ROUND)
+    mat["deform_aniso"] = DEFORM_ANISO
+    mat["hollow_depth"] = HOLLOW_DEPTH
+    mat["hollow_rim"] = HOLLOW_RIM
     os.makedirs(a.out, exist_ok=True)
     step = (mat["lum_hi"] - mat["lum_lo"]) / (CF.PALETTE_LEVELS - 1)
 
@@ -1158,7 +1264,8 @@ def main():
                a_table=A_TABLE, mv_table=MV_TABLE,
                salts=dict(horizontal=HORIZ, vertical=VERT, span=SPAN, interior=INTERIOR,
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
-                          marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT),
+                          marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT,
+                          hollow=HOLLOW_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,

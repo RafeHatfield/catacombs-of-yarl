@@ -86,7 +86,7 @@ def stone_worn(worn, kind, x, y):
     return bool(worn(x, y))
 
 
-def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
+def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
     """Lay a w x h field, then paint the material onto it one stone at a time.
 
     The tiles supply the bond. Everything else — a stone's value and a stone's grain — is chosen
@@ -270,21 +270,79 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
                 idx = np.abs(open_amt[..., None] - ages).argmin(-1)
                 fill = np.array(CA.JOINT_FILL_RUNGS)[idx]
                 brk = np.array(CA.JOINT_BREAK)[idx]
+
+                # ============ THE COMPACTION KNOWS WHICH WAY THE FEET WENT ============
+                # A joint lying ACROSS the route is crossed and packed shut; one running WITH it
+                # takes far less and stays open and dark. The bed joints close along a north-south
+                # corridor and the head joints survive as continuous lines — the directional grain
+                # the seat asked for, made of the bond that was already there.
+                axis0 = CA.travel_axis(traffic, x, y) if defect != "no_erosion" else CA.DIR_NONE
+                if axis0 != CA.DIR_NONE:
+                    # a joint pixel is BED if its run continues left-right, HEAD if up-down
+                    bedj = np.zeros((T, T), dtype=bool)
+                    bedj[:, 1:-1] = jm_pix[:, :-2] & jm_pix[:, 2:]
+                    headj = np.zeros((T, T), dtype=bool)
+                    headj[1:-1, :] = jm_pix[:-2, :] & jm_pix[2:, :]
+                    wv0, wh0 = CA.aniso_weights(axis0)
+                    # bed joints have a north-south normal, head joints an east-west one
+                    kw = np.where(bedj & ~headj, wv0, np.where(headj & ~bedj, wh0, 1.0))
+                    fill = fill * kw
+                    brk = brk * kw
                 hb = (CA._mix_np(xx + x * T, yy + y * T, CA.JOINT_BREAK_SALT + seed)
                       % 1000) / 1000.0
                 broken = jm_pix & (hb < brk)
                 L = L + np.where(jm_pix & ~broken, fill, 0.0) * step
                 L = np.where(broken, mat["lum_median"], L)
 
-                # (b) THE ARRIS GOES WITH THE JOINT. A stone pixel touching an open joint is
-                # chipped off in proportion to how open that joint is — occlusion vocabulary,
-                # a recess getting wider rather than anything getting brighter.
-                near = np.zeros((T, T), dtype=float)
-                near[1:, :] = np.maximum(near[1:, :], open_amt[:-1, :])
-                near[:-1, :] = np.maximum(near[:-1, :], open_amt[1:, :])
-                near[:, 1:] = np.maximum(near[:, 1:], open_amt[:, :-1])
-                near[:, :-1] = np.maximum(near[:, :-1], open_amt[:, 1:])
+                # ================= FORM AS EROSION =================
                 stone_px = (cls != 0) & ~jm_pix
+                fage = np.abs(w01b[..., None] - np.array(CA.WEAR_AGES)).argmin(-1)
+                axis = CA.travel_axis(traffic, x, y) if defect != "no_erosion" else CA.DIR_NONE
+
+                # (a) GROUND LOWER AND FLATTER. A walked stone loses its crown: its value
+                # collapses toward the material's median. A pull to the median is symmetric, so
+                # this takes contrast away without darkening anything on average — a stone that
+                # merely got darker would be a stone that got painted.
+                if defect != "no_erosion":
+                    fl = np.array(CA.DEFORM_FLATTEN)[fage]
+                    L = np.where(stone_px, L + (mat["lum_median"] - L) * fl, L)
+
+                # (c) THRESHOLD HOLLOWS. Where routes converge on a mouth the stone dishes:
+                # genuinely lower in the middle with a rim that shadows. Never a sill, never a
+                # kerb, never an installed piece — nothing is built here (§8.1).
+                if mouth is not None and mouth(x, y) and defect != "no_erosion":
+                    cy, cx = (T - 1) / 2.0, (T - 1) / 2.0
+                    rr = np.sqrt(((yy - cy) / cy) ** 2 + ((xx - cx) / cx) ** 2)
+                    jit = (CA._mix_np(xx + x * T, yy + y * T, CA.HOLLOW_SALT + seed) % 100) / 400.0
+                    dish = np.clip(1.0 - rr - jit, 0.0, 1.0) * CA.HOLLOW_DEPTH
+                    rim = np.where((rr > 0.82) & (rr < 1.02), CA.HOLLOW_RIM, 0.0)
+                    L = np.where(stone_px, L - (dish + rim) * step, L)
+
+                # (b) THE ARRIS GOES WITH THE JOINT — AND THE ROUTE CHOOSES WHICH ARRIS. Feet
+                # cross the joints that lie ACROSS a route and skate over the ones that run with
+                # it, so the crossed edges round away and the parallel ones stay crisp. In a
+                # north-south corridor that leaves the bed joints soft and the head joints sharp:
+                # long unbroken runs in the direction of travel, out of geometry that was already
+                # there. This is the seat's "directional grain" with no new families and no new
+                # bond.
+                nv = np.zeros((T, T), dtype=float)     # edges whose normal runs north-south
+                nh = np.zeros((T, T), dtype=float)     # edges whose normal runs east-west
+                nv[1:, :] = np.maximum(nv[1:, :], open_amt[:-1, :])
+                nv[:-1, :] = np.maximum(nv[:-1, :], open_amt[1:, :])
+                nh[:, 1:] = np.maximum(nh[:, 1:], open_amt[:, :-1])
+                nh[:, :-1] = np.maximum(nh[:, :-1], open_amt[:, 1:])
+                # THE ARRIS PASS STAYS ISOTROPIC. It was frozen and passing, and the direction
+                # now lives in the compaction where it works; weighting both would double-count
+                # one story and make neither measurable on its own axis (§4.1).
+                near = np.maximum(nv, nh)
+
+                # A WHOLE RUNG OR NOTHING, §13.8 applied to this lever too: an arris rounds by a
+                # full step when the erosion asks for more than half of one, and otherwise stays
+                # where it is. A continuous rounding at 32px is a sub-rung shift the quantiser
+                # eats, which this project has now measured three times.
+                if defect != "no_erosion" and any(CA.DEFORM_ROUND):
+                    ro = np.array(CA.DEFORM_ROUND)[fage] * near
+                    L = np.where(stone_px & (ro > 0.5), L - step, L)
                 hsh = (CA._mix_np(xx + x * T, yy + y * T, CA.CHIP + seed) % 1000) / 1000.0
                 chip = stone_px & (near > 0) & (hsh < CA.CHIP_RATE * near)
                 L = np.where(chip, L - near * step * 1.6, L)
@@ -917,6 +975,62 @@ def chroma_read(img, traffic, w, h):
                 parity_ratio=float(max(e, o) / max(min(e, o), 1e-6)))
 
 
+def erosion_read(img, joints, traffic, w, h):
+    """FORM AS EROSION, read off the pixels: does the grain run WITH the route?
+
+    A joint that survives is a dark line. Along a north-south corridor the crossed BED joints pack
+    shut and the HEAD joints running with the route survive, so the ratio of how far each sits
+    below its stone IS the directional grain, in one number.
+
+    `flatten` is the other half: a walked stone loses its crown, so its faces lose value spread.
+    """
+    L = np.asarray(img).astype(float)[..., 0]
+    med = float(np.median(L[~joints]))
+    bedj = np.zeros(joints.shape, bool)
+    bedj[:, 1:-1] = joints[:, :-2] & joints[:, 2:]
+    headj = np.zeros(joints.shape, bool)
+    headj[1:-1, :] = joints[:-2, :] & joints[2:, :]
+    hot = np.zeros(joints.shape, bool)
+    cold = np.zeros(joints.shape, bool)
+    for y in range(h):
+        for x in range(w):
+            sl = (slice(y * T, (y + 1) * T), slice(x * T, (x + 1) * T))
+            lvl = int(traffic[x, y])
+            if lvl >= 200:
+                hot[sl] = True
+            elif lvl <= 30:
+                cold[sl] = True
+
+    def ratio(m):
+        b = bedj & ~headj & m
+        hh = headj & ~bedj & m
+        if b.sum() < 50 or hh.sum() < 50:
+            return None
+        return float((med - L[hh].mean()) / max(med - L[b].mean(), 1e-6))
+
+    return dict(grain_ratio_trodden=ratio(hot), grain_ratio_off=ratio(cold),
+                spread_trodden=float(L[(~joints) & hot].std()) if hot.any() else None,
+                spread_off=float(L[(~joints) & cold].std()) if cold.any() else None)
+
+
+def erosion_plant(w, h, seed, mat):
+    """The plants for form-as-erosion: null it entirely, and null only its direction."""
+    tr = np.zeros((w, h), dtype=np.uint8)
+    tr[w // 2 - 1:w // 2 + 1, :] = 255
+    out = {}
+    for name in (None, "no_erosion"):
+        img, j, _, _, _ = assemble(w, h, seed, mat, defect=name, traffic=tr)
+        out[name or "live"] = erosion_read(img, j, tr, w, h)
+    keep = CA.DEFORM_ANISO
+    CA.DEFORM_ANISO = 0.0
+    try:
+        img, j, _, _, _ = assemble(w, h, seed, mat, traffic=tr)
+        out["isotropic"] = erosion_read(img, j, tr, w, h)
+    finally:
+        CA.DEFORM_ANISO = keep
+    return out
+
+
 def chroma_plant(w, h, seed, mat):
     """Two plants for the chroma channel, and the live arm they are judged against."""
     tr = np.zeros((w, h), dtype=np.uint8)
@@ -943,6 +1057,31 @@ def run_plants(w, h, seed, mat):
     rows.append(dict(plant="flat_channel", must_fire="channel_legibility", fired=flat,
                      why="wear multipliers set to 1.0: the channel is declared and delivers "
                          "nothing", measured=cm))
+
+    ep = erosion_plant(w, h, seed, mat)
+    live_e, none_e, iso_e = ep["live"], ep["no_erosion"], ep["isotropic"]
+    for nm, m, fired, why, detail in (
+        ("no_erosion", none_e,
+         abs((none_e["grain_ratio_trodden"] or 1.0) - 1.0) < 0.15
+         and (none_e["spread_trodden"] or 0) > (live_e["spread_trodden"] or 0) * 1.2,
+         "form-as-erosion nulled entirely — no flattening, no directional compaction, so the "
+         "floor must lose both its grain and its ground-down look",
+         "grain %.2f (live %.2f) | face spread %.1f (live %.1f)"
+         % (none_e["grain_ratio_trodden"] or 0, live_e["grain_ratio_trodden"] or 0,
+            none_e["spread_trodden"] or 0, live_e["spread_trodden"] or 0)),
+        ("isotropic_erosion", iso_e,
+         abs((iso_e["grain_ratio_trodden"] or 1.0) - 1.0) < 0.15,
+         "the erosion kept but its DIRECTION removed — the stones still grind down, and the "
+         "floor must stop saying which way",
+         "grain %.2f (live %.2f)" % (iso_e["grain_ratio_trodden"] or 0,
+                                     live_e["grain_ratio_trodden"] or 0)),
+    ):
+        print("  %-16s -> %-14s %s" % (nm, "erosion_read", "FIRED" if fired else "SILENT"))
+        print("       %s" % why)
+        print("       %s" % detail)
+        ok &= bool(fired)
+        rows.append(dict(plant=nm, must_fire="erosion_read", fired=bool(fired), why=why,
+                         measured=m))
 
     cp = chroma_plant(w, h, seed, mat)
     live, flatc, latt = cp["live"], cp["flat_chroma"], cp["chroma_lattice"]
