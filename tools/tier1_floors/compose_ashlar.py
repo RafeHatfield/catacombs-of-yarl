@@ -108,7 +108,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, HERE)
 import compose_family as CF      # noqa: E402
-import field_laws as FL          # noqa: E402
+import field_laws as FL
+import route_polyline as RP          # noqa: E402
 
 T = 32
 # FIVE, NOT THREE, AND THE THIRD FAMILY COUNT A SEAT HAS RULED ON.
@@ -756,6 +757,12 @@ def traffic_block(traffic, x0, y0, n):
     return (top * (T - fy) + bot * fy) // (T * T)
 
 
+# THE ROUTES, AS LINES. Set by whoever knows the level — the engine from its own graph, the
+# instruments from a declared synthetic route. Empty means no route model, and then the old
+# per-tile field is the fallback rather than the truth.
+LINES = []
+
+
 def wear_scalar_block(x0, y0, n, seed, traffic=None):
     """What the wear pass consumes: the traffic field FRAYED by the old noise.
 
@@ -765,6 +772,19 @@ def wear_scalar_block(x0, y0, n, seed, traffic=None):
     wanders, without moving where the route goes.
     """
     noise = wear_block(x0, y0, n, seed)
+    if LINES:
+        # RE-KEYED TO THE ROUTE ITSELF. Round 21 measured that a per-tile field cannot supply a
+        # line — its derived direction agreed between neighbours only 34% of the time. Distance to
+        # the polyline is a pure function of world position, so it is coherent along the route by
+        # construction. The noise stays at the same quarter it always was: a pure distance falloff
+        # is a smooth ribbon, and a smooth ribbon is what "reads as a drawn route" means.
+        import numpy as _np
+        yy, xx = _np.mgrid[0:n, 0:n]
+        v = _np.empty((n, n), dtype=float)
+        for iy in range(n):
+            for ix in range(n):
+                v[iy, ix] = RP.strength(LINES, (x0 + ix + 0.5) / T, (y0 + iy + 0.5) / T)
+        return (_np.round(v * 255.0).astype(_np.int64) * 3 + noise) // 4
     if traffic is None:
         return noise
     return (traffic_block(traffic, x0, y0, n) * 3 + noise) // 4
@@ -884,6 +904,13 @@ DIR_MIN_GRAD = 6                 # below this the gradient is noise, not a route
 
 
 def travel_axis(traffic, tx, ty):
+    """(see below) — the line's own tangent takes precedence when there is a line."""
+    if LINES:
+        return RP.axis(LINES, tx + 0.5, ty + 0.5)
+    return _travel_axis_from_field(traffic, tx, ty)
+
+
+def _travel_axis_from_field(traffic, tx, ty):
     """The local axis of travel: 0 = E-W, 1 = NE-SW, 2 = N-S, 3 = NW-SE, or DIR_NONE.
 
     THE ROUTE RUNS WHERE THE TRAFFIC CONTINUES. For each of the four axes a pixel grid allows,

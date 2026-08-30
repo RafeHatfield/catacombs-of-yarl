@@ -93,6 +93,8 @@ public static class Tier1AshlarFloor
         public double DeformAniso = 0.8;
         public double HollowDepth = 1.3, HollowRim = 0.45;
         public int HollowSalt = 3011;
+        public System.Collections.Generic.IReadOnlyList<Logic.ECS.RoutePolyline.Line> Lines =
+            new System.Collections.Generic.List<Logic.ECS.RoutePolyline.Line>();
         public int[][] ATable = System.Array.Empty<int[]>();
         public int[][] MvTable = System.Array.Empty<int[]>();
         public readonly Dictionary<int, string> Atlas = new();
@@ -107,6 +109,7 @@ public static class Tier1AshlarFloor
         // derivation is verified by the Logic layer's own tests, where a hierarchy can be
         // asserted without a scene, a device or a capture.
         public byte[,]? CheckTraffic;
+        public System.Collections.Generic.List<Logic.ECS.RoutePolyline.Line> CheckLines = new();
     }
 
     private static int Mix(int x, int y, int salt)
@@ -399,9 +402,29 @@ public static class Tier1AshlarFloor
     /// a drawn route" means. A quarter of the old two-octave field is mixed back in so the edges
     /// break up and the width wanders, without moving where the route goes.
     /// </summary>
+    /// <summary>
+    /// THE WEAR SCALAR, RE-KEYED TO THE ROUTE ITSELF.
+    ///
+    /// It was a per-tile accumulation sampled bilinearly. Round 21 measured that such a field
+    /// cannot supply a line: the direction derived from it agreed between neighbouring tiles only
+    /// 34% of the time, so a grain keyed to it never accumulated into anything a viewer could
+    /// follow. The magnitude now comes from DISTANCE TO THE POLYLINE — a pure function of world
+    /// position, coherent along the route by construction rather than by luck.
+    ///
+    /// THE OLD NOISE STAYS, mixed at the same quarter it always was. The register guardrail is
+    /// that a path is discovered and never staged, and a pure distance falloff is a smooth ribbon,
+    /// which is exactly what "reads as a drawn route" means. The noise frays the shoulders without
+    /// moving where the route goes.
+    /// </summary>
     private static int WearScalar(Config c, byte[,]? traffic, int wx, int wy)
     {
         int noise = WearAt(c, wx, wy);
+        if (c.Lines.Count > 0)
+        {
+            double v = Logic.ECS.RoutePolyline.Strength(
+                c.Lines, (wx + 0.5) / (double)T, (wy + 0.5) / (double)T) * 255.0;
+            return ((int)System.Math.Round(v) * 3 + noise) / 4;
+        }
         if (traffic == null) return noise;
         return (TrafficAt(traffic, wx, wy) * 3 + noise) / 4;
     }
@@ -490,6 +513,9 @@ public static class Tier1AshlarFloor
     /// Derived rather than carried beside the field, so both painters reach the same answer from
     /// the same numbers with no second channel to fall out of sync.
     /// </summary>
+    private static System.Collections.Generic.IReadOnlyList<Logic.ECS.RoutePolyline.Line>
+        linesForAxis = new System.Collections.Generic.List<Logic.ECS.RoutePolyline.Line>();
+
     private static int TravelAxis(byte[,]? t, int tx, int ty)
     {
         // THE ROUTE RUNS WHERE THE TRAFFIC CONTINUES. Sum the two neighbours along each of the
@@ -500,6 +526,11 @@ public static class Tier1AshlarFloor
         // corridor — both across-neighbours are wall, the across-gradient is identically zero,
         // and the perpendicular then reads the along-route variation as a route running the other
         // way. It labelled the review scene's north-south chokepoint E-W down its whole length.
+        // THE LINE'S OWN TANGENT, when there is a line. Everything below is the fallback for a
+        // scene with no route model, and it is the code round 21 found aimed ninety degrees wrong
+        // in a one-tile corridor — kept only because a floor with no routes must still lay.
+        if (linesForAxis.Count > 0)
+            return Logic.ECS.RoutePolyline.Axis(linesForAxis, tx + 0.5, ty + 0.5);
         if (t == null) return -1;
         int w = t.GetLength(0), h = t.GetLength(1);
         double At(int x, int y) =>
@@ -629,6 +660,63 @@ public static class Tier1AshlarFloor
                     : '#');
             sb.Append('\n');
         }
+        // THE ROUTES, AS LINES. Keying only — nothing is drawn along them (§8.1: worn, never
+        // built). The age layer that already shipped simply re-keys to distance from the line and
+        // to its tangent, and therefore concentrates along it.
+        cfg.Lines = tf.Lines;
+        linesForAxis = tf.Lines;
+
+        // THE AXIS MAP, LOGGED. Round 21's finding was a number nobody had measured — the derived
+        // travel axis agreed between neighbouring tiles only 34% of the time — and it surfaced
+        // only because the axis could be drawn. It is logged every boot now so the next reader
+        // does not have to think of it first.
+        sb.Append("[Tier1] travel axis (- E-W  / NE-SW  | N-S  \\ NW-SE  . none)\n");
+        int coherent = 0, adjacent = 0;
+        for (int y = 0; y < map.Height; y++)
+        {
+            sb.Append("[Tier1]   ");
+            for (int x = 0; x < map.Width; x++)
+            {
+                if (!map.IsWalkable(x, y)) { sb.Append('#'); continue; }
+                int ax = TravelAxis(traffic, x, y);
+                sb.Append(ax == 0 ? '-' : ax == 1 ? '/' : ax == 2 ? '|' : ax == 3 ? '\\' : '.');
+                for (int k = 0; k < 2; k++)
+                {
+                    int nx = x + (k == 0 ? 1 : 0), ny = y + (k == 0 ? 0 : 1);
+                    if (nx >= map.Width || ny >= map.Height || !map.IsWalkable(nx, ny)) continue;
+                    int bx = TravelAxis(traffic, nx, ny);
+                    if (ax < 0 || bx < 0) continue;   // off-route is a boundary, not a disagreement
+                    adjacent++;
+                    if (ax == bx) coherent++;
+                }
+            }
+            sb.Append('\n');
+        }
+        // THE ROUTE STRENGTH, LOGGED, and it replaces the traffic field as what instruments
+        // bucket by. The keying moved to the line this round; a measurement still bucketing by
+        // the per-tile field is measuring a different population from the one the painter reads,
+        // and it showed: the instrument's own matching control started leaking and its null draws
+        // collapsed to zero. Measure what is keyed, or measure nothing.
+        sb.Append("[Tier1] route strength (space=off-route .. @=on the line)\n");
+        for (int y = 0; y < map.Height; y++)
+        {
+            sb.Append("[Tier1]   ");
+            for (int x = 0; x < map.Width; x++)
+            {
+                if (!map.IsWalkable(x, y)) { sb.Append('#'); continue; }
+                double v = cfg.Lines.Count == 0 ? 0.0
+                    : Logic.ECS.RoutePolyline.Strength(cfg.Lines, x + 0.5, y + 0.5);
+                int k = System.Math.Clamp((int)System.Math.Round(v * 9.0), 0, 9);
+                sb.Append(" .:-=+*#%@"[k]);
+            }
+            sb.Append('\n');
+        }
+
+        sb.Append("[Tier1] axis coherence: " + coherent + " of " + adjacent
+                  + " adjacent on-route pairs agree ("
+                  + (adjacent > 0 ? (100.0 * coherent / adjacent).ToString("F0") : "0")
+                  + "%) - round 21 measured 34% on the per-tile field\n");
+
         var crackCache = new Dictionary<(int, int), List<(int X, int Y)>>();
         int laid = 0, channel = 0, missing = 0, polished = 0, mouths = 0;
 
@@ -689,7 +777,7 @@ public static class Tier1AshlarFloor
              + $"families={cfg.Families} seed={cfg.Seed} atlases={atlasCache.Count} "
              + $"edge_check={cfg.EdgeCheck.Count}/OK stone_check={cfg.StoneCheck.Count}/OK "
              + $"paint_check={cfg.PaintCheck.Count}/OK "
-             + $"mouths={mouths} polished={polished}{(polishShader == null ? "/SHADER-MISSING" : "")} "
+             + $"lines={cfg.Lines.Count} mouths={mouths} polished={polished}{(polishShader == null ? "/SHADER-MISSING" : "")} "
              + $"traffic=spine:{tf.SpineLength:F0}/routes:{tf.Routes} "
              + $"manifest={manifestResPath}\n" + sb.ToString().TrimEnd();
     }
@@ -1054,8 +1142,14 @@ public static class Tier1AshlarFloor
                     if (atlas == null) return $"paint check: atlas unreadable: {path}";
                     atlasCache[idx] = atlas;
                 }
+                var liveLines = cfg.Lines;
+                var liveAxis = linesForAxis;
+                cfg.Lines = cfg.CheckLines;
+                linesForAxis = cfg.CheckLines;
                 img = PaintCell(cfg, atlas, grainImg, s.X, s.Y, fw, fe, cfg.CheckTraffic, worn,
                                 checkCracks, false, out _, out _);
+                cfg.Lines = liveLines;
+                linesForAxis = liveAxis;
                 cells[(s.X, s.Y)] = img;
             }
             var c = img.GetPixel(s.Px, s.Py);
@@ -1253,6 +1347,19 @@ public static class Tier1AshlarFloor
                             for (int xx = 0; xx < rowsList[yy].Length; xx++)
                                 t[xx, yy] = (byte)rowsList[yy][xx];
                         cfg.CheckTraffic = t;
+                        if (pc.TryGetProperty("route", out var rt))
+                        {
+                            var pts = new System.Collections.Generic.List<(double X, double Y)>();
+                            foreach (var pr in rt.EnumerateArray())
+                            {
+                                var e = pr.EnumerateArray().GetEnumerator();
+                                e.MoveNext(); double rx = e.Current.GetDouble();
+                                e.MoveNext(); double ry = e.Current.GetDouble();
+                                pts.Add((rx, ry));
+                            }
+                            if (pts.Count >= 2)
+                                cfg.CheckLines.Add(new Logic.ECS.RoutePolyline.Line(pts, 1.0));
+                        }
                     }
                 }
                 foreach (var e in pc.GetProperty("samples").EnumerateArray())

@@ -28,7 +28,8 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, HERE)
-import compose_ashlar as CA      # noqa: E402
+import compose_ashlar as CA
+import route_polyline as RP      # noqa: E402
 import compose_family as CF      # noqa: E402
 import field_ashlar as FA        # noqa: E402
 import field_laws as FL          # noqa: E402
@@ -280,6 +281,30 @@ def main():
     print("      and the arm is not vacuous: %.1f%% of the floor carries the cast" % (cast * 100))
     if cast < 0.02:
         print("      SILENT: the traffic arm drew no chroma, so it verified nothing.")
+        ok = False
+
+    # THE ROUTE ARM. Since round 22 a declared route keys the wear scalar and the travel axis,
+    # and every arm above runs with none — so the whole re-keying could be wrong in both painters
+    # and all of them would still say IDENTICAL. Fourth instance of LOOP-PROCESS §4.2.
+    route = [(a.w // 2, ty) for ty in range(1, a.h - 1)]
+    keep_lines = CA.LINES
+    CA.LINES = [(RP.jitter(RP.smooth(route), lambda x, y: 0 <= x < a.w and 0 <= y < a.h, a.seed),
+                 1.0)]
+    try:
+        d4, _j4, _t4, _c4, _d4 = FA.assemble(a.w, a.h, a.seed, mat)
+        s4 = paint_from_atlas(a.w, a.h, a.seed, man)
+        c4 = compare(d4, s4)
+        worn_share = float((np.abs(d4.astype(int) - direct.astype(int)).max(-1) > 0).mean())
+    finally:
+        CA.LINES = keep_lines
+    ok = ok and c4["differing"] == 0
+    print("  with a declared route (keying live): %d of %d pixels differ (%.4f%%)  -> %s"
+          % (c4["differing"], c4["pixels"], c4["differing_pct"],
+             "IDENTICAL" if c4["differing"] == 0 else "DISAGREE"))
+    print("      and the arm is not vacuous: the route changed %.1f%% of the floor"
+          % (worn_share * 100))
+    if worn_share < 0.05:
+        print("      SILENT: the route arm changed almost nothing, so it verified nothing.")
         ok = False
 
     plant = None

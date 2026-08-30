@@ -33,7 +33,8 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, HERE)
-import compose_ashlar as CA        # noqa: E402
+import compose_ashlar as CA
+import route_polyline as RP        # noqa: E402
 import verify_atlas_path as VP     # noqa: E402
 
 WORN_COLUMNS = [3, 4]
@@ -75,6 +76,16 @@ def main():
         for tx in range(a.w):
             traffic[tx, ty] = CA.mix(tx, ty, 4242 + a.seed) & 255
 
+    # A DECLARED ROUTE, so the check exercises the thing that now keys everything.
+    #
+    # The two existing arms carry a synthetic traffic FIELD, and since round 22 the field is only
+    # a fallback — with a route present the wear scalar and the travel axis both come from the
+    # LINE. A check that never declares a line would verify the fallback and call it coverage,
+    # which is LOOP-PROCESS §4.2's failure written a fourth time.
+    route = [(a.w // 2, ty) for ty in range(1, a.h - 1)]
+    line = RP.jitter(RP.smooth(route),
+                     lambda x, y: 0 <= x < a.w and 0 <= y < a.h, a.seed)
+    CA.LINES = [(line, 1.0)]
     img = VP.paint_from_atlas(a.w, a.h, a.seed, man, worn=worn, assets=assets, traffic=traffic)
 
     # Deliberate spread: the trodden columns and their neighbours (so the arris pass and the
@@ -96,6 +107,7 @@ def main():
     man["paint_check"] = dict(
         worn_columns=WORN_COLUMNS, grid=[a.w, a.h], samples=picks,
         traffic=[[int(traffic[tx, ty]) for tx in range(a.w)] for ty in range(a.h)],
+        route=[[round(px, 6), round(py, 6)] for px, py in line],
         what=("finished RGB from the shipped path. The engine reproduces every one of these or "
               "refuses to lay the floor. Covers joints, plain stone, trodden stone, joints beside "
               "trodden stone, and spanning stones seen from both sides."))
