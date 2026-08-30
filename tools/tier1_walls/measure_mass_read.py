@@ -43,6 +43,19 @@ import measure_wall_amplitude as MA  # noqa: E402
 from mask_census import build        # noqa: E402
 
 FLOOR_REFERENCE = 0.1440
+# ── THE BAR, AND IT IS READ IN LEVELS ─────────────────────────────────────────────────────────
+#
+# RULED (Rafe, 2026-08-30): *"The perceptual-floor law reads in DELIVERED LEVELS, not ratios —
+# 8 levels is 'barely met', and wall-vs-floor must clear the same bar after the material change;
+# measure both."*
+#
+# So the bar is not picked here, and it is not invented: it is a human verdict on a measured
+# quantity, which is the only way §13.8 permits a floor to come into existence. Eight levels is
+# the AMBIGUOUS point — §13.8's own words about a signal that clears by a hair: *"that is the
+# geometric midpoint between present and absent, which is precisely the ambiguous point."* The
+# obligation the clause then imposes is to say where a signal sits relative to it and why it sits
+# there rather than higher.
+LEVELS_BAR = 8.0
 
 
 def cell_mean(lum, g, x, y, inset=6):
@@ -109,7 +122,12 @@ def main():
                          void=round(best_v[1], 2) if best_v else None,
                          floor=round(best_f[1], 2) if best_f else None,
                          w_void=round(weber(m, best_v[1]), 4) if best_v else None,
-                         w_floor=round(weber(m, best_f[1]), 4) if best_f else None))
+                         w_floor=round(weber(m, best_f[1]), 4) if best_f else None,
+                         # DELIVERED LEVELS, which is what the bar is now read in. Absolute and
+                         # signed: a ratio survives the lamp's multiplication and eight bits do
+                         # not, which is the whole reason the ruling moved the bar here.
+                         l_void=round(m - best_v[1], 2) if best_v else None,
+                         l_floor=round(m - best_f[1], 2) if best_f else None))
 
     print("MASS-READ — can the wall be told from the dark beyond it, and from the ground?")
     print("  %-8s %6s %8s %8s %8s %10s %10s"
@@ -125,8 +143,9 @@ def main():
     def band(lo, hi):
         return [r for r in rows if lo <= r["dist"] < hi]
     print()
-    print("  %-14s %5s %14s %14s   %s"
-          % ("range band", "n", "W(wall,void)", "W(wall,floor)", "vs 0.1440 reference"))
+    print("  %-14s %5s %10s %10s %10s %10s   %s"
+          % ("range band", "n", "W(w,void)", "W(w,floor)", "L(w,void)", "L(w,floor)",
+             "vs the %.0f-level bar" % LEVELS_BAR))
     summary = {}
     for label, lo, hi in (("standing <=2", 0, 2.5), ("3-4 tiles", 2.5, 4.5),
                           ("beyond 4", 4.5, 99)):
@@ -135,15 +154,28 @@ def main():
         wf = [r["w_floor"] for r in b if r["w_floor"] is not None]
         if not b:
             continue
+        lv = [r["l_void"] for r in b if r["l_void"] is not None]
+        lf = [r["l_floor"] for r in b if r["l_floor"] is not None]
         mv = float(np.mean(wv)) if wv else float("nan")
         mf = float(np.mean(wf)) if wf else float("nan")
-        summary[label] = dict(n=len(b), w_void=round(mv, 4), w_floor=round(mf, 4))
-        print("  %-14s %5d %14.4f %14.4f   %s"
-              % (label, len(b), mv, mf,
-                 "wall/void above" if abs(mv) >= FLOOR_REFERENCE else "wall/void BELOW"))
+        alv = float(np.mean(np.abs(lv))) if lv else float("nan")
+        alf = float(np.mean(np.abs(lf))) if lf else float("nan")
+        summary[label] = dict(n=len(b), w_void=round(mv, 4), w_floor=round(mf, 4),
+                              levels_void=round(alv, 2), levels_floor=round(alf, 2),
+                              void_clears=bool(alv >= LEVELS_BAR),
+                              floor_clears=bool(alf >= LEVELS_BAR))
+        print("  %-14s %5d %10.4f %10.4f %10.2f %10.2f   void %s / floor %s"
+              % (label, len(b), mv, mf, alv, alf,
+                 "CLEARS" if alv >= LEVELS_BAR else "under",
+                 "CLEARS" if alf >= LEVELS_BAR else "under"))
 
     out = dict(produced_by="tools/tier1_walls/measure_mass_read.py", scene=spec["name"],
                capture=a.png, family=man["family"], reference=FLOOR_REFERENCE,
+               levels_bar=LEVELS_BAR,
+               levels_bar_provenance=("RULED (Rafe, 2026-08-30): the perceptual-floor law reads "
+                                      "in delivered levels, and 8 levels is 'barely met'. A human "
+                                      "verdict on a measured quantity, which is the only way "
+                                      "§13.8 permits a floor to exist."),
                cells=rows, by_band=summary)
     p = os.path.join(EV, "MASS-READ-%s.json" % a.tag)
     json.dump(out, open(p, "w"), indent=2)

@@ -1,0 +1,117 @@
+{
+  "name": "tier1_corridor_traffic",
+  "_comment": [
+    "THE CORRIDOR REVIEW SCENE, REBUILT SO ITS TRAFFIC-KEYED SYSTEMS ARE ACTUALLY ON.",
+    "",
+    "RULED (Rafe, 2026-08-30): *\"Fix the review scenes first: give the corridor scene real traffic",
+    "(rooms/destinations) so traffic-keyed systems are actually on.\"*",
+    "",
+    "WHY A NEW SPEC RATHER THAN AN EDIT. `corridor_junction.json` is section 6.4's instrument and",
+    "`wall_face_review.json` is the section 3 rounds', and both are cited by evidence already on disk.",
+    "The repo's own rule, written into both of those files: *a scene swap would silently invalidate",
+    "every comparison against that record.* So they stay, marked dead, and this is the live one.",
+    "",
+    "WHAT IT FIXES, AND IT IS TWO THINGS, NOT ONE",
+    "--------------------------------------------",
+    "1. **Destinations.** Three rooms on the ends of the arms, plus a dead-end stub. `TrafficField`",
+    "   accumulates traversal between places; a bare cross of corridors has nowhere to be going.",
+    "",
+    "2. **A LOOP, so no single figure can sever the map.** This is the half the ruling did not know it",
+    "   was asking for, because the audit's first diagnosis was wrong. The corridor scenes are dead",
+    "   not for want of rooms but because the player STANDS IN THEM: `FarthestWalkable` picks the",
+    "   spine's endpoints with a Dijkstra map that walks through blocking entities, and the spine",
+    "   itself is an A* that does not. In a one-wide corridor every route between the two halves runs",
+    "   through the figure, A* returns null, and the field collapses to exactly zero \u2014 40 cells to 0,",
+    "   5 routes to 0, from one person standing still (`TrafficFieldReviewSceneTests`).",
+    "   A loop means there is always a second way round, so the disagreement cannot bite.",
+    "",
+    "WHAT IT KEEPS, because the corridor scene's two recorded traps are still traps:",
+    "  * **corridors are ONE tile wide.** A three-wide carve is a room, and every cell in it has three",
+    "    or more open neighbours, so the junction check passes trivially and the scene stops testing",
+    "    what it claims.",
+    "  * **the junction sits inside the delivered reach**, which is about four tiles, not the nominal",
+    "    five."
+  ],
+  "_legibility": [
+    "Distances are from the player at (8,11). The ratified radius is 5.0 tiles and its",
+    "DELIVERED reach is about four, so lit points are declared no further than four and",
+    "dark ones past five; the fifth tile is the ambiguous band and nothing is asserted",
+    "about it in either direction."
+  ],
+  "legibility": [
+    {
+      "x": 8,
+      "y": 9,
+      "expect": "lit",
+      "why": "the trunk two tiles north - the easy case"
+    },
+    {
+      "x": 8,
+      "y": 8,
+      "expect": "lit",
+      "why": "the northern crossing, 3 tiles - the junction the scene exists for"
+    },
+    {
+      "x": 5,
+      "y": 11,
+      "expect": "lit",
+      "why": "the dead-end stub's mouth, 3 tiles - the unvisited end"
+    }
+  ],
+  "width": 17,
+  "height": 21,
+  "player": {
+    "x": 8,
+    "y": 11
+  },
+  "carve": [
+    {
+      "x0": 8,
+      "y0": 3,
+      "x1": 8,
+      "y1": 18
+    },
+    {
+      "x0": 2,
+      "y0": 8,
+      "x1": 14,
+      "y1": 8
+    },
+    {
+      "x0": 2,
+      "y0": 14,
+      "x1": 14,
+      "y1": 14
+    },
+    {
+      "x0": 2,
+      "y0": 8,
+      "x1": 2,
+      "y1": 14
+    },
+    {
+      "x0": 14,
+      "y0": 8,
+      "x1": 14,
+      "y1": 14
+    },
+    {
+      "x0": 6,
+      "y0": 2,
+      "x1": 10,
+      "y1": 3
+    },
+    {
+      "x0": 6,
+      "y0": 17,
+      "x1": 10,
+      "y1": 18
+    },
+    {
+      "x0": 4,
+      "y0": 11,
+      "x1": 5,
+      "y1": 11
+    }
+  ]
+}
