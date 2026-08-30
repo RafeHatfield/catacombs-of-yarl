@@ -373,6 +373,94 @@ present, correct, world-placed, and unrepresentable — which is the same law as
 this report, arriving on the one clause (§7.1) that was supposed to be carried by *linear
 elements that still read at 1×*.
 
+## 9. THE GATE'S RULINGS, AND WHAT WAS DONE WITH EACH
+
+Rafe walked it on the SE. Five items came back. Four were executed; the fifth is a document.
+
+### (1) *"South faces workable in kind — but walls have opted out of history."* — DONE
+
+Aging at the base courses, keyed to `TrafficField`: the floor's own accumulated-traversal field,
+in which vaults and shrines sit at **exactly zero**, so a wall beside a route ages and a sealed
+room's wall stays sharp — and sharpness then MEANS something. **A wall's traffic is not its own:**
+nobody walks on a wall, so the age of a reveal is read from the floor cell it faces, which is the
+same cell §6.5 measures it against.
+
+Patina, scuff and arris-rounding. **The polish half is expressed as FORM, not as a pale value
+lift** — §8.2.1 banned that for the floor's channel and the floor session paid for the lesson
+twice, so four hundred years of shoulders arrive as a rounded arris and the grime arrives as
+darkening. Neither asks the lamp for permission. Bible §8.2.2.
+
+Measured as an **A/B against an ageless build of the same family**, so every lighting term cancels
+rather than being modelled:
+
+| age | n | Weber | levels | delivered course value | vs the 0.1440 reference |
+|---:|---:|---:|---:|---:|---|
+| 1 | 4 | 0.048 | 0.75 | 16.5 | below — *deliberately* |
+| 2 | 3 | 0.134 | 7.52 | 51.1 | just below |
+| 3 | 3 | **0.181** | **12.23** | 46.9 | **above** |
+
+Monotonic, correctly signed everywhere, and sealed cells flat to **0.0000**. Ages 1 and 2 sitting
+under the reference is not a shortfall: light traffic on a remote branch should be almost nothing,
+and a wall that is visibly grimy everywhere has stopped saying where people walk.
+
+⚠ **The first version of this instrument was wrong and its own numbers said so.** It compared the
+base band against the course above it in the same cell, claiming they were illumination-matched
+"because they are the same cell". They are not — the base is the SOUTHERN half and the lamp is to
+the south — and it returned Weber values scattered from −0.57 to +0.31 with the sign flipping
+between neighbours. It would have been read as *the aging does not work*. The A/B replaced it.
+
+### (2) Void gate DEFERRED; the comb/spike marks — DONE
+
+**They were bindings on top planes.** `lash` is an iron strap with three rope turns across it,
+which at 32 px is a comb; `strap` is the plain bar, the spike; `patch` is four sawn-grain strokes,
+a second comb. Three blind seats had described the first without being told anything was there —
+*"a vertical post with three horizontal crossbars"*, *"a stake or rack"* — and all three said it
+was holding nothing. Removed; bindings are face-only. Bible §8.3.1a, with what it costs: **a wall
+mass seen from above now shows no orc work at all.**
+
+The new requirement — *wall mass beats void by a readable margin* — is measured in
+`MASS-READ-REMEDIES.md` §0, and the measurement disagrees with the diagnosis in a way worth
+reading before ruling: **wall-versus-void is 0.89 Weber, and wall-versus-FLOOR is 0.05.**
+
+### (3) §6.5 re-scoped — RECORDED
+
+Written into the bible as a standing-distance law, with the original clause kept beneath it in
+full. `no authored chase past the ladder` is now a line in the composer, not an intention.
+
+### (4) The §3 mask collapse — FIXED, as a correctness bug
+
+`WallMaskPolicy` in the **logic** layer, where the suite can assert the invariant across all
+sixteen masks at once. It was presentation-only arithmetic, which is exactly why nothing could
+reach it and why it broke silently. Four tests, exhaustive over the mask space rather than over
+the two values that happened to be wrong, and **shown to fail against the old value before being
+believed**.
+
+### (5) Mass-read at distance — `MASS-READ-REMEDIES.md`
+
+Three remedies, delivered numbers at the standing case and at 3–4 tiles, costs, laws touched. The
+headline: **the rig cannot fix it** (the pipeline is multiplicative, so the lamp scales wall and
+floor together — measured at five thousandths of Weber across a falloff change from 1.00 to 0.50),
+and **the remedy that can is free and already on disk.**
+
+## 9a. Two defects the instruments found, both mine, both after they were built
+
+- **The scuff reached 1.83 rungs** and pushed some faces brighter than their own top planes.
+  `two_planes` reported a minimum separation of **−0.329 rungs** and named the tile.
+- **And that tile was an ID COLLISION.** The aged face set is 108 tiles and the id blocks were
+  spaced 100, so face ids ran into `top_h` and **eight face tiles were drawing top-plane files** —
+  a top plane's material laid where a reveal should be. The count was right, `missing=0` was
+  right, the edge check was right, and the picture looked like a wall. Nothing else in the
+  apparatus would have said so.
+
+## 9b. And a scene that cannot exercise the thing it is used to test
+
+**The corridor review scene's traffic field is exactly zero.** A symmetric cross of one-wide
+corridors with no rooms and no dead ends gives `TrafficField` nothing to accumulate, so no
+traffic-keyed system can be exercised there — not the wall's aging, and **not the floor's wear
+either**. That reaches backwards into every round that used it. `tier1_wall_standing` is the gate
+geometry with the player at the chokepoint mouth, so a number about the standing case is taken
+standing.
+
 ## 8. State
 
 - **§6.5 vs the ratified rig — RULING TRIGGER, open.** Three remedies named in `STACK-FINDING.md`,

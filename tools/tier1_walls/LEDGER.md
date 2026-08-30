@@ -23,7 +23,9 @@ token batch to show willing.
 | 1 | blind seats | 4 (W1, W2, W3, W4) | VALID — plant caught on axis |
 | 2 | rebuild after the grain fix + bond stagger | — | seats W1, W2 — VALID |
 | 3 | rebuild after ink + two-scale grain | — | seats W1, W2 — **VOID**, the plant was missed on axis |
-| 4 | rebuild at void_ring 1 | — | seats W1, W2 — the build offered to the gate |
+| 4 | rebuild at void_ring 1 | — | seats W1, W2 — VALID. **Walked by Rafe on the SE; five rulings returned.** |
+| 5 | the gate's items: mask fix, tops cleaned, aging keyed to traffic | 162 tiles + 3 void | seats W1, W2 — W1 WITHHELD by the new rule, no plant verdict |
+| 6 | rebuild after the ID-COLLISION fix | 162 tiles + 3 void | seats W1, W2 — the build offered after the rulings |
 
 ## 2. The captures
 
@@ -48,6 +50,10 @@ holds this together* would be answered with nothing and the answer would look de
 | `r11_{family,plant}.png` | after ink + two-scale grain | round 3 — VOID |
 | `r12_{family,plant}.png` | after void_ring 2 → 1 | **the build offered to the gate**, round 4 |
 | `rig_{ratified,f070,f050,r065,r080}.png` | rig probe | evidence for a ruling, not a proposal |
+| `r13_family.png` | first build with aging + the §3 mask fix | age keyed, `age0..3=2/11/7/4` |
+| `r14_{family,ageless}.png` | the A/B pair | every lighting term cancels between them |
+| `r16_standing*.png` | the standing station | where the standing-case numbers are taken |
+| `r17_standing{,_mat,_ageless}.png`, `r17_plant.png` | after the ID fix | **the build offered after the rulings**, both arms |
 
 ## 3. The instruments, and the four bounds that were wrong
 
@@ -83,6 +89,11 @@ and it is listed because a discarded construction is the cheapest thing a later 
 | a three-deep mass in the gate scene | two rings of stone and no void — the scene did not contain its own subject | 66 void cells, 0 in view |
 | a seat crop that trimmed the HUD | it trimmed the void with it | seat W1: *"the image contains no beyond"* |
 | radius 8.0 / falloff 0.45 rig arm | returned an all-zero capture; not chased, because falloff at the ratified radius already answered the question | `rig_r080.log` |
+| bindings on top planes | ruled out at the gate — the comb and the spike. §8.3.1 outranks §7.1 on a plane that carries no incident | three seats: *"it is holding nothing"* |
+| a within-cell age statistic | the base band and the course above it are half a tile apart ALONG the lamp's gradient, not illumination-matched | Weber scattered −0.57..+0.31, sign flipping between neighbours |
+| scuff at 1.83 rungs | pushed some faces brighter than their own top planes | `two_planes` at −0.329 rungs |
+| id blocks spaced 100 | the aged face set is 108 tiles; eight of them collided with `top_h` and drew top-plane files | the same `two_planes` failure, one layer down |
+| the corridor scene as an aging instrument | its traffic field is exactly ZERO | `r15_choke.log` age map: all `0` |
 
 ## 5. The rig probe
 
