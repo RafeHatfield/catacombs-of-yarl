@@ -166,7 +166,36 @@ check() {   # a name, and the pattern that proves it
 #   THE FLOOR ACTUALLY LAID. `missing=0` and all three cross-checks green, ON THE HANDSET. The old
 #   check could not see whether a single tile had been placed, let alone whether the engine
 #   reproduced the composer's bond arithmetic, its material arithmetic and its finished pixels.
-check "booted the review scene"        "corridor scene: tier1_floor_review"
+# THE SCENE IS WHATEVER THIS BUILD DECLARED, not a name frozen in this file. Hard-coded, it
+# reported MISS for a build that had booted exactly the scene it was told to — and the operator's
+# first reading of that was "my build is broken" rather than "this check is out of date".
+# Set TIER0_SCENE the same way the build did and the expectation follows it.
+EXPECT_SCENE="tier1_floor_review"
+if [ -n "${TIER0_SCENE:-}" ]; then
+  EXPECT_SCENE="$(basename "${TIER0_SCENE%.json}")"
+fi
+check "booted the review scene"        "corridor scene: $EXPECT_SCENE"
+
+# ⚠ IS THIS EVEN THE BUILD YOU MADE? Two sessions building review apps share one bundle id, and
+# the last install silently wins. A wall session overwrote a floor gate build here and the only
+# symptom was the scene check going MISS — which reads as "your build is wrong" when the truth is
+# "your build is gone". The handset reports the commit it was built from; compare it to HEAD.
+DEVICE_COMMIT="$(grep -oE 'BUILD IDENTITY: commit=[0-9a-f]+' "$LOG" 2>/dev/null \
+                 | head -1 | sed 's/.*commit=//')"
+LOCAL_COMMIT="$(git rev-parse HEAD 2>/dev/null)"
+if [ -n "$DEVICE_COMMIT" ] && [ -n "$LOCAL_COMMIT" ]; then
+  if [ "${LOCAL_COMMIT#$DEVICE_COMMIT}" != "$LOCAL_COMMIT" ]; then
+    echo "  OK    the build on the handset is this working copy's HEAD"
+  else
+    echo "  MISS  THE HANDSET IS RUNNING A DIFFERENT BUILD"
+    echo "        device: $DEVICE_COMMIT"
+    echo "        HEAD:   $LOCAL_COMMIT"
+    echo "        Review builds from different sessions share a bundle id and the last install"
+    echo "        wins. Rebuild under your own TIER0_BUNDLE_ID rather than racing for the"
+    echo "        default one."
+    FAIL=1
+  fi
+fi
 check "incident overlays attached"     "floor overlays: cells="
 check "rig panel constructed"          "\[Tier1\] rig:start:"
 check "no losable state"               "losable-state check:"
@@ -198,7 +227,7 @@ grep -m1 "light rig:" "$LOG" | sed 's/^/  /' || true
 
 echo ""
 if [ "$FAIL" = "0" ]; then
-	echo "VERIFIED ON DEVICE — installed, launched, booted into tier1_floor_review, rig live."
+	echo "VERIFIED ON DEVICE — installed, launched, booted into $EXPECT_SCENE, rig live."
 	echo "log: ${LOG#$ROOT/}"
 else
 	echo "NOT VERIFIED — the app is installed but did not report what it should have." >&2
