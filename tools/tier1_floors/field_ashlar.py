@@ -755,7 +755,28 @@ def crack_field(cracks, w, h):
                 retired_system_median_px=4)
 
 
-def constant_pitch_lines(joints, w, h):
+def joint_contrast(img, joints):
+    """HOW DARK IS A JOINT AGAINST THE STONE BESIDE IT? — the ring, in the only form it took.
+
+    The campaign has banned the ring throughout and every instrument built for it looked at the
+    TILE GRID: does a treatment sit at a constant grid position. None of them asked the simpler
+    question a person asks first — is every STONE outlined — and so a device walk came back
+    reading as "outlined chips" while eleven rounds of instruments reported nothing.
+
+    §13.8's floor is 0.144. A joint is meant to be visible, so this cannot go to zero; what it
+    must not do is move without anyone noticing. It moved from 0.342 to 0.579 — 2.4x the floor to
+    4.0x — when the palette gained two rungs below the donors, because what a sheltered joint does
+    with somewhere darker to go is go there, everywhere the route is not. Off-route is most of a
+    floor.
+    """
+    L = np.asarray(img).astype(float)[..., 0]
+    jv, sv = float(np.median(L[joints])), float(np.median(L[~joints]))
+    w = (sv - jv) / max(sv, 1e-6)
+    return dict(joint=round(jv, 2), stone=round(sv, 2), weber=round(w, 4),
+                times_perceptual_floor=round(w / 0.144, 2))
+
+
+def constant_pitch_lines(joints, w, h, img=None):
     """HOW MUCH OF THE COURSING SITS AT THE ONE PITCH THAT CAN NEVER MOVE?
 
     A blind seat found this and culled for it, in one sentence:
@@ -777,6 +798,19 @@ def constant_pitch_lines(joints, w, h):
 
     Reported as the share of full-width lines sitting at the tile phase. Two courses per tile puts
     it at 0.5. It cannot reach 0 without abandoning runtime addressing.
+
+    ⚠ AND THE SHARE ALONE IS BLIND, which cost a device gate. This instrument reported a steady
+    55% for eleven rounds and never once asked HOW DARK those lines are — so when the palette
+    gained two rungs below the donors and every sheltered joint dropped from 75.02 to 48.56, the
+    count did not move and the floor came back from the handset reading as OUTLINED CHIPS.
+    Measured: the full-width lines went from a Weber contrast of 0.103 against the stone — BELOW
+    §13.8's floor of 0.144, and therefore absent — to 0.247, which is 1.7x the floor and a line
+    the eye is obliged to see.
+
+    §13.8 cuts both ways. It rules that a signal below the perceptual floor is absent; the
+    corollary, which nothing had measured until now, is that pushing an unwanted artefact ACROSS
+    that floor makes it appear. So the amplitude is reported beside the count, and it is the
+    amplitude that has a threshold.
     """
     full = np.where(joints.mean(axis=1) > 0.8)[0]
     if not len(full):
@@ -788,10 +822,28 @@ def constant_pitch_lines(joints, w, h):
             lines.append(int(y))
         last = y
     at = [y for y in lines if (y % T) in (0, T - 1)]
+
+    # HOW DARK IS THE LINE, against the stone it crosses? This is the half that was missing, and
+    # it is the half with a threshold: the count cannot go to zero and never could, but the
+    # CONTRAST can be kept under §13.8's floor, where an unavoidable line is an invisible one.
+    contrast = None
+    if img is not None and lines:
+        L = np.asarray(img).astype(float)[..., 0]
+        stone = float(np.median(L[~joints]))
+        vals = []
+        for y in lines:
+            band = L[max(y - 1, 0):min(y + 2, L.shape[0]), :]
+            vals.append(float(band.mean()))
+        line_v = float(np.mean(vals))
+        contrast = round((stone - line_v) / max(stone, 1e-6), 4)
+
     return dict(full_width_lines=len(lines), at_tile_phase=len(at),
                 share=round(len(at) / len(lines), 3),
-                floor=("cannot reach 0 while stone values are addressed at runtime: no stone may "
-                       "cross a horizontal tile boundary"))
+                contrast=contrast,
+                over_perceptual_floor=(None if contrast is None else bool(contrast >= 0.144)),
+                floor=("the COUNT cannot reach 0 while stone values are addressed at runtime — no "
+                       "stone may cross a horizontal tile boundary. The CONTRAST can and must "
+                       "stay under §13.8's 0.144, where an unavoidable line is an invisible one."))
 
 
 def skeleton_repeats(joints, w, h):
@@ -872,7 +924,8 @@ def measure(img, joints, w, h, transitions=(), seed=1337, cracks=None, dressing=
                 continuity=continuity(joints, w, h),
                 grid_hiding=grid_hiding(img, joints, w, h, seed), banding=banding(joints),
                 skeleton=skeleton_repeats(joints, w, h),
-                constant_pitch=constant_pitch_lines(joints, w, h),
+                constant_pitch=constant_pitch_lines(joints, w, h, img),
+                joint_contrast=joint_contrast(img, joints),
                 cracks=crack_field(cracks, w, h) if cracks is not None else None,
                 joint_variation=joint_variation(img, joints, w, h, rung),
                 crossings=crossing_spread(joints, w, h))

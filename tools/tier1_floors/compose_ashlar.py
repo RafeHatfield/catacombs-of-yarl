@@ -1376,7 +1376,9 @@ def build_tile(n, e, s, w, mat, seed, drops=(0, 0), split_i=0):
     # So the bond keeps the dark joint it had, and the differential is spent the only way the
     # palette leaves room for: a SHELTERED joint is shallower, and an open one takes the arris off
     # the stones beside it instead of going darker, because it cannot.
-    depth = np.full((T, T), 0.42, dtype=float)
+    # Overridable so a diagnosis can cost alternatives without editing the file it is
+    # measuring. Production always reads the literal.
+    depth = np.full((T, T), globals().get('_JOINT_DEPTH_OVERRIDE', 0.42), dtype=float)
     for r, prof in bed_rows:
         depth[r, :] = 0.44 - prof * 0.09
     L = np.where(joints, stone * depth + rng.normal(0, 1.0, (T, T)), L)

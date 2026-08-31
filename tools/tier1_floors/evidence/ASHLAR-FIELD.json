@@ -1,5 +1,5 @@
 {
- "commit": "13274d746a765bc435287bec8c1466a8222d8c51",
+ "commit": "a79d92db8c3f2513433919b960b630420ec2addd",
  "grid": [
   16,
   16
@@ -148,7 +148,15 @@
      "full_width_lines": 33,
      "at_tile_phase": 17,
      "share": 0.515,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.2625,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "joint": 75.0,
+     "stone": 114.0,
+     "weber": 0.3421,
+     "times_perceptual_floor": 2.38
     },
     "cracks": {
      "marks": 13,
@@ -244,7 +252,15 @@
      "full_width_lines": 33,
      "at_tile_phase": 17,
      "share": 0.515,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.2038,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "joint": 75.0,
+     "stone": 114.0,
+     "weber": 0.3421,
+     "times_perceptual_floor": 2.38
     },
     "cracks": {
      "marks": 13,
@@ -340,7 +356,15 @@
      "full_width_lines": 33,
      "at_tile_phase": 17,
      "share": 0.515,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.2774,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "joint": 61.0,
+     "stone": 114.0,
+     "weber": 0.4649,
+     "times_perceptual_floor": 3.23
     },
     "cracks": {
      "marks": 13,
@@ -432,7 +456,15 @@
      "full_width_lines": 33,
      "at_tile_phase": 17,
      "share": 0.515,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.2634,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "joint": 75.0,
+     "stone": 114.0,
+     "weber": 0.3421,
+     "times_perceptual_floor": 2.38
     },
     "cracks": {
      "marks": 13,
@@ -524,7 +556,15 @@
      "full_width_lines": 17,
      "at_tile_phase": 17,
      "share": 1.0,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.2586,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "joint": 75.0,
+     "stone": 114.0,
+     "weber": 0.3421,
+     "times_perceptual_floor": 2.38
     },
     "cracks": {
      "marks": 13,
@@ -621,7 +661,15 @@
      "full_width_lines": 31,
      "at_tile_phase": 17,
      "share": 0.548,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.2628,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "joint": 61.0,
+     "stone": 114.0,
+     "weber": 0.4649,
+     "times_perceptual_floor": 3.23
     },
     "cracks": {
      "marks": 13,
@@ -718,7 +766,15 @@
      "full_width_lines": 31,
      "at_tile_phase": 17,
      "share": 0.548,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.418,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "joint": 48.0,
+     "stone": 114.0,
+     "weber": 0.5789,
+     "times_perceptual_floor": 4.02
     },
     "cracks": {
      "marks": 13,
@@ -815,7 +871,15 @@
      "full_width_lines": 31,
      "at_tile_phase": 17,
      "share": 0.548,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.2647,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "joint": 61.0,
+     "stone": 114.0,
+     "weber": 0.4649,
+     "times_perceptual_floor": 3.23
     },
     "cracks": {
      "marks": 13,
@@ -912,7 +976,15 @@
      "full_width_lines": 31,
      "at_tile_phase": 17,
      "share": 0.548,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.2495,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "joint": 61.0,
+     "stone": 114.0,
+     "weber": 0.4649,
+     "times_perceptual_floor": 3.23
     },
     "cracks": {
      "marks": 13,
@@ -1007,7 +1079,15 @@
     "full_width_lines": 31,
     "at_tile_phase": 17,
     "share": 0.548,
-    "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    "contrast": 0.2653,
+    "over_perceptual_floor": true,
+    "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+   },
+   "joint_contrast": {
+    "joint": 61.0,
+    "stone": 114.0,
+    "weber": 0.4649,
+    "times_perceptual_floor": 3.23
    },
    "cracks": {
     "marks": 13,
@@ -1105,7 +1185,15 @@
     "full_width_lines": 31,
     "at_tile_phase": 17,
     "share": 0.548,
-    "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    "contrast": 0.2475,
+    "over_perceptual_floor": true,
+    "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+   },
+   "joint_contrast": {
+    "joint": 75.0,
+    "stone": 114.0,
+    "weber": 0.3421,
+    "times_perceptual_floor": 2.38
    },
    "cracks": {
     "marks": 13,
