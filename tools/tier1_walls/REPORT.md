@@ -804,6 +804,121 @@ extended to enforce a day earlier, and the reason that code carries the comment 
 round came back VALID, so nothing had to be withdrawn. That is luck, not process, and the note
 stays here because a rule that is only followed when it is convenient was never a rule.
 
+## 9i. THE FOURTH RULING SET — the ring outline, and a rule that no longer depends on me
+
+### Ruling (1): `VOID_RING=1` is a §12.1 violation
+
+**Fixed by dropping it.** `void_ring: 0` now means *no void at all*: every wall cell is capped, and
+distant mass is dark because the lamp does not reach it rather than because a tile was authored
+dark. That is §6.3 in one line — assets receive light, they never depict it — and it is why this
+was the placement to change rather than a value to tune.
+
+**The instrument first, and it is proven two-sided.** `measure_ring_outline.py` holds the ring
+boundary to the bound this family already uses for every other boundary (`cap_seamless`,
+`edge_agreement`): **no more than 1.35× an ordinary cell boundary**. If the classification adds
+nothing to an ordinary edge, placement drew no line. Two-sided because this one starts life
+failing, and an instrument that only ever reds proves as little as one that only ever greens:
+
+| build | worst ring step | ordinary cell boundary | ratio | verdict |
+|---|---:|---:|---:|---|
+| shipped, `void_ring=1` | **7.283 levels** | 4.00 | **1.82×** | OUTLINE |
+| control — void repainted as cap | 0.883 | 7.32 | 0.12× | form |
+| **remedied, `void_ring=0`** | **0.231** | 4.00 | **0.06×** | **form** |
+
+And at the seat's own columns, which is the check that needs no instrument at all:
+
+```
+x=          300   305   310   311   312          498   501   502   503   506
+shipped     1.0   1.0   1.0   8.1   8.1          9.1   9.2   9.2   1.1   1.1
+remedied    8.0   8.0   8.1   8.1   8.1          9.1   9.2   9.2   9.2   9.3
+```
+
+Both 197px verticals are gone. The ordinary cell boundary is unmoved at 4.00, so nothing else
+moved with them.
+
+**What it cost, stated plainly.** `W(wall, void)` and `L(wall, void)` now return `nan`, and that is
+correct rather than broken: **the gate's requirement that *wall mass beats void by a readable
+margin* is undefined, because there is no void to beat.** The deferred void gate has no candidates
+left to rule on — the three are still composed and are no longer placed, so the rig panel's VOID
+row switches nothing. If the walk wants the void back, `--void-ring 1` restores it and the outline
+with it; that is the trade, and it is Rafe's.
+
+What it did **not** cost: `L(cap, floor)` at the standing case is **19.27 levels**, unchanged, so
+the cap pass's accepted result survives the remedy intact. All nine instruments still pass on the
+remedied family.
+
+### Three corrections to the instrument, and one to the engine
+
+- **The engine's own counters caught an inversion.** Setting `ring = 1` at `void_ring=0` while the
+  test still read `ring > cfg.VoidRing` is `1 > 0` — so *every* wall cell became void and the
+  capture came back `cap=0+216void`, the exact inverse of the intent. Whether a cell is void is
+  one question and it is now asked once, at the predicate.
+- **And the Python re-derivation had the identical bug**, which matters more: `measure_wall_amplitude.predict`
+  exists to cross-check the engine, and a cross-check that shares the engine's bug agrees with it
+  and reports nothing. Fixed on both sides, separately.
+- **The median hid the defect.** Six of thirteen ring boundaries carry a 6–7 level step and seven
+  carry none, because past the lamp the capped side is as black as the void. The median was 1.0
+  and the first version said *form* about a defect a blind seat had already found unaided. **You
+  do not average an outline away** — one ruled line is a ruled line.
+- **A cell that carries a face is excluded.** Where the south neighbour is open the cell holds the
+  reveal as well as the top, so its edges carry §3's two-plane separation — which §12.1 names as
+  **form**, in the same clause that bans the outline. Counting it reported a 5.7-level "outline"
+  on the *remedied* build and sent me hunting a second defect that was the wall doing its job.
+- **The denominator was interior noise.** Past the lamp an interior step is 0.55 levels — 8-bit
+  rounding — so dividing by it made a 0.88-level boundary look like 1.59× and kept the remedied
+  build "dirty". The honest denominator is the same kind of edge with no classification change
+  behind it.
+
+### It is NOT one bug on two surfaces
+
+Read off the floor session's own branch (`6926f449`) rather than by correspondence, which is the
+better evidence anyway. **They tested the shared hypothesis and discarded it by bisect:**
+
+> *"IT IS NOT THE §12.1 OVERLAY. Same scene captured with overlays on and off […] 0-1px 27.1% |
+> 1-2px 27.2% | 2-4px 27.9% | 4-8px 28.1% | 8-16px 29.2% | 16-32px 27.3%. Flat across every band
+> […] A treatment at a constant grid position concentrates at the boundary and falls away. This
+> does not. The overlay is real geometry. Exonerated."*
+
+Their keyline is **joint amplitude driven globally** by PR #161's two extra rungs; mine is a
+genuine grid-position discontinuity from a per-cell classification. Same word, different
+mechanisms, and my own overlays-off capture agrees on my side too — identical pixels with the
+floor overlay omitted, so nothing the overlay draws is involved here either.
+
+**⚠ AND THERE IS A COST COMING THE OTHER WAY.** Their only remedy that clears is option B, *revert
+the two rungs* — and their own report names the consequence: *"The rungs were also bought for
+§6.5's WALL FACE, which needs 48.56-61.79 and cannot be authored without them."* **This family's
+face is rung 1 = 61.79.** If B is ruled, the landed wall face loses the value it is authored at
+and this family needs recomposing. That is a cross-thread ruling, not mine, and it is flagged
+before it is made rather than discovered after.
+
+### Ruling (2): the withholding is structural now
+
+**The plant seat runs first, and a family seat is not run at all until its verdict is on disk and
+CAUGHT.** The previous rule withheld family answers from the *console* and wrote the record anyway
+— which stops an accident and not a decision, and the decision is what happened. Now there is no
+file to read early because the seat has not been run.
+
+This is the concurrent floor session's design (their round 20: *"the PLANT SEAT NOW RUNS FIRST, so
+a void round costs one seat instead of two and there is nothing to read early"*), adopted rather
+than reinvented. Theirs still lands candidate transcripts as `.WITHHELD.txt`; under this ruling
+nothing lands at all. It is also cheaper — a void round now costs one seat instead of two.
+
+Proved by making it refuse, twice:
+
+```
+$ run_seats.py W1 --round 99 ...
+REFUSING: round 99 has no plant verdict on disk, and a family seat is not run before one
+exists (§4). Run W2 for this round first:
+
+$ run_seats.py W1 W3 --round 98 ...        # with a MISSED plant verdict planted on disk
+== W1 NOT RUN: the plant was MISSED — round 98 is VOID.
+   §4: a void round's findings are not read, so they are not COLLECTED.
+   Nothing for this seat is written, and there is no file to read early.
+```
+
+and confirmed by listing the directory afterwards: only `r98_W2.json` exists. There is no `PENDING`
+state any more — a family record exists exactly when its round is VALID.
+
 ## 8. State
 
 - **§6.5 vs the ratified rig — RULING TRIGGER, open.** Three remedies named in `STACK-FINDING.md`,

@@ -200,7 +200,46 @@ def main():
     commit = subprocess.run(["git", "-C", REPO, "rev-parse", "HEAD"],
                             capture_output=True, text=True).stdout.strip()
 
+    # ── THE PLANT RUNS FIRST, AND A FAMILY SEAT CANNOT RUN WITHOUT ITS VERDICT ────────────────
+    #
+    # RULED (Rafe, 2026-08-31): *"the round-result file does not exist on disk until the plant
+    # verdict lands, so it cannot be read early even deliberately."*
+    #
+    # The previous rule withheld family answers from the CONSOLE and wrote the record anyway,
+    # which stopped an accident and not a decision — and the decision is what happened: I read
+    # `r8_W1.json` straight out of the JSON before the plant seat returned, going around my own
+    # guard. The round came back VALID, so nothing had to be withdrawn. That is luck, not process.
+    #
+    # This is the concurrent floor session's design, adopted rather than reinvented (their round
+    # 20: *"the PLANT SEAT NOW RUNS FIRST, so a void round costs one seat instead of two and there
+    # is nothing to read early"*). Their candidate transcripts still land as `.WITHHELD.txt`;
+    # under this ruling nothing lands at all, because the family seat is never RUN before the
+    # control clears. A file that does not exist cannot be read deliberately.
+    #
+    # It is cheaper too: a void round now costs one seat instead of two.
+    a.seats = sorted(set(a.seats), key=lambda s: (s != "W2", s))
+    if any(s != "W2" for s in a.seats) and "W2" not in a.seats:
+        pp = os.path.join(OUT, "r%d_W2.json" % a.round)
+        if not os.path.exists(pp):
+            raise SystemExit(
+                "REFUSING: round %d has no plant verdict on disk, and a family seat is not run "
+                "before one exists (§4). Run W2 for this round first:\n"
+                "    python3 %s W2 --round %d --family %s --plant %s"
+                % (a.round, os.path.relpath(__file__, REPO), a.round, a.family, a.plant))
+
     for seat in a.seats:
+        # THE GATE, RE-READ FROM DISK FOR EVERY FAMILY SEAT rather than carried in a variable —
+        # so a plant that ran in this same invocation and MISSED stops the family seats behind it.
+        if seat != "W2":
+            pp = os.path.join(OUT, "r%d_W2.json" % a.round)
+            ctrl = json.load(open(pp)) if os.path.exists(pp) else None
+            if ctrl is None or not ctrl.get("caught"):
+                why = ("no plant verdict on disk" if ctrl is None
+                       else "the plant was MISSED — round %d is VOID" % a.round)
+                print("== %s NOT RUN: %s." % (seat, why))
+                print("   §4: a void round's findings are not read, so they are not COLLECTED.")
+                print("   Nothing for this seat is written, and there is no file to read early.")
+                continue
         for n, want in frozen.items():
             if sha256_of(os.path.join(EV, n)) != want:
                 raise SystemExit("REFUSING: %s changed while the round was running. Re-capture "
@@ -221,40 +260,19 @@ def main():
             print("   plant: culled=%s (not the test) ruin_named=%s -> %s"
                   % (culled, named, "CAUGHT ON AXIS" if rec["caught"]
                      else "MISSED — ROUND IS VOID"))
-        # ── THE ROUND'S VERDICT IS STAMPED INTO EVERY RECORD, AND FAMILY TRANSCRIPTS ARE
-        #    WITHHELD UNTIL THE CONTROL HAS CLEARED. ──────────────────────────────────────────
-        #
-        # §4 says a round whose plant is missed is VOID and its findings are NOT READ. That is a
-        # rule about a human's attention, and this file was doing nothing to help: it printed each
-        # seat's answers the moment they arrived, so a family transcript could be read — and acted
-        # on — before the plant seat had returned at all.
-        #
-        # It happened, twice, on the same day. Round 3 here had a reading of the island drafted
-        # into STACK-FINDING.md before its plant came back MISSED, and the concurrent floor
-        # session logged the identical defect in its own words: *"run_seats.py shows the family
-        # transcript before the plant verdict returns, and I read a VOID round's findings that
-        # way."* Withdrawing a quotation is more expensive than never printing it.
-        #
-        # So: a family seat's answers are printed only when a plant verdict for the same round is
-        # already on disk and CAUGHT. Otherwise the record is written — evidence is never
-        # withheld from the FILE — and the console says why it is not being shown.
+        # A record only ever reaches disk for a seat that was ALLOWED to run, and the gate above
+        # is the only thing that decides that. There is no PENDING state any more: a family
+        # seat's record exists exactly when its round is VALID.
         p = os.path.join(OUT, "r%d_%s.json" % (a.round, seat))
-        pp = os.path.join(OUT, "r%d_W2.json" % a.round)
-        control = json.load(open(pp)) if (seat != "W2" and os.path.exists(pp)) else None
-        if seat == "W2":
-            rec["round_verdict"] = "VALID" if rec["caught"] else "VOID"
-        elif control is None:
-            rec["round_verdict"] = "PENDING — no plant seat for this round yet"
-        else:
-            rec["round_verdict"] = "VALID" if control.get("caught") else "VOID"
+        rec["round_verdict"] = ("VALID" if rec["caught"] else "VOID") if seat == "W2" else "VALID"
         json.dump(rec, open(p, "w"), indent=2)
         print("   wrote %s   [round: %s]" % (os.path.relpath(p, REPO), rec["round_verdict"]))
-        if seat != "W2" and not str(rec["round_verdict"]).startswith("VALID"):
-            print("   ── answers WITHHELD: %s. §4 — a void round's findings are not read, and a"
-                  % rec["round_verdict"])
-            print("      pending one's have not earned being read yet. Run W2 for this round.")
+        if seat == "W2" and not rec["caught"]:
+            print("   ── ROUND %d IS VOID. No family seat will run, so no family record will"
+                  % a.round)
+            print("      exist for it. §4: a void round's findings are not evidence.")
             continue
-        for k in ("Q1", "Q2", "Q4", "Q6", "Q9", "Q10", "CULL", "RANK"):
+        for k in ("Q1", "Q2", "Q4", "Q6", "Q9", "Q10", "Q12", "CULL", "RANK"):
             if k in fields:
                 print("   %-5s %s" % (k, fields[k].splitlines()[0][:150] if fields[k] else ""))
 

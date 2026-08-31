@@ -340,7 +340,23 @@ public static class Tier1BoundaryWall
                 if (!tileLayer.TileSprites.TryGetValue((x, y), out var node) || node is not Sprite2D s)
                     continue;
 
-                int ring = RingOf(map, x, y, cfg.VoidRing);
+                // VoidRing == 0 MEANS NO VOID, and it is not a degenerate setting — it is the
+                // remedy for §12.1's ring outline. `RingOf` is a classification that changes at a
+                // cell boundary, so it puts a luminance step at a grid position; round 8's seat
+                // read the result as two ruled 197px verticals in the dark with nothing standing
+                // to explain them. At zero there is no classification and therefore no step: every
+                // wall cell is capped, and distant mass is dark because the lamp does not reach it
+                // rather than because a tile was authored dark (§6.3 — assets receive light, they
+                // never depict it). Short-circuited rather than expressed as a huge cap, because
+                // RingOf is O(r²) per cell.
+                //
+                // ⚠ THE PREDICATE, NOT THE RING. The first attempt set `ring = 1` at zero and left
+                // the test as `ring > cfg.VoidRing` — which is `1 > 0`, so every wall cell in the
+                // map became void and the capture came back `cap=0+216void`: the exact inverse of
+                // the intent, loudly, in the renderer's own counters. Whether a cell is void is
+                // one question and it is asked once, here.
+                bool isVoid = cfg.VoidRing > 0 && RingOf(map, x, y, cfg.VoidRing) > cfg.VoidRing;
+                int ring = isVoid ? cfg.VoidRing + 1 : 1;
                 bool southOpenCache = !map.IsWallTile(x, y + 1) && map.InBounds(x, y + 1);
 
                 // THE WINDOW THIS CELL SEES INTO THE FIELD — world position and nothing else. No
@@ -351,7 +367,7 @@ public static class Tier1BoundaryWall
                     $"{((y % cap.FieldTiles) + cap.FieldTiles) % cap.FieldTiles}";
 
                 int id;
-                if (ring > cfg.VoidRing)
+                if (isVoid)
                 {
                     voidCells++;
                     if (cap != null && vc < cap.Void.Count

@@ -28,6 +28,7 @@ token batch to show willing.
 | 6 | rebuild after the ID-COLLISION fix | 162 tiles + 3 void | seats W1, W2 — **VOID**, the plant missed on axis |
 | 7 | **the material arm as the family** (gate ruling 1) + the fixed corridor scene | 162 tiles + 3 void | seats W1, W2 — **VALID**, plant caught on axis with four hits |
 | 8 | **the cap pass** — one seamless field, 256 windows picked by world position; textured void | 165 wall tiles + 1024 cap windows | seats W1, W2 — **VALID**. Q12 answered *ground, unlit ground* |
+| 9 | **`void_ring: 0`** — the §12.1 ring outline removed at its source | 165 tiles, 0 void placed | plant first (the new structural rule), then family |
 
 ## 2. The captures
 
@@ -61,6 +62,8 @@ holds this together* would be answered with nothing and the answer would look de
 | `r18_corridor.png` | the material arm, `tier1_corridor_traffic` | the corridor scene with its traffic actually on |
 | `r21_{family,plant}.png` | **the cap pass**, gate scene | round 8; plant differs in the ruin and nothing else |
 | `r21_standing.png` | the cap pass at the standing station | where `L(cap,floor)` = 19.27 levels is taken |
+| `r22_{novoid,plant,standing}.png` | **the ring remedy**, `void_ring: 0` | round 9; the build the walk carries |
+| `r22_nooverlay.png` | same build, floor overlays OMITTED | the bisect: identical pixels, so the overlay draws none of it |
 
 ## 3. The instruments, and the SIX bounds that were wrong
 
@@ -77,6 +80,7 @@ holds this together* would be answered with nothing and the answer would look de
 | `cap_seamless` | seam ≤1.35× an interior step | **0.95** | 13.65 → FIRES |
 | `cap_not_featureless` | ≥16.1 levels/window, ≤53.8% modal | 17.34 / 0.437 | 1.0 / 1.0 → FIRES |
 | `cap_field_scale` | window sd ≥5, no tile-pitch spike | 8.46 / **1.13** | 6.54 → FIRES |
+| `ring_outline` | ring boundary ≤1.35× an ordinary cell boundary | **0.06×** (remedied) | 1.82× shipped → FIRES |
 
 **Six** bounds were rewritten because their plants came back SILENT or because they failed the
 legal family. Each correction is recorded in the code beside the test it fixed. See `REPORT.md`

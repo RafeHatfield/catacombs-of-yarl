@@ -1,0 +1,60 @@
+{
+  "png": "tools/tier1_walls/evidence/r21_family.png",
+  "void_ring": 1,
+  "bound": 1.35,
+  "bands": [
+    {
+      "band": "beyond 4",
+      "n_ring": 6,
+      "n_peer": 42,
+      "ring_step": 7.283,
+      "over_bar": 6,
+      "peer_step": 4.003,
+      "interior_step": 0.554,
+      "ring_over_peer": 1.819,
+      "outline": true,
+      "worst_pair": {
+        "step": 7.283,
+        "a": [
+          9,
+          9
+        ],
+        "b": [
+          10,
+          9
+        ],
+        "range": 6.0
+      }
+    }
+  ],
+  "outline": true,
+  "control": {
+    "bands": [
+      {
+        "band": "beyond 4",
+        "n_ring": 6,
+        "n_peer": 42,
+        "ring_step": 0.883,
+        "over_bar": 0,
+        "peer_step": 7.316,
+        "interior_step": 0.554,
+        "ring_over_peer": 0.121,
+        "outline": false,
+        "worst_pair": {
+          "step": 0.883,
+          "a": [
+            6,
+            8
+          ],
+          "b": [
+            7,
+            8
+          ],
+          "range": 7.0
+        }
+      }
+    ],
+    "clean": true
+  },
+  "proven": true
+}

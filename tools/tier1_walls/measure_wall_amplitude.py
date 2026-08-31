@@ -77,8 +77,13 @@ def predict(spec, man, age_map=None):
         for x in range(w):
             if not wall[y][x]:
                 continue
-            ring = ring_of(wall, w, h, x, y, cap=ring_cap)
-            if ring > ring_cap:
+            # ⚠ ZERO MEANS NO VOID, and `ring > ring_cap` reads it as ALL void — which is the same
+            # inversion the renderer shipped for one capture (`cap=0+216void`). Whether a cell is
+            # void is one question; asked here the way `Tier1BoundaryWall` asks it, so the
+            # cross-check below can still catch a disagreement instead of sharing the bug.
+            is_void = ring_cap > 0 and ring_of(wall, w, h, x, y, cap=ring_cap) > ring_cap
+            ring = 1 if not is_void else ring_cap + 1
+            if is_void:
                 out[(x, y)] = ("void", man["table"]["void"]["0"])
                 continue
             south_open = (0 <= y + 1 < h) and not wall[y + 1][x]

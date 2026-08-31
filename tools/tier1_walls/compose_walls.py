@@ -128,7 +128,13 @@ ASSETS_REL = "src/Presentation/assets/tier1_walls"
 # edge check was right, and the picture looked like a wall.
 IDS = dict(face=9400, top_h=9600, top_v=9700, void=9900)
 VARIANTS = 3   # free interior variants per key pair - see the compose loop
-VOID_RING = 1  # rings of stone drawn before the void; see the manifest note
+VOID_RING = 1  # rings of stone drawn before the void; see the manifest note. 0 = NO VOID AT ALL.
+#
+# ⚠ ZERO IS A REAL SETTING AND IT IS THE ONE UNDER TEST. Round 8's seat found the ring boundary as
+# two ruled 197px verticals in the dark, and Rafe ruled it a §12.1 violation: an outline that
+# PLACEMENT bakes. `void_ring=0` removes it at the source — every wall cell is capped, and what
+# makes distant mass dark is the lamp not reaching it rather than a tile authored to be dark.
+# That is §6.3 in one line: assets receive light, they never depict it.
 
 # ── AGE, AT THE BASE COURSES ──────────────────────────────────────────────────────────────────
 #
@@ -707,7 +713,12 @@ if __name__ == "__main__":
                          "overwrite the candidate it is a control for")
     ap.add_argument("--void", default="18,10,0",
                     help="three near-black void candidates; Rafe rules one at the gate")
+    ap.add_argument("--void-ring", type=int, default=VOID_RING,
+                    help="rings of capped stone before the void. 0 = NO VOID: every wall cell is "
+                         "capped and distance alone makes it dark (§6.3). Under test as the "
+                         "remedy for the §12.1 ring outline.")
     a = ap.parse_args()
+    globals()["VOID_RING"] = a.void_ring
     if a.ageless:
         globals()["AGES"] = 1
     out = os.path.join(REPO, ASSETS_REL if a.arm == "material" else ASSETS_REL + "_" + a.arm)
