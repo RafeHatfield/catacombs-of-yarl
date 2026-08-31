@@ -1,0 +1,112 @@
+Looked at A.png at 1:1, then magnified and flat-field-normalised the lighting to separate surface from lamp. 750×600. Figure at ~(405,175).
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone paving — rectangular slabs, pale sand colour, laid in running bond with dark recessed joints. That is as far as I can honestly go: I can name the *format* confidently and the *material* only by assumption. Nothing on the faces tells me stone rather than concrete, plaster screed, or fired clay.
+
+**Q1_WHY:** The joint lattice at x 310–750, y 0–272 is unmistakable — courses ~60px tall, slabs of varying width (full, half, quarter) offset course to course, joints 3–4px and consistently darker. But the slab *faces* under the lamp (x 374–502, y 196–272 magnified 7×) are a single flat cream fill with at most a one-pixel lighter top edge. No grain, no bedding, no pitting, no tonal split between slabs. I'm reading the mortar, not the stone.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 502–566. **Nothing about the ground influenced that.** The walls chose it for me — it's the only single-tile passage in frame and it reads as a route by geometry alone. The paving inside that corridor mouth (x 502–566, y 272–336) is identical in tone, joint width and surface to the paving I'd be leaving behind at x 374–500, y 140–260. If I'd been shown the ground alone with the walls stripped out, I'd have had no reason to prefer it over west or east.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has cracked and nothing else. A branching hairline fracture network runs across it — but the slabs are square-edged, fully seated, uniformly coloured, unchipped on their faces, uncovered, unstained, and completely undisturbed. Nothing has been dropped on it, spilled on it, swept across it, dragged over it, repaired into it, or worn off it. It reads as a floor that has been sitting still.
+
+**Q3_WHY:** The cracks are real and well done — a continuous 1px staircase line enters at ~(430,0), runs down to ~(400,140), branches, and one arm crosses eight or nine separate slabs to ~(620,265). It crosses joints without breaking, which means it's an overlay drawn on top of the tile grid rather than per-tile decoration. That's the only damage. Against it: joint width is constant everywhere I sampled; no slab is lower, tilted, or lipped against its neighbour; the floor region x 310–750, y 0–272 contains 3,928 unique colours but they all sit in a **single hue band, 20°–60°** — there is not one differently-coloured thing on this floor. No repair timber, no rope, no pin, no rust, no soot, no dust drift at the wall base. For a place where a garrison patches everything with salvage, the floor has been patched zero times.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes, three things, and only one of them is a compliment.
+
+1. **The hard-edged diagonal dither bands** at x 320–392, y 150–270 and x 490–560, y 200–272. Stepped 45° light shafts rendered as chunky ordered dither. At 1:1 they read as texture on the floor, not as light, and they are the loudest thing on the walkable surface — louder than anything actually on the stone. My eye goes there first every time and it's an artefact of the lighting pass.
+2. **The 45° hatch stamp.** Once magnified and brightened, the same cluster of 4–6 parallel diagonal scratch lines appears on dozens of slabs across x 600–750, y 0–260 and x 130–300, y 25–145. Same angle, same spacing, same count. It's one motif dealt out repeatedly.
+3. **The blankness of the four slabs around the figure** — x 374–500, y 140–260. My eye keeps going back because it expects to find something there and there is nothing.
+
+---
+
+**Q5: MADE, OR REPEATED?**
+**Made** — for the room. But the corridor fails it outright, and I want that on the record rather than buried.
+
+The room's joint layout does not repeat: I cross-correlated every 64px floor cell against every other and the best genuine floor pair scores 0.64. Slab widths vary, course offsets vary, and the crack network is authored across the grid. That is a made surface.
+
+The corridor is not. Cells at x 502–566 for y = 272, 336, 400, 464, 528 correlate 0.45–0.77 against each other *in raw pixels, through a steep lighting falloff* — and a 20px patch at (502,304) matches (502,368) at **r = 0.995**. It's one 64px tile stacked five times, same joint skeleton, same chip mark. The one stretch of floor the level pushes you down is the one stretch that's a photocopy.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.**
+
+Merely competent. The lighting is handsome, the crack authoring is genuinely better than average, and nothing here is broken. But it is not good. Good would mean the floor carried information — where people go, how long it's been there, what was done to it. This floor is a well-lit paving diagram.
+
+---
+
+**Q7: AT THE SIZE SHOWN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+**The faces are blank at 1:1.** Excluding the joints and the crack overlay as instructed, there is nothing legible on the face of a single slab anywhere in this image at played size.
+
+Legible at 1:1: the joint lattice, the crack lines, the diagonal dither bands. All three are excluded or are lighting.
+Only on magnification: the 45° hatch clusters; short horizontal ruled/tally lines; heavy black cross and "T" glyphs; small incised mark clusters. Some of it is nice work — the tally-like glyphs around (220–250, 88–105) suit a ledger-underworld exactly. None of it survives to the screen.
+
+**Q7_WHY:**
+- Checked at **1:1** — x 374–502, y 196–272 (brightest paving, directly beside the lamp); x 330–378, y 190–212; x 392–440, y 216–240; x 456–504, y 152–176. A joint-free 30×16 window at (389,216) has a total luminance range of 53, and virtually all of that is the lamp's own falloff across 30px, not surface. High-frequency content inside joint-free bright faces is dither noise, not form.
+- Had to **magnify and brighten** — x 560–750, y 0–270 at 5× and ×9 gain; x 110–320, y 0–150 at 5× and ×6 gain; x 490–580, y 270–600 at ×7. The far-east floor at x 600–740, y 20–250 sits at mean luminance **14/255, 95th percentile 19**. That is black on a phone. Every authored mark on this floor is in there.
+
+The detail and the light are in complementary places. Where you can see, there is nothing; where there is something, you cannot see.
+
+---
+
+**Q8: HOW OLD IS THIS FLOOR?**
+It reads as **laid within living memory and never walked on** — call it a decade or two, in a building that has since settled. That is flatly at odds with the fiction, which wants ground older than the records.
+
+It reads as **one age everywhere.** I can find no part that is older or newer than any other — not the corridor, not the alcove, not the room.
+
+**Q8_WHY:** From x 374–502, y 140–272 and x 502–566, y 272–336, magnified. Slab corners are sharp right angles; edges are straight with no rounding, no cupping, no lipping of one slab above its neighbour; joint width is uniform across the whole visible floor, including at the corridor mouth where the funnelling geometry should have ground the joints wide and shallow. Old paving loses its arrises first — these have all of theirs. The only ageing evidence is the crack network (x 430,0 → 620,265), and cracks are settlement, which happens to new floors too. There is no *use* evidence anywhere.
+
+---
+
+**Q8B: MARK THE MOST-WALKED GROUND**
+**NO BASIS.**
+
+I cannot mark it. The floor surface carries no traffic signal I can read.
+
+**Q8B_WHY:** I flat-field-normalised the image (divide by a 45px blur) to strip the lamp out, masked off joints and cracks, and measured mean face brightness in 48px blocks across the whole lit room, x 310–750, y 0–272. Values run 0.77 to 1.65 — a wide spread — but the spread maps **exactly onto the diagonal shadow shafts**, not onto any path: the lows (0.77, 0.85, 0.87 at x 454–598, y 0–48) sit precisely where the occlusion band falls, and the highs sit in open light. Remove the lighting and the faces are uniform. Beyond that: joint width is constant, so no ground-down grout; there is no debris anywhere to be absent from a path; and the floor is monochrome within one hue band, so there is no polish, no darkening, no dust-tone shift to read.
+
+Confidence: **high** that the signal genuinely isn't there, rather than that I failed to find it. I checked value, hue, saturation, joint width, and high-frequency texture separately, and all four are flat.
+
+---
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES, TO THE EDGE OF YOUR LIGHT?**
+No. The ground told me nothing. I read the route off the walls.
+
+The light reaches roughly 230px from the figure — comfortably far enough to show me a route if one were drawn. Within that radius I can see south to about y 340, east to about x 640, west to about x 300, north to the top edge. In every one of those directions the paving is the same paving.
+
+**Q9_WHY:** Along my nominal route — x 502–566, y 272–340 (corridor mouth, still lit at mean luminance 78) and the approach to it at x 440–520, y 200–270. Rejected — x 330–420, y 90–200 (west of the figure) and x 560–650, y 60–200 (east). **What is different about the ground between them: nothing.** Same slab colour, same joint width, same blank faces, same absence of debris. The corridor cells are marginally *cleaner* than the room if anything — no cracks reach into x 502–566 at all — which if I took it literally would argue the corridor is the *less* used ground, the opposite of what the geometry says.
+
+---
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST?**
+**They all look the same.**
+
+Four ways out are visible: the south corridor (mouth at x 502–566, y ~278); the western alcove/passage (mouth at x ~300, y 25–150); the east edge (x 750, y 0–270); and the north edge (y 0, x 300–750). Judging only from the ground in front of each, I can't rank them.
+
+There *is* a visible difference in slab marking between them — the west alcove approach (x 250–320, y 60–145) and the east approach (x 690–750, y 100–260) carry hatch and ruled marks that the corridor mouth entirely lacks. But that isn't traffic. It's tile-variant assignment: the marked variants are scattered through the dim outer ring and the blank variants happen to sit under the lamp, and the pattern doesn't organise around any opening. The corridor mouth — which the level layout makes the single busiest square metre in frame — is the *blankest* ground in the image.
+
+---
+
+**CULL:** Under the lamp the slab faces are blank; every authored surface mark sits in unreadable darkness.
+
+**FLIP LIST**
+- Put wear on the ground: a lighter, joint-softened band ~2 slabs wide running through the room into the corridor mouth at x 502–566, y 272–340, with dirtier, rougher, debris-caught paving in the dead corners (x 620–750, y 0–120).
+- Give the slab faces something legible at 1:1 inside the lamp radius (x 340–500, y 100–260): 2–4 value steps of grain, pitting or edge-chipping per slab, amplitude no less than 8–10 levels against the ~215 lit face — currently a joint-free window there spans 53 levels and it's all falloff.
+- Break the corridor's vertical repeat at x 502–566, y 272–600: cells at y = 272 / 336 / 400 share one joint skeleton and one chip mark; a 20px patch at (502,304) matches (502,368) at r = 0.995. Needs at least three variants and an off-grid course break.
+- Cut the 45° hatch stamp by half and vary its angle, length and line count — the same 4–6 line motif recurs on dozens of slabs across x 600–750, y 0–260 and x 130–300, y 25–145.
+- Add one piece of physical incident inside the lit radius, with a lamp-side highlight and a cast shadow: a lifted or missing slab, a driven pin, a salvaged plank bridging the crack at ~(480,180)–(510,215). Right now the floor has no relief and no repair anywhere, in a place defined by four hundred years of both.
+
+---
+
+Model: Claude Opus 5 (1M context).

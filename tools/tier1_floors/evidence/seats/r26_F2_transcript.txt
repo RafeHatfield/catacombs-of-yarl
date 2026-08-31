@@ -1,0 +1,140 @@
+Looked at it at 1:1 first, then magnified, then measured. Here's what I found.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dressed stone slabs — pale sandy flagstones, rectangular, laid in staggered courses with dark recessed joints between them.
+
+**Q1_WHY:** The joint lattice is unambiguous. Measuring the dark rows across the lit floor (x 310–750) puts horizontal joints at y ≈ 16, 42, 80, 112, 144, 208, 250 — a course roughly every 32px, half a game tile. Vertical joints at x ≈ 334, 364, 384, 434, 491, 515, 619, 631 — irregular spacing, so slabs vary in width but not height. Courses are offset between rows (running bond). The face colour where the lamp is strongest, around (392,88), sits at luminance ~215 with a warm cream cast; in the dim east it drops to ~40 but keeps the same hue. Cut stone, not poured, not tile, not earth.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 500–564, y 275–470.
+
+And I have to be straight with you: **nothing about the ground made me pick it.** I picked it off the walls. It's the only opening in the image that reads as a bounded passage rather than an edge of the lit area, so it's the only one that looks like a decision. The floor inside that corridor — I zoomed it at (470,260)–(600,460) — is the same slab, the same joint pitch, the same cracks, the same value as the room floor at the same lamp distance. If you erased the magenta blocks either side of it I could not tell you that corridor was a corridor.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It's been cracked and splattered, and nothing else. It has damage but no history.
+
+There's a network of long thin black lines running across the whole visible floor, and about a dozen dark splat-shaped stains. What's absent is everything that comes from use: no polish, no hollowing, no darkened track, no grime banked into the corners, no chips at the slab edges, no debris, no patch, no repair. For a floor in an underworld in continuous heavy use since before the records, with a company of orcs on it for four hundred years, it reads as if it were laid, cracked, stained, and then never touched.
+
+**Q3_WHY:**
+- The cracks (e.g. (400,198)–(440,218), (325,50)–(365,70), the long arc through (350,210)–(500,260)) run *straight over the joints* as though the floor were one continuous plate. A slab floor fractures along its joints and stops at slab edges. These don't — they cross the mortar lines without deviating or terminating.
+- Their shape is smooth, curving, branching meander. That's a vine or a cable, not a fracture. Fractures are angular and they stop.
+- The splats — the clearest one at (440,150)–(490,195) — are a round clump with scattered outlier pixels around it, a spray pattern. They sit on the slab as an overlay and are not conformed to it.
+- I measured slab interiors for any wear-derived tonal variation and found none in the lit area (see Q8B).
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Two things, and both are the same problem.
+
+**The splats.** The same round spray blob recurs at roughly (350,25), (455,158), (515,170), (385,220), (540,225), (600,235), (155,110), (205,125), and a couple more in the east murk. They aren't pixel-identical — I template-matched the one at (455,158) and the best non-self hit was 0.55 — but they're the same idea at the same size, ten-plus times in one screen, evenly scattered. Once I saw the third one I started counting them instead of looking at the room.
+
+**The hatch fields.** In the dimmer east, whole slab-sized patches are filled with a 45° diagonal scratch pattern — same angle, same spacing, snapped to a 32px sub-lattice. I template-matched the patch at (635,120) and got hits at 0.65–0.75 at (611,88), (577,88), (559,120), (595,184), (431,56), (439,120), (503,88), (485,18), (529,120), (651,184), (431,18). Every hit lands on the 32px grid. It's one stamp, placed twelve-plus times.
+
+The cracks also pull harder than they should. In the lit area a crack pixel sits at ~0.15–0.21 of the local floor value — near black against cream. They are the loudest element in the frame, louder than the figure's silhouette.
+
+---
+
+**Q5: MADE, OR REPEATED?**
+**Repeated.** The hatch evidence above is decisive: a small set of detail stamps placed on a 32px lattice, correlating 0.65–0.75 across a dozen positions. The splats are the same story with more variation. The slab lattice itself has a fixed 32px course height everywhere with no variation across the whole floor.
+
+The crack overlay is the one part that argues the other way — it's drawn continuously across tile boundaries and doesn't respect the 64px grid, which is real authorship. But it's the only layer that does, and it's laid on top of a stamped floor rather than emerging from it.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It's coherent, it's readable, the lighting sells it, and nothing in it looks broken.
+
+Merely competent, or genuinely good? **Merely competent.** It clears the bar and stops. Nothing in the surface is doing work that a stamped-decal pass and a crack overlay couldn't do, and there is no place on this floor where I can point and say someone made a decision about *that spot*.
+
+---
+
+**Q7: WHAT CAN YOU ACTUALLY SEE AT 1:1?**
+
+Legible at 1:1:
+- The joint lattice — slab shapes, course offsets.
+- The black crack lines. Very legible, they dominate.
+- The dark splats, as soft smudges — I can tell something is there, not what.
+- Overall warm tan, and the lamp gradient.
+
+That's the entire list. **The slab faces are blank at 1:1.** Flat cream, no grain, no speckle, no tone. Under the lamp the face is one value with a lighting ramp across it.
+
+Only visible after magnifying:
+- A sparse 4px dither on the faces — perhaps three or four blocks per slab, one value step darker. Invisible at native size.
+- The 45° hatch fields.
+- Vertical tally-like scratch marks and horizontal dash marks in the west band.
+- Ring/circle shapes in the west and far east.
+- Per-slab base-value variation — individual stones reading lighter or darker than neighbours. This exists in the dim east but not in the lit centre.
+
+That last group is real work that nobody will ever see. It's all hunting, not seeing.
+
+**Q7_WHY:**
+Checked at 1:1, no magnification: the full frame; then native crops (308,0)–(750,276) and (490,270)–(570,470). In both I could resolve joints, cracks and smudges, nothing on the faces.
+Had to magnify: (378,84)–(414,106) at 12× to find the 4px dither; (600,60)–(750,200) at 5× with brightness ×3 to find the hatch fields and rings; (140,60)–(310,150) at 5× ×3 to find the tally and dash marks; (440,150)–(490,195) at 8× ×2.2 to resolve a splat's actual shape.
+
+---
+
+**Q8: HOW OLD IS THIS FLOOR?**
+It reads as **one age everywhere: laid a long time ago, cracked, and then frozen.** Call it a century or two — old enough to have fractured, not old enough to have been walked.
+
+The problem is that it reads *uniformly* one age, and that's what makes it wrong for this place. There is no part of this floor that is older than another part, no part repaired, no part re-laid, no part beaten down. A floor in continuous use since before the records would be a patchwork of ages — and would show it as differential wear, replaced slabs, hollows.
+
+**Q8_WHY:**
+- Crack density measured as dark-feature fraction: upper-left room (312,8)–(436,140) = 0.282, centre around the figure (372,110)–(500,240) = 0.236, lower-left (312,140)–(436,270) = 0.215. Comparable regions at comparable lamp levels, comparable damage. No region is more beaten than another.
+- Slab geometry is identical throughout: 32px course pitch at (310,0)–(750,275) and equally at (500,275)–(564,470). No slab is a different size, a different colour, or set at a different depth — nothing has been replaced.
+- No debris anywhere. Corners at (312,250)–(360,275) and (700,10)–(750,60) are as clean as the centre.
+
+---
+
+**Q8B: MARK THE MOST-WALKED GROUND.**
+
+**NO BASIS.**
+
+I tried to get this from the surface and the surface refused. What I did: sampled 768 low-variance 6×6 patches across the lit floor, skipping joints and cracks, binned them by distance from the lamp at (408,172), and took each patch's residual against its distance-bin median — i.e. what's left after removing the lamp falloff. Residual std came back at 41.5, which looked promising until I mapped it. The darkest residuals cluster at (338,190)–(378,238) and the brightest at (442,182)–(482,238) and (330,118)–(338,150). Those are exactly the shadow wedge running down-left of the figure and the bright wedge opposite it. It's the light cone's *shape*, not the floor. Once you account for the lamp, the residual is zero.
+
+Crack density is flat across the lit region (0.215–0.282 across three comparable areas). Splat placement is even scatter, not clustered on any line. Slab base value is uniform in the lit centre. Joint darkness is constant.
+
+**Q8B_WHY:** Nothing in the surface put a mark anywhere, because I could not find a mark to place. Value: all lighting. Colour: one hue everywhere. Texture: the faces are blank. Joints: identical width and value across the whole floor. Debris: none. Confidence that there is no wear signal here: **high.** I checked for it four different ways and every apparent signal resolved to the lamp.
+
+---
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES, TO THE EDGE OF YOUR LIGHT?**
+
+**The ground told me nothing.** I read the route off the walls.
+
+Standing at (408,172) with light reaching roughly to x=620 east and y=260 south before it gives up, I can see maybe six metres of floor in every direction, and there is no direction in which that floor is different from any other direction. No track, no polish, no scuff line, no grime channel, no smoothing of the joints along any axis. If you told me this figure was standing on a daily route I would have no way to confirm it, and no way to tell you which of the four ways it runs.
+
+**Q9_WHY:**
+Regions along the candidate south route: (500,180)–(564,275) at the corridor mouth, then (500,275)–(564,400) inside it. Regions I'd have rejected: (330,100)–(400,200) to the west, (560,80)–(680,200) to the east, (350,0)–(500,80) to the north.
+What's different about the ground between them: **nothing that isn't the lamp.** Same 32px course pitch, same joint value, same crack contrast ratio (0.21 at (400,198) in the lit centre, 0.16 at (325,50) to the north-west — both just tracking local brightness), same blank faces, same splat frequency. I compared the corridor mouth against the room's dead centre directly and they are the same floor.
+
+---
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST?**
+
+Judged from the ground alone: **they all look the same.**
+
+Four ways out of the lit region — north across the top edge at (310,0)–(750,0), east off the right edge at (750,0)–(750,275), west into the dim band at (120,30)–(180,145), and south down the corridor at (500,275)–(564,470). I examined the floor immediately in front of each. Same slab, same joint pitch, same crack density, same blank faces, same absence of debris. Not one of these thresholds is worn more than another, and none of them is worn at all. There is no most-used door here and no abandoned one.
+
+---
+
+**CULL:**
+Every slab reads identical — blank faces at 1:1, zero wear, detail only from repeated stamps and cracks.
+
+---
+
+**FLIP LIST**
+- Put grain on the slab faces that survives at 1:1 — currently the face at (378,84)–(414,106) is flat cream and only shows three dither pixels at 12×.
+- Cut the crack overlay's contrast (it's at 0.15–0.21 of local floor value) and make cracks terminate at joints instead of running smooth arcs across them.
+- Break the 32px stamp lattice — the hatch at (635,120) repeats at eleven other positions all snapped to the same grid.
+- Add wear differentiation the surface can carry: darkened, joint-smoothed ground through the corridor mouth at (500,180)–(564,340) and the room's centre line, grime and debris banked in the corners at (312,250) and (700,10).
+- Vary per-slab base value in the lit area the way it already varies in the dim east — right now every slab under the lamp is the same stone.
+
+---
+
+*Model: Claude Opus 5 (1M context).*
