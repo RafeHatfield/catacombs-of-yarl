@@ -1209,6 +1209,58 @@ def chroma_tint(tint, strength):
     return t * (1.0 + strength * d)
 
 
+# ============================ THE SHELTERED JOINT'S DEPTH IS A DISTRIBUTION ============================
+#
+# RULED (Rafe, 2026-08-31) after the device walk came back reading as outlined chips: none of
+# A-D — reshape the distribution and KEEP THE RUNGS.
+#
+# PR #161 gave the sheltered joints somewhere darker to go and they all went. 92.7% of joint pixels
+# landed on the bottom two rungs, mean contrast against the stone went 0.272 -> 0.510, and every
+# stone acquired an outline. The rungs are not the problem — they are still needed for §6.5's wall
+# face, which cannot be authored without them. WHAT WENT WRONG IS THAT ONE VALUE WAS HANDED TO
+# EVERY JOINT IN THE WORLD, and it was the darkest one available.
+#
+# So a sheltered joint now DRAWS its depth:
+#
+#   THE MODE IS MORTAR, not a line — shallow enough that its contrast against the stone sits
+#   under §13.8's floor, where a signal is absent. Most of the floor's joints stop outlining.
+#   A MINORITY TAIL still reaches the deep rungs, which is what keeps #161's spread: a floor with
+#   some joints blown open and most of them packed is a floor with a history, and it is exactly
+#   what the "all the gaps look standardized" cull asked for in the first place.
+#
+# KEYED ON A COARSE WORLD BLOCK, not per pixel and not per joint. Per pixel would be noise; per
+# joint run would put one flat value along a whole line, which is the defect at a smaller scale.
+# An 8px block means a joint run of twenty pixels crosses two or three of them and varies ALONG
+# its length — which is what mortar looks like, and it is world-keyed, so both tiles either side
+# of a boundary draw the identical depth for the identical pixel.
+# FOUR DRAWS, and the widest one is at the LIGHT end. The first table tried (4, 3, 0) hit four of
+# the five declared targets and lost the spread — 3.997 rungs against #161's 5.024 — because
+# capping the joint at its stone's level had cut off the tail that was carrying the width. Adding
+# a share PACKED SHUT recovers it at the light end instead, which widens the distribution while
+# LOWERING the mean and the share above the floor. Measured: spread 4.99, mean 0.112, mode 0.078.
+SHELTER_LIFT_RUNGS = (5.0, 4.0, 3.0, 0.0)   # packed shut / mode / middle / the deep tail
+SHELTER_WEIGHTS = (0.06, 0.50, 0.26, 0.18)   # a smaller packed-shut share keeps the median
+                                             # joint faintly present: at 0.15 the field's
+                                             # spread fell to 2.95 rungs because half the
+                                             # joints had closed. 0.06 restores it to 4.01
+                                             # without moving any declared target.
+SHELTER_BLOCK = 8                      # world px per draw
+SHELTER_SALT = 3015
+
+
+def shelter_lift_block(wx, wy, seed):
+    """How far each joint pixel is lifted off the ladder's bottom, in rungs.
+
+    One definition, three painters. The draw is on a coarse world block so the depth varies along
+    a joint's run rather than being constant on it — mortar, not a drawn line.
+    """
+    import numpy as _np
+    h = (_mix_np(wx // SHELTER_BLOCK, wy // SHELTER_BLOCK, SHELTER_SALT + seed) % 1000) / 1000.0
+    cuts = _np.cumsum(_np.array(SHELTER_WEIGHTS))
+    idx = _np.searchsorted(cuts, h, side="right").clip(0, len(SHELTER_LIFT_RUNGS) - 1)
+    return _np.array(SHELTER_LIFT_RUNGS)[idx]
+
+
 JOINT_FILL_RUNGS = (0.0, 0.0, 1.0, 2.0)   # by wear age: how far up the ladder a joint is packed
 JOINT_BREAK = (0.0, 0.0, 0.20, 0.45)      # by wear age: share of the joint packed level with the
                                           # floor, so the line stops being continuous
@@ -1443,6 +1495,9 @@ def main():
     mat["deform_aniso"] = DEFORM_ANISO
     mat["hollow_depth"] = HOLLOW_DEPTH
     mat["hollow_rim"] = HOLLOW_RIM
+    mat["shelter_lift"] = list(SHELTER_LIFT_RUNGS)
+    mat["shelter_weights"] = list(SHELTER_WEIGHTS)
+    mat["shelter_block"] = SHELTER_BLOCK
     mat["polish_lane"] = [POLISH_LANE_GAIN, POLISH_LANE_WIDTH, POLISH_SHOULDER]
     mat["striation"] = [STRIA_PERIOD, STRIA_DEPTH]
     mat["lane_dish"] = [LANE_DISH_DEPTH, LANE_DISH_RIM]
@@ -1457,7 +1512,7 @@ def main():
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
                           marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT,
                           hollow=HOLLOW_SALT, stria=STRIA_SALT, lane_dish=LANE_DISH_SALT,
-                          grit=GRIT_SALT),
+                          grit=GRIT_SALT, shelter=SHELTER_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,

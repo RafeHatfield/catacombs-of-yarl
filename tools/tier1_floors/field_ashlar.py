@@ -302,7 +302,19 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
                 hb = (CA._mix_np(xx + x * T, yy + y * T, CA.JOINT_BREAK_SALT + seed)
                       % 1000) / 1000.0
                 broken = jm_pix & (hb < brk)
-                L = L + np.where(jm_pix & ~broken, fill, 0.0) * step
+                # THE SHELTERED JOINT'S OWN DEPTH, drawn before the route's fill is added on
+                # top. Every joint is lifted off the ladder's floor by its own draw; a trodden one
+                # is then compacted further, exactly as it was built.
+                lift = CA.shelter_lift_block(xx + x * T, yy + y * T, seed)
+                if defect == "flat_joint_depth":
+                    lift = np.full((T, T), CA.SHELTER_LIFT_RUNGS[0])
+                # A JOINT IS NEVER BRIGHTER THAN THE STONE IT LIES BETWEEN. The lift and the
+                # route's fill are both packings — a packed joint rises TOWARD the floor's level
+                # and stops there. Uncapped, the two together put 2% of joints above the stone,
+                # which is a joint that emits light: the exact inversion of "dark BECAUSE
+                # enclosed" the whole campaign rests on.
+                raise_ = np.minimum(lift + fill, (mat["lum_median"] - L) / step)
+                L = L + np.where(jm_pix & ~broken, np.maximum(raise_, 0.0), 0.0) * step
                 L = np.where(broken, mat["lum_median"], L)
 
                 # ================= FORM AS EROSION =================
@@ -756,24 +768,51 @@ def crack_field(cracks, w, h):
 
 
 def joint_contrast(img, joints):
-    """HOW DARK IS A JOINT AGAINST THE STONE BESIDE IT? — the ring, in the only form it took.
+    """IS EVERY STONE OUTLINED? — the ban's QUESTION, not the ban's last known form.
 
-    The campaign has banned the ring throughout and every instrument built for it looked at the
-    TILE GRID: does a treatment sit at a constant grid position. None of them asked the simpler
-    question a person asks first — is every STONE outlined — and so a device walk came back
-    reading as "outlined chips" while eleven rounds of instruments reported nothing.
+    RULED as law after this instrument set missed a keyline for eleven rounds. Every ring
+    instrument built here asked whether a treatment sits at a constant TILE GRID position, because
+    that is the shape the ring had last time it was caught. None of them asked what a person asks
+    in one glance — is every stone ringed — and so four green instruments and a floor reading as a
+    wireframe were true at once. AN INSTRUMENT ASKS THE BAN'S QUESTION, NEVER THE BAN'S LAST KNOWN
+    FORM.
 
-    §13.8's floor is 0.144. A joint is meant to be visible, so this cannot go to zero; what it
-    must not do is move without anyone noticing. It moved from 0.342 to 0.579 — 2.4x the floor to
-    4.0x — when the palette gained two rungs below the donors, because what a sheltered joint does
-    with somewhere darker to go is go there, everywhere the route is not. Off-route is most of a
-    floor.
+    DISTRIBUTION, NOT MEAN, and that is also ruled. A mean hides the shape: a floor whose joints
+    are ALL just over §13.8's floor and a floor with a shallow mode and a deep minority can share
+    a mean and look nothing alike. What outlines every stone is not the average joint — it is the
+    SHARE of joints dark enough to read as a line. So the reported number is that share, and the
+    mean rides along as context.
+
+    Each joint pixel is measured against the stone it actually touches, not against a global
+    median: a dark joint beside dark stone is not an outline.
     """
     L = np.asarray(img).astype(float)[..., 0]
-    jv, sv = float(np.median(L[joints])), float(np.median(L[~joints]))
-    w = (sv - jv) / max(sv, 1e-6)
-    return dict(joint=round(jv, 2), stone=round(sv, 2), weber=round(w, 4),
-                times_perceptual_floor=round(w / 0.144, 2))
+    stone = ~joints
+    # the local stone level: a wide box mean over stone pixels only, so each joint is judged
+    # against its own neighbourhood rather than the floor's average
+    from numpy.lib.stride_tricks import sliding_window_view
+    R = 6
+    pad = np.pad(np.where(stone, L, 0.0), R, mode="edge")
+    cnt = np.pad(stone.astype(float), R, mode="edge")
+    k = 2 * R + 1
+    csum = np.cumsum(np.cumsum(pad, 0), 1)
+    ccnt = np.cumsum(np.cumsum(cnt, 0), 1)
+
+    def box(c):
+        c = np.pad(c, ((1, 0), (1, 0)))
+        H, W = L.shape
+        return (c[k:k + H, k:k + W] - c[0:H, k:k + W] - c[k:k + H, 0:W] + c[0:H, 0:W])
+
+    local = box(csum) / np.maximum(box(ccnt), 1e-6)
+    w = (local - L) / np.maximum(local, 1e-6)
+    jw = w[joints]
+    over = float((jw >= 0.144).mean())
+    return dict(share_over_floor=round(over, 4),
+                mean_weber=round(float(jw.mean()), 4),
+                p50=round(float(np.percentile(jw, 50)), 4),
+                p90=round(float(np.percentile(jw, 90)), 4),
+                joint=round(float(np.median(L[joints])), 2),
+                stone=round(float(np.median(L[stone])), 2))
 
 
 def constant_pitch_lines(joints, w, h, img=None):
@@ -971,6 +1010,11 @@ PLANTS = [
          why="every boundary collapsed to one family, so every cell of a row draws the same bond "
              "— the 0.99+ duplicates at one-tile displacement the seat measured, restored whole",
          test=lambda m: m["skeleton"]["duplicate_rate"] > 0.5),
+    dict(name="flat_joint_depth", must_fire="joint_contrast",
+         why="every sheltered joint handed the SAME depth again — PR #161's defect restored, one "
+             "value for every joint in the world, which is what outlined every stone",
+         test=lambda m: m["joint_contrast"]["share_over_floor"] < 0.10
+         or m["joint_contrast"]["share_over_floor"] > 0.60),
     dict(name="broken_courses", must_fire="continuity",
          why="bed joints stopping short of the vertical boundaries — coursing that does not travel",
          # `x or 1.0` on a measured 0.0 yields 1.0, because 0.0 is falsy — so the plant that
@@ -1086,12 +1130,22 @@ def erosion_read(img, joints, traffic, w, h):
             elif lvl <= 30:
                 cold[sl] = True
 
+    step = float(np.max(L) - np.min(L)) / 8.0 or 1.0
+
     def ratio(m):
+        """How much DEEPER the joints running with the route are than the ones crossing it.
+
+        ⚠ A DIFFERENCE, NOT A RATIO. This divided one depth-below-stone by the other, which is
+        well-behaved only while every joint is dark. The moment the sheltered joints were reshaped
+        so that a share of them pack shut, the denominator went through zero and the metric
+        reported grain of -7,896,677 — and the plants that depend on it went SILENT, which reads
+        as "the lever stopped working" rather than "the instrument stopped being defined".
+        """
         b = bedj & ~headj & m
         hh = headj & ~bedj & m
         if b.sum() < 50 or hh.sum() < 50:
             return None
-        return float((med - L[hh].mean()) / max(med - L[b].mean(), 1e-6))
+        return float(((med - L[hh].mean()) - (med - L[b].mean())) / step)
 
     return dict(grain_ratio_trodden=ratio(hot), grain_ratio_off=ratio(cold),
                 spread_trodden=float(L[(~joints) & hot].std()) if hot.any() else None,
@@ -1147,7 +1201,7 @@ def run_plants(w, h, seed, mat):
     live_e, none_e, iso_e = ep["live"], ep["no_erosion"], ep["isotropic"]
     for nm, m, fired, why, detail in (
         ("no_erosion", none_e,
-         abs((none_e["grain_ratio_trodden"] or 1.0) - 1.0) < 0.15
+         abs(none_e["grain_ratio_trodden"] or 0.0) < 0.25
          and (none_e["spread_trodden"] or 0) > (live_e["spread_trodden"] or 0) * 1.2,
          "form-as-erosion nulled entirely — no flattening, no directional compaction, so the "
          "floor must lose both its grain and its ground-down look",
@@ -1155,7 +1209,7 @@ def run_plants(w, h, seed, mat):
          % (none_e["grain_ratio_trodden"] or 0, live_e["grain_ratio_trodden"] or 0,
             none_e["spread_trodden"] or 0, live_e["spread_trodden"] or 0)),
         ("isotropic_erosion", iso_e,
-         abs((iso_e["grain_ratio_trodden"] or 1.0) - 1.0) < 0.15,
+         abs(iso_e["grain_ratio_trodden"] or 0.0) < 0.25,
          "the erosion kept but its DIRECTION removed — the stones still grind down, and the "
          "floor must stop saying which way",
          "grain %.2f (live %.2f)" % (iso_e["grain_ratio_trodden"] or 0,

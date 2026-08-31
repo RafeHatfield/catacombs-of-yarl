@@ -160,7 +160,11 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
                 brk = brk * kw
             hb = (CA._mix_np(xx + x * T, yy + y * T, CA.JOINT_BREAK_SALT + seed) % 1000) / 1000.0
             broken = jm_pix & (hb < brk)
-            L = L + np.where(jm_pix & ~broken, fill, 0.0) * step
+            # THE SHELTERED JOINT'S OWN DEPTH, mirrored — drawn first, then the route's fill on
+            # top, then both capped so a joint never rises above the stone it lies between.
+            lift = CA.shelter_lift_block(xx + x * T, yy + y * T, seed)
+            raise_ = np.minimum(lift + fill, (mat["lum_median"] - L) / step)
+            L = L + np.where(jm_pix & ~broken, np.maximum(raise_, 0.0), 0.0) * step
             L = np.where(broken, mat["lum_median"], L)
             # FLATTEN, mirrored: a walked stone's value collapses toward the material median.
             _fage = np.abs(w01b[..., None] - np.array(CA.WEAR_AGES)).argmin(-1)

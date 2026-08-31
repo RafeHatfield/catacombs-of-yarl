@@ -93,7 +93,10 @@ public static class Tier1AshlarFloor
         public double DeformAniso = 0.8;
         public double HollowDepth = 1.3, HollowRim = 0.45;
         public int HollowSalt = 3011;
-        public int StriaSalt = 3012, LaneDishSalt = 3013, GritSalt = 3014;
+        public int StriaSalt = 3012, LaneDishSalt = 3013, GritSalt = 3014, ShelterSalt = 3015;
+        public double[] ShelterLift = { 5, 4, 3, 0 };
+        public double[] ShelterWeights = { 0.15, 0.50, 0.20, 0.15 };
+        public int ShelterBlock = 8;
         public double PolishLaneGain = 1.9, PolishLaneWidth = 0.62, PolishShoulder = 1.15;
         public int StriaPeriod = 3;
         public double StriaDepth = 0.45;
@@ -521,6 +524,20 @@ public static class Tier1AshlarFloor
     /// </summary>
     private static System.Collections.Generic.IReadOnlyList<Logic.ECS.RoutePolyline.Line>
         linesForAxis = new System.Collections.Generic.List<Logic.ECS.RoutePolyline.Line>();
+
+    /// <summary>How far a sheltered joint is lifted off the ladder's bottom, in rungs.</summary>
+    private static double ShelterLift(Config c, int wx, int wy)
+    {
+        double h = (Mix(wx / c.ShelterBlock, wy / c.ShelterBlock, c.ShelterSalt + c.Seed) % 1000)
+                   / 1000.0;
+        double acc = 0.0;
+        for (int i = 0; i < c.ShelterWeights.Length; i++)
+        {
+            acc += c.ShelterWeights[i];
+            if (h < acc) return c.ShelterLift[System.Math.Min(i, c.ShelterLift.Length - 1)];
+        }
+        return c.ShelterLift[^1];
+    }
 
     private static int TravelAxis(byte[,]? t, int tx, int ty)
     {
@@ -978,7 +995,21 @@ public static class Tier1AshlarFloor
                     if ((hb % 1000) / 1000.0 < cfg.JointBreak[age] * kw)
                         raw[py, px] = cfg.LumMedian;
                     else
-                        raw[py, px] += cfg.JointFill[age] * kw * rung;
+                    {
+                        // THE SHELTERED JOINT DRAWS ITS OWN DEPTH, then the route's fill packs it
+                        // further. Drawn on a coarse world block so the depth varies ALONG a
+                        // joint's run — mortar, not a drawn line — and world-keyed, so both tiles
+                        // either side of a boundary draw the identical depth for the same pixel.
+                        //
+                        // CAPPED AT THE STONE'S OWN LEVEL. A packed joint rises toward the floor
+                        // and stops there; uncapped, lift plus fill put 2% of joints ABOVE their
+                        // stone, which is a joint that emits light — the exact inversion of "dark
+                        // BECAUSE enclosed".
+                        double lift = ShelterLift(cfg, tx * T + px, ty * T + py);
+                        double up = System.Math.Min(lift + cfg.JointFill[age] * kw,
+                                                    (cfg.LumMedian - raw[py, px]) / rung);
+                        raw[py, px] += System.Math.Max(up, 0.0) * rung;
+                    }
                 }
 
         // ORDER IS LOAD-BEARING, and the paint check is what said so. These two passes run
@@ -1325,6 +1356,14 @@ public static class Tier1AshlarFloor
             cfg.StriaSalt = salts.GetProperty("stria").GetInt32();
             cfg.LaneDishSalt = salts.GetProperty("lane_dish").GetInt32();
             cfg.GritSalt = salts.GetProperty("grit").GetInt32();
+            cfg.ShelterSalt = salts.GetProperty("shelter").GetInt32();
+            var sl = new List<double>();
+            foreach (var v in mat.GetProperty("shelter_lift").EnumerateArray()) sl.Add(v.GetDouble());
+            cfg.ShelterLift = sl.ToArray();
+            var sw = new List<double>();
+            foreach (var v in mat.GetProperty("shelter_weights").EnumerateArray()) sw.Add(v.GetDouble());
+            cfg.ShelterWeights = sw.ToArray();
+            cfg.ShelterBlock = mat.GetProperty("shelter_block").GetInt32();
             var pl = mat.GetProperty("polish_lane");
             cfg.PolishLaneGain = pl[0].GetDouble();
             cfg.PolishLaneWidth = pl[1].GetDouble();

@@ -78,6 +78,15 @@ Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU? Give an age or an age range in yo
     can tell. If it reads as one age everywhere, say that.
 Q8_WHY: name the pixel regions your answer comes from.
 
+Q8B: MARK THE MOST-WALKED GROUND, FROM THE FLOOR ALONE. Before you answer anything about routes,
+    give the pixel regions of the ground you judge to be walked MOST, and the ground you judge
+    walked LEAST or never. Judge from the FLOOR SURFACE ONLY — you may not use the walls, the
+    openings, the shape of the lit area, or where the figure is standing. If the floor gives you
+    nothing to go on, write "NO BASIS" rather than guessing from the layout: a wrong mark and an
+    honest refusal are both useful, and a guess dressed as a reading is not.
+Q8B_WHY: name what in the surface itself put your mark there — value, colour, texture, the joints,
+    debris — and say how confident you are.
+
 Q9: YOU ARE STANDING ON THE ROUTE — CAN YOU SEE WHERE IT GOES, TO THE EDGE OF YOUR LIGHT? The
     figure in this image is carrying the only lamp, and it is standing on ground that is walked
     daily. Look at the ground you can actually see, out to where the light gives up. Does it
