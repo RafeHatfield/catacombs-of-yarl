@@ -1,0 +1,71 @@
+{
+  "produced_by": "tools/tier1_walls/measure_bar_cap.py",
+  "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2",
+  "note": "measurements only; no bar pixel is in this repo (\u00a713.3)",
+  "cap_tiles": 39,
+  "flatness": {
+    "modal_share_mean": 0.5376,
+    "modal_share_min": 0.2778,
+    "distinct_levels_mean": 16.1,
+    "distinct_levels_max": 39
+  },
+  "continuity": {
+    "adjacent_pairs": 82,
+    "edge_step_mean": 24.22,
+    "interior_step_mean": 5.457,
+    "edge_over_interior": 4.439
+  },
+  "field_scale": [
+    {
+      "map": "uf_example_1.tmx",
+      "n_top_tiles": 7,
+      "mean": 90.93,
+      "spread": 7.07,
+      "lo": 87.23,
+      "hi": 108.18
+    },
+    {
+      "map": "uf_example_2.tmx",
+      "n_top_tiles": 6,
+      "mean": 91.63,
+      "spread": 10.41,
+      "lo": 72.56,
+      "hi": 108.18
+    },
+    {
+      "map": "uf_example_3.tmx",
+      "n_top_tiles": 12,
+      "mean": 131.07,
+      "spread": 7.55,
+      "lo": 108.18,
+      "hi": 136.0
+    },
+    {
+      "map": "uf_example_4.tmx",
+      "n_top_tiles": 7,
+      "mean": 182.78,
+      "spread": 30.65,
+      "lo": 108.18,
+      "hi": 200.31
+    },
+    {
+      "map": "uf_example_simple.tmx",
+      "n_top_tiles": 7,
+      "mean": 90.93,
+      "spread": 7.07,
+      "lo": 87.23,
+      "hi": 108.18
+    }
+  ],
+  "separation": {
+    "cap_lum": 119.87,
+    "floor_lum": 78.37,
+    "cap_over_floor": 1.5297,
+    "levels": 41.51,
+    "cap_hue": 165.0,
+    "floor_hue": 109.7,
+    "hue_delta": 55.3,
+    "cap_sat": 0.2514,
+    "floor_sat": 0.4345
+  }
+}
