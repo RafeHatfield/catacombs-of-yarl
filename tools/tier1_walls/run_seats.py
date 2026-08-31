@@ -117,7 +117,12 @@ def run_claude(work, prompt):
 
 
 LABELS = ["Q1_WHY", "Q7_WHY", "Q1_A", "Q1_B", "Q2_A", "Q2_B", "Q4_A", "Q4_B", "Q5_A", "Q5_B",
-          "Q6_A", "Q6_B", "CULL_A", "CULL_B", "Q10", "Q11", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6",
+          # ⚠ THE MULTI-DIGIT LABELS MUST COME BEFORE THE SINGLE-DIGIT ONES. The alternation is
+          # ordered, so with "Q1" first, "Q12:" parses as "Q1" and the round's own seat question
+          # vanishes into a field nobody reads. It did, once — r8_W1 came back with Q12 = None
+          # while the answer was sitting in the transcript.
+          "Q6_A", "Q6_B", "CULL_A", "CULL_B", "Q10", "Q11", "Q12", "Q1", "Q2", "Q3", "Q4", "Q5",
+          "Q6",
           "Q7", "Q8", "Q9", "CULL", "RANK", "FLIP LIST"]
 _LABEL_RE = re.compile(r"^\s*#{0,6}\s*\**(" + "|".join(re.escape(l) for l in LABELS)
                        + r")\**\s*:?\**\s*", re.MULTILINE)
@@ -162,7 +167,27 @@ def main():
     ap.add_argument("--round", type=int, required=True)
     ap.add_argument("--family", default="r07_family.png")
     ap.add_argument("--plant", default="r07_plant.png")
+    ap.add_argument("--reparse", action="store_true",
+                    help="re-split the STORED transcripts with the current label set and rewrite "
+                         "`fields`. Reads no model and rolls no dice: same words, parsed right.")
     a = ap.parse_args()
+
+    if a.reparse:
+        # ⚠ THIS IS NOT A RE-RUN, and the distinction is §4's. Re-running a seat until it says
+        # something is the laundering the plant exists to prevent. Re-PARSING asks the same
+        # transcript the same question with a parser that can hear the answer — Q12 was added to
+        # the prompt and not to LABELS, so `Q12:` matched the `Q1` alternative and the round's own
+        # seat question came back None while its answer sat in the file.
+        for seat in a.seats:
+            p = os.path.join(OUT, "r%d_%s.json" % (a.round, seat))
+            rec = json.load(open(p))
+            before = set(rec["fields"])
+            rec["fields"] = parse(rec["transcript"])
+            rec["reparsed"] = "labels %s; transcript untouched" % sorted(set(rec["fields"]) - before)
+            json.dump(rec, open(p, "w"), indent=2)
+            print("reparsed %s  +%s" % (os.path.relpath(p, REPO),
+                                        sorted(set(rec["fields"]) - before)))
+        return
 
     seats = {
         "W1": dict(img=a.family, what="family", solo=True),

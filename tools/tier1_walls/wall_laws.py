@@ -255,11 +255,157 @@ def constant_pitch(man, imgs, cells=12):
                 bound="<= 60% of the darkest columns on a tile boundary")
 
 
+def cap_seamless(man, imgs, cap=None):
+    """The cap runs across a tile boundary as if the boundary were not there.
+
+    RULED (Rafe, 2026-08-30): *"tops become a continuous mass — seams removed across tiles."*
+
+    The old cap could not do this: §8.3.3's corner theorem forced a bed joint onto every tile
+    boundary, and that joint at 32px pitch WAS the lattice the gate saw. The cap is one field now,
+    cut into windows chosen by world position, so the test is whether two windows the engine will
+    place side by side actually join — measured the way the bar was measured, so the two numbers
+    are comparable: the step across the shared boundary against an ordinary interior step.
+    """
+    if cap is None:
+        return dict(pass_=False, why="no cap manifest")
+    n = cap["field_tiles"]
+    W = _capwin(cap)
+    steps, inner = [], []
+    for gy in range(n):
+        for gx in range(n):
+            a = W("%d,%d" % (gx, gy))
+            b = W("%d,%d" % ((gx + 1) % n, gy))
+            c = W("%d,%d" % (gx, (gy + 1) % n))
+            steps.append(float(np.abs(a[:, -1] - b[:, 0]).mean()))
+            steps.append(float(np.abs(a[-1, :] - c[0, :]).mean()))
+            inner.append(float(np.abs(np.diff(a, axis=1)).mean()))
+    r = float(np.mean(steps) / max(np.mean(inner), 1e-6))
+    return dict(pass_=bool(r <= 1.35), seam_over_interior=round(r, 4),
+                seam=round(float(np.mean(steps)), 3), interior=round(float(np.mean(inner)), 3),
+                pairs=len(steps), bound="cap seam <= 1.35x an interior step (the bar's is 4.44x)")
+
+
+def cap_not_featureless(man, imgs, cap=None):
+    """§8.3.1's mirror: incident-free is not empty.
+
+    Held to the BAR's own cap, which carries 16.1 distinct values per tile with only 53.8% of it
+    on the modal value (`WALL-RECIPE.md` A.1). A cap below that is emptier than the thing we are
+    measured against.
+    """
+    if cap is None:
+        return dict(pass_=False, why="no cap manifest")
+    W = _capwin(cap)
+    levels, modal = [], []
+    for k in cap["table"]:
+        a = W(k)
+        levels.append(int(len(np.unique(np.round(a)))))
+        mode = float(np.bincount(np.clip(np.round(a), 0, 255).astype(int).ravel()).argmax())
+        modal.append(float((np.abs(a - mode) < 1.5).mean()))
+    lv, md = float(np.mean(levels)), float(np.mean(modal))
+    return dict(pass_=bool(lv >= 16.1 and md <= 0.538), levels_mean=round(lv, 2),
+                modal_share=round(md, 4), n=len(levels),
+                bound="at least the bar's 16.1 levels and no flatter than its 53.8% modal share")
+
+
+def cap_field_scale(man, imgs, cap=None):
+    """Variation lives at FIELD scale, not per cell.
+
+    RULED: *"field-scale variation only — cracks spanning several tiles, slow value drift, no
+    per-cell anything."* Two numbers: the drift across windows must exist (the bar's caps carry
+    sd 7 to 30 within one map), and the field must carry no periodicity AT THE TILE PITCH, which
+    is what a per-cell treatment would produce.
+    """
+    if cap is None:
+        return dict(pass_=False, why="no cap manifest")
+    n = cap["field_tiles"]
+    W = _capwin(cap)
+    means = [float(W("%d,%d" % (gx, gy)).mean()) for gy in range(n) for gx in range(n)]
+    sd = float(np.std(means))
+    # Reassemble the WHOLE field and look for power at the tile pitch on both axes.
+    #
+    # ⚠ The first version divided the tile-pitch bin by the MEAN of every other bin, and the mean
+    # is swamped by the slow drift the cap is supposed to have: a planted per-cell stamp came back
+    # at 0.97, silent, because the denominator was the field's own legitimate low-frequency
+    # power. A spike is only a spike against its NEIGHBOURS, so the comparison is now the local
+    # median either side of the bin — and the plant fires.
+    field = np.vstack([np.hstack([W("%d,%d" % (gx, gy)) for gx in range(n)]) for gy in range(n)])
+    # ⚠ And it averages the periodogram over every line, not the periodogram of the averaged
+    # line. One profile gives one draw per bin from a distribution with as much spread as its own
+    # mean, so an ordinary field can put 4.6x in the tile bin by luck alone — which is what the
+    # legal cap did on the first run of this version, and it would have been reported as a defect.
+    powers = []
+    for ax in (0, 1):
+        lines = field if ax == 0 else field.T
+        spec = (np.abs(np.fft.rfft(lines - lines.mean(axis=1, keepdims=True), axis=1)) ** 2
+                ).mean(axis=0)
+        k = lines.shape[1] // CW.T
+        neigh = np.concatenate([spec[k - 8:k - 1], spec[k + 2:k + 9]])
+        powers.append(float(spec[k] / max(np.median(neigh), 1e-9)))
+    tile_power = float(max(powers))
+    return dict(pass_=bool(sd >= 5.0 and tile_power <= 4.0),
+                window_mean_sd=round(sd, 3), tile_pitch_power=round(tile_power, 3),
+                bound="drift sd >= 5 (the bar: 7..30) and no spike at the tile pitch")
+
+
 TESTS = dict(two_planes=two_planes, flat_top=flat_top, incident_free_top=incident_free_top,
              no_ring=no_ring, edge_agreement=edge_agreement, constant_pitch=constant_pitch)
+CAP_TESTS = dict(cap_seamless=cap_seamless, cap_not_featureless=cap_not_featureless,
+                 cap_field_scale=cap_field_scale)
+
+_CAPCACHE = {}
+
+
+def _capwin(cap):
+    """Window accessor. Returns the planted pixels when this is a planted copy, the shipped ones
+    otherwise — so the three cap tests read a plant through exactly the path they read the family
+    through, and a plant cannot fire by taking a different code path."""
+    if "_imgs" in cap:
+        return lambda k: cap["_imgs"][k]
+    files = {t["id"]: t["file"] for t in cap["tiles"]}
+    return lambda k: _capimg(cap["_root"], files[cap["table"][k]])
+
+
+def _capimg(root, f):
+    if f not in _CAPCACHE:
+        _CAPCACHE[f] = lum(np.asarray(Image.open(os.path.join(root, f)).convert("RGB")))
+    return _CAPCACHE[f]
+
+
+def load_cap(assets):
+    man = json.load(open(os.path.join(assets, "MANIFEST.json")))
+    man["_root"] = assets
+    return man
 
 
 # ── the plants ───────────────────────────────────────────────────────────────────────────────
+
+def cap_plant(cap, kind):
+    """A copy of the cap carrying ONE defect, on the axis the matching test claims.
+
+    Each of these is a construction the cap pass was ruled AGAINST, not a generic degradation:
+      seam    — every window independently re-levelled. Continuous inside, discontinuous at every
+                join: exactly the lattice the gate saw, produced without touching anything else.
+      flatten — the featureless cap. §8.3.1's mirror: incident-free is not empty.
+      percell — one treatment stamped at a constant offset inside every window: "no per-cell
+                anything", violated at the tile pitch and nowhere else.
+    """
+    W = _capwin(cap)
+    imgs = {k: W(k).copy() for k in cap["table"]}
+    if kind == "seam":
+        for i, k in enumerate(sorted(imgs)):
+            imgs[k] += ((i * 37) % 41) - 20
+    elif kind == "flatten":
+        for k in imgs:
+            imgs[k][:] = imgs[k].mean()
+    elif kind == "percell":
+        for k in imgs:
+            imgs[k][6:10, 6:10] -= 40
+    else:
+        raise SystemExit("no cap plant for %s" % kind)
+    out = dict(cap)
+    out["_imgs"] = imgs
+    return out
+
 
 def plant(name, man, imgs):
     """Return a mutated copy of the family carrying ONE defect, on the axis its test claims."""
@@ -312,24 +458,31 @@ def plant(name, man, imgs):
     return out
 
 
-def run(man, imgs, only=None):
+def run(man, imgs, only=None, cap=None):
     res = {}
     for name, fn in TESTS.items():
         if only and name != only:
             continue
         res[name] = fn(man, imgs)
+    if cap is not None:
+        for name, fn in CAP_TESTS.items():
+            if only and name != only:
+                continue
+            res[name] = fn(man, imgs, cap)
     return res
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--assets", default=os.path.join(REPO, CW.ASSETS_REL))
+    ap.add_argument("--cap", default=os.path.join(REPO, "src/Presentation/assets/tier1_cap"))
     ap.add_argument("--controls", action="store_true")
     a = ap.parse_args()
     man, imgs = load_family(a.assets)
+    cap = load_cap(a.cap) if os.path.exists(os.path.join(a.cap, "MANIFEST.json")) else None
 
     if not a.controls:
-        res = run(man, imgs)
+        res = run(man, imgs, cap=cap)
         ok = all(v["pass_"] for v in res.values())
         for k, v in res.items():
             print("  %-20s %s   %s" % (k, "PASS" if v["pass_"] else "FAIL",
@@ -342,7 +495,7 @@ def main():
     print("POSITIVE CONTROLS — every plant must fire on its own axis, and the legal family must")
     print("come back clean. An instrument that reds on everything is as decorative as one that")
     print("greens on everything.\n")
-    clean = run(man, imgs)
+    clean = run(man, imgs, cap=cap)
     fails = [k for k, v in clean.items() if not v["pass_"]]
     print("  legal family : %s%s" % ("CLEAN" if not fails else "DIRTY - ",
                                      "" if not fails else ", ".join(fails)))
@@ -354,10 +507,23 @@ def main():
         rows.append((name, fired, p))
         print("  %-20s plant -> %s   %s" % (name, "FIRES" if fired else "SILENT",
                                             {k: v for k, v in p.items() if k != "pass_"}))
+    if cap is not None:
+        for name, kind in (("cap_seamless", "seam"), ("cap_not_featureless", "flatten"),
+                           ("cap_field_scale", "percell")):
+            p = CAP_TESTS[name](man, imgs, cap_plant(cap, kind))
+            fired = not p["pass_"]
+            allgood &= fired
+            rows.append((name, fired, p))
+            print("  %-20s plant -> %s   %s" % (name, "FIRES" if fired else "SILENT",
+                                                {k: v for k, v in p.items() if k != "pass_"}))
+    else:
+        allgood = False
+        print("  cap_*                NO CAP MANIFEST - the three cap instruments are unproven")
+
     json.dump(dict(family=man["family"], legal_clean=not fails,
                    plants={n: dict(fired=f, detail=d) for n, f, d in rows}),
               open(os.path.join(HERE, "evidence", "WALL-LAWS-CONTROLS.json"), "w"), indent=2)
-    print("\n  VERDICT: %s" % ("all six instruments have demonstrated they can fail"
+    print("\n  VERDICT: %s" % ("all %d instruments have demonstrated they can fail" % len(rows)
                                if allgood else "NOT ALL INSTRUMENTS ARE PROVEN - see above"))
     return 0 if allgood else 1
 

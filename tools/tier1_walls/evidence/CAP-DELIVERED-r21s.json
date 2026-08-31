@@ -1,0 +1,67 @@
+{
+  "png": "tools/tier1_walls/evidence/r21_standing.png",
+  "cells": 17,
+  "bands": [
+    {
+      "band": "standing <=2",
+      "n": 2,
+      "mean": 71.58,
+      "sd": 11.319,
+      "texture_sd": 3.858,
+      "levels": 48.0,
+      "flat": false
+    },
+    {
+      "band": "3-4 tiles",
+      "n": 4,
+      "mean": 30.41,
+      "sd": 5.501,
+      "texture_sd": 1.651,
+      "levels": 27.0,
+      "flat": false
+    },
+    {
+      "band": "beyond 4",
+      "n": 11,
+      "mean": 8.47,
+      "sd": 0.531,
+      "texture_sd": 0.434,
+      "levels": 5.0,
+      "flat": true
+    }
+  ],
+  "sd_floor": 0.5,
+  "levels_floor": 3,
+  "plant": {
+    "bands": [
+      {
+        "band": "standing <=2",
+        "n": 2,
+        "mean": 71.5,
+        "sd": 0.0,
+        "texture_sd": 0.0,
+        "levels": 1.0,
+        "flat": true
+      },
+      {
+        "band": "3-4 tiles",
+        "n": 4,
+        "mean": 30.5,
+        "sd": 0.0,
+        "texture_sd": 0.0,
+        "levels": 1.0,
+        "flat": true
+      },
+      {
+        "band": "beyond 4",
+        "n": 11,
+        "mean": 8.0,
+        "sd": 0.0,
+        "texture_sd": 0.0,
+        "levels": 1.0,
+        "flat": true
+      }
+    ],
+    "fires": true
+  }
+}

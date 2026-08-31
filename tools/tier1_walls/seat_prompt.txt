@@ -1,4 +1,4 @@
-YARL — BLIND SEAT — THE WALL AND THE DARK BEYOND IT — v0.1
+YARL — BLIND SEAT — THE WALL AND THE DARK BEYOND IT — v0.2
 
 RUN AS: fresh `claude -p`, cwd OUTSIDE the repo. No repo access. No project memory.
 INPUT: the PNG file(s) in this directory, nothing else.
@@ -88,6 +88,12 @@ Q10: COULD YOU TELL A WAY THROUGH FROM A DEAD END WITHOUT WALKING INTO IT? Find 
 
 Q11: HAS ANYTHING HAPPENED TO THIS STRUCTURE? Describe its condition in your own words, and say
      what you read it from.
+
+Q12: BETWEEN THE LIT FACE OF THE STRUCTURE AND THE DARKNESS THERE IS A DARKER BAND. WHAT IS IT —
+     THE TOP OF A THICK WALL SEEN FROM ABOVE, OR MORE GROUND? Pick one, or say CANNOT TELL, then
+     say what decided it. If you think it is ground, say whether it is lit ground or unlit ground.
+     Then, whichever you picked: does that band look like one continuous surface, or does it
+     break into squares? Say where you see the breaks if there are any.
 
 CULL: If this should be rejected, give the single strongest reason in under twenty words.
       If it should not be rejected, write NONE.

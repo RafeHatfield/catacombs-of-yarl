@@ -72,6 +72,36 @@
         "field": "12x1 cells",
         "bound": "<= 60% of the darkest columns on a tile boundary"
       }
+    },
+    "cap_seamless": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "seam_over_interior": 13.6505,
+        "seam": 13.918,
+        "interior": 1.02,
+        "pairs": 512,
+        "bound": "cap seam <= 1.35x an interior step (the bar's is 4.44x)"
+      }
+    },
+    "cap_not_featureless": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "levels_mean": 1.0,
+        "modal_share": 1.0,
+        "n": 256,
+        "bound": "at least the bar's 16.1 levels and no flatter than its 53.8% modal share"
+      }
+    },
+    "cap_field_scale": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "window_mean_sd": 8.464,
+        "tile_pitch_power": 6.539,
+        "bound": "drift sd >= 5 (the bar: 7..30) and no spike at the tile pitch"
+      }
     }
   }
 }

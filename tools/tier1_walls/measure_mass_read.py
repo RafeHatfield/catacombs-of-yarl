@@ -58,6 +58,28 @@ FLOOR_REFERENCE = 0.1440
 LEVELS_BAR = 8.0
 
 
+def cell_rgb(img, g, x, y, inset=6):
+    x0, y0, w, h = LF.cell_box(g, x, y)
+    p = img[int(y0) + inset:int(y0 + h) - inset, int(x0) + inset:int(x0 + w) - inset]
+    return p if p.size else None
+
+
+def hue_sat(rgb):
+    """Mean hue angle and saturation, ignoring pixels too dark to have a colour at all."""
+    mx, mn = rgb.max(2), rgb.min(2)
+    keep = mx > 8
+    if keep.sum() < 20:
+        return None, None
+    sat = np.where(mx > 0, (mx - mn) / np.maximum(mx, 1), 0)
+    r, g_, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    d = np.maximum(mx - mn, 1e-6)
+    h = np.zeros_like(mx)
+    m = (mx == r); h[m] = ((g_ - b) / d)[m] % 6
+    m = (mx == g_); h[m] = ((b - r) / d + 2)[m]
+    m = (mx == b); h[m] = ((r - g_) / d + 4)[m]
+    return float((h[keep] * 60).mean()), float(sat[keep].mean())
+
+
 def cell_mean(lum, g, x, y, inset=6):
     x0, y0, w, h = LF.cell_box(g, x, y)
     p = lum[int(y0) + inset:int(y0 + h) - inset, int(x0) + inset:int(x0 + w) - inset]
@@ -169,7 +191,68 @@ def main():
                  "CLEARS" if alv >= LEVELS_BAR else "under",
                  "CLEARS" if alf >= LEVELS_BAR else "under"))
 
+    # ── THE CAP SPECIFICALLY, because that is what the 2026-08-30 ruling is about ────────────
+    # A reveal cell's mean mixes cap and face, so a wall-vs-floor number taken over all wall cells
+    # answers a question about the WALL. Ruling (3) is about the TOP: *"a top must never read as
+    # unlit floor."* Top-plane cells are pure cap, so they are the ones that answer it.
+    # ── THE HUE HALF OF RULING (3) ──────────────────────────────────────────────────────────
+    # *"top value/hue separated from floor by a readable margin"*. The value half is below; this
+    # is the other one, measured DELIVERED rather than authored, because a cooler surface under a
+    # warm carried lamp is not the same colour it was in the palette.
+    cap_hs, floor_hs = [], []
+    for r in rows:
+        if not r["cls"].startswith("top") or r["dist"] > 3.2:
+            continue
+        p = cell_rgb(img, g, r["x"], r["y"])
+        if p is not None:
+            hs = hue_sat(p)
+            if hs[0] is not None:
+                cap_hs.append(hs)
+    for fy in range(h):
+        for fx in range(w):
+            if wall[fy][fx] or not LF.in_view(g, fx, fy):
+                continue
+            if dist(fx, fy) > 3.2:
+                continue
+            p = cell_rgb(img, g, fx, fy)
+            if p is not None:
+                hs = hue_sat(p)
+                if hs[0] is not None:
+                    floor_hs.append(hs)
+    if cap_hs and floor_hs:
+        ch = float(np.mean([a for a, _ in cap_hs])); cs = float(np.mean([b for _, b in cap_hs]))
+        fh = float(np.mean([a for a, _ in floor_hs])); fs = float(np.mean([b for _, b in floor_hs]))
+        print()
+        print("  HUE, DELIVERED, at the standing case (<=3.2 tiles)")
+        print("    cap   hue %6.1f  sat %.4f" % (ch, cs))
+        print("    floor hue %6.1f  sat %.4f" % (fh, fs))
+        print("    delta hue %+.1f   sat ratio %.3f      (the bar: 55.3 deg, cap 42%% less sat)"
+              % (ch - fh, cs / max(fs, 1e-6)))
+        hue_out = dict(cap_hue=round(ch, 2), cap_sat=round(cs, 4),
+                       floor_hue=round(fh, 2), floor_sat=round(fs, 4),
+                       hue_delta=round(ch - fh, 2), sat_ratio=round(cs / max(fs, 1e-6), 4))
+    else:
+        hue_out = None
+
+    print()
+    print("  THE CAP ALONE — top-plane cells only, which is what ruling (3) is about")
+    print("  %-14s %5s %10s %10s   %s" % ("range band", "n", "W(cap,floor)", "L(cap,floor)",
+                                          "vs the %.0f-level bar" % LEVELS_BAR))
+    cap_summary = {}
+    for label, lo, hi in (("standing <=2", 0, 2.5), ("3-4 tiles", 2.5, 4.5),
+                          ("beyond 4", 4.5, 99)):
+        b = [r for r in band(lo, hi) if r["cls"].startswith("top") and r["l_floor"] is not None]
+        if not b:
+            continue
+        wf2 = float(np.mean([r["w_floor"] for r in b]))
+        lf2 = float(np.mean(np.abs([r["l_floor"] for r in b])))
+        cap_summary[label] = dict(n=len(b), w_floor=round(wf2, 4), levels_floor=round(lf2, 2),
+                                  clears=bool(lf2 >= LEVELS_BAR))
+        print("  %-14s %5d %10.4f %10.2f   %s"
+              % (label, len(b), wf2, lf2, "CLEARS" if lf2 >= LEVELS_BAR else "under"))
+
     out = dict(produced_by="tools/tier1_walls/measure_mass_read.py", scene=spec["name"],
+               cap_vs_floor=cap_summary, cap_hue=hue_out,
                capture=a.png, family=man["family"], reference=FLOOR_REFERENCE,
                levels_bar=LEVELS_BAR,
                levels_bar_provenance=("RULED (Rafe, 2026-08-30): the perceptual-floor law reads "

@@ -523,10 +523,28 @@ class Family:
             self.age_face(img, age, grain_amp)
         return img
 
-    def rgb(self, img):
+    def rgb(self, img, face_only=False):
+        """RGB, or RGBA with the top band cut away.
+
+        FACE TILES BECAME FACE-ONLY WHEN THE CAP BECAME A FIELD (the 2026-08-30 cap ruling). The
+        cap is now one continuous field selected by world position, and a face tile that carried
+        its own top band would draw block material against the field beside it — a seam at exactly
+        the boundary the cap pass exists to remove, arriving through the one tile class that still
+        painted its own cap.
+        //
+        So a reveal cell draws the CAP WINDOW as its base and this tile OVER it, and the two
+        planes stop sharing an asset. The turn between them is still occlusion and still lives
+        here, because it belongs to the face: it is the face darkening under an overhang, not the
+        cap doing anything.
+        """
         v = np.clip(img, 0, 255)
         out = np.stack([v * self.tint[0], v * self.tint[1], v * self.tint[2]], axis=2)
-        return np.clip(np.rint(out), 0, 255).astype(np.uint8)
+        out = np.clip(np.rint(out), 0, 255).astype(np.uint8)
+        if not face_only:
+            return out
+        alpha = np.zeros((T, T), dtype=np.uint8)
+        alpha[FACE_TOP_ROW:, :] = 255
+        return np.dstack([out, alpha])
 
 
 def compose(arm, out_dir, grain_amp, void_values):
@@ -566,7 +584,7 @@ def compose(arm, out_dir, grain_amp, void_values):
                         img = fam.tile(cls, keys, grain_amp, var, age)
                         tid = base + n
                         p = os.path.join(out_dir, "tier1_wall_%d.png" % tid)
-                        Image.fromarray(fam.rgb(img)).save(p)
+                        Image.fromarray(fam.rgb(img, face_only=(cls == "face"))).save(p)
                         key = ("%d,%d,%d,%d" % (ka, kb, var, age) if cls == "face"
                                else "%d,%d,%d" % (ka, kb, var))
                         table[cls][key] = tid
@@ -603,7 +621,12 @@ def compose(arm, out_dir, grain_amp, void_values):
                     face_rung=fam.face_rung, face_value=round(float(ladder[fam.face_rung]), 3),
                     authored_face_over_top=round(float(ladder[fam.face_rung]
                                                        / ladder[fam.top_rung]), 4),
-                    face_top_row=FACE_TOP_ROW, occlusion_rows=OCCLUSION_ROWS),
+                    face_top_row=FACE_TOP_ROW, occlusion_rows=OCCLUSION_ROWS,
+                    face_only=True,
+                    face_only_note=("face tiles are RGBA with the top band cut away. The cap "
+                                    "is a continuous field selected by world position and is "
+                                    "drawn underneath; a face tile carrying its own top band "
+                                    "would put block material against the field beside it.")),
         edge_families=EDGE_FAMILIES,
         # HOW MANY RINGS OF STONE ARE DRAWN BEFORE THE VOID BEGINS.
         #
@@ -653,6 +676,15 @@ def compose(arm, out_dir, grain_amp, void_values):
                      "bible 12.1). A seam baked into a wall tile is present on every side the "
                      "tile is used, which is a ring.",
     )
+    # THE SAME CHECK THE CAP CARRIES, for the same reason and from the same session: the aged
+    # face set overran its 100-wide id block into top_h and eight face tiles drew top-plane files
+    # while every other number stayed green.
+    ids = [t["id"] for t in tiles]
+    dupes = sorted({i for i in ids if ids.count(i) > 1})
+    if dupes:
+        raise SystemExit("REFUSED: %d duplicate tile ids, e.g. %s. An id is a name."
+                         % (len(dupes), dupes[:8]))
+
     mp = os.path.join(out_dir, "MANIFEST.json")
     json.dump(man, open(mp, "w"), indent=2)
     return man, mp

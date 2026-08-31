@@ -142,6 +142,25 @@ with open(path, "w") as f:
 PY
   echo "== wall bindings: $TIER1_BINDINGS"
 fi
+# TIER1_WALLS_CAP points the review build at the cap field's MANIFEST.json — the wall TOPS.
+#
+# Omit it and the walls fall back to the family's own per-tile top plane, which is what the device
+# gate saw and rejected: a lattice at tile frequency, featureless inside each cell, reading as dim
+# floor rather than as the top of a thick wall. The cap is one seamless field cut into windows the
+# engine picks BY WORLD POSITION, so this knob changes what the tops are made of, not how they are
+# lit. It is separate from TIER1_WALLS because the arms share a cap and the plant must not.
+if [ -n "${TIER1_WALLS_CAP:-}" ]; then
+  python3 - "$MARKER" "$TIER1_WALLS_CAP" <<'PY'
+import json, sys
+path, manifest = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["wallCap"] = manifest
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== wall cap: $TIER1_WALLS_CAP"
+fi
 if [ -n "${TIER1_VOID:-}" ]; then
   python3 - "$MARKER" "$TIER1_VOID" <<'PY'
 import json, sys

@@ -27,6 +27,7 @@ token batch to show willing.
 | 5 | the gate's items: mask fix, tops cleaned, aging keyed to traffic | 162 tiles + 3 void | seats W1, W2 — W1 WITHHELD by the new rule, no plant verdict |
 | 6 | rebuild after the ID-COLLISION fix | 162 tiles + 3 void | seats W1, W2 — **VOID**, the plant missed on axis |
 | 7 | **the material arm as the family** (gate ruling 1) + the fixed corridor scene | 162 tiles + 3 void | seats W1, W2 — **VALID**, plant caught on axis with four hits |
+| 8 | **the cap pass** — one seamless field, 256 windows picked by world position; textured void | 165 wall tiles + 1024 cap windows | seats W1, W2 — **VALID**. Q12 answered *ground, unlit ground* |
 
 ## 2. The captures
 
@@ -58,10 +59,12 @@ holds this together* would be answered with nothing and the answer would look de
 | `audit_*.png/.log` | one per review spec | the traffic audit — the engine's own field, not a re-derivation |
 | `r18_{family,plant}.png` | **the material arm**, gate scene | round 7, the build the walk carries |
 | `r18_corridor.png` | the material arm, `tier1_corridor_traffic` | the corridor scene with its traffic actually on |
+| `r21_{family,plant}.png` | **the cap pass**, gate scene | round 8; plant differs in the ruin and nothing else |
+| `r21_standing.png` | the cap pass at the standing station | where `L(cap,floor)` = 19.27 levels is taken |
 
-## 3. The instruments, and the four bounds that were wrong
+## 3. The instruments, and the SIX bounds that were wrong
 
-`wall_laws.py --controls`: six tests, six plants, every plant fires, legal family clean.
+`wall_laws.py --controls`: **nine** tests, nine plants, every plant fires, legal family clean.
 
 | test | bound | legal family (compensated) | its plant |
 |---|---|---:|---:|
@@ -71,9 +74,21 @@ holds this together* would be answered with nothing and the answer would look de
 | `no_ring` | no tile with all four borders deviating >12% | 0.008 | 0.35 → FIRES |
 | `edge_agreement` | seam ≤1.35× an interior step | **0.11** | 2.39 → FIRES |
 | `constant_pitch` | ≤60% of darkest columns on a boundary | 0.067 | 1.00 → FIRES |
+| `cap_seamless` | seam ≤1.35× an interior step | **0.95** | 13.65 → FIRES |
+| `cap_not_featureless` | ≥16.1 levels/window, ≤53.8% modal | 17.34 / 0.437 | 1.0 / 1.0 → FIRES |
+| `cap_field_scale` | window sd ≥5, no tile-pitch spike | 8.46 / **1.13** | 6.54 → FIRES |
 
-Four bounds were rewritten because their plants came back SILENT or because they failed the legal
-family. Each correction is recorded in the code beside the test it fixed. See `REPORT.md` §5.
+**Six** bounds were rewritten because their plants came back SILENT or because they failed the
+legal family. Each correction is recorded in the code beside the test it fixed. See `REPORT.md`
+§5 and §9g — the last two are `cap_field_scale`, whose first version divided the tile-pitch bin by
+the mean of every other bin (swamped by the drift the cap is supposed to have; the plant was
+silent at 0.97) and whose second version failed the LEGAL cap at 4.6× on a single-profile
+periodogram, which is one draw from a distribution as wide as its own mean.
+
+And `cap_not_featureless` failed the composer rather than a plant: 13.7 levels/window against the
+bar's 16.1, from a soft-snap weight picked by eye at 0.72. `compose_cap.py --snap-sweep` is the
+record; `SNAP = 0.62` is the hardest snap that clears the bar, chosen from that end because §5.6
+wants the ladder.
 
 `light_field.py --controls`: LINEARITY 0.5000 (worst cell 0.0006, n=38) · UNITY 1.00000 exactly
 (n=81) · UNITY-FAILS 1.43349 with the lamp on · DARK-CELL 0.9280.
@@ -151,8 +166,10 @@ laying its bond with them. No generated pixel is in a shipped tile.
 | 5 | W2 **plant** | r16 | **CAUGHT ON AXIS** (`rubble`, `ruin`, `abandoned`) |
 | 6 | W1 family | r17 | **NOT READ — VOID**, withheld by the harness before anyone saw it |
 | 6 | W2 **plant** | r17 | **MISSED ON AXIS.** CULL: *"walls and floor render on one flat plane at equal value"* — the family's defect, not the plant's |
+| 8 | W2 **plant** | r21 | **CAUGHT ON AXIS** (`rubble`, `stamped`). Its cull was one the family shares; the axis decides |
+| 8 | W1 family | r21 | **Q12 = GROUND. Unlit ground.** *"the same fill as the margins … at x=120 it is exactly (6,7,11) for all 32 rows"*. Also two ruled verticals in the dark at x=311/x=502 — the cap/void ring boundary |
 
-**Five of seven rounds VALID (1, 2, 4, 5, 7); two VOID (3, 6).** Round 7 is the fresh valid round
+**Six of eight rounds VALID (1, 2, 4, 5, 7, 8); two VOID (3, 6).** Round 7 is the fresh valid round
 the second ruling set asked for, and its plant catch is the strongest of the session — `rubble`,
 `was applied`, `stamped`, `nothing has happened`. Both misses culled on a defect the
 FAMILY carries rather than the plant's ruin — *"invisible at play brightness"* and *"walls and

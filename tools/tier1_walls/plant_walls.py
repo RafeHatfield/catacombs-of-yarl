@@ -106,13 +106,17 @@ def main():
 
     tiles = []
     for i, t in enumerate(man["tiles"]):
-        src = np.asarray(Image.open(os.path.join(a.src, t["file"])).convert("RGB")).astype(float)
-        lum = src @ np.array([0.299, 0.587, 0.114])
+        # ⚠ RGBA, NOT RGB. The face tiles became face-only — the top band cut away with alpha,
+        # because the cap is a field drawn underneath them. Flattening to RGB here would give the
+        # plant an opaque top band the family does not have, and a seat culling THAT would be
+        # culling the conversion, not the ruin. §4.1: the plant carries one defect, on one axis.
+        src = np.asarray(Image.open(os.path.join(a.src, t["file"])).convert("RGBA")).astype(float)
+        lum = src[..., :3] @ np.array([0.299, 0.587, 0.114])
         if t["cls"] != "void":
             lum = ruin(lum, ladder, i)
-        rgb = np.stack([lum * tint[0], lum * tint[1], lum * tint[2]], axis=2)
+        rgba = np.stack([lum * tint[0], lum * tint[1], lum * tint[2], src[..., 3]], axis=2)
         p = os.path.join(a.out, t["file"])
-        Image.fromarray(np.clip(np.rint(rgb), 0, 255).astype(np.uint8)).save(p)
+        Image.fromarray(np.clip(np.rint(rgba), 0, 255).astype(np.uint8)).save(p)
         d = dict(t)
         d["sha256"] = hashlib.sha256(open(p, "rb").read()).hexdigest()
         tiles.append(d)

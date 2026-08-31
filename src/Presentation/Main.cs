@@ -2734,14 +2734,16 @@ public partial class Main : Node
             _wallManifest = wallManifest;
             _voidChoice = voidChoice;
             string? bindings = ReadStringArg("--wall-bindings") ?? marker?.WallBindings;
+            string? capManifest = ReadStringArg("--wall-cap") ?? marker?.WallCap;
             Report(Tier1BoundaryWall.Apply(_tileLayer, _state.Map, wallManifest, voidChoice,
-                                           bindings));
+                                           bindings, capManifest));
             var layer = _tileLayer;
             var map = _state.Map;
             _rigPanel?.AddVoidRow(Tier1BoundaryWall.LastVoidCount, () => _voidChoice, v =>
             {
                 _voidChoice = v;
-                string line = Tier1BoundaryWall.Apply(layer, map, wallManifest, v, bindings);
+                string line = Tier1BoundaryWall.Apply(layer, map, wallManifest, v, bindings,
+                                                      capManifest);
                 GD.Print(line);
                 Diag.Log(line);
             });

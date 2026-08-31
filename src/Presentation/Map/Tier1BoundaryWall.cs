@@ -189,6 +189,67 @@ public static class Tier1BoundaryWall
     }
 
     private const string BindNode = "Tier1Binding";
+    private const string FaceNode = "Tier1Face";
+
+    /// <summary>Drop any overlay this class put on a cell, so a re-lay never stacks two.</summary>
+    private static void ClearOverlays(Sprite2D s)
+    {
+        foreach (var n in new[] { FaceNode, BindNode })
+        {
+            var old = s.GetNodeOrNull<Sprite2D>(n);
+            if (old != null) { s.RemoveChild(old); old.QueueFree(); }
+        }
+    }
+
+    /// <summary>
+    /// The CAP field: one continuous surface, cut into windows, chosen by world position.
+    ///
+    /// RULED (Rafe, 2026-08-30): the tops read as dim floor — tile-frequency seams, featureless,
+    /// too close to the ground. The seams were §8.3.3's forced bed joint, and it could not be
+    /// removed while the cap was made of blocks whose values had to be addressed per tile.
+    ///
+    /// So the cap stopped being blocks. It is found rock now (§7.4: *the Boundary is mostly found
+    /// stone with orc work pinned into it*), authored as ONE field and cut into an N×N grid of
+    /// windows. Cell (x, y) draws the window at (x mod N, y mod N), so two adjacent cells draw two
+    /// adjacent windows and **the tile boundary is not a boundary at all** — continuous by
+    /// construction rather than by agreement, which is stronger than edge matching and free.
+    ///
+    /// The VOID is the same field carried down to ambient, because it is the same rock unlit —
+    /// ruled at the same gate: *unlit rock with faint grain, not a flat fill.*
+    /// </summary>
+    private sealed class Cap
+    {
+        public string Root = "";
+        public int FieldTiles = 16;
+        public readonly Dictionary<string, int> Window = new();
+        public readonly List<Dictionary<string, int>> Void = new();
+        public readonly Dictionary<int, string> Files = new();
+    }
+
+    private static Cap? LoadCap(string resPath, out string status)
+    {
+        status = "";
+        using var f = Godot.FileAccess.Open(resPath, Godot.FileAccess.ModeFlags.Read);
+        if (f == null) { status = $"cap manifest unreadable: {resPath}"; return null; }
+        var doc = JsonDocument.Parse(f.GetAsText());
+        var r = doc.RootElement;
+        var c = new Cap
+        {
+            Root = resPath.Substring(0, resPath.LastIndexOf('/') + 1),
+            FieldTiles = r.GetProperty("field_tiles").GetInt32(),
+        };
+        foreach (var e in r.GetProperty("table").EnumerateObject())
+            c.Window[e.Name] = e.Value.GetInt32();
+        foreach (var e in r.GetProperty("void_table").EnumerateObject())
+        {
+            var d = new Dictionary<string, int>();
+            foreach (var w in e.Value.EnumerateObject()) d[w.Name] = w.Value.GetInt32();
+            c.Void.Add(d);
+        }
+        foreach (var t in r.GetProperty("tiles").EnumerateArray())
+            c.Files[t.GetProperty("id").GetInt32()] = t.GetProperty("file").GetString() ?? "";
+        return c;
+    }
 
     private sealed class Bindings
     {
@@ -222,7 +283,8 @@ public static class Tier1BoundaryWall
     }
 
     public static string Apply(TileLayer tileLayer, GameMap map, string manifestResPath,
-                               int voidChoice, string? bindingManifest = null)
+                               int voidChoice, string? bindingManifest = null,
+                               string? capManifest = null)
     {
         var cfg = Load(manifestResPath, out string status);
         if (cfg == null) return $"[Tier1] boundary wall: NOT APPLIED — {status}";
@@ -243,6 +305,13 @@ public static class Tier1BoundaryWall
         LastVoidCount = cfg.Void.Count;
         int vc = System.Math.Clamp(voidChoice, 0, cfg.Void.Count - 1);
 
+        Cap? cap = null;
+        if (capManifest is { Length: > 0 })
+        {
+            cap = LoadCap(capManifest, out string capStatus);
+            if (cap == null) return $"[Tier1] boundary wall: REFUSED — {capStatus}";
+        }
+
         Bindings? bind = null;
         string bindStatus = "none declared";
         if (bindingManifest is { Length: > 0 })
@@ -259,7 +328,7 @@ public static class Tier1BoundaryWall
         var traffic = tf.Field;
 
         int face = 0, top = 0, voidCells = 0, missing = 0, faceSuppressed = 0;
-        int bound = 0;
+        int bound = 0, capLaid = 0, capVoid = 0;
         var ageHist = new int[System.Math.Max(1, 8)];
         var ageMap = new Dictionary<(int X, int Y), int>();
         var boundKinds = new Dictionary<string, int>();
@@ -273,11 +342,34 @@ public static class Tier1BoundaryWall
 
                 int ring = RingOf(map, x, y, cfg.VoidRing);
                 bool southOpenCache = !map.IsWallTile(x, y + 1) && map.InBounds(x, y + 1);
+
+                // THE WINDOW THIS CELL SEES INTO THE FIELD — world position and nothing else. No
+                // hash, no variant, no per-cell decision of any kind. That IS the mechanism:
+                // adjacent cells get adjacent windows, so there is no seam left to match.
+                string wkey = cap == null ? "" :
+                    $"{((x % cap.FieldTiles) + cap.FieldTiles) % cap.FieldTiles}," +
+                    $"{((y % cap.FieldTiles) + cap.FieldTiles) % cap.FieldTiles}";
+
                 int id;
                 if (ring > cfg.VoidRing)
                 {
-                    id = cfg.Void[vc];
                     voidCells++;
+                    if (cap != null && vc < cap.Void.Count
+                        && cap.Void[vc].TryGetValue(wkey, out int vid)
+                        && cap.Files.TryGetValue(vid, out var vfile))
+                    {
+                        var vtex = GD.Load<Texture2D>(cap.Root + vfile);
+                        if (vtex != null)
+                        {
+                            s.Texture = vtex;
+                            s.FlipH = false;
+                            s.FlipV = false;
+                            ClearOverlays(s);
+                            capVoid++;
+                            continue;
+                        }
+                    }
+                    id = cfg.Void[vc];
                 }
                 else
                 {
@@ -347,22 +439,56 @@ public static class Tier1BoundaryWall
                     if (southOpen) face++; else top++;
                 }
 
+                // ── THE CAP IS THE BASE ON EVERY WALL CELL ──────────────────────────────────
+                // A reveal draws the cap window underneath and its FACE-ONLY tile over it, so the
+                // two planes stop sharing an asset. A face tile carrying its own top band would
+                // put block material against the field beside it — a seam at exactly the boundary
+                // this pass exists to remove, arriving through the one tile class that still
+                // painted its own cap.
+                ClearOverlays(s);
+                bool capBase = false;
+                if (cap != null && cap.Window.TryGetValue(wkey, out int cid)
+                    && cap.Files.TryGetValue(cid, out var cfile))
+                {
+                    var ctex = GD.Load<Texture2D>(cap.Root + cfile);
+                    if (ctex != null)
+                    {
+                        s.Texture = ctex;
+                        s.FlipH = false;
+                        s.FlipV = false;
+                        capBase = true;
+                        capLaid++;
+                    }
+                }
+
                 if (!_files.TryGetValue(id, out var file)) { missing++; continue; }
                 var tex = GD.Load<Texture2D>(cfg.Root + file);
                 if (tex == null) { missing++; continue; }
-                s.Texture = tex;
-                // A wall tile carries no orientation: flipping one relabels its edges and it stops
-                // agreeing with its neighbours (§8.3.3's recorded cost of edge matching).
-                s.FlipH = false;
-                s.FlipV = false;
+
+                if (capBase && southOpenCache)
+                {
+                    // The face rides over the cap as a child, so the cap keeps the cell's base.
+                    var fs = new Sprite2D
+                    {
+                        Name = FaceNode, Texture = tex, Centered = true,
+                        TextureFilter = CanvasItem.TextureFilterEnum.Nearest, ZIndex = 1,
+                    };
+                    s.AddChild(fs);
+                }
+                else if (!capBase)
+                {
+                    s.Texture = tex;
+                    // A wall tile carries no orientation: flipping one relabels its edges and it
+                    // stops agreeing with its neighbours (§8.3.3's cost of edge matching).
+                    s.FlipH = false;
+                    s.FlipV = false;
+                }
 
                 // ── THE ORC LAYER ────────────────────────────────────────────────────────────
                 // Placed here, per cell, from the cell's WORLD ADDRESS — never baked into the
                 // segment. §8.3.1: a binding drawn into a tile is a binding on every cell that
                 // tile lands on, which is thirty identical repairs to a wall nobody repaired
                 // thirty times.
-                var old = s.GetNodeOrNull<Sprite2D>(BindNode);
-                if (old != null) { s.RemoveChild(old); old.QueueFree(); }
                 if (bind != null && ring == 1 && southOpenCache)
                 {
                     const string plane = "face";
@@ -421,6 +547,7 @@ public static class Tier1BoundaryWall
              + $"face_suppressed={faceSuppressed} "
              + $"planes(top={cfg.TopValue:0.##} face={cfg.FaceValue:0.##}) "
              + $"edge_check={cfg.EdgeCheck.Count}/OK bindings={bound}({kinds}) "
+             + $"cap={capLaid}+{capVoid}void "
              + $"age0..3={ages} traffic=spine:{tf.SpineLength:F0}/routes:{tf.Routes} "
              + $"manifest={manifestResPath}";
     }

@@ -32,6 +32,9 @@ python3 tools/tier1_walls/compose_walls.py --arm material --grain-amp 1.0
 python3 tools/tier1_walls/compose_walls.py --arm compensated --grain-amp 1.0
 python3 tools/tier1_walls/compose_bindings.py --arm material
 python3 tools/tier1_walls/compose_bindings.py --arm compensated
+python3 tools/tier1_walls/compose_cap.py --arm material      # the TOPS: one seamless field
+python3 tools/tier1_walls/compose_cap.py --arm compensated
+python3 tools/tier1_walls/compose_cap.py --snap-sweep        # the record for SNAP, against the bar
 python3 tools/tier1_walls/plant_walls.py \
         --src src/Presentation/assets/tier1_walls_compensated \
         --out src/Presentation/assets/tier1_walls_plant
@@ -40,8 +43,18 @@ dotnet build CatacombsOfYarl.Presentation.csproj        # ⚠ THE ROOT ONE
 /Applications/Godot_mono.app/Contents/MacOS/Godot --headless --path . --import   # ⚠ ROOT PATH
 
 # --- in scene, lit, at device pixel size (LOOP-PROCESS §2.1). Every flag is load-bearing. ---
-zsh tools/tier1_walls/capture.sh compensated \
-    src/Presentation/assets/tier0_harness/scenes/tier1_wall_review.json r08_family
+zsh tools/tier1_walls/capture.sh material \
+    src/Presentation/assets/tier0_harness/scenes/tier1_wall_review.json r21_family
+zsh tools/tier1_walls/capture.sh plant \
+    src/Presentation/assets/tier0_harness/scenes/tier1_wall_review.json r21_plant
+#   ⚠ `plant` swaps ONLY the wall faces — same bindings, same cap, so the plant and the family
+#     differ in the ruin and in nothing else.
+
+# --- does the cap's texture survive the multiply? §13.9, with its own plant ---
+python3 tools/tier1_walls/measure_cap_delivered.py --controls --tag r21 \
+        --scene src/Presentation/assets/tier0_harness/scenes/tier1_wall_review.json \
+        --png tools/tier1_walls/evidence/r21_family.png \
+        --log tools/tier1_walls/evidence/r21_family.log
 
 # --- §13.8's question, on the capture rather than on the source ---
 python3 tools/tier1_walls/measure_wall_amplitude.py \
@@ -59,11 +72,14 @@ TIER0_SCENE=res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_review
 TIER0_THEME=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml \
 TIER1_OVERLAYS=res://src/Presentation/assets/tier1_floors/MANIFEST.json \
 TIER1_ASHLAR=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json \
-TIER1_WALLS=res://src/Presentation/assets/tier1_walls_compensated/MANIFEST.json \
-TIER1_BINDINGS=res://src/Presentation/assets/tier1_bindings_compensated/MANIFEST.json \
+TIER1_WALLS=res://src/Presentation/assets/tier1_walls/MANIFEST.json \
+TIER1_BINDINGS=res://src/Presentation/assets/tier1_bindings/MANIFEST.json \
+TIER1_WALLS_CAP=res://src/Presentation/assets/tier1_cap/MANIFEST.json \
 tools/tier0_harness/build_review_app.sh
 
-tools/tier0_harness/verify_on_device.sh
+# ⚠ THE TWO ENV VARS ARE NOT OPTIONAL. Without them the verifier checks the DEFAULT scene and
+#   skips both wall checks, and reports green for a build it never looked at.
+TIER0_EXPECT_SCENE=tier1_wall_review TIER0_EXPECT_WALLS=1 tools/tier0_harness/verify_on_device.sh
 ```
 
 A fresh worktree needs the build and the import before any capture renders, and **the import must

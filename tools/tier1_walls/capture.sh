@@ -20,9 +20,18 @@ VOID=${4:-0}
 
 WALLDIR=src/Presentation/assets/tier1_walls
 BINDDIR=src/Presentation/assets/tier1_bindings
-if [ "$ARM" != "material" ]; then
+CAPDIR=src/Presentation/assets/tier1_cap
+if [ "$ARM" = "plant" ]; then
+  # LOOP-PROCESS §4: the plant must differ from the family in THE RUIN AND NOTHING ELSE, or a
+  # seat that culls it has not told us it can see the register — only that it can see a
+  # difference. So the plant swaps the wall faces and keeps the family's own bindings and its own
+  # cap, byte for byte. Rounds 3 and 6 went void because the plant was culled for something the
+  # family shared; the way to stop paying for that is to hold every other variable here.
+  WALLDIR=src/Presentation/assets/tier1_walls_plant
+elif [ "$ARM" != "material" ]; then
   WALLDIR=${WALLDIR}_${ARM}
   BINDDIR=${BINDDIR}_${ARM}
+  CAPDIR=${CAPDIR}_${ARM}
 fi
 
 python3 tools/tier0_harness/capture_corridor.py \
@@ -33,5 +42,6 @@ python3 tools/tier0_harness/capture_corridor.py \
   --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json \
   --boundary-wall res://$WALLDIR/MANIFEST.json \
   --wall-bindings res://$BINDDIR/MANIFEST.json \
+  --wall-cap res://$CAPDIR/MANIFEST.json \
   --void-choice "$VOID" \
   --log-out tools/tier1_walls/evidence/${TAG}.log

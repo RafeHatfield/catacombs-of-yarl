@@ -74,6 +74,15 @@ public sealed class ReviewBuildMarker
     public string? WallBindings { get; private init; }
 
     /// <summary>
+    /// res:// path to the CAP field's MANIFEST.json, or null. Separate again, and for the same
+    /// reason: the cap is not a tile set keyed by anything the wall family knows. It is one
+    /// continuous field cut into windows chosen by WORLD POSITION, so it has no masks, no edge
+    /// families and no ages — and a wall build without it falls back to the block cap the
+    /// 2026-08-30 gate culled for its tile-frequency seams.
+    /// </summary>
+    public string? WallCap { get; private init; }
+
+    /// <summary>
     /// The commit the build was made from, and when — stamped into the marker by
     /// build_review_app.sh. LOOP-PROCESS §2.3: evidence carries its producer's hash, and a
     /// hash mismatch at a ruling invalidates the evidence. Headless captures have always
@@ -162,6 +171,7 @@ public sealed class ReviewBuildMarker
                             ? vch.GetInt32() : (int?)null,
                 WallBindings = root.TryGetProperty("wallBindings", out var wb)
                             ? wb.GetString() : null,
+                WallCap = root.TryGetProperty("wallCap", out var wc) ? wc.GetString() : null,
                 Commit  = root.TryGetProperty("commit",  out var cm) ? cm.GetString() : null,
                 BuiltAt = root.TryGetProperty("builtAt", out var ba) ? ba.GetString() : null,
                 TileSize  = root.TryGetProperty("tileSize", out var ts)

@@ -77,7 +77,7 @@ def git_commit():
 def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
             light_overrides=None, scene_spec=None, log_out=None, timeout=180,
             floor_overlays=None, wang_floor=None, ashlar_floor=None,
-            boundary_wall=None, void_choice=None, wall_bindings=None):
+            boundary_wall=None, void_choice=None, wall_bindings=None, wall_cap=None):
     """Invoke the engine. Returns (returncode, log, cmd)."""
     w = cfg["resolution"]["width"]
     h = cfg["resolution"]["height"]
@@ -147,6 +147,10 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
         cmd += ["--void-choice", str(void_choice)]
     if wall_bindings:
         cmd += ["--wall-bindings", wall_bindings]
+    # THE CAP FIELD. Omit it and the walls fall back to the block cap the 2026-08-30 gate culled
+    # for tile-frequency seams - which looks like a wall, so nothing else would report it.
+    if wall_cap:
+        cmd += ["--wall-cap", wall_cap]
 
     os.makedirs(os.path.dirname(out_png) or ".", exist_ok=True)
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
@@ -196,6 +200,9 @@ def main():
     ap.add_argument("--boundary-wall",
                     help="res:// path to the tier-one WALL family MANIFEST.json. Absent, the "
                          "capture shows the tier-0 magenta mocks.")
+    ap.add_argument("--wall-cap",
+                    help="res:// path to the CAP field MANIFEST.json - one continuous surface cut "
+                         "into world-positioned windows. Absent, the walls wear the block cap.")
     ap.add_argument("--wall-bindings",
                     help="res:// path to the orc BINDING family MANIFEST.json. Section 8.3.1 "
                          "keeps these out of the wall segments; absent, the walls are bare.")
@@ -227,7 +234,7 @@ def main():
     rc, log, cmd = capture(args.out, args.theme_config, cfg, args.godot,
                            light_overrides=overrides, scene_spec=args.scene_spec,
                            boundary_wall=args.boundary_wall, void_choice=args.void_choice,
-                           wall_bindings=args.wall_bindings,
+                           wall_bindings=args.wall_bindings, wall_cap=args.wall_cap,
                            log_out=args.log_out, floor_overlays=args.floor_overlays,
                            wang_floor=args.wang_floor, ashlar_floor=args.ashlar_floor)
 
