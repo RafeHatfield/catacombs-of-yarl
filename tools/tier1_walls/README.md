@@ -63,9 +63,16 @@ python3 tools/tier1_walls/measure_wall_amplitude.py \
         --log tools/tier1_walls/evidence/r08_family.log \
         --assets src/Presentation/assets/tier1_walls_compensated --tag gate
 
-# --- the blind seats. Round is VOID if the plant seat misses the plant. ---
-python3 tools/tier1_walls/run_seats.py W1 W2 W3 W4 --round 2 \
-        --family r08_family.png --plant r08_plant.png
+# --- the §12.1 ring outline, two-sided (it starts life FAILING, so both sides are proved) ---
+python3 tools/tier1_walls/measure_ring_outline.py --controls --tag r21 \
+        --scene src/Presentation/assets/tier0_harness/scenes/tier1_wall_review.json \
+        --png tools/tier1_walls/evidence/r21_family.png \
+        --log tools/tier1_walls/evidence/r21_family.log
+
+# --- the blind seats. THE PLANT RUNS FIRST and a family seat will not run without its
+#     verdict — there is no file to read early, deliberately or otherwise. ---
+python3 tools/tier1_walls/run_seats.py W1 W2 --round 9 \
+        --family r22_novoid.png --plant r22_plant.png
 
 # --- ON DEVICE. The only thing that decides anything. ---
 # The wall session has its OWN bundle slot — two live sessions sharing one means the last
