@@ -68,18 +68,13 @@ python3 tools/tier1_walls/run_seats.py W1 W2 W3 W4 --round 2 \
         --family r08_family.png --plant r08_plant.png
 
 # --- ON DEVICE. The only thing that decides anything. ---
-TIER0_SCENE=res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_review.json \
-TIER0_THEME=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml \
-TIER1_OVERLAYS=res://src/Presentation/assets/tier1_floors/MANIFEST.json \
-TIER1_ASHLAR=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json \
-TIER1_WALLS=res://src/Presentation/assets/tier1_walls/MANIFEST.json \
-TIER1_BINDINGS=res://src/Presentation/assets/tier1_bindings/MANIFEST.json \
-TIER1_WALLS_CAP=res://src/Presentation/assets/tier1_cap/MANIFEST.json \
-tools/tier0_harness/build_review_app.sh
-
-# ⚠ THE TWO ENV VARS ARE NOT OPTIONAL. Without them the verifier checks the DEFAULT scene and
-#   skips both wall checks, and reports green for a build it never looked at.
-TIER0_EXPECT_SCENE=tier1_wall_review TIER0_EXPECT_WALLS=1 tools/tier0_harness/verify_on_device.sh
+# The wall session has its OWN bundle slot — two live sessions sharing one means the last
+# install silently wins, and it already cost the floor gate a build. device.sh carries the slot,
+# every load-bearing manifest, and TIER0_EXPECT_WALLS, so none of it can be forgotten.
+tools/tier1_walls/device.sh build
+tools/tier1_walls/device.sh verify
+#   verify compares the commit the HANDSET reports against this working copy's HEAD, and says so
+#   when the build was +dirty — a dirty stamp matches on sha and not on pixels.
 ```
 
 A fresh worktree needs the build and the import before any capture renders, and **the import must

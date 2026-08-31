@@ -850,14 +850,26 @@ stays here because a rule that is only followed when it is convenient was never 
 - **Instruments.** **Ten**, all proven failable, legal family clean, both arms clean. Nine in
   `wall_laws.py` and `measure_cap_delivered.py`, which reads the capture rather than the asset.
 - **Generations spent: 0 of 60.**
-- **Device — INSTALLED, NOT VERIFIED.** The cap build is on the handset with `wallCap` wired
-  through `TIER1_WALLS_CAP`, but `verify_on_device.sh` could not launch it: *"the device was not,
-  or could not be, unlocked."* It is recorded as installed rather than rounded up to verified.
-  Unlock the phone and re-run:
+- **Device — INSTALLED, NOT VERIFIED, in the wall session's own slot.** The cap build is on the
+  handset at `55f55f30` as `com.rafehatfield.catacombsofyarl.tier1walls` / *YARL Tier1 Walls*.
+  Verification is blocked on the handset, not on the build: first *"the device was not, or could
+  not be, unlocked"*, then two transport drops (*"the device disconnected immediately after
+  connecting"*). Recorded as installed rather than rounded up. Reconnect and run:
 
   ```
-  TIER0_EXPECT_SCENE=tier1_wall_review TIER0_EXPECT_WALLS=1 tools/tier0_harness/verify_on_device.sh
+  tools/tier1_walls/device.sh verify
   ```
+
+  **The walls no longer share the default `…tier0` slot with the floor gate.** Two sessions
+  installing under one bundle id means the last install silently wins, and it already cost a
+  floor gate build — the only symptom was that session's scene check going MISS, which reads as
+  *your build is wrong* when the truth is *your build is gone*. `device.sh` carries the slot, all
+  five load-bearing manifests and `TIER0_EXPECT_WALLS`, so none of it depends on being
+  remembered. And `verify_on_device.sh` now compares the commit **the handset reports** against
+  this working copy's HEAD — adopted from the floor gate, extended to say `OK*` rather than `OK`
+  when the stamp is `+dirty`, because a dirty build matches on sha and not on pixels. Proved
+  failable on three doctored logs: stale → MISS and exit 6, HEAD → OK, HEAD+dirty → OK* with the
+  rebuild instruction.
 - **Device — VERIFIED, twice.** The gate build was `7e64cdb`. **The post-ruling build is
   `ea9eedf5`**, all eight checks green on the handset, and it carries the `material` arm because
   that is what `MASS-READ-REMEDIES.md` recommends:
