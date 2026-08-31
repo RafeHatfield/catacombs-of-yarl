@@ -52,18 +52,36 @@ BAR_CROP = (96, 96, 672, 672)
 # the subject is the review scene's own §2.2 failure moved into the review harness.
 YARL_CROP = (0, 91, 750, 1000)
 
-# THE RUIN VOCABULARY. §8.1 holds that nothing in the Paths is ruined and everything is used up,
-# so a seat that has read the register reports the plant's collapse, cobweb, moss and applied
-# damage AS A DEFECT.
+# ── THE RUIN VOCABULARY — AND IT IS NOT A CONTROL. SEE `audit_plant_control.py`. ──────────────
 #
-# ⚠ "STAGED" IS IN THIS LIST BECAUSE ROUND 1 PUT IT THERE. The first version of the check treated
-# a bare CULL as catching the plant, and round 1's plant seat culled — for *"walls render at 4%
-# luminance, invisible at play size"*, which is a defect the FAMILY SHARES. A control that counts
-# a shared cull as a catch has not discriminated between the arm and the plant at all; it has
-# only established that the seat culls things. The plant was in fact caught, on Q11, in the
-# seat's own words — *"cracked, uniformly and decoratively, and otherwise untouched … Nothing has
-# happened to it. Cracks were applied to it."* — and none of the original vocabulary matched that
-# sentence, so the check reported the right verdict for the wrong reason.
+# THIS LIST IS UNCHANGED, DELIBERATELY. It is exactly the list that scored rounds 1-9, because
+# re-scoring nine rounds with a vocabulary chosen after reading their transcripts would be the
+# laundering §4 exists to prevent — and every round's verdict below stands or falls on the control
+# that was in force when it ran.
+#
+# ⚠ BUT IT DOES NOT DISCRIMINATE, AND `audit_plant_control.py` PROVES IT BOTH WAYS:
+#
+#   IT GREENS ON THINGS THE FAMILY SHARES. Nine of its terms appear in FAMILY transcripts —
+#   `stamped` in six of ten, `nothing has happened` in seven, `no repair` in five. §4.1's own
+#   rule, already written into `plant_caught`, is that a reason the family shares has not
+#   discriminated between the arm and the plant. Round 8's catch was `['rubble','stamped']`.
+#
+#   AND IT REDS ON SEATS THAT PLAINLY NAMED THE RUIN. The plant has drawn A FORKED CRACK since it
+#   was written and this list has no crack term at all. Round 9's plant seat reported *"Cracked
+#   and shedding, never touched … damage without response, which for a place held for four hundred
+#   years by people who are extremely good at fixing things is the wrong story"* — the register
+#   violation named exactly — and was scored MISSED.
+#
+# Adding the crack terms makes it green on everything (rounds 3, 6 and 9 all "catch", mostly on
+# `crack`, which the FAMILY also authors — `compose_cap.field_cracks`). Removing every
+# family-shared term leaves an arbitrary residue in which `fracture` counts and `crack` does not,
+# on a ten-transcript sample. There is no vocabulary that works, because the plant's defect is a
+# REGISTER judgement — §8.1's *nothing is ruined, things are used up* — and a substring match
+# cannot make one.
+#
+# **STOP (LOOP-PROCESS §1.1, instrument-can't-fail).** The control needs replacing with a
+# judgement, not a wider grep, and that is a change to the loop's structure rather than a fix.
+# Not this session's to make.
 RUIN_WORDS = ("cobweb", "web", "moss", "collapse", "collapsed", "rubble", "ruin", "ruined",
               "crumbl", "derelict", "abandoned", "overgrown", "picturesque", "atmospheric",
               "gothic", "haunted", "spooky",

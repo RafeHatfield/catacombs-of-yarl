@@ -28,7 +28,7 @@ token batch to show willing.
 | 6 | rebuild after the ID-COLLISION fix | 162 tiles + 3 void | seats W1, W2 — **VOID**, the plant missed on axis |
 | 7 | **the material arm as the family** (gate ruling 1) + the fixed corridor scene | 162 tiles + 3 void | seats W1, W2 — **VALID**, plant caught on axis with four hits |
 | 8 | **the cap pass** — one seamless field, 256 windows picked by world position; textured void | 165 wall tiles + 1024 cap windows | seats W1, W2 — **VALID**. Q12 answered *ground, unlit ground* |
-| 9 | **`void_ring: 0`** — the §12.1 ring outline removed at its source | 165 tiles, 0 void placed | plant first (the new structural rule), then family |
+| 9 | **`void_ring: 0`** — the §12.1 ring outline removed at its source | 165 tiles, 0 void placed | **VOID** — plant missed. W1 never ran, so no family record exists. Not re-run. |
 
 ## 2. The captures
 
@@ -171,9 +171,18 @@ laying its bond with them. No generated pixel is in a shipped tile.
 | 6 | W1 family | r17 | **NOT READ — VOID**, withheld by the harness before anyone saw it |
 | 6 | W2 **plant** | r17 | **MISSED ON AXIS.** CULL: *"walls and floor render on one flat plane at equal value"* — the family's defect, not the plant's |
 | 8 | W2 **plant** | r21 | **CAUGHT ON AXIS** (`rubble`, `stamped`). Its cull was one the family shares; the axis decides |
+| 9 | W2 **plant** | r22 | **MISSED** by the detector, though the seat named the register violation: *"damage without response … the wrong story"*. The vocabulary has no crack term. Round VOID; `audit_plant_control.py`. |
 | 8 | W1 family | r21 | **Q12 = GROUND. Unlit ground.** *"the same fill as the margins … at x=120 it is exactly (6,7,11) for all 32 rows"*. Also two ruled verticals in the dark at x=311/x=502 — the cap/void ring boundary |
 
-**Six of eight rounds VALID (1, 2, 4, 5, 7, 8); two VOID (3, 6).** Round 7 is the fresh valid round
+**Six of nine rounds VALID (1, 2, 4, 5, 7, 8); three VOID (3, 6, 9).**
+
+⚠ **AND THE CONTROL BEHIND ALL NINE IS NOT AN INSTRUMENT.** `audit_plant_control.py`: four of its
+26 terms fire on FAMILY transcripts (`nothing has happened` 7/10, `stamped` 6/10), and rounds 4
+and 8 rest entirely on those. It also has no term for the forked crack the plant draws, which is
+why round 9 died. Widening greens the void rounds; narrowing flips the valid ones. STOP under
+LOOP-PROCESS §1.1 — the replacement is a judgement, not a wider grep, and it is not this
+session's to make. **No verdict above has been re-scored**; all nine reproduce under the
+vocabulary that ruled them. Round 7 is the fresh valid round
 the second ruling set asked for, and its plant catch is the strongest of the session — `rubble`,
 `was applied`, `stamped`, `nothing has happened`. Both misses culled on a defect the
 FAMILY carries rather than the plant's ruin — *"invisible at play brightness"* and *"walls and

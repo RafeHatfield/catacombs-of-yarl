@@ -919,6 +919,82 @@ $ run_seats.py W1 W3 --round 98 ...        # with a MISSED plant verdict planted
 and confirmed by listing the directory afterwards: only `r98_W2.json` exists. There is no `PENDING`
 state any more — a family record exists exactly when its round is VALID.
 
+## 9j. ROUND 9 IS VOID — and auditing why exposed the control itself
+
+The new gate worked exactly as ruled: the plant ran first, came back MISSED, **W1 was never run**,
+and there is no family record for round 9 to read. A void round cost one seat instead of two.
+
+Then I read the plant transcript to find out why it missed, and the answer was not the seat:
+
+> *"Cracked and shedding, never touched. Three fractures […] About fourteen pale objects scattered
+> along the top surface. No repair of any kind anywhere on it. I read that as damage without
+> response, which for a place held for four hundred years by people who are extremely good at
+> fixing things is the wrong story."*
+
+That is §8.1's register violation named precisely — damage nobody answered, in a place whose
+garrison answers everything. **The detector scored it MISSED because `plant_caught()` greps a
+fixed vocabulary and that vocabulary has no crack term**, while `plant_walls.ruin()` has drawn
+*A FORKED CRACK* since the day it was written.
+
+### So I audited the control, and it fails in both directions
+
+`audit_plant_control.py` — it changes nothing and re-scores nothing:
+
+**It certifies on terms the family shares.** §4.1 is already in `plant_caught`'s own docstring —
+*a cull whose reason the family shares has not discriminated between the arm and the plant.* The
+same is true of the naming terms:
+
+| term | fires on family transcripts |
+|---|---:|
+| `nothing has happened` | **7 of 10** |
+| `stamped` | **6 of 10** |
+| `collapse` | 2 of 10 |
+| `rubble` | 1 of 10 |
+
+**Which means two rounds were certified by terms that do not discriminate:**
+
+| round | what its catch rested on | family-shared |
+|---|---|---|
+| **4** | `stamped` | **all of it** |
+| **8** | `rubble`, `stamped` | **all of it** |
+
+Round 4 is the build that went to the gate and produced five rulings. Round 8 is the cap pass.
+Neither verdict is retracted here — the seats may well have caught the plant — but **the control
+did not establish it**, and that is what a control is for.
+
+**And no vocabulary repairs it.** Add the crack terms and rounds 3, 6 and 9 all "catch", mostly on
+`crack` — which the family also authors (`compose_cap.field_cracks`). Remove every family-shared
+term and rounds 4 and 8 flip to MISSED while `fracture` survives and `crack` does not, on a
+ten-transcript sample, though they mean the same thing.
+
+```
+round  as ruled   +crack terms   family-shared removed
+    3  MISSED     CAUGHT         MISSED
+    4  CAUGHT     CAUGHT         MISSED
+    8  CAUGHT     CAUGHT         MISSED
+    9  MISSED     CAUGHT         MISSED
+```
+
+### What I did about it: nothing, on purpose
+
+`run_seats.py` still carries **the exact vocabulary that ruled rounds 1–9**, verified by
+recomputing every stored verdict — all nine reproduce. Re-scoring nine rounds with a list chosen
+after reading their transcripts is the laundering §4 exists to prevent, and it would make every
+future catch worthless. **Round 9 stays VOID and is not re-run**: re-rolling a round until the
+control clears is the same error wearing a different hat.
+
+**⚠ STOP — LOOP-PROCESS §1.1, instrument-can't-fail.** The plant control is not an instrument
+under §13.5: it has never been shown to fail on a seat that missed the ruin, nor to pass only on
+one that caught it. The defect it guards is a **register judgement** — *nothing is ruined, things
+are used up* — and a substring match cannot make one. Replacing it means a second blind pass that
+is asked the register question directly, which is a change to the loop's structure and not a fix
+to a file. **Not this session's to make.**
+
+Full disclosure on timing: I found the crack gap while reading a transcript that had already been
+scored MISSED. The audit's rule — *a term the family also produces cannot certify a catch* — is
+stated before its results and applied mechanically, and it flips a round of mine in each
+direction. The reading still came first, and that is on the record rather than tidied away.
+
 ## 8. State
 
 - **§6.5 vs the ratified rig — RULING TRIGGER, open.** Three remedies named in `STACK-FINDING.md`,
