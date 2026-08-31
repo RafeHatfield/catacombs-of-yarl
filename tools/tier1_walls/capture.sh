@@ -21,13 +21,12 @@ VOID=${4:-0}
 WALLDIR=src/Presentation/assets/tier1_walls
 BINDDIR=src/Presentation/assets/tier1_bindings
 CAPDIR=src/Presentation/assets/tier1_cap
-if [ "$ARM" = "novoid" ]; then
-  # THE §12.1 REMEDY UNDER TEST. Same material, same bindings, same cap — the ONLY difference is
-  # `void_ring: 0` in the wall manifest, so nothing but the ring classification can explain a
-  # change in the measurement. Composed by:
-  #   compose_walls.py --arm material --void-ring 0 --out-suffix _novoid
-  WALLDIR=src/Presentation/assets/tier1_walls_novoid
-elif [ "$ARM" = "plant" ]; then
+# `novoid` WAS AN ARM HERE AND IS NOT ANY MORE. The §12.1 remedy was tested as a side-by-side
+# variant (`--out-suffix _novoid`) and then RULED, so `void_ring: 0` is what the material arm is
+# composed at — the two directories were byte-identical across all 165 PNGs, and keeping both
+# would have been two sources of truth for one family. `r22_novoid.png` reproduces from
+# `capture.sh material` now.
+if [ "$ARM" = "plant" ]; then
   # LOOP-PROCESS §4: the plant must differ from the family in THE RUIN AND NOTHING ELSE, or a
   # seat that culls it has not told us it can see the register — only that it can see a
   # difference. So the plant swaps the wall faces and keeps the family's own bindings and its own
