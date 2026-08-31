@@ -1151,6 +1151,26 @@ def run_plants(w, h, seed, mat):
         if not fired:
             print("       ^^ THIS INSTRUMENT HAS NOT SHOWN IT CAN FAIL. Its pass does not count.")
     print()
+    # ================= THE PLANT RUN ASSERTS ITS OWN COMPLETION =================
+    #
+    # RULED (Rafe, 2026-08-30) after a crash read as a silence. An unbound name took the run down
+    # after ELEVEN of fourteen plants, and the only visible symptom was a smaller FIRED count —
+    # which looks exactly like "three plants went silent", the one thing this file exists to
+    # report. A control suite that can end early and quietly is not a control suite.
+    #
+    # AN EARLY EXIT IS RED, NEVER QUIET. The count is declared, not inferred from what happened to
+    # run: the two special plants plus every entry in the PLANTS table.
+    # 1 channel + 2 erosion + 2 chroma + the table. Declared as a sum of its parts rather than a
+    # literal, and it caught its own author on the first run: written as 2+2+len it reported
+    # "14 of 13" and went red, which is the check doing exactly its job on the way in.
+    expected = 1 + 2 + 2 + len(PLANTS)
+    if len(rows) != expected:
+        print("\n  *** PLANT RUN INCOMPLETE: %d of %d plants reported. The suite did not finish, "
+              "which is a RED result and never a quiet one. ***" % (len(rows), expected))
+        ok = False
+    else:
+        print("\n  plant run complete: %d of %d." % (len(rows), expected))
+
     return ok, rows
 
 

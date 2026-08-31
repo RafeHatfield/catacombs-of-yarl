@@ -1,0 +1,87 @@
+Looked at `A.png` (750×600) at 1:1, then at 4–5× nearest-neighbour, plus a lighting-normalised pass (divide by 18px Gaussian) to separate material from lamp falloff.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Pale limestone or sandstone ashlar — rectangular cut slabs laid in a running bond, set in dark mortar. Cream-white where the lamp hits it, warm tan at the falloff.
+
+**Q1_WHY:** The bond pattern at x 310–620, y 0–270: courses ~32px tall, slabs of varying width within a course (a 60px slab at x 438–498 y 168, a 28px one at x 505–533 y 300), joints staggered course to course. Joints are a consistent 3–4px dark recess, not painted lines. The unclipped colour at x 470–530, y 120–150 is a low-saturation warm grey-cream — stone, not brick, not tile, not wood. Slab edges are square and unchamfered.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 505–565.
+
+Nothing about the ground influenced that. I picked it off the walls — it's the only direction where the placeholder blocks pinch into a corridor and therefore the only direction that reads as "somewhere." The ground inside that corridor mouth (x 505–565, y 275–420) is byte-for-byte the same coursing, same joint width, same blank faces as the room I'm standing in. If you deleted the walls I could not have told you which way to go.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has cracked, and that is all. A network of hairline fractures runs across the lit area — no chips, no spalled corners, no sunken or lifted slabs, no missing slabs, no debris, no staining, no patching, no polish. Every slab arris is still square. Nothing has been dropped on it, dragged across it, or repaired.
+
+Specifically: there is no trace of the orc-soldiers on it. No driven pin, no rope, no salvaged timber laid over a gap, no boot-scuff. The ground has no history of use — only a history of settling.
+
+**Q3_WHY:** The cracks at x 430–560, y 150–230 and x 585–700, y 150–230 are uniform 1px polylines that cross slab faces and mortar joints without deflecting or widening. A real fracture arrests or steps at a joint; these don't. Meanwhile every joint I measured is the same width (x 340 y 160 vs x 620 y 250 vs x 520 y 380 — all 3–4px), which means no slab has shifted. The corridor mouth at y 275–290 has no threshold wear, no rounding of the leading slab edges.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Three things.
+
+1. **Two soft diagonal bands** sweeping down-left to up-right across the lit floor — one through x 300–400, y 140–270, a second through x 460–560, y 90–270. They cross slabs and joints identically, so they're a lighting or shadow overlay, not material. At 1:1 they are the single most prominent thing on the floor: brighter and higher-contrast than any actual stone feature. My eye lands on them before it lands on the figure.
+
+2. **The crack generator's signature shape.** A shallow sagging arc with one kink in it. It appears at x 585–640, y 165–175; again at x 655–690, y 150–160; again at x 660–695, y 185–195; again at x 400–440, y 130–142. Four near-identical catenaries in one screen. Once you see it you can't stop counting them.
+
+3. **The blank rectangle directly under the lamp.** x 380–500, y 155–235 — roughly four slabs of pure flat cream. In the normalised pass it's a solid white hole in the middle of the image. The eye keeps going back to it looking for something and finding nothing.
+
+**Q5: MADE, OR REPEATED?**
+Made. The slab widths vary genuinely within courses, the bond offsets are irregular rather than a half-lap, and the face marks in the dim band are individually authored per slab — I ran a near-duplicate patch search across the floor and the only high-correlation matches were in the blank lit core (where the only high-frequency content is the mortar joints, which are of course identical). No stamped tile is being repeated.
+
+That's the problem, though: it was made once and then nothing was done with it. It reads as a fresh masonry survey, not as a floor that has been in continuous heavy use since before records began.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. Not genuinely good. It is a correct, clean, well-constructed stone floor that carries no information — you cannot read use, direction, hierarchy, danger or age off it. It would pass a milestone review and it would never be the reason anyone remembered the game.
+
+**Q7: AT THE SIZE SHOWN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1: the mortar joints, the crack polylines, the two diagonal light bands. That is the complete list. **The faces of the slabs in the lit core are blank.** Not subtle — blank.
+
+Only on magnification: diagonal hatch bundles, stacks of short horizontal dashes that read like scratched tallies or eroded inscription rows, small dark pits, vertical stroke groups. There's a good vocabulary of marks in there. None of it is visible while playing.
+
+There is one borderline case — the slab at x 305–345, y 212–250 — where at 1:1 I registered "that patch looks grubby" without resolving a single mark. I had to go to 4× to find the dash rows. That is hunting, not seeing.
+
+**Q7_WHY:**
+Checked at 1:1 — x 320–500, y 150–260 (around the figure); x 350–560, y 90–150; x 560–680, y 0–140; x 505–565, y 275–420 (corridor). Result: joints and cracks only.
+Had to magnify — x 430–750, y 0–150; x 600–650, y 30–58; x 690–740, y 90–118; x 305–345, y 212–250.
+
+The measurements say why. In the lit slabs at x 438–498, y 168–194 and x 382–438, y 207–230 the red channel is clipped at 255 across 27% and 30% of the slab respectively — the lamp has burned the surface off. In the detailed slabs at x 600–650, y 30–58 the face variation is ±5 grey levels; at x 690–740, y 90–118 it is ±1.6 grey levels. **The texture work exists everywhere except in the exposure band where a human eye could resolve it.** Where you can see, there's nothing; where there's something, you can't see.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+One age everywhere, and the age it reads is wrong: **laid maybe a decade ago and never walked on.** Cracked, but unworn.
+
+The fiction wants a floor older than the records, in continuous heavy use. What's on screen is a floor that settled and split but has no idea anyone has ever crossed it.
+
+**Q8_WHY:** Every slab arris is square. x 438–498, y 168 — sharp 90° corners. x 505–533, y 300–330 (corridor, supposedly the most-trafficked strip on the map) — also sharp 90° corners. No cupping, no dishing, no rounded leading edges, no polish differential, no cumulative grime in the joint recesses (joint darkness is constant at every sample: x 340 y 160, x 620 y 250, x 520 y 380). The only ageing evidence is the crack network at x 400–750, y 120–270, and cracks read as structural settlement, not as use. Nowhere on the floor does one region read older or more used than another — I looked specifically for a differential at the corridor threshold (x 505–565, y 270–300) and at the north opening (x 310–620, y 0–20) and found none.
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES?**
+The route goes south. **The ground told me nothing** — I read it entirely off the walls.
+
+**Q9_WHY:**
+Route regions: x 505–565, y 275–420 (the corridor). Coursing is running bond, ~30×28 slabs, two per course. Face detail: none beyond dithered gradient noise.
+Rejected regions: x 310–620, y 0–30 (north opening); x 620–750, y 0–270 (east, into falloff); x 118–310, y 20–140 (the western arm).
+**What is different about the ground between them: nothing.** Same bond, same slab proportion, same joint width, same blank faces, same absence of wear. The corridor is identifiable only because the placeholder blocks close in on it at x 490 and x 570. A floor that is walked daily and a floor at the back of an alcove are rendered with the same pixels.
+
+**Q10: WHICH WAY IS USED MOST, WHICH LEAST?**
+They all look the same.
+
+Four openings — north-wide (x 310–620, y 0), north-west arm (x 118–250, y 0), east (x 750, y 0–270), south corridor (x 505–565, y 270). Judging only the ground in front of each: identical bond, identical joint darkness, identical square edges, identical blank faces. No threshold polish, no fan of wear spreading from a mouth, no drift of grit against a disused corner, no darkening in a traffic lane. I cannot rank them. In a place that is a filing system in continuous heavy use, that is the single largest missed opportunity on the screen.
+
+---
+
+**CULL:** Reject. Floor faces are blank exactly where the lamp makes them readable; all texture hides in darkness.
+
+**FLIP LIST**
+- Move the surface detail into the lit band: the hatch, dash-row and pit vocabulary currently at x 430–750, y 0–150 must be legible at 1:1 on the slabs at x 380–500, y 155–235. Raise its contrast and stop the lamp clipping red at 255 across 30% of those slabs.
+- Differentiate the corridor at x 505–565, y 275–420 from the room: worn-smooth centre lane, edge grit, rounded leading arrises at the y 275 threshold — so the ground alone says "this way."
+- Rank the four openings by wear. Give the south mouth a polished traffic fan and give the western arm at x 118–250, y 20–140 undisturbed grit and intact joints, so the player can read use off the floor.
+- Replace the repeated sagging-arc crack (four instances: x 585–640 y 168; x 655–690 y 155; x 660–695 y 188; x 400–440 y 136) with fractures that arrest or step at mortar joints, and add spall, sunken slabs and missing slabs — cracks alone are not four hundred years of damage.
+- Put the orc repairs on the ground: driven pins, lashed rope over a split slab, a salvaged timber plank bridging a gap. At least two instances inside the lit radius, x 310–620, y 90–270.
+
+---
+*Model: Claude Opus 5 (1M context).*

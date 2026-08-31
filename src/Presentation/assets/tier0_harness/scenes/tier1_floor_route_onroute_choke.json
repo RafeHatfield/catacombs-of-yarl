@@ -1,0 +1,87 @@
+{
+  "name": "tier1_floor_route_onroute_choke",
+  "_comment": [
+    "ROUND 24 \u2014 A STATION SAMPLED FROM THE POLYLINE.",
+    "",
+    "RULED (Rafe, 2026-08-30) after round 23's verdict was set aside as VOID-FOR-STATION rather",
+    "than negative: the seat judged ground whose ROUTE STRENGTH IS ZERO. It cited x 370-440,",
+    "y 250-430 as 'the corridor' and found nothing on it, correctly, because there is nothing on",
+    "it \u2014 the route at that height was over at x 151-279.",
+    "",
+    "THE LAW: stations for traffic-keyed questions are SAMPLED FROM THE POLYLINE. The player",
+    "stands ON the route, the gameplay camera frames it, and the route AHEAD lies inside the lit",
+    "pool. A capture composed around the player's position is not composed around the route's",
+    "visible portion, and those stop being the same thing the moment the lamp is carried and the",
+    "route runs diagonally.",
+    "",
+    "TWO PRIOR ROUNDS WERE MIS-STATIONED and are recorded as such rather than as evidence:",
+    "  ROUND 18  the chokepoint is one tile wide and has NO FLANK, so it could not answer a",
+    "            contrast question however the floor was drawn.",
+    "  ROUND 23  the approach station put the route's lit run off to one side while the",
+    "            wall-announced corridor sat at the frame's bottom edge in the dark.",
+    "",
+    "Geometry, carve list and mocked walls are IDENTICAL to tier1_floor_review.json \u2014 only the",
+    "player's station moves, so every comparison through that spec stays valid.",
+    "",
+    "THIS STATION: inside the chokepoint, on the route, with a straight three-tile run of it ahead to (8,14) and the way back north to (8,10) behind. \u00a78.2.1's 'polished wall to wall' state, asked the question it can actually answer: not 'is this different from its flanks' \u2014 it has none \u2014 but 'can you see where it goes'."
+  ],
+  "_legibility": [
+    "Both points are ON THE ROUTE, which is the whole point of the station: the lit one is",
+    "route the seat must be able to read, and the dark one is route beyond the lamp, which",
+    "the design ruling accepts rather than fights.",
+    "Six tiles is the furthest declarable dark - seven lands at py 1026 against a view that",
+    "ends at 1001, and the probe refuses rather than measuring the letterbox."
+  ],
+  "legibility": [
+    {
+      "x": 8,
+      "y": 13,
+      "expect": "lit",
+      "why": "on the route, inside the delivered pool - the ground the question is about"
+    },
+    {
+      "x": 8,
+      "y": 17,
+      "expect": "dark",
+      "why": "the same route past the lamp; dark illegibility accepted by design"
+    }
+  ],
+  "width": 17,
+  "height": 21,
+  "player": {
+    "x": 8,
+    "y": 11
+  },
+  "carve": [
+    {
+      "x0": 5,
+      "y0": 4,
+      "x1": 11,
+      "y1": 9
+    },
+    {
+      "x0": 8,
+      "y0": 10,
+      "x1": 8,
+      "y1": 15
+    },
+    {
+      "x0": 5,
+      "y0": 16,
+      "x1": 11,
+      "y1": 18
+    },
+    {
+      "x0": 4,
+      "y0": 7,
+      "x1": 4,
+      "y1": 7
+    },
+    {
+      "x0": 2,
+      "y0": 6,
+      "x1": 3,
+      "y1": 7
+    }
+  ]
+}
