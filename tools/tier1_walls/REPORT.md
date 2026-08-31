@@ -665,26 +665,33 @@ standing.
   The other arm is one environment variable away — `TIER1_WALLS` / `TIER1_BINDINGS` pointed at
   `tier1_walls_compensated`.
 
-- ⚠ **The post-ruling walk build is INSTALLED, NOT VERIFIED.** It exported, built and installed
-  cleanly onto the SE, and then `verify_on_device.sh` could not launch it:
+- **The post-ruling walk build is VERIFIED ON DEVICE** at commit `0c60bc50`, all eight checks
+  green:
 
   ```
-  Unable to launch com.rafehatfield.catacombsofyarl.tier0 because the device was not,
-  or could not be, unlocked.
+  [Tier1] BUILD IDENTITY: commit=0c60bc501e2bef3a0595dca93681142f50bba04e built=2026-08-30T16:04:32Z
+  [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=63
+          void=129(choice=0,ring>1) missing=0 face_suppressed=63
+          planes(top=114.7 face=61.79) edge_check=46/OK
+          bindings=11(cramp:2,lash:3,patch:1,pin:3,strap:2)
+          age0..3=2/11/7/4 traffic=spine:18/routes:25
   ```
 
-  **Installed and verified are different things on this project and the distinction is not
-  cosmetic** — a session once reported a build "verified on device" on the strength of an export
-  exiting 0, and it had not been installed at all. So this one says what it is. One command with
-  the phone unlocked closes it:
+  It took two attempts and both failures are worth keeping. The first was refused because the
+  phone was locked, and was recorded as **installed-not-verified** rather than rounded up — the
+  distinction is load-bearing here, a session once reported "verified on device" on the strength
+  of an export exiting 0 and it had never reached the handset. The second was a transport drop
+  (`Connection reset by peer`), and the script said the one thing that matters about it: *"CANNOT
+  ASK THE DEVICE … this is NOT a statement about whether the app is installed."*
+
+  ⚠ **THE VERIFIER NEEDS ITS TWO ENVIRONMENT VARIABLES OR IT CHECKS THE WRONG THING.** Run bare,
+  it looks for `tier1_floor_review` and returns MISS on a correct wall build, and it skips both
+  wall checks entirely — so a bare run can come back green having tested nothing about the walls.
 
   ```
   TIER0_EXPECT_SCENE=tier1_wall_review TIER0_EXPECT_WALLS=1 \
   tools/tier0_harness/verify_on_device.sh
   ```
-
-  It must come back with all eight checks green and the wall line reading
-  `family=boundary_wall_material_v1 … missing=0 … edge_check=46/OK … age0..3=…`.
 
   `verify_on_device.sh` named `tier1_floor_review` literally and returned MISS on a correct wall
   build; the scene is a parameter now, and the wall checks are opt-in so a floor build is not
