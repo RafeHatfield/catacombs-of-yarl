@@ -1,6 +1,6 @@
 {
  "family": "boundary_floor_ashlar_v1",
- "commit": "6926f4493cb532225812b9587ce66ed87985af55",
+ "commit": "93d4b026cb0bb2ad5cd0e7c0be90f80b6219be41",
  "seed": 1337,
  "material": {
   "lum_lo": 75.016,
@@ -74,6 +74,8 @@
    0.18
   ],
   "shelter_block": 8,
+  "lane_fray": 0.32,
+  "joint_polish_floor": 0.7,
   "polish_lane": [
    1.9,
    0.62,
@@ -176,7 +178,8 @@
   "stria": 3012,
   "lane_dish": 3013,
   "grit": 3014,
-  "shelter": 3015
+  "shelter": 3015,
+  "lane_fray": 3016
  },
  "offset_steps": [
   -2,

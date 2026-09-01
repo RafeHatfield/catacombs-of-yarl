@@ -1055,6 +1055,13 @@ POLISH_SHOULDER = 1.15          # in tiles, where the lane's specular has faded 
 STRIA_PERIOD = 3                # pixels between streaks
 STRIA_DEPTH = 0.45              # how much of the lane's specular a dark streak gives up
 STRIA_SALT = 3012
+LANE_FRAY = 0.32          # tiles of jitter on the distance BEFORE the lane's falloff, so
+                          # its shoulder wanders instead of arriving on a line. A
+                          # smoothstep to zero at a fixed distance gave the lane a hard
+                          # upper edge, and the walk read it as a spotlight stripe laid on
+                          # the floor — staging, which §8.1 does not allow.
+LANE_FRAY_SALT = 3016
+JOINT_POLISH_FLOOR = 0.70  # no joint is more than 30% below the face beside it in specular
 
 # ---- (2) DISHING ALONG THE LINE ---------------------------------------------------------------
 # The threshold hollows stay exactly as they are; this is the shallow version that follows the
@@ -1122,8 +1129,14 @@ def lane_polish_block(dist, tx, ty, wx, wy, seed):
     distance directly; the noise returns at the shoulders through the age layer underneath.
     """
     import numpy as _np
-    lane = _np.clip((POLISH_SHOULDER - dist) / max(POLISH_SHOULDER - POLISH_LANE_WIDTH, 1e-6),
-                    0.0, 1.0)
+    # THE SHOULDER FRAYS. A smoothstep to zero at a fixed distance gives the lane a hard upper
+    # edge, which the walk read as a spotlight stripe laid on the floor — staging, which §8.1 does
+    # not allow. The distance is jittered on a coarse world block BEFORE the falloff, so the
+    # shoulder wanders by a fraction of a tile instead of arriving on a line.
+    fray = ((_mix_np(wx // SHELTER_BLOCK, wy // SHELTER_BLOCK, LANE_FRAY_SALT) % 1000) / 1000.0
+            - 0.5) * 2.0 * LANE_FRAY
+    lane = _np.clip((POLISH_SHOULDER - (dist + fray))
+                    / max(POLISH_SHOULDER - POLISH_LANE_WIDTH, 1e-6), 0.0, 1.0)
     lane = lane * lane * (3.0 - 2.0 * lane) * POLISH_LANE_GAIN
 
     # STRIATIONS ALONG THE TANGENT. The band coordinate is PERPENDICULAR to the tangent, so the
@@ -1498,6 +1511,8 @@ def main():
     mat["shelter_lift"] = list(SHELTER_LIFT_RUNGS)
     mat["shelter_weights"] = list(SHELTER_WEIGHTS)
     mat["shelter_block"] = SHELTER_BLOCK
+    mat["lane_fray"] = LANE_FRAY
+    mat["joint_polish_floor"] = JOINT_POLISH_FLOOR
     mat["polish_lane"] = [POLISH_LANE_GAIN, POLISH_LANE_WIDTH, POLISH_SHOULDER]
     mat["striation"] = [STRIA_PERIOD, STRIA_DEPTH]
     mat["lane_dish"] = [LANE_DISH_DEPTH, LANE_DISH_RIM]
@@ -1512,7 +1527,7 @@ def main():
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
                           marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT,
                           hollow=HOLLOW_SALT, stria=STRIA_SALT, lane_dish=LANE_DISH_SALT,
-                          grit=GRIT_SALT, shelter=SHELTER_SALT),
+                          grit=GRIT_SALT, shelter=SHELTER_SALT, lane_fray=LANE_FRAY_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,

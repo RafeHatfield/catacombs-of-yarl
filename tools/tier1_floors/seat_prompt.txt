@@ -78,6 +78,18 @@ Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU? Give an age or an age range in yo
     can tell. If it reads as one age everywhere, say that.
 Q8_WHY: name the pixel regions your answer comes from.
 
+⚠ HOW TO GIVE A POSITION, IN EVERY ANSWER BELOW.
+    NOT IN PIXELS. Give positions RELATIVE TO THE FIGURE, IN TILES — "two tiles south of the
+    figure", "the tile the figure stands on", "four tiles north-east". A tile is 64 screen pixels
+    here and the figure is standing on one.
+
+    This is not a style preference. Across three rounds, seats gave confident, specific,
+    measured pixel coordinates for ground that was nowhere near what they described — one placed
+    a corridor mouth at x 502-566 when the frame has it at x 343-407, and analysed the region it
+    named rather than the one it meant. Every one of those coordinate claims has been STRUCK from
+    the record. Positions relative to the figure cannot drift that way, whatever scaling the
+    image reached you at.
+
 Q8B: MARK THE MOST-WALKED GROUND, FROM THE FLOOR ALONE. Before you answer anything about routes,
     give the pixel regions of the ground you judge to be walked MOST, and the ground you judge
     walked LEAST or never. Judge from the FLOOR SURFACE ONLY — you may not use the walls, the

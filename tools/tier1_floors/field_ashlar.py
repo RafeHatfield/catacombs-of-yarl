@@ -418,9 +418,15 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             # (1) THE SPECULAR LANE, recorded for the instruments. The shader consumes it in the
             # engine; here it is returned so the reference painter can be measured on the same
             # quantity the device shows.
+            # A PACKED JOINT TAKES THE SHINE. Faces get the lane in full; a joint gets it in
+            # proportion to how FILLED it is, so a joint level with its stone shines like the
+            # stone and a deep one stays matte. Mirrors the engine, which is where the ring was
+            # being drawn.
+            _lane = CA.lane_polish_block(ldist, ltx, lty, wxb, wyb, seed)
+            _bottom = mat["ladder"][0]
+            _filled = np.clip((L - _bottom) / max(mat["lum_median"] - _bottom, 1e-6), 0.0, 1.0)
             polish[y * T:(y + 1) * T, x * T:(x + 1) * T] = np.where(
-                (cls != 0) & ~((cls == 0) & jm),
-                CA.lane_polish_block(ldist, ltx, lty, wxb, wyb, seed), 0.0)
+                (cls != 0), _lane, _lane * np.maximum(_filled, CA.JOINT_POLISH_FLOOR))
 
             tmap = np.stack([CA.chroma_tint(mat["tint"], v) for v in CA.CHROMA_BY_AGE])
             _ci = np.abs(chr_blk[..., None] - np.array(CA.CHROMA_BY_AGE)).argmin(-1)
