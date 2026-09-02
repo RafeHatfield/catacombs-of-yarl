@@ -1044,7 +1044,13 @@ HOLLOW_SALT = 3011                         # so two mouths are not the same dish
 # for age and wrong for a lane: a specular streak that is chopped into noise cannot be followed.
 # Width now comes from the line distance UNFRAYED, so the lane runs continuous down the centre,
 # and the noise returns only at its shoulders.
-POLISH_LANE_GAIN = 1.9          # how much brighter the lane's specular is than the aged surface
+POLISH_LANE_GAIN = 1.0    # RULED DOWN from 1.9 at the gate: 'it looks like all the tiles on
+                          # the walked path have been replaced'. At 1.9 the on-lane masonry
+                          # measured 0.157 — NINE PERCENT above §13.8's floor, and BELOW its
+                          # own flank's 0.177. The lane was washing the stones out. At 1.0 it
+                          # reads 0.421, nearly three times the floor, while lane-vs-flank
+                          # holds at 0.394. Wear modulates the same stones; it never replaces
+                          # their identity.          # how much brighter the lane's specular is than the aged surface
 POLISH_LANE_WIDTH = 0.62        # in tiles, half-width of the fully-polished centre
 POLISH_SHOULDER = 1.15          # in tiles, where the lane's specular has faded to nothing
 

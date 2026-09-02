@@ -1,0 +1,28 @@
+{
+ "commit": "88da9175d7d9aef4d0d3c0909240f4e1a6d6ca7b",
+ "floor": 0.144,
+ "captures": {
+  "r24_onroute": {
+   "identity_ratio": 1.527,
+   "lane_tiles": 5,
+   "flank_tiles": 13,
+   "on_lane_legibility": 0.4207,
+   "on_flank_legibility": 0.2756,
+   "lane_vs_flank": 0.3938,
+   "lane_mean": 143.2,
+   "flank_mean": 96.1,
+   "in_window": true
+  },
+  "r24_onroute_choke": {
+   "identity_ratio": 1.175,
+   "lane_tiles": 3,
+   "flank_tiles": 3,
+   "on_lane_legibility": 0.4258,
+   "on_flank_legibility": 0.3624,
+   "lane_vs_flank": 0.3655,
+   "lane_mean": 136.7,
+   "flank_mean": 94.5,
+   "in_window": true
+  }
+ }
+}

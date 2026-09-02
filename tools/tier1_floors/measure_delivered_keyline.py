@@ -59,7 +59,10 @@ def measure(png, log):
         return None
     H, W = L.shape
     fh, fw = f.shape
-    oy, ox = (H - fh * T) // 2, (W - fw * T) // 2
+    # THE ORIGIN COMES FROM THE ENGINE, NEVER FROM AN ASSUMPTION OF CENTRING. The camera
+    # follows the player; a centred formula was 160px out in x on the standing station and
+    # every delivered reading taken through it sampled the wrong tiles.
+    ox, oy = MTR.tile_origin(log) or ((W - fw * T) // 2, (H - fh * T) // 2)
 
     floor = np.zeros(L.shape, bool)
     for ty in range(fh):
