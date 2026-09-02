@@ -93,6 +93,7 @@ public sealed class ReviewLighting
     private CanvasModulate? _ambient;
     private PointLight2D? _light;
     private int _tileW = 1, _tileH = 1;
+    private int _lampTileX, _lampTileY;
 
     public ReviewLighting(Params p) => _p = p;
 
@@ -132,6 +133,8 @@ public sealed class ReviewLighting
     /// </summary>
     public void Follow(int tileX, int tileY)
     {
+        _lampTileX = tileX;
+        _lampTileY = tileY;
         if (_light == null) return;
         _light.Position = new Vector2(tileX * _tileW + _tileW / 2f,
                                       tileY * _tileH + _tileH / 2f);
@@ -232,6 +235,34 @@ public sealed class ReviewLighting
             }
         }
         return ImageTexture.CreateFromImage(img);
+    }
+
+    /// <summary>
+    /// The lamp's RELATIVE illumination at a world point: ambient, plus the carried light's own
+    /// radial ramp. 1.0 is ambient alone; the lit ground beside the figure is several times that.
+    ///
+    /// It exists so the §12.1 contact occlusion can be anchored to AMBIENT rather than scaled by
+    /// the lamp — *a boundary scaled by an absent lamp is a boundary that isn't drawn* (RULED,
+    /// 2026-09-02). The occlusion is FORM, and form does not fade because nothing is shining on
+    /// it. This is the rig's own curve, read from the rig, and NOT a second copy of it: the same
+    /// `1 - smoothstep(d)` raised to the same falloff that `BuildRadialFalloff` bakes into the
+    /// texture, so the two cannot drift apart.
+    /// </summary>
+    /// ⚠ IN TILES, NOT IN PIXELS, AND THE FIRST VERSION WAS IN PIXELS. It measured
+    /// `host.GlobalPosition` against `_light.GlobalPosition`, and at the moment the floor overlays
+    /// attach the lamp's global transform is not yet resolved — so every cell came back at
+    /// ambient and the occlusion stacked EVERYWHERE. The capture said so plainly: all three range
+    /// bands rose by about a third (47.80 -> 63.54, 15.64 -> 21.93, 3.85 -> 5.23) where only the
+    /// third was meant to move at all. Tile indices need no transform to be right.
+    public float RelativeIlluminationAtTile(int tileX, int tileY)
+    {
+        float amb = Mathf.Max(_p.AmbientLevel, 0.0001f);
+        if (_p.RadiusTiles <= 0f) return 1.0f;
+        float dx = tileX - _lampTileX, dy = tileY - _lampTileY;
+        float d = Mathf.Sqrt(dx * dx + dy * dy) / _p.RadiusTiles;
+        float a = d >= 1f ? 0f : 1f - Mathf.SmoothStep(0f, 1f, d);
+        if (!Mathf.IsEqualApprox(_p.Falloff, 1.0f)) a = Mathf.Pow(a, _p.Falloff);
+        return 1.0f + (_p.Energy * a) / amb;
     }
 
     /// <summary>One line, written into the capture log so a capture carries its own rig.</summary>

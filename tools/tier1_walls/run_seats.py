@@ -33,6 +33,9 @@ import sys
 
 from PIL import Image
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import plant_adjudicator as PA          # noqa: E402
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
 EV = os.path.join(HERE, "evidence")
@@ -274,10 +277,24 @@ def main():
             culled, named = plant_caught(fields, text)
             rec["plant_culled"] = culled
             rec["ruin_named"] = named
-            rec["caught"] = bool(named)          # the AXIS decides, not the cull
-            print("   plant: culled=%s (not the test) ruin_named=%s -> %s"
-                  % (culled, named, "CAUGHT ON AXIS" if rec["caught"]
-                     else "MISSED — ROUND IS VOID"))
+            # ── THE ADJUDICATOR DECIDES FROM ROUND 10. ────────────────────────────────────────
+            #
+            # RULED: *"replace the plant control under the §1.1 STOP first."* The grep is not an
+            # instrument — `audit_plant_control.py` — so a fresh judgement scores the transcript
+            # instead. It is proven on the ten family transcripts with ZERO false positives, and
+            # it can return CAUGHT, which the grep could never be shown to do on its own axis.
+            #
+            # The grep is kept and REPORTED, never decisive, because the two disagreeing is
+            # itself evidence: on the nine past rounds they disagree four times, and twice
+            # (rounds 4 and 8) the adjudicator says NOT CAUGHT where the grep matched only terms
+            # the family also uses. Nothing below re-scores a past round.
+            adj = PA.adjudicate(PA.transcript_of(rec))
+            rec["adjudicator"] = {k: v for k, v in adj.items() if k != "raw"}
+            rec["ruin_named_grep"] = named
+            rec["caught"] = bool(adj["caught"])
+            print("   plant: adjudicator=%s  (grep second opinion: %s)"
+                  % (adj["verdict"], named or "no terms"))
+            print("   quote: %s" % (adj["quote"] or "NONE"))
         # A record only ever reaches disk for a seat that was ALLOWED to run, and the gate above
         # is the only thing that decides that. There is no PENDING state any more: a family
         # seat's record exists exactly when its round is VALID.

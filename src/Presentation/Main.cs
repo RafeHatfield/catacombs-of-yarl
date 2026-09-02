@@ -2596,6 +2596,11 @@ public partial class Main : Node
                         _state.Player.X, _state.Player.Y);
         _reviewLighting = lighting;   // retained so _Process can keep the lamp on the player
 
+        // The floor overlays need the rig to anchor §12.1's contact occlusion to AMBIENT rather
+        // than let it scale away with the lamp. Handed over BEFORE the overlays attach, because
+        // the occlusion's layer count is decided as each cell is drawn.
+        Tier1FloorOverlays.UseLighting(lighting);
+
         // THE RIG LADDER — §6.2.1's tuning pass, on device, in Rafe's hands. Review builds only:
         // this is reached from LaunchCorridorScene, which a player build never enters.
         var rigPanel = new ReviewRigPanel(lighting);
