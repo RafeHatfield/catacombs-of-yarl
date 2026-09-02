@@ -33,6 +33,11 @@ if [ "$ARM" = "plant" ]; then
   # cap, byte for byte. Rounds 3 and 6 went void because the plant was culled for something the
   # family shared; the way to stop paying for that is to hold every other variable here.
   WALLDIR=src/Presentation/assets/tier1_walls_plant
+  # ⚠ AND THE PLANT'S OWN CAP. Since the cap pass the cell's base is a cap window and the wall
+  # family's top tiles are never drawn, so a plant that ruins only the wall tiles is invisible in
+  # 99.5% of the frame — measured, on the round-10 pair: 0.54% of pixels differing, 21 cells.
+  # Rounds 9 and 10 both died on a control that was not in the picture.
+  CAPDIR=src/Presentation/assets/tier1_cap_plant
 elif [ "$ARM" != "material" ]; then
   WALLDIR=${WALLDIR}_${ARM}
   BINDDIR=${BINDDIR}_${ARM}
