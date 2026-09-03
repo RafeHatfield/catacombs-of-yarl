@@ -1,0 +1,62 @@
+{
+  "_what": [
+    "THE JUDGE'S OWN SELF-TEST — a deck whose BUILD SLOT holds a frame Rafe personally culled.",
+    "",
+    "  .claude/skills/frame-critic/run_frame_critic.sh \\",
+    "      --config .claude/skills/frame-critic/evidence/selftest-floor.json \\",
+    "      --build-frame .claude/skills/frame-critic/morgue/keyline-floor.png",
+    "",
+    "The declared expectation is that the seat flags it. If a seat would ship a culled frame, the",
+    "mechanism has told us its own judging layer is soft — which is the one thing it exists to be",
+    "able to say.",
+    "",
+    "WHY THE FLOOR SURFACE AND NOT THE WALL. `--build-frame` excludes its own file from the plant",
+    "draw, because a deck showing the seat the same picture twice would be the control judging",
+    "itself. The wall lane holds ONE morgue entry, so excluding it leaves nothing to draw. The",
+    "floor lane holds three, so the self-test runs there — and the picture in the build slot is",
+    "still a real culled frame, which is all the test needs.",
+    "",
+    "No capture command runs: --build-frame supplies the frame. The block below is present so the",
+    "config is well formed and so the path is obvious if someone points this file at a live round.",
+    "",
+    "The Yarl crop is the wall config's engine-reported viewport band. Same renderer, same",
+    "750x1334 capture, same HUD, so the same band — the floor logs of this vintage predate the",
+    "grid-map line that reports it, which is why it is inherited rather than read.",
+    "",
+    "The bar crop is the CORRECTED one — twice corrected. The box inherited from",
+    "tools/tier1_floors/run_seats.py ran 24 rows off a 720x504 source and PIL padded the",
+    "difference with black; shifting it up then ran into the example sheet's own white paper",
+    "margin. The artwork occupies x 24-695, y 24-479. See the note in docs/FRAME-CRITIC.json."
+  ],
+  "surface": "floor",
+  "capture": {
+    "cmd": [
+      "false"
+    ],
+    "frame": "tools/tier1_floors/evidence/fc_standing.png",
+    "log": "tools/tier1_floors/evidence/fc_standing.log"
+  },
+  "crop": [
+    0,
+    90,
+    750,
+    1001
+  ],
+  "asset_bar": {
+    "image": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "crop": [
+      304,
+      192,
+      688,
+      480
+    ]
+  },
+  "approved_capture": null,
+  "_approved_capture_note": [
+    "NULL, and docs/GATE-CONDITIONS.json explains why for the floor at length: no floor capture",
+    "was ever approved outright — the verdicts run 'not wowed, impressed, close', 'closer,",
+    "legitimately impressed, one axis remains', 'passed in kind', and a run of FAILs. Naming one",
+    "myself would be choosing the baseline my own work is judged against."
+  ],
+  "work_dir": "~/.claude/frame-critic"
+}

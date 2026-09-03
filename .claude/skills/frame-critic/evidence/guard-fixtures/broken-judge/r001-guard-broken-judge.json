@@ -1,0 +1,25 @@
+{
+ "_fixture": "Synthetic verdict. Drives a loop guard against the real guards() and write_stall(). Not a round; not evidence about any build.",
+ "schema": "frame-critic/1",
+ "verdict": "VOID",
+ "lane": "guard-broken-judge",
+ "round": 1,
+ "surface": "wall",
+ "commit": "0000000000000000000000000000000000000000",
+ "build_id": "fixture-void-1",
+ "timestamp": "2026-09-03T09:00:00",
+ "deck": {
+  "work_dir": "(fixture)",
+  "build": "tools/tier1_walls/evidence/fixture_v1.png"
+ },
+ "plant": {
+  "file": "grey-walls.png",
+  "caught": false,
+  "verbatim": "Grey walls and ceiling; it looked better a few versions ago."
+ },
+ "seat": {
+  "WORST_WHY": ""
+ },
+ "flip_list": [],
+ "transcript": "(fixture)"
+}

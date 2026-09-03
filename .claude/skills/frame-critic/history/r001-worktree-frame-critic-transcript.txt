@@ -1,0 +1,49 @@
+Read all three at native size, then brightened, upscaled and measured them.
+
+RANK: 3 > 1 > 2
+
+BEST: 3
+
+BEST_WHY: The floor in the lit pool holds a genuine masonry structure at play size. The slabs are not one repeated unit — there is an offset running bond with real size variety (the 2×1 slab under the figure at ~(390–450, 460–490), a run of 1×1s at y≈540, a long single-piece slab at (280–420, 530–565)) and the courses break rather than line up column-to-column. The pixels are discrete: measured across the frame, 80% of horizontal neighbour pairs are identical, and the art is a clean 2× upscale of a 16px tile with hard source edges, so nothing smears. The light falloff is also correct and symmetric — floor at equal radius left and right of the figure (x 200–360 vs 440–600, y 470–600) measures 87.4 and 87.2 luma, and the region behind the wall band measures 27–30 against 87 in front of it, so the wall genuinely occludes. That is a working light, not a painted vignette.
+
+WORST: 2
+
+WORST_WHY: The water is a rectangle. It meets the dirt on a dead-straight vertical seam at x≈248 running the full height from y=0 to y≈190, meets the flagstone on another at x≈344, has square 90° corners, and has no bank, no shoreline tile, no edge darkening and no depth variation — one flat teal with a single uniform bubble pattern repeated over ~40 tiles. Underneath that, the frame mixes projections: the two barrels at (120,196) and (168,196) are drawn in 3/4 view — you see the barrel's side staves *and* a full elliptical lid — while the crates at (64,8) and (64,56) and every flagstone are drawn flat-on from directly above. And the brick wall stub at (16–56, 122–146) simply stops in bare dirt at both ends with no end cap, no corner and no thickness, with an orange fixture perched on it whose brown post runs down onto the dirt and terminates in a flat 2px stump with no footing and no contact shadow.
+
+FLAGGED: 1, 2, 3
+
+SHIP: NONE
+
+FLIP 1:
+- The lit pool is not centred on the lamp. At y 470–600 with no occluder in between, floor left of the figure (x 200–360) averages 92.2 luma and floor right of it (x 440–600) averages 58.6 — a 1.6× asymmetry at equal radius. Make the falloff radially symmetric about the figure, or remove whatever baked directional gradient is sitting under it.
+- The two upper rooms (x 60–360 and x 440–720, above y≈380) are a per-pixel grain field with no slab, no joint and no grid anywhere in them, while the room below the wall is fully tiled. Draw them with the same slab structure as the lower room.
+- Block edges in the wall course — x≈300, x≈380, x≈470 at y≈395–415 — are 2px soft ramps, not edges. The frame is a 2× upscale but only 51% of source horizontal neighbour pairs match, so the source itself carries anti-aliased continuous tone. Redraw with hard 1px source edges so the art holds the pixel grid.
+- Slab faces and their joints across the whole lower room sit within about two value steps of each other, so at play size the floor collapses into brown mush. Widen the face-to-joint separation to at least four steps.
+- The 45° hatch is applied at the same angle, spacing and value to most slabs in the lower room (compare (430–500, 470) with (520–600, 555) — identical treatment). Vary the angle and density, and leave most slabs bare.
+- Nothing in the frame is a repair. The company works in rope, driven pins, hide and salvaged timber, and there is not one pin, lashing or timber patch in the lit pool. Add them as drawn objects, on the floor and across the wall course.
+
+FLIP 2:
+- Add shore transition tiles on all four sides of the water and darken it toward the bank; kill the 90° corners at (248,0) and (344,190).
+- Break up the water interior: it is one flat teal over ~40 tiles. Give it at least one depth value break and non-uniform surface detail.
+- Pick one projection. Redraw the barrels at (120,196) and (168,196) flat-on to match the crates and flagstones, or re-pitch the whole frame.
+- The two barrels are identical copies, as are the two tan crates at (64,8)/(64,56) and the two dark crates between them. Vary stave count, lid wear and rim damage per instance.
+- Cap the brick wall stub at (16–56, 122–146) at both ends, or run it to a boundary. Give it a thickness face on its south edge.
+- Give the orange fixture at (56,120–160) a footing where its post meets the dirt at y≈160, plus a contact shadow.
+- The grey flagstone floor is one identical tile with a 1px seam grid repeated across roughly 40 tiles with zero variation. Author cracked, chipped and stained variants and scatter them.
+- The dirt/flagstone boundaries at y≈216 (full width) and x≈56 are hard straight cuts with no transition tile. Add edge tiles.
+- The frame is uniformly lit with no light source; the only shadows are the ones baked into the barrel sprites. Add the lamp-carried falloff and occlusion from the wall stub and crates.
+- The green blob cluster is used verbatim as both pond scum on water at (300,100) and floor moss on stone at (350,155) and (30,60). Author them separately.
+- The orc sprite at (222,0) is clipped by the top edge and stands on a hard-edged brown oval that does not match the dirt under it. Remove the pad or redraw it as a contact shadow.
+
+FLIP 3:
+- The wall's south face — y≈425 to y≈452, running the full frame width across both runs — is a single flat value carrying nothing but soft smoke blobs. Give it the drawn treatment the block course above it already has: mortar joints aligned to that course, at least three value steps, and a cut edge where it meets the floor at y≈452.
+- The line at y≈420 where the block course stops and that flat face begins is a hard, unbroken 1px straight edge from x=25 to x=345 and again from x=410 to x=720. Vary the bottom edge of the course by ±1px per block and let two or three blocks overhang.
+- The upper rooms (x 60–360 and x 440–720, above y≈380) are smooth anti-aliased cloud blobs with no grid, sitting in the same frame as crisp stippled pixel-art floor. Redraw them on the 16px grid with hard edges and no sub-pixel gradients.
+- Every joint in the lit pool is the same 1px dotted line at the same value — the run at y≈505 from x≈300 to x≈620 has no variation along its whole length. Vary joint depth and value within a single run so the stones read as cut rather than stamped.
+- The interior marks repeat verbatim: the same paired vertical ticks and the same 45° hatch run appear on the slabs at (455,470), (600,470) and (300,540). Leave at least half the slabs blank and hand-vary the rest.
+- The large slab at (280–420, 530–565) is a plain untextured rectangle brighter than everything around it, with no joint detail and no marks. Finish it or break it up.
+- No repairs anywhere. Add rope, driven pins, hide and salvaged timber as drawn objects across the wall course and on the floor — this is the one thing the fiction says the place is entirely made of, and the frame contains none of it.
+
+The two dungeon frames are the same map and the same sprite with different tile art, so the comparison is clean: 1 is softer and has a light that doesn't sit on its own lamp; 3 holds its pixels and its light but has an unfinished wall face and blank upper rooms. Neither is far off — 3 is closer, and its fixes are additive rather than a re-render. 2 is a different order of problem.
+
+Model: Claude Opus 5 (1M context)

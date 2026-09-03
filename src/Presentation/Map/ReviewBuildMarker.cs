@@ -93,6 +93,20 @@ public sealed class ReviewBuildMarker
     public string? BuiltAt { get; private init; }
 
     /// <summary>
+    /// What this build was allowed past, or null when it was gated normally. Currently one
+    /// value: <c>SKIPPED-REVIEW</c>, stamped by build_review_app.sh when YARL_SKIP_CRITIC=1
+    /// waved the build past the frame-critic gate.
+    ///
+    /// It is drawn ON SCREEN, in the corner, for as long as the build is on the handset. An
+    /// override nobody can see from the phone is indistinguishable from a gate that does not
+    /// work, and this project's ledger is a list of rules that depended on being remembered and
+    /// eventually were not. Whoever is walking the build has to be able to tell that nothing
+    /// looked at it — otherwise a measurement build gets walked as a gate build, and the verdict
+    /// is taken on a frame no critic ever saw.
+    /// </summary>
+    public string? ReviewStatus { get; private init; }
+
+    /// <summary>
     /// Tile size and integer scale for the review build, mirroring --tile-size / --tile-scale.
     ///
     /// These exist for the same reason the light values do, and the omission would have been
@@ -174,6 +188,8 @@ public sealed class ReviewBuildMarker
                 WallCap = root.TryGetProperty("wallCap", out var wc) ? wc.GetString() : null,
                 Commit  = root.TryGetProperty("commit",  out var cm) ? cm.GetString() : null,
                 BuiltAt = root.TryGetProperty("builtAt", out var ba) ? ba.GetString() : null,
+                ReviewStatus = root.TryGetProperty("reviewStatus", out var rs)
+                            ? rs.GetString() : null,
                 TileSize  = root.TryGetProperty("tileSize", out var ts)
                             ? ts.GetInt32() : (int?)null,
                 TileScale = root.TryGetProperty("tileScale", out var sc)

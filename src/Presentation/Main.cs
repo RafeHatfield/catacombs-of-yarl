@@ -2607,6 +2607,32 @@ public partial class Main : Node
         _rigPanel = rigPanel;
         GetNode<Control>("UILayer/ViewportOverlay").AddChild(rigPanel);
 
+        // ── A BYPASSED REVIEW GATE IS VISIBLE FROM THE PHONE ──────────────────────────────────
+        //
+        // Art rounds are judged by eyes on delivered frames, and no build reaches this handset
+        // without a frame-critic PASS for that exact build — unless somebody set YARL_SKIP_CRITIC
+        // and waved it through, which is legitimate for producing something to MEASURE and is
+        // never a build to take a verdict on.
+        //
+        // The two are indistinguishable in the hand, and that is the whole hazard: a measurement
+        // build gets walked as a gate build and a verdict is taken on a frame no critic ever saw.
+        // So the stamp is drawn ON SCREEN rather than only logged. A log nobody pulls is not a
+        // warning, and every process rule in this project that depended on being remembered was
+        // eventually not remembered.
+        if (!string.IsNullOrEmpty(marker?.ReviewStatus))
+        {
+            var warn = new Label
+            {
+                Text = marker!.ReviewStatus,
+                Modulate = new Color(1f, 0.35f, 0.35f),
+                MouseFilter = Control.MouseFilterEnum.Ignore,
+                Position = new Vector2(8, 8),
+                ZIndex = 4096,
+            };
+            warn.AddThemeFontSizeOverride("font_size", 18);
+            GetNode<Control>("UILayer/ViewportOverlay").AddChild(warn);
+        }
+
         // Through Diag as well as GD.Print: on iOS there is no console to read, and GD.Print goes
         // nowhere retrievable. Diag writes to the app container, which can be pulled back off the
         // device — which is the only way to show that a review build actually booted the corridor
@@ -2621,6 +2647,7 @@ public partial class Main : Node
         // and that is what this line carries.
         Report($"[Tier1] BUILD IDENTITY: commit={marker?.Commit ?? "UNSTAMPED"} "
                + $"built={marker?.BuiltAt ?? "UNSTAMPED"} "
+               + $"review={marker?.ReviewStatus ?? "GATED"} "
                + $"app={ProjectSettings.GetSetting("application/config/name")}");
         Report($"[Tier0] corridor scene: {spec.Name} ({jsonPath})");
         Report($"[Tier0] map={spec.Width}x{spec.Height} player=({spec.PlayerX},{spec.PlayerY}) "

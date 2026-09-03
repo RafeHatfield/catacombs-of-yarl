@@ -1,0 +1,67 @@
+I read all three at native resolution and at magnification, plus luminance/saturation measurements.
+
+**RANK:** 2 > 3 > 1
+
+**BEST:** 2
+
+**BEST_WHY:** The masonry in the lower room reads as cut and laid rather than stamped. In the floor band below the figure (roughly x 100–650, y 480–700) the block widths genuinely vary along a single course — a wide slab at around (300, 560) runs about twice the width of its neighbours, and the mortar joints continue across block boundaries instead of resetting at a tile edge. The horizontal wall band at y≈388–425 is the frame's strongest piece of construction: its top edge is a clean unbroken line, and the ground immediately above and below it is held smooth and low-detail, so the wall is the highest-contrast silhouette in the frame. That is a deliberate hierarchy decision and it works. Measured, the dark field left of the corridor (x 150–330, y 240–380) has a high-frequency energy of 1.06 against a mean luminance of 19 — it is soft and structured, so the darkness reads as unlit space rather than as texture the artist forgot to turn off.
+
+**WORST:** 1
+
+**WORST_WHY:** Several things, any one of which stops it.
+
+The frame is padded. Content ends at row 239. Rows 240–263 are pure white — literally (255,255,255), all 384 pixels wide — and rows 264–287 are pure black. A solid white bar at the bottom of an underworld frame is a compositing accident left in the file.
+
+The two barrels at around (105–160, 145–170) are drawn in three-quarter view — full ellipse top plus the complete cylindrical side and stave lines — sitting on a floor drawn straight from above. They are also hard-clipped: the barrel bodies terminate in a flat horizontal cut exactly at the grey stone tile boundary at y≈168. No bottom, no contact, no shadow. The chest at top-left (110–165, 0–40) has the same problem, showing its front face.
+
+The green rectangle at (218–305, 0–140) is an axis-aligned block that simply stops. No bank, no edge tile, no depth shift — the bottom edge at y≈140 is a straight horizontal line where saturated teal meets brown dirt with zero transition pixels. Its lily pads read at roughly (60,180,60), fully saturated green, against a scene whose stone is near-neutral grey and whose dirt is desaturated warm brown. Three unrelated palettes in one frame.
+
+There is no lighting. Row means across the content area run 78–99 top to bottom, column means 66–85 left to right. It is uniformly flat. No figure, no light source, no falloff.
+
+The white specks at around (185–202, 68–80) are a scatter of one- and two-pixel near-white marks — the highest values anywhere in the frame — that resolve into nothing at played size. They read as dead pixels, not as bone.
+
+**FLAGGED:** 1, 3, 2
+
+For 1: the white padding bar and the barrels cut off mid-body at the tile seam.
+
+For 3: it is image 2 with a noise pass over it. In the corridor (x 385–430, y 250–380) the high-frequency energy is 19.19 against 2's 10.60 at the same location, and in the dark field left of the corridor it is 2.98 against 2's 1.06 at a comparable mean luminance. Magnified, that region is per-pixel random jitter between dark brown and mustard with no structure — it is grain, not material. The consequence is visible at a glance: the wall band at y≈388–425 loses its silhouette, because the ground above it now carries the same value and the same speckle as the wall's own lit blocks. And long 45° hatch strokes run continuously across stone joints and across the wall's footprint — in the lower-left floor around (150–500, 480–620) single diagonal streaks cross four or five separate blocks without breaking at a single mortar line. Material does not do that; an overlay does. The light pool is also wrong: the brightest 0.3% of pixels centroid at (376, 473), up and to the left of the figure at (407, 487), so the brightest floor is not under the lamp-bearer. In 2 the same centroid lands at (400, 517), on the figure.
+
+For 2: the figure stands in the brightest pool in the frame and casts no shadow. The boots at y≈505 meet the floor with nothing but the sprite's own black outline — no contact shadow, no occlusion, in the one place a player's eye is guaranteed to be.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 2:**
+- Put a contact shadow under the figure. The boots at (395–420, 500–508) meet the floor with only the sprite outline; the sprite is the light source's origin and the only thing in the frame not occluding anything.
+- The figure carries a sword and shield and no lamp. The frame's whole lighting model is "one carried light." Give the sprite the light-emitting object, or move the emitter to a placed prop and let the figure be lit by it.
+- The sprite contains fully saturated pixels — measured max saturation 1.00, 90th percentile 1.00 — while nothing in the environment exceeds 0.57. Bring the character into the scene's palette or the scene up to meet it; right now it is an asset from another game pasted on top.
+- The cracks in the lower-left and lower-right floor are uniform 1px strokes at near-black, holding the same width and the same value from near the figure out to the darkest corners. They are the highest-contrast marks in the unlit regions. Vary their width along their length, break them where they cross a joint, and attenuate their value with distance from the lamp like everything else.
+- The hatch fill inside the floor stones is one stamp at one angle and one pitch, repeated. Count the hatched blocks in the band y 480–700: the motif at (240, 500), (490, 530), (930, 490) and (250, 815) is the same mark rotated zero degrees each time. Make three or four hatch variants at different angles and pitches, or vary the stone interiors by value instead of by texture.
+- Nothing in the frame has been repaired. The fiction is four hundred years of rope, driven pins, hide and salvaged timber, done by people who are excellent at it and indifferent to appearance. The wall band at y≈388–425 is the obvious place: put timber baulks pinned across the courses, with the pins visibly driven and the timber not squared to the stone.
+- The floor immediately right of the figure (x 430–470, y 470–520) is the brightest area and the least described — flat tan with a few faint horizontal dashes. Detail should peak where the light peaks; give that area its joints and stone edges at full strength.
+
+**FLIP 3:**
+- Delete the noise layer. The field left of the corridor at (150–330, 240–380) is per-pixel random speckle; strip it and rebuild that area as drawn form, or leave it dark and unresolved as 2 does.
+- Delete the 45° hatch overlay. It runs across block boundaries — single strokes crossing four or five stones and their joints in the lower-left floor around (150–500, 480–620) — which is the clearest tell that it was applied globally rather than drawn per surface. If hatching stays, clip it to each stone and change its angle per stone.
+- Restore the wall band's silhouette at y≈388–425. Its top edge is currently buried because the ground above it carries the same luminance and texture as the wall's lit blocks. Drop the ground above the wall by a clear value step and hold that band smooth.
+- Move the light pool onto the figure. The brightest-pixel centroid sits at (376, 473); the figure is at (407, 487). The bright wedge currently extends up and to the left with a hard edge and no source.
+- The corridor floor (x 385–430, y 250–380) is a single uniform dither pattern for its entire length with no block structure. It needs actual paving: joints, varying slab sizes, and the joint spacing changing along the run.
+- The mustard-green cast in the mid-corridor mottle sits outside the scene's hue range and does not resolve into any material. Pick what it is — stone, silt, mould — and draw it as that, or remove it.
+- Same as 2: contact shadow under the figure, a light source in the figure's hands, the sprite's fully-saturated palette reconciled with the environment's 0.57 ceiling, and some evidence anywhere in the frame that this place has been repaired by hand for four hundred years.
+
+**FLIP 1:**
+- Crop the file to the content area. Rows 240–263 are solid white and rows 264–287 are solid black; neither is part of the frame.
+- Redraw the barrels at (105–160, 145–170) and the chest at (110–165, 0–40) in the same projection as the floor. They currently show front faces and full cylindrical sides against a straight top-down ground plane.
+- Stop clipping the barrels at the tile seam. Both bodies are cut by a flat horizontal line at y≈168 where the dirt meets the grey stone. Draw them whole, on one surface, with a contact shadow.
+- Build an edge for the green area at (218–305, 0–140). Its bottom boundary is a straight horizontal line of saturated teal against brown with no transition pixel. It needs a bank, a value ramp into depth, and an irregular contour.
+- Bring the three palettes together. The stone at bottom is near-neutral grey, the dirt is desaturated brown, and the pads in the green area sit near (60,180,60). Pull the green down into the scene's chroma range or cut it.
+- Add the light. Row means run 78–99 top to bottom and column means 66–85 left to right — the frame is uniformly lit with no figure and no source. It needs the carried light and the falloff that the other frames have.
+- Resolve or remove the white specks at (185–202, 68–80). They are the highest-value pixels in the frame, scattered across roughly fifteen isolated one- and two-pixel marks, and they read as screen dirt.
+- Fix the left edge at x 0–3, y 75–118, where an orange object is sliced by the frame boundary, and give the dark brick run at (0–45, 78–130) an actual join to the grey stone above and below it rather than a butt seam.
+
+---
+
+The pattern across 2 and 3 is worth naming directly: they are the same map, and 3 is the version where a texture pass was substituted for drawing. It buys apparent detail and spends the frame's entire silhouette hierarchy to get it. 2 is the better decision by a wide margin, and it still isn't shippable — the shadowless figure standing in the brightest pixel of the frame is the first thing anyone will see, and nothing anywhere in either frame shows the repair work that the place is supposed to be made of.
+
+*Model: Claude Opus 5 (1M context)*

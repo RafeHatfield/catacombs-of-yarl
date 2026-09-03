@@ -1,0 +1,104 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-frame-critic",
+ "round": 1,
+ "surface": "wall",
+ "commit": "e248cad6d0e5dae81cef44950a44f5d01b47ea48",
+ "dirty": true,
+ "build_id": "049c36f3cfd4af3b896a73ae83898779d403286088e6e61edbc8cf0e39830cdf",
+ "timestamp": "2026-09-03T14:14:01",
+ "build_frame": {
+  "path": "tools/tier1_walls/evidence/fc_standing.png",
+  "sha256": "c1f09e4be73aff2cd03176b678b24adf87c795446c9d9ee519a9d1ae0db66c09",
+  "log": "tools/tier1_walls/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/frame-critic --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_walls/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-choice 0 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-frame-critic-r1",
+  "slots": {
+   "1": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     336,
+     240,
+     720,
+     528
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "2": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/grey-walls.png",
+    "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "build",
+    "source": "tools/tier1_walls/evidence/fc_standing.png",
+    "sha256": "c1f09e4be73aff2cd03176b678b24adf87c795446c9d9ee519a9d1ae0db66c09",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_walls/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 2,
+  "file": "grey-walls.png",
+  "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+  "culled_by": "Rafe, device gate, 2026-09-02",
+  "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The masonry in the lower room reads as cut and laid rather than stamped. In the floor band below the figure (roughly x 100\u2013650, y 480\u2013700) the block widths genuinely vary along a single course \u2014 a wide slab at around (300, 560) runs about twice the width of its neighbours, and the mortar joints continue across block boundaries instead of resetting at a tile edge. The horizontal wall band at y\u2248388\u2013425 is the frame's strongest piece of construction: its top edge is a clean unbroken line, and the ground immediately above and below it is held smooth and low-detail, so the wall is the highest-contrast silhouette in the frame. That is a deliberate hierarchy decision and it works. Measured, the dark field left of the corridor (x 150\u2013330, y 240\u2013380) has a high-frequency energy of 1.06 against a mean luminance of 19 \u2014 it is soft and structured, so the darkness reads as unlit space rather than as texture the artist forgot to turn off.",
+  "WORST_WHY": "Several things, any one of which stops it.\n\nThe frame is padded. Content ends at row 239. Rows 240\u2013263 are pure white \u2014 literally (255,255,255), all 384 pixels wide \u2014 and rows 264\u2013287 are pure black. A solid white bar at the bottom of an underworld frame is a compositing accident left in the file.\n\nThe two barrels at around (105\u2013160, 145\u2013170) are drawn in three-quarter view \u2014 full ellipse top plus the complete cylindrical side and stave lines \u2014 sitting on a floor drawn straight from above. They are also hard-clipped: the barrel bodies terminate in a flat horizontal cut exactly at the grey stone tile boundary at y\u2248168. No bottom, no contact, no shadow. The chest at top-left (110\u2013165, 0\u201340) has the same problem, showing its front face.\n\nThe green rectangle at (218\u2013305, 0\u2013140) is an axis-aligned block that simply stops. No bank, no edge tile, no depth shift \u2014 the bottom edge at y\u2248140 is a straight horizontal line where saturated teal meets brown dirt with zero transition pixels. Its lily pads read at roughly (60,180,60), fully saturated green, against a scene whose stone is near-neutral grey and whose dirt is desaturated warm brown. Three unrelated palettes in one frame.\n\nThere is no lighting. Row means across the content area run 78\u201399 top to bottom, column means 66\u201385 left to right. It is uniformly flat. No figure, no light source, no falloff.\n\nThe white specks at around (185\u2013202, 68\u201380) are a scatter of one- and two-pixel near-white marks \u2014 the highest values anywhere in the frame \u2014 that resolve into nothing at played size. They read as dead pixels, not as bone.",
+  "FLAGGED": "1, 3, 2\n\nFor 1: the white padding bar and the barrels cut off mid-body at the tile seam.\n\nFor 3: it is image 2 with a noise pass over it. In the corridor (x 385\u2013430, y 250\u2013380) the high-frequency energy is 19.19 against 2's 10.60 at the same location, and in the dark field left of the corridor it is 2.98 against 2's 1.06 at a comparable mean luminance. Magnified, that region is per-pixel random jitter between dark brown and mustard with no structure \u2014 it is grain, not material. The consequence is visible at a glance: the wall band at y\u2248388\u2013425 loses its silhouette, because the ground above it now carries the same value and the same speckle as the wall's own lit blocks. And long 45\u00b0 hatch strokes run continuously across stone joints and across the wall's footprint \u2014 in the lower-left floor around (150\u2013500, 480\u2013620) single diagonal streaks cross four or five separate blocks without breaking at a single mortar line. Material does not do that; an overlay does. The light pool is also wrong: the brightest 0.3% of pixels centroid at (376, 473), up and to the left of the figure at (407, 487), so the brightest floor is not under the lamp-bearer. In 2 the same centroid lands at (400, 517), on the figure.\n\nFor 2: the figure stands in the brightest pool in the frame and casts no shadow. The boots at y\u2248505 meet the floor with nothing but the sprite's own black outline \u2014 no contact shadow, no occlusion, in the one place a player's eye is guaranteed to be.",
+  "RANK": "2 > 3 > 1",
+  "BEST": "2",
+  "WORST": "1",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "Delete the noise layer. The field left of the corridor at (150\u2013330, 240\u2013380) is per-pixel random speckle; strip it and rebuild that area as drawn form, or leave it dark and unresolved as 2 does.",
+  "Delete the 45\u00b0 hatch overlay. It runs across block boundaries \u2014 single strokes crossing four or five stones and their joints in the lower-left floor around (150\u2013500, 480\u2013620) \u2014 which is the clearest tell that it was applied globally rather than drawn per surface. If hatching stays, clip it to each stone and change its angle per stone.",
+  "Restore the wall band's silhouette at y\u2248388\u2013425. Its top edge is currently buried because the ground above it carries the same luminance and texture as the wall's lit blocks. Drop the ground above the wall by a clear value step and hold that band smooth.",
+  "Move the light pool onto the figure. The brightest-pixel centroid sits at (376, 473); the figure is at (407, 487). The bright wedge currently extends up and to the left with a hard edge and no source.",
+  "The corridor floor (x 385\u2013430, y 250\u2013380) is a single uniform dither pattern for its entire length with no block structure. It needs actual paving: joints, varying slab sizes, and the joint spacing changing along the run.",
+  "The mustard-green cast in the mid-corridor mottle sits outside the scene's hue range and does not resolve into any material. Pick what it is \u2014 stone, silt, mould \u2014 and draw it as that, or remove it.",
+  "Same as 2: contact shadow under the figure, a light source in the figure's hands, the sprite's fully-saturated palette reconciled with the environment's 0.57 ceiling, and some evidence anywhere in the frame that this place has been repaired by hand for four hundred years."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r001-worktree-frame-critic-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

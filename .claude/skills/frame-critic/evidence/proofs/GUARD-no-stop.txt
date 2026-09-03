@@ -1,0 +1,1 @@
+no guard fired for lane 'guard-no-stop' over 4 verdict(s) in .claude/skills/frame-critic/evidence/guard-fixtures/no-stop

@@ -1,0 +1,308 @@
+
+PASS  A  no verdict -> refuse
+      exit 1 (wanted 1); looked for 'NO CRITIC VERDICT'
+      | == FRAME CRITIC GATE
+      |    NO CRITIC VERDICT. CRITIC-VERDICT.json does not exist, so no one has looked at this build.
+      | 
+      |    Run the round:   .claude/skills/frame-critic/run_frame_critic.sh
+      | 
+      |    REFUSING TO INSTALL. Override with YARL_SKIP_CRITIC=1 if you need the build on
+      |    the phone for measurement — it installs, marked, and is not a gate build.
+
+PASS  B  verdict for another build -> refuse
+      exit 1 (wanted 1); looked for 'NOT ABOUT THIS BUILD'
+      | == FRAME CRITIC GATE
+      |    verdict:  PASS   lane prove-gate round 1   2026-09-03T00:00:00
+      |    build:    e248cad6d0e5  (+dirty)
+      | 
+      |    THE VERDICT IS NOT ABOUT THIS BUILD.
+      |      verdict build_id  aaaaaaaaaaaaaaaa  (commit e248cad6d0e5)
+      |      this working tree  57687e1a9d3ed485  (commit e248cad6d0e5)
+      | 
+      |    The build id folds in every tracked change and every untracked file, so a recomposed family moves it even when the commit does not. Something has changed since the seat looked.
+      | 
+      |    Re-run the round:   .claude/skills/frame-critic/run_frame_critic.sh
+      | 
+      |    REFUSING TO INSTALL. Override with YARL_SKIP_CRITIC=1 if you need the build on
+      |    the phone for measurement — it installs, marked, and is not a gate build.
+
+PASS  C  FAIL verdict -> refuse
+      exit 1 (wanted 1); looked for 'VERDICT IS FAIL'
+      | == FRAME CRITIC GATE
+      |    verdict:  FAIL   lane prove-gate round 1   2026-09-03T00:00:00
+      |    build:    e248cad6d0e5  (+dirty)
+      | 
+      |    VERDICT IS FAIL. The seat would not ship this frame.
+      |      flip: The wall tops read as dim floor; separate the planes.
+      | 
+      |    Fix, then re-run the round:   .claude/skills/frame-critic/run_frame_critic.sh
+      | 
+      |    REFUSING TO INSTALL. Override with YARL_SKIP_CRITIC=1 if you need the build on
+      |    the phone for measurement — it installs, marked, and is not a gate build.
+
+PASS  D  FAIL + YARL_SKIP_CRITIC -> allow, exit 10
+      exit 10 (wanted 10); looked for 'SKIPPED-REVIEW'
+      | == FRAME CRITIC GATE
+      |    verdict:  FAIL   lane prove-gate round 1   2026-09-03T00:00:00
+      |    build:    e248cad6d0e5  (+dirty)
+      | 
+      |    VERDICT IS FAIL. The seat would not ship this frame.
+      |      flip: The wall tops read as dim floor; separate the planes.
+      | 
+      |    Fix, then re-run the round:   .claude/skills/frame-critic/run_frame_critic.sh
+      | 
+      |    YARL_SKIP_CRITIC=1 — INSTALLING ANYWAY.
+      |    The build is stamped SKIPPED-REVIEW and the phone will say so on screen.
+      |    Nothing walked on a SKIPPED-REVIEW build is a gate verdict.
+
+PASS  D2 the marker is stamped SKIPPED-REVIEW
+      exit 0 (wanted 0); looked for '"reviewStatus": "SKIPPED-REVIEW"'
+      | == FRAME CRITIC GATE
+      |    verdict:  FAIL   lane prove-gate round 1   2026-09-03T00:00:00
+      |    build:    e248cad6d0e5  (+dirty)
+      | 
+      |    VERDICT IS FAIL. The seat would not ship this frame.
+      |      flip: The wall tops read as dim floor; separate the planes.
+      | 
+      |    Fix, then re-run the round:   .claude/skills/frame-critic/run_frame_critic.sh
+      | 
+      |    YARL_SKIP_CRITIC=1 — INSTALLING ANYWAY.
+      |    The build is stamped SKIPPED-REVIEW and the phone will say so on screen.
+      |    Nothing walked on a SKIPPED-REVIEW build is a gate verdict.
+      | == build identity: commit=e248cad6d0e5dae81cef44950a44f5d01b47ea48+dirty built=2026-09-03T21:16:52Z
+      | == ⚠ SKIPPED-REVIEW — this build has no frame-critic PASS. The phone will say so.
+      | == marker written: REVIEW_BUILD.json
+      | == grid: tile 32 at x2.0
+      | == bundle id: com.rafehatfield.catacombsofyarl.tier0   name: YARL Tier0
+      | == MARKER ONLY — stopping before the export. The marker as written:
+      | {
+      |   "_what": [
+      |     "TIER 0 REVIEW BUILD MARKER \u2014 ART-BIBLE-v0 \u00a713.1.",
+      |     "",
+      |     "This file exists because of a gap the device control exposed: the review corridor was",
+      |     "reachable only through --corridor-scene, and an iOS app receives no command line. The",
+      |     "app could be verified installed on the reference device and still have no way to SHOW",
+      |     "the corridor on it \u2014 which is most of the point. \u00a713.1 requires the verdict to come from",
+      |     "the lit scene at true display size on device, so the scene has to be bootable there.",
+      |     "",
+      |     "When a file named REVIEW_BUILD.json is present in this directory at boot AND no",
+      |     "--corridor-scene flag was given, Main boots straight into the review corridor using the",
+      |     "values below instead of the menu. Absent, the game boots normally \u2014 so a normal build is",
+      |     "completely unaffected and this cannot leak into a player build by accident.",
+      |     "",
+      |     "This is a TEMPLATE. Copy it to REVIEW_BUILD.json to make a review build; the harness does",
+      |     "that for you (tools/tier0_harness/build_review_app.sh). Install it under its own bundle id",
+      |     "so it sits side by side with the real game rather than replacing it.",
+      |     "",
+      |     "THE LIGHT VALUES HERE ARE RULED FOR THE BOUNDARY \u2014 \u00a76.2.1, Ruling 56 (Rafe, 2026-08-28),",
+      |     "ratified by walking the tier-one floor family on the reference device at gameplay distance.",
+      |     "They are copied from tools/tier0_harness/harness_config.yaml so the device build and the",
+      |     "desktop capture are lit by the same rig; if they drift, the two stop being comparable.",
+      |     "",
+      |     "THE UNITS, because a knob position is not a value:",
+      |     "  radiusTiles   reach in TILES, not pixels (32px tile -> 320px radius)",
+      |     "  falloff       exponent on the radial ramp; 1.00 is the plain smoothstep, the identity",
+      |     "  ambientLevel  SCALAR on the ambient hue, not a colour: 1a1a22 x 0.70 -> #121218",
+      |     "",
+      |     "RULED FOR THE BOUNDARY AND NOTHING ELSE. Every other region derives its own at its own",
+      |     "gate; copying these into one would be conformance to a neighbouring region's answer."
+      |   ],
+      |   "scene": "res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json",
+      |   "themeConfig": "res://src/Presentation/assets/tier0_harness/tile_themes_stub.yaml",
+      |   "light": {
+      |     "ambient": "1a1a22",
+      |     "ambientLevel": 0.7,
+      |     "color": "ffb066",
+      |     "energy": 1.6,
+      |     "radiusTiles": 5.0,
+      |     "falloff": 1.0
+      |   },
+      |   "_floorOverlays": [
+      |     "ART-BIBLE-v0 \u00a78.3's incident overlays and \u00a78.2.1's trodden channel, as a res:// path to a",
+      |     "floor family's MANIFEST.json. Absent, the scene draws base tiles only \u2014 which is what every",
+      |     "review build before tier one did, so an old marker keeps working unchanged.",
+      |     "",
+      |     "It is a separate key rather than part of themeConfig because an overlay is NOT A TILE ROLE.",
+      |     "A cell may carry none, one or two of them, chosen per instance, and TileThemeLoader's schema",
+      |     "has one id list per role and no shape for that. \u00a78.3: a tile is the material, the incident",
+      |     "is the variant.",
+      |     "",
+      |     "The engine reports which branch it took on every boot, so a device build that silently drew",
+      |     "no incident at all cannot be mistaken for a floor that simply has none (LOOP-PROCESS \u00a74.2)."
+      |   ],
+      |   "floorOverlays": null,
+      |   "_grid": [
+      |     "Tile size and integer scale, mirroring --tile-size / --tile-scale. Present for the same",
+      |     "reason the light values are: an iOS app receives no command line, so without these the",
+      |     "device build would draw at the renderer's default 24 while the desktop captures it is",
+      |     "meant to be compared against were taken at 32 \u2014 and nothing would have said so. The",
+      |     "device and the capture must share the grid as well as the rig, or the \u00a713.1 verdict is",
+      |     "taken on the wrong picture.",
+      |     "",
+      |     "32 at x2 is RULED (Rafe, 2026-08-25), NOT derived \u2014 \u00a74.3's derivation has not happened.",
+      |     "Copied from tools/tier0_harness/harness_config.yaml; if they drift the two stop being",
+      |     "comparable."
+      |   ],
+      |   "tileSize": 32,
+      |   "tileScale": 2.0,
+      |   "_reviewStatus": [
+      |     "WHAT THIS BUILD WAS ALLOWED PAST. Stamped by build_review_app.sh, never authored here.",
+      |     "",
+      |     "null            the build carries a frame-critic PASS for its exact build id.",
+      |     "SKIPPED-REVIEW  YARL_SKIP_CRITIC=1 waved it past the gate. Legitimate for producing a",
+      |     "                build to MEASURE; never a build to take a verdict on.",
+      |     "",
+      |     "The app draws this in the corner of the screen and reports it in its BUILD IDENTITY line,",
+      |     "because the two kinds of build are indistinguishable in the hand and the hazard is walking a",
+      |     "measurement build as a gate build. An override nobody can see from the phone is the same as",
+      |     "no gate at all."
+      |   ],
+      |   "reviewStatus": "SKIPPED-REVIEW",
+      |   "commit": "e248cad6d0e5dae81cef44950a44f5d01b47ea48+dirty",
+      |   "builtAt": "2026-09-03T21:16:52Z"
+      | }
+      | == marker removed (a leftover would silently make the next build a review build)
+
+PASS  E  PASS verdict for this build -> allow
+      exit 0 (wanted 0); looked for 'GATE OPEN'
+      | == FRAME CRITIC GATE
+      |    verdict:  PASS   lane prove-gate round 1   2026-09-03T00:00:00
+      |    build:    e248cad6d0e5  (+dirty)
+      |    plant:    grey-walls.png — caught
+      |    GATE OPEN — a blind seat would ship this exact frame.
+
+PASS  E2 a gated build's marker carries no stamp
+      exit 0 (wanted 0); looked for '"reviewStatus": null'
+      | == FRAME CRITIC GATE
+      |    verdict:  PASS   lane prove-gate round 1   2026-09-03T00:00:00
+      |    build:    e248cad6d0e5  (+dirty)
+      |    plant:    grey-walls.png — caught
+      |    GATE OPEN — a blind seat would ship this exact frame.
+      | == build identity: commit=e248cad6d0e5dae81cef44950a44f5d01b47ea48+dirty built=2026-09-03T21:16:52Z
+      | == marker written: REVIEW_BUILD.json
+      | == grid: tile 32 at x2.0
+      | == bundle id: com.rafehatfield.catacombsofyarl.tier0   name: YARL Tier0
+      | == MARKER ONLY — stopping before the export. The marker as written:
+      | {
+      |   "_what": [
+      |     "TIER 0 REVIEW BUILD MARKER \u2014 ART-BIBLE-v0 \u00a713.1.",
+      |     "",
+      |     "This file exists because of a gap the device control exposed: the review corridor was",
+      |     "reachable only through --corridor-scene, and an iOS app receives no command line. The",
+      |     "app could be verified installed on the reference device and still have no way to SHOW",
+      |     "the corridor on it \u2014 which is most of the point. \u00a713.1 requires the verdict to come from",
+      |     "the lit scene at true display size on device, so the scene has to be bootable there.",
+      |     "",
+      |     "When a file named REVIEW_BUILD.json is present in this directory at boot AND no",
+      |     "--corridor-scene flag was given, Main boots straight into the review corridor using the",
+      |     "values below instead of the menu. Absent, the game boots normally \u2014 so a normal build is",
+      |     "completely unaffected and this cannot leak into a player build by accident.",
+      |     "",
+      |     "This is a TEMPLATE. Copy it to REVIEW_BUILD.json to make a review build; the harness does",
+      |     "that for you (tools/tier0_harness/build_review_app.sh). Install it under its own bundle id",
+      |     "so it sits side by side with the real game rather than replacing it.",
+      |     "",
+      |     "THE LIGHT VALUES HERE ARE RULED FOR THE BOUNDARY \u2014 \u00a76.2.1, Ruling 56 (Rafe, 2026-08-28),",
+      |     "ratified by walking the tier-one floor family on the reference device at gameplay distance.",
+      |     "They are copied from tools/tier0_harness/harness_config.yaml so the device build and the",
+      |     "desktop capture are lit by the same rig; if they drift, the two stop being comparable.",
+      |     "",
+      |     "THE UNITS, because a knob position is not a value:",
+      |     "  radiusTiles   reach in TILES, not pixels (32px tile -> 320px radius)",
+      |     "  falloff       exponent on the radial ramp; 1.00 is the plain smoothstep, the identity",
+      |     "  ambientLevel  SCALAR on the ambient hue, not a colour: 1a1a22 x 0.70 -> #121218",
+      |     "",
+      |     "RULED FOR THE BOUNDARY AND NOTHING ELSE. Every other region derives its own at its own",
+      |     "gate; copying these into one would be conformance to a neighbouring region's answer."
+      |   ],
+      |   "scene": "res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json",
+      |   "themeConfig": "res://src/Presentation/assets/tier0_harness/tile_themes_stub.yaml",
+      |   "light": {
+      |     "ambient": "1a1a22",
+      |     "ambientLevel": 0.7,
+      |     "color": "ffb066",
+      |     "energy": 1.6,
+      |     "radiusTiles": 5.0,
+      |     "falloff": 1.0
+      |   },
+      |   "_floorOverlays": [
+      |     "ART-BIBLE-v0 \u00a78.3's incident overlays and \u00a78.2.1's trodden channel, as a res:// path to a",
+      |     "floor family's MANIFEST.json. Absent, the scene draws base tiles only \u2014 which is what every",
+      |     "review build before tier one did, so an old marker keeps working unchanged.",
+      |     "",
+      |     "It is a separate key rather than part of themeConfig because an overlay is NOT A TILE ROLE.",
+      |     "A cell may carry none, one or two of them, chosen per instance, and TileThemeLoader's schema",
+      |     "has one id list per role and no shape for that. \u00a78.3: a tile is the material, the incident",
+      |     "is the variant.",
+      |     "",
+      |     "The engine reports which branch it took on every boot, so a device build that silently drew",
+      |     "no incident at all cannot be mistaken for a floor that simply has none (LOOP-PROCESS \u00a74.2)."
+      |   ],
+      |   "floorOverlays": null,
+      |   "_grid": [
+      |     "Tile size and integer scale, mirroring --tile-size / --tile-scale. Present for the same",
+      |     "reason the light values are: an iOS app receives no command line, so without these the",
+      |     "device build would draw at the renderer's default 24 while the desktop captures it is",
+      |     "meant to be compared against were taken at 32 \u2014 and nothing would have said so. The",
+      |     "device and the capture must share the grid as well as the rig, or the \u00a713.1 verdict is",
+      |     "taken on the wrong picture.",
+      |     "",
+      |     "32 at x2 is RULED (Rafe, 2026-08-25), NOT derived \u2014 \u00a74.3's derivation has not happened.",
+      |     "Copied from tools/tier0_harness/harness_config.yaml; if they drift the two stop being",
+      |     "comparable."
+      |   ],
+      |   "tileSize": 32,
+      |   "tileScale": 2.0,
+      |   "_reviewStatus": [
+      |     "WHAT THIS BUILD WAS ALLOWED PAST. Stamped by build_review_app.sh, never authored here.",
+      |     "",
+      |     "null            the build carries a frame-critic PASS for its exact build id.",
+      |     "SKIPPED-REVIEW  YARL_SKIP_CRITIC=1 waved it past the gate. Legitimate for producing a",
+      |     "                build to MEASURE; never a build to take a verdict on.",
+      |     "",
+      |     "The app draws this in the corner of the screen and reports it in its BUILD IDENTITY line,",
+      |     "because the two kinds of build are indistinguishable in the hand and the hazard is walking a",
+      |     "measurement build as a gate build. An override nobody can see from the phone is the same as",
+      |     "no gate at all."
+      |   ],
+      |   "reviewStatus": null,
+      |   "commit": "e248cad6d0e5dae81cef44950a44f5d01b47ea48+dirty",
+      |   "builtAt": "2026-09-03T21:16:52Z"
+      | }
+      | == marker removed (a leftover would silently make the next build a review build)
+
+PASS  E3 a self-test PASS cannot open the gate
+      exit 1 (wanted 1); looked for 'SELF-TEST'
+      | == FRAME CRITIC GATE
+      |    verdict:  PASS   lane prove-gate round 1   2026-09-03T00:00:00
+      |    build:    e248cad6d0e5  (+dirty)
+      | 
+      |    THIS VERDICT IS A SELF-TEST OF THE JUDGE, not a verdict on a build — its deck put a morgue frame in the build's slot. It cannot authorise an install.
+      | 
+      |    Run a real round:   .claude/skills/frame-critic/run_frame_critic.sh
+      | 
+      |    REFUSING TO INSTALL. Override with YARL_SKIP_CRITIC=1 if you need the build on
+      |    the phone for measurement — it installs, marked, and is not a gate build.
+
+PASS  F1 hook denies a raw devicectl install
+      exit 0 (wanted 0); looked for '"permissionDecision": "deny"'
+      | {
+      |   "hookSpecificOutput": {
+      |     "hookEventName": "PreToolUse",
+      |     "permissionDecision": "deny",
+      |     "permissionDecisionReason": "This command installs a build to the device, and the frame-critic gate refuses it.\n\n== FRAME CRITIC GATE\n   verdict:  FAIL   lane prove-gate round 1   2026-09-03T00:00:00\n   build:    e248cad6d0e5  (+dirty)\n\n   VERDICT IS FAIL. The seat would not ship this frame.\n     flip: The wall tops read as dim floor; separate the planes.\n\n   Fix, then re-run the round:   .claude/skills/frame-critic/run_frame_critic.sh\n\n   REFUSING TO INSTALL. Override with YARL_SKIP_CRITIC=1 if you need the build on\n   the phone for measurement — it installs, marked, and is not a gate build.\n\nArt rounds are judged by eyes on delivered frames (CLAUDE.md). Run the round, or prefix the command with YARL_SKIP_CRITIC=1 to install a build stamped SKIPPED-REVIEW."
+      |   }
+      | }
+
+PASS  F2 hook lets non-install work through
+      exit 0, output (silent)
+
+PASS  F3 hook lets --no-install through
+      exit 0, output (silent)
+
+PASS  F4 hook honours the visible override
+      exit 0, output (silent)
+
+======================================================================
+EVERY CASE BEHAVED AS DECLARED. The gate refuses where it says it refuses,
+opens where it says it opens, and the override is visible in the marker.

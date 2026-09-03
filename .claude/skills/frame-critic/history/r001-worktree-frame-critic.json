@@ -1,0 +1,103 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-frame-critic",
+ "round": 1,
+ "surface": "wall",
+ "commit": "e248cad6d0e5dae81cef44950a44f5d01b47ea48",
+ "dirty": true,
+ "build_id": "23762e5aeb56c84de2c440b15c4b7ecfc21d8fb11a4c462023666b40005d617f",
+ "timestamp": "2026-09-03T14:29:33",
+ "build_frame": {
+  "path": "tools/tier1_walls/evidence/fc_standing.png",
+  "sha256": "c1f09e4be73aff2cd03176b678b24adf87c795446c9d9ee519a9d1ae0db66c09",
+  "log": "tools/tier1_walls/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/frame-critic --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_walls/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-choice 0 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-frame-critic-r1",
+  "slots": {
+   "1": {
+    "what": "build",
+    "source": "tools/tier1_walls/evidence/fc_standing.png",
+    "sha256": "c1f09e4be73aff2cd03176b678b24adf87c795446c9d9ee519a9d1ae0db66c09",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "3": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/grey-walls.png",
+    "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_walls/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 3,
+  "file": "grey-walls.png",
+  "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+  "culled_by": "Rafe, device gate, 2026-09-02",
+  "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "every_frame_flagged": true
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The floor in the lit pool holds a genuine masonry structure at play size. The slabs are not one repeated unit \u2014 there is an offset running bond with real size variety (the 2\u00d71 slab under the figure at ~(390\u2013450, 460\u2013490), a run of 1\u00d71s at y\u2248540, a long single-piece slab at (280\u2013420, 530\u2013565)) and the courses break rather than line up column-to-column. The pixels are discrete: measured across the frame, 80% of horizontal neighbour pairs are identical, and the art is a clean 2\u00d7 upscale of a 16px tile with hard source edges, so nothing smears. The light falloff is also correct and symmetric \u2014 floor at equal radius left and right of the figure (x 200\u2013360 vs 440\u2013600, y 470\u2013600) measures 87.4 and 87.2 luma, and the region behind the wall band measures 27\u201330 against 87 in front of it, so the wall genuinely occludes. That is a working light, not a painted vignette.",
+  "WORST_WHY": "The water is a rectangle. It meets the dirt on a dead-straight vertical seam at x\u2248248 running the full height from y=0 to y\u2248190, meets the flagstone on another at x\u2248344, has square 90\u00b0 corners, and has no bank, no shoreline tile, no edge darkening and no depth variation \u2014 one flat teal with a single uniform bubble pattern repeated over ~40 tiles. Underneath that, the frame mixes projections: the two barrels at (120,196) and (168,196) are drawn in 3/4 view \u2014 you see the barrel's side staves *and* a full elliptical lid \u2014 while the crates at (64,8) and (64,56) and every flagstone are drawn flat-on from directly above. And the brick wall stub at (16\u201356, 122\u2013146) simply stops in bare dirt at both ends with no end cap, no corner and no thickness, with an orange fixture perched on it whose brown post runs down onto the dirt and terminates in a flat 2px stump with no footing and no contact shadow.",
+  "FLAGGED": "1, 2, 3",
+  "RANK": "3 > 1 > 2",
+  "BEST": "3",
+  "WORST": "2",
+  "SHIP": "NONE"
+ },
+ "flip_list": [
+  "The lit pool is not centred on the lamp. At y 470\u2013600 with no occluder in between, floor left of the figure (x 200\u2013360) averages 92.2 luma and floor right of it (x 440\u2013600) averages 58.6 \u2014 a 1.6\u00d7 asymmetry at equal radius. Make the falloff radially symmetric about the figure, or remove whatever baked directional gradient is sitting under it.",
+  "The two upper rooms (x 60\u2013360 and x 440\u2013720, above y\u2248380) are a per-pixel grain field with no slab, no joint and no grid anywhere in them, while the room below the wall is fully tiled. Draw them with the same slab structure as the lower room.",
+  "Block edges in the wall course \u2014 x\u2248300, x\u2248380, x\u2248470 at y\u2248395\u2013415 \u2014 are 2px soft ramps, not edges. The frame is a 2\u00d7 upscale but only 51% of source horizontal neighbour pairs match, so the source itself carries anti-aliased continuous tone. Redraw with hard 1px source edges so the art holds the pixel grid.",
+  "Slab faces and their joints across the whole lower room sit within about two value steps of each other, so at play size the floor collapses into brown mush. Widen the face-to-joint separation to at least four steps.",
+  "The 45\u00b0 hatch is applied at the same angle, spacing and value to most slabs in the lower room (compare (430\u2013500, 470) with (520\u2013600, 555) \u2014 identical treatment). Vary the angle and density, and leave most slabs bare.",
+  "Nothing in the frame is a repair. The company works in rope, driven pins, hide and salvaged timber, and there is not one pin, lashing or timber patch in the lit pool. Add them as drawn objects, on the floor and across the wall course."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r001-worktree-frame-critic-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

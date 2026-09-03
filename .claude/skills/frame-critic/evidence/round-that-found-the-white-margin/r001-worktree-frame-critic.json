@@ -1,0 +1,104 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-frame-critic",
+ "round": 1,
+ "surface": "wall",
+ "commit": "e248cad6d0e5dae81cef44950a44f5d01b47ea48",
+ "dirty": true,
+ "build_id": "daa8fcc5e3808ee51ec9c94b82c94ad4d9df3f322197e54b0ec11785f1daf102",
+ "timestamp": "2026-09-03T14:21:55",
+ "build_frame": {
+  "path": "tools/tier1_walls/evidence/fc_standing.png",
+  "sha256": "c1f09e4be73aff2cd03176b678b24adf87c795446c9d9ee519a9d1ae0db66c09",
+  "log": "tools/tier1_walls/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/frame-critic --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_walls/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-choice 0 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-frame-critic-r1",
+  "slots": {
+   "1": {
+    "what": "build",
+    "source": "tools/tier1_walls/evidence/fc_standing.png",
+    "sha256": "c1f09e4be73aff2cd03176b678b24adf87c795446c9d9ee519a9d1ae0db66c09",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     336,
+     216,
+     720,
+     504
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "3": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/grey-walls.png",
+    "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_walls/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 3,
+  "file": "grey-walls.png",
+  "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+  "culled_by": "Rafe, device gate, 2026-09-02",
+  "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "every_frame_flagged": true
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The floor is actually built out of cut stone rather than textured. In the run below the wall, roughly x 60\u2013700 / y 450\u2013620, the joints form a continuous mortar network with varying course heights \u2014 a wide slab at (330\u2013430, 455\u2013520) butts against three short courses to its right at (440\u2013520, 455\u2013490), and the joints step rather than aligning into a lattice. The joint line itself is not a uniform stroke: it is a 1px dark line with an intermittent stipple of 1px pixels breaking along it, so the edges read as chipped stone rather than a drawn grid. The corridor mouth at (390\u2013432, 200\u2013460) is genuinely narrower stonework than the room floor, with its own smaller course height, so the corridor reads as a separate build and not as the same floor with a light cone on it. The wall cap band at (432\u2013700, 418\u2013448) is separated from the floor below it by a real value break, so the wall reads as a solid you cannot walk on. And the block-ends along the wall run at (440\u2013700, 388\u2013415) vary in width \u2014 a run of narrow ones at 440\u2013520, then wide ones at 560\u2013620 \u2014 so the wall reads as assembled from salvage rather than extruded.",
+  "WORST_WHY": "The frame is not finished rendering. There is a pure white (255,255,255) margin occupying x 360\u2013383 for the full height and y 264\u2013287 for the full width \u2014 a blank white L down the right edge and along the bottom of the image. Nothing else in the frame is above value 200; this is a blown-out white bar on screen. Beyond that: the water is a rectangle. Its south-west corner at (216,166) is a hard 90\u00b0 step where dirt meets water with no bank, no shallow, no edge tile and no shading of any kind; the same happens along the whole west edge at x=216, y 0\u2013166. The tiling is literal \u2014 of 1530 sampled 20\u00d720 windows on the grey flagstone, 776 are byte-identical to another window in the same floor; the dirt scores 645 of 1505. The projection is mixed: the barrels at (85\u2013110, 168\u2013188) and (128\u2013153, 168\u2013188) are drawn three-quarter with visible side staves and an elliptical lid, and the chest at (30\u201366, 22\u201344) is three-quarter with a gold rim that is the brightest thing in the frame, while the floor under them is straight top-down. Both barrel lids carry a small black right-pointing arrow \u2014 a debug or UI glyph baked into the sprite art. The left frame edge at (0\u201312, 96\u2013136) is an orange strip and a dark brick block sliced off by the image boundary, sitting on the dirt with no contact shadow. There is no light model at all; the frame is evenly lit corner to corner. The only candidate for the light-carrying figure, at (180\u2013205, 88\u2013106), is a loose scatter of white and grey pixels with no silhouette, no outline and no readable form.",
+  "FLAGGED": "1, 2, 3",
+  "RANK": "3 > 1 > 2",
+  "BEST": "3",
+  "WORST": "2",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "The wall's top surface and the floor are the same texture at the same value. The band at (430\u2013700, 390\u2013430) and the floor at (430\u2013700, 450\u2013520) directly below it use the identical mottle; only the row of dark rectangles distinguishes them. Give the wall cap its own flat value, at least 20 steps off the adjacent lit floor, and its own surface language.",
+  "Nothing in this image has a clean pixel edge except the character sprite. Every crack and every block boundary ramps over 2\u20133px of gradient \u2014 visible on the crack running from (330,470) to (250,560) and on all the block outlines along the wall run. Redraw the joints as 1px hard lines. As it stands the surface reads as a photographic texture that has been downscaled, not as drawn art.",
+  "The floor has no mortar network. The pale rectangle at approximately (490\u2013530, 460\u2013500) and the one at (300\u2013380, 555\u2013600) are flat fills with hard rectangular boundaries floating on the mottle, with no joint, no bevel and no contact edge, and they overlap each other at different opacities. Replace them with real blocks bounded by joints on all four sides.",
+  "The 45\u00b0 hatch strokes across the whole lower floor are all the same angle, the same 1px width and roughly the same length, and they cross block boundaries as if the blocks were not there. Bind the wear to the blocks: strokes stop at joints, angle varies per block, density varies with traffic.",
+  "The corridor floor at (388\u2013430, 200\u2013450) is a different hatch frequency from the room floor and meets it at a 1px butt seam at x=430 with no transition. Resolve the two as one masonry system, or make the corridor an explicitly different build with a finished threshold block across the mouth.",
+  "There is a hard horizontal seam at y\u224860 running x 60\u2013750, with a different texture and a value step above and below it. Remove it or make it an intentional architectural edge.",
+  "Same as 3: no repairs anywhere. Add physical, drawn repairs on lit surfaces."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r001-worktree-frame-critic-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

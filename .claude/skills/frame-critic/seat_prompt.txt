@@ -1,0 +1,76 @@
+YARL — FRAME CRITIC — v1.0
+
+RUN AS: fresh `claude -p`, cwd OUTSIDE the repo. No repo access. No project memory.
+INPUT: the numbered PNG files in this directory, nothing else. Read every one of them.
+This process is NOT given the art bible. It gets the fiction, the tone, and these questions.
+
+You are being shown finished frames from games. They are NOT labelled, they are in no meaningful
+order, and you are NOT told which came from where. Do not guess, and do not let a guess change an
+answer. Some are at different tile sizes than others; that is not a defect in any of them.
+
+The on-screen buttons, bars and menus are interface. They are out of scope everywhere.
+
+------------------------------------------------------------------------------
+THE PLACE
+
+The Paths of the Dead: an underworld that is ADMINISTERED, not haunted — a filing system for
+souls. In continuous heavy use since before anyone's records begin, and no one has ever cared
+for it. Nothing in it is arranged for anyone's benefit.
+
+The upper floors are a contested frontier where a company of orc-soldiers has held a line for
+four hundred years and cannot advance it. They repair things endlessly, with rope, driven pins,
+hide and salvaged timber, and they do not care how the repairs look. They are extremely good at
+it and have never once cared how it looks.
+
+The tone is dry, cold and completely straight. Not spooky-fun. Not adventurous. No sense of
+humour about itself.
+
+Each frame is a top-down dungeon seen straight from above, drawn on a square grid, at the size
+the game is actually played. A figure stands carrying the only light there is, so the picture
+gets darker further from that figure. That is intended and is not a defect.
+
+------------------------------------------------------------------------------
+THE BAR
+
+You are judging CRAFT, not style. The question behind every answer below is:
+
+    Does this look like a game somebody paid for, or like the free one next to it?
+
+"Doesn't match some other game's look" is not a defect. "Looks unfinished, looks generated,
+looks like a placeholder, looks like a filter was run over it" is.
+
+A frame that needs a qualifier — fine, acceptable, promising, close, better than the others —
+is a frame you would NOT ship. Say so. If you find no defect anywhere, suspect your own rigour
+before crediting the work.
+
+------------------------------------------------------------------------------
+QUESTIONS
+
+Answer every one. Use the exact labels, at the start of a line, followed by a colon. Refer to
+images by their file number. Be specific about WHERE you are looking, and quote what you
+actually see rather than what you expect to see.
+
+RANK: the file numbers, best-made first, worst-made last, separated by ">". Every image appears
+    exactly once. No ties.
+
+BEST: the single file number you ranked first.
+BEST_WHY: what specifically is well made in it. Name the thing and where it is. Not "good
+    atmosphere" — "the joints vary in depth along a single run, so the stones read as cut rather
+    than stamped."
+
+WORST: the single file number you ranked last.
+WORST_WHY: what specifically is wrong with it. Name the thing and where it is.
+
+FLAGGED: the file numbers with an OBVIOUS defect — something a person would notice at a glance
+    and would be embarrassed to ship. Comma-separated, or NONE. This is not the same as ranking
+    last: an image can be last and still have nothing obviously broken in it, and an image can
+    be ranked highly and still carry one glaring fault.
+
+SHIP: the file numbers you would ship as they stand, comma-separated, or NONE. Shipping means
+    you would put it in front of a paying player and defend it. Hedging is not shipping.
+
+Then, for EVERY image you did not put in SHIP, one block each:
+
+FLIP <n>: the specific, concrete, executable changes that would flip that image to shippable.
+    One per line, each beginning with "- ". "Needs more atmosphere" is not a flip list item.
+    "The wall's top surface sits at the same value as the lit floor; separate them" is.

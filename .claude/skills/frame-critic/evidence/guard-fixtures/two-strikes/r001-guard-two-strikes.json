@@ -1,0 +1,18 @@
+{
+ "_fixture": "Synthetic verdict. Drives the two-strikes guard against the REAL guards() and write_stall(), per LOOP-PROCESS §4 — no check's pass counts until it has demonstrated it can fail. Not a round, not evidence about any build.",
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "guard-two-strikes",
+ "round": 1,
+ "surface": "wall",
+ "commit": "0000000000000000000000000000000000000000",
+ "build_id": "fixture-two-strikes-1",
+ "timestamp": "2026-09-03T09:00:00",
+ "deck": {"work_dir": "(fixture)", "build": "tools/tier1_walls/evidence/fixture_r1.png"},
+ "seat": {"WORST_WHY": "The wall tops sit at the same value as the lit floor, so the room has no ceiling."},
+ "flip_list": [
+  "The wall top plane sits at the same value as the lit floor beside it; separate the two planes.",
+  "The passage mouth has no jamb; give the opening a vertical edge."
+ ],
+ "transcript": "(fixture)"
+}
