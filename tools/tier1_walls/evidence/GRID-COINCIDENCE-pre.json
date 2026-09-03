@@ -1,0 +1,67 @@
+{
+  "png": "tools/tier1_walls/evidence/fc_standing.png",
+  "bound": 1.35,
+  "tile_px": 64,
+  "axes": {
+    "x": {
+      "n": 11887,
+      "on_edge": 0.056,
+      "chance": 0.0469,
+      "ratio": 1.195
+    },
+    "y": {
+      "n": 13989,
+      "on_edge": 0.0882,
+      "chance": 0.0469,
+      "ratio": 1.882
+    }
+  },
+  "per_surface": {
+    "wall face": {
+      "axes": {
+        "x": null,
+        "y": null
+      },
+      "worst": 0.0
+    },
+    "wall cap-only": {
+      "axes": {
+        "x": {
+          "n": 569,
+          "on_edge": 0.2671,
+          "chance": 0.0469,
+          "ratio": 5.699
+        },
+        "y": {
+          "n": 488,
+          "on_edge": 0.0123,
+          "chance": 0.0469,
+          "ratio": 0.262
+        }
+      },
+      "worst": 5.699
+    },
+    "floor": {
+      "axes": {
+        "x": {
+          "n": 11318,
+          "on_edge": 0.0454,
+          "chance": 0.0469,
+          "ratio": 0.969
+        },
+        "y": {
+          "n": 13501,
+          "on_edge": 0.091,
+          "chance": 0.0469,
+          "ratio": 1.94
+        }
+      },
+      "worst": 1.94
+    }
+  },
+  "worst_ratio": 1.882,
+  "on_grid": true,
+  "face_worst": 0.0,
+  "cap_worst": 5.699,
+  "floor_worst": 1.94
+}

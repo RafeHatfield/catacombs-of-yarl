@@ -179,6 +179,27 @@ git branch). A counter held in memory resets when a session restarts, and a guar
 clears is a suggestion with a number in it. Clearing one means deleting committed files, which
 shows up in a diff.
 
+### Two strikes is matched BY SUBSTANCE, and the runner is the one who matches it
+
+**LAW (Rafe, 2026-09-03).** The automated matcher compares flip text. Text is not the item. A
+critic that says the same thing twice in different words has said it twice, and the guard exists
+for the fact — *the fix is not landing* — not for the string.
+
+> **The runner judges whether a flip item is the same finding as one in the previous round, and
+> fires the guard on its own judgement when the matcher does not.** Saying "the matcher did not
+> fire, so I ran again" is the guard being routed around by the only person who can see it.
+
+It has already happened once, on the wall lane, and the two texts were:
+
+| round | the same finding, twice |
+|---|---|
+| r001 | *"dense sponge speckle … Replace with **drawn courses** at the frame's own pixel size."* |
+| r002 | *"the dark upper region is fine mottle with **no architecture under it. Draw the stone through it.**"* |
+
+The speckle had been fixed and the complaint underneath it had not moved. The matcher saw two
+different sentences; a reader sees one item. **Fire it, name it as a judgement call, and say the
+matcher stayed silent** — the honesty about which one fired is what keeps the guard worth having.
+
 **When a guard fires: write nothing else, run no further rounds, end the turn.** Say plainly that
 the line stopped, which guard fired, and where the report is. Do not summarise the report away —
 Rafe reads it.
@@ -191,6 +212,20 @@ Rafe reads it.
 it exports, and a PreToolUse hook (`.claude/hooks/critic_install_guard.sh`) runs it against any
 shell command that would put a build on a device. Two callers, one implementation — a gate
 reimplemented in a second place has two behaviours and the second one is always the lenient one.
+
+### LAW: a second gate is deleted, not reconciled
+
+**(Rafe, 2026-09-03, affirmed into law.)** When a lane discovers it has built its own gate beside
+this one, **the lane's copy is deleted.** Not merged, not made to defer, not kept "for the checks
+the other one lacks" — deleted, in the same change that notices it.
+
+> **A second implementation is always the lenient one.** Not usually. Always — because the two
+> drift, and the one that drifts toward passing is the one nobody removes.
+
+This is not hypothetical. The wall lane wrote `install_gate.py` and a `gate()` wrapper in its own
+`device.sh` under a standing order, one day before this skill landed on main; both were deleted on
+sight when the lane merged. If a lane's gate checks something this one does not, **that check
+belongs in a round report or in `gate_precheck.py`** — never in a second thing that can say yes.
 
 It requires **CRITIC-VERDICT.json to exist, to match this working tree's build id exactly, and to
 read PASS.** The build id folds in the commit, every tracked change and every untracked file, so

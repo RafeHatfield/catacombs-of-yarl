@@ -508,7 +508,36 @@ public static class Tier1BoundaryWall
                 if (bind != null && ring == 1 && southOpenCache)
                 {
                     const string plane = "face";
+
+                    // ── BINDINGS ARE KEYED TO TRAFFIC (RULED, Rafe, 2026-09-03) ──────────────
+                    //
+                    // *"Bindings re-key to the traffic field — density on route-adjacent walls,
+                    // thresholds, chokepoints; sparse on remote runs (register: orcs repair what
+                    // use breaks)."*
+                    //
+                    // A flat rate over a position hash spread eleven repairs evenly across every
+                    // wall cell in the map, and most wall cells are nowhere near the lamp or the
+                    // route — so the critic's flip list said *"nothing rigged, lashed or pinned
+                    // anywhere in the lit radius"* on a build carrying eleven bindings. §7.1 was
+                    // being answered where nobody could see it.
+                    //
+                    // The field is the floor's own `TrafficField`, already read a few lines above
+                    // for the aging, so the two systems cannot disagree about where use is. A
+                    // wall's traffic is the traffic of the ground at its foot — nobody walks on a
+                    // wall — which is the same reading the age uses.
+                    //
+                    // The register carries the shape: orcs repair what use breaks. A wall beside
+                    // the spine gets worked on; a remote run gets left. So the rate rises with
+                    // traffic and does not fall to zero without it — a sealed room may still have
+                    // one old cramp in it, and a rate of exactly zero would be a rule about the
+                    // map rather than about the orcs.
                     double rate = bind.FaceRate;
+                    if (traffic != null)
+                    {
+                        int t = traffic[x, y + 1];              // the ground this reveal faces
+                        double f = System.Math.Clamp(t / 160.0, 0.0, 1.0);
+                        rate *= 0.35 + 1.15 * f;
+                    }
                     // A separate salt from the tile keys, so a cell's binding is independent of
                     // the tile it landed on. Sharing one would correlate the two and put the same
                     // strap on the same tile every time — §8.3.1 arriving one level up.

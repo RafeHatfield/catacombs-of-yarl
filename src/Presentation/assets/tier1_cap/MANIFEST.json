@@ -1,7 +1,7 @@
 {
   "family": "boundary_cap_material_v1",
   "arm": "material",
-  "commit": "0a9f288699d5d01d9db643120903dde087f5a529",
+  "commit": "9418efcf61f45b2360ee4237ffd290ee7df99c5f",
   "seed": 1337,
   "field_tiles": 16,
   "tile": 32,
@@ -26,15 +26,15 @@
     154.376
   ],
   "measured": {
-    "wrap_step": 2.373,
-    "interior_step": 3.418,
-    "wrap_over_interior": 0.694,
-    "distinct_levels": 61,
-    "modal_share_mean": 0.2647,
-    "tile_mean_sd": 5.86,
+    "wrap_step": 4.337,
+    "interior_step": 3.807,
+    "wrap_over_interior": 1.139,
+    "distinct_levels": 69,
+    "modal_share_mean": 0.2458,
+    "tile_mean_sd": 8.229,
     "tile_mean_range": [
-      63.82,
-      95.14
+      58.68,
+      101.83
     ]
   },
   "void": {
@@ -48,23 +48,23 @@
       {
         "candidate": 0,
         "authored": 14,
-        "sd": 1.618,
-        "distinct": 17,
-        "mean": 14.05
+        "sd": 1.652,
+        "distinct": 14,
+        "mean": 14.06
       },
       {
         "candidate": 1,
         "authored": 8,
-        "sd": 1.617,
-        "distinct": 17,
+        "sd": 1.628,
+        "distinct": 14,
         "mean": 8.02
       },
       {
         "candidate": 2,
         "authored": 4,
-        "sd": 1.605,
-        "distinct": 13,
-        "mean": 4.02
+        "sd": 1.621,
+        "distinct": 12,
+        "mean": 4.01
       }
     ],
     "note": "unlit rock, not a flat fill. Same field, same windows, same world positioning; grain authored in LEVELS because a fraction of a rung is nothing at a delivered value of two."
@@ -1109,2048 +1109,2048 @@
       "gx": 0,
       "gy": 0,
       "file": "tier1_cap_9200.png",
-      "mean": 91.67,
-      "sha256": "b4575913f0d75d10e030d82f1214de26cc3ed08967dc79e53bef794779cd2c16"
+      "mean": 96.59,
+      "sha256": "2b0e8984c5d843b3a428da3cfdac8b7fc61d29a2ef7d22824595d1a23eb1e12f"
     },
     {
       "id": 9201,
       "gx": 1,
       "gy": 0,
       "file": "tier1_cap_9201.png",
-      "mean": 79.44,
-      "sha256": "a34c365b184c6b0b17fde33cf6c1cb7fdf88fffaca6d2954cc85d97681be8ec1"
+      "mean": 79.82,
+      "sha256": "e760db711a470be6a2b312b1447c1e879106ca5c9a9db9f4e055ba6e2859033d"
     },
     {
       "id": 9202,
       "gx": 2,
       "gy": 0,
       "file": "tier1_cap_9202.png",
-      "mean": 82.75,
-      "sha256": "cd95bfb93d7092bc08b60c25553ff9941fe8f9af106ab74015af1eabbf8c65c2"
+      "mean": 77.43,
+      "sha256": "7cf41890b591310757522db585680c8e67c988c853faeb08fcc49ea31a4298eb"
     },
     {
       "id": 9203,
       "gx": 3,
       "gy": 0,
       "file": "tier1_cap_9203.png",
-      "mean": 73.98,
-      "sha256": "64f8bd08703bcf45c5e6be2942e78dab837e02d40e7f37b0825d5ce84248fabd"
+      "mean": 70.4,
+      "sha256": "10e38554685bbc01811aa94fda85e684685372c8393d005bb6482b0ab024ad48"
     },
     {
       "id": 9204,
       "gx": 4,
       "gy": 0,
       "file": "tier1_cap_9204.png",
-      "mean": 73.9,
-      "sha256": "f818d699a72021587b1a6e175a66b3811a037b471feaca455302bd85fe35b709"
+      "mean": 79.55,
+      "sha256": "2a69adb055ff4b92e51afb6574f87ff8347da19b030b1880762dad61b1556dff"
     },
     {
       "id": 9205,
       "gx": 5,
       "gy": 0,
       "file": "tier1_cap_9205.png",
-      "mean": 70.13,
-      "sha256": "1122a1245a385e6390bb80c41ce287613b590f0b8f530649d32f31423d8db1b6"
+      "mean": 73.31,
+      "sha256": "969191eda525b7095852104c827cad6da641d86fae3f6986286745b3f2e2bff2"
     },
     {
       "id": 9206,
       "gx": 6,
       "gy": 0,
       "file": "tier1_cap_9206.png",
-      "mean": 68.02,
-      "sha256": "26a4b8663e21679be040aa465039d24fbfedaf788c0fc0710115ad56da26cb24"
+      "mean": 64.67,
+      "sha256": "b09beb79378f30fd34b3d77c5301e100e2f6d7752eb579b57794cb38fdb51cde"
     },
     {
       "id": 9207,
       "gx": 7,
       "gy": 0,
       "file": "tier1_cap_9207.png",
-      "mean": 71.58,
-      "sha256": "cf7ff65a03cf698e8ab085061931f942eb6f6cd6f9c43e3ea65b74193e8d930c"
+      "mean": 67.98,
+      "sha256": "4ad267fae4933d6e1958cc77472fdc58d23aa29d05f28495fb86d73f6cd48e77"
     },
     {
       "id": 9208,
       "gx": 8,
       "gy": 0,
       "file": "tier1_cap_9208.png",
-      "mean": 79.14,
-      "sha256": "22aa6fccabf6b3cf46a998801e6f9d4381ce50b4197ec5cfb75df709db7203cf"
+      "mean": 75.17,
+      "sha256": "a815f310546b92b35a8d67e8fbf813f0de100c22fb8db6d9e4b0bdbffcf636ae"
     },
     {
       "id": 9209,
       "gx": 9,
       "gy": 0,
       "file": "tier1_cap_9209.png",
-      "mean": 79.27,
-      "sha256": "b1963905fea96419702f3420e3896b207a99c987fbb09fc8b9313a91721a62cd"
+      "mean": 74.4,
+      "sha256": "9b865b558cfdcad9f5fc9955fd3d15fa0853b1344b9534441c1fab3221bcf113"
     },
     {
       "id": 9210,
       "gx": 10,
       "gy": 0,
       "file": "tier1_cap_9210.png",
-      "mean": 91.45,
-      "sha256": "1f7dbfda62086ab8ca317512a46ebe87d7091f81fc3b67ecf2cc36bdca28b8d7"
+      "mean": 82.21,
+      "sha256": "d18a0fa51ade7d5798d76cfb364cf042c7f69a0d5c6ffee85acaa776a3fc42c9"
     },
     {
       "id": 9211,
       "gx": 11,
       "gy": 0,
       "file": "tier1_cap_9211.png",
-      "mean": 83.94,
-      "sha256": "fb8cc63c454c2a4c0753ed54c247dd27200da2235ac205d50810c87220c01105"
+      "mean": 78.55,
+      "sha256": "3efa4286578d1132e66bc7e983faf846b844229cc81550da2d4e85aa8d1b1f84"
     },
     {
       "id": 9212,
       "gx": 12,
       "gy": 0,
       "file": "tier1_cap_9212.png",
-      "mean": 87.6,
-      "sha256": "71201109108116a7906ad77694b33dfd9944a79fdc5baae33b07c007cb40259a"
+      "mean": 84.88,
+      "sha256": "d7400c672f5c6c421b50a69298fdb4ae87cdd50d016efc6206e1a85abef87576"
     },
     {
       "id": 9213,
       "gx": 13,
       "gy": 0,
       "file": "tier1_cap_9213.png",
-      "mean": 84.86,
-      "sha256": "a8edb13bce31d62bf4d3199b2dabf64860e8fa3f50a80d706a535baf16068dd4"
+      "mean": 79.4,
+      "sha256": "e4286b2855a5dc26bf4424aa57f1e7e81b935ecd1534eb32be7f950c34a2b39b"
     },
     {
       "id": 9214,
       "gx": 14,
       "gy": 0,
       "file": "tier1_cap_9214.png",
-      "mean": 90.04,
-      "sha256": "a4706a2fe6a4844a3a170169a20d63778b2b096cbb5a698f6f5ccf3e4a3855ea"
+      "mean": 85.51,
+      "sha256": "bd0065e3d0eb542fb45965231d96d0f72c8f22ef043f335d82b0f9f12a6d3e96"
     },
     {
       "id": 9215,
       "gx": 15,
       "gy": 0,
       "file": "tier1_cap_9215.png",
-      "mean": 91.24,
-      "sha256": "d6043c6ecd1113f4ae3707d0616bc634d5b0846c919fa065e4438724f007c516"
+      "mean": 89.94,
+      "sha256": "8708ef1cb97ec725abbec2e6ea2403893903bdc7ed6d9693b87f34d6cc77b001"
     },
     {
       "id": 9216,
       "gx": 0,
       "gy": 1,
       "file": "tier1_cap_9216.png",
-      "mean": 92.03,
-      "sha256": "36e5a792636167c00adc98f0b4916d9677cd02b61f4c6941911c8bb043f879a7"
+      "mean": 101.83,
+      "sha256": "bffef4d2bd1c43ae006241311a3d6241ff2cda053af223b6e3909bc9c319eda0"
     },
     {
       "id": 9217,
       "gx": 1,
       "gy": 1,
       "file": "tier1_cap_9217.png",
-      "mean": 89.42,
-      "sha256": "bea26a9ffa64e4b754f854fde16979b551eae09743c06eea05803ff40d6e057c"
+      "mean": 99.25,
+      "sha256": "52a841657762dcb830a960281b0eb57e1b57305c16e28a761c91882cd00d12e8"
     },
     {
       "id": 9218,
       "gx": 2,
       "gy": 1,
       "file": "tier1_cap_9218.png",
-      "mean": 77.74,
-      "sha256": "b3ce4334dba7b812ec0cd84010893059f8df74786947d89e2370212f2dd81878"
+      "mean": 87.36,
+      "sha256": "134f3c9eaf8d5b7dcd6f9c0f67e0241a6d41d949de13d24def9242c6e5317246"
     },
     {
       "id": 9219,
       "gx": 3,
       "gy": 1,
       "file": "tier1_cap_9219.png",
-      "mean": 76.96,
-      "sha256": "bcf732b376d3010c5f5dd14f2aabd2c66567833ee33626582702484999c458f5"
+      "mean": 81.6,
+      "sha256": "7b2927c9fbd8d9c6663bc34d2d75089e255026ec3f62f7b9e4b2ca6fee9dc62d"
     },
     {
       "id": 9220,
       "gx": 4,
       "gy": 1,
       "file": "tier1_cap_9220.png",
-      "mean": 71.01,
-      "sha256": "041b0655a572e25fabac51ae3d4f215e0287d7149a2b69a4644459ac4e275e05"
+      "mean": 77.43,
+      "sha256": "8cc3dc98a4fc3689e6c5db4302003929177af9f5fb241c6185a919ee964eccd4"
     },
     {
       "id": 9221,
       "gx": 5,
       "gy": 1,
       "file": "tier1_cap_9221.png",
-      "mean": 75.72,
-      "sha256": "ea3d56bc4f6b66669880dcc57bf2db7f7eaffd7bd5a0cf751e13e1680c45763f"
+      "mean": 82.88,
+      "sha256": "4c1b6d8c34fc9d7c0fe247b377b73d21714d75a47ae8206b9efac67be1eb7fd8"
     },
     {
       "id": 9222,
       "gx": 6,
       "gy": 1,
       "file": "tier1_cap_9222.png",
-      "mean": 70.36,
-      "sha256": "30718f67fad0de75a74df2bb8d2645b74f262a894b7a2c85414aa8e2c5f7aed9"
+      "mean": 71.25,
+      "sha256": "e56f3c977e30bcc5f4198a9e3f3796b9e693fd3e0c6a9c68d3fdb1ccd9685b3c"
     },
     {
       "id": 9223,
       "gx": 7,
       "gy": 1,
       "file": "tier1_cap_9223.png",
-      "mean": 79.58,
-      "sha256": "ff375c2c0072ba73571167ad2ec02d5a992a1bbbdabad564bb05dab7159db33d"
+      "mean": 76.25,
+      "sha256": "07acd820bbf41b0bb7001d3d800727c17abf03db2794236237b3c0925fa944b4"
     },
     {
       "id": 9224,
       "gx": 8,
       "gy": 1,
       "file": "tier1_cap_9224.png",
-      "mean": 85.12,
-      "sha256": "904c5a51170cf0bffb95228efb5a12085992ef8dd69f37405c72bfd4ce5d4728"
+      "mean": 81.97,
+      "sha256": "4487e48e476cf4b6066b29663abea4bb47f36804c812d631b06a26d24adccc9e"
     },
     {
       "id": 9225,
       "gx": 9,
       "gy": 1,
       "file": "tier1_cap_9225.png",
-      "mean": 82.33,
-      "sha256": "7087c0a2bddc47697b5d1ea46f2bdd44b8f34e1304fe91a5a6b14f4036692548"
+      "mean": 73.82,
+      "sha256": "584546bddf15e5976f5edc328f073597277a9d198c1625f68fa6f450a47c7e8a"
     },
     {
       "id": 9226,
       "gx": 10,
       "gy": 1,
       "file": "tier1_cap_9226.png",
-      "mean": 83.34,
-      "sha256": "c3b91db59995546dfe4aeeccc216abb872e060c2191d4f845bbecd4fe9084d14"
+      "mean": 74.19,
+      "sha256": "dfc76e54ef03f8658937e0f8c919eb07db1465a1fee18dbd7f88a64d934aac0e"
     },
     {
       "id": 9227,
       "gx": 11,
       "gy": 1,
       "file": "tier1_cap_9227.png",
-      "mean": 81.82,
-      "sha256": "633eaa766a3afdc23e19b4d0da56cd221cdaa7b1357544068f206e6840ecf440"
+      "mean": 73.42,
+      "sha256": "65c6a82c8c1c55ff33b50e3a7753160dfbad75f5e90852b73f52bf0dce338bb8"
     },
     {
       "id": 9228,
       "gx": 12,
       "gy": 1,
       "file": "tier1_cap_9228.png",
-      "mean": 84.55,
-      "sha256": "7c78dd9f7dae7a46fb7bf06543e7c016a4a6a9df78e97c5780cf866e5abc8a55"
+      "mean": 78.11,
+      "sha256": "592d67ac7f7e056be2841184cd16743fba5ca0bee17c96944627de917f72ad58"
     },
     {
       "id": 9229,
       "gx": 13,
       "gy": 1,
       "file": "tier1_cap_9229.png",
-      "mean": 86.16,
-      "sha256": "90a0978be2fec0278a87c500c144cc18022a31c2643607aabd869900f899f868"
+      "mean": 85.21,
+      "sha256": "55bfbfc8176d2b2e29fe806c370fe6b6cd30743353fe7e05a69d1e5772568761"
     },
     {
       "id": 9230,
       "gx": 14,
       "gy": 1,
       "file": "tier1_cap_9230.png",
-      "mean": 91.57,
-      "sha256": "9db6e59380fd2a388ec0fe47573182ccea5550d51f5a898b1033278213ab5d58"
+      "mean": 90.64,
+      "sha256": "53aa6fabd07c05c79ff91e019610a2c24354dca6a4e081185c14b86f8025fc47"
     },
     {
       "id": 9231,
       "gx": 15,
       "gy": 1,
       "file": "tier1_cap_9231.png",
-      "mean": 93.5,
-      "sha256": "1dc1968408d5643805cf72a99d5594c004ac1c4039ff353f566f4a8d3652d1c4"
+      "mean": 95.47,
+      "sha256": "fcb2d4db9e7d5439fd225530e5273e1be226a35ace0b9bd67520d0483d69a8d2"
     },
     {
       "id": 9232,
       "gx": 0,
       "gy": 2,
       "file": "tier1_cap_9232.png",
-      "mean": 89.36,
-      "sha256": "e93390e2fa1e5fb1d5677af2619d9db3a36b375e79c09ac80c9efa84214bfb94"
+      "mean": 99.26,
+      "sha256": "27a0c856cf762be9021418b92379dc1df938c56ab8f796857c6039cf5be1b206"
     },
     {
       "id": 9233,
       "gx": 1,
       "gy": 2,
       "file": "tier1_cap_9233.png",
-      "mean": 86.19,
-      "sha256": "5ea78fec8ea72434661f62d638dc3b0b0097e8efe54c862f143e15133c996844"
+      "mean": 96.36,
+      "sha256": "1dd2a61880efae9f61cbcb22785e6433daa73101190efce7cd2508512f813e5f"
     },
     {
       "id": 9234,
       "gx": 2,
       "gy": 2,
       "file": "tier1_cap_9234.png",
-      "mean": 85.35,
-      "sha256": "fb28026e60e77627df9747932b90b6567fff1c8928b1ea4ede03ef0a7b7e6908"
+      "mean": 93.11,
+      "sha256": "1e56b346ef334c745784d9a8235186c9221eff7f954411fbaa3e98e334f44957"
     },
     {
       "id": 9235,
       "gx": 3,
       "gy": 2,
       "file": "tier1_cap_9235.png",
-      "mean": 83.6,
-      "sha256": "cf1b360cf143231c9aad4435bc6f017996160c8a8913ed977d5c147b4a31e68c"
+      "mean": 90.51,
+      "sha256": "dd6fce38798107cafe981c886e17e4b14327de8c7866b623ec4f5034fda31ee7"
     },
     {
       "id": 9236,
       "gx": 4,
       "gy": 2,
       "file": "tier1_cap_9236.png",
-      "mean": 81.23,
-      "sha256": "d5ef835b6a3581ff80da164103503079817f888446a8c22e8c8200e881420035"
+      "mean": 88.17,
+      "sha256": "eede2840d3d76db9ad703d40e5bc790333a2abad57a19b14a720c29ebdb12fef"
     },
     {
       "id": 9237,
       "gx": 5,
       "gy": 2,
       "file": "tier1_cap_9237.png",
-      "mean": 76.57,
-      "sha256": "096f554ea0e7911eb282b0ed60f06d6009b0dac6c5cd0c37e9de52e3573c013b"
+      "mean": 82.81,
+      "sha256": "3097269e0a0692a8bc557c93f725844d336e84d610524f0e229a3dd45b50d199"
     },
     {
       "id": 9238,
       "gx": 6,
       "gy": 2,
       "file": "tier1_cap_9238.png",
-      "mean": 81.67,
-      "sha256": "0e6f6b7997d544546a7012b6239faed953888916fb1e41be8b116644ed2fa85d"
+      "mean": 88.12,
+      "sha256": "9c7bd7735416cfd2fbebcd30165f0d8128b8a79bab2c9d010bf42820b52a542c"
     },
     {
       "id": 9239,
       "gx": 7,
       "gy": 2,
       "file": "tier1_cap_9239.png",
-      "mean": 83.71,
-      "sha256": "a267a7769d0c15f4443b5c1f9856f0f2a618ac3b2fcecf8c51a3c06ad5576dc1"
+      "mean": 79.18,
+      "sha256": "363f8369c7fd6b3b804373856f33410d91b85dd87cbbcbe2f2eb70da68ee452b"
     },
     {
       "id": 9240,
       "gx": 8,
       "gy": 2,
       "file": "tier1_cap_9240.png",
-      "mean": 82.72,
-      "sha256": "997d43067d49031218f990f9db7069586e6614c71d7dc8611161367e5efe87ed"
+      "mean": 75.08,
+      "sha256": "975d47b1408e03e829289106759db77f875ee9eda2e2c270be6355879d6aa399"
     },
     {
       "id": 9241,
       "gx": 9,
       "gy": 2,
       "file": "tier1_cap_9241.png",
-      "mean": 82.6,
-      "sha256": "477c9b15d8a5fa100c62c995d9648c6badd73eca2c142229d89187eafbd35d64"
+      "mean": 72.94,
+      "sha256": "4d5fb01f0468efb0188848f60825fb34e1671a2f3025ef57cb65d0e83e9ff627"
     },
     {
       "id": 9242,
       "gx": 10,
       "gy": 2,
       "file": "tier1_cap_9242.png",
-      "mean": 85.77,
-      "sha256": "7de28994dfd2d4699ef045a35bf824009cc67c6a18bfbee978dd3130c5e663d0"
+      "mean": 76.45,
+      "sha256": "dd1f3ac55c0c21ce6198f4ba6a8be5593cba9bd5a97f6a3b1e9f2dfd484bf083"
     },
     {
       "id": 9243,
       "gx": 11,
       "gy": 2,
       "file": "tier1_cap_9243.png",
-      "mean": 84.63,
-      "sha256": "bf32c5d1a16080e338017a48f9060f915edce26a39c3ace1d103312a69730790"
+      "mean": 77.04,
+      "sha256": "8725d7aa49b76b93829c147d245ea92a6fb5a694729cb99f0a4c75ff753783ba"
     },
     {
       "id": 9244,
       "gx": 12,
       "gy": 2,
       "file": "tier1_cap_9244.png",
-      "mean": 85.5,
-      "sha256": "542ae416f759495001d319696aac90150d8946e99079f2aa748f7b2f545c252a"
+      "mean": 78.46,
+      "sha256": "fa5eeb7edc35f26c988dbbd76b30c76c4b7b9aea7b417fdc401db04655367a65"
     },
     {
       "id": 9245,
       "gx": 13,
       "gy": 2,
       "file": "tier1_cap_9245.png",
-      "mean": 80.43,
-      "sha256": "0e91b0f977ed9a517b0bd86c02b2227d6426d121e40ea22d043f243ae702c1ef"
+      "mean": 80.14,
+      "sha256": "0e39e9675197cb26c709e9985e4a767cec8e686db651aa41aa5688988e89e5a2"
     },
     {
       "id": 9246,
       "gx": 14,
       "gy": 2,
       "file": "tier1_cap_9246.png",
-      "mean": 89.64,
-      "sha256": "1acda3150803387c8815e4212af7bfa4d57cb22ebf3a684c82c969f485199b09"
+      "mean": 87.09,
+      "sha256": "7d7ed810f153d86e4347c736e9ae86cb142d27b51f44825fc891a10636e4f62f"
     },
     {
       "id": 9247,
       "gx": 15,
       "gy": 2,
       "file": "tier1_cap_9247.png",
-      "mean": 93.46,
-      "sha256": "e098b4b34a7218630d56f02a4808fcd0c9946bb0b8aaedb50e8ca9dbec6a8807"
+      "mean": 93.14,
+      "sha256": "a389f18d60a9328372d7a407e341da442b2ec272b3486bc2e3f613ed4000a5f0"
     },
     {
       "id": 9248,
       "gx": 0,
       "gy": 3,
       "file": "tier1_cap_9248.png",
-      "mean": 87.64,
-      "sha256": "ef5889f00bb1bfb69d21bc38df4dc4d87c6bfe60ffa58d03826ff10fcec1719c"
+      "mean": 84.46,
+      "sha256": "737ec7f6f226a41a30a5e952c4fcd28535b6ec105f1abadae18ecb42e258cac5"
     },
     {
       "id": 9249,
       "gx": 1,
       "gy": 3,
       "file": "tier1_cap_9249.png",
-      "mean": 89.48,
-      "sha256": "b72f22618b831fba9eaed08ea004913f7cc0fd40f40ca3cfa8336dbb8da9c95c"
+      "mean": 85.83,
+      "sha256": "d3198600e9c80446257c42c695b12fb7ce0c4fa591be087e447951caaccb79bb"
     },
     {
       "id": 9250,
       "gx": 2,
       "gy": 3,
       "file": "tier1_cap_9250.png",
-      "mean": 85.01,
-      "sha256": "c9942c21913370ce8b48d5e47f1271a1bb5583e52b3c26010b8cef78f9163fd0"
+      "mean": 80.25,
+      "sha256": "44f86b2997e6399e795b89d5f5c4583de965f4a8d580f561fab9c008ef09d3a8"
     },
     {
       "id": 9251,
       "gx": 3,
       "gy": 3,
       "file": "tier1_cap_9251.png",
-      "mean": 83.39,
-      "sha256": "4f291f66462d49472e500646178be90a4c9fabfbbb71da3e04bc5c1c7802369e"
+      "mean": 89.01,
+      "sha256": "1502470ac8350c14187671866c8d9a949b4227ada9349ea728c74df8091d2b0c"
     },
     {
       "id": 9252,
       "gx": 4,
       "gy": 3,
       "file": "tier1_cap_9252.png",
-      "mean": 88.08,
-      "sha256": "d94d24dd031327121e54673567a5fdd2e8d44b9d06d8e191b7e81bf8403b96aa"
+      "mean": 94.61,
+      "sha256": "b19976766ccc20abf52131538ab48345616b82fd8278ef63dca689b2124408ed"
     },
     {
       "id": 9253,
       "gx": 5,
       "gy": 3,
       "file": "tier1_cap_9253.png",
-      "mean": 89.02,
-      "sha256": "2e07ff5bb588b1954de383b5d78dd920ecdfaa68dec8db9b5efcf4ec504a38f1"
+      "mean": 96.35,
+      "sha256": "badd433268e7942ab8ad60ba65df2630698c90ba9bdf06d228f48a0ed503876b"
     },
     {
       "id": 9254,
       "gx": 6,
       "gy": 3,
       "file": "tier1_cap_9254.png",
-      "mean": 84.98,
-      "sha256": "da42b7552f5d7161bddc8f362d6f189593a64486d140c6d8529b1f9421eddc3b"
+      "mean": 85.5,
+      "sha256": "5b2fee654da2c8d863e24b097a05d8c6e9d84fe708724b3503588b10a5d09783"
     },
     {
       "id": 9255,
       "gx": 7,
       "gy": 3,
       "file": "tier1_cap_9255.png",
-      "mean": 89.25,
-      "sha256": "e41aecf8210ceaeb5b0c66e91935f548791a9d9f62c03a90745bfff79b50182a"
+      "mean": 79.73,
+      "sha256": "3bf6944c2c2c63459514aee5785343708f159a8553b38ebe1a2be38438cf7907"
     },
     {
       "id": 9256,
       "gx": 8,
       "gy": 3,
       "file": "tier1_cap_9256.png",
-      "mean": 88.68,
-      "sha256": "2c0ea1bcd2ec7a5cb20d4f0074ad3757ce2448acb48d9ceb37643f918dda5420"
+      "mean": 78.84,
+      "sha256": "8b9a972fe89f5858734bad5961c58534a1d9bc5df4902524f1063e9682129c35"
     },
     {
       "id": 9257,
       "gx": 9,
       "gy": 3,
       "file": "tier1_cap_9257.png",
-      "mean": 85.64,
-      "sha256": "a71db3b521f4c527cd336d23351f5c0ae1bf47272756554cc3015ece5f925e34"
+      "mean": 73.96,
+      "sha256": "839ad10f780b71b16e87eafee23ccbd5d609ff157937c84f1f0225e66f27f17a"
     },
     {
       "id": 9258,
       "gx": 10,
       "gy": 3,
       "file": "tier1_cap_9258.png",
-      "mean": 86.21,
-      "sha256": "99e5a3f57b87720d4cb160028f3d6115c299396892cca7629ea20055ac7a3ee2"
+      "mean": 76.73,
+      "sha256": "31e4c1eada864fa4f8c2f37e8b729acff34fe3162f5abf569bc1f27d8c3c527c"
     },
     {
       "id": 9259,
       "gx": 11,
       "gy": 3,
       "file": "tier1_cap_9259.png",
-      "mean": 85.16,
-      "sha256": "9b2603062592c4c83b50e6bf85f6d115f7f7203c9ef408879390e2ed1a75c7a1"
+      "mean": 77.03,
+      "sha256": "d0b47acfd59fc6acae91dbb9df790b4e0ebc678fa8765d54ea1595ef22c1eee1"
     },
     {
       "id": 9260,
       "gx": 12,
       "gy": 3,
       "file": "tier1_cap_9260.png",
-      "mean": 86.37,
-      "sha256": "6e31f546b66a1ada409c96839b714373932a31bbe0e3e47f43312dc2f218e928"
+      "mean": 78.32,
+      "sha256": "7b02307538f29e7b4d58b0ad08f5626b89d36e31bfdf2b8238312df11220ee40"
     },
     {
       "id": 9261,
       "gx": 13,
       "gy": 3,
       "file": "tier1_cap_9261.png",
-      "mean": 90.87,
-      "sha256": "aeb6696fb35400719f742b029623e5e62b57864a42240844e664e8c78517c907"
+      "mean": 88.51,
+      "sha256": "4a0ec6fa2d0c011cc8f9210cd988a4d3eddee7f6b949014596d12b4334f7b552"
     },
     {
       "id": 9262,
       "gx": 14,
       "gy": 3,
       "file": "tier1_cap_9262.png",
-      "mean": 86.33,
-      "sha256": "ea75cc5facd5468233d33600c39cde039be7bef84b574e6ebd6caa3110e71e9f"
+      "mean": 85.45,
+      "sha256": "3de03a4a7490eb3968431870bfcea68b5277375e12aa49594cf9ed465da6c349"
     },
     {
       "id": 9263,
       "gx": 15,
       "gy": 3,
       "file": "tier1_cap_9263.png",
-      "mean": 90.47,
-      "sha256": "b1ca8e4d8f6e420164fa83db36dbb29e105b760580452c93374c128d6b1f7191"
+      "mean": 89.27,
+      "sha256": "ac58abab01bc121e10fb17b7635ac2e1d35af623704a278bbd5b6601adb0632a"
     },
     {
       "id": 9264,
       "gx": 0,
       "gy": 4,
       "file": "tier1_cap_9264.png",
-      "mean": 89.51,
-      "sha256": "d7ab684f76daa3b13a6c810f967893e22a12d4ab6a15537d7797f7f2fe2573dc"
+      "mean": 85.65,
+      "sha256": "8196f26b4be3a993ef3ff2c30b10ca3c13eb1fba3ab8e88ff7a2c1f405fd0ac4"
     },
     {
       "id": 9265,
       "gx": 1,
       "gy": 4,
       "file": "tier1_cap_9265.png",
-      "mean": 88.79,
-      "sha256": "188b27ac04020b9b1cdadcb7f98ecb96b7398c4aff52daaca9cad2be8815365a"
+      "mean": 85.13,
+      "sha256": "3c1a45985f55fe52c6dbce527a728cdad7e72b75ccaa5ae3cf4c0e626c254d71"
     },
     {
       "id": 9266,
       "gx": 2,
       "gy": 4,
       "file": "tier1_cap_9266.png",
-      "mean": 86.13,
-      "sha256": "3ed1aace01451baae24c96bc08d3bc0e6673342788ac2443da5f7b7e85fbe68f"
+      "mean": 84.71,
+      "sha256": "0c6ac6c047ef54d020b3360d7615bfca0197e129b198412d6fd7eff8ec949bc6"
     },
     {
       "id": 9267,
       "gx": 3,
       "gy": 4,
       "file": "tier1_cap_9267.png",
-      "mean": 90.59,
-      "sha256": "72ee9c41ef09c68ef1de98bf459dde9c67ad5813bc5384aef4ab6959dffd502d"
+      "mean": 97.8,
+      "sha256": "527905783734fc22e6083d18828ecffb9a551ccec314b1149ab894fde9eaf3e1"
     },
     {
       "id": 9268,
       "gx": 4,
       "gy": 4,
       "file": "tier1_cap_9268.png",
-      "mean": 89.34,
-      "sha256": "b088336fb34bc715ea23be70ee7550a1338739fc5d46f804c8a96d134045a3c4"
+      "mean": 96.29,
+      "sha256": "c704ed2cbaad7aade77e3f0a3daacd5a91b74610adde9f208863eb92919aea54"
     },
     {
       "id": 9269,
       "gx": 5,
       "gy": 4,
       "file": "tier1_cap_9269.png",
-      "mean": 88.04,
-      "sha256": "64a0cf595d146e60af5b2366947456cf80bf1662c49596db78e5ea0e83e93f58"
+      "mean": 89.01,
+      "sha256": "ca2e71ff8080dba8a21b94024815b94520c0eec781f2a307a6667cc8b8788e5c"
     },
     {
       "id": 9270,
       "gx": 6,
       "gy": 4,
       "file": "tier1_cap_9270.png",
-      "mean": 86.55,
-      "sha256": "05c29321c5d6fa421377c89f03cdffaa226f9a2896ddd808b72d8d3c91a786ee"
+      "mean": 77.42,
+      "sha256": "54f0d03d88c9eae9e9e10c4144d43b5d740d0b63d6d563f29cc080f881c4f157"
     },
     {
       "id": 9271,
       "gx": 7,
       "gy": 4,
       "file": "tier1_cap_9271.png",
-      "mean": 89.9,
-      "sha256": "7f96c3e33567c629cf6397b9a95e0d434b5c8490499e0e1b70f8515f1e53660c"
+      "mean": 80.7,
+      "sha256": "cc6b4a90773bac1282d87c76dbaccef43eac337c108ef6b2b460b03770fce064"
     },
     {
       "id": 9272,
       "gx": 8,
       "gy": 4,
       "file": "tier1_cap_9272.png",
-      "mean": 85.56,
-      "sha256": "547026855cb04ada014d40c4b05359838bd696ea5d81eee9f37d3600787c7a43"
+      "mean": 76.22,
+      "sha256": "a926020c1597d69a6222c239ba5f23d0d570a5ae6911e4e226d15e66e10bc0de"
     },
     {
       "id": 9273,
       "gx": 9,
       "gy": 4,
       "file": "tier1_cap_9273.png",
-      "mean": 82.77,
-      "sha256": "f02424296ed966bb1dd926a4be6f9d9c5b72430df29cc09d8f69400ce88168cc"
+      "mean": 75.03,
+      "sha256": "2c845dac57416e9bdf70d4495345d9c32672b6e1e8f50e64c8becf3ea54c861b"
     },
     {
       "id": 9274,
       "gx": 10,
       "gy": 4,
       "file": "tier1_cap_9274.png",
-      "mean": 82.02,
-      "sha256": "06b3ce335a49694850feb81223186227514084f11e610b1f8f8bd2636cc92877"
+      "mean": 76.07,
+      "sha256": "b90f93862ebdad1ade62f000f763c6b7aa0589de9facd24ab93a1e232deb931b"
     },
     {
       "id": 9275,
       "gx": 11,
       "gy": 4,
       "file": "tier1_cap_9275.png",
-      "mean": 89.16,
-      "sha256": "5387955f48bc3af9fa0ee710dce27aa3bbe85a4d45d8ddbf334411a7aa6a722f"
+      "mean": 84.57,
+      "sha256": "ce9a6ffa9d1be839f825e78b5df0ea5f9af83ec9fcfb1629d1b90acb64832b2a"
     },
     {
       "id": 9276,
       "gx": 12,
       "gy": 4,
       "file": "tier1_cap_9276.png",
-      "mean": 87.19,
-      "sha256": "c516d552fa20a4b73f9c84bec80df5a04c072b245389ded5dc6f8fcbcda961f9"
+      "mean": 80.13,
+      "sha256": "4f9da1e858ec077a659e54e2a7c78c7d222d84b6bc525faa13f2104f6af86996"
     },
     {
       "id": 9277,
       "gx": 13,
       "gy": 4,
       "file": "tier1_cap_9277.png",
-      "mean": 87.2,
-      "sha256": "8c96be31802a9248ee60fc8db4752a3e57ca7daf10721dd1322a123ddd8ffe73"
+      "mean": 84.95,
+      "sha256": "97748f7f075034fc9cbaecceb9682dfc9cd7f086c248cada9952949f9823bc81"
     },
     {
       "id": 9278,
       "gx": 14,
       "gy": 4,
       "file": "tier1_cap_9278.png",
-      "mean": 84.4,
-      "sha256": "b2c74899883ee565293caaa64e016b407d9c81e53110b63c2b535ed21e5f72a2"
+      "mean": 83.74,
+      "sha256": "5e6f88516562f0082689546b395052e162fc622f327829476f8239bac537c38b"
     },
     {
       "id": 9279,
       "gx": 15,
       "gy": 4,
       "file": "tier1_cap_9279.png",
-      "mean": 85.55,
-      "sha256": "2a2bbaa04811df139be27fb93290f6980a0745eeaf6960b943e893427254c30e"
+      "mean": 83.48,
+      "sha256": "121aa37f11d4c27358da296ca27e598fc8f3e6b334178b92708f12f0f2a1affd"
     },
     {
       "id": 9280,
       "gx": 0,
       "gy": 5,
       "file": "tier1_cap_9280.png",
-      "mean": 86.12,
-      "sha256": "9dabd8b9a11d488458a52818c999c3fc513f325b2077dc16907e86418c459564"
+      "mean": 83.43,
+      "sha256": "3ad20326256e0b2865cf343269379f74383169014c638e9e97c1c6607457e9db"
     },
     {
       "id": 9281,
       "gx": 1,
       "gy": 5,
       "file": "tier1_cap_9281.png",
-      "mean": 86.41,
-      "sha256": "a814025cf2647707850d835019f3cda03dc520e3881e3a1fefa8957a1d1325b0"
+      "mean": 83.69,
+      "sha256": "c2dc65582a062b1e2d94ef0506200f9efd2adf540cc66c9823cb1d800b130139"
     },
     {
       "id": 9282,
       "gx": 2,
       "gy": 5,
       "file": "tier1_cap_9282.png",
-      "mean": 88.95,
-      "sha256": "fff5ede5df1ae8c12043da15a82418eaf522da11c98d3ce3cd589d6db76bbb4a"
+      "mean": 92.62,
+      "sha256": "19a1bea13d672380dc78f52d8dc3b46fc2f31a8fc94946323b465857f651d6e8"
     },
     {
       "id": 9283,
       "gx": 3,
       "gy": 5,
       "file": "tier1_cap_9283.png",
-      "mean": 91.85,
-      "sha256": "71f0c7a9807c5668611b16e0d475cb7c9c8747ee50f3f9d24e35151e1cd27425"
+      "mean": 98.63,
+      "sha256": "88bbe9d84c7f6dcbb147d12bde6d3c20a263c9156f94506ad1a42f11dfca1c62"
     },
     {
       "id": 9284,
       "gx": 4,
       "gy": 5,
       "file": "tier1_cap_9284.png",
-      "mean": 88.28,
-      "sha256": "372a72fb1ae7dbce96de1211164c981a2dd718a96c4083a43a599fdf752c5e62"
+      "mean": 95.81,
+      "sha256": "9a1a6c13e92d475eecd73e4c9cb2386942d4d060965303cc21c3cb6fcece4973"
     },
     {
       "id": 9285,
       "gx": 5,
       "gy": 5,
       "file": "tier1_cap_9285.png",
-      "mean": 94.35,
-      "sha256": "ae41c02fc8aa30a271f94dbb914765eb2306a6bece8fa5c0531eac60fc0367c9"
+      "mean": 96.41,
+      "sha256": "44aced4dc25743cef51d9f1c8e233917b7dbd0c84ff793bb3310852d3346883b"
     },
     {
       "id": 9286,
       "gx": 6,
       "gy": 5,
       "file": "tier1_cap_9286.png",
-      "mean": 91.55,
-      "sha256": "99fcdf1bd1f237ad68acc20e1fd30036d2d7b06154240c575fdc51731a65167f"
+      "mean": 82.27,
+      "sha256": "c28593030b0fa2f824a67675812aa03b5ab407f36e29a2db383bc64b42a26dad"
     },
     {
       "id": 9287,
       "gx": 7,
       "gy": 5,
       "file": "tier1_cap_9287.png",
-      "mean": 90.65,
-      "sha256": "46a913be7b64cbd725e70ca214eb2c86cb0502ca3150cf387bf415e20a01095f"
+      "mean": 81.67,
+      "sha256": "a9a90afcf9b574a3c1baa617305b3db1ec0c16ebc1dbb8ef04d6e14918f5a4d4"
     },
     {
       "id": 9288,
       "gx": 8,
       "gy": 5,
       "file": "tier1_cap_9288.png",
-      "mean": 92.4,
-      "sha256": "91d9298ac1a68e991f85c390a9f15f39ca27a156998b8997f750e83ff9692a7c"
+      "mean": 83.11,
+      "sha256": "607f05679a481cd0bf4ab802a3169d07562f685141c075b83bcd32ddce7544f9"
     },
     {
       "id": 9289,
       "gx": 9,
       "gy": 5,
       "file": "tier1_cap_9289.png",
-      "mean": 84.22,
-      "sha256": "3eff79689fe285384c9e872673148e9622cd9f5feb4b05d9242e8d65dca09acf"
+      "mean": 77.49,
+      "sha256": "11de8b9dff6f0eb327318d55d1e9ff9ba47ca40de87752608e9cfb00c7a07f6d"
     },
     {
       "id": 9290,
       "gx": 10,
       "gy": 5,
       "file": "tier1_cap_9290.png",
-      "mean": 85.04,
-      "sha256": "fa46c0ea6b782ab47d92ea8bc6e268eb079f2a77cbe91674365b9fb58682c8ed"
+      "mean": 80.47,
+      "sha256": "a1365a5c3d562462b973c23c105d165f272be2f621676dda1e5bb5f981daa410"
     },
     {
       "id": 9291,
       "gx": 11,
       "gy": 5,
       "file": "tier1_cap_9291.png",
-      "mean": 86.42,
-      "sha256": "064e844c9fac568f572642dd7aa63a6a2a913efe1596ef2f92553b38bea5390e"
+      "mean": 81.27,
+      "sha256": "cef4c8434cee082a9d45672f81f546df49dcabbc84088eaf3a4b3826a978a430"
     },
     {
       "id": 9292,
       "gx": 12,
       "gy": 5,
       "file": "tier1_cap_9292.png",
-      "mean": 92.65,
-      "sha256": "46a70c637189e29663b492e3f5ed8012f013bcb2d1f7958517fb558be98c66bd"
+      "mean": 86.43,
+      "sha256": "be9d83ddc0809274cae56011c32d915a6b721f9fa30d9dfcbd00bf96a9f7c836"
     },
     {
       "id": 9293,
       "gx": 13,
       "gy": 5,
       "file": "tier1_cap_9293.png",
-      "mean": 85.51,
-      "sha256": "cb80f39373990d91363e165aae6afda2f3c3d6d01a2edeae58e16943d18992cc"
+      "mean": 83.97,
+      "sha256": "97bae0993dec6e480546b69031f83920455a254fa81b521fa8fdf74052992407"
     },
     {
       "id": 9294,
       "gx": 14,
       "gy": 5,
       "file": "tier1_cap_9294.png",
-      "mean": 89.17,
-      "sha256": "84d149b4853a7a098aa3db8bea289a21a4e7a63aec4824c2fd6cd2fb862676ee"
+      "mean": 88.76,
+      "sha256": "f3ed50e9c08404291949e53c6f24e8d13634e7f1a32cf47ae2cb51dd41db13d8"
     },
     {
       "id": 9295,
       "gx": 15,
       "gy": 5,
       "file": "tier1_cap_9295.png",
-      "mean": 83.94,
-      "sha256": "9a4aef5f43c449d2422e0a2a98020ec99a1bd3d762f31f63817ac28ed32d61ec"
+      "mean": 80.54,
+      "sha256": "ebf00f1c03713e4ec9fe479729264390ef9bd382dea91ce7e90b185ffc06a47e"
     },
     {
       "id": 9296,
       "gx": 0,
       "gy": 6,
       "file": "tier1_cap_9296.png",
-      "mean": 88.24,
-      "sha256": "3e95bcfab7c0cd4c2fce440ce8446cf21b22afa7a1c852ac8d353798cc6a5476"
+      "mean": 84.55,
+      "sha256": "687d420faab75fbec3f9fbf4b3fce35ca5eb0623c5405f720f9657d7555bdd5d"
     },
     {
       "id": 9297,
       "gx": 1,
       "gy": 6,
       "file": "tier1_cap_9297.png",
-      "mean": 87.03,
-      "sha256": "02694f73c5539bae5cff5422920029b6489332fd317a7efd811ce0f4cb7e74a6"
+      "mean": 82.26,
+      "sha256": "2fa45c1f82572b44ff26027d17698e3eb1f8f740d0f22a15305b30c50ebcbcfc"
     },
     {
       "id": 9298,
       "gx": 2,
       "gy": 6,
       "file": "tier1_cap_9298.png",
-      "mean": 83.02,
-      "sha256": "0df67cfa8b601ce6312347f403f679943f2b01e1fad52fab55e9c74b3f4d9320"
+      "mean": 91.3,
+      "sha256": "a13528292a29b74071e5ce3ebebb6d5a7d5bac6195f395f362a72524ff382f9a"
     },
     {
       "id": 9299,
       "gx": 3,
       "gy": 6,
       "file": "tier1_cap_9299.png",
-      "mean": 88.22,
-      "sha256": "9bebb3e6dfccfd009743be3f3680a6cac2763f7b1711a6d0eac230ec71f10613"
+      "mean": 95.08,
+      "sha256": "6152d5c6ef4c3dafdd6891d4fc3cf2e41654d520eb20aa8f2d36c370e7addee1"
     },
     {
       "id": 9300,
       "gx": 4,
       "gy": 6,
       "file": "tier1_cap_9300.png",
-      "mean": 88.9,
-      "sha256": "9473aa06d3356d6300babc461c47b724ceb163b82f0391404a52180cd3b0c823"
+      "mean": 96.58,
+      "sha256": "3abbb312ec693072c2c02c454e6020dc0f54b1de1beec0fcce764fdc7edebf66"
     },
     {
       "id": 9301,
       "gx": 5,
       "gy": 6,
       "file": "tier1_cap_9301.png",
-      "mean": 94.32,
-      "sha256": "2b80f85071e80ab8f47ef0f21c9faa30224608ccc5605dbac8c429119a5ef230"
+      "mean": 97.24,
+      "sha256": "b4e5a5dc56d4416c98487359b855c9eb664090c551298db935c85c561e1d73f9"
     },
     {
       "id": 9302,
       "gx": 6,
       "gy": 6,
       "file": "tier1_cap_9302.png",
-      "mean": 88.98,
-      "sha256": "b42f49a3ea44504597acfe463ae3e4641b51807ab1efcda2b3564b583859b652"
+      "mean": 79.25,
+      "sha256": "198c81a9e20009229a0db41a44e74f2d01ee5cd53d529a70b2fccfaf6a73f69b"
     },
     {
       "id": 9303,
       "gx": 7,
       "gy": 6,
       "file": "tier1_cap_9303.png",
-      "mean": 86.8,
-      "sha256": "7603f52cb24fd4e3041044a79faf8d34807bb09d3b99760fc2e4013621538887"
+      "mean": 83.05,
+      "sha256": "29588a2d1ed986a2ce35ba7810a48d268b4a75a74fa12cc3aec700a431e9412b"
     },
     {
       "id": 9304,
       "gx": 8,
       "gy": 6,
       "file": "tier1_cap_9304.png",
-      "mean": 87.5,
-      "sha256": "1479f602b181995bd30a7a8685d6453d935dfac01499611336e72bd426a62b39"
+      "mean": 90.45,
+      "sha256": "07b9a0d709c0b56568e3b0c4800eb937251ae37e7285ff6f635ead9804c96978"
     },
     {
       "id": 9305,
       "gx": 9,
       "gy": 6,
       "file": "tier1_cap_9305.png",
-      "mean": 86.65,
-      "sha256": "53e9ce48d8427ee5a1af76d09f6edda16ab92d9cad249d62d14da8dea96eacb6"
+      "mean": 91.05,
+      "sha256": "11d0451db7943e2f782223b7ce8ad5d6d7ad916241977a46b3127d3140d045f1"
     },
     {
       "id": 9306,
       "gx": 10,
       "gy": 6,
       "file": "tier1_cap_9306.png",
-      "mean": 88.69,
-      "sha256": "f5e0cfb10279b24369c49e9a05e6dde87327cd155a0da4ddc205f5b9ac619793"
+      "mean": 83.67,
+      "sha256": "01a316e6936de89fd53895bfe30f191ec17083b9e11c05274361b2fbc10fc0e2"
     },
     {
       "id": 9307,
       "gx": 11,
       "gy": 6,
       "file": "tier1_cap_9307.png",
-      "mean": 86.5,
-      "sha256": "7cdce29f72e7665db08f14738872f89c6a319614c2e9aa90a2c586d1e07a56a4"
+      "mean": 74.84,
+      "sha256": "8a105775069321f866f26005e84b73a568b8b3f7f3f474066190670644b7fc2a"
     },
     {
       "id": 9308,
       "gx": 12,
       "gy": 6,
       "file": "tier1_cap_9308.png",
-      "mean": 78.4,
-      "sha256": "51280c03e10baeca551f957e5dfa97e479893b08d1120070eb4e5843fc4dcb31"
+      "mean": 73.39,
+      "sha256": "5b38fb5d92a7069e8841f898621a3a2a3603277644da2755e514cd2b6cb175b4"
     },
     {
       "id": 9309,
       "gx": 13,
       "gy": 6,
       "file": "tier1_cap_9309.png",
-      "mean": 79.24,
-      "sha256": "7c75a851c727aef81f25668107c59120108ec75365dd42f6680427291c0384d8"
+      "mean": 82.98,
+      "sha256": "ea13848cc44bd549f772adc227519a20d0e65c66d6954eeb7d9bae4a74a112cb"
     },
     {
       "id": 9310,
       "gx": 14,
       "gy": 6,
       "file": "tier1_cap_9310.png",
-      "mean": 85.85,
-      "sha256": "1b225273d564af9ee6b639917ab4011a9a31c187b05de9e49e63f09fbb0a03ba"
+      "mean": 87.34,
+      "sha256": "8d05f2f681c77ec90bd4f5051832722c9b6effda11df07d4d027024a2cb51106"
     },
     {
       "id": 9311,
       "gx": 15,
       "gy": 6,
       "file": "tier1_cap_9311.png",
-      "mean": 83.29,
-      "sha256": "c8684295736bdd9f2c539d07e8ca5eba3fb46b18f26216ad5b85b18c8eed4943"
+      "mean": 78.7,
+      "sha256": "119f66887bbfa927ce09eba55cbf6c4a19841fa4ed029a0f60457c590aaa5db2"
     },
     {
       "id": 9312,
       "gx": 0,
       "gy": 7,
       "file": "tier1_cap_9312.png",
-      "mean": 82.64,
-      "sha256": "971427adaae9dac7dfaf396a340be4cd4d8d18fe7e9d1c191b7aa44729772605"
+      "mean": 85.06,
+      "sha256": "66a1c46429579eab595f704c6da0610af74895d5c595096dffca0364b49c65f6"
     },
     {
       "id": 9313,
       "gx": 1,
       "gy": 7,
       "file": "tier1_cap_9313.png",
-      "mean": 82.72,
-      "sha256": "e65834c264c5dab93d4525b2fd87253b2fb7ee0afaad4f38d8dbd5637549d640"
+      "mean": 87.73,
+      "sha256": "4899b53c1b99393e753f1caa8a9f63fc68b275844d4b6bf2d607eef63884665c"
     },
     {
       "id": 9314,
       "gx": 2,
       "gy": 7,
       "file": "tier1_cap_9314.png",
-      "mean": 85.29,
-      "sha256": "4018922208ca72d631de487d4ae5434fcffeca259a128426318c1736115e14d9"
+      "mean": 90.29,
+      "sha256": "f1e05263f263bf8f3b3b4416464f6f2cdc6af57140a74df6c49a1d2f732becf6"
     },
     {
       "id": 9315,
       "gx": 3,
       "gy": 7,
       "file": "tier1_cap_9315.png",
-      "mean": 84.99,
-      "sha256": "e75163ac2a50dcd416be4e9f15cff2ee846069a7cbe84def2772f8af6941c101"
+      "mean": 85.69,
+      "sha256": "721de357e5a3a504b4a702c6fb8201932bed7bce149b64871bec538744afdc41"
     },
     {
       "id": 9316,
       "gx": 4,
       "gy": 7,
       "file": "tier1_cap_9316.png",
-      "mean": 84.59,
-      "sha256": "32c80191ddc119445d321174522a84a91679f17eeb886a84c12a3b931455bf9c"
+      "mean": 78.42,
+      "sha256": "bc10d59cb0cbdcebc254729287ebce8413d2a5571f6b3ae0f04d0911da73d378"
     },
     {
       "id": 9317,
       "gx": 5,
       "gy": 7,
       "file": "tier1_cap_9317.png",
-      "mean": 86.48,
-      "sha256": "09b7ee8b1e298f1c839d8a19daf07b28600918079538f1cbe9e7c075c7a2815e"
+      "mean": 79.69,
+      "sha256": "0019c74469460ce2325b2beb122c495df16c52b55a7fdf59dc531fd7023c0d49"
     },
     {
       "id": 9318,
       "gx": 6,
       "gy": 7,
       "file": "tier1_cap_9318.png",
-      "mean": 85.19,
-      "sha256": "53bf6961e6cbde97ef0cbbeef78372f3a29452cd74bd0aa541e81756c378f4b2"
+      "mean": 82.15,
+      "sha256": "85482c2edc788cb85200f47b67b681a842d31e8e81a7d6af5a0266e9630baa79"
     },
     {
       "id": 9319,
       "gx": 7,
       "gy": 7,
       "file": "tier1_cap_9319.png",
-      "mean": 82.58,
-      "sha256": "6b23c3d8e7ce2fb57fe1a3c8db0835a6b1c644f12103987f7841a4bbec2be47c"
+      "mean": 86.9,
+      "sha256": "97403ac8d3ccc749995e38982445cab32dd0a4a2f92e0fdc53a9fdd0a71af92f"
     },
     {
       "id": 9320,
       "gx": 8,
       "gy": 7,
       "file": "tier1_cap_9320.png",
-      "mean": 84.62,
-      "sha256": "6e9017e1cf14ab79f5c1dede205c49e97363bb402149b1575d14cdcf4316705b"
+      "mean": 88.85,
+      "sha256": "6a4a992c1d2897e973d8473c2acea2e6f106f4087c5f38245dd274c114cddc85"
     },
     {
       "id": 9321,
       "gx": 9,
       "gy": 7,
       "file": "tier1_cap_9321.png",
-      "mean": 81.13,
-      "sha256": "4e6138454310bf5f0e79896a48def456ba7c51478e253d935976dbf489fd5a00"
+      "mean": 85.95,
+      "sha256": "293de73b8f3a846984554f9918420392b8456b8d528be6c140fd34e01ee8ea4d"
     },
     {
       "id": 9322,
       "gx": 10,
       "gy": 7,
       "file": "tier1_cap_9322.png",
-      "mean": 83.56,
-      "sha256": "48db4c2cad1b2b5d98bc55021610acf2844da3b86a5a06406e7447846c91cc84"
+      "mean": 71.6,
+      "sha256": "b744219c7f1652f51a871466efdcff77479015d528438823e2a8525a0f35db8f"
     },
     {
       "id": 9323,
       "gx": 11,
       "gy": 7,
       "file": "tier1_cap_9323.png",
-      "mean": 86.11,
-      "sha256": "dee2cdbfbc4f0d339b364e2260aa95f9cae27f881ebdc6944ce0ce4af6a7ba09"
+      "mean": 71.05,
+      "sha256": "dd851ae3a5bd12d6298b78c9fc06880f1e38ae017d97b08426b99935927dd824"
     },
     {
       "id": 9324,
       "gx": 12,
       "gy": 7,
       "file": "tier1_cap_9324.png",
-      "mean": 85.8,
-      "sha256": "d17a92dee351fbfaf38f72c16b913c291218c78d4ef5141c4334e1be07496934"
+      "mean": 86.1,
+      "sha256": "dae3666889649b2c6452d395ab83cd36f044713d8a4dc0e52cf9b7df8fb1b25f"
     },
     {
       "id": 9325,
       "gx": 13,
       "gy": 7,
       "file": "tier1_cap_9325.png",
-      "mean": 82.46,
-      "sha256": "6616ebec5388006d7e8ff4260e0c6822f12ad111da2f59fefb16750a95e872db"
+      "mean": 91.86,
+      "sha256": "6f45c75c2092f91d27c9cdfc15f1c914fc2dd2709c2b9401b6a5b9d2253aa0c7"
     },
     {
       "id": 9326,
       "gx": 14,
       "gy": 7,
       "file": "tier1_cap_9326.png",
-      "mean": 82.57,
-      "sha256": "000177878db22d35aa13e78da53bbf9e40b5255625b58a03b7d5eaccb4df3ddc"
+      "mean": 93.71,
+      "sha256": "5c7c0cfea00bc8184e9b3dcd488f5fe099a7430b1fe0f9b1d2a6cf6f3627b473"
     },
     {
       "id": 9327,
       "gx": 15,
       "gy": 7,
       "file": "tier1_cap_9327.png",
-      "mean": 84.29,
-      "sha256": "89df15d449c41e963bc61c7339a8cdcc174eb57402b803c243e3a1def305aa57"
+      "mean": 90.41,
+      "sha256": "1acd71ef265a94a214fc203cdc9a1dc8f2c995f8df0567a3f1c67282907cc7d3"
     },
     {
       "id": 9328,
       "gx": 0,
       "gy": 8,
       "file": "tier1_cap_9328.png",
-      "mean": 81.8,
-      "sha256": "9794d74d400a2a1c4b943528deb561675b26c07e882a9ad763368486ed388314"
+      "mean": 87.51,
+      "sha256": "e626e46c4cabcaa183b30a48a8fab076e8b8cc25acdbd9904ee1a01fd53ef635"
     },
     {
       "id": 9329,
       "gx": 1,
       "gy": 8,
       "file": "tier1_cap_9329.png",
-      "mean": 82.55,
-      "sha256": "f9b5d9705011e1291aced23564d482bc14d7e0fc7367b9cfa5eca7172895573f"
+      "mean": 87.92,
+      "sha256": "a939131bb90886ca31e2ff929dc6979329ad73c8ae5f3a84712e0bbaa976d665"
     },
     {
       "id": 9330,
       "gx": 2,
       "gy": 8,
       "file": "tier1_cap_9330.png",
-      "mean": 82.32,
-      "sha256": "dd0d6d96e5961a7feddb443e0739daa528b564fd11900202adf72239e84792a5"
+      "mean": 87.9,
+      "sha256": "c03e171e5f6da4880ec2de513b5115392fab68b82299cd5c17404e620940f3d3"
     },
     {
       "id": 9331,
       "gx": 3,
       "gy": 8,
       "file": "tier1_cap_9331.png",
-      "mean": 86.28,
-      "sha256": "9f4e2437c7f22cc5779c42f21ce9e34dd2a1681a4d475a3cb044f8c9fbfba3b8"
+      "mean": 83.13,
+      "sha256": "fcb726ab635f4266e7e541fa9d83e81c2089f718f9e5d139804dd5f8e359c35b"
     },
     {
       "id": 9332,
       "gx": 4,
       "gy": 8,
       "file": "tier1_cap_9332.png",
-      "mean": 83.92,
-      "sha256": "a039354863851fe055eaf25a62a7a92f77389729c71f9073426c0d5daab91f95"
+      "mean": 78.05,
+      "sha256": "1467b45268249ddda940ed93d18796ba07437e5c044e08d9dc9f03c7942dafe6"
     },
     {
       "id": 9333,
       "gx": 5,
       "gy": 8,
       "file": "tier1_cap_9333.png",
-      "mean": 84.36,
-      "sha256": "36064054a2162a37da45f5d5fad7abd2c1ebf6d6730abe38bf9b8f200b7739fd"
+      "mean": 78.14,
+      "sha256": "7ad0af788584e020c22f7ef08d33310270b42b732f60047d7fceb080326adde0"
     },
     {
       "id": 9334,
       "gx": 6,
       "gy": 8,
       "file": "tier1_cap_9334.png",
-      "mean": 81.76,
-      "sha256": "1513c2a06259d93b5711ce7c95a032f945f7c4e07d908e786aa777630687453e"
+      "mean": 77.06,
+      "sha256": "695c277dc467a42d64eba26cf14c0299c3eb809bdd9e169809230e83c1ee7aec"
     },
     {
       "id": 9335,
       "gx": 7,
       "gy": 8,
       "file": "tier1_cap_9335.png",
-      "mean": 84.93,
-      "sha256": "541ab21c21f52774753b9f73055ef28448edc486852e8339e6c5a91623ca5907"
+      "mean": 90.31,
+      "sha256": "34cdb3dd5ba385477f290bda1b9fe1a1dd4d47881bf1cd3493f65a7a66002f39"
     },
     {
       "id": 9336,
       "gx": 8,
       "gy": 8,
       "file": "tier1_cap_9336.png",
-      "mean": 86.35,
-      "sha256": "b1ec5304c371326fa1b2ed8843d80f05e08c8a9aab1dcd6544c7d6e6fe40e04a"
+      "mean": 91.81,
+      "sha256": "76676a50838ed59df78d47075f2de7f7903a15d335aa8d58822f441032060e38"
     },
     {
       "id": 9337,
       "gx": 9,
       "gy": 8,
       "file": "tier1_cap_9337.png",
-      "mean": 81.63,
-      "sha256": "b4379923ff7154a8546a498651c7bbd8e08f0aebba6d626d2403979adf28cb7f"
+      "mean": 78.86,
+      "sha256": "f09b7d55c8c24e7f074ad243a737f780c0469ab9451991509a6849991c4a872c"
     },
     {
       "id": 9338,
       "gx": 10,
       "gy": 8,
       "file": "tier1_cap_9338.png",
-      "mean": 86.98,
-      "sha256": "0c19f4d3ab46b684a9772787ddd2da597c7540e334318e2385b955a8bca82ce3"
+      "mean": 70.97,
+      "sha256": "7db3c692add6b2935b1f32509e817bbcb3b01b97b8651987a4ee3b915d970d29"
     },
     {
       "id": 9339,
       "gx": 11,
       "gy": 8,
       "file": "tier1_cap_9339.png",
-      "mean": 84.22,
-      "sha256": "13d3c4ed811a66e186d35893e1d90342cc041d9327196d0141e133bc5524bca2"
+      "mean": 68.36,
+      "sha256": "2348f093184c4929fd33ecbe75365f2369e19191b32208007df3ccb422f913e3"
     },
     {
       "id": 9340,
       "gx": 12,
       "gy": 8,
       "file": "tier1_cap_9340.png",
-      "mean": 83.55,
-      "sha256": "2f6f1ccce2b903fba8798b88537e6a387df2ee6e04cb2da280e8954ae78852e5"
+      "mean": 88.43,
+      "sha256": "27c4420601befc4e4b4c9418058d7edb4f8627bc24b457dec5b1cecd1f8a9b21"
     },
     {
       "id": 9341,
       "gx": 13,
       "gy": 8,
       "file": "tier1_cap_9341.png",
-      "mean": 76.34,
-      "sha256": "d86ecf4d84bf7b20c73b19d0e70a5aea3b61c785a2ff0c27ae46de0936ae085a"
+      "mean": 86.95,
+      "sha256": "ac431a265fec822cd3be44e70770f3403628e61cdc6948ca7b057111078d0f8b"
     },
     {
       "id": 9342,
       "gx": 14,
       "gy": 8,
       "file": "tier1_cap_9342.png",
-      "mean": 80.37,
-      "sha256": "fc5dc1ba87aaa5a5971716e9a1163963257fc116a7002de92cf70c92d2234b29"
+      "mean": 90.74,
+      "sha256": "c6eafd118002cfa8b78e76042b104c3b936c51e49cb3a857f96a36cdbf3f588a"
     },
     {
       "id": 9343,
       "gx": 15,
       "gy": 8,
       "file": "tier1_cap_9343.png",
-      "mean": 80.53,
-      "sha256": "d2284b803249d8f4d2747d5c68f327eb08ac338cad23cb00b52962f9b1a17a66"
+      "mean": 88.88,
+      "sha256": "43629d6c91d0d9f934f7bb8219c6761c3018278205b78a0f9fe83fb1e701c555"
     },
     {
       "id": 9344,
       "gx": 0,
       "gy": 9,
       "file": "tier1_cap_9344.png",
-      "mean": 78.12,
-      "sha256": "972619445d87408dad2234c600ca256a4cbd85ff4b19aa1c01a5a7535ccd0878"
+      "mean": 83.88,
+      "sha256": "e71ef80501a2d630a07109ce1ff9041ad98f3259b9102c27ef9258caffc62e7c"
     },
     {
       "id": 9345,
       "gx": 1,
       "gy": 9,
       "file": "tier1_cap_9345.png",
-      "mean": 80.47,
-      "sha256": "de7dece762be1ae8e841866ee1142024acf109575d7db5d1ee91a6141ed77917"
+      "mean": 86.29,
+      "sha256": "156a636820ccf420dee5d0409a6c2ba0b9eacc60b5f692aabdc2d66e1ff455ad"
     },
     {
       "id": 9346,
       "gx": 2,
       "gy": 9,
       "file": "tier1_cap_9346.png",
-      "mean": 82.84,
-      "sha256": "ff970f125ab0ed6bb38eb18c623cd154dab34453e1a4099d8b6d50ee2aa919fe"
+      "mean": 88.48,
+      "sha256": "49f690db7a79c1c3b6aa58c0cac00e4ccd18376993ac970e5f029259ae6ced2c"
     },
     {
       "id": 9347,
       "gx": 3,
       "gy": 9,
       "file": "tier1_cap_9347.png",
-      "mean": 82.54,
-      "sha256": "381cc43fb5f891c9d933f95148fa9e108ff5d0b5a40f31918fa80d622df88a0b"
+      "mean": 79.49,
+      "sha256": "d7c894aff0cbe7bcfe22dacd10294866605a9e4ee3efed777cb62fc85f806fa5"
     },
     {
       "id": 9348,
       "gx": 4,
       "gy": 9,
       "file": "tier1_cap_9348.png",
-      "mean": 79.92,
-      "sha256": "ebd21b9aa5a95f632fa84da786be2f3f0aa9576e710811619bff87bdb03080c7"
+      "mean": 74.63,
+      "sha256": "1b39167bbe4a37a8487595532f679c7830aa47edbfe3ea755c3963be8cac05dc"
     },
     {
       "id": 9349,
       "gx": 5,
       "gy": 9,
       "file": "tier1_cap_9349.png",
-      "mean": 81.86,
-      "sha256": "2518d7a74290526f1f43600ec8b1e6f4ebc160eee61d606651868aa5304c3df2"
+      "mean": 75.74,
+      "sha256": "7c11c4a009246aa52bdfa3a296bedc133bfaa23213d5276f523125ab033af5ca"
     },
     {
       "id": 9350,
       "gx": 6,
       "gy": 9,
       "file": "tier1_cap_9350.png",
-      "mean": 80.68,
-      "sha256": "02ce2cb8efc5e6992f72783b072a52019fc0dc9a3f48c2db616a96f54d18d1da"
+      "mean": 73.25,
+      "sha256": "ce4918e453a785c837dfb601c475af39d9ed9769c0cb97c00f0273b1df1bab0d"
     },
     {
       "id": 9351,
       "gx": 7,
       "gy": 9,
       "file": "tier1_cap_9351.png",
-      "mean": 81.56,
-      "sha256": "614951193df6f44d71aaa15d190ea5445fe22b6be9627bda991409a4d8512673"
+      "mean": 83.47,
+      "sha256": "3f7de9c8278972f002e7f36d3b060729ffd79057e98120d773448251bb6e2eeb"
     },
     {
       "id": 9352,
       "gx": 8,
       "gy": 9,
       "file": "tier1_cap_9352.png",
-      "mean": 79.01,
-      "sha256": "67bd06d74de1419858200ae12a4889f31810d2484622c8b40e7d56e8c372d336"
+      "mean": 83.6,
+      "sha256": "9588899180718fbf9250b80dab0ead092323a3d8f6d129fbecd3548c86dab86d"
     },
     {
       "id": 9353,
       "gx": 9,
       "gy": 9,
       "file": "tier1_cap_9353.png",
-      "mean": 83.47,
-      "sha256": "2b305fc147d85bee7196032ae9ab058fd413957440fd1db44ab700d64f76b14e"
+      "mean": 70.67,
+      "sha256": "cca764194894a7b0385497fc74f08f8c65b47b3d43e7bbccb367bbcb5f4d760a"
     },
     {
       "id": 9354,
       "gx": 10,
       "gy": 9,
       "file": "tier1_cap_9354.png",
-      "mean": 80.87,
-      "sha256": "4f9fac3fb285d7e8f8aa1825fea86437c0b7effda86744063f3276803d593623"
+      "mean": 64.25,
+      "sha256": "68f1502b6eebb7bb1c450824dd11bc6e9ea8882897a208f0d965c0d014de1544"
     },
     {
       "id": 9355,
       "gx": 11,
       "gy": 9,
       "file": "tier1_cap_9355.png",
-      "mean": 80.06,
-      "sha256": "ea9e34248ae4f735479efdeba9dace953037ae02664d6ddb57495ef7a2b6c791"
+      "mean": 65.97,
+      "sha256": "aa45bb629e795d14dd55d3f278cb87ea3e2b488f9130266bf7064a46346f18de"
     },
     {
       "id": 9356,
       "gx": 12,
       "gy": 9,
       "file": "tier1_cap_9356.png",
-      "mean": 78.0,
-      "sha256": "3b647a296660a1e2693ef57f9186683a0bf4815ede3306e64531f8eafc094ad2"
+      "mean": 87.2,
+      "sha256": "9a010a0abf53c02a3609687756adb823eec682773dc9c3f056f23f8200a3bfca"
     },
     {
       "id": 9357,
       "gx": 13,
       "gy": 9,
       "file": "tier1_cap_9357.png",
-      "mean": 78.98,
-      "sha256": "ca8f937ed962e698951cd00ba8529f6266f24a79094159d502c43d7eec2ee044"
+      "mean": 88.37,
+      "sha256": "43664c22dd8edb660f3eef7a3149003e8fb708fac5b29cbd4594f677fcb1b44d"
     },
     {
       "id": 9358,
       "gx": 14,
       "gy": 9,
       "file": "tier1_cap_9358.png",
-      "mean": 79.39,
-      "sha256": "c9c7df311e4f53412c06bdf998f2ef3829bd780c64f7ad48dc1227b7a51edcee"
+      "mean": 87.26,
+      "sha256": "89f666f6d83b7159e23b1b3ce6b77af092748d535d1495ad7ac2593da660c3f7"
     },
     {
       "id": 9359,
       "gx": 15,
       "gy": 9,
       "file": "tier1_cap_9359.png",
-      "mean": 84.96,
-      "sha256": "acd0b874d2e4f0b6f7f2f5e255c17af7a54a38b9d986bd8c27a2669f1fca078b"
+      "mean": 91.08,
+      "sha256": "85fcd63b1a381453d363e42d3d552109104b9592f73fce380d5116ef78f35e09"
     },
     {
       "id": 9360,
       "gx": 0,
       "gy": 10,
       "file": "tier1_cap_9360.png",
-      "mean": 76.96,
-      "sha256": "a45704407fc9dc336871f2c3585eebe04f481a4763a367cf0ba03894a64ba660"
+      "mean": 79.54,
+      "sha256": "650f815a67db4d7942e2f2031d01c5931d3c4fbbc9b26c197b8406920b85a47b"
     },
     {
       "id": 9361,
       "gx": 1,
       "gy": 10,
       "file": "tier1_cap_9361.png",
-      "mean": 76.83,
-      "sha256": "7fd78707939c1a836d925a174e143abd1a1552301a64ca640a869eabe167be29"
+      "mean": 80.02,
+      "sha256": "ac486beede28e6e6b39d6fdbb6696752bf9c93c3ff769f1903241bf4aee9dd7f"
     },
     {
       "id": 9362,
       "gx": 2,
       "gy": 10,
       "file": "tier1_cap_9362.png",
-      "mean": 76.94,
-      "sha256": "1e6e6ee4a35163c52a2d15a5084112a4f023c793beb80db4d6a5cdc4d21f901b"
+      "mean": 78.88,
+      "sha256": "b6a90fdb71da47066dc2a66bd66c703ea8623da596d68bb545aa7c1f4ba3d7f6"
     },
     {
       "id": 9363,
       "gx": 3,
       "gy": 10,
       "file": "tier1_cap_9363.png",
-      "mean": 77.33,
-      "sha256": "022dcbcbf9492405def057fa51cd99ff49ee86d78a8289b6902ef72c011b61f0"
+      "mean": 69.85,
+      "sha256": "c9a26188a8ab24ee84ed08b68ebc7a6ce76610207b8f889add661ef8a544be42"
     },
     {
       "id": 9364,
       "gx": 4,
       "gy": 10,
       "file": "tier1_cap_9364.png",
-      "mean": 76.53,
-      "sha256": "fdf7c7307d1ade37e4f01d39e6c14c30993bda78d4a2d63335b08fade47068f0"
+      "mean": 70.1,
+      "sha256": "74a2266e781d4a247966d8572e79b82c85973a18feb6f790ec545b203244c2e5"
     },
     {
       "id": 9365,
       "gx": 5,
       "gy": 10,
       "file": "tier1_cap_9365.png",
-      "mean": 77.86,
-      "sha256": "1fad29caaa880df0d5aa343206eeff9c7ee72b11795a8a5b3bc8a93334c8c8cb"
+      "mean": 70.02,
+      "sha256": "b40d60b1fdc3dc7b3e8e5111ea189ff70a6ff45a1131ec6d06f5a97d1bf3983c"
     },
     {
       "id": 9366,
       "gx": 6,
       "gy": 10,
       "file": "tier1_cap_9366.png",
-      "mean": 78.21,
-      "sha256": "06cd2bbc500f2f5e9da1bfb6ef9ad59d934097e80b7e2fd8393d3d585fc0d0f7"
+      "mean": 78.63,
+      "sha256": "99a606356e2de932c05be180b341f398758c5009b3923e7b71629c6aaf331053"
     },
     {
       "id": 9367,
       "gx": 7,
       "gy": 10,
       "file": "tier1_cap_9367.png",
-      "mean": 73.67,
-      "sha256": "e1cd8110439e3f956d64b9f3eaf35192948b8f667a556bd57c53ed970b78e4a2"
+      "mean": 76.99,
+      "sha256": "f2dd35a422e62416f7f9f323993f0ae719b431ac9a26b7c78aa0b28b46607f06"
     },
     {
       "id": 9368,
       "gx": 8,
       "gy": 10,
       "file": "tier1_cap_9368.png",
-      "mean": 79.83,
-      "sha256": "551946d7bb9ced130bb9278db773881a5f8a5ea271fbe25ced75d86c90cdfe26"
+      "mean": 80.73,
+      "sha256": "d75bd71dce2b11e6019998ebde28f1512ede5b65abe6fd671cc91c1cce2b0a4c"
     },
     {
       "id": 9369,
       "gx": 9,
       "gy": 10,
       "file": "tier1_cap_9369.png",
-      "mean": 78.79,
-      "sha256": "fa501b591756c9e7aecdac2d7fafdaec0c4b81de96f2fb7dc4c563c43c40a73d"
+      "mean": 65.84,
+      "sha256": "69880af5fc831b61c08d211a29b548d02b1744f359b8e465ee9cfdd12c3b5a68"
     },
     {
       "id": 9370,
       "gx": 10,
       "gy": 10,
       "file": "tier1_cap_9370.png",
-      "mean": 77.22,
-      "sha256": "473f229d00b6c8c5a0925ee183b6aec77ef70136e1aeb7552bb491585cff3335"
+      "mean": 68.67,
+      "sha256": "d8df39fef525dd8abf5dfb7689f13b5bc402469547b6bec37538d63f6452e8d4"
     },
     {
       "id": 9371,
       "gx": 11,
       "gy": 10,
       "file": "tier1_cap_9371.png",
-      "mean": 76.39,
-      "sha256": "cfd8811769ec1a325b22b201340b6c59ac08f604b598fa26e3cb3ab08c6026da"
+      "mean": 70.25,
+      "sha256": "05ec3c82185665f341c953798f0bc67bc49db44c18534e1bfd7aa03c5b897bba"
     },
     {
       "id": 9372,
       "gx": 12,
       "gy": 10,
       "file": "tier1_cap_9372.png",
-      "mean": 75.09,
-      "sha256": "19ac5e1ca5c64afa2ceb79870159f62d2857e89df24e40f5a1b9bdc9314e2834"
+      "mean": 80.98,
+      "sha256": "c825f1572a3d5aeed31eef46b8659d98b50fed71845797f1b69e6e2163a5914a"
     },
     {
       "id": 9373,
       "gx": 13,
       "gy": 10,
       "file": "tier1_cap_9373.png",
-      "mean": 78.31,
-      "sha256": "7f8c7c3b0fd7f9f6428e8f50566d4bccf38716f44d36ad820f02c0e39c56a997"
+      "mean": 86.2,
+      "sha256": "6b351fd702e176d52ee636eef6276ef9502b40410baff9743f52aa2a7ec85af9"
     },
     {
       "id": 9374,
       "gx": 14,
       "gy": 10,
       "file": "tier1_cap_9374.png",
-      "mean": 84.78,
-      "sha256": "7bcbb1c783253142457bd2e43ad8edf8b40742d45c8e880a4ff4eb9f177a2529"
+      "mean": 93.33,
+      "sha256": "5a69a2fbb8c4f472c4195e9fb3d51077e0104ce7a5fee619a101b62673f67468"
     },
     {
       "id": 9375,
       "gx": 15,
       "gy": 10,
       "file": "tier1_cap_9375.png",
-      "mean": 79.21,
-      "sha256": "c8a7506b3596e134ed7e71400cb7fefeb8954abdfd5ea5203043317c336a9e61"
+      "mean": 86.54,
+      "sha256": "27231f3699308c52a5dbc7bddc9b9adb2c7f6f05eef1fafa38fc92effea39302"
     },
     {
       "id": 9376,
       "gx": 0,
       "gy": 11,
       "file": "tier1_cap_9376.png",
-      "mean": 80.18,
-      "sha256": "b51bd409007ca5a61a8f7c21e5b26e6f18f0e94f63eb50bf3d90183a49028739"
+      "mean": 84.57,
+      "sha256": "3df299356c77caf1247d49fade1ec318cb7ba5e0d14eeb70486e6883ff35d05a"
     },
     {
       "id": 9377,
       "gx": 1,
       "gy": 11,
       "file": "tier1_cap_9377.png",
-      "mean": 82.46,
-      "sha256": "f4365ac3aa89dbd11e4c0a857330a713d4d63b58cb1ca85e8bbacfe64ff23ea5"
+      "mean": 86.67,
+      "sha256": "7148dcba62e77f452a86d1f8af20257072e7f550378fd1c13096ed0c7df7f85c"
     },
     {
       "id": 9378,
       "gx": 2,
       "gy": 11,
       "file": "tier1_cap_9378.png",
-      "mean": 81.43,
-      "sha256": "ab3349af017785ba6257f742834ce3fd49b9e2df13aa2d1b551ee136d535fcd3"
+      "mean": 83.06,
+      "sha256": "0301a84068ec11839cd0d6cf1823115983c2a2b8dd8467f6cb2cd32d39612de3"
     },
     {
       "id": 9379,
       "gx": 3,
       "gy": 11,
       "file": "tier1_cap_9379.png",
-      "mean": 72.37,
-      "sha256": "c920f4370799639053224e83e2018c5ecc2f7534dee9b6c5b2acf77bf10a8fb1"
+      "mean": 65.15,
+      "sha256": "d306ffdac9ecbecdc2b5df1a24938bf482182ae307a66de52ba700c487baa9e9"
     },
     {
       "id": 9380,
       "gx": 4,
       "gy": 11,
       "file": "tier1_cap_9380.png",
-      "mean": 72.71,
-      "sha256": "5c4f8974cf44db55e76ee1571d578a6144b71f868e6b7941a213b004a2f35e83"
+      "mean": 66.68,
+      "sha256": "f590ba72508cb5afd96ffa8bf1d980595aaf115197ae0a8e27ce0c416e4aa1d5"
     },
     {
       "id": 9381,
       "gx": 5,
       "gy": 11,
       "file": "tier1_cap_9381.png",
-      "mean": 73.4,
-      "sha256": "fa7c96a2872b3ab93727227998589ecd22e541967e04b089b14100fa0d19fb83"
+      "mean": 69.12,
+      "sha256": "435ddefc07df1abaa4f45463058adc20966fdd364f9c784a26512a1c8bbc0d4b"
     },
     {
       "id": 9382,
       "gx": 6,
       "gy": 11,
       "file": "tier1_cap_9382.png",
-      "mean": 77.19,
-      "sha256": "592c0b8d666da93ba99b21c70b718d939f3fc98244bcd30b021c299b0d528a59"
+      "mean": 81.62,
+      "sha256": "9bcfd76548a1e51eaee15937a8492fe4c3bc7be0d58ea6a8ec49d349decfe9ce"
     },
     {
       "id": 9383,
       "gx": 7,
       "gy": 11,
       "file": "tier1_cap_9383.png",
-      "mean": 79.12,
-      "sha256": "3907685f9c79e9c15106f83f0c419d344f14a13b09fd58f1967ec43f4ec481f9"
+      "mean": 83.49,
+      "sha256": "49ee7cdac0d0baf2e4b8631536d6fa33db0233f3220f558a8a463e9ea0b41145"
     },
     {
       "id": 9384,
       "gx": 8,
       "gy": 11,
       "file": "tier1_cap_9384.png",
-      "mean": 75.74,
-      "sha256": "f681dbc6b0419def1f2c93dddb0987f2abbaf0c41e9a76de145516c0f322f7ce"
+      "mean": 79.9,
+      "sha256": "13e055c26ee9a894020cf8f8df7a4aef038b75df36b7974f6e0e54c6c9a1b97c"
     },
     {
       "id": 9385,
       "gx": 9,
       "gy": 11,
       "file": "tier1_cap_9385.png",
-      "mean": 82.68,
-      "sha256": "26d8099941dbef061be675e842357121d43a622f70a2e3f88dce12ce7bb9e4b9"
+      "mean": 85.13,
+      "sha256": "ee731769768c11a56fe778ad41230b850d0507c03ce4a2fc460f54e4cb834e06"
     },
     {
       "id": 9386,
       "gx": 10,
       "gy": 11,
       "file": "tier1_cap_9386.png",
-      "mean": 79.72,
-      "sha256": "3f96a67deb8007c6246a6292b14f45f43430f794d351b279048424cd0df9b98d"
+      "mean": 83.46,
+      "sha256": "65d5f1101ee762444ddf23479eb9f9178a2ab55dd42155f7a11df1389b721bba"
     },
     {
       "id": 9387,
       "gx": 11,
       "gy": 11,
       "file": "tier1_cap_9387.png",
-      "mean": 80.04,
-      "sha256": "57c4b5fd80cb446d503d3a7daf1a238ed4cb9997790b7ff836ad585ae5eaf44d"
+      "mean": 82.24,
+      "sha256": "143c252a6d68b11c28561fa043883674b8e685636832bd22405b87bf970b1543"
     },
     {
       "id": 9388,
       "gx": 12,
       "gy": 11,
       "file": "tier1_cap_9388.png",
-      "mean": 77.16,
-      "sha256": "772b637b9685c990860929225c93b0e21214c77f7f178a480bb3adc2ca5f6e62"
+      "mean": 81.31,
+      "sha256": "317137d8db1b8c05c57940fda906eea00971fa17649ad838e3667d147305d2e9"
     },
     {
       "id": 9389,
       "gx": 13,
       "gy": 11,
       "file": "tier1_cap_9389.png",
-      "mean": 82.25,
-      "sha256": "8ba46ae09cd0612bbce2da09c8a5ae71fa1d67dc6811b68c8857cd1d05bb29f9"
+      "mean": 91.14,
+      "sha256": "46777fdbc37adcce261b991bd2299b67d290142ce40f1bc0f0307072ff6bcdc7"
     },
     {
       "id": 9390,
       "gx": 14,
       "gy": 11,
       "file": "tier1_cap_9390.png",
-      "mean": 81.94,
-      "sha256": "fcc7681e15ce04389bfacb8b9f0daf1d35db9d1c99eff3dc48d76bbc782d3af3"
+      "mean": 91.01,
+      "sha256": "8fdd16a2b435869a5dbc1b710762fd4ed943b75e983cf64d80c85a96d4830f32"
     },
     {
       "id": 9391,
       "gx": 15,
       "gy": 11,
       "file": "tier1_cap_9391.png",
-      "mean": 79.6,
-      "sha256": "da90c1401409182b418845e5660e35dcb380164b1f2ccd6e65bcee546b99050b"
+      "mean": 86.82,
+      "sha256": "2981b23ab1ffd0ee2d5a1a91012dfc6bba809e9b5d712c3d7cf9f2cb82beeead"
     },
     {
       "id": 9392,
       "gx": 0,
       "gy": 12,
       "file": "tier1_cap_9392.png",
-      "mean": 86.47,
-      "sha256": "6af74f1a1ab52eef0ccf6010f525da481aa7d72abc90c1e30754bedc441cae14"
+      "mean": 90.46,
+      "sha256": "cb3668afb833ebcb5abc414a3ef226d47a088ef6d9aa391c64943722dfc66d55"
     },
     {
       "id": 9393,
       "gx": 1,
       "gy": 12,
       "file": "tier1_cap_9393.png",
-      "mean": 86.26,
-      "sha256": "35f7f38a890f0eb601ce6435ee81873b3ef1c968cd7f906fdb9958286aab36a7"
+      "mean": 90.77,
+      "sha256": "0dd603eb02609c6ad04b33046c6e68aa666ca2bb4971eefe778ad4e2251a835b"
     },
     {
       "id": 9394,
       "gx": 2,
       "gy": 12,
       "file": "tier1_cap_9394.png",
-      "mean": 82.51,
-      "sha256": "9e4a0e26590faf45fbb12ae0e5c74cbb24d500afcb6d4c98340d96c5c98168ff"
+      "mean": 84.4,
+      "sha256": "5ea826a08ff9e13f9721b1f94ef47d29059e350d831c352dd97b78ba90bb5287"
     },
     {
       "id": 9395,
       "gx": 3,
       "gy": 12,
       "file": "tier1_cap_9395.png",
-      "mean": 76.26,
-      "sha256": "5cc6bf1298272e4b6e386f36c2833844533490a5066db18c37b551c544072a67"
+      "mean": 68.82,
+      "sha256": "72d0125292bd2ca30de22a01f8392fe9378e0824f5fb41ad8e8531b89337863b"
     },
     {
       "id": 9396,
       "gx": 4,
       "gy": 12,
       "file": "tier1_cap_9396.png",
-      "mean": 76.28,
-      "sha256": "c9d1fc401008dff489c5ada01fc7eddbdf0050ebf41b227cefd8a797091b0bee"
+      "mean": 68.1,
+      "sha256": "53c711b7e1ee0d2dd5436a121d38911ca0844a2fc2f386d8d1d8d2ad4d1e3c1d"
     },
     {
       "id": 9397,
       "gx": 5,
       "gy": 12,
       "file": "tier1_cap_9397.png",
-      "mean": 78.17,
-      "sha256": "d2695c4acf92a555105b06dfde319d8129b66bd0db0faabf3f533ccfac2e9db9"
+      "mean": 71.9,
+      "sha256": "894ba8d978591b1f6a6e4de40530525c31c89b03b424df25d869370a33ae73d8"
     },
     {
       "id": 9398,
       "gx": 6,
       "gy": 12,
       "file": "tier1_cap_9398.png",
-      "mean": 76.07,
-      "sha256": "2431e1152bc0c08c96e8e3a80f93243766098fed824eb7201a62f854f6c1bea8"
+      "mean": 77.26,
+      "sha256": "c4d83a8cad25f19bac0d48e76b34e8489cbcbb25e0cb0e767d3cc14fba033e36"
     },
     {
       "id": 9399,
       "gx": 7,
       "gy": 12,
       "file": "tier1_cap_9399.png",
-      "mean": 71.16,
-      "sha256": "cf1968fa773dbe88f96328f120fbb3244a27afe8ab317db78389070f50cb1299"
+      "mean": 74.35,
+      "sha256": "a4f85710c7b993c26fddcadea57978391c9a9405b902374839b22ffd5b578bd3"
     },
     {
       "id": 9400,
       "gx": 8,
       "gy": 12,
       "file": "tier1_cap_9400.png",
-      "mean": 78.09,
-      "sha256": "cd7ed2ffc2cdb013551c5d038dd83ba5ef1468ed0a322d19eeec212b900efe4b"
+      "mean": 81.58,
+      "sha256": "ff793ab95cd87942c7dc5c03ef6689c62b95f0517c839e39cf34bd9d956b33fb"
     },
     {
       "id": 9401,
       "gx": 9,
       "gy": 12,
       "file": "tier1_cap_9401.png",
-      "mean": 81.73,
-      "sha256": "2a43bd4c1712e2f6cf3ad771936b683eb5c643d17ceea9fbd747810c170ae62c"
+      "mean": 83.6,
+      "sha256": "0322e8c494488299ff898830a4c66db60772b3ed8e615035418db62ff4b5ec8e"
     },
     {
       "id": 9402,
       "gx": 10,
       "gy": 12,
       "file": "tier1_cap_9402.png",
-      "mean": 79.02,
-      "sha256": "24f9897f61027e140082011521a6dd7adcba63f2456ac46ba9e670b165ae29bf"
+      "mean": 81.48,
+      "sha256": "bad99fee3c2d0e04bfe5030fe3a7a19f52dd02ec37776e19d9f25c04b6d548aa"
     },
     {
       "id": 9403,
       "gx": 11,
       "gy": 12,
       "file": "tier1_cap_9403.png",
-      "mean": 78.33,
-      "sha256": "d16eb09e21ba849ed624c89915bfaeb6c148d1950e2e7a3b158cd689de0ea538"
+      "mean": 81.16,
+      "sha256": "fb4efcf25f89477e3e8bec681b92531a90e51fd4623af473067cb66b6830772d"
     },
     {
       "id": 9404,
       "gx": 12,
       "gy": 12,
       "file": "tier1_cap_9404.png",
-      "mean": 78.78,
-      "sha256": "29be865419b66f156f80658f418067dd7c4e57706cfb90021afff3b294724d61"
+      "mean": 81.76,
+      "sha256": "9f568307f28a6c08ef08b1c86577140762bb111024625bac44def69d7d72c9d4"
     },
     {
       "id": 9405,
       "gx": 13,
       "gy": 12,
       "file": "tier1_cap_9405.png",
-      "mean": 84.18,
-      "sha256": "d75a9d4fe98dbcc82f8b3121afeae4dbedb73f8538bda24048fb9aa88c388aea"
+      "mean": 91.59,
+      "sha256": "55a24db8ff5ec15784ed089de2b970a689c577e6b4ed638af520a0de8a7e4caf"
     },
     {
       "id": 9406,
       "gx": 14,
       "gy": 12,
       "file": "tier1_cap_9406.png",
-      "mean": 87.28,
-      "sha256": "1b68ba3de97263b841befc1ed5e2b57aed4ee77cb26be10a87ce810270be9ba3"
+      "mean": 96.52,
+      "sha256": "a9f11b47c783f94f17556aa72a94bb3c237a716f36deb1623c156ba68258e6d6"
     },
     {
       "id": 9407,
       "gx": 15,
       "gy": 12,
       "file": "tier1_cap_9407.png",
-      "mean": 88.17,
-      "sha256": "89f672a0a2846d839c109121b3e902ba9b6472da37fedde3d4f5b3005873598c"
+      "mean": 93.75,
+      "sha256": "f2c781202cdfb8418e7de7851963f27be4668931f257273d906bc99ed069a600"
     },
     {
       "id": 9408,
       "gx": 0,
       "gy": 13,
       "file": "tier1_cap_9408.png",
-      "mean": 81.79,
-      "sha256": "333a5b1b6e1f59b48475c7269d4ef5534fbc3f7cc7f52969d39d10df380a09dd"
+      "mean": 77.66,
+      "sha256": "e1a77bba97e2732c35ae0f423736356791ba4e561a4cfe6fe46126104072f87d"
     },
     {
       "id": 9409,
       "gx": 1,
       "gy": 13,
       "file": "tier1_cap_9409.png",
-      "mean": 87.2,
-      "sha256": "a83bb76a0d020d368f21d742c23a8582657e294b57994076aa102f7d7407ee4a"
+      "mean": 85.13,
+      "sha256": "f095e848c5bafd939837a207afc4d971ebcf07690d603787222fb85e77283407"
     },
     {
       "id": 9410,
       "gx": 2,
       "gy": 13,
       "file": "tier1_cap_9410.png",
-      "mean": 81.63,
-      "sha256": "14eb560baecf4f25c2b95b4b470c0d5522a1db80870c6a10fa23359da01be2de"
+      "mean": 79.68,
+      "sha256": "f2e672b420726f3decaeef07c5ba6d4f40e06dded23e6e178217a1158b873887"
     },
     {
       "id": 9411,
       "gx": 3,
       "gy": 13,
       "file": "tier1_cap_9411.png",
-      "mean": 77.76,
-      "sha256": "693d4710ee43e842e1731da3a7753dfdd1caf4a651ccdd449c19aad82b2fef63"
+      "mean": 68.22,
+      "sha256": "95296c6981064d99a8efa0d52c57fc66755d60a67d2201093fb6e0bf0d681a8e"
     },
     {
       "id": 9412,
       "gx": 4,
       "gy": 13,
       "file": "tier1_cap_9412.png",
-      "mean": 70.31,
-      "sha256": "86a3bb286eb48810cffd031bea478f8a9bbf8f7448626a3c88ca8b3f542cf98c"
+      "mean": 64.77,
+      "sha256": "3c67533adcc03a47d23e22ef0306a02f9af520059e37773bbf7b284764c0e69a"
     },
     {
       "id": 9413,
       "gx": 5,
       "gy": 13,
       "file": "tier1_cap_9413.png",
-      "mean": 76.08,
-      "sha256": "fbe20e15a94a4f7fdc4f32a2b62ac212151701688da940367d640d1a501f1835"
+      "mean": 70.7,
+      "sha256": "345eaa97826bd7524582a21765660c060b72e69420cdd57086392d5e74116555"
     },
     {
       "id": 9414,
       "gx": 6,
       "gy": 13,
       "file": "tier1_cap_9414.png",
-      "mean": 74.56,
-      "sha256": "ec1c01c771792ce0ad28ec04a446ed73bb014ec910d12fafff33771733bfcba7"
+      "mean": 69.34,
+      "sha256": "122acb2a810ce20336deb606ea4b4659ac1c455ffd2a90b8ffdcd21c6edb1c9f"
     },
     {
       "id": 9415,
       "gx": 7,
       "gy": 13,
       "file": "tier1_cap_9415.png",
-      "mean": 77.66,
-      "sha256": "6a5fba7f579db33704aef2df3607eed1d4e809d3e87cc914c9b01f9fddcb5e02"
+      "mean": 83.2,
+      "sha256": "bb87e208f0427e39e1b16133f3b4c3d12ac821dc9e5fc3df104b69da5cced9a1"
     },
     {
       "id": 9416,
       "gx": 8,
       "gy": 13,
       "file": "tier1_cap_9416.png",
-      "mean": 79.67,
-      "sha256": "af5bf58b91dd73263ccbae61958527ee0e59baf2c3c168d67a269c89904120d4"
+      "mean": 88.01,
+      "sha256": "4814b8591473c8dce1dfd5bfc0ff6343bda7172539f4ce98bf5f1e9ab7a03d1b"
     },
     {
       "id": 9417,
       "gx": 9,
       "gy": 13,
       "file": "tier1_cap_9417.png",
-      "mean": 80.52,
-      "sha256": "4da1e6ef26852844ce398ce8cb169656345e9fbed14300a73572e14c327ca618"
+      "mean": 89.23,
+      "sha256": "0e4c614843c798849423baaceada63cbff7d4cbe0e64bbac3b0056dd1661fd80"
     },
     {
       "id": 9418,
       "gx": 10,
       "gy": 13,
       "file": "tier1_cap_9418.png",
-      "mean": 82.5,
-      "sha256": "e5c5afc7b174d11df2f38d88389309df635c2e0ced31525a96887ae65ef30491"
+      "mean": 81.86,
+      "sha256": "cecbabf3058e3971f8fa4d5f89e39e2e28389a99c2547cdc00a5e09a5aaa39e8"
     },
     {
       "id": 9419,
       "gx": 11,
       "gy": 13,
       "file": "tier1_cap_9419.png",
-      "mean": 84.36,
-      "sha256": "063ceecebcab482ad456f8005d6fa2551213a25ce2c10a079f565147d5ff0eb8"
+      "mean": 84.54,
+      "sha256": "d262b5af2d5a4c90e7b8421f9b51e188d7f91de317c5298db1143bf82766bcfc"
     },
     {
       "id": 9420,
       "gx": 12,
       "gy": 13,
       "file": "tier1_cap_9420.png",
-      "mean": 83.84,
-      "sha256": "fc3c1fd7689d384f98668262670dfbac8b03318b24c3adb417644c3df85762fa"
+      "mean": 83.07,
+      "sha256": "11f579a433e445444c3e6c6290cb3a467516a3ce93a0c1a9ad87f3c9665eb424"
     },
     {
       "id": 9421,
       "gx": 13,
       "gy": 13,
       "file": "tier1_cap_9421.png",
-      "mean": 86.73,
-      "sha256": "9317e6b2ac46ebb7b097acde4dff4c6d8ff3fb7209690b7f286a422f97dc8c35"
+      "mean": 82.5,
+      "sha256": "00103b599ec06449be45c70a0f9504403ed26356b3aefc477884902c1b12a88f"
     },
     {
       "id": 9422,
       "gx": 14,
       "gy": 13,
       "file": "tier1_cap_9422.png",
-      "mean": 83.42,
-      "sha256": "da6e2bc59b68d3d9196814d6b5a570aa59b40e8d6d3f3ed4c99cc79acc7dd63f"
+      "mean": 78.25,
+      "sha256": "74d2fb46eb2b25c0aaf2c1d63658851de693ff48cbcc1c4d2e4e48a5fd237870"
     },
     {
       "id": 9423,
       "gx": 15,
       "gy": 13,
       "file": "tier1_cap_9423.png",
-      "mean": 86.36,
-      "sha256": "15e91227423a8d11f5600c41c72325743254d9533dfbf415a64a6bab1dcc62c6"
+      "mean": 79.93,
+      "sha256": "1883cb12d77da10331f4215f7b3316c2b2fc76af0fc11cce859f07c1479cae87"
     },
     {
       "id": 9424,
       "gx": 0,
       "gy": 14,
       "file": "tier1_cap_9424.png",
-      "mean": 93.69,
-      "sha256": "8f2b4ddba58a2bef7ed4cfa570a1d552d03e1ce42326d3c51532dd5d6b5b78b7"
+      "mean": 88.96,
+      "sha256": "38c5187f96dc8f3bb5bd0ff370abe398bb32fefbe4cff01312fecc0d7393e315"
     },
     {
       "id": 9425,
       "gx": 1,
       "gy": 14,
       "file": "tier1_cap_9425.png",
-      "mean": 87.22,
-      "sha256": "56632e0e4a43c952138fea9701153477256d62a1622c740fc27fd5cd2abf6956"
+      "mean": 83.04,
+      "sha256": "8fcbcd0cf0a2bc9b5dcaa249543e9b9a38756358d81eb7306afe674d203c8ef5"
     },
     {
       "id": 9426,
       "gx": 2,
       "gy": 14,
       "file": "tier1_cap_9426.png",
-      "mean": 75.68,
-      "sha256": "3874a840930d34c3b09de92188ede42e8dfdc415bc403c2077ed3fb39119f9ca"
+      "mean": 71.34,
+      "sha256": "7fcb870249aeb3bb64af66008002b5c90dc01615f7590156564af3eb5cf116ae"
     },
     {
       "id": 9427,
       "gx": 3,
       "gy": 14,
       "file": "tier1_cap_9427.png",
-      "mean": 73.93,
-      "sha256": "b7db52346886c5d5a293c4c0fe3e6c1b66f2b8cf02213181c688dd3a75c1cad5"
+      "mean": 67.67,
+      "sha256": "9033e6b9f031f84a431c8d53303f3aa6538e11b33c224cc9b2cc7e987a4deb37"
     },
     {
       "id": 9428,
       "gx": 4,
       "gy": 14,
       "file": "tier1_cap_9428.png",
-      "mean": 67.51,
-      "sha256": "b57ea8cac68e17785c693feecb83cb8c6b7e5b85ba02869b57ce29f1b493a34c"
+      "mean": 62.23,
+      "sha256": "100b86cc114c60cb04b842b5c24469ee6c6428b4705648bc631d76fbbb3e53f4"
     },
     {
       "id": 9429,
       "gx": 5,
       "gy": 14,
       "file": "tier1_cap_9429.png",
-      "mean": 67.15,
-      "sha256": "dd76da04042e93275c8abd8e3313beb2925f7a8191da042e6b9dabfdfb18acbf"
+      "mean": 62.17,
+      "sha256": "cbacfd93e090c6c6a9297b9a83a8a5f645d5de3ea5b3b66914e574f62cf68475"
     },
     {
       "id": 9430,
       "gx": 6,
       "gy": 14,
       "file": "tier1_cap_9430.png",
-      "mean": 67.93,
-      "sha256": "b5f1a4a89bcf4e74fd09bb300c00e6ce8ce17293eeb5bf4421c02e50b47511d4"
+      "mean": 67.55,
+      "sha256": "ca3dd61e8854ac35a9154d29204c7f7638848fe977f53c941aa5aff57e939d5c"
     },
     {
       "id": 9431,
       "gx": 7,
       "gy": 14,
       "file": "tier1_cap_9431.png",
-      "mean": 77.92,
-      "sha256": "7e62ef16e97077c6603745d9fef6deb99f4c836360a186feb30c3866f1840808"
+      "mean": 89.11,
+      "sha256": "7fab8f34eca7c1bcb39a77f5724a16b96a1322cec8267e038fa91febea4512b1"
     },
     {
       "id": 9432,
       "gx": 8,
       "gy": 14,
       "file": "tier1_cap_9432.png",
-      "mean": 78.71,
-      "sha256": "576aaa25c83ddff276eabdb9e504abb6207053889403cc0db5d99da3ce480641"
+      "mean": 90.5,
+      "sha256": "088078b04959025f8c302e3b37e23b686b568a71a45072b91bed2a078475ac9b"
     },
     {
       "id": 9433,
       "gx": 9,
       "gy": 14,
       "file": "tier1_cap_9433.png",
-      "mean": 80.48,
-      "sha256": "1b2e738fb87706b3ee2d0cb4b150c439637f61b53a706d6be1d7fcf8f347886d"
+      "mean": 92.03,
+      "sha256": "c86139ad88c91c27a41a777df1354cd27cd0d5ccb52452f9090d3eb3196fbf7d"
     },
     {
       "id": 9434,
       "gx": 10,
       "gy": 14,
       "file": "tier1_cap_9434.png",
-      "mean": 85.55,
-      "sha256": "cabd696a26c6e214cc59cc6a60ea8d03c408186bfba236d83c3f02fb4195d6bb"
+      "mean": 85.33,
+      "sha256": "d590de661f3192d8569b82615e3efdf275e6ffa4b9125f60973f8e1eedf3e052"
     },
     {
       "id": 9435,
       "gx": 11,
       "gy": 14,
       "file": "tier1_cap_9435.png",
-      "mean": 80.08,
-      "sha256": "b2e3d6cd44dc167634555f7f955d0d13251e721fbbfdd20af2c3c42901f09fec"
+      "mean": 79.5,
+      "sha256": "ee410b300a0f96790bcb2c7b9cd86a5e94029a998cb1bb25d437bde7512b985e"
     },
     {
       "id": 9436,
       "gx": 12,
       "gy": 14,
       "file": "tier1_cap_9436.png",
-      "mean": 82.06,
-      "sha256": "3ac9f619a633b4635f4bad87c1882875848696e6018e4a6f90a006a493419389"
+      "mean": 82.0,
+      "sha256": "d21b9b1050e69412e2ca4ee9894fa59432d9c5fbca26994239349af37763cf31"
     },
     {
       "id": 9437,
       "gx": 13,
       "gy": 14,
       "file": "tier1_cap_9437.png",
-      "mean": 84.77,
-      "sha256": "4cac744ad0677707f0ad944c406b25e32c3e5f45e3d2723f9f4d1213940c02d4"
+      "mean": 80.53,
+      "sha256": "b8dfabe7748b2654bd366f6f407c580435b5f8f6aeef85db12f291180e4c2e51"
     },
     {
       "id": 9438,
       "gx": 14,
       "gy": 14,
       "file": "tier1_cap_9438.png",
-      "mean": 92.41,
-      "sha256": "e44d8e529f9da38bbfc9d784f453d55bce304c5e0edeba56398a2848be65a043"
+      "mean": 87.21,
+      "sha256": "49747f159b39c2f6310483f7f1a650b01190ed846d474a67b525116e9b52bd40"
     },
     {
       "id": 9439,
       "gx": 15,
       "gy": 14,
       "file": "tier1_cap_9439.png",
-      "mean": 90.5,
-      "sha256": "7307a945e3866b920b57966083dc35110b4cb59bf8d821a665569392128fb87d"
+      "mean": 83.72,
+      "sha256": "93f8c19543601a8d0125602cccd1b5317c306df4950cbb5cc891aff3ebae4971"
     },
     {
       "id": 9440,
       "gx": 0,
       "gy": 15,
       "file": "tier1_cap_9440.png",
-      "mean": 92.21,
-      "sha256": "d4e669c9e4108f869f3e4975d39d1ca5242e4dacf12b7e2bd320aa1525ffc574"
+      "mean": 87.96,
+      "sha256": "95340f70e7fe1d71b890284f5836116d5cdb3a65ebad4f8fec609df831047d3d"
     },
     {
       "id": 9441,
       "gx": 1,
       "gy": 15,
       "file": "tier1_cap_9441.png",
-      "mean": 85.12,
-      "sha256": "236fe5075282adf5c171d5edc16784ca5e8003682ae4535c5a5fabb51b762f22"
+      "mean": 81.0,
+      "sha256": "5fc5e105ac159d8fb8c02053e84827565b7fdc15629d83e78d99945dd16584aa"
     },
     {
       "id": 9442,
       "gx": 2,
       "gy": 15,
       "file": "tier1_cap_9442.png",
-      "mean": 78.09,
-      "sha256": "861915ecfa57e8ce973ba61f432d64ba5076b7fba8c8fa35a495acd6d40f37b3"
+      "mean": 73.17,
+      "sha256": "038481faf4bc63995f9f287ca07208ba740132e504e1e28034cc35e00c3a1e8b"
     },
     {
       "id": 9443,
       "gx": 3,
       "gy": 15,
       "file": "tier1_cap_9443.png",
-      "mean": 74.75,
-      "sha256": "277dc7f14071b261db25477c55345f292e82da8c24ea60c69416ff6f656f6eba"
+      "mean": 68.81,
+      "sha256": "fe057a6b8f21864d2a26fed82dd8528af3af1b853b4e88f2830325f91e0ef96c"
     },
     {
       "id": 9444,
       "gx": 4,
       "gy": 15,
       "file": "tier1_cap_9444.png",
-      "mean": 68.49,
-      "sha256": "1db9b72f65fd5085af7bd503cbfe437e12b20de4c80fe8a9c43e44f0f08797e0"
+      "mean": 63.05,
+      "sha256": "800aad1a372b5a399362a2af8a7ba34aba219ce4fa75f471300bed1768e10c49"
     },
     {
       "id": 9445,
       "gx": 5,
       "gy": 15,
       "file": "tier1_cap_9445.png",
-      "mean": 63.82,
-      "sha256": "eb2a6a0a8b404d87e6280fae96b08ed75ea47afad7e5da4d017158a404c336a1"
+      "mean": 58.68,
+      "sha256": "10c410453c283283ae88a6a5c81e3dd824776fe4a8152ef4fc4f1fdf2cf108ad"
     },
     {
       "id": 9446,
       "gx": 6,
       "gy": 15,
       "file": "tier1_cap_9446.png",
-      "mean": 64.7,
-      "sha256": "021a1cee92971e57c01fc6a915e6f48fc6ffbaff08457043c0e1b3b5201127c7"
+      "mean": 64.26,
+      "sha256": "373df151aca646599d3498e24cc67ea20ddc3179ba84036ebd0c8545ae0a54c4"
     },
     {
       "id": 9447,
       "gx": 7,
       "gy": 15,
       "file": "tier1_cap_9447.png",
-      "mean": 74.92,
-      "sha256": "0404bc69aeca70ef7f3631b1a026612601347ea1392477fe901b9733c9173e1d"
+      "mean": 79.46,
+      "sha256": "5c6dbb6590d6c7ca20793ab8d39435ad843b43043c9639b591cd6ccd3b2949a6"
     },
     {
       "id": 9448,
       "gx": 8,
       "gy": 15,
       "file": "tier1_cap_9448.png",
-      "mean": 79.31,
-      "sha256": "70a8bf678e5a7e1a42175c7733593a2cb2227945445aa2c9370fb3033072fa7e"
+      "mean": 86.52,
+      "sha256": "8f1bab2f3ecf4b8b9840b9df8d90cb3ad9797d121c9d6b96e8e6762dc3a9f7b7"
     },
     {
       "id": 9449,
       "gx": 9,
       "gy": 15,
       "file": "tier1_cap_9449.png",
-      "mean": 83.09,
-      "sha256": "4c004286a0ed9ec9ffd41ffc73a2af23140131334f62396835a72254ef0e7fef"
+      "mean": 91.06,
+      "sha256": "230b457a889472b0afb3fa8de1d33c8a0fa85789cd7bb1726ae4c843a9430ad6"
     },
     {
       "id": 9450,
       "gx": 10,
       "gy": 15,
       "file": "tier1_cap_9450.png",
-      "mean": 83.51,
-      "sha256": "5aef8369d3437e964bbeb946a2220c9a5859d157176b7617766d1577996da80c"
+      "mean": 83.35,
+      "sha256": "d54364abadf58f96187d833dd22e18a7946e97a4f977f82860c4aabec33ba001"
     },
     {
       "id": 9451,
       "gx": 11,
       "gy": 15,
       "file": "tier1_cap_9451.png",
-      "mean": 82.93,
-      "sha256": "ebfb8b39f167b7bd1fd5aefc770a42ec38b9fa7c2566b6d42c9cf7871edea895"
+      "mean": 82.26,
+      "sha256": "c676bae1a329ff22d55d634028f27f97a814d29e1cb0325a56ec5e3334ff5081"
     },
     {
       "id": 9452,
       "gx": 12,
       "gy": 15,
       "file": "tier1_cap_9452.png",
-      "mean": 89.4,
-      "sha256": "9520ab22b86eacd5fa7d4eb2c3b684bfe2b30d6d41cd961eaa67ff05cc3d0290"
+      "mean": 88.32,
+      "sha256": "929fcf9ad59bce52249d2c8fa98363914cd7c8cef77966ce3efced2582f72bf1"
     },
     {
       "id": 9453,
       "gx": 13,
       "gy": 15,
       "file": "tier1_cap_9453.png",
-      "mean": 92.25,
-      "sha256": "e1cf17c445d5eb8949e7013532026d65b60132e30e4deaf607c87d42fec7b54b"
+      "mean": 85.98,
+      "sha256": "732673427dd6fa632fb255b1eb5e05e2f0088523f417fd4028edd82ffdec3635"
     },
     {
       "id": 9454,
       "gx": 14,
       "gy": 15,
       "file": "tier1_cap_9454.png",
-      "mean": 95.14,
-      "sha256": "95419c1e47d6c1e35ceb095ac18128cf58bdacff07e0f5c3bf7a60f93d41003e"
+      "mean": 89.15,
+      "sha256": "387cfa0a45614a9746be10db282a27c2f4d92a6c95d5f56074d1bdc9867cff6f"
     },
     {
       "id": 9455,
       "gx": 15,
       "gy": 15,
       "file": "tier1_cap_9455.png",
-      "mean": 94.18,
-      "sha256": "c5c0dba879296f4a91b9a2ef4bd0e664a27cbeea84e8616698d5adcbc8fc0b66"
+      "mean": 86.99,
+      "sha256": "9a0432f4fd81d9d383bb114580f8c427772d875107b35e9292ec3731c7157ec1"
     },
     {
       "id": 9500,

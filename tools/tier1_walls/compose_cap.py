@@ -123,6 +123,66 @@ def field_cracks(size, rng, n, step_rungs, ladder_step):
     return out
 
 
+def field_slabs(size, rng, step, spacing=104, offset_rungs=0.55, fracture_rungs=2.2):
+    """SLAB / FRACTURE ARCHITECTURE at multi-tile scale — RULED (Rafe, 2026-09-03).
+
+    *"Cap architecture approved as a new construction — field-scale slab/fracture structure via
+    world-positioned polylines across the cap mass at multi-tile scale (the crack network's
+    machinery), crossing tile boundaries; the corner theorem binds constant-position constructions
+    and this has none. Courses remain culled on caps; found rock keeps its grain but stops being
+    structureless."*
+
+    WHY THIS IS NOT THE THING THE GATE CULLED. §8.3.3's corner theorem binds constructions whose
+    features sit at a CONSTANT POSITION in every tile: an edge-matched course set must agree at
+    every boundary, so it forces a bed joint onto every boundary, and that joint at 32px pitch was
+    the lattice the device gate rejected. This has no constant position at all — the seeds are
+    placed in FIELD coordinates on a jittered lattice at ~3 tiles' spacing, wrap toroidally, and
+    a slab edge crosses a tile boundary exactly as often as it crosses anything else. There is
+    nothing for the theorem to bite on, which is the same argument that licensed found rock.
+
+    WHAT IT DRAWS. The field is partitioned into slabs by nearest-seed distance; each slab takes a
+    small value offset, so the mass reads as broken rock with parts rather than as one tone with
+    noise on it. Where the two nearest seeds are near-equidistant a FRACTURE runs — the boundary
+    between two blocks of stone, drawn as a value break rather than a ruled line.
+
+    Two critic rounds asked for exactly this and were refused a course grid twice:
+        r001  "Replace with drawn courses at the frame's own pixel size."
+        r002  "fine mottle with no architecture under it. Draw the stone through it."
+    The complaint was ARCHITECTURE, not courses. This answers the complaint without the geometry.
+    """
+    n = max(2, int(round(size / spacing)))
+    cell = size / n
+    # Jittered lattice, so the slabs are irregular but never clustered into a blank half-field.
+    sy, sx = np.mgrid[0:n, 0:n]
+    seeds = np.stack([(sy + rng.uniform(0.15, 0.85, (n, n))) * cell,
+                      (sx + rng.uniform(0.15, 0.85, (n, n))) * cell], axis=-1).reshape(-1, 2)
+    vals = rng.normal(0.0, 1.0, len(seeds))
+    vals = (vals - vals.mean()) / max(vals.std(), 1e-6) * offset_rungs * step
+
+    yy, xx = np.mgrid[0:size, 0:size].astype(float)
+    best = np.full((size, size), 1e18)
+    second = np.full((size, size), 1e18)
+    who = np.zeros((size, size), dtype=int)
+    for i, (cy, cx) in enumerate(seeds):
+        # TOROIDAL distance, so a slab that leaves one edge arrives at the other and the field
+        # still tiles. A non-wrapping partition would put a seam down the field's own join.
+        dy = np.abs(yy - cy); dy = np.minimum(dy, size - dy)
+        dx = np.abs(xx - cx); dx = np.minimum(dx, size - dx)
+        d = dy * dy + dx * dx
+        closer = d < best
+        second = np.where(closer, best, np.minimum(second, d))
+        who = np.where(closer, i, who)
+        best = np.where(closer, d, best)
+
+    out = vals[who]
+
+    # THE FRACTURE. Near-equidistance between the two nearest seeds is the slab boundary; the
+    # width is in field pixels and does not know the tile size, which is the whole point.
+    edge = np.sqrt(second) - np.sqrt(best)
+    out -= np.clip(1.0 - edge / 3.0, 0.0, 1.0) * fracture_rungs * step
+    return out
+
+
 def build_field(ladder, tint, top_rung, hue_shift, seed=1337,
                 grain_rungs=0.85, drift_rungs=1.10, cracks=7, crack_rungs=1.6, snap=None):
     size = FIELD_TILES * T
@@ -175,6 +235,7 @@ def build_field(ladder, tint, top_rung, hue_shift, seed=1337,
     grain = grain * grain_rungs * step
 
     img = base + drift + grain
+    img = img + field_slabs(size, rng, step)
     img = img + field_cracks(size, rng, cracks, crack_rungs, step)
 
     # QUANTISE ONTO THE LADDER, the way every other tier-one surface does — but softly, so the
