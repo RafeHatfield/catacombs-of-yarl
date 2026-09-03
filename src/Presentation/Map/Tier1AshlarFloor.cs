@@ -573,6 +573,18 @@ public static class Tier1AshlarFloor
         return lane;
     }
 
+    /// <summary>
+    /// The travel axis AT A PIXEL. With a route present this is the line's own tangent there, so
+    /// the compaction's direction changes where the route turns rather than where the tiles do.
+    /// Without one it falls back to the per-tile field, which is all a fieldless scene has.
+    /// </summary>
+    private static int PixelAxis(Config c, byte[,]? traffic, int wx, int wy, int tx, int ty)
+    {
+        if (c.Lines.Count > 0)
+            return Logic.ECS.RoutePolyline.Axis(c.Lines, (wx + 0.5) / T, (wy + 0.5) / T);
+        return TravelAxis(traffic, tx, ty);
+    }
+
     private static int TravelAxis(byte[,]? t, int tx, int ty)
     {
         // THE ROUTE RUNS WHERE THE TRAFFIC CONTINUES. Sum the two neighbours along each of the
@@ -990,9 +1002,23 @@ public static class Tier1AshlarFloor
         //     alone, so both tiles either side of a boundary agree by construction.
         // (b) the stones beside an open joint lose their arrises: a pixel of stone goes with the
         //     joint, and sometimes a second — a corner gone.
-        bool channelHere = isChannel != null && isChannel(tx, ty);
-        int travelAxis = TravelAxis(traffic, tx, ty);
-        var (anisoBed, anisoHead) = AnisoWeights(cfg, travelAxis);
+        // ================= WEAR IGNORES THE TILE GRID =================
+        //
+        // RULED at the gate: "one tile worn, the one next to it not — that's not how it works."
+        // ANY WEAR BOUNDARY COINCIDING WITH A TILE EDGE IS STAGED.
+        //
+        // Two per-tile evaluations were feeding every wear pixel in this cell, and both drew
+        // their boundaries on the grid by construction:
+        //
+        //   THE CHANNEL FLAG was a per-tile boolean that raised the wear scalar to a floor for
+        //   the whole tile — a hard step at the tile edge, in the joints, the chroma and the
+        //   flatten alike. It predates the route model. With a route present the route IS the
+        //   channel, so the legacy flag no longer applies at all.
+        //
+        //   THE TRAVEL AXIS was computed once at the tile and then handed to every joint pixel
+        //   in it, so the compaction's DIRECTION changed on tile edges. It is per pixel now,
+        //   from the same Nearest() the strength already costs.
+        bool channelHere = isChannel != null && isChannel(tx, ty) && cfg.Lines.Count == 0;
         var openAmt = new double[T, T];
         for (int py = 0; py < T; py++)
             for (int px = 0; px < T; px++)
@@ -1011,12 +1037,14 @@ public static class Tier1AshlarFloor
                     // stone keeps its address and the corner theorem is unaffected. What degrades
                     // along a path is the VISIBLE enclosure, deliberately.
                     int age = AgeIndex(cfg, openAmt[py, px]);
+                    int pxAxis = PixelAxis(cfg, traffic, tx * T + px, ty * T + py, tx, ty);
+                    var (anisoBed, anisoHead) = AnisoWeights(cfg, pxAxis);
                     // A joint lying ACROSS the route is crossed and packed shut; one running WITH
                     // it stays open and dark. Along a north-south corridor the bed joints close
                     // and the head joints survive as continuous lines: the directional grain,
                     // out of the bond that was already there.
                     double kw = 1.0;
-                    if (travelAxis >= 0)
+                    if (pxAxis >= 0)
                     {
                         bool bedJ = px > 0 && px < T - 1
                                     && clsArr[py, px - 1] == 0 && clsArr[py, px + 1] == 0;

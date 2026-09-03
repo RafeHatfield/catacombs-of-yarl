@@ -250,7 +250,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             chr_blk = np.zeros((T, T), dtype=float)
             if defect not in ("uniform_wear", "flat_chroma"):
                 chr_blk = CA.chroma_strength_block(x * T, y * T, T, seed, traffic,
-                                                   bool(worn and worn(x, y)))
+                                                   (bool(worn and worn(x, y)) and not CA.LINES))
                 if defect == "chroma_lattice":
                     # THE PLANT: chroma keyed to the tile a stone is SEEN FROM rather than to the
                     # world — §8.3.1's lattice, restated in the colour domain.
@@ -260,7 +260,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             if defect != "uniform_wear":
                 jm_pix = (cls == 0) & jm
                 wblk = CA.wear_scalar_block(x * T, y * T, T, seed, traffic)
-                w01b = CA.wear01_block(wblk, bool(worn and worn(x, y)))
+                w01b = CA.wear01_block(wblk, (bool(worn and worn(x, y)) and not CA.LINES))
                 open_amt = np.where(jm_pix, w01b, 0.0)
                 # A SHELTERED joint is shallower. An open one keeps the dark it already had —
                 # there is no rung below it — and spends its wear on the arrises instead.
@@ -288,13 +288,26 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
                 # corridor and the head joints survive as continuous lines — the directional grain
                 # the seat asked for, made of the bond that was already there.
                 axis0 = CA.travel_axis(traffic, x, y) if defect != "no_erosion" else CA.DIR_NONE
-                if axis0 != CA.DIR_NONE:
+                # PER PIXEL, from the line's own tangent — the axis taken once at the tile handed
+                # one direction to every joint in it, so the compaction changed where the TILES
+                # changed. Any wear boundary on a tile edge is staged.
+                axmap = (CA.axis_block(x * T, y * T, T)
+                         if (CA.LINES and defect != "no_erosion") else None)
+                if axis0 != CA.DIR_NONE or axmap is not None:
                     # a joint pixel is BED if its run continues left-right, HEAD if up-down
                     bedj = np.zeros((T, T), dtype=bool)
                     bedj[:, 1:-1] = jm_pix[:, :-2] & jm_pix[:, 2:]
                     headj = np.zeros((T, T), dtype=bool)
                     headj[1:-1, :] = jm_pix[:-2, :] & jm_pix[2:, :]
-                    wv0, wh0 = CA.aniso_weights(axis0)
+                    if axmap is not None:
+                        wv0 = np.ones((T, T)); wh0 = np.ones((T, T))
+                        for _a in (-1, 0, 1, 2, 3):
+                            _m = axmap == _a
+                            if _m.any():
+                                _v, _h = CA.aniso_weights(_a)
+                                wv0[_m], wh0[_m] = _v, _h
+                    else:
+                        wv0, wh0 = CA.aniso_weights(axis0)
                     # bed joints have a north-south normal, head joints an east-west one
                     kw = np.where(bedj & ~headj, wv0, np.where(headj & ~bedj, wh0, 1.0))
                     fill = fill * kw

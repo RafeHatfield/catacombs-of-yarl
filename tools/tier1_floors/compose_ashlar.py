@@ -903,6 +903,23 @@ DIR_NONE = -1                    # no usable gradient: flat ground, and erosion 
 DIR_MIN_GRAD = 6                 # below this the gradient is noise, not a route
 
 
+def axis_block(x0, y0, n):
+    """The travel axis at every pixel of an n x n block, from the line's own tangent.
+
+    Per pixel because ANY WEAR BOUNDARY COINCIDING WITH A TILE EDGE IS STAGED. Taking the axis
+    once at the tile handed one direction to every joint in it, so the compaction changed where
+    the tiles changed.
+    """
+    import numpy as _np
+    out = _np.full((n, n), DIR_NONE, dtype=int)
+    if not LINES:
+        return out
+    for iy in range(n):
+        for ix in range(n):
+            out[iy, ix] = RP.axis(LINES, (x0 + ix + 0.5) / T, (y0 + iy + 0.5) / T)
+    return out
+
+
 def travel_axis(traffic, tx, ty):
     """(see below) — the line's own tangent takes precedence when there is a line."""
     if LINES:
@@ -1044,13 +1061,19 @@ HOLLOW_SALT = 3011                         # so two mouths are not the same dish
 # for age and wrong for a lane: a specular streak that is chopped into noise cannot be followed.
 # Width now comes from the line distance UNFRAYED, so the lane runs continuous down the centre,
 # and the noise returns only at its shoulders.
-POLISH_LANE_GAIN = 1.0    # RULED DOWN from 1.9 at the gate: 'it looks like all the tiles on
+POLISH_LANE_GAIN = 0.6    # RULED DOWN from 1.9 at the gate: 'it looks like all the tiles on
                           # the walked path have been replaced'. At 1.9 the on-lane masonry
                           # measured 0.157 — NINE PERCENT above §13.8's floor, and BELOW its
                           # own flank's 0.177. The lane was washing the stones out. At 1.0 it
                           # reads 0.421, nearly three times the floor, while lane-vs-flank
                           # holds at 0.394. Wear modulates the same stones; it never replaces
-                          # their identity.          # how much brighter the lane's specular is than the aged surface
+                          # their identity.
+                          #
+                          # STEPPED AGAIN, 1.0 -> 0.6, at the gate that found the tile
+                          # quantisation: with the staircase gone the lane was re-judged and 1.0
+                          # still read as different material. At 0.6 the wash is gone, the stone
+                          # reads as stone and the cracks still carry. On-lane masonry 0.291,
+                          # twice the floor.          # how much brighter the lane's specular is than the aged surface
 POLISH_LANE_WIDTH = 0.62        # in tiles, half-width of the fully-polished centre
 POLISH_SHOULDER = 1.15          # in tiles, where the lane's specular has faded to nothing
 
