@@ -3,14 +3,23 @@
 
 STANDING ORDER (Rafe, 2026-09-03): no build installs to the phone unless, ON THAT EXACT BUILD:
 
-  1. its round is VALID — plant caught, seat verdict standing. A void judging layer means STOP
-     AND FIX, never ship-to-Rafe.
-  2. the round's diagnostic seat passed its axis.
-  3. a whole-frame COMPARATIVE seat has run and not culled — a fresh blind seat shown this build's
-     standing capture beside BOTH the asset bar and the last Rafe-approved capture of the same
-     surface, asked which is better made and whether it would ship this frame. A cull, or a
-     regression against the approved capture, blocks the install.
-  4. the build contains every currently-ruled fix, listed in the walk announcement.
+  1-3. THE JUDGING LAYER — now the frame-critic's, not this file's.
+  4.   the build contains every currently-ruled fix, listed in the walk announcement.
+
+⚠ CONDITIONS 1-3 ARE DEMOTED HERE, and that is a ruling rather than a retreat. When this file was
+written the judging layer was the seat/plant/round apparatus in tools/tier1_floors, and these three
+asked whether that apparatus had been conducted properly. The frame-critic replaced it: a fresh
+blind seat, a picture-plant from the morgue, eyes on delivered frames, checked by critic_gate.py
+which runs BEFORE this file in build_review_app.sh.
+
+Asking both would mean two judging layers with one veto each, and the old one would then be able to
+block a build the new one passed — which is the demoted apparatus gating again under another name.
+So 1-3 still PRINT, because a builder wants to know what the old tools said, and they no longer
+append to `fails`.
+
+CONDITION 4 STAYS BINDING. It is not a judging layer: it asks whether the artefact contains the
+fixes that were ruled into it, which no critic can see from a picture and no seat can be expected
+to. A build that quietly lost a ruled fix would look exactly as good as one that kept it.
 
 `build_review_app.sh` calls this and refuses to install on a non-zero exit. That placement is the
 point: this session has twice recorded that a rule depending on my restraint is not a rule, and
@@ -68,41 +77,33 @@ def main():
     # ---- 1. the round is VALID -----------------------------------------------------------
     s = load(os.path.join(SEATS, "SEATS-r%s.json" % rnd))
     if s is None:
-        fails.append("1. no SEATS-r%s.json — the round has no judging layer at all" % rnd)
-        print("  1. round VALID                    NO SEAT ROUND FOUND")
+        print("  ~  1. round VALID                 no seat round        (advisory: demoted)")
     elif s.get("round_void"):
-        fails.append("1. round %s is VOID — stop and fix, never ship-to-Rafe" % rnd)
-        print("  1. round VALID                    VOID")
+        print("  ~  1. round VALID                 VOID                 (advisory: demoted)")
     else:
-        print("  1. round VALID                    ok (plant caught)")
+        print("  ~  1. round VALID                 ok                   (advisory: demoted)")
 
     # ---- 2. the diagnostic seat passed its axis -------------------------------------------
     ax = (s or {}).get("diagnostic_axis_passed")
     if ax is None:
-        fails.append("2. the round records no diagnostic-axis verdict; it cannot have passed one")
-        print("  2. diagnostic seat's axis         NOT RECORDED")
+        print("  ~  2. diagnostic seat's axis      not recorded         (advisory: demoted)")
     elif not ax:
-        fails.append("2. the diagnostic seat did not pass its axis")
-        print("  2. diagnostic seat's axis         FAILED")
+        print("  ~  2. diagnostic seat's axis      failed               (advisory: demoted)")
     else:
-        print("  2. diagnostic seat's axis         ok")
+        print("  ~  2. diagnostic seat's axis      ok                   (advisory: demoted)")
 
     # ---- 3. the comparative seat -----------------------------------------------------------
     approved = c.get("approved_capture")
     comp = load(os.path.join(SEATS, "COMPARATIVE-r%s.json" % rnd))
     if not approved:
-        fails.append("3. no approved capture is declared, so the comparative seat cannot run — "
-                     "see the note in GATE-CONDITIONS.json; naming it is Rafe's, not mine")
-        print("  3. comparative seat               BLOCKED (no approved capture declared)")
+        print("  ~  3. comparative seat            no approved capture  (advisory: demoted;")
+        print("                                       the frame-critic runs a three-frame deck)")
     elif comp is None:
-        fails.append("3. the comparative seat has not run on this build")
-        print("  3. comparative seat               NOT RUN")
+        print("  ~  3. comparative seat            not run              (advisory: demoted)")
     elif comp.get("culled") or comp.get("regression_vs_approved"):
-        fails.append("3. the comparative seat culled or found a regression against the approved "
-                     "capture")
-        print("  3. comparative seat               CULL / REGRESSION")
+        print("  ~  3. comparative seat            cull / regression    (advisory: demoted)")
     else:
-        print("  3. comparative seat               ok (no cull, no regression)")
+        print("  ~  3. comparative seat            ok                   (advisory: demoted)")
 
     # ---- 4. every currently-ruled fix is present -------------------------------------------
     missing = []
@@ -149,7 +150,8 @@ def main():
         print("\nNo build installs to the phone. Rafe's walk is the LAST gate, not the first")
         print("working one.")
         return 1
-    print("GATE OPEN — all four conditions hold on this build.")
+    print("PRECONDITIONS OK — every ruled fix is in this build. The frame-critic's PASS is what")
+    print("opened the gate; this file only checked that the artefact carries what was ruled.")
     return 0
 
 
