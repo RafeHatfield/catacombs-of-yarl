@@ -1,0 +1,37 @@
+You are looking at three images of floor. You have not seen any of them before and you are not
+told which is which, who made them, or in what order they were made.
+
+  A, B and C are in your working directory.
+
+One is a published commercial tile set of long standing. One is an earlier version of a floor in
+development. One is the current version of that floor. WHICH IS WHICH IS NOT STATED AND YOU MUST
+NOT GUESS FROM CONTEXT — judge only what is in front of you.
+
+Answer these, in this order, with the labels exactly as written.
+
+Q1: RANK THEM BY HOW WELL MADE THEY ARE, best first, as "A > B > C" or with ties as "A = B > C".
+Q1_WHY: two or three sentences. Name what decided it — the material, the light, the construction,
+    the wear, the repetition, whatever actually moved you.
+
+Q2: WOULD YOU SHIP THE CURRENT ONE? You do not know which it is, so answer for EACH of the three:
+    "A: yes/no", "B: yes/no", "C: yes/no". Shipping means: this frame goes into a commercial game
+    and you are content to have your name on it.
+Q2_WHY: for every "no", one sentence on what stops it.
+
+Q3: DOES ANY OF THEM LOOK LIKE A DECAL — a treatment laid ON the floor rather than the floor
+    itself being worn? Name it and say what gives it away, or write NONE.
+
+Q4: DOES ANY OF THEM SHOW ITS GRID? A tile boundary you can see because a treatment stops there,
+    a repeat you can predict, a seam. Name it and where, or write NONE.
+
+Q5: PICK ANY TWO AND SAY WHICH IS THE SAME FLOOR AS THE OTHER, IF ANY. Two versions of one
+    surface share a material even when one is better made. If you can see that relationship, say
+    which pair and what they share; if you cannot, say so plainly.
+
+CULL: If any of these floors should be rejected outright, name it and give the single strongest
+      reason in under twenty words. If none should be, write NONE.
+      A critic who finds no defect should suspect its own rigour before crediting the work.
+
+⚠ POSITIONS, if you give any: relative to a figure if one is present, in tiles, or as a fraction
+  of the image ("the upper third", "the left quarter"). NOT in pixel coordinates — three separate
+  seats have given confident pixel coordinates that did not correspond to what they described.

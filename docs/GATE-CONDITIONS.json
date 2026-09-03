@@ -1,0 +1,69 @@
+{
+  "_comment": [
+    "THE DEVICE GATE'S PRECONDITIONS, in machine-readable form.",
+    "",
+    "STANDING ORDER (Rafe, 2026-09-03): no build installs to the phone unless, ON THAT EXACT",
+    "BUILD, all four hold. Rafe's walk is the LAST gate, not the first working one.",
+    "",
+    "This file is the declared state and tools/tier0_harness/gate_precheck.py is the enforcement.",
+    "build_review_app.sh calls it and REFUSES TO INSTALL if it fails. A rule that depends on my",
+    "restraint is not a rule — this session has proved that twice — so the rule lives in the",
+    "build path rather than in an intention.",
+    "",
+    "A build announcement missing any of the four is itself a defect, so the precheck prints them",
+    "and the announcement quotes its output."
+  ],
+
+  "round": 33,
+  "standing_capture": "r24_onroute",
+
+  "approved_capture": null,
+  "_approved_capture_note": [
+    "⚠ BLOCKING, AND THE GAP IS REAL RATHER THAN AN OVERSIGHT OF THIS ROUND.",
+    "",
+    "Condition 3 needs 'the last Rafe-approved capture of the same surface'. THE RECORD DOES NOT",
+    "CONTAIN ONE. No floor capture in this session has been approved outright: the verdicts run",
+    "'not wowed, impressed, close', 'closer, legitimately impressed, one axis remains', 'passed",
+    "in kind', and a run of FAILs. Each praised something and culled something.",
+    "",
+    "Picking one myself would be choosing the baseline my own work is judged against, which is",
+    "exactly the conflict the comparative seat exists to remove. So it stays null and the gate",
+    "stays shut until Rafe names it.",
+    "",
+    "The candidates, with what he actually said:",
+    "  scene_ashlar_r9   'not wowed, impressed, close' — cracks excellent, colouring good",
+    "  scene_ashlar_r13  'closer, legitimately impressed' — texture passed and frozen",
+    "  scene_ashlar_r15  differential wear 'PASSED in kind'",
+    "  r24_onroute@8640780f  'the keyline fix holds' — the lane was the cull, not the masonry"
+  ],
+
+  "ruled_fixes": [
+    {"id": "lane-gain-stepped",       "rule": "wear modulates the same stones; the lane at 0.6",
+     "check": "const:POLISH_LANE_GAIN==0.6"},
+    {"id": "wear-ignores-grid-axis",  "rule": "the travel axis is per pixel, never per tile",
+     "check": "file:src/Presentation/Map/Tier1AshlarFloor.cs:PixelAxis(cfg, traffic"},
+    {"id": "wear-ignores-grid-channel", "rule": "the per-tile channel flag does not apply under a route",
+     "check": "file:src/Presentation/Map/Tier1AshlarFloor.cs:&& cfg.Lines.Count == 0"},
+    {"id": "packed-joint-shines",     "rule": "a joint level with its stone takes the polish",
+     "check": "file:src/Presentation/Map/Tier1AshlarFloor.cs:A PACKED JOINT TAKES THE SHINE"},
+    {"id": "joint-polish-floor",      "rule": "the face/joint delivered specular ratio is capped",
+     "check": "const:JOINT_POLISH_FLOOR==0.7"},
+    {"id": "lane-frays",              "rule": "the lane's shoulder frays; nothing is staged",
+     "check": "const:LANE_FRAY==0.32"},
+    {"id": "sheltered-joint-draws",   "rule": "the sheltered joint draws its depth from a distribution",
+     "check": "const:SHELTER_WEIGHTS==(0.06, 0.5, 0.26, 0.18)"},
+    {"id": "origin-from-engine",      "rule": "§13.10 — instruments derive ground truth from the engine's probes",
+     "check": "file:tools/tier1_floors/measure_traffic_read.py:def tile_origin"},
+    {"id": "seat-relative-coords",    "rule": "seat positions are relative to the figure, in tiles",
+     "check": "file:tools/tier1_floors/seat_prompt.txt:NOT IN PIXELS"},
+    {"id": "plants-assert-count",     "rule": "an early exit in the plant run is red, never quiet",
+     "check": "file:tools/tier1_floors/field_ashlar.py:PLANT RUN INCOMPLETE"},
+    {"id": "seats-withheld",          "rule": "candidate transcripts are withheld until the plant clears",
+     "check": "file:tools/tier1_floors/run_seats.py:WITHHELD"}
+  ],
+
+  "instruments_that_must_pass": [
+    {"id": "grid-coincidence", "evidence": "GRID-COINCIDENCE.json", "key": "verdict"},
+    {"id": "shipped-path",     "evidence": "ATLAS-PATH.json"}
+  ]
+}

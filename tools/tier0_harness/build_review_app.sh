@@ -15,6 +15,26 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+
+# ================= THE DEVICE GATE'S PRECONDITIONS =================
+#
+# STANDING ORDER (Rafe, 2026-09-03): no build installs to the phone unless, on THAT EXACT BUILD,
+# its round is valid, its diagnostic seat passed its axis, a whole-frame comparative seat has run
+# without culling, and every currently-ruled fix is present.
+#
+# Enforced HERE rather than remembered, because this session has twice recorded that a rule
+# depending on my restraint is not a rule, and was right both times. Rafe's walk is the LAST gate.
+#
+# --no-install still builds: a build you cannot walk is still worth compiling, and blocking that
+# would only teach me to reach for the override.
+if [ "${1:-}" != "--no-install" ]; then
+  if ! python3 "$ROOT/tools/tier0_harness/gate_precheck.py"; then
+    echo
+    echo "REFUSING TO BUILD FOR INSTALL. Fix the conditions above, or run with --no-install"
+    echo "to compile without putting it on the handset."
+    exit 2
+  fi
+fi
 MARKER="$ROOT/src/Presentation/assets/tier0_harness/REVIEW_BUILD.json"
 TEMPLATE="$MARKER.template"
 BUNDLE_ID="${TIER0_BUNDLE_ID:-com.rafehatfield.catacombsofyarl.tier0}"
