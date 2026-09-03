@@ -1,0 +1,93 @@
+Looked at A.png at 1:1, then magnified specific regions (5–10× nearest-neighbour) and ran a near-duplicate patch search over the floor area. Findings below.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dry-laid stone paving — large tan-grey flags, irregular sizes, mortared. That's as far as I can honestly take it. I can tell you it's *stone slabs*; I cannot tell you what kind of stone, whether it's cut or salvaged, or whether it's the same stone as the last room.
+
+**Q1_WHY:** The read comes entirely from the *joint layout*, not the material. Across x 185–630, y 0–395 there's a continuous mesh of running-bond-ish rectangles of varying size (a 90×30px slab at x 470–553 y 50–79, a 70×30 at x 205–275 y 300–330, small 25×20 units at x 555–615 y 130–200). Rectangular units of mixed size, staggered, with mortar between = paving. The faces themselves are flat tonal fill; they carry no grain, no bedding, no aggregate, no colour variation between one slab and its neighbour beyond a couple of degrees of tint. I'm reading the *diagram* of a stone floor and inferring the stone.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, into the corridor mouth at x 376–433, y 395+.
+
+Nothing about the ground influenced that. I picked it because it's a two-tile gap in a wall and it's near the figure. I checked the ground at that mouth (x 376–433, y 370–395) against the ground at the west mouth (x 183–210, y 205–275) and against open floor nowhere near either (x 280–330, y 220–260) — the joint pattern, tone and surface treatment are indistinguishable. I routed by the negative space in the walls. That is a random choice dressed up as a decision.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It's been cracked and nothing else. Long fracture lines run across it; the stones themselves are untouched. No spalling at the crack lips, no lifted or dropped slabs, nothing spilled, nothing dragged, nothing burnt, nothing patched, nothing repaired. For a place in continuous heavy use since before the records, the floor has no history on it — it has one event, drawn once.
+
+**Q3_WHY:** The cracks are the only damage vocabulary present. Trace the main one: it enters at x≈355 y≈35, runs down to x≈350 y≈250, then splays into three branches heading southeast through x 400 y 300 → x 490 y 330 → x 630 y 370. A second runs from x≈185 y≈215 east to x≈300 y≈250. They are 1px near-black polylines and they cross slab joints *mid-face without any change* — at x 353 y 150 the crack passes straight through a joint and the joint neither offsets it nor interrupts it. Real fracture propagates along mortar or steps at it. This one is drawn over the top of the tile grid as a separate layer. Contrast at the lamp is stark (crack luminance 52 against floor 144 at y 150, x 353); out at y 330 x 269 it's 19 against 27, so it's correctly lit — but it's still a line on a surface, not a break in one.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes — two things.
+
+**One: the 45° hatch.** A short dotted diagonal stroke, lower-left to upper-right, sitting near the middle of the slab face. It is on nearly every large slab in the room and it is *always the same angle, same 1px dotted construction, same length band*. Count them in one crop, x 400–560 / y 20–200: I count it on the slab at x 470–553 y 50–79, on x 483–520 y 85–115, on x 520–560 y 85–115, on x 415–465 y 155–185, on x 500–555 y 155–190. Same crop, five slabs, five identical strokes. It repeats again out west: x 215–260 y 30–60, x 270–320 y 45–75, x 250–300 y 250–285. It is one stamp applied everywhere and once you see it you cannot stop counting it.
+
+**Two: the vertical tally.** Three-to-five short vertical ticks in a row, in the same relative position on the slab. At x 555–580 y 132–158, x 585–612 y 132–158, x 505–535 y 175–200, x 235–265 y 305–330. Same motif, same spacing.
+
+Both pull attention off the scene and onto the texture pipeline.
+
+---
+
+**Q5: MADE, OR REPEATED?**
+**Repeated.** Not tiled — the joint *layout* is genuinely varied and non-periodic (I autocorrelated the floor region after removing the lighting gradient; peak correlation across periods 6–90px is only 0.195 at 24px, so there's no hard tile stamp in the geometry). The repetition is in the *decoration*. Faces get one of about three stamps — blank, 45° hatch, vertical tally — dropped in the same relative position at the same scale and the same angle. A near-duplicate search on 20×20px windows returns matches at r=0.98 between (527,44) and (533,290), r=0.977 between (539,164) and (599,266), r=0.974 between (593,158) and (593,260) — 250px apart and interchangeable. When I magnified those pairs, the reason they match is worse than a copy: the windows correlate because there's nothing in them *but* a mortar line. Two random pieces of this floor are the same piece of floor.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It's clean, the palette holds together, the lighting falloff is handled properly, nothing is broken.
+
+Merely competent. Not good. It clears the bar to be sold and does not clear the bar to be noticed. The layout logic is doing all the work and the material is doing none.
+
+---
+
+**Q7: AT 1:1, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1, on the face of the material: **essentially nothing.** What I can see at 1:1 is the joint grid, the crack lines, and two slabs that are a different tone from their neighbours (x 205–275 y 300–330 reads greyer; x 370–410 y 128–145 reads darker). All three of those are layout and tone, not surface. Within about one slab of the lantern — say x 430–470, y 145–170 — I can perceive that *something* is going on, a faint diagonal grain, but I cannot resolve what it is. Everywhere else the faces are flat.
+
+Only visible under magnification: the 45° hatch stroke, the vertical tally ticks, the 1–2px dark chips scattered on faces, the dithered edge on the light mortar joints, and the fact that the west half uses a pale dotted mortar while the east half (x>440) uses a solid dark mortar — I did not see that material change at 1:1 at all, and it's the single most interesting thing on this floor.
+
+All of that is hunting.
+
+**Q7_WHY:** Checked at 1:1: the lit core x 350–500 / y 100–250; the bright northeast x 470–620 / y 30–200; the mid-left x 200–330 / y 60–200; the southwest x 200–300 / y 280–380; and both corridor mouths. Had to magnify to see anything: x 480–545 / y 55–75 (big slab interior — high-passed texture amplitude std 6.4), x 258–296 / y 110–134 (std 9.7), and x 212–254 / y 302–326 in the southwest, which measures a high-passed std of **1.24** with a total range of 9 levels on a mean luminance of 25. That slab is mathematically blank. That's the problem in one number: the surface detail is being multiplied by the light, so past roughly 100px from the lantern the texture is annihilated and the floor becomes a lit gradient with a grid ruled on it. On a phone, that's most of what's on screen.
+
+---
+
+**Q8: HOW OLD IS THIS FLOOR?**
+Laid maybe forty years ago and walked on gently since. It reads *young*, and it reads **one single age everywhere** — I can find no part of it that is older or newer than any other part.
+
+That is badly wrong for the fiction. This is supposed to be a floor in continuous heavy use since before the records, held by a garrison that repairs things with rope and driven pins and doesn't care how it looks. Nothing here has been repaired, replaced, worn, re-laid, or patched. There is no second generation of stone. The one thing that could have read as a repair — the odd blank grey slab at x 205–275 / y 300–330 — I magnified, and it's just a larger stone with a slightly cooler tint and a few faint vertical ticks. No fastening, no seam, no different bedding, no mismatch at its edges. It sits in the mortar exactly like its neighbours.
+
+**Q8_WHY:** Slab edges are sharp everywhere — the corners at x 470/553 y 50/79, at x 415/465 y 155/185, at x 555/615 y 130/200 are all crisp right angles with no rounding, no chipping, no rocking. Mortar is intact along every joint I traced (x 185–630 at y 90, y 205, y 285); there is not one blown or missing joint in the room. Every slab sits flush — no differential settlement, no lipped edge, no slab standing proud of its neighbour. Traffic zones and non-traffic zones (compare the corridor mouth at x 376–433 y 370–395 against the dead corner at x 590–630 y 340–390) are tonally and texturally identical. The only aging signal in the entire image is the crack network, and as established in Q3 that's a decal.
+
+---
+
+**Q9: WHERE WOULD YOU WALK TO CROSS THIS LEVEL — DOES THE FLOOR ALREADY KNOW?**
+Route: enter the west mouth at x≈185, y≈240; east along y≈240 to about x≈390; then south into the corridor at x 376–433 and off the bottom edge. Roughly an L.
+
+**The ground told me nothing.** I routed entirely off the walls. This is the answer I'd flag hardest, because a floor in an administered underworld in four hundred years of use is the one surface that should be carrying the route — polish down the middle of the traffic line, grit and debris banked against the dead corners, the mortar worn out of the joints where feet land and intact where they don't.
+
+**Q9_WHY:** Along the route: x 185–260 / y 225–260 (west approach), x 260–360 / y 225–255 (mid-crossing), x 360–433 / y 250–395 (turn and corridor mouth). Rejected: x 480–630 / y 30–200 (the northeast, dead end against the east wall at x≈630, which I confirmed is solid — no opening anywhere on it) and x 560–630 / y 300–390 (southeast corner, also dead). What's different about the ground between the walked regions and the rejected ones: **nothing.** Same joint density, same face treatment, same absence of wear. I compared the crossing at x 300 y 240 with the dead southeast corner at x 600 y 360 and the only difference is lantern falloff. If I lit them equally they'd be the same floor.
+
+---
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST?**
+They all look the same. There are two openings — the west corridor mouth (x≈183, y 205–275) and the south corridor mouth (x 376–433, y 395+) — plus the room running off the top of the viewport at y=0. I magnified the ground immediately inside each mouth. The west threshold at x 185–215 / y 210–270 and the south threshold at x 376–433 / y 365–395 carry the same slab sizes, the same intact mortar, the same absence of surface wear, and no threshold stone, no scuff fan, no swept-clear centre, no banked grit at the jambs. Judged on the ground alone I cannot tell you which door the garrison uses daily and which one has been shut for a century. That information is not on this floor.
+
+---
+
+**CULL:** Stone faces are blank at 1:1; only the joint grid and drawn-on cracks read — no material.
+
+**FLIP LIST**
+- Kill the repeating 45° hatch stamp and the vertical tally stamp; give slab faces per-slab variation — different stones, different tints, different wear states — so no two 20px windows are interchangeable.
+- Add surface texture that survives the lighting: it currently multiplies to zero past ~100px from the lantern (measured std 1.24 at x 212–254 / y 302–326). Floor detail needs a light-independent floor, or higher base contrast, so the dim two-thirds of the room isn't a bare gradient.
+- Make the cracks interact with the stone: step them at mortar joints, spall the lips, drop or lift the slabs on either side. Right now they cross joints unchanged (x 353, y 150) and read as a decal layer.
+- Put age difference into the floor — at minimum one region of re-laid or replaced paving with mismatched stone, blown mortar and lipped edges, so the room has more than one generation on it. Repairs should read as the garrison's: driven pins, salvaged timber, hide, done badly.
+- Wear the traffic line in: polish and worn-out mortar along the west→south crossing (y≈240, x 185–390, turning south at x 376–433), grit and debris banked in the dead northeast and southeast corners, so the ground states the route before the walls do.
+
+*Model: Claude Opus 5 (1M context).*

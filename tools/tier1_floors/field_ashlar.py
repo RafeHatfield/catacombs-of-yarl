@@ -232,6 +232,20 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
             #
             # Occlusion vocabulary throughout: everything here is a recess getting deeper or
             # wider. Nothing brightens.
+            # THE CHROMA CHANNEL, on the stone faces only, from the SAME wear scalar the joints
+            # read. Sharing the scalar is what makes the two channels one signal instead of two
+            # coincidences: a stone whose joints have packed shut is the same stone whose face has
+            # been walked to a colder colour.
+            chr_blk = np.zeros((T, T), dtype=float)
+            if defect not in ("uniform_wear", "flat_chroma"):
+                chr_blk = CA.chroma_strength_block(x * T, y * T, T, seed, traffic,
+                                                   bool(worn and worn(x, y)))
+                if defect == "chroma_lattice":
+                    # THE PLANT: chroma keyed to the tile a stone is SEEN FROM rather than to the
+                    # world — §8.3.1's lattice, restated in the colour domain.
+                    chr_blk = np.full((T, T), CA.CHROMA_BY_AGE[-1] * ((x + y) % 2))
+                chr_blk = np.where((cls != 0) & ~((cls == 0) & jm), chr_blk, 0.0)
+
             if defect != "uniform_wear":
                 jm_pix = (cls == 0) & jm
                 wblk = CA.wear_scalar_block(x * T, y * T, T, seed, traffic)
@@ -298,6 +312,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
                 px_set = CA.crack_pixels(x, y, seed, crack_cache)
             for (ly, lx) in px_set:
                 L[ly, lx] = crack_v
+                chr_blk[ly, lx] = 0.0        # a crack is enclosure, and enclosure has no hue
                 cracks[y * T + ly, x * T + lx] = True
 
             # CLIP AGAINST THE LADDER'S OWN ENDS, not against the donors' band. They used to be
@@ -306,8 +321,10 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None):
             # 75.02 while the engine — which has always clipped at `Ladder[0]` — went to 48.56.
             # The paint check would have caught it as a 96-sample disagreement with no cause.
             L = CF.quantise(np.clip(L, mat["ladder"][0], mat["ladder"][-1]), mat["ladder"])
+            tmap = np.stack([CA.chroma_tint(mat["tint"], v) for v in CA.CHROMA_BY_AGE])
+            _ci = np.abs(chr_blk[..., None] - np.array(CA.CHROMA_BY_AGE)).argmin(-1)
             img[y * T:(y + 1) * T, x * T:(x + 1) * T] = \
-                CF.colourise(L, mat["tint"]).astype(np.uint8)
+                CF.colourise_map(L, tmap[_ci]).astype(np.uint8)
             joints[y * T:(y + 1) * T, x * T:(x + 1) * T] = jm
 
     if defect == "value_lattice":
@@ -861,6 +878,56 @@ def channel_plant(w, h, seed, mat):
     return flat, m
 
 
+def chroma_read(img, traffic, w, h):
+    """THE CHROMA CHANNEL, read off the pixels: is the cast where the traffic is?
+
+    Two numbers, and the second is the one §5.4 cares about. `separation` asks whether trodden
+    stone is measurably more coloured than sheltered stone. `cast_share` asks how much of the
+    floor is carrying colour at all — because a cast everywhere is not a signal, it is a wash,
+    and *general richness is forbidden; saturation spent everywhere identifies nothing.*
+
+    A third number, `parity_ratio`, exists only to be broken: chroma keyed to the tile a stone is
+    seen from rather than to the world would divide cleanly along the grid, and §8.3.1 does not
+    stop applying because the lattice is made of colour.
+    """
+    a = np.asarray(img).astype(float)
+    rc = (a.max(-1) - a.min(-1)) / np.maximum(a.max(-1), 1e-6)
+    hot = np.zeros(rc.shape, bool)
+    cold = np.zeros(rc.shape, bool)
+    for y in range(h):
+        for x in range(w):
+            lvl = int(traffic[x, y])
+            sl = (slice(y * T, (y + 1) * T), slice(x * T, (x + 1) * T))
+            if lvl >= 200:
+                hot[sl] = True
+            elif lvl <= 30:
+                cold[sl] = True
+    ev = np.zeros(rc.shape, bool)
+    od = np.zeros(rc.shape, bool)
+    for y in range(h):
+        for x in range(w):
+            sl = (slice(y * T, (y + 1) * T), slice(x * T, (x + 1) * T))
+            (ev if (x + y) % 2 == 0 else od)[sl] = True
+    e, o = float(rc[ev].mean()), float(rc[od].mean())
+    return dict(trodden=float(rc[hot].mean()) if hot.any() else None,
+                off_route=float(rc[cold].mean()) if cold.any() else None,
+                separation=(float(rc[hot].mean() - rc[cold].mean())
+                            if hot.any() and cold.any() else None),
+                cast_share=float((rc > 0.03).mean()),
+                parity_ratio=float(max(e, o) / max(min(e, o), 1e-6)))
+
+
+def chroma_plant(w, h, seed, mat):
+    """Two plants for the chroma channel, and the live arm they are judged against."""
+    tr = np.zeros((w, h), dtype=np.uint8)
+    tr[w // 2 - 1:w // 2 + 1, :] = 255
+    out = {}
+    for name in (None, "flat_chroma", "chroma_lattice"):
+        img, _j, _t, _c, _d = assemble(w, h, seed, mat, defect=name, traffic=tr)
+        out[name or "live"] = chroma_read(img, tr, w, h)
+    return out
+
+
 def run_plants(w, h, seed, mat):
     print("PLANTS — every instrument must demonstrate it can fail (§4, bible §13.5)\n")
     rows, ok = [], True
@@ -876,6 +943,26 @@ def run_plants(w, h, seed, mat):
     rows.append(dict(plant="flat_channel", must_fire="channel_legibility", fired=flat,
                      why="wear multipliers set to 1.0: the channel is declared and delivers "
                          "nothing", measured=cm))
+
+    cp = chroma_plant(w, h, seed, mat)
+    live, flatc, latt = cp["live"], cp["flat_chroma"], cp["chroma_lattice"]
+    for nm, m, fired, why, detail in (
+        ("flat_chroma", flatc, (flatc["separation"] or 0) < 0.005,
+         "the chroma channel nulled while the joints keep working — the combined verdict must "
+         "fall back to what the joint lever alone can carry",
+         "separation %.4f (live %.4f) | cast %.1f%%"
+         % (flatc["separation"] or 0, live["separation"] or 0, flatc["cast_share"] * 100)),
+        ("chroma_lattice", latt, latt["parity_ratio"] > 3.0,
+         "chroma keyed to the tile a stone is SEEN FROM rather than to the world — §8.3.1's "
+         "lattice restated in the colour domain",
+         "parity ratio %.2f (live %.2f)" % (latt["parity_ratio"], live["parity_ratio"])),
+    ):
+        print("  %-16s -> %-14s %s" % (nm, "chroma_read", "FIRED" if fired else "SILENT"))
+        print("       %s" % why)
+        print("       %s" % detail)
+        ok &= fired
+        rows.append(dict(plant=nm, must_fire="chroma_read", fired=bool(fired), why=why,
+                         measured=m))
     for p in PLANTS:
         img, joints, tr, ck, dr = assemble(w, h, seed, mat, defect=p["name"])
         m = measure(img, joints, w, h, tr, seed, ck, dr)

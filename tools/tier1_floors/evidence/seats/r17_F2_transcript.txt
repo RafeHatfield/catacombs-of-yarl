@@ -1,0 +1,82 @@
+# BLIND SEAT — THE FLOOR — A.png (750×600)
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone paving — flat rectangular slabs, dry-ish laid with thin recessed joints. A soft, pale-tan sedimentary stone; sandstone or a soft limestone, not granite and not brick.
+
+**Q1_WHY:** The joint network across `(180,10)–(640,390)` resolves into discrete quadrilateral faces with darker recessed lines between them, and the courses are irregular — I measured horizontal joint spacing at roughly 21, 22, 23, 25, 27, 30, 32, 36, 37, 40, 42 px going down the room, and vertical joints breaking at unequal intervals. That's coursed rubble/ashlar paving, not tile and not a repeating brick bond. Softness comes from the damage read: the cracks are wide, branching and irregular rather than clean shear lines, and the faces chip at the joint lips (visible around `(300,300)`, `(560,290)`).
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, into the corridor at `(365–445, 390→500)`.
+
+**Nothing about the ground influenced that.** I want to be straight about this, because I first tried to talk myself into a reason: there's a crack fan converging in the lower-centre around `(300–450, 300–390)` that appears to point at the south mouth. It doesn't — it's a coincidence of a branching pattern that runs everywhere with equal density. The ground at the south mouth `(400,385)` and the ground at the west opening `(175,215)` are the same paving, the same joint rhythm, the same crack density, the same absence of anything else. I picked south because it's the opening I could see clearly. That is a wall-geometry choice and a lighting choice, not a floor choice.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been broken but never used. It is heavily fractured and repeatedly spattered, and it is otherwise pristine — no wear, no dirt, no rubble, no repair.
+
+**Q3_WHY:** Three things I'm reading, and one absence that matters more than all three.
+
+- A branching dark crack system, 1–2 px wide, running continuously from about `(240,60)` down through `(330,220)` and `(390,340)` and off east to `(560,300)`, with a second system through `(500,90)→(590,180)`. Each crack carries a bright 1px highlight on one side — that reads correctly as light catching a lifted lip.
+- Nine or so pale rosette splashes: `(400,95)`, `(460,45)`, `(335,170)`, `(400,240)`, `(600,205)`, `(610,232)`, `(525,345)`, `(270,355)`, `(415,370)`. Template-matching one against the rest returns correlations of only 0.29–0.39, so they are genuinely varied instances, not one stamp. Good work.
+- Two sunken dark panels — `(355–400, 125–142)` and `(200–290, 285–312)` — recessed, with a rounded inner outline. They read as dropped or blanked slabs.
+
+**The absence:** there is no traffic anywhere. No polish or lightening on a walking line, no dirt or grit darkening in the joints versus mid-slab, no scuffing at either doorway threshold, no debris fallen from the cracks, no puddling in the sunken panels. And there is not one repair on this floor — no rope, no driven pin, no plank, no hide, no salvaged timber, nothing wedged or lashed. I magnified `(340,340)–(480,470)` and `(190,250)–(420,340)` specifically looking for it. It isn't there. For a floor in an administered underworld that has been in continuous heavy use since before records, held by a company that repairs everything, this floor has never been walked on and has never been fixed.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Two things.
+
+1. **The rosettes.** They read as bright pale blooms against a dark floor and they are the highest-contrast thing on the ground. There are ~9 in `(180,10)–(640,390)` and they are *evenly distributed* — one in roughly every quadrant, none clustered, none absent. My eye hops between `(400,95)`, `(400,240)` and `(415,370)` because they sit almost on a vertical line down the room's centre, and then out to `(600,205)`/`(610,232)`, which are the only pair close together. Even scatter is the signature of a placement algorithm, not of whatever caused them.
+
+2. **The 45° hatch.** Once I magnified `(480,20)–(660,180)` I found the same diagonal scoring motif on face after face. I template-matched one hatched face from `(520,60)` against the whole floor: matches at `(534,30)` = 0.81, `(464,127)` = 0.79, `(590,20)` = 0.74, `(582,97)` = 0.72, `(592,148)` = 0.71, `(542,19)` = 0.69, `(606,169)` = 0.68, `(604,45)` = 0.68, `(467,19)` = 0.67. Nine strong recurrences of one gesture. It is not pixel-identical — I hashed every 8/10/12/15/16/20/30 px block across the lit floor after dividing out the lighting field and found **zero** exact duplicates — but it is one stroke reused with jitter.
+
+**Q5: MADE OR REPEATED?**
+**Made.** Zero exact block duplicates at any tested size after lighting normalisation; the courses are genuinely irregular (21–42 px); the crack network is continuous across the whole room rather than restarting at any interval; the rosettes are individually varied. There is no tiling period I can find. The caveat is Q4's hatch — the *vocabulary* is thin enough that the right-hand third feels repeated even though the pixels aren't.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.**
+
+Merely competent. Not genuinely good. The craft is real — the lighting falloff is clean, the crack highlighting is correct, the bond is irregular where a lazier floor would be gridded. But it does not do the one job the fiction gives it: it carries no information. It doesn't say who walks here, which way they go, how long they've been doing it, or that anyone has ever tried to hold the place together. It's a damage pass on a paving texture.
+
+**Q7: AT 1:1, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+**Legible at 1:1 (the face, not the layout):** almost nothing. The slab faces read as soft tonal mottle — a low-amplitude noise and a broad light-to-dark gradient, and that's the whole of it. What I *can* see at 1:1 is all of it either joint or overlay: the joint lines, the black crack strokes, the pale rosettes, the two sunken panels, and the lamp falloff. Peel those off and the faces are blank.
+
+**Only appears on magnification:** the 45° hatch scoring on essentially every face in `(480,20)–(640,180)`; rows of short vertical tick-marks reading as inscription bands at `(490–570, 25–40)` and `(490–570, 130–145)`; discrete letter-like glyph clusters at `(305,130)–(340,145)` and a single clear letterform around `(310,180)`; tally scratches at `(300,205)`; the rounded inner outline inside the sunken panel at `(360–395, 128–140)`; the fine chipping along joint lips.
+
+That list is the problem stated plainly. There is a real second layer of authored detail on this floor — carved marks, possibly writing, in an underworld that is *a filing system for souls*, which is exactly the right idea — and at the size the game is played on a phone, none of it exists. I did not glimpse it and confirm it by zooming. I had no idea it was there until I zoomed. That is hunting, not seeing.
+
+**Q7_WHY:** Checked at 1:1 in the native 750×600 frame and again in an unscaled crop of `(180,10)–(650,395)`. Magnified at 4× or 6×: `(300,120)–(480,270)`, `(480,20)–(660,180)`, `(190,270)–(400,400)`, `(190,250)–(420,340)`, `(340,100)–(460,150)`, `(340,340)–(480,470)`, `(0,140)–(200,290)`.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+Centuries as a structure — but only about a week as a place. It reads as **one age everywhere**, and that single age is contradictory: the stone is old and the room is new.
+
+The structural evidence says old: crack systems that propagate the full width of the room across dozens of slabs, two fully dropped slabs, chipped joint lips throughout. That's a century or several under load and settlement.
+
+The surface evidence says the floor was laid yesterday: no polish on any line, no grit in any joint, no accumulation anywhere, no repair of any kind. Nothing has been *dragged* across this floor, and nobody has ever knelt on it with a hide patch and a mallet.
+
+So I can't give you "older than the records." I can give you "old stone in a room nobody has entered." The reading that would actually match the fiction — floor laid before records, walked continuously for four hundred years, patched over and over by people who don't care how it looks — isn't on the screen.
+
+**Q8_WHY:** Old-stone reading from the crack runs `(240,60)→(390,340)→(560,300)` and `(500,90)→(590,180)`, the dropped panels at `(355–400,125–142)` and `(200–290,285–312)`, and the joint-lip chipping around `(300,300)` and `(560,290)`. New-room reading from the doorway approaches at `(390–440, 360–390)` and `(160–200, 190–240)`, the room's centre line `(300,180)→(500,180)`, and the joints throughout, all of which are tonally identical to untrafficked mid-slab.
+
+**Q9: WHERE WOULD YOU WALK TO CROSS THIS LEVEL — DOES THE FLOOR ALREADY KNOW?**
+Route: in at the west opening around `(175,215)`, east along `y≈200` through `(250,200)`, `(330,195)`, past the figure at `(410,180)`, then a right turn down through `(410,260)`, `(405,320)` and out the south mouth at `(405,390)`.
+
+**The ground told me nothing.** I routed entirely off the walls. I picked `y≈200` because it's the clear span between the west mouth and the room's middle, and I turned south at `x≈405` because that's where the corridor is. If you deleted the walls and left me the floor, I could not tell you where the exits are.
+
+**Q9_WHY:** Along the route — `(200,205)`, `(280,200)`, `(360,195)`, `(410,240)`, `(408,300)`, `(405,375)`. Rejected — the north band `(250–500, 20–60)`, the east block `(540–630, 100–260)`, the south-west corner `(200–300, 320–385)`. **What is different about the ground between them: nothing.** Same slab sizes, same joint contrast, same crack density, same mottle amplitude, same rosette spacing. I sampled mean colour across `(230,150)–(330,250)`, `(360,250)–(460,340)`, `(540,150)–(630,250)` and `(300,15)–(420,45)`; after normalising for brightness the channel ratios sit within about 0.08 of each other, so even the apparent olive-centre/brown-edge split is the lamp, not a change in the ground. The floor is homogeneous. A route is not encoded in it.
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST OR NEVER?**
+They all look the same. Judging only the ground in front of each: the west approach `(150–200, 170–260)` and the south approach `(370–440, 355–392)` carry the same paving, the same joint darkness, the same fracture density, and neither shows a fan of wear spreading from the opening, a darkened threshold, a scuffed lip, or a polished line. I magnified both specifically for this. I cannot rank them, and I cannot tell you that any of them has ever been used at all. In a place that is a filing system in continuous heavy operation, every doorway reads as never opened.
+
+**CULL:**
+No traffic wear and no repairs anywhere; surface detail is sub-legible at 1:1, so faces read blank.
+
+**FLIP LIST**
+- Cut a traffic path into the ground: a lighter, joint-softened band ~2 slabs wide running west mouth `(175,215)` → centre → south mouth `(405,390)`, with the joints inside it worn shallow and the joints outside it holding grit and dark.
+- Differentiate the two openings — heavy fanned wear spreading from one doorway approach, and an untouched, grit-filled, undisturbed floor at the other, so the ground says which way the traffic goes before the walls do.
+- Put the orcs' repairs on the floor: at least two salvaged timber planks pinned flat across the crack at `(330,220)–(390,340)`, driven pins at the joint lips near `(300,300)`, and the dropped panel at `(200–290,285–312)` bridged with lashed board — crude, oversized, unmistakable at 1:1.
+- Raise the surface detail to play size: the hatch, tick-bands and glyph clusters in `(480,20)–(640,180)` and `(300,130)–(340,185)` currently vanish at 1:1. Either double their contrast and stroke weight so they read as inscription from a phone, or cut them and spend the pixels on wear.
+- Break the rosette placement — nine evenly-scattered splashes at `(400,95)/(400,240)/(415,370)` etc. read as a spawn rule. Cluster them where something actually happened, leave whole quadrants clean, and vary their size by 3×.
+
+**What to watch next:** the underlying paint is competent and the crack lighting is genuinely right — this floor's problem is not skill, it's that every mark on it is *damage* and none of it is *use*. Fix the wear and the repairs and most of the rest follows; the 1:1 legibility issue is the one that will bite twice, because it's currently costing real authored detail that nobody will ever see.
+
+*Model: Claude Opus 5 (1M context)*
