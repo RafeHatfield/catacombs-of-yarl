@@ -1,0 +1,93 @@
+{
+  "png": "tools/tier1_walls/evidence/r22_standing.png",
+  "unlit_floor": 6.55,
+  "as_built": [
+    {
+      "band": "standing <=2",
+      "n": 2,
+      "n_ns": 2,
+      "cap": 71.52,
+      "floor": 89.11,
+      "worst_vs_floor": 15.56,
+      "worst_vs_unlit": 62.93,
+      "clears": true
+    },
+    {
+      "band": "3-4 tiles",
+      "n": 4,
+      "n_ns": 4,
+      "cap": 31.13,
+      "floor": 33.22,
+      "worst_vs_floor": 0.58,
+      "worst_vs_unlit": 11.13,
+      "clears": false
+    },
+    {
+      "band": "beyond 4",
+      "n": 11,
+      "n_ns": 4,
+      "cap": 9.16,
+      "floor": 7.24,
+      "worst_vs_floor": 0.13,
+      "worst_vs_unlit": 1.08,
+      "clears": false
+    }
+  ],
+  "projected": [
+    {
+      "rung": 0,
+      "authored": 48.56,
+      "band34": 12.5,
+      "band2": 57.97,
+      "rungs_above_face": -1,
+      "two_planes_ok": false
+    },
+    {
+      "rung": 1,
+      "authored": 61.79,
+      "band34": 10.45,
+      "band2": 49.49,
+      "rungs_above_face": 0,
+      "two_planes_ok": false
+    },
+    {
+      "rung": 2,
+      "authored": 75.02,
+      "band34": 8.39,
+      "band2": 41.01,
+      "rungs_above_face": 1,
+      "two_planes_ok": false
+    },
+    {
+      "rung": 3,
+      "authored": 88.24,
+      "band34": 6.34,
+      "band2": 32.52,
+      "rungs_above_face": 2,
+      "two_planes_ok": true
+    },
+    {
+      "rung": 4,
+      "authored": 101.47,
+      "band34": 4.28,
+      "band2": 24.04,
+      "rungs_above_face": 3,
+      "two_planes_ok": true
+    },
+    {
+      "rung": 5,
+      "authored": 114.7,
+      "band34": 0.58,
+      "band2": 15.56,
+      "rungs_above_face": 4,
+      "two_planes_ok": true
+    }
+  ],
+  "levels_bar": 8.0,
+  "note": "projections are predictions from a proven-linear pipeline, not measurements",
+  "controls": {
+    "cap_equals_floor_fails": true,
+    "cap_far_passes": true,
+    "proven": true
+  }
+}

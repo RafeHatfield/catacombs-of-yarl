@@ -1,0 +1,85 @@
+{
+  "produced_by": "tools/tier1_walls/derive_stack.py",
+  "floor_manifest": "src/Presentation/assets/tier1_ashlar/MANIFEST.json",
+  "floor_family": "boundary_floor_ashlar_v1",
+  "floor_commit": "cbf5ad2189fb1fee45e31a3c4496eea5ab97b8bd",
+  "ladder_stored": [
+    48.563,
+    61.789,
+    75.016,
+    88.243,
+    101.469,
+    114.696,
+    127.923,
+    141.149,
+    154.376
+  ],
+  "ladder_derived": [
+    48.563,
+    61.789,
+    75.016,
+    88.243,
+    101.469,
+    114.696,
+    127.923,
+    141.149,
+    154.376
+  ],
+  "ladder_agrees_with_stored": true,
+  "ladder_step": 13.2267,
+  "fields": {
+    "12x12": {
+      "area_weighted_mean": 102.997,
+      "median": 113.847
+    },
+    "16x16": {
+      "area_weighted_mean": 101.162,
+      "median": 100.864
+    }
+  },
+  "anchor": 101.162,
+  "mean_spread_pct": 1.782,
+  "median_spread_pct": 11.404,
+  "stack": [
+    {
+      "plane": "wall top",
+      "ratio": 1.11,
+      "target": 112.29,
+      "nearest_rung": 114.7,
+      "rung_index": 5,
+      "on_ladder": true,
+      "rung_error_pct": 2.14
+    },
+    {
+      "plane": "floor",
+      "ratio": 1.0,
+      "target": 101.16,
+      "nearest_rung": 101.47,
+      "rung_index": 4,
+      "on_ladder": true,
+      "rung_error_pct": 0.3
+    },
+    {
+      "plane": "wall face (0.60, light end)",
+      "ratio": 0.6,
+      "target": 60.7,
+      "nearest_rung": 61.79,
+      "rung_index": 1,
+      "on_ladder": true,
+      "rung_error_pct": 1.8
+    },
+    {
+      "plane": "wall face (0.50, dark end)",
+      "ratio": 0.5,
+      "target": 50.58,
+      "nearest_rung": 48.56,
+      "rung_index": 0,
+      "on_ladder": true,
+      "rung_error_pct": -3.99
+    }
+  ],
+  "delivered_face_over_top": {
+    "wall face (0.60, light end)": 0.5406,
+    "wall face (0.50, dark end)": 0.4504
+  }
+}

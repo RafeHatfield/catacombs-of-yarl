@@ -1,0 +1,203 @@
+{
+  "family": "boundary_binding_v1",
+  "arm": "material",
+  "commit": "8ed98f5f699b4ce14e5c828af29948ef6d99e5f3",
+  "rates": {
+    "face": 0.45
+  },
+  "rates_note": "Properties of the world (section 7.3), never of the tile set. The engine planner and this file read the same numbers; neither carries its own copy.",
+  "law": "Section 8.3.1 - incident arrives at the INSTANCE level, randomised. Nothing here may be baked into a wall segment.",
+  "ink": {
+    "face": {
+      "shadow": 48.56,
+      "iron": 48.56,
+      "rope": 48.56,
+      "timber": 48.56,
+      "pale": 88.24
+    }
+  },
+  "tops": "NO BINDINGS ON TOP PLANES - ruled at the gate, \u00a78.3.1. See RATES.",
+  "age_by_implication": "RECORDED (Rafe, at the gate): the orc repairs ARE age. A strap over a joint means the joint moved; a patch means a course broke; a lash over a strap means the first repair failed and nobody replaced it (\u00a77.3, repaired on top of prior repairs). The wall's history is carried by the binding family as much as by the aging pass, and neither is decoration.",
+  "tiles": [
+    {
+      "id": 9800,
+      "kind": "cramp",
+      "plane": "face",
+      "variant": 0,
+      "file": "tier1_bind_9800.png",
+      "coverage": 0.0312,
+      "grips": [
+        "cramp"
+      ],
+      "sha256": "8c9d0437a2631ab66ffb0e4bb3c1ea11388e5bbe6313d3cb7d76b130a6d3113b"
+    },
+    {
+      "id": 9801,
+      "kind": "cramp",
+      "plane": "face",
+      "variant": 1,
+      "file": "tier1_bind_9801.png",
+      "coverage": 0.0312,
+      "grips": [
+        "cramp"
+      ],
+      "sha256": "ddef06211a072190fb63b97ddf8821ecb11526c5a37f7570ca51bbe96a9a7715"
+    },
+    {
+      "id": 9802,
+      "kind": "cramp",
+      "plane": "face",
+      "variant": 2,
+      "file": "tier1_bind_9802.png",
+      "coverage": 0.0312,
+      "grips": [
+        "cramp"
+      ],
+      "sha256": "003d22ece07c6072468c1f615ca7a68beda75fb3c09d776e8dc28715a8f6654b"
+    },
+    {
+      "id": 9803,
+      "kind": "lash",
+      "plane": "face",
+      "variant": 0,
+      "file": "tier1_bind_9803.png",
+      "coverage": 0.0967,
+      "grips": [
+        "lash"
+      ],
+      "sha256": "6a697c488b381ce6f250762c1d76da9ffed2a4e296de875ffda6a4d11c844961"
+    },
+    {
+      "id": 9804,
+      "kind": "lash",
+      "plane": "face",
+      "variant": 1,
+      "file": "tier1_bind_9804.png",
+      "coverage": 0.0967,
+      "grips": [
+        "lash"
+      ],
+      "sha256": "f11b5d66f2f7b883ddac05c944283b240ae9e850ede77b2eaca17926c737b298"
+    },
+    {
+      "id": 9805,
+      "kind": "lash",
+      "plane": "face",
+      "variant": 2,
+      "file": "tier1_bind_9805.png",
+      "coverage": 0.0967,
+      "grips": [
+        "lash"
+      ],
+      "sha256": "6212058b399e235e9b7236717474bd302ac613dabca0159487803480b8daf1f8"
+    },
+    {
+      "id": 9806,
+      "kind": "patch",
+      "plane": "face",
+      "variant": 0,
+      "file": "tier1_bind_9806.png",
+      "coverage": 0.0889,
+      "grips": [
+        "patch"
+      ],
+      "sha256": "2faf51b391d8c5475599a3431d8f993afa27254be1946e11d005da2c0068bc7c"
+    },
+    {
+      "id": 9807,
+      "kind": "patch",
+      "plane": "face",
+      "variant": 1,
+      "file": "tier1_bind_9807.png",
+      "coverage": 0.0889,
+      "grips": [
+        "patch"
+      ],
+      "sha256": "17719d6c40dd5ac059412222c7e6966c9c459ec8592033262b924628d12ec048"
+    },
+    {
+      "id": 9808,
+      "kind": "patch",
+      "plane": "face",
+      "variant": 2,
+      "file": "tier1_bind_9808.png",
+      "coverage": 0.0889,
+      "grips": [
+        "patch"
+      ],
+      "sha256": "3321bdd60a901e2516b88de285c4efd7d87a3efe85f1e4d4f627fb08af080ce7"
+    },
+    {
+      "id": 9809,
+      "kind": "pin",
+      "plane": "face",
+      "variant": 0,
+      "file": "tier1_bind_9809.png",
+      "coverage": 0.0059,
+      "grips": [
+        "pin"
+      ],
+      "sha256": "6e673526c28e293bd82d3ac5db3f4354ac8a1d7f3427c21f7d8683cfaa6f1e9a"
+    },
+    {
+      "id": 9810,
+      "kind": "pin",
+      "plane": "face",
+      "variant": 1,
+      "file": "tier1_bind_9810.png",
+      "coverage": 0.0059,
+      "grips": [
+        "pin"
+      ],
+      "sha256": "d435e9e181c2555c9a0d4ef492c3f010364701af1bd05706baf05d15f1655603"
+    },
+    {
+      "id": 9811,
+      "kind": "pin",
+      "plane": "face",
+      "variant": 2,
+      "file": "tier1_bind_9811.png",
+      "coverage": 0.0059,
+      "grips": [
+        "pin"
+      ],
+      "sha256": "e83961ae8ef2f8507c91d5f90e3474a2c615e49cd1b5b7d2bc372a2f77411229"
+    },
+    {
+      "id": 9812,
+      "kind": "strap",
+      "plane": "face",
+      "variant": 0,
+      "file": "tier1_bind_9812.png",
+      "coverage": 0.0557,
+      "grips": [
+        "strap"
+      ],
+      "sha256": "209f80697a8b99da3187bbed104686964bbc931dc2f43a3da6e379165ca653d9"
+    },
+    {
+      "id": 9813,
+      "kind": "strap",
+      "plane": "face",
+      "variant": 1,
+      "file": "tier1_bind_9813.png",
+      "coverage": 0.0557,
+      "grips": [
+        "strap"
+      ],
+      "sha256": "0b8bc89b54e919301b87a00fb7e2ecd5e5f0db693eb4815cddabddf5476d7db1"
+    },
+    {
+      "id": 9814,
+      "kind": "strap",
+      "plane": "face",
+      "variant": 2,
+      "file": "tier1_bind_9814.png",
+      "coverage": 0.0557,
+      "grips": [
+        "strap"
+      ],
+      "sha256": "84b819cdc0a1d2f3d4a3cac244545fcb65f54803da95a116a4f4ac7ecad16063"
+    }
+  ]
+}

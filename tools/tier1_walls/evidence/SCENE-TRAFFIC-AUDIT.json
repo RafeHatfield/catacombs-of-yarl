@@ -1,0 +1,54 @@
+{
+  "produced_by": "tools/tier1_walls/audit_scene_traffic.py",
+  "scenes": {
+    "corridor_junction": {
+      "spine": 0.0,
+      "routes": 0,
+      "walkable": 28,
+      "worn": 0,
+      "traffic_dead": true
+    },
+    "mixed_distribution": {
+      "spine": 14.0,
+      "routes": 18,
+      "walkable": 59,
+      "worn": 59,
+      "traffic_dead": false
+    },
+    "tier1_corridor_traffic": {
+      "spine": 16.0,
+      "routes": 14,
+      "walkable": 66,
+      "worn": 55,
+      "traffic_dead": false
+    },
+    "tier1_floor_review": {
+      "spine": 14.0,
+      "routes": 16,
+      "walkable": 60,
+      "worn": 60,
+      "traffic_dead": false
+    },
+    "tier1_wall_review": {
+      "spine": 18.0,
+      "routes": 25,
+      "walkable": 119,
+      "worn": 119,
+      "traffic_dead": false
+    },
+    "tier1_wall_standing": {
+      "spine": 18.0,
+      "routes": 25,
+      "walkable": 119,
+      "worn": 119,
+      "traffic_dead": false
+    },
+    "wall_face_review": {
+      "spine": 0.0,
+      "routes": 0,
+      "walkable": 40,
+      "worn": 0,
+      "traffic_dead": true
+    }
+  }
+}

@@ -166,12 +166,70 @@ check() {   # a name, and the pattern that proves it
 #   THE FLOOR ACTUALLY LAID. `missing=0` and all three cross-checks green, ON THE HANDSET. The old
 #   check could not see whether a single tile had been placed, let alone whether the engine
 #   reproduced the composer's bond arithmetic, its material arithmetic and its finished pixels.
-check "booted the review scene"        "corridor scene: tier1_floor_review"
+# THE SCENE NAME IS A PARAMETER, and it became one the first time a build was verified that was
+# not the floor gate's. It read `tier1_floor_review` literally, so the WALL review build - the
+# correct scene, correctly booted - came back MISS. The fix is not to widen it to `tier1_.*`,
+# which would green a build that booted the wrong tier-one scene; it is to state which scene the
+# operator asked for and check for THAT.
+# THE EXPECTATION FOLLOWS THE BUILD. `TIER0_SCENE` is what the BUILD was told to boot, so setting
+# it the same way the build did carries the expectation with it and there is nothing extra to
+# remember. `TIER0_EXPECT_SCENE` still overrides, for checking a log whose build env is gone.
+EXPECT_SCENE="tier1_floor_review"
+if [ -n "${TIER0_SCENE:-}" ]; then
+	EXPECT_SCENE="$(basename "${TIER0_SCENE%.json}")"
+fi
+EXPECT_SCENE="${TIER0_EXPECT_SCENE:-$EXPECT_SCENE}"
+check "booted the review scene"        "corridor scene: $EXPECT_SCENE"
+
+# ⚠ IS THIS EVEN THE BUILD YOU MADE? Two sessions building review apps share one bundle id and the
+# last install silently wins. A wall session overwrote a floor gate build on this handset and the
+# only symptom was the scene check going MISS — which reads as *your build is wrong* when the
+# truth is *your build is gone*. The handset reports the commit it was built from; compare it to
+# HEAD. Adopted from the floor gate's verify path, where the incident happened.
+DEVICE_STAMP="$(grep -oE 'BUILD IDENTITY: commit=[0-9a-f]+(\+dirty)?' "$LOG" 2>/dev/null \
+                | head -1 | sed 's/.*commit=//' || true)"
+DEVICE_COMMIT="${DEVICE_STAMP%+dirty}"
+LOCAL_COMMIT="$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || true)"
+if [ -n "$DEVICE_COMMIT" ] && [ -n "$LOCAL_COMMIT" ]; then
+	if [ "${LOCAL_COMMIT#$DEVICE_COMMIT}" != "$LOCAL_COMMIT" ]; then
+		# A DIRTY BUILD MATCHES ON SHA AND NOT ON PIXELS, so it is reported as what it is. The
+		# commit check answers "is this the build you made"; a stamp that says +dirty means the
+		# sha alone cannot answer it, and saying OK there would be the claim without the evidence.
+		if [ "$DEVICE_STAMP" != "$DEVICE_COMMIT" ]; then
+			echo "  OK*   handset is at this HEAD, but the build was DIRTY ($DEVICE_STAMP)"
+			echo "        The sha matches; the working tree at build time did not. Commit and"
+			echo "        rebuild before treating this as a reproducible gate build (§2.3)."
+		else
+			echo "  OK    the build on the handset is this working copy's HEAD"
+		fi
+	else
+		echo "  MISS  THE HANDSET IS RUNNING A DIFFERENT BUILD"
+		echo "        device: $DEVICE_STAMP"
+		echo "        HEAD:   $LOCAL_COMMIT"
+		echo "        Review builds from different sessions share a bundle id and the last"
+		echo "        install wins. Rebuild under your own TIER0_BUNDLE_ID rather than racing"
+		echo "        for the default one."
+		FAIL=1
+	fi
+fi
 check "incident overlays attached"     "floor overlays: cells="
 check "rig panel constructed"          "\[Tier1\] rig:start:"
 check "no losable state"               "losable-state check:"
 check "floor family laid, every cross-check green" \
       "floor: laid=[1-9][0-9]* .*missing=0 .*edge_check=[0-9]*/OK stone_check=[0-9]*/OK paint_check=[0-9]*/OK"
+# THE WALL FAMILY, CHECKED ONLY WHERE ONE WAS ASKED FOR. Set TIER0_EXPECT_WALLS=1 for a wall
+# review build. It is opt-in rather than always-on because a floor gate build legitimately has no
+# wall family, and a check that fails on a build that was never meant to satisfy it teaches the
+# operator to ignore checks.
+#
+# What it requires is the same shape the floor's does: tiles actually laid, nothing missing, and
+# the composer's boundary arithmetic reproduced BY THE ENGINE, on the handset. `missing=0` alone
+# would pass a build that laid every cell from the wrong side of a disagreement.
+if [ -n "${TIER0_EXPECT_WALLS:-}" ]; then
+	check "wall family laid, edge families reproduced" \
+	      "boundary wall: .*missing=0 .*edge_check=[0-9]*/OK"
+	check "orc bindings placed"            "boundary wall: .*bindings=[1-9][0-9]*("
+fi
 
 # `|| true` ON BOTH, AND IT IS NOT DECORATION. Under `set -euo pipefail` a grep that matches
 # nothing fails, and a failing command substitution ABORTS THE SCRIPT — so the single likeliest
@@ -198,7 +256,14 @@ grep -m1 "light rig:" "$LOG" | sed 's/^/  /' || true
 
 echo ""
 if [ "$FAIL" = "0" ]; then
-	echo "VERIFIED ON DEVICE — installed, launched, booted into tier1_floor_review, rig live."
+	# The scene NAME is read back FROM THE LOG rather than restated, because a summary that names
+	# a scene it did not check is the same class of claim as an app asserting its own bundle id.
+	# It said it did this and it did not: it echoed `TIER0_EXPECT_SCENE`, so a run driven by
+	# `TIER0_SCENE` alone reported VERIFIED "into tier1_floor_review" after checking, correctly,
+	# for tier1_wall_review. The check was right and the sentence was a fabrication.
+	BOOTED="$(grep -oE 'corridor scene: [A-Za-z0-9_.-]+' "$LOG" 2>/dev/null | head -1 \
+		| sed 's/corridor scene: //' || true)"
+	echo "VERIFIED ON DEVICE — installed, launched, booted into ${BOOTED:-$EXPECT_SCENE}, rig live."
 	echo "log: ${LOG#$ROOT/}"
 else
 	echo "NOT VERIFIED — the app is installed but did not report what it should have." >&2

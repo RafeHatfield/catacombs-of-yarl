@@ -1,0 +1,24 @@
+{
+  "produced_by": "tools/tier1_walls/measure_void.py",
+  "candidates": {
+    "choice 0": {
+      "authored": 18,
+      "delivered": 1.073,
+      "spread": 2.0,
+      "cells": 21
+    },
+    "choice 1": {
+      "authored": 10,
+      "delivered": 1.0,
+      "spread": 2.072,
+      "cells": 21
+    },
+    "choice 2": {
+      "authored": 0,
+      "delivered": 0.001,
+      "spread": 3.072,
+      "cells": 21
+    }
+  },
+  "unlit_wall_beyond_six_tiles": 10.445
+}

@@ -1,0 +1,107 @@
+{
+  "family": "boundary_wall_material_v1",
+  "legal_clean": true,
+  "plants": {
+    "two_planes": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "min_rungs": 0.382,
+        "mean_rungs": 0.404,
+        "n": 108,
+        "bound": "min separation >= 1.5 rungs"
+      }
+    },
+    "flat_top": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "joint_rows_in_top_band": 3,
+        "tile": 9407,
+        "mean": 0.398,
+        "n": 108,
+        "bound": "zero rows in the top band a full rung below its own median"
+      }
+    },
+    "incident_free_top": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "largest_frozen_blob": 4,
+        "per_class": {
+          "top_h": {
+            "frozen_px": 4,
+            "largest_frozen_blob": 4,
+            "sd_rungs": 1.69
+          },
+          "top_v": {
+            "frozen_px": 4,
+            "largest_frozen_blob": 4,
+            "sd_rungs": 1.69
+          }
+        },
+        "bound": "no connected region larger than 2px identical across the whole set"
+      }
+    },
+    "no_ring": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "worst": 0.35,
+        "tile": 9428,
+        "bound": "no tile with all four borders deviating >12% the same way"
+      }
+    },
+    "edge_agreement": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "seam_over_interior": 2.2806,
+        "seam": 14.767,
+        "interior": 6.475,
+        "n": 18,
+        "bound": "seam step <= 1.35x an ordinary interior step"
+      }
+    },
+    "constant_pitch": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "on_pitch_share": 1.0,
+        "dark_columns": 32,
+        "field": "12x1 cells",
+        "bound": "<= 60% of the darkest columns on a tile boundary"
+      }
+    },
+    "cap_seamless": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "seam_over_interior": 13.6505,
+        "seam": 13.918,
+        "interior": 1.02,
+        "pairs": 512,
+        "bound": "cap seam <= 1.35x an interior step (the bar's is 4.44x)"
+      }
+    },
+    "cap_not_featureless": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "levels_mean": 1.0,
+        "modal_share": 1.0,
+        "n": 256,
+        "bound": "at least the bar's 16.1 levels and no flatter than its 53.8% modal share"
+      }
+    },
+    "cap_field_scale": {
+      "fired": true,
+      "detail": {
+        "pass_": false,
+        "window_mean_sd": 8.464,
+        "tile_pitch_power": 6.539,
+        "bound": "drift sd >= 5 (the bar: 7..30) and no spike at the tile pitch"
+      }
+    }
+  }
+}

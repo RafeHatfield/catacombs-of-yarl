@@ -1,4 +1,5 @@
 using CatacombsOfYarl.Logic.ECS;
+using CatacombsOfYarl.Logic.Map;
 using Godot;
 
 using CatacombsOfYarl.Presentation;
@@ -168,19 +169,21 @@ public sealed class DungeonRenderer
                     var (cardinal, diagonal) = ComputeWallMasks(map, gx, gy);
 
                     // Collapse 3-wall masks to plain horizontal/vertical edges.
-                    // Masks 7/11 (one open cardinal N or S) → mask 3 (tile 184, horizontal edge).
                     // Masks 13/14 (one open cardinal E or W) → mask 12 (tile 187, vertical edge).
+                    // Mask 11 (open to the SOUTH) → mask 3 (tile 184, horizontal edge).
                     // Tiles 194/195/196/197 in this set render as directional faces/T-junctions
                     // with the far side showing rock/stone texture — correct for a wall that
                     // has an external wall structure meeting it, but WRONG for plain room
                     // edges and corridor edges, where the far side is just more interior fill.
                     // Room and corridor walls look consistent when all edges use 184/187.
-                    int effectiveCardinal = cardinal switch
-                    {
-                        7 or 11 => 3,
-                        13 or 14 => 12,
-                        _ => cardinal,
-                    };
+                    //
+                    // ⚠ MASK 7 USED TO COLLAPSE TO 3 AS WELL, AND THAT WAS A §3 VIOLATION.
+                    // Mask 7 has WALL to its south — it is a room's SOUTH wall, seen from the room
+                    // to its north — so a face tile cut a reveal into the middle of a solid mass on
+                    // 13 in-map cells per review scene. The rule now lives in the LOGIC layer, in
+                    // WallMaskPolicy, where the test suite can assert it for all sixteen masks;
+                    // this was presentation-only arithmetic and nothing could reach it.
+                    int effectiveCardinal = WallMaskPolicy.Collapse(cardinal);
 
                     tilePath = themeConfig.GetWallTile(themeName, effectiveCardinal, diagonal, gx, gy);
                 }

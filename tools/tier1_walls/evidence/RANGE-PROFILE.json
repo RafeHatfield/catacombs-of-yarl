@@ -1,0 +1,117 @@
+{
+  "produced_by": "tools/tier1_walls/range_profile.py",
+  "anchor": 101.162,
+  "dark_cell_modulate": 0.9280377490919512,
+  "rows": [
+    {
+      "row": 1,
+      "cardinal": 0,
+      "albedo": 101.0,
+      "pair": "a101/a051",
+      "dist_wall": 1.414,
+      "L_top": 0.9583224208804809,
+      "L_face": 1.054171735767327,
+      "L_floor": 1.1032738880334205,
+      "k_top": 0.8686169692538316,
+      "k_face": 0.9554941408487263
+    },
+    {
+      "row": 2,
+      "cardinal": 0,
+      "albedo": 101.0,
+      "pair": "a101/a051",
+      "dist_wall": 2.236,
+      "L_top": 0.6708592733380481,
+      "L_face": 0.821960477811174,
+      "L_floor": 1.0018428272455502,
+      "k_top": 0.669625269646834,
+      "k_face": 0.820448532901172
+    },
+    {
+      "row": 3,
+      "cardinal": 0,
+      "albedo": 101.0,
+      "pair": "a101/a051",
+      "dist_wall": 3.162,
+      "L_top": 0.35667380011543753,
+      "L_face": 0.5083753558168316,
+      "L_floor": 0.7432338301557966,
+      "k_top": 0.4798944634162732,
+      "k_face": 0.6840045961178408
+    },
+    {
+      "row": 4,
+      "cardinal": 0,
+      "albedo": 202.0,
+      "pair": "a202/a101",
+      "dist_wall": 4.123,
+      "L_top": 0.12898714444794113,
+      "L_face": 0.22263103452086278,
+      "L_floor": 0.4307376028438867,
+      "k_top": 0.29945642914925696,
+      "k_face": 0.5168599933021206
+    }
+  ],
+  "k_top": {
+    "mean": 0.5793982828665489,
+    "min": 0.29945642914925696,
+    "max": 0.8686169692538316
+  },
+  "k_face": {
+    "mean": 0.7442018157924649,
+    "min": 0.5168599933021206,
+    "max": 0.9554941408487263
+  },
+  "top_row_reachable": {
+    "ladder top rung": {
+      "authored": 154.376,
+      "delivered": [
+        1.3255,
+        1.0219,
+        0.7323,
+        0.457
+      ],
+      "max": 1.3255,
+      "min": 0.457,
+      "ranges_above_1": [
+        1,
+        2
+      ]
+    },
+    "8-bit ceiling": {
+      "authored": 255.0,
+      "delivered": [
+        2.1895,
+        1.6879,
+        1.2097,
+        0.7548
+      ],
+      "max": 2.1895,
+      "min": 0.7548,
+      "ranges_above_1": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  "equal_range_pairing": [
+    {
+      "row": 1,
+      "k_top_equal_range": 0.9565596467015455,
+      "k_face_equal_range": 1.052232652766152
+    },
+    {
+      "row": 2,
+      "k_top_equal_range": 0.9026220902746349,
+      "k_face_equal_range": 1.1059244674571322
+    },
+    {
+      "row": 3,
+      "k_top_equal_range": 0.8280535475903359,
+      "k_face_equal_range": 1.180243731822697
+    }
+  ],
+  "candidates_face_in_band": [],
+  "any_candidate_puts_top_above_floor": false
+}

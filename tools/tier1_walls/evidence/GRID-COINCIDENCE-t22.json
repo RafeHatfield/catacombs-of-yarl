@@ -1,0 +1,67 @@
+{
+  "png": "tools/tier1_walls/evidence/r22_standing.png",
+  "bound": 1.35,
+  "tile_px": 64,
+  "axes": {
+    "x": {
+      "n": 15148,
+      "on_edge": 0.0412,
+      "chance": 0.0469,
+      "ratio": 0.879
+    },
+    "y": {
+      "n": 17066,
+      "on_edge": 0.0689,
+      "chance": 0.0469,
+      "ratio": 1.47
+    }
+  },
+  "per_surface": {
+    "wall face": {
+      "axes": {
+        "x": null,
+        "y": null
+      },
+      "worst": 0.0
+    },
+    "wall cap-only": {
+      "axes": {
+        "x": {
+          "n": 355,
+          "on_edge": 0.4958,
+          "chance": 0.0469,
+          "ratio": 10.577
+        },
+        "y": {
+          "n": 209,
+          "on_edge": 0.0096,
+          "chance": 0.0469,
+          "ratio": 0.204
+        }
+      },
+      "worst": 10.577
+    },
+    "floor": {
+      "axes": {
+        "x": {
+          "n": 14793,
+          "on_edge": 0.0303,
+          "chance": 0.0469,
+          "ratio": 0.646
+        },
+        "y": {
+          "n": 16857,
+          "on_edge": 0.0696,
+          "chance": 0.0469,
+          "ratio": 1.486
+        }
+      },
+      "worst": 1.486
+    }
+  },
+  "worst_ratio": 1.47,
+  "on_grid": true,
+  "face_worst": 0.0,
+  "cap_worst": 10.577,
+  "floor_worst": 1.486
+}

@@ -1,0 +1,219 @@
+{
+  "produced_by": "tools/tier1_walls/measure_age_signal.py",
+  "scene": "tier0_wall_face_review",
+  "capture": "tools/tier1_walls/evidence/r15_choke.png",
+  "control": {
+    "aged_cells_move": false,
+    "sealed_cells_flat": true
+  },
+  "family": "boundary_wall_compensated_v1",
+  "reference_floor": 0.144,
+  "cells": [
+    {
+      "x": 3,
+      "y": 7,
+      "age": 0,
+      "dist": 6.4,
+      "aged_ratio": 1.07,
+      "sharp_ratio": 1.07,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 4.71
+    },
+    {
+      "x": 3,
+      "y": 13,
+      "age": 0,
+      "dist": 5.39,
+      "aged_ratio": 0.8262,
+      "sharp_ratio": 0.8262,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 5.92
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "age": 0,
+      "dist": 5.66,
+      "aged_ratio": 1.0555,
+      "sharp_ratio": 1.0555,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 4.57
+    },
+    {
+      "x": 4,
+      "y": 13,
+      "age": 0,
+      "dist": 4.47,
+      "aged_ratio": 0.6391,
+      "sharp_ratio": 0.6391,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 6.78
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "age": 0,
+      "dist": 5.0,
+      "aged_ratio": 1.3314,
+      "sharp_ratio": 1.3314,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 4.76
+    },
+    {
+      "x": 5,
+      "y": 13,
+      "age": 0,
+      "dist": 3.61,
+      "aged_ratio": 0.8679,
+      "sharp_ratio": 0.8679,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 17.1
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "age": 0,
+      "dist": 4.47,
+      "aged_ratio": 0.9288,
+      "sharp_ratio": 0.9288,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 10.25
+    },
+    {
+      "x": 6,
+      "y": 13,
+      "age": 0,
+      "dist": 2.83,
+      "aged_ratio": 1.3152,
+      "sharp_ratio": 1.3152,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 31.91
+    },
+    {
+      "x": 7,
+      "y": 7,
+      "age": 0,
+      "dist": 4.12,
+      "aged_ratio": 1.7603,
+      "sharp_ratio": 1.7603,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 11.7
+    },
+    {
+      "x": 7,
+      "y": 13,
+      "age": 0,
+      "dist": 2.24,
+      "aged_ratio": 0.8387,
+      "sharp_ratio": 0.9975,
+      "weber": 0.1592,
+      "levels": -25.81,
+      "lit": 91.91
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "age": 0,
+      "dist": 4.12,
+      "aged_ratio": 1.4024,
+      "sharp_ratio": 1.4024,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 11.8
+    },
+    {
+      "x": 9,
+      "y": 13,
+      "age": 0,
+      "dist": 2.24,
+      "aged_ratio": 1.3589,
+      "sharp_ratio": 1.3589,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 35.56
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "age": 0,
+      "dist": 4.47,
+      "aged_ratio": 1.3781,
+      "sharp_ratio": 1.3781,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 10.01
+    },
+    {
+      "x": 10,
+      "y": 13,
+      "age": 0,
+      "dist": 2.83,
+      "aged_ratio": 0.6646,
+      "sharp_ratio": 0.6646,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 38.72
+    },
+    {
+      "x": 11,
+      "y": 7,
+      "age": 0,
+      "dist": 5.0,
+      "aged_ratio": 1.2141,
+      "sharp_ratio": 1.2141,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 4.86
+    },
+    {
+      "x": 11,
+      "y": 13,
+      "age": 0,
+      "dist": 3.61,
+      "aged_ratio": 1.011,
+      "sharp_ratio": 1.011,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 17.95
+    },
+    {
+      "x": 12,
+      "y": 7,
+      "age": 0,
+      "dist": 5.66,
+      "aged_ratio": 1.5537,
+      "sharp_ratio": 1.5537,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 3.57
+    },
+    {
+      "x": 12,
+      "y": 13,
+      "age": 0,
+      "dist": 4.47,
+      "aged_ratio": 0.8373,
+      "sharp_ratio": 0.8373,
+      "weber": 0.0,
+      "levels": 0.0,
+      "lit": 6.86
+    }
+  ],
+  "by_age": {
+    "0": {
+      "n": 18,
+      "weber": 0.0088,
+      "levels": -1.43,
+      "lit": 17.72
+    }
+  }
+}
