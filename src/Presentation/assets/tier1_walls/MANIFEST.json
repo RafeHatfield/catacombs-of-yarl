@@ -2,7 +2,7 @@
   "family": "boundary_wall_material_v1",
   "arm": "material",
   "arm_why": "section 6.5's ratios read as ALBEDO: top 1.11x and face 0.60x the floor's own anchor of 101.16. No rig baked into the asset.",
-  "commit": "65a512a0dd57119a3ba06964dd2eda54c674a19b",
+  "commit": "ab40dfafe4d8120583a5f44fc71b184409519ea8",
   "seed": 1337,
   "floor_manifest": "src/Presentation/assets/tier1_ashlar/MANIFEST.json",
   "floor_family": "boundary_floor_ashlar_v1",
@@ -32,6 +32,11 @@
   },
   "edge_families": 3,
   "void_ring": 0,
+  "quarry_tint": [
+    1.024486,
+    1.010312,
+    0.82575
+  ],
   "salts": {
     "v": 60101,
     "h": 60203,

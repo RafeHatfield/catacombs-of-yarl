@@ -55,6 +55,13 @@ BAR_CROP = (96, 96, 672, 672)
 # the subject is the review scene's own §2.2 failure moved into the review harness.
 YARL_CROP = (0, 91, 750, 1000)
 
+# THE LAST RAFE-APPROVED CAPTURE OF THIS SURFACE — the standing station on build `0c60bc50`, the
+# walk on which the material arm was approved ("walls read as their own stone"). The standing
+# order's third condition compares every candidate against it, so a build that has gone backwards
+# against the last thing a person said yes to is blocked before it reaches the phone.
+APPROVED_CAPTURE = "r17_standing_mat.png"
+APPROVED_BUILD = "0c60bc50"
+
 # ── THE RUIN VOCABULARY — AND IT IS NOT A CONTROL. SEE `audit_plant_control.py`. ──────────────
 #
 # THIS LIST IS UNCHANGED, DELIBERATELY. It is exactly the list that scored rounds 1-9, because
@@ -108,6 +115,15 @@ def build_work(seat, cfg):
     if cfg["solo"]:
         yarl_crop(cfg["img"]).save(os.path.join(d, "A.png"))
         return d, {"A": cfg["img"]}
+    if cfg.get("three_way"):
+        # THREE FRAMES, SHUFFLED BY A FIXED RULE so the seat cannot infer which is which from
+        # position: this build in B, the approved capture in A, the bar in C. §13.3 holds — the
+        # bar crop is written OUTSIDE the repo and nowhere else.
+        yarl_crop(cfg["img"]).save(os.path.join(d, "B.png"))
+        yarl_crop(cfg["approved"]).save(os.path.join(d, "A.png"))
+        Image.open(BAR_IMG).convert("RGB").crop(BAR_CROP).save(os.path.join(d, "C.png"))
+        return d, {"B": cfg["img"], "A": cfg["approved"] + " (last approved)",
+                   "C": "BAR (not in the repo)"}
     slot = cfg["yarl_slot"]
     other = "A" if slot == "B" else "B"
     yarl_crop(cfg["img"]).save(os.path.join(d, slot + ".png"))
@@ -115,8 +131,40 @@ def build_work(seat, cfg):
     return d, {slot: cfg["img"], other: "BAR (not in the repo)"}
 
 
+COMPARATIVE_3 = """
+INPUT: the three files A.png, B.png and C.png in this directory, nothing else.
+
+**They are three frames of a top-down dungeon, from different sources and different dates.** You
+are NOT told which is which and must not guess. Two are from the same game at different points in
+its development; one is from a different, finished commercial game. They are shown at their own
+native tile sizes and under their own lighting, so the pixels are not the same size in all three
+and one is lit far more evenly than the others. **None of that is a defect in any of them.** Judge
+the STANDING STRUCTURE and the ground it sits on — the craft of the frame.
+
+Answer with these exact labels and nothing else:
+
+BEST: A, B or C — which frame is the better made piece of work, all round.
+BEST_WHY: one or two sentences. Be specific about what you are looking at.
+
+RANK: the three letters in order, best first, separated by ">" (for example "C > A > B").
+
+SHIP_B: YES or NO — would you ship frame B as it stands, in a game you were paid for?
+SHIP_B_WHY: one or two sentences.
+
+B_VS_A: BETTER, WORSE or SAME — is frame B better or worse made than frame A?
+B_VS_A_WHY: name the specific thing that got better or worse. If WORSE, say exactly what was lost.
+
+CULL: if any frame should be rejected outright, name it and give the single strongest reason in
+under twenty words. Otherwise write NONE. A critic who finds no defect should suspect its own
+rigour before crediting the work.
+"""
+
+
 def prompt_for(cfg):
     base = open(os.path.join(HERE, "seat_prompt.txt")).read()
+    if cfg.get("three_way"):
+        head = base.split("SCOPE — READ THIS AND HOLD TO IT")[0]
+        return head + COMPARATIVE_3
     if cfg["solo"]:
         return base.replace("INPUT: the PNG file(s) in this directory, nothing else.",
                             "INPUT: the file A.png in this directory, nothing else.")
@@ -142,8 +190,9 @@ LABELS = ["Q1_WHY", "Q7_WHY", "Q1_A", "Q1_B", "Q2_A", "Q2_B", "Q4_A", "Q4_B", "Q
           # ordered, so with "Q1" first, "Q12:" parses as "Q1" and the round's own seat question
           # vanishes into a field nobody reads. It did, once — r8_W1 came back with Q12 = None
           # while the answer was sitting in the transcript.
-          "Q6_A", "Q6_B", "CULL_A", "CULL_B", "Q10", "Q11", "Q12", "Q1", "Q2", "Q3", "Q4", "Q5",
-          "Q6",
+          "Q6_A", "Q6_B", "CULL_A", "CULL_B", "BEST_WHY", "SHIP_B_WHY", "B_VS_A_WHY",
+          "BEST", "SHIP_B", "B_VS_A",
+          "Q10", "Q11", "Q12", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6",
           "Q7", "Q8", "Q9", "CULL", "RANK", "FLIP LIST"]
 _LABEL_RE = re.compile(r"^\s*#{0,6}\s*\**(" + "|".join(re.escape(l) for l in LABELS)
                        + r")\**\s*:?\**\s*", re.MULTILINE)
@@ -188,6 +237,10 @@ def main():
     ap.add_argument("--round", type=int, required=True)
     ap.add_argument("--family", default="r07_family.png")
     ap.add_argument("--plant", default="r07_plant.png")
+    ap.add_argument("--standing", default="r25_standing.png",
+                    help="this build's STANDING capture — the frame W5 compares")
+    ap.add_argument("--approved", default=APPROVED_CAPTURE,
+                    help="the last Rafe-approved capture of the same surface")
     ap.add_argument("--reparse", action="store_true",
                     help="re-split the STORED transcripts with the current label set and rewrite "
                          "`fields`. Reads no model and rolls no dice: same words, parsed right.")
@@ -215,8 +268,16 @@ def main():
         "W2": dict(img=a.plant, what="PLANT", solo=True),
         "W3": dict(img=a.family, what="family", solo=True),
         "W4": dict(img=a.family, what="family", solo=False, yarl_slot="B"),
+        # THE STANDING ORDER'S THIRD CONDITION. Three frames, blind: this build, the asset bar,
+        # and the last capture Rafe approved. Two questions — which is better made, and would you
+        # ship this one — and a cull or a regression against the approved frame blocks the
+        # install. It is the seat that asks whether the work got WORSE, which no other seat here
+        # has ever been asked.
+        "W5": dict(img=a.standing, what="comparative-3", solo=False, three_way=True,
+                   approved=a.approved),
     }
-    frozen = {n: sha256_of(os.path.join(EV, n)) for n in {a.family, a.plant}}
+    frozen = {n: sha256_of(os.path.join(EV, n))
+              for n in {a.family, a.plant} | ({a.standing} if "W5" in a.seats else set())}
     os.makedirs(OUT, exist_ok=True)
     commit = subprocess.run(["git", "-C", REPO, "rev-parse", "HEAD"],
                             capture_output=True, text=True).stdout.strip()
@@ -252,6 +313,9 @@ def main():
         # THE GATE, RE-READ FROM DISK FOR EVERY FAMILY SEAT rather than carried in a variable —
         # so a plant that ran in this same invocation and MISSED stops the family seats behind it.
         if seat != "W2":
+            # W5 IS GATED THE SAME WAY. It is install evidence rather than a round finding, but
+            # the standing order's first condition is that a void judging layer means STOP AND
+            # FIX — so a void round does not get to produce ship evidence either.
             pp = os.path.join(OUT, "r%d_W2.json" % a.round)
             ctrl = json.load(open(pp)) if os.path.exists(pp) else None
             if ctrl is None or not ctrl.get("caught"):
@@ -273,6 +337,17 @@ def main():
         rec = dict(seat=seat, round=a.round, what=cfg["what"], commit=commit,
                    slots=slots, capture_sha256=frozen.get(cfg["img"]),
                    fields=fields, transcript=text)
+        if seat == "W5":
+            # THE REGRESSION VERDICT IS A FIELD, not a reading. `install_gate` blocks on it, and a
+            # gate that depends on someone interpreting a paragraph is the kind of gate this
+            # session has already watched fail.
+            bva = (fields.get("B_VS_A") or "").strip().upper()
+            rec["b_vs_approved"] = bva
+            rec["regression_vs_approved"] = bva.startswith("WORSE")
+            rec["ship"] = (fields.get("SHIP_B") or "").strip().upper().startswith("YES")
+            print("   comparative: B vs approved = %s | ship B = %s | BEST = %s"
+                  % (bva or "?", fields.get("SHIP_B", "?").strip()[:6],
+                     (fields.get("BEST") or "?").strip()[:3]))
         if seat == "W2":
             culled, named = plant_caught(fields, text)
             rec["plant_culled"] = culled

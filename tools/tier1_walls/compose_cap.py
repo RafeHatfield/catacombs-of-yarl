@@ -340,6 +340,7 @@ def main():
                       "agreement." % (FIELD_TILES, FIELD_TILES)),
         top_rung=top_rung, top_value=round(float(ladder[top_rung]), 3),
         hue_shift=a.hue_shift,
+        quarry_tint=[round(float(v), 6) for v in tint],   # see compose_walls: the gate reads it
         ladder=[round(v, 4) for v in ladder],
         measured=dict(
             wrap_step=round(seam_h, 3), interior_step=round(inner, 3),

@@ -659,6 +659,10 @@ def compose(arm, out_dir, grain_amp, void_values):
         # Kept as a parameter, and both settings captured, because this is a LOOK and section 13.1
         # gives a look to Rafe.
         void_ring=VOID_RING,
+        # RECORDED SO THE BUILD CAN ATTEST TO ITS OWN FIX. `install_gate.py` checks the ruled
+        # fixes against the built artefacts, and a fix that leaves no trace in them cannot be
+        # checked — the quarry tint was invisible to the gate until it was written here.
+        quarry_tint=[round(float(v), 6) for v in fam.tint],
         salts=dict(v=SALT_V, h=SALT_H, s=SALT_S, g=SALT_G),
         grain=dict(amp_rungs=grain_amp, bank=GRAIN_BANK, synthesised=True,
                    donor_pool_sd=round(pool_sd, 4),

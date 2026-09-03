@@ -1,7 +1,7 @@
 {
   "family": "boundary_cap_material_v1",
   "arm": "material",
-  "commit": "65a512a0dd57119a3ba06964dd2eda54c674a19b",
+  "commit": "ab40dfafe4d8120583a5f44fc71b184409519ea8",
   "seed": 1337,
   "field_tiles": 16,
   "tile": 32,
@@ -9,6 +9,11 @@
   "top_rung": 3,
   "top_value": 88.243,
   "hue_shift": 0.0,
+  "quarry_tint": [
+    1.024486,
+    1.010312,
+    0.82575
+  ],
   "ladder": [
     48.5627,
     61.7893,
