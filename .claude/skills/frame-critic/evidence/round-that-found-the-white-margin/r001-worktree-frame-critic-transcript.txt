@@ -1,0 +1,49 @@
+Read all three. 1 and 3 are the same room rendered two different ways; 2 is a different tile size and a different problem entirely.
+
+**RANK:** 3 > 1 > 2
+
+**BEST:** 3
+
+**BEST_WHY:** The floor is actually built out of cut stone rather than textured. In the run below the wall, roughly x 60–700 / y 450–620, the joints form a continuous mortar network with varying course heights — a wide slab at (330–430, 455–520) butts against three short courses to its right at (440–520, 455–490), and the joints step rather than aligning into a lattice. The joint line itself is not a uniform stroke: it is a 1px dark line with an intermittent stipple of 1px pixels breaking along it, so the edges read as chipped stone rather than a drawn grid. The corridor mouth at (390–432, 200–460) is genuinely narrower stonework than the room floor, with its own smaller course height, so the corridor reads as a separate build and not as the same floor with a light cone on it. The wall cap band at (432–700, 418–448) is separated from the floor below it by a real value break, so the wall reads as a solid you cannot walk on. And the block-ends along the wall run at (440–700, 388–415) vary in width — a run of narrow ones at 440–520, then wide ones at 560–620 — so the wall reads as assembled from salvage rather than extruded.
+
+**WORST:** 2
+
+**WORST_WHY:** The frame is not finished rendering. There is a pure white (255,255,255) margin occupying x 360–383 for the full height and y 264–287 for the full width — a blank white L down the right edge and along the bottom of the image. Nothing else in the frame is above value 200; this is a blown-out white bar on screen. Beyond that: the water is a rectangle. Its south-west corner at (216,166) is a hard 90° step where dirt meets water with no bank, no shallow, no edge tile and no shading of any kind; the same happens along the whole west edge at x=216, y 0–166. The tiling is literal — of 1530 sampled 20×20 windows on the grey flagstone, 776 are byte-identical to another window in the same floor; the dirt scores 645 of 1505. The projection is mixed: the barrels at (85–110, 168–188) and (128–153, 168–188) are drawn three-quarter with visible side staves and an elliptical lid, and the chest at (30–66, 22–44) is three-quarter with a gold rim that is the brightest thing in the frame, while the floor under them is straight top-down. Both barrel lids carry a small black right-pointing arrow — a debug or UI glyph baked into the sprite art. The left frame edge at (0–12, 96–136) is an orange strip and a dark brick block sliced off by the image boundary, sitting on the dirt with no contact shadow. There is no light model at all; the frame is evenly lit corner to corner. The only candidate for the light-carrying figure, at (180–205, 88–106), is a loose scatter of white and grey pixels with no silhouette, no outline and no readable form.
+
+**FLAGGED:** 1, 2, 3
+
+**SHIP:** NONE
+
+---
+
+**FLIP 3:**
+- Kill the soft haze layer. The grey blobs centred near (150,300), (250,420), (560,300) and (640,470) have 6–10px anti-aliased gradient edges and rounded amoeba outlines, sitting on top of masonry whose joints are 1px hard. Either delete it or redraw it as dithered pixel clusters on the same grid as the stone.
+- The haze crosses the wall run at (432–700, 415–450) and flattens the wall cap to the same grey as the fog, destroying the one value break that tells you the wall is solid. Mask the haze out of the wall footprint, or lift the cap band 15–20 values above it.
+- Break the block stamp. The 45° hatch cluster on the floor blocks at roughly (95,470), (170,540), (250,470), (300,600), (470,545) and (610,480) is the same stroke count at the same angle at the same length. Vary stroke count per block, drop it entirely from at least a third of blocks, and let some strokes run across a joint into the next block.
+- The stipple breaking the joint line is applied to the perimeter of every single block at the same density, which turns into a dotted-line look at 100%. Leave the joints of some blocks clean and hard.
+- The region at (60–370, 150–450) is a featureless grey field with two thin crack lines and no architecture under it. Build the floor grid and the wall continuation there at full detail before the darkness is applied — the light will move.
+- Nothing in this frame is repaired. The brief's rope, driven pins, hide and salvaged timber appear nowhere; the wall cap at (432–700, 418–448) is a blank grey slab. Put at least two explicit physical repairs on lit surfaces — a timber baulk pinned across a cracked block, a lashing over a joint — drawn at the same joint weight as the stone.
+
+**FLIP 1:**
+- The wall's top surface and the floor are the same texture at the same value. The band at (430–700, 390–430) and the floor at (430–700, 450–520) directly below it use the identical mottle; only the row of dark rectangles distinguishes them. Give the wall cap its own flat value, at least 20 steps off the adjacent lit floor, and its own surface language.
+- Nothing in this image has a clean pixel edge except the character sprite. Every crack and every block boundary ramps over 2–3px of gradient — visible on the crack running from (330,470) to (250,560) and on all the block outlines along the wall run. Redraw the joints as 1px hard lines. As it stands the surface reads as a photographic texture that has been downscaled, not as drawn art.
+- The floor has no mortar network. The pale rectangle at approximately (490–530, 460–500) and the one at (300–380, 555–600) are flat fills with hard rectangular boundaries floating on the mottle, with no joint, no bevel and no contact edge, and they overlap each other at different opacities. Replace them with real blocks bounded by joints on all four sides.
+- The 45° hatch strokes across the whole lower floor are all the same angle, the same 1px width and roughly the same length, and they cross block boundaries as if the blocks were not there. Bind the wear to the blocks: strokes stop at joints, angle varies per block, density varies with traffic.
+- The corridor floor at (388–430, 200–450) is a different hatch frequency from the room floor and meets it at a 1px butt seam at x=430 with no transition. Resolve the two as one masonry system, or make the corridor an explicitly different build with a finished threshold block across the mouth.
+- There is a hard horizontal seam at y≈60 running x 60–750, with a different texture and a value step above and below it. Remove it or make it an intentional architectural edge.
+- Same as 3: no repairs anywhere. Add physical, drawn repairs on lit surfaces.
+
+**FLIP 2:**
+- Crop or re-render so the frame has no blank margin. The white (255,255,255) block at x 360–383 and y 264–287 must not exist.
+- Build water edge tiles. The corner at (216,166) and the whole west shore at x=216 need a bank: a darker wet-stone lip, a 2–3px shallow value inside the water edge, and an irregular boundary that does not run perfectly straight for 166px.
+- Break the floor repeat. 776 of 1530 sampled 20px windows in the grey flagstone are byte-identical; the dirt is the same. Hand-vary at minimum every third tile — chip a corner, shift a joint, change a tile's base value — and stop the joints from running as unbroken full-width 1px lines.
+- Pick one projection. The barrels at (85–110, 168–188) and (128–153, 168–188) and the chest at (30–66, 22–44) are three-quarter; the floor is top-down. Redraw all three as top-down: circular lid, no side staves, contact shadow.
+- Remove the black right-pointing arrow glyphs from both barrel lids.
+- The chest's gold rim at (30–66, 22–44) is the brightest value in the frame by a wide margin and pulls the eye off everything else. Bring it inside the frame's value range.
+- Resolve the cut-off orange strip and dark brick block at (0–12, 96–136) — either complete the object inside the frame or move it out. Give it a contact shadow where it meets the dirt.
+- There is no light falloff. Apply the carried-lamp model the other frames use: the figure is the only source, values drop off with distance, and the frame edges go dark.
+- The figure at (180–205, 88–106) is a scatter of unconnected white pixels with no silhouette. Draw an actual sprite with a readable outline, or if that scatter is meant to be debris, replace it with a debris sprite that reads as one object.
+
+The through-line: 3 has real architecture with a soft-focus layer painted over it, 1 has a soft-focus layer with architecture implied inside it, and 2 has a rendering fault you can see from across the room. 3 is the only one whose fixes are subtractive — pull the haze off and de-stamp the blocks and it's close. Watch the wall cap in 3 specifically; it's the surface that carries the "four hundred years of repairs" claim and right now it's blank.
+
+*Model: Claude Opus 5 (1M context)*

@@ -1,0 +1,102 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-frame-critic-selftest",
+ "round": 1,
+ "surface": "floor",
+ "commit": "e248cad6d0e5dae81cef44950a44f5d01b47ea48",
+ "dirty": true,
+ "build_id": "9313fd51bb65c76acd4b80c3df09ac4c3f6b0d7964ba57f179213029b583193c",
+ "timestamp": "2026-09-03T13:58:09",
+ "build_frame": {
+  "path": ".claude/skills/frame-critic/morgue/keyline-floor.png",
+  "sha256": "352461c6b0917d3892679efb16f895d939ca039c010cce6c249829d9e3aac224"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-frame-critic-selftest-r1",
+  "slots": {
+   "1": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/tile-quantized-wear.png",
+    "sha256": "2c097a288e54de45704834cedb319201278f83cd9e83bf2083ac317f502c169a",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     336,
+     240,
+     720,
+     528
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "3": {
+    "what": "build",
+    "source": ".claude/skills/frame-critic/morgue/keyline-floor.png",
+    "sha256": "352461c6b0917d3892679efb16f895d939ca039c010cce6c249829d9e3aac224",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": ".claude/skills/frame-critic/morgue/keyline-floor.png"
+ },
+ "plant": {
+  "slot": 1,
+  "file": "tile-quantized-wear.png",
+  "sha256": "2c097a288e54de45704834cedb319201278f83cd9e83bf2083ac317f502c169a",
+  "culled_by": "Rafe, device walk, 2026-09-02",
+  "verbatim": "one tile worn, the one next to it not \u2014 that's not how it works.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": false,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The masonry is genuinely constructed rather than tiled. In the courses around the figure (roughly x 310\u2013520, y 380\u2013560), block lengths vary along a single run \u2014 the course through the figure's head is one long block, a short one, then a wide one, and the course below breaks at different points, so the bond never repeats. The joints carry depth: each block has a pale bevel on its upper-left edge and a dark line on the lower-right, so the stone reads as having a cut thickness instead of an outline drawn around it. Best of all, the cracks are drawn as fractures, not decoration \u2014 the long black line entering at the top-left of the lit area continues down through at least six separate blocks and crosses every joint it meets without stopping at a tile edge. And critically, the courses survive the lighting: the same bond continues from the near-white blocks under the figure out into the near-black at upper right, only losing value, never losing structure.",
+  "WORST_WHY": "Several things a person would not ship. The green water is a literal axis-aligned rectangle \u2014 its left edge is a dead-straight vertical column boundary and its bottom edge a dead-straight horizontal one, with square corners and not one edge or shore tile anywhere; brown dirt simply stops and green begins. The two barrels are drawn in three-quarter view \u2014 you see the elliptical top *and* the cylinder side \u2014 sitting on a floor drawn straight from above, and their lower halves are cut off flat by the grey stone row beneath them, so both barrels are sunk into the floor at the ankle. The board at top-left is likewise drawn in elevation, hung on nothing. The grey floor is the same tile copied without variation across roughly forty cells \u2014 identical speckle, identical white top edge \u2014 so it reads as one bitmap wallpapered. The white sparkle in the middle of the dirt floats with no object under it. The palette (orange dirt, bright leaf-green lily pads) is a sunlit outdoor scene, and there is no light source or falloff of any kind.",
+  "FLAGGED": "1, 2",
+  "RANK": "3 > 1 > 2",
+  "BEST": "3",
+  "WORST": "2",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "The lighting is not radial. Broad pale wedges run upper-right to lower-left across the blocks above and below the figure (clearest around x 300\u2013430, y 430\u2013580), crossing joints as unbroken diagonals. A lamp held by a standing figure lights the floor in rings; replace the directional streak with a radial falloff centred on the sprite.",
+  "The same scratch-hatch cluster is stamped on many blocks at an identical 45\u00b0 angle and spacing \u2014 the row right of the figure repeats it three times in a row. Vary or thin it.",
+  "The small glyph clusters meant to read as records (around x 560\u2013660, y 340\u2013360) resolve at play size to random specks. Either draw marks legible at this size or cut them.",
+  "Same as 1: the figure carries no light, only a sword and shield, and the sprite's saturated cyan/orange/white palette is a bright fantasy hero against a dry, cold, administered underworld.",
+  "Same as 1: nothing in frame is repaired, salvaged, pinned or roped \u2014 no evidence of a garrison that has been patching this place for four hundred years.",
+  "Same as 1: the hot-magenta tile overlay covering roughly a third of the frame."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r001-worktree-frame-critic-selftest-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read.",
+ "self_test": true
+}

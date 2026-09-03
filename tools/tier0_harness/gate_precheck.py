@@ -116,18 +116,30 @@ def main():
     else:
         print("  4. every ruled fix present        ok (%d checked)" % len(c.get("ruled_fixes", [])))
 
-    # ---- the instruments that gate ---------------------------------------------------------
+    # ---- the instruments, ADVISORY ----------------------------------------------------------
+    #
+    # DEMOTED, and this is the change rather than an omission. Instruments are builder's tools:
+    # they are how you aim between rounds, and they GATE NOTHING. Nothing here appends to `fails`
+    # any more.
+    #
+    # The reason is measured, not stylistic. At the wall gate of 2026-08-27 every instrument in
+    # this repo was green and the phone still said no — which is what it looks like when the thing
+    # being measured and the thing being judged have come apart. A number that can hold a gate
+    # will, over enough rounds, be optimised against; and it will silently outcompete every clause
+    # that has no number, which is most of the register (bible §13.4).
+    #
+    # What gates now is a picture judged by eyes: the frame-critic verdict, checked ahead of this
+    # file in build_review_app.sh. Nothing was deleted — these rows still print, because knowing
+    # an instrument went red is useful to a builder even when it decides nothing.
     for spec in c.get("instruments_that_must_pass", []):
         ev = load(os.path.join(EVID, spec["evidence"]))
         key = spec.get("key")
         if ev is None:
-            fails.append("instrument %s has no evidence on disk" % spec["id"])
-            print("  +  %-30s NO EVIDENCE" % spec["id"])
+            print("  ~  %-30s no evidence           (advisory)" % spec["id"])
         elif key and not ev.get(key):
-            fails.append("instrument %s did not pass" % spec["id"])
-            print("  +  %-30s FAILED" % spec["id"])
+            print("  ~  %-30s FAILED                (advisory)" % spec["id"])
         else:
-            print("  +  %-30s ok" % spec["id"])
+            print("  ~  %-30s ok                    (advisory)" % spec["id"])
 
     print()
     if fails:

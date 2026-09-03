@@ -167,6 +167,16 @@ PLACEHOLDER, that is a finding to report, not a gap to fill with a guess.
 Two gates: a blind LLM critic ends a round; only Rafe, in-scene on device, lands an
 asset. **No candidate is ever approved from a contact sheet** (bible §13.1).
 
+**Art rounds are judged by eyes on delivered frames only. Instruments gate nothing** —
+they are builder's tools, welcome and forever ungated. **Installs require a frame-critic
+verdict** for that exact build (see `.claude/skills/frame-critic`; `YARL_SKIP_CRITIC=1`
+installs a build stamped SKIPPED-REVIEW, visible on the phone, and nothing walked on one
+is a gate verdict). **Loop guards escalate to Rafe — never grind past a STOP**, and never
+run a further round past a broken judge. Law and history: `ART-LOOP-PROCESS-v0.md` §1.2.
+
+An art-thread PR carries the final build's `CRITIC-VERDICT.json` in the diff and names it
+in the PR body.
+
 **The Oryx-conformance track is closed (2026-08).** Its bible, lint spec,
 acceptance-scene spec, gate package, and generation walkthroughs are archived under
 `docs/archive/oryx-track/` with RETIRED banners. Do not work to them. Treat any Oryx

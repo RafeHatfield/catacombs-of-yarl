@@ -69,5 +69,19 @@
     "comparable."
   ],
   "tileSize": 32,
-  "tileScale": 2.0
+  "tileScale": 2.0,
+
+  "_reviewStatus": [
+    "WHAT THIS BUILD WAS ALLOWED PAST. Stamped by build_review_app.sh, never authored here.",
+    "",
+    "null            the build carries a frame-critic PASS for its exact build id.",
+    "SKIPPED-REVIEW  YARL_SKIP_CRITIC=1 waved it past the gate. Legitimate for producing a",
+    "                build to MEASURE; never a build to take a verdict on.",
+    "",
+    "The app draws this in the corner of the screen and reports it in its BUILD IDENTITY line,",
+    "because the two kinds of build are indistinguishable in the hand and the hazard is walking a",
+    "measurement build as a gate build. An override nobody can see from the phone is the same as",
+    "no gate at all."
+  ],
+  "reviewStatus": null
 }

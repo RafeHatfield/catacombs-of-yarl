@@ -1,6 +1,6 @@
 # Yarl Art Loop — PROCESS LAW v0
 
-**Status: v0.6 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
+**Status: v0.7 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
 `ART-BIBLE-v0.md`. Structure transfers wholesale; every number is re-derived.
 
 *(The banner read v0.4 while the revision log below already carried v0.5 — corrected here rather
@@ -79,6 +79,104 @@ long, autonomous, critic-held runs — not checkpointed relay.**
 autonomous loop toward human relay, observed independently on both projects. Standing test:
 **every human touchpoint in a session prompt must cite the law that requires it.** No citation,
 no touchpoint.
+
+### 1.2 The eyes-only rule — LAW
+
+**Anything that gates an art round must be a picture judged by eyes.**
+
+Not a threshold, not a census, not a manifest predicate, not a screen. A picture, delivered by
+the production renderer, looked at by something with eyes — the blind critic at the loop gate,
+Rafe at the landing gate.
+
+**Instruments gate nothing.** They are builder's tools. Every `measure_*.py`, every control, every
+census in this repo stays exactly where it is, keeps running, and keeps informing where the next
+round aims. They report; they do not decide. An instrument result belongs in a round report and
+never in a verdict.
+
+**One paragraph of history, because this clause was bought twice.** Both collapses were of the
+review layer, and both are the same shape: *the apparatus became the judge, and then the apparatus
+broke.* At the wall device gate of 2026-08-27 **every instrument was green and the phone still
+said no** — which is what it looks like when the thing measured and the thing judged have come
+apart, and the numbers had been quietly holding the gate for some rounds before anyone checked.
+Then the control itself went: wall rounds 9 and 10 both voided because the **generated** plant
+differed from the family in **0.54% of pixels, in 21 cells** — since the cap pass the cell's base
+is a cap window and the wall family's top tiles are never drawn, so ruining the wall tiles ruined
+almost nothing. The plant was downstream of the engine, so an engine change disarmed it in
+silence. Rounds 3 and 6 died the same way for a different reason. §13.4 already held that a script
+must never score register conformance; these two say the same thing about *every* apparatus that
+can drift, and the remedy is to gate on the one artefact that cannot: the picture.
+
+#### 1.2.1 The mechanism — `.claude/skills/frame-critic`
+
+A fresh blind `claude -p` seat is shown the build's capture, the asset bar, the last
+Rafe-approved capture of the same surface, and **one picture-plant**, shuffled and unlabelled. It
+ranks them for craft, says which it would ship, and flags obvious defects. That is the verdict:
+**PASS**, **FAIL** with a verbatim flip list, or **VOID**.
+
+**The plant is a picture, not a build.** A frame Rafe personally culled at the device gate, kept
+as bytes in `morgue/` with his words and the commit that produced it, hash-checked before every
+round. **An engine change can never neutralise a picture.** The plant must land worst-or-flagged
+and must not be shipped; a passed plant voids the round under §4, unchanged.
+
+The plant rule needs no vocabulary list, and that is the gain. The generated plant it replaces
+needed one — a hand-maintained list of ruin words that carried `lichen`, which no plant ever
+contained, and lacked `hole`, the plainest word for its most prominent feature, for three rounds.
+A list widened by reading transcripts is a test derived from its own outcome. **A rank has no
+vocabulary.**
+
+**And its limit, measured four times on the day it was built rather than found later. A BLIND
+SEAT'S RANKING DOES NOT REPRODUCE RAFE'S CULLS.** In the first live wall round the seat flagged
+all three frames, shipped none, and **ranked the plant first** — a frame culled for grey walls,
+placed above the current build. In the plant self-test, the build slot deliberately held
+`keyline-floor.png`, a frame culled outright, and the seat **ranked it best of three and did not
+flag it** (it listed that frame's magenta placeholder walls in its own flip list, so it had seen
+them; it simply did not call it a flagged defect). Two further rounds on the same wall build,
+different seats and different shuffles, **put the plant above it again, both times**.
+
+Every round came out FAIL and no gate opened, which is the protective claim — and it is narrower
+than it sounds: **the gate rests on SHIP, not on RANK.** What is guaranteed is that a build
+reaching the phone is one a blind seat said it would ship. What is **not** guaranteed is that the
+seat's ordering agrees with the human gate's; the evidence is that it does not. This is the
+measured shape of §1.1.1's *"nothing reaches the human gate that the blind critic would kill"* —
+it culls what a seat would refuse to ship, not everything Rafe would.
+
+So the plant tests for **softness, not ordering**, and the ordering facts are recorded and
+reported rather than scored: `outranked_build`, and `every_frame_flagged` for a seat that flags
+everything including the commercial bar. Folding either into the verdict would say the wrong
+thing — VOID means *stop and fix the judge*, and the judge was not what failed. A seat too harsh
+ever to pass belongs to the five-round park, not to the plant. §8: the rule was declared before
+the round, held frozen, cleared honestly, and impeached in the same report.
+
+#### 1.2.2 The install gate
+
+**No build reaches the device without a critic verdict for that exact build.**
+`build_review_app.sh` and a PreToolUse hook both call one implementation, `critic_gate.py`, which
+requires `CRITIC-VERDICT.json` to exist, to match this working tree's build id (commit + tracked
+changes + untracked files), and to read PASS. Two callers, one implementation: a gate reimplemented
+in a second place has two behaviours and the second is always the lenient one.
+
+`YARL_SKIP_CRITIC=1` installs anyway and stamps **SKIPPED-REVIEW** into the review marker, which
+the app draws on screen and reports in its `BUILD IDENTITY` line. It exists for producing a build
+to *measure*. **Nothing walked on a SKIPPED-REVIEW build is a gate verdict**, and an override
+nobody can see from the phone is the same as no gate.
+
+#### 1.2.3 The loop guards — the line stops, it never grinds
+
+§1.1 makes a FAIL a reprompt rather than a stop, and it is right. These are the bounds on that.
+
+| guard | fires when | why |
+| --- | --- | --- |
+| **two strikes** | the same flip item survives two consecutive FAIL rounds | the fix is not landing; a third attempt is a guess |
+| **five-round park** | five rounds on a lane with no PASS | the lane needs a ruling, not another round |
+| **broken judge** | the picture-plant is missed twice running | nothing past a broken judge is readable, and nothing ships past one |
+
+Each writes `STALL-REPORT.md` in plain language — what was tried, the critic's own words, the
+capture paths — and **each is a §1.1.4 ruling trigger with that report as its evidence**, which is
+the citation §1.1's standing test demands. **Never run a further round past a STOP.**
+
+**The counters are derived from the verdict files on disk, per lane, not held in a session.** A
+counter that a restart clears is a suggestion with a number in it; clearing these means deleting
+committed files, which shows up in a diff.
 
 ---
 
@@ -393,6 +491,32 @@ conditions, which supplies parts, which camera parameters are spent, and why the
 images rather than parameters. One home, cited from both documents.
 
 ---
+
+*v0.7 — 2026-09-03. **New §1.2: the eyes-only rule.** Anything that gates an art round must be a
+picture judged by eyes; instruments are builder's tools and gate nothing. Bought twice, both
+times by the review layer rather than the art: at the 2026-08-27 wall gate **every instrument was
+green and the phone still said no**, and then the control itself went — wall rounds 9 and 10
+voided because the generated plant differed from the family in **0.54% of pixels, in 21 cells**,
+the cap pass having quietly stopped the wall family's top tiles from being drawn at all. §1.2.1
+puts the plant beyond that reach by making it a **picture** — a frame Rafe personally culled, kept
+as hash-checked bytes in a morgue — which no engine change can neutralise, and which needs no
+vocabulary list (the generated plant's list carried `lichen`, which no plant ever had, and lacked
+`hole` for three rounds). §1.2.2 makes the install script the choke point, with a visible
+SKIPPED-REVIEW override. §1.2.3 adds the three loop guards — two strikes, five-round park, broken
+judge — each writing `STALL-REPORT.md` as a §1.1.4 ruling trigger, with counters derived from the
+verdict files on disk so a session restart cannot clear them. §1.2.1's limit is recorded from the
+mechanism's own rounds, held frozen per §8 rather than re-tuned: the plant tests for softness, not
+ordering, and a plant that outranks the build is reported rather than scored. Those rounds also
+found that **the asset-bar crop was wrong twice over**, each half caught by a seat culling the
+bar: `(336, 240, 720, 528)` against a 720×504 source, so PIL padded the comparative frame with 24
+black rows and said nothing; and then, moved inside the file, still outside the picture, reaching
+the example sheet's own white paper margin. `crop_to()` now refuses an out-of-bounds box and the
+second half is a standing instruction to look at the crop — a weak detector for *inside the image
+but outside the picture* would be worse than reading the verdict.
+`tools/tier1_floors/run_seats.py` still carries the original box, which reaches backwards into
+that session's comparative seats.
+`gate_precheck.py`'s instrument rows are demoted to advisory in the same commit; no instrument was
+deleted. Mechanism: `.claude/skills/frame-critic`.*
 
 *v0.6 — 2026-08-27. **§4.2 gains its second logged instance and generalises.**
 `capture_children.py` staged candidate floors from id 9200, which is `wall_autotile: 0` in the

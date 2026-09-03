@@ -27,8 +27,39 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 #
 # --no-install still builds: a build you cannot walk is still worth compiling, and blocking that
 # would only teach me to reach for the override.
+#
+# ── THE FRAME-CRITIC GATE COMES FIRST ─────────────────────────────────────────────────────────
+#
+# An art round is judged by EYES ON DELIVERED FRAMES and by nothing else. A fresh blind seat is
+# shown this build's capture, the asset bar, the last frame Rafe approved and one known-bad frame
+# he personally culled, shuffled and unlabelled, and asked which it would ship. That verdict —
+# for THIS EXACT BUILD, tracked changes and untracked files folded in — is what opens this gate.
+#
+# It runs BEFORE gate_precheck.py because it is the stronger claim: the preconditions below ask
+# whether a round was conducted properly, this asks whether the picture is any good.
+#
+# YARL_SKIP_CRITIC=1 installs anyway and stamps the build SKIPPED-REVIEW, which the phone then
+# shows on screen. A bypassed gate is always visible to whoever is holding the handset.
+REVIEW_STATUS=""
 if [ "${1:-}" != "--no-install" ]; then
-  if ! python3 "$ROOT/tools/tier0_harness/gate_precheck.py"; then
+  set +e
+  python3 "$ROOT/.claude/skills/frame-critic/critic_gate.py"
+  CRITIC_RC=$?
+  set -e
+  case "$CRITIC_RC" in
+    0)  ;;
+    10) REVIEW_STATUS="SKIPPED-REVIEW" ;;
+    *)  echo
+        echo "REFUSING TO BUILD FOR INSTALL — no frame-critic PASS for this build."
+        echo "Run with --no-install to compile without putting it on the handset."
+        exit 2 ;;
+  esac
+
+  # TIER0_MARKER_ONLY stops before the export, so there is no artefact for these preconditions to
+  # be about — they ask whether a build offered to a WALK was properly conducted. The critic gate
+  # above still runs and still decides the stamp, which is the point of the diagnostic.
+  if [ "${TIER0_MARKER_ONLY:-}" != "1" ] \
+     && ! python3 "$ROOT/tools/tier0_harness/gate_precheck.py"; then
     echo
     echo "REFUSING TO BUILD FOR INSTALL. Fix the conditions above, or run with --no-install"
     echo "to compile without putting it on the handset."
@@ -208,20 +239,42 @@ if [ -n "$(git -C "$ROOT" status --porcelain 2>/dev/null | head -1)" ]; then
   COMMIT="$COMMIT+dirty"
 fi
 BUILT_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-python3 - "$MARKER" "$COMMIT" "$BUILT_AT" <<'PY'
+# reviewStatus RIDES WITH THE IDENTITY, and that placement is the point: it is not a build option,
+# it is a fact about what this build was allowed past. Empty on a gated build; SKIPPED-REVIEW when
+# YARL_SKIP_CRITIC waved it through, in which case the app draws it on screen for as long as the
+# build is on the handset. An override you cannot see from the phone is the same as no gate.
+python3 - "$MARKER" "$COMMIT" "$BUILT_AT" "${REVIEW_STATUS:-}" <<'PY'
 import json, sys
-path, commit, built = sys.argv[1], sys.argv[2], sys.argv[3]
+path, commit, built, status = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 with open(path) as f:
     d = json.load(f)
 d["commit"] = commit
 d["builtAt"] = built
+d["reviewStatus"] = status or None
 with open(path, "w") as f:
     json.dump(d, f, indent=2)
 PY
 echo "== build identity: commit=$COMMIT built=$BUILT_AT"
+if [ -n "${REVIEW_STATUS:-}" ]; then
+  echo "== ⚠ $REVIEW_STATUS — this build has no frame-critic PASS. The phone will say so."
+fi
 echo "== marker written: $(basename "$MARKER")"
 echo "== grid: $(python3 -c 'import json,sys;d=json.load(open(sys.argv[1]));print("tile %s at x%s" % (d.get("tileSize","default"), d.get("tileScale","default")))' "$MARKER")"
 echo "== bundle id: $BUNDLE_ID   name: $NAME"
+
+# TIER0_MARKER_ONLY=1 stops here, after the marker is written and BEFORE the export, and prints
+# it. It exists so the SKIPPED-REVIEW stamp can be shown to appear — LOOP-PROCESS §4, no check's
+# pass counts until it has demonstrated it can fail — without an xcodebuild and a handset, and
+# without a test that reimplements the stamping and then proves the reimplementation.
+#
+# The marker is printed rather than left behind because the trap removes it on exit, and it must:
+# a leftover marker turns the next ordinary build into a review build.
+if [ "${TIER0_MARKER_ONLY:-}" = "1" ]; then
+  echo "== MARKER ONLY — stopping before the export. The marker as written:"
+  cat "$MARKER"
+  echo
+  exit 0
+fi
 
 # The marker is a new res:// file, so it must be imported before it can be packed.
 "${GODOT:-/Applications/Godot_mono.app/Contents/MacOS/Godot}" --headless --path "$ROOT" --import >/dev/null 2>&1 || true

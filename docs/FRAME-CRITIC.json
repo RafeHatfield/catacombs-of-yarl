@@ -1,0 +1,97 @@
+{
+  "_what": [
+    "WHAT THE FRAME CRITIC CAPTURES AND WHAT IT SHOWS THE SEAT — the one file an art session",
+    "edits when it moves to a new surface.",
+    "",
+    "The skill (.claude/skills/frame-critic) judges pictures and knows nothing about how a wall",
+    "or a floor is composed. That separation is deliberate: everything content-specific lives",
+    "here, so the judging layer has nothing in it that a content change can break.",
+    "",
+    "`capture.cmd` is run from the repo root and must write `capture.frame`. The skill refuses if",
+    "the file is not rewritten — a frame left over from an earlier build, judged as this one, is",
+    "the evidence failure LOOP-PROCESS §2.3 exists to forbid.",
+    "",
+    "`crop` is applied identically to every Yarl frame in the deck — build, plant and approved —",
+    "so the crop can never be the tell that identifies one of them. The asset bar has its own,",
+    "because it is a different game at a different tile size.",
+    "",
+    "`asset_bar.image` points OUTSIDE the repo and is never copied into it. Bible §13.3:",
+    "measurements leave, pixels never do. The seat sees the crop in its own working directory,",
+    "which is also outside the repo."
+  ],
+
+  "surface": "wall",
+
+  "capture": {
+    "cmd": ["tools/tier1_walls/capture.sh",
+            "material",
+            "src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json",
+            "fc_standing"],
+    "frame": "tools/tier1_walls/evidence/fc_standing.png",
+    "log": "tools/tier1_walls/evidence/fc_standing.log"
+  },
+
+  "_crop_note": [
+    "THE ENGINE'S OWN VIEWPORT BAND, not a guess at it. Every capture logs",
+    "`grid map: ... view=(0,90)...(750,1001)`, and all three Yarl frames in the wall deck report",
+    "the same band. §13.10: instruments take ground truth from the engine's probes rather than",
+    "re-deriving it. A cropped-by-eye band is a slow way to make the crop itself a tell."
+  ],
+  "crop": [0, 90, 750, 1001],
+
+  "_asset_bar_note": [
+    "⚠ THE CROP WAS WRONG IN TWO DIFFERENT WAYS AND BOTH WERE FOUND BY SEATS CULLING THE BAR.",
+    "The bar is the reference the whole comparison rests on: a seat that rejects it for a framing",
+    "artefact never makes the comparison it was seated to make.",
+    "",
+    "  1. OUT OF BOUNDS. The box inherited from tools/tier1_floors/run_seats.py is",
+    "     (336, 240, 720, 528) against a source that is 720x504, so the bottom 24 rows fell off",
+    "     the image. PIL pads that with black and says nothing.",
+    "         WORST — 'The frame is padded. Content ends at row 239. Rows 240-263 are pure ...'",
+    "     frame_critic.py now REFUSES an out-of-bounds box rather than padding it.",
+    "",
+    "  2. INSIDE THE IMAGE, OUTSIDE THE PICTURE. Shifting the same window up to (336, 216, 720,",
+    "     504) cleared the padding and still ran into the source's own WHITE PAPER MARGIN — the",
+    "     example sheet's artwork occupies x 24-695, y 24-479 and everything outside that is white.",
+    "         WORST — 'There is a pure white (255,255,255) margin occupying x 360-383 ...'",
+    "",
+    "     (304, 192, 688, 480) is the same 384x288 window placed wholly inside the artwork. It",
+    "     shows floor, a wall run, water and props — a fair comparison frame.",
+    "",
+    "STANDING RULE FOR THIS FIELD: after changing it, LOOK AT THE CROP. The out-of-bounds check is",
+    "mechanical and exact; 'inside the image but outside the picture' is not something a script",
+    "should be trusted to judge, and a weak detector for it would be worse than reading the",
+    "verdict — which is how both of these were found.",
+    "",
+    "tools/tier1_floors/run_seats.py still carries the original box. It belongs to an open art",
+    "session and this PR does not touch that session's work — but its comparative-seat results",
+    "were taken through a padded bar and that is worth knowing before any of them are cited."
+  ],
+  "asset_bar": {
+    "image": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "crop": [304, 192, 688, 480]
+  },
+
+  "approved_capture": null,
+  "_approved_capture_note": [
+    "NULL, AND THE GAP IS REAL RATHER THAN AN OVERSIGHT. The deck runs three frames until Rafe",
+    "names one.",
+    "",
+    "The obvious candidate was `r18_family.png` (the build at 0c60bc50), because BISECT-GREY.md",
+    "quotes that walk approving the material arm — *'walls read as their own stone, wall-vs-floor",
+    "separation confirmed by eye'*. Reading further disqualifies it: THE SAME WALK CULLED THE",
+    "FRAME. REPORT.md §9g records the third ruling set as material arm approved, aging accepted,",
+    "and *'one defect left, and it is the tops: they read as dim floor: tile-frequency seams",
+    "visible (lattice), featureless, insufficient separation from the ground.'*",
+    "",
+    "An approved ARM is not an approved FRAME. Putting a frame with a standing defect in the",
+    "deck as the approved baseline would be choosing the baseline my own work is judged against —",
+    "which is exactly the conflict the comparative frame exists to remove, and exactly why",
+    "docs/GATE-CONDITIONS.json refuses to name one for the floor.",
+    "",
+    "Rafe fills this in by naming a capture. Until then the deck is build + bar + plant, and every",
+    "verdict records that it ran without an approved baseline."
+  ],
+
+  "work_dir": "~/.claude/frame-critic"
+}

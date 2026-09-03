@@ -1,0 +1,100 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-frame-critic",
+ "round": 1,
+ "surface": "wall",
+ "commit": "e248cad6d0e5dae81cef44950a44f5d01b47ea48",
+ "dirty": true,
+ "build_id": "cb983cbe3078a934f511f8505de245f7b0ce4ac5ec4b1682e0cddfcdf131a03b",
+ "timestamp": "2026-09-03T13:50:17",
+ "build_frame": {
+  "path": "tools/tier1_walls/evidence/fc_standing.png",
+  "sha256": "c1f09e4be73aff2cd03176b678b24adf87c795446c9d9ee519a9d1ae0db66c09"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-frame-critic-r1",
+  "slots": {
+   "1": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/grey-walls.png",
+    "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "build",
+    "source": "tools/tier1_walls/evidence/fc_standing.png",
+    "sha256": "c1f09e4be73aff2cd03176b678b24adf87c795446c9d9ee519a9d1ae0db66c09",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     336,
+     240,
+     720,
+     528
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   }
+  },
+  "build": "tools/tier1_walls/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 1,
+  "file": "grey-walls.png",
+  "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+  "culled_by": "Rafe, device gate, 2026-09-02",
+  "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The floor stones have closed perimeters. Along the lit run below the figure (roughly x=250\u2013620, y=470\u2013620) the mortar joints run continuously and meet at corners, so each stone is a bounded shape of a specific width \u2014 you can trace one stone all the way round. The courses are also broken: a narrow stone at (250\u2013330, 470\u2013495) sits beside a wide one at (335\u2013430, 470\u2013495), so the run doesn't read as a grid. The lighting is honest to a point source: at radius 150px from the figure the floor reads L=70.7 due east and L=88.5 due west, a spread you'd expect from surface variation, not from a second light. The crack in the far dark corner at (600\u2013750, 830\u2013900) is drawn as a hard 1px staircase with no anti-aliasing \u2014 it was authored at the pixel scale rather than dropped in as a smooth spline over the top.",
+  "WORST_WHY": "It is a placeholder. The player at (185\u2013205, 60\u201378) is about fifteen scattered white pixels \u2014 no outline, no head, no feet, nothing that resolves into a figure at any zoom. There is no light falloff anywhere: the corner at (10,10) and the corner at (370,240) are as bright as the centre, so the stated premise \u2014 a figure carrying the only light \u2014 is not rendered at all. The green pool stops at a dead-straight vertical edge at x\u2248312 and a dead-straight horizontal at y\u2248143 with no shoreline or transition tile; the water simply ends against the dirt. The grey floor below y\u2248170 is one tile stamped over and over \u2014 the identical speckle sits at the identical position inside every tile, separated by a uniform 1px lighter grid line. And the bottom band from y\u2248250 to y\u2248288 is solid black with the right edge past x\u2248360 left empty grey: out-of-bounds showing through, not designed void.",
+  "FLAGGED": "3, 2, 1",
+  "RANK": "1 > 2 > 3",
+  "BEST": "1",
+  "WORST": "3",
+  "SHIP": "NONE"
+ },
+ "flip_list": [
+  "The masses flanking the corridor (x\u224840\u2013370 and x\u2248440\u2013730, y\u224890\u2013380) are a uniform high-frequency 1\u20132px yellow-green and brown speckle with no stone edges, no joints and no silhouette anywhere in the field. That is a noise pass over a flat fill, and it is the single thing a viewer notices first. Build actual masonry at tile scale there, then darken it.",
+  "That noise field is also brighter and more legible than the corridor floor the lantern is lighting. At radius 150px the west floor reads L=107.6 against the east floor's L=50.5, with open floor and no occluder between the figure and either point \u2014 the frame has a second light source it never shows. Rebuild the falloff radially from the figure so equal distances land at equal value unless a wall blocks them.",
+  "The stones in the floor around (350\u2013620, 490\u2013620) have no closed perimeters. Their edges are scattered short dark dashes that start and stop mid-run, so no stone is a bounded shape. Close the joints.",
+  "The dark stepped mass at (370\u2013470, 578\u2013612), with a stray vertical stub above it at (385, 565), resolves into nothing at any zoom \u2014 not a stone, not a hole, not a shadow, not an object. Delete it or make it a specific thing.",
+  "The same 45\u00b0 hatch triplet and the same vertical dash triplet appear on dozens of stones with only position offset. Reduce the repeat count and leave some stones plain.",
+  "Wall-top band at y\u2248430\u2013455 is (69,49,27) against floor at (121,91,57) \u2014 same failure as 1. Add a value step and a lit lip so the height change reads.",
+  "No rope, pins, hide or salvaged timber anywhere in the lit radius."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r001-worktree-frame-critic-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

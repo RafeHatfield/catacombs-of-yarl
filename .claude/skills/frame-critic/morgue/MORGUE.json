@@ -1,0 +1,80 @@
+{
+  "_what": [
+    "THE PICTURE-PLANT MORGUE — known-bad delivered frames, kept as pictures.",
+    "",
+    "LOOP-PROCESS §4 requires a plant: one deliberately wrong candidate seeded into the set, and",
+    "if the critic does not catch it the round is VOID and its findings are not read.",
+    "",
+    "Every plant this project has built before now was GENERATED — plant_ashlar.py, plant_walls.py,",
+    "plant_family.py — a ruined family composed by the same composer from the same material. That",
+    "shape has failed four times in the recorded ledger, and each failure has the same root: the",
+    "plant is downstream of the engine, so an engine change can neutralise it silently.",
+    "",
+    "  wall round 9   VOID — plant missed. The plant was not in the picture.",
+    "  wall round 10  VOID — plant missed. Since the cap pass the cell's base is a cap window and",
+    "                 the wall family's top tiles are never drawn, so a plant that ruined only the",
+    "                 wall tiles differed from the family in 0.54% of pixels, in 21 cells.",
+    "  wall rounds 3, 6  VOID — the plant was culled for something the family shared.",
+    "",
+    "A PICTURE CANNOT BE NEUTRALISED BY AN ENGINE CHANGE. These bytes are fixed. The defect in them",
+    "is fixed. The only way to stop a morgue entry carrying its defect is to delete the file, which",
+    "is a visible diff.",
+    "",
+    "WHAT QUALIFIES FOR ENTRY. A frame Rafe personally culled at the device gate (§1's landing",
+    "gate), with his verbatim words and the commit whose build produced it. Not a frame an",
+    "instrument disliked; not a frame I thought was weak. The morgue is a record of human culls.",
+    "",
+    "SURFACE TAGS ARE LOAD-BEARING. The deck draws a plant of the SAME surface as the round. A",
+    "floor plant in a wall round is caught for its magenta wall mocks — the critic flags the right",
+    "image for the wrong reason, and a control that greens for the wrong reason is not a control",
+    "(LOOP-PROCESS §4.2). run_frame_critic.sh refuses to build a deck if the surface has no entry.",
+    "",
+    "KNOWN LIMIT, stated rather than discovered later: the `wall` lane holds ONE entry. Wall rounds",
+    "therefore draw the same plant every time. That is safe against the seat, which is fresh each",
+    "round and cannot remember, and it is NOT safe against a builder who learns to compose around",
+    "one picture. Add wall entries as wall culls happen."
+  ],
+
+  "entries": [
+    {
+      "file": "keyline-floor.png",
+      "surface": "floor",
+      "sha256": "352461c6b0917d3892679efb16f895d939ca039c010cce6c249829d9e3aac224",
+      "source": "tools/tier1_floors/evidence/r24_onroute.png @ c611c59a",
+      "culled_by": "Rafe, device walk, 2026-08-31",
+      "verbatim": "outlined chips",
+      "defect": "every stone carries a dark outline. 92.7% of joint pixels landed on the bottom two rungs and the floor reads as a wireframe rather than as masonry.",
+      "provenance": "docs/KEYLINE-REGRESSION.md; the ruling is quoted in tools/tier1_floors/compose_ashlar.py (THE SHELTERED JOINT'S DEPTH IS A DISTRIBUTION). Fixed by c76dbd9d."
+    },
+    {
+      "file": "washed-slab-lane.png",
+      "surface": "floor",
+      "sha256": "538aaac2b97c1ede4f8b2454e6879aae30c91da024ada74317a92b6844dfe0d9",
+      "source": "tools/tier1_floors/evidence/r24_onroute.png @ 8640780f",
+      "culled_by": "Rafe, device walk, 2026-09-02",
+      "verbatim": "it looks like all the tiles on the walked path have been replaced.",
+      "defect": "the walked lane washes out into one bright slab. The masonry inside it stops reading, so the path is a decal laid over the floor rather than the same stones worn.",
+      "provenance": "quoted in tools/tier1_floors/measure_lane_window.py; docs/GATE-CONDITIONS.json records this exact capture as 'the keyline fix holds — the lane was the cull, not the masonry'. Fixed by 8b5640d7 and b36fe61c."
+    },
+    {
+      "file": "tile-quantized-wear.png",
+      "surface": "floor",
+      "sha256": "2c097a288e54de45704834cedb319201278f83cd9e83bf2083ac317f502c169a",
+      "source": "tools/tier1_floors/evidence/r24_onroute.png @ 8b5640d7",
+      "culled_by": "Rafe, device walk, 2026-09-02",
+      "verbatim": "one tile worn, the one next to it not — that's not how it works.",
+      "defect": "the wear knows where the tiles are. Wear boundaries land on tile edges, so worn cells sit beside unworn ones with a square edge between them.",
+      "provenance": "quoted in tools/tier1_floors/measure_wear_grid_lock.py. Fixed by b36fe61c (per-pixel keying)."
+    },
+    {
+      "file": "grey-walls.png",
+      "surface": "wall",
+      "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+      "source": "tools/tier1_walls/evidence/r24_standing.png @ 65a512a0",
+      "culled_by": "Rafe, device gate, 2026-09-02",
+      "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
+      "defect": "the wall family and the cap were never given the floor's chroma — a grey multiplier that looks like colour. Delivered: cap +27.6° of hue off the floor at 55% of its saturation, face +12.8° at 60%.",
+      "provenance": "tools/tier1_walls/BISECT-GREY.md names the approved build (0c60bc50) and bisects the three commits since it. Fixed by ab40dfaf (derive_quarry_tint.py)."
+    }
+  ]
+}

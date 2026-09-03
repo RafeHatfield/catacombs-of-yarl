@@ -1,0 +1,17 @@
+baseline build id: 57687e1a9d3ed4851af2144367febe5b09d392ea6f46b65b1ab2f19fa33be323
+
+PASS  1  a new file in the tree moves the id
+      with probe: 53455857201b5ed5b7f235c6f56719c550dde9c25379ee77020d63641f1278ce
+
+PASS  1b removing it puts the id back
+      back to: 57687e1a9d3ed4851af2144367febe5b09d392ea6f46b65b1ab2f19fa33be323
+
+PASS  2  staging the same bytes does not move the id
+      staged (scratch index): 57687e1a9d3ed4851af2144367febe5b09d392ea6f46b65b1ab2f19fa33be323
+
+PASS  3  writing CRITIC-VERDICT.json does not move the id
+      with a verdict on disk: 57687e1a9d3ed4851af2144367febe5b09d392ea6f46b65b1ab2f19fa33be323
+
+======================================================================
+ALL THREE HOLD. The id tracks the build, ignores git's bookkeeping, and does not
+invalidate the verdict that records it.

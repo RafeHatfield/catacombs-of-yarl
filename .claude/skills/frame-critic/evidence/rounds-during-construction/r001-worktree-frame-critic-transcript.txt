@@ -1,0 +1,48 @@
+Read all three at full size and at 3–5x on the regions that matter, plus luminance sampling to check the lighting claims rather than eyeballing them.
+
+RANK: 1 > 2 > 3
+
+BEST: 1
+
+BEST_WHY: The floor stones have closed perimeters. Along the lit run below the figure (roughly x=250–620, y=470–620) the mortar joints run continuously and meet at corners, so each stone is a bounded shape of a specific width — you can trace one stone all the way round. The courses are also broken: a narrow stone at (250–330, 470–495) sits beside a wide one at (335–430, 470–495), so the run doesn't read as a grid. The lighting is honest to a point source: at radius 150px from the figure the floor reads L=70.7 due east and L=88.5 due west, a spread you'd expect from surface variation, not from a second light. The crack in the far dark corner at (600–750, 830–900) is drawn as a hard 1px staircase with no anti-aliasing — it was authored at the pixel scale rather than dropped in as a smooth spline over the top.
+
+WORST: 3
+
+WORST_WHY: It is a placeholder. The player at (185–205, 60–78) is about fifteen scattered white pixels — no outline, no head, no feet, nothing that resolves into a figure at any zoom. There is no light falloff anywhere: the corner at (10,10) and the corner at (370,240) are as bright as the centre, so the stated premise — a figure carrying the only light — is not rendered at all. The green pool stops at a dead-straight vertical edge at x≈312 and a dead-straight horizontal at y≈143 with no shoreline or transition tile; the water simply ends against the dirt. The grey floor below y≈170 is one tile stamped over and over — the identical speckle sits at the identical position inside every tile, separated by a uniform 1px lighter grid line. And the bottom band from y≈250 to y≈288 is solid black with the right edge past x≈360 left empty grey: out-of-bounds showing through, not designed void.
+
+FLAGGED: 3, 2, 1
+
+SHIP: NONE
+
+FLIP 1:
+- The two stones directly under the figure's feet — a small one at (340–365, 522–545) and a wide one at (368–430, 520–548) — sit at (207,147,90) against neighbouring stones at (142,101,63), 45% brighter, and carry three faint diagonal hatch strokes where every neighbour carries a full texture pass. Repaint them at the same hatch and speckle density as their neighbours and bring them back onto the lightmap ramp.
+- The dark horizontal slab at (370–465, 583–600) has hard rectangular ends and a flat empty interior. It reads as a hole with no lip, a shadow with no caster, or an unfilled tile. Give it a rim — lit near edge, dark far edge — so it reads as a pit, or delete it.
+- Every mortar joint in the frame is the same 1px dotted stipple at the same value. Vary joint depth and value along a single run: some packed with debris and nearly closed, some open and dark, so the stones read as cut and laid rather than stamped from one texture.
+- The unlit masses flanking the corridor (x≈30–370 and x≈440–720, y≈90–380) are soft low-frequency gradient blobs with no hard edges — a blurred layer sitting under crisp pixel art. Quantise that region to the same pixel scale and palette ramp as the lit floor. It should read as stone you can't see well, not as a blur.
+- The wall-top band at y≈430–455 measures (59,49,40) while the floor 20px below measures (100,72,47). Those are close enough that the top of the wall reads as slightly darker floor. Give the wall top its own value step and a 1px lit lip on the player-facing edge so the height change is unambiguous.
+- Nothing in the lit radius shows the four-hundred-year repair — no rope, no driven pins, no hide, no salvaged timber anywhere. Add at least two on the lit run: a pinned timber brace crossing a joint, a hide patch lashed over a break, drawn as a bodge rather than as decoration.
+
+FLIP 2:
+- The masses flanking the corridor (x≈40–370 and x≈440–730, y≈90–380) are a uniform high-frequency 1–2px yellow-green and brown speckle with no stone edges, no joints and no silhouette anywhere in the field. That is a noise pass over a flat fill, and it is the single thing a viewer notices first. Build actual masonry at tile scale there, then darken it.
+- That noise field is also brighter and more legible than the corridor floor the lantern is lighting. At radius 150px the west floor reads L=107.6 against the east floor's L=50.5, with open floor and no occluder between the figure and either point — the frame has a second light source it never shows. Rebuild the falloff radially from the figure so equal distances land at equal value unless a wall blocks them.
+- The stones in the floor around (350–620, 490–620) have no closed perimeters. Their edges are scattered short dark dashes that start and stop mid-run, so no stone is a bounded shape. Close the joints.
+- The dark stepped mass at (370–470, 578–612), with a stray vertical stub above it at (385, 565), resolves into nothing at any zoom — not a stone, not a hole, not a shadow, not an object. Delete it or make it a specific thing.
+- The same 45° hatch triplet and the same vertical dash triplet appear on dozens of stones with only position offset. Reduce the repeat count and leave some stones plain.
+- Wall-top band at y≈430–455 is (69,49,27) against floor at (121,91,57) — same failure as 1. Add a value step and a lit lip so the height change reads.
+- No rope, pins, hide or salvaged timber anywhere in the lit radius.
+
+FLIP 3:
+- Replace the player at (185–205, 60–78). It is a scatter of white pixels with no silhouette. Draw an actual sprite with an outline and a readable head/body/feet.
+- Add the light falloff. The corners at (10,10) and (370,240) currently match the centre in value; the frame is uniformly lit and the stated premise is not rendered.
+- The pool's edges at x≈312 and y≈143 are dead-straight with no transition. Author corner and edge tiles, break the rectangle, and put a wet margin on the dirt where it meets water.
+- The grey floor below y≈170 is a single stamped tile — identical speckle at identical positions, plus a uniform 1px lighter grid line between every tile. Author at least four variants and remove the grid line.
+- The brown dirt repeats the same red-maroon Y-shaped crack vein on roughly a 16px pitch across the whole field, visible as a lattice. Break the repeat.
+- Fill the frame. y≈250–288 is a solid black band and everything past x≈360 is empty light grey — that is out-of-bounds showing, not designed void.
+- The barrels at (85,145) and (135,145) have no contact shadow and no occlusion; they float on the dirt/stone seam. Ground them.
+- The orange sliver with a black brick band above it at (0–20, 75–100) is an object bisected by the frame edge with no context. Resolve it or move it inside.
+- Pull the palette onto one ramp. Saturated kelly-green algae against teal water against neutral grey stone against brown dirt reads as three unrelated tilesets composited into one frame.
+- None of the content is administrative, cold, or repaired. It is a castle courtyard with a pond. The fiction is a filing system for souls held by orc-soldiers who patch everything with rope and pins.
+
+The gap between 1 and 2 is not style, it's construction: 1 draws stones with closed edges and lights them from the figure; 2 substitutes a noise pass for masonry and has a bright wedge to the west that no light source in the frame accounts for. Neither ships as-is — 1's blown-out blank stones sit directly under the character, which is the one place a player looks every frame.
+
+*Model: Claude Opus 5 (1M context).*

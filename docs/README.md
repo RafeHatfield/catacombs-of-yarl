@@ -58,7 +58,8 @@ _Last verified: 2026-07-12 against commit 86b6f10_
 ## Art
 
 - [ART-BIBLE-v0.md](ART-BIBLE-v0.md) — **The art direction. The only live one.** Still a draft; clauses are marked LOCKED / PROVISIONAL / PLACEHOLDER and a PLACEHOLDER is not usable as a gate. The revision is stated in the file's own status line — this index does not mirror it.
-- [ART-LOOP-PROCESS-v0.md](ART-LOOP-PROCESS-v0.md) — **How art work is done and certified.** The bible says what is correct; this says how a round runs and what may land. Two gates: a blind LLM critic ends a round, only Rafe in-scene lands an asset.
+- [ART-LOOP-PROCESS-v0.md](ART-LOOP-PROCESS-v0.md) — **How art work is done and certified.** The bible says what is correct; this says how a round runs and what may land. Two gates: a blind LLM critic ends a round, only Rafe in-scene lands an asset. §1.2 is the eyes-only rule: anything that gates an art round is a picture judged by eyes, instruments gate nothing, and no build installs without a frame-critic verdict.
+- [FRAME-CRITIC.json](FRAME-CRITIC.json) — what the frame critic captures and what it shows the seat: surface, capture command, crop, asset bar, approved capture. The one file an art session edits when it moves to a new surface; the mechanism is `.claude/skills/frame-critic`.
 - [art/tier1/](art/tier1/) — Tier 1 (floors and walls) scaffolding: the gate table, the identity-card schema, and the blind-critic prompt. Deliberately thin — a gate is `UNPROVEN` until it has been shown to go red.
 - The **Oryx-conformance track is closed** (2026-08). Its bible, lint spec, acceptance-scene spec, gate package, and generation walkthroughs are archived under [archive/oryx-track/](archive/oryx-track/), each with a RETIRED banner. Do not work to them.
 
