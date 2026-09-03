@@ -2236,6 +2236,40 @@ and corridors are where the lamp is not.
 
 ---
 
+### 13.10 A measurement that convicts a witness needs the witness's proof standard — LAW (Rafe, 2026-09-02)
+
+**Instruments derive ground truth from the engine's own probes and refuse on disagreement. They
+never assume it.**
+
+The law is banked because an assumption did the convicting. Three blind seats reported, in
+confident and specific terms, what they saw on the floor; an instrument said they had described
+ground the route does not touch, and their findings were struck on that basis across three rounds.
+The instrument was computing a tile's screen position as `(H − rows·tile) // 2` — the field,
+centred. **The camera follows the player.** Measured origins on three stations of the same scene:
+`(−9, 34)`, `(−137, −158)`, `(−137, 34)`, where the assumption returned `(−169, −5)` for all three.
+
+Round 24's seat placed the corridor at x 505–565. The engine places its mouth at x 535. **The seat
+was right and the instrument contradicting it was wrong**, and the seat spent two rounds discredited
+for it.
+
+**What the law requires:**
+
+1. **Ground truth comes from the engine.** Every capture's log already prints a tile and the pixel
+   it landed on — that is the camera's own answer, and it is the only admissible one.
+   `measure_traffic_read.tile_origin` reads it and **refuses outright if a log's probe points
+   disagree with each other**, rather than averaging them into a plausible wrong number.
+2. **An assumption is removed, not corrected.** This one survived nine rounds inside three separate
+   instruments. Looking harder at it was never going to catch it; only deleting the code path did.
+3. **The asymmetry is deliberate.** A seat's claim is checked against the engine before it is
+   doubted, and an instrument's claim is checked against the engine before it is believed. The
+   party with more to lose from being wrong is the one making the accusation.
+
+> **The general form:** the standard of proof required to overturn a witness is at least the
+> standard that witness was held to. An instrument that says a seat did not see what it says it saw
+> is making the stronger claim and carries the heavier burden.
+
+---
+
 ## 14. Out of scope for this document
 
 **Sound.** Deferred deliberately, not overlooked. Sound has almost no coupling to the decisions

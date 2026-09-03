@@ -140,7 +140,7 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
             # arris beside an open joint goes with it.
             jm_pix = (cls == 0)
             wblk = CA.wear_scalar_block(x * T, y * T, T, seed, traffic)
-            w01b = CA.wear01_block(wblk, bool(worn and worn(x, y)))
+            w01b = CA.wear01_block(wblk, (bool(worn and worn(x, y)) and not CA.LINES))
             open_amt = np.where(jm_pix, w01b, 0.0)
             ages = np.array(CA.WEAR_AGES)
             idx = np.abs(open_amt[..., None] - ages).argmin(-1)
@@ -149,18 +149,31 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
 
             # THE COMPACTION KNOWS WHICH WAY THE FEET WENT, mirrored.
             axis0 = CA.travel_axis(traffic, x, y)
-            if axis0 != CA.DIR_NONE:
+            axmap = CA.axis_block(x * T, y * T, T) if CA.LINES else None
+            if axis0 != CA.DIR_NONE or axmap is not None:
                 bedj = np.zeros((T, T), dtype=bool)
                 bedj[:, 1:-1] = jm_pix[:, :-2] & jm_pix[:, 2:]
                 headj = np.zeros((T, T), dtype=bool)
                 headj[1:-1, :] = jm_pix[:-2, :] & jm_pix[2:, :]
-                wv0, wh0 = CA.aniso_weights(axis0)
+                if axmap is not None:
+                    wv0 = np.ones((T, T)); wh0 = np.ones((T, T))
+                    for _a in (-1, 0, 1, 2, 3):
+                        _m = axmap == _a
+                        if _m.any():
+                            _v, _h = CA.aniso_weights(_a)
+                            wv0[_m], wh0[_m] = _v, _h
+                else:
+                    wv0, wh0 = CA.aniso_weights(axis0)
                 kw = np.where(bedj & ~headj, wv0, np.where(headj & ~bedj, wh0, 1.0))
                 fill = fill * kw
                 brk = brk * kw
             hb = (CA._mix_np(xx + x * T, yy + y * T, CA.JOINT_BREAK_SALT + seed) % 1000) / 1000.0
             broken = jm_pix & (hb < brk)
-            L = L + np.where(jm_pix & ~broken, fill, 0.0) * step
+            # THE SHELTERED JOINT'S OWN DEPTH, mirrored — drawn first, then the route's fill on
+            # top, then both capped so a joint never rises above the stone it lies between.
+            lift = CA.shelter_lift_block(xx + x * T, yy + y * T, seed)
+            raise_ = np.minimum(lift + fill, (mat["lum_median"] - L) / step)
+            L = L + np.where(jm_pix & ~broken, np.maximum(raise_, 0.0), 0.0) * step
             L = np.where(broken, mat["lum_median"], L)
             # FLATTEN, mirrored: a walked stone's value collapses toward the material median.
             _fage = np.abs(w01b[..., None] - np.array(CA.WEAR_AGES)).argmin(-1)
@@ -200,7 +213,7 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
             # scalar directly, drew one. A silent, whole-channel divergence.
             chr_blk = np.where(~jm_pix,
                                CA.chroma_strength_block(x * T, y * T, T, seed, traffic,
-                                                        bool(worn and worn(x, y))), 0.0)
+                                                        (bool(worn and worn(x, y)) and not CA.LINES)), 0.0)
 
             for (ly, lx) in CA.crack_pixels(x, y, seed, crack_cache):
                 L[ly, lx] = ladder[int(np.abs(crack_v - ladder).argmin())]

@@ -88,7 +88,10 @@ def bands(capture, log, tile, plant=None, shuffle=False, hue=None, min_illum=0.0
         # blind seat caught itself making: *"that gap is lighting, not surface."*
         f = {1: f[::-1, ::-1], 2: f[::-1, :], 3: f[:, ::-1], 4: f.T}[shuffle].copy()
     fh, fw = f.shape
-    oy, ox = (H - fh * tile) // 2, (W - fw * tile) // 2
+    # THE ORIGIN COMES FROM THE ENGINE, NEVER FROM AN ASSUMPTION OF CENTRING. The camera
+    # follows the player; a centred formula was 160px out in x on the standing station and
+    # every delivered reading taken through it sampled the wrong tiles.
+    ox, oy = MTR.tile_origin(log, tile) or ((W - fw * tile) // 2, (H - fh * tile) // 2)
 
     # The lit mask comes from the UNPLANTED image, always. Deriving it after the plant lets the
     # plant delete its own darkest tiles from the sample and then take credit for the difference.

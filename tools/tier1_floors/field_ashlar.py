@@ -250,7 +250,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             chr_blk = np.zeros((T, T), dtype=float)
             if defect not in ("uniform_wear", "flat_chroma"):
                 chr_blk = CA.chroma_strength_block(x * T, y * T, T, seed, traffic,
-                                                   bool(worn and worn(x, y)))
+                                                   (bool(worn and worn(x, y)) and not CA.LINES))
                 if defect == "chroma_lattice":
                     # THE PLANT: chroma keyed to the tile a stone is SEEN FROM rather than to the
                     # world — §8.3.1's lattice, restated in the colour domain.
@@ -260,7 +260,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             if defect != "uniform_wear":
                 jm_pix = (cls == 0) & jm
                 wblk = CA.wear_scalar_block(x * T, y * T, T, seed, traffic)
-                w01b = CA.wear01_block(wblk, bool(worn and worn(x, y)))
+                w01b = CA.wear01_block(wblk, (bool(worn and worn(x, y)) and not CA.LINES))
                 open_amt = np.where(jm_pix, w01b, 0.0)
                 # A SHELTERED joint is shallower. An open one keeps the dark it already had —
                 # there is no rung below it — and spends its wear on the arrises instead.
@@ -288,13 +288,26 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
                 # corridor and the head joints survive as continuous lines — the directional grain
                 # the seat asked for, made of the bond that was already there.
                 axis0 = CA.travel_axis(traffic, x, y) if defect != "no_erosion" else CA.DIR_NONE
-                if axis0 != CA.DIR_NONE:
+                # PER PIXEL, from the line's own tangent — the axis taken once at the tile handed
+                # one direction to every joint in it, so the compaction changed where the TILES
+                # changed. Any wear boundary on a tile edge is staged.
+                axmap = (CA.axis_block(x * T, y * T, T)
+                         if (CA.LINES and defect != "no_erosion") else None)
+                if axis0 != CA.DIR_NONE or axmap is not None:
                     # a joint pixel is BED if its run continues left-right, HEAD if up-down
                     bedj = np.zeros((T, T), dtype=bool)
                     bedj[:, 1:-1] = jm_pix[:, :-2] & jm_pix[:, 2:]
                     headj = np.zeros((T, T), dtype=bool)
                     headj[1:-1, :] = jm_pix[:-2, :] & jm_pix[2:, :]
-                    wv0, wh0 = CA.aniso_weights(axis0)
+                    if axmap is not None:
+                        wv0 = np.ones((T, T)); wh0 = np.ones((T, T))
+                        for _a in (-1, 0, 1, 2, 3):
+                            _m = axmap == _a
+                            if _m.any():
+                                _v, _h = CA.aniso_weights(_a)
+                                wv0[_m], wh0[_m] = _v, _h
+                    else:
+                        wv0, wh0 = CA.aniso_weights(axis0)
                     # bed joints have a north-south normal, head joints an east-west one
                     kw = np.where(bedj & ~headj, wv0, np.where(headj & ~bedj, wh0, 1.0))
                     fill = fill * kw
@@ -302,7 +315,19 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
                 hb = (CA._mix_np(xx + x * T, yy + y * T, CA.JOINT_BREAK_SALT + seed)
                       % 1000) / 1000.0
                 broken = jm_pix & (hb < brk)
-                L = L + np.where(jm_pix & ~broken, fill, 0.0) * step
+                # THE SHELTERED JOINT'S OWN DEPTH, drawn before the route's fill is added on
+                # top. Every joint is lifted off the ladder's floor by its own draw; a trodden one
+                # is then compacted further, exactly as it was built.
+                lift = CA.shelter_lift_block(xx + x * T, yy + y * T, seed)
+                if defect == "flat_joint_depth":
+                    lift = np.full((T, T), CA.SHELTER_LIFT_RUNGS[0])
+                # A JOINT IS NEVER BRIGHTER THAN THE STONE IT LIES BETWEEN. The lift and the
+                # route's fill are both packings — a packed joint rises TOWARD the floor's level
+                # and stops there. Uncapped, the two together put 2% of joints above the stone,
+                # which is a joint that emits light: the exact inversion of "dark BECAUSE
+                # enclosed" the whole campaign rests on.
+                raise_ = np.minimum(lift + fill, (mat["lum_median"] - L) / step)
+                L = L + np.where(jm_pix & ~broken, np.maximum(raise_, 0.0), 0.0) * step
                 L = np.where(broken, mat["lum_median"], L)
 
                 # ================= FORM AS EROSION =================
@@ -406,9 +431,15 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             # (1) THE SPECULAR LANE, recorded for the instruments. The shader consumes it in the
             # engine; here it is returned so the reference painter can be measured on the same
             # quantity the device shows.
+            # A PACKED JOINT TAKES THE SHINE. Faces get the lane in full; a joint gets it in
+            # proportion to how FILLED it is, so a joint level with its stone shines like the
+            # stone and a deep one stays matte. Mirrors the engine, which is where the ring was
+            # being drawn.
+            _lane = CA.lane_polish_block(ldist, ltx, lty, wxb, wyb, seed)
+            _bottom = mat["ladder"][0]
+            _filled = np.clip((L - _bottom) / max(mat["lum_median"] - _bottom, 1e-6), 0.0, 1.0)
             polish[y * T:(y + 1) * T, x * T:(x + 1) * T] = np.where(
-                (cls != 0) & ~((cls == 0) & jm),
-                CA.lane_polish_block(ldist, ltx, lty, wxb, wyb, seed), 0.0)
+                (cls != 0), _lane, _lane * np.maximum(_filled, CA.JOINT_POLISH_FLOOR))
 
             tmap = np.stack([CA.chroma_tint(mat["tint"], v) for v in CA.CHROMA_BY_AGE])
             _ci = np.abs(chr_blk[..., None] - np.array(CA.CHROMA_BY_AGE)).argmin(-1)
@@ -755,7 +786,55 @@ def crack_field(cracks, w, h):
                 retired_system_median_px=4)
 
 
-def constant_pitch_lines(joints, w, h):
+def joint_contrast(img, joints):
+    """IS EVERY STONE OUTLINED? — the ban's QUESTION, not the ban's last known form.
+
+    RULED as law after this instrument set missed a keyline for eleven rounds. Every ring
+    instrument built here asked whether a treatment sits at a constant TILE GRID position, because
+    that is the shape the ring had last time it was caught. None of them asked what a person asks
+    in one glance — is every stone ringed — and so four green instruments and a floor reading as a
+    wireframe were true at once. AN INSTRUMENT ASKS THE BAN'S QUESTION, NEVER THE BAN'S LAST KNOWN
+    FORM.
+
+    DISTRIBUTION, NOT MEAN, and that is also ruled. A mean hides the shape: a floor whose joints
+    are ALL just over §13.8's floor and a floor with a shallow mode and a deep minority can share
+    a mean and look nothing alike. What outlines every stone is not the average joint — it is the
+    SHARE of joints dark enough to read as a line. So the reported number is that share, and the
+    mean rides along as context.
+
+    Each joint pixel is measured against the stone it actually touches, not against a global
+    median: a dark joint beside dark stone is not an outline.
+    """
+    L = np.asarray(img).astype(float)[..., 0]
+    stone = ~joints
+    # the local stone level: a wide box mean over stone pixels only, so each joint is judged
+    # against its own neighbourhood rather than the floor's average
+    from numpy.lib.stride_tricks import sliding_window_view
+    R = 6
+    pad = np.pad(np.where(stone, L, 0.0), R, mode="edge")
+    cnt = np.pad(stone.astype(float), R, mode="edge")
+    k = 2 * R + 1
+    csum = np.cumsum(np.cumsum(pad, 0), 1)
+    ccnt = np.cumsum(np.cumsum(cnt, 0), 1)
+
+    def box(c):
+        c = np.pad(c, ((1, 0), (1, 0)))
+        H, W = L.shape
+        return (c[k:k + H, k:k + W] - c[0:H, k:k + W] - c[k:k + H, 0:W] + c[0:H, 0:W])
+
+    local = box(csum) / np.maximum(box(ccnt), 1e-6)
+    w = (local - L) / np.maximum(local, 1e-6)
+    jw = w[joints]
+    over = float((jw >= 0.144).mean())
+    return dict(share_over_floor=round(over, 4),
+                mean_weber=round(float(jw.mean()), 4),
+                p50=round(float(np.percentile(jw, 50)), 4),
+                p90=round(float(np.percentile(jw, 90)), 4),
+                joint=round(float(np.median(L[joints])), 2),
+                stone=round(float(np.median(L[stone])), 2))
+
+
+def constant_pitch_lines(joints, w, h, img=None):
     """HOW MUCH OF THE COURSING SITS AT THE ONE PITCH THAT CAN NEVER MOVE?
 
     A blind seat found this and culled for it, in one sentence:
@@ -777,6 +856,19 @@ def constant_pitch_lines(joints, w, h):
 
     Reported as the share of full-width lines sitting at the tile phase. Two courses per tile puts
     it at 0.5. It cannot reach 0 without abandoning runtime addressing.
+
+    ⚠ AND THE SHARE ALONE IS BLIND, which cost a device gate. This instrument reported a steady
+    55% for eleven rounds and never once asked HOW DARK those lines are — so when the palette
+    gained two rungs below the donors and every sheltered joint dropped from 75.02 to 48.56, the
+    count did not move and the floor came back from the handset reading as OUTLINED CHIPS.
+    Measured: the full-width lines went from a Weber contrast of 0.103 against the stone — BELOW
+    §13.8's floor of 0.144, and therefore absent — to 0.247, which is 1.7x the floor and a line
+    the eye is obliged to see.
+
+    §13.8 cuts both ways. It rules that a signal below the perceptual floor is absent; the
+    corollary, which nothing had measured until now, is that pushing an unwanted artefact ACROSS
+    that floor makes it appear. So the amplitude is reported beside the count, and it is the
+    amplitude that has a threshold.
     """
     full = np.where(joints.mean(axis=1) > 0.8)[0]
     if not len(full):
@@ -788,10 +880,28 @@ def constant_pitch_lines(joints, w, h):
             lines.append(int(y))
         last = y
     at = [y for y in lines if (y % T) in (0, T - 1)]
+
+    # HOW DARK IS THE LINE, against the stone it crosses? This is the half that was missing, and
+    # it is the half with a threshold: the count cannot go to zero and never could, but the
+    # CONTRAST can be kept under §13.8's floor, where an unavoidable line is an invisible one.
+    contrast = None
+    if img is not None and lines:
+        L = np.asarray(img).astype(float)[..., 0]
+        stone = float(np.median(L[~joints]))
+        vals = []
+        for y in lines:
+            band = L[max(y - 1, 0):min(y + 2, L.shape[0]), :]
+            vals.append(float(band.mean()))
+        line_v = float(np.mean(vals))
+        contrast = round((stone - line_v) / max(stone, 1e-6), 4)
+
     return dict(full_width_lines=len(lines), at_tile_phase=len(at),
                 share=round(len(at) / len(lines), 3),
-                floor=("cannot reach 0 while stone values are addressed at runtime: no stone may "
-                       "cross a horizontal tile boundary"))
+                contrast=contrast,
+                over_perceptual_floor=(None if contrast is None else bool(contrast >= 0.144)),
+                floor=("the COUNT cannot reach 0 while stone values are addressed at runtime — no "
+                       "stone may cross a horizontal tile boundary. The CONTRAST can and must "
+                       "stay under §13.8's 0.144, where an unavoidable line is an invisible one."))
 
 
 def skeleton_repeats(joints, w, h):
@@ -872,7 +982,8 @@ def measure(img, joints, w, h, transitions=(), seed=1337, cracks=None, dressing=
                 continuity=continuity(joints, w, h),
                 grid_hiding=grid_hiding(img, joints, w, h, seed), banding=banding(joints),
                 skeleton=skeleton_repeats(joints, w, h),
-                constant_pitch=constant_pitch_lines(joints, w, h),
+                constant_pitch=constant_pitch_lines(joints, w, h, img),
+                joint_contrast=joint_contrast(img, joints),
                 cracks=crack_field(cracks, w, h) if cracks is not None else None,
                 joint_variation=joint_variation(img, joints, w, h, rung),
                 crossings=crossing_spread(joints, w, h))
@@ -918,6 +1029,11 @@ PLANTS = [
          why="every boundary collapsed to one family, so every cell of a row draws the same bond "
              "— the 0.99+ duplicates at one-tile displacement the seat measured, restored whole",
          test=lambda m: m["skeleton"]["duplicate_rate"] > 0.5),
+    dict(name="flat_joint_depth", must_fire="joint_contrast",
+         why="every sheltered joint handed the SAME depth again — PR #161's defect restored, one "
+             "value for every joint in the world, which is what outlined every stone",
+         test=lambda m: m["joint_contrast"]["share_over_floor"] < 0.10
+         or m["joint_contrast"]["share_over_floor"] > 0.60),
     dict(name="broken_courses", must_fire="continuity",
          why="bed joints stopping short of the vertical boundaries — coursing that does not travel",
          # `x or 1.0` on a measured 0.0 yields 1.0, because 0.0 is falsy — so the plant that
@@ -1033,12 +1149,22 @@ def erosion_read(img, joints, traffic, w, h):
             elif lvl <= 30:
                 cold[sl] = True
 
+    step = float(np.max(L) - np.min(L)) / 8.0 or 1.0
+
     def ratio(m):
+        """How much DEEPER the joints running with the route are than the ones crossing it.
+
+        ⚠ A DIFFERENCE, NOT A RATIO. This divided one depth-below-stone by the other, which is
+        well-behaved only while every joint is dark. The moment the sheltered joints were reshaped
+        so that a share of them pack shut, the denominator went through zero and the metric
+        reported grain of -7,896,677 — and the plants that depend on it went SILENT, which reads
+        as "the lever stopped working" rather than "the instrument stopped being defined".
+        """
         b = bedj & ~headj & m
         hh = headj & ~bedj & m
         if b.sum() < 50 or hh.sum() < 50:
             return None
-        return float((med - L[hh].mean()) / max(med - L[b].mean(), 1e-6))
+        return float(((med - L[hh].mean()) - (med - L[b].mean())) / step)
 
     return dict(grain_ratio_trodden=ratio(hot), grain_ratio_off=ratio(cold),
                 spread_trodden=float(L[(~joints) & hot].std()) if hot.any() else None,
@@ -1094,7 +1220,7 @@ def run_plants(w, h, seed, mat):
     live_e, none_e, iso_e = ep["live"], ep["no_erosion"], ep["isotropic"]
     for nm, m, fired, why, detail in (
         ("no_erosion", none_e,
-         abs((none_e["grain_ratio_trodden"] or 1.0) - 1.0) < 0.15
+         abs(none_e["grain_ratio_trodden"] or 0.0) < 0.25
          and (none_e["spread_trodden"] or 0) > (live_e["spread_trodden"] or 0) * 1.2,
          "form-as-erosion nulled entirely — no flattening, no directional compaction, so the "
          "floor must lose both its grain and its ground-down look",
@@ -1102,7 +1228,7 @@ def run_plants(w, h, seed, mat):
          % (none_e["grain_ratio_trodden"] or 0, live_e["grain_ratio_trodden"] or 0,
             none_e["spread_trodden"] or 0, live_e["spread_trodden"] or 0)),
         ("isotropic_erosion", iso_e,
-         abs((iso_e["grain_ratio_trodden"] or 1.0) - 1.0) < 0.15,
+         abs(iso_e["grain_ratio_trodden"] or 0.0) < 0.25,
          "the erosion kept but its DIRECTION removed — the stones still grind down, and the "
          "floor must stop saying which way",
          "grain %.2f (live %.2f)" % (iso_e["grain_ratio_trodden"] or 0,
@@ -1151,6 +1277,26 @@ def run_plants(w, h, seed, mat):
         if not fired:
             print("       ^^ THIS INSTRUMENT HAS NOT SHOWN IT CAN FAIL. Its pass does not count.")
     print()
+    # ================= THE PLANT RUN ASSERTS ITS OWN COMPLETION =================
+    #
+    # RULED (Rafe, 2026-08-30) after a crash read as a silence. An unbound name took the run down
+    # after ELEVEN of fourteen plants, and the only visible symptom was a smaller FIRED count —
+    # which looks exactly like "three plants went silent", the one thing this file exists to
+    # report. A control suite that can end early and quietly is not a control suite.
+    #
+    # AN EARLY EXIT IS RED, NEVER QUIET. The count is declared, not inferred from what happened to
+    # run: the two special plants plus every entry in the PLANTS table.
+    # 1 channel + 2 erosion + 2 chroma + the table. Declared as a sum of its parts rather than a
+    # literal, and it caught its own author on the first run: written as 2+2+len it reported
+    # "14 of 13" and went red, which is the check doing exactly its job on the way in.
+    expected = 1 + 2 + 2 + len(PLANTS)
+    if len(rows) != expected:
+        print("\n  *** PLANT RUN INCOMPLETE: %d of %d plants reported. The suite did not finish, "
+              "which is a RED result and never a quiet one. ***" % (len(rows), expected))
+        ok = False
+    else:
+        print("\n  plant run complete: %d of %d." % (len(rows), expected))
+
     return ok, rows
 
 

@@ -1,0 +1,39 @@
+{
+ "commit": "a4d259ecc50cbcc6766fd31b89dfc80ce30b1099",
+ "floor": 0.144,
+ "captures": {
+  "r24_onroute": {
+   "identity_ratio": 1.55,
+   "lane_tiles": 5,
+   "flank_tiles": 12,
+   "on_lane_legibility": 0.4199,
+   "on_flank_legibility": 0.2709,
+   "lane_vs_flank": 0.4543,
+   "lane_mean": 143.4,
+   "flank_mean": 90.3,
+   "in_window": true
+  },
+  "r32_gain06": {
+   "identity_ratio": 1.461,
+   "lane_tiles": 4,
+   "flank_tiles": 11,
+   "on_lane_legibility": 0.2911,
+   "on_flank_legibility": 0.1992,
+   "lane_vs_flank": 0.48,
+   "lane_mean": 134.6,
+   "flank_mean": 82.5,
+   "in_window": true
+  },
+  "r32_gain06_nostria": {
+   "identity_ratio": 1.327,
+   "lane_tiles": 4,
+   "flank_tiles": 12,
+   "on_lane_legibility": 0.1989,
+   "on_flank_legibility": 0.1499,
+   "lane_vs_flank": 0.5309,
+   "lane_mean": 145.2,
+   "flank_mean": 84.3,
+   "in_window": true
+  }
+ }
+}

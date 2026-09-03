@@ -1,6 +1,6 @@
 {
  "family": "boundary_floor_ashlar_v1",
- "commit": "ce88318c7689ad48593b341b278aa9c68166c948",
+ "commit": "a4d259ecc50cbcc6766fd31b89dfc80ce30b1099",
  "seed": 1337,
  "material": {
   "lum_lo": 75.016,
@@ -61,8 +61,23 @@
   "deform_aniso": 0.8,
   "hollow_depth": 1.3,
   "hollow_rim": 0.45,
+  "shelter_lift": [
+   5.0,
+   4.0,
+   3.0,
+   0.0
+  ],
+  "shelter_weights": [
+   0.06,
+   0.5,
+   0.26,
+   0.18
+  ],
+  "shelter_block": 8,
+  "lane_fray": 0.32,
+  "joint_polish_floor": 0.7,
   "polish_lane": [
-   1.9,
+   0.6,
    0.62,
    1.15
   ],
@@ -162,7 +177,9 @@
   "hollow": 3011,
   "stria": 3012,
   "lane_dish": 3013,
-  "grit": 3014
+  "grit": 3014,
+  "shelter": 3015,
+  "lane_fray": 3016
  },
  "offset_steps": [
   -2,
@@ -7864,8 +7881,8 @@
     "y": 3,
     "px": 30,
     "py": 9,
-    "r": 102,
-    "g": 121,
+    "r": 108,
+    "g": 118,
     "b": 113
    },
    {
@@ -7945,9 +7962,9 @@
     "y": 2,
     "px": 8,
     "py": 0,
-    "r": 48,
-    "g": 48,
-    "b": 48
+    "r": 101,
+    "g": 102,
+    "b": 100
    },
    {
     "x": 0,
@@ -8035,9 +8052,9 @@
     "y": 0,
     "px": 2,
     "py": 31,
-    "r": 48,
-    "g": 48,
-    "b": 48
+    "r": 101,
+    "g": 102,
+    "b": 100
    },
    {
     "x": 1,
@@ -8071,8 +8088,8 @@
     "y": 0,
     "px": 9,
     "py": 7,
-    "r": 102,
-    "g": 121,
+    "r": 108,
+    "g": 118,
     "b": 113
    },
    {
@@ -8152,9 +8169,9 @@
     "y": 1,
     "px": 29,
     "py": 23,
-    "r": 90,
-    "g": 107,
-    "b": 100
+    "r": 83,
+    "g": 91,
+    "b": 87
    },
    {
     "x": 5,
@@ -8188,9 +8205,9 @@
     "y": 3,
     "px": 8,
     "py": 21,
-    "r": 48,
-    "g": 48,
-    "b": 48
+    "r": 88,
+    "g": 88,
+    "b": 87
    },
    {
     "x": 7,
@@ -8215,17 +8232,17 @@
     "y": 6,
     "px": 13,
     "py": 2,
-    "r": 48,
-    "g": 48,
-    "b": 48
+    "r": 101,
+    "g": 102,
+    "b": 100
    },
    {
     "x": 4,
     "y": 0,
     "px": 21,
     "py": 4,
-    "r": 90,
-    "g": 107,
+    "r": 101,
+    "g": 102,
     "b": 100
    },
    {
@@ -8242,9 +8259,9 @@
     "y": 6,
     "px": 12,
     "py": 16,
-    "r": 48,
-    "g": 48,
-    "b": 48
+    "r": 88,
+    "g": 88,
+    "b": 87
    },
    {
     "x": 6,
@@ -8287,8 +8304,8 @@
     "y": 1,
     "px": 5,
     "py": 30,
-    "r": 78,
-    "g": 93,
+    "r": 83,
+    "g": 91,
     "b": 87
    },
    {
@@ -8431,17 +8448,17 @@
     "y": 7,
     "px": 0,
     "py": 29,
-    "r": 102,
-    "g": 121,
-    "b": 113
+    "r": 128,
+    "g": 128,
+    "b": 126
    },
    {
     "x": 4,
     "y": 0,
     "px": 12,
     "py": 6,
-    "r": 90,
-    "g": 107,
+    "r": 96,
+    "g": 104,
     "b": 100
    },
    {
@@ -8485,9 +8502,9 @@
     "y": 2,
     "px": 5,
     "py": 13,
-    "r": 48,
-    "g": 48,
-    "b": 48
+    "r": 101,
+    "g": 102,
+    "b": 100
    },
    {
     "x": 2,
@@ -8503,18 +8520,18 @@
     "y": 4,
     "px": 7,
     "py": 9,
-    "r": 88,
-    "g": 88,
-    "b": 87
+    "r": 114,
+    "g": 115,
+    "b": 113
    },
    {
     "x": 4,
     "y": 4,
     "px": 16,
     "py": 15,
-    "r": 75,
-    "g": 75,
-    "b": 74
+    "r": 114,
+    "g": 115,
+    "b": 113
    },
    {
     "x": 5,
@@ -8557,9 +8574,9 @@
     "y": 4,
     "px": 7,
     "py": 31,
-    "r": 48,
-    "g": 48,
-    "b": 48
+    "r": 101,
+    "g": 102,
+    "b": 100
    },
    {
     "x": 2,
@@ -8584,9 +8601,9 @@
     "y": 7,
     "px": 31,
     "py": 16,
-    "r": 75,
-    "g": 75,
-    "b": 74
+    "r": 48,
+    "g": 48,
+    "b": 48
    },
    {
     "x": 5,
@@ -8647,9 +8664,9 @@
     "y": 6,
     "px": 27,
     "py": 3,
-    "r": 88,
-    "g": 88,
-    "b": 87
+    "r": 114,
+    "g": 115,
+    "b": 113
    },
    {
     "x": 4,
@@ -8701,9 +8718,9 @@
     "y": 1,
     "px": 28,
     "py": 30,
-    "r": 48,
-    "g": 48,
-    "b": 48
+    "r": 114,
+    "g": 115,
+    "b": 113
    }
   ],
   "traffic": [
@@ -8887,5 +8904,150 @@
    ]
   ],
   "what": "finished RGB from the shipped path. The engine reproduces every one of these or refuses to lay the floor. Covers joints, plain stone, trodden stone, joints beside trodden stone, and spanning stones seen from both sides."
- }
+ },
+ "theme": "tile_themes_tier1_ashlar.yaml",
+ "fallback_tile": {
+  "id": 9999,
+  "why": "magenta; a painter failure must go red"
+ },
+ "wall_mocks": [
+  {
+   "id": 9010,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9010.png",
+   "sha256": "bb03a5f27478c942701010ed904e133fb6fdf70610789589cf02462ab7e4b6e5",
+   "source_sha256": "bb03a5f27478c942701010ed904e133fb6fdf70610789589cf02462ab7e4b6e5"
+  },
+  {
+   "id": 9011,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9011.png",
+   "sha256": "4ca7ca7e32a976437e32711812d704cf5fbde6485823b017fa3ac3bb4a1b13b7",
+   "source_sha256": "4ca7ca7e32a976437e32711812d704cf5fbde6485823b017fa3ac3bb4a1b13b7"
+  },
+  {
+   "id": 9012,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9012.png",
+   "sha256": "82d1a7ed96e506e6d3422824f265e493e37a4849b63827a97890c65d409b171d",
+   "source_sha256": "82d1a7ed96e506e6d3422824f265e493e37a4849b63827a97890c65d409b171d"
+  },
+  {
+   "id": 9013,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9013.png",
+   "sha256": "6709b68ddcbce8b878fea3b240355e2394d4788925e6b05b8cbcc8851d5ce215",
+   "source_sha256": "6709b68ddcbce8b878fea3b240355e2394d4788925e6b05b8cbcc8851d5ce215"
+  },
+  {
+   "id": 9014,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9014.png",
+   "sha256": "ac0bc988c03411716414d3cd155aac49073077e7533377290f90f3481674c334",
+   "source_sha256": "ac0bc988c03411716414d3cd155aac49073077e7533377290f90f3481674c334"
+  },
+  {
+   "id": 9015,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9015.png",
+   "sha256": "fb13868ca84b855b42def0c64c366bbd0f71fd769178eb3e4c381250b8384119",
+   "source_sha256": "fb13868ca84b855b42def0c64c366bbd0f71fd769178eb3e4c381250b8384119"
+  },
+  {
+   "id": 9016,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9016.png",
+   "sha256": "13fd730443f63dbf2bafdbf6dda32e817aa8dc139a491bc5ad5caffa8bfc7c3a",
+   "source_sha256": "13fd730443f63dbf2bafdbf6dda32e817aa8dc139a491bc5ad5caffa8bfc7c3a"
+  },
+  {
+   "id": 9017,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9017.png",
+   "sha256": "463f534952c9d0388e166aa2b5767150e063d0cd41a739aa2ef572f1b69fe2a1",
+   "source_sha256": "463f534952c9d0388e166aa2b5767150e063d0cd41a739aa2ef572f1b69fe2a1"
+  },
+  {
+   "id": 9018,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9018.png",
+   "sha256": "d562e0969959f17e1dea61baa535bf3377379b4f3c17ad7d56376e5857a5c847",
+   "source_sha256": "d562e0969959f17e1dea61baa535bf3377379b4f3c17ad7d56376e5857a5c847"
+  },
+  {
+   "id": 9019,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9019.png",
+   "sha256": "e49e210622e5ca9fef351c5af7496a4599d7a346e8e0fc02283590d404f1d99f",
+   "source_sha256": "e49e210622e5ca9fef351c5af7496a4599d7a346e8e0fc02283590d404f1d99f"
+  },
+  {
+   "id": 9020,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9020.png",
+   "sha256": "307703f15cb7f06c108346fcfbf4b7180a76fb84c0ca538607b1c349c3d3baff",
+   "source_sha256": "307703f15cb7f06c108346fcfbf4b7180a76fb84c0ca538607b1c349c3d3baff"
+  },
+  {
+   "id": 9021,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9021.png",
+   "sha256": "6835f338d3ad3df7c21f4d6d1970f9bbc8f7d7627fad51568918504f5f137745",
+   "source_sha256": "6835f338d3ad3df7c21f4d6d1970f9bbc8f7d7627fad51568918504f5f137745"
+  },
+  {
+   "id": 9022,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9022.png",
+   "sha256": "6fe1bffc220912d203db47b7debf57a67197186de21321e3c80024fe4f53e593",
+   "source_sha256": "6fe1bffc220912d203db47b7debf57a67197186de21321e3c80024fe4f53e593"
+  },
+  {
+   "id": 9023,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9023.png",
+   "sha256": "2e830a0e860ef4c555d9cbe0197aaf331e890cb0c6fb7287d559c6174ccc0dfe",
+   "source_sha256": "2e830a0e860ef4c555d9cbe0197aaf331e890cb0c6fb7287d559c6174ccc0dfe"
+  },
+  {
+   "id": 9024,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9024.png",
+   "sha256": "96967bd511806d756206db13ea6473c13e6b33d3d00f637ab97c4b447b6301b7",
+   "source_sha256": "96967bd511806d756206db13ea6473c13e6b33d3d00f637ab97c4b447b6301b7"
+  },
+  {
+   "id": 9025,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9025.png",
+   "sha256": "44380cc39d4b3f76b92281eb9b5bef4cf70217bdb43544fd8f667710c1706abc",
+   "source_sha256": "44380cc39d4b3f76b92281eb9b5bef4cf70217bdb43544fd8f667710c1706abc"
+  },
+  {
+   "id": 9030,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9030.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "source_sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b"
+  },
+  {
+   "id": 9031,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9031.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "source_sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b"
+  },
+  {
+   "id": 9032,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9032.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "source_sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b"
+  },
+  {
+   "id": 9033,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9033.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "source_sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b"
+  },
+  {
+   "id": 9034,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9034.png",
+   "sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b",
+   "source_sha256": "19d3971969e812d2e64dd4b2482184412e25000e23cc8dd823fc9409bf55f48b"
+  },
+  {
+   "id": 9040,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9040.png",
+   "sha256": "dbc7c20f6414cdd689d73c10233cc7b3624cd37d9f0c6bd6148ea7649fd9656e",
+   "source_sha256": "dbc7c20f6414cdd689d73c10233cc7b3624cd37d9f0c6bd6148ea7649fd9656e"
+  },
+  {
+   "id": 9041,
+   "source": "src/Presentation/assets/tier0_harness/stub/tier0_stub_9041.png",
+   "sha256": "803fe0edee650d5cc670ab3ba8fefb8dc9aee99f44ecbf10a11369c987b2841d",
+   "source_sha256": "803fe0edee650d5cc670ab3ba8fefb8dc9aee99f44ecbf10a11369c987b2841d"
+  }
+ ]
 }

@@ -1,5 +1,5 @@
 {
- "commit": "ce88318c7689ad48593b341b278aa9c68166c948",
+ "commit": "a4d259ecc50cbcc6766fd31b89dfc80ce30b1099",
  "grid": [
   16,
   16
@@ -23,12 +23,12 @@
     "band_alone": {
      "texture": 1.092,
      "variety": 0.847,
-     "arris": 0.966
+     "arris": 0.905
     },
     "same_band_unpolished": {
      "texture": 1.092,
      "variety": 0.847,
-     "arris": 0.966
+     "arris": 0.905
     },
     "inside_px": 32768
    }
@@ -39,8 +39,8 @@
    "fired": true,
    "why": "form-as-erosion nulled entirely \u2014 no flattening, no directional compaction, so the floor must lose both its grain and its ground-down look",
    "measured": {
-    "grain_ratio_trodden": 0.9638669172091211,
-    "grain_ratio_off": 0.9973223459492685,
+    "grain_ratio_trodden": -0.0030173346293253956,
+    "grain_ratio_off": -0.005428413943067229,
     "spread_trodden": 16.579464134572532,
     "spread_off": 22.19206240251041
    }
@@ -51,8 +51,8 @@
    "fired": true,
    "why": "the erosion kept but its DIRECTION removed \u2014 the stones still grind down, and the floor must stop saying which way",
    "measured": {
-    "grain_ratio_trodden": 0.9638669172091211,
-    "grain_ratio_off": 0.9973223459492685,
+    "grain_ratio_trodden": -0.00310114948013999,
+    "grain_ratio_off": -0.005579203219263541,
     "spread_trodden": 11.248646543359216,
     "spread_off": 21.921398690444008
    }
@@ -63,11 +63,11 @@
    "fired": true,
    "why": "the chroma channel nulled while the joints keep working \u2014 the combined verdict must fall back to what the joint lever alone can carry",
    "measured": {
-    "trodden": 0.01519364429897691,
-    "off_route": 0.01275388151907941,
-    "separation": 0.0024397627798975006,
+    "trodden": 0.01664147752141902,
+    "off_route": 0.015668351157475693,
+    "separation": 0.0009731263639433281,
     "cast_share": 0.0,
-    "parity_ratio": 1.0016739221515205
+    "parity_ratio": 1.0043218707799004
    }
   },
   {
@@ -76,11 +76,11 @@
    "fired": true,
    "why": "chroma keyed to the tile a stone is SEEN FROM rather than to the world \u2014 \u00a78.3.1's lattice restated in the colour domain",
    "measured": {
-    "trodden": 0.06961485550431858,
-    "off_route": 0.06735960221293687,
-    "separation": 0.002255253291381709,
+    "trodden": 0.07106268872676068,
+    "off_route": 0.07027407185133314,
+    "separation": 0.0007886168754275419,
     "cast_share": 0.38805389404296875,
-    "parity_ratio": 9.350831889787383
+    "parity_ratio": 7.894397517639774
    }
   },
   {
@@ -114,9 +114,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 75.41,
-     "bed_value_mid": 75.76,
-     "bed_value_ratio": 0.9954,
+     "bed_value_boundary": 102.92,
+     "bed_value_mid": 102.56,
+     "bed_value_ratio": 1.0035,
      "col_density_boundary": 0.125,
      "col_density_other": 0.2215,
      "col_density_ratio": 0.5644
@@ -148,7 +148,17 @@
      "full_width_lines": 33,
      "at_tile_phase": 17,
      "share": 0.515,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.0985,
+     "over_perceptual_floor": false,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 0.1968,
+     "mean_weber": 0.0508,
+     "p50": -0.0118,
+     "p90": 0.3848,
+     "joint": 114.0,
+     "stone": 114.0
     },
     "cracks": {
      "marks": 13,
@@ -210,9 +220,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 82.07,
-     "bed_value_mid": 82.42,
-     "bed_value_ratio": 0.9958,
+     "bed_value_boundary": 109.55,
+     "bed_value_mid": 109.2,
+     "bed_value_ratio": 1.0032,
      "col_density_boundary": 0.125,
      "col_density_other": 0.2215,
      "col_density_ratio": 0.5644
@@ -244,7 +254,17 @@
      "full_width_lines": 33,
      "at_tile_phase": 17,
      "share": 0.515,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.0393,
+     "over_perceptual_floor": false,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 0.2007,
+     "mean_weber": 0.0475,
+     "p50": -0.0099,
+     "p90": 0.35,
+     "joint": 114.0,
+     "stone": 114.0
     },
     "cracks": {
      "marks": 13,
@@ -257,9 +277,9 @@
     },
     "joint_variation": {
      "joint_px": 57268,
-     "open_decile": 48.0,
+     "open_decile": 61.59,
      "tight_decile": 127.77,
-     "spread_rungs": 6.03
+     "spread_rungs": 5.003
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -306,9 +326,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 71.92,
-     "bed_value_mid": 75.55,
-     "bed_value_ratio": 0.9519,
+     "bed_value_boundary": 99.33,
+     "bed_value_mid": 102.36,
+     "bed_value_ratio": 0.9705,
      "col_density_boundary": 1.0,
      "col_density_other": 0.2215,
      "col_density_ratio": 4.5152
@@ -340,7 +360,17 @@
      "full_width_lines": 33,
      "at_tile_phase": 17,
      "share": 0.515,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.1133,
+     "over_perceptual_floor": false,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 0.304,
+     "mean_weber": 0.0931,
+     "p50": 0.0134,
+     "p90": 0.4571,
+     "joint": 114.0,
+     "stone": 114.0
     },
     "cracks": {
      "marks": 13,
@@ -402,9 +432,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 0.3301,
      "bed_density_ratio": 3.0296,
-     "bed_value_boundary": 75.41,
-     "bed_value_mid": 98.13,
-     "bed_value_ratio": 0.7685,
+     "bed_value_boundary": 102.92,
+     "bed_value_mid": 107.46,
+     "bed_value_ratio": 0.9578,
      "col_density_boundary": 0.125,
      "col_density_other": 0.2215,
      "col_density_ratio": 0.5644
@@ -432,7 +462,17 @@
      "full_width_lines": 33,
      "at_tile_phase": 17,
      "share": 0.515,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.0983,
+     "over_perceptual_floor": false,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 0.2056,
+     "mean_weber": 0.0513,
+     "p50": -0.0131,
+     "p90": 0.3659,
+     "joint": 114.0,
+     "stone": 114.0
     },
     "cracks": {
      "marks": 13,
@@ -494,9 +534,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 0.2214,
      "bed_density_ratio": 4.516,
-     "bed_value_boundary": 75.41,
-     "bed_value_mid": 103.1,
-     "bed_value_ratio": 0.7315,
+     "bed_value_boundary": 102.92,
+     "bed_value_mid": 108.88,
+     "bed_value_ratio": 0.9453,
      "col_density_boundary": 0.0625,
      "col_density_other": 0.1688,
      "col_density_ratio": 0.3702
@@ -524,7 +564,17 @@
      "full_width_lines": 17,
      "at_tile_phase": 17,
      "share": 1.0,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.0949,
+     "over_perceptual_floor": false,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 0.2224,
+     "mean_weber": 0.0623,
+     "p50": -0.0064,
+     "p90": 0.3813,
+     "joint": 114.0,
+     "stone": 114.0
     },
     "cracks": {
      "marks": 13,
@@ -586,9 +636,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 75.67,
-     "bed_value_mid": 75.5,
-     "bed_value_ratio": 1.0022,
+     "bed_value_boundary": 103.4,
+     "bed_value_mid": 102.94,
+     "bed_value_ratio": 1.0045,
      "col_density_boundary": 0.1172,
      "col_density_other": 0.214,
      "col_density_ratio": 0.5475
@@ -621,7 +671,17 @@
      "full_width_lines": 31,
      "at_tile_phase": 17,
      "share": 0.548,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.0953,
+     "over_perceptual_floor": false,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 0.2009,
+     "mean_weber": 0.0517,
+     "p50": -0.012,
+     "p90": 0.3426,
+     "joint": 114.0,
+     "stone": 114.0
     },
     "cracks": {
      "marks": 13,
@@ -634,9 +694,9 @@
     },
     "joint_variation": {
      "joint_px": 55312,
-     "open_decile": 48.0,
+     "open_decile": 61.59,
      "tight_decile": 114.47,
-     "spread_rungs": 5.024
+     "spread_rungs": 3.997
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -718,7 +778,17 @@
      "full_width_lines": 31,
      "at_tile_phase": 17,
      "share": 0.548,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.418,
+     "over_perceptual_floor": true,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 1.0,
+     "mean_weber": 0.5427,
+     "p50": 0.5513,
+     "p90": 0.6078,
+     "joint": 48.0,
+     "stone": 114.0
     },
     "cracks": {
      "marks": 13,
@@ -780,9 +850,9 @@
      "bed_density_boundary": 1.0,
      "bed_density_mid": 1.0,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 75.37,
-     "bed_value_mid": 75.32,
-     "bed_value_ratio": 1.0008,
+     "bed_value_boundary": 102.9,
+     "bed_value_mid": 102.55,
+     "bed_value_ratio": 1.0034,
      "col_density_boundary": 0.1172,
      "col_density_other": 0.214,
      "col_density_ratio": 0.5475
@@ -815,7 +885,17 @@
      "full_width_lines": 31,
      "at_tile_phase": 17,
      "share": 0.548,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.0986,
+     "over_perceptual_floor": false,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 0.2058,
+     "mean_weber": 0.0531,
+     "p50": -0.0133,
+     "p90": 0.3769,
+     "joint": 114.0,
+     "stone": 114.0
     },
     "cracks": {
      "marks": 13,
@@ -831,6 +911,113 @@
      "open_decile": 48.0,
      "tight_decile": 114.47,
      "spread_rungs": 5.024
+    },
+    "crossings": {
+     "horizontal_boundaries": {
+      "n": 0
+     },
+     "vertical_boundaries": {
+      "n": 900,
+      "distinct": 10,
+      "sd": 11.58,
+      "spread": 31,
+      "modal_share": 0.267
+     }
+    }
+   }
+  },
+  {
+   "plant": "flat_joint_depth",
+   "must_fire": "joint_contrast",
+   "why": "every sheltered joint handed the SAME depth again \u2014 PR #161's defect restored, one value for every joint in the world, which is what outlined every stone",
+   "fired": true,
+   "measured": {
+    "enclosure": {
+     "regions": 848,
+     "floor_px": 206832,
+     "largest_share": 0.0062,
+     "median_region": 204,
+     "regions_over_64px": 827
+    },
+    "boundary_step": {
+     "boundary_mean": 0.175,
+     "interior_mean": 0.341,
+     "ratio": 0.513,
+     "boundary_max": 13.59,
+     "n": 3787,
+     "channel_edge_mean": null,
+     "channel_edge_n": 0
+    },
+    "continuity": {
+     "arriving": 900,
+     "continuing": 900,
+     "continued": 1.0
+    },
+    "grid_hiding": {
+     "bed_density_boundary": 1.0,
+     "bed_density_mid": 1.0,
+     "bed_density_ratio": 1.0,
+     "bed_value_boundary": 113.88,
+     "bed_value_mid": 113.99,
+     "bed_value_ratio": 0.999,
+     "col_density_boundary": 0.1172,
+     "col_density_other": 0.214,
+     "col_density_ratio": 0.5475
+    },
+    "banding": {
+     "bed_rows": 60,
+     "courses": 30,
+     "distinct_spacings": 6,
+     "modal_share": 0.2,
+     "sd": 5.28,
+     "spacings": [
+      10,
+      12,
+      15,
+      18,
+      20,
+      31
+     ]
+    },
+    "skeleton": {
+     "cells": 256,
+     "distinct_skeletons": 191,
+     "cells_sharing_a_skeleton": 110,
+     "duplicate_rate": 0.4297,
+     "neighbour_pairs": 480,
+     "identical_neighbours": 3,
+     "identical_neighbour_rate": 0.0063
+    },
+    "constant_pitch": {
+     "full_width_lines": 31,
+     "at_tile_phase": 17,
+     "share": 0.548,
+     "contrast": 0.0317,
+     "over_perceptual_floor": false,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 0.0103,
+     "mean_weber": -0.0531,
+     "p50": -0.0429,
+     "p90": 0.0355,
+     "joint": 114.0,
+     "stone": 114.0
+    },
+    "cracks": {
+     "marks": 13,
+     "median_px": 99,
+     "max_px": 1091,
+     "min_px": 6,
+     "crossing_a_boundary": 11,
+     "share_crossing": 0.846,
+     "retired_system_median_px": 4
+    },
+    "joint_variation": {
+     "joint_px": 55312,
+     "open_decile": 114.47,
+     "tight_decile": 114.47,
+     "spread_rungs": 0.0
     },
     "crossings": {
      "horizontal_boundaries": {
@@ -877,9 +1064,9 @@
      "bed_density_boundary": 0.9375,
      "bed_density_mid": 0.9375,
      "bed_density_ratio": 1.0,
-     "bed_value_boundary": 77.92,
-     "bed_value_mid": 77.71,
-     "bed_value_ratio": 1.0027,
+     "bed_value_boundary": 103.7,
+     "bed_value_mid": 103.25,
+     "bed_value_ratio": 1.0044,
      "col_density_boundary": 0.1172,
      "col_density_other": 0.202,
      "col_density_ratio": 0.58
@@ -912,7 +1099,17 @@
      "full_width_lines": 31,
      "at_tile_phase": 17,
      "share": 0.548,
-     "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+     "contrast": 0.0935,
+     "over_perceptual_floor": false,
+     "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+    },
+    "joint_contrast": {
+     "share_over_floor": 0.2034,
+     "mean_weber": 0.0534,
+     "p50": -0.0121,
+     "p90": 0.3636,
+     "joint": 114.0,
+     "stone": 114.0
     },
     "cracks": {
      "marks": 13,
@@ -972,9 +1169,9 @@
     "bed_density_boundary": 1.0,
     "bed_density_mid": 1.0,
     "bed_density_ratio": 1.0,
-    "bed_value_boundary": 75.41,
-    "bed_value_mid": 75.32,
-    "bed_value_ratio": 1.0012,
+    "bed_value_boundary": 102.92,
+    "bed_value_mid": 102.55,
+    "bed_value_ratio": 1.0036,
     "col_density_boundary": 0.1172,
     "col_density_other": 0.214,
     "col_density_ratio": 0.5475
@@ -1007,7 +1204,17 @@
     "full_width_lines": 31,
     "at_tile_phase": 17,
     "share": 0.548,
-    "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    "contrast": 0.0991,
+    "over_perceptual_floor": false,
+    "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+   },
+   "joint_contrast": {
+    "share_over_floor": 0.203,
+    "mean_weber": 0.0515,
+    "p50": -0.014,
+    "p90": 0.3665,
+    "joint": 114.0,
+    "stone": 114.0
    },
    "cracks": {
     "marks": 13,
@@ -1037,9 +1244,9 @@
     }
    },
    "lattice": {
-    "lattice": 0.1499,
-    "var_total": 498.4,
-    "var_per_position": 423.69,
+    "lattice": 0.0227,
+    "var_total": 261.52,
+    "var_per_position": 255.57,
     "cells": 256
    }
   },
@@ -1070,9 +1277,9 @@
     "bed_density_boundary": 1.0,
     "bed_density_mid": 1.0,
     "bed_density_ratio": 1.0,
-    "bed_value_boundary": 78.57,
-    "bed_value_mid": 78.45,
-    "bed_value_ratio": 1.0014,
+    "bed_value_boundary": 103.82,
+    "bed_value_mid": 103.47,
+    "bed_value_ratio": 1.0033,
     "col_density_boundary": 0.1172,
     "col_density_other": 0.214,
     "col_density_ratio": 0.5475
@@ -1105,7 +1312,17 @@
     "full_width_lines": 31,
     "at_tile_phase": 17,
     "share": 0.548,
-    "floor": "cannot reach 0 while stone values are addressed at runtime: no stone may cross a horizontal tile boundary"
+    "contrast": 0.0949,
+    "over_perceptual_floor": false,
+    "floor": "the COUNT cannot reach 0 while stone values are addressed at runtime \u2014 no stone may cross a horizontal tile boundary. The CONTRAST can and must stay under \u00a713.8's 0.144, where an unavoidable line is an invisible one."
+   },
+   "joint_contrast": {
+    "share_over_floor": 0.1878,
+    "mean_weber": 0.0439,
+    "p50": -0.0205,
+    "p90": 0.3288,
+    "joint": 114.0,
+    "stone": 114.0
    },
    "cracks": {
     "marks": 13,
@@ -1135,24 +1352,24 @@
     }
    },
    "lattice": {
-    "lattice": 0.1349,
-    "var_total": 466.81,
-    "var_per_position": 403.85,
+    "lattice": 0.0234,
+    "var_total": 248.99,
+    "var_per_position": 243.17,
     "cells": 256
    },
    "channel_legibility": {
     "texture_ratio": 0.172,
     "variety_ratio": 0.341,
-    "arris_ratio": 0.597,
+    "arris_ratio": 0.924,
     "band_alone": {
      "texture": 0.414,
      "variety": 0.299,
-     "arris": 0.569
+     "arris": 0.773
     },
     "same_band_unpolished": {
      "texture": 2.407,
      "variety": 0.875,
-     "arris": 0.952
+     "arris": 0.836
     },
     "inside_px": 32768
    }

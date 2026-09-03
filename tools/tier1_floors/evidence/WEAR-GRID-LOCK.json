@@ -1,0 +1,23 @@
+{
+ "commit": "a4d259ecc50cbcc6766fd31b89dfc80ce30b1099",
+ "results": {
+  "no route model (noise only)": {
+   "boundary_px": 2195,
+   "on_grid": 0.139,
+   "chance": 0.1211,
+   "ratio": 1.147
+  },
+  "with the route polyline": {
+   "boundary_px": 5079,
+   "on_grid": 0.1286,
+   "chance": 0.1211,
+   "ratio": 1.062
+  },
+  "THE CONTROL: a per-tile channel flag": {
+   "boundary_px": 4177,
+   "on_grid": 0.412,
+   "chance": 0.1211,
+   "ratio": 3.402
+  }
+ }
+}

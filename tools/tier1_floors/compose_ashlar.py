@@ -903,6 +903,23 @@ DIR_NONE = -1                    # no usable gradient: flat ground, and erosion 
 DIR_MIN_GRAD = 6                 # below this the gradient is noise, not a route
 
 
+def axis_block(x0, y0, n):
+    """The travel axis at every pixel of an n x n block, from the line's own tangent.
+
+    Per pixel because ANY WEAR BOUNDARY COINCIDING WITH A TILE EDGE IS STAGED. Taking the axis
+    once at the tile handed one direction to every joint in it, so the compaction changed where
+    the tiles changed.
+    """
+    import numpy as _np
+    out = _np.full((n, n), DIR_NONE, dtype=int)
+    if not LINES:
+        return out
+    for iy in range(n):
+        for ix in range(n):
+            out[iy, ix] = RP.axis(LINES, (x0 + ix + 0.5) / T, (y0 + iy + 0.5) / T)
+    return out
+
+
 def travel_axis(traffic, tx, ty):
     """(see below) — the line's own tangent takes precedence when there is a line."""
     if LINES:
@@ -1044,7 +1061,19 @@ HOLLOW_SALT = 3011                         # so two mouths are not the same dish
 # for age and wrong for a lane: a specular streak that is chopped into noise cannot be followed.
 # Width now comes from the line distance UNFRAYED, so the lane runs continuous down the centre,
 # and the noise returns only at its shoulders.
-POLISH_LANE_GAIN = 1.9          # how much brighter the lane's specular is than the aged surface
+POLISH_LANE_GAIN = 0.6    # RULED DOWN from 1.9 at the gate: 'it looks like all the tiles on
+                          # the walked path have been replaced'. At 1.9 the on-lane masonry
+                          # measured 0.157 — NINE PERCENT above §13.8's floor, and BELOW its
+                          # own flank's 0.177. The lane was washing the stones out. At 1.0 it
+                          # reads 0.421, nearly three times the floor, while lane-vs-flank
+                          # holds at 0.394. Wear modulates the same stones; it never replaces
+                          # their identity.
+                          #
+                          # STEPPED AGAIN, 1.0 -> 0.6, at the gate that found the tile
+                          # quantisation: with the staircase gone the lane was re-judged and 1.0
+                          # still read as different material. At 0.6 the wash is gone, the stone
+                          # reads as stone and the cracks still carry. On-lane masonry 0.291,
+                          # twice the floor.          # how much brighter the lane's specular is than the aged surface
 POLISH_LANE_WIDTH = 0.62        # in tiles, half-width of the fully-polished centre
 POLISH_SHOULDER = 1.15          # in tiles, where the lane's specular has faded to nothing
 
@@ -1055,6 +1084,13 @@ POLISH_SHOULDER = 1.15          # in tiles, where the lane's specular has faded 
 STRIA_PERIOD = 3                # pixels between streaks
 STRIA_DEPTH = 0.45              # how much of the lane's specular a dark streak gives up
 STRIA_SALT = 3012
+LANE_FRAY = 0.32          # tiles of jitter on the distance BEFORE the lane's falloff, so
+                          # its shoulder wanders instead of arriving on a line. A
+                          # smoothstep to zero at a fixed distance gave the lane a hard
+                          # upper edge, and the walk read it as a spotlight stripe laid on
+                          # the floor — staging, which §8.1 does not allow.
+LANE_FRAY_SALT = 3016
+JOINT_POLISH_FLOOR = 0.70  # no joint is more than 30% below the face beside it in specular
 
 # ---- (2) DISHING ALONG THE LINE ---------------------------------------------------------------
 # The threshold hollows stay exactly as they are; this is the shallow version that follows the
@@ -1122,8 +1158,14 @@ def lane_polish_block(dist, tx, ty, wx, wy, seed):
     distance directly; the noise returns at the shoulders through the age layer underneath.
     """
     import numpy as _np
-    lane = _np.clip((POLISH_SHOULDER - dist) / max(POLISH_SHOULDER - POLISH_LANE_WIDTH, 1e-6),
-                    0.0, 1.0)
+    # THE SHOULDER FRAYS. A smoothstep to zero at a fixed distance gives the lane a hard upper
+    # edge, which the walk read as a spotlight stripe laid on the floor — staging, which §8.1 does
+    # not allow. The distance is jittered on a coarse world block BEFORE the falloff, so the
+    # shoulder wanders by a fraction of a tile instead of arriving on a line.
+    fray = ((_mix_np(wx // SHELTER_BLOCK, wy // SHELTER_BLOCK, LANE_FRAY_SALT) % 1000) / 1000.0
+            - 0.5) * 2.0 * LANE_FRAY
+    lane = _np.clip((POLISH_SHOULDER - (dist + fray))
+                    / max(POLISH_SHOULDER - POLISH_LANE_WIDTH, 1e-6), 0.0, 1.0)
     lane = lane * lane * (3.0 - 2.0 * lane) * POLISH_LANE_GAIN
 
     # STRIATIONS ALONG THE TANGENT. The band coordinate is PERPENDICULAR to the tangent, so the
@@ -1207,6 +1249,58 @@ def chroma_tint(tint, strength):
     d = _np.asarray(CHROMA_DIR, dtype=float)
     d = d - (w @ (t * d)) / (w @ t)       # the component that changes hue and nothing else
     return t * (1.0 + strength * d)
+
+
+# ============================ THE SHELTERED JOINT'S DEPTH IS A DISTRIBUTION ============================
+#
+# RULED (Rafe, 2026-08-31) after the device walk came back reading as outlined chips: none of
+# A-D — reshape the distribution and KEEP THE RUNGS.
+#
+# PR #161 gave the sheltered joints somewhere darker to go and they all went. 92.7% of joint pixels
+# landed on the bottom two rungs, mean contrast against the stone went 0.272 -> 0.510, and every
+# stone acquired an outline. The rungs are not the problem — they are still needed for §6.5's wall
+# face, which cannot be authored without them. WHAT WENT WRONG IS THAT ONE VALUE WAS HANDED TO
+# EVERY JOINT IN THE WORLD, and it was the darkest one available.
+#
+# So a sheltered joint now DRAWS its depth:
+#
+#   THE MODE IS MORTAR, not a line — shallow enough that its contrast against the stone sits
+#   under §13.8's floor, where a signal is absent. Most of the floor's joints stop outlining.
+#   A MINORITY TAIL still reaches the deep rungs, which is what keeps #161's spread: a floor with
+#   some joints blown open and most of them packed is a floor with a history, and it is exactly
+#   what the "all the gaps look standardized" cull asked for in the first place.
+#
+# KEYED ON A COARSE WORLD BLOCK, not per pixel and not per joint. Per pixel would be noise; per
+# joint run would put one flat value along a whole line, which is the defect at a smaller scale.
+# An 8px block means a joint run of twenty pixels crosses two or three of them and varies ALONG
+# its length — which is what mortar looks like, and it is world-keyed, so both tiles either side
+# of a boundary draw the identical depth for the identical pixel.
+# FOUR DRAWS, and the widest one is at the LIGHT end. The first table tried (4, 3, 0) hit four of
+# the five declared targets and lost the spread — 3.997 rungs against #161's 5.024 — because
+# capping the joint at its stone's level had cut off the tail that was carrying the width. Adding
+# a share PACKED SHUT recovers it at the light end instead, which widens the distribution while
+# LOWERING the mean and the share above the floor. Measured: spread 4.99, mean 0.112, mode 0.078.
+SHELTER_LIFT_RUNGS = (5.0, 4.0, 3.0, 0.0)   # packed shut / mode / middle / the deep tail
+SHELTER_WEIGHTS = (0.06, 0.50, 0.26, 0.18)   # a smaller packed-shut share keeps the median
+                                             # joint faintly present: at 0.15 the field's
+                                             # spread fell to 2.95 rungs because half the
+                                             # joints had closed. 0.06 restores it to 4.01
+                                             # without moving any declared target.
+SHELTER_BLOCK = 8                      # world px per draw
+SHELTER_SALT = 3015
+
+
+def shelter_lift_block(wx, wy, seed):
+    """How far each joint pixel is lifted off the ladder's bottom, in rungs.
+
+    One definition, three painters. The draw is on a coarse world block so the depth varies along
+    a joint's run rather than being constant on it — mortar, not a drawn line.
+    """
+    import numpy as _np
+    h = (_mix_np(wx // SHELTER_BLOCK, wy // SHELTER_BLOCK, SHELTER_SALT + seed) % 1000) / 1000.0
+    cuts = _np.cumsum(_np.array(SHELTER_WEIGHTS))
+    idx = _np.searchsorted(cuts, h, side="right").clip(0, len(SHELTER_LIFT_RUNGS) - 1)
+    return _np.array(SHELTER_LIFT_RUNGS)[idx]
 
 
 JOINT_FILL_RUNGS = (0.0, 0.0, 1.0, 2.0)   # by wear age: how far up the ladder a joint is packed
@@ -1376,7 +1470,9 @@ def build_tile(n, e, s, w, mat, seed, drops=(0, 0), split_i=0):
     # So the bond keeps the dark joint it had, and the differential is spent the only way the
     # palette leaves room for: a SHELTERED joint is shallower, and an open one takes the arris off
     # the stones beside it instead of going darker, because it cannot.
-    depth = np.full((T, T), 0.42, dtype=float)
+    # Overridable so a diagnosis can cost alternatives without editing the file it is
+    # measuring. Production always reads the literal.
+    depth = np.full((T, T), globals().get('_JOINT_DEPTH_OVERRIDE', 0.42), dtype=float)
     for r, prof in bed_rows:
         depth[r, :] = 0.44 - prof * 0.09
     L = np.where(joints, stone * depth + rng.normal(0, 1.0, (T, T)), L)
@@ -1441,6 +1537,11 @@ def main():
     mat["deform_aniso"] = DEFORM_ANISO
     mat["hollow_depth"] = HOLLOW_DEPTH
     mat["hollow_rim"] = HOLLOW_RIM
+    mat["shelter_lift"] = list(SHELTER_LIFT_RUNGS)
+    mat["shelter_weights"] = list(SHELTER_WEIGHTS)
+    mat["shelter_block"] = SHELTER_BLOCK
+    mat["lane_fray"] = LANE_FRAY
+    mat["joint_polish_floor"] = JOINT_POLISH_FLOOR
     mat["polish_lane"] = [POLISH_LANE_GAIN, POLISH_LANE_WIDTH, POLISH_SHOULDER]
     mat["striation"] = [STRIA_PERIOD, STRIA_DEPTH]
     mat["lane_dish"] = [LANE_DISH_DEPTH, LANE_DISH_RIM]
@@ -1455,7 +1556,7 @@ def main():
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
                           marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT,
                           hollow=HOLLOW_SALT, stria=STRIA_SALT, lane_dish=LANE_DISH_SALT,
-                          grit=GRIT_SALT),
+                          grit=GRIT_SALT, shelter=SHELTER_SALT, lane_fray=LANE_FRAY_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,

@@ -1,0 +1,48 @@
+{
+ "commit": "b36fe61c10fe65094e452512ac961bdcb9cc3f9f",
+ "pass_ratio": 1.35,
+ "treatments": {
+  "wear_age": {
+   "boundary_px": 5079,
+   "on_grid": 0.1286,
+   "chance": 0.1211,
+   "ratio": 1.062,
+   "pass_": true
+  },
+  "travel_axis": {
+   "boundary_px": 1526,
+   "on_grid": 0.0734,
+   "chance": 0.1211,
+   "ratio": 0.606,
+   "pass_": true
+  },
+  "specular_lane": {
+   "boundary_px": 8418,
+   "on_grid": 0.1268,
+   "chance": 0.1211,
+   "ratio": 1.047,
+   "pass_": true
+  },
+  "lane_dish": {
+   "boundary_px": 5602,
+   "on_grid": 0.1092,
+   "chance": 0.1211,
+   "ratio": 0.902,
+   "pass_": true
+  },
+  "margin_grit": {
+   "boundary_px": 3048,
+   "on_grid": 0.1345,
+   "chance": 0.1211,
+   "ratio": 1.111,
+   "pass_": true
+  }
+ },
+ "control": {
+  "boundary_px": 4177,
+  "on_grid": 0.412,
+  "chance": 0.1211,
+  "ratio": 3.402
+ },
+ "verdict": true
+}

@@ -1,0 +1,85 @@
+Looked at `A.png` (750×600) at 1:1 first, then magnified and ran measurements. Walls and UI ignored as instructed. Floor is the vertical corridor `x 372–436, y 16–464`, the east–west band at `y 0–80, x 180–628`, and the unlit band at `y 464–600`.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Pale cream limestone flagstones, laid in courses with dark mortar joints. Large slabs in the corridor, smaller ones in the room to the north.
+
+**Q1_WHY:** The faces are a flat warm cream — sampled `(392,250)` = RGB(255,232,137), `(384,130)` = same family. Uniform, no grain, no bedding lines, no aggregate. The joints are a consistent dark brown 2–3px line (`(400,230)` = RGB(101,72,46)) that reads as mortar rather than a gap. The 1px dotted brown crack lines break in short straight runs, which reads as stone rather than tile or brick. Honest caveat: under the lamp I am partly guessing the material from the joint pattern, because the faces themselves are blown out (see Q7).
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+North. **The ground did not influence me.** I picked it off the light and the layout — the lamp reaches to `y=0` in the north band but gives up around `y=440` going south, and the northern band is a wider space with a different, tighter coursing pattern, which reads as *somewhere else* rather than *more corridor*. Both of those are architecture, not surface. There is nothing on the walkable ground itself — no path, no wear, no direction, no cue — that made one end more attractive than the other. If you had shown me the floor with the lighting flattened I would have chosen at random.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been cracked and lightly stained. Nothing else. One hairline crack meanders down the corridor from `y≈84` to `y≈460`, and two dark blotches sit on it at `(417,316)` and `(417,430)`. The north band `y 0–75` carries more of the same: a long sweeping crack from `x≈310` to `x≈478` and roughly five more blotches.
+
+What has *not* happened to it: nothing is chipped, nothing is spalled, no slab is missing, sunken, lifted or replaced, there is no debris, no repair, no patch, no rubble, no wet, no crust, nothing tracked in from anywhere. For a floor in continuous heavy use since before the records, the surface is intact.
+
+**Q3_WHY:** The corridor cross-section (mean brightness per column, `x 378→434`, lighting normalised) is 0.83–0.91 on the west half and 0.54–0.74 on the east half — and that entire difference is accounted for by the crack and the two blotches sitting on the east side. There is no centre-high/edge-low profile, which is what a walked floor gives you. Slab edges at the joints are geometrically sharp everywhere: at `(436,146)` the joint line is a clean 2px run with no bitten corners. No slab in the whole lit area deviates in tone from its neighbours by more than the lamp gradient explains.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Three things.
+
+1. **Rungs.** A full-width horizontal joint crosses the entire corridor at `y = 144, 166, 208, 230, 272, 336, 358, 400, 422, 464`. Every one of them spans the complete 54px interior — I checked, and at each of those rows all columns `380–433` are dark. No slab ever bridges a course. Combined with the fact that the corridor is exactly two slabs wide everywhere, it reads as a ladder, and once seen I could not stop seeing it. Worse: the intra-course line sits at exactly **+21px from the tile top** in four of the six corridor tiles (tiles topped at `y=144, 208, 336, 400`), giving a 22/42/22/42 rhythm locked to a 64px grid. Only the tiles at `y=80` (+25) and `y=272` (+31) break it.
+2. **The blob.** A spiky rosette splat, roughly 30px across, at `(417,316)` and `(417,430)` in the corridor, `(272,41)`, `(477,58)`, `(515,28)` in the north band, and about six more in the south band. Same silhouette, same scale, same spike frequency every time. Cross-correlating the corridor instance against the others peaks at 0.48, so they are variants rather than clones — but at 1:1 they read as one stamp used repeatedly.
+3. **The joint snapping.** The single vertical joint down the corridor alternates between `x≈387` and `x≈397` and back — `y 84–108` at 387, `y 116–140` at 397, `y 212–228` at 387, `y 236–268` at 397. Two positions, oscillating. It pulls the eye left-right as you scan down.
+
+**Q5: MADE, OR REPEATED?**
+**Made** — but out of a thin kit, and the kit shows.
+
+The evidence for made is real: no two corridor tiles are pixel-duplicates (highest pairwise correlation across the six, lighting-normalised, is 0.56 between `y=80` and `y=208`); slab layouts genuinely vary; and cracks cross tile seams — the north-band crack runs continuously through the seams at `x=372` and `x=436` without a step. Someone laid this out rather than tiling it.
+
+The evidence for repeated is the +21 course offset appearing in four of six corridor tiles, the full-width seam every 64px without exception, and the two-position vertical joint. Those are the machine showing through the hand.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. It is clean, readable, correctly lit, correctly aligned, and it does not embarrass itself — which is exactly the bar for competent. It is not good. A good floor gives you information when you look at it; this one gives you geometry.
+
+**Q7: WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF AT 1:1?**
+
+**Legible at 1:1:** the joint grid, the crack running down the corridor, the two dark blotches. That is the complete list.
+
+**The faces are blank at 1:1.** Not subtle — blank. And under the lamp it is worse than blank, it is clipped: the most common colour in the bright pool is RGB(255,255,151), with both the red *and* green channels saturated at 255. **40.6% of all pixels in the corridor between `y=100` and `y=300` have red pinned at 255.** In the core of the light pool the material has no tonal range left to carry anything. Whatever texture is authored into the tile, the lamp is destroying it precisely where the player is looking.
+
+**Only appears once magnified:** a faint per-pixel dither on the slab faces, ±2–4 value steps — I found it at 8×, not before. The splats resolve from "smudge" to "spiky rosette" at about 3×. The crack resolves from "line" to "1px dotted brown run with a slight bevel" at 6×. All of that is hunting.
+
+**Q7_WHY:** Checked at 1:1 — corridor `y 100–300, x 378–434` (the bright pool, where I expected to see the most); corridor `y 300–400`; north band `y 20–75, x 280–520`. Had to magnify — `(378,210)–(436,274)` at 8× to find the dither; `(390,300)–(430,332)` at 6× to resolve the splat; `(378,120)–(436,172)` at 9× to see how the crack meets a joint. Measured face value range on clean slab interiors (grout and crack excluded by percentile): `y 220–265, x 382–432` gives 221–243, and `y 110–140` gives 227–243 — roughly 20 levels of spread on a mean of 230, and most of that 20 is the lamp falloff, not material.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+Decades. Not centuries, and nothing like older-than-the-records. **One age everywhere.**
+
+The cracks say time has passed and the ground has moved — that is genuine, and it is the one thing on this floor doing work. But everything a genuinely old, continuously trafficked floor accumulates is missing: no rounding at slab edges, no dishing in the middle of the run, no polish where feet go and dullness where they don't, no mortar loss, no differential settlement between courses, no replaced slabs sitting proud or low, nothing ground into the joints. The stone is cracked but it is not *worn*. That combination — fractured, pristine — reads as a floor laid perhaps thirty or fifty years ago over ground that shifted once, then left alone.
+
+The north band `y 0–75` carries visibly more marking than the corridor (dark-pixel fraction 0.49–0.51 versus 0.21–0.46 per corridor tile), so it is *dirtier*. But it is the same clean stone underneath with more decals on top, not older stone. That is decal density, not age, and it does not survive as an age cue.
+
+**Q8_WHY:** Slab edges at the joints throughout `x 372–436, y 84–464` — every corner is square. Corridor cross-section profile `x 378–434` — flat across the width, no dish. Face brightness on the clean slabs at `y 220–265` and `y 110–140` — 221–243, uniform, no polish variance. North band `y 8–72, x 190–620` for the higher marking density. The crack trace `y 84→460`, `x 415→424→405→411→418→399`, for the one real age signal.
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES, TO THE EDGE OF YOUR LIGHT?**
+**No. The ground told me nothing.** I read the route entirely off the walls.
+
+I know the corridor runs north–south because there are solid blocks at `x<372` and `x>436` and open floor between them. Take the walls away and leave me only the ground and I could not tell you that this is a route at all, let alone which way it runs. The floor under the figure's feet is identical in every respect to the floor at the corridor's edges — same tone, same joint treatment, same absence of everything. Nothing narrows, nothing points, nothing is smoother down the middle, nothing is dirtier at the sides.
+
+**Q9_WHY:** Along the route — `y 84–144`, `y 208–272`, `y 272–336`, `y 336–400`, all at `x 378–434`. Rejected — nothing, because there was nothing to reject on ground evidence; the only reason I did not consider east and west is that they are wall. What is different about the ground between the accepted and rejected regions: **nothing.** The measured centre-to-edge brightness profile across the corridor (`x 378→434`, grout rows excluded) is 0.83, 0.91, 0.77, 0.86, 0.85, 0.88, 0.76, 0.60, 0.70, 0.54, 0.74, 0.71, 0.67 — the variation tracks the crack position, not distance from the wall. A trodden route would show the inverse.
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST?**
+They all look the same.
+
+Two openings are within the light: the north mouth at `y 80–110, x 378–432` and the south mouth at `y 440–470, x 378–432`. I examined both at 6×. At the north mouth the floor simply changes coursing — corridor slabs give way to the room's tighter courses at `y=80` with no threshold, no sill, no scuffing, no fan of wear spreading into the room, nothing carried across. At the south mouth, the same: the crack and a splat continue through and the stone is unchanged. Neither mouth has a scrap of ground evidence in front of it. If one of these is the door four hundred years of soldiers use and the other is the one nobody has opened, the floor is not telling.
+
+---
+
+**CULL:** Under the lamp the surface clips to flat 255-yellow — the faces carry no material at all.
+
+**FLIP LIST**
+- Pull the light's peak down so the corridor faces stop clipping — currently 41% of pixels in `y 100–300, x 378–434` have red pinned at 255 and the most common colour is RGB(255,255,151); the material needs 30–40 levels of headroom to survive the lamp.
+- Put legible material on the slab faces at 1:1 — pitting, tool marks, bedding, discolouration at 3–6 value steps and 2–4px feature size, not the current invisible ±2 dither.
+- Break the 64px course rhythm: the intra-tile joint sits at exactly +21 from the tile top in four of the six corridor tiles, and every horizontal joint spans the full corridor width. Some slabs must bridge a seam, and the course offset must vary by at least ±10px.
+- Author traffic into the ground: a centre-lighter, edge-darker gradient down the corridor and a wear fan spreading from the north mouth at `y 80–110`, so the route and the used door are readable from the floor alone.
+- Retire or heavily re-vary the rosette splat — it appears at `(417,316)`, `(417,430)`, `(272,41)`, `(477,58)`, `(515,28)` and around six more times in the south band at one scale and one silhouette.
+
+---
+
+The thing worth carrying forward: this floor's problem is not craft, it is **information**. It is competently drawn and it tells you nothing — not where you are, not which way you're going, not how long this place has been here. In a game whose whole premise is that the ground has been walked on for longer than anyone can count, a floor that reads as *fractured but unworn* is the single most expensive miss. Fix the clipping first, because until the lamp stops flattening the near field, no amount of texture you add will reach the player.
+
+*Model: Claude Opus 5 (1M context).*

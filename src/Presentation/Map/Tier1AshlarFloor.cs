@@ -93,7 +93,13 @@ public static class Tier1AshlarFloor
         public double DeformAniso = 0.8;
         public double HollowDepth = 1.3, HollowRim = 0.45;
         public int HollowSalt = 3011;
-        public int StriaSalt = 3012, LaneDishSalt = 3013, GritSalt = 3014;
+        public int StriaSalt = 3012, LaneDishSalt = 3013, GritSalt = 3014, ShelterSalt = 3015;
+        public double[] ShelterLift = { 5, 4, 3, 0 };
+        public double[] ShelterWeights = { 0.15, 0.50, 0.20, 0.15 };
+        public int ShelterBlock = 8;
+        public int LaneFraySalt = 3016;
+        public double LaneFray = 0.32;
+        public double JointPolishFloor = 0.70;
         public double PolishLaneGain = 1.9, PolishLaneWidth = 0.62, PolishShoulder = 1.15;
         public int StriaPeriod = 3;
         public double StriaDepth = 0.45;
@@ -522,6 +528,63 @@ public static class Tier1AshlarFloor
     private static System.Collections.Generic.IReadOnlyList<Logic.ECS.RoutePolyline.Line>
         linesForAxis = new System.Collections.Generic.List<Logic.ECS.RoutePolyline.Line>();
 
+    /// <summary>How far a sheltered joint is lifted off the ladder's bottom, in rungs.</summary>
+    private static double ShelterLift(Config c, int wx, int wy)
+    {
+        double h = (Mix(wx / c.ShelterBlock, wy / c.ShelterBlock, c.ShelterSalt + c.Seed) % 1000)
+                   / 1000.0;
+        double acc = 0.0;
+        for (int i = 0; i < c.ShelterWeights.Length; i++)
+        {
+            acc += c.ShelterWeights[i];
+            if (h < acc) return c.ShelterLift[System.Math.Min(i, c.ShelterLift.Length - 1)];
+        }
+        return c.ShelterLift[^1];
+    }
+
+    /// <summary>
+    /// The specular lane's strength at a world pixel: continuous down the centre, streaked along
+    /// the tangent, FRAYED at its shoulder.
+    ///
+    /// THE FRAY IS RULED, not a nicety. A smoothstep to zero at a fixed distance gives the lane a
+    /// hard upper edge, and the walk read that as a spotlight stripe laid on the floor — which is
+    /// staging, and §8.1 does not allow it. The distance is jittered on a coarse world block
+    /// before the falloff is taken, so the edge wanders by a fraction of a tile instead of
+    /// arriving on a line.
+    /// </summary>
+    private static double LanePolish(Config c, int wx, int wy)
+    {
+        if (c.Lines.Count == 0) return 0.0;
+        var nr = Logic.ECS.RoutePolyline.Nearest(c.Lines, (wx + 0.5) / T, (wy + 0.5) / T);
+        double fray = ((Mix(wx / c.ShelterBlock, wy / c.ShelterBlock, c.LaneFraySalt + c.Seed)
+                        % 1000) / 1000.0 - 0.5) * 2.0 * c.LaneFray;
+        double d = nr.Dist + fray;
+        double lane = System.Math.Clamp(
+            (c.PolishShoulder - d) / System.Math.Max(c.PolishShoulder - c.PolishLaneWidth, 1e-6),
+            0.0, 1.0);
+        lane = lane * lane * (3.0 - 2.0 * lane) * c.PolishLaneGain;
+
+        double nlen = System.Math.Sqrt(nr.Tx * nr.Tx + nr.Ty * nr.Ty);
+        if (nlen < 1e-9) nlen = 1.0;
+        double perp = (-nr.Ty / nlen) * wx + (nr.Tx / nlen) * wy;
+        long band = ((long)System.Math.Floor(perp) % c.StriaPeriod + c.StriaPeriod) % c.StriaPeriod;
+        double hs = (Mix(wx, wy, c.StriaSalt + c.Seed) % 100) / 100.0;
+        if (band == 0 || (band == 1 && hs < c.StriaDepth)) lane *= 1.0 - c.StriaDepth;
+        return lane;
+    }
+
+    /// <summary>
+    /// The travel axis AT A PIXEL. With a route present this is the line's own tangent there, so
+    /// the compaction's direction changes where the route turns rather than where the tiles do.
+    /// Without one it falls back to the per-tile field, which is all a fieldless scene has.
+    /// </summary>
+    private static int PixelAxis(Config c, byte[,]? traffic, int wx, int wy, int tx, int ty)
+    {
+        if (c.Lines.Count > 0)
+            return Logic.ECS.RoutePolyline.Axis(c.Lines, (wx + 0.5) / T, (wy + 0.5) / T);
+        return TravelAxis(traffic, tx, ty);
+    }
+
     private static int TravelAxis(byte[,]? t, int tx, int ty)
     {
         // THE ROUTE RUNS WHERE THE TRAFFIC CONTINUES. Sum the two neighbours along each of the
@@ -939,9 +1002,23 @@ public static class Tier1AshlarFloor
         //     alone, so both tiles either side of a boundary agree by construction.
         // (b) the stones beside an open joint lose their arrises: a pixel of stone goes with the
         //     joint, and sometimes a second — a corner gone.
-        bool channelHere = isChannel != null && isChannel(tx, ty);
-        int travelAxis = TravelAxis(traffic, tx, ty);
-        var (anisoBed, anisoHead) = AnisoWeights(cfg, travelAxis);
+        // ================= WEAR IGNORES THE TILE GRID =================
+        //
+        // RULED at the gate: "one tile worn, the one next to it not — that's not how it works."
+        // ANY WEAR BOUNDARY COINCIDING WITH A TILE EDGE IS STAGED.
+        //
+        // Two per-tile evaluations were feeding every wear pixel in this cell, and both drew
+        // their boundaries on the grid by construction:
+        //
+        //   THE CHANNEL FLAG was a per-tile boolean that raised the wear scalar to a floor for
+        //   the whole tile — a hard step at the tile edge, in the joints, the chroma and the
+        //   flatten alike. It predates the route model. With a route present the route IS the
+        //   channel, so the legacy flag no longer applies at all.
+        //
+        //   THE TRAVEL AXIS was computed once at the tile and then handed to every joint pixel
+        //   in it, so the compaction's DIRECTION changed on tile edges. It is per pixel now,
+        //   from the same Nearest() the strength already costs.
+        bool channelHere = isChannel != null && isChannel(tx, ty) && cfg.Lines.Count == 0;
         var openAmt = new double[T, T];
         for (int py = 0; py < T; py++)
             for (int px = 0; px < T; px++)
@@ -960,12 +1037,14 @@ public static class Tier1AshlarFloor
                     // stone keeps its address and the corner theorem is unaffected. What degrades
                     // along a path is the VISIBLE enclosure, deliberately.
                     int age = AgeIndex(cfg, openAmt[py, px]);
+                    int pxAxis = PixelAxis(cfg, traffic, tx * T + px, ty * T + py, tx, ty);
+                    var (anisoBed, anisoHead) = AnisoWeights(cfg, pxAxis);
                     // A joint lying ACROSS the route is crossed and packed shut; one running WITH
                     // it stays open and dark. Along a north-south corridor the bed joints close
                     // and the head joints survive as continuous lines: the directional grain,
                     // out of the bond that was already there.
                     double kw = 1.0;
-                    if (travelAxis >= 0)
+                    if (pxAxis >= 0)
                     {
                         bool bedJ = px > 0 && px < T - 1
                                     && clsArr[py, px - 1] == 0 && clsArr[py, px + 1] == 0;
@@ -978,7 +1057,21 @@ public static class Tier1AshlarFloor
                     if ((hb % 1000) / 1000.0 < cfg.JointBreak[age] * kw)
                         raw[py, px] = cfg.LumMedian;
                     else
-                        raw[py, px] += cfg.JointFill[age] * kw * rung;
+                    {
+                        // THE SHELTERED JOINT DRAWS ITS OWN DEPTH, then the route's fill packs it
+                        // further. Drawn on a coarse world block so the depth varies ALONG a
+                        // joint's run — mortar, not a drawn line — and world-keyed, so both tiles
+                        // either side of a boundary draw the identical depth for the same pixel.
+                        //
+                        // CAPPED AT THE STONE'S OWN LEVEL. A packed joint rises toward the floor
+                        // and stops there; uncapped, lift plus fill put 2% of joints ABOVE their
+                        // stone, which is a joint that emits light — the exact inversion of "dark
+                        // BECAUSE enclosed".
+                        double lift = ShelterLift(cfg, tx * T + px, ty * T + py);
+                        double up = System.Math.Min(lift + cfg.JointFill[age] * kw,
+                                                    (cfg.LumMedian - raw[py, px]) / rung);
+                        raw[py, px] += System.Math.Max(up, 0.0) * rung;
+                    }
                 }
 
         // ORDER IS LOAD-BEARING, and the paint check is what said so. These two passes run
@@ -1113,7 +1206,38 @@ public static class Tier1AshlarFloor
                 double L = cfg.Ladder[LadderIndex(cfg, System.Math.Clamp(
                     raw[py, px], cfg.Ladder[0], cfg.Ladder[^1]))];
                 double[] t = cfg.Tint;
+                // ================= A PACKED JOINT TAKES THE SHINE =================
+                //
+                // RULED after the walk contradicted the table. The polish mask was set on STONE
+                // FACES ONLY and every joint got zero — so under the lamp the faces gained a
+                // superlinear specular and the joints gained nothing, and the delivered
+                // face-to-joint contrast was amplified by exactly the light. Measured by nulling
+                // the gain: in the lit band the outline share falls 16.3% -> 1.3%, a twelvefold
+                // drop, while the dark band barely moves. The source was clean the whole time;
+                // the renderer was drawing the ring. That is §13.9's converse.
+                //
+                // The fix is physical rather than a cap. A joint PACKED LEVEL WITH ITS STONE is
+                // not a recess any more — it is walked surface, and walked surface shines. So a
+                // joint's share of the polish is how FILLED it is: none while it is still a hole,
+                // all of it once it is level. Nothing else changes, and a deep joint stays matte
+                // because a deep joint is still a hole.
                 double refl = 0.0;
+                if (clsArr[py, px] == 0)
+                {
+                    double bottom = cfg.Ladder[0];
+                    // AND THE RATIO IS CAPPED. Letting a joint's shine track how filled it is
+                    // is physically right and, alone, moved the delivered outline only 16.3% ->
+                    // 14.4% in the lit band: the deep minority still went matte beside faces
+                    // carrying a 1.9 gain, and THAT ratio is what draws the line. So the joint's
+                    // share has a floor — no joint is more than (1 - floor) below the face beside
+                    // it in specular, however deep it is. The story survives: grit packed into a
+                    // deep joint in a polished lane catches some of the same sheen.
+                    double filled = System.Math.Clamp(
+                        (raw[py, px] - bottom) / System.Math.Max(cfg.LumMedian - bottom, 1e-6),
+                        cfg.JointPolishFloor, 1.0);
+                    if (filled > 0.0)
+                        refl = LanePolish(cfg, tx * T + px, ty * T + py) * filled;
+                }
                 if (clsArr[py, px] != 0)
                 {
                     int fa = AgeIndex(cfg, Wear01(cfg,
@@ -1129,29 +1253,7 @@ public static class Tier1AshlarFloor
                     // chopped into noise cannot be followed. Width now comes from the line
                     // distance directly, so the lane runs continuous down the centre; the noise
                     // returns at its shoulders through the age layer underneath.
-                    if (cfg.Lines.Count > 0)
-                    {
-                        int wx2 = tx * T + px, wy2 = ty * T + py;
-                        var nr = Logic.ECS.RoutePolyline.Nearest(
-                            cfg.Lines, (wx2 + 0.5) / T, (wy2 + 0.5) / T);
-                        double lane = System.Math.Clamp(
-                            (cfg.PolishShoulder - nr.Dist)
-                            / System.Math.Max(cfg.PolishShoulder - cfg.PolishLaneWidth, 1e-6),
-                            0.0, 1.0);
-                        lane = lane * lane * (3.0 - 2.0 * lane) * cfg.PolishLaneGain;
-
-                        // STRIATIONS ALONG THE TANGENT. The band coordinate is PERPENDICULAR to
-                        // the tangent, so the streaks themselves run along it. Floored to whole
-                        // pixels: §4.3 forbids the anti-aliasing a smooth stripe would need.
-                        double nlen = System.Math.Sqrt(nr.Tx * nr.Tx + nr.Ty * nr.Ty);
-                        if (nlen < 1e-9) nlen = 1.0;
-                        double perp = (-nr.Ty / nlen) * wx2 + (nr.Tx / nlen) * wy2;
-                        long band = ((long)System.Math.Floor(perp) % cfg.StriaPeriod
-                                     + cfg.StriaPeriod) % cfg.StriaPeriod;
-                        double hs = (Mix(wx2, wy2, cfg.StriaSalt + cfg.Seed) % 100) / 100.0;
-                        if (band == 0 || (band == 1 && hs < 0.35)) lane *= 1.0 - cfg.StriaDepth;
-                        refl = System.Math.Max(refl, lane);
-                    }
+                    refl = System.Math.Max(refl, LanePolish(cfg, tx * T + px, ty * T + py));
                 }
                 outImg.SetPixel(px, py, new Color(
                     (float)(L * t[0] / 255.0), (float)(L * t[1] / 255.0),
@@ -1325,6 +1427,17 @@ public static class Tier1AshlarFloor
             cfg.StriaSalt = salts.GetProperty("stria").GetInt32();
             cfg.LaneDishSalt = salts.GetProperty("lane_dish").GetInt32();
             cfg.GritSalt = salts.GetProperty("grit").GetInt32();
+            cfg.ShelterSalt = salts.GetProperty("shelter").GetInt32();
+            var sl = new List<double>();
+            foreach (var v in mat.GetProperty("shelter_lift").EnumerateArray()) sl.Add(v.GetDouble());
+            cfg.ShelterLift = sl.ToArray();
+            var sw = new List<double>();
+            foreach (var v in mat.GetProperty("shelter_weights").EnumerateArray()) sw.Add(v.GetDouble());
+            cfg.ShelterWeights = sw.ToArray();
+            cfg.ShelterBlock = mat.GetProperty("shelter_block").GetInt32();
+            cfg.LaneFraySalt = salts.GetProperty("lane_fray").GetInt32();
+            cfg.LaneFray = mat.GetProperty("lane_fray").GetDouble();
+            cfg.JointPolishFloor = mat.GetProperty("joint_polish_floor").GetDouble();
             var pl = mat.GetProperty("polish_lane");
             cfg.PolishLaneGain = pl[0].GetDouble();
             cfg.PolishLaneWidth = pl[1].GetDouble();

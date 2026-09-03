@@ -1,0 +1,112 @@
+*** ROUND 25 IS VOID — THE PLANT SEAT DID NOT CATCH THE PLANT. ***
+*** LOOP-PROCESS §4: these findings are NOT READ and are NOT EVIDENCE. ***
+*** Nothing below may be cited, quoted, or acted on. ***
+
+Looked at A.png (750×600, rendered at 2× — native art is 375×300; tile grid is 64 display px, boundaries at x = …313, 377, 441, 505… and y = 19, 83, 147, 211, 275, 339, 403, 467).
+
+Floor regions in scope: the one-tile-wide corridor **x377–441, y83–467** (the lit ground the figure occupies), the east–west band **x181–573, y0–83**, and the wide room **x181–573, y467–600** (mostly beyond the light).
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone slabs — a warm tan limestone or sandstone, laid as irregular ashlar with dark mortar joints. That much is clear. What it is *not* clear about is the stone's character: it could equally be plaster, clay tile or paint. The material is named by the joint layout, not by the stone.
+
+**Q1_WHY:** Measured hue is consistent everywhere — corridor slab at (391–431, 240–268) averages RGB [251,219,130], top band at (300–360, 25–50) averages [183,136,82]; both are the ratio 1 : 0.87 : 0.52, one warm tan under different light. Joints are 2 display px (1 native px) of dark brown, and slab sizes are genuinely irregular — reading down the corridor at x385–430, joint rows fall at y105, 143, 207, 229, 271, 303, giving course heights of 19, 32, 11, 21, 16 native px. That irregular coursing is what says "stone laid by hand" rather than "tile."
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+North, up the corridor. **Nothing about the ground influenced that choice.** I picked it because the top band at y0–83 is lit and visibly open east–west, and because the south end at y467 is dark. Both are lighting and layout cues. The ground at (391–431, 100–140) immediately north of the figure and the ground at (391–431, 380–430) immediately south are the same material, the same slab rhythm, and the same blank faces. If you desaturated the walls and removed the lamp falloff, I could not tell you which end of this corridor anyone has ever used.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Almost nothing. It is intact, unworn, and clean. Slab edges are square and sharp everywhere; no corner is chipped, no joint is spalled, nothing is displaced, cracked, stained, patched, or worn hollow. Two long hairline marks arc across the top band and are the only events on the entire surface — one rising from roughly (200,80) to a peak near (355,10), a second rising from about (310,55) to a peak near (505,35) and falling away to (555,75). They cross tile joints, so they were authored across the layout rather than stamped per-tile, and they read as either cracks or rope laid down — I cannot tell which. Everything else is untouched.
+
+**Q3_WHY:** The corridor faces carry no incident at all. Beyond the two arcs, the only surface marks anywhere are faint diagonal hatch-scratches on a handful of dark slabs around (502–513, 0–12) and (526–545, 63–78), and some faint horizontal ruled lines near (545–570, 35–60). All of it is in the top band. None of it is on the corridor.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Three things.
+
+1. **The right edge of the corridor, every tile, x429–440.** Normalising each row and averaging across all five corridor tiles, the column profile runs 1.19 at x415, 1.15 at x421, 1.10 at x425, then 0.89, 0.69, 0.62, 0.58, 0.40 at x437 — while the left edge only falls to 0.68 at x377. The same lopsided dark hem repeats on every course down the whole corridor. It reads as a baked-in edge shadow rather than anything the stone is doing, and the repetition is what makes it register.
+
+2. **The slab rhythm in the corridor.** Every tile is the same phrase: one full-width course, then a course split into two slabs by a single vertical joint. Five times in a row, top to bottom.
+
+3. **The two arcs in the top band.** They are the only thing on the floor with any shape to it, so the eye goes to them, and it goes back. In a frame where the figure is meant to be the subject, the strongest ground incident is 400 px away from them and pointed the wrong way.
+
+---
+
+**Q5: MADE, OR AN IMAGE THAT WAS REPEATED?**
+**Repeated** — with an attempt at variation that does not survive measurement.
+
+The variation is real at the level of whole tiles: I compared the six top-band tiles at y19–83 pairwise and found no exact matches (best IoU 0.55, best normalised correlation 0.55), and the same for the six corridor tiles. So this is not one stamp tiled flat.
+
+But it is a small set drawn from repeatedly. Sliding a 32×32 window over all three floor regions and correlating every non-adjacent pair turns up 23 near-duplicates above 0.93. The clearest is inside the corridor: the block at **(377–433, 115–147)** and the block at **(377–433, 243–275)** correlate at **0.972**, and their binarised joint masks agree at **1.000** — pixel-identical layout, 128 px apart, exactly two tiles. (377,243) vs (377,307) hits 0.98, one tile apart. Running the corridor's joint mask against itself at every vertical shift, the strongest non-trivial peak in the whole 4–220 px range is **shift 128 at 0.839** — a two-tile cadence, visible in the one part of the image the player is looking at.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** The lighting is handled properly, the mortar reads cleanly at 1:1, the coursing is irregular in a way that doesn't look procedural, and the two arcs cross tile boundaries, which is more care than most tilesets get.
+
+Merely competent, or genuinely good? **Merely competent.** It is a correct floor. It is not a floor with anything to say. The walkable corridor — the only ground the player will actually look at — is blank stone with a repeating two-tile joint pattern and no wear, no history, and no direction.
+
+---
+
+**Q7: AT 1:1, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+**Legible at 1:1 (faces only, joints excluded):**
+- Colour. The floor is warm tan; under the lamp it is a pale yellow.
+- The two long arcs in the top band.
+- Nothing else. **The slab faces in the corridor are blank at 1:1.**
+
+**Only appears once magnified:**
+- The diagonal hatch-scratches near (502–513, 0–12) and (526–545, 63–78).
+- The faint horizontal ruled lines near (545–570, 35–60).
+- A ±1–3 level dither across the lit slab faces.
+- More hatching in the south room at y480–580, which needed both magnification and a gamma lift to see at all.
+
+I had to hunt for all of it. It counts as hunting.
+
+**Q7_WHY:** At 1:1 I read the corridor faces at **(391–431, 212–228)**, **(391–431, 240–270)**, **(391–431, 276–302)** and the top-band faces at **(396–458, 92–118)** and **(302–358, 18–48)**. Magnified (6× and 8×, plus a γ 0.38 lift) I went back over **(360–455, 80–480)**, **(180–380, 0–85)**, **(380–575, 0–85)** and **(180–575, 460–600)**.
+
+The measurement that settles it: the brightest slab in the image, directly under the lamp at **(391–431, 212–228)** — 20×8 native pixels — contains 58 distinct colours, of which **56% are within three levels of a single value [255,255,151]**. Detrended standard deviation across that face is **6.06** and almost all of that is the falloff dither along its right edge, not the stone. Separately, **5,498 of 24,576 corridor pixels (22%) have the red channel clipped at 255** — at the centre of the light, where the player's eye actually is, the floor stops being tan stone and becomes a flat yellow wash.
+
+---
+
+**Q8: HOW OLD IS THIS FLOOR?**
+**Laid recently and never walked on** — a year, maybe less. It reads as **one age everywhere**; I could not find a region that reads older or younger than another.
+
+That is the wrong answer for this place, and the gap is the point. This is meant to be a filing system in continuous heavy use since before the records, that no one has ever cared for. What I am reading is a floor that was finished last season and has not yet had a boot on it.
+
+**Q8_WHY:** Slab corners are square and unbroken at **(391–431, 148–206)**, **(391–431, 234–270)** and **(396–458, 92–118)** — no rounding, no chipping, no spalled arris. Joints are the same uniform 1-native-px dark line at every intersection down **x377–441, y83–467**; none is widened, packed, crumbled or lost. There is no dishing or polish along the corridor centre: the normalised column profile peaks at x391–393 and falls monotonically to the right, which tracks the lamp and the wall shadow, not a worn track. There is no debris, no staining, no accumulated dirt in any joint. The only evidence of elapsed time anywhere on the floor is the two arcs at y10–80, x200–555 — and they are not on the route.
+
+---
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES?**
+The route goes **north and south**, and the corridor's silhouette tells you so. **The ground told me nothing.**
+
+**Q9_WHY:** Along the route I read **(391–431, 100–140)**, **(391–431, 212–228)**, **(391–431, 240–270)**, **(391–431, 276–302)** and **(391–431, 308–340)**. I rejected everything at **x<373** and **x>441** for y83–467 — but I rejected it because it is wall, which I know from the placeholder blocks, not from anything the ground did.
+
+What is different about the ground between the accepted and rejected regions: **nothing, because there is no ground in the rejected regions.** That is the whole problem with this floor as a route. Within the corridor, the accepted regions do not differ from each other either: same slab size distribution, same joint weight, same blank faces, same everything, north end to south end. The horizontal courses run *across* the direction of travel — a ladder of rungs perpendicular to the walk — which is directionally neutral at best and mildly obstructive at worst. Rotate this corridor 90° and the ground would look identical; only the walls would tell you anything had changed.
+
+---
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST?**
+**They all look the same.** There are two openings — north into the east–west band at y83, south into the wide room at y467. The ground in front of the north opening, **(377–441, 84–120)**, and the ground in front of the south opening, **(377–441, 430–466)**, are the same material, the same coursing, the same intact joints, the same blank faces. Neither is scuffed, polished, dished, dirtied or cleaner than the other. The south end looks less used only because it is darker, and that is the lamp, not the floor. I cannot rank them.
+
+---
+
+**CULL:** The walked route is blank flat stone with a visible two-tile joint repeat and zero wear.
+
+**FLIP LIST**
+- Put wear on the corridor route: a dished, polished centre track through **x395–425, y83–467**, darker in the joints at its edges and lighter down its middle, so the ground itself says which way people go.
+- Differentiate the two openings — pack the joints at **(377–441, 84–120)** with trodden grime and leave **(377–441, 430–466)** clean and sharp, so the north end reads as used daily and the south as rarely.
+- Break the two-tile repeat in the corridor: the layout at **(377–433, 115–147)** is joint-identical to **(377–433, 243–275)**. Redraw one, and add at least one broken, sunken or replaced slab in the run so the eye has somewhere to stop.
+- Give the slab faces something legible at 1:1 — chipped arrises, a spalled corner, a stain, a crack that stops. Right now **56% of the lit face at (391–431, 212–228) is a single colour**, and 22% of the corridor is clipped to R=255.
+- Fix the highlight clip so the stone keeps its hue under the lamp; move the top band's two arcs, or add equivalent incident on the corridor, so the strongest ground mark is not 400 px off the route.
+
+Forward look: the top band already proves the pipeline can carry marks across tile joints — that arc is the one piece of authored history in the frame. The corridor needs the same treatment applied where the player is standing, and it needs a wear pass before the joint repeat matters, because right now the repeat is only visible *because* there is nothing else on the surface to look at.
+
+*Model: Claude Opus 5 (1M context).*

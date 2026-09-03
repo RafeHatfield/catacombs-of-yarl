@@ -1,0 +1,36 @@
+{
+ "commit": "88da9175d7d9aef4d0d3c0909240f4e1a6d6ca7b",
+ "dark": 0.22,
+ "captures": {
+  "r24_onroute": {
+   "floor_px": 253952,
+   "outline_share": 0.2527,
+   "bands": [
+    {
+     "band": "dark      <40",
+     "px": 139377,
+     "outline_share": 0.2356,
+     "mean_below": 0.1316
+    },
+    {
+     "band": "dim     40-80",
+     "px": 64518,
+     "outline_share": 0.2185,
+     "mean_below": 0.1166
+    },
+    {
+     "band": "lit    80-140",
+     "px": 24912,
+     "outline_share": 0.3611,
+     "mean_below": 0.1568
+    },
+    {
+     "band": "bright  >140",
+     "px": 25145,
+     "outline_share": 0.3273,
+     "mean_below": 0.1126
+    }
+   ]
+  }
+ }
+}

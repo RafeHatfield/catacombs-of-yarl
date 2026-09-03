@@ -1,0 +1,77 @@
+I read the file at 1:1 first (750×600, viewed unscaled), then magnified specific regions. Everything below is from those two passes; I say which is which.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut sandstone flagstones, laid in courses with dark mortar joints. Warm tan-to-ochre stone, dry, not polished.
+
+**Q1_WHY:** The joint grid is unambiguous — I measured the horizontal courses at y = 16, 42, 80, 112, 144, 166, 208, 250, 270. Course heights run 26, 38, 32, 32, 22, 42, 42, 20 px: irregular, so cut stone rather than tile or brick. Vertical joints within each course sit at varied offsets and give stone lengths from ~20 to ~60 px, staggered course to course. The colour under the lamp (x 380–505, y 140–265) is a flat warm tan, RGB running up to ~(250,225,160) at the brightest, with no aggregate speckle, no grain direction, no veining. It's sandstone by colour and by the fact that it cracks in long thin lines rather than shattering.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 505–570.
+
+Nothing about the ground made me pick it. The corridor mouth reads as an exit because two placeholder wall blocks bound it at x≈500 and x≈572 — that's wall information, which I'm meant to discount. I checked the ground in the corridor throat (x 510–565, y 275–330) against the ground in the open room (x 440–500, y 150–210) and against the west band (x 200–300, y 80–140), and there is no difference I can name: same joint density, same stone sizes, same absence of face detail. I chose south because it's the only direction where the geometry narrows, not because the floor told me anything.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Cracked and marked, evenly, everywhere, at a low level. Nothing has *happened* to it in a way I can point at — it has aged without any event.
+
+There are two kinds of mark and only two. Thin 1px meandering crack lines, maybe ten of them across the whole lit area — e.g. (330,105)→(470,115), a long one running (350,150)→(500,220), another (490,190)→(430,265), one down the corridor (510,290)→(520,390). And ragged dark rosettes roughly 16–24 px across at (215,45), (287,97), (356,46), (398,236), (463,174), (528,186), (558,67), (620,153), (560,239), (622,256). That's the entire event history of this floor.
+
+No repair. Nothing pinned, roped, bridged with plank or hide, nothing patched with a mismatched stone, no stone lifted or missing, no rubble, no debris in the corners, no staining pooled anywhere. For a floor in an underworld held by a company that repairs everything with driven pins and salvaged timber, the ground shows zero evidence any of them exist.
+
+**Q3_WHY:** I measured the fraction of area occupied by marks-plus-joints, after normalising out the lamp falloff, in five separate regions: bright pool 0.31, upper lit slab field 0.28, far right in the falloff 0.40, corridor throat 0.29, west dim band 0.36. That's flat within noise across the entire floor. Damage is distributed like a texture parameter, not like history. And the rosettes are all in the same 16–24 px size band and the same value — no big one, no small one, no cluster.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Two things.
+
+First, the rosettes. Ten of them in the visible floor, listed above, all the same size, all the same weight, spaced roughly one per 150 px in both axes. After the third one you stop reading them as damage and start reading them as a stamp being placed. I tested whether they're literal copies: exhaustive template match under all eight rotations/mirrors across the whole lit region gives a best-match correlation of 0.65 between any two of them, so they are genuinely varied and not duplicates — but they are close enough in silhouette, size and value that at 1:1 the variation doesn't register. They read as one asset. Worse, they aren't legible as anything: at 1:1 they're dark specks; at 6× they're ragged dark rings with lighter centres that could be scorch, mould, a chipped-out hollow or a splash. The only event marks on this floor don't say what the event was.
+
+Second, the soft diagonal banding at x 320–400, y 150–265 — pale and dark smears running upper-left to lower-right, which continue across the horizontal joint at y=208 at the same angle. They are blurred and off the pixel grid, unlike every other element in the image, which is crisp. If that's a dust-in-beam VFX, it's the most prominent thing on the ground in the lit pool and it's the one thing that isn't drawn to the same standard. Either way it pulls attention off the stone.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+Made — but only the layout. I looked for tile-scale repetition and the highest correlation between any two 40×40 regions is 0.867, at (377,260) vs (569,260); I pulled both up at 6× and they are not copies — the correlation comes from them sharing the same joint geometry, which is what you'd expect from a real bond. Course heights are irregular, stone lengths are irregular, cracks cross joints continuously instead of stopping at them. Nobody stamped this.
+
+The catch: the layout is the *only* thing that was made. The faces inside the layout are near-blank, so the "made" quality lives entirely in the mortar lines. That's a floor plan, not a floor.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. The lamp falloff is genuinely well handled — the roll from ~215 mean luminance in the pool down to ~28 at x 600–700, y 150–260 is smooth and the hue stays warm as it darkens, which is harder than it looks. But competent is where it stops. There is no passage of this floor where I'd want to know who made it.
+
+**Q7: AT THE SIZE SHOWN, WITHOUT ZOOMING IN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+The faces are effectively blank at 1:1.
+
+Legible at 1:1: the joint grid; the thin crack lines; the rosettes as dark specks (present, but not identifiable); the overall warm value. That's it. Every one of those is either a joint, a line between pieces, or an object dropped on top. Nothing about the *face* of the stone is legible — no texture, no tooth, no grain, no wear, no pitting, no tonal variation from stone to stone. A stone at (445,155) and a stone at (480,225) are the same blank tan.
+
+Only appears once magnified: faint 45° hatch striations at ~4–5 px spacing on scattered faces — I found them at x 500–520 y 55–75, x 560–585 y 40–60, x 600–640 y 90–120. Short horizontal dash marks, three parallel, at ~(573,60), ~(555,105), ~(240,120). Slight vertical streak shading down the left edge of some stones. All of this is one to two shades from its background and none of it is visible at 1:1 — I had to go to 4× and 6× and I had to hunt for it. That is hunting, not seeing.
+
+**Q7_WHY:** Checked at 1:1 in the unscaled 750×600 render: the bright pool x 380–505 y 140–265; the upper slab field x 315–620 y 0–140; the corridor x 505–570 y 270–450; the west band x 120–315 y 60–145. Had to magnify to 4–6×: x 490–650 y 10–110 (found the hatch and the dashes); x 310–420 y 120–280 (found the off-grid smear and the left-edge streaking); x 600–750 y 0–300 (found nothing beyond joints). Quantitatively, high-passing the lighting-normalised image and excluding joint pixels gives a face-detail standard deviation of ~4 in the falloff regions and ~25 in the bright pool — and that 25 is mostly the crack lines and rosette edges, not the faces.
+
+**Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU?**
+One age everywhere. Old in a generic way — a couple of centuries, maybe — but I'm reading that off "it has cracks" and nothing more specific. It cannot be older than the records, because a floor that old under continuous heavy use would not still have square-cornered stones and even joints.
+
+**Q8_WHY:** The evidence for age is the crack network — (330,105)→(470,115), (350,150)→(500,220), (490,190)→(430,265) — and the rosettes. The evidence *against* real age is what's missing, and I checked for all of it specifically: joint width is uniform at 3–4 px everywhere I measured (courses at y=16, 42, 80, 112, 144, 166, 208, 250), so no joint has opened or been washed out; stone corners at the joint intersections around (425,145), (497,112), (555,80) are square and sharp, not rounded off; there is no stone sitting proud of or below its neighbours; no stone is a different colour or a different age from the one beside it. The mark density is statistically identical in the corridor throat (0.29) and in the far corner (0.40 — and that difference is falloff noise, not wear). Every part of this floor is exactly as old as every other part, which is the one thing a floor in continuous heavy use since before the records cannot be.
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES?**
+No. The ground told me nothing. I read the corridor off the walls.
+
+**Q9_WHY:** Route I'd claim: south through x 505–570, y 270 out to about y 450 where the light gives up. Regions I checked along it: (510–565, 275–330), (510–565, 330–390), (510–565, 390–450). Regions I rejected: the west band (150–310, 70–140), and the east continuation (620–750, 60–260). What is different about the ground between them: nothing. Same course structure, same blank faces, same joint width, same mark density. The corridor is darker than the room, but that's distance from the lamp, not the floor saying anything.
+
+What should have been there and isn't: on ground walked daily for four hundred years by soldiers in boots, there is no polished lane, no darkened centre-of-corridor track, no joints scuffed shallower where feet land, no dirt swept to the corridor edges. The stone at the centre of the corridor (535, 300) is identical to the stone at its edge (512, 300). The floor is inert with respect to being walked on.
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST?**
+They all look the same. There are four openings — north off the top edge (x 320–750, y 0), east into the falloff (x 620+, y 0–260), west along the band at y 60–145, and south down the corridor (x 505–570, y 270). I compared the ground immediately in front of each: normalised mark density 0.28 north, 0.40 east, 0.36 west, 0.29 south, which after accounting for the lamp falloff is one number. No threshold is worn. No threshold is clean. Nothing distinguishes the door that's used every day from the one nobody has opened in four hundred years.
+
+**CULL:**
+Stone faces are blank at 1:1 — all detail is joints and a dozen scattered stamps.
+
+**FLIP LIST**
+- Put readable texture on the stone faces themselves at 1:1 — tooth, pitting, tonal variation stone-to-stone — at a contrast that survives without magnifying; the 45° hatch at x 500–520 y 55–75 is invisible at play size and currently the faces carry nothing.
+- Wear the route: darken and smooth a traffic lane down the centre of the corridor (x 520–555, y 270–450) and across the room floor toward it, with the joints scuffed shallower inside the lane and grit accumulated at its edges.
+- Differentiate the four thresholds — heavy polish and dirt at the mouth used daily, sharp joints and undisturbed grit at the one that isn't. Right now all four read 0.28–0.40 mark density, i.e. identical.
+- Add the orc repairs to the ground: a lifted or missing stone, a plank laid over a gap, driven pins, a patch of mismatched salvaged flag. Nothing on this floor has ever been fixed.
+- Replace the ten evenly-spaced 16–24 px rosettes with damage that varies in size, weight and cause, and remove the blurred off-grid diagonal smear at x 320–400 y 150–265 or rebuild it on the pixel grid.
+
+---
+
+Model: Claude Opus 5 (1M context).

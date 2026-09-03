@@ -35,6 +35,33 @@ import measure_perceptual_floor as MPF   # noqa: E402
 RAMP = " .:-=+*#%@"
 
 
+ORIGIN_RE = re.compile(r"legibility\((\d+),(\d+)\)[^\n]*at px\((\d+),(\d+)\)")
+
+
+def tile_origin(log_path, tile=64):
+    """Where tile (0,0) sits in the captured frame, DERIVED FROM THE ENGINE'S OWN OUTPUT.
+
+    ⚠ NEVER ASSUME THE FIELD IS CENTRED. Every delivered measurement in this session computed the
+    origin as `(H - rows*tile)//2` and was WRONG: the camera follows the PLAYER, not the map. On
+    the standing station the engine's legibility probe puts tile (8,10) at px(535,706) and the
+    centred formula puts it at px(375,667) — 160 pixels out in x.
+    
+    Everything that binned delivered pixels by traffic level was therefore sampling the wrong
+    tiles, and a seat that reported the corridor at x 502-566 was RIGHT while the instrument that
+    contradicted it was wrong. The probe prints a tile and its pixel on every capture; that is the
+    camera's own answer and it is what gets used.
+    """
+    txt = open(log_path).read()
+    pts = [(int(a), int(b), int(x), int(y)) for a, b, x, y in ORIGIN_RE.findall(txt)]
+    if not pts:
+        return None
+    oxs = [x - (tx * tile + tile // 2) for tx, ty, x, y in pts]
+    oys = [y - (ty * tile + tile // 2) for tx, ty, x, y in pts]
+    if len(set(oxs)) > 1 or len(set(oys)) > 1:
+        raise SystemExit("the log's probe points disagree about the origin: %s %s" % (oxs, oys))
+    return oxs[0], oys[0]
+
+
 def read_field(log_path, prefer_route=True):
     """The field the painter actually keys to, as the engine logged it.
 

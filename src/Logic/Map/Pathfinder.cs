@@ -20,7 +20,7 @@ public static class Pathfinder
     public static List<(int X, int Y)>? AStar(
         GameMap map, int fromX, int fromY, int toX, int toY,
         Entity? movingEntity = null, bool canPassDoors = false,
-        HashSet<(int, int)>? avoidTiles = null)
+        HashSet<(int, int)>? avoidTiles = null, bool terrainOnly = false)
     {
         if (fromX == toX && fromY == toY) return new List<(int, int)>();
 
@@ -61,7 +61,19 @@ public static class Pathfinder
 
                     // Check passability — destination is always allowed even if occupied
                     bool isDestination = nx == toX && ny == toY;
-                    if (!map.CanMoveToWith(nx, ny, movingEntity, ignoreEntityAtDest: isDestination, canPassDoors: canPassDoors))
+                    // TERRAIN ONLY, for callers asking about the LEVEL rather than about this
+                    // turn. A route is a property of the map's shape and its graph, not of who
+                    // happens to be standing where — and with occupancy on, ONE CREATURE IN A
+                    // ONE-TILE CORRIDOR SEVERS THE GRAPH. Measured: with the player at (8,11) in
+                    // the review scene's chokepoint, the whole level returned spine:0/routes:0
+                    // and the floor's entire route model vanished.
+                    bool passable = terrainOnly
+                        ? (map.IsWalkable(nx, ny)
+                           || (canPassDoors && map.GetTileKind(nx, ny) == TileKind.Door))
+                        : map.CanMoveToWith(nx, ny, movingEntity,
+                                            ignoreEntityAtDest: isDestination,
+                                            canPassDoors: canPassDoors);
+                    if (!passable)
                         continue;
 
                     // Skip avoid-tiles unless we're already standing on one (start tile)

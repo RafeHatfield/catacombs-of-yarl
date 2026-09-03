@@ -97,7 +97,7 @@ public static class TrafficField
 
         // ---- THE SPINE: the one journey every run makes.
         var spine = exit is { } e
-            ? Pathfinder.AStar(map, entry.X, entry.Y, e.X, e.Y, canPassDoors: true)
+            ? Pathfinder.AStar(map, entry.X, entry.Y, e.X, e.Y, canPassDoors: true, terrainOnly: true)
             : null;
         if (spine == null || spine.Count == 0)
         {
@@ -105,7 +105,7 @@ public static class TrafficField
             // level without stairs still has a spine rather than a blank field.
             var far = FarthestWalkable(map, entry);
             spine = far is { } f
-                ? Pathfinder.AStar(map, entry.X, entry.Y, f.X, f.Y, canPassDoors: true)
+                ? Pathfinder.AStar(map, entry.X, entry.Y, f.X, f.Y, canPassDoors: true, terrainOnly: true)
                 : new List<(int X, int Y)>();
         }
         if (spine.Count > 0) routes++;
@@ -137,7 +137,7 @@ public static class TrafficField
             if (target is not { } t) continue;
 
             var from = NearestOf(spineSet, t) ?? entry;
-            var route = Pathfinder.AStar(map, from.X, from.Y, t.X, t.Y, canPassDoors: true);
+            var route = Pathfinder.AStar(map, from.X, from.Y, t.X, t.Y, canPassDoors: true, terrainOnly: true);
             if (route == null) continue;
             routes++;
             tiers[tier]++;
@@ -193,7 +193,7 @@ public static class TrafficField
 
         int w = map.Width, h = map.Height;
         var acc = new double[w, h];
-        var spine = Pathfinder.AStar(map, a.X, a.Y, b.X, b.Y, canPassDoors: true)
+        var spine = Pathfinder.AStar(map, a.X, a.Y, b.X, b.Y, canPassDoors: true, terrainOnly: true)
                     ?? new List<(int X, int Y)>();
         foreach (var (x, y) in spine) Deposit(acc, w, h, x, y, SpineWeight);
 
@@ -224,7 +224,7 @@ public static class TrafficField
         {
             var from = NearestOf(spineSet, leaf);
             if (from is not { } f) continue;
-            var route = Pathfinder.AStar(map, f.X, f.Y, leaf.X, leaf.Y, canPassDoors: true);
+            var route = Pathfinder.AStar(map, f.X, f.Y, leaf.X, leaf.Y, canPassDoors: true, terrainOnly: true);
             if (route == null) continue;
             routes++;
             lineSrc.Add((route, RemoteWeight));
