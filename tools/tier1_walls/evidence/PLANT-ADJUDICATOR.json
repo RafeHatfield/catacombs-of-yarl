@@ -1,0 +1,44 @@
+{
+  "negative_set": 10,
+  "false_positives": [],
+  "plants_validation": [
+    [
+      "r1_W2.json",
+      "CAUGHT"
+    ],
+    [
+      "r2_W2.json",
+      "CAUGHT"
+    ],
+    [
+      "r3_W2.json",
+      "CAUGHT"
+    ],
+    [
+      "r4_W2.json",
+      "NOT CAUGHT"
+    ],
+    [
+      "r5_W2.json",
+      "CAUGHT"
+    ],
+    [
+      "r6_W2.json",
+      "CAUGHT"
+    ],
+    [
+      "r7_W2.json",
+      "CAUGHT"
+    ],
+    [
+      "r8_W2.json",
+      "NOT CAUGHT"
+    ],
+    [
+      "r9_W2.json",
+      "CAUGHT"
+    ]
+  ],
+  "can_say_caught": true,
+  "proven": true
+}

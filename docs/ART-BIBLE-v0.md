@@ -1124,7 +1124,39 @@ and a parameter row is therefore not evidence. **Probe total: 174 generations.**
 
 ---
 
-### 6.5 The value stack — RULED (Rafe, 2026-08-27). The recipe's load-bearing law.
+### 6.5 The value stack — RULED (Rafe, 2026-08-27), RE-SCOPED (Rafe, 2026-08-29, at the wall gate).
+
+> **RE-SCOPED — RULED (Rafe, 2026-08-29, at the first gate with real walls in the scene).
+> THE STACK IS A STANDING-DISTANCE LAW.**
+>
+> | | as it now stands |
+> |---|---|
+> | **where it holds** | **two tiles and in.** k_top ≈ **0.67** at the standing case. |
+> | **what it requires there** | the **2:1 plane separation**, which is delivered (mean ≈0.55 against 0.53). |
+> | **beyond three tiles** | the planes invert relative to the floor. **This is physics, and it is recorded as dark-by-design.** |
+> | **what is forbidden** | **no authored chase past the ladder.** |
+>
+> **The 1.11× came from a lightless screenshot.** The asset bar's scene is uniformly lit with no
+> run-time light in it at all, so a wall top brighter than the floor costs it nothing. Under a
+> carried lamp the floor a wall faces is always nearer the light than the wall's own top — by one
+> tile plus the half-tile the top band sits back inside its own cell — so k_top cannot reach 1.0
+> at any range and the number was never reachable here. Measured across one to four tiles:
+> **0.87 / 0.67 / 0.48 / 0.30**. Delivering 1.11× would need an authored 129 / 168 / 234 / 375
+> against a ladder that stops at 154.38.
+>
+> **What is NOT withdrawn.** The 2:1 separation between the wall's own two planes is a local
+> relationship, it survives the falloff, and it is what the whole wall campaign was actually
+> short of — §6.5's original finding, that Yarl's planes were INVERTED, stands untouched.
+>
+> **The clause no longer licenses solving the art backwards to chase the first row.** The
+> compensation the §6.2 coupling flag introduced is spent: what remains is a material law at the
+> distance a person stands to look at a wall.
+>
+> Evidence: `tools/tier1_walls/STACK-FINDING.md`, `evidence/RANGE-PROFILE.json`,
+> `LIGHT-FIELD-CONTROLS.json`. Instrument: a flat-albedo probe, four positive controls, the
+> pipeline shown exactly multiplicative in albedo at 0.5000 with a worst-cell error of 0.0006.
+
+**The original clause, kept in full because a status trail that overwrites itself is not a trail:**
 
 > **The floor sits BETWEEN the wall's two planes.**
 >
@@ -1319,6 +1351,36 @@ which matters enormously on a screen with no room for any of those. It also prod
 the unease the register wants: **the safe route is the one worn down by the traffic of the
 dead.**
 
+### 8.2.2 Walls age too, and they age at the foot — RULED (Rafe, 2026-08-29, at the wall gate)
+
+> **South faces workable in kind — but the walls have opted out of history.**
+
+Wear was written from floors and applied to floors, and the first walls to reach a gate arrived
+with a four-hundred-year-old frontier's masonry looking newly cut. The ruling is bounded and it
+names its own field:
+
+- **At the base courses**, where the world touches a wall — scuff, arris-rounding, and patina
+  rising one to two courses where routes run adjacent.
+- **Keyed to the EXISTING traffic field**, not to a new one and not to noise. `TrafficField` puts
+  vaults and shrines at exactly zero, so **sealed rooms stay sharp** — and sharpness then MEANS
+  something, in the same way §8.1's absence of wear does on a floor.
+- **The orc repair overlays count as age by implication** (§8.3.1a).
+
+**A wall's traffic is not its own.** Nobody walks on a wall; what rubs its foot is the traffic of
+the floor it faces, which is the same cell §6.5 measures it against.
+
+⚠ **The polish half is expressed as FORM, never as a pale value lift.** §8.2.1 banned a value lift
+for the floor's channel and the floor session paid for the lesson twice — *a value lift cannot
+signal under a carried lamp, because brightness is what the light is saying.* So four hundred years
+of shoulders and gear arrive as **arris-rounding**, a change of shape, and the grime arrives as
+darkening. Neither asks the lamp for permission.
+
+**As built and measured** (`tools/tier1_walls/measure_age_signal.py`, an A/B against an ageless
+build of the same family so every lighting term cancels): Weber **0.061 / 0.133 / 0.210** at ages
+1/2/3, monotonic, sealed cells flat to 0.0000. The top step clears §13.8's floor-family reference
+of 0.1440 by 46%; ages 1 and 2 sit under it deliberately, because light traffic on a remote branch
+should be almost nothing.
+
 ### 8.2.1 The trodden channel — RULED (Rafe, 2026-08-25)
 
 The primary expression of legible wear on floors is **a polished channel worn through a wider
@@ -1463,6 +1525,35 @@ objects**, and every round so far has shown a seat the first while calling it th
 |---|---|---|---|
 | **base tile** | once, per material | material only — no incident | never alone; only as laid |
 | **variant / overlay** | per instance, randomised | the incident — cracks, wear, marks, channel | in the field it produces |
+
+#### 8.3.1a AND IT WAS BROKEN AGAIN, BY THE ORC LAYER — RULED (Rafe, 2026-08-29, at the wall gate)
+
+> **The comb and spike marks on the top band are bindings. Remove them. Tops are incident-free.**
+
+The tier-one wall round built §7.1's orc layer as world-placed overlays — correct, and correctly
+kept out of the tile — and then placed them on **both planes**. Identified at the gate:
+`lash` is an iron strap with three rope turns across it, which at 32 px on a wall top is a comb;
+`strap` is the plain vertical bar, which is the spike; `patch` is four sawn-grain strokes, which is
+a second comb.
+
+**Three blind seats had already described the first one without being told anything existed
+there** — *"a vertical post with three horizontal crossbars"*, *"a stake or rack"* — and every one
+of them said the same thing about it: **it is holding nothing.**
+
+**§8.3.1 outranks §7.1 on a top plane, and this is the general form:** an overlay at a hashed
+position on a plane the bible says carries no incident is still incident on that plane, however it
+is placed and whatever it depicts. World-placement answers §8.3's *lattice* objection; it does not
+answer §3.1's *this surface carries nothing but the joints between the blocks it is made of*.
+
+⚠ **What it costs, stated because it is real:** a wall mass seen from above now shows no orc work
+at all, and §7.1's *show me what holds this together* is answered only where a reveal is. The
+bindings ship face-only.
+
+**AND THE REPAIRS ARE AGE — RECORDED (Rafe, 2026-08-29).** A strap over a joint means the joint
+moved. A patch means a course broke. A lash over a strap means the first repair failed and nobody
+replaced it (§7.3, *repaired on top of prior repairs*). The orc layer is the wall's history stated
+by implication, and it is counted as such alongside the aging pass rather than as decoration on
+top of one.
 
 #### 8.3.1 It applies to WALL material identically — RULED (Rafe, 2026-08-27, at the device gate)
 

@@ -1,0 +1,31 @@
+{
+  "png": "tools/tier1_walls/evidence/r21_family.png",
+  "cells": 16,
+  "bands": [
+    {
+      "band": "beyond 4",
+      "n": 16,
+      "mean": 8.24,
+      "sd": 0.57,
+      "texture_sd": 0.447,
+      "levels": 4.0,
+      "flat": true
+    }
+  ],
+  "sd_floor": 0.5,
+  "levels_floor": 3,
+  "plant": {
+    "bands": [
+      {
+        "band": "beyond 4",
+        "n": 16,
+        "mean": 8.0,
+        "sd": 0.0,
+        "texture_sd": 0.0,
+        "levels": 1.0,
+        "flat": true
+      }
+    ],
+    "fires": true
+  }
+}

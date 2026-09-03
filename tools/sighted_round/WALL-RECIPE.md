@@ -327,3 +327,97 @@ are outside this round.
 (`tools/floor_remediation/ring_instrument.py`) on every composed tile, and the round-8
 differencing check — authored occlusion must persist with the engine light off, and anything
 that only exists with the light on is a cull.
+
+---
+
+# ADDENDUM — THE CAP, MEASURED (2026-08-30)
+
+**RULED (Rafe, at the wall gate): *"Measure the bar's top-band construction and add it to
+WALL-RECIPE (we measured faces and ratios, never the cap)."***
+
+This recipe measured the bar's FACE across 23 tiles — its value stack, its proportions, its shadow
+ramp — and measured the top band exactly once, as a single value, on a single tile. That one
+reading was *"91.5% of those pixels are literally 90"*, and it was read as **the top is flat**.
+Tier one built that flatness, delivered it as a ruled grid, and it cost a device gate (§8.3.1).
+
+**The cap has now been measured as a construction**, across **39 cap tiles in five example maps**.
+Instrument: `tools/tier1_walls/measure_bar_cap.py`. Evidence:
+`tools/tier1_walls/evidence/BAR-CAP.json`. Measurements leave; pixels never do (§13.3).
+
+## A.1 THE CAP IS NOT FLAT. The single-tile reading was unrepresentative.
+
+| | measured across 39 cap tiles |
+|---|---:|
+| modal share — pixels holding the tile's single commonest value | **53.8%** |
+| worst tile | **27.8%** |
+| distinct values per cap tile, mean | **16.1** |
+| distinct values, max | **39** |
+
+**53.8%, not 91.5%.** The bar's cap uses sixteen values on a 48px tile and barely half of it sits
+on one of them. §2.3's *"plane flat at its target value, broken only by joints"* was true of one
+tile and is not true of the corpus, and §8.3.1's mirror clause is the one that applies:
+*incident-free is not featureless.*
+
+## A.2 THE CAP DOES **NOT** RUN CONTINUOUSLY ACROSS TILES — and it does not need to
+
+Measured on **82 adjacent cap pairs the maps actually draw**, left tile's last column against
+right tile's first:
+
+| | |
+|---|---:|
+| step across a drawn tile boundary | **24.22** |
+| step between neighbouring columns inside a tile | **5.46** |
+| ratio | **4.44×** |
+
+The bar's cap restarts at every tile boundary, and it reads anyway. **It buys continuity with
+TEXTURE rather than with edge-matching**: a boundary step of 24 disappears inside a material whose
+own interior already carries sixteen values across a similar range. A featureless cap has nothing
+to hide the seam in, which is why Yarl's is visible at the same construction.
+
+⚠ **This is NOT licence to skip seamless construction.** §13.3's origination rule cuts both ways:
+the bar may occasion a law but only the register may justify one, and *the bar does not bother*
+is not a justification either. What the number changes is the diagnosis — the seam is visible
+because the cap is empty, so texture and continuity are the same fix approached from two sides.
+
+⚠ **And the measurement had to be taken twice.** The first version compared a tile's own left
+column against its own right column, which asks whether the tile WRAPS ONTO ITSELF — a question
+the bar has no reason to answer yes to. It would have been reported as *the bar's cap restarts at
+every tile* without the map ever being consulted. Same arithmetic, different claim.
+
+## A.3 THE CAP IS SEPARATED FROM THE FLOOR BY VALUE **AND** BY HUE
+
+| | cap | floor | separation |
+|---|---:|---:|---|
+| luminance | 119.87 | 78.37 | **1.53×, +41.5 levels** |
+| hue angle | 165.0° | 109.7° | **55.3°** |
+| saturation | 0.251 | 0.435 | cap is **42% less saturated** |
+
+**+41.5 levels**, in a uniformly lit screenshot. §1.1 of this recipe adopted 1.15× from an
+aggregate that mixed cap and face; the cap alone is **1.53×**.
+
+And the separation is not only value: **the cap is hue-shifted 55° from the floor and markedly
+less saturated.** The floor is the warmer, dirtier, more saturated surface and the cap is the
+cooler, greyer one — which is §8.1's own derivation arriving as colour rather than as brightness.
+*The floor is dirty because it is used; the cap is clean because nothing has ever touched it.*
+
+⚠ **§5.4 governs how far Yarl may take the hue half.** *Chroma is signal* — a saturated pixel
+should mean something happened, and general richness is forbidden. The bar's numbers describe two
+materials differing, not an accent; Yarl's cap may separate on the same axis provided it stays a
+material difference and does not become a saturated event. **The bar's own cap saturation is 0.25
+and falling relative to its floor, which is the direction that costs nothing.**
+
+## A.4 FIELD SCALE — the cap varies across a map, by more than a rung
+
+Spread of per-tile cap means within a single map:
+
+| map | n | mean | sd | range |
+|---|---:|---:|---:|---|
+| `uf_example_1` | 7 | 90.93 | 7.07 | 87–108 |
+| `uf_example_2` | 6 | 91.63 | 10.41 | 73–108 |
+| `uf_example_3` | 12 | 131.07 | 7.55 | 108–136 |
+| `uf_example_4` | 7 | 182.78 | 30.65 | 108–200 |
+| `uf_example_simple` | 7 | 90.93 | 7.07 | 87–108 |
+
+**Every map's cap drifts.** The tightest carries an sd of 7 luminance across its wall tops and the
+loosest 30. A cap at one value across a room is not what the bar ships, and this is the number the
+field-scale requirement can be held to.

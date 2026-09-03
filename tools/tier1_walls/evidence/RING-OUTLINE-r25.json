@@ -1,0 +1,31 @@
+{
+  "png": "tools/tier1_walls/evidence/r25_family.png",
+  "void_ring": 1,
+  "bound": 1.35,
+  "bands": [
+    {
+      "band": "beyond 4",
+      "n_ring": 6,
+      "n_peer": 42,
+      "ring_step": 0.384,
+      "over_bar": 0,
+      "peer_step": 4.0,
+      "interior_step": 0.836,
+      "ring_over_peer": 0.096,
+      "outline": false,
+      "worst_pair": {
+        "step": 0.384,
+        "a": [
+          6,
+          9
+        ],
+        "b": [
+          7,
+          9
+        ],
+        "range": 6.0
+      }
+    }
+  ],
+  "outline": false
+}

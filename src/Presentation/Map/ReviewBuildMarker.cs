@@ -51,6 +51,38 @@ public sealed class ReviewBuildMarker
     public string? AshlarFloor { get; private init; }
 
     /// <summary>
+    /// res:// path to the tier-one WALL family's MANIFEST.json, or null. Absent, the scene keeps
+    /// whatever the theme's mask table chose — which for every build before this one was the
+    /// tier-0 magenta programmer-art mock, and deliberately so.
+    /// </summary>
+    public string? BoundaryWall { get; private init; }
+
+    /// <summary>
+    /// Which of the wall family's void candidates the build starts on. NOT A RULED VALUE: the
+    /// void is Rafe's to choose at the gate (§13.1), and the rig panel switches it live so the
+    /// choice is made by walking rather than by rebuilding.
+    /// </summary>
+    public int? VoidChoice { get; private init; }
+
+    /// <summary>
+    /// res:// path to the ORC BINDING family's MANIFEST.json, or null. Separate from
+    /// <see cref="BoundaryWall"/> because they are different objects and §8.3.1 requires them to
+    /// stay that way: the wall is the material, the bindings are the incident, and a binding that
+    /// ever gets baked into a wall segment is a repair repeated on every cell that segment lands
+    /// on.
+    /// </summary>
+    public string? WallBindings { get; private init; }
+
+    /// <summary>
+    /// res:// path to the CAP field's MANIFEST.json, or null. Separate again, and for the same
+    /// reason: the cap is not a tile set keyed by anything the wall family knows. It is one
+    /// continuous field cut into windows chosen by WORLD POSITION, so it has no masks, no edge
+    /// families and no ages — and a wall build without it falls back to the block cap the
+    /// 2026-08-30 gate culled for its tile-frequency seams.
+    /// </summary>
+    public string? WallCap { get; private init; }
+
+    /// <summary>
     /// The commit the build was made from, and when — stamped into the marker by
     /// build_review_app.sh. LOOP-PROCESS §2.3: evidence carries its producer's hash, and a
     /// hash mismatch at a ruling invalidates the evidence. Headless captures have always
@@ -133,6 +165,13 @@ public sealed class ReviewBuildMarker
                             ? fo.GetString() : null,
                 WangFloor = root.TryGetProperty("wangFloor", out var wf) ? wf.GetString() : null,
                 AshlarFloor = root.TryGetProperty("ashlarFloor", out var af) ? af.GetString() : null,
+                BoundaryWall = root.TryGetProperty("boundaryWall", out var bw)
+                            ? bw.GetString() : null,
+                VoidChoice = root.TryGetProperty("voidChoice", out var vch)
+                            ? vch.GetInt32() : (int?)null,
+                WallBindings = root.TryGetProperty("wallBindings", out var wb)
+                            ? wb.GetString() : null,
+                WallCap = root.TryGetProperty("wallCap", out var wc) ? wc.GetString() : null,
                 Commit  = root.TryGetProperty("commit",  out var cm) ? cm.GetString() : null,
                 BuiltAt = root.TryGetProperty("builtAt", out var ba) ? ba.GetString() : null,
                 TileSize  = root.TryGetProperty("tileSize", out var ts)

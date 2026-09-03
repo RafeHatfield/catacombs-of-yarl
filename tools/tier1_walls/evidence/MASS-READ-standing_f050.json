@@ -1,0 +1,323 @@
+{
+  "produced_by": "tools/tier1_walls/measure_mass_read.py",
+  "scene": "tier1_wall_standing",
+  "capture": "tools/tier1_walls/evidence/r16_standing_f050.png",
+  "family": "boundary_wall_material_v1",
+  "reference": 0.144,
+  "cells": [
+    {
+      "x": 3,
+      "y": 6,
+      "cls": "top_h",
+      "dist": 7.81,
+      "wall": 6.47,
+      "void": 1.07,
+      "floor": 7.87,
+      "w_void": 0.8342,
+      "w_floor": -0.178
+    },
+    {
+      "x": 3,
+      "y": 11,
+      "cls": "face",
+      "dist": 5.1,
+      "wall": 8.34,
+      "void": 1.83,
+      "floor": 9.92,
+      "w_void": 0.7799,
+      "w_floor": -0.16
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "cls": "top_h",
+      "dist": 7.21,
+      "wall": 9.57,
+      "void": 1.07,
+      "floor": 8.83,
+      "w_void": 0.888,
+      "w_floor": 0.0774
+    },
+    {
+      "x": 4,
+      "y": 11,
+      "cls": "face",
+      "dist": 4.12,
+      "wall": 27.55,
+      "void": 6.43,
+      "floor": 44.05,
+      "w_void": 0.7664,
+      "w_floor": -0.3745
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "cls": "top_h",
+      "dist": 6.71,
+      "wall": 6.06,
+      "void": 1.07,
+      "floor": 7.91,
+      "w_void": 0.8232,
+      "w_floor": -0.233
+    },
+    {
+      "x": 5,
+      "y": 11,
+      "cls": "face",
+      "dist": 3.16,
+      "wall": 48.38,
+      "void": 14.6,
+      "floor": 81.66,
+      "w_void": 0.6983,
+      "w_floor": -0.4075
+    },
+    {
+      "x": 5,
+      "y": 15,
+      "cls": "face",
+      "dist": 4.24,
+      "wall": 27.68,
+      "void": 6.43,
+      "floor": 37.45,
+      "w_void": 0.7675,
+      "w_floor": -0.2609
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "cls": "top_h",
+      "dist": 6.32,
+      "wall": 7.8,
+      "void": 1.07,
+      "floor": 7.49,
+      "w_void": 0.8626,
+      "w_floor": 0.0402
+    },
+    {
+      "x": 6,
+      "y": 11,
+      "cls": "face",
+      "dist": 2.24,
+      "wall": 79.36,
+      "void": 14.6,
+      "floor": 116.76,
+      "w_void": 0.8161,
+      "w_floor": -0.3203
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "cls": "top_h",
+      "dist": 6.08,
+      "wall": 9.63,
+      "void": 1.07,
+      "floor": 8.11,
+      "w_void": 0.8887,
+      "w_floor": 0.1583
+    },
+    {
+      "x": 7,
+      "y": 7,
+      "cls": "top_v",
+      "dist": 5.1,
+      "wall": 10.79,
+      "void": 1.83,
+      "floor": 9.92,
+      "w_void": 0.8299,
+      "w_floor": 0.08
+    },
+    {
+      "x": 7,
+      "y": 8,
+      "cls": "top_v",
+      "dist": 4.12,
+      "wall": 38.82,
+      "void": 6.43,
+      "floor": 44.05,
+      "w_void": 0.8342,
+      "w_floor": -0.1187
+    },
+    {
+      "x": 7,
+      "y": 9,
+      "cls": "top_v",
+      "dist": 3.16,
+      "wall": 74.59,
+      "void": 14.6,
+      "floor": 81.66,
+      "w_void": 0.8043,
+      "w_floor": -0.0865
+    },
+    {
+      "x": 7,
+      "y": 10,
+      "cls": "top_v",
+      "dist": 2.24,
+      "wall": 94.13,
+      "void": 14.6,
+      "floor": 116.76,
+      "w_void": 0.8449,
+      "w_floor": -0.1938
+    },
+    {
+      "x": 7,
+      "y": 11,
+      "cls": "face",
+      "dist": 1.41,
+      "wall": 106.75,
+      "void": null,
+      "floor": 124.41,
+      "w_void": null,
+      "w_floor": -0.142
+    },
+    {
+      "x": 9,
+      "y": 6,
+      "cls": "top_h",
+      "dist": 6.08,
+      "wall": 9.52,
+      "void": 1.07,
+      "floor": 8.11,
+      "w_void": 0.8874,
+      "w_floor": 0.1482
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "cls": "top_v",
+      "dist": 5.1,
+      "wall": 17.07,
+      "void": 1.83,
+      "floor": 9.92,
+      "w_void": 0.8925,
+      "w_floor": 0.4186
+    },
+    {
+      "x": 9,
+      "y": 8,
+      "cls": "top_v",
+      "dist": 4.12,
+      "wall": 54.23,
+      "void": 6.43,
+      "floor": 44.05,
+      "w_void": 0.8813,
+      "w_floor": 0.1877
+    },
+    {
+      "x": 9,
+      "y": 9,
+      "cls": "top_v",
+      "dist": 3.16,
+      "wall": 60.56,
+      "void": 14.6,
+      "floor": 81.66,
+      "w_void": 0.759,
+      "w_floor": -0.2584
+    },
+    {
+      "x": 9,
+      "y": 10,
+      "cls": "top_v",
+      "dist": 2.24,
+      "wall": 115.08,
+      "void": 14.6,
+      "floor": 116.76,
+      "w_void": 0.8732,
+      "w_floor": -0.0144
+    },
+    {
+      "x": 9,
+      "y": 11,
+      "cls": "face",
+      "dist": 1.41,
+      "wall": 77.66,
+      "void": null,
+      "floor": 124.41,
+      "w_void": null,
+      "w_floor": -0.3758
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "cls": "top_h",
+      "dist": 6.32,
+      "wall": 7.1,
+      "void": 1.07,
+      "floor": 7.49,
+      "w_void": 0.849,
+      "w_floor": -0.0515
+    },
+    {
+      "x": 10,
+      "y": 11,
+      "cls": "face",
+      "dist": 2.24,
+      "wall": 82.49,
+      "void": 14.6,
+      "floor": 116.76,
+      "w_void": 0.8231,
+      "w_floor": -0.2935
+    },
+    {
+      "x": 11,
+      "y": 6,
+      "cls": "top_h",
+      "dist": 6.71,
+      "wall": 6.47,
+      "void": 1.07,
+      "floor": 7.91,
+      "w_void": 0.8342,
+      "w_floor": -0.1821
+    },
+    {
+      "x": 11,
+      "y": 11,
+      "cls": "face",
+      "dist": 3.16,
+      "wall": 61.84,
+      "void": 14.6,
+      "floor": 81.66,
+      "w_void": 0.764,
+      "w_floor": -0.2428
+    },
+    {
+      "x": 12,
+      "y": 6,
+      "cls": "top_h",
+      "dist": 7.21,
+      "wall": 8.12,
+      "void": 1.07,
+      "floor": 8.83,
+      "w_void": 0.8679,
+      "w_floor": -0.0808
+    },
+    {
+      "x": 12,
+      "y": 11,
+      "cls": "face",
+      "dist": 4.12,
+      "wall": 36.03,
+      "void": 6.43,
+      "floor": 44.05,
+      "w_void": 0.8214,
+      "w_floor": -0.1822
+    }
+  ],
+  "by_band": {
+    "standing <=2": {
+      "n": 6,
+      "w_void": 0.8393,
+      "w_floor": -0.2233
+    },
+    "3-4 tiles": {
+      "n": 9,
+      "w_void": 0.7885,
+      "w_floor": -0.1938
+    },
+    "beyond 4": {
+      "n": 12,
+      "w_void": 0.8531,
+      "w_floor": 0.0031
+    }
+  }
+}

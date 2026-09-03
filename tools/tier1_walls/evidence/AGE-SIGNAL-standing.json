@@ -1,0 +1,148 @@
+{
+  "produced_by": "tools/tier1_walls/measure_age_signal.py",
+  "scene": "tier1_wall_standing",
+  "capture": "tools/tier1_walls/evidence/r17_standing.png",
+  "control": {
+    "aged_cells_move": true,
+    "sealed_cells_flat": true
+  },
+  "family": "boundary_wall_compensated_v1",
+  "reference_floor": 0.144,
+  "cells": [
+    {
+      "x": 3,
+      "y": 11,
+      "age": 1,
+      "dist": 5.1,
+      "aged_ratio": 0.7009,
+      "sharp_ratio": 0.7329,
+      "weber": 0.0437,
+      "levels": 0.16,
+      "lit": 4.94
+    },
+    {
+      "x": 4,
+      "y": 11,
+      "age": 1,
+      "dist": 4.12,
+      "aged_ratio": 1.0354,
+      "sharp_ratio": 1.0913,
+      "weber": 0.0513,
+      "levels": 0.69,
+      "lit": 11.73
+    },
+    {
+      "x": 5,
+      "y": 11,
+      "age": 2,
+      "dist": 3.16,
+      "aged_ratio": 1.3746,
+      "sharp_ratio": 1.5823,
+      "weber": 0.1313,
+      "levels": 5.09,
+      "lit": 23.42
+    },
+    {
+      "x": 5,
+      "y": 15,
+      "age": 3,
+      "dist": 4.24,
+      "aged_ratio": 0.3912,
+      "sharp_ratio": 0.4935,
+      "weber": 0.2074,
+      "levels": 1.79,
+      "lit": 14.92
+    },
+    {
+      "x": 6,
+      "y": 11,
+      "age": 3,
+      "dist": 2.24,
+      "aged_ratio": 0.7963,
+      "sharp_ratio": 0.9648,
+      "weber": 0.1746,
+      "levels": 13.77,
+      "lit": 53.8
+    },
+    {
+      "x": 7,
+      "y": 11,
+      "age": 3,
+      "dist": 1.41,
+      "aged_ratio": 0.9785,
+      "sharp_ratio": 1.1657,
+      "weber": 0.1606,
+      "levels": 21.14,
+      "lit": 71.92
+    },
+    {
+      "x": 9,
+      "y": 11,
+      "age": 2,
+      "dist": 1.41,
+      "aged_ratio": 0.9475,
+      "sharp_ratio": 1.094,
+      "weber": 0.134,
+      "levels": 10.18,
+      "lit": 66.74
+    },
+    {
+      "x": 10,
+      "y": 11,
+      "age": 2,
+      "dist": 2.24,
+      "aged_ratio": 0.7047,
+      "sharp_ratio": 0.8164,
+      "weber": 0.1369,
+      "levels": 7.28,
+      "lit": 63.13
+    },
+    {
+      "x": 11,
+      "y": 11,
+      "age": 1,
+      "dist": 3.16,
+      "aged_ratio": 0.7636,
+      "sharp_ratio": 0.8047,
+      "weber": 0.0511,
+      "levels": 1.55,
+      "lit": 36.67
+    },
+    {
+      "x": 12,
+      "y": 11,
+      "age": 1,
+      "dist": 4.12,
+      "aged_ratio": 0.9865,
+      "sharp_ratio": 1.0329,
+      "weber": 0.0449,
+      "levels": 0.6,
+      "lit": 12.61
+    }
+  ],
+  "by_age": {
+    "1": {
+      "n": 4,
+      "weber": 0.0478,
+      "levels": 0.75,
+      "lit": 16.49
+    },
+    "2": {
+      "n": 3,
+      "weber": 0.1341,
+      "levels": 7.52,
+      "lit": 51.1
+    },
+    "3": {
+      "n": 3,
+      "weber": 0.1809,
+      "levels": 12.23,
+      "lit": 46.88
+    }
+  },
+  "standing_case": {
+    "n": 6,
+    "weber": 0.1314,
+    "lit": 52.61
+  }
+}

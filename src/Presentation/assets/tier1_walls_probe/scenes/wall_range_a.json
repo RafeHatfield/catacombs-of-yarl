@@ -1,0 +1,118 @@
+{
+  "name": "tier1_wall_range_a",
+  "_comment": [
+    "MEASURING FIXTURE - tools/tier1_walls/make_range_scenes.py. Not a review scene.",
+    "Isolated wall blocks (cardinal mask 0) stand at ranges 1, 3, 5, 7 tiles due north of the",
+    "player, each with floor on all four sides, so each shows the top/face pair whose",
+    "delivered ratio against the floor it faces is the quantity bible section 6.5 states",
+    "and section 6.2's coupling flag says must be solved backwards through this rig."
+  ],
+  "width": 17,
+  "height": 25,
+  "player": {
+    "x": 8,
+    "y": 18
+  },
+  "carve": [
+    {
+      "x0": 2,
+      "y0": 10,
+      "x1": 14,
+      "y1": 10
+    },
+    {
+      "x0": 2,
+      "y0": 11,
+      "x1": 6,
+      "y1": 11
+    },
+    {
+      "x0": 8,
+      "y0": 11,
+      "x1": 14,
+      "y1": 11
+    },
+    {
+      "x0": 2,
+      "y0": 12,
+      "x1": 14,
+      "y1": 12
+    },
+    {
+      "x0": 2,
+      "y0": 13,
+      "x1": 6,
+      "y1": 13
+    },
+    {
+      "x0": 8,
+      "y0": 13,
+      "x1": 14,
+      "y1": 13
+    },
+    {
+      "x0": 2,
+      "y0": 14,
+      "x1": 14,
+      "y1": 14
+    },
+    {
+      "x0": 2,
+      "y0": 15,
+      "x1": 6,
+      "y1": 15
+    },
+    {
+      "x0": 8,
+      "y0": 15,
+      "x1": 14,
+      "y1": 15
+    },
+    {
+      "x0": 2,
+      "y0": 16,
+      "x1": 14,
+      "y1": 16
+    },
+    {
+      "x0": 2,
+      "y0": 17,
+      "x1": 6,
+      "y1": 17
+    },
+    {
+      "x0": 8,
+      "y0": 17,
+      "x1": 14,
+      "y1": 17
+    },
+    {
+      "x0": 2,
+      "y0": 18,
+      "x1": 14,
+      "y1": 20
+    }
+  ],
+  "_blocks": [
+    {
+      "x": 7,
+      "y": 17,
+      "row": 1
+    },
+    {
+      "x": 7,
+      "y": 15,
+      "row": 3
+    },
+    {
+      "x": 7,
+      "y": 13,
+      "row": 5
+    },
+    {
+      "x": 7,
+      "y": 11,
+      "row": 7
+    }
+  ]
+}

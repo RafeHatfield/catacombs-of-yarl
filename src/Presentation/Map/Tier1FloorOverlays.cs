@@ -36,6 +36,18 @@ public static class Tier1FloorOverlays
     /// like a scene whose floor has no incident in it (LOOP-PROCESS §4.2 — ask of any step what
     /// goes red if it silently does nothing).
     /// </summary>
+    /// How many times the ambient floor's own occlusion may be re-drawn where the lamp is
+    /// absent, and the illumination ratio below which stacking starts. Three is the cap because a
+    /// seam that reaches the ground's whole value is not a seam, it is a hole — and §12.1 bans
+    /// the outline in the same clause that requires the occlusion.
+    private const int MaxOcclusionLayers = 3;
+    private const float OcclusionAnchor = 2.0f;
+    private static ReviewLighting? _lighting;
+
+    /// <summary>The rig, so the occlusion can anchor to ambient instead of scaling with the lamp.
+    /// Null is legal and means the previous behaviour exactly — one layer, everywhere.</summary>
+    public static void UseLighting(ReviewLighting? lighting) => _lighting = lighting;
+
     public static string Attach(TileLayer tileLayer, GameMap map, string manifestResPath, int seed)
         => Attach(tileLayer, map, manifestResPath, seed, out _);
 
@@ -53,7 +65,7 @@ public static class Tier1FloorOverlays
         if (cfg == null) return $"floor overlays: NOT ATTACHED — {load}";
 
         plan = FloorIncidentPlanner.Plan(map, cfg, seed);
-        int grit = 0, events = 0, chan = 0, occl = 0, missing = 0;
+        int grit = 0, events = 0, chan = 0, occl = 0, missing = 0, stacked = 0;
 
         // THE RENDERER'S WHOLE-CELL WALL SHADOW IS TURNED OFF WHERE THIS FAMILY IS ACTIVE.
         //
@@ -106,8 +118,38 @@ public static class Tier1FloorOverlays
 
             // OCCLUSION IS NOT A MARK and is never retired: it is §12.1's plane boundary, the
             // form that says the floor stops where the wall begins.
+            // §12.1's CONTACT OCCLUSION, ANCHORED TO AMBIENT (RULED 2026-09-02).
+            //
+            // *"The E/W plane-boundary occlusion drawn at ambient-anchored strength so the
+            // silhouette survives where the lamp doesn't reach — a boundary scaled by an absent
+            // lamp is a boundary that isn't drawn."*
+            //
+            // The overlay is a dark sprite multiplied by the same light as the ground under it,
+            // so its DELIVERED darkening falls with the lamp: measured on `r22_standing`, 47.80
+            // levels at the standing case, 15.64 at 3-4 tiles, and **3.85 past four** — where the
+            // floor itself only holds 7.79, so half of nothing is nothing. The seam stops being
+            // drawn exactly where the room most needs an edge.
+            //
+            // ⚠ WHAT THIS DOES NOT DO IS BRIGHTEN ANYTHING. It draws the same overlay more than
+            // once where the lamp is absent, so the darkening approaches what the ambient floor
+            // can actually represent. The near bands are UNCHANGED — the ratio there is already
+            // 15.64 levels, nearly twice the 8-level bar, and strengthening a seam that already
+            // reads would be the optimisation §13.4 warns about rather than a fix.
+            //
+            // §6.3 is bent here and the bending is deliberate and bounded: an asset receives
+            // light and never depicts it, but §12.1 rules plane-boundary occlusion FORM, and form
+            // does not fade because nothing is shining on it. It applies to this one treatment.
+            int layers = 1;
+            if (_lighting != null && inc.OcclusionIds.Length > 0)
+            {
+                float rel = _lighting.RelativeIlluminationAtTile(pos.X, pos.Y);
+                layers = Mathf.Clamp(Mathf.RoundToInt(OcclusionAnchor / Mathf.Max(rel, 0.01f)),
+                                     1, MaxOcclusionLayers);
+            }
             foreach (var oid in inc.OcclusionIds)
-                Draw(oid, 2, ref occl, orientable: false);         // N/E/S/W mean their edge
+                for (int i = 0; i < layers; i++)
+                    Draw(oid, 2, ref occl, orientable: false);     // N/E/S/W mean their edge
+            if (layers > 1) stacked++;
 
             // PER-TILE MARKS, RETIRED BY RULING when the family draws its own incident.
             //
@@ -137,7 +179,8 @@ public static class Tier1FloorOverlays
         }
 
         return $"floor overlays: cells={plan.Count} channel={channelCells} neglected={neglected} "
-             + $"drawn(grit={grit} event={events} channel={chan} occlusion={occl}) "
+             + $"drawn(grit={grit} event={events} channel={chan} occlusion={occl}"
+             + $"/stacked={stacked}@anchor{OcclusionAnchor:0.##}) "
              + $"cell_shadow_suppressed={suppressed} missing_texture={missing} "
              + $"seed={seed} manifest={manifestResPath}\n"
              + AsciiChannelMap(map, plan);

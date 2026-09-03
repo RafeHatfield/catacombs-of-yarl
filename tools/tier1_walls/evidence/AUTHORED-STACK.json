@@ -1,0 +1,110 @@
+{
+  "produced_by": "tools/tier1_walls/solve_authored_stack.py",
+  "scene": "tier1_floor_review",
+  "anchor": 101.162,
+  "dark_cell_modulate": 0.9280377490919512,
+  "pairs": [
+    {
+      "x": 8,
+      "y": 3,
+      "cardinal": 11,
+      "dist": 3.0,
+      "L_top": 0.4033527669731259,
+      "L_face": 0.5689052554809052,
+      "L_floor": 0.7638413675742575,
+      "floor_dark_modulated": true,
+      "L_floor_true": 0.8230714411365772,
+      "k_top": 0.49005802754635386,
+      "k_face": 0.6911979046379078
+    },
+    {
+      "x": 7,
+      "y": 3,
+      "cardinal": 11,
+      "dist": 3.1622776601683795,
+      "L_top": 0.35667380011543753,
+      "L_face": 0.5083753558168316,
+      "L_floor": 0.6897490507867751,
+      "floor_dark_modulated": true,
+      "L_floor_true": 0.7432338301557966,
+      "k_top": 0.4798944634162732,
+      "k_face": 0.6840045961178408
+    },
+    {
+      "x": 9,
+      "y": 3,
+      "cardinal": 11,
+      "dist": 3.1622776601683795,
+      "L_top": 0.35667380011543753,
+      "L_face": 0.5083753558168316,
+      "L_floor": 0.6897490507867751,
+      "floor_dark_modulated": true,
+      "L_floor_true": 0.7432338301557966,
+      "k_top": 0.4798944634162732,
+      "k_face": 0.6840045961178408
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "cardinal": 11,
+      "dist": 3.605551275463989,
+      "L_top": 0.24176156755795344,
+      "L_face": 0.35664099255472337,
+      "L_floor": 0.50054621198727,
+      "floor_dark_modulated": true,
+      "L_floor_true": 0.5393597539292286,
+      "k_top": 0.4482380559482305,
+      "k_face": 0.6612302641355764
+    },
+    {
+      "x": 10,
+      "y": 3,
+      "cardinal": 11,
+      "dist": 3.605551275463989,
+      "L_top": 0.24176156755795342,
+      "L_face": 0.35664099255472337,
+      "L_floor": 0.50054621198727,
+      "floor_dark_modulated": true,
+      "L_floor_true": 0.5393597539292286,
+      "k_top": 0.4482380559482305,
+      "k_face": 0.6612302641355764
+    }
+  ],
+  "solutions": {
+    "top": {
+      "target_ratio": 1.11,
+      "k_mean": 0.46926461325507224,
+      "authored_exact": 239.29,
+      "rung": 154.38,
+      "rung_index": 8,
+      "delivered_mean": 0.7161,
+      "delivered_min": 0.684,
+      "delivered_max": 0.7478
+    },
+    "face_light": {
+      "target_ratio": 0.6,
+      "k_mean": 0.6763335250289484,
+      "authored_exact": 89.74,
+      "rung": 88.24,
+      "rung_index": 3,
+      "delivered_mean": 0.59,
+      "delivered_min": 0.5768,
+      "delivered_max": 0.6029
+    },
+    "face_dark": {
+      "target_ratio": 0.5,
+      "k_mean": 0.6763335250289484,
+      "authored_exact": 74.79,
+      "rung": 75.02,
+      "rung_index": 2,
+      "delivered_mean": 0.5015,
+      "delivered_min": 0.4903,
+      "delivered_max": 0.5126
+    }
+  },
+  "authored_face_over_top": {
+    "face_light": 0.5716,
+    "face_dark": 0.4859
+  },
+  "stack_ordered_across_the_scene": false
+}

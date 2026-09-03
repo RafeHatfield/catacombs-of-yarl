@@ -1,0 +1,73 @@
+{
+  "png": "tools/tier1_walls/evidence/r25_standing.png",
+  "bound": 1.35,
+  "tile_px": 64,
+  "axes": {
+    "x": {
+      "n": 16250,
+      "on_edge": 0.0387,
+      "chance": 0.0469,
+      "ratio": 0.826
+    },
+    "y": {
+      "n": 18137,
+      "on_edge": 0.0656,
+      "chance": 0.0469,
+      "ratio": 1.4
+    }
+  },
+  "per_surface": {
+    "wall face": {
+      "axes": {
+        "x": null,
+        "y": null
+      },
+      "worst": 0.0
+    },
+    "wall cap-only": {
+      "axes": {
+        "x": {
+          "n": 1478,
+          "on_edge": 0.1272,
+          "chance": 0.0469,
+          "ratio": 2.714
+        },
+        "y": {
+          "n": 1314,
+          "on_edge": 0.0122,
+          "chance": 0.0469,
+          "ratio": 0.26
+        }
+      },
+      "worst": 2.714
+    },
+    "floor": {
+      "axes": {
+        "x": {
+          "n": 14772,
+          "on_edge": 0.0299,
+          "chance": 0.0469,
+          "ratio": 0.637
+        },
+        "y": {
+          "n": 16823,
+          "on_edge": 0.0698,
+          "chance": 0.0469,
+          "ratio": 1.489
+        }
+      },
+      "worst": 1.489
+    }
+  },
+  "worst_ratio": 1.4,
+  "on_grid": true,
+  "face_worst": 0.0,
+  "cap_worst": 2.714,
+  "floor_worst": 1.489,
+  "control": {
+    "plant_ratio": 2.321,
+    "fires": true,
+    "legal_clean": false
+  },
+  "proven": false
+}

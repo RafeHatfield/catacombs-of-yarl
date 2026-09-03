@@ -123,6 +123,76 @@ with open(path, "w") as f:
 PY
   echo "== ashlar floor: $TIER1_ASHLAR"
 fi
+# TIER1_WALLS / TIER1_BINDINGS / TIER1_VOID — the wall family, the orc layer over it, and which
+# void candidate the walk starts on.
+#
+# Three knobs rather than one because they are three different objects and §8.3.1 requires the
+# first two to stay separate: the wall is the material and the bindings are the incident, and a
+# binding baked into a segment is a repair repeated on every cell that segment lands on.
+#
+# Omit TIER1_WALLS and the phone shows the TIER-0 MAGENTA MOCKS. That is loud on purpose and is
+# the only reason it is safe to have a knob at all. Omit TIER1_BINDINGS and the walls are bare —
+# which is NOT loud, and is the failure worth naming here: §7.1's *show me what holds this
+# together* would be answered with nothing, and the answer would look like a design decision.
+#
+# TIER1_VOID is a STARTING POSITION, not a value. The rig panel's VOID row switches it live,
+# because §13.1 gives the choice to Rafe in the scene and three rebuilt candidates are three
+# walks rather than one comparison.
+if [ -n "${TIER1_WALLS:-}" ]; then
+  python3 - "$MARKER" "$TIER1_WALLS" <<'PY'
+import json, sys
+path, manifest = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["boundaryWall"] = manifest
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== boundary wall: $TIER1_WALLS"
+fi
+if [ -n "${TIER1_BINDINGS:-}" ]; then
+  python3 - "$MARKER" "$TIER1_BINDINGS" <<'PY'
+import json, sys
+path, manifest = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["wallBindings"] = manifest
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== wall bindings: $TIER1_BINDINGS"
+fi
+# TIER1_WALLS_CAP points the review build at the cap field's MANIFEST.json — the wall TOPS.
+#
+# Omit it and the walls fall back to the family's own per-tile top plane, which is what the device
+# gate saw and rejected: a lattice at tile frequency, featureless inside each cell, reading as dim
+# floor rather than as the top of a thick wall. The cap is one seamless field cut into windows the
+# engine picks BY WORLD POSITION, so this knob changes what the tops are made of, not how they are
+# lit. It is separate from TIER1_WALLS because the arms share a cap and the plant must not.
+if [ -n "${TIER1_WALLS_CAP:-}" ]; then
+  python3 - "$MARKER" "$TIER1_WALLS_CAP" <<'PY'
+import json, sys
+path, manifest = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["wallCap"] = manifest
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== wall cap: $TIER1_WALLS_CAP"
+fi
+if [ -n "${TIER1_VOID:-}" ]; then
+  python3 - "$MARKER" "$TIER1_VOID" <<'PY'
+import json, sys
+path, choice = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["voidChoice"] = int(choice)
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== void candidate (STARTING POSITION ONLY, the panel switches it): $TIER1_VOID"
+fi
 # STAMP THE BUILD'S OWN IDENTITY INTO THE MARKER.
 #
 # LOOP-PROCESS §2.3: every evidence file records the commit hash of the code that produced it,

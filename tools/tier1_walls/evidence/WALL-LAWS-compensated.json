@@ -1,0 +1,59 @@
+{
+  "assets": "src/Presentation/assets/tier1_walls_compensated",
+  "family": "boundary_wall_compensated_v1",
+  "results": {
+    "two_planes": {
+      "pass_": true,
+      "min_rungs": 4.576,
+      "mean_rungs": 5.894,
+      "n": 108,
+      "bound": "min separation >= 1.5 rungs"
+    },
+    "flat_top": {
+      "pass_": true,
+      "joint_rows_in_top_band": 0,
+      "tile": null,
+      "mean": 0.0,
+      "n": 108,
+      "bound": "zero rows in the top band a full rung below its own median"
+    },
+    "incident_free_top": {
+      "pass_": true,
+      "largest_frozen_blob": 0,
+      "per_class": {
+        "top_h": {
+          "frozen_px": 0,
+          "largest_frozen_blob": 0,
+          "sd_rungs": 1.135
+        },
+        "top_v": {
+          "frozen_px": 0,
+          "largest_frozen_blob": 0,
+          "sd_rungs": 1.135
+        }
+      },
+      "bound": "no connected region larger than 2px identical across the whole set"
+    },
+    "no_ring": {
+      "pass_": true,
+      "worst": 0.034,
+      "tile": 9601,
+      "bound": "no tile with all four borders deviating >12% the same way"
+    },
+    "edge_agreement": {
+      "pass_": true,
+      "seam_over_interior": 0.3099,
+      "seam": 1.65,
+      "interior": 5.323,
+      "n": 18,
+      "bound": "seam step <= 1.35x an ordinary interior step"
+    },
+    "constant_pitch": {
+      "pass_": true,
+      "on_pitch_share": 0.0,
+      "dark_columns": 102,
+      "field": "12x1 cells",
+      "bound": "<= 60% of the darkest columns on a tile boundary"
+    }
+  }
+}

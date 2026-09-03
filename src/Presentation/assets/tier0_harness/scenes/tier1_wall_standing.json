@@ -1,0 +1,112 @@
+{
+  "name": "tier1_wall_standing",
+  "_comment": [
+    "THE STANDING STATION \u2014 the gate scene's geometry, with the player where a player stands.",
+    "",
+    "The gate ruled \u00a76.5 down to a STANDING-DISTANCE law \u2014 two tiles and in \u2014 and the gate scene has",
+    "exactly ONE reveal inside 3.2 tiles, so every standing-case number was n=1.",
+    "",
+    "The obvious alternative was the corridor review scene, which has close reveals in quantity. It",
+    "turned out to be unusable, for a reason worth recording rather than working around: **its traffic",
+    "field is entirely zero.** A symmetric cross of one-wide corridors with no rooms and no dead ends",
+    "gives `TrafficField` nothing to accumulate, so NO traffic-keyed system can be exercised there \u2014",
+    "not the wall's aging, and not the floor's wear either. That reaches backwards into every round",
+    "that used that scene.",
+    "",
+    "So the station keeps the geometry that HAS traffic and moves the eye instead. It is an INSTRUMENT",
+    "STATION, not a second gate scene: nothing is judged here that is not judged in the walk. It exists",
+    "so that a number about the standing case is taken standing."
+  ],
+  "legibility": [
+    {
+      "x": 8,
+      "y": 13,
+      "expect": "lit",
+      "why": "the cell behind the player, 1 tile - the standing case's own ground"
+    },
+    {
+      "x": 5,
+      "y": 14,
+      "expect": "lit",
+      "why": "room A's west side, 3.6 tiles"
+    },
+    {
+      "x": 3,
+      "y": 17,
+      "expect": "dark",
+      "why": "room A's south-west corner, 7.1 tiles - the arc's outside, and in frame"
+    }
+  ],
+  "width": 17,
+  "height": 21,
+  "player": {
+    "x": 8,
+    "y": 12
+  },
+  "carve": [
+    {
+      "x0": 3,
+      "y0": 12,
+      "x1": 13,
+      "y1": 14
+    },
+    {
+      "x0": 3,
+      "y0": 16,
+      "x1": 13,
+      "y1": 19
+    },
+    {
+      "x0": 3,
+      "y0": 15,
+      "x1": 4,
+      "y1": 15
+    },
+    {
+      "x0": 6,
+      "y0": 15,
+      "x1": 13,
+      "y1": 15
+    },
+    {
+      "x0": 8,
+      "y0": 6,
+      "x1": 8,
+      "y1": 11
+    },
+    {
+      "x0": 3,
+      "y0": 2,
+      "x1": 13,
+      "y1": 5
+    },
+    {
+      "x0": 1,
+      "y0": 16,
+      "x1": 2,
+      "y1": 17
+    }
+  ],
+  "_carve_note": [
+    "Row 15 is carved in two pieces either side of x=5, which leaves ONE CELL STANDING at (5,15).",
+    "That is the island: floor on all four sides and on all four diagonals, so it is the only",
+    "geometry in any review scene that puts an outer corner on every side of the same mass.",
+    "",
+    "The band at y=6..11 is NOT carved except at x=8, so the two masses either side of the",
+    "chokepoint are the full width of the map and SIX cells deep. Six rather than three, and the",
+    "reason is a defect this scene had in its first form: the wall system draws two rings of",
+    "stone and then the void, so a three-deep mass is ring 1 and ring 2 and nothing else, and the",
+    "scene DID NOT CONTAIN THE VOID IT EXISTS TO RULE ON. Measured: 66 void cells in the map and",
+    "none of them inside the dungeon view. A scene that cannot pose its own question is the",
+    "failure \u00a72.2 asks every capture to declare, arriving one level up.",
+    "",
+    "Two rings of stone is itself derived rather than chosen: WALL-RECIPE \u00a72.2 measured every room",
+    "boundary in the asset bar at two tiles or more, and \u00a77.4 gives the register - a held line is",
+    "thick because thickness is what holding costs.",
+    "",
+    "The stub at x1..2, y16..17 is a neglected side passage off room A's west wall, carried over",
+    "from the floor gate scene for the same reason it exists there: \u00a78.2's polish-means-on-path",
+    "says nothing unless some floor in frame is off the path. It is short on purpose so it cannot",
+    "become the map's longest through-route and get treaded."
+  ]
+}

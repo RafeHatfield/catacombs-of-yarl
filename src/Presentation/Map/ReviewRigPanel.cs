@@ -95,6 +95,26 @@ public sealed partial class ReviewRigPanel : VBoxContainer
         LogSettings("rig:start");
     }
 
+    /// <summary>
+    /// Add the VOID row — the darkness beyond the walls, switched live.
+    ///
+    /// It is a row on this panel rather than a build flag for the same reason the rig knobs are:
+    /// three near-blacks rebuilt and redeployed one at a time are three separate judgements of
+    /// three different walks, and what is actually being asked is *which of these is the room's
+    /// outside*. That is a comparison, and a comparison needs the images adjacent in TIME if it
+    /// cannot have them adjacent in space.
+    ///
+    /// The panel does not rank them, label one as expected, or start anywhere but where the build
+    /// started. The void has no clause in the bible yet and this session proposes none.
+    /// </summary>
+    public void AddVoidRow(int count, System.Func<int> get, System.Action<int> set)
+    {
+        if (_body == null || count <= 1) return;
+        AddRow(_body, "void", 1f,
+               d => set(((get() + (int)d) % count + count) % count),
+               () => $"{get() + 1}/{count}");
+    }
+
     private Label AddRow(Control parent, string name, float step,
                          System.Action<float> nudge, System.Func<string> read)
     {
