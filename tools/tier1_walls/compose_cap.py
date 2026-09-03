@@ -133,10 +133,30 @@ def build_field(ladder, tint, top_rung, hue_shift, seed=1337,
     # SLOW DRIFT across the whole field — one span, three periods, so a room-sized view sees a
     # gradient rather than a plateau. The bar's caps drift by sd 7 to 30 luminance within a single
     # map (`WALL-RECIPE.md` A.4); this is authored to sit inside that.
-    drift = wrap_noise(size, 3, rng) * drift_rungs * step * 0.5
+    # ⚠ AND THE DRIFT IS HALVED. It is the term that made the field a cloud: a single 3-cell span
+    # carries enormous power in very few frequency bins, and it was drowning every octave above
+    # it. It still has to exist — the bar's caps drift by sd 7 to 30 within one map — so it is
+    # reduced rather than removed, and `cap_field_scale` still requires it to be there.
+    drift = wrap_noise(size, 3, rng) * drift_rungs * step * 0.38
 
-    # GRAIN at two scales, continuous across every window. One scale reads as a blur.
-    grain = (wrap_noise(size, 26, rng) * 1.0 + wrap_noise(size, 61, rng) * 0.45) / 1.45
+    # GRAIN — AN OCTAVE STACK REACHING STONE SCALE, and the two-octave version it replaces was
+    # measured as a cloud.
+    #
+    # GATE (Rafe): *"the cap texture is arriving as grey cloud, not stone grain."* Quantified on
+    # the composed field: **94.4% of its power sat at periods coarser than two tiles and 0.3% at
+    # half a tile or finer.** Mean period 428.7px on a 512px field — almost all of the variation
+    # was one slow drift.
+    #
+    # THE TARGET IS THE FLOOR'S OWN STONE, which is the same quarry argument applied to texture
+    # rather than to colour: measured over 120 ashlar tiles, **84.8% of their power is at periods
+    # of half a tile or finer.** That is what stone looks like at this tile size, and it is
+    # derived rather than chosen.
+    #
+    # 26 cells over 512px is a 20px period; 61 is 8px; 128 is 4px; 256 is 2px. §4.3 is not
+    # strained — every octave lands on whole pixels and nothing here is a sub-pixel gradient.
+    octaves = ((26, 0.12), (61, 0.30), (128, 0.95), (256, 1.60))
+    grain = sum(wrap_noise(size, c, rng) * a for c, a in octaves)
+    grain = grain / max(grain.std(), 1e-6)
     grain = grain * grain_rungs * step
 
     img = base + drift + grain
@@ -185,7 +205,12 @@ def main():
     # §5.4 is SATISFIED by this rather than strained. *Chroma is signal; general richness is
     # forbidden.* Making the cap LESS saturated than the floor spends no chroma at all - it is the
     # opposite of a saturated accent, and it is the direction that costs nothing.
-    ap.add_argument("--hue-shift", type=float, default=0.18,
+    # ⚠ DEFAULT 0.18 -> 0.0, BY RULING. This knob was authored to make the cap the COOLER,
+    # GREYER surface than the floor — the exact opposite of one quarry — and the gate named the
+    # result: *"grey walls and ceiling."* The separation the cap needs is VALUE (rung 3, already
+    # landed) and not chroma. Kept as a knob rather than deleted so the divergence can be
+    # measured again if anyone proposes it, but it ships at zero.
+    ap.add_argument("--hue-shift", type=float, default=0.0,
                     help="cool/desaturated split between cap and floor. §5.4 bounds it: a "
                          "material difference, never a saturated event.")
     ap.add_argument("--top-rung", type=int, default=None,
@@ -208,7 +233,9 @@ def main():
         if f.endswith(".png") or f.endswith(".png.import"):
             os.remove(os.path.join(out_dir, f))
 
-    tint = mat["tint"]
+    # THE QUARRY TINT (see compose_walls). The cap is the same stone as the ground it sits over.
+    import derive_quarry_tint as QT
+    tint, _, _, _ = QT.derive()
 
     if a.snap_sweep:
         # The record for SNAP. Same measure `cap_not_featureless` uses and the same measure

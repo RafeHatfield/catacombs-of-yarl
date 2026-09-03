@@ -561,7 +561,14 @@ def compose(arm, out_dir, grain_amp, void_values):
     ladder = mat["ladder"]
 
     prov, pool_sd, peak = donor_residual(FACE_DONORS)
-    fam = Family(arm, ladder, mat["tint"], None)
+    # ⚠ THE QUARRY TINT, DERIVED AT CONSUMPTION — not `mat["tint"]`, which is NEUTRAL
+    # (1.0013, 1.0068, 0.9918, saturation 0.015) and is why the gate saw grey walls. The floor's
+    # colour lives in its PIXELS, not in that field; `derive_quarry_tint` reads it back as a
+    # luminance-preserving ratio so a wall takes the floor's hue and saturation and differs in
+    # VALUE only. Same quarry, a darker cut.
+    import derive_quarry_tint as QT
+    quarry, _, _, _ = QT.derive()
+    fam = Family(arm, ladder, quarry, None)
 
     if os.path.isdir(out_dir):
         for f in os.listdir(out_dir):
