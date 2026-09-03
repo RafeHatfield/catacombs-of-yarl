@@ -1,0 +1,506 @@
+{
+  "family": "tools/tier1_walls/evidence/r24_standing.png",
+  "plant": "tools/tier1_walls/evidence/r24_standing_plant.png",
+  "judgeable_threshold": 12.31,
+  "levels_bar": 8.0,
+  "presence_pct": 45.0,
+  "cells": [
+    {
+      "x": 3,
+      "y": 6,
+      "rng": 6,
+      "value": 6.742215625,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "rng": 6,
+      "value": 7.292484374999999,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 5,
+      "y": 6,
+      "rng": 6,
+      "value": 7.349380273437499,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 6,
+      "y": 6,
+      "rng": 6,
+      "value": 6.21479609375,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "rng": 6,
+      "value": 6.3852904296875,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 9,
+      "y": 6,
+      "rng": 6,
+      "value": 7.81003701171875,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "rng": 6,
+      "value": 6.724415429687499,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 11,
+      "y": 6,
+      "rng": 6,
+      "value": 5.697584960937499,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 12,
+      "y": 6,
+      "rng": 6,
+      "value": 5.8402998046875005,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 3,
+      "y": 7,
+      "rng": 5,
+      "value": 6.286834375,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "rng": 5,
+      "value": 5.7586947265625,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "rng": 5,
+      "value": 6.2608361328125,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 6,
+      "y": 7,
+      "rng": 5,
+      "value": 6.2278408203125,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 7,
+      "y": 7,
+      "rng": 5,
+      "value": 6.069147949218751,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 9,
+      "y": 7,
+      "rng": 5,
+      "value": 14.456758642578125,
+      "judgeable": true,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 10,
+      "y": 7,
+      "rng": 5,
+      "value": 6.26431015625,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 11,
+      "y": 7,
+      "rng": 5,
+      "value": 6.44824921875,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 12,
+      "y": 7,
+      "rng": 5,
+      "value": 5.6497158203125,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 3,
+      "y": 8,
+      "rng": 5,
+      "value": 6.10310234375,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 4,
+      "y": 8,
+      "rng": 4,
+      "value": 5.752106445312499,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 5,
+      "y": 8,
+      "rng": 4,
+      "value": 6.130837695312501,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 6,
+      "y": 8,
+      "rng": 4,
+      "value": 8.596045214843748,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 7,
+      "y": 8,
+      "rng": 4,
+      "value": 13.830382128906251,
+      "judgeable": true,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 9,
+      "y": 8,
+      "rng": 4,
+      "value": 13.8155228515625,
+      "judgeable": true,
+      "share": 0.1953125,
+      "present": true
+    },
+    {
+      "x": 10,
+      "y": 8,
+      "rng": 4,
+      "value": 9.67308701171875,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 11,
+      "y": 8,
+      "rng": 4,
+      "value": 6.3789750000000005,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 12,
+      "y": 8,
+      "rng": 4,
+      "value": 5.3966103515625,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 3,
+      "y": 9,
+      "rng": 5,
+      "value": 5.7603472656250005,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 4,
+      "y": 9,
+      "rng": 4,
+      "value": 5.5628326171874996,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 5,
+      "y": 9,
+      "rng": 3,
+      "value": 10.985084472656249,
+      "judgeable": false,
+      "share": 0.0009765625,
+      "present": false
+    },
+    {
+      "x": 6,
+      "y": 9,
+      "rng": 3,
+      "value": 22.552333203125002,
+      "judgeable": true,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 7,
+      "y": 9,
+      "rng": 3,
+      "value": 32.1463783203125,
+      "judgeable": true,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 9,
+      "y": 9,
+      "rng": 3,
+      "value": 34.73486669921875,
+      "judgeable": true,
+      "share": 0.5947265625,
+      "present": true
+    },
+    {
+      "x": 10,
+      "y": 9,
+      "rng": 3,
+      "value": 22.685953417968754,
+      "judgeable": true,
+      "share": 0.0185546875,
+      "present": false
+    },
+    {
+      "x": 11,
+      "y": 9,
+      "rng": 3,
+      "value": 10.570150878906249,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 12,
+      "y": 9,
+      "rng": 4,
+      "value": 6.083401269531249,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 3,
+      "y": 10,
+      "rng": 5,
+      "value": 5.3543748046875,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 4,
+      "y": 10,
+      "rng": 4,
+      "value": 8.73037080078125,
+      "judgeable": false,
+      "share": 0.01171875,
+      "present": false
+    },
+    {
+      "x": 5,
+      "y": 10,
+      "rng": 3,
+      "value": 20.472251367187503,
+      "judgeable": true,
+      "share": 0.2802734375,
+      "present": true
+    },
+    {
+      "x": 6,
+      "y": 10,
+      "rng": 2,
+      "value": 38.192834667968754,
+      "judgeable": true,
+      "share": 0.009765625,
+      "present": false
+    },
+    {
+      "x": 7,
+      "y": 10,
+      "rng": 2,
+      "value": 52.125109863281246,
+      "judgeable": true,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 9,
+      "y": 10,
+      "rng": 2,
+      "value": 54.96531796875,
+      "judgeable": true,
+      "share": 0.0185546875,
+      "present": false
+    },
+    {
+      "x": 10,
+      "y": 10,
+      "rng": 2,
+      "value": 35.78781123046875,
+      "judgeable": true,
+      "share": 0.013671875,
+      "present": false
+    },
+    {
+      "x": 11,
+      "y": 10,
+      "rng": 3,
+      "value": 20.26529345703125,
+      "judgeable": true,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 12,
+      "y": 10,
+      "rng": 4,
+      "value": 8.2970546875,
+      "judgeable": false,
+      "share": 0.0,
+      "present": false
+    },
+    {
+      "x": 3,
+      "y": 11,
+      "rng": 5,
+      "value": 4.3558690429687505,
+      "judgeable": false,
+      "share": 0.0048828125,
+      "present": false
+    },
+    {
+      "x": 4,
+      "y": 11,
+      "rng": 4,
+      "value": 11.101440429687498,
+      "judgeable": false,
+      "share": 0.00732421875,
+      "present": false
+    },
+    {
+      "x": 5,
+      "y": 11,
+      "rng": 3,
+      "value": 28.85984189453125,
+      "judgeable": true,
+      "share": 0.0703125,
+      "present": true
+    },
+    {
+      "x": 6,
+      "y": 11,
+      "rng": 2,
+      "value": 47.296702246093744,
+      "judgeable": true,
+      "share": 0.03515625,
+      "present": true
+    },
+    {
+      "x": 7,
+      "y": 11,
+      "rng": 1,
+      "value": 67.8918498046875,
+      "judgeable": true,
+      "share": 0.0517578125,
+      "present": true
+    },
+    {
+      "x": 9,
+      "y": 11,
+      "rng": 1,
+      "value": 66.525298046875,
+      "judgeable": true,
+      "share": 0.025390625,
+      "present": true
+    },
+    {
+      "x": 10,
+      "y": 11,
+      "rng": 2,
+      "value": 51.1205560546875,
+      "judgeable": true,
+      "share": 0.1240234375,
+      "present": true
+    },
+    {
+      "x": 11,
+      "y": 11,
+      "rng": 3,
+      "value": 27.988366894531254,
+      "judgeable": true,
+      "share": 0.04833984375,
+      "present": true
+    },
+    {
+      "x": 12,
+      "y": 11,
+      "rng": 4,
+      "value": 10.230281249999999,
+      "judgeable": false,
+      "share": 0.001953125,
+      "present": false
+    },
+    {
+      "x": 5,
+      "y": 15,
+      "rng": 3,
+      "value": 13.686407958984375,
+      "judgeable": true,
+      "share": 0.0,
+      "present": false
+    }
+  ],
+  "control_self_pct": 0.0,
+  "proven": true
+}

@@ -28,6 +28,8 @@ token batch to show willing.
 | 6 | rebuild after the ID-COLLISION fix | 162 tiles + 3 void | seats W1, W2 — **VOID**, the plant missed on axis |
 | 7 | **the material arm as the family** (gate ruling 1) + the fixed corridor scene | 162 tiles + 3 void | seats W1, W2 — **VALID**, plant caught on axis with four hits |
 | 8 | **the cap pass** — one seamless field, 256 windows picked by world position; textured void | 165 wall tiles + 1024 cap windows | seats W1, W2 — **VALID**. Q12 answered *ground, unlit ground* |
+| 10 | **A+C** — cap to rung 3, §12.1 occlusion anchored to ambient | 165 tiles, cap rung 3 | **VOID** — plant missed; the plant was not in the picture |
+| 11 | same build, **plant repaired** (the cap ruined at field scale) | plant presence 45.0% in the judgeable band | authorized after the control fix; 9 and 10 stay VOID |
 | 9 | **`void_ring: 0`** — the §12.1 ring outline removed at its source | 165 tiles, 0 void placed | **VOID** — plant missed. W1 never ran, so no family record exists. Not re-run. |
 
 ## 2. The captures
@@ -81,6 +83,8 @@ holds this together* would be answered with nothing and the answer would look de
 | `cap_not_featureless` | ≥16.1 levels/window, ≤53.8% modal | 17.34 / 0.437 | 1.0 / 1.0 → FIRES |
 | `cap_field_scale` | window sd ≥5, no tile-pitch spike | 8.46 / **1.13** | 6.54 → FIRES |
 | `ring_outline` | ring boundary ≤1.35× an ordinary cell boundary | **0.06×** (remedied) | 1.82× shipped → FIRES |
+| `room_sides` | cap vs abutting floor ≥8 delivered levels, worst cell, every band | 5.95 at 3–4 | cap=floor fails, cap−40 passes |
+| `plant_presence` | ruin present where a ruin is deliverable | **45.0%** (9 of 20 judgeable) | family vs itself → 0.0% |
 
 **Six** bounds were rewritten because their plants came back SILENT or because they failed the
 legal family. Each correction is recorded in the code beside the test it fixed. See `REPORT.md`
