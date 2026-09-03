@@ -1020,6 +1020,65 @@ HOLLOW_SALT = 3011                         # so two mouths are not the same dish
 #
 # The perceptual-floor law applies to the delivered LIT delta, which is the quantity the corrected
 # captures measure and the quantity §13.9 was always about.
+# ============================ THE ADDITIVE LAYER ============================
+#
+# RULED (Rafe, 2026-08-30). Round 22 moved the failure axis: the signal is keyed to a real,
+# coherent line (79% axis coherence, 100% where the route is straight) and is present on it
+# (1.22x the off-route detail), and is still too small for a viewer to route by. The seat named
+# three treatments it expects and does not find, and ALL THREE ARE ADDITIVE — polish down the
+# centre, grit driven to the wall edges, dishing where feet land.
+#
+# Everything this session built before now SUBTRACTS: flattening removes value spread, compaction
+# removes joints, chipping removes arrises. A floor made only of absence reads as unfinished
+# rather than used. These three put something back.
+#
+# ⚠ BANKED AS LAW BEFORE ANY OF IT WAS BUILT: a seat reports PERCEPTS; its EXPLANATIONS are
+# hypotheses and are measured before anything is built on them. Round 22's cull — "the floor is
+# blank exactly where the lamp lights it" — was a compelling structural story and was FALSE at
+# tile scale (+0.772 correlation the other way). The three treatments below are taken because the
+# seat OBSERVED their absence, not because it explained why.
+
+# ---- (1) THE SPECULAR LANE, off the line rather than off the frayed field --------------------
+# The polish shader has read the wear scalar since it was built, and that scalar is traffic FRAYED
+# BY NOISE — deliberately, so a path's edges break up rather than ending on a pixel. That is right
+# for age and wrong for a lane: a specular streak that is chopped into noise cannot be followed.
+# Width now comes from the line distance UNFRAYED, so the lane runs continuous down the centre,
+# and the noise returns only at its shoulders.
+POLISH_LANE_GAIN = 1.9          # how much brighter the lane's specular is than the aged surface
+POLISH_LANE_WIDTH = 0.62        # in tiles, half-width of the fully-polished centre
+POLISH_SHOULDER = 1.15          # in tiles, where the lane's specular has faded to nothing
+
+# STRIATIONS ALONG THE TANGENT. Dragged feet do not polish evenly; they leave streaks running the
+# way they went. The bands are laid in a coordinate PERPENDICULAR to the tangent, so the streaks
+# themselves run ALONG it, and they are floored to whole pixels because §4.3 forbids the
+# anti-aliasing a smooth stripe would need.
+STRIA_PERIOD = 3                # pixels between streaks
+STRIA_DEPTH = 0.45              # how much of the lane's specular a dark streak gives up
+STRIA_SALT = 3012
+
+# ---- (2) DISHING ALONG THE LINE ---------------------------------------------------------------
+# The threshold hollows stay exactly as they are; this is the shallow version that follows the
+# whole route rather than only its mouths. Deepest on the centre-line, gone by the shoulder.
+# Occlusion-legal by construction: genuinely lower stone, with the rim shadow that implies.
+LANE_DISH_DEPTH = 0.85          # ladder rungs at the centre-line
+LANE_DISH_RIM = 0.30            # rungs of extra shadow at the dish's edge
+LANE_DISH_SALT = 3013
+
+# ---- (3) MARGIN GRIT — THE ONE NEW LEVER ------------------------------------------------------
+# Traffic sweeps the centre clean and drives debris to the flanks. The grit is placed at the
+# route's MARGINS and the swept lane is left conspicuously clean between gritty edges: THE
+# CONTRAST BETWEEN SWEPT AND UNSWEPT IS THE SIGNAL, not the grit itself.
+#
+# §8.3.1-LEGAL BY CONSTRUCTION. Keyed on world position and on distance from the line, never on a
+# tile — so it does not repeat with the grid, and a stone spanning a boundary gets the same grit
+# from both tiles. Field-scale, like the crack network, which is the one system class seats have
+# consistently praised here.
+GRIT_INNER = 0.70               # tiles from the line: inside this the sweep has taken it away
+GRIT_OUTER = 1.90               # tiles from the line: beyond this nobody swept anything anywhere
+GRIT_RATE = 0.13                # share of face pixels in the margin band carrying a speck
+GRIT_DEPTH = 1.25               # ladder rungs a speck sits below the stone it lies on
+GRIT_SALT = 3014
+
 POLISH_BY_AGE = (0.0, 0.05, 0.22, 0.45)   # reflectivity by wear age; sheltered stone is matte
 POLISH_EXP = 2.0                          # how much faster than linear. 1.0 would BE an albedo
                                           # change, which is the banned lever wearing this one's
@@ -1030,6 +1089,89 @@ CHROMA_DIR = (-1.0, 0.35, -0.15)          # toward a cool grey-green, before the
 CHROMA_BY_AGE = (0.0, 0.0, 0.06, 0.12)    # by wear age; the first two are silent ON PURPOSE — a
                                           # signal that starts at the first hint of traffic is a
                                           # wash over the whole floor, and washes identify nothing
+
+
+def line_geometry_block(x0, y0, n):
+    """Per-pixel (distance to the route in tiles, tangent x, tangent y) over an n x n block.
+
+    ONE definition, three painters. Everything additive keys off this: the specular lane's width,
+    the dish's depth, and which side of the sweep a pixel is on.
+    """
+    import numpy as _np
+    d = _np.empty((n, n), dtype=float)
+    tx = _np.empty((n, n), dtype=float)
+    ty = _np.empty((n, n), dtype=float)
+    if not LINES:
+        d[:] = 1e9
+        tx[:] = 1.0
+        ty[:] = 0.0
+        return d, tx, ty
+    for iy in range(n):
+        for ix in range(n):
+            dd, _w, a, b = RP.nearest(LINES, (x0 + ix + 0.5) / T, (y0 + iy + 0.5) / T)
+            d[iy, ix], tx[iy, ix], ty[iy, ix] = dd, a, b
+    return d, tx, ty
+
+
+def lane_polish_block(dist, tx, ty, wx, wy, seed):
+    """The specular lane: continuous down the centre, streaked along the way the feet went.
+
+    UNFRAYED, deliberately. The polish has read the noise-frayed wear scalar since it was built,
+    which is right for AGE — a path's edges should break up rather than end on a pixel — and wrong
+    for a LANE: a specular streak chopped into noise cannot be followed. Width comes from the line
+    distance directly; the noise returns at the shoulders through the age layer underneath.
+    """
+    import numpy as _np
+    lane = _np.clip((POLISH_SHOULDER - dist) / max(POLISH_SHOULDER - POLISH_LANE_WIDTH, 1e-6),
+                    0.0, 1.0)
+    lane = lane * lane * (3.0 - 2.0 * lane) * POLISH_LANE_GAIN
+
+    # STRIATIONS ALONG THE TANGENT. The band coordinate is PERPENDICULAR to the tangent, so the
+    # streaks themselves run along it. Floored to whole pixels: §4.3 forbids the anti-aliasing a
+    # smooth stripe would need, and at 32px a hard edge is the only honest edge.
+    n = _np.hypot(tx, ty)
+    n = _np.where(n < 1e-9, 1.0, n)
+    perp = (-ty / n) * wx + (tx / n) * wy
+    band = _np.floor(perp).astype(_np.int64) % STRIA_PERIOD
+    h = (_mix_np(wx, wy, STRIA_SALT + seed) % 100) / 100.0
+    dark = (band == 0) | ((band == 1) & (h < 0.35))
+    return lane * _np.where(dark, 1.0 - STRIA_DEPTH, 1.0)
+
+
+def lane_dish_block(dist, wx, wy, seed):
+    """A shallow dish following the whole route, deepest on the centre-line.
+
+    The threshold hollows are untouched; this is the version that follows the line rather than
+    only its mouths. Genuinely lower stone with the rim shadow that implies — occlusion-legal by
+    construction, and salted so the dish is not the same dish everywhere (§8.3.1).
+    """
+    import numpy as _np
+    jit = (_mix_np(wx, wy, LANE_DISH_SALT + seed) % 100) / 500.0
+    u = _np.clip(1.0 - dist / max(POLISH_SHOULDER, 1e-6) - jit, 0.0, 1.0)
+    dish = u * u * LANE_DISH_DEPTH
+    rim = _np.where((dist > POLISH_SHOULDER * 0.80) & (dist < POLISH_SHOULDER * 1.05),
+                    LANE_DISH_RIM, 0.0)
+    return dish + rim
+
+
+def grit_block(dist, wx, wy, seed):
+    """Debris swept off the centre and left at the margins.
+
+    THE CONTRAST IS THE SIGNAL, not the grit. Traffic sweeps the lane clean and drives what it
+    lifts to the flanks, so the swept lane reads as conspicuously bare BETWEEN gritty edges —
+    which is a thing absence can say only when there is something either side of it.
+
+    §8.3.1-legal by construction: keyed on world position and on distance from the line, never on
+    a tile. It does not repeat with the grid, and a stone spanning a boundary gets the same grit
+    from both tiles.
+    """
+    import numpy as _np
+    band = (dist > GRIT_INNER) & (dist < GRIT_OUTER)
+    # densest just outside the sweep and thinning outward — debris piles where it was pushed to
+    t = _np.clip((dist - GRIT_INNER) / max(GRIT_OUTER - GRIT_INNER, 1e-6), 0.0, 1.0)
+    rate = GRIT_RATE * (1.0 - t) * (1.0 - t)
+    h = (_mix_np(wx, wy, GRIT_SALT + seed) % 1000) / 1000.0
+    return band & (h < rate)
 
 
 def chroma_strength_block(x0, y0, n, seed, traffic, channel=False):
@@ -1299,6 +1441,10 @@ def main():
     mat["deform_aniso"] = DEFORM_ANISO
     mat["hollow_depth"] = HOLLOW_DEPTH
     mat["hollow_rim"] = HOLLOW_RIM
+    mat["polish_lane"] = [POLISH_LANE_GAIN, POLISH_LANE_WIDTH, POLISH_SHOULDER]
+    mat["striation"] = [STRIA_PERIOD, STRIA_DEPTH]
+    mat["lane_dish"] = [LANE_DISH_DEPTH, LANE_DISH_RIM]
+    mat["grit"] = [GRIT_INNER, GRIT_OUTER, GRIT_RATE, GRIT_DEPTH]
     os.makedirs(a.out, exist_ok=True)
     step = (mat["lum_hi"] - mat["lum_lo"]) / (CF.PALETTE_LEVELS - 1)
 
@@ -1308,7 +1454,8 @@ def main():
                salts=dict(horizontal=HORIZ, vertical=VERT, span=SPAN, interior=INTERIOR,
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
                           marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT,
-                          hollow=HOLLOW_SALT),
+                          hollow=HOLLOW_SALT, stria=STRIA_SALT, lane_dish=LANE_DISH_SALT,
+                          grit=GRIT_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,

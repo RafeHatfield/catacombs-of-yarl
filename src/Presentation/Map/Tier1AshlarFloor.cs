@@ -93,6 +93,12 @@ public static class Tier1AshlarFloor
         public double DeformAniso = 0.8;
         public double HollowDepth = 1.3, HollowRim = 0.45;
         public int HollowSalt = 3011;
+        public int StriaSalt = 3012, LaneDishSalt = 3013, GritSalt = 3014;
+        public double PolishLaneGain = 1.9, PolishLaneWidth = 0.62, PolishShoulder = 1.15;
+        public int StriaPeriod = 3;
+        public double StriaDepth = 0.45;
+        public double LaneDishDepth = 0.85, LaneDishRim = 0.30;
+        public double GritInner = 0.70, GritOuter = 1.90, GritRate = 0.13, GritDepth = 1.25;
         public System.Collections.Generic.IReadOnlyList<Logic.ECS.RoutePolyline.Line> Lines =
             new System.Collections.Generic.List<Logic.ECS.RoutePolyline.Line>();
         public int[][] ATable = System.Array.Empty<int[]>();
@@ -994,6 +1000,45 @@ public static class Tier1AshlarFloor
                     raw[py, px] += (cfg.LumMedian - raw[py, px]) * fl;
                 }
 
+        // ================= THE ADDITIVE LAYER =================
+        //
+        // Round 22 moved the failure axis: the signal is keyed to a real, coherent line and is
+        // present on it, and is still too small to route by. Every lever before this one
+        // SUBTRACTS — flattening removes value spread, compaction removes joints, chipping
+        // removes arrises — and a floor made only of absence reads as unfinished rather than
+        // used. These put something back, and all of them key off the same line geometry.
+        for (int py = 0; py < T; py++)
+            for (int px = 0; px < T; px++)
+            {
+                if (clsArr[py, px] == 0) continue;
+                int wx = tx * T + px, wy = ty * T + py;
+                double ld = cfg.Lines.Count == 0 ? 1e9
+                    : Logic.ECS.RoutePolyline.Nearest(cfg.Lines, (wx + 0.5) / T, (wy + 0.5) / T).Dist;
+
+                // DISHING ALONG THE LINE — deepest on the centre-line, gone by the shoulder. The
+                // threshold hollows below are untouched and compose on top of this. Genuinely
+                // lower stone with the rim shadow that implies.
+                double jitD = (Mix(wx, wy, cfg.LaneDishSalt + cfg.Seed) % 100) / 500.0;
+                double u = System.Math.Clamp(1.0 - ld / cfg.PolishShoulder - jitD, 0.0, 1.0);
+                double dishL = u * u * cfg.LaneDishDepth;
+                double rimL = (ld > cfg.PolishShoulder * 0.80 && ld < cfg.PolishShoulder * 1.05)
+                              ? cfg.LaneDishRim : 0.0;
+                raw[py, px] -= (dishL + rimL) * rung;
+
+                // MARGIN GRIT. Traffic sweeps the centre clean and drives what it lifts to the
+                // flanks, so the swept lane reads as conspicuously bare BETWEEN gritty edges.
+                // THE CONTRAST IS THE SIGNAL, not the grit — absence can only say something when
+                // there is something either side of it.
+                if (ld > cfg.GritInner && ld < cfg.GritOuter)
+                {
+                    double t = System.Math.Clamp((ld - cfg.GritInner) / (cfg.GritOuter - cfg.GritInner),
+                                                 0.0, 1.0);
+                    double rate = cfg.GritRate * (1.0 - t) * (1.0 - t);
+                    if ((Mix(wx, wy, cfg.GritSalt + cfg.Seed) % 1000) / 1000.0 < rate)
+                        raw[py, px] -= cfg.GritDepth * rung;
+                }
+            }
+
         // THRESHOLD HOLLOW. Where routes converge on a mouth the stone dishes: genuinely lower
         // in the middle, with a rim that shadows just inside its edge. Occlusion-legal by
         // construction — this is a recess, drawn as a recess — and salted so two mouths in one
@@ -1075,6 +1120,38 @@ public static class Tier1AshlarFloor
                         WearScalar(cfg, traffic, tx * T + px, ty * T + py), channelHere));
                     t = tints[fa];
                     refl = cfg.PolishByAge[fa];
+
+                    // THE SPECULAR LANE, OFF THE LINE RATHER THAN OFF THE FRAYED FIELD.
+                    //
+                    // The polish has read the wear scalar since it was built, and that scalar is
+                    // traffic FRAYED BY NOISE — right for AGE, since a path's edges should break
+                    // up rather than end on a pixel, and wrong for a LANE: a specular streak
+                    // chopped into noise cannot be followed. Width now comes from the line
+                    // distance directly, so the lane runs continuous down the centre; the noise
+                    // returns at its shoulders through the age layer underneath.
+                    if (cfg.Lines.Count > 0)
+                    {
+                        int wx2 = tx * T + px, wy2 = ty * T + py;
+                        var nr = Logic.ECS.RoutePolyline.Nearest(
+                            cfg.Lines, (wx2 + 0.5) / T, (wy2 + 0.5) / T);
+                        double lane = System.Math.Clamp(
+                            (cfg.PolishShoulder - nr.Dist)
+                            / System.Math.Max(cfg.PolishShoulder - cfg.PolishLaneWidth, 1e-6),
+                            0.0, 1.0);
+                        lane = lane * lane * (3.0 - 2.0 * lane) * cfg.PolishLaneGain;
+
+                        // STRIATIONS ALONG THE TANGENT. The band coordinate is PERPENDICULAR to
+                        // the tangent, so the streaks themselves run along it. Floored to whole
+                        // pixels: §4.3 forbids the anti-aliasing a smooth stripe would need.
+                        double nlen = System.Math.Sqrt(nr.Tx * nr.Tx + nr.Ty * nr.Ty);
+                        if (nlen < 1e-9) nlen = 1.0;
+                        double perp = (-nr.Ty / nlen) * wx2 + (nr.Tx / nlen) * wy2;
+                        long band = ((long)System.Math.Floor(perp) % cfg.StriaPeriod
+                                     + cfg.StriaPeriod) % cfg.StriaPeriod;
+                        double hs = (Mix(wx2, wy2, cfg.StriaSalt + cfg.Seed) % 100) / 100.0;
+                        if (band == 0 || (band == 1 && hs < 0.35)) lane *= 1.0 - cfg.StriaDepth;
+                        refl = System.Math.Max(refl, lane);
+                    }
                 }
                 outImg.SetPixel(px, py, new Color(
                     (float)(L * t[0] / 255.0), (float)(L * t[1] / 255.0),
@@ -1245,6 +1322,24 @@ public static class Tier1AshlarFloor
             cfg.HollowDepth = mat.GetProperty("hollow_depth").GetDouble();
             cfg.HollowRim = mat.GetProperty("hollow_rim").GetDouble();
             cfg.HollowSalt = salts.GetProperty("hollow").GetInt32();
+            cfg.StriaSalt = salts.GetProperty("stria").GetInt32();
+            cfg.LaneDishSalt = salts.GetProperty("lane_dish").GetInt32();
+            cfg.GritSalt = salts.GetProperty("grit").GetInt32();
+            var pl = mat.GetProperty("polish_lane");
+            cfg.PolishLaneGain = pl[0].GetDouble();
+            cfg.PolishLaneWidth = pl[1].GetDouble();
+            cfg.PolishShoulder = pl[2].GetDouble();
+            var st = mat.GetProperty("striation");
+            cfg.StriaPeriod = st[0].GetInt32();
+            cfg.StriaDepth = st[1].GetDouble();
+            var ldh = mat.GetProperty("lane_dish");
+            cfg.LaneDishDepth = ldh[0].GetDouble();
+            cfg.LaneDishRim = ldh[1].GetDouble();
+            var gr = mat.GetProperty("grit");
+            cfg.GritInner = gr[0].GetDouble();
+            cfg.GritOuter = gr[1].GetDouble();
+            cfg.GritRate = gr[2].GetDouble();
+            cfg.GritDepth = gr[3].GetDouble();
             // THE ONE ASSERTION THAT KEEPS THIS LEVER HONEST. At an exponent of 1.0 the specular
             // term is linear in delivered light, which is arithmetically identical to changing the
             // stone's albedo — the baked value-lift §8.2.1 bans, wearing this lever's name. It is

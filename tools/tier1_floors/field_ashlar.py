@@ -103,6 +103,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
     cracks = np.zeros((h * T, w * T), dtype=bool)
     dressing = np.zeros((h * T, w * T), dtype=bool)
     chips = np.zeros((h * T, w * T), dtype=bool)
+    polish = np.zeros((h * T, w * T), dtype=float)
     yy, xx = np.mgrid[0:T, 0:T]
 
     for y in range(h):
@@ -232,6 +233,16 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             #
             # Occlusion vocabulary throughout: everything here is a recess getting deeper or
             # wider. Nothing brightens.
+            # THE LINE GEOMETRY, hoisted above every branch that reads it. The `uniform_wear`
+            # plant skips the erosion block entirely, and with the geometry defined inside it the
+            # polish line below referenced an unbound name and took the whole plant run down after
+            # eleven of fourteen — which read as "three plants went silent" until the traceback
+            # was found. A plant runner that crashes is not a plant runner that failed.
+            wxb, wyb = xx + x * T, yy + y * T
+            ldist, ltx, lty = CA.line_geometry_block(x * T, y * T, T)
+            if defect == "no_additive":
+                ldist = np.full((T, T), 1e9)
+
             # THE CHROMA CHANNEL, on the stone faces only, from the SAME wear scalar the joints
             # read. Sharing the scalar is what makes the two channels one signal instead of two
             # coincidences: a stone whose joints have packed shut is the same stone whose face has
@@ -307,6 +318,19 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
                     fl = np.array(CA.DEFORM_FLATTEN)[fage]
                     L = np.where(stone_px, L + (mat["lum_median"] - L) * fl, L)
 
+                # ================= THE ADDITIVE LAYER =================
+                # Round 22 moved the axis: the signal is on a real coherent line and is still too
+                # small to route by, and every lever before this one SUBTRACTS. These put
+                # something back, and all three key off the same line geometry.
+
+                # (2) DISHING ALONG THE LINE — deepest on the centre-line, gone by the shoulder.
+                # The threshold hollows below are untouched and compose on top of it.
+                L = np.where(stone_px, L - CA.lane_dish_block(ldist, wxb, wyb, seed) * step, L)
+
+                # (3) MARGIN GRIT — the swept lane left conspicuously bare BETWEEN gritty edges.
+                grit = CA.grit_block(ldist, wxb, wyb, seed) & stone_px
+                L = np.where(grit, L - CA.GRIT_DEPTH * step, L)
+
                 # (c) THRESHOLD HOLLOWS. Where routes converge on a mouth the stone dishes:
                 # genuinely lower in the middle with a rim that shadows. Never a sill, never a
                 # kerb, never an installed piece — nothing is built here (§8.1).
@@ -379,6 +403,13 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             # 75.02 while the engine — which has always clipped at `Ladder[0]` — went to 48.56.
             # The paint check would have caught it as a 96-sample disagreement with no cause.
             L = CF.quantise(np.clip(L, mat["ladder"][0], mat["ladder"][-1]), mat["ladder"])
+            # (1) THE SPECULAR LANE, recorded for the instruments. The shader consumes it in the
+            # engine; here it is returned so the reference painter can be measured on the same
+            # quantity the device shows.
+            polish[y * T:(y + 1) * T, x * T:(x + 1) * T] = np.where(
+                (cls != 0) & ~((cls == 0) & jm),
+                CA.lane_polish_block(ldist, ltx, lty, wxb, wyb, seed), 0.0)
+
             tmap = np.stack([CA.chroma_tint(mat["tint"], v) for v in CA.CHROMA_BY_AGE])
             _ci = np.abs(chr_blk[..., None] - np.array(CA.CHROMA_BY_AGE)).argmin(-1)
             img[y * T:(y + 1) * T, x * T:(x + 1) * T] = \
@@ -396,6 +427,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
     # NO TRANSITION LIST. Wear is now decided per stone, so the channel's edge falls on a joint
     # rather than on a tile boundary, and there is no longer an intended material step at any
     # vertical boundary to exclude. The empty list is the finding, not an omission.
+    assemble.last_polish = polish
     return img, joints, [], cracks, dressing | chips
 
 
