@@ -1,0 +1,92 @@
+Looked at `A.png` (750×600) at 1:1, then magnified specific regions. Walls and UI excluded as instructed.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut sandstone or warm limestone blocks, laid in irregular courses with recessed mortar joints. Roughly two blocks across the corridor width, block faces about 30×26 px.
+
+**Q1_WHY:** The lit floor occupies x 377–438, y 0–390 (measured, not eyeballed — that's the full tan extent). Within it the joints are darker recessed lines, not drawn outlines, and the block sizes are unequal course to course — compare the single wide block at y≈290–330 spanning nearly the full corridor against the two-block course at y≈150–190. The colour sits at r>g>b with a mid-tone around lum 115–129, a dry warm stone, not brick, not tile, not flag. Below y≈400 the material changes to a cold grey flagstone, but that is beyond the lamp and I'm not scoring it.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down into the dark room — and the ground did not choose it for me. I chose it because the corridor visibly opens into a larger space at y≈400 and going north just leaves the frame. That's layout reading, not ground reading.
+
+I checked for a ground reason and there isn't one. I ran the corridor's column luminance with the per-row lighting removed: the only structure is symmetric darkening at both walls (x 377 at −28, x 437 at −46) and a dip at x 407–409 that is a mortar joint. There is no centre lane, no polish, no scuff darkening, no debris drift, nothing that says feet went this way rather than that way.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been broken, once, and never touched since. A single fracture runs the entire lit length. Twice along its run the stone has failed outright and spalled into a shallow crater. Nothing has been swept, filled, pinned or patched.
+
+**Q3_WHY:**
+- The crack: a continuous dark fissure at x≈405–422 from y≈20 to y≈390, unbroken across the whole visible corridor. It crosses course boundaries rather than stopping at them — visible at y≈145, y≈235, y≈285 where it steps over a joint and keeps going. That is authored, not stamped.
+- Spall one: x≈400–435, y≈240–275 — a ragged blown-out patch where the crack widens and the block face has come away in chunks.
+- Spall two: x≈405–440, y≈345–375 — same failure, at the corridor mouth.
+- What's absent is louder. Four hundred years of orcs who repair everything with rope, pins, hide and timber, and there is not one repair on this floor. No driven pin, no timber baulk, no packed rubble in the fracture. The floor is damaged but nobody has ever been on it with a hammer.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes, two things.
+
+First, the crack itself — but as a pull, not a fault. It's the only incident in 62×390 px of lit floor, so the eye has nowhere else to land and keeps going back to x≈410, y 20–390. That's a symptom of the faces being empty around it.
+
+Second, and this is beyond the lamp so I'm reporting it rather than judging it: the room floor at y 400–600 has one blast crater per tile, at a metronomic cadence. I measured the centres in the band y 455–500: x = 284, 332, 403, 469, 547, 601, 638, 702 — gaps of 48, 71, 66, 78, 54, 37, 64. That clusters on the 64 px grid pitch. The band at y 535–585 does the same. At 1:1 they read as a dim row of evenly spaced dark discs marching across the screen. If that decal density carries into lit areas it will read as wallpaper.
+
+**Q5: MADE, OR REPEATED?**
+Made. The corridor is not tiled art.
+
+I autocorrelated the lit floor strip (x 377–438, y 0–390) vertically after removing the lighting gradient. There is no peak at 64, 128 or any other period — correlation decays monotonically from 0.54 at shift 8 and never recovers. A repeated tile would spike. The horizontal autocorrelation of the room floor does the same: no periodic spike. Block-hash comparison at 32 px and 64 px found duplicate groups only in fully black regions.
+
+The clinching evidence is the crack. A single fracture holding its identity for 370 px across five or six courses cannot come out of a tile set; it was drawn onto this specific corridor.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES.
+
+Merely competent. Not genuinely good. The silhouette work is clean, the courses are properly irregular, the crack is real authored damage — that clears the commercial bar. But the block faces carry nothing at 1:1, there is exactly one narrative event in the entire lit floor, and the floor tells me nothing about who uses it. Competent stonework, no authorship.
+
+**Q7: WHAT CAN YOU ACTUALLY SEE ON THE SURFACE AT 1:1?**
+
+Legible at 1:1: mortar joints, the crack, and a soft warm-to-cool gradient across each face that reads as a bevel. That is the complete list. The spall at y≈345–375 is present at 1:1 but reads as an indistinct dark smudge — I could not tell it was broken stone until I magnified. **The block faces themselves are blank at 1:1.** Flat tan with a bevel.
+
+Only on magnification: fine diagonal scratch hatching, and a low-amplitude mottle in the stone.
+
+I want to be exact about the hunting. I did not see the scratches, suspect them, and confirm them. I magnified to 5× for other reasons and they appeared. At 1:1 I had read those same faces as empty. That is hunting.
+
+**Q7_WHY:**
+- Checked at 1:1 (native strip, x 374–442, y 0–400): faces at x 380–405 / y 190–212; x 380–405 / y 300–322; x 416–436 / y 60–84; x 380–405 / y 100–124. Joints and crack read. Faces read blank.
+- Only on 5× magnification: diagonal scratches at x≈380–405, y≈214–234 and x≈380–408, y≈300–330; the mottle across all faces; the rubble structure inside both spalls.
+- The numbers agree. A clean face at x 382–404, y 300–322 measures σ 8.8 — near flat. The faces that measure high (σ 43 at y 190–212) are high only because the crack or a joint clips them, not because the face has content.
+
+**Q8: HOW OLD IS THIS FLOOR?**
+Old — a few centuries at least, and worked stone rather than ancient. But I'm reading that off the fiction and off the damage, not off the stone. Honestly: the floor gives me a **broken** signal, not an **old** signal, and those are different things.
+
+It reads as one age everywhere. No patching, no differing courses, no younger stone set into older, no zone where the wear is deeper. Uniform throughout.
+
+What ages a floor is accumulation — hollows worn into the tread line, joints packed with centuries of dirt, edges rounded off, previous repairs weathered to a different tone than the repairs on top of them. None of that is here. The mortar joints are as crisp at the corridor mouth as at the top of the frame. The block edges are sharp. Strip out the crack and this stone could have been laid last year.
+
+**Q8_WHY:** Damage evidence from x 405–422 / y 20–390 (the crack) and the two spalls at y 240–275 and y 345–375. Uniformity checked by measuring dark-pixel fraction in 65 px bands down the corridor — the variation that comes back (10.7% to 37.5%) tracks the lamp falloff, not the damage, so there is no age gradient to read. Joint crispness checked at y≈232 and y≈393.
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES?**
+The route runs north–south, and **I read it off the walls, not off the ground.**
+
+The corridor is bounded at x 377 and x 438 by unbroken wall for the entire lit height. That's what tells me this is a north–south passage. The floor inside those bounds is the same floor at the top of the frame as at the bottom.
+
+The ground told me nothing. There is one linear feature aligned with the corridor — the crack at x≈410 — and it is direction-shaped, but it's a structural failure, not a path. It doesn't tell me north from south, and it doesn't tell me where the walking happens. If you rotated the floor 180° I could not detect it from the ground.
+
+**Q9_WHY:** Route regions along the lit corridor: y 0–65, 65–130, 130–195, 195–260, 260–325, 325–390, all at x 379–437. I looked for a difference between them and found none that survives correcting for the lamp. I rejected everything at x < 377 and x > 438 on wall geometry alone, not on ground evidence. Within the corridor there is no interior region I can reject — the whole width looks equally walked, which for a route in daily use is exactly the thing that's missing. A trafficked corridor should have a lane and two dead margins. This has one uniform surface wall to wall.
+
+**Q10: WHICH WAY IS USED MOST, WHICH LEAST?**
+They look the same.
+
+Two openings are lit: the corridor continuing north off the top edge (x 377–438, y 0–15) and the corridor mouth opening south into the room (x 377–438, y 385–400). Judging only the ground in front of each: the north approach is clean stone with the crack running through it; the south approach is clean stone with the crack running through it plus one spall. No difference in dirt, no difference in polish, no threshold worn hollow, no debris pushed to one side, no scuffing fanning out from either mouth.
+
+I initially wondered whether damage clustered toward the south mouth. I measured it and it doesn't — the apparent gradient was the lamp. There is nothing here that ranks these two openings.
+
+---
+
+**CULL:** Block faces are blank at 1:1 and the ground records no traffic — a walked route that nobody walks.
+
+**FLIP LIST**
+- Put a traffic lane in the corridor: darken and smooth a soft band roughly x 392–424 running the full length, leaving the wall margins at x 377–391 and x 425–438 lighter and grittier. Right now the floor is uniform wall to wall.
+- Give the block faces something readable at 1:1 — pitting, staining, a scored line — at a contrast that survives without magnifying. The current scratches at x 380–405 / y 214–234 measure σ 8.8 against the face and are invisible at native scale.
+- Put orc repair on the damage. Driven pins across the crack at x≈410, or a timber baulk and packed rubble in the spall at y 345–375. A floor in a place defined by four hundred years of repairing has no repairs on it.
+- Break the one-crater-per-tile cadence in the room floor (y 400–600) — measured centres land on the 64 px pitch. Cluster them, run some across joints, leave whole tiles empty.
+- Differentiate the two mouths. Grind and darken the ground in front of one (x 377–438, y 385–400) and leave the other with settled dust, so the ground says which way people go.
+
+*Model: Claude Opus 5 (1M context).*
