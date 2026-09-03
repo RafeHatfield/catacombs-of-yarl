@@ -1,0 +1,50 @@
+Read all three at full size plus pixel-level crops. Findings below are measured where I say measured.
+
+**RANK:** 2 > 3 > 1
+
+**BEST:** 2
+
+**BEST_WHY:** The props are constructed rather than decorated. The barrel at x≈113–145, y≈188–215: the top face is a lighter tan ellipse with a 1px cream rim highlight running only along its upper-left arc, and the staves below darken toward both silhouette edges, so the object reads as a cylinder with a lid and not a brown circle. The crates at x≈60–120, y≈0–75 resolve the same way — a lit top plank face over a darker vertical slat face — and the highlight sits upper-left on both props, so one light direction governs the whole frame. The bottom wall run (y≈252) terminates the floor in a single 1px cream cap line before the dark brick face, which is the cheapest possible way to give a wall height in top-down and it works. The palette is disciplined: 854 unique colours in the entire 384×288 frame, meaning the material was authored, not filtered.
+
+**WORST:** 1
+
+**WORST_WHY:** There is no floor material in the frame. The entire lit area is a flat magenta field overlaid with black horizontal lines on an 8px period — the same lines, at the same frequency, from the top of the room to the bottom of the corridor. No stones, no joints, no seams, no dirt, no debris, nothing that says anyone ever walked on it. The only variation is brightness. On top of that the stripe pattern breaks: I measured the dark-row phase across the lit floor and inside the rectangle x≈440–503, y≈325–395 the dark rows land one pixel higher (phase 4/6) than the identical pattern immediately left of x=440 and right of x=503 (phase 5/7). It shows as a rectangular block of misaligned stripes hanging in the middle of the lit room with hard top and bottom edges. The corridor leaving the bottom (x≈510–575) is the same stripes at a lower value, so corridor and chamber are the same surface. The wall tiles are near-black squares each carrying one small lighter square dot in the same relative position. The character sprite is the only object anybody drew.
+
+**FLAGGED:** 1, 2, 3
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- Delete the horizontal stripe overlay entirely. It is not a floor texture; it is a scanline artifact, and it is the same on every surface in the frame.
+- Replace it with an actual floor: cut slabs with joints that break bond between courses, varying joint depth along a single run, and per-stone value variation of at least 3 steps so no two adjacent stones match.
+- Fix the misaligned block at x≈440–503, y≈325–395 — its pattern is one pixel out of phase with the floor around it. Whatever tile-placement or offset bug caused it, that seam is visible at a glance.
+- Repitch the lit palette off saturated magenta. A carried lamp is warm and narrow-band; a floor lit to RGB ≈ (255,20,140) reads as a coloured stage light, not fire.
+- Differentiate the corridor at x≈510–575 from the chamber by material, not brightness: narrower stones, a worn centre track, a threshold line where the two floors meet.
+- Give the wall tiles a top surface. Right now they are black squares with a single dot; they need a lit cap edge on the sides facing the figure and a dark body, so the wall reads as having thickness.
+- Put the four hundred years of repair on screen inside the lit radius: driven pins in a cracked slab, a rope lashing, a hide patch over a hole, salvaged timber pinned across a gap. The lit area is currently empty floor.
+
+**FLIP 3:**
+- Redraw the unlit tiles. They are flat-filled crimson squares separated by hard black gutters, each with one small tan square blob in the same relative corner — that is a tilemap debug render, not wall art. Give them a stone top surface with real texture at the same pixel density as the lit floor.
+- Unify the lighting model. The floor falls off smoothly per pixel; the surrounding tiles are shaded as flat per-tile blocks with a uniform value each. Two lighting models in one frame is the single loudest tell here.
+- Kill the magenta. Nothing else in the frame is that hue, and a crimson wall against a sand-coloured floor is a palette collision, not a contrast choice.
+- Remove the uniform 45° hatch that runs across the whole lit area at one frequency and one angle — it runs identically over the mottled region and over the masonry blocks at x≈455–640, y≈395–455. It sits on top of the geometry instead of describing it. If the floor needs tooth, dither it per material, not per screen.
+- Redraw the black crack lines. They are smooth constant-width splines that cross mortar joints without stepping, widening, or displacing the stone either side. A crack should break at joints, vary in width along its run, and show a lighter chipped edge on one side.
+- The masonry courses at x≈455 begin abruptly against undifferentiated mottle to their left, with no transition and no reason. Either extend the coursing across the lit radius or give the boundary a cause — a patched-in section with a visible seam, a threshold, a change of floor level.
+- Add the repair vocabulary inside the lit radius: pins, rope, hide, salvaged timber. There is currently nothing man-made in the frame except the floor itself.
+
+**FLIP 2:**
+- The second barrel at x≈161 is the first one copy-pasted at exactly +48px — measured, 57% of its pixels are bit-identical to the first and mean difference is 2/255, including the same bung mark in the same place on the lid. Redraw one of them, or at minimum re-stagger the stave lines and move the bung.
+- The pond is a plain axis-aligned rectangle: left edge dead straight at x≈248, right at x≈344, bottom at y≈191, each a 1px teal-to-mud transition. Give it shore tiles — a darker wet margin on the mud side, a lighter shallow band on the water side, and an irregular outline that does not run parallel to the tile grid.
+- Same problem at every other material boundary: the dirt yard is a rectangle inside a rectangular stone border, with no transition tile anywhere. Add edge tiles where mud meets stone, with mud spilling over the first course of slabs.
+- The cobble joints are unbroken uniform 1px lines on a perfect grid, every slab the same size and the same value. Break the bond between courses, vary slab widths, and spread at least 3 value steps across neighbouring slabs so the stones read as cut rather than stamped.
+- The cracks in the cobble at top-left run continuously over the mortar joints and stop mid-slab. Terminate them at joints and step them where they cross.
+- The teal stain at the bottom-left of the cobble is drawn with a hard 1px lighter outline sitting over the joint lines. Drop the outline and let the joints darken through it.
+- The lily clusters in the pond are four placements of two blob shapes at the same scale and the same green. Vary size, hue and rotation, or cut the count.
+
+The set does not contain a shippable frame. 1 and 3 are the same renderer and share the same core failure — the walls are flat-shaded tile blocks while the floor is per-pixel lit, so the frame announces its own tilemap. 3 is ahead only because somebody drew a floor. 2 is a finished-looking tileset from a different discipline entirely, and its defects are the ordinary ones — copy-paste and rectangular geometry — rather than structural ones, which is why it ranks first and still gets flagged.
+
+What to watch: fixing 3's crack splines and hatch will not help while the surrounding tiles stay flat blocks. The wall render is the load-bearing problem in both 1 and 3, and it is a lighting-pipeline fix, not an art fix.
+
+*Model: Claude Opus 5 (1M context)*

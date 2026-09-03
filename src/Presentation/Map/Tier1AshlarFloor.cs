@@ -97,6 +97,9 @@ public static class Tier1AshlarFloor
         public double[] ShelterLift = { 5, 4, 3, 0 };
         public double[] ShelterWeights = { 0.15, 0.50, 0.20, 0.15 };
         public int ShelterBlock = 8;
+        public int CrackVarySalt = 3017;
+        public double CrackDepthVary = 0.18;
+        public double MarkBareShare = 0.34;
         public int LaneFraySalt = 3016;
         public double LaneFray = 0.32;
         public double JointPolishFloor = 0.70;
@@ -327,6 +330,14 @@ public static class Tier1AshlarFloor
         // TRAFFICKED STONES POLISH SMOOTHER AS THEIR JOINTS OPEN; sheltered stones stay sharp and
         // tight. The dressing is what traffic takes off first, so its count and its depth both
         // fall with wear — continuous now, where it used to be a binary channel flag.
+        // A THIRD OF THE STONES CARRY NOTHING, drawn from the stone's own key before anything
+        // else so a bare stone is bare from both tiles that see it. The frame critic: "the
+        // diagonal-hatch motif recurs on a visible rhythm across the lit area — omit it on a
+        // third of the slabs." An even scatter over every stone stops being an event and becomes
+        // the material, which is §8.3's motif trap arriving through the dressing.
+        if (((key ^ (c.MarksSalt + c.Seed)) % 1000) / 1000.0 < c.MarkBareShare)
+            return new List<(int, int, double)>();
+
         double keep = 1.0 - c.DressingKeep * wear;
         var outp = new List<(int, int, double)>();
         int st = Lcg((key ^ (c.MarksSalt + c.Seed)) | 1);
@@ -1268,12 +1279,18 @@ public static class Tier1AshlarFloor
         // reported "No cracks. Not one." in captures whose log said event=44.
         if (crackCache != null)
         {
-            double cv = cfg.Ladder[LadderIndex(cfg, cfg.LumMedian * cfg.CrackDepth)];
-            var col = new Color((float)(cv * cfg.Tint[0] / 255.0), (float)(cv * cfg.Tint[1] / 255.0),
-                                (float)(cv * cfg.Tint[2] / 255.0));
+            // THE CRACK VARIES ALONG ITS LENGTH. One value end to end is a drawn line; the
+            // frame critic named it twice as "the identical overlay, uniform 1px black". Keyed on
+            // world position so the fracture varies as it travels and both tiles agree.
             foreach (var (ly, lx) in CrackPixels(cfg, tx, ty, crackCache))
             {
-                outImg.SetPixel(lx, ly, col);
+                double vv = ((Mix(tx * T + lx, ty * T + ly, cfg.CrackVarySalt + cfg.Seed) % 1000)
+                             / 1000.0 - 0.5) * 2.0;
+                double cvp = cfg.LumMedian * cfg.CrackDepth * (1.0 + vv * cfg.CrackDepthVary);
+                double cv2 = cfg.Ladder[LadderIndex(cfg, cvp)];
+                outImg.SetPixel(lx, ly, new Color(
+                    (float)(cv2 * cfg.Tint[0] / 255.0), (float)(cv2 * cfg.Tint[1] / 255.0),
+                    (float)(cv2 * cfg.Tint[2] / 255.0)));
                 polishImg.SetPixel(lx, ly, new Color(0, 0, 0));
             }
         }
@@ -1435,6 +1452,9 @@ public static class Tier1AshlarFloor
             foreach (var v in mat.GetProperty("shelter_weights").EnumerateArray()) sw.Add(v.GetDouble());
             cfg.ShelterWeights = sw.ToArray();
             cfg.ShelterBlock = mat.GetProperty("shelter_block").GetInt32();
+            cfg.CrackVarySalt = salts.GetProperty("crack_vary").GetInt32();
+            cfg.CrackDepthVary = mat.GetProperty("crack_depth_vary").GetDouble();
+            cfg.MarkBareShare = mat.GetProperty("mark_bare_share").GetDouble();
             cfg.LaneFraySalt = salts.GetProperty("lane_fray").GetInt32();
             cfg.LaneFray = mat.GetProperty("lane_fray").GetDouble();
             cfg.JointPolishFloor = mat.GetProperty("joint_polish_floor").GetDouble();

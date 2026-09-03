@@ -318,6 +318,13 @@ def crack_dir_table():
 DIRS = crack_dir_table()
 
 
+# THE CRACK IS NOT ONE VALUE. The frame critic, twice: "uniform 1px black crossing joints
+# without deflection... the identical overlay". A crack that is one value along its whole length
+# is a drawn line; a real one is deepest where it has opened and shallows to nothing at its ends.
+# The depth is modulated per pixel from the crack's own world position, so it varies ALONG the
+# fracture and both tiles either side of a boundary agree about it.
+CRACK_DEPTH_VARY = 0.18    # +/- share of the crack's depth, keyed on world position
+CRACK_VARY_SALT = 3017
 CRACK_DEPTH = 0.42         # the joint's own depth: a crack is dark because ENCLOSED (§6.5),
                            # and one that met a joint at a different value would announce itself
                            # as a decal laid over the bond rather than a split through it.
@@ -497,6 +504,13 @@ WEAR_ARRIS = 0.45          # how far a joint beside trodden stone rises toward t
 # could not see. The plant caught an omission that would otherwise have ridden along as a channel
 # nobody had agreed to.
 MARK_BANDS, MARK_PITS = 5, 3        # on ordinary stone
+# A THIRD OF THE STONES CARRY NOTHING. The frame critic: "the diagonal-hatch motif recurs on a
+# visible rhythm across the lit area — vary the hatch angle, density, or omit it on a third of the
+# slabs." An even scatter over every stone is a texture, and a texture that covers everything
+# stops being an event and becomes the material — which is §8.3's motif trap arriving through the
+# dressing rather than through the bond. Keyed on the stone's own address, so a bare stone is bare
+# from both tiles that see it.
+MARK_BARE_SHARE = 0.34
 WEAR_BANDS, WEAR_PITS = 3, 1        # on trodden stone
 
 
@@ -596,6 +610,10 @@ def stone_marks(key, seed, extent, worn=False, wear=0.0):
     of a spanning stone dress it identically.
     """
     st = _lcg((key ^ (MARKS + seed)) | 1)
+    # BARE STONE. Drawn from the stone's own key before anything else, so it is stable and shared
+    # across a boundary, and so the marks that DO appear read as events rather than as a coat.
+    if ((key ^ (MARKS + seed)) % 1000) / 1000.0 < MARK_BARE_SHARE:
+        return []
     u_lo, u_hi, v_hi = extent
     u_span = max(1, u_hi - u_lo - 1)
     v_span = max(1, v_hi - 1)
@@ -972,7 +990,16 @@ def _travel_axis_from_field(traffic, tx, ty):
 #     toward the material's median (flatter) and it sits below its neighbours, which is drawn the
 #     only legal way — as shadow at its edges, never as an overall darkening, because a stone that
 #     is merely darker is a stone that was painted.
-DEFORM_FLATTEN = (0.0, 0.10, 0.35, 0.60)   # by wear age: how far a stone's value is pulled to the
+# CUT by the frame critic: "every lit tile sits inside one narrow brown band, so slab, repair,
+# hatched patch and ground-in dirt all read as the same material at the same distance."
+#
+# This pass is what was closing the band. It pulls a walked stone's value toward the material
+# median to say "ground down", and at 0.60 a fully worn stone had lost most of the value that
+# distinguished it from its neighbours — the stone-to-stone variation the bond spends five
+# families and two tables to produce, flattened out again at paint time on exactly the ground the
+# player is standing on. Ground-down is a real thing to say; saying it this loudly costs the floor
+# its material.
+DEFORM_FLATTEN = (0.0, 0.04, 0.14, 0.24)   # by wear age: how far a stone's value is pulled to the
                                            # material median. Flat is what ground-down looks like.
 #
 # (b) THE COMPACTION ITSELF IS THE DIRECTIONAL LEVER, and the first attempt at this had it
@@ -1082,7 +1109,12 @@ POLISH_SHOULDER = 1.15          # in tiles, where the lane's specular has faded 
 # themselves run ALONG it, and they are floored to whole pixels because §4.3 forbids the
 # anti-aliasing a smooth stripe would need.
 STRIA_PERIOD = 3                # pixels between streaks
-STRIA_DEPTH = 0.45              # how much of the lane's specular a dark streak gives up
+STRIA_DEPTH = 0.12        # CUT by the frame critic, which called it a '45 degree hatch
+                          # OVERLAY' — read as applied to the floor rather than worn into
+                          # it, which is a decal by another name. At 0.45 every third
+                          # pixel line lost nearly half its specular and the pattern
+                          # covered the whole lit area as an even weave. Measured earlier
+                          # at a third of the on-lane 'legibility' the metric credited.              # how much of the lane's specular a dark streak gives up
 STRIA_SALT = 3012
 LANE_FRAY = 0.32          # tiles of jitter on the distance BEFORE the lane's falloff, so
                           # its shoulder wanders instead of arriving on a line. A
@@ -1281,7 +1313,17 @@ def chroma_tint(tint, strength):
 # a share PACKED SHUT recovers it at the light end instead, which widens the distribution while
 # LOWERING the mean and the share above the floor. Measured: spread 4.99, mean 0.112, mode 0.078.
 SHELTER_LIFT_RUNGS = (5.0, 4.0, 3.0, 0.0)   # packed shut / mode / middle / the deep tail
-SHELTER_WEIGHTS = (0.06, 0.50, 0.26, 0.18)   # a smaller packed-shut share keeps the median
+SHELTER_WEIGHTS = (0.04, 0.26, 0.52, 0.18)   # RAISED BACK by the frame critic: 'the floor's
+                                             # joint structure has dissolved... no legible
+                                             # slab edge anywhere: a soft brown gradient.'
+                                             # The keyline fix had put the MODAL joint at
+                                             # 0.107 Weber, UNDER §13.8's floor, so the
+                                             # typical joint was not merely subtle but
+                                             # absent — the overshoot flagged two rounds
+                                             # before the critic named it. The mode now
+                                             # sits at 0.154, just clear of the floor and
+                                             # far below the 0.579 that outlined every
+                                             # stone. Spread unchanged at 4.99 rungs.   # a smaller packed-shut share keeps the median
                                              # joint faintly present: at 0.15 the field's
                                              # spread fell to 2.95 rungs because half the
                                              # joints had closed. 0.06 restores it to 4.01
@@ -1541,6 +1583,8 @@ def main():
     mat["shelter_weights"] = list(SHELTER_WEIGHTS)
     mat["shelter_block"] = SHELTER_BLOCK
     mat["lane_fray"] = LANE_FRAY
+    mat["crack_depth_vary"] = CRACK_DEPTH_VARY
+    mat["mark_bare_share"] = MARK_BARE_SHARE
     mat["joint_polish_floor"] = JOINT_POLISH_FLOOR
     mat["polish_lane"] = [POLISH_LANE_GAIN, POLISH_LANE_WIDTH, POLISH_SHOULDER]
     mat["striation"] = [STRIA_PERIOD, STRIA_DEPTH]
@@ -1556,7 +1600,7 @@ def main():
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
                           marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT,
                           hollow=HOLLOW_SALT, stria=STRIA_SALT, lane_dish=LANE_DISH_SALT,
-                          grit=GRIT_SALT, shelter=SHELTER_SALT, lane_fray=LANE_FRAY_SALT),
+                          grit=GRIT_SALT, shelter=SHELTER_SALT, lane_fray=LANE_FRAY_SALT, crack_vary=CRACK_VARY_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,

@@ -216,7 +216,11 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
                                                         (bool(worn and worn(x, y)) and not CA.LINES)), 0.0)
 
             for (ly, lx) in CA.crack_pixels(x, y, seed, crack_cache):
-                L[ly, lx] = ladder[int(np.abs(crack_v - ladder).argmin())]
+                # THE CRACK VARIES ALONG ITS LENGTH, mirrored.
+                _wx, _wy = x * T + lx, y * T + ly
+                _v = ((CA.mix(_wx, _wy, CA.CRACK_VARY_SALT + seed) % 1000) / 1000.0 - 0.5) * 2.0
+                _cv = crack_v * (1.0 + _v * CA.CRACK_DEPTH_VARY)
+                L[ly, lx] = ladder[int(np.abs(_cv - ladder).argmin())]
                 chr_blk[ly, lx] = 0.0
 
             tmap = np.stack([CA.chroma_tint(tint, v) for v in CA.CHROMA_BY_AGE])

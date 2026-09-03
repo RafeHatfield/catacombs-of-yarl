@@ -1,0 +1,102 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-tier1-floors",
+ "round": 2,
+ "surface": "floor",
+ "commit": "f97ffec13e4061e66866370aa7eb05e27f5494aa",
+ "dirty": true,
+ "build_id": "404a664d4accbb4fc947e3d6f0f8c57c3744a13c781dd16e839f31ca07f428af",
+ "timestamp": "2026-09-03T15:31:04",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/fc_standing.png",
+  "sha256": "19bd4a1615f13b6d5f2727fb0fd6e3631bbac5f5985c414feefd62a57498c405",
+  "log": "tools/tier1_floors/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier1-floors --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_route_onroute.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-tier1-floors-r2",
+  "slots": {
+   "1": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/washed-slab-lane.png",
+    "sha256": "538aaac2b97c1ede4f8b2454e6879aae30c91da024ada74317a92b6844dfe0d9",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/fc_standing.png",
+    "sha256": "19bd4a1615f13b6d5f2727fb0fd6e3631bbac5f5985c414feefd62a57498c405",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 1,
+  "file": "washed-slab-lane.png",
+  "sha256": "538aaac2b97c1ede4f8b2454e6879aae30c91da024ada74317a92b6844dfe0d9",
+  "culled_by": "Rafe, device walk, 2026-09-02",
+  "verbatim": "it looks like all the tiles on the walked path have been replaced.",
+  "caught": true,
+  "how": {
+   "ranked_last": true,
+   "named_worst": true,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": false,
+   "every_frame_flagged": true
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The lichen on the grey flagstone at the upper left (roughly x 20\u201355, y 40\u201370) is the only genuinely authored surface in any of the three frames. It is a two-value teal body with a darker one-pixel rim, and the body spreads across four separate slabs \u2014 the joint lines pass *under* it and are not respected by its outline, with three smaller satellite patches of decreasing size trailing off to the lower left. That is growth reading as growth on top of masonry, not a decal stamped inside a cell. Nearby, the crack at (28,26) forks into a Y and both branches terminate rather than running to the tile edge. The chest at (128,36): the pale lid frame carries a genuine bevel \u2014 light rim on the top and left of the moulding, darker on the bottom and right \u2014 and the diamond boss inside it is lit from the same direction. The barrels at (116,190) and (160,190) render staves as alternating vertical value bands that compress toward the silhouette edge, with a lighter elliptical rim on the lid. Someone drew these.",
+  "WORST_WHY": "Two things, one of them shared with 2 and one of them 1's alone.\n\nShared and fatal: roughly forty percent of the frame is not art. Everything outside the tan floor patch (i.e. everything left of x=310, below y=580, and the entire top band) is flat untextured cells at RGB(197,22,91) \u2014 saturated magenta \u2014 separated by 2px black gridlines, each with a solid cream square inset in its top-left corner. Zoom the boundary at (290,540)\u2013(420,620): the floor terminates on a razor-straight horizontal line and directly beneath it are two flat magenta cells with cream corner markers at (320,590) and (382,590). There is no wall, no threshold, no shadow into the room. That is a collision or occupancy debug layer left switched on, and it is the majority of the picture.\n\n1's own failure: the light pass clips. In the region immediately above and left of the figure \u2014 about x 330\u2013420, y 420\u2013520 \u2014 the slab joints, the diagonal hatching and the tick-marks all wash out into a near-flat cream field. The material is least readable exactly where the player's eye is. Meanwhile the crack overlay survives the blowout at full pure black, so in the hot core the only thing with any contrast is a network of 1px ink lines. Those lines are themselves wrong: uniform single-pixel black, no width variation, no lip, and they cross slab joints without deflecting or terminating \u2014 trace the one starting near (355,215) down through (400,470) and on past (520,570). It reads as pen on paper, not fracture in stone. 2 uses the identical tile art and holds the hatch and joints readable right up against the figure; 1 throws them away to get punch.",
+  "FLAGGED": "1, 2, 3",
+  "RANK": "3 > 2 > 1",
+  "BEST": "3",
+  "WORST": "1",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "Delete the debug cell layer, as above. Same layer, same coordinates, same problem.",
+  "Draw the wall geometry the deleted layer was standing in for.",
+  "Open up the floor's value range. Every lit tile from x=320 to x=650 sits inside one narrow brown band, so slab, repair, hatched patch and ground-in dirt all read as the same material at the same distance. Separate at minimum the slab face from the joint and the repair patch from the slab.",
+  "Break the hatched-slab repeat. The diagonal-hatch motif recurs on a visible rhythm across the lit area \u2014 vary the hatch angle, density, or omit it on a third of the slabs.",
+  "Fix the cracks as in FLIP 1: they are the identical overlay, still uniform 1px black crossing joints without deflection."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r002-worktree-tier1-floors-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

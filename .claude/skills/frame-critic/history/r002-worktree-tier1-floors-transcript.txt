@@ -1,0 +1,47 @@
+All three read. Here is the assessment.
+
+**RANK:** 3 > 2 > 1
+
+**BEST:** 3
+
+**BEST_WHY:** The lichen on the grey flagstone at the upper left (roughly x 20–55, y 40–70) is the only genuinely authored surface in any of the three frames. It is a two-value teal body with a darker one-pixel rim, and the body spreads across four separate slabs — the joint lines pass *under* it and are not respected by its outline, with three smaller satellite patches of decreasing size trailing off to the lower left. That is growth reading as growth on top of masonry, not a decal stamped inside a cell. Nearby, the crack at (28,26) forks into a Y and both branches terminate rather than running to the tile edge. The chest at (128,36): the pale lid frame carries a genuine bevel — light rim on the top and left of the moulding, darker on the bottom and right — and the diamond boss inside it is lit from the same direction. The barrels at (116,190) and (160,190) render staves as alternating vertical value bands that compress toward the silhouette edge, with a lighter elliptical rim on the lid. Someone drew these.
+
+**WORST:** 1
+
+**WORST_WHY:** Two things, one of them shared with 2 and one of them 1's alone.
+
+Shared and fatal: roughly forty percent of the frame is not art. Everything outside the tan floor patch (i.e. everything left of x=310, below y=580, and the entire top band) is flat untextured cells at RGB(197,22,91) — saturated magenta — separated by 2px black gridlines, each with a solid cream square inset in its top-left corner. Zoom the boundary at (290,540)–(420,620): the floor terminates on a razor-straight horizontal line and directly beneath it are two flat magenta cells with cream corner markers at (320,590) and (382,590). There is no wall, no threshold, no shadow into the room. That is a collision or occupancy debug layer left switched on, and it is the majority of the picture.
+
+1's own failure: the light pass clips. In the region immediately above and left of the figure — about x 330–420, y 420–520 — the slab joints, the diagonal hatching and the tick-marks all wash out into a near-flat cream field. The material is least readable exactly where the player's eye is. Meanwhile the crack overlay survives the blowout at full pure black, so in the hot core the only thing with any contrast is a network of 1px ink lines. Those lines are themselves wrong: uniform single-pixel black, no width variation, no lip, and they cross slab joints without deflecting or terminating — trace the one starting near (355,215) down through (400,470) and on past (520,570). It reads as pen on paper, not fracture in stone. 2 uses the identical tile art and holds the hatch and joints readable right up against the figure; 1 throws them away to get punch.
+
+**FLAGGED:** 1, 2, 3
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- Delete the debug cell layer entirely — the flat RGB(197,22,91) cells, the 2px black gridlines and the cream corner markers. Nothing in the frame outside the tan floor patch is art and all of it is currently on screen.
+- Draw actual wall geometry where that layer sits: a top surface, a visible thickness on the side facing the camera, and a contact shadow cast onto the floor. Right now the floor ends at (310, y) and (x, 580) with a one-pixel step into void.
+- Cap the light pass so the floor's brightest value stays below the point where joints vanish. Currently the four tiles around the figure are a single flat cream; the joint lines that are legible at (450,400) are gone by (380,470).
+- Re-render the cracks as material rather than overlay: vary the stroke from 1px to 2px along a single run, give each one a one-pixel lighter lip on the side away from the light, and make them terminate at or deflect along slab joints instead of crossing them square.
+- Give the cracks the same falloff as everything else. They are currently full black in the hot core and full black in the dark, so they gain contrast as the floor brightens.
+
+**FLIP 2:**
+- Delete the debug cell layer, as above. Same layer, same coordinates, same problem.
+- Draw the wall geometry the deleted layer was standing in for.
+- Open up the floor's value range. Every lit tile from x=320 to x=650 sits inside one narrow brown band, so slab, repair, hatched patch and ground-in dirt all read as the same material at the same distance. Separate at minimum the slab face from the joint and the repair patch from the slab.
+- Break the hatched-slab repeat. The diagonal-hatch motif recurs on a visible rhythm across the lit area — vary the hatch angle, density, or omit it on a third of the slabs.
+- Fix the cracks as in FLIP 1: they are the identical overlay, still uniform 1px black crossing joints without deflection.
+
+**FLIP 3:**
+- Fix the barrel draw order. Both barrels at (116,190) and (160,190) are sliced off by a dead-straight horizontal cut at y=216 where the dirt meets the flagstone: row 215 is barrel wood (68,54,28), row 216 is flat floor grey (124,124,124). The stave lines stop mid-stroke. The barrels have no bottom and no shadow. Draw the sprites above the terrain layer and give them a contact shadow.
+- Replace the tiled dirt. The earth field from x 64–240 repeats a 48×48 patch verbatim in both axes — self-similarity at a 48px shift measures 4.2 mean absolute error against ~7 for every other offset, an isolated minimum. The same dark-red blotch cluster marches across the frame in a lattice you can see at 1x. Author at least three non-aligned variants, or drive the mottling from a non-repeating source.
+- Build a shoreline. The pond's left edge steps from dirt (65,30,19) at x=247 to water (38,81,66) at x=248 in a single pixel, and its bottom edge from water at y=191 to dirt at y=192, both dead straight for their entire length. Add wet/darkened bank tiles, an irregular waterline, and break the rectangle.
+- Pull the lily pads into the palette. They sit at (44,133,62) against water at (36,76,62) — the green channel nearly doubles. Nothing else in the frame reaches that saturation. Desaturate and darken them, or give them a darker rim so they sit in the water rather than on it.
+- Vary the bottom flagstone band (y 216–260). Twenty-odd slabs share one flat grey, identical 1px joints of identical value, and three stray pale speckles. Vary joint depth along a single run, vary slab face value, carry some of the wear and lichen from the upper-left stone into it — the two grey areas currently read as two different levels of finish.
+- Settle a single shadow policy. The orc at (215,10) has a heavy soft-alpha blurred ellipse under it in an otherwise hard-pixel image; the bone scatter at (215,112) has no shadow at all; the chests at (128,10) and (128,36) have no shadow at all; the barrels have none. Pick one — hard-edged pixel shadows on everything that touches the ground.
+- Resolve the projection. The orc, the barrels and the chest bodies are drawn in front elevation — you see the orc's face and chest, the barrels' curved sides, the chests' plank fronts — standing on a floor drawn straight from above. If the frame is top-down, the props need top-down silhouettes.
+- The frame has no light model. It is evenly lit corner to corner at full brightness with no carried source and no falloff, in a space that should have neither daylight nor fixtures. If the carried lamp is the only light, that has to be built here too.
+
+Model: Claude Opus 5 (1M context).

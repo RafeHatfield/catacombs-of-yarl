@@ -418,7 +418,12 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             else:
                 px_set = CA.crack_pixels(x, y, seed, crack_cache)
             for (ly, lx) in px_set:
-                L[ly, lx] = crack_v
+                # THE CRACK VARIES ALONG ITS LENGTH. One value end to end is a drawn line; a
+                # fracture is deepest where it has opened. Keyed on world position, so both tiles
+                # either side of a boundary agree about the same pixel.
+                _wx, _wy = x * T + lx, y * T + ly
+                _v = ((CA.mix(_wx, _wy, CA.CRACK_VARY_SALT + seed) % 1000) / 1000.0 - 0.5) * 2.0
+                L[ly, lx] = crack_v * (1.0 + _v * CA.CRACK_DEPTH_VARY)
                 chr_blk[ly, lx] = 0.0        # a crack is enclosure, and enclosure has no hue
                 cracks[y * T + ly, x * T + lx] = True
 
