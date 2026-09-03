@@ -1291,7 +1291,22 @@ public static class Tier1AshlarFloor
                 outImg.SetPixel(lx, ly, new Color(
                     (float)(cv2 * cfg.Tint[0] / 255.0), (float)(cv2 * cfg.Tint[1] / 255.0),
                     (float)(cv2 * cfg.Tint[2] / 255.0)));
-                polishImg.SetPixel(lx, ly, new Color(0, 0, 0));
+
+                // A CRACK IS LIT LIKE EVERYTHING ELSE IT IS CUT INTO. The frame critic: "they are
+                // pure black inside the brightest part of the lamp pool, which makes them the
+                // darkest thing in the frame; they need to be lit along with the surface they're
+                // in." Giving cracks a flat zero polish was the same mistake the joints had —
+                // fixed there, missed here — and it is worse for a crack, because the surface
+                // around it is the polished lane and the contrast is therefore largest exactly
+                // where the player is looking.
+                //
+                // A recess catches less light, not none. It takes the lane's shine at the same
+                // fraction a joint of that depth would.
+                double crackLit = System.Math.Clamp(
+                    (cv2 - cfg.Ladder[0]) / System.Math.Max(cfg.LumMedian - cfg.Ladder[0], 1e-6),
+                    cfg.JointPolishFloor, 1.0);
+                double cpol = LanePolish(cfg, tx * T + lx, ty * T + ly) * crackLit;
+                polishImg.SetPixel(lx, ly, new Color((float)cpol, (float)cpol, (float)cpol));
             }
         }
 

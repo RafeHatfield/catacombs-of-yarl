@@ -443,6 +443,9 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             _lane = CA.lane_polish_block(ldist, ltx, lty, wxb, wyb, seed)
             _bottom = mat["ladder"][0]
             _filled = np.clip((L - _bottom) / max(mat["lum_median"] - _bottom, 1e-6), 0.0, 1.0)
+            # A CRACK IS LIT LIKE EVERYTHING ELSE IT IS CUT INTO. Cracks used to take a flat
+            # zero polish, which made them the darkest thing in the frame exactly where the lane
+            # is brightest. A recess catches less light, not none.
             polish[y * T:(y + 1) * T, x * T:(x + 1) * T] = np.where(
                 (cls != 0), _lane, _lane * np.maximum(_filled, CA.JOINT_POLISH_FLOOR))
 
