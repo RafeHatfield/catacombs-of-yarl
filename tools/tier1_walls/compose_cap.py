@@ -154,7 +154,22 @@ def build_field(ladder, tint, top_rung, hue_shift, seed=1337,
     #
     # 26 cells over 512px is a 20px period; 61 is 8px; 128 is 4px; 256 is 2px. §4.3 is not
     # strained — every octave lands on whole pixels and nothing here is a sub-pixel gradient.
-    octaves = ((26, 0.12), (61, 0.30), (128, 0.95), (256, 1.60))
+    # ⚠ AND THE FIRST TUNING OF THIS WENT PAST STONE INTO NOISE. Chasing the floor's 84.8%
+    # fine-power share, the 2px octave was weighted 1.60 and the frame critic — eyes on the
+    # delivered picture — called the result exactly what it was:
+    #
+    #     "The upper wall masses at x≈60–370 and x≈440–700 are dense SPONGE SPECKLE that reads
+    #      as loose gravel, not a surface."
+    #
+    # That is the failure the frame-critic skill exists to catch, and I walked straight into it:
+    # `grain32.py` is a builder's tool and I treated its number as a target. "Masonry frequency"
+    # is structure at stone scale, not the maximum high frequency a field can carry — and the
+    # metric cannot tell those apart, because a metric never can. The weights below sit between
+    # the cloud the gate rejected (49.6%) and the gravel the critic rejected (73.6%).
+    # The 2px term is the speckle; 8px and 4px are stone-scale structure. So the fine-power
+    # share is bought from STRUCTURE and the pure-noise octave is held down, which is the
+    # difference the share alone cannot see.
+    octaves = ((26, 0.25), (61, 0.90), (128, 1.05), (256, 0.22))
     grain = sum(wrap_noise(size, c, rng) * a for c, a in octaves)
     grain = grain / max(grain.std(), 1e-6)
     grain = grain * grain_rungs * step

@@ -1,5 +1,23 @@
 #!/usr/bin/env python3
-"""BLIND SEATS on the tier-one wall family. LOOP-PROCESS §3, with §4's plant.
+"""BLIND SEATS on the tier-one wall family — SUPERSEDED, and kept only as history.
+
+⚠ THIS APPARATUS GATES NOTHING. `.claude/skills/frame-critic` is the judge now: a fresh blind seat
+ranks four delivered FRAMES — this build, the asset bar, the last capture Rafe approved, and a
+picture-plant he personally culled — and its verdict is the round. RULED (Rafe, 2026-09-03):
+*"the round/VOID seat apparatus is superseded."*
+
+The reason is in the skill and it is this session's own history: rounds 9 and 10 went VOID because
+the GENERATED plant differed from the family in 0.54% of pixels — the cap pass moved what the
+engine draws, and a control composed downstream of the engine was disarmed by an engine change
+without anyone touching it. A plant that is a PICTURE, bytes in a morgue, cannot be disarmed that
+way. And the ruin vocabulary this file maintained went wrong in every direction a word list can.
+
+Nothing below decides anything. It is left in the tree because the transcripts it produced are
+evidence for rounds 1-10 and the code that produced them should stay readable beside them.
+
+Original header follows.
+
+BLIND SEATS on the tier-one wall family. LOOP-PROCESS §3, with §4's plant.
 
     python3 tools/tier1_walls/run_seats.py W1 W2 W3 --round 1
     python3 tools/tier1_walls/run_seats.py W4 --round 1        # the comparative seat

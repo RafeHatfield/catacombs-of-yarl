@@ -2,9 +2,9 @@
   "produced_by": "tools/tier1_walls/derive_quarry_tint.py",
   "source": "src/Presentation/assets/tier1_ashlar",
   "quarry_tint": [
-    1.056818,
-    1.023928,
-    0.595667
+    1.024486,
+    1.010312,
+    0.82575
   ],
   "floor_hue": 73.55,
   "floor_sat": 0.6561,

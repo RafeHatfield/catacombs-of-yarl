@@ -37,48 +37,26 @@ export TIER1_WALLS_CAP="${TIER1_WALLS_CAP:-res://src/Presentation/assets/tier1_c
 # ignore checks. A wall build always wants them, so they are not optional here.
 export TIER0_EXPECT_WALLS=1
 
-# ── THE DEVICE GATE (standing order, Rafe) ────────────────────────────────────────────────────
-# No build installs to the phone unless, on that exact build: its round is VALID, its diagnostic
-# seat answered its axis, a whole-frame comparative seat ran without culling or calling it a
-# regression, and every ruled fix is present. Checked by `install_gate.py` against the built
-# artefacts and that round's seat records.
+# ── THE GATE IS NOT HERE, AND THAT IS THE POINT ───────────────────────────────────────────────
 #
-# Rafe's walk is the LAST gate, not the first working one. Every rule in this directory that
-# depended on being remembered was eventually not remembered, so the gate is the thing that
-# installs rather than a paragraph beside it.
+# This file used to carry its own install gate — a round-validity check of my own, wired in front
+# of the build. It is gone, because `.claude/skills/frame-critic` landed on main and the skill is
+# explicit about why a second one is worse than none:
 #
-# `--force-ungated` exists for ONE purpose: producing an artefact to MEASURE. It says so, loudly,
-# every time, and `announce` still refuses — a build that cannot produce an announcement is a
-# build nobody is being asked to walk.
-gate() {
-  if [ -z "${TIER1_GATE_ROUND:-}" ]; then
-    echo "== GATE: refusing — set TIER1_GATE_ROUND to the round this build is for." >&2
-    echo "   The gate checks THAT round's seats. A build with no round has not been judged." >&2
-    return 1
-  fi
-  python3 tools/tier1_walls/install_gate.py --round "$TIER1_GATE_ROUND" \
-          --axis "${TIER1_GATE_AXIS:-Q12}"
-}
-
+#     "Two callers, one implementation — a gate reimplemented in a second place has two
+#      behaviours and the second one is always the lenient one."
+#
+# `build_review_app.sh` now runs `critic_gate.py` before it exports, and a PreToolUse hook runs
+# the same implementation against anything that would put a build on a device. My version checked
+# whether a ROUND was conducted properly; the critic checks whether the PICTURE is any good, which
+# is the stronger claim and the one that matters. Nothing here re-implements it.
+#
+# The override is the skill's, and it is visible from the handset:
+#     YARL_SKIP_CRITIC=1 tools/tier1_walls/device.sh build
+# installs and stamps SKIPPED-REVIEW, which the app draws on screen.
 case "${1:-}" in
-  build)
-    shift
-    if [ "${1:-}" = "--force-ungated" ]; then
-      shift
-      echo "== UNGATED BUILD — for measurement only. NOT for Rafe's walk, and no walk"
-      echo "   announcement can be produced for it."
-    elif ! gate; then
-      echo "" >&2
-      echo "== BLOCKED. This build does not go to the phone. Fix the failures above." >&2
-      exit 3
-    fi
-    exec tools/tier0_harness/build_review_app.sh "$@" ;;
-  announce)
-    shift
-    exec python3 tools/tier1_walls/install_gate.py \
-         --round "${TIER1_GATE_ROUND:?set TIER1_GATE_ROUND}" \
-         --axis "${TIER1_GATE_AXIS:-Q12}" --announce ;;
+  build)  shift; exec tools/tier0_harness/build_review_app.sh "$@" ;;
   verify) shift; exec tools/tier0_harness/verify_on_device.sh \
                       --out tools/tier1_walls/evidence "$@" ;;
-  *) echo "usage: tools/tier1_walls/device.sh {build|verify|announce} [args...]" >&2; exit 2 ;;
+  *) echo "usage: tools/tier1_walls/device.sh {build|verify} [args...]" >&2; exit 2 ;;
 esac
