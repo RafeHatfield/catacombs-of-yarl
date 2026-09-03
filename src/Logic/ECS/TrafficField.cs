@@ -46,7 +46,40 @@ public static class TrafficField
     public const double DecayPerTile = 0.010;
 
     public sealed record Result(byte[,] Field, int Routes, double SpineLength,
-                                Dictionary<string, int> TierCounts);
+                                Dictionary<string, int> TierCounts,
+                                IReadOnlyList<RoutePolyline.Line> Lines);
+
+    /// <summary>
+    /// The routes as LINES, smoothed to walking curvature and nudged off centre.
+    ///
+    /// The scalar field above is kept — it is what the age layer's magnitude has always read and
+    /// it is verified by seven tests — but round 21 measured that a per-tile scalar cannot supply
+    /// a DIRECTION a viewer can follow: its derived axis agreed between neighbours only 34% of the
+    /// time. The same routes, emitted as lines, are coherent by construction.
+    /// </summary>
+    private static List<RoutePolyline.Line> MakeLines(
+        GameMap map, IEnumerable<(List<(int X, int Y)> Path, double Weight)> routes, int seed)
+    {
+        var outp = new List<RoutePolyline.Line>();
+        foreach (var (path, weight) in routes)
+        {
+            if (path == null || path.Count < 2) continue;
+            // ⚠ SPINE AND REAL ROUTES ONLY, not every leaf. The scalar field is fed by every
+            // branch the graph finds, which is right for a field — but as LINES, nineteen of them
+            // flooded the review scene: every tile was near some route, adjacent tiles were
+            // nearest to DIFFERENT routes, and the axis flipped between them. Coherence read 70%
+            // where it should read ~100% along a route.
+            //
+            // A remote branch is walked lightly and should show as lightly-worn ground, which the
+            // scalar already does. It is not a LINE the floor states, and the ruling says as much:
+            // portal-to-portal plus spine.
+            if (weight < SecondaryWeight) continue;
+            var pts = RoutePolyline.Jitter(RoutePolyline.Smooth(path),
+                                           (x, y) => map.IsWalkable(x, y), seed);
+            outp.Add(new RoutePolyline.Line(pts, weight));
+        }
+        return outp;
+    }
 
     /// <summary>
     /// Accumulate traversal over the walkable grid. Returns a per-TILE scalar, 0..255.
@@ -77,6 +110,8 @@ public static class TrafficField
         }
         if (spine.Count > 0) routes++;
         foreach (var (x, y) in spine) Deposit(acc, w, h, x, y, SpineWeight);
+        var lineSrc = new List<(List<(int X, int Y)> Path, double Weight)>();
+        if (spine.Count >= 2) lineSrc.Add((spine, SpineWeight));
 
         // Distance from the spine, in tiles, for the decay term.
         var spineSet = new HashSet<(int, int)>(spine);
@@ -106,6 +141,7 @@ public static class TrafficField
             if (route == null) continue;
             routes++;
             tiers[tier]++;
+            lineSrc.Add((route, weight));
 
             // Decay with distance travelled off the spine: a remote branch is walked, but less,
             // and less the further out it goes.
@@ -132,7 +168,7 @@ public static class TrafficField
                 for (int x = 0; x < w; x++)
                     field[x, y] = (byte)System.Math.Clamp((int)System.Math.Round(sm[x, y] / max * 255.0), 0, 255);
 
-        return new Result(field, routes, spine.Count, tiers);
+        return new Result(field, routes, spine.Count, tiers, MakeLines(map, lineSrc, 1337));
     }
 
     /// <summary>
@@ -148,7 +184,9 @@ public static class TrafficField
     public static Result ComputeFromMap(GameMap map)
     {
         var start = FirstWalkable(map);
-        if (start is not { } s0) return new Result(new byte[map.Width, map.Height], 0, 0, new());
+        if (start is not { } s0)
+            return new Result(new byte[map.Width, map.Height], 0, 0, new(),
+                              new List<RoutePolyline.Line>());
 
         var a = FarthestWalkable(map, s0) ?? s0;
         var b = FarthestWalkable(map, a) ?? a;
@@ -180,6 +218,8 @@ public static class TrafficField
 
         var spineSet = new HashSet<(int, int)>(spine);
         int routes = spine.Count > 0 ? 1 : 0;
+        var lineSrc = new List<(List<(int X, int Y)> Path, double Weight)>();
+        if (spine.Count >= 2) lineSrc.Add((spine, SpineWeight));
         foreach (var leaf in leaves)
         {
             var from = NearestOf(spineSet, leaf);
@@ -187,6 +227,7 @@ public static class TrafficField
             var route = Pathfinder.AStar(map, f.X, f.Y, leaf.X, leaf.Y, canPassDoors: true);
             if (route == null) continue;
             routes++;
+            lineSrc.Add((route, RemoteWeight));
             for (int i = 0; i < route.Count; i++)
                 Deposit(acc, w, h, route[i].X, route[i].Y,
                         RemoteWeight * System.Math.Max(0.15, 1.0 - DecayPerTile * i));
@@ -206,7 +247,8 @@ public static class TrafficField
 
         return new Result(field, routes, spine.Count,
                           new Dictionary<string, int> { ["spine"] = spine.Count,
-                                                        ["remote"] = leaves.Count });
+                                                        ["remote"] = leaves.Count },
+                          MakeLines(map, lineSrc, 1337));
     }
 
     private static (int X, int Y)? FirstWalkable(GameMap map)

@@ -1,0 +1,133 @@
+I read the image at 1:1, then magnified and ran lighting-normalized measurements to separate "texture that isn't there" from "texture the lamp is washing out." That distinction turned out to be the whole story.
+
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Cut stone flagging — irregular rectangular slabs, dry-laid, no mortar bed, sizes all over the place. Sandstone or a pale limestone.
+
+**Q1_WHY:** The slab layout does the work. I segmented 123 slab faces between x=183–618, y=0–268 and got 103 distinct sizes — a running bond that never settles into a course. Compare x=371–427, y=115–143 (one long slab, 56px) against x=475–489, y=147–165 (a 14px offcut two rows down). That's stone cut to fit a hole, not tile. Joints are a 1–2px dark line with a stippled, uneven edge rather than a clean rule — the slabs don't meet squarely. Colour sits in the tan/ochre band (RGB roughly 200/165/115 at the brightest, x=452–486 y=138–158), which reads as a pale sedimentary stone, and it is the same material everywhere including down the corridor.
+
+---
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x=375–440.
+
+But I have to split the answer, because the honest version is uncomfortable: **the shape of the ground picked it, the surface of the ground told me nothing.** The lit floor narrows into a two-slab-wide channel at y=270 and runs down to about y=416 where the lamp gives out. That's an unambiguous route and it's the only one fully inside the light. Everything else — north across the top of the frame, east past x=560, west past x=250 — is a wide open floor edge that just gets dark.
+
+What did *not* influence me: any mark on the surface. There is no worn line, no polish, no scatter of grit pushed to the sides, nothing on the slab faces at x=375–440, y=280–400 that says people go this way. If you flipped the corridor to the north side of the room and left the surface untouched, I would have made the same choice for the same reason and noticed nothing missing.
+
+---
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+Two things, and they are happening in different places.
+
+It has cracked, comprehensively. A network of thin dark fissures runs across the whole lit chamber, ignoring the joints entirely — they cut *through* slab faces and carry on into the next one. And separately, a large number of slabs are carved: blocks of short horizontal dashes stacked in rows, like lines of writing, plus fields of diagonal hatching and small scratch patches.
+
+The problem is that nothing has happened to the floor **you can actually see**. The carved slabs are all out at the dim edges. The lit floor — the ground the figure is standing on — is unmarked. Not lightly marked. Unmarked.
+
+**Q3_WHY:** The cracks I can point at directly: a long diagonal enters around x=230, y=45, runs down-right and passes clean through the slab at x=305–337, y=147–165 without deflecting at either joint; another crosses the frame left-to-right at y≈220–240 from x=190 to x=470. They cross slab boundaries, which is why they read as fracture rather than as a drawn edge.
+
+The carving is at x=505–618 across all y, at x=185–340 y=0–110, and along the top rows y=0–45. Magnify x=400–620, y=0–140 and you find dash-rows on nearly every face — the slab at x=555–600, y=95–115 has four stacked rows of them.
+
+Now magnify x=330–500, y=110–250, the lamp-lit centre. Flat fill, a soft vertical gradient, one crack. Nothing else. I normalised for lighting (divide by a 10px Gaussian, so brightness can't hide anything) and measured per-slab detail energy on 114 slabs with the sprite excluded: slabs at mean brightness 100–200 average **0.128**; slabs at brightness 0–70 average **0.157–0.177**. The best-lit third of the floor is objectively the emptiest third. The lamp is not washing detail out — the detail was never placed there.
+
+---
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes, two things.
+
+**The hard vertical seam at x≈500–508, running y=140–260.** My eye goes back to it every pass. To its left, the slabs are blank tan. To its right, every single slab carries hatching or dash-rows. The material changes character across a straight vertical line that isn't a joint, isn't a crack, and isn't anything in the layout. It's a lighting boundary, and the floor's entire surface vocabulary is switching on and off with it. Once you see it you can't stop seeing it — it makes the lit floor look like a hole cut in a different, better floor.
+
+**The stair-stepped shadow edge at x≈240–260, y=155–250**, left of the figure. Same effect, mirrored: hard diagonal boundary, blank slabs on the lit side, carved slabs immediately across it at x=195–235, y=170–210.
+
+Together they frame the player in a rectangle of empty ground roughly x=255–505, y=110–250, with all the interesting material pushed outside it.
+
+---
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+**Made.** This one is genuinely earned.
+
+I autocorrelated the lighting-normalized chamber looking for a stamp period — nothing. No local maximum anywhere in offsets up to dy=150/dx=200; the correlation decays monotonically and the only elevated values are the horizontal joint banding, which is what slab courses are *supposed* to produce. I then compared every same-size slab pair for identical content. The closest matches came in at diff=0.089–0.13, and when I looked at which slabs those were — x=431–455/y=253–268 against x=373–397/y=253–268 — they match because they are both **blank**. Two empty slabs are identical for a boring reason.
+
+So: no stamped grid, no duplicated marks, no tiling seam. The layout was authored. Credit where it's due. It just doesn't rescue the rest.
+
+---
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+**YES.** It is coherent, it is not obviously broken, it would pass in a screenshot.
+
+Merely competent, or genuinely good? **Merely competent.** The slab layout is good work. The surface treatment is not, because the surface treatment is invisible in the one place the player is looking. Good means the material rewards attention at the size it's played at. This one punishes it — you look at the ground under your feet and there is nothing there.
+
+---
+
+**Q7: AT THE SIZE SHOWN, WITHOUT ZOOMING IN, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1, on the face of the material:
+- The crack network. That's it. Thin dark lines, high contrast against the lit tan, clearly readable.
+
+Also legible at 1:1 but not surface: the joints, the slab sizes, the light falloff.
+
+**Not legible at 1:1 — only appears on magnification:**
+- The dash-row carvings. All of them.
+- The diagonal hatch fields.
+- The small scratch and pitting patches.
+- Any grain or tonal variation within a slab face.
+
+**At 1:1, under the lamp, the faces are blank.** I want to be plain about that: the region x=255–505, y=110–250 has no legible surface content whatsoever except cracks. In the dark regions there is *something* — you can tell the slabs aren't flat — but it reads as undifferentiated noise, not as marks, and it's too dark to resolve.
+
+And the carvings are the best idea in this floor. Rows of short parallel dashes stacked in blocks, on the ground of a place that files souls — that's the fiction sitting right there on the stone. The player never sees it. I only found it by dividing the image by a Gaussian blur. That is hunting, not seeing.
+
+**Q7_WHY:**
+- **Checked at 1:1** (the unmagnified 750×600 read): x=330–500 y=110–250 (lamp centre); x=180–620 y=0–270 (whole chamber); x=375–440 y=270–420 (corridor). Cracks read. Faces do not.
+- **Had to magnify** (4×–6× nearest-neighbour, plus lighting normalisation to see anything at all): x=400–620 y=0–140 — dash-rows and hatching on nearly every slab; x=180–400 y=0–140 — same; x=505–618 y=140–270 — heaviest carving in the image; x=190–260 y=155–250 — carved slabs on the shadowed side of the stair-step edge. Every one of these needed magnification. Several needed magnification *and* a brightness fix.
+
+---
+
+**Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU?**
+It reads as **two different ages in one room**, and the boundary between them is a lighting edge, which is the tell that this is a production artifact rather than a story.
+
+**The dim floor: older than the records.** x=505–618 (all y), x=185–340 (y=0–110), and the top rows y=0–45. Slabs carved over and over — the dash-rows at x=555–600 y=95–115 and x=490–545 y=10–35 are stacked in multiple passes at different densities, which reads as accumulation over a long time rather than one event. Fractures crossing many slabs at once mean the whole bed has moved, and that takes settlement, not an accident.
+
+**The lit floor: laid last week.** x=255–505, y=110–250. Blank, uniform, uncarved, unworn. The slab at x=371–427 y=115–143 is a large clean face directly north of the figure with a single crack across it and nothing else. If I saw only that region I would say this floor is new.
+
+The two ages meet at x≈500 on a straight vertical line and at the stair-step around x≈250. Neither boundary corresponds to a repair seam, a different stone, a joint run, or anything a mason would have done. The floor gets four centuries older exactly where the lamp stops reaching. That's the failure stated as an age reading.
+
+**Q8_WHY:** Ancient read from x=505–618 y=0–270, x=185–340 y=0–110, x=240–620 y=0–45. New read from x=255–505 y=110–250 — specifically the slabs at (257–297, 115–143), (301–339, 115–143), (371–427, 115–143), (431–455, 115–143), (459–489, 115–143), (305–337, 147–165), (435–471, 147–165), (433–449, 175–207), all measured in the bottom fourteen of 114 for detail energy.
+
+---
+
+**Q9: YOU ARE STANDING ON THE ROUTE — CAN YOU SEE WHERE IT GOES?**
+It goes **south**, down the channel at x=375–440 to about y=416 where the light dies.
+
+**I read it off the walls and off the shape of the lit area — the ground surface told me nothing.** I want that recorded clearly, because the question is asking whether ground that is walked daily looks walked, and the answer is no. The corridor floor is the blankest ground in the image.
+
+**Q9_WHY:**
+- **Route, accepted:** x=375–440, y=270–420. Slab faces here at (373–397, 253–268) and (401–427, 253–268) rank among the fourteen emptiest in the whole image — detail energy 0.051 and 0.038 against a chamber mean of 0.15. Magnified (my corridor crop, x=370–460 y=270–470), it is a clean running bond, flat fills, one hairline joint offset near y=310. No polish down the centre. No grit pushed to the walls. No dishing where feet land. Nothing that separates the middle of the walkway from the edges.
+- **Rejected, north** (x=311–540 at y=0, where floor still reaches the top of frame): rejected only because it exits the frame with no visible destination. The ground there is *more* marked than the corridor, not less — carved slabs across y=0–45. If I were reading traffic off the surface, the carving would argue people go north, which is the opposite of what the layout says.
+- **Rejected, east and west** (x>560, x<250 at mid-height): rejected because the floor edge dissolves into shadow with no channel forming.
+- **What is different about the ground between them:** in terms of surface, nothing that indicates use. The corridor is emptier than the chamber, and the chamber is emptier under the lamp than at its dark edges. The gradient of detail in this image tracks illumination, not footfall. There is no traffic signal on this floor at any point.
+
+---
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST OR NEVER?**
+**They all look the same.**
+
+Two openings are readable: the north continuation across the top of the frame (floor still present at y=0, x≈311–540) and the south corridor mouth at x=375–440, y=268–290. I compared the ground immediately in front of each. The corridor mouth slabs at (373–397, 253–268) and (401–427, 253–268) measure 0.051 and 0.038 detail energy. The chamber floor either side of the mouth — (283–303, 169–207) at 0.041, (433–449, 175–207) at 0.032 — measures the same. There is no darkening, no wear fan, no scuff spreading out from the threshold, nothing accumulating in the corners where nobody walks.
+
+If one of these is the door a company of soldiers has used every day for four hundred years and the other is bricked-up dead ground, the floor does not know which is which.
+
+---
+
+**CULL:**
+The floor is blank exactly where the lamp lights it; all its detail hides in the dark.
+
+**FLIP LIST**
+- Move the carved dash-row and hatch content into the lamp-lit radius (x≈255–505, y≈110–250) so at least one legible mark falls within two slabs of the figure — right now that zone measures 0.128 detail energy against 0.17 in shadow, and it must invert.
+- Raise mark contrast until the dash-rows read at 1:1 without magnification; test at 750×600 on a phone, not in an editor, and delete any mark that fails.
+- Kill the surface-detail discontinuity at the hard light edges x≈500–508 (y=140–260) and the stair-step at x≈240–260 (y=155–250) — slab content must not change character across a lighting boundary.
+- Put traffic wear on the corridor at x=375–440, y=270–420: centre polish, grit and debris driven to the wall edges, dishing at the threshold slabs (373–397, 253–268) and (401–427, 253–268).
+- Differentiate the ground in front of the north opening (x≈311–540, y=0–30) from the south corridor mouth so one reads as daily-used and the other does not.
+
+---
+
+Model used: Claude Opus 5 (1M context).

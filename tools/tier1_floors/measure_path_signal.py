@@ -319,11 +319,17 @@ def main():
             nulls.append(report(bands_many(a.capture, a.log, a.tile, shuffle=k, min_illum=a.min_illum),
                                 "NULL %d — the traffic field rearranged, so no label matches "
                                 "its floor" % k))
-        except SystemExit as e:
+        except SystemExit as e:  # noqa: PERF203
             # A rearrangement can land every busy tile outside the captured frame, leaving
             # nothing to compare. That draw is discarded rather than scored as zero — a null of
             # zero would be a free pass, which is the opposite of what a control is for.
             print("\nNULL %d — discarded: %s" % (k, e))
+    # A DRAW THAT SCORED ZERO IS NOT A CLEAN NULL, IT IS NO DRAW. A rearrangement can pair a tile
+    # with itself, or leave two tiles matched to 0.00 luminance apart; ΔE then comes back 0.000 and
+    # drags the median down, handing the real reading a free pass. That is the opposite of what a
+    # control is for, and it is the same mistake as the discarded-draw case one line above wearing
+    # a number instead of an exception.
+    nulls = [n for n in nulls if n["delta_e"] > 1e-6]
     if len(nulls) < 2:
         raise SystemExit("fewer than two usable null draws — the control cannot be trusted here")
     nde = sorted(n["delta_e"] for n in nulls)
@@ -390,9 +396,17 @@ def main():
         print("  could say it in numbers: \"that gap is lighting, not surface.\"")
     else:
         ok = ok and c1 and c2
-    verdict = c1 and (c2 or not null_usable)
+    # THE INSTRUMENT'S OWN CONTROLS BIND ITS VERDICT. `ok` carries the plant and the absorbed
+    # control; a run where a lightness-only plant moved the number is a run whose readings are
+    # part illumination, and printing PASS over that would be reporting a measurement the
+    # instrument has just told me not to trust.
+    verdict = ok and c1 and (c2 or not null_usable)
+    if not ok:
+        print("  CONTROLS FAILED — the verdict below is withheld, whatever the numbers say.")
     print("  COMBINED VERDICT: %s%s"
-          % ("THE SIGNAL CLEARS THE FLOOR" if verdict else "THE SIGNAL IS BELOW THE FLOOR",
+          % ("THE SIGNAL CLEARS THE FLOOR" if verdict
+             else ("NOT ADJUDICATED — CONTROLS FAILED" if not ok
+                   else "THE SIGNAL IS BELOW THE FLOOR"),
              " — seat to confirm it reads as a path" if (verdict and not null_usable) else ""))
 
     out = dict(commit=FL.git_commit(),

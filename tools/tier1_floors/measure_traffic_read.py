@@ -35,10 +35,21 @@ import measure_perceptual_floor as MPF   # noqa: E402
 RAMP = " .:-=+*#%@"
 
 
-def read_field(log_path):
-    """The traffic field as the engine logged it. '#' is wall, ' '..'@' are the ten levels."""
+def read_field(log_path, prefer_route=True):
+    """The field the painter actually keys to, as the engine logged it.
+
+    ROUTE STRENGTH FIRST. Since round 22 the wear scalar and the travel axis come from the route
+    POLYLINE, and the per-tile traffic field is only a fallback. An instrument that went on
+    bucketing by the field would be comparing a different population from the one the painter
+    reads — and it showed the moment the two diverged: the matching control started leaking and
+    the null draws collapsed to zero. Measure what is keyed.
+    """
     txt = open(log_path).read()
-    m = re.search(r"traffic field \(space=unwalked[^\n]*\n((?:\[Tier1\]   [^\n]*\n)+)", txt)
+    m = None
+    if prefer_route:
+        m = re.search(r"route strength \(space=off-route[^\n]*\n((?:\[Tier1\]   [^\n]*\n)+)", txt)
+    if m is None:
+        m = re.search(r"traffic field \(space=unwalked[^\n]*\n((?:\[Tier1\]   [^\n]*\n)+)", txt)
     if not m:
         return None
     rows = [ln[len("[Tier1]   "):] for ln in m.group(1).rstrip("\n").split("\n")]

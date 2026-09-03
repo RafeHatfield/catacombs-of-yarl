@@ -1,0 +1,92 @@
+---
+
+**Q1: WHAT IS THIS FLOOR MADE OF?**
+Dry-laid sandstone flagging — flat tan slabs in irregular courses, set with dark joints. No mortar bed visible; the joints read as gaps, not fill.
+
+**Q1_WHY:** The colour is one narrow tan family everywhere (sampled across the lit core, R:G:B holds at roughly 1 : 0.75 : 0.42 with no hue departures anywhere). The pieces are cut rectangles in mixed sizes — big ones around 50×37px next to small ones around 25×18px (clearly visible x 280–360, y 150–200) — laid in rough courses with staggered vertical joints. That is flagging, not brick, not tile, not cast slab. But I am naming the material from silhouette and colour alone. Nothing on the face of any stone tells me it is sandstone rather than limestone, concrete, or painted board. There is no grain, no bedding, no grit.
+
+**Q2: WHICH WAY WOULD YOU WALK, AND WHY?**
+South, down the corridor at x 375–438.
+
+Nothing about the ground influenced that. I picked it because the walls pinch in on both sides at x≈375 and x≈440 and form a channel — that is a wall read, not a floor read. The ground inside the corridor mouth (x 380–435, y 275–330) is the identical stone at the identical tone, with the identical joint rhythm and the identical crack line-work as the room floor I am standing on. If you deleted the walls I would have no reason to go south rather than north.
+
+**Q3: HAS ANYTHING HAPPENED TO THIS FLOOR?**
+It has been cracked, thoroughly and evenly, and nothing else has ever happened to it.
+
+There are long fracture lines running everywhere and about a dozen dark spiky blotches scattered across it. But it has not been *used*. There is no wear. No polish, no dishing, no scuffing, no dirt in the low corners, no grime banked against the wall bases, no darkening at the corridor threshold, no chipped arrises on the stones nearest the doorway. Nothing has been dragged across it, dropped on it, spilled on it or repaired on it — no rope, no pins, no patch timber, no salvaged stone set in at a wrong angle. For a place in continuous heavy use since before the records, the ground is unmarked by traffic.
+
+**Q3_WHY:** I flattened the lamp falloff out (fitted brightness against radius from the figure at ~410,178 and divided it out) and looked at what albedo is left underneath. The answer is: essentially none. Across 291 sampled stone-face interiors inside the lit core, residual albedo std is 0.14, and most of that is my own model error at the edges. Every stone face is the same value as every other stone face. The one exception in the whole image is a single large dark slab at x 525–600, y 82–112 — and it sits out in the gloom where it barely registers.
+
+The cracks also don't behave like damage. Follow the long one that enters at about (300, 215) and runs up-right to (410, 185): it crosses a stone joint at x≈304 and continues through with no deflection, no offset, no step. It holds a constant 1px width for its entire run and has no spalling, no chipped edge, no lighter freshly-broken interior, no dark depth to the void. It is a line lying on top of the stones, not a break in them.
+
+**Q4: IS THERE ANYTHING YOUR EYE KEEPS RETURNING TO?**
+Yes — the spiky starburst blotch. About twelve of them, at roughly (217,35), (340,33), (402,60), (585,60), (400,102), (342,170), (612,170), (270,228), (420,235), (472,242), (590,232), (535,260).
+
+Every one is the same motif: a dark irregular disc about 20–25px across with short spikes radiating off the rim, some filled, some open in the middle like a ring. They are all the same size, all the same value, and they are spread at a suspiciously even pitch — roughly 110px apart in every direction, including out in the dark where I am told not to look and where no one will ever see them.
+
+I checked whether they are literally the same stamp. They are not: cross-correlating the eight clearest against each other under all four rotations and both mirrors, nothing exceeded 0.35. They are individually drawn. It doesn't help. They are individually drawn *variations on one idea*, applied at constant density, and my eye finds them faster than it finds the room.
+
+Second thing, smaller: the diagonal hatch. Short parallel dashes at 45° on stone faces at x 520–620 / y 120–220 and along the top band x 190–420 / y 0–60. It only ever appears on dim stones. Inside the lamp there is none. Which tells me the hatch is doing shading work, not material work — it's a dither, dressed as texture.
+
+**Q5: DOES THIS LOOK LIKE A SURFACE THAT WAS MADE, OR LIKE AN IMAGE THAT WAS REPEATED?**
+An image that was repeated — with one real exception.
+
+The exception is the layout, and I want to credit it properly because I went looking to fail it. There is no tiling here. Autocorrelating the floor band horizontally and vertically from 4px to 80px produces a flat monotonic curve with no periodic minimum — no grid repeat at any scale I tested. Normalising 25px blocks and comparing all pairs, the best matches (0.247, 0.338) are all pairs of *blank* faces matching each other, and the population median is 1.124. The stonework genuinely does not repeat. Someone laid this out.
+
+But the layout is the only made thing. The surface on top of it is three marks — crack polyline, starburst blotch, diagonal hatch — scattered at uniform density over the entire floor, corner to corner, lit and unlit alike, with no regard for where anything is. A floor that was made would have a story in the distribution: more damage where the load is, dirt where it collects, nothing where nothing happens. This has the same event rate everywhere. That is a scatter pass, not a history.
+
+**Q6: WOULD YOU BELIEVE THIS SHIPPED IN A COMMERCIAL GAME?**
+YES. It is clean, coherent, correctly lit, readable at size, and the stonework layout is above average for the category.
+
+Merely competent. Not good. The non-repeating layout is real craft, and it is spent on a surface with nothing on it. The floor is a diagram of a floor: correct plan, empty faces.
+
+**Q7: AT 1:1, WHAT CAN YOU ACTUALLY SEE ON THE SURFACE ITSELF?**
+
+Legible at 1:1, on the floor: the joint grid; the long crack polylines; the dark blotches; the lamp falloff. That is the complete list — and note that all four are *outline and value*. Not one of them is the face of the material.
+
+**The faces are blank at 1:1.** Flat unmodulated tan. Not "subtle" — absent.
+
+Only on magnification: the 45° hatch dashes on the dim stones; a few small rectangular inset marks in the top band; and an extremely faint per-stone tonal blocking. I had to hunt for all of it, and the hatch isn't material anyway, it's shading.
+
+**Q7_WHY:**
+Checked at 1:1 (from the unmagnified 750×600 view): x 280–360 / y 150–200 (open faces just left of the figure) — blank. x 200–260 / y 120–260 (the wide lit stones on the left) — blank. x 440–520 / y 140–230 (right of the figure) — blank. x 380–435 / y 275–330 (corridor mouth) — blank. The corridor interior x 375–438 / y 275–480 — blank.
+
+Had to magnify (4×–8×): x 520–620 / y 120–220 to find the hatch. x 190–420 / y 0–60 to find the dashes and inset marks. x 280–360 / y 150–200 at 8× to confirm the faces really are empty and not just low-contrast — they are empty.
+
+The measurement, on eroded face interiors only with joints and cracks excluded: high-pass std is 3.9 against a mean of 164 in the lit core. 2.4% relative contrast. On a phone that is nothing. Out in the dim ring it reaches 4.9% relative, but the absolute signal there is ~3 levels. Whatever texture exists is below the threshold where the medium can carry it.
+
+**Q8: HOW OLD IS THIS FLOOR, AND WHAT TELLS YOU?**
+It reads as one age everywhere, and the age it reads is contradictory: **laid last year and then hit once, hard, all over.**
+
+The crack density says centuries. The faces say the stone came out of the yard this morning. Those two can't both be true, and the absence wins the argument — cracking is cheap to fake and wear is not, so a floor with cracks and no wear reads younger than a floor with wear and no cracks. My honest number: a decade of standing, one afternoon of damage, zero years of traffic.
+
+Nothing distinguishes any part of it. Not one region is older or newer than another. The floor by the wall (x 190–230) is the same age as the floor at the doorway (x 380–435, y 260–290) is the same age as the floor under the lamp. In a place that has been administered continuously since before the records, with a company holding a line on it for four hundred years, there is no second generation of stone anywhere — no patch, no replacement, no re-set slab, no repair of any kind.
+
+**Q8_WHY:** Crack evidence from x 245–410 / y 180–220 and x 200–380 / y 30–130. Absence-of-wear evidence from the flattened-albedo pass over the whole lit floor x 185–620 / y 0–270 — uniform. Threshold evidence from x 360–460 / y 260–290: the stone runs through the doorway unchanged, no darkening, no rounded edges, no threshold slab. Wall-base evidence from x 185–210 / y 100–260 and x 600–620 / y 100–260: no accumulation, no grime, no debris where the floor meets the wall.
+
+**Q9: CAN YOU SEE WHERE THE ROUTE GOES, TO THE EDGE OF YOUR LIGHT?**
+No. The ground told me nothing. I read the route off the walls.
+
+There is a route — south, down the channel at x 375–438, and north where the room runs off the top edge — but I know that because the walls close in, not because the floor says so.
+
+**Q9_WHY:** Along the south route I checked x 380–435 at y 275–300, 300–330, and 330–360. Against the rejected directions: x 200–300 / y 150–250 (west), x 500–600 / y 150–250 (east), x 250–550 / y 0–60 (north). The difference between the route and the rejections is zero. Same stone, same joint pitch, same crack vocabulary, same tone once the lamp is divided out, same blotch density. The stone in the corridor at (400, 300) is indistinguishable from the stone in the dead west corner at (220, 200).
+
+What a walked route would have and this doesn't: a centre line worn lighter or darker than its margins, edges of the traffic lane where dirt banks up, stones dished in the middle of the channel, the corridor mouth scuffed where four hundred years of shoulders have turned the corner. There is none of it. I am told I am standing on ground that is walked daily and I cannot find the path under my own feet.
+
+**Q10: WHICH WAY IN OR OUT IS USED MOST, AND WHICH LEAST OR NEVER?**
+They all look the same.
+
+There are two openings in view: the corridor mouth south at x 375–438, y ≈272, and the room continuing north off the top edge across x 217–554, y = 0. The ground immediately inside each is identical in tone, joint pattern and mark density. Nothing marks one as the road and the other as the door nobody opens. In a filing system for souls, in continuous heavy use, with a garrison holding one line, the floor should be shouting which way everyone goes. It is silent.
+
+**CULL:**
+Stone faces are blank — every mark is outline; the material itself has no surface at 1:1.
+
+**FLIP LIST**
+- Put material on the faces: grit, bedding, pitting and colour break-up on the stone interiors, at contrast that survives at 1:1 (target ≥8% local, vs the 2.4% measured now at x 280–360 / y 150–200).
+- Vary albedo stone to stone. Right now 291 sampled faces come back at one value; give the flagging a distribution of tone, weathering and cut quality so no two neighbours match.
+- Cut the starburst blotch count by two thirds and stop scattering it evenly. Remove those at (585,60), (612,170), (590,232), (535,260); keep clusters where something plausibly happened.
+- Make the cracks behave: deflect or step them at every joint they meet, vary the width, and spall the edges — the run through (300,215)→(410,185) currently crosses a joint at x≈304 with no offset and holds one pixel of width throughout.
+- Build wear into the route: a darker, dished traffic lane down the corridor at x 375–438, dirt banked at the wall bases (x 185–210, x 600–620), and scuffed rounded stone at the doorway threshold (x 360–460, y 260–290) — with the north opening deliberately left clean so the two read differently.
+
+---
+*Model: Claude Opus 5 (1M context)*
