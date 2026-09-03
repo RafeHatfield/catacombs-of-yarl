@@ -17,6 +17,11 @@ namespace CatacombsOfYarl.Tests.Logic;
 /// These tests pin the property in the LOGIC layer, where it can be asserted without a scene, a
 /// device or a capture — and they are written to fail on the shape of the defect rather than on
 /// one scene's name, so a future spec that reintroduces it says so.
+///
+/// The first paragraph is the state at DISCOVERY and is no longer the state of the code: the
+/// cause was a standing figure, and the floor session closed it by deriving routes from terrain
+/// (`terrainOnly: true`). The test that pinned the zero field now asserts its absence — see
+/// `APlayerStandingInAOneWideCorridorDoesNotCollapseTheField`.
 /// </summary>
 [TestFixture]
 public class TrafficFieldReviewSceneTests
@@ -99,14 +104,26 @@ public class TrafficFieldReviewSceneTests
     /// standing still.** That is why it survived — it is invisible in the spec file and only
     /// appears once somebody is standing in the scene.
     ///
-    /// ⚠ NOT FIXED HERE. `TrafficField` is the floor session's live surface (PRs #162, #163,
-    /// #165, #166 all open on it), and a concurrent edit to it from this branch would collide
-    /// with work in flight. What this session does instead is pin the behaviour, report it, and
-    /// build the replacement review scene with a LOOP so that no single figure can sever it —
-    /// which is the right scene design regardless of how the disagreement is settled.
+    /// ⚠ FIXED, AND THIS TEST TURNED OVER WITH THE FIX. The wall session that found this could
+    /// not repair it — `TrafficField` was the floor session's live surface (PRs #162, #163,
+    /// #165, #166) — so it pinned the behaviour as a characterisation and reported it, with the
+    /// note that the day it changed, the pin would fail rather than change meaning in silence.
+    /// That is exactly what happened on this merge: the floor session settled the disagreement
+    /// on the AStar side, passing `terrainOnly: true` at every route call in `TrafficField`, so
+    /// route derivation reads TERRAIN and the figures standing on it are not part of the model.
+    ///
+    /// So the assertions are inverted from what they pinned, and the measurement is the same
+    /// one: the figure now costs the field NOTHING — 40 → 40 occupancy, 5 → 5 routes, spine
+    /// 16 → 16. Not "degrades gracefully"; identical, which is the correct answer for a model
+    /// of where traffic goes rather than of who is standing where right now.
+    ///
+    /// The Dijkstra assertion is KEPT AS IT WAS, deliberately. The two pathfinders still
+    /// disagree about blockers; what changed is that route derivation no longer asks the one
+    /// that cares. Were the fix reverted, this test fails on the two lines below it — which is
+    /// how it was observed failing on this merge, before the assertions were turned over.
     /// </summary>
     [Test]
-    public void APlayerStandingInAOneWideCorridorCollapsesTheFieldToZero()
+    public void APlayerStandingInAOneWideCorridorDoesNotCollapseTheField()
     {
         var map = Cross();
         var before = TrafficField.ComputeFromMap(map);
@@ -131,10 +148,15 @@ public class TrafficFieldReviewSceneTests
         Assert.That(reach, Is.EqualTo(Occupancy(before.Field, map)),
             "DijkstraMap walks through the figure: every cell is still 'reachable', which is how "
             + "the endpoints get chosen in a component AStar cannot cross");
-        Assert.That(after.Routes, Is.EqualTo(0), "the spine collapses rather than shortening");
-        Assert.That(Occupancy(after.Field, map), Is.EqualTo(0),
-            "and the field goes to exactly zero — a cliff, not a degradation. One figure standing "
-            + "still switches every traffic-keyed system in the scene off.");
+        Assert.That(after.Routes, Is.EqualTo(before.Routes),
+            "the route model is derived from terrain, so a figure standing in the corridor "
+            + "neither severs it nor shortens it");
+        Assert.That(Occupancy(after.Field, map), Is.EqualTo(Occupancy(before.Field, map)),
+            "and the field is identical, not merely non-zero — one figure standing still must "
+            + "not switch any traffic-keyed system in the scene off, or dim it either");
+        Assert.That(after.SpineLength, Is.EqualTo(before.SpineLength),
+            "including the spine, which is the journey the level is about and not a function of "
+            + "who happens to be on it");
     }
 
     /// <summary>
