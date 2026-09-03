@@ -1,5 +1,5 @@
 {
- "commit": "3e6f9d18ad00eafa21406599bf30d3b791ccf180",
+ "commit": "958b6d8318b6c770420aeba982a83c7bfaaa358d",
  "captures": [
   "tools/tier1_floors/evidence/r18_approach.png",
   "tools/tier1_floors/evidence/r18_room.png",
@@ -8,192 +8,192 @@
  "floor": 0.144,
  "margin": 1.25,
  "shipped": {
-  "value_weber": 0.2728,
-  "texture_weber": 0.183,
-  "off_value": 170.182,
-  "trodden_value": 129.327,
-  "off_rough": 7.0516,
-  "trodden_rough": 8.4717,
-  "off_relchroma": 0.3318,
-  "trodden_relchroma": 0.1571,
-  "delta_e": 13.414,
-  "delta_e_value_only": 0.961,
+  "value_weber": 0.262,
+  "texture_weber": 0.2226,
+  "off_value": 171.545,
+  "trodden_value": 131.8,
+  "off_rough": 6.8818,
+  "trodden_rough": 8.6054,
+  "off_relchroma": 0.332,
+  "trodden_relchroma": 0.1535,
+  "delta_e": 12.996,
+  "delta_e_value_only": 0.928,
   "pairs": 6,
-  "delta_e_floor": 4.767,
+  "delta_e_floor": 4.78,
   "clears": true,
   "levels": [
    {
     "level": 1,
     "tiles": 1,
-    "value": 114.491,
-    "roughness": 5.0039,
+    "value": 117.138,
+    "roughness": 4.8093,
     "rgb": [
-     88.73,
-     133.64,
-     83.47
+     90.55,
+     136.88,
+     85.21
     ]
    },
    {
     "level": 3,
     "tiles": 7,
-    "value": 181.998,
-    "roughness": 7.1388,
+    "value": 182.997,
+    "roughness": 7.0195,
     "rgb": [
-     140.75,
-     214.06,
-     125.11
+     141.53,
+     215.26,
+     125.67
     ]
    },
    {
     "level": 4,
     "tiles": 8,
-    "value": 166.804,
-    "roughness": 7.2313,
+    "value": 168.325,
+    "roughness": 7.0203,
     "rgb": [
-     145.46,
-     183.12,
-     138.78
+     146.88,
+     184.74,
+     140.03
     ]
    },
    {
     "level": 5,
     "tiles": 9,
-    "value": 193.049,
-    "roughness": 9.0767,
+    "value": 195.79,
+    "roughness": 9.1893,
     "rgb": [
-     154.79,
-     220.82,
-     150.4
+     157.31,
+     223.75,
+     152.76
     ]
    },
    {
     "level": 6,
     "tiles": 12,
-    "value": 144.536,
-    "roughness": 11.1089,
+    "value": 147.455,
+    "roughness": 11.2439,
     "rgb": [
-     135.11,
-     153.26,
-     124.34
+     137.73,
+     156.41,
+     126.87
     ]
    },
    {
     "level": 8,
     "tiles": 5,
-    "value": 133.832,
-    "roughness": 8.8378,
+    "value": 136.682,
+    "roughness": 8.9899,
     "rgb": [
-     140.91,
-     130.96,
-     130.06
+     143.64,
+     133.92,
+     132.65
     ]
    },
    {
     "level": 9,
     "tiles": 1,
-    "value": 106.801,
-    "roughness": 6.6415,
+    "value": 107.391,
+    "roughness": 6.683,
     "rgb": [
-     158.58,
-     72.75,
-     146.33
+     159.34,
+     73.25,
+     146.94
     ]
    }
   ]
  },
  "plant": {
-  "value_weber": 0.2838,
-  "texture_weber": 0.1867,
-  "off_value": 170.004,
-  "trodden_value": 127.75,
-  "off_rough": 7.046,
-  "trodden_rough": 8.4968,
-  "off_relchroma": 0.3297,
-  "trodden_relchroma": 0.0574,
-  "delta_e": 22.591,
-  "delta_e_value_only": 0.868,
+  "value_weber": 0.2706,
+  "texture_weber": 0.228,
+  "off_value": 171.209,
+  "trodden_value": 130.405,
+  "off_rough": 6.8698,
+  "trodden_rough": 8.6373,
+  "off_relchroma": 0.3298,
+  "trodden_relchroma": 0.0602,
+  "delta_e": 22.891,
+  "delta_e_value_only": 0.657,
   "pairs": 5,
-  "delta_e_floor": 4.65,
+  "delta_e_floor": 4.663,
   "clears": true,
   "levels": [
    {
     "level": 1,
     "tiles": 1,
-    "value": 114.887,
-    "roughness": 5.0218,
+    "value": 117.542,
+    "roughness": 4.8263,
     "rgb": [
-     89.92,
-     133.64,
-     83.8
+     91.77,
+     136.88,
+     85.55
     ]
    },
    {
     "level": 3,
     "tiles": 7,
-    "value": 181.424,
-    "roughness": 7.1157,
+    "value": 182.216,
+    "roughness": 6.9883,
     "rgb": [
-     140.69,
-     213.18,
-     124.75
+     141.3,
+     214.14,
+     125.16
     ]
    },
    {
     "level": 4,
     "tiles": 8,
-    "value": 166.902,
-    "roughness": 7.2381,
+    "value": 168.286,
+    "roughness": 7.0215,
     "rgb": [
-     146.9,
-     182.52,
-     138.96
+     148.23,
+     183.97,
+     140.12
     ]
    },
    {
     "level": 5,
     "tiles": 9,
-    "value": 192.67,
-    "roughness": 9.062,
+    "value": 195.204,
+    "roughness": 9.1638,
     "rgb": [
-     155.25,
-     219.99,
-     150.15
+     157.62,
+     222.67,
+     152.35
     ]
    },
    {
     "level": 6,
     "tiles": 12,
-    "value": 145.118,
-    "roughness": 11.1488,
+    "value": 147.951,
+    "roughness": 11.2798,
     "rgb": [
-     137.54,
-     152.91,
-     124.84
+     140.11,
+     155.96,
+     127.29
     ]
    },
    {
     "level": 8,
     "tiles": 5,
-    "value": 127.75,
-    "roughness": 8.4968,
+    "value": 130.405,
+    "roughness": 8.6373,
     "rgb": [
-     123.2,
-     130.69,
-     124.53
+     125.52,
+     133.57,
+     126.94
     ]
    }
   ]
  },
  "null": {
-  "value_weber": 0.1586,
-  "texture_weber": 0.3045,
-  "off_value": 190.151,
-  "trodden_value": 162.202,
-  "off_rough": 0.2459,
-  "trodden_rough": 0.3342,
+  "value_weber": 0.1578,
+  "texture_weber": 0.2924,
+  "off_value": 190.182,
+  "trodden_value": 162.364,
+  "off_rough": 0.2448,
+  "trodden_rough": 0.3286,
   "off_relchroma": 0.1688,
   "trodden_relchroma": 0.2245,
-  "delta_e": 3.199,
+  "delta_e": 3.657,
   "delta_e_value_only": 0.0,
   "pairs": 2,
   "delta_e_floor": 3.799,
@@ -202,23 +202,23 @@
    {
     "level": 2,
     "tiles": 4,
-    "value": 184.756,
-    "roughness": 0.224,
+    "value": 184.779,
+    "roughness": 0.2233,
     "rgb": [
-     171.79,
-     194.9,
-     166.53
+     171.82,
+     194.92,
+     166.55
     ]
    },
    {
     "level": 3,
     "tiles": 4,
-    "value": 194.184,
-    "roughness": 0.2534,
+    "value": 194.237,
+    "roughness": 0.2514,
     "rgb": [
-     178.48,
-     207.14,
-     168.63
+     178.53,
+     207.2,
+     168.66
     ]
    },
    {
@@ -235,125 +235,125 @@
    {
     "level": 5,
     "tiles": 5,
-    "value": 187.813,
-    "roughness": 3.8345,
+    "value": 188.129,
+    "roughness": 3.9374,
     "rgb": [
-     175.66,
-     200.01,
-     156.91
+     176.14,
+     200.23,
+     157.28
     ]
    },
    {
     "level": 6,
     "tiles": 14,
-    "value": 161.236,
-    "roughness": 8.3349,
+    "value": 163.649,
+    "roughness": 8.3717,
     "rgb": [
-     149.43,
-     170.61,
-     143.95
+     151.55,
+     173.26,
+     145.9
     ]
    },
    {
     "level": 8,
     "tiles": 2,
-    "value": 162.202,
-    "roughness": 0.3342,
+    "value": 162.364,
+    "roughness": 0.3286,
     "rgb": [
-     137.05,
-     176.73,
-     153.38
+     137.19,
+     176.91,
+     153.48
     ]
    }
   ],
   "draws": [
    0.0,
    0.0,
-   6.398,
-   17.173
+   7.314,
+   17.297
   ]
  },
  "null_usable": true,
  "verdict": true,
  "absorbed": {
-  "value_weber": 0.4278,
-  "texture_weber": 0.032,
-  "off_value": 169.919,
-  "trodden_value": 110.032,
-  "off_rough": 7.0603,
-  "trodden_rough": 7.2901,
-  "off_relchroma": 0.3285,
-  "trodden_relchroma": 0.0826,
-  "delta_e": 13.862,
-  "delta_e_value_only": 1.678,
+  "value_weber": 0.414,
+  "texture_weber": 0.0748,
+  "off_value": 170.684,
+  "trodden_value": 112.138,
+  "off_rough": 6.8651,
+  "trodden_rough": 7.3988,
+  "off_relchroma": 0.3284,
+  "trodden_relchroma": 0.0799,
+  "delta_e": 13.824,
+  "delta_e_value_only": 1.364,
   "pairs": 5,
-  "delta_e_floor": 4.431,
+  "delta_e_floor": 4.441,
   "clears": true,
   "levels": [
    {
     "level": 1,
     "tiles": 1,
-    "value": 116.586,
-    "roughness": 5.0981,
+    "value": 119.278,
+    "roughness": 4.8997,
     "rgb": [
-     90.33,
-     136.13,
-     84.81
+     92.18,
+     139.43,
+     86.58
     ]
    },
    {
     "level": 3,
     "tiles": 7,
-    "value": 180.574,
-    "roughness": 7.0851,
+    "value": 180.791,
+    "roughness": 6.9345,
     "rgb": [
-     139.68,
-     212.36,
-     124.17
+     139.85,
+     212.64,
+     124.19
     ]
    },
    {
     "level": 4,
     "tiles": 8,
-    "value": 167.263,
-    "roughness": 7.2839,
+    "value": 168.267,
+    "roughness": 7.0501,
     "rgb": [
-     146.79,
-     183.01,
-     139.86
+     147.85,
+     184.01,
+     140.77
     ]
    },
    {
     "level": 5,
     "tiles": 9,
-    "value": 192.408,
-    "roughness": 9.0687,
+    "value": 194.373,
+    "roughness": 9.1404,
     "rgb": [
-     154.3,
-     220.05,
-     150.03
+     156.16,
+     222.11,
+     151.75
     ]
    },
    {
     "level": 6,
     "tiles": 12,
-    "value": 147.027,
-    "roughness": 11.3346,
+    "value": 149.639,
+    "roughness": 11.4548,
     "rgb": [
-     137.84,
-     155.65,
-     126.71
+     140.15,
+     158.49,
+     128.96
     ]
    },
    {
     "level": 8,
     "tiles": 5,
-    "value": 110.032,
-    "roughness": 7.2901,
+    "value": 112.138,
+    "roughness": 7.3988,
     "rgb": [
-     116.73,
-     107.09,
-     107.64
+     118.76,
+     109.27,
+     109.56
     ]
    }
   ]

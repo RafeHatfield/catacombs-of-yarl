@@ -334,8 +334,27 @@ def main():
         print("  %-28s %s" % (k, v))
     print()
 
+    # ================= THE CONTROL RUNS FIRST, AND NOTHING IS READABLE UNTIL IT CLEARS =========
+    #
+    # RULED after round 19, where I read the family seat's findings while its plant control was
+    # still running — and the control then missed, voiding the round whose findings were already
+    # in my head. §4 exists to keep a finding out of the record until its control clears, and
+    # reading early defeats it whatever is done afterwards.
+    #
+    # Two changes, and the first one is the one that actually works. ORDER: the plant seat runs
+    # BEFORE any candidate seat, so a void round costs one seat instead of two and there is
+    # nothing to read early. WITHHOLDING: candidate transcripts are written to a quarantine name
+    # while the round is undecided and only renamed once the control has caught the plant.
+    #
+    # A rule that depends on my restraint is not a rule. This one depends on the filenames.
+    ordered = ([PLANT_SEAT] if PLANT_SEAT in a.seats else []) \
+        + [x for x in a.seats if x != PLANT_SEAT]
+    if ordered != list(a.seats):
+        print("seat order: %s  (the plant control runs first)\n" % " -> ".join(ordered))
+
     results, void = {}, False
-    for seat in a.seats:
+    quarantined = []
+    for seat in ordered:
         check_captures(frozen)
         d, mapping = build_work(seat)
         print("=" * 78)
@@ -344,9 +363,13 @@ def main():
         print("  cwd: %s  (outside the repo)" % d)
         print("  slots: %s" % ", ".join("%s=%s" % kv for kv in sorted(mapping.items())))
         text = run(d, prompt_for(seat))
-        tp = os.path.join(OUT, "r%d_%s_transcript.txt" % (a.round, seat))
+        final = os.path.join(OUT, "r%d_%s_transcript.txt" % (a.round, seat))
+        tp = final if seat == PLANT_SEAT \
+            else os.path.join(OUT, "r%d_%s_transcript.WITHHELD.txt" % (a.round, seat))
         with open(tp, "w") as f:
             f.write(text)
+        if seat != PLANT_SEAT:
+            quarantined.append((tp, final))
         r = parse(text)
         r["mapping"] = mapping
         r["transcript"] = os.path.relpath(tp, REPO)
@@ -375,6 +398,25 @@ def main():
                 print("     flip: %s" % fx[:90])
 
     check_captures(frozen)
+
+    # RELEASE, or STAMP AND LEAVE WITHHELD. A void round's transcript keeps a name that says so
+    # and gains a banner at its head, because the next reader of this directory will not have the
+    # runner's output in front of them — the file has to carry its own status.
+    for tmp, final in quarantined:
+        if void:
+            body = open(tmp).read()
+            with open(tmp, "w") as f:
+                f.write("*** ROUND %d IS VOID — THE PLANT SEAT DID NOT CATCH THE PLANT. ***\n"
+                        "*** LOOP-PROCESS §4: these findings are NOT READ and are NOT EVIDENCE. ***\n"
+                        "*** Nothing below may be cited, quoted, or acted on. ***\n\n" % a.round
+                        + body)
+            print("  WITHHELD (round void): %s" % os.path.relpath(tmp, REPO))
+        else:
+            os.replace(tmp, final)
+            for k, r in results.items():
+                if r.get("transcript") == os.path.relpath(tmp, REPO):
+                    r["transcript"] = os.path.relpath(final, REPO)
+
     res = dict(round=a.round, commit=git_commit(), seats=results, captures=frozen,
                plant_seat=PLANT_SEAT, round_void=void,
                plant_words_declared=list(PLANT_WORDS),
