@@ -28,6 +28,24 @@ namespace CatacombsOfYarl.Presentation.Map;
 /// REVIEW BUILDS ONLY. Reached from the corridor review scene, which a player build never
 /// enters, and gated on the marker naming a manifest.
 /// </summary>
+/// <summary>
+/// What a family that paints its own floor needs in order to draw §12.1's contact occlusion
+/// ITSELF, on its own ladder, instead of having a blended sprite laid over the top of it.
+///
+/// The decision — which edges a cell has and how many times the boundary is re-drawn there — is
+/// made ONCE, here, where it has always been made, and handed over. Two independent derivations
+/// of the same adjacency would be the copy that drifts (LOOP-PROCESS §4.2); this is one
+/// derivation with two consumers.
+/// </summary>
+/// <param name="AlphaBySide">The shipped sprites' alpha planes, N E S W, or null where absent.
+/// The PNG stays the datum: its along-edge jitter is the only thing keeping the seam off a
+/// straight constant-pitch line, and it survives the quantise.</param>
+/// <param name="Cells">Per cell: which sides carry a wall (bit 0=N 1=E 2=S 3=W) and the
+/// ambient-anchored layer count.</param>
+public readonly record struct OcclusionBake(
+    Image?[] AlphaBySide,
+    Dictionary<(int X, int Y), (int SideMask, int Layers)> Cells);
+
 public static class Tier1FloorOverlays
 {
     /// <summary>
@@ -59,10 +77,30 @@ public static class Tier1FloorOverlays
     public static string Attach(TileLayer tileLayer, GameMap map, string manifestResPath, int seed,
                                 out Dictionary<(int X, int Y), FloorIncident> plan,
                                 bool drawChannel = true, bool drawMarks = true)
+        => Attach(tileLayer, map, manifestResPath, seed, out plan, out _, drawChannel, drawMarks);
+
+    /// <summary>
+    /// As above, and hands back the occlusion decision as well as the incident plan.
+    ///
+    /// `drawOcclusion: false` says a floor family downstream will paint §12.1's boundary into its
+    /// own pixels on its own ladder, so the sprite must NOT also be laid over the top — the two
+    /// together would darken twice. The decision is still made and still handed over: turning the
+    /// treatment off and turning the DRAWING off are different things, and only the second one is
+    /// on offer here.
+    /// </summary>
+    public static string Attach(TileLayer tileLayer, GameMap map, string manifestResPath, int seed,
+                                out Dictionary<(int X, int Y), FloorIncident> plan,
+                                out OcclusionBake bake,
+                                bool drawChannel = true, bool drawMarks = true,
+                                bool drawOcclusion = true)
     {
         plan = new Dictionary<(int X, int Y), FloorIncident>();
+        bake = new OcclusionBake(new Image?[4], new Dictionary<(int X, int Y), (int, int)>());
         var cfg = LoadConfig(manifestResPath, out string load);
         if (cfg == null) return $"floor overlays: NOT ATTACHED — {load}";
+        for (int i = 0; i < 4 && i < cfg.OcclusionIds.Length; i++)
+            if (cfg.Path.TryGetValue(cfg.OcclusionIds[i], out var op))
+                bake.AlphaBySide[i] = GD.Load<Texture2D>(op)?.GetImage();
 
         plan = FloorIncidentPlanner.Plan(map, cfg, seed);
         int grit = 0, events = 0, chan = 0, occl = 0, missing = 0, stacked = 0;
@@ -146,10 +184,23 @@ public static class Tier1FloorOverlays
                 layers = Mathf.Clamp(Mathf.RoundToInt(OcclusionAnchor / Mathf.Max(rel, 0.01f)),
                                      1, MaxOcclusionLayers);
             }
-            foreach (var oid in inc.OcclusionIds)
-                for (int i = 0; i < layers; i++)
-                    Draw(oid, 2, ref occl, orientable: false);     // N/E/S/W mean their edge
-            if (layers > 1) stacked++;
+            // THE DECISION IS RECORDED WHETHER OR NOT IT IS DRAWN. `SideMask` is rebuilt from
+            // the same adjacency the planner used, by the ids it chose, so the mask and the
+            // sprite list cannot disagree about which edge is which.
+            int sideMask = 0;
+            for (int i = 0; i < 4 && i < cfg.OcclusionIds.Length; i++)
+                if (System.Array.IndexOf(inc.OcclusionIds, cfg.OcclusionIds[i]) >= 0)
+                    sideMask |= 1 << i;
+            if (sideMask != 0) bake.Cells[pos] = (sideMask, layers);
+
+            if (drawOcclusion)
+            {
+                foreach (var oid in inc.OcclusionIds)
+                    for (int i = 0; i < layers; i++)
+                        Draw(oid, 2, ref occl, orientable: false); // N/E/S/W mean their edge
+                if (layers > 1) stacked++;
+            }
+            else if (layers > 1) stacked++;
 
             // PER-TILE MARKS, RETIRED BY RULING when the family draws its own incident.
             //
@@ -180,7 +231,8 @@ public static class Tier1FloorOverlays
 
         return $"floor overlays: cells={plan.Count} channel={channelCells} neglected={neglected} "
              + $"drawn(grit={grit} event={events} channel={chan} occlusion={occl}"
-             + $"/stacked={stacked}@anchor{OcclusionAnchor:0.##}) "
+             + $"/stacked={stacked}@anchor{OcclusionAnchor:0.##}"
+             + $"{(drawOcclusion ? "" : " BAKED-BY-FLOOR")}) "
              + $"cell_shadow_suppressed={suppressed} missing_texture={missing} "
              + $"seed={seed} manifest={manifestResPath}\n"
              + AsciiChannelMap(map, plan);

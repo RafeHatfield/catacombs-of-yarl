@@ -133,7 +133,53 @@ PALETTE_LEVELS = 7        # §5's values are PLACEHOLDER; this is a quantisation
 #
 # Same spacing, same tint, two rungs down: 48.56 and 61.79. Count 7 -> 9, noted for the future
 # palette-derivation pass, which should derive this reach rather than extend it after the fact.
-PALETTE_EXTEND_BELOW = 2
+#
+# ============================ AND TWO MORE, FOR THE SAME REASON ============================
+#
+# RULED (Rafe, 2026-09-03), and it is the SECOND instance of one shortfall rather than a new one.
+# The reason above is reproduced exactly: a treatment that must reach below the donors' band gets
+# clamped against the ladder's own end, and the clamp is invisible because every clamped pixel is
+# arithmetically correct.
+#
+#   THE CONTACT OCCLUSION   §12.1's plane boundary, ambient-anchored (RULED 2026-09-02) so it is
+#                           re-drawn up to three times where the lamp does not reach. It blends
+#                           the floor toward rgb(22,22,22) — the ambient itself — and at its
+#                           deepest it wants 24.07, which is 1.85 rungs BELOW 48.56. Snapping it
+#                           to a nine-rung ladder does not merely quantise the seam, it DELETES
+#                           the stacking: every layer past the first lands on the same bottom
+#                           rung, which is the 2026-08-31 sheltered-joint failure repeated on a
+#                           different treatment. Measured before the change: at 1 layer the clamp
+#                           costs 0.64 luminance at the contact edge and nothing beyond it; at 2
+#                           and 3 layers it costs 19.24 and 24.49, all of it in the dark band the
+#                           ruling exists to serve.
+#
+# Same spacing, same tint, two rungs further down: 35.34 and 22.11. 22.11 is the first rung that
+# reaches the deepest stack, so the reach is DERIVED from what has to be representable rather than
+# chosen. Count 9 -> 11.
+#
+# WHAT IT MOVES, MEASURED RATHER THAN ASSERTED — and the first answer was wrong. The obvious
+# claim is that nothing but the occlusion can reach the new rungs, because the bond authors its
+# joint at 0.42 x its stone (47.79 at the median) and 47.79 is nearer 48.56 than 35.34. That is
+# true of a joint under a MEDIAN stone and false of the field: a joint is 0.42 x THE STONE IT IS
+# CUT INTO, so under a stone at 88.24 it is authored at 37.06 — which the nine-rung ladder
+# clamped to 48.56 and the eleven-rung one puts on 35.34, where it belongs. `--ladder-delta`
+# reports it: 2.78% of the composed field moves, 83.6% of those pixels are joints, and every
+# move is one rung or two.
+#
+# THAT IS THE CLAMP RELEASING, NOT PR #161's FAILURE REPEATING, and the difference is in the
+# distribution rather than in the mean. #161 put 92.7% of joint pixels on the bottom two rungs
+# and took mean joint contrast 0.272 -> 0.510; here the joint spread is UNCHANGED at 5.026 rungs
+# with both deciles identical (open 48.0, tight 114.47), and mean Weber contrast moves
+# 0.1765 -> 0.1886. A 6.9% lift with the distribution held is a minority of joints going to the
+# rung they always wanted.
+#
+# ⚠ AN ANCHOR SAYING "THE BOTTOM" IS AN ANCHOR THAT MOVES. `SHELTER_LIFT_RUNGS` lifts a joint off
+# the ladder's bottom, so extending the ladder moves every sheltered joint with it. It survived
+# this change because the lift is applied to the joint's own authored VALUE and not to
+# `ladder[0]`, but the next treatment written against "the bottom rung" will not. Bible §5.7's
+# rule for anchors — a mean, stable under field size — wants its twin here: an anchor is named
+# by what it IS, never by where the ladder happens to end.
+PALETTE_EXTEND_BELOW = 4
 
 # Tile ids. 9600 block: clear of the composition spike's sparse wall ids (which reach 9343) and
 # of the floor-remediation captures at 9400 — the id collision LOOP-PROCESS §4.2 logs as its

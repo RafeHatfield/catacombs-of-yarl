@@ -129,6 +129,10 @@ public partial class Main : Node
     // a lamp that does not move. Held here so _Process can keep it on the player and so
     // ReviewRigPanel can turn its knobs. Null outside a review build.
     private ReviewLighting? _reviewLighting;
+    // The occlusion decision, made once by the overlay planner and consumed by the floor family
+    // that bakes it. Null means no overlay manifest — the floor then paints no boundary, which
+    // is the same thing that happened before when there was no sprite to draw.
+    private OcclusionBake? _occlusionBake;
 
     // Review-build only, and reached solely from LaunchCorridorScene. The wall family is held so
     // the rig panel's VOID row can re-lay it live: §13.1 gives the void to Rafe at the gate, and
@@ -2710,11 +2714,21 @@ public partial class Main : Node
             // The ashlar family draws its own incident at field scale and carries the channel in
             // its own stones, so both of the overlay system's per-tile treatments are switched
             // off under it. What remains is the occlusion, which is §12.1's form and not a mark.
+            // THE ASHLAR FAMILY PAINTS §12.1's BOUNDARY ITSELF, so the sprite must not also be
+            // laid over the top. The overlay's version is an alpha blend toward rgb(22,22,22)
+            // and compositing it took the family's nine authored albedo values to a hundred and
+            // thirty-two — a continuous-tone layer over a quantised floor. The decision is still
+            // made by the overlay planner and handed to the floor; only the DRAWING moves.
+            bool ashlarActive = (ReadStringArg("--ashlar-floor") ?? marker?.AshlarFloor)
+                                is { Length: > 0 };
             Report("[Tier1] " + Tier1FloorOverlays.Attach(_tileLayer, _state.Map,
                                                           overlayManifest, _baseSeed,
                                                           out incidentPlan,
+                                                          out var occBake,
                                                           drawChannel: !wangActive,
-                                                          drawMarks: !wangActive));
+                                                          drawMarks: !wangActive,
+                                                          drawOcclusion: !ashlarActive));
+            _occlusionBake = occBake;
         }
         else
             Report("[Tier1] floor overlays: none declared (no --floor-overlays, no marker "
@@ -2747,7 +2761,8 @@ public partial class Main : Node
             var aplan = incidentPlan;
             Report(Tier1AshlarFloor.Apply(_tileLayer, _state.Map, ashlarManifest,
                 (x, y) => aplan != null && aplan.TryGetValue((x, y), out var inc)
-                          && inc.Channel != ChannelKind.None));
+                          && inc.Channel != ChannelKind.None,
+                _occlusionBake));
         }
         else
         {

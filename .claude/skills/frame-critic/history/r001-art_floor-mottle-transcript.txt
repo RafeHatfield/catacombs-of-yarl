@@ -1,0 +1,48 @@
+All three read. Here's the assessment.
+
+**RANK:** 2 > 3 > 1
+
+**BEST:** 2
+
+**BEST_WHY:** The paving is the only genuinely hand-built material in the deck. In the lit area around the figure (roughly x 310–620, y 380–570) the courses are staggered and the stones vary in length *within* a single course — a short stone of about 20px sits beside one of about 55px in the same run, and the run above breaks at a different point, so the bond reads as laid rather than tiled. Each stone carries its own bevel and its own wear: on the course just above the figure one slab has three short parallel scratches, its neighbour has a diagonal hatch, the next is clean. The joints hold a consistent 2px dark value across the whole field without ever merging two stones into one blob, which is what usually breaks at this size. Compare the same floor in 1, where joints fade in and out and stones dissolve into each other.
+
+**WORST:** 1
+
+**WORST_WHY:** There is no architecture in it. Gamma-lifted, the frame is a floor-plan rectangle — paving from about x 310 to 735, y 200 to 570, plus a small annex at x 118–310, y 320–455, plus a corridor strip x 515–585 running to the bottom edge — and every pixel outside that outline is one structureless grey-brown noise field that runs to all four edges. The room's south edge at y≈570 is a razor-straight 1px transition from slab to noise: no wall, no threshold, no thickness, no cast shadow. Worse, the crack decals are not masked to the floor. At the top left, a crack enters at x=0, y≈255 and runs right across bare noise where there is no masonry to crack, then meets the paving. Two masonry fragments float in the void with nothing attached — a two-course bar at x 88–215, y 262–285, and a longer one at x 285–730, y 135–160 — each terminating in mid-air at both ends. On top of that the slab surfaces are soft: the joints are 1–2px anti-aliased grey rather than a chosen value, and the diagonal hatch marks repeat at an identical 45° and identical spacing on stone after stone. At 1:1 it reads as a filter pass over a floor blit, which is precisely the thing the bar exists to catch.
+
+**FLAGGED:** 1, 2, 3
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- Mask the crack decal layer to the floor footprint. The crack entering at x=0, y≈255 crosses ~90px of void before reaching any stone; clip it at the floor edge.
+- Delete or attach the two floating masonry bars (x 88–215, y 262–285; x 285–730, y 135–160). A wall run that starts and ends in mid-air with no return and no thickness is worse than no wall.
+- Build an actual wall at the room perimeter. The south edge at y≈570 is a 1px material change; it needs a wall body of at least one tile with a top surface at a different value from the lit floor, a visible thickness, and a dark contact line where it meets the floor.
+- Replace the void fill. Right now the same structureless noise serves as bedrock, as out-of-bounds, and as whatever the corridor cuts through. Give it either a real material with structure, or take it to near-black and let the light falloff do the work.
+- Sharpen the joints to a chosen value at a chosen width instead of the current 1–2px anti-aliased grey that fades out toward the light edge. Stones in the bright centre currently merge into one another.
+- Vary the surface hatching. The 45° diagonal hatch appears at the same angle and same spacing on at least a dozen slabs across the frame; rotate, re-space, and remove it from most stones.
+
+**FLIP 2:**
+- Every tile outside the room is flat magenta with a pale square in its top-left corner — around 60% of the frame, most visibly the block at x 0–310, y 580–911 and the whole left margin. That is a missing-texture placeholder receiving the torch's lighting pass. Replace it with real material or take it to void black.
+- Remove the corner registration dot present in every placeholder cell; it makes the grid read as a debug overlay even where the tint is dark enough to pass.
+- Build a wall at the room perimeter. At y≈580, x 310–500, the paving ends on a tile line and placeholder begins with nothing between them — same missing-wall problem as 1, just wearing a different colour.
+- The stone bevel highlight is baked to the same edge on every slab (the light edge sits on the upper-left of stones both left and right of the figure), while the torch light is radial and moves. On the right-hand stones the highlight now faces away from the only light source. Either drive the bevel from light direction or flatten it and carry the shading in the light pass alone.
+- The cracks are uniform 1px at a single value and cross joints without deviating — the run descending from y≈290 to y≈560 passes straight through four joints unchanged. Break them at the joints and vary the stroke value so they read as fractures in stone rather than a spline drawn on top.
+
+**FLIP 3:**
+- Both barrels are sliced flat by the terrain boundary. At x 112–140 and x 155–182, the last drawn row is y=215 and it is still mid-body stave colour (68,54,28); y=216 is flagstone grey. There is no bottom curve, no foot, no contact shadow — the sprite is being clipped by the tile layer at the 24px line. Draw the props above the terrain and give each a base.
+- The moss patch at x≈115–125, y≈216 is cut by the same line, flat across its top. Same fix.
+- The two chests (x 190–290, y 5–70 and y 155–215) are byte-identical copies in a perfectly aligned vertical column one tile apart, as are the two barrels. Vary at least the rotation, the wear, and the placement off-grid.
+- The green liquid at x 248–344, y 0–190 is a rectangle. It meets dirt on the left and stone on the right with a straight vertical edge at the same luminance as both, no shoreline, no darkening at the margin, no wet lip. Give it an edge treatment and separate its value from the dirt so it reads as a surface below floor level rather than a fill selection.
+- The same round splat stamp appears four times inside the algae blobs at x 300–345, and the same diamond sparkle used as chest hardware is reused as the highlight inside the moss at x≈28, y≈45. Draw these once each per instance or stop reusing the sparkle across unrelated materials.
+- The flagstones are flat: one grey per slab plus two or three speckles, on a perfectly regular 24px grid with zero variation in slab size across the entire floor. Break the grid, vary the slab values, and give the joints depth variation.
+- The dirt/stone boundary at x≈168 and y≈216 is a hard axis-aligned rectangle with no scatter. Add transition tiles or hand-scatter dirt onto the first course of stone.
+- The orc sits at a saturation the environment never reaches and is the only object with a hard black shadow ellipse; the chests have a soft gradient shadow and the barrels have none. Pick one shadow treatment and pull the sprite's saturation into the environment's range.
+
+---
+
+The two frames sharing a floor plan (1 and 2) share the same underlying failure: the level is a floor rectangle with no walls, floating in fill. One fills that void with noise and one with a debug colour, but neither has built the thing the fiction is actually about — a structure held up by four hundred years of repair. Frame 3 is the only one with a wall in it, and it's the flattest-drawn of the three. Fixing the void fill in 2 without building perimeter walls will get you a prettier frame with the same hole in it.
+
+*Model: Claude Opus 5 (1M context)*

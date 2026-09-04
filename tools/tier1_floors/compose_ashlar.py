@@ -400,6 +400,116 @@ def crack_spall(pixels, joint, stone_ok):
     return out
 
 
+# ============================ THE CONTACT OCCLUSION, ON THE LADDER ============================
+#
+# §12.1's plane boundary — the form that says the floor stops where the wall begins — used to be
+# an ALPHA-BLENDED SPRITE and is now a rung subtraction painted into the floor's own pixels.
+#
+# WHY IT MOVED. `tier1_floor_963{0..3}.png` is one colour, rgb(22,22,22), carrying a 130-STEP
+# ALPHA RAMP, drawn over the floor one to three times per cell. Compositing it is
+# `floor*(1-a) + 22a`, which lands between rungs by construction: measured on the composed field,
+# the family's NINE authored albedo values became ONE HUNDRED AND THIRTY-TWO. That is the wall
+# cap's disease exactly (107 -> 9, fixed there by snapping) arriving on the floor through a layer
+# nobody was measuring, and every seat that has called this floor "continuous-tone procedural
+# noise, not authored pixel art" has been looking at it.
+#
+#   A VALUE BETWEEN RUNGS IS NOT IN THE PALETTE. No blend, no feather, no taper — the same
+#   sentence the crack network is authored under, applied to the one treatment that still broke
+#   it.
+#
+# WHY THE SPRITE IS STILL THE SOURCE. The ramp's ALONG-EDGE JITTER survives the quantise (2-3
+# distinct rungs per row, measured), and it is the only thing keeping the seam off a straight
+# constant-pitch line on the tile grid. So the shipped PNG remains the datum and its alpha is
+# read PER PIXEL; what changes is that the alpha now says HOW MANY RUNGS rather than how much to
+# blend. Nothing is invented and nothing is smoothed.
+#
+# ANCHORED AT THE MEDIAN, NOT AT THE PIXEL. The blend darkened a bright stone more than a dark
+# one, because a blend is a ratio. Occlusion is FORM (§12.1) and a form does not vary with the
+# value of what it crosses, so the depth is a fixed number of rungs taken from the material's
+# median. That is also what makes it exactly representable.
+OCCLUSION_FLOOR = 22.0      # DERIVED: the sprites' own rgb, which is the ambient itself
+OCCLUSION_SIDES = ("N", "E", "S", "W")
+
+
+def occlusion_rungs(alpha, layers, mat):
+    """Alpha -> whole ladder rungs of darkening. ONE definition, two painters.
+
+    `layers` is the ambient-anchored stack count (RULED 2026-09-02): the same sprite re-drawn
+    where the lamp does not reach, so the boundary survives past the lamp. Under the blend that
+    was `1-(1-a)^n`; the same compounding is kept and then quantised, which is why the eleven-rung
+    ladder was needed — three layers want 22.11 and a nine-rung ladder stops at 48.56 (see
+    `PALETTE_EXTEND_BELOW` in compose_family).
+    """
+    import numpy as _np
+    lad = _np.asarray(mat["ladder"], dtype=float)
+    rung = lad[1] - lad[0]
+    eff = 1.0 - (1.0 - _np.asarray(alpha, dtype=float)) ** int(layers)
+    # FLOOR(x + 0.5), NOT round(). numpy rounds a tie TO EVEN and C# rounds it AWAY FROM ZERO, so
+    # a rung landing exactly on a half would differ between the two painters with neither able to
+    # be called wrong. One expression, both painters, no tie-break at all.
+    return _np.floor(eff * (mat["lum_median"] - OCCLUSION_FLOOR) / rung + 0.5).astype(int)
+
+
+def occlusion_alpha(side):
+    """The shipped sprite's alpha plane for one side, as 0..1, T x T."""
+    import numpy as _np
+    from PIL import Image as _Image
+    src = json.load(open(os.path.join(CF.ASSETS, "MANIFEST.json")))
+    for e in src.get("occlusion", []):
+        if e.get("side") == side:
+            a = _np.asarray(_Image.open(os.path.join(CF.ASSETS, e["file"])).convert("RGBA"))
+            return a[..., 3].astype(float) / 255.0
+    raise SystemExit("REFUSING: no occlusion sprite for side %s in the overlay manifest" % side)
+
+
+_OCC_ALPHA_CACHE = {}
+
+
+def occlusion_block(side_mask, layers, mat):
+    """The whole-tile rung field for one cell's occlusion. ONE definition, two painters.
+
+    The sides composite the way the four sprites did — each was a separate draw, so their alphas
+    multiply through their complements and a corner carrying two edges is darker than either.
+    """
+    import numpy as _np
+    keep = _np.ones((T, T), dtype=float)
+    for i, side in enumerate(OCCLUSION_SIDES):
+        if not (side_mask & (1 << i)):
+            continue
+        if side not in _OCC_ALPHA_CACHE:
+            _OCC_ALPHA_CACHE[side] = occlusion_alpha(side)
+        keep *= 1.0 - _OCC_ALPHA_CACHE[side]
+    return occlusion_rungs(1.0 - keep, layers, mat)
+
+
+def occlusion_check_vector(mat, n=48):
+    """Sample (side, pixel, layers) -> rungs, so the engine's derivation can be refused.
+
+    The paint check cannot cover this: it compares the composer against the engine on a field
+    with no map in it, and occlusion is decided by WALL ADJACENCY. So the two derivations are
+    tied together the way the edge families are — a vector in the manifest that the engine
+    recomputes and refuses on (LOOP-PROCESS §4.2: a duplicate with an enforcement is a different
+    thing from a duplicate with a comment).
+    """
+    import numpy as _np
+    out = []
+    for i in range(n):
+        side = OCCLUSION_SIDES[i % 4]
+        layers = 1 + (i // 4) % 3
+        a = occlusion_alpha(side)
+        # SAMPLED FROM THE RAMP, NOT FROM THE TILE. Each side's ramp occupies its own eighth of
+        # the sprite; a fixed (px, py) walk hits alpha 0 on three sides out of four and the
+        # vector then checks that zero equals zero forty-eight times.
+        ys, xs = _np.nonzero(a)
+        if len(ys) == 0:
+            raise SystemExit("REFUSING: the %s occlusion sprite is entirely transparent" % side)
+        k = (i * 37) % len(ys)
+        py, px = int(ys[k]), int(xs[k])
+        out.append(dict(side=side, px=px, py=py, layers=int(layers),
+                        rungs=int(occlusion_rungs(a[py, px], layers, mat))))
+    return out
+
+
 CRACK_LIP = 0.55           # rungs the lip sits ABOVE the stone it broke from
 CRACK_LIP_SALT = 3018
 CRACK_DEPTH = 0.42         # the joint's own depth: a crack is dark because ENCLOSED (§6.5),
@@ -1685,6 +1795,7 @@ def main():
     mat["mark_cluster_swing"] = MARK_CLUSTER_SWING
     mat["joint_polish_floor"] = JOINT_POLISH_FLOOR
     mat["polish_lane"] = [POLISH_LANE_GAIN, POLISH_LANE_WIDTH, POLISH_SHOULDER]
+    mat["occlusion_floor"] = OCCLUSION_FLOOR
     mat["striation"] = [STRIA_PERIOD, STRIA_DEPTH]
     mat["lane_dish"] = [LANE_DISH_DEPTH, LANE_DISH_RIM]
     mat["grit"] = [GRIT_INNER, GRIT_OUTER, GRIT_RATE, GRIT_DEPTH]
@@ -1713,6 +1824,8 @@ def main():
                                "no feather. Replaces a per-tile overlay whose median mark was "
                                "4px.")), ladder_step=round(step, 3),
                edge_family_check=cross_check_vector(a.seed),
+               occlusion_sides=list(OCCLUSION_SIDES),
+               occlusion_check=occlusion_check_vector(mat),
                grain_bank=GRAIN_BANK, donors=src.get("donors", []), base=[],
                classes={"0": "joint — offset is defined zero, never remapped",
                         "1": "course 0, spans the WEST boundary", "2": "course 0, interior",
