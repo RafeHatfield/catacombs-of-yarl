@@ -163,13 +163,39 @@ def check():
         out += ["", "Fix, then re-run the round:   %s" % RUN]
         return False, out
 
-    if os.path.exists(STALL):
+    # ── A LIVE GUARD BLOCKS. A HISTORICAL REPORT DOES NOT. ────────────────────────────────────
+    #
+    # RULED (Rafe, 2026-09-03): *"fix the gate to block on active guard state, not on the
+    # existence of a STALL-REPORT.md file — a historical report must never gate installs; only a
+    # live guard does."*
+    #
+    # This used to be `if os.path.exists(STALL)`, and a file's existence is not a fact about the
+    # line. The floor lane's five-round-park report sat committed on main after that guard had
+    # been RETIRED — the park was replaced by the progress guards — and the report went on
+    # blocking installs for **every lane**, including lanes that had never stalled and including
+    # any combined build. It also broke the gate's own proof: `prove_gate.py` failed two cases
+    # ("PASS verdict for this build -> allow", "a gated build's marker carries no stamp") for no
+    # reason but a stale document on disk.
+    #
+    # The guards are derived from the verdict files on disk and are recomputed here, so what
+    # blocks an install is a guard that is firing NOW, on THIS lane. A report is a record of a
+    # ruling trigger; records do not gate.
+    try:
+        import frame_critic as FC                              # noqa: PLC0415
+        lane = (BID._git("rev-parse", "--abbrev-ref", "HEAD").strip() or "detached")
+        guard, why = FC.guards(FC.history(), lane)
+    except Exception as e:                                     # noqa: BLE001
+        # A gate that cannot evaluate its own guards must refuse — it does not know that it is
+        # safe, and "could not check" is not "clear".
+        return False, L + ["", "CANNOT EVALUATE THE LOOP GUARDS (%s). A gate that does not know "
+                               "whether the line is stalled does not open." % e]
+    if guard:
         return False, L + [
             "",
-            "A STALL REPORT IS STANDING. STALL-REPORT.md exists, which means a loop guard fired "
-            "and the line is waiting on a ruling from Rafe.",
+            "A LOOP GUARD IS LIVE ON THIS LANE: %s" % guard,
+            "  %s" % why,
             "",
-            "Read it, get the ruling, and delete the report when it is discharged.",
+            "This is a LOOP-PROCESS §1.1.4 ruling trigger. The line does not restart itself.",
         ]
 
     L.append("plant:    %s — caught" % v.get("plant", {}).get("file"))

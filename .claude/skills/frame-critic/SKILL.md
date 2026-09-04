@@ -284,6 +284,28 @@ the rest is a FAIL wearing a better name.
 Every disposition is printed at the gate and stamped onto the handset, so a routing the builder
 invented is a quote Rafe does not recognise, on his own screen, while he is holding the build.
 
+### A historical report never gates. Only a LIVE guard does.
+
+**LAW (Rafe, 2026-09-03).** *"A historical report must never gate installs; only a live guard
+does."*
+
+`critic_gate.py` used to refuse whenever `STALL-REPORT.md` existed. **A file's existence is not a
+fact about the line.** The floor lane's five-round-park report sat committed on main *after that
+guard had been retired* — the park was replaced by these progress guards — and went on blocking
+installs for **every lane**, including lanes that had never stalled and any combined build. It
+also broke the gate's own proof: `prove_gate.py` failed *"PASS verdict for this build → allow"*
+and *"a gated build's marker carries no stamp"* for no reason but a stale document on disk.
+
+The gate now recomputes the guards from the verdict files and refuses only if one is firing
+**now, on this lane**. A report is the record of a ruling trigger; **records do not gate.** Stale
+reports belong in `history/`, kept, not deleted.
+
+⚠ **A gate that cannot evaluate its guards still refuses.** *Could not check* is not *clear*.
+
+Both directions are proved every run — `E4` plants two consecutive VOIDs and requires the gate to
+name the live guard; `E5` removes them and requires it to open again. Removing a blocking
+condition without showing that its replacement bites is how a gate quietly stops being one.
+
 ### A guard clears by an ADDED artifact, never by removing evidence
 
 **LAW (Rafe, 2026-09-03).** The counters are derived from the verdict files on disk, which means
