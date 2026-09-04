@@ -77,6 +77,7 @@ MORGUE = os.path.join(HERE, "morgue")
 HISTORY = os.path.join(HERE, "history")
 VERDICT = os.path.join(REPO, "CRITIC-VERDICT.json")
 STALL = os.path.join(REPO, "STALL-REPORT.md")
+PARK_CLEARED = os.path.join(REPO, "PARK-CLEARED.json")
 
 # ── THE GUARDS' NUMBERS, DECLARED HERE BEFORE ANY ROUND RUNS ──────────────────────────────────
 # LOOP-PROCESS §8: a bar is never re-tuned after the answer is seen. These are the bar.
@@ -146,6 +147,29 @@ def guards(hist, lane):
     """
     lane_hist = [v for v in hist if lane_of(v) == lane]
 
+    # ── A PARK CLEARS BY AN ADDED ARTIFACT, NEVER BY REMOVING EVIDENCE ────────────────────────
+    #
+    # RULED (Rafe, 2026-09-03): *"Park cleared by ruling — author and commit PARK-CLEARED.json at
+    # repo root … guard counts judged rounds after the marker, no verdict files deleted (evidence
+    # stays; the clear is an added artifact)."*
+    #
+    # The guard fires from the verdict files on disk, so the only other way to clear it is to
+    # delete them — and a mechanism whose reset is *destroy the record* teaches exactly the wrong
+    # reflex: the lane that most wants the guard gone is the lane holding the evidence against
+    # itself. Every round stays readable; the marker only says where a ruling drew the line.
+    #
+    # It does NOT clear a broken judge. A soft critic is not a lane problem, and no ruling about
+    # the lane makes an unreadable verdict readable — which is why this is consulted below the
+    # broken-judge check and not above it.
+    cleared_after = None
+    if os.path.exists(PARK_CLEARED):
+        try:
+            mk = json.load(open(PARK_CLEARED))
+            if mk.get("lane") in (None, lane):
+                cleared_after = int(mk.get("cleared_after_round", 0)) or None
+        except Exception:                                            # noqa: BLE001
+            cleared_after = None
+
     # BROKEN JUDGE first, because nothing downstream of it is readable. A void round's findings
     # are not evidence, so a stall computed across them would be a stall computed across nothing.
     tail = [v for v in lane_hist[-JUDGE_MISSES:]]
@@ -181,12 +205,16 @@ def guards(hist, lane):
     #
     # The broken-judge guard above is what VOIDs are for, and it still has them.
     judged = [v for v in lane_hist if v.get("verdict") != "VOID"]
+    if cleared_after:
+        judged = [v for v in judged if int(v.get("round", 0)) > cleared_after]
     if len(judged) >= PARK_ROUNDS and not any(v.get("verdict") == "PASS"
                                               for v in judged[-PARK_ROUNDS:]):
         return ("five-round-park",
                 "%d JUDGED rounds on this lane with no PASS (voids excluded — they are not "
-                "evidence). The lane is parked; the next move is a ruling, not another round."
-                % PARK_ROUNDS)
+                "evidence%s). The lane is parked; the next move is a ruling, not another round."
+                % (PARK_ROUNDS,
+                   "; rounds up to r%d cleared by PARK-CLEARED.json" % cleared_after
+                   if cleared_after else ""))
     return (None, None)
 
 

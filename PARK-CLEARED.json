@@ -1,0 +1,72 @@
+{
+  "_what": [
+    "A PARK CLEARED BY RULING — an ADDED artifact, never a deletion.",
+    "",
+    "The five-round-park guard fires from the verdict files in .claude/skills/frame-critic/",
+    "history/. The only other way to clear it is to delete those files, and a mechanism whose",
+    "reset is 'destroy the record' teaches exactly the wrong reflex: the lane that most wants the",
+    "guard gone is the lane holding the evidence against itself. So every verdict stays on disk,",
+    "permanently readable, and this marker records where a ruling drew the line and why.",
+    "",
+    "It cannot clear a BROKEN JUDGE. A soft critic is not a lane problem, and no ruling about a",
+    "lane makes an unreadable verdict readable."
+  ],
+
+  "lane": "worktree-session-2026-08-29",
+  "surface": "wall",
+  "cleared_after_round": 6,
+  "cleared_on": "2026-09-03",
+  "cleared_by": "Rafe, ruling",
+
+  "ruling": [
+    "The mottle is routed to the floor lane (floor-side, post-#169, measured) - your caps are",
+    "clean at 9 colours, faces frozen; you're not blocked by your own work, you're blocked by",
+    "the floor's, so hold for the combined build rather than running wall rounds that can't pass",
+    "over another surface's defect.",
+    "",
+    "Park cleared by ruling - author and commit PARK-CLEARED.json at repo root: quote this",
+    "ruling, state the blocking rounds (r002-r004, r006) judged an un-passable deck (dominant",
+    "defect belongs to the floor lane), guard counts judged rounds after the marker, no verdict",
+    "files deleted (evidence stays; the clear is an added artifact)."
+  ],
+
+  "blocking_rounds": ["r002", "r003", "r004", "r006"],
+
+  "why_the_deck_was_un_passable": [
+    "These four judged FAILs were rendered on a deck whose dominant defect was not this lane's",
+    "to fix. Measured on the delivered frames, unique colours by surface region:",
+    "",
+    "                                wall cells   floor cells",
+    "    r28 (current build)               1088         4708",
+    "    cement-cap (r22, pre-merge)       1897         2209",
+    "    grey-walls                        1658         2241",
+    "",
+    "The wall's colour count fell 43% when the cap was hard-snapped to the ladder (cap asset 107",
+    "-> 9 colours, against the approved ashlar floor's 8). Over the same span the FLOOR's count",
+    "more than doubled, 2209 -> 4708, on an eight-colour asset palette - arriving with the merge",
+    "of #169, on the floor lane's surface.",
+    "",
+    "The frame critic named that layer as the single defect making the image read as filtered:",
+    "'The whole frame carries a soft continuous-tone mottle over the pixel work (5763 unique",
+    "colours against 2's 3414 for the same scene). Drop that layer; it's the single thing making",
+    "the image read as filtered.' Confirmed by measurement, and attributed to the floor.",
+    "",
+    "A wall round cannot pass over another surface's defect. The rounds were not a lane failing",
+    "to converge; they were a lane being judged on a frame it did not control."
+  ],
+
+  "not_cleared": [
+    "Nothing is deleted. r002, r003, r004, r005 (VOID) and r006 remain in history/ with their",
+    "verdicts, flip lists and build ids intact, and the guard still reads them - it simply counts",
+    "judged rounds AFTER round 6 when deciding whether this lane is getting anywhere.",
+    "",
+    "The findings from those rounds that belong to this lane were acted on and are in the tree:",
+    "the sine-tooling self-catch, the hard-edge recovery (wall cells 4.6% -> 13.2% against the",
+    "last approved build's 10.7%), the slab/fracture architecture, and the palette snap."
+  ],
+
+  "next": [
+    "HOLD for the combined build. No further wall rounds until the floor lane's continuous-tone",
+    "layer lands, per the same ruling."
+  ]
+}

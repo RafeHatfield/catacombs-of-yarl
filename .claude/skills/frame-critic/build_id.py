@@ -40,6 +40,8 @@ deliberately contains nothing anyone builds from:
 
     CRITIC-VERDICT.json                     the verdict. It describes the build; it is not in it.
     STALL-REPORT.md                         a guard's report. Same.
+    PARK-CLEARED.json                       a ruling that clears a guard. Same: it describes a
+                                            decision about the lane, and reaches no pixel.
     .claude/skills/frame-critic/history/    past verdicts. Same.
     …/tier0_harness/REVIEW_BUILD.json       the transient review marker, written by the build
                                             itself and removed on exit. If it moved the id, a
@@ -58,6 +60,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(
 EXCLUDED = (
     "CRITIC-VERDICT.json",
     "STALL-REPORT.md",
+    "PARK-CLEARED.json",
     ".claude/skills/frame-critic/history/",
     "src/Presentation/assets/tier0_harness/REVIEW_BUILD.json",
 )

@@ -285,6 +285,28 @@ The line stops rather than grinding. Every stop writes `STALL-REPORT.md` and is 
 | **five-round park** | five **judged** rounds on this lane with no PASS | the lane needs a ruling, not another round |
 | **broken judge** | the plant is missed twice running | nothing past a broken judge is readable, and nothing ships past one |
 
+### A park clears by an ADDED artifact, never by removing evidence
+
+**LAW (Rafe, 2026-09-03).** *"Park cleared by ruling — author and commit PARK-CLEARED.json at
+repo root … guard counts judged rounds after the marker, no verdict files deleted (evidence
+stays; the clear is an added artifact)."*
+
+The guard fires from the verdict files in `history/`, so the only other way to clear it is to
+delete them — and **a mechanism whose reset is *destroy the record* teaches exactly the wrong
+reflex.** The lane that most wants the guard gone is the lane holding the evidence against
+itself. So nothing is deleted, ever. A `PARK-CLEARED.json` at the repo root names the lane, the
+rounds it covers, quotes the ruling that authorised it, and says why those rounds were not the
+lane failing to converge. The guard then counts judged rounds **after** the marker.
+
+It **cannot clear a broken judge.** A soft critic is not a lane problem, and no ruling about a
+lane makes an unreadable verdict readable.
+
+The wall lane's is the worked example: four judged FAILs rendered on a deck whose dominant
+defect — a continuous-tone layer measured at 4708 colours in the floor's cells against 2209
+before the merge, on an eight-colour asset palette — belonged to another surface. **A round
+cannot pass over a defect its lane does not control**, and grinding one that can't is what the
+park is for; but the answer there is a routing, not a stalled lane.
+
 **A VOID DOES NOT COUNT TOWARD THE PARK (RULED, Rafe, 2026-09-03).** *"A VOID round is a
 broken-judge event, not a no-progress round — it must not count toward stall/park."* The park asks
 whether the lane is getting anywhere; a void round says nothing about the lane, because §4 forbids

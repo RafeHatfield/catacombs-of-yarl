@@ -1,3 +1,4 @@
+using CatacombsOfYarl.Logic.ECS;
 using Godot;
 
 namespace CatacombsOfYarl.Presentation.Map;
@@ -124,6 +125,70 @@ public sealed class ReviewLighting
         gameView.AddChild(_light);
         Follow(playerTileX, playerTileY);
     }
+
+    /// <summary>
+    /// §12.1a — THE VOID IS DARK BY OCCLUSION, NOT BY A RING (RULED, Rafe, 2026-09-03).
+    ///
+    /// *"Unexcavated mass is unlit by construction — the lamp stops at the wall face because
+    /// solid stone is behind it, so the void is dark by occlusion, not by a ring."*
+    ///
+    /// This is the presentation half of that clause. Every solid cell gets a
+    /// <see cref="LightOccluder2D"/> and the carried light casts shadows, so what lies behind a
+    /// wall face receives nothing — the same found rock, unlit, rather than a darker material
+    /// swapped in at a fixed distance.
+    ///
+    /// WHY THE ENGINE AND NOT A CLASSIFICATION OF MY OWN. The culled `void_ring` decided what a
+    /// cell was made of from its Chebyshev distance to the nearest floor, and a classification
+    /// that changes at a cell boundary puts a luminance step at that boundary — which a blind
+    /// seat found as "200px-tall ruled lines in the dark itself". A shadow has no such offset:
+    /// it is cast from wherever the lamp happens to be, moves when the player moves, and lands
+    /// on geometry rather than on the grid. §12.1 calls a lighting boundary at a plane boundary
+    /// FORM; that is what this produces and it is why it does not reintroduce the outline.
+    /// </summary>
+    public void AddOccluders(GameMap map, Node2D gameView)
+    {
+        if (_light == null) return;
+        _light.ShadowEnabled = true;
+        _light.ShadowFilter = Light2D.ShadowFilterEnum.None;   // §4.3: no soft, resampled edges
+
+        var poly = new OccluderPolygon2D
+        {
+            // ⚠ CULLING ON, AND THE FIRST ATTEMPT HAD IT OFF. With CullMode.Disabled every edge
+            // of the quad occludes, so a wall cell casts a shadow onto ITSELF: the lamp reached
+            // the face and the face's own occluder took it away again. Measured — exposed wall
+            // fell 37.90 -> 5.51, the whole frame went dark, and "the lamp stops at the wall
+            // face" became "the lamp stops at the wall". With culling, only the edges facing
+            // AWAY from the light occlude, so the face is lit and the shadow begins behind it,
+            // which is what the clause actually says.
+            CullMode = OccluderPolygon2D.CullModeEnum.Clockwise,
+            Polygon = new[]
+            {
+                new Vector2(0, 0), new Vector2(_tileW, 0),
+                new Vector2(_tileW, _tileH), new Vector2(0, _tileH),
+            },
+        };
+
+        var root = new Node2D { Name = "ReviewOccluders" };
+        gameView.AddChild(root);
+        int n = 0;
+        for (int y = 0; y < map.Height; y++)
+        {
+            for (int x = 0; x < map.Width; x++)
+            {
+                if (!map.IsWallTile(x, y)) continue;
+                root.AddChild(new LightOccluder2D
+                {
+                    Occluder = poly,
+                    Position = new Vector2(x * _tileW, y * _tileH),
+                });
+                n++;
+            }
+        }
+        _occluderCount = n;
+    }
+
+    private int _occluderCount;
+    public int OccluderCount => _occluderCount;
 
     /// <summary>
     /// Move the carried light onto a tile. The player IS the lamp (§6.2, §6.5), so this is
