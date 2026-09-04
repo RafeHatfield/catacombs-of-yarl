@@ -1,15 +1,18 @@
-# STALL REPORT — broken-judge
+# STALL REPORT — no-change
 
 **The line has stopped and is not restarting itself.** LOOP-PROCESS §1.1.4 ruling trigger: this report is the evidence.
 
-- **lane** `broken-judge`
+- **lane** `no-change`
 - **surface** `wall`
-- **guard** `broken-judge`
+- **guard** `no-change`
 - **written** 2026-09-03T17:59:34
 
 ## Why it stopped
 
-the picture-plant was missed 2 rounds running. The judging layer is broken; no round past it is readable and nothing ships past it.
+rounds 1 and 2 are the same picture — mean 0.000 and worst cell 0
+luminance levels apart over the delivered frame, byte-identical, against floors of
+0.25 and 4, and both FAIL. Whatever was changed between them did not
+reach the capture.
 
 ## What was tried, round by round
 
@@ -17,10 +20,18 @@ the picture-plant was missed 2 rounds running. The judging layer is broken; no r
 
 | round | verdict | rank | score | best? | Δpic | build | the seat's own words |
 |---|---|---|---|---|---|---|---|
-| 1 | VOID | — | — |  | — | `fixture-brok` | Round 1. |
-| 2 | VOID | — | — |  | 1.942 / 36 | `fixture-brok` | Round 2. |
+| 1 | FAIL | 3/4 | 0.33 | **new best** | — | `fixture-no-c` | Round 1. |
+| 2 | FAIL | 2/4 | 0.67 | **new best** | 0.000 / 0 | `fixture-no-c` | Round 2. |
 
 ## The flip lists, verbatim
+
+**round 1 (FAIL)**
+
+- The passage mouth has no jamb.
+
+**round 2 (FAIL)**
+
+- The void beyond the wall is pure black.
 
 ## Where to look
 

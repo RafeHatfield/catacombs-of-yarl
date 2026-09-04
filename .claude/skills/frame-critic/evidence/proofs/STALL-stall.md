@@ -1,25 +1,27 @@
-# STALL REPORT — five-round-park
+# STALL REPORT — stall
 
 **The line has stopped and is not restarting itself.** LOOP-PROCESS §1.1.4 ruling trigger: this report is the evidence.
 
-- **lane** `guard-park`
+- **lane** `stall`
 - **surface** `wall`
-- **guard** `five-round-park`
-- **written** 2026-09-03T14:17:08
+- **guard** `stall`
+- **written** 2026-09-03T17:59:34
 
 ## Why it stopped
 
-5 rounds on this lane with no PASS. The lane is parked; the next move is a ruling, not another round.
+3 readable rounds with no new best rank. The best is 1.00, set at round
+1, and nothing since has beaten it. The lane is not converging.
 
 ## What was tried, round by round
 
-| round | verdict | build | capture | the seat's own words |
-|---|---|---|---|---|
-| 1 | FAIL | `fixture-park` | `fixture_p1.png` | Round 1: still not a frame anyone would ship. |
-| 2 | FAIL | `fixture-park` | `fixture_p2.png` | Round 2: still not a frame anyone would ship. |
-| 3 | FAIL | `fixture-park` | `fixture_p3.png` | Round 3: still not a frame anyone would ship. |
-| 4 | FAIL | `fixture-park` | `fixture_p4.png` | Round 4: still not a frame anyone would ship. |
-| 5 | FAIL | `fixture-park` | `fixture_p5.png` | Round 5: still not a frame anyone would ship. |
+`rank` is where the build placed in that round's blind shuffled deck, and `score` normalises it so decks of different sizes compare — 1.00 is first, 0.00 is last. `Δpic` is how far the delivered frame moved from the previous round: mean and worst cell, in luminance levels. `0.000 / 0` means the picture did not change at all.
+
+| round | verdict | rank | score | best? | Δpic | build | the seat's own words |
+|---|---|---|---|---|---|---|---|
+| 1 | FAIL | 1/4 | 1.00 | **new best** | — | `fixture-stal` | Round 1. |
+| 2 | FAIL | 2/4 | 0.67 |  | 2.342 / 63 | `fixture-stal` | Round 2. |
+| 3 | FAIL | 3/4 | 0.33 |  | 1.942 / 36 | `fixture-stal` | Round 3. |
+| 4 | FAIL | 2/4 | 0.67 |  | 7.889 / 120 | `fixture-stal` | Round 4. |
 
 ## The flip lists, verbatim
 
@@ -37,10 +39,6 @@
 
 **round 4 (FAIL)**
 
-- The floor and the wall base share one value at the south run; drop the base.
-
-**round 5 (FAIL)**
-
 - The void beyond the wall is pure black with zero variance; give it rock.
 
 ## Where to look
@@ -51,7 +49,6 @@ Captures and transcripts, per round:
 - round 2 — deck `(fixture)`, transcript `(fixture)`
 - round 3 — deck `(fixture)`, transcript `(fixture)`
 - round 4 — deck `(fixture)`, transcript `(fixture)`
-- round 5 — deck `(fixture)`, transcript `(fixture)`
 
 ## What is being asked for
 

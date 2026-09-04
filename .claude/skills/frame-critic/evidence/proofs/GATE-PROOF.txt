@@ -13,11 +13,11 @@ PASS  B  verdict for another build -> refuse
       exit 1 (wanted 1); looked for 'NOT ABOUT THIS BUILD'
       | == FRAME CRITIC GATE
       |    verdict:  PASS   lane prove-gate round 1   2026-09-03T00:00:00
-      |    build:    e248cad6d0e5  (+dirty)
+      |    build:    0a9f288699d5  (+dirty)
       | 
       |    THE VERDICT IS NOT ABOUT THIS BUILD.
-      |      verdict build_id  aaaaaaaaaaaaaaaa  (commit e248cad6d0e5)
-      |      this working tree  57687e1a9d3ed485  (commit e248cad6d0e5)
+      |      verdict build_id  aaaaaaaaaaaaaaaa  (commit 0a9f288699d5)
+      |      this working tree  a9826d9ccb5efc51  (commit 0a9f288699d5)
       | 
       |    The build id folds in every tracked change and every untracked file, so a recomposed family moves it even when the commit does not. Something has changed since the seat looked.
       | 
@@ -30,7 +30,7 @@ PASS  C  FAIL verdict -> refuse
       exit 1 (wanted 1); looked for 'VERDICT IS FAIL'
       | == FRAME CRITIC GATE
       |    verdict:  FAIL   lane prove-gate round 1   2026-09-03T00:00:00
-      |    build:    e248cad6d0e5  (+dirty)
+      |    build:    0a9f288699d5  (+dirty)
       | 
       |    VERDICT IS FAIL. The seat would not ship this frame.
       |      flip: The wall tops read as dim floor; separate the planes.
@@ -44,7 +44,7 @@ PASS  D  FAIL + YARL_SKIP_CRITIC -> allow, exit 10
       exit 10 (wanted 10); looked for 'SKIPPED-REVIEW'
       | == FRAME CRITIC GATE
       |    verdict:  FAIL   lane prove-gate round 1   2026-09-03T00:00:00
-      |    build:    e248cad6d0e5  (+dirty)
+      |    build:    0a9f288699d5  (+dirty)
       | 
       |    VERDICT IS FAIL. The seat would not ship this frame.
       |      flip: The wall tops read as dim floor; separate the planes.
@@ -59,7 +59,7 @@ PASS  D2 the marker is stamped SKIPPED-REVIEW
       exit 0 (wanted 0); looked for '"reviewStatus": "SKIPPED-REVIEW"'
       | == FRAME CRITIC GATE
       |    verdict:  FAIL   lane prove-gate round 1   2026-09-03T00:00:00
-      |    build:    e248cad6d0e5  (+dirty)
+      |    build:    0a9f288699d5  (+dirty)
       | 
       |    VERDICT IS FAIL. The seat would not ship this frame.
       |      flip: The wall tops read as dim floor; separate the planes.
@@ -69,7 +69,7 @@ PASS  D2 the marker is stamped SKIPPED-REVIEW
       |    YARL_SKIP_CRITIC=1 — INSTALLING ANYWAY.
       |    The build is stamped SKIPPED-REVIEW and the phone will say so on screen.
       |    Nothing walked on a SKIPPED-REVIEW build is a gate verdict.
-      | == build identity: commit=e248cad6d0e5dae81cef44950a44f5d01b47ea48+dirty built=2026-09-03T21:16:52Z
+      | == build identity: commit=0a9f288699d5d01d9db643120903dde087f5a529+dirty built=2026-09-04T01:02:05Z
       | == ⚠ SKIPPED-REVIEW — this build has no frame-critic PASS. The phone will say so.
       | == marker written: REVIEW_BUILD.json
       | == grid: tile 32 at x2.0
@@ -158,8 +158,8 @@ PASS  D2 the marker is stamped SKIPPED-REVIEW
       |     "no gate at all."
       |   ],
       |   "reviewStatus": "SKIPPED-REVIEW",
-      |   "commit": "e248cad6d0e5dae81cef44950a44f5d01b47ea48+dirty",
-      |   "builtAt": "2026-09-03T21:16:52Z"
+      |   "commit": "0a9f288699d5d01d9db643120903dde087f5a529+dirty",
+      |   "builtAt": "2026-09-04T01:02:05Z"
       | }
       | == marker removed (a leftover would silently make the next build a review build)
 
@@ -167,7 +167,7 @@ PASS  E  PASS verdict for this build -> allow
       exit 0 (wanted 0); looked for 'GATE OPEN'
       | == FRAME CRITIC GATE
       |    verdict:  PASS   lane prove-gate round 1   2026-09-03T00:00:00
-      |    build:    e248cad6d0e5  (+dirty)
+      |    build:    0a9f288699d5  (+dirty)
       |    plant:    grey-walls.png — caught
       |    GATE OPEN — a blind seat would ship this exact frame.
 
@@ -175,10 +175,10 @@ PASS  E2 a gated build's marker carries no stamp
       exit 0 (wanted 0); looked for '"reviewStatus": null'
       | == FRAME CRITIC GATE
       |    verdict:  PASS   lane prove-gate round 1   2026-09-03T00:00:00
-      |    build:    e248cad6d0e5  (+dirty)
+      |    build:    0a9f288699d5  (+dirty)
       |    plant:    grey-walls.png — caught
       |    GATE OPEN — a blind seat would ship this exact frame.
-      | == build identity: commit=e248cad6d0e5dae81cef44950a44f5d01b47ea48+dirty built=2026-09-03T21:16:52Z
+      | == build identity: commit=0a9f288699d5d01d9db643120903dde087f5a529+dirty built=2026-09-04T01:02:06Z
       | == marker written: REVIEW_BUILD.json
       | == grid: tile 32 at x2.0
       | == bundle id: com.rafehatfield.catacombsofyarl.tier0   name: YARL Tier0
@@ -266,8 +266,8 @@ PASS  E2 a gated build's marker carries no stamp
       |     "no gate at all."
       |   ],
       |   "reviewStatus": null,
-      |   "commit": "e248cad6d0e5dae81cef44950a44f5d01b47ea48+dirty",
-      |   "builtAt": "2026-09-03T21:16:52Z"
+      |   "commit": "0a9f288699d5d01d9db643120903dde087f5a529+dirty",
+      |   "builtAt": "2026-09-04T01:02:06Z"
       | }
       | == marker removed (a leftover would silently make the next build a review build)
 
@@ -275,7 +275,7 @@ PASS  E3 a self-test PASS cannot open the gate
       exit 1 (wanted 1); looked for 'SELF-TEST'
       | == FRAME CRITIC GATE
       |    verdict:  PASS   lane prove-gate round 1   2026-09-03T00:00:00
-      |    build:    e248cad6d0e5  (+dirty)
+      |    build:    0a9f288699d5  (+dirty)
       | 
       |    THIS VERDICT IS A SELF-TEST OF THE JUDGE, not a verdict on a build — its deck put a morgue frame in the build's slot. It cannot authorise an install.
       | 
@@ -290,7 +290,7 @@ PASS  F1 hook denies a raw devicectl install
       |   "hookSpecificOutput": {
       |     "hookEventName": "PreToolUse",
       |     "permissionDecision": "deny",
-      |     "permissionDecisionReason": "This command installs a build to the device, and the frame-critic gate refuses it.\n\n== FRAME CRITIC GATE\n   verdict:  FAIL   lane prove-gate round 1   2026-09-03T00:00:00\n   build:    e248cad6d0e5  (+dirty)\n\n   VERDICT IS FAIL. The seat would not ship this frame.\n     flip: The wall tops read as dim floor; separate the planes.\n\n   Fix, then re-run the round:   .claude/skills/frame-critic/run_frame_critic.sh\n\n   REFUSING TO INSTALL. Override with YARL_SKIP_CRITIC=1 if you need the build on\n   the phone for measurement — it installs, marked, and is not a gate build.\n\nArt rounds are judged by eyes on delivered frames (CLAUDE.md). Run the round, or prefix the command with YARL_SKIP_CRITIC=1 to install a build stamped SKIPPED-REVIEW."
+      |     "permissionDecisionReason": "This command installs a build to the device, and the frame-critic gate refuses it.\n\n== FRAME CRITIC GATE\n   verdict:  FAIL   lane prove-gate round 1   2026-09-03T00:00:00\n   build:    0a9f288699d5  (+dirty)\n\n   VERDICT IS FAIL. The seat would not ship this frame.\n     flip: The wall tops read as dim floor; separate the planes.\n\n   Fix, then re-run the round:   .claude/skills/frame-critic/run_frame_critic.sh\n\n   REFUSING TO INSTALL. Override with YARL_SKIP_CRITIC=1 if you need the build on\n   the phone for measurement — it installs, marked, and is not a gate build.\n\nArt rounds are judged by eyes on delivered frames (CLAUDE.md). Run the round, or prefix the command with YARL_SKIP_CRITIC=1 to install a build stamped SKIPPED-REVIEW."
       |   }
       | }
 

@@ -1,6 +1,6 @@
 # Yarl Art Loop — PROCESS LAW v0
 
-**Status: v0.8 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
+**Status: v0.9 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
 `ART-BIBLE-v0.md`. Structure transfers wholesale; every number is re-derived.
 
 *(The banner read v0.4 while the revision log below already carried v0.5 — corrected here rather
@@ -113,6 +113,21 @@ Rafe-approved capture of the same surface, and **one picture-plant**, shuffled a
 ranks them for craft, says which it would ship, and flags obvious defects. That is the verdict:
 **PASS**, **FAIL** with a verbatim flip list, or **VOID**.
 
+**PASS requires all of it**: the seat would ship this frame, flagged nothing in it, and ranked it
+at or above the last Rafe-approved frame and near the asset bar — §5's visual bar (*which of these
+looks like the shipped game; the answer must be Yarl or a tie*) expressed as a rank, with one
+place below the bar standing in for the tie the deck forbids. **Rank is a necessary condition
+added on top of SHIP, never a substitute for it**; §1.2.1's limit below is exactly why.
+
+**A PLANT CONTROLS FOR SOFTNESS ON THE AXIS ITS CULL WAS MADE ON.** Measured, at cost: the first
+wall round under §1.2.3's progress guards went VOID because the seat put `grey-walls.png` first in
+the deck and flagged nothing in it — and the seat was not being soft. That frame was culled for
+**chroma**; the seat is asked to rank **craft**. It is well constructed and the wrong colour, and
+it was only ever the wrong colour. **A colour cull cannot control a craft question.** Record which
+axis a morgue entry's cull was about, and do not expect it to catch a seat asked about a different
+one. A lane whose only plant is off-axis will void honestly and repeatedly, and the answer is a
+plant, not another round.
+
 **The plant is a picture, not a build.** A frame Rafe personally culled at the device gate, kept
 as bytes in `morgue/` with his words and the commit that produced it, hash-checked before every
 round. **An engine change can never neutralise a picture.** The plant must land worst-or-flagged
@@ -144,7 +159,7 @@ So the plant tests for **softness, not ordering**, and the ordering facts are re
 reported rather than scored: `outranked_build`, and `every_frame_flagged` for a seat that flags
 everything including the commercial bar. Folding either into the verdict would say the wrong
 thing — VOID means *stop and fix the judge*, and the judge was not what failed. A seat too harsh
-ever to pass belongs to the five-round park, not to the plant. §8: the rule was declared before
+ever to pass belongs to §1.2.3's stall guard, not to the plant. §8: the rule was declared before
 the round, held frozen, cleared honestly, and impeached in the same report.
 
 #### 1.2.2 The install gate
@@ -160,23 +175,53 @@ the app draws on screen and reports in its `BUILD IDENTITY` line. It exists for 
 to *measure*. **Nothing walked on a SKIPPED-REVIEW build is a gate verdict**, and an override
 nobody can see from the phone is the same as no gate.
 
-#### 1.2.3 The loop guards — the line stops, it never grinds
+#### 1.2.3 The loop guards — the line stops, it never grinds, and it never stops a lane that is working
 
-§1.1 makes a FAIL a reprompt rather than a stop, and it is right. These are the bounds on that.
+§1.1 makes a FAIL a reprompt rather than a stop, and it is right. §1.1.3 adds that sessions are
+**bounded by budget and width, never by rounds.** These are the bounds on that, and they are
+bounds on *progress* rather than on rounds elapsed — a round cap contradicts §1.1.3 and is wrong
+in both directions at once: five rounds that are getting somewhere should keep going, and two that
+are not should already have stopped.
 
-| guard | fires when | why |
+**THE PROGRESS SIGNAL IS RANK.** Where the build placed in that round's blind shuffled deck,
+against the asset bar, the last approved frame and the plant, normalised so decks of different
+sizes compare — `(deck_size − position) / (deck_size − 1)`. The round already produces it at no
+extra cost, and it is a judgement about the picture rather than about the apparatus.
+
+**The seat is told nothing about it.** Not the round number, not the history, not that anything is
+tracked — and not in the path it sits in, either: the working directory is named by a hash,
+because it used to carry the round number and that directory is the seat's own cwd. A rank has to
+be an unprompted judgement about a picture, not a judgement about a campaign.
+
+| guard | fires when | why the order |
 | --- | --- | --- |
-| **two strikes** | the same flip item survives two consecutive FAIL rounds | the fix is not landing; a third attempt is a guess |
-| **five-round park** | five rounds on a lane with no PASS | the lane needs a ruling, not another round |
-| **broken judge** | the picture-plant is missed twice running | nothing past a broken judge is readable, and nothing ships past one |
+| **broken judge** | the picture-plant is missed twice running | checked first: nothing past it is readable, so every guard below would be reasoning about rounds §4 forbids reading |
+| **no change** | two consecutive FAILs whose delivered frames are within **2 bits of a 256-bit perceptual hash** | the cheapest true statement available — the fix never reached the picture (§4.2's shape exactly) |
+| **thrash** | the same flip item across two consecutive FAILs **and no movement in rank** | the same request twice, with nothing to show for it |
+| **stall** | **3** readable rounds with no new best rank | matching the best is not progress; the lane is not converging |
+| **ceiling** | **15** rounds on a lane | the backstop, and it should never be the guard that fires |
 
-Each writes `STALL-REPORT.md` in plain language — what was tried, the critic's own words, the
-capture paths — and **each is a §1.1.4 ruling trigger with that report as its evidence**, which is
-the citation §1.1's standing test demands. **Never run a further round past a STOP.**
+**`two strikes` is retained as the builder's judgement overlay — reported, never a stop.** A flip
+item can legitimately survive a round the build won on every other axis, and stopping there sends
+a ruling about a lane that is working. `thrash` is the same substance with one added condition,
+and that condition is precisely what separates a stuck lane from a busy one.
 
-**The counters are derived from the verdict files on disk, per lane, not held in a session.** A
-counter that a restart clears is a suggestion with a number in it; clearing these means deleting
-committed files, which shows up in a diff.
+A **VOID** round's rank is not evidence — §4 says its findings are not read, and that includes its
+rank — so void rounds are excluded from the progress series. They still count toward the ceiling:
+they consumed a round.
+
+**PASS is reachable at any round and no guard gates it.** The guards decide when to stop and ask;
+they never decide what may ship.
+
+Each writes `STALL-REPORT.md` in plain language — the rank series round by round, what was tried,
+the critic's own words, the capture paths — and **each is a §1.1.4 ruling trigger with that report
+as its evidence**, which is the citation §1.1's standing test demands. **Never run a further round
+past a STOP.**
+
+**The series lives in the verdict files on disk, per lane, not in a session** — and in each
+verdict rather than merely derivable by walking the directory, so it is in the diff and in the PR.
+A counter that a restart clears is a suggestion with a number in it; clearing these means deleting
+committed files.
 
 ---
 
@@ -529,7 +574,7 @@ images rather than parameters. One home, cited from both documents.
 
 ---
 
-*v0.8 — 2026-09-03. **New §4.3: the gate verdict outranks the instrument bar.** Ruled at the
+*v0.9 — 2026-09-03. **New §4.3: the gate verdict outranks the instrument bar.** Ruled at the
 floor's close. A positive control that can only be cleared by restoring a lever the eye culled is
 superseded, not satisfied: the bar is not moved, the lever is not restored, and the check is
 annotated `SUPERSEDED-BY-GATE` and demoted to a builder's tool — it prints its number every round
@@ -538,6 +583,30 @@ half that still discriminates keeps its vote. First instance: the floor's `no_er
 already unmet at 1.162x before the change that exposed it, clearable only by re-admitting the
 value-blob defect a frame critic culled. The hazard it closes is a bar going stale as a surface
 gains layers — that is the bar going wrong, not the surface.*
+
+*v0.8 — 2026-09-03. **§1.2.3's guards now measure PROGRESS, not rounds.** The five-round park is
+struck: a round cap contradicts §1.1.3's *bounded by budget and width, never by rounds*, and it is
+wrong in both directions at once — five rounds that are getting somewhere should keep going, and
+two that are not should already have stopped. The signal is the one every round already produces
+at no extra cost, **where the build ranked in the blind shuffled deck**, normalised across deck
+sizes. Four guards replace it: **no change** (two consecutive FAILs within 2 bits of a 256-bit
+perceptual hash of the delivered frame — the fix never reached the picture), **thrash** (the same
+flip item twice with no movement in rank), **stall** (3 readable rounds with no new best), and
+**ceiling** (15 rounds, a backstop that should never be what fires). `two strikes` is retained as
+the builder's judgement overlay, reported and never a stop, because a flip item can survive a
+round the build won on every other axis. Void rounds are excluded from the series and counted
+toward the ceiling. §1.2's PASS is stated in full: SHIP **and** ranked at or above the last
+approved frame and near the bar — §5's visual bar as a rank, one place below the bar standing in
+for the tie the deck forbids. Rank is a necessary condition on top of SHIP, never a substitute:
+§1.2.1's limit is why. The rank series is written into every verdict rather than only being
+derivable from the history directory, and the seat's working directory is now named by a hash —
+it carried the round number, and that directory is the seat's own cwd. **Two findings arrived with
+the first live round under these guards, which went VOID.** §1.2.1 gains the axis rule: a plant
+controls for softness ON THE AXIS ITS CULL WAS MADE ON, and `grey-walls.png` was culled for chroma
+while the seat is asked to rank craft — so a competent seat ranked it first without being soft.
+And a void round's findings were being printed by `critic_gate.py`, the most-read surface the
+mechanism has, which is exactly the reading §4 forbids; a void verdict now carries no readable
+flip list at all.*
 
 *v0.7 — 2026-09-03. **New §1.2: the eyes-only rule.** Anything that gates an art round must be a
 picture judged by eyes; instruments are builder's tools and gate nothing. Bought twice, both

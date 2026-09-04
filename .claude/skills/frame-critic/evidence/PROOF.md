@@ -26,11 +26,25 @@ half is a standing instruction to look at the crop, because a weak detector for 
 but outside the picture* would be worse than reading the verdict. **The first half reaches
 backwards into every comparative seat the floor session has run.**
 
-**A blind seat's ranking does not reproduce Rafe's culls — four rounds, four seats, four
-shuffles.** Three live wall rounds each **ranked the plant above the build**; the self-test
-**ranked a culled frame best of three and did not flag it.** Every one still came out FAIL with
-`SHIP: NONE`, which is the protective claim and is narrower than it sounds: **the gate rests on
-SHIP, not on RANK.**
+**A blind seat's ranking does not reproduce Rafe's culls — now five rounds, five seats, five
+shuffles, and the fifth voided a round.** Three live wall rounds each **ranked the plant above the
+build**; the self-test **ranked a culled frame best of three and did not flag it**; and the first
+round under the progress guards put the plant **first in the deck and flagged nothing in it** —
+`void-round-2026-09-03/`. Every one still came out with `SHIP: NONE`, which is the protective
+claim and is narrower than it sounds: **PASS needs SHIP; rank is only ever a filter on top.**
+
+That fifth round points at the **plant**, not the seat. `grey-walls.png` was culled for *chroma*
+and the seat is asked to rank *craft* — a plant whose defect is orthogonal to the question can be
+ranked first by a perfectly competent seat. `morgue/README.md` carried this as a stated risk (*the
+wall lane holds one entry*); the round turns it into a measurement. **The wall lane needs a plant
+culled on construction, and morgue entries are Rafe's culls.**
+
+**A VOID round's findings were being printed on the most-read surface there is.**
+`critic_gate.py` printed the flip list for every non-PASS verdict, void included — exactly the
+reading §4 forbids, found the first time a round actually voided. A void verdict now carries no
+readable `flip_list` at all (the findings are kept under `flip_list_withheld`, because deleting
+evidence is a different sin), so the gate, the stall report and the guards are correct **by
+construction** rather than by each reader's manners.
 
 ## 1. A real round on a real build — `rounds-during-construction/`
 
@@ -93,6 +107,12 @@ behind it. Three properties, all of which must hold together:
 | **2** | **staging the same bytes does not move it** (checked against a scratch `GIT_INDEX_FILE`, so the real staging area is never touched) |
 | **3** | writing `CRITIC-VERDICT.json` does not move it |
 
+⚠ **Property 3 used to skip itself** whenever a real `CRITIC-VERDICT.json` was on disk — which,
+once the mechanism had shipped, was always. The most important of the three stopped being checked
+at the exact moment it started mattering, and the transcript said `3 skipped` quietly enough that
+it read as fine. It moves the real verdict aside and puts it back now, the way `prove_gate.py`
+already did.
+
 Property 2 is why the id is content-addressed — a sha256 over `(path, git blob sha)` for the
 effective working tree — rather than a hash of `git diff HEAD`. Under the diff scheme, **committing
 the exact pixels that had just passed produced a different id**, and the gate refused a build it
@@ -122,27 +142,68 @@ the mechanism promises: **the gate rests on SHIP, not on RANK.**
 
 ## 4. The loop guards — `proofs/GUARD-*.txt`, `proofs/STALL-*.md`
 
-Driven against fixture histories (`guard-fixtures/`, built by `make_guard_fixtures.py`) through
-`--check-guards`, which runs the real `guards()` and writes a real stall report.
+**These measure progress, not rounds.** The signal is where the build ranked in that round's blind
+shuffled deck, normalised across deck sizes. Driven against fixture histories (`guard-fixtures/`,
+built by `make_guard_fixtures.py`) through `--check-guards`, which runs the real `guards()` and
+writes a real stall report.
 
-| fixture | guard | exit |
+| fixture | what it presents | exit |
 | --- | --- | --- |
-| `two-strikes/` | two consecutive FAILs whose flip lists carry **the same request, differently worded** | **3 — STOP** |
-| `five-round-park/` | five FAILs, unrelated flips, no PASS | **3 — STOP** |
-| `broken-judge/` | two consecutive VOIDs | **3 — STOP** |
-| `no-stop/` | FAIL, PASS, FAIL(same flip as round 1), FAIL(unrelated) | **0 — no stop** |
+| `broken-judge/` | two consecutive VOIDs | **3 — STOP broken-judge** |
+| `no-change/` | two consecutive FAILs on literally the same picture, rank improving between them | **3 — STOP no-change** |
+| `thrash/` | the same request twice, differently worded, rank going backwards | **3 — STOP thrash** |
+| `stall/` | a new best at round 1, then three readable rounds that never beat it | **3 — STOP stall** |
+| `ceiling/` | fifteen rounds that improve every single round | **3 — STOP ceiling** |
+| `no-stop/` | a lane doing well enough that nothing may fire | **0 — no stop** |
+
+**Each fixture fires its own guard and no other**, and the check order proves it: the guards are
+evaluated broken-judge → no-change → thrash → stall → ceiling, so a fixture reporting `stall` has
+demonstrated that the three before it stayed quiet. A history that fired two guards would prove
+nothing about either.
 
 **The negative control is the half usually skipped.** A guard that always fires is exactly as
 useless as one that never does, and much harder to notice: every round STOPs, everyone stops
-reading the reason, and the mechanism is gone. `no-stop/` puts three separate temptations in front
-of the guards — a repeated flip item, a run of FAILs, and a lane four rounds deep — and requires
-silence. The intervening PASS is what makes the repeated item legal: two FAILs with a PASS between
-them are not consecutive.
+reading the reason, and the mechanism is gone. `no-stop/` puts four temptations in front of the
+guards — a repeated flip item, a run of FAILs, a lane several rounds deep, and two consecutive
+FAILs sharing a flip item — and requires silence. **The last of those is the case the old
+two-strikes guard got wrong**: rounds 3 and 4 are consecutive FAILs sharing a flip item, but round
+4 sets a new best rank, so `thrash` must hold its fire. The advisory speaks; the line continues.
 
-The two-strikes fixture's wording is the point of it. Its two flip items overlap at **Jaccard
-0.692** on content words, against a threshold of **0.60 declared in `frame_critic.py` before any
-round ran**. Exact string equality would have matched neither, and a guard that silently never
-fires is the failure a guard cannot have.
+The `thrash` fixture's wording is the point of it. Its two flip items overlap at **Jaccard 0.692**
+on content words, against a threshold of **0.60 declared in `frame_critic.py` before any round
+ran**. Exact string equality would have matched neither, and a guard that silently never fires is
+the failure a guard cannot have.
+
+The `ceiling` fixture is deliberately awkward: fifteen rounds that improve *every* round, because
+that is the only lane for which the ceiling is the correct guard. It uses an unrealistically wide
+deck to buy fifteen strictly increasing ranks, and says so in its own docstring rather than
+leaving a reader to notice.
+
+### What this proof found in its own subject — the hash could not see the thing it was for
+
+The no-change guard first measured a **256-bit perceptual (difference) hash** of the delivered
+frame, with a declared floor of 2 bits. Calibrating it against real data before it shipped:
+
+| pair | dHash distance | signature Δ (mean / worst cell) |
+| --- | ---: | ---: |
+| a frame against itself | 0 bits | 0.000 / 0 |
+| `washed-slab-lane` → `tile-quantized-wear` | **2 bits — the entire floor** | 1.942 / 36 |
+| `tile-quantized-wear` → `keyline-floor` | 8 bits | 1.200 / 38 |
+
+Those first two are **consecutive real builds that Rafe culled for two different defects.** The
+guard would have stopped that lane on a round where the art genuinely moved. Raising the hash
+resolution did not help — the gap held at 0.4–0.9% of bits from 256 up to 4096 — because a
+gradient-sign hash asks *is this the same scene* and the honest answer was yes. Wrong question.
+
+The distance is a magnitude now: mean and worst-cell luminance difference over a 32×32 grid of the
+delivered frame, with **both** required to be small. Mean alone would miss a change confined to a
+corner — one tile of ninety moving twenty levels contributes about 0.2 to the mean — and a corner
+is exactly where a seat looks. The floors are 0.25 and 4 levels, five and nine times below the
+smallest real change measured.
+
+**That calibration is now a fixture, not a comment.** The `thrash` lane's two pictures *are* that
+pair, so if the measure ever stops telling them apart, `no-change` fires first and the fixture goes
+red.
 
 ## 5. What was NOT verified, and will not be claimed
 

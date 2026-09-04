@@ -8,6 +8,10 @@ The five-round park fired on a **scene** defect, not a floor defect: every round
 were walls, wall-caps, props and filled void. This is the disposition of every item in the five
 flip lists. Nothing is dropped; each line names where it goes.
 
+*(The guard that stopped this lane has since been struck — LOOP-PROCESS v0.8 replaced the round
+cap with four progress guards keyed on rank. The stop was correct and the reports stand; only the
+trigger that produced them is superseded.)*
+
 ---
 
 ## Floor lane — applied

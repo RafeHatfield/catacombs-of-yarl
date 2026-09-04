@@ -1,0 +1,52 @@
+==============================================================================
+FRAME CRITIC — lane art/progress-guards, round 1
+  commit   0a9f288699d5d01d9db643120903dde087f5a529
+==============================================================================
+== capture: tools/tier1_walls/capture.sh material src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json fc_standing
+   frame: tools/tier1_walls/evidence/fc_standing.png  sha256 c1f09e4be73aff2c
+   log:   tools/tier1_walls/evidence/fc_standing.log
+   build id 2eca8fc3fdf0a1ce0551e07d0f202098c43a8ed6628d4e2a7842a3371cdf7a0e  (+dirty)
+
+== deck (3 frames, shuffled, unlabelled) — cwd /Users/rafehatfield/.claude/frame-critic/deck-0940621f4f77606e
+   1.png  plant     .claude/skills/frame-critic/morgue/grey-walls.png
+   2.png  build     tools/tier1_walls/evidence/fc_standing.png
+   3.png  bar       /Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png
+   plant: grey-walls.png — Grey walls and ceiling; it looked better a few versions ago.
+
+== seat running (fresh claude -p, no repo access)...
+
+== the seat said
+   RANK    1 > 2 > 3
+   SHIP    NONE
+
+---
+   FLAGGED 2, 3
+
+Image 2's fault is glance-obvious once you look left of the figure: the floor at (300, 515) reads luminance 144 wh
+   WORST   3 — It is not the same discipline, and it fails the frame's own rules before you get to craft. There is no light m
+   BEST    1 — Two things in it are authored rather than generated. First, the damage crosses the grid. A hairline crack ente
+
+   plant was slot 1: ranked_last=False named_worst=False flagged=False shipped=False -> MISSED
+   build was slot 2
+
+   ⚠ THE PLANT OUTRANKED THE BUILD. A blind seat put a frame Rafe personally
+     culled — "Grey walls and ceiling; it looked better a few versions ago." — above this one.
+     That is a statement about the build, not about the judge, and it is not
+     part of the verdict. It is the most important line in this round.
+
+== progress
+   rank      2 of 3   score 0.50
+   best so far (none)
+   the bar ranked 3; near-bar YES (slack 1)
+   NO APPROVED FRAME IN THE DECK — that half of the bar is untested this round.
+   picture moved (first round) from the previous readable round
+
+*** VOID ***
+The seat would ship, or did not flag, a frame Rafe personally culled:
+   grey-walls.png — "Grey walls and ceiling; it looked better a few versions ago."
+LOOP-PROCESS §4: the round is void and its findings are NOT READ.
+
+written: CRITIC-VERDICT.json
+         .claude/skills/frame-critic/history/r001-art_progress-guards.json
+
+[exited with code 2]
