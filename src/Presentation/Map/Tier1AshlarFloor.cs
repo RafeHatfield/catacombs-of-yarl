@@ -76,6 +76,8 @@ public static class Tier1AshlarFloor
         public int WearSalt = 3008, ChipSalt = 3009, WearLo = 70, WearHi = 200, ChannelWear = 235;
         public double ChipRate = 0.55, DressingKeep = 0.45;
         public int JointBreakSalt = 3010;
+        public double OcclusionFloor = 22.0;
+        public readonly List<(string Side, int Px, int Py, int Layers, int Rungs)> OcclusionCheck = new();
         public double[] JointFill = { 0.0, 0.0, 1.0, 2.0 };
         public double[] JointBreak = { 0.0, 0.0, 0.20, 0.45 };
         public int[][] WearOctaves = System.Array.Empty<int[]>();
@@ -683,6 +685,32 @@ public static class Tier1AshlarFloor
             || Open(x - 1, y) >= 3 || Open(x + 1, y) >= 3;
     }
 
+    /// <summary>
+    /// Alpha -> whole ladder rungs of darkening. ONE definition, two painters; the composer's
+    /// twin is `occlusion_rungs` in `tools/tier1_floors/compose_ashlar.py`, and the two are tied
+    /// together by `occlusion_check` in the manifest rather than by this comment.
+    ///
+    /// `layers` is the ambient-anchored stack (RULED 2026-09-02) — the boundary re-drawn where
+    /// the lamp does not reach. Under the blend that compounded as 1-(1-a)^n and it still does;
+    /// what changed is that the result is quantised. Three layers reach 22.11, which is why the
+    /// ladder needed two more rungs below (see PALETTE_EXTEND_BELOW).
+    ///
+    /// ANCHORED AT THE MEDIAN, NOT AT THE PIXEL. The blend darkened a bright stone more than a
+    /// dark one because a blend is a ratio. Occlusion is FORM and a form does not vary with the
+    /// value of what it crosses — which is also what makes it exactly representable, since a
+    /// fixed number of rungs off a ladder value is a ladder value.
+    /// </summary>
+    private static int OcclusionRungs(Config c, double alpha, int layers)
+    {
+        double rung = c.Ladder[1] - c.Ladder[0];
+        double eff = 1.0 - System.Math.Pow(1.0 - alpha, layers);
+        // FLOOR(x + 0.5), NOT Round(). C#'s Math.Round is away-from-zero at a tie and numpy's is
+        // to-even, so a rung landing exactly on a half would be 5 in the engine and 4 in the
+        // composer with neither able to be called wrong — the same knife-edge WEAR_AGES was
+        // snapped to four values to avoid. One expression, both painters, no tie-break at all.
+        return (int)System.Math.Floor(eff * (c.LumMedian - c.OcclusionFloor) / rung + 0.5);
+    }
+
     private static int LadderIndex(Config c, double v)
     {
         int best = 0;
@@ -697,6 +725,22 @@ public static class Tier1AshlarFloor
 
     public static string Apply(TileLayer tileLayer, GameMap map, string manifestResPath,
                                System.Func<int, int, bool> isChannel)
+        => Apply(tileLayer, map, manifestResPath, isChannel, null);
+
+    /// <summary>
+    /// As above, and paints §12.1's contact occlusion into the floor's own pixels.
+    ///
+    /// The boundary used to be an alpha-blended sprite laid over this floor, and compositing it
+    /// took the family's nine authored albedo values to a hundred and thirty-two — the wall cap's
+    /// disease (107 -> 9) arriving on the floor through a layer nobody was measuring. Here it is
+    /// a subtraction in WHOLE LADDER RUNGS, so the delivered floor carries the family's palette
+    /// and nothing else. The sprite is still the datum: its alpha is read per pixel and now says
+    /// how many rungs rather than how much to blend, which keeps the along-edge jitter that is
+    /// the only thing holding the seam off a straight constant-pitch line.
+    /// </summary>
+    public static string Apply(TileLayer tileLayer, GameMap map, string manifestResPath,
+                               System.Func<int, int, bool> isChannel,
+                               OcclusionBake? bake)
     {
         var cfg = Load(manifestResPath, out string status);
         if (cfg == null) return $"[Tier1] ashlar floor: NOT APPLIED — {status}";
@@ -733,6 +777,31 @@ public static class Tier1AshlarFloor
         var atlasCache = new Dictionary<int, Image>();
         var paintFail = SelfCheck(cfg, grainImg, atlasCache);
         if (paintFail != null) return $"[Tier1] ashlar floor: REFUSED — {paintFail}";
+
+        // THE OCCLUSION CROSS-CHECK. The paint check cannot cover this one: it compares composer
+        // against engine on a field with no map in it, and occlusion is decided by WALL
+        // ADJACENCY. So the two derivations are tied together the way the edge families are.
+        // §4.2 — a duplicate with an enforcement is a different thing from a duplicate with a
+        // comment, and this is what goes red if the two ever disagree about a rung.
+        int occChecked = 0;
+        if (bake != null && cfg.OcclusionCheck.Count > 0)
+        {
+            var order = new[] { "N", "E", "S", "W" };
+            foreach (var (side, px, py, layers, expect) in cfg.OcclusionCheck)
+            {
+                int si = System.Array.IndexOf(order, side);
+                var alphaImg = si >= 0 ? bake.Value.AlphaBySide[si] : null;
+                if (alphaImg == null)
+                    return $"[Tier1] ashlar floor: REFUSED — occlusion cross-check has no sprite "
+                         + $"for side {side}; the composer measured one.";
+                int got = OcclusionRungs(cfg, alphaImg.GetPixel(px, py).A, layers);
+                if (got != expect)
+                    return $"[Tier1] ashlar floor: REFUSED — occlusion cross-check failed at "
+                         + $"{side}({px},{py}) layers={layers}: composer says {expect} rungs, "
+                         + $"engine says {got}.";
+                occChecked++;
+            }
+        }
 
         // WHERE PEOPLE ACTUALLY WALK — derived from the level graph, once, before anything is
         // laid. The review scenes carry no Room records, so the map-only derivation is used: the
@@ -814,7 +883,7 @@ public static class Tier1AshlarFloor
                   + "%) - round 21 measured 34% on the per-tile field\n");
 
         var crackCache = new Dictionary<(int, int), List<(int X, int Y)>>();
-        int laid = 0, channel = 0, missing = 0, polished = 0, mouths = 0;
+        int laid = 0, channel = 0, missing = 0, polished = 0, mouths = 0, occCells = 0;
 
         // §4.2: A STEP THAT DOES NOTHING MUST GO RED. If the shader fails to load, the floor
         // still lays and still looks almost right — the chroma and the joints carry on — and the
@@ -843,9 +912,13 @@ public static class Tier1AshlarFloor
 
             bool mouthHere = IsMouth(map, pos.X, pos.Y);
             if (mouthHere) mouths++;
+            (int SideMask, int Layers)? occHere = null;
+            if (bake != null && bake.Value.Cells.TryGetValue((pos.X, pos.Y), out var oc))
+            { occHere = oc; occCells++; }
             var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw, fe, traffic,
                                    isChannel, crackCache, mouthHere, out bool anyWorn,
-                                   out var polishImg);
+                                   out var polishImg, occHere,
+                                   bake?.AlphaBySide);
 
             // NO FLIP, NO ROTATION. Orientation is meaning on an edge-matched tile, and the
             // coursing has a direction: turning one would stand its bed joints on end.
@@ -873,6 +946,7 @@ public static class Tier1AshlarFloor
              + $"families={cfg.Families} seed={cfg.Seed} atlases={atlasCache.Count} "
              + $"edge_check={cfg.EdgeCheck.Count}/OK stone_check={cfg.StoneCheck.Count}/OK "
              + $"paint_check={cfg.PaintCheck.Count}/OK "
+             + $"occlusion={(bake == null ? "SPRITE(not baked)" : $"baked:{occCells}/check:{occChecked}/OK")} "
              + $"lines={cfg.Lines.Count} mouths={mouths} polished={polished}{(polishShader == null ? "/SHADER-MISSING" : "")} "
              + $"traffic=spine:{tf.SpineLength:F0}/routes:{tf.Routes} "
              + $"manifest={manifestResPath}\n" + sb.ToString().TrimEnd();
@@ -889,7 +963,9 @@ public static class Tier1AshlarFloor
     private static Image PaintCell(Config cfg, Image atlas, Image grainImg, int tx, int ty,
                                    int fw, int fe, byte[,]? traffic, System.Func<int, int, bool>? isChannel,
                                    Dictionary<(int, int), List<(int X, int Y)>> crackCache,
-                                   bool isMouth, out bool anyWorn, out Image polish)
+                                   bool isMouth, out bool anyWorn, out Image polish,
+                                   (int SideMask, int Layers)? occlusion = null,
+                                   Image?[]? occlusionAlpha = null)
     {
         var drops = new int[Courses];
         for (int c = 0; c < Courses; c++)
@@ -1269,6 +1345,37 @@ public static class Tier1AshlarFloor
             }
         }
 
+        // ================= §12.1's CONTACT OCCLUSION, IN RUNGS =================
+        //
+        // LAST, because the sprite it replaces was drawn last — over the stones, the joints and
+        // the cracks alike. Order is load-bearing in this painter (see the flatten/chip note
+        // above) and the safest reproduction of a layer that sat on top of everything is a term
+        // that runs after everything.
+        //
+        // The sides composite the way the sprites did: each was a separate draw, so their alphas
+        // multiply through their complements and a corner carrying two edges is darker than
+        // either. `layers` then compounds that the same way. What is new is only the last step —
+        // the result is whole rungs, and a whole number of rungs off a ladder value is a ladder
+        // value, so the snap below has nothing left to invent.
+        if (occlusion is { } occ && occlusionAlpha != null)
+        {
+            for (int py = 0; py < T; py++)
+                for (int px = 0; px < T; px++)
+                {
+                    double keep = 1.0;
+                    for (int side = 0; side < 4; side++)
+                    {
+                        if ((occ.SideMask & (1 << side)) == 0) continue;
+                        var img = occlusionAlpha[side];
+                        if (img == null) continue;
+                        keep *= 1.0 - img.GetPixel(px, py).A;
+                    }
+                    if (keep >= 1.0) continue;
+                    raw[py, px] -= OcclusionRungs(cfg, 1.0 - keep, occ.Layers)
+                                   * (cfg.Ladder[1] - cfg.Ladder[0]);
+                }
+        }
+
         // ================= THE CHROMA CHANNEL =================
         //
         // Step two of the pre-declared ladder, after the joint lever was discharged BY PROOF: a
@@ -1534,6 +1641,7 @@ public static class Tier1AshlarFloor
             var pba = new List<double>();
             foreach (var v in mat.GetProperty("polish_by_age").EnumerateArray()) pba.Add(v.GetDouble());
             cfg.PolishByAge = pba.ToArray();
+            if (mat.TryGetProperty("occlusion_floor", out var of)) cfg.OcclusionFloor = of.GetDouble();
             cfg.PolishExp = mat.GetProperty("polish_exp").GetDouble();
             cfg.PolishGain = mat.GetProperty("polish_gain").GetDouble();
             var dfl = new List<double>();
@@ -1658,6 +1766,13 @@ public static class Tier1AshlarFloor
                 cfg.EdgeCheck.Add((e.GetProperty("x").GetInt32(), e.GetProperty("y").GetInt32(),
                                    e.GetProperty("salt").GetInt32(),
                                    e.GetProperty("family").GetInt32()));
+            if (root.TryGetProperty("occlusion_check", out var occChk))
+                foreach (var e in occChk.EnumerateArray())
+                    cfg.OcclusionCheck.Add((e.GetProperty("side").GetString() ?? "",
+                                            e.GetProperty("px").GetInt32(),
+                                            e.GetProperty("py").GetInt32(),
+                                            e.GetProperty("layers").GetInt32(),
+                                            e.GetProperty("rungs").GetInt32()));
             foreach (var e in root.GetProperty("stone_check").EnumerateArray())
                 cfg.StoneCheck.Add((e.GetProperty("x").GetInt32(), e.GetProperty("k").GetInt32(),
                                     e.GetProperty("kind").GetInt32(), e.GetProperty("drop").GetInt32(),

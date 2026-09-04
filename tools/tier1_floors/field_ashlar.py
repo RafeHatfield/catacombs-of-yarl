@@ -86,7 +86,7 @@ def stone_worn(worn, kind, x, y):
     return bool(worn(x, y))
 
 
-def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
+def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None, occlusion=None):
     """Lay a w x h field, then paint the material onto it one stone at a time.
 
     The tiles supply the bond. Everything else — a stone's value and a stone's grain — is chosen
@@ -94,6 +94,11 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
     side of a boundary paint the identical material onto the identical stone.
 
     `defect` names a plant; see `PLANTS`.
+
+    `occlusion` is `(x, y) -> (side_mask, layers)` or None: §12.1's contact boundary, painted into
+    the floor's own pixels in WHOLE LADDER RUNGS rather than blended over them as a sprite. None
+    means a field with no walls in it, which is what every instrument that lays a bare field
+    wants; the census in `measure_delivered_palette.py` supplies one.
     """
     step = (mat["lum_hi"] - mat["lum_lo"]) / (CF.PALETTE_LEVELS - 1)
     amp = max(mat["grain_mad"], 1.0)
@@ -463,6 +468,14 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             # are not, and clipping at `lum_lo` here would have pinned the reference painter to
             # 75.02 while the engine — which has always clipped at `Ladder[0]` — went to 48.56.
             # The paint check would have caught it as a 96-sample disagreement with no cause.
+            #
+            # §12.1's CONTACT OCCLUSION GOES IN FIRST — last of the value terms, over stones,
+            # joints and cracks alike, which is where the sprite it replaces was drawn. Whole
+            # rungs off a ladder value is a ladder value, so the quantise has nothing to invent.
+            if occlusion is not None:
+                _oc = occlusion(x, y)
+                if _oc is not None and _oc[0]:
+                    L = L - CA.occlusion_block(_oc[0], _oc[1], mat) * step
             L = CF.quantise(np.clip(L, mat["ladder"][0], mat["ladder"][-1]), mat["ladder"])
             # (1) THE SPECULAR LANE, recorded for the instruments. The shader consumes it in the
             # engine; here it is returned so the reference painter can be measured on the same
