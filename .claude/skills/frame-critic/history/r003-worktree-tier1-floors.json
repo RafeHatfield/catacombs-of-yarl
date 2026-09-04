@@ -1,0 +1,104 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-tier1-floors",
+ "round": 3,
+ "surface": "floor",
+ "commit": "f97ffec13e4061e66866370aa7eb05e27f5494aa",
+ "dirty": true,
+ "build_id": "f8745c18dc354dd6b22db1bd7f71d98c5fe8ec81bb69d857cd3ea1c91b1b01cb",
+ "timestamp": "2026-09-03T15:41:06",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/fc_standing.png",
+  "sha256": "5c5d5bbf421f34f9bc78c143858d1b49fe70cb6089459854cd317bd2f1dfd77f",
+  "log": "tools/tier1_floors/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier1-floors --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_route_onroute.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-tier1-floors-r3",
+  "slots": {
+   "1": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/fc_standing.png",
+    "sha256": "5c5d5bbf421f34f9bc78c143858d1b49fe70cb6089459854cd317bd2f1dfd77f",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "3": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/tile-quantized-wear.png",
+    "sha256": "2c097a288e54de45704834cedb319201278f83cd9e83bf2083ac317f502c169a",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 3,
+  "file": "tile-quantized-wear.png",
+  "sha256": "2c097a288e54de45704834cedb319201278f83cd9e83bf2083ac317f502c169a",
+  "culled_by": "Rafe, device walk, 2026-09-02",
+  "verbatim": "one tile worn, the one next to it not \u2014 that's not how it works.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "every_frame_flagged": true
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The props are constructed rather than decorated. The barrel at x\u2248113\u2013145, y\u2248188\u2013215: the top face is a lighter tan ellipse with a 1px cream rim highlight running only along its upper-left arc, and the staves below darken toward both silhouette edges, so the object reads as a cylinder with a lid and not a brown circle. The crates at x\u224860\u2013120, y\u22480\u201375 resolve the same way \u2014 a lit top plank face over a darker vertical slat face \u2014 and the highlight sits upper-left on both props, so one light direction governs the whole frame. The bottom wall run (y\u2248252) terminates the floor in a single 1px cream cap line before the dark brick face, which is the cheapest possible way to give a wall height in top-down and it works. The palette is disciplined: 854 unique colours in the entire 384\u00d7288 frame, meaning the material was authored, not filtered.",
+  "WORST_WHY": "There is no floor material in the frame. The entire lit area is a flat magenta field overlaid with black horizontal lines on an 8px period \u2014 the same lines, at the same frequency, from the top of the room to the bottom of the corridor. No stones, no joints, no seams, no dirt, no debris, nothing that says anyone ever walked on it. The only variation is brightness. On top of that the stripe pattern breaks: I measured the dark-row phase across the lit floor and inside the rectangle x\u2248440\u2013503, y\u2248325\u2013395 the dark rows land one pixel higher (phase 4/6) than the identical pattern immediately left of x=440 and right of x=503 (phase 5/7). It shows as a rectangular block of misaligned stripes hanging in the middle of the lit room with hard top and bottom edges. The corridor leaving the bottom (x\u2248510\u2013575) is the same stripes at a lower value, so corridor and chamber are the same surface. The wall tiles are near-black squares each carrying one small lighter square dot in the same relative position. The character sprite is the only object anybody drew.",
+  "FLAGGED": "1, 2, 3",
+  "RANK": "2 > 3 > 1",
+  "BEST": "2",
+  "WORST": "1",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "Delete the horizontal stripe overlay entirely. It is not a floor texture; it is a scanline artifact, and it is the same on every surface in the frame.",
+  "Replace it with an actual floor: cut slabs with joints that break bond between courses, varying joint depth along a single run, and per-stone value variation of at least 3 steps so no two adjacent stones match.",
+  "Fix the misaligned block at x\u2248440\u2013503, y\u2248325\u2013395 \u2014 its pattern is one pixel out of phase with the floor around it. Whatever tile-placement or offset bug caused it, that seam is visible at a glance.",
+  "Repitch the lit palette off saturated magenta. A carried lamp is warm and narrow-band; a floor lit to RGB \u2248 (255,20,140) reads as a coloured stage light, not fire.",
+  "Differentiate the corridor at x\u2248510\u2013575 from the chamber by material, not brightness: narrower stones, a worn centre track, a threshold line where the two floors meet.",
+  "Give the wall tiles a top surface. Right now they are black squares with a single dot; they need a lit cap edge on the sides facing the figure and a dark body, so the wall reads as having thickness.",
+  "Put the four hundred years of repair on screen inside the lit radius: driven pins in a cracked slab, a rope lashing, a hide patch over a hole, salvaged timber pinned across a gap. The lit area is currently empty floor."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r003-worktree-tier1-floors-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

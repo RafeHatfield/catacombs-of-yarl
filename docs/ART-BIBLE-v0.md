@@ -1,6 +1,6 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.12 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
+**Status: v0.13 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
 or ruled at the gate on them (§8.3); §6.5 and §3.1 are measured against the asset bar and ruled,
 awaiting the device gate; §3 remains under test and ratifies at that gate. Everything else in
 this document still has not been derived.**
@@ -1615,6 +1615,10 @@ hereby legal.
 **No stone may cross a horizontal tile boundary, so a full-width joint sits at exactly one tile
 pitch — for ever, in every region, in any floor whose stone values are addressed at runtime.**
 
+**It has a twin.** §13.7's *deflection theorem* runs the same argument in the other direction: a
+treatment keyed to WORLD position cannot register against structure keyed at RUNTIME. Read the two
+together — one says what the bond may not do, the other says what may not consult the bond.
+
 The proof is short and does not depend on the art. Four tiles meet at a grid corner. A tile shares
 one boundary family with its eastern neighbour and one with its southern, and shares **nothing
 with its diagonal**. So a stone covering a grid corner is seen by four tiles that have no common
@@ -2189,9 +2193,41 @@ question a future session would otherwise re-open with generations.
 - **Nothing on this platform is seed-reproducible** — measured on every surface tried. The ledger
   therefore stores **images, not parameters**, and that is process law rather than preference
   (§6.4's evidence note says the same thing from the other end: a parameter row is not evidence).
+- **A world-keyed treatment cannot register against runtime-keyed structure.** The deflection
+  theorem, below — the corner theorem's twin, and it is likewise permanent.
+
+**THE DEFLECTION THEOREM — RULED (Rafe, 2026-09-03), and it is a PLATFORM THEOREM.**
+
+*A treatment keyed to world position cannot register against structure keyed at runtime. Any
+attempt to make it do so reintroduces the lattice.*
+
+The proof is the corner theorem's, run in the other direction. A crack, a stain, a scatter of
+debris — anything that must look the same to every tile it crosses — has to be a **pure function
+of world position**; that is what makes each tile compute the identical mark, and it is the same
+discipline §8.3.3 imposes on the stones. But the **bond is not a world function**: a tile's course
+splits, drop pattern and stone origins come from the atlas **variant the map picks for that cell at
+runtime**. So the two are addressed in different spaces, and a treatment that consulted the real
+joints would compute a different mark depending on which tile drew it — with the disagreement
+landing exactly on the tile boundaries. **The fix for one defect would draw §8.3.1's grid tell.**
+
+The occasion was a frame critic asking, correctly, for cracks that deflect at joints — *"a crack
+that crosses six slabs in one smooth curve without registering a single joint reads as a line drawn
+over the floor, not damage in it."* The note is right about the picture and unbuildable as stated.
+
+**THE SUBSTITUTE IS LOCAL, AND IT STANDS.** What a world-keyed treatment *may* consult is
+information local to the pixel it is painting, which every painter already holds and which both
+tiles either side of a boundary already agree about by edge-family construction. For the crack
+that is `CRACK_SPALL`: where it passes through a joint the arrises either side break away — wide
+at the bond, narrow across the slab, which is how a fracture actually crosses one. It registers
+the joint at the place the critic said nothing registered it, without ever asking where the joints
+are.
+
+**DO NOT REOPEN DEFLECTION** — for cracks or for any successor treatment — without first changing
+the constraint that forbids it. §8.3.3's mitigation is the same shape and is the one that remains:
+a mark may not *consult* the bond, but incident may sit *over* it, world-placed.
 
 Sources: PRs #142 (probe 6.4 surface audit), #144 (wall gauntlet), #145 (tiles-pro audit), #146
-(composition spike).
+(composition spike); `c3d05980` (the floor consolidation pass, deflection theorem).
 
 ---
 
@@ -2366,6 +2402,18 @@ Recorded so they are not re-derived; deliberately not law.
 ---
 
 *Revision history:*
+
+- *v0.13 — 2026-09-03. **The deflection theorem — the corner theorem's twin, recorded in §13.7.**
+  Ruled a PLATFORM THEOREM at the gate: a treatment keyed to WORLD position cannot register
+  against structure keyed at RUNTIME, and any attempt to make it reintroduces the lattice. The
+  proof is §8.3.3's, run backwards — a mark that must look the same to every tile it crosses has
+  to be a pure function of world position, while the bond comes from the atlas variant the map
+  picks at runtime, so a mark that consulted the real joints would disagree with itself exactly
+  on the tile boundaries. Occasioned by a frame critic asking, correctly and unbuildably, for
+  cracks that deflect at joints. **The substitute is local and stands:** `CRACK_SPALL` breaks the
+  arrises where a crack crosses a joint, registering the joint without ever asking where it is.
+  Deflection is not to be reopened without changing the constraint. §8.3.3 gains a pointer to
+  its twin. See `docs/FLOOR-CONSOLIDATION-PASS.md` and LOOP-PROCESS §4.3.*
 
 - *v0.12 — 2026-08-27. **The sighted round's device gate: FAIL, and two laws come out of it.**
   Rafe walked the rounds-4/5 build on the phone and overruled the stills. **§3's status trail

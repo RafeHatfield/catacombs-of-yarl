@@ -173,7 +173,7 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
                     # and both tiles either side of a spanning stone dress it identically.
                     if defect != "no_marks":
                         ext = CA.stone_extent(wf, e, kind, c, drops[c], split_i)
-                        for (u, v, depth) in CA.stone_marks(key, seed, ext, worn=is_worn,
+                        for (u, v, depth) in CA.stone_marks(key, seed, ext, worn=is_worn, extent_world=(x * T, y * T),
                                                             wear=w01):
                             lx, ly = u + ox, v + oy
                             if 0 <= lx < T and 0 <= ly < T and m[ly, lx]:
@@ -350,7 +350,13 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
 
                 # (2) DISHING ALONG THE LINE — deepest on the centre-line, gone by the shoulder.
                 # The threshold hollows below are untouched and compose on top of it.
-                L = np.where(stone_px, L - CA.lane_dish_block(ldist, wxb, wyb, seed) * step, L)
+                # THE DISH STEPS. A smooth radial subtraction is airbrush on a quantised
+                # surface — the critic's "large soft value-blobs that follow no geometry".
+                # Rounded to whole rungs it reads as depth, which is what it is.
+                _dish = CA.lane_dish_block(ldist, wxb, wyb, seed)
+                if CA.DISH_QUANTISE:
+                    _dish = np.round(_dish)
+                L = np.where(stone_px, L - _dish * step, L)
 
                 # (3) MARGIN GRIT — the swept lane left conspicuously bare BETWEEN gritty edges.
                 grit = CA.grit_block(ldist, wxb, wyb, seed) & stone_px
@@ -394,7 +400,19 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
                     L = np.where(stone_px & (ro > 0.5), L - step, L)
                 hsh = (CA._mix_np(xx + x * T, yy + y * T, CA.CHIP + seed) % 1000) / 1000.0
                 chip = stone_px & (near > 0) & (hsh < CA.CHIP_RATE * near)
-                L = np.where(chip, L - near * step * 1.6, L)
+                # A CHIPPED ARRIS IS JOINT, NOT A BLEND ON THE WAY TO ONE. Subtracting a
+                # fraction of a rung put intermediate values along every open joint, which is the
+                # two-to-three pixel ramp the critic saw the slab edges dissolve into. The stone
+                # that has broken away is gone: the pixel takes the value of the joint beside it.
+                if CA.CHIP_TAKES_JOINT:
+                    _jv = np.zeros((T, T), dtype=float)
+                    _jv[1:, :] = np.maximum(_jv[1:, :], np.where(jm_pix[:-1, :], L[:-1, :], 0))
+                    _jv[:-1, :] = np.maximum(_jv[:-1, :], np.where(jm_pix[1:, :], L[1:, :], 0))
+                    _jv[:, 1:] = np.maximum(_jv[:, 1:], np.where(jm_pix[:, :-1], L[:, :-1], 0))
+                    _jv[:, :-1] = np.maximum(_jv[:, :-1], np.where(jm_pix[:, 1:], L[:, 1:], 0))
+                    L = np.where(chip & (_jv > 0), _jv, L)
+                else:
+                    L = np.where(chip, L - near * step * 1.6, L)
                 chips[y * T:(y + 1) * T, x * T:(x + 1) * T] = chip
 
             # THE CRACK NETWORK, drawn last so it crosses stones and joints alike. Not an
@@ -417,8 +435,26 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
                 px_set = set()
             else:
                 px_set = CA.crack_pixels(x, y, seed, crack_cache)
+            # AND THE ARRISES SPALL WHERE IT CROSSES A JOINT — the crack is wide at the bond and
+            # narrow across the slab, which is the only way it registers the joints it crosses
+            # under a world-keyed polyline. See compose_ashlar.crack_spall.
+            px_set = set(px_set) | CA.crack_spall(
+                px_set, lambda a, b: bool(jm[a, b]),
+                lambda a, b: 0 <= a < T and 0 <= b < T and not jm[a, b])
             for (ly, lx) in px_set:
-                L[ly, lx] = crack_v
+                # THE CRACK VARIES ALONG ITS LENGTH. One value end to end is a drawn line; a
+                # fracture is deepest where it has opened. Keyed on world position, so both tiles
+                # either side of a boundary agree about the same pixel.
+                _wx, _wy = x * T + lx, y * T + ly
+                _v = ((CA.mix(_wx, _wy, CA.CRACK_VARY_SALT + seed) % 1000) / 1000.0 - 0.5) * 2.0
+                L[ly, lx] = crack_v * (1.0 + _v * CA.CRACK_DEPTH_VARY)
+                # AND A SECTION. One pixel of stone beside the channel is a LIP — broken edge,
+                # lighter than the flat face it came from, on the side the crack's own position
+                # chooses so it stays consistent along a run instead of alternating.
+                _side = (CA.mix(_wx // 4, _wy // 4, CA.CRACK_LIP_SALT + seed) % 2)
+                _lx2 = lx + (1 if _side else -1)
+                if 0 <= _lx2 < T and not jm[ly, _lx2] and (ly, _lx2) not in px_set:
+                    L[ly, _lx2] = L[ly, _lx2] + CA.CRACK_LIP * step
                 chr_blk[ly, lx] = 0.0        # a crack is enclosure, and enclosure has no hue
                 cracks[y * T + ly, x * T + lx] = True
 
@@ -438,6 +474,9 @@ def assemble(w, h, seed, mat, worn=None, defect=None, traffic=None, mouth=None):
             _lane = CA.lane_polish_block(ldist, ltx, lty, wxb, wyb, seed)
             _bottom = mat["ladder"][0]
             _filled = np.clip((L - _bottom) / max(mat["lum_median"] - _bottom, 1e-6), 0.0, 1.0)
+            # A CRACK IS LIT LIKE EVERYTHING ELSE IT IS CUT INTO. Cracks used to take a flat
+            # zero polish, which made them the darkest thing in the frame exactly where the lane
+            # is brightest. A recess catches less light, not none.
             polish[y * T:(y + 1) * T, x * T:(x + 1) * T] = np.where(
                 (cls != 0), _lane, _lane * np.maximum(_filled, CA.JOINT_POLISH_FLOOR))
 
@@ -1123,7 +1162,7 @@ def chroma_read(img, traffic, w, h):
                 parity_ratio=float(max(e, o) / max(min(e, o), 1e-6)))
 
 
-def erosion_read(img, joints, traffic, w, h):
+def erosion_read(img, joints, traffic, w, h, cracks=None, dressed=None):
     """FORM AS EROSION, read off the pixels: does the grain run WITH the route?
 
     A joint that survives is a dark line. Along a north-south corridor the crossed BED joints pack
@@ -1133,7 +1172,39 @@ def erosion_read(img, joints, traffic, w, h):
     `flatten` is the other half: a walked stone loses its crown, so its faces lose value spread.
     """
     L = np.asarray(img).astype(float)[..., 0]
-    med = float(np.median(L[~joints]))
+    # THE CROWN, NOT EVERY PIXEL INSIDE THE STONE'S OUTLINE. `spread_trodden` asks one question —
+    # has the walked stone lost its CROWN — and it was asking it of a population that also held
+    # every pixel cut INTO that crown: the cracks, the tool marks, and the chipped arrises.
+    #
+    # That was survivable while a chip was a fraction of a rung. This pass ruled that a chipped
+    # arris IS JOINT — the stone that broke away is gone, so the pixel takes the joint's own value
+    # — and the same ruling has to reach the instrument too: a pixel that is joint cannot be
+    # counted as face. It was not, and the plant fell from 1.06x to 1.14x of the 1.20x it needs.
+    #
+    # ⚠ THIS DID NOT MAKE THE PLANT FIRE, AND IT IS NOT MEANT TO. `no_erosion` was ALREADY SILENT
+    # before this pass — 1.162x on HEAD's own code, measured — and the threshold has not been
+    # touched to close the gap. What the narrowing buys is an honest population; the finding
+    # underneath it went to the gate: the crown now carries several EROSION-INDEPENDENT value
+    # layers (the lane dish, the margin grit, the tool marks) that the 1.20x threshold predates,
+    # so the flattening half of this plant is diluted by features with plants of their own. The
+    # directional half is untouched and total — grain 1.17 live against -0.01 nulled.
+    #
+    # RULED (Rafe, 2026-09-03): HOLD. DEFORM_FLATTEN is not restored — the only lever that clears
+    # the bar reopens the eye-culled value-blob defect, and a lever proven on spread is not
+    # licensed back when its picture was culled. The spread half of the check is annotated
+    # SUPERSEDED-BY-GATE and demoted to a builder's tool; see the plant runner below.
+    #
+    # `boundary_step` already excludes the cracks, for this reason and in these words: "counting
+    # cracks as stone, one feature later, and it nearly sent a good floor back for a feature."
+    #
+    # The exclusion is not arm-dependent — the crown population is the SAME 10,313 pixels in the
+    # live and null-erosion arms — so this narrows what is measured without tilting the comparison.
+    faces = ~joints
+    if cracks is not None:
+        faces &= ~cracks
+    if dressed is not None:
+        faces &= ~dressed
+    med = float(np.median(L[faces]))
     bedj = np.zeros(joints.shape, bool)
     bedj[:, 1:-1] = joints[:, :-2] & joints[:, 2:]
     headj = np.zeros(joints.shape, bool)
@@ -1167,8 +1238,8 @@ def erosion_read(img, joints, traffic, w, h):
         return float(((med - L[hh].mean()) - (med - L[b].mean())) / step)
 
     return dict(grain_ratio_trodden=ratio(hot), grain_ratio_off=ratio(cold),
-                spread_trodden=float(L[(~joints) & hot].std()) if hot.any() else None,
-                spread_off=float(L[(~joints) & cold].std()) if cold.any() else None)
+                spread_trodden=float(L[faces & hot].std()) if hot.any() else None,
+                spread_off=float(L[faces & cold].std()) if cold.any() else None)
 
 
 def erosion_plant(w, h, seed, mat):
@@ -1177,13 +1248,13 @@ def erosion_plant(w, h, seed, mat):
     tr[w // 2 - 1:w // 2 + 1, :] = 255
     out = {}
     for name in (None, "no_erosion"):
-        img, j, _, _, _ = assemble(w, h, seed, mat, defect=name, traffic=tr)
-        out[name or "live"] = erosion_read(img, j, tr, w, h)
+        img, j, _, ck, dr = assemble(w, h, seed, mat, defect=name, traffic=tr)
+        out[name or "live"] = erosion_read(img, j, tr, w, h, cracks=ck, dressed=dr)
     keep = CA.DEFORM_ANISO
     CA.DEFORM_ANISO = 0.0
     try:
-        img, j, _, _, _ = assemble(w, h, seed, mat, traffic=tr)
-        out["isotropic"] = erosion_read(img, j, tr, w, h)
+        img, j, _, ck, dr = assemble(w, h, seed, mat, traffic=tr)
+        out["isotropic"] = erosion_read(img, j, tr, w, h, cracks=ck, dressed=dr)
     finally:
         CA.DEFORM_ANISO = keep
     return out
@@ -1216,6 +1287,27 @@ def run_plants(w, h, seed, mat):
                      why="wear multipliers set to 1.0: the channel is declared and delivers "
                          "nothing", measured=cm))
 
+    # ================= no_erosion IS SUPERSEDED BY THE GATE =================
+    #
+    # RULED (Rafe, 2026-09-03): hold, and do not restore DEFORM_FLATTEN. The bar predates the
+    # floor's current layer count, and the only lever that clears it REOPENS THE EYE-CULLED
+    # VALUE-BLOB DEFECT. Measurable-vs-effective, stated as a rule: **a lever proven on spread is
+    # not licensed back when its picture was culled.** The gate verdict outranks the instrument
+    # bar, so this check is annotated superseded and demoted to a builder's tool — it prints its
+    # number, it no longer votes.
+    #
+    # What is superseded is the SPREAD half only. The directional half is untouched and total
+    # (grain 1.17 live against -0.01 nulled), and `isotropic_erosion` still guards it and still
+    # votes. Nothing here is a licence to stop measuring: the number is printed every run, and if
+    # a future round moves the floor's layer count the reading moves with it.
+    #
+    # The gap was not introduced by the change that exposed it — 1.162x measured on HEAD's own
+    # code, against the same 1.20x bar. See docs/FLOOR-CONSOLIDATION-PASS.md.
+    SUPERSEDED = {"no_erosion": "superseded by the device gate (Rafe, 2026-09-03): the 1.20x "
+                                "spread bar predates the lane dish, the margin grit and the tool "
+                                "marks, and the only lever that clears it reopens the culled "
+                                "value-blob defect. Builder's tool: prints, does not vote."}
+
     ep = erosion_plant(w, h, seed, mat)
     live_e, none_e, iso_e = ep["live"], ep["no_erosion"], ep["isotropic"]
     for nm, m, fired, why, detail in (
@@ -1234,12 +1326,17 @@ def run_plants(w, h, seed, mat):
          "grain %.2f (live %.2f)" % (iso_e["grain_ratio_trodden"] or 0,
                                      live_e["grain_ratio_trodden"] or 0)),
     ):
-        print("  %-16s -> %-14s %s" % (nm, "erosion_read", "FIRED" if fired else "SILENT"))
+        sup = SUPERSEDED.get(nm)
+        state = "FIRED" if fired else ("SUPERSEDED" if sup else "SILENT")
+        print("  %-16s -> %-14s %s" % (nm, "erosion_read", state))
         print("       %s" % why)
         print("       %s" % detail)
-        ok &= bool(fired)
+        if sup:
+            print("       ^ %s" % sup)
+        else:
+            ok &= bool(fired)
         rows.append(dict(plant=nm, must_fire="erosion_read", fired=bool(fired), why=why,
-                         measured=m))
+                         superseded=sup, votes=sup is None, measured=m))
 
     cp = chroma_plant(w, h, seed, mat)
     live, flatc, latt = cp["live"], cp["flat_chroma"], cp["chroma_lattice"]
