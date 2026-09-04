@@ -155,6 +155,45 @@ def main():
         rc, out = run(["python3", GATE])
         case("E3 a self-test PASS cannot open the gate", 1, rc, out, "SELF-TEST")
 
+        # ---- E4/E5. A LIVE GUARD BLOCKS; A HISTORICAL REPORT DOES NOT --------------------------
+        #
+        # RULED (Rafe, 2026-09-03): "fix the gate to block on active guard state, not on the
+        # existence of a STALL-REPORT.md file - a historical report must never gate installs;
+        # only a live guard does."
+        #
+        # The old check was `os.path.exists(STALL-REPORT.md)`, and a file's existence is not a
+        # fact about the line: the floor lane's five-round-park report sat committed on main
+        # after that guard had been RETIRED, and blocked installs for every lane - including
+        # this proof, which failed E and E2 for no reason but a stale document on disk.
+        #
+        # Removing a blocking condition without showing that its replacement still bites is how
+        # a gate quietly stops being one, so both directions are proved. Two consecutive VOIDs on
+        # this lane are the broken-judge guard's own declared condition.
+        lane = (BID._git("rev-parse", "--abbrev-ref", "HEAD").strip() or "detached")
+        probes = [os.path.join(HERE, "history", "zz-proof-liveguard-%d.json" % i)
+                  for i in (901, 902)]
+        try:
+            for i, pp in enumerate(probes):
+                # A FUTURE timestamp, because history() orders by timestamp and the guard reads
+                # the LAST rounds. Backdated probes sort to the front and prove nothing - which
+                # is exactly how the first version of this case came back silent.
+                json.dump({"lane": lane, "round": 901 + i, "verdict": "VOID",
+                           "timestamp": "2099-01-01T00:00:0%d" % i,
+                           "note": "synthetic; written and removed by prove_gate.py"},
+                          open(pp, "w"), indent=2)
+            synth("PASS", bid)
+            rc, out = run(["python3", GATE])
+            case("E4 a LIVE guard blocks an otherwise-passing build", 1, rc, out,
+                 "A LOOP GUARD IS LIVE")
+        finally:
+            for pp in probes:
+                if os.path.exists(pp):
+                    os.remove(pp)
+
+        synth("PASS", bid)
+        rc, out = run(["python3", GATE])
+        case("E5 and it opens again once the guard clears", 0, rc, out)
+
         # ---- F. the hook, which is the wall around the way past the script --------------------
         synth("FAIL", bid)
         payload = json.dumps({"tool_name": "Bash", "cwd": REPO, "session_id": "prove",
