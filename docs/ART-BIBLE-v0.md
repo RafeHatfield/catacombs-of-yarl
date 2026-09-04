@@ -1839,6 +1839,39 @@ Every clause in this section is a stated design purpose awaiting a derived value
   Threshold: PLACEHOLDER.
 - **Survives a busy screen** (§4.1). Every rule above is tested with neighbours present.
 
+### 12.1a The void is dark by OCCLUSION, not by a ring — RULED (Rafe, 2026-09-03)
+
+**Unexcavated mass is unlit by construction.** The lamp stops at the wall face, because solid
+stone is behind it; what lies past the face is dark because nothing reaches it, not because a
+different tile was laid there. **Occlusion-not-illumination, applied to the void.**
+
+This RECONCILES two rules that had been pulling against each other for a fortnight:
+
+- **§12.1 forbids the ring.** `void_ring` swapped a darker MATERIAL in at a fixed Chebyshev
+  distance, and a classification that changes at a cell boundary puts a luminance step at that
+  boundary. A blind seat found it unaided — *"two perfectly straight vertical seams in the
+  darkness … 200px-tall ruled lines in the dark itself"* — and it was culled as an outline that
+  placement bakes.
+- **But dropping it made the lamp shine through rock.** With every wall cell capped, a frame
+  critic measured the consequence: *"Light is passing through solid rock. At y=340 the rock at
+  x=300 is (63,45,25) against the corridor floor at (410,300) = (82,64,41) — the unexcavated mass
+  is 77% as bright as the walked surface."*
+
+Both readings were right, and the thing wrong with each was the same: **darkness was being
+authored instead of received.** A ring authors it into the tile; a flat void authors it into the
+palette. §6.3 has always said assets receive light and never depict it, and the void is not an
+exception to that — it is the case that proves it.
+
+**So the void needs no material of its own and no ring.** It is the same found rock, occluded.
+The transition is then a LIGHTING boundary at a plane boundary, which §12.1's own text names as
+**form** rather than outline, and it moves with the lamp instead of sitting on the grid.
+
+**Implementation note, recorded so the ruling is not mistaken for the build:** the renderer
+currently lights wall cells regardless of what stands between them and the lamp. Making the lamp
+occlude against the wall faces is a presentation change (an occluder pass), not a composition
+one, and it is outstanding at the time of writing. §6.5's standing-distance law is unaffected —
+it governs what a LIT surface delivers at range, and this governs which surfaces are lit at all.
+
 ### 12.1 No baked outline — LOCKED (Rafe, 2026-08-24)
 
 **Nothing in Yarl carries a baked dark ring.** Separation is delivered by the value floor above

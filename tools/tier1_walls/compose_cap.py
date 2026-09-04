@@ -74,7 +74,30 @@ VOID_GRAIN_LEVELS = 1.6
 #
 # The sweep (levels/window, bar = 16.1):  0.85 -> 9.5   0.72 -> 14.6   0.62 -> 18.4   0.52 -> 21.5
 #                                         0.42 -> 25.3  0.30 -> 29.4   0.00 -> 37.3
-# ⚠ RAISED 0.62 -> 0.80 (2026-09-03). The soft blend was 38% unsnapped, and unsnapped values sit
+# ⚠⚠ 1.00 — A HARD SNAP, NO BLEND (RULED, Rafe, 2026-09-03). THE FLOOR CARRIES EIGHT COLOURS.
+#
+# *"The continuous-tone mottle is the real defect ... an off-palette continuous-tone layer over
+# the pixel art (the 'filtered/cement' read all along). Hunt the render stage adding sub-ladder
+# intermediate values and quantise it to the palette."*
+#
+# Hunted, and the render stage is innocent: turning the whole floor-overlay pass off moved the
+# delivered count 5763 -> 5402. THE COMPOSER IS THE STAGE. Measured on the assets themselves:
+#
+#     the ashlar FLOOR, approved, 300 tiles :    8 unique colours
+#     this cap, 256 windows                 :  107
+#
+# Eight. The floor this cap is cut from is strict palette pixel art and the cap was continuous
+# tone sitting on top of it. Any soft blend at all puts values BETWEEN rungs, and a value between
+# rungs is not in the palette — so the blend goes to zero rather than down a notch.
+#
+# ⚠ AND THIS BREAKS `cap_not_featureless`, WHICH WANTS 16.1 LEVELS PER WINDOW. That bound came
+# off the commercial asset bar, and the bar is a different game with a different palette
+# discipline; Yarl's own approved floor uses eight colours in total. The instrument is a
+# builder's tool and gates nothing (frame-critic skill §2) — when it and the eye disagree about
+# whether a surface should be continuous, the eye wins and the number gets a note, not a retune.
+#
+# The blend history, kept because it is the shape of the mistake: 0.62 -> 0.80 -> 1.00. The soft
+# blend was 38% unsnapped, and unsnapped values sit
 # BETWEEN rungs — which is a gradient, and a gradient has no hard edge. With the slab tooling now
 # carrying the level count (36 per window against the bar's 16.1) the blend is no longer needed to
 # clear `cap_not_featureless`, so it goes back toward the ladder where §5.6 wants it.
@@ -82,7 +105,7 @@ VOID_GRAIN_LEVELS = 1.6
 # 0.62 was the HARDEST snap that clears the bar, and that is the right end to choose from: §5.6
 # wants the ladder, so the cap departs from it by the least the bar's own construction allows,
 # not by the most the instrument tolerates.
-SNAP = 0.80
+SNAP = 1.00
 
 
 def wrap_noise(size, cells, rng):
