@@ -1,0 +1,103 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-session-2026-08-29",
+ "round": 2,
+ "surface": "wall",
+ "commit": "0a9f288699d5d01d9db643120903dde087f5a529",
+ "dirty": true,
+ "build_id": "ce716ac1eb9616e14c0381ae6df7af54d231f38edc9405ca442ce3a0af9b6554",
+ "timestamp": "2026-09-03T15:26:51",
+ "build_frame": {
+  "path": "tools/tier1_walls/evidence/fc_standing.png",
+  "sha256": "560619414ae8c833ebb74f55959b16d7ad0d683760dffafa7575ed41e6f9afc5",
+  "log": "tools/tier1_walls/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/session-2026-08-29 --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_walls/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-choice 0 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-session-2026-08-29-r2",
+  "slots": {
+   "1": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/grey-walls.png",
+    "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "3": {
+    "what": "build",
+    "source": "tools/tier1_walls/evidence/fc_standing.png",
+    "sha256": "560619414ae8c833ebb74f55959b16d7ad0d683760dffafa7575ed41e6f9afc5",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_walls/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 1,
+  "file": "grey-walls.png",
+  "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+  "culled_by": "Rafe, device gate, 2026-09-02",
+  "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The masonry in the lit pool is genuinely cut, not stamped. In the band at x\u2248150\u2013400, y\u2248455\u2013555, the courses are broken into blocks of different widths \u2014 a wide slab at x\u2248220\u2013290, two narrow ones immediately right of it \u2014 and the joint darkness varies *along a single run*: the horizontal joint at y\u2248490 is near-black between x\u2248200\u2013260 and almost invisible between x\u2248290\u2013330. The joints are dashed rather than continuous, so mortar reads as partly gone rather than uniformly drawn. The pale block at x\u2248260\u2013320, y\u2248490\u2013530 sits about 20 levels above its neighbours and reads as a replacement stone, which is exactly what four hundred years of patching should look like. There is also correct hue separation between surfaces: sampling the wall face at (440,435) gives (105,85,66), a desaturated grey-brown, while the floor 35px below at (440,470) gives (140,99,61), distinctly warm \u2014 the wall is not just a darker version of the floor. The corridor at x 380\u2013435 has real construction in it: distinct pavers, a low step at y\u2248425, and a dark timber lintel at x\u2248410\u2013435, y\u2248378.",
+  "WORST_WHY": "Three separate projections in one frame, and terrain painted as rectangles. The pond occupies x\u2248246\u2013342, y\u22480\u2013188 as an exact axis-aligned rectangle with a hard 1px edge on all four sides \u2014 no bank, no shore tile, no darkening at the margin, water meeting dry flagstone at a straight vertical line at x\u2248342. The dirt patch is the same failure: hard straight edges against stone at x\u224856, x\u2248344 and y\u2248214, with no transition tile anywhere. The wooden post at x\u224827, y\u2248122\u2013170 is drawn in side elevation \u2014 visible horizontal plank courses, a lit left face \u2014 passing over a top-down brick wall, and it terminates in a flat unshaded cut end at y\u2248170 with nothing under it and no shadow. The barrels at x\u2248115\u2013190, y\u2248192\u2013215 show an elliptical top *and* a full curved side, a 3/4 view; the crates at x\u224863\u201397 show a front face; the floor is straight top-down. The flagstone field is one 32px tile repeated on a perfect unbroken lattice \u2014 the bottom band y\u2248215\u2013265 and the right column x\u2248344\u2013384 are the same stone stamped with 1px grout that never once breaks or shifts. The teal moss blob appears unrotated and unmirrored at roughly (22,58), (36,178) and (120,205). And nothing in the frame is lit by anything: no falloff, no cast shadow from any prop, the only shadow present being the hard black ellipse under the figure at (225,20).",
+  "FLAGGED": "2, 3\n\n3 is flagged for the hatch, described below \u2014 you see it in the first second. 1 is not flagged: its faults are real but they are dim-area and flat-area faults, not things that shout across the room.",
+  "RANK": "1 > 3 > 2",
+  "BEST": "1",
+  "WORST": "2",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "The floor from x\u2248150 to x\u2248400, y\u2248450\u2013560 carries one unbroken 45\u00b0 hatch that runs straight through every place a joint should be. There are no tile boundaries in that region at all. Delete the hatch overlay, draw the courses first, then reapply wear per-stone clipped to each stone's bounds.",
+  "The corridor at x 380\u2013435 has zero masonry seams from y\u2248200 down to y\u2248460 \u2014 260px of continuous noise where paving should be. Give it joints on the same course spacing as the lit floor.",
+  "Same fix in the lower-right floor, x\u2248450\u2013700, y\u2248600\u2013830: nearly every tile carries an identical `\\\\ \\\\` stroke pair plus the same vertical tick cluster. That is a stamp, and at this density it is obvious.",
+  "Brightness down the corridor centre at x=405 swings 102\u2192169\u2192114\u2192184\u2192110 pixel to pixel. The noise is louder than the light gradient carrying it. Cut its amplitude to under about 15 levels and bind the variation to stone boundaries so it reads as different stones rather than static.",
+  "Same brighten-test failure as 1 \u2014 the dark upper region is fine mottle with no architecture under it. Draw the stone through it.",
+  "Same missing-repairs problem as 1: nothing rigged, lashed or pinned anywhere in the lit radius."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r002-worktree-session-2026-08-29-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

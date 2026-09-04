@@ -1,0 +1,50 @@
+I read all three at full size and again at 3–8× with the light lifted, so the dark two thirds could be inspected rather than assumed.
+
+**RANK:** 1 > 3 > 2
+
+**BEST:** 1
+
+**BEST_WHY:** The masonry course sitting on the wall run at y≈390–415 (both sides of the doorway, x≈30–345 and x≈415–700) is genuinely built rather than tiled: the stone widths vary along a single run — a narrow block at x≈470 next to a double-width one at x≈490–530 — several stones are darker and set back as if replaced, and there is a single vertical pin driven through the course at x≈567 that breaks the run. The floor slabs below hold a real running bond, and the cracks are the strongest piece of craft in any of the three frames: the one entering at x≈95,y≈530 and the arc through x≈450–620,y≈600–660 both step in whole pixels at a consistent slope, and they cross slab joints and keep going — the crack owns the floor rather than being drawn inside one tile. The light falloff is also cleanly integrated: the wall run at y≈415 gets darker left-to-right away from the figure across a single continuous surface, so the wall and the lamp agree.
+
+**WORST:** 2
+
+**WORST_WHY:** Nothing in it is shaped; everything is a rectangle laid over a rectangle. The water is an axis-aligned block, x≈248–343 by y≈0–191, with four dead-straight edges — its right edge stops against the grey flagstones at a razor-clean vertical line with no bank, no shallows, no wet stone, and its bottom edge terminates in open dirt at a straight horizontal line at y≈191, with nothing holding the water in. The dirt field is a second such rectangle, x≈56–344, y≈0–215, and it repeats: the same red-brown crack cluster recurs on a 48-pixel period in both axes (measured, and visible unaided in the mid-field around x≈100–250). Props are duplicated without variation — the two crates at x≈63–97 (y≈2–20 and y≈49–69) are the same sprite twice stacked, the two barrels at x≈114–142 and x≈162–190 are the same sprite twice side by side, and the green algae blob appears three times unchanged (x≈12–45,y≈50–75; x≈15–45,y≈200–235; x≈350–384,y≈148–190). The frame carries three conflicting projections at once: the flagstones are straight top-down, the crates show a front elevation face below their lid, and the barrels are cylinders seen from three-quarters. There is no light source anywhere — the illumination is flat ambient from corner to corner, and the only shadow in the frame is the hard black ellipse under the orc at x≈213–237, so every other object floats. The bottom strip, y≈265–288, is an unresolved black band with one slightly lighter grey rectangle at x≈163–186 and no explanation.
+
+**FLAGGED:** 1, 2, 3
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The two largest surfaces in the frame — the wall masses at x≈60–370 and x≈440–700, y≈90–390 — carry no drawn structure at all, only soft airbrushed grey-brown cloud blobs with no pixel grid. Draw them: block courses, joints, and the same replaced-stone and driven-pin vocabulary already working on the course at y≈390–415.
+- Those wall masses are rendered at a different resolution from everything else — smooth gradients against crisp pixel work. Quantise them to the same pixel size as the floor slabs so they stop reading as a fog layer pasted on top.
+- The floor directly under the figure, roughly x≈300–480, y≈490–620, is blown to a flat near-white with all slab texture destroyed. Cap the lamp's peak value below the point where joint and hatch detail clips out; the light should reach maximum on the stone, not erase it.
+- Every floor slab is ringed with the same uniform 1px dashed outline, so the slabs read as stickers with a border. Vary joint depth and continuity along a single run — let joints close up entirely on two or three slabs and open wide on others.
+- The flat top surface of the wall run, y≈415–450, holds one value across its whole width with only vague soft mottling. Give it a drawn top face — dressed stone, chipping at the edges, and the debris an orc company would leave on it.
+- The floor slabs repeat their diagonal hatch cluster identically across many tiles (compare the slabs at x≈150–200 and x≈600–650, y≈550). Hand-vary the hatch or add a second and third variant.
+
+**FLIP 3:**
+- A grain filter has been run over the entire frame — the speckle is visible in the near-black at the bottom-left corner around x≈50–150, y≈780–880, where there is nothing to be textured. Remove the global noise pass.
+- The upper wall masses at x≈60–370 and x≈440–700, y≈90–390 are dense sponge speckle that reads as loose gravel, not a surface. Replace with drawn courses at the frame's own pixel size.
+- The region left of the figure, x≈230–400, y≈445–560, carries one continuous 45° hatch at a single pitch that runs straight across every slab joint without breaking. That is a texture overlay sitting on top of the masonry, not stone tooling. Clip the hatch to each slab and change its angle per slab.
+- The cluster at x≈330–430, y≈555–605 is a group of dark smears and half-erased marks that resolve into no object. Either draw the thing that is there — a repair, a fitting, a grate — or clear the floor.
+- Small unattached pale squares float free of any slab boundary, e.g. x≈330,y≈495 and x≈345,y≈505. Delete them or seat them in the bond.
+- The corridor floor between y≈300 and y≈440 has lost its joints entirely and dissolves into undifferentiated dither. Restore the slab grid through the full length of the corridor so the doorway and the floor stay the same construction.
+- The lamp's peak, x≈300–470, y≈460–560, clips to flat white. Lower the ceiling on the falloff so stone detail survives at the brightest point.
+
+**FLIP 2:**
+- Break the water's rectangle. The straight vertical edge at x≈343 and the straight horizontal cut at y≈191 need an irregular outline, a bank tile set where water meets stone, darker value at depth and lighter at the margin, and something containing it — a kerb, a broken channel, silt.
+- Same for the dirt: its boundary against the flagstones at x≈56, x≈344 and y≈215 is a clean rectangle. Let dirt spill across the stone joints and let flagstones show through where it is thin.
+- The dirt field repeats on a 48-pixel period in both axes. Add at least three more variants and scatter them non-periodically, or break the repeat with drawn features.
+- The two crates at x≈63–97 are pixel-identical, and so are the two barrels at x≈114–142 and x≈162–190. Vary them — different lid damage, different stave count, different rotation.
+- Resolve the projection conflict: the crates show a front elevation face below their top, the barrels are three-quarter cylinders, the floor is straight top-down. Redraw all props straight from above to match the floor.
+- Every prop except the orc floats. Add contact shading under both crates, both barrels and the plank at x≈26–35.
+- There is no light source. Introduce the carried lamp and its falloff, so value drops with distance from the figure the way it does in the other frames; at present the far corners are as bright as the centre.
+- The white specks at x≈207–237, y≈110–128 read as noise, not as bones or debris. Draw identifiable objects or remove them.
+- The orange plank at x≈26–35, y≈125–167 is bisected by the dark brick bar at y≈120–140 with no join and no explanation of what it leans against. Finish or cut it.
+- The bottom band at y≈265–288 is flat black with one arbitrary lighter rectangle at x≈163–186. Draw a wall base with thickness and a top edge, or crop the frame above it.
+
+The through-line: 1 and 3 are the same room, and the difference between them is that 3 has had a destructive pass applied over drawn art. That is the cheapest defect to fix and the most expensive to leave in — it is the exact thing that reads as generated. 2 needs different work entirely; its problem is not surface treatment but that nothing in it has been shaped.
+
+Model: Opus 5 (1M context)

@@ -1,0 +1,105 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-session-2026-08-29",
+ "round": 6,
+ "surface": "wall",
+ "commit": "b1572b8956ef306e8f8b51a51f6e12cbbdf88f70",
+ "dirty": true,
+ "build_id": "30054521159bfa427b713b902e0b21c02a33506a3a817258e949141bb8dda8e9",
+ "timestamp": "2026-09-03T19:29:13",
+ "build_frame": {
+  "path": "tools/tier1_walls/evidence/fc_standing.png",
+  "sha256": "b2ec7eb05372219695bf092fe780c7e4f826df4e8736feff7849cf159eb18af2",
+  "log": "tools/tier1_walls/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/session-2026-08-29 --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_walls/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-choice 0 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-session-2026-08-29-r6",
+  "slots": {
+   "1": {
+    "what": "build",
+    "source": "tools/tier1_walls/evidence/fc_standing.png",
+    "sha256": "b2ec7eb05372219695bf092fe780c7e4f826df4e8736feff7849cf159eb18af2",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/cement-cap.png",
+    "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   }
+  },
+  "build": "tools/tier1_walls/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 2,
+  "file": "cement-cap.png",
+  "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+  "culled_by": "Rafe, device walk, 2026-09-03",
+  "verbatim": "caps are still grey and read as cement, not stone",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "outranked_by_approved": false,
+   "approved_slot": null,
+   "every_frame_flagged": true
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The floor paving below the timber band is the only genuinely well-made surface in the set. Every slab in the region around the figure (x 420\u2013700, y 460\u2013620) carries a continuous dark perimeter joint, and the joints vary in width \u2014 some runs are a hard 2px black, others break to a broken 1px dotted line mid-run, so the slabs read as separately cut and separately settled rather than stamped from one master. Slab sizes vary genuinely: the run at y\u2248470\u2013510 right of the figure has a wide 3:1 block butted against two near-squares, and the courses don't align vertically across the frame. The timber band at y\u2248390\u2013420 is legible as construction \u2014 you can count individual salvaged boards, each a slightly different length and value, with a vertical pin visible at x\u2248568 breaking the top line of the run. It also holds its value structure: the material near the lamp is genuinely brighter than the material at the frame edge without the mid-tones collapsing.",
+  "WORST_WHY": "It has no light model at all. Grey flagstone directly beside the figure at (355,20) is RGB(90,90,90); grey flagstone at the far edge at (10,90) is RGB(90,90,90) \u2014 identical. There is no falloff anywhere; the darker greys at the bottom-left are a different tile, not lighting. Beyond that: the water is an axis-aligned rectangle (x 246\u2013383, y 0\u2013192) with a 1-pixel hard edge \u2014 row y=100 steps from dirt RGB(65,30,19) at x=247 straight to water RGB(38,81,66) at x=248, with no bank, no shore tile, no transition of any kind. It is filled with one value under a single hex-scale pattern stamped edge to edge, no depth, no reflection. The frame also runs three projections at once: the two barrels at (120,200) and (168,200) are drawn side-on with visible staves and an elliptical lid, the crates at (60\u2013105, 5\u201370) are drawn in 3/4 with a front face showing, and the floor is pure top-down. Neither barrels nor crates have any contact shadow, so they sit on top of the dirt rather than in it. The same green decal \u2014 with an identical 5-pixel asterisk highlight on every instance \u2014 appears both in the water and on dry flagstone at (340\u2013375, 145\u2013175) and (20\u201345, 195\u2013215). And the sconce at (26,110) is a lit torch emitting zero illumination.",
+  "FLAGGED": "1, 2, 3**",
+  "RANK": "2 > 1 > 3**",
+  "BEST": "2**",
+  "WORST": "3**",
+  "SHIP": "NONE**\n\n---"
+ },
+ "flip_list": [
+  "The entire rock mass outside the corridor (x 0\u2013370 and x 440\u2013750, y 90\u2013450) is continuous-tone mottled cloud noise \u2014 soft round blobs at 8\u201312px with no edges and no repeat. Replace it with drawn material at the same texel size as the floor, or make it flat unlit fill. It currently reads as a noise layer, not stone.",
+  "Long unbroken straight lines cut through that noise \u2014 one from approx (37,170) to (140,95), another running from (280,80) down to (375,390) \u2014 forming a fan of wedges radiating from the corridor mouth. Rock does not fracture in 300px straight segments. Remove them or replace with breaks that step and change direction.",
+  "Light is passing through solid rock. At y=340 the rock at x=300 is (63,45,25) against the corridor floor at (410,300) = (82,64,41) \u2014 the unexcavated mass is 77% as bright as the walked surface. Occlude the lamp against the corridor walls so the glow terminates at the passage edge.",
+  "Floor joints break down right of the figure (x 480\u2013700, y 470\u2013620): many slabs carry only a 6\u201310px vertical dark tick where an edge should be and no perimeter at all \u2014 see the isolated strokes at approx (505,560) and (575,505). Close the perimeters so the slabs read as cut blocks instead of tonal patches.",
+  "The timber run at y\u2248390\u2013420 left of x\u2248300 sits within about 3 values of the wall behind it and reads as a smear. Separate the boards from the wall by at least one clear step and restore the individual board ends.",
+  "The whole frame carries a soft continuous-tone mottle over the pixel work (5763 unique colours against 2's 3414 for the same scene). Drop that layer; it's the single thing making the image read as filtered."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r006-worktree-session-2026-08-29-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

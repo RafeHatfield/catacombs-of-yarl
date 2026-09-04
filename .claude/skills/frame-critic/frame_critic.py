@@ -490,9 +490,29 @@ def crop_to(path, box, dest):
     return im.size
 
 
-def pick_plant(surface, morgue, exclude=()):
+def pick_plant(surface, morgue, exclude=(), axis=None):
+    """Candidates for this round's plant, narrowed to the AXIS the deck is asking about.
+
+    RULED (Rafe, 2026-09-03): *"Per-axis morgue plants — tag entries by axis, assemble the plant
+    to match the deck's question; this is why round 5 VOIDed."*
+
+    A plant is only a control if it is wrong on the axis under test. The wall lane's round 5 was
+    judged on CONSTRUCTION — does the cap read as stone or as cement — and was handed the `grey
+    walls` plant, whose defect is CHROMA. The build had already had its chroma fixed, so the two
+    frames differed on an axis the plant was not carrying, the seat had no reason to rank the
+    plant last, and the round voided on the judge rather than on the art. **The right image for
+    the wrong question is not a control.**
+
+    An entry with no `axis` answers any question, so the morgue stays usable while it is being
+    tagged, and a surface whose entries carry no matching axis falls back to all of them rather
+    than refusing — a narrower plant is better than no round, but no plant is not an option.
+    """
     entries = [e for e in morgue["entries"]
                if e["surface"] == surface and e["file"] not in exclude]
+    if axis:
+        on_axis = [e for e in entries if axis in (e.get("axis") or [axis])]
+        if on_axis:
+            entries = on_axis
     if not entries:
         raise SystemExit(
             "REFUSING: the morgue holds no known-bad frame for surface %r.\n"
@@ -768,7 +788,7 @@ def main():
     # A self-test puts a morgue frame in the BUILD slot. It must not also be drawn as the plant —
     # the seat would be shown the same picture twice and the control would be judging itself.
     exclude = (os.path.basename(a.build_frame),) if a.build_frame else ()
-    candidates = pick_plant(cfg["surface"], morgue, exclude=exclude)
+    candidates = pick_plant(cfg["surface"], morgue, exclude=exclude, axis=cfg.get("axis"))
     rng = random.Random(hashlib.sha256(("%s|%d" % (bid, rnd)).encode()).hexdigest())
     plant = rng.choice(candidates)
 

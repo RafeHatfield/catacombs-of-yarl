@@ -1,0 +1,103 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-session-2026-08-29",
+ "round": 3,
+ "surface": "wall",
+ "commit": "9418efcf61f45b2360ee4237ffd290ee7df99c5f",
+ "dirty": true,
+ "build_id": "494912d713af15cfde1b790645c00ec6c43d1abbf8363937ef385e7cfa1370de",
+ "timestamp": "2026-09-03T16:03:53",
+ "build_frame": {
+  "path": "tools/tier1_walls/evidence/fc_standing.png",
+  "sha256": "c916e18e0f40aa172057d8c4f8968d14fed5f5dea2a195d9776fab2db21f524f",
+  "log": "tools/tier1_walls/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/session-2026-08-29 --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_walls/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-choice 0 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-session-2026-08-29-r3",
+  "slots": {
+   "1": {
+    "what": "build",
+    "source": "tools/tier1_walls/evidence/fc_standing.png",
+    "sha256": "c916e18e0f40aa172057d8c4f8968d14fed5f5dea2a195d9776fab2db21f524f",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/grey-walls.png",
+    "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   }
+  },
+  "build": "tools/tier1_walls/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 2,
+  "file": "grey-walls.png",
+  "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+  "culled_by": "Rafe, device gate, 2026-09-02",
+  "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": false,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The joints on the room floor are drawn, not applied. In the lit block at (440\u2013600, 470\u2013560) the slab edges vary run to run: a heavy 3px-wide dark vertical at x\u2248450 y 485\u2013515, a thin single-value horizontal at y\u2248518, and \u2014 the part that matters \u2014 the large pale slab at (470\u2013495, 478\u2013515) is separated from its neighbour by **no joint at all**, purely by a two-step tone drop. That mix is what cut stone does and what a stamped tileset never does. The chisel hatch also clusters per slab and stops at slab edges (the cluster at (505\u2013550, 478\u2013495) does not cross into the slab below it). The unlit ceiling mass at (120\u2013320, 150\u2013300) carries genuine per-pixel grain \u2014 measured edge-energy 0.354 against 0.158 for the same region in 2 \u2014 so its polygonal crack lines sit on rock rather than on blur.",
+  "WORST_WHY": "The two barrels at (110\u2013150, 185\u2013210) and (155\u2013195, 185\u2013210) are **guillotined dead flat** by the dirt/stone boundary at y=205. The left barrel's staves simply stop at a straight horizontal line \u2014 no bottom rim, no base, no contact shadow. The sprite is being drawn under the terrain layer and sliced. They are also pixel-identical copies of each other at the same sub-tile offset, and they are drawn in three-quarter projection (elliptical lid *plus* visible cylinder wall) sitting on a floor grid drawn from straight overhead. Two projections, one frame. Beyond that: the frame has **no carried light at all** \u2014 brightness is uniform corner to corner, which is the one thing the premise requires; the water at (245\u2013330, 0\u2013172) is a hard-cornered rectangle of repeating honeycomb that terminates at a 1px line with no bank; the same 3-blob moss decal is pasted unrotated at (20,55), (30,215) and (365,155); and there is a light-grey untextured rectangle at (164\u2013190, 273\u2013281) sitting in the dark brick course matching no neighbour on any side.",
+  "FLAGGED": "3, 2",
+  "RANK": "1 > 2 > 3",
+  "BEST": "1",
+  "WORST": "3",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "The corridor floor (378\u2013432, 220\u2013460) is a column of 1px vertical streaks with no slab boundaries, while the room floor 20px to either side is cut slabs. It is the brightest, most central surface in the frame and has no structure. Redraw it as slabs on the room's module, coursed across the corridor.",
+  "The ceiling masses at (60\u2013370, 70\u2013380) and (440\u2013740, 70\u2013380) are soft blotches 12\u201320px across \u2014 softer and larger than any other feature. The 1px crack lines are hard but sit on mush. Replace the blotch fill with value noise at the floor's granularity.",
+  "The wall run at y 385\u2013435 has a flat black top surface, so the wall reads as an absence rather than a mass with thickness. Give the top face its own lit value, separated from both the floor and from black.",
+  "The figure at (390\u2013430, 460\u2013510) has no contact: the slab under its feet is the same value as one a tile away. Add a cast shadow and one extra brightness step on the two tiles it stands on.",
+  "The chisel hatch is a single 45\u00b0 angle across every slab in the frame. Vary the angle per slab.",
+  "Nothing in the frame is an object. Four hundred years of rope, driven pins, hide and salvaged timber, and not one piece of it is visible \u2014 the frame is floor, ceiling, and one wall strip. Put the salvage in."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r003-worktree-session-2026-08-29-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

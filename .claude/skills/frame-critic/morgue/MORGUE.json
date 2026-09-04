@@ -1,40 +1,39 @@
 {
   "_what": [
-    "THE PICTURE-PLANT MORGUE — known-bad delivered frames, kept as pictures.",
+    "THE PICTURE-PLANT MORGUE \u2014 known-bad delivered frames, kept as pictures.",
     "",
-    "LOOP-PROCESS §4 requires a plant: one deliberately wrong candidate seeded into the set, and",
+    "LOOP-PROCESS \u00a74 requires a plant: one deliberately wrong candidate seeded into the set, and",
     "if the critic does not catch it the round is VOID and its findings are not read.",
     "",
-    "Every plant this project has built before now was GENERATED — plant_ashlar.py, plant_walls.py,",
-    "plant_family.py — a ruined family composed by the same composer from the same material. That",
+    "Every plant this project has built before now was GENERATED \u2014 plant_ashlar.py, plant_walls.py,",
+    "plant_family.py \u2014 a ruined family composed by the same composer from the same material. That",
     "shape has failed four times in the recorded ledger, and each failure has the same root: the",
     "plant is downstream of the engine, so an engine change can neutralise it silently.",
     "",
-    "  wall round 9   VOID — plant missed. The plant was not in the picture.",
-    "  wall round 10  VOID — plant missed. Since the cap pass the cell's base is a cap window and",
+    "  wall round 9   VOID \u2014 plant missed. The plant was not in the picture.",
+    "  wall round 10  VOID \u2014 plant missed. Since the cap pass the cell's base is a cap window and",
     "                 the wall family's top tiles are never drawn, so a plant that ruined only the",
     "                 wall tiles differed from the family in 0.54% of pixels, in 21 cells.",
-    "  wall rounds 3, 6  VOID — the plant was culled for something the family shared.",
+    "  wall rounds 3, 6  VOID \u2014 the plant was culled for something the family shared.",
     "",
     "A PICTURE CANNOT BE NEUTRALISED BY AN ENGINE CHANGE. These bytes are fixed. The defect in them",
     "is fixed. The only way to stop a morgue entry carrying its defect is to delete the file, which",
     "is a visible diff.",
     "",
-    "WHAT QUALIFIES FOR ENTRY. A frame Rafe personally culled at the device gate (§1's landing",
+    "WHAT QUALIFIES FOR ENTRY. A frame Rafe personally culled at the device gate (\u00a71's landing",
     "gate), with his verbatim words and the commit whose build produced it. Not a frame an",
     "instrument disliked; not a frame I thought was weak. The morgue is a record of human culls.",
     "",
     "SURFACE TAGS ARE LOAD-BEARING. The deck draws a plant of the SAME surface as the round. A",
-    "floor plant in a wall round is caught for its magenta wall mocks — the critic flags the right",
+    "floor plant in a wall round is caught for its magenta wall mocks \u2014 the critic flags the right",
     "image for the wrong reason, and a control that greens for the wrong reason is not a control",
-    "(LOOP-PROCESS §4.2). run_frame_critic.sh refuses to build a deck if the surface has no entry.",
+    "(LOOP-PROCESS \u00a74.2). run_frame_critic.sh refuses to build a deck if the surface has no entry.",
     "",
     "KNOWN LIMIT, stated rather than discovered later: the `wall` lane holds ONE entry. Wall rounds",
     "therefore draw the same plant every time. That is safe against the seat, which is fresh each",
     "round and cannot remember, and it is NOT safe against a builder who learns to compose around",
     "one picture. Add wall entries as wall culls happen."
   ],
-
   "entries": [
     {
       "file": "keyline-floor.png",
@@ -44,7 +43,10 @@
       "culled_by": "Rafe, device walk, 2026-08-31",
       "verbatim": "outlined chips",
       "defect": "every stone carries a dark outline. 92.7% of joint pixels landed on the bottom two rungs and the floor reads as a wireframe rather than as masonry.",
-      "provenance": "docs/KEYLINE-REGRESSION.md; the ruling is quoted in tools/tier1_floors/compose_ashlar.py (THE SHELTERED JOINT'S DEPTH IS A DISTRIBUTION). Fixed by c76dbd9d."
+      "provenance": "docs/KEYLINE-REGRESSION.md; the ruling is quoted in tools/tier1_floors/compose_ashlar.py (THE SHELTERED JOINT'S DEPTH IS A DISTRIBUTION). Fixed by c76dbd9d.",
+      "axis": [
+        "construction"
+      ]
     },
     {
       "file": "washed-slab-lane.png",
@@ -54,7 +56,10 @@
       "culled_by": "Rafe, device walk, 2026-09-02",
       "verbatim": "it looks like all the tiles on the walked path have been replaced.",
       "defect": "the walked lane washes out into one bright slab. The masonry inside it stops reading, so the path is a decal laid over the floor rather than the same stones worn.",
-      "provenance": "quoted in tools/tier1_floors/measure_lane_window.py; docs/GATE-CONDITIONS.json records this exact capture as 'the keyline fix holds — the lane was the cull, not the masonry'. Fixed by 8b5640d7 and b36fe61c."
+      "provenance": "quoted in tools/tier1_floors/measure_lane_window.py; docs/GATE-CONDITIONS.json records this exact capture as 'the keyline fix holds \u2014 the lane was the cull, not the masonry'. Fixed by 8b5640d7 and b36fe61c.",
+      "axis": [
+        "value"
+      ]
     },
     {
       "file": "tile-quantized-wear.png",
@@ -62,9 +67,12 @@
       "sha256": "2c097a288e54de45704834cedb319201278f83cd9e83bf2083ac317f502c169a",
       "source": "tools/tier1_floors/evidence/r24_onroute.png @ 8b5640d7",
       "culled_by": "Rafe, device walk, 2026-09-02",
-      "verbatim": "one tile worn, the one next to it not — that's not how it works.",
+      "verbatim": "one tile worn, the one next to it not \u2014 that's not how it works.",
       "defect": "the wear knows where the tiles are. Wear boundaries land on tile edges, so worn cells sit beside unworn ones with a square edge between them.",
-      "provenance": "quoted in tools/tier1_floors/measure_wear_grid_lock.py. Fixed by b36fe61c (per-pixel keying)."
+      "provenance": "quoted in tools/tier1_floors/measure_wear_grid_lock.py. Fixed by b36fe61c (per-pixel keying).",
+      "axis": [
+        "construction"
+      ]
     },
     {
       "file": "grey-walls.png",
@@ -73,8 +81,24 @@
       "source": "tools/tier1_walls/evidence/r24_standing.png @ 65a512a0",
       "culled_by": "Rafe, device gate, 2026-09-02",
       "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
-      "defect": "the wall family and the cap were never given the floor's chroma — a grey multiplier that looks like colour. Delivered: cap +27.6° of hue off the floor at 55% of its saturation, face +12.8° at 60%.",
-      "provenance": "tools/tier1_walls/BISECT-GREY.md names the approved build (0c60bc50) and bisects the three commits since it. Fixed by ab40dfaf (derive_quarry_tint.py)."
+      "defect": "the wall family and the cap were never given the floor's chroma \u2014 a grey multiplier that looks like colour. Delivered: cap +27.6\u00b0 of hue off the floor at 55% of its saturation, face +12.8\u00b0 at 60%.",
+      "provenance": "tools/tier1_walls/BISECT-GREY.md names the approved build (0c60bc50) and bisects the three commits since it. Fixed by ab40dfaf (derive_quarry_tint.py).",
+      "axis": [
+        "chroma"
+      ]
+    },
+    {
+      "file": "cement-cap.png",
+      "surface": "wall",
+      "axis": [
+        "construction"
+      ],
+      "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+      "source": "tools/tier1_walls/evidence/r22_standing.png @ 431c140f",
+      "culled_by": "Rafe, device walk, 2026-09-03",
+      "verbatim": "caps are still grey and read as cement, not stone",
+      "defect": "the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.",
+      "provenance": "tools/tier1_walls/CRITIC-STOP.md and STALL-REPORT.md; the frame the critic itself ranked below the grey plant in rounds r001 and r002."
     }
   ]
 }

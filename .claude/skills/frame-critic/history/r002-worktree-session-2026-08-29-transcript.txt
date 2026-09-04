@@ -1,0 +1,52 @@
+Read all three at full size and at 3–8× on the specific regions. Here is the verdict.
+
+**RANK:** 1 > 3 > 2
+
+**BEST:** 1
+
+**BEST_WHY:** The masonry in the lit pool is genuinely cut, not stamped. In the band at x≈150–400, y≈455–555, the courses are broken into blocks of different widths — a wide slab at x≈220–290, two narrow ones immediately right of it — and the joint darkness varies *along a single run*: the horizontal joint at y≈490 is near-black between x≈200–260 and almost invisible between x≈290–330. The joints are dashed rather than continuous, so mortar reads as partly gone rather than uniformly drawn. The pale block at x≈260–320, y≈490–530 sits about 20 levels above its neighbours and reads as a replacement stone, which is exactly what four hundred years of patching should look like. There is also correct hue separation between surfaces: sampling the wall face at (440,435) gives (105,85,66), a desaturated grey-brown, while the floor 35px below at (440,470) gives (140,99,61), distinctly warm — the wall is not just a darker version of the floor. The corridor at x 380–435 has real construction in it: distinct pavers, a low step at y≈425, and a dark timber lintel at x≈410–435, y≈378.
+
+**WORST:** 2
+
+**WORST_WHY:** Three separate projections in one frame, and terrain painted as rectangles. The pond occupies x≈246–342, y≈0–188 as an exact axis-aligned rectangle with a hard 1px edge on all four sides — no bank, no shore tile, no darkening at the margin, water meeting dry flagstone at a straight vertical line at x≈342. The dirt patch is the same failure: hard straight edges against stone at x≈56, x≈344 and y≈214, with no transition tile anywhere. The wooden post at x≈27, y≈122–170 is drawn in side elevation — visible horizontal plank courses, a lit left face — passing over a top-down brick wall, and it terminates in a flat unshaded cut end at y≈170 with nothing under it and no shadow. The barrels at x≈115–190, y≈192–215 show an elliptical top *and* a full curved side, a 3/4 view; the crates at x≈63–97 show a front face; the floor is straight top-down. The flagstone field is one 32px tile repeated on a perfect unbroken lattice — the bottom band y≈215–265 and the right column x≈344–384 are the same stone stamped with 1px grout that never once breaks or shifts. The teal moss blob appears unrotated and unmirrored at roughly (22,58), (36,178) and (120,205). And nothing in the frame is lit by anything: no falloff, no cast shadow from any prop, the only shadow present being the hard black ellipse under the figure at (225,20).
+
+**FLAGGED:** 2, 3
+
+3 is flagged for the hatch, described below — you see it in the first second. 1 is not flagged: its faults are real but they are dim-area and flat-area faults, not things that shout across the room.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The wall face at y≈420–450, running x≈25–345 and x≈415–650, holds effectively one value across its full height — sampled at x=440 it is 105, 109, 111 at y=425/435/445. Break it into individual capstones with joints, and model it vertically: a 1–2px brighter lip on the edge nearest the light at y≈448, a darker one at y≈420, so the wall reads as a surface with thickness rather than a painted bar.
+- Raise the exposure four stops and the entire upper half of the frame is a blur field — soft 30–50px gradient blobs with no stone, no joints, no grid anywhere under it. The darkness is not attenuating drawn masonry, it is replacing it. Draw the floor through the dark region at the same course spacing as the lit pool and let the falloff curve dim it.
+- The crack lines at x≈100–350, y≈150–420 render as crisp 1px strokes sitting on top of that blur field, so a detail layer is surviving at full sharpness over a layer that has none. Either attenuate the cracks with the same falloff or restore the geometry beneath them.
+- Those ambient blobs interpolate smoothly over ~40px, several times the tile scale. Quantise the fog/ambient layer to the pixel grid or remove it — as it stands it is the one thing in the frame that looks like a filter pass.
+- The lit pool — the only part the player can actually read — contains no repairs at all except the single lintel at x≈410–435, y≈378. No rope, no driven pins, no hide, no salvaged timber. Put at least two in the lit radius: a plank bridging the cracked slab at x≈200–290, y≈540 with a pin at each end, and a lashed prop leaning against the wall face.
+- The same diagonal scratch stamp recurs at the same angle and length on tiles at roughly x≈300, 460, 560 and 600 in the lit pool. Mirror, rotate or redraw per stone.
+
+**FLIP 3:**
+- The floor from x≈150 to x≈400, y≈450–560 carries one unbroken 45° hatch that runs straight through every place a joint should be. There are no tile boundaries in that region at all. Delete the hatch overlay, draw the courses first, then reapply wear per-stone clipped to each stone's bounds.
+- The corridor at x 380–435 has zero masonry seams from y≈200 down to y≈460 — 260px of continuous noise where paving should be. Give it joints on the same course spacing as the lit floor.
+- Same fix in the lower-right floor, x≈450–700, y≈600–830: nearly every tile carries an identical `\\ \\` stroke pair plus the same vertical tick cluster. That is a stamp, and at this density it is obvious.
+- Brightness down the corridor centre at x=405 swings 102→169→114→184→110 pixel to pixel. The noise is louder than the light gradient carrying it. Cut its amplitude to under about 15 levels and bind the variation to stone boundaries so it reads as different stones rather than static.
+- Same brighten-test failure as 1 — the dark upper region is fine mottle with no architecture under it. Draw the stone through it.
+- Same missing-repairs problem as 1: nothing rigged, lashed or pinned anywhere in the lit radius.
+
+**FLIP 2:**
+- Cut the pond outline off the rectangle at x≈246–342, y≈0–188: irregular edge, a shore/bank transition tile the whole way round, and water darkened 2–3 values within ~4px of the bank.
+- Add edge tiles where dirt meets stone at x≈56, x≈344 and y≈214, and let dirt spill a few pixels into the grout of the adjacent flagstones so the boundary isn't a painted rectangle.
+- Redraw the post at x≈27, y≈122–170 top-down as a post seen end-on, or give it a base and a cast shadow. As drawn it is a side-elevation object hanging in a top-down frame with a cut end and nothing beneath it.
+- Redraw the barrels at x≈115–190, y≈192–215 and the crates at x≈63–97 to the floor's projection. Right now the frame contains 3/4, elevation and plan simultaneously.
+- Author at least four flagstone variants and break the grout line where stones have shifted or sunk. The bottom band y≈215–265 and right column x≈344–384 are currently one tile on a flawless lattice.
+- Mirror, rotate or recolour the moss blob per placement — it is currently identical at (22,58), (36,178) and (120,205).
+- Give the bones at x≈210–235, y≈112–128 a 1px darker outline and a contact shadow. They sit at the same value as the surrounding dirt speckle and read as dust.
+- Vary the dirt speckle density: compacted darker tracks near the doorway and the water's edge, drier lighter ground away from it. It is currently uniform across the whole patch.
+- Establish a light model and apply it to every object. There is no falloff and no prop casts a shadow.
+
+---
+
+The pattern across 1 and 3 is the same underlying build with two different surface treatments, and both fail the same test in the dark: lift the exposure and there is no building there. Fix that once and it fixes both. 3's hatch problem is the cheaper fix of the two but the more visible one.
+
+*Model: Claude Opus 5 (1M context)*

@@ -1,0 +1,61 @@
+Read all four at 1:1 and at 3× on the regions I'm citing, plus pixel measurements where the eye could be fooled.
+
+RANK: 2 > 4 > 3 > 1
+
+BEST: 2
+
+BEST_WHY: The floor slabs between roughly x240–560, y460–640 are genuinely surveyed rather than tiled: slab widths run 14, 22, 9, 30 px along a single course, and a crack enters at the left edge around (240,580), climbs to (400,520) and continues across three separate slab boundaries without breaking at any of them — it was drawn over the masonry, not into one tile. The top wall band at y0–60 carries the same discipline: varied block widths and a meandering hairline joint that crosses the whole run. The lit-floor edge energy measures 3.40/3.60 (gx/gy) against 2.44/2.86 for the same rectangle in 3, so the joint structure here is really present and not an impression of it.
+
+WORST: 1
+
+WORST_WHY: The pond is a rectangle. Water occupies exactly x248–343, y0–191; at row 100 it starts at x=248 and stops at x=343 on a dead-straight vertical pixel line, and at column 300 it stops at y=191 on a dead-straight horizontal one, meeting in an unmodified 90° corner at (343,191). No bank, no shelf, no darkening at depth, no edge treatment of any kind — dirt, then teal. The two barrels at (118,188) and (166,188) are the same sprite pasted 48px apart: aligning them gives a mean per-pixel difference of 1.87, which is just the dirt showing through. Same lid ellipse, same highlight on the same side, same staves, no flip, no rotation, and neither has a contact shadow — both are simply chopped flat where the cobble tile starts at y≈214. Both barrels and the two chests at top-left are drawn in ¾ view (visible lid ellipse, visible front face) inside a frame that is otherwise straight top-down. And there is no lighting pass at all: corner luminances read 101, 90, 71, 71 against 59 at frame centre, so the frame is *brightest at the top-left corner* and darkest in the middle, with the figure at (232,8) casting nothing. The green figure itself is a hard-outlined, fully saturated cartoon sprite that shares no ramp with the muted environment tiles.
+
+FLAGGED: 4, 1, 3
+
+SHIP: NONE
+
+---
+
+FLIP 4:
+- Two rectangles — x0–310, y135–390 and x503–750, y135–390 — are crushed to luminance 1.3–3.3 while the same rooms in the same frame elsewhere sit at 7–14. Raise the unlit floor so no stone falls below the value the rest of the dark rooms use.
+- The top edge steps from 12.0 to 1.3 across the single pixel boundary y134→y135, with no falloff. Feather that transition over at least 24px.
+- The right rectangle's edge at x502→x503 drops 28.7 to 3.3 *mid-block*, splitting one wall slab into a lit half and a black half. Snap occlusion boundaries to slab edges or remove them.
+- The rectangles cut across a continuous brick course running x60–310 at y≈400, orphaning the half that survives. Clip the mask to wall geometry, not to a screen-space box.
+- The wall run at x440–690, y398–424 is lit per-tile: adjacent blocks hold flat uniform values and jump in hard steps on 16px boundaries. Sample the light per-pixel.
+- Then everything in FLIP 2, all of which this frame also has.
+
+FLIP 3:
+- Joints in the lit floor (x240–560, y520–640) have been blurred out — edge energy 2.44/2.86 against 3.40/3.60 for the identical region in the other frames. Restore the 1px joint darks at native resolution; do not resample the tile layer before compositing light.
+- The upper rooms at x0–370, y75–390 are a Voronoi cell field — irregular polygons with thin dark borders and soft blotch fill. There is no brick, no course line, no straight architectural edge anywhere in it. Replace with the masonry already drawn elsewhere in this same frame.
+- A pale wedge runs from about (90,470) diagonally down to the figure, ignoring the slab grid and with no emitter anywhere along it. Delete it, or give it a source.
+- The cluster at roughly x340–450, y570–620 is smeared dark noise that reads as no object. Redraw it as a readable prop or clear it.
+- Then everything in FLIP 2.
+
+FLIP 2:
+- The unlit room interiors (x60–370, y80–380) are a smooth airbrushed cloud gradient with zero pixel structure, sitting 60px above floor slabs with hard 1px joints. Two detail resolutions in one frame. Draw the dark stone at the same pixel density and let the light multiplier take it down.
+- The shadow volume at roughly x113–377, y423–457 is flat neutral grey with a hard straight top edge and no stone visible through it, while every lit surface is warm brown. Shadow by multiplying the stone's own colour so hue is preserved and joints survive into the dark.
+- The wall-top blocks along y398–424 are soft-edged blurred rectangles; the slabs 40px below have crisp 1px joints. Redraw wall tops at native pixel resolution.
+- The figure at (395,470) is the frame's only emitter and casts neither a directional shadow nor a contact shadow. Add both.
+- The figure carries a sword and a round shield and no light source. The light in the frame is emitted from nothing. Put the lamp in the sprite's hand.
+- The figure's palette (cyan helmet, orange skin, yellow boots, solid black outline) shares no ramp with the environment and sits at full saturation at the brightest point of the image. Re-ramp it into the scene's browns and drop the outline to a dark scene colour.
+- Every slab boundary in the lit floor uses the identical 1px dotted dither. Vary joint depth and width along a single course so the stones read as cut rather than stamped.
+- The diagonal chisel hatching inside slabs (visible x430–560, y480–560 and again x620–700, y490–570) is the same stamp repeated at the same angle and spacing. Break it up or remove it.
+- Nothing in the frame is repaired: no rope, no driven pins, no salvaged timber, no hide. For a floor held for four hundred years by people who fix things badly and constantly, the masonry is uniformly intact.
+
+FLIP 1:
+- Give the frame a lighting pass. It currently has none — corner luminances 101/90/71/71 against 59 at centre means it is brightest in the top-left corner and darkest in the middle, the inverse of a carried light.
+- Build a shoreline for the pond. The straight left edge at x=248, the straight bottom edge at y=191 and the square corner at (343,191) need a bank tile set with corners, plus a depth ramp from the edge inward.
+- The three lily pads are the same blob at three scales with the same star scratch. Draw distinct ones or cut to one.
+- The two barrels at (118,188) and (166,188) are the same sprite 48px apart. Draw a second barrel, or flip and re-shade one, and add contact shadows to both.
+- The barrels are chopped flat where the cobble begins at y≈214. Let them overlap the tile boundary and shade the ground under them.
+- Redraw the barrels and the two chests at top-left in straight top-down. All four currently show a ¾ lid ellipse and a front face.
+- The dirt/cobble boundary at y≈208 is a razor-straight horizontal line with a 1px pale highlight and no transition tile. Add edge tiles with scatter, so stone breaks into dirt instead of abutting it.
+- The dirt tile's red-brown speckle is uniform-density noise across the whole field with no clustering, no wear paths, no puddling. Replace with authored variation.
+- Every grey floor tile is the same 32px stamp with the same grout value; the grid is legible as a grid from across the room. Vary the slab sizes and joint depths.
+- The green figure at (232,8) has a hard black outline and saturated greens that appear nowhere else in the frame. Re-ramp it to the environment palette.
+- The white scatter at roughly x216–248, y104–128 reads as random noise dots, not bones. Redraw as identifiable remains or remove.
+- The moss blobs on the cobble at (40,96) and (272,208) are the same teal shape reused. Vary them.
+
+The gap in this set is not style, it's finish: 2 and 4 share the same well-drawn floor, and everything separating them is a lighting pass that either works or emits hard black rectangles. Worth checking whether 3 is 2 run through a resampling step rather than an independent frame — its geometry is identical and only its detail has been lost, which would mean the fix is a pipeline setting rather than art.
+
+Model: Claude Opus 5 (1M context)

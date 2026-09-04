@@ -1,0 +1,50 @@
+Read all three at full size and at 3–4× on the regions I'm calling out. Pixel values quoted below are from the source files.
+
+**RANK: 2 > 1 > 3**
+
+**BEST: 2**
+
+**BEST_WHY:** The floor paving below the timber band is the only genuinely well-made surface in the set. Every slab in the region around the figure (x 420–700, y 460–620) carries a continuous dark perimeter joint, and the joints vary in width — some runs are a hard 2px black, others break to a broken 1px dotted line mid-run, so the slabs read as separately cut and separately settled rather than stamped from one master. Slab sizes vary genuinely: the run at y≈470–510 right of the figure has a wide 3:1 block butted against two near-squares, and the courses don't align vertically across the frame. The timber band at y≈390–420 is legible as construction — you can count individual salvaged boards, each a slightly different length and value, with a vertical pin visible at x≈568 breaking the top line of the run. It also holds its value structure: the material near the lamp is genuinely brighter than the material at the frame edge without the mid-tones collapsing.
+
+**WORST: 3**
+
+**WORST_WHY:** It has no light model at all. Grey flagstone directly beside the figure at (355,20) is RGB(90,90,90); grey flagstone at the far edge at (10,90) is RGB(90,90,90) — identical. There is no falloff anywhere; the darker greys at the bottom-left are a different tile, not lighting. Beyond that: the water is an axis-aligned rectangle (x 246–383, y 0–192) with a 1-pixel hard edge — row y=100 steps from dirt RGB(65,30,19) at x=247 straight to water RGB(38,81,66) at x=248, with no bank, no shore tile, no transition of any kind. It is filled with one value under a single hex-scale pattern stamped edge to edge, no depth, no reflection. The frame also runs three projections at once: the two barrels at (120,200) and (168,200) are drawn side-on with visible staves and an elliptical lid, the crates at (60–105, 5–70) are drawn in 3/4 with a front face showing, and the floor is pure top-down. Neither barrels nor crates have any contact shadow, so they sit on top of the dirt rather than in it. The same green decal — with an identical 5-pixel asterisk highlight on every instance — appears both in the water and on dry flagstone at (340–375, 145–175) and (20–45, 195–215). And the sconce at (26,110) is a lit torch emitting zero illumination.
+
+**FLAGGED: 1, 2, 3**
+
+**SHIP: NONE**
+
+---
+
+**FLIP 1:**
+- The entire rock mass outside the corridor (x 0–370 and x 440–750, y 90–450) is continuous-tone mottled cloud noise — soft round blobs at 8–12px with no edges and no repeat. Replace it with drawn material at the same texel size as the floor, or make it flat unlit fill. It currently reads as a noise layer, not stone.
+- Long unbroken straight lines cut through that noise — one from approx (37,170) to (140,95), another running from (280,80) down to (375,390) — forming a fan of wedges radiating from the corridor mouth. Rock does not fracture in 300px straight segments. Remove them or replace with breaks that step and change direction.
+- Light is passing through solid rock. At y=340 the rock at x=300 is (63,45,25) against the corridor floor at (410,300) = (82,64,41) — the unexcavated mass is 77% as bright as the walked surface. Occlude the lamp against the corridor walls so the glow terminates at the passage edge.
+- Floor joints break down right of the figure (x 480–700, y 470–620): many slabs carry only a 6–10px vertical dark tick where an edge should be and no perimeter at all — see the isolated strokes at approx (505,560) and (575,505). Close the perimeters so the slabs read as cut blocks instead of tonal patches.
+- The timber run at y≈390–420 left of x≈300 sits within about 3 values of the wall behind it and reads as a smear. Separate the boards from the wall by at least one clear step and restore the individual board ends.
+- The whole frame carries a soft continuous-tone mottle over the pixel work (5763 unique colours against 2's 3414 for the same scene). Drop that layer; it's the single thing making the image read as filtered.
+
+**FLIP 2:**
+- The two rock masses flanking the corridor (x 0–378 and x 440–750, y 70–378) are entirely featureless: soft airbrushed lobes plus four or five wandering hairline cracks across roughly 250,000 pixels. Against a floor drawn at 2px-per-texel, this reads as a layer that failed to render. Either draw the mass at the floor's texel size or drop it to flat unlit fill — the current soft gradient is the worst of both.
+- Light passes through solid rock, and here it's the dominant read. At y=340 the rock at x=300 is (59,49,42) and at x=500 is (71,59,49); the corridor floor at (410,300) is (67,49,33). The unexcavated stone either side is as bright as or brighter than the passage. Occlude the lamp at the corridor walls so the two symmetric glow lobes stop at the passage edge.
+- The same 3-stroke diagonal hatch appears at the same slab-relative offset across most of the floor around the figure (x 420–700, y 460–620). Vary the offset, rotation and stroke count per slab, or cut the hatch on a third of them, so the paving stops reading as one tile repeated.
+- The wall's top surface at the timber band (y 380–455, right of x 440) sits at essentially the same value as the lit floor at y 470 immediately below it. Separate them by a clear step and add an edge so the wall's height reads.
+
+**FLIP 3:** This is a rebuild, not a fix list — but concretely:
+- Implement the light model. There is currently none; sample any two same-material tiles at different distances from the figure and they are identical. Radial falloff from the figure, with the frame edges going to near-black.
+- The torch at (26,110) emits nothing. Either make it a light source with its own falloff or remove it.
+- Give the water a shore. Replace the 1px dirt→water step at x=247 with transition tiles: wet bank, submerged edge, a value gradient into depth. Break the rectangle's straight sides so the pool has a shape.
+- The water fill is one value under a single stamped hex pattern across 138×192px. Add depth variation, break up the pattern, and give it something to reflect.
+- Resolve the projection to one. The barrels at (120,200) and (168,200) are side-on and the crates at (60–105, 5–70) are 3/4, in a top-down frame. Redraw both as top-down.
+- Add contact shadows under the barrels and crates; they currently float on the dirt.
+- Stop reusing the green decal across materials. It appears identically in water and on dry flagstone at (340–375, 145–175) and (20–45, 195–215). Water plants and floor moss need to be different assets.
+- The green pads all carry the same 5px asterisk highlight. Vary or remove it.
+- The dirt is one tile repeated with the same red speckle clusters recurring on a visible 16px lattice. Add tile variants and break the lattice.
+- The grey floor is a perfectly regular grid of identical tiles with a few white specks. Vary the values per tile, add wear at the traffic lines, and give the courses a bond pattern.
+- The dark band at the bottom reads as a wall but sits at the same plane as the floor above it. Give it thickness.
+
+---
+
+The interesting result is 1 and 2: same map, same asset set, two different render passes. 2's floor proves the underlying tile work is genuinely good — the problem is that in both frames roughly 40% of the image is a region nobody drew, and the lighting doesn't know that rock is opaque. Fix the occlusion and fill the rock mass and 2 is close to defensible; 1 needs the noise layer off first, and it's a much bigger job because the noise is what's currently standing in for the missing material. Watch for the hatch-stamp problem spreading — it's already the tell that the paving is one tile, and it'll get louder on any frame with more open floor than this one.
+
+*Model: Claude Opus 5 (1M context)*

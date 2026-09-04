@@ -2605,6 +2605,22 @@ public partial class Main : Node
         // the occlusion's layer count is decided as each cell is drawn.
         Tier1FloorOverlays.UseLighting(lighting);
 
+        // §12.1a IS NOT WIRED, AND THE ATTEMPT IS RECORDED RATHER THAN SHIPPED.
+        //
+        // `ReviewLighting.AddOccluders` implements the clause and MEASURES WORSE. A
+        // LightOccluder2D covering a wall cell blocks the light before it reaches that cell's own
+        // sprite, so the wall shadows its own face: exposed wall fell 37.90 -> 5.51 against a
+        // floor unchanged at 41.35, and "the lamp stops at the wall face" became "the lamp stops
+        // at the wall". Turning culling on (only far edges occlude) did not move it — 5.51 either
+        // way, because the player is south of the face and the occluder's south edge is reached
+        // first whichever winding casts.
+        //
+        // The clause is right and this implementation of it is not. What it needs is an occluder
+        // that begins BEHIND the reveal — §3 already defines that split at `FACE_TOP_ROW` — or a
+        // shadow pass that lights the first surface it meets and stops. Outstanding, deliberately
+        // un-wired, and not left as dead code by accident: the method stays so the next attempt
+        // starts from a measured failure rather than a blank page.
+
         // THE RIG LADDER — §6.2.1's tuning pass, on device, in Rafe's hands. Review builds only:
         // this is reached from LaunchCorridorScene, which a player build never enters.
         var rigPanel = new ReviewRigPanel(lighting);

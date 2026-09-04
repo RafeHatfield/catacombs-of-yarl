@@ -74,10 +74,38 @@ VOID_GRAIN_LEVELS = 1.6
 #
 # The sweep (levels/window, bar = 16.1):  0.85 -> 9.5   0.72 -> 14.6   0.62 -> 18.4   0.52 -> 21.5
 #                                         0.42 -> 25.3  0.30 -> 29.4   0.00 -> 37.3
-# 0.62 is the HARDEST snap that clears the bar, and that is the right end to choose from: §5.6
+# ⚠⚠ 1.00 — A HARD SNAP, NO BLEND (RULED, Rafe, 2026-09-03). THE FLOOR CARRIES EIGHT COLOURS.
+#
+# *"The continuous-tone mottle is the real defect ... an off-palette continuous-tone layer over
+# the pixel art (the 'filtered/cement' read all along). Hunt the render stage adding sub-ladder
+# intermediate values and quantise it to the palette."*
+#
+# Hunted, and the render stage is innocent: turning the whole floor-overlay pass off moved the
+# delivered count 5763 -> 5402. THE COMPOSER IS THE STAGE. Measured on the assets themselves:
+#
+#     the ashlar FLOOR, approved, 300 tiles :    8 unique colours
+#     this cap, 256 windows                 :  107
+#
+# Eight. The floor this cap is cut from is strict palette pixel art and the cap was continuous
+# tone sitting on top of it. Any soft blend at all puts values BETWEEN rungs, and a value between
+# rungs is not in the palette — so the blend goes to zero rather than down a notch.
+#
+# ⚠ AND THIS BREAKS `cap_not_featureless`, WHICH WANTS 16.1 LEVELS PER WINDOW. That bound came
+# off the commercial asset bar, and the bar is a different game with a different palette
+# discipline; Yarl's own approved floor uses eight colours in total. The instrument is a
+# builder's tool and gates nothing (frame-critic skill §2) — when it and the eye disagree about
+# whether a surface should be continuous, the eye wins and the number gets a note, not a retune.
+#
+# The blend history, kept because it is the shape of the mistake: 0.62 -> 0.80 -> 1.00. The soft
+# blend was 38% unsnapped, and unsnapped values sit
+# BETWEEN rungs — which is a gradient, and a gradient has no hard edge. With the slab tooling now
+# carrying the level count (36 per window against the bar's 16.1) the blend is no longer needed to
+# clear `cap_not_featureless`, so it goes back toward the ladder where §5.6 wants it.
+#
+# 0.62 was the HARDEST snap that clears the bar, and that is the right end to choose from: §5.6
 # wants the ladder, so the cap departs from it by the least the bar's own construction allows,
 # not by the most the instrument tolerates.
-SNAP = 0.62
+SNAP = 1.00
 
 
 def wrap_noise(size, cells, rng):
@@ -123,6 +151,117 @@ def field_cracks(size, rng, n, step_rungs, ladder_step):
     return out
 
 
+def field_slabs(size, rng, step, spacing=104, offset_rungs=0.55, fracture_rungs=2.2,
+                tooling_rungs=0.42, gradient_rungs=0.34):
+    """SLAB / FRACTURE ARCHITECTURE at multi-tile scale — RULED (Rafe, 2026-09-03).
+
+    *"Cap architecture approved as a new construction — field-scale slab/fracture structure via
+    world-positioned polylines across the cap mass at multi-tile scale (the crack network's
+    machinery), crossing tile boundaries; the corner theorem binds constant-position constructions
+    and this has none. Courses remain culled on caps; found rock keeps its grain but stops being
+    structureless."*
+
+    WHY THIS IS NOT THE THING THE GATE CULLED. §8.3.3's corner theorem binds constructions whose
+    features sit at a CONSTANT POSITION in every tile: an edge-matched course set must agree at
+    every boundary, so it forces a bed joint onto every boundary, and that joint at 32px pitch was
+    the lattice the device gate rejected. This has no constant position at all — the seeds are
+    placed in FIELD coordinates on a jittered lattice at ~3 tiles' spacing, wrap toroidally, and
+    a slab edge crosses a tile boundary exactly as often as it crosses anything else. There is
+    nothing for the theorem to bite on, which is the same argument that licensed found rock.
+
+    WHAT IT DRAWS. The field is partitioned into slabs by nearest-seed distance; each slab takes a
+    small value offset, so the mass reads as broken rock with parts rather than as one tone with
+    noise on it. Where the two nearest seeds are near-equidistant a FRACTURE runs — the boundary
+    between two blocks of stone, drawn as a value break rather than a ruled line.
+
+    Two critic rounds asked for exactly this and were refused a course grid twice:
+        r001  "Replace with drawn courses at the frame's own pixel size."
+        r002  "fine mottle with no architecture under it. Draw the stone through it."
+    The complaint was ARCHITECTURE, not courses. This answers the complaint without the geometry.
+    """
+    n = max(2, int(round(size / spacing)))
+    cell = size / n
+    # Jittered lattice, so the slabs are irregular but never clustered into a blank half-field.
+    sy, sx = np.mgrid[0:n, 0:n]
+    seeds = np.stack([(sy + rng.uniform(0.15, 0.85, (n, n))) * cell,
+                      (sx + rng.uniform(0.15, 0.85, (n, n))) * cell], axis=-1).reshape(-1, 2)
+    vals = rng.normal(0.0, 1.0, len(seeds))
+    vals = (vals - vals.mean()) / max(vals.std(), 1e-6) * offset_rungs * step
+
+    yy, xx = np.mgrid[0:size, 0:size].astype(float)
+    best = np.full((size, size), 1e18)
+    second = np.full((size, size), 1e18)
+    who = np.zeros((size, size), dtype=int)
+    for i, (cy, cx) in enumerate(seeds):
+        # TOROIDAL distance, so a slab that leaves one edge arrives at the other and the field
+        # still tiles. A non-wrapping partition would put a seam down the field's own join.
+        dy = np.abs(yy - cy); dy = np.minimum(dy, size - dy)
+        dx = np.abs(xx - cx); dx = np.minimum(dx, size - dx)
+        d = dy * dy + dx * dx
+        closer = d < best
+        second = np.where(closer, best, np.minimum(second, d))
+        who = np.where(closer, i, who)
+        best = np.where(closer, d, best)
+
+    out = vals[who]
+
+    # ── DRESSED STONE, NOT POURED CONCRETE (RULED, Rafe, 2026-09-03) ──────────────────────────
+    #
+    # *"The slab construction reads as poured concrete — it needs dressed-stone character:
+    # visible tooling, grain, and value variation within each slab, not smooth fill between
+    # fracture lines."*
+    #
+    # A flat offset per slab is exactly a smooth fill: the partition gave the mass PARTS, and
+    # parts made of nothing still read as cast. Three things go inside each slab, and all three
+    # are keyed to the SLAB rather than to the tile or to the pixel:
+    #
+    #   TOOLING   a directional chisel hatch at the slab's own angle. Per-slab angle is the
+    #             lesson from the floor's own critic flip — *"a single 45 degree angle across
+    #             every slab in the frame"* — learned here without paying for it twice.
+    #   GRADIENT  each slab is lit-and-cut slightly unevenly across its own span, so its interior
+    #             has somewhere to go. This is what a flat offset lacked.
+    #   GRAIN     a per-slab amplitude jitter on the field grain, so two slabs are not the same
+    #             stone at a different value.
+    #
+    # None of it is per-cell and none of it repeats at the tile pitch: the angle, the gradient
+    # axis and the jitter are all indexed by slab id, and slabs are field-scale.
+    ang = rng.uniform(0.0, np.pi, len(seeds))
+    freq = rng.uniform(0.55, 1.15, len(seeds))
+    grad = rng.normal(0.0, 1.0, (len(seeds), 2))
+    jit = rng.uniform(0.6, 1.45, len(seeds))
+
+    ca, sa = np.cos(ang)[who], np.sin(ang)[who]
+    # Toroidal offset from the owning seed, so a slab that wraps is still one slab.
+    dy = yy - seeds[who, 0]; dy -= size * np.round(dy / size)
+    dx = xx - seeds[who, 1]; dx -= size * np.round(dx / size)
+
+    # ⚠ HARD-EDGED STROKES, NOT A SINE WAVE — and the first version was a sine wave.
+    #
+    # It was shaped with a power curve and a comment claiming "a chisel bites; it does not
+    # undulate", and it undulated anyway: a continuous function has no 1px edge anywhere in it.
+    # Measured on the delivered frame, the build carried 12.5% hard gradients against the last
+    # APPROVED frame's 15.6% — the capture really was softer, and the critic said so from the
+    # picture alone: *"render it at 1:1 so slab joints are hard 1px edges again."*
+    #
+    # A chisel groove is a STEP: stone is there, then it is not. So the phase is thresholded
+    # rather than shaped, which puts a hard edge at both sides of every cut.
+    phase = ((dx * ca + dy * sa) * freq[who] / (2.0 * np.pi)) % 1.0
+    tooling = np.where(phase < 0.22, -tooling_rungs * step,
+                       np.where(phase < 0.30, -0.45 * tooling_rungs * step, 0.0))
+
+    gradient = ((dx * grad[who, 1] + dy * grad[who, 0]) / max(spacing, 1.0)) \
+        * gradient_rungs * step
+    out = out + tooling + gradient
+
+    # THE FRACTURE. Near-equidistance between the two nearest seeds is the slab boundary; the
+    # width is in field pixels and does not know the tile size, which is the whole point.
+    edge = np.sqrt(second) - np.sqrt(best)
+    # A fracture between two blocks of stone is a hard line, not a 3px ramp. 1.2 keeps it to
+    # roughly a pixel at the field's own scale, which is what "hard 1px edges" means here.
+    out -= np.clip(1.0 - edge / 1.2, 0.0, 1.0) * fracture_rungs * step
+    return out, jit[who]
+
+
 def build_field(ladder, tint, top_rung, hue_shift, seed=1337,
                 grain_rungs=0.85, drift_rungs=1.10, cracks=7, crack_rungs=1.6, snap=None):
     size = FIELD_TILES * T
@@ -154,12 +293,30 @@ def build_field(ladder, tint, top_rung, hue_shift, seed=1337,
     #
     # 26 cells over 512px is a 20px period; 61 is 8px; 128 is 4px; 256 is 2px. §4.3 is not
     # strained — every octave lands on whole pixels and nothing here is a sub-pixel gradient.
-    octaves = ((26, 0.12), (61, 0.30), (128, 0.95), (256, 1.60))
+    # ⚠ AND THE FIRST TUNING OF THIS WENT PAST STONE INTO NOISE. Chasing the floor's 84.8%
+    # fine-power share, the 2px octave was weighted 1.60 and the frame critic — eyes on the
+    # delivered picture — called the result exactly what it was:
+    #
+    #     "The upper wall masses at x≈60–370 and x≈440–700 are dense SPONGE SPECKLE that reads
+    #      as loose gravel, not a surface."
+    #
+    # That is the failure the frame-critic skill exists to catch, and I walked straight into it:
+    # `grain32.py` is a builder's tool and I treated its number as a target. "Masonry frequency"
+    # is structure at stone scale, not the maximum high frequency a field can carry — and the
+    # metric cannot tell those apart, because a metric never can. The weights below sit between
+    # the cloud the gate rejected (49.6%) and the gravel the critic rejected (73.6%).
+    # The 2px term is the speckle; 8px and 4px are stone-scale structure. So the fine-power
+    # share is bought from STRUCTURE and the pure-noise octave is held down, which is the
+    # difference the share alone cannot see.
+    octaves = ((26, 0.25), (61, 0.90), (128, 1.05), (256, 0.22))
     grain = sum(wrap_noise(size, c, rng) * a for c, a in octaves)
     grain = grain / max(grain.std(), 1e-6)
     grain = grain * grain_rungs * step
 
-    img = base + drift + grain
+    slabs, slab_jitter = field_slabs(size, rng, step)
+    # The grain is modulated PER SLAB, so two slabs are not one stone at two values.
+    img = base + drift + grain * slab_jitter
+    img = img + slabs
     img = img + field_cracks(size, rng, cracks, crack_rungs, step)
 
     # QUANTISE ONTO THE LADDER, the way every other tier-one surface does — but softly, so the

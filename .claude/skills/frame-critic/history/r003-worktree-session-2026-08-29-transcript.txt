@@ -1,0 +1,53 @@
+All three read. I worked at 1:1 and at 6–12× on the surfaces, and measured texture energy where the eye could be fooled by exposure.
+
+**RANK:** 1 > 2 > 3
+
+**BEST:** 1
+
+**BEST_WHY:** The joints on the room floor are drawn, not applied. In the lit block at (440–600, 470–560) the slab edges vary run to run: a heavy 3px-wide dark vertical at x≈450 y 485–515, a thin single-value horizontal at y≈518, and — the part that matters — the large pale slab at (470–495, 478–515) is separated from its neighbour by **no joint at all**, purely by a two-step tone drop. That mix is what cut stone does and what a stamped tileset never does. The chisel hatch also clusters per slab and stops at slab edges (the cluster at (505–550, 478–495) does not cross into the slab below it). The unlit ceiling mass at (120–320, 150–300) carries genuine per-pixel grain — measured edge-energy 0.354 against 0.158 for the same region in 2 — so its polygonal crack lines sit on rock rather than on blur.
+
+**WORST:** 3
+
+**WORST_WHY:** The two barrels at (110–150, 185–210) and (155–195, 185–210) are **guillotined dead flat** by the dirt/stone boundary at y=205. The left barrel's staves simply stop at a straight horizontal line — no bottom rim, no base, no contact shadow. The sprite is being drawn under the terrain layer and sliced. They are also pixel-identical copies of each other at the same sub-tile offset, and they are drawn in three-quarter projection (elliptical lid *plus* visible cylinder wall) sitting on a floor grid drawn from straight overhead. Two projections, one frame. Beyond that: the frame has **no carried light at all** — brightness is uniform corner to corner, which is the one thing the premise requires; the water at (245–330, 0–172) is a hard-cornered rectangle of repeating honeycomb that terminates at a 1px line with no bank; the same 3-blob moss decal is pasted unrotated at (20,55), (30,215) and (365,155); and there is a light-grey untextured rectangle at (164–190, 273–281) sitting in the dark brick course matching no neighbour on any side.
+
+**FLAGGED:** 3, 2
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The corridor floor (378–432, 220–460) is a column of 1px vertical streaks with no slab boundaries, while the room floor 20px to either side is cut slabs. It is the brightest, most central surface in the frame and has no structure. Redraw it as slabs on the room's module, coursed across the corridor.
+- The ceiling masses at (60–370, 70–380) and (440–740, 70–380) are soft blotches 12–20px across — softer and larger than any other feature. The 1px crack lines are hard but sit on mush. Replace the blotch fill with value noise at the floor's granularity.
+- The wall run at y 385–435 has a flat black top surface, so the wall reads as an absence rather than a mass with thickness. Give the top face its own lit value, separated from both the floor and from black.
+- The figure at (390–430, 460–510) has no contact: the slab under its feet is the same value as one a tile away. Add a cast shadow and one extra brightness step on the two tiles it stands on.
+- The chisel hatch is a single 45° angle across every slab in the frame. Vary the angle per slab.
+- Nothing in the frame is an object. Four hundred years of rope, driven pins, hide and salvaged timber, and not one piece of it is visible — the frame is floor, ceiling, and one wall strip. Put the salvage in.
+
+**FLIP 2:**
+- Every joint in the frame is a 50% checkerboard dither at identical period — a procedural outline pass. It is most visible exactly where the light is strongest, across (430–700, 455–610), so the light's job is to reveal a dither artefact. Replace with solid joints of varying weight; delete the joint entirely where two slabs abut and let value carry the separation.
+- The unlit mass at (60–370, 70–380) is smooth airbrush blobs — edge-energy 0.158, less than half the same region in 1. Nothing in it resolves at the pixel grid. Rebuild it with per-pixel noise.
+- Slabs inside the light pool are near-flat fills at nearly one value, so the light lands on a wireframe grid rather than on stone. Give each slab a base value 2–3 steps apart before lighting.
+- Wall run at y 385–435: flat black top, no thickness. Same fix as 1.
+- Figure at (390–430, 460–510): no contact shadow, no local brightening under the feet.
+- No props, no repairs, no salvage anywhere in the frame.
+
+**FLIP 3:**
+- Fix the draw order so barrel sprites render above terrain, and draw their bases and contact shadows — currently both are cut flat at y=205.
+- Differentiate the two barrels: change stave count, rotate the lid seam, dent one.
+- Redraw the barrels from directly overhead. Remove the visible cylinder wall.
+- Add a bank/lip tile along the water edge at (245–330, 0–172), break the straight boundary, and change value where dirt meets water.
+- Replace the honeycomb net water fill with a still, near-flat dark surface; the current pattern repeats at uniform scale right to the cut edge.
+- Add the carried light and its falloff. The frame is currently at one uniform brightness corner to corner.
+- Break the dirt field (55–245, 0–210): it is one noise texture over ~50 tiles with no tile variation and a perfectly axis-aligned rectangular border against the stone.
+- Draw moss variants or randomize rotation — the identical 3-blob decal appears at (20,55), (30,215), (365,155).
+- Give the stone floor tiles (0–384, 210–265) per-tile variation, wear and chipped corners; they are currently one value under a uniform 1px grid.
+- Resolve the timber post at (25–33, 122–170): it emerges from the wall band and ends flat in mid-dirt with nothing supporting or terminating it.
+- Replace the light-grey placeholder rectangle at (164–190, 273–281) with a real brick.
+- Move the figure at (215–245, 0–25) fully inside the frame, and replace the hard-edged brown ellipse under it with a shadow smaller than the sprite.
+- Desaturate the teal water and grass-green moss. Against orange dirt they read cheerful; the register is dry and cold.
+- Redraw the two yellow panels at (48–72, 5–48) — flat rectangles with a centred diamond, nothing about them resolves as an object seen from above.
+
+The gap between 1 and 2 is entirely in the art under an identical lighting rig — I sampled falloff from the figure outward in both and the curves match to within a few levels at every radius. So whatever produced 2's blurred ceiling and dithered joints is a surface-authoring problem, not a lighting one, and fixing it doesn't risk the look.
+
+*Model: Claude Opus 5 (1M context)*

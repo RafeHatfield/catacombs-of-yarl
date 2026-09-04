@@ -91,7 +91,57 @@ def check():
             "Run a real round:   %s" % RUN,
         ]
 
-    if v.get("verdict") != "PASS":
+    # ── PASS-WITH-ROUTED-ITEMS ────────────────────────────────────────────────────────────────
+    #
+    # RULED (Rafe, 2026-09-03): a lawful third state, *"valid only with a quoted Rafe ruling and a
+    # named destination lane — builder can never route."*
+    #
+    # It exists because a FAIL can contain items no round on this lane can ever discharge. The
+    # wall lane's r003 asked for OBJECTS — rope, pins, salvaged timber standing in the scene — and
+    # the review scene has no prop system at all. Grinding that lane produces nothing; the human
+    # gate routes the item to the lane that owns it and the build goes to the walk.
+    #
+    # THE BUILDER CAN NEVER ROUTE, and the enforcement is not a signature — it is VISIBILITY.
+    # Every disposition is required to carry Rafe's words verbatim, every one is printed here, and
+    # the set is stamped into the review marker so the handset shows it. A routing the builder
+    # invented is a quote Rafe does not recognise, on his own screen, while he is holding it. That
+    # is the same principle SKIPPED-REVIEW already runs on: an override nobody can see from the
+    # phone is the same as no gate.
+    #
+    # EVERY flip must be dispositioned. A state that discharges some items and stays silent about
+    # the rest is a FAIL wearing a better name.
+    if v.get("verdict") == "PASS-WITH-ROUTED-ITEMS":
+        flips = list(v.get("flip_list", []))
+        disp = list(v.get("dispositions", []))
+        bad = []
+        if len(disp) < len(flips):
+            bad.append("%d flip items and only %d dispositions — every item must be dispositioned"
+                       % (len(flips), len(disp)))
+        for i, d in enumerate(disp):
+            state = (d.get("state") or "").upper()
+            if state not in ("ROUTED", "CLOSED", "PARKED"):
+                bad.append("disposition %d: state %r is not ROUTED, CLOSED or PARKED" % (i, state))
+            if not (d.get("ruling") or "").strip():
+                bad.append("disposition %d (%s): no quoted ruling" % (i, state))
+            if state == "ROUTED" and not (d.get("lane") or "").strip():
+                bad.append("disposition %d: ROUTED with no destination lane" % i)
+        if bad:
+            return False, L + ["", "PASS-WITH-ROUTED-ITEMS IS NOT LAWFULLY FORMED:"] \
+                   + ["  - %s" % b for b in bad] \
+                   + ["", "It is valid ONLY with a quoted Rafe ruling per item and, for a routed "
+                          "item, a named destination lane. The builder can never route."]
+        L += ["", "PASS WITH ROUTED ITEMS — every flip carries a human disposition:"]
+        for d in disp:
+            L.append("  %-7s %s" % (d.get("state", "?").upper(),
+                                    " ".join((d.get("item") or "").split())[:78]))
+            if d.get("lane"):
+                L.append("          -> %s" % d["lane"])
+            L.append("          Rafe: %s" % " ".join((d.get("ruling") or "").split())[:78])
+        L.append("")
+        L.append("  These are drawn on the handset. A routing Rafe does not recognise is visible")
+        L.append("  to him on his own screen while he is holding the build.")
+
+    elif v.get("verdict") != "PASS":
         why = {"FAIL": "The seat would not ship this frame.",
                "VOID": "The seat did not catch the picture-plant. The judging layer is not "
                        "trustworthy and the round's findings are not read (LOOP-PROCESS §4). "

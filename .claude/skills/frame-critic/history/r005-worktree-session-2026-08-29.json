@@ -1,0 +1,119 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "VOID",
+ "lane": "worktree-session-2026-08-29",
+ "round": 5,
+ "surface": "wall",
+ "commit": "7633de641126c0c22c99baa9e04dc347fd5c62a5",
+ "dirty": true,
+ "build_id": "6890b826c375b1676f6c33b3375379c3ba9a3bcd2ea8ccd7c18b1d5bd63be81f",
+ "timestamp": "2026-09-03T17:59:40",
+ "build_frame": {
+  "path": "tools/tier1_walls/evidence/fc_standing.png",
+  "sha256": "b2ec7eb05372219695bf092fe780c7e4f826df4e8736feff7849cf159eb18af2",
+  "log": "tools/tier1_walls/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/session-2026-08-29 --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_walls/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-choice 0 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-session-2026-08-29-r5",
+  "slots": {
+   "1": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "2": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/grey-walls.png",
+    "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "build",
+    "source": "tools/tier1_walls/evidence/fc_standing.png",
+    "sha256": "b2ec7eb05372219695bf092fe780c7e4f826df4e8736feff7849cf159eb18af2",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "4": {
+    "what": "approved",
+    "source": "tools/tier1_walls/evidence/r17_standing_mat.png",
+    "sha256": "2ba162b49cc5f642f4545a1209a0fb66fe928fede0a83e4b80b85c12cff5929c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_walls/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 2,
+  "file": "grey-walls.png",
+  "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+  "culled_by": "Rafe, device gate, 2026-09-02",
+  "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
+  "caught": false,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": false,
+   "shipped": false,
+   "outranked_build": true,
+   "outranked_by_approved": true,
+   "approved_slot": 4,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The floor slabs between roughly x240\u2013560, y460\u2013640 are genuinely surveyed rather than tiled: slab widths run 14, 22, 9, 30 px along a single course, and a crack enters at the left edge around (240,580), climbs to (400,520) and continues across three separate slab boundaries without breaking at any of them \u2014 it was drawn over the masonry, not into one tile. The top wall band at y0\u201360 carries the same discipline: varied block widths and a meandering hairline joint that crosses the whole run. The lit-floor edge energy measures 3.40/3.60 (gx/gy) against 2.44/2.86 for the same rectangle in 3, so the joint structure here is really present and not an impression of it.",
+  "WORST_WHY": "The pond is a rectangle. Water occupies exactly x248\u2013343, y0\u2013191; at row 100 it starts at x=248 and stops at x=343 on a dead-straight vertical pixel line, and at column 300 it stops at y=191 on a dead-straight horizontal one, meeting in an unmodified 90\u00b0 corner at (343,191). No bank, no shelf, no darkening at depth, no edge treatment of any kind \u2014 dirt, then teal. The two barrels at (118,188) and (166,188) are the same sprite pasted 48px apart: aligning them gives a mean per-pixel difference of 1.87, which is just the dirt showing through. Same lid ellipse, same highlight on the same side, same staves, no flip, no rotation, and neither has a contact shadow \u2014 both are simply chopped flat where the cobble tile starts at y\u2248214. Both barrels and the two chests at top-left are drawn in \u00be view (visible lid ellipse, visible front face) inside a frame that is otherwise straight top-down. And there is no lighting pass at all: corner luminances read 101, 90, 71, 71 against 59 at frame centre, so the frame is *brightest at the top-left corner* and darkest in the middle, with the figure at (232,8) casting nothing. The green figure itself is a hard-outlined, fully saturated cartoon sprite that shares no ramp with the muted environment tiles.",
+  "FLAGGED": "4, 1, 3",
+  "RANK": "2 > 4 > 3 > 1",
+  "BEST": "2",
+  "WORST": "1",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "Joints in the lit floor (x240\u2013560, y520\u2013640) have been blurred out \u2014 edge energy 2.44/2.86 against 3.40/3.60 for the identical region in the other frames. Restore the 1px joint darks at native resolution; do not resample the tile layer before compositing light.",
+  "The upper rooms at x0\u2013370, y75\u2013390 are a Voronoi cell field \u2014 irregular polygons with thin dark borders and soft blotch fill. There is no brick, no course line, no straight architectural edge anywhere in it. Replace with the masonry already drawn elsewhere in this same frame.",
+  "A pale wedge runs from about (90,470) diagonally down to the figure, ignoring the slab grid and with no emitter anywhere along it. Delete it, or give it a source.",
+  "The cluster at roughly x340\u2013450, y570\u2013620 is smeared dark noise that reads as no object. Redraw it as a readable prop or clear it.",
+  "Then everything in FLIP 2."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r005-worktree-session-2026-08-29-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

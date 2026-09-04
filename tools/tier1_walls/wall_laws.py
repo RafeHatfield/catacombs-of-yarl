@@ -286,7 +286,29 @@ def cap_seamless(man, imgs, cap=None):
 
 
 def cap_not_featureless(man, imgs, cap=None):
-    """§8.3.1's mirror: incident-free is not empty.
+    """SUPERSEDED-BY-GATE (§4.3) — RULED, Rafe, 2026-09-03. A builder's tool; it decides nothing.
+
+    ⚠ ITS BAR IS ANOTHER GAME'S PALETTE DISCIPLINE. The 16.1-levels-per-window figure was measured
+    off the commercial asset bar, and the bar is a different game authored to a different palette.
+    **Yarl's own approved floor carries EIGHT colours in total** (300 ashlar tiles, measured).
+    Held to this bound, the cap was authored with 107 colours against that floor's 8, and the
+    frame critic read the result off the picture with no instrument at all:
+
+        "The whole frame carries a soft continuous-tone mottle over the pixel work (5763 unique
+         colours against 2's 3414 for the same scene) ... it's the single thing making the image
+         read as filtered."
+
+    So the number and the eye disagreed about whether a wall top should be continuous, and the
+    eye wins: the cap is hard-snapped to the ladder now and carries 9 colours, and THIS TEST
+    FAILS ON THE SHIPPING FAMILY BY DESIGN. That is the correct state, not a regression.
+
+    Left in place, still running, still printing, because the level count is a useful thing to
+    know while aiming — which is what §4.3 means by superseded rather than deleted. What it may
+    not do is hold a gate, and under the frame-critic skill §2 nothing here does.
+
+    The original claim, kept because the reasoning is still sound where the palette allows it:
+
+    §8.3.1's mirror: incident-free is not empty.
 
     Held to the BAR's own cap, which carries 16.1 distinct values per tile with only 53.8% of it
     on the modal value (`WALL-RECIPE.md` A.1). A cap below that is emptier than the thing we are
@@ -302,7 +324,8 @@ def cap_not_featureless(man, imgs, cap=None):
         mode = float(np.bincount(np.clip(np.round(a), 0, 255).astype(int).ravel()).argmax())
         modal.append(float((np.abs(a - mode) < 1.5).mean()))
     lv, md = float(np.mean(levels)), float(np.mean(modal))
-    return dict(pass_=bool(lv >= 16.1 and md <= 0.538), levels_mean=round(lv, 2),
+    return dict(pass_=bool(lv >= 16.1 and md <= 0.538), superseded="by-gate (§4.3)",
+                levels_mean=round(lv, 2),
                 modal_share=round(md, 4), n=len(levels),
                 bound="at least the bar's 16.1 levels and no flatter than its 53.8% modal share")
 

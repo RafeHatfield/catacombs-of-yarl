@@ -170,6 +170,22 @@ one edit, and it **loosens** the gate, so it is Rafe's to make.
 bar found wanting mid-run is held frozen, cleared honestly, and impeached in the same report —
 never re-tuned once the answer is visible. This section is that impeachment.
 
+### Plants are drawn PER AXIS
+
+**LAW (Rafe, 2026-09-03).** *"Per-axis morgue plants — tag entries by axis, assemble the plant to
+match the deck's question; this is why round 5 VOIDed."*
+
+A plant is only a control if it is wrong **on the axis under test**. Morgue entries carry an
+`axis` list; `docs/FRAME-CRITIC.json` carries the round's `axis`; the deck draws a plant that
+matches. An entry with no `axis` answers any question, so the morgue stays usable while it is
+being tagged.
+
+The wall lane paid for this. Round 5 was judged on **construction** — does the cap read as stone
+or as cement — and was handed the `grey-walls` plant, whose defect is **chroma**. The build's
+chroma had already been fixed, so the two frames differed on an axis the plant was not carrying,
+the seat had no reason to rank the plant last, and the round voided **on the judge rather than on
+the art**. The right image for the wrong question is not a control.
+
 ### The morgue
 
 `morgue/` holds frames **Rafe personally culled at the device gate**, with his verbatim words and
@@ -244,6 +260,42 @@ the line stopped, which guard fired, and where the report is. Do not summarise t
 Rafe reads it.
 
 ---
+
+### PASS-WITH-ROUTED-ITEMS — the third lawful verdict state
+
+**LAW (Rafe, 2026-09-03).** *"Valid only with a quoted Rafe ruling and a named destination lane —
+builder can never route."* Implemented in `critic_gate.py`.
+
+A FAIL can contain items **no round on this lane can ever discharge.** The wall lane's r003 asked
+for *objects* — rope, driven pins, salvaged timber standing in the scene — and the review scene
+has no prop system at all. Grinding that lane produces nothing. The human gate routes the item to
+the lane that owns it and the build goes to the walk.
+
+**Every flip must carry a disposition.** A state that discharges some items and stays silent about
+the rest is a FAIL wearing a better name.
+
+| state | means | requires |
+|---|---|---|
+| `ROUTED` | another lane owns it | a quoted ruling **and** a named destination lane |
+| `CLOSED` | ruled not to be chased | a quoted ruling |
+| `PARKED` | first-time item, awaiting Rafe eye on the walk | a quoted ruling |
+
+**The builder can never route**, and the enforcement is not a signature — it is **visibility**.
+Every disposition is printed at the gate and stamped onto the handset, so a routing the builder
+invented is a quote Rafe does not recognise, on his own screen, while he is holding the build.
+
+### A guard clears by an ADDED artifact, never by removing evidence
+
+**LAW (Rafe, 2026-09-03).** The counters are derived from the verdict files on disk, which means
+the only way to clear one is to delete them — and **a mechanism whose reset is *destroy the
+record* teaches exactly the wrong reflex.** The lane that most wants a guard gone is the lane
+holding the evidence against itself.
+
+So nothing is ever deleted. A ruling that clears a guard is written as an **added** artifact at
+the repo root (`PARK-CLEARED.json` is the worked example) naming the lane, the rounds it covers,
+and the ruling verbatim; the guard then counts rounds **after** the marker. It **cannot clear a
+broken judge** — a soft critic is not a lane problem, and no ruling about a lane makes an
+unreadable verdict readable.
 
 ## 6. The install gate
 
