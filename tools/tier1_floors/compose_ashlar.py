@@ -323,8 +323,85 @@ DIRS = crack_dir_table()
 # is a drawn line; a real one is deepest where it has opened and shallows to nothing at its ends.
 # The depth is modulated per pixel from the crack's own world position, so it varies ALONG the
 # fracture and both tiles either side of a boundary agree about it.
+# ================= THE FLOOR STEPS, IT DOES NOT RAMP =================
+#
+# Consolidation pass, from the parked lane's floor-only items. The frame critic, twice:
+# "the slab edges ramp over two to three pixels and adjacent blocks merge until the joint
+# vanishes; step them at a hard boundary so the floor sits at the same resolution as the sprite",
+# and "large soft value-blobs sit across the floor that follow no geometry... they read as
+# airbrush, not as light or as material."
+#
+# Both are the same defect wearing two descriptions: CONTINUOUS TERMS ON A QUANTISED SURFACE.
+# The chip pass subtracted a fraction of a rung from the pixels beside an open joint, the dish
+# subtracted a smooth radial, and the lane's falloff was a smoothstep — none of them landing on
+# the ladder, all of them producing intermediate values the palette was built to forbid. §4.3
+# bans anti-aliasing and these were manufacturing it at paint time.
+#
+# The fix is not to remove them. It is to make each land ON a rung: a chipped arris takes the
+# JOINT'S OWN VALUE rather than an intermediate, and the dish steps in whole rungs.
+CHIP_TAKES_JOINT = True     # a chipped arris is joint, not a blend on the way to one
+DISH_QUANTISE = True        # the dish steps in whole rungs, so it reads as depth not as airbrush
+
 CRACK_DEPTH_VARY = 0.18    # +/- share of the crack's depth, keyed on world position
 CRACK_VARY_SALT = 3017
+# A CRACK HAS A SECTION. "A uniform 1px black stroke has no depth" — a real fracture has a lip
+# where the stone has broken away on one side and a channel below it. The lip is drawn on the
+# side the crack's own local direction chooses, so it is consistent along a run rather than
+# alternating pixel to pixel, and it is LIGHTER than the stone: a broken edge catches light the
+# flat face does not.
+# AND IT REGISTERS THE JOINTS IT CROSSES. The frame critic: "a crack that crosses six slabs in
+# one smooth curve without registering a single joint reads as a line drawn over the floor, not
+# damage in it. Break them at joints, or run them along one."
+#
+# It cannot be done in the polyline, and the reason is worth recording because it is a standing
+# constraint on this family rather than a shortcut. A crack must be a PURE FUNCTION OF WORLD
+# POSITION — that is what makes every tile it crosses compute the identical line, and it is the
+# same discipline the corner theorem imposes on the stones. The bond is not a world function: a
+# tile's course splits, drop pattern and stone origins come from the atlas VARIANT the map picks
+# for that cell at runtime. A crack that deflected on the real joints would therefore be a
+# different crack depending on which tile drew it, and the disagreement would land exactly on the
+# tile boundaries — §8.3.1's grid tell, reintroduced by the fix for a different defect.
+#
+# What IS available at paint time, in every painter, from purely local information: where the
+# crack passes through a joint, the arrises either side of the crossing SPALL. The stone corners
+# break away, so the crack is wide where it meets the bond and narrow across the slab — which is
+# how a fracture actually crosses a joint, and it registers the joint at the one place the
+# critic said nothing registered it. Computed from the ORIGINAL crack set, so it is
+# order-independent, and from the joint mask, which both tiles either side of a boundary already
+# agree about by edge-family construction.
+CRACK_SPALL = True
+
+
+def crack_spall(pixels, joint, stone_ok):
+    """The pixels that break away where a crack crosses a joint. Tile-local, order-free.
+
+    `pixels` is the tile's crack set, `joint(ly, lx)` says whether a pixel is joint, and
+    `stone_ok(ly, lx)` says whether a pixel is in bounds and is stone.
+    """
+    if not CRACK_SPALL:
+        return set()
+    have = set(pixels)
+    out = set()
+    for (ly, lx) in have:
+        if joint(ly, lx):
+            continue
+        # BOUNDS FIRST. A negative index wraps silently in numpy and a positive one raises;
+        # the first version of this did both, on the same line.
+        if not any(0 <= ny < T and 0 <= nx < T and joint(ny, nx) and (ny, nx) in have
+                   for (ny, nx) in ((ly - 1, lx), (ly + 1, lx), (ly, lx - 1), (ly, lx + 1))):
+            continue
+        # Perpendicular to the crack's own local run, or the spall is drawn along it and is
+        # invisible: a horizontal crack widened horizontally is still one pixel tall.
+        vert = (ly - 1, lx) in have or (ly + 1, lx) in have
+        cand = ((ly, lx - 1), (ly, lx + 1)) if vert else ((ly - 1, lx), (ly + 1, lx))
+        for (ny, nx) in cand:
+            if 0 <= ny < T and 0 <= nx < T and stone_ok(ny, nx) and (ny, nx) not in have:
+                out.add((ny, nx))
+    return out
+
+
+CRACK_LIP = 0.55           # rungs the lip sits ABOVE the stone it broke from
+CRACK_LIP_SALT = 3018
 CRACK_DEPTH = 0.42         # the joint's own depth: a crack is dark because ENCLOSED (§6.5),
                            # and one that met a joint at a different value would announce itself
                            # as a decal laid over the bond rather than a split through it.
@@ -511,6 +588,15 @@ MARK_BANDS, MARK_PITS = 5, 3        # on ordinary stone
 # dressing rather than through the bond. Keyed on the stone's own address, so a bare stone is bare
 # from both tiles that see it.
 MARK_BARE_SHARE = 0.34
+# AND THE MARKED STONES CLUSTER. "The scribble marks are distributed as an even noise field
+# across the whole floor. Place them deliberately in clusters where a hand would have made them,
+# and leave stretches of floor with none." Bare-vs-marked was a per-stone coin flip, which is an
+# even field by construction however low the rate. The coin is now biased by a coarse world
+# field, so working ran in one part of a room and not another — and the field is world-keyed, so
+# a cluster crosses tile boundaries the way a hand would.
+MARK_CLUSTER_PERIOD = 5    # tiles
+MARK_CLUSTER_SALT = 3019
+MARK_CLUSTER_SWING = 0.30  # how far the bare share moves between a busy patch and a quiet one
 WEAR_BANDS, WEAR_PITS = 3, 1        # on trodden stone
 
 
@@ -602,7 +688,7 @@ def stone_extent(fw, fe, kind, c, drop, split_i):
     return 0, mv_e - a_w, v_hi                     # interior
 
 
-def stone_marks(key, seed, extent, worn=False, wear=0.0):
+def stone_marks(key, seed, extent, worn=False, wear=0.0, extent_world=None):
     """The dressing on one stone, in STONE-LOCAL pixels: [(u, v, depth_in_rungs), ...].
 
     Addressed by the stone, like its value and its grain, so it cannot repeat on the tile grid —
@@ -612,7 +698,13 @@ def stone_marks(key, seed, extent, worn=False, wear=0.0):
     st = _lcg((key ^ (MARKS + seed)) | 1)
     # BARE STONE. Drawn from the stone's own key before anything else, so it is stable and shared
     # across a boundary, and so the marks that DO appear read as events rather than as a coat.
-    if ((key ^ (MARKS + seed)) % 1000) / 1000.0 < MARK_BARE_SHARE:
+    bare = MARK_BARE_SHARE
+    if extent_world is not None:
+        wx, wy = extent_world
+        c = (mix(wx // (MARK_CLUSTER_PERIOD * T), wy // (MARK_CLUSTER_PERIOD * T),
+                 MARK_CLUSTER_SALT + seed) % 1000) / 1000.0
+        bare = min(max(MARK_BARE_SHARE + (c - 0.5) * 2.0 * MARK_CLUSTER_SWING, 0.0), 0.95)
+    if ((key ^ (MARKS + seed)) % 1000) / 1000.0 < bare:
         return []
     u_lo, u_hi, v_hi = extent
     u_span = max(1, u_hi - u_lo - 1)
@@ -1585,6 +1677,12 @@ def main():
     mat["lane_fray"] = LANE_FRAY
     mat["crack_depth_vary"] = CRACK_DEPTH_VARY
     mat["mark_bare_share"] = MARK_BARE_SHARE
+    mat["chip_takes_joint"] = CHIP_TAKES_JOINT
+    mat["dish_quantise"] = DISH_QUANTISE
+    mat["crack_lip"] = CRACK_LIP
+    mat["crack_spall"] = CRACK_SPALL
+    mat["mark_cluster_period"] = MARK_CLUSTER_PERIOD
+    mat["mark_cluster_swing"] = MARK_CLUSTER_SWING
     mat["joint_polish_floor"] = JOINT_POLISH_FLOOR
     mat["polish_lane"] = [POLISH_LANE_GAIN, POLISH_LANE_WIDTH, POLISH_SHOULDER]
     mat["striation"] = [STRIA_PERIOD, STRIA_DEPTH]
@@ -1600,7 +1698,8 @@ def main():
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
                           marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT,
                           hollow=HOLLOW_SALT, stria=STRIA_SALT, lane_dish=LANE_DISH_SALT,
-                          grit=GRIT_SALT, shelter=SHELTER_SALT, lane_fray=LANE_FRAY_SALT, crack_vary=CRACK_VARY_SALT),
+                          grit=GRIT_SALT, shelter=SHELTER_SALT, lane_fray=LANE_FRAY_SALT, crack_vary=CRACK_VARY_SALT, crack_lip=CRACK_LIP_SALT,
+                          mark_cluster=MARK_CLUSTER_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,

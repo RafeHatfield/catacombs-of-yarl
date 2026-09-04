@@ -100,6 +100,11 @@ public static class Tier1AshlarFloor
         public int CrackVarySalt = 3017;
         public double CrackDepthVary = 0.18;
         public double MarkBareShare = 0.34;
+        public bool ChipTakesJoint = true, DishQuantise = true, CrackSpall = true;
+        public double CrackLip = 0.55;
+        public int CrackLipSalt = 3018, MarkClusterSalt = 3019;
+        public int MarkClusterPeriod = 5;
+        public double MarkClusterSwing = 0.30;
         public int LaneFraySalt = 3016;
         public double LaneFray = 0.32;
         public double JointPolishFloor = 0.70;
@@ -325,7 +330,7 @@ public static class Tier1AshlarFloor
 
     private static List<(int U, int V, double D)> StoneMarks(Config c, int key, bool worn,
                                                              (int Lo, int Hi, int VHi) ext,
-                                                             double wear)
+                                                             double wear, int wx = -1, int wy = -1)
     {
         // TRAFFICKED STONES POLISH SMOOTHER AS THEIR JOINTS OPEN; sheltered stones stay sharp and
         // tight. The dressing is what traffic takes off first, so its count and its depth both
@@ -335,7 +340,18 @@ public static class Tier1AshlarFloor
         // diagonal-hatch motif recurs on a visible rhythm across the lit area — omit it on a
         // third of the slabs." An even scatter over every stone stops being an event and becomes
         // the material, which is §8.3's motif trap arriving through the dressing.
-        if (((key ^ (c.MarksSalt + c.Seed)) % 1000) / 1000.0 < c.MarkBareShare)
+        // AND THE MARKED STONES CLUSTER. A per-stone coin flip is an even field by construction
+        // however low its rate — "distributed as an even noise field across the whole floor".
+        // The coin is biased by a coarse world field, so working ran in one part of a room and
+        // not another, and a cluster crosses tile boundaries the way a hand would.
+        double bare = c.MarkBareShare;
+        if (wx >= 0)
+        {
+            int cp = c.MarkClusterPeriod * T;
+            double cl = (Mix(wx / cp, wy / cp, c.MarkClusterSalt + c.Seed) % 1000) / 1000.0;
+            bare = System.Math.Clamp(bare + (cl - 0.5) * 2.0 * c.MarkClusterSwing, 0.0, 0.95);
+        }
+        if (((key ^ (c.MarksSalt + c.Seed)) % 1000) / 1000.0 < bare)
             return new List<(int, int, double)>();
 
         double keep = 1.0 - c.DressingKeep * wear;
@@ -935,7 +951,8 @@ public static class Tier1AshlarFloor
                 int mAx = (cellIndex % AtlasCols) * T, mAy = (cellIndex / AtlasCols) * T;
                 var mExt = StoneExtent(cfg, fw, fe, kind, c, drops[c], splitI);
                 double sw = Wear01(cfg, WearScalar(cfg, traffic, tx * T + T / 2, ty * T + T / 2), worn);
-                foreach (var (mu, mv, md) in StoneMarks(cfg, key, worn, mExt, sw))
+                foreach (var (mu, mv, md) in StoneMarks(cfg, key, worn, mExt, sw,
+                                                       tx * T, ty * T))
                 {
                     int mlx = mu + ox[cls], mly = mv + oy[cls];
                     if (mlx < 0 || mlx >= T || mly < 0 || mly >= T) continue;
@@ -1127,7 +1144,12 @@ public static class Tier1AshlarFloor
                 double dishL = u * u * cfg.LaneDishDepth;
                 double rimL = (ld > cfg.PolishShoulder * 0.80 && ld < cfg.PolishShoulder * 1.05)
                               ? cfg.LaneDishRim : 0.0;
-                raw[py, px] -= (dishL + rimL) * rung;
+                // THE DISH STEPS. A smooth radial subtraction is airbrush on a quantised surface
+                // — the critic's "large soft value-blobs that follow no geometry, they read as
+                // airbrush, not as light or as material". Whole rungs read as depth.
+                double dishTotal = dishL + rimL;
+                if (cfg.DishQuantise) dishTotal = System.Math.Round(dishTotal);
+                raw[py, px] -= dishTotal * rung;
 
                 // MARGIN GRIT. Traffic sweeps the centre clean and drives what it lifts to the
                 // flanks, so the swept lane reads as conspicuously bare BETWEEN gritty edges.
@@ -1178,7 +1200,72 @@ public static class Tier1AshlarFloor
                 if (near <= 0.0) continue;
                 int h = Mix(tx * T + px, ty * T + py, cfg.ChipSalt + cfg.Seed);
                 if ((h % 1000) / 1000.0 < cfg.ChipRate * near)
-                    raw[py, px] -= near * rung * 1.6;
+                {
+                    // A CHIPPED ARRIS IS JOINT, NOT A BLEND ON THE WAY TO ONE. Subtracting a
+                    // fraction of a rung put intermediate values along every open joint, which is
+                    // the two-to-three pixel ramp the critic saw the slab edges dissolve into.
+                    // The stone that broke away is gone: the pixel takes the joint's own value.
+                    double jv = 0.0;
+                    if (py > 0 && clsArr[py - 1, px] == 0) jv = System.Math.Max(jv, raw[py - 1, px]);
+                    if (py < T - 1 && clsArr[py + 1, px] == 0) jv = System.Math.Max(jv, raw[py + 1, px]);
+                    if (px > 0 && clsArr[py, px - 1] == 0) jv = System.Math.Max(jv, raw[py, px - 1]);
+                    if (px < T - 1 && clsArr[py, px + 1] == 0) jv = System.Math.Max(jv, raw[py, px + 1]);
+                    if (cfg.ChipTakesJoint && jv > 0.0) raw[py, px] = jv;
+                    else raw[py, px] -= near * rung * 1.6;
+                }
+            }
+        }
+
+        // THE CRACK SET, WITH THE ARRISES THAT SPALL WHERE IT CROSSES A JOINT. The frame
+        // critic: "a crack that crosses six slabs in one smooth curve without registering a
+        // single joint reads as a line drawn over the floor." It cannot deflect — a crack is a
+        // pure function of world position so that every tile it crosses draws the identical
+        // line, and the bond is a per-atlas-variant property, not a world function; deflecting on
+        // the real joints would make the crack disagree with itself on the tile boundaries.
+        // What it can do, from purely local information, is BREAK THE ARRISES at the crossing:
+        // wide at the bond, narrow across the slab. See compose_ashlar.crack_spall.
+        var cset = new HashSet<(int, int)>();
+        if (crackCache != null)
+        {
+            var craw = new HashSet<(int, int)>(CrackPixels(cfg, tx, ty, crackCache));
+            foreach (var q in craw) cset.Add(q);
+            if (cfg.CrackSpall)
+                foreach (var (ly, lx) in craw)
+                {
+                    if (clsArr[ly, lx] == 0) continue;
+                    bool touches =
+                        (ly > 0 && clsArr[ly - 1, lx] == 0 && craw.Contains((ly - 1, lx)))
+                     || (ly < T - 1 && clsArr[ly + 1, lx] == 0 && craw.Contains((ly + 1, lx)))
+                     || (lx > 0 && clsArr[ly, lx - 1] == 0 && craw.Contains((ly, lx - 1)))
+                     || (lx < T - 1 && clsArr[ly, lx + 1] == 0 && craw.Contains((ly, lx + 1)));
+                    if (!touches) continue;
+                    bool vert = craw.Contains((ly - 1, lx)) || craw.Contains((ly + 1, lx));
+                    var cand = vert
+                        ? new[] { (ly, lx - 1), (ly, lx + 1) }
+                        : new[] { (ly - 1, lx), (ly + 1, lx) };
+                    foreach (var (ny, nx) in cand)
+                    {
+                        if (ny < 0 || ny >= T || nx < 0 || nx >= T) continue;
+                        if (clsArr[ny, nx] == 0 || craw.Contains((ny, nx))) continue;
+                        cset.Add((ny, nx));
+                    }
+                }
+        }
+
+        // A CRACK HAS A SECTION. The frame critic: "a uniform 1px black stroke has no depth."
+        // A real fracture has a LIP where the stone broke away on one side and a channel below
+        // it. The lip goes in HERE, before quantisation, so it lands on a rung like everything
+        // else — and the crack pixels themselves are still painted last, over the top.
+        if (crackCache != null && cfg.CrackLip != 0.0)
+        {
+            foreach (var (ly, lx) in cset)
+            {
+                int side = (int)(Mix((tx * T + lx) / 4, (ty * T + ly) / 4,
+                                     cfg.CrackLipSalt + cfg.Seed) % 2);
+                int lx2 = lx + (side != 0 ? 1 : -1);
+                if (lx2 < 0 || lx2 >= T) continue;
+                if (clsArr[ly, lx2] == 0 || cset.Contains((ly, lx2))) continue;
+                raw[ly, lx2] += cfg.CrackLip * rung;
             }
         }
 
@@ -1282,7 +1369,7 @@ public static class Tier1AshlarFloor
             // THE CRACK VARIES ALONG ITS LENGTH. One value end to end is a drawn line; the
             // frame critic named it twice as "the identical overlay, uniform 1px black". Keyed on
             // world position so the fracture varies as it travels and both tiles agree.
-            foreach (var (ly, lx) in CrackPixels(cfg, tx, ty, crackCache))
+            foreach (var (ly, lx) in cset)
             {
                 double vv = ((Mix(tx * T + lx, ty * T + ly, cfg.CrackVarySalt + cfg.Seed) % 1000)
                              / 1000.0 - 0.5) * 2.0;
@@ -1470,6 +1557,14 @@ public static class Tier1AshlarFloor
             cfg.CrackVarySalt = salts.GetProperty("crack_vary").GetInt32();
             cfg.CrackDepthVary = mat.GetProperty("crack_depth_vary").GetDouble();
             cfg.MarkBareShare = mat.GetProperty("mark_bare_share").GetDouble();
+            cfg.ChipTakesJoint = mat.GetProperty("chip_takes_joint").GetBoolean();
+            cfg.DishQuantise = mat.GetProperty("dish_quantise").GetBoolean();
+            cfg.CrackSpall = mat.GetProperty("crack_spall").GetBoolean();
+            cfg.CrackLip = mat.GetProperty("crack_lip").GetDouble();
+            cfg.CrackLipSalt = salts.GetProperty("crack_lip").GetInt32();
+            cfg.MarkClusterSalt = salts.GetProperty("mark_cluster").GetInt32();
+            cfg.MarkClusterPeriod = mat.GetProperty("mark_cluster_period").GetInt32();
+            cfg.MarkClusterSwing = mat.GetProperty("mark_cluster_swing").GetDouble();
             cfg.LaneFraySalt = salts.GetProperty("lane_fray").GetInt32();
             cfg.LaneFray = mat.GetProperty("lane_fray").GetDouble();
             cfg.JointPolishFloor = mat.GetProperty("joint_polish_floor").GetDouble();
