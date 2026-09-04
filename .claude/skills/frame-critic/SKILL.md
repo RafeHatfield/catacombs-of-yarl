@@ -17,12 +17,16 @@ obvious defect. That is the verdict.
 ```
 
 ```
-exit 0  PASS   the seat would ship this frame
-exit 1  FAIL   it would not; the flip list is in CRITIC-VERDICT.json, verbatim
+exit 0  PASS   the seat would ship this frame, flagged nothing in it, and ranked it at or
+               above the last Rafe-approved frame and near the asset bar. Any round.
+exit 1  FAIL   any of those missing; the flip list is in CRITIC-VERDICT.json, verbatim
 exit 2  VOID   it did not catch the plant. Findings are NOT READ. Stop and fix the judge.
 exit 3  STOP   a loop guard fired. Read STALL-REPORT.md, end the turn, hand it to Rafe.
 exit 4  refused — a precondition failed and it says which
 ```
+
+**PASS is reachable at any round and the guards never gate it** — they decide when to stop and
+ask, never what may ship.
 
 ---
 
@@ -125,23 +129,42 @@ same result. It is the most important thing in this file:
 | **the plant self-test** | the build slot deliberately held `keyline-floor.png`, a frame Rafe culled outright. The seat **ranked it best of three and did not flag it.** It listed that frame's magenta placeholder walls in its flip list, so it had seen them — it simply did not call it a flagged defect |
 | **the round that found the padded bar** | a different seat on the same wall build **ranked the plant above it again**, and ranked the commercial asset bar last — for a black band the crop box had put there |
 | **the round that found the white margin** | a third seat, a third shuffle, **the plant above the build again** — and the bar last again, this time for the example sheet's own white paper margin |
+| **the first round under the progress guards** | a fourth seat put the plant **first in the deck and flagged nothing in it.** The round went **VOID** — the first time the control actually fired, and the strongest form of the same finding |
 
 Every one of them still came out **FAIL** with `SHIP: NONE`, and no gate opened. That is the whole
 protective claim and it is narrower than it sounds:
 
-> **The gate rests on SHIP, not on RANK.** Only a PASS opens it, and PASS requires the seat to
-> put this frame in SHIP unflagged. What the mechanism guarantees is that a build reaching the
-> phone is one a blind seat said it would ship. It does **not** guarantee the seat's ordering
-> agrees with the human gate's — the evidence is that it does not.
+> **Rank is never sufficient on its own.** PASS requires the seat to put this frame in SHIP,
+> unflagged — and, since the progress amendment, *also* to have ranked it at or above the last
+> approved frame and near the bar. Rank is a **necessary** condition added on top, never a
+> substitute: a build that outranks everything and is not in SHIP still fails. What the mechanism
+> guarantees is that a build reaching the phone is one a blind seat said it would ship. It does
+> **not** guarantee the seat's ordering agrees with the human gate's — the evidence above is that
+> it does not, which is exactly why rank was added as a filter and not as a verdict.
 
-So the ordering facts are **recorded and reported, never scored**: `outranked_build` when the
+Two ordering facts remain **recorded and reported, never scored**: `outranked_build` when the
 plant sits above the build, and `every_frame_flagged` when a seat flags everything including the
 commercial bar and its flag therefore carries no discrimination. Folding either into the verdict
 would say the wrong thing — VOID means *stop and fix the judge*, and there is nothing wrong with
 the judge in either case.
 
-A seat too harsh ever to PASS is a real failure too, and it belongs to the **five-round park**
-guard, not to the plant.
+Rank does one more job, and only one: it is **the progress signal the loop guards read** (§5).
+Deciding when to stop and ask a human is a much weaker use than deciding what ships, and it is
+the use the evidence supports.
+
+A seat too harsh ever to PASS is a real failure too, and it belongs to the **stall** guard, not to
+the plant.
+
+### ⚠ One assumption, stated rather than buried
+
+The amendment that introduced these guards described PASS as *"still = ranks at/above the
+last-approved frame and near the bar."* On main, PASS was SHIP-based and said nothing about rank,
+so *"still"* cannot mean *unchanged*. It is read here as **not loosened**: PASS is the conjunction
+of the rule that shipped and the comparative rule. That can only refuse more builds than either
+reading alone, which is the safe direction for an install gate to be wrong in.
+
+If rank alone was meant, drop the two SHIP terms from the verdict line in `frame_critic.py`. It is
+one edit, and it **loosens** the gate, so it is Rafe's to make.
 
 **The rule was declared before the first round and was not touched after it.** LOOP-PROCESS §8: a
 bar found wanting mid-run is held frozen, cleared honestly, and impeached in the same report —
@@ -163,21 +186,58 @@ reason, which is not a control at all.
 
 ---
 
-## 5. The loop guards
+## 5. The loop guards — they measure progress, not rounds
 
-The line stops rather than grinding. Every stop writes `STALL-REPORT.md` and is a **LOOP-PROCESS
-§1.1.4 ruling trigger** with that report as its evidence.
+The line stops rather than grinding, **and it does not stop a lane that is working.** Every stop
+writes `STALL-REPORT.md` and is a **LOOP-PROCESS §1.1.4 ruling trigger** with that report as its
+evidence.
 
-| guard | fires when | why |
+### The signal
+
+**Where the build ranked** in that round's blind shuffled deck, against the asset bar, the last
+Rafe-approved frame and the plant. Normalised so decks of different sizes compare:
+
+```
+rank_score = (deck_size − rank_position) / (deck_size − 1)      1.00 first, 0.00 last
+```
+
+It costs nothing extra — the round already produces it — and it is a judgement about the picture
+rather than about the apparatus. **A round count is not.** The five-round park it replaces counted
+rounds, which is the wrong quantity in both directions at once: five rounds that are getting
+somewhere should keep going, and two that are not should already have stopped.
+
+**The seat is never told the round number, the history, or that anything is being tracked.** Not
+in the prompt, not in the deck, and not in the path it sits in — the working directory is named by
+a hash, because it used to be named `<lane>-r7` and that is the seat's own cwd.
+
+### The guards, in the order they are checked
+
+| guard | fires when | why the order |
 |---|---|---|
-| **two strikes** | the same flip item survives two consecutive FAIL rounds | the fix is not landing; a third attempt is a guess |
-| **five-round park** | five rounds on this lane with no PASS | the lane needs a ruling, not another round |
-| **broken judge** | the plant is missed twice running | nothing past a broken judge is readable, and nothing ships past one |
+| **broken judge** | the plant is missed twice running | nothing past it is readable, so every guard below would be reasoning about rounds §4 forbids reading |
+| **no change** | two consecutive FAILs whose delivered frames are within **2 bits of a 256-bit perceptual hash** | the cheapest true statement available: the fix did not reach the picture at all |
+| **thrash** | the same flip item across two consecutive FAILs **and no movement in rank** | the same request twice, with nothing to show for it |
+| **stall** | **3** readable rounds with no new best rank | matching the best is not progress; the lane is not converging |
+| **ceiling** | **15** rounds on the lane | the backstop, and it should never be the one that fires |
 
-**Counters are derived from the verdict files in `history/`, on disk, per lane** (the lane is the
-git branch). A counter held in memory resets when a session restarts, and a guard a restart
-clears is a suggestion with a number in it. Clearing one means deleting committed files, which
-shows up in a diff.
+**`two strikes` stays, as the builder's judgement overlay — reported, never a stop.** A flip item
+can legitimately survive a round the build won on every other axis, and stopping there sends a
+ruling to Rafe about a lane that is working. That is what `thrash` adds the rank condition for:
+same substance, one more condition, and the condition is exactly what separates a stuck lane from
+a busy one. When the advisory speaks and the guard does not, the runner says so and the builder
+decides.
+
+A **VOID** round's rank is not evidence — §4 says its findings are not read, and that has to
+include its rank — so void rounds are excluded from the progress series. They still count toward
+the ceiling: they consumed a round.
+
+### The series is in the verdict files
+
+Every verdict carries `progress`, including the **whole rank series to date** and each round's
+perceptual hash. Not merely derivable by walking `history/` — written into the file, so it is in
+the diff, in the PR, and in the stall report. **A counter a restart can clear is a suggestion with
+a number in it**, and so is one that lives only in a directory listing. Clearing this means
+deleting committed files.
 
 **When a guard fires: write nothing else, run no further rounds, end the turn.** Say plainly that
 the line stopped, which guard fired, and where the report is. Do not summarise the report away —
@@ -216,14 +276,26 @@ override nobody can see from the phone is the same as no gate.
 3. **PASS** — the round ends. `CRITIC-VERDICT.json` goes in the PR diff and is named in the PR
    body. The device gate is next, and it is Rafe's.
 4. **FAIL** — apply the flip list, run again. Automatically, without returning to a human
-   (§1.1.2). This is the loop.
-5. **VOID** — stop. The judge is what failed, not the art. Nothing from that round is evidence.
-   Check whether the plant is actually in the picture the seat saw.
+   (§1.1.2). This is the loop. Read the `== progress` block: it says where the build ranked,
+   whether that is a new best, and how far the picture actually moved. **A round that moved the
+   picture very little is a round to look at before spending another seat** — the no-change guard
+   will say so eventually, but it needs two rounds to say it and you have the number now.
+5. **VOID** — stop. The judge is what failed, not the art. Nothing from that round is evidence,
+   including its rank. Check whether the plant is actually in the picture the seat saw.
 6. **STOP** — end the turn and hand `STALL-REPORT.md` to Rafe.
 
+If the runner prints the **two-strikes advisory** and does not stop, that is working as intended:
+the same request survived, but the build moved in the deck. Decide whether to keep going. That
+judgement is yours; `thrash` only takes it out of your hands when the rank has stopped moving too.
+
 `--no-capture` replays the round on the frame already on disk. `--build-frame <path>` puts a
-chosen frame in the build's slot — that is the judge's own self-test, and its verdict is marked
+chosen frame in the build's slot — that is the judge's own self-test, it runs on its own
+`-selftest` lane so it cannot touch a real lane's progress series, and its verdict is marked
 `self_test` and can never open the install gate.
+
+`--check-guards --history <dir> --lane <name>` evaluates the guards against a history without
+running a round or spending a seat. It is how the fixtures in `evidence/guard-fixtures/` drive
+the real `guards()` rather than a copy of it.
 
 ---
 

@@ -1,0 +1,10 @@
+
+*** STOP — thrash ***
+the same flip item survived two consecutive FAIL rounds AND the build did
+    not move in the deck (rank score 0.67 -> 0.33):
+    round 1: The wall top plane sits at the same value as the lit floor beside it; separate the planes.
+    round 2: Separate the wall top plane from the lit floor value beside it; they sit at the same value.
+
+written: ../../../../../../../private/tmp/claude-501/-Users-rafehatfield-development-c-yarl/c791d47e-1e84-411b-940e-0a744e3fe713/scratchpad/S-thrash.md
+
+This is a LOOP-PROCESS §1.1.4 ruling trigger. The line does not restart itself.
