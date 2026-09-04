@@ -1,5 +1,9 @@
 # The five stall reports, routed
 
+> **ACCEPTED (Rafe, 2026-09-03).** The routing stands, and **both register refusals are upheld**:
+> the four-sided joint is the culled ring, and snapping value boundaries to the tile grid is
+> staged wear. Neither is to be re-attempted on a critic note alone.
+
 The five-round park fired on a **scene** defect, not a floor defect: every round's fatal items
 were walls, wall-caps, props and filled void. This is the disposition of every item in the five
 flip lists. Nothing is dropped; each line names where it goes.

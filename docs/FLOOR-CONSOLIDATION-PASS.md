@@ -1,5 +1,12 @@
 # The floor consolidation pass
 
+> **ACCEPTED (Rafe, 2026-09-03), with two rulings.** The floor solo lane is **CLOSED**.
+> (1) The deflection unavailability below is a **permanent platform theorem**, recorded in bible
+> §13.7 beside the corner theorem; the spall stands as the substitute; deflection is not to be
+> reopened without changing the constraint. (2) `erosion_read`'s red: **hold** — `DEFORM_FLATTEN`
+> is not restored. The check is annotated superseded-by-gate and demoted to a builder's tool.
+> The routing is accepted with both register refusals upheld. Nothing else solo.
+
 **Ruled:** the floor lane's solo gate is closed. The floor is judged only in the combined scene.
 The floor-only items extracted from the five stall reports are applied here as **one pass, no
 critic gate**, feeding the combined build. Everything else in those reports — walls, caps, wall
@@ -47,9 +54,12 @@ quantise, like everything else that moves a stone's value.
 > a crack that crosses six slabs in one smooth curve without registering a single joint reads as a
 > line drawn over the floor, not damage in it. Break them at joints, or run them along one.
 
-**True deflection is not available, and the reason is a standing constraint rather than a
-shortcut.** A crack must be a pure function of world position — that is what makes every tile it
-crosses compute the identical line, the same discipline the corner theorem imposes on the stones.
+**True deflection is not available, and the reason is now a PLATFORM THEOREM** (bible §13.7,
+ruled 2026-09-03) — the corner theorem's twin, and permanent. One says what the bond may not do;
+the other says what may not consult the bond.
+
+A crack must be a pure function of world position — that is what makes every tile it crosses
+compute the identical line, the same discipline the corner theorem imposes on the stones.
 The bond is *not* a world function: a tile's course splits, drop pattern and stone origins come
 from the atlas **variant** the map picks for that cell at runtime. A crack that deflected on the
 real joints would be a different crack depending on which tile drew it, and the disagreement would
@@ -89,9 +99,10 @@ a floor-family one.
 
 ---
 
-## The check that is not green, and why the threshold was not moved
+## The check that is not green — now SUPERSEDED BY THE GATE
 
-`no_erosion → erosion_read` is **SILENT**, and this pass did not cause it.
+`no_erosion → erosion_read` did not fire, and this pass did not cause it. It has since been ruled
+superseded and demoted to a builder's tool; the record of how it got there is below.
 
 The plant nulls form-as-erosion entirely and demands two things of the floor: it must lose its
 directional grain, and it must lose its ground-down look (face spread ≥ 1.20× the live floor's).
@@ -116,10 +127,18 @@ exclusion is arm-symmetric (the same 10,313 pixels in both arms), so it narrows 
 without tilting the comparison, and it recovers 1.057 → 1.143.
 
 **The 1.20 threshold has not been touched.** Moving a bar to clear one's own change is the failure
-this process is built to catch, and the gap is a finding for the human gate: *the flattening
+this process is built to catch, and the gap went to the human gate as a finding: *the flattening
 lever's spread signal no longer clears a bar written before the floor had this many layers.*
 Restoring `DEFORM_FLATTEN` to its old strength would clear it and would re-open the value-blob
 defect the critic culled — which is why it was cut.
+
+**RULED (Rafe, 2026-09-03): HOLD.** `DEFORM_FLATTEN` stays where it is. The bar predates the
+floor's current layer count, and the only lever that clears it reopens an eye-culled defect —
+measurable-vs-effective, stated as a rule: **a lever proven on spread is not licensed back when
+its picture was culled.** The **gate verdict outranks the instrument bar**, so the spread half of
+this check is annotated **superseded-by-gate** and demoted to a builder's tool: it prints its
+number every run, and it no longer votes. The directional half is untouched and still votes —
+`isotropic_erosion` guards it, and it fires.
 
 ---
 
@@ -131,7 +150,7 @@ defect the critic culled — which is why it was cut.
 - engine reproduces the composer's finished pixels: **`paint_check=96/OK`**, with
   `edge_check=128/OK stone_check=144/OK laid=74 missing=0 lines=1 mouths=13 polished=74`
 - `UNADDRESSABLE 0`, `VERDICT: K is RUNTIME`
-- plants **14 of 15 fire**; `no_erosion` silent as above, run completes 15 of 15
+- plants: **14 of 14 voting plants fire**; `no_erosion` reports SUPERSEDED and does not vote (run completes 15 of 15, exit 0)
 - fast suite **2518 passed / 0 failed**
 
 Three bugs the checks caught during the pass, recorded because each was silent by nature:

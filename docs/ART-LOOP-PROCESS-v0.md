@@ -1,6 +1,6 @@
 # Yarl Art Loop — PROCESS LAW v0
 
-**Status: v0.7 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
+**Status: v0.8 — DRAFT.** Adapted from Gemfall's `docs/LOOP-PROCESS.md`, re-pointed at
 `ART-BIBLE-v0.md`. Structure transfers wholesale; every number is re-derived.
 
 *(The banner read v0.4 while the revision log below already carried v0.5 — corrected here rather
@@ -327,6 +327,43 @@ silently stops holding?**
 
 ---
 
+### 4.3 The gate verdict outranks the instrument bar — LAW (Rafe, 2026-09-03)
+
+**A lever proven on a number is not licensed back when its picture was culled.**
+
+The occasion: the floor's `no_erosion` positive control demands that nulling form-as-erosion cost
+the floor 20% of its face-value spread. It reads 1.14x against that 1.20x bar — and it read 1.162x
+before the change that exposed it, so the bar was already unmet. Exactly one lever clears it:
+restoring `DEFORM_FLATTEN` to the strength a frame critic culled as *"large soft value-blobs ...
+they read as airbrush, not as light or as material."*
+
+That is measurable-versus-effective in its sharpest form. The number and the eye disagree, and
+**the eye wins** — §1.2 and bible §13.2 already say so for acceptance, and it holds for controls
+too. The instrument does not get to re-admit a defect the gate removed.
+
+**What happens instead**, and this is the whole of the procedure:
+
+1. **The bar is not moved.** Ever, and least of all by the session whose change exposed it.
+   Moving a threshold to clear one's own work is the failure §4 exists to catch.
+2. **The lever is not restored.** The culled picture stands.
+3. **The check is annotated `SUPERSEDED-BY-GATE`, with the verdict that superseded it and the
+   date**, and demoted to a **builder's tool**: it still runs, it still prints its number every
+   round, and it **no longer votes**. A superseded check is not a deleted one — if a later round
+   changes what it measures, the reading moves and is visible.
+4. **Only the superseded axis is demoted.** Where a control guards two things, the half that
+   still discriminates keeps its vote. Here the *directional* half is untouched and total —
+   grain 1.17 live against -0.01 nulled — and `isotropic_erosion` continues to guard it.
+5. **The supersession is recorded where the check lives**, not only in a round doc, so the next
+   reader of a non-firing control finds the ruling beside it rather than a mystery.
+
+**The standing hazard this closes:** a bar written for one version of a surface silently becomes
+wrong as the surface gains layers. Here the crown gained the lane dish, the margin grit and the
+tool marks — three erosion-independent value layers, each with its own control — and every one of
+them dilutes a ratio written before they existed. That is a bar going stale, not a floor going
+wrong, and the honest response is to say so rather than to chase the number.
+
+---
+
 ## 5. The bar
 
 **PASS means genuinely wowed.**
@@ -491,6 +528,16 @@ conditions, which supplies parts, which camera parameters are spent, and why the
 images rather than parameters. One home, cited from both documents.
 
 ---
+
+*v0.8 — 2026-09-03. **New §4.3: the gate verdict outranks the instrument bar.** Ruled at the
+floor's close. A positive control that can only be cleared by restoring a lever the eye culled is
+superseded, not satisfied: the bar is not moved, the lever is not restored, and the check is
+annotated `SUPERSEDED-BY-GATE` and demoted to a builder's tool — it prints its number every round
+and no longer votes. Only the superseded axis is demoted; where a control guards two things, the
+half that still discriminates keeps its vote. First instance: the floor's `no_erosion` spread bar,
+already unmet at 1.162x before the change that exposed it, clearable only by re-admitting the
+value-blob defect a frame critic culled. The hazard it closes is a bar going stale as a surface
+gains layers — that is the bar going wrong, not the surface.*
 
 *v0.7 — 2026-09-03. **New §1.2: the eyes-only rule.** Anything that gates an art round must be a
 picture judged by eyes; instruments are builder's tools and gate nothing. Bought twice, both

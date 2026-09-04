@@ -1184,10 +1184,15 @@ def erosion_read(img, joints, traffic, w, h, cracks=None, dressed=None):
     # ⚠ THIS DID NOT MAKE THE PLANT FIRE, AND IT IS NOT MEANT TO. `no_erosion` was ALREADY SILENT
     # before this pass — 1.162x on HEAD's own code, measured — and the threshold has not been
     # touched to close the gap. What the narrowing buys is an honest population; the finding
-    # underneath it stands and is reported: the crown now carries several EROSION-INDEPENDENT
-    # value layers (the lane dish, the margin grit, the tool marks) that the 1.20x threshold
-    # predates, so the flattening half of this plant is diluted by features with plants of their
-    # own. The directional half is untouched and total — grain 1.17 live against -0.01 nulled.
+    # underneath it went to the gate: the crown now carries several EROSION-INDEPENDENT value
+    # layers (the lane dish, the margin grit, the tool marks) that the 1.20x threshold predates,
+    # so the flattening half of this plant is diluted by features with plants of their own. The
+    # directional half is untouched and total — grain 1.17 live against -0.01 nulled.
+    #
+    # RULED (Rafe, 2026-09-03): HOLD. DEFORM_FLATTEN is not restored — the only lever that clears
+    # the bar reopens the eye-culled value-blob defect, and a lever proven on spread is not
+    # licensed back when its picture was culled. The spread half of the check is annotated
+    # SUPERSEDED-BY-GATE and demoted to a builder's tool; see the plant runner below.
     #
     # `boundary_step` already excludes the cracks, for this reason and in these words: "counting
     # cracks as stone, one feature later, and it nearly sent a good floor back for a feature."
@@ -1282,6 +1287,27 @@ def run_plants(w, h, seed, mat):
                      why="wear multipliers set to 1.0: the channel is declared and delivers "
                          "nothing", measured=cm))
 
+    # ================= no_erosion IS SUPERSEDED BY THE GATE =================
+    #
+    # RULED (Rafe, 2026-09-03): hold, and do not restore DEFORM_FLATTEN. The bar predates the
+    # floor's current layer count, and the only lever that clears it REOPENS THE EYE-CULLED
+    # VALUE-BLOB DEFECT. Measurable-vs-effective, stated as a rule: **a lever proven on spread is
+    # not licensed back when its picture was culled.** The gate verdict outranks the instrument
+    # bar, so this check is annotated superseded and demoted to a builder's tool — it prints its
+    # number, it no longer votes.
+    #
+    # What is superseded is the SPREAD half only. The directional half is untouched and total
+    # (grain 1.17 live against -0.01 nulled), and `isotropic_erosion` still guards it and still
+    # votes. Nothing here is a licence to stop measuring: the number is printed every run, and if
+    # a future round moves the floor's layer count the reading moves with it.
+    #
+    # The gap was not introduced by the change that exposed it — 1.162x measured on HEAD's own
+    # code, against the same 1.20x bar. See docs/FLOOR-CONSOLIDATION-PASS.md.
+    SUPERSEDED = {"no_erosion": "superseded by the device gate (Rafe, 2026-09-03): the 1.20x "
+                                "spread bar predates the lane dish, the margin grit and the tool "
+                                "marks, and the only lever that clears it reopens the culled "
+                                "value-blob defect. Builder's tool: prints, does not vote."}
+
     ep = erosion_plant(w, h, seed, mat)
     live_e, none_e, iso_e = ep["live"], ep["no_erosion"], ep["isotropic"]
     for nm, m, fired, why, detail in (
@@ -1300,12 +1326,17 @@ def run_plants(w, h, seed, mat):
          "grain %.2f (live %.2f)" % (iso_e["grain_ratio_trodden"] or 0,
                                      live_e["grain_ratio_trodden"] or 0)),
     ):
-        print("  %-16s -> %-14s %s" % (nm, "erosion_read", "FIRED" if fired else "SILENT"))
+        sup = SUPERSEDED.get(nm)
+        state = "FIRED" if fired else ("SUPERSEDED" if sup else "SILENT")
+        print("  %-16s -> %-14s %s" % (nm, "erosion_read", state))
         print("       %s" % why)
         print("       %s" % detail)
-        ok &= bool(fired)
+        if sup:
+            print("       ^ %s" % sup)
+        else:
+            ok &= bool(fired)
         rows.append(dict(plant=nm, must_fire="erosion_read", fired=bool(fired), why=why,
-                         measured=m))
+                         superseded=sup, votes=sup is None, measured=m))
 
     cp = chroma_plant(w, h, seed, mat)
     live, flatc, latt = cp["live"], cp["flat_chroma"], cp["chroma_lattice"]
