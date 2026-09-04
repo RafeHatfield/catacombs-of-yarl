@@ -49,3 +49,22 @@ human culls**, and adding to it is the correct response to any device-gate cull.
 rounds draw the same plant every round. That is safe against the seat, which is fresh each round
 and cannot remember one. It is **not** safe against a builder who learns to compose around a
 single picture. Add wall entries as wall culls happen.
+
+## ⚠ AND THAT LIMIT HAS NOW COST A ROUND — a plant must be culled on the axis the seat is asked about
+
+The first wall round under the progress guards went **VOID**: the seat put `grey-walls.png`
+**first in the deck and flagged nothing in it** (`../evidence/void-round-2026-09-03/`).
+
+The seat was not being soft. `grey-walls.png` was culled for **chroma** — the wall family was
+never given the floor's colour, and the delivered cap sat +27.6° of hue off the floor at 55% of
+its saturation. The frame critic asks a seat to rank **craft**. That frame is well constructed and
+the wrong colour, and it was only ever the wrong colour, so a competent seat can rank it first
+without having failed at anything.
+
+> **A plant controls for softness on the axis its cull was made on.** A colour cull cannot control
+> a craft question. When adding an entry, record which axis the cull was about, and do not expect
+> it to catch a seat asked about a different one.
+
+**The wall lane needs a plant culled on construction.** Morgue entries are Rafe's culls, so that
+one is his to supply — and until it exists, a wall round voiding on this plant is the mechanism
+reporting a gap in the morgue rather than a fault in the seat.

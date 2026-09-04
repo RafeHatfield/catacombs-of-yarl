@@ -1,0 +1,9 @@
+
+*** STOP — ceiling ***
+15 rounds on this lane. This is the backstop and it should never be the guard
+    that fires — if it did, the progress guards did not see something they
+    should have, and that is itself worth a ruling.
+
+written: ../../../../../../../private/tmp/claude-501/-Users-rafehatfield-development-c-yarl/c791d47e-1e84-411b-940e-0a744e3fe713/scratchpad/S-ceiling.md
+
+This is a LOOP-PROCESS §1.1.4 ruling trigger. The line does not restart itself.

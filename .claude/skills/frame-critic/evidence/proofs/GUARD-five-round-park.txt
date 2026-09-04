@@ -1,7 +1,0 @@
-
-*** STOP — five-round-park ***
-5 rounds on this lane with no PASS. The lane is parked; the next move is a ruling, not another round.
-
-written: ../../../../../../../private/tmp/claude-501/-Users-rafehatfield-development-c-yarl/c791d47e-1e84-411b-940e-0a744e3fe713/scratchpad/S2.md
-
-This is a LOOP-PROCESS §1.1.4 ruling trigger. The line does not restart itself.

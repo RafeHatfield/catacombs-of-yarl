@@ -1,9 +1,0 @@
-
-*** STOP — two-strikes ***
-the same flip item survived two consecutive FAIL rounds:
-    round 1: The wall top plane sits at the same value as the lit floor beside it; separate the two planes.
-    round 2: Separate the wall top plane from the lit floor value beside it; they sit at the same value.
-
-written: ../../../../../../../private/tmp/claude-501/-Users-rafehatfield-development-c-yarl/c791d47e-1e84-411b-940e-0a744e3fe713/scratchpad/S1.md
-
-This is a LOOP-PROCESS §1.1.4 ruling trigger. The line does not restart itself.
