@@ -197,6 +197,46 @@ The lawful ways out, in order of preference:
 3. There is no third way. `YARL_SKIP_CRITIC=1` installs a build stamped as *not a gate build*,
    which misrepresents a build whose every item has a human disposition.
 
+### PASS = SHIP ∧ RANK — ratified
+
+**LAW (Rafe, 2026-09-03).** A round PASSes when **both** hold:
+
+> the seat puts the build in **SHIP**, unflagged — **and** the build **ranks at or above** the
+> approved reference frame.
+
+SHIP alone was the rule until r003, and r003 is why it is not any more: the seat named the build
+BEST and unflagged, the gate would have opened, and Rafe's eye then failed it for grey cement
+caps. The deck it passed against had a culled frame and a different game in it and nothing that
+was ever approved, so the build only had to beat two things nobody had said yes to.
+
+`outranked_build` (the plant above the build) stays **reported and never scored** — §4 above has
+four rounds of evidence that a blind rank does not reproduce Rafe's culls.
+`outranked_by_approved` **is scored**, because it asks a narrower question a rank can answer: is
+this better than the last thing a person said yes to?
+
+### Bootstrapping the reference — and a frame that is merely OLD is not a reference
+
+**LAW (Rafe, 2026-09-03).** *"approved_capture bootstrap: first SHIP∧rank build against
+bar+construction-plant seeds the reference; a Rafe-walked PASS overwrites it."*
+
+When `approved_capture` is null the deck is **build + bar + on-axis plant**, and the first build
+to take SHIP and rank against them seeds the field. A Rafe-walked PASS overwrites whatever is
+there.
+
+**Check that the frame you name is actually better on the axis you are judging.** The wall lane
+set `approved_capture` to its last approved build and then measured it:
+
+```
+r17_standing_mat   floor sat 0.507   cap sat 0.510 (ratio 1.007)   cap value 24.1
+current build      floor sat 0.476   cap sat 0.553 (ratio 1.161)   cap value 31.0
+```
+
+It was described in the config as "the last Rafe-approved **warm** build" and it is not warm — its
+cap tracks its own floor exactly, which is the same-quarry relation the round was trying to
+produce, and it is darker than the candidate on both planes. Naming it the reference charged the
+lane with a regression against a frame that was not better on the axis in question. **Approved is
+a fact about the past; better-on-this-axis is a measurement, and the reference needs both.**
+
 ### The approved frame is permanent, and the build cannot pass below it
 
 **LAW (Rafe, 2026-09-03).** *"Add the last Rafe-approved warm build as a permanent reference frame
@@ -242,8 +282,15 @@ The line stops rather than grinding. Every stop writes `STALL-REPORT.md` and is 
 | guard | fires when | why |
 |---|---|---|
 | **two strikes** | the same flip item survives two consecutive FAIL rounds | the fix is not landing; a third attempt is a guess |
-| **five-round park** | five rounds on this lane with no PASS | the lane needs a ruling, not another round |
+| **five-round park** | five **judged** rounds on this lane with no PASS | the lane needs a ruling, not another round |
 | **broken judge** | the plant is missed twice running | nothing past a broken judge is readable, and nothing ships past one |
+
+**A VOID DOES NOT COUNT TOWARD THE PARK (RULED, Rafe, 2026-09-03).** *"A VOID round is a
+broken-judge event, not a no-progress round — it must not count toward stall/park."* The park asks
+whether the lane is getting anywhere; a void round says nothing about the lane, because §4 forbids
+reading its findings at all. Counting it parks a lane on a tally that includes a round nobody was
+allowed to learn from — a guard firing on its own blindness. The **broken-judge** guard is what
+voids are for, and it still has them.
 
 **Counters are derived from the verdict files in `history/`, on disk, per lane** (the lane is the
 git branch). A counter held in memory resets when a session restarts, and a guard a restart

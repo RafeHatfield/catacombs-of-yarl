@@ -79,11 +79,7 @@
       480
     ]
   },
-  "approved_capture": {
-    "path": "tools/tier1_walls/evidence/r17_standing_mat.png",
-    "build": "0c60bc50",
-    "why": "The last build Rafe approved on this surface, and the last with WARM FACES - the walk where the material arm was ruled in: 'walls read as their own stone, wall-vs-floor separation confirmed by eye.' A PERMANENT member of every wall deck (RULED 2026-09-03), because r003 passed the critic while failing Rafe's eye and the reason was the deck: a grey plant and the bar, and no warm-correct reference to be greyer than."
-  },
+  "approved_capture": null,
   "_approved_capture_note": [
     "NULL, AND THE GAP IS REAL RATHER THAN AN OVERSIGHT. The deck runs three frames until Rafe",
     "names one.",
@@ -103,5 +99,34 @@
     "Rafe fills this in by naming a capture. Until then the deck is build + bar + plant, and every",
     "verdict records that it ran without an approved baseline."
   ],
-  "work_dir": "~/.claude/frame-critic"
+  "work_dir": "~/.claude/frame-critic",
+  "axis": "construction",
+  "_axis": [
+    "WHAT THIS ROUND IS ASKING, and it selects the plant (RULED 2026-09-03).",
+    "",
+    "A plant is only a control if it is wrong on the axis under test. Round 5 was judged on",
+    "construction - does the cap read as stone or as cement - and was handed the `grey walls`",
+    "plant, whose defect is chroma. The build's chroma was already fixed, so the two frames",
+    "differed on an axis the plant did not carry, and the round voided on the judge rather than",
+    "on the art. The right image for the wrong question is not a control."
+  ],
+  "_approved_capture": [
+    "NULL ON PURPOSE - AWAITING BOOTSTRAP (RULED, Rafe, 2026-09-03):",
+    "  'approved_capture bootstrap: first SHIP-and-rank build against bar+construction-plant",
+    "   seeds the reference; a Rafe-walked PASS overwrites it.'",
+    "",
+    "It briefly held r17_standing_mat.png (build 0c60bc50) as 'the last Rafe-approved WARM",
+    "build'. MEASURED, THAT FRAME IS NOT WARM, and it is not warmer than the current build:",
+    "",
+    "    r17_standing_mat   floor sat 0.507   cap sat 0.510 (ratio 1.007)   cap value 24.1",
+    "    current build      floor sat 0.476   cap sat 0.553 (ratio 1.161)   cap value 31.0",
+    "",
+    "r17's cap tracks its own floor exactly - the same-quarry relation the hue fix was built to",
+    "produce - and it is DARKER than the current build on both planes. It is the last APPROVED",
+    "build; it is not a warm-correct reference, and using it as one charged this lane with a",
+    "regression against a frame that is not better on the axis in question.",
+    "",
+    "So the deck runs build + bar + construction-plant until a build takes SHIP and rank against",
+    "them. That build seeds this field, and a Rafe-walked PASS overwrites it."
+  ]
 }

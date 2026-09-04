@@ -5,11 +5,11 @@
 - **lane** `worktree-session-2026-08-29`
 - **surface** `wall`
 - **guard** `five-round-park`
-- **written** 2026-09-03T17:59:40
+- **written** 2026-09-03T19:29:13
 
 ## Why it stopped
 
-5 rounds on this lane with no PASS. The lane is parked; the next move is a ruling, not another round.
+5 JUDGED rounds on this lane with no PASS (voids excluded — they are not evidence). The lane is parked; the next move is a ruling, not another round.
 
 ## What was tried, round by round
 
@@ -20,6 +20,7 @@
 | 3 | FAIL | `494912d713af` | `fc_standing.png` | The two barrels at (110–150, 185–210) and (155–195, 185–210) are **guillotined dead flat** by the dirt/stone boundary at y=205. The left barrel's staves simply  |
 | 4 | FAIL | `4e8f175be9ce` | `fc_standing.png` | Two-thirds of the frame contains no drawn architecture. The chambers flanking the corridor — x20–300 and x460–740, y60–380 — are mottled brown noise crossed by  |
 | 5 | VOID | `6890b826c375` | `fc_standing.png` | The pond is a rectangle. Water occupies exactly x248–343, y0–191; at row 100 it starts at x=248 and stops at x=343 on a dead-straight vertical pixel line, and a |
+| 6 | FAIL | `30054521159b` | `fc_standing.png` | It has no light model at all. Grey flagstone directly beside the figure at (355,20) is RGB(90,90,90); grey flagstone at the far edge at (10,90) is RGB(90,90,90) |
 
 ## The flip lists, verbatim
 
@@ -68,6 +69,15 @@
 - The cluster at roughly x340–450, y570–620 is smeared dark noise that reads as no object. Redraw it as a readable prop or clear it.
 - Then everything in FLIP 2.
 
+**round 6 (FAIL)**
+
+- The entire rock mass outside the corridor (x 0–370 and x 440–750, y 90–450) is continuous-tone mottled cloud noise — soft round blobs at 8–12px with no edges and no repeat. Replace it with drawn material at the same texel size as the floor, or make it flat unlit fill. It currently reads as a noise layer, not stone.
+- Long unbroken straight lines cut through that noise — one from approx (37,170) to (140,95), another running from (280,80) down to (375,390) — forming a fan of wedges radiating from the corridor mouth. Rock does not fracture in 300px straight segments. Remove them or replace with breaks that step and change direction.
+- Light is passing through solid rock. At y=340 the rock at x=300 is (63,45,25) against the corridor floor at (410,300) = (82,64,41) — the unexcavated mass is 77% as bright as the walked surface. Occlude the lamp against the corridor walls so the glow terminates at the passage edge.
+- Floor joints break down right of the figure (x 480–700, y 470–620): many slabs carry only a 6–10px vertical dark tick where an edge should be and no perimeter at all — see the isolated strokes at approx (505,560) and (575,505). Close the perimeters so the slabs read as cut blocks instead of tonal patches.
+- The timber run at y≈390–420 left of x≈300 sits within about 3 values of the wall behind it and reads as a smear. Separate the boards from the wall by at least one clear step and restore the individual board ends.
+- The whole frame carries a soft continuous-tone mottle over the pixel work (5763 unique colours against 2's 3414 for the same scene). Drop that layer; it's the single thing making the image read as filtered.
+
 ## Where to look
 
 Captures and transcripts, per round:
@@ -77,6 +87,7 @@ Captures and transcripts, per round:
 - round 3 — deck `/Users/rafehatfield/.claude/frame-critic/worktree-session-2026-08-29-r3`, transcript `.claude/skills/frame-critic/history/r003-worktree-session-2026-08-29-transcript.txt`
 - round 4 — deck `/Users/rafehatfield/.claude/frame-critic/worktree-session-2026-08-29-r4`, transcript `.claude/skills/frame-critic/history/r004-worktree-session-2026-08-29-transcript.txt`
 - round 5 — deck `/Users/rafehatfield/.claude/frame-critic/worktree-session-2026-08-29-r5`, transcript `.claude/skills/frame-critic/history/r005-worktree-session-2026-08-29-transcript.txt`
+- round 6 — deck `/Users/rafehatfield/.claude/frame-critic/worktree-session-2026-08-29-r6`, transcript `.claude/skills/frame-critic/history/r006-worktree-session-2026-08-29-transcript.txt`
 
 ## What is being asked for
 

@@ -168,11 +168,25 @@ def guards(hist, lane):
                                 "    round %s: %s\n    round %s: %s"
                                 % (a.get("round"), x, b.get("round"), y))
 
-    if len(lane_hist) >= PARK_ROUNDS and not any(v.get("verdict") == "PASS"
-                                                 for v in lane_hist[-PARK_ROUNDS:]):
+    # ⚠ A VOID DOES NOT COUNT TOWARD THE PARK (RULED, Rafe, 2026-09-03).
+    #
+    # *"A VOID round is a broken-judge event, not a no-progress round — it must not count toward
+    # stall/park."*
+    #
+    # The park asks whether the LANE is getting anywhere. A void round says nothing about the
+    # lane: its findings are not read, by §4, so it produced no evidence either way — and this
+    # file already says as much a few lines up, where the broken-judge guard skips them for
+    # exactly that reason. Counting them anyway parked the wall lane on a tally that included
+    # one round nobody was allowed to learn from, which is a guard firing on its own blindness.
+    #
+    # The broken-judge guard above is what VOIDs are for, and it still has them.
+    judged = [v for v in lane_hist if v.get("verdict") != "VOID"]
+    if len(judged) >= PARK_ROUNDS and not any(v.get("verdict") == "PASS"
+                                              for v in judged[-PARK_ROUNDS:]):
         return ("five-round-park",
-                "%d rounds on this lane with no PASS. The lane is parked; the next move is a "
-                "ruling, not another round." % PARK_ROUNDS)
+                "%d JUDGED rounds on this lane with no PASS (voids excluded — they are not "
+                "evidence). The lane is parked; the next move is a ruling, not another round."
+                % PARK_ROUNDS)
     return (None, None)
 
 
@@ -257,9 +271,28 @@ def crop_to(path, box, dest):
     return im.size
 
 
-def pick_plant(surface, morgue, exclude=()):
+def pick_plant(surface, morgue, exclude=(), axis=None):
+    """Candidates for this round's plant, narrowed to the AXIS the deck is asking about.
+
+    RULED (Rafe, 2026-09-03): *"Per-axis morgue plants — tag entries by axis, assemble the plant
+    to match the deck's question; this is why round 5 VOIDed."*
+
+    A plant is only a control if it is wrong on the axis under test. The wall lane's round 5 was
+    judged on CONSTRUCTION — does the cap read as stone or as cement — and was handed the `grey
+    walls` plant, whose defect is CHROMA. The build had already had its chroma fixed, so the two
+    frames differed on an axis the plant was not carrying, the seat had no reason to rank the
+    plant last, and the round voided on the judge rather than on the art. The right image for the
+    wrong question is not a control.
+
+    An entry with no `axis` is treated as answering any question, so the morgue stays usable while
+    it is being tagged.
+    """
     entries = [e for e in morgue["entries"]
                if e["surface"] == surface and e["file"] not in exclude]
+    if axis:
+        on_axis = [e for e in entries if axis in (e.get("axis") or [axis])]
+        if on_axis:
+            entries = on_axis
     if not entries:
         raise SystemExit(
             "REFUSING: the morgue holds no known-bad frame for surface %r.\n"
@@ -546,7 +579,7 @@ def main():
     # A self-test puts a morgue frame in the BUILD slot. It must not also be drawn as the plant —
     # the seat would be shown the same picture twice and the control would be judging itself.
     exclude = (os.path.basename(a.build_frame),) if a.build_frame else ()
-    candidates = pick_plant(cfg["surface"], morgue, exclude=exclude)
+    candidates = pick_plant(cfg["surface"], morgue, exclude=exclude, axis=cfg.get("axis"))
     rng = random.Random(hashlib.sha256(("%s|%d" % (bid, rnd)).encode()).hexdigest())
     plant = rng.choice(candidates)
 
@@ -589,6 +622,8 @@ def main():
     for i in sorted(mapping, key=int):
         print("   %s.png  %-9s %s" % (i, mapping[i]["what"], mapping[i]["source"]))
     print("   plant: %s — %s" % (plant["file"], plant["verbatim"]))
+    if cfg.get("axis"):
+        print("   axis:  %s   (the plant is drawn to be wrong on THIS axis)" % cfg["axis"])
 
     prompt = open(os.path.join(HERE, "seat_prompt.txt")).read().replace(
         "the numbered PNG files in this directory",
