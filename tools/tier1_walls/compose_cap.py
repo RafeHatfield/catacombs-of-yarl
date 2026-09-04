@@ -74,10 +74,15 @@ VOID_GRAIN_LEVELS = 1.6
 #
 # The sweep (levels/window, bar = 16.1):  0.85 -> 9.5   0.72 -> 14.6   0.62 -> 18.4   0.52 -> 21.5
 #                                         0.42 -> 25.3  0.30 -> 29.4   0.00 -> 37.3
-# 0.62 is the HARDEST snap that clears the bar, and that is the right end to choose from: §5.6
+# ⚠ RAISED 0.62 -> 0.80 (2026-09-03). The soft blend was 38% unsnapped, and unsnapped values sit
+# BETWEEN rungs — which is a gradient, and a gradient has no hard edge. With the slab tooling now
+# carrying the level count (36 per window against the bar's 16.1) the blend is no longer needed to
+# clear `cap_not_featureless`, so it goes back toward the ladder where §5.6 wants it.
+#
+# 0.62 was the HARDEST snap that clears the bar, and that is the right end to choose from: §5.6
 # wants the ladder, so the cap departs from it by the least the bar's own construction allows,
 # not by the most the instrument tolerates.
-SNAP = 0.62
+SNAP = 0.80
 
 
 def wrap_noise(size, cells, rng):
@@ -123,7 +128,8 @@ def field_cracks(size, rng, n, step_rungs, ladder_step):
     return out
 
 
-def field_slabs(size, rng, step, spacing=104, offset_rungs=0.55, fracture_rungs=2.2):
+def field_slabs(size, rng, step, spacing=104, offset_rungs=0.55, fracture_rungs=2.2,
+                tooling_rungs=0.42, gradient_rungs=0.34):
     """SLAB / FRACTURE ARCHITECTURE at multi-tile scale — RULED (Rafe, 2026-09-03).
 
     *"Cap architecture approved as a new construction — field-scale slab/fracture structure via
@@ -176,11 +182,61 @@ def field_slabs(size, rng, step, spacing=104, offset_rungs=0.55, fracture_rungs=
 
     out = vals[who]
 
+    # ── DRESSED STONE, NOT POURED CONCRETE (RULED, Rafe, 2026-09-03) ──────────────────────────
+    #
+    # *"The slab construction reads as poured concrete — it needs dressed-stone character:
+    # visible tooling, grain, and value variation within each slab, not smooth fill between
+    # fracture lines."*
+    #
+    # A flat offset per slab is exactly a smooth fill: the partition gave the mass PARTS, and
+    # parts made of nothing still read as cast. Three things go inside each slab, and all three
+    # are keyed to the SLAB rather than to the tile or to the pixel:
+    #
+    #   TOOLING   a directional chisel hatch at the slab's own angle. Per-slab angle is the
+    #             lesson from the floor's own critic flip — *"a single 45 degree angle across
+    #             every slab in the frame"* — learned here without paying for it twice.
+    #   GRADIENT  each slab is lit-and-cut slightly unevenly across its own span, so its interior
+    #             has somewhere to go. This is what a flat offset lacked.
+    #   GRAIN     a per-slab amplitude jitter on the field grain, so two slabs are not the same
+    #             stone at a different value.
+    #
+    # None of it is per-cell and none of it repeats at the tile pitch: the angle, the gradient
+    # axis and the jitter are all indexed by slab id, and slabs are field-scale.
+    ang = rng.uniform(0.0, np.pi, len(seeds))
+    freq = rng.uniform(0.55, 1.15, len(seeds))
+    grad = rng.normal(0.0, 1.0, (len(seeds), 2))
+    jit = rng.uniform(0.6, 1.45, len(seeds))
+
+    ca, sa = np.cos(ang)[who], np.sin(ang)[who]
+    # Toroidal offset from the owning seed, so a slab that wraps is still one slab.
+    dy = yy - seeds[who, 0]; dy -= size * np.round(dy / size)
+    dx = xx - seeds[who, 1]; dx -= size * np.round(dx / size)
+
+    # ⚠ HARD-EDGED STROKES, NOT A SINE WAVE — and the first version was a sine wave.
+    #
+    # It was shaped with a power curve and a comment claiming "a chisel bites; it does not
+    # undulate", and it undulated anyway: a continuous function has no 1px edge anywhere in it.
+    # Measured on the delivered frame, the build carried 12.5% hard gradients against the last
+    # APPROVED frame's 15.6% — the capture really was softer, and the critic said so from the
+    # picture alone: *"render it at 1:1 so slab joints are hard 1px edges again."*
+    #
+    # A chisel groove is a STEP: stone is there, then it is not. So the phase is thresholded
+    # rather than shaped, which puts a hard edge at both sides of every cut.
+    phase = ((dx * ca + dy * sa) * freq[who] / (2.0 * np.pi)) % 1.0
+    tooling = np.where(phase < 0.22, -tooling_rungs * step,
+                       np.where(phase < 0.30, -0.45 * tooling_rungs * step, 0.0))
+
+    gradient = ((dx * grad[who, 1] + dy * grad[who, 0]) / max(spacing, 1.0)) \
+        * gradient_rungs * step
+    out = out + tooling + gradient
+
     # THE FRACTURE. Near-equidistance between the two nearest seeds is the slab boundary; the
     # width is in field pixels and does not know the tile size, which is the whole point.
     edge = np.sqrt(second) - np.sqrt(best)
-    out -= np.clip(1.0 - edge / 3.0, 0.0, 1.0) * fracture_rungs * step
-    return out
+    # A fracture between two blocks of stone is a hard line, not a 3px ramp. 1.2 keeps it to
+    # roughly a pixel at the field's own scale, which is what "hard 1px edges" means here.
+    out -= np.clip(1.0 - edge / 1.2, 0.0, 1.0) * fracture_rungs * step
+    return out, jit[who]
 
 
 def build_field(ladder, tint, top_rung, hue_shift, seed=1337,
@@ -234,8 +290,10 @@ def build_field(ladder, tint, top_rung, hue_shift, seed=1337,
     grain = grain / max(grain.std(), 1e-6)
     grain = grain * grain_rungs * step
 
-    img = base + drift + grain
-    img = img + field_slabs(size, rng, step)
+    slabs, slab_jitter = field_slabs(size, rng, step)
+    # The grain is modulated PER SLAB, so two slabs are not one stone at two values.
+    img = base + drift + grain * slab_jitter
+    img = img + slabs
     img = img + field_cracks(size, rng, cracks, crack_rungs, step)
 
     # QUANTISE ONTO THE LADDER, the way every other tier-one surface does — but softly, so the

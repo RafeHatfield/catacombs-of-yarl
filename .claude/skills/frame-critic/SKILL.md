@@ -197,6 +197,27 @@ The lawful ways out, in order of preference:
 3. There is no third way. `YARL_SKIP_CRITIC=1` installs a build stamped as *not a gate build*,
    which misrepresents a build whose every item has a human disposition.
 
+### The approved frame is permanent, and the build cannot pass below it
+
+**LAW (Rafe, 2026-09-03).** *"Add the last Rafe-approved warm build as a permanent reference frame
+in every wall deck — a build that reads greyer or flatter than it cannot rank BEST; this is why
+r003 passed the critic while failing Rafe's eye (the deck had a grey plant and the bar, no
+warm-correct reference)."*
+
+`approved_capture` in `docs/FRAME-CRITIC.json` was **null** for the whole wall campaign, so the
+deck was the build, a grey morgue frame and the commercial bar. A build only had to beat a culled
+frame and a different game to look like the best thing in the room. r003 did exactly that — the
+seat named it BEST and unflagged — and Rafe's eye then failed it for grey cement caps.
+
+**The approved frame answers a question the plant cannot.** §4 above is emphatic that the plant
+tests for *softness, not ordering*, and that a blind seat's RANK does not reproduce Rafe's culls —
+four rounds of evidence say so. That argument does not carry to the approved frame, because the
+question is narrower: not *is this good* but **is this better than the last thing a person said
+yes to?** A build the seat ranks below it has gone backwards against a human verdict.
+
+So `outranked_by_approved` **is part of the verdict**, where `outranked_build` is not. It is a
+FAIL and never a VOID: nothing is wrong with the judge.
+
 ### The morgue
 
 `morgue/` holds frames **Rafe personally culled at the device gate**, with his verbatim words and

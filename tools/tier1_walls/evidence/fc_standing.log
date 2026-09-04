@@ -6,7 +6,7 @@ Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
 Catacombs of YARL — loading...
 [DIAG] Logging to: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag.log
 [DIAG] Structured log: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag_structured.jsonl
-[DIAG 00000 F0 T1.152] === Session started ===
+[DIAG 00000 F0 T0.685] === Session started ===
 [Main] Persistence loaded — 6 runs ever.
 [Main] Loading tileset: 16bit_fantasy
 [Main] Tileset loaded: Oryx 16-Bit Fantasy (48px, 2 frames)
@@ -113,23 +113,23 @@ empt
 # Substituted 
 [Main] Memo registry loaded.
 [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
-[DIAG 00001 F0 T1.769] [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
+[DIAG 00001 F0 T1.412] [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
 [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED review=GATED app=Catacombs of YARL
-[DIAG 00002 F0 T1.772] [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED review=GATED app=Catacombs of YARL
+[DIAG 00002 F0 T1.416] [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED review=GATED app=Catacombs of YARL
 [Tier0] corridor scene: tier1_wall_standing (res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json)
-[DIAG 00003 F0 T1.772] [Tier0] corridor scene: tier1_wall_standing (res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json)
+[DIAG 00003 F0 T1.416] [Tier0] corridor scene: tier1_wall_standing (res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json)
 [Tier0] map=17x21 player=(8,12) carve_rects=7
-[DIAG 00004 F0 T1.772] [Tier0] map=17x21 player=(8,12) carve_rects=7
+[DIAG 00004 F0 T1.416] [Tier0] map=17x21 player=(8,12) carve_rects=7
 [Tier0] junction=NO
-[DIAG 00005 F0 T1.772] [Tier0] junction=NO
+[DIAG 00005 F0 T1.416] [Tier0] junction=NO
 [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
-[DIAG 00006 F0 T1.772] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
+[DIAG 00006 F0 T1.416] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
 [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
-[DIAG 00007 F0 T1.772] [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
+[DIAG 00007 F0 T1.416] [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
 [Tier0] grid map: centre00=(-105,-190.5) pitch=(64,64) view=(0,90)...(750,1001)
-[DIAG 00008 F0 T1.773] [Tier0] grid map: centre00=(-105,-190.5) pitch=(64,64) view=(0,90)...(750,1001)
+[DIAG 00008 F0 T1.416] [Tier0] grid map: centre00=(-105,-190.5) pitch=(64,64) view=(0,90)...(750,1001)
 [Tier1] variant census: cells=141 distinct=1 max_multiplicity=141  step_top2: row=1.000(122/122) col=1.000(117/117) diag=1.000(103/103) anti=1.000(103/103)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
-[DIAG 00009 F0 T1.776] [Tier1] variant census: cells=141 distinct=1 max_multiplicity=141  step_top2: row=1.000(122/122) col=1.000(117/117) diag=1.000(103/103) anti=1.000(103/103)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
+[DIAG 00009 F0 T1.419] [Tier1] variant census: cells=141 distinct=1 max_multiplicity=141  step_top2: row=1.000(122/122) col=1.000(117/117) diag=1.000(103/103) anti=1.000(103/103)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
 [Tier1] floor overlays: cells=141 channel=28 neglected=55 drawn(grit=0 event=0 channel=0 occlusion=158/stacked=59@anchor2) cell_shadow_suppressed=78 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
@@ -153,7 +153,7 @@ empt
 [Tier1]   ###xxx.......x###
 [Tier1]   ###xxxxxxxxxxx###
 [Tier1]   #################
-[DIAG 00010 F0 T1.792] [Tier1] floor overlays: cells=141 channel=28 neglected=55 drawn(grit=0 event=0 channel=0 occlusion=158/stacked=59@anchor2) cell_shadow_suppressed=78 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
+[DIAG 00010 F0 T1.435] [Tier1] floor overlays: cells=141 channel=28 neglected=55 drawn(grit=0 event=0 channel=0 occlusion=158/stacked=59@anchor2) cell_shadow_suppressed=78 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
 [Tier1]   #################
@@ -177,7 +177,7 @@ empt
 [Tier1]   ###xxxxxxxxxxx###
 [Tier1]   #################
 [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
-[DIAG 00011 F0 T1.792] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
+[DIAG 00011 F0 T1.436] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
 [Tier1] ashlar floor: laid=141 channel_cells=27 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK lines=1 mouths=12 polished=141 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
 [Tier1] traffic field (space=unwalked .. @=busiest)
 [Tier1]   #################
@@ -246,7 +246,7 @@ empt
 [Tier1]   ###           ###
 [Tier1]   #################
 [Tier1] axis coherence: 58 of 62 adjacent on-route pairs agree (94%) - round 21 measured 34% on the per-tile field
-[DIAG 00012 F0 T3.449] [Tier1] ashlar floor: laid=141 channel_cells=27 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK lines=1 mouths=12 polished=141 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
+[DIAG 00012 F0 T3.096] [Tier1] ashlar floor: laid=141 channel_cells=27 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK lines=1 mouths=12 polished=141 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
 [Tier1] traffic field (space=unwalked .. @=busiest)
 [Tier1]   #################
 [Tier1]   #################
@@ -336,7 +336,7 @@ empt
 [Tier1]   .................
 [Tier1]   .................
 [Tier1]   .................
-[DIAG 00013 F0 T3.555] [Tier1] wall age map (. not a reveal, 0=sharp/sealed .. 3=on the spine)
+[DIAG 00013 F0 T3.211] [Tier1] wall age map (. not a reveal, 0=sharp/sealed .. 3=on the spine)
 [Tier1]   .................
 [Tier1]   ...12221111110...
 [Tier1]   .................
@@ -359,21 +359,21 @@ empt
 [Tier1]   .................
 [Tier1]   .................
 [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=192 void=0(choice=0,ring>0) missing=0 face_suppressed=192 planes(top=114.7 face=61.79) edge_check=46/OK bindings=13(cramp:3,lash:3,patch:1,pin:3,strap:3) cap=216+0void age0..3=2/11/7/4 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
-[DIAG 00014 F0 T3.557] [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=192 void=0(choice=0,ring>0) missing=0 face_suppressed=192 planes(top=114.7 face=61.79) edge_check=46/OK bindings=13(cramp:3,lash:3,patch:1,pin:3,strap:3) cap=216+0void age0..3=2/11/7/4 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
+[DIAG 00014 F0 T3.213] [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=192 void=0(choice=0,ring>0) missing=0 face_suppressed=192 planes(top=114.7 face=61.79) edge_check=46/OK bindings=13(cramp:3,lash:3,patch:1,pin:3,strap:3) cap=216+0void age0..3=2/11/7/4 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
 [Tier0] review_build_marker=none (CLI flags)
-[DIAG 00015 F0 T3.558] [Tier0] review_build_marker=none (CLI flags)
+[DIAG 00015 F0 T3.213] [Tier0] review_build_marker=none (CLI flags)
 [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
-[DIAG 00016 F0 T3.559] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00016 F0 T3.214] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
 [Main] Visible tile rect: (2,4)-(13,19)
 [Main] floor_worn (3001) tiles: 1 rendered in the authored room, 1 in frame: (11,15)
 [Tier1] legibility(8,13) expect=lit  ratio=1.0000 at px(407,642) bound=0.1200 OK  - the cell behind the player, 1 tile - the standing case's own ground
-[DIAG 00017 F5 T3.719] [Tier1] legibility(8,13) expect=lit  ratio=1.0000 at px(407,642) bound=0.1200 OK  - the cell behind the player, 1 tile - the standing case's own ground
+[DIAG 00017 F5 T3.374] [Tier1] legibility(8,13) expect=lit  ratio=1.0000 at px(407,642) bound=0.1200 OK  - the cell behind the player, 1 tile - the standing case's own ground
 [Tier1] legibility(5,14) expect=lit  ratio=0.4127 at px(215,706) bound=0.1200 OK  - room A's west side, 3.6 tiles
-[DIAG 00018 F5 T3.719] [Tier1] legibility(5,14) expect=lit  ratio=0.4127 at px(215,706) bound=0.1200 OK  - room A's west side, 3.6 tiles
+[DIAG 00018 F5 T3.375] [Tier1] legibility(5,14) expect=lit  ratio=0.4127 at px(215,706) bound=0.1200 OK  - room A's west side, 3.6 tiles
 [Tier1] legibility(3,17) expect=dark ratio=0.0857 at px(87,898) bound=0.1000 OK  - room A's south-west corner, 7.1 tiles - the arc's outside, and in frame
-[DIAG 00019 F5 T3.719] [Tier1] legibility(3,17) expect=dark ratio=0.0857 at px(87,898) bound=0.1000 OK  - room A's south-west corner, 7.1 tiles - the arc's outside, and in frame
+[DIAG 00019 F5 T3.375] [Tier1] legibility(3,17) expect=dark ratio=0.0857 at px(87,898) bound=0.1000 OK  - room A's south-west corner, 7.1 tiles - the arc's outside, and in frame
 [Tier1] floor-legibility probe: 3 declared points, reference lum=0.3468, verdict=PASS
-[DIAG 00020 F5 T3.719] [Tier1] floor-legibility probe: 3 declared points, reference lum=0.3468, verdict=PASS
+[DIAG 00020 F5 T3.375] [Tier1] floor-legibility probe: 3 declared points, reference lum=0.3468, verdict=PASS
 [Main] Capture written: tools/tier1_walls/evidence/fc_standing.png
 [TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
 [TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.

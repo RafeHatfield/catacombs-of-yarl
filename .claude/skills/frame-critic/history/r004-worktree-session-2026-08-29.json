@@ -1,0 +1,120 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-session-2026-08-29",
+ "round": 4,
+ "surface": "wall",
+ "commit": "7633de641126c0c22c99baa9e04dc347fd5c62a5",
+ "dirty": true,
+ "build_id": "4e8f175be9ce728099bcf32e3e562698e1c769a5b577ec3c87c25cc5a7e46823",
+ "timestamp": "2026-09-03T17:51:48",
+ "build_frame": {
+  "path": "tools/tier1_walls/evidence/fc_standing.png",
+  "sha256": "584712b5b75901a0af955d0ca70e261d8c96b85e6bf17602e4b0063e9bd773b3",
+  "log": "tools/tier1_walls/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/session-2026-08-29 --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_walls/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-choice 0 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-session-2026-08-29-r4",
+  "slots": {
+   "1": {
+    "what": "build",
+    "source": "tools/tier1_walls/evidence/fc_standing.png",
+    "sha256": "584712b5b75901a0af955d0ca70e261d8c96b85e6bf17602e4b0063e9bd773b3",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "approved",
+    "source": "tools/tier1_walls/evidence/r17_standing_mat.png",
+    "sha256": "2ba162b49cc5f642f4545a1209a0fb66fe928fede0a83e4b80b85c12cff5929c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "4": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/grey-walls.png",
+    "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_walls/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 4,
+  "file": "grey-walls.png",
+  "sha256": "ec007b1adc6cc585f0c9c09216c44388839844d22245373873917191b915422c",
+  "culled_by": "Rafe, device gate, 2026-09-02",
+  "verbatim": "Grey walls and ceiling; it looked better a few versions ago.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "outranked_by_approved": true,
+   "approved_slot": 2,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The floor between the character and the bottom of the light, roughly x150\u2013470 / y455\u2013640. The horizontal joint at y\u2248519 is a broken run, not a line \u2014 sampling across it at 15px intervals gives 50, 87, 63, 68, 112, 79, 83, 133, 90, 92, 93, 141, 140, 121. It goes near-black in places, vanishes completely into the slab face in others. That is a joint that reads as cut and worn rather than stamped, and it is the single strongest piece of craft in the set. Supporting it: the courses do not align \u2014 the run at y\u2248470\u2013505 carries slabs of roughly 40, 55 and 30px width and the run beneath it breaks at different x positions, so no vertical joint carries through two courses. The diagonal tool-scoring is per-slab, not per-texture: the slab at x\u2248390\u2013440 / y\u2248530\u2013565 carries about six hatch strokes and its neighbour at x\u2248300\u2013370 carries none. And the crack from x\u2248120,y\u2248560 to x\u2248340,y\u2248490 is one hand-placed 1px run that crosses four joints at a shallow angle without snapping to the grid. In the wall band at y\u2248390\u2013430, a vertical pin at x\u2248565 breaks the course \u2014 one legible piece of the repair fiction, drawn rather than implied.",
+  "WORST_WHY": "Two-thirds of the frame contains no drawn architecture. The chambers flanking the corridor \u2014 x20\u2013300 and x460\u2013740, y60\u2013380 \u2014 are mottled brown noise crossed by thin anti-aliased outlines forming irregular polygons, a cracked-mud / Voronoi pattern that sits between pixels and answers to nothing in the layout. There are no courses, no slabs, no joints, at any distance. The corridor floor at x380\u2013420 / y230\u2013450 is a vertical smear: the stone detail dissolves upward into streaks rather than dimming. The wall band at y\u2248390\u2013430 has 4px-wide soft mortar where the same band in 2 has legible blocks and a driven pin. This is what \"a filter was run over it\" looks like, and the measurement above confirms it was \u2014 the good floor is in there, blurred.",
+  "FLAGGED": "3, 4, 1, 2\n\n- **3** \u2014 the two barrels at x\u2248110\u2013180 / y\u2248188\u2013208 are sliced flat by a dead-straight horizontal line at y=205 where the grey floor tile draws over them. Both barrels, same y, staves cut mid-run. A draw-order bug, visible in the thumbnail.\n- **4** \u2014 a flat grey wash lies across the right-hand wall band, x438\u2013700 / y\u2248370\u2013450, *lighter* than the masonry it covers, bounded by a hard vertical edge at x=438 and a hard horizontal base. It obscures the stonework it sits on.\n- **1** \u2014 the blur, above. Glance-obvious next to any of the others.\n- **2** \u2014 the region x0\u2013309 / y134\u2013388 is a flat rectangle at luminance **1**: one value, zero variation, max equals mean. It is darker than the wall run at y105\u2013130 (mean 7.4), which is *farther* from the light. Mirrored on the right at x505\u2013750. That is not falloff, it is a hole, and its right edge slices the corridor's west wall mid-course.",
+  "RANK": "2 > 4 > 3 > 1",
+  "BEST": "2",
+  "WORST": "1",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "Remove the blur/resample pass. The floor art already exists intact in 2 and 4 at the same coordinates; render it at 1:1 so slab joints are hard 1px edges again.",
+  "Replace the noise fill in x20\u2013300 and x460\u2013740, y60\u2013380 with the laid stone courses used in the lit floor, then dim them. Do not substitute texture for architecture.",
+  "Redraw every crack as a hard 1px run on the grid, the way the crack at x120\u2013340 / y490\u2013560 already is. The polygon outlines in the flanking chambers are anti-aliased curves sitting between pixels \u2014 delete them.",
+  "Restore tile detail in the corridor at x380\u2013420 / y230\u2013450 and apply distance falloff as a value ramp over intact art, not as a vertical smear.",
+  "Resolve the wall band mortar at y\u2248390\u2013430 from 4px soft bands to 1px hard lines, and put a value step between the wall's top surface and the lit floor below it.",
+  "The figure is stated to carry the only light and is holding a sword and a shield. Give it a lamp or a torch, or move the light origin onto something the player can see."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r004-worktree-session-2026-08-29-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

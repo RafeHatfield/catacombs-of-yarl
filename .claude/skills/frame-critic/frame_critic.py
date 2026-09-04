@@ -381,7 +381,7 @@ def parse(text, n_slots):
 # that was already rejected once. So it is recorded as `outranked_build` and reported, rather
 # than folded into the verdict. LOOP-PROCESS §8: a bar found wanting mid-run is held frozen,
 # cleared honestly, and impeached in the same report — never re-tuned after the answer is seen.
-def plant_caught(r, plant_slot, build_slot):
+def plant_caught(r, plant_slot, build_slot, approved_slot=None):
     ranked_last = bool(r["_rank"]) and r["_rank"][-1] == plant_slot
     worst = r["_worst"] == plant_slot
     flagged = plant_slot in r["_flagged"]
@@ -389,9 +389,20 @@ def plant_caught(r, plant_slot, build_slot):
     rank = r["_rank"]
     outranked = (plant_slot in rank and build_slot in rank
                  and rank.index(plant_slot) < rank.index(build_slot))
+    # ── THE APPROVED FRAME'S OWN RANK (RULED, Rafe, 2026-09-03) ───────────────────────────────
+    #
+    # The plant answers ONE question — would this seat ship something already culled — and §4 is
+    # explicit that RANK does not reproduce Rafe's culls. The approved frame answers a different
+    # and much narrower question, and it is one a rank CAN answer: **is this better than the last
+    # thing a person said yes to?** A build the seat puts below that frame has gone backwards
+    # against a human verdict, whatever else it does.
+    outranked_by_approved = bool(approved_slot and rank and approved_slot in rank
+                                 and build_slot in rank
+                                 and rank.index(approved_slot) < rank.index(build_slot))
     return ((ranked_last or worst or flagged) and not shipped,
             dict(ranked_last=ranked_last, named_worst=worst, flagged=flagged, shipped=shipped,
                  outranked_build=outranked,
+                 outranked_by_approved=outranked_by_approved, approved_slot=approved_slot,
                  every_frame_flagged=(len(r["_flagged"]) == len(rank) and bool(rank))))
 
 
@@ -560,7 +571,7 @@ def main():
         deck.append(("bar", bar["image"], bar.get("crop")))
     rng.shuffle(deck)
 
-    mapping, plant_slot, build_slot = {}, None, None
+    mapping, plant_slot, build_slot, approved_slot = {}, None, None, None
     for i, (what, path, box) in enumerate(deck, start=1):
         size = crop_to(path, box, os.path.join(work, "%d.png" % i))
         mapping[str(i)] = dict(what=what, source=os.path.relpath(path, REPO)
@@ -571,6 +582,8 @@ def main():
             plant_slot = i
         if what == "build":
             build_slot = i
+        if what == "approved":
+            approved_slot = i
 
     print("\n== deck (%d frames, shuffled, unlabelled) — cwd %s" % (len(deck), work))
     for i in sorted(mapping, key=int):
@@ -596,11 +609,16 @@ def main():
         print("transcript: %s" % os.path.relpath(tpath, REPO))
         return 4
 
-    caught, how = plant_caught(r, plant_slot, build_slot)
+    caught, how = plant_caught(r, plant_slot, build_slot, approved_slot)
     flips = r["_flip_blocks"].get(build_slot, [])
 
     if not caught:
         verdict = "VOID"
+    elif how.get("outranked_by_approved"):
+        # RULED 2026-09-03: a build that ranks below the last Rafe-approved frame cannot PASS.
+        # "A build that reads greyer or flatter than it cannot rank BEST; this is why r003 passed
+        # the critic while failing Rafe's eye." FAIL, not VOID — nothing is wrong with the judge.
+        verdict = "FAIL"
     elif build_slot in r["_ship"] and build_slot not in r["_flagged"]:
         verdict = "PASS"
     else:
@@ -616,6 +634,16 @@ def main():
           % (plant_slot, how["ranked_last"], how["named_worst"], how["flagged"], how["shipped"],
              "CAUGHT" if caught else "MISSED"))
     print("   build was slot %s" % build_slot)
+    if approved_slot:
+        print("   approved reference was slot %s (%s) — %s"
+              % (approved_slot, cfg["approved_capture"].get("build", "?"),
+                 "BUILD IS ABOVE IT" if not how["outranked_by_approved"]
+                 else "BUILD IS BELOW IT"))
+    if how.get("outranked_by_approved"):
+        print("\n   ⚠ THE BUILD RANKS BELOW THE LAST APPROVED FRAME. This is a REGRESSION")
+        print("     against a verdict a person already gave, and unlike the plant's ordering it")
+        print("     IS part of the verdict (RULED 2026-09-03). The build cannot pass below the")
+        print("     last thing Rafe said yes to.")
     if how["outranked_build"]:
         print("\n   ⚠ THE PLANT OUTRANKED THE BUILD. A blind seat put a frame Rafe personally")
         print("     culled — \"%s\" — above this one." % plant["verbatim"])

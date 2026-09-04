@@ -1,0 +1,62 @@
+Read all four. Two things worth stating up front, because they shape everything below: **2 and 4 are pixel-identical below y≈455** — I diffed them; the entire lit floor, the character, and the lower masonry are the same bytes. They differ only in how the far field is handled. And **1 is a softened, dimmed copy of that same floor**: over the identical region (x260–660, y520–640) mean per-pixel gradient is 2.18 in 1 against 3.22 in 2 and 4, and mean luminance is 54.9 against 77.2. That is not a lighting difference. That is a blur.
+
+RANK: 2 > 4 > 3 > 1
+
+BEST: 2
+
+BEST_WHY: The floor between the character and the bottom of the light, roughly x150–470 / y455–640. The horizontal joint at y≈519 is a broken run, not a line — sampling across it at 15px intervals gives 50, 87, 63, 68, 112, 79, 83, 133, 90, 92, 93, 141, 140, 121. It goes near-black in places, vanishes completely into the slab face in others. That is a joint that reads as cut and worn rather than stamped, and it is the single strongest piece of craft in the set. Supporting it: the courses do not align — the run at y≈470–505 carries slabs of roughly 40, 55 and 30px width and the run beneath it breaks at different x positions, so no vertical joint carries through two courses. The diagonal tool-scoring is per-slab, not per-texture: the slab at x≈390–440 / y≈530–565 carries about six hatch strokes and its neighbour at x≈300–370 carries none. And the crack from x≈120,y≈560 to x≈340,y≈490 is one hand-placed 1px run that crosses four joints at a shallow angle without snapping to the grid. In the wall band at y≈390–430, a vertical pin at x≈565 breaks the course — one legible piece of the repair fiction, drawn rather than implied.
+
+WORST: 1
+
+WORST_WHY: Two-thirds of the frame contains no drawn architecture. The chambers flanking the corridor — x20–300 and x460–740, y60–380 — are mottled brown noise crossed by thin anti-aliased outlines forming irregular polygons, a cracked-mud / Voronoi pattern that sits between pixels and answers to nothing in the layout. There are no courses, no slabs, no joints, at any distance. The corridor floor at x380–420 / y230–450 is a vertical smear: the stone detail dissolves upward into streaks rather than dimming. The wall band at y≈390–430 has 4px-wide soft mortar where the same band in 2 has legible blocks and a driven pin. This is what "a filter was run over it" looks like, and the measurement above confirms it was — the good floor is in there, blurred.
+
+FLAGGED: 3, 4, 1, 2
+
+- **3** — the two barrels at x≈110–180 / y≈188–208 are sliced flat by a dead-straight horizontal line at y=205 where the grey floor tile draws over them. Both barrels, same y, staves cut mid-run. A draw-order bug, visible in the thumbnail.
+- **4** — a flat grey wash lies across the right-hand wall band, x438–700 / y≈370–450, *lighter* than the masonry it covers, bounded by a hard vertical edge at x=438 and a hard horizontal base. It obscures the stonework it sits on.
+- **1** — the blur, above. Glance-obvious next to any of the others.
+- **2** — the region x0–309 / y134–388 is a flat rectangle at luminance **1**: one value, zero variation, max equals mean. It is darker than the wall run at y105–130 (mean 7.4), which is *farther* from the light. Mirrored on the right at x505–750. That is not falloff, it is a hole, and its right edge slices the corridor's west wall mid-course.
+
+SHIP: NONE
+
+---
+
+FLIP 1:
+- Remove the blur/resample pass. The floor art already exists intact in 2 and 4 at the same coordinates; render it at 1:1 so slab joints are hard 1px edges again.
+- Replace the noise fill in x20–300 and x460–740, y60–380 with the laid stone courses used in the lit floor, then dim them. Do not substitute texture for architecture.
+- Redraw every crack as a hard 1px run on the grid, the way the crack at x120–340 / y490–560 already is. The polygon outlines in the flanking chambers are anti-aliased curves sitting between pixels — delete them.
+- Restore tile detail in the corridor at x380–420 / y230–450 and apply distance falloff as a value ramp over intact art, not as a vertical smear.
+- Resolve the wall band mortar at y≈390–430 from 4px soft bands to 1px hard lines, and put a value step between the wall's top surface and the lit floor below it.
+- The figure is stated to carry the only light and is holding a sword and a shield. Give it a lamp or a torch, or move the light origin onto something the player can see.
+
+FLIP 2:
+- Fill x0–309 / y134–388 and x505–750 / y134–388 with drawn, dimmed stonework. Requirement: luminance must decrease monotonically with distance from the light — right now y140–165 reads 1.0 while y105–130, farther out, reads 7.4.
+- Terminate darkness on wall geometry, not on an axis-aligned rectangle. The current right edge at x=309 cuts the corridor wall mid-course.
+- Redraw the corridor side walls at x310–370 and x440–503, y134–390. They are soft gradient blocks meeting the crisp corridor floor at a hard vertical seam — two resolutions butted together. Give them the floor's 1px joint treatment.
+- Break the left corridor wall's mortar: the courses are at constant pitch with constant value along each run. Vary course height and let the joint value swing along its length, as the lit floor's joints already do.
+- The character reads at full saturation — sampled pixels (100,220,184) and (226,131,0) against a floor palette around (170,140,105). Tint the sprite into the light it is supposedly casting.
+- Same light-source problem as 1: no lamp, no torch, light from nothing.
+
+FLIP 3:
+- Fix draw order so props sort above floor tiles. Both barrels at x≈110–180 are currently clipped at y=205 by the grey tile drawn over them.
+- The two barrels are pixel-identical copies on one row; so are the two crates at x≈62–98 / y4–68. Mirror, revalue, or separate them.
+- Draw transition tiles. Water, dirt and stone currently meet at three dead-straight axis-aligned cuts with nothing between them: the water's base at y=191, its right edge at x=343, and the dirt's edges at x=56 and x=344. At minimum, a 1px darker rim on the water and a scatter of dirt pixels breaking the stone boundary.
+- The water is one flat value edge to centre. Darken it toward the middle and drop a shadow line under the bank edge so it has depth.
+- Break the dirt repeat — the same maroon crack cluster stamps on a regular pitch across the entire field. Two or three variant tiles, offset placement.
+- Vary the stone floor slab values. Every tile in the left column and the bottom band is the same mid-grey with identical 1px grout.
+- The barrels and crates are drawn three-quarter with visible side walls in an otherwise straight top-down frame. Pick one projection and redraw the props to it.
+- Recolour the moss blobs per surface and drop the light mint outline — the same sprite currently appears on grey stone and in green water, reading as a sticker with no contact.
+- Nothing is lit by a carried source; the frame is uniformly bright edge to edge. Add the falloff.
+
+FLIP 4:
+- Clip the haze to the wall silhouette instead of to a rectangle, and keep it darker than the surface it covers. The wash at x438–700 / y≈370–450 is currently lighter than the masonry underneath and cuts on a hard vertical at x=438.
+- Draw the chambers at x30–360 and x460–740, y60–380. They are soft airbrushed grey blobs at sub-pixel smoothness with no tile structure — the same rooms are drawn as laid stone in 2. Draw the stone, then dim it.
+- Redraw the wandering dark curves in those chambers (the one running roughly x100,y250 to x330,y180, and its counterpart on the right) as hard 1px runs. They are currently vector-smooth and ignore the grid.
+- Remove the soft diagonal gradient boundary at x≈585–630 / y≈420–455, or align it to the grid. It is the only diagonal edge in an otherwise wholly axis-aligned frame.
+- Sprite tint and visible light source, as in 1 and 2.
+
+---
+
+The thing to watch: 2 and 4 are the same asset with two different far-field systems bolted on, and **both systems fail in the same place** — neither one draws the rooms. One fills them with black, one fills them with fog. The floor art is good enough to carry a paid game; nothing above y≈455 in any of the three is. That is where the work is, and it is a content problem, not a shader problem.
+
+*Model: Claude Opus 5 (1M context).*
