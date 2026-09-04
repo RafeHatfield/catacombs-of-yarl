@@ -147,6 +147,56 @@ guard, not to the plant.
 bar found wanting mid-run is held frozen, cleared honestly, and impeached in the same report —
 never re-tuned once the answer is visible. This section is that impeachment.
 
+### PASS-WITH-ROUTED-ITEMS — the third lawful verdict state
+
+**LAW (Rafe, 2026-09-03).** *"Add the lawful verdict state to the skill: PASS-WITH-ROUTED-ITEMS,
+valid only with a quoted Rafe ruling and a named destination lane — builder can never route."*
+
+A FAIL can contain items **no round on this lane can ever discharge.** The wall lane's r003 asked
+for *objects* — rope, driven pins, hide and salvaged timber standing in the scene — and the review
+scene has no prop system at all. Grinding that lane produces nothing. The human gate routes the
+item to the lane that owns it, where it becomes that lane's acceptance criterion, and the build
+goes to the walk.
+
+**Every flip must carry a disposition.** A state that discharges some items and stays silent about
+the rest is a FAIL wearing a better name. Three are lawful:
+
+| state | means | requires |
+|---|---|---|
+| `ROUTED` | another lane owns it | a quoted ruling **and** a named destination lane |
+| `CLOSED` | ruled not to be chased | a quoted ruling |
+| `PARKED` | first-time item, awaiting Rafe's eye on the walk | a quoted ruling |
+
+**THE BUILDER CAN NEVER ROUTE.** Not "should not" — the state is invalid without Rafe's words
+recorded verbatim against each item. The enforcement is not a signature, it is **visibility**:
+`critic_gate.py` prints every disposition at install time and the set is stamped onto the handset,
+so a routing the builder invented is a quote Rafe does not recognise, on his own screen, while he
+is holding the build. Same principle as `SKIPPED-REVIEW`: an override nobody can see from the
+phone is the same as no gate.
+
+### ⚠ Editing the gate invalidates every standing verdict — including one you are about to use
+
+Found the first time this state was implemented, and it is a property of the mechanism rather than
+a bug in it. The build id is content-addressed over the whole tree **except a short exclusion
+list, and the judging layer's own source is not on that list.** So editing `critic_gate.py` to add
+a verdict state changes the build id, and every verdict taken before the edit stops matching —
+including the verdict the new state was written for.
+
+**Do not widen the exclusion list to get around this.** It was tried, in the same hour, and
+reverted: excluding the judging layer would make a *softened* gate keep old passes, which trades a
+permanent loosening for one instance's convenience.
+
+The lawful ways out, in order of preference:
+
+1. **Add the state first, then run the round.** A verdict taken after the gate change matches it.
+   This is the only clean path and it costs one round.
+2. **Re-run the round on unchanged pixels.** The verdict pins `build_frame.sha256`; if the frame
+   still hashes the same, the seat is being shown the identical picture and only the judging
+   layer moved. **This is still a round and still needs whatever authority a round needs** — after
+   a STOP, that is Rafe's.
+3. There is no third way. `YARL_SKIP_CRITIC=1` installs a build stamped as *not a gate build*,
+   which misrepresents a build whose every item has a human disposition.
+
 ### The morgue
 
 `morgue/` holds frames **Rafe personally culled at the device gate**, with his verbatim words and
