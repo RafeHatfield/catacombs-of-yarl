@@ -318,6 +318,200 @@ def crack_dir_table():
 DIRS = crack_dir_table()
 
 
+# THE CRACK IS NOT ONE VALUE. The frame critic, twice: "uniform 1px black crossing joints
+# without deflection... the identical overlay". A crack that is one value along its whole length
+# is a drawn line; a real one is deepest where it has opened and shallows to nothing at its ends.
+# The depth is modulated per pixel from the crack's own world position, so it varies ALONG the
+# fracture and both tiles either side of a boundary agree about it.
+# ================= THE FLOOR STEPS, IT DOES NOT RAMP =================
+#
+# Consolidation pass, from the parked lane's floor-only items. The frame critic, twice:
+# "the slab edges ramp over two to three pixels and adjacent blocks merge until the joint
+# vanishes; step them at a hard boundary so the floor sits at the same resolution as the sprite",
+# and "large soft value-blobs sit across the floor that follow no geometry... they read as
+# airbrush, not as light or as material."
+#
+# Both are the same defect wearing two descriptions: CONTINUOUS TERMS ON A QUANTISED SURFACE.
+# The chip pass subtracted a fraction of a rung from the pixels beside an open joint, the dish
+# subtracted a smooth radial, and the lane's falloff was a smoothstep — none of them landing on
+# the ladder, all of them producing intermediate values the palette was built to forbid. §4.3
+# bans anti-aliasing and these were manufacturing it at paint time.
+#
+# The fix is not to remove them. It is to make each land ON a rung: a chipped arris takes the
+# JOINT'S OWN VALUE rather than an intermediate, and the dish steps in whole rungs.
+CHIP_TAKES_JOINT = True     # a chipped arris is joint, not a blend on the way to one
+DISH_QUANTISE = True        # the dish steps in whole rungs, so it reads as depth not as airbrush
+
+CRACK_DEPTH_VARY = 0.18    # +/- share of the crack's depth, keyed on world position
+CRACK_VARY_SALT = 3017
+# A CRACK HAS A SECTION. "A uniform 1px black stroke has no depth" — a real fracture has a lip
+# where the stone has broken away on one side and a channel below it. The lip is drawn on the
+# side the crack's own local direction chooses, so it is consistent along a run rather than
+# alternating pixel to pixel, and it is LIGHTER than the stone: a broken edge catches light the
+# flat face does not.
+# AND IT REGISTERS THE JOINTS IT CROSSES. The frame critic: "a crack that crosses six slabs in
+# one smooth curve without registering a single joint reads as a line drawn over the floor, not
+# damage in it. Break them at joints, or run them along one."
+#
+# It cannot be done in the polyline, and the reason is worth recording because it is a standing
+# constraint on this family rather than a shortcut. A crack must be a PURE FUNCTION OF WORLD
+# POSITION — that is what makes every tile it crosses compute the identical line, and it is the
+# same discipline the corner theorem imposes on the stones. The bond is not a world function: a
+# tile's course splits, drop pattern and stone origins come from the atlas VARIANT the map picks
+# for that cell at runtime. A crack that deflected on the real joints would therefore be a
+# different crack depending on which tile drew it, and the disagreement would land exactly on the
+# tile boundaries — §8.3.1's grid tell, reintroduced by the fix for a different defect.
+#
+# What IS available at paint time, in every painter, from purely local information: where the
+# crack passes through a joint, the arrises either side of the crossing SPALL. The stone corners
+# break away, so the crack is wide where it meets the bond and narrow across the slab — which is
+# how a fracture actually crosses a joint, and it registers the joint at the one place the
+# critic said nothing registered it. Computed from the ORIGINAL crack set, so it is
+# order-independent, and from the joint mask, which both tiles either side of a boundary already
+# agree about by edge-family construction.
+CRACK_SPALL = True
+
+
+def crack_spall(pixels, joint, stone_ok):
+    """The pixels that break away where a crack crosses a joint. Tile-local, order-free.
+
+    `pixels` is the tile's crack set, `joint(ly, lx)` says whether a pixel is joint, and
+    `stone_ok(ly, lx)` says whether a pixel is in bounds and is stone.
+    """
+    if not CRACK_SPALL:
+        return set()
+    have = set(pixels)
+    out = set()
+    for (ly, lx) in have:
+        if joint(ly, lx):
+            continue
+        # BOUNDS FIRST. A negative index wraps silently in numpy and a positive one raises;
+        # the first version of this did both, on the same line.
+        if not any(0 <= ny < T and 0 <= nx < T and joint(ny, nx) and (ny, nx) in have
+                   for (ny, nx) in ((ly - 1, lx), (ly + 1, lx), (ly, lx - 1), (ly, lx + 1))):
+            continue
+        # Perpendicular to the crack's own local run, or the spall is drawn along it and is
+        # invisible: a horizontal crack widened horizontally is still one pixel tall.
+        vert = (ly - 1, lx) in have or (ly + 1, lx) in have
+        cand = ((ly, lx - 1), (ly, lx + 1)) if vert else ((ly - 1, lx), (ly + 1, lx))
+        for (ny, nx) in cand:
+            if 0 <= ny < T and 0 <= nx < T and stone_ok(ny, nx) and (ny, nx) not in have:
+                out.add((ny, nx))
+    return out
+
+
+# ============================ THE CONTACT OCCLUSION, ON THE LADDER ============================
+#
+# §12.1's plane boundary — the form that says the floor stops where the wall begins — used to be
+# an ALPHA-BLENDED SPRITE and is now a rung subtraction painted into the floor's own pixels.
+#
+# WHY IT MOVED. `tier1_floor_963{0..3}.png` is one colour, rgb(22,22,22), carrying a 130-STEP
+# ALPHA RAMP, drawn over the floor one to three times per cell. Compositing it is
+# `floor*(1-a) + 22a`, which lands between rungs by construction: measured on the composed field,
+# the family's NINE authored albedo values became ONE HUNDRED AND THIRTY-TWO. That is the wall
+# cap's disease exactly (107 -> 9, fixed there by snapping) arriving on the floor through a layer
+# nobody was measuring, and every seat that has called this floor "continuous-tone procedural
+# noise, not authored pixel art" has been looking at it.
+#
+#   A VALUE BETWEEN RUNGS IS NOT IN THE PALETTE. No blend, no feather, no taper — the same
+#   sentence the crack network is authored under, applied to the one treatment that still broke
+#   it.
+#
+# WHY THE SPRITE IS STILL THE SOURCE. The ramp's ALONG-EDGE JITTER survives the quantise (2-3
+# distinct rungs per row, measured), and it is the only thing keeping the seam off a straight
+# constant-pitch line on the tile grid. So the shipped PNG remains the datum and its alpha is
+# read PER PIXEL; what changes is that the alpha now says HOW MANY RUNGS rather than how much to
+# blend. Nothing is invented and nothing is smoothed.
+#
+# ANCHORED AT THE MEDIAN, NOT AT THE PIXEL. The blend darkened a bright stone more than a dark
+# one, because a blend is a ratio. Occlusion is FORM (§12.1) and a form does not vary with the
+# value of what it crosses, so the depth is a fixed number of rungs taken from the material's
+# median. That is also what makes it exactly representable.
+OCCLUSION_FLOOR = 22.0      # DERIVED: the sprites' own rgb, which is the ambient itself
+OCCLUSION_SIDES = ("N", "E", "S", "W")
+
+
+def occlusion_rungs(alpha, layers, mat):
+    """Alpha -> whole ladder rungs of darkening. ONE definition, two painters.
+
+    `layers` is the ambient-anchored stack count (RULED 2026-09-02): the same sprite re-drawn
+    where the lamp does not reach, so the boundary survives past the lamp. Under the blend that
+    was `1-(1-a)^n`; the same compounding is kept and then quantised, which is why the eleven-rung
+    ladder was needed — three layers want 22.11 and a nine-rung ladder stops at 48.56 (see
+    `PALETTE_EXTEND_BELOW` in compose_family).
+    """
+    import numpy as _np
+    lad = _np.asarray(mat["ladder"], dtype=float)
+    rung = lad[1] - lad[0]
+    eff = 1.0 - (1.0 - _np.asarray(alpha, dtype=float)) ** int(layers)
+    # FLOOR(x + 0.5), NOT round(). numpy rounds a tie TO EVEN and C# rounds it AWAY FROM ZERO, so
+    # a rung landing exactly on a half would differ between the two painters with neither able to
+    # be called wrong. One expression, both painters, no tie-break at all.
+    return _np.floor(eff * (mat["lum_median"] - OCCLUSION_FLOOR) / rung + 0.5).astype(int)
+
+
+def occlusion_alpha(side):
+    """The shipped sprite's alpha plane for one side, as 0..1, T x T."""
+    import numpy as _np
+    from PIL import Image as _Image
+    src = json.load(open(os.path.join(CF.ASSETS, "MANIFEST.json")))
+    for e in src.get("occlusion", []):
+        if e.get("side") == side:
+            a = _np.asarray(_Image.open(os.path.join(CF.ASSETS, e["file"])).convert("RGBA"))
+            return a[..., 3].astype(float) / 255.0
+    raise SystemExit("REFUSING: no occlusion sprite for side %s in the overlay manifest" % side)
+
+
+_OCC_ALPHA_CACHE = {}
+
+
+def occlusion_block(side_mask, layers, mat):
+    """The whole-tile rung field for one cell's occlusion. ONE definition, two painters.
+
+    The sides composite the way the four sprites did — each was a separate draw, so their alphas
+    multiply through their complements and a corner carrying two edges is darker than either.
+    """
+    import numpy as _np
+    keep = _np.ones((T, T), dtype=float)
+    for i, side in enumerate(OCCLUSION_SIDES):
+        if not (side_mask & (1 << i)):
+            continue
+        if side not in _OCC_ALPHA_CACHE:
+            _OCC_ALPHA_CACHE[side] = occlusion_alpha(side)
+        keep *= 1.0 - _OCC_ALPHA_CACHE[side]
+    return occlusion_rungs(1.0 - keep, layers, mat)
+
+
+def occlusion_check_vector(mat, n=48):
+    """Sample (side, pixel, layers) -> rungs, so the engine's derivation can be refused.
+
+    The paint check cannot cover this: it compares the composer against the engine on a field
+    with no map in it, and occlusion is decided by WALL ADJACENCY. So the two derivations are
+    tied together the way the edge families are — a vector in the manifest that the engine
+    recomputes and refuses on (LOOP-PROCESS §4.2: a duplicate with an enforcement is a different
+    thing from a duplicate with a comment).
+    """
+    import numpy as _np
+    out = []
+    for i in range(n):
+        side = OCCLUSION_SIDES[i % 4]
+        layers = 1 + (i // 4) % 3
+        a = occlusion_alpha(side)
+        # SAMPLED FROM THE RAMP, NOT FROM THE TILE. Each side's ramp occupies its own eighth of
+        # the sprite; a fixed (px, py) walk hits alpha 0 on three sides out of four and the
+        # vector then checks that zero equals zero forty-eight times.
+        ys, xs = _np.nonzero(a)
+        if len(ys) == 0:
+            raise SystemExit("REFUSING: the %s occlusion sprite is entirely transparent" % side)
+        k = (i * 37) % len(ys)
+        py, px = int(ys[k]), int(xs[k])
+        out.append(dict(side=side, px=px, py=py, layers=int(layers),
+                        rungs=int(occlusion_rungs(a[py, px], layers, mat))))
+    return out
+
+
+CRACK_LIP = 0.55           # rungs the lip sits ABOVE the stone it broke from
+CRACK_LIP_SALT = 3018
 CRACK_DEPTH = 0.42         # the joint's own depth: a crack is dark because ENCLOSED (§6.5),
                            # and one that met a joint at a different value would announce itself
                            # as a decal laid over the bond rather than a split through it.
@@ -497,6 +691,22 @@ WEAR_ARRIS = 0.45          # how far a joint beside trodden stone rises toward t
 # could not see. The plant caught an omission that would otherwise have ridden along as a channel
 # nobody had agreed to.
 MARK_BANDS, MARK_PITS = 5, 3        # on ordinary stone
+# A THIRD OF THE STONES CARRY NOTHING. The frame critic: "the diagonal-hatch motif recurs on a
+# visible rhythm across the lit area — vary the hatch angle, density, or omit it on a third of the
+# slabs." An even scatter over every stone is a texture, and a texture that covers everything
+# stops being an event and becomes the material — which is §8.3's motif trap arriving through the
+# dressing rather than through the bond. Keyed on the stone's own address, so a bare stone is bare
+# from both tiles that see it.
+MARK_BARE_SHARE = 0.34
+# AND THE MARKED STONES CLUSTER. "The scribble marks are distributed as an even noise field
+# across the whole floor. Place them deliberately in clusters where a hand would have made them,
+# and leave stretches of floor with none." Bare-vs-marked was a per-stone coin flip, which is an
+# even field by construction however low the rate. The coin is now biased by a coarse world
+# field, so working ran in one part of a room and not another — and the field is world-keyed, so
+# a cluster crosses tile boundaries the way a hand would.
+MARK_CLUSTER_PERIOD = 5    # tiles
+MARK_CLUSTER_SALT = 3019
+MARK_CLUSTER_SWING = 0.30  # how far the bare share moves between a busy patch and a quiet one
 WEAR_BANDS, WEAR_PITS = 3, 1        # on trodden stone
 
 
@@ -588,7 +798,7 @@ def stone_extent(fw, fe, kind, c, drop, split_i):
     return 0, mv_e - a_w, v_hi                     # interior
 
 
-def stone_marks(key, seed, extent, worn=False, wear=0.0):
+def stone_marks(key, seed, extent, worn=False, wear=0.0, extent_world=None):
     """The dressing on one stone, in STONE-LOCAL pixels: [(u, v, depth_in_rungs), ...].
 
     Addressed by the stone, like its value and its grain, so it cannot repeat on the tile grid —
@@ -596,6 +806,16 @@ def stone_marks(key, seed, extent, worn=False, wear=0.0):
     of a spanning stone dress it identically.
     """
     st = _lcg((key ^ (MARKS + seed)) | 1)
+    # BARE STONE. Drawn from the stone's own key before anything else, so it is stable and shared
+    # across a boundary, and so the marks that DO appear read as events rather than as a coat.
+    bare = MARK_BARE_SHARE
+    if extent_world is not None:
+        wx, wy = extent_world
+        c = (mix(wx // (MARK_CLUSTER_PERIOD * T), wy // (MARK_CLUSTER_PERIOD * T),
+                 MARK_CLUSTER_SALT + seed) % 1000) / 1000.0
+        bare = min(max(MARK_BARE_SHARE + (c - 0.5) * 2.0 * MARK_CLUSTER_SWING, 0.0), 0.95)
+    if ((key ^ (MARKS + seed)) % 1000) / 1000.0 < bare:
+        return []
     u_lo, u_hi, v_hi = extent
     u_span = max(1, u_hi - u_lo - 1)
     v_span = max(1, v_hi - 1)
@@ -972,7 +1192,16 @@ def _travel_axis_from_field(traffic, tx, ty):
 #     toward the material's median (flatter) and it sits below its neighbours, which is drawn the
 #     only legal way — as shadow at its edges, never as an overall darkening, because a stone that
 #     is merely darker is a stone that was painted.
-DEFORM_FLATTEN = (0.0, 0.10, 0.35, 0.60)   # by wear age: how far a stone's value is pulled to the
+# CUT by the frame critic: "every lit tile sits inside one narrow brown band, so slab, repair,
+# hatched patch and ground-in dirt all read as the same material at the same distance."
+#
+# This pass is what was closing the band. It pulls a walked stone's value toward the material
+# median to say "ground down", and at 0.60 a fully worn stone had lost most of the value that
+# distinguished it from its neighbours — the stone-to-stone variation the bond spends five
+# families and two tables to produce, flattened out again at paint time on exactly the ground the
+# player is standing on. Ground-down is a real thing to say; saying it this loudly costs the floor
+# its material.
+DEFORM_FLATTEN = (0.0, 0.04, 0.14, 0.24)   # by wear age: how far a stone's value is pulled to the
                                            # material median. Flat is what ground-down looks like.
 #
 # (b) THE COMPACTION ITSELF IS THE DIRECTIONAL LEVER, and the first attempt at this had it
@@ -1082,7 +1311,12 @@ POLISH_SHOULDER = 1.15          # in tiles, where the lane's specular has faded 
 # themselves run ALONG it, and they are floored to whole pixels because §4.3 forbids the
 # anti-aliasing a smooth stripe would need.
 STRIA_PERIOD = 3                # pixels between streaks
-STRIA_DEPTH = 0.45              # how much of the lane's specular a dark streak gives up
+STRIA_DEPTH = 0.12        # CUT by the frame critic, which called it a '45 degree hatch
+                          # OVERLAY' — read as applied to the floor rather than worn into
+                          # it, which is a decal by another name. At 0.45 every third
+                          # pixel line lost nearly half its specular and the pattern
+                          # covered the whole lit area as an even weave. Measured earlier
+                          # at a third of the on-lane 'legibility' the metric credited.              # how much of the lane's specular a dark streak gives up
 STRIA_SALT = 3012
 LANE_FRAY = 0.32          # tiles of jitter on the distance BEFORE the lane's falloff, so
                           # its shoulder wanders instead of arriving on a line. A
@@ -1281,7 +1515,17 @@ def chroma_tint(tint, strength):
 # a share PACKED SHUT recovers it at the light end instead, which widens the distribution while
 # LOWERING the mean and the share above the floor. Measured: spread 4.99, mean 0.112, mode 0.078.
 SHELTER_LIFT_RUNGS = (5.0, 4.0, 3.0, 0.0)   # packed shut / mode / middle / the deep tail
-SHELTER_WEIGHTS = (0.06, 0.50, 0.26, 0.18)   # a smaller packed-shut share keeps the median
+SHELTER_WEIGHTS = (0.04, 0.26, 0.52, 0.18)   # RAISED BACK by the frame critic: 'the floor's
+                                             # joint structure has dissolved... no legible
+                                             # slab edge anywhere: a soft brown gradient.'
+                                             # The keyline fix had put the MODAL joint at
+                                             # 0.107 Weber, UNDER §13.8's floor, so the
+                                             # typical joint was not merely subtle but
+                                             # absent — the overshoot flagged two rounds
+                                             # before the critic named it. The mode now
+                                             # sits at 0.154, just clear of the floor and
+                                             # far below the 0.579 that outlined every
+                                             # stone. Spread unchanged at 4.99 rungs.   # a smaller packed-shut share keeps the median
                                              # joint faintly present: at 0.15 the field's
                                              # spread fell to 2.95 rungs because half the
                                              # joints had closed. 0.06 restores it to 4.01
@@ -1541,8 +1785,17 @@ def main():
     mat["shelter_weights"] = list(SHELTER_WEIGHTS)
     mat["shelter_block"] = SHELTER_BLOCK
     mat["lane_fray"] = LANE_FRAY
+    mat["crack_depth_vary"] = CRACK_DEPTH_VARY
+    mat["mark_bare_share"] = MARK_BARE_SHARE
+    mat["chip_takes_joint"] = CHIP_TAKES_JOINT
+    mat["dish_quantise"] = DISH_QUANTISE
+    mat["crack_lip"] = CRACK_LIP
+    mat["crack_spall"] = CRACK_SPALL
+    mat["mark_cluster_period"] = MARK_CLUSTER_PERIOD
+    mat["mark_cluster_swing"] = MARK_CLUSTER_SWING
     mat["joint_polish_floor"] = JOINT_POLISH_FLOOR
     mat["polish_lane"] = [POLISH_LANE_GAIN, POLISH_LANE_WIDTH, POLISH_SHOULDER]
+    mat["occlusion_floor"] = OCCLUSION_FLOOR
     mat["striation"] = [STRIA_PERIOD, STRIA_DEPTH]
     mat["lane_dish"] = [LANE_DISH_DEPTH, LANE_DISH_RIM]
     mat["grit"] = [GRIT_INNER, GRIT_OUTER, GRIT_RATE, GRIT_DEPTH]
@@ -1556,7 +1809,8 @@ def main():
                           drop=DROP, cluster=CLUSTER, split=SPLIT_SALT, crack=CRACK,
                           marks=MARKS, wear=WEAR, chip=CHIP, joint_break=JOINT_BREAK_SALT,
                           hollow=HOLLOW_SALT, stria=STRIA_SALT, lane_dish=LANE_DISH_SALT,
-                          grit=GRIT_SALT, shelter=SHELTER_SALT, lane_fray=LANE_FRAY_SALT),
+                          grit=GRIT_SALT, shelter=SHELTER_SALT, lane_fray=LANE_FRAY_SALT, crack_vary=CRACK_VARY_SALT, crack_lip=CRACK_LIP_SALT,
+                          mark_cluster=MARK_CLUSTER_SALT),
                offset_steps=OFFSET_STEPS, cluster_table=CLUSTER_TABLE,
                marks=dict(dirs=[list(d) for d in MARK_DIRS], min_len=MARK_MIN_LEN,
                           max_len=MARK_MAX_LEN, depth=MARK_DEPTH, pit_depth=PIT_DEPTH,
@@ -1570,6 +1824,8 @@ def main():
                                "no feather. Replaces a per-tile overlay whose median mark was "
                                "4px.")), ladder_step=round(step, 3),
                edge_family_check=cross_check_vector(a.seed),
+               occlusion_sides=list(OCCLUSION_SIDES),
+               occlusion_check=occlusion_check_vector(mat),
                grain_bank=GRAIN_BANK, donors=src.get("donors", []), base=[],
                classes={"0": "joint — offset is defined zero, never remapped",
                         "1": "course 0, spans the WEST boundary", "2": "course 0, interior",

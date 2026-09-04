@@ -1,0 +1,8 @@
+
+*** STOP — stall ***
+3 readable rounds with no new best rank. The best is 1.00, set at round
+    1, and nothing since has beaten it. The lane is not converging.
+
+written: ../../../../../../../private/tmp/claude-501/-Users-rafehatfield-development-c-yarl/c791d47e-1e84-411b-940e-0a744e3fe713/scratchpad/S-stall.md
+
+This is a LOOP-PROCESS §1.1.4 ruling trigger. The line does not restart itself.

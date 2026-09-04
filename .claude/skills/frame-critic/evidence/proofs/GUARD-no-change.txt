@@ -1,0 +1,10 @@
+
+*** STOP — no-change ***
+rounds 1 and 2 are the same picture — mean 0.000 and worst cell 0
+    luminance levels apart over the delivered frame, byte-identical, against floors of
+    0.25 and 4, and both FAIL. Whatever was changed between them did not
+    reach the capture.
+
+written: ../../../../../../../private/tmp/claude-501/-Users-rafehatfield-development-c-yarl/c791d47e-1e84-411b-940e-0a744e3fe713/scratchpad/S-no-change.md
+
+This is a LOOP-PROCESS §1.1.4 ruling trigger. The line does not restart itself.

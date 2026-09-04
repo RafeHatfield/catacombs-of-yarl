@@ -2,6 +2,6 @@
 *** STOP — broken-judge ***
 the picture-plant was missed 2 rounds running. The judging layer is broken; no round past it is readable and nothing ships past it.
 
-written: ../../../../../../../private/tmp/claude-501/-Users-rafehatfield-development-c-yarl/c791d47e-1e84-411b-940e-0a744e3fe713/scratchpad/S3.md
+written: ../../../../../../../private/tmp/claude-501/-Users-rafehatfield-development-c-yarl/c791d47e-1e84-411b-940e-0a744e3fe713/scratchpad/S-broken-judge.md
 
 This is a LOOP-PROCESS §1.1.4 ruling trigger. The line does not restart itself.

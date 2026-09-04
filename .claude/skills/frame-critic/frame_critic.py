@@ -10,8 +10,10 @@ the asset bar, the last frame Rafe approved, and ONE PICTURE-PLANT drawn from th
 asked to rank them, say which it would ship, and flag anything with an obvious defect. The deck
 is shuffled and unlabelled. The seat gets no code, no coordinates, no thresholds, no bible.
 
-    PASS   the build's frame is one the seat would ship, and it flagged no defect in it
-    FAIL   it would not ship it; the flip list is recorded verbatim
+    PASS   the seat would ship this frame, flagged no defect in it, AND ranked it at or above
+           the last Rafe-approved frame and near the asset bar (§5's visual bar as a rank).
+           Reachable at any round; the guards below never gate it.
+    FAIL   any of those missing; the flip list is recorded verbatim
     VOID   the seat did not catch the plant. Findings are NOT READ (LOOP-PROCESS §4)
 
 WHY IT IS BUILT THIS WAY — two measured collapses, both of the review layer, both the same shape
@@ -40,11 +42,31 @@ nothing in it that can break. So:
     INSTRUMENTS ARE BUILDER'S TOOLS. They are welcome, they are useful for aiming between
     rounds, and they gate nothing. Every measure_*.py in this repo stays exactly where it is.
 
-THE LOOP GUARDS — this must never grind
----------------------------------------
-    TWO STRIKES     the same flip item unresolved across two consecutive FAILs -> STOP
-    FIVE-ROUND PARK five rounds on this lane with no PASS -> STOP
-    BROKEN JUDGE    the plant missed twice consecutively -> STOP, and never ship past one
+THE LOOP GUARDS — this must never grind, and it must not stop a lane that is working
+------------------------------------------------------------------------------------
+THEY MEASURE PROGRESS, NOT ROUNDS. The five-round park counted rounds, which is the wrong
+quantity in both directions at once: five rounds that are getting somewhere should keep going,
+and two that are not should already have stopped.
+
+The signal is the one every round already produces at no extra cost — WHERE THE BUILD RANKED in
+the blind shuffled deck against the bar, the last approved frame and the plant. It is a judgement
+about the picture, and the seat cannot see it coming: it is never told the round number, the
+history, or that anything is being tracked. Even the working directory it sits in is named by a
+hash now, because it used to be named `<lane>-r7`.
+
+    BROKEN JUDGE  the plant missed twice consecutively -> STOP, and never ship past one
+    NO CHANGE     two consecutive FAILs whose delivered frames are within NO_CHANGE_MAD /
+                  NO_CHANGE_MAX luminance levels of each other -> STOP. The fix did not
+                  reach the picture at all.
+    THRASH        the same flip item across two consecutive FAILs AND no movement in rank
+                  -> STOP
+    STALL         STALL_ROUNDS readable rounds with no new best rank -> STOP
+    CEILING       ROUND_CEILING rounds, absolute backstop -> STOP
+
+    TWO STRIKES   the same flip item across two consecutive FAILs, rank movement ignored.
+                  ADVISORY — reported and recorded, never a stop. It is the builder's
+                  judgement overlay: a flip item can survive a round the build won on every
+                  other axis, and stopping there sends a ruling about a lane that is working.
 
 Every STOP writes STALL-REPORT.md and is a §1.1.4 ruling trigger with that report as its
 evidence. THE COUNTERS ARE DERIVED FROM THE VERDICT FILES ON DISK, not held in memory, so
@@ -77,14 +99,34 @@ MORGUE = os.path.join(HERE, "morgue")
 HISTORY = os.path.join(HERE, "history")
 VERDICT = os.path.join(REPO, "CRITIC-VERDICT.json")
 STALL = os.path.join(REPO, "STALL-REPORT.md")
-PARK_CLEARED = os.path.join(REPO, "PARK-CLEARED.json")
 
 # ── THE GUARDS' NUMBERS, DECLARED HERE BEFORE ANY ROUND RUNS ──────────────────────────────────
 # LOOP-PROCESS §8: a bar is never re-tuned after the answer is seen. These are the bar.
-TWO_STRIKES = 2          # consecutive FAILs carrying the same unresolved flip item
-PARK_ROUNDS = 5          # rounds on one lane with no PASS
+#
+# THE GUARDS MEASURE PROGRESS NOW, NOT ROUNDS. The five-round park counted rounds, which is the
+# wrong quantity: five rounds that are getting somewhere should keep going, and two that are not
+# should already have stopped. A round cap can only be wrong in both directions at once.
+#
+# The signal is the one the round already produces: WHERE THE BUILD RANKED in a blind shuffled
+# deck against the asset bar, the last Rafe-approved frame, and the plant. It costs nothing extra,
+# it is a judgement about the picture rather than about the apparatus, and the seat cannot see it
+# coming — it is never told the round number, the history, or that anything is being tracked.
+STALL_ROUNDS = 3         # readable rounds with no new best rank, before the line stops
+ROUND_CEILING = 15       # absolute backstop, all rounds counted including void ones
 JUDGE_MISSES = 2         # consecutive plant misses before the judge is called broken
+TWO_STRIKES = 2          # consecutive FAILs carrying the same flip item — ADVISORY, see guards()
 FLIP_SAME = 0.60         # Jaccard over content words at which two flip items are "the same item"
+
+# The no-change floor lives with the signature it is measured on — see SIG_GRID below. Two
+# captures within it are the same picture, and a FAIL round on the same picture as the last FAIL
+# round is a round that was never going to say anything new: §4.2's shape exactly, a fix that
+# runs, changes nothing, and says so quietly.
+
+# How far below the asset bar still counts as "near the bar" for a PASS. LOOP-PROCESS §5 asks
+# *which of these looks like the shipped game* and requires the answer to be *Yarl or a tie*; the
+# deck forbids ties, so one place below the bar is the closest representable tie. Declared before
+# any round and not widened after (§8).
+NEAR_BAR_SLACK = 1
 
 # Words that carry no content for the purpose of asking whether two flip items are the same one.
 _STOP_WORDS = set("""a an the and or but if then than that this these those it its is are was
@@ -121,6 +163,88 @@ def lane_of(v):
     return v.get("lane")
 
 
+# ================================ the progress signal ==========================================
+#
+# WHY RANK AND NOT A ROUND COUNT. A round count knows nothing about the work. Rank is the seat's
+# own answer to the only question that matters — *of these finished pictures, where does ours
+# sit* — and it is already produced by every round at no extra cost.
+#
+# ⚠ AND IT IS A COARSE SIGNAL, WHICH IS WHY IT GUARDS AND DOES NOT JUDGE. This mechanism's own
+# evidence (§1.2.1, four rounds) is that a blind seat's ordering does not reproduce Rafe's culls:
+# seats put a culled frame above the current build three times, and ranked another culled frame
+# best of three. So rank decides when to STOP AND ASK — a question, never a shipping decision —
+# while the verdict itself still rests on SHIP.
+def rank_score(pos, n):
+    """1.0 when the build ranked first, 0.0 when last. Normalised so a 3-frame deck and a
+    4-frame deck are comparable — the deck grows by one the day Rafe names an approved capture,
+    and a raw position would silently look like a regression that morning."""
+    if not pos or n < 2:
+        return None
+    return (n - pos) / float(n - 1)
+
+
+def prog(v):
+    return v.get("progress") or {}
+
+
+def readable(lane_hist):
+    """The rounds whose findings may be read. A VOID round's rank is not evidence about the
+    build — §4 says its findings are not read, and that has to include its rank."""
+    return [v for v in lane_hist if v.get("verdict") != "VOID"]
+
+
+# ── THE CAPTURE SIGNATURE, so "did this build change" is answerable a round later ─────────────
+#
+# sha256 answers only "byte-identical". The frames themselves are overwritten by the next round,
+# so a distance has to be computable from something small enough to live in the verdict file: a
+# SIG_GRID x SIG_GRID grid of mean luminance over the DELIVERED, CROPPED frame — the same pixels
+# the seat was shown.
+#
+# ⚠ IT WAS A PERCEPTUAL HASH FIRST, AND THE HASH COULD NOT SEE THE THING IT WAS FOR. A 256-bit
+# dHash put `washed-slab-lane.png` and `tile-quantized-wear.png` — two consecutive real builds
+# that Rafe culled for two DIFFERENT defects — **2 bits apart, which was the whole declared
+# floor.** The guard would have stopped that lane on a round where the art genuinely moved.
+# Raising the hash resolution did not help: the gap held at 0.4-0.9% of bits from 256 up to 4096,
+# because a gradient-sign hash asks *is this the same scene* and the answer was yes. It is the
+# wrong question. Measured before the guard shipped rather than discovered by a false STOP.
+#
+# A magnitude answers it. Over the same three frames:
+#
+#     identical                       MAD 0.000   max 0
+#     lane -> tile-quantized wear     MAD 1.942   max 36
+#     wear -> keyline                 MAD 1.200   max 38
+#
+# TWO NUMBERS, NOT ONE, AND BOTH MUST BE SMALL TO FIRE. Mean absolute difference alone would miss
+# a change confined to a corner of the frame — one tile of ninety moving twenty levels contributes
+# about 0.2 to the mean — and a corner is exactly where a seat looks. The max-cell term is what
+# stops a small, real, local change being called no change at all.
+SIG_GRID = 32            # cells per side; 1024 cells, stable across grid size (measured)
+NO_CHANGE_MAD = 0.25     # mean absolute luminance difference, levels. 5x below the smallest
+                         # real round-over-round change measured, and determinism produces 0.
+NO_CHANGE_MAX = 4        # worst single cell, levels. 9x below the smallest measured.
+
+
+def signature(path, box, n=SIG_GRID):
+    im = Image.open(path).convert("L")
+    if box:
+        im = im.crop(tuple(box))
+    return bytes(im.resize((n, n), Image.BOX).getdata()).hex()
+
+
+def sig_delta(a, b):
+    """(mean absolute difference, worst cell) in luminance levels, or None."""
+    if not a or not b or len(a) != len(b):
+        return None
+    x, y = bytes.fromhex(a), bytes.fromhex(b)
+    d = [abs(p - q) for p, q in zip(x, y)]
+    return (sum(d) / float(len(d)), max(d))
+
+
+def unchanged(a, b):
+    d = sig_delta(a, b)
+    return (d is not None and d[0] <= NO_CHANGE_MAD and d[1] <= NO_CHANGE_MAX), d
+
+
 def _words(s):
     return {w for w in re.findall(r"[a-z]+", (s or "").lower()) if w not in _STOP_WORDS
             and len(w) > 2}
@@ -139,82 +263,124 @@ def same_flip(a, b):
     return len(wa & wb) / float(len(wa | wb)) >= FLIP_SAME
 
 
+def shared_flip(a, b):
+    """The first flip item these two rounds are both asking for, or None."""
+    for x in a.get("flip_list", []):
+        for y in b.get("flip_list", []):
+            if same_flip(x, y):
+                return (x, y)
+    return None
+
+
+def two_strikes_advisory(lane_hist):
+    """THE BUILDER'S OVERLAY, and it is deliberately NOT a STOP.
+
+    The same flip item surviving two consecutive FAILs used to stop the line on its own. That was
+    too eager in a way worth naming: a flip item can legitimately survive a round in which the
+    build got materially better on every other axis, and stopping there sends a ruling to Rafe
+    about a lane that is working.
+
+    So it is computed, reported and recorded — the builder reads it and decides — while the
+    mechanical STOP is `thrash`, which is this AND no movement in rank. Same substance, one extra
+    condition, and the condition is exactly the thing that distinguishes a stuck lane from a busy
+    one.
+    """
+    fails = [v for v in lane_hist if v.get("verdict") == "FAIL"]
+    if len(fails) < TWO_STRIKES:
+        return None
+    a, b = fails[-2], fails[-1]
+    if lane_hist.index(b) != lane_hist.index(a) + 1:
+        return None                      # an intervening PASS or VOID breaks the streak
+    pair = shared_flip(a, b)
+    if not pair:
+        return None
+    return dict(rounds=[a.get("round"), b.get("round")], items=list(pair))
+
+
 def guards(hist, lane):
     """Which guard, if any, has fired. Returns (name, explanation) or (None, None).
 
     Checked over the lane's verdicts as they sit on disk, BEFORE the run is reported, so a session
     that restarts mid-stall walks into the same wall it walked into before.
+
+    ORDER MATTERS AND IS NOT ARBITRARY:
+      broken-judge  first — nothing past it is readable, so every other guard would be reasoning
+                    about rounds whose findings §4 forbids reading.
+      no-change     next — it is the cheapest true statement available: the same picture twice.
+      thrash        then — the same request twice, and no movement.
+      stall         then — no new best for STALL_ROUNDS readable rounds.
+      ceiling       last — the backstop, which should never be the one that fires. If it is, the
+                    three above did not see something they should have, and that is worth
+                    knowing.
     """
     lane_hist = [v for v in hist if lane_of(v) == lane]
+    read = readable(lane_hist)
 
-    # ── A PARK CLEARS BY AN ADDED ARTIFACT, NEVER BY REMOVING EVIDENCE ────────────────────────
-    #
-    # RULED (Rafe, 2026-09-03): *"Park cleared by ruling — author and commit PARK-CLEARED.json at
-    # repo root … guard counts judged rounds after the marker, no verdict files deleted (evidence
-    # stays; the clear is an added artifact)."*
-    #
-    # The guard fires from the verdict files on disk, so the only other way to clear it is to
-    # delete them — and a mechanism whose reset is *destroy the record* teaches exactly the wrong
-    # reflex: the lane that most wants the guard gone is the lane holding the evidence against
-    # itself. Every round stays readable; the marker only says where a ruling drew the line.
-    #
-    # It does NOT clear a broken judge. A soft critic is not a lane problem, and no ruling about
-    # the lane makes an unreadable verdict readable — which is why this is consulted below the
-    # broken-judge check and not above it.
-    cleared_after = None
-    if os.path.exists(PARK_CLEARED):
-        try:
-            mk = json.load(open(PARK_CLEARED))
-            if mk.get("lane") in (None, lane):
-                cleared_after = int(mk.get("cleared_after_round", 0)) or None
-        except Exception:                                            # noqa: BLE001
-            cleared_after = None
-
-    # BROKEN JUDGE first, because nothing downstream of it is readable. A void round's findings
-    # are not evidence, so a stall computed across them would be a stall computed across nothing.
-    tail = [v for v in lane_hist[-JUDGE_MISSES:]]
+    # ── broken judge ──────────────────────────────────────────────────────────────────────────
+    tail = lane_hist[-JUDGE_MISSES:]
     if len(tail) >= JUDGE_MISSES and all(v.get("verdict") == "VOID" for v in tail):
         return ("broken-judge",
                 "the picture-plant was missed %d rounds running. The judging layer is broken; "
                 "no round past it is readable and nothing ships past it." % JUDGE_MISSES)
 
-    fails = [v for v in lane_hist if v.get("verdict") == "FAIL"]
-    if len(fails) >= TWO_STRIKES:
-        a, b = fails[-2], fails[-1]
-        # Consecutive means consecutive: an intervening PASS or VOID breaks the streak.
-        ia, ib = lane_hist.index(a), lane_hist.index(b)
-        if ib == ia + 1:
-            for x in a.get("flip_list", []):
-                for y in b.get("flip_list", []):
-                    if same_flip(x, y):
-                        return ("two-strikes",
-                                "the same flip item survived two consecutive FAIL rounds:\n"
-                                "    round %s: %s\n    round %s: %s"
-                                % (a.get("round"), x, b.get("round"), y))
+    # ── no change ─────────────────────────────────────────────────────────────────────────────
+    # Two consecutive FAILs on the same picture. Not "the fix did not work" — the fix did not
+    # reach the frame at all, which is a different problem and needs a different answer.
+    if len(read) >= 2:
+        a, b = read[-2], read[-1]
+        if a.get("verdict") == "FAIL" and b.get("verdict") == "FAIL":
+            same, d = unchanged(prog(a).get("capture_signature"),
+                                prog(b).get("capture_signature"))
+            if same:
+                same_bytes = (a.get("build_frame", {}).get("sha256")
+                              == b.get("build_frame", {}).get("sha256"))
+                return ("no-change",
+                        "rounds %s and %s are the same picture — mean %.3f and worst cell %d\n"
+                        "    luminance levels apart over the delivered frame%s, against floors of\n"
+                        "    %.2f and %d, and both FAIL. Whatever was changed between them did not\n"
+                        "    reach the capture."
+                        % (a.get("round"), b.get("round"), d[0], d[1],
+                           ", byte-identical" if same_bytes else "",
+                           NO_CHANGE_MAD, NO_CHANGE_MAX))
 
-    # ⚠ A VOID DOES NOT COUNT TOWARD THE PARK (RULED, Rafe, 2026-09-03).
-    #
-    # *"A VOID round is a broken-judge event, not a no-progress round — it must not count toward
-    # stall/park."*
-    #
-    # The park asks whether the LANE is getting anywhere. A void round says nothing about the
-    # lane: its findings are not read, by §4, so it produced no evidence either way — and this
-    # file already says as much a few lines up, where the broken-judge guard skips them for
-    # exactly that reason. Counting them anyway parked the wall lane on a tally that included
-    # one round nobody was allowed to learn from, which is a guard firing on its own blindness.
-    #
-    # The broken-judge guard above is what VOIDs are for, and it still has them.
-    judged = [v for v in lane_hist if v.get("verdict") != "VOID"]
-    if cleared_after:
-        judged = [v for v in judged if int(v.get("round", 0)) > cleared_after]
-    if len(judged) >= PARK_ROUNDS and not any(v.get("verdict") == "PASS"
-                                              for v in judged[-PARK_ROUNDS:]):
-        return ("five-round-park",
-                "%d JUDGED rounds on this lane with no PASS (voids excluded — they are not "
-                "evidence%s). The lane is parked; the next move is a ruling, not another round."
-                % (PARK_ROUNDS,
-                   "; rounds up to r%d cleared by PARK-CLEARED.json" % cleared_after
-                   if cleared_after else ""))
+    # ── thrash ────────────────────────────────────────────────────────────────────────────────
+    adv = two_strikes_advisory(lane_hist)
+    if adv:
+        a = next(v for v in lane_hist if v.get("round") == adv["rounds"][0])
+        b = next(v for v in lane_hist if v.get("round") == adv["rounds"][1])
+        sa, sb = prog(a).get("rank_score"), prog(b).get("rank_score")
+        if sa is not None and sb is not None and sb <= sa:
+            return ("thrash",
+                    "the same flip item survived two consecutive FAIL rounds AND the build did\n"
+                    "    not move in the deck (rank score %.2f -> %.2f):\n"
+                    "    round %s: %s\n    round %s: %s"
+                    % (sa, sb, adv["rounds"][0], adv["items"][0],
+                       adv["rounds"][1], adv["items"][1]))
+
+    # ── stall ─────────────────────────────────────────────────────────────────────────────────
+    # A new best is the only thing that counts as progress. Matching the best is not progress; it
+    # is a lane holding still, and holding still for three readable rounds is the signal.
+    scored = [v for v in read if prog(v).get("rank_score") is not None]
+    if len(scored) > STALL_ROUNDS:
+        best, since, at = None, 0, None
+        for v in scored:
+            s = prog(v)["rank_score"]
+            if best is None or s > best:
+                best, since, at = s, 0, v.get("round")
+            else:
+                since += 1
+        if since >= STALL_ROUNDS:
+            return ("stall",
+                    "%d readable rounds with no new best rank. The best is %.2f, set at round\n"
+                    "    %s, and nothing since has beaten it. The lane is not converging."
+                    % (since, best, at))
+
+    # ── ceiling ───────────────────────────────────────────────────────────────────────────────
+    if len(lane_hist) >= ROUND_CEILING:
+        return ("ceiling",
+                "%d rounds on this lane. This is the backstop and it should never be the guard\n"
+                "    that fires — if it did, the progress guards did not see something they\n"
+                "    should have, and that is itself worth a ruling." % len(lane_hist))
     return (None, None)
 
 
@@ -230,18 +396,43 @@ def write_stall(name, why, hist, lane, cfg, out=None):
     L.append("- **guard** `%s`" % name)
     L.append("- **written** %s\n" % datetime.datetime.now().isoformat(timespec="seconds"))
     L.append("## Why it stopped\n")
-    L.append(why + "\n")
+    # The explanations are indented for the terminal. Markdown would render the continuation
+    # lines as part of the paragraph anyway, but a leading run of spaces is one blank line away
+    # from becoming a code block, so it is stripped rather than trusted.
+    L.append("\n".join(l.strip() for l in why.splitlines()) + "\n")
     L.append("## What was tried, round by round\n")
-    L.append("| round | verdict | build | capture | the seat's own words |")
-    L.append("|---|---|---|---|---|")
+    L.append("`rank` is where the build placed in that round's blind shuffled deck, and `score` "
+             "normalises it so decks of different sizes compare — 1.00 is first, 0.00 is last. "
+             "`Δpic` is how far the delivered frame moved from the previous round: mean and worst "
+             "cell, in luminance levels. `0.000 / 0` means the picture did not change at all.\n")
+    L.append("| round | verdict | rank | score | best? | Δpic | build | the seat's own words |")
+    L.append("|---|---|---|---|---|---|---|---|")
+    best = None
+    prev_sig = None
     for v in lane_hist:
+        p = prog(v)
+        s = p.get("rank_score")
+        isbest = ""
+        if s is not None and v.get("verdict") != "VOID":
+            if best is None or s > best:
+                best, isbest = s, "**new best**"
+        d = sig_delta(prev_sig, p.get("capture_signature"))
+        if p.get("capture_signature"):
+            prev_sig = p["capture_signature"]
         worst = (v.get("seat", {}).get("WORST_WHY") or "").replace("|", "/")
-        L.append("| %s | %s | `%s` | `%s` | %s |"
-                 % (v.get("round"), v.get("verdict"), (v.get("build_id") or "")[:12],
-                    os.path.basename(v.get("deck", {}).get("build", "")),
-                    " ".join(worst.split())[:160]))
+        L.append("| %s | %s | %s | %s | %s | %s | `%s` | %s |"
+                 % (v.get("round"), v.get("verdict"),
+                    ("%s/%s" % (p.get("rank_position"), p.get("deck_size"))
+                     if p.get("rank_position") else "—"),
+                    ("%.2f" % s) if s is not None else "—",
+                    isbest, "—" if d is None else "%.3f / %d" % d,
+                    (v.get("build_id") or "")[:12],
+                    " ".join(worst.split())[:140]))
     L.append("")
     L.append("## The flip lists, verbatim\n")
+    L.append("Void rounds do not appear here. §4: the plant was missed, so those findings are not "
+             "read — they are kept in the verdict under `flip_list_withheld` and are not "
+             "evidence.\n")
     for v in lane_hist:
         if not v.get("flip_list"):
             continue
@@ -309,11 +500,12 @@ def pick_plant(surface, morgue, exclude=(), axis=None):
     judged on CONSTRUCTION — does the cap read as stone or as cement — and was handed the `grey
     walls` plant, whose defect is CHROMA. The build had already had its chroma fixed, so the two
     frames differed on an axis the plant was not carrying, the seat had no reason to rank the
-    plant last, and the round voided on the judge rather than on the art. The right image for the
-    wrong question is not a control.
+    plant last, and the round voided on the judge rather than on the art. **The right image for
+    the wrong question is not a control.**
 
-    An entry with no `axis` is treated as answering any question, so the morgue stays usable while
-    it is being tagged.
+    An entry with no `axis` answers any question, so the morgue stays usable while it is being
+    tagged, and a surface whose entries carry no matching axis falls back to all of them rather
+    than refusing — a narrower plant is better than no round, but no plant is not an option.
     """
     entries = [e for e in morgue["entries"]
                if e["surface"] == surface and e["file"] not in exclude]
@@ -442,7 +634,7 @@ def parse(text, n_slots):
 # that was already rejected once. So it is recorded as `outranked_build` and reported, rather
 # than folded into the verdict. LOOP-PROCESS §8: a bar found wanting mid-run is held frozen,
 # cleared honestly, and impeached in the same report — never re-tuned after the answer is seen.
-def plant_caught(r, plant_slot, build_slot, approved_slot=None):
+def plant_caught(r, plant_slot, build_slot):
     ranked_last = bool(r["_rank"]) and r["_rank"][-1] == plant_slot
     worst = r["_worst"] == plant_slot
     flagged = plant_slot in r["_flagged"]
@@ -450,20 +642,9 @@ def plant_caught(r, plant_slot, build_slot, approved_slot=None):
     rank = r["_rank"]
     outranked = (plant_slot in rank and build_slot in rank
                  and rank.index(plant_slot) < rank.index(build_slot))
-    # ── THE APPROVED FRAME'S OWN RANK (RULED, Rafe, 2026-09-03) ───────────────────────────────
-    #
-    # The plant answers ONE question — would this seat ship something already culled — and §4 is
-    # explicit that RANK does not reproduce Rafe's culls. The approved frame answers a different
-    # and much narrower question, and it is one a rank CAN answer: **is this better than the last
-    # thing a person said yes to?** A build the seat puts below that frame has gone backwards
-    # against a human verdict, whatever else it does.
-    outranked_by_approved = bool(approved_slot and rank and approved_slot in rank
-                                 and build_slot in rank
-                                 and rank.index(approved_slot) < rank.index(build_slot))
     return ((ranked_last or worst or flagged) and not shipped,
             dict(ranked_last=ranked_last, named_worst=worst, flagged=flagged, shipped=shipped,
                  outranked_build=outranked,
-                 outranked_by_approved=outranked_by_approved, approved_slot=approved_slot,
                  every_frame_flagged=(len(r["_flagged"]) == len(rank) and bool(rank))))
 
 
@@ -611,8 +792,18 @@ def main():
     rng = random.Random(hashlib.sha256(("%s|%d" % (bid, rnd)).encode()).hexdigest())
     plant = rng.choice(candidates)
 
-    work = os.path.join(os.path.expanduser(cfg.get("work_dir",
-                        "~/.claude/frame-critic")), "%s-r%d" % (lane, rnd))
+    # ── THE SEAT MUST NOT BE ABLE TO READ THE ROUND NUMBER OFF ITS OWN CWD ────────────────────
+    #
+    # The directory used to be named `<lane>-r<n>`, which is the seat's working directory and
+    # therefore visible to it. A seat that can see it is in round 7 is a seat that can infer a
+    # history it was never shown, and the whole progress signal depends on the seat not knowing
+    # anything is being tracked: rank has to be an unprompted judgement about the picture, not a
+    # judgement about a campaign.
+    #
+    # Opaque, and reproducible from the verdict — which records the path.
+    work = os.path.join(os.path.expanduser(cfg.get("work_dir", "~/.claude/frame-critic")),
+                        "deck-" + hashlib.sha256(
+                            ("%s|%d|%s" % (lane, rnd, bid)).encode()).hexdigest()[:16])
     if os.path.commonpath([os.path.realpath(work), os.path.realpath(REPO)]) \
             == os.path.realpath(REPO):
         raise SystemExit("REFUSING: work_dir is inside the repo. §3.1 — the seat's cwd is "
@@ -632,7 +823,8 @@ def main():
         deck.append(("bar", bar["image"], bar.get("crop")))
     rng.shuffle(deck)
 
-    mapping, plant_slot, build_slot, approved_slot = {}, None, None, None
+    mapping = {}
+    plant_slot = build_slot = bar_slot = approved_slot = None
     for i, (what, path, box) in enumerate(deck, start=1):
         size = crop_to(path, box, os.path.join(work, "%d.png" % i))
         mapping[str(i)] = dict(what=what, source=os.path.relpath(path, REPO)
@@ -643,6 +835,8 @@ def main():
             plant_slot = i
         if what == "build":
             build_slot = i
+        if what == "bar":
+            bar_slot = i
         if what == "approved":
             approved_slot = i
 
@@ -650,8 +844,6 @@ def main():
     for i in sorted(mapping, key=int):
         print("   %s.png  %-9s %s" % (i, mapping[i]["what"], mapping[i]["source"]))
     print("   plant: %s — %s" % (plant["file"], plant["verbatim"]))
-    if cfg.get("axis"):
-        print("   axis:  %s   (the plant is drawn to be wrong on THIS axis)" % cfg["axis"])
 
     prompt = open(os.path.join(HERE, "seat_prompt.txt")).read().replace(
         "the numbered PNG files in this directory",
@@ -672,17 +864,42 @@ def main():
         print("transcript: %s" % os.path.relpath(tpath, REPO))
         return 4
 
-    caught, how = plant_caught(r, plant_slot, build_slot, approved_slot)
+    caught, how = plant_caught(r, plant_slot, build_slot)
     flips = r["_flip_blocks"].get(build_slot, [])
 
+    # ── WHERE THE BUILD PLACED, which is this round's contribution to the progress signal ──────
+    n = len(deck)
+    rk = r["_rank"]
+    pos = (rk.index(build_slot) + 1) if build_slot in rk else None
+    score = rank_score(pos, n)
+    bar_pos = (rk.index(bar_slot) + 1) if bar_slot and bar_slot in rk else None
+    app_pos = (rk.index(approved_slot) + 1) if approved_slot and approved_slot in rk else None
+
+    # ── THE COMPARATIVE HALF OF PASS — LOOP-PROCESS §5's visual bar, as a rank ─────────────────
+    #
+    # §5: *blind side-by-side against shipped commercial games, asking which of these looks like
+    # the shipped game. The answer must be Yarl or a tie.* The deck forbids ties, so the closest
+    # representable thing to a tie is one place below the bar, and that is what NEAR_BAR_SLACK
+    # buys — declared here, before any round, and not widened afterwards (§8).
+    #
+    # AND THE BUILD MUST NOT SIT BELOW THE LAST FRAME RAFE APPROVED. A frame that ranks under the
+    # baseline is a regression however well the seat speaks of it.
+    beats_approved = (app_pos is None) or (pos is not None and pos <= app_pos)
+    near_bar = (bar_pos is None) or (pos is not None and pos <= bar_pos + NEAR_BAR_SLACK)
+
+    # ⚠ ASSUMPTION, STATED RATHER THAN BURIED. The amendment specifying these guards described
+    # PASS as *"still = ranks at/above the last-approved frame and near the bar"*. On main PASS
+    # was SHIP-based and said nothing about rank, so "still" cannot be read as *unchanged*. It is
+    # taken here as *not loosened*: PASS is the CONJUNCTION of the rule that shipped and the
+    # comparative rule above. That can only ever refuse more builds than either reading alone,
+    # which is the safe direction for an install gate to be wrong in.
+    #
+    # If rank alone was meant, delete the two SHIP terms from the line below — it is one edit,
+    # and it loosens the gate, so it is Rafe's to make rather than mine.
     if not caught:
         verdict = "VOID"
-    elif how.get("outranked_by_approved"):
-        # RULED 2026-09-03: a build that ranks below the last Rafe-approved frame cannot PASS.
-        # "A build that reads greyer or flatter than it cannot rank BEST; this is why r003 passed
-        # the critic while failing Rafe's eye." FAIL, not VOID — nothing is wrong with the judge.
-        verdict = "FAIL"
-    elif build_slot in r["_ship"] and build_slot not in r["_flagged"]:
+    elif (build_slot in r["_ship"] and build_slot not in r["_flagged"]
+            and beats_approved and near_bar):
         verdict = "PASS"
     else:
         verdict = "FAIL"
@@ -697,16 +914,6 @@ def main():
           % (plant_slot, how["ranked_last"], how["named_worst"], how["flagged"], how["shipped"],
              "CAUGHT" if caught else "MISSED"))
     print("   build was slot %s" % build_slot)
-    if approved_slot:
-        print("   approved reference was slot %s (%s) — %s"
-              % (approved_slot, cfg["approved_capture"].get("build", "?"),
-                 "BUILD IS ABOVE IT" if not how["outranked_by_approved"]
-                 else "BUILD IS BELOW IT"))
-    if how.get("outranked_by_approved"):
-        print("\n   ⚠ THE BUILD RANKS BELOW THE LAST APPROVED FRAME. This is a REGRESSION")
-        print("     against a verdict a person already gave, and unlike the plant's ordering it")
-        print("     IS part of the verdict (RULED 2026-09-03). The build cannot pass below the")
-        print("     last thing Rafe said yes to.")
     if how["outranked_build"]:
         print("\n   ⚠ THE PLANT OUTRANKED THE BUILD. A blind seat put a frame Rafe personally")
         print("     culled — \"%s\" — above this one." % plant["verbatim"])
@@ -716,6 +923,56 @@ def main():
         print("   note: the seat flagged EVERY frame, including the commercial bar. The plant")
         print("         check still holds (it declined to ship a culled frame) but the flag")
         print("         carries no discrimination this round.")
+
+    # ── the progress signal, and the whole series it belongs to ───────────────────────────────
+    lane_hist = [v for v in hist if lane_of(v) == lane]
+    prior = [prog(v).get("rank_score") for v in readable(lane_hist)]
+    prior = [s for s in prior if s is not None]
+    best_before = max(prior) if prior else None
+    new_best = (score is not None and verdict != "VOID"
+                and (best_before is None or score > best_before))
+    prev = readable(lane_hist)
+    prev_sig = prog(prev[-1]).get("capture_signature") if prev else None
+    this_sig = signature(frame, crop)
+    moved = sig_delta(prev_sig, this_sig)
+
+    # The series carries the signature of every round, because the frames themselves are
+    # overwritten by the next capture and a distance you cannot recompute is a distance you
+    # cannot check.
+    series = [dict(round=v.get("round"), verdict=v.get("verdict"),
+                   rank_position=prog(v).get("rank_position"),
+                   deck_size=prog(v).get("deck_size"),
+                   rank_score=prog(v).get("rank_score"),
+                   capture_signature=prog(v).get("capture_signature"))
+              for v in lane_hist]
+    series.append(dict(round=rnd, verdict=verdict, rank_position=pos, deck_size=n,
+                       rank_score=score, capture_signature=this_sig))
+
+    print("\n== progress")
+    print("   rank      %s of %s   score %s%s"
+          % (pos or "?", n, ("%.2f" % score) if score is not None else "?",
+             "   <- NEW BEST" if new_best else ""))
+    print("   best so far %s" % (("%.2f" % best_before) if best_before is not None else "(none)"))
+    if bar_pos:
+        print("   the bar ranked %s; near-bar %s (slack %d)"
+              % (bar_pos, "YES" if near_bar else "NO", NEAR_BAR_SLACK))
+    if app_pos:
+        print("   the approved frame ranked %s; at-or-above %s"
+              % (app_pos, "YES" if beats_approved else "NO"))
+    else:
+        print("   NO APPROVED FRAME IN THE DECK — that half of the bar is untested this round.")
+    print("   picture moved %s from the previous readable round"
+          % ("(first round)" if moved is None
+             else "mean %.3f / worst %d luminance levels (floors %.2f / %d)"
+                  % (moved[0], moved[1], NO_CHANGE_MAD, NO_CHANGE_MAX)))
+
+    adv = two_strikes_advisory(lane_hist + [dict(lane=lane, round=rnd, verdict=verdict,
+                                                 flip_list=flips)])
+    if adv:
+        print("\n   two-strikes (ADVISORY, not a stop): the same request has now survived rounds")
+        print("     %s and %s — \"%s\"" % (adv["rounds"][0], adv["rounds"][1],
+                                          " ".join(adv["items"][1].split())[:100]))
+        print("     The line continues because rank moved. Builder's judgement whether it should.")
 
     out = dict(
         schema="frame-critic/1",
@@ -743,11 +1000,48 @@ def main():
                    culled_by=plant["culled_by"], verbatim=plant["verbatim"],
                    caught=caught, how=how),
         seat={k: r[k] for k in LABELS},
-        flip_list=flips,
+        # ── A VOID ROUND CARRIES NO READABLE FLIP LIST ────────────────────────────────────────
+        #
+        # §4: if the critic does not catch the plant the round is void and its findings are NOT
+        # READ — not discounted, void. A soft critic's findings are worse than none because they
+        # will be acted on.
+        #
+        # ⚠ AND THEY WERE BEING PUT IN FRONT OF A READER. `critic_gate.py` printed the flip list
+        # for every non-PASS verdict, void included, on the most-read surface the mechanism has.
+        # Found the first time a round actually voided. So the withholding lives in the DATA
+        # rather than in each reader's manners: every consumer — the gate, the stall report, the
+        # guards — is now correct by construction. The findings are kept, under a name that says
+        # what they are, because deleting evidence is a different sin.
+        flip_list=[] if verdict == "VOID" else flips,
+        flip_list_withheld=(flips if verdict == "VOID" else None),
+        withheld_because=("LOOP-PROCESS §4: the plant was missed, so this round's findings are "
+                          "not read. Nothing here may be cited, quoted, or acted on."
+                          if verdict == "VOID" else None),
+        # ── THE PROGRESS SIGNAL, AND THE WHOLE SERIES, IN EVERY VERDICT ───────────────────────
+        # The series is written into each round's own file rather than only being derivable by
+        # walking history/. A counter a restart can clear is a suggestion with a number in it —
+        # and so is one that lives only in a directory listing. Here it is in the diff, it is in
+        # the verdict the PR carries, and it is in the stall report.
+        progress=dict(
+            rank_position=pos, deck_size=n, rank_score=score,
+            bar_position=bar_pos, approved_position=app_pos,
+            approved_frame_in_deck=bool(approved_slot),
+            beats_approved=beats_approved, near_bar=near_bar,
+            near_bar_slack=NEAR_BAR_SLACK,
+            new_best=new_best, best_before=best_before,
+            capture_signature=this_sig,
+            moved=None if moved is None else dict(mad=moved[0], max_cell=moved[1]),
+            two_strikes_advisory=adv,
+            series=series,
+            guards=dict(stall_rounds=STALL_ROUNDS, round_ceiling=ROUND_CEILING,
+                        no_change_mad=NO_CHANGE_MAD, no_change_max=NO_CHANGE_MAX,
+                        sig_grid=SIG_GRID, judge_misses=JUDGE_MISSES,
+                        flip_same=FLIP_SAME),
+        ),
         transcript=os.path.relpath(tpath, REPO),
         law=("LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must "
              "land worst-or-flagged; a passed plant voids the round and its findings are not "
-             "read."),
+             "read. The guards measure progress — rank in the deck — never rounds elapsed."),
     )
     if a.build_frame:
         out["self_test"] = True

@@ -103,16 +103,26 @@ def main():
         # ---- 3. it ignores the review layer's own artefacts -------------------------------------
         # THE SELF-REFERENCE THAT BROKE THE FIRST VERSION. Writing the verdict must not invalidate
         # the verdict.
-        if not had_verdict:
+        #
+        # ⚠ THIS USED TO SKIP ITSELF whenever a real CRITIC-VERDICT.json was on disk — which, once
+        # the mechanism had shipped, was always. The most important of the three properties was
+        # the one that stopped being checked the moment it started mattering. A real verdict is
+        # moved aside and put back instead, the same way prove_gate.py does it.
+        stash = None
+        if had_verdict:
+            stash = os.path.join(tempfile.gettempdir(), "frame-critic-prove-bid-verdict.bak")
+            shutil.move(VERDICT, stash)
+        try:
             with open(VERDICT, "w") as f:
                 f.write('{"verdict": "PASS", "_probe": true}\n')
             with_verdict, _ = BID.build_id()
             check("3  writing CRITIC-VERDICT.json does not move the id", with_verdict == base,
                   "with a verdict on disk: %s" % with_verdict)
-            os.remove(VERDICT)
-        else:
-            print("\n      3 skipped — a real CRITIC-VERDICT.json is on disk and is not "
-                  "overwritten by a probe.")
+        finally:
+            if os.path.exists(VERDICT):
+                os.remove(VERDICT)
+            if stash:
+                shutil.move(stash, VERDICT)
     finally:
         if os.path.exists(PROBE):
             os.remove(PROBE)

@@ -1,0 +1,106 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-tier1-floors",
+ "round": 4,
+ "surface": "floor",
+ "commit": "c3ff7dc9149890fa949ca778e6332b92d51b00ab",
+ "dirty": true,
+ "build_id": "24b492c1f1639a3615c9b65f435634a1b0072042d7d434af51c1479bc30a4fca",
+ "timestamp": "2026-09-03T15:49:05",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/fc_standing.png",
+  "sha256": "1e80c4d224abd4033b33be5b0ab66498ee57ee7300895e33c631ba1bde097231",
+  "log": "tools/tier1_floors/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier1-floors --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_route_onroute.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-tier1-floors-r4",
+  "slots": {
+   "1": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "2": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/keyline-floor.png",
+    "sha256": "352461c6b0917d3892679efb16f895d939ca039c010cce6c249829d9e3aac224",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/fc_standing.png",
+    "sha256": "1e80c4d224abd4033b33be5b0ab66498ee57ee7300895e33c631ba1bde097231",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 2,
+  "file": "keyline-floor.png",
+  "sha256": "352461c6b0917d3892679efb16f895d939ca039c010cce6c249829d9e3aac224",
+  "culled_by": "Rafe, device walk, 2026-08-31",
+  "verbatim": "outlined chips",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The masonry in the lit area is the only genuinely authored surface in the set. In the row running through the figure's feet, the slab widths change along a single course \u2014 a wide slab left of the sprite, two narrow ones under it, a wide one right \u2014 and the coursing doesn't reset to a running bond, so the floor reads as stone that was cut and fitted rather than a repeating stamp. The joints hold a consistent dark value at consistent width while the slab faces vary, which is what separates cut stone from a grid overlay. Above and left of the figure there are pale diagonal streaks raking across several slabs at once, crossing joints without breaking \u2014 that's the lamp grazing an uneven floor, and it's drawn as one continuous event across multiple tiles rather than per-tile. There's a cast shadow below-left of the sprite that darkens the slab faces but not the joints. And in the upper-right, at the edge of the falloff, the slabs are still legible as individual blocks at very low value \u2014 I sampled a lit row and found 34 distinct luminance values across 140 pixels with hard steps at the joints. Holding block separation at that value range is the hard part, and it's done.",
+  "WORST_WHY": "Nothing in it reads as architecture. Look at the vertical passage running down from the figure through the lower half: the strip of slabs continues downward, and the areas either side of it go dark \u2014 but there is no wall. No top surface at a different value, no thickness, no cast shadow thrown from a wall edge onto the floor. I cannot tell whether the black either side of that passage is a wall, a pit, or unlit floor, and the frame gives me nothing to decide with. Second: the floor is soft where the sprite is hard. In the region around the figure the slab edges ramp over two or three pixels instead of stepping, and several blocks in the upper-middle bleed into their neighbours until the joint disappears entirely \u2014 the same crop in the other frame of comparable content has hard single-pixel steps at those joints. The sprite is crisp pixel art sitting on a blurred surface; two resolutions in one picture. Third: the cracks. They are 1px pure-black curves that run smoothly across slab after slab, ignoring every joint they cross \u2014 a crack in stone deflects at a joint or runs along it; these pass through as if the joints weren't there. They also stay pure black inside the brightest part of the lamp pool, which makes them darker than anything else in the frame and marks them as an overlay drawn after the lighting rather than damage in the floor. Fourth: at roughly two-thirds down, the slab floor meets a mottled brown speckle field on a dead-straight horizontal line with no threshold, no lip, no debris scatter across the boundary. Two textures butted together.",
+  "FLAGGED": "2, 1\n\nImage 2: roughly a tenth of the frame is saturated magenta laid out on the exact tile grid \u2014 the left third from the middle down, and most of the bottom half. Each magenta cell carries a small square swatch pinned to its upper-left corner, some tan, some grey, some cream. That is a debug read-out with a missing-texture fill under it. Magenta is the color engines use to say \"nothing here.\" Nobody ships it, and nobody misses it.\n\nImage 1: the pond in the upper right is a rectangle. Its left, right and bottom edges are all perfectly straight, and a 100-pixel vertical column through it contains exactly two colours \u2014 the whole body is a two-tone fill with a tiled honeycomb pattern over it. There is no bank, no lip, no darkening with depth, no shadow under the edge; the dirt simply stops and the teal begins. Separately, the four corners of that frame measure 86.4 / 89.0 / 86.6 / 89.1 luminance. There is no light falloff in it at all, in a set of frames where the figure carries the only light there is.",
+  "RANK": "2 > 1 > 3",
+  "BEST": "2",
+  "WORST": "3",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "Build a wall that reads. Give wall tiles a distinct top surface value clearly separated from the lit floor, add visible thickness at the edge, and cast a shadow from the wall onto the floor on the far side from the lamp. Right now the passage below the figure has no sides.",
+  "Sharpen the floor. The slab edges ramp over two to three pixels and adjacent blocks merge until the joint vanishes; step them at a hard boundary so the floor sits at the same resolution as the sprite.",
+  "Take the cracks off the top of the lighting. They are pure black inside the brightest part of the lamp pool, which makes them the darkest thing in the frame; they need to be lit along with the surface they're in.",
+  "Deflect the cracks at joints. A crack that crosses six slabs in one smooth curve without registering a single joint reads as a line drawn over the floor, not damage in it. Break them at joints, or run them along one.",
+  "Give the cracks a section \u2014 a lighter lip on the lamp-facing side, dark in the channel. A uniform 1px black stroke has no depth.",
+  "Fix the horizontal seam where the slab floor meets the mottled brown region. Add a threshold, a lip, or scattered debris crossing the line so the two surfaces interlock rather than butt.",
+  "The mottled brown region has no structure at any scale and no relationship to the slab grid. Give it a legible material \u2014 rubble at a stated size, packed earth with direction, something with an edge \u2014 or make it stone.",
+  "Over half the canvas carries no information. Either raise the ambient floor so the far architecture is faintly legible, or tighten the frame so the picture isn't mostly empty black.",
+  "Same note as the other frame: the stated content is four hundred years of continuous repair with rope, pins, hide and salvaged timber. There is none of it in the floor. The falloff is the only thing doing work here."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r004-worktree-tier1-floors-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

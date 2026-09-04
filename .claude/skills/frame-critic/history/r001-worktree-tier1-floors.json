@@ -1,0 +1,102 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-tier1-floors",
+ "round": 1,
+ "surface": "floor",
+ "commit": "f97ffec13e4061e66866370aa7eb05e27f5494aa",
+ "dirty": true,
+ "build_id": "42eabf326462d95d089097e1839e2ea2da3418617cdd905318f8e5e87b68d86d",
+ "timestamp": "2026-09-03T15:21:56",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/fc_standing.png",
+  "sha256": "307e773902a2a8386caed04ad4e5bbdf3bbd03624c4ae471278d5bbcd69293cf",
+  "log": "tools/tier1_floors/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier1-floors --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_route_onroute.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-tier1-floors-r1",
+  "slots": {
+   "1": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "2": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/tile-quantized-wear.png",
+    "sha256": "2c097a288e54de45704834cedb319201278f83cd9e83bf2083ac317f502c169a",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/fc_standing.png",
+    "sha256": "307e773902a2a8386caed04ad4e5bbdf3bbd03624c4ae471278d5bbcd69293cf",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 2,
+  "file": "tile-quantized-wear.png",
+  "sha256": "2c097a288e54de45704834cedb319201278f83cd9e83bf2083ac317f502c169a",
+  "culled_by": "Rafe, device walk, 2026-09-02",
+  "verbatim": "one tile worn, the one next to it not \u2014 that's not how it works.",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "every_frame_flagged": true
+  }
+ },
+ "seat": {
+  "BEST_WHY": "In the band right of the figure (roughly x 440\u2013700, y 390\u2013560) the floor actually resolves as cut stone: the slabs are unequal \u2014 a long one about two texels tall butted against a short square one, then a wide one \u2014 and the joints between them are not one value. Some joints read as a dark 2-texel gutter, some as a single darker line, and a few slabs sit a half-value above their neighbour so you read a lipped edge rather than a printed seam. That is a floor somebody laid rather than a pattern somebody tiled. The light also behaves like light in this frame specifically: the falloff crossing the slab field is anisotropic \u2014 it reaches further along the corridor mouth at the bottom (x\u2248490\u2013560) than it does into the recess at the top right, so the darkness is being shaped by the room rather than by a radial gradient stamped on top. And the black crack running from (390,230) down past the figure to (520,560) branches at (415,455) with the branch dying out rather than terminating, which is the correct behaviour for a crack.",
+  "WORST_WHY": "Two things, either of which sinks it on its own. First, the barrels at approximately (120,196) and (170,196): the stone floor's top edge at y\u2248212 draws straight over both of them, so each barrel is sliced flat along a perfectly horizontal line and the bottom third simply is not there. They also cast no shadow, and they are the identical sprite pasted twice with no rotation or variation. Second, the water: it occupies x\u2248248\u2013352, y\u22480\u2013178, and its bottom edge at y\u2248178 and right edge at x\u2248352 are both dead-straight, pixel-hard, full-length cuts against the dirt. There is no shoreline, no wet margin, no edge tile \u2014 a teal rectangle is sitting on top of a brown rectangle. Beyond those, the projection is not consistent: the floor is straight-down, but the crates at (65,5) and (65,45) are drawn with a receding brown front face beneath them, and the wall at the left is a light grey top-surface with a dark brick elevation below it, so the same frame is claiming two camera angles. The frame is also lit flat and evenly to all four corners, and the orange plank at x\u224840 runs off the brickwork onto the dirt at y\u2248148 and just stops, with nothing at the join.",
+  "FLAGGED": "1, 2, 3",
+  "RANK": "2 > 3 > 1",
+  "BEST": "2",
+  "WORST": "1",
+  "SHIP": "NONE"
+ },
+ "flip_list": [
+  "Same flat magenta wall tiles, same per-tile corner swatch, same saturation problem, same hard-clipped floor boundary at y\u2248199 and x\u2248310, same 45\u00b0 hatch overlay, same mismatched sprite resolution, same missing light source on the figure, same missing contact shadow, same constant-width cracks \u2014 all as itemised for 2.",
+  "The floor's joint structure has dissolved. In the region x 440\u2013700, y 380\u2013560 there is no legible slab edge anywhere: it is a soft brown gradient carrying scattered tally-marks and hatch. Raise the joint contrast until the floor reads as laid stone rather than as a wash.",
+  "Large soft value-blobs sit across the floor that follow no geometry \u2014 the diagonal soft edge through (480,420)\u2013(620,520) and the blur at (350,560). They read as airbrush, not as light or as material. Tie every value change to either a light falloff or a surface edge.",
+  "The scribble marks \u2014 the small \"T\" shapes, dashes and tally clusters at (330,500)\u2013(470,600) \u2014 are distributed as an even noise field across the whole floor. Place them deliberately in clusters where a hand would have made them, and leave stretches of floor with none.",
+  "The brightest region sits roughly three-quarters of a tile *below* the figure, which reads as the light coming from underneath. Move it onto the sprite."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r001-worktree-tier1-floors-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

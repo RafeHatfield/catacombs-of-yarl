@@ -1,0 +1,104 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "worktree-tier1-floors",
+ "round": 5,
+ "surface": "floor",
+ "commit": "e84db6ad08c034d8a0bf60d1b34801d88be564e6",
+ "dirty": true,
+ "build_id": "400da32af0a61ea346d75b4eca9cec5b169f64c00807fb8e9a2589bfb7cf3bb5",
+ "timestamp": "2026-09-03T15:54:46",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/fc_standing.png",
+  "sha256": "a3de9232430c8bd0e639228a9c1115f443ea86c70ebffbcb8f68bf75eeb75ff5",
+  "log": "tools/tier1_floors/evidence/fc_standing.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/tier1-floors --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/fc_standing.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_floor_route_onroute.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/worktree-tier1-floors-r5",
+  "slots": {
+   "1": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/keyline-floor.png",
+    "sha256": "352461c6b0917d3892679efb16f895d939ca039c010cce6c249829d9e3aac224",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "3": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/fc_standing.png",
+    "sha256": "a3de9232430c8bd0e639228a9c1115f443ea86c70ebffbcb8f68bf75eeb75ff5",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/fc_standing.png"
+ },
+ "plant": {
+  "slot": 1,
+  "file": "keyline-floor.png",
+  "sha256": "352461c6b0917d3892679efb16f895d939ca039c010cce6c249829d9e3aac224",
+  "culled_by": "Rafe, device walk, 2026-08-31",
+  "verbatim": "outlined chips",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": false,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The crack network is the one genuinely authored thing in the set. Follow the line that enters at the top of the room around (400,215) and runs down past the figure to (300,600): it changes width, it branches at roughly (455,410) into a second line that arcs right across six slabs to (700,430), and where it crosses a slab joint it kinks rather than running straight through \u2014 so it reads as fracture propagating through a floor rather than a scribble laid on top. The slab faces carry different tool marks slab to slab: diagonal hatch on the slab at (480,340), horizontal chisel ticks at (390,250), a plain worn face at (430,300). And the light falloff is doing real work at the room's boundaries \u2014 the floor at (620,300) is dim but still legibly stone, not crushed to black, so the room continues past the lamp instead of ending at it. That is the hardest part of a lit top-down frame and it is handled.",
+  "WORST_WHY": "There is not a single transition tile in the frame. The water is a rectangle: it runs x\u2248248\u2013341, y\u22480\u2013191, and it stops at four hard 90\u00b0 corners \u2014 the corner at (341,191) is a right angle with the dirt butting straight against teal, no bank, no shallows, no reed, no darkening at depth. The dirt/flagstone boundary at x\u224857 is likewise a dead-straight vertical seam from y=0 to y=230 with dirt on one side and grey on the other. The grey floor is one 32px tile stamped in a grid \u2014 compare the cell at (10,150) to (10,182) to (352,150): same value, same joint, same speckle, no rotation, no variation. The dirt tile shows its repeat plainly at 4\u00d7: the same dark speckle cluster recurs at the same offset in every 16px cell across x=100\u2013200, y=90\u2013140, so the ground reads as wallpaper. The two objects at (62,0) and (62,45) are the same sprite pasted twice, pixel for pixel, stacked directly on top of each other. And the white scatter at (140,110) is illegible confetti \u2014 I cannot tell you what object that is, and neither could a player.",
+  "FLAGGED": "1, 2",
+  "RANK": "3 > 1 > 2",
+  "BEST": "3",
+  "WORST": "2",
+  "SHIP": "NONE"
+ },
+ "flip_list": [
+  "The slab joints are washed out. Compare the region x=430\u2013610, y=300\u2013430 against the same coordinates in the other dark frame: here whole rows of slabs merge into one beige field with no mortar line between them \u2014 the run at (490,320)\u2013(600,320) has no separation at all. Restore a consistent dark joint on all four sides of every slab, and vary its depth along a single run so the stones read as cut rather than stamped.",
+  "Large soft blotches sit over the pixel art off-grid: the vertical smear at x\u2248450\u2013470, y=300\u2013430, and the diagonal shadow running from the figure down to (560,570). They are smooth gradients on hard-edged art and read as a filter pass. Quantise them to the palette's value steps and snap them to the tile grid.",
+  "Isolated slabs float in the void with nothing joining them to the room: a dim bar at x=90\u2013215, y=265\u2013290, and another at x=280\u2013430, y=138\u2013165. Either connect them to walkable geometry or cull them from the render.",
+  "The bottom-left and bottom ground (x=0\u2013310, y=440\u2013600, and the band below y=590) is a single mustard hue with uniform per-pixel noise \u2014 no stones, no clumps, no forms, no value grouping. It reads as static. Replace with drawn rubble: distinct fragments with their own light and shadow sides, sized in a range, grouped so there are open patches and dense patches.",
+  "Same missing wall as the other dark frame: the floor edge at y=205 and the step at x=310 are cuts into black, not walls. Give the boundary a top surface separated in value from the lit floor and a contact line at its base.",
+  "The two identical plus-shaped marks at roughly (590,405) and (590,480) are the same stamp at the same x. Offset, rotate, or vary them; a repeated glyph on a vertical line reads as a registration artefact.",
+  "The whole frame's midtones sit in a narrow band \u2014 the floor at (430,330) and at (620,300) are close in value despite very different distance from the lamp. Widen the falloff range so the light has a shape, and let the far floor go genuinely dark rather than muddy."
+ ],
+ "transcript": ".claude/skills/frame-critic/history/r005-worktree-tier1-floors-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read."
+}

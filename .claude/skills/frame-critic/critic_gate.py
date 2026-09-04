@@ -148,8 +148,18 @@ def check():
                        "STOP AND FIX — never ship past a void round."}
         out = L + ["", "VERDICT IS %s. %s" % (v.get("verdict"),
                                               why.get(v.get("verdict"), ""))]
-        for f in v.get("flip_list", [])[:8]:
-            out.append("  flip: %s" % f)
+        # ⚠ ONLY A FAIL HAS FINDINGS TO SHOW. This printed the flip list for every non-PASS
+        # verdict, void included — on the most-read surface the mechanism has — which is exactly
+        # the reading §4 forbids. The verdict now carries no readable `flip_list` on a void round
+        # at all, so this loop is correct by construction as well as by intent; the belt is here
+        # and the braces are in frame_critic.py.
+        if v.get("verdict") == "FAIL":
+            for f in v.get("flip_list", [])[:8]:
+                out.append("  flip: %s" % f)
+        else:
+            out.append("  Its findings are withheld and are not evidence. Fix the judging layer,")
+            out.append("  not the art: check that the plant is actually in the picture the seat")
+            out.append("  saw, and that its defect is on the axis the seat was asked about.")
         out += ["", "Fix, then re-run the round:   %s" % RUN]
         return False, out
 

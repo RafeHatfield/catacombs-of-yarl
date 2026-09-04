@@ -1,0 +1,50 @@
+Read all three at native size and upscaled crop-by-crop.
+
+RANK: 2 > 3 > 1
+
+BEST: 2
+
+BEST_WHY: In the band right of the figure (roughly x 440–700, y 390–560) the floor actually resolves as cut stone: the slabs are unequal — a long one about two texels tall butted against a short square one, then a wide one — and the joints between them are not one value. Some joints read as a dark 2-texel gutter, some as a single darker line, and a few slabs sit a half-value above their neighbour so you read a lipped edge rather than a printed seam. That is a floor somebody laid rather than a pattern somebody tiled. The light also behaves like light in this frame specifically: the falloff crossing the slab field is anisotropic — it reaches further along the corridor mouth at the bottom (x≈490–560) than it does into the recess at the top right, so the darkness is being shaped by the room rather than by a radial gradient stamped on top. And the black crack running from (390,230) down past the figure to (520,560) branches at (415,455) with the branch dying out rather than terminating, which is the correct behaviour for a crack.
+
+WORST: 1
+
+WORST_WHY: Two things, either of which sinks it on its own. First, the barrels at approximately (120,196) and (170,196): the stone floor's top edge at y≈212 draws straight over both of them, so each barrel is sliced flat along a perfectly horizontal line and the bottom third simply is not there. They also cast no shadow, and they are the identical sprite pasted twice with no rotation or variation. Second, the water: it occupies x≈248–352, y≈0–178, and its bottom edge at y≈178 and right edge at x≈352 are both dead-straight, pixel-hard, full-length cuts against the dirt. There is no shoreline, no wet margin, no edge tile — a teal rectangle is sitting on top of a brown rectangle. Beyond those, the projection is not consistent: the floor is straight-down, but the crates at (65,5) and (65,45) are drawn with a receding brown front face beneath them, and the wall at the left is a light grey top-surface with a dark brick elevation below it, so the same frame is claiming two camera angles. The frame is also lit flat and evenly to all four corners, and the orange plank at x≈40 runs off the brickwork onto the dirt at y≈148 and just stops, with nothing at the join.
+
+FLAGGED: 1, 2, 3
+
+SHIP: NONE
+
+FLIP 2:
+- Every wall tile is a flat unmodulated magenta/crimson quad — for example the run from (310,580) to (500,700), and the block at (130,455)–(310,580). There is no texture, no joint, no wear, no repair on any of them. Paint actual masonry into the wall tiles at the same texel density as the floor.
+- Each wall tile carries a small lighter square in its top-left corner (e.g. at (318,588), (380,588), (443,588)) that brightens with proximity to the light. That reads as a per-tile debug swatch or a lightmap probe. Remove it, or replace it with an actual object that justifies its position.
+- The wall colour is a saturated magenta. Nothing else in the frame is saturated. Desaturate the walls into the same cold grey-brown family as the floor and let the light, not the hue, separate them from the floor.
+- The floor region is clipped by a dead-straight horizontal line at y≈199 and a dead-straight vertical at x≈310, with unlit grid immediately beyond and no wall face, threshold or contact shadow at either. Terminate the floor against drawn geometry.
+- The lit core around (400–480, 440–520) is crushed to a flat cream; the slab joints that are legible at x 500–700 vanish entirely there. Pull the top of the light range down so joints survive at maximum brightness — the brightest part of the frame currently carries the least information.
+- The whole floor carries a uniform 45° hatch on a 2-texel lattice, unbroken across slab boundaries, joints and cracks alike — visible clearly at (330,450)–(470,610). It is a texture overlay, not a surface. Break it at every joint, vary its direction per slab, or drop it.
+- The figure sprite is drawn at 1 screen pixel per texel with a crisp black outline; the floor beneath it is at 2 pixels per texel and blurred. Rebuild the sprite at the floor's texel size.
+- The figure carries a sword and a round shield and no light source, yet is the origin of the only light. Give it a lamp or torch.
+- The brightest region sits about a tile to the right of the figure rather than under it. Move the light origin onto the sprite.
+- The figure has no contact shadow and no darkening beneath it — it floats. Add ground contact.
+- The black cracks are uniform 1-texel width with constant value along their entire length, including where they cross the deep shadow at (600,300). Vary width and let them lose contrast as the light falls off.
+
+FLIP 3:
+- Same flat magenta wall tiles, same per-tile corner swatch, same saturation problem, same hard-clipped floor boundary at y≈199 and x≈310, same 45° hatch overlay, same mismatched sprite resolution, same missing light source on the figure, same missing contact shadow, same constant-width cracks — all as itemised for 2.
+- The floor's joint structure has dissolved. In the region x 440–700, y 380–560 there is no legible slab edge anywhere: it is a soft brown gradient carrying scattered tally-marks and hatch. Raise the joint contrast until the floor reads as laid stone rather than as a wash.
+- Large soft value-blobs sit across the floor that follow no geometry — the diagonal soft edge through (480,420)–(620,520) and the blur at (350,560). They read as airbrush, not as light or as material. Tie every value change to either a light falloff or a surface edge.
+- The scribble marks — the small "T" shapes, dashes and tally clusters at (330,500)–(470,600) — are distributed as an even noise field across the whole floor. Place them deliberately in clusters where a hand would have made them, and leave stretches of floor with none.
+- The brightest region sits roughly three-quarters of a tile *below* the figure, which reads as the light coming from underneath. Move it onto the sprite.
+
+FLIP 1:
+- The stone floor draws over the barrels at (120,196) and (170,196), cutting both flat at y≈212. Fix the draw order so the barrels sit on the floor, and give each a contact shadow.
+- The two barrels are the same sprite unvaried, side by side. Vary one — different lid, different stave damage, or rotate it.
+- The water at x≈248–352, y≈0–178 terminates in straight hard cuts on its bottom and right edges with no transition. Draw shoreline edge tiles on every water-to-dirt boundary, with a wet margin on the dirt side.
+- The wall at the left is drawn as a light grey top surface with a dark brick elevation beneath it, and the crates at (65,5) and (65,45) have receding front faces, while the floor is straight-down. Pick one projection and redraw the objects and wall to it.
+- The orange plank at x≈40 crosses the brickwork and runs onto the dirt, ending at y≈148 with no termination, no shadow and no fixing. Terminate it against something and shadow it.
+- That plank is a single unmodulated saturated orange with no wear, in a frame where nothing else is saturated. Desaturate it and add grain and damage.
+- The frame is lit flat and evenly to all four corners with no falloff from the figure at (232,8). Introduce the light falloff so the figure is the light source.
+- The dirt texture is a red-brown speckle field that repeats visibly across the whole area, e.g. the same clot pattern recurring around (260,60), (260,120) and (200,180). Break the repeat, or reduce the speckle's contrast so the tiling stops reading.
+- The figure at (232,8) is bright saturated green against an otherwise desaturated frame and is lit from a different direction than everything else. Bring it into the scene's palette and light it from the frame's source.
+
+The consistent story across all three: none of them has a wall. In 1 the wall is a projection mismatch that also swallows objects; in 2 and 3 the wall is an untextured coloured quad wearing what looks like a debug chip. Frames 2 and 3 do have a real floor and a real light system underneath the problems — the slab variation in 2 is genuine craft, not luck — but flat magenta placeholder walls are the first thing any player sees, and they are the same defect in both.
+
+Model: Claude Opus 5 (1M context)

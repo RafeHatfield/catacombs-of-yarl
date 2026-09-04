@@ -108,7 +108,7 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
                     vv = L + off + g * gm
                     marks = np.zeros((T, T), dtype=float)
                     ext = CA.stone_extent(fw, fe, kind, c, drops[c], split_i)
-                    for (u, vloc, depth) in CA.stone_marks(key, seed, ext, worn=is_worn,
+                    for (u, vloc, depth) in CA.stone_marks(key, seed, ext, worn=is_worn, extent_world=(x * T, y * T),
                                                            wear=w01):
                         lx, ly = u + ox, vloc + oy
                         if 0 <= lx < T and 0 <= ly < T and m[ly, lx]:
@@ -190,7 +190,10 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
             _wxb, _wyb = xx + x * T, yy + y * T
             _ld, _ltx, _lty = CA.line_geometry_block(x * T, y * T, T)
             _stone = ~jm_pix
-            L = np.where(_stone, L - CA.lane_dish_block(_ld, _wxb, _wyb, seed) * step, L)
+            _dish = CA.lane_dish_block(_ld, _wxb, _wyb, seed)
+            if CA.DISH_QUANTISE:
+                _dish = np.round(_dish)
+            L = np.where(_stone, L - _dish * step, L)
             L = np.where(CA.grit_block(_ld, _wxb, _wyb, seed) & _stone,
                          L - CA.GRIT_DEPTH * step, L)
 
@@ -201,7 +204,30 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
             near[:, :-1] = np.maximum(near[:, :-1], open_amt[:, 1:])
             hsh = (CA._mix_np(xx + x * T, yy + y * T, CA.CHIP + seed) % 1000) / 1000.0
             chip = (~jm_pix) & (near > 0) & (hsh < CA.CHIP_RATE * near)
-            L = np.where(chip, L - near * step * 1.6, L)
+            if CA.CHIP_TAKES_JOINT:
+                _jv = np.zeros((T, T), dtype=float)
+                _jv[1:, :] = np.maximum(_jv[1:, :], np.where(jm_pix[:-1, :], L[:-1, :], 0))
+                _jv[:-1, :] = np.maximum(_jv[:-1, :], np.where(jm_pix[1:, :], L[1:, :], 0))
+                _jv[:, 1:] = np.maximum(_jv[:, 1:], np.where(jm_pix[:, :-1], L[:, :-1], 0))
+                _jv[:, :-1] = np.maximum(_jv[:, :-1], np.where(jm_pix[:, 1:], L[:, 1:], 0))
+                L = np.where(chip & (_jv > 0), _jv, L)
+            else:
+                L = np.where(chip, L - near * step * 1.6, L)
+            # A CRACK HAS A SECTION — the lip goes on BEFORE the quantise, like everything
+            # else that moves a stone's value. (It went on after, once, and 553 pixels of this
+            # arm disagreed with the reference painter: quantise(x) + w is not quantise(x + w).)
+            _cpx = CA.crack_pixels(x, y, seed, crack_cache)
+            _cpx = sorted(set(_cpx) | CA.crack_spall(
+                _cpx, lambda a, b: bool(jm_pix[a, b]),
+                lambda a, b: 0 <= a < T and 0 <= b < T and not jm_pix[a, b]))
+            _cset = set(_cpx)
+            for (_ly, _lx) in _cpx:
+                _s2 = (CA.mix((x * T + _lx) // 4, (y * T + _ly) // 4,
+                              CA.CRACK_LIP_SALT + seed) % 2)
+                _lx2 = _lx + (1 if _s2 else -1)
+                if 0 <= _lx2 < T and not jm_pix[_ly, _lx2] and (_ly, _lx2) not in _cset:
+                    L[_ly, _lx2] = L[_ly, _lx2] + CA.CRACK_LIP * step
+
             L = ladder[np.abs(np.clip(L, ladder[0], ladder[-1])[..., None]
                               - ladder).argmin(-1)]
 
@@ -215,8 +241,12 @@ def paint_from_atlas(w, h, seed, man, worn=None, corrupt=None, assets=None, traf
                                CA.chroma_strength_block(x * T, y * T, T, seed, traffic,
                                                         (bool(worn and worn(x, y)) and not CA.LINES)), 0.0)
 
-            for (ly, lx) in CA.crack_pixels(x, y, seed, crack_cache):
-                L[ly, lx] = ladder[int(np.abs(crack_v - ladder).argmin())]
+            for (ly, lx) in _cpx:
+                # THE CRACK VARIES ALONG ITS LENGTH, mirrored.
+                _wx, _wy = x * T + lx, y * T + ly
+                _v = ((CA.mix(_wx, _wy, CA.CRACK_VARY_SALT + seed) % 1000) / 1000.0 - 0.5) * 2.0
+                _cv = crack_v * (1.0 + _v * CA.CRACK_DEPTH_VARY)
+                L[ly, lx] = ladder[int(np.abs(_cv - ladder).argmin())]
                 chr_blk[ly, lx] = 0.0
 
             tmap = np.stack([CA.chroma_tint(tint, v) for v in CA.CHROMA_BY_AGE])

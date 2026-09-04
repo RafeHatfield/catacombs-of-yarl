@@ -1,0 +1,45 @@
+Read all three at full size and at 4–5× on the regions that decide it.
+
+RANK: 3 > 1 > 2
+
+BEST: 3
+
+BEST_WHY: The crack network is the one genuinely authored thing in the set. Follow the line that enters at the top of the room around (400,215) and runs down past the figure to (300,600): it changes width, it branches at roughly (455,410) into a second line that arcs right across six slabs to (700,430), and where it crosses a slab joint it kinks rather than running straight through — so it reads as fracture propagating through a floor rather than a scribble laid on top. The slab faces carry different tool marks slab to slab: diagonal hatch on the slab at (480,340), horizontal chisel ticks at (390,250), a plain worn face at (430,300). And the light falloff is doing real work at the room's boundaries — the floor at (620,300) is dim but still legibly stone, not crushed to black, so the room continues past the lamp instead of ending at it. That is the hardest part of a lit top-down frame and it is handled.
+
+WORST: 2
+
+WORST_WHY: There is not a single transition tile in the frame. The water is a rectangle: it runs x≈248–341, y≈0–191, and it stops at four hard 90° corners — the corner at (341,191) is a right angle with the dirt butting straight against teal, no bank, no shallows, no reed, no darkening at depth. The dirt/flagstone boundary at x≈57 is likewise a dead-straight vertical seam from y=0 to y=230 with dirt on one side and grey on the other. The grey floor is one 32px tile stamped in a grid — compare the cell at (10,150) to (10,182) to (352,150): same value, same joint, same speckle, no rotation, no variation. The dirt tile shows its repeat plainly at 4×: the same dark speckle cluster recurs at the same offset in every 16px cell across x=100–200, y=90–140, so the ground reads as wallpaper. The two objects at (62,0) and (62,45) are the same sprite pasted twice, pixel for pixel, stacked directly on top of each other. And the white scatter at (140,110) is illegible confetti — I cannot tell you what object that is, and neither could a player.
+
+FLAGGED: 1, 2
+
+SHIP: NONE
+
+FLIP 1:
+- Roughly half the frame is flat magenta missing-texture fill — the band y=0–200 across the full width (dark purple, but the same tile), the block x=0–310 / y=200–580, and the block x=0–580 / y=580–911. Draw actual floor there or make it solid occluded black. Ship nothing magenta.
+- Each of those magenta cells carries a pale ~10px square in its upper-left corner at 42px spacing — a debug marker grid. Remove the marker layer entirely; it is not art and it is visible even in the darkest cells at (60,60) and (128,146).
+- The room has no wall. The floor's top edge at y=205 and its left edge at x=310 are straight cuts into void. Give the boundary a wall: a top surface at a distinct value from the lit floor, plus a 1–2px darker contact line where floor meets wall base, so the room is enclosed rather than trimmed.
+- The bright shaft running down-left from about (500,230) to (330,560) is a soft non-pixel-aligned gradient sitting over hard-edged slab art. Either quantise it to the same value steps the slabs use, or drop it.
+- Keep the slab drawing from the right half (x=310–750, y=205–580) — the broken-course layout with varied slab sizes, the branching crack at (400,400), the per-slab hatching — and extend that treatment into the replaced regions rather than filling them with a single tile.
+
+FLIP 2:
+- Author edge tiles for every material boundary. Water needs a bank set (straight, inner corner, outer corner) so the edge at x=248 and the corner at (341,191) are not raw rectangle sides. Dirt/stone needs a broken-edge overlap so the seam at x=57 stops being a ruled line.
+- The water body is one flat teal with a faint cell pattern and no value change from (250,10) to (335,185). Add depth: darker toward the centre, lighter and more transparent within ~8px of the bank, and let the bank silhouette be irregular.
+- The dirt tile repeats visibly on a 16px grid. Break it: at minimum a 3–4 variant set plus scattered non-tiling debris placed by hand, so the cluster at (105,95) does not recur at (121,95) and (137,95).
+- The grey flagstone is a single stamp on a 32px grid. Vary slab size, offset the courses, and vary joint darkness per slab — the run at x=0–50, y=140–230 currently has six identical cells in a column.
+- The two objects at (62,0) and (62,45) are identical copies abutting each other. Vary one, or separate them and give the pair a reason to be adjacent.
+- The white cluster at (140,110) does not resolve into an object at 1:1. Redraw it with a readable silhouette and at least one dark edge pixel against the dirt, or remove it.
+- The teal blobs at (30,60) and (355,105) are the same organic stamp on two different floor materials with no adaptation to either. Give them contact shading against the stone.
+- Nothing in the frame is lit — the value range is identical at (10,10) and (370,280). If this scene is meant to sit in the same game as a carried light, it needs the falloff; if not, it still needs a directional value structure so the floor is not uniformly bright edge to edge.
+
+FLIP 3:
+- The slab joints are washed out. Compare the region x=430–610, y=300–430 against the same coordinates in the other dark frame: here whole rows of slabs merge into one beige field with no mortar line between them — the run at (490,320)–(600,320) has no separation at all. Restore a consistent dark joint on all four sides of every slab, and vary its depth along a single run so the stones read as cut rather than stamped.
+- Large soft blotches sit over the pixel art off-grid: the vertical smear at x≈450–470, y=300–430, and the diagonal shadow running from the figure down to (560,570). They are smooth gradients on hard-edged art and read as a filter pass. Quantise them to the palette's value steps and snap them to the tile grid.
+- Isolated slabs float in the void with nothing joining them to the room: a dim bar at x=90–215, y=265–290, and another at x=280–430, y=138–165. Either connect them to walkable geometry or cull them from the render.
+- The bottom-left and bottom ground (x=0–310, y=440–600, and the band below y=590) is a single mustard hue with uniform per-pixel noise — no stones, no clumps, no forms, no value grouping. It reads as static. Replace with drawn rubble: distinct fragments with their own light and shadow sides, sized in a range, grouped so there are open patches and dense patches.
+- Same missing wall as the other dark frame: the floor edge at y=205 and the step at x=310 are cuts into black, not walls. Give the boundary a top surface separated in value from the lit floor and a contact line at its base.
+- The two identical plus-shaped marks at roughly (590,405) and (590,480) are the same stamp at the same x. Offset, rotate, or vary them; a repeated glyph on a vertical line reads as a registration artefact.
+- The whole frame's midtones sit in a narrow band — the floor at (430,330) and at (620,300) are close in value despite very different distance from the lamp. Widen the falloff range so the light has a shape, and let the far floor go genuinely dark rather than muddy.
+
+The thing worth naming across all three: not one of them has a wall. Two frames end their rooms with a straight cut into black and the third ends them with a butted seam. In a top-down frame the wall is where the room gets its weight, and it is absent everywhere — that is a bigger structural gap than any of the individual defects above, and it will keep every one of these frames looking like a floor texture test until it's solved.
+
+*Model: Claude Opus 5 (1M context)*

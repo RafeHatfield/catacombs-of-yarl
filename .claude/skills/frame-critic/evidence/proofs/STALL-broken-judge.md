@@ -2,10 +2,10 @@
 
 **The line has stopped and is not restarting itself.** LOOP-PROCESS §1.1.4 ruling trigger: this report is the evidence.
 
-- **lane** `guard-broken-judge`
+- **lane** `broken-judge`
 - **surface** `wall`
 - **guard** `broken-judge`
-- **written** 2026-09-03T14:17:15
+- **written** 2026-09-03T17:59:34
 
 ## Why it stopped
 
@@ -13,10 +13,12 @@ the picture-plant was missed 2 rounds running. The judging layer is broken; no r
 
 ## What was tried, round by round
 
-| round | verdict | build | capture | the seat's own words |
-|---|---|---|---|---|
-| 1 | VOID | `fixture-void` | `fixture_v1.png` |  |
-| 2 | VOID | `fixture-void` | `fixture_v2.png` |  |
+`rank` is where the build placed in that round's blind shuffled deck, and `score` normalises it so decks of different sizes compare — 1.00 is first, 0.00 is last. `Δpic` is how far the delivered frame moved from the previous round: mean and worst cell, in luminance levels. `0.000 / 0` means the picture did not change at all.
+
+| round | verdict | rank | score | best? | Δpic | build | the seat's own words |
+|---|---|---|---|---|---|---|---|
+| 1 | VOID | — | — |  | — | `fixture-brok` | Round 1. |
+| 2 | VOID | — | — |  | 1.942 / 36 | `fixture-brok` | Round 2. |
 
 ## The flip lists, verbatim
 

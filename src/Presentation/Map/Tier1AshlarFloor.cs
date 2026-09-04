@@ -76,6 +76,8 @@ public static class Tier1AshlarFloor
         public int WearSalt = 3008, ChipSalt = 3009, WearLo = 70, WearHi = 200, ChannelWear = 235;
         public double ChipRate = 0.55, DressingKeep = 0.45;
         public int JointBreakSalt = 3010;
+        public double OcclusionFloor = 22.0;
+        public readonly List<(string Side, int Px, int Py, int Layers, int Rungs)> OcclusionCheck = new();
         public double[] JointFill = { 0.0, 0.0, 1.0, 2.0 };
         public double[] JointBreak = { 0.0, 0.0, 0.20, 0.45 };
         public int[][] WearOctaves = System.Array.Empty<int[]>();
@@ -97,6 +99,14 @@ public static class Tier1AshlarFloor
         public double[] ShelterLift = { 5, 4, 3, 0 };
         public double[] ShelterWeights = { 0.15, 0.50, 0.20, 0.15 };
         public int ShelterBlock = 8;
+        public int CrackVarySalt = 3017;
+        public double CrackDepthVary = 0.18;
+        public double MarkBareShare = 0.34;
+        public bool ChipTakesJoint = true, DishQuantise = true, CrackSpall = true;
+        public double CrackLip = 0.55;
+        public int CrackLipSalt = 3018, MarkClusterSalt = 3019;
+        public int MarkClusterPeriod = 5;
+        public double MarkClusterSwing = 0.30;
         public int LaneFraySalt = 3016;
         public double LaneFray = 0.32;
         public double JointPolishFloor = 0.70;
@@ -322,11 +332,30 @@ public static class Tier1AshlarFloor
 
     private static List<(int U, int V, double D)> StoneMarks(Config c, int key, bool worn,
                                                              (int Lo, int Hi, int VHi) ext,
-                                                             double wear)
+                                                             double wear, int wx = -1, int wy = -1)
     {
         // TRAFFICKED STONES POLISH SMOOTHER AS THEIR JOINTS OPEN; sheltered stones stay sharp and
         // tight. The dressing is what traffic takes off first, so its count and its depth both
         // fall with wear — continuous now, where it used to be a binary channel flag.
+        // A THIRD OF THE STONES CARRY NOTHING, drawn from the stone's own key before anything
+        // else so a bare stone is bare from both tiles that see it. The frame critic: "the
+        // diagonal-hatch motif recurs on a visible rhythm across the lit area — omit it on a
+        // third of the slabs." An even scatter over every stone stops being an event and becomes
+        // the material, which is §8.3's motif trap arriving through the dressing.
+        // AND THE MARKED STONES CLUSTER. A per-stone coin flip is an even field by construction
+        // however low its rate — "distributed as an even noise field across the whole floor".
+        // The coin is biased by a coarse world field, so working ran in one part of a room and
+        // not another, and a cluster crosses tile boundaries the way a hand would.
+        double bare = c.MarkBareShare;
+        if (wx >= 0)
+        {
+            int cp = c.MarkClusterPeriod * T;
+            double cl = (Mix(wx / cp, wy / cp, c.MarkClusterSalt + c.Seed) % 1000) / 1000.0;
+            bare = System.Math.Clamp(bare + (cl - 0.5) * 2.0 * c.MarkClusterSwing, 0.0, 0.95);
+        }
+        if (((key ^ (c.MarksSalt + c.Seed)) % 1000) / 1000.0 < bare)
+            return new List<(int, int, double)>();
+
         double keep = 1.0 - c.DressingKeep * wear;
         var outp = new List<(int, int, double)>();
         int st = Lcg((key ^ (c.MarksSalt + c.Seed)) | 1);
@@ -656,6 +685,32 @@ public static class Tier1AshlarFloor
             || Open(x - 1, y) >= 3 || Open(x + 1, y) >= 3;
     }
 
+    /// <summary>
+    /// Alpha -> whole ladder rungs of darkening. ONE definition, two painters; the composer's
+    /// twin is `occlusion_rungs` in `tools/tier1_floors/compose_ashlar.py`, and the two are tied
+    /// together by `occlusion_check` in the manifest rather than by this comment.
+    ///
+    /// `layers` is the ambient-anchored stack (RULED 2026-09-02) — the boundary re-drawn where
+    /// the lamp does not reach. Under the blend that compounded as 1-(1-a)^n and it still does;
+    /// what changed is that the result is quantised. Three layers reach 22.11, which is why the
+    /// ladder needed two more rungs below (see PALETTE_EXTEND_BELOW).
+    ///
+    /// ANCHORED AT THE MEDIAN, NOT AT THE PIXEL. The blend darkened a bright stone more than a
+    /// dark one because a blend is a ratio. Occlusion is FORM and a form does not vary with the
+    /// value of what it crosses — which is also what makes it exactly representable, since a
+    /// fixed number of rungs off a ladder value is a ladder value.
+    /// </summary>
+    private static int OcclusionRungs(Config c, double alpha, int layers)
+    {
+        double rung = c.Ladder[1] - c.Ladder[0];
+        double eff = 1.0 - System.Math.Pow(1.0 - alpha, layers);
+        // FLOOR(x + 0.5), NOT Round(). C#'s Math.Round is away-from-zero at a tie and numpy's is
+        // to-even, so a rung landing exactly on a half would be 5 in the engine and 4 in the
+        // composer with neither able to be called wrong — the same knife-edge WEAR_AGES was
+        // snapped to four values to avoid. One expression, both painters, no tie-break at all.
+        return (int)System.Math.Floor(eff * (c.LumMedian - c.OcclusionFloor) / rung + 0.5);
+    }
+
     private static int LadderIndex(Config c, double v)
     {
         int best = 0;
@@ -670,6 +725,22 @@ public static class Tier1AshlarFloor
 
     public static string Apply(TileLayer tileLayer, GameMap map, string manifestResPath,
                                System.Func<int, int, bool> isChannel)
+        => Apply(tileLayer, map, manifestResPath, isChannel, null);
+
+    /// <summary>
+    /// As above, and paints §12.1's contact occlusion into the floor's own pixels.
+    ///
+    /// The boundary used to be an alpha-blended sprite laid over this floor, and compositing it
+    /// took the family's nine authored albedo values to a hundred and thirty-two — the wall cap's
+    /// disease (107 -> 9) arriving on the floor through a layer nobody was measuring. Here it is
+    /// a subtraction in WHOLE LADDER RUNGS, so the delivered floor carries the family's palette
+    /// and nothing else. The sprite is still the datum: its alpha is read per pixel and now says
+    /// how many rungs rather than how much to blend, which keeps the along-edge jitter that is
+    /// the only thing holding the seam off a straight constant-pitch line.
+    /// </summary>
+    public static string Apply(TileLayer tileLayer, GameMap map, string manifestResPath,
+                               System.Func<int, int, bool> isChannel,
+                               OcclusionBake? bake)
     {
         var cfg = Load(manifestResPath, out string status);
         if (cfg == null) return $"[Tier1] ashlar floor: NOT APPLIED — {status}";
@@ -706,6 +777,31 @@ public static class Tier1AshlarFloor
         var atlasCache = new Dictionary<int, Image>();
         var paintFail = SelfCheck(cfg, grainImg, atlasCache);
         if (paintFail != null) return $"[Tier1] ashlar floor: REFUSED — {paintFail}";
+
+        // THE OCCLUSION CROSS-CHECK. The paint check cannot cover this one: it compares composer
+        // against engine on a field with no map in it, and occlusion is decided by WALL
+        // ADJACENCY. So the two derivations are tied together the way the edge families are.
+        // §4.2 — a duplicate with an enforcement is a different thing from a duplicate with a
+        // comment, and this is what goes red if the two ever disagree about a rung.
+        int occChecked = 0;
+        if (bake != null && cfg.OcclusionCheck.Count > 0)
+        {
+            var order = new[] { "N", "E", "S", "W" };
+            foreach (var (side, px, py, layers, expect) in cfg.OcclusionCheck)
+            {
+                int si = System.Array.IndexOf(order, side);
+                var alphaImg = si >= 0 ? bake.Value.AlphaBySide[si] : null;
+                if (alphaImg == null)
+                    return $"[Tier1] ashlar floor: REFUSED — occlusion cross-check has no sprite "
+                         + $"for side {side}; the composer measured one.";
+                int got = OcclusionRungs(cfg, alphaImg.GetPixel(px, py).A, layers);
+                if (got != expect)
+                    return $"[Tier1] ashlar floor: REFUSED — occlusion cross-check failed at "
+                         + $"{side}({px},{py}) layers={layers}: composer says {expect} rungs, "
+                         + $"engine says {got}.";
+                occChecked++;
+            }
+        }
 
         // WHERE PEOPLE ACTUALLY WALK — derived from the level graph, once, before anything is
         // laid. The review scenes carry no Room records, so the map-only derivation is used: the
@@ -787,7 +883,7 @@ public static class Tier1AshlarFloor
                   + "%) - round 21 measured 34% on the per-tile field\n");
 
         var crackCache = new Dictionary<(int, int), List<(int X, int Y)>>();
-        int laid = 0, channel = 0, missing = 0, polished = 0, mouths = 0;
+        int laid = 0, channel = 0, missing = 0, polished = 0, mouths = 0, occCells = 0;
 
         // §4.2: A STEP THAT DOES NOTHING MUST GO RED. If the shader fails to load, the floor
         // still lays and still looks almost right — the chroma and the joints carry on — and the
@@ -816,9 +912,13 @@ public static class Tier1AshlarFloor
 
             bool mouthHere = IsMouth(map, pos.X, pos.Y);
             if (mouthHere) mouths++;
+            (int SideMask, int Layers)? occHere = null;
+            if (bake != null && bake.Value.Cells.TryGetValue((pos.X, pos.Y), out var oc))
+            { occHere = oc; occCells++; }
             var outImg = PaintCell(cfg, atlas, grainImg, pos.X, pos.Y, fw, fe, traffic,
                                    isChannel, crackCache, mouthHere, out bool anyWorn,
-                                   out var polishImg);
+                                   out var polishImg, occHere,
+                                   bake?.AlphaBySide);
 
             // NO FLIP, NO ROTATION. Orientation is meaning on an edge-matched tile, and the
             // coursing has a direction: turning one would stand its bed joints on end.
@@ -846,6 +946,7 @@ public static class Tier1AshlarFloor
              + $"families={cfg.Families} seed={cfg.Seed} atlases={atlasCache.Count} "
              + $"edge_check={cfg.EdgeCheck.Count}/OK stone_check={cfg.StoneCheck.Count}/OK "
              + $"paint_check={cfg.PaintCheck.Count}/OK "
+             + $"occlusion={(bake == null ? "SPRITE(not baked)" : $"baked:{occCells}/check:{occChecked}/OK")} "
              + $"lines={cfg.Lines.Count} mouths={mouths} polished={polished}{(polishShader == null ? "/SHADER-MISSING" : "")} "
              + $"traffic=spine:{tf.SpineLength:F0}/routes:{tf.Routes} "
              + $"manifest={manifestResPath}\n" + sb.ToString().TrimEnd();
@@ -862,7 +963,9 @@ public static class Tier1AshlarFloor
     private static Image PaintCell(Config cfg, Image atlas, Image grainImg, int tx, int ty,
                                    int fw, int fe, byte[,]? traffic, System.Func<int, int, bool>? isChannel,
                                    Dictionary<(int, int), List<(int X, int Y)>> crackCache,
-                                   bool isMouth, out bool anyWorn, out Image polish)
+                                   bool isMouth, out bool anyWorn, out Image polish,
+                                   (int SideMask, int Layers)? occlusion = null,
+                                   Image?[]? occlusionAlpha = null)
     {
         var drops = new int[Courses];
         for (int c = 0; c < Courses; c++)
@@ -924,7 +1027,8 @@ public static class Tier1AshlarFloor
                 int mAx = (cellIndex % AtlasCols) * T, mAy = (cellIndex / AtlasCols) * T;
                 var mExt = StoneExtent(cfg, fw, fe, kind, c, drops[c], splitI);
                 double sw = Wear01(cfg, WearScalar(cfg, traffic, tx * T + T / 2, ty * T + T / 2), worn);
-                foreach (var (mu, mv, md) in StoneMarks(cfg, key, worn, mExt, sw))
+                foreach (var (mu, mv, md) in StoneMarks(cfg, key, worn, mExt, sw,
+                                                       tx * T, ty * T))
                 {
                     int mlx = mu + ox[cls], mly = mv + oy[cls];
                     if (mlx < 0 || mlx >= T || mly < 0 || mly >= T) continue;
@@ -1116,7 +1220,12 @@ public static class Tier1AshlarFloor
                 double dishL = u * u * cfg.LaneDishDepth;
                 double rimL = (ld > cfg.PolishShoulder * 0.80 && ld < cfg.PolishShoulder * 1.05)
                               ? cfg.LaneDishRim : 0.0;
-                raw[py, px] -= (dishL + rimL) * rung;
+                // THE DISH STEPS. A smooth radial subtraction is airbrush on a quantised surface
+                // — the critic's "large soft value-blobs that follow no geometry, they read as
+                // airbrush, not as light or as material". Whole rungs read as depth.
+                double dishTotal = dishL + rimL;
+                if (cfg.DishQuantise) dishTotal = System.Math.Round(dishTotal);
+                raw[py, px] -= dishTotal * rung;
 
                 // MARGIN GRIT. Traffic sweeps the centre clean and drives what it lifts to the
                 // flanks, so the swept lane reads as conspicuously bare BETWEEN gritty edges.
@@ -1167,8 +1276,104 @@ public static class Tier1AshlarFloor
                 if (near <= 0.0) continue;
                 int h = Mix(tx * T + px, ty * T + py, cfg.ChipSalt + cfg.Seed);
                 if ((h % 1000) / 1000.0 < cfg.ChipRate * near)
-                    raw[py, px] -= near * rung * 1.6;
+                {
+                    // A CHIPPED ARRIS IS JOINT, NOT A BLEND ON THE WAY TO ONE. Subtracting a
+                    // fraction of a rung put intermediate values along every open joint, which is
+                    // the two-to-three pixel ramp the critic saw the slab edges dissolve into.
+                    // The stone that broke away is gone: the pixel takes the joint's own value.
+                    double jv = 0.0;
+                    if (py > 0 && clsArr[py - 1, px] == 0) jv = System.Math.Max(jv, raw[py - 1, px]);
+                    if (py < T - 1 && clsArr[py + 1, px] == 0) jv = System.Math.Max(jv, raw[py + 1, px]);
+                    if (px > 0 && clsArr[py, px - 1] == 0) jv = System.Math.Max(jv, raw[py, px - 1]);
+                    if (px < T - 1 && clsArr[py, px + 1] == 0) jv = System.Math.Max(jv, raw[py, px + 1]);
+                    if (cfg.ChipTakesJoint && jv > 0.0) raw[py, px] = jv;
+                    else raw[py, px] -= near * rung * 1.6;
+                }
             }
+        }
+
+        // THE CRACK SET, WITH THE ARRISES THAT SPALL WHERE IT CROSSES A JOINT. The frame
+        // critic: "a crack that crosses six slabs in one smooth curve without registering a
+        // single joint reads as a line drawn over the floor." It cannot deflect — a crack is a
+        // pure function of world position so that every tile it crosses draws the identical
+        // line, and the bond is a per-atlas-variant property, not a world function; deflecting on
+        // the real joints would make the crack disagree with itself on the tile boundaries.
+        // What it can do, from purely local information, is BREAK THE ARRISES at the crossing:
+        // wide at the bond, narrow across the slab. See compose_ashlar.crack_spall.
+        var cset = new HashSet<(int, int)>();
+        if (crackCache != null)
+        {
+            var craw = new HashSet<(int, int)>(CrackPixels(cfg, tx, ty, crackCache));
+            foreach (var q in craw) cset.Add(q);
+            if (cfg.CrackSpall)
+                foreach (var (ly, lx) in craw)
+                {
+                    if (clsArr[ly, lx] == 0) continue;
+                    bool touches =
+                        (ly > 0 && clsArr[ly - 1, lx] == 0 && craw.Contains((ly - 1, lx)))
+                     || (ly < T - 1 && clsArr[ly + 1, lx] == 0 && craw.Contains((ly + 1, lx)))
+                     || (lx > 0 && clsArr[ly, lx - 1] == 0 && craw.Contains((ly, lx - 1)))
+                     || (lx < T - 1 && clsArr[ly, lx + 1] == 0 && craw.Contains((ly, lx + 1)));
+                    if (!touches) continue;
+                    bool vert = craw.Contains((ly - 1, lx)) || craw.Contains((ly + 1, lx));
+                    var cand = vert
+                        ? new[] { (ly, lx - 1), (ly, lx + 1) }
+                        : new[] { (ly - 1, lx), (ly + 1, lx) };
+                    foreach (var (ny, nx) in cand)
+                    {
+                        if (ny < 0 || ny >= T || nx < 0 || nx >= T) continue;
+                        if (clsArr[ny, nx] == 0 || craw.Contains((ny, nx))) continue;
+                        cset.Add((ny, nx));
+                    }
+                }
+        }
+
+        // A CRACK HAS A SECTION. The frame critic: "a uniform 1px black stroke has no depth."
+        // A real fracture has a LIP where the stone broke away on one side and a channel below
+        // it. The lip goes in HERE, before quantisation, so it lands on a rung like everything
+        // else — and the crack pixels themselves are still painted last, over the top.
+        if (crackCache != null && cfg.CrackLip != 0.0)
+        {
+            foreach (var (ly, lx) in cset)
+            {
+                int side = (int)(Mix((tx * T + lx) / 4, (ty * T + ly) / 4,
+                                     cfg.CrackLipSalt + cfg.Seed) % 2);
+                int lx2 = lx + (side != 0 ? 1 : -1);
+                if (lx2 < 0 || lx2 >= T) continue;
+                if (clsArr[ly, lx2] == 0 || cset.Contains((ly, lx2))) continue;
+                raw[ly, lx2] += cfg.CrackLip * rung;
+            }
+        }
+
+        // ================= §12.1's CONTACT OCCLUSION, IN RUNGS =================
+        //
+        // LAST, because the sprite it replaces was drawn last — over the stones, the joints and
+        // the cracks alike. Order is load-bearing in this painter (see the flatten/chip note
+        // above) and the safest reproduction of a layer that sat on top of everything is a term
+        // that runs after everything.
+        //
+        // The sides composite the way the sprites did: each was a separate draw, so their alphas
+        // multiply through their complements and a corner carrying two edges is darker than
+        // either. `layers` then compounds that the same way. What is new is only the last step —
+        // the result is whole rungs, and a whole number of rungs off a ladder value is a ladder
+        // value, so the snap below has nothing left to invent.
+        if (occlusion is { } occ && occlusionAlpha != null)
+        {
+            for (int py = 0; py < T; py++)
+                for (int px = 0; px < T; px++)
+                {
+                    double keep = 1.0;
+                    for (int side = 0; side < 4; side++)
+                    {
+                        if ((occ.SideMask & (1 << side)) == 0) continue;
+                        var img = occlusionAlpha[side];
+                        if (img == null) continue;
+                        keep *= 1.0 - img.GetPixel(px, py).A;
+                    }
+                    if (keep >= 1.0) continue;
+                    raw[py, px] -= OcclusionRungs(cfg, 1.0 - keep, occ.Layers)
+                                   * (cfg.Ladder[1] - cfg.Ladder[0]);
+                }
         }
 
         // ================= THE CHROMA CHANNEL =================
@@ -1268,13 +1473,34 @@ public static class Tier1AshlarFloor
         // reported "No cracks. Not one." in captures whose log said event=44.
         if (crackCache != null)
         {
-            double cv = cfg.Ladder[LadderIndex(cfg, cfg.LumMedian * cfg.CrackDepth)];
-            var col = new Color((float)(cv * cfg.Tint[0] / 255.0), (float)(cv * cfg.Tint[1] / 255.0),
-                                (float)(cv * cfg.Tint[2] / 255.0));
-            foreach (var (ly, lx) in CrackPixels(cfg, tx, ty, crackCache))
+            // THE CRACK VARIES ALONG ITS LENGTH. One value end to end is a drawn line; the
+            // frame critic named it twice as "the identical overlay, uniform 1px black". Keyed on
+            // world position so the fracture varies as it travels and both tiles agree.
+            foreach (var (ly, lx) in cset)
             {
-                outImg.SetPixel(lx, ly, col);
-                polishImg.SetPixel(lx, ly, new Color(0, 0, 0));
+                double vv = ((Mix(tx * T + lx, ty * T + ly, cfg.CrackVarySalt + cfg.Seed) % 1000)
+                             / 1000.0 - 0.5) * 2.0;
+                double cvp = cfg.LumMedian * cfg.CrackDepth * (1.0 + vv * cfg.CrackDepthVary);
+                double cv2 = cfg.Ladder[LadderIndex(cfg, cvp)];
+                outImg.SetPixel(lx, ly, new Color(
+                    (float)(cv2 * cfg.Tint[0] / 255.0), (float)(cv2 * cfg.Tint[1] / 255.0),
+                    (float)(cv2 * cfg.Tint[2] / 255.0)));
+
+                // A CRACK IS LIT LIKE EVERYTHING ELSE IT IS CUT INTO. The frame critic: "they are
+                // pure black inside the brightest part of the lamp pool, which makes them the
+                // darkest thing in the frame; they need to be lit along with the surface they're
+                // in." Giving cracks a flat zero polish was the same mistake the joints had —
+                // fixed there, missed here — and it is worse for a crack, because the surface
+                // around it is the polished lane and the contrast is therefore largest exactly
+                // where the player is looking.
+                //
+                // A recess catches less light, not none. It takes the lane's shine at the same
+                // fraction a joint of that depth would.
+                double crackLit = System.Math.Clamp(
+                    (cv2 - cfg.Ladder[0]) / System.Math.Max(cfg.LumMedian - cfg.Ladder[0], 1e-6),
+                    cfg.JointPolishFloor, 1.0);
+                double cpol = LanePolish(cfg, tx * T + lx, ty * T + ly) * crackLit;
+                polishImg.SetPixel(lx, ly, new Color((float)cpol, (float)cpol, (float)cpol));
             }
         }
 
@@ -1415,6 +1641,7 @@ public static class Tier1AshlarFloor
             var pba = new List<double>();
             foreach (var v in mat.GetProperty("polish_by_age").EnumerateArray()) pba.Add(v.GetDouble());
             cfg.PolishByAge = pba.ToArray();
+            if (mat.TryGetProperty("occlusion_floor", out var of)) cfg.OcclusionFloor = of.GetDouble();
             cfg.PolishExp = mat.GetProperty("polish_exp").GetDouble();
             cfg.PolishGain = mat.GetProperty("polish_gain").GetDouble();
             var dfl = new List<double>();
@@ -1435,6 +1662,17 @@ public static class Tier1AshlarFloor
             foreach (var v in mat.GetProperty("shelter_weights").EnumerateArray()) sw.Add(v.GetDouble());
             cfg.ShelterWeights = sw.ToArray();
             cfg.ShelterBlock = mat.GetProperty("shelter_block").GetInt32();
+            cfg.CrackVarySalt = salts.GetProperty("crack_vary").GetInt32();
+            cfg.CrackDepthVary = mat.GetProperty("crack_depth_vary").GetDouble();
+            cfg.MarkBareShare = mat.GetProperty("mark_bare_share").GetDouble();
+            cfg.ChipTakesJoint = mat.GetProperty("chip_takes_joint").GetBoolean();
+            cfg.DishQuantise = mat.GetProperty("dish_quantise").GetBoolean();
+            cfg.CrackSpall = mat.GetProperty("crack_spall").GetBoolean();
+            cfg.CrackLip = mat.GetProperty("crack_lip").GetDouble();
+            cfg.CrackLipSalt = salts.GetProperty("crack_lip").GetInt32();
+            cfg.MarkClusterSalt = salts.GetProperty("mark_cluster").GetInt32();
+            cfg.MarkClusterPeriod = mat.GetProperty("mark_cluster_period").GetInt32();
+            cfg.MarkClusterSwing = mat.GetProperty("mark_cluster_swing").GetDouble();
             cfg.LaneFraySalt = salts.GetProperty("lane_fray").GetInt32();
             cfg.LaneFray = mat.GetProperty("lane_fray").GetDouble();
             cfg.JointPolishFloor = mat.GetProperty("joint_polish_floor").GetDouble();
@@ -1528,6 +1766,13 @@ public static class Tier1AshlarFloor
                 cfg.EdgeCheck.Add((e.GetProperty("x").GetInt32(), e.GetProperty("y").GetInt32(),
                                    e.GetProperty("salt").GetInt32(),
                                    e.GetProperty("family").GetInt32()));
+            if (root.TryGetProperty("occlusion_check", out var occChk))
+                foreach (var e in occChk.EnumerateArray())
+                    cfg.OcclusionCheck.Add((e.GetProperty("side").GetString() ?? "",
+                                            e.GetProperty("px").GetInt32(),
+                                            e.GetProperty("py").GetInt32(),
+                                            e.GetProperty("layers").GetInt32(),
+                                            e.GetProperty("rungs").GetInt32()));
             foreach (var e in root.GetProperty("stone_check").EnumerateArray())
                 cfg.StoneCheck.Add((e.GetProperty("x").GetInt32(), e.GetProperty("k").GetInt32(),
                                     e.GetProperty("kind").GetInt32(), e.GetProperty("drop").GetInt32(),

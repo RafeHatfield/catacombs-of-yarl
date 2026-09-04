@@ -19,16 +19,15 @@
     "measurements leave, pixels never do. The seat sees the crop in its own working directory,",
     "which is also outside the repo."
   ],
-  "surface": "wall",
+  "surface": "floor",
   "capture": {
     "cmd": [
-      "tools/tier1_walls/capture.sh",
-      "material",
-      "src/Presentation/assets/tier0_harness/scenes/tier1_wall_standing.json",
+      "tools/tier1_floors/capture.sh",
+      "src/Presentation/assets/tier0_harness/scenes/tier1_floor_route_onroute.json",
       "fc_standing"
     ],
-    "frame": "tools/tier1_walls/evidence/fc_standing.png",
-    "log": "tools/tier1_walls/evidence/fc_standing.log"
+    "frame": "tools/tier1_floors/evidence/fc_standing.png",
+    "log": "tools/tier1_floors/evidence/fc_standing.log"
   },
   "_crop_note": [
     "THE ENGINE'S OWN VIEWPORT BAND, not a guess at it. Every capture logs",
@@ -100,33 +99,21 @@
     "verdict records that it ran without an approved baseline."
   ],
   "work_dir": "~/.claude/frame-critic",
-  "axis": "construction",
-  "_axis": [
-    "WHAT THIS ROUND IS ASKING, and it selects the plant (RULED 2026-09-03).",
+  "_surface_note": [
+    "MOVED FROM wall TO floor, 2026-09-03. This is the one file a session edits when the critic",
+    "changes surface; the skill itself knows nothing about floors or walls and so has nothing in",
+    "it for that move to break.",
     "",
-    "A plant is only a control if it is wrong on the axis under test. Round 5 was judged on",
-    "construction - does the cap read as stone or as cement - and was handed the `grey walls`",
-    "plant, whose defect is chroma. The build's chroma was already fixed, so the two frames",
-    "differed on an axis the plant did not carry, and the round voided on the judge rather than",
-    "on the art. The right image for the wrong question is not a control."
+    "The deck draws its picture-plant BY SURFACE, so this field is what stops a floor round being",
+    "judged against a wall cull - the right image flagged for the wrong reason, which is not a",
+    "control at all. The morgue holds three floor entries: keyline-floor, washed-slab-lane and",
+    "tile-quantized-wear, all three of them this session's own device-gate culls."
   ],
-  "_approved_capture": [
-    "NULL ON PURPOSE - AWAITING BOOTSTRAP (RULED, Rafe, 2026-09-03):",
-    "  'approved_capture bootstrap: first SHIP-and-rank build against bar+construction-plant",
-    "   seeds the reference; a Rafe-walked PASS overwrites it.'",
-    "",
-    "It briefly held r17_standing_mat.png (build 0c60bc50) as 'the last Rafe-approved WARM",
-    "build'. MEASURED, THAT FRAME IS NOT WARM, and it is not warmer than the current build:",
-    "",
-    "    r17_standing_mat   floor sat 0.507   cap sat 0.510 (ratio 1.007)   cap value 24.1",
-    "    current build      floor sat 0.476   cap sat 0.553 (ratio 1.161)   cap value 31.0",
-    "",
-    "r17's cap tracks its own floor exactly - the same-quarry relation the hue fix was built to",
-    "produce - and it is DARKER than the current build on both planes. It is the last APPROVED",
-    "build; it is not a warm-correct reference, and using it as one charged this lane with a",
-    "regression against a frame that is not better on the axis in question.",
-    "",
-    "So the deck runs build + bar + construction-plant until a build takes SHIP and rank against",
-    "them. That build seeds this field, and a Rafe-walked PASS overwrites it."
+  "_standing_station_note": [
+    "THE STANDING STATION IS SAMPLED FROM THE POLYLINE - the player stands ON the route with the",
+    "route ahead inside the lamp's delivered pool. Two earlier stations were wrong for the",
+    "question they were asked: a one-tile chokepoint has no flank to contrast against, and an",
+    "approach station put the route's lit run off to one side. A capture composed around the",
+    "PLAYER is not composed around the ROUTE'S VISIBLE PORTION once the lamp is carried."
   ]
 }

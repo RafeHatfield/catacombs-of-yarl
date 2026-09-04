@@ -1,0 +1,56 @@
+All three read. Ranking below; nothing here ships.
+
+**RANK:** 1 > 3 > 2
+
+**BEST:** 1
+
+**BEST_WHY:** The lit floor between the figure and the bottom of the frame (roughly x 300–620, y 460–640) is genuinely constructed, not stamped. Slab widths vary along a single course — the slab left of the figure runs about three grid units wide, the two to its right are one and two — and the joints between them are drawn at different depths, some a single dark pixel, some a two-pixel trench with a lighter chipped lip on the upper side. The diagonal chisel hatching stays *inside* individual slabs and stops at the joints, which is what tells you the stone was cut and dressed one piece at a time rather than having a texture laid over the top. The lighting is also physically honest: the patch at x 285–360, y 450–545 measures mean luminance 109.7 and its mirror on the other side of the figure at x 465–540 measures 100.6 — near-symmetric around a point light, as it should be. The block course running along the bottom edge of the middle wall at y ≈ 420–428 is the best-made thing in the deck: irregular block lengths, dark joints of varying weight, and one block near x 545 that is visibly lighter than its neighbours, so the run reads as repaired rather than built.
+
+**WORST:** 2
+
+**WORST_WHY:** The green water body at the right is a rectangle. Its left edge is a dead-straight vertical at x ≈ 248 running the full height of the pool, and its bottom is a dead-straight horizontal at y ≈ 190, and where the brown dirt meets it there is no bank, no wet margin, no edge tile, no darkening — the dirt simply stops on a pixel boundary and water begins. Water does not have corners. Beneath that: the frame is lit uniformly from nowhere, with zero falloff anywhere in it. The two barrels at x 110–145 and x 155–190, y 190–215, are the identical sprite placed twice with the identical lid highlight in the identical position. The dirt field repeats a single 16px tile with a recognisable dark-red speckle cluster that recurs on a visible grid across the whole middle of the frame. The bottom stone band is one flagstone tile with every joint identical on every instance. The projection is inconsistent within one image: the barrels and the crates at x 62–96 are drawn in three-quarter view showing their sides and lids, while the floor is straight top-down, and the wall band at the bottom is drawn as a flat front elevation. And the white pixel scatter at x 208–232, y 110–125 has no silhouette at all — it is a handful of loose white and grey pixels that reads as dirt on the screen rather than as an object.
+
+**FLAGGED:** 2, 3
+
+For 3, the flag is a lighting fault you see instantly: the pale wedge on the floor to the *left* of the figure, x 285–360, y 450–545, measures mean luminance 123.8, while the mirror patch at the same distance on the *right*, x 465–540, measures 68.8. Eighteen-tenths as bright on one side of a point light with nothing occluding the other side. There is no wall, pillar or step between the lamp and the right-hand patch that is not also on the left. It looks like a highlight was painted in by hand and the other side forgotten.
+
+For 2, the flag is the rectangular water plus the duplicated barrels — either one alone is a glance-level tell.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The entire chamber above the middle wall (x 60–350 and x 470–700, y 185–460) has no masonry in it at all — brightened, it is a smooth airbrushed gradient with soft round blobs and three thin crack lines. Build the actual slab grid through that whole area at the same joint spacing as the lit floor below, then let the darkness fall on top of it. Right now it is unmodelled, not unlit, and the soft blobs read as a smudge-tool overlay even at play brightness.
+- Those soft blobs specifically — the pale cloud shapes centred near (250, 300) and (560, 320) — have no edge and no grid relationship. Delete them or replace them with something with a cause: a dust drift with a stone lip, a stain with a hard downhill edge.
+- The middle wall's top surface (y 385–420) is a flat unbroken field with no top texture and no thickness cue, so the wall reads as a painted band rather than a solid you could not walk over. Give the top surface its own course of stone and a one-to-two pixel highlight along its lower edge where the lamp catches it.
+- The corridor's side walls at x ≈ 383 and x ≈ 437 are pure value cliffs — a straight vertical for over 350 pixels with no cap, no chipping, no single stone crossing the line. Break the run: vary the wall face by a tile in two or three places and put visible block ends on the corridor side.
+- The corridor floor is a different, narrower texture from the room floor it opens into at y ≈ 460, and the transition is a hard horizontal seam. Carry three or four slabs across the threshold so the two floors are the same construction.
+- Nothing in the frame shows the four hundred years of orc repair the fiction requires — no rope, no driven pins, no salvaged timber, no hide. There is one lighter block in the wall course and that is all. Add repair hardware at the two or three points a defender would actually reinforce, and let it be ugly.
+
+**FLIP 3:**
+- Fix the light asymmetry named above: the wedge at x 285–360, y 450–545 must fall to roughly the same value as its mirror at x 465–540, or an occluder has to be drawn that explains the difference. As it stands the lamp is lying about where it is.
+- A uniform mottled crust covers the dark chamber floor, the wall band and the corridor at the *same* grain size everywhere, regardless of distance from the lamp and regardless of whether the surface underneath is a cut slab or a wall cap. That is the single biggest tell. Remove it as a global pass and re-author per material: slabs get chisel hatching bounded by their joints, the wall cap gets its own coarser treatment, rubble gets a different one again.
+- Consequence of the above: the chamber floor above the wall (x 100–350, y 200–380) is a mottled brown-gold crust while the floor below the wall is cut slabs, with no boundary explaining the material change. Continue the slab grid through the upper chamber.
+- The dark clot below and left of the figure, spanning roughly x 300–430, y 555–600, crosses four slabs and three joints without breaking at any of them. Damage and staining have to respect the joints — either clip it per slab or cut it back to one slab.
+- The short vertical dark strokes scattered across the lit floor (for example near (470, 500), (520, 570), (600, 440)) sit at arbitrary positions with no relation to slab edges or to each other. Either align them to slab edges as chipping, or remove them.
+- The lit floor is muddier than it should be — the tile beside the figure at (410, 530) sits at RGB (144, 103, 66) against (224, 159, 97) for the same tile in the other treatment of this scene. Lift the near-lamp values so the pool of light has a bright core; right now the brightest thing in the frame is a wall band well away from the lamp.
+- Same repair note as above: no rope, pins, hide or salvaged timber anywhere. The fiction's whole visual argument is missing.
+
+**FLIP 2:**
+- Give the frame a light source. There is none — the image is uniformly lit corner to corner. A carried lamp with falloff, and everything past a few tiles goes dark.
+- Break the water rectangle. The straight vertical at x ≈ 248 and the straight horizontal at y ≈ 190 both have to go irregular, and an edge treatment has to exist between dirt and water: a wet-dark margin one or two pixels deep, a bank, silt where the two meet.
+- Give the water depth: it is one flat green with three sizes of the same lily blob on it. Darken toward the middle, lighten at the margin, and vary the blobs' shapes rather than scaling one.
+- The two barrels at x 110–145 and x 155–190 are pixel-identical including the lid highlight. Redraw one — different rim damage, different lid angle, different stave shading.
+- Break the dirt tile repeat. The dark-red speckle cluster recurs on a visible 16px grid across the whole field. Author three or four variants and scatter, or paint the field as one surface.
+- Break the flagstone repeat in the bottom band, same problem: every joint identical on every tile.
+- Resolve the projection conflict. Barrels and crates are three-quarter, the floor is top-down, the bottom wall is a front elevation. Pick top-down and redraw the props to match — barrels seen from above are circles with a rim.
+- Replace the white pixel scatter at x 208–232, y 110–125 with something that has a readable silhouette, or delete it.
+- The structure at top-left, x 0–56, y 118–142 — a solid black bar with an orange striped vertical element — is unreadable as any object and is clipped by the frame edge. Redraw it or move it inside the frame.
+- The solid untextured black rectangle at x 0–12, y 70–90 has no material in it. Fill it or remove it.
+- The orc at the top of the frame is cut in half by the frame edge and stands on an isolated brown ellipse of dirt with a hard elliptical boundary that matches nothing around it. Move the figure fully into frame and remove the ellipse.
+- Nothing in the frame says administered underworld: it is grass-green water, brown mud, grey flagstones and crates. No records, no filing, no four-hundred-year repair line.
+
+The pattern across the deck: 1 has the strongest craft where the light actually falls and falls apart everywhere the light doesn't, 3 has a hand-painted highlight the lighting model doesn't support plus a global texture pass sitting on top of the whole frame, and 2 is a different order of finish altogether. If only one gets work, it is 1 — building real masonry into the dark chamber is a contained job and it is the only frame whose lit half is already at the bar.
+
+*Model: Claude Opus 5 (1M context).*
