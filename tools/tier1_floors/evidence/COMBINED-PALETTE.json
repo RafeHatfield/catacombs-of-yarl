@@ -1,0 +1,11 @@
+{
+ "ladder_rungs": 11,
+ "authored": 33,
+ "legal_renderings": 65,
+ "control": {
+  "blended": 634,
+  "snapped": 31,
+  "off_palette": 596,
+  "binds": true
+ }
+}

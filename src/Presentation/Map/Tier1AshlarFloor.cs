@@ -294,7 +294,10 @@ public static class Tier1AshlarFloor
     ///
     /// What replaces it is not louder noise. These are the marks of a stone that was DRESSED —
     /// claw-chisel striations running ONE WAY PER STONE, because one mason worked one stone one
-    /// way, and pits where the tooth tore out rather than cut. All of it is occlusion vocabulary
+    /// way — chosen from TWELVE directions, because with four in the table (two of them the same
+    /// 45°) a dozen stones in one lit pool drew the identical hatch and §8.3's motif arrived
+    /// through the angle. And pits where the tooth tore out rather than cut. All of it is
+    /// occlusion vocabulary
     /// and nothing else: every mark is a recess, so every mark is darker, and none has a lit side
     /// and a shaded side. A dressing mark drawn with a highlight would be depicted lighting.
     ///
@@ -328,6 +331,67 @@ public static class Tier1AshlarFloor
         if (kind == 0) return (mvW, T + aW, vHi);
         if (kind == 2 || drop == 2) return (mvE, T + aE, vHi);
         return (0, mvE - aW, vHi);
+    }
+
+    /// <summary>
+    /// `n` pixels along (dx, dy), Bresenham on the major axis — the C# twin of
+    /// `compose_ashlar.mark_run`.
+    ///
+    /// `(u + dx*i, v + dy*i)` was exact while every direction in the table was a unit step, and
+    /// draws a DOTTED line the moment one is not. The walk is on the major axis so a run of `n`
+    /// deposits exactly `n` pixels at every angle: widening the direction table changes the
+    /// angle and nothing about coverage or delivered amplitude (§13.8).
+    /// </summary>
+    private static void MarkRun(List<(int U, int V, double D)> outp, int u, int v,
+                                int dx, int dy, int n, double depth)
+    {
+        int adx = System.Math.Abs(dx), ady = System.Math.Abs(dy);
+        int sx = dx > 0 ? 1 : -1, sy = dy > 0 ? 1 : -1;
+        int x = u, y = v;
+        if (adx >= ady)
+        {
+            int err = adx / 2;
+            for (int i = 0; i < n; i++)
+            {
+                outp.Add((x, y, depth));
+                err -= ady;
+                if (err < 0) { y += sy; err += adx; }
+                x += sx;
+            }
+        }
+        else
+        {
+            int err = ady / 2;
+            for (int i = 0; i < n; i++)
+            {
+                outp.Add((x, y, depth));
+                err -= adx;
+                if (err < 0) { x += sx; err += ady; }
+                y += sy;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Tooth `t`'s offset from the run: `gap * t` pixels along the direction's own UNIT normal —
+    /// the C# twin of `compose_ashlar.mark_normal`.
+    ///
+    /// The raw (-dy, dx) it replaces is a normal of the right direction and the wrong length:
+    /// |(-dy, dx)| is 1 only for an axis step, so a diagonal stone's teeth sat 2.83px apart
+    /// against an orthogonal stone's 2.00, and a 3:1 stone's would sit at 6.32.
+    ///
+    /// `System.Math.Round(double)` is round-half-to-even, which is what Python's `round` does.
+    /// The two must agree pixel for pixel or `paint_check` fails, which is the point of having it.
+    /// </summary>
+    private static (int U, int V) MarkNormal(int dx, int dy, int gap, int t)
+    {
+        if (t == 0) return (0, 0);
+        double n = System.Math.Sqrt(dx * dx + dy * dy);
+        int ou = (int)System.Math.Round(-dy / n * gap * t);
+        int ov = (int)System.Math.Round(dx / n * gap * t);
+        if (ou == 0 && ov == 0)          // never stack two teeth on one run
+            return System.Math.Abs(dx) >= System.Math.Abs(dy) ? (0, 1) : (1, 0);
+        return (ou, ov);
     }
 
     private static List<(int U, int V, double D)> StoneMarks(Config c, int key, bool worn,
@@ -370,7 +434,6 @@ public static class Tier1AshlarFloor
         // passes. Scattered singly they read as SCRATCHES — a few long slashes at odd angles
         // across a face, which is damage, not dressing. Clustered into parallel runs 2px apart
         // they read as tooling, and each stroke still clears the readable-extent bar on its own.
-        int pxp = -dy, pyp = dx;
         // MORE BANDS, NOT MORE TEETH PER BAND. Teeth raise regularity; bands raise
         // coverage while staying ragged. At three bands the delivered contrast sat at
         // 0.148 against a floor of 0.144, and a 3% margin proves nothing.
@@ -388,15 +451,15 @@ public static class Tier1AshlarFloor
             int gap = 2 + (st >> 12) % 2;      // 2 or 3 px between teeth, not always 2
             for (int t = 0; t < teeth; t++)
             {
-                int ou = u + pxp * t * gap, ov = v + pyp * t * gap;
+                var (du, dv) = MarkNormal(dx, dy, gap, t);
+                int ou = u + du, ov = v + dv;
                 // EVERY TOOTH A DIFFERENT LENGTH. Equal-length teeth on an equal pitch is a
                 // barcode: the first clustered version read as tally marks on some stones. A
                 // chisel skips and bites unevenly, and a ragged end is the difference between
                 // tooling and hatching.
                 st = Lcg(st);
                 int ln = System.Math.Max(c.MarkMinLen, length - (st >> 8) % 3);
-                for (int i = 0; i < ln; i++)
-                    outp.Add((ou + dx * i, ov + dy * i, c.MarkDepth * keep));
+                MarkRun(outp, ou, ov, dx, dy, ln, c.MarkDepth * keep);
             }
         }
 
