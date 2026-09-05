@@ -1,0 +1,53 @@
+{
+  "name": "tier1_combined_probe",
+  "_comment": [
+    "THE NULL-POLISH CONTROL'S SCENE, and it exists for one reason: `tier1_combined_review.json`",
+    "REFUSES TO WRITE A PNG when a declared lit point comes back dark, and nulling the polish",
+    "shader makes three of them come back dark. That refusal is correct and must not be weakened",
+    "— it is the guard that stops a capture circulating with its subject outside the light — so",
+    "the control gets its own spec instead.",
+    "",
+    "IDENTICAL TO tier1_combined_review IN EVERY FIELD EXCEPT `legibility`, WHICH IS EMPTY.",
+    "Same geometry, same station, same width and height. A control frame that differed from the",
+    "build in anything but the one variable would not be a control (LOOP-PROCESS §4.2).",
+    "",
+    "⚠ IT IS AN INSTRUMENT SCENE, NOT A REVIEW SCENE, and the distinction is load-bearing here in",
+    "a way it is not elsewhere: a spec with no legibility declarations cannot fail the",
+    "floor-legibility guard, so NOTHING IS EVER JUDGED THROUGH THIS FILE. It is used to answer a",
+    "measurement question — how much of the floor's delivered value is the specular term — and",
+    "for nothing else. Any round that captures a candidate through it has bypassed the guard, and",
+    "that is the mistake this paragraph exists to prevent.",
+    "",
+    "Reproduce the control:",
+    "  sed -i '' 's/\"polish_gain\": 1.0/\"polish_gain\": 0.0/' \\",
+    "      src/Presentation/assets/tier1_ashlar/MANIFEST.json",
+    "  python3 tools/tier0_harness/capture_corridor.py --scene-spec <this file> ... --void-ring 1",
+    "  # then RESTORE the manifest — compose_ashlar rewrites it, but a stale 0.0 in the tree",
+    "  # would silently null the shader for every later capture in the session.",
+    "",
+    "⚠ AND EDIT THE MANIFEST BY TEXT SUBSTITUTION, NEVER BY A JSON ROUND-TRIP. The first attempt",
+    "at this control loaded the manifest with `json.load`, set the key and dumped it back. The",
+    "capture came back with EVERY declared point at ratio 0.0000 including the reference — a",
+    "whole-frame failure that looks nothing like the change being tested, and would have been",
+    "reported as one if the second attempt had not been made a different way."
+  ],
+  "_legibility": [
+    "DELIBERATELY EMPTY. See above — this is the whole point of the file, not an omission."
+  ],
+  "legibility": [],
+  "width": 17,
+  "height": 21,
+  "player": {
+    "x": 6,
+    "y": 12
+  },
+  "carve": [
+    { "x0": 3, "y0": 12, "x1": 13, "y1": 14 },
+    { "x0": 3, "y0": 16, "x1": 13, "y1": 19 },
+    { "x0": 3, "y0": 15, "x1": 4, "y1": 15 },
+    { "x0": 6, "y0": 15, "x1": 13, "y1": 15 },
+    { "x0": 8, "y0": 6, "x1": 8, "y1": 11 },
+    { "x0": 3, "y0": 2, "x1": 13, "y1": 5 },
+    { "x0": 1, "y0": 16, "x1": 2, "y1": 17 }
+  ]
+}

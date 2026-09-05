@@ -2794,19 +2794,23 @@ public partial class Main : Node
             string? vArg = ReadStringArg("--void-choice");
             int voidChoice = vArg != null && int.TryParse(vArg, out int vv) ? vv
                            : marker?.VoidChoice ?? 0;
+            // A CAPTURE-TIME DEPARTURE FROM A RULED MANIFEST VALUE, declared on the command line
+            // so it lands in the log of every capture it produced. See Tier1BoundaryWall.Apply.
+            string? rArg = ReadStringArg("--void-ring");
+            int? voidRing = rArg != null && int.TryParse(rArg, out int rr) ? rr : null;
             _wallManifest = wallManifest;
             _voidChoice = voidChoice;
             string? bindings = ReadStringArg("--wall-bindings") ?? marker?.WallBindings;
             string? capManifest = ReadStringArg("--wall-cap") ?? marker?.WallCap;
             Report(Tier1BoundaryWall.Apply(_tileLayer, _state.Map, wallManifest, voidChoice,
-                                           bindings, capManifest));
+                                           bindings, capManifest, voidRing));
             var layer = _tileLayer;
             var map = _state.Map;
             _rigPanel?.AddVoidRow(Tier1BoundaryWall.LastVoidCount, () => _voidChoice, v =>
             {
                 _voidChoice = v;
                 string line = Tier1BoundaryWall.Apply(layer, map, wallManifest, v, bindings,
-                                                      capManifest);
+                                                      capManifest, voidRing);
                 GD.Print(line);
                 Diag.Log(line);
             });

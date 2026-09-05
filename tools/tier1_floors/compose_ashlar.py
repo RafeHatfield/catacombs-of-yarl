@@ -737,7 +737,7 @@ def stone_offset(key, step, worn=False, bias=0):
 #
 #   STRIATIONS  the parallel grooves a claw chisel leaves. One direction per stone, because one
 #               mason worked one stone one way — and that is the material identity the ruling
-#               asks for. Four directions in the world, chosen by the stone's address.
+#               asks for. TWELVE directions in the world, chosen by the stone's address.
 #   PITS        where the tooth of the stone tore out rather than cut.
 #
 # ALL OF IT IS OCCLUSION VOCABULARY AND NOTHING ELSE (§6.3, §6.5). Every mark is a RECESS, so
@@ -748,7 +748,30 @@ def stone_offset(key, step, worn=False, bias=0):
 # tens of pixels long — as excellent, and ruled 4px overlay marks as absent. So a 1px-wide feature
 # is readable IF IT IS LONG: striations are 1px by 5..10. A blob is not, so pits are at least 2x2,
 # never the 1px speck a seat once called "the pepper".
-MARK_DIRS = ((1, 0), (0, 1), (1, 1), (1, -1))
+# §8.3'S MOTIF TRAP, AND IT ARRIVED THROUGH THE ANGLE — the frame critic's own words at the
+# floor's last round: *"vary the 45° hatch; same angle and spacing on a dozen slabs."*
+#
+# One direction per stone was never the defect. A mason does work one stone one way, and that
+# clause stands. The defect is that the WORLD only held four directions, two of them the same
+# 45°, so a dozen stones in one lit pool drew the identical hatch. §8.3.1's general form is
+# about a treatment at a constant POSITION; this is the same arithmetic one axis over — a
+# treatment drawn at a constant ANGLE is a motif once the field is large enough to hold a
+# dozen of it, however well each one is addressed.
+#
+# Twelve directions, as rational slopes rather than unit steps: 0°, ±18.4°, ±26.6°, ±45°,
+# ±63.4°, ±71.6°, 90°. Still one per stone, still stable across a boundary, still pure
+# occlusion vocabulary — the stone's key chooses from a longer table and nothing else moves.
+#
+# ⚠ AND THE SPACING WAS NEVER 2px, which is the other half of the same verdict. The teeth were
+# offset by the RAW (-dy, dx), exact only while every direction was a unit step: a diagonal
+# stone's teeth sat 2.83px apart where an orthogonal stone's sat 2.00. That 1.41× was never
+# authored and, with only one diagonal angle in the table, it was a constant — the hatch that
+# was culled had one angle AND one spacing, and the second followed from the first. Both the
+# offset and the run are taken along the direction's own geometry now (`mark_normal`,
+# `mark_run`), so "2px between teeth" means 2px at every angle in the table.
+MARK_DIRS = ((1, 0), (0, 1), (1, 1), (1, -1),
+             (2, 1), (2, -1), (1, 2), (1, -2),
+             (3, 1), (3, -1), (1, 3), (1, -3))
 MARK_MIN_LEN = 5
 MARK_MAX_LEN = 8
 # DEPTH IN LADDER RUNGS, and deliberately NOT whole numbers.
@@ -798,6 +821,63 @@ def stone_extent(fw, fe, kind, c, drop, split_i):
     return 0, mv_e - a_w, v_hi                     # interior
 
 
+# A BUILDER'S TOOL AND NOTHING ELSE (LOOP-PROCESS §1.2 — instruments gate nothing). Set this to
+# a list and every stone that draws dressing appends the direction it chose, so the angle census
+# is taken on the stones the field actually lays rather than on the table it could have drawn
+# from. `None` by default: the hook costs one branch per dressed stone and is off in every build.
+DIR_CENSUS = None
+
+
+def mark_run(u, v, dx, dy, n):
+    """`n` pixels along (dx, dy), Bresenham on the major axis.
+
+    `(u + dx*i, v + dy*i)` was exact while every direction in MARK_DIRS was a unit step, and it
+    draws a DOTTED line the moment one is not: a 2:1 slope would place n pixels two apart with
+    nothing between them, which is not a groove. The walk is on the major axis so a run of `n`
+    still deposits exactly `n` pixels at every angle — the coverage and therefore the delivered
+    amplitude (§13.8) are unchanged by widening the table.
+    """
+    adx, ady = abs(dx), abs(dy)
+    sx = 1 if dx > 0 else -1
+    sy = 1 if dy > 0 else -1
+    x, y = u, v
+    if adx >= ady:
+        err = adx // 2
+        for _ in range(n):
+            yield x, y
+            err -= ady
+            if err < 0:
+                y += sy
+                err += adx
+            x += sx
+    else:
+        err = ady // 2
+        for _ in range(n):
+            yield x, y
+            err -= adx
+            if err < 0:
+                x += sx
+                err += ady
+            y += sy
+
+
+def mark_normal(dx, dy, gap, t):
+    """Tooth `t`'s offset from the run: `gap * t` pixels along the direction's own UNIT normal.
+
+    The raw (-dy, dx) it replaces is a normal of the right direction and the wrong length —
+    |(-dy, dx)| is 1 only for an axis step. It put a diagonal stone's teeth 2.83px apart against
+    an orthogonal stone's 2.00, and would put a 3:1 stone's at 6.32.
+    """
+    if t == 0:
+        return 0, 0
+    n = (dx * dx + dy * dy) ** 0.5
+    ou = int(round(-dy / n * gap * t))
+    ov = int(round(dx / n * gap * t))
+    if ou == 0 and ov == 0:            # never stack two teeth on one run
+        return (0, 1) if abs(dx) >= abs(dy) else (1, 0)
+    return ou, ov
+
+
 def stone_marks(key, seed, extent, worn=False, wear=0.0, extent_world=None):
     """The dressing on one stone, in STONE-LOCAL pixels: [(u, v, depth_in_rungs), ...].
 
@@ -823,6 +903,8 @@ def stone_marks(key, seed, extent, worn=False, wear=0.0, extent_world=None):
 
     # ONE DIRECTION PER STONE. A mason does not change hands halfway across a flag.
     dx, dy = MARK_DIRS[(st >> 6) % len(MARK_DIRS)]
+    if DIR_CENSUS is not None:
+        DIR_CENSUS.append((dx, dy))
 
     # STROKES COME IN BANDS, because a claw chisel has several teeth and a mason works in passes.
     #
@@ -830,7 +912,6 @@ def stone_marks(key, seed, extent, worn=False, wear=0.0, extent_world=None):
     # which is damage, not dressing. Clustered into parallel runs 2px apart they read as tooling.
     # Each stroke still clears the readable-extent bar on its own (the gate ruled 1px-wide-but-
     # long readable, and 4px blobs absent), so the clustering costs nothing and buys the register.
-    px_, py_ = -dy, dx                      # perpendicular, for the offset between teeth
     # MORE BANDS, NOT MORE TEETH PER BAND. Teeth raise regularity; bands raise coverage
     # while staying ragged. At three bands the delivered contrast sat at 0.148 against a
     # floor of 0.144 — a 3% margin is not a proof of readable amplitude, which is what the
@@ -852,15 +933,15 @@ def stone_marks(key, seed, extent, worn=False, wear=0.0, extent_world=None):
         st = _lcg(st)
         gap = 2 + (st >> 12) % 2            # 2 or 3 px between teeth, not always 2
         for t in range(teeth):
-            ou = u + px_ * t * gap
-            ov = v + py_ * t * gap
+            du, dv = mark_normal(dx, dy, gap, t)
+            ou, ov = u + du, v + dv
             # EVERY TOOTH A DIFFERENT LENGTH. Equal-length teeth on an equal pitch is a barcode:
             # the first clustered version read as tally marks on some stones. A chisel skips and
             # bites unevenly, and a ragged end is the difference between tooling and hatching.
             st = _lcg(st)
             ln = max(MARK_MIN_LEN, length - (st >> 8) % 3)
-            for i in range(ln):
-                out.append((ou + dx * i, ov + dy * i, MARK_DEPTH * keep))
+            for (mu, mv) in mark_run(ou, ov, dx, dy, ln):
+                out.append((mu, mv, MARK_DEPTH * keep))
 
     m = max(0, int(round(((WEAR_PITS if worn else MARK_PITS) + ((st >> 11) % 3)) * keep)))
     for _ in range(m):
