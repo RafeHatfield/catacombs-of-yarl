@@ -72,24 +72,30 @@ uniform float polish_exp = 2.0;
 uniform float polish_gain = 1.0;
 
 void light() {
-	// ⚠⚠ THIS SCALAR IS BROKEN, IT IS A SECOND DEFECT, AND IT IS NOT FIXED IN THIS CHANGE.
+	// THE DELIVERED-LIGHT SCALAR — the fraction of full illumination this fragment actually
+	// receives, and the quantity §13.9 rules on.
 	//
-	// `LIGHT_COLOR.rgb` is the light's TINT, measured constant across the whole lit field (see
-	// above). Its max channel is the tint's red, 1.002, EVERYWHERE the lamp's quad reaches — so
-	// this clamps to exactly 1.0 at every lit fragment and 0.0 outside it, and
-	// `pow(delivered, polish_exp)` has been computing `pow(1.0, 2) = 1.0` since the day it was
-	// written.
+	// IT USED TO BE `max(LIGHT_COLOR.rgb)` AND THAT WAS A SECOND DEFECT, INDEPENDENT OF #174.
+	// LIGHT_COLOR.rgb is the light's TINT and nothing else — measured constant at
+	// (1.002, 0.696, 0.423) across the whole lit field — so its max channel is the Boundary's
+	// saturated red, 1.002, at EVERY lit fragment. `pow(delivered, polish_exp)` was computing
+	// `pow(1.0, 2) = 1.0` from the day it was written, and **Ruling 70's superlinear response
+	// never ran**: the specular was a flat `polish * polish_gain`, attenuated exactly once by
+	// the blend, which is linear in delivered light — arithmetically an albedo change, the one
+	// thing this file's header says would make it a lie. Measured from the other side too: with
+	// the polish live the floor's energy exponent was indistinguishable from the nulled arm
+	// (1.992 against 1.989), and the polish still contributed 11.0 levels AT ENERGY ZERO.
 	//
-	// **The superlinear response Ruling 70 ruled has therefore never run.** The specular below
-	// is a flat `polish * polish_gain`, attenuated exactly ONCE by the blend's LIGHT.a — linear
-	// in delivered light, which is arithmetically an albedo change, which is the thing this
-	// file's own header says would make it a lie.
+	// The attenuation lives in LIGHT_COLOR.a and the energy in LIGHT_ENERGY, so that is what the
+	// scalar is built from. Clamped to [0,1] because it is a FRACTION of full delivery and the
+	// superlinearity is defined on that interval; above the ratified 1.6 the near field is at
+	// full delivery and the exponent stops biting, which is the correct behaviour for a
+	// reflectivity and not a cap bolted on to tame it.
 	//
-	// Left standing here DELIBERATELY. This change connects the lamp and changes nothing else,
-	// so that the connection is proved on its own axis with the specular held fixed. The
-	// specular is the next step's, with its own control and its own before-picture. Do not tidy
-	// this line into the same commit.
-	float delivered = clamp(max(max(LIGHT_COLOR.r, LIGHT_COLOR.g), LIGHT_COLOR.b), 0.0, 1.0);
+	// Two properties this restores, both checked as controls rather than claimed:
+	//   - at energy 0 a polished stone and a rough one are THE SAME STONE (this file's header);
+	//   - the specular's share of delivered value falls off FASTER than the diffuse's (Ruling 70).
+	float delivered = clamp(LIGHT_COLOR.a * LIGHT_ENERGY, 0.0, 1.0);
 
 	// The ordinary diffuse term: what this canvas item would do with no shader at all — and the
 	// LIGHT_ENERGY factor on the RGB is what finally makes that sentence true (#174). The ALPHA
@@ -99,7 +105,7 @@ void light() {
 
 	// The specular term. `polish` is the traffic-keyed reflectivity the engine baked into a
 	// single-channel mask — faces only, never joints or cracks, which are enclosure and do not
-	// take a shine. UNCHANGED BY THIS COMMIT, defect and all.
+	// take a shine.
 	float polish = texture(polish_tex, UV).r;
 	float spec = polish * polish_gain * pow(delivered, polish_exp);
 
