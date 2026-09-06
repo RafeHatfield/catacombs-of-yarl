@@ -266,8 +266,24 @@ This round's own critic, blind, flagged it again with a box:
 > *"A diagonal streak/hatch band runs down-left at ~45° across the lit pool around
 > (430,470)–(560,560). A point lamp cannot produce a directional band. Delete the overlay."*
 
-**That is round 27, round 28 and round 29 — three seats, three decks, three rounds.** So the
-instruments got one more chance, on the seat's own coordinates. The two above are high-pass
+**That is round 28 and round 29 — two seats, two decks.** So the instruments got one more
+chance, on the seat's own coordinates.
+
+> ⚠ **AND IT IS TWO ARTEFACTS, NOT ONE. I CONFLATED THEM AND THE CONFLATION IS CORRECTED HERE.**
+>
+> Round 27's flip 6 — *"vary the 45° hatch; same angle and spacing on a dozen slabs"* — is **not
+> this**. Round 27 located it, in `stone_marks`, and ruled it *"a §8.3 motif trap … and its own
+> logical change"*. **This round's seat reported that one separately and in the same breath:**
+> *"The incised double-tick `//` marks on the stones right of the figure (roughly x 565–620,
+> y 480–580) recur at identical angle and identical length about fifteen times."*
+>
+> | | seats | where it is |
+> |---|---|---|
+> | **repeated `//` incised marks** | round 27 flip 6, round 29 flip 3 | **`stone_marks`. Located, §8.3 motif trap, handed forward twice and never filed.** |
+> | **a diagonal band across the lit pool** | round 28 flip 1, round 29 flip 2 | **unlocated.** Attributed by round 28 to the polish mask; that does not survive its own control. |
+>
+> Everything below is about the **band**. Counting round 27 toward it inflated the seat count and
+> would have put a wrong provenance on the issue filed from this round. The two above are high-pass
 measures and **a broad directional band is LOW frequency: they would miss it by construction.**
 That gap is closed here, on the smoothed field, inside the seat's box:
 
@@ -282,7 +298,7 @@ levels, sd 31.28), so this is not a null for want of signal.
 
 > ### ⚠ AND THE HONEST READING OF THAT IS NOT "THE SEATS ARE WRONG". §13.10.
 >
-> **Three seats have reported a ~45° feature and six instruments across two rounds have failed to
+> **Two seats have reported the band and six instruments across two rounds have failed to
 > find it** — round 28's lag autocorrelation and structure tensor, and this round's high-pass
 > residual, flip rate, and two orientation histograms. §13.10 is explicit about which side that
 > leaves carrying the burden: *"an instrument that says a seat did not see what it says it saw is
@@ -301,7 +317,7 @@ levels, sd 31.28), so this is not a null for want of signal.
 exposed; the connection exposed nothing, and the one candidate the brief named is excluded by
 control. Chasing the unlocated artefact here would have been re-authoring the tier-one floor
 inside a round whose refusals forbid bundling — and on a premise measurement had already killed.
-**Filed as the successor, unattributed, with a box and three seat quotes to start from.**
+**Filed as the successor, unattributed, with a box and the two seat quotes to start from.**
 
 **The delivered palette is clean and was never the issue.** `measure_delivered_palette.py`:
 albedo 31 delivered against 33 authored, **0 off-palette**, control binds at 634 blended against
@@ -445,15 +461,18 @@ is a ratified value that can silently drift. The current §6.2.1 values are then
    the re-scoping's *dark-by-design* now extends inward — and it is **Rafe's, at the gate, not
    an instrument's.**
 
-3. **THE ~45° FEATURE: THREE SEATS, SIX INSTRUMENTS, NO LOCATION — and §13.10 says the
-   instruments are the ones short.** Rounds 27, 28 and 29 have each had a blind seat report it;
-   this round's gave a box, (430,470)–(560,560). Round 28's attribution to the polish mask **does
+3. **THE DIAGONAL BAND: TWO SEATS, SIX INSTRUMENTS, NO LOCATION — and §13.10 says the
+   instruments are the ones short.** Rounds 28 and 29 have each had a blind seat report it;
+   this round's gave a box, (430,470)–(560,560). **Round 27's flip 6 is a DIFFERENT artefact** —
+   the repeated `//` marks in `stone_marks`, located, ruled a §8.3 motif trap, reported again by
+   this round's seat as its own flip, and **never filed in two rounds of being handed forward.** Round 28's attribution to the polish mask **does
    not survive its own control** — nulled, the relative high-frequency residual is
    0.0776 / 0.0766 / 0.0780 / 0.0781 and the orientation statistics inside the seat's box are
    unchanged (45° bins 0.067 polish, 0.052 diffuse, against 0.083 uniform). But six failures to
    find a thing are not a finding that it is absent, and §13.10 puts the heavier burden on the
    party making the accusation. Proposed: round 28's §7 attribution is annotated as unproven, the
-   item is filed **unattributed** with the box and the three quotes, and it does not ride on #174.
+   item is filed **unattributed** with the box and the two quotes, and it does not ride on #174.
+   The `stone_marks` motif trap is a separate item and is not folded into it.
    **Not applied to round 28's document.**
 
 4. **Bible §5.6 says nine rungs; the code and the manifest ship eleven.** Still true, still not
