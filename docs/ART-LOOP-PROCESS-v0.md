@@ -501,6 +501,20 @@ same:
   in the code. First occupant: round 28's combined build, blocked on **#174**, which its own
   null-polish control found. `docs/ROUND-28-COMBINED-BUILD.md`.
 
+  > **UN-PARKED 2026-09-06.** #174 landed (the lamp is one arithmetic) and Ruling 56 re-ratified
+  > on the corrected lamp, which were the two conditions the park named. **The resumer did re-do
+  > rather than re-read, and the park was right to demand it:** every cross-plane figure was
+  > re-measured twice — once when the arithmetic was fixed, and again when the rig moved under it
+  > four hours later. The second re-measurement caught figures that were correct when written that
+  > same day.
+  >
+  > **What the state was worth, recorded because the next occupant will want to know:** the park
+  > cost nothing in rework and saved a gate. Round 28's composed scene, station, carve list and
+  > capture scripts were all still valid; only the *numbers* were void. A park that had been
+  > called "finalised" would have shipped those numbers into §6.5.
+
+
+
 **Refusals are declared before the run, not after.** Each seat writes *what this seat refuses,
 written before it could be tempted*, and the promotion rule is declared before ranking.
 
