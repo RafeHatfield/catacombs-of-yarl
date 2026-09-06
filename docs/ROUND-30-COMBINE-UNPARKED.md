@@ -131,6 +131,92 @@ firing later, is the same error in slower motion.
 
 ---
 
+## 3b. The critic round — FAIL, and the plant outranked the build
+
+**FAIL**, `SHIP: NONE`, rank **2 of 3**, score **0.50** against a best of 1.00. Plant
+`cement-cap.png` **CAUGHT**, so the round is readable. Picture moved mean 12.147 / worst 56
+luminance levels from the previous readable round, so the guard's premise was genuinely false and
+round 3 ran — the #182 mechanism working on its first live use.
+
+> ⚠ **THE PLANT OUTRANKED THE BUILD.** A blind seat put a frame Rafe personally culled — *"caps
+> are still grey and read as cement, not stone"* — above this one. That is a statement about the
+> build, not about the judge. **`approved_capture` is not seeded and the room walk does not happen
+> on this build.**
+
+### The headline flip is about the rig that was ratified this morning, and it measures true
+
+> *"The lit floor is blown out. Excluding UI and sprite, 12,159 pixels sit above luma 190 … the
+> floor around the figure reaches ≈(240,235,215)."*
+
+| frame | floor px > luma 190 | share | max |
+|---|---:|---:|---:|
+| round 29 — old rig (r 5.0 / a 0.70) | 7,168 | 3.68% | 247.9 |
+| round 30 — **re-ratified** (r 6.0 / a 1.50) | **10,408** | **5.35%** | 249.2 |
+
+*(measured on floor surface with the player's own cell excluded; the seat's 12,159 uses a looser
+exclusion and is the same finding.)* **The re-ratification added 45% more near-blown floor.**
+
+### And flip 2 is Rafe's own walk finding, arriving from the opposite side
+
+> *"the sprite stops reading. The shield's cream face and the sword blade's interior land at the
+> same value as the floor beside them, so only the dark outline holds the figure together."*
+
+| | sprite cell p95 | floor beside it p95 | separation |
+|---|---:|---:|---:|
+| old rig | 248.1 | 241.3 | **+6.7 levels** |
+| re-ratified | 249.2 | 248.2 | **+1.0 levels** |
+
+§13.8 puts the *ambiguous* point at 8 levels. **At +1.0 the separation is not faint, it is
+absent** — which is exactly what the walk saw and routed as *"Sasha reads washed out."*
+
+> **THE TWO READINGS AGREE ON THE FACT AND DISAGREE ON WHICH SIDE MOVES, AND THAT IS A RULING.**
+>
+> - **The walk (#183):** the hero takes *less* of the lamp's top end — *warmest never brightest*.
+>   That restores separation by putting the figure **below** the lit ground.
+> - **The seat (flip 1–2):** pull the floor's peak down until the brightest stone is well clear of
+>   the sprite. That restores it by putting the figure **above** the ground.
+>
+> Both work arithmetically. They produce **opposite pictures**, and the choice is a register
+> decision, not a measurement — §13.2 gives it to the eye that walked it, and §13.4.1 is explicit
+> that a seat is a proxy for the gate rather than a vote against it. **#183 as routed stands.
+> Nothing here re-opens it.**
+>
+> ⚠ **BUT FLIPS 1 AND 3 SURVIVE #183, AND THIS IS THE PART THAT NEEDS RAFE.** A darker hero does
+> not un-blow the floor. *"At x 430–700, y 470–560 there is a flat pale block roughly 110×28 px
+> with no interior texture"* — **the blown region is losing its joints**, which is a floor-versus-rig
+> question and not a hero one. The re-ratified rig is four hours old and this is the first blind
+> read of it.
+
+### The nine flips, triaged
+
+| # | flip | ground |
+|---|---|---|
+| 1 | the lit floor is blown out | **REAL, measured above.** Consequence of the re-ratification. Survives #183. **Rafe's** |
+| 2 | the sprite stops reading | **REAL, +1.0 levels.** Same observation as the walk's own; routed **#183**, direction is Rafe's |
+| 3 | restore joints in the blown region | **REAL, and it is flip 1's consequence.** Not separately actionable until 1 is ruled |
+| 4 | unify detail scale in that region | floor material — the mottle/erosion layers, **SUPERSEDED-BY-GATE** (LOOP-PROCESS §4.3) |
+| 5 | free-floating dark bars at ~(505,505) | unattributed. Candidate for **#185**'s bug, not confirmed — not folded in without a measurement |
+| 6 | block edges soft/anti-aliased vs a hard sprite | same layer as 4; `default_texture_filter=0` is nearest, so this is authored softness, not a filter |
+| 7 | strip the mottle off the wall tops; it crosses stone divisions | **wall lane**, and it is §8.3's motif/stain shape — a stain that ignores the joints beneath it |
+| 8 | give the wall top a value separation from the lit floor | **THIS IS §6.5 ROW 1**, and §1 above measures it moving *further* out of reach. **Rafe's, at a gate** |
+| 9 | grey axis-aligned rectangle in the black | **the declared cost of `void_ring 1`.** Measured near-black (14–18, sd 2.2), not #178's flat (77,77,77). A ring classifies at a cell boundary and puts a luminance step there — named in `capture_combined.sh`'s own comment and owed to §12.1a's outstanding occluder |
+
+### Why the line stops here
+
+**No guard fired** — rank fell but one round without a new best is not a stall, and the picture
+moved. This is **§1.1.4**, the same shape as round 28's stop: **after triage there is no flip this
+round is permitted to apply.**
+
+- 1, 2, 3 turn on a ruling about which side moves, and the rig is four hours ratified
+- 8 is §6.5's value law, explicitly reserved
+- 4 and 6 are SUPERSEDED-BY-GATE
+- 7 is the wall lane, 9 is §12.1a's occluder, 5 is unattributed
+
+Grinding a round against those would be re-opening a gate ruling on a seat's say-so, which
+§13.4.1 forbids by name.
+
+---
+
 ## 4. What this round does NOT rule
 
 - **§6.5's value law.** Row 1 (*wall top lighter than the floor*) is further out of reach, not
@@ -138,6 +224,8 @@ firing later, is the same error in slower motion.
 - **§6.5's void banner.** Round 29 proposed narrowing it on proof that the range-probe scenes never
   carried the shader. Still **proposed, not applied.**
 - **Round 28's flip-1 attribution.** Still unannotated in its own document.
+- **Which side moves — the hero or the floor.** Flips 1–2 and walk finding #183 are the same
+  observation from opposite directions. **Not ruled here.**
 - **The ~45° band (#179).** Untouched; two seats, no location, and not the polish mask.
 
 ---
