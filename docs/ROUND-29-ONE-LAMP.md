@@ -464,6 +464,33 @@ points come back dark, and no rung was refused).
 | ambient 0.5 | 150.24 | 55.11 | 6.97 | 17.05 | — |
 | ambient 1.0 | 155.55 | 60.57 | 12.29 | 22.28 | — |
 
+### The white-point rung — where the seat's ~232 lands, and what it costs at range
+
+Round 29's seat: *"Pull the light curve's white point down so no floor pixel exceeds ~232."*
+Measured on the **floor surface** — all cells, the player's own cell out, **the eight neighbours
+kept**, because excluding that ring is the mistake §3 had to correct:
+
+| energy | max floor | px ≥232 | ≤2 tiles | 2–4 | >4 | worst 2–4 cell |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1.00 | 207.3 | **0** | 103.20 | 37.09 | 8.46 | 14.68 |
+| **1.25** | **232.2** | **24** | **128.31** | **45.40** | **8.69** | **16.53** |
+| 1.30 | 236.0 | 52 | 131.90 | 47.11 | 8.73 | 16.87 |
+| 1.35 | 239.8 | 52 | 135.31 | 48.82 | 8.77 | 17.28 |
+| 1.45 | 246.6 | 406 | 141.64 | 52.28 | 8.86 | 18.01 |
+| **1.60 — Ruling 56** | **247.9** | **1290** | **150.48** | **57.33** | **9.00** | **19.14** |
+| 2.00 | 249.4 | 4028 | 171.76 | 69.62 | 9.35 | 22.09 |
+
+**Energy 1.25 is where the request lands** — max floor 232.2. **The trade is stated rather than
+recommended:** it costs 15% of the standing-case value and **21% of the 2–4 band**, and the worst
+mid-band cell falls 19.14 → 16.53. §6.2.1's whole subject is legibility at gameplay distance
+*across the radius*, so the white point and the mid band pull against each other and the walk is
+where that gets decided.
+
+⚠ **And the seat asked for a CURVE, not a knob** — *"let the falloff reach that ceiling
+asymptotically instead of saturating."* No such knob exists; the rig offers radius, falloff,
+ambient and energy. Lowering energy dims the whole field rather than shaping its top end. If the
+walk wants the ceiling without the mid-band cost, that is a new lever and a ruling, not a rung.
+
 ⚠ **THESE STILLS GATE NOTHING** (§13.1, §6.2.1). No rig value is ratified from a sheet of frames;
 §6.2.1 exists precisely because the sighted round read its captures at 2× on a desktop. **The
 ratification is Rafe's eye, on the reference device, at gameplay distance, across the lit
@@ -524,19 +551,26 @@ is a ratified value that can silently drift. The current §6.2.1 values are then
    `YARL_SKIP_CRITIC=1`, which installs a build stamped **SKIPPED-REVIEW**, and CLAUDE.md is
    explicit that *nothing walked on one is a gate verdict*.
 
-   **That is the bind, and it is Rafe's to cut, because it decides what Ruling 56 is worth.** The
-   walk is a RIG ratification under §6.2.1, not an asset acceptance — but Ruling 56 is itself a
-   gate ruling, so a ratification taken on a SKIPPED-REVIEW build may not be a ratification at
-   all. **Not decided here.** The three options, stated without a recommendation because the
-   ruling is not mine:
+   **RULED (Rafe, 2026-09-05) — BOTH CLEARED.**
 
-   - rule that a rig-ratification walk may run on a SKIPPED-REVIEW build, since the rig is not
-     the artefact being judged;
-   - clear enough of the seat's flip list for a PASS first — but most of it is floor-material
-     work (blob-noise, unjointed corridor, anti-aliased cracks, the repeated hatch decal) that is
-     a different lane, and the STOP forbids this round grinding on it;
-   - walk the ladder on the captured frames and defer the device pass — which §6.2.1 exists
-     specifically to refuse.
+   **(a) is procedural and cleared by ruling, not by a lane fix.** `PARK-CLEARED.json` carries it,
+   per SKILL.md §5's law that a guard clears by an **added** artifact and never by deleting
+   evidence. ⚠ **Known gap, reported not closed:** nothing reads that file — `frame_critic.py`'s
+   `history()` loads only `history/*.json` and `guards()` consults no marker. The convention is
+   documented and unimplemented; building the consumer is a change to a ruled mechanism and is not
+   this round's.
+
+   **(b) the walk runs on the SKIPPED-REVIEW build**, under a new clause: **LOOP-PROCESS §1.2.2a —
+   a SKIPPED-REVIEW build may be walked for a RIG or INSTRUMENT gate, never for a SURFACE gate.**
+   *The rig ladder is a lighting fixture, not the artefact under judgment;* the frame critic ranks
+   pictures against a bar and cannot answer *what values do the knobs want*, so an art review is
+   the wrong review for a lighting decision, and the stamp is honest — the build has no art
+   verdict and the walk claims none.
+
+   > **HARD GUARD.** The frame walked for the rig is explicitly **NOT `approved_capture`**. The
+   > walk ratifies **lamp values**; it does not bless the picture. When the combine un-parks on the
+   > re-ratified lamp, **that recomposed build takes the full frame-critic gate and its PASS seeds
+   > `approved_capture`.** The surface gate is deferred, never waived.
 
    ⚠ **The seat's flip 1 is a rig request and belongs to this walk either way:** *"Pull the light
    curve's white point down so no floor pixel exceeds ~232."*
