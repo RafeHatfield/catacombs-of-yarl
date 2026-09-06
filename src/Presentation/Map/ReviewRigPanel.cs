@@ -38,7 +38,7 @@ namespace CatacombsOfYarl.Presentation.Map;
 public sealed partial class ReviewRigPanel : VBoxContainer
 {
     private readonly ReviewLighting _rig;
-    private Label? _radius, _falloff, _ambient, _walk;
+    private Label? _energy, _radius, _falloff, _ambient, _walk;
     private VBoxContainer? _body;
     private int _walkNumber;
 
@@ -75,6 +75,11 @@ public sealed partial class ReviewRigPanel : VBoxContainer
             toggle.Text = _body.Visible ? "RIG ▾" : "RIG ▸";
         };
 
+        // ENERGY FIRST, because it is the quantity #174 moved and the one Ruling 56 re-opens.
+        // A rig-energy walk that cannot reach it ratifies nothing, which is what happened on
+        // 2026-09-05 when a build went to the handset with this row missing.
+        _energy  = AddRow(_body, "energy", ReviewLighting.EnergyStep,
+                          d => _rig.Energy += d, () => $"{_rig.Energy:0.00}");
         _radius  = AddRow(_body, "radius", ReviewLighting.RadiusStep,
                           d => _rig.Radius += d, () => $"{_rig.Radius:0.0} tiles");
         _falloff = AddRow(_body, "falloff", ReviewLighting.FalloffStep,

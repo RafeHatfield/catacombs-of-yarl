@@ -30,8 +30,70 @@
     "RULED FOR THE BOUNDARY AND NOTHING ELSE. Every other region derives its own at its own",
     "gate; copying these into one would be conformance to a neighbouring region's answer."
   ],
-  "scene": "res://src/Presentation/assets/tier0_harness/scenes/corridor_junction.json",
-  "themeConfig": "res://src/Presentation/assets/tier0_harness/tile_themes_stub.yaml",
+  "_walk": [
+    "WHICH WALK THIS BUILD IS FOR, and it is asserted before the build may install.",
+    "",
+    "Added 2026-09-05 after a build went to the handset for a rig-energy walk with NO ENERGY",
+    "KNOB and the tier-0 STUB THEME under it - a magenta mock floor. Neither is visible to the",
+    "frame critic, which judges the rendered frame and cannot see panel or scene wiring, so the",
+    "critic passed correctly and the build was still unwalkable. That is a MECHANICAL gate and",
+    "it lives in tools/tier0_harness/walk_precheck.py.",
+    "",
+    "  rig-energy   the §6.2.1 / Ruling 56 rig pass. Requires the energy control AND the real",
+    "               floor family rendered - a rig walk that cannot reach the rig value, or that",
+    "               shows the wrong surface, ratifies nothing.",
+    "  surface      the tier-one surface gate. Requires both families composed and no mock.",
+    "  none         not offered for a walk. Builds, does not assert.",
+    "",
+    "A walk that names requirements it does not carry REFUSES TO INSTALL and says which."
+  ],
+  "walk": "rig-energy",
+
+  "_scene": [
+    "THE COMBINED ROOM, not the tier-0 corridor junction, and this is the second half of the",
+    "2026-09-05 defect. The corridor junction is a programmer-art scene lit through the STUB",
+    "THEME: it draws the magenta placeholder where the floor family should be, which on the",
+    "handset reads as a floor rendered in mock-wall colour. Every desktop frame the walk is",
+    "compared against is tier1_combined_review.json with the real families laid.",
+    "",
+    "A walk build showing a different scene from the round it is meant to ratify is the wrong",
+    "picture - the same reason TIER0_SCENE exists and the same reason its substitution is echoed."
+  ],
+  "scene": "res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json",
+  "themeConfig": "res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml",
+
+  "_families": [
+    "EVERY ONE OF THESE IS LOAD-BEARING and the failure modes differ - the same list the desktop",
+    "capture scripts carry, for the same reasons, because the device build must show the same",
+    "room. Omit one and the scene does not fail: it draws something plausible and wrong.",
+    "",
+    "  ashlarFloor    omit and the floor is the MAGENTA placeholder",
+    "  floorOverlays  omit and §12.1's plane-boundary occlusion silently disappears",
+    "  boundaryWall   omit and the walls are the tier-0 MAGENTA MOCKS",
+    "  wallBindings   omit and the walls are bare - §7.1 answered with nothing, silently",
+    "  wallCap        omit and the walls have no top surface",
+    "",
+    "The engine reports which branch it took for each on every boot, so a device build missing",
+    "one cannot be mistaken for a scene that simply has none (LOOP-PROCESS §4.2)."
+  ],
+  "ashlarFloor": "res://src/Presentation/assets/tier1_ashlar/MANIFEST.json",
+  "boundaryWall": "res://src/Presentation/assets/tier1_walls/MANIFEST.json",
+  "wallBindings": "res://src/Presentation/assets/tier1_bindings/MANIFEST.json",
+  "wallCap": "res://src/Presentation/assets/tier1_cap/MANIFEST.json",
+
+  "_voidRing": [
+    "THE FLAT-DARK FALLBACK, matching every desktop capture of this room.",
+    "",
+    "§12.1a RULED the void dark by OCCLUSION and the wall manifest carries void_ring 0 for it,",
+    "but that ruling's implementation is recorded-outstanding in the clause itself: at 0 the lamp",
+    "lights 192 cells of solid rock and the room has no outside. Every capture the walk compares",
+    "against therefore runs --void-ring 1 and says so in its log.",
+    "",
+    "Set here rather than left null because the handset has no command line, and a device room",
+    "with no outside is not obviously wrong in the hand - which makes it worse than magenta, not",
+    "better. The departure from a ruled manifest value is declared, and the engine echoes it."
+  ],
+  "voidRing": 1,
   "light": {
     "ambient": "1a1a22",
     "ambientLevel": 0.70,
@@ -54,7 +116,7 @@
     "The engine reports which branch it took on every boot, so a device build that silently drew",
     "no incident at all cannot be mistaken for a floor that simply has none (LOOP-PROCESS §4.2)."
   ],
-  "floorOverlays": null,
+  "floorOverlays": "res://src/Presentation/assets/tier1_floors/MANIFEST.json",
 
   "_grid": [
     "Tile size and integer scale, mirroring --tile-size / --tile-scale. Present for the same",

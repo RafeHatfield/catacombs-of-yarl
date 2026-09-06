@@ -2797,7 +2797,11 @@ public partial class Main : Node
             // A CAPTURE-TIME DEPARTURE FROM A RULED MANIFEST VALUE, declared on the command line
             // so it lands in the log of every capture it produced. See Tier1BoundaryWall.Apply.
             string? rArg = ReadStringArg("--void-ring");
-            int? voidRing = rArg != null && int.TryParse(rArg, out int rr) ? rr : null;
+            // The marker is the device's command line: an iOS app has none, and without this the
+            // handset ran the manifest's ruled 0 while every capture it is walked against was
+            // taken at 1. Same precedence as every other flag here — CLI first, marker second.
+            int? voidRing = rArg != null && int.TryParse(rArg, out int rr) ? rr
+                          : marker?.VoidRing;
             _wallManifest = wallManifest;
             _voidChoice = voidChoice;
             string? bindings = ReadStringArg("--wall-bindings") ?? marker?.WallBindings;

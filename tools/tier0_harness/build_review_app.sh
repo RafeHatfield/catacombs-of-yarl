@@ -111,6 +111,33 @@ with open(path, "w") as f:
 PY
   echo "== scene override: $TIER0_SCENE"
 fi
+
+# ── THE WALK GATE ─────────────────────────────────────────────────────────────────────────────
+#
+# RULED (Rafe, 2026-09-05). A build offered for a NAMED WALK asserts that walk's requirements
+# before it may install, and it is checked on THE MARKER THAT ACTUALLY SHIPS — after the theme and
+# scene overrides above, because those are precisely what can make a build unwalkable.
+#
+# The occasion: a build reached the handset for the #174 rig-energy walk with NO ENERGY KNOB in
+# the RIG panel and the tier-0 stub theme under it, so the floor rendered magenta. A rig walk that
+# cannot reach the rig value, and shows the wrong surface, ratifies nothing.
+#
+# ⚠ IT IS NOT BYPASSED BY YARL_SKIP_CRITIC, and that is deliberate. That override waives the ART
+# VERDICT; this asks whether the artefact can perform the walk at all. §1.2.2a permits walking a
+# SKIPPED-REVIEW build for a rig gate — which makes this check MORE load-bearing, not less, since
+# it is then the only mechanical thing standing between an unwalkable build and a ratification.
+#
+# ⚠ AND IT IS NOT A CRITIC CHANGE. The frame critic judges the delivered frame and has no view of
+# panel wiring or marker contents; it passed correctly on the build that shipped. Folding this
+# into it would weaken it to catch something it structurally cannot see.
+if [ "${1:-}" != "--no-install" ] && [ "${TIER0_MARKER_ONLY:-}" != "1" ]; then
+  if ! python3 "$ROOT/tools/tier0_harness/walk_precheck.py" "$MARKER"; then
+    echo
+    echo "REFUSING TO BUILD FOR INSTALL — see the walk requirements above."
+    echo "Run with --no-install to compile without putting it on the handset."
+    exit 2
+  fi
+fi
 # TIER1_OVERLAYS points the review build at a floor family's MANIFEST.json — ART-BIBLE-v0 §8.3's
 # incident overlays and §8.2.1's trodden channel. Same reasoning and same echo as the two
 # overrides above: an overlay is NOT a tile role (a cell may carry none, one or two of them,

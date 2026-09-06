@@ -87,6 +87,22 @@ public sealed class ReviewLighting
     // review panel offers, wide enough that Rafe's pass is not fenced in by a builder's guess
     // at the answer. §6.2.1 gives the pass to the human; this only decides how far the dial goes.
     public const float MinRadius = 2.0f,  MaxRadius = 14.0f, RadiusStep = 0.5f;
+    // ENERGY, ADDED 2026-09-05 — and its absence blocked the walk it was needed for.
+    //
+    // #174 re-opened Ruling 56 because the floor's delivered value moved by 1.44x, and ENERGY is
+    // the quantity that moved. The panel offered radius, falloff and ambient and not this one, so
+    // a build was put on the handset for a rig-energy walk that could not reach the rig value.
+    // **A walk cannot set what it cannot touch**, and the round's blind critic could not have
+    // caught it: a frame critic judges the rendered frame and sees no panel wiring at all.
+    //
+    // Step 0.05 rather than the coarser steps above, because the interesting interval is narrow:
+    // Ruling 56's 1.6 delivers a floor maximum of 247.9 and round 29's seat asked for no floor
+    // pixel above ~232, which lands at 1.25 — seven steps, walkable without overshooting it.
+    //
+    // MIN IS 0.0 ON PURPOSE. harness_config.yaml keeps energy 0.0 as the "lighting is live"
+    // positive control, and a control reachable from the panel is a control that can be taken on
+    // the device rather than only in a capture.
+    public const float MinEnergy = 0.0f,  MaxEnergy = 4.0f,  EnergyStep = 0.05f;
     public const float MinFalloff = 0.30f, MaxFalloff = 4.0f, FalloffStep = 0.1f;
     public const float MinAmbient = 0.0f,  MaxAmbient = 4.0f, AmbientStep = 0.1f;
 
@@ -205,7 +221,7 @@ public sealed class ReviewLighting
                                       tileY * _tileH + _tileH / 2f);
     }
 
-    // --- the three §6.2.1 knobs ---------------------------------------------------------------
+    // --- the §6.2.1 knobs ---------------------------------------------------------------
 
     public float Radius
     {
@@ -224,6 +240,24 @@ public sealed class ReviewLighting
         {
             _p = _p with { Falloff = Mathf.Clamp(value, MinFalloff, MaxFalloff) };
             RebuildTexture();
+        }
+    }
+
+    /// <summary>
+    /// The lamp's energy — the §6.2 rig value #174 moved and Ruling 56 re-opened.
+    ///
+    /// Unlike the three below it this changes no texture: PointLight2D applies energy per frame,
+    /// and the floor's ShaderMaterial now reads LIGHT_ENERGY (#174) so both planes answer it by
+    /// the same arithmetic. Before that fix this setter would have moved the walls and left the
+    /// floor where it was, which is exactly the defect and exactly why the knob is worth having.
+    /// </summary>
+    public float Energy
+    {
+        get => _p.Energy;
+        set
+        {
+            _p = _p with { Energy = Mathf.Clamp(value, MinEnergy, MaxEnergy) };
+            if (_light != null) _light.Energy = _p.Energy;
         }
     }
 
