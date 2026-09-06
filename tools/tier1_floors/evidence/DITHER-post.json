@@ -1,0 +1,14 @@
+{
+  "tag": "post",
+  "scene": "src/Presentation/assets/tier0_harness/scenes/tier1_combined_probe.json",
+  "on": "tools/tier1_floors/evidence/s2_r16g1_e1.6.png,tools/tier1_floors/evidence/s2_r16g1_e1.6.log",
+  "off": "tools/tier1_floors/evidence/s2_r16g0_e1.6.png,tools/tier1_floors/evidence/s2_r16g0_e1.6.log",
+  "max_tiles": 4.0,
+  "pixels": 64896,
+  "flip_rate": 0.0986833836098542,
+  "diffuse_flip_rate": 0.25864127702363,
+  "amplitude_mean": 7.698523255670612,
+  "amplitude_p95": 51.9484,
+  "amplitude_max": 83.63320000000002,
+  "distinct_levels": 85
+}

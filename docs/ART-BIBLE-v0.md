@@ -810,6 +810,40 @@ flatten again.
 > composed-and-holding (PR #177) and resumes for the walk once the arithmetic is one and Ruling
 > 56 is re-ratified. Evidence: `docs/ROUND-28-COMBINED-BUILD.md` §5.
 
+> #### ⚠ #174 IS FIXED IN CODE, AND THE EXPRESSION THIS CLAUSE PRESCRIBES IS ITSELF WRONG.
+> **RECORDED (round 29, 2026-09-05). A CORRECTION OF FACT, NOT A RULING** — no value law moves
+> here and Ruling 56's re-ratification is still owed.
+>
+> `LIGHT = diffuse + LIGHT_COLOR.rgb · polish · pow(delivered, exp)` above, and #174's own exit
+> line *"`* LIGHT_ENERGY` restored"*, both read as though `COLOR * LIGHT_COLOR * LIGHT_ENERGY`
+> were the fix. **It is not. Written that way it measures a QUADRATIC energy response on a floor
+> whose walls are linear** — 3.915 per doubling against the wall's 2.018. `LIGHT_COLOR` is two
+> quantities and this clause names only one of them:
+>
+> | | what it carries | measured |
+> |---|---|---|
+> | `LIGHT_COLOR.rgb` | the light's TINT alone | constant `(1.002, 0.696, 0.423)` at 2.2, 3.2 and 4.5 tiles alike; zero outside the light's quad |
+> | `LIGHT_COLOR.a` | the radial falloff | 0.574 at the cell measured |
+> | `LIGHT_ENERGY` | the energy, exactly | 0.400 at energy 0.4, 0.815 at 0.8 |
+> | the blend | **the engine multiplies `LIGHT.rgb` by `LIGHT.a`** | a vec4 scaled whole is scaled twice |
+>
+> **Energy goes on the RGB only.** Eight one-line shader probes, banked once so nobody buys them
+> a third time: `tools/tier1_floors/SHADER-SEMANTICS.md`.
+>
+> **AND THERE WAS A SECOND DEFECT, which this clause does not know about.** The shader's
+> `delivered` scalar was `max(LIGHT_COLOR.rgb)` — the tint's saturated red, **1.0 at every lit
+> fragment** — so `pow(delivered, 2)` computed 1.0 from the day it was written and **Ruling 70's
+> superlinear response has never run.** The polish was a flat `polish × gain` attenuated once:
+> linear in delivered light, which is the baked value-lift §8.2.1 bans. Now built from
+> `LIGHT_COLOR.a * LIGHT_ENERGY`, with two controls (`docs/ROUND-29-ONE-LAMP.md` §3).
+>
+> **#174's clipping premise does not survive either.** *"the corrected floor clips to 255 near the
+> lamp at 1.6"* was derived from the naive fix's 2.56×. The correct fix is 1.6× and floor clipping
+> at the ratified rig is **0.07% of floor pixels** (a first pass read 3.81%; that was the player
+> sprite). **Ruling 56 re-opens regardless** — the floor's delivered value at the standing case
+> moved 105.74 → 152.34, ×1.44, and the rig was walked against the old one. It does not re-open
+> for the clipping.
+
 #### 6.2.1 TIER-ONE PRECONDITION — the rig is tuned for readability BEFORE any asset is judged through it. RULED (Rafe, 2026-08-27, at the device gate).
 
 > **The §6.2 rig values — radius, falloff, ambient — get a readability-tuning pass before any
@@ -901,6 +935,24 @@ game. Tune the cheap thing.**
 > 2026-08-27 gate and are in nothing shipping, so no live asset is invalidated — but the number is
 > not to be picked up and reused. The tier-one FLOOR family derives no ratio against the rig at
 > all (its values come from measured donor material), so it needs no re-derivation.
+>
+> ### ⚠ RULING 56 IS RE-OPENED BY #174 — RECORDED (round 29, 2026-09-05). NOT RE-RATIFIED.
+>
+> Every knob above was walked against **a floor lit at energy 1.0 while the walls beside it ran
+> at this table's 1.6**, because `tier1_polish.gdshader` discarded `LIGHT_ENERGY`. The floor's
+> delivered value at the standing case has since moved **105.74 → 152.34 (×1.44)**. The rig was
+> tuned for readability against behaviour that no longer exists, which is exactly the coupling
+> §6.2.1 was written to prevent, running in the other direction.
+>
+> The ladder is built and waiting: `tools/tier1_floors/capture_rig_ladder.sh`, ten one-knob rungs
+> bracketing this table on the corrected lamp, with delivered floor luminance by range and the
+> worst cell in each band (`docs/ROUND-29-ONE-LAMP.md` §7). **Those stills gate nothing** — §13.1
+> and this clause's own history both say so. The ratification is Rafe's eye, on the reference
+> device, at gameplay distance, across the lit radius.
+>
+> **When new values are ruled they are written back here and into `harness_config.yaml` as
+> REQUIRED FLAGS**, and the table above is annotated *superseded-by-re-ratification* with the
+> date. Until then this table stands and every capture carries it.
 
 This is the first measured instance of art and rig being coupled on this project. It will not be
 the last, and the reason to write it down here rather than in the recipe is that **§6.2 is where
@@ -1179,6 +1231,31 @@ and a parameter row is therefore not evidence. **Probe total: 174 generations.**
 > What is void is every number offered in evidence for it.
 >
 > #174 is the gate for the tier-one surface. `docs/ROUND-28-COMBINED-BUILD.md` §5.
+
+> ⚠ **THE BANNER IS CHALLENGED ON EVIDENCE AND IS NOT LIFTED HERE. Awaiting Rafe (round 29,
+> 2026-09-05).**
+>
+> The banner voids *"the re-scoping's own range profile (0.87 / 0.67 / 0.48 / 0.30), the k_top
+> cannot reach 1.0 argument, and the 2:1 plane separation."* **Those three were never measured
+> across the defect.** `range_profile.py` runs on `wall_range_a/b.json` through
+> `tile_themes_probe.yaml` — flat-albedo photometric probes captured with **no `--ashlar-floor`
+> and no `--floor-overlays`**, so their floor is a plain theme sprite carrying **no
+> `ShaderMaterial` at all** and it ran the default light pass, with the energy, the whole time.
+>
+> Re-captured on the corrected lamp: **all six probe PNGs are byte-identical to the committed
+> pre-fix evidence.** Only the worktree path and the timestamps moved in the logs. Recomputed
+> k_top: **0.8686 / 0.6696 / 0.4799 / 0.2995**.
+>
+> **PROPOSED, not applied:** the banner narrows to figures measured on the COMPOSED scene with
+> the real ashlar floor — round 28 §5's table, and PR #151's status-trail measurements if those
+> used it. Round 28 §5's table IS re-taken, on one lamp, in `docs/ROUND-29-ONE-LAMP.md` §6.
+>
+> ⚠ **AND ONE FIGURE MOVED IN THE DIRECTION THIS CLAUSE CARES ABOUT.** On the corrected lamp the
+> floor gained 1.44× and the cap gained nothing, so `L(cap, floor)` at the standing case went
+> **50.22 → 72.56 levels, sign negative — the cap further BELOW the floor.** Row 1 asks for the
+> wall top to be *lighter* than the floor. Whether row 1 is reachable at the standing case on
+> the corrected lamp, or whether the re-scoping's *dark-by-design* now extends inward, **is a
+> value law and it is Rafe's at the gate.**
 
 > **RE-SCOPED — RULED (Rafe, 2026-08-29, at the first gate with real walls in the scene).
 > THE STACK IS A STANDING-DISTANCE LAW.**

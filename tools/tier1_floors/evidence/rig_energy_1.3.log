@@ -1,4 +1,4 @@
-/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/one-lamp --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_walls/evidence/range_a_a051.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier1_walls_probe/scenes/wall_range_a.json --tile-theme-config res://src/Presentation/assets/tier1_walls_probe/tile_themes_probe.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7
+/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/one-lamp --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/rig_energy_1.3.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.3 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json
 
 Godot Engine v4.7.stable.mono.official.5b4e0cb0f - https://godotengine.org
 Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
@@ -6,7 +6,7 @@ Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
 Catacombs of YARL — loading...
 [DIAG] Logging to: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag.log
 [DIAG] Structured log: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag_structured.jsonl
-[DIAG 00000 F0 T0.564] === Session started ===
+[DIAG 00000 F0 T0.494] === Session started ===
 [Main] Persistence loaded — 6 runs ever.
 [Main] Loading tileset: 16bit_fantasy
 [Main] Tileset loaded: Oryx 16-Bit Fantasy (48px, 2 frames)
@@ -112,119 +112,273 @@ empt
 [ReadGodotResource] res://config/under_warden/cause_display_names.yaml: 1936 chars, starts with: # Bureaucratic display phrases for engine cause-of-death strings.
 # Substituted 
 [Main] Memo registry loaded.
-[Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
-[DIAG 00001 F0 T1.215] [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
+[Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.3
+[DIAG 00001 F0 T1.023] [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.3
 [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED review=GATED app=Catacombs of YARL
-[DIAG 00002 F0 T1.217] [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED review=GATED app=Catacombs of YARL
-[Tier0] corridor scene: tier1_wall_range_a (res://src/Presentation/assets/tier1_walls_probe/scenes/wall_range_a.json)
-[DIAG 00003 F0 T1.217] [Tier0] corridor scene: tier1_wall_range_a (res://src/Presentation/assets/tier1_walls_probe/scenes/wall_range_a.json)
-[Tier0] map=17x25 player=(8,18) carve_rects=13
-[DIAG 00004 F0 T1.217] [Tier0] map=17x25 player=(8,18) carve_rects=13
+[DIAG 00002 F0 T1.027] [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED review=GATED app=Catacombs of YARL
+[Tier0] corridor scene: tier1_combined_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json)
+[DIAG 00003 F0 T1.027] [Tier0] corridor scene: tier1_combined_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json)
+[Tier0] map=17x21 player=(6,12) carve_rects=7
+[DIAG 00004 F0 T1.027] [Tier0] map=17x21 player=(6,12) carve_rects=7
 [Tier0] junction=NO
-[DIAG 00005 F0 T1.217] [Tier0] junction=NO
-[Tier0] tile_theme_config=res://src/Presentation/assets/tier1_walls_probe/tile_themes_probe.yaml
-[DIAG 00006 F0 T1.217] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_walls_probe/tile_themes_probe.yaml
-[Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
-[DIAG 00007 F0 T1.218] [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
-[Tier0] grid map: centre00=(-105,-574.5) pitch=(64,64) view=(0,90)...(750,1001)
-[DIAG 00008 F0 T1.218] [Tier0] grid map: centre00=(-105,-574.5) pitch=(64,64) view=(0,90)...(750,1001)
-[Tier1] variant census: cells=139 distinct=1 max_multiplicity=139  step_top2: row=1.000(124/124) col=1.000(122/122) diag=1.000(112/112) anti=1.000(112/112)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
-[DIAG 00009 F0 T1.221] [Tier1] variant census: cells=139 distinct=1 max_multiplicity=139  step_top2: row=1.000(124/124) col=1.000(122/122) diag=1.000(112/112) anti=1.000(112/112)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
-[Tier1] floor overlays: none declared (no --floor-overlays, no marker floorOverlays) — base tiles only
-[DIAG 00010 F0 T1.221] [Tier1] floor overlays: none declared (no --floor-overlays, no marker floorOverlays) — base tiles only
+[DIAG 00005 F0 T1.028] [Tier0] junction=NO
+[Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
+[DIAG 00006 F0 T1.028] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
+[Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.3 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
+[DIAG 00007 F0 T1.028] [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.3 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
+[Tier0] grid map: centre00=(23,-190.5) pitch=(64,64) view=(0,90)...(750,1001)
+[DIAG 00008 F0 T1.028] [Tier0] grid map: centre00=(23,-190.5) pitch=(64,64) view=(0,90)...(750,1001)
+[Tier1] variant census: cells=141 distinct=1 max_multiplicity=141  step_top2: row=1.000(122/122) col=1.000(117/117) diag=1.000(103/103) anti=1.000(103/103)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
+[DIAG 00009 F0 T1.036] [Tier1] variant census: cells=141 distinct=1 max_multiplicity=141  step_top2: row=1.000(122/122) col=1.000(117/117) diag=1.000(103/103) anti=1.000(103/103)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
+[Tier1] floor overlays: cells=141 channel=28 neglected=55 drawn(grit=0 event=0 channel=0 occlusion=0/stacked=56@anchor2 BAKED-BY-FLOOR) cell_shadow_suppressed=78 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
+[Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###xx.......xx###
+[Tier1]   ###xx.......xx###
+[Tier1]   ###xx..LMR..xx###
+[Tier1]   ###xx..LMR..xx###
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ###xx..LMMR..x###
+[Tier1]   ###xx...LMR..x###
+[Tier1]   ###xx...LMR..x###
+[Tier1]   ###xx#..LMR..x###
+[Tier1]   #xxxxx..LMR..x###
+[Tier1]   #xxxxx.......x###
+[Tier1]   ###xxx.......x###
+[Tier1]   ###xxxxxxxxxxx###
+[Tier1]   #################
+[DIAG 00010 F0 T1.049] [Tier1] floor overlays: cells=141 channel=28 neglected=55 drawn(grit=0 event=0 channel=0 occlusion=0/stacked=56@anchor2 BAKED-BY-FLOOR) cell_shadow_suppressed=78 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
+[Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###xx.......xx###
+[Tier1]   ###xx.......xx###
+[Tier1]   ###xx..LMR..xx###
+[Tier1]   ###xx..LMR..xx###
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ########F########
+[Tier1]   ###xx..LMMR..x###
+[Tier1]   ###xx...LMR..x###
+[Tier1]   ###xx...LMR..x###
+[Tier1]   ###xx#..LMR..x###
+[Tier1]   #xxxxx..LMR..x###
+[Tier1]   #xxxxx.......x###
+[Tier1]   ###xxx.......x###
+[Tier1]   ###xxxxxxxxxxx###
+[Tier1]   #################
 [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
-[DIAG 00011 F0 T1.221] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
-[Tier1] ashlar floor: none declared (no --ashlar-floor, no marker ashlarFloor)
-[DIAG 00012 F0 T1.221] [Tier1] ashlar floor: none declared (no --ashlar-floor, no marker ashlarFloor)
-[Tier1] boundary wall: none declared (no --boundary-wall, no marker boundaryWall) — the walls in this capture are the tier-0 magenta mocks
-[DIAG 00013 F0 T1.221] [Tier1] boundary wall: none declared (no --boundary-wall, no marker boundaryWall) — the walls in this capture are the tier-0 magenta mocks
+[DIAG 00011 F0 T1.049] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
+[Tier1] ashlar floor: laid=141 channel_cells=27 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK occlusion=baked:70/check:48/OK lines=1 mouths=12 polished=141 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
+[Tier1] traffic field (space=unwalked .. @=busiest)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###=++=-----::###
+[Tier1]   ###=****++==-:###
+[Tier1]   ###=+*###*+=-:###
+[Tier1]   ###:=+####*=-:###
+[Tier1]   ########%########
+[Tier1]   #################
+[Tier1]   ########*########
+[Tier1]   ########+########
+[Tier1]   ########*########
+[Tier1]   #################
+[Tier1]   ###-=*###*+-:.###
+[Tier1]   ###=*###**+=-:###
+[Tier1]   ###*#%#*++=--:###
+[Tier1]   ####%##+==--::###
+[Tier1]   #+*%@%*=----:.###
+[Tier1]   #+*#%#*=---::.###
+[Tier1]   ###*#*+==--::.###
+[Tier1]   ###+***+==--:.###
+[Tier1]   #################
+[Tier1] travel axis (- E-W  / NE-SW  | N-S  \ NW-SE  . none)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###////.......###
+[Tier1]   ###/////......###
+[Tier1]   ###.////......###
+[Tier1]   ###...//|.....###
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########\########
+[Tier1]   ###.\\\\\.....###
+[Tier1]   ###\\\\\......###
+[Tier1]   ###\\\\.......###
+[Tier1]   ###\\#........###
+[Tier1]   #||\\.........###
+[Tier1]   #|||..........###
+[Tier1]   ###|..........###
+[Tier1]   ###...........###
+[Tier1]   #################
+[Tier1] route strength (space=off-route .. @=on the line)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###*@=        ###
+[Tier1]   ###.*@-       ###
+[Tier1]   ###  *@-      ###
+[Tier1]   ###   +@-     ###
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ########*########
+[Tier1]   ########%########
+[Tier1]   ########*########
+[Tier1]   ########=########
+[Tier1]   ###  *%=      ###
+[Tier1]   ### =@=.      ###
+[Tier1]   ###+@*        ###
+[Tier1]   ###@*#        ###
+[Tier1]   # %*          ###
+[Tier1]   # *#          ###
+[Tier1]   ###-          ###
+[Tier1]   ###           ###
+[Tier1]   #################
+[Tier1] axis coherence: 58 of 62 adjacent on-route pairs agree (94%) - round 21 measured 34% on the per-tile field
+[DIAG 00012 F0 T2.538] [Tier1] ashlar floor: laid=141 channel_cells=27 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK occlusion=baked:70/check:48/OK lines=1 mouths=12 polished=141 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
+[Tier1] traffic field (space=unwalked .. @=busiest)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###=++=-----::###
+[Tier1]   ###=****++==-:###
+[Tier1]   ###=+*###*+=-:###
+[Tier1]   ###:=+####*=-:###
+[Tier1]   ########%########
+[Tier1]   #################
+[Tier1]   ########*########
+[Tier1]   ########+########
+[Tier1]   ########*########
+[Tier1]   #################
+[Tier1]   ###-=*###*+-:.###
+[Tier1]   ###=*###**+=-:###
+[Tier1]   ###*#%#*++=--:###
+[Tier1]   ####%##+==--::###
+[Tier1]   #+*%@%*=----:.###
+[Tier1]   #+*#%#*=---::.###
+[Tier1]   ###*#*+==--::.###
+[Tier1]   ###+***+==--:.###
+[Tier1]   #################
+[Tier1] travel axis (- E-W  / NE-SW  | N-S  \ NW-SE  . none)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###////.......###
+[Tier1]   ###/////......###
+[Tier1]   ###.////......###
+[Tier1]   ###...//|.....###
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########\########
+[Tier1]   ###.\\\\\.....###
+[Tier1]   ###\\\\\......###
+[Tier1]   ###\\\\.......###
+[Tier1]   ###\\#........###
+[Tier1]   #||\\.........###
+[Tier1]   #|||..........###
+[Tier1]   ###|..........###
+[Tier1]   ###...........###
+[Tier1]   #################
+[Tier1] route strength (space=off-route .. @=on the line)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###*@=        ###
+[Tier1]   ###.*@-       ###
+[Tier1]   ###  *@-      ###
+[Tier1]   ###   +@-     ###
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ########*########
+[Tier1]   ########%########
+[Tier1]   ########*########
+[Tier1]   ########=########
+[Tier1]   ###  *%=      ###
+[Tier1]   ### =@=.      ###
+[Tier1]   ###+@*        ###
+[Tier1]   ###@*#        ###
+[Tier1]   # %*          ###
+[Tier1]   # *#          ###
+[Tier1]   ###-          ###
+[Tier1]   ###           ###
+[Tier1]   #################
+[Tier1] axis coherence: 58 of 62 adjacent on-route pairs agree (94%) - round 21 measured 34% on the per-tile field
+[Tier1] wall age map (. not a reveal, 0=sharp/sealed .. 3=on the spine)
+[Tier1]   .................
+[Tier1]   ...12221111110...
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   ...11233.22110...
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .23..3...........
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[DIAG 00013 F0 T2.607] [Tier1] wall age map (. not a reveal, 0=sharp/sealed .. 3=on the spine)
+[Tier1]   .................
+[Tier1]   ...12221111110...
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   ...11233.22110...
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .23..3...........
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1]   .................
+[Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=63 void=129(choice=0,ring>1,OVERRIDE manifest=0) missing=0 face_suppressed=63 planes(top=114.7 face=61.79) edge_check=46/OK bindings=13(cramp:3,lash:3,patch:1,pin:3,strap:3) cap=87+129void age0..3=2/11/7/4 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
+[DIAG 00014 F0 T2.609] [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=63 void=129(choice=0,ring>1,OVERRIDE manifest=0) missing=0 face_suppressed=63 planes(top=114.7 face=61.79) edge_check=46/OK bindings=13(cramp:3,lash:3,patch:1,pin:3,strap:3) cap=87+129void age0..3=2/11/7/4 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
 [Tier0] review_build_marker=none (CLI flags)
-[DIAG 00014 F0 T1.221] [Tier0] review_build_marker=none (CLI flags)
+[DIAG 00015 F0 T2.609] [Tier0] review_build_marker=none (CLI flags)
 [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
-[DIAG 00015 F0 T1.222] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
-[Main] Visible tile rect: (2,10)-(13,25)
-[Main] floor_worn (3001) tiles: 2 rendered in the authored room, 2 in frame: (13,13), (11,15)
-[Main] Capture written: tools/tier1_walls/evidence/range_a_a051.png
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
-[TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
+[DIAG 00016 F0 T2.610] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[Main] Visible tile rect: (0,4)-(11,19)
+[Main] floor_worn (3001) tiles: 1 rendered in the authored room, 1 in frame: (11,15)
+[Tier1] legibility(5,12) expect=lit  ratio=1.0791 at px(343,578) bound=0.1200 OK  - 1 tile — the floor at the foot of the masses' south face. The standing case, and the ground §6.5's stack is a relationship against
+[DIAG 00017 F5 T2.699] [Tier1] legibility(5,12) expect=lit  ratio=1.0791 at px(343,578) bound=0.1200 OK  - 1 tile — the floor at the foot of the masses' south face. The standing case, and the ground §6.5's stack is a relationship against
+[Tier1] legibility(4,14) expect=lit  ratio=0.3294 at px(279,706) bound=0.1200 OK  - 2.8 tiles — the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure
+[DIAG 00018 F5 T2.700] [Tier1] legibility(4,14) expect=lit  ratio=0.3294 at px(279,706) bound=0.1200 OK  - 2.8 tiles — the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure
+[Tier1] legibility(6,15) expect=lit  ratio=0.2675 at px(407,770) bound=0.1200 OK  - 3 tiles — the floor beside the island, which is what its outer corners are read against
+[DIAG 00019 F5 T2.700] [Tier1] legibility(6,15) expect=lit  ratio=0.2675 at px(407,770) bound=0.1200 OK  - 3 tiles — the floor beside the island, which is what its outer corners are read against
+[Tier1] legibility(11,13) expect=dark ratio=0.0441 at px(727,642) bound=0.1000 OK  - 5.1 tiles — room A's east end, past the delivered reach of about four. The arc is part of the distribution and a scene where everything is lit is not the game
+[DIAG 00020 F5 T2.700] [Tier1] legibility(11,13) expect=dark ratio=0.0441 at px(727,642) bound=0.1000 OK  - 5.1 tiles — room A's east end, past the delivered reach of about four. The arc is part of the distribution and a scene where everything is lit is not the game
+[Tier1] legibility(8,7) expect=dark ratio=0.0450 at px(535,258) bound=0.1000 OK  - 5.4 tiles — the chokepoint deep inside the mass, in frame and unlit
+[DIAG 00021 F5 T2.700] [Tier1] legibility(8,7) expect=dark ratio=0.0450 at px(535,258) bound=0.1000 OK  - 5.4 tiles — the chokepoint deep inside the mass, in frame and unlit
+[Tier1] floor-legibility probe: 5 declared points, reference lum=0.7018, verdict=PASS
+[DIAG 00022 F5 T2.700] [Tier1] floor-legibility probe: 5 declared points, reference lum=0.7018, verdict=PASS
+[Main] Capture written: tools/tier1_floors/evidence/rig_energy_1.3.png
 [TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
 [TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
 [TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
