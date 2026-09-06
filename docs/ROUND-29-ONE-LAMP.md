@@ -43,8 +43,13 @@ happened.
    genuinely void is the *composed-scene* table, and it is re-taken here. §6.
 
 6. **Ruling 56 re-opens and the ladder is built.** The floor's delivered value at the standing
-   case moved 105.74 → 152.34 (×1.44). Ten one-knob rungs captured on the corrected lamp. **This
-   is the round's device gate and it is Rafe's.** §7.
+   case moved 105.74 → 152.34 (×1.44), **and near-max floor pixels at the lamp core went 72 →
+   1220** — which a blind seat located unaided and I had excluded from my own measurement (§3).
+   Ten one-knob rungs captured. **This is the round's device gate and it is Rafe's.** §7.
+
+7. **TWO STOPS ARE STACKED AND THE BUILD IS NOT ON THE PHONE.** The no-change loop guard fired,
+   and the install gate refuses a FAIL verdict. Both are working correctly and neither is
+   overridden here. §8 item 5.
 
 **Nothing in this round was ruled. Three items are printed in full in §8 awaiting Rafe.**
 
@@ -180,15 +185,42 @@ Beyond four tiles both arms read 1.917 and the term contributes nothing, which i
 Wall values byte-identical across both arms. Round 28's *"43% of the cross-plane separation runs
 through that term"* is now **10.8–12.6% of the floor's own value**.
 
-### And #174's exit condition rests on a figure that does not survive
+### And #174's clipping premise — I got this wrong the first time, and a blind seat caught it
 
-The issue reads: *"the corrected floor clips to 255 near the lamp at 1.6, so the ratified radius /
-falloff / ambient were tuned against the defect."* That was derived from the naive fix's 2.56×.
-The correct fix is 1.6×, and **floor clipping at the ratified rig is 0.07% of floor pixels, worst
-cell 3.3%.** (A first pass read 3.81% — that was the **player sprite**, which is not floor.)
+#174 reads: *"the corrected floor clips to 255 near the lamp at 1.6."* My first pass reported
+**0.07% of floor pixels**, and called the premise dead. **That number excluded the region the
+premise is about.** It was taken at threshold `== 255`, on the probe scene, **excluding the player
+cell and its eight neighbours** — a filter added to keep the player sprite out of a floor
+measurement, which removed the lamp core with it. Round 29's blind seat then flagged exactly that
+region unaided:
 
-**Ruling 56 still re-opens**, because the floor's delivered value moved by 1.44× at the standing
-case and the rig was walked against the old one. It does not re-open for the clipping.
+> *"The lamp core is clipped: 12,874 non-UI pixels sit at luminance ≥246 in a contiguous patch at
+> x 285–504, y 457–601, where the floor loses every joint and slab edge into flat cream. Pull the
+> light curve's white point down so no floor pixel exceeds ~232."*
+
+Re-measured on the delivered frame the seat actually judged, over the whole dungeon view, nothing
+excluded:
+
+| frame | pixels ≥246 | pixels = 255 |
+|---|---:|---:|
+| round 28, **pre-fix** | **72** | 0 |
+| round 29, **ratified rig** | **1220** | **0** |
+| round 29, energy 1.0 — what the floor *was* lit at | **0** | 0 |
+
+**The seat's localisation is exactly right and mine was the number that hid.** All 1220 pixels
+fall inside the box it named; the patch reads mean 167.7, max **249.9**. Its count is ~10× high
+and nothing in the frame reaches 255 — so the literal *"clips to 255"* is still not met — but
+**the fix raised near-max floor pixels seventeenfold at the lamp core**, and an independent eye
+read the result as losing joint detail there.
+
+> **So the honest statement is the opposite of the one I first filed.** Ruling 56 re-opens on the
+> 1.44× *and* on the lamp core, the seat has proposed a white point (~232) as a starting position
+> for the walk, and **the rig ladder's `energy_1.0` rung is the control that isolates it** — at
+> the energy the floor was actually lit at, the count is zero.
+>
+> **The bible-memory lesson this violated is already written down:** *never summarise to the band
+> that agrees with you; report the worst cell, every band.* An exclusion added for one good reason
+> silently answered a different question.
 
 ---
 
@@ -421,10 +453,10 @@ points come back dark, and no rung was refused).
 
 | rung | ≤2 tiles | 2–4 | >4 | worst 2–4 cell | floor clipped |
 |---|---:|---:|---:|---:|---:|
-| **ratified** (r 5.0 / f 1.00 / a 0.70 / E 1.6) | **152.34** | **57.33** | **9.00** | 19.14 | 0.07% |
-| energy 1.0 — *what the floor was actually lit at* | 105.74 | 37.09 | 8.46 | 14.68 | — |
+| **ratified** (r 5.0 / f 1.00 / a 0.70 / E 1.6) | **152.34** | **57.33** | **9.00** | 19.14 | **1220 px ≥246** |
+| energy 1.0 — *what the floor was actually lit at* | 105.74 | 37.09 | 8.46 | 14.68 | **0** |
 | energy 1.3 | 133.77 | 47.11 | 8.73 | 16.87 | — |
-| energy 2.0 | 173.12 | 69.62 | 9.35 | 22.09 | 0.39% |
+| energy 2.0 | 173.12 | 69.62 | 9.35 | 22.09 | — |
 | radius 4.0 — *≈ Ruling 56's own delivered reach* | 137.46 | 31.63 | 7.55 | **7.48** | — |
 | radius 6.0 | 160.52 | 79.76 | 13.94 | 36.68 | — |
 | falloff 0.7 | 160.47 | 76.22 | 10.92 | 30.46 | — |
@@ -477,6 +509,37 @@ is a ratified value that can silently drift. The current §6.2.1 values are then
 
 4. **Bible §5.6 says nine rungs; the code and the manifest ship eleven.** Still true, still not
    this round's. Carried forward from round 28 §9.5.
+
+5. **THE DEVICE BUILD FOR THE RIG WALK IS BLOCKED, BY TWO GUARDS, AND NEITHER IS OVERRIDDEN.**
+
+   **(a) The no-change guard STOPPED the line.** Rounds 1 and 2 are byte-identical pictures, mean
+   0.000 / worst cell 0, both FAIL. **The cause is procedural, not a stalled lane:** round 1's
+   verdict went stale when doc commits moved the build id, so round 2 was run on an unchanged
+   picture purely to refresh it. The guard cannot tell those apart and should not have to.
+   `STALL-REPORT.md`. **No further round was run** — LOOP-PROCESS §1.1.4 and CLAUDE.md both say
+   the line escalates and never grinds past a STOP.
+
+   **(b) The install gate refuses, because the verdict is FAIL.** Not because it is stale — it is
+   current for build `08be3c7e6e32`. A FAIL verdict does not satisfy §1.2.2. The only override is
+   `YARL_SKIP_CRITIC=1`, which installs a build stamped **SKIPPED-REVIEW**, and CLAUDE.md is
+   explicit that *nothing walked on one is a gate verdict*.
+
+   **That is the bind, and it is Rafe's to cut, because it decides what Ruling 56 is worth.** The
+   walk is a RIG ratification under §6.2.1, not an asset acceptance — but Ruling 56 is itself a
+   gate ruling, so a ratification taken on a SKIPPED-REVIEW build may not be a ratification at
+   all. **Not decided here.** The three options, stated without a recommendation because the
+   ruling is not mine:
+
+   - rule that a rig-ratification walk may run on a SKIPPED-REVIEW build, since the rig is not
+     the artefact being judged;
+   - clear enough of the seat's flip list for a PASS first — but most of it is floor-material
+     work (blob-noise, unjointed corridor, anti-aliased cracks, the repeated hatch decal) that is
+     a different lane, and the STOP forbids this round grinding on it;
+   - walk the ladder on the captured frames and defer the device pass — which §6.2.1 exists
+     specifically to refuse.
+
+   ⚠ **The seat's flip 1 is a rig request and belongs to this walk either way:** *"Pull the light
+   curve's white point down so no floor pixel exceeds ~232."*
 
 ---
 

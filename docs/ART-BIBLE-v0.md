@@ -837,12 +837,16 @@ flatten again.
 > linear in delivered light, which is the baked value-lift §8.2.1 bans. Now built from
 > `LIGHT_COLOR.a * LIGHT_ENERGY`, with two controls (`docs/ROUND-29-ONE-LAMP.md` §3).
 >
-> **#174's clipping premise does not survive either.** *"the corrected floor clips to 255 near the
-> lamp at 1.6"* was derived from the naive fix's 2.56×. The correct fix is 1.6× and floor clipping
-> at the ratified rig is **0.07% of floor pixels** (a first pass read 3.81%; that was the player
-> sprite). **Ruling 56 re-opens regardless** — the floor's delivered value at the standing case
-> moved 105.74 → 152.34, ×1.44, and the rig was walked against the old one. It does not re-open
-> for the clipping.
+> **#174's clipping premise is PARTLY met, and the first report of it here was wrong.** The
+> literal *"clips to 255"* is not met: nothing in the delivered frame reaches 255 at the ratified
+> rig. But **near-max floor pixels (≥246) went 72 → 1220 across the fix**, all of them inside one
+> contiguous patch at the lamp core, and round 29's blind seat located that patch unaided and read
+> it as *"the floor loses every joint and slab edge into flat cream."* A first measurement here
+> reported 0.07% and called the premise dead — **it had excluded the player cell and its eight
+> neighbours, which is exactly where all 1220 sit.** At energy 1.0, the energy the floor was
+> actually lit at, the count is **zero**. **Ruling 56 re-opens on both counts**: the standing-case
+> value moved 105.74 → 152.34 (×1.44), and the lamp core is now near the ceiling. The seat has
+> proposed a white point of ~232 as a starting position for the walk.
 
 #### 6.2.1 TIER-ONE PRECONDITION — the rig is tuned for readability BEFORE any asset is judged through it. RULED (Rafe, 2026-08-27, at the device gate).
 
