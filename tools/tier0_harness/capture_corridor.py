@@ -77,7 +77,8 @@ def git_commit():
 def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
             light_overrides=None, scene_spec=None, log_out=None, timeout=180,
             floor_overlays=None, wang_floor=None, ashlar_floor=None,
-            boundary_wall=None, void_choice=None, wall_bindings=None, wall_cap=None):
+            boundary_wall=None, void_choice=None, wall_bindings=None, wall_cap=None,
+            void_ring=None):
     """Invoke the engine. Returns (returncode, log, cmd)."""
     w = cfg["resolution"]["width"]
     h = cfg["resolution"]["height"]
@@ -145,6 +146,8 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
         cmd += ["--boundary-wall", boundary_wall]
     if void_choice is not None:
         cmd += ["--void-choice", str(void_choice)]
+    if void_ring is not None:
+        cmd += ["--void-ring", str(void_ring)]
     if wall_bindings:
         cmd += ["--wall-bindings", wall_bindings]
     # THE CAP FIELD. Omit it and the walls fall back to the block cap the 2026-08-30 gate culled
@@ -206,6 +209,11 @@ def main():
     ap.add_argument("--wall-bindings",
                     help="res:// path to the orc BINDING family MANIFEST.json. Section 8.3.1 "
                          "keeps these out of the wall segments; absent, the walls are bare.")
+    ap.add_argument("--void-ring", type=int,
+                    help="CAPTURE-TIME override of the wall manifest's void_ring. Omit and the "
+                         "manifest's RULED value stands. It exists so a round can run the "
+                         "flat-dark void fallback without editing the artefact 12.1a ruled, and "
+                         "the override is named in the capture log wherever it is used.")
     ap.add_argument("--void-choice", type=int,
                     help="which void candidate to start on. NOT a ruled value (bible 13.1).")
     ap.add_argument("--ashlar-floor",
@@ -234,6 +242,7 @@ def main():
     rc, log, cmd = capture(args.out, args.theme_config, cfg, args.godot,
                            light_overrides=overrides, scene_spec=args.scene_spec,
                            boundary_wall=args.boundary_wall, void_choice=args.void_choice,
+                           void_ring=args.void_ring,
                            wall_bindings=args.wall_bindings, wall_cap=args.wall_cap,
                            log_out=args.log_out, floor_overlays=args.floor_overlays,
                            wang_floor=args.wang_floor, ashlar_floor=args.ashlar_floor)

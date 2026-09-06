@@ -1,0 +1,122 @@
+{
+  "name": "tier1_combined_review",
+  "_comment": [
+    "THE COMBINED SCENE — one room, both surfaces, judged together.",
+    "",
+    "Both tier-one lanes finished soloing against scenes built for their own question, and each",
+    "lane's frames were half debug colour to the other's eye: three floor rounds spent most of",
+    "their flip list on the wall lane's magenta mocks, and one seat read those mocks as the",
+    "FLOOR's lighting. This spec exists so that neither surface is judged again in a frame the",
+    "other one has not really been laid into.",
+    "",
+    "GEOMETRY IS tier1_wall_review's, UNCHANGED, and deliberately so. That spec was built to put",
+    "all four of §3's contexts in one frame — south reveals at more than one range, a chokepoint",
+    "between two masses, inner and outer corners, and wall seen at a glance rather than only up",
+    "close — and it is the only review geometry that also carries a non-zero traffic field",
+    "(spine 18 / routes 25). Re-deriving a room would have thrown that away to no purpose, and",
+    "§9e records what a traffic-dead scene costs: every traffic-keyed system in it is untested",
+    "while looking tested.",
+    "",
+    "WHAT MOVES IS THE STATION, and it moves for the FLOOR's law rather than for the wall's.",
+    "Round 24 ruled that stations for traffic-keyed questions are SAMPLED FROM THE POLYLINE: the",
+    "player stands ON the route, and the route AHEAD lies inside the lamp's delivered pool. The",
+    "wall gate's station at (8,15) has route strength ZERO — it was chosen when the floor was not",
+    "the question — so a combined round taken there would judge the floor's whole traffic system",
+    "on ground the level's own graph says nobody walks. That is round 23's VOID-FOR-STATION",
+    "failure, and taking the wall lane's station unexamined would have reproduced it silently.",
+    "",
+    "  THE STATION IS (6,12), read off this scene's own route-strength map, where the route",
+    "  crosses room A on its way from the chokepoint mouth to the south-west alcove. From here:",
+    "",
+    "    the route AHEAD runs (5,13) (4,14) (3,15), all inside the delivered reach",
+    "    the masses' SOUTH FACE row (y=11) stands 1 tile north — the range §6.5 is now scoped",
+    "      to, and at n=11 cells rather than the wall gate station's n=1",
+    "    the ISLAND at (5,15) is 3.2 tiles south-west: four outer corners, the case §3's",
+    "      two-plane rule is hardest on, because an outer corner is where a wall stops",
+    "    the CHOKEPOINT MOUTH at (8,11) is a one-wide doorway with jambs at (7,11) and (9,11) —",
+    "      four inner corners — 2.2 tiles away",
+    "    room A's east end and the mass beyond it run out past the delivered reach of about four",
+    "      tiles, because a scene where every wall is legible is not the game (§6.2's arc)",
+    "",
+    "⚠ THE STATION IS ONE TILE EAST OF THE ROUTE'S PEAK, AND THAT TILE IS THE WHOLE REASON.",
+    "The peak sits at (5,13) and the first capture was taken there. At x=5 the camera's left",
+    "edge falls at tile −0.86, i.e. OUTSIDE THE MAP, and the engine fills out-of-map ground with",
+    "a flat 77-grey that the light rig never touches: measured on that frame, a 55px column at",
+    "exactly (77,77,77) with a standard deviation of 0.00, running the full height of the",
+    "dungeon view, against a void of 3.2 beside it. It is the brightest thing in the frame after",
+    "the lamp pool and it has a ruled straight edge. Any seat would have culled the frame for it",
+    "and the cull would have been about the harness. (6,12) is still on the route — strength one",
+    "band below the peak — and puts the map edge off-frame. The grey itself is engine behaviour",
+    "and is reported rather than fixed here: it is neither floor nor wall material."
+  ],
+  "_station_trail": [
+    "(5,13) — route peak. REJECTED: put the map edge in frame (see above).",
+    "(6,12) — live."
+  ],
+  "_void_note": [
+    "THE VOID IS NOT IN THIS FILE. Which cells are void is a wall-family question and it is set",
+    "per capture — see tools/tier1_floors/capture_combined.sh and the --void-ring it passes, and",
+    "the flag's own documentation on Tier1BoundaryWall.Apply for why that is a command-line",
+    "decision rather than a manifest edit."
+  ],
+  "_legibility": [
+    "Wall faces are probed at the FLOOR cell they stand over, exactly as the wall gate scene",
+    "probed them: the probe reads a cell's delivered luminance, and a face is not a cell.",
+    "Nothing east of x=10 or south of y=20 is declared — at this camera it is outside the frame,",
+    "and a still cannot check ground it does not contain."
+  ],
+  "legibility": [
+    {
+      "x": 5,
+      "y": 12,
+      "expect": "lit",
+      "why": "1 tile — the floor at the foot of the masses' south face. The standing case, and the ground §6.5's stack is a relationship against"
+    },
+    {
+      "x": 4,
+      "y": 14,
+      "expect": "lit",
+      "why": "2.8 tiles — the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure"
+    },
+    {
+      "x": 6,
+      "y": 15,
+      "expect": "lit",
+      "why": "3 tiles — the floor beside the island, which is what its outer corners are read against"
+    },
+    {
+      "x": 11,
+      "y": 13,
+      "expect": "dark",
+      "why": "5.1 tiles — room A's east end, past the delivered reach of about four. The arc is part of the distribution and a scene where everything is lit is not the game"
+    },
+    {
+      "x": 8,
+      "y": 7,
+      "expect": "dark",
+      "why": "5.4 tiles — the chokepoint deep inside the mass, in frame and unlit"
+    }
+  ],
+  "width": 17,
+  "height": 21,
+  "player": {
+    "x": 6,
+    "y": 12
+  },
+  "carve": [
+    { "x0": 3, "y0": 12, "x1": 13, "y1": 14 },
+    { "x0": 3, "y0": 16, "x1": 13, "y1": 19 },
+    { "x0": 3, "y0": 15, "x1": 4, "y1": 15 },
+    { "x0": 6, "y0": 15, "x1": 13, "y1": 15 },
+    { "x0": 8, "y0": 6, "x1": 8, "y1": 11 },
+    { "x0": 3, "y0": 2, "x1": 13, "y1": 5 },
+    { "x0": 1, "y0": 16, "x1": 2, "y1": 17 }
+  ],
+  "_carve_note": [
+    "Row 15 is carved in two pieces either side of x=5, which leaves ONE CELL STANDING at (5,15).",
+    "That is the island: floor on all four sides and on all four diagonals, so it is the only",
+    "geometry in any review scene that puts four OUTER corners in frame. Inherited unchanged from",
+    "tier1_wall_review — every rect in this list is that spec's, byte for byte, so a comparison",
+    "between the two scenes is a comparison of stations and of nothing else."
+  ]
+}

@@ -457,6 +457,17 @@ same:
 - **Finalised, not iterated** — this is done. It does not reopen because a later tier raised
   the standard.
 - **Prepared, not generated** — staged, deliberately not spent on.
+- **Composed and holding, blocked on a named gate** — RULED (Rafe, 2026-09-05). **Added because
+  the combined build is in it and neither of the other two describes it.** The work is built,
+  captured, reproducible and *correct as far as it goes*; what stops it is a defect elsewhere
+  that its own evidence identified. It is not finalised — it has never passed a gate. It is not
+  merely prepared — it has been spent on, and the spending produced the finding.
+
+  **A park in this state names the gate, and the gate is an issue number, never a mood.** It
+  also names what the resumer must re-do rather than re-read: the numbers taken across the
+  defect are void, and a resumer who trusts them has inherited the bug in a report instead of
+  in the code. First occupant: round 28's combined build, blocked on **#174**, which its own
+  null-polish control found. `docs/ROUND-28-COMBINED-BUILD.md`.
 
 **Refusals are declared before the run, not after.** Each seat writes *what this seat refuses,
 written before it could be tempted*, and the promotion rule is declared before ranking.

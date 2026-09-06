@@ -773,6 +773,43 @@ flatten again.
 > alternatives — derive the rig before freezing the ratio, or give wall tiles a light-response
 > clamp in the renderer — are both real and both outside the round that found this.
 
+> ### ⚠ THE COUPLING IS WORSE THAN THIS CLAUSE SAYS, AND THE ASTERISK IS ISSUE #174.
+> **RULED (Rafe, 2026-09-05), on round 28's measurement. THE TWO PLANES ARE LIT BY DIFFERENT
+> ARITHMETIC, NOT BY DIFFERENT AMOUNTS.**
+>
+> Everything above describes ONE rig compressing an authored ratio — a factor, solvable
+> backwards, which is what "solve the art backwards" assumes. That assumption is false.
+> `tier1_polish.gdshader`'s `light()` reads `LIGHT_COLOR` and never `LIGHT_ENERGY`, and every
+> floor tile carries a `ShaderMaterial` built from it. **The floor resolves its light through a
+> different expression from the wall standing next to it.**
+>
+> Measured on the first composed room (round 28), nulling `polish_gain`, everything else held:
+>
+> | band | floor, polish ON | floor, NULLED | wall, ON | wall, NULLED |
+> |---|---:|---:|---:|---:|
+> | ≤2 tiles | 122.04 | **85.24** | 58.79 | **58.79** |
+> | 2–4 | 47.94 | **35.00** | 20.75 | **20.75** |
+> | >4 | 11.19 | 11.09 | 4.97 | 4.97 |
+>
+> **Every wall value is byte-identical and the floor loses 30%. 43% of the cross-plane
+> separation at the range §6.5 governs runs through that term.**
+>
+> **AND IT CANNOT BE DIVIDED OUT.** `LIGHT = diffuse + LIGHT_COLOR.rgb · polish ·
+> pow(delivered, polish_exp)`. Restoring `LIGHT_ENERGY` moves the diffuse linearly and the
+> specular quadratically, so **no ratio measured under the defect survives a rescale.** The
+> re-derivation rule above is therefore not sufficient here: a re-derivation presumes the old
+> number was right about a rig that has since moved, and these numbers were never right about
+> any rig.
+>
+> **What this puts in doubt, and it is the whole cross-plane body of work:** §6.5's stack, §3's
+> status-trail measurements of the inverted value stack, the wall session's *k_top < 1 at every
+> range*, and round 28's own floor-versus-wall table. **Void rather than provisional.** Each is
+> re-measured after #174 lands, not adjusted.
+>
+> **#174 IS THE GATE FOR THE TIER-ONE SURFACE.** The combined build is parked
+> composed-and-holding (PR #177) and resumes for the walk once the arithmetic is one and Ruling
+> 56 is re-ratified. Evidence: `docs/ROUND-28-COMBINED-BUILD.md` §5.
+
 #### 6.2.1 TIER-ONE PRECONDITION — the rig is tuned for readability BEFORE any asset is judged through it. RULED (Rafe, 2026-08-27, at the device gate).
 
 > **The §6.2 rig values — radius, falloff, ambient — get a readability-tuning pass before any
@@ -1124,7 +1161,24 @@ and a parameter row is therefore not evidence. **Probe total: 174 generations.**
 
 ---
 
-### 6.5 The value stack — RULED (Rafe, 2026-08-27), RE-SCOPED (Rafe, 2026-08-29, at the wall gate).
+### 6.5 The value stack — RULED (Rafe, 2026-08-27), RE-SCOPED (Rafe, 2026-08-29, at the wall gate). ⚠ EVERY NUMBER IN THIS CLAUSE IS UNDER #174 (2026-09-05).
+
+> ⚠ **READ §6.2's #174 ASTERISK BEFORE ANY NUMBER BELOW. RULED (Rafe, 2026-09-05).**
+>
+> This clause is a set of ratios between the floor and the wall's two planes, and **the floor and
+> the wall are lit by different arithmetic**: `tier1_polish.gdshader` resolves the floor's light
+> through `LIGHT_COLOR` where everything else takes `LIGHT_ENERGY`, and **43% of the cross-plane
+> separation at the standing case runs through that term.** The specular squares its input, so no
+> ratio taken under it survives a rescale.
+>
+> **Every measured figure in this clause is VOID rather than provisional, and is re-measured
+> after #174 lands — not adjusted.** That includes the re-scoping's own range profile
+> (0.87 / 0.67 / 0.48 / 0.30), the *k_top cannot reach 1.0* argument, and the 2:1 plane
+> separation. **The LAW is untouched** — the floor sits between the planes, the top catches
+> light, the face is enclosed — because it is a register derivation and not a measurement.
+> What is void is every number offered in evidence for it.
+>
+> #174 is the gate for the tier-one surface. `docs/ROUND-28-COMBINED-BUILD.md` §5.
 
 > **RE-SCOPED — RULED (Rafe, 2026-08-29, at the first gate with real walls in the scene).
 > THE STACK IS A STANDING-DISTANCE LAW.**
@@ -1876,6 +1930,26 @@ occlude against the wall faces is a presentation change (an occluder pass), not 
 one, and it is outstanding at the time of writing. §6.5's standing-distance law is unaffected —
 it governs what a LIT surface delivers at range, and this governs which surfaces are lit at all.
 
+> **THE INTERIM, RULED (Rafe, 2026-09-05): THE FLAT-DARK FALLBACK STANDS UNTIL THE OCCLUDER
+> SHIPS, AND IT IS DECLARED PER CAPTURE RATHER THAN BAKED.**
+>
+> Round 28 composed the first room with both real surfaces in it and measured what the ruled
+> `void_ring: 0` delivers with the occluder still outstanding: **`void=0`, `face_suppressed=192`,
+> `cap=216+0void` — the lamp lighting 192 cells of solid rock, and a room with no outside.**
+> `tools/tier1_floors/evidence/combined_r1_ring0.png` is that frame. It is the consequence this
+> clause's own note predicts, and a room that has no outside cannot be judged as a room.
+>
+> So a round that needs a real dark beyond the walls runs **the ring, as a flat-dark fallback**,
+> through `--void-ring` — a **capture-time** flag. **The manifest keeps the ruled 0**, because a
+> round does not get to quietly move a number a ruling put there, and every capture log carries
+> `ring>1,OVERRIDE manifest=0` so no frame circulates without its own departure attached.
+>
+> **The cost is named and is not forgiven:** a ring is a classification that changes at a cell
+> boundary, so it puts a luminance step on the grid, and round 8's seat read exactly that step
+> unaided as *"two perfectly straight vertical seams in the darkness."* **This clause is not
+> weakened by the interim.** Occlusion remains the ruling; the occluder pass remains outstanding
+> and owns its own round with a walk behind it.
+
 ### 12.1 No baked outline — LOCKED (Rafe, 2026-08-24)
 
 **Nothing in Yarl carries a baked dark ring.** Separation is delivered by the value floor above
@@ -2138,6 +2212,45 @@ Two binding consequences:
    not earned. The precedent is a personhood predicate that passed **67.55% of random noise**
    with a ruling already resting on it. **There will be no "dread score" and no "staging
    detector."** §15's honest `NO INSTRUMENT` row is the correct output instead.
+
+#### 13.4.1 A REPEATED SEAT REQUEST IS NOT A VOTE AGAINST A GATE RULING — RULED (Rafe, 2026-09-05). It is a report that the treatment is not reading as intentional.
+
+**The occasion.** *A packed joint takes the shine* was ruled at the human gate, after a walk
+contradicted the table: polish on stone faces only amplified the delivered face-to-joint contrast
+by exactly the light, and the outline share in the lit band fell **16.3% → 1.3%** once joints took
+their share. *"The source was clean the whole time; the renderer was drawing the ring."*
+
+**Two independent blind seats, two rounds, two different decks, have since asked for the inverse:**
+
+> *"sharpen the joints; they fade toward the light edge"* — round 27
+> *"in the lit zone right of the figure the stone joints vanish entirely — you cannot tell where
+> one slab ends. Restore joint contrast at full light so the grid survives exposure."* — round 28
+
+**RULED: REFUSED. The flip is not applied and the clause is not reopened.**
+
+**Why this is §13.4 and not new evidence.** A blind seat is a proxy for the gate, not the gate —
+§13.2 and LOOP-PROCESS §1.2 both put the ruling with the eye that walked it. Counting seat
+requests as votes is exactly §13.4's failure running in the review layer instead of the
+generation layer: **the side of the trade with a repeatable signal wins, and the side carried
+eye-side has no counter to offer.** The gate ruled on a walk; two seats on stills cannot outweigh
+it by arriving twice. Nor is agreement between them independent — they are asked the same
+question about the same defect class, so the second is close to a re-run of the first.
+
+**AND THE REPETITION IS STILL INFORMATION — just not the information the flip asks for.** Two
+observers reading a deliberate treatment as a *failure* is a report that **the treatment is not
+reading as intentional.** A joint that packs shut because it has been walked into should look
+walked into; one that merely stops being visible looks like a joint that was not drawn. Those are
+the same pixels and different pictures.
+
+> **So the successor is a MAKE-IT-READ item, not a DEEPEN-NOW one**, and the distinction is the
+> whole ruling. Deepening the joint at full light is capitulation: it undoes the gate's finding
+> and puts the ring back. Making the packing legible *as packing* — grit, fill, a shoulder, the
+> vocabulary §8.2.1 already owns — answers what the seats actually saw without touching what was
+> ruled. Parked as a polish item; it is not this round's and it is not urgent.
+
+**The general form:** a ruling made at the human gate is overturned at the human gate. Everything
+else is a report about how the ruled thing is being read, and reports about reading are answered
+by making it read.
 
 ### 13.5 No instrument's pass counts until it has demonstrated it can fail — LOCKED
 

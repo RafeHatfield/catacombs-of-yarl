@@ -1,0 +1,44 @@
+Read all three at 1:1 and in detail crops, plus numeric sampling. Findings below.
+
+RANK: 3 > 2 > 1
+
+BEST: 3
+
+BEST_WHY: The floor slabs in the lit zone (roughly x 180–420, y 450–620) are actually built rather than tiled. The joints are a 1px stipple whose interruptions differ slab to slab, so no two seams read the same length; the slab interiors carry three distinct tooling treatments — short vertical chisel ticks, a fine 45° hatch, and blank stone — distributed without pattern; and slab widths vary, with double-width blocks breaking the course. Most tellingly, the hairline crack entering at the lower left runs continuously across four separate slabs and over their joints, ignoring the tile boundary entirely. Cracks that respect the grid are stamped; this one was drawn over the finished surface. The wall runs at y≈388–420 also carry thin vertical pins at x≈350 and x≈700 driven through the timber — the only thing in the deck that matches the repair vocabulary of the place.
+
+WORST: 1
+
+WORST_WHY: The water body is a rectangle. Its left edge sits at exactly x=248 and its right edge at exactly x=343 on row 40, row 100 and row 160 — identical to the pixel, three times down the frame — and it terminates in a flat horizontal cut at y≈190. There is no shoreline, no edge tile, no single pixel of transition between teal water and brown dirt anywhere on its perimeter. The dirt field around it is worse: of 432 16px blocks in the frame only 193 are unique, and one dirt block from (160,0) recurs verbatim 15 times on a regular 48px lattice — (112,48), (160,48), (208,48), (64,96), (112,96) — so the entire mud area is one 3×3 patch stamped edge to edge, with the seam visible. The dirt-to-stone boundary is likewise raw square steps with no transition. On top of that: the frame has zero light falloff, uniformly bright corner to corner, in a game whose premise is that the figure carries the only light; the green figure at top-centre is drawn at a different outline weight and saturation from everything else and is the only object in the frame carrying a soft elliptical drop shadow (the two barrels at y≈200 cast none); the lily pads are primary saturated green against an otherwise fully desaturated brown/grey scene; and the bone scatter at ~(215,115) is white noise with no readable form.
+
+FLAGGED: 1, 2, 3
+
+SHIP: NONE
+
+FLIP 3:
+- The wall run at y≈388–420 inverts its read along its own length: at x=120 the wall's top face measures luminance 4.1 against surround of 8.1 above and 9.2 below, so it disappears; at x=560 the same run's top face measures 57.0 against surround 41.1, so it reads as a lit solid. Pick one relationship — wall top darker than adjacent floor — and hold it for the full run at every light level.
+- The upper third of the frame (x 40–400 and x 440–750, y 60–380) is a smooth airbrushed blue-grey gradient with soft round blobs and two thin wandering contour lines. It carries no pixel structure and no grid while the floor 100px below is crisp tile art. Redraw that region in the same medium as the floor: give it stone at the same grid pitch, dithered rather than gradient-blended into darkness.
+- The same haze sits *brighter* than the darkness at frame left (lum ~7 at (200,250) vs ~8 at (40,250) — indistinguishable). Either it is unrevealed space, in which case it should be at the floor-darkness value with no light in it, or it is lit space, in which case it needs stone. Right now it is neither.
+- The wall runs are 2-row strips of small rectangles pasted onto that gradient with a hard rectangular outer boundary and no cast shadow onto the floor below. Add a 2–3px shadow along the wall's lower edge so it has thickness from above.
+- The bright patch on the floor directly below the figure at ~(400,530) is a single slab blown flat to near-white with its joints gone. Reduce it so the joint stipple survives at peak light.
+
+FLIP 2:
+- A uniform ~45° hatch overlay runs across the entire lit floor at one pitch and one angle, crossing stones, crossing joints, and continuing into the dark zone unchanged. It is screen-space, not surface texture, and it is the single thing that makes the frame read as filtered. Remove it; put the hatch into individual stones as tooling, varying angle per stone as image 3 does.
+- The region x 130–440, y 0–140 is soft brown blobs with no joints and no edges — stones dissolved by blur. Redraw it with hard 1px joints at the tile pitch.
+- The wall top surface immediately right of the figure at (490,470) measures luminance 170 against the floor below it at (520,500) measuring 68. The wall is 2.5× brighter than the floor it stands on and reads as a white smear rather than a solid. Cap wall-top luminance below adjacent lit floor.
+- There is a vertical column of light at x≈510–530 running y 250–450, measuring 70 against 54 immediately beside it, with nothing in the frame casting it. In a straight top-down view there is no geometry that produces a vertical shaft. Delete it.
+- In the lit zone right of the figure the stone joints vanish entirely — you cannot tell where one slab ends. Restore joint contrast at full light so the grid survives exposure.
+- Overall: the frame is soft everywhere. Kill the blur pass and let the tiles land on the pixel grid.
+
+FLIP 1:
+- Give the water an actual edge. Its perimeter is a pure axis-aligned rectangle (x=248 and x=343 on every row; flat cut at y≈190). Cut a shoreline that breaks the grid, with transition tiles on all four sides — wet stone, silt, a value step at the waterline.
+- Break the dirt tiling. One 16px block recurs 15 times on a 48px lattice across the whole mud field. Author at least four variants and scatter them non-periodically, or overlay non-tiling detail (pooled water, dragged tracks, spoil) that crosses tile boundaries.
+- Replace the stepped square dirt-to-stone boundary with transition tiles: dirt spilling over the flagstone edge, grit in the joints.
+- The frame has no light falloff at all. Add the light model the other frames use — a single carried source at the figure, everything falling to darkness with distance.
+- Remove the elliptical drop shadow under the green figure, or add matching shadows to the barrels at y≈200 and the chests at top-left. Right now one object in the frame is grounded and nothing else is.
+- Desaturate the lily pads and the water to sit in the same palette as the stone and dirt; as drawn they are the highest-chroma thing in a frame that is otherwise fully desaturated.
+- The bone scatter at ~(215,115) is unreadable white noise. Redraw it as recognisable forms — a ribcage, a long bone — with a dark side and a lit side.
+- Nothing in the frame shows rope, driven pins, hide or salvaged timber. The props present (barrels, chests, a pond with lily pads) read as a generic outdoor sample map, not an administered underworld held by a repair-obsessed garrison. Re-dress with the repair vocabulary.
+
+One note across the deck: 2 and 3 are clearly the same asset set and the same scene under two different render passes. 3 is what that pass looks like when it works; 2 is what it looks like when the blur and bloom are left on. If there is a toggle between them, the fix for 2 is mostly upstream of the art.
+
+Model used: Claude Opus 5 (1M context).

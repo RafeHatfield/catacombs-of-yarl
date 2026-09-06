@@ -506,9 +506,24 @@ def pick_plant(surface, morgue, exclude=(), axis=None):
     An entry with no `axis` answers any question, so the morgue stays usable while it is being
     tagged, and a surface whose entries carry no matching axis falls back to all of them rather
     than refusing — a narrower plant is better than no round, but no plant is not an option.
+
+    AN ENTRY MAY SERVE MORE THAN ONE SURFACE, and `surface` is therefore a string OR a list.
+    The combined round is what asked for this. It judges a whole room — floor, wall, cap and
+    void together — and the morgue was tagged when every round judged one surface at a time.
+    Reading the pictures rather than the tags settles which entries can serve it: the three
+    FLOOR culls each carry **3904 magenta pixels**, because the wall family did not exist when
+    they were taken, and a seat handed one of those in a deck whose build has real walls catches
+    it for the debug colour. That is §4.2's failure exactly — the right image flagged for the
+    wrong reason — so they are not eligible, and the reason is written in their entries rather
+    than left to be rediscovered. The two WALL culls carry no magenta and were captured with the
+    real floor laid under them, so they are whole-scene frames already and serve both.
     """
+    def serves(e):
+        sf = e["surface"]
+        return surface == sf if isinstance(sf, str) else surface in sf
+
     entries = [e for e in morgue["entries"]
-               if e["surface"] == surface and e["file"] not in exclude]
+               if serves(e) and e["file"] not in exclude]
     if axis:
         on_axis = [e for e in entries if axis in (e.get("axis") or [axis])]
         if on_axis:
@@ -980,6 +995,12 @@ def main():
         lane=lane,
         round=rnd,
         surface=cfg["surface"],
+        # THE AXIS THE DECK ASKED ON, recorded because §4's per-axis law makes the verdict
+        # unreadable without it. The axis chooses the plant, so a verdict that does not name it
+        # cannot be checked later against the rule it was drawn under — and "the deck is
+        # reproducible from the verdict file alone" is the property that makes these files worth
+        # committing. It was selecting plants correctly and saying nothing about it.
+        axis=cfg.get("axis"),
         commit=bdetail["commit"],
         dirty=bdetail["dirty"],
         build_id=bid,

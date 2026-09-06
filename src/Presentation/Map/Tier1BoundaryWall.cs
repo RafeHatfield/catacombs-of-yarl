@@ -282,12 +282,28 @@ public static class Tier1BoundaryWall
         return b;
     }
 
+    /// <param name="voidRingOverride">
+    /// A CAPTURE-TIME override of the manifest's `void_ring`, and it exists so that a round can
+    /// depart from a RULED value without editing the ruled artefact.
+    ///
+    /// §12.1a (Rafe, 2026-09-03) ruled the void dark by OCCLUSION rather than by a ring, and the
+    /// manifest carries `void_ring: 0` for it. That ruling's implementation — making the lamp
+    /// occlude against the wall faces — is RECORDED-OUTSTANDING, so at zero the renderer lights
+    /// every cell of unexcavated mass and the lamp shines through rock. A round that needs a
+    /// room with a real dark beyond it therefore has to run the flat-dark fallback, and the
+    /// honest way to do that is on the command line, echoed into the capture log, rather than by
+    /// quietly moving a number a ruling put in a manifest.
+    ///
+    /// Null means "whatever the manifest says", which is what every build does.
+    /// </param>
     public static string Apply(TileLayer tileLayer, GameMap map, string manifestResPath,
                                int voidChoice, string? bindingManifest = null,
-                               string? capManifest = null)
+                               string? capManifest = null, int? voidRingOverride = null)
     {
         var cfg = Load(manifestResPath, out string status);
         if (cfg == null) return $"[Tier1] boundary wall: NOT APPLIED — {status}";
+        int manifestRing = cfg.VoidRing;
+        if (voidRingOverride is int vr) cfg.VoidRing = vr;
 
         // THE CROSS-CHECK, BEFORE ANYTHING IS LAID. The composer and this class each compute the
         // boundary keys; if they disagree, every crossing block is drawn from two different
@@ -588,7 +604,9 @@ public static class Tier1BoundaryWall
         string kinds = boundKinds.Count == 0 ? "-"
             : string.Join(",", boundKinds.OrderBy(k => k.Key).Select(k => $"{k.Key}:{k.Value}"));
         return $"[Tier1] boundary wall: family={cfg.Family} face={face} top={top} "
-             + $"void={voidCells}(choice={vc},ring>{cfg.VoidRing}) missing={missing} "
+             + $"void={voidCells}(choice={vc},ring>{cfg.VoidRing}"
+             + (cfg.VoidRing == manifestRing ? "" : $",OVERRIDE manifest={manifestRing}")
+             + $") missing={missing} "
              + $"face_suppressed={faceSuppressed} "
              + $"planes(top={cfg.TopValue:0.##} face={cfg.FaceValue:0.##}) "
              + $"edge_check={cfg.EdgeCheck.Count}/OK bindings={bound}({kinds}) "
