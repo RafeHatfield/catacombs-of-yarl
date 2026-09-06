@@ -289,6 +289,17 @@ the energy, the whole time. Re-captured on the corrected lamp:
 > **Every one of the six probe PNGs is byte-identical to the committed pre-fix evidence.** Only
 > the logs moved, and only in the worktree path and the timestamps.
 
+And the engine says so itself, independently of the byte-identity, in every one of those logs:
+
+```
+[Tier1] floor overlays: none declared (no --floor-overlays, no marker floorOverlays) — base tiles only
+[Tier1] wang floor:     none declared (no --wang-floor, no marker wangFloor)
+[Tier1] ashlar floor:   none declared (no --ashlar-floor, no marker ashlarFloor)
+```
+
+Two independent confirmations, and the second is the engine's own answer rather than mine —
+§13.10's standard for a measurement that overturns a written finding.
+
 Recomputed from them:
 
 | range | k_top, recorded (void) | k_top, corrected lamp |

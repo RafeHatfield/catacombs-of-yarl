@@ -1244,7 +1244,9 @@ and a parameter row is therefore not evidence. **Probe total: 174 generations.**
 >
 > Re-captured on the corrected lamp: **all six probe PNGs are byte-identical to the committed
 > pre-fix evidence.** Only the worktree path and the timestamps moved in the logs. Recomputed
-> k_top: **0.8686 / 0.6696 / 0.4799 / 0.2995**.
+> k_top: **0.8686 / 0.6696 / 0.4799 / 0.2995**. And the engine states it independently in every
+> one of those logs — `[Tier1] ashlar floor: none declared` — which is §13.10's standard: the
+> engine's own answer, not an instrument's inference.
 >
 > **PROPOSED, not applied:** the banner narrows to figures measured on the COMPOSED scene with
 > the real ashlar floor — round 28 §5's table, and PR #151's status-trail measurements if those
