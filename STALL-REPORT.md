@@ -5,7 +5,7 @@
 - **lane** `combined`
 - **surface** `combined`
 - **guard** `no-change`
-- **written** 2026-09-05T22:11:03
+- **written** 2026-09-06T09:30:48
 
 ## Why it stopped
 

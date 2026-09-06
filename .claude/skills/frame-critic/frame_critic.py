@@ -163,6 +163,63 @@ def lane_of(v):
     return v.get("lane")
 
 
+# ================================ a ruling that clears a guard =================================
+#
+# SKILL.md §5, LAW (Rafe, 2026-09-03): **a guard clears by an ADDED artifact, never by removing
+# evidence.** The counters are derived from the verdict files on disk, so the only way to clear one
+# by subtraction is to delete them — and a mechanism whose reset is *destroy the record* teaches
+# exactly the wrong reflex, in the lane that most wants the guard gone.
+#
+# The convention was documented from the day the law was written and NOTHING READ IT (#182). It
+# cost a gate on 2026-09-06: a park marker was written, correctly, naming the lane, the guard, the
+# rounds and the ruling verbatim — and the guard stopped the line anyway, because no code looked.
+# A clear artifact nobody reads is a mechanism that only looks like one, and it is worse than none,
+# because the next person writes it and believes the guard is cleared.
+#
+# WHAT A CLEAR DOES, AND THE LIMIT OF IT:
+#
+#   it EXCLUDES the named rounds from ONE named guard's evaluation, on ONE named lane.
+#   it DELETES nothing — the verdicts stay on disk and in the diff, and every other guard still
+#     counts them, because a ruling about why `no-change` fired says nothing about `stall`.
+#   it SILENCES nothing — a cleared guard still fires on rounds AFTER the marker. That is the
+#     whole distinction between clearing history and disabling a check, and it is the property
+#     the positive control exists to prove (§13.5: a check that cannot fail does not count).
+#
+# ⚠ AND IT CANNOT CLEAR A BROKEN JUDGE. RULED (Rafe, 2026-09-06): *a proven-blind judge is never
+# laundered by a park.* `broken-judge` means the picture-plant was missed twice running, so no
+# round past it is readable — and a ruling about a LANE cannot make an unreadable verdict readable.
+# The refusal is enforced below rather than left to whoever writes the next marker.
+PARK = os.path.join(REPO, "PARK-CLEARED.json")
+JUDGE_GUARD = "broken-judge"
+
+
+def park_clears(lane, guard, path=None):
+    """Round numbers a ruling has excluded from THIS guard's evaluation on THIS lane.
+
+    Absent, unreadable or irrelevant marker -> empty set, and the guard behaves exactly as it did
+    before this existed. A malformed marker must never be able to clear anything by accident.
+    """
+    if guard == JUDGE_GUARD:
+        return set()                      # never, whatever the marker says
+    p = path or PARK
+    if not os.path.exists(p):
+        return set()
+    try:
+        m = json.load(open(p))
+    except Exception:
+        return set()
+    out = set()
+    for e in (m if isinstance(m, list) else [m]):
+        if not isinstance(e, dict):
+            continue
+        if e.get("lane") != lane or e.get("guard") != guard:
+            continue
+        for r in (e.get("rounds_covered") or []):
+            if isinstance(r, int):
+                out.add(r)
+    return out
+
+
 # ================================ the progress signal ==========================================
 #
 # WHY RANK AND NOT A ROUND COUNT. A round count knows nothing about the work. Rank is the seat's
@@ -297,7 +354,7 @@ def two_strikes_advisory(lane_hist):
     return dict(rounds=[a.get("round"), b.get("round")], items=list(pair))
 
 
-def guards(hist, lane):
+def guards(hist, lane, park=None):
     """Which guard, if any, has fired. Returns (name, explanation) or (None, None).
 
     Checked over the lane's verdicts as they sit on disk, BEFORE the run is reported, so a session
@@ -316,6 +373,12 @@ def guards(hist, lane):
     lane_hist = [v for v in hist if lane_of(v) == lane]
     read = readable(lane_hist)
 
+    # A ruling clears ONE guard on ONE lane, so the exclusion is applied per guard rather than to
+    # the history as a whole — clearing `no-change` must not quietly clear `stall` as well.
+    def less(guard_name, seq):
+        ex = park_clears(lane, guard_name, park)
+        return [v for v in seq if v.get("round") not in ex] if ex else seq
+
     # ── broken judge ──────────────────────────────────────────────────────────────────────────
     tail = lane_hist[-JUDGE_MISSES:]
     if len(tail) >= JUDGE_MISSES and all(v.get("verdict") == "VOID" for v in tail):
@@ -326,8 +389,9 @@ def guards(hist, lane):
     # ── no change ─────────────────────────────────────────────────────────────────────────────
     # Two consecutive FAILs on the same picture. Not "the fix did not work" — the fix did not
     # reach the frame at all, which is a different problem and needs a different answer.
-    if len(read) >= 2:
-        a, b = read[-2], read[-1]
+    read_nc = less("no-change", read)
+    if len(read_nc) >= 2:
+        a, b = read_nc[-2], read_nc[-1]
         if a.get("verdict") == "FAIL" and b.get("verdict") == "FAIL":
             same, d = unchanged(prog(a).get("capture_signature"),
                                 prog(b).get("capture_signature"))
@@ -344,7 +408,7 @@ def guards(hist, lane):
                            NO_CHANGE_MAD, NO_CHANGE_MAX))
 
     # ── thrash ────────────────────────────────────────────────────────────────────────────────
-    adv = two_strikes_advisory(lane_hist)
+    adv = two_strikes_advisory(less("thrash", lane_hist))
     if adv:
         a = next(v for v in lane_hist if v.get("round") == adv["rounds"][0])
         b = next(v for v in lane_hist if v.get("round") == adv["rounds"][1])
@@ -360,7 +424,7 @@ def guards(hist, lane):
     # ── stall ─────────────────────────────────────────────────────────────────────────────────
     # A new best is the only thing that counts as progress. Matching the best is not progress; it
     # is a lane holding still, and holding still for three readable rounds is the signal.
-    scored = [v for v in read if prog(v).get("rank_score") is not None]
+    scored = [v for v in less("stall", read) if prog(v).get("rank_score") is not None]
     if len(scored) > STALL_ROUNDS:
         best, since, at = None, 0, None
         for v in scored:
@@ -376,11 +440,12 @@ def guards(hist, lane):
                     % (since, best, at))
 
     # ── ceiling ───────────────────────────────────────────────────────────────────────────────
-    if len(lane_hist) >= ROUND_CEILING:
+    if len(less("ceiling", lane_hist)) >= ROUND_CEILING:
         return ("ceiling",
                 "%d rounds on this lane. This is the backstop and it should never be the guard\n"
                 "    that fires — if it did, the progress guards did not see something they\n"
-                "    should have, and that is itself worth a ruling." % len(lane_hist))
+                "    should have, and that is itself worth a ruling."
+                % len(less("ceiling", lane_hist)))
     return (None, None)
 
 
@@ -730,6 +795,9 @@ def main():
     # `verify_on_device.sh --check-log` is the precedent and states the reason: a test that
     # reimplements the thing it tests proves the reimplementation.
     ap.add_argument("--history", help="read verdicts from this directory instead of history/")
+    ap.add_argument("--park", help="read the guard-clearing ruling from this file instead of "
+                                   "PARK-CLEARED.json. Exists so the clear can be driven against "
+                                   "a fixture and PROVED still to fire (§13.5).")
     ap.add_argument("--stall-out", help="write the stall report here instead of the repo root")
     ap.add_argument("--check-guards", action="store_true",
                     help="evaluate the loop guards against --history and exit. No round runs, "
@@ -755,7 +823,7 @@ def main():
     # A guard checked only after a fresh round has run is a guard that always pays for one more
     # round. Worse, "never run additional rounds past a broken judge" cannot be honoured by a
     # check that happens at the end of the additional round.
-    name, why = guards(hist, lane)
+    name, why = guards(hist, lane, a.park)
     if name:
         p = write_stall(name, why, hist, lane, cfg, a.stall_out)
         print("\n*** STOP — %s ***\n%s\n\nwritten: %s\n"
@@ -1096,7 +1164,7 @@ def main():
 
     # And check the guards again with this round folded in, so a STOP is written the moment it is
     # earned rather than one round later.
-    name, why = guards(history(a.history), lane)
+    name, why = guards(history(a.history), lane, a.park)
     if name:
         p = write_stall(name, why, history(a.history), lane, cfg, a.stall_out)
         print("\n*** STOP — %s ***\n%s\n\nwritten: %s"
