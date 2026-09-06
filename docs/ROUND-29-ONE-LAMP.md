@@ -572,6 +572,35 @@ is a ratified value that can silently drift. The current §6.2.1 values are then
    > re-ratified lamp, **that recomposed build takes the full frame-critic gate and its PASS seeds
    > `approved_capture`.** The surface gate is deferred, never waived.
 
+   **(c) AND A THIRD GATE REFUSED, WHICH NEITHER STOP NOR THE RULING COVERED.** With the critic
+   gate cut, the device-gate preconditions closed on condition 4 — *every ruled fix present* —
+   reporting `sheltered-joint-draws` absent. **It was the registry that was stale, not the
+   build:** the entry asserted the pre-raise `SHELTER_WEIGHTS`, correct when written on 2026-09-02
+   and superseded the next day by `c3ff7dc9`, which raised the sheltered joints and did not touch
+   `GATE-CONDITIONS.json`. **Condition 4 therefore failed on every build for two days**, and the
+   only path that consults it is also the only path that bakes the review marker — so the only
+   buildable device artefact in that window was one that cannot be walked for a review.
+
+   **RULED (Rafe, 2026-09-05): `(0.04, 0.26, 0.52, 0.18)` is the ruled value.** Registry corrected,
+   provenance recorded on the entry itself as well as in `docs/GATE-REGISTRY-DRIFT-2026-09-03.md`.
+   ⚠ **No other registry entry was re-verified against its constant.**
+
+6. **TWO APPARATUS DEFECTS, FILED NOT FIXED (Rafe, 2026-09-05).**
+
+   - **#181** — the review build's `--no-install` path ships `reviewStatus: null`, leaving a
+     loadable artefact that reads as clean-unreviewed on the handset. §1.2.2's own words: *an
+     override nobody can see from the phone is the same as no gate*, and §1.2.2a leans on the
+     stamp being honest. Exit: stamp it, or refuse to bake a marker under `--no-install`.
+   - **#182** — `PARK-CLEARED.json` is documented in the skill and **read by nothing**. The
+     marker written for item (a) above is correct, on disk, and has no effect. *A clear artifact
+     nobody reads is a mechanism that only looks like one*, and it is worse than none, because the
+     next person writes it and believes the guard is cleared.
+
+7. **THE BUILD IS ON THE PHONE.** `YARL Tier0`, bundle `com.rafehatfield.catacombsofyarl.tier0`,
+   commit `200d6108`, **stamped SKIPPED-REVIEW**, installed beside the game rather than over it.
+   It boots straight into the lit review corridor with the rig panel. Per §1.2.2a: **the walk
+   ratifies lamp values and its frame is not `approved_capture`.**
+
    ⚠ **The seat's flip 1 is a rig request and belongs to this walk either way:** *"Pull the light
    curve's white point down so no floor pixel exceeds ~232."*
 
