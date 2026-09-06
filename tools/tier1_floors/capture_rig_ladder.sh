@@ -13,7 +13,8 @@
 # here is the record of what each knob does on the corrected lamp, so the walk starts informed
 # rather than blind, and so the ratified values can be written back against something.
 #
-# ONE KNOB AT A TIME, bracketing the ratified value, everything else held at Ruling 56. A ladder
+# ONE KNOB AT A TIME, bracketing the ratified value, everything else held at the re-ratified
+# rig (radius 6.0 / falloff 1.00 / ambient 1.50 / energy 1.6, Rafe 2026-09-06). A ladder
 # that moved two knobs per rung could not attribute what the eye saw to either of them.
 set -e
 cd "$(dirname "$0")/../.."
@@ -34,7 +35,7 @@ shot () { # $1 tag, rest: overrides
     --log-out "tools/tier1_floors/evidence/rig_${TAG}.log"
 }
 
-shot ratified                                          # Ruling 56, unchanged, corrected lamp
+shot ratified                                          # the RE-RATIFIED rig (2026-09-06)
 shot energy_1.0  --light-energy 1.0                    # what the FLOOR was actually lit at
 shot energy_1.3  --light-energy 1.3
 shot energy_2.0  --light-energy 2.0

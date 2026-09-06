@@ -91,13 +91,44 @@ light:
   # shipping depends on it; the stale compensation is recorded in WALL-RECIPE.md rather than
   # silently carried. The tier-one FLOOR family derives no ratio against the rig at all — its
   # values come from the measured donor material — so it needs no re-derivation.
-  ambient: "1a1a22"        # RULED (hue) — Ruling 56
-  ambient_level: 0.70      # RULED — Ruling 56. Scalar on the hue; effective CanvasModulate #121218
-  color: "ffb066"          # RULED — Ruling 56, carried-fire warmth (§6.2 "warm")
-  energy: 1.6              # RULED — Ruling 56
-  radius_tiles: 5.0        # RULED — Ruling 56. Reach in TILES.
-  falloff: 1.00            # RULED — Ruling 56. Exponent on the radial ramp; 1.00 is identity.
-  status: RULED (Boundary only) — Ruling 56, Rafe, 2026-08-28. Other regions derive their own.
+  # ============================================================================================
+  # RE-RATIFIED (Rafe, 2026-09-06) ON THE CORRECTED SINGLE-ARITHMETIC LAMP. Issue #174.
+  #
+  # Ruling 56's original pass (2026-08-28) was walked against a floor lit at energy 1.0 while the
+  # walls beside it ran at 1.6, because tier1_polish.gdshader discarded LIGHT_ENERGY. The two
+  # planes were lit by different arithmetic, so the rig was tuned against behaviour that no longer
+  # exists. #174 made the lamp one quantity; this is the walk taken on the corrected one.
+  #
+  # WHAT MOVED, and each is a walked decision rather than a derived one (§13.2 — the eye is the
+  # final instrument):
+  #
+  #   radius_tiles   5.0 -> 6.0    the pool widens
+  #   ambient_level  0.70 -> 1.50  the dark lifts; effective CanvasModulate 121218 -> 272733
+  #   energy         1.6           UNCHANGED, and it is the quantity #174 moved. The walk had an
+  #                                energy knob for the first time and left it where it was.
+  #   falloff        1.00          UNCHANGED, still ratified AT the identity
+  #   color/ambient hue            UNCHANGED
+  #
+  # ⚠ AMBIENT WENT UP, AND §6.2.1's THIRD BULLET IS ENGAGED RATHER THAN BREACHED. That bullet
+  # asks that the pass preserve §6.2's arc — "you begin as the only thing here that burns" — and
+  # the 2026-08-28 pass could point at ambient moving DOWN (1.0 -> 0.70) as evidence it had not
+  # flooded the Boundary. This one moves it to 1.50, above the pre-Ruling-56 value. Recorded
+  # plainly because the clause deserves it: the arc is a register claim carried eye-side (§13.4),
+  # it is not instrumented, and the gate that owns it ruled here. Not a finding, a note.
+  #
+  # ⚠ THIS FIRES §6.2's RE-DERIVATION RULE AGAIN. Every authored ratio and every delivered figure
+  # taken against radius 5.0 / ambient 0.70 is stale — including the numbers round 29 re-derived
+  # on the corrected lamp four hours earlier, which were correct for the OLD rig. They are
+  # re-measured on this one, not adjusted. ART-BIBLE-v0 §6.2, §6.2.1, §6.5.
+  ambient: "1a1a22"        # RULED (hue) — unchanged by the re-ratification
+  ambient_level: 1.50      # RE-RATIFIED 2026-09-06. Scalar on the hue; effective CanvasModulate #272733
+  color: "ffb066"          # RULED — carried-fire warmth (§6.2 "warm"), unchanged
+  energy: 1.6              # RE-RATIFIED 2026-09-06 — walked with a knob for the first time, held
+  radius_tiles: 6.0        # RE-RATIFIED 2026-09-06. Reach in TILES.
+  falloff: 1.00            # RE-RATIFIED 2026-09-06. Exponent on the radial ramp; 1.00 is identity.
+  status: RE-RATIFIED (Boundary only) — Rafe, 2026-09-06, on the corrected lamp (#174). Supersedes
+    Ruling 56's 2026-08-28 values, which are annotated superseded-by-re-ratification in §6.2.1.
+    Other regions derive their own at their own gate.
 
 scene:
   # The corridor spec. Geometry is authored data (see corridor_junction.json) so the shape of

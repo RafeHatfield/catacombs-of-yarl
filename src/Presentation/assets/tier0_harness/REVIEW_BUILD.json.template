@@ -17,7 +17,9 @@
     "that for you (tools/tier0_harness/build_review_app.sh). Install it under its own bundle id",
     "so it sits side by side with the real game rather than replacing it.",
     "",
-    "THE LIGHT VALUES HERE ARE RULED FOR THE BOUNDARY — §6.2.1, Ruling 56 (Rafe, 2026-08-28),",
+    "THE LIGHT VALUES HERE ARE RE-RATIFIED FOR THE BOUNDARY — §6.2.1 (Rafe, 2026-09-06), on the",
+    "corrected single-arithmetic lamp (#174). They supersede Ruling 56's 2026-08-28 values:",
+    "radius 5.0 -> 6.0 and ambientLevel 0.70 -> 1.50; energy and falloff held.",
     "ratified by walking the tier-one floor family on the reference device at gameplay distance.",
     "They are copied from tools/tier0_harness/harness_config.yaml so the device build and the",
     "desktop capture are lit by the same rig; if they drift, the two stop being comparable.",
@@ -96,10 +98,10 @@
   "voidRing": 1,
   "light": {
     "ambient": "1a1a22",
-    "ambientLevel": 0.70,
+    "ambientLevel": 1.50,
     "color": "ffb066",
     "energy": 1.6,
-    "radiusTiles": 5.0,
+    "radiusTiles": 6.0,
     "falloff": 1.00
   },
 

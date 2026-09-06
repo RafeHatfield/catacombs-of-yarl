@@ -706,6 +706,42 @@ menace with almost no gothic vocabulary.
 
 ~~Only the Boundary's values are derived at the pilot. The rest are PLACEHOLDER.~~
 
+> ### ⚠ RE-RATIFIED (Rafe, 2026-09-06) ON THE CORRECTED SINGLE-ARITHMETIC LAMP. THIS TABLE IS THE LIVE ONE.
+>
+> Ruling 56's values below were walked against **a floor lit at energy 1.0 while the walls beside
+> it ran at 1.6** — `tier1_polish.gdshader` discarded `LIGHT_ENERGY` (#174), so the two planes
+> were lit by different arithmetic and the rig was tuned for a readability that did not exist.
+> #174 made the lamp one quantity. This is the walk taken on the corrected one, on the reference
+> device, at gameplay distance, across the lit radius — the ordering §6.2.1 demands.
+>
+> | knob | Ruling 56 (2026-08-28) | **re-ratified (2026-09-06)** | unit |
+> |---|---:|---:|---|
+> | **radius** | 5.0 | **6.0** | TILES. At the RULED 32px tile: a 384px radius, 768px light texture. |
+> | **falloff** | 1.00 | **1.00** | EXPONENT on the radial ramp. Held at the identity a second time, on a different lamp — which makes it a repeated decision rather than an inherited one. |
+> | **ambient level** | 0.70 | **1.50** | SCALAR on the ambient HUE. `#1a1a22 × 1.50 → rgb(39,39,51) = #272733`, the CanvasModulate actually applied. |
+> | ambient hue | `1a1a22` | `1a1a22` | unchanged |
+> | light colour | `ffb066` | `ffb066` | unchanged — §6.2's carried-fire warmth |
+> | **energy** | 1.6 | **1.6** | **HELD, and this time it was reachable.** The panel had no energy knob until this round; every prior walk left it where it was because it *could not be moved*. This is the first walk in which holding it was a choice. |
+>
+> **BOUNDARY ONLY**, as before. Landed in `tools/tier0_harness/harness_config.yaml` and in the
+> device marker template, **passed explicitly and required by the engine** — a ratified value that
+> can be silently defaulted is a ratified value that can silently drift.
+>
+> ⚠ **AMBIENT WENT UP, AND §6.2.1's THIRD BULLET IS ENGAGED RATHER THAN BREACHED.** That bullet
+> asks the pass to preserve §6.2's arc — *you begin as the only thing here that burns* — and the
+> 2026-08-28 pass could point at ambient moving **down** (1.0 → 0.70) as evidence it had not
+> flooded the Boundary. This one moves it to **1.50**, above even the pre-Ruling-56 value.
+> Recorded plainly, because the clause deserves the note: **the arc is a register claim, carried
+> eye-side and never instrumented (§13.4), and the gate that owns it is the one that ruled here.**
+> A number does not get to overturn a look (§13.2). It is a note, not a finding.
+>
+> ⚠ **THE RE-DERIVATION RULE HAS FIRED AGAIN, AND IT REACHES WORK DONE HOURS EARLIER.** Radius
+> 5.0 → 6.0 and ambient 0.70 → 1.50. **Every delivered figure round 29 re-took on the corrected
+> lamp is now stale** — the composed floor-versus-wall table, `L(cap, floor)`, the white-point
+> ladder, the delivered-reach profile. They were correct for the old rig and are re-measured on
+> this one, **not adjusted**. That is the second time in one day this rule has fired, and it is
+> the cost the coupling flag names: art downstream of a rig is art that moves when the rig does.
+
 > **RULED (Rafe, 2026-08-28) — RULING 56. THE BOUNDARY'S RIG IS RATIFIED. PLACEHOLDER CLEARED FOR
 > THIS REGION AND FOR NO OTHER.**
 >
@@ -883,6 +919,19 @@ game. Tune the cheap thing.**
   convenience.
 - **The ratified values written back here**, which fires the re-derivation rule above.
 
+> **⚠ SUPERSEDED-BY-RE-RATIFICATION 2026-09-06.** Everything in this block describes the pass
+> taken on the BROKEN lamp — floor at energy 1.0, walls at 1.6 (#174). Its ratified values
+> (radius 5.0, ambient 0.70) are **no longer the rig**; see the re-ratification at the head of
+> §6.2. **The block is kept in full, not rewritten**, because a status trail that overwrites
+> itself is not a trail — and because what the pass *owed* is unchanged and is re-answered below.
+>
+> **What the re-ratification answers that this pass could not:** its second bullet — *the §6.5
+> stack surviving the falloff across the lit radius* — was recorded ⚠ NOT ANSWERED because the
+> scene's walls were programmer-art mocks. The 2026-09-06 walk had real walls, a real floor and
+> one arithmetic. **It is still not answered as a §6.5 value law**, because the walk ratified the
+> LAMP and §1.2.2a is explicit that a rig walk blesses no picture — but the obstacle is now the
+> ruling's scope rather than the scene's contents.
+>
 > **DONE — RULING 56 (Rafe, 2026-08-28).** The values are in the §6.2 table above. What the pass
 > owed, answered:
 >
