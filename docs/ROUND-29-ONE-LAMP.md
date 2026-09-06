@@ -259,11 +259,49 @@ than its own material; it is not the high-frequency source.
 > `delivered` quantity"* — and with two instruments that disagree about method and agree about
 > the answer.
 
-**So there was nothing for step 2 to fix, and the successor is not this lane.** Whatever the seat
-saw is in the floor's authored material at a constant ~7.8% of local value, which is where round
-28's flip 6 (*"the frame is soft everywhere"*) was already ruled to live: the mottle and erosion
-layers, **SUPERSEDED-BY-GATE** under LOOP-PROCESS §4.3. Chasing it here would have been re-authoring
-the tier-one floor on a premise measurement had already killed.
+### A THIRD SEAT SAW IT, THIS ROUND, ON THE CORRECTED FRAME — and it is still not located
+
+This round's own critic, blind, flagged it again with a box:
+
+> *"A diagonal streak/hatch band runs down-left at ~45° across the lit pool around
+> (430,470)–(560,560). A point lamp cannot produce a directional band. Delete the overlay."*
+
+**That is round 27, round 28 and round 29 — three seats, three decks, three rounds.** So the
+instruments got one more chance, on the seat's own coordinates. The two above are high-pass
+measures and **a broad directional band is LOW frequency: they would miss it by construction.**
+That gap is closed here, on the smoothed field, inside the seat's box:
+
+| in the seat's box | peak gradient orientation | share | 45° bins | 90° bins |
+|---|---|---:|---:|---:|
+| the polish term, isolated | 90–105° | 0.222 | **0.067** | 0.380 |
+| the diffuse floor beneath it | 75–90° | 0.223 | **0.052** | 0.426 |
+
+*(uniform would be 0.083 per bin.)* Both planes are organised at **90° — the bond** — and the 45°
+bins sit **at or below uniform in both.** The polish term in that box is not small (mean 22.33
+levels, sd 31.28), so this is not a null for want of signal.
+
+> ### ⚠ AND THE HONEST READING OF THAT IS NOT "THE SEATS ARE WRONG". §13.10.
+>
+> **Three seats have reported a ~45° feature and six instruments across two rounds have failed to
+> find it** — round 28's lag autocorrelation and structure tensor, and this round's high-pass
+> residual, flip rate, and two orientation histograms. §13.10 is explicit about which side that
+> leaves carrying the burden: *"an instrument that says a seat did not see what it says it saw is
+> making the stronger claim."* **Six failures to find a thing are not a finding that it is absent.**
+> Round 24's seat was right and the instrument contradicting it was wrong, and that seat spent two
+> rounds discredited for it.
+>
+> **What this round establishes is narrower than round 28's attribution and firmer than it:**
+> whatever the seats are seeing, **it is not the polish mask.** Nulling the polish leaves the
+> relative high-frequency content unchanged to three decimals and leaves the orientation
+> statistics in the seat's own box unchanged. Round 28's *"the artefact is the polish mask"* does
+> not survive its own control. **Where it IS remains open, and it is not closed by my failing to
+> find it.**
+
+**So there was nothing for step 2 to fix.** Step 2 was briefed to fix a dither the connection
+exposed; the connection exposed nothing, and the one candidate the brief named is excluded by
+control. Chasing the unlocated artefact here would have been re-authoring the tier-one floor
+inside a round whose refusals forbid bundling — and on a premise measurement had already killed.
+**Filed as the successor, unattributed, with a box and three seat quotes to start from.**
 
 **The delivered palette is clean and was never the issue.** `measure_delivered_palette.py`:
 albedo 31 delivered against 33 authored, **0 off-palette**, control binds at 634 blended against
@@ -407,11 +445,16 @@ is a ratified value that can silently drift. The current §6.2.1 values are then
    the re-scoping's *dark-by-design* now extends inward — and it is **Rafe's, at the gate, not
    an instrument's.**
 
-3. **Round 28's flip 1 is misattributed and the clause that records it should say so.** The
-   cross-hatch is not the polish mask: the relative high-frequency residual is 0.0776 / 0.0766 /
-   0.0780 / 0.0781 across polish-on and polish-nulled, before and after the fix. §5 above.
-   Proposed: round 28's §7 attribution is annotated, and the successor is filed to the floor
-   material lane rather than carried on #174. **Not applied to round 28's document.**
+3. **THE ~45° FEATURE: THREE SEATS, SIX INSTRUMENTS, NO LOCATION — and §13.10 says the
+   instruments are the ones short.** Rounds 27, 28 and 29 have each had a blind seat report it;
+   this round's gave a box, (430,470)–(560,560). Round 28's attribution to the polish mask **does
+   not survive its own control** — nulled, the relative high-frequency residual is
+   0.0776 / 0.0766 / 0.0780 / 0.0781 and the orientation statistics inside the seat's box are
+   unchanged (45° bins 0.067 polish, 0.052 diffuse, against 0.083 uniform). But six failures to
+   find a thing are not a finding that it is absent, and §13.10 puts the heavier burden on the
+   party making the accusation. Proposed: round 28's §7 attribution is annotated as unproven, the
+   item is filed **unattributed** with the box and the three quotes, and it does not ride on #174.
+   **Not applied to round 28's document.**
 
 4. **Bible §5.6 says nine rungs; the code and the manifest ship eleven.** Still true, still not
    this round's. Carried forward from round 28 §9.5.

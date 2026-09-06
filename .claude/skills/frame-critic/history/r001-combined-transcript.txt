@@ -1,0 +1,69 @@
+All three read at once. Here's the assessment.
+
+**RANK:** 1 > 2 > 3
+
+**BEST:** 1
+
+**BEST_WHY:** Three things are actually built rather than filtered.
+
+First, the paving below the figure (roughly x 190–560, y 460–660) is laid from stones of at least four distinct widths inside a single course, and their top values differ by a real margin — the block at ~(230,500) sits several steps darker than its neighbour at ~(300,500), and the joint between them is a partial dark dash that stops before the stone's full length. Joints appearing along only part of a run is exactly what cut-and-salvaged paving does, and it is the one thing in this deck that could not be produced by stamping a grid.
+
+Second, the crack running from ~(280,555) down through ~(340,610) to ~(430,660) crosses at least five separate stones and continues *across* the joints rather than terminating at them, and it narrows as it travels. Fracture propagating through the courses instead of respecting them is a deliberate call.
+
+Third, and the reason it beats 2 outright: the occlusion is honest. Boosting the darks four stops shows a hard straight shadow edge running from about (120,135) diagonally to (670,135) off the wall at y≈390, and nothing behind that wall receives any light at all. The lamp is treated as a point source with real geometry blocking it.
+
+**WORST:** 3
+
+**WORST_WHY:** The dirt field is one 16×16 tile repeated across roughly 150 cells with no variation whatsoever. Crop x 100–244, y 20–164 and the same dark-red crescent-and-dot vein cluster recurs at every 16px step — you can count the grid off the texture alone. Nothing is rotated, nothing is reflected, no second variant exists.
+
+Next to that, the water is a literal rectangle. Its bottom edge runs dead straight at y≈191 from x=246 to x=344, and its right edge runs dead straight down x≈344, both axis-aligned, both cutting the dirt with no bank, no shoreline, no transition tile, no darkening at the margin. A pond shaped like its own bounding box. The dirt-to-flagstone boundary at y≈215 does the same thing — the brown simply stops and grey begins on a single pixel row.
+
+The grey floor is one flat mid-grey per tile with a uniform 1px lighter grout line and a sprinkle of identical lighter dots; across the whole visible stone area no tile differs from another in value, and no joint differs in depth from any other joint. And the lily pads at ~(259,151)–(289,184) are a saturated grass green sitting in desaturated teal — the chroma jump is far outside anything else in the frame, so they read as pasted from a different set.
+
+There is no light model at all. The frame is uniformly bright corner to corner, which is not a stylistic difference from the others — it's the absence of the system the other two implement.
+
+**FLAGGED:** 1, 2, 3
+
+Each carries something visible in the first second:
+
+- **2** — the lamp light passes through solid rock. Boost the darks and the two masses flanking the corridor (x 30–370 and x 440–740, y 200–460) are the same mottled stone bulk that 1 renders as wall, but they are lit by a smooth radial glow that spreads up and outward in a near-mirrored butterfly, and they end up *brighter* than the lit wall band at y≈390–425 standing directly in front of them. Light is passing through the occluder and the thing behind is out-reading the thing in front.
+- **3** — the rectangular pond, above.
+- **1** — resolution mismatch between figure and world. The sprite at ~(400,485) is hard-edged pixel art on a ~2px grid with a black outline and clean saturated teal/orange. The floor it stands on is soft resampled texture with anti-aliased, blurry stone edges and no consistent pixel size. The figure sits on the scene like a decal.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The figure is rendered at a ~2px hard pixel grid; the environment is soft and resampled with no fixed pixel size. Quantise the environment to the same pixel grid as the sprite so stone edges land on hard pixel boundaries instead of gradients.
+- A diagonal streak/hatch band runs down-left at ~45° across the lit pool around (430,470)–(560,560). A point lamp cannot produce a directional band. Delete the overlay.
+- The incised double-tick "//" marks on the stones right of the figure (roughly x 565–620, y 480–580) recur at identical angle and identical length about fifteen times. Vary angle and length per instance, or cut their count by two thirds.
+- The block at approx (494,520)–(558,550) is flat and untextured, brighter than every stone around it, and further from the lamp than the figure. Give it the same joint and wear treatment as its neighbours and drop it to the value its distance from the lamp implies.
+- Four cracks radiate from a single point at ~(314,600) in a near-symmetric X. Stone does not fracture radially from a point. Break it into two crossing fractures with offset origins, or remove two of the four arms.
+- The wall band at y 385–440 is mottled brown noise with no legible courses. Draw actual stone runs into it with joint lines at the same weight as the floor's.
+- Nothing anywhere in the frame shows a repair. The fiction specifies rope, driven pins, hide and salvaged timber holding this floor together for four hundred years. Add at least two: a timber baulk pinned across a gap in the paving, and a stone lashed back into a course.
+
+**FLIP 2:**
+- Light is passing through solid rock. Occlude the masses at x 30–370 and x 440–740, y 200–460 against the wall band at y≈390–425 so nothing behind that wall receives lamp light. Currently they are brighter than the wall in front of them.
+- Those same masses have no tile structure at all — no grid, no joints, no stone — while every other surface in the frame carries a grid. Either give them the wall treatment or crush them to the black that 1 uses.
+- The glow spreading into them is near-mirrored left-to-right about the corridor centreline at x≈407. Break the symmetry.
+- Every floor joint from y 455 to y 700 is the same dashed line at the same value and the same weight. Vary joint value and width per stone and add a shadow side to at least the joints within two tiles of the lamp.
+- A repeating diagonal hatch fills the floor tiles across roughly (250,470)–(650,620) at one fixed angle. Remove it or randomise angle per tile.
+- The floor across the entire lit area holds a single brown value — the stone at ~(250,480) is indistinguishable from the stone at ~(600,560) despite a large difference in lamp distance. Open the value range so distance from the lamp actually reads on the paving.
+- The crack running from ~(0,600) to ~(420,530) is a uniform-width black line that crosses joints without interacting with them. Taper it and let it deviate where it meets a joint.
+- No repairs anywhere, same as 1.
+
+**FLIP 3:**
+- The dirt is one 16×16 tile repeated across the whole field with zero variation. Author at least four variants plus rotations and scatter them, or the grid stays countable.
+- The water's bottom edge (y≈191, x 246→344) and right edge (x≈344) are dead straight and axis-aligned. Give the pond an irregular outline that does not follow the tile grid, and add an edge/bank transition tile between water and dirt.
+- The dirt terminates against the flagstones at y≈215 on a single pixel row with no transition. Add a scatter/overlap edge so soil spills onto the stone rather than stopping at a ruled line.
+- Every grey floor tile carries the same value and the same 1px grout line. Vary tile value across the field and vary joint depth so some stones sit proud and some are sunk.
+- The lily pads at ~(259,151)–(289,184) are a saturated grass green against desaturated teal. Pull their chroma and value into the water's range.
+- The water surface is a uniform repeating bubble/scale pattern edge to edge with no depth. Darken toward the centre, lighten at the margin, and break the pattern's period.
+- There is no light source. The frame is evenly lit corner to corner. Implement the lamp falloff the premise requires — the figure is the only light, so everything beyond a few tiles of it should be dropping toward black.
+- The stone, the dirt, the water and the crates each read as a separate asset set that has never been colour-matched. Bring them onto one palette ramp.
+
+Forward look: 2's failure is a lighting/occlusion bug in the renderer, not an art problem — fix the occluder test and roughly 40% of that frame changes without an artist touching it. 1's failures are all in the texture pipeline, and the resolution mismatch between sprite and world is the one that will keep looking wrong no matter how much detail gets added on top. 3 needs a different tileset, not repairs to this one.
+
+---
+*Model: Claude Opus 5 (1M context)*
