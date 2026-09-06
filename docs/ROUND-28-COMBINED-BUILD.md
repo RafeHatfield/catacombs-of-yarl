@@ -1,5 +1,28 @@
 # Round 28 — the combined build: one room
 
+> ## RULED (Rafe, 2026-09-05). ROUND ACCEPTED. THE LANE IS PARKED, AND #174 IS THE GATE.
+>
+> *"The combine cannot honestly PASS while #174 stands — the room's two core reads (§6.5 stack,
+> corridor-as-corridor) are both measured across the broken arithmetic. #174 is now the gate.
+> Park the combine at this composed-and-holding state; it resumes for the walk after #174 lands
+> and the rig re-ratifies."*
+>
+> **Composition holds. The round stopped correctly at a ruling trigger and not at a guard.**
+>
+> | | ruling |
+> |---|---|
+> | **the joint flip** | **REFUSED and recorded.** *Packed joints take the shine* is ruled; two seats requesting the inverse is the **§13.4 case, not a reopening**. The repetition means **the treatment is not reading as intentional** — a MAKE-IT-READ polish item for later, **not a deepen-now capitulation**. Written up as bible **§13.4.1** |
+> | **#174** | **Scope reframed** from *"the lamp is wrong"* to **"43% of §6.5-governed cross-plane separation runs on `LIGHT_COLOR`-not-`ENERGY` arithmetic; the planes are lit by different math."** Filed onto the issue and onto bible §6.2's asterisk. §6.5's measured figures are **VOID rather than provisional** — re-measured after #174, not adjusted |
+> | **the chokepoint** | *"a vertical column of light with nothing casting it"* is **the wall mass-read question, ruled #174-provisional.** The fix is the floor-wall value relationship, which #174 corrupts; **it cannot be chased until the lamp arithmetic is one** |
+> | **§12.1a's void** | **stays flat-dark-fallback.** Occluder outstanding, and recorded as the interim in the clause itself |
+> | **the out-of-map grey** | filed as **#178** |
+>
+> **PARK STATE — composed and holding.** The scene, the capture path, the `--void-ring` flag, the
+> hatch fix and the critic's `combined` surface are all landed and reproducible (§10). What is
+> owed before the walk is **#174 and Ruling 56's re-ratification**, and nothing in this lane.
+> Whoever resumes: re-capture through §10 unchanged, re-measure §5's table, and expect every
+> cross-plane number in it to move.
+
 **Both surface lanes stopped soloing. This is the first frame in the project's history that has a
 real floor, real walls, a real cap and a real void in it at once, with no magenta anywhere.**
 
@@ -276,7 +299,7 @@ It was selecting correctly and saying nothing about it. Fixed; this round's two 
 | 1 | *"A uniform ~45° hatch overlay runs across the entire lit floor … it is screen-space, not surface texture"* | **REAL, and it is #174.** See below |
 | 2 | *"x 130–440, y 0–140 is soft brown blobs with no joints — stones dissolved by blur"* | wall cap at 4+ tiles. §13.9: below the representable floor at that range, recorded dark-by-design |
 | 3 | *"The wall top … at (490,470) measures 170 against the floor below it at (520,500) measuring 68"* | **the luminances are right to within 3 levels; the identification is not.** Both points are FLOOR — tiles (7,12) and (8,12) — per the engine's own logged grid, verified against its own probe (`legibility(5,12) at px(343,578)`, and 23+64·5 = 343). It is floor-to-floor inside the falloff, not a plane inversion |
-| 4 | *"a vertical column of light at x≈510–530, y 250–450 with nothing in the frame casting it"* | **REAL, and it is the wall lane's own open question.** Those are tiles (8, 8–11) — the lit chokepoint. **The corridor does not read as a corridor; it reads as an unexplained shaft.** §5 of the wall report's gate questions, answered no |
+| 4 | *"a vertical column of light at x≈510–530, y 250–450 with nothing in the frame casting it"* | **REAL, and it is the wall lane's own open question.** Those are tiles (8, 8–11) — the lit chokepoint. **The corridor does not read as a corridor; it reads as an unexplained shaft.** §5 of the wall report's gate questions, answered no. **RULED 2026-09-05: #174-PROVISIONAL.** It is the wall mass-read question, its fix is the floor-wall value relationship, and #174 corrupts that — **it cannot be chased until the lamp arithmetic is one** |
 | 5 | *"the stone joints vanish entirely … restore joint contrast at full light"* | **ruled behaviour**, §4 above. Second seat |
 | 6 | *"the frame is soft everywhere. Kill the blur pass"* | no blur pass exists — `default_texture_filter=0` is nearest. The softness is the mottle and erosion layers, which LOOP-PROCESS §4.3 already ruled SUPERSEDED-BY-GATE |
 
@@ -322,20 +345,30 @@ and it holds; what it is waiting on is #174's walk.**
 
 ## 9. Anything awaiting a ruling, printed in full (§9)
 
-1. **Packed joints take the shine.** Two independent blind seats, two rounds, have asked for the
-   joints back at full light. The behaviour is ruled and is doing what it was ruled to do.
-   Verbatim, both: *"sharpen the joints; they fade toward the light edge"* /
+1. **Packed joints take the shine.** — **RULED 2026-09-05: REFUSED.** Two independent blind seats,
+   two rounds, asked for the joints back at full light; the behaviour is ruled and is doing what
+   it was ruled to do. Verbatim, both: *"sharpen the joints; they fade toward the light edge"* /
    *"in the lit zone right of the figure the stone joints vanish entirely — you cannot tell where
    one slab ends. Restore joint contrast at full light so the grid survives exposure."*
-2. **#174 and the polish term.** The floor's delivered value at the standing case is 30% specular;
-   nulling it leaves every wall value unchanged. The visible cost is a four-level per-pixel dither
-   stamped over the lit floor, which this round's seat made its first flip. **This round did not
-   touch `LIGHT_ENERGY`, as instructed.** Whoever re-ratifies the rig owns both.
-3. **§12.1a's occluder.** Not attempted. At the ruled `void_ring: 0` the lamp lights 192 cells of
-   solid rock and the room has no outside; this round ran the flat-dark fallback on the command
-   line and flagged it.
-4. **The out-of-map grey.** A flat (77,77,77), sd 0.00, unlit, wherever the camera sees past the
-   map edge.
+   A blind seat is a proxy for the gate, not the gate, and counting seat requests as votes is
+   §13.4's failure running in the review layer. **But the repetition is information: the
+   treatment is not reading as INTENTIONAL.** The successor is a make-it-read item — make the
+   packing legible *as* packing, in §8.2.1's own vocabulary — and explicitly **not** a
+   deepen-now capitulation, which would put the ring back. Bible **§13.4.1** carries the ruling
+   and its general form.
+2. **#174 and the polish term.** — **RULED 2026-09-05: SCOPE REFRAMED, AND #174 IS THE GATE.**
+   Not *"the lamp is wrong"* but *"43% of §6.5-governed cross-plane separation runs on
+   `LIGHT_COLOR`-not-`ENERGY` arithmetic; the planes are lit by different math."* Filed onto the
+   issue and onto bible §6.2's asterisk; §6.5's measured figures are now **void rather than
+   provisional**. The visible cost is a four-level per-pixel dither stamped over the lit floor,
+   which this round's seat made its first flip. **This round did not touch `LIGHT_ENERGY`, as
+   instructed.** Whoever re-ratifies the rig owns both.
+3. **§12.1a's occluder.** — **RULED 2026-09-05: THE FLAT-DARK FALLBACK STANDS, OCCLUDER
+   OUTSTANDING.** Not attempted. At the ruled `void_ring: 0` the lamp lights 192 cells of solid
+   rock and the room has no outside; this round ran the flat-dark fallback on the command line
+   and flagged it. Recorded as the interim in §12.1a itself, with its grid-step cost named.
+4. **The out-of-map grey.** — **FILED as #178.** A flat (77,77,77), sd 0.00, unlit, wherever the
+   camera sees past the map edge.
 5. **Bible §5.6 says nine rungs; the code and the manifest ship eleven.**
 
 ---
