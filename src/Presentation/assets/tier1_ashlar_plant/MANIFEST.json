@@ -1,6 +1,6 @@
 {
  "family": "boundary_floor_ashlar_PLANT",
- "commit": "700ba78f45196dff770b0d7ed88d4149970fa1cf",
+ "commit": "054260921f4d9144ef7f3d3ade2e6a441995e028",
  "seed": 1337,
  "material": {
   "lum_lo": 75.016,
@@ -50,6 +50,8 @@
   ],
   "polish_exp": 2.0,
   "polish_gain": 1.0,
+  "shoulder_knee": 0.75,
+  "shoulder_ceiling": 0.92,
   "deform_flatten": [
    0.0,
    0.04,
