@@ -1,0 +1,54 @@
+Read all three at native size and at 3–7× on the regions that matter, plus pixel measurements where a claim needed checking.
+
+RANK: 3 > 2 > 1
+
+BEST: 3
+
+BEST_WHY: The floor is genuinely built rather than tiled. In the lit area below the figure the slab joints are dark dashed pixel runs whose weight and continuity *vary along a single run* — the horizontal joint at roughly y≈680 breaks and re-forms around x≈600, and slab sizes are irregular (half-slabs at the left edge, a doubled slab under the figure, a noticeably paler replacement stone at ~x430–520,y560–600 that reads as a stone swapped in later). The crack lines are hand-drawn continuous curves that cross slab boundaries and ignore the grid entirely — the long arc running from ~(60,600) down to (450,760) passes straight over four joints. That is how cracks actually propagate through masonry, and it is the single strongest signal in the deck that a person drew this rather than stamped it. The corridor mouth at x≈390–440 is also correctly built: the corridor floor holds warm tan and its own joint pattern, and it terminates against wall runs on both sides that read as separate objects, not as a recolour of the floor.
+
+WORST: 1
+
+WORST_WHY: Three things, any one of which is disqualifying.
+
+First, there are no walls. The dirt field, the grey flagstone at left and right, and the water are all coplanar floor recolours that simply abut. The dirt-to-flagstone boundary at x≈56 and again at x≈344 is a pixel-straight vertical cut, one pixel wide, with no wall thickness, no worn edge, no dirt spilling onto the stone. The frame is a painted tilemap, not a room.
+
+Second, the water at x≈250–344, y≈0–190 is a flat rectangle. I measured it: **7 unique colours across the whole body, standard deviation 2.64**. It is a flat teal fill with a stamped hexagonal cell pattern over it, terminating in hard 90° corners with zero edge treatment — no bank, no lip, no darker shallows, no shore. It reads as a selection filled with a colour.
+
+Third, the two crates on the left at x64–96 — the one at y0–32 and the one at y48–80 — are **byte-identical, maximum pixel difference 0**. Same lid highlight, same latch, same diamond keyhole, in the same column, 48px apart. So are the two dark bodies beneath them. The teal moss blobs are likewise the same three or four shapes reused at left and right. And nothing in the frame is lit or grounded: no object casts a contact shadow, the two barrels at the bottom sit on the dirt with no shadow at all, and the whole scene is at flat uniform ambient.
+
+FLAGGED: 1, 2
+
+SHIP: NONE
+
+FLIP 3:
+- The grey-blue wall-top band and the floor are the same value. I measured the band at x80–340,y415–450 against the floor directly below it at x150–340,y600–640: **mean luminance 48.5 vs 48.0**. They separate only by a faint hue shift (39.8/33.6 vs 35.3/24.9 in G/B), and in the dark half of the frame that difference vanishes — wall and floor merge into one field. Drop the wall-top surface a minimum of 25 luminance below the floor at equal distance from the light, and hold that gap across the whole falloff range, not just near the figure.
+- That same wall-top band is the largest continuous surface in the frame and it carries no information at all — no joints, no capstone courses, no wear, no repair, over roughly 700×40 px. Give it its own masonry course at a different block size from the floor, with joints running perpendicular to the floor's, so the eye reads it as a different plane before it reads value.
+- The wall runs terminate at the corridor mouth (left end x≈390, right start x≈440) in a clean vertical cut with no end-stone and no corner block. Add a distinct quoin/end stone at each terminus, wider than the course blocks, so the wall reads as having thickness rather than being sliced.
+- The diagonal chisel hatch is one repeated stamp: identical 3–4 line clusters at identical 45° angle and identical spacing recur at ~(490,730), (560,970), (830,970), (860,900) and roughly two dozen other places. Cut it to three angle variants and remove it from at least half the slabs — uniform tooling marks in one direction across an entire floor is the tell.
+- The far face of the wall (the dark block course above the grey band) has exactly one timber pin visible, the vertical dark bar at x≈570,y≈385. On a wall a company has been patching for four hundred years, add six to ten more across that run at irregular spacing, at varying lengths, some driven at an angle, some doubled.
+- The figure has no contact shadow. Add a hard-edged dark ellipse under the boots at y≈510 — the light is at the figure's own position, so the shadow is short and directly beneath, but its absence is what makes the sprite float.
+
+FLIP 2:
+- The darkness is doing two incompatible things in the same frame. There is a smooth radial falloff *and* hard-edged axis-aligned black rectangles: a pixel-crisp vertical black edge at x≈180 running from y0 to y≈135, and a horizontal one at y≈134 running right to x≈500, plus a second black rectangle x≈60–520, y≈268–650. Those hard rectangle boundaries cut straight across wall and floor alike. Either feather every one of those edges into the radial falloff, or commit to hard tile-quantised occlusion everywhere and drop the smooth gradient — but not both in one frame.
+- The lit core is the least-detailed part of the picture. In the 60px band around the figure the floor is a flat cream/peach field with no surface information inside the slabs at all. The light should reveal the most detail where it is strongest; here it erases it. Pull the lit-zone highlight down about 30 luminance and re-introduce the chisel texture and joint variation into the brightest slabs.
+- Joints in the lit zone are *lighter* than the slab faces — the vertical joint immediately left of the figure at x≈365 is a pale pink line. A joint is a recess; it cannot be brighter than the stone it separates. Invert those so every joint sits below its neighbouring faces at every light level.
+- There are dozens of orphaned joint stubs: short dark vertical bars that start and stop inside a slab and connect to nothing. Clear examples at (620,490), (640,530), (690,520), (655,650), (620,650). A joint separates two stones; these separate nothing. Delete every stub that does not terminate at another joint or at a wall.
+- The olive-brown rectangle at x≈235–305, y≈650–715 is a hard-edged untextured box in a hue family that appears nowhere else, with no top/side distinction and no shadow. It reads as a placeholder. Either texture it as an actual object with a lit top face, a darker side face and a cast shadow, or remove it.
+- There is a straight-line shadow wedge running diagonally from the upper-left of the lower floor area down toward (350,850) that corresponds to no occluder in the scene. Delete it or place the geometry that would produce it.
+- The wall surfaces are soft blurred mottle with crisp 1px pixel marks drawn on top — two incompatible resolutions in the same surface, most visible along the wall top at y≈140–265 in the upper area. That blur is the strongest "a filter was run over this" signal in the frame. Quantise the wall texture to the same pixel grid as the joint marks so the whole surface resolves at one scale.
+- The wall's bottom edge against the floor at y≈455 is a hard 1px line with no shadow cast onto the floor below it. Add a 3–4px darker band on the floor along the base of every wall run.
+- Same repeated diagonal hatch stamp as in 3, at higher density across the right-hand floor. Vary or thin it.
+
+FLIP 1:
+- Build actual walls. Right now the dirt field, the flagstone at x<56 and x>344, and the water are coplanar floor recolours that abut at pixel-straight cuts. Every boundary between two floor materials needs either a wall with a visible top surface and a near face, or a transition strip 4–8px wide where one material breaks into the other.
+- The water body at x250–344, y0–190 is a flat fill — 7 colours, std 2.64, hard 90° corners. Add a bank: a 4px darker rim where water meets dirt, a value ramp from the edge toward the centre so depth reads, and irregularise the outline so no run of edge is longer than about 24px without a break.
+- The two crates at x64–96 (y0–32 and y48–80) are byte-identical, difference 0. Redraw the second with a different lid highlight, a different latch position, a broken or missing board, and a few degrees of rotation off-grid.
+- The teal moss blobs reuse the same three or four shapes — the cluster at x≈16–72,y≈48–72 recurs almost exactly at the right edge around x≈350,y≈150. Draw at least eight distinct shapes and never place two identical ones in the same frame.
+- Nothing casts a shadow. The two barrels at x≈110–180, y≈190–215 sit on the dirt with no contact shadow at all, and neither do the crates. Add a hard dark ellipse or offset under every standing object.
+- The lighting is flat uniform ambient across the entire frame — no falloff, no direction, no source. Introduce a single light position and let every surface darken with distance from it, so objects have a lit side and a dark side rather than one flat value each.
+- The flagstone grid is perfectly regular: identical stones, a uniform 1px joint at the same value everywhere, flat interiors. Vary slab sizes, break joint runs, and add a handful of cracked, sunken or replaced stones — otherwise it reads as one tile stamped in a grid, which is what it is.
+
+The through-line: 3 is the only one that shows evidence of a hand deciding where each joint goes, and it still merges its wall into its floor. 2 has more ambition in the lighting and more damage in the execution — the hard black rectangles against a soft gradient are the thing a player would notice in the first second. 1 is a level-editor screenshot.
+
+---
+Model: Claude Opus 5 (1M context)
