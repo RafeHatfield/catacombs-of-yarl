@@ -32,7 +32,7 @@ namespace CatacombsOfYarl.Logic.Core;
 ///   "width":  int, "height": int,                      // map extent, in tiles
 ///   "player": { "x": int, "y": int },                  // where the carried light is anchored
 ///   "carve":  [ { "x0":int,"y0":int,"x1":int,"y1":int } ... ]   // inclusive rects, floor
-///   "legibility": [ { "x":int,"y":int,"expect":"lit"|"dark","why":string } ... ]   // optional
+///   "legibility": [ { "x":int,"y":int,"expect":"lit"|"dark","bound_lum":float,"why":string } ... ]
 /// }
 ///
 /// THE LEGIBILITY LIST — floor session two, precondition 2. Optional, so every existing spec
@@ -63,7 +63,20 @@ public static class CorridorReviewSceneBuilder
     /// carried so the capture log says what each point is FOR — a coordinate with no reason
     /// beside it is a number nobody can maintain.
     /// </summary>
-    public readonly record struct LegibilityPoint(int X, int Y, bool MustBeLit, string Why);
+    /// <summary>
+    /// A declared legibility point and THE ABSOLUTE DELIVERED LUMINANCE IT REQUIRES.
+    ///
+    /// RULED (Rafe, 2026-09-07): <c>BoundLum</c> replaced a ratio against the brightest lit floor.
+    /// **An instrument whose reference can saturate measures the ceiling, not the scene.** The old
+    /// reference cell clipped at 255, so every dark declaration was a ratio against a pinned
+    /// value; a highlight shoulder that changed ZERO dark pixels made two of them "fail", purely
+    /// because the denominator moved. The bound is now what a viewer can or cannot see, in
+    /// delivered luminance, on the frame (§13.8).
+    ///
+    /// Units: normalised 0..1, the same quantity <c>PatchLuminance</c> returns.
+    /// </summary>
+    public readonly record struct LegibilityPoint(
+        int X, int Y, bool MustBeLit, float BoundLum, string Why);
 
     public static Spec ParseSpec(string roundJsonPath)
         => ParseSpecJson(System.IO.File.ReadAllText(roundJsonPath));
@@ -103,9 +116,20 @@ public static class CorridorReviewSceneBuilder
                     throw new InvalidOperationException(
                         $"Corridor spec '{name}': legibility point must declare expect \"lit\" or "
                         + $"\"dark\", got \"{expect}\". An undeclared expectation cannot be checked.");
+                // NO DEFAULT, AND THAT IS THE POINT. A bound that can be omitted is a bound
+                // that drifts silently, and the guard this replaced spent its whole life
+                // measuring against a number nobody declared. A point without one fails loudly
+                // at parse time rather than quietly at capture time.
+                if (!e.TryGetProperty("bound_lum", out var bl))
+                    throw new InvalidOperationException(
+                        $"Corridor spec '{name}': legibility point ({e.GetProperty("x").GetInt32()},"
+                        + $"{e.GetProperty("y").GetInt32()}) declares no \"bound_lum\". Since "
+                        + "2026-09-07 legibility is an ABSOLUTE delivered-luminance bound, not a "
+                        + "ratio against the brightest pixel — see LegibilityPoint. Derive it on "
+                        + "the nulled build at the ratified rig and declare it.");
                 legibility.Add(new LegibilityPoint(
                     e.GetProperty("x").GetInt32(), e.GetProperty("y").GetInt32(),
-                    expect == "lit",
+                    expect == "lit", (float)bl.GetDouble(),
                     e.TryGetProperty("why", out var wy) ? (wy.GetString() ?? "") : ""));
             }
         }

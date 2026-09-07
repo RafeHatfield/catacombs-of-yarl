@@ -884,6 +884,32 @@ flatten again.
 > value moved 105.74 → 152.34 (×1.44), and the lamp core is now near the ceiling. The seat has
 > proposed a white point of ~232 as a starting position for the walk.
 
+> ### ⚠ THE BOUNDARY'S LAMP PINS RED FIRST — BANKED (2026-09-07), and it shapes every highlight lever
+>
+> `ffb066` has **red = 1.0**. So as delivered light rises, the red channel saturates while the
+> others still have headroom, and a stone at the core of the pool loses its texture **in its
+> dominant channel** while its hue slides toward the light's own colour. Measured on the round-30
+> frame, inside the blown block a blind seat flagged:
+>
+> | channel | pixels at 255 | max |
+> |---|---:|---:|
+> | **R** | **11.0%** | 255 |
+> | G | 2.6% | 255 |
+> | B | **0.0%** | **176** |
+>
+> **2,044 pixels had red pinned while green was not** — that is the hue shift, not just the flat
+> patch. Whole frame: 16,839 red-clipped pixels.
+>
+> **CONSEQUENCE FOR ANY LEVER THAT TOUCHES THE TOP END:** it is keyed on the **first-clipping
+> channel** and applied **hue-preserving** — one scale factor for all three. Compressing channels
+> independently fixes the texture and *keeps* the hue shift, which is half the defect left in
+> place. The highlight shoulder is built this way (`tier1_polish.gdshader`), and so is anything
+> that follows it.
+>
+> ⚠ **This is a property of the region's light colour, not of the floor.** A region whose lamp is
+> not red-dominant will pin a different channel first, and its levers must be keyed on whichever
+> that is rather than on red.
+
 #### 6.2.1 TIER-ONE PRECONDITION — the rig is tuned for readability BEFORE any asset is judged through it. RULED (Rafe, 2026-08-27, at the device gate).
 
 > **The §6.2 rig values — radius, falloff, ambient — get a readability-tuning pass before any
@@ -2581,6 +2607,53 @@ for it.
 > **The general form:** the standard of proof required to overturn a witness is at least the
 > standard that witness was held to. An instrument that says a seat did not see what it says it saw
 > is making the stronger claim and carries the heavier burden.
+
+---
+
+### 13.11 An instrument whose reference can saturate measures the ceiling, not the scene — LAW (Rafe, 2026-09-07)
+
+**A relative bound is only as honest as its denominator.** If the reference can clip, the
+instrument stops reporting the scene and starts reporting the top of the range — and it does so
+silently, because a saturated reference looks like a very bright reference.
+
+**The occasion.** The floor-legibility guard asked whether a declared point was dark *relative to
+lit floor beside the player*. That reference cell **clipped at 255**. So every dark declaration in
+the scene was a ratio against a pinned value, and the guard had been measuring the ceiling since
+the day it was written.
+
+It surfaced when the highlight shoulder (§6.2) removed the clipping. Isolated:
+
+| | change |
+|---|---:|
+| the declared-dark point `(8,7)` | **+0.00 levels** — byte-identical |
+| its reference | **−26.95 levels** |
+
+**A fix that changed zero dark pixels made two dark declarations fail.** The guard was not wrong
+about arithmetic; it was wrong about what it was dividing by. And the defect had a second face
+nobody had looked for: a relative bound is **blind to global darkening**, because dimming the
+whole scene moves numerator and denominator together. Measured at energy 0.15, two declared-lit
+points sat at 0.0895 and 0.0981 delivered — too dark to see — while their *ratios* read **0.6651
+and 0.7285**, comfortably passing a 0.12 bound.
+
+> **RULED: legibility is an ABSOLUTE delivered-luminance bound, per point, per §13.8.** The
+> question is *can a viewer see this point*, which is a property of the delivered frame and of
+> nothing else in it. Declared as `bound_lum` in the scene spec, **with no default** — a bound
+> that can be omitted is a bound that drifts, and the retired one spent its life measuring against
+> a number nobody had declared.
+
+**How a live instrument is replaced without laundering a re-tune.** The bounds were derived as
+`reference_on_the_nulled_build_at_the_ratified_rig × the retired ratio`, which is algebraically
+the old test with its denominator frozen at a known-good moment. **Every point's pass state was
+preserved exactly on the day of the swap.** That is the discipline: change what the instrument
+MEANS without changing what it SAYS, or nobody can tell a re-definition from a re-tuning.
+
+**And it was proved in both directions before it was believed** (§13.5): the shouldered capture,
+whose dark ground is byte-identical, **passes**; a genuinely darkened capture — Weber 0.71 against
+§13.8's 0.1440 floor — **is refused**.
+
+> **The general form:** before trusting a ratio, ask what happens to it when the denominator hits
+> the end of its range. If the answer is *it keeps returning a number*, the instrument has a blind
+> spot exactly where the picture is brightest, and that is where the eye is.
 
 ---
 

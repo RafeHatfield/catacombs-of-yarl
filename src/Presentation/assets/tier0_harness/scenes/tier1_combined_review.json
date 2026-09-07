@@ -70,31 +70,41 @@
       "x": 5,
       "y": 12,
       "expect": "lit",
-      "why": "1 tile \u2014 the floor at the foot of the masses' south face. The standing case, and the ground \u00a76.5's stack is a relationship against"
+      "why": "1 tile \u2014 the floor at the foot of the masses' south face. The standing case, and the ground \u00a76.5's stack is a relationship against",
+      "bound_lum": 0.100404,
+      "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 \u2014 a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.12), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.8881 absolute (1.0614 relative) and the bound is 0.100404."
     },
     {
       "x": 4,
       "y": 14,
       "expect": "lit",
-      "why": "2.8 tiles \u2014 the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure"
+      "why": "2.8 tiles \u2014 the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure",
+      "bound_lum": 0.100404,
+      "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 \u2014 a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.12), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.4891 absolute (0.5845 relative) and the bound is 0.100404."
     },
     {
       "x": 6,
       "y": 15,
       "expect": "lit",
-      "why": "3 tiles \u2014 the floor beside the island, which is what its outer corners are read against"
+      "why": "3 tiles \u2014 the floor beside the island, which is what its outer corners are read against",
+      "bound_lum": 0.100404,
+      "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 \u2014 a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.12), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.3417 absolute (0.4084 relative) and the bound is 0.100404."
     },
     {
       "x": 11,
       "y": 14,
       "expect": "dark",
-      "why": "5.4 tiles - room A's east end, past the delivered reach. RE-DERIVED 2026-09-06 against the re-ratified rig (radius 5.0 -> 6.0, ambient 0.70 -> 1.50), per SS6.2's re-derivation rule. This point WAS (11,13) at 5.1 tiles, declared dark because the old rig's delivered reach was about four tiles; on the new rig that cell reads ratio 0.1160 and is legitimately LIT, so the guard refused the capture and was right to. THE BOUND WAS NOT TOUCHED - the probe moved to ground that is actually past the reach, because loosening a bound to pass one's own capture is the failure LOOP-PROCESS SS4.3 forbids. Measured here: 0.0718, 28% clear of the 0.1000 bound. New delivered reach ~5.2-5.5 tiles against the old ~4; the ambient plateau sits at ratio ~0.075 and 33 of 81 in-view floor cells remain under the dark bound, so the arc survives the brighter ambient."
+      "why": "5.4 tiles - room A's east end, past the delivered reach. RE-DERIVED 2026-09-06 against the re-ratified rig (radius 5.0 -> 6.0, ambient 0.70 -> 1.50), per SS6.2's re-derivation rule. This point WAS (11,13) at 5.1 tiles, declared dark because the old rig's delivered reach was about four tiles; on the new rig that cell reads ratio 0.1160 and is legitimately LIT, so the guard refused the capture and was right to. THE BOUND WAS NOT TOUCHED - the probe moved to ground that is actually past the reach, because loosening a bound to pass one's own capture is the failure LOOP-PROCESS SS4.3 forbids. Measured here: 0.0718, 28% clear of the 0.1000 bound. New delivered reach ~5.2-5.5 tiles against the old ~4; the ambient plateau sits at ratio ~0.075 and 33 of 81 in-view floor cells remain under the dark bound, so the arc survives the brighter ambient.",
+      "bound_lum": 0.08367,
+      "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 \u2014 a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.1), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.0634 absolute (0.0758 relative) and the bound is 0.08367."
     },
     {
       "x": 8,
       "y": 7,
       "expect": "dark",
-      "why": "5.4 tiles \u2014 the chokepoint deep inside the mass, in frame and unlit"
+      "why": "5.4 tiles \u2014 the chokepoint deep inside the mass, in frame and unlit",
+      "bound_lum": 0.08367,
+      "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 \u2014 a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.1), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.0817 absolute (0.0976 relative) and the bound is 0.08367."
     }
   ],
   "width": 17,
