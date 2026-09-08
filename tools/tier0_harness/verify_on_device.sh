@@ -174,7 +174,33 @@ check() {   # a name, and the pattern that proves it
 # THE EXPECTATION FOLLOWS THE BUILD. `TIER0_SCENE` is what the BUILD was told to boot, so setting
 # it the same way the build did carries the expectation with it and there is nothing extra to
 # remember. `TIER0_EXPECT_SCENE` still overrides, for checking a log whose build env is gone.
+#
+# ⚠ AND THE DEFAULT WENT STALE THE MOMENT THE MARKER STARTED CARRYING THE SCENE. `tier1_floor_review`
+# was hardcoded here when a review build was told what to boot by TIER0_SCENE or by nothing at all.
+# Since 2026-09-06 REVIEW_BUILD.json.template names the scene — it is what the handset actually
+# reads — so the combined build booted `tier1_combined_review`, correctly, and this check reported
+# MISS against a scene nobody had asked for. A false negative on the one instrument that reads the
+# handset is worse than no check: it teaches the operator to skim past NOT VERIFIED.
+#
+# THE DEFAULT NOW FOLLOWS THE SAME FILE THE BUILD DOES, which is this clause's own stated principle
+# rather than a widening. It cannot green a build that booted the wrong scene: the expectation comes
+# from the CONFIG and is compared against what the ENGINE LOGGED, so a build that booted something
+# other than what it was told still misses. The hardcoded value survives only as the last fallback,
+# for a template that cannot be read.
 EXPECT_SCENE="tier1_floor_review"
+_TPL="$ROOT/src/Presentation/assets/tier0_harness/REVIEW_BUILD.json.template"
+if [ -f "$_TPL" ]; then
+	_MARKER_SCENE="$(python3 - "$_TPL" <<'PYEOF'
+import json, os, sys
+try:
+    s = json.load(open(sys.argv[1])).get("scene") or ""
+    print(os.path.basename(s).removesuffix(".json"))
+except Exception:
+    print("")
+PYEOF
+)"
+	[ -n "$_MARKER_SCENE" ] && EXPECT_SCENE="$_MARKER_SCENE"
+fi
 if [ -n "${TIER0_SCENE:-}" ]; then
 	EXPECT_SCENE="$(basename "${TIER0_SCENE%.json}")"
 fi

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SHOW THE BUILD ID BEHAVING — the three properties the install gate rests on.
+"""SHOW THE BUILD ID BEHAVING — the properties the install gate rests on.
 
     python3 .claude/skills/frame-critic/prove_build_id.py
 
@@ -13,6 +13,15 @@ identifier behind it. Three properties, and all three have to hold at once:
                                              committing the exact pixels that had just passed
                                              produced a different id and the gate refused a build
                                              it had approved seconds earlier.
+    4/5. IT IS SCOPED TO THE BUILD.          RULED (Rafe, 2026-09-07), §13.11's third
+                                             instance. Editing the judge's own source or the
+                                             docs must NOT move it; editing a shader, a scene
+                                             config or an asset MUST. A hash broader than the
+                                             thing it identifies measures the repo, not the
+                                             build — and it refused an install whose frame was
+                                             byte-identical, because acting on the gate's own
+                                             ruling had edited the bible.
+
     3. IT IGNORES THE REVIEW LAYER'S OWN     Writing CRITIC-VERDICT.json must not change it, or
        ARTEFACTS.                            writing the verdict invalidates the verdict. That is
                                              not hypothetical: it is what the first version did,
@@ -123,6 +132,66 @@ def main():
                 os.remove(VERDICT)
             if stash:
                 shutil.move(stash, VERDICT)
+        # ---- 4/5. the id is scoped to the BUILD — RULED (Rafe, 2026-09-07), §13.11 third ------
+        #
+        # BOTH DIRECTIONS ARE REQUIRED and neither is worth anything alone. (4) alone would be
+        # satisfied by an id that never moves; (5) alone by the over-broad id this replaced.
+        for rel, should_move, label in (
+            (".claude/skills/frame-critic/__scope_probe.py", False,
+             "4a editing the review layer's SOURCE does not move the id"),
+            ("docs/__scope_probe.md", False,
+             "4b editing docs/ does not move the id"),
+            ("src/Presentation/assets/shaders/__scope_probe.gdshader", True,
+             "5a editing a SHADER moves the id"),
+            ("src/Presentation/assets/tier0_harness/scenes/__scope_probe.json", True,
+             "5b editing a SCENE CONFIG moves the id"),
+            ("src/Presentation/assets/tier1_ashlar/__scope_probe.png", True,
+             "5c editing an ASSET moves the id"),
+        ):
+            full = os.path.join(REPO, rel)
+            os.makedirs(os.path.dirname(full), exist_ok=True)
+            try:
+                with open(full, "w") as f:
+                    f.write("scope probe\n")
+                got, _ = BID.build_id()
+                moved_now = got != base
+                check(label, moved_now == should_move,
+                      "%s the id (%s)" % ("moved" if moved_now else "did not move", rel))
+            finally:
+                if os.path.exists(full):
+                    os.remove(full)
+
+        # ---- 5d/5e the marker: the TEMPLATE ships, the GENERATED one does not -----------------
+        #
+        # These are not hypothetical paths. `REVIEW_BUILD.json.template` decides the device's
+        # scene, theme, family manifests, rig and void ring; `REVIEW_BUILD.json` is written from
+        # it before the export and deleted after. A prefix match on the second swallowed the
+        # first, so editing what the handset shows moved no id.
+        import json as _json
+        tpl = os.path.join(REPO, "src/Presentation/assets/tier0_harness/REVIEW_BUILD.json.template")
+        gen = os.path.join(REPO, "src/Presentation/assets/tier0_harness/REVIEW_BUILD.json")
+        bak = tpl + ".provebak"
+        shutil.copyfile(tpl, bak)
+        try:
+            d = _json.load(open(tpl))
+            d["_scope_probe"] = True
+            _json.dump(d, open(tpl, "w"), indent=2)
+            got, _ = BID.build_id()
+            check("5d editing REVIEW_BUILD.json.template moves the id", got != base,
+                  "%s the id" % ("moved" if got != base else "did NOT move"))
+        finally:
+            shutil.move(bak, tpl)
+        had_gen = os.path.exists(gen)
+        if not had_gen:
+            try:
+                shutil.copyfile(tpl, gen)
+                got, _ = BID.build_id()
+                check("5e the GENERATED marker does not move the id", got == base,
+                      "%s the id" % ("did not move" if got == base else "MOVED"))
+            finally:
+                if os.path.exists(gen):
+                    os.remove(gen)
+
     finally:
         if os.path.exists(PROBE):
             os.remove(PROBE)

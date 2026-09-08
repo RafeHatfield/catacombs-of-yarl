@@ -1,0 +1,132 @@
+{
+  "tag": "conn_before",
+  "scene": "src/Presentation/assets/tier0_harness/scenes/tier1_combined_probe.json",
+  "grid": {
+    "cx0": 23.0,
+    "cy0": -190.5,
+    "px": 64.0,
+    "py": 64.0,
+    "view": [
+      0.0,
+      90.0,
+      750.0,
+      1001.0
+    ]
+  },
+  "arms": [
+    {
+      "energy": 0.0,
+      "png": "tools/tier1_floors/evidence/conn_before_e0.png",
+      "log": "tools/tier1_floors/evidence/conn_before_e0.log"
+    },
+    {
+      "energy": 1.6,
+      "png": "tools/tier1_floors/evidence/conn_before_e1.6.png",
+      "log": "tools/tier1_floors/evidence/conn_before_e1.6.log"
+    },
+    {
+      "energy": 8.0,
+      "png": "tools/tier1_floors/evidence/conn_before_e8.0.png",
+      "log": "tools/tier1_floors/evidence/conn_before_e8.0.log"
+    }
+  ],
+  "cells_sampled": 131,
+  "identity": {
+    "floor": {
+      "pixels": 1087008,
+      "identical": 1055232,
+      "identical_share": 0.9707674644528835
+    },
+    "wall": {
+      "pixels": 1038336,
+      "identical": 614081,
+      "identical_share": 0.5914087540064102
+    }
+  },
+  "response": {
+    "floor|<=2": {
+      "0": {
+        "n": 3,
+        "mean": 70.0678624260355
+      },
+      "1.6": {
+        "n": 3,
+        "mean": 70.31098081854043
+      },
+      "8": {
+        "n": 3,
+        "mean": 70.31098081854043
+      }
+    },
+    "floor|2-4": {
+      "0": {
+        "n": 21,
+        "mean": 45.7400658354466
+      },
+      "1.6": {
+        "n": 21,
+        "mean": 46.54000039447732
+      },
+      "8": {
+        "n": 21,
+        "mean": 48.62840936179205
+      }
+    },
+    "floor|>4": {
+      "0": {
+        "n": 43,
+        "mean": 8.63382359639466
+      },
+      "1.6": {
+        "n": 43,
+        "mean": 8.63382359639466
+      },
+      "8": {
+        "n": 43,
+        "mean": 8.647756546718039
+      }
+    },
+    "wall|<=2": {
+      "0": {
+        "n": 1,
+        "mean": 1.0
+      },
+      "1.6": {
+        "n": 1,
+        "mean": 11.425708284023669
+      },
+      "8": {
+        "n": 1,
+        "mean": 53.0867625739645
+      }
+    },
+    "wall|2-4": {
+      "0": {
+        "n": 15,
+        "mean": 3.110002781065089
+      },
+      "1.6": {
+        "n": 15,
+        "mean": 20.145155512820516
+      },
+      "8": {
+        "n": 15,
+        "mean": 83.43892059171597
+      }
+    },
+    "wall|>4": {
+      "0": {
+        "n": 48,
+        "mean": 4.100022502157298
+      },
+      "1.6": {
+        "n": 48,
+        "mean": 5.054269927268245
+      },
+      "8": {
+        "n": 48,
+        "mean": 8.751561110083827
+      }
+    }
+  }
+}

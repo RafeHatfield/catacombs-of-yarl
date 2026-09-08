@@ -65,6 +65,21 @@ public sealed class ReviewBuildMarker
     public int? VoidChoice { get; private init; }
 
     /// <summary>
+    /// CAPTURE-TIME override of the wall manifest's ruled <c>void_ring</c>, mirroring
+    /// <c>--void-ring</c>. Added 2026-09-05, and its absence made a device walk incomparable
+    /// with the ladder it was meant to be walked against.
+    ///
+    /// Every desktop capture of the combined room is taken at <c>--void-ring 1</c>, the
+    /// flat-dark fallback, because §12.1a's occluder is still outstanding and at the ruled 0 the
+    /// lamp lights 192 cells of solid rock and the room has no outside. An iOS app receives no
+    /// command line, so without this key the handset showed a DIFFERENT ROOM from every frame
+    /// the walk compares it to — not magenta, not obviously wrong, and therefore worse.
+    ///
+    /// Null leaves the manifest's ruled value alone, so an older marker is unaffected.
+    /// </summary>
+    public int? VoidRing { get; private init; }
+
+    /// <summary>
     /// res:// path to the ORC BINDING family's MANIFEST.json, or null. Separate from
     /// <see cref="BoundaryWall"/> because they are different objects and §8.3.1 requires them to
     /// stay that way: the wall is the material, the bindings are the incident, and a binding that
@@ -183,6 +198,9 @@ public sealed class ReviewBuildMarker
                             ? bw.GetString() : null,
                 VoidChoice = root.TryGetProperty("voidChoice", out var vch)
                             ? vch.GetInt32() : (int?)null,
+                VoidRing = root.TryGetProperty("voidRing", out var vrg)
+                             && vrg.ValueKind == System.Text.Json.JsonValueKind.Number
+                           ? vrg.GetInt32() : (int?)null,
                 WallBindings = root.TryGetProperty("wallBindings", out var wb)
                             ? wb.GetString() : null,
                 WallCap = root.TryGetProperty("wallCap", out var wc) ? wc.GetString() : null,

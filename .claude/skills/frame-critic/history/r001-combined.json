@@ -1,0 +1,142 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "combined",
+ "round": 1,
+ "surface": "combined",
+ "axis": "construction",
+ "commit": "700ba78f45196dff770b0d7ed88d4149970fa1cf",
+ "dirty": true,
+ "build_id": "6e4f980012c4a35250929e02a5442d51b0d129245ce6c7bbca93fa9e6a35fb69",
+ "timestamp": "2026-09-05T21:56:17",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/combined.png",
+  "sha256": "c7f6ff5b73157f25534f4ec6eacea9415164f41d236d0705a200dda6c5d92a96",
+  "log": "tools/tier1_floors/evidence/combined.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/one-lamp --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/combined.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 5.0 --light-falloff 1.0 --light-ambient-level 0.7 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-d3a75aa4363e50e7",
+  "slots": {
+   "1": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/combined.png",
+    "sha256": "c7f6ff5b73157f25534f4ec6eacea9415164f41d236d0705a200dda6c5d92a96",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/cement-cap.png",
+    "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/combined.png"
+ },
+ "plant": {
+  "slot": 2,
+  "file": "cement-cap.png",
+  "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+  "culled_by": "Rafe, device walk, 2026-09-03",
+  "verbatim": "caps are still grey and read as cement, not stone",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": false,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "Three things are actually built rather than filtered.\n\nFirst, the paving below the figure (roughly x 190\u2013560, y 460\u2013660) is laid from stones of at least four distinct widths inside a single course, and their top values differ by a real margin \u2014 the block at ~(230,500) sits several steps darker than its neighbour at ~(300,500), and the joint between them is a partial dark dash that stops before the stone's full length. Joints appearing along only part of a run is exactly what cut-and-salvaged paving does, and it is the one thing in this deck that could not be produced by stamping a grid.\n\nSecond, the crack running from ~(280,555) down through ~(340,610) to ~(430,660) crosses at least five separate stones and continues *across* the joints rather than terminating at them, and it narrows as it travels. Fracture propagating through the courses instead of respecting them is a deliberate call.\n\nThird, and the reason it beats 2 outright: the occlusion is honest. Boosting the darks four stops shows a hard straight shadow edge running from about (120,135) diagonally to (670,135) off the wall at y\u2248390, and nothing behind that wall receives any light at all. The lamp is treated as a point source with real geometry blocking it.",
+  "WORST_WHY": "The dirt field is one 16\u00d716 tile repeated across roughly 150 cells with no variation whatsoever. Crop x 100\u2013244, y 20\u2013164 and the same dark-red crescent-and-dot vein cluster recurs at every 16px step \u2014 you can count the grid off the texture alone. Nothing is rotated, nothing is reflected, no second variant exists.\n\nNext to that, the water is a literal rectangle. Its bottom edge runs dead straight at y\u2248191 from x=246 to x=344, and its right edge runs dead straight down x\u2248344, both axis-aligned, both cutting the dirt with no bank, no shoreline, no transition tile, no darkening at the margin. A pond shaped like its own bounding box. The dirt-to-flagstone boundary at y\u2248215 does the same thing \u2014 the brown simply stops and grey begins on a single pixel row.\n\nThe grey floor is one flat mid-grey per tile with a uniform 1px lighter grout line and a sprinkle of identical lighter dots; across the whole visible stone area no tile differs from another in value, and no joint differs in depth from any other joint. And the lily pads at ~(259,151)\u2013(289,184) are a saturated grass green sitting in desaturated teal \u2014 the chroma jump is far outside anything else in the frame, so they read as pasted from a different set.\n\nThere is no light model at all. The frame is uniformly bright corner to corner, which is not a stylistic difference from the others \u2014 it's the absence of the system the other two implement.",
+  "FLAGGED": "1, 2, 3\n\nEach carries something visible in the first second:\n\n- **2** \u2014 the lamp light passes through solid rock. Boost the darks and the two masses flanking the corridor (x 30\u2013370 and x 440\u2013740, y 200\u2013460) are the same mottled stone bulk that 1 renders as wall, but they are lit by a smooth radial glow that spreads up and outward in a near-mirrored butterfly, and they end up *brighter* than the lit wall band at y\u2248390\u2013425 standing directly in front of them. Light is passing through the occluder and the thing behind is out-reading the thing in front.\n- **3** \u2014 the rectangular pond, above.\n- **1** \u2014 resolution mismatch between figure and world. The sprite at ~(400,485) is hard-edged pixel art on a ~2px grid with a black outline and clean saturated teal/orange. The floor it stands on is soft resampled texture with anti-aliased, blurry stone edges and no consistent pixel size. The figure sits on the scene like a decal.",
+  "RANK": "1 > 2 > 3",
+  "BEST": "1",
+  "WORST": "3",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "The figure is rendered at a ~2px hard pixel grid; the environment is soft and resampled with no fixed pixel size. Quantise the environment to the same pixel grid as the sprite so stone edges land on hard pixel boundaries instead of gradients.",
+  "A diagonal streak/hatch band runs down-left at ~45\u00b0 across the lit pool around (430,470)\u2013(560,560). A point lamp cannot produce a directional band. Delete the overlay.",
+  "The incised double-tick \"//\" marks on the stones right of the figure (roughly x 565\u2013620, y 480\u2013580) recur at identical angle and identical length about fifteen times. Vary angle and length per instance, or cut their count by two thirds.",
+  "The block at approx (494,520)\u2013(558,550) is flat and untextured, brighter than every stone around it, and further from the lamp than the figure. Give it the same joint and wear treatment as its neighbours and drop it to the value its distance from the lamp implies.",
+  "Four cracks radiate from a single point at ~(314,600) in a near-symmetric X. Stone does not fracture radially from a point. Break it into two crossing fractures with offset origins, or remove two of the four arms.",
+  "The wall band at y 385\u2013440 is mottled brown noise with no legible courses. Draw actual stone runs into it with joint lines at the same weight as the floor's.",
+  "Nothing anywhere in the frame shows a repair. The fiction specifies rope, driven pins, hide and salvaged timber holding this floor together for four hundred years. Add at least two: a timber baulk pinned across a gap in the paving, and a stone lashed back into a course."
+ ],
+ "flip_list_withheld": null,
+ "withheld_because": null,
+ "progress": {
+  "rank_position": 1,
+  "deck_size": 3,
+  "rank_score": 1.0,
+  "bar_position": 3,
+  "approved_position": null,
+  "approved_frame_in_deck": false,
+  "beats_approved": true,
+  "near_bar": true,
+  "near_bar_slack": 1,
+  "new_best": true,
+  "best_before": null,
+  "capture_signature": "010101010106060708080608080907060709070809070808080807060608291f0101010101050707070706080808070606080807080808070808070606073e2b01010101010506070605060605050605060506060506090706060505060505040101010101060606060707070708080706050606050508070606080706060606010101010105050606050605050606040404050a170708070606060505050404010101010101010101010101010101010101020b100808070607060101010101010101010101010101010101010101010101020b150808060506060101010101010101010101010101010101010201020202040b0b070a0806060501010101010101010101010101010101020202020203030815120e0e0b0807040101010101010101010101010101010202030304040504091e1d1716120c07060101010101010101010101010102020304040606060607112b2921231b100d080101010101010101010101010202030405060708080908142e2e2e3a29120e0901010101010101010101010102030405060809090a0b0c193e3a3e4e3f20160c0201010101010101010103040506080a0f0f101319171623444456643d22181204030202020101010101090c0e121821242a353d3a3d3242445c6c6e242018140e0806040401010101010a0e141621262c3c474b566870655a597980452f2d1e150f09060601010101010a1115292e434f5e78a9c6bb95bfc3b2997f5a4233241a1109050601010101010b141629465d7595bddbe4c093dad59f7162564736261f140b050801010101010b131428383f568bb2cfdbe4e0cfa6997b705b4436271c130a07080101010101080e122a30486a9eb6c3c5ccc89c8270635e4f3f32241b110907080101010101070810242e45637f92a9b3b19b82685745403b362b20160e090708010101010105060c1a2838485a688273665d534c563b31332e231a110b070606040303030306080b151e263031393d323c3f41464736302a231b130c080605070e1111112b26111214171a20131a1a203443433b2f28262119120e0908060709090b0b0a0a090a0a0c0e11151910141a2b34313021231d18100d090808080809070705060606070708090a0c111114151617191a1316120f0b090808080809060807060706080908080606090b0d0e0f111211100c0c0b0908080808080708080708060706070908080706060807080909090809080707060808070808070706070705070607080808070606080707070606060706070706080807070706070608070605050605050807070708070707060607080806080807070606060606061d1b0b0707070706070708080908080808070809080808080708070607070607101c080505070706070708080908070708070708070808080807070607070707",
+  "moved": null,
+  "two_strikes_advisory": null,
+  "series": [
+   {
+    "round": 1,
+    "verdict": "FAIL",
+    "rank_position": 1,
+    "deck_size": 3,
+    "rank_score": 1.0,
+    "capture_signature": "010101010106060708080608080907060709070809070808080807060608291f0101010101050707070706080808070606080807080808070808070606073e2b01010101010506070605060605050605060506060506090706060505060505040101010101060606060707070708080706050606050508070606080706060606010101010105050606050605050606040404050a170708070606060505050404010101010101010101010101010101010101020b100808070607060101010101010101010101010101010101010101010101020b150808060506060101010101010101010101010101010101010201020202040b0b070a0806060501010101010101010101010101010101020202020203030815120e0e0b0807040101010101010101010101010101010202030304040504091e1d1716120c07060101010101010101010101010102020304040606060607112b2921231b100d080101010101010101010101010202030405060708080908142e2e2e3a29120e0901010101010101010101010102030405060809090a0b0c193e3a3e4e3f20160c0201010101010101010103040506080a0f0f101319171623444456643d22181204030202020101010101090c0e121821242a353d3a3d3242445c6c6e242018140e0806040401010101010a0e141621262c3c474b566870655a597980452f2d1e150f09060601010101010a1115292e434f5e78a9c6bb95bfc3b2997f5a4233241a1109050601010101010b141629465d7595bddbe4c093dad59f7162564736261f140b050801010101010b131428383f568bb2cfdbe4e0cfa6997b705b4436271c130a07080101010101080e122a30486a9eb6c3c5ccc89c8270635e4f3f32241b110907080101010101070810242e45637f92a9b3b19b82685745403b362b20160e090708010101010105060c1a2838485a688273665d534c563b31332e231a110b070606040303030306080b151e263031393d323c3f41464736302a231b130c080605070e1111112b26111214171a20131a1a203443433b2f28262119120e0908060709090b0b0a0a090a0a0c0e11151910141a2b34313021231d18100d090808080809070705060606070708090a0c111114151617191a1316120f0b090808080809060807060706080908080606090b0d0e0f111211100c0c0b0908080808080708080708060706070908080706060807080909090809080707060808070808070706070705070607080808070606080707070606060706070706080807070706070608070605050605050807070708070707060607080806080807070606060606061d1b0b0707070706070708080908080808070809080808080708070607070607101c080505070706070708080908070708070708070808080807070607070707"
+   }
+  ],
+  "guards": {
+   "stall_rounds": 3,
+   "round_ceiling": 15,
+   "no_change_mad": 0.25,
+   "no_change_max": 4,
+   "sig_grid": 32,
+   "judge_misses": 2,
+   "flip_same": 0.6
+  }
+ },
+ "transcript": ".claude/skills/frame-critic/history/r001-combined-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress \u2014 rank in the deck \u2014 never rounds elapsed."
+}

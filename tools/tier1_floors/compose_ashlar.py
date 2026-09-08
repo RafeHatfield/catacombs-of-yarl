@@ -1436,6 +1436,15 @@ POLISH_EXP = 2.0                          # how much faster than linear. 1.0 wou
                                           # name, so the engine asserts it is greater than 1.
 POLISH_GAIN = 1.0
 
+# THE HIGHLIGHT SHOULDER — RULED (Rafe, 2026-09-07), round 31. The lamp's top end rolls off
+# instead of clipping: identity below the knee, exponential to the ceiling above it, applied
+# hue-preserving on the channel that clips first. The knee is where the Boundary's warm lamp
+# starts pinning RED (measured: 11.0% of the seat's pale block at 255 in red, blue peaking at
+# 176), and the ceiling is set so ambient plus light stays clear of 255.
+# Null control: SHOULDER_KNEE = 10.0 makes the curve the identity everywhere.
+SHOULDER_KNEE = 0.75
+SHOULDER_CEILING = 0.92
+
 CHROMA_DIR = (-1.0, 0.35, -0.15)          # toward a cool grey-green, before the luminance projection
 CHROMA_BY_AGE = (0.0, 0.0, 0.06, 0.12)    # by wear age; the first two are silent ON PURPOSE — a
                                           # signal that starts at the first hint of traffic is a
@@ -1857,6 +1866,8 @@ def main():
     mat["polish_by_age"] = list(POLISH_BY_AGE)
     mat["polish_exp"] = POLISH_EXP
     mat["polish_gain"] = POLISH_GAIN
+    mat["shoulder_knee"] = SHOULDER_KNEE
+    mat["shoulder_ceiling"] = SHOULDER_CEILING
     mat["deform_flatten"] = list(DEFORM_FLATTEN)
     mat["deform_round"] = list(DEFORM_ROUND)
     mat["deform_aniso"] = DEFORM_ANISO

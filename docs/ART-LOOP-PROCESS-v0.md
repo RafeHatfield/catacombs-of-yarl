@@ -175,6 +175,38 @@ the app draws on screen and reports in its `BUILD IDENTITY` line. It exists for 
 to *measure*. **Nothing walked on a SKIPPED-REVIEW build is a gate verdict**, and an override
 nobody can see from the phone is the same as no gate.
 
+##### 1.2.2a A SKIPPED-REVIEW BUILD MAY BE WALKED FOR A RIG OR INSTRUMENT GATE, NEVER FOR A SURFACE GATE — RULED (Rafe, 2026-09-05)
+
+**The occasion.** #174's fix moved the floor's delivered value by 1.44×, which re-opened Ruling 56
+and made a rig walk owed. The critic returned **FAIL** on the corrected build — on floor-material
+flips belonging to another lane — so the install gate refused, and the only override stamps
+SKIPPED-REVIEW, on which the clause above says nothing walked is a gate verdict. A rig ratification
+was therefore blocked by an art verdict about something else.
+
+> **RULED: the walk runs. A SKIPPED-REVIEW build may be walked for a RIG or INSTRUMENT gate, and
+> never for a SURFACE gate.**
+
+**Why the distinction is real and not a convenience.** *The rig ladder is a lighting fixture, not
+the artefact under judgment.* The frame critic ranks finished pictures against a bar; it cannot
+answer *what values do the knobs want*, and it was never built to. **Asking an art review to clear
+a lighting decision is the wrong review**, and refusing the walk on its verdict would let a
+judgement about the floor's material decide a question about the lamp. The stamp is honest either
+way: the build genuinely has no art verdict, and the walk genuinely is not claiming one.
+
+> **HARD GUARD — and it is the whole of what keeps this from becoming a bypass.**
+>
+> **The frame walked for the rig is explicitly NOT `approved_capture`.** The walk ratifies **lamp
+> values**. It does not bless the picture, and no capture taken on a SKIPPED-REVIEW build may ever
+> seed the bar, be cited as an approved frame, or enter a deck as one.
+>
+> **When the combine un-parks on the re-ratified lamp, that recomposed build takes the FULL
+> frame-critic gate, and its PASS is what seeds `approved_capture`.** The surface gate is deferred
+> by this ruling, never waived by it.
+
+**The test for any future invocation:** name the gate the walk is for. If the answer is a value the
+knobs or the instruments carry, this clause applies. If the answer is *does this picture ship*, it
+does not, and §1.2.2 stands unmodified.
+
 #### 1.2.3 The loop guards — the line stops, it never grinds, and it never stops a lane that is working
 
 §1.1 makes a FAIL a reprompt rather than a stop, and it is right. §1.1.3 adds that sessions are
@@ -468,6 +500,39 @@ same:
   defect are void, and a resumer who trusts them has inherited the bug in a report instead of
   in the code. First occupant: round 28's combined build, blocked on **#174**, which its own
   null-polish control found. `docs/ROUND-28-COMBINED-BUILD.md`.
+
+  > ### ⚠ AND IT CLOSED, 2026-09-07: TIER-ONE SURFACE **DONE WITH NAMED DEBT**.
+  >
+  > Rafe walked the room on the reference device and returned **SERVICEABLE** — *"still pretty
+  > good"* — which seeds `approved_capture` and closes the tier-one surface. **The first
+  > Rafe-approved combined reference this project has ever had**; the lane ran five rounds with
+  > `approved_capture` null and every verdict saying so.
+  >
+  > **DONE WITH NAMED DEBT is a park state's opposite and is recorded as such.** The surface is
+  > closed and the debt is carried in the open, each item its own bounded round against the
+  > now-seeded reference: the worn lane washing the wall-base occlusion (**#184**), the
+  > corridor-mouth face band (**#185/#186**), and the hero wash (**#183**). *Serviceable* is not
+  > *wowed*, and pretending otherwise would spend the reference's whole value — a bar is what the
+  > next round must not fall below, never a claim that nothing is left.
+  >
+  > **What the walk did that no instrument had:** it NAMED the hallway-bottom artefact. Three
+  > rounds of seats and six instruments had it unattributed; the walk identified it as a wall-face
+  > band drawn across the corridor mouth — a §3 face-mask family case, a south reveal rendered
+  > over an opening — which turns it from an art question into a mask correctness bug.
+
+  > **UN-PARKED 2026-09-06.** #174 landed (the lamp is one arithmetic) and Ruling 56 re-ratified
+  > on the corrected lamp, which were the two conditions the park named. **The resumer did re-do
+  > rather than re-read, and the park was right to demand it:** every cross-plane figure was
+  > re-measured twice — once when the arithmetic was fixed, and again when the rig moved under it
+  > four hours later. The second re-measurement caught figures that were correct when written that
+  > same day.
+  >
+  > **What the state was worth, recorded because the next occupant will want to know:** the park
+  > cost nothing in rework and saved a gate. Round 28's composed scene, station, carve list and
+  > capture scripts were all still valid; only the *numbers* were void. A park that had been
+  > called "finalised" would have shipped those numbers into §6.5.
+
+
 
 **Refusals are declared before the run, not after.** Each seat writes *what this seat refuses,
 written before it could be tempted*, and the promotion rule is declared before ranking.

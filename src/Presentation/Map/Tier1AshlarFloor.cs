@@ -91,6 +91,9 @@ public static class Tier1AshlarFloor
         public double[] ChromaDir = { 0, 0, 0 };
         public double[] PolishByAge = { 0, 0, 0, 0 };
         public double PolishExp = 2.0, PolishGain = 1.0;
+        // The highlight shoulder (RULED Rafe 2026-09-07). Defaults are the identity-safe pair;
+        // the manifest is the authority, as it is for every other lever here.
+        public double ShoulderKnee = 0.75, ShoulderCeiling = 0.92;
         public double[] DeformFlatten = { 0, 0, 0, 0 };
         public double DeformAniso = 0.8;
         public double HollowDepth = 1.3, HollowRim = 0.45;
@@ -998,6 +1001,8 @@ public static class Tier1AshlarFloor
                 pm.SetShaderParameter("polish_tex", ImageTexture.CreateFromImage(polishImg));
                 pm.SetShaderParameter("polish_exp", (float)cfg.PolishExp);
                 pm.SetShaderParameter("polish_gain", (float)cfg.PolishGain);
+                pm.SetShaderParameter("shoulder_knee", (float)cfg.ShoulderKnee);
+                pm.SetShaderParameter("shoulder_ceiling", (float)cfg.ShoulderCeiling);
                 sprite.Material = pm;
                 polished++;
             }
@@ -1707,6 +1712,8 @@ public static class Tier1AshlarFloor
             if (mat.TryGetProperty("occlusion_floor", out var of)) cfg.OcclusionFloor = of.GetDouble();
             cfg.PolishExp = mat.GetProperty("polish_exp").GetDouble();
             cfg.PolishGain = mat.GetProperty("polish_gain").GetDouble();
+            if (mat.TryGetProperty("shoulder_knee", out var sk)) cfg.ShoulderKnee = sk.GetDouble();
+            if (mat.TryGetProperty("shoulder_ceiling", out var sc)) cfg.ShoulderCeiling = sc.GetDouble();
             var dfl = new List<double>();
             foreach (var v in mat.GetProperty("deform_flatten").EnumerateArray()) dfl.Add(v.GetDouble());
             cfg.DeformFlatten = dfl.ToArray();

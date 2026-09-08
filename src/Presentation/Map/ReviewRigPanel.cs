@@ -38,12 +38,35 @@ namespace CatacombsOfYarl.Presentation.Map;
 public sealed partial class ReviewRigPanel : VBoxContainer
 {
     private readonly ReviewLighting _rig;
-    private Label? _radius, _falloff, _ambient, _walk;
+    private Label? _energy, _radius, _falloff, _ambient, _walk;
     private VBoxContainer? _body;
     private int _walkNumber;
 
     /// <summary>Buttons are sized for a thumb on the reference device, not for a mouse.</summary>
     private const float BtnSize = 44f;
+
+    // ── CLEARING THE MSG BUTTON ───────────────────────────────────────────────────────────────
+    //
+    // RULED at the 2026-09-06 rig walk: *"Msg button overlaps the bottom rig control — unreadable."*
+    //
+    // Both controls anchor to the BOTTOM-LEFT of the same ViewportOverlay. MsgButton sits at
+    // x 8..52 with its bottom 8px off the edge; this panel's rect ran down to -8 as well, so its
+    // LAST row — the void selector, added after construction — landed underneath it. The panel
+    // was not wrong about its own layout; it was wrong about what else lives in that corner.
+    //
+    // These are derived from MsgButton's own numbers rather than typed as a literal, because a
+    // hard-coded 60 is a value that silently stops clearing the thing it was measured against.
+    private const float MsgButtonSize = 44f;    // MsgButton.ButtonSize
+    private const float MsgMarginBottom = 8f;   // MsgButton.MarginBottom
+    private const float Gap = 8f;
+    /// <summary>Where this panel's bottom edge must stop to leave the Msg button readable.</summary>
+    private const float BottomClear = -(MsgMarginBottom + MsgButtonSize + Gap);   // -60
+    /// <summary>
+    /// Nominal height. <c>GrowVertical = Begin</c> means content taller than this pushes the TOP
+    /// upward rather than spilling over the bottom, so this is a floor and not a cap — which is
+    /// what lets a knob be added without re-tuning it. It was raised with the energy row (#174).
+    /// </summary>
+    private const float NominalHeight = 316f;
 
     public ReviewRigPanel(ReviewLighting rig)
     {
@@ -51,7 +74,12 @@ public sealed partial class ReviewRigPanel : VBoxContainer
         Name = "ReviewRigPanel";
 
         AnchorLeft = 0f; AnchorRight = 0f; AnchorTop = 1f; AnchorBottom = 1f;
-        OffsetLeft = 8f; OffsetTop = -260f; OffsetRight = 232f; OffsetBottom = -8f;
+        OffsetLeft = 8f; OffsetRight = 232f;
+        // The bottom edge stops above the Msg button; the top follows from the nominal height.
+        // GrowVertical.Begin then grows the panel UPWARD, away from the corner both controls
+        // wanted, so a future row cannot push it back down onto the button.
+        OffsetBottom = BottomClear;
+        OffsetTop = BottomClear - NominalHeight;
         GrowVertical = GrowDirection.Begin;
 
         var toggle = new Button { Text = "RIG ▸", TooltipText = "§6.2.1 rig pass" };
@@ -75,6 +103,11 @@ public sealed partial class ReviewRigPanel : VBoxContainer
             toggle.Text = _body.Visible ? "RIG ▾" : "RIG ▸";
         };
 
+        // ENERGY FIRST, because it is the quantity #174 moved and the one Ruling 56 re-opens.
+        // A rig-energy walk that cannot reach it ratifies nothing, which is what happened on
+        // 2026-09-05 when a build went to the handset with this row missing.
+        _energy  = AddRow(_body, "energy", ReviewLighting.EnergyStep,
+                          d => _rig.Energy += d, () => $"{_rig.Energy:0.00}");
         _radius  = AddRow(_body, "radius", ReviewLighting.RadiusStep,
                           d => _rig.Radius += d, () => $"{_rig.Radius:0.0} tiles");
         _falloff = AddRow(_body, "falloff", ReviewLighting.FalloffStep,

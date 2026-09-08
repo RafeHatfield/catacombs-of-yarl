@@ -2797,7 +2797,11 @@ public partial class Main : Node
             // A CAPTURE-TIME DEPARTURE FROM A RULED MANIFEST VALUE, declared on the command line
             // so it lands in the log of every capture it produced. See Tier1BoundaryWall.Apply.
             string? rArg = ReadStringArg("--void-ring");
-            int? voidRing = rArg != null && int.TryParse(rArg, out int rr) ? rr : null;
+            // The marker is the device's command line: an iOS app has none, and without this the
+            // handset ran the manifest's ruled 0 while every capture it is walked against was
+            // taken at 1. Same precedence as every other flag here — CLI first, marker second.
+            int? voidRing = rArg != null && int.TryParse(rArg, out int rr) ? rr
+                          : marker?.VoidRing;
             _wallManifest = wallManifest;
             _voidChoice = voidChoice;
             string? bindings = ReadStringArg("--wall-bindings") ?? marker?.WallBindings;
@@ -2890,8 +2894,17 @@ public partial class Main : Node
     /// radius and delivered reach are different quantities, not that any particular tile is
     /// invisible to a person. Do NOT lower them to make a capture pass.
     /// </summary>
-    private const float FloorLegibleMinRatio = 0.12f;
-    private const float FloorDarkMaxRatio = 0.10f;
+    // ⚠ THE RATIO BOUNDS ARE RETIRED — RULED (Rafe, 2026-09-07). They are kept, unused, as the
+    // provenance of the absolute bounds that replaced them: each declared point's `bound_lum` was
+    // derived as `reference_luminance_on_the_nulled_build * (this ratio)`, at the ratified rig,
+    // which preserves the pass state those bounds had on the day they were replaced.
+    //
+    // THE LAW THIS COST: **an instrument whose reference can saturate measures the ceiling, not
+    // the scene.** The reference cell — lit floor beside the player — clipped at 255, so every
+    // dark declaration was a ratio against a pinned value. A highlight shoulder that left every
+    // dark pixel BYTE-IDENTICAL made two of them "fail", because only the denominator moved.
+    private const float RetiredLegibleMinRatio = 0.12f;
+    private const float RetiredDarkMaxRatio = 0.10f;
 
     /// <summary>Mean perceived luminance of a small patch, clipped to the image.</summary>
     private static float PatchLuminance(Image img, Vector2 centre, int half)
@@ -2981,21 +2994,25 @@ public partial class Main : Node
             }
 
             float lum = PatchLuminance(image, at, half);
+            // ABSOLUTE, not relative. The question is "can a viewer see this point", which is a
+            // property of the delivered frame and of nothing else in it.
+            bool pass = p.MustBeLit ? lum >= p.BoundLum : lum <= p.BoundLum;
+            // The reference is still MEASURED and still PRINTED — it is a useful datum and the
+            // record of how these bounds were derived — but it no longer decides anything.
             float ratio = rLum <= 0.0001f ? 0f : lum / rLum;
-            bool pass = p.MustBeLit ? ratio >= FloorLegibleMinRatio
-                                    : ratio <= FloorDarkMaxRatio;
             string line =
                 $"[Tier1] legibility({p.X},{p.Y}) expect={(p.MustBeLit ? "lit " : "dark")} "
-              + $"ratio={ratio:0.0000} at px({at.X:0},{at.Y:0}) "
-              + $"bound={(p.MustBeLit ? FloorLegibleMinRatio : FloorDarkMaxRatio):0.0000} "
-              + $"{(pass ? "OK" : "FAIL")}  - {p.Why}";
+              + $"lum={lum:0.0000} at px({at.X:0},{at.Y:0}) "
+              + $"bound={p.BoundLum:0.0000} "
+              + $"{(pass ? "OK" : "FAIL")}  (ratio={ratio:0.0000}, informational)  - {p.Why}";
             GD.Print(line);
             Diag.Log(line);
             if (!pass) ok = false;
         }
 
         string summary = $"[Tier1] floor-legibility probe: {_legibility.Count} declared points, "
-                       + $"reference lum={rLum:0.0000}, verdict={(ok ? "PASS" : "FAIL")}";
+                       + $"reference lum={rLum:0.0000} (informational — bounds are ABSOLUTE "
+                       + $"since 2026-09-07), verdict={(ok ? "PASS" : "FAIL")}";
         GD.Print(summary);
         Diag.Log(summary);
 

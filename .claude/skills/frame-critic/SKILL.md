@@ -130,6 +130,7 @@ same result. It is the most important thing in this file:
 | **the round that found the padded bar** | a different seat on the same wall build **ranked the plant above it again**, and ranked the commercial asset bar last — for a black band the crop box had put there |
 | **the round that found the white margin** | a third seat, a third shuffle, **the plant above the build again** — and the bar last again, this time for the example sheet's own white paper margin |
 | **the first round under the progress guards** | a fourth seat put the plant **first in the deck and flagged nothing in it.** The round went **VOID** — the first time the control actually fired, and the strongest form of the same finding |
+| **combined rounds 3 and 4** | the plant sat above the build **twice more**, and on round 4 the seat also **did not flag it** — VOID again. Sixth and seventh instances |
 
 Every one of them still came out **FAIL** with `SHIP: NONE`, and no gate opened. That is the whole
 protective claim and it is narrower than it sounds:
@@ -141,6 +142,26 @@ protective claim and it is narrower than it sounds:
 > guarantees is that a build reaching the phone is one a blind seat said it would ship. It does
 > **not** guarantee the seat's ordering agrees with the human gate's — the evidence above is that
 > it does not, which is exactly why rank was added as a filter and not as a verdict.
+
+> ### THE SEVENTH INSTANCE, AND WHAT IT IS EVIDENCE OF — STANDING OBSERVATION (Rafe, 2026-09-07). NOT A DEFECT, NOT FIXED.
+>
+> Seven runs now. It is not noise and it is not a soft seat, and the reading that matters is
+> **why the two orderings differ rather than which is right**:
+>
+> > **A seat ranks WHOLE-FRAME CRAFT. Rafe culls a SPECIFIC PROPERTY.** Those are different
+> > questions, and a frame can lose on the first while winning on the second — or the reverse.
+> > The gap is not the seat being wrong.
+>
+> **The consequence is the per-axis plant law, and this is the observation's whole practical
+> content.** If a seat is ranking overall craft, then handing it a plant whose defect lies on some
+> *other* axis gives it no reason to rank that plant last — the two frames differ on a question
+> nobody asked. That is the mechanism behind wall round 5 and combined round 4, and it is why the
+> plant must be **axis-matched** rather than merely known-bad.
+>
+> **What is NOT concluded from it:** that the seat should be replaced, re-prompted toward Rafe's
+> criteria, or scored on agreement with him. Prompting a blind seat toward the gate's known
+> answers is how a proxy stops being independent, and §13.4 already refuses to instrument what is
+> carried eye-side. **The seat is kept as it is, and the plant is made to match the question.**
 
 Two ordering facts remain **recorded and reported, never scored**: `outranked_build` when the
 plant sits above the build, and `every_frame_flagged` when a seat flags everything including the

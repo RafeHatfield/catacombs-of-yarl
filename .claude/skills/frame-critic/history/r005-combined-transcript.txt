@@ -1,0 +1,51 @@
+RANK: 3 > 1 > 2
+
+BEST: 3
+
+BEST_WHY: The wall run along the top of the lit room, roughly (430–750, 395–450). The blocks vary in width course-to-course and the vertical joints don't stack — the joint at x≈600 in the upper course has no partner below it — and the joints vary in depth along a single run: some read as a near-black slot, others as a two-value step. That reads as cut and laid stone, not a stamped brick pattern. Driven into that run are thin dark vertical pins at x≈693 and x≈703 and a horizontal salvaged timber at (600–660, 400), placed at irregular intervals and not centred on any block — repairs made by someone solving a problem, not decorating. Second thing that's genuinely well made: the floor around the figure holds its structure under the light. Sampling y=545 across x=300–470, the joints still step (204, 204, 204, 200) inside the brightest area, so the grid survives the highlight and the floor keeps its scale where the eye actually goes.
+
+WORST: 2
+
+WORST_WHY: The flagstone floor is a flat fill with a grid drawn on top. The band at (40–340, 230–258) contains 7 unique colours total, and one of them — a neutral #5A5A5A — covers 87% of the pixels. Every channel is equal: mean saturation across that band is 0.54/255. The stone has no material colour, no bedding, no wear, no variation between one slab and the next; the only thing distinguishing two adjacent flagstones is the 1px joint line between them. Second: the water at roughly (248–345, 0–192) is an axis-aligned rectangle. Its left edge is a dead-straight vertical cut against the dirt, its bottom edge a dead-straight horizontal one, with no bank, no shoreline tile, no darkening at depth, no wetting of the dirt it touches. It is a green rectangle placed on a brown rectangle. Third: the two barrels at (118,190) and (160,190) and the two crates at (65,0)–(95,75) are drawn in side elevation — visible staves, elliptical lids, a crate front face with a latch — sitting in an otherwise strictly top-down field, and none of the four casts a contact shadow.
+
+FLAGGED: 1, 2, 3
+
+For 1: the clipping. Along y=545, x≈365–425 the floor runs 244, 244, 244, 243 — a flat plateau with the joints erased, in the exact centre of the frame. Then the diagonal hatch streaks through (300–430, 470–600) at about 30°, crossing tile boundaries and appearing nowhere else in the image. It reads as a bloom pass run over the tiles.
+
+For 3 (and 1, same sprite): the figure holds a sword in one hand and a round bullseye shield in the other. It is carrying no light. The frame's entire light model originates at its feet from nothing. That is the first thing a person looks at and there is no lamp there.
+
+For 2: the water rectangle, and the elevation-view props in a top-down field.
+
+SHIP: NONE
+
+---
+
+FLIP 3:
+- The figure at (385–430, 460–510) carries sword and shield and no light source, while the only light in the frame originates at its feet. Put a hooded lamp in the shield hand or hung at the belt, and move the light origin to the lamp.
+- That sprite is the only object in the frame with an outline — a black inner line plus a cream outer line, visible all around the helmet and boots — and the only one using saturated cyan (~#8FD8D8) and pure orange. Nothing in the environment uses an outline or either hue. Repaint it onto the environment's tan/umber/soot ramp and drop to a single dark outline or none.
+- At (450–530, 380–470) the wall's top surface and the lit corridor floor both sit at L≈190–210 and carry the same speckle; only a 1–2px dark line separates them. Drop the wall top ~25 values and give it a coarser, larger-scale grain than the floor.
+- The wall tops at (390–490, 70–190) and (620–750, 70–190) have no joints at all — they are soft airbrushed cloud. Draw the same block courses used at (430–750, 400–450) and let value, not blur, take them into the dark.
+- The object at (275–380, 640–710) reads as nothing: soft rim on all four sides, an interior of four arbitrary lighter and darker rectangles, no top plane, no side plane, and its left edge lands mid-tile. Resolve it into a named object — hatch, crate, grating — with a hard top edge and one visible side face, or delete it.
+- The crack descending from (330, 600) stops dead at that object's top-left corner and a different crack restarts at its right edge. Run one continuous crack under it, or terminate it into something.
+- 23.4% of the frame sits below L=8 — flat void carrying no information. Raise the ambient floor to L≈14–18 so the unlit rooms at (0–180, 150–640) and (620–750, 150–300) still show block courses in silhouette.
+- The place is described as held by orc-soldiers repairing with rope, pins, hide and salvaged timber. One timber and two pins appear, all in the same wall run at (600–710, 400). Nothing in the other 90% of the frame has been touched by anyone. Carry the repair vocabulary into the floor and the far walls.
+
+FLIP 1:
+- Everything in FLIP 3, plus the two below.
+- The lit floor clips. Along y=545, x≈365–425 the values run 244, 244, 244, 243 — a flat plateau where the identical tiles in 3 still step 204, 204, 204, 200. Pull the light gain down about 20 values so the brightest floor tops out near 210 and the joints keep their step through the highlight.
+- Remove the diagonal hatch streaks running through (300–430, 470–600) at ~30°. They cross tile boundaries, they don't follow the stone, and they exist nowhere in the dim art — they read as a filter pass, not as drawn detail.
+
+FLIP 2:
+- There is no light model. The brief calls for one carried source with falloff; this frame is uniformly lit corner to corner. Add the carried light and a falloff, and let the corners of the room go.
+- The flagstone band at (40–340, 230–258) is 87% one neutral grey with 7 colours total and mean saturation 0.54/255. Give the stone a hue, a value range, and slab-to-slab variation so adjacent flagstones differ by something other than the joint between them.
+- The water at roughly (248–345, 0–192) is an axis-aligned rectangle butted straight against dirt. Add bank tiles on all edges, darken toward the centre, and wet the dirt where it meets.
+- The two barrels at (118,190) and (160,190) and the two crates at (65,0)–(95,75) are drawn in side elevation in a top-down field. Redraw them from directly overhead — barrel lids as concentric rings, crates as a top plane with slat lines — and give each a contact shadow.
+- The dirt field at (110–248, 0–225) repeats on a visible ~16px lattice; the same rust-red blotch cluster recurs down the column at x≈130. Break the repeat with a second and third variant tile and scattered overlay decals.
+- The white cluster at ~(228,110) has no readable silhouette — a scatter of near-white pixels reading as neither bone, debris, nor sparkle. Draw it as a specific object or remove it.
+- The bottom band is two flat plateaus: rows 230–258 at a uniform 89.5 grey and rows 265–285 at a uniform 44.4 grey, with a hard step between and zero variation along either run. If the lower band is a wall, give it a top surface, a thickness, and a cast shadow onto the floor above it; right now it reads as a hole.
+- The orange element at (48,120) sits against a dark brick band with no cue whether it is above or below the floor plane. Resolve its height with a shadow or a visible side.
+- Nothing in this frame has been repaired. No rope, no driven pins, no hide, no salvaged timber anywhere in it — the fiction's single strongest visual hook is absent. Add the repair vocabulary to the walls and the doorway.
+
+The gap between 3 and 1 is one setting — the light gain — and it costs 1 the centre of its own frame. The gap between either of them and 2 is the whole job.
+
+Model used: Claude Opus 5 (1M context).

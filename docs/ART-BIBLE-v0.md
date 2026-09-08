@@ -706,6 +706,42 @@ menace with almost no gothic vocabulary.
 
 ~~Only the Boundary's values are derived at the pilot. The rest are PLACEHOLDER.~~
 
+> ### ⚠ RE-RATIFIED (Rafe, 2026-09-06) ON THE CORRECTED SINGLE-ARITHMETIC LAMP. THIS TABLE IS THE LIVE ONE.
+>
+> Ruling 56's values below were walked against **a floor lit at energy 1.0 while the walls beside
+> it ran at 1.6** — `tier1_polish.gdshader` discarded `LIGHT_ENERGY` (#174), so the two planes
+> were lit by different arithmetic and the rig was tuned for a readability that did not exist.
+> #174 made the lamp one quantity. This is the walk taken on the corrected one, on the reference
+> device, at gameplay distance, across the lit radius — the ordering §6.2.1 demands.
+>
+> | knob | Ruling 56 (2026-08-28) | **re-ratified (2026-09-06)** | unit |
+> |---|---:|---:|---|
+> | **radius** | 5.0 | **6.0** | TILES. At the RULED 32px tile: a 384px radius, 768px light texture. |
+> | **falloff** | 1.00 | **1.00** | EXPONENT on the radial ramp. Held at the identity a second time, on a different lamp — which makes it a repeated decision rather than an inherited one. |
+> | **ambient level** | 0.70 | **1.50** | SCALAR on the ambient HUE. `#1a1a22 × 1.50 → rgb(39,39,51) = #272733`, the CanvasModulate actually applied. |
+> | ambient hue | `1a1a22` | `1a1a22` | unchanged |
+> | light colour | `ffb066` | `ffb066` | unchanged — §6.2's carried-fire warmth |
+> | **energy** | 1.6 | **1.6** | **HELD, and this time it was reachable.** The panel had no energy knob until this round; every prior walk left it where it was because it *could not be moved*. This is the first walk in which holding it was a choice. |
+>
+> **BOUNDARY ONLY**, as before. Landed in `tools/tier0_harness/harness_config.yaml` and in the
+> device marker template, **passed explicitly and required by the engine** — a ratified value that
+> can be silently defaulted is a ratified value that can silently drift.
+>
+> ⚠ **AMBIENT WENT UP, AND §6.2.1's THIRD BULLET IS ENGAGED RATHER THAN BREACHED.** That bullet
+> asks the pass to preserve §6.2's arc — *you begin as the only thing here that burns* — and the
+> 2026-08-28 pass could point at ambient moving **down** (1.0 → 0.70) as evidence it had not
+> flooded the Boundary. This one moves it to **1.50**, above even the pre-Ruling-56 value.
+> Recorded plainly, because the clause deserves the note: **the arc is a register claim, carried
+> eye-side and never instrumented (§13.4), and the gate that owns it is the one that ruled here.**
+> A number does not get to overturn a look (§13.2). It is a note, not a finding.
+>
+> ⚠ **THE RE-DERIVATION RULE HAS FIRED AGAIN, AND IT REACHES WORK DONE HOURS EARLIER.** Radius
+> 5.0 → 6.0 and ambient 0.70 → 1.50. **Every delivered figure round 29 re-took on the corrected
+> lamp is now stale** — the composed floor-versus-wall table, `L(cap, floor)`, the white-point
+> ladder, the delivered-reach profile. They were correct for the old rig and are re-measured on
+> this one, **not adjusted**. That is the second time in one day this rule has fired, and it is
+> the cost the coupling flag names: art downstream of a rig is art that moves when the rig does.
+
 > **RULED (Rafe, 2026-08-28) — RULING 56. THE BOUNDARY'S RIG IS RATIFIED. PLACEHOLDER CLEARED FOR
 > THIS REGION AND FOR NO OTHER.**
 >
@@ -810,6 +846,70 @@ flatten again.
 > composed-and-holding (PR #177) and resumes for the walk once the arithmetic is one and Ruling
 > 56 is re-ratified. Evidence: `docs/ROUND-28-COMBINED-BUILD.md` §5.
 
+> #### ⚠ #174 IS FIXED IN CODE, AND THE EXPRESSION THIS CLAUSE PRESCRIBES IS ITSELF WRONG.
+> **RECORDED (round 29, 2026-09-05). A CORRECTION OF FACT, NOT A RULING** — no value law moves
+> here and Ruling 56's re-ratification is still owed.
+>
+> `LIGHT = diffuse + LIGHT_COLOR.rgb · polish · pow(delivered, exp)` above, and #174's own exit
+> line *"`* LIGHT_ENERGY` restored"*, both read as though `COLOR * LIGHT_COLOR * LIGHT_ENERGY`
+> were the fix. **It is not. Written that way it measures a QUADRATIC energy response on a floor
+> whose walls are linear** — 3.915 per doubling against the wall's 2.018. `LIGHT_COLOR` is two
+> quantities and this clause names only one of them:
+>
+> | | what it carries | measured |
+> |---|---|---|
+> | `LIGHT_COLOR.rgb` | the light's TINT alone | constant `(1.002, 0.696, 0.423)` at 2.2, 3.2 and 4.5 tiles alike; zero outside the light's quad |
+> | `LIGHT_COLOR.a` | the radial falloff | 0.574 at the cell measured |
+> | `LIGHT_ENERGY` | the energy, exactly | 0.400 at energy 0.4, 0.815 at 0.8 |
+> | the blend | **the engine multiplies `LIGHT.rgb` by `LIGHT.a`** | a vec4 scaled whole is scaled twice |
+>
+> **Energy goes on the RGB only.** Eight one-line shader probes, banked once so nobody buys them
+> a third time: `tools/tier1_floors/SHADER-SEMANTICS.md`.
+>
+> **AND THERE WAS A SECOND DEFECT, which this clause does not know about.** The shader's
+> `delivered` scalar was `max(LIGHT_COLOR.rgb)` — the tint's saturated red, **1.0 at every lit
+> fragment** — so `pow(delivered, 2)` computed 1.0 from the day it was written and **Ruling 70's
+> superlinear response has never run.** The polish was a flat `polish × gain` attenuated once:
+> linear in delivered light, which is the baked value-lift §8.2.1 bans. Now built from
+> `LIGHT_COLOR.a * LIGHT_ENERGY`, with two controls (`docs/ROUND-29-ONE-LAMP.md` §3).
+>
+> **#174's clipping premise is PARTLY met, and the first report of it here was wrong.** The
+> literal *"clips to 255"* is not met: nothing in the delivered frame reaches 255 at the ratified
+> rig. But **near-max floor pixels (≥246) went 72 → 1220 across the fix**, all of them inside one
+> contiguous patch at the lamp core, and round 29's blind seat located that patch unaided and read
+> it as *"the floor loses every joint and slab edge into flat cream."* A first measurement here
+> reported 0.07% and called the premise dead — **it had excluded the player cell and its eight
+> neighbours, which is exactly where all 1220 sit.** At energy 1.0, the energy the floor was
+> actually lit at, the count is **zero**. **Ruling 56 re-opens on both counts**: the standing-case
+> value moved 105.74 → 152.34 (×1.44), and the lamp core is now near the ceiling. The seat has
+> proposed a white point of ~232 as a starting position for the walk.
+
+> ### ⚠ THE BOUNDARY'S LAMP PINS RED FIRST — BANKED (2026-09-07), and it shapes every highlight lever
+>
+> `ffb066` has **red = 1.0**. So as delivered light rises, the red channel saturates while the
+> others still have headroom, and a stone at the core of the pool loses its texture **in its
+> dominant channel** while its hue slides toward the light's own colour. Measured on the round-30
+> frame, inside the blown block a blind seat flagged:
+>
+> | channel | pixels at 255 | max |
+> |---|---:|---:|
+> | **R** | **11.0%** | 255 |
+> | G | 2.6% | 255 |
+> | B | **0.0%** | **176** |
+>
+> **2,044 pixels had red pinned while green was not** — that is the hue shift, not just the flat
+> patch. Whole frame: 16,839 red-clipped pixels.
+>
+> **CONSEQUENCE FOR ANY LEVER THAT TOUCHES THE TOP END:** it is keyed on the **first-clipping
+> channel** and applied **hue-preserving** — one scale factor for all three. Compressing channels
+> independently fixes the texture and *keeps* the hue shift, which is half the defect left in
+> place. The highlight shoulder is built this way (`tier1_polish.gdshader`), and so is anything
+> that follows it.
+>
+> ⚠ **This is a property of the region's light colour, not of the floor.** A region whose lamp is
+> not red-dominant will pin a different channel first, and its levers must be keyed on whichever
+> that is rather than on red.
+
 #### 6.2.1 TIER-ONE PRECONDITION — the rig is tuned for readability BEFORE any asset is judged through it. RULED (Rafe, 2026-08-27, at the device gate).
 
 > **The §6.2 rig values — radius, falloff, ambient — get a readability-tuning pass before any
@@ -845,6 +945,19 @@ game. Tune the cheap thing.**
   convenience.
 - **The ratified values written back here**, which fires the re-derivation rule above.
 
+> **⚠ SUPERSEDED-BY-RE-RATIFICATION 2026-09-06.** Everything in this block describes the pass
+> taken on the BROKEN lamp — floor at energy 1.0, walls at 1.6 (#174). Its ratified values
+> (radius 5.0, ambient 0.70) are **no longer the rig**; see the re-ratification at the head of
+> §6.2. **The block is kept in full, not rewritten**, because a status trail that overwrites
+> itself is not a trail — and because what the pass *owed* is unchanged and is re-answered below.
+>
+> **What the re-ratification answers that this pass could not:** its second bullet — *the §6.5
+> stack surviving the falloff across the lit radius* — was recorded ⚠ NOT ANSWERED because the
+> scene's walls were programmer-art mocks. The 2026-09-06 walk had real walls, a real floor and
+> one arithmetic. **It is still not answered as a §6.5 value law**, because the walk ratified the
+> LAMP and §1.2.2a is explicit that a rig walk blesses no picture — but the obstacle is now the
+> ruling's scope rather than the scene's contents.
+>
 > **DONE — RULING 56 (Rafe, 2026-08-28).** The values are in the §6.2 table above. What the pass
 > owed, answered:
 >
@@ -901,6 +1014,24 @@ game. Tune the cheap thing.**
 > 2026-08-27 gate and are in nothing shipping, so no live asset is invalidated — but the number is
 > not to be picked up and reused. The tier-one FLOOR family derives no ratio against the rig at
 > all (its values come from measured donor material), so it needs no re-derivation.
+>
+> ### ⚠ RULING 56 IS RE-OPENED BY #174 — RECORDED (round 29, 2026-09-05). NOT RE-RATIFIED.
+>
+> Every knob above was walked against **a floor lit at energy 1.0 while the walls beside it ran
+> at this table's 1.6**, because `tier1_polish.gdshader` discarded `LIGHT_ENERGY`. The floor's
+> delivered value at the standing case has since moved **105.74 → 152.34 (×1.44)**. The rig was
+> tuned for readability against behaviour that no longer exists, which is exactly the coupling
+> §6.2.1 was written to prevent, running in the other direction.
+>
+> The ladder is built and waiting: `tools/tier1_floors/capture_rig_ladder.sh`, ten one-knob rungs
+> bracketing this table on the corrected lamp, with delivered floor luminance by range and the
+> worst cell in each band (`docs/ROUND-29-ONE-LAMP.md` §7). **Those stills gate nothing** — §13.1
+> and this clause's own history both say so. The ratification is Rafe's eye, on the reference
+> device, at gameplay distance, across the lit radius.
+>
+> **When new values are ruled they are written back here and into `harness_config.yaml` as
+> REQUIRED FLAGS**, and the table above is annotated *superseded-by-re-ratification* with the
+> date. Until then this table stands and every capture carries it.
 
 This is the first measured instance of art and rig being coupled on this project. It will not be
 the last, and the reason to write it down here rather than in the recipe is that **§6.2 is where
@@ -1161,6 +1292,59 @@ and a parameter row is therefore not evidence. **Probe total: 174 generations.**
 
 ---
 
+### 6.5 The value stack — RULED (Rafe, 2026-08-27), RE-SCOPED (2026-08-29), **ROW 1 RETIRED AS A DELIVERED TARGET (Rafe, 2026-09-07)**
+
+> ## ⚠ ROW 1 IS RETIRED AS A DELIVERED TARGET — RULED (Rafe, 2026-09-07)
+>
+> *"Wall top ≈ 1.11 × floor — lighter than the floor"* is **withdrawn as something the engine is
+> asked to deliver.** It is not softened, re-scoped or deferred: it is no longer a target.
+>
+> **The evidence, and it is three rounds deep and taken on ONE arithmetic:**
+>
+> | round | `L(cap, floor)`, standing case | direction |
+> |---|---:|---|
+> | 28 (across the #174 defect) | 50.22 levels | cap **below** floor |
+> | 29 (corrected lamp, old rig) | 72.56 | cap **below** floor |
+> | 30 (re-ratified rig) | **89.64** | cap **below** floor |
+>
+> **Every correction moved it further from row 1, never toward it.** The floor gains more than the
+> cap does at every range, because the floor is nearer the carried lamp by construction — and a
+> blind seat has asked for the separation three rounds running while the number was going the
+> other way.
+>
+> **And the 1.11 was never a delivered number.** It came from the asset bar's own screenshot,
+> whose scene has **no run-time light in it at all** — §6.5's own re-scoping said so in 2026-08-29
+> and the consequence was not drawn. In a lightless frame a wall top brighter than the floor costs
+> nothing. Under a carried lamp the floor a wall faces is always nearer the light than the wall's
+> own top — by one tile plus the half-tile the top band sits back inside its own cell — so
+> **k_top cannot reach 1.0 at any range**, which the flat-albedo probe measures as
+> 0.87 / 0.67 / 0.48 / 0.30. A target that requires k_top > 1 is a target the rig cannot express.
+>
+> ### What the LAW keeps, and it is most of it
+>
+> 1. **The 2:1 separation between the wall's own two planes.** A local relationship, it survives
+>    the falloff, and it was the whole finding of the wall campaign — Yarl's planes were
+>    **inverted**, and that correction stands untouched.
+> 2. **Cap-versus-floor distinctness — BY MATERIAL, TEXTURE AND BOUNDARY OCCLUSION, NEVER BY
+>    BRIGHTNESS.** The cap must read as a different *thing* from the floor: a different grain, a
+>    different course, a hard boundary where the plane turns. What it must no longer do is read as
+>    a different thing *because it is lighter*, because under a carried lamp it cannot be.
+> 3. **The register derivation is untouched** — the top catches light, the face is enclosed. That
+>    is why the stack exists and it was never a measurement.
+>
+> ### Why this is a retirement and not a failure
+>
+> The clause was written from a lightless reference and asked the engine for something a carried
+> lamp forbids. **Chasing it further would have meant authoring the cap brighter and brighter
+> against a floor that keeps outrunning it** — solving the art backwards against physics, which is
+> the §6.3 line and the failure the coupling flag was raised to prevent. Retiring the row is what
+> the measurement has been saying for three rounds.
+>
+> ⚠ **Consequence for the seats:** *"give the wall top a value separation from the lit floor"*
+> is now a **REFUSED** request wherever it asks for brightness, and a **MAKE-IT-READ** item
+> wherever it asks for distinctness — §13.4.1's shape exactly. The successor is material, not
+> value.
+
 ### 6.5 The value stack — RULED (Rafe, 2026-08-27), RE-SCOPED (Rafe, 2026-08-29, at the wall gate). ⚠ EVERY NUMBER IN THIS CLAUSE IS UNDER #174 (2026-09-05).
 
 > ⚠ **READ §6.2's #174 ASTERISK BEFORE ANY NUMBER BELOW. RULED (Rafe, 2026-09-05).**
@@ -1179,6 +1363,33 @@ and a parameter row is therefore not evidence. **Probe total: 174 generations.**
 > What is void is every number offered in evidence for it.
 >
 > #174 is the gate for the tier-one surface. `docs/ROUND-28-COMBINED-BUILD.md` §5.
+
+> ⚠ **THE BANNER IS CHALLENGED ON EVIDENCE AND IS NOT LIFTED HERE. Awaiting Rafe (round 29,
+> 2026-09-05).**
+>
+> The banner voids *"the re-scoping's own range profile (0.87 / 0.67 / 0.48 / 0.30), the k_top
+> cannot reach 1.0 argument, and the 2:1 plane separation."* **Those three were never measured
+> across the defect.** `range_profile.py` runs on `wall_range_a/b.json` through
+> `tile_themes_probe.yaml` — flat-albedo photometric probes captured with **no `--ashlar-floor`
+> and no `--floor-overlays`**, so their floor is a plain theme sprite carrying **no
+> `ShaderMaterial` at all** and it ran the default light pass, with the energy, the whole time.
+>
+> Re-captured on the corrected lamp: **all six probe PNGs are byte-identical to the committed
+> pre-fix evidence.** Only the worktree path and the timestamps moved in the logs. Recomputed
+> k_top: **0.8686 / 0.6696 / 0.4799 / 0.2995**. And the engine states it independently in every
+> one of those logs — `[Tier1] ashlar floor: none declared` — which is §13.10's standard: the
+> engine's own answer, not an instrument's inference.
+>
+> **PROPOSED, not applied:** the banner narrows to figures measured on the COMPOSED scene with
+> the real ashlar floor — round 28 §5's table, and PR #151's status-trail measurements if those
+> used it. Round 28 §5's table IS re-taken, on one lamp, in `docs/ROUND-29-ONE-LAMP.md` §6.
+>
+> ⚠ **AND ONE FIGURE MOVED IN THE DIRECTION THIS CLAUSE CARES ABOUT.** On the corrected lamp the
+> floor gained 1.44× and the cap gained nothing, so `L(cap, floor)` at the standing case went
+> **50.22 → 72.56 levels, sign negative — the cap further BELOW the floor.** Row 1 asks for the
+> wall top to be *lighter* than the floor. Whether row 1 is reachable at the standing case on
+> the corrected lamp, or whether the re-scoping's *dark-by-design* now extends inward, **is a
+> value law and it is Rafe's at the gate.**
 
 > **RE-SCOPED — RULED (Rafe, 2026-08-29, at the first gate with real walls in the scene).
 > THE STACK IS A STANDING-DISTANCE LAW.**
@@ -2449,6 +2660,85 @@ for it.
 > **The general form:** the standard of proof required to overturn a witness is at least the
 > standard that witness was held to. An instrument that says a seat did not see what it says it saw
 > is making the stronger claim and carries the heavier burden.
+
+---
+
+### 13.11 An instrument whose reference can saturate measures the ceiling, not the scene — LAW (Rafe, 2026-09-07)
+
+**A relative bound is only as honest as its denominator.** If the reference can clip, the
+instrument stops reporting the scene and starts reporting the top of the range — and it does so
+silently, because a saturated reference looks like a very bright reference.
+
+**The occasion.** The floor-legibility guard asked whether a declared point was dark *relative to
+lit floor beside the player*. That reference cell **clipped at 255**. So every dark declaration in
+the scene was a ratio against a pinned value, and the guard had been measuring the ceiling since
+the day it was written.
+
+It surfaced when the highlight shoulder (§6.2) removed the clipping. Isolated:
+
+| | change |
+|---|---:|
+| the declared-dark point `(8,7)` | **+0.00 levels** — byte-identical |
+| its reference | **−26.95 levels** |
+
+**A fix that changed zero dark pixels made two dark declarations fail.** The guard was not wrong
+about arithmetic; it was wrong about what it was dividing by. And the defect had a second face
+nobody had looked for: a relative bound is **blind to global darkening**, because dimming the
+whole scene moves numerator and denominator together. Measured at energy 0.15, two declared-lit
+points sat at 0.0895 and 0.0981 delivered — too dark to see — while their *ratios* read **0.6651
+and 0.7285**, comfortably passing a 0.12 bound.
+
+> **RULED: legibility is an ABSOLUTE delivered-luminance bound, per point, per §13.8.** The
+> question is *can a viewer see this point*, which is a property of the delivered frame and of
+> nothing else in it. Declared as `bound_lum` in the scene spec, **with no default** — a bound
+> that can be omitted is a bound that drifts, and the retired one spent its life measuring against
+> a number nobody had declared.
+
+**How a live instrument is replaced without laundering a re-tune.** The bounds were derived as
+`reference_on_the_nulled_build_at_the_ratified_rig × the retired ratio`, which is algebraically
+the old test with its denominator frozen at a known-good moment. **Every point's pass state was
+preserved exactly on the day of the swap.** That is the discipline: change what the instrument
+MEANS without changing what it SAYS, or nobody can tell a re-definition from a re-tuning.
+
+**And it was proved in both directions before it was believed** (§13.5): the shouldered capture,
+whose dark ground is byte-identical, **passes**; a genuinely darkened capture — Weber 0.71 against
+§13.8's 0.1440 floor — **is refused**.
+
+> ### THE SECOND AND THIRD INSTANCES, both on 2026-09-07, both in the review layer
+>
+> **SECOND — the progress metric.** `rank_score` is `(deck_size − position) / (deck_size − 1)`, so
+> first place in a three-frame deck is **1.00 with nothing above it.** The stall guard demanded a
+> NEW best and counted matching as standing still, so **any lane that ever ranked first was
+> guaranteed to stop three readable rounds later, however good the work was.** RULED: progress at
+> the ceiling is `(rank_score, shipped, −unresolved_flips)` — SHIP arriving counts at any rank, and
+> at equal rank strictly fewer *unresolved* flips counts. And **a round excluded from a guard's
+> evaluation cannot set that guard's best**; cleared rounds do not hold records.
+>
+> **THIRD — the build identifier.** `build_id` hashed every tracked and untracked file in the
+> repository, so **acting on the gate's own ruling invalidated the verdict that ruling was about**:
+> the human gate dispositioned every flip, and the install refused because implementing the ruling
+> had edited `frame_critic.py` and this document. The delivered frame was byte-identical. RULED:
+> the id hashes **shipped inputs only** — game source, assets, shaders, scene and theme configs,
+> and the build scripts that affect output — and excludes the review layer's source, `.claude/skills`
+> and `docs/`, on the ground the exclusion list already stated for the review layer's *artefacts*:
+> **they describe the build, they are not in it.**
+>
+> > **A hash broader than the thing it identifies measures the repo, not the build.**
+>
+> ⚠ **The blacklist is deliberate and the direction of failure is chosen.** "Shipped inputs only"
+> is whitelist language, and a whitelist that forgets a shipped directory yields an id that does
+> **not** move when the build does — the gate goes blind and says nothing. A blacklist that forgets
+> a non-shipped one yields an id that moves needlessly: loud, visible, one line to fix. Anything
+> new in the repository counts until someone names it.
+>
+> **All three instances are the same shape**, and it is worth stating once: an instrument's INPUT
+> must be no wider than the thing it claims to measure. A ratio whose denominator can saturate, a
+> progress metric whose scale can top out, an identifier that hashes the room the build was made in
+> — each keeps returning a confident number after it has stopped measuring the subject.
+
+> **The general form:** before trusting a ratio, ask what happens to it when the denominator hits
+> the end of its range. If the answer is *it keeps returning a number*, the instrument has a blind
+> spot exactly where the picture is brightest, and that is where the eye is.
 
 ---
 

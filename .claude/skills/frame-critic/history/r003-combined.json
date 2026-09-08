@@ -1,0 +1,163 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "combined",
+ "round": 3,
+ "surface": "combined",
+ "axis": "construction",
+ "commit": "724a782865f4f914b1df946af7bb25a862e1fef1",
+ "dirty": true,
+ "build_id": "ce139378b2ec6155ddd943564e57070d29f685afbf181c7ddca1ad048113fc46",
+ "timestamp": "2026-09-06T14:07:14",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/combined.png",
+  "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+  "log": "tools/tier1_floors/evidence/combined.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/one-lamp --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/combined.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 6.0 --light-falloff 1.0 --light-ambient-level 1.5 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-5c9a8cb6b18a6c2e",
+  "slots": {
+   "1": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "2": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/combined.png",
+    "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/cement-cap.png",
+    "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/combined.png"
+ },
+ "plant": {
+  "slot": 3,
+  "file": "cement-cap.png",
+  "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+  "culled_by": "Rafe, device walk, 2026-09-03",
+  "verbatim": "caps are still grey and read as cement, not stone",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": true,
+   "every_frame_flagged": true
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The corridor running north from the figure (x\u2248378\u2013440, y 70\u2013460) is authored, not stamped. The joints are drawn as broken stipple \u2014 dotted, interrupted runs \u2014 rather than continuous lines, so the blocks read as chipped edges meeting badly. Block lengths vary along a single course (roughly 20, 35, 28, 45 px in the wall run at y\u2248390\u2013422), and two long cracks cross the corridor diagonally at y\u2248310 and y\u2248360, running *through* several joints without breaking at them \u2014 a crack that ignores block boundaries can only be hand-placed, and it is the single clearest tell in the deck that a person drew this. The dark vertical members at x\u2248565 and x\u2248660 break their course cleanly and read as driven timber. The falloff is monotonic and unbanded: down the corridor centre the luma climbs 9 \u2192 90 from y=200 to y=490 with no tile-step in it. And the sprite reads: the shield's cream face and the pale blade sit on floor at luma \u224890, so both hold.",
+  "WORST_WHY": "Three separate failures, any one of which is disqualifying.\n\n*The dirt is stamped on a visible lattice.* Hashing the frame at 16 px shows the identical tile recurring 15 times at (160,0), (112,48), (160,48), (208,48), (64,96), (112,96)\u2026 \u2014 every coordinate 48 apart in both axes. The entire brown field is one 48\u00d748 patch repeated on an exact 3\u00d73-tile grid, and the same cluster of maroon splotches comes back every third tile.\n\n*Two camera angles in one frame.* The floor and water are straight top-down; the barrels at x\u2248112\u2013148 and x\u2248160\u2013196 show their lid ellipse *and* their front staves, so they are three-quarter; and the green figure at x\u2248206\u2013238, y 0\u201330 is full front elevation \u2014 you see its face, both eyes, its chest and both legs from the front, standing upright at the camera. Under it is a soft airbrushed brown ellipse, the only shadow anywhere in the frame, and it is a blurred blob rather than a pixel shape.\n\n*The water is a rectangle.* Teal spans x=248 to x=343 at every scanline from y=0 to y\u2248185 \u2014 the left edge does not deviate by one pixel over 185 rows \u2014 and it terminates at y=185 in a dead-straight horizontal cut with no bank, no lip, no transition tile. Dirt simply begins.\n\nSupporting: the two crates at x 64\u2013112 are pixel-identical including the diamond blot in the same corner of each lid; the barrels are the same sprite with the same 2 px cream rim and the same notch on the lid; nothing but the figure casts a shadow; and the frame is uniformly lit \u2014 mean luma per 96\u00d796 block runs 60.1 to 79.5 corner to corner, i.e. no falloff at all, in a scene whose premise is one carried lamp. The bones at x\u2248215\u2013245 are a scatter of pale cream dots with no silhouette and no dark under-pixel.",
+  "FLAGGED": "1, 2, 3",
+  "RANK": "3 > 2 > 1",
+  "BEST": "3",
+  "WORST": "1",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "The lit floor is blown out. Excluding UI and sprite, 12,159 pixels sit above luma 190, against 289 in the comparable frame; the floor around the figure reaches \u2248(240,235,215). Pull the peak floor value down until the brightest stone is well clear of the sprite's lightest pixels.",
+  "Consequence of the above, and the reason it matters: the sprite stops reading. The shield's cream face and the sword blade's interior land at the same value as the floor beside them, so only the dark outline holds the figure together. Fix the exposure and check the read again at 1:1.",
+  "Restore joints in the blown region. At x 430\u2013700, y 470\u2013560 there is a flat pale block roughly 110\u00d728 px with no interior texture and a dark line on only two of its four edges. Every block in that pool needs its joints back.",
+  "Unify the detail scale in that same region: adjacent blocks alternate between crisp 1 px diagonal hatch triplets and completely blank gradients. Pick one density and hold it.",
+  "Remove or attach the free-floating dark bars \u2014 roughly 3\u00d720 px verticals at around (505,505) and (525,505) \u2014 that sit mid-block, joined to no joint and no timber.",
+  "The block edges there are soft, anti-aliased gradients roughly 4 px wide while the sprite is hard 1 px. Snap the floor art back to the pixel grid; as it stands the frame carries two rendering resolutions.",
+  "Strip the mottled cloud-blotch layer off the wall tops at y\u2248390\u2013455. The dark green-brown blobs cross stone divisions and ignore every joint underneath them \u2014 it reads as a grunge texture multiplied over the tiles rather than as stained stone. If the stain stays, cut it to the block boundaries.",
+  "Give the wall's top surface a value separation from the lit floor. In the lit span they sit close enough that the wall does not read as raised.",
+  "The grey patch at roughly x 120\u2013200, y 55\u2013133 is an axis-aligned rectangle sitting inside the black unexplored area with hard straight sides. Either texture it or let it go to the same black as its surround."
+ ],
+ "flip_list_withheld": null,
+ "withheld_because": null,
+ "progress": {
+  "rank_position": 2,
+  "deck_size": 3,
+  "rank_score": 0.5,
+  "bar_position": 3,
+  "approved_position": null,
+  "approved_frame_in_deck": false,
+  "beats_approved": true,
+  "near_bar": true,
+  "near_bar_slack": 1,
+  "new_best": false,
+  "best_before": 1.0,
+  "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1218130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b242a231b190e030202020202020202020303040404050607080809090810363832362f2318150303020202020202020303040405060708080a090a0a0b1943433e4b3d2522190403020202020202020303040506070709090b0b0c0c0b1b40414e6b50231f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c5f826f382b1c050303020202020203030c0b0b0b0e0f141414171d1a1929515373975f372a240b0808050402020303041e1e1e20262f303540474245384a4e6c808e322f27261f16150f0c02020203041f2228263234394953545f717a6e64668c9a5d4446362c271f161102020304041e292943445b646e86b6cfc39cc6cdc1ad98745c4d3f35291c13120202020304222f2a44687d93adcfe8ecc69bdedfae82776e6252423e3221131a0405050607212a263e4e586ea3c5dde4eae7d7b1ab9089775f53433a31211a1a0b1010112b2f1e1f2d316c95c1ced4d2d8d5a9928277776a5c5042392e20191805070708081818213a48739bafb2c2c8c3b0937a6856555353493f342b21191502020202031214203a52687c8e97a88b7a6f655f6e4e454e4c41392d231a1310060303030410171d32434e5b545a5d444f53565e624e4a46413930241d1510100e08090a080a111720313d44222a28304c6162584a42423e362e29211b1210150d0e0e0d0b0c111218232e333820242d485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110",
+  "moved": {
+   "mad": 12.1474609375,
+   "max_cell": 56
+  },
+  "two_strikes_advisory": null,
+  "series": [
+   {
+    "round": 1,
+    "verdict": "FAIL",
+    "rank_position": 1,
+    "deck_size": 3,
+    "rank_score": 1.0,
+    "capture_signature": "010101010106060708080608080907060709070809070808080807060608291f0101010101050707070706080808070606080807080808070808070606073e2b01010101010506070605060605050605060506060506090706060505060505040101010101060606060707070708080706050606050508070606080706060606010101010105050606050605050606040404050a170708070606060505050404010101010101010101010101010101010101020b100808070607060101010101010101010101010101010101010101010101020b150808060506060101010101010101010101010101010101010201020202040b0b070a0806060501010101010101010101010101010101020202020203030815120e0e0b0807040101010101010101010101010101010202030304040504091e1d1716120c07060101010101010101010101010102020304040606060607112b2921231b100d080101010101010101010101010202030405060708080908142e2e2e3a29120e0901010101010101010101010102030405060809090a0b0c193e3a3e4e3f20160c0201010101010101010103040506080a0f0f101319171623444456643d22181204030202020101010101090c0e121821242a353d3a3d3242445c6c6e242018140e0806040401010101010a0e141621262c3c474b566870655a597980452f2d1e150f09060601010101010a1115292e434f5e78a9c6bb95bfc3b2997f5a4233241a1109050601010101010b141629465d7595bddbe4c093dad59f7162564736261f140b050801010101010b131428383f568bb2cfdbe4e0cfa6997b705b4436271c130a07080101010101080e122a30486a9eb6c3c5ccc89c8270635e4f3f32241b110907080101010101070810242e45637f92a9b3b19b82685745403b362b20160e090708010101010105060c1a2838485a688273665d534c563b31332e231a110b070606040303030306080b151e263031393d323c3f41464736302a231b130c080605070e1111112b26111214171a20131a1a203443433b2f28262119120e0908060709090b0b0a0a090a0a0c0e11151910141a2b34313021231d18100d090808080809070705060606070708090a0c111114151617191a1316120f0b090808080809060807060706080908080606090b0d0e0f111211100c0c0b0908080808080708080708060706070908080706060807080909090809080707060808070808070706070705070607080808070606080707070606060706070706080807070706070608070605050605050807070708070707060607080806080807070606060606061d1b0b0707070706070708080908080808070809080808080708070607070607101c080505070706070708080908070708070708070808080807070607070707"
+   },
+   {
+    "round": 2,
+    "verdict": "FAIL",
+    "rank_position": 1,
+    "deck_size": 3,
+    "rank_score": 1.0,
+    "capture_signature": "010101010106060708080608080907060709070809070808080807060608291f0101010101050707070706080808070606080807080808070808070606073e2b01010101010506070605060605050605060506060506090706060505060505040101010101060606060707070708080706050606050508070606080706060606010101010105050606050605050606040404050a170708070606060505050404010101010101010101010101010101010101020b100808070607060101010101010101010101010101010101010101010101020b150808060506060101010101010101010101010101010101010201020202040b0b070a0806060501010101010101010101010101010101020202020203030815120e0e0b0807040101010101010101010101010101010202030304040504091e1d1716120c07060101010101010101010101010102020304040606060607112b2921231b100d080101010101010101010101010202030405060708080908142e2e2e3a29120e0901010101010101010101010102030405060809090a0b0c193e3a3e4e3f20160c0201010101010101010103040506080a0f0f101319171623444456643d22181204030202020101010101090c0e121821242a353d3a3d3242445c6c6e242018140e0806040401010101010a0e141621262c3c474b566870655a597980452f2d1e150f09060601010101010a1115292e434f5e78a9c6bb95bfc3b2997f5a4233241a1109050601010101010b141629465d7595bddbe4c093dad59f7162564736261f140b050801010101010b131428383f568bb2cfdbe4e0cfa6997b705b4436271c130a07080101010101080e122a30486a9eb6c3c5ccc89c8270635e4f3f32241b110907080101010101070810242e45637f92a9b3b19b82685745403b362b20160e090708010101010105060c1a2838485a688273665d534c563b31332e231a110b070606040303030306080b151e263031393d323c3f41464736302a231b130c080605070e1111112b26111214171a20131a1a203443433b2f28262119120e0908060709090b0b0a0a090a0a0c0e11151910141a2b34313021231d18100d090808080809070705060606070708090a0c111114151617191a1316120f0b090808080809060807060706080908080606090b0d0e0f111211100c0c0b0908080808080708080708060706070908080706060807080909090809080707060808070808070706070705070607080808070606080707070606060706070706080807070706070608070605050605050807070708070707060607080806080807070606060606061d1b0b0707070706070708080908080808070809080808080708070607070607101c080505070706070708080908070708070708070808080807070607070707"
+   },
+   {
+    "round": 3,
+    "verdict": "FAIL",
+    "rank_position": 2,
+    "deck_size": 3,
+    "rank_score": 0.5,
+    "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1218130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b242a231b190e030202020202020202020303040404050607080809090810363832362f2318150303020202020202020303040405060708080a090a0a0b1943433e4b3d2522190403020202020202020303040506070709090b0b0c0c0b1b40414e6b50231f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c5f826f382b1c050303020202020203030c0b0b0b0e0f141414171d1a1929515373975f372a240b0808050402020303041e1e1e20262f303540474245384a4e6c808e322f27261f16150f0c02020203041f2228263234394953545f717a6e64668c9a5d4446362c271f161102020304041e292943445b646e86b6cfc39cc6cdc1ad98745c4d3f35291c13120202020304222f2a44687d93adcfe8ecc69bdedfae82776e6252423e3221131a0405050607212a263e4e586ea3c5dde4eae7d7b1ab9089775f53433a31211a1a0b1010112b2f1e1f2d316c95c1ced4d2d8d5a9928277776a5c5042392e20191805070708081818213a48739bafb2c2c8c3b0937a6856555353493f342b21191502020202031214203a52687c8e97a88b7a6f655f6e4e454e4c41392d231a1310060303030410171d32434e5b545a5d444f53565e624e4a46413930241d1510100e08090a080a111720313d44222a28304c6162584a42423e362e29211b1210150d0e0e0d0b0c111218232e333820242d485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110"
+   }
+  ],
+  "guards": {
+   "stall_rounds": 3,
+   "round_ceiling": 15,
+   "no_change_mad": 0.25,
+   "no_change_max": 4,
+   "sig_grid": 32,
+   "judge_misses": 2,
+   "flip_same": 0.6
+  }
+ },
+ "transcript": ".claude/skills/frame-critic/history/r003-combined-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress \u2014 rank in the deck \u2014 never rounds elapsed."
+}

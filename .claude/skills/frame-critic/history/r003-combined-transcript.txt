@@ -1,0 +1,60 @@
+Read all three at full size and at 4–10× on the regions that decide it, plus pixel measurements where my eye could lie to me.
+
+**RANK:** 3 > 2 > 1
+
+**BEST:** 3
+
+**BEST_WHY:** The corridor running north from the figure (x≈378–440, y 70–460) is authored, not stamped. The joints are drawn as broken stipple — dotted, interrupted runs — rather than continuous lines, so the blocks read as chipped edges meeting badly. Block lengths vary along a single course (roughly 20, 35, 28, 45 px in the wall run at y≈390–422), and two long cracks cross the corridor diagonally at y≈310 and y≈360, running *through* several joints without breaking at them — a crack that ignores block boundaries can only be hand-placed, and it is the single clearest tell in the deck that a person drew this. The dark vertical members at x≈565 and x≈660 break their course cleanly and read as driven timber. The falloff is monotonic and unbanded: down the corridor centre the luma climbs 9 → 90 from y=200 to y=490 with no tile-step in it. And the sprite reads: the shield's cream face and the pale blade sit on floor at luma ≈90, so both hold.
+
+**WORST:** 1
+
+**WORST_WHY:** Three separate failures, any one of which is disqualifying.
+
+*The dirt is stamped on a visible lattice.* Hashing the frame at 16 px shows the identical tile recurring 15 times at (160,0), (112,48), (160,48), (208,48), (64,96), (112,96)… — every coordinate 48 apart in both axes. The entire brown field is one 48×48 patch repeated on an exact 3×3-tile grid, and the same cluster of maroon splotches comes back every third tile.
+
+*Two camera angles in one frame.* The floor and water are straight top-down; the barrels at x≈112–148 and x≈160–196 show their lid ellipse *and* their front staves, so they are three-quarter; and the green figure at x≈206–238, y 0–30 is full front elevation — you see its face, both eyes, its chest and both legs from the front, standing upright at the camera. Under it is a soft airbrushed brown ellipse, the only shadow anywhere in the frame, and it is a blurred blob rather than a pixel shape.
+
+*The water is a rectangle.* Teal spans x=248 to x=343 at every scanline from y=0 to y≈185 — the left edge does not deviate by one pixel over 185 rows — and it terminates at y=185 in a dead-straight horizontal cut with no bank, no lip, no transition tile. Dirt simply begins.
+
+Supporting: the two crates at x 64–112 are pixel-identical including the diamond blot in the same corner of each lid; the barrels are the same sprite with the same 2 px cream rim and the same notch on the lid; nothing but the figure casts a shadow; and the frame is uniformly lit — mean luma per 96×96 block runs 60.1 to 79.5 corner to corner, i.e. no falloff at all, in a scene whose premise is one carried lamp. The bones at x≈215–245 are a scatter of pale cream dots with no silhouette and no dark under-pixel.
+
+**FLAGGED:** 1, 2, 3
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- Break the 48 px repeat: the brown field is one 3×3-tile patch cycled across the whole floor. Author enough unique variants that no patch recurs within the frame, or overlay per-tile detail that does not repeat on the same lattice.
+- Redraw the figure at x≈206–238 in the same top-down projection as the floor: crown of the head and shoulders visible, feet not. As drawn you see its face and both legs frontally while you see the tops of the barrels beside it.
+- Replace the soft airbrushed ellipse under that figure with a hard-edged pixel contact shadow, and give the barrels and crates the same shadow. Right now it is the only shadow in the frame.
+- Make the two crates at x 64–112 different objects — different lid wear, different plank count, one rotated — instead of the same sprite with the same diamond blot in the same corner. Same for the two barrels.
+- Break the water's left edge at x=248: it holds to the pixel for 185 rows. Cut it to the block grid irregularly, and build a bank — a darker wet lip, a shallow shelf, spill onto the adjacent dirt — where it currently meets dirt on a bare 1 px seam.
+- Give the water's bottom termination at y=185 the same treatment; it is currently a straight horizontal line snapped to the tile grid.
+- Drop the saturated mid-green pads floating on the water. They are the most saturated thing in the frame and they sit at a chroma nothing else reaches.
+- Put in the light. Frame luma is 60–79 everywhere; there must be a falloff centred on the light-carrier and near-black at the frame edges.
+- Kill the flat 1 px cream highlight line along the top of the stone run at y≈216 and vary the joint spacing — the joints are currently identical 3 px darks at exact 48 px intervals.
+- Redraw the bones at x≈215–245 as a silhouette with a dark underside, not a scatter of single cream pixels on flat brown.
+
+**FLIP 2:**
+- The lit floor is blown out. Excluding UI and sprite, 12,159 pixels sit above luma 190, against 289 in the comparable frame; the floor around the figure reaches ≈(240,235,215). Pull the peak floor value down until the brightest stone is well clear of the sprite's lightest pixels.
+- Consequence of the above, and the reason it matters: the sprite stops reading. The shield's cream face and the sword blade's interior land at the same value as the floor beside them, so only the dark outline holds the figure together. Fix the exposure and check the read again at 1:1.
+- Restore joints in the blown region. At x 430–700, y 470–560 there is a flat pale block roughly 110×28 px with no interior texture and a dark line on only two of its four edges. Every block in that pool needs its joints back.
+- Unify the detail scale in that same region: adjacent blocks alternate between crisp 1 px diagonal hatch triplets and completely blank gradients. Pick one density and hold it.
+- Remove or attach the free-floating dark bars — roughly 3×20 px verticals at around (505,505) and (525,505) — that sit mid-block, joined to no joint and no timber.
+- The block edges there are soft, anti-aliased gradients roughly 4 px wide while the sprite is hard 1 px. Snap the floor art back to the pixel grid; as it stands the frame carries two rendering resolutions.
+- Strip the mottled cloud-blotch layer off the wall tops at y≈390–455. The dark green-brown blobs cross stone divisions and ignore every joint underneath them — it reads as a grunge texture multiplied over the tiles rather than as stained stone. If the stain stays, cut it to the block boundaries.
+- Give the wall's top surface a value separation from the lit floor. In the lit span they sit close enough that the wall does not read as raised.
+- The grey patch at roughly x 120–200, y 55–133 is an axis-aligned rectangle sitting inside the black unexplored area with hard straight sides. Either texture it or let it go to the same black as its surround.
+
+**FLIP 3:**
+- The wall's south face is unfinished. At y≈425–453, both left (x 0–345) and right (x 415–750) of the corridor, it is a smooth featureless gradient with hard straight edges top and bottom — no stone course, no joint, no material of any kind, across roughly 700 px of frame width. The wall's top surface directly above it carries stone divisions and timber posts; the floor directly below carries joints and hatch. Draw the face: courses, joints, and the repair language the rest of the frame uses.
+- That same face sits at luma 71 at x=260 while the lit floor below it at y=472 sits at 70 — identical. It is also brighter than the wall top above it (60) despite being further from the lamp. Separate the face's value from the floor and put it below the wall top, so the run reads as standing on the ground rather than lying on it.
+- Add a contact shadow under the figure's boots at (395–430, 505–512). The floor there is the same value as floor 20 px away, so the figure floats on the light pool.
+- The floor blocks are drawn at roughly twice the sprite's pixel size. It is consistent across the frame, so it is a choice rather than an accident — but next to a 1 px-outlined sprite the floor reads coarse. Either bring the floor detail up to the sprite's pixel size or accept it deliberately and match the sprite to it.
+
+---
+
+The gap between 3 and the other two is real, and it is not a style gap — 3 has hand-authored detail that survives magnification, 2 has a filter over a tile render, 1 has a stamped lattice and two incompatible cameras. But 3's blank wall face is a 700 px hole in the middle of the frame, and no exposure or palette work fixes it. That face is the one thing to draw next.
+
+*Model: Claude Opus 5 (1M context).*
