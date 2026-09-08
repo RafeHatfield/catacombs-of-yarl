@@ -110,7 +110,64 @@ def check():
     #
     # EVERY flip must be dispositioned. A state that discharges some items and stays silent about
     # the rest is a FAIL wearing a better name.
-    if v.get("verdict") == "PASS-WITH-ROUTED-ITEMS":
+    # ── PASS-INSTALL ─────────────────────────────────────────────────────────────────────────
+    #
+    # RULED (Rafe, 2026-09-08): *"PASS for polish rounds against a seeded reference = rank above
+    # approved_capture AND no unrouted flags -> PASS-INSTALL; SHIP stays recorded as the wowed
+    # signal, not the install gate — the seeded reference is the human-ratified install bar."*
+    #
+    # THE REASON IT IS NOT A LOOSENING: SHIP-and-rank was ratified against a NULL REFERENCE, when
+    # every combined round recorded "NO APPROVED FRAME IN THE DECK" and SHIP was the only thing
+    # standing between a build and the phone. With a serviceable reference seeded, the deck holds
+    # a frame the human gate has already ratified as installable, and beating it gates the build
+    # ABOVE THE BAR IT MEASURES AGAINST.
+    #
+    # The gate re-derives the two conditions from the verdict's own recorded numbers rather than
+    # trusting the label — a verdict that merely SAYS PASS-INSTALL proves nothing, and this file
+    # is the one place an install can be authorised.
+    if v.get("verdict") == "PASS-INSTALL":
+        pr = v.get("progress") or {}
+        pos, app = pr.get("rank_position"), pr.get("approved_position")
+        bad = []
+        if app is None:
+            bad.append("no approved frame in this round's deck — PASS-INSTALL is defined against "
+                       "a SEEDED reference and there is nothing here to be above")
+        elif pos is None or pos >= app:
+            bad.append("build ranked %s and the approved frame ranked %s — PASS-INSTALL requires "
+                       "the build ABOVE the reference" % (pos, app))
+        flagged = (v.get("seat") or {}).get("_flagged_build")
+        disp = list(v.get("dispositions", []))
+        flips = list(v.get("flip_list", []))
+        if flips and len(disp) < len(flips):
+            bad.append("%d flip items and only %d dispositions — 'no unrouted flags' means every "
+                       "outstanding item carries a human disposition"
+                       % (len(flips), len(disp)))
+        for i, d in enumerate(disp):
+            state = (d.get("state") or "").upper()
+            if state not in ("ROUTED", "CLOSED", "PARKED"):
+                bad.append("disposition %d: state %r is not ROUTED, CLOSED or PARKED" % (i, state))
+            if not (d.get("ruling") or "").strip():
+                bad.append("disposition %d (%s): no quoted ruling" % (i, state))
+            if state == "ROUTED" and not (d.get("lane") or "").strip():
+                bad.append("disposition %d: ROUTED with no destination lane" % i)
+        if bad:
+            return False, L + ["", "PASS-INSTALL IS NOT LAWFULLY FORMED:"] \
+                   + ["  - %s" % b for b in bad]
+        L += ["", "PASS-INSTALL — above the seeded reference (build %s, reference %s)."
+                  % (pos, app)]
+        if disp:
+            L.append("  Outstanding items, each with a human disposition:")
+            for d in disp:
+                L.append("  %-7s %s" % (d.get("state", "?").upper(),
+                                        " ".join((d.get("item") or "").split())[:76]))
+                if d.get("lane"):
+                    L.append("          -> %s" % d["lane"])
+                L.append("          Rafe: %s" % " ".join((d.get("ruling") or "").split())[:76])
+        ship = (v.get("seat") or {}).get("SHIP", "")
+        L.append("  SHIP recorded as %s — the wowed signal, not the install gate."
+                 % (" ".join(str(ship).split())[:40] or "(unrecorded)"))
+
+    elif v.get("verdict") == "PASS-WITH-ROUTED-ITEMS":
         flips = list(v.get("flip_list", []))
         disp = list(v.get("dispositions", []))
         bad = []

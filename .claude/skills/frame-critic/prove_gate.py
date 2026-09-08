@@ -142,6 +142,46 @@ def main():
         rc, out = run(["python3", GATE])
         case("E  PASS verdict for this build -> allow", 0, rc, out, "GATE OPEN")
 
+        # ---- G. PASS-INSTALL, and it must be able to REFUSE ----------------------------------
+        #
+        # RULED (Rafe, 2026-09-08): PASS for a polish round against a seeded reference is
+        # "rank above approved_capture AND no unrouted flags". §13.5 — the pass of a new state
+        # counts for nothing until the state has been shown to fail, and the three ways it can
+        # fail are the three halves of the rule: no reference to be above, not above it, and
+        # items left outstanding. All four drive the real gate.
+        ROUTED = [{"state": "ROUTED", "item": "wall tops read as noise",
+                   "lane": "wall lane", "ruling": "route it - Rafe, fixture"}]
+
+        synth("PASS-INSTALL", bid, {"progress": {"rank_position": 1, "approved_position": 2},
+                                    "flip_list": [], "dispositions": []})
+        rc, out = run(["python3", GATE])
+        case("G1 PASS-INSTALL above the reference, nothing outstanding -> allow",
+             0, rc, out, "GATE OPEN")
+
+        synth("PASS-INSTALL", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                    "flip_list": [], "dispositions": []})
+        rc, out = run(["python3", GATE])
+        case("G2 PASS-INSTALL BELOW the reference -> refuse", 1, rc, out,
+             "requires the build ABOVE the reference")
+
+        synth("PASS-INSTALL", bid, {"progress": {"rank_position": 1, "approved_position": None},
+                                    "flip_list": [], "dispositions": []})
+        rc, out = run(["python3", GATE])
+        case("G3 PASS-INSTALL with NO seeded reference in the deck -> refuse", 1, rc, out,
+             "nothing here to be above")
+
+        synth("PASS-INSTALL", bid, {"progress": {"rank_position": 1, "approved_position": 2},
+                                    "dispositions": []})
+        rc, out = run(["python3", GATE])
+        case("G4 PASS-INSTALL with an undispositioned flip -> refuse", 1, rc, out,
+             "every outstanding item carries a human disposition")
+
+        synth("PASS-INSTALL", bid, {"progress": {"rank_position": 1, "approved_position": 2},
+                                    "dispositions": ROUTED})
+        rc, out = run(["python3", GATE])
+        case("G5 PASS-INSTALL with the flip ROUTED by a quoted ruling -> allow",
+             0, rc, out, "GATE OPEN")
+
         # ---- E2. and a gated build carries no stamp -------------------------------------------
         rc, out = run(["tools/tier0_harness/build_review_app.sh"],
                       env={"TIER0_MARKER_ONLY": "1"})

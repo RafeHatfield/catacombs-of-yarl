@@ -401,6 +401,28 @@ def guards(hist, lane, park=None, gate_path=None):
                     knowing.
     """
     lane_hist = [v for v in hist if lane_of(v) == lane]
+
+    # ── THE SERIES IS THE ITEM UNDER WORK — RULED (Rafe, 2026-09-08). ────────────────────────
+    #
+    #     "Progress-guard scope = the item under work, not the lane; the routed-PASS record
+    #      cannot cap future items."
+    #
+    # A PASS state CLOSES an item. Rounds after it are a NEW item's rounds and do not inherit the
+    # closed one's record — which is what stops the saturation this branch reported: a
+    # PASS-WITH-ROUTED-ITEMS at rank 1.00 with zero unresolved flips sets
+    # `(1.00, shipped, 0)`, the arithmetic maximum a deck can produce, and NOTHING CAN EVER BEAT
+    # IT. On lane `combined` that made the stall guard certain to fire three readable rounds
+    # later however good the work was. Bible §13.11 a fourth time: a progress metric whose scale
+    # can top out stops measuring the work and starts measuring the ceiling.
+    #
+    # Cutting at the last PASS is the whole fix, and it is deliberately not a counter reset: the
+    # verdicts stay on disk, the history is untouched, and the cut point is derived from them.
+    # Nothing is deleted, which is the law this mechanism runs on (SKILL.md §5).
+    cut = 0
+    for i, v in enumerate(lane_hist):
+        if str(v.get("verdict", "")).startswith("PASS"):
+            cut = i + 1
+    lane_hist = lane_hist[cut:]
     read = readable(lane_hist)
 
     # A ruling clears ONE guard on ONE lane, so the exclusion is applied per guard rather than to
@@ -1129,11 +1151,40 @@ def main():
     #
     # If rank alone was meant, delete the two SHIP terms from the line below — it is one edit,
     # and it loosens the gate, so it is Rafe's to make rather than mine.
+    # ── PASS-INSTALL — RULED (Rafe, 2026-09-08). THE SEEDED REFERENCE IS THE INSTALL BAR. ─────
+    #
+    #     "PASS for polish rounds against a seeded reference = rank above approved_capture AND no
+    #      unrouted flags -> PASS-INSTALL; SHIP stays recorded as the wowed signal, not the
+    #      install gate — the seeded reference is the human-ratified install bar."
+    #
+    # THE REASON, and it is the whole of why this is not a loosening: **SHIP AND RANK WAS
+    # RATIFIED AGAINST A NULL REFERENCE.** Every round the combined lane ever ran before
+    # 2026-09-07 recorded *"NO APPROVED FRAME IN THE DECK — that half of the bar is untested this
+    # round"*, so SHIP was the only thing standing between a build and the phone and it had to
+    # carry the whole gate alone. With a serviceable reference seeded, the deck contains a frame
+    # the human gate has ALREADY ratified as installable, and beating it gates the build ABOVE
+    # THE BAR IT MEASURES AGAINST. SHIP then answers a different and stricter question — would a
+    # stranger ship this as finished work — which is worth recording and is not what an install
+    # needs to clear.
+    #
+    # It REQUIRES the reference. With `approved_capture` null there is nothing to be above, and
+    # the rule falls back to the ratified SHIP-and-rank conjunction — the state it was written
+    # for. A gate that silently weakens when its comparator goes missing is the failure this
+    # whole mechanism exists to avoid.
+    #
+    # "No unrouted flags" is evaluated HERE as "the seat did not flag the build". A flagged build
+    # is a FAIL at round time; only the human gate can route a flag, and it does so by amending
+    # the verdict with a quoted ruling per item — which `critic_gate.py` then re-validates.
+    approved_in_deck = app_pos is not None
+    above_approved = approved_in_deck and pos is not None and pos < app_pos
+    unflagged = build_slot not in r["_flagged"]
+
     if not caught:
         verdict = "VOID"
-    elif (build_slot in r["_ship"] and build_slot not in r["_flagged"]
-            and beats_approved and near_bar):
+    elif (build_slot in r["_ship"] and unflagged and beats_approved and near_bar):
         verdict = "PASS"
+    elif above_approved and unflagged:
+        verdict = "PASS-INSTALL"
     else:
         verdict = "FAIL"
 
@@ -1322,7 +1373,9 @@ def main():
         print("LOOP-PROCESS §1.1.4 ruling trigger. Ending the turn for Rafe.")
         return 3
 
-    return {"PASS": 0, "FAIL": 1, "VOID": 2}[verdict]
+    # PASS-INSTALL exits 0 with PASS: both open the install gate, and a caller that
+    # distinguished them would be a second gate with its own opinion (SKILL.md §6).
+    return {"PASS": 0, "PASS-INSTALL": 0, "FAIL": 1, "VOID": 2}[verdict]
 
 
 if __name__ == "__main__":
