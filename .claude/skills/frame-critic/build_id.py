@@ -98,6 +98,23 @@ EXCLUDED = (
     "docs/",
     # the review build's own marker, written by the build script and removed after
     "src/Presentation/assets/tier0_harness/REVIEW_BUILD.json",
+    # ── THE RUN'S OWN REPORTS — added 2026-09-08 under LOOP-PROCESS §1.1.5.2 ─────────────────
+    #
+    # A hash exclusion is ENGINEERING, not an escalation, and the law it is fixed under is the one
+    # already in this list's own words: *they describe the build; they are not in it.* A report is
+    # the archetype of that, and `a historical report never gates` is settled law.
+    #
+    # THE OCCASION, and it cost a night. `POLISH-REPORT.md` is the morning deliverable a run is
+    # REQUIRED to write, and writing it after a round moved the build id, so the round's verdict
+    # stopped describing the tree and the install refused. The report had reached no pixel. The
+    # loop then escalated a hash to a human, which §1.1.4 now names as the defect.
+    #
+    # ⚠ SCOPED TO NAMED FILES, NEVER A PATTERN. `*.md` at the root would swallow anything anyone
+    # dropped there, and the blacklist's chosen failure direction is an id that moves NEEDLESSLY
+    # rather than one that fails to move — so each report is named, and `prove_build_id.py` case 6
+    # holds the line by requiring that an unnamed root file STILL moves the id.
+    "POLISH-REPORT.md",
+    "RUN-REPORT.md",
 )
 
 

@@ -147,6 +147,18 @@ def main():
              "5b editing a SCENE CONFIG moves the id"),
             ("src/Presentation/assets/tier1_ashlar/__scope_probe.png", True,
              "5c editing an ASSET moves the id"),
+            # ---- 6. the run's reports are excluded, AND THE EXCLUSION IS NARROW --------------
+            #
+            # 6a is the exclusion added 2026-09-08 (a report describes the build and is not in
+            # it). 6b is the line it must not cross: the entries are NAMED FILES, not a root
+            # pattern, so an unnamed file at the root still moves the id. Without 6b the
+            # exclusion could quietly widen into "the repo root does not count", which is the
+            # failure direction the blacklist exists to avoid — an id that does not move when
+            # the build does.
+            ("RUN-REPORT.md", False,
+             "6a the run's own report does not move the id"),
+            ("__unnamed_root_probe.md", True,
+             "6b an UNNAMED file at the root still does"),
         ):
             full = os.path.join(REPO, rel)
             os.makedirs(os.path.dirname(full), exist_ok=True)
