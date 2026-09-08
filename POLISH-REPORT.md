@@ -1,3 +1,42 @@
+# The polish list — overnight run, 2026-09-07, and the rulings of 2026-09-08
+
+> ## ⚠ SECOND HALF, 2026-09-08 — nothing installed, and two blockers say why
+>
+> Rafe's five rulings are implemented. **The phone was not flashed**, for two reasons, neither of
+> which I was willing to route around:
+>
+> **1. The device gate's ruled-fix pin.** `GATE-CONDITIONS.json` pins
+> `const:POLISH_LANE_GAIN==0.6`. B and C are stacked on A, whose round stays FAIL by ruling, so
+> their builds carry the unratified 0.3 and the precheck refuses. **The critic gate OPENED for B**
+> — that part worked — the device precheck is a separate gate and it closed.
+> Editing the registry to pass my own build is LOOP-PROCESS §4.3's named failure, so it is
+> untouched. ⚠ **And the pin now asserts something false:** its rule is *"wear modulates the same
+> stones; it never replaces their identity"*, and at 0.6 the on-lane masonry measures **0.1338,
+> below §13.8's 0.1440 floor.** §6.2's re-derivation rule fired under it when #174 corrected the
+> lamp.
+>
+> **Unstacking does not help, and this was measured rather than assumed.** A committed negative
+> control (`art/polish-bc-install`, round `r001-polish-bc`) builds B and C on the ruled 0.6 with
+> A's levers nulled: it ranks **2 of 4, below the reference**, where A+B+C ranks **1 of 4, above
+> it**. A's floor work is load-bearing for the frame's rank.
+>
+> **2. Rank is not stable across seats.** C's round was re-run on a frozen tree so its verdict
+> would describe the exact bytes that would install. Same frame (`839fb12f`, "picture moved mean
+> 0.000 / worst 0"), and it came back **2 of 4 where it had been 1 of 4** — the build and the
+> reference swapped places with no pixel changing. Under the newly ratified PASS-INSTALL rule that
+> is FAIL, so C does not install either. The rule is **held frozen and impeached in place**
+> (SKILL.md), not re-tuned — LOOP-PROCESS §8.
+>
+> Done from the rulings: PASS-INSTALL implemented, banked with its reason, and proved (gate cases
+> 15 → 19, three of them refusals); guards scoped to the item, cutting at the last PASS; #186
+> closed with its premise disproved and re-filed as **#193**; C's flips routed to **#194** with the
+> ruling quoted per item; #184's share re-derived and its "doubling" claim **retracted**.
+>
+> **The unblock is one line from you** — ratify the lane at 0.3 so the pin moves with it, or
+> re-express the pin as the law rather than the value. Trees and verdicts are ready.
+
+---
+
 # The polish list — overnight run, 2026-09-07
 
 Branch `art/polish-list`, off `main` at `ad19a72b`. Three items, strict order, one round each,

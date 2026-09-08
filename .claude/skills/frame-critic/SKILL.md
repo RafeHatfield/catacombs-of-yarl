@@ -338,6 +338,34 @@ verdict with a quoted ruling and a named destination per item — and `critic_ga
 both conditions from the verdict's own recorded numbers rather than trusting the label, because a
 verdict that merely *says* PASS-INSTALL proves nothing.
 
+> ### ⚠ IMPEACHED ON THE DAY IT WAS RATIFIED, AND HELD FROZEN
+>
+> **The rank term is not stable across seats on an unchanged picture.** Lane `polish-c-183` judged
+> **the same frame twice** — build sha `839fb12f`, "picture moved mean 0.000 / worst 0":
+>
+> | round | build rank | reference rank | verdict under this rule |
+> |---|---|---|---|
+> | r001 | **1 of 4** | 2 | PASS-INSTALL |
+> | r002 | **2 of 4** | 1 | FAIL |
+>
+> The build and the reference **swapped places with no pixel changing**. §4 already records that a
+> blind seat's ordering does not reproduce the human gate's; this is the sharper version — the
+> ordering does not reproduce *itself*.
+>
+> **The rule is NOT re-tuned here.** LOOP-PROCESS §8: a bar found wanting mid-run is held frozen,
+> cleared honestly and impeached in the same report, never adjusted once the answer is visible.
+> It is recorded so that whoever rules on it next is ruling on the evidence:
+>
+> - PASS-INSTALL rests entirely on rank, and rank flipped on a re-run.
+> - The old SHIP∧rank rule was not exposed to this, because SHIP was the binding term and rank
+>   only ever *added* a condition. Making rank the sole discriminator moved the whole gate onto
+>   the least stable thing the deck produces.
+> - The safe direction is unchanged: the gate refuses more often than it opens, and a build that
+>   flips to FAIL on a re-run simply does not install.
+>
+> **What it does not touch:** the plant, which caught on both rounds, and the two SHIP terms,
+> which are recorded either way.
+
 **Proved before it was believed** (§13.5). `prove_gate.py` drives the real gate through the three
 ways the state can fail — no reference in the deck, build below the reference, an item left
 undispositioned — as well as the two ways it opens. A new state's pass counts for nothing until
