@@ -258,5 +258,30 @@
       "device_readback": "the handset's own log confirms it: theme and floor family agree (tier1_ashlar), floor laid with every cross-check green, incident overlays attached, booted tier1_combined_review, review=GATED"
     },
     "why_not_flipped": "The declaration is a shipped input by the 2026-09-07 build_id ruling, so changing it moves the id and invalidates a verdict about a frame that did not move. Correcting a label is not worth a spurious round; the inaccuracy is recorded here instead, where it is visible to anyone reading the verdict. FILED as a mechanism defect: the walk declaration DESCRIBES THE WALK, NOT THE BUILD \u2014 the same category as the review layer \u2014 and belongs outside the shipped inputs."
+  },
+  "room_walk": {
+    "gate": "SURFACE \u2014 the tier-one surface gate (the room walk)",
+    "walked_by": "Rafe, on the reference device, 2026-09-07",
+    "verdict": "SERVICEABLE",
+    "verbatim": "still pretty good",
+    "seeds_approved_capture": true,
+    "revisit_flags": [
+      {
+        "flag": "worn lane washes the wall-base occlusion shadow",
+        "routed": "#184 \u2014 polish gain / wall-base occlusion tuning",
+        "note": "Already routed before the walk: the walk confirms it on device and is the second independent sighting, after the 2026-09-06 rig walk's 'too shiny on worn areas'."
+      },
+      {
+        "flag": "hallway-bottom artefact \u2014 IDENTIFIED from the walk capture as a wall-face band drawn across the corridor mouth: a \u00a73 face-mask family case, a SOUTH REVEAL RENDERED OVER AN OPENING",
+        "routed": "#185 / #186 \u2014 fix as a MASK CORRECTNESS bug, not an art change",
+        "note": "This closes the unattributed status both issues carried. The walk did what three rounds of instruments could not: named the layer."
+      },
+      {
+        "flag": "hero wash \u2014 Sasha reads washed out",
+        "routed": "#183 \u2014 standing",
+        "note": "Unchanged by the shoulder, as predicted: a darker hero is the ruled direction and the shoulder does not touch the sprite."
+      }
+    ],
+    "tier_one_surface": "DONE with named debt"
   }
 }

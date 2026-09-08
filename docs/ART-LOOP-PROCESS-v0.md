@@ -501,6 +501,25 @@ same:
   in the code. First occupant: round 28's combined build, blocked on **#174**, which its own
   null-polish control found. `docs/ROUND-28-COMBINED-BUILD.md`.
 
+  > ### ⚠ AND IT CLOSED, 2026-09-07: TIER-ONE SURFACE **DONE WITH NAMED DEBT**.
+  >
+  > Rafe walked the room on the reference device and returned **SERVICEABLE** — *"still pretty
+  > good"* — which seeds `approved_capture` and closes the tier-one surface. **The first
+  > Rafe-approved combined reference this project has ever had**; the lane ran five rounds with
+  > `approved_capture` null and every verdict saying so.
+  >
+  > **DONE WITH NAMED DEBT is a park state's opposite and is recorded as such.** The surface is
+  > closed and the debt is carried in the open, each item its own bounded round against the
+  > now-seeded reference: the worn lane washing the wall-base occlusion (**#184**), the
+  > corridor-mouth face band (**#185/#186**), and the hero wash (**#183**). *Serviceable* is not
+  > *wowed*, and pretending otherwise would spend the reference's whole value — a bar is what the
+  > next round must not fall below, never a claim that nothing is left.
+  >
+  > **What the walk did that no instrument had:** it NAMED the hallway-bottom artefact. Three
+  > rounds of seats and six instruments had it unattributed; the walk identified it as a wall-face
+  > band drawn across the corridor mouth — a §3 face-mask family case, a south reveal rendered
+  > over an opening — which turns it from an art question into a mask correctness bug.
+
   > **UN-PARKED 2026-09-06.** #174 landed (the lamp is one arithmetic) and Ruling 56 re-ratified
   > on the corrected lamp, which were the two conditions the park named. **The resumer did re-do
   > rather than re-read, and the park was right to demand it:** every cross-plane figure was

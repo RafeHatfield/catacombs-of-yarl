@@ -78,7 +78,30 @@
       480
     ]
   },
-  "approved_capture": null,
+  "approved_capture": {
+    "path": ".claude/skills/frame-critic/approved/combined-2026-09-07.png",
+    "sha256": "8745c556dd1bef108a15f9f490a229ab9f40765d2a6ececb7197dc3d415fba68",
+    "approved_by": "Rafe, room walk, 2026-09-07",
+    "verdict": "SERVICEABLE \u2014 \"still pretty good\"",
+    "build": "144b0234 (round 5, PASS-WITH-ROUTED-ITEMS, review=GATED)",
+    "_what": [
+      "THE FIRST RAFE-APPROVED COMBINED REFERENCE. Until this walk `approved_capture` had been",
+      "null for every round the combined lane ever ran, and each verdict said so: 'NO APPROVED",
+      "FRAME IN THE DECK \u2014 that half of the bar is untested this round.' Half the comparative bar",
+      "has been missing since the lane began. It is not missing any more.",
+      "",
+      "\u26a0 IT IS COPIED, NOT REFERENCED IN PLACE. tools/tier1_floors/evidence/combined.png is the",
+      "capture path every round OVERWRITES \u2014 pointing the bar at it would mean the reference became",
+      "whatever was captured last, which is a bar that moves with the thing it measures. The copy",
+      "lives in the review layer beside the morgue, where build_id already excludes it, and the",
+      "sha is recorded so a silent swap is visible.",
+      "",
+      "SERVICEABLE, NOT WOWED, and the debt is named rather than absorbed: the worn lane washes",
+      "the wall-base occlusion (#184), the corridor-mouth face band (#185/#186), and the hero wash",
+      "(#183). A reference is what the next round must not fall below \u2014 it is not a claim that",
+      "nothing is left to do."
+    ]
+  },
   "_approved_capture_note": [
     "STILL NULL, AND NOW FOR A SECOND REASON ON TOP OF THE FIRST.",
     "",
