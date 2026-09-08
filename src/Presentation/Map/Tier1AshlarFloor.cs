@@ -113,6 +113,16 @@ public static class Tier1AshlarFloor
         public int LaneFraySalt = 3016;
         public double LaneFray = 0.32;
         public double JointPolishFloor = 0.70;
+
+        /// <summary>
+        /// How much of its shine a fully-occluded contact pixel keeps (#184). 1.0 is the NULL
+        /// CONTROL — the identity, and the build before this term existed. 0.0 says the deepest
+        /// row of §12.1's plane boundary takes no specular at all; the ramp between comes from
+        /// the occlusion sprite's own alpha, so the transition is the boundary's shape and not a
+        /// threshold. Declared in the manifest; this default is the null so a family that does
+        /// not declare it is unchanged.
+        /// </summary>
+        public double OcclusionPolishFloor = 1.0;
         public double PolishLaneGain = 1.9, PolishLaneWidth = 0.62, PolishShoulder = 1.15;
         public int StriaPeriod = 3;
         public double StriaDepth = 0.45;
@@ -1425,6 +1435,10 @@ public static class Tier1AshlarFloor
         // either. `layers` then compounds that the same way. What is new is only the last step —
         // the result is whole rungs, and a whole number of rungs off a ladder value is a ladder
         // value, so the snap below has nothing left to invent.
+        // AND THE ENCLOSURE IS REMEMBERED, not merely subtracted — see the polish note below.
+        // Null everywhere the boundary is not drawn, so a cell with no wall beside it allocates
+        // nothing and is byte-identical to the build before this term existed.
+        double[,]? occEnclosure = null;
         if (occlusion is { } occ && occlusionAlpha != null)
         {
             for (int py = 0; py < T; py++)
@@ -1439,8 +1453,16 @@ public static class Tier1AshlarFloor
                         keep *= 1.0 - img.GetPixel(px, py).A;
                     }
                     if (keep >= 1.0) continue;
-                    raw[py, px] -= OcclusionRungs(cfg, 1.0 - keep, occ.Layers)
-                                   * (cfg.Ladder[1] - cfg.Ladder[0]);
+                    int rungs = OcclusionRungs(cfg, 1.0 - keep, occ.Layers);
+                    raw[py, px] -= rungs * (cfg.Ladder[1] - cfg.Ladder[0]);
+                    if (rungs <= 0) continue;
+                    occEnclosure ??= new double[T, T];
+                    // HOW DEEP THE BOUNDARY IS, as a fraction of the depth this family can
+                    // represent — the same denominator the joint's `filled` uses, so the two
+                    // recesses are described on one scale rather than on two.
+                    occEnclosure[py, px] = System.Math.Clamp(
+                        rungs * (cfg.Ladder[1] - cfg.Ladder[0])
+                        / System.Math.Max(cfg.LumMedian - cfg.Ladder[0], 1e-6), 0.0, 1.0);
                 }
         }
 
@@ -1528,6 +1550,45 @@ public static class Tier1AshlarFloor
                     // returns at its shoulders through the age layer underneath.
                     refl = System.Math.Max(refl, LanePolish(cfg, tx * T + px, ty * T + py));
                 }
+
+                // ================= THE CONTACT BOUNDARY TAKES NO SHINE =================
+                //
+                // ISSUE #184, second reading, ruled at the 2026-09-07 room walk: *"the worn lane
+                // is slightly too shiny and its shine washes out the wall-base occlusion shadow,
+                // so walls lose mass where the lane meets them."*
+                //
+                // THE ARITHMETIC OF THE WASH, because it is a bigger effect than it sounds. The
+                // contact occlusion is a SUBTRACTION FROM THE ALBEDO — at the seam's deepest row
+                // (sprite alpha 0.72, one layer) it is 5 rungs, 66 luminance units. The specular
+                // is an ADDITION IN light(), `polish * gain * delivered^2` on LIGHT_COLOR, and on
+                // a lane pixel `polish` reaches the lane gain 0.6 — about 153 levels of red at
+                // full delivery. The seam was being subtracted from the stone and then handed
+                // back, with interest, by a term that had never heard of it. Measured on the
+                // approved capture (8745c556): the seam reads Weber 0.3085 on flank cells and
+                // 0.0094 on the one wall-adjacent lane cell in view — a lane/flank ratio of
+                // 0.030. Ninety-seven per cent of the boundary, gone exactly where the player
+                // walks.
+                //
+                // THE FIX IS THE ONE THIS FILE HAS ALREADY MADE TWICE, and it is physics rather
+                // than a cap. A joint takes the lane's shine in proportion to how FILLED it is; a
+                // crack takes it "at the same fraction a joint of that depth would". The contact
+                // boundary is the deepest enclosure in the floor plane — it is where the ground
+                // stops — so it takes the same treatment on the same scale. §12.1 rules
+                // plane-boundary occlusion FORM, and form does not fade because something is
+                // shining on it.
+                //
+                // ⚠ IT IS NOT AN OUTLINE AND CANNOT BECOME ONE (§12.1). The attenuation exists
+                // only where the boundary is drawn — only on the side a wall actually adjoins,
+                // never where wall meets wall — and its profile is the shipped sprite's own
+                // alpha ramp, jitter and all. A ring is drawn round a thing because it is a
+                // thing; this answers to the geometry between two planes and to nothing else.
+                //
+                // NULL CONTROL: `occlusion_polish_floor: 1.0` makes this the identity everywhere
+                // and the build byte-identical to the one before it.
+                if (occEnclosure != null && occEnclosure[py, px] > 0.0)
+                    refl *= System.Math.Clamp(1.0 - occEnclosure[py, px],
+                                              cfg.OcclusionPolishFloor, 1.0);
+
                 outImg.SetPixel(px, py, new Color(
                     (float)(L * t[0] / 255.0), (float)(L * t[1] / 255.0),
                     (float)(L * t[2] / 255.0)));
@@ -1568,6 +1629,12 @@ public static class Tier1AshlarFloor
                     (cv2 - cfg.Ladder[0]) / System.Math.Max(cfg.LumMedian - cfg.Ladder[0], 1e-6),
                     cfg.JointPolishFloor, 1.0);
                 double cpol = LanePolish(cfg, tx * T + lx, ty * T + ly) * crackLit;
+                // A crack running under the contact boundary is enclosed twice; the boundary's
+                // attenuation applies here for the same reason it applies above, and this loop
+                // overwrites the mask so it has to be applied again rather than inherited.
+                if (occEnclosure != null && occEnclosure[ly, lx] > 0.0)
+                    cpol *= System.Math.Clamp(1.0 - occEnclosure[ly, lx],
+                                              cfg.OcclusionPolishFloor, 1.0);
                 polishImg.SetPixel(lx, ly, new Color((float)cpol, (float)cpol, (float)cpol));
             }
         }
@@ -1746,6 +1813,8 @@ public static class Tier1AshlarFloor
             cfg.LaneFraySalt = salts.GetProperty("lane_fray").GetInt32();
             cfg.LaneFray = mat.GetProperty("lane_fray").GetDouble();
             cfg.JointPolishFloor = mat.GetProperty("joint_polish_floor").GetDouble();
+            if (mat.TryGetProperty("occlusion_polish_floor", out var opf))
+                cfg.OcclusionPolishFloor = opf.GetDouble();
             var pl = mat.GetProperty("polish_lane");
             cfg.PolishLaneGain = pl[0].GetDouble();
             cfg.PolishLaneWidth = pl[1].GetDouble();

@@ -1,0 +1,52 @@
+Read all four at native size and at 5–7× on the regions that matter, plus difference maps between them.
+
+One structural fact up front, because it determines everything below: **1, 3 and 4 are the same frame.** Pixel-identical base art, identical geometry, identical black mask (26% of every one of those frames is at luminance < 8). They differ only in the light pass. `4 − 1` is purely additive (range 0 to +39, never negative); `3 − 1` is purely subtractive (range −103 to +1). So ranking those three is a judgement about the lighting layer, not the environment. All three are honest 2× nearest upscales of a 375×455 buffer with the light baked at source resolution — no shader smeared across the pixel grid. That part is done properly.
+
+RANK: 1 > 3 > 4 > 2
+
+BEST: 1
+
+BEST_WHY: The floor is genuinely cut, not tiled. The courses do not run in bond — a slab left of the figure at (200,470)–(300,530) spans about three cells while the blocks at (560,600)–(620,650) are near-square, and the horizontal joints step at irregular pitches (measured spacings of 30, 26, 40, 32 display px down the run at x≈500). Better: the long crack that enters at (300,760), forks at (325,610) and runs up to (500,510) crosses block boundaries and joints without breaking — it is drawn on the surface, not per-tile, which is the single detail that stops a stone floor reading as a grid. The top wall run at y≈385–440 carries vertical timber pins driven at irregular intervals (x≈265, 345, 420, 500), each one a different length, sitting proud of the masonry with a darker underside band at y≈440 that separates the wall's top face from the floor below it. The light falls off monotonically and plausibly — sampled mean luminance by radius from the figure: 168 at r=24, 129 at r=72, 99 at r=120, 55 at r=192 — and the corridor at x≈500–530 takes a shaft of that light northward and loses it by y≈180, which is the correct behaviour for a corridor mouth rather than a painted gradient.
+
+WORST: 2
+
+WORST_WHY: Mixed projection in a frame that has to be top-down. The crates at (60,0)–(96,70) and the barrels at (115,193)–(145,216) and (164,193)–(190,216) are drawn in three-quarter elevation — you can read the barrel staves down the side and the lit lid ellipse on top — while the ground they sit on is strict plan view. The mud-to-stone boundary at y≈216 is a dead-straight horizontal pixel line with no transition, no lip and no debris; the mud simply stops. Both water edges are worse: hard vertical seams at x≈248 and x≈344, full height, no bank, no shallows, no shadow under the stone lip. The mud texture repeats measurably — autocorrelation of the region x 104–232, y 0–192 peaks at lag 48 in both axes (0.149 vertical, 0.116 horizontal, above every neighbouring lag), so the same noise patch is stamped on a 48px lattice and you can find the same dark-red squiggle cluster three times without looking hard. And there is no light in the frame at all: luminance standard deviation is 18.3 across the whole image, uniform corner to corner, in a place that is supposed to be lit only by what the figure is carrying. The green figure at (208,0)–(240,30) has a cast ellipse under its feet; nothing else in the frame casts anything.
+
+FLAGGED: 4, 2
+
+SHIP: NONE
+
+---
+
+FLIP 1:
+- The wear decal repeats on a short cycle. The identical four-stroke diagonal hatch, same angle (~35°, up-right), same stroke count, same length, unmirrored and unrotated, appears at (510,656), (520,616), (570,498), (570,628), (578,526), (582,670), (584,564) — seven instances inside a 75×175 display-pixel column. Author at least six variants and rotate/mirror them, or generate the strokes per-stone from the stone's own bounding box so no two blocks carry the same mark.
+- The stones in the brightest part of the frame are blank. The four blocks immediately around the figure, (355,455)–(465,535), are flat single-value fills with zero internal modulation — no cut face, no dish, no chip, no bevel. The best-lit surface in the picture is the least drawn one. Give the stones in the r<60 zone the same internal value break the joints get.
+- The joints do not vary in depth along a single run. The horizontal joint at y≈646 holds one value and one 1px width from x=440 to x=620. Vary the joint value ±15 and the width between 1 and 2 px along each run so the mortar reads as packed by hand.
+- The figure has no contact shadow. It sits on the floor at (400,510) with nothing under it — no occlusion, no darkening at the boot line — so it reads as a sticker over the floor rather than an object standing on it. Add a short soft occlusion pool at the feet.
+- Vertical and horizontal walls speak different languages. The top wall at y≈440 renders a 3px darker near-face band under its top surface; the left wall's right edge at x≈180, y 445–700 is a hard 1px cut straight to lit floor with no face and no thickness. Give vertical runs the same edge treatment.
+- The short thick dark dashes scattered on the floor stones at (496,488), (524,488), (492,538), (534,518), (560,632) have no head, no hole, no shadow and no shaft. They read as noise dabs. Either resolve them into actual driven pins with a seated shadow, matching the wall pins, or remove them.
+
+FLIP 3:
+- Everything in FLIP 1 (identical base art).
+- The light pool has a plateau instead of a peak. 3 is 1 with up to 72 levels of modulation subtracted across the lit floor and the corridor's right wall, so the floor from the wall band at y≈440 down to the crack at y≈610 sits at effectively one value across roughly four tiles. The figure stops reading as the source and the area reads as a region of the map that happens to be lighter. Restore a distinct core: the floor within one tile of the figure should sit clearly above the floor three tiles out, not within 10 levels of it.
+- The joint grid loses contrast in the same flattening. Around (250,480)–(360,560) the mortar lines drop to near the stone value. Hold the joints darker than the stone by a fixed ratio through the light pass rather than letting an additive term compress them.
+
+FLIP 4:
+- Delete the diagonal streak overlay. There is a field of parallel light rays at a single constant angle, uniform spacing, running from roughly (250,420) to (520,660) — it crosses the floor, the mortar joints and the wall band at y≈440 without changing angle or breaking at any of them. It is screen-space, not lit geometry, and it is the thing a player would spot in one second. If light shafts are wanted, they have to originate somewhere and be occluded by the wall run.
+- The light layer is additive-only, so the mortar joints in the core are erased. Compare (350,440)–(470,540): in the unstreaked version the joint grid around the figure is fully legible; here there is not one readable joint in that entire 120×100 region. Apply the light multiplicatively against albedo instead of adding a constant, so bright stone and dark joint keep their ratio.
+- The light mask's boundary is a staircase of hard rectangles. Isolating the added layer shows solid square blocks of constant value, roughly 8 source-pixels on a side, sitting directly against zero along the whole perimeter — most visible on the right edge around (500,470)–(545,560) and the lower-left around (280,600)–(330,650). Compute the mask at pixel resolution, or interpolate it before compositing.
+- The character is punched out of the light layer as a hard silhouette. The added brightness is exactly zero inside the sprite's outline while the floor a pixel away is at +39, so the figure carrying the torch is the only thing in frame the torch does not touch, leaving a sprite-shaped seam. Light the sprite with the same term that lights the floor.
+- Isolated floor stones are blown to near-white by the overlay independent of geometry — the block at roughly (365,540)–(400,575) reads flat cream against neighbours 30 levels darker for no reason the scene supports. Falls out once the overlay goes.
+
+FLIP 2:
+- Redraw the crates at (60,0)–(96,70) and the barrels at (115,193)–(145,216) and (164,193)–(190,216) in plan view. Right now the barrel staves and the crate front faces are visible; from directly above they are not.
+- Build a transition at the mud/stone boundary, y≈216. A hard horizontal pixel seam across the full width has to become a worn edge: mud spilling over the first course, a shadow under the stone lip, loose grit two or three pixels into the stone.
+- Same for both water edges, x≈248 and x≈344. Add a bank, a value shift in the first few pixels of water where it shallows, and a cast shadow from the stone edge on the right side.
+- Break the mud tiling. Measured repeat is exactly 48px in both axes over x 104–232, y 0–192. Author at least four mud variants and scatter them, or offset the noise per-cell.
+- Add the light. Luminance standard deviation across the whole frame is 18.3 with a uniform distribution edge to edge, in a scene lit by one carried source. The frame needs the same falloff structure the other frames have — bright at the figure, dark at the corners.
+- Make shadows consistent. The figure at (208,0)–(240,30) has a cast ellipse; the crates, barrels and stone edges have none. Either everything grounded casts, or nothing does.
+- The green algae blobs at (12,66)–(48,88) and (128,158)–(148,172) are soft round shapes drawn at a coarser resolution than the tile speckle they sit on, and they cross tile joints without acknowledging them. Redraw at the tile's own pixel density and let the joints show through.
+
+The thing worth watching: 1, 3 and 4 are three lighting passes over one environment, and the environment is the strongest thing in the deck — the crack that crosses joints and the irregular timber pins in the wall are real craft, not decoration. What is holding it back from shippable is not the lighting at all. It is that the wear is one stamp reused seven times in a hand-span, and that the best-lit stones in the frame are blank. Fix the decal library and put detail on the stones inside the light, and 1 ships.
+
+*Model: Claude Opus 5 (1M context).*
