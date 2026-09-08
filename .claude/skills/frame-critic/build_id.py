@@ -112,7 +112,27 @@ def head():
 
 
 def _excluded(path):
-    return any(path == p or path.startswith(p) for p in EXCLUDED)
+    """A directory entry (trailing slash) excludes its subtree; a file entry excludes ITSELF.
+
+    ⚠ IT USED TO PREFIX-MATCH EVERYTHING, and that quietly excluded a shipped input. The entry
+    `src/Presentation/assets/tier0_harness/REVIEW_BUILD.json` names the GENERATED marker, which is
+    written before the export and deleted after and is correctly ignored — but `startswith` also
+    swallowed `REVIEW_BUILD.json.template`, which is the file that DECIDES WHAT THE DEVICE SHOWS:
+    its scene, its theme, every family manifest, the rig values and the void ring. Editing it moved
+    no id at all, so the gate was blind to a real change in what ships.
+
+    That is the exact failure direction the 2026-09-07 ruling chose against — an id that does not
+    move when the build does says nothing, where an id that moves needlessly is loud and fixable.
+    Found by testing the narrowed id rather than by reading it: the ruling asked for a control that
+    a scene config MUST move the id, and the template is one.
+    """
+    for p in EXCLUDED:
+        if p.endswith("/"):
+            if path.startswith(p):
+                return True
+        elif path == p:
+            return True
+    return False
 
 
 def _blob_shas(paths):

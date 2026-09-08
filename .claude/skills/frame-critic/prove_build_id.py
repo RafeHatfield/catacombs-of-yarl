@@ -161,6 +161,37 @@ def main():
                 if os.path.exists(full):
                     os.remove(full)
 
+        # ---- 5d/5e the marker: the TEMPLATE ships, the GENERATED one does not -----------------
+        #
+        # These are not hypothetical paths. `REVIEW_BUILD.json.template` decides the device's
+        # scene, theme, family manifests, rig and void ring; `REVIEW_BUILD.json` is written from
+        # it before the export and deleted after. A prefix match on the second swallowed the
+        # first, so editing what the handset shows moved no id.
+        import json as _json
+        tpl = os.path.join(REPO, "src/Presentation/assets/tier0_harness/REVIEW_BUILD.json.template")
+        gen = os.path.join(REPO, "src/Presentation/assets/tier0_harness/REVIEW_BUILD.json")
+        bak = tpl + ".provebak"
+        shutil.copyfile(tpl, bak)
+        try:
+            d = _json.load(open(tpl))
+            d["_scope_probe"] = True
+            _json.dump(d, open(tpl, "w"), indent=2)
+            got, _ = BID.build_id()
+            check("5d editing REVIEW_BUILD.json.template moves the id", got != base,
+                  "%s the id" % ("moved" if got != base else "did NOT move"))
+        finally:
+            shutil.move(bak, tpl)
+        had_gen = os.path.exists(gen)
+        if not had_gen:
+            try:
+                shutil.copyfile(tpl, gen)
+                got, _ = BID.build_id()
+                check("5e the GENERATED marker does not move the id", got == base,
+                      "%s the id" % ("did not move" if got == base else "MOVED"))
+            finally:
+                if os.path.exists(gen):
+                    os.remove(gen)
+
     finally:
         if os.path.exists(PROBE):
             os.remove(PROBE)
