@@ -1,0 +1,69 @@
+Read all four. Here is the review.
+
+**RANK:** 3 > 1 > 4 > 2
+
+**BEST:** 3
+
+**BEST_WHY:** The wall band across y≈388–422 is the only place in the deck where structure was authored rather than filled. The vertical timber at x≈266 runs y=386→421 and *breaks the wall's top silhouette* — it stands proud into the black at y=380, so it reads as a post driven through the course and left long. Three horizontal ties cross it at y≈396, 404, 412 and they are three different lengths (the middle one runs ~10px, the outer two ~6px), which is what a lashed repair looks like and what a stamped cross does not. A second timber at x≈355 is shorter and carries no ties; a third at x≈416 is a horizontal bar with a stepped right end. Spacing between the three is 89px then 61px — irregular, i.e. placed where something failed, not on a grid. The wall's top edge is also stepped rather than run: it lifts ~30px at x≈470 and the corridor mouth at x≈500–545 has jambs at different depths (left at y≈422, right at y≈390). That asymmetry is the single most convincing thing in any of the four frames — it is the only evidence anywhere that the place was built and then patched by someone who didn't care how it looked.
+
+**WORST:** 2
+
+**WORST_WHY:** Three separate glance-level failures, any one of which is disqualifying.
+
+1. The green pool is a flat rectangle laid on top of the dirt. Sampling row y=60: x=247 is dirt `(85,47,20)`, x=248 is water `(36,76,62)` — one pixel, no transition, no bank, no edging tile. Its bottom edge at column x=300 does the same thing between y=191 and y=192. Every one of the ~5,500 water pixels is the identical value `(36,76,62)`; there is no depth gradient, no shallow margin, nothing under the surface. It is a filled marquee selection.
+
+2. The stated lighting model is entirely absent. Mean luminance of the top-left 20×20 corner is 85.4, top-right 88.2, bottom-left 78.5 — and the 20×20 block around the figure at the top is **55.6**. The frame is *brighter at its edges than at the light-carrier*. There is no falloff, no pool, no direction.
+
+3. Nothing has weight. The two barrels at (128,200) and (172,200) sit across the dirt/cobble seam with zero contact shadow; the crates at (68,10) and (68,58) are pixel-identical copies of one sprite with the same dark plank tile repeated verbatim beneath each; the green moss blob at (25,60) reappears unrotated at (30,207) and at (367,157). And the orc sprite carries a hard black outline at a larger effective pixel size than any environment element, which has none — it is visibly a different asset from a different set.
+
+**FLAGGED:** 1, 2, 3, 4
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The figure carrying "the only light there is" is not the brightest thing in the frame. Its brightest pixel measures 193.7; the floor at (442,485) immediately to its right measures 193.3. Regrade the sprite so its lit side sits at least 40 luminance above the floor it stands on.
+- The shield at (415–432, 478–500) has been graded to a mud-brown at the same value as the surrounding flagstone, so the figure's silhouette breaks apart at a glance. Give the shield face its own value separation — rim dark, face light — independent of the light pass.
+- The wall course's bottom edge at y≈452 is a single unbroken dead-straight dark line running from x=183 to x=500 without one break, step or interruption, and its top edge at y≈423 is dead-parallel to it. Break the run: step it, drop a course, let a stone sit proud.
+- The band above that line, x=190→500 by y=390→420, is ~9,000px of undifferentiated soft brown with no joint, block or edge in it — the largest empty area in the frame. Either put the course structure up there or drop it out of the light.
+- The vertical timbers at x≈266 and x≈355 sit fully inside the band and touch no silhouette, so they read as painted marks on a surface rather than posts driven through it. Extend them past the wall's top edge as in the other frames.
+- Two incompatible floor systems meet at x≈470–480 (y 460–640) with no seam: left of it is a regular ~35px square grid with pale 1px joints, right of it is irregular flagstone of mixed sizes with dark joints. Add an actual boundary — a threshold course, a step, a change in level — or unify the two.
+- The 3-stroke diagonal scratch glyph in the right-hand flagstone repeats unrotated at roughly (565,500), (530,565), (605,510), (555,610), (700,610) and (505,655) — same angle, same stroke count, same length every time. Vary the angle and count, or cut the count to a third and place them where traffic would actually be.
+- The floor patch at x 230–320, y 545–650 carries a distinct greenish-grey cast against the warm tan of its neighbours, with no object, stain edge or joint explaining it. Either give it a cause (a stain with a boundary) or remove the tint.
+- The black regions are literally `(2,2,2)` flat with axis-aligned razor edges — the vertical cut at x=630 from y=135 to y=380 goes from lit wall to absolute black in one column. Give the wall's near edge a 1–2px rim value so the void reads as an unlit room rather than a hole in the canvas.
+- Nothing in the frame casts a shadow: not the wall onto the floor, not the object at (300–380, 640–710), not the figure. Add at minimum a contact shadow under the figure and a cast band under the wall's near face.
+
+**FLIP 3:**
+- The sprite is pasted on, not lit. Its brightest pixel is 240.3 against a floor of 193.3 immediately right of it, and its palette — the cyan at roughly `(127,216,208)` in the hair and the near-white cream of the shield face — appears nowhere else in the 750×911 frame, which is otherwise entirely amber/brown. Run the sprite through the same light pass as the floor: warm it toward the scene's hue, and cap the cream so it isn't the only pure highlight in the image.
+- The figure carries a sword and a shield and no light source. If it is the only light, draw the lamp.
+- The wall's top surface (x 200–500, y 425–450) is an airbrushed gradient with soft 8px blobs and 2–3px gradient block edges, while the floor 40px below it has hard 1px joints. Two resolutions in one frame. Redraw the wall at the floor's resolution — hard-edged blocks, 1px joints.
+- Wall top at (300,410) measures 70.0; lit floor at (300,490) measures 83.3. Thirteen luminance apart. The wall separates from the floor only by being blurrier. Drop the wall top by 30–40 luminance or raise the floor.
+- Same floor-system discontinuity at x≈470–480 as in 1 — square grid left, irregular flagstone right, no seam. Fix as above.
+- Same repeated 3-stroke scratch glyph across the right-hand flagstone. Fix as above.
+- The object at (295–375, 645–710) loses its top-left corner into the floor and reads as a smear rather than a crate, hatch or block. Give it a closed silhouette and a contact shadow.
+- Same `(2,2,2)` hard-edged voids and same total absence of cast shadows. Fix as above.
+
+**FLIP 4:**
+- A 45° streak texture runs across the lit floor only — clearly visible x 300–500, y 490–580 and again at x 505–560, y 470–500 — and it crosses tile joints without interruption. Light in a straight-down view does not arrive as diagonal rays, and the strokes ignore the geometry beneath them, so it reads as a brush overlay dragged across the finished frame. Delete the layer.
+- The light core is clipped. In the region x 340–450, y 480–545 the joints of the floor grid have disappeared entirely into a flat cream field — the drawing underneath has been erased by the highlight. Pull the peak down until the joints survive at the brightest point.
+- Every item in FLIP 3 also applies here: the sprite at 240.3 against floor 193.3 with a cyan/cream palette present nowhere else; no drawn light source; airbrushed wall at a different resolution from the floor; wall top at 70.0 against floor at 83.3; the unseamed floor-system change at x≈470; the repeated 3-stroke scratch glyph; the `(2,2,2)` hard-edged voids; no cast or contact shadows anywhere.
+
+**FLIP 2:**
+- Redraw the pool's boundary. It currently changes from dirt to water in one pixel column at x=248 and one pixel row at y=191. Add a bank: a dark contact line at the dirt edge, a shallow lighter margin 2–4px inside the water, and a value gradient toward the centre so the pool has depth.
+- The water is one flat value `(36,76,62)` across its whole area. Give it at least three values and break the two long straight edges — the vertical at x=248 runs unbroken from y=0 to y=191.
+- The dirt/cobble boundary is likewise a hard axis-aligned rectangle (the vertical at x≈56 and the horizontal at y≈214). Add transition tiles, or scatter dirt over the first course of cobble so the two materials interleave.
+- Build the lighting the frame is supposed to have. Currently the corners average 78–88 luminance while the figure's immediate surround averages 55.6 — the image is brightest furthest from the light. Put a falloff on the figure and take the frame edges to near-black.
+- The dirt field carries a uniform all-over speckle of dark-red and blue dots at even density with no clustering (visible across the whole of x 56–248, y 0–214). That is noise, not detail. Replace with authored features — ruts, scuffs, a worn path where traffic goes — clustered where they'd occur.
+- The moss blob sprite is stamped unrotated at (25,60), (30,207) and (367,157), and the crate at (68,10) is a pixel-identical copy of the one at (68,58), with the same dark plank tile repeated below each. Rotate, mirror, or draw variants.
+- No object in the frame has a contact shadow. The two barrels at (128,200) and (172,200) sit across the dirt/cobble seam and float. Add contact shadows to the barrels, crates and bone pile.
+- The lighting direction contradicts itself: the crates at (68,10) and (68,58) have their top faces lit from the upper-left, while the barrels at (128,200) and (172,200) have their tops lit from directly overhead. Pick one and apply it to every object.
+- The orc sprite carries a hard black outline at a larger effective pixel size than the environment, which has no outline at all. Either outline the environment or unoutline the sprite, and match the pixel size.
+- There is no wall in the frame — the grey area reads as floor throughout, with no top surface, no thickness, and no shadow, so the room has no enclosure. Draw the wall: top surface at a separate value from the floor, a visible near face, and a cast shadow onto the floor below it.
+- The saturated green of the pool and the orc are the only saturated hues present and they sit against neutral grey and brown. For an administered underworld nobody has ever cared for, desaturate both toward the environment.
+
+---
+
+The pattern across 1, 3 and 4 is one asset with three local edits: the diff between 1 and 3 touches only the wall band and the sprite, and the diff between 3 and 4 touches only a blob around the figure. Whichever way that iteration goes next, the two faults that decide shippability are untouched in all three — the sprite is not lit by the same pass as the world, and the floor changes its whole tiling language at x≈470 with nothing marking the join. Fix those two and the frame stops looking assembled.
+
+*Model: Claude Opus 5 (1M context).*

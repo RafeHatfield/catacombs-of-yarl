@@ -1,29 +1,7 @@
 {
- "commit": "ad19a72b3f44f89abb355f8e9b9852787d934a9f",
+ "commit": "3c35d60d971b1d230646a94e4886c5eb4fd3a50e",
  "floor": 0.144,
  "captures": {
-  "baseline_r0": {
-   "identity_ratio": 1.054,
-   "lane_tiles": 4,
-   "flank_tiles": 18,
-   "on_lane_legibility": 0.1295,
-   "on_flank_legibility": 0.1228,
-   "lane_vs_flank": 0.2354,
-   "lane_mean": 137.0,
-   "flank_mean": 108.1,
-   "in_window": false
-  },
-  "combined": {
-   "identity_ratio": 1.141,
-   "lane_tiles": 3,
-   "flank_tiles": 18,
-   "on_lane_legibility": 0.1522,
-   "on_flank_legibility": 0.1333,
-   "lane_vs_flank": 0.3434,
-   "lane_mean": 146.6,
-   "flank_mean": 103.6,
-   "in_window": true
-  },
   "b_l060": {
    "identity_ratio": 1.066,
    "lane_tiles": 3,
@@ -33,17 +11,6 @@
    "lane_vs_flank": 0.3939,
    "lane_mean": 160.4,
    "flank_mean": 107.6,
-   "in_window": false
-  },
-  "b_l045": {
-   "identity_ratio": 1.101,
-   "lane_tiles": 3,
-   "flank_tiles": 18,
-   "on_lane_legibility": 0.1423,
-   "on_flank_legibility": 0.1292,
-   "lane_vs_flank": 0.3736,
-   "lane_mean": 154.6,
-   "flank_mean": 105.9,
    "in_window": false
   },
   "b_l040": {
@@ -66,6 +33,28 @@
    "lane_vs_flank": 0.3732,
    "lane_mean": 152.3,
    "flank_mean": 104.4,
+   "in_window": true
+  },
+  "rd_l020": {
+   "identity_ratio": 1.331,
+   "lane_tiles": 3,
+   "flank_tiles": 18,
+   "on_lane_legibility": 0.1813,
+   "on_flank_legibility": 0.1362,
+   "lane_vs_flank": 0.343,
+   "lane_mean": 146.9,
+   "flank_mean": 103.9,
+   "in_window": true
+  },
+  "rd_l015": {
+   "identity_ratio": 1.439,
+   "lane_tiles": 3,
+   "flank_tiles": 18,
+   "on_lane_legibility": 0.1989,
+   "on_flank_legibility": 0.1382,
+   "lane_vs_flank": 0.3406,
+   "lane_mean": 145.9,
+   "flank_mean": 103.4,
    "in_window": true
   }
  }

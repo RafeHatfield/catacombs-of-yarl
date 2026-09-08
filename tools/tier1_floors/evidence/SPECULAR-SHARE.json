@@ -1,18 +1,53 @@
 {
- "commit": "ad19a72b3f44f89abb355f8e9b9852787d934a9f",
- "null": "a_nopolish",
+ "commit": "3c35d60d971b1d230646a94e4886c5eb4fd3a50e",
+ "null": "rd_null",
  "station": [
   6,
   12
  ],
  "arms": {
-  "baseline_r0": {
+  "rd_s6": {
+   "0-2": {
+    "n": 6,
+    "arm_mean": 187.13,
+    "null_mean": 133.31,
+    "share": 0.2876,
+    "worst_share": 0.3925,
+    "worst_cell": [
+     5,
+     13
+    ]
+   },
+   "2-4": {
+    "n": 23,
+    "arm_mean": 92.93,
+    "null_mean": 80.02,
+    "share": 0.1389,
+    "worst_share": 0.3843,
+    "worst_cell": [
+     5,
+     14
+    ]
+   },
+   "4-99": {
+    "n": 5,
+    "arm_mean": 44.89,
+    "null_mean": 44.89,
+    "share": 0.0,
+    "worst_share": 0.0,
+    "worst_cell": [
+     10,
+     12
+    ]
+   }
+  },
+  "rd_s3": {
    "0-2": {
     "n": 6,
     "arm_mean": 174.03,
-    "null_mean": 135.09,
-    "share": 0.2238,
-    "worst_share": 0.3277,
+    "null_mean": 133.31,
+    "share": 0.234,
+    "worst_share": 0.3282,
     "worst_cell": [
      5,
      13
@@ -20,185 +55,45 @@
    },
    "2-4": {
     "n": 23,
-    "arm_mean": 91.74,
-    "null_mean": 79.33,
-    "share": 0.1353,
-    "worst_share": 0.3799,
-    "worst_cell": [
-     5,
-     14
-    ]
-   },
-   "4-99": {
-    "n": 5,
-    "arm_mean": 44.89,
-    "null_mean": 44.89,
-    "share": 0.0,
-    "worst_share": 0.0,
-    "worst_cell": [
-     10,
-     12
-    ]
-   }
-  },
-  "combined": {
-   "0-2": {
-    "n": 6,
-    "arm_mean": 162.95,
-    "null_mean": 135.09,
-    "share": 0.171,
-    "worst_share": 0.263,
-    "worst_cell": [
-     5,
-     13
-    ]
-   },
-   "2-4": {
-    "n": 23,
-    "arm_mean": 86.15,
-    "null_mean": 79.33,
-    "share": 0.0792,
-    "worst_share": 0.2563,
-    "worst_cell": [
-     5,
-     14
-    ]
-   },
-   "4-99": {
-    "n": 5,
-    "arm_mean": 44.89,
-    "null_mean": 44.89,
-    "share": 0.0,
-    "worst_share": 0.0,
-    "worst_cell": [
-     10,
-     12
-    ]
-   }
-  },
-  "b_l060": {
-   "0-2": {
-    "n": 6,
-    "arm_mean": 172.59,
-    "null_mean": 135.09,
-    "share": 0.2173,
-    "worst_share": 0.3277,
-    "worst_cell": [
-     5,
-     13
-    ]
-   },
-   "2-4": {
-    "n": 23,
-    "arm_mean": 91.18,
-    "null_mean": 79.33,
-    "share": 0.13,
-    "worst_share": 0.3755,
-    "worst_cell": [
-     5,
-     14
-    ]
-   },
-   "4-99": {
-    "n": 5,
-    "arm_mean": 44.89,
-    "null_mean": 44.89,
-    "share": 0.0,
-    "worst_share": 0.0,
-    "worst_cell": [
-     10,
-     12
-    ]
-   }
-  },
-  "b_l045": {
-   "0-2": {
-    "n": 6,
-    "arm_mean": 169.2,
-    "null_mean": 135.09,
-    "share": 0.2016,
-    "worst_share": 0.3056,
-    "worst_cell": [
-     5,
-     13
-    ]
-   },
-   "2-4": {
-    "n": 23,
-    "arm_mean": 88.82,
-    "null_mean": 79.33,
-    "share": 0.1069,
-    "worst_share": 0.3272,
-    "worst_cell": [
-     5,
-     14
-    ]
-   },
-   "4-99": {
-    "n": 5,
-    "arm_mean": 44.89,
-    "null_mean": 44.89,
-    "share": 0.0,
-    "worst_share": 0.0,
-    "worst_cell": [
-     10,
-     12
-    ]
-   }
-  },
-  "b_l040": {
-   "0-2": {
-    "n": 6,
-    "arm_mean": 168.38,
-    "null_mean": 135.09,
-    "share": 0.1977,
-    "worst_share": 0.3017,
-    "worst_cell": [
-     5,
-     13
-    ]
-   },
-   "2-4": {
-    "n": 23,
-    "arm_mean": 88.37,
-    "null_mean": 79.33,
-    "share": 0.1023,
-    "worst_share": 0.3172,
-    "worst_cell": [
-     5,
-     14
-    ]
-   },
-   "4-99": {
-    "n": 5,
-    "arm_mean": 44.89,
-    "null_mean": 44.89,
-    "share": 0.0,
-    "worst_share": 0.0,
-    "worst_cell": [
-     10,
-     12
-    ]
-   }
-  },
-  "b_l030": {
-   "0-2": {
-    "n": 6,
-    "arm_mean": 166.44,
-    "null_mean": 135.09,
-    "share": 0.1884,
-    "worst_share": 0.2917,
-    "worst_cell": [
-     5,
-     13
-    ]
-   },
-   "2-4": {
-    "n": 23,
-    "arm_mean": 87.43,
-    "null_mean": 79.33,
-    "share": 0.0927,
+    "arm_mean": 88.47,
+    "null_mean": 80.02,
+    "share": 0.0955,
     "worst_share": 0.2955,
+    "worst_cell": [
+     5,
+     14
+    ]
+   },
+   "4-99": {
+    "n": 5,
+    "arm_mean": 44.89,
+    "null_mean": 44.89,
+    "share": 0.0,
+    "worst_share": 0.0,
+    "worst_cell": [
+     10,
+     12
+    ]
+   }
+  },
+  "rd_s2": {
+   "0-2": {
+    "n": 6,
+    "arm_mean": 171.05,
+    "null_mean": 133.31,
+    "share": 0.2207,
+    "worst_share": 0.3145,
+    "worst_cell": [
+     5,
+     13
+    ]
+   },
+   "2-4": {
+    "n": 23,
+    "arm_mean": 87.52,
+    "null_mean": 80.02,
+    "share": 0.0856,
+    "worst_share": 0.2758,
     "worst_cell": [
      5,
      14

@@ -1371,7 +1371,22 @@ HOLLOW_SALT = 3011                         # so two mouths are not the same dish
 # for age and wrong for a lane: a specular streak that is chopped into noise cannot be followed.
 # Width now comes from the line distance UNFRAYED, so the lane runs continuous down the centre,
 # and the noise returns only at its shoulders.
-POLISH_LANE_GAIN = 0.3    # STEPPED A FOURTH TIME, 0.6 -> 0.3, #184 at the 2026-09-07 room
+POLISH_LANE_GAIN = 0.6    # HELD AT THE RULED VALUE ON THIS BRANCH. #184's step to 0.3 is real
+                          # work with a corrected derivation behind it (see PR #190), but Rafe
+                          # ruled its ROUND stays FAIL on 2026-09-08 pending that re-derivation,
+                          # and a fix whose round has not passed does not ship. This branch
+                          # therefore carries #185's and #183's fixes on the RULED floor, with
+                          # #184's two levers at their nulls, so `docs/GATE-CONDITIONS.json`'s
+                          # `lane-gain-stepped` pin is satisfied honestly rather than edited.
+                          #
+                          # ⚠ AND THE PIN NOW FAILS ITS OWN RULE, which is Rafe's to resolve and
+                          # is NOT resolved here: at 0.6 the lane's on-lane masonry measures
+                          # 0.1338, BELOW §13.8's 0.1440 floor, so the value ruled to satisfy
+                          # "wear modulates the same stones; it never replaces their identity"
+                          # no longer does. The lane window moved under it when #174 corrected
+                          # the lamp and Ruling 56 was re-ratified — §6.2's re-derivation rule.
+                          #
+                          # ORIGINALLY: STEPPED A FOURTH TIME, 0.6 -> 0.3, #184 at the walk
                           # walk: 'the worn lane is slightly too shiny and its shine washes out
                           # the wall-base occlusion shadow'. Same complaint, same direction, same
                           # lever as the three steps below it. Measured on the ratified rig: the
@@ -1428,7 +1443,7 @@ JOINT_POLISH_FLOOR = 0.70  # no joint is more than 30% below the face beside it 
 # of its depth would; this is the same rule for the deepest recess in the plane, the place the
 # ground stops.
 # Null control: OCCLUSION_POLISH_FLOOR = 1.0 is the identity, byte-identical to the build before.
-OCCLUSION_POLISH_FLOOR = 0.0
+OCCLUSION_POLISH_FLOOR = 1.0
 
 # ---- (2) DISHING ALONG THE LINE ---------------------------------------------------------------
 # The threshold hollows stay exactly as they are; this is the shallow version that follows the

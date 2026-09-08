@@ -1,6 +1,6 @@
 {
  "schema": "frame-critic/1",
- "verdict": "FAIL",
+ "verdict": "PASS-INSTALL",
  "lane": "polish-c-183",
  "round": 1,
  "surface": "combined",
@@ -151,5 +151,56 @@
   }
  },
  "transcript": ".claude/skills/frame-critic/history/r001-polish-c-183-transcript.txt",
- "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress \u2014 rank in the deck \u2014 never rounds elapsed."
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress \u2014 rank in the deck \u2014 never rounds elapsed.",
+ "dispositions": [
+  {
+   "state": "ROUTED",
+   "item": "Same as 1 for the wall top surfaces (x 570\u2013750, y 60\u2013390; x 130\u2013440, y 30\u2013135): cut them into blocks with varied joints instead of leaving noise blobs.",
+   "lane": "#194 \u2014 #183 follow-up",
+   "ruling": "C (#183) \u2192 PASS-INSTALL once its remaining flips are routed \u2014 route them to #183's follow-up with this ruling quoted. \u2014 Rafe, 2026-09-08",
+   "_origin": "wall lane"
+  },
+  {
+   "state": "ROUTED",
+   "item": "Same as 1 for the floor cracks: light them, and break them at the joints.",
+   "lane": "#194 \u2014 #183 follow-up",
+   "ruling": "C (#183) \u2192 PASS-INSTALL once its remaining flips are routed \u2014 route them to #183's follow-up with this ruling quoted. \u2014 Rafe, 2026-09-08",
+   "_origin": "floor lane"
+  },
+  {
+   "state": "ROUTED",
+   "item": "The value range across the lit room is compressed \u2014 the floor at (200,500), well inside the light, and the wall top at (620,300), well outside it, sit close enough in brightness that the light does not read as a light. Push the lit core up and the mid-falloff down so the carried lamp is legible as the only source.",
+   "lane": "#194 \u2014 #183 follow-up",
+   "ruling": "C (#183) \u2192 PASS-INSTALL once its remaining flips are routed \u2014 route them to #183's follow-up with this ruling quoted. \u2014 Rafe, 2026-09-08",
+   "_origin": "\u00a76.5 row 1, RETIRED as a delivered target"
+  },
+  {
+   "state": "ROUTED",
+   "item": "The object at x 285\u2013385, y 640\u2013710 is the same rimless brown blob as in 1; give it a top face and a contact shadow or cut it.",
+   "lane": "#194 \u2014 #183 follow-up",
+   "ruling": "C (#183) \u2192 PASS-INSTALL once its remaining flips are routed \u2014 route them to #183's follow-up with this ruling quoted. \u2014 Rafe, 2026-09-08",
+   "_origin": "#193 (make-it-read: spanning stones read as an object)"
+  },
+  {
+   "state": "ROUTED",
+   "item": "Same as 1 for the sprite/background edge-hardness mismatch.",
+   "lane": "#194 \u2014 #183 follow-up",
+   "ruling": "C (#183) \u2192 PASS-INSTALL once its remaining flips are routed \u2014 route them to #183's follow-up with this ruling quoted. \u2014 Rafe, 2026-09-08",
+   "_origin": "hero sprite source art"
+  }
+ ],
+ "human_gate": {
+  "ruled_by": "Rafe",
+  "date": "2026-09-08",
+  "pass_rule": "PASS for polish rounds against a seeded reference = rank above approved_capture \u2227 no unrouted flags \u2192 PASS-INSTALL; SHIP stays recorded as the wowed signal, not the install gate \u2014 the seeded reference is the human-ratified install bar. \u2014 Rafe, 2026-09-08",
+  "ruling": "C (#183) \u2192 PASS-INSTALL once its remaining flips are routed \u2014 route them to #183's follow-up with this ruling quoted. \u2014 Rafe, 2026-09-08",
+  "basis": [
+   "rank 1 of 4 \u2014 ABOVE the seeded reference, which ranked 2",
+   "every remaining flip ROUTED to the destination the ruling named (#194)",
+   "plant CAUGHT on-axis (tonal): blown-highlight flagged, not shipped",
+   "no flip in the round says the hero is washed out or bright \u2014 the item's own defect is gone"
+  ],
+  "ship_recorded_not_gating": "SHIP: NONE. Recorded as the wowed signal per the pass rule.",
+  "_seat_data_untouched": "Only `verdict` changed; `dispositions` and this block were ADDED. RANK, SHIP, FLAGGED, flip_list, progress and the transcript are exactly as the seat left them."
+ }
 }

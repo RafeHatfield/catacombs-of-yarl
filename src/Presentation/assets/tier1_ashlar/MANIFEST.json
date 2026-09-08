@@ -88,9 +88,9 @@
   "mark_cluster_period": 5,
   "mark_cluster_swing": 0.3,
   "joint_polish_floor": 0.7,
-  "occlusion_polish_floor": 0.0,
+  "occlusion_polish_floor": 1.0,
   "polish_lane": [
-   0.3,
+   0.6,
    0.62,
    1.15
   ],
