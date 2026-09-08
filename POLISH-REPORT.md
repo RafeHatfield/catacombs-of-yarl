@@ -328,6 +328,21 @@ Instruments added (they gate nothing): `measure_wall_base_occlusion.py`,
   have tripped the no-change guard on the same picture.
 - **Did not re-scope #186**, though its stated exit is now known to be unsatisfiable.
 
+## 9a. CI — read, not badge-checked
+
+Every PR in the stack shows **balance: fail**, and that is the inherited red CLAUDE.md documents,
+not something this branch introduced. Confirmed by reading the log rather than the badge, as the
+rule requires:
+
+- **Fast tests pass** on the base PR: `Passed! - Failed: 0, Passed: 2518, Skipped: 1`.
+- The red step is **Balance acceptance suite**, and its failing set is
+  `depth3_orc_brutal` ×5 FAIL, `depth2_orc_baseline` + `_keen` FAIL, three `_vicious/_fine/
+  _masterwork` WARN.
+- **`main`'s own run at `ad19a72b` (run 34184047703) has that identical set.** No new failure.
+
+Nothing in this branch touches balance, scenarios or the logic layer — it is presentation,
+shaders, scene legibility declarations and the review layer.
+
 ## 10. What I would put in front of you first
 
 1. **The `r002-worktree-session-2026-08-29` impeachment** (§5). A round was read that should have
