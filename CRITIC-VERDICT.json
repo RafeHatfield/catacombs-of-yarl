@@ -235,7 +235,8 @@
       "plant caught ON-AXIS (tonal): the seat flagged it for the clipping \u2014 'along y=545 the floor runs 244,244,244,243, a flat plateau'",
       "beats bar and plant"
     ],
-    "_note": "The seat's own verdict was FAIL/SHIP:NONE and is NOT overwritten as a judgement \u2014 it is dispositioned. LOOP-PROCESS \u00a74.3 and bible \u00a713.2 put the human gate above the instrument bar; this is that authority applied item by item, with Rafe's words on each so the handset can show them."
+    "_note": "The seat's own verdict was FAIL/SHIP:NONE and is NOT overwritten as a judgement \u2014 it is dispositioned. LOOP-PROCESS \u00a74.3 and bible \u00a713.2 put the human gate above the instrument bar; this is that authority applied item by item, with Rafe's words on each so the handset can show them.",
+    "applies_to": "the SURFACE gate (the room walk). Serviceable-or-better seeds approved_capture."
   },
   "_build_id_restamped": {
     "date": "2026-09-07",
@@ -244,5 +245,18 @@
     "new_id": "46b5c453a26950e701e510d4ed0de5ac5a01da1544bb248e1f4473242294aafd",
     "why": "SECOND RE-STAMP, 2026-09-07: the exclusion prefix-match fix pulled REVIEW_BUILD.json.template \u2014 a shipped input it had been hiding \u2014 into the hash. Again the FUNCTION changed, not the build. The build_id FUNCTION changed by ruling, not the build. RULED (Rafe, 2026-09-07): 'narrow build_id to the build. The id hashes shipped inputs only \u2014 game source, assets, shaders, scene/theme configs, output-affecting build scripts \u2014 and excludes the review layer's source, .claude/skills, and docs/ on the stated ground: they describe the build, they are not in it.' Bible \u00a713.11's third instance. The old id was computed by the broad function and is not comparable with the new one, so it is recomputed rather than left to fail a comparison between two different functions.",
     "the_guarantee_that_did_not_move": "THE DELIVERED FRAME. build_frame.sha256 is 8745c556dd1bef10 before and after \u2014 the same bytes the seat judged. That, not the id, is what the verdict is a claim about; the id is a cheap proxy for it, and re-stamping is only lawful BECAUSE the frame is identical. This script asserts that and refuses if it is not."
+  },
+  "walk_declaration_note": {
+    "ruled_by": "Rafe",
+    "date": "2026-09-07",
+    "declared_walk": "rig-energy",
+    "walked_as": "surface \u2014 the tier-one surface gate",
+    "ruling": "Walk as-is. walk: rig-energy is a STALE DECLARATION \u2014 the build is being walked as the surface gate, surface preconditions verified satisfied. Do not flip the marker (shipped-input change -> spurious fresh round on a byte-identical frame). Rafe's verdict applies to the SURFACE GATE; if serviceable-or-better, it seeds approved_capture. \u2014 Rafe, 2026-09-07",
+    "surface_preconditions_verified": {
+      "how": "tools/tier0_harness/walk_precheck.py run against a copy of the shipped marker with walk set to 'surface' \u2014 the marker itself was NOT modified, so no shipped input moved and the build id is unchanged.",
+      "result": "requirements present \u2014 themeConfig is not the stub, and all five families (ashlarFloor, floorOverlays, boundaryWall, wallBindings, wallCap) are declared",
+      "device_readback": "the handset's own log confirms it: theme and floor family agree (tier1_ashlar), floor laid with every cross-check green, incident overlays attached, booted tier1_combined_review, review=GATED"
+    },
+    "why_not_flipped": "The declaration is a shipped input by the 2026-09-07 build_id ruling, so changing it moves the id and invalidates a verdict about a frame that did not move. Correcting a label is not worth a spurious round; the inaccuracy is recorded here instead, where it is visible to anyone reading the verdict. FILED as a mechanism defect: the walk declaration DESCRIBES THE WALK, NOT THE BUILD \u2014 the same category as the review layer \u2014 and belongs outside the shipped inputs."
   }
 }
