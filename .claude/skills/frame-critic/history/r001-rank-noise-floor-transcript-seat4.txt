@@ -1,0 +1,57 @@
+All four read. Coordinates below are pixel coordinates in each file as delivered (1.png is 384×288; 2/3/4.png are 750×911).
+
+RANK: 2 > 3 > 4 > 1
+
+BEST: 2
+
+BEST_WHY: The wall run left of the pillar (x≈195–490, y≈418–442) is built, not textured. It is a course of separate blocks whose values differ block to block, with joints of differing darkness, and two vertical timbers driven straight through the course at x≈305 and x≈390 — the one at x≈305 carries three short horizontal cross-marks where the other has none. The repairs sit proud of the masonry as objects with their own edges; they are not painted onto the stone. The wall then has a defined bottom: a dark base line at y≈443 running the full width, interrupted where the pillar crosses in front of it at x≈500–535, so the pillar reads as nearer than the wall. On the floor, joints vary along a single run — the slabs at x≈490–560, y≈470–505 share an edge with no joint at all and read as one uncut span, while the slabs immediately left of them are separately cut on all four sides. The hairline crack from (300,575) up to (450,500) changes width along its length, forks at x≈310, and crosses the joints without kinking to follow them; it was drawn rather than stamped. And the material survives the light: across row 520 the lit slabs run 148–186, and nothing in the lit pool exceeds luminance 208, so the stone still reads as stone at the brightest point. The corridor at x≈500–565 goes cool grey-green at its far end (y≈200–280) while the near end at y≈380 stays warm, so the light has a colour temperature, not just a level.
+
+WORST: 1
+
+WORST_WHY: Materials meet as rectangles with nothing between them. The pond's bottom edge is a single-pixel transition at y=192, dead straight from x=249 to x=344 — sampling column x=300 gives water (36,76,62) at y=191 and dry dirt (92,68,29) at y=192, with no damp margin, no waterline, no bank. Its left edge at x=249 and right edge at x=344 are the same straight tile-aligned cuts, the right one abutting grey flagstone with no lip and no wet stone. The water itself is a flat fill: the pond body contains seven colours total, and 94.6% of it is two teals that differ by (2,5,4). The two barrels at (113,192) and (162,192) are the same barrel copied 48px to the right — mean pixel difference 2.3 across the bounding box — and neither casts a shadow; they simply stop at the dirt. Nothing in the frame casts a shadow except the figure at top-right (213,0), which has an oval one: one shadow in the whole picture. There is also no light in the picture at all — the dirt at (110,20) sits at the same value as the dirt at (220,160), so the frame has no centre and nothing recedes. The dirt is visibly stamped: the block from (96,0) to (240,192) is 108 tiles drawn from 47 distinct 16px images with one used nine times, and the repeat is legible as the same red speckle cluster recurring. The flagstone across the bottom third is near-featureless — slab-to-slab value variation of essentially nothing, joints of uniform darkness, no wear anywhere. The debris at (208,112) is a spray of near-white single pixels with no readable form. Nothing in the frame is broken, patched or repaired, in a place nobody has ever cared for.
+
+FLAGGED: 1, 4, 3
+
+SHIP: NONE
+
+FLIP 2:
+- The figure reads as pasted on. It carries a hard 1px black outline and flat saturated fills while nothing in the environment has a hard edge anywhere — measured, the sprite's horizontal edge energy is about 4× that of the lit floor beside it. Either redraw the figure with the environment's edge treatment, or cut the stone joints to hard 1px lines so both read as drawn at the same resolution.
+- The figure's teal hood and orange tunic are the only saturated hues in the frame. Pull both into the frame's amber/brown chroma range and let the lamp be the only source of saturation.
+- Everything from the wall at y≈420 down to y≈640 is one hue. Put a cool value into the near floor — the grey-green already used at the corridor's far end near (520,230) — so the warm reads as lamp rather than as the room's own colour.
+- The floor joints are anti-aliased gradients 2–3px wide rather than lines; at the size this is played they read soft. Cut each to a hard 1px dark line with a 1px lighter line on the lamp-facing side of the slab.
+- The figure carries the only light and casts no shadow. Add a short shadow thrown away from the lamp and a contact darkening under the feet at y≈505; as it stands it hovers on the floor.
+- This is a filing system for souls held by a company that has been repairing it for four hundred years, and the only evidence of either is two timbers. Add one legible piece of record-keeping into the wall course at x≈200–300 — a scratched tally, a driven tag, a stencilled number — sized to read at play scale.
+
+FLIP 3:
+- The wall band from y≈415 to y≈443, running the full width of the frame, contains no masonry: no joints, no block edges, nothing but two dark smudges and one wobbly hairline over a brown gradient. Draw the block course into it, as done in the run at x≈195–490.
+- The two driven timbers sit at y≈388–415, above the block course rather than crossing it, so they are pinned into nothing. Move them down into the masonry they are repairing.
+- The wall's far edge at y≈385 dissolves into the darkness with no defined line, so the wall has a bottom but no top and no readable thickness. Give it a defined far edge.
+- The shield at (408–432, 482–502) has bleached to 238 with its interior hue gone, in a frame whose brightest stone elsewhere is 208. Clamp the sprite's lit ramp to its own top palette entry so the shield keeps a rim darker than its face.
+- Joint contrast in the lit slabs is roughly half what the same joints carry at the frame's left edge near x≈200–260 — the brighter the light, the less stone you can see, which is backwards. Darken joints proportionally as the light rises so their absolute contrast holds.
+- The sprite/environment edge mismatch and the single-hue lit pool described in FLIP 2 apply here unchanged.
+
+FLIP 4:
+- The lit floor is blown out. In the region (280,460)–(520,600), 32% of pixels are above luminance 215 and 13% are above 235, topping out at 250; the same slabs under the gentler light of image 2 peak at 208. Cap the lamp's contribution so the brightest floor pixel lands near 205–210.
+- Under the hotspot the masonry has dissolved: the horizontal joint at y≈470 and the vertical joint at x≈355 are legible left of x≈300 and gone between x≈300 and x≈470. Restore them by darkening joints as the light rises rather than adding flat brightness across the slab and its joint alike.
+- The light is not a smooth falloff — it steps in cell-sized rectangles, visible as whole slabs jumping a step brighter than their neighbours around x≈470 and x≈500, y≈510–560. Interpolate the light per pixel, not per cell.
+- The player's skin has gone from orange to pale yellow and the shield to near-white at 238. Clamp the sprite's lit values as in FLIP 3.
+- Every item in FLIP 3 also applies: the wall band at y≈415–443 carries no masonry, and the timbers at y≈388–415 are pinned above the course they are meant to be repairing.
+
+FLIP 1:
+- There is no light source in the frame. Build falloff from the figure at (213,0) so the picture has a centre and the far corners recede.
+- The pond (x 249–344, y 0–192) is a rectangle. Give its bottom edge at y=192 a bank: a 2–4px damp margin, a darker waterline, and a silhouette that leaves the tile grid instead of running straight along it.
+- Do the same at the pond's left edge (x=249) and at its right edge (x=344) where it meets flagstone with no lip and no wet stone.
+- The pond body is 94.6% two near-identical teals. Give it depth — darker toward the centre, lighter at the shallows — and put movement or debris on the surface.
+- The barrels at (113,192) and (162,192) are the same image. Redraw one: different stave count, different hoop wear, or turned.
+- Add contact shadows under both barrels, both crates at (63,2) and (63,48), and the plank at (27,125). Right now the figure at (213,0) has the only shadow in the frame.
+- The crates at (63,2) and (63,48) are a repeated pair and their bright tan sits lighter than the lit floor. Vary them and drop them into the frame's value range.
+- Break the dirt repeat: 108 tiles from 47 distinct 16px images, one used nine times. Hand-place detail that crosses tile boundaries — a rut, a drag mark, a scatter that does not stop at x ≡ 0 mod 16.
+- The flagstone from y=218 down is one flat value with uniform joints. Vary slab values, vary joint depth along a single run, and wear the stone where traffic would fall — the two doorways and the strip in front of them.
+- The debris at (208,112) is a spray of near-white pixels with no form. Draw the objects or remove them.
+- The lily pads and the figure are the only saturated things in the frame, at roughly double the chroma of everything else. Bring both into range.
+- The plank at (27,125)–(33,167) runs bright orange at the top to near-black at the bottom with no light source to justify the gradient, and it stops mid-dirt with no end. Light it consistently and terminate it.
+- Nothing in this frame is broken, patched or repaired. Put in the rope, the driven pins, the hide and the salvaged timber — the wall at y=268, the doorway at x=27, and the floor edge at y=216 are the three places that would carry them.
+
+The through-line: 2 is the only frame where the wall is an object with a top, a bottom and a repair history, and where light adds without erasing material. 3 and 4 are the same scene with progressively more light and progressively less stone — 4 is what happens when you keep turning the lamp up and stop checking what it costs. 1 is a different problem entirely: it isn't lit, isn't worn, and its materials meet at tile lines.
+
+Model used: Claude Opus 5 (1M context).

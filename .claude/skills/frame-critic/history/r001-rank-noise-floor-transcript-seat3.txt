@@ -1,0 +1,65 @@
+All four read. Frames 2, 3 and 4 are the same camera position on the same map with different lighting and wall passes; 1 is a different, smaller-tile scene. I measured values and diffed pixels rather than eyeballing.
+
+RANK: 3 > 4 > 2 > 1
+
+BEST: 3
+
+BEST_WHY: The wall run spanning the frame at y≈385–455 is the only genuinely authored piece of construction in the deck. Its top course is made of discrete blocks of unequal width — one about 30px wide at x≈195, the next about 55px at x≈230, another short one at x≈300 — so the course reads as re-laid salvage rather than one module stamped along a row. Five vertical timber pins at roughly x≈265, 360, 415, 630 and 690 are driven through that course and *protrude past the wall's top silhouette into the black*, which is what makes the repair read as added on top of the masonry rather than drawn into the texture. The wall also carries three separate values across its depth — lit top face, a darker south face band at y≈440–455, and a cast shadow onto the floor at y≈455–465 — so it has thickness instead of being a dark stripe. Separately, the light falloff is not a symmetric radial blob: it is pushed toward the corridor mouth at lower right, and the wall at y≈440 clips it into a hard-edged wedge on its north side. And it does not clip: the floor around the figure peaks at 208/255, so joints and hairline cracks survive inside the brightest part of the pool.
+
+WORST: 1
+
+WORST_WHY: The two barrels at x≈118–150 and x≈168–200 are sliced dead flat along y=216, the horizontal seam where the dirt floor meets the grey flagstone. Their staves simply terminate at that row — no bottom rim, no ellipse, no contact shadow. The flagstone floor is drawn *over* the barrel sprites. That is a layer-order bug visible from across the room. Compounding it: the two chests at x≈64–96, y≈3–24 and y≈51–72 are pixel-for-pixel identical (verified by array comparison) and are drawn in front elevation — you are looking at the front face of a box — inside a frame that is otherwise straight top-down, and 40px away the barrels are drawn top-down. Two projections in one frame. The water is a plain rectangle: a razor-straight vertical edge at x=249 running unbroken from y=0 to y=191, one pixel from dirt to teal, no bank, no shallows, no wet margin, terminating at the bottom in a flat horizontal cut at y≈191. Its interior is a single hexagonal cell pattern tiled with zero variation. The algae blobs recur unrotated at the left wall, mid-floor and right edge. And there is no lighting model at all — the frame is uniformly lit corner to corner, which is not a stylistic choice against the stated brief, it is the absence of a pass.
+
+FLAGGED: 1, 4, 3, 2
+
+- **1** — barrels cut in half by the floor seam at y=216, floor rendered on top of them.
+- **4** — the light pool is blown out. 13% of the floor in the block y 515–575, x 310–470 sits above 240/255 and peaks at 246, where the identical floor in 2 and 3 peaks at 208. The masonry joints that are legible in 3 under the same light are gone, and the sword blade goes to near-paper-white against a near-paper-white floor.
+- **3** — the shield reads as a hole. Its interior averages 180/255 against floor of 198/255 directly beneath it: 18 steps of separation. In 2 the same shield sits 55 steps off its floor. The face has lost its shadow side too and is a flat yellow field. The sprite has had a brightening pass run over it that the surrounding art did not get.
+- **2** — the wall mass from y≈390 down to y≈445 carries no discrete detail whatsoever: it is soft cloud with no course lines, no joints, no pins, and its top edge dissolves into the black with no silhouette. Meanwhile the character sprite 60px below it has 1-pixel hard outlines. Two resolutions in one frame, adjacent. (This blur is present in 3 and 4 too, but in those the wall itself is built; in 2 the blur *is* the wall.)
+
+SHIP: NONE
+
+---
+
+FLIP 3:
+- Darken the shield interior to ~120/255 and reinstate its rim: it currently sits 18 luminance steps off the floor behind it and disappears. Target 50+ steps, matching the separation the same shield has in 2.
+- Restore the two-tone shading on the face — the shadow side under the helmet brim is gone, leaving a flat orange field. Put the darker orange back on the viewer's left of the nose.
+- The dark room interior bounded by the rectangle from roughly (125,140) to (440,390) has no floor structure inside it at all — just a smeared organic blob field with two hairline cracks. Draw actual flagstone courses in it at 20–30% of the lit floor's value, or drop it to true black. Currently it is legible enough to see there is nothing there.
+- That rectangle's edges cut masonry mid-stone: at (440,390) the corner lands in the middle of a slab whose remainder continues visibly to the right. Align unlit-region boundaries to tile edges, or feather them.
+- The hairline curves crossing the floor from (250,460) through (390,700) are smooth sub-pixel Beziers on a square-grid scene — they step at fractional intervals while every other line in the frame steps on whole pixels. Redraw them on the pixel grid.
+- Those same curves pass over the wall at y≈440 and over the corridor at x≈520 with no change in value and no contact points. If they are rope spans they need anchors where they meet stone; if they are floor cracks they must stop at the wall base.
+- The wall column running down the left of the corridor at x≈565–600, y≈100–390 has no top/side distinction — it is one soft grey gradient. Give it the same three-value treatment the horizontal wall run at y≈385 already has.
+
+FLIP 4:
+- Pull the light pool's peak down. The floor block at x 310–470, y 515–575 hits 246/255 with 13% of pixels above 240; cap it at the 208 ceiling used in 2 and 3 so joint detail survives inside the pool.
+- The sword blade currently reads at essentially the floor value. Once exposure is capped it will separate; if not, darken the blade's core.
+- Same shield fix as 3 — the interior has had the brightening pass applied and lost its rim.
+- Same blur, black-rectangle, and sub-pixel-curve items as FLIP 3: the dark room at (125,140)–(440,390) is structureless, its corners cut stones mid-slab, and the floor cracks are drawn off-grid.
+
+FLIP 2:
+- Rebuild the wall run at y≈390–455. The joint band with its block courses and pins currently sits at the *bottom* of the wall mass (y≈445–470), leaving the top 50px as featureless cloud. Move the course band to the wall's top edge so the wall has a defined silhouette against the black, as it does in 3 and 4.
+- Add the protruding timber pins along that top edge. Right now nothing breaks the wall's upper contour anywhere across 600px of frame.
+- The wall's top edge fades into black over ~15px. Make it a hard edge — a wall seen from directly above ends where it ends.
+- The large field at x 150–440, y 200–390 is soft cloud at roughly 6px feature size sitting next to a sprite with 1px outlines. Either draw floor structure into it at the sprite's resolution or take it to black.
+- Bottom-left, the masonry patch at roughly x 0–160, y 640–700 carries a distinctly cooler blue-grey cast than everything above it, and the change happens along a straight horizontal line rather than following a light source. Bring its hue into the warm range used elsewhere.
+- Same sub-pixel-curve item as FLIP 3 — the crack lines are off-grid Beziers.
+- Same black-rectangle-boundary item — the corner at (440,390) and the one at (630,130) both slice slabs mid-stone.
+
+FLIP 1:
+- Fix the layer order: the flagstone floor at y≥216 is drawn over the barrel sprites at x≈118–150 and x≈168–200, cutting both barrels flat. Objects render above floor.
+- Give both barrels a bottom — an ellipse or shadowed base rim — and a contact shadow on the dirt. They currently float with no ground attachment.
+- Differentiate the two barrels. Flip one horizontally and shift its stave lines and top-plank orientation.
+- The two chests at (64,3) and (64,51) are pixel-identical. Change one — rotate the lid ironwork, move the lock, vary the plank count.
+- Redraw the chests in top-down projection. You are currently seeing their front faces in a frame where the barrels 180px below are seen from above.
+- The water edge at x=249 is a single straight column from y=0 to y=191 with a one-pixel dirt-to-teal transition. Add a 2–3px darker shoreline band, break the edge line with an irregular margin, and vary the water's value near the bank.
+- Terminate the water's bottom edge at y≈191 with a bank rather than a flat horizontal cut across the full pool width.
+- Vary the water interior. The hexagonal cell pattern repeats identically across the entire pool with no value change and no depth gradient.
+- The dirt/flagstone boundaries — the vertical one at x≈56 and the horizontal one at y=216 — are hard straight cuts. Add transition tiles: scattered dirt over the first row of flagstone, a broken edge, debris in the joints.
+- Rotate or reshape the algae blobs; the same cluster appears unmodified at the left wall (x≈15–75, y≈50–70), on the floor at (100–140, 190–215) and at the right edge.
+- There is no light falloff anywhere in the frame — it is uniformly lit corner to corner. Add the carried-light pass: a bright pool at the figure, and darkness at the frame edges.
+
+---
+
+Model: Claude Opus 5 (1M context).
+
+The thing worth watching: 3 and 4 are the same frame with two different exposure settings on the light, and 4 is the one that clipped. That is a single tunable number, not an art problem — but nobody caught it, which means there is no check on highlight clipping in whatever produces these. Worth adding one before more frames come through.

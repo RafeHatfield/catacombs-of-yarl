@@ -1,82 +1,122 @@
 {
-  "_comment": [
-    "THE DEVICE GATE'S PRECONDITIONS, in machine-readable form.",
+ "_comment": [
+  "THE DEVICE GATE'S PRECONDITIONS, in machine-readable form.",
+  "",
+  "STANDING ORDER (Rafe, 2026-09-03): no build installs to the phone unless, ON THAT EXACT",
+  "BUILD, all four hold. Rafe's walk is the LAST gate, not the first working one.",
+  "",
+  "This file is the declared state and tools/tier0_harness/gate_precheck.py is the enforcement.",
+  "build_review_app.sh calls it and REFUSES TO INSTALL if it fails. A rule that depends on my",
+  "restraint is not a rule — this session has proved that twice — so the rule lives in the",
+  "build path rather than in an intention.",
+  "",
+  "A build announcement missing any of the four is itself a defect, so the precheck prints them",
+  "and the announcement quotes its output."
+ ],
+ "round": 33,
+ "standing_capture": "r24_onroute",
+ "approved_capture": null,
+ "_approved_capture_note": [
+  "⚠ BLOCKING, AND THE GAP IS REAL RATHER THAN AN OVERSIGHT OF THIS ROUND.",
+  "",
+  "Condition 3 needs 'the last Rafe-approved capture of the same surface'. THE RECORD DOES NOT",
+  "CONTAIN ONE. No floor capture in this session has been approved outright: the verdicts run",
+  "'not wowed, impressed, close', 'closer, legitimately impressed, one axis remains', 'passed",
+  "in kind', and a run of FAILs. Each praised something and culled something.",
+  "",
+  "Picking one myself would be choosing the baseline my own work is judged against, which is",
+  "exactly the conflict the comparative seat exists to remove. So it stays null and the gate",
+  "stays shut until Rafe names it.",
+  "",
+  "The candidates, with what he actually said:",
+  "  scene_ashlar_r9   'not wowed, impressed, close' — cracks excellent, colouring good",
+  "  scene_ashlar_r13  'closer, legitimately impressed' — texture passed and frozen",
+  "  scene_ashlar_r15  differential wear 'PASSED in kind'",
+  "  r24_onroute@8640780f  'the keyline fix holds' — the lane was the cull, not the masonry"
+ ],
+ "ruled_fixes": [
+  {
+   "id": "lane-window-held",
+   "rule": "wear modulates the same stones; it never replaces their identity. The lane must read as the SAME masonry, polished — on-lane identity and lane-vs-flank both at or above §13.8's perceptual floor, MEASURED ON THE BUILD.",
+   "check": "window:combined",
+   "_ruled": "RULED (Rafe, 2026-09-08): 'Re-express the POLISH_LANE_GAIN pin as the law it stood for: the precheck asserts the window — on-lane identity >= perceptual floor AND lane-vs-flank >= floor — measured on the build; 0.3 ratified as the current value meeting it, with the polish_by_age floor recorded as the lower bound's reason. Assertions derive, never copy.'",
+   "_current_value": "POLISH_LANE_GAIN = 0.3, RATIFIED 2026-09-08 as the current value meeting the window: on-lane 0.1602 (1.11x the floor) and lane-vs-flank 0.3732 (2.59x). It replaces 0.6, which by then read on-lane 0.1338 — BELOW the floor — because the window moved when #174 corrected the lamp and Ruling 56 was re-ratified (§6.2's re-derivation rule).",
+   "_lower_bound_reason": "THE polish_by_age FLOOR. The mask is max(polish_by_age, LanePolish) and polish_by_age reaches 0.45, so below about 0.3 the age layer takes over and the lane gain stops biting: 0.6->0.3 buys 5.4 points of the specular's share (28.8% -> 23.4% at the standing case, shoulder nulled) while 0.3->0.2 buys 1.3 and costs 0.03 of lane-vs-flank. 0.3 sits at that knee. This is the REASON for the lower bound, recorded per the ruling — it is not itself an assertion, because the assertion is the window.",
+   "_superseded": "was const:POLISH_LANE_GAIN==0.6 — a copied value that went on asserting after its premises moved. Bible §13.12."
+  },
+  {
+   "id": "wear-ignores-grid-axis",
+   "rule": "the travel axis is per pixel, never per tile",
+   "check": "file:src/Presentation/Map/Tier1AshlarFloor.cs:PixelAxis(cfg, traffic"
+  },
+  {
+   "id": "wear-ignores-grid-channel",
+   "rule": "the per-tile channel flag does not apply under a route",
+   "check": "file:src/Presentation/Map/Tier1AshlarFloor.cs:&& cfg.Lines.Count == 0"
+  },
+  {
+   "id": "packed-joint-shines",
+   "rule": "a joint level with its stone takes the polish",
+   "check": "file:src/Presentation/Map/Tier1AshlarFloor.cs:A PACKED JOINT TAKES THE SHINE"
+  },
+  {
+   "id": "joint-polish-floor",
+   "rule": "the face/joint delivered specular ratio is capped",
+   "check": "const:JOINT_POLISH_FLOOR==0.7"
+  },
+  {
+   "id": "lane-frays",
+   "rule": "the lane's shoulder frays; nothing is staged",
+   "check": "const:LANE_FRAY==0.32"
+  },
+  {
+   "id": "sheltered-joint-draws",
+   "rule": "the sheltered joint draws its depth from a distribution",
+   "check": "const:SHELTER_WEIGHTS==(0.04, 0.26, 0.52, 0.18)",
+   "_corrected": [
+    "CORRECTED (Rafe, 2026-09-05) from (0.06, 0.5, 0.26, 0.18). THE REGISTRY WAS STALE, NOT",
+    "THE BUILD. This entry was a snapshot taken BEFORE c3ff7dc9 raised the sheltered joints,",
+    "which is the behaviour Rafe has been walking ever since. The assertion was correct when",
+    "it was written (2fe0e938, 2026-09-02) and went stale the next day.",
     "",
-    "STANDING ORDER (Rafe, 2026-09-03): no build installs to the phone unless, ON THAT EXACT",
-    "BUILD, all four hold. Rafe's walk is the LAST gate, not the first working one.",
+    "IT CLOSED THE DEVICE GATE FOR TWO DAYS AND NOBODY NOTICED, because the review-build path",
+    "is the only one that consults this file. See docs/GATE-REGISTRY-DRIFT-2026-09-03.md.",
     "",
-    "This file is the declared state and tools/tier0_harness/gate_precheck.py is the enforcement.",
-    "build_review_app.sh calls it and REFUSES TO INSTALL if it fails. A rule that depends on my",
-    "restraint is not a rule — this session has proved that twice — so the rule lives in the",
-    "build path rather than in an intention.",
-    "",
-    "A build announcement missing any of the four is itself a defect, so the precheck prints them",
-    "and the announcement quotes its output."
-  ],
-
-  "round": 33,
-  "standing_capture": "r24_onroute",
-
-  "approved_capture": null,
-  "_approved_capture_note": [
-    "⚠ BLOCKING, AND THE GAP IS REAL RATHER THAN AN OVERSIGHT OF THIS ROUND.",
-    "",
-    "Condition 3 needs 'the last Rafe-approved capture of the same surface'. THE RECORD DOES NOT",
-    "CONTAIN ONE. No floor capture in this session has been approved outright: the verdicts run",
-    "'not wowed, impressed, close', 'closer, legitimately impressed, one axis remains', 'passed",
-    "in kind', and a run of FAILs. Each praised something and culled something.",
-    "",
-    "Picking one myself would be choosing the baseline my own work is judged against, which is",
-    "exactly the conflict the comparative seat exists to remove. So it stays null and the gate",
-    "stays shut until Rafe names it.",
-    "",
-    "The candidates, with what he actually said:",
-    "  scene_ashlar_r9   'not wowed, impressed, close' — cracks excellent, colouring good",
-    "  scene_ashlar_r13  'closer, legitimately impressed' — texture passed and frozen",
-    "  scene_ashlar_r15  differential wear 'PASSED in kind'",
-    "  r24_onroute@8640780f  'the keyline fix holds' — the lane was the cull, not the masonry"
-  ],
-
-  "ruled_fixes": [
-    {"id": "lane-gain-stepped",       "rule": "wear modulates the same stones; the lane at 0.6",
-     "check": "const:POLISH_LANE_GAIN==0.6"},
-    {"id": "wear-ignores-grid-axis",  "rule": "the travel axis is per pixel, never per tile",
-     "check": "file:src/Presentation/Map/Tier1AshlarFloor.cs:PixelAxis(cfg, traffic"},
-    {"id": "wear-ignores-grid-channel", "rule": "the per-tile channel flag does not apply under a route",
-     "check": "file:src/Presentation/Map/Tier1AshlarFloor.cs:&& cfg.Lines.Count == 0"},
-    {"id": "packed-joint-shines",     "rule": "a joint level with its stone takes the polish",
-     "check": "file:src/Presentation/Map/Tier1AshlarFloor.cs:A PACKED JOINT TAKES THE SHINE"},
-    {"id": "joint-polish-floor",      "rule": "the face/joint delivered specular ratio is capped",
-     "check": "const:JOINT_POLISH_FLOOR==0.7"},
-    {"id": "lane-frays",              "rule": "the lane's shoulder frays; nothing is staged",
-     "check": "const:LANE_FRAY==0.32"},
-    {"id": "sheltered-joint-draws",   "rule": "the sheltered joint draws its depth from a distribution",
-     "check": "const:SHELTER_WEIGHTS==(0.04, 0.26, 0.52, 0.18)",
-     "_corrected": [
-       "CORRECTED (Rafe, 2026-09-05) from (0.06, 0.5, 0.26, 0.18). THE REGISTRY WAS STALE, NOT",
-       "THE BUILD. This entry was a snapshot taken BEFORE c3ff7dc9 raised the sheltered joints,",
-       "which is the behaviour Rafe has been walking ever since. The assertion was correct when",
-       "it was written (2fe0e938, 2026-09-02) and went stale the next day.",
-       "",
-       "IT CLOSED THE DEVICE GATE FOR TWO DAYS AND NOBODY NOTICED, because the review-build path",
-       "is the only one that consults this file. See docs/GATE-REGISTRY-DRIFT-2026-09-03.md.",
-       "",
-       "THE LESSON FOR WHOEVER EDITS A RULED VALUE NEXT: this registry does not follow the code.",
-       "Change a constant named here and change this line in the same commit, or the gate starts",
-       "refusing builds for a fix that is present."
-     ]},
-    {"id": "origin-from-engine",      "rule": "§13.10 — instruments derive ground truth from the engine's probes",
-     "check": "file:tools/tier1_floors/measure_traffic_read.py:def tile_origin"},
-    {"id": "seat-relative-coords",    "rule": "seat positions are relative to the figure, in tiles",
-     "check": "file:tools/tier1_floors/seat_prompt.txt:NOT IN PIXELS"},
-    {"id": "plants-assert-count",     "rule": "an early exit in the plant run is red, never quiet",
-     "check": "file:tools/tier1_floors/field_ashlar.py:PLANT RUN INCOMPLETE"},
-    {"id": "seats-withheld",          "rule": "candidate transcripts are withheld until the plant clears",
-     "check": "file:tools/tier1_floors/run_seats.py:WITHHELD"}
-  ],
-
-  "instruments_that_must_pass": [
-    {"id": "grid-coincidence", "evidence": "GRID-COINCIDENCE.json", "key": "verdict"},
-    {"id": "shipped-path",     "evidence": "ATLAS-PATH.json"}
-  ]
+    "THE LESSON FOR WHOEVER EDITS A RULED VALUE NEXT: this registry does not follow the code.",
+    "Change a constant named here and change this line in the same commit, or the gate starts",
+    "refusing builds for a fix that is present."
+   ]
+  },
+  {
+   "id": "origin-from-engine",
+   "rule": "§13.10 — instruments derive ground truth from the engine's probes",
+   "check": "file:tools/tier1_floors/measure_traffic_read.py:def tile_origin"
+  },
+  {
+   "id": "seat-relative-coords",
+   "rule": "seat positions are relative to the figure, in tiles",
+   "check": "file:tools/tier1_floors/seat_prompt.txt:NOT IN PIXELS"
+  },
+  {
+   "id": "plants-assert-count",
+   "rule": "an early exit in the plant run is red, never quiet",
+   "check": "file:tools/tier1_floors/field_ashlar.py:PLANT RUN INCOMPLETE"
+  },
+  {
+   "id": "seats-withheld",
+   "rule": "candidate transcripts are withheld until the plant clears",
+   "check": "file:tools/tier1_floors/run_seats.py:WITHHELD"
+  }
+ ],
+ "instruments_that_must_pass": [
+  {
+   "id": "grid-coincidence",
+   "evidence": "GRID-COINCIDENCE.json",
+   "key": "verdict"
+  },
+  {
+   "id": "shipped-path",
+   "evidence": "ATLAS-PATH.json"
+  }
+ ]
 }

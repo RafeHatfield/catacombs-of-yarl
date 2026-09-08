@@ -861,6 +861,46 @@ def _slots(body, n_slots):
     return nums(rest)
 
 
+# ── THE PANEL'S ARITHMETIC — RULED (Rafe, 2026-09-08) ─────────────────────────────────────────
+#
+#     "majority of three independent blind seats rank the build above approved_capture, no
+#      unrouted flags from any; each seat its own axis-matched plant."
+#
+# Extracted so `prove_panel.py` drives THIS function rather than a copy of it. A proof against a
+# reimplementation only proves the reimplementation — the same reason `prove_gate.py` shells the
+# real gate and the guard fixtures call the real `guards()`.
+#
+# THE TWO TERMS ARE ASYMMETRIC ON PURPOSE, and the asymmetry IS the ruling:
+#
+#   rank   is the NOISY term — it flipped on identical bytes — so it takes a MAJORITY.
+#   a flag is a FINDING. ONE seat finding it is enough, because a flag outvoted 2-1 is still a
+#          defect that two seats missed. Averaging findings would discard the only thing a panel
+#          is good at.
+#
+# EVERY seat must catch its plant. §4 voids a round on one missed plant and a panel does not get
+# to dilute that into an average: a soft seat's ballot is exactly what §4 refuses to read.
+def panel_tally(seats):
+    """(n_above, n_flagged, n_shipped, all_caught, majority_above) over independent seats."""
+    n = len(seats)
+    n_above = sum(1 for x in seats if x.get("above_approved"))
+    n_flagged = sum(1 for x in seats if x.get("build_flagged"))
+    n_shipped = sum(1 for x in seats if x.get("shipped"))
+    all_caught = bool(seats) and all(x.get("caught") for x in seats)
+    return n_above, n_flagged, n_shipped, all_caught, (n_above * 2 > n)
+
+
+def panel_verdict(seats, approved_in_deck, beats_approved, near_bar):
+    """The verdict the panel yields. Same three states, decided by vote rather than by sample."""
+    n_above, n_flagged, n_shipped, all_caught, majority_above = panel_tally(seats)
+    if not all_caught:
+        return "VOID"
+    if n_shipped * 2 > len(seats) and n_flagged == 0 and beats_approved and near_bar:
+        return "PASS"
+    if approved_in_deck and majority_above and n_flagged == 0:
+        return "PASS-INSTALL"
+    return "FAIL"
+
+
 # THE PLANT RULE, WRITTEN DOWN BEFORE THE FIRST ROUND AND NOT NEGOTIABLE AFTERWARDS.
 #
 #     The plant must land WORST or FLAGGED, and must not be in SHIP.
@@ -957,6 +997,10 @@ def main():
     ap.add_argument("--build-frame", help="override the build frame. Used by the plant "
                                           "self-test, which puts a morgue capture in the "
                                           "build's slot and requires the seat to flag it.")
+    ap.add_argument("--seats", type=int, default=1,
+                    help="how many INDEPENDENT blind seats judge this round. Ruled at 3 for a "
+                         "PASS-INSTALL vote (Rafe, 2026-09-08); higher values measure the "
+                         "comparator's own noise floor on unchanged bytes.")
     ap.add_argument("--timeout", type=int, default=2400)
     # ── SHOWING THE GUARDS THEY CAN FIRE, WITHOUT REIMPLEMENTING THEM ────────────────────────
     # LOOP-PROCESS §4 / bible §13.5: no check's pass counts until it has demonstrated it can
@@ -1044,73 +1088,143 @@ def main():
     # the seat would be shown the same picture twice and the control would be judging itself.
     exclude = (os.path.basename(a.build_frame),) if a.build_frame else ()
     candidates = pick_plant(cfg["surface"], morgue, exclude=exclude, axis=cfg.get("axis"))
-    rng = random.Random(hashlib.sha256(("%s|%d" % (bid, rnd)).encode()).hexdigest())
-    plant = rng.choice(candidates)
 
-    # ── THE SEAT MUST NOT BE ABLE TO READ THE ROUND NUMBER OFF ITS OWN CWD ────────────────────
+    # ══════════════════════════════════════════════════════════════════════════════════════════
+    # MORE THAN ONE SEAT — RULED (Rafe, 2026-09-08).
     #
-    # The directory used to be named `<lane>-r<n>`, which is the seat's working directory and
-    # therefore visible to it. A seat that can see it is in round 7 is a seat that can infer a
-    # history it was never shown, and the whole progress signal depends on the seat not knowing
-    # anything is being tracked: rank has to be an unprompted judgement about the picture, not a
-    # judgement about a campaign.
+    #     "PASS-INSTALL rests on a single rank sample and flipped on identical bytes —
+    #      impeachment upheld. Refine: majority of three independent blind seats rank the build
+    #      above approved_capture, no unrouted flags from any; each seat its own axis-matched
+    #      plant."
     #
-    # Opaque, and reproducible from the verdict — which records the path.
-    work = os.path.join(os.path.expanduser(cfg.get("work_dir", "~/.claude/frame-critic")),
-                        "deck-" + hashlib.sha256(
-                            ("%s|%d|%s" % (lane, rnd, bid)).encode()).hexdigest()[:16])
-    if os.path.commonpath([os.path.realpath(work), os.path.realpath(REPO)]) \
-            == os.path.realpath(REPO):
-        raise SystemExit("REFUSING: work_dir is inside the repo. §3.1 — the seat's cwd is "
-                         "outside it, so the seat cannot read its way to the answer.")
-    shutil.rmtree(work, ignore_errors=True)
-    os.makedirs(work)
+    #     LAW: "a gate's binding term must have a measured noise floor and must never be a
+    #      single sample."
+    #
+    # THE OCCASION, and it is one frame: lane polish-c-183 judged build sha 839fb12f twice, with
+    # `picture moved mean 0.000 / worst 0` between them, and the build ranked 1 OF 4 then 2 OF 4.
+    # It and the reference SWAPPED PLACES with no pixel changing. Under the rule ratified that
+    # morning — rank above `approved_capture` — the same bytes were PASS-INSTALL and then FAIL.
+    #
+    # EVERY SEAT IS INDEPENDENT: its own working directory, its own shuffle, its own plant draw
+    # from the axis-matched set. The directory name is a hash of (lane, round, build, seat) for
+    # the reason the round number is hashed — a seat that can read "seat 2 of 3" off its own cwd
+    # can infer it is one of a panel, and the whole signal depends on it judging the picture
+    # rather than the apparatus.
+    #
+    # ⚠ ONE SEAT, ONE PLANT, AND THE MORGUE IS THIN. `pick_plant` returns the entries matching
+    # this surface AND this axis, and for `combined`/`tonal` that set has exactly ONE member. So
+    # three seats draw the same picture-plant and their catches are CORRELATED — the panel
+    # multiplies the rank samples but not the plant's evidence. That is a real limit of this
+    # implementation and it is reported per round rather than hidden.
+    def seat_round(seat_idx):
+        """One independent seat: its own deck, its own shuffle, its own plant. Returns a dict."""
+        salt = "%s|%d|%s|seat%d" % (lane, rnd, bid, seat_idx)
+        srng = random.Random(hashlib.sha256(salt.encode()).hexdigest())
+        seat_plant = srng.choice(candidates)
+        work = os.path.join(os.path.expanduser(cfg.get("work_dir", "~/.claude/frame-critic")),
+                            "deck-" + hashlib.sha256(salt.encode()).hexdigest()[:16])
+        if os.path.commonpath([os.path.realpath(work), os.path.realpath(REPO)]) \
+                == os.path.realpath(REPO):
+            raise SystemExit("REFUSING: work_dir is inside the repo. §3.1 — the seat's cwd is "
+                             "outside it, so the seat cannot read its way to the answer.")
+        shutil.rmtree(work, ignore_errors=True)
+        os.makedirs(work)
 
-    crop = cfg.get("crop")
-    deck = [("build", frame, crop),
-            ("plant", os.path.join(MORGUE, plant["file"]), crop)]
-    if cfg.get("approved_capture"):
-        deck.append(("approved", os.path.join(REPO, cfg["approved_capture"]["path"]), crop))
-    bar = cfg.get("asset_bar")
-    if bar:
-        # §13.3: measurements leave, pixels never do. The bar crop is written into the seat's
-        # working directory OUTSIDE the repo and nowhere else.
-        deck.append(("bar", bar["image"], bar.get("crop")))
-    rng.shuffle(deck)
+        crop = cfg.get("crop")
+        deck = [("build", frame, crop),
+                ("plant", os.path.join(MORGUE, seat_plant["file"]), crop)]
+        if cfg.get("approved_capture"):
+            deck.append(("approved", os.path.join(REPO, cfg["approved_capture"]["path"]), crop))
+        bar = cfg.get("asset_bar")
+        if bar:
+            # §13.3: measurements leave, pixels never do. The bar crop is written into the seat's
+            # working directory OUTSIDE the repo and nowhere else.
+            deck.append(("bar", bar["image"], bar.get("crop")))
+        srng.shuffle(deck)
 
-    mapping = {}
-    plant_slot = build_slot = bar_slot = approved_slot = None
-    for i, (what, path, box) in enumerate(deck, start=1):
-        size = crop_to(path, box, os.path.join(work, "%d.png" % i))
-        mapping[str(i)] = dict(what=what, source=os.path.relpath(path, REPO)
-                               if path.startswith(REPO) else path,
-                               sha256=hashlib.sha256(open(path, "rb").read()).hexdigest(),
-                               crop=box, delivered=list(size))
-        if what == "plant":
-            plant_slot = i
-        if what == "build":
-            build_slot = i
-        if what == "bar":
-            bar_slot = i
-        if what == "approved":
-            approved_slot = i
+        mapping = {}
+        slots = dict(plant=None, build=None, bar=None, approved=None)
+        for i, (what, path, box) in enumerate(deck, start=1):
+            size = crop_to(path, box, os.path.join(work, "%d.png" % i))
+            mapping[str(i)] = dict(what=what, source=os.path.relpath(path, REPO)
+                                   if path.startswith(REPO) else path,
+                                   sha256=hashlib.sha256(open(path, "rb").read()).hexdigest(),
+                                   crop=box, delivered=list(size))
+            slots[what] = i
 
-    print("\n== deck (%d frames, shuffled, unlabelled) — cwd %s" % (len(deck), work))
-    for i in sorted(mapping, key=int):
-        print("   %s.png  %-9s %s" % (i, mapping[i]["what"], mapping[i]["source"]))
-    print("   plant: %s — %s" % (plant["file"], plant["verbatim"]))
+        print("\n== seat %d of %d — deck (%d frames, shuffled, unlabelled) — cwd %s"
+              % (seat_idx + 1, a.seats, len(deck), work))
+        for i in sorted(mapping, key=int):
+            print("   %s.png  %-9s %s" % (i, mapping[i]["what"], mapping[i]["source"]))
+        print("   plant: %s — %s" % (seat_plant["file"], seat_plant["verbatim"]))
 
-    prompt = open(os.path.join(HERE, "seat_prompt.txt")).read().replace(
-        "the numbered PNG files in this directory",
-        "the files %s in this directory" % ", ".join("%d.png" % i
-                                                     for i in range(1, len(deck) + 1)))
+        prompt = open(os.path.join(HERE, "seat_prompt.txt")).read().replace(
+            "the numbered PNG files in this directory",
+            "the files %s in this directory" % ", ".join("%d.png" % i
+                                                         for i in range(1, len(deck) + 1)))
+        print("   running (fresh claude -p, no repo access)...")
+        text = run_seat(work, prompt, a.timeout)
+        tp = os.path.join(HISTORY, "r%03d-%s-transcript%s.txt"
+                          % (rnd, lane.replace("/", "_"),
+                             "" if a.seats == 1 else "-seat%d" % (seat_idx + 1)))
+        os.makedirs(HISTORY, exist_ok=True)
+        with open(tp, "w") as f:
+            f.write(text)
+        return dict(seat=seat_idx + 1, work_dir=work, slots=slots, mapping=mapping,
+                    plant=seat_plant, text=text, transcript=os.path.relpath(tp, REPO))
 
-    print("\n== seat running (fresh claude -p, no repo access)...")
-    text = run_seat(work, prompt, a.timeout)
-    tpath = os.path.join(HISTORY, "r%03d-%s-transcript.txt" % (rnd, lane.replace("/", "_")))
-    os.makedirs(HISTORY, exist_ok=True)
-    with open(tpath, "w") as f:
-        f.write(text)
+    crop = cfg.get("crop")          # the deck's crop, used again for the round's perceptual hash
+    seats = [seat_round(i) for i in range(a.seats)]
+    # The first seat's deck is the one the verdict's top-level fields describe, so a single-seat
+    # round records exactly what it always did.
+    work, mapping = seats[0]["work_dir"], seats[0]["mapping"]
+    plant = seats[0]["plant"]
+    plant_slot, build_slot = seats[0]["slots"]["plant"], seats[0]["slots"]["build"]
+    bar_slot, approved_slot = seats[0]["slots"]["bar"], seats[0]["slots"]["approved"]
+    deck = [x for x in (1, 2, 3, 4) if str(x) in mapping]
+    text, tpath = seats[0]["text"], os.path.join(REPO, seats[0]["transcript"])
+
+    # ── EVERY SEAT PARSED AND SCORED SEPARATELY, THEN THE VOTE ────────────────────────────────
+    for sd in seats:
+        try:
+            sd["r"] = parse(sd["text"], len(sd["mapping"]))
+        except ValueError as e:
+            print("\n%s" % e)
+            print("transcript: %s" % sd["transcript"])
+            return 4
+        rr, sl = sd["r"], sd["slots"]
+        sd["rank"] = rr["_rank"].index(sl["build"]) + 1 if sl["build"] in rr["_rank"] else None
+        sd["approved_rank"] = (rr["_rank"].index(sl["approved"]) + 1
+                               if sl["approved"] and sl["approved"] in rr["_rank"] else None)
+        sd["above_approved"] = (sd["approved_rank"] is not None and sd["rank"] is not None
+                                and sd["rank"] < sd["approved_rank"])
+        sd["build_flagged"] = sl["build"] in rr["_flagged"]
+        sd["shipped"] = sl["build"] in rr["_ship"]
+        sd["caught"], sd["how"] = plant_caught(rr, sl["plant"], sl["build"])
+
+    n_above, n_flagged, n_shipped, all_caught, majority_above = panel_tally(seats)
+
+    if len(seats) > 1:
+        print("\n== the panel (%d independent seats)" % len(seats))
+        print("   %-5s %-10s %-12s %-9s %-8s %s"
+              % ("seat", "build rank", "reference", "above ref", "flagged", "plant"))
+        for sd in seats:
+            print("   %-5d %-10s %-12s %-9s %-8s %s"
+                  % (sd["seat"], sd["rank"], sd["approved_rank"],
+                     "YES" if sd["above_approved"] else "no",
+                     "yes" if sd["build_flagged"] else "no",
+                     "CAUGHT" if sd["caught"] else "MISSED"))
+        print("   ---> above the reference in %d of %d seats; %s"
+              % (n_above, len(seats),
+                 "MAJORITY" if majority_above else "NO MAJORITY"))
+        # THE COMPARATOR'S OWN ERROR BAR, on this round's bytes. A binding term without one is a
+        # single sample wearing a threshold (LAW, Rafe 2026-09-08).
+        print("   rank's noise floor on THESE bytes: %d/%d seats disagree with the majority"
+              % (min(n_above, len(seats) - n_above), len(seats)))
+        if len(set(id(sd["plant"]) for sd in seats)) == 1:
+            print("   ⚠ every seat drew the SAME plant (the axis-matched set has one member),")
+            print("     so the plant catches are CORRELATED — the panel multiplies rank samples,")
+            print("     not the plant's evidence.")
 
     try:
         r = parse(text, len(deck))
@@ -1119,7 +1233,7 @@ def main():
         print("transcript: %s" % os.path.relpath(tpath, REPO))
         return 4
 
-    caught, how = plant_caught(r, plant_slot, build_slot)
+    caught, how = seats[0]["caught"], seats[0]["how"]
     flips = r["_flip_blocks"].get(build_slot, [])
 
     # ── WHERE THE BUILD PLACED, which is this round's contribution to the progress signal ──────
@@ -1175,18 +1289,20 @@ def main():
     # "No unrouted flags" is evaluated HERE as "the seat did not flag the build". A flagged build
     # is a FAIL at round time; only the human gate can route a flag, and it does so by amending
     # the verdict with a quoted ruling per item — which `critic_gate.py` then re-validates.
+    # ── THE VOTE, not a sample — RULED (Rafe, 2026-09-08) ─────────────────────────────────────
+    #
+    # "majority of three independent blind seats rank the build above approved_capture, no
+    #  unrouted flags from any". Both halves are asymmetric ON PURPOSE and the asymmetry is the
+    #  ruling: rank is the NOISY term so it takes a majority, while a flag is a FINDING and one
+    #  seat finding it is enough. A flag outvoted 2-1 is still a defect two seats missed.
+    #
+    # EVERY SEAT MUST CATCH ITS PLANT. §4 voids a round on one missed plant; a panel does not
+    # dilute that into an average, because a soft seat's ballot is exactly what §4 refuses to
+    # read. With one seat this is the rule that always applied; with three it is strictly harder.
     approved_in_deck = app_pos is not None
-    above_approved = approved_in_deck and pos is not None and pos < app_pos
-    unflagged = build_slot not in r["_flagged"]
+    unflagged_all = n_flagged == 0
 
-    if not caught:
-        verdict = "VOID"
-    elif (build_slot in r["_ship"] and unflagged and beats_approved and near_bar):
-        verdict = "PASS"
-    elif above_approved and unflagged:
-        verdict = "PASS-INSTALL"
-    else:
-        verdict = "FAIL"
+    verdict = panel_verdict(seats, approved_in_deck, beats_approved, near_bar)
 
     print("\n== the seat said")
     print("   RANK    %s" % (r["RANK"] or "(unparsed)")[:120])
@@ -1312,6 +1428,25 @@ def main():
         # walking history/. A counter a restart can clear is a suggestion with a number in it —
         # and so is one that lives only in a directory listing. Here it is in the diff, it is in
         # the verdict the PR carries, and it is in the stall report.
+        panel=dict(
+            seats=len(seats),
+            ruling=("majority of three independent blind seats rank the build above "
+                    "approved_capture, no unrouted flags from any; each seat its own "
+                    "axis-matched plant. — Rafe, 2026-09-08"),
+            law=("a gate's binding term must have a measured noise floor and must never be a "
+                 "single sample. — Rafe, 2026-09-08"),
+            above_reference=n_above, flagged_by=n_flagged, shipped_by=n_shipped,
+            majority_above=majority_above, all_caught=all_caught,
+            dissent=min(n_above, len(seats) - n_above),
+            plants_distinct=len({sd["plant"]["file"] for sd in seats}),
+            per_seat=[dict(seat=sd["seat"], rank=sd["rank"],
+                           reference_rank=sd["approved_rank"],
+                           above_reference=sd["above_approved"],
+                           build_flagged=sd["build_flagged"], shipped=sd["shipped"],
+                           plant=sd["plant"]["file"], caught=sd["caught"],
+                           transcript=sd["transcript"], work_dir=sd["work_dir"])
+                      for sd in seats],
+        ),
         progress=dict(
             rank_position=pos, deck_size=n, rank_score=score,
             bar_position=bar_pos, approved_position=app_pos,

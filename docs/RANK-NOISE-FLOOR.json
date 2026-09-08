@@ -1,0 +1,100 @@
+{
+ "schema": "frame-critic/noise-floor/1",
+ "_what": [
+  "RANK'S ERROR BAR — the same bytes through five independent blind seats.",
+  "",
+  "RULED (Rafe, 2026-09-08): 'Measure the comparator's noise floor: same bytes through five",
+  "seats, record the flip rate, publish it as rank's error bar.' LAW: a gate's binding term",
+  "must have a measured noise floor and must never be a single sample (bible §13.13).",
+  "",
+  "THIS IS THE NUMBER THAT BELONGS BESIDE THE THRESHOLD wherever the threshold is quoted. A",
+  "bar without it is a bar nobody can size."
+ ],
+ "ruling": "PASS-INSTALL rests on a single rank sample and flipped on identical bytes — impeachment upheld. ... Measure the comparator's noise floor: same bytes through five seats, record the flip rate, publish it as rank's error bar. — Rafe, 2026-09-08",
+ "build_frame": "tools/tier1_floors/evidence/combined.png",
+ "build_frame_sha256": "839fb12f6ff445a8f8ccf75dd32efe73324d09773a38d6edf3d7e3476aba8f2f",
+ "identical_bytes": true,
+ "deck_size": 4,
+ "seats": 5,
+ "per_seat": [
+  {
+   "seat": 1,
+   "rank": 3,
+   "reference_rank": 1,
+   "above_reference": false,
+   "build_flagged": true,
+   "caught": true
+  },
+  {
+   "seat": 2,
+   "rank": 1,
+   "reference_rank": 2,
+   "above_reference": true,
+   "build_flagged": true,
+   "caught": true
+  },
+  {
+   "seat": 3,
+   "rank": 3,
+   "reference_rank": 1,
+   "above_reference": false,
+   "build_flagged": true,
+   "caught": true
+  },
+  {
+   "seat": 4,
+   "rank": 1,
+   "reference_rank": 2,
+   "above_reference": true,
+   "build_flagged": false,
+   "caught": true
+  },
+  {
+   "seat": 5,
+   "rank": 1,
+   "reference_rank": 2,
+   "above_reference": true,
+   "build_flagged": false,
+   "caught": true
+  }
+ ],
+ "result": {
+  "above_reference": 3,
+  "below_reference": 2,
+  "majority": "above",
+  "dissent": 2,
+  "flip_rate": 0.4,
+  "build_flagged_by": 3,
+  "ranks_observed": [
+   1,
+   1,
+   1,
+   3,
+   3
+  ]
+ },
+ "reading": [
+  "TWO OF FIVE SEATS DISAGREE WITH THE MAJORITY — a 40% flip rate on unchanged bytes.",
+  "The build placed 1st three times and 3rd twice in a four-frame deck, with the seeded",
+  "reference taking the other position each time. This is the comparator PASS-INSTALL binds",
+  "on, and it is why the ruling put a three-seat majority in front of it.",
+  "",
+  "⚠ AND THE SECOND COLUMN MATTERS MORE FOR THIS BUILD. Three of five seats FLAGGED the",
+  "build. 'No unrouted flags from any' is not a majority test, so on this evidence the",
+  "A+B+C build does not clear the vote on flags even when it clears it on rank.",
+  "",
+  "⚠ CORRELATED PLANTS. The axis-matched morgue set for combined/tonal has exactly one",
+  "member, so all five seats drew the same plant. Every seat caught it, but those catches",
+  "are not five independent observations.",
+  "",
+  "⚠ THE PLANT OUTRANKED THE BUILD in at least one seat's deck. Recorded, never scored (§4):",
+  "it is a statement about the build, not about the judge."
+ ],
+ "transcripts": [
+  ".claude/skills/frame-critic/history/r001-rank-noise-floor-transcript-seat1.txt",
+  ".claude/skills/frame-critic/history/r001-rank-noise-floor-transcript-seat2.txt",
+  ".claude/skills/frame-critic/history/r001-rank-noise-floor-transcript-seat3.txt",
+  ".claude/skills/frame-critic/history/r001-rank-noise-floor-transcript-seat4.txt",
+  ".claude/skills/frame-critic/history/r001-rank-noise-floor-transcript-seat5.txt"
+ ]
+}
