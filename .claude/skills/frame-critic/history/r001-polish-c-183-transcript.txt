@@ -1,0 +1,57 @@
+Read all four at full size and at 2–6× on the junctions. Frames 1, 3 and 4 are the same room; 1 and 4 are pixel-identical outside x 269–534 / y 387–622, so 4 is 1 with a different lighting pass. Frame 2 is unrelated work.
+
+**RANK:** 3 > 1 > 4 > 2
+
+**BEST:** 3
+
+**BEST_WHY:** The wall-to-floor junction along the room's top wall (x 150–750, y ≈389–455) is stacked correctly and is the only piece of real construction anywhere in the set. Reading down a column at x≈260: mottled top surface from y 389 to y 422, then a hard 1px dark line at y≈423, then a course of cut blocks with legible vertical joints down to y≈455, then the floor. So the wall has a top, a face and a base, in that order, and you can tell where it stops. The repair timber and its driven pins sit *on that face* (the vertical beam at x≈297, y 423–455 with three short cross-pins) — where a pin would actually be driven — rather than floating in open masonry. Frames 1 and 4 invert this: blocks from y 393 to y 422, then soft brown cloud from y 422 down to the floor line, so the wall dissolves into the floor with no base edge at all.
+
+**WORST:** 2
+
+**WORST_WHY:** The frame contains at least two projections at once. The floor is straight-down orthographic — the grey slabs at y 217–267 are plain squares with no perspective, and the water at x 248–343 is a flat plane. But the two barrels at (113–143, 192–217) and (162–190, 192–217) are drawn from a raised 3/4 view: you see the full elliptical lid *and* the entire cylindrical side wall below it, about 25px of barrel body. The crates at x 63–97, y 2–90 are the same error — front-facing box faces with visible lid panels. Second: the dirt/water boundary is a dead-straight one-pixel vertical cut at x=248 running the full height y 0–192. No bank, no wet edge, no transition tile, no value shift on either side — two materials stickered together. Third, the grey floor band at y 217–267 is a uniform flat fill with a 1px grid and three scattered specks; it is not finished, it is a placeholder. Fourth, there is no light modelling of any kind in the frame — every surface is at full ambient, so nothing has a form.
+
+**FLAGGED:** 4, 2, 1, 3
+
+- **4** — long parallel bright streaks laid over the floor from roughly (300,470) to (430,620) and (500,490) to (560,520). They are all at the same ~40° angle and they do not diverge, so they cannot be rays from the point light the figure is carrying; they cross tile joints without breaking. Alongside them, individual floor tiles are lit as whole units with hard tile-edge boundaries — e.g. the tile at (355–390, 460–490) is markedly brighter than its immediate neighbour with a straight vertical seam between them. Reads as a light layer painted on afterwards.
+- **2** — the barrel/crate projection mismatch and the razor water edge, above. Both are a-glance obvious.
+- **1 and 3** — the wall top surfaces, which are the largest single element in a top-down frame, carry no stonework at all. The corridor run at x 570–750, y 60–390 and the block at x 130–440, y 30–135 are soft brown blobs of varying size with a few thin dark scribbles over them. Zoomed or not, that region reads as blurred noise, not as the top of a masonry wall seen from above.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The wall band at x 150–750, y 393–455 runs cut blocks on top and formless brown mush at the bottom, so the wall has no base. Invert it: mottled top surface above, then a hard dark line at the wall's near edge, then one course of cut face-blocks meeting the floor — the stack used in 3 at y 423.
+- The wall top surfaces (x 570–750, y 60–390; x 130–440, y 30–135) are a soft noise field with no joints. Cut them into blocks: give each stone a defined rectangular footprint with a joint line, and vary the joint depth and block width along a single run so they read as quarried and laid rather than as a texture.
+- The dark curved lines crossing the floor — the one from (230,490) through (330,600) to (400,780), and the one from (560,500) to (750,680) — hold the same near-black value from the brightest part of the floor to the darkest. Nothing that dark survives at that brightness. Multiply them into the lighting so a crack in a lit stone is a mid-value line and only goes black out in the falloff.
+- Those same cracks are a constant width for their entire length and pass over stone faces and mortar joints identically. Break them at the joints and vary the width; a crack that runs through a joint without changing is drawn on, not in.
+- The object at x 280–380, y 645–707 is a soft brown square with two darker rectangles inside it and no rim, no top/side separation and no contact shadow. Give it a defined top face, a value step at its near edge, and a shadow on the floor at its base, or remove it.
+- The black region at x 0–125, y 490–655 is a hard-edged axis-aligned rectangle butted against graded floor, with no wall on its right edge at x=125 to justify the cut. Either put an occluder there or let that edge fall off on the same gradient as everything else.
+- The figure is hard-edged pixel art with 1px outlines standing on a soft airbrushed background. Either resolve the environment to the sprite's edge hardness or the mismatch will read as a sprite pasted onto a painting in every frame.
+
+**FLIP 3:**
+- Same as 1 for the wall top surfaces (x 570–750, y 60–390; x 130–440, y 30–135): cut them into blocks with varied joints instead of leaving noise blobs.
+- Same as 1 for the floor cracks: light them, and break them at the joints.
+- The value range across the lit room is compressed — the floor at (200,500), well inside the light, and the wall top at (620,300), well outside it, sit close enough in brightness that the light does not read as a light. Push the lit core up and the mid-falloff down so the carried lamp is legible as the only source.
+- The object at x 285–385, y 640–710 is the same rimless brown blob as in 1; give it a top face and a contact shadow or cut it.
+- Same as 1 for the sprite/background edge-hardness mismatch.
+
+**FLIP 4:**
+- Delete the parallel streak layer over the floor — the strokes running (300,470)→(430,620) and (500,490)→(560,520). If the light needs to throw rays they must radiate from the figure at (405,485) and diverge; parallel stripes are the single most obvious tell in the set.
+- The lighting is being applied per-tile in places: (355–390, 460–490) is a uniformly bright square with a hard seam against its neighbour. Sample the light per-pixel so the gradient crosses tile boundaries without a step.
+- The bright core around the figure blows out to near-white and the floor joints inside x 330–500, y 450–540 disappear entirely. Cap the highlight below the point where the joints are lost — the stone should still read as cut at the brightest part of the frame.
+- Then every item in FLIP 1, which applies unchanged: the inverted wall stack at y 393–455, the noise wall tops, the unlit constant-width cracks, the rimless object at (280–380, 645–707), the hard black rectangle at x 0–125 / y 490–655, and the sprite/background edge mismatch.
+
+**FLIP 2:**
+- Redraw the barrels at (113–143, 192–217) and (162–190, 192–217) in straight top-down: an elliptical-to-circular lid with hoop and stave lines, and at most a 2–3px sliver of side, not a 25px cylinder wall.
+- Redraw the crates at x 63–97, y 2–90 the same way — plank tops and corner bracing seen from above, not front-facing box faces.
+- The water boundary at x=248, y 0–192 is a straight 1px cut. Add a bank: a darker wet-dirt band on the dirt side, an irregular edge that breaks the vertical, and a value shift in the water within a few pixels of the shore.
+- The water fill itself is one flat teal with a faint uniform cell pattern across the whole 95×192 area. Vary the depth value — darker away from the bank — and stop the cell pattern from tiling identically.
+- The grey floor at y 217–267 is a flat fill with a 1px grid. Give the slabs individual value variation, chipped corners, and joint depth that varies along a run.
+- The green moss blobs are the same 3–4 stamps repeated at (25–55, 165–200), (60–100, 550–640 in the water) and (355–380, 145–175). Redraw them as distinct shapes or reduce the count.
+- Nothing in the frame is lit. Introduce a source and let it fall off — as it stands every surface is at full ambient and no object has form or a contact shadow, including the barrels, which sit on the dirt with nothing under them.
+- The door slab at x 26–35, y 125–167 is drawn in elevation inside a top-down wall, fades orange-to-brown for no stated reason, and overhangs the wall's bottom edge onto the dirt with no frame or shadow. Resolve it to the same projection as the floor.
+
+Nothing here clears the bar. 3 is the one worth building on, and only because the wall stack at y 423 shows someone understood what a top-down wall edge has to do — that reading needs to be carried into the wall *tops*, which is where the frame actually spends most of its pixels.
+
+*Model: Opus 5 (1M context).*

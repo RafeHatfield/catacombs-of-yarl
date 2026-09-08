@@ -31,6 +31,9 @@ public sealed class EntitySpriteManager
     private readonly SpriteMapping? _spriteMapping;
     private readonly IMapRenderer _renderer;
     private readonly Dictionary<int, Sprite2D> _sprites = new();
+
+    /// <summary>§183's hero light response. See the shader's own header for the ruling.</summary>
+    private const string HeroShaderPath = "res://src/Presentation/assets/shaders/hero_light.gdshader";
     // Cached grid positions — avoids O(n) monster scan in UpdateVisibility each turn.
     private readonly Dictionary<int, (int X, int Y)> _positions = new();
 
@@ -63,7 +66,8 @@ public sealed class EntitySpriteManager
     {
         // Player entity has no SpeciesTag — use PlayerSprite from tileset config directly.
         // If no SpriteMapping (test-only constructor path), CreateSprite will skip with a log.
-        CreateSprite(state.Player, _spriteMapping?.PlayerSprite ?? FallbackSprite);
+        CreateSprite(state.Player, _spriteMapping?.PlayerSprite ?? FallbackSprite,
+                     isHero: true);
 
         foreach (var monster in state.Monsters)
         {
@@ -156,7 +160,7 @@ public sealed class EntitySpriteManager
         return _sprites.GetValueOrDefault(entityId);
     }
 
-    private void CreateSprite(Entity entity, string spriteBase)
+    private void CreateSprite(Entity entity, string spriteBase, bool isHero = false)
     {
         if (_spriteMapping == null)
         {
@@ -194,6 +198,31 @@ public sealed class EntitySpriteManager
             ZIndex = _renderer.GetEntitySortOrder(entity.X, entity.Y),
             TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
         };
+
+        // ── §183: THE HERO RECEIVES LESS OF THE LAMP'S TOP END ───────────────────────────────
+        //
+        // RULED by Rafe at the 2026-09-06 rig walk: *"warmest is never brightest"*. Measured on
+        // the combined frame at the ratified rig, the hero's cell read p95 242.7 and max 250.0
+        // against lit floor either side of him at 203.5 and 207.4 — he was the brightest thing in
+        // the picture, which is the inverse of the clause.
+        //
+        // THE PLAYER ONLY, and that is a decision rather than an oversight. §10 rules the player
+        // unit; nothing rules a monster's response, and giving every entity a hero law would be
+        // legislating for a population this walk never looked at. A monster that needs the same
+        // treatment can be given the same material, deliberately, at its own gate.
+        //
+        // It is a LIGHT RESPONSE and touches nothing else: no rig value moves (§6.2.1 keeps a
+        // character decision out of a region's lighting law), no albedo is repainted, and with
+        // the shoulder inactive the shader is the identity — the sprite is lit exactly as a
+        // sprite with no material at all. `hero_knee` above any reachable value is the null.
+        if (isHero)
+        {
+            var shader = ResourceLoader.Load<Shader>(HeroShaderPath);
+            if (shader != null)
+                sprite.Material = new ShaderMaterial { Shader = shader };
+            else
+                GD.PrintErr($"[EntitySpriteManager] hero light shader missing: {HeroShaderPath}");
+        }
 
         _parent.AddChild(sprite);
         _sprites[entity.Id] = sprite;
