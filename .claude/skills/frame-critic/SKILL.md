@@ -225,6 +225,39 @@ reason, which is not a control at all.
 
 ---
 
+## 4b. The autonomy amendment — what stops the run, and what does not
+
+**RULED (Rafe, 2026-09-08).** LOOP-PROCESS §1.1.4 is amended and §1.1.5 added. There are now
+**three** reasons to return to a human mid-run:
+
+1. **a one-way door** — canvas, projection (§3), palette lock (§5.1), rig ratification (the
+   Ruling 56 family), or a **landing** at the surface gate;
+2. **the bible is silent or self-contradictory** on a question the round needs answered — a
+   genuine gap, quoted;
+3. **broken judge** (the plant missed twice) **or budget exhausted**.
+
+Everything else is the builder's, under the bible:
+
+| was escalated | now |
+|---|---|
+| a flip touching a ruled system | **ruled BY the clause**, by the builder, citation recorded. *"This touches §X"* is an answer |
+| build-id drift, pin staleness, plant axis mismatch, hash exclusions, guard scope | **engineering.** Fix under existing law, record, continue. Rafe never hears about a hash |
+| routing a flag | **the builder routes**, with a citation the gate verifies |
+| a PASS-INSTALL | **installs as `latest`.** Builds queue; Rafe walks whichever is current |
+| a single item's STOP | **write the report and continue to the next item** |
+
+**Why: escalation is free for the machine and expensive for the human.** A loop that is uncertain
+drifts toward asking unless that asymmetry is corrected, and the run of 2026-09-07/08 stopped for
+a hash exclusion, a value pin and a routing decision — none of which needed a human, each of which
+cost a night.
+
+⚠ **Nothing here weakens a guard.** The plants, the panel, the progress guards and the citation
+checks are what make an unattended run safe, and §4's rule is unchanged: no check's pass counts
+until it has demonstrated it can fail. `prove_gate.py` case **J1** is the amendment working — a
+flip citing a resolvable clause disposed with no human anywhere in it — and **J2/J3/J4/J5** are
+the guard that makes J1 safe: an unresolvable citation, a bare assertion, a missing destination,
+and a `CLOSED` attempted by citation all still refuse.
+
 ## 5. The loop guards — they measure progress, not rounds
 
 The line stops rather than grinding, **and it does not stop a lane that is working.** Every stop
@@ -424,7 +457,29 @@ the rest is a FAIL wearing a better name.
 | `CLOSED` | ruled not to be chased | a quoted ruling |
 | `PARKED` | first-time item, awaiting Rafe eye on the walk | a quoted ruling |
 
-**The builder can never route**, and the enforcement is not a signature — it is **visibility**.
+> ### ⚠ SUPERSEDED IN PART — THE BUILDER NOW ROUTES, BY VERIFIED CITATION
+>
+> **RULED (Rafe, 2026-09-08):** *"CC routes flags to issues with verified citations. Routing is no
+> longer a human-only act; the citation verifier is the laundering guard. Rafe audits the routing
+> table at the walk."*
+>
+> The sentence below — *the builder can never route* — was written when the only guard available
+> was a human recognising his own words. There is a machine guard now: `critic_gate` refuses a
+> `ROUTED` whose citation does not **resolve** — a clause must exist in the bible or the process
+> law, an issue must resolve in the record. **A routing nobody can look up is refused by the gate
+> rather than by someone's memory**, which is a stronger guarantee than the signature it replaces,
+> not a weaker one.
+>
+> `CLOSED` and `PARKED` are **unchanged and still need Rafe's words**, and the distinction is
+> exact: routing says *this belongs over there*, which is checkable; closing says *a human decided
+> not to chase this*, which is not.
+>
+> What survives from the paragraph below is its principle, and it still does the work: **the
+> enforcement is visibility.** Every disposition is printed at the gate and stamped onto the
+> handset, and the routing table is audited at the walk.
+
+**The builder can never route** *(superseded above for `ROUTED`; still true of `CLOSED` and
+`PARKED`)*, and the enforcement is not a signature — it is **visibility**.
 Every disposition is printed at the gate and stamped onto the handset, so a routing the builder
 invented is a quote Rafe does not recognise, on his own screen, while he is holding the build.
 

@@ -103,9 +103,26 @@ def _issue_cited(ref):
         return False
     import subprocess
     r = subprocess.run(["git", "-C", REPO, "grep", "-rl", "--", "#" + num,
-                        "docs/", ".claude/skills/frame-critic/history/"],
+                        "docs/", ".claude/skills/frame-critic/history/",
+                        "RUN-REPORT.md", "ROUTING-TABLE.json"],
                        capture_output=True, text=True)
     return bool(r.stdout.strip())
+
+
+def _bad_citation(i, cite):
+    """One citation, checked. Shared by ROUTED and ROUTED-ALREADY so the two cannot drift apart."""
+    if cite.startswith("§") or cite.startswith("S"):
+        if not _clause_exists(cite):
+            return ["disposition %d: cited clause %s does not resolve in the bible or the "
+                    "process law" % (i, cite)]
+    elif cite.startswith("#"):
+        if not _issue_cited(cite):
+            return ["disposition %d: cited issue %s appears nowhere in the repository's record"
+                    % (i, cite)]
+    else:
+        return ["disposition %d: citation %r is neither a clause (§x.y) nor an issue (#nnn)"
+                % (i, cite)]
+    return []
 
 
 def check_dispositions(disp, flips):
@@ -120,28 +137,39 @@ def check_dispositions(disp, flips):
             bad.append("disposition %d: state %r is not one of %s"
                        % (i, state, ", ".join(FLAG_STATES)))
             continue
-        if state in ("ROUTED", "CLOSED", "PARKED"):
+        if state == "ROUTED":
+            # ── THE BUILDER ROUTES, BY VERIFIED CITATION — RULED (Rafe, 2026-09-08) ───────────
+            #
+            #     "CC routes flags to issues with verified citations. Routing is no longer a
+            #      human-only act; the citation verifier is the laundering guard. Rafe audits the
+            #      routing table at the walk."
+            #
+            # What replaces the human signature is not trust, it is RESOLVABILITY: a routing whose
+            # citation cannot be looked up is refused here, by machine, rather than by someone
+            # remembering. A quoted Rafe ruling still authorises a routing on its own — his word
+            # needs no citation — so both forms are lawful and one of them must be present.
+            if not (d.get("lane") or "").strip():
+                bad.append("disposition %d: ROUTED with no destination lane" % i)
+            cite = (d.get("cites") or "").strip()
+            if not cite and not (d.get("ruling") or "").strip():
+                bad.append("disposition %d: ROUTED with neither a verified citation nor a quoted "
+                           "ruling — the citation verifier is what replaced the signature" % i)
+            elif cite:
+                bad += _bad_citation(i, cite)
+        elif state in ("CLOSED", "PARKED"):
+            # Unchanged, and deliberately: CLOSED says "ruled not to be chased" and PARKED says
+            # "awaiting Rafe's eye". Both are statements about what a HUMAN decided, so both still
+            # need his words. Routing says "this belongs over there", which is checkable.
             if not (d.get("ruling") or "").strip():
                 bad.append("disposition %d (%s): no quoted ruling — only Rafe creates these"
                            % (i, state))
-            if state == "ROUTED" and not (d.get("lane") or "").strip():
-                bad.append("disposition %d: ROUTED with no destination lane" % i)
         elif state == "ROUTED-ALREADY":
             cite = (d.get("cites") or "").strip()
             if not cite:
                 bad.append("disposition %d: ROUTED-ALREADY must CITE the issue or clause it "
                            "matches" % i)
-            elif cite.startswith("§") or cite.startswith("S"):
-                if not _clause_exists(cite):
-                    bad.append("disposition %d: cited clause %s does not resolve in the bible or "
-                               "the process law" % (i, cite))
-            elif cite.startswith("#"):
-                if not _issue_cited(cite):
-                    bad.append("disposition %d: cited issue %s appears nowhere in the "
-                               "repository's record" % (i, cite))
             else:
-                bad.append("disposition %d: citation %r is neither a clause (§x.y) nor an issue "
-                           "(#nnn)" % (i, cite))
+                bad += _bad_citation(i, cite)
         elif state == "MEASURED-FALSE":
             if not (d.get("measured") or "").strip():
                 bad.append("disposition %d: MEASURED-FALSE with no measurement — the whole state "

@@ -239,6 +239,45 @@ def main():
         case("H8 a seat flagged the build and nothing is disposed -> refuse",
              1, rc, out, "not a majority test")
 
+        # ---- J. THE AUTONOMY AMENDMENT — a cited flip disposes WITHOUT a human return ---------
+        #
+        # RULED (Rafe, 2026-09-08): "CC routes flags to issues with verified citations. Routing is
+        # no longer a human-only act; the citation verifier is the laundering guard." The case the
+        # amendment is FOR is J1: a flip that cites a clause which resolves is disposed by the
+        # builder, the gate opens, and no human is involved anywhere in it. J2 and J3 are the
+        # guard that makes J1 safe — an unresolvable citation and a bare assertion both refuse.
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED", "item": "joints fade at full light", "lane": "#194",
+             "cites": "§13.4.1"}]})
+        rc, out = run(["python3", GATE])
+        case("J1 a flip ROUTED by the builder on a resolvable clause -> allow, no human",
+             0, rc, out, "GATE OPEN")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED", "item": "x", "lane": "#194", "cites": "§99.9"}]})
+        rc, out = run(["python3", GATE])
+        case("J2 builder ROUTED citing a clause that does NOT resolve -> refuse",
+             1, rc, out, "does not resolve")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED", "item": "x", "lane": "#194"}]})
+        rc, out = run(["python3", GATE])
+        case("J3 builder ROUTED with neither citation nor ruling -> refuse",
+             1, rc, out, "neither a verified citation nor a quoted ruling")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED", "item": "x", "cites": "§13.4.1"}]})
+        rc, out = run(["python3", GATE])
+        case("J4 ROUTED with no destination lane -> refuse", 1, rc, out, "no destination lane")
+
+        # CLOSED and PARKED still need Rafe's words — they are statements about what a human
+        # decided, where routing is a statement about where something belongs.
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "CLOSED", "item": "x", "cites": "§13.4.1"}]})
+        rc, out = run(["python3", GATE])
+        case("J5 CLOSED by citation alone -> refuse (only Rafe closes)",
+             1, rc, out, "only Rafe creates these")
+
         # Leave a clean passing verdict behind: the cases below assume one, and a fixture that
         # silently changes the state its successors read is how a proof stops proving.
         synth("PASS", bid)
