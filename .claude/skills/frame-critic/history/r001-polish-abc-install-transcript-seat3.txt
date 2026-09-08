@@ -1,0 +1,59 @@
+All four read. Findings below.
+
+---
+
+**RANK:** 4 > 1 > 2 > 3
+
+**BEST:** 4
+
+**BEST_WHY:** The lamp actually resolves as a lamp. Measured on the floor within 70px of the figure, 4 carries the highest mean luminance (170) *and* the highest local variance (σ 56) of the three — it lifts the floor without flattening it, so at x≈300–450, y≈460–560 you can still count individual slab joints inside the hot core. The falloff steps down cleanly through three readable plateaus (r0–40 mean 193 → r80–120 mean 128 → r160–200 mean 70) with no posterised banding and no clipping on the floor (the only pixels above 235 are the sprite's shield). At the wall band's lower edge, x≈200–500, y≈438, the lit floor and the wall's top surface separate by a clear value step rather than bleeding into each other. That is the one thing in this deck that is genuinely well-judged.
+
+**WORST:** 3
+
+**WORST_WHY:** The two barrels at x≈114–142 and x≈163–191, y≈193–215 are sliced off flat at exactly y=215, the line where the brown dirt rectangle meets the grey floor. No base rim, no bottom ellipse, no shadow — the staves just stop mid-object, on both barrels, at the same scanline. They are also pixel-identical duplicates of each other: same rim notch, same bung, same three staves. Behind them, the terrain is two paint-bucket rectangles — the dirt field's left edge (x=56) and bottom edge (y=215) are razor-straight axis-aligned seams with zero transition tile, and the teal water at x≈248–344, y≈0–191 is the same trick again with no bank and no depth. The chest column at x≈63–81 is the upper pair copy-pasted 40px down, unmodified, with a visible rectangular sprite matte darkening the dirt beneath it at y≈88–93. And the frame is uniformly ambient-lit end to end — the figure at the top casts neither light nor shadow.
+
+**FLAGGED:** 1, 2, 3, 4
+
+For 1, 2 and 4 the glance-level fault is the same and it is shared base art: the walls are a soft, out-of-focus airbrushed bitmap sitting directly against hard-edged pixel floor tiles. Look at the top-left field, x≈120–440, y≈0–130, and the field left of the corridor at x≈440–500, y≈195–420 — smeared brown cloud, blurry darker blobs, no stone division, no joint, no pin, no timber, with 1px black hairline scribbles laid over the top that have no width variation and no light side. Two incompatible resolutions of information in one frame. That is the "a filter was run over it" tell.
+
+For 3, the barrels and the rectangle terrain, as above.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The wall fields at x≈120–440, y≈0–130 and x≈440–500, y≈195–420 are a blurred bitmap; redraw them at the floor's pixel density, with cut block divisions and joints, so wall and floor share one resolution.
+- The corridor at x≈505–565 runs cool grey-green (a distinctly different colour temperature from the warm lamp) from y≈200 to y≈450 with no motivated source. Either put a visible source at the far end or regrade it into the same warm falloff as everything else.
+- The corridor's left and right edges at x=505 and x=565 are razor-straight 1px value seams for their full height. Give the wall a top surface of measurable thickness and cast a shadow down into the trench so the corridor reads as cut, not as two colour fields butted together.
+- The same 3–4 stroke diagonal scuff decal repeats four times down the right of the lit floor at roughly (552,498), (570,526), (572,570), (580,592) — same angle, same stroke count, unrotated. Vary or reduce to one.
+- The wide slab right of the figure's feet, x≈495–560, y≈520–550, is a completely blank pale rectangle bounded by a hard 1px line, while its neighbours carry heavy noise. Bring its interior into the same texture budget as the slabs around it.
+- The lamp barely reads: r0–40 mean 156 against r80–120 mean 119. Steepen the near falloff so the floor under the figure separates from the mid-field.
+- The bottom-right floor at x≈550–700, y≈740–830 sits at nearly the same value as floor half the distance from the lamp. Pull it down so distance and darkness stay monotonic.
+
+**FLIP 2:**
+- All seven items in FLIP 1 apply — same base art, same corridor, same repeated decal, same blank slab.
+- On top of that, this grade is the flattest of the three: at higher core brightness (mean 155) it has the *lowest* local variance (σ 45), so the slab joints around x≈300–450, y≈460–560 wash out to near-invisible. Restore the tonal separation between slab face and joint inside the lit pool.
+
+**FLIP 3:**
+- Both barrels at x≈114–142 and x≈163–191 are cut off flat at y=215 by the terrain seam. Draw the full object, base rim included, over the grey floor, and give each a contact shadow.
+- The two barrels are the identical sprite; the two chests at x≈63–81 are the identical sprite. Vary silhouette, damage, or rotation, or cut one of each.
+- The chest sprite leaves a rectangular matte halo on the dirt at x≈63–81, y≈88–93 — a darker, straight-edged band exactly sprite-width. Clean the alpha edge.
+- The dirt field's boundaries at x=56, y=215 and the water's at x=248/344, y=191 are perfect rectangles. Build corner and edge transition tiles: broken lip, spill, rubble, so the boundary follows the tile grid instead of a fill selection.
+- The water is a flat teal fill with a faint hex pattern and stamped lily blobs. Add a bank, a depth ramp from edge to centre, and a value difference between shallow and deep.
+- The frame has no lighting model at all — uniform ambient corner to corner. Add the carried-light falloff the rest of the deck uses, centred on the figure.
+- The chests, barrels and the bottom brick wall at y≈265–288 are drawn in 3/4 elevation — you see their front faces — inside an otherwise top-down frame. Pick one projection and redraw whichever set loses.
+- The same 3-blob green algae decal appears unrotated at roughly (25,60), (28,207) and (367,157). Vary or thin it.
+- Unpainted map edge at x=0–5, y≈70–100 and y≈120–133: black and stray brown slivers bleeding at the frame boundary. Fill or extend the map past the camera.
+- The orange pole at x≈43–60, y≈125–170 is the only saturated chroma in the frame, has no shadow, and terminates by running off the bottom. Desaturate into the palette, ground it, and resolve its end.
+- One brick at x≈274–302, y≈272–282 is a visibly lighter grey than every other brick in that wall run. Correct the tile.
+
+**FLIP 4:**
+- All seven items in FLIP 1 apply unchanged — the base art defects are identical, and this grade's extra brightness makes two of them worse rather than better: the blurred wall at x≈440–500, y≈195–420 is now clearly legible as mush, and the blank slab at x≈495–560, y≈520–550 reads as an obvious empty rectangle in the brightest part of the frame.
+- The lighting is the only part of this frame doing its job. Fix the art underneath it and this one ships.
+
+---
+
+The deck is really two problems, not four. 3 is a different and much cruder object — free-asset-pack construction with a clipping bug in it. 1, 2 and 4 are one frame graded three ways: beyond ~200px from the figure they are numerically pixel-identical, so the only thing being compared there is the exposure of a local light blob. That means the ranking among them is not an art comparison at all — it's a lighting comparison over shared art whose walls are blurred bitmap. Grading 4 harder won't fix that; the wall surfaces need redrawing at the floor's resolution before any grade is worth choosing between.
+
+*Model: Claude Opus 5 (1M context).*

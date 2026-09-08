@@ -98,8 +98,8 @@
   }
  },
  "seat": {
-  "BEST_WHY": "The wall run at y\u2248425\u2013455 (x 200\u2013500, and continuing right of the corridor at x 570\u2013750) is the only place in the deck where structure is actually drawn rather than implied. The block course there has joints of unequal width \u2014 the gap at x\u2248310 is one pixel, the one at x\u2248345 is three \u2014 and the block faces catch light unevenly along a single run, so they read as cut and set by hand rather than stamped. The driven pins at x\u2248297 and x\u2248389 are contained within that course for their whole length, with the left one carrying two short cross-rungs; they sit on the stone, not in front of it. Below it a single hard 1px line separates wall from floor, and the soft mottled band is pushed *above* the course, into the unlit side, where softness costs nothing. That ordering \u2014 crisp edge at the boundary the eye lands on, mush behind it in shadow \u2014 is the one real craft decision in the set, and 3 and 4 have it exactly backwards. The hatch at x 300\u2013380, y 645\u2013710 is also axis-true: four square corners, edges parallel to the grid, a lighter top rim reading as a lid.",
-  "WORST_WHY": "Three things, any one of which stops it.\n\nThe two barrels at x 113\u2013145 and x 161\u2013193 are flat-cut by the stone floor edge at y=216. Their staves run down and terminate on a straight horizontal line \u2014 no bottom rim, no rolloff, no contact. The grey floor tile is drawn over them. Nothing occludes them; the terrain boundary just eats them.\n\nThe water is the literal rectangle x\u2208[248,343], y\u2208[0,191]. I checked every column and row: it is 96\u00d7192 px of one fill with a 1px cut on all four sides. Dirt at y=192, teal at y=191, nothing between \u2014 no bank, no edge tile, no wetting, no darkening at the margin. Its surface carries a faint hexagonal net whose pitch has no relationship to the 24px square grid everything else obeys.\n\nThe two crates at x 64\u201396, y 2\u201326 and y 50\u201374 are pixel-identical \u2014 mean channel difference 0.0, not \"similar,\" the same stamp twice, one directly above the other. Each is also two projections welded together: a lid seen straight down (bevel frame, diamond stud) sitting on a body seen in side elevation with vertical planks and a visible front face, in 24 pixels.\n\nUnderneath all that, the frame has no lighting model whatsoever \u2014 uniform ambient edge to edge, not one cast shadow under crate, barrel or figure.",
+  "BEST_WHY": "The wall run at y≈425–455 (x 200–500, and continuing right of the corridor at x 570–750) is the only place in the deck where structure is actually drawn rather than implied. The block course there has joints of unequal width — the gap at x≈310 is one pixel, the one at x≈345 is three — and the block faces catch light unevenly along a single run, so they read as cut and set by hand rather than stamped. The driven pins at x≈297 and x≈389 are contained within that course for their whole length, with the left one carrying two short cross-rungs; they sit on the stone, not in front of it. Below it a single hard 1px line separates wall from floor, and the soft mottled band is pushed *above* the course, into the unlit side, where softness costs nothing. That ordering — crisp edge at the boundary the eye lands on, mush behind it in shadow — is the one real craft decision in the set, and 3 and 4 have it exactly backwards. The hatch at x 300–380, y 645–710 is also axis-true: four square corners, edges parallel to the grid, a lighter top rim reading as a lid.",
+  "WORST_WHY": "Three things, any one of which stops it.\n\nThe two barrels at x 113–145 and x 161–193 are flat-cut by the stone floor edge at y=216. Their staves run down and terminate on a straight horizontal line — no bottom rim, no rolloff, no contact. The grey floor tile is drawn over them. Nothing occludes them; the terrain boundary just eats them.\n\nThe water is the literal rectangle x∈[248,343], y∈[0,191]. I checked every column and row: it is 96×192 px of one fill with a 1px cut on all four sides. Dirt at y=192, teal at y=191, nothing between — no bank, no edge tile, no wetting, no darkening at the margin. Its surface carries a faint hexagonal net whose pitch has no relationship to the 24px square grid everything else obeys.\n\nThe two crates at x 64–96, y 2–26 and y 50–74 are pixel-identical — mean channel difference 0.0, not \"similar,\" the same stamp twice, one directly above the other. Each is also two projections welded together: a lid seen straight down (bevel frame, diamond stud) sitting on a body seen in side elevation with vertical planks and a visible front face, in 24 pixels.\n\nUnderneath all that, the frame has no lighting model whatsoever — uniform ambient edge to edge, not one cast shadow under crate, barrel or figure.",
   "FLAGGED": "2, 4, 3",
   "RANK": "1 > 3 > 4 > 2",
   "BEST": "1",
@@ -107,18 +107,18 @@
   "SHIP": "NONE\n\n---"
  },
  "flip_list": [
-  "The slab at x 495\u2013560, y 520\u2013548 is a flat fill \u2014 one value, two stray specks, no grain \u2014 while every block touching it carries diagonal scratch hatch. Texture it to match its neighbours.",
+  "The slab at x 495–560, y 520–548 is a flat fill — one value, two stray specks, no grain — while every block touching it carries diagonal scratch hatch. Texture it to match its neighbours.",
   "That same slab's outline changes weight without cause: hard black for the leftmost ~15px of its top edge, then a pale 1px brown for the rest; its bottom edge is a broken dashed line of unequal darks; its left edge is black only in the lower half. Pick one joint weight and run it around the whole block.",
-  "The falloff is not centred on the lamp. At equal radius (150\u2013250px) the floor left of the figure averages luminance 47 and right of it averages 68. Concretely: open floor at x\u2248190, y\u2248490 \u2014 two tiles from the light \u2014 is near-black, while the same tileset at x\u2248630, y\u2248490 \u2014 seven tiles out \u2014 is pale cream, with nothing occluding either. Re-centre the attenuation on the figure or introduce the second emitter the image is already implying.",
-  "The wall's top surface at y 395\u2013420 is structureless airbrushed mottle \u2014 no courses, no joints, no block edges anywhere across x 200\u2013500. It is the widest single element in the frame and it is the only one with no drawn information in it. Give it coursing consistent with the band below it.",
+  "The falloff is not centred on the lamp. At equal radius (150–250px) the floor left of the figure averages luminance 47 and right of it averages 68. Concretely: open floor at x≈190, y≈490 — two tiles from the light — is near-black, while the same tileset at x≈630, y≈490 — seven tiles out — is pale cream, with nothing occluding either. Re-centre the attenuation on the figure or introduce the second emitter the image is already implying.",
+  "The wall's top surface at y 395–420 is structureless airbrushed mottle — no courses, no joints, no block edges anywhere across x 200–500. It is the widest single element in the frame and it is the only one with no drawn information in it. Give it coursing consistent with the band below it.",
   "The background is rendered in soft blurred noise with razor-hard 1px black rectangles laid on top (clearest at the wall/floor line y=455 and around the hatch). Two mark languages in one image. Either soften the joint lines to sit in the same material or sharpen the fills."
  ],
  "flip_list_withheld": null,
  "withheld_because": null,
  "panel": {
   "seats": 3,
-  "ruling": "majority of three independent blind seats rank the build above approved_capture, no unrouted flags from any; each seat its own axis-matched plant. \u2014 Rafe, 2026-09-08",
-  "law": "a gate's binding term must have a measured noise floor and must never be a single sample. \u2014 Rafe, 2026-09-08",
+  "ruling": "majority of three independent blind seats rank the build above approved_capture, no unrouted flags from any; each seat its own axis-matched plant. — Rafe, 2026-09-08",
+  "law": "a gate's binding term must have a measured noise floor and must never be a single sample. — Rafe, 2026-09-08",
   "above_reference": 2,
   "flagged_by": 2,
   "shipped_by": 0,
@@ -201,5 +201,22 @@
   }
  },
  "transcript": ".claude/skills/frame-critic/history/r001-polish-abc-install-transcript-seat1.txt",
- "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress \u2014 rank in the deck \u2014 never rounds elapsed."
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress — rank in the deck — never rounds elapsed.",
+ "_falloff_claim_disproved": {
+  "recorded_by": "builder, 2026-09-08, as an ADDED note — the seat's own answer is untouched",
+  "claim": "The falloff is not centred on the lamp ... open floor at x=190,y=490 — two tiles from the light — is near-black, while the same tileset at x=630,y=490 — seven tiles out — is pale cream, with nothing occluding either.",
+  "measured": {
+   "px(190,490)": "tile (3,11) — a WALL cell, luminance 27.7",
+   "px(630,490)": "tile (9,11) — a WALL cell, luminance 40.4",
+   "gap": "12.7 levels, not near-black against pale cream",
+   "floor_left_vs_right_by_chebyshev_distance": {
+    "1 tile": "left 178.0 vs right 159.4  (left BRIGHTER, delta -18.7)",
+    "2 tiles": "left 124.9 vs right 103.2  (left BRIGHTER, delta -21.7)",
+    "3 tiles": "left  59.9 vs right  68.6  (delta +8.7)",
+    "4 tiles": "left  28.9 vs right  36.6  (delta +7.6)"
+   }
+  },
+  "verdict_on_the_claim": "NOT SUPPORTED. Both named points are wall, and on floor the asymmetry near the lamp runs OPPOSITE to the claim. The mild right-side excess past three tiles is the room's geometry — more open floor east — not an off-centre emitter. The remedy asked for ('re-centre the attenuation, or introduce a second emitter') would have moved the ratified rig on a disproved premise.",
+  "law": "A seat reports PERCEPTS; its EXPLANATIONS are hypotheses and are measured before anything is built on them. Third instance this session."
+ }
 }
