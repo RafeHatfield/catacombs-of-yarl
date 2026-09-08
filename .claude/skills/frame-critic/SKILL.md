@@ -338,7 +338,7 @@ verdict with a quoted ruling and a named destination per item — and `critic_ga
 both conditions from the verdict's own recorded numbers rather than trusting the label, because a
 verdict that merely *says* PASS-INSTALL proves nothing.
 
-> ### ⚠ IMPEACHED ON THE DAY IT WAS RATIFIED, AND HELD FROZEN
+> ### ⚠ IMPEACHED ON THE DAY IT WAS RATIFIED — IMPEACHMENT UPHELD, RULE REFINED
 >
 > **The rank term is not stable across seats on an unchanged picture.** Lane `polish-c-183` judged
 > **the same frame twice** — build sha `839fb12f`, "picture moved mean 0.000 / worst 0":
@@ -365,6 +365,40 @@ verdict that merely *says* PASS-INSTALL proves nothing.
 >
 > **What it does not touch:** the plant, which caught on both rounds, and the two SHIP terms,
 > which are recorded either way.
+>
+> ### THE RULING ON THE IMPEACHMENT (Rafe, 2026-09-08) — UPHELD, AND REFINED
+>
+> > *"PASS-INSTALL rests on a single rank sample and flipped on identical bytes — impeachment
+> > upheld. Refine: majority of three independent blind seats rank the build above
+> > `approved_capture`, no unrouted flags from any; each seat its own axis-matched plant.
+> > Measure the comparator's noise floor: same bytes through five seats, record the flip rate,
+> > publish it as rank's error bar."*
+> >
+> > **LAW: a gate's binding term must have a measured noise floor and must never be a single
+> > sample.** (bible §13.13)
+>
+> **Run it with `--seats 3`.** Each seat gets its own working directory, its own shuffle and its
+> own plant draw; the directory is a hash of (lane, round, build, seat) for the same reason the
+> round number is hashed — a seat that can read *"seat 2 of 3"* off its own cwd can infer it is
+> one of a panel.
+>
+> **The two terms are asymmetric and the asymmetry is the ruling:**
+>
+> | term | why | rule |
+> |---|---|---|
+> | **rank** | the noisy one — it flipped on identical bytes | **majority** of seats |
+> | **a flag** | a *finding*; one seat seeing it is enough | **any** seat disqualifies |
+> | **the plant** | §4 refuses to read a soft seat's ballot at all | **every** seat must catch its own |
+>
+> More seats make the plant condition *harder*, never softer. `prove_panel.py` drives the real
+> `panel_verdict` through all of it — a lost majority, a lone flag against a unanimous rank, a
+> single missed plant, and a deck with no reference — because a new gating rule's pass counts for
+> nothing until it has been shown to refuse (§13.5).
+>
+> ⚠ **A panel is not independence for free.** Where the axis-matched morgue set has one member —
+> which is the case for `combined`/`tonal` today — every seat draws the *same* plant and their
+> catches are **correlated**. The panel multiplies the rank samples, not the plant's evidence.
+> The round prints this rather than assuming it away.
 
 **Proved before it was believed** (§13.5). `prove_gate.py` drives the real gate through the three
 ways the state can fail — no reference in the deck, build below the reference, an item left

@@ -1,0 +1,62 @@
+Read all four at native resolution and pulled crops and pixel measurements. Coordinates below are original-image pixels, origin top-left.
+
+**RANK:** 1 > 2 > 4 > 3
+
+**BEST:** 1
+
+**BEST_WHY:** The wall band at y 390–457 is lit from the correct side, and it's measurable, not vibes. Sampling a vertical column at x=420 (directly above the figure) from the wall's far edge down to the floor: 107, 60, 29, 112, 114, 116, 142, 152, then 193 on the floor. The wall's near face — the surface closest to the lamp — brightens continuously into the floor, and the wall's top face goes dark. Same at x=300: 46, 42, 83, 80, 96, 68. The wall reads as a solid mass with a lit face and a shadowed cap because the values were actually built that way.
+
+Second thing: the flagstone joints survive the bright core. At x 300–378, y 462–520 — the hottest floor in the frame at mean luminance 184 — the high-pass standard deviation is still 11.0, and the horizontal joint at y≈519 sits 52 levels below its local mean. The grid runs unbroken under the figure's feet. Light is revealing the stonework rather than dissolving it.
+
+Third: the figure separates. Sprite maximum 250 against a surrounding floor maximum of 208 — a 42-level gap. The character holds its silhouette against the pool it is casting.
+
+**WORST:** 3
+
+**WORST_WHY:** It is stamped, not made, and the stamping is provable.
+
+The lily pad at (300,60) and the lily pad at (300,156) are the *same 22×20 sprite, pixel for pixel* — mean absolute difference of exactly 0.0. Same column, no rotation, no variation, 96px apart, both in plain view. The two barrels at (110,188) and (158,188) are the same sprite offset by exactly 48px, differing by 2.5 luminance levels. The grey floor tile at (120,240) and the one at (192,240) differ by 1.47 — one tile repeated across the whole band with its speck placements intact.
+
+The material boundaries are untreated. The dirt meets the stone floor at a razor-straight vertical line at x≈115 running the full height of the frame — no transition tile, no dirt scattered onto stone, no edge treatment of any kind. The water is a rectangle: left edge dead straight at x≈248 from y=0 to y≈190, bottom edge dead straight at y≈190. No bank, no shoreline, no depth gradient. A sampled 85×160 patch of it contains **7 unique colours** with a red-channel standard deviation of 1.47. It is a fill with a tiling honeycomb pattern on it.
+
+Projection is inconsistent within the frame. The two chests at x 62–98, y 0–92 are drawn in three-quarter view — you see the lid top *and* a tall plank-divided front face with a lock. The barrels at y 188–218 show their round lids *and* their curved staves in side elevation. The floor and walls are pure straight-down. In a frame seen from directly above, no object can present a front face. Three projections in one 384×288 image.
+
+And there is no light model at all. Every surface is at the same value regardless of distance from anything, nothing casts, and the chests, barrels and figure have no contact shadow — they sit on the dirt like decals, because that is what they are. The whole image holds 854 unique colours against 7,625 in image 1.
+
+**FLAGGED:** 3, 4, 2
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The darkness is a flat multiply, not a light model. Relative local contrast (high-pass σ ÷ mean) is 0.087 in the lit floor at y 560–620, 0.100 in the mid floor at y 660–700, and 0.119 in the far dark floor at y 740–830 — it *rises* as the image darkens. Every joint, block edge and hatch scratch in the black is still fully described, just scaled down. Add a small ambient floor term and lift the black point so contrast compresses toward zero with distance instead of holding constant.
+- Fix the rectilinear value plateau in the unlit field. Walking straight away from the lamp down column x=300 the luminance goes 119 (y640) → 20 (y650) → 24 (y680) → **60 (y720)** → 15 (y840). It gets 2.5× brighter between y=680 and y=720 while getting further from the only light source. The boundary at y≈685 is a straight horizontal line.
+- Kill the hard-edged rectangle at x 55–185, y 712–838 and the second one at x 23–152, y 647–680. Both have 1px straight borders, square corners, and interiors tinted a distinctly cooler blue than the neutral grey immediately outside them. They read as boxes drawn on the floor. Either feather these region boundaries or make them follow wall geometry.
+- The unlit floor is cool blue-grey and the lit floor is warm amber, with no transitional hue between them — the crossover happens across a few pixels at the pool edge. Run a warm-to-cool ramp across the falloff rather than switching palettes.
+
+**FLIP 2:**
+- The light pool is 25–43 levels hotter than image 1's over a 273×241 region (x 263–536, y 387–628), and it costs the character its silhouette. Sprite maximum is 250; the floor immediately around it now peaks at **246** — a 4-level separation, down from 42. The helmet band, shield boss and boot highlights fuse into the floor behind them. Pull the pool's peak back so the floor under the figure tops out around 205–210, or grade the sprite up so it keeps at least 30 levels on its own light pool.
+- The added brightening bands at its own boundary. Along y=518 near the pool edge the delta alternates in 2px runs: x309–310 = +24, x311–318 = 0, x319–320 = +28, x321–324 = 0. That is a quantized gradient producing visible striping in the falloff ring. Dither the ramp or carry more bit depth through the light composite.
+- Everything in FLIP 1 applies here unchanged — the far field is byte-identical to image 1, including the rectangular plateaus and the flat-multiply darkness.
+
+**FLIP 4:**
+- The wall is lit from the wrong side. Column at x=420, from the wall's far edge down to the floor: 105, 124, 110, **34**, 89, 102, 74, 126, then 165 on the floor. The wall's top face reads 124 while the band directly touching the lit floor reads 34 — the surface *nearest* the lamp is the darkest part of the wall and it sits against the brightest floor in the frame. Same inversion at x=300: 75, 63, 51, 52, 53, 54 — brightest at the top, decaying as it approaches the light. Flip the wall's face and cap shading so the near face is the bright one, as it is at x=420 in image 1.
+- The wall's upper half at x 190–500, y 392–422 carries no coursing, no joints and no block edges — it is a soft brown gradient with the black occlusion region terminating on it in a razor-straight horizontal line. Put the masonry courses back so the shadow boundary lands on actual geometry.
+- The figure has zero separation from its floor: sprite maximum 208, surrounding floor maximum 208. The character is graded down until it has no highlight above its own background and reads as a flat brown decal. Give the sprite a specular tier above the floor's ceiling.
+- Everything in FLIP 1 applies — the far field below y≈640 is byte-identical to image 1.
+
+**FLIP 3:**
+- Break the duplicated stamps. The lily pad at (300,60) and (300,156) are identical to zero difference; produce at least four variants and rotate/mirror per placement. Same for the barrels at (110,188) and (158,188) — vary the lid grain, the stave count, the lean.
+- Give the grey floor real variation. The tile at (120,240) and (192,240) differ by 1.47 levels; author 6–8 tile variants plus a set of crack/chip decals placed off the tile grid so the pitch stops being readable.
+- Build a transition at x≈115 where dirt meets stone: an edge tile set with dirt spilling 3–6px onto the stone in an irregular line, plus scattered loose dirt pixels 10–20px further in.
+- Give the water a bank. The left edge at x≈248 and bottom edge at y≈190 are perfectly straight tile boundaries. Add a shoreline tile set with a wet-stone darkening band 4–8px wide, and a depth ramp from a lighter shallow value at the edge to the current teal in the middle — right now the sampled patch has 7 unique colours and a red-channel σ of 1.47.
+- Redraw the chests at x 62–98, y 0–92 and the barrels at y 188–218 in straight top-down projection. No front faces, no visible staves, no lock plate — lid and rim only, with the body implied by a thin dark rim.
+- Add a light model. Nothing in the frame darkens with distance from anything, and no object casts. At minimum: a contact shadow under every chest, barrel and figure, and a falloff from the figure so the frame reads as one lit space rather than a flat texture sheet.
+
+---
+
+The through-line: images 1, 2 and 4 are three lighting passes over one tile set, and the tile set is genuinely good — the joint depths vary along a run, the repair pins break the courses, the mortar face is authored rather than noised. What is failing is the compositing layer above it, and it fails the same way in all three: darkness is a multiply rather than a light, and the visibility regions are raw axis-aligned polygons. Fix the falloff model once and all three move; fix the wall face shading in 4 and it becomes the strongest of them, because 4 is the only one that attempts to grade the character into the scene at all.
+
+Image 3 is not the same problem and is not on the same ladder. It is asset-store tiles at default settings.
+
+*Model: Claude Opus 5 (1M context).*

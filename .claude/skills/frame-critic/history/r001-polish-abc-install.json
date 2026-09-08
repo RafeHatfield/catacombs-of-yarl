@@ -1,0 +1,353 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "FAIL",
+ "lane": "polish-abc-install",
+ "round": 1,
+ "surface": "combined",
+ "axis": "tonal",
+ "commit": "62cec92029055d803278451b7a7410ce74ea6cf9",
+ "dirty": true,
+ "build_id": "13364f377c553943a2809042ce79480bc4ccb719b9bb211832143399ceee3c45",
+ "timestamp": "2026-09-08T14:08:49",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/combined.png",
+  "sha256": "839fb12f6ff445a8f8ccf75dd32efe73324d09773a38d6edf3d7e3476aba8f2f",
+  "log": "tools/tier1_floors/evidence/combined.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/polish-list --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/combined.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 6.0 --light-falloff 1.0 --light-ambient-level 1.5 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-1bfe6a153eb28b2e",
+  "slots": {
+   "1": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/combined.png",
+    "sha256": "839fb12f6ff445a8f8ccf75dd32efe73324d09773a38d6edf3d7e3476aba8f2f",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "3": {
+    "what": "approved",
+    "source": ".claude/skills/frame-critic/approved/combined-2026-09-07.png",
+    "sha256": "8745c556dd1bef108a15f9f490a229ab9f40765d2a6ececb7197dc3d415fba68",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "4": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/blown-highlight.png",
+    "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/combined.png"
+ },
+ "plant": {
+  "slot": 4,
+  "file": "blown-highlight.png",
+  "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+  "culled_by": "TWO INDEPENDENT EYES. Rafe, device walk, 2026-09-06; and round 30's blind seat, 2026-09-06.",
+  "verbatim": "flat pale block, no interior texture (seat) / too shiny on worn areas, character washed out (Rafe)",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": false,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The wall run at y≈425–455 (x 200–500, and continuing right of the corridor at x 570–750) is the only place in the deck where structure is actually drawn rather than implied. The block course there has joints of unequal width — the gap at x≈310 is one pixel, the one at x≈345 is three — and the block faces catch light unevenly along a single run, so they read as cut and set by hand rather than stamped. The driven pins at x≈297 and x≈389 are contained within that course for their whole length, with the left one carrying two short cross-rungs; they sit on the stone, not in front of it. Below it a single hard 1px line separates wall from floor, and the soft mottled band is pushed *above* the course, into the unlit side, where softness costs nothing. That ordering — crisp edge at the boundary the eye lands on, mush behind it in shadow — is the one real craft decision in the set, and 3 and 4 have it exactly backwards. The hatch at x 300–380, y 645–710 is also axis-true: four square corners, edges parallel to the grid, a lighter top rim reading as a lid.",
+  "WORST_WHY": "Three things, any one of which stops it.\n\nThe two barrels at x 113–145 and x 161–193 are flat-cut by the stone floor edge at y=216. Their staves run down and terminate on a straight horizontal line — no bottom rim, no rolloff, no contact. The grey floor tile is drawn over them. Nothing occludes them; the terrain boundary just eats them.\n\nThe water is the literal rectangle x∈[248,343], y∈[0,191]. I checked every column and row: it is 96×192 px of one fill with a 1px cut on all four sides. Dirt at y=192, teal at y=191, nothing between — no bank, no edge tile, no wetting, no darkening at the margin. Its surface carries a faint hexagonal net whose pitch has no relationship to the 24px square grid everything else obeys.\n\nThe two crates at x 64–96, y 2–26 and y 50–74 are pixel-identical — mean channel difference 0.0, not \"similar,\" the same stamp twice, one directly above the other. Each is also two projections welded together: a lid seen straight down (bevel frame, diamond stud) sitting on a body seen in side elevation with vertical planks and a visible front face, in 24 pixels.\n\nUnderneath all that, the frame has no lighting model whatsoever — uniform ambient edge to edge, not one cast shadow under crate, barrel or figure.",
+  "FLAGGED": "2, 4, 3",
+  "RANK": "1 > 3 > 4 > 2",
+  "BEST": "1",
+  "WORST": "2",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [
+  "The slab at x 495–560, y 520–548 is a flat fill — one value, two stray specks, no grain — while every block touching it carries diagonal scratch hatch. Texture it to match its neighbours.",
+  "That same slab's outline changes weight without cause: hard black for the leftmost ~15px of its top edge, then a pale 1px brown for the rest; its bottom edge is a broken dashed line of unequal darks; its left edge is black only in the lower half. Pick one joint weight and run it around the whole block.",
+  "The falloff is not centred on the lamp. At equal radius (150–250px) the floor left of the figure averages luminance 47 and right of it averages 68. Concretely: open floor at x≈190, y≈490 — two tiles from the light — is near-black, while the same tileset at x≈630, y≈490 — seven tiles out — is pale cream, with nothing occluding either. Re-centre the attenuation on the figure or introduce the second emitter the image is already implying.",
+  "The wall's top surface at y 395–420 is structureless airbrushed mottle — no courses, no joints, no block edges anywhere across x 200–500. It is the widest single element in the frame and it is the only one with no drawn information in it. Give it coursing consistent with the band below it.",
+  "The background is rendered in soft blurred noise with razor-hard 1px black rectangles laid on top (clearest at the wall/floor line y=455 and around the hatch). Two mark languages in one image. Either soften the joint lines to sit in the same material or sharpen the fills."
+ ],
+ "flip_list_withheld": null,
+ "withheld_because": null,
+ "panel": {
+  "seats": 3,
+  "ruling": "majority of three independent blind seats rank the build above approved_capture, no unrouted flags from any; each seat its own axis-matched plant. — Rafe, 2026-09-08",
+  "law": "a gate's binding term must have a measured noise floor and must never be a single sample. — Rafe, 2026-09-08",
+  "above_reference": 2,
+  "flagged_by": 2,
+  "shipped_by": 0,
+  "majority_above": true,
+  "all_caught": true,
+  "dissent": 1,
+  "plants_distinct": 1,
+  "per_seat": [
+   {
+    "seat": 1,
+    "rank": 1,
+    "reference_rank": 2,
+    "above_reference": true,
+    "build_flagged": false,
+    "shipped": false,
+    "plant": "blown-highlight.png",
+    "caught": true,
+    "transcript": ".claude/skills/frame-critic/history/r001-polish-abc-install-transcript-seat1.txt",
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-1bfe6a153eb28b2e"
+   },
+   {
+    "seat": 2,
+    "rank": 3,
+    "reference_rank": 1,
+    "above_reference": false,
+    "build_flagged": true,
+    "shipped": false,
+    "plant": "blown-highlight.png",
+    "caught": true,
+    "transcript": ".claude/skills/frame-critic/history/r001-polish-abc-install-transcript-seat2.txt",
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-51a35bc4b73ab289"
+   },
+   {
+    "seat": 3,
+    "rank": 2,
+    "reference_rank": 3,
+    "above_reference": true,
+    "build_flagged": true,
+    "shipped": false,
+    "plant": "blown-highlight.png",
+    "caught": true,
+    "transcript": ".claude/skills/frame-critic/history/r001-polish-abc-install-transcript-seat3.txt",
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-644c9a3ed6e59104"
+   }
+  ]
+ },
+ "progress": {
+  "rank_position": 1,
+  "deck_size": 4,
+  "rank_score": 1.0,
+  "bar_position": 4,
+  "approved_position": 2,
+  "approved_frame_in_deck": true,
+  "beats_approved": true,
+  "near_bar": true,
+  "near_bar_slack": 1,
+  "new_best": true,
+  "best_before": null,
+  "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e030202020202020202020303040404050607080809090810363830342d2318150303020202020202020303040405060708080a090a0a0b1943433946392422190403020202020202020303040506070709090b0b0c0c0b1b404144624a221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c507561362b1c050303020202020203030c0e11101414181c1d1c1f242531625460886a3f31270e0e0b080602020303041e222c25302f413f3f525350685b5965698b563c3330251e1a140f02020203041f222826292b3139354052414b384049618452242b211d1c11100c02020304041e292943445b646778a5a89e79a0ab9b9488715c4d3f35291c13120202020304222f2a44687d919db8c9c5a478babe9e80776e6252423e3221131a0405050607212a263e4e57698ba6bec0c4c1b398a29089775f53433a31211a1a0b1010112b2f1e1f2d306684acb3b6b1b6bb97888177776a5c5042392e201918050707080818182138446c8a9c9aaaaba4a488796856555353493f342b2119150202020203121420384e61707f8492716967655f6e4e454e4c41392d231a1310060506050613181c31414b55625950414e53565e624e4a46413930241d1510100e100e0d0c0f12151f303b4342252c2c4c6162584a42423e362e29211b1210150d0e0a080a09090c18222e31341a2020485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110",
+  "moved": null,
+  "two_strikes_advisory": null,
+  "series": [
+   {
+    "round": 1,
+    "verdict": "FAIL",
+    "rank_position": 1,
+    "deck_size": 4,
+    "rank_score": 1.0,
+    "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e030202020202020202020303040404050607080809090810363830342d2318150303020202020202020303040405060708080a090a0a0b1943433946392422190403020202020202020303040506070709090b0b0c0c0b1b404144624a221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c507561362b1c050303020202020203030c0e11101414181c1d1c1f242531625460886a3f31270e0e0b080602020303041e222c25302f413f3f525350685b5965698b563c3330251e1a140f02020203041f222826292b3139354052414b384049618452242b211d1c11100c02020304041e292943445b646778a5a89e79a0ab9b9488715c4d3f35291c13120202020304222f2a44687d919db8c9c5a478babe9e80776e6252423e3221131a0405050607212a263e4e57698ba6bec0c4c1b398a29089775f53433a31211a1a0b1010112b2f1e1f2d306684acb3b6b1b6bb97888177776a5c5042392e201918050707080818182138446c8a9c9aaaaba4a488796856555353493f342b2119150202020203121420384e61707f8492716967655f6e4e454e4c41392d231a1310060506050613181c31414b55625950414e53565e624e4a46413930241d1510100e100e0d0c0f12151f303b4342252c2c4c6162584a42423e362e29211b1210150d0e0a080a09090c18222e31341a2020485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110"
+   }
+  ],
+  "guards": {
+   "stall_rounds": 3,
+   "round_ceiling": 15,
+   "no_change_mad": 0.25,
+   "no_change_max": 4,
+   "sig_grid": 32,
+   "judge_misses": 2,
+   "flip_same": 0.6
+  }
+ },
+ "transcript": ".claude/skills/frame-critic/history/r001-polish-abc-install-transcript-seat1.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress — rank in the deck — never rounds elapsed.",
+ "_falloff_claim_disproved": {
+  "recorded_by": "builder, 2026-09-08, as an ADDED note — the seat's own answer is untouched",
+  "claim": "The falloff is not centred on the lamp ... open floor at x=190,y=490 — two tiles from the light — is near-black, while the same tileset at x=630,y=490 — seven tiles out — is pale cream, with nothing occluding either.",
+  "measured": {
+   "px(190,490)": "tile (3,11) — a WALL cell, luminance 27.7",
+   "px(630,490)": "tile (9,11) — a WALL cell, luminance 40.4",
+   "gap": "12.7 levels, not near-black against pale cream",
+   "floor_left_vs_right_by_chebyshev_distance": {
+    "1 tile": "left 178.0 vs right 159.4  (left BRIGHTER, delta -18.7)",
+    "2 tiles": "left 124.9 vs right 103.2  (left BRIGHTER, delta -21.7)",
+    "3 tiles": "left  59.9 vs right  68.6  (delta +8.7)",
+    "4 tiles": "left  28.9 vs right  36.6  (delta +7.6)"
+   }
+  },
+  "verdict_on_the_claim": "NOT SUPPORTED. Both named points are wall, and on floor the asymmetry near the lamp runs OPPOSITE to the claim. The mild right-side excess past three tiles is the room's geometry — more open floor east — not an off-centre emitter. The remedy asked for ('re-centre the attenuation, or introduce a second emitter') would have moved the ratified rig on a disproved premise.",
+  "law": "A seat reports PERCEPTS; its EXPLANATIONS are hypotheses and are measured before anything is built on them. Third instance this session."
+ },
+ "dispositions": [
+  {
+   "state": "MEASURED-FALSE",
+   "seat": 1,
+   "item": "The falloff is not centred on the lamp — open floor at (190,490) near-black vs (630,490) pale cream, nothing occluding either.",
+   "measured": "Both named points are WALL cells — tiles (3,11) and (9,11), luminance 27.7 and 40.4, twelve levels apart rather than near-black against cream. On FLOOR the asymmetry near the lamp runs the OPPOSITE way: left of the figure is brighter at 1 tile (178.0 vs 159.4) and at 2 (124.9 vs 103.2).",
+   "percept": "The right side does read brighter past three tiles (+8.7 at 3, +7.6 at 4) — that is the room's geometry, more open floor east, not an off-centre emitter.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "MEASURED-FALSE",
+   "seat": 2,
+   "item": "The global lift has collapsed the frame's range — lit patch peaks at 193 where 1 and 4 reach 240.",
+   "measured": "Build p99 194.1 against the REFERENCE's 198.3 — 4.2 levels apart, not 193 against 240. The 240 is the PLANT's blowout (p99 226.7, max 250.0), i.e. the frame Rafe culled for exactly that.",
+   "percept": "The build's max is 231.7 against the reference's 250.0, and that gap is #183's hero cap working as ruled — warmest is never brightest.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "MEASURED-FALSE",
+   "seat": 3,
+   "item": "The bottom-right floor at x550-700, y740-830 sits at nearly the same value as floor half the distance from the lamp.",
+   "measured": "That region means 33.8. Floor at two tiles means 111.1 — a factor of 3.3, not 'nearly the same'. It matches floor at FOUR tiles (34.4), which is where it is.",
+   "percept": "Past four tiles the field is near the ambient plateau, so differences out there really are small — §6.2's arc, by design.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 2,
+   "item": "Restore the figure's separation from the floor: the sprite is tinted down with the plate until the shield disc and the floor sit within a few levels.",
+   "cites": "§13.4.1",
+   "why": "Asks to undo the hero light response ruled at the 2026-09-06 walk (warmest is never brightest, #183). A ruling made at the human gate is overturned at the human gate; the percept is recorded as a make-it-read successor, which is what the clause prescribes.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 2,
+   "item": "Redraw the figure's plate contact — the sprite is drawn at 2 device px per art pixel with hard outlines while the plate has no edge under 3px of ramp.",
+   "cites": "#194",
+   "why": "Item 5 of the #183 follow-up: sprite/background edge-hardness mismatch, already routed there with Rafe's ruling quoted.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 2,
+   "item": "The brown quadrilateral at x285-380, y640-715 must become a specific object.",
+   "cites": "#193",
+   "why": "The spanning-stones make-it-read item. Third and fourth seats to name it; #186's premise was disproved and this is its successor.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 3,
+   "item": "The wall fields at x120-440,y0-130 and x440-500,y195-420 are a blurred bitmap; redraw at the floor's pixel density with cut block divisions.",
+   "cites": "#194",
+   "why": "Item 1 of the #183 follow-up: wall top surfaces read as noise blobs, origin the wall lane.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 3,
+   "item": "The corridor's left and right edges at x=505 and x=565 are razor-straight 1px value seams for their full height.",
+   "cites": "§12.1a",
+   "why": "The void ring's named interim cost, verbatim in the clause: 'a ring is a classification that changes at a cell boundary ... two perfectly straight vertical seams in the darkness'. Ruled to stand until the occluder pass ships.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 3,
+   "item": "The lamp barely reads: r0-40 mean 156 against r80-120 mean 119. Steepen the near falloff.",
+   "cites": "§6.2.1",
+   "why": "Asks to move the rig ratified as Ruling 56 and re-ratified 2026-09-06. §13.4.1: a seat is a proxy for the gate, not a vote against it.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  }
+ ],
+ "unmatched_flags": {
+  "ruling": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08",
+  "_what": "Flags with no existing route or ruling to match. THE BUILDER DOES NOT ROUTE THESE — they block the gate until Rafe routes them, which is the ruling's own division of authority.",
+  "count": 7,
+  "items": [
+   {
+    "seats": [
+     2,
+     3
+    ],
+    "item": "The same 3-4 stroke diagonal hatch/scuff motif repeats unrotated at one angle and pitch across the lit floor — seat 2 names blocks at (470,600),(520,...); seat 3 names (552,498),(570,526),(572,570),(580,592).",
+    "note": "TWO SEATS, same defect. Looks like §8.3's motif trap, but that clause CONDEMNS it rather than disposing of it, and no issue owns it. Not matched."
+   },
+   {
+    "seats": [
+     3
+    ],
+    "item": "The wide slab right of the figure's feet, x495-560 y520-550, is a completely blank pale rectangle bounded by a hard 1px line while its neighbours carry hatch.",
+    "note": "Probably #193's family (a spanning stone reading as an object) but at different coordinates. Left unmatched rather than stretched — your call."
+   },
+   {
+    "seats": [
+     2
+    ],
+    "item": "The soft blur under and left of the figure, x300-390 y480-560, has no edge and no cause.",
+    "note": "No route and no clause found."
+   },
+   {
+    "seats": [
+     2
+    ],
+    "item": "The corridor at x500-570, y180-420 has no legible wall-to-floor edge on its west side — the boundary is a 3-4px value ramp.",
+    "note": "Distinct from #194's wall-top block definition; that is about surface, this is about the edge."
+   },
+   {
+    "seats": [
+     2
+    ],
+    "item": "The cables crossing the corridor at y230/290/400 vary in thickness along their length and pass through the wall face without an anchor.",
+    "note": "§7.1 says everything is held, but no route owns this. Note the binding placement was corrected in #185, so this is post-fix."
+   },
+   {
+    "seats": [
+     2
+    ],
+    "item": "The pin bars at the joints in the right-hand floor are flat near-black rectangles of inconsistent length.",
+    "note": "No route and no clause found."
+   },
+   {
+    "seats": [
+     3
+    ],
+    "item": "The corridor at x505-565 runs cool grey-green, a different colour temperature from the warm lamp, from y200 to y450 with no motivated source.",
+    "note": "Possibly the ambient #272733 read against the lamp, but nothing rules it. Not matched."
+   }
+  ]
+ }
+}

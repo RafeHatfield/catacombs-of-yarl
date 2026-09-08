@@ -54,6 +54,40 @@ def check_ruled_fix(spec):
         import compose_ashlar as CA
         got = getattr(CA, name.strip(), None)
         return repr(got) == want.strip() or str(got) == want.strip(), "%s = %r" % (name.strip(), got)
+    # ── ASSERTIONS DERIVE, NEVER COPY — RULED (Rafe, 2026-09-08). Bible §13.12. ──────────────
+    #
+    #     "Re-express the POLISH_LANE_GAIN pin as the law it stood for: the precheck asserts the
+    #      window — on-lane identity >= perceptual floor AND lane-vs-flank >= floor — measured on
+    #      the build."
+    #
+    # THE OCCASION. `const:POLISH_LANE_GAIN==0.6` copied a VALUE that had satisfied a LAW at the
+    # moment it was written. When #174 corrected the lamp and Ruling 56 was re-ratified, the lane
+    # window moved under it and 0.6 stopped satisfying the rule it was pinned for — on-lane
+    # masonry 0.1338, BELOW §13.8's 0.1440 floor. **The assertion went on asserting.** It blocked
+    # a build that met the law and passed a value that no longer did, in the same breath, because
+    # a copied conclusion cannot notice that its premises moved.
+    #
+    # A `window:` check re-derives the property from THE DELIVERED FRAME every time it runs, so it
+    # tracks the law rather than the day the law was written down.
+    if kind == "window":
+        stem = (rest.strip() or "combined")
+        sys.path.insert(0, os.path.join(REPO, "tools", "tier1_floors"))
+        import measure_lane_window as MLW
+        ev = os.path.join(REPO, "tools", "tier1_floors", "evidence")
+        png, log = os.path.join(ev, stem + ".png"), os.path.join(ev, stem + ".log")
+        if not (os.path.exists(png) and os.path.exists(log)):
+            return False, "no delivered capture '%s' to measure — a window is measured on the " \
+                          "build, never assumed" % stem
+        m = MLW.measure(png, log)
+        if m is None:
+            return False, "capture '%s' has no lit lane and flank to compare" % stem
+        return bool(m["in_window"]), (
+            "on-lane %.4f%s / lane-vs-flank %.4f%s against §13.8's %.4f (identity %.3f), "
+            "measured on %s" % (m["on_lane_legibility"],
+                                "" if m["on_lane_legibility"] >= MLW.FLOOR else " BELOW",
+                                m["lane_vs_flank"],
+                                "" if m["lane_vs_flank"] >= MLW.FLOOR else " BELOW",
+                                MLW.FLOOR, m["identity_ratio"], stem))
     if kind == "file":
         path, _, needle = rest.partition(":")
         full = os.path.join(REPO, path)

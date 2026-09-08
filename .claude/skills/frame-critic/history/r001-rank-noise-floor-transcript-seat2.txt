@@ -1,0 +1,64 @@
+Read all four at 1:1 and at 4–10× on the regions that decide it, plus pixel diffs. Findings below.
+
+Two facts that shaped the ranking, both verified rather than eyeballed: **1 and 3 are the same frame** — a pixel diff shows they differ only inside a blob bounded by x 269–534, y 389–620, i.e. the light pool and the sprite; every other pixel is identical. And **the wall surfaces in 1/2/3 carry no drawn detail at all** — the patch at (150,260)–(290,360), brightened 4×, contains not one joint, chip, edge or repair, only per-pixel cloudy blotching.
+
+---
+
+RANK: 2 > 3 > 1 > 4
+
+BEST: 2
+
+BEST_WHY: The block on the floor at roughly (310,635)–(380,715) is the only object in the deck that is actually constructed. Its silhouette closes on all four sides — a hard top line, a hard left edge, a hard right edge — and it carries a light seam down the right where it meets the pale floor slab beside it, plus one internal horizontal division separating an upper face from a lower course of three sub-blocks. In 1 and 3 that same object is a dark stub merged into the body with the top-left corner chewed off; it reads as a stain. Second, the falloff in 2 carries hue rather than just brightness: cream at the figure's feet, tan at ~100px, cold grey beyond, and the brightest floor pixel measures 188 — short of clipping — so the joint lines survive through the hottest part of the frame. Third, the wall bands have real thickness: at the run above the figure the top surface and the darker vertical face below it are held ~10px apart at distinctly different values, so the wall reads as a mass with height, not a painted line. Fourth, the rope-and-pin line running down the corridor's left wall around x 500–540, y 470–900 is hand-placed — the nubs vary in spacing and the line follows the wall rather than the grid.
+
+WORST: 4
+
+WORST_WHY: The green pool, source x 247–342, y 0–191. It meets the dirt on a dead-straight vertical cut at x≈247 running the full height and stops on a dead-straight horizontal at y≈191. There is no bank, no edge tile, no darkening of the dirt at the waterline, no wetness — the dirt is the same value one pixel either side of the boundary. It is a rectangle of green filled into the map. Directly beside it: the two chest units at (62,0)–(97,45) and (62,48)–(97,92) are pixel-identical copies stacked with no gap, no variation and no contact shadow. The large lily pad appears three times at identical rotation with an identical internal highlight. The dirt's dark-red crack cluster repeats on the ~16px tile grid across the entire field. The white pixels at (207,112)–(237,130) read as spilled noise, not bones. And the whole frame is uniform ambient — there is no carried light anywhere in it.
+
+FLAGGED: 4, 1, 2, 3
+
+That is every frame, and I am not hedging by saying so. 4's water rectangle and duplicated chests are the worst of it. 1's light pool blows the floor between (270,470) and (430,560) to a flat cream at luminance 220 with every joint erased, and the glow's soft circular edge crosses stone joints and the wall base at (250,455) without altering them — it is an additive sprite sitting on top of the floor, not light on a surface. And in all of 1, 2 and 3 the figure is a flat cartoon sprite with a hard 1px black keyline and five saturated colours, standing on an environment that has no outlines anywhere and is rendered in continuous-tone noise. A player sees a sticker on a photograph in the first second.
+
+SHIP: NONE
+
+---
+
+FLIP 2:
+- The wall top surfaces are unstructured noise — the patch at (150,260)–(290,360) has no joint, chip or edge in it at 4× brightness. Draw block divisions on wall tops so they read as cut stone, and vary joint depth along a single run.
+- The floor's joint network does not close. Between (560,430) and (700,540) there are two vertical joint stubs that terminate in mid-field, one T-junction that leads nowhere, and no horizontal joint at all across ~140px. Resolve the floor into an actual bond; no vertical may end without meeting a horizontal.
+- The three-stroke diagonal scratch decal is stamped unrotated at approximately (200,500), (300,530), (350,525), (490,530), (560,500), (600,650) and a dozen more sites, always the same angle and length. Vary angle, length and stroke count, or cut the instance count in half.
+- The mid-distance floor at (560,470)–(700,560) grades to a pink-mauve with no light source that colour. Take the falloff from warm tan to a cool desaturated grey instead.
+- The sprite carries a hard black keyline over an environment with no edge language. Either chip the block corners and hold joint lines at a consistent dark value so the world has defined edges too, or strip the keyline and re-render the figure inside the environment's value range.
+- The 1px cracks that arc across the floor (e.g. the run from (270,540) through (330,610) to (400,700)) are drawn at a different, crisper resolution than the surface they sit on. Match them to the surface treatment or redraw the surface to match them.
+
+FLIP 3:
+- All six items from FLIP 2 apply unchanged.
+- The block at (280,645)–(375,700): a dark stub merges into its upper-left corner so post and block read as one damaged blob with no closed silhouette. Give the post its own outline and a cast shadow onto the block, or remove it.
+- The light pool erases the diagonal chisel hatching on the slabs around (300,540) that is legible on the same slabs elsewhere in the frame. Detail must survive the bright zone.
+
+FLIP 1:
+- All eight items from FLIP 3 apply unchanged.
+- Cap the light's contribution. The floor at (270,470)–(430,560) reaches luminance 220 as a flat field with every joint erased; hold the brightest floor pixel under ~185 so the joints survive, as they do in the darker grade of this identical frame.
+- The glow is composited over the floor rather than lighting it — its circular soft edge at radius ~120px passes across stone joints and the wall base at (250,455) leaving them unchanged. Multiply the light against the surface so joints darken in proportion.
+- The core of the pool is pushed to torch-orange (R exceeds B by ~40 in the near-white centre). Desaturate the core so the hottest area moves toward the stone's own colour, not toward the flame's.
+
+FLIP 4:
+- Give the pool a shoreline. Edge tiles on all four sides, the dirt darkened within ~4px of the waterline, and the straight cuts at x≈247 and y≈191 broken into an irregular bank.
+- Differentiate the two chest units at (62,0) and (62,48) — different lid, different damage, or reflect one — and put a gap between them so they stop reading as one stamped column.
+- Add a contact shadow under each chest; both currently float on the dirt with no footing.
+- The large lily pad sprite appears three times unrotated with an identical highlight. Rotate, reflect and shift the value of each instance.
+- Build 3–4 variants of the dirt tile, or apply per-tile rotation. The dark-red crack cluster currently repeats on the ~16px grid and is traceable across the whole field.
+- The dirt/flagstone boundary at y≈214 is a straight horizontal cut with no transition. Scatter dirt onto the first row of flagstones and wear the edge.
+- The dirt/flagstone boundary at x≈56 is the same straight cut vertically. Same treatment.
+- The orange plank at (25,126)–(35,167) overhangs the dark brick band below it with no base and no shadow. Anchor it to something and give it a cast shadow.
+- The white pixels at (207,112)–(237,130) do not read as bones. Redraw as recognisable forms with a dark side and a contact shadow, or remove them.
+- Add the light. The frame is uniform ambient throughout — no falloff, no occlusion behind the chests or the brick band, no darkened corners. This is the largest single gap between 4 and the other three.
+- The teal moss decal on the flagstones is one shape at three scales (top-left, bottom-left, right edge). Draw variants.
+- The figure at (214,0)–(239,24) is clipped by the top frame edge and is the only object in the image casting a shadow. Either everything casts or nothing does.
+
+---
+
+The read across the deck: 1, 2 and 3 are one asset set at three light grades, and the grade is doing more work than the art underneath it. They have a real lighting model, real cast shadows off wall corners, and a repair motif that fits the fiction — but the stone itself is a noise field with rectangles painted on at random, and that is what "looks generated" means in practice. 4 is a different problem entirely: clean, uniform, competently drawn tiles assembled with no transitions, no variation and no light. It is the free one.
+
+Worth deciding before the next pass: whether the environment is going to be drawn or generated. Every item in the FLIP 2 list is downstream of that one choice, and no exposure tweak reaches it.
+
+*Model: Claude Opus 5 (1M context).*

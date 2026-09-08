@@ -2740,6 +2740,148 @@ whose dark ground is byte-identical, **passes**; a genuinely darkened capture �
 > the end of its range. If the answer is *it keeps returning a number*, the instrument has a blind
 > spot exactly where the picture is brightest, and that is where the eye is.
 
+### 13.12 An assertion DERIVES the property; it never copies the value — LAW (Rafe, 2026-09-08)
+
+**A check that copies a value is a snapshot of a conclusion.** It stops tracking the thing it was
+written to protect the moment anything upstream moves, and — this is the part that costs rounds —
+**it goes on asserting.** A copied constant cannot notice that its premises have changed, so it
+fails in the worst available direction: confidently, silently, and in whichever direction the
+drift happens to point.
+
+**The occasion.** The device gate's ruled-fix registry carried
+
+```
+{"id": "lane-gain-stepped", "rule": "wear modulates the same stones", "check": "const:POLISH_LANE_GAIN==0.6"}
+```
+
+0.6 was the value that satisfied that rule the day it was pinned. Then #174 corrected the lamp and
+Ruling 56 was re-ratified, the lane window moved underneath it (§6.2's re-derivation rule), and
+**0.6 stopped satisfying the rule it was pinned for** — on-lane masonry 0.1338, *below* §13.8's
+0.1440 floor. On 2026-09-08 the registry was simultaneously
+
+- **blocking** a build that met the law, and
+- **asserting** a value that no longer did.
+
+The successor measures the law on the delivered frame: *on-lane identity and lane-vs-flank both at
+or above the perceptual floor*. Proved in both directions on real captures, which is the whole
+point — **the new assertion refuses the exact value the old one required:**
+
+| build | on-lane | lane-vs-flank | derived check |
+|---|---:|---:|---|
+| lane 0.3 (ratified) | 0.1513 | 0.3456 | **passes** |
+| lane 0.6 (the old pin's value) | **0.1338** | 0.3939 | **refuses** |
+
+**THE THIRD INSTANCE, and the family is what makes it a law rather than an anecdote.**
+
+| | what was copied | what should have been derived |
+|---|---|---|
+| **the working ladder** (§5.6) | a manifest's stored rungs, trusted by consumers | the rungs, re-derived from the donors' percentiles at every read — *"a manifest written under an older rule cannot silently keep it"* |
+| **the shelter weights** | the weight tuple, as though it were the signal | the delivered **modal joint contrast**, which the tuple only influences — the weights looked fine while the mode sat at 0.107 Weber, under §13.8's floor, and the frame critic found it before the number did |
+| **the lane-gain pin** (here) | `POLISH_LANE_GAIN == 0.6` | the lane **window**, measured on the build |
+
+Each is the same shape: a *value* standing in for a *property*, holding correctly right up until
+the relationship between them moved.
+
+> **Write the assertion against the property the rule is about, and measure it on the artefact.
+> If the check cannot be expressed that way, the rule is not yet understood well enough to gate
+> on.**
+
+⚠ **THE BOUNDARY — RATIFIED (Rafe, 2026-09-08):** *"§13.12 licenses deriving the measurement,
+never the bar; re-deriving §13.8 per capture is §13.11 in disguise."*
+
+The floor a derived property is compared against is **ruled and stays ruled**. §13.8's 0.1440 is
+not re-derived per capture — a bar that moves with the artefact it judges is the saturating
+comparator of §13.11 wearing this clause's name, and it would pass everything. **Derive the
+measurement; never derive the bar.**
+
+The two laws are therefore a pair and are read together: §13.12 says *measure the property on the
+build*, §13.11 says *against a reference that cannot move with it*. Either one alone is a way to
+build a check that always agrees with whoever wrote it.
+
+### 13.13 A gate's binding term must have a MEASURED NOISE FLOOR, and must never be a single sample — LAW (Rafe, 2026-09-08)
+
+**The occasion, and it is one frame.** On the morning of 2026-09-08 `PASS-INSTALL` was ratified:
+a polish round passes when it *ranks above `approved_capture`*. That afternoon lane
+`polish-c-183` judged **the same build twice** — sha `839fb12f`, with the round's own
+no-change measure reading `picture moved mean 0.000 / worst 0` between them:
+
+| round | build rank | reference rank | verdict under the new rule |
+|---|---|---|---|
+| r001 | **1 of 4** | 2 | PASS-INSTALL |
+| r002 | **2 of 4** | 1 | FAIL |
+
+**The build and the reference swapped places with no pixel changing.** The gate's entire
+discriminator was a single draw from a distribution nobody had measured.
+
+**Why the previous rule had not exposed it.** SHIP∧rank was ratified against a null reference, and
+rank only ever *added* a condition to a SHIP-based decision. Making rank the **sole** binding term
+moved the whole gate onto the least stable quantity the deck produces — and §4 had already
+recorded, three times, that a blind seat's ordering does not reproduce the human gate's. What was
+new was that it does not reproduce **itself**.
+
+> **RULED: a term that binds a gate must (a) be sampled more than once, and (b) have its own
+> variability measured and published beside it. A threshold on an unmeasured single sample is not
+> a gate; it is a coin with a number written on it.**
+
+**The refinement, for this gate:** a majority of **three independent blind seats** rank the build
+above `approved_capture`, with **no unrouted flags from any**, each seat drawing its own
+axis-matched plant.
+
+**The asymmetry between the two terms is deliberate.** Rank takes a majority because rank is the
+noisy term. A **flag does not** — one seat finding a defect is enough, because a flag outvoted 2–1
+is still a defect two seats missed. Averaging *findings* would discard the only thing a panel is
+good at, while averaging *rankings* is the entire reason it exists.
+
+**And the noise floor is measured rather than assumed** — the same bytes through five seats, the
+disagreement rate recorded and published as rank's error bar. That number belongs beside the
+threshold wherever the threshold is quoted; a bar without it is a bar nobody can size.
+
+⚠ **THIS IS NOT A LICENCE TO AVERAGE THE PLANT.** Every seat must catch its own. §4 voids a round
+on one missed plant, and a panel does not get to dilute that into a proportion: a soft seat's
+ballot is exactly what §4 refuses to read. More seats make the plant condition *harder*, never
+softer.
+
+⚠ **And a panel is not independence for free.** Where the axis-matched morgue set has one member,
+every seat draws the same plant and their catches are **correlated** — the panel multiplies the
+rank samples but not the plant's evidence. Reported per round rather than assumed away.
+
+### 13.14 Flag disposition — matched, measured-false, or it goes to the gate — RULED (Rafe, 2026-09-08)
+
+A blind seat's flag is not automatically work. It is one of three things, and **which one must be
+checkable by someone other than the person asserting it.**
+
+| state | means | requires | who may assert |
+|---|---|---|---|
+| `ROUTED-ALREADY` | this is the thing we already decided | **a citation** — an issue (`#nnn`) or a clause (`§x.y`) that RESOLVES | the builder |
+| `MEASURED-FALSE` | the stated cause is not what is happening | **the measurement** that disproves it **and the percept, recorded** | the builder |
+| `ROUTED` / `CLOSED` / `PARKED` | a new destination, or a decision not to chase | **Rafe's words, quoted** | Rafe only |
+
+**Only new, unmatched flags block — and those go to Rafe.**
+
+**The division of authority is the point.** A builder disposing by citation is *not* routing: it
+asserts a **match against a record that already exists**, and the citation is what lets anyone
+else look it up and contradict it. An uncited match is an opinion. A routing is the creation of a
+new destination, and that stays with the human gate.
+
+**The citation is checked, not trusted** (`critic_gate.check_dispositions`): a cited clause must
+exist in the bible or the process law, and a cited issue must appear in the repository's own
+record. ⚠ **And the search space is the RECORD, not the repo** — the first implementation grepped
+everything, and its own proof caught it: the case asserting that an invented issue number is
+refused has to *write that number into the test file*, so the grep found it and the citation
+passed. An assertion whose search space includes its own fixtures is §13.11's shape again, an
+input wider than the thing it measures.
+
+**`MEASURED-FALSE` keeps the percept, and that is not a formality.** §13.4.1's whole finding is
+that a seat's *explanation* fails while its *seeing* stands — three times in one session on this
+project. A disposition that discarded the percept along with the explanation would throw away the
+observation and keep only the argument, which is exactly backwards.
+
+**Worked, on the round that occasioned it** (`r001-polish-abc-install`, three seats): nine flags
+disposed — three measured-false (an off-centre falloff whose two named points were *wall cells*;
+a collapsed range measured against the **plant's** blowout rather than the reference; a far-field
+value claim off by a factor of 3.3) and six routed-already against #193, #194, §12.1a, §6.2.1 and
+§13.4.1 — with **seven left unmatched and handed up**.
+
 ---
 
 ## 14. Out of scope for this document

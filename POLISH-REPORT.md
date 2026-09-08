@@ -1,5 +1,48 @@
 # The polish list — overnight run, 2026-09-07, and the rulings of 2026-09-08
 
+> ## ⚠ THIRD PASS, 2026-09-08 — the precheck clears, the VOTE does not
+>
+> Both rulings are implemented, proved and banked (bible **§13.12** assertions derive; **§13.13**
+> a binding term needs a measured noise floor). The ruled sequence ran as far as it could:
+>
+> | step | outcome |
+> |---|---|
+> | precheck on the window | **CLEAR** — 11/11 ruled fixes, the pin now measured on the build |
+> | A+B+C build | **built** |
+> | three-seat vote | **FAIL** — rank majority yes, flags no |
+> | install | **not reached** |
+>
+> **The vote, `r001-polish-abc-install`:**
+>
+> | seat | build rank | reference | above ref | flagged the build | plant |
+> |---|---|---|---|---|---|
+> | 1 | 1 | 2 | **yes** | no | CAUGHT |
+> | 2 | 3 | 1 | no | **yes** | CAUGHT |
+> | 3 | 2 | 3 | **yes** | **yes** | CAUGHT |
+>
+> **2 of 3 above the reference — the majority holds.** But two of three seats flagged the build,
+> and *"no unrouted flags from any"* is deliberately not a majority test. So the gate refuses, and
+> the disposition is yours: **routing is the human gate's and the builder can never route.**
+>
+> **Rank's error bar, measured as ruled** (`docs/RANK-NOISE-FLOOR.json`): same bytes, five
+> independent seats, ranks `1, 1, 1, 3, 3` — **a 40% flip rate**. The vote's own round showed 1 of
+> 3 dissenting, consistent with it. That number now travels with the threshold.
+>
+> ⚠ **One flip asked to move the ratified rig on a disproved premise.** *"The falloff is not
+> centred on the lamp … open floor at x=190,y=490 … x=630,y=490 … nothing occluding either."*
+> **Both named points are WALL cells** (tiles (3,11) and (9,11), 27.7 and 40.4 — 12.7 levels
+> apart, not near-black against pale cream). On actual floor the asymmetry near the lamp runs the
+> *other way*: left of the figure is brighter at 1 tile (178.0 vs 159.4) and at 2 (124.9 vs
+> 103.2). The mild right-side excess past three tiles is the room's geometry. Recorded against the
+> round as an added note; the seat's own answer is untouched. **Third time this session a seat's
+> explanation failed measurement while its percept stood.**
+>
+> ⚠ **The plants are correlated.** The axis-matched morgue set for `combined`/`tonal` has one
+> member, so every seat in both runs drew the same plant. All eight caught it — but that is not
+> eight independent observations. A second tonal cull would fix it.
+>
+> ---
+>
 > ## ⚠ SECOND HALF, 2026-09-08 — nothing installed, and two blockers say why
 >
 > Rafe's five rulings are implemented. **The phone was not flashed**, for two reasons, neither of

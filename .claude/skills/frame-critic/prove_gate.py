@@ -174,13 +174,74 @@ def main():
                                     "dispositions": []})
         rc, out = run(["python3", GATE])
         case("G4 PASS-INSTALL with an undispositioned flip -> refuse", 1, rc, out,
-             "every outstanding item carries a human disposition")
+             "every outstanding item carries one")
 
         synth("PASS-INSTALL", bid, {"progress": {"rank_position": 1, "approved_position": 2},
                                     "dispositions": ROUTED})
         rc, out = run(["python3", GATE])
         case("G5 PASS-INSTALL with the flip ROUTED by a quoted ruling -> allow",
              0, rc, out, "GATE OPEN")
+
+        # ---- H. FLAG DISPOSITIONS BY CITATION — the builder's two states ----------------------
+        #
+        # RULED (Rafe, 2026-09-08): a flag matching an existing route/ruling is ROUTED-ALREADY and
+        # must CITE it; a flag whose explanation measures false while the percept stands is
+        # MEASURED-FALSE with the percept recorded. The builder may assert either BY CITATION and
+        # still never routes a new item. §13.5 — each has to be shown refusing before its pass
+        # counts, and the refusals are the citation checks: a clause that does not resolve, an
+        # issue that appears nowhere, a measurement with no percept kept.
+        P = {"rank_position": 1, "approved_position": 2}
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED-ALREADY", "item": "joints fade at full light", "cites": "§13.4.1"}]})
+        rc, out = run(["python3", GATE])
+        case("H1 ROUTED-ALREADY citing a clause that RESOLVES -> allow", 0, rc, out, "GATE OPEN")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED-ALREADY", "item": "x", "cites": "§99.9"}]})
+        rc, out = run(["python3", GATE])
+        case("H2 ROUTED-ALREADY citing a clause that does NOT resolve -> refuse",
+             1, rc, out, "does not resolve")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED-ALREADY", "item": "x", "cites": ""}]})
+        rc, out = run(["python3", GATE])
+        case("H3 ROUTED-ALREADY with NO citation -> refuse", 1, rc, out, "must CITE")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED-ALREADY", "item": "x", "cites": "#999999"}]})
+        rc, out = run(["python3", GATE])
+        case("H4 ROUTED-ALREADY citing an issue that appears nowhere -> refuse",
+             1, rc, out, "appears nowhere")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "MEASURED-FALSE", "item": "the falloff is off-centre",
+             "measured": "both named points are wall cells; floor asymmetry runs the other way",
+             "percept": "the right side does read brighter past three tiles"}]})
+        rc, out = run(["python3", GATE])
+        case("H5 MEASURED-FALSE with measurement AND percept -> allow", 0, rc, out, "GATE OPEN")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "MEASURED-FALSE", "item": "x", "measured": "numbers"}]})
+        rc, out = run(["python3", GATE])
+        case("H6 MEASURED-FALSE with no percept recorded -> refuse",
+             1, rc, out, "no percept recorded")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "MEASURED-FALSE", "item": "x", "percept": "kept"}]})
+        rc, out = run(["python3", GATE])
+        case("H7 MEASURED-FALSE with no measurement -> refuse", 1, rc, out, "no measurement")
+
+        # A FLAG FROM ANY SEAT IS AN OUTSTANDING ITEM, even with no flips recorded.
+        synth("PASS-INSTALL", bid, {"progress": P, "flip_list": [], "dispositions": [],
+                                    "panel": {"seats": 3, "flagged_by": 2}})
+        rc, out = run(["python3", GATE])
+        case("H8 a seat flagged the build and nothing is disposed -> refuse",
+             1, rc, out, "not a majority test")
+
+        # Leave a clean passing verdict behind: the cases below assume one, and a fixture that
+        # silently changes the state its successors read is how a proof stops proving.
+        synth("PASS", bid)
 
         # ---- E2. and a gated build carries no stamp -------------------------------------------
         rc, out = run(["tools/tier0_harness/build_review_app.sh"],
