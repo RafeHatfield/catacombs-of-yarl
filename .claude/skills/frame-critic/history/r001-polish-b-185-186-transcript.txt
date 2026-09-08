@@ -1,0 +1,45 @@
+Read all four. Findings below.
+
+RANK: 2 > 1 > 4 > 3
+
+BEST: 2
+
+BEST_WHY: The north wall run of the lit room (x≈185–730, y≈425–450) holds a continuous dark base line across its full width, and it holds it *under* the light spill from the corridor mouth — measured, that seam sits at luminance 62 against a floor at 165, a 103-point separation, so the room reads as bounded rather than as a bright area that fades out. The driven pins and timber ties along the top of that run are spaced irregularly — a tie at x≈382, a pin at x≈500, a longer plank butting the corridor jamb at x≈545 — so the repair reads as done by hand over time, not as a stamped repeat. On the floor immediately south of the figure the slabs carry genuinely different base values (the pale slab at x≈430–475, y≈490 sits ~40 points above its neighbour at x≈480–530), so the stones read as individually cut and separately worn rather than as one texture with joint lines drawn on top. The floor's local variance is *higher* than image 1's (49.5 vs 42.6) while being darker overall, which means the lighting is being carried by the artwork instead of erasing it.
+
+WORST: 3
+
+WORST_WHY: The water body (x≈248–344, y≈0–190) is a perfect rectangle. Four right-angle corners, a dead-straight bottom edge at y≈190, and no bank, no wet margin, no value change where teal meets dirt — the water and the ground are butted like two swatches. The dirt/stone boundary on the left (x≈56) and the bottom (y≈212) are the same: straight cuts on the grid with no transition tile in either direction. The two barrels at x≈118 and x≈160, y≈196 are the identical sprite pasted twice — same rim highlight, same stave shadow, same three flecks on the lid, no rotation or offset. The grey floor along the bottom is one tile repeated across the full width with the specular dot in the same place in every instance. And there is no light source anywhere: the frame is uniformly ambient, so nothing in it has a near side or a far side. Nothing here is *broken* — it is simply assembled rather than made, and it is the one frame that would be read as the free one on sight.
+
+FLAGGED: 4, 1, 3
+
+SHIP: NONE
+
+FLIP 4:
+- The region left of the corridor (x≈55–370, y≈195–450) and its mirror right of the corridor (x≈440–700, y≈195–450) contain no drawing at all — smooth airbrushed grey-blue with soft amoeba blobs and no grid, no joints, no stone, while every other surface in the frame sits on the tile grid. Draw these two areas as actual masonry at the same slab scale as the floor south of the wall.
+- That smudge is brighter than floor tiles that are closer to the lamp and on the same side of the wall as it. Light is passing through a solid wall run. Re-derive the falloff so occluders block it, or make those areas genuinely dark.
+- The two horizontal wall runs at y≈390–420 float: the pale band along their underside continues past both their ends to the frame edge (left of x≈25, right of x≈690). Terminate the wall's cast light at the wall's own footprint.
+- The floor hatch (visible across the whole lit area, e.g. x≈200–650, y≈560–700) is one 45° diagonal texture at constant angle and density, and it runs continuously *across* joint lines instead of stopping at them. Break it per slab, vary the angle between slabs, and delete it from slabs that should be worn smooth.
+- Slab-to-slab base value variation on that floor is near zero; the only thing separating stones is the joint line. Push individual slabs apart in value by 15–25 points as image 2 does.
+- The crack at x≈760–800, y≈610–650 terminates in a hard straight vertical stub at a different line weight from the curve it joins. Either continue it or end it in a taper.
+- The dark rectangle at x≈470–560, y≈600–615 is a black bar with square ends sitting on the floor with no shadow, no thickness and no context. Give it an identity or remove it.
+
+FLIP 1:
+- The corridor-mouth bloom (centred x≈500, y≈420) erases the north wall's base line from x≈430 rightward — the seam there reads 100 against a 175 floor, so the wall and the floor merge and the room loses its northern boundary. Clamp the highlight so the wall top stays at least 80 points below the lit floor for the full run, as it does in the same shot's left half.
+- The floor immediately around the figure (x≈320–470, y≈450–560) is blown to a near-flat pale wedge with the slab joints gone. Cap the light's white point below the point where joint lines disappear, and let the falloff carry the brightness instead.
+- The wall column bounding the room on the west (x≈120–185, y≈385–700) is a continuous soft brown mottle for its entire ~300px run: no courses, no joints, no block divisions, no distinction between the wall's top surface and its side. Draw it as coursed stone at the same slab scale as the floor.
+- The same blob mottle covers the wall faces at the top of the frame (x≈130–450, y≈385–425) and the corridor's flanks (x≈440–520, y≈100–380). It is a cloud/noise pass at a scale unrelated to the tile grid and reads as a filter, not as damage. Replace it with drawn stone plus specific damage.
+- The long crack curves (the arc from x≈240,y≈480 through x≈330,y≈640 to x≈600,y≈700) are anti-aliased sub-pixel lines drawn over chunky pixel work — two different resolutions in one frame. Redraw them on the pixel grid at the frame's native density.
+- The scratch-cluster motif on the floor slabs repeats identically on at least four slabs on the right side (x≈600–740, y≈480–620): same five diagonal ticks, same spacing, different position. Vary or hand-place them.
+
+FLIP 3:
+- Give the water an edge. Break the rectangle: irregular shoreline, a darker wet band 2–3px wide where it meets dirt, and depth shading so the centre is not the same flat teal as the margin.
+- Break the straight material cuts at x≈56 (stone→dirt) and y≈212 (dirt→stone) with transition tiles — dirt spilling over the stone edge, stone showing through worn dirt.
+- The two barrels at x≈118 and x≈160 are the same sprite twice. Vary one: different rim damage, different lid, or rotate and offset it off the grid line.
+- The bottom stone floor repeats one tile across the full width with the highlight fleck in the same position every time. Author 3–4 variants and scatter them.
+- There is no light model. Introduce a source and a falloff so surfaces have a near and a far side; right now every pixel in the frame is lit identically and nothing has form.
+- The green figure at x≈168, y≈2 is drawn at a finer pixel density than the tiles it stands on and has no contact shadow, so it floats. Match its density to the environment and ground it.
+- The dark band along the bottom edge (y≈272–288) is a different, unresolved material with no join to the floor above it. Finish it or crop it out.
+
+Where this leaves you: nothing in this deck ships. 2 is the only one whose *lighting* is doing its job, and it is the right reference for the others — but its west wall is undrawn over a 300px run and its cracks are at the wrong resolution, so it fails the same way 1 and 4 do, just in fewer places. The common fault across 1, 2 and 4 is that wall faces are being handled with a noise/cloud pass instead of being drawn, and 4 shows where that ends: a quadrant with nothing in it. Fix the wall vocabulary once and three of the four frames move at the same time.
+
+*Model: Claude Opus 5 (1M context)*

@@ -191,6 +191,36 @@ public static class Tier1BoundaryWall
     private const string BindNode = "Tier1Binding";
     private const string FaceNode = "Tier1Face";
 
+    /// <summary>
+    /// Does this overlay child cover EXACTLY its parent cell, and nothing of the cell next door?
+    ///
+    /// The fourth cross-check in this family, and it exists for the same reason as the other
+    /// three: `edge_check` says the engine agrees with the composer about the bond, `stone_check`
+    /// about the material, `occlusion_check` about the rungs — and each of them REFUSES rather
+    /// than warning, because a silent disagreement is a defect nothing downstream reports.
+    ///
+    /// This one says the engine agrees with itself about WHERE. #185/#186 were a half-cell
+    /// placement error that survived every one of those checks, every unit test, and a device
+    /// gate, because all of them ask what is drawn and none of them asked where. A face half a
+    /// cell out is §3's violation — a reveal cut into ground that is not this cell's — arriving
+    /// through placement rather than through the mask, which is the layer
+    /// <see cref="Logic.Map.WallMaskPolicy"/> was built to make safe.
+    /// </summary>
+    private static bool Contained(Sprite2D parent, Sprite2D child, out string why)
+    {
+        var pr = parent.GetRect();
+        var cr = child.GetRect();
+        if (cr.Position != pr.Position || cr.Size != pr.Size)
+        {
+            why = $"child rect {cr.Position}+{cr.Size} against the cell's {pr.Position}+{pr.Size}"
+                + (child.Centered != parent.Centered
+                   ? $" (centred={child.Centered} under a parent centred={parent.Centered})" : "");
+            return false;
+        }
+        why = "";
+        return true;
+    }
+
     /// <summary>Drop any overlay this class put on a cell, so a re-lay never stacks two.</summary>
     private static void ClearOverlays(Sprite2D s)
     {
@@ -500,12 +530,44 @@ public static class Tier1BoundaryWall
                 if (capBase && southOpenCache)
                 {
                     // The face rides over the cap as a child, so the cap keeps the cell's base.
+                    //
+                    // ⚠ `Centered` FOLLOWS THE PARENT AND IS NOT A CONSTANT — #185/#186.
+                    //
+                    // It was `Centered = true` on a child of a tile sprite the renderer creates
+                    // `Centered = false` at the cell's TOP-LEFT. A centred child at local (0,0)
+                    // therefore drew its 32px texture CENTRED ON THE CELL'S CORNER: half a tile
+                    // up and half a tile left of the cell it belongs to. Every reveal in the game
+                    // was drawn a half-cell out of place, and it was invisible for as long as the
+                    // neighbour was also wall — which is why the walk found it at a corridor
+                    // mouth, where the neighbour is FLOOR and the face lands on walkable ground.
+                    //
+                    // Measured on the corridor mouth (8,11), the floor cell in the doorway: a
+                    // 52.8-level column step at EXACTLY the half-tile, the largest step in the
+                    // cell, with wall-face values to its right. Bisected without changing any
+                    // code, using the flag that selects this path: captured with `--wall-cap`
+                    // omitted, so the face is set on the tile sprite instead of on a child, the
+                    // half-tile step is GONE and the largest step falls back to 30.1 at column 4,
+                    // which is the west contact occlusion sitting correctly on the cell edge.
+                    //
+                    // This is also #186's *"its left edge lands mid-tile, which no tile-laid
+                    // family can produce"*. A centred child on a cell corner can produce exactly
+                    // that, and it is the only thing in this pipeline that can.
+                    //
+                    // Taking the parent's value rather than writing `false` is deliberate: the
+                    // claim is that the child sits where its cell sits, and that claim survives
+                    // the renderer changing its mind. The engine then CHECKS it below rather than
+                    // trusting this comment.
                     var fs = new Sprite2D
                     {
-                        Name = FaceNode, Texture = tex, Centered = true,
+                        Name = FaceNode, Texture = tex, Centered = s.Centered,
                         TextureFilter = CanvasItem.TextureFilterEnum.Nearest, ZIndex = 1,
                     };
                     s.AddChild(fs);
+                    if (!Contained(s, fs, out string why))
+                        return $"[Tier1] boundary wall: REFUSED — the face at ({x},{y}) is drawn "
+                             + $"outside its own cell: {why}. A reveal in a neighbouring cell is "
+                             + "§3's violation arriving through placement instead of through the "
+                             + "mask (#185/#186).";
                 }
                 else if (!capBase)
                 {
@@ -567,13 +629,21 @@ public static class Tier1BoundaryWall
                             var btex = GD.Load<Texture2D>(bind.Root + pick.File);
                             if (btex != null)
                             {
+                                // Same placement rule as the face above, and the same defect:
+                                // a binding centred on the cell's corner is a strap drawn across
+                                // the join of four cells. §7.1's linear elements are the read at
+                                // 1x, so a half-cell offset puts the one thing carrying the read
+                                // in the wrong place.
                                 var bs = new Sprite2D
                                 {
-                                    Name = BindNode, Texture = btex, Centered = true,
+                                    Name = BindNode, Texture = btex, Centered = s.Centered,
                                     TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
                                     ZIndex = 1,
                                 };
                                 s.AddChild(bs);
+                                if (!Contained(s, bs, out string bwhy))
+                                    return $"[Tier1] boundary wall: REFUSED — the binding at "
+                                         + $"({x},{y}) is drawn outside its own cell: {bwhy}.";
                                 bound++;
                                 boundKinds[pick.Kind] = boundKinds.GetValueOrDefault(pick.Kind) + 1;
                             }
