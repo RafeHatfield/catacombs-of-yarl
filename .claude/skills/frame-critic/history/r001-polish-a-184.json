@@ -1,0 +1,155 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "VOID",
+ "lane": "polish-a-184",
+ "round": 1,
+ "surface": "combined",
+ "axis": "tonal",
+ "commit": "ad19a72b3f44f89abb355f8e9b9852787d934a9f",
+ "dirty": true,
+ "build_id": "b8571587074a1e0e5966102bd9de26959ad3bedd8d9217c17c8139fa2c15bfd6",
+ "timestamp": "2026-09-07T21:51:19",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/combined.png",
+  "sha256": "7e0634a073578acbd320e0863b3565b82d0595ecb8fbeba0e5901f0ad3052181",
+  "log": "tools/tier1_floors/evidence/combined.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/polish-list --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/combined.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 6.0 --light-falloff 1.0 --light-ambient-level 1.5 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-f288be2a3ac8e186",
+  "slots": {
+   "1": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/blown-highlight.png",
+    "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "3": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/combined.png",
+    "sha256": "7e0634a073578acbd320e0863b3565b82d0595ecb8fbeba0e5901f0ad3052181",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "4": {
+    "what": "approved",
+    "source": ".claude/skills/frame-critic/approved/combined-2026-09-07.png",
+    "sha256": "8745c556dd1bef108a15f9f490a229ab9f40765d2a6ececb7197dc3d415fba68",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/combined.png"
+ },
+ "plant": {
+  "slot": 1,
+  "file": "blown-highlight.png",
+  "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+  "culled_by": "TWO INDEPENDENT EYES. Rafe, device walk, 2026-09-06; and round 30's blind seat, 2026-09-06.",
+  "verbatim": "flat pale block, no interior texture (seat) / too shiny on worn areas, character washed out (Rafe)",
+  "caught": false,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": false,
+   "shipped": false,
+   "outranked_build": false,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "- The slab run left of the figure, roughly (250\u2013340, 490\u2013570), holds its joints through the brightest part of the pool. A horizontal scan at y=470 across x=330\u2013390 drops ~18 luminance into the joints against a 176 slab face, and adjacent slabs differ in tone by 8\u201312 \u2014 the one at x\u2248300\u2013330 sits distinctly cooler and greener than its neighbour at x\u2248335\u2013360. The run reads as separately cut stones, not one bitmap with lines drawn on it. The same scan in image 1 never dips more than 10.\n- The timber laid across the wall band at (250\u2013290, 385\u2013400) and (415\u2013440, 390\u2013405): the beams are different lengths, sit at different heights, and do not align with the courses beneath them, with dark pin heads punched at the ends. That's a repair decision, drawn, not a decorative overlay.\n- The crack system: a single 1px line entering at about (255,590), forking at (300,635), running up-right to (510,510). It crosses tile joints without deflecting and thins as it travels. It's a crack in the slab field rather than a crack drawn inside one slab, which is the version most people get wrong.\n- The north corridor at (500\u2013560, 200\u2013380) cools from warm tan at the bottom to blue-grey at the top as it recedes from the light, rather than only getting darker. Temperature shift with distance is a deliberate call and it's executed consistently.",
+  "WORST_WHY": "- Perspective break, everywhere. The barrels at (114\u2013144, 194\u2013215) and (162\u2013191, 194\u2013215) show a lid ellipse *and* the cylinder's side and lower rim. Both crates at (62\u201397, 0\u201345) and (62\u201397, 47\u201393) have a lit top face with a separate dark vertical plank front face drawn underneath it. These are 3/4-view objects sitting on a straight top-down floor.\n- The floor repeats verbatim. In the row at y=248\u2013264, the three-tile sequence spanning x=0\u201348 is repeated pixel-for-pixel three consecutive times out to x=144. Identical hashes, identical specks.\n- The water from x=248 to x=343 uses **six unique colours** over its entire 180-pixel height. It is a flat teal slab with one evenly repeated bubble cell and no depth, no shading at the bank, no variation.\n- The dirt/water boundary at x=248 is a dead-straight vertical line. Scanning y=100: dirt at [92,69,30] to x=245, two transition pixels, then [36,76,62] flat from x=248 onward. Two pixels of bank.\n- No light exists in the frame. It is uniformly flat-ambient across all 384\u00d7288, with no falloff from any figure. The green figure at (211\u2013239, 0\u201326) carries a hard elliptical drop shadow while nothing else in the frame casts one.\n- The grey stone stub at (9\u201355, 166\u2013215) juts two tiles into the dirt with a hard edge and nothing structural behind it.\n- The bone scatter at (208\u2013237, 110\u2013130) is unreadable white specks.",
+  "FLAGGED": "1, 2, 3, 4\n\n- **2** \u2014 the 3/4-view barrels and crates on a top-down floor, and the verbatim tile repeat along the bottom. Both are glance-level.\n- **1** \u2014 the centre of the frame is a smooth cream blur. The joints are gone from roughly (250,455) to (480,600), while slabs at the *same distance from the light* on the right at (600\u2013700, 480\u2013560) still carry crisp 1px joints and hatching. Something is softening only the bright end, and it reads as a filter.\n- **1, 3, 4** \u2014 the mass at (280\u2013375, 645\u2013712). It is the largest freestanding object on the floor and it does not resolve into anything. Flat brown fill, vague rectangular blotches, no board seams, no lid, no pin heads, no rope \u2014 15 pixels to its right the floor slabs have clean 1px joints, bevels and scratch hatch. In a fiction where everything is patched with rope, driven pins and salvaged timber, the biggest object in the room carries none of it.\n- **1, 3, 4** \u2014 the floor's diagonal grain. There is a ~12px-pitch diagonal hatch at a single constant angle running unbroken across the entire lit pool. It crosses every joint without a break (clearest where it passes the joint at x\u2248360 around y=520\u2013620). It's multiplicative, so it's baked into the floor material, not a screen overlay \u2014 which means every slab in the room was cut with its grain running the same way. That is the \"one texture stretched under everything\" tell.",
+  "RANK": "3 > 4 > 1 > 2",
+  "BEST": "3",
+  "WORST": "2",
+  "SHIP": "NONE\n\n---"
+ },
+ "flip_list": [],
+ "flip_list_withheld": [
+  "The diagonal floor grain runs unbroken through the joints at one angle and one ~12px pitch across the whole pool. Break it per slab: randomise the grain's rotation and phase inside each slab so it terminates at the joint lines.",
+  "The mass at (280\u2013375, 645\u2013712) has no readable feature. Decide what it is and draw it. If it is salvaged timber: 4\u20135 board seams at the tile pitch, driven pin heads at both ends of each board, and a hard bright edge on the side facing the light at (410,485).",
+  "The wall pier at (440\u2013500, 150\u2013380) is filled with soft round tan blobs with fuzzy edges \u2014 no joints, no courses, no cut edges. It is airbrushed cloud abutting drawn masonry. Give its top surface courses with 1px recessed joints and at least two broken or patched blocks, so it uses the same drawing language as the floor.",
+  "The wall band at (210\u2013430, 405\u2013440) sits at luminance 66 while the shadowed floor at (190\u2013245, 485\u2013560) sits at 77 \u2014 11 apart, and the wall is *nearer* the light. The room's edge is currently read only from the timber beams. Push the wall-top 25\u201330 luminance below floor at equal distance from the light so the two separate on value alone.",
+  "The joints under the figure at (390\u2013460, 470\u2013500) still fall below a 10-value delta. Key joint contrast as a fixed ratio of the slab value rather than a fixed offset, so it survives at peak exposure."
+ ],
+ "withheld_because": "LOOP-PROCESS \u00a74: the plant was missed, so this round's findings are not read. Nothing here may be cited, quoted, or acted on.",
+ "progress": {
+  "rank_position": 1,
+  "deck_size": 4,
+  "rank_score": 1.0,
+  "bar_position": 4,
+  "approved_position": 2,
+  "approved_frame_in_deck": true,
+  "beats_approved": true,
+  "near_bar": true,
+  "near_bar_slack": 1,
+  "new_best": false,
+  "best_before": null,
+  "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e03020202020202020202030304040405060708080909081036382f332d2318150303020202020202020303040405060708080a090a0a0b1943433744382422190403020202020202020303040506070709090b0b0c0c0b1b4041425e49221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c4b6e62372b1c050303020202020203030c0b0b0b0e0f141414171d1a192951535b7c56362a240b0808050402020303041e1e1e20262f303540474245384a4e6c6778312f27261f16150f0c02020203041f2228263234394952545d6f776c62646f81524446362c271f161102020304041e292943445b6468789fa39e879aa09b9289725c4d3f35291c13120202020304222f2a44687d929eb3c2c1a998beba9e81776e6252423e3221131a0405050607212a263e4e57688ba2b6bbc2beaf96a29089775f53433a31211a1a0b1010112b2f1e1f2d306580a0abb0adb3b996888177776a5c5042392e20191805070708081818213944678190919fa4a4a489796856555353493f342b2119150202020203121420374c5c6a767a88736b68655f6e4e454e4c41392d231a1310060303030410171c303f4850494d4d414e53565e624e4a46413930241d1510100e08090a080a11171f2f393f212a28304c6162584a42423e362e29211b1210150d0e0e0d0b0c111218222d31341f242d485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110",
+  "moved": null,
+  "two_strikes_advisory": null,
+  "series": [
+   {
+    "round": 1,
+    "verdict": "VOID",
+    "rank_position": 1,
+    "deck_size": 4,
+    "rank_score": 1.0,
+    "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e03020202020202020202030304040405060708080909081036382f332d2318150303020202020202020303040405060708080a090a0a0b1943433744382422190403020202020202020303040506070709090b0b0c0c0b1b4041425e49221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c4b6e62372b1c050303020202020203030c0b0b0b0e0f141414171d1a192951535b7c56362a240b0808050402020303041e1e1e20262f303540474245384a4e6c6778312f27261f16150f0c02020203041f2228263234394952545d6f776c62646f81524446362c271f161102020304041e292943445b6468789fa39e879aa09b9289725c4d3f35291c13120202020304222f2a44687d929eb3c2c1a998beba9e81776e6252423e3221131a0405050607212a263e4e57688ba2b6bbc2beaf96a29089775f53433a31211a1a0b1010112b2f1e1f2d306580a0abb0adb3b996888177776a5c5042392e20191805070708081818213944678190919fa4a4a489796856555353493f342b2119150202020203121420374c5c6a767a88736b68655f6e4e454e4c41392d231a1310060303030410171c303f4850494d4d414e53565e624e4a46413930241d1510100e08090a080a11171f2f393f212a28304c6162584a42423e362e29211b1210150d0e0e0d0b0c111218222d31341f242d485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110"
+   }
+  ],
+  "guards": {
+   "stall_rounds": 3,
+   "round_ceiling": 15,
+   "no_change_mad": 0.25,
+   "no_change_max": 4,
+   "sig_grid": 32,
+   "judge_misses": 2,
+   "flip_same": 0.6
+  }
+ },
+ "transcript": ".claude/skills/frame-critic/history/r001-polish-a-184-transcript.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress \u2014 rank in the deck \u2014 never rounds elapsed."
+}

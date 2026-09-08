@@ -1371,7 +1371,19 @@ HOLLOW_SALT = 3011                         # so two mouths are not the same dish
 # for age and wrong for a lane: a specular streak that is chopped into noise cannot be followed.
 # Width now comes from the line distance UNFRAYED, so the lane runs continuous down the centre,
 # and the noise returns only at its shoulders.
-POLISH_LANE_GAIN = 0.6    # RULED DOWN from 1.9 at the gate: 'it looks like all the tiles on
+POLISH_LANE_GAIN = 0.3    # STEPPED A FOURTH TIME, 0.6 -> 0.3, #184 at the 2026-09-07 room
+                          # walk: 'the worn lane is slightly too shiny and its shine washes out
+                          # the wall-base occlusion shadow'. Same complaint, same direction, same
+                          # lever as the three steps below it. Measured on the ratified rig: the
+                          # lane's specular share of delivered floor value at the standing case
+                          # falls 22.4% -> 18.8% (worst cell 32.8% -> 29.2%), on-lane masonry
+                          # rises 0.1295 -> 0.1602 (0.90x §13.8's floor -> 1.11x, so the lane's
+                          # window goes from OUT to IN), lane-vs-flank holds at 0.373, and the
+                          # wall-base contact seam on the lane goes from 3% of the flank's to
+                          # 64%. The alternative arm — global gain 1.0 -> 0.55 — cleared the same
+                          # window but cost the lamp pool 11 luminance, which is not what the
+                          # gate asked for.
+                          # RULED DOWN from 1.9 at the gate: 'it looks like all the tiles on
                           # the walked path have been replaced'. At 1.9 the on-lane masonry
                           # measured 0.157 — NINE PERCENT above §13.8's floor, and BELOW its
                           # own flank's 0.177. The lane was washing the stones out. At 1.0 it
@@ -1407,6 +1419,17 @@ LANE_FRAY = 0.32          # tiles of jitter on the distance BEFORE the lane's fa
 LANE_FRAY_SALT = 3016
 JOINT_POLISH_FLOOR = 0.70  # no joint is more than 30% below the face beside it in specular
 
+# HOW MUCH SHINE §12.1's CONTACT BOUNDARY KEEPS — #184, ruled at the 2026-09-07 room walk:
+# "the worn lane is slightly too shiny and its shine washes out the wall-base occlusion shadow".
+# The boundary is subtracted from the ALBEDO in rungs and the specular was added in light() with
+# no knowledge of it, so the lane handed the seam back: measured on the approved capture, Weber
+# 0.3085 on flank cells against 0.0094 on the wall-adjacent lane cell — 3% of the boundary left.
+# A joint takes the shine in proportion to how filled it is and a crack at the fraction a joint
+# of its depth would; this is the same rule for the deepest recess in the plane, the place the
+# ground stops.
+# Null control: OCCLUSION_POLISH_FLOOR = 1.0 is the identity, byte-identical to the build before.
+OCCLUSION_POLISH_FLOOR = 0.0
+
 # ---- (2) DISHING ALONG THE LINE ---------------------------------------------------------------
 # The threshold hollows stay exactly as they are; this is the shallow version that follows the
 # whole route rather than only its mouths. Deepest on the centre-line, gone by the shoulder.
@@ -1434,7 +1457,15 @@ POLISH_BY_AGE = (0.0, 0.05, 0.22, 0.45)   # reflectivity by wear age; sheltered 
 POLISH_EXP = 2.0                          # how much faster than linear. 1.0 would BE an albedo
                                           # change, which is the banned lever wearing this one's
                                           # name, so the engine asserts it is greater than 1.
-POLISH_GAIN = 1.0
+POLISH_GAIN = 1.0                         # UNCHANGED. #184's lever turned out to be the LANE's
+                                          # gain, not the global one — see POLISH_LANE_GAIN. The
+                                          # global gain scales `polish_by_age` on ordinary stone
+                                          # too, and cutting it took 11 luminance out of the lamp
+                                          # pool's core (174.0 -> 163.0 at the standing case),
+                                          # which a blind seat read at once as *"the pool does not
+                                          # localise on the figure ... the light reads as room
+                                          # ambient"*. Rafe's verdict named the LANE. The lane is
+                                          # what moved.
 
 # THE HIGHLIGHT SHOULDER — RULED (Rafe, 2026-09-07), round 31. The lamp's top end rolls off
 # instead of clipping: identity below the knee, exponential to the ceiling above it, applied
@@ -1886,6 +1917,7 @@ def main():
     mat["mark_cluster_period"] = MARK_CLUSTER_PERIOD
     mat["mark_cluster_swing"] = MARK_CLUSTER_SWING
     mat["joint_polish_floor"] = JOINT_POLISH_FLOOR
+    mat["occlusion_polish_floor"] = OCCLUSION_POLISH_FLOOR
     mat["polish_lane"] = [POLISH_LANE_GAIN, POLISH_LANE_WIDTH, POLISH_SHOULDER]
     mat["occlusion_floor"] = OCCLUSION_FLOOR
     mat["striation"] = [STRIA_PERIOD, STRIA_DEPTH]
