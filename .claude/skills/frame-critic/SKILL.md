@@ -19,6 +19,8 @@ obvious defect. That is the verdict.
 ```
 exit 0  PASS   the seat would ship this frame, flagged nothing in it, and ranked it at or
                above the last Rafe-approved frame and near the asset bar. Any round.
+        PASS-INSTALL  against a SEEDED reference: ranked ABOVE it, with no unrouted flags.
+               Same exit, same gate. See §4a.
 exit 1  FAIL   any of those missing; the flip list is in CRITIC-VERDICT.json, verbatim
 exit 2  VOID   it did not catch the plant. Findings are NOT READ. Stop and fix the judge.
 exit 3  STOP   a loop guard fired. Read STALL-REPORT.md, end the turn, hand it to Rafe.
@@ -268,6 +270,21 @@ A **VOID** round's rank is not evidence — §4 says its findings are not read, 
 include its rank — so void rounds are excluded from the progress series. They still count toward
 the ceiling: they consumed a round.
 
+**THE SERIES IS THE ITEM UNDER WORK, NOT THE LANE — LAW (Rafe, 2026-09-08).**
+
+> *"Progress-guard scope = the item under work, not the lane; the routed-PASS record cannot cap
+> future items."*
+
+A PASS state **closes an item**; rounds after it belong to the next one and do not inherit the
+closed one's record. Without this the guards saturate: a `PASS-WITH-ROUTED-ITEMS` at rank 1.00
+with zero unresolved flips sets `(1.00, shipped, 0)` — the arithmetic maximum a deck can produce
+— and **nothing can ever beat it**, so the stall guard was certain to fire three readable rounds
+later however good the following work was. That is bible §13.11 a fourth time, in the guard
+§13.11's second instance was written into.
+
+The cut is **derived from the verdicts on disk**, at the last PASS. It is not a counter reset and
+nothing is deleted — the same law the park-clear runs on.
+
 ### The series is in the verdict files
 
 Every verdict carries `progress`, including the **whole rank series to date** and each round's
@@ -281,6 +298,78 @@ the line stopped, which guard fired, and where the report is. Do not summarise t
 Rafe reads it.
 
 ---
+
+### PASS-INSTALL — what a PASS means once a reference is seeded
+
+**LAW (Rafe, 2026-09-08).**
+
+> *"PASS for polish rounds against a seeded reference = rank above `approved_capture` ∧ no
+> unrouted flags → PASS-INSTALL; SHIP stays recorded as the wowed signal, not the install gate —
+> the seeded reference is the human-ratified install bar."*
+
+**THE REASON, and it is why this is not a loosening: SHIP∧rank was ratified against a NULL
+REFERENCE.** Every round the combined lane ran before 2026-09-07 recorded *"NO APPROVED FRAME IN
+THE DECK — that half of the bar is untested this round."* Half the comparative bar was missing
+since the lane began, so **SHIP was the only thing standing between a build and the phone and it
+had to carry the whole gate alone.** §4's own impeachment says what that cost: a blind seat's
+ordering does not reproduce the human gate's, and SHIP is a stranger's answer to *would you put
+this in front of a paying player and defend it* — a question about finished work, not about
+whether a build may be walked.
+
+With a serviceable reference seeded, the deck contains **a frame the human gate has already
+ratified as installable**. Beating it gates the build *above the bar it measures against*, which
+is a stronger claim than the null-reference rule could make and a different one from SHIP.
+
+| | gates the install | recorded |
+|---|---|---|
+| **rank above `approved_capture`** | **yes** — the human-ratified bar | always |
+| **no unrouted flags** | **yes** | always |
+| SHIP | no — it is the *wowed* signal | always, in the verdict |
+
+**It REQUIRES the reference.** With `approved_capture` null there is nothing to be above, and the
+rule falls back to the ratified SHIP∧rank conjunction — the state it was written for. A gate that
+silently weakens when its comparator goes missing is the failure this whole mechanism exists to
+prevent, so `critic_gate.py` refuses a PASS-INSTALL whose deck carried no reference rather than
+treating the absence as a pass.
+
+**"No unrouted flags" is evaluated at two points.** At round time it means *the seat did not flag
+the build*; a flagged build is a FAIL. Only the human gate can route a flag, by amending the
+verdict with a quoted ruling and a named destination per item — and `critic_gate.py` re-derives
+both conditions from the verdict's own recorded numbers rather than trusting the label, because a
+verdict that merely *says* PASS-INSTALL proves nothing.
+
+> ### ⚠ IMPEACHED ON THE DAY IT WAS RATIFIED, AND HELD FROZEN
+>
+> **The rank term is not stable across seats on an unchanged picture.** Lane `polish-c-183` judged
+> **the same frame twice** — build sha `839fb12f`, "picture moved mean 0.000 / worst 0":
+>
+> | round | build rank | reference rank | verdict under this rule |
+> |---|---|---|---|
+> | r001 | **1 of 4** | 2 | PASS-INSTALL |
+> | r002 | **2 of 4** | 1 | FAIL |
+>
+> The build and the reference **swapped places with no pixel changing**. §4 already records that a
+> blind seat's ordering does not reproduce the human gate's; this is the sharper version — the
+> ordering does not reproduce *itself*.
+>
+> **The rule is NOT re-tuned here.** LOOP-PROCESS §8: a bar found wanting mid-run is held frozen,
+> cleared honestly and impeached in the same report, never adjusted once the answer is visible.
+> It is recorded so that whoever rules on it next is ruling on the evidence:
+>
+> - PASS-INSTALL rests entirely on rank, and rank flipped on a re-run.
+> - The old SHIP∧rank rule was not exposed to this, because SHIP was the binding term and rank
+>   only ever *added* a condition. Making rank the sole discriminator moved the whole gate onto
+>   the least stable thing the deck produces.
+> - The safe direction is unchanged: the gate refuses more often than it opens, and a build that
+>   flips to FAIL on a re-run simply does not install.
+>
+> **What it does not touch:** the plant, which caught on both rounds, and the two SHIP terms,
+> which are recorded either way.
+
+**Proved before it was believed** (§13.5). `prove_gate.py` drives the real gate through the three
+ways the state can fail — no reference in the deck, build below the reference, an item left
+undispositioned — as well as the two ways it opens. A new state's pass counts for nothing until
+it has been shown to refuse.
 
 ### PASS-WITH-ROUTED-ITEMS — the third lawful verdict state
 

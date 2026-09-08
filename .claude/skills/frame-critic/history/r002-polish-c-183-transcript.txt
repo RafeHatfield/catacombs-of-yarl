@@ -1,0 +1,59 @@
+I read all four at native resolution and again at 3–6× on the regions I cite, plus a pixel-diff between the three 750×911 frames to confirm what actually differs between them.
+
+RANK: 1 > 3 > 4 > 2
+
+BEST: 1
+
+BEST_WHY: The wall course at y≈390–450, running from x=180 to the corridor mouth at x=500. It is two stacked runs of stone with vertical timbers driven through them at x≈270, 348, 415, 480 — and the courses do not line up. The upper run's block breaks fall at different intervals from the lower run's, the timber at x≈348 crosses both courses while the one at x≈415 only crosses the upper, and one block at x≈425 has a small L-shaped patch let into its face at a different value from the surrounding stone. That is a wall someone built out of what was to hand and then pinned, rather than a repeated tile. Second thing, at the corridor mouth x≈500–520, y≈380–460: the timber ends there are cut short and the stone beside them is chewed back, so the corridor edge reads as a hole that was widened and then braced, not as a gap left in a tileset. Third: in the lit pool immediately left of the figure, x≈230–390, y≈460–560, the flagstone joints are legible as a grid but the joint *width* changes along a single run — the horizontal joint at y≈505 is 1px from x=230 to x=290 and 2px from x=300 to x=370. The stones read as cut and settled.
+
+WORST: 2
+
+WORST_WHY: Two incompatible projections in one 384×288 frame, roughly 100px apart. The crates at x≈64–97, y≈0–90 are drawn in **elevation** — you are looking at their front faces, you can count vertical plank lines running down the lower half of each, and each casts a soft drop shadow downward onto the dirt as if lit from behind the camera. The barrels at x≈112–135 and x≈160–183, y≈188–215 are drawn as top ellipse **plus staved body receding downward**, so their height occupies vertical screen space, and they cast no shadow at all. The flagstone floor beneath them is flat top-down. Worse, both barrels' bodies are **sliced flat by the dirt/flagstone seam at y≈215** — the staves just stop on a dead horizontal line at a floor-material boundary. An object clipped by a texture edge is the single most placeholder-looking thing in the deck. On top of that the frame has **no light falloff whatsoever**: the premise is a figure carrying the only light there is, and this image is at identical exposure from x=0 to x=383. And the brick at x≈165–186, y≈272–278 in the bottom course is a visibly lighter grey than every other brick in that run — one wrong tile, sitting in the middle of the frame's bottom edge.
+
+FLAGGED: 2, 4, 1, 3
+
+- **2** — the barrel/crate projection clash and the sliced barrel bases, above.
+- **4** — a diagonal streak overlay across the entire lit pool, x≈340–520, y≈450–600, running lower-left to upper-right at a constant angle with constant spacing. It crosses stone and joint indiscriminately and, critically, it *erases* the flagstone joint grid that 1 and 3 both have in that exact area: in 1 you can count five individual flagstones left of the figure, in 4 that same area is one smeared bright wash. This is the literal "a filter was run over it" failure, and the pixel-diff confirms it is the only meaningful difference between 1 and 4.
+- **1 and 3 share one flag**: a dead-straight vertical material seam at x≈380–440, running from y≈460 to the bottom edge. Left of it: large square flagstones on a ~40px grid, cool grey-green cast. Right of it: small running-bond bricks, roughly 48×22, warm tan. Two floor materials at two different stone scales butted edge to edge with no threshold course, no jamb, no wear transition. You see it at a glance because the value and hue both jump on the same line. (4 has this too; it is flagged above for the worse fault.)
+
+SHIP: NONE
+
+FLIP 1:
+- The vertical material seam at x≈380–440: either run one course of the small bricks *into* the flagstone field as a patched trench — three or four bricks stepping left past x=380 at y≈560, 640, 700 with broken edges — or lay a single long threshold stone down the seam and let both fields die into it with chipped ends.
+- The object at x≈280–380, y≈635–715 (below-left of the figure) is an unreadable brown mush with a soft silhouette while every stone around it is hard-edged. Redraw it as a specific thing: give it a flat top face at a single value, a 1px darker edge on all four sides, and one piece of construction — two hoop bands, or a plank seam — so the player can name it.
+- That same object has no contact shadow. Add a 2px darkened band along its lower and right edges, dropped ~1.5 steps in value, so it sits on the floor instead of on top of it.
+- The figure at (400,485) also casts nothing. Add a small contact darkening under the boots only, 3–4px, so it makes ground contact.
+- The hairline crack that enters at (240,470) and exits right at (750,640) is drawn *after* the lighting: at (700,620) it is still at full contrast while the stone joints around it have collapsed to black. Multiply it by the same light mask as everything else so it fades out with the falloff.
+- Same crack, whole length: it is 1px at constant value and constant width, and it does not jog when it crosses a joint. Vary it to 1–2px, break it at three or four joints, and let it terminate rather than running off the frame edge.
+- The diagonal hatch cluster — 4–5 parallel slashes at a fixed angle — is stamped identically at (470,585), (500,620), (490,655), (410,745) and roughly a dozen more places across the floor. Mirror, rotate 90°, and vary the stroke count on at least half of them, or delete two-thirds of them.
+- The pure-black rectangle at x=0–120 with a razor-straight vertical edge at x≈120 and a hard horizontal cut at y≈640 sits against a soft-graded floor. Two darkness systems in one frame. Feather that boundary to match the falloff, or if it is meant to be an unlit room, give it a wall edge to be black *behind*.
+- Same for the black rectangle at x≈655–750, y≈140–390.
+- The wall masses flanking the corridor (x≈510–650, y≈150–380) are mottled brown noise with no courses, no joints and no top-surface delineation, while the floor 200px below is crisply cut stone. Give those masses at least a top-surface value plate and two or three course lines so they read as built.
+
+FLIP 3:
+- Everything in FLIP 1 applies — 3 carries the same material seam, the same unlit-rectangle hard edges, the same lighting-independent crack, and the same repeated hatch stamp.
+- The band at x≈180–500, y≈385–430, directly above the pin course, is structureless soft brown mottle — no block breaks, no joints, no edges — while the identical region in 1 is articulated stone. Rebuild that band with the same block-and-timber language as the course below it, or cut the wall thinner so the mottle isn't there.
+- The transition from that mottle into the pin course at y≈430 is a soft blur. Put a hard 1px edge on the top of the pin course so the two read as different surfaces rather than one gradient.
+
+FLIP 4:
+- Remove the diagonal streak overlay across x≈340–520, y≈450–600 entirely. It is a uniform-angle, uniform-spacing pass laid over the lit pool.
+- Restore the flagstone joint grid it erased: the five stones left of the figure between x=230 and x=390 need their 1–2px joints back at the same varied widths they have in the unfiltered version.
+- Then apply every item in FLIP 1.
+
+FLIP 2:
+- Pick one projection and hold it. The barrels at x≈112–135 and x≈160–183 show top ellipse *and* staved body; the crates at x≈64–97 show only front faces and plank lines. Redraw the crates as top-down lids — four board seams, corner brackets, no visible front face — or redraw the barrels as top ellipses only with a 2px rim.
+- The barrel bodies are cut flat by the dirt/flagstone boundary at y≈215. Move both barrels up so no part of them crosses a material boundary, and draw them over the floor rather than into it.
+- Pick one shadow convention. Right now the crates drop a soft shadow downward, the green figure at x≈208–232, y≈0–24 has a hard black ellipse, and the barrels have nothing. Give every standing object the same contact shape at the same opacity.
+- The frame has zero light falloff. Add the carried-light mask: full value within ~5 tiles of the figure, dropping to near-black at the frame corners, applied to floor, water, props and wall alike.
+- The green water at x≈248–343, y≈0–190 is a flat teal slab with perfectly straight vertical edges at x=248 and x=343 and a square corner at (343,190). Add a shoreline: 2–3px of darker wet stone along the bank, an irregular edge that breaks the tile line by 1–4px, and a value gradient going darker toward the middle of the pool.
+- The lily pads at (296,20), (280,44), (296,132), (300,148), (272,196) are two stamps repeated at two sizes with an identical light "star" scratch on each. Vary silhouette and rotate the scratch, or reduce to two pads.
+- The dirt field x≈56–248 is one 16px noise tile repeated across roughly 12×18 cells with no variation; the red-brown speckle pattern visibly steps. Add at least three variant tiles, plus larger-scale value blotching that ignores the tile grid.
+- The flagstone grid at x=0–56 and y=216–265 uses a single 1px joint at one constant value for every stone. Vary joint value and width, break two or three joints, and settle a few stones a step darker.
+- The brick at x≈165–186, y≈272–278 is a lighter grey than the rest of its course. Match it.
+- The wooden post at x≈27–35, y≈127–166 crosses out of the dark brick band at y≈142 onto the dirt with no shadow and no footing. Give it a base — a socket stone, or splayed dirt — and a cast shadow consistent with whatever convention you settled on above.
+- The bone scatter at x≈205–232, y≈105–125 is loose white pixels floating on the dirt with no bedding. Darken the dirt 1 step immediately under each fragment and drop the whitest pixels a step so they sit in the ground rather than on the glass.
+- The dirt/flagstone boundary at y≈215 and x≈56 is a hard axis-aligned cut on tile lines. Break it with a few tiles of scatter — dirt spilled two or three pixels over the stone, stone showing through where the dirt is thin.
+
+The pattern across the deck: 1, 3 and 4 are the same frame at three levels of finish, and the one thing that separates them is whether a post-pass helped (1), was absent (3), or was actively destructive (4). That post-pass is where I'd spend the effort — the underlying stonework in 1 is genuinely good, and it is being let down by a crack line and a hatch brush that were both applied outside the lighting model. 2 is not a finish problem; it's a projection problem, and no amount of polish fixes a barrel sliced by a floor seam.
+
+*Model: Claude Opus 5 (1M context).*

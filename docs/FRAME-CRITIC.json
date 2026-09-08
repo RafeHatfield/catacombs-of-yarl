@@ -148,19 +148,14 @@
   "approach station put the route's lit run off to one side. A capture composed around the",
   "PLAYER is not composed around the ROUTE'S VISIBLE PORTION once the lamp is carried."
  ],
- "axis": "construction",
+ "axis": "tonal",
  "_axis": [
   "WHICH QUESTION THIS ROUND ASKS, and therefore which plant the deck draws.",
   "",
-  "RULED BY THE ITEM (2026-09-07, polish list item B): 'construction'. The change under test is a",
-  "PLACEMENT correctness fix — §3's front face was being drawn half a cell up and left of the cell",
-  "it belongs to, so a south-facing reveal landed across a corridor opening. Whether the place",
-  "reads as built and held is exactly the construction question, and cement-cap is the morgue's",
-  "construction cull.",
+  "RULED BY THE ITEM (2026-09-07, polish list item C): back to 'tonal'. The change under test is",
+  "#183's hero light response — how much of the lamp's top end the sprite receives — which is a",
+  "value question, and blown-highlight is the morgue's tonal cull.",
   "",
-  "Previous value: 'tonal', for item A (#184, polish gain and the wall-base occlusion). Move it",
-  "when the question moves, and say so in the round. Per the ratified per-axis law a plant is only",
-  "a control if it is wrong on the axis under test — round 4 and wall round 5 both VOIDed on a",
-  "plant-axis mismatch."
+  "Item B ran on 'construction' for the face-placement fix. Move it when the question moves."
  ]
 }
