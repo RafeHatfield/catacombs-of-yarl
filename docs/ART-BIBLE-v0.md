@@ -1292,6 +1292,59 @@ and a parameter row is therefore not evidence. **Probe total: 174 generations.**
 
 ---
 
+### 6.5 The value stack — RULED (Rafe, 2026-08-27), RE-SCOPED (2026-08-29), **ROW 1 RETIRED AS A DELIVERED TARGET (Rafe, 2026-09-07)**
+
+> ## ⚠ ROW 1 IS RETIRED AS A DELIVERED TARGET — RULED (Rafe, 2026-09-07)
+>
+> *"Wall top ≈ 1.11 × floor — lighter than the floor"* is **withdrawn as something the engine is
+> asked to deliver.** It is not softened, re-scoped or deferred: it is no longer a target.
+>
+> **The evidence, and it is three rounds deep and taken on ONE arithmetic:**
+>
+> | round | `L(cap, floor)`, standing case | direction |
+> |---|---:|---|
+> | 28 (across the #174 defect) | 50.22 levels | cap **below** floor |
+> | 29 (corrected lamp, old rig) | 72.56 | cap **below** floor |
+> | 30 (re-ratified rig) | **89.64** | cap **below** floor |
+>
+> **Every correction moved it further from row 1, never toward it.** The floor gains more than the
+> cap does at every range, because the floor is nearer the carried lamp by construction — and a
+> blind seat has asked for the separation three rounds running while the number was going the
+> other way.
+>
+> **And the 1.11 was never a delivered number.** It came from the asset bar's own screenshot,
+> whose scene has **no run-time light in it at all** — §6.5's own re-scoping said so in 2026-08-29
+> and the consequence was not drawn. In a lightless frame a wall top brighter than the floor costs
+> nothing. Under a carried lamp the floor a wall faces is always nearer the light than the wall's
+> own top — by one tile plus the half-tile the top band sits back inside its own cell — so
+> **k_top cannot reach 1.0 at any range**, which the flat-albedo probe measures as
+> 0.87 / 0.67 / 0.48 / 0.30. A target that requires k_top > 1 is a target the rig cannot express.
+>
+> ### What the LAW keeps, and it is most of it
+>
+> 1. **The 2:1 separation between the wall's own two planes.** A local relationship, it survives
+>    the falloff, and it was the whole finding of the wall campaign — Yarl's planes were
+>    **inverted**, and that correction stands untouched.
+> 2. **Cap-versus-floor distinctness — BY MATERIAL, TEXTURE AND BOUNDARY OCCLUSION, NEVER BY
+>    BRIGHTNESS.** The cap must read as a different *thing* from the floor: a different grain, a
+>    different course, a hard boundary where the plane turns. What it must no longer do is read as
+>    a different thing *because it is lighter*, because under a carried lamp it cannot be.
+> 3. **The register derivation is untouched** — the top catches light, the face is enclosed. That
+>    is why the stack exists and it was never a measurement.
+>
+> ### Why this is a retirement and not a failure
+>
+> The clause was written from a lightless reference and asked the engine for something a carried
+> lamp forbids. **Chasing it further would have meant authoring the cap brighter and brighter
+> against a floor that keeps outrunning it** — solving the art backwards against physics, which is
+> the §6.3 line and the failure the coupling flag was raised to prevent. Retiring the row is what
+> the measurement has been saying for three rounds.
+>
+> ⚠ **Consequence for the seats:** *"give the wall top a value separation from the lit floor"*
+> is now a **REFUSED** request wherever it asks for brightness, and a **MAKE-IT-READ** item
+> wherever it asks for distinctness — §13.4.1's shape exactly. The successor is material, not
+> value.
+
 ### 6.5 The value stack — RULED (Rafe, 2026-08-27), RE-SCOPED (Rafe, 2026-08-29, at the wall gate). ⚠ EVERY NUMBER IN THIS CLAUSE IS UNDER #174 (2026-09-05).
 
 > ⚠ **READ §6.2's #174 ASTERISK BEFORE ANY NUMBER BELOW. RULED (Rafe, 2026-09-05).**
