@@ -1,0 +1,68 @@
+I read all four at full resolution and re-examined them cropped and pixel-doubled; 2, 3 and 4 turn out to be the same base render with three different light passes over it, so I diffed them to isolate what each pass does.
+
+---
+
+**RANK:** 2 > 4 > 3 > 1
+
+**BEST:** 2
+
+**BEST_WHY:** The crack network on the floor is authored, not scattered. At (314,602) there is a single impact node with four cracks radiating from it, and each one is drawn as a hard 1px stair-step on the pixel grid — no anti-aliasing, no smooth bezier laid over pixel art. Where a crack crosses a slab joint at roughly (350,575) it kicks sideways by a pixel instead of running straight through, which is what a fracture does when it meets a seam. The slab joints themselves vary: some are a single dark pixel, some are a 2px doubled line, and a few slabs around (280,560) abut with almost no joint at all, so the floor reads as laid stone rather than a stamped grid. The repair language is present and specific — a driven pin at (365,585) rendered as a vertical bar with a wedge head, and groups of incised tally scores at (600,545) and hatch scores at (640,480) cut at slightly different angles per group. And the light falloff at the pool's right edge, (430,440)–(560,640), is a genuinely smooth gradient with no banding and no stepping.
+
+**WORST:** 1
+
+**WORST_WHY:** The two barrels at (128,200) and (176,200) are pixel-identical copies of one sprite placed side by side, and both are **sliced flat by the dirt/flagstone seam at y=214** — the bottom third of each barrel body is simply gone, cut by a terrain edge on a dead-straight horizontal line. That is a masking bug, not a style choice. Beneath it, the flagstone row at y=214–265 repeats one tile thirteen times across the full frame width with zero variation: the same pale squiggle scratch sits at the same sub-tile offset in every single stone. The brick course at y=265–288 does the same, and one brick at roughly (163,271)–(188,281) is rendered a step lighter than every other brick in the run for no reason — a single wrong tile in the atlas. The water at (248,0)–(344,191) is a perfect rectangle: hard vertical sides, a hard horizontal bottom, a clean 90° corner at (248,191), no bank, no shoreline, no wet margin on the dirt, no depth shading — it abuts the flagstone at x=344 on a straight seam with no lip. The dirt field's left edge at x=56 is likewise a knife-clean vertical cut against flagstone with no transition tile. The two crates at (63,2)–(97,43) and (63,49)–(97,90) are the same sprite twice, same lid, same diamond keyhole in the same position, and neither has a contact shadow. The black brick band at (10,123)–(56,143) is a three-tile wall fragment floating in the middle of the floor with no ends, no returns and no connection to anything, with an orange-and-black striped bar at (26,125)–(35,147) sitting on it and a brown pole running out of its underside down to y≈170 — an object that reads as nothing.
+
+**FLAGGED:** 1, 2, 3, 4
+
+Per image:
+
+- **1** — barrels clipped by the terrain seam; the identical-tile flagstone row; the rectangular water with no shoreline.
+- **2, 3, 4** (shared) — the figure is a **side-profile sprite standing in a plan-view room.** At (378,455)–(440,515) you see a face in profile with a nose and one eye, a sword held out horizontally at shoulder height, a round shield presented face-on, and two boots viewed from the side. Every other object in the frame — floor slabs, wall runs, the crate at (310,645) — is drawn straight down. Two projections in one image. Compounding it: **he is carrying no light.** Both hands are full, sword and shield, no torch, no lantern. The entire lighting premise of the frame is a figure carrying the only light there is. He also receives nothing from the lamp — flat cel shading, saturated cyan and orange against a frame where nothing else exceeds about 20% saturation, a hard black 1px outline where nothing else is outlined, and no contact shadow under the boots. He floats and he reads as pasted in.
+- **4** additionally — the light pool's boundary is quantised to whole tiles. Along (430,440)–(560,640) the falloff is a staircase of fully-lit and fully-unlit squares stepping diagonally, and there is a lit rectangle sitting isolated inside the shadow at roughly (500,455)–(535,500). The diff against 2 confirms it: the extra illumination 4 adds has hard axis-aligned block edges throughout.
+- **3** additionally — light lands on geometry the lamp cannot reach. The horizontal wall run at y≈388–425 is lit across the **entire frame width**, out to x=749, roughly 340px from the figure, while the floor directly below it at the same distance stays black. The consequence is the frame's worst structural failure: the crisp dark line at the wall's foot, which in 2 and 4 sits at y≈425 at a value of 13, is gone in 3 — replaced by value 43, the same as the floor in front of it. Across the right half of 3 you cannot tell where the wall stops and the floor starts. There is also a lit fragment at (23,640)–(160,710), bottom-left, not connected to the light pool at all.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- Cut the barrels at (128,200) and (176,200) free of the terrain mask so their full bodies draw over the flagstone instead of terminating on the seam at y=214; add a contact shadow under each.
+- Give the two barrels different sprites, or at minimum rotate one lid and offset its stave alignment — they are currently the same pixels twice.
+- Author at least four variants of the flagstone tile used in the row at y=214–265 and randomise placement; the pale scratch currently sits at an identical sub-tile offset in all thirteen stones.
+- Correct the single light brick at (163,271)–(188,281) to the same value as the rest of the course at y=265–288.
+- Build an edge set for the dirt/flagstone boundary: the vertical cut at x=56 and the horizontal cut at y=214 need transition tiles with dirt spilling a few pixels onto the stone and stone showing through the dirt, plus scatter at the corner (56,214).
+- Build a shoreline for the water at (248,0)–(344,191): a darker wet margin two to three pixels wide on the dirt side, a value ramp into the centre so the pool has depth, and break the dead-straight bottom edge at y=191 so it does not terminate on a 90° corner.
+- Vary or remove the duplicated lily-pad sprite — the same pad with the same white asymmetric stem mark appears unrotated at (355,20), (330,110), (348,122) and (275,163).
+- Break up the dirt fill between x=56–344: the red speckle cluster repeats on a visible regular lattice down the whole field.
+- Resolve the wall fragment at (10,123)–(56,143) — give it ends and a connection to another wall, or remove it; and replace the orange striped bar at (26,125)–(35,147) with something that reads as an object.
+- Add distance-from-figure falloff. The frame is uniformly lit edge to edge with no contact shadows anywhere, which is why every object reads as a decal on a flat plane.
+- Bring the orc at (207,0)–(233,25) into the environment's key. Its green is the most saturated colour in the frame by a wide margin and sits in no other element.
+- Redraw the figure in the same projection as the room, or accept the mismatch deliberately — currently it is a front-facing sprite (both eyes, both arms, both legs visible) on a plan-view floor.
+
+**FLIP 2:**
+- Redraw the figure at (378,455)–(440,515) as a top-down sprite: crown of the head and shoulders visible, no profile nose, no face-on shield disc, no side-view boots.
+- Put a light source in the sprite's hand — a torch or lantern — and make it the visual origin of the pool. Currently the sword and shield occupy both hands and the light emanates from nothing.
+- Light the sprite from its own lamp: warm on the lamp side, cooler and darker on the away side. It is currently flat-shaded and identical in all three lighting passes.
+- Add a contact shadow beneath the boots; the figure sits on the floor with no darkening under it at all.
+- Desaturate the cyan helmet and belt and the orange hair toward the environment's palette, and drop the hard black outline, or add comparable outlining to the props so it is a consistent rule rather than one exception.
+- Separate wall from floor by more than value. The horizontal run at y≈425–460 uses the same masonry module at the same scale as the floor slabs and is distinguished only by being darker — give it a lit top surface, a visible thickness edge, and a cast shadow with width onto the floor, not the current 1px line. This is the fault that makes frame 3 collapse when the light changes.
+- Give the black rooms at (150,140)–(440,390) and (630,70)–(750,380) a floor. They are flat near-zero with no material and hard axis-aligned edges against textured floor, so they read as holes cut in the image rather than dark space; a 4–6% value floor texture and a short ramp into the boundary fixes it.
+
+**FLIP 3:**
+- Restore the dark line at the base of the horizontal wall run at y≈425. It currently sits at value 43 against a floor of the same value across the right half of the frame; in 2 and 4 it is 13. Without it the wall stops reading as an object.
+- Stop the light pass reaching the wall run beyond the lamp's radius. Wall tiles at x≈700, y≈400 are lit at roughly 300px from the figure while the floor immediately below them is black — the wall is receiving illumination on a different falloff curve to the floor. Put both on the same curve.
+- Remove the disconnected lit patch at (23,640)–(160,710). It is separated from the light pool by unlit floor and has no source.
+- Restore the contrast on the driven pins in the wall face between x=200 and x=500 — they are crisp near-black verticals in 2 and washed to mid-grey here, so the repair detail that gives the wall its character has been flattened out.
+- All FLIP 2 items on the figure and the black rooms apply here unchanged.
+
+**FLIP 4:**
+- Fix the light-pool quantisation. Along (430,440)–(560,640) the boundary steps in whole lit/unlit squares; the falloff needs to be evaluated per pixel, or the tile mask needs blurring before it multiplies the frame. The diff against 2 shows the added light has hard block edges throughout its extent.
+- Remove the isolated lit rectangle at roughly (500,455)–(535,500) sitting inside the shadow at the wall corner — it is brighter than floor nearer the lamp.
+- Reconcile the pool's reach with 2's: the light spills up the vertical corridor to y≈259 and onto the wall face here, on a different curve to the floor, producing the bright wedge at (505,260)–(570,440).
+- All FLIP 2 items on the figure and the black rooms apply here unchanged.
+
+---
+
+Worth saying plainly: 2, 3 and 4 are one frame with three light passes. Judging them as three frames flatters the set — the underlying environment art is made once, and it is the strongest thing in the deck. The recurring failure across all three is that the lighting model treats walls and floors as the same surface, and the figure was authored for a different game than the room he is standing in. Fix those two and 2 ships; 3 and 4 are then light-pass parameters, not art problems.
+
+*Model used: Claude Opus 5 (1M context).*

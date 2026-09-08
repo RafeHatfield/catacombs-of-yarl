@@ -1116,11 +1116,32 @@ def main():
     # three seats draw the same picture-plant and their catches are CORRELATED — the panel
     # multiplies the rank samples but not the plant's evidence. That is a real limit of this
     # implementation and it is reported per round rather than hidden.
+    # ── PLANTS ARE DEALT WITHOUT REPLACEMENT — the ruled property, delivered ─────────────────
+    #
+    # RULED (Rafe, 2026-09-08): "each seat its own axis-matched plant."
+    #
+    # The first implementation had each seat draw INDEPENDENTLY, which delivers that only
+    # probabilistically. Measured over 900 simulated rounds with a two-member set and three
+    # seats: **all three seats draw the SAME plant in 24.8% of rounds** (chance is exactly 25%,
+    # so the draw was sound — the DESIGN was what fell short). A quarter of rounds therefore had
+    # fully correlated plant evidence, which is the thing the second plant was seeded to end.
+    #
+    # It cost a VOID immediately: r002 on this lane hit that case, all three seats drew the
+    # weaker plant, one missed it, and the round was void on a judge that two seats had passed.
+    #
+    # Dealing without replacement — shuffle the candidates once per round, then seat i takes
+    # i mod n — guarantees that with two plants and three seats BOTH are exercised every round.
+    # A seat missing one is then visible against another seat catching the other, which is the
+    # discrimination a panel is for. With one candidate it is identical to the old behaviour.
+    deal = list(candidates)
+    random.Random(hashlib.sha256(("%s|%d|%s|deal" % (lane, rnd, bid)).encode())
+                  .hexdigest()).shuffle(deal)
+
     def seat_round(seat_idx):
         """One independent seat: its own deck, its own shuffle, its own plant. Returns a dict."""
         salt = "%s|%d|%s|seat%d" % (lane, rnd, bid, seat_idx)
         srng = random.Random(hashlib.sha256(salt.encode()).hexdigest())
-        seat_plant = srng.choice(candidates)
+        seat_plant = deal[seat_idx % len(deal)]
         work = os.path.join(os.path.expanduser(cfg.get("work_dir", "~/.claude/frame-critic")),
                             "deck-" + hashlib.sha256(salt.encode()).hexdigest()[:16])
         if os.path.commonpath([os.path.realpath(work), os.path.realpath(REPO)]) \
@@ -1221,10 +1242,21 @@ def main():
         # single sample wearing a threshold (LAW, Rafe 2026-09-08).
         print("   rank's noise floor on THESE bytes: %d/%d seats disagree with the majority"
               % (min(n_above, len(seats) - n_above), len(seats)))
-        if len(set(id(sd["plant"]) for sd in seats)) == 1:
-            print("   ⚠ every seat drew the SAME plant (the axis-matched set has one member),")
-            print("     so the plant catches are CORRELATED — the panel multiplies rank samples,")
-            print("     not the plant's evidence.")
+        distinct = len({sd["plant"]["file"] for sd in seats})
+        if distinct == 1:
+            # ⚠ SAY WHICH IT IS. This line used to assert the CAUSE — "the axis-matched set has
+            # one member" — without checking it, and was printed on a round where the set had
+            # two. A note that states an unchecked cause is the same defect as an instrument
+            # that does (§13.10): report what was observed, and the count that explains it.
+            print("   ⚠ every seat drew the SAME plant (%s), so the plant catches are CORRELATED"
+                  % seats[0]["plant"]["file"])
+            print("     — the panel multiplies rank samples, not the plant's evidence.")
+            print("     axis-matched candidates available: %d%s"
+                  % (len(candidates),
+                     " — seed another cull on this axis" if len(candidates) == 1 else ""))
+        else:
+            print("   plants dealt without replacement: %d distinct across %d seats"
+                  % (distinct, len(seats)))
 
     try:
         r = parse(text, len(deck))
