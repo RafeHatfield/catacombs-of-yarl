@@ -2786,10 +2786,17 @@ the relationship between them moved.
 > If the check cannot be expressed that way, the rule is not yet understood well enough to gate
 > on.**
 
-⚠ **This does not licence deriving a THRESHOLD from the build.** The floor a derived property is
-compared against is ruled and stays ruled — §13.8's 0.1440 is not re-derived per capture, which
-would be the saturating-reference failure (§13.11) wearing this law's name. **Derive the
+⚠ **THE BOUNDARY — RATIFIED (Rafe, 2026-09-08):** *"§13.12 licenses deriving the measurement,
+never the bar; re-deriving §13.8 per capture is §13.11 in disguise."*
+
+The floor a derived property is compared against is **ruled and stays ruled**. §13.8's 0.1440 is
+not re-derived per capture — a bar that moves with the artefact it judges is the saturating
+comparator of §13.11 wearing this clause's name, and it would pass everything. **Derive the
 measurement; never derive the bar.**
+
+The two laws are therefore a pair and are read together: §13.12 says *measure the property on the
+build*, §13.11 says *against a reference that cannot move with it*. Either one alone is a way to
+build a check that always agrees with whoever wrote it.
 
 ### 13.13 A gate's binding term must have a MEASURED NOISE FLOOR, and must never be a single sample — LAW (Rafe, 2026-09-08)
 
@@ -2837,6 +2844,43 @@ softer.
 ⚠ **And a panel is not independence for free.** Where the axis-matched morgue set has one member,
 every seat draws the same plant and their catches are **correlated** — the panel multiplies the
 rank samples but not the plant's evidence. Reported per round rather than assumed away.
+
+### 13.14 Flag disposition — matched, measured-false, or it goes to the gate — RULED (Rafe, 2026-09-08)
+
+A blind seat's flag is not automatically work. It is one of three things, and **which one must be
+checkable by someone other than the person asserting it.**
+
+| state | means | requires | who may assert |
+|---|---|---|---|
+| `ROUTED-ALREADY` | this is the thing we already decided | **a citation** — an issue (`#nnn`) or a clause (`§x.y`) that RESOLVES | the builder |
+| `MEASURED-FALSE` | the stated cause is not what is happening | **the measurement** that disproves it **and the percept, recorded** | the builder |
+| `ROUTED` / `CLOSED` / `PARKED` | a new destination, or a decision not to chase | **Rafe's words, quoted** | Rafe only |
+
+**Only new, unmatched flags block — and those go to Rafe.**
+
+**The division of authority is the point.** A builder disposing by citation is *not* routing: it
+asserts a **match against a record that already exists**, and the citation is what lets anyone
+else look it up and contradict it. An uncited match is an opinion. A routing is the creation of a
+new destination, and that stays with the human gate.
+
+**The citation is checked, not trusted** (`critic_gate.check_dispositions`): a cited clause must
+exist in the bible or the process law, and a cited issue must appear in the repository's own
+record. ⚠ **And the search space is the RECORD, not the repo** — the first implementation grepped
+everything, and its own proof caught it: the case asserting that an invented issue number is
+refused has to *write that number into the test file*, so the grep found it and the citation
+passed. An assertion whose search space includes its own fixtures is §13.11's shape again, an
+input wider than the thing it measures.
+
+**`MEASURED-FALSE` keeps the percept, and that is not a formality.** §13.4.1's whole finding is
+that a seat's *explanation* fails while its *seeing* stands — three times in one session on this
+project. A disposition that discarded the percept along with the explanation would throw away the
+observation and keep only the argument, which is exactly backwards.
+
+**Worked, on the round that occasioned it** (`r001-polish-abc-install`, three seats): nine flags
+disposed — three measured-false (an off-centre falloff whose two named points were *wall cells*;
+a collapsed range measured against the **plant's** blowout rather than the reference; a far-field
+value claim off by a factor of 3.3) and six routed-already against #193, #194, §12.1a, §6.2.1 and
+§13.4.1 — with **seven left unmatched and handed up**.
 
 ---
 

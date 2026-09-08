@@ -46,6 +46,128 @@ STALL = os.path.join(REPO, "STALL-REPORT.md")
 RUN = ".claude/skills/frame-critic/run_frame_critic.sh"
 
 
+# ── FLAG DISPOSITIONS — RULED (Rafe, 2026-09-08). GATE-CHECKABLE, AND THE CHECK IS HERE. ─────
+#
+#     "a seat flag matching an existing route/ruling -> routed-already (must cite the issue or
+#      clause); a flag whose explanation measures false while the percept stands -> measured-false,
+#      percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by
+#      citation; still never routes new items."
+#
+# THE DIVISION OF AUTHORITY, and it is the whole reason this is a separate mechanism from ROUTED:
+#
+#   ROUTED           creates a NEW destination for a NEW item.        RAFE ONLY. Needs his words.
+#   routed-already   says "this is the thing we already decided".     Builder may, BY CITATION.
+#   measured-false   says "the stated cause is not what is happening". Builder may, BY MEASUREMENT.
+#
+# A builder disposing by citation is not routing: it asserts a MATCH against a record that already
+# exists, and the citation is what makes the assertion checkable by someone other than its author.
+# An uncited match is an opinion; a cited one can be looked up and contradicted.
+#
+# WHAT IS ACTUALLY CHECKED, rather than trusted:
+#   - a clause citation (§x.y) must RESOLVE — the clause has to exist in the bible;
+#   - an issue citation (#nnn) must appear in the repository's own record, so a number invented at
+#     three in the morning does not pass as a route;
+#   - a `measured-false` must carry BOTH the measurement that disproves the explanation AND the
+#     percept, because §13.4.1's lesson is that the percept usually survives the explanation.
+#
+# Everything is printed and stamped, on the same principle as ROUTED: a disposition Rafe does not
+# recognise is on his own screen while he is holding the build.
+FLAG_STATES = ("ROUTED", "CLOSED", "PARKED", "ROUTED-ALREADY", "MEASURED-FALSE")
+
+
+def _clause_exists(ref):
+    """Does a cited bible clause resolve? A citation that points nowhere is not a citation."""
+    body = ""
+    for name in ("ART-BIBLE-v0.md", "ART-LOOP-PROCESS-v0.md"):
+        f = os.path.join(REPO, "docs", name)
+        if os.path.exists(f):
+            body += open(f, errors="ignore").read()
+    num = ref.lstrip("§S").strip()
+    return bool(num) and ("§" + num) in body
+
+
+def _issue_cited(ref):
+    """Does a cited issue resolve against the REPOSITORY'S RECORD?
+
+    ⚠ SEARCHED IN THE RECORD, NOT IN THE REPO. The first version grepped everything, and its own
+    proof caught it: the case asserting that a made-up issue number is refused has to WRITE that
+    number into the test file, so `git grep` found it and the citation passed. An assertion whose
+    search space includes its own fixtures resolves citations against noise — §13.11's shape in a
+    new place, an input wider than the thing it measures.
+
+    A citation resolves against documentation and recorded verdicts, which is where routings and
+    rulings actually live.
+    """
+    num = ref.lstrip("#").strip()
+    if not num.isdigit():
+        return False
+    import subprocess
+    r = subprocess.run(["git", "-C", REPO, "grep", "-rl", "--", "#" + num,
+                        "docs/", ".claude/skills/frame-critic/history/"],
+                       capture_output=True, text=True)
+    return bool(r.stdout.strip())
+
+
+def check_dispositions(disp, flips):
+    """Every outstanding item carries a lawful, CITED disposition. Returns a list of problems."""
+    bad = []
+    if flips and len(disp) < len(flips):
+        bad.append("%d flip items and only %d dispositions — 'no unrouted flags' means every "
+                   "outstanding item carries one" % (len(flips), len(disp)))
+    for i, d in enumerate(disp):
+        state = (d.get("state") or "").upper()
+        if state not in FLAG_STATES:
+            bad.append("disposition %d: state %r is not one of %s"
+                       % (i, state, ", ".join(FLAG_STATES)))
+            continue
+        if state in ("ROUTED", "CLOSED", "PARKED"):
+            if not (d.get("ruling") or "").strip():
+                bad.append("disposition %d (%s): no quoted ruling — only Rafe creates these"
+                           % (i, state))
+            if state == "ROUTED" and not (d.get("lane") or "").strip():
+                bad.append("disposition %d: ROUTED with no destination lane" % i)
+        elif state == "ROUTED-ALREADY":
+            cite = (d.get("cites") or "").strip()
+            if not cite:
+                bad.append("disposition %d: ROUTED-ALREADY must CITE the issue or clause it "
+                           "matches" % i)
+            elif cite.startswith("§") or cite.startswith("S"):
+                if not _clause_exists(cite):
+                    bad.append("disposition %d: cited clause %s does not resolve in the bible or "
+                               "the process law" % (i, cite))
+            elif cite.startswith("#"):
+                if not _issue_cited(cite):
+                    bad.append("disposition %d: cited issue %s appears nowhere in the "
+                               "repository's record" % (i, cite))
+            else:
+                bad.append("disposition %d: citation %r is neither a clause (§x.y) nor an issue "
+                           "(#nnn)" % (i, cite))
+        elif state == "MEASURED-FALSE":
+            if not (d.get("measured") or "").strip():
+                bad.append("disposition %d: MEASURED-FALSE with no measurement — the whole state "
+                           "is the measurement" % i)
+            if not (d.get("percept") or "").strip():
+                bad.append("disposition %d: MEASURED-FALSE with no percept recorded — the "
+                           "explanation failing does not make the seeing wrong (§13.4.1)" % i)
+    return bad
+
+
+def print_dispositions(L, disp):
+    for d in disp:
+        st = (d.get("state") or "?").upper()
+        L.append("  %-14s %s" % (st, " ".join((d.get("item") or "").split())[:70]))
+        if d.get("lane"):
+            L.append("                 -> %s" % d["lane"])
+        if d.get("cites"):
+            L.append("                 cites %s" % d["cites"])
+        if d.get("measured"):
+            L.append("                 measured: %s" % " ".join(d["measured"].split())[:66])
+        if d.get("percept"):
+            L.append("                 percept KEPT: %s" % " ".join(d["percept"].split())[:60])
+        if d.get("ruling"):
+            L.append("                 Rafe: %s" % " ".join(d["ruling"].split())[:66])
+
+
 def check():
     """Returns (ok, lines). `ok` is whether an install may proceed."""
     L = []
@@ -135,34 +257,29 @@ def check():
         elif pos is None or pos >= app:
             bad.append("build ranked %s and the approved frame ranked %s — PASS-INSTALL requires "
                        "the build ABOVE the reference" % (pos, app))
-        flagged = (v.get("seat") or {}).get("_flagged_build")
         disp = list(v.get("dispositions", []))
         flips = list(v.get("flip_list", []))
-        if flips and len(disp) < len(flips):
-            bad.append("%d flip items and only %d dispositions — 'no unrouted flags' means every "
-                       "outstanding item carries a human disposition"
-                       % (len(flips), len(disp)))
-        for i, d in enumerate(disp):
-            state = (d.get("state") or "").upper()
-            if state not in ("ROUTED", "CLOSED", "PARKED"):
-                bad.append("disposition %d: state %r is not ROUTED, CLOSED or PARKED" % (i, state))
-            if not (d.get("ruling") or "").strip():
-                bad.append("disposition %d (%s): no quoted ruling" % (i, state))
-            if state == "ROUTED" and not (d.get("lane") or "").strip():
-                bad.append("disposition %d: ROUTED with no destination lane" % i)
+        bad += check_dispositions(disp, flips)
+        # ⚠ A FLAG FROM ANY SEAT IS AN OUTSTANDING ITEM. The panel's rule is asymmetric — rank
+        # takes a majority, a flag does not — so a build flagged by one seat of three must carry a
+        # disposition for what that seat flagged, exactly as the majority's flips must.
+        panel = v.get("panel") or {}
+        if panel.get("flagged_by") and not disp:
+            bad.append("%d of %d seats flagged the build and there are NO dispositions — 'no "
+                       "unrouted flags from any' is not a majority test"
+                       % (panel["flagged_by"], panel.get("seats", "?")))
         if bad:
             return False, L + ["", "PASS-INSTALL IS NOT LAWFULLY FORMED:"] \
                    + ["  - %s" % b for b in bad]
         L += ["", "PASS-INSTALL — above the seeded reference (build %s, reference %s)."
                   % (pos, app)]
+        if panel.get("seats", 1) > 1:
+            L.append("  panel: above the reference in %s of %s seats; flagged by %s."
+                     % (panel.get("above_reference"), panel.get("seats"),
+                        panel.get("flagged_by")))
         if disp:
-            L.append("  Outstanding items, each with a human disposition:")
-            for d in disp:
-                L.append("  %-7s %s" % (d.get("state", "?").upper(),
-                                        " ".join((d.get("item") or "").split())[:76]))
-                if d.get("lane"):
-                    L.append("          -> %s" % d["lane"])
-                L.append("          Rafe: %s" % " ".join((d.get("ruling") or "").split())[:76])
+            L.append("  Outstanding items, each disposed:")
+            print_dispositions(L, disp)
         ship = (v.get("seat") or {}).get("SHIP", "")
         L.append("  SHIP recorded as %s — the wowed signal, not the install gate."
                  % (" ".join(str(ship).split())[:40] or "(unrecorded)"))

@@ -218,5 +218,136 @@
   },
   "verdict_on_the_claim": "NOT SUPPORTED. Both named points are wall, and on floor the asymmetry near the lamp runs OPPOSITE to the claim. The mild right-side excess past three tiles is the room's geometry — more open floor east — not an off-centre emitter. The remedy asked for ('re-centre the attenuation, or introduce a second emitter') would have moved the ratified rig on a disproved premise.",
   "law": "A seat reports PERCEPTS; its EXPLANATIONS are hypotheses and are measured before anything is built on them. Third instance this session."
+ },
+ "dispositions": [
+  {
+   "state": "MEASURED-FALSE",
+   "seat": 1,
+   "item": "The falloff is not centred on the lamp — open floor at (190,490) near-black vs (630,490) pale cream, nothing occluding either.",
+   "measured": "Both named points are WALL cells — tiles (3,11) and (9,11), luminance 27.7 and 40.4, twelve levels apart rather than near-black against cream. On FLOOR the asymmetry near the lamp runs the OPPOSITE way: left of the figure is brighter at 1 tile (178.0 vs 159.4) and at 2 (124.9 vs 103.2).",
+   "percept": "The right side does read brighter past three tiles (+8.7 at 3, +7.6 at 4) — that is the room's geometry, more open floor east, not an off-centre emitter.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "MEASURED-FALSE",
+   "seat": 2,
+   "item": "The global lift has collapsed the frame's range — lit patch peaks at 193 where 1 and 4 reach 240.",
+   "measured": "Build p99 194.1 against the REFERENCE's 198.3 — 4.2 levels apart, not 193 against 240. The 240 is the PLANT's blowout (p99 226.7, max 250.0), i.e. the frame Rafe culled for exactly that.",
+   "percept": "The build's max is 231.7 against the reference's 250.0, and that gap is #183's hero cap working as ruled — warmest is never brightest.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "MEASURED-FALSE",
+   "seat": 3,
+   "item": "The bottom-right floor at x550-700, y740-830 sits at nearly the same value as floor half the distance from the lamp.",
+   "measured": "That region means 33.8. Floor at two tiles means 111.1 — a factor of 3.3, not 'nearly the same'. It matches floor at FOUR tiles (34.4), which is where it is.",
+   "percept": "Past four tiles the field is near the ambient plateau, so differences out there really are small — §6.2's arc, by design.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 2,
+   "item": "Restore the figure's separation from the floor: the sprite is tinted down with the plate until the shield disc and the floor sit within a few levels.",
+   "cites": "§13.4.1",
+   "why": "Asks to undo the hero light response ruled at the 2026-09-06 walk (warmest is never brightest, #183). A ruling made at the human gate is overturned at the human gate; the percept is recorded as a make-it-read successor, which is what the clause prescribes.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 2,
+   "item": "Redraw the figure's plate contact — the sprite is drawn at 2 device px per art pixel with hard outlines while the plate has no edge under 3px of ramp.",
+   "cites": "#194",
+   "why": "Item 5 of the #183 follow-up: sprite/background edge-hardness mismatch, already routed there with Rafe's ruling quoted.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 2,
+   "item": "The brown quadrilateral at x285-380, y640-715 must become a specific object.",
+   "cites": "#193",
+   "why": "The spanning-stones make-it-read item. Third and fourth seats to name it; #186's premise was disproved and this is its successor.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 3,
+   "item": "The wall fields at x120-440,y0-130 and x440-500,y195-420 are a blurred bitmap; redraw at the floor's pixel density with cut block divisions.",
+   "cites": "#194",
+   "why": "Item 1 of the #183 follow-up: wall top surfaces read as noise blobs, origin the wall lane.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 3,
+   "item": "The corridor's left and right edges at x=505 and x=565 are razor-straight 1px value seams for their full height.",
+   "cites": "§12.1a",
+   "why": "The void ring's named interim cost, verbatim in the clause: 'a ring is a classification that changes at a cell boundary ... two perfectly straight vertical seams in the darkness'. Ruled to stand until the occluder pass ships.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  },
+  {
+   "state": "ROUTED-ALREADY",
+   "seat": 3,
+   "item": "The lamp barely reads: r0-40 mean 156 against r80-120 mean 119. Steepen the near falloff.",
+   "cites": "§6.2.1",
+   "why": "Asks to move the rig ratified as Ruling 56 and re-ratified 2026-09-06. §13.4.1: a seat is a proxy for the gate, not a vote against it.",
+   "rule": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08"
+  }
+ ],
+ "unmatched_flags": {
+  "ruling": "a seat flag matching an existing route/ruling → routed-already (must cite the issue or clause); a flag whose explanation measures false while the percept stands → measured-false, percept recorded; only new, unmatched flags block, and those go to Rafe. Builder disposes by citation; still never routes new items. — Rafe, 2026-09-08",
+  "_what": "Flags with no existing route or ruling to match. THE BUILDER DOES NOT ROUTE THESE — they block the gate until Rafe routes them, which is the ruling's own division of authority.",
+  "count": 7,
+  "items": [
+   {
+    "seats": [
+     2,
+     3
+    ],
+    "item": "The same 3-4 stroke diagonal hatch/scuff motif repeats unrotated at one angle and pitch across the lit floor — seat 2 names blocks at (470,600),(520,...); seat 3 names (552,498),(570,526),(572,570),(580,592).",
+    "note": "TWO SEATS, same defect. Looks like §8.3's motif trap, but that clause CONDEMNS it rather than disposing of it, and no issue owns it. Not matched."
+   },
+   {
+    "seats": [
+     3
+    ],
+    "item": "The wide slab right of the figure's feet, x495-560 y520-550, is a completely blank pale rectangle bounded by a hard 1px line while its neighbours carry hatch.",
+    "note": "Probably #193's family (a spanning stone reading as an object) but at different coordinates. Left unmatched rather than stretched — your call."
+   },
+   {
+    "seats": [
+     2
+    ],
+    "item": "The soft blur under and left of the figure, x300-390 y480-560, has no edge and no cause.",
+    "note": "No route and no clause found."
+   },
+   {
+    "seats": [
+     2
+    ],
+    "item": "The corridor at x500-570, y180-420 has no legible wall-to-floor edge on its west side — the boundary is a 3-4px value ramp.",
+    "note": "Distinct from #194's wall-top block definition; that is about surface, this is about the edge."
+   },
+   {
+    "seats": [
+     2
+    ],
+    "item": "The cables crossing the corridor at y230/290/400 vary in thickness along their length and pass through the wall face without an anchor.",
+    "note": "§7.1 says everything is held, but no route owns this. Note the binding placement was corrected in #185, so this is post-fix."
+   },
+   {
+    "seats": [
+     2
+    ],
+    "item": "The pin bars at the joints in the right-hand floor are flat near-black rectangles of inconsistent length.",
+    "note": "No route and no clause found."
+   },
+   {
+    "seats": [
+     3
+    ],
+    "item": "The corridor at x505-565 runs cool grey-green, a different colour temperature from the warm lamp, from y200 to y450 with no motivated source.",
+    "note": "Possibly the ambient #272733 read against the lamp, but nothing rules it. Not matched."
+   }
+  ]
  }
 }
