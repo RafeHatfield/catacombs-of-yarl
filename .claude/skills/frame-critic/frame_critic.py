@@ -765,15 +765,78 @@ def parse(text, n_slots):
                            for k, v in per_flip.items()}
     out["_rank"] = [int(x) for x in re.findall(r"\d+", out["RANK"])
                     if 1 <= int(x) <= n_slots]
-    out["_ship"] = ([] if re.search(r"\bNONE\b", out["SHIP"], re.I)
-                    else [int(x) for x in re.findall(r"\d+", out["SHIP"])
-                          if 1 <= int(x) <= n_slots])
-    out["_flagged"] = ([] if re.search(r"\bNONE\b", out["FLAGGED"], re.I)
-                       else [int(x) for x in re.findall(r"\d+", out["FLAGGED"])
-                             if 1 <= int(x) <= n_slots])
+    out["_ship"] = _slots(out["SHIP"], n_slots)
+    out["_flagged"] = _slots(out["FLAGGED"], n_slots)
     out["_worst"] = next((int(x) for x in re.findall(r"\d+", out["WORST"])
                           if 1 <= int(x) <= n_slots), None)
     return out
+
+
+# ⚠ THE SENTINEL IS AN ANSWER, NOT A WORD THAT HAPPENS TO APPEAR IN ONE.
+#
+# THE OCCASION (2026-09-07, lane polish-a-184 round 1). The seat answered
+#
+#     FLAGGED: 1, 2, 3, 4
+#     - **1** - the centre of the frame is a smooth cream blur ...
+#     - **1, 3, 4** - the mass at (280-375, 645-712) ... no board seams, no lid, no pin heads,
+#       no rope ... the biggest object in the room carries NONE of it.
+#
+# and the parser searched the WHOLE BODY for `\bNONE\b`, found that prose "none", and returned an
+# EMPTY flagged list. The plant was slot 1. The seat had flagged it, explicitly, at length, and had
+# shipped nothing - a clean catch by the rule as written - and the runner recorded
+# `flagged=False` and threw the round away as VOID. Its findings, four substantive flips on the
+# build, were not read.
+#
+# This is bible SS13.11 in the review layer's parser: AN INSTRUMENT'S INPUT MUST BE NO WIDER THAN
+# THE THING IT MEASURES. The sentinel measures the ANSWER; it was being fed the answer plus every
+# word of the seat's reasoning, and free prose about a dungeon will contain "none" eventually. It
+# did on the first round that had a long enough explanation.
+#
+# THE DIRECTION OF THE OLD FAILURE IS THE UNSAFE ONE, which is why it is fixed rather than
+# tolerated: a spurious NONE on FLAGGED makes a caught plant read as missed, and two of those in a
+# row fire the broken-judge guard and stop the line over a judge that was working.
+#
+# SCOPED, and the scope is checked rather than asserted: re-parsing every transcript committed to
+# `history/` shows this firing on exactly ONE - the round that found it. No past verdict moves.
+#
+# AND THE LIST IS DEDUPLICATED, which is a second defect of the same family found in the same
+# reading. `every_frame_flagged` asks `len(_flagged) == len(rank)`, and a seat that elaborates
+# per frame repeats its numbers - r005-combined parsed to [1,2,3,1,3,1,2] - so the comparison
+# could not be true and the signal had never once fired. It is recorded and never scored (SS4), so
+# this corrects a REPORT rather than a verdict.
+def _slots(body, n_slots):
+    """File numbers named in an answer, or [] for the NONE sentinel.
+
+    THE ANSWER LINE IS THE ANSWER. Both the sentinel and the numbers are read from it, and the
+    rest of the body — the seat's reasoning — is read only when the answer line names nothing at
+    all and does not say NONE, which is the one case where the answer really is below the label.
+
+    ⚠ THE SECOND HALF OF THIS RULE WAS LEARNED ON THE ROUND AFTER THE FIRST HALF, and it is the
+    dangerous one. The first fix stopped a prose "none" eating a real list, and read the NUMBERS
+    from the whole body — where the seat writes things like *"the slab mortar grid plainly visible
+    in 2 and 4 is gone"*, and *"49.5% ... 11.2% ... 16,602 pixels ... 754 in image 2"*. On lane
+    polish-a-184 round 2 the seat answered `FLAGGED: 1, 3` and that parser returned [1, 2, 3, 4].
+    It happened to be harmless — the plant was in the real answer — but the failure it can produce
+    is A PLANT RECORDED AS FLAGGED THAT THE SEAT NEVER FLAGGED, which is a soft critic passing its
+    own self-test. That is the one direction this mechanism may never fail in.
+
+    Both halves are the same law (bible §13.11): AN INSTRUMENT'S INPUT MUST BE NO WIDER THAN THE
+    THING IT MEASURES. The answer to "which frames are flagged" is the list on the answer line;
+    everything under it is why.
+    """
+    def nums(t):
+        return sorted({int(x) for x in re.findall(r"\d+", t) if 1 <= int(x) <= n_slots})
+    head = next((l for l in body.strip().splitlines() if l.strip()), "")
+    found = nums(head)
+    if found:
+        return found
+    if re.search(r"\bNONE\b", head, re.I):
+        return []
+    # The answer line named nothing and did not say NONE: the answer is below the label.
+    rest = "\n".join(body.strip().splitlines()[1:])
+    if re.search(r"\bNONE\b", rest, re.I) and not nums(rest):
+        return []
+    return nums(rest)
 
 
 # THE PLANT RULE, WRITTEN DOWN BEFORE THE FIRST ROUND AND NOT NEGOTIABLE AFTERWARDS.
