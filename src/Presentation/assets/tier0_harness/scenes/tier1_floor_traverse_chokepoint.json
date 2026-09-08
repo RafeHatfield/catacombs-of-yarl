@@ -36,13 +36,17 @@
       "x": 8,
       "y": 10,
       "expect": "lit",
-      "why": "on the route, 2 tiles - inside the delivered pool, where the reader stands"
+      "why": "on the route, 2 tiles - inside the delivered pool, where the reader stands",
+      "bound_lum": 0.109416,
+      "bound_derivation": "ABSOLUTE delivered luminance (0..1). Derived 2026-09-07 per bible \u00a713.11 and tools/tier0_harness/derive_legibility_bounds.py: reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.9118, capture tools/tier1_floors/evidence/hk_tier1_floor_traverse_chokepoint.log, shoulder_knee 10.0 = identity, radius 6.0 / falloff 1.00 / ambient 1.50 / energy 1.6) x the retired ratio bound (0.12). This scene declared points with NO bound_lum, so the engine refused to parse it at all; the formula is the ruled one applied verbatim and NOTHING WAS TUNED to make any point pass."
     },
     {
       "x": 8,
       "y": 6,
       "expect": "dark",
-      "why": "the same route at 6 tiles - past the lamp's delivered reach and still inside the dungeon view; dark illegibility accepted by design"
+      "why": "the same route at 6 tiles - past the lamp's delivered reach and still inside the dungeon view; dark illegibility accepted by design",
+      "bound_lum": 0.09118,
+      "bound_derivation": "ABSOLUTE delivered luminance (0..1). Derived 2026-09-07 per bible \u00a713.11 and tools/tier0_harness/derive_legibility_bounds.py: reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.9118, capture tools/tier1_floors/evidence/hk_tier1_floor_traverse_chokepoint.log, shoulder_knee 10.0 = identity, radius 6.0 / falloff 1.00 / ambient 1.50 / energy 1.6) x the retired ratio bound (0.10). This scene declared points with NO bound_lum, so the engine refused to parse it at all; the formula is the ruled one applied verbatim and NOTHING WAS TUNED to make any point pass."
     }
   ],
   "width": 17,
