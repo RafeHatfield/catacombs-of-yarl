@@ -7,7 +7,7 @@
   "axis": "tonal",
   "commit": "f9c57f49f8a6e285fc2acfc102d9066cb330bf95",
   "dirty": true,
-  "build_id": "c1fa1220c41510c45a4925b7c9b13e4dfe5c20a8c0cc3e2a3c45e9e6b10f2a23",
+  "build_id": "46b5c453a26950e701e510d4ed0de5ac5a01da1544bb248e1f4473242294aafd",
   "timestamp": "2026-09-07T13:07:34",
   "build_frame": {
     "path": "tools/tier1_floors/evidence/combined.png",
@@ -240,9 +240,9 @@
   "_build_id_restamped": {
     "date": "2026-09-07",
     "ruled_by": "Rafe",
-    "old_id": "d361e4f08430fd90950127999deec60b2dab5374f66ac954ce4aa63b8b44bb2a",
-    "new_id": "c1fa1220c41510c45a4925b7c9b13e4dfe5c20a8c0cc3e2a3c45e9e6b10f2a23",
-    "why": "The build_id FUNCTION changed by ruling, not the build. RULED (Rafe, 2026-09-07): 'narrow build_id to the build. The id hashes shipped inputs only \u2014 game source, assets, shaders, scene/theme configs, output-affecting build scripts \u2014 and excludes the review layer's source, .claude/skills, and docs/ on the stated ground: they describe the build, they are not in it.' Bible \u00a713.11's third instance. The old id was computed by the broad function and is not comparable with the new one, so it is recomputed rather than left to fail a comparison between two different functions.",
+    "old_id": "c1fa1220c41510c45a4925b7c9b13e4dfe5c20a8c0cc3e2a3c45e9e6b10f2a23",
+    "new_id": "46b5c453a26950e701e510d4ed0de5ac5a01da1544bb248e1f4473242294aafd",
+    "why": "SECOND RE-STAMP, 2026-09-07: the exclusion prefix-match fix pulled REVIEW_BUILD.json.template \u2014 a shipped input it had been hiding \u2014 into the hash. Again the FUNCTION changed, not the build. The build_id FUNCTION changed by ruling, not the build. RULED (Rafe, 2026-09-07): 'narrow build_id to the build. The id hashes shipped inputs only \u2014 game source, assets, shaders, scene/theme configs, output-affecting build scripts \u2014 and excludes the review layer's source, .claude/skills, and docs/ on the stated ground: they describe the build, they are not in it.' Bible \u00a713.11's third instance. The old id was computed by the broad function and is not comparable with the new one, so it is recomputed rather than left to fail a comparison between two different functions.",
     "the_guarantee_that_did_not_move": "THE DELIVERED FRAME. build_frame.sha256 is 8745c556dd1bef10 before and after \u2014 the same bytes the seat judged. That, not the id, is what the verdict is a claim about; the id is a cheap proxy for it, and re-stamping is only lawful BECAUSE the frame is identical. This script asserts that and refuses if it is not."
   }
 }
