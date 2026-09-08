@@ -57,11 +57,46 @@ import sys
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__)))))
 
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+# THE ID HASHES SHIPPED INPUTS ONLY — RULED (Rafe, 2026-09-07). Bible §13.11, THIRD INSTANCE.
+#
+# **A hash broader than the thing it identifies measures the repo, not the build.**
+#
+# The occasion: a round returned a verdict, the human gate dispositioned every flip and ruled
+# PASS-WITH-ROUTED-ITEMS — and the install refused, because ACTING ON THAT RULING had edited
+# `frame_critic.py` and `ART-BIBLE-v0.md`. The delivered frame was byte-identical (8745c556), no
+# game source, asset, shader or scene config had moved, and the gate still said "something has
+# changed since the seat looked". Something had: the judge's own source and the documentation.
+# Neither is in the build. **Implementing a ruling about a round invalidated that round's verdict.**
+#
+# The list below already carried the principle for the review layer's ARTEFACTS, in its own words:
+# *they describe the build; they are not in it.* The review layer's SOURCE, and the docs, are the
+# same category. This is that principle applied consistently rather than a new licence.
+#
+# WHAT IS HASHED: game source, assets, shaders, scene and theme configs, and the build scripts
+# that affect the output — everything whose bytes can reach a pixel on the handset.
+#
+# ⚠ WHY A BLACKLIST AND NOT A WHITELIST, since "shipped inputs only" is whitelist language.
+# The two fail in opposite directions and only one of them is survivable. A whitelist that forgets
+# a shipped directory produces an id that does NOT move when the build does — the gate goes blind
+# and says nothing. A blacklist that forgets a non-shipped directory produces an id that moves when
+# it needn't — the gate is noisy and refuses a build it should have passed, which is what happened
+# here and which is loud, visible and fixable in one line. **The failure mode is chosen, not
+# inherited:** anything new in this repository counts toward the id until someone names it.
 EXCLUDED = (
+    # the review layer's ARTEFACTS — they describe the build
     "CRITIC-VERDICT.json",
     "STALL-REPORT.md",
     "PARK-CLEARED.json",
-    ".claude/skills/frame-critic/history/",
+    "GATE-RULING.json",
+    # the review layer's SOURCE — the judge, its morgue, its controls, its law. Ruled
+    # 2026-09-07. `.claude/skills/frame-critic/history/` was already here and is subsumed;
+    # it is kept above in spirit by this broader prefix.
+    ".claude/skills/",
+    # documentation. The bible and the process law govern the build and are not in it, and a
+    # ruling is almost always written down in the same breath as it is applied.
+    "docs/",
+    # the review build's own marker, written by the build script and removed after
     "src/Presentation/assets/tier0_harness/REVIEW_BUILD.json",
 )
 

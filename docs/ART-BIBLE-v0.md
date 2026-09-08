@@ -2704,6 +2704,38 @@ MEANS without changing what it SAYS, or nobody can tell a re-definition from a r
 whose dark ground is byte-identical, **passes**; a genuinely darkened capture — Weber 0.71 against
 §13.8's 0.1440 floor — **is refused**.
 
+> ### THE SECOND AND THIRD INSTANCES, both on 2026-09-07, both in the review layer
+>
+> **SECOND — the progress metric.** `rank_score` is `(deck_size − position) / (deck_size − 1)`, so
+> first place in a three-frame deck is **1.00 with nothing above it.** The stall guard demanded a
+> NEW best and counted matching as standing still, so **any lane that ever ranked first was
+> guaranteed to stop three readable rounds later, however good the work was.** RULED: progress at
+> the ceiling is `(rank_score, shipped, −unresolved_flips)` — SHIP arriving counts at any rank, and
+> at equal rank strictly fewer *unresolved* flips counts. And **a round excluded from a guard's
+> evaluation cannot set that guard's best**; cleared rounds do not hold records.
+>
+> **THIRD — the build identifier.** `build_id` hashed every tracked and untracked file in the
+> repository, so **acting on the gate's own ruling invalidated the verdict that ruling was about**:
+> the human gate dispositioned every flip, and the install refused because implementing the ruling
+> had edited `frame_critic.py` and this document. The delivered frame was byte-identical. RULED:
+> the id hashes **shipped inputs only** — game source, assets, shaders, scene and theme configs,
+> and the build scripts that affect output — and excludes the review layer's source, `.claude/skills`
+> and `docs/`, on the ground the exclusion list already stated for the review layer's *artefacts*:
+> **they describe the build, they are not in it.**
+>
+> > **A hash broader than the thing it identifies measures the repo, not the build.**
+>
+> ⚠ **The blacklist is deliberate and the direction of failure is chosen.** "Shipped inputs only"
+> is whitelist language, and a whitelist that forgets a shipped directory yields an id that does
+> **not** move when the build does — the gate goes blind and says nothing. A blacklist that forgets
+> a non-shipped one yields an id that moves needlessly: loud, visible, one line to fix. Anything
+> new in the repository counts until someone names it.
+>
+> **All three instances are the same shape**, and it is worth stating once: an instrument's INPUT
+> must be no wider than the thing it claims to measure. A ratio whose denominator can saturate, a
+> progress metric whose scale can top out, an identifier that hashes the room the build was made in
+> — each keeps returning a confident number after it has stopped measuring the subject.
+
 > **The general form:** before trusting a ratio, ask what happens to it when the denominator hits
 > the end of its range. If the answer is *it keeps returning a number*, the instrument has a blind
 > spot exactly where the picture is brightest, and that is where the eye is.
