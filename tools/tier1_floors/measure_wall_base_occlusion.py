@@ -58,6 +58,8 @@ import json
 import os
 import sys
 
+import re
+
 import numpy as np
 from PIL import Image
 
@@ -70,23 +72,53 @@ import measure_traffic_read as MTR       # noqa: E402
 
 T = 64            # screen px per tile (32 art at 2x)
 CONTACT = 8       # screen rows at the wall foot: art rows 0-3, alpha 0.72/0.52/0.36/0.23
-REF0, REF1 = 24, 48   # the cell's own interior, clear of the seam and of the far edge
+LOCAL = 12            # the strip just inside the seam -- the ground a viewer compares it to
+REF0, REF1 = 24, 48   # retained: the mid-cell band, no longer used as the reference
 FLOOR = 0.1440    # §13.8's ruled perceptual floor, in Weber contrast
 LIT = 60          # below this the cell is not being judged: dark illegibility is design (§8.2.1)
+
+
+PLAYER_RE = re.compile(r"player=\((\d+),(\d+)\)")
+
+
+def _player(log):
+    """The station, from the engine's own log rather than from an assumption (S13.10)."""
+    txt = open(log, errors="ignore").read()
+    m = PLAYER_RE.search(txt)
+    if m:
+        return int(m.group(1)), int(m.group(2))
+    m = re.search(r"--corridor-scene res://(\S+\.json)", txt)
+    if not m:
+        return None
+    d = json.load(open(os.path.join(REPO, m.group(1))))
+    return d["player"]["x"], d["player"]["y"]
 
 
 SIDES = {"N": (0, -1), "E": (1, 0), "S": (0, 1), "W": (-1, 0)}
 
 
 def _bands(blk, side):
-    """(contact band, reference band) for one side of one cell."""
+    """(contact band, reference band) for one side of one cell.
+
+    THE REFERENCE IS LOCAL, and the mid-cell reference it replaces was an artefact factory.
+    It compared the contact band against the cell's MIDDLE, 24-48px away, and a 64px cell
+    under a carried lamp has a steep gradient across it. On the corridor-mouth cell (8,11)
+    the west edge faces the lamp: contact 103.4, mid-cell 109.4, but the strip just inside
+    the edge 161.2. The seam measured 0.0546 against the middle and 0.3582 against its own
+    neighbourhood -- a 6.5x understatement that read as a missing boundary and WAS FILED AS
+    A DEFECT (#199).
+
+    A seam is a LOCAL step, so it is measured against the ground immediately inside it,
+    which is also what a viewer compares it to. The lamp's gradient then falls out of both
+    terms instead of landing entirely in one.
+    """
     if side == "N":
-        return blk[:CONTACT, :], blk[REF0:REF1, :]
+        return blk[:CONTACT, :], blk[CONTACT:CONTACT + LOCAL, :]
     if side == "S":
-        return blk[-CONTACT:, :], blk[REF0:REF1, :]
+        return blk[-CONTACT:, :], blk[-CONTACT - LOCAL:-CONTACT, :]
     if side == "W":
-        return blk[:, :CONTACT], blk[:, REF0:REF1]
-    return blk[:, -CONTACT:], blk[:, REF0:REF1]
+        return blk[:, :CONTACT], blk[:, CONTACT:CONTACT + LOCAL]
+    return blk[:, -CONTACT:], blk[:, -CONTACT - LOCAL:-CONTACT]
 
 
 def cells(png, log, side="N"):
@@ -101,11 +133,20 @@ def cells(png, log, side="N"):
     if o is None:
         return None
     ox, oy = o
+    player = _player(log)
     out = []
     for ty in range(1, fh):
         for tx in range(fw):
             lv = int(f[ty, tx])
             if lv < 0:                      # this cell is solid
+                continue
+            # THE PLAYER'S OWN CELL IS EXCLUDED -- A SPRITE STANDS IN IT. The second
+            # artefact behind #199: at (6,12) the hero occupies the north contact band, so
+            # its mean is lifted by pixels that are not floor -- 131.5 against 113.3 and
+            # 126.3 at the two neighbours on a similar reference, pushing the seam to
+            # 0.1289 and reading as a cell whose boundary had gone. A floor's contact seam
+            # cannot be measured through a figure standing on it.
+            if player and (tx, ty) == player:
                 continue
             dx, dy = SIDES[side]
             nx, ny = tx + dx, ty + dy

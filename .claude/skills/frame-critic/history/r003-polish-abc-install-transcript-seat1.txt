@@ -1,0 +1,52 @@
+Read all four at 1:1 and at pixel zoom, and measured the channels rather than trusting my eye. The headline: three of these are the same room (1 and 3 are the same painting with different light passes; 2 is a separate render of the same geometry), and the thing that separates them is entirely the lighting pass — which clips.
+
+RANK: 2 > 1 > 3 > 4
+
+BEST: 2
+
+BEST_WHY: The wall's top surface at (200–430, 400–445) — the band immediately above the floor line, where the eye actually lands — is *drawn*. Two courses of blocks with vertical joints running the full width, a horizontal beam at y≈425 separating them, and a driven-pin brace at x≈300: a vertical timber with two horizontal rungs crossing it. That is a repair someone made, in the frame, at the size the game is played. In frames 1 and 3 the same band is undifferentiated brown cloud — I measured it: high-frequency detail 2.47 there against 4.19 on the floor two pixels below, versus 2.65/5.34 in frame 2. Second thing: frame 2 is the only frame whose light doesn't break. Sixteen pixels in the entire image have the red channel at 255 (frame 1: 650; frame 3: 15,522), and zero of them are on the character. The consequence is visible on the sprite at (383–432, 458–510): the shield boss at (400–425, 480–505) is mid-tan with a legible ring and dark slot, the sword blade at (388–393, 465–490) has a darker left edge, so the figure holds its silhouette against a bright floor. In 1 and 3 those same pixels are cream.
+
+WORST: 4
+
+WORST_WHY: The props are stamped, not placed. The two barrels at (115–149, 188–216) and (163–197, 188–216) are the same sprite offset 48px — 68.2% pixel-identical, mean absolute difference 1.36. The two crates at (64–98, 0–26) and (64–98, 48–74) are the same sprite offset 48px vertically, mean absolute difference 0.15 — effectively identical. The moss decal at (18–42, 55–80) reappears unchanged at (10–20, 105–118), (30–40, 100–115) and (355–380, 145–170). 55% of the frame's 16×16 tiles are exact duplicates of another tile; one tile occurs fifteen times. Second: the pond at (248–368, 0–192) is a rectangle. Flat single teal, a dead-straight vertical edge at x=248, a dead-straight horizontal at y=192, meeting at a 90° corner, no bank, no wet mud, no depth value — water that stops because a tile ran out. Third: both barrels are amputated by the mud/stone tile seam at y=215; their bottom third is simply gone along a straight horizontal line, and their lids are drawn as ~30° ellipses while the tile grid is orthogonal top-down, so the props and the ground are in different projections. Fourth: there is no light in it. Not one pixel of the playfield falls below luminance 20 and the corners match the centre — nothing recedes, everything sits at midtone.
+
+FLAGGED: 4, 3, 1
+
+SHIP: NONE
+
+FLIP 1:
+- The light pass pins the red channel at 255 on 650 px including 18.3% of the character's own bounding box. Cap the layer so no channel clips; the shield interior at (400–425, 480–505) is currently within a few values of the floor behind it, so the silhouette breaks at the shield. Hold the shield's interior at least 40 luminance below the floor it sits on.
+- Mask the character sprite out of the light pass entirely and light it with its own ramp. The face at (405–425, 478–495) is flat cream with a single dark mouth pixel row and no interior modelling; the sword blade at (388–393, 465–490) is one uniform cream value.
+- The wall top at (200–430, 400–445) is soft airbrushed blotch with no block edges, joints or timber, against a floor 2px below carrying 1px joints and hatch scratches. Draw the courses through that band the way frame 2 does.
+- The vertical wall tops at (120–180, 390–660) and (440–505, 240–380) are the same problem worse: cloud mottle with two thin crack lines and nothing else. Redraw both at the floor's resolution.
+- The floor object at (427–465, 520–560) — a pale shapeless blotch with a black bar beneath it and dark tags hanging below — resolves into nothing at 1:1. Make it a specific thing (a grate, a spill, a pinned hide) or delete it.
+- The dark floor below y=700 repeats its block breaks on the grid: 12×12 patches at (408,700) and (432,700) correlate at 0.98, as do (528,874) and (552,874). Offset the course breaks so the lattice stops showing.
+
+FLIP 2:
+- The vertical wall tops at (120–180, 390–660) and (440–505, 240–380) are blurred mottle while the floor beside them is pixel-crisp. Half the picture is drawn at a lower resolution than the other half — this is the frame's single biggest fault. Redraw both at floor resolution.
+- The wall/floor junction at y≈447 is a constant-value 2px near-black rule running the full width. Vary its depth along the run and let it lift where the light strikes it; right now it reads as an ink outline, not contact.
+- The soot on the wall top between x=200 and x=430 is soft airbrush with no edges anywhere. Cut it to hard-edged staining that follows the joints and pools at the beam.
+- The pin brace at x≈300 in the wall band is the only repair in a run of ~230px of wall. Carry the vocabulary — driven pins, lashings, salvaged timber — across the rest of the run, or the one brace reads as an accident rather than a company that has been holding this line for four hundred years.
+- The floor blotch at (427–465, 520–560): draw it as a specific object or remove it.
+
+FLIP 3:
+- The added light layer clips the red channel at exactly 255 across 15,522 px — 47.7% of the floor patch around the figure and 47.0% of the sprite's bounding box. In the 14,872 px that clip here but not in frame 1, mean colour goes 245/187/118 → 255/225/141: red cannot rise, so green climbs 38 and blue 22 unopposed, saturation drops 0.52 → 0.45, and the hot core turns yellow-white. Halve the gain and apply it multiplicatively against the base albedo so nothing clips.
+- Mask the character out of the light pass. Face, shield and sword blade are all flat cream; the shield at (400–425, 480–505) reads as a hole in the figure.
+- The added layer has a standard deviation of 11.2 against a mean of 7.8 — it is noisier than it is bright, and that mottle sits on top of the stones rather than in them. Smooth the falloff and let the stone texture supply the variation.
+- Everything in FLIP 1 applies unchanged: the wall tops at (200–430, 400–445), (120–180, 390–660) and (440–505, 240–380); the floor blotch at (427–465, 520–560); the repeated block breaks below y=700.
+
+FLIP 4:
+- Build a light model. Nothing in the playfield is below luminance 20 and the corners match the centre. Falloff from the figure, far tiles down toward black.
+- Break the duplicate props: the barrels at (115–149, 188–216)/(163–197, 188–216) and the crates at (64–98, 0–26)/(64–98, 48–74) are the same sprites offset 48px. Different stave counts, band positions or rotations — or place fewer.
+- Move the barrels off the tile seam at y=215, which currently cuts their bottom third off along a straight line, and give each a contact shadow.
+- The barrel lids are ~30° ellipses on an orthogonal top-down grid. Pick one projection and redraw the lids flat.
+- Give the pond at (248–368, 0–192) a bank: wet mud at the margin, a value drop toward depth, and a shoreline that does not run along tile boundaries or turn a 90° corner at (248,192).
+- Redraw or mirror each moss instance at (18–42, 55–80), (10–20, 105–118), (30–40, 100–115), (355–380, 145–170) — they are currently one decal stamped four times.
+- The grey floor is a flat fill with a uniform 1px mid-grey mortar grid at exact tile pitch, identical value the whole run. Vary joint depth along a single run and break the grid so stones read as cut rather than stamped.
+- The object at (0–56, 96–168) — a black brick slab with an orange post through it — ends at y=168 in a hard flat cut against a grey tile, no cap, no foot, no shadow. Finish it or remove it.
+- The white specks at (215–240, 105–130) have no silhouette and read as pixel damage. Draw the bones as recognisable shapes or drop them.
+- Only the figure casts a shadow, a flat single-value ellipse. Shadow the barrels, crates and post from the same source, or give the figure none.
+
+Worth watching: the defect that decided the top three is not art, it's the light pass. Frames 1 and 3 are the same painting — pixel-identical outside a 265×235 region — and the only difference is how hard the glow was pushed. Fix the clipping and mask the sprite out of it, and frame 1 becomes the better frame, since its underlying wall band is the same asset as frame 3's. That's one shader change, not a repaint. The wall tops being airbrush mush while the floors are crisp is the expensive problem, and it's in all three.
+
+Model: Opus 5 (1M context)
