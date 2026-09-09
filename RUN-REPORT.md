@@ -6,8 +6,9 @@ Appended per item. **Nothing here needs a reply** unless it names one of §1.1.4
 **On the phone right now:** nothing. The handset has read `unavailable` to `devicectl` all
 session. Two builds passed their gate and are waiting on a reachable device, not on a verdict.
 
-**The run ended on a one-way door:** the props pass cannot fire because **§3 is not ratified**.
-That is the only thing here that needs you. Item 8 has it.
+**Two things need you**, in this order: **#183's ceiling** — nine seats across four panels have
+now ranked or flagged this build for the consequence of that clause (item 9) — and **§3**, without
+which the props pass cannot fire (item 8).
 
 ---
 
@@ -536,3 +537,61 @@ fixed in instruments that report on themselves; `prove_gate` 27 → 41 cases.
 4. **#183's remaining half**, if it is worth a round: *washed out* is sprite art, not a light
    response — 8.28% of the sprite is pinned at one value with nothing between 207 and 245, and a
    shoulder is monotone, so it can move that plateau but can never separate it.
+
+---
+
+## Item 9 — the handset came back, and the build still did not install. **This time it is the judge.**
+
+*Jiminy Cricket* went `available (paired)` mid-run, so I drove the current build — polish stack +
+#198 + the #183 re-derivation — at the phone. It did not get there, and the reason is worth more
+than the install would have been.
+
+### The panel flipped on identical bytes
+
+| round | not below the reference | flagged the build | verdict |
+|---|---|---|---|
+| r002 | **3 of 3** | 1 of 3 | INSTALL-LATEST (amended, seven items disposed) |
+| r003 | **1 of 3** | **3 of 3** | **FAIL** |
+
+Same picture. The round's own progress line: *picture moved mean 0.000 / worst 0 luminance
+levels*. **Six independent seats on one frame, and the majority went both ways.**
+
+The three-seat panel was the remedy for a single seat's 40% flip rate. It narrows the error bar;
+it cannot remove it. Seat-level this build is not below its reference in **4 of 6** seats — p =
+0.667 — and a majority of three drawn from that lands not-below with probability
+p³ + 3p²(1−p) = **0.741**. **About one panel in four says "no majority" on a build that is
+genuinely 2-of-3 at seat level.** That is what happened, published to
+`docs/RANK-NOISE-FLOOR.json` as the second measurement.
+
+**The bar is not re-tuned and nothing installed.** LOOP-PROCESS §8 — a bar found wanting mid-run
+is held frozen, cleared honestly and impeached in the same report. r003 is the round that
+describes this tree; r003 says no majority; the gate refuses. Choosing r002 because it agrees with
+me is the move that rule exists to forbid, and **a third panel run after seeing r003 would be the
+same move wearing a better name.** I did not run one.
+
+⚠ The guard behaved correctly this time: no STOP fired, because r002's INSTALL-LATEST closed the
+item and r003 opened a new series. That is the cut fix working on its first live round.
+
+### The pattern under the noise, which is not noise
+
+Four rounds, four independent panels, and the seats keep naming the same consequence:
+
+> r001 — *"The figure carrying the only light is darker than the ground he stands on."*
+> r002 — *"the player's silhouette is now within one value step of the floor."*
+> r003 — *"The player character loses its silhouette ... peak luminance is 231 with zero pixels
+> above that, so the lantern never produces a highlight and the 'only light there is' does not
+> read as a light."*
+> r004 (previous lane) — *"The lamp has no core: max 223, p99 198 ... add a tight bright core."*
+
+Every one of those is **#183's ceiling doing exactly what you ruled**: *the hero should receive
+LESS of the lamp's top end than the ground does.* §13.4.1 disposes each request individually and I
+have disposed all of them. **The trend is not a request and cannot be disposed.** It is a measured
+fact about the ruling's price at the blind gate: nine seats across four panels have now ranked or
+flagged this build for the consequence of that clause.
+
+I am not asking for it to change, and I have not touched it — the one time I tried, on the seat's
+evidence alone, I was wrong and reverted. What I can say with numbers is what it costs: the
+figure's own pixels peak at 198.70 against lit floor at p95 202.50, by construction, and every
+panel since has read that as the light-bearer not being lit.
+
+**That is the second thing that needs you, and it is now ahead of the handset in the queue.**

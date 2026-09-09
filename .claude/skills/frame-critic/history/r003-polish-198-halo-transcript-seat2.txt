@@ -1,0 +1,59 @@
+All four read. 1, 2 and 3 are the same render — the lighting field is byte-identical in the mids and darks (floor at x=160 measures 26.8 in all three; corridor at y=180 measures 18.5/18.5/18.4). They differ only in how the top end of the curve is handled. So the comparison between them is entirely about what happens inside the light pool. 4 is a different frame at a different tile size.
+
+RANK: 3 > 2 > 1 > 4
+
+BEST: 3
+
+BEST_WHY: The mortar survives full brightness. In the light pool left of the figure (x 260–390, y 500–600) the vertical joint at x≈298 still carries a 36-value step against a 165-mean floor, and the two slabs either side of it sit at different values from each other — a paler one across x 300–330, a darker one across 330–360 — so the floor reads as separately cut blocks that have worn unevenly rather than one bleached sheet. Second: the hairline crack running from x≈240,y≈590 up to x≈450,y≈500 stays a one-pixel dark line all the way through the hottest part of the floor instead of being eaten. Third: on the wall run at y 425–455, the driven timber pins at x≈290 and x≈390 hold clean two-pixel silhouettes against the wall face, and the wall's bottom edge holds one continuous dark line right across the frame (row 454 is the strongest horizontal edge in the image, 24.3 mean gradient). At play size the repair hardware still reads as hardware. Measured against the others, 3 keeps 8.43 mean edge energy in the 200+ luminance bucket versus 6.06 for 2, and it does it with structure rather than noise.
+
+WORST: 4
+
+WORST_WHY: Start with the omission: there is no lighting in it at all. The frame is flat corner to corner — no source, no falloff, no cast shadow anywhere except one oval under the green figure. Then the tile work. The dirt field meets the grey pavers on dead-straight pixel lines — the vertical cut at x≈56 on the left, the horizontal cut at y≈228 along the bottom, the vertical cut at x≈340 on the right — with no transition tile, no rubble, no scatter, no value change at the seam. The dirt itself repeats: autocorrelation shows a clear peak at a 48-pixel vertical period (0.167 against a 0.08 noise floor), and you can see it — the same dark red squiggle motif recurs down the field. The props are duplicates rather than variations: the two crates at top-left are pixel-identical to each other, the two barrels at bottom-centre are pixel-identical and sitting side by side, and the two large lily pads in the water are the same sprite at the same rotation. The water is one flat teal with a scale pattern over it, terminating on a straight vertical edge at x≈248 with no bank, no shoreline, no darkening at depth. The green figure's shadow oval is the same dark green as the figure's own outline, so its legs merge into the shadow. The white debris scatter at x 110–160, y 105–130 sits on the dirt with no shadow and no contact — it reads as confetti dropped on top of the tilemap.
+
+FLAGGED: 4, 1, 2, 3
+
+For 4 — the straight-cut tile seams and the twinned barrels are the glance-level ones.
+
+For 1 — the centre of the light pool, x 280–400 / y 470–560, is a blown cream cloud with the masonry gone. The joint grid that is present everywhere else in the frame simply stops inside the brightest area, replaced by soft blotches with a pink/magenta cast that appears nowhere else in the image. 1 blows out 12,098 pixels above luminance 200 against 5,734 for 2 and 4,698 for 3. The focal area of the frame is the least-drawn area in it. That is the "a filter was run over it" tell.
+
+For 1, 2 and 3 alike — the figure has no ground contact. Sample the row directly under the boots (y=511, x 388–432): luminance 240.9 in image 1, while the open floor beside it at x 300–344 reads 218.5. It is *brighter* under the sprite than next to it. The character has a hard black outline and nothing anchoring it; it floats. That is the thing a player looks at for the whole session.
+
+Also for 1, 2 and 3 alike — the corridor at x 505–535 is lit by something other than the figure. At y=420 it reads 160.8, roughly 132 pixels from the light. On the open floor at the same 140-pixel radius, luminance is 103. The corridor is 55% brighter than open floor at equal distance from the only light source, and it ramps smoothly and symmetrically up a parallel-sided shaft to y≈200. A point light does not do that. Against a premise that states the figure carries the only light there is, it is a visible contradiction.
+
+SHIP: NONE
+
+FLIP 3:
+- Darken the four floor rows immediately below the sprite's feet (y 508–516, x 386–434) by roughly 25% and feather it two pixels outward; the sprite currently sits on floor that is brighter than its surroundings.
+- Add a short contact occlusion under the boots that is warm-dark, not neutral grey, so it reads as the light-carrier's own shadow rather than a drop shadow.
+- Either kill the corridor gradient at x 505–535 above y≈340 so the corridor falls off on the same radial curve as the open floor, or commit to it as a real source and put the fixture in frame — a grate, a shaft mouth, a burning thing at the top of the corridor. Right now it is a glow with no cause.
+- The wall run at y 398–448 sits 57 luminance points below the lit floor here, against 87 in the other two treatments. Pull the wall band down about 10–12 points to restore the read; at play size the left half of that wall currently drifts toward the floor value.
+- The lower-left of the light pool (x 180–260, y 560–640) carries a green-grey cast that does not appear anywhere else in the frame. Neutralise it toward the warm range the rest of the pool uses.
+
+FLIP 2:
+- The joint grid across the lit floor is dead regular — same course height, same block width, same joint value and width from x 240 to x 470. Vary block length along a single run and vary joint value by 15–20 points block to block, so the floor reads as cut and laid rather than stamped.
+- The mortar reads salmon-pink (visible as the joint colour across the whole hot area). Nothing else in the frame carries that hue. Desaturate the joints toward the grey-brown the shadowed masonry uses.
+- Edge energy in the 200+ luminance bucket is 6.06 here against 8.43 in the alternate treatment — the stone faces inside the pool have lost their internal wear. Restore the surface scratching and pitting that the darker slabs at x 560–700 still show.
+- Same as 3: darken y 508–516 under the boots; the row reads 203.7 against 192.5 for the floor beside it.
+- Same as 3: resolve the corridor beam at x 505–535.
+
+FLIP 1:
+- Rebuild the joint grid through x 280–400 / y 470–560. Every joint in that box has been dissolved. Reinstate the vertical joints at x≈298 and x≈360 and the course line at y≈518 at full strength, then roll the highlight off on top of them rather than through them.
+- Cut the blown area down. 12,098 pixels sit above luminance 200 and the peak is 242. Bring the ceiling to roughly 200 and let the falloff do the work; the light pool is currently reading as an overexposure, not as a lantern.
+- Remove the pink/magenta blotching in the pool (most visible x 260–340, y 490–540). It is not in the palette anywhere else in the frame.
+- The wall face at y 415–450, x 150–470 has gone soft — the block definition in its lower half is a blurred brown wash with no course lines. Restore the joints and the block edges; compare against the same wall in the alternate treatments where they hold.
+- Same as 3: darken y 508–516 under the boots; the row reads 240.9 against 218.5 beside it.
+- Same as 3: resolve the corridor beam at x 505–535.
+
+FLIP 4:
+- Add the light. Place a source on the figure and apply radial falloff across the whole frame; nothing in it currently darkens with distance from anything.
+- Break the four straight tile-boundary cuts: the dirt/stone edges at x≈56, x≈340 and y≈228, and the water/dirt edge at x≈248. Each needs a transition band — spill tiles, scattered stones sitting on the dirt on the stone side, dirt caught in the paver joints on the dirt side.
+- Kill the 48-pixel vertical repeat in the dirt. Author at least four variants of the dirt tile with the speckle motif in different positions and scatter them, or add a non-tiling detail pass over the field.
+- Give the water a bank: darken the two-tile band along its edges, and put a value gradient across the body so it has depth. It is currently one flat teal.
+- Rotate or redraw one of each duplicated pair — the two crates at top-left, the two barrels at bottom-centre, the two large lily pads. Identical adjacent props are the clearest tell in the frame.
+- Change the green figure's shadow oval to a value distinct from its own outline colour; its legs currently disappear into it.
+- Ground the white debris at x 110–160, y 105–130 — give each fragment a one-pixel dark contact edge on its lower side so it sits in the dirt rather than on the image.
+- The dark brick band along the bottom has a mismatched grey rectangle at x≈166, y≈275. Replace it with the correct tile.
+
+The thing worth taking away: between 1, 2 and 3 you are not choosing a look, you are choosing how much drawing survives your highlight. 3 keeps the most and it is not close. But all three share two faults that live in the render, not the tone curve — the unanchored sprite and the corridor lit by nothing — and those will follow every frame you produce from this pipeline until they are fixed at the source.
+
+Model: Opus 5 (1M context).

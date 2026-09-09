@@ -1,0 +1,82 @@
+I read all four at full size and at 4–6× on the areas I'm citing, and measured luminance where a claim depended on it.
+
+---
+
+**RANK:** 1 > 3 > 2 > 4
+
+**BEST:** 1
+
+**BEST_WHY:** The joint work in the lit floor is authored, not generated. Along the horizontal course at y≈560, x=185–320, a single joint changes value across its own length — near-black at x≈200, fading to barely darker than the block face by x≈290, re-darkening past that. The blocks in that run are unequal: a double-width face at (250–320, 545–575) sits above two singles. So the courses read as cut and laid rather than stamped.
+
+The crack system is hand-drawn. The crack entering at (300,560) forks at a Y-junction around (310,590); the two branches leave at different angles *and* different weights — the eastern branch thins to 1px by (430,530), the western thickens where it crosses a joint at (250,610). Procedural cracks don't change weight at a junction.
+
+The repairs match the fiction without illustrating it. Along the north wall at (200–500, 390–445) there are three driven timbers at x≈268, 355 and 420, at three different lengths and three different y-offsets, and the one at x≈420 crosses a block joint instead of landing on it. That is what "extremely good at it and never once cared how it looks" looks like.
+
+And the light behaves. Sampling the north wall south-to-north, luminance runs 53.2 → 64.3 → 77.6 → 87.7 as you come toward the lamp, monotonic, with a 70-unit step down to the wall from the floor below it (wall L≈54, floor L≈126). The wall reads as an obstruction in a glance, which is the whole job.
+
+**WORST:** 4
+
+**WORST_WHY:** There is no light in it. I measured the dirt field (x 60–240, y 0–215) in bands: rows vary 64.2 to 78.6, columns 66.6 to 72.5. Across the entire field the illumination is flat within about six luminance units. There is no carried light, no falloff, no source. The premise of every other frame here is simply absent.
+
+Worse, there *is* a torch drawn — the orange notched bar at (26–35, 127–144) on its brown post — and it emits nothing. The dirt directly beneath it is the same value as dirt 200 pixels away. A lit torch casting zero light is the first thing a player registers as broken.
+
+The assets are copy-paste, and I confirmed it byte-wise: the two yellow-framed crate panels at (63–97, 2–22) and (63–97, 49–69) are **pixel-identical** — a difference bounding box of `None`. The two barrels at (113–142, 190–217) and (162–190, 190–217) differ nowhere in their 30×28 footprint. Nobody varied anything.
+
+The green pool is a rectangle. Its west edge is a dead-straight vertical at x=248 for its full height; its south edge a dead-straight horizontal at y=192. No bank, no wet margin, no lip, no spill. The "lily" blobs are two-value discs — one mid-green fill, one lighter dot.
+
+The projection is mixed: the barrels are drawn in oblique, you see their sides, while the dirt, water and tile floor are straight top-down. And the bones at (207–237, 112–128) are pure white — the highest-contrast pixels in the frame — with no contact shadow, floating, pulling the eye toward nothing.
+
+**FLAGGED:** 1, 2, 3, 4
+
+The shared glaring fault in 1, 2 and 3 is the figure itself. Its brightest pixel at (411,465) is `#EC8B00` — a zero blue channel, saturation 1.00. Nothing in the environment of any of the three exceeds saturation 0.55. It also carries a 1px pure-black outline where nothing else in the frame is outlined, and it is rendered at hard 1:1 pixel edges against block faces with 3–4px soft transitions. It is the light source and receives none of its own light: the shield at (410–425, 480–498) sits cooler than the floor four pixels beneath it. Two different games, and the one you look at first is the wrong one.
+
+2 and 4 carry their own separately, described below.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The sprite's palette breaks the frame's ceiling: `#EC8B00` at (411,465) has B=0, saturation 1.00, against an environment maximum of 0.55. Regrade the sprite into the environment ramp; no zero-channel primaries.
+- Remove the 1px pure-black outline on the sprite. Nothing else in the frame is outlined.
+- The sprite is the light source and is not lit by it — the shield at (410–425, 480–498) reads cooler than the floor directly below. Apply the same warm ramp that lights the floor tiles to the sprite.
+- The sprite renders at hard 1:1 pixel edges; the wall blocks at (200–500, 390–445) have 3–4px soft edges. Pick one sharpness and hold it for both.
+- The unseen regions are axis-aligned rectangles with 0px feather — the block at x 190–440 / y 60–378 has a dead-straight bottom at y=378 and a dead-straight right at x=440 — sitting beside a light pool with roughly 60px of feather. Feather that boundary, or break it on tile edges with irregular per-tile offsets so it stops reading as a mask.
+- Floor wear on the right half (560–720, 545–700) is one 45° hatch stroke stamped repeatedly at a single angle and near-constant length. Add two more stroke angles and vary length, or the surface reads as stamped on any inspection.
+- The dark smear at (490–580, 555–600) reads as neither a shadow nor an object. Give it a caster or delete it.
+
+**FLIP 3:**
+- All seven items in FLIP 1 apply unchanged; 1 and 3 differ only inside (259–545, 379–631).
+- Remove the 45° streak overlay across the light pool in that region. It runs at a fixed screen-space angle, crosses the tile joints and the crack line without breaking on either, and terminates at the light radius rather than at any surface. That is a filter pass, and it looks like one.
+- Under that overlay the tile joints at (200–400, 500–580) are washed out relative to the same joints further along the same course outside the pool. Light is erasing detail instead of revealing it. Lift the block faces without lifting the joint values, so joint contrast survives into the light.
+
+**FLIP 2:**
+- All seven sprite/mask/wear items from FLIP 1 apply.
+- The north wall at (220–420, 390–445) is lit backwards. Row luminance runs 59.2 at y390, peaking at 80.7 at y408, then dropping to 53.1 at y420 and sitting near 60 down to y444. The far edge of the wall is brighter than the edge nearest the lamp. Invert the ramp so the wall's south face is brightest — 1 and 3 run 55.8 → 87.7 in that same span.
+- There is a 27-unit hard horizontal luminance seam between y414 and y420 across the full width of that wall with no geometry under it. Remove it or put a physical step there.
+- The floor hatch at (310–400, 640–715) has a uniform dark 1–2px border on all four sides and a dead-straight top edge at y≈645 spanning its full width. It reads as a pasted rectangle. Break the silhouette against the surrounding brick courses and drop the uniform border.
+- Same hatch: the crack arriving from the north-west stops dead at its left edge around (310,655) with no contact shadow and no continuation. Run the crack to the object and occlude it, or carry it around.
+- The grade collapses the mid-tones — the wall faces and floor faces across (200–500, 390–500) sit within about ten units of each other in hue and saturation. Pull the wall tops cooler and darker to restore the hue separation that 1 holds.
+
+**FLIP 4:**
+- There is no lighting model. Luminance across the dirt field (60–240, 0–215) varies under six units row-to-row and column-to-column. Add the carried light and its falloff; nothing else on this list matters until that exists.
+- The torch at (26–35, 127–144) emits nothing. Make it a light source or delete it.
+- The wall band the torch sits in (8–56, 120–145) is a dark slate strip that terminates in mid-air at x=56 against bare dirt with a hard vertical cut. Terminate it on something, or extend it.
+- The pool's west edge is a dead-straight vertical at x=248 running its full height and its south edge a dead-straight horizontal at y=192. Give it an irregular edge that follows the tile boundaries, plus a darker wet band on the dirt side.
+- The pool blobs at roughly (300–330, 110–125) and (255–270, 155–170) are two-value discs. Give them a silhouette and a third value, or cut them.
+- The two yellow crate panels at (63–97, 2–22) and (63–97, 49–69) are pixel-identical, verified. So are the two barrels at (113–142, 190–217) and (162–190, 190–217). Vary damage, offset and height on each instance.
+- The dirt field is one tile repeating on the grid at uniform speckle density edge to edge. Break the repeat with larger-scale value variation, and drop the red speckle — it reads as neither soil nor stone.
+- The blue chips scattered on the dirt (about (125,12), (180,155), (233,163) among others) are the same 3px sprite at the same rotation, stamped repeatedly. Vary rotation and value, or remove.
+- The barrels are drawn in oblique projection — their sides are visible — while dirt, water and floor tiles are straight top-down. Redraw them top-down.
+- Those barrels have a hard bottom edge sitting on the dirt with nothing under them. Add contact shadows.
+- The bones at (207–237, 112–128) are pure white, the highest-contrast pixels in the frame, floating. Drop their value into the dirt's range and ground them with a contact shadow.
+- The green figure at (210–240, 0–27) is cropped by the frame edge and stands on an opaque solid-brown ellipse. Replace that with a multiply shadow.
+- The stone border (bottom band y 215–270, left column x 0–56) is a perfectly regular grid, every tile at the same value, joints a uniform 1px. Vary tile values, break and re-cut some joints, chip the corners.
+- The dirt meets the cut stone at x=56 and y=215 with a 1px straight cut and no spill. Scatter dirt over the stone at the boundary.
+- Nothing in the frame carries the repair language — no rope, no driven pins, no hide, no salvaged timber. Without it this frame does not belong to the place the other three are set in.
+
+---
+
+The gap between 1 and 3 is one overlay pass; the gap between 3 and 2 is a lighting bug you can measure; the gap between 2 and 4 is the difference between a frame with a fault and a frame with no lighting system at all. What I would fix first, everywhere, is the figure — it is the only thing on screen a player looks at every second of play, and in all three of the strong frames it is the one object that announces the art was assembled rather than made.
+
+*Model: Claude Opus 5 (1M context)*
