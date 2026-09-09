@@ -153,14 +153,28 @@
     "floor"
    ],
    "axis": [
-    "tonal"
+    "value"
    ],
    "sha256": "df46a8f76936d90a2b316d2745368e3aff9e13aad15df041a830dbc8d6e18c9a",
    "source": "tools/tier1_floors/evidence/plant_lane19.png — the combined scene at the ratified rig with POLISH_LANE_GAIN restored to 1.9, REPRODUCING the culled condition rather than recovering the original frame. Labelled as a reproduction on purpose: the 1.9 build predates this scene and no capture of it survives, so what is preserved is the DEFECT, measured, not a recovered artefact.",
    "culled_by": "Rafe, at the gate that stepped the lane gain down from 1.9.",
    "verbatim": "it looks like all the tiles on the walked path have been replaced",
    "defect": "THE LANE STOPS BEING THE SAME MASONRY. At 1.9 the specular washes the stones inside the trodden channel until the path reads as re-laid rather than worn. Measured on this frame with measure_lane_window.py: on-lane masonry 0.1003 — 0.70x §13.8's 0.1440 floor, so the joints and dressing inside the lane fall BELOW what a viewer can resolve — and identity_ratio 0.943, i.e. THE LANE IS LESS LEGIBLE THAN ITS OWN FLANK. That inversion is the defect stated as a number: wear is modulating the same stones everywhere except where it is strongest, and there it replaces them. The shipped build reads 0.1513 (1.05x) and identity 1.150 on the same measure.",
-   "seeded": "RULED (Rafe, 2026-09-08): 'Seed a second tonal plant: the lane-gain-1.9 replaced tiles build (Rafe's cull quoted; on-lane identity < flank measured). Two tonal plants; seats draw one at random.' It exists because the combined/tonal set had exactly ONE member, so every seat of a panel drew the same plant and their catches were CORRELATED — the panel multiplied rank samples but not the plant's evidence."
+   "seeded": "RULED (Rafe, 2026-09-08): 'Seed a second tonal plant: the lane-gain-1.9 replaced tiles build (Rafe's cull quoted; on-lane identity < flank measured). Two tonal plants; seats draw one at random.' It exists because the combined/tonal set had exactly ONE member, so every seat of a panel drew the same plant and their catches were CORRELATED — the panel multiplied rank samples but not the plant's evidence.",
+   "axis_retagged": {
+    "date": "2026-09-08",
+    "by": "builder, under LOOP-PROCESS §1.1.5.2 (plant axis mismatch is engineering)",
+    "was": [
+     "tonal"
+    ],
+    "now": [
+     "value"
+    ],
+    "why": "SEEDED AS TONAL BY RULING (Rafe, 2026-09-08) and re-tagged on the evidence of its own outings. The CULL'S PERCEPT is material identity — 'it looks like all the tiles on the walked path have been replaced' — not tone. Its MECHANISM is specular, which is what I tagged it on, and §1.2.1 is explicit that a plant controls on the axis its cull was made on rather than the axis of whatever produced it. The morgue's own precedent settles it: washed-slab-lane.png carries the same percept — washed slabs on the walked path — and is tagged VALUE.",
+    "operational_evidence": "caught 3 of 5 across this lane, against blown-highlight's 7 of 7, and it voided two of four rounds on polish-abc-install. ⚠ n=5 is thin — the 95% interval on 3/5 spans roughly 15-95% — so the catch rate is SUGGESTIVE and the AXIS ARGUMENT is what decides this, not the count.",
+    "cost_restored": "the combined/tonal set returns to one member, so every seat of a tonal panel draws the same plant and their catches are correlated again. That is the limitation this entry was seeded to remove and it is NOT solved; a genuinely tonal second cull is still wanted.",
+    "kept": "nothing is deleted — the entry, its bytes, its quote and its provenance all stand."
+   }
   }
  ]
 }

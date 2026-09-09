@@ -1027,6 +1027,11 @@ def main():
     ap.add_argument("--build-frame", help="override the build frame. Used by the plant "
                                           "self-test, which puts a morgue capture in the "
                                           "build's slot and requires the seat to flag it.")
+    ap.add_argument("--redraw-seat", type=int, default=None,
+                    help="re-draw ONE seat of the lane's last round on the SAME frozen frame, "
+                         "because its plant was mis-tagged. RULED (Rafe, 2026-09-08): a seat "
+                         "voided by a mis-tagged plant is re-drawn, not the round; a correct "
+                         "plant missed still voids.")
     ap.add_argument("--seats", type=int, default=1,
                     help="how many INDEPENDENT blind seats judge this round. Ruled at 3 for a "
                          "PASS-INSTALL vote (Rafe, 2026-09-08); higher values measure the "
@@ -1094,7 +1099,10 @@ def main():
         fsha = hashlib.sha256(open(frame, "rb").read()).hexdigest()
         print("== BUILD FRAME OVERRIDDEN: %s  sha256 %s" % (a.build_frame, fsha[:16]))
         print("   This round is a SELF-TEST of the judge, not a verdict on a build.")
-    elif a.no_capture:
+    elif a.no_capture or a.redraw_seat is not None:
+        # A RE-DRAW NEVER RE-CAPTURES. Its whole premise is the SAME FROZEN BYTES — the seats that
+        # are carried judged this exact frame, and a fresh capture would make their ballots
+        # describe a picture they never saw. The sha is checked against the prior round below.
         frame = os.path.join(REPO, cfg["capture"]["frame"])
         fsha = hashlib.sha256(open(frame, "rb").read()).hexdigest()
         print("== capture skipped; judging %s as it sits (sha256 %s)"
@@ -1213,11 +1221,36 @@ def main():
             "the numbered PNG files in this directory",
             "the files %s in this directory" % ", ".join("%d.png" % i
                                                          for i in range(1, len(deck) + 1)))
-        print("   running (fresh claude -p, no repo access)...")
-        text = run_seat(work, prompt, a.timeout)
         tp = os.path.join(HISTORY, "r%03d-%s-transcript%s.txt"
                           % (rnd, lane.replace("/", "_"),
-                             "" if a.seats == 1 else "-seat%d" % (seat_idx + 1)))
+                             "" if (a.seats == 1 and a.redraw_seat is None)
+                             else ("-seat%d-redraw" % (seat_idx + 1)
+                                   if a.redraw_seat is not None
+                                   else "-seat%d" % (seat_idx + 1))))
+        # ⚠ A RE-DRAW WRITES ITS OWN FILE AND NEVER THE ORIGINAL'S. Naming it for the seat alone
+        # cost r004's original seat-2 ballot when I renamed files by hand — untracked, gone. A
+        # re-drawn ballot is a SECOND ballot on the same bytes, not a replacement for the first.
+
+        # ── A RE-DRAW NEVER RE-ROLLS, AND THIS CHECK RUNS BEFORE THE SEAT IS SPENT ──────────
+        #
+        # If this seat has already been re-drawn on these frozen bytes, ITS BALLOT STANDS. The
+        # first re-draw of seat 2 flagged the build and ranked it below; re-running until a
+        # kinder seat turns up is exactly what a plant exists to prevent, arriving through the
+        # door marked "the reporting code crashed". A crash in my own summary is not grounds to
+        # re-open a verdict already cast.
+        #
+        # ⚠ IT WAS FIRST WRITTEN AFTER `run_seat` AND SO GUARDED NOTHING — the seat was already
+        # spent by the time it was consulted, and a live run had to be killed mid-flight. A
+        # no-re-roll guard downstream of the roll is a comment, not a guard.
+        if a.redraw_seat is not None and os.path.exists(tp):
+            print("   seat %d's re-drawn ballot is already on disk — REUSED, not re-rolled (%s)"
+                  % (seat_idx + 1, os.path.relpath(tp, REPO)))
+            return dict(seat=seat_idx + 1, work_dir=work, slots=slots, mapping=mapping,
+                        plant=seat_plant, text=open(tp).read(),
+                        transcript=os.path.relpath(tp, REPO), reused=True)
+
+        print("   running (fresh claude -p, no repo access)...")
+        text = run_seat(work, prompt, a.timeout)
         os.makedirs(HISTORY, exist_ok=True)
         with open(tp, "w") as f:
             f.write(text)
@@ -1225,18 +1258,100 @@ def main():
                     plant=seat_plant, text=text, transcript=os.path.relpath(tp, REPO))
 
     crop = cfg.get("crop")          # the deck's crop, used again for the round's perceptual hash
-    seats = [seat_round(i) for i in range(a.seats)]
+
+    # ── A MIS-TAGGED PLANT VOIDS A SEAT, NOT A ROUND — RULED (Rafe, 2026-09-08) ──────────────
+    #
+    #     "a seat voided by a mis-tagged plant is re-drawn, not the round; a correct plant missed
+    #      still voids."
+    #
+    # The distinction is between a fault in the DECK'S CONFIGURATION and a fault in the JUDGE. A
+    # seat handed a plant whose axis does not match the round's question was never asked a
+    # answerable question — §1.2.1: a plant controls on the axis its cull was made on, and the
+    # right image for the wrong question is not a control at all. Throwing away two seats that
+    # judged correctly, plus a capture, to repair one mis-configured deck is a cost with no
+    # evidentiary return.
+    #
+    # ⚠ AND THE OTHER HALF IS WHAT KEEPS IT HONEST: a seat that misses a CORRECTLY tagged plant
+    # still voids the whole round, exactly as §4 says. This re-draw is available only where the
+    # tag was wrong, it names the mis-tagged plant, and it is recorded as an added artifact — so
+    # it can never become "re-run the seat that disagreed with me".
+    if a.redraw_seat is not None:
+        prior_path = os.path.join(HISTORY, "r%03d-%s.json" % (rnd - 1, lane.replace("/", "_")))
+        if not os.path.exists(prior_path):
+            raise SystemExit("REFUSING: --redraw-seat needs the lane's last round on disk; "
+                             "%s is not there." % os.path.relpath(prior_path, REPO))
+        prior = json.load(open(prior_path))
+        pf = (prior.get("build_frame") or {}).get("sha256")
+        now = hashlib.sha256(open(frame, "rb").read()).hexdigest()
+        if pf != now:
+            raise SystemExit("REFUSING: the frame has moved since that round (%s -> %s). A "
+                             "re-draw is only lawful on the SAME FROZEN BYTES." % (pf[:16], now[:16]))
+        rnd = prior["round"]
+        seats = []
+        for old_seat in prior["panel"]["per_seat"]:
+            i = old_seat["seat"] - 1
+            if old_seat["seat"] == a.redraw_seat:
+                print("\n== RE-DRAWING seat %d — its plant (%s) was mis-tagged for axis '%s'"
+                      % (old_seat["seat"], old_seat["plant"], cfg.get("axis")))
+                seats.append(seat_round(i))
+            else:
+                tp = os.path.join(REPO, old_seat["transcript"])
+                sd = dict(seat=old_seat["seat"], work_dir=old_seat["work_dir"],
+                          slots=dict(plant=None, build=None, bar=None, approved=None),
+                          mapping={}, plant={"file": old_seat["plant"], "verbatim": "(carried)"},
+                          text=open(tp).read(), transcript=old_seat["transcript"],
+                          carried=True)
+                seats.append(sd)
+                print("   seat %d carried unchanged from that round (%s, caught=%s)"
+                      % (old_seat["seat"], old_seat["plant"], old_seat["caught"]))
+        redraw_note = dict(round=rnd, seat=a.redraw_seat,
+                           mis_tagged_plant=prior["panel"]["per_seat"][a.redraw_seat - 1]["plant"],
+                           frame_sha256=now,
+                           ruling=("a seat voided by a mis-tagged plant is re-drawn, not the "
+                                   "round; a correct plant missed still voids. — Rafe, "
+                                   "2026-09-08"))
+    else:
+        redraw_note = None
+        seats = [seat_round(i) for i in range(a.seats)]
     # The first seat's deck is the one the verdict's top-level fields describe, so a single-seat
     # round records exactly what it always did.
-    work, mapping = seats[0]["work_dir"], seats[0]["mapping"]
-    plant = seats[0]["plant"]
-    plant_slot, build_slot = seats[0]["slots"]["plant"], seats[0]["slots"]["build"]
-    bar_slot, approved_slot = seats[0]["slots"]["bar"], seats[0]["slots"]["approved"]
+    # THE ROUND'S TOP-LEVEL DESCRIPTORS COME FROM A SEAT THAT ACTUALLY RAN. On a re-draw the
+    # first seat may be CARRIED, and a carried seat has no deck of its own — its ballot was cast
+    # in the earlier round and only its numbers are kept. Describing the round from it produced
+    # "rank ? of 0" and "NO APPROVED FRAME IN THE DECK" on a round whose deck plainly had one.
+    desc = next((sd for sd in seats if not sd.get("carried")), seats[0])
+    work, mapping = desc["work_dir"], desc["mapping"]
+    plant = desc["plant"]
+    plant_slot, build_slot = desc["slots"]["plant"], desc["slots"]["build"]
+    bar_slot, approved_slot = desc["slots"]["bar"], desc["slots"]["approved"]
     deck = [x for x in (1, 2, 3, 4) if str(x) in mapping]
-    text, tpath = seats[0]["text"], os.path.join(REPO, seats[0]["transcript"])
+    text, tpath = desc["text"], os.path.join(REPO, desc["transcript"])
 
     # ── EVERY SEAT PARSED AND SCORED SEPARATELY, THEN THE VOTE ────────────────────────────────
+    prior_by_seat = {}
+    if a.redraw_seat is not None:
+        prior_by_seat = {p["seat"]: p for p in prior["panel"]["per_seat"]}
     for sd in seats:
+        if sd.get("carried"):
+            # A CARRIED SEAT IS NOT RE-JUDGED. Its ballot stands exactly as recorded; re-parsing
+            # it would risk a different reading of the same words, which is not what "carried"
+            # means. Its numbers are taken from the round it was cast in.
+            p0 = prior_by_seat[sd["seat"]]
+            sd.update(rank=p0["rank"], approved_rank=p0["reference_rank"],
+                      above_approved=p0["above_reference"],
+                      not_below=p0.get("not_below",
+                                       p0["rank"] <= p0["reference_rank"] + REF_SLACK),
+                      build_flagged=p0["build_flagged"], shipped=p0["shipped"],
+                      caught=p0["caught"],
+                      how=dict(ranked_last=None, named_worst=None, flagged=p0["build_flagged"],
+                               shipped=p0["shipped"], outranked_build=None,
+                               every_frame_flagged=None, carried=True),
+                      r={"_rank": [], "_flagged": [], "_ship": [],
+                                                      "RANK": "", "SHIP": "", "FLAGGED": "",
+                                                      "WORST": "", "WORST_WHY": "", "BEST": "",
+                                                      "BEST_WHY": "", "_flip_blocks": {},
+                                                      "_worst": None})
+            continue
         try:
             sd["r"] = parse(sd["text"], len(sd["mapping"]))
         except ValueError as e:
@@ -1307,7 +1422,7 @@ def main():
         print("transcript: %s" % os.path.relpath(tpath, REPO))
         return 4
 
-    caught, how = seats[0]["caught"], seats[0]["how"]
+    caught, how = desc["caught"], desc["how"]
     flips = r["_flip_blocks"].get(build_slot, [])
 
     # ── WHERE THE BUILD PLACED, which is this round's contribution to the progress signal ──────
@@ -1524,6 +1639,7 @@ def main():
                            transcript=sd["transcript"], work_dir=sd["work_dir"])
                       for sd in seats],
         ),
+        seat_redraw=redraw_note,
         item_exit=item_exit,
         progress=dict(
             rank_position=pos, deck_size=n, rank_score=score,

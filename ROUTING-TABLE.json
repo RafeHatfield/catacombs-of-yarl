@@ -1,0 +1,38 @@
+{
+  "_what": [
+    "THE ROUTING TABLE — what the builder routed, and where it went. Audited by Rafe at the walk.",
+    "",
+    "RULED (Rafe, 2026-09-08): \"CC routes flags to issues with verified citations. Routing is no",
+    "longer a human-only act; the citation verifier is the laundering guard. Rafe audits the",
+    "routing table at the walk.\"",
+    "",
+    "This file is the audit surface that ruling names. It exists so a routing can be looked up",
+    "rather than remembered: `critic_gate._issue_cited` resolves a #nnn citation against the",
+    "record — docs/, the verdict history, RUN-REPORT.md and this file — and refuses a ROUTED whose",
+    "citation resolves nowhere. A number invented at three in the morning does not pass as a route.",
+    "",
+    "⚠ ONLY `ROUTED` LIVES HERE. `CLOSED` says a human decided not to chase something and `PARKED`",
+    "says a human has yet to look; both still need Rafe's words and neither is the builder's to",
+    "write. `ROUTED-ALREADY` and `MEASURED-FALSE` are dispositions against an existing record, not",
+    "new destinations, so they stay in the verdict where they were made.",
+    "",
+    "It is excluded from `build_id` by name: it describes where flags went and reaches no pixel."
+  ],
+  "routings": [
+    {
+      "when": "2026-09-08",
+      "round": "r004-polish-abc-install",
+      "lane": "wall",
+      "seat": "seat 2 of 3 (re-drawn), which flagged the build",
+      "to": "#201",
+      "title": "The wall run's top edge is ruled: no silhouette variation and a flush T at the corridor junction",
+      "items": [
+        "The wall run's top silhouette is a straight edge across its whole width. Give it the notch-and-return treatment the same wall has in 4 at x~445-500.",
+        "Where the horizontal wall meets the corridor wall at x~505, the two runs meet at a flush T at different course heights with no corner return. Resolve the corner."
+      ],
+      "why_new": "#194's item 1 is the wall SURFACE — 'cut them into blocks with varied joints instead of leaving noise blobs'. These two are the run's TOP EDGE: its silhouette, and how it terminates against another run. Different property, different lever.",
+      "measured": "The build's top edge takes 2 distinct rows across x190..440 (sd 0.13) against the reference's 3 (sd 1.71), detected per column against each frame's own unlit wall-top plane (11.69 in both). The reference's entire variation is 12 columns at 8px — two binding sprites drawn above their own cell, the artefact #185 fixed — so the exemplar the seat points at is a placement bug and is disproved in the issue. The percept stands. Neither item is attributable to this stack: the boundary-wall diagnostics are identical between build 144b0234 and this one.",
+      "evidence": ".claude/skills/frame-critic/history/r004-polish-abc-install-transcript-seat2-redraw.txt"
+    }
+  ]
+}

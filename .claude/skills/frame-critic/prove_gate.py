@@ -339,6 +339,49 @@ def main():
         case("K6 a seat flagged the build, nothing disposed -> refuse",
              1, rc, out, "not a majority test")
 
+        # ---- K7/K8. A FLAGGED BUILD REACHES INSTALL-LATEST ONLY BY A RECORDED AMENDMENT -------
+        #
+        # `panel_verdict` returns FAIL the moment any seat flags the build, and that is right at
+        # round time. The verdict can then be amended once every flagged item carries a lawful
+        # disposition — the builder may do that for ROUTED since 2026-09-08, by verified
+        # citation. What must not happen is the rewrite going unrecorded: the whole enforcement
+        # of a disposition is that Rafe sees it on the handset, and a file that simply says
+        # INSTALL-LATEST hides the fact that a seat said no. K7 is that hole; K8 is the same
+        # verdict with the amendment written down.
+        DISPOSED = [{"state": "ROUTED-ALREADY", "item": "wall tops read as noise",
+                     "lane": "wall", "cites": "#194"}]
+        AM = {"from": "FAIL", "to": "INSTALL-LATEST",
+              "law": "CC routes flags to issues with verified citations. - Rafe, fixture",
+              "flag": "1 of 3 seats flagged the build; its items are disposed"}
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [],
+                                      "dispositions": DISPOSED,
+                                      "panel": {"seats": 3, "flagged_by": 1, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K7 flagged + disposed but the amendment is UNRECORDED -> refuse",
+             1, rc, out, "amendment record is absent")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [],
+                                      "dispositions": DISPOSED, "amendment": AM,
+                                      "panel": {"seats": 3, "flagged_by": 1, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K8 the same verdict with the amendment recorded -> allow",
+             0, rc, out, "AMENDED from FAIL")
+
+        # An amendment that names no law is not a record of one.
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [],
+                                      "dispositions": DISPOSED,
+                                      "amendment": {"from": "FAIL", "to": "INSTALL-LATEST"},
+                                      "panel": {"seats": 3, "flagged_by": 1, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K9 an amendment naming no law -> refuse", 1, rc, out, "missing law")
+
         # Leave a clean passing verdict behind: the cases below assume one, and a fixture that
         # silently changes the state its successors read is how a proof stops proving.
         synth("PASS", bid)

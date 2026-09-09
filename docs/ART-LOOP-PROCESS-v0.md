@@ -190,6 +190,31 @@ axis a morgue entry's cull was about, and do not expect it to catch a seat asked
 one. A lane whose only plant is off-axis will void honestly and repeatedly, and the answer is a
 plant, not another round.
 
+**AN AXIS IS THE CULL'S PERCEPT, NEVER ITS MECHANISM.** RULED (Rafe, 2026-09-08): *"Re-tag
+`replaced-tiles-lane.png` as `value` — my error; the cull's percept is material identity. Law: a
+plant's axis is the cull's percept, never its mechanism."* That frame was tagged `tonal` because
+it was **made** by restoring `POLISH_LANE_GAIN` to 1.9 — a tonal lever. What Rafe saw was that the
+stones had stopped being the same stones: a **material identity** read, which is `value`. Tagging
+by the knob that produced a frame files the plant under the builder's story about it, and a seat
+is never asked about the knob. Ask what the eye rejected, and tag that.
+
+**A SEAT VOIDED BY A MIS-TAGGED PLANT IS RE-DRAWN, NOT THE ROUND.** RULED (Rafe, 2026-09-08):
+*"its miss is a deck-config fault, not a seat or build fault… Law: a seat voided by a mis-tagged
+plant is re-drawn, not the round; a correct plant missed still voids. Record by added artifact."*
+The distinction is whose fault the miss is. A seat that misses a plant **correctly tagged for the
+axis it was asked about** is soft, and softness voids — unchanged, and this must never be softened,
+because it is the only control the mechanism has. A seat handed a plant that could not test the
+question it was set is not being judged at all, and re-running two innocent seats over it throws
+away evidence and costs a build the panel already carries.
+
+**The re-draw is bounded, and each bound is load-bearing.** The frame's bytes are frozen and the
+run refuses if its sha has moved; the other seats are carried unchanged and are never re-parsed;
+nothing is re-captured; the re-drawn ballot is written to its own `-seat{N}-redraw.txt` so the
+original is never overwritten (it was, once, and was unrecoverable); and an existing re-drawn
+ballot is REUSED rather than re-rolled, checked **before** the seat is spent. Recorded by an added
+artifact — `SEAT-REDRAWN.json`, beside `PARK-CLEARED.json` — on the same principle as the guards:
+evidence is added, never deleted.
+
 **The plant is a picture, not a build.** A frame Rafe personally culled at the device gate, kept
 as bytes in `morgue/` with his words and the commit that produced it, hash-checked before every
 round. **An engine change can never neutralise a picture.** The plant must land worst-or-flagged
@@ -711,6 +736,20 @@ conditions, which supplies parts, which camera parameters are spent, and why the
 images rather than parameters. One home, cited from both documents.
 
 ---
+
+*v0.10 — 2026-09-08. **§1.1.4 narrowed to three triggers; new §1.1.5.** The old list read
+*landing; amendment to anything frozen; an instrument shown unable to fail; a precondition fail;
+budget*, and two of those were open doors: *precondition fail* was read as every gate mechanic and
+*amendment to anything frozen* as every flip touching a ruled clause. Between them one run stopped
+for a hash exclusion, a value pin and a routing decision. The loop now returns for **a one-way
+door**, **a genuine ruling gap quoted from the bible's silence or self-contradiction**, or **a
+broken judge / exhausted budget** — nothing else. §1.1.5 states the other side: a flip touching a
+ruled system is ruled BY the clause, gate mechanics are engineering, and a STOP does not stop the
+run. Routing moved to the builder **by verified citation** — `critic_gate` refuses a `ROUTED`
+whose issue or clause does not resolve in the record, which is a stronger guard than the signature
+it replaces, and `CLOSED`/`PARKED` still need Rafe's words. **§1.2.1 gains the two plant laws**
+above: an axis is the cull's percept and never its mechanism, and a seat voided by a mis-tagged
+plant is re-drawn while a correct plant missed still voids.*
 
 *v0.9 — 2026-09-03. **New §4.3: the gate verdict outranks the instrument bar.** Ruled at the
 floor's close. A positive control that can only be cleared by restoring a lever the eye culled is

@@ -102,10 +102,24 @@ def _issue_cited(ref):
     if not num.isdigit():
         return False
     import subprocess
-    r = subprocess.run(["git", "-C", REPO, "grep", "-rl", "--", "#" + num,
-                        "docs/", ".claude/skills/frame-critic/history/",
-                        "RUN-REPORT.md", "ROUTING-TABLE.json"],
+    # ⚠ THE SEARCH MUST NOT LIE ABOUT ITSELF. `git grep` exits 128 — not 1 — when ANY path it is
+    # given is absent from the working tree, and one missing path fails the whole call. This ran
+    # for real: `RUN-REPORT.md` had been deleted (by `prove_build_id`, since fixed), and the gate
+    # reported that #194, #193 and #201 "appear nowhere in the repository's record" when it had
+    # not looked at anything. It refused, which is the safe direction, but it refused with a false
+    # reason — and a check whose failure mode is indistinguishable from its finding is not a check.
+    # So: only existing paths are searched, and a nonzero exit that is not git's "no match" (1) is
+    # raised rather than read as an answer.
+    where = [w for w in ("docs/", ".claude/skills/frame-critic/history/",
+                         "RUN-REPORT.md", "ROUTING-TABLE.json")
+             if os.path.exists(os.path.join(REPO, w))]
+    if not where:
+        raise RuntimeError("the citation record is missing entirely — nothing to resolve against")
+    r = subprocess.run(["git", "-C", REPO, "grep", "-rl", "--", "#" + num] + where,
                        capture_output=True, text=True)
+    if r.returncode > 1:
+        raise RuntimeError("git grep failed while resolving %s: %s"
+                           % (ref, (r.stderr or "").strip()))
     return bool(r.stdout.strip())
 
 
@@ -322,10 +336,40 @@ def check():
             bad.append("%d of %s seats flagged the build and there are NO dispositions — 'no "
                        "unrouted flags' is not a majority test"
                        % (panel["flagged_by"], panel.get("seats", "?")))
+        # ── A FLAGGED BUILD REACHES THIS STATE ONLY BY A RECORDED AMENDMENT ──────────────────
+        #
+        # "No unrouted flags" is evaluated at two points (SKILL.md). At ROUND time a flagged
+        # build is a FAIL, and `panel_verdict` returns exactly that. The second point is here,
+        # where each flagged item carries a disposition — and moving the verdict between those
+        # two points is an AMENDMENT, which the autonomy ruling put in the builder's hands for
+        # `ROUTED` and left with Rafe for `CLOSED` and `PARKED`.
+        #
+        # The enforcement of a disposition has always been VISIBILITY: every one is printed at
+        # the gate and stamped onto the handset, so a routing the builder invented is a claim
+        # Rafe does not recognise, on his own screen, while he is holding the build. A verdict
+        # rewritten from FAIL with no trace of the rewrite defeats that — the file simply says
+        # INSTALL-LATEST and nothing records that a seat said no. So the amendment must be
+        # written down, in the verdict, naming the state it came from and the law it moved
+        # under, and it is printed below with everything else.
+        if panel.get("flagged_by"):
+            am = v.get("amendment") or {}
+            missing = [k for k in ("from", "to", "law") if not str(am.get(k) or "").strip()]
+            if missing:
+                bad.append("%d of %s seats flagged the build, so this verdict was AMENDED into "
+                           "INSTALL-LATEST — and the amendment record is %s (%s). A rewrite "
+                           "nobody can see is the one thing visibility cannot police."
+                           % (panel["flagged_by"], panel.get("seats", "?"),
+                              "absent" if not am else "incomplete",
+                              "missing " + ", ".join(missing)))
         if bad:
             return False, L + ["", "INSTALL-LATEST IS NOT LAWFULLY FORMED:"] \
                    + ["  - %s" % b for b in bad]
         L += ["", "INSTALL-LATEST — non-regression against the seeded reference."]
+        am = v.get("amendment") or {}
+        if am:
+            L.append("  AMENDED from %s: %s" % (am.get("from"),
+                                                " ".join(str(am.get("flag") or "").split())[:60]))
+            L.append("    under: %s" % " ".join(str(am.get("law") or "").split())[:70])
         if seats:
             L.append("  panel: not below it in %d of %d seats (above in %s); flagged by %s."
                      % (sum(1 for x in seats if x.get("not_below")), len(seats),

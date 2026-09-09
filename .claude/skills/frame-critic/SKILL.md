@@ -225,6 +225,24 @@ reason, which is not a control at all.
 
 ---
 
+## 4a. Two laws about the plant — RULED 2026-09-08
+
+**An axis is the cull's percept, never its mechanism.** `replaced-tiles-lane.png` was tagged
+`tonal` because it was *made* by restoring `POLISH_LANE_GAIN` to 1.9. What Rafe saw was that the
+stones had stopped being the same stones — material identity, which is `value`. Tag what the eye
+rejected, never the knob that produced it: a seat is never asked about the knob.
+
+**A seat voided by a mis-tagged plant is re-drawn, not the round; a correct plant missed still
+voids.** `--redraw-seat N` implements it and is fenced: the frame's sha must not have moved,
+nothing is re-captured, the other seats are carried unchanged and never re-parsed, the ballot is
+written to `-seat{N}-redraw.txt` so no transcript is overwritten, and an existing re-drawn ballot
+is REUSED — the no-re-roll check runs **before** the seat is spent, because the first version ran
+after it and guarded nothing. The re-draw is recorded by an added artifact, `SEAT-REDRAWN.json`.
+
+⚠ **The softness control is untouched.** A seat that misses a plant correctly tagged for the axis
+it was asked about is soft, and softness voids the round. That is the only control the mechanism
+has, and nothing here weakens it.
+
 ## 4b. The autonomy amendment — what stops the run, and what does not
 
 **RULED (Rafe, 2026-09-08).** LOOP-PROCESS §1.1.4 is amended and §1.1.5 added. There are now

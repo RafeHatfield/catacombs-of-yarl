@@ -1,0 +1,46 @@
+Read all four. Measurements below are from the pixel data, not impressions.
+
+**RANK:** 4 > 2 > 1 > 3
+
+**BEST:** 4
+
+**BEST_WHY:** The light is occluded geometry, not a radial gradient. Sampling luminance in a ring around the figure at (408, 485): at r=160px the values are SW 174, NE 157, SE 43, N 9 — the bright arms point exactly down the open floor and up the corridor, the dark arms sit behind the wall run at y 383–455. A blob filter cannot produce that. The histogram backs it: p99 of the play area is 200 with a max of 250, so a small hot core sits on top of a lit field that is otherwise the same value as image 1's — that is what a carried lamp does, a tight core and a long roll-off. Second: the wall run directly above the figure has a stepped top silhouette rather than a ruled one — the black edge drops at x≈500 and steps up again at x≈445, and two driven timbers at x≈290 and x≈355 cross the top course and overhang it by 3–4px, so the run reads as a line that has been patched at different times rather than a stamped course. Third, at 9× the floor slab at (200–290, 455–520) is genuine hard-edged pixel work — the crack is a 1px black run with single-pixel jogs, and the hatch scratches differ slab to slab. No blur anywhere in the source art; the softness is the light layer only.
+
+**WORST:** 3
+
+**WORST_WHY:** The water is a literal rectangle. I measured its left and right edges at every tenth row from y=0 to y=191: x=248 and x=343 on every single row, no exception. Ninety-six pixels wide, exactly six tiles, with no shoreline, no edge tile, no depth change, no bank. It ends at the dirt on a 1px vertical cut. The dirt-to-stone boundary along the bottom is the same failure: first grey pixel at y=216 for every x from 60 through 235, a dead rule with no transition. There is no lighting of any kind — the four frame corners sample to luminance 90, 90, 90, 90. The two yellow crates at (63–98, 0–19) and (63–98, 48–67) are 86% pixel-identical (690 of 800 pixels exactly equal, max channel difference 31), i.e. the same sprite stamped twice with a tint nudge. The crates and the barrels at (113–199, 190–218) are drawn in a three-quarter view with visible front faces and staves, sitting on a floor drawn straight down. The bone scatter at (207–233, 110–128) is loose near-white pixels with no silhouette — it reads as dirt on the screen, not an object. The wall stub at (0–57, 122–145) with the orange post below it connects to nothing and terminates in mid-dirt.
+
+**FLAGGED:** 3, 2, 1
+
+- **3** — the rectangular pond and the flat, sourceless light.
+- **2** — the light is overcooked. p99 is 231 against 4's 200 on identical art; the floor slabs at (300–480, 455–500) lose their joint lines entirely into the glow, and a pale halo sits directly under the black occlusion line at the wall base from x≈300 to x≈480, which reads as bloom, not as lamplight on stone.
+- **1** — the lamp has no core. Peak luminance anywhere in the play area is 223 against 250 in 2 and 4, and p99 is 198, so the lit pool is a single broad even wash. The result is that the frame reads as an ambient-lit room with a vignette rather than a figure carrying the only light. Compounding it: because the wall run sits one tile further back here (y 418–455 instead of 383–455), the light climbs its face — luminance due north of the figure at r=80 is 124 in image 1 versus 50 in 2 and 4 — and what it lights up is roughly two tiles of undifferentiated mottled fill with a single unbroken horizontal joint ruled edge to edge beneath it.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 4:**
+- The pier at x 122–190 carries coursed blocks for its top ~1.5 tiles and then nothing — from y≈440 down to y≈645 its face is mottled fill with zero joints, zero course lines, while the wall across the corridor is coursed for its whole height. Carry the joint layer down the full run.
+- That same pier has a razor-straight right edge at x=190 from y=390 to y=645 with no variation, no chipped corner, no repair. Break it in at least two places.
+- The block at (300–378, 645–722) casts no shadow. Behind it at (310–370, 725–755) the floor measures 46.2 against 34.9 at (250–300, 725–755) — it is *brighter* directly behind the object than beside it. Props are excluded from the shadowcaster set that the walls are in. Add them, or the object reads as a decal.
+- That block's silhouette steps in twice on its right edge for no structural reason and its top-right corner meets lit floor with no edge. Resolve it to one readable shape and give it a base line.
+- The corridor floor at (505–580, 190–450) brightens toward its middle with no source below or above it. Either put a source in the corridor or let it fall off monotonically from the figure.
+
+**FLIP 2:**
+- Everything in FLIP 4 — it is the same scene, same art, only the light differs.
+- Pull the exposure down until p99 of the play area is at 4's level (~200). At present 231.
+- The pale band hugging the underside of the wall base line from x≈300 to x≈480 is bloom bleeding across a hard occlusion edge. Clamp the light at the wall boundary so nothing brightens on the floor side of that black line.
+- The floor slabs at (300–480, 455–500) have lost their mortar joints into the glow. Whatever the peak brightness ends up being, the joint value must stay separated from the slab value at the hottest point of the pool.
+
+**FLIP 1:**
+- Everything in FLIP 4 — same scene, same pier, same shadowless block.
+- The lamp has no core: max 223, p99 198, so core and field are nearly the same value. Add a tight bright core in the ~1.5 tiles around (408, 485) — 4 reaches 250 there over an equivalent field — so the figure reads as the light source.
+- Move the wall run above the figure back to y≈383 (where 2 and 4 have it) or drop the light that reaches its face. As it stands, luminance north of the figure at r=80 is 124 and the light fully reveals two tiles of blank fill.
+- The wall run's top joint is one unbroken horizontal rule from x=190 to x=505 at constant depth. Break it: vary the joint depth along the run and step the course at least twice, so the stones read as cut and set rather than stamped.
+- The wall run's top silhouette is a straight edge across its whole width. Give it the notch-and-return treatment the same wall has in 4 at x≈445–500.
+- Where the horizontal wall meets the corridor wall at x≈505, the two runs meet at a flush T at different course heights with no corner return. Resolve the corner.
+
+The three dungeon frames share one tileset and one map; the difference between them is entirely lighting tuning plus one tile of wall placement. That means the gap between the best and the worst of those three is a config change, and the two genuine art defects — the blank pier face and props being outside the shadowcaster set — are present in all three and will survive any amount of relighting.
+
+*Model: Claude Opus 5 (1M context)*
