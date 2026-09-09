@@ -3,12 +3,12 @@
 One autonomous cycle: the autonomy amendment, then the remaining surface work, then props.
 Appended per item. **Nothing here needs a reply** unless it names one of §1.1.4's three triggers.
 
-**On the phone right now:** nothing. The handset has read `unavailable` to `devicectl` all
-session. Two builds passed their gate and are waiting on a reachable device, not on a verdict.
+**On the phone right now:** the polish stack, #198's proportional specular, and #183's
+re-derived cap — installed and verified on the handset, `review=GATED`.
 
-**Two things need you**, in this order: **#183's ceiling** — nine seats across four panels have
-now ranked or flagged this build for the consequence of that clause (item 9) — and **§3**, without
-which the props pass cannot fire (item 8).
+**On the phone as of 2026-09-09: the polish stack + #198 + #183 re-derived**, INSTALL-LATEST on
+five seats, verified from the handset's own log (item 10). **§3 is the one thing still needed** —
+without it the props pass cannot fire (item 8).
 
 ---
 
@@ -595,3 +595,69 @@ figure's own pixels peak at 198.70 against lit floor at p95 202.50, by construct
 panel since has read that as the light-bearer not being lit.
 
 **That is the second thing that needs you, and it is now ahead of the handset in the queue.**
+
+---
+
+## Item 10 — **installed and verified on the handset.** Both rulings executed
+
+The first build to reach the phone in this run, and it did not need the new rule's leniency to
+get there.
+
+### The panel — five seats, under ruling 1
+
+| | |
+|---|---|
+| not below the reference | **5 of 5** |
+| above it | 2 of 5 |
+| **ranked below** | **0** |
+| plants | all caught |
+| rank in deck | **1 of 4 — new best, score 1.00** |
+| picture moved | mean 0.045, worst **19 levels** |
+
+**It ranks above the approved reference**, which no round on this lane had managed, and with zero
+seats ranking it below **it would have cleared the old majority test too**. The re-derivation
+moved it, not the threshold. That distinction matters: the new rule was ruled on evidence, and
+the first build judged under it did not need it.
+
+All five seats flagged the build, and all five items dispose against the record: two to **#194**
+(its own items 5 and 2 — the edge-hardness mismatch and *break the cracks at the joints* — both
+found unaided by seats that had never seen the issue), one to **#193** (the **sixth** independent
+seat to name that patch, this time as *"the box at (310,645)"*), one to **§5.1** (the
+sprite/environment palette split is that clause's own unlanded derivation, which no build can
+close), and one to **§13.4.1**: *"put a lantern in the sprite's hand"* — the request you refused
+on 2026-09-07 with *"§6.2 rules the player IS the lamp."* Second independent seat to ask for it.
+Recorded, not re-argued.
+
+No amendment block: the panel returned INSTALL-LATEST itself, so `verdict_at_round` matches the
+file and nothing was rewritten. That is the sharpened guard doing exactly what it should — silent
+when nothing was rewritten, loud when something was.
+
+### On the phone, verified from the handset's own log
+
+```
+BUILD IDENTITY: commit=64020884... built=2026-09-09T20:23:24Z review=GATED
+bundle (device): com.rafehatfield.catacombsofyarl.tier0
+  OK  booted the review scene          OK  rig panel constructed
+  OK  incident overlays attached       OK  floor family laid, every cross-check green
+  OK  theme and floor family agree     OK  no losable state
+VERIFIED ON DEVICE — installed, launched, booted into tier1_combined_review, rig live.
+```
+
+The first install was made from a **dirty** tree — the verdict and its dispositions were written
+after the build — and `verify_on_device` says plainly that a dirty build is not a reproducible
+gate build (§2.3). So it was committed, rebuilt and re-verified clean rather than left claimed on
+the first pass.
+
+### Two instrument faults this cost, both filed rather than fixed mid-panel
+
+**A rebuild without a re-import renders a black frame, and so does deleting any PNG under the
+project.** Two panels were lost to it. The legibility guard caught both — *"CAPTURE REFUSED — a
+declared legibility point failed. Fix the rig or the scene — do NOT lower these thresholds"* — and
+it was right both times: five seats were seconds from judging a picture that did not exist. The
+ordering rule is now: import, capture, verify the frame yourself, **then** spend seats. I checked
+the frame's own numbers before the third attempt rather than trusting exit 0.
+
+**`junction=NO` fires on every capture, including every successful one**, printing
+`ABORT: carved geometry contains no junction` to stderr while blocking nothing. It sat at the top
+of both failure logs looking like the cause and was not. Same shape as the `git grep` exit-128
+fault earlier in this run: **a check whose noise is indistinguishable from its finding.**

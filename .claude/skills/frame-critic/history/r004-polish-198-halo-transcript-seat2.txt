@@ -1,0 +1,50 @@
+Read all four. Here's the assessment.
+
+**RANK:** 1 > 4 > 2 > 3
+
+**BEST:** 1
+
+**BEST_WHY:** The flagstone floor below and right of the figure (roughly x 190–700, y 500–850) is the only surface in the deck where the masonry carries real information. Joint values vary along a single run — the horizontal joint at y≈600 is near-black under the light at x≈420 and fades to a 2-value grey by x≈650, so the stones read as separately cut and separately worn rather than stamped from one tile. Block widths are genuinely irregular (compare the wide slab at x 480–570, y 560–600 against the three narrow ones immediately right of it). The incised hatch-marks scratched into individual blocks change count, angle and length block to block — the cluster at x≈250, y≈490 runs vertical, the one at x≈610, y≈505 runs diagonal. And the long hairline crack running from x≈290/y≈560 down through the junction at x≈320/y≈665 and out to x≈600/y≈590 crosses block boundaries without snapping to them, which is the single hardest thing to fake and the thing that separates hand-authored masonry from a tiled fill. The sprite also holds its shading tiers under full light: the shield at x≈405/y≈485 still shows outline, body, inner ring and boss as four separate values.
+
+**WORST:** 3
+
+**WORST_WHY:** There is no light model at all. The frame is uniformly lit corner to corner — the grey flagstone at the bottom-left corner (x≈10, y≈250) is the same value as the flagstone at the top-right (x≈360, y≈10), with no falloff from anything. Every boundary is a raw 1px cut with no transition set: the stone/dirt seam at x≈56 is a dead-straight vertical line from y=0 to y≈215 where grey abuts brown with zero overlap, zero shadow, zero edge tile. The water is a perfect axis-aligned rectangle (x 248–343, y 0–190) — its bottom-left corner is a clean 90° step directly into dirt, no shore, no bank, no darkening at the lip. The two barrels at y≈192 are the same sprite pasted at exactly 48px horizontal pitch (mean pixel difference 1.08, and that's only the dirt speckle behind them); the two chests at x≈64 are the same sprite at exactly 48px vertical pitch (mean difference 0.14 — literally identical). Both barrels are sliced flat where the grey floor tile starts at y≈212, so they're cut off mid-stave instead of resting on ground. The green figure at the top is cropped by the frame edge and is the only object in the picture with a contact shadow. The dirt field is undirected speckle noise — no wear, no path, no structure.
+
+**FLAGGED:** 2, 3, 4, 1
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The dark rectangle at x 282–375, y 640–712 has no readable content — hard 1px black top and bottom edges, straight black sides, and a blurred brown interior with two faint rectangular patches that resolve into nothing. Decide what it is and draw it: if it's a pit, give it a lit lip on the light-facing side and 2–3 value steps of depth down the interior wall; if it's a hatch or a lid, give it a plank direction, a hinge and a rope, and a 1px contact shadow separating it from the floor it sits on.
+- The dark occlusion is authored in two incompatible ways. Left of the room the darkness is a hard-edged rectilinear cutout — a razor vertical edge at x≈185 running y≈605 to the frame bottom, and a hard step at x≈120/y≈390 — while everywhere else the falloff is a smooth radial gradient. Pick one: either dither the cutout edges over 2–3px so they read as the same light model, or square off the radial falloff to the same tile grid.
+- The far band at the top of the frame (y≈15–105) is brighter and cooler than the band between it and the figure: [20,20,25] at y=40 versus [2,2,2] at y=140 on the same column. Light increases with distance, and the hue flips from warm to blue. If this is remembered/mapped terrain, hold it strictly below the dimmest currently-lit value — cap it at or under the y=140 level so the gradient stays monotonic.
+- The blurred blotch texture on the wall run at x 200–500, y 392–420 is airbrush mottle sitting directly against crisp 1px masonry joints 30px below it. Redraw that band at the same joint sharpness as the course under it.
+
+**FLIP 2:**
+- The light core is channel-clipped: the floor at (440, 490) reads [255, 255, 167] — red and green both saturated while blue sits at 167, so the warm lamp turns acid yellow-green at its centre. 3,506 pixels are clipped this way (frame 1's same shot has 314). Cap the light so peak floor value lands near [252, 201, 127] and the hue stays warm at maximum brightness.
+- A regular ~45° diagonal streak pattern runs across the entire light pool — clearly visible across x 230–470, y 470–620 and again over x 480–650, y 400–470. It crosses stone joints, block edges and the wall base without acknowledging any of them, at a constant pitch and angle. Remove the overlay. If the intent was volumetric shafts, they have to originate from something in the scene and be occluded by the wall geometry they currently pass straight through.
+- Every floor tile joint within ~3 tiles of the figure has been erased by the blowout — the grid that reads clearly in the identically-framed shot simply isn't there between x 350–560, y 450–560. Reduce peak intensity so the joints survive under the lamp, or push the joint value darker so it still separates at peak.
+- Same falloff inversion as above: top band y≈15–105 is brighter and cooler than y≈140. Fix identically.
+
+**FLIP 3:**
+- Build the light model. One source at the figure, warm, with monotonic falloff. Right now (10, 250) and (360, 10) are the same value.
+- Author transition tiles for every material boundary. The stone/dirt seam at x≈56 and the mirrored one at x≈343 need a broken, interlocking edge with the dirt spilling 2–4px into the stone at irregular intervals, plus a 1px darker line where the dirt banks against the flagstone.
+- Give the water an edge. The rectangle at x 248–343, y 0–190 needs a shore treatment on all three visible sides: a darker wet band 3–4px in from the boundary, an irregular waterline that doesn't run parallel to the tile grid, and the corner at (248, 190) broken so it isn't a 90° step.
+- Break the duplicate props. The barrels at (116, 192) and (164, 192) are the same sprite at 48px pitch; the chests at (64, 2) and (64, 50) are pixel-identical. Vary the lid highlight, the stave count, the tilt, and the wear on at least one of each pair.
+- Fix the draw order on the barrels. Both are clipped flat at y≈212 by the flagstone tile, cutting them off mid-stave. Sort them by their base y so they occlude the floor instead of the floor occluding them, and give each a 1–2px contact shadow.
+- The green figure at the top is cut by the frame edge and is the only object carrying a drop shadow. Either give every prop the same contact shadow treatment or remove its ellipse.
+- The dirt field is undifferentiated red-brown speckle across the whole of x 56–248. Give it structure: a worn path where traffic goes, compacted darker ground near the crates, scattered debris that varies in size rather than a uniform noise mask.
+- The grey flagstone strip along the bottom (y 216–260) is one value per block with a 1px white top highlight and evenly-pitched 1px vertical joints. Vary block width, vary joint value, and damage some blocks.
+
+**FLIP 4:**
+- The sprite has lost its interior shading. At x 382–432, y 455–512: the face is a single flat saturated orange with no jaw, cheek or brow separation; the shield is one flat cream disc with a single dark dash and no rim or boss; the sword blade is one flat cream and the gripping hand merges into it so the grip vanishes. Restore the tier structure — the identically-posed sprite in frame 1 carries four values on the shield and two on the blade. Whatever is compressing the character's midtones under full illumination needs to stop at the sprite.
+- There is a dead-straight, unbroken, single-value 1px joint at y≈424 running the entire frame width, and a second at y≈456. Neither varies in value, neither steps, and both pass straight through the two timber pins at x≈290 and x≈390 without interruption. Those are ruler lines, not masonry. Break them: step the joint at block boundaries, vary its value along the run, and let the pins interrupt it where they sit on top.
+- The block course below y≈424 uses 1px verticals all at the same value and near-identical spacing. Vary block width and joint darkness the way the floor course at y≈600 does.
+- The wall's top course at y 392–420 is measurably softer than the course beneath it (mean edge energy 4.49 versus 6.79 over the same x range) — soft-blurred blotches against crisp joints, two sharpness treatments in one wall. Bring the top course up to the same crispness.
+- Same falloff inversion at the top of frame: y≈40 sits at [20,20,25] while y≈140, closer to the light, sits at [2,2,2]. Make the gradient monotonic.
+
+The thing worth noting across 1, 2 and 4: they're the same shot with three different lighting passes over it, and the underlying scene art is strong in all three. The failures are all in the pass, not the art — a blowout and an overlay in 2, midtone crush and re-drawn ruler-straight joints in 4. That's a tractable problem. 3 is a different category and no lighting pass would rescue it.
+
+*Model: Claude Opus 5 (1M context)*

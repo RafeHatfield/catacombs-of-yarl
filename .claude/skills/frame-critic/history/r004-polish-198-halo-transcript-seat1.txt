@@ -1,0 +1,82 @@
+Read all four. Three of them (2, 3, 4) are the same frame at the same camera position with different lighting and wall-band passes; 1 is a different, brighter, larger-tile frame. Judging them on craft only.
+
+---
+
+**RANK:** 2 > 4 > 3 > 1
+
+**BEST:** 2
+
+**BEST_WHY:** Three specific things are built rather than blurred.
+
+1. There is a real contact shadow at the wall/floor junction. Sampling the column at x=400 downward through y≈425–475: the wall face runs 123, 108, then drops to 41, 52, 64, 50, then the floor comes up 139, 193. That dark row runs the full width of the corridor at y≈448–462. It gives the wall thickness — it reads as a mass standing on the floor, not a brown band painted onto it. Neither 3 nor 4 has it: at the same column they run 133, 116, 117, 126 straight into 209 with no break.
+
+2. The timber posts at x≈296 and x≈388 sit *in* the wall course, bottom ends terminating on the wall face inside the block run at y≈393–440. They read as pins driven through masonry from this side. In 3 and 4 the same two posts have migrated to x≈266 and x≈358 and now stick up out of the top of the wall into the black, where their upper halves are cut off by the darkness — the same asset, worse placed.
+
+3. The dark box on the floor at (310,645)–(378,712) has a complete hard rim on all four sides — top edge unbroken across y≈645, left edge unbroken down x≈310. It reads as an object. In 3 and 4 (byte-identical to each other in that region) the top and left edges have dissolved: the top edge only begins around x≈332 and the left third of the body bleeds into the floor value with no boundary at all. Same box, and in 3/4 it has become a stain.
+
+Also: the paving joints stay legible from the figure's feet out to the black. Nothing is blown.
+
+**WORST:** 1
+
+**WORST_WHY:**
+
+- **There is no light in it.** The stated premise is a picture that darkens away from a carried light. This frame is flat corner to corner. Flagstone at (10,240) is RGB (71,71,71); flagstone at (350,240) is RGB (71,71,71) — identical. Dirt at (200,30) is (88,56,20); dirt at (200,180) is (90,57,22). Zero falloff anywhere on the image. And the only figure, the green one at (213,0)–(237,25), is jammed against the top edge and holds a sword, not a light.
+- **Region seams are raw rectangle cuts with no transition tiles.** The water is a pure axis-aligned rectangle with its corner at (249,192): teal meets dirt across a single-pixel boundary, no shoreline, no wet-dirt darkening, no bank, no edge treatment on any of the three exposed sides. Same for the dirt/flagstone seams — a razor-straight vertical cut at x≈56, another at x≈343, a straight horizontal cut at y≈216. These are fill regions, not a built floor.
+- **The wall stub ends in mid-air.** The dark brick strip at (0,125)–(56,145) stops dead at x=56 with a flat vertical cut — no end cap, no corner piece, no return. It is a three-tile fragment of wall floating in dirt.
+- **The orange column at (26,125)–(35,167)** is a vertical orange-to-brown gradient bar drawn over the brick and continuing about three tiles down onto the dirt, terminating in a flat horizontal cut at y≈167. It has no top, no base, no flame silhouette. If it's a torch it emits nothing and casts nothing. If it's a post it stands on nothing.
+- **Straight asset duplication, unvaried.** The two chests at (63,0) and (63,48) are the same sprite: I differenced them and got a total absolute error of 378 across 2,625 channel values — that's background dirt bleed at the edges, nothing else. Same lid, same four corner studs, same diamond lock plate, same diagonal tick. The two barrels at (112,190) and (160,190) are likewise the same sprite at the same offset, 48px apart, not flipped, not re-shaded, not rotated. And the top chest is flush-cut by the frame edge at y=0.
+- **The white scatter at (207,110)–(237,128)** has no silhouette — it is loose white pixels. It doesn't resolve into bone, rubble or debris at any distance.
+
+**FLAGGED:** 1, 2, 3, 4
+
+Per image, the glance-level fault:
+
+- **1** — the water rectangle and the flat corner-to-corner lighting. Both visible in under a second.
+- **2** — the character does not live in the picture. The sprite is hard-outlined pixel art in saturated orange and cyan at 1:1 pixel scale; the floor under it is soft, blurred, desaturated brown with a 3–4px blur radius and no hard edges anywhere. Zoomed to the sprite at (388,462), the outline is a crisp dark-brown 1px line and the floor beside it has no edge sharper than four pixels. It reads as pasted in. Same fault in 3 and 4.
+- **3** — the light core is blown. Mean floor value beside the figure is 225 versus 193 in 4. The paving joints are *erased* in the band running from the figure down-left through roughly x 300–470 / y 460–560; where 4 shows countable courses with regular mortar lines, 3 shows undifferentiated cream with diagonal streaks running lower-left to upper-right that cross paving stones and joints without regard to either. That is the signature of a pass run over the top of the art rather than drawn into it.
+- **4** — same sprite/ground mismatch as 2, plus the missing wall-base shadow and the dissolved box edges described above.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- Add a light model. Attenuate every tile by distance from the figure so the flagstone at (10,240) sits at least four values darker than the floor beside the figure, and take the frame corners to near-black. Right now they are numerically identical.
+- Give the figure at (213,0) a light source in hand — a torch or lantern sprite — and move it off the frame edge so its whole silhouette is visible.
+- Cut water-edge tiles: a darker waterline row one tile deep on all three exposed sides of the water rectangle, and a damp-dirt row outside it. Break the corner at (249,192) so it is not a 90° angle.
+- Cut dirt/flagstone transition tiles for the seams at x≈56, x≈343 and y≈216 — scattered dirt over stone, broken flag edges — so no seam is a single unbroken straight line for more than four tiles.
+- Cap the wall stub at (0,125)–(56,145) with an end piece, or extend it to meet another structure. It cannot terminate in mid-air.
+- Resolve the orange column at (26,125)–(35,167): give it a defined top and a base where it meets the dirt, and if it is a light source, make it cast one.
+- Re-shade one of the two chests and one of the two barrels — different damage, different lid state, different rim highlight. Two byte-identical copies side by side is the tell.
+- Replace the white pixel scatter at (207,110) with an object that has a readable silhouette, or delete it.
+- Ground the barrels and chests: each needs a contact shadow on the dirt. Nothing in this frame touches the floor.
+
+**FLIP 2:**
+- Redraw the floor and wall texture at the sprite's edge hardness. Every stone edge, joint and chip should be a hard pixel transition, not a 3–4px blur. As it stands the environment and the character are two different media in one frame.
+- Bring the environment palette and the sprite palette into one ramp. The sprite's cyan and saturated orange appear nowhere else in the image; either seed those hues into the environment (rope, rust, cloth) or desaturate the sprite into the brown/tan ramp.
+- The wandering 1px black cracks — the run from (250,530) through (300,620) to (420,760), and the arc from (555,620) to (750,700) — are uniform width, pass over the box at (310,645) instead of behind it, and cross paving joints without deviating. Vary their width, terminate them at joints, and put them behind objects.
+- The figure carries a sword and a round shield and no light. The light pool has no source in the picture. Put a torch or lantern in the sprite's hand and centre the falloff on it.
+- Nothing in the frame casts a shadow except the wall base. Give the box at (310,645) and the pin at (358,600) directional contact shadows pointing away from the figure.
+
+**FLIP 3:**
+- Reduce the near-field exposure to roughly 4's level (mean ~193 beside the figure, not 225). At the current level the paving joints in the band x 300–470 / y 460–560 are gone — the floor has no structure where the player is standing and looking.
+- Remove the diagonal streak layer running lower-left to upper-right across the light pool. It ignores the paving grid, crosses stones and joints identically, and is the single most "filtered" thing in the deck.
+- Restore the wall-base contact shadow at y≈448–462 that image 2 has. Currently the wall face at value ~126 abuts floor at 209 with no separating row, so the wall reads as a flat band painted on the ground.
+- Restore the box at (310,645): its top edge is missing left of x≈332 and its left edge is absent entirely. Close the silhouette on all four sides.
+- Fix the T-headed pin at (358,600)–(374,640): its stem is broken mid-length. Draw it as one continuous object.
+- Move the timber posts back into the wall course, as at x≈296 and x≈388 in image 2. At x≈266 and x≈358 they project up into the black and get half-eaten by the darkness.
+- Then everything in FLIP 2 (texture hardness, palette, cracks, light source, shadows) still applies.
+
+**FLIP 4:**
+- Restore the wall-base contact shadow at y≈448–462. Same defect as 3: wall at ~126 running straight into floor at 209 with nothing between them.
+- Restore the box at (310,645) — top edge missing left of x≈332, left edge absent. Same as 3.
+- Fix the broken pin stem at (358,600)–(374,640). Same as 3.
+- Move the timber posts back inside the wall course rather than projecting into the black above y≈390. Same as 3.
+- Give the light pool actual falloff structure. Between the figure at (400,485) and the mid-floor at (420,660) the value drops 193→105, but the near field is a nearly uniform wash with no shape — no brighter ring near the source, no direction. Build a proper 3–4 step ramp from the source outward instead of one flat plateau.
+- Then everything in FLIP 2 (texture hardness, palette, cracks, light source, shadows) still applies.
+
+---
+
+Two things worth naming beyond the questions. First, 3 and 4 are the same file with a different exposure — the pixel diff between them is confined to a single rectangle, (259,379)–(545,631), the near-field light pool. Everything else is byte-identical. So the only thing separating them in this ranking is that one blew out the floor and the other didn't; there is no additional craft in 4 that 3 lacks. Second, the fault that sinks 2, 3 and 4 alike is one fault, not many: the environment was made at a different edge hardness than the character. Fix that one thing and this deck changes shape entirely — the wall shadows, the box edges and the crack behaviour are all downstream of a floor that has no hard edges to hold them.
+
+*Model: Claude Opus 5 (1M context)*
