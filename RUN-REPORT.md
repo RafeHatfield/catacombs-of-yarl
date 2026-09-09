@@ -3,8 +3,11 @@
 One autonomous cycle: the autonomy amendment, then the remaining surface work, then props.
 Appended per item. **Nothing here needs a reply** unless it names one of §1.1.4's three triggers.
 
-**On the phone right now:** nothing — the handset reads `unavailable` to `devicectl`. The
-polish stack passed its gate and is waiting on a reachable device, not on a verdict.
+**On the phone right now:** nothing. The handset has read `unavailable` to `devicectl` all
+session. Two builds passed their gate and are waiting on a reachable device, not on a verdict.
+
+**The run ended on a one-way door:** the props pass cannot fire because **§3 is not ratified**.
+That is the only thing here that needs you. Item 8 has it.
 
 ---
 
@@ -449,3 +452,87 @@ is not a course** — a fracture family, a bedding plane, salvage pinned into it
 own answer and #167's exit — or is *found rock, continuous, no courses* the final word and the
 wall tops finished as they are? Not escalated; §13.4.1 disposes the seats. Noted here because it
 is the one question standing between this issue and a build.
+
+---
+
+## Item 8 — the props pass: **precondition 2 fails. Not fired.**
+
+`CC-SESSION-tier2-props.md` says it *"fires only when its preconditions are true — check them
+first and stop if any fails"*, and its refusals end with *"does not proceed past a failed
+precondition."* So:
+
+| # | precondition | state |
+|---|---|---|
+| 1 | floor family LANDED, the scene is real floors | **met** |
+| 2 | walls LANDED, **§3 ratified** | walls landed; **§3 NOT ratified** |
+| 3 | ratified rig as flags; anchor on record; palette state declared | met — declared below |
+| 4 | tiered-review amendment landed in LOOP-PROCESS | met — it landed as item 0 |
+
+**§3 has never been ratified, and its ratification is a one-way door.** The bible's own status
+trail: *"§3 IS NEITHER RATIFIED NOR REJECTED — IT RIDES PROVISIONAL INTO TIER ONE"* and
+*"§3 STAYS PROVISIONAL; RATIFICATION WAITS ON THE DEVICE GATE (§13.1)"*, under your ruled
+condition **"depth arriving ratifies §3; depth failing reopens it, with evidence."** No later
+entry rules on it — I searched the bible, the process law and the skill for one. The 2026-09-07
+walk seeded `approved_capture` and was recorded as SERVICEABLE; it did not say *depth arrived*.
+
+That is the first of §1.1.4's three triggers, and it is the only thing in this whole run I am
+bringing back to you.
+
+**Palette state, declared as precondition 3 requires:** §5's values are still `PLACEHOLDER` and
+§5.1's derivation has not landed, so **the ladder regime continues** — assets authored to the
+family's measured value ladder, not to a locked hex list. Stated here and in every report the
+pass will produce.
+
+### What I did instead of spending the budget
+
+The 90 generations are not spent and no prompt file is written. What the pass needs *before*
+generation, and what does not depend on the door, is written:
+**`docs/art/tier2/IDCARDS-props.md`** — three identity cards to the tier-1 schema, all three
+`park_state: prepared-not-generated`.
+
+They carry the three questions as written: the marker stone's **two binding authorities on one
+object** (§7.3's dialect distinction reading at 1×, and schema v0.1 has no `BOTH`, so the card
+records the two hands separately); the barricade as **a variant family from round one** because it
+repeats along a line, which is §8.3.1's motif trap by another route and its first prop-scale exam;
+and the fire as **an object that emits**, authored to *receive* like everything else with the
+emission left to a stationary warm `PointLight2D` — the rig's first two-source scene, three
+captures, and the §9.2 flicker toggle **built and not ruled on**.
+
+Two schema notes fall out of writing them. **I9 uniqueness is now live** — the schema says it
+activates at tier 2 *"once tier 1 assets can serve as positive controls on the eye"*, and tier one
+is landed, so "name them cold" is a real question for the first time. And **I3 binding is further
+from an instrument than the schema admits** for the marker: it is uninstrumented by design, but
+what B-PROP-001 actually has to carry is the *dialect* — which of two hands did which work — and
+that is a harder eye-side question than "show me what holds this together".
+
+**If this pass passes, #167 closes with it.** Its exit is exactly this pass: *"the prop/overlay
+pass gives wall tops world-placed OBJECTS standing on them ... so §8.3.1 does not reach them."*
+And #194's open question lands in the same place — whether the cap may carry structure that is not
+a course, or salvage pinned into it, which is §7.1's own answer.
+
+---
+
+## Where the run ended
+
+**Nothing is on the phone.** Two independent reasons, neither of them a verdict about the picture:
+the handset has read `unavailable` to `devicectl` for the whole session, and the `polish-198-halo`
+lane's install gate is held by a live no-change guard I will not clear without your words.
+
+**On the branch `art/autonomy-amendment`,** all gated and all measured: the autonomy amendment;
+the polish stack at INSTALL-LATEST on three seats with its six flips disposed; #199 closed as my
+own instrument artefact; #193 and #197 re-scoped by measurement; #179 closed; #198 named by null
+control and fixed on its larger term; #183's ceiling re-derived after the floor moved under it;
+#194 shown to be aimed at an asset that is not on screen; #201 filed and routed; three faults
+fixed in instruments that report on themselves; `prove_gate` 27 → 41 cases.
+
+**What needs you, in order:**
+
+1. **§3.** Ratify, reject, or say what would settle it. The props pass — the run's destination,
+   and #167's exit, and #194's open question — is behind that one door.
+2. **The handset**, if you want the stack on glass. Unlock and connect it; the build is signed and
+   waiting and needs no new round.
+3. **The `polish-198-halo` no-change STOP**, if you want that lane's build installed rather than
+   the next one. It fired correctly and I am not clearing it on my own.
+4. **#183's remaining half**, if it is worth a round: *washed out* is sprite art, not a light
+   response — 8.28% of the sprite is pinned at one value with nothing between 207 and 245, and a
+   shoulder is monotone, so it can move that plateau but can never separate it.
