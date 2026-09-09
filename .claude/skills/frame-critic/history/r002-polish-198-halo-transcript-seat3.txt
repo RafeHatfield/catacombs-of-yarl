@@ -1,0 +1,79 @@
+All four read. Findings below; forensic detail is at native pixel scale, coordinates are in each file's own pixel space.
+
+**RANK:** 3 > 4 > 2 > 1
+
+**BEST:** 3
+
+**BEST_WHY:** Three concrete things, all in the same footprint where 2 and 4 fail.
+
+The floor joints survive the light. In the area right of the figure (x 300–470, y 505–600) 3 holds a continuous grid of flagstone joints — vertical joints at x≈328, 363, 393, 428, horizontals at y≈519, 551, 583 — and the stones between them carry *different* values: the block at (330–360, 520–548) is a step lighter than the one directly below it, which is lighter than its right neighbour. So the floor reads as separately-cut stones under a lamp, not as a lit texture. In 2, at that exact region, those joints are gone — the same span is a soft cream wash with amorphous bright patches that have no borders (the pale patch around (315–330, 520–535) simply fades out).
+
+The wall face carries the repair. In the wall run at y 391–455, 3 puts its crispest detail in the *lower* half — measured per-row horizontal detail across x 190–440 peaks at y 441–453 (≈3.0–3.4) against ≈1.8–2.4 for 2 in the same rows. Visually that is a course of legible blocks with vertical joints at the wall's near edge, crossed by two driven timbers (x≈289 and x≈390) that run the full depth of the face and terminate with cross-bars at the base line. 2 and 4 put the coursed detail at the *far* edge (peak at y 405–421) and let the near half go soft, so the timbers stop mid-wall with nothing under them.
+
+The pit at (300–390, 640–715) has a hard top edge at y≈645 and a hard right edge at x≈382, with a horizontal beam and two verticals readable inside it. In 2 and 4 the same object is a brown smudge with a fuzzy left boundary and no interior structure.
+
+**WORST:** 1
+
+**WORST_WHY:** Nothing in it has been finished past first placement.
+
+The teal liquid is a bare rectangle. Its left edge is a straight vertical line at x=248 running y 0→192; its bottom is a straight horizontal at y=191; its right is straight at x=342. Sampled across the boundary at row 100 the values go dirt 71, 71 → 50, 39 → liquid 66, 62, 62 — a two-pixel dark line and then straight into the fill. Down the column at x=300 it is 62, 62, 62 → 66 → 71: a one-pixel step. There is no bank, no lip, no shore tile, no darkening at depth, anywhere on any of the three edges. The same is true of every other material meeting in the frame: dirt→stone at the bottom band (y≈216) and stone→liquid at (342, 0–140) are all single-pixel butts. Not one transition tile exists in the image.
+
+The stone floor is a flat fill. A 25×140 sample of the lower band (x 200–340, y 230–255) contains **six** unique colours total — base grey, a grid line, and a few speckles. No per-stone value variation, no cut edges, no wear.
+
+Projection is mixed. The two yellow objects at (64, 0–24) and (64, 48–72) each show a panelled vertical front face below the lid; the two barrels at (114–146, 190–214) and (162–194, 190–214) show staved cylinder sides under elliptical tops. Both are 3/4 objects dropped into a straight top-down frame, and both pairs are the same sprite pasted twice with no variation. Neither casts a shadow, while the figure at (228, 0) does.
+
+And there is no light model at all: corner luminance means are 86 / 88 / 63 / 63, and the whole difference is dirt-versus-stone, not distance from the figure. The frame is lit flat corner to corner.
+
+**FLAGGED:** 1, 2, 3, 4
+
+- **1** — the rectangular liquid slab and the total absence of transition tiles. Glance-level.
+- **2** — the lit pool around the figure is a smeared cream blur sitting inside an otherwise pixel-crisp floor; the masonry visibly dissolves as it gets brighter. Reads as a blur filter, not a lamp.
+- **3** — the protagonist's face at (398–412, 468–482) collapses to one flat rust-red mass; the eye and the nose highlight that read in 2 and 4 are gone, and the shield at (410–428, 478–498) loses its boss and rim to a single flat tan. The focal 20×25 px of the frame is illegible.
+- **2, 3, 4 all** — the figure casts no contact shadow. Standing at the centre of the brightest area in the frame, the floor directly under the boots is the same value as the floor two tiles away. And the figure holds a sword and a shield: there is no lamp, torch or lantern anywhere on the sprite that the light could be coming from.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- Author edge tiles for every material boundary: dirt→liquid, dirt→stone, stone→liquid. Minimum a 2–3px darkened wet lip on the liquid side plus an irregular 1-tile-wide dirt margin, so no boundary is a straight line for more than two tiles.
+- Break the liquid's silhouette off the tile grid. Its outline is currently three straight axis-aligned segments; give it at least four concave and two convex turns that do not land on tile corners.
+- Replace the 6-colour flat grey floor fill with per-stone variation: a minimum of four base values distributed non-repeating across the band at x 0–384, y 216–262, plus varied joint depth so some stones read as seated deeper than their neighbours.
+- Redraw the two objects at (64,0) and (64,48) and the two barrels at (114,190) and (162,190) as pure top-down. No vertical front faces. If the barrels must read as cylinders, do it with a rim ellipse and a ring of top-surface shading, not staves.
+- Give each of those four props a cast shadow matched to the figure's own shadow at (228,20), and differentiate the two barrels from each other — rotate the lid grain, dent one rim.
+- Implement the light falloff the other frames have. Right now corner means are 86/88/63/63 with zero distance term; the figure is the only light source in the fiction and the frame does not know it.
+- Kill the lily-pad read on the green blobs at (300,20), (285,175) and (295,255). As drawn they are pond vegetation in an administered underworld.
+- Replace the repeated green splotches on the stone at (20,100), (95,160) and (300,155) — they are the same three shapes at identical scale and orientation.
+- Give the dirt field tile structure. It is currently a red-brown noise wash with a repeating mottle; add stamped-earth courses or debris that reads at the grid.
+
+**FLIP 2:**
+- The light pass is destroying the drawing underneath it. In x 300–470, y 505–600 the flagstone joints present in 4 and 3 are absent here — clamp the light so joint-to-stone delta is preserved at the top of the range, or apply the light as a value multiply against the stone ramp rather than an additive wash.
+- The near-half of the wall run (y 427–455) measures ≈1.8–2.4 horizontal detail against ≈3.0 in image 3. Restore the coursed masonry to the wall's near edge and let the two timbers at x≈305 run to the base line with visible feet, instead of terminating in the smooth band at y≈420.
+- The strip at y 392–395 across x 296–330 is a dead-flat run of value 26 (±2 across 34px). Give the wall's top ledge texture or delete it.
+- The pit at (300–390, 640–715) has no hard edges and no readable interior. Give it a defined lip and the beam/post structure that reads in image 3.
+- Bring the sprite into the scene's light. Face at (398–412, 468–482) and shield at (410–428, 478–498) sit at full saturation and near-white; the shield boss has collapsed to two cream values with a pink smudge. Tint and value-shift the sprite by the same light term the floor gets, while keeping its internal contrast ramp intact.
+- Add a contact shadow under the boots at (395–425, 500–508).
+- Put a light source on the sprite. It carries the only light in the fiction and has no lamp.
+
+**FLIP 3:**
+- Preserve the sprite's internal value ramp under the tint. The face at (398–412, 468–482) is now one flat rust-red with a single darker pixel; the shield at (410–428, 478–498) is a featureless tan disc. Tint the hue, keep the four-step ramp — do not multiply the sprite flat.
+- Restore the sword blade highlight at (386–396, 462–486); it has gone to a single cream value with no edge.
+- Add a contact shadow under the boots at (395–425, 500–508).
+- Put a light source on the sprite.
+- The dead-flat run at x=300, y 415–453 holds values 51–53 for 38 consecutive pixels — a completely untextured column through the wall band. 2 and 4 carry texture there. Fix the blank.
+- Raise the core light contrast. Mean luminance inside r<40 of the figure is 155 against 174 and 195 in the other two, while the mid- and far-field are identical; the frame reads more evenly beige than it should for one lamp in a black place. Push the core, not the falloff.
+
+**FLIP 4:**
+- Bring the sprite into the scene's light — it is byte-identical to 2's outside a small region around the figure, and carries the same fault: face at (398–412, 468–482) at full saturation, shield at (410–428, 478–498) collapsed to two near-white values with a pink boss smudge. It reads as pasted on.
+- Add a contact shadow under the boots at (395–425, 500–508).
+- Put a light source on the sprite.
+- Restore masonry to the wall's near half (y 427–455) and let the timbers at x≈305 terminate at the base line with feet and cross-bars, as they do in 3. As drawn the wall's lower half is soft and the posts stop in nothing.
+- Give the pit at (300–390, 640–715) a hard lip and readable interior structure.
+- Push per-stone value variation on the lit floor. The joints survive here, but the stones between them are near-uniform; 3 gets visible step differences between adjacent blocks in the same area.
+- Fix the flat 4px ledge strip at y 392–395 (constant value 26 across x 296–330).
+
+---
+
+The thing to watch: 2, 3 and 4 are three renders of one room, and none of them gets both halves right at once. 3 wins the environment and loses the figure; 2 and 4 win the figure and lose the stone. The fix is not to pick one — it is to run 3's light term over the environment and 4's over the sprite, then solve the contact shadow and the missing lamp, which are wrong in all three. 1 is not in that conversation; it needs transition tiles and a light model before it is worth ranking against anything.
+
+*Model: Claude Opus 5 (1M context)*

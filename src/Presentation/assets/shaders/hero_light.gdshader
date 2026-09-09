@@ -69,8 +69,47 @@ shader_type canvas_item;
 // 0.70 is the first setting where his brightest pixel sits below BOTH the lit ground's peak and
 // its p95, which is what "never the brightest" has to mean if it is to be checkable. 0.74 clears
 // the peak by half a level and still sits above the p95 — a tie is not an answer to this clause.
+//
+// ── ⚠ RE-DERIVED 2026-09-08: 0.70 → 0.68, BECAUSE THE FLOOR MOVED ────────────────────────────
+//
+// The table above is measured against a floor reading p95 203.51 / max 207.51. The polish stack
+// lowered it — #184 took the worn lane's shine down and #198 made the specular proportional —
+// and the lit floor either side of him now reads **p95 202.50 / max 206.50**. At the same 0.70
+// his brightest pixel measures **202.55: +0.05 ABOVE the floor's p95**, so the clause this file
+// exists to enforce had quietly stopped holding. Nobody touched the hero; his comparator moved
+// under him.
+//
+// This is §6.2's re-derivation rule, not a retune: a derived number moves when its input moves,
+// and the input here is the ground he must not out-shine. Re-swept on the current build, his own
+// 950 pixels isolated against the null arm:
+//
+//   ceiling   his p50   his p95   his max   vs floor p95   vs floor max   ruling held
+//   0.70       151.30    175.96    202.55        +0.05          -3.95         NO
+//   0.68       148.24    173.25    198.70        -3.80          -7.80         yes   <- here
+//   0.66       145.81    169.96    194.56        -7.94         -11.94         yes
+//
+// 0.68 is again the FIRST value that clears both, which is the same derivation rule that chose
+// 0.70, applied to the numbers as they now are.
+//
+// ── AND WHAT A BLIND SEAT ASKED FOR HERE IS THE INVERSE OF THE RULING (§13.4.1) ───────────────
+//
+// Round r001-polish-198-halo put four of its seven flips on this term:
+//
+//     "The figure carrying the only light is darker than the ground he stands on ... the sprite
+//      must be the brightest thing in its own pool, above the floor value, not 70 below it."
+//
+// That is a well-observed percept and an exact contradiction of *"the hero should receive LESS
+// of the lamp's top end than the ground does"* — Rafe, 2026-09-06. §13.4.1: a seat is a proxy
+// for the gate, not a vote against a gate ruling.
+//
+// It was also worth checking rather than waving away, and the check is recorded because it
+// closes a door: THE KNEE IS NOT A WAY TO GIVE THE SEAT WHAT IT WANTS. Swept at the ruled
+// ceiling, his median moves 151.30 → 153.66 across knees 0.55 → 0.69 and stops, because with
+// the asymptote at 0.70 everything above the knee lands in [knee, 0.70] however high the knee
+// is. His body sits 42 levels below the null BECAUSE OF THE CEILING, and the ceiling is the
+// ruling. There is no builder setting that answers the flip; only Rafe can, by moving it.
 uniform float hero_knee = 0.55;
-uniform float hero_ceiling = 0.70;
+uniform float hero_ceiling = 0.68;
 
 void light() {
 	// The ordinary diffuse term — what this sprite would do with no shader at all.

@@ -1,0 +1,79 @@
+I read all four at full size and then at pixel level (wall profiles, joint spacing, the light layer isolated by ratio, and prop silhouettes brightened).
+
+---
+
+RANK: 1 > 2 > 4 > 3
+
+BEST: 1
+
+BEST_WHY: Two things are actually built rather than painted.
+
+First, the wall run at y≈390–465 across x 180–750 is constructed in three separated value tiers. Sampling straight down at x=300: void at 12, the wall's top surface at 62–75 (y 395–412), a recessed stone course at 51–54 (y 415–452), a hard shadow line at 25 (y≈455), then floor at 107. That's a 55-level gap between the wall's lower course and the floor it meets — the wall never reads as floor. Hanging below the black lintel line at y≈432 are driven pins, and they are individually placed: a long one at x≈500, a short stub at x≈285, an L-bracket at x≈600, a paired stub at x≈430. Not one pin sprite repeated on a spacing. That is the "four hundred years of repairs by people who don't care how it looks" written as geometry.
+
+Second, the floor slabs are cut, not stamped. Running a joint-detection pass along y=520 gives boundaries at x = 486, 534, 550, 560, 592, 616 — spacings of 48, 16, 10, 32, 24. The slabs are genuinely different sizes and the joints sit at different depths. Compare 3, where the same test along y=250 returns 5, 29, 53, 77, 101, 125, 149, 173, 197, 221, 245 — exactly 24 apart, every time.
+
+Third, the crate at (275–380, 640–710) is a legible object: closed black outline on all four sides, a lid split at y≈672, cross-brace timbers below it, and a ~4px lip highlight on the left and right showing the box has thickness.
+
+WORST: 3
+
+WORST_WHY: The projection is broken, and not subtly. The two barrels at (110–145, 188–215) and (158–193, 188–215) are drawn in three-quarter view — you see the elliptical lid *and* the staves and hoops of the barrel body below it — sitting in a frame where the floor, the water and the flagstones are all pure straight-down. The two crates at (68–110, 2–38) and (68–110, 80–116) are worse: each is a lid quad with a full front-facing panelled chest face under it, so you are looking at the front of a box from directly above. Neither barrels nor crates cast any shadow at all; they float.
+
+The water is a filled rectangle. Its left edge is a dead-straight vertical at a single x for its whole height; its lower boundary at y≈170 is a dead-straight horizontal running ~130px with a 1px transition from teal directly to brown. No bank, no shallow shelf, no wet mud line, no darkening at the shore. At the right it abuts the grey flagstones on a hard vertical seam at x≈344 with no lip and no lapping — the water and the stone are at the same height and simply touch.
+
+The flagstones are on an exact 24px lattice, every joint one pixel of one value, every stone the same size, with zero wear where the dirt meets them. The dirt is one noise tile whose red-brown crack cluster visibly recurs on the same 24px lattice. The moss blobs on the grey floor at (0–60, 170–230) are the same shape reused at three scales, and one at the far right straddles the water/stone seam. The green figure at the top is clipped by the frame edge — head and weapon tip cut off. The charcoal brick band along the bottom is in a different palette family from everything above it and carries one anomalous light-grey bar at x≈165–215 that appears once and reads as a leftover tile.
+
+And there is no light in it. The scene is uniform flat ambient corner to corner — no falloff anywhere, in a place where a figure carries the only light there is.
+
+FLAGGED: 3, 4, 2
+
+- **3** — the side-view barrels and front-facing chests in a top-down frame, and the water rectangle with no edge.
+- **4** — the extra light layer is made of 45° diagonal hatch stripes. Isolating it by dividing 4 by 2 shows the added brightness is not a gradient, it is diagonal streaking, and it's visible unaided on the floor across (300–560, 450–620). Its edge is also quantised into hard rectangular steps that follow no geometry — one at roughly (520–560, 470–510), another at (400–460, 590–640).
+- **2** — a floating black bar at x≈278–310, y≈646–650, lying on lit floor to the left of the crate, attached to nothing. Under it a vertical post at x≈291–299, y≈638–677 with two stub arms reaching left to x≈283 into empty floor, its top cut flat and its bottom stopping mid-object. 4 carries this same fault.
+
+Not flagged: **1**. Its problems are real (below) but none of them is the kind of thing that snags the eye in the first second.
+
+SHIP: NONE
+
+---
+
+FLIP 1:
+- The light pool's centre is not on the figure. The figure's bbox is x 385–425, y 460–505 (centre ≈405,482); the centroid of the brightest floor is at (370, 526). Move the light origin ~35px right and ~44px up so the hot spot sits under the lamp, not a tile and a half down-left of it.
+- The figure casts no shadow. A single point light at that distance must throw one; the floor runs continuous straight through where it should fall. Add a cast shadow opposite the lamp offset.
+- The wall course directly behind the figure (x 450–620, y 415–452) sits at the same luminance as the same course at x 200, ~400px further from the lamp. Apply the same falloff curve to the wall as to the floor so the section behind the lamp blows toward the top of its range.
+- The wall's top surface at x 180–450, y 393–412 is continuous-tone airbrushed mottle with no discrete pixel structure, butted directly against the 1px-crisp lintel line and pins below it. Requantise that mottle to the same pixel grid and the same palette step count as the linework — as it stands the resolution mismatch reads as a filter pass over a painting.
+- Same treatment for the wall blobs at (150–450, 340–430), which are blurred past the point of being readable as anything.
+
+FLIP 2:
+- Delete or reattach the floating black bar at x≈278–310, y≈646–650. Nothing supports it.
+- Give the crate at (275–380, 640–710) a closed silhouette. Its right edge is a hard 1px black line; its left edge dissolves into the floor at x≈280 with no boundary at all. Outline all four sides.
+- The crate's top and bottom edges are not parallel and its bottom-left corner sits ~40px right of its top-left corner. Square it, or commit to a deliberate broken-and-sagging read with the corner joints drawn.
+- Resolve the vertical post at x≈291–299, y≈638–677: its top is cut flat with no cap and its bottom stops inside the crate body. Terminate both ends against something, and remove the two stub arms at y≈655 and y≈661 that reach left to x≈283 over bare floor.
+- Separate the wall's lower band from the floor. At x=300 that band (y 410–445) runs 76–96 against a floor at 120 — a ~30-level gap, and the band carries almost no texture across its full 550px width. Either drop it to the 51–54 that frame 1 uses there, or put the pinned stone course in it instead of leaving it as flat paint.
+- Fix the light centroid offset as in FLIP 1 — 2 has the same (370, 527) vs (405, 482) mismatch.
+
+FLIP 4:
+- Rebuild the light layer. The added brightness over 2 is 45° diagonal hatching, not a falloff. Replace it with a radial gradient generated from the lamp position and dithered on the same pixel grid as the art, so no directional pattern survives.
+- Remove the hard rectangular steps in the light's edge at roughly (520–560, 470–510) and (400–460, 590–640). The light is quantising to blocks that match no wall, slab or prop.
+- Pull the hot spot down. At (330–500, 460–560) the floor hits luminance 228 and the slab joints that are legible in both 1 and 2 are gone — flat cream. Cap the pool so the joints survive at peak brightness; the floor has to keep reading as stone where the player is actually looking.
+- Apply every item in FLIP 2 — 4 carries the same floating black bar, the same open-sided crate, the same post, and the same textureless wall band.
+
+FLIP 3:
+- Redraw the barrels at (110–145, 188–215) and (158–193, 188–215) as straight top-down: lid ellipse, rim, and the outer stave edge only. No barrel body, no hoops below the lid.
+- Redraw the crates at (68–110, 2–38) and (68–110, 80–116) as lids seen from above. Currently each shows a full front-facing panelled chest face, which is a side view.
+- Vary the two barrels and the two crates from each other, or place only one of each. As drawn they read as copy-paste at a glance.
+- Add contact shadows under all four props. Nothing in the frame is touching the ground.
+- Give the water a shore. Break the dead-straight vertical left edge and the dead-straight horizontal bottom edge at y≈170 into an irregular boundary, add a shallow-water value band 3–6px inside the edge, and add a wet-dirt darkening 2–4px outside it.
+- Treat the water/flagstone seam at x≈344: add a stone lip, a darker line where the water meets it, and break the stone edge so it isn't one unbroken vertical.
+- Break the 24px flagstone lattice. Merge and split stones so joint spacing varies, and vary joint value so some joints read deeper than others.
+- Chip and stain the flagstones where they meet the dirt at y≈195 — currently the transition is a clean 1px colour change with the stone perfectly intact right up to it.
+- Kill the visible repeat in the dirt: its red-brown crack cluster recurs on the same 24px lattice as the stone. Overlay a second, larger-period variation pass and hand-break the repeating clusters.
+- Rebuild the moss blobs on the grey floor at (0–60, 170–230) as distinct shapes rather than one blob scaled three ways, and remove or redraw the one straddling the water/stone seam.
+- Reposition the green figure so the frame edge does not cut its head and weapon tip.
+- Bring the bottom brick band into the same palette family as the rest of the frame, remove the stray light-grey bar at x≈165–215, and align the band so the bottom row isn't cut mid-tile.
+- Add the light model. There is currently zero falloff anywhere in the frame; the far corners are exactly as bright as the figure's tile, in a place lit by one carried lamp.
+
+---
+
+The through-line: 1, 2 and 4 are the same room, and the whole gap between them is downstream of the lighting and prop pass, not the base art. 1 is the version where nobody broke the crate and nobody ran a hatch pattern through the light — and it still isn't shippable, because the lamp isn't attached to the person holding it. Fix the light origin and requantise the wall mottle and 1 goes out the door; 4 needs its light layer thrown away and regenerated before it's even in the same conversation. 3 is a different problem entirely — that one is an asset question, not a pass.
+
+*Model: Claude Opus 5 (1M context)*

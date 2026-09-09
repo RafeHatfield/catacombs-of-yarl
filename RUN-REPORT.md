@@ -3,7 +3,8 @@
 One autonomous cycle: the autonomy amendment, then the remaining surface work, then props.
 Appended per item. **Nothing here needs a reply** unless it names one of §1.1.4's three triggers.
 
-**On the phone right now:** nothing from this run yet.
+**On the phone right now:** nothing — the handset reads `unavailable` to `devicectl`. The
+polish stack passed its gate and is waiting on a reachable device, not on a verdict.
 
 ---
 
@@ -186,3 +187,265 @@ The measured hook is that marks varying in **angle** but not in **length, stroke
 will still read as one decal reused, because angle is the least salient of the four at 32px. That
 is a dressing-vocabulary question, not a direction-table one.
 
+
+---
+
+## Item 5 — r004 VALID on three seats, gate OPEN, **install blocked at the handset**
+
+The stack (A #184 + B #185 + C #183) cleared every gate it can clear: three independent blind
+seats, INSTALL-LATEST, gate open, build signed. It is **not on the phone**, and the reason is the
+phone — see *On the phone* at the end of this item. It took a re-drawn seat, eight dispositions,
+one new issue and three fixes to the review layer's own instruments to get there.
+
+### The round
+
+`r004-polish-abc-install`, three independent blind seats on frozen bytes `839fb12f`:
+
+| seat | build rank | reference rank | not below | flags build | plant |
+|---|---|---|---|---|---|
+| 1 | 1 | 2 | yes | no | CAUGHT |
+| 2 (re-drawn) | 3 | 1 | no | **yes** | CAUGHT |
+| 3 | 1 | 2 | yes | no | CAUGHT |
+
+**2 of 3 not below the reference — the INSTALL-LATEST bar.** Every plant caught. Rank's own noise
+floor showed up on schedule: 1 of 3 seats disagrees with the majority on identical bytes, against
+the published 40% flip rate.
+
+### Seat 2 was re-drawn, not re-run — and the two laws that say so are banked
+
+Seat 2's first ballot drew `replaced-tiles-lane.png` on a `tonal` round. **Your ruling:** the plant
+was tagged for the lever that *made* it (`POLISH_LANE_GAIN` at 1.9) rather than for what your cull
+saw — material identity, which is `value`. Re-tagged; **an axis is the cull's percept, never its
+mechanism** is now LOOP-PROCESS §1.2.1 and SKILL §4a.
+
+The seat was re-drawn on the same frozen bytes with the correct tonal plant, and it **caught it**.
+The bounds held: sha unchanged, nothing re-captured, seats 1 and 3 carried and never re-parsed, the
+ballot written to its own `-redraw.txt`, and the existing ballot **reused rather than re-rolled**.
+Recorded by added artifact, `SEAT-REDRAWN.json`, beside `PARK-CLEARED.json`.
+
+⚠ **The softness control is untouched.** A correct plant missed still voids the round. That is the
+only control the mechanism has.
+
+### Seat 2's six flips, disposed by citation — the amendment's first real workout
+
+Two of the six were compound, so eight dispositions. **Three of them measured the seat's stated
+cause false while keeping its percept**, which is the state §13.4.1 exists for.
+
+**"The lamp has no core — add a tight bright core at (408, 485)."** The peak it is missing was the
+**hero sprite**. All 72 of the reference's peak pixels (≥250.8) lie inside the figure's own cell and
+none on the floor; in this build the hero cell's max falls 251.82 → 207.00 while the floor pool
+around it is unchanged at 206.29 against 206.71 — 0.42 of a level. That fall **is** #183's ratified
+hero ceiling answering your own cull, *character washed out*. Adding the core re-blows the hero.
+
+**"Move the wall run back to y≈383."** The run has not moved. Detected per column against each
+frame's own unlit wall-top plane (11.69 in both, so the detector is not a brightness proxy), the top
+edge is y=391 in 249 of 250 columns here and 237 of 250 in the reference, and above it the two
+frames agree on **99.0%** of pixels. The reference's 12 dissenting columns are two binding sprites
+drawn 8px outside their cell — **the artefact #185 fixed**. Percept kept: the light does reach the
+face (118.04 against 52.33 at r=80) and what it reveals carries a high-frequency residual of 6.33
+against the floor's 11.82 → #194.
+
+**"The corridor brightens toward its middle with no source."** It falls off monotonically from the
+figure: 23.34 at r=285px rising through twelve of thirteen bands to 109.89 at r=85px, no interior
+maximum. The one reversal is the wall run's own base shadow crossing the column.
+
+The rest: the blank pier face and the constant-depth top joint → **#194**; the shadowless block →
+**#193**, whose measurement already showed there is no prop there to add to a shadowcaster set.
+
+### One new issue, routed by the builder — #201
+
+The wall run's **top edge**: no silhouette variation, and a flush T where it meets the corridor
+wall. #194's item 1 is the wall *surface*; this is the run's edge — different property, different
+lever. The seat's exemplar is disproved inside the issue (the reference's variation is those same
+mis-centred bindings), so nobody restores a placement bug trying to fix it. Neither item is
+attributable to this stack: the boundary-wall diagnostics are identical between build `144b0234`
+and this one. **`ROUTING-TABLE.json` opened** — the audit surface your ruling named.
+
+### Three faults found in the review layer, all in instruments that report on themselves
+
+1. **`prove_build_id` was eating `RUN-REPORT.md`.** Case 6a probes the exclusion *by name*, wrote
+   "scope probe" over the real file and deleted it in its `finally`. It destroyed this report twice
+   — the second time it had to be recovered from the last commit. The probe now restores what it
+   found. **A proof that damages the tree it is proving about is not a proof.**
+2. **The citation search reported a failed search as a clean negative.** `git grep` exits **128**,
+   not 1, when any path it is given is absent — so with `RUN-REPORT.md` deleted the gate announced
+   that #194, #193 and #201 *"appear nowhere in the repository's record"* having looked at nothing.
+   It refused, which is the safe direction, but with a false reason. Missing paths are now dropped
+   and a non-"no match" exit is raised. **A check whose failure is indistinguishable from its
+   finding is not a check.**
+3. **A carried seat has no deck, and the round was describing itself from one.** On a re-draw the
+   first seat may be carried; the round's top-level descriptors were read from `seats[0]` regardless,
+   producing `KeyError: 'sha256'`, *"rank ? of 0"* and *"NO APPROVED FRAME IN THE DECK"* on a round
+   whose deck plainly had one. They now come from a seat that actually ran.
+
+### The amendment guard this round earned
+
+`panel_verdict` returns **FAIL** the moment any seat flags the build, and that is right at round
+time. Moving it to INSTALL-LATEST once every flagged item carries a lawful disposition is an
+**amendment** — and the enforcement of a disposition has always been *visibility*. A verdict
+rewritten with no trace of the rewrite defeats exactly that: the file just says INSTALL-LATEST and
+nothing records that a seat said no. So a flagged build now needs an `amendment` block naming the
+state it came from and the law it moved under, printed at the gate and stamped onto the handset.
+`prove_gate` **38 → 41 cases**: **K7** an unrecorded amendment refuses, **K8** the same verdict with
+it recorded opens, **K9** an amendment naming no law refuses. Every other prover green.
+
+### On the phone
+
+**Not on the phone — the handset is unreachable, not the gate.** The gate OPENED on r004 and the
+build compiled and signed; `devicectl` then failed three times with
+`CoreDeviceError 1011: unable to locate a device matching the requested device identifier`.
+`xcrun devicectl list devices` lists *Jiminy Cricket* in state **unavailable** — it is not
+connected or awake. I held a ten-minute poll for it to come back and it did not.
+
+No SKIPPED-REVIEW build was made and none will be. **The stack is not lost**: it is committed on
+`art/autonomy-amendment` at `68f1e312` with its verdict, and it rides in the next build — the
+#198 round installs the stack *and* the halo fix as latest, the moment the phone is reachable.
+Unlock it and connect it and the next install lands without another round.
+
+
+---
+
+## Item 6 — #198: the halo is named, and it caught the hero ceiling slipping
+
+**The halo is not a blur.** There is no soft pass anywhere in the source art. It is the floor
+**losing relative contrast where the light is strongest**, which is what "no edge and no cause"
+looks like when you go looking for an edge. Stated as one number — mean|grad| ÷ mean luminance
+over floor cells, core (0.5–1.2 tiles) against mid-field (2.0–2.8), where 1.0 would mean the light
+costs the surface nothing:
+
+| arm | core/mid | what it says |
+|---|---|---|
+| as shipped | **0.677** | the light costs the surface a third of its contrast |
+| shoulder nulled | 0.819 | |
+| specular nulled | **0.858** | the larger term |
+
+**The two signatures differ, and that is the identification.** Nulling the *shoulder* lifts
+absolute variation and the mean together (|grad| 7.72 → 11.03, mean 156 → 173) — a compression
+released. Nulling the *specular* barely moves variation while dropping the mean a fifth (7.72 →
+8.63, 156 → 124) — a term that was **adding light without adding texture**. Weber does the rest: a
+term added to every fragment of a face alike raises the denominator and leaves the numerator, so
+contrast falls by exactly the share the term carries.
+
+**The fix, on the larger term.** The specular now scales with the fragment's own value, normalised
+by the family's median albedo — proportional instead of additive, so contrast survives it. Core
+relative contrast **0.0572 → 0.0651 (+13.8%)**, halo ratio 0.677 → 0.722, at **0.8%** of mean
+delivered floor value. The magnitude is not retuned, only its distribution, so #184's measured
+specular share is not quietly moved by a change that claims to be about texture.
+
+⚠ **The null is exact.** `spec_shade = 0.0` reproduces the previous build **byte-for-byte** —
+sha256 `839fb12f6ff4` on both frames. That is what confines the change to this term.
+
+### The seat caught something I had broken, and it was not the halo
+
+The first round's seat put **four of its seven flips** on the hero: *"The figure carrying the only
+light is darker than the ground he stands on."* Two things came out of chasing that, and they
+point in opposite directions.
+
+**What the seat asked for is the inverse of your ruling, and cannot be given.** #183 is
+*"the hero should receive LESS of the lamp's top end than the ground does"* (2026-09-06 rig walk);
+the seat asks for him to be the brightest thing in his own pool. §13.4.1 — a seat is a proxy for
+the gate, not a vote against one. I checked whether the **knee** could answer the percept without
+touching the ruled ceiling, and it cannot: swept 0.55 → 0.69 his median moves 151.30 → 153.66 and
+stops, because with the asymptote at the ceiling everything above the knee lands in [knee,
+ceiling] however high the knee is. **His body sits low because of the ceiling, and the ceiling is
+the ruling.** Only you can move it. Recorded in the shader so the door stays shut.
+
+**But the ruling had stopped holding, and nobody had touched the hero.** The polish stack lowered
+the lit floor either side of him to p95 202.50 / max 206.50. At the shipped ceiling his brightest
+pixel measured **202.55 — +0.05 above the floor's p95**, and the shader's own standard is *below
+both*, with *"a tie is not an answer to this clause"* written into it. **His comparator moved
+under him.** Re-derived per §6.2's re-derivation rule, on his own 950 pixels isolated against the
+null arm:
+
+| ceiling | his max | vs floor p95 | vs floor max | ruling held |
+|---|---|---|---|---|
+| 0.70 | 202.55 | **+0.05** | −3.95 | **no** |
+| **0.68** | 198.70 | −3.80 | −7.80 | yes |
+| 0.66 | 194.56 | −7.94 | −11.94 | yes |
+
+0.68 is again the *first* value clearing both — the same derivation rule that chose 0.70, applied
+to the numbers as they now are. **A derived number moves when its input moves; that is not a
+retune.**
+
+I nearly got this wrong in the other direction. On the seat's evidence I had already written a
+correction that put the figure back above the floor, and the ruling was three lines above it in
+the same file. That is what the clause citation is for, and it caught me.
+
+### The round, and a STOP I am not clearing
+
+`r002-polish-198-halo`, three independent blind seats on the frozen build:
+
+| seat | build rank | reference rank | not below | flags build | plant |
+|---|---|---|---|---|---|
+| 1 | 2 | 1 | yes | no | CAUGHT |
+| 2 | 1 | 2 | yes | no | CAUGHT |
+| 3 | 1 | 2 | yes | **yes** | CAUGHT |
+
+**Not below the seeded reference in 3 of 3** — better than the stack's own round — above it in 2
+of 3, every plant caught. That clears INSTALL-LATEST's rank term outright.
+
+**Then the no-change guard fired, and it is right.** Rounds 1 and 2 are 0.004 mean and 1 worst
+cell apart, against floors of 0.25 and 4. The only thing between them was the hero ceiling
+re-derivation: **4 levels on 950 pixels, 0.017% of the frame**. A clause repair worth +0.05 of a
+level cannot move a frame mean, so the guard's floors can never see it — and the guard's real
+message is the true one: *I spent three seats on a picture that had not changed.* The #198 work
+should have been rounded first and the ceiling repaired after.
+
+**I am not clearing it.** Both existing `PARK-CLEARED` entries carry your words, and I have no
+ruling that covers this; the guard is also correct on the facts. The remedy is not a clearance,
+it is a build with a real change in it — which is where the run goes next. `STALL-REPORT.md` is
+written and the run continues, per the standing instruction.
+
+⚠ So the polish stack + #198 + the ceiling repair are **all still off the phone**, now for two
+independent reasons: the handset is unreachable, and this lane's install gate is held by a live
+guard. Neither is a verdict about the picture.
+
+
+---
+
+## Item 7 — #194: **the remedy is aimed at an asset that is not on screen**
+
+Three seats across three rounds have said the same thing in three ways — *"zero block definition
+— mottled brown noise with no joints anywhere in a 200×240px area"*, *"wall faces are being
+handled with a noise/cloud pass instead of being drawn"*, *"a featureless brown smear with no
+stone joints, while the course directly below it has crisp black joints"*. #194's item 1 routes
+the remedy to the boundary-wall family's top plane.
+
+**The wall family does not draw a pixel of that band.** Composed a wall family with its joints
+**five ladder rungs deeper** and captured the same scene:
+
+```
+ y     shipped   deep-joint   delta
+ 483     70.47      70.47      +0.00
+ 493     79.90      79.90      +0.00    <- the bed joint's own row
+ 503     82.89      82.89      +0.00
+whole frame: mean |delta| 0.3667, max 37.32     (it does draw — elsewhere)
+```
+
+The family's pixels are at y 513–559 and 768–815 — **exactly the band the seat contrasts
+against.** The course below is the wall family; the smear above it is the **cap field**. Removing
+`--wall-cap` confirms it: the band collapses to a dead-flat **77.00** across 28 rows.
+
+**And the remedy is ruled out on the cap.** Your 2026-08-30 gate: *"the tops read as dim floor —
+tile-frequency seams, featureless, too close to the ground."* The cap stopped being blocks
+*because* of that. Item 1's *cut them into blocks with varied joints* is the construction that
+ruling removed — §13.4.1.
+
+**The one unruled lever is already between two culls.** `compose_cap.py` records the sweep: the
+gate rejected *"grey cloud, not stone grain"* at 49.6% fine power, and a blind seat rejected
+*"dense SPONGE SPECKLE that reads as loose gravel"* at 73.6%. The shipped weights sit between
+them.
+
+**The number, corrected.** Raw high-frequency residual says wall 6.856 against floor 16.946 — a
+ratio of 0.405, which is what makes the percept feel damning. But HF scales with luminance under
+a multiplicative light and the cap sits at mean 78 against the floor's 146. **Per unit of
+delivered value: 0.0878 against 0.1159, a ratio of 0.758** — the same Weber correction #198 just
+turned on. The gap is a quarter, not two thirds, and it is not grain amplitude. It is the absence
+of structure at *masonry* scale, which the cap ruling removed on purpose.
+
+So item 1 is **disposed, not chased**, and the finding is posted to #194. The other four items are
+untouched. What would move it is a ruling rather than a build: **may the cap carry structure that
+is not a course** — a fracture family, a bedding plane, salvage pinned into it, which is §7.1's
+own answer and #167's exit — or is *found rock, continuous, no courses* the final word and the
+wall tops finished as they are? Not escalated; §13.4.1 disposes the seats. Noted here because it
+is the one question standing between this issue and a build.

@@ -1,0 +1,64 @@
+All four read. Frames 1, 2 and 4 are the same scene and the same art at three different exposures of the same lighting pass — the far field is pixel-identical across them (edge luma 16.4/17.0/24.6 in all three), so what separates them is entirely what the light does in the near field. Frame 3 is a different tileset and a different problem.
+
+---
+
+**RANK:** 2 > 1 > 4 > 3
+
+**BEST:** 2
+
+**BEST_WHY:** The masonry survives its own lighting. At 8× on the floor left of the figure (x 300–440, y 440–560) the vertical joint at x≈352 and the horizontals at y≈477 and y≈518 are intact and 1px wide *through* the brightest part of the pool — the light raises the stone's value without dissolving its cut. The joints also vary: the block at (330–390, 480–518) has a chipped lower-left corner and a scuffed face, the one beside it at (395–450, 480–518) is clean, so they read as laid stones rather than one stamped tile. The figure is lit by the lamp he is carrying — there is a distinct pale rim on the right of the helmet and a bright yellow highlight on the cheek at (410–416, 472–478), and the shield holds four separate tones (cream face, warmer ring, dark boss slot, outline) so it stays a shield against a floor of nearly the same brightness. That last part is the actual craft: separating a cream object from a cream ground by structure instead of by value.
+
+**WORST:** 3
+
+**WORST_WHY:** Two cameras in one frame, and a floor that is a noise layer. The barrels at (112–142, 192–215) and (163–193, 192–215) are drawn in three-quarter side view — you can see the staved front face and the vertical hoop *and* the lid ellipse at once — while the flagstones, the crates' footprints and the water are straight top-down. They are also pixel-identical duplicates placed side by side, and neither casts a shadow; the left one's base lands exactly on the dirt/stone seam at y=214 with a hard cut and no contact. The dirt field (x 56–343, y 0–214) is one flat mid-brown with randomly scattered dark-red 1px specks and a steel-blue two-pixel chip reused about a dozen times (x≈133 y≈9, x≈180 y≈76, x≈183 y≈157, x≈219 y≈124) floating with no shadow — no grid, no repeat structure, no direction of wear. Its boundary against the cobble is a raw 1px cut: dead straight down x=56 from y=0 to y=214, then dead straight along y=214 to x=343, with no transition tile and no scatter across the seam. The pond (248–343, 0–190) is an axis-aligned rectangle with square corners, flat teal, no shoreline and no depth. And there is no lighting model at all — the far corners are exactly as bright as the centre.
+
+**FLAGGED:** 3, 4, 1, 2
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The figure carrying the only light is darker than the ground he stands on: his shield samples L≈139 and his face L≈127 against floor L≈207 immediately to his right. Invert that — the sprite must be the brightest thing in its own pool, above the floor value, not 70 below it.
+- The lamp casts no light onto its bearer. At 8× the face (404–414, 472–482) is one solid brick-orange mass with a single lighter smudge and no rim. Restore the pale helmet rim and the cheek highlight so the light source is legible on the figure holding it.
+- The shield at (414–425, 483–497) has collapsed from four tones to two — a flat brown slab with one 4px dark dash. Re-separate the boss, the ring and the face; a shield that reads as a disc of cardboard at play size is the player's own avatar failing.
+- Boots, belt and torso have converged to near-identical mid-orange, so the legs merge into the body. Push the boots at least 30 luma below the tunic.
+- The wall band at (200–440, 395–450) is built from the same flagstone rectangles at the same joint pitch as the floor at (200–440, 460–520), differing only in value. Give the wall a different block size or bond pattern, plus a top surface and a cast shadow onto the floor at its base, so it is architecture and not floor-in-shadow.
+- The corridor mouth at (503–535, 400–455) has no wall across it: the pale corridor floor runs down into the pale room floor with a single 1px value step at y≈440. Draw the wall through the junction and let the doorway be a cut in it.
+- The right-hand wall at (535–585, 240–440) is soft cloudy blobs with no joints, sitting 60px from floor tiles with crisp 1px joints. Match the level of finish — either the walls get joints or the floor loses them.
+
+**FLIP 2:**
+- Same wall problem as above and it is the reason this does not ship: at (503–535, 430–460), where the light is strong enough to reveal it, the wall band simply is not there — the corridor pours into the room through what should be solid. Draw the wall across the junction and cut the doorway out of it.
+- The wall bands at (200–440, 395–450) and (575–750, 390–440) use the identical flagstone tile as the floor at lower exposure. Give walls their own material — different block proportion, a visible top surface, and a contact shadow along their base — so the architecture holds up when the player walks the lamp along it.
+- The right-hand wall at (535–585, 240–440) is a Gaussian smear of brown blobs with no stone structure, immediately adjacent to floor with 1px joints. Bring it to the same resolution of detail.
+- A straight-line shadow boundary runs across the wall from about (637, 70) to (563, 380) — a dead-straight edge with a 1px transition and no occluder anywhere that could cast it. Remove it or give it a source.
+- The unlit rooms at (0–115, 130–370) and (630–750, 140–390) are flat RGB 2–7 with 7 and 19 unique colours across 24,000 and 18,000 pixels, bounded by dead-straight vertical and horizontal edges. At L≈3 against far-floor ambient of L≈16–25 they read as undrawn holes, not as dark rooms. Lift them to the same ambient floor the frame edges use and let the room boundary be defined by drawn wall rather than by the edge of the void.
+- The crate at (300–380, 645–715) is a dark olive slab with vague internal rectangles that resolve into neither planks, bands nor lid, and it has no contact shadow — it sits on the floor with a hard black bottom edge. Give it a readable top face, a side thickness, and a shadow.
+
+**FLIP 4:**
+- The light pass has overwritten the art. In the hotspot (300–440, 440–560) the tile joints that are clean and 1px in the equivalent region of the same scene are gone — replaced by cloudy 2–3px yellow blobs with no alignment to anything. Make the lighting multiply the stone rather than replace it, so the joints survive at full intensity.
+- The floor in the pool has collapsed toward a single hue with pixels reaching L=250 (0.08% of the frame above 245 versus 0.01% at the correct exposure). Cap the hotspot below clipping and keep at least three distinguishable floor values inside it.
+- Consequence of the two above: the player is standing on a beige cloud, not on flagstones. Once the joints are back, verify at 1:1 that the block at (330–390, 480–518) still reads as a separate stone from the one at (395–450, 480–518).
+- Inherits every wall defect listed in FLIP 2 — the wall-is-floor material identity, the missing wall across the corridor mouth at (503–535, 430–460), the blurred right wall at (535–585, 240–440), the sourceless straight shadow edge from (637, 70) to (563, 380), and the flat RGB 2–7 rectangles at (0–115, 130–370) and (630–750, 140–390). Fix them there and here.
+
+**FLIP 3:**
+- Redraw the two barrels at (112–142, 192–215) and (163–193, 192–215) in the frame's actual top-down camera: lid ellipse and hoop rings only, no staved front face. Right now you see the side and the top of the same object simultaneously while the floor beside it is straight overhead.
+- They are pixel-identical duplicates side by side. Vary one — different lid wear, different hoop count, a tilt.
+- Neither barrel has a contact shadow; the left one's base at y=215 lands exactly on the dirt/stone seam with a hard cut. Add ground shadows and pull them off the seam.
+- Same camera fault on the crates at (63–97, 0–90): you can see the slatted front faces. Redraw as top-down lids.
+- The two crate lids are identical, each with the same diamond nail in the same top-right corner. Vary the nail placement and the plank widths, or reduce to one crate.
+- Replace the dirt field (56–343, 0–214) with an actual tiled surface. It is currently one flat brown plus randomly scattered dark-red 1px specks — no grid, no repeat, no direction. It reads as a noise layer.
+- The steel-blue two-pixel chip is reused unmodified about a dozen times across the dirt (x≈133 y≈9, x≈163 y≈9, x≈180 y≈76, x≈183 y≈157, x≈219 y≈124, x≈208 y≈150). Give each a shadow pixel and at least three shape variants, or cut them.
+- Build transition tiles at the dirt/cobble boundary. The left edge runs dead straight down x=56 from y=0 to y=214 and the bottom dead straight along y=214 — 1px cut, no scatter, no edge darkening.
+- The pond (248–343, 0–190) is an axis-aligned rectangle with square corners. Break the silhouette, add a shallow band along the edge and a depth gradient toward the centre. Its interior hex tessellation is stamped identically edge to edge — vary it or drop it.
+- The green clover blob is the same three-tone asset reused at four scales in the water (x≈290 y≈12, x≈310 y≈18, x≈305 y≈110, x≈318 y≈122, x≈272 y≈163) *and* unchanged on dry grey stone at (15–45, 45–75) and (15–40, 195–230). Water growth and stone growth cannot be the same sprite.
+- The figure at (208–232, 0–25) is clipped by the top frame edge and its lower body dissolves at y≈18–25 into a brown smear the same hue as the dirt. Give it feet, a ground shadow, and an outline dark enough to separate it from the floor.
+- The white pixel spray at (205–232, 110–127) has no enclosing silhouette — it is unreadable as an object at play size. Give it a defined shape and outline or remove it.
+- The orange banded post at (25–33, 122–168) has no top, no base, no shadow, and passes through the dark brick band at y 122–140 with no occlusion. Establish what it is, or cut it.
+- Add the lighting model. The frame is uniformly full-bright corner to corner with no light-carrying figure — every other frame in this set darkens with distance from the lamp, and this one has no falloff at all.
+
+---
+
+The pattern worth acting on: 1, 2 and 4 are not three art passes, they are one art pass at three exposures, and the exposure is the only variable being tuned. The thing actually holding all three back is underneath that — the walls are the floor tile at lower brightness, so the level's architecture only exists where the lamp doesn't reach. Turn the gamma up on any of them and the room disappears into one continuous stone plain. Fix the wall material and the exposure question mostly answers itself; keep tuning the exposure and you will keep trading a dark figure (1) for a dissolved floor (4).
+
+*Model: Claude Opus 5 (1M context)*

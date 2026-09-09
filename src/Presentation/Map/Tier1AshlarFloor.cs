@@ -94,6 +94,9 @@ public static class Tier1AshlarFloor
         // The highlight shoulder (RULED Rafe 2026-09-07). Defaults are the identity-safe pair;
         // the manifest is the authority, as it is for every other lever here.
         public double ShoulderKnee = 0.75, ShoulderCeiling = 0.92;
+        // #198: the specular scales with the fragment's own value, normalised by the family's
+        // median albedo. `SpecShade = 0` is the flat additive term it replaces, exactly.
+        public double SpecShade = 1.0, AlbedoMedian = 0.446;
         public double[] DeformFlatten = { 0, 0, 0, 0 };
         public double DeformAniso = 0.8;
         public double HollowDepth = 1.3, HollowRim = 0.45;
@@ -1013,6 +1016,8 @@ public static class Tier1AshlarFloor
                 pm.SetShaderParameter("polish_gain", (float)cfg.PolishGain);
                 pm.SetShaderParameter("shoulder_knee", (float)cfg.ShoulderKnee);
                 pm.SetShaderParameter("shoulder_ceiling", (float)cfg.ShoulderCeiling);
+                pm.SetShaderParameter("spec_shade", (float)cfg.SpecShade);
+                pm.SetShaderParameter("albedo_median", (float)cfg.AlbedoMedian);
                 sprite.Material = pm;
                 polished++;
             }
@@ -1781,6 +1786,12 @@ public static class Tier1AshlarFloor
             cfg.PolishGain = mat.GetProperty("polish_gain").GetDouble();
             if (mat.TryGetProperty("shoulder_knee", out var sk)) cfg.ShoulderKnee = sk.GetDouble();
             if (mat.TryGetProperty("shoulder_ceiling", out var sc)) cfg.ShoulderCeiling = sc.GetDouble();
+            if (mat.TryGetProperty("spec_shade", out var ss)) cfg.SpecShade = ss.GetDouble();
+            // DERIVED, NEVER COPIED (§13.12). The median albedo the specular is normalised by is
+            // the family's own `lum_median`, which the compositor measured off the donors — so it
+            // moves when the family does, and no second number can drift away from the first.
+            if (mat.TryGetProperty("lum_median", out var lm))
+                cfg.AlbedoMedian = lm.GetDouble() / 255.0;
             var dfl = new List<double>();
             foreach (var v in mat.GetProperty("deform_flatten").EnumerateArray()) dfl.Add(v.GetDouble());
             cfg.DeformFlatten = dfl.ToArray();
