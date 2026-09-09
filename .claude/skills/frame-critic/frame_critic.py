@@ -384,6 +384,32 @@ def two_strikes_advisory(lane_hist):
     return dict(rounds=[a.get("round"), b.get("round")], items=list(pair))
 
 
+# WHICH VERDICTS CLOSE AN ITEM — the ruling's word "PASS" meant the gate-opening states, and
+# INSTALL-LATEST is one of them.
+#
+#     "Progress-guard scope = the item under work, not the lane." — Rafe, 2026-09-08
+#     "A PASS state CLOSES an item. Rounds after it are a NEW item's rounds."
+#
+# The test was `verdict.startswith("PASS")`, written when every gate-opening state began with
+# that word. INSTALL-LATEST — ruled into existence the same day, and the state polish rounds
+# actually reach — does not, so a lane that PASSED its item still carried that item's rounds
+# into the next one's guards. Caught on `polish-198-halo`: the item closed at INSTALL-LATEST on
+# 3 of 3 seats not below the reference, and `no-change` was still reasoning about the rounds
+# before it.
+#
+# ⚠ THIS IS A LIST OF GATE-OPENING STATES, NOT A LIST OF STATES I WOULD LIKE TO PASS. FAIL and
+# VOID are absent and must stay absent: the guard exists to catch a lane repeating a failure,
+# and a lane that has not opened a gate has not closed anything. `prove_stall_ceiling` holds
+# both directions — C7 a closing verdict cuts, C8 a lane of FAILs still fires.
+CLOSING_VERDICTS = ("PASS", "PASS-INSTALL", "PASS-WITH-ROUTED-ITEMS", "INSTALL-LATEST")
+
+
+def closes_item(verdict):
+    """Does this verdict close the item under work, so later rounds start a new series?"""
+    v = str(verdict or "")
+    return v.startswith("PASS") or v in CLOSING_VERDICTS
+
+
 def guards(hist, lane, park=None, gate_path=None):
     """Which guard, if any, has fired. Returns (name, explanation) or (None, None).
 
@@ -420,7 +446,7 @@ def guards(hist, lane, park=None, gate_path=None):
     # Nothing is deleted, which is the law this mechanism runs on (SKILL.md §5).
     cut = 0
     for i, v in enumerate(lane_hist):
-        if str(v.get("verdict", "")).startswith("PASS"):
+        if closes_item(v.get("verdict")):
             cut = i + 1
     lane_hist = lane_hist[cut:]
     read = readable(lane_hist)
