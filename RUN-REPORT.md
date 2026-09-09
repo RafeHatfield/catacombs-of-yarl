@@ -118,3 +118,71 @@ directions on real captures — a control with the overlays omitted collapses it
 The instrument now reads all four sides with a local reference and excludes the player's cell —
 this issue's stated exit, reached by disproving the issue.
 
+---
+
+## Item 3 — #193: **the shoulder is not the lever.** Nothing shipped
+
+Scoped as *"contrast-preserving shoulder — compress the mean, preserve inter-stone deltas"*. I built
+**both** readings and measured each on the issue's own metric.
+
+**Preserve the deltas.** The ruled shoulder compresses the *product*, `max(albedo × light)`, so
+adjacent stones take different factors and the brighter is squeezed harder — it pulls them together
+exactly where it acts hardest. Deriving the factor at a **reference stone** makes it uniform and
+preserves ratios: Weber **0.1263 → 0.1399** (+11%) on #193's object. Cost: red-clipped pixels
+**1333 → 7177**, and only **16** of the ruled build's 1333 are inside the judged crop — so ~5,800
+genuine new clipped pixels, reintroducing the defect §6.2's shoulder was ruled to fix and the
+blown-highlight plant's own cull. **The trade does not pay.**
+
+⚠ Referencing the *median* albedo switched the shoulder off entirely — delivered magnitude there
+reaches only ≈0.72, below the 0.75 knee — and clipping went to 9641. A shoulder whose reference
+sits below its own knee never engages.
+
+**Compress the mean harder.** Monotonically *worse*: Weber 0.1263 / 0.1219 / 0.1116 / 0.1025 as the
+ceiling drops 0.92 / 0.86 / 0.82 / 0.78. The curve acts hardest at the top, which is where the
+deltas live.
+
+**The ruled 0.75 / 0.92 beats every arm.** Source tree reverted; only the arms' evidence kept.
+Re-scoped: the exit stands, but the lever is the **albedo** — the stones already carry more absolute
+texture than the floor around them (20.5 against 12.2); what they lack is value separation between
+neighbours, which lives in the family's address-to-rung spread, not in any light term.
+
+---
+
+## Item 4 — #197, and **#179 closed after six failed instrument hunts**
+
+### #179 was the route all along
+
+Open since it was reported twice and located by none, with six instruments failing to find it. They
+were hunting an **overlay**; it is a **feature**.
+
+The route polyline through this station runs **(6,12) → (5,13) → (4,14)** — a 45° **down-left**
+diagonal, which is the seats' description exactly. And it is measurably brighter, distance held:
+
+| distance | on route | off route | delta |
+|---|---:|---:|---:|
+| 1 tile | **186.6** | 160.8 | **+25.8** |
+| 2 tiles | 113.4 | 111.0 | +2.5 |
+
+That is Ruling 70's polish-as-light-response working as built. **The band is the path.** Every
+instrument treated the lane as signal and searched for an artefact, so none could ever flag it.
+The seats' word *"screen-space"* was the misdirection — the lane is world-space, and only looks
+screen-space because the station sits on it. **Closed.**
+
+⚠ I had guessed #179 and #197 were one defect. **They are not**, and the measurement is what said
+so — the lit floor's high-frequency layer has no diagonal dominance at all, so nothing at hatch
+scale produces that band.
+
+### #197 re-scoped — the motif is not there as described
+
+Three tests, all negative: the delivered orientation histogram (40–50° at **6.6%** against 5.6%
+uniform; the peaks are the joints at 80–100° and 170–10°); neighbour direction collisions
+(**0.078 / 0.084** against 0.083 chance for a 12-entry table, spread even at 271–328 over 3600
+stones); and the four named marks themselves (**mean correlation 0.261** against a random-floor
+baseline of **0.077** — 3.4× more alike than chance, but no pair identical and their max no higher
+than random floor reaches).
+
+So: **not a §8.3.1 violation**, but §13.4.1's shape — two seats read the dressing as repetitive.
+The measured hook is that marks varying in **angle** but not in **length, stroke count or depth**
+will still read as one decal reused, because angle is the least salient of the four at 32px. That
+is a dressing-vocabulary question, not a direction-table one.
+
