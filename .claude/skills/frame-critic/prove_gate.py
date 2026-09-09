@@ -278,6 +278,67 @@ def main():
         case("J5 CLOSED by citation alone -> refuse (only Rafe closes)",
              1, rc, out, "only Rafe creates these")
 
+        # ---- K. INSTALL-LATEST — non-regression, not victory ---------------------------------
+        #
+        # RULED (Rafe, 2026-09-08). The three things the ruling asks to be proved: an EQUAL-RANK
+        # build with its exit met installs; a build a MAJORITY ranks below does not; and the
+        # guards, plants and citation checks are untouched (every case above still passes).
+        #
+        # "Equal rank" is one place below the reference — the tie the deck forbids, the same slack
+        # §1.2.1 already uses for the asset bar.
+        EXIT = {"claim": "the lane's shine is down and the wall-base seam is restored",
+                "measured": "specular share 22.4% -> 18.8%; seam lane/flank 0.030 -> 0.639",
+                "met": True}
+        def seats(*pairs):
+            return [{"seat": i + 1, "rank": r, "reference_rank": a, "not_below": r <= a + 1}
+                    for i, (r, a) in enumerate(pairs)]
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 0, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K1 EQUAL-RANK build (tied 3 of 3) with its exit met -> allow",
+             0, rc, out, "GATE OPEN")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 3, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 0, "above_reference": 0,
+                                                "per_seat": seats((3, 1), (3, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K2 a MAJORITY ranks the build below the reference -> refuse",
+             1, rc, out, "that is a regression")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": {"claim": "x", "measured": "", "met": True},
+                                      "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 0, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K3 exit claimed met with NO measurement -> refuse", 1, rc, out, "carries no measurement")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": {"claim": "x", "measured": "n", "met": False},
+                                      "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 0, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K4 the item's exit NOT met -> refuse", 1, rc, out, "DID THE THING")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": None},
+                                      "item_exit": EXIT, "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 0, "per_seat": []}})
+        rc, out = run(["python3", GATE])
+        case("K5 no seeded reference in the deck -> refuse", 1, rc, out, "nothing here to be level with")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 2, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K6 a seat flagged the build, nothing disposed -> refuse",
+             1, rc, out, "not a majority test")
+
         # Leave a clean passing verdict behind: the cases below assume one, and a fixture that
         # silently changes the state its successors read is how a proof stops proving.
         synth("PASS", bid)

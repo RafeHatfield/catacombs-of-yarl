@@ -157,5 +157,23 @@
   "value question, and blown-highlight is the morgue's tonal cull.",
   "",
   "Item B ran on 'construction' for the face-placement fix. Move it when the question moves."
- ]
+ ],
+ "item_exit": {
+  "_what": [
+   "THE ITEM'S OWN MEASURED EXIT — required by INSTALL-LATEST (Rafe, 2026-09-08).",
+   "",
+   "A build installs because it DID THE THING IT SET OUT TO DO. The rank test only says",
+   "the doing cost nothing against the seeded reference; this says what was done. Without",
+   "it, 'not worse than the reference' would mean 'not different from it', and a round",
+   "that changed nothing would install as readily as one that fixed something.",
+   "",
+   "Declared here per item, recorded into the verdict, re-checked at the gate. The gate",
+   "refuses a `met` with no measurement behind it."
+  ],
+  "item": "the polish stack — #184 lane shine + wall-base occlusion, #185 face placement, #183 hero",
+  "claim": "the worn lane's shine is down, the wall-base seam is restored, the wall's front face sits in its own cell, and the hero is no longer the brightest thing in the frame",
+  "measured": "#184: the specular's share of delivered floor value at the standing case 22.4% -> 18.8% (worst cell 32.8% -> 29.2%), and the lane's ruled window moved from OUT (on-lane 0.1295, 0.90x §13.8's floor) to IN (0.1513, 1.05x). #185: the corridor-mouth cell's 52.8-level step at the exact half-tile is gone and the cell now matches the no-cap arm that never had the defect; the engine refuses a face drawn outside its own cell. #183: the hero's own pixels peak at 200.23 against lit floor at p95 203.51 and max 207.51 — below both, where the null arm read 249.98. Contact seam on every side a wall adjoins: N 0.3077 / E 0.4533 / S 0.5015 / W 0.3698, all above §13.8's 0.1440, worst cell 0.2869.",
+  "instrument": "tools/tier1_floors/measure_specular_share.py, measure_lane_window.py, measure_wall_base_occlusion.py; #185 by bisect against the --wall-cap arm",
+  "met": true
+ }
 }

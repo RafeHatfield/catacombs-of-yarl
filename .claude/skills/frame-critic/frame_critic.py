@@ -879,25 +879,55 @@ def _slots(body, n_slots):
 #
 # EVERY seat must catch its plant. §4 voids a round on one missed plant and a panel does not get
 # to dilute that into an average: a soft seat's ballot is exactly what §4 refuses to read.
+REF_SLACK = 1
+# ⚠ THE DECK FORBIDS TIES, SO ONE PLACE BELOW STANDS IN FOR ONE. The seat is told "no ties", so
+# a seat can never say the build and the reference are equal — the only two things it can say are
+# "above" and "below", and one of those has to carry the meaning of "level with". This is the
+# same device §1.2.1 already uses for the asset bar, where one place below the bar stands in for
+# the tie the deck forbids, and it is used here for the same reason and with the same slack.
+
+
 def panel_tally(seats):
     """(n_above, n_flagged, n_shipped, all_caught, majority_above) over independent seats."""
     n = len(seats)
     n_above = sum(1 for x in seats if x.get("above_approved"))
+    n_not_below = sum(1 for x in seats if x.get("not_below"))
     n_flagged = sum(1 for x in seats if x.get("build_flagged"))
     n_shipped = sum(1 for x in seats if x.get("shipped"))
     all_caught = bool(seats) and all(x.get("caught") for x in seats)
-    return n_above, n_flagged, n_shipped, all_caught, (n_above * 2 > n)
+    return dict(n=n, above=n_above, not_below=n_not_below, flagged=n_flagged,
+                shipped=n_shipped, all_caught=all_caught,
+                majority_above=(n_above * 2 > n), majority_not_below=(n_not_below * 2 > n))
 
 
-def panel_verdict(seats, approved_in_deck, beats_approved, near_bar):
-    """The verdict the panel yields. Same three states, decided by vote rather than by sample."""
-    n_above, n_flagged, n_shipped, all_caught, majority_above = panel_tally(seats)
-    if not all_caught:
+def panel_verdict(seats, approved_in_deck, beats_approved, near_bar, exit_met=False):
+    """The verdict the panel yields, decided by vote rather than by sample.
+
+    ── INSTALL-LATEST — RULED (Rafe, 2026-09-08). NON-REGRESSION, NOT VICTORY. ──────────────────
+
+        "PASS-INSTALL for polish rounds = non-regression, not victory. INSTALL-LATEST = majority
+         of seats do not rank the build below the seeded reference (above or tied), AND the item's
+         own measured exit is met, AND no unrouted flags. Beating the reference is not required to
+         install; seeding a new reference is Rafe's walk only — seats never move approved_capture."
+
+    THE CONTRADICTION IT RESOLVES, measured on this lane. Requiring the build to BEAT its reference
+    made the gate un-passable for incremental polish: r002 and r003 judged IDENTICAL BYTES and gave
+    3-of-3 above and then 1-of-3, because rank carries a measured 40% flip rate (§13.13). A change
+    worth shipping — a lane-gain step, a half-cell placement fix, a hero cap — is small next to
+    seat-to-seat noise on the same scene, so "better than the frame it came from" was a coin toss
+    dressed as a threshold.
+
+    Non-regression is the honest bar for a polish round: the build must not be WORSE than the frame
+    already ratified as installable, and it must have DONE THE THING IT SET OUT TO DO — which is
+    what the item's measured exit carries, and what stops "not worse" from meaning "not different".
+    """
+    t = panel_tally(seats)
+    if not t["all_caught"]:
         return "VOID"
-    if n_shipped * 2 > len(seats) and n_flagged == 0 and beats_approved and near_bar:
+    if t["shipped"] * 2 > t["n"] and t["flagged"] == 0 and beats_approved and near_bar:
         return "PASS"
-    if approved_in_deck and majority_above and n_flagged == 0:
-        return "PASS-INSTALL"
+    if approved_in_deck and t["majority_not_below"] and t["flagged"] == 0 and exit_met:
+        return "INSTALL-LATEST"
     return "FAIL"
 
 
@@ -1219,11 +1249,23 @@ def main():
                                if sl["approved"] and sl["approved"] in rr["_rank"] else None)
         sd["above_approved"] = (sd["approved_rank"] is not None and sd["rank"] is not None
                                 and sd["rank"] < sd["approved_rank"])
+        # NOT BELOW = above, or one place under (the tie the deck forbids). RULED 2026-09-08.
+        sd["not_below"] = (sd["approved_rank"] is not None and sd["rank"] is not None
+                           and sd["rank"] <= sd["approved_rank"] + REF_SLACK)
         sd["build_flagged"] = sl["build"] in rr["_flagged"]
         sd["shipped"] = sl["build"] in rr["_ship"]
         sd["caught"], sd["how"] = plant_caught(rr, sl["plant"], sl["build"])
 
-    n_above, n_flagged, n_shipped, all_caught, majority_above = panel_tally(seats)
+    _t = panel_tally(seats)
+    n_above, n_flagged, n_shipped = _t["above"], _t["flagged"], _t["shipped"]
+    all_caught, majority_above = _t["all_caught"], _t["majority_above"]
+    n_not_below, majority_not_below = _t["not_below"], _t["majority_not_below"]
+
+    # THE ITEM'S OWN MEASURED EXIT — declared in docs/FRAME-CRITIC.json, recorded here, re-checked
+    # at the gate. It is what stops "not worse than the reference" from meaning "not different":
+    # a build installs because it DID THE THING, and the rank test only says it cost nothing.
+    item_exit = cfg.get("item_exit") or {}
+    exit_met = bool(item_exit.get("met")) and bool(str(item_exit.get("measured") or "").strip())
 
     if len(seats) > 1:
         print("\n== the panel (%d independent seats)" % len(seats))
@@ -1235,9 +1277,9 @@ def main():
                      "YES" if sd["above_approved"] else "no",
                      "yes" if sd["build_flagged"] else "no",
                      "CAUGHT" if sd["caught"] else "MISSED"))
-        print("   ---> above the reference in %d of %d seats; %s"
-              % (n_above, len(seats),
-                 "MAJORITY" if majority_above else "NO MAJORITY"))
+        print("   ---> above the reference in %d of %d seats; NOT BELOW it in %d of %d — %s"
+              % (n_above, len(seats), n_not_below, len(seats),
+                 "MAJORITY (install bar)" if majority_not_below else "NO MAJORITY"))
         # THE COMPARATOR'S OWN ERROR BAR, on this round's bytes. A binding term without one is a
         # single sample wearing a threshold (LAW, Rafe 2026-09-08).
         print("   rank's noise floor on THESE bytes: %d/%d seats disagree with the majority"
@@ -1334,7 +1376,7 @@ def main():
     approved_in_deck = app_pos is not None
     unflagged_all = n_flagged == 0
 
-    verdict = panel_verdict(seats, approved_in_deck, beats_approved, near_bar)
+    verdict = panel_verdict(seats, approved_in_deck, beats_approved, near_bar, exit_met)
 
     print("\n== the seat said")
     print("   RANK    %s" % (r["RANK"] or "(unparsed)")[:120])
@@ -1467,18 +1509,22 @@ def main():
                     "axis-matched plant. — Rafe, 2026-09-08"),
             law=("a gate's binding term must have a measured noise floor and must never be a "
                  "single sample. — Rafe, 2026-09-08"),
-            above_reference=n_above, flagged_by=n_flagged, shipped_by=n_shipped,
-            majority_above=majority_above, all_caught=all_caught,
+            above_reference=n_above, not_below_reference=n_not_below,
+            ref_slack=REF_SLACK, flagged_by=n_flagged, shipped_by=n_shipped,
+            majority_above=majority_above, majority_not_below=majority_not_below,
+            all_caught=all_caught,
             dissent=min(n_above, len(seats) - n_above),
             plants_distinct=len({sd["plant"]["file"] for sd in seats}),
             per_seat=[dict(seat=sd["seat"], rank=sd["rank"],
                            reference_rank=sd["approved_rank"],
                            above_reference=sd["above_approved"],
+                           not_below=sd["not_below"],
                            build_flagged=sd["build_flagged"], shipped=sd["shipped"],
                            plant=sd["plant"]["file"], caught=sd["caught"],
                            transcript=sd["transcript"], work_dir=sd["work_dir"])
                       for sd in seats],
         ),
+        item_exit=item_exit,
         progress=dict(
             rank_position=pos, deck_size=n, rank_score=score,
             bar_position=bar_pos, approved_position=app_pos,
@@ -1542,7 +1588,8 @@ def main():
 
     # PASS-INSTALL exits 0 with PASS: both open the install gate, and a caller that
     # distinguished them would be a second gate with its own opinion (SKILL.md §6).
-    return {"PASS": 0, "PASS-INSTALL": 0, "FAIL": 1, "VOID": 2}[verdict]
+    return {"PASS": 0, "PASS-INSTALL": 0, "INSTALL-LATEST": 0,
+            "FAIL": 1, "VOID": 2}[verdict]
 
 
 if __name__ == "__main__":

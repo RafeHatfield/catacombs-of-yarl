@@ -28,17 +28,20 @@ import frame_critic as FC   # noqa: E402
 FAILURES = []
 
 
-def seat(above, flagged=False, shipped=False, caught=True):
-    return dict(above_approved=above, build_flagged=flagged, shipped=shipped, caught=caught)
+def seat(above, flagged=False, shipped=False, caught=True, not_below=None):
+    """A seat's ballot. `not_below` defaults to `above` — a seat that ranks the build above the
+    reference is trivially not below it — so the older cases keep meaning what they meant."""
+    return dict(above_approved=above, not_below=above if not_below is None else not_below,
+                build_flagged=flagged, shipped=shipped, caught=caught)
 
 
-def case(name, seats, want, approved=True, beats=True, near=True):
-    got = FC.panel_verdict(seats, approved, beats, near)
+def case(name, seats, want, approved=True, beats=True, near=True, exit_met=True):
+    got = FC.panel_verdict(seats, approved, beats, near, exit_met)
     ok = got == want
-    n_above, n_flag, n_ship, all_caught, maj = FC.panel_tally(seats)
+    t = FC.panel_tally(seats)
     print("\n%s %s" % ("PASS " if ok else "FAIL ", name))
-    print("      %d seats | above %d | flagged %d | shipped %d | all caught %s | majority %s"
-          % (len(seats), n_above, n_flag, n_ship, all_caught, maj))
+    print("      %d seats | above %d | not-below %d | flagged %d | shipped %d | caught %s"
+          % (t["n"], t["above"], t["not_below"], t["flagged"], t["shipped"], t["all_caught"]))
     print("      -> %s (wanted %s)" % (got, want))
     if not ok:
         FAILURES.append(name)
@@ -48,20 +51,30 @@ def main():
     print("THE THREE-SEAT VOTE — driving frame_critic.panel_verdict\n")
 
     # ── rank takes a MAJORITY, because rank is the term that flipped ─────────────────────────
-    case("A  3 of 3 above the reference, clean          -> PASS-INSTALL",
-         [seat(True), seat(True), seat(True)], "PASS-INSTALL")
-    case("B  2 of 3 above (one dissent)                 -> PASS-INSTALL",
-         [seat(True), seat(True), seat(False)], "PASS-INSTALL")
-    case("C  1 of 3 above — NO majority                 -> FAIL",
-         [seat(True), seat(False), seat(False)], "FAIL")
-    case("C2 0 of 3 above                               -> FAIL",
-         [seat(False), seat(False), seat(False)], "FAIL")
+    case("A  3 of 3 above the reference, clean          -> INSTALL-LATEST",
+         [seat(True), seat(True), seat(True)], "INSTALL-LATEST")
+    case("B  2 of 3 above (one dissent)                 -> INSTALL-LATEST",
+         [seat(True), seat(True), seat(False)], "INSTALL-LATEST")
+    # ⚠ REWRITTEN FOR THE 2026-09-08 RULING, not deleted. These two used to read "no majority
+    # ABOVE -> FAIL". Under non-regression that is no longer the question, and a seat that ranks
+    # the build one place under the reference is now saying TIED. So the cases now say what they
+    # were always for: a build a majority puts genuinely BELOW does not install.
+    case("C  1 of 3 not-below — a majority ranks it BELOW -> FAIL",
+         [seat(True), seat(False, not_below=False), seat(False, not_below=False)], "FAIL")
+    case("C2 0 of 3 not-below                             -> FAIL",
+         [seat(False, not_below=False)] * 3, "FAIL")
+    case("C3 2 of 3 TIED (one place under) — non-regression -> INSTALL-LATEST",
+         [seat(True), seat(False, not_below=True), seat(False, not_below=True)],
+         "INSTALL-LATEST")
+    case("C4 the same panel with the item's exit NOT met  -> FAIL",
+         [seat(True), seat(False, not_below=True), seat(False, not_below=True)],
+         "FAIL", exit_met=False)
 
     # ── a FLAG from ANY seat is disqualifying — the asymmetry, proved as a pair ──────────────
     case("D  3 of 3 above but ONE seat flags the build  -> FAIL",
          [seat(True), seat(True), seat(True, flagged=True)], "FAIL")
-    case("E  the same panel with the flag withdrawn     -> PASS-INSTALL",
-         [seat(True), seat(True), seat(True)], "PASS-INSTALL")
+    case("E  the same panel with the flag withdrawn     -> INSTALL-LATEST",
+         [seat(True), seat(True), seat(True)], "INSTALL-LATEST")
 
     # ── every seat must catch its plant; a panel does not average a soft seat away ───────────
     case("F  one seat MISSES its plant                  -> VOID",
@@ -78,8 +91,8 @@ def main():
          [seat(True, shipped=True), seat(True, shipped=True), seat(True)], "PASS")
 
     # ── and a single seat still behaves exactly as it did before the panel existed ───────────
-    case("J  one seat, above, clean                     -> PASS-INSTALL",
-         [seat(True)], "PASS-INSTALL")
+    case("J  one seat, above, clean                     -> INSTALL-LATEST",
+         [seat(True)], "INSTALL-LATEST")
     case("K  one seat, above, but it flags the build    -> FAIL",
          [seat(True, flagged=True)], "FAIL")
 

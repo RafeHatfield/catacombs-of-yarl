@@ -275,7 +275,68 @@ def check():
     # The gate re-derives the two conditions from the verdict's own recorded numbers rather than
     # trusting the label — a verdict that merely SAYS PASS-INSTALL proves nothing, and this file
     # is the one place an install can be authorised.
-    if v.get("verdict") == "PASS-INSTALL":
+    # ── INSTALL-LATEST — RULED (Rafe, 2026-09-08). NON-REGRESSION, NOT VICTORY. ─────────────
+    #
+    #     "INSTALL-LATEST = majority of seats do not rank the build below the seeded reference
+    #      (above or tied), AND the item's own measured exit is met, AND no unrouted flags.
+    #      Beating the reference is not required to install; seeding a new reference is Rafe's
+    #      walk only — seats never move approved_capture."
+    #
+    # Requiring the build to BEAT its reference made the gate un-passable for incremental polish:
+    # two rounds on IDENTICAL BYTES gave 3-of-3 above and then 1-of-3, because rank carries a
+    # measured 40% flip rate (§13.13). "Better than the frame it came from" was a coin toss
+    # dressed as a threshold. Non-regression is the honest bar, and THE ITEM'S MEASURED EXIT is
+    # what stops it meaning "not different".
+    #
+    # ⚠ SEATS NEVER MOVE `approved_capture`. Nothing in this file or in frame_critic writes it;
+    # it is edited by hand when Rafe's walk seeds one. An install bar that could re-seed its own
+    # reference would ratchet: each build becomes the thing the next is measured against, and the
+    # gate drifts wherever the work drifts.
+    if v.get("verdict") == "INSTALL-LATEST":
+        pr = v.get("progress") or {}
+        panel = v.get("panel") or {}
+        bad = []
+        if pr.get("approved_position") is None:
+            bad.append("no approved frame in this round's deck — INSTALL-LATEST is defined "
+                       "against a SEEDED reference and there is nothing here to be level with")
+        seats = panel.get("per_seat") or []
+        if seats:
+            nb = sum(1 for x in seats if x.get("not_below"))
+            if nb * 2 <= len(seats):
+                bad.append("a majority of seats ranked the build BELOW the reference (%d of %d "
+                           "not-below) — that is a regression, and non-regression is the bar"
+                           % (nb, len(seats)))
+        else:
+            pos, app = pr.get("rank_position"), pr.get("approved_position")
+            if pos is None or app is None or pos > app + 1:
+                bad.append("build ranked %s against a reference at %s — below it" % (pos, app))
+        ie = v.get("item_exit") or {}
+        if not ie.get("met"):
+            bad.append("the item's own measured exit is not recorded as met — a build installs "
+                       "because it DID THE THING, not merely because it cost nothing")
+        if not str(ie.get("measured") or "").strip():
+            bad.append("the item's exit carries no measurement — 'met' without a number is an "
+                       "assertion, and this state is the one place it would go unchecked")
+        bad += check_dispositions(list(v.get("dispositions", [])), list(v.get("flip_list", [])))
+        if panel.get("flagged_by") and not v.get("dispositions"):
+            bad.append("%d of %s seats flagged the build and there are NO dispositions — 'no "
+                       "unrouted flags' is not a majority test"
+                       % (panel["flagged_by"], panel.get("seats", "?")))
+        if bad:
+            return False, L + ["", "INSTALL-LATEST IS NOT LAWFULLY FORMED:"] \
+                   + ["  - %s" % b for b in bad]
+        L += ["", "INSTALL-LATEST — non-regression against the seeded reference."]
+        if seats:
+            L.append("  panel: not below it in %d of %d seats (above in %s); flagged by %s."
+                     % (sum(1 for x in seats if x.get("not_below")), len(seats),
+                        panel.get("above_reference"), panel.get("flagged_by")))
+        L.append("  item exit MET: %s" % " ".join(str(ie.get("claim") or "").split())[:74])
+        L.append("    measured: %s" % " ".join(str(ie.get("measured")).split())[:72])
+        if v.get("dispositions"):
+            L.append("  Outstanding items, each disposed:")
+            print_dispositions(L, list(v["dispositions"]))
+
+    elif v.get("verdict") == "PASS-INSTALL":
         pr = v.get("progress") or {}
         pos, app = pr.get("rank_position"), pr.get("approved_position")
         bad = []
