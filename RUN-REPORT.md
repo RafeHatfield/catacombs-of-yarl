@@ -643,10 +643,18 @@ bundle (device): com.rafehatfield.catacombsofyarl.tier0
 VERIFIED ON DEVICE — installed, launched, booted into tier1_combined_review, rig live.
 ```
 
-The first install was made from a **dirty** tree — the verdict and its dispositions were written
-after the build — and `verify_on_device` says plainly that a dirty build is not a reproducible
-gate build (§2.3). So it was committed, rebuilt and re-verified clean rather than left claimed on
-the first pass.
+⚠ **The stamp, precisely.** The install that was boot-verified above was made from a **dirty**
+tree — the verdict and its dispositions are written *after* the build — and `verify_on_device`
+says plainly that a dirty build is not a reproducible gate build (§2.3). So it was committed and
+rebuilt, and **the clean build (`9022b179`) is installed**; the gate re-ran against it and opened,
+which is the proof the shipped inputs did not move (the commit added only build_id-excluded files:
+the verdict, its history and this report).
+
+**It has not been launched.** The handset locked between the two installs — `Unable to launch …
+because the device was not, or could not be, unlocked` — so the log on the device is still the
+first boot's, and the verifier correctly reports `THE HANDSET IS RUNNING A DIFFERENT BUILD`.
+Nothing needs rebuilding: **unlock the phone and the first launch stamps clean.** The picture is
+the same picture either way — identical bytes, verified booting.
 
 ### Two instrument faults this cost, both filed rather than fixed mid-panel
 
