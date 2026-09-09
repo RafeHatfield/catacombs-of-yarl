@@ -48,60 +48,80 @@ def case(name, seats, want, approved=True, beats=True, near=True, exit_met=True)
 
 
 def main():
-    print("THE THREE-SEAT VOTE — driving frame_critic.panel_verdict\n")
+    print("THE PANEL VOTE — driving frame_critic.panel_verdict\n")
 
-    # ── rank takes a MAJORITY, because rank is the term that flipped ─────────────────────────
-    case("A  3 of 3 above the reference, clean          -> INSTALL-LATEST",
-         [seat(True), seat(True), seat(True)], "INSTALL-LATEST")
-    case("B  2 of 3 above (one dissent)                 -> INSTALL-LATEST",
-         [seat(True), seat(True), seat(False)], "INSTALL-LATEST")
-    # ⚠ REWRITTEN FOR THE 2026-09-08 RULING, not deleted. These two used to read "no majority
-    # ABOVE -> FAIL". Under non-regression that is no longer the question, and a seat that ranks
-    # the build one place under the reference is now saying TIED. So the cases now say what they
-    # were always for: a build a majority puts genuinely BELOW does not install.
-    case("C  1 of 3 not-below — a majority ranks it BELOW -> FAIL",
-         [seat(True), seat(False, not_below=False), seat(False, not_below=False)], "FAIL")
-    case("C2 0 of 3 not-below                             -> FAIL",
-         [seat(False, not_below=False)] * 3, "FAIL")
-    case("C3 2 of 3 TIED (one place under) — non-regression -> INSTALL-LATEST",
-         [seat(True), seat(False, not_below=True), seat(False, not_below=True)],
+    # ── THE REGRESSION TERM — RULED (Rafe, 2026-09-09) ───────────────────────────────────────
+    #
+    #     "five seats; block only on strong-majority regression (>=4 of 5 rank below the
+    #      reference); else install if exit met and plant caught. Rank-in-deck cannot resolve
+    #      polish-sized deltas at a 40% flip rate."
+    #
+    # ⚠ THREE CASES BELOW CHANGED THEIR EXPECTED ANSWER, AND THAT IS A RULING RATHER THAN A
+    # WEAKENING SLIPPED PAST A PROOF. They are kept and re-stated with the old expectation named,
+    # so the diff shows exactly what moved and on whose word. What did NOT move: every plant must
+    # be caught, the exit must be met, and a FLAG still blocks the install — that term now lives
+    # only at `critic_gate`, where it was always enforced, and `prove_gate` K6/K10 hold it there.
+    # A term is not proved by the file that used to hold it.
+    case("A  5 of 5 above the reference, clean          -> INSTALL-LATEST",
+         [seat(True)] * 5, "INSTALL-LATEST")
+
+    # the ruling's own arithmetic, at the size it was ruled for
+    case("B1 4 of 5 BELOW — strong majority            -> FAIL",
+         [seat(False, not_below=False)] * 4 + [seat(True)], "FAIL")
+    case("B2 3 of 5 below — not strong, it installs    -> INSTALL-LATEST",
+         [seat(False, not_below=False)] * 3 + [seat(True), seat(True)], "INSTALL-LATEST")
+    case("B3 5 of 5 below — unanimous                  -> FAIL",
+         [seat(False, not_below=False)] * 5, "FAIL")
+
+    # the SAME standard at other panel sizes: four FIFTHS, never the number four
+    case("C  2 of 3 below (was FAIL until 2026-09-09)  -> INSTALL-LATEST",
+         [seat(True), seat(False, not_below=False), seat(False, not_below=False)],
          "INSTALL-LATEST")
-    case("C4 the same panel with the item's exit NOT met  -> FAIL",
-         [seat(True), seat(False, not_below=True), seat(False, not_below=True)],
-         "FAIL", exit_met=False)
+    case("C2 3 of 3 below — unanimous at n=3           -> FAIL",
+         [seat(False, not_below=False)] * 3, "FAIL")
+    case("C3 tied (one place under) is NOT below       -> INSTALL-LATEST",
+         [seat(True)] + [seat(False, not_below=True)] * 4, "INSTALL-LATEST")
+    case("C4 the same panel with the exit NOT met      -> FAIL",
+         [seat(True)] + [seat(False, not_below=True)] * 4, "FAIL", exit_met=False)
 
-    # ── a FLAG from ANY seat is disqualifying — the asymmetry, proved as a pair ──────────────
-    case("D  3 of 3 above but ONE seat flags the build  -> FAIL",
-         [seat(True), seat(True), seat(True, flagged=True)], "FAIL")
-    case("E  the same panel with the flag withdrawn     -> INSTALL-LATEST",
-         [seat(True), seat(True), seat(True)], "INSTALL-LATEST")
+    # ── A FLAG NO LONGER FORCES FAIL AT ROUND TIME. It blocks at the gate, and only there ────
+    #
+    # The pair it would be dangerous to leave unstated. The flag term did not go away; it stopped
+    # being evaluated twice. `critic_gate` refuses any install whose flagged build carries no
+    # lawful disposition (prove_gate K6) and accepts it when every item does (prove_gate K10).
+    # If those two ever go green together, this pair means nothing and the guard is gone.
+    case("D  5 of 5 above, ONE seat flags it           -> INSTALL-LATEST (the gate holds it)",
+         [seat(True)] * 4 + [seat(True, flagged=True)], "INSTALL-LATEST")
+    case("E  the same panel with the flag withdrawn    -> INSTALL-LATEST",
+         [seat(True)] * 5, "INSTALL-LATEST")
 
     # ── every seat must catch its plant; a panel does not average a soft seat away ───────────
-    case("F  one seat MISSES its plant                  -> VOID",
-         [seat(True), seat(True), seat(True, caught=False)], "VOID")
-    case("G  a missed plant outranks everything else    -> VOID",
-         [seat(True, flagged=True, caught=False), seat(True), seat(True)], "VOID")
+    case("F  one seat MISSES its plant                 -> VOID",
+         [seat(True)] * 4 + [seat(True, caught=False)], "VOID")
+    case("G  a missed plant outranks everything else   -> VOID",
+         [seat(False, flagged=True, caught=False)] + [seat(False, not_below=False)] * 4, "VOID")
 
-    # ── the reference must exist, exactly as for one seat (§13.11's saturating comparator) ───
-    case("H  no seeded reference in the deck            -> FAIL",
-         [seat(True), seat(True), seat(True)], "FAIL", approved=False, beats=False)
+    # ── the reference must exist (§13.11's saturating comparator) ────────────────────────────
+    case("H  no seeded reference in the deck           -> FAIL",
+         [seat(True)] * 5, "FAIL", approved=False, beats=False)
 
     # ── SHIP is the wowed signal and still reaches the stronger state ────────────────────────
-    case("I  a majority would SHIP it                   -> PASS",
-         [seat(True, shipped=True), seat(True, shipped=True), seat(True)], "PASS")
+    case("I  a majority would SHIP it                  -> PASS",
+         [seat(True, shipped=True)] * 3 + [seat(True), seat(True)], "PASS")
 
-    # ── and a single seat still behaves exactly as it did before the panel existed ───────────
-    case("J  one seat, above, clean                     -> INSTALL-LATEST",
+    # ── one seat still behaves as one seat: four fifths of 1 is 1 ────────────────────────────
+    case("J  one seat, above, clean                    -> INSTALL-LATEST",
          [seat(True)], "INSTALL-LATEST")
-    case("K  one seat, above, but it flags the build    -> FAIL",
-         [seat(True, flagged=True)], "FAIL")
+    case("K  one seat, and it ranks the build BELOW    -> FAIL",
+         [seat(False, not_below=False)], "FAIL")
 
     print("\n%s" % ("=" * 70))
     if FAILURES:
         print("%d CASE(S) FAILED: %s" % (len(FAILURES), ", ".join(FAILURES)))
         return 1
-    print("EVERY CASE BEHAVED AS DECLARED. The vote refuses on a lost majority, on any single")
-    print("seat's flag, and on any missed plant — and it opens only when the panel agrees.")
+    print("EVERY CASE BEHAVED AS DECLARED. The vote refuses on a STRONG-MAJORITY regression and")
+    print("on any missed plant. The flag term now lives at the gate — prove_gate K6 and K10 are")
+    print("the other half of this rule, and neither half proves it alone.")
     return 0
 
 

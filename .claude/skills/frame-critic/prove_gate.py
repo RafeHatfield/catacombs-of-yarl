@@ -303,11 +303,12 @@ def main():
 
         synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 3, "approved_position": 1},
                                       "item_exit": EXIT, "flip_list": [], "dispositions": [],
-                                      "panel": {"seats": 3, "flagged_by": 0, "above_reference": 0,
-                                                "per_seat": seats((3, 1), (3, 1), (2, 1))}})
+                                      "panel": {"seats": 5, "flagged_by": 0, "above_reference": 0,
+                                                "per_seat": seats((3, 1), (3, 1), (3, 1),
+                                                                  (3, 1), (2, 1))}})
         rc, out = run(["python3", GATE])
-        case("K2 a MAJORITY ranks the build below the reference -> refuse",
-             1, rc, out, "that is a regression")
+        case("K2 a STRONG majority ranks the build below -> refuse",
+             1, rc, out, "a strong")
 
         synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
                                       "item_exit": {"claim": "x", "measured": "", "met": True},
@@ -354,31 +355,58 @@ def main():
               "law": "CC routes flags to issues with verified citations. - Rafe, fixture",
               "flag": "1 of 3 seats flagged the build; its items are disposed"}
 
+        # ⚠ THE AMENDMENT TEST IS DIVERGENCE, NOT FLAGS — sharpened 2026-09-09. The panel can now
+        # return INSTALL-LATEST with a flag on it, so "flagged" no longer implies "was amended".
+        # What must never pass silently is the verdict being REWRITTEN, so the check compares the
+        # file against `panel.verdict_at_round` — what the panel actually returned.
         synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
                                       "item_exit": EXIT, "flip_list": [],
                                       "dispositions": DISPOSED,
-                                      "panel": {"seats": 3, "flagged_by": 1, "above_reference": 1,
-                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+                                      "panel": {"seats": 5, "flagged_by": 1, "above_reference": 1,
+                                                "verdict_at_round": "FAIL",
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1),
+                                                                  (2, 1), (2, 1))}})
         rc, out = run(["python3", GATE])
-        case("K7 flagged + disposed but the amendment is UNRECORDED -> refuse",
+        case("K7 verdict REWRITTEN from FAIL, no amendment record -> refuse",
              1, rc, out, "amendment record is absent")
 
         synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
                                       "item_exit": EXIT, "flip_list": [],
                                       "dispositions": DISPOSED, "amendment": AM,
-                                      "panel": {"seats": 3, "flagged_by": 1, "above_reference": 1,
-                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+                                      "panel": {"seats": 5, "flagged_by": 1, "above_reference": 1,
+                                                "verdict_at_round": "FAIL",
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1),
+                                                                  (2, 1), (2, 1))}})
         rc, out = run(["python3", GATE])
         case("K8 the same verdict with the amendment recorded -> allow",
              0, rc, out, "AMENDED from FAIL")
+
+        # ── K10. THE OTHER HALF OF THE FLAG TERM, which prove_panel no longer holds ───────────
+        #
+        # The panel itself returned INSTALL-LATEST with one seat flagging — no rewrite, so no
+        # amendment is owed. The install must still turn on whether that flag carries a lawful
+        # disposition, and K6 above is this case with the dispositions removed. If K6 and K10
+        # ever go green together the flag guard has quietly stopped existing.
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [],
+                                      "dispositions": DISPOSED,
+                                      "panel": {"seats": 5, "flagged_by": 1, "above_reference": 1,
+                                                "verdict_at_round": "INSTALL-LATEST",
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1),
+                                                                  (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K10 panel returned it flagged AND disposed -> allow",
+             0, rc, out, "INSTALL-LATEST")
 
         # An amendment that names no law is not a record of one.
         synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
                                       "item_exit": EXIT, "flip_list": [],
                                       "dispositions": DISPOSED,
                                       "amendment": {"from": "FAIL", "to": "INSTALL-LATEST"},
-                                      "panel": {"seats": 3, "flagged_by": 1, "above_reference": 1,
-                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+                                      "panel": {"seats": 5, "flagged_by": 1, "above_reference": 1,
+                                                "verdict_at_round": "FAIL",
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1),
+                                                                  (2, 1), (2, 1))}})
         rc, out = run(["python3", GATE])
         case("K9 an amendment naming no law -> refuse", 1, rc, out, "missing law")
 

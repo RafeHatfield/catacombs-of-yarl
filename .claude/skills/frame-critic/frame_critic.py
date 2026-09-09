@@ -921,8 +921,20 @@ def panel_tally(seats):
     n_flagged = sum(1 for x in seats if x.get("build_flagged"))
     n_shipped = sum(1 for x in seats if x.get("shipped"))
     all_caught = bool(seats) and all(x.get("caught") for x in seats)
-    return dict(n=n, above=n_above, not_below=n_not_below, flagged=n_flagged,
+    n_below = n - n_not_below
+    # ── THE STRONG-MAJORITY REGRESSION BLOCK — RULED (Rafe, 2026-09-09) ───────────────────────
+    #
+    #     "five seats; block only on strong-majority regression (>=4 of 5 rank below the
+    #      reference); else install if exit met and plant caught."
+    #
+    # Written as a RATIO so it does not silently mean something else on a panel of another size:
+    # four of five is four fifths, so the test is `below * 5 >= n * 4`. At n=5 that is >=4, which
+    # is the ruling's own arithmetic; at n=3 it is >=3, unanimous, which is the same standard and
+    # not a quietly different one.
+    strong_regression = (n_below * 5 >= n * 4) if n else False
+    return dict(n=n, above=n_above, not_below=n_not_below, below=n_below, flagged=n_flagged,
                 shipped=n_shipped, all_caught=all_caught,
+                strong_regression=strong_regression,
                 majority_above=(n_above * 2 > n), majority_not_below=(n_not_below * 2 > n))
 
 
@@ -946,13 +958,43 @@ def panel_verdict(seats, approved_in_deck, beats_approved, near_bar, exit_met=Fa
     Non-regression is the honest bar for a polish round: the build must not be WORSE than the frame
     already ratified as installable, and it must have DONE THE THING IT SET OUT TO DO — which is
     what the item's measured exit carries, and what stops "not worse" from meaning "not different".
+
+    ── AMENDED (Rafe, 2026-09-09). THE MAJORITY WAS ITSELF THE NOISE. ───────────────────────────
+
+        "five seats; block only on strong-majority regression (>=4 of 5 rank below the
+         reference); else install if exit met and plant caught. Rank-in-deck cannot resolve
+         polish-sized deltas at a 40% flip rate."
+
+    THE MEASUREMENT THAT MOVED IT, and it is the second time the same frame taught the same
+    lesson. Lane `polish-198-halo` ran two panels of three ON BYTE-IDENTICAL BYTES — the round's
+    own line reads *picture moved mean 0.000 / worst 0 luminance levels* — and returned:
+
+        r002    NOT BELOW the reference in 3 of 3        install bar met
+        r003    NOT BELOW the reference in 1 of 3        no majority, refused
+
+    Six seats, one picture, the majority in both directions. A three-seat majority of a statistic
+    with a 40% per-seat flip rate is still, in effect, a single noisy sample: at the seat-level
+    rate this frame actually shows (not below in 4 of 6, q_below = 0.333) the OLD rule refuses a
+    perfectly good build **25.9% of the time**. The new rule refuses it **4.5%** of the time.
+
+    THE COST IS PAID IN CATCH POWER AND IS NOT HIDDEN. Against a build that six seats in ten
+    would rank below, the old rule fired 82% of the time and the new one fires 34%. The trade is
+    deliberate: a gate that refuses one good build in four is not measuring the build, and the
+    item's own measured exit — which no seat votes on — is what carries "did this do the thing".
+    The full false-refuse / true-catch table is published beside `docs/RANK-NOISE-FLOOR.json`.
+
+    ⚠ WHAT DID NOT MOVE. Every plant must still be caught; the exit must still be met and
+    measured; and a flag from any seat still blocks the install until it carries a lawful
+    disposition — that term simply moved to where it was always enforced, `critic_gate`, instead
+    of forcing the round-time verdict to FAIL and then be amended back. `panel.verdict_at_round`
+    records what this function returned, so any later divergence is visible as an amendment.
     """
     t = panel_tally(seats)
     if not t["all_caught"]:
         return "VOID"
     if t["shipped"] * 2 > t["n"] and t["flagged"] == 0 and beats_approved and near_bar:
         return "PASS"
-    if approved_in_deck and t["majority_not_below"] and t["flagged"] == 0 and exit_met:
+    if approved_in_deck and not t["strong_regression"] and exit_met:
         return "INSTALL-LATEST"
     return "FAIL"
 
@@ -1645,12 +1687,19 @@ def main():
         # the verdict the PR carries, and it is in the stall report.
         panel=dict(
             seats=len(seats),
-            ruling=("majority of three independent blind seats rank the build above "
-                    "approved_capture, no unrouted flags from any; each seat its own "
-                    "axis-matched plant. — Rafe, 2026-09-08"),
+            ruling=("five seats; block only on strong-majority regression (>=4 of 5 rank below "
+                    "the reference); else install if exit met and plant caught. Rank-in-deck "
+                    "cannot resolve polish-sized deltas at a 40% flip rate. — Rafe, 2026-09-09"),
             law=("a gate's binding term must have a measured noise floor and must never be a "
                  "single sample. — Rafe, 2026-09-08"),
+            # WHAT THE PANEL ITSELF RETURNED, before any human or builder touched the file. A
+            # verdict that later differs from this is an AMENDMENT and the gate demands the
+            # record — which is how "the enforcement is visibility" is made checkable rather
+            # than trusted.
+            verdict_at_round=verdict,
             above_reference=n_above, not_below_reference=n_not_below,
+            below_reference=len(seats) - n_not_below,
+            strong_regression=((len(seats) - n_not_below) * 5 >= len(seats) * 4),
             ref_slack=REF_SLACK, flagged_by=n_flagged, shipped_by=n_shipped,
             majority_above=majority_above, majority_not_below=majority_not_below,
             all_caught=all_caught,

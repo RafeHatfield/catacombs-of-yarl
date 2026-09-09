@@ -315,11 +315,21 @@ def check():
                        "against a SEEDED reference and there is nothing here to be level with")
         seats = panel.get("per_seat") or []
         if seats:
+            # ── STRONG-MAJORITY REGRESSION — RULED (Rafe, 2026-09-09) ────────────────────────
+            #
+            #     "block only on strong-majority regression (>=4 of 5 rank below the reference);
+            #      else install if exit met and plant caught."
+            #
+            # RE-DERIVED HERE FROM per_seat rather than read off `panel.strong_regression`, for
+            # the same reason every other term in this file is: a verdict that merely SAYS it
+            # passed proves nothing. Expressed as a ratio so a panel of another size means the
+            # same standard — four fifths, not "four".
             nb = sum(1 for x in seats if x.get("not_below"))
-            if nb * 2 <= len(seats):
-                bad.append("a majority of seats ranked the build BELOW the reference (%d of %d "
-                           "not-below) — that is a regression, and non-regression is the bar"
-                           % (nb, len(seats)))
+            below = len(seats) - nb
+            if below * 5 >= len(seats) * 4:
+                bad.append("%d of %d seats ranked the build BELOW the reference — a strong "
+                           "majority, which is the one thing that blocks an install"
+                           % (below, len(seats)))
         else:
             pos, app = pr.get("rank_position"), pr.get("approved_position")
             if pos is None or app is None or pos > app + 1:
@@ -351,14 +361,21 @@ def check():
         # INSTALL-LATEST and nothing records that a seat said no. So the amendment must be
         # written down, in the verdict, naming the state it came from and the law it moved
         # under, and it is printed below with everything else.
-        if panel.get("flagged_by"):
+        # ⚠ THE TEST IS DIVERGENCE, NOT FLAGS — sharpened 2026-09-09 with the ruling that let a
+        # flagged build reach this state on its own. Before, "flagged" stood in for "must have
+        # been amended", which was true then and is not now: the panel itself can return
+        # INSTALL-LATEST with a flag on it, and the flag is enforced by the disposition rules
+        # below exactly as it always was. What must never happen silently is the verdict being
+        # REWRITTEN, so the check now compares the file against what the panel actually returned.
+        at_round = panel.get("verdict_at_round")
+        if at_round and at_round != v.get("verdict"):
             am = v.get("amendment") or {}
             missing = [k for k in ("from", "to", "law") if not str(am.get(k) or "").strip()]
             if missing:
-                bad.append("%d of %s seats flagged the build, so this verdict was AMENDED into "
-                           "INSTALL-LATEST — and the amendment record is %s (%s). A rewrite "
-                           "nobody can see is the one thing visibility cannot police."
-                           % (panel["flagged_by"], panel.get("seats", "?"),
+                bad.append("the panel returned %s and this file says %s, so it was AMENDED — and "
+                           "the amendment record is %s (%s). A rewrite nobody can see is the one "
+                           "thing visibility cannot police."
+                           % (at_round, v.get("verdict"),
                               "absent" if not am else "incomplete",
                               "missing " + ", ".join(missing)))
         if bad:

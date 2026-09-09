@@ -203,8 +203,13 @@ public sealed class EntitySpriteManager
         //
         // RULED by Rafe at the 2026-09-06 rig walk: *"warmest is never brightest"*. Measured on
         // the combined frame at the ratified rig, the hero's cell read p95 242.7 and max 250.0
-        // against lit floor either side of him at 203.5 and 207.4 — he was the brightest thing in
-        // the picture, which is the inverse of the clause.
+        // against lit floor either side of him at 203.5 and 207.4.
+        //
+        // ⚠ THAT WAS READ AS "the inverse of the clause" AND IT WAS NOT — OVERTURNED at the
+        // human gate 2026-09-09. Being above the ground is what a light source does; the defect
+        // was that 8.8% of his pixels were pinned within two levels of his max, i.e. CLIPPED.
+        // "Warmest never brightest" means never blown. The shader now rolls that top end off
+        // before the clamp and leaves the figure where it stands.
         //
         // THE PLAYER ONLY, and that is a decision rather than an oversight. §10 rules the player
         // unit; nothing rules a monster's response, and giving every entity a hero law would be

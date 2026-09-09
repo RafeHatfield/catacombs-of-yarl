@@ -1,6 +1,10 @@
 shader_type canvas_item;
 
-// THE HERO'S LIGHT RESPONSE — warmest thing on screen, never the brightest.
+// THE HERO'S LIGHT RESPONSE — warmest thing on screen, and NEVER BLOWN.
+//
+// ⚠ THE TITLE USED TO READ 'never the brightest'. That reading was OVERTURNED at
+// the human gate on 2026-09-09 and is corrected here rather than left standing in
+// a file whose numbers now contradict it.
 //
 // ISSUE #183, ruled by Rafe at the 2026-09-06 rig walk: *"the hero should receive LESS of the
 // lamp's top end than the ground does."* That is a light-response term on the sprite — the same
@@ -70,7 +74,59 @@ shader_type canvas_item;
 // its p95, which is what "never the brightest" has to mean if it is to be checkable. 0.74 clears
 // the peak by half a level and still sits above the p95 — a tie is not an answer to this clause.
 //
-// ── ⚠ RE-DERIVED 2026-09-08: 0.70 → 0.68, BECAUSE THE FLOOR MOVED ────────────────────────────
+// ══ ⚠ OVERTURNED AT THE HUMAN GATE — RULED (Rafe, 2026-09-09), §13.4.1 ══════════════════════
+//
+//     "#183 cap overturned at the human gate: the hero reads LIT — sprite peak above the lit
+//      floor beside him, below the shoulder's knee (no clipping, real separation). Nine seats
+//      across four panels are the evidence; 'warmest never brightest' meant 'never blown,' not
+//      'darker than the ground.'"
+//
+// EVERYTHING BELOW THIS LINE IS SUPERSEDED AND KEPT. The table, the 0.70, the 0.68 — all of it
+// derived a ceiling from the reading that the sprite must sit UNDER the ground's peak. That
+// reading is now ruled wrong, and the evidence against it is the strongest this loop has
+// produced: four independent panels, nine seats, none of which had seen the clause, all naming
+// the same consequence — "darker than the ground he stands on", "within one value step of the
+// floor", "loses its silhouette ... the lantern never produces a highlight", "the lamp has no
+// core". §13.4.1 says a seat is not a vote against a gate ruling, and it was applied correctly
+// each time; but the HUMAN GATE outranks both, and it has now ruled.
+//
+// ── WHAT THE OLD DERIVATION ACTUALLY MISSED: THE PLATEAU WAS CLIPPING ────────────────────────
+//
+// `m` is `max(lit) * alpha` and CAN EXCEED 1.0 before the engine clamps it. At the null, 72 of
+// the hero's 820 delivered pixels — 8.8% — sit within two levels of his max of 251.82, and his
+// p95 is 251.32. That is not a highlight, it is a flat top: the clamp had eaten his top end and
+// the sprite had nowhere to go. A shoulder applied BEFORE the clamp is precisely the instrument
+// for that, and it works — every capped arm below cuts the plateau from 72 pixels to 16.
+//
+// So the clause was always about BLOWING, and the old ceiling answered it by moving the whole
+// figure down instead of by rolling his top end off. Both bounds now, measured on his own 820
+// pixels isolated against the null arm, against the lit floor either side of him (p50 179.91,
+// p95 202.50, max 206.50):
+//
+//   knee  ceil   his p50   his max   UP: vs floor max   DOWN: floor max - his p50   blown px
+//   null          193.49    251.82        +45.32                +13.01                 72
+//   0.80  0.84    179.99    239.61        +33.11                +26.51                 16
+//   0.80  0.88    183.41    246.47        +39.97                +23.09                 16   <-
+//   0.80  0.92    185.55    249.89        +43.39                +20.95                 16
+//   0.86  0.94    190.55    251.32        +44.82                +15.95                 16
+//
+// SEPARATION IS MEASURED BOTH WAYS, as the ruling asks. UP is whether he reads as the light:
+// his peak against the ground's own peak. DOWN is whether he is still a figure standing in his
+// light rather than a lantern-shaped blob: the ground's peak against his median. A pair that
+// wins upward by losing downward has not answered the clause, it has inverted it.
+//
+// 0.80 / 0.88 IS TAKEN, and the knee is the load-bearing half. 0.80 is 204 of 255 and his body's
+// median sits at 193 — BELOW THE KNEE, so the shoulder does not touch the figure at all; it
+// touches only the top end that was clipping. That is the ruling's "below the shoulder's knee"
+// in the only sense the curve permits: what a viewer reads as the figure never enters
+// compression. The ceiling then buys separation — his peak clears the ground's peak by 40 levels
+// and its own p95 by 44 — while leaving 8.5 levels of headroom under the null, so nothing sits
+// near the clamp. 0.84 puts his body level with the ground but spends 7 levels of separation for
+// it; 0.92 and 0.94 buy 3 more levels of separation and give back the headroom.
+//
+// ══ SUPERSEDED BELOW ═══════════════════════════════════════════════════════════════════════
+//
+// ── RE-DERIVED 2026-09-08: 0.70 → 0.68, BECAUSE THE FLOOR MOVED ─────────────────────────────
 //
 // The table above is measured against a floor reading p95 203.51 / max 207.51. The polish stack
 // lowered it — #184 took the worn lane's shine down and #198 made the specular proportional —
@@ -108,8 +164,8 @@ shader_type canvas_item;
 // the asymptote at 0.70 everything above the knee lands in [knee, 0.70] however high the knee
 // is. His body sits 42 levels below the null BECAUSE OF THE CEILING, and the ceiling is the
 // ruling. There is no builder setting that answers the flip; only Rafe can, by moving it.
-uniform float hero_knee = 0.55;
-uniform float hero_ceiling = 0.68;
+uniform float hero_knee = 0.80;
+uniform float hero_ceiling = 0.88;
 
 void light() {
 	// The ordinary diffuse term — what this sprite would do with no shader at all.
