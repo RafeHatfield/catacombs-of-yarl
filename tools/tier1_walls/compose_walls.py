@@ -226,6 +226,68 @@ AGES = 4
 AGE_BASE_ROWS = 6          # how deep the base treatment reaches at age 1, in native px
 AGE_SECOND_COURSE = 3      # the age at which patina climbs into the course above
 
+# THE WORN ARRIS — #202, and it is a STANDING RULING being executed rather than a new call.
+#
+# `WALL-RECIPE.md` section 4.1 MEASURED this on the bar: a single 1px row at the top-to-face turn
+# running 1.27-1.47x the top band's value, on 14 of 23 face tiles. It was refused, and the refusal
+# named its own condition exactly:
+#
+#     "The only register derivation available is section 8.1 polish-where-touched - a worn arris,
+#      pale because four hundred years of shoulders and gear have rubbed it. That derivation is
+#      real but it carries a condition: WEAR IS TRAFFIC-MODULATED ... A pale line of constant
+#      value on every turn is precisely the coping course section 12.1's worked example culled.
+#      Status: adoptable only in a traffic-modulated form. The uniform version is refused. This
+#      round does not have a wear system to modulate it with (section 8.2.1's tier-one
+#      requirement), so it is built with the cap OFF and the flag stands."
+#
+# THE CONDITION IS NOW MET. The face family carries a four-step `age` index keyed to traffic, and
+# it already implements the FORM half of section 8.1's polish - `age_face`'s arris-rounding, the
+# block's bottom corners giving up pixels. This is the VALUE half of the same clause on the same
+# key. #202's three earlier attempts all built a UNIFORM band and all failed, which is the recipe's
+# refusal arriving on schedule; none of them was traffic-modulated.
+#
+# ⚠ ABSENT AT AGES 0 AND 1, AND THAT IS THE POINT, not a shortcut. "A worn arris must be pale
+# where traffic passes and ABSENT WHERE IT DOES NOT." An arris on every tile is the ribbon. It is
+# also what keeps section 13.8 honest: against the top plane's 114.696 the first rung up is Weber
+# 0.115, UNDER the 0.1440 floor, so an age-1 arris would be authored and not there. Two ages carry
+# it, at two amplitudes that both clear the floor, and two do not.
+#
+# RATIOS, NOT INDICES (section 5.7, and #206 is why this comment exists). Stated against the top
+# plane's own value and snapped to whichever rung is nearest.
+ARRIS_AGE_MIN = 2
+# ⚠ AGAINST THE CAP, NOT AGAINST THE WALL'S OWN TOP PLANE — measured, after getting it wrong.
+#
+# The first build stated these against `ladder[top_rung]`, the face tile's own top-plane value.
+# It delivered 1.82x and 2.09x the surface above it, against the bar's 1.27-1.47. The reason is
+# structural and is written three screens down in `rgb()`: A FACE TILE'S TOP BAND IS CUT AWAY BY
+# ALPHA. Rows 0..15 are transparent and the CAP FIELD draws there. So `ladder[top_rung]` is a
+# value that is never once drawn beside the arris, and deriving a ratio against it is deriving
+# against something the frame does not contain.
+#
+# What sits above the arris is the cap's own top value, read from the cap manifest at compose time
+# rather than written here (section 13.12: derive, never copy). It comes back 88.243 - and the bar
+# measured its own turn at 129.8 against a top band of 89.5, so the two families are within 1.5%
+# of each other on the surface the ratio is taken against. The rungs that bracket the bar's range
+# on ours are 114.696 (1.30x) and 127.923 (1.45x), which is where these two numbers come from.
+ARRIS_RATIOS = (1.30, 1.45)   # x THE CAP's top value, for ages 2 and 3; the bar measured 1.27-1.47
+
+
+def cap_top_value(default=None):
+    """The value the cap field lays above a face tile — the arris's actual neighbour.
+
+    ⚠ AND READING IT FOUND THE SAME §5.7 DEFECT ONE FAMILY OVER, UNFIXED. The cap manifest
+    carries `top_rung: 3` beside a NINE-rung ladder. #206 fixed that class here; `compose_cap.py`
+    still states its plane as an index, and the floor's ladder is eleven rungs now. Recompose the
+    cap today and index 3 resolves to 61.789 instead of 88.243 — the cap goes 26 levels dark, the
+    exact failure the walls shipped. Nothing is wrong on disk, because the cap has not been
+    recomposed; it is a landmine, not a fault, and it is FILED rather than fixed here (one logical
+    change per commit, and the cap is not this issue's subject).
+    """
+    p = os.path.join(REPO, "src/Presentation/assets/tier1_cap/MANIFEST.json")
+    if not os.path.exists(p):
+        return default
+    return float(json.load(open(p))["top_value"])
+
 
 def h(*parts):
     """FNV-1a 64 over the colon-joined parts.
@@ -497,6 +559,30 @@ class Family:
                     img[cy0:cy1, max(x0, x1 - jw):x1] = joint
         return img
 
+    def arris(self, img, keys, var, age):
+        """The worn top edge of the face — #202. Absent below ARRIS_AGE_MIN; see the note there.
+
+        It is laid PER STONE, not across the tile. A head joint has no arris: there is no stone
+        edge there to rub. So the row is broken on course 0's own joint spans, which makes the
+        pale run a property of each block rather than a line drawn along the wall — the exact
+        difference between section 8.1's polish and section 12.1's culled ribbon.
+        """
+        if age < ARRIS_AGE_MIN:
+            return img
+        ratio = ARRIS_RATIOS[min(age - ARRIS_AGE_MIN, len(ARRIS_RATIOS) - 1)]
+        base = cap_top_value(default=float(self.ladder[self.top_rung]))
+        v = self.ladder[_nearest_rung(self.ladder, base * ratio)]
+        jw = JOINT_PX["face"]
+        for (x0, x1, _off, _gkey, _gx) in self.stones_in_row(0, keys["w"], keys["e"], var):
+            a, b = x0, x1
+            if a > 0:
+                a += jw                      # the joint keeps its darkness
+            if b < T:
+                b -= jw
+            if b > a:
+                img[FACE_TOP_ROW, a:b] = v
+        return img
+
     def age_face(self, img, age, grain_amp):
         """Lay the base-course aging on a face tile. Age 0 is untouched, and must stay so."""
         if age <= 0:
@@ -624,6 +710,7 @@ class Family:
             lip = img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :]
             img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :] = np.minimum(
                 lip * 0.55, self.rung(self.face_rung, -2))
+            self.arris(img, keys, var, age)
             self.age_face(img, age, grain_amp)
         return img
 

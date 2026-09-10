@@ -26,6 +26,12 @@ faults had accumulated in the composer, each invisible on its own, each shipped:
 The common shape: **an assertion that outlived the thing it asserts** (§13.12). The only instrument
 that catches that class is one that rebuilds and compares, so this is it.
 
+A DELIBERATE CHANGE RE-BASELINES; IT DOES NOT LOWER THE BAR. This guard's reference is the
+family on disk, so case A fails the moment the composer is asked to draw something new - as it did
+when #202's worn arris went in. That failure is the guard working: a look change has to be
+recomposed, shipped and taken through the gate, and case A passes again against the bytes the gate
+saw. What it must never mean is widening TOL to make a change quiet.
+
 TOLERANCE IS ONE LEVEL, AND THE REASON IS NAMED. The quarry tint is derived AT CONSUMPTION from
 the floor's own tile pixels (`derive_quarry_tint`), so a floor recompose legitimately moves it: it
 has drifted 0.82575 -> 0.820778 in blue since the walls were laid, which is -1 level on the blue
