@@ -33,6 +33,34 @@
       "why_new": "#194's item 1 is the wall SURFACE — 'cut them into blocks with varied joints instead of leaving noise blobs'. These two are the run's TOP EDGE: its silhouette, and how it terminates against another run. Different property, different lever.",
       "measured": "The build's top edge takes 2 distinct rows across x190..440 (sd 0.13) against the reference's 3 (sd 1.71), detected per column against each frame's own unlit wall-top plane (11.69 in both). The reference's entire variation is 12 columns at 8px — two binding sprites drawn above their own cell, the artefact #185 fixed — so the exemplar the seat points at is a placement bug and is disproved in the issue. The percept stands. Neither item is attributable to this stack: the boundary-wall diagnostics are identical between build 144b0234 and this one.",
       "evidence": ".claude/skills/frame-critic/history/r004-polish-abc-install-transcript-seat2-redraw.txt"
+    },
+    {
+      "when": "2026-09-09",
+      "round": "the walk that ratified §3",
+      "lane": "wall",
+      "seat": "Rafe, room walk on build 9022b179 — the human gate, not a seat",
+      "to": "#202",
+      "title": "The top-to-face turn reads as two objects",
+      "items": [
+        "the top-to-face turn — face and top read as separate objects ('a bookcase against the wall'); build the seam treatment the sighted round measured on the bar (coping/edge/lip where the planes meet) so the mass turns a corner"
+      ],
+      "why_new": "§3 was ratified in the same breath, so this is a family serving a ratified grammar badly at the join — not evidence against the projection.",
+      "measured": "The turn is drawn entirely by occlusion, which §6.3 requires, but as a HARD CUT: cap ~79, a 4px lip at ~29, face ~61 — down 50 levels and back up 32 with nothing between. Two lit planes separated by a black rule read as two objects touching.",
+      "evidence": "tools/tier1_floors/evidence/combined.png (the walked frame, now approved_capture)"
+    },
+    {
+      "when": "2026-09-09",
+      "round": "the walk that ratified §3",
+      "lane": "wall",
+      "seat": "Rafe, room walk on build 9022b179",
+      "to": "#203",
+      "title": "The vertical above the player's station is the void ring, not the bond",
+      "items": [
+        "repeating vertical line in the pattern above the player's station"
+      ],
+      "why_new": "Filed as the record that §8.3.3 was checked and CLEARED, so the next seat reporting a vertical is not sent to re-derive the bond. It routes onward rather than holding work of its own.",
+      "measured": "The ruling's conditional does not fire. Head joints do not align: x mod 64 scattered in both courses ([6,31,55,12,50] and [24,9,23,46,59]), cross-course profile correlation r=+0.276, autocorrelation at tile pitch r=-0.002 in course 1. The percept is TWO seams with different causes — x 435-438 scores 0.98 with the void ring on and 0.19-0.50 with it off (§12.1a's classification edge), while x 503-506 is 1.00 either way (the corridor junction, #201).",
+      "evidence": "the walked frame against a --void-ring 0 control"
     }
   ]
 }
