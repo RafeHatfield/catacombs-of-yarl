@@ -669,3 +669,68 @@ the frame's own numbers before the third attempt rather than trusting exit 0.
 `ABORT: carved geometry contains no junction` to stderr while blocking nothing. It sat at the top
 of both failure logs looking like the cause and was not. Same shape as the `git grep` exit-128
 fault earlier in this run: **a check whose noise is indistinguishable from its finding.**
+
+---
+
+## Item 11 — §3 ratified, the reference re-seeded, and the props pass opened
+
+**§3 is law.** Heading and status rewritten, dated, the walk quoted, the ruled condition marked
+discharged. The status trail is kept in full — it is the record of a clause nearly struck twice
+that was right both times, and the Q3 control is why it survived to be ratified rather than
+abandoned. One boundary recorded with it: **ratification settles the projection, not how well a
+family serves it.** The same walk routed two wall items, and those are debt against a ratified
+grammar rather than evidence against it.
+
+**`approved_capture` re-seeded** to the walked frame `42f6941b`, superseding 2026-09-07's. Both
+halves of the ruling are written into the file as the authority: *Rafe-walked* is what makes it a
+reference at all (a bar that re-seeds itself ratchets), *above the previous reference* is what
+makes replacing the old one honest. The superseded frame is kept and named.
+
+**#202 — the top-to-face turn.** Measured: cap ~79, a 4px occlusion lip at ~29, face ~61. Down 50
+levels and back up 32 with nothing between. The turn is drawn by occlusion, which §6.3 requires,
+but as a hard cut, and two lit planes split by a black rule read as two objects.
+
+**#203 — the vertical, and the conditional did not fire.** §8.3.3 constrains the *horizontal*
+axis; head joints are deliberately free and measurably are — x mod 64 scattered in both courses
+(`[6,31,55,12,50]` and `[24,9,23,46,59]`), cross-course profile correlation **r = +0.276**,
+autocorrelation at tile pitch **−0.002** in course 1. The percept is **two seams with different
+causes**: x 435–438 scores 0.98 with the void ring on and **0.19 with it off** — §12.1a's
+classification edge, which an earlier seat named as *"two perfectly straight vertical seams in the
+darkness"* — while x 503–506 is 1.00 either way and is #201's junction. No variant offset is owed.
+
+**9022b179 stamps clean.** The handset was unlocked and its first launch recorded
+`commit=9022b17902fb…` with no `+dirty`, `review=GATED`, booted into the review scene.
+
+### The props pass opened — substrate first, and the first proof of it was wrong
+
+The wall lane's r003 asked for standing objects and was routed here for one reason: *"the review
+scene has no prop system at all."* Ninety generations against a scene that cannot seat what they
+produce is ninety wasted, so the seat was built before the art. `CorridorReviewSceneBuilder` takes
+the **same props vocabulary its sibling has parsed since the candidate rounds** — nothing invented
+where something proven exists — absent by default, so every floor and wall scene parses and
+captures identically and their reference frames stay comparable. `tier1_props_review.json` is a
+**new** spec with the combined scene's geometry copied verbatim, because adding props to the scene
+`approved_capture` was walked on would break the comparison that gates installs.
+
+⚠ **THE FIRST SUBSTRATE PROOF WAS WRONG AND IS CORRECTED HERE.** It measured *pixels changed at
+the prop's cell* and read that as *the sprite drew*. It did not: `GetTexturePath` is pure pattern
+substitution — `tier1_ashlar_{id}.png` — so the Oryx ids I probed with resolved to files that do
+not exist, `GD.Load` returned null, and no prop sprite was ever created. What moved those 12,464
+pixels was the **floor**: `MarkPropCell` makes a prop's cell fall back to plain floor instead of
+worn or accent (PR #103), so marking a cell repaints it whether or not anything stands there.
+**A proxy that agrees with the hypothesis for the wrong reason** — the third instance today, after
+the mid-cell reference and the black-frame capture.
+
+Re-proved with a tile that can actually load: a **screaming magenta stub** at the props family's
+own id (9800), because §4.2 says a missed painter must come back screaming rather than plausible.
+Magenta at the cell cannot be faked by any amount of floor repainting:
+
+| prop cell | magenta px | |
+|---|---|---|
+| (5,13) | 908 | DREW |
+| (8,13) | 908 | DREW |
+| (4,14) | 904 | DREW |
+| (8,11) | 908 | DREW |
+
+**Sprite path proved.** Authoring size falls out of the same probe: a prop is scaled to fill its
+64px cell, so props are authored at **32×32 native** like every other family.

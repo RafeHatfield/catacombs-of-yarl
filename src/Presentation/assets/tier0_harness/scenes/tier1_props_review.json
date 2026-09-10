@@ -132,36 +132,42 @@
   "between the two scenes is a comparison of stations and of nothing else."
  ],
  "_props_note": [
-  "PLACEHOLDER TILE IDS. 268 is the Oryx barrel and is here as a SUBSTRATE PROBE, not as art:",
-  "it proves the scene can seat a standing object at all, which is the thing the wall lane's",
-  "r003 was routed here for ('the review scene has no prop system at all'). The Oryx track is",
-  "closed (CLAUDE.md) and nothing from it ships. These ids are replaced by the props family's",
-  "own as it lands, one at a time, so each replacement is a visible diff."
+  "TILE 9800 IS A SCREAMING STUB, not art. The props family's id block is 9800-9899.",
+  "",
+  "The first probe used Oryx sheet ids (268/327/328/269) and they resolved to files that DO NOT",
+  "EXIST — GetTexturePath is pure pattern substitution, tier1_ashlar_{id}.png, so GD.Load returned",
+  "null and no prop sprite was ever created. The pixels that changed were the FLOOR: MarkPropCell",
+  "makes a prop's cell fall back to plain floor rather than worn or accent (PR #103), so marking a",
+  "cell repaints it whether or not anything stands there. The check agreed with the hypothesis for",
+  "the wrong reason.",
+  "",
+  "9800 is magenta on purpose (LOOP-PROCESS 4.2). Magenta at the cell proves the sprite path;",
+  "magenta absent proves it does not work, and no floor repaint can fake it."
  ],
  "props": [
   {
-   "tileId": 268,
+   "tileId": 9800,
    "x": 5,
    "y": 13,
    "blocks": true,
    "why": "PROBE — one tile SW of the station, unambiguously inside the lit pool. The first placement was (5,11), which the carve makes SOLID ROCK: rows above 12 are floor only in the corridor at x=8. A prop inside a wall draws nothing, and the probe found that before any art existed — which is what the probe is for."
   },
   {
-   "tileId": 327,
+   "tileId": 9800,
    "x": 8,
    "y": 13,
    "blocks": true,
    "why": "PROBE — mid-pool, off the player's own cell, against the floor's traffic lane."
   },
   {
-   "tileId": 328,
+   "tileId": 9800,
    "x": 4,
    "y": 14,
    "blocks": true,
    "why": "PROBE — near the wall run, where a prop must read against masonry rather than floor."
   },
   {
-   "tileId": 269,
+   "tileId": 9800,
    "x": 8,
    "y": 11,
    "blocks": true,
