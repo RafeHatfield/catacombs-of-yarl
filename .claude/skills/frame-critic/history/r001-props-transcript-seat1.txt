@@ -1,66 +1,69 @@
-All four read. Findings below.
+**RANK:** 1 > 3 > 4 > 2
 
-**RANK:** 4 > 2 > 1 > 3
+**BEST:** 1
 
-**BEST:** 4
+**BEST_WHY:** The floor is painted, not stamped. Across the slab field from (180,460) to (740,820) I ran a 32×32 comparison and found zero byte-identical cells out of 187 — and only 4 duplicates out of 770 at 16×16. Every slab was individually worked. You can see the consequence at (200–320, 540–600): the joint between the two large slabs left of the player is a 2px dark line for part of its run and then thins to a single dark pixel and vanishes for about eight pixels before resuming, so the two stones read as sitting hard against each other in one place and settled apart in another. That is cut stone, not a tile.
 
-**BEST_WHY:** Three things are actually built rather than applied.
+The wall band at y428–460, x185–500 also does the one thing walls in this genre usually fail at: it terminates. There is a crisp 2px shadow line along its whole base where it meets the floor, and above that line the block coursing stays continuous — you can follow a single horizontal joint from x190 to x440 and count the vertical breaks in it. The wall has a footprint and a top surface at different values from the floor.
 
-The crack system. One hairline runs from (250,540) diagonally down to (390,620), forks, and continues out into the dark at (600,760)–(730,690). It crosses block faces *and* joints without snapping to either, and it is one object spanning a dozen tiles — not a per-tile crack decal. In the dim right quadrant it keeps going as a 1px line at luminance 40 where a lazier frame would have let it dissolve.
+And the corridor at x490–570 reads as depth rather than as a dark rectangle: at y380 the floor is (118,95,61), at y300 it is (78,67,46), at y260 (43,38,29), at y220 (31,25,22). That's a continuous falloff with the joint structure still faintly legible down to about y280 before it goes.
 
-The floor courses in the lit pool (x190–520, y460–620). Blocks run in a broken bond, lengths vary from roughly one to two-and-a-half tiles, and individual faces carry incised marks that differ block to block — short vertical tally strokes near (500,510), a diagonal hatch group at (640,555), a different one at (690,570). I ran a duplicate-block search across the whole floor: 986 sampled patches, 12 near-matches, all of them in the featureless dark at luminance 40–66 where the gradient is smooth. Nothing is stamped. Compare frame 3 below.
+**WORST:** 2
 
-The wall band at y422–456 resolves as three separate values — top surface, a dark shadow line, a course of block faces, a second shadow line at the floor — so it reads as having thickness, and dark verticals at x≈345 and x≈724 break the run where driven timber would.
+**WORST_WHY:** Three incompatible projections in one frame. The stone floor along the bottom (y215–263) is drawn flat top-down — you see only the top faces. The two barrels at x113–143 and x162–192, y192–217 are drawn in three-quarter — you see the lid ellipse *and* the staved side below it. The crates at x63–97, y2–88 are drawn face-on from the side — you are looking at the front panel of a crate, complete with a latch, in a frame where the ground is seen from directly overhead. Nothing reconciles these; they are three different cameras.
 
-**WORST:** 3
+The dirt field is stamped and the stamp is visible without zooming. In the region x56–248, y0–215, 96 of 156 16×16 cells are byte-identical duplicates of another cell — 60 unique tiles doing the work of 156. The same red-flecked cluster lands on the same 16px grid over and over. Water is worse: 41 of 66 cells duplicated.
 
-**WORST_WHY:** The pond at x248–344, y0–190 is an axis-aligned rectangle butted straight against the dirt. No shoreline, no transition tile, no depth — the water ends on a perfectly straight vertical at x=248 and a perfectly straight horizontal at y=190. Inside it, the surface is one tile stamped with zero variation: 18×18 blocks match *pixel-for-pixel, mean absolute difference 0.00*, at 24px vertical and 48px horizontal intervals throughout the pond. The two barrels at (118,192) and (166,192) are identical copies — 1.5 mean absolute difference at a 48px offset, and that residual is just the dirt showing past their edges. The two wall banners are the same. The three lily pads are the same sprite three times at the same rotation with the same white centre mark. The dirt is one 16px tile with a recognisable red-clot signature recurring on the grid. The grey stone is a flat fill with a 1px darker grid line and nothing else — no wear, no chipping, no per-block value. And it has no lighting model at all: uniformly lit corner to corner, the figure at (218,8) carrying nothing.
+The water edge at x=248 is a perfectly straight, unmodulated vertical line from y0 to y190. No bank, no darkening at the margin, no wet dirt — the dirt tile ends and the teal tile begins on a pixel boundary. Same at its lower edge at y190, where it stops on a horizontal line.
 
-**FLAGGED:** 1, 2, 3
+There is no light in it anywhere. The torch on the left wall at x28, y125–168 emits nothing; the wall it is mounted on is the same value above and below it. No ambient occlusion where the grey stone meets the dirt, no contact shadow under the barrels, under the crates, or under the green figure at x215, y0–25. The bottom strip at y263–288 is a flat dark grey band with a small lighter notch at x160–175 and no top surface at all — that is a placeholder, not a wall.
+
+**FLAGGED:** 1, 2, 4
 
 **SHIP:** NONE
 
 ---
 
 **FLIP 1:**
-- A 45° hatch/dither overlay is applied in screen space across the entire frame **including the actor**. Inside the shield boss at (415,490) and across the face at (400,478) there are stray cream pixels not in the sprite's palette, and the sword blade at (392,470) is broken up by them. Exclude the actor layer from the overlay entirely.
-- The overlay runs continuously across every stone joint in the lit pool (x250–520, y460–580) without breaking at a single one, so the light reads as a sheet laid on top of the floor rather than light falling on it. Mask any such texture to stone faces and break it at every joint.
-- The overlay has pulled the frame apart at both ends: the wall band at y400–418 drops to luminance 57 against 83 in the same region of the other frames, while the lit floor rises to 196 against 168. The mid-range is gone. Pull the highlight back down and lift the wall.
-- Restore the course lines in x250–450, y500–560 — they are legible in the same area of the other frames and blown out here.
-- After removing the overlay, every item under FLIP 4 still applies.
-
-**FLIP 2:**
-- The brazier at (598,548) burns a saturated red/yellow flame and casts no light. Measured against the same frame without it: above the pit 74 vs 77, left 84 vs 92, below 62 vs 72, right 44 vs 61. A visible fire is making its surroundings *darker*. Either light it — a warm radial falloff centred on the pit, brightest on its own ring stones, dying over about three tiles, warming the joints it crosses — or extinguish it and draw it as a cold ash pit.
-- That flame is the only fully saturated red and yellow in the frame; everything else sits on a warm-brown-to-cold-grey ramp. Bring it onto the palette.
-- The barrel at (345,545) has no contact shadow and no base occlusion — it floats. Ground it with a shadow thrown away from the lamp at (405,485).
-- The same barrel is lit from directly overhead (cream band on top, dark at the bottom) while the lamp is up and to its right. Relight it from the lamp.
-- Its silhouette is a rounded rectangle with one horizontal band; at played size it reads as a chest. Add stave lines and a visible hoop.
-- The object at (280,800) is the same sprite again at a different tint. Vary it or cut it.
-- Every item under FLIP 4 also applies — 2 is that frame with props added.
-
-**FLIP 4:**
-- The wall block at x430–495 runs from y180 to y420 — roughly six tiles — as one continuous soft brown mottle with no bed joints and no head joints, one thin crack its only feature. Cut it into courses at the same joint value used in the wall band at y422–456.
-- Same treatment for the wall field at x120–190, y380–640.
-- The corridor floor from y180 to y320 is a smoky vertical gradient with two scratch curves and no stone divisions at all. Give it the running bond the room floor has at y460–620, then darken it — don't darken it until the masonry is gone.
-- The corridor floor at (535,330) measures luminance 91; the room floor at (210,500) measures 70. Those are 202px and 196px from the lamp. Either put a source in the corridor or put it on the same falloff curve as the room.
-- Below roughly luminance 60 the frame stops having edges — x570–750, y480–700 is feathered mush. Darken by dropping value on the same hard pixels; carry joint lines and scratch marks into the dark as 1px edges.
-- Nothing in the frame shows four hundred years of repair. The only structural reads are two dark verticals. Put at least three distinct repairs in the lit wall band at y422–456 where they will be seen: a timber baulk let into a broken course with visible driven pins, a rope lashing crossing a joint, a hide patch over a gap.
-- The room is empty — one dark block at (310,650) across 500px of floor. Add the salvage the soldiers would leave: stacked offcuts, a rope coil, a spoil heap of broken block. Each with a contact shadow.
+- The grate at (597,548) is lit wrong. Its pale stone ring reads (165,120,82), luminance 129, while the bare floor under it is 89 and the floor 30px right at (630,545) is 59 — the prop is 2.2× brighter than the surface it is set into, in a corner the lamp does not reach. Attenuate the grate by the same falloff curve as the floor beneath it so it lands near 85–90.
+- Same fault on the loose planks at (505–550, 605–620): the plank pixel at (520,612) is luminance 96 against floor at (560,612) of 64. The props are receiving a contact shadow — (560,612) drops from 83 in the bare frame to 64 with the prop present — but the props themselves are not being attenuated. Apply the light term to the prop sprites, not only their shadows.
+- The centre X at (385–425, 600–625) is (158,49,20) — a saturated red with no yellow in it, in a frame where every other surface carries the amber cast of the lamp. Repaint it in the same wood ramp as the left X at (263–300, 600–622), which is (75,26,7) there, then let falloff separate them rather than hue.
+- The brazier at (332–362, 528–568) reads as a fire and casts nothing: pixels immediately around it are unchanged from the unlit frame. Either give it a small radial contribution to the floor within ~40px, or repaint the interior so it reads as cold and empty rather than as flame.
+- Same for the orange flame inside the grate ring at (597,548) — it glows in the sprite and puts zero light on the surrounding stone.
+- The crate at (310–378, 638–708) has no cast shadow. The lamp is up and left of it at (405,485), so it should throw down and right. It throws nothing, and it has no visible height cue — only a top face and two dark bands. Add the cast shadow and a 1–2px lighter lip on the lamp-facing top edge.
+- The crack running from about (230,520) through the fork at (320,590) out to (740,600) is a constant-width, constant-value black line that crosses at least eight slab joints without stepping, jogging or widening at any of them. Break it at the joints, vary its width from 1px to 3px along the run, and let it pick up the light — right now it stays the same pure black on floor that ranges from luminance 200 to under 20.
 
 **FLIP 3:**
-- Draw the pond a shoreline: irregular edge, a wet-dirt transition band, proper corner and edge tiles. It currently terminates on two straight lines.
-- Vary the water tile and give the pond depth — value change toward the middle or at the bank. It is currently one stamp with zero variation.
-- Draw distinct lily pad variants. Three identical sprites at identical rotation.
-- Vary or remove the duplicate barrels at (118,192)/(166,192) and the duplicate banners at (64,4)/(64,40).
-- Add two more dirt-floor variants and some larger-scale value drift; the current tile's red-clot pattern is identifiable on the grid.
-- Give the grey stone blocks individual values and edge damage. It is a flat fill with a grid line.
-- Add the lighting model. The frame is uniformly lit corner to corner and the figure at (218,8) carries no light; every other frame in this set falls off with distance from the figure.
-- Outline the sword at (232,4) — a white blade with no outline directly against pale stone, it vanishes.
-- Resolve the black band at y224–288: it is a flat strip with a thin grey line at y240 and no readable top or face. Finish it or crop it.
-- The tileset is a generic outdoor courtyard — leaf-green water plants, clean grey stone, clean brown dirt, no rope, no pins, no hide, no salvaged timber, nothing repaired. This is not a fix list item so much as a rebuild against the fiction.
+- The room is empty. Every prop present in the deck's other framing of this same layout — the brazier, the two crossed timbers, the loose planks, the grate — is absent here, leaving the entire lit floor from (185,460) to (740,720) as undifferentiated slab. This is the frontier the orc company has been repairing for four hundred years and there is not one rope, pin, hide patch or salvaged timber in it. Place repair work: driven pins in the wall band at y428–460, a lashed timber brace across one of the wider joints, a patched section of floor where the slab pattern breaks.
+- Carries the same crack fault as above: the line from (230,520) to (740,600) crosses eight joints at constant width and constant pure black regardless of local illumination. Break it at joints, vary width, attenuate with distance.
+- Carries the same shadowless crate at (310–378, 638–708). Give it a cast shadow down-and-right from the lamp at (405,485) and a lit top lip.
+- The three-stroke diagonal scratch mark repeats unrotated at least six times in the lower floor — visible at roughly (500,620), (530,635), (625,745), (655,750), (680,795) and (445,750). Same angle, same stroke count, same spacing each time. Vary the angle and stroke count, or cut the count in half.
+- With no props, nothing establishes scale against the slabs. Even after adding repair material, put one object with known real size — a pin, a coil of rope — in the lit zone near (300,560).
+
+**FLIP 4:**
+- The light pool is blown out and is eating the art. 18,078 pixels have a channel pinned at 255 and 4,502 exceed luminance 235; the comparable frame at this layout has 414 and 16. The floor peak at y560 hits 245 against 204. The result is visible at (300–560, 440–520): under and around the figure the slab joints have completely dissolved — there is no readable stone left, just a cream field with faint diagonal streaking. Pull the light pool's peak down to roughly 205 and re-check that the joint under the figure's feet is still legible.
+- The wall band at y385–450, x185–560 has been reduced to a mottled brown cloud. Compare it to the same wall in the deck's other framing, where you can follow one horizontal joint from x190 to x440 and count its vertical breaks; here the coursing is gone and only isolated block rectangles float in noise. Restore continuous horizontal coursing across the full run and re-cut the vertical joints.
+- Loose vertical dark bars sit in that wall at approximately x=250, x=340 and x=520, y400–440, aligned to no block edge and belonging to no course. Either align them to joints as driven pins with visible heads, or remove them.
+- The wall's base line at y≈450 is present but the texture above it dissolves upward into blur instead of terminating. Give the wall a defined top surface at a value clearly separated from both the floor below and the blackness above.
+- There is a hard vertical tonal break at x≈610, y440–620 where the warm floor steps abruptly to a colder, flatter grey with no joint continuing across it. Grade that transition or give it a physical cause — a threshold, a course change, a repair seam.
+- The figure's contact shading at (395–425, 505–515) is washed out by the hot pool; it now floats on cream. Restore a contact shadow dark enough to hold against a 205 peak.
+- Same crack fault and same shadowless crate as above — the crack from (230,520) to (740,600) and the crate at (310–378, 638–708).
+
+**FLIP 2:**
+- Pick one camera. The floor is top-down; conform the barrels at (113–143, 192–217) and (162–192, 192–217) to it — lid ellipse only, no staves visible below it — and redraw the crates at (63–97, 2–88) as top faces with a lid seam, not as front panels with a latch.
+- The dirt field at x56–248, y0–215 is 62% exact duplicate cells. Hand-vary at least the cells adjacent to every boundary — the water edge at x248, the stone edge at x56, the stone edge at y215 — so no two touching cells are identical, and break up the repeating red fleck cluster in the field interior.
+- Same for the water at x248–343, y0–190: 41 of 66 cells are duplicates. The hexagonal scale pattern lands on an unbroken grid.
+- Build a shoreline. The water currently ends on the pixel boundary at x=248 from y0 to y190 with zero transition. Add a bank: 2–4px of darker wet dirt on the land side, a darker value in the water along the margin, and an irregular edge that does not follow the tile grid.
+- Same treatment at the water's lower edge at y=190 and where it meets grey stone at its top and right.
+- Add a light model. There is none: the torch at (28, 125–168) puts no value change on the wall it is mounted on, and nothing in the frame has a cast shadow. At minimum give the torch a falloff onto the surrounding stone and give the barrels, crates and the figure at (215, 0–25) contact shadows opposite it.
+- Add ambient occlusion at every material boundary — grey stone to dirt along x=56 and y=215, and around the water margin. Right now surfaces meet with no darkening at all, which is what makes the frame read flat.
+- The green moss cluster is placed unrotated and unmodified at approximately (20,55), (25,215) and (355,150) — the same three-blob asset three times. Vary or reduce.
+- The bottom strip at y263–288 is a flat dark band with no top surface, no thickness and no shadow onto the floor above it. Give it a lit top face and a contact shadow, or remove it.
+- The figure at (215, 0–25) stands on a small dirt mound that belongs to no tile and is the only object in the frame with a base under it. Either give every standing object the same treatment or drop it.
+- The white pixel spray at (207–237, 110–130) reads as loose noise, not as bone. Give the pieces defined silhouettes with a dark edge and contact shadows.
 
 ---
 
-Two of these frames share a base render — 2 and 4 differ only inside a 420×370 box, and 1 is that same base under a filter. The real question is whether the base is good enough, and it isn't yet: roughly a third of frame 4 is soft cloud noise standing in for masonry, and the room is empty of the repairs the fiction is built on. Fix the base once and three frames improve together. Frame 3 is a different problem entirely.
+The pattern across the deck is worth naming: 1, 3 and 4 share one base render, and the differences between them are almost entirely post-process. 3 is that base clean. 1 is that base with props that were composited without the light term applied. 4 is that base with the exposure pushed until the stonework near the lamp stopped existing and the wall band was smoothed into mush. The underlying stone painting in all three is the strongest craft in the deck — it is the passes on top of it that are failing. Fix the compositing pipeline (attenuate props by the same curve as the floor, cap the light pool below clipping, keep the wall pass off the blur) and 1 becomes shippable without anyone touching the base art.
 
-*Model: Opus 5 (1M context)*
+*Model: Claude Opus 5 (1M context)*

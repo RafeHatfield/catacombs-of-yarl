@@ -1,56 +1,66 @@
-I read all four. Here are my findings.
+All four read. Measurements below are from the pixels, not impressions.
 
-RANK: 2 > 3 > 4 > 1
+RANK: 1 > 4 > 3 > 2
 
-BEST: 2
+BEST: 1
 
-BEST_WHY: The floor in the right half (x 520–750, y 430–750) passes the cut-not-stamped test on every axis. Slab sizes are genuinely irregular and courses break offset — a wide slab at ~(600,560) sits against a narrow one at ~(650,570) with no attempt to keep a module. Joint weight varies *within a single run*: the course at y≈610 has a heavy black joint at x≈565, a one-value-step joint at x≈620, and no joint at all at x≈680 where two slabs have closed up. Individual slabs carry short parallel chisel hatch-marks that differ slab to slab in count and angle — the slab at ~(560,610) has five strokes running NE, its immediate neighbour has none. The salvage fiction lands as drawing, not as decoration: a cable runs in a slack catenary from ~(560,700) out to the right edge, pinned at intervals by small cross-shaped staples driven into the stone (one clearly legible at ~(570,712)), and short dark vertical ticks scattered across the floor read as driven pins. At the wall/floor junction (y≈445–455) the wall's block courses run all the way down to the floor line with a crisp dark joint and a shadow lip at the base, and two vertical timber posts at x≈300 and x≈420 are pinned *across two courses* — they span a break, which is what a driven repair timber does. The corridor (x 460–590, y 0–440) shifts from warm tan to cool blue-grey as it recedes, and slab structure stays faintly legible in the darkest visible stone. That's a hue-plus-value falloff, not a black multiply over a texture.
+BEST_WHY: The wall run at y≈385–450 is the one thing in the deck that's genuinely built. Its underside is closed with a hard 2px black line the full width of the frame, so the wall has thickness and the floor terminates against it instead of fading into it. Above that line the courses carry vertical joints at irregular spacing and irregular depth — the run from (200,400) to (440,400) has some joints cut full-depth and some only half — with small dark driven-pin marks at (280,420) and (355,425). The stones read as cut and set rather than stamped from one tile. The value discipline backs it up: the wall face directly above the figure measures luminance 41 against a lit floor of 151 at (400,505) — a 110-step separation, so you can tell what blocks you at a glance. The corridor at x≈500–560 keeps a narrow tongue of light that falls from L≈116 at its mouth to near-black by y=200, so the corridor recedes from one source correctly. And the dark is actually dark: only 1,798 pixels in the frame have any channel at 250 or above, so stone detail survives everywhere the light reaches.
 
-WORST: 1
+WORST: 2
 
-WORST_WHY: Nothing in it is drawn; it is assembled from stamps with hard edges. The mud field is an axis-aligned rectangle whose left edge (x=56), right edge (x=248) and bottom edge (y=215) are all razor-straight tile-boundary lines — dirt stops dead on a grid line, with no scatter, no wear, no transition into the flagstone. The water (x 248–343) is a flat teal fill with a visibly repeating rounded-cell pattern, terminating in a perfectly straight vertical line against grey stone with no bank, no shoreline, no wetting of the adjacent slabs and no depth gradient; it is a colour swatch. The grey floor is one slab value with a 1px light gridline at perfectly uniform pitch and zero joint variation. The mud is one noise tile repeated at uniform density across the whole field — the same red-brown speckle clusters recur verbatim, with no path, no puddle, no traffic, in a place described as in continuous heavy use. Props are copy-paste: the two barrels at (127,202) and (175,202) are the identical sprite at identical rotation and identical shading; the moss blobs on the grey floor at bottom-left, in the water at right, and at the far right edge are the same three-blob stamp; the two crates at (80,10) and (80,58) are the same sprite twice. The fixture at (28,127) is a torch drawn in **side elevation** — an orange flame bar on a bracket with a brown post running *down* the picture to y≈168 — in a frame that is otherwise top-down, and it lights nothing: the mud directly under it is the same brown as mud at the far edge. And there is no light model at all. The frame is uniformly bright edge to edge, which is not a stylistic difference from the others, it is the absence of the thing the picture is supposed to be about. The bottom band (y≥265) is an unresolved dark strip with a single slightly-lighter rectangle at (175,273) sitting in it.
+WORST_WHY: The pool from (245,0) to (330,178) ends in a perfectly straight vertical line on both sides and a straight horizontal line at the bottom, with **zero** transition pixels. At (330,90) the water's honeycomb cell pattern is sliced through mid-cell and grey stone begins on the next texel — no rim, no shoreline, no darkening, nothing. A liquid with a rectangular boundary is the first thing anyone sees. The interior holds three colours across a 50×50 sample with no depth cue at all. Beneath it, the stone floor is a uniform 32-texel grid of near-identical tiles across roughly forty cells, differentiated by about four speck variations; the same green blob cluster is copy-pasted at (28,60), (25,215), (372,155) and (375,175). The orange post at (28,125)–(35,170) runs off its brick strip onto the dirt and terminates in a flat cut in mid-air — no base, no contact. The brick strip itself at (10,123)–(55,142) is one tile tall and ends at both ends in a flat vertical cut, no cap, no return, no thickness. There are solid black cells with no content at the left edge around (0,75)–(8,88). And there is no lighting: exactly 2 pixels in the whole image reach 245, and the figure at the top sits at the same exposure as the far bottom-right corner.
 
-FLAGGED: 1, 3, 4
+FLAGGED: 1, 2, 3, 4
 
 SHIP: NONE
 
-FLIP 2:
-- The figure casts no contact shadow. Floor directly under the boots at y=512–524 measures 185–193 average value; open floor at the same radius (x 300–360, same rows) measures 182–189. It is equal or brighter. Darken a 2-texel band under the soles by ~35–45% toward ambient, tightest at the contact and gone within 3 texels.
-- The carried light has no emitter. The object in the raised left hand at ~(390,468) is a flat tan bar with an orange nub at its base; the brightest pixel in the entire frame is (245,252,196) at (413,471), which is the helmet highlight. Draw a hot core on the held object — a 2×3-texel near-white cell with an orange corona — so the light in the scene has a visible cause.
-- Move the falloff origin off the head and onto that emitter, and re-derive the gradient from the new centre. Currently the pool is centred on the sprite's skull.
-- The occlusion mask reads as flat black rectangles, not as darkness: a vertical cut at x≈120 runs the full frame height and a horizontal cut at y≈270 runs straight through open floor. 22% of the frame sits at value ≤6/255. Lift the masked regions to a floor of ~12–16/255 using the cool blue-grey already established at the corridor's far end, and break the mask edges on stone joints so they don't cut straight lines across a floor.
-- The character's mint-cyan (~150,230,220) is the only saturated cool hue in a frame otherwise built entirely from desaturated warm browns and cool greys. Pull it toward the frame's existing grey-blue, or replace it with a dun/hide tone.
+---
 
-FLIP 3:
-- The wall brazier at (598,548) is drawn in side elevation: the flame has a clear vertical axis licking upward in screen space, and the bowl is an ellipse with a visible front rim. Redraw it from directly above — the ring as a ring, the flame as a radial bloom with no up-direction.
-- The brazier emits no light, and worse, it *subtracts*. Floor at (568,548) measures (73,46,32) here versus (115,86,61) at the same pixel in the version of this scene without it — the sprite's own shadow ring makes adjacent stone darker than unlit stone. Give it a real contribution: warm falloff of roughly 60px radius with a core lift of at least +60 on the red channel at the bowl rim.
-- The brazier is the highest-contrast element in the picture — a (203,14,0) core inside a ring of near-white petals — and it sits well outside the carried light's radius, in stone that is falling toward darkness. Either bring its value range inside the frame's warm-brown gamut, or commit to it as a light source and let it light the wall around it.
-- The lantern at (345,545) reads (255,168,77) at core and contributes nothing: floor pixels at ±15px and ±25px from it are byte-identical to the same frame without the lantern present. Emit, or stop looking like an emitter.
-- The prop at (278,800) sits in stone at value ~20/255 but is rendered with its own baked-in warm-yellow interior that the scene falloff never touched. Multiply it by the same falloff every other pixel at that radius receives.
-- Plus every item in FLIP 2 — same sprite, same missing contact shadow, same missing emitter, same black-mask edges.
+**FLIP 1:**
+- The figure's boots at (400,505) meet the floor with one black outline pixel and nothing else — no contact shadow, in the hottest part of the frame. Darken a 2-texel ellipse under the boots to ~60% of surrounding floor value.
+- He carries no visible light source. The brightest point of the pool is at (400,505), below and left of him, anchored to no object. Draw the lamp in the sprite and move the light centre onto it.
+- The oval at (430,485) is a flat pale field with one 2px dot — no rim, no boss, no strap, no edge value, and it sits at nearly the same luminance as the lit floor behind it. Give it a rim at least 40 steps below the floor and one piece of interior structure.
+- The dark box at (310,645)–(382,712) is a flat brown rectangle with four division lines and one lighter patch: no top-surface detail, no rope, no driven pins, no salvaged grain. Redraw the top surface with plank ends and at least two pins.
+- That box has a soft, out-of-focus top-left corner and a hard 1px bottom-right edge. Make the silhouette one hardness all the way round.
+- The box casts no shadow standing 150px from the only light in the room. Add a cast shadow running down-right, away from (400,505).
+- The grey mass at (341,613) has no silhouette, no outline and no counterpart anywhere else in the frame. Resolve it into a nameable object or delete it.
+- A 48×54 patch of lit floor at (200,520) contains 254 distinct colours, changing at nearly every 2px step; the character sprite in the same frame contains 69. There is not one flat plane in the environment. Quantise the stone to a fixed palette so faces read as cut surfaces rather than noise.
+- The 1px crack from (240,545) through (320,600) to (400,690) is one continuous smooth curve across six blocks and never steps at a mortar joint. Break it at each joint and offset the segments.
 
-FLIP 4:
-- Remove the diagonal hatch overlay across the lit region (x 200–560, y 440–660). Evenly-pitched parallel 45° lines run NE-SW continuously across slab boundaries, mortar joints and the cracks, indifferent to the geometry beneath — it is a screen-space pattern, not surface detail. The other version of this same scene in the deck has none of it. Whatever pass produced it, take it out.
-- Fix the per-tile light quantisation. Individual floor slabs receive a flat uniform brightness bump with hard rectangular edges on the slab boundaries — sampling y=545 from x=230 rightward gives 0, 8, 12, 0, 0, 2, 2, 5, 17, 29, 21, 8, 36 in steps, jumping in blocks rather than ramping. Light per pixel against the distance field, not per tile.
-- Rebuild the wall band at y≈390–460. Its block courses and both timber posts have been pushed to the top of the band, leaving the lower ~35px a featureless blurred brown smear with no joints, no block divisions, no texture. Run the courses down to the floor line.
-- Consequence of the above: the timber posts at x≈275 and x≈420 terminate in mid-air around y≈445 — they descend out of the darkness and stop in the middle of the smear with nothing to pin into. Land them across two courses.
-- Restore the wall/floor junction at y≈455. It is currently a soft gradient in which the wall's base and the lit floor arrive at the same value with no separating line. Put back the dark joint and the shadow lip.
-- Restore the slab joints in the floor at x 250–330, y 560–620, where they have blurred out entirely into a soft wash.
-- Plus every item in FLIP 2.
+**FLIP 4:** *(everything in FLIP 1 — same base — plus:)*
+- The fire in the grate at (600,545) peaks at (222,141,3), luminance 149, in a zone where the surrounding stone tops out at 90. Measured against the same frame without it, the stone ring around the grate is *darker* with the fire present (mean L 68 vs 75). An open flame that darkens its own floor. Give it a warm falloff or take it out.
+- That flame uses saturated pure red and yellow found nowhere else in the frame, drawn with a hard cel outline against painted stone that has no outlines anywhere. Bring it into the palette and the drawing language.
+- Ten added elements sit on a strict 64–65px lattice — centres at x ∈ {214, 278, 341, 406, 467}, y ∈ {485, 549, 615, 679} — each occupying an identical 74×70 footprint. Place props where the fiction puts them, not on a grid.
+- Two of those lattice cells produce nothing readable: the grey mass at (341,618) and the smudge at (407,549). If a cell has no object, leave the floor untouched.
+- The red form at (405,615) reads as no object at all — a crumpled saturated starburst with an orange bead on its right edge, at higher saturation than anything within 150px. Redraw it as a nameable thing or remove it.
+- Added scratch detail on the right-hand floor is clipped to 32-texel tile rectangles: strokes run to a tile edge and stop dead. The floor from (500,460) to (750,660) reads as alternating detailed and plain squares. Let strokes cross tile boundaries.
+- One arc motif is stamped three times at identical radius with identical broken segments, near (555,470), (520,540) and (500,595). Vary them or keep one.
+- The bucket at (280,545) shows a tall front face and a top rim — a three-quarter object — while the box at (345,678) is a flat top-down square. Pick one projection.
+- None of the added props cast a shadow. The crossed timbers at (215,610) sit 200px from the single light source with nothing under them.
 
-FLIP 1:
-- Break every material boundary off the grid. The mud's edges at x=56, x=248 and y=215 are straight tile-boundary lines; give them a 1–3 texel irregular fringe with mud scattered onto the first course of flagstone and stone showing through the mud where it has been worn.
-- Draw a shoreline. The water at x 248–343 currently meets stone at a hard vertical line. Add a wet band 2–3 texels wide on the adjacent stone at reduced value and raised saturation, a darker margin in the water at the edge, and a value ramp toward the middle so it has depth.
-- Replace the water's repeating rounded-cell fill with per-region variation: darker where it is deep, silt visible at the margins, and no cell pattern that recurs identically within the visible area.
-- Break the mud's uniform noise density. Put in a worn path where traffic runs — between the crates at (80,10)/(80,58) and the flagstone at the bottom — with the speckle thinned and the value lifted along it, and standing water pooled where the ground is low.
-- Vary the flagstone. It currently has one slab value and a 1px gridline at perfectly uniform pitch. Vary slab size, offset the courses, and vary joint weight so some joints are heavy, some are one value-step and some are closed.
-- De-duplicate the props: the barrels at (127,202) and (175,202) are the same sprite twice — change one's silhouette, rotation and top-face wear. Same for the crates at (80,10) and (80,58), and for the three identical moss stamps.
-- Redraw the crates from above. They currently show a front-facing panel with a nail, which is elevation, not plan.
-- Remove or redraw the torch at (28,127). It is a side-elevation flame with a bracket post running down the picture to y≈168. From directly above, a wall torch is a bracket and a bloom, not a vertical bar.
-- Add the light model that the frame is built around: a single carried source at the figure, radial falloff with a hue shift toward cool at distance, and the frame edges falling into darkness. Right now the picture is uniformly lit at full brightness, which is not a different lighting choice — it is no lighting.
-- Give the torch at (28,127) and the figure's light actual emission onto the mud and stone around them.
-- Resolve the bottom band at y≥265 — it is a dark strip with an unexplained lighter rectangle at (175,273). Either finish it as a doorway with a threshold and jambs, or take it out.
+**FLIP 3:** *(everything in FLIP 1 — same base — plus:)*
+- The wall face directly above the figure at (400,440) measures luminance 133 against a floor of 152 at (400,505): a 19-step separation. The same wall in the unblown version of this frame reads 41. The wall has stopped reading as an obstruction. Pull it to at least 60 steps below the lit floor.
+- 16,602 pixels have a channel at 250 or above, against 1,798 in the comparable frame. The floor around the figure is clipped to paper white with no stone detail left in it. Cap the pool so the brightest floor texel lands around 210–220 and the joints survive.
+- A field of parallel diagonal hatch lines at roughly 45°, uniform spacing, runs edge-to-edge across the entire lit area from (230,470) to (470,640), crossing block joints and mortar without regard to geometry. It is screen-space; a point light directly overhead cannot make parallel streaks. Remove it.
+- The gain varies per tile in flat rectangular steps, so the lit floor reads as a checkerboard of mismatched swatches — clearest from (350,540) to (500,620). Make the falloff continuous across tile edges.
+- The mortar joints received more gain than the stone faces, which is why they vanish under the light: the joint at (300,555) is brighter relative to its stone than the same joint at (300,700). Invert that — the dark lines should gain least.
+- The pool is not centred on the figure. At radius 60 the floor reads 244 west and 188 north-east; at radius 120, 165 west and 81 east. Make the falloff radial about the figure.
 
-The one thing worth saying beyond the answers: 2, 3 and 4 are the same room, and the gap between them is entirely in the systems, not the art. Frame 2's stone and light are the strongest work in the deck by a distance. Frame 3 throws three props onto that same base and every one of them breaks the single rule the scene runs on. Frame 4 keeps the props out but degrades the render itself. The asset library here is good; the pipeline around it is what's leaking.
+**FLIP 2:**
+- Add edge tiles to the pool at (245,0)–(330,178): a rim value, a shoreline, and a break in the honeycomb pattern at the boundary so cells aren't sliced mid-cell at (330,90).
+- The pool interior holds three colours across a 50×50 sample. Add a value gradient toward the boundary so it has depth.
+- The green blob cluster is repeated at (28,60), (25,215), (372,155) and (375,175). Redraw with varied silhouettes.
+- The bottom stone floor is a uniform 32-texel grid across ~40 near-identical cells. Vary block sizes, offset the courses, and vary joint depth along a single run.
+- The dirt field repeats on a fixed interval — the same dark-red speckle cluster recurs roughly every 48 texels from (62,0) to (245,215). Add two variant tiles and break the repeat.
+- The crates at (63,0)–(97,90) are drawn in front elevation — visible front face, lid plate, dark lower panel reading as a wall, shadow falling downward as if lit from the front — on top-down dirt. Redraw as top-down lids.
+- The orange post at (28,125)–(35,170) runs onto the dirt and ends in a flat cut in mid-air. Give it a base and a contact shadow, or remove it.
+- The brick strip at (10,123)–(55,142) ends at both ends in a flat vertical cut with no cap and no thickness. Close the ends.
+- Fill the empty black cells at the left edge around (0,75)–(8,88).
+- Add light falloff from the figure. Currently only 2 pixels in the frame reach 245 and the exposure at the top of the image equals the exposure at the bottom-right corner.
+- The white specks at (210,113)–(233,127) read as scattered noise with no silhouette or grouping. Resolve them into a nameable object.
 
-Model: Opus 5 (1M context)
+---
+
+Worth naming: 1 and 4 are pixel-identical outside a 33k-pixel region, and 3 differs from 1 only inside the lit area and the wall bands. Two of these three frames are the same base art with a mechanical pass laid over it — a decal lattice in one case, an exposure-and-hatch filter in the other. Both passes made the frame worse than the base they started from. If that base is the actual asset, the thing to fix first is the shadowless figure and the featureless brown box in it, not the passes.
+
+*Model: Claude Opus 5 (1M context)*

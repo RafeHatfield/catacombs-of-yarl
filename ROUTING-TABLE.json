@@ -61,6 +61,39 @@
       "why_new": "Filed as the record that §8.3.3 was checked and CLEARED, so the next seat reporting a vertical is not sent to re-derive the bond. It routes onward rather than holding work of its own.",
       "measured": "The ruling's conditional does not fire. Head joints do not align: x mod 64 scattered in both courses ([6,31,55,12,50] and [24,9,23,46,59]), cross-course profile correlation r=+0.276, autocorrelation at tile pitch r=-0.002 in course 1. The percept is TWO seams with different causes — x 435-438 scores 0.98 with the void ring on and 0.19-0.50 with it off (§12.1a's classification edge), while x 503-506 is 1.00 either way (the corridor junction, #201).",
       "evidence": "the walked frame against a --void-ring 0 control"
+    },
+    {
+      "when": "2026-09-10",
+      "round": "r001-props",
+      "lane": "props",
+      "seat": "three of five blind seats, each measuring it independently",
+      "to": "#204",
+      "title": "Landed props are not on the family's value ladder",
+      "items": [
+        "The grate at (597,548) is lit wrong ... the prop is 2.2x brighter than the surface it is set into.",
+        "Same fault on the loose planks at (505-550, 605-620): plank 96 against floor 64.",
+        "The centre X at (385-425, 600-625) is (158,49,20) — a saturated red with no yellow in it."
+      ],
+      "why_new": "A defect in the LANDING ROUTE, not in any one asset. compose_props.py snaps to the wall family's ladder and quarry tint; land_props.py, the route that actually shipped, only downsamples. Fixing the PNGs would drift at the next prop.",
+      "measured": "fire ring 129 against floor 89; barricade planks 96 against 64; barricade centre (158,49,20) with no yellow where every other surface carries quarry_tint [1.024, 1.010, 0.826]. The seats' own control rules out lighting: the floor drops 83 -> 64 under a prop, so props receive the contact shadow correctly. It is albedo.",
+      "mine": "Yes. I noticed the bright variant myself before the round and put it to the seats anyway, which was right — it is their question — but the answer is unambiguous.",
+      "evidence": ".claude/skills/frame-critic/history/r001-props.json"
+    },
+    {
+      "when": "2026-09-10",
+      "round": "r001-props",
+      "lane": "props",
+      "seat": "two of five seats, plus a third in the round killed by memory",
+      "to": "#205",
+      "title": "The orc fire emits nothing: the rig's first two-source scene is owed",
+      "items": [
+        "The brazier reads as a fire and casts nothing: pixels immediately around it are unchanged from the unlit frame.",
+        "Same for the orange flame inside the grate ring — it glows in the sprite and puts zero light on the surrounding stone."
+      ],
+      "why_new": "Deliberate and owed rather than a defect in the art. B-PROP-003's card splits the prop: the sprite RECEIVES light, the engine emits. The pit shipped with no PointLight2D so the carried-only capture could judge the object first — and it passed, since three seats named it as a fire with no light coming off it.",
+      "measured": "A seat in the killed round measured it in four directions: above the pit 74 vs 77, left 84 vs 92, below 62 vs 72.",
+      "not_the_builder_s": "The §9.2 flicker flag is built, defaults OFF, and is RULED BY RAFE at the gate with both states demonstrated. §5.4 makes the tended fire the exception; §9.2 names idle-flicker as a killer; the tension is stated rather than resolved here.",
+      "evidence": ".claude/skills/frame-critic/history/r001-props.json and the preserved seat-1 transcript of the killed round"
     }
   ]
 }
