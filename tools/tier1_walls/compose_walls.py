@@ -130,6 +130,38 @@ LEDGER = os.path.join(REPO, "tools/pixellab/wall_gauntlet/rounds")
 # the face — and the rung is whichever one is nearest. Grow the ladder again and the values hold.
 ANCHOR = 101.16
 
+# ⚠ AND THE SAME LAW ONE LAYER DOWN - THE FLOOR, found by #206 after the planes were fixed.
+#
+# Fixing the arms to ratios did NOT make the composer reproduce its family. A recompose still came
+# back with the top plane exact to 0.01 and every FACE tile 3 to 8.6 levels light, and the face's
+# palette collapsed: the approved tile carries a joint value at 96px and an occlusion band at
+# 64px, the recompose carried one value at 148px. Two authored values had become one.
+#
+# The cause is that a joint and a value break are stated as INDEX OFFSETS from the plane's rung -
+# `rung(face, -3)` for the joint, -2..+2 for the blocks - and `rung()` clipped at index 0. On the
+# NINE-rung ladder the face sat at rung 1, so everything below rung 0 piled up on 48.5627:
+#
+#     face joint   rung 1 - 3  ->  CLIPPED to 48.5627   (one rung down, not three)
+#     dark block   rung 1 - 2  ->  CLIPPED to 48.5627   (the same value as its own joint)
+#     top joint    rung 5 - 3  ->  75.016               (never clipped, so never moved)
+#
+# The eleven-rung ladder reaches two rungs further down, so it GRANTS the -3 for the first time
+# and delivers 22.11. That is the composer's stated law arriving, and it reads as a regression:
+# the panel ranked it below the reference. What the gate walked and approved is the CLIPPED
+# family, whose face joint is one rung down.
+#
+# So index-0 was never the intended bottom - it was wherever the ladder happened to end, which is
+# section 5.7 again: an index into a list whose length can change is not stable under field size.
+# A clip is an anchor, and this one has to be a value. The family's floor is stated as a ratio of
+# the same anchor the arms use, and the rung is whichever one is nearest. Grow the ladder again
+# and the floor holds.
+#
+# ⚠ THIS DOES NOT CLOSE THE QUESTION IT SURFACED. The deeper joint is now reachable and has
+# never been seen at the gate. Whether the face's joints should be three rungs down - the depth
+# this file's own comment argues for on rig grounds - is a LOOK CHANGE and a ruling, not a
+# builder's call. It is filed, not taken.
+FLOOR_RATIO = 0.48   # x ANCHOR = 48.56, the darkest value the approved family puts on a plane
+
 
 def _nearest_rung(ladder, value):
     """The rung closest to a value. Section 13.12: derive, never copy."""
@@ -301,6 +333,7 @@ class Family:
             self.face_rung = _nearest_rung(self.ladder, ANCHOR * a["face_ratio"])
         else:
             self.top_rung, self.face_rung = a["top"], a["face"]
+        self.floor_rung = _nearest_rung(self.ladder, ANCHOR * FLOOR_RATIO)
 
     # ---- the edge families -----------------------------------------------------------------
     def vjoint(self, course, key):
@@ -334,7 +367,8 @@ class Family:
         return a, b, v
 
     def rung(self, base_index, offset):
-        i = int(np.clip(base_index + offset, 0, len(self.ladder) - 1))
+        # The bottom is FLOOR_RATIO's rung, not index 0 - see the note on FLOOR_RATIO. #206.
+        i = int(np.clip(base_index + offset, self.floor_rung, len(self.ladder) - 1))
         return self.ladder[i]
 
     def stones_in_row(self, course, kw, ke, var=0, width=T):
@@ -576,6 +610,20 @@ class Family:
             # comparison against the reference dishonest, so it is not shipped. What the attempt
             # DID buy is banked below the arms: the ladder drift it surfaced was real and is
             # fixed. #202 stays open with three closed doors recorded in it.
+            # RESTORED BY #206 - IT HAD BEEN DELETED, AND ONLY THE COMMENT WAS LEFT.
+            # The two lines below went out in bceb7446, the cap pass, when face tiles became
+            # face-only RGBA. The paragraph above them describing the turn stayed, and so did the
+            # manifest's `occlusion_rows: 2`, so the composer went on ADVERTISING a band it no
+            # longer painted. The tiles on disk still carry it - they predate the deletion - which
+            # is why nothing looked wrong: the only way to see it was to recompose and compare,
+            # and that is what #206 finally did. Rows 16-17 came back at 48.56 against the
+            # approved 26.64, a 22-level band across every face tile in the family.
+            #
+            # A deleted feature and a silent manifest are the same defect the ladder drift was:
+            # an assertion that outlived the thing it asserts (section 13.12).
+            lip = img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :]
+            img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :] = np.minimum(
+                lip * 0.55, self.rung(self.face_rung, -2))
             self.age_face(img, age, grain_amp)
         return img
 
