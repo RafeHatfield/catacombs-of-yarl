@@ -758,6 +758,34 @@ def verify_morgue(morgue):
 
 
 # ================================ the seat ====================================================
+# ── THE MEMORY PRECHECK — RULED (Rafe, 2026-09-10) ───────────────────────────────────────────
+#
+#     "before seating a panel or starting any recompose/capture, check free memory against a
+#      floor ... if below, STOP cleanly ... never start a write that an OOM kill can leave
+#      corrupt."
+#
+# Three five-seat rounds on the props build were killed by the system mid-panel, and each one
+# looked from the outside exactly like a lane that would not converge. The floors are measured
+# (tools/tier0_harness/headroom.py): a seat peaks at 351MB and takes 16 points off the system's
+# free percentage for seven and a half minutes; a capture peaks at 507MB for four seconds.
+def _headroom(kind):
+    import importlib.util
+    hp = os.path.join(REPO, "tools", "tier0_harness", "headroom.py")
+    if not os.path.exists(hp):
+        return True, "headroom module absent; proceeding"
+    spec = importlib.util.spec_from_file_location("headroom", hp)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m.require(kind)
+
+
+def _no_lingering_seats():
+    """RULED: free each seat fully before the next starts, and CONFIRM it."""
+    import subprocess as sp
+    out = sp.run(["pgrep", "-f", "claude -p"], capture_output=True, text=True)
+    return [x for x in out.stdout.split() if x.strip()]
+
+
 def run_seat(work, prompt, timeout):
     p = subprocess.run(["claude", "-p", prompt, "--allowedTools", "Read"],
                        cwd=work, capture_output=True, text=True,
@@ -1038,6 +1066,10 @@ def plant_caught(r, plant_slot, build_slot):
 
 # ================================ the round ===================================================
 def capture(cfg, echo=True):
+    ok, msg = _headroom("write")
+    if not ok:
+        print("\n*** STOP — %s" % msg)
+        raise SystemExit(3)
     """Run the configured capture and hand back the frame it produced.
 
     The command lives in docs/FRAME-CRITIC.json rather than here so this skill stays
@@ -1380,7 +1412,21 @@ def main():
                                    "2026-09-08"))
     else:
         redraw_note = None
-        seats = [seat_round(i) for i in range(a.seats)]
+        ok, msg = _headroom("seat")
+        if not ok:
+            print("\n*** STOP — %s" % msg)
+            raise SystemExit(3)
+        seats = []
+        for i in range(a.seats):
+            seats.append(seat_round(i))
+            stray = _no_lingering_seats()
+            if stray:
+                print("   ⚠ %d seat process(es) still alive after seat %d: %s"
+                      % (len(stray), i + 1, ", ".join(stray)))
+            ok, msg = _headroom("seat")
+            if not ok and i + 1 < a.seats:
+                print("\n*** STOP after seat %d — %s" % (i + 1, msg))
+                raise SystemExit(3)
     # The first seat's deck is the one the verdict's top-level fields describe, so a single-seat
     # round records exactly what it always did.
     # THE ROUND'S TOP-LEVEL DESCRIPTORS COME FROM A SEAT THAT ACTUALLY RAN. On a re-draw the

@@ -451,5 +451,21 @@ def main():
     print("manifest: %s" % os.path.relpath(mf, REPO))
 
 
+def _headroom_or_stop():
+    """A COMPOSE IS THE WORST THING TO HAVE KILLED: it writes a whole tile family, and a family
+    left half-written is judged by the next round without anyone knowing (ruled 2026-09-10)."""
+    import importlib.util
+    hp = os.path.join(REPO, "tools", "tier0_harness", "headroom.py")
+    if not os.path.exists(hp):
+        return
+    spec = importlib.util.spec_from_file_location("headroom", hp)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    ok, msg = m.require("write")
+    if not ok:
+        raise SystemExit("STOP: " + msg)
+
+
 if __name__ == "__main__":
+    _headroom_or_stop()
     main()
