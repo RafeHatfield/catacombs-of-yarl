@@ -7,11 +7,17 @@ above it."*
 ⚠ RAW FREE PAGES ARE THE WRONG SIGNAL ON THIS PLATFORM, and reading them is what made three killed
 rounds look mysterious. macOS keeps free memory near zero by design — it was 92MB free while
 `memory_pressure` reported the system 63% free, because inactive and purgeable pages are
-reclaimable and are not "used". The signal that actually predicts a kill here is **SWAP HEADROOM**:
-at the third kill, swap was 3182MB of 4096MB used with 913MB left.
+reclaimable and are not "used".
 
-So the floor is expressed in swap-free and in the system's own free percentage, and this tool
-measures what one seat and one capture do to both.
+⚠ AND SWAP IS THE WRONG SIGNAL TOO, WHICH I ONLY LEARNED BY RUNNING THIS. Before measuring I wrote
+here that swap headroom was what predicted the kills — swap was 3182MB of 4096MB used when the
+third round died, and it looked conclusive. It is not: a seat drew **0.0MB** of swap and a capture
+drew **0.0MB**, while a seat held 351MB of RSS for seven and a half minutes. That swap had been
+filled by other processes long before and never moved. The claim is corrected rather than deleted,
+because the wrong hypothesis is the reason this tool exists.
+
+What moves is the system's own free percentage — 16 points for one seat — so that is what the
+floor is built on, with swap kept only as a secondary guard against genuine exhaustion.
 
 ── THE DECK DOWNSCALE WAS TESTED AND IS NOT SHIPPED ─────────────────────────────────────────
 
