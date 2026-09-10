@@ -1053,3 +1053,80 @@ wall in front of it, so the rule wanted is per-cell depth, not a global z bump.
 and #202 and #201 both need a recompose. One cause is found and fixed (the ladder grew from nine
 rungs to eleven and the plane rungs are indices — §5.7); a residual 5–6 levels, 19 at the foot, is
 not identified.
+
+
+---
+
+## Item 16 — #206 is closed, and closing it unblocked #202, which is built
+
+### #206 — three faults, not one, and the third was a deleted feature
+
+The plane-level cause was already fixed and a recompose **still** came back wrong. The residual
+is identified. It was two more faults of the same shape as the first.
+
+| | fault | how it hid |
+|---|---|---|
+| 1 | arms as ladder indices (already fixed) | nobody recomposed |
+| 2 | **`rung()` clipped at index 0** | the top plane never reached the clip, so only the face moved |
+| 3 | **the occlusion lip was deleted in `bceb7446`** | its comment and its manifest entry stayed behind |
+
+Fault 2 is fault 1 one layer down and **survived its fix**. A joint is written `rung(face, -3)`
+and a block's value break as offsets −2..+2. On the nine-rung ladder the face sat at rung 1, so
+the joint *and* the darkest blocks all landed on 48.5627 — one value where three were authored.
+The eleven-rung ladder separates them and grants the −3 for the first time. Fixed by clipping at
+`FLOOR_RATIO`'s rung: a **value**, stable under field size (§5.7).
+
+Fault 3 is the one worth remembering. The turn between the planes,
+`min(lip*0.55, rung(face,-2))`, went out when face tiles became face-only RGBA. **The paragraph
+describing it stayed. The manifest's `occlusion_rows: 2` stayed.** The composer advertised a
+22-level band it no longer painted, on all 108 face tiles.
+
+The common shape is **an assertion outliving the thing it asserts** (§13.12), and the only
+instrument that catches it rebuilds and compares. `prove_reproduces.py` does, with five cases: it
+PASSES as things stand and FAILS on each of the three historical faults and on a moved floor.
+
+Tolerance is **one level**, named rather than assumed: the quarry tint is derived at consumption
+from the floor's own pixels, so a floor recompose legitimately moves it. A tolerance of zero would
+fail every time the floor is touched.
+
+⚠ **Not taken:** the face's joints can now reach three rungs down — the depth this file's own
+comment argues for on rig grounds — and have never been seen at the gate. That is a look change
+and a ruling.
+
+### #202 — the turn, and why three doors had closed
+
+`WALL-RECIPE.md` §4.1 **measured this exact treatment on the bar** — a 1px row at the turn running
+1.27–1.47× the top band — and **refused it**, naming its own condition: *"wear is
+traffic-modulated … a pale line of constant value on every turn is precisely the coping course
+§12.1's worked example culled. Adoptable only in a traffic-modulated form. This round does not
+have a wear system to modulate it with."*
+
+**All three of my earlier attempts built a uniform band.** They were that refusal arriving on
+schedule. The condition is now met: the face family carries a four-step `age` index read from the
+floor's traffic field, and already implements the *form* half of §8.1's polish (arris-rounding).
+This is the **value half of the same clause on the same key**.
+
+| | measured |
+|---|---|
+| present, non-uniform | 992 px change vs the previous gated frame, in 2-row runs at the turns and nowhere else |
+| where | ages 2–3 only, 11 of 24 reveals, clustered on the spine `...11233.22110...` |
+| authored | 1.30× and 1.45× the cap's top value — Weber +0.3000 / +0.4500, inside the bar's band |
+| delivered, lit | cap 75.83 → arris 113.33, ratio **1.495**, 0 blown of 532 |
+| delivered, **worst cell** | dim wall cap 25.58 → arris 44.20, ratio **1.728**, 0 blown of 300 |
+
+⚠ **The dim wall is the §6.3 exposure and it is stated, not buried.** At 1.728× the arris is the
+brightest thing on that wall. The authored ratio is inside the bar's band; the delivered one is
+not, because the cap and the face do not take the rig identically. Nothing is blown, so #183's
+*never blown* holds. That is the gate's call.
+
+**I got the reference wrong first and the frame said so.** The first build stated the ratios
+against the face tile's own top-plane value and delivered 1.82×/2.09×. A face tile's top band is
+**cut away by alpha** — rows 0–15 are transparent and the cap field draws there — so that value is
+never once drawn beside the arris.
+
+### And reading the cap manifest found #206's defect one family over, unfixed
+
+`tier1_cap` carries **`top_rung: 3` beside a nine-rung ladder**. Recompose the cap today and index
+3 resolves to 61.789 instead of 88.243 — 26 levels dark, the exact failure the walls shipped.
+Nothing is wrong on disk because the cap has not been recomposed. **A landmine, not a fault**, and
+filed rather than fixed here.

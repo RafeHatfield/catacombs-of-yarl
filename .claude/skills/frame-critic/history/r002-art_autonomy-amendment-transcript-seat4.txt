@@ -1,0 +1,63 @@
+Read all four at 1:1, then at 3–8× on crop, plus measured luminance and diffed the frames against each other. 2, 3 and 4 are the same map at three different light/dressing passes — they differ only inside y 287–710 — so the ranking between them is a judgement on the render, not on separate builds.
+
+RANK: 4 > 3 > 2 > 1
+
+BEST: 4
+
+BEST_WHY: The wall run at y 395–450, x 185–505 is the only place in the deck where the structure survives the lighting intact. Across that strip the wall's front course reads as discrete blocks — you can count the individual stones between x 200 and x 300 — with a continuous dark bed joint running the full width at y ≈ 428, and two vertical timber posts standing against the face at x ≈ 300 and x ≈ 390 that break the course and are clearly driven in later, not laid with it. That is the frame's one piece of genuine "repaired by people who don't care how it looks" evidence, and it is legible at 1:1. I stacked the identical strip from 2, 3 and 4: in 2 the bed joint and both posts are gone, washed to a smooth brown gradient. 4 holds them. The lit core also holds its range — 0.1% of the pixels in the pool of light (y 440–540, x 300–560) exceed 200, against 30.3% in image 2 — so the flagstone joints under and right of the figure are still readable inside the brightest part of the frame instead of dissolving.
+
+WORST: 1
+
+WORST_WHY: The water is an axis-aligned rectangle. I checked every column of the pool between x 250 and x 340: the last water pixel is at row 191 in all of them, without exception, and the left bank is a dead vertical. There is no edge tile, no wet margin on the dirt, no darkening at the bank — the dirt texture runs up to the line and stops, and the water starts at full value. Beside that: the projection is not one projection. The floor is straight top-down on a square grid, but the two chests at x 62–97 are drawn in elevation with their lid on top and their full plank front face below it (y 22–46 and y 70–93), the two barrels at y 192–215 show an elliptical top *and* their staved sides, and the green figure at x 215–235 is a front-facing standing pose with a raised sword — a character drawn from the side, on a floor drawn from above. The dirt is one noise texture with a red mottle that visibly repeats on roughly a 48px cycle across the whole brown field. The moss is flat two-value blobs with a single darker outline and no contact shading, and the grey floor is one tile with a uniform 1px light grid line, unvaried, stamped. There is no light model at all — the frame is at the same brightness in every corner.
+
+FLAGGED: 1, 2, 3, 4
+
+- **1** — the rectangle of water, and the elevation-view figure and chests on a top-down floor.
+- **2** — the wall's front course at y 395–450 is erased by the highlight. Same geometry as 3 and 4, structure gone.
+- **3** — three fire-coloured objects that emit no light. I measured annular means around each: the floor in a 12–24px ring around the brazier at (340, 545) is 149.3 in image 3 against 164.7 at the same coordinates in image 4, which has no brazier there. The prop makes the floor *darker*. Same at the crossed timbers at (408, 613): 85.2 with the prop, 101.4 without. The fire in the ring of stones at (598, 548) — saturated red and yellow, the only fully saturated pixels in the frame — sits in floor at luminance 78 with a flat gradient around it identical in shape to the propless version. Nothing is lit by any of them.
+- **4** — the figure floats and carries nothing. At 8× the sprite has no contact shadow of any kind, on the brightest flagstone in the frame, and holds a sword and a shield — no lamp, no torch. The premise of the frame is the light this figure carries and there is no object in the sprite producing it. The brightest point of the pool measures at (441, 502), which is bare floor beside the figure, not on it.
+
+SHIP: NONE
+
+---
+
+FLIP 4:
+- Give the sprite a light source. It holds a sword and a round shield and nothing else; put a lamp, a shuttered lantern or a burning brand in one hand and make its emitter pixels the highest value in the frame. Move the pool centroid from (441, 502) onto that object.
+- Add a contact shadow under the boots at (390–420, 500–510) — a hard-edged ellipse, cast away from the emitter once it exists, darkening the flagstone by 25–35%.
+- The wall top surface across y 405–445 measures 62.3 mean; the floor at y 600–700, x 200–300 measures 66.5. Wall and floor are the same value two tiles from the light. Drop the wall top by 20–25 luminance and add a 3–4px hard shadow along its base at y 448–452 so the wall has thickness.
+- Kill the repeating scratch decal. The same cluster of 4–6 parallel diagonal strokes at the same angle and length appears 20+ times across the floor — I count seven instances in the strip y 600–760, x 180–520 alone. Either author three or four distinct scratch sets and vary rotation and length, or cut it entirely.
+- Terminate the joints. There are isolated dark vertical stubs that start and stop in open stone and connect to nothing — at (250, 630), (430, 618), (745, 620), (935, 640) among others. Every joint must run stone-edge to stone-edge.
+- Resolve the crate at x 308–380, y 640–712: it has a hard 1px dark outline on its left, top and bottom and its right edge fades into the floor. Close the outline, and give it a cast shadow consistent with the light above-right.
+- The long smooth curves crossing the floor are uniform width over their whole length and cross stone faces and joints without changing. Vary the width, chip the stone where they cross a joint, and add a lighter lip on the light-facing side, or remove them.
+- 27.7% of the frame is below luminance 12. The two black masses at x 118–440, y 130–390 and x 630–750, y 60–390 read as unrendered rather than as unlit stone. Lift them 6–10 luminance with a cold ambient so their tops are just legible as surfaces.
+- Match the sprite to the environment. Its pure cyan and orange are the only saturated hues in an entirely desaturated umber frame, and it carries a hard 1px black outline against soft, low-frequency stone. Desaturate it toward the scene and either outline the environment or drop the sprite's outline.
+- Break the shield's value off the floor: it reads at roughly the same luminance as the flagstone under it, so its lower-right edge disappears. Darken the rim or add a cast edge.
+
+FLIP 3:
+- Everything in FLIP 4 — same base art, same figure, same wall value, same repeating scratch decal, same unterminated joints.
+- Make the fires emit. The brazier at (340, 545), the crossed timbers at (408, 613) and the fire in the stone ring at (598, 548) each need a warm radial contribution composited into the light buffer. Right now the floor around the brazier is 15 luminance *darker* than the same floor in the propless render.
+- Fix the palette on those props. The fire in the stone ring uses near-pure red and near-pure yellow; nothing else in the frame exceeds low saturation. Pull them into the scene's umber range and let the emitted light, not the pigment, carry the heat.
+- The crossed timbers at (408, 613) are bright orange-red while the identical prop at (280, 615) is dark brown, and they are the same distance from the light. Same asset, two unrelated colours. Pick one.
+- Give every prop a contact shadow. The crossed timbers at (280, 615) have no darkening anywhere beneath them and sit on the flagstone as a decal.
+- The ring of pale pebbles around the fire at (578–618, 528–568) is drawn at a different pixel scale from the masonry — rounded blobs with no joint logic, lighter than any stone near them. Redraw it as cut stone at the floor's scale, or as a broken hole with fractured flagstone edges.
+- The grey-brown lump at roughly (370–390, 590–620) resolves into nothing at any zoom. Make it a specific object or delete it.
+
+FLIP 2:
+- Everything in FLIP 4.
+- Bring the exposure down. 30.3% of the lit core (y 440–540, x 300–560) is above luminance 200 against 0.1% in image 4, and the plateau erases the wall's bed joint and both timber posts across y 395–450 — structure that is present in the source and visible in the other two renders. Cut the light's intensity until that course reads.
+- The wall's front face below the course, y 430–450, is a featureless brown gradient in this render. Once the exposure is corrected, confirm the blocks return; if they don't, the falloff curve is wrong, not just the gain.
+- The pool of light has a hard vertical edge at x ≈ 320, y 430–520 where it meets the dimmer floor. Soften it or justify it with an occluder.
+
+FLIP 1:
+- Cut a shoreline. The pool's lower edge holds y = 191 in every single column from x 250 to x 340. Build edge tiles for all four sides plus corners, break the bank off the grid, and darken the water within 3–4px of the bank.
+- Pick one projection. The chests at x 62–97 show their front faces, the barrels at y 192–215 show their staves, and the figure at x 215–235 is a standing front view — all on a floor drawn straight down. Redraw the props as true top-down (lid and rim only, no side face) or move the whole frame to a consistent oblique.
+- Give the props shadows. Both barrels meet the dirt at a hard bottom edge with no contact darkening, and the right one is clipped flat where it crosses the dirt-to-stone seam at y 215.
+- Break the dirt's repeat. The red mottle cluster recurs on roughly a 48px cycle across the entire brown field. Add two or three variant tiles and scatter them, or overlay a large-scale value gradient to hide the period.
+- Transition the floor changes. The grey stone patch at x 8–56, y 168–215 is a bare rectangle stamped into the dirt, and the dirt-to-stone boundary at y 215 is a straight line the full width. Build corner and edge tiles for both.
+- Vary the stone. The grey floor is one tile with a uniform 1px light grid line repeated without deviation. Vary the joint depth along a single run, chip a few corners, shift two or three stones a value.
+- The moss blobs are flat fills with one outline colour and no contact shading. Give them an inner value step and darken the stone immediately around them so they sit in the surface rather than on it.
+- Add a light model. The frame is at identical brightness corner to corner with no source anywhere. Whatever the light is meant to be, place it and let the falloff do work — as it stands the image has no depth information at all.
+
+Where this leaves you: the base map under 2/3/4 is close, and 4 proves it can hold structure under light. The two things standing between it and shippable are cheap — a lamp and a shadow on the figure, and a value break between wall top and floor. The scratch decal is the expensive one, and it's the thing that will read as generated to anyone who looks twice.
+
+Model used: Claude Opus 5 (1M context).

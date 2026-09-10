@@ -110,6 +110,21 @@
       "why_new": "How the props are BUILT, not how they are valued (#204). And it replaces a SPENT disposition: 'props are excluded from the shadowcaster set' was disposed against #193 because there was no prop there. Correct then; there are four real props now and they cast nothing.",
       "measured": "9812 is the family's weakest member — I recorded it as 'thin, but the right register' when it landed and shipped it as the third of a family that wanted four. A seat has now read it as debris, which is the identity card's `role_reject` arriving for that variant.",
       "evidence": ".claude/skills/frame-critic/history/r002-props.json"
+    },
+    {
+      "when": "2026-09-10",
+      "round": "r002-art_autonomy-amendment",
+      "lane": "scene",
+      "seat": "one seat of five",
+      "to": "#210",
+      "title": "The review scene lines the barricade family up in a row at constant pitch",
+      "items": [
+        "Move at least one barricade off y=14 and off the two-cell pitch.",
+        "A pass over the whole review scene for the same shape, not just this row."
+      ],
+      "why_new": "It is a SCENE fault, not a prop fault, and no open issue covers how the review scene arranges what it is reviewing. #204 is values, #207 is craft, #109 is multi-tile props.",
+      "measured": "I placed the family at (4,14), (6,14), (8,14) - one row, every other cell, which at 64px device pitch is the 125px spacing the seat measured twice. That is 8.3.1's motif trap one level up: a repeated element at constant pitch reads as pattern whether the repetition comes from a tilemap or from a placement list. The generation grammar spent 68 attempts avoiding a fence, and the scene then lined the heaps up.",
+      "evidence": ".claude/skills/frame-critic/history/r002-art_autonomy-amendment.json"
     }
   ]
 }

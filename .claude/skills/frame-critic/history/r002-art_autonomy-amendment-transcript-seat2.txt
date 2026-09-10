@@ -1,0 +1,59 @@
+I read all four at full size and then at 4–6× on the specific areas, plus a few pixel measurements where my eye could be fooled by the falloff.
+
+RANK: 2 > 3 > 4 > 1
+
+BEST: 2
+
+BEST_WHY: The floor keeps its construction legible *through* the light. In the tile the figure stands on, at (300–400, 465–520), the joints between slabs survive at full lamp intensity — you can still count four separate stones and each has its own face value, so the light is sitting on masonry rather than replacing it. Measured, the lit patch there has a standard deviation of 45 grey levels around a mean of 173: bright, but still carrying detail. The wall band at (200–500, 425–455) reads bottom-to-top as a hard dark base line, then a course of blocks with visible joints, then a horizontal timber rail with vertical posts driven through it — you can name every layer, which is what makes it read as something built and then patched rather than a brown stripe. And the wall's meeting with the floor is a line, not a fade. Prop density is the only frame here that supports the fiction: a barrel, a crate, three timber assemblies and a socket in the stone, spread across the readable part of the falloff rather than clustered at the lamp.
+
+WORST: 1
+
+WORST_WHY: The water at (249,0)–(336,191) is a rectangle with square corners and no edge treatment of any kind. At y=100, the pixel at x=248 is dirt (80,41,22) and the pixel at x=250 is water (36,76,62) — the shoreline is one pixel wide. Same at the bottom: y=191 is water, y=192 is dirt. No bank, no coping, no waterline, no shadow thrown onto the surface. The body itself is two values, (36,76,62) and (38,81,66) — a five-level spread across ninety pixels of water, so it has no depth and no surface. Second: there is no light falloff at all. Dirt beside the figure measures L=66.0; dirt in the far lower-left corner measures L=67.5. The corners are as lit as the centre. Third, and this is the one that reads as placeholder: of the 432 sixteen-pixel tiles in the frame, only 193 are distinct — 310 tiles are byte-identical to another tile, and the main dirt tile repeats on a strict 48-pixel lattice (same block at (160,0), (112,48), (160,48), (208,48), (64,96), (112,96)…). You can see the grid without looking for it. On top of that the two chests at (62,0)–(97,45) and (62,47)–(97,92) are the same sprite stacked twice with the same diamond centred on each lid, the two stumps at ≈(132,202) and ≈(180,202) are identical rings, and the three-lobe teal moss with the diamond highlight appears at ≈(24,62) and again at ≈(365,158). The lily pads sit on the water with no contact shadow and no waterline, at a green more saturated than anything else in the frame. And the figure at (222,3) has a hard black shadow ellipse under it while the chests and stumps standing on the same ground cast nothing.
+
+FLAGGED: 1, 4, 2, 3
+
+SHIP: NONE
+
+---
+
+FLIP 1:
+- The water body at (249,0)–(336,191) ends in a one-pixel cut on both visible sides. Build the edge: a bank or coping on the left and bottom runs, a 2–3 px darker waterline inside it, and a shadow cast from the bank onto the water.
+- The surface is two values, (36,76,62) and (38,81,66). Ramp it — darker toward the middle of the body, a lighter shelf where it meets the bank — so it has depth.
+- Break the square corners at (249,191) and (336,191), or commit to it being a built cistern and give it a stone rim.
+- The lily pads at (300,32), (300,105), (320,110), (307,143) and (285,150) float with no contact. Put a dark waterline under each and pull their green down into the frame's saturation range — right now they're the most saturated pixels in the image.
+- Dirt beside the figure is L=66.0 and dirt in the far corner is L=67.5. Add carried-lamp falloff centred on the figure so distance costs value.
+- 310 of 432 tiles are exact duplicates and the dirt repeats on a 48-px lattice. Add variant tiles and non-tiling detail — scuffs, spills, wear that crosses tile boundaries — until the lattice is unreadable.
+- The two chests at (62,0)–(97,45) and (62,47)–(97,92) are one sprite stacked. Vary the second: different lid, different damage, or rotate it.
+- The stumps at ≈(132,202) and ≈(180,202) are identical rings. Vary the ring count and the break in the bark.
+- The moss stamp at ≈(24,62) and ≈(365,158) is the same silhouette with the same interior diamond. Redraw one.
+- The figure at (222,3) has a black shadow ellipse; nothing else does. Either give the chests and stumps contact shadows or drop the figure's.
+- The bones at ≈(218,115) are six scattered white pixels with no legible form. Give them a silhouette or remove them.
+
+FLIP 2:
+- The socket at (596,548) shows open flame, and the floor 20 px to its right measures L=51 while floor 100 px to its *left* measures L=117 — the flame contributes nothing. Give it its own falloff over roughly (555–640, 505–595), or close the socket and delete the flame pixels.
+- Same fault at the barrel at (345,545) and the orange mass at (410,612): both carry hot orange interiors and light nothing. Decide per object — it's an ember and it casts, or it's rust and its brightest value comes down into the range of the surrounding timber.
+- The crossed-timber prop at (400,600)–(425,630) has no straight edge anywhere; at 1:1 it reads as a red-orange lump with a V-notch. Redraw it as two 3-px bars with continuous edges and a 1-px dark break at the crossing so the overlap reads.
+- The ring at (575,530)–(620,570) is built from soft rounded lumps with anti-aliased edges while every stone in the frame is hard-cut. Rebuild it as blocks with flat faces and 1-px joints.
+- The same five-stroke 45° diagonal hatch is stamped on most flagstones across y=700–900. Cut it to roughly one stone in five and vary the angle per stone — forty marks sharing one angle reads as procedural noise, not as damage.
+- The pins along the rail at y≈440, x=200–500 are evenly spaced identical dashes. Vary the spacing, bend two, omit one.
+
+FLIP 3:
+- The slab at (490,515)–(560,550) is flat fill — no grain, no mark, no value break — and the slab below it at (490,555)–(560,580) is the same. Together they make a bald patch about 90×70 px in a floor where every neighbouring stone is scratched. Give them the same wear.
+- One object (the crate at (310,645)–(380,710)) occupies the entire readable area. Populate the band between (250,560) and (560,660), which is still well inside the falloff: rope, driven pins, hide, salvaged timber.
+- The post stub at (358,598)–(368,625) and the speckle field at (370,600)–(470,640) sit on bare floor with nothing above them — they read as ground marks left behind when a prop was pulled. Restore the object or clear the marks.
+- The pale lump at (432,528)–(462,548) has two dark pits and no readable silhouette at 1:1, and no contact shadow. Outline it and ground it, or remove it.
+- Same 45° hatch-stamp repetition across the lower floor as above.
+
+FLIP 4:
+- 17,126 pixels sit at or above 246 in every channel, forming a blob from (273,455) to about (500,570). Inside it, every joint and every stone mark is gone, including on the tile the figure stands on. Cap the lit floor around 225 so the joints survive under the lamp — the sibling framing does exactly this at std 40 / mean 177.
+- That clipped region's outline is an amoeba with fingers: one reaches left to x=273 while the boundary directly under the figure sits at y=520. Make the falloff radial from the lamp and let the stones break its edge; don't let the hot core have its own arbitrary silhouette.
+- The wall band between the timber rail at y≈400 and the floor at y≈455 is a featureless soft brown gradient across the full width x=160–470 — no blocks, no joints, no marks. Put the masonry course back.
+- The wall's lower edge fades into the floor across y≈450–465. There's no line where the wall stops. Give it a hard dark base line so the boundary reads.
+- The two timber posts at x≈262 and x≈355 project above the wall's top edge at y≈390 into pure black with nothing holding them. Terminate them at the wall face or light what they're pinned into.
+- Carries the same blank slab at (490,515)–(560,550) and the same 45° hatch-stamp repetition described above.
+
+---
+
+The one fault that runs through 2, 3 and 4 and would cost you the most for the least work is the hatch stamp: it's on nearly every stone at one angle, and it's what makes a genuinely well-built floor start to look generated. Fixing the unlit fires in 2 is the shortest path to a shippable frame — the geometry underneath it is already there.
+
+*Model: Claude Opus 5 (1M context).*
