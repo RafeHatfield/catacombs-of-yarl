@@ -56,7 +56,18 @@ public static class CorridorReviewSceneBuilder
     public readonly record struct Spec(
         string Name, int Width, int Height, int PlayerX, int PlayerY,
         IReadOnlyList<(int X0, int Y0, int X1, int Y1)> Carve,
-        IReadOnlyList<LegibilityPoint> Legibility);
+        IReadOnlyList<LegibilityPoint> Legibility,
+        IReadOnlyList<PropPlacement> Props);
+
+    /// <summary>
+    /// A standing object seated in the review scene, for the tier-two props gate.
+    ///
+    /// THE FIELDS ARE <c>ReviewSceneBuilder</c>'S, DELIBERATELY. That sibling builder has parsed
+    /// and placed props since the candidate-review rounds, and <c>DungeonRenderer.Render</c> has
+    /// drawn them in Pass 4 for as long. Giving this scene a second vocabulary for the same thing
+    /// would mean two ways to say "a barrel at (5,12)" and one of them going stale.
+    /// </summary>
+    public readonly record struct PropPlacement(int TileId, int X, int Y, bool Blocks, string Why);
 
     /// <summary>
     /// A point the capture must be able to see, or must leave dark. <paramref name="Why"/> is
@@ -134,7 +145,27 @@ public static class CorridorReviewSceneBuilder
             }
         }
 
-        return new Spec(name, w, h, px, py, carve, legibility);
+        // ── PROPS, OPTIONAL AND ABSENT BY DEFAULT ────────────────────────────────────────
+        //
+        // Every scene that existed before the props pass parses identically: no `props` key means
+        // an empty list, and an empty list means this builder behaves exactly as it did. The
+        // floor and wall lanes' captures are unaffected, which matters because their reference
+        // frames are still the bar.
+        var props = new List<PropPlacement>();
+        if (root.TryGetProperty("props", out var propsEl))
+        {
+            foreach (var e in propsEl.EnumerateArray())
+            {
+                props.Add(new PropPlacement(
+                    e.GetProperty("tileId").GetInt32(),
+                    e.GetProperty("x").GetInt32(),
+                    e.GetProperty("y").GetInt32(),
+                    !e.TryGetProperty("blocks", out var b) || b.GetBoolean(),
+                    e.TryGetProperty("why", out var wy) ? (wy.GetString() ?? "") : ""));
+            }
+        }
+
+        return new Spec(name, w, h, px, py, carve, legibility, props);
     }
 
     /// <summary>
@@ -211,6 +242,16 @@ public static class CorridorReviewSceneBuilder
         // a lighting instrument. Darkness in this capture must come from the engine light rig
         // (§6.1), not from FOV dimming — otherwise the "lighting is live" control could be
         // satisfied by fog and the harness would be measuring the wrong thing.
+        // The props, seated before RevealAll so a blocking one marks its cell for the floor
+        // composer — a prop must sit on plain floor, not on a worn or accent tile, or it reads as
+        // standing on a pedestal (the defect PR #103 fixed for the game and #128 tracks).
+        var placed = new List<PlacedProp>();
+        foreach (var pp in spec.Props)
+        {
+            placed.Add(new PlacedProp($"review_{pp.TileId}", pp.X, pp.Y, 1, 1, pp.Blocks, pp.TileId));
+            if (pp.Blocks) map.MarkPropCell(pp.X, pp.Y);
+        }
+
         map.RevealAll();
 
         // THE REVIEW SCENE CARRIES NO LOSABLE GAME STATE. This is the fix for "the player dies on
@@ -243,7 +284,9 @@ public static class CorridorReviewSceneBuilder
         {
             IsDungeonMode = true,
             CurrentDepth  = 1,
-            Props         = new List<PlacedProp>(),
+            // The scene's props. Empty for every floor and wall round — no spec before the
+            // tier-two pass declares any — and the subject of the review for the props rounds.
+            Props         = placed,
         };
     }
 }

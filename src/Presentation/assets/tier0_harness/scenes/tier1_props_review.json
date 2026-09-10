@@ -1,0 +1,171 @@
+{
+ "name": "tier1_props_review",
+ "_comment": [
+  "THE PROPS SCENE — the combined room, with orc work standing in it.",
+  "",
+  "Geometry, player station, carve and legibility points are tier1_combined_review's, copied",
+  "verbatim and not to be edited independently: the props are judged ON THE LANDED SURFACES,",
+  "and a scene that drifted from the one the floors and walls were ratified in would be judging",
+  "them against something else.",
+  "",
+  "THE ACCEPTANCE CRITERION THIS SCENE EXISTS TO ANSWER, routed from the wall lane and quoted",
+  "in CC-SESSION-tier2-props.md: 'the props session PASSES only if orc work is visible AS",
+  "STANDING OBJECTS IN THE LIT RADIUS of the walked scene.' Every placement below is inside the",
+  "carried lamp's reach from the player's station, because a prop in the dark answers nothing.",
+  "",
+  "It is also #167's exit: 'the prop/overlay pass gives wall tops world-placed OBJECTS standing",
+  "on them ... so §8.3.1 does not reach them.'"
+ ],
+ "_station_trail": [
+  "(5,13) — route peak. REJECTED: put the map edge in frame (see above).",
+  "(6,12) — live."
+ ],
+ "_void_note": [
+  "THE VOID IS NOT IN THIS FILE. Which cells are void is a wall-family question and it is set",
+  "per capture — see tools/tier1_floors/capture_combined.sh and the --void-ring it passes, and",
+  "the flag's own documentation on Tier1BoundaryWall.Apply for why that is a command-line",
+  "decision rather than a manifest edit."
+ ],
+ "_legibility": [
+  "Wall faces are probed at the FLOOR cell they stand over, exactly as the wall gate scene",
+  "probed them: the probe reads a cell's delivered luminance, and a face is not a cell.",
+  "Nothing east of x=10 or south of y=20 is declared — at this camera it is outside the frame,",
+  "and a still cannot check ground it does not contain."
+ ],
+ "legibility": [
+  {
+   "x": 5,
+   "y": 12,
+   "expect": "lit",
+   "why": "1 tile — the floor at the foot of the masses' south face. The standing case, and the ground §6.5's stack is a relationship against",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.12), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.8881 absolute (1.0614 relative) and the bound is 0.100404."
+  },
+  {
+   "x": 4,
+   "y": 14,
+   "expect": "lit",
+   "why": "2.8 tiles — the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.12), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.4891 absolute (0.5845 relative) and the bound is 0.100404."
+  },
+  {
+   "x": 6,
+   "y": 15,
+   "expect": "lit",
+   "why": "3 tiles — the floor beside the island, which is what its outer corners are read against",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.12), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.3417 absolute (0.4084 relative) and the bound is 0.100404."
+  },
+  {
+   "x": 11,
+   "y": 14,
+   "expect": "dark",
+   "why": "5.4 tiles - room A's east end, past the delivered reach. RE-DERIVED 2026-09-06 against the re-ratified rig (radius 5.0 -> 6.0, ambient 0.70 -> 1.50), per SS6.2's re-derivation rule. This point WAS (11,13) at 5.1 tiles, declared dark because the old rig's delivered reach was about four tiles; on the new rig that cell reads ratio 0.1160 and is legitimately LIT, so the guard refused the capture and was right to. THE BOUND WAS NOT TOUCHED - the probe moved to ground that is actually past the reach, because loosening a bound to pass one's own capture is the failure LOOP-PROCESS SS4.3 forbids. Measured here: 0.0718, 28% clear of the 0.1000 bound. New delivered reach ~5.2-5.5 tiles against the old ~4; the ambient plateau sits at ratio ~0.075 and 33 of 81 in-view floor cells remain under the dark bound, so the arc survives the brighter ambient.",
+   "bound_lum": 0.08367,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.1), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.0634 absolute (0.0758 relative) and the bound is 0.08367."
+  },
+  {
+   "x": 8,
+   "y": 7,
+   "expect": "dark",
+   "why": "5.4 tiles — the chokepoint deep inside the mass, in frame and unlit",
+   "bound_lum": 0.08367,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.1), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.0817 absolute (0.0976 relative) and the bound is 0.08367."
+  }
+ ],
+ "width": 17,
+ "height": 21,
+ "player": {
+  "x": 6,
+  "y": 12
+ },
+ "carve": [
+  {
+   "x0": 3,
+   "y0": 12,
+   "x1": 13,
+   "y1": 14
+  },
+  {
+   "x0": 3,
+   "y0": 16,
+   "x1": 13,
+   "y1": 19
+  },
+  {
+   "x0": 3,
+   "y0": 15,
+   "x1": 4,
+   "y1": 15
+  },
+  {
+   "x0": 6,
+   "y0": 15,
+   "x1": 13,
+   "y1": 15
+  },
+  {
+   "x0": 8,
+   "y0": 6,
+   "x1": 8,
+   "y1": 11
+  },
+  {
+   "x0": 3,
+   "y0": 2,
+   "x1": 13,
+   "y1": 5
+  },
+  {
+   "x0": 1,
+   "y0": 16,
+   "x1": 2,
+   "y1": 17
+  }
+ ],
+ "_carve_note": [
+  "Row 15 is carved in two pieces either side of x=5, which leaves ONE CELL STANDING at (5,15).",
+  "That is the island: floor on all four sides and on all four diagonals, so it is the only",
+  "geometry in any review scene that puts four OUTER corners in frame. Inherited unchanged from",
+  "tier1_wall_review — every rect in this list is that spec's, byte for byte, so a comparison",
+  "between the two scenes is a comparison of stations and of nothing else."
+ ],
+ "_props_note": [
+  "PLACEHOLDER TILE IDS. 268 is the Oryx barrel and is here as a SUBSTRATE PROBE, not as art:",
+  "it proves the scene can seat a standing object at all, which is the thing the wall lane's",
+  "r003 was routed here for ('the review scene has no prop system at all'). The Oryx track is",
+  "closed (CLAUDE.md) and nothing from it ships. These ids are replaced by the props family's",
+  "own as it lands, one at a time, so each replacement is a visible diff."
+ ],
+ "props": [
+  {
+   "tileId": 268,
+   "x": 5,
+   "y": 13,
+   "blocks": true,
+   "why": "PROBE — one tile SW of the station, unambiguously inside the lit pool. The first placement was (5,11), which the carve makes SOLID ROCK: rows above 12 are floor only in the corridor at x=8. A prop inside a wall draws nothing, and the probe found that before any art existed — which is what the probe is for."
+  },
+  {
+   "tileId": 327,
+   "x": 8,
+   "y": 13,
+   "blocks": true,
+   "why": "PROBE — mid-pool, off the player's own cell, against the floor's traffic lane."
+  },
+  {
+   "tileId": 328,
+   "x": 4,
+   "y": 14,
+   "blocks": true,
+   "why": "PROBE — near the wall run, where a prop must read against masonry rather than floor."
+  },
+  {
+   "tileId": 269,
+   "x": 8,
+   "y": 11,
+   "blocks": true,
+   "why": "PROBE — the corridor mouth, where a prop is read against the wall run rather than against open floor."
+  }
+ ]
+}

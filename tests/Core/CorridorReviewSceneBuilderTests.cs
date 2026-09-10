@@ -150,7 +150,14 @@ public class CorridorReviewSceneBuilderTests
             Assert.That(state.Monsters, Is.Empty, "nothing may exist that can deal damage");
             Assert.That(state.Ending, Is.EqualTo(EndingType.None), "no ending may be pre-set");
             Assert.That(state.PlayerFighter.IsAlive, Is.True);
-            Assert.That(state.Props, Is.Empty, "props are not part of a floor/wall review");
+            // ⚠ AMENDED for the tier-two props pass. This used to read "props are not part of a
+            // floor/wall review", which was true of every scene that existed when it was
+            // written and is still true of every FLOOR AND WALL scene — TrunkAndBranch declares
+            // no props and gets none. What changed is that props became a SUBJECT of review, so
+            // the invariant this test is named for is stated on what it was always about:
+            // nothing in the scene may carry a loss condition. A prop is furniture, not a hazard.
+            Assert.That(state.Props, Is.Empty,
+                        "a spec that declares no props must produce none");
         });
     }
 
