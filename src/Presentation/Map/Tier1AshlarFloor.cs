@@ -747,6 +747,16 @@ public static class Tier1AshlarFloor
     /// It is NOT a sill and NOT a kerb. Nothing is built here — the register is found-and-annexed
     /// with thin administration, so traffic carved what it needed and nobody installed a piece.
     /// </summary>
+    /// <summary>
+    /// Is this cell FLOOR — regardless of whether anything stands on it?
+    ///
+    /// Walkable-minus-props is a movement predicate and this is a rendering one. A cell with a
+    /// barrel on it is still a floor cell; it is simply a floor cell you cannot walk into.
+    /// </summary>
+    private static bool IsFloorCell(GameMap map, int x, int y)
+        => map.IsWalkable(x, y) || map.IsPropCell(x, y);
+
+
     private static bool IsMouth(GameMap map, int x, int y)
     {
         if (!map.IsWalkable(x, y)) return false;
@@ -972,7 +982,19 @@ public static class Tier1AshlarFloor
 
         foreach (var (pos, node) in tileLayer.TileSprites)
         {
-            if (!map.IsWalkable(pos.X, pos.Y)) continue;
+            // ⚠ A PROP'S CELL IS STILL FLOOR — #128's conflation, in a second painter.
+            //
+            // `IsWalkable` is `_walkable && !_propCells.Contains(...)`: it answers CAN AN ACTOR
+            // STEP HERE, which is a movement question. Using it to decide WHAT TO PAINT means a
+            // blocking prop's cell is skipped by the family and left showing the theme's magenta
+            // placeholder — and the props pass found exactly that, three props each sitting on a
+            // magenta square. #128 is the same fault in FloorComposer: *"Pass 1 conflates
+            // walkability with floor — wall-adjacent props render as light pedestals."*
+            //
+            // The magenta is the guard working (§4.2: a painter that misses comes back screaming
+            // rather than plausible), so the fix is to paint the cell, never to change the
+            // placeholder. Floor-ness is `IsFloor`; walkability is somebody else's question.
+            if (!IsFloorCell(map, pos.X, pos.Y)) continue;
             if (node is not Sprite2D sprite) continue;
 
             int n = EdgeFamily(pos.X, pos.Y, cfg.HorizSalt, cfg.Seed, cfg.Families);

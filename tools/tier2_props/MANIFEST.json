@@ -1,0 +1,127 @@
+{
+ "family": "boundary_props_v1",
+ "_what": [
+  "THE BOUNDARY'S PROPS \u2014 structure composed, material taken from generation.",
+  "",
+  "No generated pixel is copied into a shipped tile. What crosses is the GRAIN STATISTIC: each donor's residual after a box blur removes its own structure, re-laid onto this family's ladder. The donors are listed so the audit trail is complete, and every one of them FAILED as a finished object \u2014 on projection, on role, or on a painted glow.",
+  "",
+  "Values are rungs of the WALL family's ladder, read from its manifest rather than restated (\u00a713.12), so a prop standing against a wall is the same rock at the same rungs. Re-derive the walls and the props follow.",
+  "",
+  "PALETTE REGIME: ladder, not locked. \u00a75.1's values are PLACEHOLDER."
+ ],
+ "planes": {
+  "top_rung": 5,
+  "face_rung": 1,
+  "top_rows": 10,
+  "occlusion_rows": 2
+ },
+ "ladder": [
+  48.5627,
+  61.7893,
+  75.016,
+  88.2427,
+  101.4693,
+  114.696,
+  127.9227,
+  141.1493,
+  154.376
+ ],
+ "donors": [
+  "tools/tier2_props/gen/wave1/barricade_a.png",
+  "tools/tier2_props/gen/wave1/barricade_b.png",
+  "tools/tier2_props/gen/wave1/barricade_c.png",
+  "tools/tier2_props/gen/wave1/barricade_d.png",
+  "tools/tier2_props/gen/wave1/fire_a.png",
+  "tools/tier2_props/gen/wave1/fire_b.png",
+  "tools/tier2_props/gen/wave1/fire_c.png",
+  "tools/tier2_props/gen/wave1/fire_cold.png",
+  "tools/tier2_props/gen/wave1/marker_a.png",
+  "tools/tier2_props/gen/wave1/marker_b.png",
+  "tools/tier2_props/gen/wave1/marker_c.png",
+  "tools/tier2_props/gen/wave1/marker_d.png",
+  "tools/tier2_props/gen/wave2/barricade_e.png",
+  "tools/tier2_props/gen/wave2/fire_e.png",
+  "tools/tier2_props/gen/wave2/marker_e.png"
+ ],
+ "donor_note": "taken for grain only; every one failed as a finished object",
+ "tiles": [
+  {
+   "name": "marker",
+   "id": 9800,
+   "file": "tier1_ashlar_9800.png",
+   "sha256": "8c606aae03724729cba83018968ab132afa9d5ee0745e3ff7a5b0393163ae520",
+   "opaque_fraction": 0.4043
+  },
+  {
+   "name": "barricade_a",
+   "id": 9810,
+   "file": "tier1_ashlar_9810.png",
+   "sha256": "b5d7c90b6558ca6438c5c1dade5629261191e8a8817e41c3a4f195c45540ee31",
+   "opaque_fraction": 0.5029
+  },
+  {
+   "name": "barricade_b",
+   "id": 9811,
+   "file": "tier1_ashlar_9811.png",
+   "sha256": "03534bed3c20095082f3cc7d2b310a892bddf663a3b71214b1fe7f1aaa0a6e13",
+   "opaque_fraction": 0.4648
+  },
+  {
+   "name": "barricade_c",
+   "id": 9812,
+   "file": "tier1_ashlar_9812.png",
+   "sha256": "4b92c3e730f51317609f458923c13671aef8928252c772bb1d44bdb746db661c",
+   "opaque_fraction": 0.4258
+  },
+  {
+   "name": "barricade_d",
+   "id": 9813,
+   "file": "tier1_ashlar_9813.png",
+   "sha256": "5e5fdd05a9d3746e69a0939da9207894629bcd953ee14739728f3716149ba23f",
+   "opaque_fraction": 0.4609
+  },
+  {
+   "name": "fire",
+   "id": 9820,
+   "file": "tier1_ashlar_9820.png",
+   "sha256": "bdb87bdd21474ee441b97b2b0f0caa5950f90c28e75ddb75e6363248a7edfd37",
+   "opaque_fraction": 0.3994
+  },
+  {
+   "name": "fire_flame",
+   "id": 9821,
+   "file": "tier1_ashlar_9821.png",
+   "sha256": "9ca7a0ca9f266da3efabc56805ea6dc0961bd036e25cb87f07c47f476d516149",
+   "opaque_fraction": 0.0576
+  }
+ ],
+ "method": "style-matched generation conditioned on the LANDED FRAME, inpainted into a 64px crop of the delivered scene, downsampled 2:1 to the family's native 32px. Basic generation was tried first and could not hold \u00a73.",
+ "landed": [
+  {
+   "name": "B-PROP-001 the boundary marker stone",
+   "id": 9800,
+   "source": "marker_styled.png",
+   "sha256": "4a4d605063dcf22db1301db34cc8736810bd7054574a2f8b606e331b1cfa813d",
+   "content": [
+    10,
+    15
+   ],
+   "quantised": 0.87
+  },
+  {
+   "name": "B-PROP-003 the orc fire",
+   "id": 9820,
+   "source": "fire_styled.png",
+   "sha256": "bd08029615c137dd2cbffce335ab7925f84c8fe2f48d3cce97e69b106ca86ec6",
+   "content": [
+    22,
+    22
+   ],
+   "quantised": 0.719
+  }
+ ],
+ "outstanding": {
+  "B-PROP-002": "THE BARRICADE DID NOT LAND. Six generations: four came back as FENCES in basic mode \u2014 the identity card's `role_reject` by name, 'too light, too regular, too agricultural' \u2014 and two style-matched attempts filled the mask with floor and one beam. Two composition passes were also tried and read as LADDERS, which is the same failure by another route: evenly spaced rails between two posts. It is recorded as outstanding rather than landed badly."
+ },
+ "palette_regime": "ladder, not locked \u2014 \u00a75.1's values are PLACEHOLDER and its derivation has not landed"
+}

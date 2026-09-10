@@ -132,17 +132,17 @@
   "between the two scenes is a comparison of stations and of nothing else."
  ],
  "_props_note": [
-  "TILE 9800 IS A SCREAMING STUB, not art. The props family's id block is 9800-9899.",
+  "TWO PROPS LANDED, ONE DID NOT.",
   "",
-  "The first probe used Oryx sheet ids (268/327/328/269) and they resolved to files that DO NOT",
-  "EXIST — GetTexturePath is pure pattern substitution, tier1_ashlar_{id}.png, so GD.Load returned",
-  "null and no prop sprite was ever created. The pixels that changed were the FLOOR: MarkPropCell",
-  "makes a prop's cell fall back to plain floor rather than worn or accent (PR #103), so marking a",
-  "cell repaints it whether or not anything stands there. The check agreed with the hypothesis for",
-  "the wrong reason.",
+  "B-PROP-001 (9800) and B-PROP-003 (9820) are style-matched generations conditioned on the",
+  "LANDED FRAME and downsampled 2:1 to the family's native 32px. B-PROP-002, the barricade, is",
+  "ABSENT: six generations came back as fences or floor-fills and two composition passes read",
+  "as ladders. It is recorded as outstanding in tools/tier2_props/MANIFEST.json rather than",
+  "landed badly — an asset nobody can name is worse than a gap.",
   "",
-  "9800 is magenta on purpose (LOOP-PROCESS 4.2). Magenta at the cell proves the sprite path;",
-  "magenta absent proves it does not work, and no floor repaint can fake it."
+  "The fire's ENGINE LIGHT is not attached in this build. The prop is judged as an object",
+  "first, which is what the identity card's carried-only capture is for; the two-source scene",
+  "is its own round."
  ],
  "props": [
   {
@@ -150,28 +150,21 @@
    "x": 5,
    "y": 13,
    "blocks": true,
-   "why": "PROBE — one tile SW of the station, unambiguously inside the lit pool. The first placement was (5,11), which the carve makes SOLID ROCK: rows above 12 are floor only in the corridor at x=8. A prop inside a wall draws nothing, and the probe found that before any art existed — which is what the probe is for."
+   "why": "B-PROP-001, the boundary marker stone. One tile SW of the station and unambiguously inside the lit pool — the routed acceptance criterion is orc work visible AS A STANDING OBJECT IN THE LIT RADIUS, so the first prop is placed where that question cannot be dodged."
   },
   {
-   "tileId": 9800,
-   "x": 8,
+   "tileId": 9820,
+   "x": 9,
    "y": 13,
    "blocks": true,
-   "why": "PROBE — mid-pool, off the player's own cell, against the floor's traffic lane."
+   "why": "B-PROP-003, the orc fire. Three tiles east of the station: far enough that it is not read as part of the player's own pool, close enough to be legible. Its engine light is NOT yet attached — this build judges the object, and the two-source scene is the next round."
   },
   {
    "tileId": 9800,
    "x": 4,
-   "y": 14,
+   "y": 17,
    "blocks": true,
-   "why": "PROBE — near the wall run, where a prop must read against masonry rather than floor."
-  },
-  {
-   "tileId": 9800,
-   "x": 8,
-   "y": 11,
-   "blocks": true,
-   "why": "PROBE — the corridor mouth, where a prop is read against the wall run rather than against open floor."
+   "why": "B-PROP-001 again, at 5 tiles — the same object at the far end of the lit radius. Two placements of one prop is the cheapest test of §8.3.1 available before the variant family exists: if it reads as a motif at two, it will at four."
   }
  ]
 }
