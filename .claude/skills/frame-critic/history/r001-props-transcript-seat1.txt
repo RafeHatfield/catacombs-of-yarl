@@ -1,0 +1,66 @@
+All four read. Findings below.
+
+**RANK:** 4 > 2 > 1 > 3
+
+**BEST:** 4
+
+**BEST_WHY:** Three things are actually built rather than applied.
+
+The crack system. One hairline runs from (250,540) diagonally down to (390,620), forks, and continues out into the dark at (600,760)–(730,690). It crosses block faces *and* joints without snapping to either, and it is one object spanning a dozen tiles — not a per-tile crack decal. In the dim right quadrant it keeps going as a 1px line at luminance 40 where a lazier frame would have let it dissolve.
+
+The floor courses in the lit pool (x190–520, y460–620). Blocks run in a broken bond, lengths vary from roughly one to two-and-a-half tiles, and individual faces carry incised marks that differ block to block — short vertical tally strokes near (500,510), a diagonal hatch group at (640,555), a different one at (690,570). I ran a duplicate-block search across the whole floor: 986 sampled patches, 12 near-matches, all of them in the featureless dark at luminance 40–66 where the gradient is smooth. Nothing is stamped. Compare frame 3 below.
+
+The wall band at y422–456 resolves as three separate values — top surface, a dark shadow line, a course of block faces, a second shadow line at the floor — so it reads as having thickness, and dark verticals at x≈345 and x≈724 break the run where driven timber would.
+
+**WORST:** 3
+
+**WORST_WHY:** The pond at x248–344, y0–190 is an axis-aligned rectangle butted straight against the dirt. No shoreline, no transition tile, no depth — the water ends on a perfectly straight vertical at x=248 and a perfectly straight horizontal at y=190. Inside it, the surface is one tile stamped with zero variation: 18×18 blocks match *pixel-for-pixel, mean absolute difference 0.00*, at 24px vertical and 48px horizontal intervals throughout the pond. The two barrels at (118,192) and (166,192) are identical copies — 1.5 mean absolute difference at a 48px offset, and that residual is just the dirt showing past their edges. The two wall banners are the same. The three lily pads are the same sprite three times at the same rotation with the same white centre mark. The dirt is one 16px tile with a recognisable red-clot signature recurring on the grid. The grey stone is a flat fill with a 1px darker grid line and nothing else — no wear, no chipping, no per-block value. And it has no lighting model at all: uniformly lit corner to corner, the figure at (218,8) carrying nothing.
+
+**FLAGGED:** 1, 2, 3
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- A 45° hatch/dither overlay is applied in screen space across the entire frame **including the actor**. Inside the shield boss at (415,490) and across the face at (400,478) there are stray cream pixels not in the sprite's palette, and the sword blade at (392,470) is broken up by them. Exclude the actor layer from the overlay entirely.
+- The overlay runs continuously across every stone joint in the lit pool (x250–520, y460–580) without breaking at a single one, so the light reads as a sheet laid on top of the floor rather than light falling on it. Mask any such texture to stone faces and break it at every joint.
+- The overlay has pulled the frame apart at both ends: the wall band at y400–418 drops to luminance 57 against 83 in the same region of the other frames, while the lit floor rises to 196 against 168. The mid-range is gone. Pull the highlight back down and lift the wall.
+- Restore the course lines in x250–450, y500–560 — they are legible in the same area of the other frames and blown out here.
+- After removing the overlay, every item under FLIP 4 still applies.
+
+**FLIP 2:**
+- The brazier at (598,548) burns a saturated red/yellow flame and casts no light. Measured against the same frame without it: above the pit 74 vs 77, left 84 vs 92, below 62 vs 72, right 44 vs 61. A visible fire is making its surroundings *darker*. Either light it — a warm radial falloff centred on the pit, brightest on its own ring stones, dying over about three tiles, warming the joints it crosses — or extinguish it and draw it as a cold ash pit.
+- That flame is the only fully saturated red and yellow in the frame; everything else sits on a warm-brown-to-cold-grey ramp. Bring it onto the palette.
+- The barrel at (345,545) has no contact shadow and no base occlusion — it floats. Ground it with a shadow thrown away from the lamp at (405,485).
+- The same barrel is lit from directly overhead (cream band on top, dark at the bottom) while the lamp is up and to its right. Relight it from the lamp.
+- Its silhouette is a rounded rectangle with one horizontal band; at played size it reads as a chest. Add stave lines and a visible hoop.
+- The object at (280,800) is the same sprite again at a different tint. Vary it or cut it.
+- Every item under FLIP 4 also applies — 2 is that frame with props added.
+
+**FLIP 4:**
+- The wall block at x430–495 runs from y180 to y420 — roughly six tiles — as one continuous soft brown mottle with no bed joints and no head joints, one thin crack its only feature. Cut it into courses at the same joint value used in the wall band at y422–456.
+- Same treatment for the wall field at x120–190, y380–640.
+- The corridor floor from y180 to y320 is a smoky vertical gradient with two scratch curves and no stone divisions at all. Give it the running bond the room floor has at y460–620, then darken it — don't darken it until the masonry is gone.
+- The corridor floor at (535,330) measures luminance 91; the room floor at (210,500) measures 70. Those are 202px and 196px from the lamp. Either put a source in the corridor or put it on the same falloff curve as the room.
+- Below roughly luminance 60 the frame stops having edges — x570–750, y480–700 is feathered mush. Darken by dropping value on the same hard pixels; carry joint lines and scratch marks into the dark as 1px edges.
+- Nothing in the frame shows four hundred years of repair. The only structural reads are two dark verticals. Put at least three distinct repairs in the lit wall band at y422–456 where they will be seen: a timber baulk let into a broken course with visible driven pins, a rope lashing crossing a joint, a hide patch over a gap.
+- The room is empty — one dark block at (310,650) across 500px of floor. Add the salvage the soldiers would leave: stacked offcuts, a rope coil, a spoil heap of broken block. Each with a contact shadow.
+
+**FLIP 3:**
+- Draw the pond a shoreline: irregular edge, a wet-dirt transition band, proper corner and edge tiles. It currently terminates on two straight lines.
+- Vary the water tile and give the pond depth — value change toward the middle or at the bank. It is currently one stamp with zero variation.
+- Draw distinct lily pad variants. Three identical sprites at identical rotation.
+- Vary or remove the duplicate barrels at (118,192)/(166,192) and the duplicate banners at (64,4)/(64,40).
+- Add two more dirt-floor variants and some larger-scale value drift; the current tile's red-clot pattern is identifiable on the grid.
+- Give the grey stone blocks individual values and edge damage. It is a flat fill with a grid line.
+- Add the lighting model. The frame is uniformly lit corner to corner and the figure at (218,8) carries no light; every other frame in this set falls off with distance from the figure.
+- Outline the sword at (232,4) — a white blade with no outline directly against pale stone, it vanishes.
+- Resolve the black band at y224–288: it is a flat strip with a thin grey line at y240 and no readable top or face. Finish it or crop it.
+- The tileset is a generic outdoor courtyard — leaf-green water plants, clean grey stone, clean brown dirt, no rope, no pins, no hide, no salvaged timber, nothing repaired. This is not a fix list item so much as a rebuild against the fiction.
+
+---
+
+Two of these frames share a base render — 2 and 4 differ only inside a 420×370 box, and 1 is that same base under a filter. The real question is whether the base is good enough, and it isn't yet: roughly a third of frame 4 is soft cloud noise standing in for masonry, and the room is empty of the repairs the fiction is built on. Fix the base once and three frames improve together. Frame 3 is a different problem entirely.
+
+*Model: Opus 5 (1M context)*

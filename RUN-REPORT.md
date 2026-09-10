@@ -4,7 +4,9 @@ One autonomous cycle: the autonomy amendment, then the remaining surface work, t
 Appended per item. **Nothing here needs a reply** unless it names one of §1.1.4's three triggers.
 
 **On the phone right now:** the polish stack, #198's proportional specular, and #183's
-re-derived cap — installed and verified on the handset, `review=GATED`.
+re-derived cap — installed and verified on the handset, `review=GATED`. **The props build is NOT
+on the phone**: three panels were killed by system memory, so it has no verdict and nothing
+installs without a gate (item 13).
 
 **On the phone as of 2026-09-09: the polish stack + #198 + #183 re-derived**, INSTALL-LATEST on
 five seats, verified from the handset's own log (item 10). **§3 is the one thing still needed** —
@@ -734,3 +736,165 @@ Magenta at the cell cannot be faked by any amount of floor repainting:
 
 **Sprite path proved.** Authoring size falls out of the same probe: a prop is scaled to fill its
 64px cell, so props are authored at **32×32 native** like every other family.
+
+---
+
+## Item 12 (queue 1) — the props pass: two props landed, one did not
+
+### The method was the problem, and the prompt had said so all along
+
+`CC-SESSION-tier2-props.md` asks for generation *"conditioned on the landed corpus at the measured
+screening rates."* I ran two waves without doing that, and they failed comprehensively:
+
+| wave | mode | result |
+|---|---|---|
+| 1 (12 gens) | basic | 4 markers: one standing stone in **grass**, one **gravestone with a skull**, two isometric. 4 barricades: four **fences**. 4 fires: four cosy campfires with painted glow, including the one asked for with *no flame*. |
+| 2 (3 gens) | basic, refusals sharpened | all three **isometric**, two still carrying green |
+
+Every one of those refusals — *no grass, not a gravestone, no skull, not a fence, orthographic, no
+isometric* — was in the prompt text. §3 was ratified hours earlier and a diamond footprint is not a
+near miss.
+
+**Wave 3 fed the generator a 64px crop of the landed frame as style context and inpainted into
+it.** The marker and the fire came back orthogonal, square to the screen, in the scene's own
+palette, no vegetation. **Conditioning on the corpus is what makes §3 survive generation** — which
+is the difference between §13.7's *"generation cannot do architecture"*, measured on a **tiled**
+surface, and what a discrete prop can do when it is shown the room it will stand in.
+
+Downsampled **2:1, not resized**: the context was the delivered frame at 2×, so the generator drew
+at 2px per art-pixel (87% and 72% of its 2×2 blocks already uniform). One sample per block recovers
+the native art; a bilinear resize would author the sub-pixel gradient §4.3 forbids.
+
+### What landed, and what did not
+
+**Landed:** B-PROP-001 the marker stone (at 1.4 and 5 tiles — the same object twice, the cheapest
+§8.3.1 test available before a variant family exists) and B-PROP-003 the orc fire, all inside the
+lit radius. That is the routed acceptance criterion — *orc work visible as standing objects in the
+lit radius* — and #167's exit.
+
+**Did not land: B-PROP-002, the barricade.** Six generations came back as fences or floor-fills,
+and **two composition passes of my own read as ladders** — the identity card's *"too light, too
+regular, too agricultural"* failure reached by a second route. Recorded as outstanding in the props
+manifest rather than shipped: an asset nobody can name is worse than a gap.
+
+### Three faults found on the way, two of them mine
+
+**1. My first substrate proof was wrong.** It measured *pixels changed at the prop's cell* and read
+that as *the sprite drew*. It did not — `GetTexturePath` is pure pattern substitution, the probe ids
+resolved to files that do not exist, and what moved 12,464 pixels was `MarkPropCell` repainting the
+floor. Re-proved with a magenta stub at the props' own id: 904–908 magenta pixels per cell, which no
+floor repaint can fake.
+
+**2. My own composition was worse than the generations**, and it reproduced #202 — the marker's
+turn was a 2-row occlusion band at 0.55 between two lit planes, which is a black rule, and a black
+rule separates. Pass 2 replaced it with a **coping course** belonging to both planes, which is
+#202's own prescribed exit, and the turn read as a turn. That is a useful early confirmation of
+#202's remedy, on a different asset.
+
+**3. A prop's cell is still floor — #128's conflation, in a second painter.** `Tier1AshlarFloor`
+skipped prop cells because it used `IsWalkable` (`_walkable && !_propCells`) to decide **what to
+paint**. That predicate answers *can an actor step here*; floor-ness is a rendering question. Every
+prop therefore sat on the theme's **magenta placeholder** — §4.2's guard working exactly as
+written, a painter that misses coming back screaming rather than plausible. The fix paints the
+cell and leaves the placeholder alone. Magenta pixels remaining: **0**.
+
+### The screen that could not see it
+
+`screen_wave.py` measures outline, glow, mass and value band. It **passed the gravestone and two of
+the fences.** §13.4 is right: register conformance is never instrumented, and the eye caught what no
+number would. The screen stays — it is a builder's tool and gates nothing — but its blindness is
+now on the record rather than assumed away.
+
+### Budget
+
+18 of 90 generations. The remaining 72 are unspent and the barricade is what they are for.
+
+### The criterion, measured on the round's own frame
+
+| prop | cell | delivered luminance | §13.8 floor 36.7 | tiles from the station |
+|---|---|---|---|---|
+| marker | (5,13) | **152.16** | LIT | 1.4 |
+| fire | (9,13) | **52.83** | LIT | 3.2 |
+| marker | (4,17) | 17.97 | **DARK** | 5.4 |
+
+Two of three placements clear the perceptual floor, and the routed criterion — *orc work visible as
+standing objects in the lit radius* — is satisfied by those two. **The third does not, and it was
+the one with a job.** I placed a second marker at 5.4 tiles as the cheapest §8.3.1 repeat test
+available before a variant family exists; at 17.97 it is past the delivered reach (~5.2–5.5 tiles,
+measured on the rig months ago) and cannot answer that question. The repeat test is still owed.
+
+### The round was killed once, and it produced no verdict
+
+The first five-seat round was **stopped by the system for low memory** after seat 1. Seats run
+sequentially, so this was ambient pressure rather than concurrency — about 107MB free at the time.
+Seat 1's ballot is preserved outside the repo and the round is re-run rather than resumed: **a
+round that produced no verdict is not a round to re-roll**, and nothing was deleted that had been
+counted. Recorded because "the harness fell over" and "the judge said no" must never look alike in
+this log.
+
+---
+
+## Item 13 — **the run ends on the budget trigger: the harness cannot seat a panel**
+
+Three consecutive five-seat rounds on the props build were **killed by the system for low memory** —
+after seat 1, after seat 1, and after seat 2. By the third attempt the OOM killer was taking my
+*watcher* processes as well. There were no orphaned `claude -p` seats to reap between attempts (I
+checked), seats run **sequentially** so this is not concurrency, and free memory at seat time was
+around 100MB.
+
+**This ends the turn, and it ends it on the third trigger rather than on a per-item STOP.** Every
+remaining queue item — #202, #198, #194, #201, #167 — is specified *"under the frame-critic with
+install-latest on PASS."* A harness that cannot complete a panel does not fail one item; it gates
+all six. Calling that five separate STOPs would be five misleading entries in this log.
+
+**I did not start the #202 recompose.** Composing the wall family, re-importing and capturing are
+all memory-heavy, and being killed *mid-write* would leave the wall family corrupt — the one
+outcome worse than not starting. The patch is written and its four anchors are verified against the
+current file; it applies clean whenever there is memory to run it.
+
+⚠ **Nothing here is a verdict about the picture.** No round completed, so nothing installed, and the
+props build's own quality is still unjudged. *"The harness fell over"* and *"the judge said no"* are
+different sentences and this log will not blur them.
+
+### What the two completed ballots said — an incomplete panel, gating nothing
+
+Seat 1 balloted in full before the third kill, and it answered **two of the three questions the
+props pass exists to ask.** A panel of two is not the ruled panel of five, so this produces no
+verdict and opens no gate. It is recorded because the evidence is real and Rafe walks this build in
+the morning.
+
+**1. The fire casts no light, and the seat measured it.**
+
+> *"The brazier at (598,548) burns a saturated red/yellow flame and casts no light. Measured
+> against the same frame without it: above the pit 74 vs 77, left 84 vs 92, below 62 vs 72…"*
+
+That is correct and it is my deliberate omission — B-PROP-003's engine `PointLight2D` is not
+attached in this build, because the identity card's `carried-only` capture judges the object first.
+A blind seat found the gap unaided and measured it in four directions. **The two-source scene is
+owed**, and it now has a seat's number on it rather than only a card's promise.
+
+**2. The repeated marker reads as a motif — §8.3.1's continuity test, and it FAILED.**
+
+> *"The object at (280,800) is the same sprite again at a different tint. Vary it or cut it."*
+
+I placed the marker twice precisely to ask this, and the answer came back no. **The variant family
+is required, not optional** — the identity card says *"a variant family from round one, never a
+single sprite"* about the barricade, and this is the same law arriving for the marker. One sprite
+placed twice is a motif at two placements; it will not survive four.
+
+Both are findings the pass wanted. Neither needed a complete panel to be true.
+
+### Where this leaves the queue
+
+| # | item | state |
+|---|---|---|
+| 1 | props pass | **art landed and committed, verdict not obtained.** Two props in scene, floor painting under them, #128's conflation fixed. Barricade outstanding. |
+| 2 | #202 turn | patch written, anchors verified, **not applied** |
+| 3–6 | #198, #194, #201, #167 | untouched |
+
+**What needs to happen first is not art.** The harness needs headroom — this machine is running a
+Claude Code session, the desktop app and several other Claude instances, and a five-seat panel does
+not fit beside them. Everything else in the queue is downstream of that.
+
+Committed and pushed on `art/autonomy-amendment`. The props build is on the branch, not on the
+phone: it has no verdict, and I will not install one without a gate.
