@@ -1130,3 +1130,88 @@ never once drawn beside the arris.
 3 resolves to 61.789 instead of 88.243 — 26 levels dark, the exact failure the walls shipped.
 Nothing is wrong on disk because the cap has not been recomposed. **A landmine, not a fault**, and
 filed rather than fixed here.
+
+
+---
+
+## Item 17 — #202 is gated and installed; #201 is unblocked and scoped; three new issues
+
+### The gate
+
+Panel of five, as ruled 2026-09-09.
+
+| seat | build rank | reference rank | above ref | plant |
+|---|---|---|---|---|
+| 1 | 1 | 2 | YES | CAUGHT |
+| 2 | 1 | 2 | YES | CAUGHT |
+| 3 | 1 | 2 | YES | CAUGHT |
+| 4 | 2 | 1 | no | CAUGHT |
+| 5 | 2 | 1 | no | CAUGHT |
+
+**Above the reference in 3 of 5; not below it in 5 of 5.** `below_reference 0`,
+`strong_regression False`, all plants caught. **INSTALL-LATEST.**
+
+**The rank moved the right way, and last round I said plainly when it did not.** r002-props ranked
+2 of 4 with 0 of 5 above; this one ranks 1 of 4 with 3 of 5 above. Same reference, same
+comparator, same published 40% per-seat flip rate — **one sample better, not a proof**, and worth
+exactly that.
+
+**Not one of the six flips is about the walls or the turn.** All six are props; three are the
+brazier alone.
+
+⚠ **I first ran this at the default one seat**, which is not the ruled panel. That round is kept
+as r001 rather than deleted, and the five-seat panel supersedes it. The direction is honest: the
+under-powered round had already said INSTALL-LATEST, so seating four more could only cost.
+
+### Installed at `3449a22f` — and NOT launch-verified
+
+The device reports the app present:
+
+```
+YARL Tier0   com.rafehatfield.catacombsofyarl.tier0   1.0.0
+```
+
+Launch refused: *"Unable to launch … because the device was not, or could not be, unlocked."*
+**Not on the phone verified because the handset is locked** — the third install running.
+
+### Three new issues, two of them found by accident
+
+| # | what | state |
+|---|---|---|
+| **#208** | **Every binding in the game is ONE flat value** — 855 px at a single luminance across all 15 tiles. Five inks authored, one delivered. | **LIVE** |
+| #209 | `compose_cap.py` carries the same ladder-index defect — `top_rung: 3` beside a nine-rung ladder | armed, not fired |
+| #210 | The review scene lines the barricade family up in a row at constant pitch — §8.3.1 built by the scene, and it is mine | routed |
+
+**#208 is the one to read.** `ink()` clips at index 0 exactly as `rung()` did, and on the
+nine-rung ladder the face sat at rung 1, so `shadow`, `iron`, `timber` and `rope` all resolved to
+48.5627. The file's own docstring is the assertion the clip defeats — *"iron is three rungs under
+its own plane wherever that plane sits, **which keeps the ratio**"*. The ratio was never kept.
+And `tops` reads *"NO BINDINGS ON TOP PLANES — ruled at the gate"*, so the face set is the whole
+set: **there is no unaffected half**.
+
+⚠ Its fix is **not** the clip. On the face there is exactly **one rung of room** — the plane sits
+at 61.789 and the family floor at 48.56 — and four inks cannot be distinct in one step on any
+ladder that ends where this one does. That needs a direction call, and I did not take it.
+
+**Three families, one defect, and the only one that was caught is the only one with a
+reproduction guard.**
+
+### #201 — unblocked, confirmed, scoped, not started
+
+#206's close removes its block. The #202 pass then **re-confirmed its item 1 for free**: the
+differenced capture marks every turn in the frame, and on one run the arris landed on **exactly
+device rows 513–514 across all 266 columns**. The top edge is a ruled line, found again by a
+completely independent instrument.
+
+**And the basis for the fix is in the bar's own numbers, which the recipe measured and walked
+past.** §2.1: *"Turn row 23 of 48 in 19 of 23 face tiles … outliers 0.479 (2), 0.542, 0.604."*
+**4 of 23 tiles — 17% — carry a turn row that is not the modal one**, spanning about rows 13–17 at
+our scale. That is a family whose top edge steps, distributed as a property of the tile rather
+than as a notch hashed inside it — which is what §8.3.1 warns against and what this issue's exit
+asks for.
+
+⚠ **Deliberately not started at the tail of this run.** It is a vertical-layout refactor
+(`FACE_TOP_ROW`, `OCCLUSION_ROWS`, `FACE_COURSES`, the alpha cut and now the arris row are all
+constants relative to row 16) plus its own gate. #202 took one wrong derivation that only
+measurement caught; starting a second layout change without room to measure it is how that
+happens twice.
