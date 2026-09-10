@@ -76,6 +76,10 @@ T = 32
 FACE_TOP_ROW = 16          # WALL-RECIPE section 2.1: the face is the lower half, 16 native px.
 OCCLUSION_ROWS = 2         # the face under the overhang, dark from every azimuth
 BED_ROWS = 2               # a joint between courses
+# THE COPING COURSE — #202. The band where the top plane meets the face, belonging to both.
+# Two native rows: one is a line rather than a course, and three would eat a third of the face
+# at this tile size (the same argument JOINT_PX makes about a 2px joint on a 6px course).
+COPING_ROWS = 2
 # Head-joint width, native px, PER PLANE and not one number for both.
 #
 # The two planes are looking at different things. A wall top shows blocks the width of the wall,
@@ -105,9 +109,36 @@ FACE_DONORS = {
 }
 LEDGER = os.path.join(REPO, "tools/pixellab/wall_gauntlet/rounds")
 
+# ⚠ THE RUNGS ARE DERIVED FROM VALUES, NOT WRITTEN AS INDICES — section 5.7, found live.
+#
+# These were index constants "on the nine-rung ladder of bible section 5.6", and the comment was
+# the assumption that broke: THE FLOOR'S LADDER IS ELEVEN RUNGS NOW. It gained two at the bottom
+# (22.11 and 35.34) when the reach was extended, and a wall family composed against the old list
+# kept its indices while their meaning moved two rungs down:
+#
+#     top   rung 5   114.696  ->   88.243     a whole plane, 26 levels darker
+#     face  rung 1    61.789  ->   35.336
+#
+# Nobody saw it because nobody recomposed. The tiles ON DISK are the nine-rung ones and the
+# composer had silently stopped reproducing them — a recompose for an unrelated reason (#202's
+# coping course) is what surfaced it, and the control that proved it was recomposing with that
+# change REVERTED and finding the face still 26 levels down.
+#
+# Section 5.7 is exactly this: "anchors must be means and stable under field size". An index into
+# a list whose length can change is not stable under field size. So the arms now carry the RATIOS
+# that section 6.5 states — the floor's own anchor of 101.16, times 1.11 for the top and 0.60 for
+# the face — and the rung is whichever one is nearest. Grow the ladder again and the values hold.
+ANCHOR = 101.16
+
+
+def _nearest_rung(ladder, value):
+    """The rung closest to a value. Section 13.12: derive, never copy."""
+    return min(range(len(ladder)), key=lambda i: abs(ladder[i] - value))
+
+
 ARMS = {
-    # (top rung index, face rung index) on the nine-rung ladder of bible section 5.6.
-    "material":    dict(top=5, face=1,
+    # RATIOS, not indices — see the note above. Kept as `top`/`face` ratio multipliers of ANCHOR.
+    "material":    dict(top_ratio=1.11, face_ratio=0.60, top=5, face=1,
                         why="section 6.5's ratios read as ALBEDO: top 1.11x and face 0.60x the "
                             "floor's own anchor of 101.16. No rig baked into the asset."),
     "compensated": dict(top=8, face=2,
@@ -261,8 +292,15 @@ class Family:
         self.tint = np.array(tint, dtype=float)
         self.bank = bank
         self.seed = seed
-        self.top_rung = ARMS[arm]["top"]
-        self.face_rung = ARMS[arm]["face"]
+        # Derived from the ratio against the floor's anchor, so a ladder that grows does not
+        # silently move a whole plane (section 5.7). The old index constants are kept in ARMS as
+        # a record of what they were on the nine-rung ladder, and are no longer read.
+        a = ARMS[arm]
+        if "top_ratio" in a:
+            self.top_rung = _nearest_rung(self.ladder, ANCHOR * a["top_ratio"])
+            self.face_rung = _nearest_rung(self.ladder, ANCHOR * a["face_ratio"])
+        else:
+            self.top_rung, self.face_rung = a["top"], a["face"]
 
     # ---- the edge families -----------------------------------------------------------------
     def vjoint(self, course, key):
@@ -523,9 +561,21 @@ class Family:
             # THE TURN, DRAWN BY OCCLUSION ONLY (section 6.3, and the gauntlet's own hazard note).
             # The top plane is NOT brightened; the first rows of the face are darkened, because a
             # face under an overhang is occluded from every azimuth and declares no direction.
-            lip = img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :]
-            img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :] = np.minimum(
-                lip * 0.55, self.rung(self.face_rung, -2))
+            #
+            # ⚠ #202'S COPING COURSE WAS BUILT HERE AND REVERTED. It is the ruled remedy — "build
+            # the seam treatment the sighted round measured on the bar so the mass turns a corner"
+            # — and three attempts did not reach its exit. Averaging the wall's own two plane
+            # rungs delivered 89.3, BRIGHTER than the cap above it at 77.1, which is a highlight
+            # at the turn that section 6.3 forbids. Deriving it one rung above the face delivered
+            # 76.7, which merges with the cap instead and leaves the same hard rule below it. The
+            # step fell 50.33 -> 42.63, and the face came back 5-6 levels down with its foot 19
+            # down FOR REASONS I COULD NOT EXPLAIN — grain amplitude was the obvious suspect and
+            # was ruled out, since grain is zero-mean and shifts no means.
+            #
+            # A half-fix with an unexplained regression in it would make the next round's
+            # comparison against the reference dishonest, so it is not shipped. What the attempt
+            # DID buy is banked below the arms: the ladder drift it surfaced was real and is
+            # fixed. #202 stays open with three closed doors recorded in it.
             self.age_face(img, age, grain_amp)
         return img
 

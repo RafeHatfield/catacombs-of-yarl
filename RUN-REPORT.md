@@ -898,3 +898,84 @@ not fit beside them. Everything else in the queue is downstream of that.
 
 Committed and pushed on `art/autonomy-amendment`. The props build is on the branch, not on the
 phone: it has no verdict, and I will not install one without a gate.
+
+---
+
+## Item 14 (queue 1 & 2) — the props pass reaches a gate; #202 STOPs on a blocked lane
+
+### The harness fixes first, and one of them was a hypothesis I had to retract
+
+**The precheck (ruling 1).** Measured before built: a seat peaks at **351MB and holds it for 448
+seconds**, taking **16 points** off the system's free percentage; a capture peaks at **507MB** for
+four. ⚠ **I had asserted twice that swap headroom was the killer** — swap was 3182MB of 4096MB used
+when the third round died. It is not: both a seat and a capture draw **0.0MB of swap**. That swap
+was filled by other processes long before and never moved. A floor built on it would have been a
+constant gating a thing it does not measure, which is §13.11's saturating comparator in a new
+place, and I nearly shipped it.
+
+Floors: **seat ≥ 35%** free (a 16-point dip lands near 19), **write ≥ 40%** — higher because a
+killed *write* leaves a tile family half-written for the next round to judge unknowingly, while a
+killed seat only costs a seat. Ten proof cases drive the real function with injected readings,
+including **the exact state the three killed rounds started in**; under this check none would have
+begun. Wired into the critic, the capture tool and both composers.
+
+**The downscale (ruling 2) was tested and NOT shipped.** Before/after peak per seat, same deck:
+**351.0MB full scale, 363.1MB half scale** — twelve megabytes *worse*, inside the noise, same
+runtime. A seat's footprint is the runtime, not its images: four decoded frames are 6.5MB of
+351MB. Downscaling would halve every coordinate a seat quotes and average away sub-native lighting
+in exchange for nothing measurable. A change that only looks like a fix is worse than no change.
+
+Seat freeing needed no fix — `run_seat` uses `subprocess.run`, which waits and reaps. What was
+missing was the *assertion*, which now runs after every seat.
+
+### The props pass: INSTALL-LATEST on five seats
+
+**4 of 5 not below the reference, 1 below** (far under the 4/5 strong-majority block), **rank 1 of
+4 — new best**, every plant caught. It would have cleared the old majority rule too: **the new
+threshold did not carry this build, the props did.**
+
+**The barricade landed by dropping the word.** Nine generations and two composition passes had
+failed — four fences, two floor-fills, two pale washouts, two of my own passes that read as
+ladders. *"A barricade"* has no strong top-down prior; *"a heap of thick timber beams lying
+crossed over one another, seen from directly above"* does. Three variants landed on that grammar,
+placed as a **line of three different variants** because that is the only honest way to run
+§8.3.1's continuity test. The pattern is banked: **crossing works, stacking returns pale debris.**
+
+⚠ **I placed props in the dark twice in one run** — a marker at 5.4 tiles (17.97 against §13.8's
+floor of 36.7) and then the whole barricade family at 4.0–4.5 tiles (22–32). Both looked fine.
+`verify_props.py` now refuses a scene whose props are not lit, *before* seats are spent, and **it
+caught tile 9812 on its first live run**.
+
+Three of the seven flips name a defect that is mine — **#204**: the landing route never snapped
+the generated art to the family's ladder. `compose_props.py` reads the wall manifest's ladder and
+quarry tint; `land_props.py`, the route that shipped, only downsamples. Fire ring 129 against floor
+89, planks 96 against 64, one barricade at (158,49,20) with no yellow. The seats' own control rules
+out lighting — the floor drops 83 → 64 under a prop — so it is albedo. Two more are **#205**, the
+fire emitting nothing, which is deliberate and owed. Installed at `f31baeea`; **not launch-verified,
+the handset was locked.**
+
+### #202 — STOP, and it found something bigger than itself
+
+The coping course needed a recompose, and the recompose came back with the wall face **26 levels
+darker**. The control that isolated it was recomposing with **#202 reverted** — still dark, so the
+change was never the cause.
+
+**`compose_walls.py` no longer reproduces the family it built.** Filed as **#206**, and it blocks
+the wall lane: #202 cannot be built without a recompose, and a recompose ships a regression.
+
+**Cause 1, fixed.** `ARMS` carried `top=5, face=1` *"on the nine-rung ladder"*. The floor's ladder
+is **eleven rungs** now — it gained two at the bottom when the reach was extended — so the same
+indices meant 88.243 and 35.336 instead of 114.696 and 61.789. **§5.7 exactly**: *anchors must be
+stable under field size*, and an index into a list whose length can change is not. The arms now
+carry §6.5's ratios against the floor's anchor and reproduce the shipped values precisely.
+
+**Cause 2, not found.** With the ladder fixed, #202 reverted and grain matched, the face is still
+5–6 down and its foot 19 down. Grain was the obvious suspect and is ruled out — it is zero-mean.
+
+⚠ **Three attempts at the coping did not reach #202's exit and it is not shipped.** Averaging the
+wall's two plane rungs delivered 89.3, *brighter than the cap above it* — a highlight at the turn
+that §6.3 forbids. One rung above the face delivered 76.7, which merges with the cap and leaves the
+same rule below it. Step 50.33 → 42.63, with an unexplained face regression riding along. **A
+half-fix with an unexplained regression would make the next round's comparison dishonest.** The
+shipped tiles are restored from git and every row delta is **0.00**. The three closed doors are
+recorded in the composer where the next attempt will read them.

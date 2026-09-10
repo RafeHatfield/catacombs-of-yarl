@@ -6,7 +6,7 @@ Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M1 (Apple7)
 Catacombs of YARL — loading...
 [DIAG] Logging to: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag.log
 [DIAG] Structured log: /Users/rafehatfield/Library/Application Support/Godot/app_userdata/Catacombs of YARL/diag_structured.jsonl
-[DIAG 00000 F0 T0.545] === Session started ===
+[DIAG 00000 F0 T0.575] === Session started ===
 [Main] Persistence loaded — 6 runs ever.
 [Main] Loading tileset: 16bit_fantasy
 [Main] Tileset loaded: Oryx 16-Bit Fantasy (48px, 2 frames)
@@ -113,23 +113,23 @@ empt
 # Substituted 
 [Main] Memo registry loaded.
 [Tier1] rig:start: radius=6 falloff=1 ambient=1.5 (272733) energy=1.6
-[DIAG 00001 F0 T1.150] [Tier1] rig:start: radius=6 falloff=1 ambient=1.5 (272733) energy=1.6
+[DIAG 00001 F0 T1.124] [Tier1] rig:start: radius=6 falloff=1 ambient=1.5 (272733) energy=1.6
 [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED review=GATED app=Catacombs of YARL
-[DIAG 00002 F0 T1.152] [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED review=GATED app=Catacombs of YARL
+[DIAG 00002 F0 T1.127] [Tier1] BUILD IDENTITY: commit=UNSTAMPED built=UNSTAMPED review=GATED app=Catacombs of YARL
 [Tier0] corridor scene: tier1_props_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json)
-[DIAG 00003 F0 T1.153] [Tier0] corridor scene: tier1_props_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json)
+[DIAG 00003 F0 T1.127] [Tier0] corridor scene: tier1_props_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json)
 [Tier0] map=17x21 player=(6,12) carve_rects=7
-[DIAG 00004 F0 T1.153] [Tier0] map=17x21 player=(6,12) carve_rects=7
+[DIAG 00004 F0 T1.127] [Tier0] map=17x21 player=(6,12) carve_rects=7
 [Tier0] junction=NO
-[DIAG 00005 F0 T1.153] [Tier0] junction=NO
+[DIAG 00005 F0 T1.127] [Tier0] junction=NO
 [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
-[DIAG 00006 F0 T1.153] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
+[DIAG 00006 F0 T1.127] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
 [Tier0] light rig: ambient=1a1a22@1.5 (effective 272733) light=ffb066 energy=1.6 radius_tiles=6 falloff=1 tile=32x32 tex=384px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
-[DIAG 00007 F0 T1.153] [Tier0] light rig: ambient=1a1a22@1.5 (effective 272733) light=ffb066 energy=1.6 radius_tiles=6 falloff=1 tile=32x32 tex=384px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
+[DIAG 00007 F0 T1.127] [Tier0] light rig: ambient=1a1a22@1.5 (effective 272733) light=ffb066 energy=1.6 radius_tiles=6 falloff=1 tile=32x32 tex=384px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
 [Tier0] grid map: centre00=(23,-190.5) pitch=(64,64) view=(0,90)...(750,1001)
-[DIAG 00008 F0 T1.153] [Tier0] grid map: centre00=(23,-190.5) pitch=(64,64) view=(0,90)...(750,1001)
+[DIAG 00008 F0 T1.128] [Tier0] grid map: centre00=(23,-190.5) pitch=(64,64) view=(0,90)...(750,1001)
 [Tier1] variant census: cells=136 distinct=1 max_multiplicity=136  step_top2: row=1.000(112/112) col=1.000(107/107) diag=1.000(95/95) anti=1.000(96/96)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
-[DIAG 00009 F0 T1.156] [Tier1] variant census: cells=136 distinct=1 max_multiplicity=136  step_top2: row=1.000(112/112) col=1.000(107/107) diag=1.000(95/95) anti=1.000(96/96)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
+[DIAG 00009 F0 T1.131] [Tier1] variant census: cells=136 distinct=1 max_multiplicity=136  step_top2: row=1.000(112/112) col=1.000(107/107) diag=1.000(95/95) anti=1.000(96/96)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
 [Tier1] floor overlays: cells=136 channel=28 neglected=49 drawn(grit=0 event=0 channel=0 occlusion=0/stacked=56@anchor2 BAKED-BY-FLOOR) cell_shadow_suppressed=76 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
@@ -153,7 +153,7 @@ empt
 [Tier1]   ###xxx.......x###
 [Tier1]   ###xxxxxxxxxxx###
 [Tier1]   #################
-[DIAG 00010 F0 T1.171] [Tier1] floor overlays: cells=136 channel=28 neglected=49 drawn(grit=0 event=0 channel=0 occlusion=0/stacked=56@anchor2 BAKED-BY-FLOOR) cell_shadow_suppressed=76 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
+[DIAG 00010 F0 T1.147] [Tier1] floor overlays: cells=136 channel=28 neglected=49 drawn(grit=0 event=0 channel=0 occlusion=0/stacked=56@anchor2 BAKED-BY-FLOOR) cell_shadow_suppressed=76 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
 [Tier1]   #################
@@ -177,7 +177,7 @@ empt
 [Tier1]   ###xxxxxxxxxxx###
 [Tier1]   #################
 [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
-[DIAG 00011 F0 T1.171] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
+[DIAG 00011 F0 T1.147] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
 [Tier1] ashlar floor: laid=141 channel_cells=27 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK occlusion=baked:70/check:48/OK lines=1 mouths=23 polished=141 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
 [Tier1] traffic field (space=unwalked .. @=busiest)
 [Tier1]   #################
@@ -246,7 +246,7 @@ empt
 [Tier1]   ###           ###
 [Tier1]   #################
 [Tier1] axis coherence: 48 of 52 adjacent on-route pairs agree (92%) - round 21 measured 34% on the per-tile field
-[DIAG 00012 F0 T2.790] [Tier1] ashlar floor: laid=141 channel_cells=27 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK occlusion=baked:70/check:48/OK lines=1 mouths=23 polished=141 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
+[DIAG 00012 F0 T2.783] [Tier1] ashlar floor: laid=141 channel_cells=27 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK occlusion=baked:70/check:48/OK lines=1 mouths=23 polished=141 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
 [Tier1] traffic field (space=unwalked .. @=busiest)
 [Tier1]   #################
 [Tier1]   #################
@@ -336,7 +336,7 @@ empt
 [Tier1]   .................
 [Tier1]   .................
 [Tier1]   .................
-[DIAG 00013 F0 T2.896] [Tier1] wall age map (. not a reveal, 0=sharp/sealed .. 3=on the spine)
+[DIAG 00013 F0 T2.877] [Tier1] wall age map (. not a reveal, 0=sharp/sealed .. 3=on the spine)
 [Tier1]   .................
 [Tier1]   ...12221111110...
 [Tier1]   .................
@@ -359,25 +359,25 @@ empt
 [Tier1]   .................
 [Tier1]   .................
 [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=63 void=129(choice=0,ring>1,OVERRIDE manifest=0) missing=0 face_suppressed=63 planes(top=114.7 face=61.79) edge_check=46/OK bindings=13(cramp:3,lash:3,patch:1,pin:3,strap:3) cap=87+129void age0..3=2/11/7/4 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
-[DIAG 00014 F0 T2.898] [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=63 void=129(choice=0,ring>1,OVERRIDE manifest=0) missing=0 face_suppressed=63 planes(top=114.7 face=61.79) edge_check=46/OK bindings=13(cramp:3,lash:3,patch:1,pin:3,strap:3) cap=87+129void age0..3=2/11/7/4 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
+[DIAG 00014 F0 T2.879] [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=63 void=129(choice=0,ring>1,OVERRIDE manifest=0) missing=0 face_suppressed=63 planes(top=114.7 face=61.79) edge_check=46/OK bindings=13(cramp:3,lash:3,patch:1,pin:3,strap:3) cap=87+129void age0..3=2/11/7/4 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
 [Tier0] review_build_marker=none (CLI flags)
-[DIAG 00015 F0 T2.899] [Tier0] review_build_marker=none (CLI flags)
+[DIAG 00015 F0 T2.880] [Tier0] review_build_marker=none (CLI flags)
 [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
-[DIAG 00016 F0 T2.900] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00016 F0 T2.881] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
 [Main] Visible tile rect: (0,4)-(11,19)
 [Main] floor_worn (3001) tiles: 1 rendered in the authored room, 1 in frame: (11,15)
 [Tier1] legibility(5,12) expect=lit  lum=0.7416 at px(343,578) bound=0.1004 OK  (ratio=1.0577, informational)  - 1 tile — the floor at the foot of the masses' south face. The standing case, and the ground §6.5's stack is a relationship against
-[DIAG 00017 F5 T3.018] [Tier1] legibility(5,12) expect=lit  lum=0.7416 at px(343,578) bound=0.1004 OK  (ratio=1.0577, informational)  - 1 tile — the floor at the foot of the masses' south face. The standing case, and the ground §6.5's stack is a relationship against
+[DIAG 00017 F5 T2.989] [Tier1] legibility(5,12) expect=lit  lum=0.7416 at px(343,578) bound=0.1004 OK  (ratio=1.0577, informational)  - 1 tile — the floor at the foot of the masses' south face. The standing case, and the ground §6.5's stack is a relationship against
 [Tier1] legibility(4,14) expect=lit  lum=0.3400 at px(279,706) bound=0.1004 OK  (ratio=0.4849, informational)  - 2.8 tiles — the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure
-[DIAG 00018 F5 T3.018] [Tier1] legibility(4,14) expect=lit  lum=0.3400 at px(279,706) bound=0.1004 OK  (ratio=0.4849, informational)  - 2.8 tiles — the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure
+[DIAG 00018 F5 T2.989] [Tier1] legibility(4,14) expect=lit  lum=0.3400 at px(279,706) bound=0.1004 OK  (ratio=0.4849, informational)  - 2.8 tiles — the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure
 [Tier1] legibility(6,15) expect=lit  lum=0.3191 at px(407,770) bound=0.1004 OK  (ratio=0.4552, informational)  - 3 tiles — the floor beside the island, which is what its outer corners are read against
-[DIAG 00019 F5 T3.018] [Tier1] legibility(6,15) expect=lit  lum=0.3191 at px(407,770) bound=0.1004 OK  (ratio=0.4552, informational)  - 3 tiles — the floor beside the island, which is what its outer corners are read against
+[DIAG 00019 F5 T2.989] [Tier1] legibility(6,15) expect=lit  lum=0.3191 at px(407,770) bound=0.1004 OK  (ratio=0.4552, informational)  - 3 tiles — the floor beside the island, which is what its outer corners are read against
 [Tier1] legibility(11,14) expect=dark lum=0.0831 at px(727,706) bound=0.0837 OK  (ratio=0.1185, informational)  - 5.4 tiles - room A's east end, past the delivered reach. RE-DERIVED 2026-09-06 against the re-ratified rig (radius 5.0 -> 6.0, ambient 0.70 -> 1.50), per SS6.2's re-derivation rule. This point WAS (11,13) at 5.1 tiles, declared dark because the old rig's delivered reach was about four tiles; on the new rig that cell reads ratio 0.1160 and is legitimately LIT, so the guard refused the capture and was right to. THE BOUND WAS NOT TOUCHED - the probe moved to ground that is actually past the reach, because loosening a bound to pass one's own capture is the failure LOOP-PROCESS SS4.3 forbids. Measured here: 0.0718, 28% clear of the 0.1000 bound. New delivered reach ~5.2-5.5 tiles against the old ~4; the ambient plateau sits at ratio ~0.075 and 33 of 81 in-view floor cells remain under the dark bound, so the arc survives the brighter ambient.
-[DIAG 00020 F5 T3.018] [Tier1] legibility(11,14) expect=dark lum=0.0831 at px(727,706) bound=0.0837 OK  (ratio=0.1185, informational)  - 5.4 tiles - room A's east end, past the delivered reach. RE-DERIVED 2026-09-06 against the re-ratified rig (radius 5.0 -> 6.0, ambient 0.70 -> 1.50), per SS6.2's re-derivation rule. This point WAS (11,13) at 5.1 tiles, declared dark because the old rig's delivered reach was about four tiles; on the new rig that cell reads ratio 0.1160 and is legitimately LIT, so the guard refused the capture and was right to. THE BOUND WAS NOT TOUCHED - the probe moved to ground that is actually past the reach, because loosening a bound to pass one's own capture is the failure LOOP-PROCESS SS4.3 forbids. Measured here: 0.0718, 28% clear of the 0.1000 bound. New delivered reach ~5.2-5.5 tiles against the old ~4; the ambient plateau sits at ratio ~0.075 and 33 of 81 in-view floor cells remain under the dark bound, so the arc survives the brighter ambient.
+[DIAG 00020 F5 T2.989] [Tier1] legibility(11,14) expect=dark lum=0.0831 at px(727,706) bound=0.0837 OK  (ratio=0.1185, informational)  - 5.4 tiles - room A's east end, past the delivered reach. RE-DERIVED 2026-09-06 against the re-ratified rig (radius 5.0 -> 6.0, ambient 0.70 -> 1.50), per SS6.2's re-derivation rule. This point WAS (11,13) at 5.1 tiles, declared dark because the old rig's delivered reach was about four tiles; on the new rig that cell reads ratio 0.1160 and is legitimately LIT, so the guard refused the capture and was right to. THE BOUND WAS NOT TOUCHED - the probe moved to ground that is actually past the reach, because loosening a bound to pass one's own capture is the failure LOOP-PROCESS SS4.3 forbids. Measured here: 0.0718, 28% clear of the 0.1000 bound. New delivered reach ~5.2-5.5 tiles against the old ~4; the ambient plateau sits at ratio ~0.075 and 33 of 81 in-view floor cells remain under the dark bound, so the arc survives the brighter ambient.
 [Tier1] legibility(8,7) expect=dark lum=0.0817 at px(535,258) bound=0.0837 OK  (ratio=0.1165, informational)  - 5.4 tiles — the chokepoint deep inside the mass, in frame and unlit
-[DIAG 00021 F5 T3.019] [Tier1] legibility(8,7) expect=dark lum=0.0817 at px(535,258) bound=0.0837 OK  (ratio=0.1165, informational)  - 5.4 tiles — the chokepoint deep inside the mass, in frame and unlit
+[DIAG 00021 F5 T2.989] [Tier1] legibility(8,7) expect=dark lum=0.0817 at px(535,258) bound=0.0837 OK  (ratio=0.1165, informational)  - 5.4 tiles — the chokepoint deep inside the mass, in frame and unlit
 [Tier1] floor-legibility probe: 5 declared points, reference lum=0.7011 (informational — bounds are ABSOLUTE since 2026-09-07), verdict=PASS
-[DIAG 00022 F5 T3.019] [Tier1] floor-legibility probe: 5 declared points, reference lum=0.7011 (informational — bounds are ABSOLUTE since 2026-09-07), verdict=PASS
+[DIAG 00022 F5 T2.990] [Tier1] floor-legibility probe: 5 declared points, reference lum=0.7011 (informational — bounds are ABSOLUTE since 2026-09-07), verdict=PASS
 [Main] Capture written: tools/tier1_floors/evidence/combined.png
 [TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
 [TileThemeConfig] Theme 'sandstone' not found — falling back to 'boundary'.
