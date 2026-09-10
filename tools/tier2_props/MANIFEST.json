@@ -100,7 +100,7 @@
   {
    "name": "B-PROP-001 the boundary marker stone",
    "id": 9800,
-   "source": "marker_styled.png",
+   "source": "wave3/marker_styled.png",
    "sha256": "4a4d605063dcf22db1301db34cc8736810bd7054574a2f8b606e331b1cfa813d",
    "content": [
     10,
@@ -111,17 +111,51 @@
   {
    "name": "B-PROP-003 the orc fire",
    "id": 9820,
-   "source": "fire_styled.png",
+   "source": "wave3/fire_styled.png",
    "sha256": "bd08029615c137dd2cbffce335ab7925f84c8fe2f48d3cce97e69b106ca86ec6",
    "content": [
     22,
     22
    ],
    "quantised": 0.719
+  },
+  {
+   "name": "B-PROP-002a barricade, crossed baulks",
+   "id": 9810,
+   "source": "wave4/barricade_heap.png",
+   "sha256": "f4d9437c8060c909f7d34b4603a262a44073e3fadaea83bb8f67e90039cd012c",
+   "content": [
+    18,
+    12
+   ],
+   "quantised": 0.863
+  },
+  {
+   "name": "B-PROP-002b barricade, bound stack",
+   "id": 9811,
+   "source": "wave4/barricade_stack.png",
+   "sha256": "d6ba1f8097520be50e2c804841d71ad042c08ea6d1737132ab2b148481539452",
+   "content": [
+    18,
+    16
+   ],
+   "quantised": 0.8
+  },
+  {
+   "name": "B-PROP-002c barricade, parallel bound beams",
+   "id": 9812,
+   "source": "wave4/barricade_three.png",
+   "sha256": "e432a00ebe220247e6630dca2603d5c077ea4cb17467c1bf459d62fbd94e26e1",
+   "content": [
+    19,
+    15
+   ],
+   "quantised": 0.871
   }
  ],
  "outstanding": {
-  "B-PROP-002": "THE BARRICADE DID NOT LAND. Six generations: four came back as FENCES in basic mode \u2014 the identity card's `role_reject` by name, 'too light, too regular, too agricultural' \u2014 and two style-matched attempts filled the mask with floor and one beam. Two composition passes were also tried and read as LADDERS, which is the same failure by another route: evenly spaced rails between two posts. It is recorded as outstanding rather than landed badly."
+  "B-PROP-002 fourth variant": "THREE VARIANTS LANDED, NOT FOUR. The identity card asks for a variant family and three is a family; the fourth slot is open. Two attempts at it came back PALE \u2014 washed-out scattered debris rather than timber \u2014 and the pattern is worth keeping: 'beams crossed over one another' works, 'a baulk with beams across it' produces pale debris however the colour is described. The grammar that works is crossing, not stacking.",
+  "history": "It took nine generations. Four basic-mode fences (the card's `role_reject` by name), two style-matched floor-fills, two pale failures, and two composition passes of my own that read as LADDERS \u2014 the same 'too light, too regular' failure reached by a second route. What changed it was describing the ARRANGEMENT rather than naming the object."
  },
  "palette_regime": "ladder, not locked \u2014 \u00a75.1's values are PLACEHOLDER and its derivation has not landed"
 }

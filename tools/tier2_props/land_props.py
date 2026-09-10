@@ -9,7 +9,12 @@ style context and inpainted into it:
 
     marker      orthogonal, square to the screen, rope legible, the scene's own palette. §3 held.
     fire        a ring of stones seen from directly above, charred interior. §3 held.
-    barricade   FAILED SIX TIMES — four fences in basic mode, two floor-fills in style-match.
+    barricade   FAILED SIX TIMES at first — four fences in basic mode, two floor-fills in
+                style-match — and then landed as a FAMILY once the prompt stopped naming the
+                object and described the ARRANGEMENT instead. "A heap of thick timber beams lying
+                crossed over one another, seen from directly above" produced crossed baulks with
+                rope at the join; "a barricade" never did. Top-down has no strong prior for the
+                word; it has one for the shape.
 
 So conditioning on the corpus is what makes §3 survive generation. That is worth more than the
 three assets: it is the difference between "generation cannot do architecture" (§13.7, measured on
@@ -30,10 +35,17 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
 ASHLAR = os.path.join(REPO, "src/Presentation/assets/tier1_ashlar")
-SRC = os.path.join(HERE, "gen", "wave3")
+SRC = os.path.join(HERE, "gen")
 
-LAND = [("marker_styled.png", 9800, "B-PROP-001 the boundary marker stone"),
-        ("fire_styled.png", 9820, "B-PROP-003 the orc fire")]
+LAND = [("wave3/marker_styled.png", 9800, "B-PROP-001 the boundary marker stone"),
+        ("wave3/fire_styled.png", 9820, "B-PROP-003 the orc fire"),
+        # B-PROP-002, the barricade — A FAMILY, not a sprite (§8.3.1). It repeats along a line by
+        # construction, so an incident baked into one becomes a motif at the second placement.
+        # These three are one grammar — crossed baulks, rope at the join, iron through it —
+        # differing in which repair was needed where.
+        ("wave4/barricade_heap.png", 9810, "B-PROP-002a barricade, crossed baulks"),
+        ("wave4/barricade_stack.png", 9811, "B-PROP-002b barricade, bound stack"),
+        ("wave4/barricade_three.png", 9812, "B-PROP-002c barricade, parallel bound beams")]
 
 
 def quantised(a):
@@ -81,13 +93,17 @@ def main():
                      "32px. Basic generation was tried first and could not hold §3.")
     man["landed"] = tiles
     man["outstanding"] = {
-        "B-PROP-002": "THE BARRICADE DID NOT LAND. Six generations: four came back as FENCES in "
-                      "basic mode — the identity card's `role_reject` by name, 'too light, too "
-                      "regular, too agricultural' — and two style-matched attempts filled the "
-                      "mask with floor and one beam. Two composition passes were also tried and "
-                      "read as LADDERS, which is the same failure by another route: evenly "
-                      "spaced rails between two posts. It is recorded as outstanding rather than "
-                      "landed badly.",
+        "B-PROP-002 fourth variant": "THREE VARIANTS LANDED, NOT FOUR. The identity card asks for "
+            "a variant family and three is a family; the fourth slot is open. Two attempts at it "
+            "came back PALE — washed-out scattered debris rather than timber — and the pattern is "
+            "worth keeping: 'beams crossed over one another' works, 'a baulk with beams across "
+            "it' produces pale debris however the colour is described. The grammar that works is "
+            "crossing, not stacking.",
+        "history": "It took nine generations. Four basic-mode fences (the card's `role_reject` by "
+                   "name), two style-matched floor-fills, two pale failures, and two composition "
+                   "passes of my own that read as LADDERS — the same 'too light, too regular' "
+                   "failure reached by a second route. What changed it was describing the "
+                   "ARRANGEMENT rather than naming the object.",
     }
     man["palette_regime"] = ("ladder, not locked — §5.1's values are PLACEHOLDER and its "
                              "derivation has not landed")

@@ -132,17 +132,25 @@
   "between the two scenes is a comparison of stations and of nothing else."
  ],
  "_props_note": [
-  "TWO PROPS LANDED, ONE DID NOT.",
+  "FIVE PROPS, THREE OF THEM ONE FAMILY.",
   "",
-  "B-PROP-001 (9800) and B-PROP-003 (9820) are style-matched generations conditioned on the",
-  "LANDED FRAME and downsampled 2:1 to the family's native 32px. B-PROP-002, the barricade, is",
-  "ABSENT: six generations came back as fences or floor-fills and two composition passes read",
-  "as ladders. It is recorded as outstanding in tools/tier2_props/MANIFEST.json rather than",
-  "landed badly — an asset nobody can name is worse than a gap.",
+  "The barricade is placed as A LINE OF THREE DIFFERENT VARIANTS rather than one sprite",
+  "repeated, because §8.3.1's trap reaches this prop by repetition along a line and the identity",
+  "card says so: 'a variant family from round one, never a single sprite'.",
   "",
-  "The fire's ENGINE LIGHT is not attached in this build. The prop is judged as an object",
-  "first, which is what the identity card's carried-only capture is for; the two-source scene",
-  "is its own round."
+  "THE PREVIOUS ROUND PROVED THE TEST BITES. It placed the MARKER twice and a seat caught it",
+  "unaided: 'the object at (280,800) is the same sprite again at a different tint. Vary it or",
+  "cut it.' So the marker appears once here and the family carries the repetition instead.",
+  "",
+  "The fire's engine light is still not attached. A seat measured its absence in the same killed",
+  "round — 'burns a saturated red/yellow flame and casts no light ... above the pit 74 vs 77' —",
+  "which is correct and deliberate: the object is judged before the two-source scene is built.",
+  "",
+  "⚠ THE BARRICADE LINE MOVED FROM ROW 16 TO ROW 14, and it is the SECOND time this run I",
+  "placed a prop outside the lit radius: row 16 measured 22-32 against S13.8's floor of 36.7.",
+  "A prop in the dark cannot answer the criterion it was placed to answer. verify_props.py",
+  "now refuses a scene whose props are not lit, so this is caught by a check rather than by",
+  "my memory."
  ],
  "props": [
   {
@@ -150,21 +158,35 @@
    "x": 5,
    "y": 13,
    "blocks": true,
-   "why": "B-PROP-001, the boundary marker stone. One tile SW of the station and unambiguously inside the lit pool — the routed acceptance criterion is orc work visible AS A STANDING OBJECT IN THE LIT RADIUS, so the first prop is placed where that question cannot be dodged."
+   "why": "B-PROP-001 the marker stone, 1.4 tiles from the station and unambiguously inside the lit pool. The routed criterion is orc work visible AS A STANDING OBJECT IN THE LIT RADIUS, so the first prop sits where that cannot be dodged. It appears ONCE now: the previous round placed it twice and a seat caught the repeat immediately."
   },
   {
    "tileId": 9820,
    "x": 9,
    "y": 13,
    "blocks": true,
-   "why": "B-PROP-003, the orc fire. Three tiles east of the station: far enough that it is not read as part of the player's own pool, close enough to be legible. Its engine light is NOT yet attached — this build judges the object, and the two-source scene is the next round."
+   "why": "B-PROP-003 the orc fire, 3.2 tiles. Its engine light is NOT attached — the object is judged first, which is the identity card's carried-only capture. A seat measured the missing light unaided in the killed round and it is owed."
   },
   {
-   "tileId": 9800,
+   "tileId": 9810,
    "x": 4,
-   "y": 17,
+   "y": 14,
    "blocks": true,
-   "why": "B-PROP-001 again, at 5 tiles — the same object at the far end of the lit radius. Two placements of one prop is the cheapest test of §8.3.1 available before the variant family exists: if it reads as a motif at two, it will at four."
+   "why": "B-PROP-002a, first of the barricade family. THREE DIFFERENT VARIANTS ALONG A LINE, which is the only honest way to run §8.3.1's continuity test: either they read as one hand at three placements, or they read as a motif and the pass says so."
+  },
+  {
+   "tileId": 9811,
+   "x": 6,
+   "y": 14,
+   "blocks": true,
+   "why": "B-PROP-002b, beside 002a. A different repair in the same grammar."
+  },
+  {
+   "tileId": 9812,
+   "x": 8,
+   "y": 14,
+   "blocks": true,
+   "why": "B-PROP-002c, completing the line. If these three read as one repeated sprite the family has failed."
   }
  ]
 }
