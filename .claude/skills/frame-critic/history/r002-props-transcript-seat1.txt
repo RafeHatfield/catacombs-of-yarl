@@ -1,0 +1,64 @@
+Read all four at native resolution and re-inspected under brightness/contrast boost, pixel-value sampling, and pairwise difference. 1, 3 and 4 are the same room with the same base tiles — the differences are the lighting pass and, in 4, an added prop layer. 2 is a different order of finish entirely.
+
+**RANK:** 3 > 4 > 1 > 2
+
+**BEST:** 3
+
+**BEST_WHY:** The wall run at y≈388–455 is built as two distinct planes with a hard, unbroken separator line at y≈424 carried the full width from x≈190 to x≈750, and a second contact line at y≈455 where it meets the floor. Both planes are coursed, and the block widths along the near band vary (roughly 10, 14, 20 and 26px between x 300 and 480) so the run reads as cut stone rather than a repeated stamp. The lighting holds structure under load: measured across x 190–560, y 450–600, only 16 pixels reach L≥240 and the peak is 208, so the mortar grid survives all the way into the brightest part of the pool — you can count courses across the whole lit floor. Falloff is also consistent between surfaces: the wall/floor luminance ratio stays in a 0.54–0.76 band from x=200 out to x=620 instead of jumping around. And the frame is genuinely sharp — the pins, rope lines and hatch-marks on the pier at x 440–640, y 60–390 are legible as individual marks.
+
+**WORST:** 2
+
+**WORST_WHY:** The water at x 248–343, y 0–191 is a rectangle. Square corners at (248,191) and (343,191), one flat green fill with a faint hex pattern, no bank, no shoreline, no depth shading, no wet dirt where it meets the ground — the dirt touching the water at y=189 is the identical dry brown as the dirt at y=60. The grey flagstone at x 0–55 and x 343–384 is one 16px stone stamped on a perfect grid with every joint at the same value and no wear anywhere. The crates at x 63–97, y 0–89 are drawn in three-quarter view with a visible front face, and the barrels at (127,203) and (176,203) show full elliptical tops plus a tall side, both sitting on a floor drawn straight from above. The lily pads are three sizes of one blob repeated eight times — (320,20), (311,36), (313,114), (326,124), (277,163), (263,180), (262,153), (308,133). And there is no light source in the frame at all: every pixel sits at ambient, with the sole exception of the brown ellipse under the green figure at (224,20), which is the only shadow anywhere in the image.
+
+**FLAGGED:** 1, 2, 3, 4
+
+- **2** — the rectangular water and the total absence of lighting.
+- **1** — a contiguous 125×115px area at x 335–460, y 455–570 is clipped at L 238–250. The masonry inside it is gone; the floor directly under the character is a white puddle with no stones in it.
+- **4** — the brazier at x 583–610, y 533–560 has a lit flame and contributes zero light. Its bowl interior is near-black while floor 40px away sits at L≈150. Next to it, three orange-red X props at (265,610), (405,615), (530,613) in a hue found nowhere else in the frame, all floating with no contact shadow.
+- **3** (and 1, and 4 — it's the shared sprite) — the shield at x 408–427, y 486–503 is a flesh-toned oval with a dark horizontal dash and two dark pips directly beside the head. It reads as a second face. The sword arm at x 388–397 sits at the same pale value as the blade above it, so arm and blade merge into one indistinguishable column. And the figure carrying "the only light there is" carries a sword and a shield — nothing on the sprite emits, and it casts no shadow.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 3:**
+- The wall's far band (y 392–420) measures L≈96 and its near band (y 426–452) measures L≈69, with the only light in the scene below at y≈480. The surface further from the lamp is 40% brighter than the one facing it. Invert: near face above far band, both below the floor value of L≈166 at y≈465.
+- Give the wall's top surface a hue of its own, not just a value. It currently uses the same tan as the floor stones, so between x 240 and 330 the cap and the floor read as one continuous plane.
+- Recolour the shield at x 408–427, y 486–503 off the skin ramp — hide over timber, grey-brown. Move the central dash off-centre into a boss and close the silhouette with a rim line, so it stops reading as a face.
+- Darken the sword arm at x 388–397, y 470–500 two steps below the blade at x 389–396, y 464–490, and put a guard between them.
+- Add a hard contact shadow under the boots at y 505–509, thrown directly away from the lamp, plus a longer soft one behind it.
+- Put the light source on the sprite. A hooded lantern or burning brand in the shield hand, with the pool's centre keyed to it rather than to the torso.
+- The blotch at x 355–395, y 585–620 is soft grey-brown mush with no hard edge sitting among crisply-edged stones. Resolve it into an object with a defined silhouette or delete it.
+- Pull the sprite's cyan and orange two steps toward the room's tan/olive ramp. Neither hue appears anywhere else in the 750×911 frame.
+
+**FLIP 4:** *(everything in FLIP 3, plus)*
+- Kill the brazier at (595,547) or make it real. If it burns, it needs a warm pool out to ~60px, rim light on the near stones at x 570–620, and no pure-black bowl interior. If the carried lamp is the only light, replace the flame at x 592–602, y 538–552 with cold ash and a soot ring.
+- Rebuild the three X props at (265,610), (405,615) and (530,613) on the scene's timber ramp and delete the yellow glints entirely — nothing there is emitting.
+- Add a contact shadow under each X and under the crate at (338,545), cast away from the figure at (405,485). All four currently float.
+- Redraw the crossing on the X at (405,615) — the two members bulge into each other instead of one passing in front. One timber overlaps, with a shadow line where it does.
+- The two rods at (515,605)–(555,625) read as loose sticks. If they're the repair work, show it: bind them, pin them, fix them to something.
+- Break the scribed floor rings (arcs centred near (640,500), (300,650), (250,660)) at every mortar joint. They currently run through joints at constant value, which reads as printed over the tiles rather than cut into separate stones.
+
+**FLIP 1:**
+- Bring the peak down from L 250 to roughly 200 across x 335–460, y 455–570. As it stands 3,606 pixels in that window sit at L≥240 as a solid mass and the mortar grid inside it is annihilated — the sixteen tiles the player looks at most carry the least information in the frame.
+- Turn off or heavily reduce the blur/bloom pass. Compare x 200–560, y 450–600 here against the same window in the other frames: joints are absent and the surface is mottled noise. Same for the pier and corridor at x 440–640, y 60–390, where pins and rope lines that are legible elsewhere smear into brown cloud.
+- Course the wall's near face at y 426–452. From x 200 to x 620 it has no block divisions at all, while the band directly above it at y 392–420 is fully coursed — one wall, two finish levels.
+- Sprite: same six items as FLIP 3. More urgent here, because the blown floor puts the pale blade at x 389–396, y 464–490 against a near-white background at the same value and the sword disappears.
+
+**FLIP 2:**
+- Add the light. One carried source, a pool, falloff, and darkness beyond it. Every pixel in this frame is currently at ambient; nothing else on this list matters until that exists.
+- Give the water at x 248–343, y 0–191 an irregular edge that follows the ground, kill the square corners at (248,191) and (343,191), and add a 4–6px band of dark wet dirt along the bank.
+- Vary the water surface: darker at the far edge, lighter at the shallows, silt in suspension. It is one flat fill.
+- Replace the eight repeated lily blobs at (320,20), (311,36), (313,114), (326,124), (277,163), (263,180), (262,153), (308,133) with three distinct pads at varied rotation, or drop them.
+- Break the flagstone grid at x 0–55 and x 343–384: vary block sizes, vary joint darkness, break the run at the room edges, and wear the traffic line.
+- The green splotch at (30,60) is the same asset as (30,208) and (368,163). Redraw or remove.
+- Redraw the crates at x 63–97, y 0–89 from directly above — lid plus a thin sliver of side, no front face. Same for the barrels at (127,203) and (176,203), which should read as near-circles from this camera.
+- The bone scatter at (208,112)–(233,128) is a handful of white pixels and reads as dirt on the lens. Draw bones or remove it.
+- Align the stray light-grey rectangle at x 163–187, y 272–278 to the brick coursing in the band around it, or delete it.
+- Nothing here reads as in continuous heavy use. The crates are new, the stone is unworn, the water is clean. Add the rope, driven pins, hide patches and salvaged timber — and the wear that four hundred years of not caring produces.
+
+---
+
+The thing worth acting on first isn't in any single frame: the character sprite is the weakest asset in three of the four images and it's the one thing on screen at all times. The shield-as-face and the missing lantern are both glance-level, and they undercut the best environment art in the deck. Fix the sprite before you touch the tiles.
+
+*Model: Claude Opus 5 (1M context)*

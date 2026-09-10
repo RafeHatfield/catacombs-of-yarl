@@ -1,0 +1,60 @@
+Four frames read. Three of them (2, 3, 4) are the same room — pixel-diff confirms 3 and 4 differ only inside (183,319)–(750,709), and 2 is that same room under a different grade. 1 is a separate, smaller, uniformly-lit tileset. All of 2/3/4 are native 375×456 presented at clean 2× nearest, so the softness in them is authored, not an upscale artifact. That matters: it means the smudging is a choice, not damage.
+
+**RANK:** 3 > 2 > 4 > 1
+
+**BEST:** 3
+
+**BEST_WHY:** The crack network on the floor. One hairline enters at roughly (540,510), runs down-left through (395,570) to a junction near (275,600), then branches down to about (390,700). It crosses at least eight slab joints and does not deflect at a single one. Underneath it the slabs are irregular against the grid — the pale plate at roughly (400–500, 540–580) spans two grid cells while its neighbours are single cells, and the run at (200–300, 470–540) carries mean |gradient| of 11.0 at native res, i.e. real per-slab scratch and chip variation rather than a repeated stamp. Cracks that ignore joints sitting on slabs that ignore the grid is what a cut stone floor actually does, and it is the one thing in this deck that could not have been produced by tiling a stamp. Second thing: the horizontal wall band at y≈392–456 carries driven vertical pins around (297,425) and (390,428) and an L-shaped bracket near (458,435), at differing lengths and inset depths — the repairs are in the wall, not stuck on it. Third: 3 holds its highlights. Zero pixels in the floor block (300–400, 500–560) exceed L=235, so the joints survive directly under the lamp.
+
+**WORST:** 1
+
+**WORST_WHY:** Both barrels are sliced flat. The barrel bodies at (118–150, 190–210) and (162–192, 190–210) terminate on a dead-straight horizontal at y=207 where the grey flagstone row begins, and the flagstones draw over them — a sort-order bug, visible at a glance, in the two most prominent props in the frame. They are also pixel-identical copies of each other, same rim highlight, same knot mark, placed adjacent. The water body at (245–336, 0–168) is a bare rectangle: at its bottom-left corner (245,168) the dirt stops and teal begins exactly on a tile boundary with no bank, no lip, no shadow, no edge tile of any kind — and the same is true of the dirt field's own outer boundary, which runs perfectly straight at x=64 and x=336 for the full height of the frame. There is an orange bar at (24–32, 118–140) that passes through the dark wall band and continues 25px below it as a flat, entirely untextured dark-brown rectangle with a square cut end at y≈165, overlapping a flagstone. And there is no lighting pass at all: the frame is uniformly bright corner to corner. This is a tileset dumped onto a map, not a finished frame.
+
+**FLAGGED:** 1, 4, 2
+
+4 earns it on measurement, not impression. The flame at (598,548) is (203,14,0) — saturation 1.00 in a frame whose surfaces run 0.39–0.52 — and it casts no light whatsoever: the floor at (640,548) is byte-identical (74,57,45) to the same frame with the fire absent. Its stone collar at (586,536) reads L=129 sitting on floor at L=61. The crossed timbers at (408,610) and (282,612) read saturation 0.91 and 0.87 against floor at 0.49 and 0.44 one tile away. Every prop in the frame is brighter and more chromatic than the floor it sits on, and the one that is supposed to be a light source lights nothing.
+
+2 earns it because 22% of the floor block (300–400, 500–560) is above L=235 — the lamp pool clips to paper-white and the slab joints vanish at exactly the point the player's eye lands.
+
+**SHIP:** NONE
+
+3 is the only one close, and "close" is the answer to the question. Its light pool is not radial: floor at (320,560) reads L=198 and floor at (500,560) reads L=96, both ~117px from the figure at (408,485), with nothing between them to occlude. And its entire lit floor is bare — no rope, no pins, no hide, no salvaged timber anywhere on the walkable surface, in a place the fiction says has been repaired continuously for four hundred years. It is clean partly because it is empty, which is not the same as being finished.
+
+---
+
+**FLIP 3:**
+- Floor at (320,560) reads L=198 and floor at (500,560) reads L=96 at equal radius from the lamp with no occluder between them; rebuild the falloff as radial from the figure so equal distance gives equal value.
+- The lit floor (200–620, 470–700) carries no props at all; author repairs into the floor itself — a slab pinned with driven iron, a rope lashing across a split, a hide sheet staked over a hole — each within the floor's own range (L 90–180, saturation 0.40–0.50).
+- The grime patches around (400,610) and (330,675) have no hard boundary anywhere while the cracks beside them are 1px hard lines; either terminate the grime at slab joints or dither it instead of airbrushing it.
+- The slabs at (560–700, 470–560) measure mean |gradient| 2.4 at native res against 11.0 for the slabs at (200–300, 470–540) — the right-hand stone is featureless. Carry the same joint and scratch density across.
+- The corridor floor at (500–540, 300–440) shifts grey-green while every other surface in frame is warm brown, with nothing to account for it; either give it a visible material boundary or bring it to the room's hue.
+
+**FLIP 2:**
+- Cap the lamp pool: 1339 of 6000 pixels in (300–400, 500–560) exceed L=235 and the slab joints are gone there. Bring the peak down to ~L=205 so the stone survives under the light.
+- Floor at (260,560) reads L=170 against L=155 for the same stone in 3 — the shadowed left half sits under a lifted black point. Drop it back so the dark half reads as dark rather than veiled.
+- Everything listed under FLIP 3 applies here unchanged — same room, same falloff asymmetry, same empty floor, same featureless right-hand slabs, same unexplained corridor hue.
+
+**FLIP 4:**
+- The flame at (598,548) leaves the floor at (640,548) byte-identical to the unlit version; either add a real second light source at the ring with its own falloff, or remove the fire.
+- The ring collar at (586,536) is L=129 on floor at L=61, 200px from the lamp; multiply it by the same distance falloff term the floor uses at that radius.
+- The flame is (203,14,0), saturation 1.00, against a frame running 0.39–0.52; cut its chroma to roughly 0.6 and let the value, not the hue, carry the heat.
+- The crossed timbers at (408,610) and (282,612) read saturation 0.91 and 0.87 against adjacent floor at 0.49 and 0.44; halve their chroma and apply the floor's falloff at their radius.
+- The crate at (342,548) is L=168 with a soft anti-aliased edge and no readable silhouette; give it a hard outline consistent with the rest of the frame and light it at its distance.
+- No prop has a contact shadow — the planks at (515–560, 605–625) float; add an occlusion run of 1–2 native pixels under each.
+- The props read as a scatter of loose objects on open floor; tie them to the room — run the crossed timbers into the cracked slab they are shoring, so they read as repair rather than debris.
+- The whole-frame grade is darker than 3 (floor at (360,612) L=155 vs 174, at (460,612) L=101 vs 130) while the props are brighter, which widens exactly the gap you need to close; match 3's floor grade first, then relight the props into it.
+
+**FLIP 1:**
+- The barrel bodies at (118–150, 190–210) and (162–192, 190–210) are cut flat at y=207 by the flagstone row drawing over them; fix the draw order or move the sprite anchor to the barrel's base.
+- The two barrels are pixel-identical, including the rim highlight and the knot mark; redraw one with a different stave count, a different lid angle, or damage.
+- The two crates at (64–96, 8–40) and (64–96, 55–90) are pixel-identical, diamond stud in the same position on both; vary the second.
+- The water at (245–336, 0–168) meets dirt on a hard 90° tile boundary at its corner (245,168) with no bank, lip, or shadow; author edge and corner tiles for all four sides.
+- The dirt field runs perfectly straight at x=64 and x=336 for the frame's full height against the flagstones; author transition tiles so the dirt spills irregularly over the stone.
+- The orange bar at (24–32, 118–140) passes through the wall band and continues as a flat untextured dark-brown rectangle to a square cut end at y≈165, overlapping a flagstone; finish the asset with actual surface detail and terminate it against geometry, or delete it.
+- The frame is uniformly lit corner to corner with no falloff at all; add the carried-light pass — this is a whole missing stage, not a tweak.
+- The orc at (200–230, 0–32) stands on a hard-edged dark brown smear at roughly (196–232, 22–32) that reads as unerased sprite backdrop; replace it with a soft contact shadow that respects the light direction.
+- The water is high-chroma teal-green with flat bright-green lily blobs — the only saturated cool in an otherwise brown-and-grey frame, and it reads as an overworld pond; desaturate it into the underworld palette and drop the lily pads or replace them with something that belongs in a filing system for souls.
+
+The pattern across the deck: 2, 3 and 4 come from a room that has a real material system and a real crack language, and the failures are all in the lighting and prop-integration layer sitting on top of it — which is the cheaper layer to fix. 1's failures are in the assets and the map itself. If you only have budget for one line of work, 3's radial falloff plus an authored repair pass on its floor is the shortest route to something you'd actually defend.
+
+*Model: Opus 5 (1M context)*

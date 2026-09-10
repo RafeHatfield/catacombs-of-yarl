@@ -94,6 +94,22 @@
       "measured": "A seat in the killed round measured it in four directions: above the pit 74 vs 77, left 84 vs 92, below 62 vs 72.",
       "not_the_builder_s": "The §9.2 flicker flag is built, defaults OFF, and is RULED BY RAFE at the gate with both states demonstrated. §5.4 makes the tended fire the exception; §9.2 names idle-flicker as a killer; the tension is stated rather than resolved here.",
       "evidence": ".claude/skills/frame-critic/history/r001-props.json and the preserved seat-1 transcript of the killed round"
+    },
+    {
+      "when": "2026-09-10",
+      "round": "r002-props",
+      "lane": "props",
+      "seat": "one seat of five",
+      "to": "#207",
+      "title": "Props float, crossings bulge, one variant reads as loose sticks",
+      "items": [
+        "Add a contact shadow under each X and under the crate — all four currently float.",
+        "Redraw the crossing on the X at (405,615) — the members bulge instead of one passing in front.",
+        "The two rods read as loose sticks. If they're the repair work, show it."
+      ],
+      "why_new": "How the props are BUILT, not how they are valued (#204). And it replaces a SPENT disposition: 'props are excluded from the shadowcaster set' was disposed against #193 because there was no prop there. Correct then; there are four real props now and they cast nothing.",
+      "measured": "9812 is the family's weakest member — I recorded it as 'thin, but the right register' when it landed and shipped it as the third of a family that wanted four. A seat has now read it as debris, which is the identity card's `role_reject` arriving for that variant.",
+      "evidence": ".claude/skills/frame-critic/history/r002-props.json"
     }
   ]
 }

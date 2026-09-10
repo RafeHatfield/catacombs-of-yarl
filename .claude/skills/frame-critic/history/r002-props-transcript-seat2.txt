@@ -1,0 +1,77 @@
+I read all four at full size and at 4× on the areas that matter. Measurements below are from the pixels, not from impression.
+
+---
+
+**RANK:** 4 > 1 > 2 > 3
+
+**BEST:** 4
+
+**BEST_WHY:** Three things are genuinely built rather than generated.
+
+First, the crack network in the lit room. A hairline enters near (250,470), runs down-right, forks at roughly (320,600), and both branches continue *across* mortar joints and *across* slab faces without breaking or realigning at the joint — the crack at (300,620) crosses a vertical joint and picks up on the far side at the same angle and the same 1px weight. Cracks that ignore the tile grid are the single hardest thing to fake, and they're right here.
+
+Second, the wall run at y≈390–450. Its top surface carries horizontal dark seams at irregular spacing, plus short vertical pin marks at roughly (430,400) and (505,395) that sit off the tile grid at different lengths. That is what driven pins and salvaged timber actually look like from above — placed where the damage was, not where the grid was.
+
+Third, the exposure is under control. Only 414 pixels in the lit room reach R=255. The brightest floor immediately under the figure still holds its mortar joints and its surface scratch. And the wall band means 63 against 144 for the floor at the same lamp distance — the wall reads as a different plane, not as recoloured floor.
+
+**WORST:** 3
+
+**WORST_WHY:** The water is a filled rectangle. It occupies x 248–343, y 0–191 — exactly 6 tiles by 12 — and I measured its fill at 96%, with the same left and right column at y=90, y=185 and y=190. Dead-straight edges on all four sides, butting directly into brown dirt with no shore, no edge tile, no transition of any kind. At the bottom edge (y≈191) teal meets dirt on a single horizontal pixel row.
+
+Beyond that: the dirt floor repeats on a ~24px lattice — the same dark-red clot cluster recurs down the field. The grey flagstones at right are identical 32px squares with one lighter joint pixel and no variation between any two stones. The two furniture pieces at top-left are drawn in three-quarter, with visible front faces and vertical slatted panels below each lid, inside a frame whose floor is strict top-down. The bone pile at ~(105,120) is a scatter of near-white single pixels with no silhouette. And there is no light model at all — flat uniform ambient edge to edge, so nothing reads as near or far.
+
+**FLAGGED:** 1, 2, 3, 4
+
+Four separate glaring faults, and one of them is in every frame:
+
+- **All of 1, 2, 4 — the darkness mask.** There are dead-flat pure-black rectangles with razor-straight axis-aligned edges: in 4, x 0–118 running down through y=500, and a second block x 630–749 spanning y 69–390. They sit immediately beside a soft, mottled, smoothly-gradiented dark region. Two incompatible darkness systems in one frame; the hard one reads as an unfinished mask.
+- **All of 1, 2, 4 — the figure.** Hard 1px black outline all the way round; nothing else in the frame is outlined. Saturated orange and a mint-cyan that appears at no other pixel in the image, against a desaturated warm-grey environment. No contact shadow — it floats. It is drawn front-on, face and shield in profile, inside a straight-down frame. And it carries a sword and shield, no lamp: the entire lighting premise has no visible source.
+- **1 — blown highlights.** 15,474 pixels pinned at R=255 in the lit room, spanning roughly x 275–532, y 445–606. That is 37× what 4 does with the same map. The mortar joints simply stop existing inside that pool.
+- **2 — the props.** The object at (340,545) is unreadable: a rounded blob, cream on top, saturated orange chunks through the middle, wrapped in a soft airbrushed halo that belongs to no other object on screen. The mass at (408,615) is a chaotic red-orange starburst with black notches. The crossed sticks at (280,615) and (530,610) render at near-full saturation while the floor they sit on has fallen to dim brown. And the fire pit at (598,548) has visible flame and casts zero light — the pale stones ringing it are the same value as stones two metres away.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 4:**
+- Replace the pure-black rectangles (x 0–118 through y=500; x 630–749 across y 69–390) with the same falloff curve used elsewhere: no region may go below the floor value at maximum lamp radius, and no darkness boundary may be axis-aligned and hard.
+- Strip the black outline from the figure. The environment has no outlines; the sprite reads as pasted in.
+- Pull the figure's palette into the environment ramp. The mint-cyan (~#7FDDD0) exists nowhere else in the frame — retint it to the warm grey-green already present in the floor wash at (230,600).
+- Add a contact shadow under the figure: a 2–3px darkened band under the boots at y≈505, falling off to the right since the light is at the figure.
+- Give the figure a visible light source. It carries sword and shield and nothing that emits. Put a lamp in the off hand or hang it at the belt, and originate the falloff from that point, not from the sprite centre.
+- Shade the figure with the same radial model as the floor: it is currently flat-lit while every pixel around it obeys distance falloff.
+- Resolve the projection. The floor and walls are straight-down; the figure is front-on. Either redraw the sprite top-down or commit the environment to the same three-quarter read.
+
+**FLIP 1:**
+- Everything in FLIP 4 — same mask, same sprite, same map.
+- Pull the lit pool off the ceiling. 15,474 pixels sit at R=255 across x 275–532, y 445–606. Cap the lamp's peak floor value near 235 so mortar joints and slab scratch survive under the figure, matching what 4 does with the same tiles.
+- Reduce the light's core radius or add a falloff shoulder: the transition from 255 to mid-floor happens over too few pixels, which is why the near zone is a featureless white disc.
+- Fix the object at (300,640). Its right edge dissolves into the floor over ~8px of blur and its interior is a set of unaligned lighter rectangles with no coherent silhouette. In 4 this same object has a defined dark rim, a lighter top face and a readable vertical strut. Restore that.
+- Remove the stray pale rectangle at approximately (395,570) — a hard-edged unblended block with a bright top-left corner sitting on top of the diagonal hatch.
+- The diagonal hatch across the bright zone runs continuously through vertical joints and across mortar. Break it per-slab or remove it; as a global overlay it reads as a filter.
+
+**FLIP 2:**
+- Everything in FLIP 4 — same mask, same sprite, same map.
+- The fire at (598,548) emits no light. Either give it a real emitter — warm falloff onto the ring stones and the four slabs around it, brightest at the pit rim — or remove the flame and leave a cold dead pit, which is the truer answer given the stated premise that the figure carries the only light there is.
+- The ring of pale stones around that pit renders brighter than floor at the same distance from the lamp. Drop it into the ambient ramp.
+- Desaturate every prop to the environment's range. The crossed sticks at (280,615) and (530,610) are near-full-saturation orange sitting on floor that has fallen to dim brown; they are lit as though lamplit while their own surroundings are not. Multiply each prop by the light value at its own position.
+- Add contact shadows under all five props. None of them touch the ground.
+- Redraw the object at (340,545). It has no identifiable silhouette — it could be a chest, a jar, or a face. Give it a flat top plane, a defined rim, and one readable feature.
+- Remove the soft airbrushed halo around that same object. It is continuous-tone over hard pixel art and matches no other rendering in the frame.
+- Redraw the mass at (408,615). Currently a chaotic red-orange starburst with black notches; nothing in it reads as an object.
+
+**FLIP 3:**
+- Give the water an edge. It is a 96%-filled rectangle at x 248–343, y 0–191. Add shore tiles on all four sides, break the straight vertical runs at x=248 and x=343 with at least three offsets each, and vary the bottom edge at y=191 rather than terminating on one pixel row.
+- Break the dirt tiling. It repeats on a ~24px lattice; the same dark-red clot cluster recurs down the field. Add three or four variant tiles and scatter non-periodically.
+- Vary the grey flagstones at right and left. They are identical 32px squares with a uniform 1px joint. Vary joint depth along a single run, chip two or three corners, offset a course.
+- Introduce a light model. The frame is flat ambient edge to edge, so nothing separates near from far or floor from wall. Add the same lamp falloff the other frames use, originating at the figure.
+- Resolve the projection. The two furniture pieces at top-left have visible front faces and vertical slatted panels — three-quarter view inside a top-down floor. Redraw them from directly above.
+- Redraw the bone pile at (105,120). It is a scatter of near-white single pixels with no silhouette; give it a mass and a shadow.
+- The green blobs are reused at the same value on water (350,190) and on stone (355,155). Two surfaces cannot take the same asset at the same value.
+- Remove the drop-shadow ellipse under the orc at (230,15). It is a soft brown oval and it is the only element in the frame using that convention.
+
+---
+
+The thing worth carrying forward: **4's environment is genuinely good work**, and it is being let down by two systems that aren't the environment — the vision mask and the character sprite. Both faults are shared across 1, 2 and 4 identically, which means they're one fix each, not three. Fix the mask falloff and re-key the sprite into the environment's palette and lighting, and 4 ships. Fix the exposure curve on top of that and 1 ships too. 2 needs its whole prop layer re-lit and three of its five props redrawn. 3 is a different game.
+
+*Model: Claude Opus 5 (1M context)*

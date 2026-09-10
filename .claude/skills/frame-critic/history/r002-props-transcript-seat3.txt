@@ -1,0 +1,70 @@
+Read all four. Notes below are anchored to pixel coordinates in the original files (750×911 for 1/3/4, 384×288 for 2), and I sampled values rather than trusting my eye where it mattered.
+
+**RANK:** 4 > 1 > 3 > 2
+
+**BEST:** 4
+
+**BEST_WHY:** The masonry survives the light. In the strip at x250–520, y460–600 the horizontal joints hold a 15–19 luma dip against a base of 153, so the courses stay legible right through the hot zone instead of dissolving — the joint rows run continuously from the dark left edge to the lit centre without a break in pitch. Nothing in the room clips: the room's peak is luma 208, so the falloff from the carried light has headroom the whole way and reads as light on stone rather than as exposure. The wall/floor separation is real and measured, not implied: the wall band at x600–700, y400–430 averages luma 37 against 56 for the floor immediately south of it, with a hard cap line at the boundary, so you can tell where the room ends. And the right-hand wall run at x560–750, y385–440 has genuinely cut blocks — the joints break bond course to course, and several blocks carry a chipped south edge that the block above doesn't.
+
+**WORST:** 2
+
+**WORST_WHY:** Both barrels are sliced off flat. At y=215 the staves are still mid-run and at y=216 they are gone — grey flagstone, no base hoop, no bottom, no contact shadow. The dirt/flagstone seam is cutting the sprites. Worse, the two barrels are byte-identical: at y=205 through y=215, x=125 and x=175 return the same RGB triple on every row, including the cross glyph on the lid at the same offset. Beyond that, the biomes are untransitioned rectangles — the water at x248–344, y0–191 has a straight left edge, straight bottom and straight right, meeting dirt and stone with a single pale pixel column and no shoreline; the dirt at x56–344 does the same. The flagstone from y216–265 is one tile stamped in a grid at a single value with uniform 1px grout and no wear anywhere. Three large lily pads are the same sprite at the same rotation with the same three-spoke crease.
+
+**FLAGGED:** 2, 1, 3
+
+**SHIP:** NONE
+
+4 is the best-made and I still would not ship it — it needs the qualifier "cleanest of the set," and by your bar that settles it. It is an empty room whose only object is a flat dark quad.
+
+---
+
+**FLIP 1:**
+- The fire pit at (598,548) emits no light. Floor two tiles west at (520,548) is luma 120 and one tile west at (555,548) is 116, but the ring at (585,532) drops to 78 and directly north of the pit at (598,505) to 86 — the floor gets *darker* as it approaches the fire. Make the pit a second emitter: warm falloff over ~3 tiles, ring stones at ~150 grading to ambient by the third tile.
+- Same pit: the interior bottoms out at luma 1, pure black, while nothing else in the lit room goes below 31. Lift the pit floor to 30–45 and put ash and part-burnt timber in it so it reads as a hearth, not a hole with a decal over it.
+- Same pit: the ring stones are a cool cream against a warm tan floor and read as a different asset set dropped in. Re-tint the ring to the floor's hue; let the fire brighten them, not the base colour.
+- The prop at x390–425, y600–630 is a saturated red-orange checkerboard mass with no silhouette — it does not resolve into an object at any viewing distance. Redraw it as the crossed baulks used at x262–300, y600–625, in that prop's value range, or cut it.
+- The same crossed-timber prop appears three times at three incompatible treatments: x262–300 (muted brown, readable), x390–425 (saturated red, unreadable), x515–560 (bright rust with a yellow highlight dash). Pick one palette and one line weight, redraw all three from it.
+- The props at x390–425 and x515–560 sit outside the torch pool but are rendered at full saturation — they are brighter than the light reaching them. Multiply them by the same falloff as the floor they stand on.
+- The box at x332–356, y530–565 is a pale panel with an orange scribble and no readable form. Give it a top face, two side faces, and a value break between them.
+- The hatch at x310–380, y640–712 is a flat dark quad with a uniform 1px border on all four sides. Darken the north and west edges ~25 luma, lighten south and east ~15, and give it a plank top face with driven pins at the plank ends.
+- No contact shadow under the figure (boots at x400–425, y505). Add a tile-wide, 3px elliptical darkening at ~40%.
+
+**FLIP 2:**
+- Barrels at x113–142 and x163–192 terminate flat at y=215 on the dirt/stone seam. Draw the complete barrel and let it overlap the flagstone, or move it clear of the seam.
+- The two barrels are pixel-identical from y205 to y215. Rotate the lid glyph on one, change a hoop height, dent a stave.
+- The water rectangle (x248–344, y0–191) has no shoreline. Author transition tiles: a 4–6px darker wet band inside the water edge, a damp-darkened rim on the dirt side, and an outline that leaves the tile grid.
+- The water is one flat teal across its whole area. Add a darker centre and a lighter shallow band at the perimeter.
+- The three large lily pads at approximately (320,25), (300,168) and (325,190) are the identical sprite at identical rotation and colour. Rotate and recolour, and add a 1px dark contact ring so they sit on the surface rather than over it.
+- The dirt rectangle's seams at x=56 and x=344 are straight vertical lines with a single pale pixel column. Author dirt-to-flagstone transition tiles with an irregular, off-grid boundary.
+- The dirt texture repeats on a visible ~16px pitch — the same red-brown crack motif recurs across x56–248. Break the repeat with a second overlay at a different period.
+- The two crate units at x63–97, y5–90 are exact copies stacked, each with the diamond glyph in the same position on the lid. Vary them.
+- That same diamond glyph reappears inside the moss splotch at ~(30,68). Replace one — it is a reused glyph across unrelated assets.
+- Flagstone from y216 to y265 is one tile at one value with uniform 1px grout and no damage. Vary tile values ±10 luma, chip several corners, break at least one grout run.
+- The orange striped bar at x25–35, y122–167 has no top, no base and no readable function; it terminates in mid-air. Resolve it into an object or remove it.
+- The white speck cluster at x208–232, y110–125 is unconnected 1–2px dots reading as particle debris. Draw the individual pieces with silhouettes.
+- Only the figure has a shadow. Give the barrels, crates and pads the same contact treatment; soften the figure's hard black ellipse to match.
+- The brown ellipse under the figure at ~(168,17)–(196,22) is lighter than the dirt and rimmed dark — it reads as a leftover decal, not a shadow. Remove it or make it a shadow.
+- The wall band at y265–288 sits at nearly the same value as the flagstone above with no separation. Drop its value or add a 2px dark line at y=265.
+
+**FLIP 3:**
+- The light pool has straight sides. A hard edge runs from (350,460) down-left to (275,595) and a second from (430,475) down to (390,595), making the lit area a wedge. A torch carried by a figure is omnidirectional — replace the wedge with a radial falloff.
+- The pool's apex is above the figure, not at it: the brightest floor is at y460–480 while the boots are at y505. Move the light origin to the carried torch.
+- The pool clips. 1,492 px in the room reach luma ≥245, where the same room rendered otherwise peaks at 238 and 208; the strip below the sprite averages 213 against 178. The stone goes to paper-white and loses its material identity. Cap the pool ~30 luma lower and carry the brightness in hue rather than value.
+- The hatch at x280–375, y638–690 is a ragged mid-brown blob with no straight edges — the same object elsewhere in this room is a bordered rectangle. Restore its silhouette: straight sides on the tile grid, dark border, readable top face.
+- Stones across x460–700, y470–620 share one base value; only the joints separate them. Give individual stones ±8-luma offsets and chip a few corners.
+- No contact shadow under the figure (boots at x400–425, y505).
+- Nothing in the frame shows the repair line — no rope, no driven pins, no hide, no salvaged timber. Add them at masonry fidelity, not as bright decal props.
+
+**FLIP 4:**
+- The pit at x310–380, y640–712 is a flat dark quad with a uniform 1px border and no interior detail — it reads as a hole punched in the tilemap, not an object. Give it a top face: 4–5 salvaged planks of varying width running one direction, a driven pin at each plank end, and a 2px lighter edge where timber catches the torch.
+- Same object: the border is the same value on all four sides. Darken north and west ~25 luma, lighten south and east ~15, so the lid reads as sitting proud of the floor rather than as a void.
+- The wall run at x150–450, y390–440 is a soft mottled band with no block edges, while the same wall at x560–750, y385–440 has crisp blocks and a hard cap line. One continuous wall at two resolutions. Redraw the left run at the right run's fidelity — block joints on the same 32px pitch, one dark cap line at the south edge.
+- No contact shadow under the figure (boots at x400–425, y505). Add a tile-wide, 3px elliptical darkening at ~40%; without it the sprite sits on top of the floor rather than in the room.
+- Floor tiles across x250–520, y460–600 all carry the same base value — only the joints separate them, so the masonry reads as printed. Give ~1 in 4 stones a ±8-luma offset and two or three a chipped corner.
+- The room contains no evidence of the four-hundred-year repair line. Add at minimum: rope run across a floor crack and pinned at both ends, a hide sheet lashed over a wall gap, a timber baulk wedged at the wall base — drawn at masonry fidelity, not as saturated props.
+
+---
+
+The through-line across 1, 3 and 4: the room itself is competently built and the lighting model is where it breaks — 3 overexposes it into a wedge, 1 drops in props that ignore it entirely, 4 leaves it empty. Fix the emitter list and the prop palette and 1 becomes the strongest of the three, because it is the only one that tries to dress the space.
+
+*Model: Claude Opus 5 (1M context)*
