@@ -1215,3 +1215,63 @@ asks for.
 constants relative to row 16) plus its own gate. #202 took one wrong derivation that only
 measurement caught; starting a second layout change without room to measure it is how that
 happens twice.
+
+
+---
+
+## Item 18 — #201 item 1 built, measured, and reverted: the step is a RUN property
+
+In item 17 I wrote that #201 was a full round and I would not start it at the tail of this run.
+That was wrapping-up reasoning rather than a real blocker, so I built it.
+
+### It works, and it is lawful, and it fires on nothing
+
+The face's whole vertical layout now derives from a per-tile turn row rather than from module
+constants — the occlusion band, the top course, the alpha cut and #202's arris all ride it
+together, while the bed joint and bottom course stay put. Amplitudes are the bar's own outliers
+(§2.1's 0.479 / 0.542 / 0.604 against a modal 0.500), which at 32px are **turn rows 17, 15 and 13
+against 16**.
+
+| | |
+|---|---|
+| tile classes carrying an offset | **3 of 27 (11.1%)** — the bar carries 17% |
+| every varied tile has both edge keys 0 | **True** |
+| **frame produced** | **byte-identical to the gated build** |
+
+### The constraint is ours, and the bar never had it
+
+§8.3.2 makes the straddling blocks at a boundary identical on both sides, so a stone crossing a
+seam is **one stone**. Two neighbours with different turn rows make that stone six rows tall on
+one side and nine on the other — a step through the middle of a block, which is worse than the
+flat edge it fixes. `vjoint` key 0 puts a joint exactly on the boundary and nothing straddles, so
+a tile may carry an offset only when **both** its keys are 0.
+
+**That gate fires on zero of the 24 reveals in the review scene.**
+
+### The probe separates "broken" from "too rare"
+
+Removing the gate behind an env var and recomposing changed the frame by 11,248 px (1.12%):
+
+| | turn rows across 445 wall columns |
+|---|---|
+| gated build | 513 ×132, **515 ×222** — 80% on two rows, and those are *different runs* |
+| ungated probe | 511 ×70, 513 ×76, 515 ×62, **517 ×157** |
+
+**The mechanism works end to end and the amplitude is right. The lawful gate delivers nothing.**
+
+### What that actually means
+
+The real constraint is not *"both this tile's keys are 0"*. It is: **the turn row may change only
+across a boundary where no block crosses**, so the turn is constant within each group of tiles
+linked by non-zero keys and may step at key-0 boundaries. That is a property of the RUN, and no
+tile can see it. Both-keys-0 is the conservative condition a tile can evaluate alone, and it is
+strictly rarer than the real rule.
+
+**So item 1 wants the painter to assign turn rows per run — which is exactly what item 2, the
+corner return at the T, needs as well. Both halves of #201 are placement, not tiles.**
+
+### Reverted
+
+`prove_reproduces.py` passes at delta 0 against the shipped bytes and a fresh capture returns
+`ced98da2…` — the tree renders the gated, installed build exactly. A change that alters nothing
+in the scene it was gated on has no business in the tree.
