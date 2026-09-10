@@ -3,10 +3,9 @@
 One autonomous cycle: the autonomy amendment, then the remaining surface work, then props.
 Appended per item. **Nothing here needs a reply** unless it names one of §1.1.4's three triggers.
 
-**On the phone right now:** the polish stack, #198's proportional specular, and #183's
-re-derived cap — installed and verified on the handset, `review=GATED`. **The props build is NOT
-on the phone**: three panels were killed by system memory, so it has no verdict and nothing
-installs without a gate (item 13).
+**On the phone right now:** the polish stack, #183's re-derived cap, **the five props**, and
+**#198's shoulder scaled by light** — installed at `f0011fde`, gated twice on five seats.
+Not launch-verified: the handset was locked at install time.
 
 **On the phone as of 2026-09-09: the polish stack + #198 + #183 re-derived**, INSTALL-LATEST on
 five seats, verified from the handset's own log (item 10). **§3 is the one thing still needed** —
@@ -979,3 +978,78 @@ same rule below it. Step 50.33 → 42.63, with an unexplained face regression ri
 half-fix with an unexplained regression would make the next round's comparison dishonest.** The
 shipped tiles are restored from git and every row delta is **0.00**. The three closed doors are
 recorded in the composer where the next attempt will read them.
+
+---
+
+## Item 15 (queue 3–6) — #198 installs; #194, #201 and #167 are each blocked, on three different things
+
+### #198 — INSTALL-LATEST, and my instrument disagreed with the seats
+
+`r002-props`: **3 of 5 not below** the reference, 2 below (under the 4/5 block), every plant
+caught. Installed clean at `f0011fde`; **not launch-verified, the handset was locked.**
+
+⚠ **The rank went the other way.** The previous props build ranked **1 of 4 with 1 of 5 above** the
+reference; this one ranks **2 of 4 with 0 of 5 above**. My instrument said the halo improved
+0.644 → 0.818 and the seats ranked the frame lower.
+
+**I did not revert on that and I did not claim vindication.** Two reasons it cannot carry a
+verdict: **not one of the six flips mentions the mid-pool being darker** — every one is about the
+props — and a 1-to-2 rank shift against the same reference sits inside the comparator's own
+published **40% per-seat flip rate**. Reading it as signal is precisely what
+`RANK-NOISE-FLOOR.json` was published to prevent. It is recorded as an observation carrying its
+error bar.
+
+Six items disposed: the fire to **#205** (the *third round running* a seat has measured it emitting
+nothing — the split working as designed), the props' values to **#204**, their craft to a new
+**#207**, and the scribed floor rings to **#194** — a **third** independent seat finding that item,
+on a surface the earlier two never named.
+
+**#207 retires a disposition that had gone stale.** *"Props are excluded from the shadowcaster
+set"* was disposed against #193 because there was no prop there — correct then. There are four real
+props now and they cast nothing. **A disposition can expire when the scene changes under it.**
+
+### #194 — blocked on a ruling, not a build
+
+Disposed in item 7 and posted to the issue: the remedy is aimed at the cap, which the 2026-08-30
+gate ruled out of blocks and joints, and the only unruled lever — field grain — already sits
+between two culls (*grey cloud* at 49.6% fine power, *sponge speckle* at 73.6%). Corrected for
+luminance the gap is 0.758, not the 0.405 raw HF suggests. **What would move it is a ruling on
+whether the cap may carry structure that is not a course.**
+
+### #201 — blocked behind #206
+
+Its silhouette half was resolved by #203 (it is the void ring's classification edge, §12.1a). The
+remaining half is the corridor junction, which is wall geometry and needs new tiles — and **any
+recompose of the wall family currently ships a regression**. Same block as #202.
+
+### #167 — blocked on layering, and the props pass does not close it
+
+Its exit is *objects standing on wall tops*, and **every prop landed so far stands on floor**.
+Probed directly: `9810` at (5,15), a solid cell, lit at 49.00.
+
+| | pixels changed vs the propless frame |
+|---|---|
+| a prop on a floor cell | ~900 |
+| **the same prop on a wall cell** | **98** |
+
+The renderer seats it and **the wall sprite draws over it** — props sort against floor, not against
+wall mass. Until that changes, no amount of prop art closes #167: the object would be generated,
+landed, placed and invisible. Posted to the issue with the ordering subtlety named — a prop on a
+wall top must sort *above* that wall while a prop at the base of a wall must still sort *below* the
+wall in front of it, so the rule wanted is per-cell depth, not a global z bump.
+
+### Where the queue stands
+
+| # | item | state |
+|---|---|---|
+| 1 | props pass | **gated twice, installed**; barricade family landed 3 of 4; #204/#205/#207 open |
+| 2 | #202 turn | **STOP** — blocked by #206 |
+| 3 | #198 halo | **done, installed** |
+| 4 | #194 wall-top | **blocked on a ruling** |
+| 5 | #201 junction | **blocked by #206** |
+| 6 | #167 binding grip | **blocked on prop layering** |
+
+**One thing unblocks two of these: #206.** The wall composer cannot rebuild the family it built,
+and #202 and #201 both need a recompose. One cause is found and fixed (the ladder grew from nine
+rungs to eleven and the plane rungs are indices — §5.7); a residual 5–6 levels, 19 at the foot, is
+not identified.
