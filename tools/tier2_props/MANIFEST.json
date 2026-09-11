@@ -147,7 +147,7 @@
   }
  ],
  "outstanding": {
-  "B-PROP-002 variants": "TWO variants at readability scale, not the family of four the card asks for. The scale re-author reset the family: the three 1x1 variants it had are superseded. 67 of the barricade's 72 generations remain.",
+  "B-PROP-002 variants": "TWO variants at readability scale. The card asks for a family and two is thin; the scale re-author reset the three 1x1 variants it had. 66 of the barricade's 72 generations remain.",
   "grammar": "unchanged and reconfirmed at the new scale — 'a barricade' returned a FENCE on the first attempt of this round, exactly as it did sixty generations ago. Describe the arrangement ('a heap of thick timber beams crossed over one another'), never the object. 'Leaning and crossed at angles' with 'splintered ends' produced thin sticks; the word that fixed it was MASS.",
   "#205": "the engine still does not emit light from the fire. The sprite receives and the engine emits, and the engine half is unbuilt — a fifth seat has now measured it.",
   "#204": "the landing route still does not snap generated values to the family's ladder or quarry tint. Bounded now by §12.2's colour freeze."
@@ -205,5 +205,34 @@
   "what": "a blind seat is shown the delivered frame, told nothing about what is in it, and asked to name every placed object. A miss is a FAIL on §12, not a style note.",
   "why": "the failed build had passed every instrument AND a five-seat panel that ranked it first of four. Not one of its six flips said 'I cannot tell what that is'. A seat asked to rank craft will rank craft; nobody had asked the naming question.",
   "calibration": "§13.5 — run against the frame the human gate failed (evidence/props_pre_1212.png). It must MISS the marker and the barricade and NAME the fire, because that is exactly what Rafe saw. It does: three seats, none named the marker (they offered 'a bottle or vial', 'a lantern/candle', 'an orange chest or crate'), the barricade came back as 'sticks' — the card's own role_reject — and all three named the fire."
+ },
+ "naming_history": {
+  "_what": "Three cold-naming rounds on the delivered frame. The instrument did not merely pass or fail the props — it said WHAT they were being mistaken for, and every correction below came from a seat's own words rather than from my eye.",
+  "round_0_the_failed_build": {
+   "marker": "MISS — no seat named it. Offered: 'a bottle or vial', 'a lantern or candle', 'an orange chest or crate'.",
+   "barricade": "MISS — 'sticks', the identity card's own role_reject.",
+   "fire": "NAMED. Which is exactly Rafe's 'unrecognizable except the fire'."
+  },
+  "round_1_scale_only": {
+   "marker": "NAMED as 'post' — but all three seats said WOODEN. Scale fixed the silhouette and left the material wrong.",
+   "barricade_a": "MISS — 'a pile of red bricks', 'a red brick wall segment'. Horizontally stacked beams with regular gaps ARE brick courses.",
+   "barricade_b": "MISS — 'a wooden crate or chest', all three. A dense rectangular mass IS a crate; the silhouette has to be ragged."
+  },
+  "round_2_material_and_arrangement": {
+   "barricade": "NAMED as 'planks' — crossing with the ends out, at a lower inpainting fraction so the shape has room to be irregular.",
+   "marker": "REGRESSED to MISS — 'a wooden barrel', 'a stack of wooden crates', 'stacked wooden crates (two boxes, one atop the other)'. The grey version's regular horizontal lashings SEGMENT the column, and stacked segments are boxes. I had traded a material error for an identity failure."
+  },
+  "round_3_pass": {
+   "marker": "NAMED — 'tall narrow stone slab or pillar', 'a tall stone pillar or column', 'a tall upright stone slab or pillar'. One continuous face, no horizontal band anywhere, narrow and tall.",
+   "barricade": "NAMED — 'crossed wooden planks or logs', 'a bundle of wooden planks tied together with rope'.",
+   "fire": "NAMED."
+  },
+  "what_it_taught": [
+   "A regular horizontal band across a column turns it into stacked boxes. This is the single most useful thing the instrument said, and no instrument that measures value, contrast or grain could have said it.",
+   "A dense rectangular silhouette is a crate no matter what is drawn inside it. §12's own second clause — silhouette carries the read, interior detail not at all — with a worked example.",
+   "Horizontally stacked beams at a regular pitch read as BRICK COURSES. §8.3.1's motif trap, arriving inside a single sprite.",
+   "The inpainting fraction is a readability lever: at 0.9 the generator fills the rect and returns a slab; at 0.7 the silhouette has room to be ragged."
+  ],
+  "flagged": "ONE SEAT OFFERED 'tombstone' FOR THE MARKER, which is the identity card's role_reject. The test passed on the other two seats under its own stated rule (any seat naming it counts), and that rule is not being changed after the fact. But it is a real collision and it is recorded rather than smoothed: the most readable form of an upright dressed stone slab is a grave marker. Whether that matters for a boundary stone is a direction call, not a builder's."
  }
 }
