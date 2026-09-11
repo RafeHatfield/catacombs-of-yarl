@@ -1,7 +1,7 @@
 {
   "family": "boundary_binding_v1",
   "arm": "material",
-  "commit": "8ed98f5f699b4ce14e5c828af29948ef6d99e5f3",
+  "commit": "fc4d8f4bb26997c6cfe2eb4f206bc1e9229d12b2",
   "rates": {
     "face": 0.45
   },
@@ -9,10 +9,10 @@
   "law": "Section 8.3.1 - incident arrives at the INSTANCE level, randomised. Nothing here may be baked into a wall segment.",
   "ink": {
     "face": {
-      "shadow": 48.56,
-      "iron": 48.56,
-      "rope": 48.56,
+      "shadow": 22.11,
+      "iron": 35.34,
       "timber": 48.56,
+      "rope": 75.02,
       "pale": 88.24
     }
   },
@@ -29,7 +29,7 @@
       "grips": [
         "cramp"
       ],
-      "sha256": "8c9d0437a2631ab66ffb0e4bb3c1ea11388e5bbe6313d3cb7d76b130a6d3113b"
+      "sha256": "d547d678ea2252f6419de834946aa1261931b3faf7ae565fc9122346971055a2"
     },
     {
       "id": 9801,
@@ -41,7 +41,7 @@
       "grips": [
         "cramp"
       ],
-      "sha256": "ddef06211a072190fb63b97ddf8821ecb11526c5a37f7570ca51bbe96a9a7715"
+      "sha256": "f4a2bcf81492f1c3e5181087c20d053db20805f7d3ede37a847c5ec381f3fa25"
     },
     {
       "id": 9802,
@@ -53,7 +53,7 @@
       "grips": [
         "cramp"
       ],
-      "sha256": "003d22ece07c6072468c1f615ca7a68beda75fb3c09d776e8dc28715a8f6654b"
+      "sha256": "d6054d81d0585c7f51fbc0952e007718bfdd7e0d47c60d598b166de6025239a7"
     },
     {
       "id": 9803,
@@ -65,7 +65,7 @@
       "grips": [
         "lash"
       ],
-      "sha256": "6a697c488b381ce6f250762c1d76da9ffed2a4e296de875ffda6a4d11c844961"
+      "sha256": "ad57fb9361b7ccda63b162f3b8a64f136fc2b89896bdb7b847dddd869ceec534"
     },
     {
       "id": 9804,
@@ -77,7 +77,7 @@
       "grips": [
         "lash"
       ],
-      "sha256": "f11b5d66f2f7b883ddac05c944283b240ae9e850ede77b2eaca17926c737b298"
+      "sha256": "e87d23918ec35e3c7afa809cd0b417ef0589808543931ec496ba3bcf532d6904"
     },
     {
       "id": 9805,
@@ -89,7 +89,7 @@
       "grips": [
         "lash"
       ],
-      "sha256": "6212058b399e235e9b7236717474bd302ac613dabca0159487803480b8daf1f8"
+      "sha256": "a2c9ff2876fd00632126d8718992b46032b6376253e37887062a744bd0e22a1e"
     },
     {
       "id": 9806,
@@ -101,7 +101,7 @@
       "grips": [
         "patch"
       ],
-      "sha256": "2faf51b391d8c5475599a3431d8f993afa27254be1946e11d005da2c0068bc7c"
+      "sha256": "4881741b30d307c455d911091abf5245dfdef492372d2a42cfa00adb69623171"
     },
     {
       "id": 9807,
@@ -113,7 +113,7 @@
       "grips": [
         "patch"
       ],
-      "sha256": "17719d6c40dd5ac059412222c7e6966c9c459ec8592033262b924628d12ec048"
+      "sha256": "18608a8fe6d5c375a0c3761993aa1adcf5754d498bd4fa4aa9de189ae3a057d7"
     },
     {
       "id": 9808,
@@ -125,7 +125,7 @@
       "grips": [
         "patch"
       ],
-      "sha256": "3321bdd60a901e2516b88de285c4efd7d87a3efe85f1e4d4f627fb08af080ce7"
+      "sha256": "794453a2a63a34daaad9411df9f849577f7fe59e95b1c0d4372009efb2faf92e"
     },
     {
       "id": 9809,
@@ -137,7 +137,7 @@
       "grips": [
         "pin"
       ],
-      "sha256": "6e673526c28e293bd82d3ac5db3f4354ac8a1d7f3427c21f7d8683cfaa6f1e9a"
+      "sha256": "77e4ebce17bcc1de74c9baba71fe2c88587e1fade9a5e43800f9e77a50c72c75"
     },
     {
       "id": 9810,
@@ -149,7 +149,7 @@
       "grips": [
         "pin"
       ],
-      "sha256": "d435e9e181c2555c9a0d4ef492c3f010364701af1bd05706baf05d15f1655603"
+      "sha256": "da0693971990dcd874eaaa5ce771115e17a821183cf044c37eedbd9f0d76b208"
     },
     {
       "id": 9811,
@@ -161,7 +161,7 @@
       "grips": [
         "pin"
       ],
-      "sha256": "e83961ae8ef2f8507c91d5f90e3474a2c615e49cd1b5b7d2bc372a2f77411229"
+      "sha256": "d3e036c17079c3028e9c3a9344fa228ed3537232a362d497678cde7fd737884f"
     },
     {
       "id": 9812,
@@ -173,7 +173,7 @@
       "grips": [
         "strap"
       ],
-      "sha256": "209f80697a8b99da3187bbed104686964bbc931dc2f43a3da6e379165ca653d9"
+      "sha256": "c5f13198a9002385bd57c5c74838de6e1eb6fb97ec8305752bd1afeca1241ab0"
     },
     {
       "id": 9813,
@@ -185,7 +185,7 @@
       "grips": [
         "strap"
       ],
-      "sha256": "0b8bc89b54e919301b87a00fb7e2ecd5e5f0db693eb4815cddabddf5476d7db1"
+      "sha256": "b3cf843fa3d97d44cb13cf8f4a974b381a1d6080bd43ab7ef7a3d4dd8725f1ad"
     },
     {
       "id": 9814,
@@ -197,7 +197,7 @@
       "grips": [
         "strap"
       ],
-      "sha256": "84b819cdc0a1d2f3d4a3cac244545fcb65f54803da95a116a4f4ac7ecad16063"
+      "sha256": "edc91d77fd72f9c5b26d729007e48f0ee0c08630e72cf73d53bda322b9ff99ae"
     }
   ]
 }
