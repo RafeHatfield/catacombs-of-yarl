@@ -72,7 +72,34 @@ RUN = ".claude/skills/frame-critic/run_frame_critic.sh"
 #
 # Everything is printed and stamped, on the same principle as ROUTED: a disposition Rafe does not
 # recognise is on his own screen while he is holding the build.
-FLAG_STATES = ("ROUTED", "CLOSED", "PARKED", "ROUTED-ALREADY", "MEASURED-FALSE")
+#   n/a              says "this asks about art that does not exist yet". RULED (Rafe, 2026-09-11)
+#                    for exactly one case: the hero's APPEARANCE.
+#
+# ── WHY `N/A` EXISTS, AND THE ONE THING IT MUST NOT BECOME ────────────────────────────────────
+#
+#     "the hero light-response engine term stays (Sasha inherits it); all hero-appearance work
+#      stops — the current sprite is the Oryx placeholder and is not worked; close the
+#      placeholder-look flags as N/A; no hero rounds until the Sasha session against his card."
+#
+# The figure in every frame is the Oryx placeholder. A seat asked to judge a picture will judge
+# what is in it, and some of what is in it is a sprite standing in for a character who has not
+# been designed. Routing those flags pretends there is somewhere to route them; CLOSING them
+# says a human decided against them, which is not what happened either. They are answered by a
+# session that has not run yet.
+#
+# ⚠ THE RISK IS OBVIOUS AND IT IS GUARDED. `N/A` is a way to make a criticism disappear, so it is
+# the narrowest state here: it needs Rafe's words AND a resolving citation AND a statement of
+# what the flag was about, and the check below refuses it outright when the flag reads as a
+# LIGHTING complaint. Exposure and value response on the figure belong to hero_light.gdshader
+# and are fully live; colour, shape, silhouette and kit belong to a character nobody has drawn.
+# The morgue's own `lamp-clip-figure` plant sits on that line and its entry says so.
+FLAG_STATES = ("ROUTED", "CLOSED", "PARKED", "ROUTED-ALREADY", "MEASURED-FALSE", "N/A")
+
+# Words that mean the flag is about LIGHT rather than about design. A disposition claiming a
+# flag is placeholder-appearance while the flag itself talks about exposure is refused: that is
+# the one way this state could be used to duck a live finding.
+_LIGHTING_WORDS = ("blown", "clip", "clipped", "washed out", "overexposed", "exposure",
+                   "too bright", "too dark", "value separation", "lit", "unlit", "luminance")
 
 
 def _clause_exists(ref):
@@ -184,6 +211,25 @@ def check_dispositions(disp, flips):
                            "matches" % i)
             else:
                 bad += _bad_citation(i, cite)
+        elif state == "N/A":
+            # Rafe's words, because only he creates this state — same bar as CLOSED and PARKED.
+            if not (d.get("ruling") or "").strip():
+                bad.append("disposition %d (N/A): no quoted ruling — only Rafe creates these"
+                           % i)
+            # and a citation, so the standing ruling can be looked up by someone else.
+            cite = (d.get("cites") or "").strip()
+            if not cite:
+                bad.append("disposition %d: N/A must CITE where the standing ruling lives" % i)
+            else:
+                bad += _bad_citation(i, cite)
+            # and the flag has to actually be about appearance.
+            item = (d.get("item") or "").lower()
+            hit = [w for w in _LIGHTING_WORDS if w in item]
+            if hit:
+                bad.append("disposition %d: N/A on a flag that talks about LIGHT (%s). The "
+                           "re-scope stops hero APPEARANCE work and keeps the light-response "
+                           "term live — a flip about exposure on the figure is not N/A, it is "
+                           "hero_light.gdshader's." % (i, ", ".join(sorted(set(hit)))))
         elif state == "MEASURED-FALSE":
             if not (d.get("measured") or "").strip():
                 bad.append("disposition %d: MEASURED-FALSE with no measurement — the whole state "

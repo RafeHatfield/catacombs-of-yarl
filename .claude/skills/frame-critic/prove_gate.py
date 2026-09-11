@@ -227,6 +227,51 @@ def main():
         case("H6 MEASURED-FALSE with no percept recorded -> refuse",
              1, rc, out, "no percept recorded")
 
+        # ── N/A: flags about art that does not exist yet. RULED (Rafe, 2026-09-11). ────────
+        #
+        # This is the narrowest state the gate has, because it is the only one that makes a
+        # criticism disappear without anybody promising to do anything about it. Each of its
+        # four refusals is exercised here, and so is the one thing it must not become.
+        NA_RULING = "the hero light-response engine term stays (Sasha inherits it); all hero-appearance work stops - the current sprite is the Oryx placeholder and is not worked; close the placeholder-look flags as N/A"
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure's tabard is a flat teal with no folds",
+             "ruling": NA_RULING,
+             "cites": "#183"}]})
+        rc, out = run(["python3", GATE])
+        case("N1 N/A on a placeholder-APPEARANCE flag, ruling + citation -> allow",
+             0, rc, out, "GATE OPEN")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure's tabard is a flat teal",
+             "cites": "#183"}]})
+        rc, out = run(["python3", GATE])
+        case("N2 N/A with no quoted ruling -> refuse", 1, rc, out, "only Rafe creates these")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure's tabard is a flat teal",
+             "ruling": NA_RULING}]})
+        rc, out = run(["python3", GATE])
+        case("N3 N/A with no citation -> refuse", 1, rc, out, "must CITE")
+
+        # ⚠ THE ONE THAT MATTERS. The re-scope stops APPEARANCE work and keeps the light-response
+        # term fully live, so a flip about exposure ON the figure is not N/A — it is
+        # hero_light.gdshader's, and disposing it N/A would be using the ruling to duck a live
+        # finding. That is precisely the flip the morgue's `lamp-clip-figure` plant carries.
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure is blown out by the lamp and reads washed out",
+             "ruling": NA_RULING,
+             "cites": "#183"}]})
+        rc, out = run(["python3", GATE])
+        case("N4 N/A used on a LIGHTING flag -> refuse", 1, rc, out, "talks about LIGHT")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure's silhouette is hard to read against the floor",
+             "ruling": NA_RULING, "cites": "#999999"}]})
+        rc, out = run(["python3", GATE])
+        case("N5 N/A citing an issue that appears nowhere -> refuse",
+             1, rc, out, "appears nowhere")
+
         synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
             {"state": "MEASURED-FALSE", "item": "x", "percept": "kept"}]})
         rc, out = run(["python3", GATE])

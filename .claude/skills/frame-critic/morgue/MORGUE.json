@@ -175,6 +175,79 @@
     "cost_restored": "the combined/tonal set returns to one member, so every seat of a tonal panel draws the same plant and their catches are correlated again. That is the limitation this entry was seeded to remove and it is NOT solved; a genuinely tonal second cull is still wanted.",
     "kept": "nothing is deleted — the entry, its bytes, its quote and its provenance all stand."
    }
+  },
+  {
+   "file": "lamp-clip-figure.png",
+   "surface": [
+    "combined"
+   ],
+   "sha256": "18860e753365b6c6ba69ba6a9623eefbb1e2594ee2e6d9c3a9745b0e37149fa0",
+   "source": "tools/tier1_floors/evidence/h_null.png @ 805a39d2 — the hero light-response term absent, which IS the pre-#183 state.",
+   "culled_by": "Rafe, rig walk, 2026-09-06 — the walk that routed #183, and seeded here by ruling 2026-09-11.",
+   "verbatim": "lamp clip on the standing figure (placeholder sprite)",
+   "defect": "The lighting blows out its subject. In the figure's own 40x44 px the lamp drives 594 pixels to 250 or above, peaking at 251.8 luminance: the shield is a flat pale disc and the tunic loses its interior entirely. #183's text names the same thing from the other side — 'the sprite takes the full top end of the lamp the way the floor does, and near the lamp, where the player always is, that flattens her against a floor delivering 168.73'. Fixed by the hero shoulder: 594 clipped -> 8 at the swept cap.",
+   "provenance": "Issue #183; src/Presentation/assets/shaders/hero_light.gdshader. The cap was later OVERTURNED at the human gate (Rafe, 2026-09-09) — 'warmest never brightest' meant NEVER BLOWN, not darker than the ground — and this frame is the blown end that both the original ruling and the overturn agree is wrong.",
+   "axis": [
+    "tonal"
+   ],
+   "sub_axis": "bright",
+   "_the_cull_is_the_lighting_not_the_sprite": [
+    "RULED (Rafe, 2026-09-11), and it decides how this entry must be read:",
+    "",
+    "  'the cull was the lighting blowing out its subject, not the hero's design.'",
+    "",
+    "The figure here is the ORYX PLACEHOLDER. It is not Sasha, it is not being worked, and",
+    "a seat flagging its ART rather than its EXPOSURE has caught this frame for the wrong",
+    "reason — which LOOP-PROCESS §4.2 says is not a control at all. What makes it a plant is",
+    "that the lamp destroys whatever is standing there."
+   ],
+   "_why_this_is_admissible_when_a_null_normally_is_not": [
+    "⚠ THIS FILE IS THE NULL ARM OF #183'S OWN SWEEP, and `blown-highlight.png`'s entry",
+    "states the general law against exactly that: 'A NULL is the same build with one lever",
+    "switched off ... It is not a plant, because nobody ever culled it.'",
+    "",
+    "The reason that law gives is the reason it does not bite here. THIS STATE WAS CULLED:",
+    "Rafe walked it on 2026-09-06 and #183 exists because of it. The null is not a",
+    "manufactured picture nobody judged — it is the faithful capture of a shipped state that",
+    "was judged and rejected, with the lever that fixed it not yet written.",
+    "",
+    "THE ALTERNATIVES WERE CHECKED AND REJECTED, by measurement rather than by preference:",
+    "  * rerat_r1.png, the actual walked frame, IS ALREADY IN THIS MORGUE — it is",
+    "    blown-highlight.png, byte for byte. Planting it twice under two labels would put the",
+    "    same picture in two seats' decks and call it decorrelation.",
+    "  * swB_e1.6.png is the same build in the probe room, with an identical 784-pixel figure",
+    "    clip — but it differs from the planted frame by only 1.61% of pixels. Two plants",
+    "    that look the same defeat the thing the second plant is for.",
+    "  * h_null differs from the planted frame by 10.55%, in the same scene, at the ratified",
+    "    rig, with the real wall and cap families laid and zero magenta."
+   ],
+   "combined_eligibility": "ELIGIBLE. Same scene as the deck (tier1_combined_review), ratified rig (energy 1.6 / radius 6.0 / ambient 1.5), real wall and cap families, ZERO magenta pixels. It predates the tier-two props, as does the approved reference and the existing tonal plant."
+  },
+  {
+   "file": "crushed-midband.png",
+   "surface": [
+    "combined"
+   ],
+   "sha256": "ef30617baed6d660c194d81adf5006247687a508be201c513980108851b34108",
+   "source": "tools/tier1_walls/evidence/r12_family.png — LEDGER.md: 'the build offered to the gate, round 4'.",
+   "culled_by": "Rafe, device gate, 2026-08-27 — the FAIL recorded verbatim in bible §3's status trail. Seeded here by ruling 2026-09-11.",
+   "verbatim": "looks like crap",
+   "defect": "THE MID-BAND IS CRUSHED. Of the frame's lit pixels the middle third of its own range holds 15.1% where a flat distribution would hold 33.3% — a 55% shortfall — with p10 9.2, MEDIAN 19.1 and p90 77.0. The weight sits at the bottom and a thin tail reaches the top, and the mid-tones where masonry actually reads are hollowed out. The walls come back as one murky brown mass with no parts in it.",
+   "provenance": "bible §3 status trail, 2026-08-27: 'Gate verdict: FAIL — the phone overrules the stills' / 'two seats ranked this above the bar; the device says otherwise; §13.2 vindicated again.' Two laws came out of that gate: §8.3's motif trap extended to wall material, and §6.2's readability-tuning pass before any asset is judged through the rig.",
+   "axis": [
+    "tonal"
+   ],
+   "sub_axis": "dark",
+   "_the_morgue_had_no_dark_side": [
+    "THIS IS THE FIRST DARK-SIDE PLANT. Every tonal entry before it fails BRIGHT — the lamp",
+    "clipping, the highlight blowing. A panel whose only tonal controls are blown frames",
+    "teaches a seat one direction of the axis, and a build that errs the other way meets a",
+    "judge that has never been asked about it.",
+    "",
+    "It is also the oldest cull in the morgue and the only one from a DEVICE GATE rather",
+    "than a walk — the round where every instrument was green and the phone still said no."
+   ],
+   "combined_eligibility": "ELIGIBLE. ZERO magenta: it was captured with the real floor, wall and binding families laid. ⚠ It is at the PRE-RE-RATIFICATION rig (radius 5.0 / ambient 0.70), because that is the rig it was culled at — the crush is partly what the re-ratification fixed. That is the defect, not a confound: a seat is being asked which frame is tonally wrong, and this one is, for the reason recorded."
   }
  ]
 }

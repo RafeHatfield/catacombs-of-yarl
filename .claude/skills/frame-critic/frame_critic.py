@@ -1249,11 +1249,14 @@ def main():
     # can infer it is one of a panel, and the whole signal depends on it judging the picture
     # rather than the apparatus.
     #
-    # ⚠ ONE SEAT, ONE PLANT, AND THE MORGUE IS THIN. `pick_plant` returns the entries matching
-    # this surface AND this axis, and for `combined`/`tonal` that set has exactly ONE member. So
-    # three seats draw the same picture-plant and their catches are CORRELATED — the panel
-    # multiplies the rank samples but not the plant's evidence. That is a real limit of this
-    # implementation and it is reported per round rather than hidden.
+    # THE MORGUE'S TONAL SET IS THREE NOW, AND THE VOID OF 2026-09-10 IS WHY.
+    # `combined`/`tonal` held exactly ONE entry, so five seats drew one picture five times, one
+    # seat missed it, and the round voided on a judge that four seats had passed. There was
+    # nothing to see the miss AGAINST. RULED (Rafe, 2026-09-11): seed two more from his culls —
+    # `lamp-clip-figure` (bright: the lamp destroying its subject) and `crushed-midband` (dark:
+    # the 2026-08-27 device FAIL, and the morgue's first dark-side plant, since every tonal
+    # entry before it failed bright). Dealt without replacement below, three plants across five
+    # seats exercises all three every round.
     # ── PLANTS ARE DEALT WITHOUT REPLACEMENT — the ruled property, delivered ─────────────────
     #
     # RULED (Rafe, 2026-09-08): "each seat its own axis-matched plant."

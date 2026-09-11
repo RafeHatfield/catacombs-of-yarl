@@ -164,6 +164,31 @@ shader_type canvas_item;
 // the asymptote at 0.70 everything above the knee lands in [knee, 0.70] however high the knee
 // is. His body sits 42 levels below the null BECAUSE OF THE CEILING, and the ceiling is the
 // ruling. There is no builder setting that answers the flip; only Rafe can, by moving it.
+// ── #183 RE-SCOPED — RULED (Rafe, 2026-09-11). READ THIS BEFORE TOUCHING ANYTHING BELOW. ─────
+//
+//     "the hero light-response engine term stays (Sasha inherits it); all hero-appearance work
+//      stops — the current sprite is the Oryx placeholder and is not worked; close the
+//      placeholder-look flags as N/A; no hero rounds until the Sasha session against his card."
+//
+// THE TERM IN THIS FILE IS THE PART THAT STAYS. It is a LIGHTING law — how a figure receives
+// the Boundary's lamp — and it belongs to the region, not to whoever is standing in it. Sasha
+// inherits it unchanged when she arrives. Nothing below is placeholder work.
+//
+// WHAT STOPS IS EVERY QUESTION ABOUT HOW THE FIGURE LOOKS. The sprite this lights is the ORYX
+// PLACEHOLDER. It is not Sasha, it is not being designed, and its palette, silhouette, gear and
+// readability are not open questions — they are answered by a session that has not happened yet,
+// against a card that exists.
+//
+// ⚠ SO A SEAT FLAGGING THE FIGURE'S APPEARANCE IS DISPOSED N/A, NOT ROUTED. That is a new
+// disposition state for exactly this class and it is not a way to duck criticism: a flip about
+// the LIGHT on the figure is still live and still routes here. The line is what the flip is
+// about — exposure and value response belong to this file; colour, shape and kit belong to a
+// character nobody has drawn yet.
+//
+// The morgue's `lamp-clip-figure.png` plant carries the same distinction in its own entry: it
+// is planted for the lamp destroying its subject, and a seat catching it for the placeholder's
+// art has caught it for the wrong reason (§4.2).
+
 uniform float hero_knee = 0.80;
 uniform float hero_ceiling = 0.88;
 
