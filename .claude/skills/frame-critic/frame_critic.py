@@ -720,8 +720,19 @@ def pick_plant(surface, morgue, exclude=(), axis=None):
         sf = e["surface"]
         return surface == sf if isinstance(sf, str) else surface in sf
 
+    # ── A RETIRED CONTROL IS NEVER DEALT, AND AN EMPTY `axis` DOES NOT RETIRE ONE ─────────────
+    #
+    # `crushed-midband.png` was seeded on 2026-09-11 and retired the same day, by measurement:
+    # both seats that drew it MISSED it, and put in the BUILD slot it was ranked 1st, 1st and
+    # 2nd of four by three fresh seats, above the approved reference, flagged by nobody. It is
+    # not a weak plant — it is a frame blind seats PREFER. It is the 2026-08-27 DEVICE gate
+    # FAIL, and what the phone catches is by construction what a seat does not (§13.2).
+    #
+    # The first attempt at retiring it set `axis: []`, which does the OPPOSITE: the rule below
+    # reads a missing axis as "answers any question", so an entry with no axis is dealt to every
+    # round rather than none. An entry is retired by saying so, in a field whose name means it.
     entries = [e for e in morgue["entries"]
-               if serves(e) and e["file"] not in exclude]
+               if serves(e) and e["file"] not in exclude and not e.get("retired_as_control")]
     if axis:
         on_axis = [e for e in entries if axis in (e.get("axis") or [axis])]
         if on_axis:

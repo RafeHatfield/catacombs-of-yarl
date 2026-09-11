@@ -70,14 +70,26 @@ The "THE FIELDS ARE `ReviewSceneBuilder`'S, DELIBERATELY" paragraph is orphaned 
 one. House drift (`LegibilityPoint` has the same shape), and the merge point is exactly where
 the two builders diverged, so it wants doing with the item above.
 
-### ⚠ still owed, and it is not a nit — `verify_props.py` does not check that a prop DREW
+### ~~still owed — `verify_props.py` does not check that a prop DREW~~ — **DONE 2026-09-11**
 
-Its headline is *"EVERY DECLARED PROP MUST DRAW, AND EVERY ONE MUST BE LIT"* and only the
-second half exists. The docstring claimed drawing was "checked against a propless control";
-`main` measures luminance and nothing else. The claim is now corrected in place rather than
-left standing, but **the check is still unbuilt**, and the incident behind it is on record: an
-earlier probe measured "pixels changed at the prop's cell", called it the sprite drawing, and
-was measuring `MarkPropCell` repainting the floor underneath.
+Built as `verify_props.py --drew`, and the control took three tries to get honest. See the
+commit `harness(judge)`. Two things worth keeping from it:
 
-**Fix:** capture a propless control and diff. **Before:** the next props round — a prop that
-silently fails to draw would pass every other check in the pass.
+- **The obvious control is wrong.** Capturing with the props removed does not isolate the
+  sprite, because a blocking prop marks its cells and a marked cell changes what the floor
+  composer lays under it. The honest control keeps every prop declared, in place and blocking,
+  and swaps only the tile ids for a reserved transparent tile.
+- **"Zero change outside the footprint" was the wrong bar.** A prop sprite is drawn CENTRED, so
+  it overflows into its neighbours by up to half a cell — 5,368 pixels on the current scene, all
+  within 32px, median 10. The test is distance, not count.
+
+**The finding as it was raised**, kept because its reasoning is what made the fix correct:
+the file's headline is *"EVERY DECLARED PROP MUST DRAW, AND EVERY ONE MUST BE LIT"* and only the
+second half existed. The docstring claimed drawing was "checked against a propless control";
+`main` measured luminance and nothing else. The incident behind it is why the naive control was
+rejected: an earlier probe measured "pixels changed at the prop's cell", called it the sprite
+drawing, and was measuring `MarkPropCell` repainting the floor underneath.
+
+⚠ The fix proposed at the time — *"capture a propless control and diff"* — **would have been
+wrong**, for exactly that reason. Recorded so the suggestion is not picked up later as if it had
+been the answer.

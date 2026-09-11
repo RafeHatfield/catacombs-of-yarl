@@ -1,0 +1,46 @@
+RANK: 1 > 2 > 4 > 3
+
+BEST: 1
+BEST_WHY: The floor is one coherent stone scale from edge to edge — flagstones at roughly 40–60px sit in staggered courses with joints of consistent width, and the darker individual stones (the single block at ~(395,400), the pair at ~(420–500, 590–620)) read as replaced or worn stones inside the same system rather than a different texture pasted in. The wall band across the top (y≈200–260) has a lighter top course over a darker face course, so the wall reads as having thickness and the room reads as sunk below it. The grate/crate object left of the figure at ~(185–245, 455–515) is drawn at the same pixel density as the floor and sits inside a stone rather than floating over a joint. The light falloff is even and does not clip to white anywhere: the brightest stone under the figure is still a tan, not a highlight.
+
+WORST: 3
+WORST_WHY: It is a flat-lit generic tileset with nothing of the place in it. There is no light falloff at all — the far-left wall column at (0–55, 0–100) is the same value as the wall at the figure's feet. The pool at (250–345, 0–190) is a hard rectangle of green with three lily-pad clusters; the bank has no edge treatment, the water meets the mud with a one-pixel line. The mud floor at (55–250, 0–200) is a single repeating speckle texture with no stones, no wear, no direction. The stone walls are one flat grey block face repeated with no variation in course or joint. The green figure at (215–240, 0–22) is clipped by the top frame edge. The chests at (60–100, 5–75), the furnace at (20–45, 120–160) and the two round pots at (115–190, 190–215) are standard RPG-kit props — rounded, saturated, evenly lit — and the whole thing reads as a placeholder scene built from a free asset pack.
+
+FLAGGED: 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The light is a mathematically perfect circle centred on the figure with the same falloff rate in every direction; break it — bias falloff by the wall geometry so the top wall face at y≈225–260 catches light on its face and throws the floor directly beneath it a step darker.
+- The long thin black crack lines (e.g. the curve from ~(110,290) to ~(250,440), the one from ~(430,470) to ~(620,440)) run continuously across mortar joints as one smooth stroke; a crack in cut stone follows or terminates at joints. Redraw them per-stone, breaking and offsetting at every joint they cross.
+- There is a uniform fine speckle noise over every stone surface, most visible at (250–400, 300–450); it reads as a noise filter, not wear. Remove it and replace with localised wear — a few chipped corners, a worn patch where the figure stands.
+- The wall top course at (55–200, 200–225) is within a step of the floor value directly beneath it at (55–200, 260–300); push the wall top lighter or the floor beneath darker so the wall edge reads at the room's periphery, not just near the light.
+- The grate object at (185–245, 455–515) casts no shadow and has no contact edge with the floor; add a one-row dark contact line along its bottom and right.
+- The tan/orange cast is uniform in hue across the entire lit area; cool the far edges (x<150, x>620) toward grey so the light reads as a lantern in a cold room rather than a warm tint applied to the frame.
+
+FLIP 2:
+- The floor is two different stone textures blended by noise: large 40–60px blocks at (380–560, 480–560) and right of the figure, fine 15–20px brick at (220–320, 480–560) and across the bottom-left at (60–300, 720–880), with mottled transitions between them. Pick one stone scale for the room floor and lay it as courses; use the fine brick only where a repair patch is intended and give that patch a hard, deliberate edge.
+- The long crack from ~(230,480) curving down to ~(560,600) and the arc at ~(600–720, 640–720) cross joints as unbroken smooth lines; redraw per-stone, breaking at joints.
+- The corridor floor at (500–560, 70–440) has the same mottled texture as the room floor with no stone courses; it should be laid stone at the same scale as the room, or clearly a different surface with its own edge.
+- The wall band at (185–500, 390–440) is a flat strip with a single darker row beneath; give the top course individual stones so it matches the drawn stone in the wall faces at (560–720, 400–440).
+- The lit floor immediately under and right of the figure at (380–450, 460–520) is a pale cream with the texture washed out; pull it down one step so joint lines remain visible at the brightest point.
+- The black void rectangles at (120–440, 70–390) and (630–750, 140–390) have hard vertical edges where they meet the walls at x=440 and x=630 with no wall face drawn; draw the wall face where the room wall meets the void.
+
+FLIP 4:
+- The floor under and right of the figure at (350–500, 450–560) is blown to white; texture and joints are gone. Clamp the light so the brightest stone keeps its joint lines and local value.
+- The halo of light bleeds over the wall band at (300–500, 390–450), lighting the wall top and the wall face the same; the face should be darker than the top.
+- The wall top at (185–470, 390–440) is drawn as blocks with notch gaps at x≈275, 355, 405 and 460 that go to the floor value; either those are gaps (then the floor should show through with its own stones) or they are damaged stone (then draw broken stone, not a notch). As drawn they read as crenellations.
+- Same floor-scale problem as image 2: large blocks at (380–560, 480–560), fine brick at (220–320, 480–560) and (60–300, 720–880), noise-blended between; lay one course scale and make any repair patch a hard-edged deliberate insert.
+- Same crack problem as image 2: the curve from ~(230,480) to ~(560,600) and the arc at ~(600–720, 640–720) ignore joints; redraw per-stone.
+- The wall band at (50–185, 640–720) at left is a lighter grey block texture that does not match the darker brown-black wall at (50–185, 720–880) directly beneath it; make one wall material.
+
+FLIP 3:
+- There is no light falloff; add a light source at the figure and darken with distance so the far-left wall column at (0–55, 0–100) and the bottom wall at (0–384, 220–288) sit well below the value of the floor at the figure's feet.
+- The figure at (215–240, 0–22) is clipped by the top edge of the frame; the camera must keep the figure on screen with margin.
+- Replace the pool at (250–345, 0–190): a hard rectangular edge with a one-pixel outline and three lily-pad clusters reads as a garden pond. If standing water is intended, give it a stone-lipped or eroded bank and remove the vegetation.
+- The mud floor at (55–250, 0–200) is a single repeating noise-speckle tile with no stones, no wear pattern, no direction; lay it as a floor surface with courses, joints and worn areas.
+- The stone wall blocks are one repeated flat face with no course variation; vary block width along each run and give the top of every wall a distinct course from its face.
+- The chests at (60–100, 5–75), the furnace at (20–45, 120–160) and the pots at (115–190, 190–215) are saturated, rounded, evenly lit kit props; redraw at the value range and pixel density of the walls, with contact shadows, and remove the lit fire from the furnace unless it is meant to be a second light source.
+- The bottom wall at (0–384, 220–288) ends in a bare grey band with a notch at (150–190, 270–288); finish the wall face or remove the notch.
+
+Model: Opus 5 (1M context)

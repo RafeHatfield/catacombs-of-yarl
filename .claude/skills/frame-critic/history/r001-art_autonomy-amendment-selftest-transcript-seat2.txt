@@ -1,0 +1,56 @@
+RANK: 4 > 3 > 2 > 1
+
+BEST: 4
+BEST_WHY: The floor at the centre of 4, from roughly (250,300) to (620,700), is laid as courses of unequal-width blocks with staggered joints — the row under the figure has a wide block at (430,500)-(520,545) next to two narrow ones, and the row below it breaks at different x positions — so the paving reads as laid stone rather than a stamped grid. The single light falloff is coherent: the floor goes from warm tan at the figure to neutral grey at (100,650) to near-black at the room edges without any patch reversing direction, and the wall face strip at y≈235-260 catches the top of the falloff faintly rather than being lit flat. The cracks at (170,300)→(350,470) and (600,380)→(780,420) span multiple blocks and follow joints for stretches, so they read as damage to the floor rather than a scribble on top of it. Wall tops (y≈200-235, and the corridor column at x≈300-440 above) hold a consistent stepped dark value separate from the floor.
+
+WORST: 1
+WORST_WHY: The pool at (248,0)-(342,192) is a flat teal hexagon fill that ends in a pixel-straight edge directly on the dirt with no bank, shore or edge tile — it is a rectangle of pattern. The whole frame is at one value edge to edge: there is no falloff from the figure at (215,5), so no depth anywhere. The wall tops are 24px flat grey squares with a 1px darker grid line — stamped, not cut — and the wall face is drawn only on the bottom run (y 260-288) and the one segment at (8,120)-(55,145); the right-hand column at x 342-384 and the top-left column have no face at all, so wall thickness contradicts itself within one screen. The door at (28,125)-(36,155) is an orange plank rectangle whose brown strip continues down into the dirt to y≈170 — it can't be read as door, post or shadow. The same pale-teal moss blob sprite appears at (20,55), (20,205) and (355,150); the two chests at (65,2) and (65,50) are identical and each sits on an identical dark plank strip; the two barrels at (110,193) and (160,193) are the same sprite. The dirt floor's rust-red crack texture repeats on the 24px tile period, visible across (120,20)-(240,180). Stray blue specks at (125,15), (250,15), (190,150), (230,165) are unreadable.
+
+FLAGGED: 1, 2, 3
+
+SHIP: NONE
+
+FLIP 1:
+- Add a light source to the figure and a falloff to black; currently every pixel in the frame is at full value.
+- Give the pool an edge: a bank/shore tile set for all four sides at (248,0)-(342,192) instead of the pattern stopping on a straight line against dirt.
+- Replace the hex-pattern water fill with a flat, darker, desaturated surface; drop the bright green lily pads or bring them to the environment's value range.
+- Draw a wall face on every wall run that faces the room, not only the bottom run — the right column (x 342-384) and top-left column (x 0-55, y 0-120) have tops but no faces.
+- Break the wall-top stamp: vary block width and joint depth within a run; remove the uniform 1px grid line.
+- Resolve the door at (28,125)-(36,155): either it is a door set into the face, in which case the brown strip below it (y 155-170) goes, or it is a post, in which case draw it as one.
+- Give the dirt floor at least four variant tiles so the rust-crack pattern does not repeat on the 24px period.
+- Make the two chests, the two barrels and the three moss blobs distinct: different orientation, wear, or size — three identical stamps in one screen reads as an asset pack.
+- Remove or explain the blue specks on the dirt at (125,15), (250,15), (190,150), (230,165).
+- Desaturate the gold chests and green orc to the same chroma range as the stone and dirt.
+
+FLIP 2:
+- Replace the wall-top texture in the band at (120,390)-(500,440), and around the black voids at (120,135)-(440,390) and (630,135)-(750,390), with structured stone: it is currently a mottled brown-olive cloud with no block edges and reads as a noise fill.
+- Remove or redraw the dark vertical bars rising out of the wall face strip at y≈420-455 (at x≈248, 280, 372, 390, 438, 465 and along (570,420)-(740,455)); they are irregular black slivers that read as rendering tears.
+- Fix the light so it falls off from one source: the cold grey-blue patch at (240-330, 590-650) sits directly against warm cream at (330-420, 560-620) — a single point light cannot produce that.
+- Pull the diagonal hatch strokes off most tiles; they are the same stroke direction and density on every tile that has them (e.g. (430,460)-(480,500), (620,510)-(740,560)) and read as a filter pass.
+- The dark object at (313,645)-(380,710) has a blurred top edge on a hard-pixel floor; either draw it in pixels or remove it.
+- Bring the crack lines to the tile's pixel scale; at (250,560)→(520,500) they are 1-2 screen px anti-aliased curves on tiles whose pixels are 2-3 screen px.
+- Bring the figure's palette (saturated cyan helmet, orange skin, hard black outline) into the environment's value/chroma range or give the environment the same outlining — as is, it is a sprite from another game.
+- Soften the join where the hard black void rectangles meet the wall-top at (440,135-390) and (630,135-390): a 1px hard edge between black and noise texture reads as a missing tile, not fog.
+
+FLIP 3:
+- Same as FLIP 2 in full; 3 differs from 2 only in the figure's shield (rim and boss added) and a marginally brighter lit band under the figure (measured ~9 luminance points, in the region (183,440)-(567,640)). Neither change touches any of the defects above.
+- Replace the mottled wall-top noise fill at (120,390)-(500,440) with structured stone.
+- Remove the dark vertical slivers rising above the wall face strip at y≈420-455.
+- Fix the cold/warm patch discontinuity at (240-330, 590-650) vs (330-420, 560-620).
+- Reduce the uniform diagonal hatching to a few tiles with varied direction.
+- Redraw the blurred-edge dark object at (313,645)-(380,710) in hard pixels or remove it.
+- Bring cracks to tile pixel scale.
+- Bring the figure's palette into the environment's range.
+
+FLIP 4:
+- Resolve the object at (183,455)-(247,520): a pale flat box with three vertical divisions on top and a brick pattern below is unreadable, and its top half sits lighter than the lit floor beside it, ignoring the falloff. Draw it as one identifiable thing (hatch, grate, step) with its own lighting.
+- Remove or redraw the hard-edged dark rectangles on the floor at (400,393)-(430,410) and (420,590)-(450,608); in the brightest part of the frame they read as missing tiles.
+- Vary or remove the diagonal hatch overlay; the same stroke appears identically on tiles at (330,380), (480,430), (560,560) and elsewhere.
+- Bring the crack lines to the tile's pixel scale; at (170,300)→(350,470) they are thin anti-aliased curves over 2-3px pixel-art.
+- Bring the figure's palette (saturated cyan/orange, hard outline) into the environment's desaturated range; it is the one element in the frame at a different chroma.
+- Identify the small dark glyph on the wall top at (137,205)-(147,225); as drawn it is a stray mark.
+- The left wall at x 0-50 has a lighter rectangle at y 455-490 aligned with the object; either it is a doorway and needs a face and threshold, or it goes.
+
+Note for the record: 2 and 3 are the same frame apart from the shield and a slight relight of one band; they were ranked separately as instructed, with 3 ahead on the more finished sprite.
+
+Model: Claude Opus 5 (1M context).

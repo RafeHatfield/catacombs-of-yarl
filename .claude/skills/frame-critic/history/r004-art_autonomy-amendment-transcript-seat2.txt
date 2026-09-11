@@ -1,0 +1,47 @@
+RANK: 4 > 2 > 1 > 3
+
+BEST: 4
+BEST_WHY: The floor in the lit area (roughly x 190–700, y 450–720) is the best-made surface in the deck. The courses are laid as running bond with stones of varying length, individual stones carry their own value (a pale one at ~(520,530), a dark pitted one at ~(430,600)), the chisel-scratch texture inside each stone is oriented per stone rather than tiled, and the joints pick up a lighter mortar value only where the light hits — so the floor reads as cut and laid stone under a carried light rather than a stamped texture. The wall's front face (y ≈ 425–455) has a hard dark shadow line at its base that cleanly separates wall from floor, and the corridor to the north takes a soft falloff without banding. It is the same base frame as 2 without 2's dressing, so it carries nothing broken on top of it.
+
+WORST: 3
+WORST_WHY: The wall band along the top of the room is broken. In 2 and 4 the wall face is a single course at y ≈ 425–455 with a clean shadow line under it; in 3 the same band has moved up to y ≈ 395–445, the top edge is a jagged parapet with individual blocks jutting up at (265,390), (355,390), (455,390), and the base shadow line is gone, so wall and floor blur into each other at x 190–230 where the floor courses appear to start above the face. Lower-left, at (50–120, 650–675), there is a flat near-black rectangle where the wall face should be — it reads as a missing tile. The floor around the figure at (300–450, 460–560) is blown to near-white and the joints disappear, and the corridor light has hard vertical edges at x ≈ 505 and x ≈ 560 while the wall tops beside it stay dark — the light is behaving per-tile, not as light.
+
+FLAGGED: 2, 3
+
+SHIP: NONE
+
+FLIP 1:
+- The water pool at (250–345, 0–190) is a hard-cornered rectangle butted straight against dirt with no bank, lip or shore tile; add an edge tile set (corners and sides) so the pool has a rim.
+- The water fill is a visible repeating hex tile; break the repeat or replace with a non-tiling ripple texture and add a shading gradient toward the walls.
+- The moss decals (e.g. at (25–45, 55–85), (355–380, 150–170)) are one semi-transparent green blob stamped at three sizes; draw at least three distinct moss shapes with hard pixel edges so they don't read as an overlay.
+- The dirt floor has scattered single blue pixels (e.g. ~(185,155), (170,160), (230,175)) that read as noise; remove them or make them deliberate objects with at least a 2–3 px footprint.
+- The dirt floor is a single noise fill across the whole room; add course variation (footpath wear near the door at (25–35, 125–170), compaction near the barrels) so it isn't one stamp.
+- The wall top surface (grey slabs at (0–55, 0–115), (345–384, 0–288), (0–384, 195–265)) is a flat 32-px grid with identical joints; vary joint depth and slab value so the stones read as cut, not tiled.
+- The picture is evenly lit corner to corner; there is no falloff from the figure at (220,15). Implement the carried light so the far corners (e.g. bottom-right (350,270)) are darker than the figure's tile.
+- The tall grey wall on the right at (345–384, 0–190) has no front face; the wall-face brick band only appears on the bottom wall at y ≈ 265–288 and on the left column at y ≈ 115–125. Every wall run that faces the camera downward needs its face tile.
+
+FLIP 2:
+- The pale vertical slab at (270–295, 540–625) is a flat, untextured beige rectangle with no shadow and no material; either draw it as a post/plank with grain, end-grain, and a cast shadow on the floor, or remove it.
+- The log pile at (205–285, 460–510) overlaps the wall's face and shadow line; move it fully onto the floor or draw it clipped behind the wall base.
+- The dark square at (310–380, 645–710) shows the horizontal courses of the wall-face tile but has no wall top above it and floor runs on all four sides; make it either a proper opening with a lip and depth, or remove it.
+- The crack lines (from (185,470) down to (470,540), and the arc at (560–700, 630–700)) are 1-px anti-aliased strokes laid across the joints at a different pixel scale to the floor; redraw cracks at the tile's pixel scale, following joints and stone edges.
+- The wall top surface (e.g. (190–500, 60–390) and the corridor walls) is a soft, blurred mottled fill at a different resolution to the crisp floor; replace with pixel-scale stone-top texture so the two surfaces match resolution.
+- The lit tile directly below-left of the figure at ~(365–380, 505–520) is a visibly brighter square; smooth per-tile light quantisation so the light gradient is continuous across tile edges.
+- The brazier at (575–625, 525–575) emits no light on the floor around it; either give it a small local falloff or unlight it (cold coals) so it is consistent with "the only light there is."
+
+FLIP 3:
+- Restore the wall face to a single course at y ≈ 425–455 with a hard shadow line at its base; remove the jagged blocks protruding above the wall line at (265,390), (355,390), (455,390).
+- Fill the near-black rectangle at (50–120, 650–675) with the correct wall-face tile.
+- Reduce the light intensity so the floor at (300–450, 460–560) retains its joints and stone texture instead of blowing to near-white.
+- Make the corridor light at x ≈ 505–560 spill onto the flanking wall tops instead of stopping at hard vertical tile edges.
+- The dark patch at (310–380, 645–710) has a broken bright block on its top edge at (330–370, 640–655); resolve it as in FLIP 2 (opening with lip, or remove).
+- Same crack-decal and blurred-wall-top fixes as FLIP 2.
+
+FLIP 4:
+- The dark square at (310–380, 645–710) carries the wall-face course pattern with no wall above it; make it a deliberate opening with lip and depth, or remove it.
+- Redraw the crack strokes ((185,470)→(470,540); arc at (560–700, 630–700); the one crossing the corridor wall top at (500–560, 200–380)) at the tile's pixel scale, following joints.
+- Replace the blurred mottled fill on wall tops ((190–500, 60–390), corridor flanks, lower-left block at (0–190, 700–911)) with pixel-scale stone texture matching the floor's resolution.
+- Smooth the brighter square tile at ~(365–380, 505–520) so the light gradient is continuous.
+- The floor's bottom-right quadrant (500–750, 700–911) drops to an even, low-contrast grey with no course visible; keep faint joint definition in the falloff so the floor still reads as stone in the dark.
+
+Model: Claude Opus 5 (1M context)

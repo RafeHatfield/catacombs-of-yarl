@@ -1358,3 +1358,92 @@ plane has *one rung of room* beneath it. That needed Rafe's ruling, and it got o
 objects, so they take their own inks outside the face band. Rope is the one that goes **up**; pale
 hemp against dark stone is lighter, and a rope authored below the stone it binds was never going
 to read as rope.
+
+
+---
+
+## Item 20 — the judge fix worked, and what it caught was one of the plants
+
+### It did exactly what it was seeded to do
+
+The VOID of 2026-09-10 was mute: one plant, five seats, one miss, nothing to see the miss
+against. Three plants later the same VOID is **diagnostic**:
+
+| plant | seats that drew it | caught |
+|---|---|---|
+| `blown-highlight` | 2, 5 | **2 of 2** |
+| `lamp-clip-figure` | 3 | **1 of 1** |
+| **`crushed-midband`** | **1, 4** | **0 of 2** |
+
+Both misses are the same plant. That is the discrimination a panel is for, and a single-plant
+deck cannot produce it at any number of seats.
+
+### And the plant is not weak — it is a frame blind seats PREFER
+
+Put in the BUILD slot by the skill's own plant self-test and shown to three fresh seats:
+
+```
+seat  build rank  above ref  flagged
+ 1        1          YES       no
+ 2        1          YES       no
+ 3        2          no        no
+rank 1 of 4   score 1.00   <- NEW BEST      *** INSTALL-LATEST ***
+```
+
+**Three seats ranked the 2026-08-27 device FAIL first of four, above the approved reference, and
+flagged nothing wrong with it.**
+
+### ⚠ The law that explains it is the one that frame created
+
+The bible's §3 status trail, written the day it was culled:
+
+> *"two seats ranked this above the bar; the device says otherwise; §13.2 vindicated again."*
+
+Five more seats have now agreed with those two. **A cull made by the DEVICE gate is not
+automatically usable as a SEAT control.** What the phone catches is, by construction, the class
+of thing a still and a seat do not — that is why the phone was needed. Planting it asks a judge
+to catch the one defect it was proven blind to, and a control nobody can catch does not measure
+the judge; it just voids rounds.
+
+A second, smaller confound, and it was foreseeable: the two plants that work are the deck's own
+scene at the ratified rig. This one is `tier1_wall_review` at the OLD rig (5.0 / 0.70), so it
+differs on scene AND rig AND tone at once and a seat cannot tell which it is meant to be wrong
+about. §4.2 generalises — **a control must differ on the axis under test and as little else as
+possible.**
+
+⚠ **I flagged that risk in the entry's own eligibility field when I seeded it and wrote "that is
+the defect, not a confound."** The measurement says it is a confound. The wrong prediction is
+kept on the record beside the correction rather than edited out.
+
+### What is fixed, and what is not
+
+`crushed-midband` is retired as a control and `pick_plant` now honours retirement — the first
+attempt set `axis: []`, which does the opposite, because a missing axis means *answers any
+question*. Two tonal plants remain, both at 100% catch.
+
+**The line is still stopped and I cannot restart it.** The broken-judge guard refused the ruled
+seat re-draw too: *"the line does not restart itself"*, a §1.1.4 ruling trigger. That is the
+guard working — I do not get to clear my own STOP, even holding the measurement that its premise
+is now false.
+
+⚠ **The dark side of the tonal axis is still unplanted**, and I cannot plant it: it needs a cull
+a blind seat can actually see, and plants are Rafe's to make.
+
+### The rest of the queue landed
+
+**#183 re-scoped** — the light-response term stays and Sasha inherits it; hero appearance work
+stops. Recorded at the top of `hero_light.gdshader` where the next round trips over it. The gate
+gains **`N/A`**, its narrowest state: Rafe's words AND a resolving citation AND what the flag was
+about — and **refused outright when the flag talks about light**, because a flip about exposure
+on the figure is not N/A, it is the shader's. Five proof cases, 47 total, all as declared.
+
+**`verify_props --drew`** — the half that file's headline has claimed since it was written.
+⚠ The obvious control is wrong and it fooled this project once: removing a prop also changes the
+floor under it, because a blocking prop marks its cells. The honest control keeps every prop
+declared, in place and blocking, and swaps only the tile ids for a reserved transparent tile.
+It self-tests every run against a frame with nothing painted.
+
+**And its first honest run corrected its own bar.** I demanded zero change outside the declared
+footprints and got 5,368 pixels — not contamination, but a centred sprite overflowing into its
+neighbours by up to half a cell. Every stray lay within 32px, median 10. The test is **distance,
+not count**.
