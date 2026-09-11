@@ -17,10 +17,16 @@ A prop in the dark answers nothing, and remembering that is not a mechanism. So 
 scene, and it refuses BEFORE a panel is seated rather than after five seats have ranked a frame
 whose subject is invisible.
 
-It also checks the half that is easy to get wrong in the other direction: that the sprite actually
-DREW. An earlier probe measured "pixels changed at the prop's cell" and read it as a sprite; it was
-`MarkPropCell` repainting the floor. Drawing is checked against a propless control, never against
-the cell's own history.
+⚠ IT DOES NOT CHECK THE OTHER HALF, AND THIS PARAGRAPH USED TO SAY IT DID. It claimed drawing
+was "checked against a propless control"; `main` measures luminance and nothing else, and a review
+found the claim sitting directly on top of a real gap. The gap is worth keeping written down: an
+earlier probe measured "pixels changed at the prop's cell" and read it as the sprite drawing, when
+it was `MarkPropCell` repainting the floor underneath. So a drawing check is OWED and unbuilt, and
+the headline above is an aspiration for the second half rather than a description of it.
+
+WHAT IT DOES MEASURE: delivered luminance at every cell of every prop's footprint, reporting the
+WORST cell. Anchor-only sampling was right while every prop was 1x1 and became wrong the moment
+§12.2 allowed a 1x2 — the far cell of a tall prop is always the darker one.
 
 Usage: python3 tools/tier2_props/verify_props.py [frame.png]
 """
@@ -60,18 +66,40 @@ def main(frame=FRAME):
 
     print("THE ROUTED CRITERION: orc work visible as standing objects IN THE LIT RADIUS")
     print("  station (%d,%d), §13.8's perceptual floor is %.1f\n" % (px, py, PERCEPTUAL_FLOOR))
-    print("  tile    cell      cell mean   lit?    tiles from station")
+    # ⚠ EVERY CELL OF THE FOOTPRINT, AND THE WORST ONE IS THE ANSWER — §12.2.
+    #
+    # This sampled the ANCHOR cell alone, which was right while every prop was 1x1 and became
+    # wrong the moment §12.2 let a standing stone be two cells tall. The light falls off radially
+    # from the station, so the far cell of a tall prop is always the darker one — and on the
+    # exemplar the clause was written for, the marker's dressed face is IN that far cell. A 2x2
+    # went three-quarters unchecked.
+    #
+    # Reporting the mean of the whole footprint would be worse than the anchor: it lets a bright
+    # near cell carry a dark far one over the floor. The rule is the floor family's own — report
+    # the WORST cell, every band — so the footprint passes only if its darkest cell passes.
+    print("  tile    cell      footprint   worst cell   worst mean   lit?    tiles from station")
     dark = []
     for p in props:
-        sx, sy = cell(p["x"], p["y"])
-        reg = L[max(0, sy):sy + PITCH, max(0, sx):sx + PITCH]
-        m = float(reg.mean())
-        d = ((p["x"] - px) ** 2 + (p["y"] - py) ** 2) ** 0.5
-        ok = m > PERCEPTUAL_FLOOR
+        pw, ph = int(p.get("w", 1)), int(p.get("h", 1))
+        worst, worst_cell = None, None
+        for dy in range(ph):
+            for dx in range(pw):
+                sx, sy = cell(p["x"] + dx, p["y"] + dy)
+                reg = L[max(0, sy):sy + PITCH, max(0, sx):sx + PITCH]
+                if reg.size == 0:
+                    continue
+                m = float(reg.mean())
+                if worst is None or m < worst:
+                    worst, worst_cell = m, (p["x"] + dx, p["y"] + dy)
+        if worst is None:
+            worst, worst_cell = 0.0, (p["x"], p["y"])
+        d = ((worst_cell[0] - px) ** 2 + (worst_cell[1] - py) ** 2) ** 0.5
+        ok = worst > PERCEPTUAL_FLOOR
         if not ok:
-            dark.append((p["tileId"], p["x"], p["y"], m, d))
-        print("  %-6d  (%2d,%2d)   %7.2f     %-5s   %.1f"
-              % (p["tileId"], p["x"], p["y"], m, "LIT" if ok else "DARK", d))
+            dark.append((p["tileId"], worst_cell[0], worst_cell[1], worst, d))
+        print("  %-6d  (%2d,%2d)   %dx%-7d  (%2d,%2d)     %7.2f      %-5s   %.1f"
+              % (p["tileId"], p["x"], p["y"], pw, ph,
+                 worst_cell[0], worst_cell[1], worst, "LIT" if ok else "DARK", d))
 
     if dark:
         print("\n*** REFUSED — %d prop(s) are below the perceptual floor:" % len(dark))

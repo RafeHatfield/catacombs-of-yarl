@@ -1,13 +1,13 @@
 {
  "family": "boundary_props_v1",
  "_what": [
-  "THE BOUNDARY'S PROPS \u2014 structure composed, material taken from generation.",
+  "THE BOUNDARY'S PROPS — structure composed, material taken from generation.",
   "",
-  "No generated pixel is copied into a shipped tile. What crosses is the GRAIN STATISTIC: each donor's residual after a box blur removes its own structure, re-laid onto this family's ladder. The donors are listed so the audit trail is complete, and every one of them FAILED as a finished object \u2014 on projection, on role, or on a painted glow.",
+  "No generated pixel is copied into a shipped tile. What crosses is the GRAIN STATISTIC: each donor's residual after a box blur removes its own structure, re-laid onto this family's ladder. The donors are listed so the audit trail is complete, and every one of them FAILED as a finished object — on projection, on role, or on a painted glow.",
   "",
-  "Values are rungs of the WALL family's ladder, read from its manifest rather than restated (\u00a713.12), so a prop standing against a wall is the same rock at the same rungs. Re-derive the walls and the props follow.",
+  "Values are rungs of the WALL family's ladder, read from its manifest rather than restated (§13.12), so a prop standing against a wall is the same rock at the same rungs. Re-derive the walls and the props follow.",
   "",
-  "PALETTE REGIME: ladder, not locked. \u00a75.1's values are PLACEHOLDER."
+  "PALETTE REGIME: ladder, not locked. §5.1's values are PLACEHOLDER."
  ],
  "planes": {
   "top_rung": 5,
@@ -49,53 +49,46 @@
    "name": "marker",
    "id": 9800,
    "file": "tier1_ashlar_9800.png",
-   "sha256": "8c606aae03724729cba83018968ab132afa9d5ee0745e3ff7a5b0393163ae520",
-   "opaque_fraction": 0.4043
+   "cell": "1x2 top"
+  },
+  {
+   "name": "marker",
+   "id": 9801,
+   "file": "tier1_ashlar_9801.png",
+   "cell": "1x2 bottom"
   },
   {
    "name": "barricade_a",
    "id": 9810,
    "file": "tier1_ashlar_9810.png",
-   "sha256": "b5d7c90b6558ca6438c5c1dade5629261191e8a8817e41c3a4f195c45540ee31",
-   "opaque_fraction": 0.5029
+   "cell": "2x1 left"
+  },
+  {
+   "name": "barricade_a",
+   "id": 9811,
+   "file": "tier1_ashlar_9811.png",
+   "cell": "2x1 right"
   },
   {
    "name": "barricade_b",
-   "id": 9811,
-   "file": "tier1_ashlar_9811.png",
-   "sha256": "03534bed3c20095082f3cc7d2b310a892bddf663a3b71214b1fe7f1aaa0a6e13",
-   "opaque_fraction": 0.4648
-  },
-  {
-   "name": "barricade_c",
    "id": 9812,
    "file": "tier1_ashlar_9812.png",
-   "sha256": "4b92c3e730f51317609f458923c13671aef8928252c772bb1d44bdb746db661c",
-   "opaque_fraction": 0.4258
+   "cell": "2x1 left"
   },
   {
-   "name": "barricade_d",
+   "name": "barricade_b",
    "id": 9813,
    "file": "tier1_ashlar_9813.png",
-   "sha256": "5e5fdd05a9d3746e69a0939da9207894629bcd953ee14739728f3716149ba23f",
-   "opaque_fraction": 0.4609
+   "cell": "2x1 right"
   },
   {
    "name": "fire",
    "id": 9820,
    "file": "tier1_ashlar_9820.png",
-   "sha256": "bdb87bdd21474ee441b97b2b0f0caa5950f90c28e75ddb75e6363248a7edfd37",
-   "opaque_fraction": 0.3994
-  },
-  {
-   "name": "fire_flame",
-   "id": 9821,
-   "file": "tier1_ashlar_9821.png",
-   "sha256": "9ca7a0ca9f266da3efabc56805ea6dc0961bd036e25cb87f07c47f476d516149",
-   "opaque_fraction": 0.0576
+   "cell": "1x1"
   }
  ],
- "method": "style-matched generation conditioned on the LANDED FRAME, inpainted into a 64px crop of the delivered scene, downsampled 2:1 to the family's native 32px. Basic generation was tried first and could not hold \u00a73.",
+ "method": "style-matched generation conditioned on the LANDED FRAME, inpainted into a crop of the delivered scene, downsampled 2:1 to the family's 32px native. THE CROP IS NOW THE PROP'S WHOLE FOOTPRINT rather than one cell (§12.2): 64x128 for a 1x2 standing stone, 128x64 for a 2x1 barricade. Basic generation was tried first and could not hold §3.",
  "landed": [
   {
    "name": "B-PROP-001 the boundary marker stone",
@@ -154,8 +147,63 @@
   }
  ],
  "outstanding": {
-  "B-PROP-002 fourth variant": "THREE VARIANTS LANDED, NOT FOUR. The identity card asks for a variant family and three is a family; the fourth slot is open. Two attempts at it came back PALE \u2014 washed-out scattered debris rather than timber \u2014 and the pattern is worth keeping: 'beams crossed over one another' works, 'a baulk with beams across it' produces pale debris however the colour is described. The grammar that works is crossing, not stacking.",
-  "history": "It took nine generations. Four basic-mode fences (the card's `role_reject` by name), two style-matched floor-fills, two pale failures, and two composition passes of my own that read as LADDERS \u2014 the same 'too light, too regular' failure reached by a second route. What changed it was describing the ARRANGEMENT rather than naming the object."
+  "B-PROP-002 variants": "TWO variants at readability scale, not the family of four the card asks for. The scale re-author reset the family: the three 1x1 variants it had are superseded. 67 of the barricade's 72 generations remain.",
+  "grammar": "unchanged and reconfirmed at the new scale — 'a barricade' returned a FENCE on the first attempt of this round, exactly as it did sixty generations ago. Describe the arrangement ('a heap of thick timber beams crossed over one another'), never the object. 'Leaning and crossed at angles' with 'splintered ends' produced thin sticks; the word that fixed it was MASS.",
+  "#205": "the engine still does not emit light from the fire. The sprite receives and the engine emits, and the engine half is unbuilt — a fifth seat has now measured it.",
+  "#204": "the landing route still does not snap generated values to the family's ladder or quarry tint. Bounded now by §12.2's colour freeze."
  },
- "palette_regime": "ladder, not locked \u2014 \u00a75.1's values are PLACEHOLDER and its derivation has not landed"
+ "palette_regime": "ladder, not locked — §5.1's values are PLACEHOLDER and its derivation has not landed",
+ "readability_scale": {
+  "clause": "bible §12.2 — RULED (Rafe, 2026-09-10)",
+  "occasion": "the props walk FAILED on identifiability: 'small, unrecognizable except the fire; colouring quite good.'",
+  "law": "a prop's size relative to the tile and the character is exaggerated until its identifying feature reads at device 1x. Real proportions preserved — never squashed, never stretched, never a cartoon outline. The shape stays honest; what changes is how much of the frame the honest shape occupies.",
+  "before": {
+   "marker_content_px": [
+    10,
+    15
+   ],
+   "canvas": [
+    32,
+    32
+   ],
+   "note": "a fifth of the cell, twenty device pixels across"
+  },
+  "after": {
+   "marker_content_px": [
+    20,
+    49
+   ],
+   "canvas": [
+    32,
+    64
+   ],
+   "footprint_cells": [
+    1,
+    2
+   ],
+   "barricade_content_px": [
+    53,
+    22
+   ],
+   "barricade_footprint_cells": [
+    2,
+    1
+   ],
+   "fire_content_px": [
+    27,
+    27
+   ],
+   "fire_footprint_cells": [
+    1,
+    1
+   ]
+  },
+  "colour": "APPROVED AND FROZEN IN KIND at the same walk — 'colouring quite good'. The re-author changes scale and keeps the colour treatment. That also bounds what #204 may do."
+ },
+ "instrument": {
+  "cold_naming": ".claude/skills/frame-critic/cold_naming.py",
+  "what": "a blind seat is shown the delivered frame, told nothing about what is in it, and asked to name every placed object. A miss is a FAIL on §12, not a style note.",
+  "why": "the failed build had passed every instrument AND a five-seat panel that ranked it first of four. Not one of its six flips said 'I cannot tell what that is'. A seat asked to rank craft will rank craft; nobody had asked the naming question.",
+  "calibration": "§13.5 — run against the frame the human gate failed (evidence/props_pre_1212.png). It must MISS the marker and the barricade and NAME the fire, because that is exactly what Rafe saw. It does: three seats, none named the marker (they offered 'a bottle or vial', 'a lantern/candle', 'an orange chest or crate'), the barricade came back as 'sticks' — the card's own role_reject — and all three named the fire."
+ }
 }

@@ -1,78 +1,17 @@
 {
  "name": "tier1_props_review",
- "_comment": [
-  "THE PROPS SCENE — the combined room, with orc work standing in it.",
+ "_what": [
+  "THE TIER-TWO PROPS SCENE — the combined room's geometry, with orc work standing in it.",
   "",
-  "Geometry, player station, carve and legibility points are tier1_combined_review's, copied",
-  "verbatim and not to be edited independently: the props are judged ON THE LANDED SURFACES,",
-  "and a scene that drifted from the one the floors and walls were ratified in would be judging",
-  "them against something else.",
+  "§12.2 (Rafe, 2026-09-10) authors props at READABILITY SCALE: a prop fills most of its cell and a large object may span 1x2 or 2x2 cells. The marker is a standing stone TALLER THAN SASHA, so it is 1x2; the barricades are chest-high and wide, so they are 2x1. The previous version of this scene seated every prop in a single cell and the gate failed it on identifiability — 'small, unrecognizable except the fire'.",
   "",
-  "THE ACCEPTANCE CRITERION THIS SCENE EXISTS TO ANSWER, routed from the wall lane and quoted",
-  "in CC-SESSION-tier2-props.md: 'the props session PASSES only if orc work is visible AS",
-  "STANDING OBJECTS IN THE LIT RADIUS of the walked scene.' Every placement below is inside the",
-  "carried lamp's reach from the player's station, because a prop in the dark answers nothing.",
+  "TWO THINGS IN THIS FILE ARE FIXES FOR FINDINGS, NOT PREFERENCES:",
   "",
-  "It is also #167's exit: 'the prop/overlay pass gives wall tops world-placed OBJECTS standing",
-  "on them ... so §8.3.1 does not reach them.'"
- ],
- "_station_trail": [
-  "(5,13) — route peak. REJECTED: put the map edge in frame (see above).",
-  "(6,12) — live."
- ],
- "_void_note": [
-  "THE VOID IS NOT IN THIS FILE. Which cells are void is a wall-family question and it is set",
-  "per capture — see tools/tier1_floors/capture_combined.sh and the --void-ring it passes, and",
-  "the flag's own documentation on Tier1BoundaryWall.Apply for why that is a command-line",
-  "decision rather than a manifest edit."
- ],
- "_legibility": [
-  "Wall faces are probed at the FLOOR cell they stand over, exactly as the wall gate scene",
-  "probed them: the probe reads a cell's delivered luminance, and a face is not a cell.",
-  "Nothing east of x=10 or south of y=20 is declared — at this camera it is outside the frame,",
-  "and a still cannot check ground it does not contain."
- ],
- "legibility": [
-  {
-   "x": 5,
-   "y": 12,
-   "expect": "lit",
-   "why": "1 tile — the floor at the foot of the masses' south face. The standing case, and the ground §6.5's stack is a relationship against",
-   "bound_lum": 0.100404,
-   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.12), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.8881 absolute (1.0614 relative) and the bound is 0.100404."
-  },
-  {
-   "x": 4,
-   "y": 14,
-   "expect": "lit",
-   "why": "2.8 tiles — the route ahead. If this is dark the station is wrong and the floor's traffic systems are being judged unlit, which is round 23's failure",
-   "bound_lum": 0.100404,
-   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.12), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.4891 absolute (0.5845 relative) and the bound is 0.100404."
-  },
-  {
-   "x": 6,
-   "y": 15,
-   "expect": "lit",
-   "why": "3 tiles — the floor beside the island, which is what its outer corners are read against",
-   "bound_lum": 0.100404,
-   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.12), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.3417 absolute (0.4084 relative) and the bound is 0.100404."
-  },
-  {
-   "x": 11,
-   "y": 14,
-   "expect": "dark",
-   "why": "5.4 tiles - room A's east end, past the delivered reach. RE-DERIVED 2026-09-06 against the re-ratified rig (radius 5.0 -> 6.0, ambient 0.70 -> 1.50), per SS6.2's re-derivation rule. This point WAS (11,13) at 5.1 tiles, declared dark because the old rig's delivered reach was about four tiles; on the new rig that cell reads ratio 0.1160 and is legitimately LIT, so the guard refused the capture and was right to. THE BOUND WAS NOT TOUCHED - the probe moved to ground that is actually past the reach, because loosening a bound to pass one's own capture is the failure LOOP-PROCESS SS4.3 forbids. Measured here: 0.0718, 28% clear of the 0.1000 bound. New delivered reach ~5.2-5.5 tiles against the old ~4; the ambient plateau sits at ratio ~0.075 and 33 of 81 in-view floor cells remain under the dark bound, so the arc survives the brighter ambient.",
-   "bound_lum": 0.08367,
-   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.1), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.0634 absolute (0.0758 relative) and the bound is 0.08367."
-  },
-  {
-   "x": 8,
-   "y": 7,
-   "expect": "dark",
-   "why": "5.4 tiles — the chokepoint deep inside the mass, in frame and unlit",
-   "bound_lum": 0.08367,
-   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound (0.1), which preserves this point's pass state exactly as it stood on 2026-09-07: it measured 0.0817 absolute (0.0976 relative) and the bound is 0.08367."
-  }
+  "1. THE BARRICADES ARE NOT IN A ROW (#210). The previous scene put all three at y=14 on a two-cell pitch, and a seat measured it: 'three props at y 612, 613, 613, spaced 125px and 125px apart ... break the row'. That is §8.3.1's motif trap built by the SCENE rather than by a tile — a repeated element at constant pitch reads as pattern whether the repetition comes from a tilemap or a placement list. They now sit on different rows, at different pitches, and the two variants differ.",
+  "",
+  "2. NO LEGIBILITY POINT STANDS ON A PROP. The previous scene declared (4,14) as a LIT FLOOR reference and then put barricade 9810 on it, so ProbeFloorLegibility was measuring a sprite and reporting it as floor luminance — in every gated props build, including the one that installed. Found by review; the scene builder now refuses it outright.",
+  "",
+  "3. EVERY PROP IS INSIDE THE LIT RADIUS, AND THE GUARD PUT IT THERE. My first arrangement under §12.2 put the fire at 4.1 tiles and a barricade at 5.7, and `verify_props.py` refused the scene: 25.41 and 13.70 against §13.8's floor of 36.7. A prop in the dark cannot answer the criterion it was placed for. The check now reads the WORST cell of each footprint rather than the anchor — a 1x2's far cell is always the darker one, so anchor-only sampling would have passed a standing stone whose dressed face sits below the floor."
  ],
  "width": 17,
  "height": 21,
@@ -124,69 +63,94 @@
    "y1": 17
   }
  ],
- "_carve_note": [
-  "Row 15 is carved in two pieces either side of x=5, which leaves ONE CELL STANDING at (5,15).",
-  "That is the island: floor on all four sides and on all four diagonals, so it is the only",
-  "geometry in any review scene that puts four OUTER corners in frame. Inherited unchanged from",
-  "tier1_wall_review — every rect in this list is that spec's, byte for byte, so a comparison",
-  "between the two scenes is a comparison of stations and of nothing else."
- ],
- "_props_note": [
-  "FIVE PROPS, THREE OF THEM ONE FAMILY.",
-  "",
-  "The barricade is placed as A LINE OF THREE DIFFERENT VARIANTS rather than one sprite",
-  "repeated, because §8.3.1's trap reaches this prop by repetition along a line and the identity",
-  "card says so: 'a variant family from round one, never a single sprite'.",
-  "",
-  "THE PREVIOUS ROUND PROVED THE TEST BITES. It placed the MARKER twice and a seat caught it",
-  "unaided: 'the object at (280,800) is the same sprite again at a different tint. Vary it or",
-  "cut it.' So the marker appears once here and the family carries the repetition instead.",
-  "",
-  "The fire's engine light is still not attached. A seat measured its absence in the same killed",
-  "round — 'burns a saturated red/yellow flame and casts no light ... above the pit 74 vs 77' —",
-  "which is correct and deliberate: the object is judged before the two-source scene is built.",
-  "",
-  "⚠ THE BARRICADE LINE MOVED FROM ROW 16 TO ROW 14, and it is the SECOND time this run I",
-  "placed a prop outside the lit radius: row 16 measured 22-32 against S13.8's floor of 36.7.",
-  "A prop in the dark cannot answer the criterion it was placed to answer. verify_props.py",
-  "now refuses a scene whose props are not lit, so this is caught by a check rather than by",
-  "my memory."
+ "legibility": [
+  {
+   "x": 5,
+   "y": 12,
+   "expect": "lit",
+   "why": "floor beside the station, well inside the radius",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  },
+  {
+   "x": 3,
+   "y": 14,
+   "expect": "lit",
+   "why": "the near corner of the room, still lit — and clear of every prop footprint",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound. ⚠ THIS PROBE MOVED, and its pass state is therefore NOT carried over. It was (4,14), which §12.2's re-authored barricade now covers — a legibility point standing on a prop measures the sprite and reports it as floor, which it had been doing in every gated props build. The BOUND IS UNTOUCHED at the ruled 0.100404: the bound is a property of the rig, not of the cell, so moving a probe does not license moving it. This cell has never been measured before and may legitimately fail; if it does, that is a finding about the scene, not a reason to loosen anything (LOOP-PROCESS §4.3)."
+  },
+  {
+   "x": 6,
+   "y": 15,
+   "expect": "lit",
+   "why": "the route ahead, where the floor's traffic systems show",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  },
+  {
+   "x": 11,
+   "y": 14,
+   "expect": "dark",
+   "why": "past the lamp's reach; the room must have an outside",
+   "bound_lum": 0.08367,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  },
+  {
+   "x": 8,
+   "y": 7,
+   "expect": "dark",
+   "why": "up the corridor, beyond the radius",
+   "bound_lum": 0.08367,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  }
  ],
  "props": [
   {
    "tileId": 9800,
-   "x": 5,
+   "x": 4,
    "y": 13,
+   "w": 1,
+   "h": 2,
+   "layout": [
+    9800,
+    9801
+   ],
    "blocks": true,
-   "why": "B-PROP-001 the marker stone, 1.4 tiles from the station and unambiguously inside the lit pool. The routed criterion is orc work visible AS A STANDING OBJECT IN THE LIT RADIUS, so the first prop sits where that cannot be dodged. It appears ONCE now: the previous round placed it twice and a seat caught the repeat immediately."
+   "why": "B-PROP-001 the boundary marker stone, 1x2 — §12.2's own example: a standing stone TALLER THAN SASHA. Content is 20x49 native where the failed version was 10x15. Worst cell 2.8 tiles from the station."
+  },
+  {
+   "tileId": 9810,
+   "x": 6,
+   "y": 14,
+   "w": 2,
+   "h": 1,
+   "layout": [
+    9810,
+    9811
+   ],
+   "blocks": true,
+   "why": "B-PROP-002a the barricade, 2x1 — chest-high and wide. The generation grammar is the ARRANGEMENT, never the object word: 'a barricade' returns a fence every time, 'a heap of thick beams crossed over one another' returns timber."
+  },
+  {
+   "tileId": 9812,
+   "x": 3,
+   "y": 12,
+   "w": 2,
+   "h": 1,
+   "layout": [
+    9812,
+    9813
+   ],
+   "blocks": true,
+   "why": "B-PROP-002b, a second variant on a DIFFERENT ROW at a DIFFERENT PITCH — #210. Two identical heaps at a constant pitch is §8.3.1's motif trap built by the scene, which is what the last round was culled for."
   },
   {
    "tileId": 9820,
    "x": 9,
    "y": 13,
    "blocks": true,
-   "why": "B-PROP-003 the orc fire, 3.2 tiles. Its engine light is NOT attached — the object is judged first, which is the identity card's carried-only capture. A seat measured the missing light unaided in the killed round and it is owed."
-  },
-  {
-   "tileId": 9810,
-   "x": 4,
-   "y": 14,
-   "blocks": true,
-   "why": "B-PROP-002a, first of the barricade family. THREE DIFFERENT VARIANTS ALONG A LINE, which is the only honest way to run §8.3.1's continuity test: either they read as one hand at three placements, or they read as a motif and the pass says so."
-  },
-  {
-   "tileId": 9811,
-   "x": 6,
-   "y": 14,
-   "blocks": true,
-   "why": "B-PROP-002b, beside 002a. A different repair in the same grammar."
-  },
-  {
-   "tileId": 9812,
-   "x": 8,
-   "y": 14,
-   "blocks": true,
-   "why": "B-PROP-002c, completing the line. If these three read as one repeated sprite the family has failed."
+   "why": "B-PROP-003 the orc fire, 1x1 filling its cell — the one prop the gate could already name, now with its ring and fuel at legible size. 3.2 tiles out, which is where it was measured LIT before. The ENGINE still does not emit from it (#205)."
   }
  ]
 }

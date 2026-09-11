@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using CatacombsOfYarl.Logic.Core;
 using CatacombsOfYarl.Logic.ECS;
 using CatacombsOfYarl.Logic.Endgame;
@@ -190,5 +192,306 @@ public class CorridorReviewSceneBuilderTests
             CorridorReviewSceneBuilder.ParseSpecJson(TrunkAndBranch));
 
         Assert.That((state.Player.X, state.Player.Y), Is.EqualTo((8, 14)));
+    }
+
+    // ── §12.2 PROPS AT READABILITY SCALE ─────────────────────────────────────────────────────
+    //
+    // Rafe's props walk FAILED on identifiability — "small, unrecognizable except the fire" —
+    // and the ruling authors props at the size at which they can be named: a prop fills most of
+    // its cell, and a large object may span 1x2 or 2x2 where the fiction allows.
+    //
+    // ⚠ THE FIRST VERSION OF THIS FIXTURE SEALED THE CORRIDOR AND EVERY TEST STILL PASSED.
+    // It seated a 1x2 blocking marker in the one-wide trunk. Walkable cells reachable from the
+    // player went from 28 to FIVE, the junction ended up on the far side of a stone wall, and
+    // HasJunction still answered YES because it does not ask what the player can reach. That is
+    // why the scene below has a BAY — three cells deep — and why `Props_ThatSealTheCorridor...`
+    // exists. A prop the walker cannot reach is not a prop the gate can judge.
+
+    /// <summary>
+    /// Trunk and branch, plus a bay wide enough that a prop standing in it does not sever the
+    /// scene. The junction at (8,11) is untouched, so the junction tests still describe it.
+    /// </summary>
+    private const string TrunkBranchAndBay = @"{
+        ""name"": ""t"", ""width"": 17, ""height"": 21,
+        ""player"": { ""x"": 8, ""y"": 14 },
+        ""carve"": [
+            { ""x0"": 8, ""y0"": 3,  ""x1"": 8,  ""y1"": 18 },
+            { ""x0"": 2, ""y0"": 11, ""x1"": 14, ""y1"": 11 },
+            { ""x0"": 5, ""y0"": 16, ""x1"": 11, ""y1"": 18 }
+        ] }";
+
+    private static string WithProps(string props) =>
+        TrunkBranchAndBay.Substring(0, TrunkBranchAndBay.LastIndexOf(']')) + "], \"props\": ["
+        + props + "] }";
+
+    [Test]
+    public void Props_SpanningTwoCells_KeepTheirFootprintAndLayout()
+    {
+        var state = CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+            WithProps(@"{ ""tileId"": 9800, ""x"": 6, ""y"": 16, ""w"": 1, ""h"": 2,
+                          ""layout"": [9800, 9801] }")));
+
+        Assert.That(state.Props, Has.Count.EqualTo(1));
+        var prop = state.Props[0];
+        Assert.Multiple(() =>
+        {
+            Assert.That(prop.FootprintW, Is.EqualTo(1));
+            Assert.That(prop.FootprintH, Is.EqualTo(2), "a 1x2 prop must reach the second cell");
+            Assert.That(prop.TileLayout, Is.EqualTo(new[] { 9800, 9801 }));
+        });
+    }
+
+    /// <summary>
+    /// The row-major contract, which a 1x2 CANNOT test: with W=1, row-major and column-major are
+    /// byte-identical. The other end of this contract is DungeonRenderer.CreatePropSprite, which
+    /// indexes `dx = i % FootprintW, dy = i / FootprintW` — so layout[1] is the cell to the EAST
+    /// of the anchor, not the one below it.
+    /// </summary>
+    [Test]
+    public void Props_SpanningTwoByTwo_CoverExactlyTheirFootprint()
+    {
+        var state = CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+            WithProps(@"{ ""tileId"": 9810, ""x"": 6, ""y"": 16, ""w"": 2, ""h"": 2,
+                          ""layout"": [9810, 9811, 9812, 9813] }")));
+
+        var prop = state.Props[0];
+        Assert.Multiple(() =>
+        {
+            Assert.That((prop.FootprintW, prop.FootprintH), Is.EqualTo((2, 2)));
+            Assert.That(prop.TileLayout, Is.EqualTo(new[] { 9810, 9811, 9812, 9813 }),
+                        "row-major: anchor, east, south, south-east");
+            foreach (var (x, y) in new[] { (6, 16), (7, 16), (6, 17), (7, 17) })
+                Assert.That(state.Map.IsPropCell(x, y), Is.True, $"({x},{y}) is under the prop");
+            foreach (var (x, y) in new[] { (5, 16), (8, 16), (6, 18), (8, 17) })
+                Assert.That(state.Map.IsPropCell(x, y), Is.False, $"({x},{y}) is not");
+        });
+    }
+
+    // ── THE REFUSALS ─────────────────────────────────────────────────────────────────────────
+    // §13.5: an instrument's pass does not count until it has been shown to go red. Each of
+    // these asserts the DISTINGUISHING clause of its own message, not a substring both share —
+    // a review found that "2x2" appeared in two different refusals, so either test passed on
+    // the other one's failure.
+
+    [Test]
+    public void Props_ThatSealTheCorridor_AreRefused()
+    {
+        // A 1x2 blocking prop across the one-wide trunk. This is what the first version of this
+        // fixture did by accident, and nothing caught it.
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9800, ""x"": 8, ""y"": 12, ""w"": 1, ""h"": 2,
+                              ""layout"": [9800, 9801] }"))));
+        Assert.That(ex!.Message, Does.Contain("seal the corridor"));
+    }
+
+    [Test]
+    public void Props_StandingOnTheJunction_AreRefused()
+    {
+        // A prop cell is not walkable, so HasJunction answers NO — and a NO makes the junction
+        // luminance guard return true without measuring anything. The guard would not fire; it
+        // would cease to exist.
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9800, ""x"": 8, ""y"": 11 }"))));
+        Assert.That(ex!.Message, Does.Contain("switches the junction"));
+    }
+
+    [Test]
+    public void Props_CoveringAWallCell_AreRefused()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9800, ""x"": 11, ""y"": 16, ""w"": 2, ""h"": 1,
+                              ""layout"": [9800, 9801] }"))));
+        Assert.That(ex!.Message, Does.Contain("is not floor"));
+    }
+
+    /// <summary>
+    /// A footprint running past the edge of the map. MarkPropCell is `if (InBounds)`, so this
+    /// used to truncate in silence while the renderer still drew a sprite for every layout
+    /// entry — half an object over solid rock, at full brightness, no error anywhere.
+    ///
+    /// ⚠ It is refused for being off the FLOOR rather than off the MAP, and that is not a
+    /// weaker result: a well-formed review map has a wall border, so a footprint leaving the
+    /// map crosses that wall first. The bounds check behind it is unreachable for any scene
+    /// with a border and is kept as defence for one without. Asserting "off the map" here
+    /// would be asserting a message this geometry can never produce.
+    /// </summary>
+    [Test]
+    public void Props_RunningPastTheMapEdge_AreRefused()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9800, ""x"": 16, ""y"": 18, ""w"": 2, ""h"": 2,
+                              ""layout"": [1, 2, 3, 4] }"))));
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Does.Contain("(16,18)"), "names the offending cell");
+            Assert.That(ex.Message, Does.Contain("is not floor"));
+        });
+    }
+
+    [Test]
+    public void Props_OnThePlayersStation_AreRefused()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9800, ""x"": 8, ""y"": 14 }"))));
+        Assert.That(ex!.Message, Does.Contain("player's own station"));
+    }
+
+    [Test]
+    public void Props_WithAFootprintItsLayoutCannotFill_AreRefused()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9800, ""x"": 6, ""y"": 16, ""w"": 2, ""h"": 2,
+                              ""layout"": [9800, 9801] }")));
+        Assert.That(ex!.Message, Does.Contain("layout of 2 tiles"));
+    }
+
+    [Test]
+    public void Props_LargerThanOneCellWithNoLayout_AreRefused()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9800, ""x"": 6, ""y"": 16, ""w"": 2, ""h"": 1 }")));
+        Assert.That(ex!.Message, Does.Contain("needs a `layout` of 2 tile ids"));
+    }
+
+    [Test]
+    public void Props_ThatAreOneByOneWithALayout_AreRefused()
+    {
+        // The renderer takes its multi-tile branch only when W > 1 || H > 1, so a layout here
+        // would be dropped and `tileId` drawn instead — silently.
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9800, ""x"": 6, ""y"": 16, ""layout"": [5555] }")));
+        Assert.That(ex!.Message, Does.Contain("is 1x1 and also declares a layout"));
+    }
+
+    /// <summary>
+    /// Every scene written before §12.2 must parse exactly as it did. A prop with no `w`/`h` is
+    /// 1x1 and carries no layout, which is what the renderer's single-sprite path expects.
+    /// </summary>
+    [Test]
+    public void Props_WithoutAFootprint_AreStillOneByOne()
+    {
+        var state = CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+            WithProps(@"{ ""tileId"": 9800, ""x"": 6, ""y"": 16 }")));
+
+        var prop = state.Props[0];
+        Assert.Multiple(() =>
+        {
+            Assert.That((prop.FootprintW, prop.FootprintH), Is.EqualTo((1, 1)));
+            Assert.That(prop.TileLayout, Is.Null, "a 1x1 prop uses TileId alone");
+        });
+    }
+
+    // ── THE SHIPPED SCENES THEMSELVES ────────────────────────────────────────────────────────
+    //
+    // ⚠ NOTHING IN THIS FIXTURE HAD EVER PARSED A SCENE FILE, and a review caught what that
+    // costs: a staged `tier1_props_review.json` with every `bound_lum` stripped out threw on its
+    // first legibility point, so the review build died at boot and produced no capture — the one
+    // scene the multi-cell work exists to enable — while `dotnet test` reported 21 of 21 green.
+    // The same hole would have swallowed the deletion of five `bound_derivation` blocks carrying
+    // a ruled 2026-09-07 derivation.
+    //
+    // Every refusal above becomes a gate on every shipped scene for the price of this one test.
+
+    private static IEnumerable<string> ShippedScenes()
+    {
+        var dir = System.IO.Path.Combine(
+            TestContext.CurrentContext.TestDirectory,
+            "..", "..", "..", "..", "src", "Presentation", "assets", "tier0_harness", "scenes");
+        dir = System.IO.Path.GetFullPath(dir);
+        return System.IO.Directory.Exists(dir)
+            ? System.IO.Directory.GetFiles(dir, "*.json")
+            : System.Linq.Enumerable.Empty<string>();
+    }
+
+    [TestCaseSource(nameof(ShippedScenes))]
+    public void ShippedScene_ParsesAndBuilds(string path)
+    {
+        var spec = CorridorReviewSceneBuilder.ParseSpecJson(System.IO.File.ReadAllText(path));
+        Assert.DoesNotThrow(() => CorridorReviewSceneBuilder.Build(spec),
+                            $"{System.IO.Path.GetFileName(path)} does not build");
+    }
+
+    [Test]
+    public void ShippedScenes_AreActuallyBeingChecked()
+    {
+        // A TestCaseSource that silently finds nothing is a green test that tests nothing —
+        // exactly the shape of the hole this pair was added to close.
+        Assert.That(ShippedScenes(), Is.Not.Empty, "no shipped scene files were found to check");
+    }
+
+    // ── THE THREE REFUSALS THAT HAD NO TEST ──────────────────────────────────────────────────
+    // A review mutated each guard in turn and found that deleting any of these three left all 21
+    // tests green — including the two that had just caught a real defect in a shipped build.
+
+    [Test]
+    public void Props_AnchoredOutsideTheMap_AreRefused()
+    {
+        // The border wall cannot intercept a footprint that never enters the map. An earlier
+        // comment here claimed this branch was unreachable; it fires on an ordinary typo.
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9800, ""x"": 99, ""y"": 99 }"))));
+        Assert.That(ex!.Message, Does.Contain("off the map"));
+    }
+
+    [Test]
+    public void Props_CoveringALegibilityPoint_AreRefused()
+    {
+        // This is the guard that caught (4,14) — a declared LIT FLOOR point with a barricade on
+        // it, in every gated props build. `blocks: false` is the hole the first version had:
+        // the renderer still draws a non-blocking prop, at 0.7 alpha, over the cell.
+        foreach (var blocks in new[] { "true", "false" })
+        {
+            var json = TrunkBranchAndBay.Substring(0, TrunkBranchAndBay.LastIndexOf(']'))
+                + @"], ""legibility"": [ { ""x"": 6, ""y"": 16, ""expect"": ""lit"",
+                     ""bound_lum"": 0.1 } ], ""props"": [ { ""tileId"": 9800, ""x"": 6,
+                     ""y"": 16, ""blocks"": " + blocks + " } ] }";
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => CorridorReviewSceneBuilder.Build(
+                    CorridorReviewSceneBuilder.ParseSpecJson(json)),
+                $"blocks={blocks} must still be refused — the sprite draws either way");
+            Assert.That(ex!.Message, Does.Contain("legibility point (6,16)"));
+        }
+    }
+
+    [Test]
+    public void Props_CoveringTheLuminanceReferenceCell_AreRefused()
+    {
+        // The reference cell is (playerX, playerY+1) and is documented as "lit floor with no
+        // sprite standing on it". In a one-wide corridor the seal check pre-empts this, so the
+        // bay is what makes it reachable: the player stands in it with floor all around.
+        const string bayStation = @"{
+            ""name"": ""t"", ""width"": 17, ""height"": 21,
+            ""player"": { ""x"": 8, ""y"": 16 },
+            ""carve"": [
+                { ""x0"": 8, ""y0"": 3,  ""x1"": 8,  ""y1"": 18 },
+                { ""x0"": 2, ""y0"": 11, ""x1"": 14, ""y1"": 11 },
+                { ""x0"": 5, ""y0"": 16, ""x1"": 11, ""y1"": 18 }
+            ],
+            ""props"": [ { ""tileId"": 9800, ""x"": 8, ""y"": 17, ""blocks"": false } ] }";
+
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(
+                CorridorReviewSceneBuilder.ParseSpecJson(bayStation)));
+        Assert.That(ex!.Message, Does.Contain("luminance reference cell"));
+    }
+
+    [Test]
+    public void Props_ThatOverlapAnotherProp_AreRefused()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9810, ""x"": 6, ""y"": 16, ""w"": 2, ""h"": 1,
+                              ""layout"": [9810, 9811] },
+                            { ""tileId"": 9800, ""x"": 7, ""y"": 16 }"))));
+        Assert.That(ex!.Message, Does.Contain("already covered by prop 9810"));
     }
 }
