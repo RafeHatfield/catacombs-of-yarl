@@ -1275,3 +1275,86 @@ corner return at the T, needs as well. Both halves of #201 are placement, not ti
 `prove_reproduces.py` passes at delta 0 against the shipped bytes and a fresh capture returns
 `ced98da2…` — the tree renders the gated, installed build exactly. A change that alters nothing
 in the scene it was gated on has no business in the tree.
+
+
+---
+
+## Item 19 — §12.2 lands; the props are named cold; the panel comes back VOID
+
+### The law, and the instrument it came with
+
+Rafe's props walk failed on identifiability — *"small, unrecognizable except the fire; colouring
+quite good"* — on a build that had passed every instrument **and a five-seat panel that ranked it
+first of four**. Not one of that panel's six flips said *I cannot tell what that is*. A seat asked
+to rank craft ranks craft; nobody had asked the naming question.
+
+Recorded as **bible §12.2**, and it comes with the cold-naming test: a blind seat is shown the
+delivered frame, told nothing, and asked to name every placed object. **A miss is a FAIL on §12,
+not a style note.**
+
+⚠ **It is calibrated against the frame the gate rejected, and it had to produce the RIGHT
+failure** — miss the marker and the barricade, *name the fire*, because that is exactly what Rafe
+saw. It does. Three seats: none named the marker (offered *"a bottle or vial"*, *"a lantern or
+candle"*, *"an orange chest or crate"*), the barricade came back as **"sticks"** — the identity
+card's own `role_reject` — and all three named the fire.
+
+### What the instrument said, which is more than pass or fail
+
+Four rounds, and every correction came from a seat's words rather than from my eye:
+
+| round | what it said |
+|---|---|
+| scale alone | marker NAMED as "post" — but all three said **wooden**. Scale fixed the silhouette and left the material wrong. |
+| | barricade A: **"a pile of red bricks"**. Stacked beams at a regular pitch ARE brick courses — §8.3.1 inside one sprite. |
+| | barricade B: **"a wooden crate or chest"**, all three. A filled rectangle is a crate whatever is drawn inside it. |
+| material fix | barricade NAMED. Marker **REGRESSED** to "a stack of wooden crates", "two boxes, one atop the other" — **a regular band across a column turns it into stacked boxes.** |
+| final | all three named. Marker: *"tall narrow stone slab or pillar"*, *"a tall stone pillar or column"*. |
+
+No instrument that measures value, contrast or grain could have said any of that.
+
+### ⚠ The panel came back VOID
+
+Five seats. All five ranked the build **2 of 4, not below the reference**, 0 above. **Seat 3
+missed the plant.** The plant is `blown-highlight.png`, correctly tagged `tonal`, culled by two
+independent eyes. Standing law: *a seat voided by a mis-tagged plant is re-drawn; a correct plant
+missed still voids.* So findings are not read and nothing installs.
+
+The tool names the only remedy itself: *"every seat drew the SAME plant, so the plant catches are
+CORRELATED — axis-matched candidates available: 1 — seed another cull on this axis."* **A plant is
+a picture Rafe personally culled; I cannot manufacture one.** That is the broken-judge trigger,
+and §1.2 forbids running a further round past it.
+
+### The queue after the props, built and measured but NOT gated
+
+**#209 — and the landmine is in the manifest, not the code.** The cap shipped at 88.243, which on
+the nine-rung ladder is index 3, and the manifest records `top_rung: 3`. On the eleven-rung ladder
+that is 61.789: **rebuilding the family the way its own manifest says it was built drops it 26
+levels.** I first wrote that the default path carried it — it does not, it lands on 88.243 *by
+accident*, because the ladder grew by exactly the two rungs that turn index 5 into what index 3
+meant. **A guard caught my wrong account.** A second fault survived the first fix: the snap ladder
+had no floor, and a recompose returned 652 of 1024 tiles darker, every delta negative.
+`prove_cap_reproduces.py` now exists — the guard the cap did not have.
+
+**#194 — the slabs were authored below the floor.** Rafe's ruling settled the open question (caps
+carry field-scale slab/fracture structure, courses culled), which made it worth measuring what
+that construction delivers:
+
+| offset | delivered Weber vs the cap | |
+|---|---|---|
+| **0.55 (shipped)** | **+0.0824** | under §13.8's 0.1440 — authored and absent |
+| 1.00 | +0.1499 | clears by 4%, which §13.8 calls the ambiguous point |
+| **1.30** | **+0.1949** | clears by 35% |
+
+**The architecture was ruled in, built, and then authored below the amplitude at which §13.8 says
+a signal exists.** The fractures *between* slabs cleared comfortably — which is the exact shape of
+the two complaints it was written to answer, *"fine mottle with no architecture under it"* and
+*"noise blobs"*. The breaks read; the parts they broke the stone into did not differ. Delivered:
+tile-mean sd 8.80 → 15.67.
+
+**#208 — 855 pixels at one value, now four.** Every binding in the game was a flat silhouette:
+15 tiles, one luminance across the whole family, five inks authored and one delivered.
+⚠ **The fix was not the clip** — flooring it reproduces the collapse exactly, because the face
+plane has *one rung of room* beneath it. That needed Rafe's ruling, and it got one: bindings are
+objects, so they take their own inks outside the face band. Rope is the one that goes **up**; pale
+hemp against dark stone is lighter, and a rope authored below the stone it binds was never going
+to read as rope.

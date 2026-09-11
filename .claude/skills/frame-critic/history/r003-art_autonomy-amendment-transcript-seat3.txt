@@ -1,0 +1,40 @@
+RANK: 2 > 3 > 1 > 4
+
+BEST: 2
+BEST_WHY: The top wall of the room (the band running x≈185–500 at y≈395–455) is the one place in the deck where a wall is actually built: a mottled top surface, then a distinct row of dark, individually-shaped bricks at y≈430–450 sitting in shadow, then the floor. The face row reads as a vertical surface under a cap, so the room has depth at that edge. The same construction is carried along the top-right stretch (x≈560–750, y≈430–450), so it is a system, not a one-off. Nothing else in 2 is better made than in 1 or 3 — it earns first place by being 3 without the broken prop and 1 with the wall fixed.
+
+WORST: 4
+WORST_WHY: Every surface is a stamped repeat. The wall face across the bottom (y≈200–290) is the same block tile cell after cell with identical joint positions; the wall column down the left (x≈0–50, y≈0–100) is the same grey tile stamped four times. The floor (x≈55–250) is one flat brown with a scatter of identical blue-grey specks and no value change anywhere. The pool (x≈250–340, y≈0–190) is a hard-edged rectangle of one green with three copies of the same blob decal at (310,20), (330,120), (260,170) and no shore, edge shadow or depth. The green figure at (215–235, 0–20) is cut off by the top of the frame. There is no light falloff at all, so nothing in the frame has a near or far. This is the free-asset look the brief describes.
+
+FLAGGED: 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The horizontal wall at y≈395–455 (x≈185–500, and again x≈560–750) is one smeared brown band that touches the floor with no face row; give it the dark brick face row that image 2 has at y≈430–450 so the wall has a top and a front.
+- The wall top texture (all wall bands, e.g. x≈120–180 vertical run at y≈395–640 and the corridor walls at x≈440–500 / x≈560–630 going up) is soft mottled noise with no drawn edges; draw actual block joints on the caps at the same pixel density as the floor stones so it reads as masonry rather than a blur filter.
+- The figure at (390–430, 465–515) is saturated cyan/orange with crisp 1px pixel edges while the environment is soft, grain-textured and desaturated; either re-render the figure at the environment's density and palette or resample the environment to the figure's density. Two pixel densities in one frame is the most visible tell here.
+- The floor's lit core (x≈330–450, y≈460–530) clips to near-white and the stone texture disappears there; cap the light's peak so joints stay visible directly under the figure.
+- Individual floor stones in the lit zone jump from near-white to mid-brown between neighbours (e.g. the pale slab at x≈530–560, y≈520–540 next to dark slabs); pull per-tile brightness variance in so the surface reads as one paved floor, not a checker.
+- The long crack lines (the one from ~(220,470) to ~(340,700), and the curve at x≈600–700, y≈640–700) are uniform 1px dark strokes drawn straight across tile joints; break them at joints, vary their width, and add a lighter edge on one side so they are cracks in stone rather than a line layer.
+- The recessed dark rectangle at x≈310–380, y≈645–705 has a light rim and nothing else; make it read as a specific thing (a hatch with hinges, a drain grate, a pit with a visible lip and shadow) or remove it.
+- The upper corridor floor (x≈505–560, y≈70–450) is a pale strip with a single dark line down its centre and hatching; pave it with the same stones as the room.
+
+FLIP 3:
+- The pale vertical rectangle at x≈270–295, y≈535–625 is a flat unshaded beige bar with no texture, no outline weight matching the other props and no cast shadow; it reads as a missing sprite. Replace it with a drawn object (a stood-up plank or post with grain, end cap and a shadow on the floor) or delete it.
+- The brazier at x≈575–625, y≈525–580 has a lit orange flame and casts nothing; the floor around it is at the same value as the floor beside it. Either put out the fire or give it its own small warm falloff on the surrounding stones and a rim highlight on the bowl.
+- The crossed timber at (200–280, 460–510) and the broken boards at (400–480, 590–630) are drawn with hard dark outlines and clean pixels while the floor under them is soft and grainy; drop the contact shadow under each and match outline weight to the environment so they sit on the floor instead of floating on it.
+- Everything listed under FLIP 1 except the wall face row (already fixed here): wall-cap block joints, figure/environment density mismatch, clipped light core, per-tile brightness variance, stroke-like cracks, the unexplained recessed rectangle at (310–380, 645–705), and the corridor floor paving.
+
+FLIP 4:
+- Break the tile repetition: the bottom wall face (y≈200–290) and left wall (x≈0–50) need at least 4–6 variant block tiles with different joint positions and chipped corners, placed non-periodically.
+- The wall needs a distinct top surface and a face; right now the left wall's top (x≈0–50, y≈0–100) and the bottom wall's face (y≈200–290) are drawn with the same tile, so the room has no readable height.
+- Add a light source and falloff: the figure at (215–235, 0–20) carries no light and the frame is uniformly lit; darken by distance from the figure so the room has depth.
+- The pool (x≈250–340, y≈0–190) needs a drawn shoreline: a darker wet band on the surrounding floor, a shadowed inner edge on the water, and its blob decals (310,20), (330,120), (260,170) replaced with non-identical ones.
+- The dirt floor (x≈55–250) is one flat brown; give it value variation at the stone-tile scale (worn paths, darker corners, joints) instead of scattered identical specks.
+- Move the figure down so it is not clipped by the frame edge at y=0.
+- The two barrels at (115–140, 195–215) and (165–185, 195–215) are the same sprite, drawn at a softer, larger pixel size than the wall behind them; redraw at the tileset's density and vary the second one.
+- The chests at (60–95, 5–20) and (60–95, 45–70) and the wall torch at (25–40, 120–150) sit on the floor with no contact shadow; add one under each.
+- The wall gap at x≈45–55, y≈105–190 is a brown strip with no jamb, threshold or edge; either draw a doorway or close the wall.
+
+Model used: Claude Opus 5 (1M context)
