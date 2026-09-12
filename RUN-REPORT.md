@@ -1528,3 +1528,68 @@ and 5 are the arithmetic.
 
 Re-running as it stands is not a strategy: the expected outcome is another VOID 43% of the time,
 which is grinding.
+
+
+---
+
+## Item 22 — the seat-level plant term, and the props install
+
+### The rule, and its arithmetic recorded as measured rather than as quoted
+
+A live-plant miss now voids the **seat**: the ballot is discarded, the slot is re-drawn once with
+a fresh seat and a fresh plant, and the round is valid when it holds five caught ballots.
+Broken-judge is a slot whose re-draw also misses, or two slots missing in one round. Supersedes
+*"a correct plant missed still voids [the round]"*.
+
+⚠ **The ruling cites ~5% VOID; as ruled, with both trip conditions live, it is 12.5%:**
+
+| | |
+|---|---|
+| k=0 misses | 57.3% valid |
+| k=1, the re-draw catches | 30.2% valid |
+| k=1, the re-draw also misses | 3.6% broken-judge |
+| k≥2 slots miss | 8.9% broken-judge |
+| **VOID** | **12.5%** |
+
+5.4% is what the rule gives if the *only* trip is a failed re-draw. The difference is the
+two-slot tripwire, which the ruling states explicitly and which is carried **as written** — two
+independent misses in one round is evidence about the judge, and dropping it to reach a nicer
+number would be fitting the law to the arithmetic instead of the other way round. Either way the
+line moves: **42.7% → 12.5%, a 3.4× reduction.**
+
+`prove_seat_plant.py` — 8 cases including the three named. `prove_judge_clear.py` — 12, with a
+transitional clause that excuses **exactly one** live miss on a round voided under the old rule
+and refuses two.
+
+### The round
+
+The re-draw of round 5's seat 2 **caught** its plant. Five caught ballots, `not_below 5, below 0,
+strong_regression False` → **INSTALL-LATEST**, gate open, installed at `1bb33aae`.
+
+⚠ **And the record it wrote was false, so it is corrected.** `--redraw-seat` predates the
+re-scope and stamped `mis_tagged_plant: lamp-clip-figure.png`. That plant was **not** mis-tagged
+— it is live and correctly tagged, and a seat missed it, which is a different thing with a
+different ruling behind it. The path now derives its reason from the morgue, and the record
+already on disk is corrected in place.
+
+### Nine flips disposed, two of them MEASURED-FALSE with the percept kept
+
+**"the lit and unlit floor are two different textures cross-faded"** — they are one texture at
+two points on one falloff. West of the figure the joints read luminance 31.16, east 25.71;
+neither is the pink or the black named. ⚠ But a 5.4-level swing in the **joints** inside a single
+lit patch is real, and the ask of the polish layer is legitimate.
+
+**"the pale pink-jointed corridor meeting the grey hatched room on a hard vertical line"** — it
+is the lamp's edge. Field 81.28 against 27.01, a factor of 3.0, and **the joints hold the same
+ratio** (31.11 / 4.30), which a material change would not do. The hard edge is real and is
+§12.1a's subject landing on the floor rather than the wall.
+
+And one measured against my own work: cap/face separation on the north wall is Weber **0.1968
+before** #194's cap change and **0.1900 after** — not a regression, and it clears §13.8. The
+percept survives the ratio: at delivered 25.64 and 30.50 the planes are five levels apart past
+the lamp's reach. That is §6.5's standing-distance problem from the other end, routed to #202.
+
+### On the phone
+
+Installed at `1bb33aae`, device reports it present. **Not launch-verified — the handset is
+locked**, fourth install running.
