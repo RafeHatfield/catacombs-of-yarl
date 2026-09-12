@@ -1,248 +1,265 @@
 {
- "schema": "frame-critic/1",
- "verdict": "VOID",
- "lane": "art/object-projection",
- "round": 1,
- "surface": "combined",
- "axis": "construction",
- "commit": "7c9d3425515113913e2d30641e2b0b587369f113",
- "dirty": true,
- "build_id": "42ba626386e2331cdae38780c312d68642d11abfea2f830dd88c787583e5414e",
- "timestamp": "2026-09-12T13:25:38",
- "build_frame": {
-  "path": "tools/tier1_floors/evidence/combined.png",
-  "sha256": "a3df8aa948404195a76b76f0f184175d45c6fd7c5d64e6cca2e18121b2b9028f",
-  "log": "tools/tier1_floors/evidence/combined.log",
-  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/object-projection --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/combined.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 6.0 --light-falloff 1.0 --light-ambient-level 1.5 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
- },
- "deck": {
-  "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-8f47012cd90f5da0",
-  "slots": {
-   "1": {
-    "what": "build",
-    "source": "tools/tier1_floors/evidence/combined.png",
+  "schema": "frame-critic/1",
+  "verdict": "VOID",
+  "lane": "art/object-projection",
+  "round": 1,
+  "surface": "combined",
+  "axis": "construction",
+  "commit": "7c9d3425515113913e2d30641e2b0b587369f113",
+  "dirty": true,
+  "build_id": "42ba626386e2331cdae38780c312d68642d11abfea2f830dd88c787583e5414e",
+  "timestamp": "2026-09-12T13:25:38",
+  "build_frame": {
+    "path": "tools/tier1_floors/evidence/combined.png",
     "sha256": "a3df8aa948404195a76b76f0f184175d45c6fd7c5d64e6cca2e18121b2b9028f",
-    "crop": [
-     0,
-     90,
-     750,
-     1001
-    ],
-    "delivered": [
-     750,
-     911
-    ]
-   },
-   "2": {
-    "what": "approved",
-    "source": ".claude/skills/frame-critic/approved/combined-2026-09-09.png",
-    "sha256": "42f6941bc10d00235a58a727dd79d5635f4ca2adcaa667e98e5c1ef9f25def54",
-    "crop": [
-     0,
-     90,
-     750,
-     1001
-    ],
-    "delivered": [
-     750,
-     911
-    ]
-   },
-   "3": {
-    "what": "bar",
-    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
-    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
-    "crop": [
-     304,
-     192,
-     688,
-     480
-    ],
-    "delivered": [
-     384,
-     288
-    ]
-   },
-   "4": {
-    "what": "plant",
-    "source": ".claude/skills/frame-critic/morgue/cement-cap.png",
-    "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
-    "crop": [
-     0,
-     90,
-     750,
-     1001
-    ],
-    "delivered": [
-     750,
-     911
-    ]
-   }
+    "log": "tools/tier1_floors/evidence/combined.log",
+    "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/object-projection --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/combined.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 6.0 --light-falloff 1.0 --light-ambient-level 1.5 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
   },
-  "build": "tools/tier1_floors/evidence/combined.png"
- },
- "plant": {
-  "slot": 4,
-  "file": "cement-cap.png",
-  "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
-  "culled_by": "Rafe, device walk, 2026-09-03",
-  "verbatim": "caps are still grey and read as cement, not stone",
-  "caught": true,
-  "how": {
-   "ranked_last": false,
-   "named_worst": false,
-   "flagged": true,
-   "shipped": false,
-   "outranked_build": false,
-   "every_frame_flagged": false
-  }
- },
- "seat": {
-  "BEST_WHY": "The floor between the figure and the bottom wall run \u2014 roughly (200\u2013560, 460\u2013720) \u2014 is laid as individually cut stones: block widths vary along a single course (the course at y\u2248510 goes wide slab, narrow, narrow, wide), the joints are broken rather than continuous, and a handful of stones sit a step lighter or darker than their neighbours, so it reads as masonry rather than a stamped grid. The bottom-face band of the upper wall at (180\u2013500, 420\u2013450) is a distinct darker value from both the wall top above and the lit floor below, so the three planes separate. The corridor mouth at (500\u2013570, 350\u2013430) picks up the light correctly and its stones are larger and squarer than the room floor, which reads as a different build.",
-  "WORST_WHY": "There is no light source in the frame \u2014 the figure at (215\u2013245, 0\u201325) illuminates nothing and the whole 384\u00d7288 is lit flat, so the one thing the fiction requires is absent. The grey wall blocks at (0\u201355, 0\u2013110) and the whole bottom band (0\u2013384, 200\u2013288) are one identical bevelled square repeated with no variation in value, size or edge; the wall meets the dirt at (55, 0\u2013110) with no face, shadow or height. The dirt floor (55\u2013245, 0\u2013195) is a single seamless noise texture with random pale-blue specks, not ground. The pool at (245\u2013345, 0\u2013195) is a hard axis-aligned rectangle of green with lighter green blobs \u2014 no bank, no edge, no depth. It looks like a starter tileset.",
-  "FLAGGED": "1, 3, 4",
-  "RANK": "2 > 1 > 4 > 3",
-  "BEST": "2",
-  "WORST": "3",
-  "SHIP": "NONE"
- },
- "flip_list": [],
- "flip_list_withheld": [
-  "The standing post at (260\u2013300, 540\u2013635) is a flat pale-grey slab lighter than the floor beneath the light hot-spot; it reads as a placeholder. Give it the floor's grey-tan value, a shadow side facing away from the figure, and a cast shadow on the floor.",
-  "The plank bundles at (190\u2013300, 470\u2013515) and (380\u2013500, 590\u2013640) are a saturated orange that appears nowhere else in the frame; desaturate toward the brazier's wood tone and let the far bundle at (380\u2013500, 590\u2013640) take the same light falloff the floor under it takes \u2014 it is currently as bright as the near one.",
-  "The rotated bundle at (380\u2013500, 590\u2013640) is drawn with clean side-on perspective (visible end-grain faces) in a straight-down view; redraw it from above, or at least drop the perspective faces.",
-  "Neither bundle nor the post casts a contact shadow; every prop needs one on the side away from the figure.",
-  "Apply every item from FLIP 2 below \u2014 this frame shares its floor, walls and crack layer."
- ],
- "withheld_because": "LOOP-PROCESS \u00a74: the plant was missed, so this round's findings are not read. Nothing here may be cited, quoted, or acted on.",
- "panel": {
-  "seats": 1,
-  "ruling": "five seats; block only on strong-majority regression (>=4 of 5 rank below the reference); else install if exit met and plant caught. Rank-in-deck cannot resolve polish-sized deltas at a 40% flip rate. \u2014 Rafe, 2026-09-09",
-  "law": "a gate's binding term must have a measured noise floor and must never be a single sample. \u2014 Rafe, 2026-09-08",
-  "verdict_at_round": "VOID",
-  "above_reference": 0,
-  "not_below_reference": 1,
-  "below_reference": 0,
-  "strong_regression": false,
-  "ref_slack": 1,
-  "flagged_by": 1,
-  "shipped_by": 0,
-  "majority_above": false,
-  "majority_not_below": true,
-  "all_caught": true,
-  "seat_redraws": [
-   {
-    "slot": 1,
-    "discarded_plant": {
-     "file": "cement-cap.png",
-     "surface": [
-      "wall",
-      "combined"
-     ],
-     "axis": [
-      "construction"
-     ],
-     "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
-     "source": "tools/tier1_walls/evidence/r22_standing.png @ 431c140f",
-     "culled_by": "Rafe, device walk, 2026-09-03",
-     "verbatim": "caps are still grey and read as cement, not stone",
-     "defect": "the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.",
-     "provenance": "tools/tier1_walls/CRITIC-STOP.md and STALL-REPORT.md; the frame the critic itself ranked below the grey plant in rounds r001 and r002.",
-     "combined_eligibility": "Serves `combined` too: no magenta anywhere in it, and it was captured with the real tier-one floor laid under the walls, so it is already a whole-scene frame."
+  "deck": {
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-8f47012cd90f5da0",
+    "slots": {
+      "1": {
+        "what": "build",
+        "source": "tools/tier1_floors/evidence/combined.png",
+        "sha256": "a3df8aa948404195a76b76f0f184175d45c6fd7c5d64e6cca2e18121b2b9028f",
+        "crop": [
+          0,
+          90,
+          750,
+          1001
+        ],
+        "delivered": [
+          750,
+          911
+        ]
+      },
+      "2": {
+        "what": "approved",
+        "source": ".claude/skills/frame-critic/approved/combined-2026-09-09.png",
+        "sha256": "42f6941bc10d00235a58a727dd79d5635f4ca2adcaa667e98e5c1ef9f25def54",
+        "crop": [
+          0,
+          90,
+          750,
+          1001
+        ],
+        "delivered": [
+          750,
+          911
+        ]
+      },
+      "3": {
+        "what": "bar",
+        "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+        "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+        "crop": [
+          304,
+          192,
+          688,
+          480
+        ],
+        "delivered": [
+          384,
+          288
+        ]
+      },
+      "4": {
+        "what": "plant",
+        "source": ".claude/skills/frame-critic/morgue/cement-cap.png",
+        "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+        "crop": [
+          0,
+          90,
+          750,
+          1001
+        ],
+        "delivered": [
+          750,
+          911
+        ]
+      }
     },
-    "redraw_plant": {
-     "file": "cement-cap.png",
-     "surface": [
-      "wall",
-      "combined"
-     ],
-     "axis": [
-      "construction"
-     ],
-     "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
-     "source": "tools/tier1_walls/evidence/r22_standing.png @ 431c140f",
-     "culled_by": "Rafe, device walk, 2026-09-03",
-     "verbatim": "caps are still grey and read as cement, not stone",
-     "defect": "the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.",
-     "provenance": "tools/tier1_walls/CRITIC-STOP.md and STALL-REPORT.md; the frame the critic itself ranked below the grey plant in rounds r001 and r002.",
-     "combined_eligibility": "Serves `combined` too: no magenta anywhere in it, and it was captured with the real tier-one floor laid under the walls, so it is already a whole-scene frame."
-    },
-    "redraw_caught": false
-   }
-  ],
-  "seat_plant_stop": "slot 1 missed a live plant and its RE-DRAW missed too ({'file': 'cement-cap.png', 'surface': ['wall', 'combined'], 'axis': ['construction'], 'sha256': '3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a', 'source': 'tools/tier1_walls/evidence/r22_standing.png @ 431c140f', 'culled_by': 'Rafe, device walk, 2026-09-03', 'verbatim': 'caps are still grey and read as cement, not stone', 'defect': \"the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.\", 'provenance': 'tools/tier1_walls/CRITIC-STOP.md and STALL-REPORT.md; the frame the critic itself ranked below the grey plant in rounds r001 and r002.', 'combined_eligibility': 'Serves `combined` too: no magenta anywhere in it, and it was captured with the real tier-one floor laid under the walls, so it is already a whole-scene frame.'}, then {'file': 'cement-cap.png', 'surface': ['wall', 'combined'], 'axis': ['construction'], 'sha256': '3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a', 'source': 'tools/tier1_walls/evidence/r22_standing.png @ 431c140f', 'culled_by': 'Rafe, device walk, 2026-09-03', 'verbatim': 'caps are still grey and read as cement, not stone', 'defect': \"the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.\", 'provenance': 'tools/tier1_walls/CRITIC-STOP.md and STALL-REPORT.md; the frame the critic itself ranked below the grey plant in rounds r001 and r002.', 'combined_eligibility': 'Serves `combined` too: no magenta anywhere in it, and it was captured with the real tier-one floor laid under the walls, so it is already a whole-scene frame.'}). A slot that misses twice is the judge, not the draw.",
-  "dissent": 0,
-  "plants_distinct": 1,
-  "per_seat": [
-   {
-    "seat": 1,
-    "rank": 2,
-    "reference_rank": 1,
-    "above_reference": false,
-    "not_below": true,
-    "build_flagged": true,
-    "shipped": false,
-    "plant": "cement-cap.png",
+    "build": "tools/tier1_floors/evidence/combined.png"
+  },
+  "plant": {
+    "slot": 4,
+    "file": "cement-cap.png",
+    "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+    "culled_by": "Rafe, device walk, 2026-09-03",
+    "verbatim": "caps are still grey and read as cement, not stone",
     "caught": true,
-    "transcript": ".claude/skills/frame-critic/history/r001-art_object-projection-transcript.txt",
-    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-8f47012cd90f5da0"
-   }
-  ]
- },
- "seat_redraw": null,
- "item_exit": {
-  "_what": [
-   "THE ITEM'S OWN MEASURED EXIT \u2014 required by INSTALL-LATEST (Rafe, 2026-09-08).",
-   "",
-   "A build installs because it DID THE THING IT SET OUT TO DO. The rank test only says",
-   "the doing cost nothing against the seeded reference; this says what was done. Without",
-   "it, 'not worse than the reference' would mean 'not different from it', and a round",
-   "that changed nothing would install as readily as one that fixed something.",
-   "",
-   "Declared here per item, recorded into the verdict, re-checked at the gate. The gate",
-   "refuses a `met` with no measurement behind it."
+    "how": {
+      "ranked_last": false,
+      "named_worst": false,
+      "flagged": true,
+      "shipped": false,
+      "outranked_build": false,
+      "every_frame_flagged": false
+    }
+  },
+  "seat": {
+    "BEST_WHY": "The floor between the figure and the bottom wall run — roughly (200–560, 460–720) — is laid as individually cut stones: block widths vary along a single course (the course at y≈510 goes wide slab, narrow, narrow, wide), the joints are broken rather than continuous, and a handful of stones sit a step lighter or darker than their neighbours, so it reads as masonry rather than a stamped grid. The bottom-face band of the upper wall at (180–500, 420–450) is a distinct darker value from both the wall top above and the lit floor below, so the three planes separate. The corridor mouth at (500–570, 350–430) picks up the light correctly and its stones are larger and squarer than the room floor, which reads as a different build.",
+    "WORST_WHY": "There is no light source in the frame — the figure at (215–245, 0–25) illuminates nothing and the whole 384×288 is lit flat, so the one thing the fiction requires is absent. The grey wall blocks at (0–55, 0–110) and the whole bottom band (0–384, 200–288) are one identical bevelled square repeated with no variation in value, size or edge; the wall meets the dirt at (55, 0–110) with no face, shadow or height. The dirt floor (55–245, 0–195) is a single seamless noise texture with random pale-blue specks, not ground. The pool at (245–345, 0–195) is a hard axis-aligned rectangle of green with lighter green blobs — no bank, no edge, no depth. It looks like a starter tileset.",
+    "FLAGGED": "1, 3, 4",
+    "RANK": "2 > 1 > 4 > 3",
+    "BEST": "2",
+    "WORST": "3",
+    "SHIP": "NONE"
+  },
+  "flip_list": [
+    "The standing post at (260–300, 540–635) is a flat pale-grey slab lighter than the floor beneath the light hot-spot; it reads as a placeholder. Give it the floor's grey-tan value, a shadow side facing away from the figure, and a cast shadow on the floor.",
+    "The plank bundles at (190–300, 470–515) and (380–500, 590–640) are a saturated orange that appears nowhere else in the frame; desaturate toward the brazier's wood tone and let the far bundle at (380–500, 590–640) take the same light falloff the floor under it takes — it is currently as bright as the near one.",
+    "The rotated bundle at (380–500, 590–640) is drawn with clean side-on perspective (visible end-grain faces) in a straight-down view; redraw it from above, or at least drop the perspective faces.",
+    "Neither bundle nor the post casts a contact shadow; every prop needs one on the side away from the figure.",
+    "Apply every item from FLIP 2 below — this frame shares its floor, walls and crack layer."
   ],
-  "item": "\u00a73.2 \u2014 the marker, the barricade family and the fire re-authored at the RULED object projection (cabinet oblique, right, \u00bd; the fire under the round exception)",
-  "claim": "every object stands in space the same way, at the projection Rafe ruled on device, and still names itself at 1\u00d7 (\u00a712). Structure authored as a projected model; generation supplies surface; nothing in the scene shows the old three-plane-left marker.",
-  "measured": "PROJECTION HOLD (silhouette IoU of the landed generation against its projected template): marker 1.000, barricade_a 0.993, barricade_b 0.999, fire 0.997 \u2014 every object carries the ruled geometry, and the templates are the same function that drew the walked candidate. COLD NAMING (three blind seats, told nothing): fire NAMED by all three ('fire pit / brazier'); barricade NAMED by all three ('planks', 'broken bench/bed frame' \u2014 the card's own arrangement grammar); marker NAMED by ONE of three ('a tall wooden pillar / pedestal (stone-coloured column)') and read as 'a tall wooden plank / upright board' by the other two. PASS under the instrument's rule, and reported at its margin: the lamp warms pale grey toward wood, which is #204's ladder problem arriving at naming. Two earlier re-authors of the marker (a banded box; a narrower banded box) were read as 'a wooden crate or barrel' by three of three and were not landed \u2014 the taper and a single low lashing are what moved it. LIT AT THE WORST FOOTPRINT CELL: 68.32 / 72.33 / 72.93 / 50.64 against \u00a713.8's 36.7.",
-  "instrument": ".claude/skills/frame-critic/cold_naming.py (calibrated, \u00a713.5); tools/tier2_props/projection_props.py land (IoU hold); tools/tier2_props/verify_props.py (worst cell)",
-  "met": true
- },
- "progress": {
-  "rank_position": 2,
-  "deck_size": 4,
-  "rank_score": 0.6666666666666666,
-  "bar_position": 4,
-  "approved_position": 1,
-  "approved_frame_in_deck": true,
-  "beats_approved": false,
-  "near_bar": true,
-  "near_bar_slack": 1,
-  "new_best": false,
-  "best_before": null,
-  "capture_signature": "02020202020d101012120e131315100e0f121010121012121212110e0d112c2302020202020b111010100e1313120f0c0e11100f101212111112100e0d10412f02020202020d11110d0b0f0e0c0d0e0b0c0a0b0b0a0d12110d0e0d0c0d0b090902020202020f111111111212111314100a0a0b0c0b0c100f0e1012100f0c0c0c02020202020c0d0e0d0d0e0d0d0e0e0a09090c111b0e110f0e0f100d090807060202020202020202020202020202020303030816160f14100e100f020202020202020202020202020202020303030303040409191f1218130f100e02020202020202020202020203030303030405050405050c252518231c16150d020202020202020202020203030303040505050506060612332f2429221d190b0202020202020202020203030304040505060707080808113b3c30332d2515100302020202020202020303040405060708080a09090a0a184849394539221a130303020202020202020304040506060708090a0b0b0b0b1c444543624a1e191404030202020202020303040405060709090a0c0c0c0d0f215450496f61302117040303020202020203030d0f110e121215181a19202627346859577965423128100e0b0807020203030420252a212a2a3935394e5c5974696470647a4d41393629221d1410020202030421252a282c2d33403640513c4a373c48567347242b211d1c11100b0202030404202c324c465657566c979c9a7b9698898379665247382a221913120202020304233133383d474d45adc8c6af8bd5ba8f736b63574d3f3c291c131a0405060607222d2a394648587696b5becccaae8881736b615942393832201a1a0b1010112b2e1d1f2d30627377a6aca8b3bc8a7a756c675c463832342d1f1918050707080817172038436c716987979b958a7a6c64524e4d4a3d382f29211915020202020311131d3549606352707a5e5a4c4f414a43414d4c41392d231a1310060505050611161b303f49454f5043394952524e564b4a46413930241d1510100e0f0e0d0c0f12151f2f3a403f232a2c45595d574942423e362e29211b1210150c0d09080a0a0a0d18222d30321c2220475352533c423d382c28211d18141215100f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e14120f100e12141214131620252728292e2f2d2b242424211d1a1714120f121213140e100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d12120d0f0e101211110f0f111614151515151517151513101211100f100e0f0d13120f0d0d0e0c0c11100f0f121112111110111313101213100f0e0d0d0e0f0f241f15111312120f1010121314131111110f1214121212121011100d0f0f0e0f151e0f0d0d11110e0f11111213121010120f10120f13121111100f0d100f1110",
-  "moved": null,
-  "two_strikes_advisory": null,
-  "series": [
-   {
-    "round": 1,
-    "verdict": "VOID",
+  "flip_list_withheld": [
+    "The standing post at (260–300, 540–635) is a flat pale-grey slab lighter than the floor beneath the light hot-spot; it reads as a placeholder. Give it the floor's grey-tan value, a shadow side facing away from the figure, and a cast shadow on the floor.",
+    "The plank bundles at (190–300, 470–515) and (380–500, 590–640) are a saturated orange that appears nowhere else in the frame; desaturate toward the brazier's wood tone and let the far bundle at (380–500, 590–640) take the same light falloff the floor under it takes — it is currently as bright as the near one.",
+    "The rotated bundle at (380–500, 590–640) is drawn with clean side-on perspective (visible end-grain faces) in a straight-down view; redraw it from above, or at least drop the perspective faces.",
+    "Neither bundle nor the post casts a contact shadow; every prop needs one on the side away from the figure.",
+    "Apply every item from FLIP 2 below — this frame shares its floor, walls and crack layer."
+  ],
+  "withheld_because": "LOOP-PROCESS §4: the plant was missed, so this round's findings are not read. Nothing here may be cited, quoted, or acted on.",
+  "panel": {
+    "seats": 1,
+    "ruling": "five seats; block only on strong-majority regression (>=4 of 5 rank below the reference); else install if exit met and plant caught. Rank-in-deck cannot resolve polish-sized deltas at a 40% flip rate. — Rafe, 2026-09-09",
+    "law": "a gate's binding term must have a measured noise floor and must never be a single sample. — Rafe, 2026-09-08",
+    "verdict_at_round": "VOID",
+    "above_reference": 0,
+    "not_below_reference": 1,
+    "below_reference": 0,
+    "strong_regression": false,
+    "ref_slack": 1,
+    "flagged_by": 1,
+    "shipped_by": 0,
+    "majority_above": false,
+    "majority_not_below": true,
+    "all_caught": true,
+    "seat_redraws": [
+      {
+        "slot": 1,
+        "discarded_plant": {
+          "file": "cement-cap.png",
+          "surface": [
+            "wall",
+            "combined"
+          ],
+          "axis": [
+            "construction"
+          ],
+          "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+          "source": "tools/tier1_walls/evidence/r22_standing.png @ 431c140f",
+          "culled_by": "Rafe, device walk, 2026-09-03",
+          "verbatim": "caps are still grey and read as cement, not stone",
+          "defect": "the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.",
+          "provenance": "tools/tier1_walls/CRITIC-STOP.md and STALL-REPORT.md; the frame the critic itself ranked below the grey plant in rounds r001 and r002.",
+          "combined_eligibility": "Serves `combined` too: no magenta anywhere in it, and it was captured with the real tier-one floor laid under the walls, so it is already a whole-scene frame."
+        },
+        "redraw_plant": {
+          "file": "cement-cap.png",
+          "surface": [
+            "wall",
+            "combined"
+          ],
+          "axis": [
+            "construction"
+          ],
+          "sha256": "3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a",
+          "source": "tools/tier1_walls/evidence/r22_standing.png @ 431c140f",
+          "culled_by": "Rafe, device walk, 2026-09-03",
+          "verbatim": "caps are still grey and read as cement, not stone",
+          "defect": "the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.",
+          "provenance": "tools/tier1_walls/CRITIC-STOP.md and STALL-REPORT.md; the frame the critic itself ranked below the grey plant in rounds r001 and r002.",
+          "combined_eligibility": "Serves `combined` too: no magenta anywhere in it, and it was captured with the real tier-one floor laid under the walls, so it is already a whole-scene frame."
+        },
+        "redraw_caught": false
+      }
+    ],
+    "seat_plant_stop": "slot 1 missed a live plant and its RE-DRAW missed too ({'file': 'cement-cap.png', 'surface': ['wall', 'combined'], 'axis': ['construction'], 'sha256': '3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a', 'source': 'tools/tier1_walls/evidence/r22_standing.png @ 431c140f', 'culled_by': 'Rafe, device walk, 2026-09-03', 'verbatim': 'caps are still grey and read as cement, not stone', 'defect': \"the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.\", 'provenance': 'tools/tier1_walls/CRITIC-STOP.md and STALL-REPORT.md; the frame the critic itself ranked below the grey plant in rounds r001 and r002.', 'combined_eligibility': 'Serves `combined` too: no magenta anywhere in it, and it was captured with the real tier-one floor laid under the walls, so it is already a whole-scene frame.'}, then {'file': 'cement-cap.png', 'surface': ['wall', 'combined'], 'axis': ['construction'], 'sha256': '3fd8223295d2f92e59f8c24f9d84163ed3223381939a554d1f6398130c3a4f0a', 'source': 'tools/tier1_walls/evidence/r22_standing.png @ 431c140f', 'culled_by': 'Rafe, device walk, 2026-09-03', 'verbatim': 'caps are still grey and read as cement, not stone', 'defect': \"the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.\", 'provenance': 'tools/tier1_walls/CRITIC-STOP.md and STALL-REPORT.md; the frame the critic itself ranked below the grey plant in rounds r001 and r002.', 'combined_eligibility': 'Serves `combined` too: no magenta anywhere in it, and it was captured with the real tier-one floor laid under the walls, so it is already a whole-scene frame.'}). A slot that misses twice is the judge, not the draw.",
+    "dissent": 0,
+    "plants_distinct": 1,
+    "per_seat": [
+      {
+        "seat": 1,
+        "rank": 2,
+        "reference_rank": 1,
+        "above_reference": false,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "cement-cap.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r001-art_object-projection-transcript.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-8f47012cd90f5da0"
+      }
+    ]
+  },
+  "seat_redraw": null,
+  "item_exit": {
+    "_what": [
+      "THE ITEM'S OWN MEASURED EXIT — required by INSTALL-LATEST (Rafe, 2026-09-08).",
+      "",
+      "A build installs because it DID THE THING IT SET OUT TO DO. The rank test only says",
+      "the doing cost nothing against the seeded reference; this says what was done. Without",
+      "it, 'not worse than the reference' would mean 'not different from it', and a round",
+      "that changed nothing would install as readily as one that fixed something.",
+      "",
+      "Declared here per item, recorded into the verdict, re-checked at the gate. The gate",
+      "refuses a `met` with no measurement behind it."
+    ],
+    "item": "§3.2 — the marker, the barricade family and the fire re-authored at the RULED object projection (cabinet oblique, right, ½; the fire under the round exception)",
+    "claim": "every object stands in space the same way, at the projection Rafe ruled on device, and still names itself at 1× (§12). Structure authored as a projected model; generation supplies surface; nothing in the scene shows the old three-plane-left marker.",
+    "measured": "PROJECTION HOLD (silhouette IoU of the landed generation against its projected template): marker 1.000, barricade_a 0.993, barricade_b 0.999, fire 0.997 — every object carries the ruled geometry, and the templates are the same function that drew the walked candidate. COLD NAMING (three blind seats, told nothing): fire NAMED by all three ('fire pit / brazier'); barricade NAMED by all three ('planks', 'broken bench/bed frame' — the card's own arrangement grammar); marker NAMED by ONE of three ('a tall wooden pillar / pedestal (stone-coloured column)') and read as 'a tall wooden plank / upright board' by the other two. PASS under the instrument's rule, and reported at its margin: the lamp warms pale grey toward wood, which is #204's ladder problem arriving at naming. Two earlier re-authors of the marker (a banded box; a narrower banded box) were read as 'a wooden crate or barrel' by three of three and were not landed — the taper and a single low lashing are what moved it. LIT AT THE WORST FOOTPRINT CELL: 68.32 / 72.33 / 72.93 / 50.64 against §13.8's 36.7.",
+    "instrument": ".claude/skills/frame-critic/cold_naming.py (calibrated, §13.5); tools/tier2_props/projection_props.py land (IoU hold); tools/tier2_props/verify_props.py (worst cell)",
+    "met": true
+  },
+  "progress": {
     "rank_position": 2,
     "deck_size": 4,
     "rank_score": 0.6666666666666666,
-    "capture_signature": "02020202020d101012120e131315100e0f121010121012121212110e0d112c2302020202020b111010100e1313120f0c0e11100f101212111112100e0d10412f02020202020d11110d0b0f0e0c0d0e0b0c0a0b0b0a0d12110d0e0d0c0d0b090902020202020f111111111212111314100a0a0b0c0b0c100f0e1012100f0c0c0c02020202020c0d0e0d0d0e0d0d0e0e0a09090c111b0e110f0e0f100d090807060202020202020202020202020202020303030816160f14100e100f020202020202020202020202020202020303030303040409191f1218130f100e02020202020202020202020203030303030405050405050c252518231c16150d020202020202020202020203030303040505050506060612332f2429221d190b0202020202020202020203030304040505060707080808113b3c30332d2515100302020202020202020303040405060708080a09090a0a184849394539221a130303020202020202020304040506060708090a0b0b0b0b1c444543624a1e191404030202020202020303040405060709090a0c0c0c0d0f215450496f61302117040303020202020203030d0f110e121215181a19202627346859577965423128100e0b0807020203030420252a212a2a3935394e5c5974696470647a4d41393629221d1410020202030421252a282c2d33403640513c4a373c48567347242b211d1c11100b0202030404202c324c465657566c979c9a7b9698898379665247382a221913120202020304233133383d474d45adc8c6af8bd5ba8f736b63574d3f3c291c131a0405060607222d2a394648587696b5becccaae8881736b615942393832201a1a0b1010112b2e1d1f2d30627377a6aca8b3bc8a7a756c675c463832342d1f1918050707080817172038436c716987979b958a7a6c64524e4d4a3d382f29211915020202020311131d3549606352707a5e5a4c4f414a43414d4c41392d231a1310060505050611161b303f49454f5043394952524e564b4a46413930241d1510100e0f0e0d0c0f12151f2f3a403f232a2c45595d574942423e362e29211b1210150c0d09080a0a0a0d18222d30321c2220475352533c423d382c28211d18141215100f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e14120f100e12141214131620252728292e2f2d2b242424211d1a1714120f121213140e100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d12120d0f0e101211110f0f111614151515151517151513101211100f100e0f0d13120f0d0d0e0c0c11100f0f121112111110111313101213100f0e0d0d0e0f0f241f15111312120f1010121314131111110f1214121212121011100d0f0f0e0f151e0f0d0d11110e0f11111213121010120f10120f13121111100f0d100f1110"
-   }
-  ],
-  "guards": {
-   "stall_rounds": 3,
-   "round_ceiling": 15,
-   "no_change_mad": 0.25,
-   "no_change_max": 4,
-   "sig_grid": 32,
-   "judge_misses": 2,
-   "flip_same": 0.6
-  }
- },
- "transcript": ".claude/skills/frame-critic/history/r001-art_object-projection-transcript.txt",
- "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress \u2014 rank in the deck \u2014 never rounds elapsed."
+    "bar_position": 4,
+    "approved_position": 1,
+    "approved_frame_in_deck": true,
+    "beats_approved": false,
+    "near_bar": true,
+    "near_bar_slack": 1,
+    "new_best": false,
+    "best_before": null,
+    "capture_signature": "02020202020d101012120e131315100e0f121010121012121212110e0d112c2302020202020b111010100e1313120f0c0e11100f101212111112100e0d10412f02020202020d11110d0b0f0e0c0d0e0b0c0a0b0b0a0d12110d0e0d0c0d0b090902020202020f111111111212111314100a0a0b0c0b0c100f0e1012100f0c0c0c02020202020c0d0e0d0d0e0d0d0e0e0a09090c111b0e110f0e0f100d090807060202020202020202020202020202020303030816160f14100e100f020202020202020202020202020202020303030303040409191f1218130f100e02020202020202020202020203030303030405050405050c252518231c16150d020202020202020202020203030303040505050506060612332f2429221d190b0202020202020202020203030304040505060707080808113b3c30332d2515100302020202020202020303040405060708080a09090a0a184849394539221a130303020202020202020304040506060708090a0b0b0b0b1c444543624a1e191404030202020202020303040405060709090a0c0c0c0d0f215450496f61302117040303020202020203030d0f110e121215181a19202627346859577965423128100e0b0807020203030420252a212a2a3935394e5c5974696470647a4d41393629221d1410020202030421252a282c2d33403640513c4a373c48567347242b211d1c11100b0202030404202c324c465657566c979c9a7b9698898379665247382a221913120202020304233133383d474d45adc8c6af8bd5ba8f736b63574d3f3c291c131a0405060607222d2a394648587696b5becccaae8881736b615942393832201a1a0b1010112b2e1d1f2d30627377a6aca8b3bc8a7a756c675c463832342d1f1918050707080817172038436c716987979b958a7a6c64524e4d4a3d382f29211915020202020311131d3549606352707a5e5a4c4f414a43414d4c41392d231a1310060505050611161b303f49454f5043394952524e564b4a46413930241d1510100e0f0e0d0c0f12151f2f3a403f232a2c45595d574942423e362e29211b1210150c0d09080a0a0a0d18222d30321c2220475352533c423d382c28211d18141215100f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e14120f100e12141214131620252728292e2f2d2b242424211d1a1714120f121213140e100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d12120d0f0e101211110f0f111614151515151517151513101211100f100e0f0d13120f0d0d0e0c0c11100f0f121112111110111313101213100f0e0d0d0e0f0f241f15111312120f1010121314131111110f1214121212121011100d0f0f0e0f151e0f0d0d11110e0f11111213121010120f10120f13121111100f0d100f1110",
+    "moved": null,
+    "two_strikes_advisory": null,
+    "series": [
+      {
+        "round": 1,
+        "verdict": "VOID",
+        "rank_position": 2,
+        "deck_size": 4,
+        "rank_score": 0.6666666666666666,
+        "capture_signature": "02020202020d101012120e131315100e0f121010121012121212110e0d112c2302020202020b111010100e1313120f0c0e11100f101212111112100e0d10412f02020202020d11110d0b0f0e0c0d0e0b0c0a0b0b0a0d12110d0e0d0c0d0b090902020202020f111111111212111314100a0a0b0c0b0c100f0e1012100f0c0c0c02020202020c0d0e0d0d0e0d0d0e0e0a09090c111b0e110f0e0f100d090807060202020202020202020202020202020303030816160f14100e100f020202020202020202020202020202020303030303040409191f1218130f100e02020202020202020202020203030303030405050405050c252518231c16150d020202020202020202020203030303040505050506060612332f2429221d190b0202020202020202020203030304040505060707080808113b3c30332d2515100302020202020202020303040405060708080a09090a0a184849394539221a130303020202020202020304040506060708090a0b0b0b0b1c444543624a1e191404030202020202020303040405060709090a0c0c0c0d0f215450496f61302117040303020202020203030d0f110e121215181a19202627346859577965423128100e0b0807020203030420252a212a2a3935394e5c5974696470647a4d41393629221d1410020202030421252a282c2d33403640513c4a373c48567347242b211d1c11100b0202030404202c324c465657566c979c9a7b9698898379665247382a221913120202020304233133383d474d45adc8c6af8bd5ba8f736b63574d3f3c291c131a0405060607222d2a394648587696b5becccaae8881736b615942393832201a1a0b1010112b2e1d1f2d30627377a6aca8b3bc8a7a756c675c463832342d1f1918050707080817172038436c716987979b958a7a6c64524e4d4a3d382f29211915020202020311131d3549606352707a5e5a4c4f414a43414d4c41392d231a1310060505050611161b303f49454f5043394952524e564b4a46413930241d1510100e0f0e0d0c0f12151f2f3a403f232a2c45595d574942423e362e29211b1210150c0d09080a0a0a0d18222d30321c2220475352533c423d382c28211d18141215100f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e14120f100e12141214131620252728292e2f2d2b242424211d1a1714120f121213140e100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d12120d0f0e101211110f0f111614151515151517151513101211100f100e0f0d13120f0d0d0e0c0c11100f0f121112111110111313101213100f0e0d0d0e0f0f241f15111312120f1010121314131111110f1214121212121011100d0f0f0e0f151e0f0d0d11110e0f11111213121010120f10120f13121111100f0d100f1110"
+      }
+    ],
+    "guards": {
+      "stall_rounds": 3,
+      "round_ceiling": 15,
+      "no_change_mad": 0.25,
+      "no_change_max": 4,
+      "sig_grid": 32,
+      "judge_misses": 2,
+      "flip_same": 0.6
+    }
+  },
+  "transcript": ".claude/skills/frame-critic/history/r001-art_object-projection-transcript.txt",
+  "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress — rank in the deck — never rounds elapsed.",
+  "instrument_correction": {
+    "ruled_by": "Rafe, 2026-09-12, LOOP-PROCESS §1.1.5",
+    "verbatim": "check the runner's slot bookkeeping first — the printout labeled the plant slot 1, then reported 'slot 4 → CAUGHT,' then voided on slot 1. If the plant was actually flagged-or-worst and the runner mislabeled it, round 1 is VALID by instrument correction (recorded, evidence kept); fix the runner with a control that reproduces the mislabel.",
+    "finding": "deck slot 4 = plant, slot 1 = build (this file's own `deck` and `plant` blocks). The seat ranked 2 > 1 > 4 > 3 and flagged 1, 3, 4: the plant WAS flagged (plant.caught = true). The seat-level plant term read sd['caught'] before any seat had been scored, counted seat 1 as a live miss, printed the seat index as 'slot 1', re-drew it (unscored too) and raised broken-judge. The runner, not the seat.",
+    "fix": "frame_critic.score_seat() runs the moment a seat returns; live_misses() refuses an unscored seat instead of counting it. Control: prove_seat_plant.py slot_bookkeeping() drives both with this round's own ballot (cases A/B/C).",
+    "corrected_verdict": "FAIL",
+    "corrected_why": "SHIP NONE; the build was flagged; rank 2 of 4 with the approved frame at 1 (at-or-above NO, near-bar YES). Its flip list is READ and disposed in round 2's record.",
+    "original_verdict": "VOID",
+    "original_stop": "broken-judge (STALL-REPORT moved to history/STALL-REPORT-art_object-projection-2026-09-12.md, kept)"
+  },
+  "flip_list_read_by_correction": true
 }

@@ -1,0 +1,43 @@
+RANK: 3 > 1 > 4 > 2
+
+BEST: 3
+BEST_WHY: The floor in 3 is the one surface in the deck that reads as cut stone rather than a stamp. Along the run of flagstones directly right of the figure (x≈440–700, y≈460–580) the blocks are different widths (roughly 45–70 px), the mortar joints alternate between pale (raised) and dark (recessed), and the light falloff is applied across the stones so the near ones show grain and the far ones lose it. The wall base along y≈424–455 across the top of the room carries a continuous dark rail with regularly spaced vertical posts, which is a legible built thing against the wall's mottled top surface. Nothing in the frame is out of viewpoint or out of key, which is more than any of the other three can say.
+
+WORST: 2
+WORST_WHY: The pale standing stone at (260–300, 540–640) is drawn as a side-view object — a tall vertical slab with a lit top cap and a strap across its foot — sitting in a straight-top-down scene. It has a front face and no top-down footprint. The orange crate at (200–300, 480–515) shows a front face strip along its bottom edge (3/4 view), and the roped log bundle at (380–500, 590–640) is rendered with smooth per-pixel gradients at roughly four times the pixel density of the figure sprite at (388–428, 465–512). All three props cast no shadow and none of them takes the room's light: the log bundle at the dark edge of the light pool is as bright as the crate next to the figure. They read as assets pasted from a different, higher-resolution source.
+
+FLAGGED: 2, 1, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The brazier at (575–625, 525–575) is a lit fire that emits no light: the floor within 40 px of it samples darker than the same floor in the empty frame (mean ≈ 90,63,45 vs 98,74,54). Either add a local warm falloff around it or put the fire out (embers only).
+- The three crossed-stick props at (270–300, 600–625), (395–425, 600–625) and (515–550, 605–625) are full-saturation orange (255,134,60) with a black outline on a floor whose lit stone tops out around (238,184,116). Desaturate them into the floor's key and drop the black outline to a dark-brown one.
+- The same three props sit on the floor with no contact shadow; add a one-unit dark offset under each.
+- The props are crisp nearest-neighbour at the sprite's pixel unit while the floor beneath is bilinear-soft; quantise the floor to the same pixel unit as the sprite and props.
+- Apply every FLIP 3 item below; 1 is 3 with props added.
+
+FLIP 2:
+- Redraw the standing stone at (260–300, 540–640) as a top-down footprint: a square or rounded block with its lit face on the side facing the figure, no vertical elevation.
+- Redraw the crate at (200–300, 480–515) without the front-face strip; give it a top and a one-unit dark edge on the side away from the light only.
+- Redraw the log bundle at (380–500, 590–640) at the figure sprite's pixel unit (its current gradients are ~1 px; the sprite's are ~3 px) and with a top-down silhouette.
+- All three props: add a contact shadow and multiply them by the room's light falloff so the log bundle at the edge of the pool is darker than the crate beside the figure.
+- The brazier at (575–625, 525–575) is a fire that lights nothing; add local warm falloff or reduce it to embers.
+- Apply every FLIP 3 item below; 2 is 3 with props added.
+
+FLIP 3:
+- The crack lines — the one running from the wall base at (300,455) down to (330,620), and the arc from (590,690) to (750,640) — are 1–2 px anti-aliased strokes that cross mortar joints without a break. Redraw them at the sprite's pixel unit, without anti-aliasing, and terminate or step them at the joints so they belong to the stones rather than to a layer above them.
+- The figure at (388–428, 465–512) is nearest-neighbour crisp; the floor and wall around it are bilinear-soft. Pick one density: quantise the environment to the sprite's pixel unit, or draw the sprite at the environment's.
+- The wall band along the top of the room (x≈120–500, y≈400–424) and down the left (x≈120–180) is low-frequency mottled brown with no masonry and no distinction between top surface and face. Give it a top and a face, with a one-unit dark edge at the floor junction.
+- The dark rectangle at (310–380, 645–710) is a low-contrast box with indistinct inner shapes; it reads as a placeholder. Draw it as a legible object (hatch, grate, stair head) with a defined rim, or remove it.
+- The scribbled hatch marks on the flagstones at (500–560, 520–560) and (720–750, 540–590), and the concentric swirl marks at (590–660, 470–500), read as brush stamps. Replace with wear that follows stone geometry: chipped corners, worn centres, at the pixel unit.
+- The light peak clips: floor directly under the figure hits (252,201,127) with a mean of (225,175,110), so stone texture disappears at the centre. Pull the peak down about 20% so grain survives where the player is looking.
+
+FLIP 4:
+- The pool at (248–343, 0–190) ends in a hard straight edge against the dirt on three sides with no bank, lip or wet margin. Add an edge tile set (at minimum a one-tile shore ring) so the water sits in the floor rather than on it.
+- The pool fill is a uniform hexagonal pattern at constant contrast across the whole rectangle; break it with at least two variants and a darker band along the edges.
+- The dirt floor (x≈55–248) shows the seams of its repeating tile as faint darker wormy lines on a regular grid; author a second and third tile variant and scatter them, or hand-break the seams.
+- The moss blobs on the grey stone at (20–50, 55–85), (355–384, 145–175) and (20–45, 205–225) are semi-transparent teal circles with a lighter outline, screen-blended over the tile; repaint them as opaque pixel clusters that respect the tile's joints.
+- The grey flagstone tiles (bottom band y≈215–265, left column x≈20–55) are a single tile with 1 px uniform joints and identical speckle; add joint width variation and two or three worn variants.
+- The wooden door/plank at (28–37, 130–170) hangs off the wall face and continues down into the dirt as a dark-brown strip with no explanation; either end it at the wall face or draw the thing it is (ladder, fallen plank) legibly.
+- There is no light falloff from the figure at (210–235, 0–25) at all; the whole frame is flat-lit. Add a radial falloff from the figure so the frame reads as one carried light in a dark place.

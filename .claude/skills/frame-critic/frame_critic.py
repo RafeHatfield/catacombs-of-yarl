@@ -808,8 +808,16 @@ def crop_to(path, box, dest):
     return im.size
 
 
-def pick_plant(surface, morgue, exclude=(), axis=None):
-    """Candidates for this round's plant, narrowed to the AXIS the deck is asking about.
+def pick_plant(surface, morgue, exclude=(), axis=None, subject=None):
+    """Candidates for this round's plant, narrowed to the AXIS and the SUBJECT the deck asks about.
+
+    LAW (Rafe, 2026-09-12): *"a plant matches the deck's axis AND subject (wall plants for wall
+    decks, object plants for object decks)."* Occasioned by round 1 of art/object-projection:
+    an object-craft deck was handed cement-cap — a wall-cap MATERIAL cull on a room frame — and
+    a seat ranking it above a props build says nothing about the props. A subject named in the
+    config is STRICT: an entry must carry it, and a morgue with no plant of that subject refuses
+    the round rather than dealing an off-subject one. An entry with no `subject` is legacy and
+    serves a round that names none.
 
     RULED (Rafe, 2026-09-03): *"Per-axis morgue plants — tag entries by axis, assemble the plant
     to match the deck's question; this is why round 5 VOIDed."*
@@ -853,6 +861,14 @@ def pick_plant(surface, morgue, exclude=(), axis=None):
     # round rather than none. An entry is retired by saying so, in a field whose name means it.
     entries = [e for e in morgue["entries"]
                if serves(e) and e["file"] not in exclude and not e.get("retired_as_control")]
+    if subject:
+        entries = [e for e in entries if subject in (e.get("subject") or [])]
+        if not entries:
+            raise SystemExit(
+                "REFUSING: the morgue holds no plant for subject %r on surface %r.\n"
+                "LAW (Rafe, 2026-09-12): a plant matches the deck's axis AND subject. A wall "
+                "plant cannot control an object deck. Seed a Rafe-culled frame tagged "
+                "subject=%r in\n  %s" % (subject, surface, subject, os.path.join(MORGUE, "MORGUE.json")))
     if axis:
         on_axis = [e for e in entries if axis in (e.get("axis") or [axis])]
         if on_axis:
@@ -1070,6 +1086,49 @@ REF_SLACK = 1
 # "above" and "below", and one of those has to carry the meaning of "level with". This is the
 # same device §1.2.1 already uses for the asset bar, where one place below the bar stands in for
 # the tie the deck forbids, and it is used here for the same reason and with the same slack.
+
+
+def score_seat(sd):
+    """Parse one seat's ballot and score it: rank, reference rank, flagged, shipped, CAUGHT.
+
+    Called the moment a seat returns — BEFORE any term reads sd["caught"]. The 2026-09-11
+    seat-level plant term was first written to read `caught` from seats that had not been
+    scored yet, so every fresh seat counted as a live miss, the "slot" it re-drew was a seat
+    index, and the re-draw (unscored too) tripped broken-judge on every round it ran. Round 1 of
+    lane art/object-projection was voided that way with its plant record saying caught=True.
+    Ruled VALID by instrument correction (Rafe, 2026-09-12, LOOP-PROCESS §1.1.5).
+    Returns None on success, or the ValueError message if the ballot did not parse."""
+    try:
+        sd["r"] = parse(sd["text"], len(sd["mapping"]))
+    except ValueError as e:
+        return str(e)
+    rr, sl = sd["r"], sd["slots"]
+    sd["rank"] = rr["_rank"].index(sl["build"]) + 1 if sl["build"] in rr["_rank"] else None
+    sd["approved_rank"] = (rr["_rank"].index(sl["approved"]) + 1
+                           if sl["approved"] and sl["approved"] in rr["_rank"] else None)
+    sd["above_approved"] = (sd["approved_rank"] is not None and sd["rank"] is not None
+                            and sd["rank"] < sd["approved_rank"])
+    # NOT BELOW = above, or one place under (the tie the deck forbids). RULED 2026-09-08.
+    sd["not_below"] = (sd["approved_rank"] is not None and sd["rank"] is not None
+                       and sd["rank"] <= sd["approved_rank"] + REF_SLACK)
+    sd["build_flagged"] = sl["build"] in rr["_flagged"]
+    sd["shipped"] = sl["build"] in rr["_ship"]
+    sd["caught"], sd["how"] = plant_caught(rr, sl["plant"], sl["build"])
+    sd["scored"] = True
+    return None
+
+
+def live_misses(seats, morgue):
+    """Indices of seats whose SCORED ballot missed a LIVE plant. A seat that has not been scored
+    is an error, never a miss: counting it as one is the defect described in score_seat()."""
+    out = []
+    for i, sd in enumerate(seats):
+        if "caught" not in sd:
+            raise RuntimeError("seat %d has not been scored — live_misses() read before "
+                               "score_seat(); that is the 2026-09-12 defect, not a miss" % (i + 1))
+        if not sd["caught"] and not _plant_retired(sd.get("plant"), morgue):
+            out.append(i)
+    return out
 
 
 def panel_tally(seats):
@@ -1356,7 +1415,8 @@ def main():
     # A self-test puts a morgue frame in the BUILD slot. It must not also be drawn as the plant —
     # the seat would be shown the same picture twice and the control would be judging itself.
     exclude = (os.path.basename(a.build_frame),) if a.build_frame else ()
-    candidates = pick_plant(cfg["surface"], morgue, exclude=exclude, axis=cfg.get("axis"))
+    candidates = pick_plant(cfg["surface"], morgue, exclude=exclude, axis=cfg.get("axis"),
+                            subject=cfg.get("subject"))
 
     # ══════════════════════════════════════════════════════════════════════════════════════════
     # MORE THAN ONE SEAT — RULED (Rafe, 2026-09-08).
@@ -1578,6 +1638,11 @@ def main():
         seats = []
         for i in range(a.seats):
             seats.append(seat_round(i))
+            err = score_seat(seats[-1])
+            if err:
+                print("\n%s" % err)
+                print("transcript: %s" % seats[-1]["transcript"])
+                return 4
             stray = _no_lingering_seats()
             if stray:
                 print("   ⚠ %d seat process(es) still alive after seat %d: %s"
@@ -1625,18 +1690,20 @@ def main():
         # independent misses in one round IS evidence about the judge, and dropping it to hit a
         # number would be fitting the law to the arithmetic instead of the other way round.
         # Either way the line moves: 42.7% -> 12.5% is a 3.4x reduction.
-        live_misses = [i for i, sd in enumerate(seats)
-                       if not sd.get("caught") and not _plant_retired(sd.get("plant"), morgue)]
+        misses = live_misses(seats, morgue)     # every seat is SCORED by now; see score_seat()
 
-        if len(live_misses) >= 2:
-            seat_plant_stop = ("%d slots missed a live plant in one round (seats %s). That is "
+        if len(misses) >= 2:
+            seat_plant_stop = ("%d seats missed a live plant in one round (seats %s). That is "
                                "not one seat having a bad day." % (
-                                   len(live_misses),
-                                   ", ".join(str(i + 1) for i in live_misses)))
-        elif len(live_misses) == 1:
-            slot = live_misses[0]
-            print("\n== seat %d missed a LIVE plant — the BALLOT is discarded and the SLOT is "
-                  "re-drawn once" % (slot + 1))
+                                   len(misses), ", ".join(str(i + 1) for i in misses)))
+        elif len(misses) == 1:
+            slot = misses[0]
+            # `slot` here is the SEAT index, not the plant's deck slot — the 2026-09-12 record
+            # printed "slot 1" for seat 1 while the plant sat in deck slot 4, and the two were
+            # read against each other. Both are named now.
+            print("\n== seat %d missed a LIVE plant (deck slot %s) — the BALLOT is discarded and "
+                  "the seat is re-drawn once"
+                  % (slot + 1, seats[slot]["slots"].get("plant")))
             print("   ruled 2026-09-11: a live-plant miss voids the seat, not the round.")
             ok, msg = _headroom("seat")
             if not ok:
@@ -1646,18 +1713,23 @@ def main():
             # land in the discarded one's working directory or draw its deck order, and the
             # plant is stepped so it is a different picture wherever the morgue allows one.
             fresh = seat_round(slot, redraw=True)
+            err = score_seat(fresh)
+            if err:
+                print("\n%s" % err)
+                print("transcript: %s" % fresh["transcript"])
+                return 4
             discarded = seats[slot]
             discarded["discarded"] = True
             discarded["discarded_why"] = "missed a live plant; ballot not counted (ruled 2026-09-11)"
-            seat_redraws.append(dict(slot=slot + 1,
+            seat_redraws.append(dict(seat=slot + 1, slot=slot + 1,
                                      discarded_plant=discarded.get("plant"),
                                      redraw_plant=fresh.get("plant"),
                                      redraw_caught=bool(fresh.get("caught"))))
             if not fresh.get("caught"):
-                seat_plant_stop = ("slot %d missed a live plant and its RE-DRAW missed too "
-                                   "(%s, then %s). A slot that misses twice is the judge, not "
-                                   "the draw." % (slot + 1, discarded.get("plant"),
-                                                  fresh.get("plant")))
+                seat_plant_stop = ("seat %d missed a live plant and its RE-DRAW missed too "
+                                   "(%s, then %s). A seat that misses twice is the judge, not "
+                                   "the draw." % (slot + 1, discarded.get("plant", {}).get("file"),
+                                                  fresh.get("plant", {}).get("file")))
             else:
                 print("   re-draw CAUGHT %s — the round holds %d caught ballots."
                       % (fresh.get("plant"), a.seats))
@@ -1701,24 +1773,13 @@ def main():
                                                       "BEST_WHY": "", "_flip_blocks": {},
                                                       "_worst": None})
             continue
-        try:
-            sd["r"] = parse(sd["text"], len(sd["mapping"]))
-        except ValueError as e:
-            print("\n%s" % e)
+        if sd.get("scored"):
+            continue                    # scored the moment it returned — score_seat()
+        err = score_seat(sd)
+        if err:
+            print("\n%s" % err)
             print("transcript: %s" % sd["transcript"])
             return 4
-        rr, sl = sd["r"], sd["slots"]
-        sd["rank"] = rr["_rank"].index(sl["build"]) + 1 if sl["build"] in rr["_rank"] else None
-        sd["approved_rank"] = (rr["_rank"].index(sl["approved"]) + 1
-                               if sl["approved"] and sl["approved"] in rr["_rank"] else None)
-        sd["above_approved"] = (sd["approved_rank"] is not None and sd["rank"] is not None
-                                and sd["rank"] < sd["approved_rank"])
-        # NOT BELOW = above, or one place under (the tie the deck forbids). RULED 2026-09-08.
-        sd["not_below"] = (sd["approved_rank"] is not None and sd["rank"] is not None
-                           and sd["rank"] <= sd["approved_rank"] + REF_SLACK)
-        sd["build_flagged"] = sl["build"] in rr["_flagged"]
-        sd["shipped"] = sl["build"] in rr["_ship"]
-        sd["caught"], sd["how"] = plant_caught(rr, sl["plant"], sl["build"])
 
     _t = panel_tally(seats)
     n_above, n_flagged, n_shipped = _t["above"], _t["flagged"], _t["shipped"]

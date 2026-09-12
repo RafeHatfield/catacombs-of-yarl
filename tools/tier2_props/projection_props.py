@@ -67,7 +67,10 @@ SUFFIX = (". Keep the exact shape, outline and faces of the input. Dungeon prop 
 
 def template(key, model, canvas):
     fn = pm.round_exception("RULED") if model == "fire_ring" else None
-    native = pm.render("RULED", model, canvas, zoom=0.5, fn=fn)
+    # NO OUTLINE. The projector's 1px edge is a diagram convention for telling planes apart; the
+    # generator kept it and five seats read 'heavy black outlines' on the timber — §12.1's baked
+    # outline, ruled out 2026-08-24. Planes separate by value alone in what ships.
+    native = pm.render("RULED", model, canvas, zoom=0.5, fn=fn, outline=False)
     arr = np.asarray(native).astype(int)
     rng = np.random.RandomState(abs(hash(key)) % (2 ** 31))
     noise = rng.randint(-pg.GRAIN, pg.GRAIN + 1, size=arr.shape[:2] + (1,))
