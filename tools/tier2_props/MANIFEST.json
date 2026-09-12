@@ -284,6 +284,12 @@
     "hold": 0.9513,
     "opaque": 0.641
    }
-  ]
+  ],
+  "walk": {
+   "by": "Rafe, cold naming on the handset, 2026-09-12",
+   "marker": "LANDED \u2014 'the standing stone'",
+   "fire": "LANDED \u2014 'clearly a well laid out campfire'",
+   "barricade": "NOT LANDED, routed to #207 (not blocking): A 'a fallen jumble of wood roped together' \u2014 must read as standing across the line, held, bindings gripping (\u00a77.1); B 'neatly stacked bricks' \u2014 break the regular pitch (\u00a78.3.1)"
+  }
  }
 }

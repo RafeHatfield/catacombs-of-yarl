@@ -445,3 +445,14 @@ placement, depth order under the top band) — **#212**, placement not projectio
   `.claude/skills/frame-critic/history/r001-art_object-projection*`. **Nothing installed.**
   Install-latest waits on the ruling the stall report asks for.
 - `projC` deleted from the handset.
+
+## Props walk (Rafe, cold naming on the handset, 2026-09-12)
+
+- **marker — LANDED.** *"the standing stone."*
+- **fire — LANDED.** *"clearly a well laid out campfire."*
+- **barricade family — reads as wood, not as a barricade. Routed, not blocking.** Variant A:
+  *"a fallen jumble of wood roped together"* — should read as standing ACROSS the line, held,
+  not collapsed; the bindings must visibly grip (§7.1). Variant B: *"neatly stacked bricks"* —
+  regular-pitch stacked beams; break the pitch (§8.3.1). Both carried as the barricade's flip
+  list on the props polish item (#207).
+- **Fire light: attach in the cast-shadows round, as written.**
