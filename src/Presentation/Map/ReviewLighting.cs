@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CatacombsOfYarl.Logic.ECS;
 using Godot;
 
@@ -137,46 +138,73 @@ public sealed class ReviewLighting
             TextureScale = 1.0f,
             BlendMode    = Light2D.BlendModeEnum.Add,
             ZIndex       = 0,
+            RangeItemCullMask  = GroundLightMask | PropLightMask,
+            ShadowItemCullMask = GroundLightMask,
         };
         gameView.AddChild(_light);
+        _lights.Add(_light);
         Follow(playerTileX, playerTileY);
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════════════════
+    // CAST SHADOWS — the lamp meets the walls (§12.1a) and the objects (§3.2), one mechanism.
+    // ═══════════════════════════════════════════════════════════════════════════════════════
+    //
+    // Receive-light-native: §6.3 forbids a baked drop shadow, and an engine shadow from the actual
+    // lamp is that clause's whole point. The shadow moves when the player moves and lands on
+    // geometry, not on the grid — which is why it does not reintroduce §12.1's ring.
+    //
+    // THE ONE RULE THAT FIXES BOTH FAILURES: the occluder begins BEHIND the visible reveal. The
+    // §12.1a attempt (r29) covered each wall cell with a quad whose light-facing edge cast, so a
+    // wall shadowed its own face (exposed wall 37.90 -> 5.51). With the light-facing edges CULLED,
+    // only the far edges cast: the lamp lights the first surface it meets — face and cap — and
+    // stops behind it. Which cull mode does that depends on the polygon's winding, so the mode is
+    // a PARAMETER and the choice is measured, not asserted (tools/cast_shadows/).
+    //
+    // OBJECTS DO NOT SELF-SHADOW, BY MASK RATHER THAN BY GEOMETRY. A prop's sprite is drawn
+    // NORTH of its footprint on screen — exactly where a lamp from the south throws the
+    // footprint's shadow. No occluder shape avoids that in a 2D light, so props sit on a light
+    // mask the lamps illuminate but never shadow (PropLightMask); the floor and walls receive
+    // both. The ½-depth right side is therefore lit whatever the lamp does.
+
+    /// <summary>Canvas light-mask bit for props: lit by every lamp, shadowed by none.</summary>
+    public const int PropLightMask = 2;
+    private const int GroundLightMask = 1;
+
+    private readonly List<PointLight2D> _lights = new();
+    private readonly List<PointLight2D> _fireLights = new();
+    private float _shadowSoftness;
+    private float _shadowDarkness = 1.0f;
+    private bool _shadowsEnabled = true;
+    private bool _fireFlicker;
+    private float _flickerT;
+    private string _occluderMode = "none";
+
+    public const float MinSoftness = 0f, MaxSoftness = 8f, SoftnessStep = 0.5f;
+    public const float MinDarkness = 0f, MaxDarkness = 1f, DarknessStep = 0.1f;
+
+    private static OccluderPolygon2D.CullModeEnum ParseCull(string mode) => mode switch
+    {
+        "cw"  => OccluderPolygon2D.CullModeEnum.Clockwise,
+        "ccw" => OccluderPolygon2D.CullModeEnum.CounterClockwise,
+        _     => OccluderPolygon2D.CullModeEnum.Disabled,
+    };
+
     /// <summary>
     /// §12.1a — THE VOID IS DARK BY OCCLUSION, NOT BY A RING (RULED, Rafe, 2026-09-03).
-    ///
-    /// *"Unexcavated mass is unlit by construction — the lamp stops at the wall face because
-    /// solid stone is behind it, so the void is dark by occlusion, not by a ring."*
-    ///
-    /// This is the presentation half of that clause. Every solid cell gets a
-    /// <see cref="LightOccluder2D"/> and the carried light casts shadows, so what lies behind a
-    /// wall face receives nothing — the same found rock, unlit, rather than a darker material
-    /// swapped in at a fixed distance.
-    ///
-    /// WHY THE ENGINE AND NOT A CLASSIFICATION OF MY OWN. The culled `void_ring` decided what a
-    /// cell was made of from its Chebyshev distance to the nearest floor, and a classification
-    /// that changes at a cell boundary puts a luminance step at that boundary — which a blind
-    /// seat found as "200px-tall ruled lines in the dark itself". A shadow has no such offset:
-    /// it is cast from wherever the lamp happens to be, moves when the player moves, and lands
-    /// on geometry rather than on the grid. §12.1 calls a lighting boundary at a plane boundary
-    /// FORM; that is what this produces and it is why it does not reintroduce the outline.
+    /// One LightOccluder2D per solid cell, culled so only the edges facing AWAY from a lamp
+    /// cast. `mode` is "cw", "ccw" or "all" (the r29 failure, kept as the control).
     /// </summary>
-    public void AddOccluders(GameMap map, Node2D gameView)
+    public void AddOccluders(GameMap map, Node2D gameView, string mode = "cw")
     {
         if (_light == null) return;
-        _light.ShadowEnabled = true;
-        _light.ShadowFilter = Light2D.ShadowFilterEnum.None;   // §4.3: no soft, resampled edges
+        _occluderMode = mode;
+        foreach (var l in _lights) l.ShadowEnabled = _shadowsEnabled;
+        ApplyShadowStyle();
 
         var poly = new OccluderPolygon2D
         {
-            // ⚠ CULLING ON, AND THE FIRST ATTEMPT HAD IT OFF. With CullMode.Disabled every edge
-            // of the quad occludes, so a wall cell casts a shadow onto ITSELF: the lamp reached
-            // the face and the face's own occluder took it away again. Measured — exposed wall
-            // fell 37.90 -> 5.51, the whole frame went dark, and "the lamp stops at the wall
-            // face" became "the lamp stops at the wall". With culling, only the edges facing
-            // AWAY from the light occlude, so the face is lit and the shadow begins behind it,
-            // which is what the clause actually says.
-            CullMode = OccluderPolygon2D.CullModeEnum.Clockwise,
+            CullMode = ParseCull(mode),
             Polygon = new[]
             {
                 new Vector2(0, 0), new Vector2(_tileW, 0),
@@ -203,8 +231,223 @@ public sealed class ReviewLighting
         _occluderCount = n;
     }
 
-    private int _occluderCount;
+    private int _occluderCount, _propOccluderCount;
     public int OccluderCount => _occluderCount;
+    public int PropOccluderCount => _propOccluderCount;
+    public string OccluderMode => _occluderMode;
+
+    /// <summary>
+    /// Object occluders from FOOTPRINTS (§3.2). A box prop's base is read off its own sprite —
+    /// the opaque extent of the bottom rows of its bottom cell — and projected as the cabinet
+    /// base parallelogram (½·depth up and right); a round prop's is the plan circle. Never the
+    /// sprite: the sprite is what the shadow must not be shaped by.
+    /// </summary>
+    public void AddPropOccluders(IReadOnlyList<PlacedProp> props, TileLayer layer, Node2D gameView,
+                                 string mode = "cw")
+    {
+        if (_light == null) return;
+        var root = new Node2D { Name = "ReviewPropOccluders" };
+        gameView.AddChild(root);
+        int n = 0;
+        for (int i = 0; i < props.Count; i++)
+        {
+            var p = props[i];
+            if (p.OnWallTop) continue;
+            // AN EMITTER GETS NO OCCLUDER. A light inside its own closed occluder polygon casts
+            // shadow in every direction — measured: the fire's footprint occluder took the whole
+            // room's floor from 62.90 to ~52. Its sprite still sits on the prop mask below.
+            bool emitter = p.Light != null;
+            // the sprite of the bottom-left cell carries the base
+            int bottomOffset = (p.FootprintH - 1) * p.FootprintW;
+            if (!layer.PropSprites.TryGetValue((i, bottomOffset), out var cell)
+                && !layer.PropSprites.TryGetValue((i, 0), out cell)) continue;
+            if (cell.Sprite is not Sprite2D sp || sp.Texture == null) continue;
+
+            // Every prop sprite: lit by the lamps, never shadowed (see the mask note above).
+            for (int c = -1; c < p.FootprintW * p.FootprintH; c++)
+                if (layer.PropSprites.TryGetValue((i, c), out var cs) && cs.Sprite is CanvasItem ci)
+                    ci.LightMask = PropLightMask;
+            if (emitter) continue;
+
+            float cellW = _tileW, cellH = _tileH;
+            float scaleX = cellW / sp.Texture.GetWidth();     // sprite pixels -> screen pixels
+            float scaleY = cellH / sp.Texture.GetHeight();
+            Vector2[] pts;
+            if (p.Footprint == "round")
+            {
+                // the plan circle: centred on the cell, radius 0.42 of the cell — the fire ring's
+                // r_out (26 of 64) at §12.2 scale
+                float r = 0.42f * Mathf.Min(cellW, cellH) * p.FootprintW;
+                float cx = p.FootprintW * cellW / 2f, cy = p.FootprintH * cellH / 2f + 0.06f * cellH;
+                const int N = 16;
+                pts = new Vector2[N];
+                for (int k = 0; k < N; k++)
+                {
+                    float ang = Mathf.Tau * k / N;
+                    pts[k] = new Vector2(cx + r * Mathf.Cos(ang), cy + r * Mathf.Sin(ang));
+                }
+            }
+            else
+            {
+                // the base extent, from the sprite's own bottom rows (alpha), full footprint width
+                var img = sp.Texture.GetImage();
+                int th = img.GetHeight(), tw = img.GetWidth();
+                int x0 = tw, x1 = -1, yb = -1;
+                for (int y = th - 1; y >= th - Mathf.Max(2, th / 5); y--)
+                {
+                    for (int x = 0; x < tw; x++)
+                    {
+                        if (img.GetPixel(x, y).A <= 0.01f) continue;
+                        if (yb < 0) yb = y;
+                        x0 = Mathf.Min(x0, x); x1 = Mathf.Max(x1, x);
+                    }
+                }
+                if (x1 < 0) { x0 = 0; x1 = tw - 1; yb = th - 1; }
+                // the right-hand cells of a wide footprint extend the base
+                float left = x0 * scaleX;
+                float right = (p.FootprintW - 1) * cellW + (x1 + 1) * scaleX;
+                float bottom = (p.FootprintH - 1) * cellH + (yb + 1) * scaleY;
+                float depth = 0.35f * cellH;                  // plan depth; k = ½ per §3.2
+                float run = 0.5f * depth;
+                pts = new[]
+                {
+                    new Vector2(left, bottom), new Vector2(right, bottom),
+                    new Vector2(right + run, bottom - run), new Vector2(left + run, bottom - run),
+                };
+            }
+            root.AddChild(new LightOccluder2D
+            {
+                Occluder = new OccluderPolygon2D { CullMode = ParseCull(mode), Polygon = pts },
+                Position = new Vector2(p.X * _tileW, p.Y * _tileH),
+            });
+            n++;
+        }
+        _propOccluderCount = n;
+    }
+
+    /// <summary>
+    /// A prop that EMITS — the orc fire, the first second light source (B-PROP-003, #205).
+    /// Static, warm, its own shadows; the flicker flag is present and OFF (§9.2 — Rafe rules at
+    /// the gate, both states demonstrated).
+    /// </summary>
+    public int AddPropLights(IReadOnlyList<PlacedProp> props, Node2D gameView)
+    {
+        int n = 0;
+        foreach (var p in props)
+        {
+            if (p.Light == null) continue;
+            int size = Mathf.Max(Mathf.RoundToInt(p.Light.RadiusTiles * Mathf.Max(_tileW, _tileH) * 2f), 2);
+            var l = new PointLight2D
+            {
+                Name         = $"PropLight_{p.TileId}",
+                Texture      = BuildRadialFalloff(size, 1.0f),
+                Color        = new Color(p.Light.Color),
+                Energy       = p.Light.Energy,
+                BlendMode    = Light2D.BlendModeEnum.Add,
+                Position     = new Vector2(p.X * _tileW + p.FootprintW * _tileW / 2f,
+                                           p.Y * _tileH + p.FootprintH * _tileH / 2f),
+                ShadowEnabled = _shadowsEnabled,
+                RangeItemCullMask  = GroundLightMask | PropLightMask,
+                ShadowItemCullMask = GroundLightMask,
+            };
+            l.SetMeta("base_energy", p.Light.Energy);
+            gameView.AddChild(l);
+            _lights.Add(l);
+            _fireLights.Add(l);
+            n++;
+        }
+        ApplyShadowStyle();
+        return n;
+    }
+
+    /// <summary>
+    /// THE SHADOW IS THE AMBIENT, AND IN GODOT'S TERMS THAT IS A BLACK SHADOW COLOUR.
+    ///
+    /// `Light2D.ShadowColor` is not what remains in shadow — it is what THIS LAMP CONTRIBUTES
+    /// there. Set to the ambient hue it ADDS ambient on top of the CanvasModulate ambient, and
+    /// the first capture came back with blue-grey wedges brighter than the unlit floor beyond
+    /// the lamp's reach (measured before this note was written). The ruled look — §12.1a, "the
+    /// same found rock, unlit" — is the lamp contributing NOTHING in shadow, so what remains is
+    /// the ambient-hued rock the CanvasModulate already delivers. RGB 0 here; the hue of the
+    /// shadow is §6.2's ambient because the ambient is all that is left, and the instrument
+    /// proves it: shadowed floor == floor outside the radius, never 0.
+    ///
+    /// ALPHA is the darkness knob — how much of the lamp leaks into shadow. 1.0 is full
+    /// occlusion (physically right); the walk may want a fill. Softness = PCF width.
+    /// </summary>
+    private void ApplyShadowStyle()
+    {
+        foreach (var l in _lights)
+        {
+            float leak = 1f - _shadowDarkness;
+            l.ShadowColor = new Color(leak, leak, leak, 1f);   // see ShadowDarkness: rgb leaks, alpha inert
+            if (_shadowSoftness <= 0f)
+            {
+                l.ShadowFilter = Light2D.ShadowFilterEnum.None;
+            }
+            else
+            {
+                l.ShadowFilter = Light2D.ShadowFilterEnum.Pcf13;
+                l.ShadowFilterSmooth = _shadowSoftness;
+            }
+        }
+    }
+
+    /// <summary>The rig-panel knob for Rafe's walk: 0 is a hard edge; the ladder climbs to soft.</summary>
+    public float ShadowSoftness
+    {
+        get => _shadowSoftness;
+        set { _shadowSoftness = Mathf.Clamp(value, MinSoftness, MaxSoftness); ApplyShadowStyle(); }
+    }
+
+    /// <summary>
+    /// How much of the lamp leaks into its shadows: 1.0 none (full occlusion), 0 all of it.
+    ///
+    /// MEASURED SEMANTICS OF `Light2D.ShadowColor` ON THIS ENGINE (Godot 4.7 mono), because two
+    /// guesses were wrong first. RGB is the FRACTION OF THE LAMP that still reaches a shadowed
+    /// pixel — the ambient hue (≈0.15 grey) leaked 15% and read as a wash; black leaks none.
+    /// ALPHA IS INERT: 0.0, 0.5 and 1.0 delivered the identical shadowed value (probe (6,15) at
+    /// 0.0686 all three times). So darkness d is `ShadowColor = (1−d, 1−d, 1−d)`, and the hue of
+    /// a shadow is §6.2's ambient because at d = 1 the ambient is all that is left — §12.1a's
+    /// "the same found rock, unlit". A fill light was tried and refused: additive, it lifted the
+    /// LIT floor too (62.9 → 69.7).
+    /// </summary>
+    public float ShadowDarkness
+    {
+        get => _shadowDarkness;
+        set { _shadowDarkness = Mathf.Clamp(value, MinDarkness, MaxDarkness); ApplyShadowStyle(); }
+    }
+
+    /// <summary>Shadows on/off, live — the perf A/B on one handset build, and a walk control.</summary>
+    public bool ShadowsEnabled
+    {
+        get => _shadowsEnabled;
+        set { _shadowsEnabled = value; foreach (var l in _lights) l.ShadowEnabled = value; }
+    }
+
+    /// <summary>§9.2 vs the tended exception: present, default OFF, Rafe rules at the gate.</summary>
+    public bool FireFlicker
+    {
+        get => _fireFlicker;
+        set
+        {
+            _fireFlicker = value;
+            if (!value)
+                foreach (var l in _fireLights) l.Energy = (float)l.GetMeta("base_energy");
+        }
+    }
+
+    public int FireLightCount => _fireLights.Count;
+
+    /// <summary>Per frame. A minimal, low-frequency intensity variance — two slow sines, ±8%.</summary>
+    public void Tick(double delta)
+    {
+        if (!_fireFlicker || _fireLights.Count == 0) return;
+        _flickerT += (float)delta;
+        float k = 1f + 0.05f * Mathf.Sin(_flickerT * 2f * Mathf.Pi * 1.3f)
+                     + 0.03f * Mathf.Sin(_flickerT * 2f * Mathf.Pi * 2.1f + 1.0f);
+        foreach (var l in _fireLights) l.Energy = (float)l.GetMeta("base_energy") * k;
+    }
 
     /// <summary>
     /// Move the carried light onto a tile. The player IS the lamp (§6.2, §6.5), so this is
@@ -268,6 +511,7 @@ public sealed class ReviewLighting
         {
             _p = _p with { AmbientLevel = Mathf.Clamp(value, MinAmbient, MaxAmbient) };
             if (_ambient != null) _ambient.Color = ScaledAmbient();
+            ApplyShadowStyle();     // the shadow tint IS the ambient hue (§6.2)
         }
     }
 
@@ -387,5 +631,8 @@ public sealed class ReviewLighting
     public string Settings()
         => $"radius={_p.RadiusTiles:0.##} falloff={_p.Falloff:0.##} " +
            $"ambient={_p.AmbientLevel:0.##} ({ScaledAmbient().ToHtml(false)}) " +
-           $"energy={_p.Energy:0.###}";
+           $"energy={_p.Energy:0.###} " +
+           $"shadows={(_shadowsEnabled ? "on" : "off")}({_occluderMode}) softness={_shadowSoftness:0.#} " +
+           $"darkness={_shadowDarkness:0.#} " +
+           $"fire_lights={_fireLights.Count} flicker={(_fireFlicker ? "on" : "off")}";
 }

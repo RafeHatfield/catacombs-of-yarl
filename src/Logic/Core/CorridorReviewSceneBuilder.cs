@@ -77,7 +77,8 @@ public static class CorridorReviewSceneBuilder
     /// </summary>
     public readonly record struct PropPlacement(
         int TileId, int X, int Y, bool Blocks, string Why,
-        int W = 1, int H = 1, IReadOnlyList<int>? Layout = null, string On = "floor");
+        int W = 1, int H = 1, IReadOnlyList<int>? Layout = null, string On = "floor",
+        string Footprint = "box", PropLight? Light = null);
 
     /// <summary>
     /// A point the capture must be able to see, or must leave dark. <paramref name="Why"/> is
@@ -225,11 +226,26 @@ public static class CorridorReviewSceneBuilder
                         "one tile id cannot fill more than one cell.");
                 }
 
+                // ── SHADOW FOOTPRINT AND EMITTED LIGHT (cast-shadows round) ─────────────────
+                // "box" (default) or "round" — the round exception's circle (§3.2). A `light`
+                // block makes the prop emit: the orc fire, and nothing else so far.
+                string shape = e.TryGetProperty("shape", out var shEl) ? (shEl.GetString() ?? "box")
+                                                                       : "box";
+                if (shape != "box" && shape != "round")
+                    throw new InvalidOperationException(
+                        $"{where} declares `shape: \"{shape}\"`; it is \"box\" or \"round\".");
+                PropLight? plight = null;
+                if (e.TryGetProperty("light", out var lEl))
+                    plight = new PropLight(
+                        lEl.GetProperty("color").GetString() ?? "ffffff",
+                        (float)lEl.GetProperty("energy").GetDouble(),
+                        (float)lEl.GetProperty("radiusTiles").GetDouble());
+
                 props.Add(new PropPlacement(
                     ptid, ppx, ppy,
                     !e.TryGetProperty("blocks", out var b) || b.GetBoolean(),
                     e.TryGetProperty("why", out var wy) ? (wy.GetString() ?? "") : "",
-                    pw, ph, layout, on));
+                    pw, ph, layout, on, shape, plight));
             }
         }
 
@@ -413,7 +429,8 @@ public static class CorridorReviewSceneBuilder
 
             placed.Add(new PlacedProp($"review_{pp.TileId}", pp.X, pp.Y, pp.W, pp.H,
                                       pp.Blocks && pp.On == "floor", pp.TileId,
-                                      TileLayout: pp.Layout, OnWallTop: pp.On == "wall"));
+                                      TileLayout: pp.Layout, OnWallTop: pp.On == "wall",
+                                      Footprint: pp.Footprint, Light: pp.Light));
 
             // 2. MARK EVERY CELL, not just the anchor. MarkPropCell is what keeps the floor
             //    composer from laying a worn or accent tile under a prop (#128's pedestal);

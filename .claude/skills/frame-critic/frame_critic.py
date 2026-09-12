@@ -862,7 +862,9 @@ def pick_plant(surface, morgue, exclude=(), axis=None, subject=None):
     entries = [e for e in morgue["entries"]
                if serves(e) and e["file"] not in exclude and not e.get("retired_as_control")]
     if subject:
-        entries = [e for e in entries if subject in (e.get("subject") or [])]
+        # a string or a list: a deck that judges walls AND objects in one room draws from both
+        wanted = [subject] if isinstance(subject, str) else list(subject)
+        entries = [e for e in entries if any(w in (e.get("subject") or []) for w in wanted)]
         if not entries:
             raise SystemExit(
                 "REFUSING: the morgue holds no plant for subject %r on surface %r.\n"

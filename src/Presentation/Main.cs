@@ -327,7 +327,11 @@ public partial class Main : Node
         // turn — and because a review build must not depend on which of several turn paths ran.
         // Cheap: one Vector2 assignment, no texture work.
         if (_reviewLighting != null && _state != null)
+        {
             _reviewLighting.Follow(_state.Player.X, _state.Player.Y);
+            _reviewLighting.Tick(delta);
+            LogFrameTime(delta);
+        }
 
         // --art-scene-capture: wait for the camera-snap sequence above to fully settle
         // (_pendingCameraSnapFrames reaches 0), then a couple more idle frames as a buffer
@@ -2513,6 +2517,31 @@ public partial class Main : Node
         return path != null;
     }
 
+    // ── THE SE PERFORMANCE GATE (§6.4: "does the SE hold frame rate") ─────────────────────
+    //
+    // Frame time on the handset, in windows, so a shadows on/off toggle on the rig panel gives
+    // a before/after on ONE build. Pulled off the device with the boot log. A window past
+    // 16.7 ms/frame is a STOP, not a tune (cast-shadows round, ruling triggers).
+    private readonly System.Collections.Generic.List<double> _frameMs = new();
+    private const int PerfWindow = 240;
+
+    private void LogFrameTime(double delta)
+    {
+        _frameMs.Add(delta * 1000.0);
+        if (_frameMs.Count < PerfWindow) return;
+        var sorted = new System.Collections.Generic.List<double>(_frameMs);
+        sorted.Sort();
+        double mean = 0; foreach (var v in sorted) mean += v; mean /= sorted.Count;
+        double p95 = sorted[(int)(sorted.Count * 0.95)];
+        double max = sorted[sorted.Count - 1];
+        string line = $"[Perf] window={PerfWindow} mean_ms={mean:0.00} p95_ms={p95:0.00} " +
+                      $"max_ms={max:0.00} fps={1000.0 / mean:0.0} " +
+                      $"({_reviewLighting?.Settings()})";
+        GD.Print(line);
+        Diag.Log(line);
+        _frameMs.Clear();
+    }
+
     private static string? ReadStringArg(string flag)
     {
         var args = OS.GetCmdlineArgs();
@@ -2818,6 +2847,44 @@ public partial class Main : Node
                 GD.Print(line);
                 Diag.Log(line);
             });
+        }
+
+        // ── CAST SHADOWS — the lamp meets the walls (§12.1a) and the objects (§3.2) ──────────
+        //
+        // One mechanism: LightOccluder2D per solid cell and per prop footprint, culled so the
+        // occluder begins BEHIND the visible reveal; shadow tint = the ruled ambient hue; the
+        // orc fire attached as the second light (#205). `--occluders none` is the control and
+        // reproduces every capture taken before this round. CLI first, marker second, as every
+        // other flag here — an iOS app has no command line.
+        if (_reviewLighting != null && _tileLayer != null)
+        {
+            string occl = ReadStringArg("--occluders") ?? marker?.Occluders ?? "none";
+            var gv = GetNode<Node2D>("GameView");
+            if (occl != "none")
+            {
+                _reviewLighting.AddOccluders(_state.Map, gv, occl);
+                _reviewLighting.AddPropOccluders(_state.Props, _tileLayer, gv, occl);
+            }
+            int fires = _reviewLighting.AddPropLights(_state.Props, gv);
+            string? softArg = ReadStringArg("--shadow-softness");
+            _reviewLighting.ShadowSoftness =
+                softArg != null && float.TryParse(softArg, System.Globalization.NumberStyles.Float,
+                                                  System.Globalization.CultureInfo.InvariantCulture,
+                                                  out float sf) ? sf
+                : marker?.ShadowSoftness ?? 1.0f;   // the measured middle: 0 is hard, 2 already ~10 native px
+            string? dkArg = ReadStringArg("--shadow-darkness");
+            if (dkArg != null && float.TryParse(dkArg, System.Globalization.NumberStyles.Float,
+                                                System.Globalization.CultureInfo.InvariantCulture,
+                                                out float dk))
+                _reviewLighting.ShadowDarkness = dk;
+            string? flArg = ReadStringArg("--fire-flicker");
+            _reviewLighting.FireFlicker = flArg != null ? flArg == "1" : (marker?.FireFlicker ?? false);
+            Report($"[Tier1] shadows: mode={occl} wall_occluders={_reviewLighting.OccluderCount} " +
+                   $"prop_occluders={_reviewLighting.PropOccluderCount} fire_lights={fires} " +
+                   $"softness={_reviewLighting.ShadowSoftness:0.#} " +
+                   $"flicker={(_reviewLighting.FireFlicker ? "on" : "off")} " +
+                   "(§12.1a occlusion; §3.2 footprints; #205 the fire emits; flicker default OFF — §9.2, Rafe rules)");
+            _rigPanel?.AddShadowRows();
         }
         else
         {

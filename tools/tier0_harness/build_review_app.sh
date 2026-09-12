@@ -251,6 +251,25 @@ with open(path, "w") as f:
 PY
   echo "== void candidate (STARTING POSITION ONLY, the panel switches it): $TIER1_VOID"
 fi
+# TIER1_OCCLUDERS / TIER1_SHADOW_SOFTNESS / TIER1_FIRE_FLICKER — the cast-shadows round's knobs,
+# mirroring --occluders / --shadow-softness / --fire-flicker for a handset that has no command
+# line. Omit them and the build has NO occluders (the marker's default), which is every build
+# before the round; a shadow build must say so, and the engine echoes what it got.
+if [ -n "${TIER1_OCCLUDERS:-}" ]; then
+  python3 - "$MARKER" "$TIER1_OCCLUDERS" "${TIER1_SHADOW_SOFTNESS:-1.0}" "${TIER1_FIRE_FLICKER:-0}" <<'PY'
+import json, sys
+path, occ, soft, flick = sys.argv[1:5]
+with open(path) as f:
+    d = json.load(f)
+d["occluders"] = occ
+d["shadowSoftness"] = float(soft)
+d["fireFlicker"] = flick == "1"
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== cast shadows: occluders=$TIER1_OCCLUDERS softness=${TIER1_SHADOW_SOFTNESS:-1.0} flicker=${TIER1_FIRE_FLICKER:-0}"
+fi
+
 # STAMP THE BUILD'S OWN IDENTITY INTO THE MARKER.
 #
 # LOOP-PROCESS §2.3: every evidence file records the commit hash of the code that produced it,

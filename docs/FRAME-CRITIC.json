@@ -24,9 +24,13 @@
     "cmd": [
       "tools/tier1_floors/capture_combined.sh",
       "combined",
-      "1",
+      "0",
       "--scene-spec",
-      "src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json"
+      "src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json",
+      "--occluders",
+      "all",
+      "--shadow-softness",
+      "1.0"
     ],
     "frame": "tools/tier1_floors/evidence/combined.png",
     "log": "tools/tier1_floors/evidence/combined.log"
@@ -188,14 +192,21 @@
       "Declared here per item, recorded into the verdict, re-checked at the gate. The gate",
       "refuses a `met` with no measurement behind it."
     ],
-    "item": "§3.2 — the marker, the barricade family and the fire re-authored at the RULED object projection (cabinet oblique, right, ½; the fire under the round exception)",
-    "claim": "every object stands in space the same way, at the projection Rafe ruled on device, and still names itself at 1× (§12). Structure authored as a projected model; generation supplies surface; nothing in the scene shows the old three-plane-left marker.",
-    "measured": "PROJECTION HOLD (silhouette IoU of the landed generation against its projected template): marker 1.000, barricade_a 0.993, barricade_b 0.999, fire 0.997 — every object carries the ruled geometry, and the templates are the same function that drew the walked candidate. COLD NAMING (three blind seats, told nothing), on the OUTLINE-FREE re-land (§12.1 — the projected templates' 1px diagram edge had survived generation and five seats read 'heavy black outlines'; templates now render outline=False): fire NAMED by all three ('campfire / fire pit in a stone ring'); barricade NAMED ('fallen wooden log or bundle of tied wood', 'wooden barrel lying on its side', 'bed frame / bench'); marker NAMED as STONE by five of six seats across two runs ('a tall pale stone slab or gravestone, standing upright', 'tall pale stone pillar or column', 'a tall pale stone block or pillar') — up from one of three on the outlined land. Reported at its residual margin: the lamp warms pale grey toward wood, which is #204's ladder problem arriving at naming. Two earlier re-authors of the marker (a banded box; a narrower banded box) were read as 'a wooden crate or barrel' by three of three and were not landed — the taper and a single low lashing are what moved it. LIT AT THE WORST FOOTPRINT CELL: 68.32 / 72.33 / 72.93 / 50.64 against §13.8's 36.7.",
-    "instrument": ".claude/skills/frame-critic/cold_naming.py (calibrated, §13.5); tools/tier2_props/projection_props.py land (IoU hold); tools/tier2_props/verify_props.py (worst cell)",
+    "item": "CAST SHADOWS — the lamp meets the walls (§12.1a) and the objects (§3.2): one occluder mechanism, the fire attached as the second light (#205)",
+    "claim": "the void is dark by occlusion (faces lit, unexcavated mass at ambient, no ring); the props cast shadows from the carried lamp and the fire, sit on the floor, and never self-shadow; shadow is the ambient, never black paint; softness and darkness are walk knobs; flicker present and OFF.",
+    "measured": "FILL-AT-ROUND",
+    "instrument": "tools/cast_shadows/measure_occlusion.py (face/cap/unexcavated/floor by cell class; prop base strip; opaque-sprite pixels); tools/cast_shadows/capture.sh; the device log's [Perf] windows",
     "met": true
   },
-  "subject": "objects",
+  "subject": [
+    "objects",
+    "walls"
+  ],
   "_subject": [
-    "LAW (Rafe, 2026-09-12): a plant matches the deck's axis AND subject. This deck asks about the PROPS — wall plants for wall decks, object plants for object decks — so the plant is drawn from the morgue's subject=objects entries: props-unrecognizable (§12.2 cull) and objects-isometric (round-one projA cull)."
+    "LAW (Rafe, 2026-09-12): a plant matches the deck's axis AND subject.",
+    "CAST-SHADOWS ROUND: the deck judges the room with shadows on walls AND objects in one frame, so the plant is drawn from both subjects — cement-cap (walls, construction), props-unrecognizable and objects-isometric (objects, construction). A list here means any-of."
+  ],
+  "_capture_note_shadows": [
+    "CAST-SHADOWS ROUND: --occluders all, softness 1.0 (the measured middle), and VOID RING 0 — the void is dark by occlusion now (§12.1a), so the flat-dark fallback the interim ruling licensed is not run. Every earlier combined capture ran ring 1; this is the round that retires it."
   ]
 }
