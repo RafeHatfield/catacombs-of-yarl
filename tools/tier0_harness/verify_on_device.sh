@@ -243,9 +243,12 @@ if [ -n "$DEVICE_COMMIT" ] && [ -n "$LOCAL_COMMIT" ]; then
 		# is owed: whether anything SHIPPED changed since, because that is what decides if the
 		# handset is still carrying the gated art.
 		BEHIND="$(git rev-list --count "$DEVICE_COMMIT"..HEAD 2>/dev/null || echo '?')"
+		# `grep -v` exits 1 when NOTHING survives it — i.e. exactly when nothing shipped changed —
+		# and under pipefail that killed the script silently at this assignment, so the OK* line
+		# below could never be reached. Found 2026-09-12 verifying five ancestor builds.
 		SHIPPED_CHANGED="$(git diff --name-only "$DEVICE_COMMIT" HEAD -- \
 			src/Presentation/assets src/Presentation/Map src/Logic 2>/dev/null \
-			| grep -v '\.import$' | wc -l | tr -d ' ')"
+			| { grep -v '\.import$' || true; } | wc -l | tr -d ' ')"
 		if [ "$SHIPPED_CHANGED" = "0" ]; then
 			echo "  OK*   the handset build is an ANCESTOR of HEAD ($BEHIND commit(s) behind)"
 			echo "        and NOTHING SHIPPED changed since — the device carries this art."

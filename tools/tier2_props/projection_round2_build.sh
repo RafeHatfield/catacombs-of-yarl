@@ -66,8 +66,18 @@ case "${1:-}" in
       xcrun devicectl device install app --device "$DEV" "$APP" > $EV/proj2_push_$c.log 2>&1 \
         && echo "   installed" || { tail -3 $EV/proj2_push_$c.log; continue; }
       TIER0_BUNDLE_ID="com.rafehatfield.catacombsofyarl.proj$c" \
+      TIER0_SCENE="res://src/Presentation/assets/tier0_harness/scenes/tier1_projection2_$c.json" \
         tools/tier0_harness/verify_on_device.sh --out $EV > $EV/proj2_verify_$c.log 2>&1 \
         && echo "   verified" || { echo "   VERIFY FAILED:"; tail -5 $EV/proj2_verify_$c.log; }
+    done
+    ;;
+  verify)
+    # the verification alone — the expectation follows TIER0_SCENE, which `push` now passes
+    for c in $CANDS; do
+      TIER0_BUNDLE_ID="com.rafehatfield.catacombsofyarl.proj$c" \
+      TIER0_SCENE="res://src/Presentation/assets/tier0_harness/scenes/tier1_projection2_$c.json" \
+        tools/tier0_harness/verify_on_device.sh --out $EV > $EV/proj2_verify_$c.log 2>&1 \
+        && echo "== $c: verified" || { echo "== $c: VERIFY FAILED:"; grep "MISS\|FAIL" $EV/proj2_verify_$c.log | head -5; }
     done
     ;;
   *) sed -n '2,14p' "$0"; exit 2 ;;

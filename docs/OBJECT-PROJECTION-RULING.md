@@ -369,29 +369,29 @@ builds of those names; round one's `projC` is superseded and should be ignored o
 
 | candidate | bundle | scene | built (UTC) | on device |
 |---|---|---|---|---|
-| W | `…catacombsofyarl.projW` | `tier1_projection2_W` | 16:05:33 | ⏳ **built, not installed** |
-| O-L | `…catacombsofyarl.projOL` | `tier1_projection2_OL` | 16:09:03 | ⏳ built, not installed |
-| O-R | `…catacombsofyarl.projOR` | `tier1_projection2_OR` | 16:10:26 | ⏳ built, not installed |
-| O-deep | `…catacombsofyarl.projOdeep` | `tier1_projection2_Odeep` | 16:11:56 | ⏳ built, not installed |
-| A | `…catacombsofyarl.projA` | `tier1_projection2_A` | 16:13:34 | ⏳ built, not installed |
+| W | `…catacombsofyarl.projW` | `tier1_projection2_W` | 16:05:33 | ✅ booted, rig live |
+| O-L | `…catacombsofyarl.projOL` | `tier1_projection2_OL` | 16:09:03 | ✅ booted, rig live |
+| O-R | `…catacombsofyarl.projOR` | `tier1_projection2_OR` | 16:10:26 | ✅ booted, rig live |
+| O-deep | `…catacombsofyarl.projOdeep` | `tier1_projection2_Odeep` | 16:11:56 | ✅ booted, rig live |
+| A | `…catacombsofyarl.projA` | `tier1_projection2_A` | 16:13:34 | ✅ booted, rig live |
 
-All five at commit `e0e383f2` (+dirty: the build script's per-candidate output dir), each with
-its scene override echoed and the SKIPPED-REVIEW stamp in its marker
-(`tools/tier1_floors/evidence/proj2_install_<cand>.log`).
+All five at commit `e0e383f2` (+dirty: the build script's per-candidate output dir; nothing
+shipped differs from HEAD, and the verifier says so). Each `proj2_verify_<cand>.log` carries the
+three identifiers off the handset — bundle id as the device reports it, commit + built time +
+`review=SKIPPED-REVIEW` from the app's own boot line — and the scene, overlays, rig panel and
+floor family checks green.
 
-⚠ **THE HANDSET WENT UNAVAILABLE BETWEEN THE CAPTURES AND THE FIRST INSTALL.** `devicectl`
-listed it *available (paired)* at the start of the session and *unavailable* from 16:05Z on
-(CoreDeviceError 1011, `proj2_install_W.log`, `proj2_push_*.log`); every build completed and
-was stamped, only the install step failed, three attempts each. So the ruling trigger — *all
-five scenes walkable* — is **NOT yet met**, and this package does not claim it. When the phone
-is awake and on the cable:
+**The install did not go smoothly, and the record says how.** The handset dropped to
+*unavailable* between the captures and the first install (CoreDeviceError 1011, three attempts
+per build, `proj2_install_<cand>.log`); all five builds completed and were stamped, and were
+pushed later without rebuilding (`projection_round2_build.sh push`), so the gate run and the
+stamp are the build's own. Then the verifier died silently on every one of them: on the
+*ancestor-of-HEAD, nothing-shipped-changed* path — the ordinary case — `grep -v` exits 1 on an
+empty diff and `pipefail` killed the script at the assignment, so its `OK*` line had never once
+been reachable. Fixed in `verify_on_device.sh` this session; the five green logs are from the
+fixed verifier.
 
-    YARL_SKIP_CRITIC=1 tools/tier2_props/projection_round2_build.sh push
-
-installs the five built apps and runs `verify_on_device.sh` on each (bundle id read off the
-device, commit and stamp pulled from the app's own boot log), writing
-`proj2_push_<cand>.log` and `proj2_verify_<cand>.log`. Nothing is rebuilt, so the stamp and
-the gate run stand. The door opens on those five verify logs, not on this table.
+Round one's `projC` is still installed and superseded — ignore it, or delete it from the phone.
 
 ## What is asked
 
