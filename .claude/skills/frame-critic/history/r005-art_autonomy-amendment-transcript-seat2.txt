@@ -1,0 +1,42 @@
+RANK: 3 > 4 > 2 > 1
+
+BEST: 3
+BEST_WHY: The floor masonry in the lit band (roughly x 190–560, y 450–720). Block widths vary along a single course (a ~64-px block sits next to a ~40-px one on the row directly under the figure), joints are broken and offset rather than a stamped grid, and the individual blocks carry different surface marks — one has a diagonal scratch cluster, its neighbour a darker stain, the next is clean. The long hairline crack that runs from the left wall at (200, 480) down to (330, 720) crosses tile boundaries instead of stopping at them, so the floor reads as one slab that cracked, not tiles laid next to each other. The timber rail with driven pins along the base of the north wall (y ≈ 425–440) has pins at irregular spacing and two different pin lengths, which is exactly the "repaired, don't care how it looks" idea executed without comment. Light falloff is smooth with no visible banding, and unlike 4 it does not clip: 16 pixels above value 230 in the hot region versus 298 in 4, so the joints under the figure are still legible.
+
+WORST: 1
+WORST_WHY: The pool at top-right (x 245–340, y 0–190) is a hard-edged rectangle of flat teal with a visible honeycomb repeat, butted directly against the dirt with no bank, no edge tile, no darkening at the margin — it is a filled selection, not water. The grey stone floor (left column and the two rows at y 200–255) is a uniform mid-grey with a 1-px dark line at every tile boundary, so the grid itself is the texture; the two cracks and the moss blobs are the only variation across ~40 tiles. The two chests (x 65–95, y 0–75) are pixel-identical and stacked vertically, as are the two barrels at (115–190, 195–215). The bottom wall (y 255–288) is a two-course brick band whose cap row sits at the same value as the stone floor above it, so there is no read of height. Nothing in the frame is darker than anything else at any distance from the figure — the picture is lit evenly edge to edge.
+
+FLAGGED: 1, 2
+
+SHIP: NONE
+
+FLIP 1:
+- Give the pool an edge: a one-tile bank/rim tile set on all four sides where teal meets dirt (x 245 and 340, y 190), with the water value darkened one step within ~6 px of the rim. The current hard rectangle is the first thing the eye lands on.
+- Replace the honeycomb water fill with a texture whose repeat is not readable at 1× — currently the hex cell is visible as a pattern across the whole pool.
+- Kill the 1-px full-tile grid on the grey stone floor. Break joints per course (offset every other row), vary block width, and let joints drop out for a few pixels here and there so the floor reads as laid stone rather than graph paper.
+- Add at least three surface-variant tiles to the grey floor and three to the dirt so the same speckle pattern is not visible repeating (the dirt's rust-red mottling at (150–250, 60–190) repeats with the tile period).
+- Separate the bottom wall's cap course (y 255–270) from the floor above it by value — it currently sits at the same grey as the walkable stone, so there is no step-down read.
+- Introduce falloff from the figure: the frame is at one exposure from corner to corner. Even a modest radial darkening (30–40% at the frame edges) would stop it reading as an editor screenshot.
+- Un-stack the duplicate props: the two chests at (65–95, 0–75) and the two barrels at (115–190, 195–215) are identical sprites placed in a line — mirror one, rotate the barrel lid highlight, or just don't place them adjacently.
+
+FLIP 2:
+- Remove or redraw the peach vertical slab at (268–298, 540–620). It is a flat, out-of-palette pink rectangle with a beveled dark right face — a side-on projection dropped into a straight-top-down frame. At a glance it reads as a missing-texture placeholder. If it is a standing stone, draw its top face only, in the sandstone palette, with a cast shadow on the floor.
+- The brazier at (575–625, 525–580) is burning and casts no light: the floor at its rim is the same value as the floor a tile away. Either it emits (a small warm falloff, 1–1.5 tiles) or it is unlit. A lit fire on an unlit floor is the second most visible fault in the frame.
+- The crossed timbers at (205–285, 455–510) show elliptical log ends, i.e. they are drawn at an oblique angle. Top-down logs show as long rectangles with no end faces. Redraw or replace.
+- The three props and the figure are at a coarser pixel density (2–3 screen px per texel) than the floor they sit on, and none of them casts a contact shadow. Add a 1–2 px darkened contact edge under each so they sit on the stone instead of floating over it.
+- Same fixes as FLIP 3 below for the shared base scene (rock texture, column base junction, crack line, right-side hatch repeat).
+
+FLIP 3:
+- The rock/earth texture behind the black rooms (e.g. x 440–500, y 60–400 and the band at y 390–430) is a soft mottled noise with no structure — no strata, no cut marks, no edge where it meets the black rectangles. It reads as a cloud-filter fill. Give it a readable structure (packed rubble, cut face, or shored timber) at the same pixel density as the floor blocks.
+- The junction where the light-grey column (x 500–560) meets the north wall and the right-hand black room, at roughly (555–640, 340–400), is a smeared lighter patch with no joint, no shadow, no masonry. Draw the corner: the column either sits in front of the wall (cast shadow on the wall) or is bonded into it (courses interlock).
+- The hairline crack across the floor is a uniform 1-px dark line laid over the joints without displacing them. Where a crack crosses a joint the joint should step; where it crosses a block the block edge should chip. Currently it is a stroke on a layer above the stone.
+- The floor east of x ≈ 580 and along the bottom edge (700–750, 640–760) uses smaller blocks with a diagonal-hatch scratch that recurs at the same position in successive tiles. Add variants or randomise the hatch placement so the repeat is not readable.
+- The dark sunken square at (310–380, 645–705) has no identity: it is a flat darker fill with a few short bars and a soft shadow on the wrong side (top edge, same side as the light source). If it is a grate or trapdoor, give it a rim and put the shadow on the side away from the figure.
+- The black room interiors (120–440, 140–390 and 630–750, 135–390) have perfectly hard rectangular edges sitting on top of the soft rock texture. Bleed the rock a few pixels into them, or give them a faint interior so they read as unlit rooms rather than masked-out regions.
+
+FLIP 4:
+- Everything in FLIP 3 applies; the scene is the same.
+- Additionally, bring the exposure in the hot spot down: 298 pixels in the region under the figure (x 300–520, y 440–600) are above value 230 and 72 are above 245, against 16 and 0 in image 3. The blocks immediately right of the figure at (420–470, 480–560) have gone to a flat cream with the joints lost. Cap the light so the joints stay legible at the source.
+- The column base at (500–560, 340–400) is flatter here than in 3 (contrast std 29.9 vs 32.9); the light is washing the one piece of masonry that should anchor the corner. Same fix — clamp the falloff curve near the figure.
+
+Model used: Claude Opus 5 (1M context).

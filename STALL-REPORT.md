@@ -5,7 +5,7 @@
 - **lane** `art/autonomy-amendment`
 - **surface** `combined`
 - **guard** `broken-judge`
-- **written** 2026-09-11T15:46:05
+- **written** 2026-09-11T20:13:25
 
 ## Why it stopped
 
@@ -21,6 +21,7 @@ the picture-plant was missed 2 rounds running. The judging layer is broken; no r
 | 2 | INSTALL-LATEST | 1/4 | 1.00 | **new best** | 0.000 / 0 | `f5081c3138d9` | Four things, any one of which is disqualifying. The mud field is one 48×48px block stamped across the entire 190×288px area. I measured it:  |
 | 3 | VOID | 2/4 | 0.67 |  | 0.855 / 57 | `275a62a30ac1` | The pool at (248–343, 0–192) is a hard-edged rectangle of hex-pattern green with a 1px lighter border and no bank, lip, shadow or wet edge w |
 | 4 | VOID | 2/4 | 0.67 |  | 0.538 / 10 | `44986fe8eaa9` | It is assembled, not made. There is no light source at all — the orc at (220,10) carries nothing and the frame is the same value edge to edg |
+| 5 | VOID | 2/4 | 0.67 |  | 0.000 / 0 | `de040ffd3427` | Nothing in it is made; everything is a stamp. The grey floor tiles (bottom two rows and the left column) are identical 48px squares separate |
 
 ## The flip lists, verbatim
 
@@ -52,6 +53,7 @@ Captures and transcripts, per round:
 - round 2 — deck `/Users/rafehatfield/.claude/frame-critic/deck-7c1ae7154dd3a4bb`, transcript `.claude/skills/frame-critic/history/r002-art_autonomy-amendment-transcript-seat1.txt`
 - round 3 — deck `/Users/rafehatfield/.claude/frame-critic/deck-7b01b7c7c285d280`, transcript `.claude/skills/frame-critic/history/r003-art_autonomy-amendment-transcript-seat1.txt`
 - round 4 — deck `/Users/rafehatfield/.claude/frame-critic/deck-fff24b0496b478af`, transcript `.claude/skills/frame-critic/history/r004-art_autonomy-amendment-transcript-seat1.txt`
+- round 5 — deck `/Users/rafehatfield/.claude/frame-critic/deck-74cc0aead0250283`, transcript `.claude/skills/frame-critic/history/r005-art_autonomy-amendment-transcript-seat1.txt`
 
 ## What is being asked for
 

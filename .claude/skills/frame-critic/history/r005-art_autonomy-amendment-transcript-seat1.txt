@@ -1,0 +1,45 @@
+RANK: 1 > 4 > 3 > 2
+
+BEST: 1
+BEST_WHY: The floor in the lit zone (roughly x 190–560, y 450–720) is the best-made surface in the set: the flags vary in size across a row (a 2-wide slab at x 400–450, y 520–545 next to half-width ones), the joints are drawn at two different weights so some read as tight and some as opened, and every stone carries its own scratch/hatch set rather than one stamp rotated. The light falloff is honest — luminance peaks under the figure (max 244, only 16 pixels above 230) and the joints stay legible right up to the figure's feet instead of washing out. The wall band at y 425–450 has vertical driven pins at x ~300 and ~390 and a bracket at x ~460 that break the run at irregular intervals, which is what "repaired with pins and salvage" should look like.
+
+WORST: 2
+WORST_WHY: Nothing in it is made; everything is a stamp. The grey floor tiles (bottom two rows and the left column) are identical 48px squares separated by a perfectly straight 1px grid — no tile differs from any other. The pond (x 250–380, y 0–190) is a flat teal fill with a repeating hexagon pattern and meets the dirt on a dead-straight hard edge with no bank, rim, or wet margin. The dirt floor repeats its rust-red crack motif every tile (visible as a vertical line at x ~95, ~145, ~195). There is no light source at all — the orc at top (x 215–240) casts a flat drop shadow but nothing else in the frame falls off. The teal moss blobs on the grey tiles at x 30–50, y 60–85 and x 340–380, y 150–175 are pasted decals with a lighter outline that floats above the tile.
+
+FLAGGED: 2, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The solid-rock band above the wall face (x 120–500, y 380–425 and x 560–750, y 380–425) is a soft cloud-noise blotch with no stone, joint or edge; replace it with a drawn wall-top surface at a distinctly different value from both the face row below and the black void above.
+- The vertical corridor at x 505–555 uses a different floor tile from the room — pink/salmon joints, stretcher-bond brick turned 90° — and is bounded on its left by a hard 1px dark seam running from y 80 to y 440; use the room's floor tile in the corridor and remove the seam.
+- The corridor floor at approximately (520, 470) and (525, 510) carries small black L/F-shaped glyph marks that read as broken sprite fragments; remove them.
+- The dark crack line is a single continuous overlay that runs across floor, corridor wall and solid rock alike (it crosses the corridor walls at y 240–300 and continues over the rock mass at x 570–590, y 200–310); clip the crack decal to floor tiles only, and break it at joints so it reads as stone splitting rather than a line drawn on top.
+- The isolated one-tile block at x 310–380, y 645–715 is drawn with the wall-face texture and is darker than the floor around it, so it reads as a wall sprite lying flat or as a hole; give it a lit top surface brighter than the adjacent floor and a face on its south side, or remove it.
+- The floor at x 180–280, y 500–650 shifts to a teal-grey cast that the warm carried light cannot produce; remove the cool tint so the falloff is value-only.
+- The black void rectangles carry a 1px lighter rim along their borders (visible at x 440–450, y 80–390 and along y 390 from x 130 to 440); remove the rim so the void meets the rock cleanly.
+
+FLIP 2:
+- Add a carried light with falloff; at present every pixel is at the same exposure, including the orc, so the frame has no depth at all.
+- Break the grey tile grid: vary tile widths along at least one row, and drop the continuous 1px straight grid line in favour of drawn joints of varying weight.
+- Give the pond an edge: a darker rim or wet-stone margin at the water/dirt boundary (currently a hard straight line at x 250 and y 190), and replace the repeating hexagon fill with a non-tiling surface.
+- Break the dirt floor's 48px repeat — the rust-red crack pattern currently recurs identically every tile.
+- Remove the light outline from the teal moss decals on the grey tiles (x 30–50, y 60–85 and x 340–380, y 150–175); they sit above the surface rather than on it.
+- The bottom wall band (y 260–288) is two rows of identical dark brick with no top surface or face distinction; give it a lit top and a shaded face.
+- The chest and barrel shadows fall in different directions (chests: straight down; barrels: down-left); pick one.
+
+FLIP 3:
+- The floor around the figure is blown out: 5,618 pixels exceed luminance 230 (vs 16 in the same scene in file 1), and at x 400–560, y 470–560 the joints and scratch detail vanish into flat white-yellow; pull the light's peak down so the stone stays legible under the figure.
+- The wall band is assembled in the wrong order: the block/pin row sits at the top against the black void (y 385–420) and the soft rock blotch sits at the bottom against the floor (y 420–450); put the face row against the floor and a drawn top surface above it.
+- The pins at x ~270 and ~355 poke above the wall's top edge into the void by about 10px; clip them to the wall.
+- At the corridor junction (x 533–570, y 390–450) the horizontal wall's cap extends left into the corridor opening and produces a stepped jog with a shadow; align the cap to the corridor's wall edge.
+- The one-tile block at x 300–380, y 640–720 has an extra piece attached at its top-left, making an L-shaped footprint that matches nothing in the grid; square it off or remove it.
+- All FLIP 1 items also apply (corridor tile mismatch and seam, crack overlay across rock, cool tint, void rim).
+
+FLIP 4:
+- The brazier at x 575–625, y 525–575 is drawn lit — orange flame, glowing coals — and casts no light whatsoever on the stones around it, which sit at the same value as the unlit floor; either extinguish it or give it a falloff of its own.
+- The pillar at x 268–300, y 540–630 is a flat salmon-pink box with a single dark right edge, uniformly bright even though it stands at the edge of the light radius, in a colour no other material in the frame uses; texture it as stone, light it from the figure's side, and give it a shadow on the far side.
+- The log pile at x 205–285, y 460–515 is near-black even though it sits inside the lit zone, while the lashed timber cross at x 395–480, y 590–630 is bright orange further from the light; light props with the same falloff as the floor.
+- All FLIP 1 items also apply (rock blotch band, corridor tile mismatch and seam, glyph marks, crack overlay across rock, floor block, cool tint, void rim).
+
+Model used: Claude Opus 5 (1M context)

@@ -1447,3 +1447,84 @@ It self-tests every run against a frame with nothing painted.
 footprints and got 5,368 pixels — not contamination, but a centred sprite overflowing into its
 neighbours by up to half a cell. Every stray lay within 32px, median 10. The test is **distance,
 not count**.
+
+
+---
+
+## Item 21 — the STOP cleared, the panel re-ran, and it VOIDed on arithmetic
+
+### The clearance, and why it covers one round rather than two
+
+Recorded as `JUDGE-CLEARED.json` with the ruling verbatim. ⚠ **A park could not do this and still
+cannot** — `park_clears` refuses `broken-judge` outright on its own ruling (*"a proven-blind judge
+is never laundered by a park"*, 2026-09-06), and that law is untouched. What it guards against is
+parking past a judge that is blind; the judge here caught every correctly-formed plant it was
+dealt.
+
+So the clearance is **checked, not trusted**: `judge_cleared()` recomputes the premise from the
+history and requires that every seat in every covered round either caught its plant or drew a
+**retired** one. One live miss inside the covered rounds and it clears nothing.
+
+That is why it covers round 4 alone:
+
+| round | verdict | the miss |
+|---|---|---|
+| 3 | VOID | seat 3 missed `blown-highlight` — **a live plant. A real seat miss.** |
+| 4 | VOID | seats 1 and 4 missed `crushed-midband` — the retired control |
+
+Excusing round 4 breaks the two-in-a-row, which is all the guard needs. **Round 3's miss is not
+cleared and should not be.** `prove_judge_clear.py` carries nine cases; the two that matter are
+that a marker covering a live-plant miss clears nothing, and that a cleared guard still fires on
+rounds *after* the marker.
+
+### The re-run: VOID, and this time the miss is genuine
+
+Round 5, five seats, two live plants dealt without replacement:
+
+| plant | seats | caught |
+|---|---|---|
+| `blown-highlight` | 1, 3, 5 | 3 of 3 |
+| `lamp-clip-figure` | 2, 4 | **1 of 2** — seat 2 missed it |
+
+A live, correctly-formed plant, missed. *A correct plant missed still voids.* **I did not clear
+this one and will not.**
+
+⚠ **And the art was passing.** `not_below 4, below 1, strong_regression False` — had the plant
+been caught this was INSTALL-LATEST. What stopped it is the judging gate, not the picture.
+
+### The finding: a 5-seat panel VOIDs 43% of the time with a working judge
+
+Measured across every round on this lane, live plants only, retired excluded:
+
+```
+blown-highlight.png      15 of 16 caught
+lamp-clip-figure.png      2 of  3 caught
+TOTAL                    17 of 19 = 89.5% per-seat catch rate
+```
+
+The plant rule is **unanimous** — any seat missing voids the round:
+
+| seats | P(all catch) | rounds VOID |
+|---|---|---|
+| 1 | 89.5% | 10.5% |
+| 3 | 71.6% | 28.4% |
+| **5** | **57.3%** | **42.7%** |
+| 7 | 45.9% | 54.1% |
+
+⚠ **MORE SEATS MAKE A VOID MORE LIKELY, NOT LESS.** The five-seat panel was ruled to reduce RANK
+noise for the strong-majority regression term. The plant gate is unanimous-catch, so the very
+same change multiplies the chance of tripping it. **The two ruled terms pull in opposite
+directions**, and at 89.5% the broken-judge guard — two consecutive VOIDs — fires on 18% of
+adjacent pairs. That is the whole of rounds 3, 4 and 5: only round 4 had a bad control. Rounds 3
+and 5 are the arithmetic.
+
+**This is a ruling, not a builder's fix.** The shapes available, none of them taken:
+
+1. **Make the plant rule a majority**, matching the regression term it sits beside — e.g. the
+   round is readable if ≥4 of 5 catch. Symmetrical with the strong-majority rule already ruled.
+2. **Decouple the two terms** — plant checked on a small fixed number of seats, rank on more.
+   They measure different things and currently share a sample size.
+3. **Keep unanimous and seat fewer**, accepting the rank noise the five seats were ruled to fix.
+
+Re-running as it stands is not a strategy: the expected outcome is another VOID 43% of the time,
+which is grinding.
