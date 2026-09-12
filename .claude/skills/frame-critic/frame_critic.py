@@ -1547,12 +1547,28 @@ def main():
                 seats.append(sd)
                 print("   seat %d carried unchanged from that round (%s, caught=%s)"
                       % (old_seat["seat"], old_seat["plant"], old_seat["caught"]))
+        _prior_plant = prior["panel"]["per_seat"][a.redraw_seat - 1].get("plant")
+        _prior_retired = _plant_retired(_prior_plant, morgue)
         redraw_note = dict(round=rnd, seat=a.redraw_seat,
-                           mis_tagged_plant=prior["panel"]["per_seat"][a.redraw_seat - 1]["plant"],
+                           discarded_plant=_prior_plant,
+                           discarded_plant_retired=_prior_retired,
                            frame_sha256=now,
-                           ruling=("a seat voided by a mis-tagged plant is re-drawn, not the "
-                                   "round; a correct plant missed still voids. — Rafe, "
-                                   "2026-09-08"))
+                           # ⚠ TWO RULINGS REACH THIS PATH AND THEY GIVE DIFFERENT REASONS.
+                           # It was built for 2026-09-08's mis-tagged case and would stamp
+                           # "mis-tagged" on a plant that was correctly tagged, which is a false
+                           # record of why a ballot was discarded. The reason is now derived from
+                           # the morgue: a RETIRED plant is the deck-config fault the older
+                           # ruling describes; a LIVE one is the seat-level miss ruled on
+                           # 2026-09-11, which discards the ballot and re-draws the slot.
+                           ruling=(
+                               ("a seat voided by a mis-tagged plant is re-drawn, not the round. "
+                                "— Rafe, 2026-09-08")
+                               if _prior_retired else
+                               ("a live-plant miss voids the seat, not the round. The ballot is "
+                                "discarded; the slot is re-drawn once (fresh seat, fresh plant); "
+                                "the round is valid when it holds five caught ballots. — Rafe, "
+                                "2026-09-11, superseding 'a correct plant missed still voids "
+                                "[the round]'")))
     else:
         redraw_note = None
         ok, msg = _headroom("seat")

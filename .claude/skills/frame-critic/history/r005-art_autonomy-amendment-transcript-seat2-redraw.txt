@@ -1,0 +1,46 @@
+RANK: 4 > 1 > 2 > 3
+
+BEST: 4
+BEST_WHY: The north wall face (y≈420–452, x≈185–505 and x≈565–750) is built as two courses of individually-toned blocks with a driven pin at x≈295 and x≈388 and a bent strap at x≈450 — the repairs are drawn into the masonry, not stuck on top of it, and the blocks either side of each pin differ in tone so the run reads as patched rather than stamped. The crossed timbers, lashings and stone in 1 are the same craft, but 4 carries the base set with nothing added that contradicts it. Floor stones under and right of the figure vary in size (single and double-width blocks in the same course at x≈470–560, y≈520–560) with joints that stagger correctly, and the corridor at x≈505–565 falls off into dark cleanly with no banding.
+
+WORST: 3
+WORST_WHY: Every wall in the frame is built upside down. On the north wall (y≈390–452) the brick face — the surface that should face the room — sits at the TOP of the band, with the pins at x≈300 and x≈368 poking up out of the bricks into the black void, and the mottled top-surface texture sits at the bottom, butted directly against the floor. Same at the SW wall (x≈50–190, y≈650–700) and the wall right of the corridor. A wall whose side face is above its top surface reads as a wall seen from underneath. Otherwise identical in floor and lighting to 4, so this single construction error is what puts it last.
+
+FLAGGED: 1, 2, 3
+SHIP: NONE
+
+FLIP 1:
+- The brazier at x≈570–630, y≈520–585 has visible flames and glowing embers but casts no light: the floor around it is the same value as the floor two tiles away. Either give it a warm falloff on the surrounding stones or extinguish it. In a game whose lighting premise is "the figure carries the only light", a burning fire that lights nothing is the first thing a player will see.
+- The standing post at x≈268–297, y≈538–625 is a flat beige rectangle with one darker edge and no ground shadow, while the timbers at x≈395–485 and the brazier both have cast shadows. Shade it and shadow it to the same standard, or remove it — it reads as a placeholder marker.
+- The rope lashings on the crossed timbers (x≈430–470, y≈595–625) are single-pixel lines of saturated yellow; they read as gold wire, not hemp. Two-pixel bands in a dull tan.
+- Wall cap (y≈390–420) and wall face (y≈420–452) along the north wall share the same warm brown at near-identical value, separated only by a 1px dark line. Drop the face two steps and cool it so the top plane and the side plane separate.
+- Floor joints flip from pale pink (x≈330–455) to black (x≈470 onward) inside the lit patch at y≈510–560 beside the figure — the lit and unlit floor are two different textures cross-faded. One joint colour; let the light change value only.
+- Flat, textureless pale bricks at x≈492–557, y≈520–550 sit next to hatched neighbours with no surface marks; give them the same grain.
+- Hairline cracks (the one rising from the west wall at y≈600 to the figure's feet, and the arc at x≈560–750, y≈640–720) cross joints without breaking or offsetting; route them along joints or step them at each joint so they belong to the stones instead of sitting on top as an overlay.
+- The "////" hatch on the right-side floor (x≈600–750, y≈470–560) is the same 3–4 stroke stamp at the same angle on many bricks; vary or drop it.
+- The corridor floor at the mouth (x≈505–565, y≈380–460) is the pale pink-jointed variant meeting the grey hatched room floor on a hard vertical line; one floor material through the doorway.
+
+FLIP 2:
+- The pool at x≈248–343, y≈0–192 is a hard-edged rectangle: green meets brown dirt on a razor line with no bank, lip, or wet-earth transition on any side. Add an edge tile set (straight + inside/outside corner) and use it.
+- Water fill is a flat hex-scale repeat at one value; add a darker band along the edges and break the pattern so it stops reading as a fill.
+- The dirt floor's crack lattice repeats on a 48px period in both axes (x≈60–240, y≈40–190); add two or three alternate tiles and rotate them.
+- The orange bar in the west wall opening at x≈27–34, y≈128–167 cannot be identified — torch, ladder, door? Draw whichever it is with a top and a side face.
+- Wall cap tiles (bottom two rows y≈217–263; left column x≈8–55) are the lightest value in the frame, brighter than the floor, with no falloff from the orc. Walls read as glowing. Drop the cap below the floor value, or add light falloff.
+- Wall face (y≈263–288) is two identical flat courses with no shadow line under the cap; add a one-row cast under the cap so the face sits below the top.
+- Two identical chests at x≈63–97, y≈0–87 and two identical barrels at x≈113–192, y≈195–215 placed as exact adjacent duplicates; flip, offset or vary one of each.
+- The moss blob is the same sprite at (x≈13–53,y≈57–83), (x≈13–47,y≈200–230) and (x≈350–383,y≈147–173); rotate or provide a second shape.
+
+FLIP 3:
+- Flip every wall band so the mottled top surface is on top and the brick face is below it, facing the floor: north wall y≈390–452, SW wall x≈50–190 y≈650–700, and the wall right of the corridor. As drawn, the pins at x≈300 and x≈368 stick up out of the face into the void.
+- Once flipped, apply everything in FLIP 4 below — the floor, cracks, hatch, corridor seam and cap/face value separation are the same set.
+
+FLIP 4:
+- Wall cap (y≈390–420) and wall face (y≈420–452) along the north wall share the same warm brown at near-identical value, separated only by a 1px dark line. Drop the face two steps and cool it so the top plane and the side plane separate.
+- Floor joints flip from pale pink (x≈330–455) to black (x≈470 onward) inside the lit patch at y≈510–560 beside the figure — the lit and unlit floor are two different textures cross-faded. One joint colour; let the light change value only.
+- Flat, textureless pale bricks at x≈492–557, y≈520–550 sit next to hatched neighbours with no surface marks; give them the same grain.
+- Hairline cracks (the one rising from the west wall at y≈600 to the figure's feet, and the arc at x≈560–750, y≈640–720) cross joints without breaking or offsetting; step them at each joint so they belong to the stones.
+- The driven pins at x≈295 and x≈388 are drawn as one vertical bar running through both cap and face; show a head on the cap and a shadowed stub on the face, not one continuous bar across two planes.
+- The "////" hatch on the right-side floor (x≈600–750, y≈470–560) is the same 3–4 stroke stamp at the same angle on many bricks; vary or drop it.
+- The corridor floor at the mouth (x≈505–565, y≈380–460) is the pale pink-jointed variant meeting the grey hatched room floor on a hard vertical line at the wall; one floor material through the doorway.
+
+Model: Claude Opus 5 (1M context)
