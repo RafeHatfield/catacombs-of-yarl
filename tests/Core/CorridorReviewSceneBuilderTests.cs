@@ -494,4 +494,88 @@ public class CorridorReviewSceneBuilderTests
                             { ""tileId"": 9800, ""x"": 7, ""y"": 16 }"))));
         Assert.That(ex!.Message, Does.Contain("already covered by prop 9810"));
     }
+
+    // ── #167 WALL-TOP PROPS ──────────────────────────────────────────────────────────────────
+    //
+    // "The prop/overlay pass gives wall tops world-placed OBJECTS standing on them — a brazier,
+    // a bundle, a driven post, salvage."
+    //
+    // ⚠ §12.2's OWN ENABLER WAS BLOCKING THIS. The footprint validation requires every covered
+    // cell to be FLOOR, which is right for a prop on the walked surface and refuses exactly the
+    // thing #167 asks for. A prop now declares its surface; "floor" is the default and every
+    // scene written before this parses unchanged.
+    //
+    // Measured on the delivered frame: a prop on a wall cell changed 98 device pixels before the
+    // draw order was fixed, and 2,288 after — the wall sprite had been drawing straight over it.
+
+    [Test]
+    public void Props_OnAWallTop_AreSeatedOnTheWallCell()
+    {
+        // (12,16) is inside the bay's surrounding rock: the bay is x 5..11, so x=12 is wall.
+        var state = CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+            WithProps(@"{ ""tileId"": 9820, ""x"": 12, ""y"": 16, ""on"": ""wall"" }")));
+
+        Assert.That(state.Props, Has.Count.EqualTo(1));
+        Assert.That(state.Props[0].OnWallTop, Is.True,
+                    "the renderer needs this to sort the sprite above the wall it stands on");
+    }
+
+    /// <summary>
+    /// A wall-top prop must NOT be marked as a prop cell. MarkPropCell tells the FLOOR composer
+    /// what stands on the floor and makes the cell unwalkable; a wall cell is already unwalkable
+    /// and has no floor beneath it to suppress, so marking it would assert a fact about a surface
+    /// that is not there — and would put the seal check to work reasoning about solid rock.
+    /// </summary>
+    [Test]
+    public void Props_OnAWallTop_DoNotMarkAFloorPropCell()
+    {
+        var state = CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+            WithProps(@"{ ""tileId"": 9820, ""x"": 12, ""y"": 16, ""on"": ""wall"" }")));
+
+        Assert.That(state.Map.IsPropCell(12, 16), Is.False);
+    }
+
+    [Test]
+    public void Props_OnAWallTop_PlacedOnFloor_AreRefused()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9820, ""x"": 6, ""y"": 16, ""on"": ""wall"" }"))));
+        Assert.That(ex!.Message, Does.Contain("IS floor"));
+    }
+
+    [Test]
+    public void Props_OnTheFloor_PlacedOnAWall_AreRefusedAndPointAt167()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9820, ""x"": 12, ""y"": 16 }"))));
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Does.Contain("is not floor"));
+            Assert.That(ex.Message, Does.Contain("#167"),
+                        "the refusal should name the way to do it deliberately");
+        });
+    }
+
+    [Test]
+    public void Props_WithAnUnknownSurface_AreRefused()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => CorridorReviewSceneBuilder.ParseSpecJson(
+                WithProps(@"{ ""tileId"": 9820, ""x"": 12, ""y"": 16, ""on"": ""ceiling"" }")));
+        Assert.That(ex!.Message, Does.Contain("\"floor\" or \"wall\""));
+    }
+
+    [Test]
+    public void Props_WithoutASurface_AreStillFloorProps()
+    {
+        var state = CorridorReviewSceneBuilder.Build(CorridorReviewSceneBuilder.ParseSpecJson(
+            WithProps(@"{ ""tileId"": 9800, ""x"": 6, ""y"": 16 }")));
+        Assert.Multiple(() =>
+        {
+            Assert.That(state.Props[0].OnWallTop, Is.False);
+            Assert.That(state.Map.IsPropCell(6, 16), Is.True, "a floor prop still marks its cell");
+        });
+    }
 }

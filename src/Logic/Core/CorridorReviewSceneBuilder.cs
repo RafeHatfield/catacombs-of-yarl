@@ -77,7 +77,7 @@ public static class CorridorReviewSceneBuilder
     /// </summary>
     public readonly record struct PropPlacement(
         int TileId, int X, int Y, bool Blocks, string Why,
-        int W = 1, int H = 1, IReadOnlyList<int>? Layout = null);
+        int W = 1, int H = 1, IReadOnlyList<int>? Layout = null, string On = "floor");
 
     /// <summary>
     /// A point the capture must be able to see, or must leave dark. <paramref name="Why"/> is
@@ -173,6 +173,24 @@ public static class CorridorReviewSceneBuilder
                 int ppy = e.GetProperty("y").GetInt32();
                 string where = $"Corridor spec '{name}': prop {ptid} at ({ppx},{ppy})";
 
+                // ── WHERE THE PROP STANDS — #167, and my own §12.2 guard was blocking it ────
+                //
+                // §12.2's enabler validates that every covered cell is FLOOR, which is right for
+                // a prop standing on the walked surface and wrong as a universal rule. #167's
+                // whole subject is the opposite case: "the prop/overlay pass gives wall tops
+                // world-placed OBJECTS standing on them — a brazier, a bundle, a driven post,
+                // salvage". A wall-top prop stands on a wall BY DEFINITION, so the floor check
+                // refuses exactly the thing the issue asks for.
+                //
+                // So a prop declares its surface. "floor" is the default and every scene written
+                // before this parses unchanged; "wall" inverts the cell test and changes what
+                // seating does with it (see Build).
+                string on = e.TryGetProperty("on", out var onEl) ? (onEl.GetString() ?? "floor")
+                                                                 : "floor";
+                if (on != "floor" && on != "wall")
+                    throw new InvalidOperationException(
+                        $"{where} declares `on: \"{on}\"`; it is \"floor\" or \"wall\".");
+
                 int pw = e.TryGetProperty("w", out var wEl) ? wEl.GetInt32() : 1;
                 int ph = e.TryGetProperty("h", out var hEl) ? hEl.GetInt32() : 1;
                 if (pw < 1 || ph < 1)
@@ -211,7 +229,7 @@ public static class CorridorReviewSceneBuilder
                     ptid, ppx, ppy,
                     !e.TryGetProperty("blocks", out var b) || b.GetBoolean(),
                     e.TryGetProperty("why", out var wy) ? (wy.GetString() ?? "") : "",
-                    pw, ph, layout));
+                    pw, ph, layout, on));
             }
         }
 
@@ -373,10 +391,16 @@ public static class CorridorReviewSceneBuilder
                     // entry.
                     if (!map.InBounds(cx, cy))
                         throw new InvalidOperationException($"{at} is off the map.");
-                    if (map.GetTileKind(cx, cy) != TileKind.Floor)
+                    bool isFloor = map.GetTileKind(cx, cy) == TileKind.Floor;
+                    if (pp.On == "floor" && !isFloor)
                         throw new InvalidOperationException(
                             $"{at} is not floor. A prop stands on the walked surface; a sprite "
-                            + "over solid rock is drawn, lit, and meaningless.");
+                            + "over solid rock is drawn, lit, and meaningless. If this is meant "
+                            + "to stand on a wall top, declare `on: \"wall\"` (#167).");
+                    if (pp.On == "wall" && isFloor)
+                        throw new InvalidOperationException(
+                            $"{at} IS floor. A wall-top prop stands on the mass, not in the "
+                            + "room — a `on: \"wall\"` prop on a walked cell would float.");
                     if (cx == spec.PlayerX && cy == spec.PlayerY)
                         throw new InvalidOperationException(
                             $"{at} is the player's own station.");
@@ -388,12 +412,19 @@ public static class CorridorReviewSceneBuilder
                 }
 
             placed.Add(new PlacedProp($"review_{pp.TileId}", pp.X, pp.Y, pp.W, pp.H,
-                                      pp.Blocks, pp.TileId, TileLayout: pp.Layout));
+                                      pp.Blocks && pp.On == "floor", pp.TileId,
+                                      TileLayout: pp.Layout, OnWallTop: pp.On == "wall"));
 
             // 2. MARK EVERY CELL, not just the anchor. MarkPropCell is what keeps the floor
             //    composer from laying a worn or accent tile under a prop (#128's pedestal);
             //    marking only the anchor would put a pedestal under three quarters of a 2x2.
-            if (pp.Blocks)
+            //
+            //    ⚠ A WALL-TOP PROP IS NOT MARKED, and that is not an oversight. MarkPropCell
+            //    exists to tell the FLOOR composer what is standing on the floor, and it also
+            //    makes the cell unwalkable. A wall cell is already unwalkable and has no floor
+            //    under it to suppress, so marking it would claim a fact about a surface that is
+            //    not there — and would make the seal check below reason about rock.
+            if (pp.Blocks && pp.On == "floor")
                 for (int dx = 0; dx < pp.W; dx++)
                     for (int dy = 0; dy < pp.H; dy++)
                         map.MarkPropCell(pp.X + dx, pp.Y + dy);
