@@ -1,0 +1,527 @@
+{
+ "W_stone": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": 0.0
+   },
+   {
+    "seed": 1338,
+    "hold": 0.8222,
+    "shear": 0.0
+   },
+   {
+    "seed": 1339,
+    "hold": 0.793,
+    "shear": -0.0104
+   }
+  ],
+  "template_shear": 0.0
+ },
+ "W_chest": {
+  "seed": 1338,
+  "ordered": [
+   {
+    "seed": 1338,
+    "hold": 0.9879,
+    "shear": 0.0
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9635,
+    "shear": 0.0
+   },
+   {
+    "seed": 1339,
+    "hold": 0.931,
+    "shear": 0.0
+   }
+  ],
+  "template_shear": 0.0096
+ },
+ "W_barrel": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": 0.0
+   },
+   {
+    "seed": 1339,
+    "hold": 0.998,
+    "shear": 0.0
+   },
+   {
+    "seed": 1338,
+    "hold": 0.986,
+    "shear": 0.0
+   }
+  ],
+  "template_shear": 0.0
+ },
+ "W_altar": {
+  "seed": 1338,
+  "ordered": [
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": 0.0
+   },
+   {
+    "seed": 1337,
+    "hold": 0.48,
+    "shear": 0.0
+   },
+   {
+    "seed": 1339,
+    "hold": 0.4621,
+    "shear": 0.0
+   }
+  ],
+  "template_shear": 0.0
+ },
+ "W_rack": {
+  "seed": 1338,
+  "ordered": [
+   {
+    "seed": 1338,
+    "hold": 0.8587,
+    "shear": 0.0
+   },
+   {
+    "seed": 1337,
+    "hold": 0.5773,
+    "shear": 0.0714
+   },
+   {
+    "seed": 1339,
+    "hold": 0.5253,
+    "shear": 0.0
+   }
+  ],
+  "template_shear": 0.0
+ },
+ "OL_stone": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": -0.0833
+   },
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": -0.0833
+   },
+   {
+    "seed": 1339,
+    "hold": 1.0,
+    "shear": -0.0833
+   }
+  ],
+  "template_shear": -0.0833
+ },
+ "OL_chest": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": -0.0222
+   },
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": -0.0222
+   },
+   {
+    "seed": 1339,
+    "hold": 1.0,
+    "shear": -0.0222
+   }
+  ],
+  "template_shear": -0.0222
+ },
+ "OL_barrel": {
+  "seed": 1339,
+  "ordered": [
+   {
+    "seed": 1339,
+    "hold": 0.9903,
+    "shear": -0.1104
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9883,
+    "shear": -0.0844
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9839,
+    "shear": -0.0844
+   }
+  ],
+  "template_shear": -0.0844
+ },
+ "OL_altar": {
+  "seed": 1338,
+  "ordered": [
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": -0.0009
+   },
+   {
+    "seed": 1339,
+    "hold": 1.0,
+    "shear": -0.0009
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9989,
+    "shear": -0.0009
+   }
+  ],
+  "template_shear": -0.0009
+ },
+ "OL_rack": {
+  "seed": 1338,
+  "ordered": [
+   {
+    "seed": 1338,
+    "hold": 0.9952,
+    "shear": -0.004
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9952,
+    "shear": -0.0159
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9951,
+    "shear": -0.0159
+   }
+  ],
+  "template_shear": -0.004
+ },
+ "OR_stone": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": 0.0833
+   },
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": 0.0833
+   },
+   {
+    "seed": 1339,
+    "hold": 1.0,
+    "shear": 0.0833
+   }
+  ],
+  "template_shear": 0.0833
+ },
+ "OR_chest": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": 0.0222
+   },
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": 0.0222
+   },
+   {
+    "seed": 1339,
+    "hold": 1.0,
+    "shear": 0.0222
+   }
+  ],
+  "template_shear": 0.0222
+ },
+ "OR_barrel": {
+  "seed": 1339,
+  "ordered": [
+   {
+    "seed": 1339,
+    "hold": 0.9903,
+    "shear": 0.0974
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9845,
+    "shear": 0.1104
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9844,
+    "shear": 0.0844
+   }
+  ],
+  "template_shear": 0.0844
+ },
+ "OR_altar": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": 0.0009
+   },
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": 0.0009
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9968,
+    "shear": 0.0009
+   }
+  ],
+  "template_shear": 0.0009
+ },
+ "OR_rack": {
+  "seed": 1338,
+  "ordered": [
+   {
+    "seed": 1338,
+    "hold": 0.9982,
+    "shear": 0.004
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9976,
+    "shear": 0.004
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9964,
+    "shear": 0.0159
+   }
+  ],
+  "template_shear": 0.004
+ },
+ "Odeep_stone": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": 0.1316
+   },
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": 0.1316
+   },
+   {
+    "seed": 1339,
+    "hold": 1.0,
+    "shear": 0.1316
+   }
+  ],
+  "template_shear": 0.1316
+ },
+ "Odeep_chest": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": 0.0812
+   },
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": 0.0812
+   },
+   {
+    "seed": 1339,
+    "hold": 0.997,
+    "shear": 0.0812
+   }
+  ],
+  "template_shear": 0.0812
+ },
+ "Odeep_barrel": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 0.9873,
+    "shear": 0.1094
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9865,
+    "shear": 0.125
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9798,
+    "shear": 0.125
+   }
+  ],
+  "template_shear": 0.1146
+ },
+ "Odeep_altar": {
+  "seed": 1338,
+  "ordered": [
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": 0.0097
+   },
+   {
+    "seed": 1339,
+    "hold": 1.0,
+    "shear": 0.0097
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9982,
+    "shear": 0.0097
+   }
+  ],
+  "template_shear": 0.0097
+ },
+ "Odeep_rack": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 0.9989,
+    "shear": 0.0222
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9989,
+    "shear": 0.0222
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9708,
+    "shear": 0.0074
+   }
+  ],
+  "template_shear": 0.0222
+ },
+ "A_stone": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0,
+    "shear": 0.1111
+   },
+   {
+    "seed": 1338,
+    "hold": 1.0,
+    "shear": 0.1111
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9961,
+    "shear": 0.1111
+   }
+  ],
+  "template_shear": 0.1111
+ },
+ "A_chest": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 0.9966,
+    "shear": 0.1
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9949,
+    "shear": 0.1
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9948,
+    "shear": 0.1
+   }
+  ],
+  "template_shear": 0.1
+ },
+ "A_barrel": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 0.9919,
+    "shear": 0.0
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9919,
+    "shear": 0.0
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9878,
+    "shear": 0.0
+   }
+  ],
+  "template_shear": 0.0
+ },
+ "A_altar": {
+  "seed": 1339,
+  "ordered": [
+   {
+    "seed": 1339,
+    "hold": 1.0,
+    "shear": 0.2212
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9989,
+    "shear": 0.2212
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9967,
+    "shear": 0.2212
+   }
+  ],
+  "template_shear": 0.2212
+ },
+ "A_rack": {
+  "seed": 1337,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 0.9971,
+    "shear": 0.0913
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9928,
+    "shear": 0.0913
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9869,
+    "shear": 0.101
+   }
+  ],
+  "template_shear": 0.0913
+ }
+}

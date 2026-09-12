@@ -1,0 +1,140 @@
+{
+ "candidate": "OL",
+ "archetype": "chest",
+ "job_id": "c22b5e0d-e128-40ea-b457-295a6b9e6507",
+ "template": {
+  "symmetry": 0.9044,
+  "shear": -0.0282,
+  "opaque": 0.5349
+ },
+ "ordered": [
+  {
+   "index": 0,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=0",
+   "distance": 0.0758,
+   "symmetry": 0.8771,
+   "shear": 0.0339,
+   "opaque": 0.6265
+  },
+  {
+   "index": 2,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=2",
+   "distance": 0.0758,
+   "symmetry": 0.8802,
+   "shear": 0.0355,
+   "opaque": 0.6248
+  },
+  {
+   "index": 1,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=1",
+   "distance": 0.0778,
+   "symmetry": 0.8763,
+   "shear": 0.0355,
+   "opaque": 0.6184
+  },
+  {
+   "index": 4,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=4",
+   "distance": 0.0783,
+   "symmetry": 0.8786,
+   "shear": 0.0371,
+   "opaque": 0.6118
+  },
+  {
+   "index": 3,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=3",
+   "distance": 0.0784,
+   "symmetry": 0.875,
+   "shear": 0.0355,
+   "opaque": 0.6152
+  },
+  {
+   "index": 5,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=5",
+   "distance": 0.0866,
+   "symmetry": 0.8747,
+   "shear": 0.0435,
+   "opaque": 0.6064
+  },
+  {
+   "index": 12,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=12",
+   "distance": 0.0881,
+   "symmetry": 0.8782,
+   "shear": 0.0468,
+   "opaque": 0.6062
+  },
+  {
+   "index": 7,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=7",
+   "distance": 0.0914,
+   "symmetry": 0.8749,
+   "shear": 0.0484,
+   "opaque": 0.6038
+  },
+  {
+   "index": 14,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=14",
+   "distance": 0.0925,
+   "symmetry": 0.8759,
+   "shear": 0.05,
+   "opaque": 0.6013
+  },
+  {
+   "index": 15,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=15",
+   "distance": 0.0925,
+   "symmetry": 0.8759,
+   "shear": 0.05,
+   "opaque": 0.6013
+  },
+  {
+   "index": 8,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=8",
+   "distance": 0.094,
+   "symmetry": 0.876,
+   "shear": 0.0516,
+   "opaque": 0.6023
+  },
+  {
+   "index": 11,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=11",
+   "distance": 0.094,
+   "symmetry": 0.876,
+   "shear": 0.0516,
+   "opaque": 0.6023
+  },
+  {
+   "index": 13,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=13",
+   "distance": 0.0945,
+   "symmetry": 0.8751,
+   "shear": 0.0516,
+   "opaque": 0.6011
+  },
+  {
+   "index": 9,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=9",
+   "distance": 0.0963,
+   "symmetry": 0.8747,
+   "shear": 0.0532,
+   "opaque": 0.6028
+  },
+  {
+   "index": 10,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=10",
+   "distance": 0.0971,
+   "symmetry": 0.8732,
+   "shear": 0.0532,
+   "opaque": 0.6023
+  },
+  {
+   "index": 6,
+   "url": "https://api.pixellab.ai/mcp/images/c22b5e0d-e128-40ea-b457-295a6b9e6507/download?index=6",
+   "distance": 0.0978,
+   "symmetry": 0.8717,
+   "shear": 0.0532,
+   "opaque": 0.6018
+  }
+ ]
+}

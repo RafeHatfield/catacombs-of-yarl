@@ -1,0 +1,151 @@
+{
+ "name": "tier1_projection2_A",
+ "_what": [
+  "OBJECT-PROJECTION RULING, ROUND TWO — one projection per scene. NOT A PROPS PASS.",
+  "",
+  "A — see tools/tier2_props/projection_round2.py for the candidate's geometry. Every archetype in this scene was generated at THIS projection from THIS candidate's template; nothing is reused from another scene or from the marker.",
+  "",
+  "Five archetypes at IDENTICAL cells in every scene, all between 2.83 and 3.16 tiles from the player, so placement is not the variable (round one's altar sat at 2.0 and its rack at 5.0, and both were read for their placement).",
+  "",
+  "  stone   1x2 at (4, 13)  d=3.16  tall vertical — does its side read against the wall's, or fight it",
+  "  chest   1x1 at (10, 14)  d=3.00  low horizontal — the classic oblique case; top-to-face ratio",
+  "  barrel  1x1 at (9, 16)  d=2.83  ROUND — no flat face to hide behind; the lid states the camera",
+  "  altar   2x1 at (6, 17)  d=3.16  wide flat — mostly top; does the top share the floor plane",
+  "  rack    1x1 at (9, 12)  d=2.83  AGAINST A WALL — the discriminator; (9,11) is solid rock",
+  "",
+  "⚠ IDS 9850-9884 ARE A RESERVED REVIEW BLOCK, referenced by these scenes and nothing else. No props manifest lists them, no placer places them, no game scene names them. The ruling is Rafe's, on device (§13.1/§13.2)."
+ ],
+ "width": 17,
+ "height": 21,
+ "player": {
+  "x": 7,
+  "y": 14
+ },
+ "carve": [
+  {
+   "x0": 3,
+   "y0": 12,
+   "x1": 13,
+   "y1": 14
+  },
+  {
+   "x0": 3,
+   "y0": 16,
+   "x1": 13,
+   "y1": 19
+  },
+  {
+   "x0": 3,
+   "y0": 15,
+   "x1": 4,
+   "y1": 15
+  },
+  {
+   "x0": 6,
+   "y0": 15,
+   "x1": 13,
+   "y1": 15
+  },
+  {
+   "x0": 8,
+   "y0": 6,
+   "x1": 8,
+   "y1": 11
+  },
+  {
+   "x0": 3,
+   "y0": 2,
+   "x1": 13,
+   "y1": 5
+  },
+  {
+   "x0": 1,
+   "y0": 16,
+   "x1": 2,
+   "y1": 17
+  }
+ ],
+ "legibility": [
+  {
+   "x": 6,
+   "y": 13,
+   "expect": "lit",
+   "why": "floor beside the player, inside the radius",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  },
+  {
+   "x": 8,
+   "y": 15,
+   "expect": "lit",
+   "why": "floor between the archetypes, clear of every footprint",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  },
+  {
+   "x": 8,
+   "y": 7,
+   "expect": "dark",
+   "why": "up the corridor, beyond the radius",
+   "bound_lum": 0.08367,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  },
+  {
+   "x": 3,
+   "y": 19,
+   "expect": "dark",
+   "why": "the far corner; the room must have an outside",
+   "bound_lum": 0.08367,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  }
+ ],
+ "props": [
+  {
+   "tileId": 9878,
+   "x": 4,
+   "y": 13,
+   "blocks": true,
+   "why": "stone — A",
+   "w": 1,
+   "h": 2,
+   "layout": [
+    9878,
+    9879
+   ]
+  },
+  {
+   "tileId": 9880,
+   "x": 10,
+   "y": 14,
+   "blocks": true,
+   "why": "chest — A"
+  },
+  {
+   "tileId": 9881,
+   "x": 9,
+   "y": 16,
+   "blocks": true,
+   "why": "barrel — A"
+  },
+  {
+   "tileId": 9882,
+   "x": 6,
+   "y": 17,
+   "blocks": true,
+   "why": "altar — A",
+   "w": 2,
+   "h": 1,
+   "layout": [
+    9882,
+    9883
+   ]
+  },
+  {
+   "tileId": 9884,
+   "x": 9,
+   "y": 12,
+   "blocks": true,
+   "why": "rack — A"
+  }
+ ]
+}
