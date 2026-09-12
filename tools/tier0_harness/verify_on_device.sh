@@ -228,6 +228,40 @@ if [ -n "$DEVICE_COMMIT" ] && [ -n "$LOCAL_COMMIT" ]; then
 		else
 			echo "  OK    the build on the handset is this working copy's HEAD"
 		fi
+	elif git merge-base --is-ancestor "$DEVICE_COMMIT" HEAD 2>/dev/null; then
+		# ── YOUR OWN HEAD MOVED ON, WHICH IS NOT THE HAZARD THIS CHECK EXISTS FOR ───────────
+		#
+		# The guard was written because a wall session overwrote the floor gate's build on this
+		# handset and the only symptom was a scene check going MISS — "your build is wrong" when
+		# the truth was "your build is gone". That hazard is a device commit this working copy
+		# has NEVER SEEN. A device commit that is an ANCESTOR of HEAD is the opposite: it is a
+		# build this copy made, with work committed after it.
+		#
+		# Reporting both as "A DIFFERENT BUILD" made the operator do the archaeology every time,
+		# and an instrument that cries wolf on the ordinary case is how the real one gets
+		# skimmed past. So the two are now told apart, and the ancestor case says exactly what
+		# is owed: whether anything SHIPPED changed since, because that is what decides if the
+		# handset is still carrying the gated art.
+		BEHIND="$(git rev-list --count "$DEVICE_COMMIT"..HEAD 2>/dev/null || echo '?')"
+		SHIPPED_CHANGED="$(git diff --name-only "$DEVICE_COMMIT" HEAD -- \
+			src/Presentation/assets src/Presentation/Map src/Logic 2>/dev/null \
+			| grep -v '\.import$' | wc -l | tr -d ' ')"
+		if [ "$SHIPPED_CHANGED" = "0" ]; then
+			echo "  OK*   the handset build is an ANCESTOR of HEAD ($BEHIND commit(s) behind)"
+			echo "        and NOTHING SHIPPED changed since — the device carries this art."
+		else
+			echo "  MISS  the handset build is $BEHIND commit(s) behind HEAD, and"
+			echo "        $SHIPPED_CHANGED shipped file(s) changed since. The device is NOT"
+			echo "        carrying what this working copy would build. Re-install, or verify"
+			echo "        against the commit the gate covered."
+			git diff --name-only "$DEVICE_COMMIT" HEAD -- \
+				src/Presentation/assets src/Presentation/Map src/Logic 2>/dev/null \
+				| grep -v '\.import$' | sed 's/^/          /' || true
+			echo "        ⚠ SOURCE changing is not the same as the PICTURE changing. If the"
+			echo "          delivered frame is byte-identical the handset still carries the"
+			echo "          gated art — but that has to be measured, not assumed, and this"
+			echo "          check deliberately will not assume it."
+		fi
 	else
 		echo "  MISS  THE HANDSET IS RUNNING A DIFFERENT BUILD"
 		echo "        device: $DEVICE_STAMP"
