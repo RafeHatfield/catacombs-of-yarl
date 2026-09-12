@@ -148,3 +148,267 @@ projection-correct objects; the ruling is written into the bible as object-proje
 ⚠ **Nothing here entered the game's prop set.** Ids 9850–9872 are a reserved review block
 referenced by these three scenes and nothing else — no props manifest lists them, no placer
 places them, no game scene names them.
+
+
+---
+---
+
+# ROUND TWO — the test fixed, the candidate Rafe named, five scenes for the handset
+
+*Round one's package above stands as history. Rafe walked it (2026-09-11) and ruled the test
+itself flawed; this round rebuilds the instrument and adds oblique. Session 2026-09-12, commit
+`e0e383f2` and after.*
+
+## ⚠ Rafe's round-one verdict, and what it did to the law
+
+**§3's object clause is PROVISIONAL, not law.** *"Objects and walls present two planes"* was
+drafted from the Oryx/SPD study before any object existed here; the 2026-09-09 ratification
+walk was of WALLS, on a scene with no objects in it. So §3 is ratified for walls and this ruling
+decides it for objects. Round one's package above cites the clause as settled and it is not;
+nothing below does.
+
+**The test was flawed three ways.** The standing stone was the same wrong object in every build;
+C mixed projections within one scene; objects within a build disagreed with each other. So no
+build could be judged for whole-scene feel — which is the entire question.
+
+**The read that survives.** True isometric reads wrong on this floor. **W fits the floor best
+and its barrel is the worst. A's objects look best as objects and don't sit on the floor; A's
+barrel is much better.** The front+top chest fits the floor best. The tension is
+*fits-the-ground* against *has-volume*, and the candidate that sits between them —
+**oblique**: square front, top visible, side receding at 45° — was not on the list.
+
+## The fix — one layout, one projection per scene
+
+### Placement, measured
+
+Round one's altar sat 2.0 tiles from the lamp and its rack 5.0. That is why the altar read as a
+glowing slab and the rack as nothing: placement, not projection. Every archetype now stands
+between **2.83 and 3.16 tiles** from the player at (7,14), the rack against the north wall at
+(9,12) with (9,11) solid behind it, and nothing stacked on the room's pillar at (5,15) — the
+first layout put the stone's base directly on it, and `check_layout()` now refuses that. The
+GROUND scene (`tier1_projection2_ground.json`) carries a legibility probe on every archetype
+cell, so the light each object stands in is a number in the capture log:
+
+| archetype | cells | d (tiles) | delivered lum (`proj2_ground.log`) |
+|---|---|---|---|
+| stone (1×2) | (4,13) (4,14) | 3.16 / 3.00 | 0.364 / 0.386 |
+| chest | (10,14) | 3.00 | 0.291 |
+| barrel | (9,16) | 2.83 | 0.330 |
+| altar (2×1) | (6,17) (7,17) | 3.16 / 3.00 | 0.247 / 0.282 |
+| rack | (9,12) | 2.83 | 0.327 |
+
+Worst cell 0.247 (the altar's west cell), best 0.386 (the stone's base): a **1.56× spread** from
+floor albedo, against round one's ~13× (≈0.06 at the rack, ≈0.79 at the altar). All lit (bound
+0.1004), none at the core, none at the edge. Same rig as every capture and every device build.
+
+### Candidates, as geometry
+
+A candidate is a **function** from world (x, depth, height) to the screen, applied to a small
+3D model of each archetype — `tools/tier2_props/projection_mesh.py`. The template a generation
+is handed is that function applied to that model, so the barrel's lid under oblique is the true
+skewed ellipse and the rack's shelves recede exactly as its uprights do. Five candidates on
+five archetypes: `gen/projection2/mesh/mesh_sheet.png`.
+
+| | rule | side | depth k |
+|---|---|---|---|
+| **W** | front + top, no side; top depth 0.31 (the walls' cap:face proportion) | — | — |
+| **O-L** | oblique: square front, side receding up-LEFT at 45° | left | ⅓ |
+| **O-R** | oblique: square front, side receding up-RIGHT at 45° | right | ⅓ |
+| **O-deep** | oblique, right, at cavalier depth | right | ½ |
+| **A** | 2:1 dimetric, turned 45° in plan: two foreshortened vertical faces, rhombus top — the volume control | — | — |
+
+*Depth k* is the receding run on each screen axis as a fraction of true depth — how a pixel
+artist steps a 45° edge. **O-deep's side is RIGHT, chosen before O-L/O-R were seen** so the
+depth walk is not conditioned on the side walk; if the side ruling goes left, O-deep is one
+constant in `projection_mesh.SIDE` and a rebuild.
+
+### Materials held
+
+One description per archetype, verbatim across every candidate (`projection_round2.MATERIALS`),
+the same three seeds per cell, no candidate given a nicer wood. Whether they held is measured
+below (ΔE vs W, every cell ≤ 5.7).
+
+## ⚠ Generation cannot be told a projection — measured, and it changed the method
+
+**Pro ignores a projection reference and a projection instruction.** Two probe calls, 16
+candidates each, the template box passed as a labelled reference *and* the projection spelled
+out in the prompt (`gen/projection2/sets/`):
+
+- **chest, O-L:** 16 of 16 came back in the model's own ¾ view receding **RIGHT** — signed
+  shear +0.034 to +0.053 against a template of −0.028. Not one leaned left.
+- **barrel, O-L:** 16 of 16 straight-on, symmetric (0.999–1.000), shear 0.000.
+
+Its view prior wins, every time, silently. This is the §6.4 pattern — *arms indistinguishable
+at generation* — arriving at projection.
+
+**img2img holds geometry and adds nothing.** pixflux from a flat painted box at strength
+250 / 150 / 90 (`gen/projection2/probes/pixflux_probe_sheet.png`): the side face holds at ≥150
+and is gone at 90; at 150 a box stays a box — a band, no lock.
+
+**So the structure is authored and generation supplies surface** — bible §13.7's division of
+labour, now at prop scale. Every band, hoop, plate and shelf is in the projected template; the
+generator is asked for material at strength 150. From that template the chest holds its left
+side and draws its lock (`probes/mesh_probe_sheet.png`).
+
+**⚠ And a lit frame's palette is the rig.** The first full matrix used the landed frame's crop
+as a forced palette, to condition on the frame. Every material came back the same tan —
+limestone read as pine (`matrix_sheet_palette.png`, `raw_palette/`). That is the floor-mottle
+finding (PR #173: *a lit frame's colour count measures the rig, not the palette*) arriving at
+props, and it was already on record. The matrix that landed is un-paletted; the frame
+conditioning this round is the template's proportions (§12.2 readability scale, 2× canvas) and
+the ratified room the objects are captured in, not a palette read off a lit frame.
+
+**And the remover eats featureless objects.** The W stone — a flat grey slab — came back
+0.195 of itself twice: `no_background` took it for background. ±6 of grain in the template's
+fill removed the trigger.
+
+Spend: probes 46 (2 × Pro at 20, 6 × pixflux at 1), palette matrix 74, landed matrix 76 —
+**196 of the 1,100 declared** (pool 2,698 → 2,503, unsettled bracket). Ledgers:
+`gen/projection2/raw/ledger.jsonl`, `raw_palette/ledger.jsonl`, every call with its redacted
+payload.
+
+## The matrix — picks by hold, then by eye
+
+Three seeds per cell; the pick is the seed whose silhouette best holds the template's
+(IoU), then confirmed nameable on `gen/projection2/matrix_sheet.png`, where every seed is shown
+and the pick is boxed. No override was needed. *seed / hold*:
+
+| | stone | chest | barrel | altar | rack |
+|---|---|---|---|---|---|
+| **W** | 1337 / 1.000 | 1338 / 0.988 | 1337 / 1.000 | 1338 / 1.000 | 1338 / 0.859 |
+| **O-L** | 1337 / 1.000 | 1337 / 1.000 | 1339 / 0.990 | 1338 / 1.000 | 1338 / 0.995 |
+| **O-R** | 1337 / 1.000 | 1337 / 1.000 | 1339 / 0.990 | 1337 / 1.000 | 1338 / 0.998 |
+| **O-deep** | 1337 / 1.000 | 1337 / 1.000 | 1337 / 0.987 | 1338 / 1.000 | 1337 / 0.999 |
+| **A** | 1337 / 1.000 | 1337 / 0.997 | 1337 / 0.992 | 1339 / 1.000 | 1337 / 0.997 |
+
+The W rack at 0.859 and the losses among the unpicked seeds (W altar 0.480/0.462, W rack
+0.577/0.525) are the remover again, on the flattest objects; the picks are whole.
+
+### The instrument, on the landed 32px tiles (`projection_round2.py measure`)
+
+Round one's symmetry and top-shear, the shear now SIGNED (which side recedes), plus the
+material match. Seam-tilt is gone: round one showed it measures joints. **Orders; never rules.**
+
+```
+cand   arch     symmetry     shear       side   reads
+W      stone       1.000    +0.000       none   2 planes
+W      chest       1.000    +0.000       none   2 planes
+W      barrel      0.996    +0.000       none   2 planes
+W      altar       1.000    +0.000       none   2 planes
+W      rack        1.000    +0.000       none   2 planes
+OL     stone       0.955    -0.111       left   3 planes
+OL     chest       0.882    -0.025       none   3 planes
+OL     barrel      0.899    -0.121       left   3 planes
+OL     altar       0.900    -0.002       none   2 planes
+OL     rack        0.971    -0.009       none   2 planes
+OR     stone       0.955    +0.111      right   3 planes
+OR     chest       0.882    +0.025       none   3 planes
+OR     barrel      0.907    +0.106      right   3 planes
+OR     altar       0.900    +0.002       none   2 planes
+OR     rack        0.969    +0.009       none   2 planes
+Odeep  stone       0.937    +0.158      right   3 planes
+Odeep  chest       0.813    +0.081      right   3 planes
+Odeep  barrel      0.834    +0.115      right   3 planes
+Odeep  altar       0.837    +0.010       none   3 planes
+Odeep  rack        0.935    +0.025       none   2 planes
+A      stone       0.929    +0.111      right   3 planes
+A      chest       0.739    +0.100      right   3 planes
+A      barrel      1.000    +0.000       none   2 planes
+A      altar       0.342    +0.221      right   3 planes
+A      rack        0.804    +0.096      right   3 planes
+
+MATERIAL MATCH — mean-colour ΔE (CIE76) against candidate W
+arch          W      OL      OR   Odeep       A
+stone       0.0     3.0     3.5     2.3     5.7
+chest       0.0     1.2     3.9     2.9     3.4
+barrel      0.0     1.1     1.2     1.7     1.5
+altar       0.0     1.4     0.9     3.8     4.4
+rack        0.0     4.1     4.6     4.2     2.4
+```
+
+Two honest limits of the numbers. The oblique **altar and rack read "2 planes"** because
+top-shear measures the sloped ends over the whole width, and on a wide or shelf-fronted object
+the sheared ends are a small fraction of it — the side is there in the picture. And **A's
+barrel reads "2 planes"** because a cylinder turned 45° is still a cylinder from the front: the
+instrument is right and the archetype is why. Those are the silhouette's limits, reported, not
+tuned away.
+
+Landing: 2:1 by sampling (§4.3), 2×2-uniform share 61.6% (O-R rack, worst) to 100%.
+
+## What each projection does to each archetype
+
+Geometry, not verdicts — what the sheet shows (`proj2_rooms_side_by_side.png`,
+`proj2_rooms_stacked.png`, and the five full captures `proj2_<cand>.png`).
+
+- **stone (tall).** W: a flat slab with a thin cap; it stands in the wall's grammar. O-L / O-R:
+  a dark side arrives and the slab becomes a block; the side reads as mass. O-deep: the side is
+  nearly as wide as the face and the block reads turned. A: a diamond-capped post, the narrowest
+  silhouette of the five.
+- **chest (low).** W: front + lid; a panel with bands. Oblique: the lid becomes a parallelogram
+  and the bands wrap over the visible side — the object gains a back. O-deep: boxier, deeper.
+  A: the classic ¾ chest, round one's "looks best as an object".
+- **barrel (round — the honest one).** W: front + elliptical lid, which is what every Pro
+  barrel came back as unasked — it is the generator's prior and the pixel-art default. Oblique:
+  the lid slides sideways and the body leans; a cylinder has no square face to anchor the front,
+  so the projection shows as a lean rather than a side. O-deep: more so. A: the same barrel as W
+  with a rounder lid — a cylinder in dimetric is a cylinder.
+- **altar (wide, flat).** W: the top is a plane in the floor's plane, with a front lip.
+  Oblique: an end face appears and the slab gains thickness. O-deep: the top skews strongly.
+  A: a long diamond, the most floor-fighting shape in the set (symmetry 0.342).
+- **rack (against a wall — the discriminator).** W: shelves parallel to the wall's courses; it
+  agrees with the masonry. O-L / O-R: the rack's side recedes while the wall behind it shows
+  none — two projections in one frame, the wall's and the object's. O-deep: the disagreement at
+  its widest. A: turned relative to the wall it stands against — the "bookcase" tension made
+  explicit.
+
+## On the handset
+
+Five builds, one bundle id each, **all SKIPPED-REVIEW by design** (§13.2 — this ruling is
+Rafe's eye, never a seat's) and stamped so on screen. `projW` and `projA` replace round one's
+builds of those names; round one's `projC` is superseded and should be ignored or removed.
+
+| candidate | bundle | scene | built (UTC) | on device |
+|---|---|---|---|---|
+| W | `…catacombsofyarl.projW` | `tier1_projection2_W` | 16:05:33 | ⏳ **built, not installed** |
+| O-L | `…catacombsofyarl.projOL` | `tier1_projection2_OL` | 16:09:03 | ⏳ built, not installed |
+| O-R | `…catacombsofyarl.projOR` | `tier1_projection2_OR` | 16:10:26 | ⏳ built, not installed |
+| O-deep | `…catacombsofyarl.projOdeep` | `tier1_projection2_Odeep` | 16:11:56 | ⏳ built, not installed |
+| A | `…catacombsofyarl.projA` | `tier1_projection2_A` | 16:13:34 | ⏳ built, not installed |
+
+All five at commit `e0e383f2` (+dirty: the build script's per-candidate output dir), each with
+its scene override echoed and the SKIPPED-REVIEW stamp in its marker
+(`tools/tier1_floors/evidence/proj2_install_<cand>.log`).
+
+⚠ **THE HANDSET WENT UNAVAILABLE BETWEEN THE CAPTURES AND THE FIRST INSTALL.** `devicectl`
+listed it *available (paired)* at the start of the session and *unavailable* from 16:05Z on
+(CoreDeviceError 1011, `proj2_install_W.log`, `proj2_push_*.log`); every build completed and
+was stamped, only the install step failed, three attempts each. So the ruling trigger — *all
+five scenes walkable* — is **NOT yet met**, and this package does not claim it. When the phone
+is awake and on the cable:
+
+    YARL_SKIP_CRITIC=1 tools/tier2_props/projection_round2_build.sh push
+
+installs the five built apps and runs `verify_on_device.sh` on each (bundle id read off the
+device, commit and stamp pulled from the app's own boot log), writing
+`proj2_push_<cand>.log` and `proj2_verify_<cand>.log`. Nothing is rebuilt, so the stamp and
+the gate run stand. The door opens on those five verify logs, not on this table.
+
+## What is asked
+
+**Walk the five and rule ONE projection as the game's object law** — and for oblique, the side
+(L/R is a whole-game constant; no fixed light motivates it) and the depth (⅓ or ½). The barrel
+and the rack are the ones to look at if the others feel close: the round one states the camera
+plainly, the against-a-wall one states the disagreement with the walls.
+
+Seats may order the five and name which archetype breaks in each; no seat rules.
+
+### Not this session
+
+The ruling goes into §3 as object law (side + depth if oblique); the marker and props are
+re-authored at the ruled projection with `projection_mesh.py` as the geometric authority; the
+§12 cold-naming walk resumes on projection-correct objects.
+
+⚠ **Nothing here entered the game's prop set.** Ids 9850–9884 are the reserved review block —
+round one's 9850–9872 overwritten (superseded; their generations remain in `gen/projection/`
+and in git history) and extended to 9884 because five candidates need 35 cells. No props
+manifest lists them, no placer places them, no game scene names them.

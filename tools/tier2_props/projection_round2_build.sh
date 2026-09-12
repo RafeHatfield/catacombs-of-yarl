@@ -4,6 +4,11 @@
 #   tools/tier2_props/projection_round2_build.sh land      # picks -> reserved ids 9850-9884, re-import
 #   tools/tier2_props/projection_round2_build.sh capture   # ground + five candidate scenes, headless
 #   tools/tier2_props/projection_round2_build.sh install <cand>   # one SKIPPED-REVIEW device build
+#   tools/tier2_props/projection_round2_build.sh push      # install the five BUILT apps + verify each
+#
+# `push` exists because the handset went unavailable mid-session: every build completed and
+# was stamped, only devicectl failed. It installs what `install` built, nothing else — the
+# critic gate and the walk precheck already ran on those builds and the stamp is in the marker.
 #
 # The install is SKIPPED-REVIEW BY DESIGN (§13.2: this ruling is Rafe's eye, never a seat's), and
 # it says so on the phone. Every candidate goes under its own bundle id so five builds sit side by
@@ -46,11 +51,24 @@ case "${1:-}" in
     ;;
   install)
     c="$2"
-    YARL_SKIP_CRITIC=1 \
+    OUT="$ROOT/.ios-build-proj$c" YARL_SKIP_CRITIC=1 \
     TIER0_BUNDLE_ID="com.rafehatfield.catacombsofyarl.proj$c" \
     TIER0_APP_NAME="YARL proj$c" \
     TIER0_SCENE="res://src/Presentation/assets/tier0_harness/scenes/tier1_projection2_$c.json" \
     tools/tier0_harness/build_review_app.sh
     ;;
-  *) sed -n '2,10p' "$0"; exit 2 ;;
+  push)
+    DEV="${DEVICE_ID:-5DB969FF-269C-5A8A-86EB-99EC9FF22397}"
+    for c in $CANDS; do
+      APP="$(find "$ROOT/.ios-build-proj$c/xcodeproj/dd/Build/Products/Debug-iphoneos" -maxdepth 1 -name '*.app' -print -quit)"
+      [ -n "$APP" ] || { echo "== $c: NOT BUILT (run install $c first)"; continue; }
+      echo "== $c: installing $(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist")"
+      xcrun devicectl device install app --device "$DEV" "$APP" > $EV/proj2_push_$c.log 2>&1 \
+        && echo "   installed" || { tail -3 $EV/proj2_push_$c.log; continue; }
+      TIER0_BUNDLE_ID="com.rafehatfield.catacombsofyarl.proj$c" \
+        tools/tier0_harness/verify_on_device.sh --out $EV > $EV/proj2_verify_$c.log 2>&1 \
+        && echo "   verified" || { echo "   VERIFY FAILED:"; tail -5 $EV/proj2_verify_$c.log; }
+    done
+    ;;
+  *) sed -n '2,14p' "$0"; exit 2 ;;
 esac
