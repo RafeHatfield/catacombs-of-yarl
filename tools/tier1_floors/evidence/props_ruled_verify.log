@@ -10,14 +10,44 @@ YARL projW          com.rafehatfield.catacombsofyarl.projW       1.0.0     1.0.0
 
 == FOUND ON DEVICE: YARL Tier0          com.rafehatfield.catacombsofyarl.tier0       1.0.0     1.0.0         
 == launching com.rafehatfield.catacombsofyarl.tier0
-       BundleIdentifier = com.rafehatfield.catacombsofyarl.tier0
-       ----------------------------------------
-           The request to open "com.rafehatfield.catacombsofyarl.tier0" failed. (FBSOpenApplicationServiceErrorDomain error 1 (0x01))
-           BSErrorCodeDescription = RequestDenied
-           NSLocalizedFailureReason = The request was denied by service delegate (SBMainWorkspace) for reason: Locked ("Unable to launch com.rafehatfield.catacombsofyarl.tier0 because the device was not, or could not be, unlocked").
-           FBSOpenApplicationRequestID = 0x8832
-       ----------------------------------------
-               The operation couldn’t be completed. Unable to launch com.rafehatfield.catacombsofyarl.tier0 because the device was not, or could not be, unlocked. (FBSOpenApplicationErrorDomain error 7 (0x07))
-               NSLocalizedFailureReason = Unable to launch com.rafehatfield.catacombsofyarl.tier0 because the device was not, or could not be, unlocked.
-               BSErrorCodeDescription = Locked
-launch failed — is the device unlocked?
+== pulling Documents/diag.log
+
+== the three identifiers, from the handset
+[DIAG 00002 F0 T1.749] [Tier1] BUILD IDENTITY: commit=80258d6308502383fb62bcdf52d08b77b8efab3e+dirty built=2026-09-12T21:28:30Z review=GATED app=Catacombs of YARL
+  bundle (device): com.rafehatfield.catacombsofyarl.tier0
+
+== did it boot into the right scene, with the rig live?
+  OK    booted the review scene
+  MISS  the handset build is 1 commit(s) behind HEAD, and
+        7 shipped file(s) changed since. The device is NOT
+        carrying what this working copy would build. Re-install, or verify
+        against the commit the gate covered.
+          src/Presentation/assets/tier1_ashlar/tier1_ashlar_9800.png
+          src/Presentation/assets/tier1_ashlar/tier1_ashlar_9801.png
+          src/Presentation/assets/tier1_ashlar/tier1_ashlar_9810.png
+          src/Presentation/assets/tier1_ashlar/tier1_ashlar_9811.png
+          src/Presentation/assets/tier1_ashlar/tier1_ashlar_9812.png
+          src/Presentation/assets/tier1_ashlar/tier1_ashlar_9813.png
+          src/Presentation/assets/tier1_ashlar/tier1_ashlar_9820.png
+        ⚠ SOURCE changing is not the same as the PICTURE changing. If the
+          delivered frame is byte-identical the handset still carries the
+          gated art — but that has to be measured, not assumed, and this
+          check deliberately will not assume it.
+  OK    incident overlays attached
+  OK    rig panel constructed
+  OK    no losable state
+  OK    floor family laid, every cross-check green
+  OK    theme and floor family agree   (tier1_ashlar)
+
+  [DIAG 00010 F0 T1.758] [Tier1] floor overlays: cells=134 channel=26 neglected=51 drawn(grit=0 event=0 channel=0 occlusion=0/stacked=56@anchor2 BAKED-BY-FLOOR) cell_shadow_suppressed=74 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
+  [DIAG 00007 F0 T1.749] [Tier0] light rig: ambient=1a1a22@1.5 (effective 272733) light=ffb066 energy=1.6 radius_tiles=6 falloff=1 tile=32x32 tex=384px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
+
+VERIFIED ON DEVICE — installed, launched, booted into tier1_props_review, rig live.
+log: tools/tier1_floors/evidence/DEVICE-tier1-boot.log
+
+== NOTE ON THE COMMIT MISS (session 2026-09-12)
+The build was made at 80258d63+dirty; the dirt WAS the seven prop PNGs listed above, which
+were committed unchanged as d1644166 immediately after the install. Nothing regenerated between
+the install and the commit: the gate's build id equalled the working tree at install, the same
+tree the five seats judged, and the working-tree blobs equal HEAD's now. The handset carries
+the gated art. Recorded here because the verifier is right not to assume it.
