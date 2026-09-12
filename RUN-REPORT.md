@@ -1593,3 +1593,62 @@ the lamp's reach. That is §6.5's standing-distance problem from the other end, 
 
 Installed at `1bb33aae`, device reports it present. **Not launch-verified — the handset is
 locked**, fourth install running.
+
+
+---
+
+## Item 23 — #167's engine gap is closed; #201 is the last item and is a full round
+
+### #167 — 98 pixels to 2,288
+
+A prop standing on a wall cell changed **98** device pixels where a floor prop changes about 900:
+the renderer seated the sprite and the wall drew straight over it.
+
+The fix is per-prop, which is what this issue's own note said it would have to be — *"a prop on a
+wall top must sort above that wall while a prop at the base of a wall must still sort below the
+wall in front of it, so the rule wanted is per-cell depth, not a global z bump."* From directly
+overhead a thing standing on a wall top is nearer the camera than the top is; a thing standing in
+the room is not.
+
+**`+5` is derived, not picked:** the wall base sits at `GetTileSortOrder`, its face child at +1,
+its binding child at +1, and the floor-overlay family reaches +4 (channel 1, occlusion 2, event 3,
+grit 4). One above the tallest of those, and still below the entity layer, which
+`GetEntitySortOrder` keeps odd.
+
+⚠ **And §12.2's own enabler was blocking it.** The footprint validation I added earlier this
+session requires every covered cell to be FLOOR — correct for a prop on the walked surface, and a
+refusal of exactly what #167 asks for. A prop now declares its surface; `"floor"` is the default
+and every prior scene parses unchanged. A wall-top prop is **not** marked with `MarkPropCell`,
+because that call tells the *floor* composer what stands on the floor, and a wall cell has no
+floor beneath it to suppress.
+
+Measured with a fire seated at (5,15), a solid cell: **2,288 pixels**. Six new tests, 47 in the
+fixture, fast suite 2555 green.
+
+⚠ **The art is not done.** #167 wants a brazier, a bundle, a driven post, salvage — objects
+authored *for the top plane*, which is a different drawing problem from a floor prop. The probe
+used the existing fire. The engine gap is closed; the pass is not, and it is now unblocked.
+
+### #201 — sized, and it is a full round
+
+Both halves are placement rather than tiles, which last session's build-and-revert established.
+What that costs is now countable.
+
+**The silhouette half** needs the turn row to be a property the painter assigns along a run,
+stepping only where no block crosses a boundary. A tile's turn row affects its own drawing
+regardless of its keys, so the face set gains a dimension:
+
+| turn rows | face tiles |
+|---|---|
+| 1 (today) | 108 |
+| 2 | 216 |
+| 3 | 324 |
+
+**The junction half** needs a tile class that does not exist. The family is `face`, `top_h`,
+`top_v`, `void` — there is no corner or T, so two runs meeting abut with no return, which is
+exactly what the seat named.
+
+So: an asset expansion of 2–3×, a painter change to assign turn rows per run, a new tile class
+for the T, and a gate over all of it. **That is a round, not a tail.** I have not started it,
+because a 3× asset expansion left mid-flight is worse than either finished state — and the
+diagnosis that makes it cheap to start is already on the issue.
