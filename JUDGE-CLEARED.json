@@ -52,5 +52,31 @@
    "where the next round's guard can still count it. Clearing it would be laundering, which is",
    "the exact thing the 2026-09-06 law exists to prevent."
   ]
+ },
+ {
+  "lane": "art/autonomy-amendment",
+  "guard": "broken-judge",
+  "rounds_covered": [
+   5
+  ],
+  "when": "2026-09-11",
+  "ruling": "the plant term re-scoped at the seat level: a live-plant miss voids the seat, not the round. The blind seat's ballot is discarded; the slot is re-drawn once (fresh seat, fresh plant); the round is valid when it holds five caught ballots. Unanimity is preserved where it matters: every counted ballot caught its plant. Broken-judge = a slot whose re-draw also misses, or two slots missing in one round. ... Then re-draw round 5's seat 2 and proceed — the art was passing (4 not-below, 1 below, no strong regression).",
+  "ruled_by": "Rafe, 2026-09-11",
+  "supersedes": "a correct plant missed still voids [the round] — Rafe, 2026-09-08",
+  "_why_the_transitional_clause_applies": [
+   "Round 5 was voided under the OLD rule for something that is no longer a round-level",
+   "fault: ONE seat missing ONE live plant.",
+   "",
+   "    blown-highlight.png    seats 1, 3, 5    CAUGHT 3 of 3",
+   "    lamp-clip-figure.png   seats 2, 4       CAUGHT 1 of 2   <- seat 2, one live miss",
+   "",
+   "Under the new rule that discards seat 2's BALLOT and re-draws the SLOT once. The clause",
+   "is narrow by construction: it excuses EXACTLY ONE live miss. Two or more is",
+   "broken-judge under the old rule and the new one alike, and no marker excuses it.",
+   "",
+   "⚠ IT DOES NOT DECIDE THE OUTCOME, IT ONLY LETS THE RE-DRAW HAPPEN. If the re-draw also",
+   "misses, the seat-level term raises broken-judge on the spot — a slot that misses twice",
+   "with a fresh seat and a fresh plant is the judging layer, not the draw."
+  ]
  }
 ]

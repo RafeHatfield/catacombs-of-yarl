@@ -118,6 +118,29 @@ def main():
     case("H  nothing is retired in the morgue -> clears nothing",
          guard_with(tmp, retired_both, mk([3, 4]), morgue={"entries": []}), "broken-judge")
 
+    # ── THE TRANSITIONAL CLAUSE, which is a second escape hatch and needs its own failures ──
+    #
+    # A marker carrying `supersedes` may excuse a round voided under the OLD round-level plant
+    # rule for the shape the NEW seat-level rule handles: exactly ONE live miss. It must not
+    # reach any further than that.
+    mk_sup = lambda rounds: [{"lane": LANE, "guard": "broken-judge", "rounds_covered": rounds,
+                              "ruling": RULING,
+                              "supersedes": "a correct plant missed still voids [the round]"}]
+
+    one_live = [ok(1), ok(2),
+                void(3, [(True, "live.png"), (False, "retired.png")]),
+                void(4, [(True, "live.png"), (False, "live.png")])]   # ONE live miss in r4
+    two_live = [ok(1), ok(2),
+                void(3, [(True, "live.png"), (False, "retired.png")]),
+                void(4, [(False, "live.png"), (False, "live.png")])]  # TWO live misses in r4
+
+    case("J  `supersedes` marker, ONE live miss -> cleared (the re-draw may run)",
+         guard_with(tmp, one_live, mk_sup([3, 4])), None)
+    case("K  `supersedes` marker, TWO live misses -> clears NOTHING",
+         guard_with(tmp, two_live, mk_sup([3, 4])), "broken-judge")
+    case("L  the SAME one-live-miss history without `supersedes` -> clears nothing",
+         guard_with(tmp, one_live, mk([3, 4])), "broken-judge")
+
     # ⚠ THE PROPERTY THAT KEEPS IT FROM BEING AN OFF SWITCH: a cleared guard still fires on
     # rounds AFTER the marker. Two fresh VOIDs past the covered ones stop the line again.
     later = retired_both + [void(5, [(False, "live.png")]), void(6, [(False, "live.png")])]
