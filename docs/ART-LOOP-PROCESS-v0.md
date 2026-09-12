@@ -413,6 +413,54 @@ be acted on.
 
 **An instrument that cannot be made to fail is decorative and must be labelled so or deleted.**
 
+### 4.0a Two laws about what may serve as a PLANT — LAW (Rafe, 2026-09-11)
+
+Both were paid for by one round, in which a newly seeded plant voided a five-seat panel and then
+turned out not to be a plant at all.
+
+**A CULL MADE BY THE DEVICE GATE IS NOT AUTOMATICALLY USABLE AS A SEAT CONTROL.**
+
+`crushed-midband.png` was the 2026-08-27 device FAIL — Rafe's *"looks like crap"*, the mid-band
+hollowed out, the frame whose verdict produced two of this bible's laws. Seeded as a tonal plant
+it was dealt to two seats and **missed by both**. Put in the BUILD slot by the plant self-test and
+shown to three fresh seats, it was ranked **first, first and second of four**, above the approved
+reference, flagged by nobody, returning INSTALL-LATEST at *rank 1 of 4, score 1.00, NEW BEST*.
+
+It is not a weak plant. **It is a frame blind seats prefer** — and the reason is the law that
+frame itself created. §3's status trail, written the day it was culled: *"two seats ranked this
+above the bar; the device says otherwise; §13.2 vindicated again."* Five more seats have now
+agreed with those two.
+
+**What the phone catches is, by construction, the class of thing a still and a seat do not.**
+That is why the phone is the gate. Planting such a frame asks the judging layer to catch the one
+defect it has been *proven blind to*, and a control nobody can catch does not measure the judge —
+it voids rounds and stops the line over a judge that was working.
+
+> A frame is eligible as a plant only if a blind seat can be expected to see what is wrong with
+> it. A device-gate cull qualifies only when its defect is also visible in the still.
+
+**PLANTS ARE CAPTURED IN THE DECK'S OWN SCENE, AT THE RATIFIED RIG.**
+
+The same round measured the second reason. The two plants that worked — caught by every seat that
+drew them — are both `tier1_combined_review` at the ratified rig (radius 6.0 / ambient 1.50), the
+deck's own room and light. The one that failed is `tier1_wall_review` at the superseded rig
+(5.0 / 0.70), so it differed from the deck on **scene AND rig AND tone at once**, and a seat
+cannot tell which of the three it is being asked about.
+
+This generalises §4.2's rule about the right image for the wrong reason: **a control must differ
+from the deck on the axis under test and as little else as possible.** Every extra axis it varies
+on is another way for a seat to be right about the wrong thing.
+
+⚠ **The risk was written into that plant's own eligibility note when it was seeded** — *"that is
+the defect, not a confound"* — and the measurement contradicted it. The wrong prediction is kept
+in the morgue entry beside the correction, because a forecast that failed is worth more on the
+record than a tidy file.
+
+**Consequence, and it is an open gap rather than a blocker (Rafe, 2026-09-11):** the DARK side of
+the tonal axis has no plant. It is filled only by a future Rafe-culled, **seat-visible** frame
+captured in the combined scene at the ratified rig. **No manufactured plants** — a plant is a
+frame somebody rejected, never one built to be rejected.
+
 ### 4.1 A lever is proven on its axis, not on the diff — LAW
 
 **Moving pixels above the noise floor proves a lever is connected. It does not prove the lever

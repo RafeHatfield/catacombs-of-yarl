@@ -1,0 +1,56 @@
+[
+ {
+  "lane": "art/autonomy-amendment",
+  "guard": "broken-judge",
+  "rounds_covered": [
+   4
+  ],
+  "when": "2026-09-11",
+  "ruling": "STOP cleared by ruling (added artifact, this quoted): the judge is proven working on two tonal plants at 100%; crushed-midband is retired as a device-gate cull that seats are §13.2-blind to — not a plant. Dark-side tonal coverage is an open gap, not a blocker — filled only by a future Rafe-culled, seat-visible frame in the combined scene at the ratified rig; no manufactured plants.",
+  "ruled_by": "Rafe, 2026-09-11",
+  "_what_this_is_not": [
+   "IT IS NOT A PARK, and it could not be one. `park_clears` refuses `broken-judge` outright,",
+   "on a ruling of its own (Rafe, 2026-09-06): 'a proven-blind judge is never laundered by a",
+   "park.' That law stands untouched and still applies to every lane ruling.",
+   "",
+   "The law protects against a builder parking past a judge that is actually blind. It does not",
+   "reach the case that arose, which is the opposite: the judge caught every correctly-formed",
+   "plant it was dealt, and what failed was a CONTROL."
+  ],
+  "_the_evidence_the_guard_re_derives": [
+   "`judge_cleared()` does not trust this file. It recomputes, from the history, that every seat",
+   "in every covered round either caught its plant or drew one the morgue has retired. One live",
+   "miss inside these rounds and the clearance clears nothing.",
+   "",
+   "round 4, five seats, three plants dealt without replacement:",
+   "    blown-highlight.png    seats 2, 5    CAUGHT 2 of 2",
+   "    lamp-clip-figure.png   seat  3       CAUGHT 1 of 1",
+   "    crushed-midband.png    seats 1, 4    MISSED 0 of 2   <- retired",
+   "",
+   "and crushed-midband put in the BUILD slot for three fresh seats: ranked 1st, 1st and 2nd of",
+   "four, above the approved reference, flagged by nobody, verdict INSTALL-LATEST at",
+   "'rank 1 of 4, score 1.00, NEW BEST'. It is not a weak plant. It is a frame blind seats",
+   "prefer, which is why it was a DEVICE gate FAIL."
+  ],
+  "_what_stays_open": [
+   "THE DARK SIDE OF THE TONAL AXIS IS UNPLANTED, and the ruling is explicit that this is a gap",
+   "and not a blocker. It is filled only by a future Rafe-culled, seat-visible frame captured in",
+   "the combined scene at the ratified rig. NO MANUFACTURED PLANTS."
+  ],
+  "_why_only_round_4": [
+   "THE RULING CLEARS THE STOP; THIS CLEARS THE NARROWEST THING THAT DOES IT, WHICH IS ONE ROUND.",
+   "",
+   "  round 3  VOID  seat 3 missed blown-highlight.png  <- a LIVE plant. A real seat miss.",
+   "  round 4  VOID  seats 1 and 4 missed crushed-midband.png  <- the retired control.",
+   "",
+   "Only round 4's premise can be re-derived, so only round 4 is covered. That is enough: the",
+   "guard fires on TWO CONSECUTIVE VOIDs, and with round 4 excused the tail reads",
+   "[round 2 INSTALL-LATEST, round 3 VOID] — not two in a row, so it does not fire.",
+   "",
+   "⚠ ROUND 3'S MISS IS NOT CLEARED AND SHOULD NOT BE. One seat of five missed a correct, live,",
+   "unretired plant. That is a real datum about the judging layer and it stays on the record",
+   "where the next round's guard can still count it. Clearing it would be laundering, which is",
+   "the exact thing the 2026-09-06 law exists to prevent."
+  ]
+ }
+]

@@ -192,6 +192,75 @@ def lane_of(v):
 PARK = os.path.join(REPO, "PARK-CLEARED.json")
 JUDGE_GUARD = "broken-judge"
 
+# ── AND THE ONE THING THAT *CAN* CLEAR A BROKEN JUDGE, BECAUSE IT PROVES THE JUDGE WORKS ──────
+#
+# The law above stands exactly as written: a PARK can never clear `broken-judge`, because a
+# ruling about a LANE cannot make an unreadable verdict readable. What that law is protecting
+# against is a builder parking their way past a judge that is actually blind.
+#
+# It does not reach the case that actually arose. RULED (Rafe, 2026-09-11):
+#
+#     "STOP cleared by ruling (added artifact, this quoted): the judge is proven working on two
+#      tonal plants at 100%; crushed-midband is retired as a device-gate cull that seats are
+#      §13.2-blind to — not a plant. Dark-side tonal coverage is an open gap, not a blocker."
+#
+# The VOIDs were not a blind judge. They were a bad CONTROL: one plant that no seat caught in a
+# deck, and that three fresh seats ranked FIRST OF FOUR when it was put in the build slot. The
+# judging layer caught every correctly-formed plant it was dealt, 3 of 3.
+#
+# ⚠ SO THIS CLEARANCE IS NOT TRUSTED, IT IS CHECKED. `JUDGE-CLEARED.json` names the rounds and
+# carries Rafe's words, and `judge_cleared()` below RECOMPUTES the evidence from the history
+# before honouring it: every plant dealt in those rounds must either have been caught by every
+# seat that drew it, or be retired in the morgue. A clearance whose own rounds contain a live
+# plant that a seat missed clears nothing. That keeps the 2026-09-06 law's protection intact —
+# a genuinely blind judge cannot be laundered by this file either, because the file's premise is
+# re-derived rather than asserted.
+JUDGE_CLEAR = os.path.join(REPO, "JUDGE-CLEARED.json")
+
+
+def judge_cleared(lane, tail, morgue=None):
+    """Rounds a RULING has excused from `broken-judge`, having re-proved the judge on them.
+
+    Returns the set of round numbers to exclude. Empty unless the marker exists, names this
+    lane, and the history agrees with it.
+    """
+    if not os.path.exists(JUDGE_CLEAR):
+        return set()
+    try:
+        m = json.load(open(JUDGE_CLEAR))
+    except Exception:
+        return set()                      # a malformed marker clears nothing, by accident or not
+
+    retired = set()
+    if morgue:
+        for e in morgue.get("entries", []):
+            if e.get("retired_as_control"):
+                retired.add(e["file"])
+
+    out = set()
+    for entry in (m if isinstance(m, list) else [m]):
+        if not isinstance(entry, dict) or entry.get("lane") != lane:
+            continue
+        if not (entry.get("ruling") or "").strip():
+            continue                      # no quoted ruling, no clearance
+        covered = {r for r in (entry.get("rounds_covered") or []) if isinstance(r, int)}
+        if not covered:
+            continue
+        # RE-DERIVE THE PREMISE. Every seat in every covered round either caught its plant, or
+        # the plant it drew is retired in the morgue. One live miss and this clears nothing.
+        ok = True
+        for v in tail:
+            if v.get("round") not in covered:
+                continue
+            for seat in (v.get("panel") or {}).get("per_seat") or []:
+                if seat.get("caught"):
+                    continue
+                if (seat.get("plant") or "") not in retired:
+                    ok = False
+        if ok:
+            out |= covered
+    return out
+
 # ================================ the human gate's own verdict =================================
 #
 # RULED (Rafe, 2026-09-07). §13.2 and LOOP-PROCESS §4.3 already put the human gate above the
@@ -221,6 +290,14 @@ def ruling_for(lane, rnd, path=None):
         if r.get("lane") == lane and r.get("round") == rnd:
             return r
     return None
+
+
+def _morgue_for_clear():
+    """The morgue, for the retirement check. Unreadable -> no retirements, so nothing clears."""
+    try:
+        return json.load(open(os.path.join(MORGUE, "MORGUE.json")))
+    except Exception:
+        return {"entries": []}
 
 
 def park_clears(lane, guard, path=None):
@@ -458,7 +535,10 @@ def guards(hist, lane, park=None, gate_path=None):
         return [v for v in seq if v.get("round") not in ex] if ex else seq
 
     # ── broken judge ──────────────────────────────────────────────────────────────────────────
-    tail = lane_hist[-JUDGE_MISSES:]
+    # A ruling may excuse specific rounds, but only by re-proving the judge on them — see
+    # `judge_cleared`. The rounds themselves stay on disk and in the diff; nothing is deleted.
+    excused = judge_cleared(lane, lane_hist, morgue=_morgue_for_clear())
+    tail = [v for v in lane_hist if v.get("round") not in excused][-JUDGE_MISSES:]
     if len(tail) >= JUDGE_MISSES and all(v.get("verdict") == "VOID" for v in tail):
         return ("broken-judge",
                 "the picture-plant was missed %d rounds running. The judging layer is broken; "
