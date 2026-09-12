@@ -1,6 +1,6 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.14 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
+**Status: v0.15 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
 or ruled at the gate on them (§8.3); §6.5 and §3.1 are measured against the asset bar and ruled,
 awaiting the device gate; §3 is ratified for walls and §3.2 RULED for objects. Everything else
 in this document still has not been derived.**
@@ -430,6 +430,11 @@ of new plane, not a re-projection of the family.
 **Filed separately, not projection:** props that do not sit against walls — the depth order
 under the top band (which of prop and wall draws over which, and where a prop's base sits in
 the cell) is placement law, and the round-two walk raised it as such.
+
+**Shadows (cast-shadows round, 2026-09-12).** An object's shadow is cast by the engine from its
+FOOTPRINT — the cabinet base parallelogram, or the round exception's circle — never from its
+sprite, and never baked (§6.3). Its sprite is exempt from receiving shadows, which is what keeps
+the ½-depth side lit under any lamp. See §12.1a's status.
 
 **What re-authors under this clause.** The boundary marker stone, the three-variant barricade
 family and the orc fire — B-PROP-001/002/003 — are re-authored from projected templates at the
@@ -2286,6 +2291,34 @@ occlude against the wall faces is a presentation change (an occluder pass), not 
 one, and it is outstanding at the time of writing. §6.5's standing-distance law is unaffected —
 it governs what a LIT surface delivers at range, and this governs which surfaces are lit at all.
 
+**STATUS (2026-09-12, cast-shadows round): THE OCCLUDER PASS IS BUILT AND MEASURED; the walk
+that lands it is Rafe's.** `ReviewLighting.AddOccluders` + the light-mask split in
+`Tier1BoundaryWall`, `--occluders all`, void ring **0**. Measured on the props room, no
+occluders → occluders: **face 40.16 → 39.61, cap 52.92 → 52.92** (the r29 failure, 37.90 → 5.51,
+is closed), **unexcavated 27.35 → 12.50** — the same rock at ambient, where the ring's 2.58 was a
+darker *material*. The interim fallback below is therefore retired for every capture this round
+and after; it stays in the record as the ruling it was.
+
+**How, since the obvious mechanism was measured and did not survive.** A 2D occluder cannot
+say *light this cell's own surface and stop behind it*: a per-cell quad whose light-facing edges
+cast shadows its own face (r29), and with those edges culled the cells of a wall row shadow each
+other obliquely through their far edges (face → 28.47 / 37.19; cap → 30.05 / 38.00 under the two
+cull modes) — and a far edge cannot darken a thick mass whose far side is rock. So **the first
+surface the lamp meets is exempt by mask, and everything behind it receives**: a wall cell with
+floor anywhere in its 8-neighbourhood (the reveal, and the cap beside it) sits on a light mask
+the lamps illuminate but never shadow; deeper mass, the floor and the walls behind receive; every
+edge casts. Objects the same way (§3.2): a prop's sprite is drawn north of its footprint on
+screen, exactly where a lamp from the south throws the footprint's shadow, so props never
+self-shadow *by mask* — measured Δ +0.00 on every sprite's interior — and their footprints
+(the cabinet base parallelogram, or the round exception's circle) cast onto the floor.
+
+**The shadow is the ambient, and on this engine that is a black shadow colour.** Measured, after
+two wrong guesses: `Light2D.ShadowColor`'s RGB is the fraction of the lamp that *leaks* into a
+shadowed pixel (the ambient hue leaked 15% and read as a wash); its alpha is inert. Black leaks
+nothing, so what remains in shadow is the `CanvasModulate` ambient — §6.2's hue — and the
+darkness knob is `rgb = 1 − d`. Never black paint: the shadowed floor measures the ambient-lit
+floor, not 0.
+
 > **THE INTERIM, RULED (Rafe, 2026-09-05): THE FLAT-DARK FALLBACK STANDS UNTIL THE OCCLUDER
 > SHIPS, AND IT IS DECLARED PER CAPTURE RATHER THAN BAKED.**
 >
@@ -3134,6 +3167,14 @@ Recorded so they are not re-derived; deliberately not law.
 ---
 
 *Revision history:*
+
+- *v0.15 — 2026-09-12. **§12.1a's occluder pass BUILT AND MEASURED** — the void is dark by
+  occlusion, faces and caps untouched (40.16 → 39.61, 52.92 → 52.92), unexcavated mass at ambient
+  (27.35 → 12.50), ring 0. The mechanism the clause imagined (an occluder behind the reveal) was
+  measured and could not work in a 2D light; the first surface is exempt by light mask instead
+  and everything behind it receives. Objects cast from their §3.2 footprints and never
+  self-shadow (Δ 0.00). Godot's ShadowColor semantics recorded (rgb leaks, alpha inert). The orc
+  fire is the second light (#205). Walk pending: softness, darkness, flicker are Rafe's.*
 
 - *v0.14 — 2026-09-12. **§3.2 — OBJECT PROJECTION RULED.** Cabinet oblique, receding RIGHT,
   ½ depth (per-axis; the walked `projOdeep` build), on device across two rounds

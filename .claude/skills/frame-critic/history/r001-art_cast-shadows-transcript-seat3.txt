@@ -1,0 +1,44 @@
+RANK: 3 > 4 > 2 > 1
+
+BEST: 3
+BEST_WHY: The floor is the thing. The blocks are cut to varying widths within a course — on the row at y≈520 a wide block spanning x≈470–555 sits next to narrow ones at x≈400–440 — and the mortar lines vary in weight and value along a run, so the ashlar reads as laid rather than stamped. The timber band along the wall base (y≈425–445, x≈185–505 and again x≈565–750) is a distinct material with pins at irregular intervals, which is exactly "repaired with driven pins and salvaged timber, don't care how it looks." The wall's inner face at (185–440, 395–450) has a lit rim that falls into dark rock, so the wall has thickness. The light falloff from the figure to the bottom edge is continuous with no banding on the floor.
+
+WORST: 1
+WORST_WHY: The pool at (245–335, 0–190) is a filled rectangle: hard straight edges on all four sides, a uniform 2-px pale rim, flat green interior with three lighter blobs (≈(315,25), (320,120), (275,160)) as the only variation. The walls at left (0–50, 0–190) and bottom (0–384, 195–265) are a flat brick texture with no top-face/side-face separation, so wall and floor meet on a hard line with zero depth. The brown floor's speckle pattern repeats at tile pitch — the same dark-blotch-plus-blue-fleck cluster can be picked out row after row. The lighter cobble tile at the bottom-left corner (0–50, 195–240) doesn't match the wall tiles either side of it — a visible seam. The orange door at (25–40, 125–150) is a front-on side-view door set into a top-down wall. There's an orphaned grey fragment at (160–190, 268–276) in the black below the bottom wall.
+
+FLAGGED: 1, 2, 4
+
+SHIP: NONE
+
+FLIP 1:
+- Replace the pool at (245–335, 0–190) with an irregular shoreline — break the straight edges by at least one tile of variation per side and drop the uniform pale rim in favour of a darker wet-edge on the floor side only.
+- Give the walls a top face and a side face at different values; the side face should be visible along the floor-facing edge of the left wall (x≈45–50) and the bottom wall (y≈195–200).
+- Break the floor's tile-pitch repetition: at minimum three floor variants placed randomly, or a noise overlay at a non-tile period, so the same speckle cluster cannot be found twice in a row.
+- Replace the corner cobble tile at (0–50, 195–240) with one that matches the surrounding wall texture.
+- Redraw the door at (25–40, 125–150) from above (a threshold and frame in the wall's plane), not front-on.
+- Remove or complete the grey fragment at (160–190, 268–276).
+- Use two different chest sprites, or one chest, at (65–100, 5–25) and (65–100, 45–70); the identical pair stacked reads as a placed asset, not a stored one.
+
+FLIP 2:
+- The fire at (580–620, 525–560) emits no light: the floor around it sits at the same value as floor at the same distance from the figure elsewhere. Either give it a warm local falloff or remove it. A visible fire that doesn't light anything is the first thing a player will see.
+- The crate at (200–305, 475–520) is drawn oblique — front face and lighter top both visible — in a straight-down map. Redraw from above: a top face with plank lines and a thin side edge only.
+- Same for the broken timber at (380–500, 590–640) and the standing stone at (265–300, 535–640); the stone shows vertical faces that cannot be visible from directly above.
+- The crate's shadow falls below it (y≈515–525) and the stone's falls to its right (≈(290–310, 600–640)) while the light source — the figure — is up and to the right of both. Shadows should fall down-left, away from the figure.
+- The props are at full saturation and full brightness regardless of their distance from the figure; the crate at the left sits in the dimmer band yet reads as bright as the floor next to the figure. Multiply props by the same light term as the floor, and desaturate the orange toward the stone's warm-grey.
+- The lit region has a straight diagonal boundary running from about (500,750) up to (610,470) — a visible polygon edge on the floor. Soften it or subdivide the light mesh so no straight run is longer than a tile.
+- The hot core at (385–470, 455–525) pushes the floor to near-white; clamp the light so joints stay visible within one tile of the figure.
+
+FLIP 3:
+- The hot core at (385–470, 455–525) bleaches the floor to a near-uniform cream; joint lines all but disappear. Clamp the peak so the block edges stay readable within one tile of the figure.
+- The crack lines — e.g. the long one from (215,555) through (330,600) to (400,520) — are uniform 1-px black lines with no lit edge, crossing block joints without interacting with them. They float above the floor like a decal layer. Give each crack a 1-px lighter edge on the light-facing side and break them at mortar lines.
+- The dark square at (310–380, 648–705) is a near-black rectangle with a thin pale outline sitting in the middle of lit floor; it reads as a missing tile. Either draw it as what it is (a drain grate, a pit with visible inner faces) or remove it.
+
+FLIP 4:
+- The orange block at (268–302, 550–620) is a flat rectangle with a pale top strip. It is a placeholder. Draw the actual object from above.
+- The bench at (395–490, 595–625) is a side-view plank with two legs in a top-down map. Redraw from above.
+- The barrel at (585–615, 590–632) shows its side staves; from above only the lid and rim are visible. Compare the barrels in image 1, which get this right.
+- The chest at (640–685, 465–500) sits in the half-lit far-right zone and is as bright as the block next to the figure. Props are not taking the light falloff — apply the same light term to them as to the floor.
+- All five props share a saturated orange that appears nowhere else in the frame. Pull them toward the stone's warm-grey so they belong to the same room.
+- Same hot-core, crack-overlay and dark-square items as FLIP 3.
+
+Model: Opus 5 (1M context)

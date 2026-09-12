@@ -1,0 +1,47 @@
+RANK: 1 > 2 > 4 > 3
+
+BEST: 1
+BEST_WHY: The value structure holds at a glance — wall tops sit at a flat mid-grey, the wall-face course at y 390–420 is a step darker, and the floor is warm — so room, wall and corridor separate without any outline doing the work. The light peaks at the figure's feet (x 340–430, y 520–545) and the mortar joints and brick hatching are still legible there; it never blows out. Along the course at y 515–545 the bricks run ~30, ~60 and ~90 px wide in a running bond with the joint darkness varying, so the floor reads as laid, not stamped. The corridor floor (x 375–440) is shaded by the same falloff as the room, so the two spaces share one light.
+
+WORST: 3
+WORST_WHY: A hard, straight-edged dark wedge runs from the right corridor's lower corner (~505,440) down to the bottom-right edge (~750,720), darkening floor that has an unobstructed line to both the figure and the brazier at (597,545) — nothing casts it, and it cuts straight through the brazier's own lit area. A second wedge below the orange crate starts at the crate's *near* end (~300,505) and runs down-left, the wrong side for a light at the figure. The crate (x 200–300, y 478–520), pale pillar (x 265–300, y 530–640) and rope-lashed timber (x 380–500, y 590–640) are drawn at roughly twice the pixel size of the floor with smooth planar shading and a saturated orange that appears nowhere else in the frame; they read as pasted from another asset set. The brazier flame is a ~16px cluster with no bowl rim or legs, and its glow stops at ~40px without tinting the pillar, timber or wall face beside it.
+
+FLAGGED: 2, 3
+
+SHIP: NONE
+
+FLIP 1:
+- Wall-top surface (e.g. the block at x 55–375, y 70–390) is a soft-focus blob texture with anti-aliased edges next to a hard-pixel floor; redraw it at the floor's pixel size so both surfaces share one resolution.
+- The single closed 1px contour on that wall top (from ~180,400 up to ~380,200 and back) reads as a blob outline, not stone fracture; remove it or replace it with short branching cracks that terminate.
+- Every floor brick carries the same diagonal hatch at the same density; leave roughly half the bricks clean and vary hatch direction on the rest.
+- Wall-face band at y 390–420 is one course of near-identical dark bricks with no top lip; add a second course and a lighter top edge so the wall has thickness.
+- Corridor floor (x 375–440) is the same brick as the room with no threshold at the junction (y ~450); add a sill or step course.
+- Nothing in frame reads as repaired; put at least one driven pin or rope-lashed timber on the wall face.
+
+FLIP 2:
+- Floor within ~60px of the figure (x 330–470, y 450–540) is bleached to cream-white; cap the light's peak so mortar and hatching survive at the centre.
+- Every brick carries dense scribble hatching that competes with the sprite; halve the density and leave clean bricks.
+- The bordered dark square at x 310–380, y 645–710 reads as an unexplained hole; make it a legible feature (drain grate, stair head) or remove it.
+- The blue-grey tile block at x 57–187, y 710–833 switches material on a hard rectangular seam; mix tiles along the boundary or give the change a cause (stain edge, different course).
+- Corridor mortar at x 505–560, y 300–450 is salmon-pink while room mortar is grey-brown; unify it.
+- The diagonal crack from (~440,500) to (~250,700) crosses ~8 joints as one unbroken line; break or offset it at joints so it reads as stone fracturing, not a line drawn over tiles.
+
+FLIP 3:
+- Delete the wedge shadow from (~505,440) to (~750,720); no occluder exists between that floor and either light source.
+- Recast the crate's shadow from its far (left) side, away from the figure, and terminate it; it currently begins at the near end (~300,505) and runs down-left.
+- Redraw crate, pillar and lashed timber at the floor's pixel size using the floor's dither/hatch language instead of smooth planar shading.
+- Pull the crate's saturated orange into the scene's warm-grey range.
+- Extend the brazier's falloff so it tints the pillar, timber and wall face beside it, and draw a bowl rim and legs under the flame at (597,545).
+- Carry over every FLIP 2 item (blowout, hatch density, dark square at x 310–380, corridor mortar).
+
+FLIP 4:
+- There is no light falloff; add the carried-light gradient so everything beyond ~6 tiles from the orc falls toward black.
+- Grey wall-top tiles (x 304–384, y 0–210 and x 0–384, y 210–260) are identical squares on a uniform 1px grid; add 3–4 variants with differing joint depth and chipped corners.
+- Water (x 256–336, y 0–192) shows a repeating hexagonal cell pattern; replace it with a non-tiling still surface with scum and debris.
+- Lily pads (e.g. ~322,40 and ~320,220) and the bright teal moss blobs are cheerful; remove the pads, desaturate the moss.
+- The orange bar at x 27–35, y 127–168 reads as nothing identifiable; make it one thing — a framed door or a torch bracket with flame.
+- Dirt rust-veins repeat on a visible 16px grid (x 96–256, y 0–200); randomise variants so the tiling doesn't show.
+- Wall-face course at y 260–288 has a lighter brick at x 328–376, y 256–264 breaking the run; fix the tile.
+- Chests at x 64–96 (y 0–24 and y 48–72) are bright gold loot boxes; darken and weather them to salvage.
+
+Model: Opus 5 (1M context)
